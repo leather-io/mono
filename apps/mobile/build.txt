@@ -1,0 +1,2127 @@
+[
+  {
+    "id": "82a9da7d-831c-446d-84e1-03c277d5066c",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/h8PKDr5tKD9dJg5XQ4He6w.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/h8PKDr5tKD9dJg5XQ4He6w.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.62.1",
+    "appBuildVersion": "469",
+    "runtimeVersion": "98393089285c8cd8a8c7cb8508437b4c2556fb81",
+    "gitCommitHash": "ad63576efa9a5e875c80c17e1ac96b1eb1a807cb",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-31T12:49:05.976Z",
+    "updatedAt": "2025-07-31T13:28:34.500Z",
+    "completedAt": "2025-07-31T13:28:32.346Z",
+    "expirationDate": "2025-08-30T12:49:06.055Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1032345,
+      "buildQueueTime": 36801,
+      "buildDuration": 1296891
+    }
+  },
+  {
+    "id": "6c3ea3cb-2de3-497e-ac63-d667459d5453",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/enfXy2rVM3jwFwSpaSqZQP.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/6c3ea3cb-2de3-497e-ac63-d667459d5453?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=5de28f0e6aae11a5c2d7af2ff8880d1b025db443ed7d8035f238a0294ba47f81c703fd619eef9bec223bc2a4dcb495e178bddf172a62dd610dc3a3059e44a76fd25f98bc05f92a8678ff76d4a746081688d38e5609c81dbfa794f7d0fb609d327cdee3e5135e8dd3ff5b092e446e7cc1e1a98a248031c1112184245e86b362b5c9695e430a7ddf227c80600e7101f24f84cf43125b18cee2c55a0bd1630de7c712a4eb343486363c55a41a07816b462b2216d84076ce7a0fca97ac9e31e19a1dc0fc7a900df00ed7b66e6997a52801a67202e0a709e9c535e1a9fbcb2dfe0fbee837eac78919ab476a9d917caf8d7fa956a55b85090edb31ff4e551d7be00be3",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/enfXy2rVM3jwFwSpaSqZQP.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.62.1",
+    "appBuildVersion": "2.0.539",
+    "runtimeVersion": "38c0fac4373f3d6dd63b68a9aa6e039adfbcd661",
+    "gitCommitHash": "ad63576efa9a5e875c80c17e1ac96b1eb1a807cb",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-31T12:49:02.216Z",
+    "updatedAt": "2025-07-31T13:13:44.005Z",
+    "completedAt": "2025-07-31T13:13:40.490Z",
+    "expirationDate": "2025-08-30T12:49:02.590Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 878542,
+      "buildQueueTime": 64573,
+      "buildDuration": 530961
+    }
+  },
+  {
+    "id": "41a64f1f-7403-4a1c-b1d4-a3dac66bb8d5",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/97bW4JFWvC4H4MXcx1kbEZ.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/41a64f1f-7403-4a1c-b1d4-a3dac66bb8d5?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=04b7231f440997bde354c2ab89885cdd5c330c10ff5ef16686d364f93b5a680bcdd5a6b3c3fc7d5a8c0e96fc1647f1c553c06eee4b7346b7fe0d518ebcea3658054896edd4724526684290ba9314eb3579c129a1a2b35762e0b7cc773a2b653aaabe2182396eb83db428cef527254f0c185151f29f241d6b1f0f3cd62aafe363e10dab2a31dfc3571759fd6ced238bd66a72fd392ab608f8c689ba68c0221f723811cbb2228beb921dd6337ad6de0d123aff73102eddb2f92817d0ffb5d04eefd019c1f50f654ed70e8b4bbcefa515846adca72f81f6d5736d3476a0b7e00b6094524b8de147edbc18c899c69a6542f414efc442d18866dfd9de3780c388ad81",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/97bW4JFWvC4H4MXcx1kbEZ.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.62.0",
+    "appBuildVersion": "2.0.538",
+    "runtimeVersion": "1f19eef2fdd375dde7b5cce19cab10ee285af656",
+    "gitCommitHash": "1feab3d07c56bed6e80dd0c4943ca0480b38f287",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-31T09:00:42.990Z",
+    "updatedAt": "2025-07-31T09:37:15.786Z",
+    "completedAt": "2025-07-31T09:37:11.088Z",
+    "expirationDate": "2025-08-30T09:00:43.057Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1395655,
+      "buildQueueTime": 55268,
+      "buildDuration": 732984
+    }
+  },
+  {
+    "id": "6ffe70cb-ceea-4ac0-8a1b-403be96e787b",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/eQ7ox1oXKWSCjbVEy4iNVH.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/eQ7ox1oXKWSCjbVEy4iNVH.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.62.0",
+    "appBuildVersion": "468",
+    "runtimeVersion": "8511d4e42e648d05d3aedb14e80458951d18f805",
+    "gitCommitHash": "1feab3d07c56bed6e80dd0c4943ca0480b38f287",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-31T09:00:37.764Z",
+    "updatedAt": "2025-07-31T09:40:57.747Z",
+    "completedAt": "2025-07-31T09:40:51.140Z",
+    "expirationDate": "2025-08-30T09:00:37.821Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1059908,
+      "buildQueueTime": 37398,
+      "buildDuration": 1315720
+    }
+  },
+  {
+    "id": "6bb48f85-ad0c-4a26-a641-853ae0637c07",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/eioUjUa6JEBNe3aQvv9G4a.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/eioUjUa6JEBNe3aQvv9G4a.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.61.1",
+    "appBuildVersion": "467",
+    "runtimeVersion": "867d392df1346b30c803ef8e2cfdbd31dbfd6352",
+    "gitCommitHash": "5753e1b8d0340ff6f25d649bb8d0d3af9d9e3b19",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-30T12:38:51.664Z",
+    "updatedAt": "2025-07-30T13:20:08.008Z",
+    "completedAt": "2025-07-30T13:19:57.559Z",
+    "expirationDate": "2025-08-29T12:38:51.712Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1029791,
+      "buildQueueTime": 117432,
+      "buildDuration": 1318258
+    }
+  },
+  {
+    "id": "19fcaee4-8e8e-44cd-9426-2e4d46c82117",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/4d83D8cG2AWuZ74P6o3e6i.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/19fcaee4-8e8e-44cd-9426-2e4d46c82117?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=a3670ab37abde629c43678e805fd8959a4f70fc277fa88a1b3e0576d34b0d27b82dc2c5f9303773a1bf152556fee210d0946d1a53c5b0c76c9367bade6df17ab9ff4191e74535f8e006087dc2dab71385c27542407eb4a5dfafae6401cd880933bc1ebeab653015e13bcfa5cf5f926d34bea69e028356eae84954e96584b944638915ed92d6c91ed301a4c71a59d03dc42a6a9556199a506770b5ea9d17e2140351570d824804fd1e4eb7fe4acb246b95b60fe87b436f50785a5c5c5dbe24d2397598506b8c4a1271ffa99fc283a3c345d335ee9dcf08218f797e8b1281b8a4865f0553faae51081dfe367779a4185eac91216479021c85d18dd493a4c4f9b6d",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/4d83D8cG2AWuZ74P6o3e6i.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.61.1",
+    "appBuildVersion": "2.0.537",
+    "runtimeVersion": "ef2f1f81c876162ce9967ebbaf6f4fdb667e1b61",
+    "gitCommitHash": "5753e1b8d0340ff6f25d649bb8d0d3af9d9e3b19",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-30T12:38:37.825Z",
+    "updatedAt": "2025-07-30T13:06:13.658Z",
+    "completedAt": "2025-07-30T13:06:02.684Z",
+    "expirationDate": "2025-08-29T12:38:37.888Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 853814,
+      "buildQueueTime": 52438,
+      "buildDuration": 734376
+    }
+  },
+  {
+    "id": "a0481536-20ad-4415-bc9e-142060af0077",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/kMX8SXAXPQBxFymgwWcVkv.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/a0481536-20ad-4415-bc9e-142060af0077?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=2f021a6c40377020dc50c63f212cb5c507c39c3fcf73b7375ce2012f26e2f5b5cfd070a1155772bf974c7a3b734fc75289980c93e3404bfa7660b33f83105ddcca75c4259eb6b6037ca11462f13f9d1ddb6d1dbc988e062debb7c9aefe5a0f64317b551609784f3c63467a2f9d48b20c30970478ae2872848065db0e91c33a25140617d5430df0ca8ce84d8e75f78d3c8dfe12c76fbe8a46f827a330b2e592c75ea1198534c4c5f57eabf91543941167e86fd7fbd512fac47c5d8db2a46ad2613f775fae8b8823d3ebe5e9ff67a6a062689ffb48aaed47601f7cce319edff85a943bceda37ed64ff9a3b7ba4ae43efb9668871804e60f4ab05a0f41ed2626db7",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/kMX8SXAXPQBxFymgwWcVkv.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.61.1",
+    "appBuildVersion": "2.0.536",
+    "runtimeVersion": "ef2f1f81c876162ce9967ebbaf6f4fdb667e1b61",
+    "gitCommitHash": "09d27ccfdd35296946115261cb323a464947b2ab",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-30T09:12:09.250Z",
+    "updatedAt": "2025-07-30T09:25:41.447Z",
+    "completedAt": "2025-07-30T09:25:39.891Z",
+    "expirationDate": "2025-08-29T09:12:09.315Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 191,
+      "buildQueueTime": 71809,
+      "buildDuration": 734480
+    }
+  },
+  {
+    "id": "89c5bcbb-81b1-4110-8fda-01057dd0b6de",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/i1JNJJKQZtg1SJcjs9SSph.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/i1JNJJKQZtg1SJcjs9SSph.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.61.1",
+    "appBuildVersion": "466",
+    "runtimeVersion": "867d392df1346b30c803ef8e2cfdbd31dbfd6352",
+    "gitCommitHash": "09d27ccfdd35296946115261cb323a464947b2ab",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-30T08:25:18.461Z",
+    "updatedAt": "2025-07-30T09:04:43.167Z",
+    "completedAt": "2025-07-30T09:04:32.673Z",
+    "expirationDate": "2025-08-29T08:25:18.520Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1013428,
+      "buildQueueTime": 41046,
+      "buildDuration": 1299422
+    }
+  },
+  {
+    "id": "92222fbf-57f3-483b-b835-d91761d1b115",
+    "status": "ERRORED",
+    "platform": "IOS",
+    "error": {
+      "errorCode": "SERVER_ERROR",
+      "message": "The application archive name is missing"
+    },
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/j3C2CsT1vsHS4DLtWkWmji.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/92222fbf-57f3-483b-b835-d91761d1b115?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=543eff131816545aed50eedea588b851994bc3488e0aa44de97ae926956fb3b79156b3f0fa4991cd34d001af42d77b09062ce94812c421d7eea50dc71f2e475f795ecf1fbf8223f0566160152a326cb346ce6ae118b20e3294e6795a6667902411f150683823ff68d4f78d9d001856e069d28888aba846c91ef03500c914d9e91b6257c0cf44c8989826d7309aa8dca1be4e759d3ccd102647dea3f7d9124b2d07c920354a32547714eb3baff670739c82a2fac62fb591844efdb3ba388750ee43a60c15b906e5202edcac3d9104fcc5cba12ac491f62fbf5aee64d754e7859c5bf0397cf228d3a776a518ab6da39439e4b331f1fdd02c051b62abcfc4200f90",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/j3C2CsT1vsHS4DLtWkWmji.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.61.1",
+    "appBuildVersion": "2.0.535",
+    "runtimeVersion": "ef2f1f81c876162ce9967ebbaf6f4fdb667e1b61",
+    "gitCommitHash": "09d27ccfdd35296946115261cb323a464947b2ab",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-30T08:25:07.754Z",
+    "updatedAt": "2025-07-30T08:49:30.331Z",
+    "completedAt": "2025-07-30T08:49:27.185Z",
+    "expirationDate": "2025-08-29T08:25:07.837Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 868887,
+      "buildQueueTime": 51077,
+      "buildDuration": 535308
+    }
+  },
+  {
+    "id": "e8d88798-bd87-4320-a6ef-e398cc68b818",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/uKEpdW1snGAdE6n3yF1EH7.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/uKEpdW1snGAdE6n3yF1EH7.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.61.0",
+    "appBuildVersion": "465",
+    "runtimeVersion": "a65e1ef216896de045e4fee7e259a9e76b5d70cb",
+    "gitCommitHash": "6e1be694536f48f9c9048a4926af898b4b20a792",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-28T14:03:04.786Z",
+    "updatedAt": "2025-07-28T14:39:58.958Z",
+    "completedAt": "2025-07-28T14:39:52.510Z",
+    "expirationDate": "2025-08-27T14:03:05.600Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 895125,
+      "buildQueueTime": 34157,
+      "buildDuration": 1278025
+    }
+  },
+  {
+    "id": "dfc9618f-4fb5-4861-82fa-86634aa4387f",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/tCMdaU8HFhYFZ4Ff21BXcM.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/dfc9618f-4fb5-4861-82fa-86634aa4387f?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=6af0cfad1e3c254907944a9def166b7dc3caac8c0014dc65e65ae7e9bc1333e3413a90c222d6b04eb6e33aadf7adbf572a4719f57643d927789ff719e1a2e00a662160919c287d8903b287c4715ae0b4f1ca4fee9998e05627431a5c9ed98d34329a8fd1e6de3f09fe859154e223da536633bad98e5f1a5bc21c873ab99f785eec623b9c0649e4c51e2db0e7e91c3e53a5fe04c7ea1d94b8fd006b146439dcaf1b738f1825bb361284806ff935e9abfef3afc4927d777de59e28bef8810930f1f68c27e7bd9682c98e174a0a9ef9542ca4bf7e5efaea030994aa9df74cdf472c9aede78fbaa82a19e935a5fdc8ee467bdcf8a79d15569da326945cd23bf407aa",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/tCMdaU8HFhYFZ4Ff21BXcM.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.61.0",
+    "appBuildVersion": "2.0.534",
+    "runtimeVersion": "c545a148a872414257c3b9d2c6fcd71bfdf8f2cc",
+    "gitCommitHash": "6e1be694536f48f9c9048a4926af898b4b20a792",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-28T14:03:03.505Z",
+    "updatedAt": "2025-07-28T14:29:06.534Z",
+    "completedAt": "2025-07-28T14:29:02.831Z",
+    "expirationDate": "2025-08-27T14:03:04.126Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 739516,
+      "buildQueueTime": 70264,
+      "buildDuration": 745359
+    }
+  },
+  {
+    "id": "e791a22e-7371-4f81-ac99-06c27c5066a2",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/uAvXBVuDXe9XxEHLmwDLPC.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/e791a22e-7371-4f81-ac99-06c27c5066a2?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=68ad40104bba5d87f92895d7e8de8c46a628eca17c8a3b33ae44579c39c5114ca10e99e1da7f3db653bd4aff7a9c751d0e88d43895138a63c3fcb9ab4a4a5b102401ee8e18b14507262bdb322470773bfeca8c26a63d6944a6640515b2196577148c3e847def72d8eb909e742a8c67b22834f31828ac571fba1609a402f66a6063c0445eb592ce57c97e22a6c74cbe24dddee73cc3fa85eb6e9f3da3d71830f6a90755275a799817d7085a5dae6b5136d525026bd89746a5f50f48c4dbc4db94ff34b9ac2d50c36a2164365586df1786b11fac9d1a99f72bcd33601108794022ca49c599fff1e5230d5f4ee9f20f80154f8b0442afd433ce0e1ccf408c4df590",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/uAvXBVuDXe9XxEHLmwDLPC.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.58.0",
+    "appBuildVersion": "2.0.533",
+    "runtimeVersion": "959a68dc47b08e19aee63ac7fb90d59f0466e288",
+    "gitCommitHash": "be6251b22609a9f7f1a293d9454765cc8cf225f7",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-22T12:10:49.197Z",
+    "updatedAt": "2025-07-22T12:37:54.316Z",
+    "completedAt": "2025-07-22T12:37:41.578Z",
+    "expirationDate": "2025-08-21T12:10:49.357Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 834599,
+      "buildQueueTime": 46924,
+      "buildDuration": 726663
+    }
+  },
+  {
+    "id": "27dc0d2c-ba1b-4a8e-a201-0818fb517876",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/5VtHc6n47Hwkxppa4t4s17.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/5VtHc6n47Hwkxppa4t4s17.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.58.0",
+    "appBuildVersion": "464",
+    "runtimeVersion": "c4651765f81b976a8b0443553df9a5ce2c614095",
+    "gitCommitHash": "be6251b22609a9f7f1a293d9454765cc8cf225f7",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-22T12:10:10.957Z",
+    "updatedAt": "2025-07-22T12:24:03.524Z",
+    "completedAt": "2025-07-22T12:24:01.672Z",
+    "expirationDate": "2025-08-21T12:10:11.104Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 799,
+      "buildQueueTime": 57572,
+      "buildDuration": 771836
+    }
+  },
+  {
+    "id": "1c1e9646-ff4e-4f18-8a3e-8a3aba7f61a6",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/4toS115Xa54wpX1KYDDpgL.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/1c1e9646-ff4e-4f18-8a3e-8a3aba7f61a6?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=87f0b7c445f1aa41426ca0ba80e906933ef6299aa5a1f897af80c0347fc5db9fa30504705d0412524b6ef64dda9c1f5cf8d429e4c8e0a24bb8c3f94b01c62b820b0c86d8cd1002a778dc01b35d966bece51ea5bdd907c43896a112241b87a2577d21b0793bd066723f1c5b09d31ea4a17a2a705e95350ce9fd9f4577381cb9b0fa4809e4236be116f79cbbe62a96a0c7c19958c9643b14b867e682deae0361237940f6f14ce79a2045d01a23ec5fc839e45ba106d92829a89ab2c91933149ac693ed8e918620c312d74b0c687b78fc714d293001f595a3d9e1883b5b9de1a101613841700cac4352350d8fcd751d95afa15848b3a76ba85be034bc34fc97ef54",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/4toS115Xa54wpX1KYDDpgL.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.57.0",
+    "appBuildVersion": "2.0.532",
+    "runtimeVersion": "24c30e58e855f83c7c4de27c49f36ae41193a546",
+    "gitCommitHash": "236af5c64ee87ad04d07369387ede92bd7f140d7",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-18T16:13:41.096Z",
+    "updatedAt": "2025-07-18T16:33:46.534Z",
+    "completedAt": "2025-07-18T16:33:41.435Z",
+    "expirationDate": "2025-08-17T16:13:41.169Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 408040,
+      "buildQueueTime": 49744,
+      "buildDuration": 738410
+    }
+  },
+  {
+    "id": "4be16c3f-538c-4884-a609-c41f05daf83d",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/ansS8B64gyPBNkBoviFtVF.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/ansS8B64gyPBNkBoviFtVF.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.57.0",
+    "appBuildVersion": "463",
+    "runtimeVersion": "352d0dd3762d7cbdfc7a8cafd5aff5bcb7c6f9f7",
+    "gitCommitHash": "236af5c64ee87ad04d07369387ede92bd7f140d7",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-18T16:13:41.027Z",
+    "updatedAt": "2025-07-18T16:44:34.097Z",
+    "completedAt": "2025-07-18T16:44:21.509Z",
+    "expirationDate": "2025-08-17T16:13:41.101Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1035535,
+      "buildQueueTime": 36937,
+      "buildDuration": 767421
+    }
+  },
+  {
+    "id": "f0390b5f-287c-4dc5-a2d0-178254cf42d3",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/vEuPtnPDrUCUmL9pvtWdoF.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/vEuPtnPDrUCUmL9pvtWdoF.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.56.0",
+    "appBuildVersion": "462",
+    "runtimeVersion": "392c7425cb2023c9bab641e600c972d471fa02a8",
+    "gitCommitHash": "f566d429906352e3930e3d1f0fb4aca83cd05219",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-15T07:59:55.192Z",
+    "updatedAt": "2025-07-15T09:11:04.486Z",
+    "completedAt": "2025-07-15T09:10:52.644Z",
+    "expirationDate": "2025-08-14T07:59:55.217Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 3455612,
+      "buildQueueTime": 31533,
+      "buildDuration": 769865
+    }
+  },
+  {
+    "id": "c3790e1a-e6b9-48db-ba47-34fe6870971a",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/q8ZD2gbVgp5baPaoyNk129.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/c3790e1a-e6b9-48db-ba47-34fe6870971a?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=5b4169aa60bcab742198d42e2ea8f668cf044da81c4c605a0e7ae884c06c9754d9fb57562b3f1564508c7230c0e1b2afc936e79edb6a6b39d49f271b0ec87a9c1474d9050969aa4c2e9a4dc761f303153f07a937d7548e0274601b08d8f7a640de3e7a2824a85dbe9cab8f800137c776cedfa561f42992d353cbfd3615f25c1bb9664ea1c9727013c648f2ea8fc2b7f4e17d35c90c7b9f9c3aed1973f9d7f6342cb131439142938a376e5415fb166339b29c52c614b5162ab44d7339945ea96f3247b3d93cc339d11c6030e7305a55b3b752341f37e090fb0d26a4d5bae6f68c30a298a3343b4dd7d1048a320e540801491b8569ed350a978ed1bd3ffaa33814",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/q8ZD2gbVgp5baPaoyNk129.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.56.0",
+    "appBuildVersion": "2.0.531",
+    "runtimeVersion": "097dcf395e12d5f7da6658b7be883cf1b0055595",
+    "gitCommitHash": "f566d429906352e3930e3d1f0fb4aca83cd05219",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-15T07:59:53.495Z",
+    "updatedAt": "2025-07-15T09:01:02.829Z",
+    "completedAt": "2025-07-15T09:00:56.071Z",
+    "expirationDate": "2025-08-14T07:59:53.553Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 2873003,
+      "buildQueueTime": 51895,
+      "buildDuration": 733550
+    }
+  },
+  {
+    "id": "fb5dbb0c-f7a9-4ca2-a1eb-5f13afabd1c7",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/x3iL3TcpadMWgax31H7KxV.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/fb5dbb0c-f7a9-4ca2-a1eb-5f13afabd1c7?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=8df98a8ea9c5b77f276360c2d31198b613b14392743e722ef470a55411751d82d79d3764fdace760647b34aabbb917e95993e034b65b1021c1579a33828189f575dddf10bc0b448c690a94f758c9cbd08dc0cd736500f06f81037286fd5916cf3e7b077d11e46c6fbf3f900169a86cdfd5284dc1c03cd8ba7b5a35acef9c5ba532a45c3e20080f7a85c0951d45559a9a3ca436a898416d9bc65c29d18f6bc3d9c8bb1bf1e1484778d102dcd942f8cbc2ac4bd1d9dcd8d6813ed4ed972aa4292f85bd9b62bc0e0a8abd659313d62c4d5c6d0cc0e770ded8b9e8b7033929c99c95010c1a18683cf81c6248b275a0dc59cfed414c7245ece02ba178a7f6a43da9d1",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/x3iL3TcpadMWgax31H7KxV.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.56.0",
+    "appBuildVersion": "2.0.530",
+    "runtimeVersion": "097dcf395e12d5f7da6658b7be883cf1b0055595",
+    "gitCommitHash": "67be5281ad979395da44cf9bb8ee2ab7918ff198",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-15T07:30:57.927Z",
+    "updatedAt": "2025-07-15T08:42:33.714Z",
+    "completedAt": "2025-07-15T08:42:18.438Z",
+    "expirationDate": "2025-08-14T07:30:57.959Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 3490743,
+      "buildQueueTime": 48323,
+      "buildDuration": 737276
+    }
+  },
+  {
+    "id": "81370f92-6707-4f8b-9ce5-19798d4369db",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/gXs5KH2DR4eLTLyAq23SKV.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/gXs5KH2DR4eLTLyAq23SKV.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.56.0",
+    "appBuildVersion": "461",
+    "runtimeVersion": "392c7425cb2023c9bab641e600c972d471fa02a8",
+    "gitCommitHash": "67be5281ad979395da44cf9bb8ee2ab7918ff198",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-15T07:30:52.229Z",
+    "updatedAt": "2025-07-15T08:29:30.805Z",
+    "completedAt": "2025-07-15T08:29:05.612Z",
+    "expirationDate": "2025-08-14T07:30:52.272Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 2661278,
+      "buildQueueTime": 40747,
+      "buildDuration": 791051
+    }
+  },
+  {
+    "id": "c0f4cfbe-4e6d-4ca5-b7a6-a12483245067",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/pPYfu6kHEZkQcNKYrYidDe.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/pPYfu6kHEZkQcNKYrYidDe.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.56.0",
+    "appBuildVersion": "460",
+    "runtimeVersion": "392c7425cb2023c9bab641e600c972d471fa02a8",
+    "gitCommitHash": "124647c197398e2b4ee7cdc2650524eb6a50a7a8",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-15T07:25:50.105Z",
+    "updatedAt": "2025-07-15T08:12:31.997Z",
+    "completedAt": "2025-07-15T08:12:26.021Z",
+    "expirationDate": "2025-08-14T07:25:50.145Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1513904,
+      "buildQueueTime": 31078,
+      "buildDuration": 1250632
+    }
+  },
+  {
+    "id": "438608b7-85c6-489f-9268-8b3f152e25d7",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/9kBn3FufDfbqgQLPrRr5Z6.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/438608b7-85c6-489f-9268-8b3f152e25d7?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=6394febb959338cc2fbbb9d23a977ca8d5b82fca29c4382bc1391d0427537cb03ab6ac1e26c5d359d830552278ba88314068362074bf16464eef99275a2cca6bc05725e96f9c77f16367d97c28997f6492929d199a322bd3970c9fd50683a55563e5cb6ab826e0d1faaba48350d832957dec594e287bfd1c741a6a03affb77ce7aae0a433506181ffde9f1c8c8b4262e81809b5143912b6acdb295468efb70338f46039a1c7713f2e9c624d97632b62e0cadd72a97a31642be277cbb0fa338e681dea7cb42d99abcc34bb5d9ff7649ba0d2487bc5e2fc777c3c9bcb1035f1dba09aedc6cd3b8131d6e38139b6b62c15c4efa83469247b4c996f115d03ab371ec",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/9kBn3FufDfbqgQLPrRr5Z6.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.56.0",
+    "appBuildVersion": "2.0.529",
+    "runtimeVersion": "097dcf395e12d5f7da6658b7be883cf1b0055595",
+    "gitCommitHash": "124647c197398e2b4ee7cdc2650524eb6a50a7a8",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-15T07:25:45.153Z",
+    "updatedAt": "2025-07-15T07:50:54.805Z",
+    "completedAt": "2025-07-15T07:50:51.776Z",
+    "expirationDate": "2025-08-14T07:25:45.241Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 721447,
+      "buildQueueTime": 51540,
+      "buildDuration": 729463
+    }
+  },
+  {
+    "id": "9c2210a7-1283-4a1a-8712-6e9fe1a4905a",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/kheQP9pdLogHduXauawFbs.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/9c2210a7-1283-4a1a-8712-6e9fe1a4905a?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=1024d23049f88d987ee1f5bd14a1390e9cd290e4ea625f10b81e3109b4fbf0b4e403bfc81784a7ba9e7d1b4bd7fcb6b50305c1070f6d29c6cd36e4523d30f48dfec5d7efff9d83e697639967442e1ffce3d994d66ed6f8f270e226a062a23f720963f9654ddacfa6de6bd145df8790af5f444a0d2ff953dd79e4a9cd569e4eae4aa8dca82b0654c7242fe6d6bb08905d01c121c5bb560a6745470d6c2d6c2b766c314d65ad6443a8a738b4e797e0f77cb789682c21b12252f08dffdaef7b9ce2a8f7854976c1a8f0a02ab8dcdfefe3050a19d8a93484c5f0870c13875e11fcd6cf0217c7336ff7013e96f5a035e14fc8c5da80e1bd216277847021e045e5bfc5",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/kheQP9pdLogHduXauawFbs.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.56.0",
+    "appBuildVersion": "2.0.528",
+    "runtimeVersion": "097dcf395e12d5f7da6658b7be883cf1b0055595",
+    "gitCommitHash": "4ac9e6313ff21c70f5ea3e6d093e351ab8f5bf44",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-14T15:09:52.131Z",
+    "updatedAt": "2025-07-14T15:46:30.667Z",
+    "completedAt": "2025-07-14T15:46:23.052Z",
+    "expirationDate": "2025-08-13T15:09:52.204Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1381499,
+      "buildQueueTime": 64022,
+      "buildDuration": 741251
+    }
+  },
+  {
+    "id": "7791d92b-286e-4814-a0ec-6e70749c5610",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/fLnoxg7vtFnWSgSpmC39ao.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/fLnoxg7vtFnWSgSpmC39ao.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.56.0",
+    "appBuildVersion": "459",
+    "runtimeVersion": "392c7425cb2023c9bab641e600c972d471fa02a8",
+    "gitCommitHash": "4ac9e6313ff21c70f5ea3e6d093e351ab8f5bf44",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-14T15:09:44.658Z",
+    "updatedAt": "2025-07-14T15:41:14.269Z",
+    "completedAt": "2025-07-14T15:41:11.446Z",
+    "expirationDate": "2025-08-13T15:09:44.769Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1067555,
+      "buildQueueTime": 33692,
+      "buildDuration": 784990
+    }
+  },
+  {
+    "id": "1e73005d-0204-4ea5-9d94-0a3aac79b5b9",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/4L5D8gVE2UYjB5N86MdanB.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/1e73005d-0204-4ea5-9d94-0a3aac79b5b9?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=90b323cff6d0c00ec946e471f2f283483b11f1d90536932044742cf45fb8b7978609232235303b462786467d67f6c3d21e99cd654dfb38fd8b0124f533712d8db9bfc6d2c38c48cf9261d320d340d266bdd003edf13c48edb0d65006e47f86bc7354fa389089562bc8cf273f8b22b31d617052f9b089f4a0e6a5734f4dd6e15ded1c4d0dd3f034b3e30c7add9bdfcbb5220d5941b99d68d2e354d29f5d043d890c4910b0a749fe0a271cc349978b16477e07bc699aa1fa5c7fb0f5c1710e61d6eb443732bdbedf4ff69b385e9f72e596b8199a9a770cc6c37f95fa3f4771e46bd97343cda6fba2f12c2ca40cbfc44245b6903ceaa725f7e19be7d9f0c95525b6",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/4L5D8gVE2UYjB5N86MdanB.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.56.0",
+    "appBuildVersion": "2.0.527",
+    "runtimeVersion": "097dcf395e12d5f7da6658b7be883cf1b0055595",
+    "gitCommitHash": "4ac9e6313ff21c70f5ea3e6d093e351ab8f5bf44",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-11T14:24:15.644Z",
+    "updatedAt": "2025-07-11T15:01:39.069Z",
+    "completedAt": "2025-07-11T15:01:36.283Z",
+    "expirationDate": "2025-08-10T14:24:15.684Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1443344,
+      "buildQueueTime": 56284,
+      "buildDuration": 736870
+    }
+  },
+  {
+    "id": "6a16713f-73af-4128-bd1a-3733fac36201",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/e6NVSHXEdLXGFH2GdJhMXp.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/e6NVSHXEdLXGFH2GdJhMXp.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.56.0",
+    "appBuildVersion": "458",
+    "runtimeVersion": "392c7425cb2023c9bab641e600c972d471fa02a8",
+    "gitCommitHash": "4ac9e6313ff21c70f5ea3e6d093e351ab8f5bf44",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-11T14:24:13.117Z",
+    "updatedAt": "2025-07-11T15:04:03.688Z",
+    "completedAt": "2025-07-11T15:03:58.697Z",
+    "expirationDate": "2025-08-10T14:24:13.196Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1061956,
+      "buildQueueTime": 36040,
+      "buildDuration": 1287245
+    }
+  },
+  {
+    "id": "86186ee3-d73c-47f7-bb6d-25a8bb2b31be",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/hypoyuvym5hYiNniwrPYuw.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/86186ee3-d73c-47f7-bb6d-25a8bb2b31be?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=58c1d62e299f207cec7c7b6ce3c768596a1c892a0f83629c03694e3992c9626b962d4dd87c7f4a16a14e17c443609c3f0f841756b2a1caea9ef4934e782883bf89f1428fe981fb369627f55a60c316cd6e4c8af1e5bdaf8908da9f0b5cabdba2198a1f9863a39e945fbd2ac62472e828cbf62fe780a0bff8a03b32e79fb6f484fc4a63abea3172b444212489b8bf583d701151afe03b87ed4f5ae4aae7565acef7d13615e733c3b385577ee1d1e3ec93c46bdae73b95f2b752dc884a0271714490e2c916c3871b5a1e1041fe124145202cc85d525953b620605cc556c51c673dc56d8048bd7f16a443467904c01ebaa5cb55282cdd4a6405f7e3f6b3875c1ae8",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/hypoyuvym5hYiNniwrPYuw.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.55.1",
+    "appBuildVersion": "2.0.526",
+    "runtimeVersion": "3fb0d19e89ab9f1ff3a1c8b161ffcb58e0627909",
+    "gitCommitHash": "72d73774c3e1409087b38ffc8bc3cc77f280fd48",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-10T13:35:26.119Z",
+    "updatedAt": "2025-07-10T14:19:50.652Z",
+    "completedAt": "2025-07-10T14:19:41.838Z",
+    "expirationDate": "2025-08-09T13:35:26.421Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1879488,
+      "buildQueueTime": 46167,
+      "buildDuration": 725910
+    }
+  },
+  {
+    "id": "5ddc1b7d-4f73-4f5c-8177-9a076471f40c",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/cAeszxYVntaPzQpUfXKKDW.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/cAeszxYVntaPzQpUfXKKDW.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.55.1",
+    "appBuildVersion": "457",
+    "runtimeVersion": "304247a9e0ab5a71e974f7a649fe467870c9e7bc",
+    "gitCommitHash": "72d73774c3e1409087b38ffc8bc3cc77f280fd48",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-10T13:35:19.781Z",
+    "updatedAt": "2025-07-10T14:17:59.119Z",
+    "completedAt": "2025-07-10T14:17:49.084Z",
+    "expirationDate": "2025-08-09T13:35:19.859Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1728234,
+      "buildQueueTime": 62280,
+      "buildDuration": 758460
+    }
+  },
+  {
+    "id": "40ef70c8-996a-42b3-b864-c0b301e39f64",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/925cwgj7rf1MhFM4hhf8iw.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/40ef70c8-996a-42b3-b864-c0b301e39f64?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=932fbc3bfe6b3f4f1367c37f596fd683bfe4d17130a85176c46ebdb2335c666ef1a696d02f8cdf2c73d1a0e2ba6f82cda7c73e1eec2d7a7df6fffb3a37131f85fafee79c20fc6b9cc04c5b8f6ee0a797c311fd6afdb0d6d8d30c5dd691b292b4e2d2bc452d443d75165378fd193aa821ef2380aec7db9c3fa2268bc3e145b5252c12654ff13666f0785dde891ddfc644d420fece584302a679dab3b5df23a95b9d0dddbe832bbb18590d9a27cf7d33ba6c8d5db71d73b5c096f7774ad3c9745725b282abbcf6f8fd754500a3d4abaf6c973d32df50f59b09b2817c6b714bb0e08161c4a5f30d947f753754ece56cda44109245be0d9c5907ca6c4d2385c787d6",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/925cwgj7rf1MhFM4hhf8iw.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.55.1",
+    "appBuildVersion": "2.0.525",
+    "runtimeVersion": "3fb0d19e89ab9f1ff3a1c8b161ffcb58e0627909",
+    "gitCommitHash": "a492c79c75f8fcf4fcd1a584b82c6bdc7212a801",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-10T13:10:21.745Z",
+    "updatedAt": "2025-07-10T13:41:13.844Z",
+    "completedAt": "2025-07-10T13:41:04.139Z",
+    "expirationDate": "2025-08-09T13:10:21.885Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1040813,
+      "buildQueueTime": 58931,
+      "buildDuration": 738415
+    }
+  },
+  {
+    "id": "a89ae217-0275-4c81-b3ef-9cca76bc498a",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/mPyGEwzs4ppGRwGqpJ5pcQ.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/mPyGEwzs4ppGRwGqpJ5pcQ.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.55.1",
+    "appBuildVersion": "456",
+    "runtimeVersion": "304247a9e0ab5a71e974f7a649fe467870c9e7bc",
+    "gitCommitHash": "a492c79c75f8fcf4fcd1a584b82c6bdc7212a801",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-10T13:10:13.231Z",
+    "updatedAt": "2025-07-10T13:45:54.870Z",
+    "completedAt": "2025-07-10T13:45:48.484Z",
+    "expirationDate": "2025-08-09T13:10:13.307Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 858801,
+      "buildQueueTime": 36568,
+      "buildDuration": 1239603
+    }
+  },
+  {
+    "id": "105e2f06-93b6-45fa-8afd-4eaf69b1576e",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/32efdCF3FgfGVHhad9XvkU.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/105e2f06-93b6-45fa-8afd-4eaf69b1576e?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=10d53c8652ec6125f7398c2eb00e4fdc10131a5f2aae63c45f97fb2b4859f22f439fb2eef5f66e62b1c2af29795fab2db4880b0325cd50aef4f685900b84bb6308cca38f8db46af71b7f700e58cdba6256edda7e103ef3b1bec574ec8f19ae63d50c3d9572ff93b6733f6493991ee27896405d9d11f42e2acbc12bb2b18df8c9b310662c3552cf4b000ce412baee1c8e9420a965214239bd2eeec38e6e8ed86651a324224bb66a0ea768608a4c9b8333ad39faee0ae4a8430f03eabcd04979675ed59959f71b2761fe04a1f44609ee777f99d9d1bcdd46ada9c549e41373be323dd4203c20a5c0e63d8fe9fa8bd22c38f9bfebc477b7dc9795279886b1acc24f",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/32efdCF3FgfGVHhad9XvkU.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.55.0",
+    "appBuildVersion": "2.0.524",
+    "runtimeVersion": "a7d32af76f7e2725be1469df200372bcf0519ac1",
+    "gitCommitHash": "572d7e249798e3770a7cda1cde6bb4c1daadbbb2",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-02T09:43:36.458Z",
+    "updatedAt": "2025-07-02T10:21:09.447Z",
+    "completedAt": "2025-07-02T10:21:04.780Z",
+    "expirationDate": "2025-08-01T09:43:36.513Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1449625,
+      "buildQueueTime": 54653,
+      "buildDuration": 739845
+    }
+  },
+  {
+    "id": "576afb27-dcd3-4839-8239-ec30fec2227c",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/bN6ucWqKPxhGC6A7d5cHEC.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/bN6ucWqKPxhGC6A7d5cHEC.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.55.0",
+    "appBuildVersion": "455",
+    "runtimeVersion": "8fa60fe0d0acd947cdcdda135bc31c78210309c3",
+    "gitCommitHash": "572d7e249798e3770a7cda1cde6bb4c1daadbbb2",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-07-02T09:43:30.355Z",
+    "updatedAt": "2025-07-02T10:24:04.261Z",
+    "completedAt": "2025-07-02T10:23:58.177Z",
+    "expirationDate": "2025-08-01T09:43:30.460Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1015195,
+      "buildQueueTime": 60010,
+      "buildDuration": 1352275
+    }
+  },
+  {
+    "id": "c0a96672-9586-4484-bc24-2573b49b73fe",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/pMRTcFcQrw67pbuqGZojbS.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/c0a96672-9586-4484-bc24-2573b49b73fe?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=2d7efeab3ce583476b21414704b97c467e8104e8b1ff1ca942e2a869df365bfecd2ac01ff27b244b856d6b395edd82cc19750ce5266b42aeb236c2c14a6b245b78124e4ecb0d5106892f4d318b2e03f94cf187293c6f5f760aa5f75db26a45322c2957ef074a4ebe126d9bdab12e01e83a955845973e176a4fa7c950f0c981a854ce5ac6c9d89b9417846627099e3ec73cd056933392beed17fc4d0fcb0d0e1c5c1475d3c23845be926405a5574a3a9ce70f49e1b02edcc8c41b1e3559689e5ba5cf374a2f6e2a26c0dcdeefd85916749ceb7736ec27d937160f3486ab70743a14125e479416ef464c9c9a340551abb1042acbf50fdbb708c3621dc08243974a",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/pMRTcFcQrw67pbuqGZojbS.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.5",
+    "appBuildVersion": "2.0.523",
+    "runtimeVersion": "4619fb082e6b1726b705ef53af9e6233e553e3ee",
+    "gitCommitHash": "dfc0b214b2b26c745af55d833adc69a242ba9158",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-30T11:49:41.247Z",
+    "updatedAt": "2025-06-30T12:25:10.122Z",
+    "completedAt": "2025-06-30T12:25:04.798Z",
+    "expirationDate": "2025-07-30T11:49:41.329Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1362775,
+      "buildQueueTime": 47753,
+      "buildDuration": 708807
+    }
+  },
+  {
+    "id": "813a756f-241a-4c12-8dae-a22a29a3d895",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/gXxAxzKht6zd4QqQhEJurc.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/gXxAxzKht6zd4QqQhEJurc.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.5",
+    "appBuildVersion": "454",
+    "runtimeVersion": "67cf378180c6015827d5cb354b40e977a4395850",
+    "gitCommitHash": "dfc0b214b2b26c745af55d833adc69a242ba9158",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-30T11:49:38.641Z",
+    "updatedAt": "2025-06-30T12:31:04.580Z",
+    "completedAt": "2025-06-30T12:30:55.881Z",
+    "expirationDate": "2025-07-30T11:49:38.706Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1053637,
+      "buildQueueTime": 30792,
+      "buildDuration": 1392410
+    }
+  },
+  {
+    "id": "55608d0a-4006-4922-9653-fa9393dbd165",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/bxtL4k7pj4R2Sduuy35oDK.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/55608d0a-4006-4922-9653-fa9393dbd165?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=6176631f97a4b7f3d33d60f8a9b6b853d6bfb6a928aa01abb2eead0fc0364f1e522d71953248103f9970322fde7548e71ee74cedfa0258985db1a8abf2215c065f0608cc1b5c5a1726aa4d46168adb9836f6c46895c9c71b262fbfc18b604f33a0eda4340c97a0ec3c70d98874e58e3d499ad6790ea9478aeea33aa629424267cbf7d83fc6c4948003d909b382639af56cb5559bd84762d451d84cf2e70d0015d961726d4109e0d25fe1ddf0b87163c8527c02035f9c0475adecbad9e892bf8d6d04ed74967e9321fd6080eadd0db59edf2fbb1e85a34a3bcb7ee5e15741d9b98f63b951ec67a5a01da05e975815cf20e8eef65fc4040a9d6d5c10e7159a580a",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/bxtL4k7pj4R2Sduuy35oDK.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.2",
+    "appBuildVersion": "2.0.522",
+    "runtimeVersion": "927576cdc8e5aa359b020ad16f20167b72379ebd",
+    "gitCommitHash": "983c09502351c54974ad13fd8e80b03126af9e78",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-26T05:26:19.263Z",
+    "updatedAt": "2025-06-26T06:02:18.402Z",
+    "completedAt": "2025-06-26T06:02:07.902Z",
+    "expirationDate": "2025-07-26T05:26:19.327Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1359787,
+      "buildQueueTime": 49993,
+      "buildDuration": 734725
+    }
+  },
+  {
+    "id": "f1461523-6f03-4e4d-bd55-88e736f24a46",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/vN2nNZ7Bq3Ji5ZGqkv5uZu.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/vN2nNZ7Bq3Ji5ZGqkv5uZu.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.2",
+    "appBuildVersion": "453",
+    "runtimeVersion": "e1614c364b3a71edeacf16917c8099fdfb1e9540",
+    "gitCommitHash": "983c09502351c54974ad13fd8e80b03126af9e78",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-26T05:26:16.594Z",
+    "updatedAt": "2025-06-26T06:05:15.017Z",
+    "completedAt": "2025-06-26T06:05:10.604Z",
+    "expirationDate": "2025-07-26T05:26:16.661Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1024499,
+      "buildQueueTime": 34899,
+      "buildDuration": 1274254
+    }
+  },
+  {
+    "id": "4a6d9dc5-93a0-4c3d-9dd0-9e256ef59840",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/ac4xPpgYUxuVZ8TKJw9uJL.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/4a6d9dc5-93a0-4c3d-9dd0-9e256ef59840?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=2848691f00cade42f5057dec3e06bc94048e9428a4cc511dc632647d2b61a9802d17cafb652ee8f5fed1ce1003df98ffbed35ce8acb429d30a905563836dba27f9b054be6bea5a73f8c2edac45e87ef6c1044ec78e81c3782cd80966ce404adcb813bdd6586c78b5bc4faf2158ee1308321e993adf44388fba2f98efa0e201244870c951388bd2bd893bfa2df1e073b8a9afc049e1fc158d5b59de58cae9ef412506df7e17957676adaff36b0e226d2c52f4705f172c3be5c1b935fe1a3e99afd46af4f0530e73e483e1f5b8a60f22afe88e49d9f5eb5108253fd3163d7dffcdf3fd9f41cd0a231cfc812a2eab3846541b1de3e6d023cf916262361f0d64410a",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/ac4xPpgYUxuVZ8TKJw9uJL.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.2",
+    "appBuildVersion": "2.0.521",
+    "runtimeVersion": "927576cdc8e5aa359b020ad16f20167b72379ebd",
+    "gitCommitHash": "25318f392c5ebb1e82e95d4bf9f986d4116a4724",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-23T15:08:46.745Z",
+    "updatedAt": "2025-06-23T15:47:38.196Z",
+    "completedAt": "2025-06-23T15:47:29.446Z",
+    "expirationDate": "2025-07-23T15:08:46.815Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1511125,
+      "buildQueueTime": 74804,
+      "buildDuration": 732576
+    }
+  },
+  {
+    "id": "86a970cc-9040-4d62-b590-49c7a2ec02df",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/hCsFQudvju2dBAk1WSLGL8.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/hCsFQudvju2dBAk1WSLGL8.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.2",
+    "appBuildVersion": "452",
+    "runtimeVersion": "e1614c364b3a71edeacf16917c8099fdfb1e9540",
+    "gitCommitHash": "25318f392c5ebb1e82e95d4bf9f986d4116a4724",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-23T15:08:38.198Z",
+    "updatedAt": "2025-06-23T15:49:43.255Z",
+    "completedAt": "2025-06-23T15:49:31.622Z",
+    "expirationDate": "2025-07-23T15:08:38.273Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1079596,
+      "buildQueueTime": 40025,
+      "buildDuration": 1333486
+    }
+  },
+  {
+    "id": "c0ad8198-793f-4c50-bb45-3687efc61db2",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/pMYxD4LxcoVstjDnhxydk5.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/pMYxD4LxcoVstjDnhxydk5.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.2",
+    "appBuildVersion": "451",
+    "runtimeVersion": "e1614c364b3a71edeacf16917c8099fdfb1e9540",
+    "gitCommitHash": "908a0021c3da1b527162d0593a6420c049f4750a",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-19T11:01:38.731Z",
+    "updatedAt": "2025-08-01T08:07:19.625Z",
+    "completedAt": "2025-06-19T11:47:39.912Z",
+    "expirationDate": "2025-07-19T11:01:38.815Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1428839,
+      "buildQueueTime": 27687,
+      "buildDuration": 1304273
+    }
+  },
+  {
+    "id": "204235d2-f5b9-4d58-b2e1-60f31979b078",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/4Z3gGGw7Si7AGGzkGwqFaj.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/204235d2-f5b9-4d58-b2e1-60f31979b078?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=8622684e08eac13efe6f8fb88fcbcce8b1a37db525ac6deaaf0b2e970cee80a80b4cbfc94bf1e514bfae5d7ff4f00b54df573dd6dfa6ed6f749f36c27e1808ca5b294426103e13bbe9b6c77604c5e05e9057ddb59af213093afc574b33039b8f537ef9e645e10d4c97d85c7531dca33bab1d2b563695d124dbd449bc2c9c3898b3b9fd2b2731f6a48adec109922cb544afca90d016847dc296079812a7efee5bbf7c2dd3da962f2508266b465f104cad011e07e2dde2c034d9ce964d2a2e3375080f180bc1f208d3a95e61e0f9ac68e0cf2302e8ef204046c0783f5f43b6d30f238773af8b96f91c6b2439d2921500a7745816b1be341d185f455b22aca3a4f1",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/4Z3gGGw7Si7AGGzkGwqFaj.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.2",
+    "appBuildVersion": "2.0.520",
+    "runtimeVersion": "927576cdc8e5aa359b020ad16f20167b72379ebd",
+    "gitCommitHash": "908a0021c3da1b527162d0593a6420c049f4750a",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-19T11:01:32.611Z",
+    "updatedAt": "2025-06-19T11:26:24.839Z",
+    "completedAt": "2025-06-19T11:26:12.985Z",
+    "expirationDate": "2025-07-19T11:01:32.685Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 695669,
+      "buildQueueTime": 46686,
+      "buildDuration": 733856
+    }
+  },
+  {
+    "id": "5e8ff319-b8e7-4037-9ac7-7ea6b0881f25",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/cFghiENeXTFsAkpV4UXdwR.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/5e8ff319-b8e7-4037-9ac7-7ea6b0881f25?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=575b3d92871e23dbc32c5ccb00443fc0c43c7c701d888ebc00cde70d7441c7a62bcfba6128307a0e527fca469ed56b745ff10ea1b70caf977b55132052cb795df208f140b2e909f4e4608326a1e01ab6ec3e9c978ade4080dc1cecefe291ed4e1936eb5a3cdc05c44f58c10f892d1f8192feb011c17457c0628e45adb5c6e283a5445afb396fca594f0221685e0690d8341fa7de68963698d5139e257a6be0d47bdfc0e607386f6c36a46244adc1af450996ee96d199cf7470d36ba9b12e2d7f3c0108906ddae6aec10f2cf462beb71d7532bfdc21f2e670b18cb4582793492620fc6750e548f533b7b2e95052a87b91dce2afea0be6fc74ea30d689dcf2b02d",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/cFghiENeXTFsAkpV4UXdwR.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.1",
+    "appBuildVersion": "2.0.519",
+    "runtimeVersion": "350becd05b56ea690e551f04bf68daf43256b5d9",
+    "gitCommitHash": "c2c4b61d072c7c4b2f660283951b41ee10b60649",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-16T15:09:20.493Z",
+    "updatedAt": "2025-07-31T21:53:22.295Z",
+    "completedAt": "2025-06-16T15:47:01.672Z",
+    "expirationDate": "2025-07-16T15:09:20.597Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1461319,
+      "buildQueueTime": 59006,
+      "buildDuration": 736642
+    }
+  },
+  {
+    "id": "0b5628bc-7824-499c-a644-5f36f7889277",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/2pcdFCE9PXphYcmLtBHFDz.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/2pcdFCE9PXphYcmLtBHFDz.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.1",
+    "appBuildVersion": "450",
+    "runtimeVersion": "3e022cb93d5107e0def1239feb26e35a196f4a24",
+    "gitCommitHash": "c2c4b61d072c7c4b2f660283951b41ee10b60649",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-16T15:09:11.933Z",
+    "updatedAt": "2025-08-01T05:53:20.036Z",
+    "completedAt": "2025-06-16T15:49:22.121Z",
+    "expirationDate": "2025-07-16T15:09:12.024Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1064869,
+      "buildQueueTime": 65313,
+      "buildDuration": 1279684
+    }
+  },
+  {
+    "id": "36857ec2-23a2-4489-a4c6-a839d45d2837",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/7JugVNsx3R8o698C9822iz.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/36857ec2-23a2-4489-a4c6-a839d45d2837?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=19d544ad061947104eaca922b33405bca5d50e7235bfd5183b9b4776dda50ec60740f0fc606c6b072a04eb32855faa9d71d8325ec4c4a4a5cbbe8434e06293cd07c9d9ffa35c9ddde9edb6803b416cb7fed2a940735b0ca61a09792382bc25ea750327c3feb6020d8c848a9953c5426ef8149012a146651ae9ae886f14c9b642e006d2771b188f52d889c3103354a4ca763869557f578a75e68595dc10b6faa7bde8f63595c958ea6b4cf90fdac18da8c9bdbf751247b72a57b72b712ea7aafa42246212a3e68e072bc2a365aa693e5c4a359c600347be0c650d3c1801ec0035c13f79d9e16f74334ff687795c1f104399b59dfd5d9faae07fc598783d347ffe",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/7JugVNsx3R8o698C9822iz.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.0",
+    "appBuildVersion": "2.0.518",
+    "runtimeVersion": "143f75068e92399356d03c3140fe4f7dffc2daa7",
+    "gitCommitHash": "4cb585e56681969a8c45dfaf3a3dbf920ea88188",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-16T10:17:35.118Z",
+    "updatedAt": "2025-07-31T21:32:28.210Z",
+    "completedAt": "2025-06-16T11:16:29.502Z",
+    "expirationDate": "2025-07-16T10:17:35.271Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 2742120,
+      "buildQueueTime": 50871,
+      "buildDuration": 737262
+    }
+  },
+  {
+    "id": "80f258d9-4231-488c-a9ca-5c14c3ee6490",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/gVwzNJoGXyjG7TPkpLQFGC.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/gVwzNJoGXyjG7TPkpLQFGC.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.54.0",
+    "appBuildVersion": "449",
+    "runtimeVersion": "cbb859a5da667602d6e1504d5004bf4c04d6a6f2",
+    "gitCommitHash": "4cb585e56681969a8c45dfaf3a3dbf920ea88188",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-16T10:17:33.310Z",
+    "updatedAt": "2025-06-16T11:24:53.804Z",
+    "completedAt": "2025-06-16T11:24:49.689Z",
+    "expirationDate": "2025-07-16T10:17:33.374Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 2743928,
+      "buildQueueTime": 39937,
+      "buildDuration": 1252273
+    }
+  },
+  {
+    "id": "a09abe45-5b14-43df-bd4f-eeb90dada124",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/kQggppeoLQJ4akGr1ECoEQ.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/a09abe45-5b14-43df-bd4f-eeb90dada124?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=7c04f8be7c5c939f169a4f1609e29001b93c8c22dc3bd872c88e870b7b4434f67b975337fec9eea3cf982a18b711cc50a514729e050292207b450136a1ae12e241f0654f53cc75419e9714768620ac64e62443ffe733720eba755c01f91ad850fec562366f980ab2e11c1badaa8b1ceaaa7edfcf29801b0ab9d8f8203a62c34590be37576ef3bb26098c98e915f4802ac9641db6d2a531aa2fd81d2da5dde6089383f44be7ef59c754b65a75c553b6f671081de98ba1b81f3bdd7974a6382ad9f449c5f918611e567bab090418db09be83777554cc6544e685af256e078dc28f52f9ae99dc575b4a919b39fd016cc29477bbf61ccf95930c0babebc0a3f25aa7",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/kQggppeoLQJ4akGr1ECoEQ.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.53.0",
+    "appBuildVersion": "2.0.517",
+    "runtimeVersion": "20fed2064d77a6ea20cd315789255b55ad660b2d",
+    "gitCommitHash": "d208b8cc7ab81543250fd350d190d457c07e9880",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-16T10:06:10.197Z",
+    "updatedAt": "2025-06-16T10:39:13.526Z",
+    "completedAt": "2025-06-16T10:39:11.728Z",
+    "expirationDate": "2025-07-16T10:06:10.273Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1416737,
+      "buildQueueTime": 45940,
+      "buildDuration": 514656
+    }
+  },
+  {
+    "id": "e5027f13-0473-45ad-bd3e-9faabdbc24b9",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/uhbTQYegTJW3Gxs2G38Gvg.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/uhbTQYegTJW3Gxs2G38Gvg.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "channel": "production",
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.53.0",
+    "appBuildVersion": "448",
+    "runtimeVersion": "7113998d2d8f706fb28e745bd6e7e5a68efd0189",
+    "gitCommitHash": "d208b8cc7ab81543250fd350d190d457c07e9880",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-16T10:05:55.662Z",
+    "updatedAt": "2025-07-31T23:10:50.640Z",
+    "completedAt": "2025-06-16T10:45:02.160Z",
+    "expirationDate": "2025-07-16T10:05:55.860Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1058651,
+      "buildQueueTime": 42023,
+      "buildDuration": 1245537
+    }
+  },
+  {
+    "id": "98a77e69-3463-49b8-8ed3-f3f9053b651b",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/jRjKjxG3P1WBkGVmogCq54.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/jRjKjxG3P1WBkGVmogCq54.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.51.0",
+    "appBuildVersion": "447",
+    "runtimeVersion": "file:fingerprint",
+    "gitCommitHash": "4367dff61117c65a570b2b3cdc86a0a5cb1f847b",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-11T09:17:12.741Z",
+    "updatedAt": "2025-06-11T09:54:30.199Z",
+    "completedAt": "2025-06-11T09:54:23.454Z",
+    "expirationDate": "2025-07-11T09:17:12.799Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1037629,
+      "buildQueueTime": 39113,
+      "buildDuration": 1153694
+    }
+  },
+  {
+    "id": "4a71324a-1a2c-4375-bdc6-e58fa8ecf735",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/acamL6HBreYR4foCQayuvB.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/4a71324a-1a2c-4375-bdc6-e58fa8ecf735?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=b553b5ede206dcbd34008b4e6d6f55e4cd4e47185474d8ce7edabf7eb98eb2dec6dc704811b2d919f313e5c056e610c2a2f6001aafbe7c44d66a35df9492d901a75f85b1a93559f7f0c62ed9dc4a2ba9d18c2d6c931b73b15f7d10114394d297f56b035dc4db7851552fd44b1c6320bb20ce106bd0d84e790d7f2b9ce64db4a711b30d7903aa9e498ec18fa319d83003fae7f22096dce89a4e01cd48a23b1b5abb73d8140397b5b78050341be1107f615dcb8595dcb5d6834ffa79fc20cdbaeddcb37e602426ac93d979210d07fea4ec933cfe52daabf0a6680d7faeed35214653bca4868f4f56bd94ae2d2c7f8ac88f40dbbde8520700136b216c42188cc481",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/acamL6HBreYR4foCQayuvB.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.51.0",
+    "appBuildVersion": "2.0.516",
+    "runtimeVersion": "file:fingerprint",
+    "gitCommitHash": "4367dff61117c65a570b2b3cdc86a0a5cb1f847b",
+    "gitCommitMessage": "chore: release dev\n\nSigned-off-by: leather-bot <leather-bot@leather.io>",
+    "priority": "HIGH",
+    "createdAt": "2025-06-11T09:17:11.140Z",
+    "updatedAt": "2025-08-01T01:57:02.544Z",
+    "completedAt": "2025-06-11T09:34:13.632Z",
+    "expirationDate": "2025-07-11T09:17:11.254Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 295085,
+      "buildQueueTime": 47778,
+      "buildDuration": 675377
+    }
+  },
+  {
+    "id": "39b4c3ba-fdf6-408c-bc99-fc9dbbd0a288",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/88ibrzBJqULoNeYqdioDCL.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/39b4c3ba-fdf6-408c-bc99-fc9dbbd0a288?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=a60cb4dea5d98153d7251c380707e74db4449f554046868c0c8bb0cf01cb416b63c30920bf7f4c2b970b2b1629fe7b492f0e6a00ce9d3276813490c195df9de36455c4acd3ca8e7ec2622838c345834e0ffd75e2e52438d52d457de3c600f9be209317286d566aa133bea77661d81fea9ed5aed03732301c9328e5cb2deb61792440284f91d27f1aedd922f33b6131baab85eba1c9a749d69e75587ccf5a7d3a0a3720258c4b6326f51f33c0a8ab68b92011dfad368e2d95d1fdcb23bfb5021dc0b8b70dec55f2ebfef7985303ac51457287f47c5f30b1863a35100922287b7b19d8586e1678be3c5ca5bda15e84fac2a04ce2ff8c338067d9aa20909cab34fb",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/88ibrzBJqULoNeYqdioDCL.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.51.0",
+    "appBuildVersion": "2.0.515",
+    "runtimeVersion": "file:fingerprint",
+    "gitCommitHash": "a22108d0e8a37c6423af916dc0825e666e08c770",
+    "gitCommitMessage": "feat(ui): use backspace icon in numpad",
+    "priority": "HIGH",
+    "createdAt": "2025-06-10T12:30:05.122Z",
+    "updatedAt": "2025-06-10T13:44:50.838Z",
+    "completedAt": "2025-06-10T13:44:42.479Z",
+    "expirationDate": "2025-07-10T12:30:05.231Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 3746763,
+      "buildQueueTime": 52252,
+      "buildDuration": 674008
+    }
+  },
+  {
+    "id": "d0c6786f-d9cc-4117-b6f4-89c16d45175e",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/rMgtjfvfKTYifzitZzwmim.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/rMgtjfvfKTYifzitZzwmim.aab"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.51.0",
+    "appBuildVersion": "446",
+    "runtimeVersion": "file:fingerprint",
+    "gitCommitHash": "a22108d0e8a37c6423af916dc0825e666e08c770",
+    "gitCommitMessage": "feat(ui): use backspace icon in numpad",
+    "priority": "HIGH",
+    "createdAt": "2025-06-10T12:29:46.683Z",
+    "updatedAt": "2025-06-10T13:52:17.133Z",
+    "completedAt": "2025-06-10T13:52:05.889Z",
+    "expirationDate": "2025-07-10T12:29:46.756Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 3608174,
+      "buildQueueTime": 127054,
+      "buildDuration": 1203696
+    }
+  },
+  {
+    "id": "6480a8f0-6a56-4c4a-a861-52690907381e",
+    "status": "FINISHED",
+    "platform": "IOS",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/dpNSTVDKCjQ83LbjcL1s2u.ipa",
+      "xcodeBuildLogsUrl": "https://job-logs.eascdn.net/production-xcode-logs/6480a8f0-6a56-4c4a-a861-52690907381e?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20250801%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250801T083645Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=4802fc391b299a128bd1dcf2ed8a24fab2622e145617de0bd8ccc48a49d114e6b84bd4d32168f05c777782208a01ba2172c40b15b95a95f1b36b7df7aa411093da0defd37004fc46a3c49bb4b71a1adff74ffceeb570ca0e54f29dedc16dec2f546400fcee8a9f5ee96d8a982ec70cded480ffa53a4c3e8f04398e75a460c37178a27731dfaa8e8fde26776cb8baaba29ac6aced0945ce5e68316a6e2fcc0380f32d528dd944ecc30e36679328f8fb06c25cfb28451ea9e772b875d43910fdd75297de82a86f5e9643d7033571f354742f7329f0e31202aaf9b01c9a3964a40665fdb5c69d26e6dc96599c9a18bb06f868f2ab71243351c15540da52193b4986",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/dpNSTVDKCjQ83LbjcL1s2u.ipa"
+    },
+    "initiatingActor": {
+      "id": "c2158394-c251-4d58-9b9c-0a4ad459f189",
+      "displayName": "Github Action"
+    },
+    "project": {
+      "id": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc",
+      "name": "Leather",
+      "slug": "leather-wallet-mobile",
+      "ownerAccount": {
+        "id": "7b2ff2a3-0984-4f59-9938-2d40dc7cbfb0",
+        "name": "leather-wallet"
+      }
+    },
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "53.0.0",
+    "appVersion": "2.51.0",
+    "appBuildVersion": "2.0.514",
+    "runtimeVersion": "file:fingerprint",
+    "gitCommitHash": "d5562a568f9768b223709af4b455aefa7d42cb21",
+    "gitCommitMessage": "fix: gift icon web",
+    "priority": "HIGH",
+    "createdAt": "2025-06-09T13:53:27.080Z",
+    "updatedAt": "2025-06-09T14:26:28.410Z",
+    "completedAt": "2025-06-09T14:26:18.176Z",
+    "expirationDate": "2025-07-09T13:53:27.133Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1415451,
+      "buildQueueTime": 49452,
+      "buildDuration": 502021
+    }
+  }
+]
