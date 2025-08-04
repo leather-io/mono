@@ -3,15 +3,12 @@ import { HeaderTitleWithSubtitle } from '@/components/screen/screen-header/compo
 import { AllAccountBalances } from '@/features/balances/balances';
 import { TotalBalance } from '@/features/balances/total-balance';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Box, Text } from '@leather.io/ui/native';
 
 export default function BalancesScreen() {
-  const pageTitle = t({
-    id: 'balances.header_title',
-    message: 'All tokens',
-  });
+  const pageTitle = t`All tokens`;
 
   return (
     <Screen>

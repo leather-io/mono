@@ -4,7 +4,7 @@ import { NativeSyntheticEvent, TextInputSubmitEditingEventData } from 'react-nat
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import {
   Button,
@@ -31,15 +31,7 @@ export function Memo({ value, onChange, onBlur, invalid, isTouched, error }: Mem
   const [confirmationAttempted, setConfirmationAttempted] = useState(false);
   const shouldDisplayErrorMessage = error && confirmationAttempted;
   const shouldMarkToggleAsInvalid = invalid && isTouched && confirmationAttempted;
-  const toggleLabel = value
-    ? t({
-        id: 'send_form.memo.input.label.filled',
-        message: 'Edit memo',
-      })
-    : t({
-        id: 'send_form.memo.input.label.empty',
-        message: 'Add memo',
-      });
+  const toggleLabel = value ? t`Edit memo` : t`Add memo`;
 
   function handleSubmitEditing(event?: NativeSyntheticEvent<TextInputSubmitEditingEventData>) {
     setConfirmationAttempted(true);
@@ -73,14 +65,7 @@ export function Memo({ value, onChange, onBlur, invalid, isTouched, error }: Mem
         <Text variant="label02">{toggleLabel}</Text>
       </Pressable>
 
-      <SheetLayout
-        sheetRef={sheetRef}
-        onChange={handleSheetStateChange}
-        title={t({
-          id: 'add_memo.header_title',
-          message: 'Add memo',
-        })}
-      >
+      <SheetLayout sheetRef={sheetRef} onChange={handleSheetStateChange} title={t`Add memo`}>
         <TextInput
           autoCapitalize="none"
           autoComplete="off"
@@ -88,10 +73,7 @@ export function Memo({ value, onChange, onBlur, invalid, isTouched, error }: Mem
           autoFocus
           inputState="focused"
           onChangeText={onChange}
-          placeholder={t({
-            id: 'add_memo.input_placeholder',
-            message: 'Memo',
-          })}
+          placeholder={t`Memo`}
           TextInputComponent={UIBottomSheetTextInput}
           value={value}
           textVariant="caption01"
@@ -108,10 +90,7 @@ export function Memo({ value, onChange, onBlur, invalid, isTouched, error }: Mem
           mt="3"
           buttonState="default"
           onPress={() => handleSubmitEditing()}
-          title={t({
-            id: 'add_memo.confirm_button',
-            message: 'Confirm',
-          })}
+          title={t`Confirm`}
         />
       </SheetLayout>
     </>

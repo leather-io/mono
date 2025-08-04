@@ -10,7 +10,7 @@ import { Account } from '@/store/accounts/accounts';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
 import { defaultIconTestId } from '@/utils/testing-utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
 import { WalletId } from '@leather.io/models';
@@ -71,7 +71,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
           {variant === 'active' && (
             <IconButton
               icon={<SettingsGearIcon color="ink.text-primary" />}
-              label={t({ id: 'wallet.open_wallet_settings', message: 'Open wallet settings' })}
+              label={t`Open wallet settings`}
               onPress={() => {
                 router.navigate({
                   pathname: '/settings/wallet/configure/[wallet]',
@@ -119,19 +119,13 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
                   setIsAddingAccount(true);
                   await keys.createNewAccountOfWallet(fingerprint);
                   displayToast({
-                    title: t({
-                      id: 'wallet.add_account.toast_title',
-                      message: `Account created`,
-                    }),
+                    title: t`Account created`,
                     type: 'success',
                   });
                   setIsAddingAccount(false);
                 } catch {
                   displayToast({
-                    title: t({
-                      id: 'wallet.add_account.fail.toast_title',
-                      message: 'Account creation failed',
-                    }),
+                    title: t`Account creation failed`,
                     type: 'error',
                   });
                   setIsAddingAccount(false);
@@ -139,17 +133,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
               }}
               buttonState="ghost"
               disabled={isAddingAccount}
-              title={
-                isAddingAccount
-                  ? t({
-                      id: 'wallet.adding_account.button',
-                      message: 'Adding account...',
-                    })
-                  : t({
-                      id: 'wallet.add_account.button',
-                      message: 'Add account',
-                    })
-              }
+              title={isAddingAccount ? t`Adding account...` : t`Add account`}
               icon={isAddingAccount ? <SpinnerIcon /> : <PlusIcon variant="small" />}
             />
           )}

@@ -4,7 +4,7 @@ import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { z } from 'zod';
 
 import { emailAddressSchema } from '@leather.io/models';
@@ -24,10 +24,7 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
     } catch (err) {
       if (err instanceof z.ZodError) {
         displayToast({
-          title: t({
-            id: 'email_address.toast_title_error',
-            message: 'Invalid email address',
-          }),
+          title: t`Invalid email address`,
           type: 'error',
         });
         return;
@@ -37,28 +34,14 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
     settings.changeEmailAddressPreference(address);
     sheetRef.current?.close();
     displayToast({
-      title: t({
-        id: 'email_address.toast_title_success',
-        message: 'Check your email for verification',
-      }),
+      title: t`Check your email for verification`,
       type: 'success',
     });
   }
 
   return (
-    <SheetLayout
-      sheetRef={sheetRef}
-      title={t({
-        id: 'email_address.header_title',
-        message: 'Email address',
-      })}
-    >
-      <Text>
-        {t({
-          id: 'email_address.subtitle',
-          message: 'Provide an email address for receiving notifications',
-        })}
-      </Text>
+    <SheetLayout sheetRef={sheetRef} title={t`Email address`}>
+      <Text>{t`Provide an email address for receiving notifications`}</Text>
       <TextInput
         autoCapitalize="none"
         autoComplete="off"
@@ -66,10 +49,7 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
         autoFocus
         inputState="focused"
         onChangeText={text => setEmailAddress(text)}
-        placeholder={t({
-          id: 'email_address.input_placeholder',
-          message: 'Email address',
-        })}
+        placeholder={t`Email address`}
         TextInputComponent={UIBottomSheetTextInput}
         value={emailAddress}
       />
@@ -77,10 +57,7 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
         mt="3"
         buttonState="default"
         onPress={() => onSaveEmailAddress(emailAddress)}
-        title={t({
-          id: 'email_address.save_button',
-          message: 'Save',
-        })}
+        title={t`Save`}
       />
     </SheetLayout>
   );

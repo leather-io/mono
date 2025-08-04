@@ -1,7 +1,7 @@
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { Account } from '@/store/accounts/accounts';
 import { makeAccountIdentifer } from '@/store/utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Approver, Button, Cell, ChevronRightIcon, Text } from '@leather.io/ui/native';
 
@@ -25,12 +25,7 @@ export function SignMessageApproverLayout({
   return (
     <Approver>
       <Approver.Container>
-        <Approver.Header
-          title={t({
-            id: 'approver.signMessage.title',
-            message: 'Sign Message',
-          })}
-        />
+        <Approver.Header title={t`Sign Message`} />
         <Approver.Section>
           {selectedAccountId ? (
             <ApproverAccountCard
@@ -56,12 +51,7 @@ export function SignMessageApproverLayout({
           )}
         </Approver.Section>
         <Approver.Section>
-          <Text variant="label01">
-            {t({
-              id: 'approver.signMessage.message-subtitle',
-              message: 'Message',
-            })}
-          </Text>
+          <Text variant="label01">{t`Message`}</Text>
           <Cell.Root pressable={false}>
             <Cell.Content>
               <Cell.Label variant="primary">{messageToSign}</Cell.Label>
@@ -71,24 +61,8 @@ export function SignMessageApproverLayout({
       </Approver.Container>
       <Approver.Footer>
         <Approver.Actions>
-          <Button
-            buttonState="outline"
-            title={t({
-              id: 'approver.button.deny',
-              message: 'Deny',
-            })}
-            flex={1}
-            onPress={onCloseApprover}
-          />
-          <Button
-            buttonState="default"
-            title={t({
-              id: 'approver.button.approve',
-              message: 'Approve',
-            })}
-            flex={1}
-            onPress={onApprove}
-          />
+          <Button buttonState="outline" title={t`Deny`} flex={1} onPress={onCloseApprover} />
+          <Button buttonState="default" title={t`Approve`} flex={1} onPress={onApprove} />
         </Approver.Actions>
       </Approver.Footer>
     </Approver>

@@ -18,7 +18,7 @@ import {
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { type Account } from '@/store/accounts/accounts';
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { type ZodSchema } from 'zod';
 
 import { type FungibleCryptoAsset, type SendAssetActivity } from '@leather.io/models';
@@ -69,10 +69,7 @@ export function RecipientSelector({
             <Box position="absolute" top={12} right={8} flexDirection="row">
               {pasteButtonEnabled && <IosRecipientPasteButton onPress={handlePasteButtonPress} />}
               <IconButton
-                label={t({
-                  id: 'send-form.recipient.qr_button',
-                  message: 'Scan a QR code',
-                })}
+                label={t`Scan a QR code`}
                 onPress={() => onQrButtonPress('input')}
                 icon={<QrCodeIcon />}
               />

@@ -4,14 +4,14 @@ import { Sticker } from '@/components/sticker';
 import { ScreenshotCard } from '@/features/browser/browser/screenshot-card';
 import { useOpenURL } from '@/features/browser/browser/use-open-url';
 import { useApps } from '@/store/apps/apps.read';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Box, Text } from '@leather.io/ui/native';
 
 export default function RecentlyViewedScreen() {
   const { list: appList } = useApps('recently_visited');
   const { openURL } = useOpenURL();
-  const title = t({ id: 'browser.recently-viewed.title', message: 'Recently viewed' });
+  const title = t`Recently viewed`;
 
   const emptyState = (
     <>
@@ -21,10 +21,7 @@ export default function RecentlyViewedScreen() {
       <Screen.Body width={270} alignSelf="center" justifyContent="center" alignItems="center">
         <Sticker source={require('@/assets/stickers/flower.png')} />
         <Text textAlign="center" variant="label01">
-          {t({
-            id: 'browser-sheet.recent.empty.caption',
-            message: 'You will find the apps you recently viewed here',
-          })}
+          {t`You will find the apps you recently viewed here`}
         </Text>
       </Screen.Body>
     </>

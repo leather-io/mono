@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import { PersistConfig } from 'redux-persist';
@@ -30,10 +30,7 @@ export const persistConfig: PersistConfig<RootState> = {
 
 function getBasicSecureStoreConfig() {
   const secureStoreConfig: SecureStore.SecureStoreOptions = {
-    authenticationPrompt: t({
-      id: 'authentication_prompt',
-      message: 'Allow app to access secure storage',
-    }),
+    authenticationPrompt: t`Allow app to access secure storage`,
     keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
   };
   return secureStoreConfig;

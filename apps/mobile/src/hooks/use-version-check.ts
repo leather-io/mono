@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { useMinimumAppVersion } from '@/features/feature-flags';
 import { isValidVersion, isVersionLessThan } from '@/utils/version-utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import * as Application from 'expo-application';
 
 export interface VersionCheckResult {
@@ -30,10 +30,7 @@ export function useVersionCheck(): VersionCheckResult {
           currentVersion: '',
           minimumVersion: null,
           isLoading: false,
-          error: t({
-            id: 'version_guard.unable_to_determine_current_version',
-            message: 'Unable to determine current app version',
-          }),
+          error: t`Unable to determine current app version`,
         };
       }
 
@@ -44,10 +41,7 @@ export function useVersionCheck(): VersionCheckResult {
           currentVersion,
           minimumVersion: null,
           isLoading: false,
-          error: t({
-            id: 'version_guard.current_version_format_invalid',
-            message: 'Current app version format is invalid',
-          }),
+          error: t`Current app version format is invalid`,
         };
       }
 
@@ -71,10 +65,7 @@ export function useVersionCheck(): VersionCheckResult {
           currentVersion,
           minimumVersion,
           isLoading: false,
-          error: t({
-            id: 'version_guard.minimum_version_format_invalid',
-            message: 'Minimum version format is invalid',
-          }),
+          error: t`Minimum version format is invalid`,
         };
       }
 
@@ -95,13 +86,7 @@ export function useVersionCheck(): VersionCheckResult {
         currentVersion,
         minimumVersion: minimumVersionFromFlag || null,
         isLoading: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : t({
-                id: 'version_guard.unknown_error',
-                message: 'Unknown error during version check',
-              }),
+        error: error instanceof Error ? error.message : t`Unknown error during version check`,
       };
     }
   }, [currentVersion, minimumVersionFromFlag]);

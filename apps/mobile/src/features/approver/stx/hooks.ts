@@ -1,5 +1,5 @@
 import { useToastContext } from '@/components/toast/toast-context';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 export function useStxTransactionUpdatesHandler() {
   const { displayToast } = useToastContext();
@@ -8,18 +8,12 @@ export function useStxTransactionUpdatesHandler() {
       try {
         onChangeMemo(memo);
         displayToast({
-          title: t({
-            id: 'approver.send.stx.success.change-memo',
-            message: 'Memo updated',
-          }),
+          title: t`Memo updated`,
           type: 'success',
         });
       } catch {
         displayToast({
-          title: t({
-            id: 'approver.send.stx.error.change-memo',
-            message: 'Failed to change memo',
-          }),
+          title: t`Failed to change memo`,
           type: 'error',
         });
       }
@@ -30,18 +24,12 @@ export function useStxTransactionUpdatesHandler() {
       try {
         onChangeFee(fee);
         displayToast({
-          title: t({
-            id: 'approver.send.stx.success.change-fee',
-            message: 'Fee updated',
-          }),
+          title: t`Fee updated`,
           type: 'success',
         });
       } catch {
         displayToast({
-          title: t({
-            id: 'approver.send.stx.error.change-fee',
-            message: 'Failed to change fee',
-          }),
+          title: t`Failed to change fee`,
           type: 'error',
         });
       }
@@ -53,18 +41,12 @@ export function useStxTransactionUpdatesHandler() {
         onChangeNonce(nonce);
 
         displayToast({
-          title: t({
-            id: 'approver.send.stx.success.change-nonce',
-            message: 'Nonce updated',
-          }),
+          title: t`Nonce updated`,
           type: 'success',
         });
       } catch {
         displayToast({
-          title: t({
-            id: 'approver.send.stx.error.change-nonce',
-            message: 'Failed to change nonce',
-          }),
+          title: t`Failed to change nonce`,
           type: 'error',
         });
       }

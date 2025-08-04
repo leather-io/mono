@@ -2,7 +2,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
 import { Box, Button, HasChildren, Text } from '@leather.io/ui/native';
@@ -43,17 +43,14 @@ export function Error({ error, onRetry }: ErrorProps) {
           }
         >
           <Text variant="heading03" textAlign="center" fontSize={32}>
-            {t({ id: 'error_boundary.title', message: 'Something went wrong' })}
+            {t`Something went wrong`}
           </Text>
           {onRetry ? (
-            <Button
-              onPress={onRetry}
-              title={t({ id: 'error_boundary.action', message: 'Try again' })}
-            />
+            <Button onPress={onRetry} title={t`Try again`} />
           ) : (
             <>
               <Text variant="label01" textAlign="center">
-                {t({ id: 'error_boundary.subtitle', message: 'Drag to refresh' })}
+                {t`Drag to refresh`}
               </Text>
 
               {error && (

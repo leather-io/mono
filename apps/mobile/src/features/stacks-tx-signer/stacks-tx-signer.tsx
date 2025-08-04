@@ -25,7 +25,7 @@ import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.rea
 import { destructAccountIdentifier } from '@/store/utils';
 import { analytics } from '@/utils/analytics';
 import { formatCurrency } from '@/utils/currency-formatter';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { PayloadType, deserializeTransaction } from '@stacks/transactions';
 
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
@@ -91,10 +91,7 @@ export function StacksTxSigner({
       );
     } catch {
       displayToast({
-        title: t({
-          id: 'approver.send.stx.error.broadcast',
-          message: 'Failed to broadcast transaction',
-        }),
+        title: t`Failed to broadcast transaction`,
         type: 'error',
       });
       setApproverState('start');
@@ -134,25 +131,18 @@ export function StacksTxSigner({
   return (
     <Approver>
       <Approver.Container>
-        <Approver.Header
-          title={t({
-            id: 'approver.send.title',
-            message: 'Send token',
-          })}
-        />
+        <Approver.Header title={t`Send token`} />
 
         <Approver.Overview>
           <Approver.Section mb="-3">
             <Approver.Subheader icon={<SentIcon variant="small" />}>
-              {t({ id: 'approver.outcomes.title1', message: 'You’ll send' })}
+              {t`You’ll send`}
             </Approver.Subheader>
             <StacksOutcome amount={principalSpend} />
           </Approver.Section>
 
           <Approver.Section>
-            <Approver.Subheader>
-              {t({ id: 'approver.outcomes.title2', message: 'To address' })}
-            </Approver.Subheader>
+            <Approver.Subheader>{t`To address`}</Approver.Subheader>
             <OutcomeAddressesCard addresses={[recipient]} />
           </Approver.Section>
         </Approver.Overview>
@@ -175,12 +165,7 @@ export function StacksTxSigner({
 
       <Approver.Footer>
         <Box flexDirection="row" alignItems="center" justifyContent="space-between">
-          <Text variant="label02">
-            {t({
-              id: 'approver.total_spend',
-              message: 'Total spend',
-            })}
-          </Text>
+          <Text variant="label02">{t`Total spend`}</Text>
           <Text variant="label02">{formatCurrency(totalSpendQuote)}</Text>
         </Box>
         <Approver.Actions>

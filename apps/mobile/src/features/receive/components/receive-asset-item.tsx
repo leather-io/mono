@@ -2,7 +2,7 @@ import { AddressTypeBadge } from '@/components/address-type-badge';
 import { SelectedAsset } from '@/features/receive/screens/select-asset';
 import { TokenIcon } from '@/features/token/components/token-icon';
 import { TestId } from '@/shared/test-id';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Box, Cell, CopyIcon, IconButton, Text } from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
@@ -38,10 +38,7 @@ export function ReceiveAssetItem({ asset, onCopyAddress, onPress }: ReceiveAsset
       </Cell.Content>
       <Cell.Aside>
         <IconButton
-          label={t({
-            id: 'receive.copy_address_label',
-            message: 'Copy address',
-          })}
+          label={t`Copy address`}
           mr="-2"
           icon={<CopyIcon />}
           onPress={() => onCopyAddress(asset)}

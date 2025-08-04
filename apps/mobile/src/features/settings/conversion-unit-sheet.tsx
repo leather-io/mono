@@ -4,7 +4,7 @@ import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 
 import { currencyNameMap } from '@leather.io/constants';
@@ -24,22 +24,13 @@ export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
   function onUpdateConversionUnit(unit: QuoteCurrency) {
     settings.changeQuoteCurrencyPreference(unit);
     displayToast({
-      title: t({
-        id: 'conversion_unit.toast_title',
-        message: 'Conversion unit updated',
-      }),
+      title: t`Conversion unit updated`,
       type: 'success',
     });
   }
 
   return (
-    <SettingsSheetLayout
-      sheetRef={sheetRef}
-      title={t({
-        id: 'conversion_unit.header_title',
-        message: 'Conversion unit',
-      })}
-    >
+    <SettingsSheetLayout sheetRef={sheetRef} title={t`Conversion unit`}>
       <SettingsList gap="0">
         {Object.entries(currencyNameMap).map(([symbol, name]) => (
           <SettingsListItem

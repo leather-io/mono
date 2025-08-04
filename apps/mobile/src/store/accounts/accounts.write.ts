@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { EntityState, createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
 
@@ -40,10 +40,7 @@ function addAccountDefaults({
       draftAccount.icon = selectNextDistinctAccountIcon(usedIcons, precedingIcon);
     }
     if (!draftAccount.name) {
-      draftAccount.name = t({
-        id: 'account.default.name',
-        message: `Account ${accountIndex}`,
-      });
+      draftAccount.name = t`Account ${accountIndex}`;
     }
     if (!draftAccount.status) {
       draftAccount.status = 'active';

@@ -5,7 +5,7 @@ import { TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { TestId } from '@/shared/test-id';
 import { tempMnemonicStore } from '@/store/storage-persistors';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import * as Clipboard from 'expo-clipboard';
 
 import { isValidMnemonic } from '@leather.io/crypto';
@@ -97,10 +97,7 @@ export function RecoverWallet() {
             onPress={pasteFromClipboard}
             style={{ position: 'absolute', bottom: 12, right: 12, zIndex: 20 }}
             buttonState="default"
-            title={t({
-              id: 'recover_wallet.paste_button',
-              message: 'Paste',
-            })}
+            title={t`Paste`}
             icon={<NoteEmptyIcon color="ink.background-primary" />}
           />
         )}
@@ -112,10 +109,7 @@ export function RecoverWallet() {
           value={recoveryMnemonic}
           errorMessage={errorMessage}
           onChangeText={onChangeText}
-          placeholder={t({
-            id: 'recover_wallet.input_placeholder',
-            message: 'Enter your Secret Key',
-          })}
+          placeholder={t`Enter your Secret Key`}
           inputState={inputState}
           height={172}
           multiline

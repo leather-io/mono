@@ -2,7 +2,7 @@ import { RefObject } from 'react';
 
 import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
 import { TestId } from '@/shared/test-id';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
 
@@ -16,9 +16,9 @@ export function WalletNameSheet({ sheetRef, name, setName }: WalletNameSheetProp
     <InputSheetLayout
       sheetRef={sheetRef}
       initialValue={name}
-      title={t({ id: 'wallet_name.header_title', message: 'Change name' })}
-      placeholder={t({ id: 'wallet_name.input_placeholder', message: 'Name' })}
-      submitTitle={t({ id: 'wallet_name.button', message: 'Save' })}
+      title={t`Change name`}
+      placeholder={t`Name`}
+      submitTitle={t`Save`}
       onSubmit={newName => {
         const { success } = setName(newName);
         if (success) {

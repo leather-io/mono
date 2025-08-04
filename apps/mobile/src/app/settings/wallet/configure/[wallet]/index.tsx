@@ -21,7 +21,7 @@ import { useAppDispatch } from '@/store/utils';
 import { WalletStore } from '@/store/wallets/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { userRenamesWallet } from '@/store/wallets/wallets.write';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import dayjs from 'dayjs';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
@@ -44,42 +44,27 @@ import {
 function getUnavailableFeatures({ iconColor }: { iconColor: keyof Theme['colors'] }) {
   return {
     addressReuse: {
-      title: t({
-        id: 'configure_wallet.address_reuse.cell_title',
-        message: 'Address reuse',
-      }),
+      title: t`Address reuse`,
       icon: <ArrowsRepeatLeftRightIcon color={iconColor} />,
       id: WaitlistIds.addressReuse,
     },
     addressScanRange: {
-      title: t({
-        id: 'configure_wallet.address_scan_range.cell_title',
-        message: 'Address scan range',
-      }),
+      title: t`Address scan range`,
       icon: <BarcodeIcon color={iconColor} />,
       id: WaitlistIds.capsule,
     },
     addressTypes: {
-      title: t({
-        id: 'configure_wallet.address_types.cell_title',
-        message: 'Address types',
-      }),
+      title: t`Address types`,
       icon: <InboxIcon color={iconColor} />,
       id: WaitlistIds.addressTypes,
     },
     exportXpub: {
-      title: t({
-        id: 'configure_wallet.export_xpub.cell_title',
-        message: 'Export xPub',
-      }),
+      title: t`Export xPub`,
       icon: <ArrowOutOfBoxIcon color={iconColor} />,
       id: WaitlistIds.exportXpub,
     },
     exportKey: {
-      title: t({
-        id: 'configure_wallet.export_key.cell_title',
-        message: 'Export key',
-      }),
+      title: t`Export key`,
       icon: <ArrowOutOfBoxIcon color={iconColor} />,
       id: WaitlistIds.exportKey,
     },
@@ -102,10 +87,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   function setName(name: string) {
     if (name === '') {
       displayToast({
-        title: t({
-          id: 'configure_wallet.wallet_name.empty_name_error',
-          message: 'Wallet name cannot be empty',
-        }),
+        title: t`Wallet name cannot be empty`,
         type: 'error',
       });
       return { success: false };
@@ -131,10 +113,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
         removeWallet();
       } else {
         displayToast({
-          title: t({
-            id: 'configure_wallet.delete_wallet.authentication_failed',
-            message: 'Authentication failed',
-          }),
+          title: t`Authentication failed`,
           type: 'error',
         });
       }
@@ -161,22 +140,14 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
 
   return (
     <>
-      <SettingsLayout
-        title={t({
-          id: 'configure_wallet.header_title',
-          message: 'Configure wallet',
-        })}
-      >
+      <SettingsLayout title={t`Configure wallet`}>
         <Box px="5" py="2">
           <Text variant="heading05">{wallet.name}</Text>
         </Box>
         <Box gap="3">
           <SettingsList gap="1">
             <SettingsListItem
-              title={t({
-                id: 'configure_wallet.view_key.cell_title',
-                message: 'View Secret Key',
-              })}
+              title={t`View Secret Key`}
               icon={<Eye1ClosedIcon />}
               onPress={() => {
                 router.navigate({
@@ -187,10 +158,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               testID={TestId.walletSettingsViewSecretKeyButton}
             />
             <SettingsListItem
-              title={t({
-                id: 'configure_wallet.rename_wallet.cell_title',
-                message: 'Rename wallet',
-              })}
+              title={t`Rename wallet`}
               icon={<SquareLinesBottomIcon />}
               onPress={() => {
                 walletNameSheetRef.current?.present();
@@ -198,10 +166,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               testID={TestId.walletSettingsRenameWalletButton}
             />
             <SettingsListItem
-              title={t({
-                id: 'configure_wallet.remove_wallet.cell_title',
-                message: 'Remove wallet',
-              })}
+              title={t`Remove wallet`}
               icon={<TrashIcon color="red.action-primary-default" />}
               onPress={() => {
                 removeWalletSheetRef.current?.present();
@@ -212,10 +177,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
           {releaseWaitlistFeatures && (
             <Box px="5">
               <Accordion
-                label={t({
-                  id: 'configure_wallet.accordion_label',
-                  message: 'Advanced options',
-                })}
+                label={t`Advanced options`}
                 content={
                   <SettingsList mx="-5">
                     {Object.values(getUnavailableFeatures({ iconColor: 'ink.text-subdued' })).map(
@@ -240,12 +202,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
           <Divider />
 
           <Box py="3" px="5">
-            <Text variant="caption01">
-              {t({
-                id: 'configure_wallet.creation_label',
-                message: 'Creation date',
-              })}
-            </Text>
+            <Text variant="caption01">{t`Creation date`}</Text>
             <Text variant="caption01" color="ink.text-subdued">
               {dayjs(wallet.createdOn).format('D MMM YYYY')}
             </Text>

@@ -1,5 +1,5 @@
 import { EmptyLayout } from '@/components/loading/empty-layout';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
 import { Box, Text } from '@leather.io/ui/native';
@@ -13,10 +13,7 @@ export function EmptyHiddenAccounts() {
     >
       <Box width={177}>
         <Text variant="label01" textAlign="center">
-          {t({
-            id: 'wallets_list.hidden_accounts_title',
-            message: 'View and manage your hidden accounts',
-          })}
+          {t`View and manage your hidden accounts`}
         </Text>
       </Box>
     </EmptyLayout>

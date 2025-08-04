@@ -1,6 +1,6 @@
 import { Screen } from '@/components/screen/screen';
 import { TabBar } from '@/components/tab-bar';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
 
 export default function SettingsNotificationsLayout() {
@@ -10,12 +10,7 @@ export default function SettingsNotificationsLayout() {
   return (
     <Screen>
       <Screen.Header />
-      <Screen.Title>
-        {t({
-          id: 'notifications.header_title',
-          message: 'Notifications',
-        })}
-      </Screen.Title>
+      <Screen.Title>{t`Notifications`}</Screen.Title>
 
       <TabBar
         tabs={[
@@ -24,20 +19,14 @@ export default function SettingsNotificationsLayout() {
             onPress() {
               router.navigate('/settings/notifications');
             },
-            title: t({
-              id: 'notifications.push.tab_title',
-              message: 'Push',
-            }),
+            title: t`Push`,
           },
           {
             isActive: pathname === '/settings/notifications/email',
             onPress() {
               router.navigate('/settings/notifications/email');
             },
-            title: t({
-              id: 'notifications.email.tab_title',
-              message: 'Email',
-            }),
+            title: t`Email`,
           },
         ]}
       />
@@ -46,20 +35,14 @@ export default function SettingsNotificationsLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: t({
-              id: 'notifications.push.tab_title',
-              message: 'Push',
-            }),
+            title: t`Push`,
             header: () => null,
           }}
         />
         <Tabs.Screen
           name="email"
           options={{
-            title: t({
-              id: 'notifications.email.tab_title',
-              message: 'Email',
-            }),
+            title: t`Email`,
             header: () => null,
           }}
         />

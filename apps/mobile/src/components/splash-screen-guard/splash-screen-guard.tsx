@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAppState } from '@/hooks/use-app-state';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useTheme } from '@shopify/restyle';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
@@ -145,10 +145,7 @@ export function SplashScreenGuard({ children }: HasChildren) {
               textStyle={{
                 color: colorThemes.dark['ink.background-primary'],
               }}
-              title={t({
-                id: 'unlock',
-                message: 'Unlock',
-              })}
+              title={t`Unlock`}
               buttonState="default"
             />
           )}

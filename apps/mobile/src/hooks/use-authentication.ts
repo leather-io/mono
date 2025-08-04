@@ -1,5 +1,5 @@
 import { useToastContext } from '@/components/toast/toast-context';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import * as LocalAuthentication from 'expo-local-authentication';
 
 async function assertEnrolled() {
@@ -14,10 +14,7 @@ export function useAuthentication() {
 
   function displayError() {
     displayToast({
-      title: t({
-        id: 'authentication.user-not-enrolled',
-        message: 'App is not protected with device-level PIN or biometrics.',
-      }),
+      title: t`App is not protected with device-level PIN or biometrics.`,
       type: 'error',
     });
   }

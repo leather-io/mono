@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 
 import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
 
@@ -19,18 +19,9 @@ export function RecoverWalletSheet({
     <InputSheetLayout
       sheetRef={recoverWalletSheetRef}
       initialValue={passphrase}
-      title={t({
-        id: 'recover_wallet.passphrase.header_title',
-        message: `BIP39 passphrase`,
-      })}
-      placeholder={t({
-        id: 'recover_wallet.passphrase.input_placeholder',
-        message: `Passphrase`,
-      })}
-      submitTitle={t({
-        id: 'recover_wallet.passphrase.button',
-        message: `Confirm`,
-      })}
+      title={t`BIP39 passphrase`}
+      placeholder={t`Passphrase`}
+      submitTitle={t`Confirm`}
       onSubmit={newPassphrase => {
         recoverWalletSheetRef.current?.close();
         setPassphrase(newPassphrase);

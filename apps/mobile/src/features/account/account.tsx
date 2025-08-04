@@ -19,7 +19,7 @@ import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { AccountLookup } from '@/shared/types';
 import { Account as AccountType } from '@/store/accounts/accounts';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { router } from 'expo-router';
 
 import { Box, ButtonV2, SettingsGearIcon } from '@leather.io/ui/native';
@@ -98,10 +98,7 @@ export function Account({ account, walletName }: AccountProps) {
             minWidth={86}
             size="sm"
             buttonState="default"
-            title={t({
-              id: 'general.send',
-              message: `Send`,
-            })}
+            title={t`Send`}
           />
           <ButtonV2
             onPress={() => {
@@ -110,10 +107,7 @@ export function Account({ account, walletName }: AccountProps) {
             minWidth={86}
             size="sm"
             buttonState="outline"
-            title={t({
-              id: 'general.receive',
-              message: `Receive`,
-            })}
+            title={t`Receive`}
           />
         </Box>
         <Box gap="8">
@@ -131,7 +125,7 @@ export function Account({ account, walletName }: AccountProps) {
                 color="ink.text-subdued"
               />
             }
-            title={t({ id: 'account.balances.header_title', message: 'Tokens' })}
+            title={t`Tokens`}
           >
             <AccountBalances mode="widget" fingerprint={fingerprint} accountIndex={accountIndex} />
           </BalancesWidget>
@@ -143,7 +137,7 @@ export function Account({ account, walletName }: AccountProps) {
                 params: { accountId: id, accountName: name },
               })
             }
-            title={t({ id: 'account.activity.header_title', message: 'Activity' })}
+            title={t`Activity`}
           />
           {releaseCollectibles && hasCollectibles(collectibles) && (
             <CollectiblesWidget
@@ -153,7 +147,7 @@ export function Account({ account, walletName }: AccountProps) {
                   params: { accountId: id, accountName: name },
                 })
               }
-              title={t({ id: 'account.collectibles.header_title', message: 'Collectibles' })}
+              title={t`Collectibles`}
             >
               <Collectibles collectibles={collectibles} mode="widget" />
             </CollectiblesWidget>

@@ -2,7 +2,7 @@ import { RefObject, useState } from 'react';
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Button, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
 
@@ -15,13 +15,7 @@ export function NonceSheet({ sheetRef, nonce: _nonce, onChangeNonce }: NonceShee
   const [nonce, setNonce] = useState(_nonce);
 
   return (
-    <SheetLayout
-      sheetRef={sheetRef}
-      title={t({
-        id: 'approver.add_nonce.header_title',
-        message: 'Add nonce',
-      })}
-    >
+    <SheetLayout sheetRef={sheetRef} title={t`Add nonce`}>
       <TextInput
         autoCapitalize="none"
         autoComplete="off"
@@ -29,10 +23,7 @@ export function NonceSheet({ sheetRef, nonce: _nonce, onChangeNonce }: NonceShee
         autoFocus
         inputState="focused"
         onChangeText={setNonce}
-        placeholder={t({
-          id: 'approver.add_nonce.input_placeholder',
-          message: 'Nonce',
-        })}
+        placeholder={t`Nonce`}
         TextInputComponent={UIBottomSheetTextInput}
         value={nonce}
       />
@@ -43,10 +34,7 @@ export function NonceSheet({ sheetRef, nonce: _nonce, onChangeNonce }: NonceShee
           sheetRef.current?.close();
           onChangeNonce(nonce);
         }}
-        title={t({
-          id: 'approver.add_nonce.confirm_button',
-          message: 'Confirm',
-        })}
+        title={t`Confirm`}
       />
     </SheetLayout>
   );

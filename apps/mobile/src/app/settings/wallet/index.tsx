@@ -7,7 +7,7 @@ import { EmptyWalletsScreen } from '@/features/settings/wallet-and-accounts/comp
 import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-list';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
 import { Eye1ClosedIcon, PlusIcon } from '@leather.io/ui/native';
@@ -21,12 +21,7 @@ export default function SettingsWalletScreen() {
   const hasWallets = walletsList.length > 0;
 
   return (
-    <SettingsLayout
-      title={t({
-        id: 'wallets.header_title',
-        message: 'Wallets',
-      })}
-    >
+    <SettingsLayout title={t`Wallets`}>
       {hasWallets ? (
         <>
           <WalletsList variant="active" />
@@ -34,14 +29,8 @@ export default function SettingsWalletScreen() {
           <SettingsList>
             {hiddenAccountsLength > 0 && (
               <SettingsListItem
-                title={t({
-                  id: 'wallet.hidden_accounts.cell_title',
-                  message: 'Hidden accounts',
-                })}
-                caption={t({
-                  id: 'wallet.hidden_accounts.cell_caption',
-                  message: `${hiddenAccountsLength} hidden accounts`,
-                })}
+                title={t`Hidden accounts`}
+                caption={t`${hiddenAccountsLength} hidden accounts`}
                 icon={<Eye1ClosedIcon />}
                 onPress={() => {
                   router.navigate('/settings/wallet/hidden-accounts');
@@ -49,10 +38,7 @@ export default function SettingsWalletScreen() {
               />
             )}
             <SettingsListItem
-              title={t({
-                id: 'wallet.add_wallet.cell_title',
-                message: 'Add wallet',
-              })}
+              title={t`Add wallet`}
               icon={<PlusIcon />}
               onPress={() => {
                 addWalletSheetRef.current?.present();

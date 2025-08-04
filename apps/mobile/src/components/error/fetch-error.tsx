@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
 import { Box, Callout, CloudOffIcon, Text } from '@leather.io/ui/native';
@@ -11,10 +11,8 @@ interface ErrorProps {
 export function Error({ errorMessage }: ErrorProps) {
   return (
     <EmptyLayout image={<Image source={require('@/assets/stickers/net.png')} />}>
-      <Text variant="heading03">{t({ id: 'error.title', message: 'Something went wrong' })}</Text>
-      <Text variant="label01">
-        {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull to refresh' })}
-      </Text>
+      <Text variant="heading03">{t`Something went wrong`}</Text>
+      <Text variant="label01">{t`Pull to refresh`}</Text>
       {errorMessage && <Text variant="code">{errorMessage}</Text>}
     </EmptyLayout>
   );
@@ -23,19 +21,14 @@ export function Error({ errorMessage }: ErrorProps) {
 export function FetchErrorCallout() {
   return (
     <Callout
-      title={t({
-        id: 'fetch-state-error.balance.title',
-        message: "Some balances couldn't load.",
-      })}
+      title={t`Some balances couldn't load.`}
       icon={
         <Box p="2">
           <CloudOffIcon />
         </Box>
       }
     >
-      <Text variant="label02">
-        {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull to refresh' })}
-      </Text>
+      <Text variant="label02">{t`Pull to refresh`}</Text>
     </Callout>
   );
 }

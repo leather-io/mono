@@ -4,7 +4,7 @@ import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.lay
 import { useToastContext } from '@/components/toast/toast-context';
 import { useWaitlistFlag } from '@/features/feature-flags';
 import { WaitlistIds } from '@/features/waitlist/ids';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 
@@ -16,10 +16,7 @@ function PassphraseDisplay({ passphrase }: { passphrase: string }) {
   return (
     <Box>
       <Text variant="label03" color="ink.text-subdued">
-        {t({
-          id: 'create_new_wallet.mnemonic.title',
-          message: `BIP39 passphrase`,
-        })}
+        {t`BIP39 passphrase`}
       </Text>
       <Text variant="label02">{passphrase}</Text>
     </Box>
@@ -54,20 +51,14 @@ export function MnemonicDisplay({
             onPress={async () => {
               await Clipboard.setStringAsync(mnemonic);
               displayToast({
-                title: t({
-                  id: 'create_new_wallet.mnemonic.toast_title',
-                  message: 'Copied to clipboard',
-                }),
+                title: t`Copied to clipboard`,
                 type: 'success',
               });
             }}
             flex={1}
             style={{ borderColor: theme.colors['ink.text-primary'] }}
             buttonState="outline"
-            title={t({
-              id: 'create_new_wallet.mnemonic.copy_button',
-              message: 'Copy',
-            })}
+            title={t`Copy`}
           />
           {releaseWaitlistFeatures && (
             <Button
@@ -75,10 +66,7 @@ export function MnemonicDisplay({
               flex={1}
               style={{ borderColor: theme.colors['ink.text-primary'] }}
               buttonState="outline"
-              title={t({
-                id: 'create_new_wallet.mnemonic.save_button',
-                message: 'Save to...',
-              })}
+              title={t`Save to...`}
             />
           )}
         </Box>
@@ -86,10 +74,7 @@ export function MnemonicDisplay({
 
       <NotifyUserSheetLayout
         sheetData={{
-          title: t({
-            id: 'create_new_wallet.mnemonic.save_button',
-            message: 'Save to...',
-          }),
+          title: t`Save to...`,
           id: WaitlistIds.saveMnemonic,
         }}
         sheetRef={notifySheetRef}

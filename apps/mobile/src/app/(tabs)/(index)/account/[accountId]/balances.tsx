@@ -5,7 +5,7 @@ import { AccountBalance } from '@/features/balances/total-balance';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { deserializeAccountId } from '@/store/accounts/accounts';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLocalSearchParams } from 'expo-router';
 
 import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
@@ -19,10 +19,7 @@ export default function BalancesScreen() {
 
   const { totalBalance } = useAccountBalance({ fingerprint, accountIndex });
 
-  const pageTitle = t({
-    id: 'balances.header_title',
-    message: 'All tokens',
-  });
+  const pageTitle = t`All tokens`;
   const isLoading = totalBalance.state === 'loading';
 
   return (

@@ -12,7 +12,7 @@ import { TestId } from '@/shared/test-id';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
@@ -45,7 +45,7 @@ export function AccountsWidget() {
               wallets.hasWallets ? () => accountSelectorSheetRef.current?.present() : undefined
             }
           >
-            <Widget.Title title={t({ id: 'accounts.header_title', message: 'All accounts' })} />
+            <Widget.Title title={t`All accounts`} />
           </Widget.Header>
           {wallets.hasWallets && (
             <Box px="5">
@@ -65,10 +65,7 @@ export function AccountsWidget() {
                 minWidth={86}
                 size="sm"
                 buttonState="default"
-                title={t({
-                  id: 'general.send',
-                  message: `Send`,
-                })}
+                title={t`Send`}
               />
               <ButtonV2
                 onPress={() => {
@@ -77,10 +74,7 @@ export function AccountsWidget() {
                 minWidth={86}
                 size="sm"
                 buttonState="outline"
-                title={t({
-                  id: 'general.receive',
-                  message: `Receive`,
-                })}
+                title={t`Receive`}
               />
             </Box>
           )}

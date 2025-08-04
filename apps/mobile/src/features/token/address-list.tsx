@@ -6,7 +6,7 @@ import { Account } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Money } from '@leather.io/models';
 import { Box, Cell, SheetRef, Text } from '@leather.io/ui/native';
@@ -74,10 +74,7 @@ function AddressList({ account, tokenId }: { account: Account; tokenId: string }
         <AddressListItem
           accountName={account.name}
           address={nativeSegwitPayerAddress}
-          name={t({
-            id: 'token.details.native_segwit_address',
-            message: 'Native Segwit',
-          })}
+          name={t`Native Segwit`}
           tokenId={tokenId}
           availableBalance={availableBalance}
           quoteBalance={quoteBalance}
@@ -86,10 +83,7 @@ function AddressList({ account, tokenId }: { account: Account; tokenId: string }
         <AddressListItem
           accountName={account.name}
           address={taprootPayerAddress}
-          name={t({
-            id: 'token.details.taproot_address',
-            message: 'Taproot',
-          })}
+          name={t`Taproot`}
           tokenId={tokenId}
           availableBalance={availableBalance}
           quoteBalance={quoteBalance}
@@ -103,10 +97,7 @@ function AddressList({ account, tokenId }: { account: Account; tokenId: string }
       <AddressListItem
         accountName={account.name}
         address={stxAddress ?? ''}
-        name={t({
-          id: 'token.details.stx_address',
-          message: 'STX',
-        })}
+        name={t`STX`}
         tokenId={tokenId}
         availableBalance={availableBalance}
         quoteBalance={quoteBalance}

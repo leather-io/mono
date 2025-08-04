@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
 
@@ -17,10 +17,7 @@ function addWalletDefaults({
 }): WalletStore {
   const updatedWallet = produce(wallet, draftWallet => {
     if (!draftWallet.name) {
-      draftWallet.name = t({
-        id: 'wallet.default.name',
-        message: `Wallet ${walletIdx}`,
-      });
+      draftWallet.name = t`Wallet ${walletIdx}`;
     }
     return draftWallet;
   });

@@ -1,6 +1,6 @@
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
 import { useBtcAccountBalance, useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { btcAsset } from '@leather.io/constants';
 import { BtcAvatarIcon } from '@leather.io/ui/native';
@@ -10,17 +10,7 @@ import { OnOpenTokenProps } from '../balances';
 type BitcoinTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
 
 export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
-  return (
-    <TokenBalance
-      ticker="BTC"
-      icon={<BtcAvatarIcon />}
-      tokenName={t({
-        id: 'asset_name.bitcoin',
-        message: 'Bitcoin',
-      })}
-      {...props}
-    />
-  );
+  return <TokenBalance ticker="BTC" icon={<BtcAvatarIcon />} tokenName={t`Bitcoin`} {...props} />;
 }
 
 interface BitcoinBalanceProps {

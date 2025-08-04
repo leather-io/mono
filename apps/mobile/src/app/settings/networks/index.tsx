@@ -4,7 +4,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { useSettings } from '@/store/settings/settings';
 import { defaultNetworkPreferences } from '@/store/settings/utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 
 import {
@@ -40,21 +40,13 @@ export default function SettingsNetworksScreen() {
   function onChangeNetwork(network: DefaultNetworkConfigurations) {
     settings.changeNetworkPreference(network);
     displayToast({
-      title: t({
-        id: 'settings.networks.toast_title',
-        message: 'Changed network',
-      }),
+      title: t`Changed network`,
       type: 'success',
     });
   }
 
   return (
-    <SettingsLayout
-      title={t({
-        id: 'networks.header_title',
-        message: 'Networks',
-      })}
-    >
+    <SettingsLayout title={t`Networks`}>
       <SettingsList>
         {defaultNetworkPreferences.map(network => (
           <SettingsListItem
@@ -64,17 +56,7 @@ export default function SettingsNetworksScreen() {
               message: '{network}',
               values: { network: capitalize(network) },
             })}
-            caption={
-              settings.networkPreference.id === network
-                ? t({
-                    id: 'networks.cell_caption_enabled',
-                    message: 'Enabled',
-                  })
-                : t({
-                    id: 'networks.cell_caption_disabled',
-                    message: 'Disabled',
-                  })
-            }
+            caption={settings.networkPreference.id === network ? t`Enabled` : t`Disabled`}
             key={network}
             onPress={() => onChangeNetwork(network)}
             type="radio"

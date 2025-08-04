@@ -2,7 +2,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { userRemovesApp } from '@/store/apps/apps.write';
 import { App } from '@/store/apps/utils';
 import { useAppDispatch } from '@/store/utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Box, CloseIcon, Pressable, Text } from '@leather.io/ui/native';
 
@@ -20,7 +20,7 @@ export function LinkCard({ app }: LinkCardProps) {
   function onDeleteApp() {
     dispatch(userRemovesApp({ origin: app.origin }));
     displayToast({
-      title: t({ id: 'general.disconnected', message: 'Disconnected' }),
+      title: t`Disconnected`,
       type: 'info',
     });
   }

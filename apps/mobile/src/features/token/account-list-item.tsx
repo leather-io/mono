@@ -4,7 +4,7 @@ import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { WalletStore } from '@/store/wallets/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { ChevronRightIcon, Text } from '@leather.io/ui/native';
 
@@ -22,7 +22,7 @@ export function AccountList({
   const accounts = useAccounts('active');
 
   return (
-    <TokenDetailsCard title={t({ id: 'token.details.accounts_title', message: 'Accounts' })}>
+    <TokenDetailsCard title={t`Accounts`}>
       {accounts.list.map(account => (
         <WalletLoader fingerprint={account.fingerprint} key={account.id}>
           {wallet => (

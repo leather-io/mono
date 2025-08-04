@@ -5,7 +5,7 @@ import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { LEATHER_GUIDES_MOBILE_BITCOIN_UNIT } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 
 import { bitcoinUnitsKeyedByName } from '@leather.io/constants';
@@ -27,10 +27,7 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
   function onUpdateBitcoinUnit(unit: BitcoinUnit) {
     settings.changeBitcoinUnitPreference(unit);
     displayToast({
-      title: t({
-        id: 'bitcoin_unit.toast_title',
-        message: 'Bitcoin unit updated',
-      }),
+      title: t`Bitcoin unit updated`,
       type: 'success',
     });
   }
@@ -38,10 +35,7 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
   return (
     <SettingsSheetLayout
       sheetRef={sheetRef}
-      title={t({
-        id: 'bitcoin_unit.header_title',
-        message: 'Bitcoin unit',
-      })}
+      title={t`Bitcoin unit`}
       onPressSupport={() => openURL(LEATHER_GUIDES_MOBILE_BITCOIN_UNIT)}
     >
       <SettingsList gap="0">

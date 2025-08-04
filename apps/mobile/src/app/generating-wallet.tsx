@@ -1,7 +1,7 @@
 import { Dimensions } from 'react-native';
 
 import { WalletGenerationAnimation } from '@/components/animations/wallet-generation';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Box, Text } from '@leather.io/ui/native';
 
@@ -20,10 +20,7 @@ export default function GeneratingWalletScreen() {
         alignItems="center"
       >
         <Text variant="heading04" color="ink.text-subdued">
-          {t({
-            id: 'add_wallet_animation.title',
-            message: 'Adding wallet...',
-          })}
+          {t`Adding wallet...`}
         </Text>
       </Box>
       <WalletGenerationAnimation />

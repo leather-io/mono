@@ -9,7 +9,7 @@ import { SearchBar } from '@/features/browser/browser/search-bar/search-bar';
 import { useBrowserSearchState } from '@/features/browser/browser/use-browser-search-state';
 import { isValidUrl } from '@/features/browser/browser/utils';
 import { analytics } from '@/utils/analytics';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLocalSearchParams } from 'expo-router';
 
 import { Box } from '@leather.io/ui/native';
@@ -60,10 +60,7 @@ export default function BrowserScreen() {
               } else {
                 displayToast({
                   type: 'error',
-                  title: t({
-                    id: 'browser.search-bar.wrong-url',
-                    message: 'Wrong URL',
-                  }),
+                  title: t`Wrong URL`,
                 });
               }
             });

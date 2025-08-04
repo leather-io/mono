@@ -304,20 +304,20 @@ msgstr "Alex"
 msgid "All accounts"
 msgstr "All accounts"
 
-#: src/app/(tabs)/(index)/index.tsx:61
+#: src/app/(tabs)/(index)/index.tsx:59
 #: src/app/(tabs)/activity.tsx:14
 #: src/app/(tabs)/activity.tsx:20
 msgid "All Activity"
 msgstr "All Activity"
 
 #: src/app/(tabs)/(index)/collectibles/index.tsx:13
-#: src/app/(tabs)/(index)/index.tsx:67
+#: src/app/(tabs)/(index)/index.tsx:65
 msgid "All collectibles"
 msgstr "All collectibles"
 
 #: src/app/(tabs)/(index)/account/[accountId]/balances.tsx:22
 #: src/app/(tabs)/(index)/balances/index.tsx:11
-#: src/app/(tabs)/(index)/index.tsx:54
+#: src/app/(tabs)/(index)/index.tsx:52
 msgid "All tokens"
 msgstr "All tokens"
 

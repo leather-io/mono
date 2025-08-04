@@ -2,7 +2,7 @@ import { RefObject, useEffect } from 'react';
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { GuardResult } from '@/features/send/components/recipient/use-recipient-evaluator';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { AddressDisplayer, Box, Button, type SheetRef, Text } from '@leather.io/ui/native';
 
@@ -27,8 +27,8 @@ export function RecipientGuardSheet({ sheetRef, config, onConfirm }: RecipientWa
     title,
     address,
     description,
-    primaryActionLabel = t({ id: 'send-form.guard.label_confirm', message: 'Confirm' }),
-    secondaryActionLabel = t({ id: 'send-form.guard.label_cancel', message: 'Cancel' }),
+    primaryActionLabel = t`Confirm`,
+    secondaryActionLabel = t`Cancel`,
     severity,
   } = config;
 
@@ -59,15 +59,7 @@ export function RecipientGuardSheet({ sheetRef, config, onConfirm }: RecipientWa
                 <Button buttonState="ghost" title={secondaryActionLabel} onPress={handleDismiss} />
               </>
             ),
-            block: (
-              <Button
-                title={t({
-                  id: 'send-form.guard.label_dismiss',
-                  message: 'Dismiss',
-                })}
-                onPress={handleDismiss}
-              />
-            ),
+            block: <Button title={t`Dismiss`} onPress={handleDismiss} />,
           }[severity]
         }
       </Box>

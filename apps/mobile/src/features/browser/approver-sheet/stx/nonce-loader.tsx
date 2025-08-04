@@ -4,7 +4,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 export function NonceLoader({
   accountId,
@@ -29,10 +29,7 @@ export function NonceLoader({
     if (!isNonceLoading && (isError || !nonceResponse?.nonce)) {
       // TODO: track this
       displayToast({
-        title: t({
-          id: 'nonce-loader.error',
-          message: 'Failed to load latest nonce',
-        }),
+        title: t`Failed to load latest nonce`,
         type: 'error',
       });
     }

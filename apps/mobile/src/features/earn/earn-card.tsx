@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Box, Button, Text } from '@leather.io/ui/native';
 
@@ -50,19 +50,11 @@ export function EarnCard({
           flexDirection="row"
         >
           <Text variant="caption01" color="ink.text-subdued">
-            {t({
-              id: 'earn.historical-yield',
-              message: 'Historical yield',
-            })}
+            {t`Historical yield`}
           </Text>
           <Box flexDirection="row" gap="1" alignItems="baseline">
             <Text variant="heading04">{minYield}</Text>
-            <Text variant="label01">
-              {t({
-                id: 'earn.sbtc.yield-description-to',
-                message: 'to',
-              })}
-            </Text>
+            <Text variant="label01">{t`to`}</Text>
             <Text variant="heading04">{maxYield}</Text>
           </Box>
         </Box>
@@ -99,10 +91,7 @@ function EarnFooter({ description, onPress }: EarnFooterProps) {
           alignItems="center"
           gap="1"
           onPress={onPress}
-          title={t({
-            id: 'earn.sbtc.button',
-            message: 'Enroll',
-          })}
+          title={t`Enroll`}
         />
       </Box>
     </Box>

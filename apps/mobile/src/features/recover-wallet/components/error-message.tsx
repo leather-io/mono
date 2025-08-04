@@ -1,9 +1,6 @@
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 export function constructErrorMessage(invalidWords: string[]) {
   const joinedInvalidWords = invalidWords.join(', ');
-  return t({
-    id: 'recover_wallet.validation_error',
-    message: `Invalid words: ${joinedInvalidWords}`,
-  });
+  return t`Invalid words: ${joinedInvalidWords}`;
 }

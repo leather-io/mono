@@ -8,7 +8,7 @@ import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/ful
 import { QrCard } from '@/features/receive/components/qr-card';
 import { useCopyAddress } from '@/hooks/use-copy-address';
 import { analytics } from '@/utils/analytics';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 
 import {
@@ -71,10 +71,7 @@ export function ReceiveSheet({ data, sheetRef }: ReceiveSheetProps) {
       <FullHeightSheetLayout
         header={
           <FullHeightSheetHeader
-            title={t({
-              id: 'receive_asset.header_title',
-              message: 'Receive',
-            })}
+            title={t`Receive`}
             subtitle={i18n._({
               id: 'select_asset.header_subtitle',
               message: '{subtitle}',
@@ -119,7 +116,7 @@ export function ReceiveSheet({ data, sheetRef }: ReceiveSheetProps) {
           </Pressable>
 
           <Button
-            title={t({ id: 'receive_asset.share_button', message: 'Share' })}
+            title={t`Share`}
             buttonState="outline"
             icon={<ArrowOutOfBoxIcon />}
             style={{ marginTop: 'auto' }}

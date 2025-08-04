@@ -2,7 +2,7 @@ import { ApproverAccountCard } from '@/features/approver/components/approver-acc
 import { ApproverPermissions } from '@/features/approver/components/approver-permissions';
 import { Account } from '@/store/accounts/accounts';
 import { makeAccountIdentifer } from '@/store/utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Approver, Button, Cell, ChevronRightIcon } from '@leather.io/ui/native';
 
@@ -28,13 +28,7 @@ export function GetAddressesApproverLayout({
   return (
     <Approver requester={requester}>
       <Approver.Container>
-        <Approver.Header
-          showLargeFavicon
-          title={t({
-            id: 'approver.connect.title',
-            message: 'Connect',
-          })}
-        />
+        <Approver.Header showLargeFavicon title={t`Connect`} />
         <Approver.Section mb="1">
           {selectedAccountId ? (
             <ApproverAccountCard
@@ -65,21 +59,10 @@ export function GetAddressesApproverLayout({
       </Approver.Container>
       <Approver.Footer>
         <Approver.Actions>
-          <Button
-            buttonState="outline"
-            title={t({
-              id: 'approver.button.deny',
-              message: 'Deny',
-            })}
-            flex={1}
-            onPress={onCloseApprover}
-          />
+          <Button buttonState="outline" title={t`Deny`} flex={1} onPress={onCloseApprover} />
           <Button
             buttonState="default"
-            title={t({
-              id: 'approver.button.confirm',
-              message: 'Confirm',
-            })}
+            title={t`Confirm`}
             flex={1}
             disabled={isSubmitDisabled}
             onPress={onApprove}

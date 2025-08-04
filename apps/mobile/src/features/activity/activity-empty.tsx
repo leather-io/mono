@@ -1,5 +1,5 @@
 import { EmptyLayout } from '@/components/loading';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
 import { Box, Text } from '@leather.io/ui/native';
@@ -11,10 +11,7 @@ export function ActivityEmpty() {
     >
       <Box width={186}>
         <Text textAlign="center" variant="label01">
-          {t({
-            id: 'activity-empty.title',
-            message: 'Make your first transaction to get started',
-          })}
+          {t`Make your first transaction to get started`}
         </Text>
       </Box>
     </EmptyLayout>

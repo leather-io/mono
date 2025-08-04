@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Alert } from 'react-native';
 
 import { getStoreButtonText, handleStoreRedirect } from '@/utils/app-store-utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { ButtonV2 } from '@leather.io/ui/native';
 import { isError } from '@leather.io/utils';
@@ -22,11 +22,9 @@ export function UpdateButton({ onPress }: UpdateButtonProps) {
     try {
       await handleStoreRedirect();
     } catch (error) {
-      Alert.alert(
-        t({ id: 'version_guard.store_error_title', message: 'Unable to Open Store' }),
-        isError(error) ? error.message : t({ id: 'version_guard.store_error_message' }),
-        [{ text: t({ id: 'common.ok', message: 'OK' }), style: 'default' }]
-      );
+      Alert.alert(t`Unable to Open Store`, isError(error) ? error.message : undefined, [
+        { text: t`OK`, style: 'default' },
+      ]);
     } finally {
       setIsLoading(false);
     }

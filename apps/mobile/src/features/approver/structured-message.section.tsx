@@ -1,6 +1,6 @@
 import { Divider } from '@/components/divider';
 import { ClarityValueListDisplayer } from '@/features/approver/clarity-value.section';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { ChainId } from '@stacks/network';
 import {
   ClarityType,
@@ -45,12 +45,7 @@ export function StructuredMessageSection({ messageToSign }: StructuredMessageSec
   const domainChainName = chainIdToDisplay(dom.value['chain-id']);
   return (
     <Approver.Section>
-      <Text variant="label01">
-        {t({
-          id: 'approver.signMessage.message-subtitle',
-          message: 'Message',
-        })}
-      </Text>
+      <Text variant="label01">{t`Message`}</Text>
       <Box gap="4">
         <Box flexDirection="row" justifyContent="space-between">
           <Text>{domainName}</Text>

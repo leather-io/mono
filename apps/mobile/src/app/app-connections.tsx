@@ -3,13 +3,13 @@ import { HeaderTitle } from '@/components/screen/screen-header/components/header
 import { Sticker } from '@/components/sticker';
 import { LinkCard } from '@/features/browser/browser/link-card';
 import { useApps } from '@/store/apps/apps.read';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Box, Text } from '@leather.io/ui/native';
 
 export default function ConnectionsScreen() {
   const { list: appList } = useApps('connected');
-  const title = t({ id: 'browser.connections.title', message: 'Connections' });
+  const title = t`Connections`;
 
   const emptyState = (
     <>
@@ -19,10 +19,7 @@ export default function ConnectionsScreen() {
       <Screen.Body width={270} alignSelf="center" justifyContent="center" alignItems="center">
         <Sticker source={require('@/assets/stickers/ufo.png')} />
         <Text textAlign="center" variant="label01">
-          {t({
-            id: 'browser-sheet.connected.empty.caption',
-            message: 'You will find the apps you are connected to here',
-          })}
+          {t`You will find the apps you are connected to here`}
         </Text>
       </Screen.Body>
     </>
