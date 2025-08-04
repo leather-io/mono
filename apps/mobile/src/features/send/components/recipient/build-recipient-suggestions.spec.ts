@@ -11,9 +11,6 @@ import { assert, describe, expect, it, vi } from 'vitest';
 import { btcAsset } from '@leather.io/constants';
 import { SendAssetActivity } from '@leather.io/models';
 
-// One of the imports references @lingui/macro, causing compile-time errors.
-vi.mock('@lingui/macro', () => ({}));
-
 function createAccount(id: string, name: string): Account {
   return {
     id,

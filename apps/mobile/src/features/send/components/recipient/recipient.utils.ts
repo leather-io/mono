@@ -1,4 +1,4 @@
-import { errorMessages } from '@/features/send/error-messages';
+import { getErrorMessages } from '@/features/send/error-messages';
 import { Account } from '@/store/accounts/accounts';
 import { isDefined } from 'remeda';
 import { SafeParseReturnType } from 'zod';
@@ -8,10 +8,10 @@ import { fetchBtcNameOwner, fetchStacksNameOwner } from '@leather.io/query';
 
 export function recipientSchemaResultContainsError(
   schemaParserResult: SafeParseReturnType<any, any>,
-  messageKey: keyof typeof errorMessages
+  messageKey: keyof ReturnType<typeof getErrorMessages>
 ) {
   return Boolean(
-    schemaParserResult.error?.issues.some(issue => issue.message === errorMessages[messageKey])
+    schemaParserResult.error?.issues.some(issue => issue.message === getErrorMessages()[messageKey])
   );
 }
 

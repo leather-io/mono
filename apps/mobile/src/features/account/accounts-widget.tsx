@@ -13,7 +13,6 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
@@ -28,7 +27,6 @@ export function AccountsWidget() {
   const wallets = useWallets();
   const accounts = useAccounts();
   const { totalBalance } = useTotalBalance();
-  const { i18n } = useLingui();
   const theme = useTheme<Theme>();
   const { addAccountSheetRef, addWalletSheetRef, sendSheetRef, receiveSheetRef } =
     useGlobalSheets();
@@ -99,11 +97,7 @@ export function AccountsWidget() {
                   width={200}
                   isLoading={isLoadingTotalBalance}
                   testID={`${TestId.homeAccountCard}-${i}`}
-                  caption={i18n._({
-                    id: 'accounts.account.cell_caption',
-                    message: '{name}',
-                    values: { name: account.name || '' },
-                  })}
+                  caption={account.name}
                   primaryTitle={
                     <AccountBalance
                       variant="label01"

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { errorMessages } from '@/features/send/error-messages';
+import { getErrorMessages } from '@/features/send/error-messages';
 import { CalculateBtcMaxSpend } from '@/features/send/hooks/use-calculate-btc-max-spend';
 import { addressComplianceValidator } from '@/features/send/utils';
 import * as z from 'zod';
@@ -28,6 +28,8 @@ export function useBtcSendFormSchema({ networkMode, calculateBtcMaxSpend }: Sche
 }
 
 function createBtcSendFormSchema({ networkMode, calculateBtcMaxSpend }: SchemaCreationParams) {
+  const errorMessages = getErrorMessages();
+
   return (
     z
       .object({
@@ -90,7 +92,7 @@ function btcInsufficientBalanceValidator(calculateBtcMaxSpend: CalculateBtcMaxSp
     ) {
       context.addIssue({
         path: ['amount'],
-        message: errorMessages.insufficientFunds,
+        message: getErrorMessages().insufficientFunds,
         code: z.ZodIssueCode.custom,
       });
     }

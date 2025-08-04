@@ -1,5 +1,5 @@
 import { formatCurrency } from '@/utils/currency-formatter';
-import { useLingui } from '@lingui/react';
+import { t } from '@lingui/core/macro';
 
 import { FeeTypes, Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
@@ -26,8 +26,8 @@ export function BitcoinFeeOption({
   isSelected,
   disabled,
 }: BitcoinFeeOptionProps) {
-  const { i18n } = useLingui();
   const sats = createMoney(fee, 'BTC');
+  const formattedQuoteFee = formatCurrency(quoteFee);
 
   return (
     <BaseFeeOption
@@ -38,11 +38,7 @@ export function BitcoinFeeOption({
       isSelected={isSelected}
       disabled={disabled}
       formattedFeeAmount={formatCurrency(sats)}
-      formattedQuoteFeeAmount={i18n._({
-        id: 'fees-sheet.fee-rate-caption',
-        message: '{feeRate} sats/vB · {quoteFee}',
-        values: { feeRate, quoteFee: formatCurrency(quoteFee) },
-      })}
+      formattedQuoteFeeAmount={t`${feeRate} sats/vB · ${formattedQuoteFee}`}
     />
   );
 }

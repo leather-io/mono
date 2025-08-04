@@ -9,7 +9,6 @@ import { useCopyAddress } from '@/hooks/use-copy-address';
 import { TestId } from '@/shared/test-id';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react';
 
 import {
   AddressDisplayer,
@@ -25,7 +24,6 @@ import {
 import { useReceiveNavigation, useReceiveRoute } from '../navigation';
 
 export function AssetDetails() {
-  const { i18n } = useLingui();
   const route = useReceiveRoute<'asset-details'>();
   const navigation = useReceiveNavigation();
   const asset = route.params.asset;
@@ -48,11 +46,7 @@ export function AssetDetails() {
       header={
         <FullHeightSheetHeader
           title={t`Receive`}
-          subtitle={i18n._({
-            id: 'select_asset.header_subtitle',
-            message: '{subtitle}',
-            values: { subtitle: accountName },
-          })}
+          subtitle={accountName}
           leftElement={<HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />}
         />
       }
