@@ -92,10 +92,13 @@ export const cvListSchema = z.object({
 
 export const cvTupleSchema = z.object({
   type: z.literal('tuple') as z.ZodLiteral<ClarityType.Tuple>,
-  value: z.record(z.lazy(() => clarityValueSchema)),
+  value: z.record(
+    z.string(),
+    z.lazy(() => clarityValueSchema)
+  ),
 });
 
-export const clarityValueSchema: z.ZodType<ClarityValue> = z.union([
+export const clarityValueSchema = z.union([
   cvIntSchema,
   cvUintSchema,
   cvBufferSchema,
@@ -111,4 +114,4 @@ export const clarityValueSchema: z.ZodType<ClarityValue> = z.union([
   cvTupleSchema,
   cvAsciiSchema,
   cvUtf8Schema,
-]);
+]) as z.ZodType<ClarityValue>;

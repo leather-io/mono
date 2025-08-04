@@ -9,13 +9,11 @@ import {
 export const stxTransferSip10Ft = defineRpcEndpoint({
   method: 'stx_transferSip10Ft',
   params: z.intersection(
-    z
-      .object({
-        recipient: z.string(),
-        asset: z.string(),
-        amount: z.coerce.number(),
-      })
-      .passthrough(),
+    z.looseObject({
+      recipient: z.string(),
+      asset: z.string(),
+      amount: z.coerce.number(),
+    }),
     baseStacksTransactionConfigSchema
   ),
   result: stacksTransactionDetailsSchema,

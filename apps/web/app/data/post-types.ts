@@ -76,7 +76,7 @@ export interface PostsCollection {
 // Zod schema for ImageAsset
 export const imageAssetSchema = z.object({
   name: z.string(),
-  url: z.string().url(),
+  url: z.url(),
 });
 
 // Zod schema for EarnProvider

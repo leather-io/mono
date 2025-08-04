@@ -4,7 +4,7 @@ export const walletIdSchema = z.object({
   fingerprint: z.string(),
 });
 
-export const accountIdSchema = walletIdSchema.merge(z.object({ accountIndex: z.number() }));
+export const accountIdSchema = walletIdSchema.and(z.object({ accountIndex: z.number() }));
 
 export const bitcoinAddressInfoSchema = z.object({
   taprootDescriptor: z.string(),

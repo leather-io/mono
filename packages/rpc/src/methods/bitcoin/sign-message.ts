@@ -9,22 +9,18 @@ export type Bip322MessageTypes = z.infer<typeof Bip322MessageTypesSchema>;
 
 const supportedPaymentTypesSchema = z.enum(['p2tr', 'p2wpkh']);
 
-export const signMessageRequestParamsSchema = z
-  .object({
-    type: Bip322MessageTypesSchema.optional(),
-    account: z.number().optional(),
-    message: z.string(),
-    paymentType: supportedPaymentTypesSchema,
-  })
-  .passthrough();
+export const signMessageRequestParamsSchema = z.looseObject({
+  type: Bip322MessageTypesSchema.optional(),
+  account: z.number().optional(),
+  message: z.string(),
+  paymentType: supportedPaymentTypesSchema,
+});
 
 export const signMessage = defineRpcEndpoint({
   method: 'signMessage',
   params: signMessageRequestParamsSchema,
-  result: z
-    .object({
-      signature: z.string(),
-      address: z.string(),
-    })
-    .passthrough(),
+  result: z.looseObject({
+    signature: z.string(),
+    address: z.string(),
+  }),
 });

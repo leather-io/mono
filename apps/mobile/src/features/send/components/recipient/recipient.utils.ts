@@ -1,13 +1,13 @@
 import { getErrorMessages } from '@/features/send/error-messages';
 import { Account } from '@/store/accounts/accounts';
 import { isDefined } from 'remeda';
-import { SafeParseReturnType } from 'zod';
+import { ZodSafeParseResult } from 'zod';
 
 import { FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
 import { fetchBtcNameOwner, fetchStacksNameOwner } from '@leather.io/query';
 
 export function recipientSchemaResultContainsError(
-  schemaParserResult: SafeParseReturnType<any, any>,
+  schemaParserResult: ZodSafeParseResult<unknown>,
   messageKey: keyof ReturnType<typeof getErrorMessages>
 ) {
   return Boolean(

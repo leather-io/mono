@@ -8,8 +8,10 @@ import { stxToMicroStx } from '@leather.io/utils';
 export function stxAmountSchema() {
   return z.coerce
     .number({
-      required_error: content.validationMessages.enterAmount,
-      invalid_type_error: content.validationMessages.invalidAmount,
+      error: issue =>
+        issue.input === undefined
+          ? content.validationMessages.enterAmount
+          : content.validationMessages.invalidAmount,
     })
     .positive(content.validationMessages.mustStackAmount);
 }

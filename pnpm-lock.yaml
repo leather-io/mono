@@ -453,8 +453,8 @@ importers:
         specifier: 11.1.0
         version: 11.1.0
       zod:
-        specifier: 3.24.2
-        version: 3.24.2
+        specifier: 4.0.14
+        version: 4.0.14
     devDependencies:
       '@babel/core':
         specifier: 7.27.1
@@ -646,8 +646,8 @@ importers:
         specifier: 1.1.2
         version: 1.1.2(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       zod:
-        specifier: 3.24.2
-        version: 3.24.2
+        specifier: 4.0.14
+        version: 4.0.14
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: 1.10.2
@@ -914,8 +914,8 @@ importers:
         specifier: 9.1.2
         version: 9.1.2
       zod:
-        specifier: 3.24.2
-        version: 3.24.2
+        specifier: 4.0.14
+        version: 4.0.14
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -985,8 +985,8 @@ importers:
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
       zod:
-        specifier: 3.24.2
-        version: 3.24.2
+        specifier: 4.0.14
+        version: 4.0.14
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -1079,8 +1079,8 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
       zod:
-        specifier: 3.24.2
-        version: 3.24.2
+        specifier: 4.0.14
+        version: 4.0.14
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -1134,8 +1134,8 @@ importers:
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
       zod:
-        specifier: 3.24.2
-        version: 3.24.2
+        specifier: 4.0.14
+        version: 4.0.14
     devDependencies:
       tsup:
         specifier: 8.4.0
@@ -1156,8 +1156,8 @@ importers:
         specifier: 1.3.0
         version: 1.3.0
       zod:
-        specifier: 3.24.2
-        version: 3.24.2
+        specifier: 4.0.14
+        version: 4.0.14
     devDependencies:
       expect-type:
         specifier: 1.2.0
@@ -1217,8 +1217,8 @@ importers:
         specifier: 11.1.0
         version: 11.1.0
       zod:
-        specifier: 3.24.2
-        version: 3.24.2
+        specifier: 4.0.14
+        version: 4.0.14
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -16662,8 +16662,11 @@ packages:
   zod@3.22.3:
     resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
 
-  zod@3.24.2:
-    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+  zod@4.0.14:
+    resolution: {integrity: sha512-nGFJTnJN6cM2v9kXL+SOBq3AtjQby3Mv5ySGFof5UGRHrRioSJ5iG680cYNjE/yWk671nROcpPj4hAS8nyLhSw==}
 
   zone-file@2.0.0-beta.3:
     resolution: {integrity: sha512-6tE3PSRcpN5lbTTLlkLez40WkNPc9vw/u1J2j6DBiy0jcVX48nCkWrx2EC+bWHqC2SLp069Xw4AdnYn/qp/W5g==}
@@ -29920,8 +29923,8 @@ snapshots:
       smol-toml: 1.3.4
       strip-json-comments: 5.0.1
       typescript: 5.8.3
-      zod: 3.24.2
-      zod-validation-error: 3.4.1(zod@3.24.2)
+      zod: 3.25.76
+      zod-validation-error: 3.4.1(zod@3.25.76)
 
   kuler@2.0.0: {}
 
@@ -34828,12 +34831,14 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-validation-error@3.4.1(zod@3.24.2):
+  zod-validation-error@3.4.1(zod@3.25.76):
     dependencies:
-      zod: 3.24.2
+      zod: 3.25.76
 
   zod@3.22.3: {}
 
-  zod@3.24.2: {}
+  zod@3.25.76: {}
+
+  zod@4.0.14: {}
 
   zone-file@2.0.0-beta.3: {}

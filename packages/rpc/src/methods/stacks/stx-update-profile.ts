@@ -6,7 +6,7 @@ import { stacksTransactionDetailsSchema } from './_stacks-helpers';
 // Request
 export const stxUpdateProfileRequestParamsSchema = z.object({
   // schema.org/Person
-  person: z.object({}).passthrough(),
+  person: z.looseObject({}),
 });
 
 export const stxUpdateProfileResponseBodySchema = stacksTransactionDetailsSchema;
