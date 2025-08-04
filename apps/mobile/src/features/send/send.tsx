@@ -10,19 +10,22 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 
 interface SendProps {
   accountId?: string;
-  asset?: SendableAsset;
+  asset?: string | undefined | SendableAsset;
 }
 
 export function Send({ accountId, asset }: SendProps) {
   const accounts = useAccounts();
   const selectedAccount = accounts.list.find(account => account.id === accountId);
-
+  console.log('?????????? asset', asset);
+  // PETE - asset is a new thing in this case
+  // just get accountId to work here first and pre-select it
+  console.log('?????????? accountId', accountId);
   return (
     <SendFlowProvider
       initialData={{
         accounts: accounts.list,
         selectedAccount,
-        selectedAsset: asset,
+        selectedAsset: asset as SendableAsset,
       }}
     >
       <SheetNavigationContainer base="send">

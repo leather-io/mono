@@ -9,9 +9,10 @@ import { SelectAsset } from './screens/select-asset';
 
 interface ReceiveProps {
   accountId?: string;
+  asset?: string | undefined;
 }
 
-export function Receive({ accountId }: ReceiveProps) {
+export function Receive({ accountId, asset }: ReceiveProps) {
   const accounts = useAccounts();
   const selectedAccount = accounts.list.find(account => account.id === accountId);
 

@@ -16,6 +16,7 @@ import { TokenPriceChange } from './token-price-change';
 
 interface TokenDetailsProps {
   accountDetails: React.ReactNode;
+  actions: React.ReactNode;
   asset: FungibleCryptoAsset;
   assetDescription: string;
   availableBalance: Money;
@@ -27,6 +28,7 @@ interface TokenDetailsProps {
 
 export function TokenDetails({
   accountDetails,
+  actions,
   asset,
   assetDescription,
   availableBalance,
@@ -53,7 +55,9 @@ export function TokenDetails({
           </Box>
         }
         quoteBalance={<Balance balance={quoteBalance} variant="label01" />}
+        actions={actions}
       />
+
       {assetDescription && <TokenDescription>{assetDescription}</TokenDescription>}
 
       <TokenDetailsTable

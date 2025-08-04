@@ -33,7 +33,7 @@ export function TokenSheet({ data, sheetRef }: TokenSheetProps) {
   function handleDismiss() {
     analytics.track('send_sheet_dismissed');
   }
-
+  console.log('------------ data', data);
   return (
     <FullHeightSheet
       sheetRef={sheetRef}
@@ -42,6 +42,8 @@ export function TokenSheet({ data, sheetRef }: TokenSheetProps) {
       onDismiss={handleDismiss}
     >
       {/* TODO LEA-3015: improve this / add fallback defensiveness */}
+      {/* TODO - this sheet should open once then the content should slide in from the right 
+      when we drill down to account specific content */}
       {data && (
         <Token
           asset={data.asset}

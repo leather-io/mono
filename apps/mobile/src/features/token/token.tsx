@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useTokenDetailsFlag } from '@/features/feature-flags';
 import { TokenIcon } from '@/features/token/components/token-icon';
 import {
@@ -7,9 +8,12 @@ import {
   useAssetPriceChangeQuery,
 } from '@/queries/assets/fungible-asset-info.query';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
+import { useAccountByIndex } from '@/store/accounts/accounts.read';
+import { t } from '@lingui/macro';
+import { useRouter } from 'expo-router';
 
 import { FungibleCryptoAsset, Money } from '@leather.io/models';
-import { SheetRef } from '@leather.io/ui/native';
+import { ButtonV2, SheetRef } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
 import { AccountList } from './account-list-item';
@@ -27,9 +31,12 @@ function AccountDetails({
 }: TokenProps) {
   const tokenDetailsFlag = useTokenDetailsFlag();
 
+  // const [accountIndex, setAccountIndex] = useState<number | null>(null);
   const tokenSheetRef = useRef<SheetRef>(null);
   const [sheetData, setSheetData] = useState<TokenSheetData | null>(null);
 
+  //  TODO - this shouldn't open a new sheet and should instead just update and filter the content
+  // come back to that part
   function onOpenToken(data: TokenSheetData) {
     setSheetData(data);
     // analytics.track('token_sheet_opened', { source: 'action_bar' });
@@ -47,16 +54,18 @@ function AccountDetails({
       ) : (
         <AccountList
           tokenId={asset.symbol}
-          selectAccount={({ accountIndex, fingerprint }) =>
-            tokenDetailsFlag
-              ? onOpenToken({
-                  asset,
-                  accountIndex,
-                  fingerprint,
-                  availableBalance,
-                  quoteBalance,
-                })
-              : undefined
+          selectAccount={
+            ({ accountIndex, fingerprint }) =>
+              tokenDetailsFlag
+                ? onOpenToken({
+                    asset,
+                    accountIndex,
+                    fingerprint,
+                    availableBalance,
+                    quoteBalance,
+                  })
+                : undefined
+            // setAccountIndex(accountIndex)
           }
         />
       )}
@@ -83,7 +92,26 @@ export function Token({
   const price = marketData.data?.price;
   const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const { data: assetPriceChange } = useAssetPriceChangeQuery(asset);
+  const router = useRouter();
+  const { sendSheetRef, receiveSheetRef } = useGlobalSheets();
 
+  const account = useAccountByIndex(fingerprint ?? '', accountIndex ?? 0);
+  const openSendSheet = () => {
+    console.log('------------ account', account, fingerprint, accountIndex, asset.symbol);
+    router.setParams({
+      accountId: account?.id ?? undefined,
+      // tokenId: asset.symbol,
+      asset: asset.symbol,
+    });
+    sendSheetRef.current?.present();
+  };
+
+  const openReceiveSheet = () => {
+    console.log('------------ account', account, fingerprint, accountIndex, asset.symbol);
+
+    router.setParams({ accountId: account?.id ?? undefined, asset: asset.symbol });
+    receiveSheetRef.current?.present();
+  };
   return (
     <TokenActivity
       ticker={asset.symbol}
@@ -100,6 +128,30 @@ export function Token({
               availableBalance={availableBalance}
               quoteBalance={quoteBalance}
             />
+          }
+          actions={
+            <>
+              <ButtonV2
+                onPress={() => openSendSheet()}
+                minWidth={86}
+                size="sm"
+                buttonState="default"
+                title={t({
+                  id: 'general.send',
+                  message: `Send`,
+                })}
+              />
+              <ButtonV2
+                onPress={() => openReceiveSheet()}
+                minWidth={86}
+                size="sm"
+                buttonState="outline"
+                title={t({
+                  id: 'general.receive',
+                  message: `Receive`,
+                })}
+              />
+            </>
           }
           availableBalance={availableBalance ?? createMoney(0, 'BTC')}
           assetDescription={assetDescription?.description ?? ''}

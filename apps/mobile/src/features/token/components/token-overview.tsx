@@ -1,6 +1,7 @@
 import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
 
 export interface TokenOverviewProps {
+  actions: React.ReactNode;
   heading: React.ReactNode;
   isLoading: boolean;
   availableBalance: React.ReactNode;
@@ -8,6 +9,7 @@ export interface TokenOverviewProps {
 }
 
 export function TokenOverview({
+  actions,
   heading,
   isLoading,
   availableBalance,
@@ -34,8 +36,7 @@ export function TokenOverview({
       p="5"
       backgroundColor="ink.background-primary"
     >
-      {/* For all accounts view there is no header so this needs a top margin of 64px */}
-      <Box p="5" flexDirection="column" alignItems="center" gap="3" flex={1}>
+      <Box flexDirection="column" alignItems="center" gap="3" flex={1}>
         {heading}
         <Box gap="1" flexDirection="column" alignItems="center">
           <Text variant="label01" textAlign="center">
@@ -44,6 +45,9 @@ export function TokenOverview({
           <Text variant="caption01" textAlign="center">
             {quoteBalance}
           </Text>
+        </Box>
+        <Box flexDirection="row" justifyContent="center" gap="2">
+          {actions}
         </Box>
       </Box>
     </Box>

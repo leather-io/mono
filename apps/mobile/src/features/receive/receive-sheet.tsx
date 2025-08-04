@@ -12,7 +12,7 @@ import { Receive } from './receive';
 export function ReceiveSheet() {
   const { receiveSheetRef } = useGlobalSheets();
   const triggerHaptics = useHaptics();
-  const { accountId } = useInitialReceiveParams();
+  const { accountId, asset } = useInitialReceiveParams();
 
   function handleAnimatedPositionChange(fromIndex: number, toIndex: number) {
     if (fromIndex === 0 && toIndex === -1) {
@@ -31,7 +31,7 @@ export function ReceiveSheet() {
       onDismiss={handleDismiss}
     >
       <SheetNavigationContainer base="receive">
-        <Receive accountId={accountId} />
+        <Receive accountId={accountId} asset={asset} />
       </SheetNavigationContainer>
     </FullHeightSheet>
   );
@@ -40,6 +40,7 @@ export function ReceiveSheet() {
 function useInitialReceiveParams() {
   const params = useGlobalSearchParams();
   const accountId = isString(params.accountId) ? params.accountId : undefined;
+  const asset = isString(params.asset) ? params.asset : undefined;
 
-  return { accountId };
+  return { accountId, asset };
 }

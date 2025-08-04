@@ -10,7 +10,7 @@ import { useHaptics } from '@leather.io/ui/native';
 export function SendSheet() {
   const { sendSheetRef } = useGlobalSheets();
   const triggerHaptics = useHaptics();
-  const { accountId } = useInitialSendParams();
+  const { accountId, asset } = useInitialSendParams();
 
   function handleAnimatedPositionChange(fromIndex: number, toIndex: number) {
     if (fromIndex === 0 && toIndex === -1) {
@@ -28,7 +28,7 @@ export function SendSheet() {
       onAnimate={handleAnimatedPositionChange}
       onDismiss={handleDismiss}
     >
-      <Send accountId={accountId} />
+      <Send accountId={accountId} asset={asset} />
     </FullHeightSheet>
   );
 }
@@ -36,6 +36,8 @@ export function SendSheet() {
 function useInitialSendParams() {
   const params = useGlobalSearchParams();
   const accountId = isString(params.accountId) ? params.accountId : undefined;
-
-  return { accountId };
+  // in the context of Send/Receive sheet, the asset is a SendableAsset which is a string and not a true asset object
+  const asset = isString(params.asset) ? params.asset : undefined;
+  console.log('--------------- asset', asset);
+  return { accountId, asset };
 }
