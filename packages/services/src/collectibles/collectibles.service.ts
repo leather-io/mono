@@ -3,6 +3,7 @@ import { injectable } from 'inversify';
 
 import {
   AccountAddresses,
+  BitcoinAddressInfo,
   InscriptionAsset,
   NonFungibleCryptoAsset,
   Sip9Asset,
@@ -34,7 +35,7 @@ export class CollectiblesService {
     const bitcoinCollectibles = await Promise.all(
       accounts
         .filter(a => a.bitcoin)
-        .map(a => this.getInscriptionsWithBlockHeight(a.bitcoin!.taprootDescriptor, signal))
+        .map(a => this.getInscriptionsWithBlockHeight(a.bitcoin!, signal))
     );
     return [
       ...stacksCollectibles
@@ -54,7 +55,7 @@ export class CollectiblesService {
   ): Promise<NonFungibleCryptoAsset[]> {
     const [bitcoinCollectibles, stacksCollectibles] = await Promise.all([
       account.bitcoin
-        ? this.getInscriptionsWithBlockHeight(account.bitcoin.taprootDescriptor, signal)
+        ? this.getInscriptionsWithBlockHeight(account.bitcoin, signal)
         : Promise.resolve([]),
       account.stacks
         ? this.getSip9sWithBlockHeight(account.stacks.stxAddress, signal)
@@ -108,12 +109,15 @@ export class CollectiblesService {
   }
 
   private async getInscriptionsWithBlockHeight(
-    taprootDescriptor: string,
+    btcAddressInfo: BitcoinAddressInfo,
     signal?: AbortSignal
   ): Promise<{ asset: InscriptionAsset; blockHeight: number }[]> {
     try {
-      const bisInscriptions = await this.bisApiClient.fetchInscriptions(taprootDescriptor, signal);
-      return bisInscriptions.map(inscription => ({
+      const [taprootInscriptions, nativeSegwitInscriptions] = await Promise.all([
+        this.bisApiClient.fetchInscriptions(btcAddressInfo.taprootDescriptor, signal),
+        this.bisApiClient.fetchInscriptions(btcAddressInfo.nativeSegwitDescriptor, signal),
+      ]);
+      return [...nativeSegwitInscriptions, ...taprootInscriptions].map(inscription => ({
         asset: createInscriptionAsset(mapBisInscriptionToCreateInscriptionData(inscription)),
         blockHeight: inscription.last_transfer_block_height ?? inscription.genesis_height,
       }));

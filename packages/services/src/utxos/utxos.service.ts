@@ -62,7 +62,7 @@ export class UtxosService {
         ? this.getDescriptorUtxos(
             account.id.fingerprint,
             account.bitcoin.nativeSegwitDescriptor,
-            [],
+            unprotectedUtxos,
             signal
           )
         : Promise.resolve(emptyUtxos),

@@ -96,11 +96,11 @@ describe(CollectiblesService.name, () => {
 
       const collectibles = await collectiblesService.getTotalCollectibles(accounts);
 
-      expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(2);
+      expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(4);
       expect(mockStacksApiClient.getNftHoldings).toHaveBeenCalledTimes(2);
       expect(mockSip9AssetService.getAsset).toHaveBeenCalledTimes(4);
 
-      expect(collectibles).toHaveLength(8);
+      expect(collectibles).toHaveLength(12);
 
       // Stacks NFTs first, then Inscriptions
       expect(collectibles[0].protocol).toEqual('sip9');
@@ -111,6 +111,10 @@ describe(CollectiblesService.name, () => {
       expect(collectibles[5].protocol).toEqual('inscription');
       expect(collectibles[6].protocol).toEqual('inscription');
       expect(collectibles[7].protocol).toEqual('inscription');
+      expect(collectibles[8].protocol).toEqual('inscription');
+      expect(collectibles[9].protocol).toEqual('inscription');
+      expect(collectibles[10].protocol).toEqual('inscription');
+      expect(collectibles[11].protocol).toEqual('inscription');
       // Stacks NFTs sorted by blockHeight, Inscriptions by last_transfer_height
       expect((collectibles[0] as Sip9Asset).assetId).toEqual('SP000.nft-2');
       expect((collectibles[1] as Sip9Asset).assetId).toEqual('SP000.nft-2');
@@ -118,8 +122,12 @@ describe(CollectiblesService.name, () => {
       expect((collectibles[3] as Sip9Asset).assetId).toEqual('SP000.nft-1');
       expect((collectibles[4] as InscriptionAsset).id).toEqual('insc1');
       expect((collectibles[5] as InscriptionAsset).id).toEqual('insc1');
-      expect((collectibles[6] as InscriptionAsset).id).toEqual('insc2');
-      expect((collectibles[7] as InscriptionAsset).id).toEqual('insc2');
+      expect((collectibles[6] as InscriptionAsset).id).toEqual('insc1');
+      expect((collectibles[7] as InscriptionAsset).id).toEqual('insc1');
+      expect((collectibles[8] as InscriptionAsset).id).toEqual('insc2');
+      expect((collectibles[9] as InscriptionAsset).id).toEqual('insc2');
+      expect((collectibles[10] as InscriptionAsset).id).toEqual('insc2');
+      expect((collectibles[11] as InscriptionAsset).id).toEqual('insc2');
     });
 
     it('handles accounts with only bitcoin addresses', async () => {
@@ -132,11 +140,17 @@ describe(CollectiblesService.name, () => {
 
       const collectibles = await collectiblesService.getTotalCollectibles(accounts);
 
-      expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(1);
+      expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(2);
       expect(mockStacksApiClient.getNftHoldings).not.toHaveBeenCalled();
-      expect(collectibles).toHaveLength(2);
+      expect(collectibles).toHaveLength(4);
       expect(collectibles[0].protocol).toEqual('inscription');
       expect(collectibles[1].protocol).toEqual('inscription');
+      expect(collectibles[2].protocol).toEqual('inscription');
+      expect(collectibles[3].protocol).toEqual('inscription');
+      expect((collectibles[0] as InscriptionAsset).id).toEqual('insc1');
+      expect((collectibles[1] as InscriptionAsset).id).toEqual('insc1');
+      expect((collectibles[2] as InscriptionAsset).id).toEqual('insc2');
+      expect((collectibles[3] as InscriptionAsset).id).toEqual('insc2');
     });
 
     it('handles accounts with only stacks addresses', async () => {
@@ -171,19 +185,23 @@ describe(CollectiblesService.name, () => {
 
       const collectibles = await collectiblesService.getAccountCollectibles(account);
 
-      expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(1);
+      expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(2);
       expect(mockStacksApiClient.getNftHoldings).toHaveBeenCalledTimes(1);
-      expect(collectibles).toHaveLength(4);
+      expect(collectibles).toHaveLength(6);
       // Stacks NFTs first, then Inscriptions
       expect(collectibles[0].protocol).toEqual('sip9');
       expect(collectibles[1].protocol).toEqual('sip9');
       expect(collectibles[2].protocol).toEqual('inscription');
       expect(collectibles[3].protocol).toEqual('inscription');
+      expect(collectibles[4].protocol).toEqual('inscription');
+      expect(collectibles[5].protocol).toEqual('inscription');
       // Stacks NFTs sorted by blockHeight, Inscriptions by last_transfer_height
       expect((collectibles[0] as Sip9Asset).assetId).toEqual('SP000.nft-2');
       expect((collectibles[1] as Sip9Asset).assetId).toEqual('SP000.nft-1');
       expect((collectibles[2] as InscriptionAsset).id).toEqual('insc1');
-      expect((collectibles[3] as InscriptionAsset).id).toEqual('insc2');
+      expect((collectibles[3] as InscriptionAsset).id).toEqual('insc1');
+      expect((collectibles[4] as InscriptionAsset).id).toEqual('insc2');
+      expect((collectibles[5] as InscriptionAsset).id).toEqual('insc2');
     });
 
     it('handles failed NFT asset info fetches', async () => {
