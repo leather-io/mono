@@ -11,6 +11,9 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      LEATHER_MOCK_MODE: true
+
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
@@ -42,6 +45,4 @@ jobs:
 
       - name: Run Playwright tests
         working-directory: apps/web
-        env:
-          LEATHER_MOCK_MODE: true
         run: pnpm exec playwright test

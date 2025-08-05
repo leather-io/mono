@@ -25,7 +25,7 @@ interface SchemaCreationParams {
   stackedAmount?: BigNumber;
 }
 
-export function createValidationSchema({
+export function createStackingPoolFormValidationSchema({
   providerId,
   networkMode,
   stackedAmount,
@@ -67,4 +67,6 @@ export function createValidationSchema({
     });
 }
 
-export type StackingPoolFormSchema = z.infer<ReturnType<typeof createValidationSchema>>;
+export type StackingPoolFormSchema = z.infer<
+  ReturnType<typeof createStackingPoolFormValidationSchema>
+>;

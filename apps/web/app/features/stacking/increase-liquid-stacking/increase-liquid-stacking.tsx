@@ -7,11 +7,11 @@ import { StackingClient } from '@stacks/stacking';
 import { useMutation } from '@tanstack/react-query';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { LiquidStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
+import { FormPageLayout } from '~/components/forms/form-page.layout';
 import { STACKING_CONTRACT_CALL_TX_BYTES } from '~/constants/constants';
 import { ChooseStackingAmount } from '~/features/stacking/components/choose-stacking-amount';
 import { StackingContractDetails } from '~/features/stacking/components/stacking-contract-details';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
-import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
 import { useGetHasPendingStackingTransactionQuery } from '~/features/stacking/direct-stacking-info/use-get-has-pending-tx-query';
 import {
@@ -184,8 +184,8 @@ function IncreaseLiquidStackingLayout({ protocolSlug, client }: StartLiquidStack
   return (
     <Stack mt="space.09" gap={[null, null, 'space.06', 'space.09']} mb="space.07">
       <FormProvider {...formMethods}>
-        <StartStackingLayout
-          stackingForm={
+        <FormPageLayout
+          form={
             <Form>
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
@@ -230,7 +230,7 @@ function IncreaseLiquidStackingLayout({ protocolSlug, client }: StartLiquidStack
               </Stack>
             </Form>
           }
-          stackingStepsPanel={
+          preview={
             <StackingFormStepsPanel>
               <LiquidStackingConfirmationSteps
                 onSubmit={onSubmit}

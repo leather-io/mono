@@ -10,6 +10,8 @@ export * from './fees/bitcoin-fees';
 
 export * from './mocks/mocks';
 
+export * from './schemas/address-schema';
+
 export * from './payments/p2tr-address-gen';
 export * from './payments/p2wpkh-address-gen';
 export * from './payments/p2wsh-p2sh-address-gen';
