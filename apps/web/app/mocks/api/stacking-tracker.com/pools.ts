@@ -1605,7 +1605,7 @@ const poolsResponse = {
       fee: 0.05,
       feeDisclosed: true,
       logo: '/logos/planbetter.webp',
-      website: 'https://www.planbetter.org',
+      website: 'https://www.planbetter.com',
       symbol: 'BTC',
       slug: 'planbetter-pool',
       stackers_count: 439,

@@ -22,7 +22,7 @@ const providers = {
   planbetter: {
     providerId: 'planbetter',
     name: 'PlanBetter',
-    url: 'https://planbetter.org',
+    url: 'https://planbetter.com',
   },
   restake: {
     providerId: 'restake',
