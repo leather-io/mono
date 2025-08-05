@@ -57,22 +57,82 @@ If you encounter difficulties with `pnpm run ios` you can instead run:
 
 - Once started press `i` to open it in the ios simulator
 
-### Translations
+## Internationalization
 
-We were using CrowdIn to manage translations however this was error prone and not working well. We have since reverted to removing the CrowdIn integration and instead managing text in a more simple manner using only `lingui`.
+We use [Lingui](http://lingui.dev/) for handling translations in the app. Familiarity with
+the library, and concepts such as [message extraction](https://lingui.dev/guides/message-extraction), [ICU](https://lingui.dev/guides/message-format) and [pluralization](https://lingui.dev/guides/plurals)
+is recommended.
 
-All code added must be translate ready and use `lingui` marcros / tags.
+### Workflow
 
-#### Development flow
+All UI text in the code must be translatable using helpers from Lingui.
 
-If you need to add / update an existing translation you will need to:
+### Preferred way of writing basic messages
 
-- make your required code change
-- run `pnpm lingui:extract` to generate a `message.po` file containing your change
-- run `pnpm lingui:compile` to verify the file is not corrupted
-- commit the `messages.po` file to the codebase
+```tsx
+import { t } from '@lingui/core/macro';
 
-#### eslint
+// Use `t` with tagged template literals:
+<Text>{t`View and manage all your wallets in one place`}</Text>;
+```
+
+### Basic interpolation
+
+```tsx
+import { t } from '@lingui/core/macro';
+
+// Use interpolation as you would normally
+<Text>
+  t`${feeRate} sats/vB · ${quoteFee}`
+</Text>;
+```
+
+Lingui will automatically pick up the interpolation, and preserve variable
+names for translators:
+
+```
+# messages.po
+#: src/features/approver/components/fees/bitcoin-fee-option.tsx:41
+msgid "{feeRate} sats/vB · {formattedQuoteFee}"
+msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
+
+```
+
+#### Limitations
+
+`t` macro can only be used within functions. In scenarios when this isn't possible, or you need
+to declare strings at module-level, resort to [lazy translations](https://lingui.dev/ref/macro#definemessage):
+
+```tsx
+import { i18n } from '@lingui/core';
+import { msg } from '@lingui/core/macro';
+
+const statusMessages = {
+  success: msg`Success`,
+  error: msg`Error`,
+  loading: msg`Loading...`,
+};
+
+// use when needed
+<Text>{i18n._(statusMessages.success)}</Text>;
+```
+
+#### Extraction
+
+After finishing working on the feature, run the following command to extract strings from code
+into .po files:
+
+```
+pnpm run lingui:extract
+```
+
+Afterwards commit updated `messages.po` along with your code:
+
+```
+pnpm run lingui:extract
+```
+
+#### ESLint
 
 `eslint` is used to enforce all text using `lingui` in the mobile app.
 
