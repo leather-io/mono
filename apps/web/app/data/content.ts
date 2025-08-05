@@ -234,7 +234,7 @@ export const content = {
   providers: [
     { name: 'Xverse', url: 'https://xverse.app', iconKey: 'XverseIcon' },
     { name: 'Fast Pool', url: 'https://fastpool.org', iconKey: 'FastPoolIcon' },
-    { name: 'PlanBetter', url: 'https://planbetter.org', iconKey: 'PlanBetterIcon' },
+    { name: 'PlanBetter', url: 'https://planbetter.com', iconKey: 'PlanBetterIcon' },
     { name: 'Restake', url: 'https://restake.net/stacks-pool', iconKey: 'RestakeIcon' },
     { name: 'Stacking DAO', url: 'https://www.stackingdao.com', iconKey: 'StackingDaoIcon' },
     { name: 'LISA', url: 'https://www.lisalab.io', iconKey: 'LisaIcon' },
