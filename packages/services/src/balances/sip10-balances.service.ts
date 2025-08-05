@@ -70,7 +70,8 @@ export class Sip10BalancesService {
     address: string,
     signal?: AbortSignal
   ): Promise<Sip10AddressBalance> {
-    const ftBalances = (await this.stacksApiClient.getAddressFtBalances(address, signal)).results;
+    const ftBalances = (await this.stacksApiClient.getAddressFtBalances(address, { signal }))
+      .results;
 
     const sip10Balances = (
       await Promise.allSettled(

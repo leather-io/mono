@@ -75,7 +75,7 @@ export class StxBalancesService {
     signal?: AbortSignal
   ): Promise<AddressQuotedStxBalance> {
     const [addressStxBalanceResponse, pendingTransactions, stxMarketData] = await Promise.all([
-      this.stacksApiClient.getAddressStxBalance(address, signal),
+      this.stacksApiClient.getAddressStxBalance(address, { signal }),
       this.stacksTransactionsService.getPendingTransactions(address, signal),
       this.marketDataService.getMarketData(stxAsset, signal),
     ]);

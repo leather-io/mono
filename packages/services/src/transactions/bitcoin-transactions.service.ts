@@ -46,7 +46,7 @@ export class BitcoinTransactionsService {
     const res = await this.leatherApiClient.fetchBitcoinTransactions(
       descriptor,
       { page: 1, pageSize: 50 },
-      signal
+      { signal }
     );
     return res.data;
   }

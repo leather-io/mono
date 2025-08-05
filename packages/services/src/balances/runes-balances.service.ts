@@ -75,8 +75,10 @@ export class RunesBalancesService {
     const runesOutputs = [];
     if (hasBitcoinAddress(account)) {
       const [taprootRunesOutputs, nativeSegwitRunesOutputs] = await Promise.all([
-        this.bisApiClient.fetchRunesValidOutputs(account.bitcoin.taprootDescriptor, signal),
-        this.bisApiClient.fetchRunesValidOutputs(account.bitcoin.nativeSegwitDescriptor, signal),
+        this.bisApiClient.fetchRunesValidOutputs(account.bitcoin.taprootDescriptor, { signal }),
+        this.bisApiClient.fetchRunesValidOutputs(account.bitcoin.nativeSegwitDescriptor, {
+          signal,
+        }),
       ]);
       runesOutputs.push(...nativeSegwitRunesOutputs, ...taprootRunesOutputs);
     }

@@ -22,7 +22,7 @@ export class NotificationsService {
   ) {
     return await this.leatherApiClient.registerAddresses(
       { addresses, notificationToken, chain },
-      signal
+      { signal }
     );
   }
 }

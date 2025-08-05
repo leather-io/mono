@@ -94,7 +94,7 @@ describe(FungibleAssetInfoService.name, () => {
       expect(mockLeatherApiClient.fetchNativeTokenDescription).toHaveBeenCalledWith(
         btcAsset.symbol,
         'en',
-        signal
+        { signal }
       );
       expect(description).toEqual({
         description: nativeTokenDescription,
@@ -114,7 +114,7 @@ describe(FungibleAssetInfoService.name, () => {
       expect(mockLeatherApiClient.fetchSip10TokenDescription).toHaveBeenCalledWith(
         contractId,
         'en',
-        signal
+        { signal }
       );
       expect(description).toEqual({
         description: sip10TokenDescription,
@@ -131,11 +131,9 @@ describe(FungibleAssetInfoService.name, () => {
         signal
       );
 
-      expect(mockLeatherApiClient.fetchRuneDescription).toHaveBeenCalledWith(
-        runeName,
-        'en',
-        signal
-      );
+      expect(mockLeatherApiClient.fetchRuneDescription).toHaveBeenCalledWith(runeName, 'en', {
+        signal,
+      });
       expect(description).toEqual({
         description: runeDescription,
       });
@@ -172,12 +170,11 @@ describe(FungibleAssetInfoService.name, () => {
         signal
       );
 
-      expect(mockLeatherApiClient.fetchNativeTokenPrice).toHaveBeenCalledWith(
-        btcAsset.symbol,
-        signal
-      );
-      expect(mockLeatherApiClient.fetchSip10Price).toHaveBeenCalledWith(contractId, signal);
-      expect(mockLeatherApiClient.fetchRunePrice).toHaveBeenCalledWith(runeName, signal);
+      expect(mockLeatherApiClient.fetchNativeTokenPrice).toHaveBeenCalledWith(btcAsset.symbol, {
+        signal,
+      });
+      expect(mockLeatherApiClient.fetchSip10Price).toHaveBeenCalledWith(contractId, { signal });
+      expect(mockLeatherApiClient.fetchRunePrice).toHaveBeenCalledWith(runeName, { signal });
 
       expect(nativeAssetPriceChange).toEqual({
         period: '24h',
@@ -237,12 +234,13 @@ describe(FungibleAssetInfoService.name, () => {
         signal
       );
 
-      expect(mockLeatherApiClient.fetchNativeTokenHistory).toHaveBeenCalledWith(
-        btcAsset.symbol,
-        signal
-      );
-      expect(mockLeatherApiClient.fetchSip10TokenHistory).toHaveBeenCalledWith(contractId, signal);
-      expect(mockLeatherApiClient.fetchRuneHistory).toHaveBeenCalledWith(runeName, signal);
+      expect(mockLeatherApiClient.fetchNativeTokenHistory).toHaveBeenCalledWith(btcAsset.symbol, {
+        signal,
+      });
+      expect(mockLeatherApiClient.fetchSip10TokenHistory).toHaveBeenCalledWith(contractId, {
+        signal,
+      });
+      expect(mockLeatherApiClient.fetchRuneHistory).toHaveBeenCalledWith(runeName, { signal });
 
       expect(nativeAssetPriceHistory).toEqual({
         period: '24h',

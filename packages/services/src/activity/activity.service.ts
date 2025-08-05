@@ -136,12 +136,12 @@ export class ActivityService {
       this.hiroStacksApiClient.getAddressTransactions(
         account.stacks.stxAddress,
         { pages: 2 },
-        signal
+        { signal }
       ),
       this.hiroStacksApiClient.getTransactionEvents(
         account.stacks.stxAddress,
         { pages: 2 },
-        signal
+        { signal }
       ),
     ]);
     const eventsByTxId = getEventsByTxId(txEvents);
@@ -171,12 +171,12 @@ export class ActivityService {
       this.hiroStacksApiClient.getAddressTransactions(
         account.stacks.stxAddress,
         { pages: 2 },
-        signal
+        { signal }
       ),
       this.hiroStacksApiClient.getTransactionEvents(
         account.stacks.stxAddress,
         { pages: 2 },
-        signal
+        { signal }
       ),
     ]);
     const stxEventsByTxId = getEventsByTxId(
@@ -212,12 +212,12 @@ export class ActivityService {
       this.hiroStacksApiClient.getAddressTransactions(
         account.stacks.stxAddress,
         { pages: 2 },
-        signal
+        { signal }
       ),
       this.hiroStacksApiClient.getTransactionEvents(
         account.stacks.stxAddress,
         { pages: 2 },
-        signal
+        { signal }
       ),
     ]);
     const eventsByTxId = getEventsByTxId(txEvents);

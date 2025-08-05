@@ -35,19 +35,15 @@ export class FungibleAssetInfoService {
     switch (asset.protocol) {
       case CryptoAssetProtocols.nativeBtc:
       case CryptoAssetProtocols.nativeStx:
-        return await this.leatherApiClient.fetchNativeTokenDescription(
-          asset.symbol,
-          locale,
-          signal
-        );
+        return await this.leatherApiClient.fetchNativeTokenDescription(asset.symbol, locale, {
+          signal,
+        });
       case CryptoAssetProtocols.sip10:
-        return await this.leatherApiClient.fetchSip10TokenDescription(
-          asset.contractId,
-          locale,
-          signal
-        );
+        return await this.leatherApiClient.fetchSip10TokenDescription(asset.contractId, locale, {
+          signal,
+        });
       case CryptoAssetProtocols.rune:
-        return await this.leatherApiClient.fetchRuneDescription(asset.runeName, locale, signal);
+        return await this.leatherApiClient.fetchRuneDescription(asset.runeName, locale, { signal });
       default:
         throw Error('Asset descriptions not supported for asset type: ' + asset.protocol);
     }
@@ -104,11 +100,11 @@ export class FungibleAssetInfoService {
     switch (asset.protocol) {
       case CryptoAssetProtocols.nativeBtc:
       case CryptoAssetProtocols.nativeStx:
-        return this.leatherApiClient.fetchNativeTokenHistory(asset.symbol, signal);
+        return this.leatherApiClient.fetchNativeTokenHistory(asset.symbol, { signal });
       case CryptoAssetProtocols.sip10:
-        return this.leatherApiClient.fetchSip10TokenHistory(asset.contractId, signal);
+        return this.leatherApiClient.fetchSip10TokenHistory(asset.contractId, { signal });
       case CryptoAssetProtocols.rune:
-        return this.leatherApiClient.fetchRuneHistory(asset.runeName, signal);
+        return this.leatherApiClient.fetchRuneHistory(asset.runeName, { signal });
       default:
         throw Error('Price history not supported for asset type: ' + asset.protocol);
     }
@@ -121,11 +117,13 @@ export class FungibleAssetInfoService {
     switch (asset.protocol) {
       case CryptoAssetProtocols.nativeBtc:
       case CryptoAssetProtocols.nativeStx:
-        return (await this.leatherApiClient.fetchNativeTokenPrice(asset.symbol, signal)).change24h;
+        return (await this.leatherApiClient.fetchNativeTokenPrice(asset.symbol, { signal }))
+          .change24h;
       case CryptoAssetProtocols.sip10:
-        return (await this.leatherApiClient.fetchSip10Price(asset.contractId, signal)).change24h;
+        return (await this.leatherApiClient.fetchSip10Price(asset.contractId, { signal }))
+          .change24h;
       case CryptoAssetProtocols.rune:
-        return (await this.leatherApiClient.fetchRunePrice(asset.runeName, signal)).change24h;
+        return (await this.leatherApiClient.fetchRunePrice(asset.runeName, { signal })).change24h;
       default:
         throw Error('Price change not supported for asset type: ' + asset.protocol);
     }
