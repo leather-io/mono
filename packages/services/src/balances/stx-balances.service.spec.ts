@@ -56,7 +56,9 @@ describe(StxBalancesService.name, () => {
     it('retrieves stx balance using stacks api account balance and pending transactions', async () => {
       const signal = new AbortController().signal;
       const balance = await stxBalancesService.getStxAddressBalance(stacksAddress, signal);
-      expect(mockStacksApiClient.getAddressStxBalance).toHaveBeenCalledWith(stacksAddress, signal);
+      expect(mockStacksApiClient.getAddressStxBalance).toHaveBeenCalledWith(stacksAddress, {
+        signal,
+      });
       expect(mockStacksTransactionsService.getPendingTransactions).toHaveBeenCalledWith(
         stacksAddress,
         signal

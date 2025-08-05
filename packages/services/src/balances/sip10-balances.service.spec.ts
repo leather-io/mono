@@ -74,7 +74,9 @@ describe(Sip10BalancesService.name, () => {
         stacksAddress,
         signal
       );
-      expect(mockStacksApiClient.getAddressFtBalances).toHaveBeenCalledWith(stacksAddress, signal);
+      expect(mockStacksApiClient.getAddressFtBalances).toHaveBeenCalledWith(stacksAddress, {
+        signal,
+      });
       expect(mockMarketDataService.getMarketData).toHaveBeenCalledTimes(2);
       expect(mockSip10TokensService.getAsset).toHaveBeenCalledTimes(2);
       expect(addressBalance.sip10s.length).toEqual(2);

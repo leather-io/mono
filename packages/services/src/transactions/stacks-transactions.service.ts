@@ -16,8 +16,8 @@ export class StacksTransactionsService {
    */
   public async getPendingTransactions(address: string, signal?: AbortSignal): Promise<StacksTx[]> {
     const [mempoolTransactionsResponse, addressTransactionsResponse] = await Promise.all([
-      this.stacksApiClient.getAddressMempoolTransactions(address, signal),
-      this.stacksApiClient.getAddressTransactions(address, { pages: 1 }, signal),
+      this.stacksApiClient.getAddressMempoolTransactions(address, { signal }),
+      this.stacksApiClient.getAddressTransactions(address, { pages: 1 }, { signal }),
     ]);
     const addressTransactions = addressTransactionsResponse.map(tx => tx.tx);
     return mempoolTransactionsResponse.results

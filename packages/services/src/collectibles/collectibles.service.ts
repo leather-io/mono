@@ -72,7 +72,7 @@ export class CollectiblesService {
     signal?: AbortSignal
   ): Promise<{ asset: Sip9Asset; blockHeight: number }[]> {
     try {
-      const nftHoldings = await this.stacksApiClient.getNftHoldings(stxAddress, signal);
+      const nftHoldings = await this.stacksApiClient.getNftHoldings(stxAddress, { signal });
       const BATCH_SIZE = 6;
       const sip9s = [];
       for (let i = 0; i < nftHoldings.length; i += BATCH_SIZE) {
@@ -114,8 +114,8 @@ export class CollectiblesService {
   ): Promise<{ asset: InscriptionAsset; blockHeight: number }[]> {
     try {
       const [taprootInscriptions, nativeSegwitInscriptions] = await Promise.all([
-        this.bisApiClient.fetchInscriptions(btcAddressInfo.taprootDescriptor, signal),
-        this.bisApiClient.fetchInscriptions(btcAddressInfo.nativeSegwitDescriptor, signal),
+        this.bisApiClient.fetchInscriptions(btcAddressInfo.taprootDescriptor, { signal }),
+        this.bisApiClient.fetchInscriptions(btcAddressInfo.nativeSegwitDescriptor, { signal }),
       ]);
       return [...nativeSegwitInscriptions, ...taprootInscriptions].map(inscription => ({
         asset: createInscriptionAsset(mapBisInscriptionToCreateInscriptionData(inscription)),

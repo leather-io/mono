@@ -9,6 +9,9 @@ import { RunesBalancesService } from './balances/runes-balances.service';
 import { Sip10BalancesService } from './balances/sip10-balances.service';
 import { StxBalancesService } from './balances/stx-balances.service';
 import { CollectiblesService } from './collectibles/collectibles.service';
+import { BestInSlotApiClient } from './infrastructure/api/best-in-slot/best-in-slot-api.client';
+import { HiroStacksApiClient } from './infrastructure/api/hiro/hiro-stacks-api.client';
+import { LeatherApiClient } from './infrastructure/api/leather/leather-api.client';
 import { HttpCacheService } from './infrastructure/cache/http-cache.service';
 import { Environment } from './infrastructure/environment';
 import { SettingsService } from './infrastructure/settings/settings.service';
@@ -94,4 +97,16 @@ export function getNotificationsService() {
 }
 export function getFungibleAssetInfoService() {
   return getServicesContainer().get(FungibleAssetInfoService);
+}
+/* 
+  API Layer Clients
+*/
+export function getLeatherApiClient() {
+  return getServicesContainer().get(LeatherApiClient);
+}
+export function getHiroStacksApiClient() {
+  return getServicesContainer().get(HiroStacksApiClient);
+}
+export function getBisApiClient() {
+  return getServicesContainer().get(BestInSlotApiClient);
 }

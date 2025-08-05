@@ -12,6 +12,7 @@ import { leatherApiPriorities } from '../../rate-limiter/leather-rate-limiter';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
 import { selectBitcoinNetwork } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
+import { ApiRequestOptions } from '../types';
 import { LeatherApiError } from './leather-api.error';
 import { LeatherApiPageRequest, getPageRequestQueryParams } from './leather-api.pagination';
 import { paths } from './leather-api.types';
@@ -58,64 +59,67 @@ export class LeatherApiClient {
     });
   }
 
-  async fetchUtxos(descriptor: string, signal?: AbortSignal) {
+  async fetchUtxos(descriptor: string, { signal, skipCache }: ApiRequestOptions = {}) {
     const network = this.settingsService.getSettings().network.chain.bitcoin.bitcoinNetwork;
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-utxos', network, descriptor],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () =>
-            this.client.GET(`/v1/utxos/{descriptor}`, {
-              params: { path: { descriptor }, query: { network } },
-              signal,
-            }),
-          {
-            priority: leatherApiPriorities.utxos,
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET(`/v1/utxos/{descriptor}`, {
+            params: { path: { descriptor }, query: { network } },
             signal,
-          }
-        );
-        return data!;
-      }
-    );
+          }),
+        {
+          priority: leatherApiPriorities.utxos,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-utxos', network, descriptor], fetchFn);
   }
 
   async fetchBitcoinTransactions(
     descriptor: string,
     pageRequest: LeatherApiPageRequest,
-    signal?: AbortSignal
+    { signal, skipCache }: ApiRequestOptions = {}
   ) {
     const params = getPageRequestQueryParams(pageRequest);
     const network = selectBitcoinNetwork(this.settingsService.getSettings());
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-transactions', descriptor, params.toString()],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () =>
-            this.client.GET(`/v1/transactions/{descriptor}`, {
-              params: {
-                path: { descriptor },
-                query: {
-                  network,
-                  page: pageRequest.page.toString(),
-                  pageSize: pageRequest.pageSize.toString(),
-                },
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET(`/v1/transactions/{descriptor}`, {
+            params: {
+              path: { descriptor },
+              query: {
+                network,
+                page: pageRequest.page.toString(),
+                pageSize: pageRequest.pageSize.toString(),
               },
-              signal,
-            }),
-          {
-            priority: leatherApiPriorities.bitcoinTransactions,
+            },
             signal,
-          }
+          }),
+        {
+          priority: leatherApiPriorities.bitcoinTransactions,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-transactions', descriptor, params.toString()],
+          fetchFn
         );
-        return data!;
-      }
-    );
   }
 
-  async fetchUsdExchangeRates(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(['leather-api-usd-exchange-rates'], async () => {
+  async fetchUsdExchangeRates({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () => this.client.GET('/v1/market/fiat-rates', { signal }),
@@ -125,124 +129,133 @@ export class LeatherApiClient {
         }
       );
       return data!;
-    });
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-usd-exchange-rates'], fetchFn);
   }
 
-  async fetchNativeTokenPriceList(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-native-token-price-list'],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () => this.client.GET('/v1/market/prices/native', { signal }),
-          {
-            priority: leatherApiPriorities.nativeTokenPriceList,
-            signal,
-          }
-        );
-        if (data?.format !== 'list') {
-          throw new Error('Unrecognized collection format');
+  async fetchNativeTokenPriceList({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () => this.client.GET('/v1/market/prices/native', { signal }),
+        {
+          priority: leatherApiPriorities.nativeTokenPriceList,
+          signal,
         }
-        return data?.data;
+      );
+      if (data?.format !== 'list') {
+        throw new Error('Unrecognized collection format');
       }
-    );
+      return data?.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-native-token-price-list'], fetchFn);
   }
 
-  async fetchNativeTokenPriceMap(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-native-token-price-map'],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () =>
-            this.client.GET('/v1/market/prices/native', {
-              signal,
-              params: {
-                query: { format: 'map' },
-              },
-            }),
-          {
-            priority: leatherApiPriorities.nativeTokenPriceMap,
+  async fetchNativeTokenPriceMap({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/market/prices/native', {
             signal,
-          }
-        );
-        if (data?.format !== 'map') {
-          throw new Error('Unrecognized collection format');
+            params: {
+              query: { format: 'map' },
+            },
+          }),
+        {
+          priority: leatherApiPriorities.nativeTokenPriceMap,
+          signal,
         }
-        return data?.data;
+      );
+      if (data?.format !== 'map') {
+        throw new Error('Unrecognized collection format');
       }
-    );
+      return data?.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-native-token-price-map'], fetchFn);
   }
 
-  async fetchNativeTokenPrice(symbol: string, signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-native-token-price', symbol],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () =>
-            this.client.GET('/v1/market/prices/native/{symbol}', {
-              signal,
-              params: { path: { symbol } },
-            }),
-          {
-            priority: leatherApiPriorities.nativeTokenPrice,
+  async fetchNativeTokenPrice(symbol: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/market/prices/native/{symbol}', {
             signal,
-          }
-        );
-        return data!;
-      }
-    );
+            params: { path: { symbol } },
+          }),
+        {
+          priority: leatherApiPriorities.nativeTokenPrice,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-native-token-price', symbol], fetchFn);
   }
 
   async fetchNativeTokenDescription(
     symbol: string,
     locale: LeatherApiLocale,
-    signal?: AbortSignal
+    { signal, skipCache }: ApiRequestOptions = {}
   ) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-native-token-description', symbol, locale],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () =>
-            this.client.GET('/v1/tokens/native/{symbol}/description', {
-              signal,
-              params: { path: { symbol }, query: { locale } },
-            }),
-          {
-            priority: leatherApiPriorities.nativeTokenDescription,
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/tokens/native/{symbol}/description', {
             signal,
-          }
+            params: { path: { symbol }, query: { locale } },
+          }),
+        {
+          priority: leatherApiPriorities.nativeTokenDescription,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-native-token-description', symbol, locale],
+          fetchFn
         );
-        return data!;
-      }
-    );
   }
 
-  async fetchNativeTokenHistory(symbol: string, signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-native-token-history', symbol],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () =>
-            this.client.GET('/v1/market/prices/native/{symbol}/history', {
-              signal,
-              params: { path: { symbol } },
-            }),
-          {
-            priority: leatherApiPriorities.nativeTokenHistory,
+  async fetchNativeTokenHistory(symbol: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/market/prices/native/{symbol}/history', {
             signal,
-          }
+            params: { path: { symbol } },
+          }),
+        {
+          priority: leatherApiPriorities.nativeTokenHistory,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-native-token-history', symbol],
+          fetchFn
         );
-        return data!;
-      }
-    );
   }
 
-  async fetchRunePriceList(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(['leather-api-rune-price-list'], async () => {
+  async fetchRunePriceList({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () => this.client.GET('/v1/market/prices/runes', { signal }),
@@ -255,11 +268,14 @@ export class LeatherApiClient {
         throw new Error('Unrecognized collection format');
       }
       return data.data;
-    });
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-rune-price-list'], fetchFn);
   }
 
-  async fetchRunePriceMap(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(['leather-api-rune-price-map'], async () => {
+  async fetchRunePriceMap({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () =>
@@ -276,32 +292,35 @@ export class LeatherApiClient {
         throw new Error('Unrecognized collection format');
       }
       return data.data;
-    });
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-rune-price-map'], fetchFn);
   }
 
-  async fetchRunePrice(runeName: string, signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-rune-price', runeName],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () =>
-            this.client.GET('/v1/market/prices/runes/{runeName}', {
-              signal,
-              params: { path: { runeName } },
-            }),
-          {
-            priority: leatherApiPriorities.runePrice,
+  async fetchRunePrice(runeName: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/market/prices/runes/{runeName}', {
             signal,
-          }
-        );
-        return data!;
-      }
-    );
+            params: { path: { runeName } },
+          }),
+        {
+          priority: leatherApiPriorities.runePrice,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-rune-price', runeName], fetchFn);
   }
 
-  async fetchRuneList(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(['leather-api-rune-list'], async () => {
+  async fetchRuneList({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () => this.client.GET('/v1/tokens/runes', { signal }),
@@ -314,11 +333,14 @@ export class LeatherApiClient {
         throw new Error('Unrecognized collection format');
       }
       return data.data;
-    });
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-rune-list'], fetchFn);
   }
 
-  async fetchRuneMap(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(['leather-api-rune-map'], async () => {
+  async fetchRuneMap({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () =>
@@ -335,11 +357,14 @@ export class LeatherApiClient {
         throw new Error('Unrecognized collection format');
       }
       return data.data;
-    });
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-rune-map'], fetchFn);
   }
 
-  async fetchRune(runeName: string, signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(['leather-api-rune', runeName], async () => {
+  async fetchRune(runeName: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () =>
@@ -353,47 +378,57 @@ export class LeatherApiClient {
         }
       );
       return data!;
-    });
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-rune', runeName], fetchFn);
   }
 
-  async fetchRuneDescription(runeName: string, locale: LeatherApiLocale, signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-rune-description', runeName, locale],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () =>
-            this.client.GET('/v1/tokens/runes/{runeName}/description', {
-              signal,
-              params: { path: { runeName }, query: { locale } },
-            }),
-          {
-            priority: leatherApiPriorities.runeDescription,
+  async fetchRuneDescription(
+    runeName: string,
+    locale: LeatherApiLocale,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/tokens/runes/{runeName}/description', {
             signal,
-          }
+            params: { path: { runeName }, query: { locale } },
+          }),
+        {
+          priority: leatherApiPriorities.runeDescription,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-rune-description', runeName, locale],
+          fetchFn
         );
-        return data!;
-      }
-    );
   }
 
-  async fetchRuneHistory(runeName: string, signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-rune-history', runeName],
-      async () => {
-        const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
-          this.client.GET('/v1/market/prices/runes/{runeName}/history', {
-            signal,
-            params: { path: { runeName } },
-          })
-        );
-        return data!;
-      }
-    );
+  async fetchRuneHistory(runeName: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
+        this.client.GET('/v1/market/prices/runes/{runeName}/history', {
+          signal,
+          params: { path: { runeName } },
+        })
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-rune-history', runeName], fetchFn);
   }
 
-  async fetchSip10PriceList(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(['leather-api-sip10-price-list'], async () => {
+  async fetchSip10PriceList({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () => this.client.GET('/v1/market/prices/sip10s', { signal }),
@@ -406,11 +441,14 @@ export class LeatherApiClient {
         throw new Error('Unrecognized collection format');
       }
       return data.data;
-    });
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-sip10-price-list'], fetchFn);
   }
 
-  async fetchSip10PriceMap(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(['leather-api-sip10-price-map'], async () => {
+  async fetchSip10PriceMap({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () =>
@@ -427,32 +465,35 @@ export class LeatherApiClient {
         throw new Error('Unrecognized collection format');
       }
       return data.data;
-    });
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-sip10-price-map'], fetchFn);
   }
 
-  async fetchSip10Price(principal: string, signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-sip10-price', principal],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () =>
-            this.client.GET('/v1/market/prices/sip10s/{principal}', {
-              signal,
-              params: { path: { principal } },
-            }),
-          {
-            priority: leatherApiPriorities.sip10Price,
+  async fetchSip10Price(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/market/prices/sip10s/{principal}', {
             signal,
-          }
-        );
-        return data!;
-      }
-    );
+            params: { path: { principal } },
+          }),
+        {
+          priority: leatherApiPriorities.sip10Price,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-sip10-price', principal], fetchFn);
   }
 
-  async fetchSip10TokenList(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(['leather-api-sip10-token-list'], async () => {
+  async fetchSip10TokenList({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () => this.client.GET('/v1/tokens/sip10s', { signal }),
@@ -465,11 +506,14 @@ export class LeatherApiClient {
         throw new Error('Unrecognized collection format');
       }
       return data.data;
-    });
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-sip10-token-list'], fetchFn);
   }
 
-  async fetchSip10TokenMap(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(['leather-api-sip10-token-map'], async () => {
+  async fetchSip10TokenMap({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () =>
@@ -486,78 +530,87 @@ export class LeatherApiClient {
         throw new Error('Unrecognized collection format');
       }
       return data.data;
-    });
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-sip10-token-map'], fetchFn);
   }
 
-  async fetchSip10Token(principal: string, signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-sip10-token', principal],
-      async () => {
-        try {
-          const { data } = await this.rateLimiter.add(
-            RateLimiterType.Leather,
-            () =>
-              this.client.GET('/v1/tokens/sip10s/{principal}', {
-                signal,
-                params: { path: { principal } },
-              }),
-            {
-              priority: leatherApiPriorities.sip10Token,
+  async fetchSip10Token(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      try {
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/tokens/sip10s/{principal}', {
               signal,
-            }
-          );
-          return data!;
-        } catch (error) {
-          if (
-            LeatherApiError.isLeatherApiError(error) &&
-            (error.isNotFound() || error.isUnprocessableEntity())
-          ) {
-            return null;
+              params: { path: { principal } },
+            }),
+          {
+            priority: leatherApiPriorities.sip10Token,
+            signal,
           }
-          throw error;
+        );
+        return data!;
+      } catch (error) {
+        if (
+          LeatherApiError.isLeatherApiError(error) &&
+          (error.isNotFound() || error.isUnprocessableEntity())
+        ) {
+          return null;
         }
+        throw error;
       }
-    );
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-sip10-token', principal], fetchFn);
   }
 
   async fetchSip10TokenDescription(
     principal: string,
     locale: LeatherApiLocale,
-    signal?: AbortSignal
+    { signal, skipCache }: ApiRequestOptions = {}
   ) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-sip10-token-description', principal, locale],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () =>
-            this.client.GET('/v1/tokens/sip10s/{principal}/description', {
-              signal,
-              params: { path: { principal }, query: { locale } },
-            }),
-          {
-            priority: leatherApiPriorities.sip10TokenDescription,
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/tokens/sip10s/{principal}/description', {
             signal,
-          }
+            params: { path: { principal }, query: { locale } },
+          }),
+        {
+          priority: leatherApiPriorities.sip10TokenDescription,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-sip10-token-description', principal, locale],
+          fetchFn
         );
-        return data!;
-      }
-    );
   }
 
-  async fetchSip10TokenHistory(principal: string, signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-sip10-token-history', principal],
-      async () => {
-        const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
-          this.client.GET('/v1/market/prices/sip10s/{principal}/history', {
-            signal,
-            params: { path: { principal } },
-          })
+  async fetchSip10TokenHistory(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
+        this.client.GET('/v1/market/prices/sip10s/{principal}/history', {
+          signal,
+          params: { path: { principal } },
+        })
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-sip10-token-history', principal],
+          fetchFn
         );
-        return data!;
-      }
-    );
   }
 
   async registerAddresses(
@@ -570,30 +623,33 @@ export class LeatherApiClient {
       notificationToken: string;
       chain: SupportedBlockchains;
     },
-    signal?: AbortSignal
+    { signal, skipCache }: ApiRequestOptions = {}
   ) {
-    return await this.cacheService.fetchWithCache(
-      ['leather-api-register-notifications', addresses, notificationToken, chain],
-      async () => {
-        const { data } = await this.rateLimiter.add(
-          RateLimiterType.Leather,
-          () =>
-            this.client.POST('/v1/notifications/register', {
-              body: {
-                addresses,
-                notificationToken,
-                chain,
-                network: 'mainnet',
-              },
-              signal,
-            }),
-          {
-            priority: leatherApiPriorities.registerAddresses,
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.POST('/v1/notifications/register', {
+            body: {
+              addresses,
+              notificationToken,
+              chain,
+              network: 'mainnet',
+            },
             signal,
-          }
+          }),
+        {
+          priority: leatherApiPriorities.registerAddresses,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-register-notifications', addresses, notificationToken, chain],
+          fetchFn
         );
-        return data!;
-      }
-    );
   }
 }

@@ -86,7 +86,7 @@ export class MarketDataService {
         createMoney(
           convertAmountToFractionalUnit(
             initBigNumber(
-              (await this.leatherApiClient.fetchNativeTokenPriceMap(signal))[base].price
+              (await this.leatherApiClient.fetchNativeTokenPriceMap({ signal }))[base].price
             ),
             currencyDecimalsMap['USD']
           ),
@@ -95,7 +95,7 @@ export class MarketDataService {
       );
     } else {
       // Leather API returns USD/Fiat rates, need to invert to get Fiat/USD
-      const usdExchangeRates = await this.leatherApiClient.fetchUsdExchangeRates(signal);
+      const usdExchangeRates = await this.leatherApiClient.fetchUsdExchangeRates({ signal });
       const usdToFiatRate = createMarketData(
         createMarketPair('USD', base),
         createMoney(
@@ -115,7 +115,7 @@ export class MarketDataService {
     asset: NativeCryptoAsset,
     signal?: AbortSignal
   ): Promise<MarketData> {
-    const priceMap = await this.leatherApiClient.fetchNativeTokenPriceMap(signal);
+    const priceMap = await this.leatherApiClient.fetchNativeTokenPriceMap({ signal });
     const nativeAssetPriceUsd = createMoney(
       convertAmountToFractionalUnit(
         initBigNumber(priceMap[asset.symbol].price),
@@ -130,7 +130,7 @@ export class MarketDataService {
     asset: Sip10Asset,
     signal?: AbortSignal
   ): Promise<MarketData> {
-    const tokenPriceMap = await this.leatherApiClient.fetchSip10PriceMap(signal);
+    const tokenPriceMap = await this.leatherApiClient.fetchSip10PriceMap({ signal });
     const tokenPriceMatch = tokenPriceMap[asset.contractId];
     if (!tokenPriceMatch) {
       return createMarketData(createMarketPair(asset.symbol, 'USD'), createMoney(0, 'USD'));
@@ -148,11 +148,11 @@ export class MarketDataService {
   }
 
   private async getRuneMarketDataUsd(asset: RuneAsset, signal?: AbortSignal): Promise<MarketData> {
-    const runePriceMap = await this.leatherApiClient.fetchRunePriceMap(signal);
+    const runePriceMap = await this.leatherApiClient.fetchRunePriceMap({ signal });
 
     const runePriceUsd = runePriceMap[asset.runeName]
       ? runePriceMap[asset.runeName]
-      : await this.leatherApiClient.fetchRunePrice(asset.runeName, signal);
+      : await this.leatherApiClient.fetchRunePrice(asset.runeName, { signal });
 
     return createMarketData(
       createMarketPair(asset.runeName, 'USD'),
@@ -172,7 +172,7 @@ export class MarketDataService {
   ): Promise<MarketData> {
     const [btcMarketData, bisMarketInfo] = await Promise.all([
       await this.getNativeAssetMarketDataUsd(btcAsset, signal),
-      await this.bestInSlotApiClient.fetchBrc20MarketInfo(asset.symbol, signal),
+      await this.bestInSlotApiClient.fetchBrc20MarketInfo(asset.symbol, { signal }),
     ]);
     const brc20PriceUsd = baseCurrencyAmountInQuote(
       createMoney(bisMarketInfo.min_listed_unit_price ?? 0, 'BTC'),

@@ -139,8 +139,8 @@ export class UtxosService {
   ): Promise<OwnedUtxo[]> {
     const [utxos, inscriptions, runeOutputs] = await Promise.all([
       this.getOwnedUtxos(descriptor, fingerprint, signal),
-      this.bisApiClient.fetchInscriptions(descriptor, signal),
-      this.bisApiClient.fetchRunesValidOutputs(descriptor, signal),
+      this.bisApiClient.fetchInscriptions(descriptor, { signal }),
+      this.bisApiClient.fetchRunesValidOutputs(descriptor, { signal }),
     ]);
     const inscribedUtxoIds = inscriptions
       .map(inscription => getUtxoIdFromSatpoint(inscription.satpoint))
@@ -155,7 +155,7 @@ export class UtxosService {
     fingerprint: string,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
-    const utxos = await this.leatherApiClient.fetchUtxos(descriptor, signal);
+    const utxos = await this.leatherApiClient.fetchUtxos(descriptor, { signal });
     return utxos.map(utxo => mapLeatherApiUtxoToOwnedUtxo(utxo, fingerprint));
   }
 }
