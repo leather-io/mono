@@ -71,6 +71,18 @@ export function findHighestAccountIndexOfFingerprint<T extends WithDescriptor>(
   );
 }
 
+export function findHighestStacksAccountOfFingerprint<T extends WithDescriptor>(
+  accounts: T[],
+  fingerprint: string
+) {
+  return Math.max(
+    0,
+    ...accounts
+      .filter(filterKeychainsByFingerprint(fingerprint))
+      .map(account => extractAddressIndexFromPath(account.descriptor))
+  );
+}
+
 export function descriptorKeychainSelectors<T extends WithDescriptor>(
   keychainList: T[],
   filterKeychainsByAccountFn: typeof filterKeychainsByAccountIndex

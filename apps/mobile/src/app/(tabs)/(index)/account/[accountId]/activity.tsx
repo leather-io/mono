@@ -3,7 +3,7 @@ import { Screen } from '@/components/screen/screen';
 import { ActivityEmpty, ActivityListItem } from '@/features/activity';
 import { useRefreshHandler } from '@/features/refresh-control/refresh-control';
 import { useAccountActivity } from '@/queries/activity/account-activity.query';
-import { deserializeAccountId } from '@/store/accounts/accounts';
+import { deserializeAccountId } from '@/store/accounts/utils';
 import { i18n } from '@lingui/core';
 import { useLocalSearchParams } from 'expo-router';
 

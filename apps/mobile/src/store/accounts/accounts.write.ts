@@ -1,10 +1,23 @@
 import { t } from '@lingui/core/macro';
-import { EntityState, createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { produce } from 'immer';
+import {
+  EntityState,
+  PayloadAction,
+  createAction,
+  createEntityAdapter,
+  createSlice,
+} from '@reduxjs/toolkit';
+import { WritableDraft, produce } from 'immer';
 
 import { AccountId } from '@leather.io/models';
 
-import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
+import {
+  AddReadonlyWalletAction,
+  AddWalletAction,
+  handleAppResetWithState,
+  userAddsReadonlyWallet,
+  userAddsWallet,
+  userRemovesWallet,
+} from '../global-action';
 import { BitcoinKeychain } from '../keychains/bitcoin/utils';
 import { StacksKeychain } from '../keychains/stacks/utils';
 import {
@@ -52,26 +65,48 @@ function addAccountDefaults({
 
 const initialState = accountsAdapter.getInitialState();
 
+function addWalletCase(
+  state: WritableDraft<EntityState<AccountStore, string>>,
+  action: PayloadAction<AddWalletAction> | PayloadAction<AddReadonlyWalletAction>
+) {
+  // Provision the first account with new wallet creation
+  const firstAccountIndex = 0;
+  const id = makeAccountIdentifer(action.payload.wallet.fingerprint, firstAccountIndex);
+
+  accountsAdapter.addOne(
+    state,
+    addAccountDefaults({
+      state,
+      account: { id },
+      accountIndex: 1,
+    })
+  );
+}
+
+function addAccountCase(
+  state: WritableDraft<EntityState<AccountStore, string>>,
+  action: PayloadAction<AddAccountPayload> | PayloadAction<AddReadonlyAccountPayload>
+) {
+  const thisWalletsAccounts = getWalletAccountsByAccountId(state, action.payload.account.id);
+
+  return accountsAdapter.addOne(
+    state,
+    addAccountDefaults({
+      state,
+      account: action.payload.account,
+      accountIndex: thisWalletsAccounts.length + 1,
+    })
+  );
+}
+
 export const accountsSlice = createSlice({
   name: 'accounts',
   initialState,
   reducers: {},
   extraReducers: builder =>
     builder
-      // Provision the first account with new wallet creation
-      .addCase(userAddsWallet, (state, action) => {
-        const firstAccountIndex = 0;
-        const id = makeAccountIdentifer(action.payload.wallet.fingerprint, firstAccountIndex);
-
-        accountsAdapter.addOne(
-          state,
-          addAccountDefaults({
-            state,
-            account: { id },
-            accountIndex: 1,
-          })
-        );
-      })
+      .addCase(userAddsWallet, addWalletCase)
+      .addCase(userAddsReadonlyWallet, addWalletCase)
 
       .addCase(userRemovesWallet, (state, action) => {
         const fingerprint = action.payload.fingerprint;
@@ -79,18 +114,8 @@ export const accountsSlice = createSlice({
         accountsAdapter.removeMany(state, accountIds);
       })
 
-      .addCase(userAddsAccount, (state, action) => {
-        const thisWalletsAccounts = getWalletAccountsByAccountId(state, action.payload.account.id);
-
-        return accountsAdapter.addOne(
-          state,
-          addAccountDefaults({
-            state,
-            account: action.payload.account,
-            accountIndex: thisWalletsAccounts.length + 1,
-          })
-        );
-      })
+      .addCase(userAddsAccount, addAccountCase)
+      .addCase(userAddsReadonlyAccount, addAccountCase)
 
       .addCase(
         userTogglesHideAccount,
@@ -131,14 +156,24 @@ export const accountsSlice = createSlice({
 
 type PartialAccountStore = Optional<AccountStore, 'icon' | 'name' | 'status'>;
 
-interface AddAccountPayload {
+export interface AddAccountPayload {
   account: PartialAccountStore;
   withKeychains: {
     bitcoin: BitcoinKeychain[];
     stacks: StacksKeychain[];
   };
 }
+export interface AddReadonlyAccountPayload {
+  account: PartialAccountStore;
+  withKeychains: {
+    bitcoin?: BitcoinKeychain[];
+    stacks?: StacksKeychain[];
+  };
+}
 export const userAddsAccount = createAction<AddAccountPayload>('accounts/userAddsAccount');
+export const userAddsReadonlyAccount = createAction<AddReadonlyAccountPayload>(
+  'accounts/userAddsReadonlyAccount'
+);
 
 interface ToggleHideAccountPayload {
   accountId: string;

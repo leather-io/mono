@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { Keyboard, TextInput as RNTextInput } from 'react-native';
 
 import { TextInput } from '@/components/text-input';
@@ -30,6 +30,12 @@ export function RecoverWallet() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { recoveryMnemonic, inputState, errorMessage, isButtonDisabled, passphrase } = state;
   const hidePasteButton = recoveryMnemonic.length > 0;
+
+  const [isReadonly, setIsReadonly] = useState(false);
+
+  function onToggleReadonly() {
+    setIsReadonly(!isReadonly);
+  }
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -71,7 +77,7 @@ export function RecoverWallet() {
     const isValid = isValidMnemonic(recoveryMnemonic);
     if (isValid) {
       await tempMnemonicStore.setTemporaryMnemonic(recoveryMnemonic, passphrase);
-      void navigateAndCreateWallet();
+      void navigateAndCreateWallet({ isReadonly });
     }
   }
 
@@ -90,6 +96,8 @@ export function RecoverWallet() {
       isButtonDisabled={isButtonDisabled}
       onSubmit={onSubmit}
       setPassphrase={passphrase => dispatch(setPassphrase(passphrase))}
+      onToggleReadonly={onToggleReadonly}
+      isReadonly={isReadonly}
     >
       <Box mb="3">
         {!hidePasteButton && (

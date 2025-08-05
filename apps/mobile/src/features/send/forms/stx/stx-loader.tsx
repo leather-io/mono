@@ -35,14 +35,15 @@ function useStxData({ fingerprint, accountIndex }: AccountId): FetchState<StxDat
     balance.status === 'error' || marketData.status === 'error' || nextNonce.status === 'error';
 
   return toFetchState({
-    data: isReady
-      ? {
-          availableBalance: balance.data.stx.availableUnlockedBalance,
-          quoteBalance: balance.data.quote.availableUnlockedBalance,
-          nonce: nextNonce.data?.nonce,
-          marketData: marketData.data,
-        }
-      : null,
+    data:
+      isReady && balance.data
+        ? {
+            availableBalance: balance.data.stx.availableUnlockedBalance,
+            quoteBalance: balance.data.quote.availableUnlockedBalance,
+            nonce: nextNonce.data?.nonce,
+            marketData: marketData.data,
+          }
+        : null,
     isLoading,
     isError,
     error: null,

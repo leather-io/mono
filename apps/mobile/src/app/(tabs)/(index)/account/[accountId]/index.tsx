@@ -1,5 +1,6 @@
 import { Account } from '@/features/account/account';
-import { AccountLoader, deserializeAccountId } from '@/store/accounts/accounts';
+import { AccountLoader } from '@/store/accounts/accounts';
+import { deserializeAccountId } from '@/store/accounts/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';

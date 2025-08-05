@@ -14,14 +14,19 @@ import {
   HasChildren,
   LockIcon,
   SheetRef,
+  Switch,
   Text,
 } from '@leather.io/ui/native';
+
+import { useReadonlyWalletsFlag } from '../feature-flags';
 
 interface RecoverWalletLayoutProps extends HasChildren {
   passphrase: string;
   setPassphrase: (passphrase: string) => void;
-  onSubmit: () => void;
+  onSubmit(): void;
   isButtonDisabled: boolean;
+  onToggleReadonly(): void;
+  isReadonly: boolean;
 }
 
 export function RecoverWalletLayout({
@@ -30,8 +35,11 @@ export function RecoverWalletLayout({
   passphrase,
   onSubmit,
   isButtonDisabled,
+  onToggleReadonly,
+  isReadonly,
 }: RecoverWalletLayoutProps) {
   const recoverWalletSheetRef = useRef<SheetRef>(null);
+  const isReadonlyWalletsEnabled = useReadonlyWalletsFlag();
 
   return (
     <Screen>
@@ -74,6 +82,16 @@ export function RecoverWalletLayout({
                     <ChevronRightIcon variant="small" />
                   </Cell.Aside>
                 </Cell.Root>
+                {isReadonlyWalletsEnabled && (
+                  <Cell.Root pressable onPress={onToggleReadonly}>
+                    <Cell.Content>
+                      <Cell.Label variant="primary">{t`Is Readonly Wallet?`}</Cell.Label>
+                    </Cell.Content>
+                    <Cell.Aside>
+                      <Switch value={isReadonly} onValueChange={onToggleReadonly} />
+                    </Cell.Aside>
+                  </Cell.Root>
+                )}
               </Box>
             }
           />

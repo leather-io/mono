@@ -41,16 +41,14 @@ export function SelectAsset() {
     }
   }
 
-  const { nativeSegwitPayerAddress, taprootPayerAddress } =
-    useBitcoinPayerAddressFromAccountIndex(
-      selectedAccount.fingerprint,
-      selectedAccount.accountIndex
-    ) ?? '';
-  const stxAddress =
-    useStacksSignerAddressFromAccountIndex(
-      selectedAccount.fingerprint,
-      selectedAccount.accountIndex
-    ) ?? '';
+  const { nativeSegwitPayerAddress, taprootPayerAddress } = useBitcoinPayerAddressFromAccountIndex(
+    selectedAccount.fingerprint,
+    selectedAccount.accountIndex
+  );
+  const stxAddress = useStacksSignerAddressFromAccountIndex(
+    selectedAccount.fingerprint,
+    selectedAccount.accountIndex
+  );
 
   const assets = getAssets({ nativeSegwitPayerAddress, taprootPayerAddress, stxAddress });
   const onCopyAddress = useCopyAddress();

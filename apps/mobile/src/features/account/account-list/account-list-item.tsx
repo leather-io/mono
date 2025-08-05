@@ -1,3 +1,5 @@
+import { t } from '@lingui/macro';
+
 import { Cell, type PressableProps } from '@leather.io/ui/native';
 
 interface AccountListItemProps extends PressableProps {
@@ -9,6 +11,7 @@ interface AccountListItemProps extends PressableProps {
   testID?: string;
   walletName?: React.ReactNode;
   chevron?: React.ReactNode;
+  isReadonly: boolean;
 }
 export function AccountListItem({
   accountName,
@@ -20,6 +23,7 @@ export function AccountListItem({
   testID,
   walletName,
   chevron,
+  isReadonly,
   ...rest
 }: AccountListItemProps) {
   return (
@@ -27,7 +31,7 @@ export function AccountListItem({
       <Cell.Icon testID={iconTestID}>{icon}</Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary" numberOfLines={1} ellipsizeMode="tail">
-          {accountName}
+          {isReadonly ? t`${accountName} (read-only)` : accountName}
         </Cell.Label>
         <Cell.Label variant="secondary">{walletName}</Cell.Label>
       </Cell.Content>

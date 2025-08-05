@@ -20,7 +20,7 @@ import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.que
 import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-transaction';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
-import { assertStacksSigner } from '@/store/keychains/stacks/utils';
+import { assertReadWriteStacksSigner, assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { destructAccountIdentifier } from '@/store/utils';
 import { analytics } from '@/utils/analytics';
@@ -74,7 +74,7 @@ export function StacksTxSigner({
   const [approverState, setApproverState] = useState<ApproverState>('start');
   async function onSubmitTransaction() {
     setApproverState('submitting');
-    assertStacksSigner(signer);
+    assertReadWriteStacksSigner(signer);
 
     try {
       const signedTx = await signer?.sign(tx);

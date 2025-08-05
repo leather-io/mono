@@ -1,6 +1,11 @@
-import { userAddsAccount } from '@/store/accounts/accounts.write';
-import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '@/store/global-action';
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { userAddsAccount, userAddsReadonlyAccount } from '@/store/accounts/accounts.write';
+import {
+  handleAppResetWithState,
+  userAddsReadonlyWallet,
+  userAddsWallet,
+  userRemovesWallet,
+} from '@/store/global-action';
+import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
 
@@ -28,11 +33,34 @@ export const bitcoinKeychainSlice = createSlice({
       )
 
       .addCase(
+        userAddsReadonlyWallet,
+        handleEntityActionWith(adapter.addMany, payload => payload.withKeychains.bitcoin ?? [])
+      )
+
+      .addCase(
         userAddsAccount,
         handleEntityActionWith(adapter.addMany, payload => payload.withKeychains.bitcoin)
+      )
+
+      .addCase(
+        userAddsReadonlyAccount,
+        handleEntityActionWith(adapter.addMany, payload => payload.withKeychains.bitcoin ?? [])
+      )
+
+      .addCase(
+        userAddsBitcoinKeychain,
+        handleEntityActionWith(adapter.addMany, payload => payload.bitcoinKeychains)
       )
 
       .addCase(userRemovesWallet, filterKeychainsToRemove(adapter.removeMany))
 
       .addCase(...handleAppResetWithState(initialState)),
 });
+
+export interface AddBitcoinKeychainPayload {
+  bitcoinKeychains: BitcoinKeychain[];
+}
+
+export const userAddsBitcoinKeychain = createAction<AddBitcoinKeychainPayload>(
+  'bitcoin-keychains/userAddsBitcoinKeychain'
+);

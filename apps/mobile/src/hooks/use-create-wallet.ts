@@ -15,18 +15,33 @@ export function useCreateWallet() {
   const keyStore = useKeyStore();
   const { changeSecurityLevelPreference, securityLevelPreference } = useSettings();
 
-  async function createWallet({ biometrics }: { biometrics: boolean }) {
+  async function createWallet({
+    biometrics,
+    isReadonly,
+  }: {
+    biometrics: boolean;
+    isReadonly?: boolean;
+  }) {
     changeSecurityLevelPreference(biometrics ? 'secure' : 'insecure');
     const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
     if (mnemonic) {
       router.navigate('/generating-wallet');
       await nextAnimationFrame();
       try {
-        await keyStore.restoreWalletFromMnemonic({
-          mnemonic,
-          biometrics,
-          passphrase: passphrase ?? undefined,
-        });
+        if (isReadonly) {
+          await keyStore.restoreReadonlyWalletFromMnemonic({
+            mnemonic,
+            biometrics,
+            passphrase: passphrase ?? undefined,
+            type: 'stx-and-btc',
+          });
+        } else {
+          await keyStore.restoreWalletFromMnemonic({
+            mnemonic,
+            biometrics,
+            passphrase: passphrase ?? undefined,
+          });
+        }
         void triggerHapticFeedback('success');
         toastContext.displayToast({
           type: 'success',
@@ -55,16 +70,21 @@ export function useCreateWallet() {
     }
   }
 
-  async function navigateAndCreateWallet() {
+  async function navigateAndCreateWallet(options?: { isReadonly?: boolean }) {
     switch (securityLevelPreference) {
       case 'not-selected':
-        router.navigate('/secure-your-wallet');
+        router.navigate({
+          pathname: '/secure-your-wallet',
+          params: {
+            type: options?.isReadonly ? 'read-only' : 'read-write',
+          },
+        });
         return;
       case 'secure':
-        await createWallet({ biometrics: true });
+        await createWallet({ biometrics: true, isReadonly: options?.isReadonly });
         return;
       case 'insecure':
-        await createWallet({ biometrics: false });
+        await createWallet({ biometrics: false, isReadonly: options?.isReadonly });
         return;
       default:
         /* eslint-disable-next-line no-console  */

@@ -2,7 +2,7 @@ import { BaseStxMessageApproverLayout } from '@/features/approver/layouts/base-s
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
-import { assertStacksSigner } from '@/store/keychains/stacks/utils';
+import { assertReadWriteStacksSigner } from '@/store/keychains/stacks/utils';
 import { deserializeCV } from '@stacks/transactions';
 
 import {
@@ -29,10 +29,10 @@ export function StxSignStructuredMessageApprover({
 }: StxSignStructuredMessageApproverProps) {
   const { list: accounts } = useAccounts();
   const signer = useStacksSigners().fromAccountId(accountId)[0];
-  assertStacksSigner(signer);
+  assertReadWriteStacksSigner(signer);
 
   async function onApprove() {
-    assertStacksSigner(signer);
+    assertReadWriteStacksSigner(signer);
 
     const signatureData = await signer.signStructuredMessage(
       deserializeCV(request.params.message),

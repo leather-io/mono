@@ -54,6 +54,7 @@ function InternalRecipientItem({ entry, onSelect }: InternalRecipientItemProps) 
     <AccountListItem
       onPress={() => onSelect(entry.address)}
       accountName={entry.rawAccount.name}
+      isReadonly={entry.rawAccount.isReadonly}
       walletName={wallet?.name}
       address={
         <AccountAddress

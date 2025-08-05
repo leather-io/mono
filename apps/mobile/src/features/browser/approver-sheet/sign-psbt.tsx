@@ -1,5 +1,5 @@
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
-import { deserializeAccountId } from '@/store/accounts/accounts';
+import { deserializeAccountId } from '@/store/accounts/utils';
 import { App } from '@/store/apps/utils';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 

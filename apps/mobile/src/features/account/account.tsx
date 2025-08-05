@@ -90,26 +90,28 @@ export function Account({ account, walletName }: AccountProps) {
           accountName={name}
           walletName={walletName}
         />
-        <Box mt="3" mb="5" px="5" flexDirection="row" justifyContent="center" gap="2">
-          <ButtonV2
-            onPress={() => {
-              sendSheetRef.current?.present();
-            }}
-            minWidth={86}
-            size="sm"
-            buttonState="default"
-            title={t`Send`}
-          />
-          <ButtonV2
-            onPress={() => {
-              receiveSheetRef.current?.present();
-            }}
-            minWidth={86}
-            size="sm"
-            buttonState="outline"
-            title={t`Receive`}
-          />
-        </Box>
+        {!account.isReadonly && (
+          <Box mt="3" mb="5" px="5" flexDirection="row" justifyContent="center" gap="2">
+            <ButtonV2
+              onPress={() => {
+                sendSheetRef.current?.present();
+              }}
+              minWidth={86}
+              size="sm"
+              buttonState="default"
+              title={t`Send`}
+            />
+            <ButtonV2
+              onPress={() => {
+                receiveSheetRef.current?.present();
+              }}
+              minWidth={86}
+              size="sm"
+              buttonState="outline"
+              title={t`Receive`}
+            />
+          </Box>
+        )}
         <Box gap="8">
           <BalancesWidget
             onPressHeader={() =>

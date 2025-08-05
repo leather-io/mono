@@ -1,0 +1,1883 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-07-22 15:18+0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/app/(tabs)/(index)/account/[accountId]/activity.tsx:26
+msgid "activity.account.header_title"
+msgstr "{accountName}"
+
+#: src/features/account/account-list/account-list-item.tsx:35
+msgid "approver.account.isReadonly"
+msgstr "{accountName} (read-only)"
+
+#: src/app/(tabs)/(index)/account/[accountId]/activity.tsx:39
+msgid "activity.account.header_content_title"
+msgstr "{accountName} Activity"
+
+#: src/features/token/components/token-price-change.tsx:42
+msgid "token.details.price_change_percentage"
+msgstr "{changePercent}%"
+
+#: src/app/settings/display/index.tsx:110
+msgid "display.conversion_unit.cell_caption"
+msgstr "{currency}"
+
+#: src/features/approver/components/fees/bitcoin-fee-option.tsx:41
+msgid "fees-sheet.fee-rate-caption"
+msgstr "{feeRate} sats/vB · {quoteFee}"
+
+#: src/app/settings/wallet/index.tsx:41
+msgid "wallet.hidden_accounts.cell_caption"
+msgstr "{hiddenAccountsLength} hidden accounts"
+
+#: src/app/settings/display/index.tsx:74
+msgid "display.language.cell_title"
+msgstr "{locale}"
+
+#: src/app/settings/display/index.tsx:79
+msgid "display.language.cell_caption"
+msgstr "{locale}"
+
+#: src/app/settings/display/index.tsx:125
+msgid "display.account_identifier.cell_caption"
+msgstr "{name}"
+
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:108
+msgid "configure_account.name.cell_caption"
+msgstr "{name}"
+
+#: src/features/account/accounts-widget.tsx:111
+msgid "accounts.account.cell_caption"
+msgstr "{name}"
+
+#: src/features/settings/bitcoin-unit-sheet.tsx:56
+msgid "bitcoin_unit.cell_caption"
+msgstr "{name}"
+
+#: src/features/settings/conversion-unit-sheet.tsx:47
+msgid "conversion_unit.cell_title"
+msgstr "{name}"
+
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:112
+msgid "wallet.wallet_name.isReadonly"
+msgstr "{name} (read-only)"
+
+#: src/app/settings/networks/index.tsx:62
+msgid "networks.cell_title"
+msgstr "{network}"
+
+#: src/features/settings/network-badge.tsx:20
+msgid "settings.header_network"
+msgstr "{network}"
+
+#: src/features/receive/screens/asset-details.tsx:54
+#: src/features/send/screens/form.tsx:59
+#: src/features/token/token-receive-sheet.tsx:78
+msgid "select_asset.header_subtitle"
+msgstr "{subtitle}"
+
+#: src/app/settings/display/index.tsx:92
+msgid "display.bitcoin_unit.cell_caption"
+msgstr "{symbol}"
+
+#: src/features/settings/bitcoin-unit-sheet.tsx:51
+msgid "bitcoin_unit.cell_title"
+msgstr "{symbol}"
+
+#: src/features/settings/conversion-unit-sheet.tsx:52
+msgid "conversion_unit.cell_caption"
+msgstr "{symbol}"
+
+#: src/app/settings/display/index.tsx:60
+msgid "display.theme.cell_caption"
+msgstr "{theme}"
+
+#: src/features/settings/theme-sheet.tsx:46
+msgid "theme.cell_title"
+msgstr "{theme}"
+
+#: src/components/sheets/notify-user-sheet.layout.tsx:48
+msgid "notify_user.title"
+msgstr "{title}"
+
+#: src/components/address-type-badge.tsx:20
+msgid "address_type_badge.label"
+msgstr "{type}"
+
+#: src/features/approver/utils.tsx:68
+msgid "approver.bitcoin.fee.speed.low"
+msgstr "~1 hour+"
+
+#: src/features/approver/utils.tsx:76
+msgid "approver.bitcoin.fee.speed.high"
+msgstr "~10 – 20min"
+
+#: src/features/approver/utils.tsx:72
+msgid "approver.bitcoin.fee.speed.middle"
+msgstr "~30 min"
+
+#: src/features/approver/utils.tsx:96
+msgid "approver.stacks.fee.speed.low"
+msgstr "1–2 minutes"
+
+#: src/features/approver/utils.tsx:104
+msgid "approver.stacks.fee.speed.high"
+msgstr "10 seconds"
+
+#: src/features/earn/stacking-card.tsx:22
+msgid "earn.stacking.yield-description-max"
+msgstr "10%"
+
+#: src/features/approver/utils.tsx:100
+msgid "approver.stacks.fee.speed.middle"
+msgstr "20–30 seconds"
+
+#: src/features/token/components/token-details-table.tsx:25
+msgid "token.details.price_change"
+msgstr "24 Hour Change"
+
+#: src/features/earn/sbtc-card.tsx:19
+msgid "earn.sbtc.yield-description-min"
+msgstr "6"
+
+#: src/features/earn/stacking-card.tsx:18
+msgid "earn.stacking.yield-description-min"
+msgstr "6"
+
+#: src/features/earn/sbtc-card.tsx:23
+msgid "earn.sbtc.yield-description-max"
+msgstr "8%"
+
+#: src/features/wallet-manager/account-list.tsx:24
+#: src/store/accounts/accounts.write.ts:56
+msgid "account.default.name"
+msgstr "Account {accountIndex}"
+
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:78
+msgid "wallet.add_account.toast_title"
+msgstr "Account created"
+
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:87
+msgid "wallet.add_account.fail.toast_title"
+msgstr "Account creation failed"
+
+#: src/app/settings/display/index.tsx:121
+msgid "display.account_identifier.cell_title"
+msgstr "Account identifier"
+
+#: src/features/settings/account-identifier-sheet.tsx:56
+msgid "account_identifier.header_title"
+msgstr "Account identifier"
+
+#: src/features/settings/account-identifier-sheet.tsx:45
+msgid "account_identifier.toast_title"
+msgstr "Account identifier updated"
+
+#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:19
+msgid "account_name.header_title"
+msgstr "Account label"
+
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:46
+msgid "configure_account.account_name.empty_name_error"
+msgstr "Account name cannot be empty"
+
+#: src/features/token/account-list-item.tsx:25
+msgid "token.details.accounts_title"
+msgstr "Accounts"
+
+#: src/features/earn/stacking-card.tsx:26
+msgid "earn.stacking.description"
+msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
+
+#: src/features/account/account.tsx:149
+msgid "account.activity.header_title"
+msgstr "Activity"
+
+#: src/features/navigation/tab-layout.tsx:58
+msgid "tabs.button.activity.title"
+msgstr "Activity"
+
+#: src/features/token/components/token-details.tsx:75
+msgid "token.activity.header_title"
+msgstr "Activity"
+
+#: src/features/account/components/add-account-card.tsx:16
+msgid "add_account_card.title"
+msgstr "Add account"
+
+#: src/features/account/components/create-wallet-card.tsx:23
+msgid "create_wallet_card.title"
+msgstr "Add account"
+
+#: src/features/account/sheets/add-account-sheet.layout.tsx:35
+msgid "add_account.header_title"
+msgstr "Add account"
+
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:175
+msgid "wallet.add_account.button"
+msgstr "Add account"
+
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:206
+msgid "wallet.add_account_btc.button"
+msgstr "Add BTC account"
+
+#: src/features/approver/components/memo-sheet.tsx:20
+msgid "approver.add_memo.header_title"
+msgstr "Add memo"
+
+#: src/features/send/components/memo.tsx:39
+msgid "send_form.memo.input.label.empty"
+msgstr "Add memo"
+
+#: src/features/send/components/memo.tsx:79
+msgid "add_memo.header_title"
+msgstr "Add memo"
+
+#: src/features/wallet-manager/wallets.tsx:39
+msgid "wallets.add-new-account"
+msgstr "Add new account for {fingerprint} 🆕"
+
+#: src/features/approver/components/nonce-sheet.tsx:20
+msgid "approver.add_nonce.header_title"
+msgstr "Add nonce"
+
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:192
+msgid "wallet.add_account_stx.button"
+msgstr "Add STX account"
+
+#: src/features/account/sheets/add-account-sheet.layout.tsx:40
+msgid "add_account.existing_wallet.cell_title"
+msgstr "Add to existing wallet"
+
+#: src/features/account/sheets/add-account-sheet.layout.tsx:52
+msgid "add_account.new_wallet.cell_title"
+msgstr "Add to new wallet"
+
+#: src/app/settings/wallet/index.tsx:52
+msgid "wallet.add_wallet.cell_title"
+msgstr "Add wallet"
+
+#: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:29
+msgid "add_or_create_new_wallet.button"
+msgstr "Add wallet"
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:81
+msgid "add_wallet.header_title"
+msgstr "Add wallet"
+
+#: src/app/settings/index.tsx:67
+msgid "settings.wallets.cell_caption"
+msgstr "Add, configure and remove"
+
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:56
+msgid "wallet.adding_account.button"
+msgstr "Adding account..."
+
+#: src/app/generating-wallet.tsx:23
+msgid "add_wallet_animation.title"
+msgstr "Adding wallet..."
+
+#: src/features/send/components/recipient/use-recipient-evaluator.ts:104
+msgid "send-form.guard.non_compliant_address_title"
+msgstr "Address blocked"
+
+#: src/hooks/use-copy-address.ts:14
+msgid "receive.select_asset.toast_title"
+msgstr "Address copied"
+
+#: src/features/send/components/recipient/use-recipient-evaluator.ts:87
+msgid "send-form.guard.incorrect_network_address_title"
+msgstr "Address from another network"
+
+#: src/features/send/error-messages.ts:34
+msgid "send.validation.invalid_network"
+msgstr "Address is for incorrect network"
+
+#: src/features/send/error-messages.ts:30
+msgid "send.validation.invalid_address"
+msgstr "Address is not valid"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:47
+msgid "configure_wallet.address_reuse.cell_title"
+msgstr "Address reuse"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:55
+msgid "configure_wallet.address_scan_range.cell_title"
+msgstr "Address scan range"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:63
+msgid "configure_wallet.address_types.cell_title"
+msgstr "Address types"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:215
+msgid "configure_wallet.accordion_label"
+msgstr "Advanced options"
+
+#: src/features/recover-wallet/recover-wallet.layout.tsx:65
+msgid "recover_wallet.accordion_label"
+msgstr "Advanced options"
+
+#: src/utils/dapps.ts:25
+msgid "dapps.alex"
+msgstr "Alex"
+
+#: src/features/account/account-selector/account-selector-sheet-header.tsx:25
+msgid "account_selector.header_title"
+msgstr "All accounts"
+
+#: src/features/account/accounts-widget.tsx:48
+msgid "accounts.header_title"
+msgstr "All accounts"
+
+#: src/app/(tabs)/(index)/index.tsx:61
+#: src/app/(tabs)/activity.tsx:14
+msgid "activity.header_title"
+msgstr "All Activity"
+
+#: src/app/(tabs)/activity.tsx:22
+msgid "screen.activity.title"
+msgstr "All Activity"
+
+#: src/app/(tabs)/(index)/collectibles/index.tsx:14
+#: src/app/(tabs)/(index)/index.tsx:67
+msgid "collectibles.header_title"
+msgstr "All collectibles"
+
+#: src/app/(tabs)/(index)/account/[accountId]/balances.tsx:22
+#: src/app/(tabs)/(index)/balances/index.tsx:11
+#: src/app/(tabs)/(index)/index.tsx:54
+msgid "balances.header_title"
+msgstr "All tokens"
+
+#: src/store/storage-persistors.ts:33
+msgid "authentication_prompt"
+msgstr "Allow app to access secure storage"
+
+#: src/features/qr-scanner/use-camera-permission.ts:36
+msgid "qr_scanner.camera_alert.title"
+msgstr "Allow Camera Access"
+
+#: src/features/settings/analytics-sheet.tsx:47
+msgid "analytics.cell_title"
+msgstr "Allow collection of data"
+
+#: src/features/send/error-messages.ts:11
+msgid "send.validation.greater_than_zero"
+msgstr "Amount must be greater than zero"
+
+#: src/components/text-input.tsx:68
+msgid "input.default.error"
+msgstr "An error has occurred"
+
+#: src/hooks/use-create-wallet.ts:72
+msgid "create_wallet.toast_title_error"
+msgstr "An error occurred"
+
+#: src/app/settings/security/index.tsx:48
+msgid "security.analytics.cell_title"
+msgstr "Analytics"
+
+#: src/features/settings/analytics-sheet.tsx:39
+msgid "analytics.header_title"
+msgstr "Analytics"
+
+#: src/app/settings/index.tsx:94
+msgid "settings.security.cell_caption"
+msgstr "Analytics and app authentication"
+
+#: src/features/settings/analytics-sheet.tsx:28
+msgid "analytics.toast_title"
+msgstr "Analytics updated"
+
+#: src/app/settings/security/index.tsx:69
+msgid "security.app_auth.cell_title"
+msgstr "App authentication"
+
+#: src/features/settings/app-authentication-sheet.tsx:68
+msgid "app_auth.header_title"
+msgstr "App authentication"
+
+#: src/features/settings/app-authentication-sheet.tsx:76
+msgid "app_auth.cell_title"
+msgstr "App authentication"
+
+#: src/features/settings/app-authentication-sheet.tsx:38
+msgid "app_auth.toast_title_success"
+msgstr "App authorization updated"
+
+#: src/hooks/use-authentication.ts:17
+msgid "authentication.user-not-enrolled"
+msgstr "App is not protected with device-level PIN or biometrics."
+
+#: src/utils/app-store-utils.ts:43
+#: src/utils/app-store-utils.ts:45
+msgid "version_guard.app_store"
+msgstr "App Store"
+
+#: src/features/approver/components/approver-buttons.tsx:31
+#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:84
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:161
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:85
+msgid "approver.button.approve"
+msgstr "Approve"
+
+#: src/features/approver/contract-call-args.section.tsx:31
+msgid "approver.contract-arguments.arg-title"
+msgstr "Argument {0}"
+
+#: src/utils/dapps.ts:35
+msgid "dapps.arkadiko"
+msgstr "Arkadiko"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:134
+msgid "configure_wallet.delete_wallet.authentication_failed"
+msgstr "Authentication failed"
+
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:120
+msgid "configure_account.avatar.cell_title"
+msgstr "Avatar"
+
+#: src/app/create-new-wallet.tsx:79
+msgid "create_new_wallet.title"
+msgstr "Back up your Secret Key"
+
+#: src/features/recover-wallet/recover-wallet.layout.tsx:89
+msgid "recover_wallet.passphrase_label"
+msgstr "BIP39 passphrase"
+
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:19
+msgid "create_new_wallet.mnemonic.title"
+msgstr "BIP39 passphrase"
+
+#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
+msgid "recover_wallet.passphrase.header_title"
+msgstr "BIP39 passphrase"
+
+#: src/features/balances/bitcoin/bitcoin-balance.tsx:17
+#: src/features/receive/get-assets.ts:24
+#: src/features/receive/get-assets.ts:43
+#: src/features/send/forms/btc/btc-form.tsx:63
+msgid "asset_name.bitcoin"
+msgstr "Bitcoin"
+
+#: src/app/settings/display/index.tsx:88
+msgid "display.bitcoin_unit.cell_title"
+msgstr "Bitcoin unit"
+
+#: src/features/settings/bitcoin-unit-sheet.tsx:41
+msgid "bitcoin_unit.header_title"
+msgstr "Bitcoin unit"
+
+#: src/features/settings/bitcoin-unit-sheet.tsx:30
+msgid "bitcoin_unit.toast_title"
+msgstr "Bitcoin unit updated"
+
+#: src/utils/dapps.ts:45
+msgid "dapps.bitflow"
+msgstr "Bitflow"
+
+#: src/shared/display-preference.ts:31
+msgid "account_display_preference.bns_name"
+msgstr "BNS name"
+
+#: src/features/earn/sbtc-card.tsx:27
+msgid "earn.sbtc.description"
+msgstr "Bridge your BTC to Bitcoin’s leading L2 to earn yield from holding or pooling"
+
+#: src/features/navigation/tab-layout.tsx:67
+msgid "tabs.button.browser.title"
+msgstr "Browser"
+
+#: src/features/send/components/recipient/use-recipient-evaluator.ts:70
+msgid "send-form.guard.same_address_error_title"
+msgstr "Can’t send to the same address"
+
+#: src/components/sheets/warning-sheet.layout.tsx:51
+msgid "warning.cancel_button"
+msgstr "Cancel"
+
+#: src/features/qr-scanner/use-camera-permission.ts:48
+msgid "qr_scanner.camera_alert.cancel_label"
+msgstr "Cancel"
+
+#: src/features/send/components/recipient/recipient-guard-sheet.tsx:31
+msgid "send-form.guard.label_cancel"
+msgstr "Cancel"
+
+#: src/features/send/error-messages.ts:42
+msgid "send.validation.cannot_send_to_yourself"
+msgstr "Cannot send to yourself"
+
+#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:19
+msgid "wallet_name.header_title"
+msgstr "Change name"
+
+#: src/app/settings/networks/index.tsx:43
+msgid "settings.networks.toast_title"
+msgstr "Changed network"
+
+#: src/utils/dapps.ts:55
+msgid "dapps.charisma"
+msgstr "Charisma"
+
+#: src/features/settings/email-address-sheet.tsx:40
+msgid "email_address.toast_title_success"
+msgstr "Check your email for verification"
+
+#: src/features/approver/layouts/get-addresses.layout.tsx:50
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:46
+msgid "browser.approver.choose-account"
+msgstr "Choose an account"
+
+#: src/features/account/sheets/add-account-sheet.layout.tsx:44
+msgid "add_account.existing_wallet.cell_caption"
+msgstr "Choose existing wallet"
+
+#: src/features/send/components/recipient/recipient-input.tsx:59
+msgid "send-form.recipient.input.clear"
+msgstr "Clear search"
+
+#: src/features/qr-scanner/qr-scanner-chrome.tsx:33
+msgid "qr_scanner.back_button"
+msgstr "Close the scanner"
+
+#: src/features/approver/components/code-card.tsx:11
+msgid "approver.code.title"
+msgstr "Code"
+
+#: src/app/(tabs)/(index)/account/[accountId]/collectibles.tsx:17
+#: src/features/account/account.tsx:159
+msgid "account.collectibles.header_title"
+msgstr "Collectibles"
+
+#: src/features/send/error-messages.ts:38
+msgid "send.validation.non_compliant_address"
+msgstr "Compliance check failed"
+
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:70
+msgid "configure_account.header_title"
+msgstr "Configure account"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:165
+msgid "configure_wallet.header_title"
+msgstr "Configure wallet"
+
+#: src/features/approver/components/memo-sheet.tsx:46
+msgid "approver.add_memo.confirm_button"
+msgstr "Confirm"
+
+#: src/features/approver/components/nonce-sheet.tsx:46
+msgid "approver.add_nonce.confirm_button"
+msgstr "Confirm"
+
+#: src/features/approver/layouts/get-addresses.layout.tsx:79
+msgid "approver.button.confirm"
+msgstr "Confirm"
+
+#: src/features/send/components/memo.tsx:111
+msgid "add_memo.confirm_button"
+msgstr "Confirm"
+
+#: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
+msgid "send-form.guard.label_confirm"
+msgstr "Confirm"
+
+#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:30
+msgid "recover_wallet.passphrase.button"
+msgstr "Confirm"
+
+#: src/features/approver/layouts/get-addresses.layout.tsx:33
+msgid "approver.connect.title"
+msgstr "Connect"
+
+#: src/app/app-connections.tsx:12
+msgid "browser.connections.title"
+msgstr "Connections"
+
+#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:27
+msgid "browser.toolbox.connections"
+msgstr "Connections"
+
+#: src/app/settings/help/index.tsx:22
+msgid "help.support.cell_title"
+msgstr "Contact us"
+
+#: src/app/settings/index.tsx:157
+msgid "settings.contacts.cell_title"
+msgstr "Contacts"
+
+#: src/app/settings/index.tsx:233
+msgid "contacts.header_title"
+msgstr "Contacts"
+
+#: src/components/sheets/warning-sheet.layout.tsx:43
+msgid "warning.submit_button"
+msgstr "Continue"
+
+#: src/features/recover-wallet/recover-wallet.layout.tsx:135
+msgid "recover_wallet.button"
+msgstr "Continue"
+
+#: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:17
+msgid "skip_secure_wallet.header_title"
+msgstr "Continue without security"
+
+#: src/features/approver/contract-call-args.section.tsx:21
+msgid "approver.contract-arguments.title"
+msgstr "Contract arguments"
+
+#: src/app/settings/display/index.tsx:106
+msgid "display.conversion_unit.cell_title"
+msgstr "Conversion unit"
+
+#: src/features/settings/conversion-unit-sheet.tsx:38
+msgid "conversion_unit.header_title"
+msgstr "Conversion unit"
+
+#: src/features/settings/conversion-unit-sheet.tsx:27
+msgid "conversion_unit.toast_title"
+msgstr "Conversion unit updated"
+
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:57
+msgid "create_new_wallet.mnemonic.toast_title"
+msgstr "Copied to clipboard"
+
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:67
+msgid "create_new_wallet.mnemonic.copy_button"
+msgstr "Copy"
+
+#: src/features/receive/components/receive-asset-item.tsx:41
+msgid "receive.copy_address_label"
+msgstr "Copy address"
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:90
+msgid "add_wallet.create_wallet.cell_title"
+msgstr "Create new wallet"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:244
+msgid "configure_wallet.creation_label"
+msgstr "Creation date"
+
+#: src/hooks/use-version-check.ts:47
+msgid "version_guard.current_version_format_invalid"
+msgstr "Current app version format is invalid"
+
+#: src/features/send/components/fee-badge.tsx:36
+msgid "approval-ux.fees.extremely-high"
+msgstr "Currently extremely high"
+
+#: src/features/send/components/fee-badge.tsx:32
+msgid "approval-ux.fees.high"
+msgstr "Currently high"
+
+#: src/features/send/components/fee-badge.tsx:24
+msgid "approval-ux.fees.low"
+msgstr "Currently low"
+
+#: src/features/send/components/fee-badge.tsx:28
+msgid "approval-ux.fees.normal"
+msgstr "Currently normal"
+
+#: src/features/approver/utils.tsx:53
+msgid "approver.fee.type.custom"
+msgstr "Custom"
+
+#: src/features/approver/utils.tsx:80
+#: src/features/approver/utils.tsx:108
+msgid "approver.fee.speed.custom"
+msgstr "Custom"
+
+#: src/app/settings/index.tsx:243
+msgid "fees.header_title"
+msgstr "Custom fees"
+
+#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:75
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:152
+#: src/features/approver/layouts/get-addresses.layout.tsx:70
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:76
+msgid "approver.button.deny"
+msgstr "Deny"
+
+#: src/features/activity/utils/format-activity.ts:33
+msgid "activity.status.deployed"
+msgstr "Deployed"
+
+#: src/features/activity/utils/format-activity.ts:34
+msgid "activity.status.deploying"
+msgstr "Deploying"
+
+#: src/features/activity/utils/format-activity.ts:35
+msgid "activity.status.deploy-failed"
+msgstr "Deployment failed"
+
+#: src/features/token/components/token-description.tsx:9
+msgid "token.details.description_title"
+msgstr "Description"
+
+#: src/app/settings/index.tsx:198
+msgid "settings.device_id_label"
+msgstr "Device ID"
+
+#: src/app/settings/networks/index.tsx:73
+msgid "networks.cell_caption_disabled"
+msgstr "Disabled"
+
+#: src/app/settings/security/index.tsx:25
+msgid "security.app_auth.cell_caption_disabled"
+msgstr "Disabled"
+
+#: src/app/settings/security/index.tsx:58
+msgid "security.analytics.cell_caption_disabled"
+msgstr "Disabled"
+
+#: src/features/recover-wallet/recover-wallet.layout.tsx:100
+msgid "recover_wallet.passphrase_disabled"
+msgstr "Disabled"
+
+#: src/features/browser/browser/link-card.tsx:23
+msgid "general.disconnected"
+msgstr "Disconnected"
+
+#: src/features/send/components/recipient/recipient-guard-sheet.tsx:64
+msgid "send-form.guard.label_dismiss"
+msgstr "Dismiss"
+
+#: src/app/settings/display/index.tsx:49
+msgid "display.header_title"
+msgstr "Display"
+
+#: src/app/settings/index.tsx:77
+msgid "settings.display.cell_title"
+msgstr "Display"
+
+#: src/app/settings/help/index.tsx:38
+msgid "help.guides.cell_caption"
+msgstr "Dive into feature details"
+
+#: src/features/notifications/notifications-sheet.tsx:41
+msgid "notification-sheet.cancel_button"
+msgstr "Don't notify me"
+
+#: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:40
+msgid "view_secret_key.button"
+msgstr "Done"
+
+#: src/components/error/error.tsx:56
+msgid "error_boundary.subtitle"
+msgstr "Drag to refresh"
+
+#: src/features/earn/earn-widget.tsx:35
+msgid "earn.title"
+msgstr "Earn"
+
+#: src/features/earn/sbtc-card.tsx:15
+msgid "earn.sbtc.title"
+msgstr "Earn with SBTC"
+
+#: src/features/approver/components/approver-buttons.tsx:22
+msgid "approver.button.edit"
+msgstr "Edit"
+
+#: src/features/send/components/memo.tsx:35
+msgid "send_form.memo.input.label.filled"
+msgstr "Edit memo"
+
+#: src/app/settings/notifications/_layout.tsx:37
+#: src/app/settings/notifications/_layout.tsx:59
+msgid "notifications.email.tab_title"
+msgstr "Email"
+
+#: src/app/settings/notifications/email.tsx:18
+msgid "notifications.email.cell_title"
+msgstr "Email address"
+
+#: src/features/settings/email-address-sheet.tsx:51
+msgid "email_address.header_title"
+msgstr "Email address"
+
+#: src/features/settings/email-address-sheet.tsx:69
+msgid "email_address.input_placeholder"
+msgstr "Email address"
+
+#: src/app/secure-your-wallet.tsx:66
+msgid "secure_your_wallet.security_button"
+msgstr "Enable device security"
+
+#: src/features/notifications/notifications-sheet.tsx:18
+msgid "notifications-sheet.subtitle"
+msgstr "Enable to receive notifications about transactions"
+
+#: src/app/settings/networks/index.tsx:69
+msgid "networks.cell_caption_enabled"
+msgstr "Enabled"
+
+#: src/app/settings/security/index.tsx:18
+msgid "security.app_auth.cell_caption_enabled"
+msgstr "Enabled"
+
+#: src/app/settings/security/index.tsx:54
+msgid "security.analytics.cell_caption_enabled"
+msgstr "Enabled"
+
+#: src/features/recover-wallet/recover-wallet.layout.tsx:96
+msgid "recover_wallet.passphrase_enabled"
+msgstr "Enabled"
+
+#: src/features/earn/earn-card.tsx:102
+msgid "earn.sbtc.button"
+msgstr "Enroll"
+
+#: src/features/send/components/recipient/recipient-toggle.tsx:57
+msgid "send_form.recipient.toggle.label"
+msgstr "Enter recipient"
+
+#: src/features/recover-wallet/recover-wallet.layout.tsx:51
+msgid "recover_wallet.title"
+msgstr "Enter your Secret Key"
+
+#: src/features/recover-wallet/recover-wallet.tsx:115
+msgid "recover_wallet.input_placeholder"
+msgstr "Enter your Secret Key"
+
+#: src/features/activity/utils/format-activity.ts:28
+msgid "activity.status.executed"
+msgstr "Executed"
+
+#: src/features/activity/utils/format-activity.ts:29
+msgid "activity.status.executing"
+msgstr "Executing"
+
+#: src/features/activity/utils/format-activity.ts:30
+msgid "activity.status.execute-failed"
+msgstr "Execution failed"
+
+#: src/app/settings/help/index.tsx:50
+msgid "help.learn.cell_caption"
+msgstr "Expand your Bitcoin knowledge"
+
+#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:19
+msgid "browser.toolbox.explore"
+msgstr "Explore"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:79
+msgid "configure_wallet.export_key.cell_title"
+msgstr "Export key"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:71
+msgid "configure_wallet.export_xpub.cell_title"
+msgstr "Export xPub"
+
+#: src/features/settings/app-authentication-sheet.tsx:46
+#: src/features/settings/app-authentication-sheet.tsx:56
+msgid "app_auth.toast_title_error"
+msgstr "Failed to authenticate"
+
+#: src/features/psbt-signer/psbt-signer.tsx:228
+#: src/features/psbt-signer/psbt-signer.tsx:239
+msgid "approver.send.btc.error.broadcast"
+msgstr "Failed to broadcast transaction"
+
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:94
+msgid "approver.send.stx.error.broadcast"
+msgstr "Failed to broadcast transaction"
+
+#: src/features/approver/stx/hooks.ts:41
+msgid "approver.send.stx.error.change-fee"
+msgstr "Failed to change fee"
+
+#: src/features/approver/stx/hooks.ts:19
+msgid "approver.send.stx.error.change-memo"
+msgstr "Failed to change memo"
+
+#: src/features/approver/stx/hooks.ts:64
+msgid "approver.send.stx.error.change-nonce"
+msgstr "Failed to change nonce"
+
+#: src/features/browser/approver-sheet/stx/nonce-loader.tsx:32
+msgid "nonce-loader.error"
+msgstr "Failed to load latest nonce"
+
+#: src/features/approver/utils.tsx:49
+msgid "approver.fee.type.high"
+msgstr "Fast"
+
+#: src/utils/dapps.ts:65
+msgid "dapps.fastpool"
+msgstr "FastPool"
+
+#: src/features/approver/stx/hooks.ts:33
+msgid "approver.send.stx.success.change-fee"
+msgstr "Fee updated"
+
+#: src/features/psbt-signer/psbt-signer.tsx:192
+msgid "approver.send.btc.success.change-fee"
+msgstr "Fee updated"
+
+#: src/app/settings/index.tsx:168
+msgid "settings.fees.cell_title"
+msgstr "Fees"
+
+#: src/app/create-new-wallet.tsx:120
+msgid "create_new_wallet.view_secret_key_label_b"
+msgstr "For your eyes only"
+
+#: src/features/account/sheets/add-account-sheet.layout.tsx:56
+msgid "add_account.new_wallet.cell_caption"
+msgstr "Generate new Secret Key for self-custody"
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:94
+msgid "add_wallet.create_wallet.cell_caption"
+msgstr "Generate new Secret Key for self-custody"
+
+#: src/app/settings/help/index.tsx:26
+msgid "help.support.cell_caption"
+msgstr "Get support or provide feedback"
+
+#: src/app/settings/index.tsx:136
+msgid "settings.help.cell_caption"
+msgstr "Get support or provide feedback"
+
+#: src/components/app-update-required/app-update-required-sheet.tsx:25
+msgid "version_guard.title"
+msgstr "Get the latest version of the Leather app"
+
+#: src/utils/app-store-utils.ts:44
+msgid "version_guard.google_play"
+msgstr "Google Play"
+
+#: src/utils/dapps.ts:75
+msgid "dapps.granite"
+msgstr "Granite"
+
+#: src/app/settings/help/index.tsx:34
+msgid "help.guides.cell_title"
+msgstr "Guides"
+
+#: src/app/settings/display/index.tsx:136
+msgid "display.haptics.cell_title"
+msgstr "Haptics"
+
+#: src/app/settings/index.tsx:132
+msgid "settings.help.cell_title"
+msgstr "Help"
+
+#: src/utils/dapps.ts:85
+msgid "dapps.hermetica"
+msgstr "Hermetica"
+
+#: src/app/settings/wallet/hidden-accounts.tsx:8
+msgid "hidden_accounts.header_title"
+msgstr "Hidden accounts"
+
+#: src/app/settings/wallet/index.tsx:37
+msgid "wallet.hidden_accounts.cell_title"
+msgstr "Hidden accounts"
+
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:134
+msgid "configure_account.hide_account.cell_title"
+msgstr "Hide account"
+
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:135
+#: src/features/psbt-signer/psbt-signer.tsx:294
+msgid "approver.advanced.hide"
+msgstr "Hide advanced options"
+
+#: src/components/screen/screen-header/components/header-actions.tsx:40
+msgid "header.privacy_label_hide"
+msgstr "Hide balances"
+
+#: src/features/earn/earn-card.tsx:53
+msgid "earn.historical-yield"
+msgstr "Historical yield"
+
+#: src/features/navigation/tab-layout.tsx:49
+msgid "tabs.button.home.title"
+msgstr "Home"
+
+#: src/components/sheets/notify-user-sheet.layout.tsx:64
+msgid "notify_user.interested_button"
+msgstr "I'm interested"
+
+#: src/app/create-new-wallet.tsx:139
+msgid "create_new_wallet.button"
+msgstr "I've backed it up"
+
+#: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:68
+msgid "choose_avatar.images.subtitle"
+msgstr "Icons"
+
+#: src/app/settings/index.tsx:51
+msgid "settings.device_id.toast_title"
+msgstr "ID copied to clipboard"
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:107
+msgid "add_wallet.restore_wallet.cell_caption"
+msgstr "Import existing accounts from self-custody"
+
+#: src/features/approver/components/inputs-outputs-card.tsx:41
+msgid "approver.inputs-outputs.input.title"
+msgstr "Input"
+
+#: src/features/approver/components/inputs-outputs-card.tsx:34
+msgid "approver.inputs-outputs.title"
+msgstr "Inputs and outputs"
+
+#: src/features/send/error-messages.ts:26
+msgid "send.validation.insufficient_funds"
+msgstr "Insufficient funds"
+
+#: src/features/settings/email-address-sheet.tsx:27
+msgid "email_address.toast_title_error"
+msgstr "Invalid email address"
+
+#: src/features/recover-wallet/components/error-message.tsx:5
+msgid "recover_wallet.validation_error"
+msgstr "Invalid words: {joinedInvalidWords}"
+
+#: src/features/recover-wallet/recover-wallet.layout.tsx:114
+msgid "recover_wallet.is_readonly.title"
+msgstr "Is Readonly Wallet?"
+
+#: src/features/token/components/token-details-table.tsx:29
+msgid "token.details.layer"
+msgstr "Layer"
+
+#: src/features/token/utils/get-chain-layer-from-protocol.ts:8
+msgid "account_balance.caption_left.native"
+msgstr "Layer 1"
+
+#: src/features/settings/account-identifier-sheet.tsx:21
+msgid "account_display_preference.description.taproot"
+msgstr "Layer 1 • Bitcoin"
+
+#: src/features/settings/account-identifier-sheet.tsx:25
+msgid "account_display_preference.description.native_segwit"
+msgstr "Layer 1 • Bitcoin"
+
+#: src/features/token/utils/get-chain-layer-from-protocol.ts:10
+msgid "account_balance.caption_left.stacks"
+msgstr "Layer 2"
+
+#: src/features/token/utils/get-chain-layer-from-protocol.ts:12
+msgid "account_balance.caption_left.sip10"
+msgstr "Layer 2 · Stacks"
+
+#: src/features/settings/account-identifier-sheet.tsx:29
+msgid "account_display_preference.description.bns"
+msgstr "Layer 2 • Stacks"
+
+#: src/features/settings/account-identifier-sheet.tsx:30
+msgid "account_display_preference.description.stacks"
+msgstr "Layer 2 • Stacks"
+
+#: src/app/settings/help/index.tsx:46
+msgid "help.learn.cell_title"
+msgstr "Learn"
+
+#: src/utils/dapps.ts:95
+msgid "dapps.leather"
+msgstr "Leather"
+
+#: src/utils/dapps.ts:30
+msgid "dapps.lisa"
+msgstr "Lisa"
+
+#: src/app/settings/index.tsx:223
+msgid "settings.lock_button"
+msgstr "Lock app"
+
+#: src/features/activity/utils/format-activity.ts:105
+msgid "activity.type.lockAsset"
+msgstr "Lock Asset"
+
+#: src/features/activity/utils/format-activity.ts:41
+msgid "activity.status.lock-failed"
+msgstr "Lock failed"
+
+#: src/features/activity/utils/format-activity.ts:39
+msgid "activity.status.locked"
+msgstr "Locked"
+
+#: src/features/activity/utils/format-activity.ts:40
+msgid "activity.status.locking"
+msgstr "Locking"
+
+#: src/app/settings/index.tsx:107
+msgid "settings.networks.cell_caption"
+msgstr "Mainnet, testnet or signet"
+
+#: src/features/activity/activity-empty.tsx:14
+msgid "activity-empty.title"
+msgstr "Make your first transaction to get started"
+
+#: src/features/send/components/recipient/recipient-selector/recipient-selector-section-header.tsx:30
+msgid "send-form.recipient.matching"
+msgstr "Matching"
+
+#: src/components/amount-field/amount-send-max-button.tsx:13
+msgid "send_form.max_label"
+msgstr "Max"
+
+#: src/components/app-update-required/app-update-required-sheet.tsx:55
+msgid "version_guard.decline_version"
+msgstr "Maybe later"
+
+#: src/features/approver/components/memo-card.tsx:20
+msgid "approver.memo.title"
+msgstr "Memo"
+
+#: src/features/approver/components/memo-sheet.tsx:32
+msgid "approver.add_memo.input_placeholder"
+msgstr "Memo"
+
+#: src/features/send/components/memo.tsx:91
+msgid "add_memo.input_placeholder"
+msgstr "Memo"
+
+#: src/features/send/error-messages.ts:46
+msgid "send.validation.memo_exceeds_limit"
+msgstr "Memo must be less than 34-bytes"
+
+#: src/features/approver/stx/hooks.ts:11
+msgid "approver.send.stx.success.change-memo"
+msgstr "Memo updated"
+
+#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:55
+#: src/features/approver/structured-message.section.tsx:49
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:60
+msgid "approver.signMessage.message-subtitle"
+msgstr "Message"
+
+#: src/features/send/error-messages.ts:21
+msgid "send.validation.minimum_amount"
+msgstr "Minimum is {minSpendAmountInSats}"
+
+#: src/hooks/use-version-check.ts:74
+msgid "version_guard.minimum_version_format_invalid"
+msgstr "Minimum version format is invalid"
+
+#: src/features/activity/utils/format-activity.ts:65
+msgid "activity.time.minutes-ago"
+msgstr "minutes ago"
+
+#: src/app/settings/index.tsx:149
+msgid "settings.accordion_label"
+msgstr "More options"
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:117
+msgid "add_wallet.options.cell_title"
+msgstr "More options"
+
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:104
+msgid "configure_account.name.cell_title"
+msgstr "Name"
+
+#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:20
+msgid "account_name.input_placeholder"
+msgstr "Name"
+
+#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:20
+msgid "wallet_name.input_placeholder"
+msgstr "Name"
+
+#: src/features/token/components/token-details-table.tsx:19
+msgid "token.details.name"
+msgstr "Name"
+
+#: src/features/receive/get-assets.ts:29
+msgid "address_type.native_segwit"
+msgstr "Native Segwit"
+
+#: src/features/token/address-list.tsx:78
+msgid "token.details.native_segwit_address"
+msgstr "Native Segwit"
+
+#: src/shared/display-preference.ts:21
+msgid "account_display_preference.native_segwit"
+msgstr "Native Segwit address"
+
+#: src/app/settings/help/index.tsx:15
+#: src/app/settings/networks/index.tsx:53
+msgid "networks.header_title"
+msgstr "Networks"
+
+#: src/app/settings/index.tsx:103
+msgid "settings.networks.cell_title"
+msgstr "Networks"
+
+#: src/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state.tsx:9
+msgid "send-form.recipient.no-search-results.label"
+msgstr "No results found"
+
+#: src/features/approver/components/nonce-card.tsx:19
+msgid "approver.nonce.title"
+msgstr "Nonce"
+
+#: src/features/approver/components/nonce-sheet.tsx:32
+msgid "approver.add_nonce.input_placeholder"
+msgstr "Nonce"
+
+#: src/features/approver/stx/hooks.ts:56
+msgid "approver.send.stx.success.change-nonce"
+msgstr "Nonce updated"
+
+#: src/features/send/error-messages.ts:7
+msgid "send.validation.not_a_number"
+msgstr "Not a number"
+
+#: src/app/settings/index.tsx:118
+msgid "settings.notifications.cell_title"
+msgstr "Notifications"
+
+#: src/app/settings/notifications/_layout.tsx:14
+msgid "notifications.header_title"
+msgstr "Notifications"
+
+#: src/features/notifications/notifications-sheet.tsx:30
+msgid "notification-sheet.submit_button"
+msgstr "Notify me"
+
+#: src/components/app-update-required/update-button.tsx:28
+msgid "common.ok"
+msgstr "OK"
+
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:124
+msgid "wallet.open_wallet_settings"
+msgstr "Open wallet settings"
+
+#: src/features/approver/components/inputs-outputs-card.tsx:61
+msgid "approver.inputs-outputs.output.title"
+msgstr "Output"
+
+#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:26
+msgid "recover_wallet.passphrase.input_placeholder"
+msgstr "Passphrase"
+
+#: src/features/recover-wallet/recover-wallet.tsx:100
+msgid "recover_wallet.paste_button"
+msgstr "Paste"
+
+#: src/features/recover-wallet/recover-wallet.layout.tsx:56
+msgid "recover_wallet.subtitle"
+msgstr "Paste or type Secret Key to add wallet"
+
+#: src/utils/dapps.ts:40
+msgid "dapps.planbetter"
+msgstr "PlanBetter"
+
+#: src/features/token/components/token-details-table.tsx:21
+msgid "token.details.price"
+msgstr "Price"
+
+#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:23
+msgid "remove_wallet.warning_caption"
+msgstr "Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you've stored its Secret Key elsewhere securely."
+
+#: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:21
+msgid "skip_secure_wallet.warning_caption"
+msgstr "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
+
+#: src/features/settings/email-address-sheet.tsx:57
+msgid "email_address.subtitle"
+msgstr "Provide an email address for receiving notifications"
+
+#: src/components/error/fetch-error.tsx:16
+#: src/components/error/fetch-error.tsx:37
+msgid "fetch-state-error.balance.subtitle"
+msgstr "Pull to refresh"
+
+#: src/app/settings/notifications/_layout.tsx:27
+#: src/app/settings/notifications/_layout.tsx:49
+msgid "notifications.push.tab_title"
+msgstr "Push"
+
+#: src/app/settings/index.tsx:122
+msgid "settings.notifications.cell_caption"
+msgstr "Push and email notifications"
+
+#: src/features/account/account.tsx:114
+#: src/features/account/accounts-widget.tsx:83
+msgid "general.receive"
+msgstr "Receive"
+
+#: src/features/receive/screens/asset-details.tsx:50
+#: src/features/token/token-receive-sheet.tsx:74
+msgid "receive_asset.header_title"
+msgstr "Receive"
+
+#: src/features/receive/screens/select-account.tsx:30
+msgid "select_account.receive.header_subtitle"
+msgstr "Receive"
+
+#: src/features/receive/screens/select-asset.tsx:70
+msgid "receive.select_asset.header_subtitle"
+msgstr "Receive"
+
+#: src/features/activity/utils/format-activity.ts:25
+msgid "activity.status.receive-failed"
+msgstr "Receive fail"
+
+#: src/app/settings/notifications/index.tsx:17
+msgid "notifications.push.cell_caption"
+msgstr "Receive notifications about transactions"
+
+#: src/features/notifications/notifications-sheet.tsx:15
+msgid "notifications-sheet.title"
+msgstr "Receive transaction notifications"
+
+#: src/features/activity/utils/format-activity.ts:23
+msgid "activity.status.received"
+msgstr "Received"
+
+#: src/app/app-recently-viewed.tsx:14
+msgid "browser.recently-viewed.title"
+msgstr "Recently viewed"
+
+#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:35
+msgid "browser.toolbox.recents"
+msgstr "Recents"
+
+#: src/features/send/components/recipient/recipient-selector/recipient-selector-section-header.tsx:22
+msgid "send-form.recipient.recents"
+msgstr "Recents"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:201
+msgid "configure_wallet.remove_wallet.cell_title"
+msgstr "Remove wallet"
+
+#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:19
+msgid "remove_wallet.header_title"
+msgstr "Remove wallet"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:190
+msgid "configure_wallet.rename_wallet.cell_title"
+msgstr "Rename wallet"
+
+#: src/features/approver/components/approver-permissions.tsx:17
+msgid "approver.permissions.request_approval"
+msgstr "Request approval for transactions"
+
+#: src/features/settings/app-authentication-sheet.tsx:80
+msgid "app_auth.cell_caption"
+msgstr "Require biometrics or PIN"
+
+#: src/utils/dapps.ts:50
+msgid "dapps.restake"
+msgstr "Restake"
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:103
+msgid "add_wallet.restore_wallet.cell_title"
+msgstr "Restore wallet"
+
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:143
+msgid "configure_account.unhide_account.cell_title"
+msgstr "Reveal account"
+
+#: src/features/send/forms/btc/btc-form.tsx:130
+#: src/features/send/forms/stx/stx-form.tsx:148
+msgid "send_form.review_button"
+msgstr "Review"
+
+#: src/features/token/utils/get-chain-layer-from-protocol.ts:14
+msgid "account_balance.caption_left.rune"
+msgstr "Runes"
+
+#: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:82
+msgid "choose_avatar.button"
+msgstr "Save"
+
+#: src/features/settings/email-address-sheet.tsx:80
+msgid "email_address.save_button"
+msgstr "Save"
+
+#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:21
+msgid "account_name.button"
+msgstr "Save"
+
+#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:21
+msgid "wallet_name.button"
+msgstr "Save"
+
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:78
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:89
+msgid "create_new_wallet.mnemonic.save_button"
+msgstr "Save to..."
+
+#: src/features/send/components/recipient/recipient-qr-scanner.tsx:33
+msgid "send-form.recipient.unsupported_qr"
+msgstr "Scan a Bitcoin or Stacks address"
+
+#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:72
+#: src/features/send/components/recipient/recipient-toggle.tsx:64
+msgid "send-form.recipient.qr_button"
+msgstr "Scan a QR code"
+
+#: src/features/qr-scanner/qr-scanner-chrome.tsx:47
+msgid "qr_scanner.title"
+msgstr "Scan QR Code"
+
+#: src/features/send/components/recipient/recipient-input.tsx:47
+msgid "send-form.recipient.input.placeholder"
+msgstr "Search for BNS name or address"
+
+#: src/app/secure-your-wallet.tsx:20
+msgid "secure_your_wallet.title"
+msgstr "Secure your wallet"
+
+#: src/app/settings/index.tsx:90
+msgid "settings.security.cell_title"
+msgstr "Security"
+
+#: src/app/settings/security/index.tsx:41
+msgid "security.header_title"
+msgstr "Security"
+
+#: src/features/receive/screens/select-account.tsx:26
+#: src/features/send/screens/select-account.tsx:45
+msgid "select_account.header_title"
+msgstr "Select account"
+
+#: src/features/receive/screens/select-asset.tsx:66
+#: src/features/send/screens/select-asset.tsx:41
+msgid "select_asset.header_title"
+msgstr "Select asset"
+
+#: src/features/account/account.tsx:102
+#: src/features/account/accounts-widget.tsx:69
+msgid "general.send"
+msgstr "Send"
+
+#: src/features/send/screens/form.tsx:55
+msgid "send_form.header_title"
+msgstr "Send"
+
+#: src/features/send/screens/select-account.tsx:49
+msgid "select_account.send.header_subtitle"
+msgstr "Send"
+
+#: src/features/send/screens/select-asset.tsx:45
+msgid "send.select_asset.header_subtitle"
+msgstr "Send"
+
+#: src/features/activity/utils/format-activity.ts:19
+msgid "activity.status.send-failed"
+msgstr "Send Failed"
+
+#: src/features/psbt-signer/psbt-signer.tsx:254
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:138
+msgid "approver.send.title"
+msgstr "Send token"
+
+#: src/features/activity/utils/format-activity.ts:20
+msgid "activity.status.sending"
+msgstr "Sending"
+
+#: src/features/send/components/recipient/use-recipient-evaluator.ts:55
+msgid "send-form.guard.same_address_warning_title"
+msgstr "Sending to the same address"
+
+#: src/features/send/components/recipient/use-recipient-evaluator.ts:74
+msgid "send-form.guard.same_address_error_description"
+msgstr "Sending to your own address isn’t supported. Choose a different address."
+
+#: src/features/activity/utils/format-activity.ts:18
+msgid "activity.status.sent"
+msgstr "Sent"
+
+#: src/app/settings/index.tsx:60
+msgid "settings.header_title"
+msgstr "Settings"
+
+#: src/components/screen/screen-header/components/header-actions.tsx:26
+msgid "header.settings_label"
+msgstr "Settings"
+
+#: src/features/qr-scanner/use-camera-permission.ts:44
+msgid "qr_scanner.camera_alert.action_label"
+msgstr "Settings"
+
+#: src/features/receive/screens/asset-details.tsx:99
+#: src/features/token/token-receive-sheet.tsx:122
+msgid "receive_asset.share_button"
+msgstr "Share"
+
+#: src/features/settings/analytics-sheet.tsx:51
+msgid "analytics.cell_caption"
+msgstr "Share anonymous usage details"
+
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:131
+#: src/features/psbt-signer/psbt-signer.tsx:290
+msgid "approver.advanced.show"
+msgstr "Show advanced options"
+
+#: src/components/screen/screen-header/components/header-actions.tsx:44
+msgid "header.privacy_label_show"
+msgstr "Show balances"
+
+#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:40
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:29
+msgid "approver.signMessage.title"
+msgstr "Sign Message"
+
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:87
+msgid "approver.signTransaction.title"
+msgstr "Sign Transaction"
+
+#: src/app/secure-your-wallet.tsx:56
+msgid "secure_your_wallet.skip_button"
+msgstr "Skip for now"
+
+#: src/features/approver/utils.tsx:41
+msgid "approver.fee.type.low"
+msgstr "Slow"
+
+#: src/components/error/fetch-error.tsx:26
+msgid "fetch-state-error.balance.title"
+msgstr "Some balances couldn't load."
+
+#: src/components/error/error.tsx:46
+msgid "error_boundary.title"
+msgstr "Something went wrong"
+
+#: src/components/error/fetch-error.tsx:14
+msgid "error.title"
+msgstr "Something went wrong"
+
+#: src/features/earn/stacking-card.tsx:14
+msgid "earn.stacking.title"
+msgstr "Stacking rewards"
+
+#: src/utils/dapps.ts:60
+msgid "dapps.stackingdao"
+msgstr "StackingDAO"
+
+#: src/features/balances/stacks/stacks-balance.tsx:16
+#: src/features/receive/get-assets.ts:62
+#: src/features/send/forms/stx/stx-form.tsx:61
+msgid "asset_name.stacks"
+msgstr "Stacks"
+
+#: src/shared/display-preference.ts:36
+msgid "account_display_preference.stacks_address"
+msgstr "Stacks address"
+
+#: src/features/approver/utils.tsx:45
+msgid "approver.fee.type.middle"
+msgstr "Standard"
+
+#: src/features/token/address-list.tsx:110
+msgid "token.details.stx_address"
+msgstr "STX"
+
+#: src/features/approver/components/approver-buttons.tsx:58
+msgid "approver.button.submitted"
+msgstr "Submitted"
+
+#: src/features/approver/components/approver-buttons.tsx:45
+msgid "approver.button.submitting"
+msgstr "Submitting..."
+
+#: src/features/activity/utils/format-activity.ts:100
+msgid "activity.type.swapAssets"
+msgstr "Swap Assets"
+
+#: src/features/activity/utils/format-activity.ts:46
+msgid "activity.status.swap-failed"
+msgstr "Swap failed"
+
+#: src/features/activity/utils/format-activity.ts:44
+msgid "activity.status.swapped"
+msgstr "Swapped"
+
+#: src/features/activity/utils/format-activity.ts:45
+msgid "activity.status.swapping"
+msgstr "Swapping"
+
+#: src/app/create-new-wallet.tsx:114
+msgid "create_new_wallet.view_secret_key_label_a"
+msgstr "Tap to view Secret Key"
+
+#: src/features/receive/get-assets.ts:48
+msgid "address_type.taproot"
+msgstr "Taproot"
+
+#: src/features/token/address-list.tsx:92
+msgid "token.details.taproot_address"
+msgstr "Taproot"
+
+#: src/shared/display-preference.ts:26
+msgid "account_display_preference.taproot"
+msgstr "Taproot address"
+
+#: src/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state.tsx:15
+msgid "send-form.recipient.no-search-results.description"
+msgstr "The address you entered isn’t valid. Verify and try again"
+
+#: src/app/settings/display/index.tsx:56
+msgid "display.theme.cell_title"
+msgstr "Theme"
+
+#: src/features/settings/theme-sheet.tsx:38
+msgid "theme.header_title"
+msgstr "Theme"
+
+#: src/app/settings/index.tsx:81
+msgid "settings.display.cell_caption"
+msgstr "Theme and account identifier"
+
+#: src/features/settings/theme-sheet.tsx:27
+msgid "theme.toast_title"
+msgstr "Theme updated"
+
+#: src/features/send/components/recipient/use-recipient-evaluator.ts:91
+msgid "send-form.guard.incorrect_network_address_description"
+msgstr "This address belongs to a different network. Use an address that matches the active network."
+
+#: src/features/send/components/recipient/use-recipient-evaluator.ts:108
+msgid "send-form.guard.non_compliant_address_description"
+msgstr "This address is linked to activity that violates compliance policies. You can’t send funds to it"
+
+#: src/features/approver/components/approver-permissions.tsx:26
+msgid "approver.permissions.title"
+msgstr "This app would like to"
+
+#: src/components/sheets/notify-user-sheet.layout.tsx:55
+msgid "notify_user.subtitle"
+msgstr "This feature is not available yet, but we can notify you when ready."
+
+#: src/features/receive/get-assets.ts:67
+msgid "asset_description.stacks"
+msgstr "This is your address for receiving tokens on the Stacks network."
+
+#: src/features/receive/get-assets.ts:33
+msgid "asset_description.native_segwit"
+msgstr "This is your Native Segwit address for receiving tokens  on the Bitcoin network."
+
+#: src/features/receive/get-assets.ts:52
+msgid "asset_description.taproot"
+msgstr "This is your Taproot address for receiving tokens on the Bitcoin network."
+
+#: src/features/send/components/recipient/use-recipient-evaluator.ts:59
+msgid "send-form.guard.same_address_warning_description"
+msgstr "This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent."
+
+#: src/features/earn/earn-card.tsx:61
+msgid "earn.sbtc.yield-description-to"
+msgstr "to"
+
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:115
+#: src/features/psbt-signer/psbt-signer.tsx:270
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:154
+msgid "approver.outcomes.title2"
+msgstr "To address"
+
+#: src/app/settings/display/index.tsx:140
+msgid "display.haptics.cell_caption"
+msgstr "Toggle tactile feedback for interactions"
+
+#: src/features/send/error-messages.ts:16
+msgid "send.validation.invalid_precision"
+msgstr "Token can only have {precision} decimals"
+
+#: src/features/token/components/token-details-table.tsx:17
+msgid "token.details.title"
+msgstr "Token Details"
+
+#: src/features/activity/utils/format-activity.ts:84
+msgid "activity.type.token-transfer"
+msgstr "Token Transfer"
+
+#: src/features/account/account.tsx:137
+msgid "account.balances.header_title"
+msgstr "Tokens"
+
+#: src/features/earn/locked-balance-card.tsx:34
+msgid "earn.total_locked"
+msgstr "Total locked"
+
+#: src/features/psbt-signer/psbt-signer.tsx:310
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:179
+msgid "approver.total_spend"
+msgstr "Total spend"
+
+#: src/app/settings/notifications/index.tsx:13
+msgid "notifications.push.cell_title"
+msgstr "Transaction confirmations"
+
+#: src/features/send/forms/btc/use-btc-form.ts:79
+#: src/features/send/forms/stx/use-stx-form.ts:74
+msgid "send-form.unexpected-error"
+msgstr "Transaction failed due to an unexpected error"
+
+#: src/components/error/error.tsx:51
+msgid "error_boundary.action"
+msgstr "Try again"
+
+#: src/features/qr-scanner/use-camera-permission.ts:40
+msgid "qr_scanner.camera_alert.message"
+msgstr "Turn on camera access in Settings to scan a QR."
+
+#: src/features/browser/browser/search-bar/search-input/generic-search-text-input.tsx:20
+msgid "browser.input_placeholder"
+msgstr "Type URL or search"
+
+#: src/hooks/use-version-check.ts:33
+msgid "version_guard.unable_to_determine_current_version"
+msgstr "Unable to determine current app version"
+
+#: src/components/app-update-required/update-button.tsx:27
+#: src/utils/app-store-utils.ts:31
+msgid "version_guard.store_error_message"
+msgstr "Unable to open app store. Please update the app manually from your device's app store."
+
+#: src/components/app-update-required/update-button.tsx:26
+msgid "version_guard.store_error_title"
+msgstr "Unable to Open Store"
+
+#: src/features/activity/utils/format-activity.ts:94
+#: src/features/activity/utils/format-activity.ts:110
+msgid "activity.type.unknown"
+msgstr "Unknown"
+
+#: src/features/approver/utils.tsx:57
+msgid "approver.fee.type.unknown"
+msgstr "Unknown"
+
+#: src/features/approver/utils.tsx:84
+#: src/features/approver/utils.tsx:112
+msgid "approver.fee.speed.unknown"
+msgstr "Unknown"
+
+#: src/hooks/use-version-check.ts:101
+msgid "version_guard.unknown_error"
+msgstr "Unknown error during version check"
+
+#: src/components/splash-screen-guard/splash-screen-guard.tsx:148
+msgid "unlock"
+msgstr "Unlock"
+
+#: src/utils/app-store-utils.ts:54
+msgid "version_guard.update_from_store"
+msgstr "Update from {0}"
+
+#: src/components/app-update-required/app-update-required-sheet.tsx:31
+msgid "version_guard.update_available"
+msgstr "Update the app to get access to the latest features."
+
+#: src/app/secure-your-wallet.tsx:33
+msgid "secure_your_wallet.caption"
+msgstr "Use your device PIN, Face ID or other biometrics to secure your wallets"
+
+#: src/utils/dapps.ts:70
+msgid "dapps.velar"
+msgstr "Velar"
+
+#: src/features/send/components/recipient/use-recipient-evaluator.ts:121
+msgid "send-form.guard.new_recipient_title"
+msgstr "Verify full address"
+
+#: src/app/settings/index.tsx:185
+msgid "settings.version_label"
+msgstr "Version"
+
+#: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:20
+msgid "wallets_list.empty_wallets_title"
+msgstr "View and manage all your wallets in one place"
+
+#: src/features/settings/wallet-and-accounts/components/empty-hidden-accounts.tsx:16
+msgid "wallets_list.hidden_accounts_title"
+msgstr "View and manage your hidden accounts"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:176
+msgid "configure_wallet.view_key.cell_title"
+msgstr "View Secret Key"
+
+#: src/features/approver/components/approver-permissions.tsx:13
+msgid "approver.permissions.view_balance_activity"
+msgstr "View your wallet balance & activity"
+
+#. js-lingui-generated-id
+#: src/features/wallet-manager/wallets.tsx:26
+msgid "Wallet {fingerprint}"
+msgstr "Wallet {fingerprint}"
+
+#: src/store/wallets/wallets.write.ts:25
+msgid "wallet.default.name"
+msgstr "Wallet {walletIdx}"
+
+#: src/hooks/use-create-wallet.ts:48
+msgid "create_wallet.toast_title_success"
+msgstr "Wallet added"
+
+#: src/hooks/use-create-wallet.ts:61
+msgid "create_wallet.wallet_exists.toast_title_error"
+msgstr "Wallet added already"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:105
+msgid "configure_wallet.wallet_name.empty_name_error"
+msgstr "Wallet name cannot be empty"
+
+#: src/app/settings/wallet/index.tsx:25
+msgid "wallets.header_title"
+msgstr "Wallets"
+
+#: src/app/settings/index.tsx:63
+msgid "settings.wallets.cell_title"
+msgstr "Wallets and accounts"
+
+#: src/app/(tabs)/browser.tsx:63
+msgid "browser.search-bar.wrong-url"
+msgstr "Wrong URL"
+
+#: src/utils/dapps.ts:80
+msgid "dapps.xverse"
+msgstr "Xverse"
+
+#: src/features/send/components/recipient/use-recipient-evaluator.ts:125
+msgid "send-form.guard.new_recipient_description"
+msgstr "You haven’t sent to this address before. Double-check that it’s correct before proceeding."
+
+#: src/app/app-connections.tsx:22
+msgid "browser-sheet.connected.empty.caption"
+msgstr "You will find the apps you are connected to here"
+
+#: src/app/app-recently-viewed.tsx:24
+msgid "browser-sheet.recent.empty.caption"
+msgstr "You will find the apps you recently viewed here"
+
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:105
+#: src/features/psbt-signer/psbt-signer.tsx:263
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:147
+msgid "approver.outcomes.title1"
+msgstr "You’ll send"
+
+#: src/features/send/components/recipient/recipient-selector/recipient-selector-section-header.tsx:26
+msgid "send-form.recipient.accounts"
+msgstr "Your accounts"
+
+#: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:19
+msgid "view_secret_key.title"
+msgstr "Your Secret Key"
+
+#: src/app/create-new-wallet.tsx:91
+msgid "create_new_wallet.subtitle"
+msgstr "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
+
+#: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:26
+msgid "view_secret_key.subtitle"
+msgstr "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
+
+#: src/utils/dapps.ts:90
+msgid "dapps.zest"
+msgstr "Zest"

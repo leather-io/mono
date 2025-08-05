@@ -85,3 +85,7 @@ export function useTokenDetailsFlag() {
 export function useMinimumAppVersion() {
   return useStringVariation('minimum_app_version', '');
 }
+
+export function useReadonlyWalletsFlag() {
+  return useBoolVariation('release_readonly_wallets', false);
+}

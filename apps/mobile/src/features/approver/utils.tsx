@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { ExtendedStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { t } from '@lingui/core/macro';
 import { bytesToHex } from '@noble/hashes/utils';
@@ -17,7 +18,6 @@ import {
 } from '@stacks/transactions';
 
 import { FeeTypes } from '@leather.io/models';
-import { StacksSigner } from '@leather.io/stacks';
 import {
   AnimalChameleonIcon,
   AnimalEagleIcon,
@@ -134,14 +134,17 @@ export interface TxOptions {
   network: StacksNetwork;
 }
 
-export function getTxOptions(signer: StacksSigner, stacksNetwork: StacksNetwork): TxOptions {
+export function getTxOptions(
+  signer: ExtendedStacksSigner,
+  stacksNetwork: StacksNetwork
+): TxOptions {
   return {
     publicKey: bytesToHex(signer.publicKey),
     network: stacksNetwork,
   };
 }
 
-export function useTxOptions(signer: StacksSigner): TxOptions {
+export function useTxOptions(signer: ExtendedStacksSigner): TxOptions {
   const stacksNetwork = useNetworkPreferenceStacksNetwork();
 
   return useMemo(() => getTxOptions(signer, stacksNetwork), [signer, stacksNetwork]);

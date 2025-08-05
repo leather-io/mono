@@ -19,6 +19,7 @@ function AccountItem({ account, onPress }: { account: Account; onPress?: () => v
 
   return (
     <AccountListItem
+      isReadonly={account.isReadonly}
       onPress={onPress}
       key={account.id}
       accountName={account.name}

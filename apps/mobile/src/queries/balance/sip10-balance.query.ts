@@ -14,10 +14,7 @@ export function useSip10TotalBalance() {
 }
 
 export function useSip10AccountBalance(fingerprint: string, accountIndex: number) {
-  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
-  if (!address) {
-    throw new Error('Stacks address not found');
-  }
+  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex);
   return toFetchState(useSip10AddressBalanceQuery(address));
 }
 
@@ -40,12 +37,12 @@ function useSip10AggregateBalanceQuery(addresses: string[]) {
   });
 }
 
-function useSip10AddressBalanceQuery(address: string) {
+function useSip10AddressBalanceQuery(address: string | undefined) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['sip10-balances-service-get-sip10-address-balance', address, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AddressBalance(address, signal),
+      address ? getSip10BalancesService().getSip10AddressBalance(address, signal) : null,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

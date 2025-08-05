@@ -14,10 +14,8 @@ export function useStxTotalBalance() {
 }
 
 export function useStxAccountBalance(fingerprint: string, accountIndex: number) {
-  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
-  if (!address) {
-    throw new Error('Stacks address not found');
-  }
+  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex);
+
   return toFetchState(useStxAddressBalanceQuery(address));
 }
 
@@ -36,12 +34,12 @@ function useStxAggregateBalanceQuery(addresses: string[]) {
   });
 }
 
-export function useStxAddressBalanceQuery(address: string) {
+export function useStxAddressBalanceQuery(address: string | undefined) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['stx-balances-service-get-stx-address-balance', address, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getStxBalancesService().getStxAddressBalance(address, signal),
+      address ? getStxBalancesService().getStxAddressBalance(address, signal) : null,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

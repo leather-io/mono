@@ -15,8 +15,24 @@ export type StacksKeychain = z.infer<typeof stacksKeychainSchema>;
 export const stacksKeychainStoreSchema = entitySchema(stacksKeychainSchema);
 export type StacksKeychainStore = z.infer<typeof stacksKeychainStoreSchema>;
 
+export interface ReadonlyStacksSigner
+  extends Omit<StacksSigner, 'sign' | 'signMessage' | 'signStructuredMessage'> {
+  isReadonly: true;
+}
+export interface ReadWriteStacksSigner extends StacksSigner {
+  isReadonly: false;
+}
+
+export type ExtendedStacksSigner = ReadonlyStacksSigner | ReadWriteStacksSigner;
+
 export function assertStacksSigner(
-  signer: StacksSigner | undefined
-): asserts signer is StacksSigner {
+  signer: ExtendedStacksSigner | undefined
+): asserts signer is ExtendedStacksSigner {
   if (!signer) throw new Error('No signer found');
+}
+
+export function assertReadWriteStacksSigner(
+  signer: ExtendedStacksSigner | undefined
+): asserts signer is ReadWriteStacksSigner {
+  if (!signer || signer.isReadonly) throw new Error('No read/write signer found');
 }

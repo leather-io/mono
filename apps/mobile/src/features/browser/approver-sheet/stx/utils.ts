@@ -1,7 +1,7 @@
 import { calculateDefaultStacksFee } from '@/features/send/utils';
 import { App, assertAppIsConnected } from '@/store/apps/utils';
 import { stacksSignerFromAddress } from '@/store/keychains/stacks/stacks-keychains.read';
-import { assertStacksSigner } from '@/store/keychains/stacks/utils';
+import { ExtendedStacksSigner, assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { getStacksNetworkFromName } from '@/store/settings/settings.read';
 import { makeStacksAccountIdentiferFromDescriptor } from '@/store/utils';
 import { StacksNetwork, StacksNetworks } from '@stacks/network';
@@ -9,7 +9,6 @@ import { PostConditionModeName } from '@stacks/transactions';
 
 import { Money } from '@leather.io/models';
 import { BaseStacksTransactionRpcParams } from '@leather.io/rpc';
-import { StacksSigner } from '@leather.io/stacks';
 import { createMoneyFromDecimal, initBigNumber } from '@leather.io/utils';
 
 export function getDefaultFee() {
@@ -30,7 +29,7 @@ export function getAccountIdFromRequestParams({
 }: {
   params: BaseStacksTransactionRpcParams;
   app: App;
-  stacksSigners: StacksSigner[];
+  stacksSigners: ExtendedStacksSigner[];
 }) {
   if (params.address) {
     const signer = stacksSigners.find(stacksSignerFromAddress(params.address));

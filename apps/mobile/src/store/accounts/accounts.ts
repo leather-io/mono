@@ -1,23 +1,29 @@
 import { AccountId } from '@leather.io/models';
 
 import { useAccountByIndex } from './accounts.read';
-import { AccountStore } from './utils';
+import { AccountIcon, AccountStatus, AccountStore, deserializeAccountId } from './utils';
 
-export function deserializeAccountId(accountId: string) {
-  const [fingerprint, accountIndex] = accountId.split('/');
-  if (!fingerprint || !accountIndex) throw new Error('Invalid account ID ' + accountId);
-  return { fingerprint, accountIndex: Number(accountIndex) };
+export interface Account {
+  status: AccountStatus;
+  fingerprint: string;
+  accountIndex: number;
+  id: string;
+  icon: AccountIcon;
+  name: string;
+  isReadonly: boolean;
 }
 
-export function initalizeAccount(account: AccountStore) {
+interface InitializeAccountData extends AccountStore {
+  isReadonly: boolean;
+}
+
+export function initalizeAccount(account: InitializeAccountData): Account {
   return {
     ...account,
     ...deserializeAccountId(account.id),
     status: account.status ?? 'active',
   };
 }
-
-export type Account = ReturnType<typeof initalizeAccount>;
 
 interface AccountLoaderProps extends AccountId {
   fallback?: React.ReactNode;

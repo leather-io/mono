@@ -20,6 +20,7 @@ export function WalletsList({ variant }: { variant: WalletViewVariant }) {
         name={wallet.name}
         key={wallet.fingerprint}
         fingerprint={wallet.fingerprint}
+        isReadonly={wallet.isReadonly}
       />
     );
   });

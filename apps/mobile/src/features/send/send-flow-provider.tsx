@@ -39,9 +39,10 @@ interface InitializerParams {
 }
 
 function initializer({ accounts, selectedAccount, selectedAsset }: InitializerParams): SendState {
-  if (accounts.length === 1 && isDefined(accounts[0])) {
+  const readWriteAccounts = accounts.filter(acc => !acc.isReadonly);
+  if (readWriteAccounts.length === 1 && isDefined(readWriteAccounts[0])) {
     return {
-      selectedAccount: accounts[0],
+      selectedAccount: readWriteAccounts[0],
       selectedAsset: null,
       inputCurrencyMode: 'crypto',
       accounts,

@@ -6,11 +6,11 @@ import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { selectNetworkPreference } from '@/store/settings/settings.read';
 import { mnemonicStore } from '@/store/storage-persistors';
+import { selectReadonlyWalletFingerprints } from '@/store/wallets/wallets.read';
 import { createSelector } from '@reduxjs/toolkit';
 
-import { decomposeDescriptor } from '@leather.io/crypto';
+import { decomposeDescriptor, extractFingerprintFromDescriptor } from '@leather.io/crypto';
 import {
-  StacksSigner,
   createSignFnFromMnemonic,
   createSignMessageFnFromMnemonic,
   createSignStructuredDataMessageFnFromMnemonic,
@@ -20,6 +20,7 @@ import {
 
 import { descriptorKeychainSelectors, filterKeychainsByStacksAccount } from '../keychains';
 import { adapter } from './stacks-keychains.write';
+import { ExtendedStacksSigner, ReadWriteStacksSigner, ReadonlyStacksSigner } from './utils';
 
 const stacksKeychainSelectors = adapter.getSelectors((state: RootState) => state.keychains.stacks);
 
@@ -38,32 +39,57 @@ function createSignStructuredMessageFnFromBiometricMnemonicStore(descriptor: str
   );
 }
 
-const stacksSigners = createSelector(
+function noop(): Promise<any> {
+  return Promise.resolve();
+}
+
+const selectStacksSigners = createSelector(
   stacksKeychainSelectors.selectAll,
+  selectReadonlyWalletFingerprints,
   selectNetworkPreference,
-  (accounts, network) =>
-    accounts.map(account =>
-      initalizeStacksSigner({
+  (accounts, readonlyWalletFingerprints, network): ExtendedStacksSigner[] =>
+    accounts.map(account => {
+      const accountFingerprint = extractFingerprintFromDescriptor(account.descriptor);
+      const isReadonly = readonlyWalletFingerprints.includes(accountFingerprint);
+      const stacksSigner = initalizeStacksSigner({
         descriptor: account.descriptor,
         network: stacksChainIdToCoreNetworkMode(network.chain.stacks.chainId),
-        signFn: createSignFnFromBiometricMnemonicStore(account.descriptor),
-        signMessageFn: createSignMessageFnFromBiometricMnemonicStore(account.descriptor),
-        signStructuredMessageFn: createSignStructuredMessageFnFromBiometricMnemonicStore(
-          account.descriptor
-        ),
-      })
-    )
+        signFn: isReadonly ? noop : createSignFnFromBiometricMnemonicStore(account.descriptor),
+        signMessageFn: isReadonly
+          ? noop
+          : createSignMessageFnFromBiometricMnemonicStore(account.descriptor),
+        signStructuredMessageFn: isReadonly
+          ? noop
+          : createSignStructuredMessageFnFromBiometricMnemonicStore(account.descriptor),
+      });
+      if (isReadonly) {
+        return {
+          descriptor: stacksSigner.descriptor,
+          keyOrigin: stacksSigner.keyOrigin,
+          address: stacksSigner.address,
+          accountIndex: stacksSigner.accountIndex,
+          network: stacksSigner.network,
+          publicKey: stacksSigner.publicKey,
+          derivationPath: stacksSigner.derivationPath,
+          isReadonly,
+        } satisfies ReadonlyStacksSigner;
+      }
+      return {
+        ...stacksSigner,
+        isReadonly,
+      } satisfies ReadWriteStacksSigner;
+    })
 );
 
 export function useStacksSigners() {
-  const list = useSelector(stacksSigners);
+  const list = useSelector(selectStacksSigners);
   return useMemo(
     () => ({ ...descriptorKeychainSelectors(list, filterKeychainsByStacksAccount) }),
     [list]
   );
 }
 
-function filterActiveAddresses(stacksSigners: StacksSigner[], accounts: Account[]) {
+function filterActiveAddresses(stacksSigners: ExtendedStacksSigner[], accounts: Account[]) {
   return stacksSigners.filter(signer =>
     accounts.some(account => {
       const { fingerprint } = decomposeDescriptor(signer.descriptor);
@@ -87,7 +113,7 @@ export function useStacksSignerAddressFromAccountIndex(fingerprint: string, acco
 }
 
 export function stacksSignerFromAddress(address: string) {
-  return function (signer: StacksSigner) {
+  return function (signer: ExtendedStacksSigner) {
     return signer.address === address;
   };
 }

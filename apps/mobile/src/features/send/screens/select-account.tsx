@@ -88,6 +88,8 @@ function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
     <AccountListItem
       onPress={() => onSelectAccount(account)}
       accountName={account.name}
+      disabled={account.isReadonly}
+      isReadonly={account.isReadonly}
       walletName={wallet?.name}
       address={
         <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />

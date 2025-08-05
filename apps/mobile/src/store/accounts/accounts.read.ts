@@ -3,14 +3,35 @@ import { useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 
 import { RootState } from '..';
+import { destructAccountIdentifier, useAppDispatch } from '../utils';
+import { selectReadonlyWalletFingerprints } from '../wallets/wallets.read';
 import { initalizeAccount } from './accounts';
-import { accountsAdapter } from './accounts.write';
+import {
+  AddAccountPayload,
+  AddReadonlyAccountPayload,
+  accountsAdapter,
+  userAddsAccount,
+  userAddsReadonlyAccount,
+} from './accounts.write';
 import { AccountStatus } from './utils';
 
-const selectors = accountsAdapter.getSelectors((state: RootState) => state.accounts);
+const accountSelectors = accountsAdapter.getSelectors((state: RootState) => state.accounts);
+
+const selectAllAccounts = createSelector(
+  accountSelectors.selectAll,
+  selectReadonlyWalletFingerprints,
+  (accounts, readonlyWalletFingerprints) =>
+    accounts.map(acc => {
+      const { fingerprint } = destructAccountIdentifier(acc.id);
+      return {
+        ...acc,
+        isReadonly: readonlyWalletFingerprints.includes(fingerprint),
+      };
+    })
+);
 
 function selectAccounts(status?: AccountStatus) {
-  return createSelector(selectors.selectAll, accounts => {
+  return createSelector(selectAllAccounts, accounts => {
     switch (status) {
       case 'active':
         return accounts.filter(account => account.status === 'active').map(initalizeAccount);
@@ -27,13 +48,19 @@ export function useSelectByAccountIds(accountIds: string[]) {
 }
 
 function selectByAccountIds(accountIds: string[]) {
-  return createSelector(selectors.selectEntities, entities =>
-    accountIds
-      .map(id => entities[id])
-      .map(account => {
-        if (!account) throw new Error('No account found');
-        return initalizeAccount(account);
-      })
+  return createSelector(
+    accountSelectors.selectEntities,
+    selectReadonlyWalletFingerprints,
+    (entities, readonlyWalletFingerprints) =>
+      accountIds
+        .map(id => entities[id])
+        .map(account => {
+          if (!account) throw new Error('No account found');
+          const { fingerprint } = destructAccountIdentifier(account.id);
+          const isReadonly = readonlyWalletFingerprints.includes(fingerprint);
+
+          return initalizeAccount({ ...account, isReadonly });
+        })
   );
 }
 
@@ -57,6 +84,8 @@ export function useAccountsByFingerprint(fingerprint: string, status?: AccountSt
 }
 
 export function useAccounts(status: AccountStatus = 'active') {
+  const dispatch = useAppDispatch();
+
   const accountsList = useSelector(selectAccounts(status));
   function fromFingerprint(fingerprint: string) {
     return accountsList.filter(account => account.fingerprint === fingerprint);
@@ -66,6 +95,12 @@ export function useAccounts(status: AccountStatus = 'active') {
   }
   return {
     list: accountsList,
+    add(params: { action: AddAccountPayload }) {
+      return dispatch(userAddsAccount(params.action));
+    },
+    addReadonly(params: { action: AddReadonlyAccountPayload }) {
+      return dispatch(userAddsReadonlyAccount(params.action));
+    },
     hasAccounts: accountsList.length > 0,
     fromFingerprint,
     fromAccountIndex,

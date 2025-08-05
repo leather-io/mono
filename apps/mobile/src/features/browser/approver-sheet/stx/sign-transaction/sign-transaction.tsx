@@ -5,7 +5,7 @@ import { getTxOptions } from '@/features/approver/utils';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
-import { assertStacksSigner } from '@/store/keychains/stacks/utils';
+import { assertReadWriteStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { deserializeTransaction } from '@stacks/transactions';
 
@@ -39,14 +39,14 @@ export function SignTransactionApprover({
   const { list: accounts } = useAccounts();
   const [txHex, setTxHex] = useState(requestTxHex);
   const signer = useStacksSigners().fromAccountId(accountId)[0];
-  assertStacksSigner(signer);
+  assertReadWriteStacksSigner(signer);
 
   const txOptions = getTxOptions(signer, network);
 
   const tx = deserializeTransaction(txHex);
 
   async function onApprove() {
-    assertStacksSigner(signer);
+    assertReadWriteStacksSigner(signer);
     const signedTx = await signer?.sign(tx);
 
     const response = createRpcSuccessResponse('stx_signTransaction', {

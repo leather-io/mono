@@ -1,6 +1,11 @@
-import { userAddsAccount } from '@/store/accounts/accounts.write';
-import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '@/store/global-action';
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { userAddsAccount, userAddsReadonlyAccount } from '@/store/accounts/accounts.write';
+import {
+  handleAppResetWithState,
+  userAddsReadonlyWallet,
+  userAddsWallet,
+  userRemovesWallet,
+} from '@/store/global-action';
+import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
 
@@ -22,15 +27,38 @@ export const stacksKeychainSlice = createSlice({
     builder
       .addCase(
         userAddsWallet,
+        handleEntityActionWith(adapter.addMany, payload => payload.withKeychains.stacks)
+      )
+
+      .addCase(
+        userAddsReadonlyWallet,
         handleEntityActionWith(adapter.addMany, payload => payload.withKeychains.stacks ?? [])
       )
 
       .addCase(
         userAddsAccount,
-        handleEntityActionWith(adapter.addMany, payload => payload.withKeychains?.stacks ?? [])
+        handleEntityActionWith(adapter.addMany, payload => payload.withKeychains.stacks)
+      )
+
+      .addCase(
+        userAddsReadonlyAccount,
+        handleEntityActionWith(adapter.addMany, payload => payload.withKeychains.stacks ?? [])
+      )
+
+      .addCase(
+        userAddsStacksKeychain,
+        handleEntityActionWith(adapter.addMany, payload => payload.stacksKeychains)
       )
 
       .addCase(userRemovesWallet, filterKeychainsToRemove(adapter.removeMany))
 
       .addCase(...handleAppResetWithState(initialState)),
 });
+
+export interface AddStacksKeychainPayload {
+  stacksKeychains: StacksKeychain[];
+}
+
+export const userAddsStacksKeychain = createAction<AddStacksKeychainPayload>(
+  'stacks-keychains/userAddsStacksKeychain'
+);

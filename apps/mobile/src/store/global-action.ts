@@ -20,7 +20,18 @@ export interface AddWalletAction {
     stacks: StacksKeychain[];
   };
 }
+export interface AddReadonlyWalletAction {
+  wallet: PartialWalletStore;
+  withKeychains: {
+    bitcoin?: BitcoinKeychain[];
+    stacks?: StacksKeychain[];
+  };
+}
 export const userAddsWallet = createAction<AddWalletAction>('global/userAddsWallet');
+
+export const userAddsReadonlyWallet = createAction<AddReadonlyWalletAction>(
+  'global/userAddsReadonlyWallet'
+);
 
 type RemoveWalletAction = WalletId;
 export const userRemovesWallet = createAction<RemoveWalletAction>('global/userRemovesWallet');

@@ -14,7 +14,7 @@ export function useGetAddressesAccount(accountId: string | null) {
   const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
   const account = accountFromAccountIndex(fingerprint, accountIndex);
 
-  if (!account) return null;
+  if (!account || account[0]?.isReadonly) return null;
 
   const stacksAccount = stacksAccountFromAccountIndex(fingerprint, accountIndex)[0];
   const { nativeSegwit, taproot } = accountIndexByPaymentType(fingerprint, accountIndex);

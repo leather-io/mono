@@ -6,6 +6,7 @@ import { useAuthentication } from '@/hooks/use-authentication';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
+import { useLocalSearchParams } from 'expo-router';
 
 import { Box, Button, SheetRef, Text } from '@leather.io/ui/native';
 
@@ -13,6 +14,8 @@ export default function SecureYourWalletScreen() {
   const sheetRef = useRef<SheetRef>(null);
   const { createWallet } = useCreateWallet();
   const { callIfEnrolled } = useAuthentication();
+  const params = useLocalSearchParams();
+  const walletType = params.type as 'read-write' | 'read-only';
 
   const pageTitle = t`Secure your wallet`;
 
@@ -48,7 +51,9 @@ export default function SecureYourWalletScreen() {
         />
         <Button
           onPress={() => {
-            void callIfEnrolled(() => createWallet({ biometrics: true }));
+            void callIfEnrolled(() =>
+              createWallet({ biometrics: true, isReadonly: walletType === 'read-only' })
+            );
           }}
           buttonState="default"
           title={t`Enable device security`}
@@ -57,7 +62,7 @@ export default function SecureYourWalletScreen() {
       <SkipSecureWalletSheet
         onSubmit={async () => {
           sheetRef.current?.close();
-          await createWallet({ biometrics: false });
+          await createWallet({ biometrics: false, isReadonly: walletType === 'read-only' });
         }}
         sheetRef={sheetRef}
       />

@@ -4,7 +4,12 @@ import { produce } from 'immer';
 
 import { WalletId } from '@leather.io/models';
 
-import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
+import {
+  handleAppResetWithState,
+  userAddsReadonlyWallet,
+  userAddsWallet,
+  userRemovesWallet,
+} from '../global-action';
 import { handleEntityActionWith } from '../utils';
 import { PartialWalletStore, WalletStore } from './utils';
 
@@ -44,7 +49,20 @@ export const walletSlice = createSlice({
       .addCase(userAddsWallet, (state, action) =>
         walletAdapter.addOne(
           state,
-          addWalletDefaults({ wallet: action.payload.wallet, walletIdx: state.ids.length + 1 })
+          addWalletDefaults({
+            wallet: { ...action.payload.wallet, isReadonly: false },
+            walletIdx: state.ids.length + 1,
+          })
+        )
+      )
+
+      .addCase(userAddsReadonlyWallet, (state, action) =>
+        walletAdapter.addOne(
+          state,
+          addWalletDefaults({
+            wallet: { ...action.payload.wallet, isReadonly: true },
+            walletIdx: state.ids.length + 1,
+          })
         )
       )
 

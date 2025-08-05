@@ -4,7 +4,11 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { selectNetworkPreference } from '@/store/settings/settings.read';
 import { destructAccountIdentifier } from '@/store/utils';
-import { useWallets } from '@/store/wallets/wallets.read';
+import {
+  selectReadonlyWalletFingerprints,
+  useReadonlyWalletFingerprints,
+  useWallets,
+} from '@/store/wallets/wallets.read';
 import { createSelector } from '@reduxjs/toolkit';
 import memoize from 'just-memoize';
 
@@ -24,6 +28,7 @@ import {
   extractAccountPathFromFullPath,
   extractAddressIndexFromPath,
   extractChangeIndexFromPath,
+  extractFingerprintFromDescriptor,
   extractKeyOriginPathFromDescriptor,
   validateKeyOriginPath,
 } from '@leather.io/crypto';
@@ -31,7 +36,6 @@ import { BitcoinNetworkModes, bitcoinNetworkToNetworkMode } from '@leather.io/mo
 
 import { descriptorKeychainSelectors, filterKeychainsByAccountIndex } from '../keychains';
 import { bitcoinKeychainAdapter } from './bitcoin-keychains.write';
-import { BitcoinKeychain } from './utils';
 
 const bitcoinKeychainSelectors = bitcoinKeychainAdapter.getSelectors(
   (state: RootState) => state.keychains.bitcoin
@@ -44,35 +48,34 @@ const memoizedDriveBitcoinPayerFromAccount = memoize(
     deriveBitcoinPayerFromAccount(descriptor, network)({ change, addressIndex })
 );
 
-function deriveBitcoinPayersFromStore(keychains: BitcoinKeychain[], network: BitcoinNetworkModes) {
-  return keychains
-    .filter(
-      keychain =>
-        inferNetworkFromPath(extractKeyOriginPathFromDescriptor(keychain.descriptor)) ===
-        bitcoinNetworkModeToCoreNetworkMode(network)
-    )
-    .map(keychain => ({
-      ...memoizedInitalizeBitcoinKeychain(keychain.descriptor),
-      // Performance optimization to aggressively memoize payer derivation
-      derivePayer({ change, addressIndex }: BitcoinPayerInfo) {
-        return memoizedDriveBitcoinPayerFromAccount(
-          keychain.descriptor,
-          network,
-          change,
-          addressIndex
-        ) as BitcoinNativeSegwitPayer | BitcoinTaprootPayer;
-      },
-    }));
-}
-
-const bitcoinKeychains = createSelector(
+const selectBitcoinKeychains = createSelector(
   bitcoinKeychainSelectors.selectAll,
+  selectReadonlyWalletFingerprints,
   selectNetworkPreference,
-  (keychains, network) =>
-    deriveBitcoinPayersFromStore(
-      keychains,
-      bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork)
-    )
+  (keychains, readonlyWalletFingerprints, network) => {
+    const networkMode = bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork);
+    return keychains
+      .filter(
+        keychain =>
+          inferNetworkFromPath(extractKeyOriginPathFromDescriptor(keychain.descriptor)) ===
+          bitcoinNetworkModeToCoreNetworkMode(networkMode)
+      )
+      .map(keychain => ({
+        isReadonly: readonlyWalletFingerprints.includes(
+          extractFingerprintFromDescriptor(keychain.descriptor)
+        ),
+        ...memoizedInitalizeBitcoinKeychain(keychain.descriptor),
+        // Performance optimization to aggressively memoize payer derivation
+        derivePayer({ change, addressIndex }: BitcoinPayerInfo) {
+          return memoizedDriveBitcoinPayerFromAccount(
+            keychain.descriptor,
+            networkMode,
+            change,
+            addressIndex
+          ) as BitcoinNativeSegwitPayer | BitcoinTaprootPayer;
+        },
+      }));
+  }
 );
 
 interface SplitByPaymentTypesReturn {
@@ -88,13 +91,19 @@ function isNativeSegwitAccount(account: BitcoinAccountKeychain) {
   return inferPaymentTypeFromPath(account.keyOrigin) === 'p2wpkh';
 }
 
-export function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
+export function splitByPaymentTypes<T extends BitcoinAccountKeychain>(
+  accounts: T[],
+  isReadonlyWallet: boolean
+) {
   const nativeSegwit = accounts.find(isNativeSegwitAccount);
 
   const taproot = accounts.find(isTaprootAccount);
 
-  if (!nativeSegwit || !taproot)
+  if (!nativeSegwit || !taproot) {
+    if (isReadonlyWallet) return { nativeSegwit: null, taproot: null };
+
     throw new Error('It is always expected an account has both Taproot and Native Segwit');
+  }
 
   // Type hacking here to ensure easy DX when consuming different payment types
   return { nativeSegwit, taproot } as unknown as SplitByPaymentTypesReturn;
@@ -102,7 +111,8 @@ export function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: 
 
 export function useBitcoinAccounts() {
   const { hasWallets } = useWallets();
-  const list = useSelector(bitcoinKeychains);
+  const readonlyWalletFingerprints = useReadonlyWalletFingerprints();
+  const bitcoinKeychains = useSelector(selectBitcoinKeychains);
 
   return useMemo(() => {
     if (!hasWallets)
@@ -114,9 +124,15 @@ export function useBitcoinAccounts() {
         fromAccountIndex: () => [],
         fromFingerprint: () => [],
       };
-    const defaultSelectors = descriptorKeychainSelectors(list, filterKeychainsByAccountIndex);
+    const defaultSelectors = descriptorKeychainSelectors(
+      bitcoinKeychains,
+      filterKeychainsByAccountIndex
+    );
     function accountIndexByPaymentType(fingerprint: string, accountIndex: number) {
-      return splitByPaymentTypes(defaultSelectors.fromAccountIndex(fingerprint, accountIndex));
+      return splitByPaymentTypes(
+        defaultSelectors.fromAccountIndex(fingerprint, accountIndex),
+        readonlyWalletFingerprints.includes(fingerprint)
+      );
     }
     function accountIdByPaymentType(accountId: string) {
       const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
@@ -127,7 +143,7 @@ export function useBitcoinAccounts() {
       accountIndexByPaymentType,
       accountIdByPaymentType,
     };
-  }, [list, hasWallets]);
+  }, [bitcoinKeychains, hasWallets, readonlyWalletFingerprints]);
 }
 
 export function useBitcoinPayerAddressFromAccountIndex(fingerprint: string, accountIndex: number) {
@@ -136,9 +152,11 @@ export function useBitcoinPayerAddressFromAccountIndex(fingerprint: string, acco
     accountIndex
   );
 
-  const taprootPayerAddress = taproot?.derivePayer({ change: 0, addressIndex: 0 }).address ?? '';
-  const nativeSegwitPayerAddress =
-    nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 }).address ?? '';
+  const taprootPayerAddress = taproot?.derivePayer({ change: 0, addressIndex: 0 }).address;
+  const nativeSegwitPayerAddress = nativeSegwit?.derivePayer({
+    change: 0,
+    addressIndex: 0,
+  }).address;
 
   return { taprootPayerAddress, nativeSegwitPayerAddress };
 }

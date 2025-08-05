@@ -2,7 +2,7 @@ import { Screen } from '@/components/screen/screen';
 import { Collectibles } from '@/features/collectibles';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
-import { deserializeAccountId } from '@/store/accounts/accounts';
+import { deserializeAccountId } from '@/store/accounts/utils';
 import { t } from '@lingui/core/macro';
 import { useLocalSearchParams } from 'expo-router';
 

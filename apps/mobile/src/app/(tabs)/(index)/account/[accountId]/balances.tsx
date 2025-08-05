@@ -4,7 +4,7 @@ import { AccountBalances } from '@/features/balances/balances';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
-import { deserializeAccountId } from '@/store/accounts/accounts';
+import { deserializeAccountId } from '@/store/accounts/utils';
 import { t } from '@lingui/core/macro';
 import { useLocalSearchParams } from 'expo-router';
 

@@ -10,6 +10,8 @@ import { StacksBalance, StacksBalanceByAccount } from '@/features/balances/stack
 import { useRunesFlag, useTokenDetailsFlag } from '@/features/feature-flags';
 import { TokenSheet, TokenSheetData } from '@/features/token/token-sheet';
 import { ViewMode } from '@/shared/types';
+import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 
 import { AccountId, FungibleCryptoAsset, Money } from '@leather.io/models';
 import { Box, SheetRef } from '@leather.io/ui/native';
@@ -65,28 +67,40 @@ export function AccountBalances({ mode, fingerprint, accountIndex }: AccountId &
     // analytics.track('token_sheet_opened', { source: 'action_bar' });
     tokenSheetRef.current?.present();
   }
+  const { nativeSegwitPayerAddress, taprootPayerAddress } = useBitcoinPayerAddressFromAccountIndex(
+    fingerprint,
+    accountIndex
+  );
+  const stxAddress = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex);
 
   const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;
 
   return (
     <>
       <Box>
-        <BitcoinBalanceByAccount
-          onPress={onPressToken}
-          fingerprint={fingerprint}
-          accountIndex={accountIndex}
-        />
-        <StacksBalanceByAccount
-          onPress={onPressToken}
-          fingerprint={fingerprint}
-          accountIndex={accountIndex}
-        />
-        <Sip10BalanceByAccount
-          mode={mode}
-          fingerprint={fingerprint}
-          accountIndex={accountIndex}
-          onPress={onPressToken}
-        />
+        {(nativeSegwitPayerAddress || taprootPayerAddress) && (
+          <BitcoinBalanceByAccount
+            onPress={onPressToken}
+            fingerprint={fingerprint}
+            accountIndex={accountIndex}
+          />
+        )}
+        {stxAddress && (
+          <>
+            <StacksBalanceByAccount
+              onPress={onPressToken}
+              fingerprint={fingerprint}
+              accountIndex={accountIndex}
+            />
+            <Sip10BalanceByAccount
+              mode={mode}
+              fingerprint={fingerprint}
+              accountIndex={accountIndex}
+              onPress={onPressToken}
+            />
+          </>
+        )}
+
         {runesFlag && (
           <RunesBalanceByAccount
             mode={mode}

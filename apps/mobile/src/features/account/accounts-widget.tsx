@@ -56,15 +56,17 @@ export function AccountsWidget() {
           )}
           {wallets.hasWallets && (
             <Box my="3" px="5" flexDirection="row" gap="2">
-              <ButtonV2
-                onPress={() => {
-                  sendSheetRef.current?.present();
-                }}
-                minWidth={86}
-                size="sm"
-                buttonState="default"
-                title={t`Send`}
-              />
+              {wallets.hasReadWriteWallets && (
+                <ButtonV2
+                  onPress={() => {
+                    sendSheetRef.current?.present();
+                  }}
+                  minWidth={86}
+                  size="sm"
+                  buttonState="default"
+                  title={t`Send`}
+                />
+              )}
               <ButtonV2
                 onPress={() => {
                   receiveSheetRef.current?.present();

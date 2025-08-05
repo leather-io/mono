@@ -6,6 +6,7 @@ const abstractWalletSchema = z.object({
   fingerprint: z.string(),
   createdOn: z.string(),
   name: z.string(),
+  isReadonly: z.boolean().optional(),
 });
 
 const softwareWalletSchema = abstractWalletSchema.extend({

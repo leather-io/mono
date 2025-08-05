@@ -61,7 +61,7 @@ function AddressList({ account, tokenId }: { account: Account; tokenId: string }
   const assets = getAssets({
     nativeSegwitPayerAddress,
     taprootPayerAddress,
-    stxAddress: stxAddress ?? '',
+    stxAddress: stxAddress,
   });
 
   const tokenBalance = useGetAccountTokenBalance({ tokenId, account });
@@ -71,24 +71,28 @@ function AddressList({ account, tokenId }: { account: Account; tokenId: string }
   if (tokenId === 'BTC') {
     return (
       <Box>
-        <AddressListItem
-          accountName={account.name}
-          address={nativeSegwitPayerAddress}
-          name={t`Native Segwit`}
-          tokenId={tokenId}
-          availableBalance={availableBalance}
-          quoteBalance={quoteBalance}
-          asset={assets[0]}
-        />
-        <AddressListItem
-          accountName={account.name}
-          address={taprootPayerAddress}
-          name={t`Taproot`}
-          tokenId={tokenId}
-          availableBalance={availableBalance}
-          quoteBalance={quoteBalance}
-          asset={assets[1]}
-        />
+        {nativeSegwitPayerAddress && (
+          <AddressListItem
+            accountName={account.name}
+            address={nativeSegwitPayerAddress}
+            name={t`Native Segwit`}
+            tokenId={tokenId}
+            availableBalance={availableBalance}
+            quoteBalance={quoteBalance}
+            asset={assets[0]}
+          />
+        )}
+        {taprootPayerAddress && (
+          <AddressListItem
+            accountName={account.name}
+            address={taprootPayerAddress}
+            name={t`Taproot`}
+            tokenId={tokenId}
+            availableBalance={availableBalance}
+            quoteBalance={quoteBalance}
+            asset={assets[1]}
+          />
+        )}
       </Box>
     );
   }

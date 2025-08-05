@@ -7,7 +7,7 @@ import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-t
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
-import { assertStacksSigner } from '@/store/keychains/stacks/utils';
+import { assertReadWriteStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { deserializeTransaction } from '@stacks/transactions';
 
@@ -46,7 +46,7 @@ export function TransferSip9NftApprover({
   const signer = useStacksSigners().fromAccountId(accountId)[0];
   const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
 
-  assertStacksSigner(signer);
+  assertReadWriteStacksSigner(signer);
   if (!txHex) return null;
 
   const txOptions = getTxOptions(signer, network);
@@ -54,7 +54,7 @@ export function TransferSip9NftApprover({
   const tx = deserializeTransaction(txHex);
 
   async function onApprove() {
-    assertStacksSigner(signer);
+    assertReadWriteStacksSigner(signer);
     const signedTx = await signer?.sign(tx);
 
     await broadcastTransaction(

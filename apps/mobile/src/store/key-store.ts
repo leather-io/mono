@@ -10,22 +10,23 @@ import {
   getMnemonicRootKeyFingerprint,
 } from '@leather.io/crypto';
 import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
+import { match } from '@leather.io/utils';
 
-import { userAddsAccount, userTogglesHideAccount } from './accounts/accounts.write';
+import { useAccounts } from './accounts/accounts.read';
+import { userTogglesHideAccount } from './accounts/accounts.write';
 import { useBitcoinAccounts } from './keychains/bitcoin/bitcoin-keychains.read';
-import { findHighestAccountIndexOfFingerprint } from './keychains/keychains';
+import { userAddsBitcoinKeychain } from './keychains/bitcoin/bitcoin-keychains.write';
+import {
+  findHighestAccountIndexOfFingerprint,
+  findHighestStacksAccountOfFingerprint,
+} from './keychains/keychains';
+import { useStacksSigners } from './keychains/stacks/stacks-keychains.read';
+import { userAddsStacksKeychain } from './keychains/stacks/stacks-keychains.write';
 import { mnemonicStore } from './storage-persistors';
 import { makeAccountIdentifer, useAppDispatch } from './utils';
 import { useWallets } from './wallets/wallets.read';
 
-type DeriveNextAccountKeychainsProps =
-  | {
-      fingerprint: string;
-    }
-  | {
-      mnemonic: string;
-      passphrase?: string;
-    };
+export type KeychainCreationType = 'stx-only' | 'btc-only' | 'stx-and-btc';
 
 enum KEYCHAIN_ERROR {
   WALLET_ALREADY_EXISTS = 'WALLET_ALREADY_EXISTS',
@@ -43,7 +44,9 @@ export const keychainErrorHandlers = {
 export function useKeyStore() {
   const dispatch = useAppDispatch();
   const wallets = useWallets();
+  const accounts = useAccounts();
   const bitcoinKeychains = useBitcoinAccounts();
+  const stacksSigners = useStacksSigners();
 
   return {
     createTemporarySoftwareWallet() {
@@ -75,43 +78,178 @@ export function useKeyStore() {
         return;
       }
       await mnemonicStore(fingerprint).setMnemonic({ mnemonic, biometrics, passphrase });
-      const { bitcoinKeychains, stacksKeychains } = await this.deriveNextAccountKeychainsFrom({
+      const { bitcoinKeychains, stacksKeychains } = await this.deriveAccountKeychains({
         mnemonic,
         passphrase,
       });
 
       wallets.add({
-        wallet: { type: 'software', fingerprint, createdOn: new Date().toISOString() },
-        withKeychains: { bitcoin: bitcoinKeychains, stacks: stacksKeychains },
+        action: {
+          wallet: { type: 'software', fingerprint, createdOn: new Date().toISOString() },
+          withKeychains: {
+            bitcoin: bitcoinKeychains,
+            stacks: stacksKeychains,
+          },
+        },
       });
     },
 
     async createNewAccountOfWallet(fingerprint: string) {
-      const { accountIndex, bitcoinKeychains, stacksKeychains } =
-        await this.deriveNextAccountKeychainsFrom({ fingerprint });
+      const { accountIndex, bitcoinKeychains, stacksKeychains } = await this.deriveAccountKeychains(
+        { fingerprint }
+      );
 
-      dispatch(
-        userAddsAccount({
+      accounts.add({
+        action: {
           account: { id: makeAccountIdentifer(fingerprint, accountIndex) },
           withKeychains: {
             bitcoin: bitcoinKeychains,
             stacks: stacksKeychains,
           },
-        })
-      );
+        },
+      });
     },
 
-    async deriveNextAccountKeychainsFrom(props: DeriveNextAccountKeychainsProps) {
+    async restoreReadonlyWalletFromMnemonic({
+      biometrics,
+      mnemonic,
+      passphrase,
+      type,
+    }: {
+      mnemonic: string;
+      biometrics: boolean;
+      passphrase?: string;
+      type: KeychainCreationType;
+    }) {
+      const fingerprint = await getMnemonicRootKeyFingerprint(mnemonic, passphrase);
+      if (this.isWalletInKeychain({ fingerprint })) {
+        keychainErrorHandlers.throwKeyExistsError();
+        return;
+      }
+      await mnemonicStore(fingerprint).setMnemonic({ mnemonic, biometrics, passphrase });
+      const { bitcoinKeychains, stacksKeychains } = await this.deriveAccountKeychains({
+        mnemonic,
+        passphrase,
+      });
+
+      const matchType = match<typeof type>();
+      const withKeychains = matchType(type, {
+        'btc-only': {
+          bitcoin: bitcoinKeychains,
+          stacks: stacksKeychains,
+        },
+        'stx-only': {
+          stacks: stacksKeychains,
+        },
+        'stx-and-btc': {
+          bitcoin: bitcoinKeychains,
+          stacks: stacksKeychains,
+        },
+      });
+
+      wallets.addReadonly({
+        action: {
+          wallet: { type: 'software', fingerprint, createdOn: new Date().toISOString() },
+          withKeychains,
+        },
+      });
+    },
+
+    async createNewReadonlyAccountOfWallet(fingerprint: string, type: KeychainCreationType) {
+      const { accountIndex, stacksKeychains, bitcoinKeychains } = await this.deriveAccountKeychains(
+        {
+          fingerprint,
+        }
+      );
+
+      const matchType = match<typeof type>();
+      const withKeychains = matchType(type, {
+        'btc-only': {
+          bitcoin: bitcoinKeychains,
+        },
+        'stx-only': {
+          stacks: stacksKeychains,
+        },
+        'stx-and-btc': {
+          bitcoin: bitcoinKeychains,
+          stacks: stacksKeychains,
+        },
+      });
+
+      accounts.addReadonly({
+        action: {
+          account: { id: makeAccountIdentifer(fingerprint, accountIndex) },
+          withKeychains,
+        },
+      });
+    },
+
+    async createReadonlyKeychainAtIndex(
+      fingerprint: string,
+      type: KeychainCreationType,
+      atIndex: number
+    ) {
+      const { stacksKeychains, bitcoinKeychains } = await this.deriveAccountKeychains({
+        fingerprint,
+        atIndex,
+      });
+
+      const matchType = match<typeof type>();
+
+      matchType(type, {
+        'btc-only': () => {
+          dispatch(userAddsBitcoinKeychain({ bitcoinKeychains }));
+          return;
+        },
+        'stx-only': () => {
+          dispatch(userAddsStacksKeychain({ stacksKeychains }));
+          return;
+        },
+        'stx-and-btc': () => {
+          dispatch(userAddsBitcoinKeychain({ bitcoinKeychains }));
+          dispatch(userAddsStacksKeychain({ stacksKeychains }));
+          return;
+        },
+      })();
+    },
+
+    async deriveAccountKeychains(
+      props:
+        | {
+            fingerprint: string;
+            atIndex?: number;
+          }
+        | {
+            mnemonic: string;
+            passphrase?: string;
+            atIndex?: number;
+          }
+    ) {
       if ('fingerprint' in props) {
         const { mnemonic, passphrase } = await mnemonicStore(props.fingerprint).getMnemonic();
-        return this.deriveNextAccountKeychainsImpl({
+        if (props.atIndex) {
+          return this._deriveAccountKeychainsAtIndex({
+            mnemonic,
+            passphrase,
+            atIndex: props.atIndex,
+          });
+        }
+        return this._deriveNextAccountKeychains({
           fingerprint: props.fingerprint,
           mnemonic,
           passphrase,
         });
       }
+
       if ('mnemonic' in props) {
-        return this.deriveNextAccountKeychainsImpl({
+        if (props.atIndex) {
+          return this._deriveAccountKeychainsAtIndex({
+            mnemonic: props.mnemonic,
+            passphrase: props.passphrase,
+            atIndex: props.atIndex,
+          });
+        }
+        return this._deriveNextAccountKeychains({
           fingerprint: await getMnemonicRootKeyFingerprint(props.mnemonic, props.passphrase),
           mnemonic: props.mnemonic,
           passphrase: props.passphrase,
@@ -122,7 +260,7 @@ export function useKeyStore() {
       );
     },
 
-    async deriveNextAccountKeychainsImpl({
+    async _deriveNextAccountKeychains({
       fingerprint,
       mnemonic,
       passphrase,
@@ -131,35 +269,60 @@ export function useKeyStore() {
       mnemonic: string;
       passphrase?: string;
     }) {
-      const rootKeychain = deriveRootBip32Keychain(
-        await deriveBip39SeedFromMnemonic(mnemonic, passphrase)
+      const fingerprintAccounts = [
+        ...stacksSigners.fromFingerprint(fingerprint),
+        ...bitcoinKeychains.fromFingerprint(fingerprint),
+      ];
+
+      const highestStacksAccountIndex = findHighestStacksAccountOfFingerprint(
+        stacksSigners.list,
+        fingerprint
       );
-
-      const fingerprintAccounts = bitcoinKeychains.fromFingerprint(fingerprint);
-
-      const highestKeychainAccountIndex = findHighestAccountIndexOfFingerprint(
+      const highestBitcoinAccountIndex = findHighestAccountIndexOfFingerprint(
         bitcoinKeychains.list,
         fingerprint
       );
 
       const nextAccountIndex =
-        fingerprintAccounts.length === 0 ? 0 : highestKeychainAccountIndex + 1;
+        fingerprintAccounts.length === 0
+          ? 0
+          : Math.max(highestStacksAccountIndex, highestBitcoinAccountIndex) + 1;
+
+      return this._deriveAccountKeychainsAtIndex({
+        mnemonic,
+        passphrase,
+        atIndex: nextAccountIndex,
+      });
+    },
+
+    async _deriveAccountKeychainsAtIndex({
+      mnemonic,
+      passphrase,
+      atIndex,
+    }: {
+      mnemonic: string;
+      passphrase?: string;
+      atIndex: number;
+    }) {
+      const rootKeychain = deriveRootBip32Keychain(
+        await deriveBip39SeedFromMnemonic(mnemonic, passphrase)
+      );
 
       const stacksKeychainDescriptors = [
-        { descriptor: stacksRootKeychainToAccountDescriptor(rootKeychain, nextAccountIndex) },
+        { descriptor: stacksRootKeychainToAccountDescriptor(rootKeychain, atIndex) },
       ];
 
       const bitcoinKeychainDescriptors = [
-        makeNativeSegwitAccountDerivationPath('mainnet', nextAccountIndex),
-        makeNativeSegwitAccountDerivationPath('testnet', nextAccountIndex),
-        makeTaprootAccountDerivationPath('mainnet', nextAccountIndex),
-        makeTaprootAccountDerivationPath('testnet', nextAccountIndex),
+        makeNativeSegwitAccountDerivationPath('mainnet', atIndex),
+        makeNativeSegwitAccountDerivationPath('testnet', atIndex),
+        makeTaprootAccountDerivationPath('mainnet', atIndex),
+        makeTaprootAccountDerivationPath('testnet', atIndex),
       ].map(path => ({
         descriptor: deriveKeychainExtendedPublicKeyDescriptor(rootKeychain, path),
       }));
 
       return {
-        accountIndex: nextAccountIndex,
+        accountIndex: atIndex,
         bitcoinKeychains: bitcoinKeychainDescriptors,
         stacksKeychains: stacksKeychainDescriptors,
       };

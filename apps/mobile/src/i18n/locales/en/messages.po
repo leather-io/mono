@@ -18,6 +18,10 @@ msgstr ""
 msgid "activity.account.header_title"
 msgstr "{accountName}"
 
+#: src/features/account/account-list/account-list-item.tsx:34
+msgid "{accountName} (read-only)"
+msgstr "{accountName} (read-only)"
+
 #. js-lingui-explicit-id
 #: src/app/(tabs)/(index)/account/[accountId]/activity.tsx:39
 msgid "activity.account.header_content_title"
@@ -50,6 +54,10 @@ msgstr "{name}"
 #: src/app/settings/display/index.tsx:92
 msgid "display.account_identifier.cell_caption"
 msgstr "{name}"
+
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:99
+msgid "{name} (read-only)"
+msgstr "{name} (read-only)"
 
 #. js-lingui-explicit-id
 #: src/features/settings/network-badge.tsx:20
@@ -134,15 +142,15 @@ msgid "8%"
 msgstr "8%"
 
 #: src/features/wallet-manager/account-list.tsx:23
-#: src/store/accounts/accounts.write.ts:43
+#: src/store/accounts/accounts.write.ts:56
 msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:122
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:73
 msgid "Account created"
 msgstr "Account created"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:128
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:79
 msgid "Account creation failed"
 msgstr "Account creation failed"
 
@@ -171,7 +179,7 @@ msgstr "Accounts"
 msgid "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 
-#: src/features/account/account.tsx:140
+#: src/features/account/account.tsx:142
 #: src/features/navigation/tab-layout.tsx:58
 #: src/features/token/components/token-details.tsx:75
 msgid "Activity"
@@ -180,9 +188,13 @@ msgstr "Activity"
 #: src/features/account/components/add-account-card.tsx:12
 #: src/features/account/components/create-wallet-card.tsx:23
 #: src/features/account/sheets/add-account-sheet.layout.tsx:35
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:136
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:157
 msgid "Add account"
 msgstr "Add account"
+
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:174
+msgid "Add BTC account"
+msgstr "Add BTC account"
 
 #: src/features/approver/components/memo-sheet.tsx:18
 #: src/features/send/components/memo.tsx:34
@@ -197,6 +209,10 @@ msgstr "Add new account for {fingerprint} 🆕"
 #: src/features/approver/components/nonce-sheet.tsx:18
 msgid "Add nonce"
 msgstr "Add nonce"
+
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:167
+msgid "Add STX account"
+msgstr "Add STX account"
 
 #: src/features/account/sheets/add-account-sheet.layout.tsx:40
 msgid "Add to existing wallet"
@@ -216,7 +232,9 @@ msgstr "Add wallet"
 msgid "Add, configure and remove"
 msgstr "Add, configure and remove"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:136
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:157
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:167
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:174
 msgid "Adding account..."
 msgstr "Adding account..."
 
@@ -257,7 +275,7 @@ msgid "Address types"
 msgstr "Address types"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:180
-#: src/features/recover-wallet/recover-wallet.layout.tsx:48
+#: src/features/recover-wallet/recover-wallet.layout.tsx:58
 msgid "Advanced options"
 msgstr "Advanced options"
 
@@ -307,7 +325,7 @@ msgstr "Amount must be greater than zero"
 msgid "An error has occurred"
 msgstr "An error has occurred"
 
-#: src/hooks/use-create-wallet.ts:51
+#: src/hooks/use-create-wallet.ts:66
 msgid "An error occurred"
 msgstr "An error occurred"
 
@@ -371,15 +389,15 @@ msgstr "Avatar"
 msgid "Back up your Secret Key"
 msgstr "Back up your Secret Key"
 
-#: src/features/recover-wallet/recover-wallet.layout.tsx:68
+#: src/features/recover-wallet/recover-wallet.layout.tsx:78
 #: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:19
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
 #: src/features/balances/bitcoin/bitcoin-balance.tsx:13
-#: src/features/receive/get-assets.ts:22
-#: src/features/receive/get-assets.ts:30
+#: src/features/receive/get-assets.ts:24
+#: src/features/receive/get-assets.ts:34
 #: src/features/send/forms/btc/btc-form.tsx:63
 msgid "Bitcoin"
 msgstr "Bitcoin"
@@ -462,7 +480,7 @@ msgid "Code"
 msgstr "Code"
 
 #: src/app/(tabs)/(index)/account/[accountId]/collectibles.tsx:17
-#: src/features/account/account.tsx:150
+#: src/features/account/account.tsx:152
 msgid "Collectibles"
 msgstr "Collectibles"
 
@@ -506,7 +524,7 @@ msgid "Contacts"
 msgstr "Contacts"
 
 #: src/components/sheets/warning-sheet.layout.tsx:43
-#: src/features/recover-wallet/recover-wallet.layout.tsx:87
+#: src/features/recover-wallet/recover-wallet.layout.tsx:112
 msgid "Continue"
 msgstr "Continue"
 
@@ -610,7 +628,7 @@ msgstr "Device ID"
 #: src/app/settings/networks/index.tsx:59
 #: src/app/settings/security/index.tsx:22
 #: src/app/settings/security/index.tsx:38
-#: src/features/recover-wallet/recover-wallet.layout.tsx:70
+#: src/features/recover-wallet/recover-wallet.layout.tsx:80
 msgid "Disabled"
 msgstr "Disabled"
 
@@ -670,7 +688,7 @@ msgstr "Email"
 msgid "Email address"
 msgstr "Email address"
 
-#: src/app/secure-your-wallet.tsx:54
+#: src/app/secure-your-wallet.tsx:57
 msgid "Enable device security"
 msgstr "Enable device security"
 
@@ -681,7 +699,7 @@ msgstr "Enable to receive notifications about transactions"
 #: src/app/settings/networks/index.tsx:59
 #: src/app/settings/security/index.tsx:18
 #: src/app/settings/security/index.tsx:38
-#: src/features/recover-wallet/recover-wallet.layout.tsx:70
+#: src/features/recover-wallet/recover-wallet.layout.tsx:80
 msgid "Enabled"
 msgstr "Enabled"
 
@@ -693,7 +711,7 @@ msgstr "Enroll"
 msgid "Enter recipient"
 msgstr "Enter recipient"
 
-#: src/features/recover-wallet/recover-wallet.layout.tsx:40
+#: src/features/recover-wallet/recover-wallet.layout.tsx:50
 #: src/features/recover-wallet/recover-wallet.tsx:112
 msgid "Enter your Secret Key"
 msgstr "Enter your Secret Key"
@@ -881,6 +899,11 @@ msgstr "Invalid email address"
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr "Invalid words: {joinedInvalidWords}"
 
+#. js-lingui-explicit-id
+#: src/features/recover-wallet/recover-wallet.layout.tsx:91
+msgid "recover_wallet.is_readonly.title"
+msgstr "Is Readonly Wallet?"
+
 #: src/features/token/components/token-details-table.tsx:22
 msgid "Layer"
 msgstr "Layer"
@@ -1006,8 +1029,8 @@ msgstr "More options"
 msgid "Name"
 msgstr "Name"
 
-#: src/features/receive/get-assets.ts:24
-#: src/features/token/address-list.tsx:77
+#: src/features/receive/get-assets.ts:26
+#: src/features/token/address-list.tsx:78
 msgid "Native Segwit"
 msgstr "Native Segwit"
 
@@ -1051,7 +1074,7 @@ msgstr "Notify me"
 msgid "OK"
 msgstr "OK"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:74
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:109
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
 
@@ -1067,7 +1090,7 @@ msgstr "Passphrase"
 msgid "Paste"
 msgstr "Paste"
 
-#: src/features/recover-wallet/recover-wallet.layout.tsx:43
+#: src/features/recover-wallet/recover-wallet.layout.tsx:53
 msgid "Paste or type Secret Key to add wallet"
 msgstr "Paste or type Secret Key to add wallet"
 
@@ -1105,11 +1128,11 @@ msgstr "Push"
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
-#: src/features/account/account.tsx:110
-#: src/features/account/accounts-widget.tsx:75
+#: src/features/account/account.tsx:111
+#: src/features/account/accounts-widget.tsx:77
 #: src/features/receive/screens/asset-details.tsx:48
 #: src/features/receive/screens/select-account.tsx:24
-#: src/features/receive/screens/select-asset.tsx:69
+#: src/features/receive/screens/select-asset.tsx:67
 #: src/features/token/token-receive-sheet.tsx:74
 msgid "Receive"
 msgstr "Receive"
@@ -1208,7 +1231,7 @@ msgstr "Scan QR Code"
 msgid "Search for BNS name or address"
 msgstr "Search for BNS name or address"
 
-#: src/app/secure-your-wallet.tsx:17
+#: src/app/secure-your-wallet.tsx:20
 msgid "Secure your wallet"
 msgstr "Secure your wallet"
 
@@ -1222,13 +1245,13 @@ msgstr "Security"
 msgid "Select account"
 msgstr "Select account"
 
-#: src/features/receive/screens/select-asset.tsx:68
+#: src/features/receive/screens/select-asset.tsx:66
 #: src/features/send/screens/select-asset.tsx:39
 msgid "Select asset"
 msgstr "Select asset"
 
-#: src/features/account/account.tsx:101
-#: src/features/account/accounts-widget.tsx:66
+#: src/features/account/account.tsx:102
+#: src/features/account/accounts-widget.tsx:67
 #: src/features/send/screens/form.tsx:55
 #: src/features/send/screens/select-account.tsx:46
 #: src/features/send/screens/select-asset.tsx:39
@@ -1296,7 +1319,7 @@ msgstr "Sign Message"
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
-#: src/app/secure-your-wallet.tsx:47
+#: src/app/secure-your-wallet.tsx:50
 msgid "Skip for now"
 msgstr "Skip for now"
 
@@ -1322,7 +1345,7 @@ msgid "StackingDAO"
 msgstr "StackingDAO"
 
 #: src/features/balances/stacks/stacks-balance.tsx:12
-#: src/features/receive/get-assets.ts:38
+#: src/features/receive/get-assets.ts:44
 #: src/features/send/forms/stx/stx-form.tsx:61
 msgid "Stacks"
 msgstr "Stacks"
@@ -1335,7 +1358,7 @@ msgstr "Stacks address"
 msgid "Standard"
 msgstr "Standard"
 
-#: src/features/token/address-list.tsx:100
+#: src/features/token/address-list.tsx:104
 msgid "STX"
 msgstr "STX"
 
@@ -1370,8 +1393,8 @@ msgstr "Swapping"
 msgid "Tap to view Secret Key"
 msgstr "Tap to view Secret Key"
 
-#: src/features/receive/get-assets.ts:32
-#: src/features/token/address-list.tsx:86
+#: src/features/receive/get-assets.ts:36
+#: src/features/token/address-list.tsx:89
 msgid "Taproot"
 msgstr "Taproot"
 
@@ -1412,15 +1435,15 @@ msgstr "This app would like to"
 msgid "This feature is not available yet, but we can notify you when ready."
 msgstr "This feature is not available yet, but we can notify you when ready."
 
-#: src/features/receive/get-assets.ts:40
+#: src/features/receive/get-assets.ts:46
 msgid "This is your address for receiving tokens on the Stacks network."
 msgstr "This is your address for receiving tokens on the Stacks network."
 
-#: src/features/receive/get-assets.ts:25
+#: src/features/receive/get-assets.ts:27
 msgid "This is your Native Segwit address for receiving tokens on the Bitcoin network."
 msgstr "This is your Native Segwit address for receiving tokens on the Bitcoin network."
 
-#: src/features/receive/get-assets.ts:33
+#: src/features/receive/get-assets.ts:37
 msgid "This is your Taproot address for receiving tokens on the Bitcoin network."
 msgstr "This is your Taproot address for receiving tokens on the Bitcoin network."
 
@@ -1454,7 +1477,7 @@ msgstr "Token Details"
 msgid "Token Transfer"
 msgstr "Token Transfer"
 
-#: src/features/account/account.tsx:128
+#: src/features/account/account.tsx:130
 msgid "Tokens"
 msgstr "Tokens"
 
@@ -1525,7 +1548,7 @@ msgstr "Update from {0}"
 msgid "Update the app to get access to the latest features."
 msgstr "Update the app to get access to the latest features."
 
-#: src/app/secure-your-wallet.tsx:27
+#: src/app/secure-your-wallet.tsx:30
 msgid "Use your device PIN, Face ID or other biometrics to secure your wallets"
 msgstr "Use your device PIN, Face ID or other biometrics to secure your wallets"
 
@@ -1561,15 +1584,15 @@ msgstr "View your wallet balance & activity"
 msgid "Wallet {fingerprint}"
 msgstr "Wallet {fingerprint}"
 
-#: src/store/wallets/wallets.write.ts:20
+#: src/store/wallets/wallets.write.ts:25
 msgid "Wallet {walletIdx}"
 msgstr "Wallet {walletIdx}"
 
-#: src/hooks/use-create-wallet.ts:33
+#: src/hooks/use-create-wallet.ts:48
 msgid "Wallet added"
 msgstr "Wallet added"
 
-#: src/hooks/use-create-wallet.ts:43
+#: src/hooks/use-create-wallet.ts:58
 msgid "Wallet added already"
 msgstr "Wallet added already"
 

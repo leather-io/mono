@@ -2,7 +2,8 @@ import {
   BuildRecipientSuggestionsParams,
   buildRecipientSuggestions,
 } from '@/features/send/components/recipient/build-recipient-suggestions';
-import { Account, deserializeAccountId } from '@/store/accounts/accounts';
+import { Account } from '@/store/accounts/accounts';
+import { deserializeAccountId } from '@/store/accounts/utils';
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import { isShallowEqual } from 'remeda';
@@ -18,6 +19,7 @@ function createAccount(id: string, name: string): Account {
     ...deserializeAccountId(id),
     status: 'active',
     icon: 'pizza',
+    isReadonly: false,
   };
 }
 

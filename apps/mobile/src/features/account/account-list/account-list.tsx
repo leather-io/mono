@@ -22,6 +22,7 @@ export function AccountList({ accounts, onPress, showWalletInfo }: AccountListPr
           address={
             <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
           }
+          isReadonly={account.isReadonly}
           balance={
             <AccountBalance
               accountIndex={account.accountIndex}

@@ -56,6 +56,7 @@ export function AccountListItem({ account, wallet, tokenId, onPress }: AccountLi
     <AccountListItemComponent
       px="0"
       accountName={account.name}
+      isReadonly={account.isReadonly}
       walletName={
         <Text variant="caption01" lineHeight={16}>
           {/* Should perhaps refactor account to have a wallet name?  Avoids using the wallet store here */}
