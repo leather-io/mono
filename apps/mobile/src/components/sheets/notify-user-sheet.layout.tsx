@@ -47,7 +47,7 @@ export function NotifyUserSheetLayout({
             {t`This feature is not available yet, but we can notify you when ready.`}
           </Text>
         </Box>
-        <Button onPress={onNotify} buttonState="default" title={t`I'm interested`} />
+        <Button onPress={onNotify} buttonState="default" title={t`I’m interested`} />
       </Box>
     </Sheet>
   );

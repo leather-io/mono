@@ -121,7 +121,7 @@ export default function CreateNewWallet() {
           disabled={isHidden}
           onPress={() => void navigateAndCreateWallet()}
           buttonState="default"
-          title={t`I've backed it up`}
+          title={t`I’ve backed it up`}
           testID={TestId.walletCreationBackedUpButton}
         />
       </Screen.Footer>
