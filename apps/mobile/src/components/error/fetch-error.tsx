@@ -21,7 +21,7 @@ export function Error({ errorMessage }: ErrorProps) {
 export function FetchErrorCallout() {
   return (
     <Callout
-      title={t`Some balances couldn't load.`}
+      title={t`Some balances couldn’t load.`}
       icon={
         <Box p="2">
           <CloudOffIcon />

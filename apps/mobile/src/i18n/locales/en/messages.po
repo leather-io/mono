@@ -632,8 +632,8 @@ msgid "Dive into feature details"
 msgstr "Dive into feature details"
 
 #: src/features/notifications/notifications-sheet.tsx:31
-msgid "Don't notify me"
-msgstr "Don't notify me"
+msgid "Don’t notify me"
+msgstr "Don’t notify me"
 
 #: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:28
 msgid "Done"
@@ -842,12 +842,12 @@ msgid "Home"
 msgstr "Home"
 
 #: src/components/sheets/notify-user-sheet.layout.tsx:50
-msgid "I'm interested"
-msgstr "I'm interested"
+msgid "I’m interested"
+msgstr "I’m interested"
 
 #: src/app/create-new-wallet.tsx:124
-msgid "I've backed it up"
-msgstr "I've backed it up"
+msgid "I’ve backed it up"
+msgstr "I’ve backed it up"
 
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:67
 msgid "Icons"
@@ -1080,8 +1080,8 @@ msgid "Price"
 msgstr "Price"
 
 #: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:20
-msgid "Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you've stored its Secret Key elsewhere securely."
-msgstr "Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you've stored its Secret Key elsewhere securely."
+msgid "Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you’ve stored its Secret Key elsewhere securely."
+msgstr "Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you’ve stored its Secret Key elsewhere securely."
 
 #: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:18
 msgid "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
@@ -1305,8 +1305,8 @@ msgid "Slow"
 msgstr "Slow"
 
 #: src/components/error/fetch-error.tsx:24
-msgid "Some balances couldn't load."
-msgstr "Some balances couldn't load."
+msgid "Some balances couldn’t load."
+msgstr "Some balances couldn’t load."
 
 #: src/components/error/error.tsx:46
 #: src/components/error/fetch-error.tsx:14
@@ -1493,8 +1493,8 @@ msgid "Unable to determine current app version"
 msgstr "Unable to determine current app version"
 
 #: src/utils/app-store-utils.ts:31
-msgid "Unable to open app store. Please update the app manually from your device's app store."
-msgstr "Unable to open app store. Please update the app manually from your device's app store."
+msgid "Unable to open app store. Please update the app manually from your device’s app store."
+msgstr "Unable to open app store. Please update the app manually from your device’s app store."
 
 #: src/components/app-update-required/update-button.tsx:25
 msgid "Unable to Open Store"

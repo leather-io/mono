@@ -17,7 +17,7 @@ export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps
     <WarningSheetLayout
       sheetRef={sheetRef}
       title={t`Remove wallet`}
-      description={t`Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you've stored its Secret Key elsewhere securely.`}
+      description={t`Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you’ve stored its Secret Key elsewhere securely.`}
       variant="critical"
       onSubmit={onSubmit}
       onPressSupport={() => openURL(LEATHER_GUIDES_MOBILE_REMOVE_WALLET)}

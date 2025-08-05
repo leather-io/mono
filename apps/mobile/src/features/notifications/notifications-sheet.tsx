@@ -28,7 +28,7 @@ export function NotificationsSheet({ sheetRef }: { sheetRef: RefObject<SheetRef 
               sheetRef.current?.dismiss();
             }}
             buttonState="ghost"
-            title={t`Don't notify me`}
+            title={t`Don’t notify me`}
           />
         </Box>
       </Box>

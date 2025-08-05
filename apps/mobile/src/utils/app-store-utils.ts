@@ -28,7 +28,7 @@ export async function handleStoreRedirect(): Promise<void> {
   try {
     await openAppStore();
   } catch {
-    const userMessage = t`Unable to open app store. Please update the app manually from your device's app store.`;
+    const userMessage = t`Unable to open app store. Please update the app manually from your device’s app store.`;
 
     throw new Error(userMessage);
   }
