@@ -9,10 +9,10 @@ import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { PooledStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
+import { FormPageLayout } from '~/components/forms/form-page.layout';
 import { PoolOverview } from '~/components/pool-overview';
 import { ChooseStackingAmount } from '~/features/stacking/components/choose-stacking-amount';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
-import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
 import { usePoolInfo } from '~/features/stacking/hooks/use-pool-info';
 import { useDelegationStatusQuery } from '~/features/stacking/pooled-stacking-info/use-delegation-status-query';
@@ -51,7 +51,7 @@ import {
 import { ChoosePoolingConditions } from './components/choose-pooling-conditions';
 import { ChoosePoolingDuration } from './components/choose-pooling-duration';
 import { ChooseRewardsAddress } from './components/choose-rewards-address';
-import { createValidationSchema } from './utils/stacking-pool-form-schema';
+import { createStackingPoolFormValidationSchema } from './utils/stacking-pool-form-schema';
 import { PoolSlug, getPoolFromSlug } from './utils/stacking-pool-types';
 import { PoolWrapperAllowanceState } from './utils/types';
 
@@ -138,7 +138,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   const schema = useMemo(
     () =>
-      createValidationSchema({
+      createStackingPoolFormValidationSchema({
         networkMode: networkPreference.chain.bitcoin.mode,
         providerId: pool.providerId,
         availableBalance: totalAvailableBalance,
@@ -316,8 +316,8 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
       )}
 
       <FormProvider {...formMethods}>
-        <StartStackingLayout
-          stackingForm={
+        <FormPageLayout
+          form={
             <Form>
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
@@ -384,7 +384,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
               </Stack>
             </Form>
           }
-          stackingStepsPanel={
+          preview={
             <StackingFormStepsPanel>
               <PooledStackingConfirmationSteps
                 onSubmit={onSubmit}
