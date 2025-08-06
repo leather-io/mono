@@ -24,7 +24,7 @@ msgid "activity.account.header_content_title"
 msgstr "{accountName} Activity"
 
 #. js-lingui-explicit-id
-#: src/app/settings/display/index.tsx:80
+#: src/app/settings/display/index.tsx:96
 msgid "display.conversion_unit.cell_caption"
 msgstr "{currency}"
 
@@ -47,7 +47,7 @@ msgid "bitcoin_unit.cell_caption"
 msgstr "{name}"
 
 #. js-lingui-explicit-id
-#: src/app/settings/display/index.tsx:92
+#: src/app/settings/display/index.tsx:108
 msgid "display.account_identifier.cell_caption"
 msgstr "{name}"
 
@@ -78,7 +78,7 @@ msgid "bitcoin_unit.cell_title"
 msgstr "{symbol}"
 
 #. js-lingui-explicit-id
-#: src/app/settings/display/index.tsx:65
+#: src/app/settings/display/index.tsx:71
 msgid "display.bitcoin_unit.cell_caption"
 msgstr "{symbol}"
 
@@ -88,7 +88,7 @@ msgid "theme.cell_title"
 msgstr "{theme}"
 
 #. js-lingui-explicit-id
-#: src/app/settings/display/index.tsx:50
+#: src/app/settings/display/index.tsx:56
 msgid "display.theme.cell_caption"
 msgstr "{theme}"
 
@@ -146,7 +146,7 @@ msgstr "Account created"
 msgid "Account creation failed"
 msgstr "Account creation failed"
 
-#: src/app/settings/display/index.tsx:91
+#: src/app/settings/display/index.tsx:107
 #: src/features/settings/account-identifier-sheet.tsx:47
 msgid "Account identifier"
 msgstr "Account identifier"
@@ -384,7 +384,7 @@ msgstr "BIP39 passphrase"
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
-#: src/app/settings/display/index.tsx:64
+#: src/app/settings/display/index.tsx:70
 #: src/features/settings/bitcoin-unit-sheet.tsx:38
 msgid "Bitcoin unit"
 msgstr "Bitcoin unit"
@@ -518,7 +518,7 @@ msgstr "Continue without security"
 msgid "Contract arguments"
 msgstr "Contract arguments"
 
-#: src/app/settings/display/index.tsx:79
+#: src/app/settings/display/index.tsx:95
 #: src/features/settings/conversion-unit-sheet.tsx:33
 msgid "Conversion unit"
 msgstr "Conversion unit"
@@ -622,7 +622,7 @@ msgstr "Disconnected"
 msgid "Dismiss"
 msgstr "Dismiss"
 
-#: src/app/settings/display/index.tsx:46
+#: src/app/settings/display/index.tsx:52
 #: src/app/settings/index.tsx:68
 msgid "Display"
 msgstr "Display"
@@ -803,7 +803,7 @@ msgstr "Granite"
 msgid "Guides"
 msgstr "Guides"
 
-#: src/app/settings/display/index.tsx:103
+#: src/app/settings/display/index.tsx:119
 msgid "Haptics"
 msgstr "Haptics"
 
@@ -880,6 +880,15 @@ msgstr "Invalid email address"
 #: src/features/recover-wallet/components/error-message.tsx:5
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr "Invalid words: {joinedInvalidWords}"
+
+#: src/app/settings/display/index.tsx:86
+#: src/features/settings/language-sheet.tsx:31
+msgid "Language"
+msgstr "Language"
+
+#: src/features/settings/language-sheet.tsx:25
+msgid "Language updated"
+msgstr "Language updated"
 
 #: src/features/token/components/token-details-table.tsx:22
 msgid "Layer"
@@ -1383,7 +1392,7 @@ msgstr "Taproot address"
 msgid "The address you entered isn’t valid. Verify and try again"
 msgstr "The address you entered isn’t valid. Verify and try again"
 
-#: src/app/settings/display/index.tsx:49
+#: src/app/settings/display/index.tsx:55
 #: src/features/settings/theme-sheet.tsx:33
 msgid "Theme"
 msgstr "Theme"
@@ -1438,7 +1447,7 @@ msgstr "to"
 msgid "To address"
 msgstr "To address"
 
-#: src/app/settings/display/index.tsx:104
+#: src/app/settings/display/index.tsx:120
 msgid "Toggle tactile feedback for interactions"
 msgstr "Toggle tactile feedback for interactions"
 

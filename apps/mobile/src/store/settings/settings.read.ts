@@ -84,6 +84,11 @@ export const selectThemePreference = createSelector(selectSettings, state => sta
 
 export const selectLastActive = createSelector(selectSettings, state => state.lastActive);
 
+export const selectLanguagePreference = createSelector(
+  selectSettings,
+  state => state.languagePreference
+);
+
 export function usePrivacyMode() {
   const privacyMode = useSelector(selectPrivacyModePreference);
   return privacyMode === 'hidden';

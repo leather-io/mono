@@ -1,6 +1,7 @@
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 
+import { AvailableLanguageCode, defaultLanguage } from '@/i18n/languages';
 import { analytics } from '@/utils/analytics';
 import { whenTheme } from '@/utils/when-theme';
 
@@ -21,6 +22,7 @@ import {
   selectCurrencyPreference,
   selectEmailAddressPreference,
   selectHapticsPreference,
+  selectLanguagePreference,
   selectLastActive,
   selectNetworkPreference,
   selectNotificationsPreference,
@@ -34,6 +36,7 @@ import {
   userChangedBitcoinUnitPreference,
   userChangedEmailAddressPreference,
   userChangedHapticsPreference,
+  userChangedLanguagePreference,
   userChangedLastActive,
   userChangedNetworkPreference,
   userChangedNotificationPreference,
@@ -66,6 +69,7 @@ export const initialState: SettingsState = {
   themePreference: 'system',
   lastActive: null,
   notificationsPreference: 'not-selected',
+  languagePreference: defaultLanguage,
 };
 
 export function useSettings() {
@@ -84,6 +88,7 @@ export function useSettings() {
   const themePreference = useSelector(selectThemePreference);
   const lastActive = useSelector(selectLastActive);
   const notificationsPreference = useSelector(selectNotificationsPreference);
+  const languagePreference = useSelector(selectLanguagePreference);
 
   const themeDerivedFromThemePreference =
     (themePreference === 'system' ? systemTheme : themePreference) ?? 'light';
@@ -102,6 +107,7 @@ export function useSettings() {
     securityLevelPreference,
     lastActive,
     notificationsPreference,
+    languagePreference,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
     changeAccountDisplayPreference(type: AccountDisplayPreference) {
       dispatch(userChangedAccountDisplayPreference(type));
@@ -173,6 +179,12 @@ export function useSettings() {
       dispatch(userChangedNotificationPreference(state));
       analytics.track('user_setting_updated', {
         notifications: state,
+      });
+    },
+    changeLanguagePreference(language: AvailableLanguageCode) {
+      dispatch(userChangedLanguagePreference(language));
+      void analytics?.track('user_setting_updated', {
+        language,
       });
     },
     userLeavesApp(timestamp: LastActiveTimestamp) {
