@@ -47,13 +47,7 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
 interface StacksBalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?: ({
-    accountIndex,
-    fingerprint,
-    asset,
-    availableBalance,
-    quoteBalance,
-  }: OnOpenTokenProps) => void;
+  onPress?: (props: OnOpenTokenProps) => void;
 }
 export function StacksBalanceByAccount({
   accountIndex,

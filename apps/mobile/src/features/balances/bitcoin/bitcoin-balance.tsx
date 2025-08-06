@@ -47,7 +47,7 @@ export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
 interface BitcoinBalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
+  onPress?: (props: OnOpenTokenProps) => void;
 }
 export function BitcoinBalanceByAccount({
   accountIndex,
