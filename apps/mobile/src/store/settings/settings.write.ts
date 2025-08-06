@@ -1,3 +1,4 @@
+import { AvailableLanguageCode } from '@/i18n/languages';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import {
@@ -59,6 +60,9 @@ export const settingsSlice = createSlice({
     userChangedNotificationPreference(state, action: PayloadAction<NotificationsPreference>) {
       state.notificationsPreference = action.payload;
     },
+    userChangedLanguagePreference(state, action: PayloadAction<AvailableLanguageCode>) {
+      state.languagePreference = action.payload;
+    },
   },
   extraReducers: builder => builder.addCase(...handleAppResetWithState(initialState)),
 });
@@ -76,4 +80,5 @@ export const {
   userChangedThemePreference,
   userChangedLastActive,
   userChangedNotificationPreference,
+  userChangedLanguagePreference,
 } = settingsSlice.actions;

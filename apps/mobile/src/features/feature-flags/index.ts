@@ -40,10 +40,6 @@ export function useCollectiblesFlag() {
   return useBoolVariation('release_collectibles_feature', false);
 }
 
-export function useLocaleFlag() {
-  return useBoolVariation('release_locale_feature', false);
-}
-
 export function useNotificationsFlag() {
   return useBoolVariation('release_push_notifications', false);
 }
@@ -83,4 +79,12 @@ export function useTokenDetailsFlag() {
 // Setting an empty string will not enforce a minimum version and will skip the check.
 export function useMinimumAppVersion() {
   return useStringVariation('minimum_app_version', '');
+}
+
+export function useBtcConversionUnitFlag() {
+  return useBoolVariation('release_btc_conversion_unit_feature', false);
+}
+
+export function useInternationalizationFlag() {
+  return useBoolVariation('internationalization', false);
 }

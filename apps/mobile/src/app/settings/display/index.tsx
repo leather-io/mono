@@ -2,12 +2,14 @@ import { useRef } from 'react';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
-import { useLocaleFlag } from '@/features/feature-flags';
+import { useBtcConversionUnitFlag, useInternationalizationFlag } from '@/features/feature-flags';
 import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
+import { LanguageSheet } from '@/features/settings/language-sheet';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
+import { supportedLanguages } from '@/i18n/languages';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
@@ -15,6 +17,7 @@ import { useLingui } from '@lingui/react';
 import {
   BitcoinCircleIcon,
   DollarCircleIcon,
+  GlobeIcon,
   PackageSecurityIcon,
   PointerHandIcon,
   SheetRef,
@@ -23,17 +26,20 @@ import {
 import { capitalize } from '@leather.io/utils';
 
 export default function SettingsDisplayScreen() {
-  const releaseLocaleFeature = useLocaleFlag();
+  const btcConversionUnitEnabled = useBtcConversionUnitFlag();
+  const i18nEnabled = useInternationalizationFlag();
   const themeSheetRef = useRef<SheetRef>(null);
   const bitcoinUnitSheetRef = useRef<SheetRef>(null);
   const conversionUnitSheetRef = useRef<SheetRef>(null);
   const accountIdentifierSheetRef = useRef<SheetRef>(null);
+  const languageSheetRef = useRef<SheetRef>(null);
   const {
     accountDisplayPreference,
     bitcoinUnitPreference,
     changeHapticsPreference,
     fiatCurrencyPreference,
     hapticsPreference,
+    languagePreference,
     themePreference,
   } = useSettings();
   const { i18n } = useLingui();
@@ -58,7 +64,7 @@ export default function SettingsDisplayScreen() {
           }}
         />
 
-        {releaseLocaleFeature && (
+        {btcConversionUnitEnabled && (
           <>
             <SettingsListItem
               title={t`Bitcoin unit`}
@@ -75,6 +81,16 @@ export default function SettingsDisplayScreen() {
           </>
         )}
 
+        {i18nEnabled && (
+          <SettingsListItem
+            title={t`Language`}
+            caption={supportedLanguages[languagePreference]}
+            icon={<GlobeIcon />}
+            onPress={() => {
+              languageSheetRef.current?.present();
+            }}
+          />
+        )}
         <SettingsListItem
           title={t`Conversion unit`}
           caption={i18n._({
@@ -112,6 +128,7 @@ export default function SettingsDisplayScreen() {
       <BitcoinUnitSheet sheetRef={bitcoinUnitSheetRef} />
       <ConversionUnitSheet sheetRef={conversionUnitSheetRef} />
       <AccountIdentifierSheet sheetRef={accountIdentifierSheetRef} />
+      <LanguageSheet sheetRef={languageSheetRef} />
     </SettingsLayout>
   );
 }

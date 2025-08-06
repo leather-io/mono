@@ -1,3 +1,4 @@
+import { AvailableLanguageCode } from '@/i18n/languages';
 import z from 'zod';
 
 import {
@@ -35,6 +36,7 @@ export interface SettingsState {
   hapticsPreference: HapticsPreference;
   lastActive: LastActiveTimestamp;
   notificationsPreference: NotificationsPreference;
+  languagePreference: AvailableLanguageCode;
 }
 
 // lose schema definition, we don't infer SettingsState type from it to keep it simple
@@ -51,4 +53,5 @@ export const settingsSchema = z.object({
   securityLevelPreference: z.string(),
   lastActive: z.union([z.number(), z.null()]),
   notificationsPreference: z.string(),
+  languagePreference: z.string().optional(),
 });
