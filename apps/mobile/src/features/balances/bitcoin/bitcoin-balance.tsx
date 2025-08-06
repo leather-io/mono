@@ -65,7 +65,9 @@ export function BitcoinBalanceByAccount({
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.({ asset: btcAsset, availableBalance, quoteBalance })}
+      onPress={() =>
+        onPress?.({ accountIndex, fingerprint, asset: btcAsset, availableBalance, quoteBalance })
+      }
       isLoading={state === 'loading'}
     />
   );

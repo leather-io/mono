@@ -106,8 +106,15 @@ export function Sip10BalanceByAccount({
   mode,
   accountIndex,
   fingerprint,
+  onPress,
 }: Sip10BalanceByAccountProps & BalanceViewProps) {
   const data = useSip10AccountBalance(fingerprint, accountIndex);
 
-  return <Sip10BalanceWrapper data={data} mode={mode} />;
+  return (
+    <Sip10BalanceWrapper
+      data={data}
+      mode={mode}
+      onPress={props => onPress?.({ ...props, fingerprint, accountIndex })}
+    />
+  );
 }

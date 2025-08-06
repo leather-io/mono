@@ -47,7 +47,13 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
 interface StacksBalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
+  onPress?: ({
+    accountIndex,
+    fingerprint,
+    asset,
+    availableBalance,
+    quoteBalance,
+  }: OnOpenTokenProps) => void;
 }
 export function StacksBalanceByAccount({
   accountIndex,
@@ -67,7 +73,9 @@ export function StacksBalanceByAccount({
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.({ asset: stxAsset, availableBalance, quoteBalance })}
+      onPress={() =>
+        onPress?.({ accountIndex, fingerprint, asset: stxAsset, availableBalance, quoteBalance })
+      }
       isLoading={state === 'loading'}
     />
   );

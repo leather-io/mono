@@ -20,6 +20,8 @@ export interface BalanceViewProps {
 }
 
 export interface OnOpenTokenProps {
+  accountIndex?: number;
+  fingerprint?: string;
   asset: FungibleCryptoAsset;
   availableBalance: Money;
   quoteBalance: Money;
@@ -32,8 +34,14 @@ export function AllAccountBalances({ mode }: BalanceViewProps) {
 
   const tokenSheetRef = useRef<SheetRef>(null);
 
-  function onOpenToken({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) {
-    setSheetData({ asset, availableBalance, quoteBalance });
+  function onOpenToken({
+    accountIndex,
+    fingerprint,
+    asset,
+    availableBalance,
+    quoteBalance,
+  }: OnOpenTokenProps) {
+    setSheetData({ accountIndex, fingerprint, asset, availableBalance, quoteBalance });
     // analytics.track('token_sheet_opened', { source: 'action_bar' });
     tokenSheetRef.current?.present();
   }
