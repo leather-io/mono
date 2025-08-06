@@ -9,6 +9,7 @@ import {
 } from '@/queries/assets/fungible-asset-info.query';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
+import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
@@ -16,6 +17,7 @@ import { FungibleCryptoAsset, Money } from '@leather.io/models';
 import { ButtonV2, SheetRef } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
+import { SelectedAsset } from '../receive/screens/select-asset';
 import { AccountList } from './account-list-item';
 import { AccountAddressList } from './address-list';
 import { TokenActivity } from './components/token-activity';
@@ -76,6 +78,7 @@ function AccountDetails({
 
 interface TokenProps {
   asset: FungibleCryptoAsset;
+  receiveAssets?: unknown;
   accountIndex?: number;
   fingerprint?: string;
   availableBalance: Money;
@@ -83,6 +86,7 @@ interface TokenProps {
 }
 export function Token({
   asset,
+  receiveAssets,
   accountIndex,
   fingerprint,
   availableBalance,
@@ -109,7 +113,12 @@ export function Token({
   const openReceiveSheet = () => {
     console.log('------------ account', account, fingerprint, accountIndex, asset.symbol);
 
-    router.setParams({ accountId: account?.id ?? undefined, asset: asset.symbol });
+    router.setParams({
+      accountId: account?.id ?? undefined,
+      // asset: asset.symbol,
+      asset: receiveAssets,
+      pete: 'pete',
+    });
     receiveSheetRef.current?.present();
   };
   return (
@@ -141,6 +150,13 @@ export function Token({
                   message: `Send`,
                 })}
               />
+              {/* 
+              For receive, we could not use the sheer as we always need to preselect token 
+              It needs to slide in from the right also 
+              BUT - at top level we need to add account selection also so need the same logic 
+
+              
+               */}
               <ButtonV2
                 onPress={() => openReceiveSheet()}
                 minWidth={86}

@@ -40,7 +40,8 @@ export function ReceiveSheet() {
 function useInitialReceiveParams() {
   const params = useGlobalSearchParams();
   const accountId = isString(params.accountId) ? params.accountId : undefined;
+  console.log('------------ receive params', params);
   const asset = isString(params.asset) ? params.asset : undefined;
-
+  console.log('------------ receive asset', asset);
   return { accountId, asset };
 }

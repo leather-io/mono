@@ -40,6 +40,7 @@ export function SelectAsset() {
       navigate('asset-details', { asset, accountName: selectedAccount?.name });
     }
   }
+  // here we need to select asset from the list of assets and show the address as part of that
 
   const { nativeSegwitPayerAddress, taprootPayerAddress } =
     useBitcoinPayerAddressFromAccountIndex(

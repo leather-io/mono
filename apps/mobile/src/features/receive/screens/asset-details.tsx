@@ -10,6 +10,7 @@ import { TestId } from '@/shared/test-id';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
+import { useGlobalSearchParams } from 'expo-router';
 
 import {
   AddressDisplayer,
@@ -26,10 +27,18 @@ import { useReceiveNavigation, useReceiveRoute } from '../navigation';
 
 export function AssetDetails() {
   const { i18n } = useLingui();
+
+  const { accountId, asset: assetParam } = useGlobalSearchParams();
   const route = useReceiveRoute<'asset-details'>();
   const navigation = useReceiveNavigation();
-  const asset = route.params.asset;
-  const accountName = route.params.accountName;
+  console.log('------------ route assetParam', route, accountId, assetParam);
+  // this asset is actually an object
+  // this is unknown as needs to be passed in
+
+  // >> here this asset is fully composed of the object with address etc.
+  // in token/address-list I do a lookup of this using the accountIndex and fingerprint
+  const asset = route.params?.asset || assetParam;
+  const accountName = route.params?.accountName || accountId;
   const { name, address, addressType, description } = asset;
   const onCopyAddress = useCopyAddress();
 
