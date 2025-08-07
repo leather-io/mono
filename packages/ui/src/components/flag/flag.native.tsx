@@ -36,7 +36,6 @@ export function Flag({
 }: FlagProps) {
   return (
     <Box
-      flex={1}
       flexDirection={reverse ? 'row-reverse' : 'row'}
       alignItems={getFlagAlignment(align)}
       {...props}
