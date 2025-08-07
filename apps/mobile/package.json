@@ -43,7 +43,7 @@
     "@formatjs/intl-numberformat": "8.15.4",
     "@formatjs/intl-pluralrules": "5.4.4",
     "@gorhom/bottom-sheet": "5.1.4",
-    "@hookform/resolvers": "3.9.1",
+    "@hookform/resolvers": "5.2.1",
     "@launchdarkly/react-native-client-sdk": "10.9.6",
     "@leather.io/analytics": "workspace:*",
     "@leather.io/bitcoin": "workspace:*",

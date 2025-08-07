@@ -132,8 +132,8 @@ importers:
         specifier: 5.1.4
         version: 5.1.4(@types/react@19.0.12)(react-native-gesture-handler@2.24.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-reanimated@3.17.5(@babel/core@7.27.1)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       '@hookform/resolvers':
-        specifier: 3.9.1
-        version: 3.9.1(react-hook-form@7.56.3(react@19.0.0))
+        specifier: 5.2.1
+        version: 5.2.1(react-hook-form@7.56.3(react@19.0.0))
       '@launchdarkly/react-native-client-sdk':
         specifier: 10.9.6
         version: 10.9.6(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
@@ -520,8 +520,8 @@ importers:
   apps/web:
     dependencies:
       '@hookform/resolvers':
-        specifier: 3.9.1
-        version: 3.9.1(react-hook-form@7.56.3(react@19.0.0))
+        specifier: 5.2.1
+        version: 5.2.1(react-hook-form@7.56.3(react@19.0.0))
       '@leather.io/analytics':
         specifier: workspace:*
         version: link:../../packages/analytics
@@ -4097,10 +4097,10 @@ packages:
   '@hirosystems/token-metadata-api-client@1.2.0':
     resolution: {integrity: sha512-voIhvGV4yCOEE2BWbQeGV4S395OLTKg5VsV4HJBM4Ekf/hiu5fktF8R0T24JcZc06resf94hH6L9ybiLz6tpGQ==}
 
-  '@hookform/resolvers@3.9.1':
-    resolution: {integrity: sha512-ud2HqmGBM0P0IABqoskKWI6PEf6ZDDBZkFqe2Vnl+mTHCEHzr3ISjjZyCwTjC/qpL25JC9aIDkloQejvMeq0ug==}
+  '@hookform/resolvers@5.2.1':
+    resolution: {integrity: sha512-u0+6X58gkjMcxur1wRWokA7XsiiBJ6aK17aPZxhkoYiK5J+HcTx0Vhu9ovXe6H+dVpO6cjrn2FkJTryXEMlryQ==}
     peerDependencies:
-      react-hook-form: ^7.0.0
+      react-hook-form: ^7.55.0
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -19616,8 +19616,9 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@hookform/resolvers@3.9.1(react-hook-form@7.56.3(react@19.0.0))':
+  '@hookform/resolvers@5.2.1(react-hook-form@7.56.3(react@19.0.0))':
     dependencies:
+      '@standard-schema/utils': 0.3.0
       react-hook-form: 7.56.3(react@19.0.0)
 
   '@humanfs/core@0.19.1': {}
