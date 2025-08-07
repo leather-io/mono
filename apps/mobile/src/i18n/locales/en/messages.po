@@ -97,7 +97,7 @@ msgstr "Account label"
 msgid "Account name cannot be empty"
 msgstr "Account name cannot be empty"
 
-#: src/features/token/account-list-item.tsx:25
+#: src/features/token/account-list-item.tsx:33
 msgid "Accounts"
 msgstr "Accounts"
 
@@ -105,9 +105,9 @@ msgstr "Accounts"
 msgid "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 
-#: src/features/account/account.tsx:133
+#: src/features/account/account.tsx:122
 #: src/features/navigation/tab-layout.tsx:57
-#: src/features/token/components/token-details.tsx:75
+#: src/features/token/components/token-activity.tsx:62
 msgid "Activity"
 msgstr "Activity"
 
@@ -310,10 +310,11 @@ msgstr "Back up your Secret Key"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:13
+#: src/features/balances/bitcoin/bitcoin-balance.tsx:12
 #: src/features/receive/get-assets.ts:22
 #: src/features/receive/get-assets.ts:30
 #: src/features/send/forms/btc/btc-form.tsx:63
+#: src/features/token/bitcoin/bitcoin-token-details.tsx:24
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -395,7 +396,7 @@ msgid "Code"
 msgstr "Code"
 
 #: src/app/(tabs)/(index)/account/[accountId]/collectibles.tsx:17
-#: src/features/account/account.tsx:143
+#: src/features/account/account.tsx:132
 msgid "Collectibles"
 msgstr "Collectibles"
 
@@ -945,7 +946,7 @@ msgid "Name"
 msgstr "Name"
 
 #: src/features/receive/get-assets.ts:24
-#: src/features/token/address-list.tsx:77
+#: src/features/token/bitcoin/bitcoin-token-details.tsx:126
 msgid "Native Segwit"
 msgstr "Native Segwit"
 
@@ -1043,12 +1044,10 @@ msgstr "Push"
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
-#: src/features/account/account.tsx:103
-#: src/features/account/accounts-widget.tsx:67
+#: src/components/action-buttons.tsx:29
 #: src/features/receive/screens/asset-details.tsx:48
 #: src/features/receive/screens/select-account.tsx:24
 #: src/features/receive/screens/select-asset.tsx:69
-#: src/features/token/token-receive-sheet.tsx:70
 msgid "Receive"
 msgstr "Receive"
 
@@ -1164,8 +1163,7 @@ msgstr "Select account"
 msgid "Select asset"
 msgstr "Select asset"
 
-#: src/features/account/account.tsx:95
-#: src/features/account/accounts-widget.tsx:59
+#: src/components/action-buttons.tsx:20
 #: src/features/send/screens/form.tsx:50
 #: src/features/send/screens/select-account.tsx:47
 #: src/features/send/screens/select-asset.tsx:40
@@ -1204,7 +1202,6 @@ msgid "Settings"
 msgstr "Settings"
 
 #: src/features/receive/screens/asset-details.tsx:95
-#: src/features/token/token-receive-sheet.tsx:113
 msgid "Share"
 msgstr "Share"
 
@@ -1255,9 +1252,10 @@ msgstr "Stacking rewards"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:12
+#: src/features/balances/stacks/stacks-balance.tsx:11
 #: src/features/receive/get-assets.ts:38
 #: src/features/send/forms/stx/stx-form.tsx:61
+#: src/features/token/stacks/stacks-token-details.tsx:18
 msgid "Stacks"
 msgstr "Stacks"
 
@@ -1269,7 +1267,7 @@ msgstr "Stacks address"
 msgid "Standard"
 msgstr "Standard"
 
-#: src/features/token/address-list.tsx:100
+#: src/features/token/stacks/stacks-token-details.tsx:120
 msgid "STX"
 msgstr "STX"
 
@@ -1302,7 +1300,7 @@ msgid "Tap to view Secret Key"
 msgstr "Tap to view Secret Key"
 
 #: src/features/receive/get-assets.ts:32
-#: src/features/token/address-list.tsx:86
+#: src/features/token/bitcoin/bitcoin-token-details.tsx:134
 msgid "Taproot"
 msgstr "Taproot"
 
@@ -1386,7 +1384,7 @@ msgstr "Token Details"
 msgid "Token Transfer"
 msgstr "Token Transfer"
 
-#: src/features/account/account.tsx:121
+#: src/features/account/account.tsx:110
 msgid "Tokens"
 msgstr "Tokens"
 

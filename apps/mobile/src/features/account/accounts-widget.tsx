@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 
+import { ActionButtons } from '@/components/action-buttons';
 import { FetchErrorCallout } from '@/components/error/fetch-error';
 import { Widget } from '@/components/widget';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
@@ -15,7 +16,7 @@ import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
-import { Box, Button, SheetRef, SkeletonLoader, useTheme } from '@leather.io/ui/native';
+import { Box, SheetRef, SkeletonLoader, useTheme } from '@leather.io/ui/native';
 
 import { AddAccountCard } from './components/add-account-card';
 import { CreateWalletCard } from './components/create-wallet-card';
@@ -27,8 +28,7 @@ export function AccountsWidget() {
   const accounts = useAccounts();
   const { totalBalance } = useTotalBalance();
   const theme = useTheme();
-  const { addAccountSheetRef, addWalletSheetRef, sendSheetRef, receiveSheetRef } =
-    useGlobalSheets();
+  const { addAccountSheetRef, addWalletSheetRef } = useGlobalSheets();
 
   const isLoadingTotalBalance = totalBalance.state === 'loading';
   const isErrorTotalBalance = totalBalance.state === 'error';
@@ -55,17 +55,7 @@ export function AccountsWidget() {
           )}
           {wallets.hasWallets && (
             <Box my="3" px="5" flexDirection="row" gap="2">
-              <Button size="md" onPress={() => sendSheetRef.current?.present()} minWidth={86}>
-                {t`Send`}
-              </Button>
-              <Button
-                size="md"
-                onPress={() => receiveSheetRef.current?.present()}
-                minWidth={86}
-                variant="outline"
-              >
-                {t`Receive`}
-              </Button>
+              <ActionButtons />
             </Box>
           )}
         </Box>

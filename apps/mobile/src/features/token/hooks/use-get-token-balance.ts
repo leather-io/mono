@@ -6,7 +6,7 @@ import { btcAsset, stxAsset } from '@leather.io/constants';
 import { FungibleCryptoAsset, Money } from '@leather.io/models';
 import { Sip10Balance } from '@leather.io/services';
 
-interface TokenBalance {
+export interface TokenBalance {
   asset: FungibleCryptoAsset;
   availableBalance: Money;
   quoteBalance: Money;
@@ -17,10 +17,7 @@ interface UseGetAccountTokenBalanceProps {
   account: Account;
 }
 
-export function useGetAccountTokenBalance({
-  tokenId,
-  account,
-}: UseGetAccountTokenBalanceProps): TokenBalance | undefined {
+export function useGetAccountTokenBalance({ tokenId, account }: UseGetAccountTokenBalanceProps) {
   const accountBalance = useAccountBalance({
     fingerprint: account.fingerprint,
     accountIndex: account.accountIndex,
@@ -30,7 +27,7 @@ export function useGetAccountTokenBalance({
 interface UseGetTokenBalanceProps {
   tokenId: string;
 }
-export function useGetTokenBalance({ tokenId }: UseGetTokenBalanceProps): TokenBalance | undefined {
+export function useGetTokenBalance({ tokenId }: UseGetTokenBalanceProps) {
   const totalBalance = useTotalBalance();
   return getTokenBalance({ tokenId, balance: totalBalance });
 }
@@ -41,24 +38,24 @@ interface GetTokenBalanceProps {
 }
 
 function getTokenBalance({ tokenId, balance }: GetTokenBalanceProps) {
-  if (tokenId === 'BTC') {
-    if (balance.btc.state === 'success') {
-      return {
-        asset: btcAsset,
-        availableBalance: balance.btc.value?.btc.availableBalance,
-        quoteBalance: balance.btc.value?.quote.availableBalance,
-      };
-    }
-  }
-  if (tokenId === 'STX') {
-    if (balance.stx.state === 'success') {
-      return {
-        asset: stxAsset,
-        availableBalance: balance.stx.value?.stx.availableBalance,
-        quoteBalance: balance.stx.value?.quote.availableBalance,
-      };
-    }
-  }
+  // if (tokenId === 'BTC') {
+  //   if (balance.btc.state === 'success') {
+  //     return {
+  //       asset: btcAsset,
+  //       availableBalance: balance.btc.value?.btc.availableBalance,
+  //       quoteBalance: balance.btc.value?.quote.availableBalance,
+  //     };
+  //   }
+  // }
+  // if (tokenId === 'STX') {
+  //   if (balance.stx.state === 'success') {
+  //     return {
+  //       asset: stxAsset,
+  //       availableBalance: balance.stx.value?.stx.availableBalance,
+  //       quoteBalance: balance.stx.value?.quote.availableBalance,
+  //     };
+  //   }
+  // }
 
   if (balance.sip10.state === 'success') {
     const sip10 = balance.sip10.value?.sip10s.find(
@@ -72,6 +69,5 @@ function getTokenBalance({ tokenId, balance }: GetTokenBalanceProps) {
       };
     }
   }
-
-  return undefined;
+  return null;
 }

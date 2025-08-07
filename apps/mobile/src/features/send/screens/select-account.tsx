@@ -107,7 +107,7 @@ function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
       onPress={() => onSelectAccount(account)}
       accountName={account.name}
       walletName={wallet?.name}
-      address={
+      secondaryAside={
         <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
       }
       balance={<Balance balance={getAvailableBalance()} />}

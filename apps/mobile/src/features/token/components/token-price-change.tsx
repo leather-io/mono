@@ -40,7 +40,7 @@ export function TokenPriceChange({
         />
       )}
       <Text variant="label02" color={color}>
-        {`${changePercent}% `}
+        {`${changePercent.toFixed(2)}% `}
       </Text>
       <Balance
         formattingOptions={{ numberFormatOptions: { signDisplay: 'never' } }}

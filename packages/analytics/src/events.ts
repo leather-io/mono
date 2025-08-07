@@ -43,6 +43,7 @@ export interface Events extends HistoricalEvents {
   send_recipient_selected: { type: 'internal' | 'external' };
   send_qr_scanner_opened: { source: 'toggle' | 'input' };
   send_transaction_review_initiated: { asset: string; amount: number };
+  token_details_opened: { tokenId: string; source: 'all_account_balances' | 'account_balances' };
   receive_address_copied: { asset: string; location: string };
   receive_share_button_pressed: { asset: string };
 }

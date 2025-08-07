@@ -55,7 +55,7 @@ function InternalRecipientItem({ entry, onSelect }: InternalRecipientItemProps) 
       onPress={() => onSelect(entry.address)}
       accountName={entry.rawAccount.name}
       walletName={wallet?.name}
-      address={
+      secondaryAside={
         <AccountAddress
           accountIndex={entry.rawAccount.accountIndex}
           fingerprint={entry.rawAccount.fingerprint}

@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 
+import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
 import { t } from '@lingui/core/macro';
 
-import { SummaryTableItem, SummaryTableRoot } from '../../../components/summary-table';
 import { TokenDetailsCard } from './token-details-card';
 
 interface TokenDetailsTableProps {
