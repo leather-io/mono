@@ -1,0 +1,92 @@
+name: Deploy mobile - Production
+
+permissions:
+  contents: write
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-submit-mobile:
+    runs-on: ubuntu-latest
+    outputs:
+      build_output: ${{ steps.build_and_submit.outputs.build_output }}
+      android_build_id: ${{ steps.build_and_submit.outputs.android_build_id }}
+      ios_build_id: ${{ steps.build_and_submit.outputs.ios_build_id }}
+      build_version: ${{ steps.build_and_submit.outputs.build_version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Provision the app
+        uses: ./.github/actions/provision
+        with:
+          PROVISION_MOBILE: true
+          GOOGLE_SERVICES_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST_B64 }}
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install jq tool
+        run: |
+          sudo apt-get update
+          sudo apt-get install jq
+
+      - name: Build and submit mobile
+        id: build_and_submit
+        working-directory: ./apps/mobile
+        run: |
+          echo build_output=$(eas build --non-interactive --json --no-wait --auto-submit --platform=all --profile=production); >> $GITHUB_OUTPUT
+          echo android_build_id=$(echo $build_output | jq -r '.[0].["id"]') >> $GITHUB_OUTPUT
+          echo ios_build_id=$(echo $build_output | jq -r '.[1].["id"]') >> $GITHUB_OUTPUT
+          echo build_version=$(eas config -e production -p android --json --non-interactive | jq -r '.["appConfig"].["version"]') >> $GITHUB_OUTPUT
+
+  create-github-release:
+    runs-on: ubuntu-latest
+    needs: build-and-submit-mobile
+    steps:
+      - name: Save build output to file
+        run: |
+          echo ${{ needs.build-and-submit-mobile.outputs.build_output }} | tee /tmp/build_output.json
+
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.LEATHER_BOT }}
+          tag_name: 'mobile-v${{ needs.build-and-submit-mobile.outputs.build_version }}'
+          name: '@leather.io/mobile: v${{ needs.build-and-submit-mobile.outputs.build_version }}'
+          body: |
+            # iOS Build:
+            https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${{ needs.build-and-submit-mobile.outputs.ios_build_id }}
+
+            # Android Build:
+            https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${{ needs.build-and-submit-mobile.outputs.android_build_id }}
+          files: /tmp/build_output.json
+
+  # Useful for testing the workflow without having to run tons of builds to completion
+  # cleanup-builds-if-cancelled:
+  #   runs-on: ubuntu-latest
+  #   needs: build-and-submit-mobile
+  #   # if: ${{ always }}
+  #   # NOTE: This could be something like `if: ${{ cancelled() && needs.build-and-submit-mobile.result == 'success' }}`
+  #   # if: ${{ cancelled() && needs.build-and-submit-mobile.result == 'success' }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Cleanup Android build if cancelled
+  #       uses: ./.github/actions/cancel-expo-build
+  #       with:
+  #         build_id: ${{ needs.build-and-submit-mobile.outputs.android_build_id }}
+  #         token: ${{ secrets.EXPO_TOKEN }}
+
+  #     - name: Cleanup iOS build if cancelled
+  #       uses: ./.github/actions/cancel-expo-build
+  #       with:
+  #         build_id: ${{ needs.build-and-submit-mobile.outputs.ios_build_id }}
+  #         token: ${{ secrets.EXPO_TOKEN }}

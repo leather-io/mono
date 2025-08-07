@@ -28,6 +28,8 @@ runs:
   steps:
     - name: Prepare the app
       uses: ./.github/actions/provision
+      with:
+        PROVISION_MOBILE: true
 
     - name: Setup Expo and EAS
       uses: expo/expo-github-action@v8
@@ -41,16 +43,8 @@ runs:
         sudo apt-get install jq
       shell: bash
 
-    - name: Setup eas credentials
-      run: |
-        echo $(jq --arg APPLE_ID "$APPLE_ID" '.submit.production.ios.appleId = $APPLE_ID' ./apps/mobile/eas.json) > ./apps/mobile/eas.json
-        echo $(jq --arg ASC_APP_ID "$ASC_APP_ID" '.submit.production.ios.ascAppId = $ASC_APP_ID' ./apps/mobile/eas.json) > ./apps/mobile/eas.json
-      shell: bash
-      env:
-        APPLE_ID: ${{ inputs.APPLE_ID }}
-        ASC_APP_ID: ${{ inputs.ASC_APP_ID }}
-
     - name: Decode GOOGLE_SERVICES_INFO_PLIST
+      if: ${{ inputs.PROVISION_MOBILE == 'true' && inputs.GOOGLE_SERVICES_INFO_PLIST_B64 != '' }}
       shell: bash
       working-directory: ./apps/mobile
       run: |
@@ -118,6 +112,3 @@ runs:
         # Release version of the app, we should wait for it to see the result
         eas build --platform ios --profile=production --non-interactive --auto-submit
       shell: bash
-      env:
-        EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
-        APPLE_ID: ${{ inputs.APPLE_ID }}

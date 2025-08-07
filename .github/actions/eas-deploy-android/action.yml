@@ -16,6 +16,8 @@ runs:
   steps:
     - name: Prepare the app
       uses: ./.github/actions/provision
+      with:
+        PROVISION_MOBILE: true
 
     - name: Setup Expo and EAS
       uses: expo/expo-github-action@v8

@@ -1,0 +1,25 @@
+name: 'Cancel Expo Build'
+description: 'Action to cancel an Expo EAS build, useful for testing without having to run tons of builds to completion.'
+
+inputs:
+  token:
+    description: 'Expo EAS access token'
+    required: true
+  build_id:
+    description: 'EAS build ID to cancel'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Expo and EAS
+      uses: expo/expo-github-action@v8
+      with:
+        eas-version: latest
+        token: ${{ inputs.token }}
+
+    - name: Cancel Expo build
+      shell: bash
+      working-directory: ./apps/mobile
+      run: |
+        eas build:cancel ${{ inputs.build_id }} --non-interactive
