@@ -2,6 +2,30 @@
 
 # Changelog
 
+## [2.63.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.62.2...@leather.io/mobile-v2.63.0) (2025-08-07)
+
+
+### Features
+
+* **mobile:** minimum app version enforcement ([51033ba](https://github.com/leather-io/mono/commit/51033ba7ad4ab3fa720de5bc672656fd8682d229))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.31.4
+    * @leather.io/crypto bumped to 1.11.4
+    * @leather.io/provider bumped to 1.5.5
+    * @leather.io/query bumped to 2.41.4
+    * @leather.io/rpc bumped to 2.20.4
+    * @leather.io/services bumped to 1.26.0
+    * @leather.io/stacks bumped to 1.14.4
+    * @leather.io/ui bumped to 1.77.4
+    * @leather.io/utils bumped to 0.42.2
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.31.4
+
 ## v2.61.0 (July 29, 2025)
 
 - Feature: Users will be prompted to update the app when a new version is available.

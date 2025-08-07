@@ -376,6 +376,24 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.3
 
+## [1.26.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.25.3...@leather.io/services-v1.26.0) (2025-08-07)
+
+
+### Features
+
+* expose api layer clients ([73ab9f1](https://github.com/leather-io/mono/commit/73ab9f11c32816e402fa38d2d39c6b1fb9e0ed62))
+* support native segwit ordinals ([224c88c](https://github.com/leather-io/mono/commit/224c88c3042157d6bdd880a463efd04a7571f01a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.31.4
+    * @leather.io/utils bumped to 0.42.2
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.4
+
 ## [1.25.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.24.0...@leather.io/services-v1.25.0) (2025-07-28)
 
 
