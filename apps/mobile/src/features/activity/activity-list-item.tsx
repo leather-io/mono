@@ -36,7 +36,6 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
 
   return (
     <Pressable
-      flexDirection="row"
       disabled={!txid}
       onPress={() => {
         const activityLink = makeActivityLink({ txid, networkPreference, asset });

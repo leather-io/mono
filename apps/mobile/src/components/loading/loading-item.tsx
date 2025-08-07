@@ -2,7 +2,7 @@ import { Box, Flag, ItemLayout, Pressable, SkeletonLoader } from '@leather.io/ui
 
 export function LoadingItem() {
   return (
-    <Pressable flexDirection="row" disabled={true} onPress={undefined}>
+    <Pressable disabled={true} onPress={undefined}>
       <Flag
         img={<SkeletonLoader borderRadius="round" height={48} width={48} isLoading={true} />}
         px="5"
