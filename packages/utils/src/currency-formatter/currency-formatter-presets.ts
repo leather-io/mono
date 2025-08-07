@@ -31,6 +31,7 @@ export const currencyFormatterPresets: Record<
   },
   'shorthand-balance': input => {
     return {
+      showCurrency: isFiatCurrencyCode(input.currencyCode),
       numberFormatOptions: {
         minimumFractionDigits: 2,
         maximumFractionDigits: isFiatCurrencyCode(input.currencyCode) ? 2 : 4,
