@@ -369,12 +369,17 @@ describe('formatAmount', () => {
 
     it('shows up to 4 decimals for crypto balances', () => {
       const btc = createBtc(1234.5678);
-      expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe(withNbsp('1,234.5678 BTC'));
+      expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe('1,234.5678');
     });
 
     it('shows up to 2 decimals for compacted crypto balances', () => {
       const btc = createBtc(12_345_678);
-      expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe(withNbsp('12.35M BTC'));
+      expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe('12.35M');
+    });
+
+    it('does not show currency code for crypo balance', () => {
+      const btc = createBtc(12_345_678);
+      expect(formatAmount(btc, { preset: 'shorthand-balance' })).not.toContain('BTC');
     });
   });
 
