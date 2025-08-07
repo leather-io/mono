@@ -18,6 +18,8 @@ runs:
   steps:
     - name: Provision
       uses: ./.github/actions/provision
+      with:
+        PROVISION_MOBILE: true
 
     - name: Build local dependencies
       run: pnpm turbo run build --force --no-cache

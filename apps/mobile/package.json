@@ -23,7 +23,7 @@
     "lingui": "pnpm run lingui:extract && pnpm run lingui:compile",
     "lingui:compile": "lingui compile --typescript --strict",
     "lingui:extract": "lingui extract --clean --overwrite",
-    "postinstall": "pnpm lingui:compile && if [ \"$CI\" = \"1\" ]; then pnpm -w build:mobile; fi",
+    "postinstall": "pnpm lingui:compile && if [ \"$PROVISION_MOBILE\" = \"true\" ]; then pnpm -w build:mobile; fi",
     "preandroid": "pnpm run firebase",
     "preios": "pnpm run check:cocoapods && pnpm run firebase",
     "start": "expo start",
