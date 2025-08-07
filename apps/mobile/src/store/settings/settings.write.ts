@@ -1,5 +1,6 @@
 import { AvailableLanguageCode } from '@/i18n/languages';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { REHYDRATE } from 'redux-persist';
 
 import {
   AccountDisplayPreference,
@@ -10,9 +11,11 @@ import {
 } from '@leather.io/models';
 
 import { handleAppResetWithState } from '../global-action';
+import { handleLanguagePreferenceHydration } from './language-preference-hydration';
 import { initialState } from './settings';
 import {
   HapticsPreference,
+  LanguagePreferenceSource,
   LastActiveTimestamp,
   NotificationsPreference,
   PrivacyModePreference,
@@ -63,8 +66,14 @@ export const settingsSlice = createSlice({
     userChangedLanguagePreference(state, action: PayloadAction<AvailableLanguageCode>) {
       state.languagePreference = action.payload;
     },
+    userChangedLanguagePreferenceSource(state, action: PayloadAction<LanguagePreferenceSource>) {
+      state.languagePreferenceSource = action.payload;
+    },
   },
-  extraReducers: builder => builder.addCase(...handleAppResetWithState(initialState)),
+  extraReducers: builder => {
+    builder.addCase(...handleAppResetWithState(initialState));
+    builder.addCase(REHYDRATE, handleLanguagePreferenceHydration);
+  },
 });
 
 export const {
@@ -81,4 +90,5 @@ export const {
   userChangedLastActive,
   userChangedNotificationPreference,
   userChangedLanguagePreference,
+  userChangedLanguagePreferenceSource,
 } = settingsSlice.actions;

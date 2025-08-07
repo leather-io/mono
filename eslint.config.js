@@ -74,6 +74,8 @@ export default tseslint.config(
           ignoreFunction: [
             'Error',
             'BitcoinError',
+            'captureException',
+            'captureMessage',
             'console.log',
             'console.warn',
             'console.error',

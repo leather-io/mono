@@ -2,10 +2,10 @@ import { RefObject } from 'react';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
-import { useToastContext } from '@/components/toast/toast-context';
 import { AvailableLanguageCode, supportedLanguages } from '@/i18n/languages';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
+import { reloadAppAsync } from 'expo';
 import { entries } from 'remeda';
 
 import { SheetRef } from '@leather.io/ui/native';
@@ -17,14 +17,11 @@ interface LanguageSheetProps {
 }
 export function LanguageSheet({ sheetRef }: LanguageSheetProps) {
   const settings = useSettings();
-  const { displayToast } = useToastContext();
 
   function onUpdateLanguage(language: AvailableLanguageCode) {
     settings.changeLanguagePreference(language);
-    displayToast({
-      title: t`Language updated`,
-      type: 'success',
-    });
+    settings.changeLanguagePreferenceSource('user-selection');
+    setTimeout(reloadAppAsync, 150);
   }
 
   return (
