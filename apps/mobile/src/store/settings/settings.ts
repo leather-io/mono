@@ -23,6 +23,7 @@ import {
   selectEmailAddressPreference,
   selectHapticsPreference,
   selectLanguagePreference,
+  selectLanguagePreferenceSource,
   selectLastActive,
   selectNetworkPreference,
   selectNotificationsPreference,
@@ -37,6 +38,7 @@ import {
   userChangedEmailAddressPreference,
   userChangedHapticsPreference,
   userChangedLanguagePreference,
+  userChangedLanguagePreferenceSource,
   userChangedLastActive,
   userChangedNetworkPreference,
   userChangedNotificationPreference,
@@ -47,6 +49,7 @@ import {
 } from './settings.write';
 import {
   HapticsPreference,
+  LanguagePreferenceSource,
   LastActiveTimestamp,
   NotificationsPreference,
   PrivacyModePreference,
@@ -70,6 +73,7 @@ export const initialState: SettingsState = {
   lastActive: null,
   notificationsPreference: 'not-selected',
   languagePreference: defaultLanguage,
+  languagePreferenceSource: 'system',
 };
 
 export function useSettings() {
@@ -89,6 +93,7 @@ export function useSettings() {
   const lastActive = useSelector(selectLastActive);
   const notificationsPreference = useSelector(selectNotificationsPreference);
   const languagePreference = useSelector(selectLanguagePreference);
+  const languagePreferenceSource = useSelector(selectLanguagePreferenceSource);
 
   const themeDerivedFromThemePreference =
     (themePreference === 'system' ? systemTheme : themePreference) ?? 'light';
@@ -108,6 +113,7 @@ export function useSettings() {
     lastActive,
     notificationsPreference,
     languagePreference,
+    languagePreferenceSource,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
     changeAccountDisplayPreference(type: AccountDisplayPreference) {
       dispatch(userChangedAccountDisplayPreference(type));
@@ -186,6 +192,9 @@ export function useSettings() {
       void analytics?.track('user_setting_updated', {
         language,
       });
+    },
+    changeLanguagePreferenceSource(source: LanguagePreferenceSource) {
+      dispatch(userChangedLanguagePreferenceSource(source));
     },
     userLeavesApp(timestamp: LastActiveTimestamp) {
       dispatch(userChangedLastActive(timestamp));

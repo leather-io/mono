@@ -17,4 +17,4 @@ jobs:
         run: |
           pnpm lingui:extract
           pnpm lingui:compile
-          git diff --exit-code '**/messages.po' || (echo "Uncommited translations - messages.po changed!" && exit 1)
+          git diff --exit-code 'src/i18n/locales/**/messages.po' || (echo "Uncommited translations - messages.po changed!" && exit 1)

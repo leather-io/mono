@@ -22,14 +22,12 @@ import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
 import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { usePageViewTracking } from '@/hooks/use-page-view-tracking';
-import { initiateI18n } from '@/i18n';
+import { I18nProvider } from '@/i18n/i18n';
 import { queryClient } from '@/queries/query';
 import { initAppServices } from '@/services/init-app-services';
 import { persistor, store } from '@/store';
 import { trackFirstAppOpen } from '@/utils/analytics';
 import { LDProvider } from '@launchdarkly/react-native-client-sdk';
-import { i18n } from '@lingui/core';
-import { I18nProvider } from '@lingui/react';
 import * as Sentry from '@sentry/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -57,7 +55,6 @@ export const unstable_settings = { initialRouteName: '/' };
 
 initAppServices();
 void SplashScreen.preventAutoHideAsync();
-void initiateI18n();
 void setupFeatureFlags();
 ErrorUtils.setGlobalHandler(error => {
   Sentry.captureException(error);
@@ -95,7 +92,7 @@ function RootLayout() {
       <LDProvider client={featureFlagClient}>
         <ReduxProvider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <I18nProvider i18n={i18n}>
+            <I18nProvider>
               <SafeAreaProvider>
                 <QueryClientProvider client={queryClient}>
                   <LeatherQueryProvider>

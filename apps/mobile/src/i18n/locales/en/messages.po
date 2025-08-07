@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2025-08-05 11:57+0400\n"
+"POT-Creation-Date: 2025-08-08 14:44+0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -882,13 +882,9 @@ msgid "Invalid words: {joinedInvalidWords}"
 msgstr "Invalid words: {joinedInvalidWords}"
 
 #: src/app/settings/display/index.tsx:86
-#: src/features/settings/language-sheet.tsx:31
+#: src/features/settings/language-sheet.tsx:28
 msgid "Language"
 msgstr "Language"
-
-#: src/features/settings/language-sheet.tsx:25
-msgid "Language updated"
-msgstr "Language updated"
 
 #: src/features/token/components/token-details-table.tsx:22
 msgid "Layer"

@@ -21,6 +21,7 @@ export type NotificationsPreference = 'enabled' | 'disabled' | 'not-selected';
 export type PrivacyModePreference = 'hidden' | 'visible';
 export type HapticsPreference = 'disabled' | 'enabled';
 export type LastActiveTimestamp = number | null;
+export type LanguagePreferenceSource = 'system' | 'user-selection';
 
 export interface SettingsState {
   accountDisplayPreference: AccountDisplayPreference;
@@ -37,6 +38,7 @@ export interface SettingsState {
   lastActive: LastActiveTimestamp;
   notificationsPreference: NotificationsPreference;
   languagePreference: AvailableLanguageCode;
+  languagePreferenceSource: LanguagePreferenceSource;
 }
 
 // lose schema definition, we don't infer SettingsState type from it to keep it simple
@@ -54,4 +56,5 @@ export const settingsSchema = z.object({
   lastActive: z.union([z.number(), z.null()]),
   notificationsPreference: z.string(),
   languagePreference: z.string().optional(),
+  languagePreferenceSource: z.string().optional(),
 });
