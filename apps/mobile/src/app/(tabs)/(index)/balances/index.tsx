@@ -21,6 +21,8 @@ export default function BalancesScreen() {
 
   const pageTitle = t`All tokens`;
 
+  AssetsFlashList;
+
   return (
     <Screen>
       <Screen.Header

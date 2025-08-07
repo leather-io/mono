@@ -21,12 +21,14 @@ function Body(props: BoxProps) {
 }
 
 function Title({ children }: HasChildren) {
-  return (
+  return typeof children === 'string' ? (
     <Box px="5" pb="5" mb="3">
       <Screen.HeaderAnimationTarget>
         <Text variant="heading03">{children}</Text>
       </Screen.HeaderAnimationTarget>
     </Box>
+  ) : (
+    <Screen.HeaderAnimationTarget>{children}</Screen.HeaderAnimationTarget>
   );
 }
 

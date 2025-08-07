@@ -2,7 +2,7 @@ import { Cell, type PressableProps } from '@leather.io/ui/native';
 
 interface AccountListItemProps extends PressableProps {
   accountName: string;
-  address: React.ReactNode;
+  secondaryAside: React.ReactNode;
   balance: React.ReactNode;
   icon: React.ReactNode;
   iconTestID?: string;
@@ -12,7 +12,7 @@ interface AccountListItemProps extends PressableProps {
 }
 export function AccountListItem({
   accountName,
-  address,
+  secondaryAside,
   balance,
   icon,
   iconTestID,
@@ -33,7 +33,7 @@ export function AccountListItem({
       </Cell.Content>
       <Cell.Aside>
         <Cell.Label variant="primary">{balance}</Cell.Label>
-        <Cell.Label variant="secondary">{address}</Cell.Label>
+        <Cell.Label variant="secondary">{secondaryAside}</Cell.Label>
       </Cell.Aside>
       {chevron && <Cell.Icon>{chevron}</Cell.Icon>}
     </Cell.Root>

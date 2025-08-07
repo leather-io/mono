@@ -1,30 +1,18 @@
-import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
+import { Box, Text } from '@leather.io/ui/native';
 
 export interface TokenOverviewProps {
+  actionButtons: React.ReactNode;
   heading: React.ReactNode;
-  isLoading: boolean;
   availableBalance: React.ReactNode;
   quoteBalance: React.ReactNode;
 }
 
 export function TokenOverview({
+  actionButtons,
   heading,
-  isLoading,
   availableBalance,
   quoteBalance,
 }: TokenOverviewProps) {
-  if (isLoading) {
-    return (
-      <Box alignItems="center" alignContent="center" alignSelf="stretch" flexWrap="wrap">
-        <Box mx="5" pt="4" pb="8" flexDirection="column" alignItems="center" gap="4" flex={1}>
-          <Box flexDirection="row" height={64} width={64} borderRadius="round" overflow="hidden">
-            <SkeletonLoader height={64} width={64} isLoading={true} />
-          </Box>
-          <SkeletonLoader height={44} width={132} isLoading={true} />
-        </Box>
-      </Box>
-    );
-  }
   return (
     <Box
       alignItems="center"
@@ -34,8 +22,7 @@ export function TokenOverview({
       p="5"
       backgroundColor="ink.background-primary"
     >
-      {/* For all accounts view there is no header so this needs a top margin of 64px */}
-      <Box p="5" flexDirection="column" alignItems="center" gap="3" flex={1}>
+      <Box flexDirection="column" alignItems="center" gap="3" flex={1}>
         {heading}
         <Box gap="1" flexDirection="column" alignItems="center">
           <Text variant="label01" textAlign="center">
@@ -44,6 +31,9 @@ export function TokenOverview({
           <Text variant="caption01" textAlign="center">
             {quoteBalance}
           </Text>
+        </Box>
+        <Box flexDirection="row" justifyContent="center" gap="2">
+          {actionButtons}
         </Box>
       </Box>
     </Box>

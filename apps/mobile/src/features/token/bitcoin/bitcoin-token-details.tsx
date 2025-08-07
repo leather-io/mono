@@ -1,0 +1,141 @@
+import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
+import {
+  useBtcAccountBalance,
+  useBtcAccountNativeSegwitBalance,
+  useBtcAccountTaprootBalance,
+  useBtcTotalBalance,
+} from '@/queries/balance/btc-balance.query';
+import { Account } from '@/store/accounts/accounts';
+import { useAccountByIndex } from '@/store/accounts/accounts.read';
+import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { WalletStore } from '@/store/wallets/utils';
+import { t } from '@lingui/core/macro';
+
+import { btcAsset } from '@leather.io/constants';
+import { Box, BtcAvatarIcon } from '@leather.io/ui/native';
+
+import { AccountList, TokenDetailsAccountListItem } from '../account-list-item';
+import { AddressListItem } from '../address-list';
+import { Token } from '../token';
+
+type BitcoinTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
+
+export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
+  return <TokenBalance ticker="BTC" icon={<BtcAvatarIcon />} tokenName={t`Bitcoin`} {...props} />;
+}
+
+interface BitcoinTokenDetailsProps {
+  onSelectAccount?: (account: Account) => void;
+}
+
+export function BitcoinTokenDetails({ onSelectAccount }: BitcoinTokenDetailsProps) {
+  const { state, value } = useBtcTotalBalance();
+  const availableBalance = value?.btc.availableBalance;
+  const quoteBalance = value?.quote.availableBalance;
+  if (!availableBalance || !quoteBalance) {
+    return null;
+  }
+
+  return (
+    <Token
+      tokenId={'BTC'}
+      asset={btcAsset}
+      availableBalance={availableBalance}
+      quoteBalance={quoteBalance}
+      canSend={true}
+    >
+      <AccountList tokenId={'BTC'} />
+    </Token>
+  );
+}
+
+interface BitcoinTokenDetailsByAccountProps {
+  accountIndex: number;
+  fingerprint: string;
+}
+export function BitcoinTokenDetailsByAccount({
+  accountIndex,
+  fingerprint,
+}: BitcoinTokenDetailsByAccountProps) {
+  const { state, value } = useBtcAccountBalance(fingerprint, accountIndex);
+  const account = useAccountByIndex(fingerprint, accountIndex);
+  const availableBalance = value?.btc.availableBalance;
+  const quoteBalance = value?.quote.availableBalance;
+  if (!availableBalance || !quoteBalance || !account) {
+    return null;
+  }
+  return (
+    <Token
+      tokenId={'BTC'}
+      asset={btcAsset}
+      availableBalance={availableBalance}
+      quoteBalance={quoteBalance}
+      canSend={true}
+    >
+      <BitcoinAccountAddressList account={account} />
+    </Token>
+  );
+}
+
+interface BitcoinAccountListItemProps {
+  account: Account;
+  wallet: WalletStore;
+  accountIndex: number;
+  fingerprint: string;
+}
+export function BitcoinAccountListItem({
+  account,
+  wallet,
+  accountIndex,
+  fingerprint,
+}: BitcoinAccountListItemProps) {
+  const { state, value } = useBtcAccountBalance(fingerprint, accountIndex);
+
+  const availableBalance = value?.btc.availableBalance;
+  const quoteBalance = value?.quote.availableBalance;
+  if (!availableBalance || !quoteBalance) {
+    return null;
+  }
+  return (
+    <TokenDetailsAccountListItem
+      account={account}
+      wallet={wallet}
+      tokenId={'BTC'}
+      availableBalance={availableBalance}
+      quoteBalance={quoteBalance}
+    />
+  );
+}
+
+export function BitcoinAccountAddressList({ account }: { account: Account }) {
+  const { nativeSegwitPayerAddress, taprootPayerAddress } = useBitcoinPayerAddressFromAccountIndex(
+    account.fingerprint,
+    account.accountIndex
+  );
+  const btcTaprootBalance = useBtcAccountTaprootBalance(account.fingerprint, account.accountIndex);
+  const btcNativeSegwitBalance = useBtcAccountNativeSegwitBalance(
+    account.fingerprint,
+    account.accountIndex
+  );
+
+  return (
+    <Box>
+      <AddressListItem
+        accountName={account.name}
+        address={nativeSegwitPayerAddress}
+        name={t`Native Segwit`}
+        tokenId={'BTC'}
+        availableBalance={btcNativeSegwitBalance.value?.btc.availableBalance}
+        quoteBalance={btcNativeSegwitBalance.value?.quote.availableBalance}
+      />
+      <AddressListItem
+        accountName={account.name}
+        address={taprootPayerAddress}
+        name={t`Taproot`}
+        tokenId={'BTC'}
+        availableBalance={btcTaprootBalance.value?.btc.availableBalance}
+        quoteBalance={btcTaprootBalance.value?.quote.availableBalance}
+      />
+    </Box>
+  );
+}

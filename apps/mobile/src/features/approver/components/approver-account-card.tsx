@@ -22,7 +22,7 @@ function AccountItem({ account, onPress }: { account: Account; onPress?: () => v
       onPress={onPress}
       key={account.id}
       accountName={account.name}
-      address={
+      secondaryAside={
         <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
       }
       balance={

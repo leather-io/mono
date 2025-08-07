@@ -1,22 +1,21 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
-import { FetchWrapper } from '@/components/loading';
+import { configureTokenParamsSchema } from '@/app/(tabs)/(index)/account/[accountId]/token/[tokenId]/index';
 import { Screen } from '@/components/screen/screen';
-import { ActivityEmpty } from '@/features/activity/activity-empty';
 import { ActivityListItem } from '@/features/activity/activity-list-item';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
-import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import { deserializeAccountId } from '@/store/accounts/accounts';
+import { t } from '@lingui/core/macro';
+import { useLocalSearchParams } from 'expo-router';
 
 import { OnChainActivity } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 import { isDefined } from '@leather.io/utils';
 
+import { TokenDetailsCard } from './token-details-card';
+
 interface TokenActivityProps {
   ListHeader: React.ReactNode;
-  ticker: string;
-  accountIndex?: number;
-  fingerprint?: string;
 }
 
 function filterByTicker(activity: OnChainActivity, ticker: string) {
@@ -30,46 +29,39 @@ function filterByAccount(activity: OnChainActivity, accountIndex: number, finger
   );
 }
 
-export function TokenActivity({
-  ListHeader,
-  ticker,
-  accountIndex,
-  fingerprint,
-}: TokenActivityProps) {
-  const scrollViewAdjustmentOffset = 56;
+export function TokenActivity({ ListHeader }: TokenActivityProps) {
+  // PETE - consider using useAccountActivityQuery or a token specific query
   const activity = useTotalActivity();
+  const params = useLocalSearchParams();
+  const { tokenId, accountId } = configureTokenParamsSchema.parse(params);
+
+  const activityData: OnChainActivity[] | undefined = useMemo(() => {
+    if (activity.state === 'success') {
+      return activity.value
+        .filter(activity => activity && 'asset' in activity)
+        .filter(activity => filterByTicker(activity, tokenId))
+        .filter(activity => {
+          if (isDefined(accountId)) {
+            const { accountIndex, fingerprint } = deserializeAccountId(accountId);
+            return filterByAccount(activity, accountIndex, fingerprint);
+          }
+          return true;
+        });
+    }
+    return undefined;
+  }, [activity, tokenId, accountId]);
 
   return (
-    <Screen>
-      <Screen.Header
-        blurOverlay={false}
-        leftElement={null}
-        rightElement={
-          <Box alignItems="center" flexDirection="row" justifyContent="center" mr="2">
-            <NetworkBadge />
-          </Box>
-        }
-      />
-      <FetchWrapper data={activity}>
-        {activity.state === 'success' && (
-          <BottomSheetFlatList
-            style={{ marginTop: -scrollViewAdjustmentOffset }}
-            data={activity.value
-              .filter(activity => activity && 'asset' in activity)
-              .filter(activity => filterByTicker(activity, ticker))
-              .filter(activity => {
-                if (isDefined(accountIndex) && isDefined(fingerprint)) {
-                  return filterByAccount(activity, accountIndex, fingerprint);
-                }
-                return true;
-              })}
-            renderItem={({ item }) => <ActivityListItem activity={item} />}
-            keyExtractor={(_, index) => `activity.${index}`}
-            ListHeaderComponent={() => ListHeader}
-            ListEmptyComponent={<ActivityEmpty />}
-          />
-        )}
-      </FetchWrapper>
-    </Screen>
+    <Screen.List
+      data={activityData}
+      renderItem={({ item }) => <ActivityListItem activity={item} />}
+      keyExtractor={(_, index) => `activity.${index}`}
+      ListHeaderComponent={() => (
+        <Box gap="1" backgroundColor="ink.background-secondary">
+          {ListHeader}
+          {activityData && activityData.length > 0 && <TokenDetailsCard title={t`Activity`} />}
+        </Box>
+      )}
+    />
   );
 }

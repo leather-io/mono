@@ -1,7 +1,17 @@
-import { useRef, useState } from 'react';
-
-import { useTokenDetailsFlag } from '@/features/feature-flags';
+import { ActionButtons } from '@/components/action-buttons';
+import { Balance } from '@/components/balance/balance';
+import { Screen } from '@/components/screen/screen';
+import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
+import { NetworkBadge } from '@/features/settings/network-badge';
+import { TokenActivity } from '@/features/token/components/token-activity';
+import { TokenDescription } from '@/features/token/components/token-description';
+import { TokenDetailsTable } from '@/features/token/components/token-details-table';
 import { TokenIcon } from '@/features/token/components/token-icon';
+import { TokenOverview } from '@/features/token/components/token-overview';
+import { TokenPriceChange } from '@/features/token/components/token-price-change';
+import { TokenBalance } from '@/features/token/hooks/use-get-token-balance';
+import { getChainLayerFromAssetProtocol } from '@/features/token/utils/get-chain-layer-from-protocol';
+import { getTokenName } from '@/features/token/utils/get-token-name';
 import {
   useAssetDescriptionQuery,
   useAssetPriceChangeQuery,
@@ -9,107 +19,83 @@ import {
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 
 import { FungibleCryptoAsset, Money } from '@leather.io/models';
-import { SheetRef } from '@leather.io/ui/native';
-import { createMoney } from '@leather.io/utils';
-
-import { AccountList } from './account-list-item';
-import { AccountAddressList } from './address-list';
-import { TokenActivity } from './components/token-activity';
-import { TokenDetails } from './components/token-details';
-import { TokenSheet, TokenSheetData } from './token-sheet';
-
-function AccountDetails({
-  accountIndex,
-  fingerprint,
-  asset,
-  availableBalance,
-  quoteBalance,
-}: TokenProps) {
-  const tokenDetailsFlag = useTokenDetailsFlag();
-
-  const tokenSheetRef = useRef<SheetRef>(null);
-  const [sheetData, setSheetData] = useState<TokenSheetData | null>(null);
-
-  function onOpenToken(data: TokenSheetData) {
-    setSheetData(data);
-    // analytics.track('token_sheet_opened', { source: 'action_bar' });
-    tokenSheetRef.current?.present();
-  }
-
-  return (
-    <>
-      {accountIndex !== undefined ? (
-        <AccountAddressList
-          tokenId={asset.symbol}
-          accountIndex={accountIndex}
-          fingerprint={fingerprint ?? ''}
-        />
-      ) : (
-        <AccountList
-          tokenId={asset.symbol}
-          selectAccount={({ accountIndex, fingerprint }) =>
-            tokenDetailsFlag
-              ? onOpenToken({
-                  asset,
-                  accountIndex,
-                  fingerprint,
-                  availableBalance,
-                  quoteBalance,
-                })
-              : undefined
-          }
-        />
-      )}
-      <TokenSheet data={sheetData} sheetRef={tokenSheetRef} />
-    </>
-  );
-}
+import { Box, Text } from '@leather.io/ui/native';
 
 interface TokenProps {
+  children?: React.ReactNode;
+  accountId?: string;
+  tokenId: string;
   asset: FungibleCryptoAsset;
-  accountIndex?: number;
-  fingerprint?: string;
+  canSend: boolean;
   availableBalance: Money;
   quoteBalance: Money;
 }
-export function Token({
-  asset,
-  accountIndex,
-  fingerprint,
-  availableBalance,
-  quoteBalance,
-}: TokenProps) {
+
+export function Token({ children, asset, availableBalance, quoteBalance, tokenId }: TokenProps) {
+  // const availableBalance = balance.availableBalance;
+  // const quoteBalance = balance.quoteBalance;
+
+  const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const marketData = useMarketDataQuery(asset);
   const price = marketData.data?.price;
-  const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const { data: assetPriceChange } = useAssetPriceChangeQuery(asset);
+  const changePercent = assetPriceChange?.changePercent ?? 0;
+
+  const canSend = tokenId === 'BTC' || tokenId === 'STX';
 
   return (
-    <TokenActivity
-      ticker={asset.symbol}
-      accountIndex={accountIndex}
-      fingerprint={fingerprint}
-      // TokenDetails is Activity ListHeader to avoid nested scrolling errors
-      ListHeader={
-        <TokenDetails
-          accountDetails={
-            <AccountDetails
-              accountIndex={accountIndex}
-              fingerprint={fingerprint}
-              asset={asset}
-              availableBalance={availableBalance}
-              quoteBalance={quoteBalance}
+    <Screen>
+      <Screen.Header
+        centerElement={<HeaderTitle title={getTokenName(asset)} />}
+        rightElement={<NetworkBadge />}
+      />
+      <TokenActivity
+        // All other content is in the Activity ListHeader to avoid nested scrolling errors
+        ListHeader={
+          <>
+            <TokenOverview
+              heading={
+                <Screen.Title>
+                  <TokenIcon ticker={tokenId} asset={asset} />
+                </Screen.Title>
+              }
+              availableBalance={
+                <Box flexDirection="row" alignItems="center" gap="1">
+                  <Balance
+                    balance={availableBalance}
+                    formattingOptions={{ showCurrency: false }}
+                    variant="heading03"
+                  />
+                  <Text variant="heading03" color="ink.text-subdued">
+                    {tokenId}
+                  </Text>
+                </Box>
+              }
+              quoteBalance={<Balance balance={quoteBalance} variant="label01" />}
+              actionButtons={<ActionButtons canSend={canSend} />}
             />
-          }
-          availableBalance={availableBalance ?? createMoney(0, 'BTC')}
-          assetDescription={assetDescription?.description ?? ''}
-          price={price ?? createMoney(0, 'USD')}
-          changePercent={assetPriceChange?.changePercent ?? 0}
-          quoteBalance={quoteBalance ?? createMoney(0, 'USD')}
-          icon={<TokenIcon ticker={asset.symbol} asset={asset} />}
-          asset={asset}
-        />
-      }
-    />
+            {assetDescription?.description && (
+              <TokenDescription>{assetDescription.description}</TokenDescription>
+            )}
+            <TokenDetailsTable
+              // PETE simplify this now we have separate screens for BTC, STX & SIP-10 tokens
+              name={getTokenName(asset, true)}
+              layer={getChainLayerFromAssetProtocol(asset.protocol)}
+              price={<Balance balance={price} variant="label02" lineHeight={16} />}
+              priceChange={
+                price && (
+                  <TokenPriceChange
+                    // PETE this needs the same empty handling state as balances. Maybe pass <Balance in to assetPrice and have it wrapped with isLoading
+                    price={price}
+                    changePercent={changePercent}
+                  />
+                )
+              }
+            />
+            {children}
+          </>
+        }
+      />
+    </Screen>
   );
 }

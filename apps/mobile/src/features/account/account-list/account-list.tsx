@@ -19,7 +19,7 @@ export function AccountList({ accounts, onPress, showWalletInfo }: AccountListPr
       {wallet => (
         <AccountListItem
           accountName={account.name}
-          address={
+          secondaryAside={
             <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
           }
           balance={

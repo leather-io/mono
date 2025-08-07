@@ -3,17 +3,18 @@ import { ReactNode, useMemo } from 'react';
 import { BitcoinBalance } from '@/features/balances/bitcoin/bitcoin-balance';
 import { StacksBalance } from '@/features/balances/stacks/stacks-balance';
 import { sortSip10Balances } from '@/features/balances/utils/sort-sip10-balances';
-import { useRunesFlag } from '@/features/feature-flags';
+import { useRunesFlag, useTokenDetailsFlag } from '@/features/feature-flags';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import { TokenSheet } from '@/features/token/token-sheet';
 import { useRunesTotalBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10TotalBalance } from '@/queries/balance/sip10-balance.query';
+import { analytics } from '@/utils/analytics';
 import { FlashList } from '@shopify/flash-list';
 
 import { RuneBalance, Sip10Balance } from '@leather.io/services';
 
-import { useTokenDetails } from '../balances';
+import { OnOpenTokenProps } from '../balances';
 import { renderAsset } from './render-assets';
+import { router } from '.expo/types/router';
 
 interface AssetsFlashListProps {
   sip10Data: ReturnType<typeof useSip10TotalBalance>;
@@ -36,12 +37,28 @@ export function AssetsFlashList({ sip10Data, runesData, header }: AssetsFlashLis
 
   const allAssetsMemo = useMemo(() => [...sip10Memo, ...runesMemo], [sip10Memo, runesMemo]);
 
-  const { onPressToken, sheetData, tokenSheetRef } = useTokenDetails();
+  const tokenDetailsFlag = useTokenDetailsFlag();
+
+  function onOpenToken({ tokenId }: OnOpenTokenProps) {
+    router.navigate({
+      pathname: '/account/[accountId]/token/[tokenId]',
+      params: { tokenId, accountId },
+    });
+    analytics.track('token_details_opened', { tokenId, source: 'all_account_balances' });
+  }
+
+  const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;
+
   return (
     <>
       <FlashList<Sip10Balance | RuneBalance>
         data={allAssetsMemo}
-        renderItem={({ item }) => renderAsset({ item, onPress: onPressToken })}
+        renderItem={({ item }) =>
+          renderAsset({
+            item,
+            onPress: () => onPressToken?.({ tokenId: item.asset.symbol }),
+          })
+        }
         getItemType={item => {
           return item.asset.protocol;
         }}
@@ -55,7 +72,6 @@ export function AssetsFlashList({ sip10Data, runesData, header }: AssetsFlashLis
           </>
         }
       />
-      <TokenSheet data={sheetData} sheetRef={tokenSheetRef} />
     </>
   );
 }

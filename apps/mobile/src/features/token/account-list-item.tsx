@@ -1,39 +1,71 @@
 import { Balance } from '@/components/balance/balance';
-import { AccountListItem as AccountListItemComponent } from '@/features/account/account-list/account-list-item';
+import { AccountListItem } from '@/features/account/account-list/account-list-item';
+import { useTokenDetailsFlag } from '@/features/feature-flags';
 import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { WalletStore } from '@/store/wallets/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';
+import { router } from 'expo-router';
 
+import { Money } from '@leather.io/models';
 import { ChevronRightIcon, Text } from '@leather.io/ui/native';
+import { isDefined } from '@leather.io/utils';
 
 import { AccountAvatar } from '../account/components/account-avatar';
+import { BitcoinAccountListItem } from './bitcoin/bitcoin-token-details';
 import { TokenDetailsCard } from './components/token-details-card';
 import { useGetAccountTokenBalance } from './hooks/use-get-token-balance';
+import { Sip10AccountListItem } from './stacks/sip10-token-details';
+import { StacksAccountListItem } from './stacks/stacks-token-details';
 
-export function AccountList({
-  tokenId,
-  selectAccount,
-}: {
+interface AccountListProps {
   tokenId: string;
-  selectAccount: (account: Account) => void;
-}) {
+}
+
+// AccountList should be a wrapper that gets its specific AccountListItem based on the tokenId context
+// PETE this is the last hurrah before removing useGetAccountTokenBalance and the final refactor
+
+export function AccountList({ tokenId }: AccountListProps) {
   const accounts = useAccounts('active');
 
   return (
     <TokenDetailsCard title={t`Accounts`}>
       {accounts.list.map(account => (
         <WalletLoader fingerprint={account.fingerprint} key={account.id}>
-          {wallet => (
-            <AccountListItem
-              key={account.id}
-              account={account}
-              wallet={wallet}
-              tokenId={tokenId}
-              onPress={() => selectAccount(account)}
-            />
-          )}
+          {/* try achieve this with component composition */}
+          {wallet => {
+            switch (tokenId) {
+              case 'BTC':
+                return (
+                  <BitcoinAccountListItem
+                    account={account}
+                    wallet={wallet}
+                    accountIndex={account.accountIndex}
+                    fingerprint={account.fingerprint}
+                  />
+                );
+              case 'STX':
+                return (
+                  <StacksAccountListItem
+                    account={account}
+                    wallet={wallet}
+                    accountIndex={account.accountIndex}
+                    fingerprint={account.fingerprint}
+                  />
+                );
+              default:
+                return (
+                  <Sip10AccountListItem
+                    account={account}
+                    wallet={wallet}
+                    accountIndex={account.accountIndex}
+                    fingerprint={account.fingerprint}
+                    tokenId={tokenId}
+                  />
+                );
+            }
+          }}
         </WalletLoader>
       ))}
     </TokenDetailsCard>
@@ -44,26 +76,43 @@ interface AccountListItemProps {
   account: Account;
   wallet: WalletStore;
   tokenId: string;
-  onPress: () => void;
+  availableBalance: Money;
+  quoteBalance: Money;
 }
 
-export function AccountListItem({ account, wallet, tokenId, onPress }: AccountListItemProps) {
-  const tokenBalance = useGetAccountTokenBalance({ tokenId, account });
-  const availableBalance = tokenBalance?.availableBalance;
-  const quoteBalance = tokenBalance?.quoteBalance;
+export function TokenDetailsAccountListItem({
+  account,
+  wallet,
+  availableBalance,
+  quoteBalance,
+  tokenId,
+}: AccountListItemProps) {
+  const tokenDetailsFlag = useTokenDetailsFlag();
 
+  const onSelectAccount = () => {
+    if (tokenDetailsFlag) {
+      router.navigate({
+        pathname: '/account/[accountId]/token/[tokenId]',
+        params: { tokenId: tokenId, accountId: account.id },
+      });
+    }
+  };
+
+  // Hide if no balance
+  // probably also hide BTC/STX if no balance
+  if (!isDefined(availableBalance) && !isDefined(quoteBalance)) {
+    return null;
+  }
   return (
-    <AccountListItemComponent
+    <AccountListItem
       px="0"
       accountName={account.name}
       walletName={
         <Text variant="caption01" lineHeight={16}>
-          {/* Should perhaps refactor account to have a wallet name?  Avoids using the wallet store here */}
           {wallet.name}
         </Text>
       }
-      // FIXME LEA-3015: refactor address prop to not be address - leftPrimary or something like  that
-      address={
+      secondaryAside={
         <Balance
           balance={quoteBalance}
           formattingOptions={{ preset: 'shorthand-balance' }}
@@ -72,8 +121,6 @@ export function AccountListItem({ account, wallet, tokenId, onPress }: AccountLi
         />
       }
       balance={
-        // FIXME LEA-3015: isQuoteCurrency is crashing for non BTC tokens
-        // need to update balance to show ticker beside non BTC tokens IF not activity list
         <Balance
           formattingOptions={{ preset: 'shorthand-balance' }}
           balance={availableBalance}
@@ -82,7 +129,7 @@ export function AccountListItem({ account, wallet, tokenId, onPress }: AccountLi
       }
       icon={<AccountAvatar icon={account.icon} />}
       chevron={<ChevronRightIcon width={16} height={16} />}
-      onPress={onPress}
+      onPress={onSelectAccount}
     />
   );
 }

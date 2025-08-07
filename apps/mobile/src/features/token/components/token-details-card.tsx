@@ -1,12 +1,5 @@
 import { Box, HasChildren, Text } from '@leather.io/ui/native';
 
-export function TokenDetailsWrapper({ children }: HasChildren) {
-  return (
-    <Box gap="1" backgroundColor="ink.background-secondary">
-      {children}
-    </Box>
-  );
-}
 interface TokenDetailsCardProps extends HasChildren {
   title: React.ReactNode;
 }

@@ -15,7 +15,7 @@ export function useAccountActivity(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
   return toFetchState(useAccountActivityQuery(account));
 }
-
+// PETE - probably better to just use this instead of the total activity query
 export function useActivityByAsset(fingerprint: string, accountIndex: number, asset: CryptoAsset) {
   const account = useAccountAddresses(fingerprint, accountIndex);
   return toFetchState(useActivityByAssetQuery(account, asset));
