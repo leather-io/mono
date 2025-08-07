@@ -325,6 +325,13 @@
     * @leather.io/constants bumped to 0.21.0
     * @leather.io/models bumped to 0.34.0
 
+## [0.42.2](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.42.1...@leather.io/utils-v0.42.2) (2025-08-07)
+
+
+### Bug Fixes
+
+* **utils:** remove currency code from shorthand-balance preset ([9194564](https://github.com/leather-io/mono/commit/91945641974e95adfc9beb2dc9de1e4cd92c4895))
+
 ## [0.42.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.42.0...@leather.io/utils-v0.42.1) (2025-07-31)
 
 
