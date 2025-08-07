@@ -51,7 +51,7 @@ const reducer = combineReducers({
 export type RootState = ReturnType<typeof reducer>;
 
 export const store = configureStore({
-  reducer: persistReducer(persistConfig, reducer),
+  reducer: persistReducer<RootState>(persistConfig, reducer),
   devTools: false,
   enhancers: getDefaultEnhancers => {
     if (!isProduction()) return getDefaultEnhancers().concat(devToolsEnhancer({ trace: true }));
