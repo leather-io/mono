@@ -1,12 +1,10 @@
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useTheme } from '@shopify/restyle';
-
-import { Theme } from '@leather.io/ui/native';
+import { useTheme } from '@leather.io/ui/native';
 
 export function useScrollViewStyles() {
   const { bottom } = useSafeAreaInsets();
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
 
   return {
     gap: theme.spacing[3],

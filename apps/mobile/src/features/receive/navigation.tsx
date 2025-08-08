@@ -2,9 +2,8 @@ import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider'
 import { Account } from '@/store/accounts/accounts';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useTheme } from '@shopify/restyle';
 
-import { HasChildren, Theme } from '@leather.io/ui/native';
+import { HasChildren, useTheme } from '@leather.io/ui/native';
 
 import { SelectedAsset } from './screens/select-asset';
 
@@ -24,7 +23,7 @@ export function ReceiveNavigator({ children }: HasChildren) {
   const {
     state: { selectedAccount, selectedAsset, accounts },
   } = useReceiveFlowContext();
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const initialRouteName = getInitialRouteName({
     selectedAccount,
     selectedAsset,

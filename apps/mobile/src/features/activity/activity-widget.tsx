@@ -3,10 +3,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { FetchState } from '@/components/loading';
 import { Widget } from '@/components/widget';
 import { ActivityCard } from '@/features/activity/activity-card';
-import { useTheme } from '@shopify/restyle';
 
 import { Activity, OnChainActivity, OnChainActivityTypes } from '@leather.io/models';
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, useTheme } from '@leather.io/ui/native';
 
 const renderLimit = 10;
 
@@ -28,7 +27,7 @@ interface ActivityWidgetProps {
   title: string;
 }
 export function ActivityWidget({ activity, onPressHeader, title }: ActivityWidgetProps) {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
 
   if (activity.state !== 'success' || !hasActivity(activity)) {
     return null;

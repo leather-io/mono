@@ -2,9 +2,8 @@ import { RefObject } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSettings } from '@/store/settings/settings';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, HasChildren, Sheet, SheetHeader, SheetRef, Theme } from '@leather.io/ui/native';
+import { Box, HasChildren, Sheet, SheetHeader, SheetRef, useTheme } from '@leather.io/ui/native';
 
 interface SettingsSheetLayoutProps extends HasChildren {
   sheetRef: RefObject<SheetRef | null>;
@@ -19,7 +18,7 @@ export function SettingsSheetLayout({
 }: SettingsSheetLayoutProps) {
   const { bottom } = useSafeAreaInsets();
   const { themeDerivedFromThemePreference } = useSettings();
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
 
   return (
     <Sheet isScrollView ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>

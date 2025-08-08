@@ -1,7 +1,6 @@
-import { useTheme } from '@shopify/restyle';
 import { ClarityType, ClarityValue, cvToString } from '@stacks/transactions';
 
-import { Box, Text, Theme } from '@leather.io/ui/native';
+import { Box, Text, useTheme } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
 function wrapText(val: string) {
@@ -15,7 +14,7 @@ export function ClarityValueListDisplayer({
   val: ClarityValue;
   level?: number;
 }) {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const encoding = 'tryAscii';
 
   switch (val.type) {

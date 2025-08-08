@@ -13,10 +13,9 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/core/macro';
-import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, ButtonV2, SheetRef, SkeletonLoader, Theme } from '@leather.io/ui/native';
+import { Box, ButtonV2, SheetRef, SkeletonLoader, useTheme } from '@leather.io/ui/native';
 
 import { AddAccountCard } from './components/add-account-card';
 import { CreateWalletCard } from './components/create-wallet-card';
@@ -27,7 +26,7 @@ export function AccountsWidget() {
   const wallets = useWallets();
   const accounts = useAccounts();
   const { totalBalance } = useTotalBalance();
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const { addAccountSheetRef, addWalletSheetRef, sendSheetRef, receiveSheetRef } =
     useGlobalSheets();
 

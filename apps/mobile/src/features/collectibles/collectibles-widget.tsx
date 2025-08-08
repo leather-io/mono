@@ -1,10 +1,8 @@
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { useTheme } from '@shopify/restyle';
+import { Widget } from '@/components/widget';
 
-import { Theme } from '@leather.io/ui/native';
-
-import { Widget } from '../../components/widget';
+import { useTheme } from '@leather.io/ui/native';
 
 interface CollectiblesWidgetProps {
   children: React.ReactNode;
@@ -13,7 +11,7 @@ interface CollectiblesWidgetProps {
 }
 
 export function CollectiblesWidget({ children, onPressHeader, title }: CollectiblesWidgetProps) {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
 
   return (
     <Widget>

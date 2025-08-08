@@ -1,10 +1,9 @@
 import Animated, { SharedValue, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 
 import { useSettings } from '@/store/settings/settings';
-import { useTheme } from '@shopify/restyle';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, useTheme } from '@leather.io/ui/native';
 
 const blurOverlayVisibilityThreshold = 6;
 const blurOverlayHeight = 22;
@@ -17,7 +16,7 @@ interface HeaderBlurOverlay {
 
 export function HeaderBlurOverlay({ scrollY }: HeaderBlurOverlay) {
   const { themeDerivedFromThemePreference } = useSettings();
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const gradientTransparentStopColor = getTransparentStopColor(themeDerivedFromThemePreference);
 
   const animatedStyle = useAnimatedStyle(() => {

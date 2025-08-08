@@ -1,10 +1,9 @@
 import { t } from '@lingui/core/macro';
-import { useTheme } from '@shopify/restyle';
 
-import { TextInput, TextInputProps, Theme } from '@leather.io/ui/native';
+import { TextInput, TextInputProps, Theme, useTheme } from '@leather.io/ui/native';
 
 export function GenericSearchTextInput(props: TextInputProps<Theme>) {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   return (
     <TextInput
       {...props}

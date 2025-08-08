@@ -62,6 +62,7 @@ export { Prism, type PrismType } from './src/components/highlighting/clarity-pri
 export { IconButton } from './src/components/icon-button/icon-button.native';
 export { usePressedState } from './src/hooks/use-pressed-state.native';
 export { useHaptics, HapticsProvider } from './src/hooks/use-haptics.native';
+export { useTheme } from './src/hooks/use-theme.native';
 export { Approver } from './src/components/approver/approver.native';
 export { Badge, type BadgeProps } from './src/components/badge/badge.native';
 export * from './src/utils/has-children.shared';

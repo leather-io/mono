@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { t } from '@lingui/core/macro';
-import { useTheme } from '@shopify/restyle';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
 
 import {
@@ -12,7 +11,7 @@ import {
   BrowseDefaultIcon,
   HomeActiveIcon,
   HomeDefaultIcon,
-  Theme,
+  useTheme,
 } from '@leather.io/ui/native';
 
 import { BottomGradient } from './bottom-gradient';
@@ -21,7 +20,7 @@ import { TabLayoutContext } from './tab-layout-context';
 
 export function TabLayout() {
   const { bottom } = useSafeAreaInsets();
-  const { colors } = useTheme<Theme>();
+  const { colors } = useTheme();
   const [tabBarHeight, setTabBarHeight] = useState(0);
   const [isGradientVisible, setIsGradientVisible] = useState(true);
 
