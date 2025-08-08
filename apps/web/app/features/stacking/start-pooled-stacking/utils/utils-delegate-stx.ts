@@ -41,31 +41,6 @@ function getDelegateStxOptions(
   const networkMode = getNetworkInstanceByName(network);
   const delegateTo = pool.poolAddress?.[networkMode] || values.poolAddress;
 
-  // if (values.name === 'Custom Pool') {
-  //   const options = client.getDelegateOptions(
-  //     {
-  //       contract: stackingContract,
-  //       amountMicroStx: stxToMicroStx(values.amount).toString(),
-  //       delegateTo,
-  //       untilBurnBlockHeight,
-  //     }
-  //     // Type coercion necessary because the `network` property returned by
-  //     // `client.getStackingContract()` has a wider type than allowed by `showContractCall`. Despite
-  //     // the wider type, the actual value of `network` is always of the type `StacksNetwork`
-  //     // expected by `showContractCall`.
-  //     //
-  //     // See
-  //     // https://github.com/hirosystems/stacks.js/blob/0e1f9f19dfa45788236c9e481f9a476d9948d86d/packages/stacking/src/index.ts#L1054
-  //   );
-
-  //   return {
-  //     contract: stackingContract,
-  //     functionName: options.functionName,
-  //     functionArgs: options.functionArgs.map(arg => serializeCV(arg)),
-  //     network,
-  //   } satisfies StxCallContractParams;
-  // }
-
   const contract = getPoxContract(networkMode, pool.poxContract);
 
   let functionArgs: ClarityValue[];
