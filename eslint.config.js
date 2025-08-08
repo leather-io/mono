@@ -17,7 +17,7 @@ export default tseslint.config(
             {
               from: 'package',
               package: '@leather.io/analytics',
-              name: 'track',
+              name: ['track', 'untypedTrack'],
             },
           ],
         },

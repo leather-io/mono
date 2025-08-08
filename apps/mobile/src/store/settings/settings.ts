@@ -105,13 +105,13 @@ export function useSettings() {
     whenTheme: whenTheme(themeDerivedFromThemePreference),
     changeAccountDisplayPreference(type: AccountDisplayPreference) {
       dispatch(userChangedAccountDisplayPreference(type));
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         account_display: type,
       });
     },
     changeAnalyticsPreference(pref: AnalyticsPreference) {
       dispatch(userChangedAnalyticsPreference(pref));
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         analytics: pref,
       });
       void analytics?.identify(undefined, {
@@ -120,13 +120,13 @@ export function useSettings() {
     },
     changeBitcoinUnitPreference(unit: BitcoinUnit) {
       dispatch(userChangedBitcoinUnitPreference(unit));
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         bitcoin_unit: unit,
       });
     },
     changeEmailAddressPreference(address: string) {
       dispatch(userChangedEmailAddressPreference(address));
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         email_address: address,
       });
       void analytics?.identify(undefined, {
@@ -134,44 +134,44 @@ export function useSettings() {
       });
     },
     changeQuoteCurrencyPreference(unit: QuoteCurrency) {
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         quote_currency: unit,
       });
       dispatch(userChangedQuoteCurrencyPreference(unit));
     },
     changeNetworkPreference(network: DefaultNetworkConfigurations) {
       dispatch(userChangedNetworkPreference(network));
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         network,
       });
     },
     changePrivacyModePreference(mode: PrivacyModePreference) {
       dispatch(userChangedPrivacyModePreference(mode));
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         privacy_mode: mode,
       });
     },
     changeHapticsPreference(state: HapticsPreference) {
       dispatch(userChangedHapticsPreference(state));
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         haptics: state,
       });
     },
     changeSecurityLevelPreference(level: SecurityLevelPreference) {
       dispatch(userChangedSecurityLevelPreference(level));
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         security_level: level,
       });
     },
     changeThemePreference(theme: ThemePreference) {
       dispatch(userChangedThemePreference(theme));
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         theme,
       });
     },
     changeNotificationsPreference(state: NotificationsPreference) {
       dispatch(userChangedNotificationPreference(state));
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         notifications: state,
       });
     },
@@ -188,14 +188,14 @@ export function useSettings() {
       void analytics?.identify(undefined, {
         active_network: network,
       });
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         network,
       });
     },
     toggleTheme() {
       const theme = themeDerivedFromThemePreference === 'light' ? 'dark' : 'light';
       dispatch(userChangedThemePreference(theme));
-      void analytics?.track('user_setting_updated', {
+      analytics.track('user_setting_updated', {
         theme,
       });
       void analytics?.identify(undefined, {

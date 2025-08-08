@@ -96,7 +96,7 @@ export function useAuthState({ playSplash }: { playSplash(): void }) {
       if (result && result.success) {
         playSplash();
         dispatch({ type: 'unlockOnOpen' });
-        void analytics?.track('app_unlocked');
+        analytics.track('app_unlocked');
       } else {
         dispatch({ type: 'authFailed' });
       }
@@ -110,7 +110,7 @@ export function useAuthState({ playSplash }: { playSplash(): void }) {
       if (result && result.success) {
         playSplash();
         dispatch({ type: 'unlockManually' });
-        void analytics?.track('app_unlocked');
+        analytics.track('app_unlocked');
       } else {
         dispatch({ type: 'authFailed' });
       }
@@ -149,7 +149,7 @@ export function useAuthState({ playSplash }: { playSplash(): void }) {
     function () {
       dispatch({ type: 'lockManually' });
       userLeavesApp(null);
-      void analytics?.track('app_locked');
+      analytics.track('app_locked');
     },
     [userLeavesApp]
   );

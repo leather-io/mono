@@ -19,7 +19,7 @@ export default function BrowserScreen() {
   const { url: urlQuery } = useLocalSearchParams<{ url?: string }>();
   useEffect(() => {
     if (urlQuery) {
-      void analytics?.track('in_app_browser_opened', { url: urlQuery });
+      analytics.track('in_app_browser_opened', { url: urlQuery });
       goToUrl(urlQuery);
     }
   }, [urlQuery, goToUrl]);

@@ -30,7 +30,7 @@ function setupPreferenceSubscription() {
     const analyticsPreference = selectAnalyticsPreference(store.getState());
 
     if (analyticsPreference === 'rejects-tracking') {
-      void analytics.track('user_setting_updated', { analytics: 'rejects-tracking' });
+      analytics.track('user_setting_updated', { analytics: 'rejects-tracking' });
     }
 
     analyticsEnabled = analyticsPreference === 'consent-given';
@@ -58,7 +58,7 @@ export async function trackFirstAppOpen() {
   const hasTrackedFirstOpen = await AsyncStorage.getItem(FIRST_OPEN_KEY);
 
   if (!hasTrackedFirstOpen) {
-    await analytics?.track('application_first_opened', {
+    await analytics.track('application_first_opened', {
       timestamp: new Date().toISOString(),
     });
     await AsyncStorage.setItem(FIRST_OPEN_KEY, 'true');

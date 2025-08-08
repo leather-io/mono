@@ -53,7 +53,7 @@ export function createAllowContractCallerSubmitMutationOptions({
     mutationFn: async () => {
       const [stackingContract] = await Promise.all([client.getStackingContract()]);
       const allowContractCallerOptions = getOptions(poxWrapperContract, stackingContract, network);
-      void analytics.untypedTrack('stacking_allow_contract_caller');
+      analytics.untypedTrack('stacking_allow_contract_caller');
       return leather.stxCallContract(allowContractCallerOptions);
     },
   } as const;

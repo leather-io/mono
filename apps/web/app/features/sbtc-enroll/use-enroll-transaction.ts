@@ -83,7 +83,7 @@ export function useSbtcEnroll() {
       const contractDetails = getEnrollContractCallByNetwork(network.networkName);
 
       try {
-        void analytics.untypedTrack('user_enrolled_sbtc');
+        analytics.untypedTrack('user_enrolled_sbtc');
 
         const result = await leather.stxCallContract({
           contract: contractDetails.contract,
