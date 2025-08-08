@@ -3,9 +3,8 @@ import { SendableAsset } from '@/features/send/types';
 import { Account } from '@/store/accounts/accounts';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useTheme } from '@shopify/restyle';
 
-import { HasChildren, Theme } from '@leather.io/ui/native';
+import { HasChildren, useTheme } from '@leather.io/ui/native';
 
 // Required to use a type alias: https://reactnavigation.org/docs/typescript#typechecking-the-navigator
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -32,7 +31,7 @@ export function SendNavigator({ children }: HasChildren) {
     selectedAsset,
     totalAccountNumber: accounts.length,
   });
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
 
   return (
     <SendStack.Navigator

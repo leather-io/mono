@@ -7,10 +7,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { useTheme } from '@shopify/restyle';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, useTheme } from '@leather.io/ui/native';
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
@@ -24,7 +23,7 @@ export const BrowserLoading = forwardRef<BrowserLoadingMethods>(function (_, ref
   const animatedStyles = useAnimatedStyle(() => ({
     width: gradientWidth.value,
   }));
-  const { colors } = useTheme<Theme>();
+  const { colors } = useTheme();
   const [isActive, setIsActive] = useState(false);
 
   useImperativeHandle(ref, () => {

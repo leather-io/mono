@@ -12,9 +12,8 @@ import { useSettings } from '@/store/settings/settings';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, Sheet, SheetRef, Theme } from '@leather.io/ui/native';
+import { Box, Sheet, SheetRef, useTheme } from '@leather.io/ui/native';
 
 import { AccountAddress } from '../components/account-address';
 import { AccountCard } from '../components/account-card';
@@ -38,7 +37,7 @@ export function AccountSelectorSheetLayout({
   const placeholderIdx = useSharedValue<null | number>(null);
   const direction = useSharedValue<'down' | 'up'>('down');
   const { themeDerivedFromThemePreference } = useSettings();
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const { list: connectedApps } = useApps('connected');
   const connectedAppsToAccountIdMap = getConnectedAppsToAccountIdMap(connectedApps);
 

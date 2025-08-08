@@ -2,16 +2,15 @@ import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Screen } from '@/components/screen/screen';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, HasChildren, Theme } from '@leather.io/ui/native';
+import { Box, HasChildren, useTheme } from '@leather.io/ui/native';
 
 interface FullHeightSheetLayoutProps extends HasChildren {
   header: React.ReactNode;
 }
 export function FullHeightSheetLayout({ children, header }: FullHeightSheetLayoutProps) {
   const { bottom } = useSafeAreaInsets();
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
 
   return (
     <Screen>

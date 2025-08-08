@@ -5,10 +5,9 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { useWaitlistFlag } from '@/features/feature-flags';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { t } from '@lingui/core/macro';
-import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 
-import { Box, Button, SheetRef, Text, Theme } from '@leather.io/ui/native';
+import { Box, Button, SheetRef, Text, useTheme } from '@leather.io/ui/native';
 
 import { MnemonicWordBox } from './mnemonic-word-box';
 
@@ -31,7 +30,7 @@ export function MnemonicDisplay({
   passphrase?: string | null;
 }) {
   const { displayToast } = useToastContext();
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const notifySheetRef = useRef<SheetRef>(null);
   const releaseWaitlistFeatures = useWaitlistFlag();
   if (!mnemonic) return null;

@@ -16,11 +16,17 @@ import {
   spacing,
   spacingShorthand,
   useRestyle,
-  useTheme,
   visible,
 } from '@shopify/restyle';
 
-import { Box, Text, TextInputProps, Theme, TextInput as UITextInput } from '@leather.io/ui/native';
+import {
+  Box,
+  Text,
+  TextInputProps,
+  Theme,
+  TextInput as UITextInput,
+  useTheme,
+} from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
 const inputRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
@@ -64,7 +70,7 @@ export function TextInput({
   TextInputComponent?: typeof UITextInput;
 }) {
   const _errorMessage = errorMessage ?? t`An error has occurred`;
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const props = useRestyle(composedRestyleFunction, rest);
 
   const borderColor = whenInputState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(

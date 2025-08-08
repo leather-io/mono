@@ -7,11 +7,10 @@ import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { BrowserLoadingMethods } from '@/features/account/components/browser-loading';
 import { userAddsApp } from '@/store/apps/apps.write';
 import { useAppDispatch } from '@/store/utils';
-import { useTheme } from '@shopify/restyle';
 
 import injectedProvider from '@leather.io/provider/mobile';
 import { RpcResponses, getInfo, parseEndpointRequest, supportedMethods } from '@leather.io/rpc';
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, useTheme } from '@leather.io/ui/native';
 
 import { ApproverSheet } from '../approver-sheet/approver-sheet';
 import { BrowserMessage } from '../approver-sheet/utils';
@@ -40,7 +39,7 @@ export function Browser({
   const viewShotRef = useRef<ViewShot>(null);
   const [origin, setOrigin] = useState<string | null>(null);
   const dispatch = useAppDispatch();
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const [message, setMessage] = useState<BrowserMessage>(null);
   const { browserSheetRef } = useGlobalSheets();
 

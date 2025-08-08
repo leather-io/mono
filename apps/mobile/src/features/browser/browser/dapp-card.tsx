@@ -2,11 +2,10 @@ import { ReactNode } from 'react';
 import { Dimensions, Platform } from 'react-native';
 
 import { useSettings } from '@/store/settings/settings';
-import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
 
 import { colorThemes } from '@leather.io/tokens';
-import { BlurView, Box, Pressable, Text, Theme } from '@leather.io/ui/native';
+import { BlurView, Box, Pressable, Text, useTheme } from '@leather.io/ui/native';
 
 const dAppImageAspectRatio = 342 / 400;
 const { width: screenWidth } = Dimensions.get('window');
@@ -32,7 +31,7 @@ interface DappCardProps {
   icon: ReactNode;
 }
 export function DappCard({ imageSrc, icon, title, caption, onPress }: DappCardProps) {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const width = screenWidth - 2 * theme.spacing['5'];
   return (
     <Pressable

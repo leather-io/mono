@@ -9,10 +9,9 @@ import {
 } from '@/features/account/components/browser-loading';
 import { BottomGradient } from '@/features/navigation/bottom-gradient';
 import { LEATHER_APPS_URL } from '@/shared/constants';
-import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, useTheme } from '@leather.io/ui/native';
 
 import { BrowserNavigationBar } from './browser-navigation-bar';
 import { SearchBarToolbar } from './search-bar-toolbar';
@@ -42,7 +41,7 @@ export function SearchBar({
   browserLoadingRef,
   goToUrl,
 }: SearchBarProps) {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const textInputRef = useRef<RNTextInput>(null);
 
   const router = useRouter();

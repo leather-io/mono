@@ -9,9 +9,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { useTheme } from '@shopify/restyle';
-
-import { Theme } from '@leather.io/ui/native';
+import { useTheme } from '@leather.io/ui/native';
 
 const APPROXIMATE_DEFAULT_ITEM_SIZE = { height: 150, width: 300 };
 interface DraggableProps {
@@ -40,7 +38,7 @@ export function Draggable({
   disableReorder,
 }: DraggableProps) {
   const ref = useRef<Animated.View>(null);
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const zoom = useSharedValue(1);
   const thisItemDimensions = useSharedValue(APPROXIMATE_DEFAULT_ITEM_SIZE);
   const isAnimatedShared = useSharedValue(false);

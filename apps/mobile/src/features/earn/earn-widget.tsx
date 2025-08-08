@@ -4,10 +4,9 @@ import { FetchState, FetchWrapper } from '@/components/loading';
 import { Widget } from '@/components/widget';
 import { useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
-import { useTheme } from '@shopify/restyle';
 
 import { QuotedStxBalance } from '@leather.io/services';
-import { Box, Text, Theme } from '@leather.io/ui/native';
+import { Box, Text, useTheme } from '@leather.io/ui/native';
 
 import { useEarnFlag } from '../feature-flags';
 import { LockedBalanceCard } from './locked-balance-card';
@@ -19,7 +18,7 @@ export function isStacking(stxBalance: FetchState<QuotedStxBalance>) {
 }
 
 export function EarnWidget() {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
 
   const stxBalance = useStxTotalBalance();
   const earnFlag = useEarnFlag();

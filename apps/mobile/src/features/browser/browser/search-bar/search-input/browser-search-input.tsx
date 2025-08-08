@@ -1,8 +1,6 @@
 import { KeyboardController } from 'react-native-keyboard-controller';
 
-import { useTheme } from '@shopify/restyle';
-
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, useTheme } from '@leather.io/ui/native';
 
 import { GenericClearSearchButton } from './generic-clear-search-button';
 import { GenericSearchTextInput } from './generic-search-text-input';
@@ -14,7 +12,7 @@ export function BrowserSearchInput({
   setTextUrl,
   onSubmit,
 }: SearchInputProps) {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   return (
     <Box>
       <GenericSearchTextInput

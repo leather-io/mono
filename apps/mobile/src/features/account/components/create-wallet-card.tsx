@@ -3,16 +3,15 @@ import { Dimensions } from 'react-native';
 import { AccountCard } from '@/features/account/components/account-card';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
-import { useTheme } from '@shopify/restyle';
 
-import { PlusIcon, Theme } from '@leather.io/ui/native';
+import { PlusIcon, useTheme } from '@leather.io/ui/native';
 
 interface CreateWalletCardProps {
   onPress(): void;
 }
 
 export function CreateWalletCard({ onPress }: CreateWalletCardProps) {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const width = Dimensions.get('screen').width - theme.spacing['5'] * 2;
 
   return (

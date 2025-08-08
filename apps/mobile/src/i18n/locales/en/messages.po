@@ -172,13 +172,13 @@ msgid "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from stak
 msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 
 #: src/features/account/account.tsx:140
-#: src/features/navigation/tab-layout.tsx:58
+#: src/features/navigation/tab-layout.tsx:57
 #: src/features/token/components/token-details.tsx:75
 msgid "Activity"
 msgstr "Activity"
 
 #: src/features/account/components/add-account-card.tsx:12
-#: src/features/account/components/create-wallet-card.tsx:23
+#: src/features/account/components/create-wallet-card.tsx:22
 #: src/features/account/sheets/add-account-sheet.layout.tsx:35
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:136
 msgid "Add account"
@@ -266,7 +266,7 @@ msgid "Alex"
 msgstr "Alex"
 
 #: src/features/account/account-selector/account-selector-sheet-header.tsx:24
-#: src/features/account/accounts-widget.tsx:46
+#: src/features/account/accounts-widget.tsx:45
 msgid "All accounts"
 msgstr "All accounts"
 
@@ -303,7 +303,7 @@ msgstr "Allow collection of data"
 msgid "Amount must be greater than zero"
 msgstr "Amount must be greater than zero"
 
-#: src/components/text-input.tsx:66
+#: src/components/text-input.tsx:72
 msgid "An error has occurred"
 msgstr "An error has occurred"
 
@@ -372,7 +372,7 @@ msgid "Back up your Secret Key"
 msgstr "Back up your Secret Key"
 
 #: src/features/recover-wallet/recover-wallet.layout.tsx:68
-#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:19
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:18
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
@@ -405,7 +405,7 @@ msgstr "BNS name"
 msgid "Bridge your BTC to Bitcoin’s leading L2 to earn yield from holding or pooling"
 msgstr "Bridge your BTC to Bitcoin’s leading L2 to earn yield from holding or pooling"
 
-#: src/features/navigation/tab-layout.tsx:67
+#: src/features/navigation/tab-layout.tsx:66
 msgid "Browser"
 msgstr "Browser"
 
@@ -527,11 +527,11 @@ msgstr "Conversion unit"
 msgid "Conversion unit updated"
 msgstr "Conversion unit updated"
 
-#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:54
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:53
 msgid "Copied to clipboard"
 msgstr "Copied to clipboard"
 
-#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:61
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:60
 msgid "Copy"
 msgstr "Copy"
 
@@ -643,7 +643,7 @@ msgstr "Done"
 msgid "Drag to refresh"
 msgstr "Drag to refresh"
 
-#: src/features/earn/earn-widget.tsx:34
+#: src/features/earn/earn-widget.tsx:33
 msgid "Earn"
 msgstr "Earn"
 
@@ -837,7 +837,7 @@ msgstr "Hide balances"
 msgid "Historical yield"
 msgstr "Historical yield"
 
-#: src/features/navigation/tab-layout.tsx:49
+#: src/features/navigation/tab-layout.tsx:48
 msgid "Home"
 msgstr "Home"
 
@@ -1106,7 +1106,7 @@ msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
 #: src/features/account/account.tsx:110
-#: src/features/account/accounts-widget.tsx:75
+#: src/features/account/accounts-widget.tsx:74
 #: src/features/receive/screens/asset-details.tsx:48
 #: src/features/receive/screens/select-account.tsx:24
 #: src/features/receive/screens/select-asset.tsx:69
@@ -1186,8 +1186,8 @@ msgstr "Runes"
 msgid "Save"
 msgstr "Save"
 
-#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:69
-#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:77
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:68
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:76
 msgid "Save to..."
 msgstr "Save to..."
 
@@ -1228,7 +1228,7 @@ msgid "Select asset"
 msgstr "Select asset"
 
 #: src/features/account/account.tsx:101
-#: src/features/account/accounts-widget.tsx:66
+#: src/features/account/accounts-widget.tsx:65
 #: src/features/send/screens/form.tsx:55
 #: src/features/send/screens/select-account.tsx:46
 #: src/features/send/screens/select-asset.tsx:39
@@ -1484,7 +1484,7 @@ msgstr "Try again"
 msgid "Turn on camera access in Settings to scan a QR."
 msgstr "Turn on camera access in Settings to scan a QR."
 
-#: src/features/browser/browser/search-bar/search-input/generic-search-text-input.tsx:20
+#: src/features/browser/browser/search-bar/search-input/generic-search-text-input.tsx:19
 msgid "Type URL or search"
 msgstr "Type URL or search"
 
@@ -1512,7 +1512,7 @@ msgstr "Unknown"
 msgid "Unknown error during version check"
 msgstr "Unknown error during version check"
 
-#: src/components/splash-screen-guard/splash-screen-guard.tsx:148
+#: src/components/splash-screen-guard/splash-screen-guard.tsx:147
 msgid "Unlock"
 msgstr "Unlock"
 

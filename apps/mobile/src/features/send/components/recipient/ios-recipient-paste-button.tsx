@@ -1,7 +1,6 @@
-import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 
-import { Theme } from '@leather.io/ui/native';
+import { useTheme } from '@leather.io/ui/native';
 
 interface RecipientPasteButtonProps {
   onPress: (value: string) => void;
@@ -9,7 +8,7 @@ interface RecipientPasteButtonProps {
 
 // Only implement a dedicated paste button for iOS. Android already provides a great out-of-the-box pasting interface.
 export function IosRecipientPasteButton({ onPress }: RecipientPasteButtonProps) {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
 
   function handlePress(payload: Clipboard.PasteEventPayload) {
     if (payload.type === 'text') {

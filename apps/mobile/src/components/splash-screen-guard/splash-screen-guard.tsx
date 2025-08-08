@@ -5,12 +5,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppState } from '@/hooks/use-app-state';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
-import { useTheme } from '@shopify/restyle';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
 
 import { colorThemes } from '@leather.io/tokens';
-import { Box, Button, HasChildren, Theme, useOnMount } from '@leather.io/ui/native';
+import { Box, Button, HasChildren, useOnMount, useTheme } from '@leather.io/ui/native';
 
 import { LeatherSplash, SplashLottieView } from '../animations/leather-splash';
 import { AuthContext } from './use-auth-context';
@@ -21,7 +20,7 @@ export function SplashScreenGuard({ children }: HasChildren) {
   const lockedSplashRef = useRef<SplashLottieView>(null);
   const { whenTheme, securityLevelPreference } = useSettings();
   const insets = useSafeAreaInsets();
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const colorScheme = useColorScheme();
 
   const playSplash = useCallback(() => {

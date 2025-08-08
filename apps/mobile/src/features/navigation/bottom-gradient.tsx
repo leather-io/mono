@@ -1,10 +1,9 @@
-import { useTheme } from '@shopify/restyle';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { Theme } from '@leather.io/ui/native';
+import { useTheme } from '@leather.io/ui/native';
 
 export function BottomGradient() {
-  const { colors } = useTheme<Theme>();
+  const { colors } = useTheme();
 
   return (
     <LinearGradient

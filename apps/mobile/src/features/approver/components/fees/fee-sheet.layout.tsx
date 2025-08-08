@@ -2,9 +2,8 @@ import { ReactNode, RefObject } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSettings } from '@/store/settings/settings';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, Sheet, SheetRef, Theme } from '@leather.io/ui/native';
+import { Box, Sheet, SheetRef, useTheme } from '@leather.io/ui/native';
 
 interface FeeSheetLayoutProps {
   sheetRef: RefObject<SheetRef | null>;
@@ -14,7 +13,7 @@ interface FeeSheetLayoutProps {
 export function FeeSheetLayout({ sheetRef, children }: FeeSheetLayoutProps) {
   const { bottom } = useSafeAreaInsets();
   const { themeDerivedFromThemePreference } = useSettings();
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
 
   return (
     <Sheet isScrollView ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>

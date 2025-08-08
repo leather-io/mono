@@ -11,9 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { G, Mask, Path, Rect } from 'react-native-svg';
 
-import { useTheme } from '@shopify/restyle';
-
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, Theme, useTheme } from '@leather.io/ui/native';
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 const AnimatedPath = Animated.createAnimatedComponent(Path);
@@ -29,7 +27,7 @@ export function QrScannerFrame({ state = 'default' }: QrScannerFrameProps) {
   const cutoutSize = 300;
   const cutoutX = (width - cutoutSize) / 2;
   const cutoutY = (height - cutoutSize) / 3;
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const { shakeProps, pathProps } = useFrameAnimations(state, theme);
 
   return (
