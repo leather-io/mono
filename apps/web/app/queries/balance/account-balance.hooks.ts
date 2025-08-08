@@ -39,7 +39,7 @@ export function useStxBalance(address: string) {
     select: resp => {
       const initialBalance = createMoney(new BigNumber(resp.balance), 'STX');
       const stxBalance = createStxBalance(initialBalance, inboundBalance, outboundBalance);
-      void analytics.track('stx_balance_updated', stxBalance);
+      analytics.track('stx_balance_updated', stxBalance);
       return stxBalance;
     },
     enabled: !!initialBalanceQuery.data,

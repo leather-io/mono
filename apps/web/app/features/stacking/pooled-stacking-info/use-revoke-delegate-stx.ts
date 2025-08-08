@@ -27,7 +27,7 @@ export function createRevokeDelegateStxMutationOptions({
     mutationFn: async () => {
       const stackingContract = await client.getStackingContract();
       const revokeDelegationOptions = client.getRevokeDelegateStxOptions(stackingContract);
-      void analytics.untypedTrack('stacking_revoke_delegate');
+      analytics.untypedTrack('stacking_revoke_delegate');
       return leather.stxCallContract({
         contract: formatContractId(
           revokeDelegationOptions.contractAddress,

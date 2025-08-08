@@ -85,12 +85,12 @@ export function SbtcRewards(): ReactElement {
   const remainingSbtcPegCapSupply = useRemainingSbtcSupply();
 
   async function bridgeSbtc() {
-    void analytics.untypedTrack('bridge_btc_sbtc_opened');
+    analytics.untypedTrack('bridge_btc_sbtc_opened');
     await leather.openSwap({ base: 'BTC', quote: 'sBTC' });
   }
 
   async function swapStxSbtc() {
-    void analytics.untypedTrack('swap_stx_sbtc_opened');
+    analytics.untypedTrack('swap_stx_sbtc_opened');
     await leather.openSwap({ base: 'STX', quote: 'sBTC' });
   }
 

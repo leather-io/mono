@@ -39,7 +39,7 @@ export function createHandleSubmit({
     setIsContractCallExtensionPageOpen(true);
 
     try {
-      void analytics.untypedTrack('contract_caller_disallowed');
+      analytics.untypedTrack('contract_caller_disallowed');
       await leather.stxCallContract({
         ...disallowContractCallerOptions,
       });

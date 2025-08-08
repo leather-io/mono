@@ -47,7 +47,7 @@ export function createIncreaseLiquidMutationOptions({
         authId: authId ? parseInt(authId, 10) : undefined,
       });
 
-      void analytics.track('liquid_stacking_increased', {
+      analytics.track('liquid_stacking_increased', {
         amount: scaleValue(increaseBy),
       });
       return leather.stxCallContract({

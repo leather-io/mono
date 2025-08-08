@@ -120,7 +120,7 @@ export function createDelegateStxMutationOptions({
 
       const delegateStxOptions = getDelegateStxOptions(values, poxInfo, network);
 
-      void analytics.track('pooled_stacking_started', {
+      analytics.track('pooled_stacking_started', {
         provider: values.providerId,
         amount: scaleValue(values.amount),
         poolAddress: values.poolAddress,
