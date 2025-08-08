@@ -38,7 +38,7 @@ import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 import { StackingFormItemTitle } from '../components/stacking-form-item-title';
 import { useCalculateFee } from '../hooks/use-calculate-fee';
 import { getProtocolBySlug } from '../start-liquid-stacking/utils/utils-preset-protocols';
-import { createValidationSchema } from './utils/increase-liquid-schema';
+import { createIncreaseLiquidValidationSchema } from './utils/increase-liquid-schema';
 
 interface StartLiquidStackingProps {
   protocolSlug: ProtocolSlug;
@@ -92,7 +92,7 @@ function IncreaseLiquidStackingLayout({ protocolSlug, client }: StartLiquidStack
 
   const schema = useMemo(
     () =>
-      createValidationSchema({
+      createIncreaseLiquidValidationSchema({
         availableBalanceUStx,
         transactionFeeUStx,
         stackerInfo: getStatusQuery.data,
@@ -120,7 +120,7 @@ function IncreaseLiquidStackingLayout({ protocolSlug, client }: StartLiquidStack
     })
   );
 
-  const formMethods = useForm<IncreaseLiquidFormSchema>({
+  const formMethods = useForm({
     mode: 'onTouched',
     defaultValues: {
       ...initialStackingFormValues,
@@ -165,15 +165,13 @@ function IncreaseLiquidStackingLayout({ protocolSlug, client }: StartLiquidStack
     );
   }
 
-  const handleIncreaseLiquid = formMethods.handleSubmit(values => {
-    return handleIncreaseLiquidSubmit({
-      ...values,
-    }).then(() => {
-      return navigate(`/stacking/liquid/${protocolSlug}/active`);
-    });
+  const handleIncreaseLiquid = formMethods.handleSubmit((values: any) => {
+    return handleIncreaseLiquidSubmit({ ...values }).then(() =>
+      navigate(`/stacking/liquid/${protocolSlug}/active`)
+    );
   });
 
-  const increaseBy = formMethods.watch('increaseBy');
+  const increaseBy = formMethods.watch('increaseBy') as number;
 
   function onSubmit(confirmation: LiquidStackingConfirmationStepId) {
     if (confirmation === 'depositStx') {

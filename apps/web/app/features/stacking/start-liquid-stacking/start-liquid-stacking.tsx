@@ -102,7 +102,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
 
   const [termsConfirmed, setTermsConfirmed] = useState(false);
 
-  const formMethods = useForm<StackingLiquidFormSchema>({
+  const formMethods = useForm({
     mode: 'onTouched',
     defaultValues: {
       ...initialStackingFormValues,
@@ -120,7 +120,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
     });
   });
 
-  const stackingAmount = formMethods.watch('amount');
+  const stackingAmount = formMethods.watch('amount') as number;
 
   // Get posts with direct access
   const posts = getPosts();

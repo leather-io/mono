@@ -17,8 +17,9 @@ interface CreateValidationSchemaArgs {
   network: StacksNetworkName;
   rewardCycleId?: number;
 }
-
-export function createValidationSchema({ availableBalanceUStx }: CreateValidationSchemaArgs) {
+export function createIncreaseLiquidValidationSchema({
+  availableBalanceUStx,
+}: CreateValidationSchemaArgs) {
   return z.object({
     increaseBy: stxAmountSchema()
       .refine(value => validateMaxStackingAmount(value))
@@ -28,4 +29,6 @@ export function createValidationSchema({ availableBalanceUStx }: CreateValidatio
   });
 }
 
-export type IncreaseLiquidFormSchema = z.infer<ReturnType<typeof createValidationSchema>>; // TODO: Use as main type for form
+export type IncreaseLiquidFormSchema = z.infer<
+  ReturnType<typeof createIncreaseLiquidValidationSchema>
+>; // TODO: Use as main type for form

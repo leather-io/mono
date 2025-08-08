@@ -51,7 +51,7 @@ import {
 import { ChoosePoolingConditions } from './components/choose-pooling-conditions';
 import { ChoosePoolingDuration } from './components/choose-pooling-duration';
 import { ChooseRewardsAddress } from './components/choose-rewards-address';
-import { StackingPoolFormSchema, createValidationSchema } from './utils/stacking-pool-form-schema';
+import { createValidationSchema } from './utils/stacking-pool-form-schema';
 import { PoolSlug, getPoolFromSlug } from './utils/stacking-pool-types';
 import { PoolWrapperAllowanceState } from './utils/types';
 
@@ -67,8 +67,6 @@ export function StartPooledStacking({ poolSlug }: StartPooledStackingProps) {
 
   return <StartPooledStackingLayout client={client} poolSlug={poolSlug} />;
 }
-
-const initialStackingFormValues: Partial<StackingPoolFormSchema> = {};
 
 interface StartPooledStackingLayoutProps {
   poolSlug: PoolSlug;
@@ -198,14 +196,15 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     getAllowanceContractCallersOneCycleQuery?.data?.type,
   ]);
 
-  const formMethods = useForm<StackingPoolFormSchema>({
+  const formMethods = useForm({
     mode: 'onTouched',
     defaultValues: {
-      ...initialStackingFormValues,
       rewardAddress: btcAddressP2wpkh?.address,
     },
     resolver: zodResolver(schema),
   });
+
+  const poolAmount = formMethods.watch('amount') as number;
 
   const handleAllowance = formMethods.handleSubmit(async () => {
     return handleAllowContractCallerSubmit();
@@ -230,8 +229,6 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
     return confirmed;
   }, [hasUserConfirmedPoolWrapperContract, network, pool.providerId]);
-
-  const poolAmount = formMethods.watch('amount');
 
   // Get posts with direct access
   const posts = getPosts();
