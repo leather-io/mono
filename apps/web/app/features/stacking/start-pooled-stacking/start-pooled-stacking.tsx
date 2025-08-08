@@ -214,7 +214,6 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     return handleDelegateStxSubmit({
       ...values,
       providerId: pool.providerId,
-      delegationDurationType: 'limited',
       numberOfCycles: 1,
       poolAddress: poolStxAddress ?? '',
     }).then(() => navigate(`/stacking/pool/${poolSlug}/active`));
