@@ -78,7 +78,7 @@ msgid "bitcoin_unit.cell_title"
 msgstr "{symbol}"
 
 #. js-lingui-explicit-id
-#: src/app/settings/display/index.tsx:71
+#: src/app/settings/display/index.tsx:72
 msgid "display.bitcoin_unit.cell_caption"
 msgstr "{symbol}"
 
@@ -88,7 +88,7 @@ msgid "theme.cell_title"
 msgstr "{theme}"
 
 #. js-lingui-explicit-id
-#: src/app/settings/display/index.tsx:56
+#: src/app/settings/display/index.tsx:58
 msgid "display.theme.cell_caption"
 msgstr "{theme}"
 
@@ -384,7 +384,7 @@ msgstr "BIP39 passphrase"
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
-#: src/app/settings/display/index.tsx:70
+#: src/app/settings/display/index.tsx:71
 #: src/features/settings/bitcoin-unit-sheet.tsx:38
 msgid "Bitcoin unit"
 msgstr "Bitcoin unit"
@@ -622,7 +622,7 @@ msgstr "Disconnected"
 msgid "Dismiss"
 msgstr "Dismiss"
 
-#: src/app/settings/display/index.tsx:52
+#: src/app/settings/display/index.tsx:54
 #: src/app/settings/index.tsx:68
 msgid "Display"
 msgstr "Display"
@@ -882,7 +882,7 @@ msgid "Invalid words: {joinedInvalidWords}"
 msgstr "Invalid words: {joinedInvalidWords}"
 
 #: src/app/settings/display/index.tsx:86
-#: src/features/settings/language-sheet.tsx:28
+#: src/features/settings/language-sheet.tsx:37
 msgid "Language"
 msgstr "Language"
 
@@ -1388,7 +1388,7 @@ msgstr "Taproot address"
 msgid "The address you entered isn’t valid. Verify and try again"
 msgstr "The address you entered isn’t valid. Verify and try again"
 
-#: src/app/settings/display/index.tsx:55
+#: src/app/settings/display/index.tsx:57
 #: src/features/settings/theme-sheet.tsx:33
 msgid "Theme"
 msgstr "Theme"
