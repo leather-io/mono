@@ -61,7 +61,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
 
   return (
     <>
-      <SettingsLayout title={t`Configure account`}>
+      <SettingsLayout title={t`Configure\naccount`}>
         <Box gap="4">
           <Box px="5">
             <WalletLoader fingerprint={account.fingerprint} key={account.id}>

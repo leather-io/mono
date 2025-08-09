@@ -1,4 +1,3 @@
-import { i18n } from '@lingui/core';
 import { t } from '@lingui/core/macro';
 import dayjs from 'dayjs';
 
@@ -9,44 +8,47 @@ interface getActivityStatusLabelProps {
   status: BaseOnChainActivity['status'];
 }
 
-type ActivityStatusMap = Record<
+function getActivityStatusMap(): Record<
   OnChainActivity['type'],
   Record<BaseOnChainActivity['status'], string>
->;
-const activityStatusMap: ActivityStatusMap = {
-  sendAsset: {
-    success: i18n._({ id: 'activity.status.sent', message: 'Sent' }),
-    failed: i18n._({ id: 'activity.status.send-failed', message: 'Send Failed' }),
-    pending: i18n._({ id: 'activity.status.sending', message: 'Sending' }),
-  },
-  receiveAsset: {
-    success: i18n._({ id: 'activity.status.received', message: 'Received' }),
-    pending: '', // there is no pending status for receiveAsset
-    failed: i18n._({ id: 'activity.status.receive-failed', message: 'Receive fail' }),
-  },
-  executeSmartContract: {
-    success: i18n._({ id: 'activity.status.executed', message: 'Executed' }),
-    pending: i18n._({ id: 'activity.status.executing', message: 'Executing' }),
-    failed: i18n._({ id: 'activity.status.execute-failed', message: 'Execution failed' }),
-  },
-  deploySmartContract: {
-    success: i18n._({ id: 'activity.status.deployed', message: 'Deployed' }),
-    pending: i18n._({ id: 'activity.status.deploying', message: 'Deploying' }),
-    failed: i18n._({ id: 'activity.status.deploy-failed', message: 'Deployment failed' }),
-  },
-  // TODO: ENG-37 - ask for designs for lockAsset and swapAssets statuses
-  lockAsset: {
-    success: i18n._({ id: 'activity.status.locked', message: 'Locked' }),
-    pending: i18n._({ id: 'activity.status.locking', message: 'Locking' }),
-    failed: i18n._({ id: 'activity.status.lock-failed', message: 'Lock failed' }),
-  },
-  swapAssets: {
-    success: i18n._({ id: 'activity.status.swapped', message: 'Swapped' }),
-    pending: i18n._({ id: 'activity.status.swapping', message: 'Swapping' }),
-    failed: i18n._({ id: 'activity.status.swap-failed', message: 'Swap failed' }),
-  },
-};
+> {
+  return {
+    sendAsset: {
+      success: t`Sent`,
+      failed: t`Send Failed`,
+      pending: t`Sending`,
+    },
+    receiveAsset: {
+      success: t`Received`,
+      pending: '', // there is no pending status for receiveAsset
+      failed: t`Receive fail`,
+    },
+    executeSmartContract: {
+      success: t`Executed`,
+      pending: t`Executing`,
+      failed: t`Execution failed`,
+    },
+    deploySmartContract: {
+      success: t`Deployed`,
+      pending: t`Deploying`,
+      failed: t`Deployment failed`,
+    },
+    // TODO: ENG-37 - ask for designs for lockAsset and swapAssets statuses
+    lockAsset: {
+      success: t`Locked`,
+      pending: t`Locking`,
+      failed: t`Lock failed`,
+    },
+    swapAssets: {
+      success: t`Swapped`,
+      pending: t`Swapping`,
+      failed: t`Swap failed`,
+    },
+  };
+}
+
 export function getActivityStatusLabel({ type, status }: getActivityStatusLabelProps) {
+  const activityStatusMap = getActivityStatusMap();
   return activityStatusMap[type][status];
 }
 

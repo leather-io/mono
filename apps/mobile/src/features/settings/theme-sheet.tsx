@@ -5,11 +5,9 @@ import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
 import { ThemePreference, defaultThemePreferences } from '@/store/settings/utils';
-import { t } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react';
+import { select, t } from '@lingui/core/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
-import { capitalize } from '@leather.io/utils';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
@@ -19,7 +17,6 @@ interface ThemeSheetProps {
 export function ThemeSheet({ sheetRef }: ThemeSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
-  const { i18n } = useLingui();
 
   function onUpdateTheme(theme: ThemePreference) {
     settings.changeThemePreference(theme);
@@ -32,17 +29,20 @@ export function ThemeSheet({ sheetRef }: ThemeSheetProps) {
   return (
     <SettingsSheetLayout sheetRef={sheetRef} title={t`Theme`}>
       <SettingsList gap="0">
-        {defaultThemePreferences.map(theme => (
+        {defaultThemePreferences.map(themePreference => (
           <SettingsListItem
-            title={i18n._({
-              id: 'theme.cell_title',
-              message: '{theme}',
-              values: { theme: capitalize(theme) },
+            title={t({
+              message: select(themePreference, {
+                light: 'Light',
+                dark: 'Dark',
+                system: 'System',
+                other: 'Unknown',
+              }),
             })}
-            key={theme}
-            onPress={() => onUpdateTheme(theme)}
+            key={themePreference}
+            onPress={() => onUpdateTheme(themePreference)}
             type="radio"
-            isRadioSelected={settings.themePreference === theme}
+            isRadioSelected={settings.themePreference === themePreference}
           />
         ))}
       </SettingsList>
