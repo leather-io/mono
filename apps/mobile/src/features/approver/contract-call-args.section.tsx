@@ -24,10 +24,11 @@ export function ContractCallArgsSection({ txHex }: { txHex: string }) {
         {functionArgs.map((fa, index) => {
           const strValue = cvToString(fa);
           const func = data?.functions.find(fn => fn.name === functionName.content);
+          const argumentNumber = index + 1;
           return (
             <Box key={strValue}>
               <Text variant="caption01" color="ink.text-subdued">
-                {func?.args[index]?.name ?? t`Argument ${index + 1}`}
+                {func?.args[index]?.name ?? t`Argument ${argumentNumber}`}
               </Text>
               <Text variant="label01">{strValue}</Text>
             </Box>

@@ -47,5 +47,6 @@ export function getStoreName(): string {
  * @returns Button text for the current platform
  */
 export function getStoreButtonText(): string {
-  return t`Update from ${getStoreName()}`;
+  const storeName = getStoreName();
+  return t`Update from ${storeName}`;
 }
