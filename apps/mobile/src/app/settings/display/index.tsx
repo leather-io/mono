@@ -13,6 +13,7 @@ import { supportedLanguages } from '@/i18n/languages';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
+import { keys } from 'remeda';
 
 import {
   BitcoinCircleIcon,
@@ -28,6 +29,7 @@ import { capitalize } from '@leather.io/utils';
 export default function SettingsDisplayScreen() {
   const btcConversionUnitEnabled = useBtcConversionUnitFlag();
   const i18nEnabled = useInternationalizationFlag();
+  const shouldShowLanguageSetting = i18nEnabled && keys(supportedLanguages).length > 1;
   const themeSheetRef = useRef<SheetRef>(null);
   const bitcoinUnitSheetRef = useRef<SheetRef>(null);
   const conversionUnitSheetRef = useRef<SheetRef>(null);
@@ -63,7 +65,6 @@ export default function SettingsDisplayScreen() {
             themeSheetRef.current?.present();
           }}
         />
-
         {btcConversionUnitEnabled && (
           <>
             <SettingsListItem
@@ -80,8 +81,7 @@ export default function SettingsDisplayScreen() {
             />
           </>
         )}
-
-        {i18nEnabled && (
+        {shouldShowLanguageSetting && (
           <SettingsListItem
             title={t`Language`}
             caption={supportedLanguages[languagePreference]}
