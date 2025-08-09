@@ -95,8 +95,17 @@ names for translators:
 #: src/features/approver/components/fees/bitcoin-fee-option.tsx:41
 msgid "{feeRate} sats/vB · {formattedQuoteFee}"
 msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
-
 ```
+
+**Important**: The app reloads when language changes, so we don't re-render components in real-time.
+This means you don't need `useLingui` hook — it adds unnecessary complexity without benefit.
+
+The preference hierarchy for translations is:
+
+1. **Use `t` macro with template literals for most scenarios** — it's the simplest and most readable
+2. **Use lazy `msg` when `t` cannot be used** (outside functions, module-level declarations) — then wrap with `i18n._()` when rendering
+3. **Avoid `useLingui` hook** — we don't need reactive re-rendering for language changes
+4. **Avoid directly importing `i18n` for translations** — use `t` macro instead
 
 #### Limitations
 
@@ -119,18 +128,50 @@ const statusMessages = {
 
 #### Extraction
 
-After finishing working on the feature, run the following command to extract strings from code
-into .po files:
+Message extraction happens automatically when you commit changes to mobile — no manual action needed.
+Compilation runs automatically on `pnpm install`.
+
+If you're actively working on translations and need to run extraction and compilation manually:
 
 ```
-pnpm run lingui:extract
+pnpm lingui
 ```
 
-Afterwards commit updated `messages.po` along with your code:
+This runs both extraction and compilation in one command.
 
+### Adding a new language
+
+To add support for a new language:
+
+1. **Update `lingui.config.ts`**: Add the language code to the `locales` array:
+
+```ts
+locales: ['en', 'es', 'fr']; // Add your language code
 ```
-pnpm run lingui:extract
+
+2. **Update `languages.ts`**: Add the language to the `supportedLanguages` object:
+
+```ts
+export const supportedLanguages = {
+  en: 'English',
+  es: 'Español', // Add your language
+  fr: 'Français',
+} as const;
 ```
+
+3. **Update `load-language-data.ts`**: Add a case for loading the language's messages and polyfills:
+
+```ts
+case 'es':
+  return Promise.all([
+    import('./locales/es/messages'),
+    import('@formatjs/intl-numberformat/locale-data/es'),
+    import('@formatjs/intl-pluralrules/locale-data/es'),
+  ]);
+```
+
+4. **Create the locale folder**: Create the directory structure `src/i18n/locales/{locale}/` and
+   run `pnpm lingui:extract` to generate the initial message catalog.
 
 #### ESLint
 
