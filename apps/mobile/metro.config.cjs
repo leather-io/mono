@@ -7,6 +7,7 @@ const { getSentryExpoConfig } = require('@sentry/react-native/metro');
 
 const projectRoot = __dirname;
 const workspaceRoot = path.resolve(projectRoot, '../..');
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 const config = getSentryExpoConfig(projectRoot);
 
@@ -67,6 +68,26 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   // https://github.com/paulmillr/noble-hashes/blob/main/package.json#L47-L50
   if (moduleName === '@noble/hashes/crypto') {
     return context.resolveRequest(context, moduleName, platform);
+  }
+
+  // Enable fast refresh for the UI package
+  if (isDevelopment) {
+    if (moduleName === '@leather.io/ui/native') {
+      return context.resolveRequest(
+        context,
+        path.resolve(workspaceRoot, 'packages/ui/native.ts'),
+        platform
+      );
+    }
+
+    if (moduleName.startsWith('@leather.io/ui/native/')) {
+      const componentPath = moduleName.replace('@leather.io/ui/native/', '');
+      return context.resolveRequest(
+        context,
+        path.resolve(workspaceRoot, 'packages/ui/src/components', componentPath),
+        platform
+      );
+    }
   }
 
   return symlinkResolver(context, moduleName, platform);
