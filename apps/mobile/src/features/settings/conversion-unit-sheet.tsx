@@ -4,8 +4,7 @@ import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react';
+import { select, t } from '@lingui/core/macro';
 
 import { currencyNameMap } from '@leather.io/constants';
 import { QuoteCurrency } from '@leather.io/models';
@@ -19,7 +18,6 @@ interface ConversionUnitSheetProps {
 export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
-  const { i18n } = useLingui();
 
   function onUpdateConversionUnit(unit: QuoteCurrency) {
     settings.changeQuoteCurrencyPreference(unit);
@@ -35,16 +33,22 @@ export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
         {Object.entries(currencyNameMap).map(([symbol, name]) => (
           <SettingsListItem
             key={symbol}
-            title={i18n._({
-              id: 'conversion_unit.cell_title',
-              message: '{name}',
-              values: { name },
+            title={t({
+              context: 'Currency name',
+              message: select(symbol, {
+                USD: 'United States Dollar',
+                EUR: 'Euro',
+                GBP: 'British Pound',
+                AUD: 'Australian Dollar',
+                CAD: 'Canadian Dollar',
+                CNY: 'Chinese Yuan',
+                JPY: 'Japanese Yen',
+                KRW: 'South Korean Won',
+                BTC: 'Bitcoin',
+                other: name,
+              }),
             })}
-            caption={i18n._({
-              id: 'conversion_unit.cell_caption',
-              message: '{symbol}',
-              values: { symbol },
-            })}
+            caption={symbol}
             onPress={() => onUpdateConversionUnit(symbol)}
             type="radio"
             isRadioSelected={settings.fiatCurrencyPreference === symbol}

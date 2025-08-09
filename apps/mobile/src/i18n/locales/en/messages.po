@@ -13,84 +13,31 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#. js-lingui-explicit-id
-#: src/app/(tabs)/(index)/account/[accountId]/activity.tsx:26
-msgid "activity.account.header_title"
-msgstr "{accountName}"
+#: src/app/settings/display/index.tsx:101
+msgid "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
+msgstr "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
 
-#. js-lingui-explicit-id
-#: src/app/(tabs)/(index)/account/[accountId]/activity.tsx:39
-msgid "activity.account.header_content_title"
+#: src/app/(tabs)/(index)/account/[accountId]/activity.tsx:27
+msgid "{accountName} Activity"
 msgstr "{accountName} Activity"
-
-#. js-lingui-explicit-id
-#: src/app/settings/display/index.tsx:96
-msgid "display.conversion_unit.cell_caption"
-msgstr "{currency}"
 
 #: src/features/approver/components/fees/bitcoin-fee-option.tsx:41
 msgid "{feeRate} sats/vB · {formattedQuoteFee}"
 msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 
 #: src/app/settings/wallet/index.tsx:33
-msgid "{hiddenAccountsLength} hidden accounts"
-msgstr "{hiddenAccountsLength} hidden accounts"
+msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
+msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
-#. js-lingui-explicit-id
-#: src/features/settings/conversion-unit-sheet.tsx:38
-msgid "conversion_unit.cell_title"
-msgstr "{name}"
+#: src/features/settings/conversion-unit-sheet.tsx:36
+msgctxt "Currency name"
+msgid "{symbol, select, USD {United States Dollar} EUR {Euro} GBP {British Pound} AUD {Australian Dollar} CAD {Canadian Dollar} CNY {Chinese Yuan} JPY {Japanese Yen} KRW {South Korean Won} BTC {Bitcoin} other {{name}}}"
+msgstr "{symbol, select, USD {United States Dollar} EUR {Euro} GBP {British Pound} AUD {Australian Dollar} CAD {Canadian Dollar} CNY {Chinese Yuan} JPY {Japanese Yen} KRW {South Korean Won} BTC {Bitcoin} other {{name}}}"
 
-#. js-lingui-explicit-id
-#: src/features/settings/bitcoin-unit-sheet.tsx:50
-msgid "bitcoin_unit.cell_caption"
-msgstr "{name}"
-
-#. js-lingui-explicit-id
-#: src/app/settings/display/index.tsx:108
-msgid "display.account_identifier.cell_caption"
-msgstr "{name}"
-
-#. js-lingui-explicit-id
-#: src/features/settings/network-badge.tsx:20
-msgid "settings.header_network"
-msgstr "{network}"
-
-#. js-lingui-explicit-id
-#: src/app/settings/networks/index.tsx:54
-msgid "networks.cell_title"
-msgstr "{network}"
-
-#. js-lingui-explicit-id
-#: src/features/send/screens/form.tsx:56
-#: src/features/token/token-receive-sheet.tsx:75
-msgid "select_asset.header_subtitle"
-msgstr "{subtitle}"
-
-#. js-lingui-explicit-id
-#: src/features/settings/conversion-unit-sheet.tsx:43
-msgid "conversion_unit.cell_caption"
-msgstr "{symbol}"
-
-#. js-lingui-explicit-id
-#: src/features/settings/bitcoin-unit-sheet.tsx:45
-msgid "bitcoin_unit.cell_title"
-msgstr "{symbol}"
-
-#. js-lingui-explicit-id
-#: src/app/settings/display/index.tsx:72
-msgid "display.bitcoin_unit.cell_caption"
-msgstr "{symbol}"
-
-#. js-lingui-explicit-id
-#: src/features/settings/theme-sheet.tsx:37
-msgid "theme.cell_title"
-msgstr "{theme}"
-
-#. js-lingui-explicit-id
-#: src/app/settings/display/index.tsx:58
-msgid "display.theme.cell_caption"
-msgstr "{theme}"
+#: src/app/settings/display/index.tsx:56
+#: src/features/settings/theme-sheet.tsx:34
+msgid "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
+msgstr "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
 
 #: src/features/approver/utils.tsx:53
 msgid "~1 hour+"
@@ -112,10 +59,6 @@ msgstr "1–2 minutes"
 msgid "10 seconds"
 msgstr "10 seconds"
 
-#: src/features/earn/stacking-card.tsx:16
-msgid "10%"
-msgstr "10%"
-
 #: src/features/approver/utils.tsx:67
 msgid "20–30 seconds"
 msgstr "20–30 seconds"
@@ -123,15 +66,6 @@ msgstr "20–30 seconds"
 #: src/features/token/components/token-details-table.tsx:21
 msgid "24 Hour Change"
 msgstr "24 Hour Change"
-
-#: src/features/earn/sbtc-card.tsx:16
-#: src/features/earn/stacking-card.tsx:15
-msgid "6"
-msgstr "6"
-
-#: src/features/earn/sbtc-card.tsx:17
-msgid "8%"
-msgstr "8%"
 
 #: src/features/wallet-manager/account-list.tsx:23
 #: src/store/accounts/accounts.write.ts:43
@@ -146,7 +80,7 @@ msgstr "Account created"
 msgid "Account creation failed"
 msgstr "Account creation failed"
 
-#: src/app/settings/display/index.tsx:107
+#: src/app/settings/display/index.tsx:100
 #: src/features/settings/account-identifier-sheet.tsx:47
 msgid "Account identifier"
 msgstr "Account identifier"
@@ -206,7 +140,7 @@ msgstr "Add to existing wallet"
 msgid "Add to new wallet"
 msgstr "Add to new wallet"
 
-#: src/app/settings/wallet/index.tsx:41
+#: src/app/settings/wallet/index.tsx:46
 #: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:26
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:80
 msgid "Add wallet"
@@ -383,12 +317,12 @@ msgstr "BIP39 passphrase"
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
-#: src/app/settings/display/index.tsx:71
-#: src/features/settings/bitcoin-unit-sheet.tsx:38
+#: src/app/settings/display/index.tsx:72
+#: src/features/settings/bitcoin-unit-sheet.tsx:37
 msgid "Bitcoin unit"
 msgstr "Bitcoin unit"
 
-#: src/features/settings/bitcoin-unit-sheet.tsx:30
+#: src/features/settings/bitcoin-unit-sheet.tsx:29
 msgid "Bitcoin unit updated"
 msgstr "Bitcoin unit updated"
 
@@ -426,7 +360,7 @@ msgstr "Cannot send to yourself"
 msgid "Change name"
 msgstr "Change name"
 
-#: src/app/settings/networks/index.tsx:43
+#: src/app/settings/networks/index.tsx:41
 msgid "Changed network"
 msgstr "Changed network"
 
@@ -470,12 +404,20 @@ msgid "Compliance check failed"
 msgstr "Compliance check failed"
 
 #: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:64
-msgid "Configure account"
-msgstr "Configure account"
+msgid ""
+"Configure\n"
+"account"
+msgstr ""
+"Configure\n"
+"account"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:143
-msgid "Configure wallet"
-msgstr "Configure wallet"
+msgid ""
+"Configure\n"
+"wallet"
+msgstr ""
+"Configure\n"
+"wallet"
 
 #: src/features/approver/components/memo-sheet.tsx:37
 #: src/features/approver/components/nonce-sheet.tsx:37
@@ -517,12 +459,12 @@ msgstr "Continue without security"
 msgid "Contract arguments"
 msgstr "Contract arguments"
 
-#: src/app/settings/display/index.tsx:95
-#: src/features/settings/conversion-unit-sheet.tsx:33
+#: src/app/settings/display/index.tsx:92
+#: src/features/settings/conversion-unit-sheet.tsx:31
 msgid "Conversion unit"
 msgstr "Conversion unit"
 
-#: src/features/settings/conversion-unit-sheet.tsx:27
+#: src/features/settings/conversion-unit-sheet.tsx:25
 msgid "Conversion unit updated"
 msgstr "Conversion unit updated"
 
@@ -583,19 +525,16 @@ msgstr "Custom fees"
 msgid "Deny"
 msgstr "Deny"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:33
-msgid "activity.status.deployed"
+#: src/features/activity/utils/format-activity.ts:32
+msgid "Deployed"
 msgstr "Deployed"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:34
-msgid "activity.status.deploying"
+#: src/features/activity/utils/format-activity.ts:33
+msgid "Deploying"
 msgstr "Deploying"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:35
-msgid "activity.status.deploy-failed"
+#: src/features/activity/utils/format-activity.ts:34
+msgid "Deployment failed"
 msgstr "Deployment failed"
 
 #: src/features/token/components/token-description.tsx:9
@@ -606,7 +545,7 @@ msgstr "Description"
 msgid "Device ID"
 msgstr "Device ID"
 
-#: src/app/settings/networks/index.tsx:59
+#: src/app/settings/networks/index.tsx:53
 #: src/app/settings/security/index.tsx:22
 #: src/app/settings/security/index.tsx:38
 #: src/features/recover-wallet/recover-wallet.layout.tsx:70
@@ -621,7 +560,7 @@ msgstr "Disconnected"
 msgid "Dismiss"
 msgstr "Dismiss"
 
-#: src/app/settings/display/index.tsx:54
+#: src/app/settings/display/index.tsx:52
 #: src/app/settings/index.tsx:68
 msgid "Display"
 msgstr "Display"
@@ -677,7 +616,7 @@ msgstr "Enable device security"
 msgid "Enable to receive notifications about transactions"
 msgstr "Enable to receive notifications about transactions"
 
-#: src/app/settings/networks/index.tsx:59
+#: src/app/settings/networks/index.tsx:53
 #: src/app/settings/security/index.tsx:18
 #: src/app/settings/security/index.tsx:38
 #: src/features/recover-wallet/recover-wallet.layout.tsx:70
@@ -697,19 +636,16 @@ msgstr "Enter recipient"
 msgid "Enter your Secret Key"
 msgstr "Enter your Secret Key"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:28
-msgid "activity.status.executed"
+#: src/features/activity/utils/format-activity.ts:27
+msgid "Executed"
 msgstr "Executed"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:29
-msgid "activity.status.executing"
+#: src/features/activity/utils/format-activity.ts:28
+msgid "Executing"
 msgstr "Executing"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:30
-msgid "activity.status.execute-failed"
+#: src/features/activity/utils/format-activity.ts:29
+msgid "Execution failed"
 msgstr "Execution failed"
 
 #: src/app/settings/help/index.tsx:30
@@ -802,7 +738,7 @@ msgstr "Granite"
 msgid "Guides"
 msgstr "Guides"
 
-#: src/app/settings/display/index.tsx:119
+#: src/app/settings/display/index.tsx:116
 msgid "Haptics"
 msgstr "Haptics"
 
@@ -880,7 +816,7 @@ msgstr "Invalid email address"
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr "Invalid words: {joinedInvalidWords}"
 
-#: src/app/settings/display/index.tsx:86
+#: src/app/settings/display/index.tsx:83
 #: src/features/settings/language-sheet.tsx:37
 msgid "Language"
 msgstr "Language"
@@ -927,23 +863,20 @@ msgstr "Lisa"
 msgid "Lock app"
 msgstr "Lock app"
 
-#: src/features/activity/utils/format-activity.ts:90
+#: src/features/activity/utils/format-activity.ts:92
 msgid "Lock Asset"
 msgstr "Lock Asset"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:41
-msgid "activity.status.lock-failed"
+#: src/features/activity/utils/format-activity.ts:40
+msgid "Lock failed"
 msgstr "Lock failed"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:39
-msgid "activity.status.locked"
+#: src/features/activity/utils/format-activity.ts:38
+msgid "Locked"
 msgstr "Locked"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:40
-msgid "activity.status.locking"
+#: src/features/activity/utils/format-activity.ts:39
+msgid "Locking"
 msgstr "Locking"
 
 #: src/app/settings/index.tsx:83
@@ -994,7 +927,7 @@ msgstr "Minimum is {minimumBtcSpendAmount}"
 msgid "Minimum version format is invalid"
 msgstr "Minimum version format is invalid"
 
-#: src/features/activity/utils/format-activity.ts:65
+#: src/features/activity/utils/format-activity.ts:67
 msgid "minutes ago"
 msgstr "minutes ago"
 
@@ -1021,7 +954,7 @@ msgstr "Native Segwit address"
 
 #: src/app/settings/help/index.tsx:14
 #: src/app/settings/index.tsx:82
-#: src/app/settings/networks/index.tsx:49
+#: src/app/settings/networks/index.tsx:47
 msgid "Networks"
 msgstr "Networks"
 
@@ -1114,13 +1047,12 @@ msgstr "Push and email notifications"
 #: src/features/receive/screens/asset-details.tsx:48
 #: src/features/receive/screens/select-account.tsx:24
 #: src/features/receive/screens/select-asset.tsx:69
-#: src/features/token/token-receive-sheet.tsx:74
+#: src/features/token/token-receive-sheet.tsx:70
 msgid "Receive"
 msgstr "Receive"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:25
-msgid "activity.status.receive-failed"
+#: src/features/activity/utils/format-activity.ts:24
+msgid "Receive fail"
 msgstr "Receive fail"
 
 #: src/app/settings/notifications/index.tsx:14
@@ -1131,9 +1063,8 @@ msgstr "Receive notifications about transactions"
 msgid "Receive transaction notifications"
 msgstr "Receive transaction notifications"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:23
-msgid "activity.status.received"
+#: src/features/activity/utils/format-activity.ts:22
+msgid "Received"
 msgstr "Received"
 
 #: src/app/app-recently-viewed.tsx:14
@@ -1233,15 +1164,14 @@ msgstr "Select asset"
 
 #: src/features/account/account.tsx:101
 #: src/features/account/accounts-widget.tsx:65
-#: src/features/send/screens/form.tsx:55
+#: src/features/send/screens/form.tsx:54
 #: src/features/send/screens/select-account.tsx:46
 #: src/features/send/screens/select-asset.tsx:39
 msgid "Send"
 msgstr "Send"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:19
-msgid "activity.status.send-failed"
+#: src/features/activity/utils/format-activity.ts:18
+msgid "Send Failed"
 msgstr "Send Failed"
 
 #: src/features/psbt-signer/psbt-signer.tsx:244
@@ -1249,9 +1179,8 @@ msgstr "Send Failed"
 msgid "Send token"
 msgstr "Send token"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:20
-msgid "activity.status.sending"
+#: src/features/activity/utils/format-activity.ts:19
+msgid "Sending"
 msgstr "Sending"
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:55
@@ -1262,9 +1191,8 @@ msgstr "Sending to the same address"
 msgid "Sending to your own address isn’t supported. Choose a different address."
 msgstr "Sending to your own address isn’t supported. Choose a different address."
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:18
-msgid "activity.status.sent"
+#: src/features/activity/utils/format-activity.ts:17
+msgid "Sent"
 msgstr "Sent"
 
 #: src/app/settings/index.tsx:57
@@ -1274,7 +1202,7 @@ msgid "Settings"
 msgstr "Settings"
 
 #: src/features/receive/screens/asset-details.tsx:90
-#: src/features/token/token-receive-sheet.tsx:119
+#: src/features/token/token-receive-sheet.tsx:108
 msgid "Share"
 msgstr "Share"
 
@@ -1351,23 +1279,20 @@ msgstr "Submitted"
 msgid "Submitting..."
 msgstr "Submitting..."
 
-#: src/features/activity/utils/format-activity.ts:88
+#: src/features/activity/utils/format-activity.ts:90
 msgid "Swap Assets"
 msgstr "Swap Assets"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:46
-msgid "activity.status.swap-failed"
+#: src/features/activity/utils/format-activity.ts:45
+msgid "Swap failed"
 msgstr "Swap failed"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:44
-msgid "activity.status.swapped"
+#: src/features/activity/utils/format-activity.ts:43
+msgid "Swapped"
 msgstr "Swapped"
 
-#. js-lingui-explicit-id
-#: src/features/activity/utils/format-activity.ts:45
-msgid "activity.status.swapping"
+#: src/features/activity/utils/format-activity.ts:44
+msgid "Swapping"
 msgstr "Swapping"
 
 #: src/app/create-new-wallet.tsx:106
@@ -1387,8 +1312,8 @@ msgstr "Taproot address"
 msgid "The address you entered isn’t valid. Verify and try again"
 msgstr "The address you entered isn’t valid. Verify and try again"
 
-#: src/app/settings/display/index.tsx:57
-#: src/features/settings/theme-sheet.tsx:33
+#: src/app/settings/display/index.tsx:55
+#: src/features/settings/theme-sheet.tsx:30
 msgid "Theme"
 msgstr "Theme"
 
@@ -1396,7 +1321,7 @@ msgstr "Theme"
 msgid "Theme and account identifier"
 msgstr "Theme and account identifier"
 
-#: src/features/settings/theme-sheet.tsx:27
+#: src/features/settings/theme-sheet.tsx:24
 msgid "Theme updated"
 msgstr "Theme updated"
 
@@ -1442,7 +1367,7 @@ msgstr "to"
 msgid "To address"
 msgstr "To address"
 
-#: src/app/settings/display/index.tsx:120
+#: src/app/settings/display/index.tsx:117
 msgid "Toggle tactile feedback for interactions"
 msgstr "Toggle tactile feedback for interactions"
 
@@ -1454,7 +1379,7 @@ msgstr "Token can only have {decimals} decimals"
 msgid "Token Details"
 msgstr "Token Details"
 
-#: src/features/activity/utils/format-activity.ts:81
+#: src/features/activity/utils/format-activity.ts:83
 msgid "Token Transfer"
 msgstr "Token Transfer"
 
@@ -1504,8 +1429,8 @@ msgstr "Unable to open app store. Please update the app manually from your devic
 msgid "Unable to Open Store"
 msgstr "Unable to Open Store"
 
-#: src/features/activity/utils/format-activity.ts:86
-#: src/features/activity/utils/format-activity.ts:92
+#: src/features/activity/utils/format-activity.ts:88
+#: src/features/activity/utils/format-activity.ts:94
 #: src/features/approver/utils.tsx:45
 #: src/features/approver/utils.tsx:57
 #: src/features/approver/utils.tsx:70

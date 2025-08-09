@@ -11,8 +11,7 @@ import SettingsLayout from '@/features/settings/settings-layout';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
 import { supportedLanguages } from '@/i18n/languages';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react';
+import { select, t } from '@lingui/core/macro';
 import { keys } from 'remeda';
 
 import {
@@ -24,7 +23,6 @@ import {
   SheetRef,
   SunInCloudIcon,
 } from '@leather.io/ui/native';
-import { capitalize } from '@leather.io/utils';
 
 export default function SettingsDisplayScreen() {
   const btcConversionUnitEnabled = useBtcConversionUnitFlag();
@@ -44,7 +42,7 @@ export default function SettingsDisplayScreen() {
     languagePreference,
     themePreference,
   } = useSettings();
-  const { i18n } = useLingui();
+  const accountIdentifierType = accountDisplayPreference.type.replace(/-/g, '_');
 
   function onUpdateHapticsPreference() {
     changeHapticsPreference(hapticsPreference === 'enabled' ? 'disabled' : 'enabled');
@@ -55,10 +53,13 @@ export default function SettingsDisplayScreen() {
       <SettingsList>
         <SettingsListItem
           title={t`Theme`}
-          caption={i18n._({
-            id: 'display.theme.cell_caption',
-            message: '{theme}',
-            values: { theme: capitalize(themePreference) },
+          caption={t({
+            message: select(themePreference, {
+              light: 'Light',
+              dark: 'Dark',
+              system: 'System',
+              other: 'Unknown',
+            }),
           })}
           icon={<SunInCloudIcon />}
           onPress={() => {
@@ -69,11 +70,7 @@ export default function SettingsDisplayScreen() {
           <>
             <SettingsListItem
               title={t`Bitcoin unit`}
-              caption={i18n._({
-                id: 'display.bitcoin_unit.cell_caption',
-                message: '{symbol}',
-                values: { symbol: bitcoinUnitPreference.symbol },
-              })}
+              caption={bitcoinUnitPreference.symbol}
               icon={<BitcoinCircleIcon />}
               onPress={() => {
                 bitcoinUnitSheetRef.current?.present();
@@ -93,11 +90,7 @@ export default function SettingsDisplayScreen() {
         )}
         <SettingsListItem
           title={t`Conversion unit`}
-          caption={i18n._({
-            id: 'display.conversion_unit.cell_caption',
-            message: '{currency}',
-            values: { currency: fiatCurrencyPreference },
-          })}
+          caption={fiatCurrencyPreference}
           icon={<DollarCircleIcon />}
           onPress={() => {
             conversionUnitSheetRef.current?.present();
@@ -105,10 +98,14 @@ export default function SettingsDisplayScreen() {
         />
         <SettingsListItem
           title={t`Account identifier`}
-          caption={i18n._({
-            id: 'display.account_identifier.cell_caption',
-            message: '{name}',
-            values: { name: accountDisplayPreference.name },
+          caption={t({
+            message: select(accountIdentifierType, {
+              native_segwit: 'Native Segwit address',
+              taproot: 'Taproot address',
+              bns: 'BNS name',
+              stacks: 'Stacks address',
+              other: 'Unknown',
+            }),
           })}
           icon={<PackageSecurityIcon />}
           onPress={() => {

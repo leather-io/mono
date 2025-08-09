@@ -140,7 +140,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
 
   return (
     <>
-      <SettingsLayout title={t`Configure wallet`}>
+      <SettingsLayout title={t`Configure\nwallet`}>
         <Box px="5" py="2">
           <Text variant="heading05">{wallet.name}</Text>
         </Box>

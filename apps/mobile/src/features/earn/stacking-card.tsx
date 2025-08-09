@@ -12,8 +12,8 @@ export function StackingCard() {
   return (
     <EarnCard
       title={t`Stacking rewards`}
-      minYield={t`6`}
-      maxYield={t`10%`}
+      minYield="6"
+      maxYield="10%"
       description={t`Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking`}
       image={
         <>

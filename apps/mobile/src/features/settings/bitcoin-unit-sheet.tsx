@@ -6,7 +6,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { LEATHER_GUIDES_MOBILE_BITCOIN_UNIT } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react';
+import { capitalize } from 'remeda';
 
 import { bitcoinUnitsKeyedByName } from '@leather.io/constants';
 import { BitcoinUnit } from '@leather.io/models';
@@ -21,7 +21,6 @@ interface BitcoinUnitSheetProps {
 export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
-  const { i18n } = useLingui();
   const { openURL } = useOpenURL();
 
   function onUpdateBitcoinUnit(unit: BitcoinUnit) {
@@ -42,16 +41,8 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
         {Object.values(bitcoinUnitsKeyedByName).map(unit => (
           <SettingsListItem
             key={unit.name}
-            title={i18n._({
-              id: 'bitcoin_unit.cell_title',
-              message: '{symbol}',
-              values: { symbol: unit.symbol },
-            })}
-            caption={i18n._({
-              id: 'bitcoin_unit.cell_caption',
-              message: '{name}',
-              values: { name: unit.name },
-            })}
+            title={unit.symbol}
+            caption={capitalize(unit.name)}
             onPress={() => onUpdateBitcoinUnit(unit.name)}
             type="radio"
             isRadioSelected={settings.bitcoinUnitPreference.name === unit.name}

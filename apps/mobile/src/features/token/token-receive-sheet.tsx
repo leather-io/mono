@@ -9,7 +9,6 @@ import { QrCard } from '@/features/receive/components/qr-card';
 import { useCopyAddress } from '@/hooks/use-copy-address';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react';
 
 import {
   AddressDisplayer,
@@ -39,7 +38,6 @@ interface ReceiveSheetProps {
 }
 export function ReceiveSheet({ data, sheetRef }: ReceiveSheetProps) {
   const triggerHaptics = useHaptics();
-  const { i18n } = useLingui();
   const { name, address, addressType, description } = data.asset;
   const onCopyAddress = useCopyAddress();
 
@@ -69,16 +67,7 @@ export function ReceiveSheet({ data, sheetRef }: ReceiveSheetProps) {
       onDismiss={handleDismiss}
     >
       <FullHeightSheetLayout
-        header={
-          <FullHeightSheetHeader
-            title={t`Receive`}
-            subtitle={i18n._({
-              id: 'select_asset.header_subtitle',
-              message: '{subtitle}',
-              values: { subtitle: data.accountName },
-            })}
-          />
-        }
+        header={<FullHeightSheetHeader title={t`Receive`} subtitle={data.accountName} />}
       >
         <Box gap="5" px="5" flex={1}>
           <Box mt="5" mb="6">

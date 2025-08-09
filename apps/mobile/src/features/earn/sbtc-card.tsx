@@ -13,8 +13,8 @@ export function SbtcCard() {
   return (
     <EarnCard
       title={t`Earn with SBTC`}
-      minYield={t`6`}
-      maxYield={t`8%`}
+      minYield="6"
+      maxYield="8%"
       description={t`Bridge your BTC to Bitcoin’s leading L2 to earn yield from holding or pooling`}
       image={
         <>

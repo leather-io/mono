@@ -5,7 +5,6 @@ import SettingsLayout from '@/features/settings/settings-layout';
 import { useSettings } from '@/store/settings/settings';
 import { defaultNetworkPreferences } from '@/store/settings/utils';
 import { t } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react';
 
 import {
   DefaultNetworkConfigurations,
@@ -35,7 +34,6 @@ function getNetworkIcon(network: DefaultNetworkConfigurations) {
 export default function SettingsNetworksScreen() {
   const settings = useSettings();
   const { displayToast } = useToastContext();
-  const { i18n } = useLingui();
 
   function onChangeNetwork(network: DefaultNetworkConfigurations) {
     settings.changeNetworkPreference(network);
@@ -51,11 +49,7 @@ export default function SettingsNetworksScreen() {
         {defaultNetworkPreferences.map(network => (
           <SettingsListItem
             icon={getNetworkIcon(network)}
-            title={i18n._({
-              id: 'networks.cell_title',
-              message: '{network}',
-              values: { network: capitalize(network) },
-            })}
+            title={capitalize(network)}
             caption={settings.networkPreference.id === network ? t`Enabled` : t`Disabled`}
             key={network}
             onPress={() => onChangeNetwork(network)}

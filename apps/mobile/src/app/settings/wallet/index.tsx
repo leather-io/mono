@@ -7,7 +7,7 @@ import { EmptyWalletsScreen } from '@/features/settings/wallet-and-accounts/comp
 import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-list';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
-import { t } from '@lingui/core/macro';
+import { plural, t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
 import { Eye1ClosedIcon, PlusIcon } from '@leather.io/ui/native';
@@ -30,7 +30,12 @@ export default function SettingsWalletScreen() {
             {hiddenAccountsLength > 0 && (
               <SettingsListItem
                 title={t`Hidden accounts`}
-                caption={t`${hiddenAccountsLength} hidden accounts`}
+                caption={t({
+                  message: plural(hiddenAccountsLength, {
+                    one: '# hidden account',
+                    other: '# hidden accounts',
+                  }),
+                })}
                 icon={<Eye1ClosedIcon />}
                 onPress={() => {
                   router.navigate('/settings/wallet/hidden-accounts');
