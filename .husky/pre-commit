@@ -1,1 +1,2 @@
+node .husky/mobile-lingui-extract.js
 node .husky/hooks.js pre-commit
