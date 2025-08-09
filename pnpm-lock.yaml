@@ -84,8 +84,8 @@ importers:
         specifier: 9.16.0
         version: 9.16.0(jiti@2.4.2)
       eslint-plugin-lingui:
-        specifier: 0.4.0
-        version: 0.4.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.8.3)
+        specifier: 0.10.1
+        version: 0.10.1(eslint@9.16.0(jiti@2.4.2))(typescript@5.8.3)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -10616,8 +10616,8 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-plugin-lingui@0.4.0:
-    resolution: {integrity: sha512-7LoOYIdF9cjn2enLwuW0bCOQYTD8KswEKVbjh8CHccBCRmaRHJ2hPKikrK+csF50Uca82GUsh+pCKZlp+vXiKQ==}
+  eslint-plugin-lingui@0.10.1:
+    resolution: {integrity: sha512-pyNM1fC4IDgxOdzwe4DxOOIBf396tbE8m9s4aw01TqOKCEIXT2apSqmZ6ESeX26lBQS2ItYj/0Bhme6ZLKfYNQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       eslint: ^8.37.0 || ^9.0.0
@@ -27765,10 +27765,11 @@ snapshots:
     dependencies:
       eslint: 9.16.0(jiti@2.4.2)
 
-  eslint-plugin-lingui@0.4.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.8.3):
+  eslint-plugin-lingui@0.10.1(eslint@9.16.0(jiti@2.4.2))(typescript@5.8.3):
     dependencies:
       '@typescript-eslint/utils': 8.32.1(eslint@9.16.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.16.0(jiti@2.4.2)
+      micromatch: 4.0.8
     transitivePeerDependencies:
       - supports-color
       - typescript

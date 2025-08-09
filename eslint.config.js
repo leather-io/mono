@@ -70,8 +70,23 @@ export default tseslint.config(
     rules: {
       'lingui/no-unlocalized-strings': [
         'error',
+        // https://github.com/lingui/eslint-plugin/blob/main/docs/rules/no-unlocalized-strings.md
         {
-          ignoreFunction: [
+          ignore: ['^(?![A-Z])\\S+$', '^[A-Z0-9_-]+$'],
+          ignoreNames: [
+            { regex: { pattern: 'className', flags: 'i' } },
+            { regex: { pattern: '^[A-Z0-9_-]+$' } },
+            'styleName',
+            'src',
+            'srcSet',
+            'type',
+            'id',
+            'width',
+            'height',
+            'displayName',
+            'Authorization',
+          ],
+          ignoreFunctions: [
             'Error',
             'BitcoinError',
             'captureException',
@@ -83,6 +98,32 @@ export default tseslint.config(
             'describe',
             'test',
             'assertExistence',
+            'cva',
+            'cn',
+            'track',
+            'Error',
+            'console.*',
+            '*headers.set',
+            '*.addEventListener',
+            '*.removeEventListener',
+            '*.postMessage',
+            '*.getElementById',
+            '*.dispatch',
+            '*.commit',
+            '*.includes',
+            '*.indexOf',
+            '*.endsWith',
+            '*.format',
+            '*.startsWith',
+            'require',
+          ],
+          // Following settings require typed linting https://typescript-eslint.io/getting-started/typed-linting/
+          useTsTypes: true,
+          ignoreMethodsOnTypes: [
+            // Ignore specified methods on Map and Set types
+            'Map.get',
+            'Map.has',
+            'Set.has',
           ],
         },
       ],

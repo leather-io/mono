@@ -350,10 +350,9 @@ msgstr "App Store"
 msgid "Approve"
 msgstr "Approve"
 
-#. placeholder {0}: index + 1
-#: src/features/approver/contract-call-args.section.tsx:30
-msgid "Argument {0}"
-msgstr "Argument {0}"
+#: src/features/approver/contract-call-args.section.tsx:31
+msgid "Argument {argumentNumber}"
+msgstr "Argument {argumentNumber}"
 
 #: src/utils/dapps.ts:35
 msgid "Arkadiko"
@@ -1521,10 +1520,9 @@ msgstr "Unknown error during version check"
 msgid "Unlock"
 msgstr "Unlock"
 
-#. placeholder {0}: getStoreName()
-#: src/utils/app-store-utils.ts:50
-msgid "Update from {0}"
-msgstr "Update from {0}"
+#: src/utils/app-store-utils.ts:51
+msgid "Update from {storeName}"
+msgstr "Update from {storeName}"
 
 #: src/components/app-update-required/app-update-required-sheet.tsx:28
 msgid "Update the app to get access to the latest features."
