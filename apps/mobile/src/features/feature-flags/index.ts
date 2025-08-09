@@ -1,4 +1,3 @@
-import { isProduction } from '@/shared/environment';
 import { getDeviceId } from '@/utils/get-device-id';
 import {
   AutoEnvAttributes,
@@ -13,7 +12,7 @@ export const featureFlagClient = new ReactNativeLDClient(
   process.env.EXPO_PUBLIC_LAUNCH_DARKLY ?? '',
   AutoEnvAttributes.Enabled,
   {
-    debug: !isProduction(),
+    debug: false,
     applicationInfo: {
       id: 'leather-mobile-wallet',
       version: Application.nativeApplicationVersion ?? '0.0.1',
