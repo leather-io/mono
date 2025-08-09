@@ -8,8 +8,10 @@ import { useBitcoinAddresses } from '@/store/keychains/bitcoin/bitcoin-keychains
 import { useStacksSignerAddresses } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings';
 import { useWallets } from '@/store/wallets/wallets.read';
-import messaging from '@react-native-firebase/messaging';
+import { deleteToken, getMessaging, getToken, onMessage } from '@react-native-firebase/messaging';
 import * as Notifications from 'expo-notifications';
+
+const messaging = getMessaging();
 
 interface RegisterNotifications {
   /**
@@ -46,18 +48,18 @@ function useRegisterNotifications(): RegisterNotifications {
   const releasePushNotifications = useNotificationsFlag();
 
   const registerNotificationsBtc = useCallback(async () => {
-    const notificationToken = await messaging().getToken();
+    const notificationToken = await getToken(messaging);
     await registerToken({ addresses: bitcoinAddresses, notificationToken, chain: 'bitcoin' });
   }, [registerToken, bitcoinAddresses]);
 
   const registerNotificationsStx = useCallback(async () => {
-    const notificationToken = await messaging().getToken();
+    const notificationToken = await getToken(messaging);
 
     await registerToken({ addresses: stacksAddresses, notificationToken, chain: 'stacks' });
   }, [registerToken, stacksAddresses]);
 
   const registerInAppNotifications = useCallback(() => {
-    messaging().onMessage(remoteMessage => {
+    onMessage(messaging, remoteMessage => {
       if (remoteMessage.notification?.body) {
         displayToast({ title: remoteMessage.notification.body, type: 'success' });
       }
@@ -67,7 +69,7 @@ function useRegisterNotifications(): RegisterNotifications {
   const unregisterNotifications = useCallback(async () => {
     if (releasePushNotifications) {
       // Delete FCM token from Firebase
-      await messaging().deleteToken();
+      await deleteToken(messaging);
     }
   }, [releasePushNotifications]);
 
