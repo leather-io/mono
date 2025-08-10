@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 import { getStoreButtonText, handleStoreRedirect } from '@/utils/app-store-utils';
 import { t } from '@lingui/core/macro';
 
-import { ButtonV2 } from '@leather.io/ui/native';
+import { Button } from '@leather.io/ui/native';
 import { isError } from '@leather.io/utils';
 
 interface UpdateButtonProps {
@@ -31,12 +31,8 @@ export function UpdateButton({ onPress }: UpdateButtonProps) {
   }
 
   return (
-    <ButtonV2
-      buttonState="default"
-      onPress={handlePress}
-      disabled={isLoading}
-      testID="update-app-button"
-      title={getStoreButtonText()}
-    />
+    <Button onPress={handlePress} disabled={isLoading} testID="update-app-button">
+      {getStoreButtonText()}
+    </Button>
   );
 }

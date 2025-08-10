@@ -15,7 +15,7 @@ import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
-import { Box, ButtonV2, SheetRef, SkeletonLoader, useTheme } from '@leather.io/ui/native';
+import { Box, Button, SheetRef, SkeletonLoader, useTheme } from '@leather.io/ui/native';
 
 import { AddAccountCard } from './components/add-account-card';
 import { CreateWalletCard } from './components/create-wallet-card';
@@ -55,24 +55,17 @@ export function AccountsWidget() {
           )}
           {wallets.hasWallets && (
             <Box my="3" px="5" flexDirection="row" gap="2">
-              <ButtonV2
-                onPress={() => {
-                  sendSheetRef.current?.present();
-                }}
+              <Button size="md" onPress={() => sendSheetRef.current?.present()} minWidth={86}>
+                {t`Send`}
+              </Button>
+              <Button
+                size="md"
+                onPress={() => receiveSheetRef.current?.present()}
                 minWidth={86}
-                size="sm"
-                buttonState="default"
-                title={t`Send`}
-              />
-              <ButtonV2
-                onPress={() => {
-                  receiveSheetRef.current?.present();
-                }}
-                minWidth={86}
-                size="sm"
-                buttonState="outline"
-                title={t`Receive`}
-              />
+                variant="outline"
+              >
+                {t`Receive`}
+              </Button>
             </Box>
           )}
         </Box>

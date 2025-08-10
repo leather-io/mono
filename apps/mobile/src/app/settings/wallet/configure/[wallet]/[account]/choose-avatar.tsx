@@ -70,12 +70,9 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
         </Box>
       </SettingsLayout>
       <Screen.Footer>
-        <Button
-          disabled={isSubmitDisabled}
-          onPress={onSubmit}
-          buttonState={isSubmitDisabled ? 'disabled' : 'default'}
-          title={t`Save`}
-        />
+        <Button disabled={isSubmitDisabled} onPress={onSubmit}>
+          {t`Save`}
+        </Button>
       </Screen.Footer>
     </>
   );

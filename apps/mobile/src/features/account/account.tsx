@@ -22,7 +22,7 @@ import { Account as AccountType } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 import { router } from 'expo-router';
 
-import { Box, ButtonV2, SettingsGearIcon } from '@leather.io/ui/native';
+import { Box, Button, SettingsGearIcon } from '@leather.io/ui/native';
 
 import { AccountBalance } from '../balances/total-balance';
 
@@ -91,24 +91,17 @@ export function Account({ account, walletName }: AccountProps) {
           walletName={walletName}
         />
         <Box mt="3" mb="5" px="5" flexDirection="row" justifyContent="center" gap="2">
-          <ButtonV2
-            onPress={() => {
-              sendSheetRef.current?.present();
-            }}
+          <Button size="md" minWidth={86} onPress={() => sendSheetRef.current?.present()}>
+            {t`Send`}
+          </Button>
+          <Button
+            size="md"
             minWidth={86}
-            size="sm"
-            buttonState="default"
-            title={t`Send`}
-          />
-          <ButtonV2
-            onPress={() => {
-              receiveSheetRef.current?.present();
-            }}
-            minWidth={86}
-            size="sm"
-            buttonState="outline"
-            title={t`Receive`}
-          />
+            variant="outline"
+            onPress={() => receiveSheetRef.current?.present()}
+          >
+            {t`Receive`}
+          </Button>
         </Box>
         <Box gap="8">
           <BalancesWidget

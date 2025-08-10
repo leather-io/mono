@@ -29,13 +29,13 @@ export function MemoSheet({ sheetRef, memo: _memo, onChangeMemo }: MemoSheetProp
       />
       <Button
         mt="3"
-        buttonState="default"
         onPress={() => {
           sheetRef.current?.close();
           onChangeMemo(memo);
         }}
-        title={t`Confirm`}
-      />
+      >
+        {t`Confirm`}
+      </Button>
     </SheetLayout>
   );
 }

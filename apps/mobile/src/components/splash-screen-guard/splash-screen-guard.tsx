@@ -8,7 +8,6 @@ import { t } from '@lingui/core/macro';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
 
-import { colorThemes } from '@leather.io/tokens';
 import { Box, Button, HasChildren, useOnMount, useTheme } from '@leather.io/ui/native';
 
 import { LeatherSplash, SplashLottieView } from '../animations/leather-splash';
@@ -139,14 +138,10 @@ export function SplashScreenGuard({ children }: HasChildren) {
                 left: theme.spacing[5],
                 right: theme.spacing[5],
                 position: 'absolute',
-                backgroundColor: colorThemes.dark['ink.action-primary-default'],
               }}
-              textStyle={{
-                color: colorThemes.dark['ink.background-primary'],
-              }}
-              title={t`Unlock`}
-              buttonState="default"
-            />
+            >
+              {t`Unlock`}
+            </Button>
           )}
         </Box>
       )}

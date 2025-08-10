@@ -86,12 +86,9 @@ export function Memo({ value, onChange, onBlur, invalid, isTouched, error }: Mem
             {error.message}
           </Text>
         ) : null}
-        <Button
-          mt="3"
-          buttonState="default"
-          onPress={() => handleSubmitEditing()}
-          title={t`Confirm`}
-        />
+        <Button mt="3" onPress={() => handleSubmitEditing()}>
+          {t`Confirm`}
+        </Button>
       </SheetLayout>
     </>
   );

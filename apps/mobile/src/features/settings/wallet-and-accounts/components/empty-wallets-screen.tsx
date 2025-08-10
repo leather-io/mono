@@ -21,10 +21,10 @@ export function EmptyWalletsScreen({ onPressCreateWallet }: EmptyWalletsScreenPr
       </Text>
       <Button
         onPress={onPressCreateWallet}
-        icon={<PlusIcon color="ink.background-primary" />}
-        buttonState="default"
-        title={t`Add wallet`}
-      />
+        iconStart={() => <PlusIcon color="ink.background-primary" />}
+      >
+        {t`Add wallet`}
+      </Button>
     </Box>
   );
 }

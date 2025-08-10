@@ -17,28 +17,26 @@ export function ApproverButtons({ approverState, onBack, onApprove }: ApproverBu
     case 'start':
       return (
         <>
-          <Button buttonState="outline" title={t`Edit`} flex={1} onPress={onBack} />
-          <Button buttonState="default" title={t`Approve`} flex={1} onPress={onApprove} />
+          <Button variant="outline" flex={1} onPress={onBack}>
+            {t`Edit`}
+          </Button>
+          <Button flex={1} onPress={onApprove}>
+            {t`Approve`}
+          </Button>
         </>
       );
     case 'submitting':
       return (
-        <Button
-          flex={1}
-          buttonState="default"
-          title={t`Submitting...`}
-          icon={<SpinnerIcon invertColors />}
-        />
+        <Button flex={1} iconStart={() => <SpinnerIcon invertColors />}>
+          {t`Submitting...`}
+        </Button>
       );
 
     case 'submitted':
       return (
-        <Button
-          flex={1}
-          buttonState="success"
-          title={t`Submitted`}
-          icon={<CheckmarkCircleIcon color="ink.background-primary" />}
-        />
+        <Button flex={1} iconStart={() => <CheckmarkCircleIcon color="ink.background-primary" />}>
+          {t`Submitted`}
+        </Button>
       );
     default:
       assertUnreachable(approverState);

@@ -16,6 +16,7 @@ interface HapticConfig {
 }
 
 interface PressableOwnProps {
+  ref?: PressableRef;
   /**
    * Configure haptic feedback
    *
@@ -64,7 +65,7 @@ export function Pressable({
   style,
   ref,
   ...rest
-}: PressableProps & { ref?: PressableRef }) {
+}: PressableProps) {
   const triggerHaptics = useHaptics();
   const hapticConfig = isString(haptics) ? { onPress: haptics } : haptics;
   const { onPressIn, onPressOut, pressed } = usePressedState(rest);

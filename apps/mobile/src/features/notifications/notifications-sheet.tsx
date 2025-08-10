@@ -19,17 +19,18 @@ export function NotificationsSheet({ sheetRef }: { sheetRef: RefObject<SheetRef 
               changeNotificationsPreference('enabled');
               sheetRef.current?.dismiss();
             }}
-            buttonState="default"
-            title={t`Notify me`}
-          />
+          >
+            {t`Notify me`}
+          </Button>
           <Button
             onPress={() => {
               changeNotificationsPreference('disabled');
               sheetRef.current?.dismiss();
             }}
-            buttonState="ghost"
-            title={t`Don’t notify me`}
-          />
+            variant="ghost"
+          >
+            {t`Don't notify me`}
+          </Button>
         </Box>
       </Box>
     </Sheet>

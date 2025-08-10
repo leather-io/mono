@@ -139,7 +139,7 @@ export function StxForm({
           )}
         />
 
-        <Button onPress={onSubmit} disabled={!form.formState.isValid} title={t`Review`} />
+        <Button onPress={onSubmit} disabled={!form.formState.isValid}>{t`Review`}</Button>
       </SendFormFooter>
     </SendFormContainer>
   );
