@@ -21,8 +21,8 @@ export default meta;
 export const ButtonStory = {
   args: {
     onPress: () => {},
-    title: 'Submit',
-    buttonState: 'default',
+    children: 'Submit',
+    variant: 'solid',
   },
   argTypes: {},
 } satisfies StoryObj<typeof Button>;

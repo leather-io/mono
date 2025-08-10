@@ -131,11 +131,14 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
                   setIsAddingAccount(false);
                 }
               }}
-              buttonState="ghost"
+              variant="ghost"
               disabled={isAddingAccount}
-              title={isAddingAccount ? t`Adding account...` : t`Add account`}
-              icon={isAddingAccount ? <SpinnerIcon /> : <PlusIcon variant="small" />}
-            />
+              iconStart={
+                isAddingAccount ? () => <SpinnerIcon /> : () => <PlusIcon variant="small" />
+              }
+            >
+              {isAddingAccount ? t`Adding account...` : t`Add account`}
+            </Button>
           )}
         </Box>
       )}

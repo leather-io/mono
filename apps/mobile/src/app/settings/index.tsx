@@ -159,12 +159,9 @@ export default function SettingsScreen() {
 
         <Divider my="3" />
 
-        <Button
-          onPress={lockApp}
-          buttonState="outline"
-          title={t`Lock app`}
-          testID={TestId.settingsLockAppButton}
-        />
+        <Button onPress={lockApp} variant="outline" testID={TestId.settingsLockAppButton}>
+          {t`Lock app`}
+        </Button>
       </Box>
 
       <NotifyUserSheetLayout

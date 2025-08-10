@@ -96,10 +96,10 @@ export function RecoverWallet() {
           <Button
             onPress={pasteFromClipboard}
             style={{ position: 'absolute', bottom: 12, right: 12, zIndex: 20 }}
-            buttonState="default"
-            title={t`Paste`}
-            icon={<NoteEmptyIcon color="ink.background-primary" />}
-          />
+            iconStart={() => <NoteEmptyIcon color="ink.background-primary" />}
+          >
+            {t`Paste`}
+          </Button>
         )}
         <TextInput
           textVariant="label01"

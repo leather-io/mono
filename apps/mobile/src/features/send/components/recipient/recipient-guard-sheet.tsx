@@ -55,11 +55,13 @@ export function RecipientGuardSheet({ sheetRef, config, onConfirm }: RecipientWa
           {
             warn: (
               <>
-                <Button title={primaryActionLabel} onPress={() => onConfirm(address)} />
-                <Button buttonState="ghost" title={secondaryActionLabel} onPress={handleDismiss} />
+                <Button onPress={() => onConfirm(address)}>{primaryActionLabel}</Button>
+                <Button variant="ghost" onPress={handleDismiss}>
+                  {secondaryActionLabel}
+                </Button>
               </>
             ),
-            block: <Button title={t`Dismiss`} onPress={handleDismiss} />,
+            block: <Button onPress={handleDismiss}>{t`Dismiss`}</Button>,
           }[severity]
         }
       </Box>

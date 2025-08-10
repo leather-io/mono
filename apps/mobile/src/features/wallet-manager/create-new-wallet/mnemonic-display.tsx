@@ -56,17 +56,19 @@ export function MnemonicDisplay({
             }}
             flex={1}
             style={{ borderColor: theme.colors['ink.text-primary'] }}
-            buttonState="outline"
-            title={t`Copy`}
-          />
+            variant="outline"
+          >
+            {t`Copy`}
+          </Button>
           {releaseWaitlistFeatures && (
             <Button
               onPress={() => notifySheetRef.current?.present()}
               flex={1}
               style={{ borderColor: theme.colors['ink.text-primary'] }}
-              buttonState="outline"
-              title={t`Save to...`}
-            />
+              variant="outline"
+            >
+              {t`Save to...`}
+            </Button>
           )}
         </Box>
       </Box>

@@ -25,7 +25,7 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
         </Box>
       </SettingsLayout>
       <Screen.Footer>
-        <Button onPress={() => router.back()} buttonState="default" title={t`Done`} />
+        <Button onPress={() => router.back()}>{t`Done`}</Button>
       </Screen.Footer>
     </>
   );

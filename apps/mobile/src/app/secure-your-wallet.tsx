@@ -38,21 +38,16 @@ export default function SecureYourWalletScreen() {
       </Screen.ScrollView>
 
       <Screen.Footer>
-        <Button
-          onPress={() => {
-            sheetRef.current?.present();
-          }}
-          pb="4"
-          buttonState="ghost"
-          title={t`Skip for now`}
-        />
+        <Button onPress={() => sheetRef.current?.present()} pb="4" variant="ghost">
+          {t`Skip for now`}
+        </Button>
         <Button
           onPress={() => {
             void callIfEnrolled(() => createWallet({ biometrics: true }));
           }}
-          buttonState="default"
-          title={t`Enable device security`}
-        />
+        >
+          {t`Enable device security`}
+        </Button>
       </Screen.Footer>
       <SkipSecureWalletSheet
         onSubmit={async () => {

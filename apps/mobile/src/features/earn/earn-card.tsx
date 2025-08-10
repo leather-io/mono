@@ -85,14 +85,9 @@ function EarnFooter({ description, onPress }: EarnFooterProps) {
         </Text>
       </Box>
       <Box width={51} height={36}>
-        <Button
-          p="2"
-          justifyContent="center"
-          alignItems="center"
-          gap="1"
-          onPress={onPress}
-          title={t`Enroll`}
-        />
+        <Button p="2" justifyContent="center" alignItems="center" gap="1" onPress={onPress}>
+          {t`Enroll`}
+        </Button>
       </Box>
     </Box>
   );

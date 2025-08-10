@@ -46,7 +46,7 @@ export function Error({ error, onRetry }: ErrorProps) {
             {t`Something went wrong`}
           </Text>
           {onRetry ? (
-            <Button onPress={onRetry} title={t`Try again`} />
+            <Button onPress={onRetry}>{t`Try again`}</Button>
           ) : (
             <>
               <Text variant="label01" textAlign="center">

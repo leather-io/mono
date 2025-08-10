@@ -37,16 +37,12 @@ export function WarningSheetLayout({
           <Text>{description}</Text>
         </Box>
         <Box gap="3">
-          <Button
-            onPress={onSubmit}
-            buttonState={variant === 'critical' ? 'critical' : 'default'}
-            title={t`Continue`}
-          />
-          <Button
-            onPress={() => sheetRef.current?.dismiss()}
-            buttonState="ghost"
-            title={t`Cancel`}
-          />
+          <Button onPress={onSubmit} intent={variant === 'critical' ? 'danger' : undefined}>
+            {t`Continue`}
+          </Button>
+          <Button onPress={() => sheetRef.current?.dismiss()} variant="ghost">
+            {t`Cancel`}
+          </Button>
         </Box>
       </Box>
     </Sheet>

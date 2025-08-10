@@ -59,14 +59,12 @@ export function GetAddressesApproverLayout({
       </Approver.Container>
       <Approver.Footer>
         <Approver.Actions>
-          <Button buttonState="outline" title={t`Deny`} flex={1} onPress={onCloseApprover} />
-          <Button
-            buttonState="default"
-            title={t`Confirm`}
-            flex={1}
-            disabled={isSubmitDisabled}
-            onPress={onApprove}
-          />
+          <Button variant="outline" flex={1} onPress={onCloseApprover}>
+            {t`Deny`}
+          </Button>
+          <Button flex={1} disabled={isSubmitDisabled} onPress={onApprove}>
+            {t`Confirm`}
+          </Button>
         </Approver.Actions>
       </Approver.Footer>
     </Approver>

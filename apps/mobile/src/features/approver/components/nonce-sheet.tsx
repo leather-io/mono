@@ -29,13 +29,13 @@ export function NonceSheet({ sheetRef, nonce: _nonce, onChangeNonce }: NonceShee
       />
       <Button
         mt="3"
-        buttonState="default"
         onPress={() => {
           sheetRef.current?.close();
           onChangeNonce(nonce);
         }}
-        title={t`Confirm`}
-      />
+      >
+        {t`Confirm`}
+      </Button>
     </SheetLayout>
   );
 }

@@ -60,8 +60,12 @@ export function BaseStxMessageApproverLayout({
       </Approver.Container>
       <Approver.Footer>
         <Approver.Actions>
-          <Button buttonState="outline" title={t`Deny`} flex={1} onPress={onCloseApprover} />
-          <Button buttonState="default" title={t`Approve`} flex={1} onPress={onApprove} />
+          <Button variant="outline" flex={1} onPress={onCloseApprover}>
+            {t`Deny`}
+          </Button>
+          <Button flex={1} onPress={onApprove}>
+            {t`Approve`}
+          </Button>
         </Approver.Actions>
       </Approver.Footer>
     </Approver>

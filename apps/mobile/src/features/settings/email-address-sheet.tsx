@@ -53,12 +53,9 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
         TextInputComponent={UIBottomSheetTextInput}
         value={emailAddress}
       />
-      <Button
-        mt="3"
-        buttonState="default"
-        onPress={() => onSaveEmailAddress(emailAddress)}
-        title={t`Save`}
-      />
+      <Button mt="3" onPress={() => onSaveEmailAddress(emailAddress)}>
+        {t`Save`}
+      </Button>
     </SheetLayout>
   );
 }

@@ -105,7 +105,7 @@ msgstr "Accounts"
 msgid "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 
-#: src/features/account/account.tsx:140
+#: src/features/account/account.tsx:133
 #: src/features/navigation/tab-layout.tsx:57
 #: src/features/token/components/token-details.tsx:75
 msgid "Activity"
@@ -114,7 +114,7 @@ msgstr "Activity"
 #: src/features/account/components/add-account-card.tsx:12
 #: src/features/account/components/create-wallet-card.tsx:22
 #: src/features/account/sheets/add-account-sheet.layout.tsx:35
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:136
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:140
 msgid "Add account"
 msgstr "Add account"
 
@@ -150,7 +150,7 @@ msgstr "Add wallet"
 msgid "Add, configure and remove"
 msgstr "Add, configure and remove"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:136
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:140
 msgid "Adding account..."
 msgstr "Adding account..."
 
@@ -277,10 +277,10 @@ msgstr "App is not protected with device-level PIN or biometrics."
 msgid "App Store"
 msgstr "App Store"
 
-#: src/features/approver/components/approver-buttons.tsx:21
-#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:64
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:138
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:65
+#: src/features/approver/components/approver-buttons.tsx:24
+#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:67
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:141
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:68
 msgid "Approve"
 msgstr "Approve"
 
@@ -346,7 +346,7 @@ msgstr "Browser"
 msgid "Can’t send to the same address"
 msgstr "Can’t send to the same address"
 
-#: src/components/sheets/warning-sheet.layout.tsx:48
+#: src/components/sheets/warning-sheet.layout.tsx:44
 #: src/features/qr-scanner/use-camera-permission.ts:39
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:31
 msgid "Cancel"
@@ -395,7 +395,7 @@ msgid "Code"
 msgstr "Code"
 
 #: src/app/(tabs)/(index)/account/[accountId]/collectibles.tsx:17
-#: src/features/account/account.tsx:150
+#: src/features/account/account.tsx:143
 msgid "Collectibles"
 msgstr "Collectibles"
 
@@ -421,8 +421,8 @@ msgstr ""
 
 #: src/features/approver/components/memo-sheet.tsx:37
 #: src/features/approver/components/nonce-sheet.tsx:37
-#: src/features/approver/layouts/get-addresses.layout.tsx:65
-#: src/features/send/components/memo.tsx:93
+#: src/features/approver/layouts/get-addresses.layout.tsx:66
+#: src/features/send/components/memo.tsx:90
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:24
 msgid "Confirm"
@@ -442,12 +442,12 @@ msgid "Contact us"
 msgstr "Contact us"
 
 #: src/app/settings/index.tsx:115
-#: src/app/settings/index.tsx:172
+#: src/app/settings/index.tsx:169
 msgid "Contacts"
 msgstr "Contacts"
 
-#: src/components/sheets/warning-sheet.layout.tsx:43
-#: src/features/recover-wallet/recover-wallet.layout.tsx:87
+#: src/components/sheets/warning-sheet.layout.tsx:41
+#: src/features/recover-wallet/recover-wallet.layout.tsx:88
 msgid "Continue"
 msgstr "Continue"
 
@@ -472,7 +472,7 @@ msgstr "Conversion unit updated"
 msgid "Copied to clipboard"
 msgstr "Copied to clipboard"
 
-#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:60
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:61
 msgid "Copy"
 msgstr "Copy"
 
@@ -514,14 +514,14 @@ msgstr "Currently normal"
 msgid "Custom"
 msgstr "Custom"
 
-#: src/app/settings/index.tsx:179
+#: src/app/settings/index.tsx:176
 msgid "Custom fees"
 msgstr "Custom fees"
 
-#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:63
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:137
-#: src/features/approver/layouts/get-addresses.layout.tsx:62
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:64
+#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:64
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:138
+#: src/features/approver/layouts/get-addresses.layout.tsx:63
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:65
 msgid "Deny"
 msgstr "Deny"
 
@@ -556,7 +556,7 @@ msgstr "Disabled"
 msgid "Disconnected"
 msgstr "Disconnected"
 
-#: src/features/send/components/recipient/recipient-guard-sheet.tsx:62
+#: src/features/send/components/recipient/recipient-guard-sheet.tsx:64
 msgid "Dismiss"
 msgstr "Dismiss"
 
@@ -569,9 +569,9 @@ msgstr "Display"
 msgid "Dive into feature details"
 msgstr "Dive into feature details"
 
-#: src/features/notifications/notifications-sheet.tsx:31
-msgid "Don’t notify me"
-msgstr "Don’t notify me"
+#: src/features/notifications/notifications-sheet.tsx:32
+msgid "Don't notify me"
+msgstr "Don't notify me"
 
 #: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:28
 msgid "Done"
@@ -589,7 +589,7 @@ msgstr "Earn"
 msgid "Earn with SBTC"
 msgstr "Earn with SBTC"
 
-#: src/features/approver/components/approver-buttons.tsx:20
+#: src/features/approver/components/approver-buttons.tsx:21
 msgid "Edit"
 msgstr "Edit"
 
@@ -608,7 +608,7 @@ msgstr "Email"
 msgid "Email address"
 msgstr "Email address"
 
-#: src/app/secure-your-wallet.tsx:54
+#: src/app/secure-your-wallet.tsx:49
 msgid "Enable device security"
 msgstr "Enable device security"
 
@@ -623,7 +623,7 @@ msgstr "Enable to receive notifications about transactions"
 msgid "Enabled"
 msgstr "Enabled"
 
-#: src/features/earn/earn-card.tsx:94
+#: src/features/earn/earn-card.tsx:89
 msgid "Enroll"
 msgstr "Enroll"
 
@@ -777,12 +777,12 @@ msgid "Home"
 msgstr "Home"
 
 #: src/components/sheets/notify-user-sheet.layout.tsx:50
-msgid "I’m interested"
-msgstr "I’m interested"
+msgid "I'm interested"
+msgstr "I'm interested"
 
-#: src/app/create-new-wallet.tsx:124
-msgid "I’ve backed it up"
-msgstr "I’ve backed it up"
+#: src/app/create-new-wallet.tsx:125
+msgid "I've backed it up"
+msgstr "I've backed it up"
 
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:67
 msgid "Icons"
@@ -859,7 +859,7 @@ msgstr "Leather"
 msgid "Lisa"
 msgstr "Lisa"
 
-#: src/app/settings/index.tsx:165
+#: src/app/settings/index.tsx:163
 msgid "Lock app"
 msgstr "Lock app"
 
@@ -1000,7 +1000,7 @@ msgstr "Output"
 msgid "Passphrase"
 msgstr "Passphrase"
 
-#: src/features/recover-wallet/recover-wallet.tsx:100
+#: src/features/recover-wallet/recover-wallet.tsx:101
 msgid "Paste"
 msgstr "Paste"
 
@@ -1042,8 +1042,8 @@ msgstr "Push"
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
-#: src/features/account/account.tsx:110
-#: src/features/account/accounts-widget.tsx:74
+#: src/features/account/account.tsx:103
+#: src/features/account/accounts-widget.tsx:67
 #: src/features/receive/screens/asset-details.tsx:48
 #: src/features/receive/screens/select-account.tsx:24
 #: src/features/receive/screens/select-asset.tsx:69
@@ -1114,15 +1114,15 @@ msgstr "Review"
 msgid "Runes"
 msgstr "Runes"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:77
-#: src/features/settings/email-address-sheet.tsx:60
+#: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:74
+#: src/features/settings/email-address-sheet.tsx:57
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:21
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:21
 msgid "Save"
 msgstr "Save"
 
-#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:68
-#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:76
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:70
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:78
 msgid "Save to..."
 msgstr "Save to..."
 
@@ -1162,8 +1162,8 @@ msgstr "Select account"
 msgid "Select asset"
 msgstr "Select asset"
 
-#: src/features/account/account.tsx:101
-#: src/features/account/accounts-widget.tsx:65
+#: src/features/account/account.tsx:95
+#: src/features/account/accounts-widget.tsx:59
 #: src/features/send/screens/form.tsx:54
 #: src/features/send/screens/select-account.tsx:46
 #: src/features/send/screens/select-asset.tsx:39
@@ -1201,8 +1201,8 @@ msgstr "Sent"
 msgid "Settings"
 msgstr "Settings"
 
-#: src/features/receive/screens/asset-details.tsx:90
-#: src/features/token/token-receive-sheet.tsx:108
+#: src/features/receive/screens/asset-details.tsx:95
+#: src/features/token/token-receive-sheet.tsx:113
 msgid "Share"
 msgstr "Share"
 
@@ -1228,7 +1228,7 @@ msgstr "Sign Message"
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
-#: src/app/secure-your-wallet.tsx:47
+#: src/app/secure-your-wallet.tsx:42
 msgid "Skip for now"
 msgstr "Skip for now"
 
@@ -1271,11 +1271,11 @@ msgstr "Standard"
 msgid "STX"
 msgstr "STX"
 
-#: src/features/approver/components/approver-buttons.tsx:39
+#: src/features/approver/components/approver-buttons.tsx:38
 msgid "Submitted"
 msgstr "Submitted"
 
-#: src/features/approver/components/approver-buttons.tsx:29
+#: src/features/approver/components/approver-buttons.tsx:31
 msgid "Submitting..."
 msgstr "Submitting..."
 
@@ -1383,7 +1383,7 @@ msgstr "Token Details"
 msgid "Token Transfer"
 msgstr "Token Transfer"
 
-#: src/features/account/account.tsx:128
+#: src/features/account/account.tsx:121
 msgid "Tokens"
 msgstr "Tokens"
 
@@ -1441,7 +1441,7 @@ msgstr "Unknown"
 msgid "Unknown error during version check"
 msgstr "Unknown error during version check"
 
-#: src/components/splash-screen-guard/splash-screen-guard.tsx:147
+#: src/components/splash-screen-guard/splash-screen-guard.tsx:143
 msgid "Unlock"
 msgstr "Unlock"
 

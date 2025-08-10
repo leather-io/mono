@@ -3,7 +3,7 @@ import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
-import { Box, ButtonV2, Sheet, Text } from '@leather.io/ui/native';
+import { Box, Button, Sheet, Text } from '@leather.io/ui/native';
 
 import { UpdateButton } from './update-button';
 
@@ -45,11 +45,9 @@ export function AppUpdateRequiredSheet({ onUpdatePress }: AppUpdateRequiredSheet
       </Box>
       <Box width="100%" px="5" maxWidth={400} alignSelf="center" gap="4">
         <UpdateButton onPress={onUpdatePress} />
-        <ButtonV2
-          title={t`Maybe later`}
-          onPress={() => versionGuardSheetRef.current?.dismiss()}
-          buttonState="ghost"
-        />
+        <Button onPress={() => versionGuardSheetRef.current?.dismiss()} variant="ghost">
+          {t`Maybe later`}
+        </Button>
       </Box>
     </Sheet>
   );

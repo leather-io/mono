@@ -83,10 +83,10 @@ export function RecoverWalletLayout({
         <Button
           onPress={onSubmit}
           disabled={isButtonDisabled}
-          buttonState={isButtonDisabled ? 'disabled' : 'default'}
-          title={t`Continue`}
           testID={TestId.restoreWalletContinue}
-        />
+        >
+          {t`Continue`}
+        </Button>
       </Screen.Footer>
       <RecoverWalletSheet
         setPassphrase={setPassphrase}

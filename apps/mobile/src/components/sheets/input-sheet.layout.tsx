@@ -58,12 +58,9 @@ export function InputSheetLayout({
             testID={inputTestId}
           />
         </Box>
-        <Button
-          onPress={() => onSubmit(internalValue)}
-          buttonState="default"
-          title={submitTitle}
-          testID={submitTestId}
-        />
+        <Button onPress={() => onSubmit(internalValue)} testID={submitTestId}>
+          {submitTitle}
+        </Button>
       </Box>
     </Sheet>
   );

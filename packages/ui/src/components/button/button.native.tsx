@@ -1,154 +1,135 @@
-import { ComponentPropsWithoutRef, forwardRef } from 'react';
-import { TouchableOpacity as RNTouchableOpacity, StyleProp, TextStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { ComponentType, ReactNode } from 'react';
 
+import { IconProps } from '../../icons/icon/create-icon.native';
+import { Theme } from '../../theme-native';
+import { PressableRef, PressableRestyleProps } from '../pressable/pressable-core.native';
 import {
-  BaseTheme,
-  LayoutProps,
-  OpacityProps,
-  ResponsiveValue,
-  SpacingProps,
-  SpacingShorthandProps,
-  VariantProps,
-  VisibleProps,
-  composeRestyleFunctions,
-  layout,
-  opacity,
-  spacing,
-  spacingShorthand,
-  useRestyle,
-  visible,
-} from '@shopify/restyle';
+  Pressable,
+  PressableProps,
+  legacyTouchablePressEffect,
+} from '../pressable/pressable.native';
+import { Text } from '../text/text.native';
 
-import { assertUnreachable } from '@leather.io/utils';
-
-import { Text, Theme, TouchableOpacity } from '../../../native';
-
-const buttonRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
-
-type BaseButtonProps<Theme extends BaseTheme> = OpacityProps<Theme> &
-  VisibleProps<Theme> &
-  SpacingProps<Theme> &
-  SpacingShorthandProps<Theme> &
-  LayoutProps<Theme>;
-
-type Props = BaseButtonProps<Theme> & ComponentPropsWithoutRef<typeof RNTouchableOpacity>;
-const composedRestyleFunction = composeRestyleFunctions<Theme, Props>(buttonRestyleFunctions);
-
-export type ButtonState = 'default' | 'critical' | 'disabled' | 'success' | 'outline' | 'ghost';
-
-function whenButtonState<T>(buttonState: ButtonState, match: Record<ButtonState, T>) {
-  switch (buttonState) {
-    case 'default':
-      return match.default;
-    case 'critical':
-      return match.critical;
-    case 'disabled':
-      return match.disabled;
-    case 'success':
-      return match.success;
-    case 'outline':
-      return match.outline;
-    case 'ghost':
-      return match.ghost;
-    default:
-      assertUnreachable(buttonState);
-  }
+type ButtonVariant = 'solid' | 'outline' | 'ghost';
+type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonIntent = 'default' | 'danger';
+interface VariantProps extends PressableRestyleProps {
+  color?: keyof Theme['colors'];
 }
 
-export function getButtonTextColor(buttonState: ButtonState) {
-  return whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
-    buttonState,
-    {
-      default: 'ink.background-primary',
-      critical: 'ink.background-primary',
-      disabled: 'ink.text-non-interactive',
-      success: 'ink.background-primary',
-      outline: 'ink.action-primary-default',
-      ghost: 'ink.text-primary',
-    }
+export interface ButtonProps extends PressableProps {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  intent?: ButtonIntent;
+  iconStart?: ComponentType<IconProps>;
+  iconEnd?: ComponentType<IconProps>;
+  children: ReactNode;
+  disabled?: boolean;
+  ref?: PressableRef;
+}
+
+export function Button({
+  variant = 'solid',
+  size = 'lg',
+  intent = 'default',
+  iconStart: IconStart,
+  iconEnd: IconEnd,
+  children,
+  disabled,
+  ref,
+  ...props
+}: ButtonProps) {
+  const { color, ...variantProps } = getButtonStyles({ size, variant, intent, disabled });
+
+  return (
+    <Pressable
+      ref={ref}
+      borderRadius="round"
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="center"
+      px="3"
+      // TODO: Designs for pressed state are more elaborate, update using transitionProperty when Reanimated v4 is ready
+      pressEffects={legacyTouchablePressEffect}
+      {...variantProps}
+      {...props}
+    >
+      {IconStart && <IconStart color={color} variant="small" />}
+      <Text variant="label02" color={color}>
+        {children}
+      </Text>
+      {IconEnd && <IconEnd color={color} variant="small" />}
+    </Pressable>
   );
 }
 
-export const Button = forwardRef(
-  (
-    {
-      title,
-      buttonState: buttonStateProp = 'default',
-      icon,
-      textStyle,
-      ...rest
-    }: Props & {
-      title?: string;
-      buttonState?: ButtonState;
-      icon?: React.ReactNode;
-      textStyle?: StyleProp<TextStyle>;
-    },
-    ref
-  ) => {
-    const props = useRestyle(composedRestyleFunction, rest);
-    const buttonState = rest.disabled ? 'disabled' : buttonStateProp;
+// Manually define variants and overrides, as Restyle has no compound variants support.
+const sizes: Record<ButtonSize, VariantProps> = {
+  sm: {
+    height: 32,
+    px: '3',
+    gap: '1',
+  },
+  md: {
+    height: 36,
+    px: '3',
+    gap: '1',
+  },
+  lg: {
+    height: 48,
+    px: '4',
+    gap: '2',
+  },
+};
 
-    const bg = whenButtonState<
-      ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
-    >(buttonState, {
-      default: 'ink.text-primary',
-      critical: 'red.action-primary-default',
-      disabled: 'ink.background-secondary',
-      success: 'green.action-primary-default',
-      outline: 'ink.background-primary',
-      ghost: undefined,
-    });
+const baseVariantStyles: Record<ButtonVariant, VariantProps> = {
+  solid: {
+    bg: 'ink.action-primary-default',
+    color: 'ink.background-primary',
+  },
+  outline: {
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'ink.border-default',
+  },
+  ghost: {},
+};
 
-    const textColor = getButtonTextColor(buttonState);
+const intentOverrides: Record<ButtonIntent, Partial<Record<ButtonVariant, VariantProps>>> = {
+  default: {},
+  danger: {
+    solid: { bg: 'red.action-primary-default' },
+    outline: { borderColor: 'red.border', color: 'red.action-primary-default' },
+    ghost: { color: 'red.action-primary-default' },
+  },
+};
 
-    const borderColor = whenButtonState<
-      ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
-    >(buttonState, {
-      default: undefined,
-      critical: undefined,
-      disabled: undefined,
-      success: undefined,
-      outline: 'ink.action-primary-default',
-      ghost: undefined,
-    });
+const disabledOverrides: Record<ButtonVariant, VariantProps> = {
+  solid: { bg: 'ink.background-secondary', color: 'ink.text-non-interactive' },
+  outline: { borderColor: 'ink.text-non-interactive', color: 'ink.text-non-interactive' },
+  ghost: { color: 'ink.text-non-interactive' },
+};
 
-    const borderWidth = whenButtonState<number | undefined>(buttonState, {
-      default: undefined,
-      critical: undefined,
-      disabled: undefined,
-      success: undefined,
-      outline: 1,
-      ghost: undefined,
-    });
+function getButtonStyles({
+  size,
+  variant,
+  intent,
+  disabled,
+}: {
+  size: ButtonSize;
+  variant: ButtonVariant;
+  intent: ButtonIntent;
+  disabled?: boolean;
+}) {
+  const sizeStyles = sizes[size];
+  const baseStyles = baseVariantStyles[variant];
+  const intentStyles = intentOverrides[intent][variant];
+  const disabledStyles = disabled ? disabledOverrides[variant] : {};
 
-    const textVariant: VariantProps<Theme, 'textVariants'>['variant'] = 'label02';
-
-    const hasGap = !!icon && !!title;
-
-    return (
-      <TouchableOpacity
-        ref={ref}
-        bg={bg}
-        p="3"
-        borderRadius="xs"
-        justifyContent="center"
-        alignItems="center"
-        borderColor={borderColor}
-        borderWidth={borderWidth}
-        flexDirection="row"
-        gap={hasGap ? '2' : undefined}
-        {...props}
-      >
-        {icon}
-        <Text variant={textVariant} color={textColor} style={textStyle}>
-          {title}
-        </Text>
-      </TouchableOpacity>
-    );
-  }
-);
-
-Button.displayName = 'Button';
-
-export const AnimatedButton = Animated.createAnimatedComponent(Button);
+  return {
+    ...sizeStyles,
+    ...baseStyles,
+    ...intentStyles,
+    ...disabledStyles,
+  };
+}

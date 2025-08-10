@@ -105,12 +105,13 @@ export function ReceiveSheet({ data, sheetRef }: ReceiveSheetProps) {
           </Pressable>
 
           <Button
-            title={t`Share`}
-            buttonState="outline"
-            icon={<ArrowOutOfBoxIcon />}
+            variant="outline"
+            iconStart={ArrowOutOfBoxIcon}
             style={{ marginTop: 'auto' }}
             onPress={handleShareButtonPress}
-          />
+          >
+            {t`Share`}
+          </Button>
         </Box>
       </FullHeightSheetLayout>
     </FullHeightSheet>
