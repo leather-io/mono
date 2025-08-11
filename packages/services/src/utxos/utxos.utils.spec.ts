@@ -2,6 +2,10 @@ import { Utxo, UtxoId } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
 import {
+  BisInscription,
+  BisRuneValidOutput,
+} from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
+import {
   LeatherApiBitcoinTransaction,
   LeatherApiUtxo,
 } from '../infrastructure/api/leather/leather-api.client';
@@ -9,8 +13,10 @@ import {
   fallbackUtxoHeight,
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
+  getInscriptionProtectedUtxoIds,
   getKeyOrigin,
   getOutboundUtxos,
+  getRuneProtectedUtxoIds,
   getUtxoIdFromOutpoint,
   getUtxoIdFromSatpoint,
   isUnconfirmedUtxo,
@@ -423,5 +429,91 @@ describe(getKeyOrigin.name, () => {
     const path = "m/84'/0'/0'/0/0";
     const keyOrigin = getKeyOrigin(fingerprint, path);
     expect(keyOrigin).toEqual("deadbeef/84'/0'/0'/0/0");
+  });
+});
+
+describe(getInscriptionProtectedUtxoIds.name, () => {
+  const inscriptions = [
+    {
+      satpoint: 'txn:0:0',
+    },
+    {
+      satpoint: 'txn:1:0',
+    },
+    {
+      satpoint: 'txn:2:0',
+    },
+    {
+      satpoint: 'txn:3:0',
+    },
+    {
+      satpoint: 'txn:3:1',
+    },
+    {
+      satpoint: 'txn:4:0',
+    },
+    {
+      satpoint: 'txn:4:1',
+    },
+  ] as BisInscription[];
+
+  it('should return unique id list of inscribed utxos', () => {
+    expect(getInscriptionProtectedUtxoIds(inscriptions, [])).toEqual([
+      getUtxoIdFromOutpoint('txn:0'),
+      getUtxoIdFromOutpoint('txn:1'),
+      getUtxoIdFromOutpoint('txn:2'),
+      getUtxoIdFromOutpoint('txn:3'),
+      getUtxoIdFromOutpoint('txn:4'),
+    ]);
+  });
+
+  it('should filter out utxos if ALL inscriptions are discarded', () => {
+    const discardedInscriptions = ['txn:2:0', 'txn:1:0', 'txn:3:0', 'txn:4:1'];
+    const result = getInscriptionProtectedUtxoIds(inscriptions, discardedInscriptions);
+    expect(result).toEqual([
+      getUtxoIdFromOutpoint('txn:0'),
+      getUtxoIdFromOutpoint('txn:3'),
+      getUtxoIdFromOutpoint('txn:4'),
+    ]);
+  });
+});
+
+describe(getRuneProtectedUtxoIds.name, () => {
+  const runeOutputs = [
+    {
+      output: 'txn:0',
+    },
+    {
+      output: 'txn:1',
+    },
+    {
+      output: 'txn:2',
+    },
+    {
+      output: 'txn:3',
+    },
+    {
+      output: 'txn:3',
+    },
+    {
+      output: 'txn:4',
+    },
+    {
+      output: 'txn:4',
+    },
+  ] as BisRuneValidOutput[];
+
+  it('should return a list of unique utxo ids corresponding to rune outputs', () => {
+    expect(getRuneProtectedUtxoIds(runeOutputs, false)).toEqual([
+      getUtxoIdFromOutpoint('txn:0'),
+      getUtxoIdFromOutpoint('txn:1'),
+      getUtxoIdFromOutpoint('txn:2'),
+      getUtxoIdFromOutpoint('txn:3'),
+      getUtxoIdFromOutpoint('txn:4'),
+    ]);
+  });
+
+  it('should return an empty array when all runes are discarded', () => {
+    expect(getRuneProtectedUtxoIds(runeOutputs, true)).toEqual([]);
   });
 });

@@ -1,6 +1,10 @@
 import { OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
-import { sumNumbers } from '@leather.io/utils';
+import { isDefined, sumNumbers } from '@leather.io/utils';
 
+import {
+  BisInscription,
+  BisRuneValidOutput,
+} from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import {
   LeatherApiBitcoinTransaction,
   LeatherApiUtxo,
@@ -103,4 +107,26 @@ export function mapLeatherApiUtxoToOwnedUtxo(
 
 export function getKeyOrigin(fingerprint: string, path: string) {
   return `${fingerprint}/${path.replace('m/', '')}`;
+}
+
+export function getInscriptionProtectedUtxoIds(
+  inscriptions: BisInscription[],
+  discardedInscriptions: string[]
+) {
+  const protectedInscriptions = inscriptions.filter(
+    inscription => !discardedInscriptions.includes(inscription.satpoint)
+  );
+  const protectedUtxoIds = protectedInscriptions
+    .map(inscription => getUtxoIdFromSatpoint(inscription.satpoint))
+    .filter(isDefined);
+  return selectUniqueUtxoIds(protectedUtxoIds);
+}
+
+export function getRuneProtectedUtxoIds(
+  runeOutputs: BisRuneValidOutput[],
+  discardAllRunes: boolean
+) {
+  return discardAllRunes
+    ? []
+    : selectUniqueUtxoIds(runeOutputs.map(r => getUtxoIdFromOutpoint(r.output)).filter(isDefined));
 }
