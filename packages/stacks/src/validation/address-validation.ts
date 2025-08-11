@@ -1,7 +1,8 @@
 import { c32addressDecode } from 'c32check';
+import { z } from 'zod';
 
 import { ChainId } from '@leather.io/models';
-import { isEmptyString, isUndefined } from '@leather.io/utils';
+import { isEmptyString, isString, isUndefined } from '@leather.io/utils';
 
 // taken from stacks-utils.ts
 export function isValidStacksAddress(address: string) {
@@ -39,3 +40,31 @@ export function validatePayerNotRecipient(senderAddress: string, recipientAddres
 
   return senderAddress !== recipientAddress;
 }
+
+export const standardPrincipalSchema = z.string().refine(
+  (address: unknown) => {
+    if (!isString(address)) return false;
+    if (!isValidStacksAddress(address)) return false;
+    return !address.includes('.');
+  },
+  { message: 'Invalid standard Stacks principal address' }
+);
+
+export const contractPrincipalSchema = z.string().refine(
+  (principal: unknown) => {
+    if (!isString(principal)) return false;
+
+    const parts = principal.split('.');
+    if (parts.length !== 2) return false;
+
+    const [address, contractName] = parts;
+
+    if (!isValidStacksAddress(address)) return false;
+
+    const contractNameRegex = /^[a-zA-Z0-9_-]{1,128}$/;
+    return contractNameRegex.test(contractName);
+  },
+  { message: 'Invalid contract principal (must be address.contract-name format)' }
+);
+
+export const principalSchema = z.union([standardPrincipalSchema, contractPrincipalSchema]);
