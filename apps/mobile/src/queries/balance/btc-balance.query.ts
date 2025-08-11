@@ -7,9 +7,7 @@ import { BtcAccountRequest, getBtcBalancesService } from '@leather.io/services';
 
 export function useBtcTotalBalance() {
   const accounts = useTotalAccountAddresses();
-  return toFetchState(
-    useBtcAggregateBalanceQuery(accounts.map(account => ({ account, unprotectedUtxos: [] })))
-  );
+  return toFetchState(useBtcAggregateBalanceQuery(accounts.map(account => ({ account }))));
 }
 
 export function useBtcTotalNativeSegwitBalance() {
@@ -18,8 +16,7 @@ export function useBtcTotalNativeSegwitBalance() {
     useBtcAggregateBalanceQuery(
       accounts.map(account => ({
         account,
-        unprotectedUtxos: [],
-        exclude: { taprootAddresses: true },
+        exclusions: { taprootAddresses: true },
       }))
     )
   );
@@ -31,8 +28,7 @@ export function useBtcTotalTaprootBalance() {
     useBtcAggregateBalanceQuery(
       accounts.map(account => ({
         account,
-        unprotectedUtxos: [],
-        exclude: { nativeSegwitAddresses: true },
+        exclusions: { nativeSegwitAddresses: true },
       }))
     )
   );
@@ -40,7 +36,7 @@ export function useBtcTotalTaprootBalance() {
 
 export function useBtcAccountBalance(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useBtcAccountBalanceQuery({ account, unprotectedUtxos: [] }));
+  return toFetchState(useBtcAccountBalanceQuery({ account }));
 }
 
 export function useBtcAccountNativeSegwitBalance(fingerprint: string, accountIndex: number) {
@@ -48,8 +44,7 @@ export function useBtcAccountNativeSegwitBalance(fingerprint: string, accountInd
   return toFetchState(
     useBtcAccountBalanceQuery({
       account,
-      unprotectedUtxos: [],
-      exclude: { taprootAddresses: true },
+      exclusions: { taprootAddresses: true },
     })
   );
 }
@@ -59,8 +54,7 @@ export function useBtcAccountTaprootBalance(fingerprint: string, accountIndex: n
   return toFetchState(
     useBtcAccountBalanceQuery({
       account,
-      unprotectedUtxos: [],
-      exclude: { nativeSegwitAddresses: true },
+      exclusions: { nativeSegwitAddresses: true },
     })
   );
 }

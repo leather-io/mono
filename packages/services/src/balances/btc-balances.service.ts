@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 
 import { btcAsset } from '@leather.io/constants';
-import { AccountAddresses, BtcBalance, UtxoId } from '@leather.io/models';
+import { AccountAddresses, BtcBalance } from '@leather.io/models';
 import {
   aggregateBtcBalances,
   baseCurrencyAmountInQuote,
@@ -25,11 +25,6 @@ export interface AccountQuotedBtcBalance extends QuotedBtcBalance {
   account: AccountAddresses;
 }
 
-export interface BtcAccountBalanceRequest {
-  account: AccountAddresses;
-  unprotectedUtxos: UtxoId[];
-}
-
 const btcAssetZeroBalance = createBtcBalance(createMoney(0, 'BTC'));
 
 @injectable()
@@ -43,7 +38,7 @@ export class BtcBalancesService {
    * Gets cumulative BTC balance of requested Bitcoin accounts list, denominated in both BTC and quote currency.
    */
   public async getBtcAggregateBalance(
-    balanceRequests: BtcAccountBalanceRequest[],
+    balanceRequests: BtcAccountRequest[],
     signal?: AbortSignal
   ): Promise<QuotedBtcBalance> {
     const accountBalances = await Promise.all(
