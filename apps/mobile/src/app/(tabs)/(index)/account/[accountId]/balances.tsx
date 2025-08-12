@@ -1,9 +1,10 @@
 import { Screen } from '@/components/screen/screen';
 import { HeaderTitleWithSubtitle } from '@/components/screen/screen-header/components/header-title-with-subtitle';
-import { AccountBalances } from '@/features/balances/balances';
+import { AssetsFlashList } from '@/features/balances/assets/assets-flashlist';
 import { AccountBalance } from '@/features/balances/total-balance';
-import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
+import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
+import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { deserializeAccountId } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 import { useLocalSearchParams } from 'expo-router';
@@ -16,6 +17,8 @@ export default function BalancesScreen() {
   const params = useLocalSearchParams();
   const { accountId } = configureAccountParamsSchema.parse(params);
   const { fingerprint, accountIndex } = deserializeAccountId(accountId);
+  const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
+  const runesData = useRunesAccountBalance(fingerprint, accountIndex);
 
   const { totalBalance } = useAccountBalance({ fingerprint, accountIndex });
 
@@ -38,23 +41,26 @@ export default function BalancesScreen() {
           />
         }
       />
-      <Screen.ScrollView refreshControl={<RefreshControl />}>
-        <Screen.HeaderAnimationTarget>
-          <Box px="5" pb="5" mb="3">
-            <Text variant="label01">{pageTitle}</Text>
-            {isLoading ? (
-              <SkeletonLoader width={55} height={24} isLoading={isLoading} />
-            ) : (
-              <AccountBalance
-                fingerprint={fingerprint}
-                accountIndex={accountIndex}
-                variant="heading03"
-              />
-            )}
-          </Box>
-        </Screen.HeaderAnimationTarget>
-        <AccountBalances mode="full" fingerprint={fingerprint} accountIndex={accountIndex} />
-      </Screen.ScrollView>
+      <AssetsFlashList
+        header={
+          <Screen.HeaderAnimationTarget>
+            <Box px="5" pb="5" mb="3">
+              <Text variant="label01">{pageTitle}</Text>
+              {isLoading ? (
+                <SkeletonLoader width={55} height={24} isLoading={isLoading} />
+              ) : (
+                <AccountBalance
+                  fingerprint={fingerprint}
+                  accountIndex={accountIndex}
+                  variant="heading03"
+                />
+              )}
+            </Box>
+          </Screen.HeaderAnimationTarget>
+        }
+        sip10Data={sip10Data}
+        runesData={runesData}
+      />
     </Screen>
   );
 }

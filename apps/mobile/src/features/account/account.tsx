@@ -127,7 +127,7 @@ export function Account({ account, walletName }: AccountProps) {
             }
             title={t`Tokens`}
           >
-            <AccountBalances mode="widget" fingerprint={fingerprint} accountIndex={accountIndex} />
+            <AccountBalances fingerprint={fingerprint} accountIndex={accountIndex} />
           </BalancesWidget>
           <ActivityWidget
             activity={activity}

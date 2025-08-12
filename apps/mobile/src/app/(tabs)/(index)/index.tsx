@@ -4,7 +4,7 @@ import { Screen } from '@/components/screen/screen';
 import { HeaderActions } from '@/components/screen/screen-header/components/header-actions';
 import { AccountsWidget } from '@/features/account/accounts-widget';
 import { ActivityWidget } from '@/features/activity/activity-widget';
-import { AllAccountBalances } from '@/features/balances/balances';
+import { AllAccountBalancesWidget } from '@/features/balances/balances';
 import { BalancesWidget } from '@/features/balances/balances-widget';
 import { TotalBalance } from '@/features/balances/total-balance';
 import { Collectibles, CollectiblesWidget, hasCollectibles } from '@/features/collectibles';
@@ -51,7 +51,7 @@ export default function HomeScreen() {
                 balance={<TotalBalance color="ink.text-subdued" />}
                 title={t`All tokens`}
               >
-                <AllAccountBalances mode="widget" />
+                <AllAccountBalancesWidget />
               </BalancesWidget>
               <ActivityWidget
                 activity={activity}
