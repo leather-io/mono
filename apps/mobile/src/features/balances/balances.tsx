@@ -4,20 +4,15 @@ import {
   BitcoinBalance,
   BitcoinBalanceByAccount,
 } from '@/features/balances/bitcoin/bitcoin-balance';
-import { RunesBalance, RunesBalanceByAccount } from '@/features/balances/bitcoin/runes-balance';
-import { Sip10Balance, Sip10BalanceByAccount } from '@/features/balances/stacks/sip10-balance';
 import { StacksBalance, StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
-import { useRunesFlag, useTokenDetailsFlag } from '@/features/feature-flags';
+import { useTokenDetailsFlag } from '@/features/feature-flags';
 import { TokenSheet, TokenSheetData } from '@/features/token/token-sheet';
-import { ViewMode } from '@/shared/types';
 
 import { AccountId, FungibleCryptoAsset, Money } from '@leather.io/models';
 import { Box, SheetRef } from '@leather.io/ui/native';
 
-export interface BalanceViewProps {
-  mode: ViewMode;
-  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
-}
+import { AssetsBalance } from './assets/assets-balance';
+import { AssetsBalanceByAccount } from './assets/assets-balance-by-account';
 
 export interface OnOpenTokenProps {
   asset: FungibleCryptoAsset;
@@ -25,9 +20,8 @@ export interface OnOpenTokenProps {
   quoteBalance: Money;
 }
 
-export function AllAccountBalances({ mode }: BalanceViewProps) {
+export function useTokenDetails() {
   const [sheetData, setSheetData] = useState<TokenSheetData | null>(null);
-  const runesFlag = useRunesFlag();
   const tokenDetailsFlag = useTokenDetailsFlag();
 
   const tokenSheetRef = useRef<SheetRef>(null);
@@ -39,34 +33,30 @@ export function AllAccountBalances({ mode }: BalanceViewProps) {
   }
 
   const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;
+  return {
+    onPressToken,
+    sheetData,
+    tokenSheetRef,
+  };
+}
+
+export function AllAccountBalancesWidget() {
+  const { onPressToken, sheetData, tokenSheetRef } = useTokenDetails();
 
   return (
     <>
       <Box flex={1} height="100%">
         <BitcoinBalance onPress={onPressToken} />
         <StacksBalance onPress={onPressToken} />
-        <Sip10Balance mode={mode} onPress={onPressToken} />
-        {runesFlag && <RunesBalance mode={mode} />}
+        <AssetsBalance onPress={onPressToken} />
       </Box>
       <TokenSheet data={sheetData} sheetRef={tokenSheetRef} />
     </>
   );
 }
 
-export function AccountBalances({ mode, fingerprint, accountIndex }: AccountId & BalanceViewProps) {
-  const [sheetData, setSheetData] = useState<TokenSheetData | null>(null);
-  const runesFlag = useRunesFlag();
-
-  const tokenSheetRef = useRef<SheetRef>(null);
-  const tokenDetailsFlag = useTokenDetailsFlag();
-
-  function onOpenToken(data: TokenSheetData) {
-    setSheetData(data);
-    // analytics.track('token_sheet_opened', { source: 'action_bar' });
-    tokenSheetRef.current?.present();
-  }
-
-  const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;
+export function AccountBalances({ fingerprint, accountIndex }: AccountId) {
+  const { onPressToken, sheetData, tokenSheetRef } = useTokenDetails();
 
   return (
     <>
@@ -81,19 +71,11 @@ export function AccountBalances({ mode, fingerprint, accountIndex }: AccountId &
           fingerprint={fingerprint}
           accountIndex={accountIndex}
         />
-        <Sip10BalanceByAccount
-          mode={mode}
+        <AssetsBalanceByAccount
           fingerprint={fingerprint}
           accountIndex={accountIndex}
           onPress={onPressToken}
         />
-        {runesFlag && (
-          <RunesBalanceByAccount
-            mode={mode}
-            fingerprint={fingerprint}
-            accountIndex={accountIndex}
-          />
-        )}
       </Box>
       <TokenSheet data={sheetData} sheetRef={tokenSheetRef} />
     </>

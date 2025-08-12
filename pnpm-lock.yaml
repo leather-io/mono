@@ -225,8 +225,8 @@ importers:
         specifier: 6.14.0
         version: 6.14.0(encoding@0.1.13)(expo@53.0.9)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       '@shopify/flash-list':
-        specifier: 1.8.0
-        version: 1.8.0(@babel/runtime@7.26.0)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
+        specifier: 2.0.2
+        version: 2.0.2(@babel/runtime@7.26.0)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       '@shopify/restyle':
         specifier: 2.4.2
         version: 2.4.2(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
@@ -7084,8 +7084,8 @@ packages:
     resolution: {integrity: sha512-pUFBGrKsHuc8K6A7B1wU2nx65n9aIzvTlcHX9yZ1qvjEO0cZFih0JCwu1Fcav/yrtT9RMN44L/ugu/kMBHQhjQ==}
     engines: {node: '>= 14'}
 
-  '@shopify/flash-list@1.8.0':
-    resolution: {integrity: sha512-APZ48kceCCJobUimmI2594io+HujELK60HFKgzIyIdHGX5ySR5YfvsPy3PKtPwHHDtIMFNaq3U/BY3qZocOhCA==}
+  '@shopify/flash-list@2.0.2':
+    resolution: {integrity: sha512-zhlrhA9eiuEzja4wxVvotgXHtqd3qsYbXkQ3rsBfOgbFA9BVeErpDE/yEwtlIviRGEqpuFj/oU5owD6ByaNX+w==}
     peerDependencies:
       '@babel/runtime': '*'
       react: '*'
@@ -14569,12 +14569,6 @@ packages:
     resolution: {integrity: sha512-/vxpCXddiX8NGfGO/mTafwjq4aFa/71pvamip0++IQk3zG8cbCj0fifNPrjjF1XMXUne91jL9OoxmdykoEtifQ==}
     engines: {node: '>= 10.13.0'}
 
-  recyclerlistview@4.2.3:
-    resolution: {integrity: sha512-STR/wj/FyT8EMsBzzhZ1l2goYirMkIgfV3gYEPxI3Kf3lOnu6f7Dryhyw7/IkQrgX5xtTcDrZMqytvteH9rL3g==}
-    peerDependencies:
-      react: '>= 15.2.1'
-      react-native: '>= 0.30.0'
-
   redent@3.0.0:
     resolution: {integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==}
     engines: {node: '>=8'}
@@ -15658,9 +15652,6 @@ packages:
         optional: true
       '@swc/wasm':
         optional: true
-
-  ts-object-utils@0.0.5:
-    resolution: {integrity: sha512-iV0GvHqOmilbIKJsfyfJY9/dNHCs969z3so90dQWsO1eMMozvTpnB1MEaUbb3FYtZTGjv5sIy/xmslEz0Rg2TA==}
 
   ts-pattern@5.0.8:
     resolution: {integrity: sha512-aafbuAQOTEeWmA7wtcL94w6I89EgLD7F+IlWkr596wYxeb0oveWDO5dQpv85YP0CGbxXT/qXBIeV6IYLcoZ2uA==}
@@ -18351,7 +18342,7 @@ snapshots:
 
   '@emnapi/runtime@1.4.5':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@emotion/babel-plugin@11.13.5':
@@ -23167,12 +23158,11 @@ snapshots:
       - encoding
       - supports-color
 
-  '@shopify/flash-list@1.8.0(@babel/runtime@7.26.0)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)':
+  '@shopify/flash-list@2.0.2(@babel/runtime@7.26.0)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@babel/runtime': 7.26.0
       react: 19.0.0
       react-native: 0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0)
-      recyclerlistview: 4.2.3(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       tslib: 2.4.0
 
   '@shopify/restyle@2.4.2(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)':
@@ -32483,14 +32473,6 @@ snapshots:
     dependencies:
       resolve: 1.22.10
 
-  recyclerlistview@4.2.3(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0):
-    dependencies:
-      lodash.debounce: 4.0.8
-      prop-types: 15.8.1
-      react: 19.0.0
-      react-native: 0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0)
-      ts-object-utils: 0.0.5
-
   redent@3.0.0:
     dependencies:
       indent-string: 4.0.0
@@ -33765,8 +33747,6 @@ snapshots:
       yn: 3.1.1
     optionalDependencies:
       '@swc/core': 1.11.24
-
-  ts-object-utils@0.0.5: {}
 
   ts-pattern@5.0.8: {}
 

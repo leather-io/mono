@@ -1,2 +1,1 @@
-export const SIP10_BALANCES_LIMIT = 10;
-export const SIP10_BALANCES_WIDGET_LIMIT = 3;
+export const ASSETS_BALANCES_WIDGET_LIMIT = 3;
