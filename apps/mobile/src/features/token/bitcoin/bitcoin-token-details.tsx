@@ -8,6 +8,7 @@ import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/core/macro';
 
 import { btcAsset } from '@leather.io/constants';
+import { OnChainActivity } from '@leather.io/models';
 import { BtcAvatarIcon } from '@leather.io/ui/native';
 
 import { AccountList } from '../components/account-list';
@@ -23,7 +24,7 @@ export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
 
 export function BitcoinTokenDetails() {
   const { state, value } = useBtcTotalBalance();
-  const activity = useTotalActivityByAsset(btcAsset);
+  const { value: activity } = useTotalActivityByAsset(btcAsset);
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
   if (!availableBalance || !quoteBalance) {
@@ -36,7 +37,7 @@ export function BitcoinTokenDetails() {
       asset={btcAsset}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      activity={activity}
+      activity={activity as OnChainActivity[]}
     >
       <AccountList
         listItem={(account, wallet) => (
@@ -74,7 +75,7 @@ export function BitcoinTokenDetailsByAccount({
       asset={btcAsset}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      activity={activity}
+      activity={activity.value as OnChainActivity[]}
     >
       <BitcoinAddressList account={account} />
     </Token>

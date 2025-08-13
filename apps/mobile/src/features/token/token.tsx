@@ -1,6 +1,5 @@
 import { ActionButtons } from '@/components/action-buttons';
 import { Balance } from '@/components/balance/balance';
-import { FetchState } from '@/components/loading/fetch-state';
 import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
 import { NetworkBadge } from '@/features/settings/network-badge';
@@ -18,11 +17,11 @@ import {
 } from '@/queries/assets/fungible-asset-info.query';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 
-import { Activity, FungibleCryptoAsset, Money } from '@leather.io/models';
+import { FungibleCryptoAsset, Money, OnChainActivity } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
 interface TokenProps {
-  activity: FetchState<Activity[]>;
+  activity: OnChainActivity[];
   asset: FungibleCryptoAsset;
   availableBalance: Money;
   canSend?: boolean;
@@ -53,6 +52,7 @@ export function Token({
         rightElement={<NetworkBadge />}
       />
       <TokenActivity
+        activity={activity}
         // All other content is in the Activity ListHeader to avoid nested scrolling errors
         ListHeader={
           <>
