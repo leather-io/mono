@@ -50,14 +50,13 @@ export const Disabled: Story = {
   },
 };
 
-export const Success: Story = {
+export const Danger: Story = {
   parameters: {
     controls: { include: ['size', 'variant'] },
   },
   args: {
     children: 'Button',
-    size: 'md',
-    variant: 'success',
+    intent: 'danger',
   },
 };
 
@@ -66,13 +65,9 @@ export const WithIcons: Story = {
     controls: { include: ['size', 'variant'] },
   },
   args: {
-    children: (
-      <HStack gap={Button.args?.size === 'md' ? 'space.02' : 'space.01'}>
-        <PlaceholderIcon />
-        <styled.span textStyle="label.02">Button</styled.span>
-        <PlaceholderIcon />
-      </HStack>
-    ),
+    children: 'Button',
+    iconStart: PlaceholderIcon,
+    iconEnd: PlaceholderIcon,
     size: 'md',
     variant: 'solid',
   },
@@ -90,7 +85,6 @@ export const WithToken: Story = {
         <ChevronDownIcon variant="small" />
       </HStack>
     ),
-    trigger: true,
     variant: 'ghost',
   },
 };

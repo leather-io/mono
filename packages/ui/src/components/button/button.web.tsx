@@ -1,42 +1,213 @@
-import { forwardRef } from 'react';
+import { ComponentType } from 'react';
 
 import { styled } from 'leather-styles/jsx';
-import { type ButtonVariantProps, button as buttonRecipe } from 'leather-styles/recipes';
 
-const StyledButton = styled('button');
+import { IconProps } from '../../icons/icon/create-icon.web';
 
-export type ButtonProps = Omit<
-  React.ComponentProps<typeof StyledButton>,
-  keyof ButtonVariantProps
-> &
-  ButtonVariantProps;
+const loadingStyles = {
+  _loading: {
+    _after: {
+      animation: 'spin',
+      border: '2px solid',
+      borderColor: 'currentColor',
+      borderBottomColor: 'transparent',
+      boxSizing: 'border-box',
+      content: '""',
+      display: 'inline-block',
+      height: '20px',
+      left: 'calc(50% - 10px)',
+      position: 'absolute',
+      rounded: '50%',
+      top: 'calc(50% - 10px)',
+      width: '20px',
+    },
+  },
+};
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+const StyledButton = styled('button', {
+  base: {
+    position: 'relative',
+    textStyle: 'label.02',
+    textAlign: 'center',
+    borderRadius: 'round',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 'space.02',
+    ...loadingStyles,
+  },
+  variants: {
+    size: {
+      sm: {
+        height: '32px',
+        px: 'space.03',
+      },
+      md: {
+        height: '36px',
+        px: 'space.03',
+      },
+      lg: {
+        height: '48px',
+        px: 'space.04',
+      },
+    },
+    variant: {
+      solid: {
+        bg: 'ink.action-primary-default',
+        color: 'ink.background-primary',
+        _hover: {
+          bg: 'ink.action-primary-hover',
+        },
+        _active: {
+          bg: 'ink.action-primary-default',
+        },
+        _focus: {
+          _before: {
+            border: '3px solid {colors.blue.border}',
+          },
+        },
+        _disabled: {
+          bg: 'ink.background-secondary',
+          color: 'ink.text-non-interactive',
+          cursor: 'not-allowed',
+          _hover: { bg: 'ink.background-secondary' },
+          _loading: { bg: 'ink.action-primary-default' },
+        },
+      },
+      outline: {
+        border: '1px solid {colors.ink.action-primary-default}',
+        _hover: {
+          bg: 'ink.component-background-hover',
+        },
+        _active: {
+          bg: 'ink.component-background-pressed',
+        },
+        _focus: {
+          _before: {
+            border: '3px solid {colors.blue.border}',
+          },
+        },
+        _disabled: {
+          _hover: { bg: 'unset' },
+          border: '1px solid {colors.ink.text-non-interactive}',
+          color: 'ink.text-non-interactive',
+          cursor: 'not-allowed',
+        },
+      },
+      ghost: {
+        _active: {
+          bg: 'ink.component-background-pressed',
+        },
+        _disabled: {
+          _hover: { bg: 'unset' },
+          color: 'ink.text-non-interactive',
+          cursor: 'not-allowed',
+        },
+        _focus: {
+          _before: {
+            border: '3px solid {colors.blue.border}',
+          },
+        },
+        _hover: {
+          bg: 'ink.component-background-hover',
+        },
+        ...loadingStyles,
+      },
+    },
+    intent: {
+      default: {},
+      danger: {},
+      success: {},
+    },
+    fullWidth: { true: { width: '100%' } },
+  },
+
+  compoundVariants: [
+    {
+      variant: 'solid',
+      intent: 'danger',
+      css: {
+        bg: 'red.action-primary-default',
+        _hover: {
+          bg: 'red.action-primary-default',
+          opacity: 0.8,
+        },
+        _active: {
+          opacity: 1,
+          bg: 'red.action-primary-default',
+        },
+      },
+    },
+    {
+      variant: 'outline',
+      intent: 'danger',
+      css: {
+        bg: 'transparent',
+        borderColor: 'red.border',
+        color: 'red.action-primary-default',
+        _hover: {
+          bg: 'red.action-primary-default',
+          borderColor: 'red.action-primary-default',
+          color: 'white',
+        },
+        _active: {
+          opacity: 1,
+          bg: 'red.action-primary-default',
+        },
+      },
+    },
+    {
+      variant: 'ghost',
+      intent: 'danger',
+      css: {
+        bg: 'transparent',
+        borderColor: 'transparent',
+        color: 'red.action-primary-default',
+        _hover: {
+          bg: 'red.action-primary-default',
+          borderColor: 'red.action-primary-default',
+          color: 'white',
+          opacity: 0.8,
+        },
+        _active: {
+          opacity: 1,
+          bg: 'red.action-primary-default',
+        },
+      },
+    },
+  ],
+
+  defaultVariants: {
+    size: 'lg',
+    variant: 'solid',
+  },
+});
+
+export interface ButtonProps extends React.ComponentProps<typeof StyledButton> {
+  iconStart?: ComponentType<IconProps>;
+  iconEnd?: ComponentType<IconProps>;
+}
+
+export function Button(props: ButtonProps) {
   const {
-    children,
-    fullWidth,
-    size,
-    trigger,
-    invert,
+    iconStart: IconStart,
+    iconEnd: IconEnd,
     type = 'button',
-    variant,
+    children,
     disabled: disabledProp,
+    ref,
     ...rest
   } = props;
   const isLoading = rest['aria-busy'] === true || rest['aria-busy'] === 'true';
   const disabled = isLoading || disabledProp;
 
   return (
-    <StyledButton
-      ref={ref}
-      className={buttonRecipe({ fullWidth, size, invert, trigger, variant })}
-      type={type}
-      disabled={disabled}
-      {...rest}
-    >
+    <StyledButton ref={ref} type={type} disabled={disabled} {...rest}>
+      {IconStart && <IconStart variant="small" color="current" />}
       <styled.span opacity={isLoading ? 0 : 1}>{children}</styled.span>
+      {IconEnd && <IconEnd variant="small" color="current" />}
     </StyledButton>
   );
-});
+}
 
 Button.displayName = 'Button';
