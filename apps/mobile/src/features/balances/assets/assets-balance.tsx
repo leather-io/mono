@@ -4,12 +4,11 @@ import { useRunesTotalBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10TotalBalance } from '@/queries/balance/sip10-balance.query';
 
 import { useRunesFlag } from '../../feature-flags';
-import { OnOpenTokenProps } from '../balances';
 import { ASSETS_BALANCES_WIDGET_LIMIT } from '../constants';
 import { renderAsset } from './render-assets';
 
 interface AssetsBalanceProps {
-  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
+  onPress?: (tokenId: string) => void;
 }
 export function AssetsBalance({ onPress }: AssetsBalanceProps) {
   const sip10Data = useSip10TotalBalance();

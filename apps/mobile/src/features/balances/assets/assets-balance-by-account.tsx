@@ -6,12 +6,11 @@ import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { AccountId } from '@leather.io/models';
 
 import { useRunesFlag } from '../../feature-flags';
-import { OnOpenTokenProps } from '../balances';
 import { ASSETS_BALANCES_WIDGET_LIMIT } from '../constants';
 import { renderAsset } from './render-assets';
 
 interface AssetsBalanceProps {
-  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
+  onPress?: (tokenId: string) => void;
 }
 export function AssetsBalanceByAccount({
   onPress,

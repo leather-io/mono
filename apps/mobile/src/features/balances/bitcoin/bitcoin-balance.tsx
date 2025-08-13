@@ -4,8 +4,6 @@ import { t } from '@lingui/core/macro';
 
 import { BtcAvatarIcon } from '@leather.io/ui/native';
 
-import { OnOpenTokenProps } from '../balances';
-
 type BitcoinTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
 
 export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
@@ -13,7 +11,7 @@ export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
 }
 
 interface BitcoinBalanceProps {
-  onPress?: ({ tokenId }: OnOpenTokenProps) => void;
+  onPress?: (tokenId: string) => void;
 }
 
 export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
@@ -28,7 +26,7 @@ export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
       isLoading={state === 'loading'}
-      onPress={() => onPress?.({ tokenId: 'BTC' })}
+      onPress={() => onPress?.('BTC')}
     />
   );
 }
@@ -36,7 +34,7 @@ export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
 interface BitcoinBalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?: ({ tokenId }: OnOpenTokenProps) => void;
+  onPress?: (tokenId: string) => void;
 }
 export function BitcoinBalanceByAccount({
   accountIndex,
@@ -54,7 +52,7 @@ export function BitcoinBalanceByAccount({
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.({ tokenId: 'BTC' })}
+      onPress={() => onPress?.('BTC')}
       isLoading={state === 'loading'}
     />
   );
