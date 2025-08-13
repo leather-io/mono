@@ -30,11 +30,19 @@ export const currencyFormatterPresets: Record<
     return options;
   },
   'shorthand-balance': input => {
+    function getMaximumFractionDigits() {
+      if (isFiatCurrencyCode(input.currencyCode)) {
+        return 2;
+      }
+
+      return input.amount < 0.001 ? input.decimals : 4;
+    }
+
     return {
       showCurrency: isFiatCurrencyCode(input.currencyCode),
       numberFormatOptions: {
         minimumFractionDigits: 2,
-        maximumFractionDigits: isFiatCurrencyCode(input.currencyCode) ? 2 : 4,
+        maximumFractionDigits: getMaximumFractionDigits(),
       },
     };
   },
