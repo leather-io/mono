@@ -17,6 +17,8 @@ import { stackingDaoContractCallHandler } from './hiro.so/stacking-dao-core-v4';
 import { ststxTokenBalanceContractCallHandler } from './hiro.so/ststx-token-get-balance';
 import { nftHoldingsHandler } from './hiro.so/tokens-nft-holdings';
 import { leatherMarketPricesHandler } from './leather.io/market-prices';
+import { leatherPingHandler } from './leather.io/ping';
+import { leatherZealyQuestConnectEarnHandler } from './leather.io/quests-connect-earn';
 import { poolsHandler } from './stacking-tracker.com/pools';
 import { tokenHandler } from './stacking-tracker.com/tokens';
 
@@ -27,6 +29,8 @@ async function delayedJsonResponse(resp: Record<string, unknown>) {
 
 const endpoints = [
   leatherMarketPricesHandler,
+  leatherPingHandler,
+  leatherZealyQuestConnectEarnHandler,
   poxGetStackerInfoHandler,
   poxMainnetHandler,
   accountsHandler,

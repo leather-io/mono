@@ -27,7 +27,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'pnpm --filter web dev',
+    command: 'pnpm dev',
     url: 'http://localhost:5173/',
     reuseExistingServer: !process.env.CI,
   },
