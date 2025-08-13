@@ -8,7 +8,6 @@ import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
-import { OnChainActivity } from '@leather.io/models';
 import { StxAvatarIcon } from '@leather.io/ui/native';
 
 import { AccountList } from '../components/account-list';
@@ -35,7 +34,7 @@ export function StacksTokenDetails() {
       asset={stxAsset}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      activity={activity.value as OnChainActivity[]}
+      activity={activity.value ?? []}
       canSend={true}
     >
       <AccountList
@@ -75,7 +74,7 @@ export function StacksTokenDetailsByAccount({
       asset={stxAsset}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      activity={activity.value as OnChainActivity[]}
+      activity={activity.value}
       canSend={true}
     >
       <StacksAddressList account={account} />

@@ -75,7 +75,7 @@ export function BitcoinTokenDetailsByAccount({
       asset={btcAsset}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      activity={activity.value as OnChainActivity[]}
+      activity={activity.value ?? []}
     >
       <BitcoinAddressList account={account} />
     </Token>

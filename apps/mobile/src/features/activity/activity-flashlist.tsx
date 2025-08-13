@@ -14,8 +14,7 @@ interface ActivityFlashListProps {
 
 export function ActivityFlashList({ data, header }: ActivityFlashListProps) {
   const activityData = useMemo(() => {
-    if (data.state === 'success')
-      return data.value.filter(activity => activity && 'asset' in activity);
+    if (data.state === 'success') return data.value;
     return [];
   }, [data]);
 

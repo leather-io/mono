@@ -1255,7 +1255,7 @@ msgstr "StackingDAO"
 #: src/features/balances/stacks/stacks-balance.tsx:9
 #: src/features/receive/get-assets.ts:38
 #: src/features/send/forms/stx/stx-form.tsx:61
-#: src/features/token/stacks/stacks-token-details.tsx:21
+#: src/features/token/stacks/stacks-token-details.tsx:20
 msgid "Stacks"
 msgstr "Stacks"
 
