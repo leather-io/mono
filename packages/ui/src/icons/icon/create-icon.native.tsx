@@ -31,7 +31,7 @@ export function createNativeIcon({
 
   if (!fallback) {
     throw new Error(
-      "Missing variant variant - at least one of: 'small', 'medium', 'large' should be specified."
+      "Missing variant - at least one of: 'small', 'medium', 'large' should be specified."
     );
   }
 
