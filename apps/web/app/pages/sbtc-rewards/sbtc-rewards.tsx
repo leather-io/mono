@@ -135,7 +135,7 @@ export function SbtcRewards(): ReactElement {
           {formattedSbtcPools.map(pool => (
             <SbtcProtocolRewardGrid
               enrollAction={
-                <Button size="xs" fullWidth onClick={() => openExternalLink(pool.url)}>
+                <Button size="sm" fullWidth onClick={() => openExternalLink(pool.url)}>
                   {content.labels.startEarning} <RotatedArrow />
                 </Button>
               }

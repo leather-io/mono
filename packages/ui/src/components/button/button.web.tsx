@@ -34,6 +34,7 @@ const StyledButton = styled('button', {
     alignItems: 'center',
     justifyContent: 'center',
     gap: 'space.02',
+    whiteSpace: 'nowrap',
     ...loadingStyles,
   },
   variants: {
@@ -202,7 +203,7 @@ export function Button(props: ButtonProps) {
   const disabled = isLoading || disabledProp;
 
   return (
-    <StyledButton ref={ref} type={type} disabled={disabled} {...rest}>
+    <StyledButton ref={ref} type={type} disabled={disabled} flexShrink={0} {...rest}>
       {IconStart && <IconStart variant="small" color="current" />}
       <styled.span opacity={isLoading ? 0 : 1}>{children}</styled.span>
       {IconEnd && <IconEnd variant="small" color="current" />}

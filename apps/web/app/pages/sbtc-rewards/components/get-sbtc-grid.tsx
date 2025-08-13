@@ -48,7 +48,7 @@ function BridgeToSbtcCell() {
               missing: true,
             })}
             mt="space.04"
-            size="xs"
+            size="sm"
           >
             {whenExtensionState({
               connected: 'Bridge',
@@ -89,7 +89,7 @@ function SwapStxToSbtcCell() {
         </Box>
       </Flex>
       <Flex alignItems="flex-end">
-        <WhenClient fallback={<Button width="52px" size="xs" aria-busy />}>
+        <WhenClient fallback={<Button width="52px" size="sm" aria-busy />}>
           <Button
             disabled={whenExtensionState({
               connected: false,
@@ -98,7 +98,7 @@ function SwapStxToSbtcCell() {
             })}
             onClick={onSwapStxSbtc}
             mt="space.04"
-            size="xs"
+            size="sm"
           >
             {whenExtensionState({
               connected: 'Swap',

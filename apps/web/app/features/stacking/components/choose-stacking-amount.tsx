@@ -54,7 +54,7 @@ export function ChooseStackingAmount({
         ) : availableAmount ? (
           <Button
             variant="ghost"
-            size="sm"
+            size="md"
             type="button"
             color="#12100F"
             onClick={() => setValue(controlName, microStxToStx(availableAmount).toNumber())}
@@ -71,7 +71,7 @@ export function ChooseStackingAmount({
           <styled.span textStyle="caption">Minimum amount:</styled.span>
           <Button
             variant="ghost"
-            size="sm"
+            size="md"
             type="button"
             color="#12100F"
             onClick={() => setValue(controlName, microStxToStx(stackedAmount).toNumber())}

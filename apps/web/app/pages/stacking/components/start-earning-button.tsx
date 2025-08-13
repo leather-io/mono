@@ -14,7 +14,7 @@ interface StartEarningButtonLayoutProps extends ButtonProps {
 }
 function StartEarningButtonLayout({ children, ...buttonProps }: StartEarningButtonLayoutProps) {
   return (
-    <Button width="100" size="xs" minW="fit-content" {...buttonProps}>
+    <Button width="120" size="sm" minW="fit-content" {...buttonProps}>
       {children || 'Start earning'}
     </Button>
   );

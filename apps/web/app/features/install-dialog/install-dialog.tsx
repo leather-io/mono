@@ -45,7 +45,7 @@ export function InstallDialog() {
               </Flex>
             </Flag>
             <Button
-              size="sm"
+              size="md"
               width="132px"
               onClick={() => openExternalLink(LEATHER_EXTENSION_CHROME_STORE_URL)}
             >
