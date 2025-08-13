@@ -375,7 +375,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
                 <Button
                   px="space.06"
-                  size="sm"
+                  size="md"
                   width="100%"
                   display={['block', null, 'none']}
                   onClick={() => setDrawerOpen(true)}

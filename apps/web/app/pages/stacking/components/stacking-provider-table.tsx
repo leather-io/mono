@@ -512,7 +512,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>): Reac
       header: () => null,
       cell: info => (
         <Link to={`/stacking/liquid/${info.row.original.slug}`} style={{ minWidth: 'fit-content' }}>
-          <Button size="xs" whiteSpace="nowrap" minW="fit-content">
+          <Button size="sm" whiteSpace="nowrap" minW="fit-content">
             Start earning
           </Button>
         </Link>
