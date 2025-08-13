@@ -1,14 +1,8 @@
 import { test } from './index';
 
 test.describe('Pooled Stacking', () => {
-  test.beforeEach(async ({ network, page }) => {
-    network.use();
-    await page.goto('/stacking');
-    await page.getByRole('button', { name: 'Connect' }).click();
-    await page.getByRole('button', { name: 'Resolve' }).click();
-  });
-
-  test('users can perform Fastpool v2 stacking', async ({ page }) => {
+  test('users can perform Fastpool v2 stacking', async ({ page, mode }) => {
+    await mode({ mode: 'mock-connected' });
     await page.getByTestId('start-earning-button-fast-pool-v2').click();
     await page.getByRole('button', { name: 'Confirm' }).click();
     await page.locator('#amount').click();
