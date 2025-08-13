@@ -510,6 +510,21 @@
     * @leather.io/crypto bumped to 1.11.4
     * @leather.io/utils bumped to 0.42.2
 
+## [1.15.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.14.4...@leather.io/stacks-v1.15.0) (2025-08-13)
+
+
+### Features
+
+* **stacks:** add principal schemas ([6eba380](https://github.com/leather-io/mono/commit/6eba380c119aa1696fa11f945fdb2969d60557c9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.11.5
+    * @leather.io/utils bumped to 0.42.3
+
 ## [1.14.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.13.0...@leather.io/stacks-v1.14.0) (2025-07-28)
 
 

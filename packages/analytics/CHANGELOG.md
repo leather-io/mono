@@ -78,6 +78,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.33.0
 
+## [3.12.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.11.0...@leather.io/analytics-v3.12.0) (2025-08-13)
+
+
+### Features
+
+* **mobile:** add language switcher to settings ([8ec6d1b](https://github.com/leather-io/mono/commit/8ec6d1bbcb3286843f217a70f5e016efe0a2d284))
+
 ## [3.11.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.10.0...@leather.io/analytics-v3.11.0) (2025-07-28)
 
 

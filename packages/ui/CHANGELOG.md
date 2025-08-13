@@ -467,6 +467,20 @@
   * dependencies
     * @leather.io/utils bumped to 0.42.2
 
+## [1.77.5](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.77.4...@leather.io/ui-v1.77.5) (2025-08-13)
+
+
+### Bug Fixes
+
+* **ui:** prevent flag component from shrinking ([4f4c3cf](https://github.com/leather-io/mono/commit/4f4c3cf717f3247bf9067701409a92006525b06b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.42.3
+
 ## [1.77.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.77.0...@leather.io/ui-v1.77.1) (2025-07-30)
 
 
