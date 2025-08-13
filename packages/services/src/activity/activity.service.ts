@@ -3,7 +3,6 @@ import { injectable } from 'inversify';
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import {
   AccountAddresses,
-  Activity,
   CryptoAsset,
   CryptoAssetCategories,
   OnChainActivity,
@@ -60,7 +59,7 @@ export class ActivityService {
   public async getTotalActivity(
     accounts: AccountAddresses[],
     signal?: AbortSignal
-  ): Promise<Activity[]> {
+  ): Promise<OnChainActivity[]> {
     const activityLists = await Promise.all(accounts.map(a => this.getAccountActivity(a, signal)));
     return activityLists.flat().sort(sortActivityByTimestampDesc);
   }
@@ -72,7 +71,7 @@ export class ActivityService {
     accounts: AccountAddresses[],
     asset: CryptoAsset,
     signal?: AbortSignal
-  ): Promise<Activity[]> {
+  ): Promise<OnChainActivity[]> {
     const activityLists = await Promise.all(accounts.map(a => this.getActivityByAsset(a, asset, signal)));
     return activityLists.flat().sort(sortActivityByTimestampDesc);
   }
@@ -82,7 +81,7 @@ export class ActivityService {
   public async getAccountActivity(
     account: AccountAddresses,
     signal?: AbortSignal
-  ): Promise<Activity[]> {
+  ): Promise<OnChainActivity[]> {
     const [btcActivity, stacksActivity] = await Promise.all([
       this.getBtcActivity(account, signal),
       this.getStacksActivity(account, signal),
@@ -97,7 +96,7 @@ export class ActivityService {
     account: AccountAddresses,
     asset: CryptoAsset,
     signal?: AbortSignal
-  ): Promise<Activity[]> {
+  ): Promise<OnChainActivity[]> {
     switch (asset.protocol) {
       case 'nativeBtc':
         return await this.getBtcActivity(account, signal);
@@ -116,14 +115,14 @@ export class ActivityService {
   public async getBtcActivity(
     account: AccountAddresses,
     signal?: AbortSignal
-  ): Promise<Activity[]> {
+  ): Promise<OnChainActivity[]> {
     if (!hasBitcoinAddress(account)) return [];
 
     const [bitcoinTransactions] = await Promise.all([
       this.bitcoinTransactionsService.getAccountTransactions(account, signal),
       this.marketDataService.getMarketData(btcAsset, signal),
     ]);
-    const activityList: Activity[] = [];
+    const activityList: OnChainActivity[] = [];
     for (const tx of bitcoinTransactions) {
       const txActivity = mapBitcoinTxToActivity(tx, account);
       if (txActivity) {
@@ -139,7 +138,7 @@ export class ActivityService {
   public async getStacksActivity(
     account: AccountAddresses,
     signal?: AbortSignal
-  ): Promise<Activity[]> {
+  ): Promise<OnChainActivity[]> {
     if (!hasStacksAddress(account)) return [];
 
     const [pendingTxs, txs, txEvents] = await Promise.all([
@@ -156,7 +155,7 @@ export class ActivityService {
       ),
     ]);
     const eventsByTxId = getEventsByTxId(txEvents);
-    const activityList: Activity[] = [];
+    const activityList: OnChainActivity[] = [];
     for (const tx of [...pendingTxs, ...txs.map(tx => tx.tx)]) {
       const txActivity = await this.getStacksTxActivity(tx, eventsByTxId.get(tx.tx_id), account);
       if (txActivity) {
@@ -174,7 +173,7 @@ export class ActivityService {
   public async getStxActivity(
     account: AccountAddresses,
     signal?: AbortSignal
-  ): Promise<Activity[]> {
+  ): Promise<OnChainActivity[]> {
     if (!hasStacksAddress(account)) return [];
 
     const [pendingTxs, txs, txEvents] = await Promise.all([
@@ -193,7 +192,7 @@ export class ActivityService {
     const stxEventsByTxId = getEventsByTxId(
       txEvents.filter(event => event.event_type === 'stx_asset' || event.event_type === 'stx_lock')
     );
-    const activityList: Activity[] = [];
+    const activityList: OnChainActivity[] = [];
     for (const tx of [
       ...pendingTxs,
       ...txs.filter(tx => stxEventsByTxId.has(tx.tx.tx_id)).map(tx => tx.tx),
@@ -215,7 +214,7 @@ export class ActivityService {
     asset: Sip10Asset,
     account: AccountAddresses,
     signal?: AbortSignal
-  ): Promise<Activity[]> {
+  ): Promise<OnChainActivity[]> {
     if (!hasStacksAddress(account)) return [];
 
     const [pendingTxs, txs, txEvents] = await Promise.all([
@@ -243,7 +242,7 @@ export class ActivityService {
           ) === asset.assetId
       )
     );
-    const activityList: Activity[] = [];
+    const activityList: OnChainActivity[] = [];
     for (const tx of [...pendingTxs, ...sip10AssetTxs.map(tx => tx.tx)]) {
       const txActivity = await this.getStacksTxActivity(tx, eventsByTxId.get(tx.tx_id), account);
       if (txActivity) {
@@ -321,7 +320,7 @@ export class ActivityService {
     }
   }
 
-  private async applyMarketData(activity: Activity, signal?: AbortSignal) {
+  private async applyMarketData(activity: OnChainActivity, signal?: AbortSignal) {
     if (
       activity.type === OnChainActivityTypes.sendAsset ||
       activity.type === OnChainActivityTypes.receiveAsset
