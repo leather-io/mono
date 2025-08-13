@@ -376,6 +376,23 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.3
 
+## [1.27.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.26.0...@leather.io/services-v1.27.0) (2025-08-13)
+
+
+### Features
+
+* simplify utxo protection params ([35982a3](https://github.com/leather-io/mono/commit/35982a3fdc414b5bd66c7615db7e634903c8c5d3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.31.5
+    * @leather.io/utils bumped to 0.42.3
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.5
+
 ## [1.26.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.25.3...@leather.io/services-v1.26.0) (2025-08-07)
 
 

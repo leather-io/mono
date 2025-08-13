@@ -2,6 +2,42 @@
 
 # Changelog
 
+## [2.64.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.63.0...@leather.io/mobile-v2.64.0) (2025-08-13)
+
+
+### Features
+
+* **mobile:** add dynamic language detection ([b031bac](https://github.com/leather-io/mono/commit/b031bac7ce56565887134d33e7191e5db6e436e0))
+* **mobile:** add language switcher to settings ([8ec6d1b](https://github.com/leather-io/mono/commit/8ec6d1bbcb3286843f217a70f5e016efe0a2d284))
+* **mobile:** add splash screen to the language selector ([9e388b9](https://github.com/leather-io/mono/commit/9e388b92ae1d45f5e8e35879e839a54b13a5f009))
+* simplify utxo protection params ([35982a3](https://github.com/leather-io/mono/commit/35982a3fdc414b5bd66c7615db7e634903c8c5d3))
+
+
+### Bug Fixes
+
+* flashlist performance ([2a4d975](https://github.com/leather-io/mono/commit/2a4d9757951ed26d5575e334d39e82a27249eb20))
+* **mobile:** fix incorrect translation usages ([ecc4e04](https://github.com/leather-io/mono/commit/ecc4e04b19451ed8605be956b489fc667b2cb819))
+* **mobile:** fix raw store returning `any` ([a3ff0d6](https://github.com/leather-io/mono/commit/a3ff0d67b429c353e862eb4dd8103556ec2c7656))
+* **ui:** prevent flag component from shrinking ([4f4c3cf](https://github.com/leather-io/mono/commit/4f4c3cf717f3247bf9067701409a92006525b06b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.12.0
+    * @leather.io/bitcoin bumped to 0.31.5
+    * @leather.io/crypto bumped to 1.11.5
+    * @leather.io/provider bumped to 1.5.6
+    * @leather.io/query bumped to 2.41.5
+    * @leather.io/rpc bumped to 2.20.5
+    * @leather.io/services bumped to 1.27.0
+    * @leather.io/stacks bumped to 1.15.0
+    * @leather.io/ui bumped to 1.77.5
+    * @leather.io/utils bumped to 0.42.3
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.31.5
+
 ## [2.63.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.62.2...@leather.io/mobile-v2.63.0) (2025-08-07)
 
 

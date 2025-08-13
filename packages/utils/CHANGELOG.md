@@ -325,6 +325,13 @@
     * @leather.io/constants bumped to 0.21.0
     * @leather.io/models bumped to 0.34.0
 
+## [0.42.3](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.42.2...@leather.io/utils-v0.42.3) (2025-08-13)
+
+
+### Bug Fixes
+
+* **utils:** account for very small crypto balances in shorthand-preset ([b18056f](https://github.com/leather-io/mono/commit/b18056f6a522dee78c2acc09a37fe63fdee8e9d8))
+
 ## [0.42.2](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.42.1...@leather.io/utils-v0.42.2) (2025-08-07)
 
 
