@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2025-08-08 14:44+0400\n"
+"POT-Creation-Date: 2025-08-13 20:13+0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -39,27 +39,27 @@ msgstr "{symbol, select, USD {United States Dollar} EUR {Euro} GBP {British Poun
 msgid "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
 msgstr "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
 
-#: src/features/approver/utils.tsx:53
+#: src/features/approver/utils.tsx:58
 msgid "~1 hour+"
 msgstr "~1 hour+"
 
-#: src/features/approver/utils.tsx:55
+#: src/features/approver/utils.tsx:60
 msgid "~10 – 20min"
 msgstr "~10 – 20min"
 
-#: src/features/approver/utils.tsx:54
+#: src/features/approver/utils.tsx:59
 msgid "~30 min"
 msgstr "~30 min"
 
-#: src/features/approver/utils.tsx:66
+#: src/features/approver/utils.tsx:71
 msgid "1–2 minutes"
 msgstr "1–2 minutes"
 
-#: src/features/approver/utils.tsx:68
+#: src/features/approver/utils.tsx:73
 msgid "10 seconds"
 msgstr "10 seconds"
 
-#: src/features/approver/utils.tsx:67
+#: src/features/approver/utils.tsx:72
 msgid "20–30 seconds"
 msgstr "20–30 seconds"
 
@@ -279,7 +279,7 @@ msgstr "App Store"
 
 #: src/features/approver/components/approver-buttons.tsx:24
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:67
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:141
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:164
 #: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:68
 msgid "Approve"
 msgstr "Approve"
@@ -508,9 +508,9 @@ msgstr "Currently low"
 msgid "Currently normal"
 msgstr "Currently normal"
 
-#: src/features/approver/utils.tsx:44
-#: src/features/approver/utils.tsx:56
-#: src/features/approver/utils.tsx:69
+#: src/features/approver/utils.tsx:49
+#: src/features/approver/utils.tsx:61
+#: src/features/approver/utils.tsx:74
 msgid "Custom"
 msgstr "Custom"
 
@@ -519,7 +519,7 @@ msgid "Custom fees"
 msgstr "Custom fees"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:64
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:138
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:161
 #: src/features/approver/layouts/get-addresses.layout.tsx:63
 #: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:65
 msgid "Deny"
@@ -590,6 +590,7 @@ msgid "Earn with SBTC"
 msgstr "Earn with SBTC"
 
 #: src/features/approver/components/approver-buttons.tsx:21
+#: src/features/send/forms/stx/sip10-approval.tsx:67
 msgid "Edit"
 msgstr "Edit"
 
@@ -691,7 +692,7 @@ msgstr "Failed to change nonce"
 msgid "Failed to load latest nonce"
 msgstr "Failed to load latest nonce"
 
-#: src/features/approver/utils.tsx:43
+#: src/features/approver/utils.tsx:48
 msgid "Fast"
 msgstr "Fast"
 
@@ -759,7 +760,7 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:125
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:148
 #: src/features/psbt-signer/psbt-signer.tsx:275
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
@@ -1106,6 +1107,7 @@ msgid "Reveal account"
 msgstr "Reveal account"
 
 #: src/features/send/forms/btc/btc-form.tsx:124
+#: src/features/send/forms/stx/sip10-form.tsx:151
 #: src/features/send/forms/stx/stx-form.tsx:142
 msgid "Review"
 msgstr "Review"
@@ -1153,20 +1155,20 @@ msgid "Security"
 msgstr "Security"
 
 #: src/features/receive/screens/select-account.tsx:24
-#: src/features/send/screens/select-account.tsx:45
+#: src/features/send/screens/select-account.tsx:46
 msgid "Select account"
 msgstr "Select account"
 
 #: src/features/receive/screens/select-asset.tsx:68
-#: src/features/send/screens/select-asset.tsx:39
+#: src/features/send/screens/select-asset.tsx:40
 msgid "Select asset"
 msgstr "Select asset"
 
 #: src/features/account/account.tsx:95
 #: src/features/account/accounts-widget.tsx:59
-#: src/features/send/screens/form.tsx:54
-#: src/features/send/screens/select-account.tsx:46
-#: src/features/send/screens/select-asset.tsx:39
+#: src/features/send/screens/form.tsx:50
+#: src/features/send/screens/select-account.tsx:47
+#: src/features/send/screens/select-asset.tsx:40
 msgid "Send"
 msgstr "Send"
 
@@ -1210,7 +1212,7 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:124
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:147
 #: src/features/psbt-signer/psbt-signer.tsx:274
 msgid "Show advanced options"
 msgstr "Show advanced options"
@@ -1224,7 +1226,7 @@ msgstr "Show balances"
 msgid "Sign Message"
 msgstr "Sign Message"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:86
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:92
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
@@ -1232,7 +1234,7 @@ msgstr "Sign Transaction"
 msgid "Skip for now"
 msgstr "Skip for now"
 
-#: src/features/approver/utils.tsx:41
+#: src/features/approver/utils.tsx:46
 msgid "Slow"
 msgstr "Slow"
 
@@ -1263,7 +1265,7 @@ msgstr "Stacks"
 msgid "Stacks address"
 msgstr "Stacks address"
 
-#: src/features/approver/utils.tsx:42
+#: src/features/approver/utils.tsx:47
 msgid "Standard"
 msgstr "Standard"
 
@@ -1361,7 +1363,8 @@ msgstr "This merges your existing funds into a single output. It incurs a fee bu
 msgid "to"
 msgstr "to"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:109
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:113
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:130
 #: src/features/psbt-signer/psbt-signer.tsx:255
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:145
 msgid "To address"
@@ -1401,9 +1404,14 @@ msgid "Transaction confirmations"
 msgstr "Transaction confirmations"
 
 #: src/features/send/forms/btc/use-btc-form.ts:79
-#: src/features/send/forms/stx/use-stx-form.ts:74
+#: src/features/send/forms/stx/use-sip10-form.ts:88
+#: src/features/send/forms/stx/use-stx-form.ts:77
 msgid "Transaction failed due to an unexpected error"
 msgstr "Transaction failed due to an unexpected error"
+
+#: src/features/send/forms/stx/sip10-approval.tsx:50
+msgid "Transaction is sent!"
+msgstr "Transaction is sent!"
 
 #: src/components/error/error.tsx:49
 msgid "Try again"
@@ -1431,9 +1439,9 @@ msgstr "Unable to Open Store"
 
 #: src/features/activity/utils/format-activity.ts:88
 #: src/features/activity/utils/format-activity.ts:94
-#: src/features/approver/utils.tsx:45
-#: src/features/approver/utils.tsx:57
-#: src/features/approver/utils.tsx:70
+#: src/features/approver/utils.tsx:50
+#: src/features/approver/utils.tsx:62
+#: src/features/approver/utils.tsx:75
 msgid "Unknown"
 msgstr "Unknown"
 
@@ -1533,7 +1541,8 @@ msgstr "You will find the apps you are connected to here"
 msgid "You will find the apps you recently viewed here"
 msgstr "You will find the apps you recently viewed here"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:100
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:104
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:123
 #: src/features/psbt-signer/psbt-signer.tsx:249
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:139
 msgid "You’ll send"

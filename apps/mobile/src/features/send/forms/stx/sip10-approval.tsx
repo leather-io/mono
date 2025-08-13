@@ -5,63 +5,39 @@ import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx
 import { getTxOptions } from '@/features/approver/utils';
 import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-transaction';
 import { useAccounts } from '@/store/accounts/accounts.read';
-import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
+import { t } from '@lingui/core/macro';
 import { deserializeTransaction } from '@stacks/transactions';
 
-import {
-  RpcRequest,
-  RpcResponse,
-  createRpcSuccessResponse,
-  stxTransferSip10Ft,
-} from '@leather.io/rpc';
-
-import { useTransferSip10FtTxHex } from './hooks';
-
-interface TransferSip10FtApproverProps {
-  app: App;
-  request: RpcRequest<typeof stxTransferSip10Ft>;
-  sendResult(result: RpcResponse<typeof stxTransferSip10Ft>): void;
-  closeApprover(): void;
-  nonce: number;
-  accountId: string;
-}
-
-export function TransferSip10FtApprover({
-  app,
-  request,
-  closeApprover,
-  sendResult,
-  nonce,
+export function Sip10Approver({
+  txHex: _txHex,
+  onEdit,
+  onSuccess,
   accountId,
-}: TransferSip10FtApproverProps) {
-  const { displayToast } = useToastContext();
-  const network = useNetworkPreferenceStacksNetwork();
+}: {
+  txHex: string;
+  onEdit(): void;
+  onSuccess(): void;
+  accountId: string;
+}) {
+  const [txHex, setTxHex] = useState<string>(_txHex);
 
+  const network = useNetworkPreferenceStacksNetwork();
   const { list: accounts } = useAccounts();
-  const [txHex, setTxHex] = useState<null | string>(null);
-  useTransferSip10FtTxHex({
-    amount: request.params.amount,
-    assetId: request.params.asset,
-    recipient: request.params.recipient,
-    accountId,
-    setTxHex,
-    nonce,
-  });
   const signer = useStacksSigners().fromAccountId(accountId)[0];
-  const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
 
   assertStacksSigner(signer);
-  if (!txHex) return null;
 
   const txOptions = getTxOptions(signer, network);
-
-  const tx = deserializeTransaction(txHex);
+  const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
+  const { displayToast } = useToastContext();
 
   async function onApprove() {
     assertStacksSigner(signer);
+    const tx = deserializeTransaction(txHex);
+
     const signedTx = await signer?.sign(tx);
 
     await broadcastTransaction(
@@ -70,15 +46,10 @@ export function TransferSip10FtApprover({
         onError(err) {
           displayToast({ type: 'error', title: err.message });
         },
-        onSuccess(resp) {
-          const response = createRpcSuccessResponse('stx_transferSip10Ft', {
-            id: request.id,
-            result: {
-              transaction: signedTx.serialize(),
-              txid: resp.txid,
-            },
-          });
-          sendResult(response);
+        onSuccess() {
+          displayToast({ type: 'success', title: t`Transaction is sent!` });
+
+          onSuccess();
         },
       }
     );
@@ -86,14 +57,14 @@ export function TransferSip10FtApprover({
 
   return (
     <BaseStxTxApproverLayout
-      origin={app.origin}
       txHex={txHex}
       setTxHex={setTxHex}
       txOptions={txOptions}
-      onCloseApprover={closeApprover}
+      onCloseApprover={onEdit}
       accountId={accountId}
       accounts={accounts}
       onApprove={onApprove}
+      backButtonTitle={t`Edit`}
     />
   );
 }

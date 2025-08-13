@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { getDefaultFee } from '@/features/approver/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { bytesToHex } from '@stacks/common';
@@ -8,8 +9,6 @@ import { RpcRequest, stxTransferStx } from '@leather.io/rpc';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { useOnMount } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
-
-import { getDefaultFee } from '../utils';
 
 interface UseTransferStxTxHex {
   request: RpcRequest<typeof stxTransferStx>;

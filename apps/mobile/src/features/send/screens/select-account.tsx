@@ -9,12 +9,13 @@ import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { SendableAsset } from '@/features/send/types';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { type Account } from '@/store/accounts/accounts';
 import { useWalletByFingerprint } from '@/store/wallets/wallets.read';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
+
+import { FungibleCryptoAsset } from '@leather.io/models';
 
 export function SelectAccount() {
   const { navigate } = useSendNavigation();
@@ -67,22 +68,39 @@ export function SelectAccount() {
 interface AccountItemProps {
   account: Account;
   onSelectAccount: (account: Account) => void;
-  asset: SendableAsset;
+  asset: FungibleCryptoAsset;
 }
 
 function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
   const wallet = useWalletByFingerprint(account.fingerprint);
-  const { btc, stx } = useAccountBalance({
+  const { btc, stx, sip10 } = useAccountBalance({
     accountIndex: account.accountIndex,
     fingerprint: account.fingerprint,
   });
 
-  if (btc.state !== 'success' || stx.state !== 'success') {
+  if (btc.state !== 'success' || stx.state !== 'success' || sip10.state !== 'success') {
     return null;
   }
+  function getAvailableBalance() {
+    switch (asset.protocol) {
+      case 'nativeStx':
+        if (stx.state !== 'success') return;
+        return stx.value.quote.availableUnlockedBalance;
+      case 'nativeBtc':
+        if (btc.state !== 'success') return;
+        return btc.value.quote.availableBalance;
+      case 'sip10': {
+        if (sip10.state !== 'success') return;
 
-  const availableBalance =
-    asset === 'stx' ? stx.value.quote.availableUnlockedBalance : btc.value.quote.availableBalance;
+        const token = sip10.value.sip10s.find(
+          sip10 => asset.protocol === 'sip10' && sip10.asset.assetId === asset.assetId
+        );
+        return token?.quote.availableBalance;
+      }
+      default:
+        return;
+    }
+  }
 
   return (
     <AccountListItem
@@ -92,7 +110,7 @@ function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
       address={
         <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
       }
-      balance={<Balance balance={availableBalance} />}
+      balance={<Balance balance={getAvailableBalance()} />}
       icon={<AccountAvatar icon={account.icon} />}
     />
   );

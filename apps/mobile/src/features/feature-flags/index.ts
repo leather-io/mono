@@ -68,6 +68,10 @@ export function useDappSuggestions() {
   return useBoolVariation('release_dapp_suggestions_feature', false);
 }
 
+export function useSip10SendFlag() {
+  return useBoolVariation('release_sip10_send_feature', false);
+}
+
 export function useSendPasteButton() {
   return useBoolVariation('send_paste_button', false);
 }

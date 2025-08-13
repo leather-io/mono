@@ -1,9 +1,9 @@
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { SendableAsset } from '@/features/send/types';
 import { Account } from '@/store/accounts/accounts';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import { FungibleCryptoAsset } from '@leather.io/models';
 import { HasChildren, useTheme } from '@leather.io/ui/native';
 
 // Required to use a type alias: https://reactnavigation.org/docs/typescript#typechecking-the-navigator
@@ -59,7 +59,7 @@ export function useSendRoute<RouteKey extends SendRouteKey>() {
 
 interface DeriveInitialRouteParams {
   selectedAccount: Account | null;
-  selectedAsset: SendableAsset | null;
+  selectedAsset: FungibleCryptoAsset | null;
   totalAccountNumber: number;
 }
 

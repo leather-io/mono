@@ -5,12 +5,13 @@ import { Form } from '@/features/send/screens/form';
 import { SelectAccount } from '@/features/send/screens/select-account';
 import { SelectAsset } from '@/features/send/screens/select-asset';
 import { SendFlowProvider } from '@/features/send/send-flow-provider';
-import { SendableAsset } from '@/features/send/types';
 import { useAccounts } from '@/store/accounts/accounts.read';
+
+import { FungibleCryptoAsset } from '@leather.io/models';
 
 interface SendProps {
   accountId?: string;
-  asset?: SendableAsset;
+  asset?: FungibleCryptoAsset;
 }
 
 export function Send({ accountId, asset }: SendProps) {

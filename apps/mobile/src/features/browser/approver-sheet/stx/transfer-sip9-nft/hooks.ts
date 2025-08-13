@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { getDefaultFee } from '@/features/approver/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { bytesToHex } from '@stacks/common';
@@ -14,8 +15,6 @@ import {
   getStacksAssetStringParts,
 } from '@leather.io/stacks';
 import { useOnMount } from '@leather.io/ui/native';
-
-import { getDefaultFee } from '../utils';
 
 interface UseTransferSip9NftTxHex {
   request: RpcRequest<typeof stxTransferSip9Nft>;

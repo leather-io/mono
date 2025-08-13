@@ -4,18 +4,15 @@ import { HeaderBackButton } from '@/components/screen/screen-header/components/h
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { InlineAssetPicker } from '@/features/send/components/inline-asset-picker';
-import { BtcForm } from '@/features/send/forms/btc/btc-form';
-import { BtcDataLoader } from '@/features/send/forms/btc/btc-loader';
-import { StxForm } from '@/features/send/forms/stx/stx-form';
-import { StxDataLoader } from '@/features/send/forms/stx/stx-loader';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { SendableAsset } from '@/features/send/types';
-import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 
+import { FungibleCryptoAsset } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
+
+import { FormLayout } from './form.layout';
 
 export function Form() {
   const { canGoBack, goBack } = useSendNavigation();
@@ -24,7 +21,6 @@ export function Form() {
     state: { selectedAsset, selectedAccount },
     selectAsset,
   } = useSendFlowContext();
-  const { fiatCurrencyPreference } = useSettings();
   const assetPickerSheetRef = useRef<SheetRef>(null);
   const [shouldAnimateAssetItem, setShouldAnimateAssetItem] = useState(true);
   const assetItemElementInitialOffset = shouldAnimateAssetItem
@@ -40,8 +36,8 @@ export function Form() {
     assetPickerSheetRef.current?.present();
   }
 
-  function handleInlineAssetSelection(asset: SendableAsset) {
-    analytics.track('send_asset_selected', { asset });
+  function handleInlineAssetSelection(asset: FungibleCryptoAsset) {
+    analytics.track('send_asset_selected', { asset: asset.symbol });
     setShouldAnimateAssetItem(false);
     selectAsset(asset);
   }
@@ -57,48 +53,12 @@ export function Form() {
           />
         }
       >
-        {/* TODO: Use pattern matching once we add support for remaining tokens */}
-        {
-          {
-            stx: (
-              <StxDataLoader account={selectedAccount}>
-                {({ availableBalance, quoteBalance, marketData, nonce }) => {
-                  return (
-                    <StxForm
-                      account={selectedAccount}
-                      marketData={marketData}
-                      availableBalance={availableBalance}
-                      quoteBalance={quoteBalance}
-                      quoteCurrency={fiatCurrencyPreference}
-                      nonce={nonce}
-                      onOpenAssetPicker={handleOpenAssetPicker}
-                      assetItemAnimationOffsetTop={assetItemElementInitialOffset}
-                    />
-                  );
-                }}
-              </StxDataLoader>
-            ),
-            btc: (
-              <BtcDataLoader account={selectedAccount}>
-                {({ availableBalance, quoteBalance, feeRates, utxos, marketData }) => {
-                  return (
-                    <BtcForm
-                      quoteCurrency={fiatCurrencyPreference}
-                      marketData={marketData}
-                      availableBalance={availableBalance}
-                      quoteBalance={quoteBalance}
-                      feeRates={feeRates}
-                      utxos={utxos}
-                      account={selectedAccount}
-                      assetItemAnimationOffsetTop={assetItemElementInitialOffset}
-                      onOpenAssetPicker={handleOpenAssetPicker}
-                    />
-                  );
-                }}
-              </BtcDataLoader>
-            ),
-          }[selectedAsset]
-        }
+        <FormLayout
+          selectedAsset={selectedAsset}
+          selectedAccount={selectedAccount}
+          handleOpenAssetPicker={handleOpenAssetPicker}
+          assetItemElementInitialOffset={assetItemElementInitialOffset}
+        />
       </FullHeightSheetLayout>
 
       <InlineAssetPicker
