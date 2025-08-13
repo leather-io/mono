@@ -1,6 +1,5 @@
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 import { ReceiveFlowProvider } from '@/features/receive/receive-flow-provider';
-import { SendableAsset } from '@/features/send/types';
 import { useAccounts } from '@/store/accounts/accounts.read';
 
 import { ReceiveNavigator, ReceiveStack } from './navigation';
@@ -10,7 +9,6 @@ import { SelectAsset } from './screens/select-asset';
 
 interface ReceiveProps {
   accountId?: string;
-  asset?: SendableAsset;
 }
 
 export function Receive({ accountId }: ReceiveProps) {

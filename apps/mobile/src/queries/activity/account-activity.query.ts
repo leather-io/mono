@@ -11,14 +11,23 @@ export function useTotalActivity() {
   return toFetchState(useTotalActivityQuery(accounts));
 }
 
+export function useTotalActivityByAsset(asset: CryptoAsset) {
+  const accounts = useTotalAccountAddresses();
+  return toFetchState(useTotalActivityByAssetQuery(accounts, asset));
+}
+
 export function useAccountActivity(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
   return toFetchState(useAccountActivityQuery(account));
 }
-// PETE - probably better to just use this instead of the total activity query
-export function useActivityByAsset(fingerprint: string, accountIndex: number, asset: CryptoAsset) {
+
+export function useAccountActivityByAsset(
+  fingerprint: string,
+  accountIndex: number,
+  asset: CryptoAsset
+) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useActivityByAssetQuery(account, asset));
+  return toFetchState(useAccountActivityByAssetQuery(account, asset));
 }
 
 export function useTotalActivityQuery(accounts: AccountAddresses[]) {
@@ -51,7 +60,27 @@ export function useAccountActivityQuery(account: AccountAddresses) {
   });
 }
 
-export function useActivityByAssetQuery(account: AccountAddresses, asset: CryptoAsset) {
+export function useTotalActivityByAssetQuery(accounts: AccountAddresses[], asset: CryptoAsset) {
+  const { fiatCurrencyPreference } = useSettings();
+  return useQuery({
+    queryKey: [
+      'activity-service-get-total-activity-by-asset',
+      accounts,
+      asset,
+      fiatCurrencyPreference,
+    ],
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getActivityService().getTotalActivityByAsset(accounts, asset, signal),
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    retryOnMount: false,
+    staleTime: 1 * 5000,
+    gcTime: 1 * 5000,
+  });
+}
+
+export function useAccountActivityByAssetQuery(account: AccountAddresses, asset: CryptoAsset) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['activity-service-get-activity-by-asset', account, asset, fiatCurrencyPreference],

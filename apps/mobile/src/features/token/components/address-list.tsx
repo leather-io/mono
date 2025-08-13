@@ -7,15 +7,15 @@ import { Money } from '@leather.io/models';
 import { Box, Cell, HasChildren, Text } from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
-import { AccountAvatar } from '../account/components/account-avatar';
-import { TokenDetailsCard } from './components/token-details-card';
+import { AccountAvatar } from '../../account/components/account-avatar';
+import { TokenDetailsCard } from './token-details-card';
 
 export function AddressList({ account, children }: HasChildren & { account: Account }) {
   return (
     <TokenDetailsCard
       title={
         <Box flexDirection="row" alignItems="center" gap="2">
-          <AccountAvatar icon={account.icon} size={16} />
+          <AccountAvatar icon={account.icon} size={16} borderWidth={0} />
           <Text variant="label03">{account.name}</Text>
         </Box>
       }
