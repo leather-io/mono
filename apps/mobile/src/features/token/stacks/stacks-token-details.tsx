@@ -9,8 +9,8 @@ import { t } from '@lingui/core/macro';
 import { stxAsset } from '@leather.io/constants';
 import { Box, StxAvatarIcon } from '@leather.io/ui/native';
 
-import { AccountList, TokenDetailsAccountListItem } from '../account-list-item';
-import { AddressListItem } from '../address-list';
+import { AccountList, TokenDetailsAccountListItem } from '../account-list';
+import { AddressList, AddressListItem } from '../address-list';
 import { Token } from '../token';
 
 type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
@@ -28,13 +28,22 @@ export function StacksTokenDetails() {
   }
   return (
     <Token
-      tokenId={'STX'}
+      tokenId="STX"
       asset={stxAsset}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
       canSend={true}
     >
-      <AccountList tokenId={'STX'} />
+      <AccountList
+        listItem={(account, wallet) => (
+          <StacksAccountListItem
+            account={account}
+            wallet={wallet}
+            accountIndex={account.accountIndex}
+            fingerprint={account.fingerprint}
+          />
+        )}
+      />
     </Token>
   );
 }
@@ -42,12 +51,10 @@ export function StacksTokenDetails() {
 interface StacksTokenDetailsByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?: () => void;
 }
 export function StacksTokenDetailsByAccount({
   accountIndex,
   fingerprint,
-  onPress,
 }: StacksTokenDetailsByAccountProps) {
   const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
 
@@ -66,7 +73,7 @@ export function StacksTokenDetailsByAccount({
       quoteBalance={quoteBalance}
       canSend={true}
     >
-      <StacksAccountAddressList account={account} />
+      <StacksAddressList account={account} />
     </Token>
   );
 }
@@ -96,14 +103,14 @@ export function StacksAccountListItem({
     <TokenDetailsAccountListItem
       account={account}
       wallet={wallet}
-      tokenId={'STX'}
+      tokenId="STX"
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
     />
   );
 }
 
-export function StacksAccountAddressList({ account }: { account: Account }) {
+export function StacksAddressList({ account }: { account: Account }) {
   const stxAddress = useStacksSignerAddressFromAccountIndex(
     account.fingerprint,
     account.accountIndex
@@ -113,15 +120,15 @@ export function StacksAccountAddressList({ account }: { account: Account }) {
     return null;
   }
   return (
-    <Box>
-      <AddressListItem
-        accountName={account.name}
-        address={stxAddress}
-        name={t`STX`}
-        tokenId="STX"
-        availableBalance={stxBalance.value?.stx.availableBalance}
-        quoteBalance={stxBalance.value?.quote.availableBalance}
-      />
-    </Box>
+    <AddressList account={account}>
+      <Box>
+        <AddressListItem
+          address={stxAddress}
+          name={t`STX`}
+          availableBalance={stxBalance.value?.stx.availableBalance}
+          quoteBalance={stxBalance.value?.quote.availableBalance}
+        />
+      </Box>
+    </AddressList>
   );
 }

@@ -97,7 +97,7 @@ msgstr "Account label"
 msgid "Account name cannot be empty"
 msgstr "Account name cannot be empty"
 
-#: src/features/token/account-list-item.tsx:33
+#: src/features/token/account-list.tsx:26
 msgid "Accounts"
 msgstr "Accounts"
 
@@ -946,7 +946,7 @@ msgid "Name"
 msgstr "Name"
 
 #: src/features/receive/get-assets.ts:24
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:126
+#: src/features/token/bitcoin/bitcoin-token-details.tsx:131
 msgid "Native Segwit"
 msgstr "Native Segwit"
 
@@ -1267,7 +1267,7 @@ msgstr "Stacks address"
 msgid "Standard"
 msgstr "Standard"
 
-#: src/features/token/stacks/stacks-token-details.tsx:120
+#: src/features/token/stacks/stacks-token-details.tsx:127
 msgid "STX"
 msgstr "STX"
 
@@ -1300,7 +1300,7 @@ msgid "Tap to view Secret Key"
 msgstr "Tap to view Secret Key"
 
 #: src/features/receive/get-assets.ts:32
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:134
+#: src/features/token/bitcoin/bitcoin-token-details.tsx:137
 msgid "Taproot"
 msgstr "Taproot"
 

@@ -9,7 +9,6 @@ import { TokenDetailsTable } from '@/features/token/components/token-details-tab
 import { TokenIcon } from '@/features/token/components/token-icon';
 import { TokenOverview } from '@/features/token/components/token-overview';
 import { TokenPriceChange } from '@/features/token/components/token-price-change';
-import { TokenBalance } from '@/features/token/hooks/use-get-token-balance';
 import { getChainLayerFromAssetProtocol } from '@/features/token/utils/get-chain-layer-from-protocol';
 import { getTokenName } from '@/features/token/utils/get-token-name';
 import {
@@ -32,9 +31,6 @@ interface TokenProps {
 }
 
 export function Token({ children, asset, availableBalance, quoteBalance, tokenId }: TokenProps) {
-  // const availableBalance = balance.availableBalance;
-  // const quoteBalance = balance.quoteBalance;
-
   const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const marketData = useMarketDataQuery(asset);
   const price = marketData.data?.price;

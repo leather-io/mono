@@ -14,8 +14,8 @@ import { t } from '@lingui/core/macro';
 import { btcAsset } from '@leather.io/constants';
 import { Box, BtcAvatarIcon } from '@leather.io/ui/native';
 
-import { AccountList, TokenDetailsAccountListItem } from '../account-list-item';
-import { AddressListItem } from '../address-list';
+import { AccountList, TokenDetailsAccountListItem } from '../account-list';
+import { AddressList, AddressListItem } from '../address-list';
 import { Token } from '../token';
 
 type BitcoinTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
@@ -24,11 +24,7 @@ export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
   return <TokenBalance ticker="BTC" icon={<BtcAvatarIcon />} tokenName={t`Bitcoin`} {...props} />;
 }
 
-interface BitcoinTokenDetailsProps {
-  onSelectAccount?: (account: Account) => void;
-}
-
-export function BitcoinTokenDetails({ onSelectAccount }: BitcoinTokenDetailsProps) {
+export function BitcoinTokenDetails() {
   const { state, value } = useBtcTotalBalance();
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
@@ -38,13 +34,22 @@ export function BitcoinTokenDetails({ onSelectAccount }: BitcoinTokenDetailsProp
 
   return (
     <Token
-      tokenId={'BTC'}
+      tokenId="BTC"
       asset={btcAsset}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
       canSend={true}
     >
-      <AccountList tokenId={'BTC'} />
+      <AccountList
+        listItem={(account, wallet) => (
+          <BitcoinAccountListItem
+            account={account}
+            wallet={wallet}
+            accountIndex={account.accountIndex}
+            fingerprint={account.fingerprint}
+          />
+        )}
+      />
     </Token>
   );
 }
@@ -66,13 +71,13 @@ export function BitcoinTokenDetailsByAccount({
   }
   return (
     <Token
-      tokenId={'BTC'}
+      tokenId="BTC"
       asset={btcAsset}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
       canSend={true}
     >
-      <BitcoinAccountAddressList account={account} />
+      <BitcoinAddressList account={account} />
     </Token>
   );
 }
@@ -100,14 +105,14 @@ export function BitcoinAccountListItem({
     <TokenDetailsAccountListItem
       account={account}
       wallet={wallet}
-      tokenId={'BTC'}
+      tokenId="BTC"
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
     />
   );
 }
 
-export function BitcoinAccountAddressList({ account }: { account: Account }) {
+export function BitcoinAddressList({ account }: { account: Account }) {
   const { nativeSegwitPayerAddress, taprootPayerAddress } = useBitcoinPayerAddressFromAccountIndex(
     account.fingerprint,
     account.accountIndex
@@ -119,23 +124,21 @@ export function BitcoinAccountAddressList({ account }: { account: Account }) {
   );
 
   return (
-    <Box>
-      <AddressListItem
-        accountName={account.name}
-        address={nativeSegwitPayerAddress}
-        name={t`Native Segwit`}
-        tokenId={'BTC'}
-        availableBalance={btcNativeSegwitBalance.value?.btc.availableBalance}
-        quoteBalance={btcNativeSegwitBalance.value?.quote.availableBalance}
-      />
-      <AddressListItem
-        accountName={account.name}
-        address={taprootPayerAddress}
-        name={t`Taproot`}
-        tokenId={'BTC'}
-        availableBalance={btcTaprootBalance.value?.btc.availableBalance}
-        quoteBalance={btcTaprootBalance.value?.quote.availableBalance}
-      />
-    </Box>
+    <AddressList account={account}>
+      <Box>
+        <AddressListItem
+          address={nativeSegwitPayerAddress}
+          name={t`Native Segwit`}
+          availableBalance={btcNativeSegwitBalance.value?.btc.availableBalance}
+          quoteBalance={btcNativeSegwitBalance.value?.quote.availableBalance}
+        />
+        <AddressListItem
+          address={taprootPayerAddress}
+          name={t`Taproot`}
+          availableBalance={btcTaprootBalance.value?.btc.availableBalance}
+          quoteBalance={btcTaprootBalance.value?.quote.availableBalance}
+        />
+      </Box>
+    </AddressList>
   );
 }
