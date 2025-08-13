@@ -4,15 +4,13 @@ import { t } from '@lingui/core/macro';
 
 import { StxAvatarIcon } from '@leather.io/ui/native';
 
-import { OnOpenTokenProps } from '../balances';
-
 type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
 export function StacksTokenBalance(props: StacksTokenBalanceProps) {
   return <TokenBalance ticker="STX" icon={<StxAvatarIcon />} tokenName={t`Stacks`} {...props} />;
 }
 
 interface StacksBalanceProps {
-  onPress?: ({ tokenId }: OnOpenTokenProps) => void;
+  onPress?: (tokenId: string) => void;
 }
 
 export function StacksBalance({ onPress }: StacksBalanceProps) {
@@ -27,7 +25,7 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.({ tokenId: 'STX' })}
+      onPress={() => onPress?.('STX')}
       isLoading={state === 'loading'}
     />
   );
@@ -36,7 +34,7 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
 interface StacksBalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?: ({ tokenId }: OnOpenTokenProps) => void;
+  onPress?: (tokenId: string) => void;
 }
 export function StacksBalanceByAccount({
   accountIndex,
@@ -56,7 +54,7 @@ export function StacksBalanceByAccount({
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.({ tokenId: 'STX' })}
+      onPress={() => onPress?.('STX')}
       isLoading={state === 'loading'}
     />
   );

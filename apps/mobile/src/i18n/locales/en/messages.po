@@ -215,8 +215,8 @@ msgstr "All Activity"
 msgid "All collectibles"
 msgstr "All collectibles"
 
-#: src/app/(tabs)/(index)/account/[accountId]/balances.tsx:25
-#: src/app/(tabs)/(index)/balances/index.tsx:22
+#: src/app/(tabs)/(index)/account/[accountId]/balances.tsx:38
+#: src/app/(tabs)/(index)/balances/index.tsx:15
 #: src/app/(tabs)/(index)/index.tsx:52
 msgid "All tokens"
 msgstr "All tokens"
@@ -310,7 +310,7 @@ msgstr "Back up your Secret Key"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:12
+#: src/features/balances/bitcoin/bitcoin-balance.tsx:10
 #: src/features/receive/get-assets.ts:22
 #: src/features/receive/get-assets.ts:30
 #: src/features/send/forms/btc/btc-form.tsx:63
@@ -1252,7 +1252,7 @@ msgstr "Stacking rewards"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:11
+#: src/features/balances/stacks/stacks-balance.tsx:9
 #: src/features/receive/get-assets.ts:38
 #: src/features/send/forms/stx/stx-form.tsx:61
 #: src/features/token/stacks/stacks-token-details.tsx:18

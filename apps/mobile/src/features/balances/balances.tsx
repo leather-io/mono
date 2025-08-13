@@ -1,4 +1,5 @@
-import { configureAccountParamsSchema } from '@/app/(tabs)/(index)/account/[accountId]/index';
+import { configureAccountParamsSchema } from '@/app/(tabs)/(index)/account/[accountId]';
+import { configureTokenParamsSchema } from '@/app/(tabs)/(index)/token/[tokenId]';
 import {
   BitcoinBalance,
   BitcoinBalanceByAccount,
@@ -14,16 +15,12 @@ import { Box } from '@leather.io/ui/native';
 import { AssetsBalance } from './assets/assets-balance';
 import { AssetsBalanceByAccount } from './assets/assets-balance-by-account';
 
-export interface OnOpenTokenProps {
-  tokenId: string;
-}
-
 export function AllAccountBalancesWidget() {
   const tokenDetailsFlag = useTokenDetailsFlag();
-  const params = useLocalSearchParams();
-  const { tokenId } = configureAccountParamsSchema.parse(params);
+  // const params = useLocalSearchParams();
+  // const { tokenId } = configureTokenParamsSchema.parse(params);
 
-  function onOpenToken({ tokenId }: OnOpenTokenProps) {
+  function onOpenToken(tokenId: string) {
     router.navigate({
       pathname: '/token/[tokenId]',
       params: { tokenId },
@@ -50,7 +47,7 @@ export function AccountBalances({ fingerprint, accountIndex }: AccountId) {
 
   const tokenDetailsFlag = useTokenDetailsFlag();
 
-  function onOpenToken({ tokenId }: OnOpenTokenProps) {
+  function onOpenToken(tokenId: string) {
     router.navigate({
       pathname: '/account/[accountId]/token/[tokenId]',
       params: { tokenId, accountId },

@@ -2,12 +2,14 @@ import { Screen } from '@/components/screen/screen';
 import { HeaderTitleWithSubtitle } from '@/components/screen/screen-header/components/header-title-with-subtitle';
 import { AssetsFlashList } from '@/features/balances/assets/assets-flashlist';
 import { AccountBalance } from '@/features/balances/total-balance';
+import { useTokenDetailsFlag } from '@/features/feature-flags';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { deserializeAccountId } from '@/store/accounts/accounts';
+import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 
 import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
 
@@ -21,6 +23,17 @@ export default function BalancesScreen() {
   const runesData = useRunesAccountBalance(fingerprint, accountIndex);
 
   const { totalBalance } = useAccountBalance({ fingerprint, accountIndex });
+
+  const tokenDetailsFlag = useTokenDetailsFlag();
+
+  function onOpenToken(tokenId: string) {
+    router.navigate({
+      pathname: '/account/[accountId]/token/[tokenId]',
+      params: { accountId, tokenId },
+    });
+    analytics.track('token_details_opened', { tokenId, source: 'all_account_balances' });
+  }
+  const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;
 
   const pageTitle = t`All tokens`;
   const isLoading = totalBalance.state === 'loading';
@@ -58,6 +71,7 @@ export default function BalancesScreen() {
             </Box>
           </Screen.HeaderAnimationTarget>
         }
+        onPressToken={onPressToken}
         sip10Data={sip10Data}
         runesData={runesData}
       />

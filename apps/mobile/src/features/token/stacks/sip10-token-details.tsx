@@ -1,5 +1,4 @@
 import { FetchState } from '@/components/loading';
-import { BalanceViewProps } from '@/features/balances/balances';
 import {
   useSip10AccountBalance,
   useSip10TotalBalance,
@@ -66,7 +65,7 @@ export function Sip10TokenDetailsByAccount({
   tokenId,
   accountIndex,
   fingerprint,
-}: Sip10TokenDetailsByAccountProps & BalanceViewProps) {
+}: Sip10TokenDetailsByAccountProps) {
   const data = useSip10AccountBalance(fingerprint, accountIndex);
   const account = useAccountByIndex(fingerprint, accountIndex);
   if (!account) {

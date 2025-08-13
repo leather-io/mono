@@ -1,6 +1,5 @@
 import { RuneBalance, Sip10Balance } from '@leather.io/services';
 
-import { OnOpenTokenProps } from '../balances';
 import { RunesTokenBalance } from '../bitcoin/runes-token-balance';
 import { Sip10TokenBalance } from '../stacks/sip10-token-balance';
 
@@ -9,7 +8,7 @@ export function renderAsset({
   onPress,
 }: {
   item: Sip10Balance | RuneBalance;
-  onPress?(props: OnOpenTokenProps): void;
+  onPress?(tokenId: string): void;
 }) {
   switch (item.asset.protocol) {
     case 'sip10':
@@ -18,12 +17,7 @@ export function renderAsset({
           key={item.asset.contractId}
           item={item as Sip10Balance}
           onPress={() => {
-            // pass balance and quote balance to the sheet from here
-            onPress?.({
-              asset: item.asset,
-              availableBalance: item.crypto.availableBalance,
-              quoteBalance: item.quote.totalBalance,
-            });
+            onPress?.(item.asset.symbol);
           }}
         />
       );

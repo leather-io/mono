@@ -3,26 +3,29 @@ import { ReactNode, useMemo } from 'react';
 import { BitcoinBalance } from '@/features/balances/bitcoin/bitcoin-balance';
 import { StacksBalance } from '@/features/balances/stacks/stacks-balance';
 import { sortSip10Balances } from '@/features/balances/utils/sort-sip10-balances';
-import { useRunesFlag, useTokenDetailsFlag } from '@/features/feature-flags';
+import { useRunesFlag } from '@/features/feature-flags';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { useRunesTotalBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10TotalBalance } from '@/queries/balance/sip10-balance.query';
-import { analytics } from '@/utils/analytics';
 import { FlashList } from '@shopify/flash-list';
 
 import { RuneBalance, Sip10Balance } from '@leather.io/services';
 
-import { OnOpenTokenProps } from '../balances';
 import { renderAsset } from './render-assets';
-import { router } from '.expo/types/router';
 
 interface AssetsFlashListProps {
   sip10Data: ReturnType<typeof useSip10TotalBalance>;
   runesData: ReturnType<typeof useRunesTotalBalance>;
   header: ReactNode;
+  onPressToken?: (tokenId: string) => void;
 }
 
-export function AssetsFlashList({ sip10Data, runesData, header }: AssetsFlashListProps) {
+export function AssetsFlashList({
+  sip10Data,
+  runesData,
+  header,
+  onPressToken,
+}: AssetsFlashListProps) {
   const runesFlag = useRunesFlag();
 
   const sip10Memo = useMemo(() => {
@@ -37,18 +40,6 @@ export function AssetsFlashList({ sip10Data, runesData, header }: AssetsFlashLis
 
   const allAssetsMemo = useMemo(() => [...sip10Memo, ...runesMemo], [sip10Memo, runesMemo]);
 
-  const tokenDetailsFlag = useTokenDetailsFlag();
-
-  function onOpenToken({ tokenId }: OnOpenTokenProps) {
-    router.navigate({
-      pathname: '/account/[accountId]/token/[tokenId]',
-      params: { tokenId, accountId },
-    });
-    analytics.track('token_details_opened', { tokenId, source: 'all_account_balances' });
-  }
-
-  const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;
-
   return (
     <>
       <FlashList<Sip10Balance | RuneBalance>
@@ -56,7 +47,7 @@ export function AssetsFlashList({ sip10Data, runesData, header }: AssetsFlashLis
         renderItem={({ item }) =>
           renderAsset({
             item,
-            onPress: () => onPressToken?.({ tokenId: item.asset.symbol }),
+            onPress: () => onPressToken?.(item.asset.symbol),
           })
         }
         getItemType={item => {
@@ -67,8 +58,8 @@ export function AssetsFlashList({ sip10Data, runesData, header }: AssetsFlashLis
         ListHeaderComponent={
           <>
             {header}
-            <BitcoinBalance onPress={onPressToken} />
-            <StacksBalance onPress={onPressToken} />
+            <BitcoinBalance onPress={() => onPressToken?.('BTC')} />
+            <StacksBalance onPress={() => onPressToken?.('STX')} />
           </>
         }
       />
