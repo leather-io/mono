@@ -381,6 +381,21 @@ describe('formatAmount', () => {
       const btc = createBtc(12_345_678);
       expect(formatAmount(btc, { preset: 'shorthand-balance' })).not.toContain('BTC');
     });
+
+    it('shows all decimals for crypto balances below 0.0001', () => {
+      const btc = createBtc(0.00000008);
+      expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe('0.00000008');
+    });
+
+    it('does not round small crypto balances to 0.00', () => {
+      const btc = createBtc(0.00000008);
+      expect(formatAmount(btc, { preset: 'shorthand-balance' })).not.toBe('0.00');
+    });
+
+    it('trims insignificant decimals in crypto balances above 1', () => {
+      const btc = createBtc(1.000004);
+      expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe('1.00');
+    });
   });
 
   describe('preset:pad-decimals', () => {
