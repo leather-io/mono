@@ -8,7 +8,7 @@ import {
 } from '@/queries/balance/sip10-balance.query';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 
-import { CryptoAsset } from '@leather.io/models';
+import { CryptoAsset, OnChainActivity } from '@leather.io/models';
 
 import { AccountList } from '../components/account-list';
 import { Token } from '../token';
@@ -34,7 +34,7 @@ export function Sip10TokenDetails({ tokenId }: Sip10TokenDetailsProps) {
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
       canSend={false}
-      activity={activity}
+      activity={activity.value as OnChainActivity[]}
     >
       <AccountList
         listItem={(account, wallet) => (
@@ -77,7 +77,7 @@ export function Sip10TokenDetailsByAccount({
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
       canSend={false}
-      activity={activity}
+      activity={activity.value as OnChainActivity[]}
     >
       <Sip10AddressList account={account} tokenId={tokenId} />
     </Token>
