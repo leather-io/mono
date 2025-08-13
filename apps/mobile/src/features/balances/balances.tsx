@@ -79,3 +79,7 @@ export function AccountBalances({ fingerprint, accountIndex }: AccountId) {
     </>
   );
 }
+
+// >> PETE - SIP-10 address token details not working
+// - showing account all the time and not address
+// - need to also fix the icon for address list
