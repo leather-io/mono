@@ -23,6 +23,7 @@ export interface AmountFieldProps {
   cryptoCurrency: CryptoCurrency;
   marketData: MarketData;
   locale: string;
+  assetDecimals?: number;
 }
 
 export function AmountField({
@@ -37,6 +38,7 @@ export function AmountField({
   canSendMax,
   quoteCurrency,
   locale,
+  assetDecimals,
 }: AmountFieldProps) {
   const state = evaluateInternalState({ inputValue, invalid });
   const textColor = getTextColor(state);
@@ -78,6 +80,7 @@ export function AmountField({
         cryptoCurrency={cryptoCurrency}
         locale={locale}
         marketData={marketData}
+        assetDecimals={assetDecimals}
       />
     </Box>
   );

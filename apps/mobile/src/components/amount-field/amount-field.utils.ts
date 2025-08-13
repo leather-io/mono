@@ -29,15 +29,17 @@ interface CalculateSecondaryValueParams {
   value: string;
   mode: InputCurrencyMode;
   marketData: MarketData;
+  assetDecimals?: number;
 }
 
 export function calculateSecondaryValue({
   value,
   mode,
   marketData,
+  assetDecimals,
 }: CalculateSecondaryValueParams) {
   const numericValue = Number(value);
-  const baseAmount = createMoneyFromDecimal(numericValue, marketData.pair.base);
+  const baseAmount = createMoneyFromDecimal(numericValue, marketData.pair.base, assetDecimals);
   const converter = mode === 'crypto' ? baseCurrencyAmountInQuote : quoteCurrencyAmountToBase;
   const resultAmount = converter(baseAmount, marketData);
 

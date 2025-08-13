@@ -26,6 +26,8 @@ import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io
 import { Approver, Button, SentIcon } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
+import { AssetOutcome } from '../components/asset-outcome';
+import { Sip10Recipient } from '../components/sip10-recipient';
 import { useStxTransactionUpdatesHandler } from '../stx/hooks';
 
 interface BaseStxTxApproverLayoutProps {
@@ -37,6 +39,8 @@ interface BaseStxTxApproverLayoutProps {
   setTxHex(txHex: string): void;
   txOptions: TxOptions;
   origin?: string;
+  backButtonTitle?: string;
+  sendButtonTitle?: string;
 }
 
 export function BaseStxTxApproverLayout({
@@ -48,6 +52,8 @@ export function BaseStxTxApproverLayout({
   setTxHex,
   txOptions,
   origin,
+  backButtonTitle,
+  sendButtonTitle,
 }: BaseStxTxApproverLayoutProps) {
   const tx = deserializeTransaction(txHex);
   const { changeFeeToastHandler, changeMemoToastHandler, changeNonceToastHandler } =
@@ -91,8 +97,6 @@ export function BaseStxTxApproverLayout({
             )}
           />
         </Approver.Section>
-        {isContractCall(tx.payload) && <ContractCallSummarySection txHex={txHex} />}
-        {isContractDeploy(tx.payload) && <ContractDeploySummarySection txHex={txHex} />}
         {isTokenTransferPayload(tx.payload) && (
           <Approver.Overview>
             <Approver.Section mb="-3">
@@ -112,6 +116,25 @@ export function BaseStxTxApproverLayout({
             </Approver.Section>
           </Approver.Overview>
         )}
+        {isContractCall(tx.payload) && accountId && (
+          <Approver.Overview>
+            <Approver.Section mb="-3">
+              <Approver.Subheader icon={<SentIcon variant="small" />}>
+                {t`You’ll send`}
+              </Approver.Subheader>
+
+              <AssetOutcome txHex={txHex} accountId={accountId} />
+            </Approver.Section>
+
+            <Approver.Section>
+              <Approver.Subheader>{t`To address`}</Approver.Subheader>
+
+              <Sip10Recipient txHex={txHex} accountId={accountId} />
+            </Approver.Section>
+          </Approver.Overview>
+        )}
+        {isContractCall(tx.payload) && <ContractCallSummarySection txHex={txHex} />}
+        {isContractDeploy(tx.payload) && <ContractDeploySummarySection txHex={txHex} />}
         <StacksFeesSection txHex={txHex} onChangeFee={onChangeFee} />
         {isTokenTransfer(tx.payload) && (
           <MemoSection
@@ -135,10 +158,10 @@ export function BaseStxTxApproverLayout({
       <Approver.Footer>
         <Approver.Actions>
           <Button variant="outline" flex={1} onPress={onCloseApprover}>
-            {t`Deny`}
+            {backButtonTitle ?? t`Deny`}
           </Button>
           <Button flex={1} onPress={onApprove}>
-            {t`Approve`}
+            {sendButtonTitle ?? t`Approve`}
           </Button>
         </Approver.Actions>
       </Approver.Footer>

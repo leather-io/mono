@@ -17,6 +17,7 @@ interface AmountFieldSecondaryValueProps {
   cryptoCurrency: CryptoCurrency;
   quoteCurrency: QuoteCurrency;
   marketData: MarketData;
+  assetDecimals?: number;
 }
 
 export function AmountFieldSecondaryValue({
@@ -28,11 +29,13 @@ export function AmountFieldSecondaryValue({
   cryptoCurrency,
   marketData,
   locale,
+  assetDecimals,
 }: AmountFieldSecondaryValueProps) {
   const secondaryValue = calculateSecondaryValue({
     value: primaryValue,
     mode: inputCurrencyMode,
     marketData,
+    assetDecimals,
   });
   const displayValue = formatSecondaryValue({
     value: secondaryValue,

@@ -1,14 +1,10 @@
 import { useForm } from 'react-hook-form';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { StxFormSchema, useStxSendFormSchema } from '@/features/send/forms/stx/stx-form-schema';
-import { useCalculateStxMaxSpend } from '@/features/send/hooks/use-calculate-stx-max-spend';
+import { getTransferSip10TxHex } from '@/features/approver/utils';
 import { useSendMax } from '@/features/send/hooks/use-send-max';
 import { useSendNavigation } from '@/features/send/navigation';
-import {
-  calculateDefaultStacksFee,
-  stxFormValuesToSerializedTransaction,
-} from '@/features/send/utils';
+import { calculateDefaultStacksFee } from '@/features/send/utils';
 import { Account } from '@/store/accounts/accounts';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
@@ -17,17 +13,21 @@ import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/core/macro';
 
-import { Money } from '@leather.io/models';
+import { Money, Sip10Asset } from '@leather.io/models';
+import { convertAmountToBaseUnit, unitToFractionalUnit } from '@leather.io/utils';
 
-interface UseStxFormProps {
+import { StxFormSchema, useStxSendFormSchema } from './stx-form-schema';
+
+interface UseSip10FormProps {
   account: Account;
+  asset: Sip10Asset;
   availableBalance: Money;
   nonce: number | undefined;
 }
 
 const defaultFee = calculateDefaultStacksFee();
 
-export function useStxForm({ account, availableBalance, nonce }: UseStxFormProps) {
+export function useSip10Form({ account, availableBalance, nonce, asset }: UseSip10FormProps) {
   const { displayToast } = useToastContext();
   const { navigate } = useSendNavigation();
   const stacksNetwork = useNetworkPreferenceStacksNetwork();
@@ -36,11 +36,15 @@ export function useStxForm({ account, availableBalance, nonce }: UseStxFormProps
     account.accountIndex
   )[0];
   assertStacksSigner(stxSigner);
-  const calculateStxMaxSpend = useCalculateStxMaxSpend(availableBalance);
+
+  function calculateStxMaxSpend() {
+    return convertAmountToBaseUnit(availableBalance.amount, asset.decimals);
+  }
   const schema = useStxSendFormSchema({
     calculateStxMaxSpend,
     payerAddress: stxSigner.address,
     chainId: stacksNetwork.chainId,
+    assetDecimals: asset.decimals,
   });
   const form = useForm<StxFormSchema>({
     resolver: zodResolver(schema),
@@ -60,18 +64,25 @@ export function useStxForm({ account, availableBalance, nonce }: UseStxFormProps
   const handleSubmit = form.handleSubmit(values => {
     assertStacksSigner(stxSigner);
     analytics.track('send_transaction_review_initiated', {
-      asset: 'STX',
+      asset: asset.symbol,
       amount: Number(values.amount),
     });
 
-    stxFormValuesToSerializedTransaction(values, stxSigner.publicKey, stacksNetwork)
-      .then(txHex =>
+    getTransferSip10TxHex({
+      signer: stxSigner,
+      assetId: asset.assetId,
+      recipient: values.recipient,
+      amount: unitToFractionalUnit(asset.decimals)(values.amount).toNumber(),
+      nonce: nonce ?? 1,
+      memo: values.memo,
+    })
+      .then(txHex => {
         navigate('approval', {
           hex: txHex,
           fingerprint: account.fingerprint,
           accountIndex: account.accountIndex,
-        })
-      )
+        });
+      })
       .catch(() =>
         displayToast({
           title: t`Transaction failed due to an unexpected error`,

@@ -5,9 +5,10 @@ import { usePreloadBtcData } from '@/features/send/hooks/use-preload-btc-data';
 import { usePreloadStxData } from '@/features/send/hooks/use-preload-stx-data';
 import { useSendNavigation } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { SendableAsset } from '@/features/send/types';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
+
+import { FungibleCryptoAsset } from '@leather.io/models';
 
 export function SelectAsset() {
   const { navigate } = useSendNavigation();
@@ -19,8 +20,8 @@ export function SelectAsset() {
   usePreloadBtcData(selectedAccount);
   usePreloadStxData(selectedAccount);
 
-  function handleSelectAsset(asset: SendableAsset, assetItemElementOffsetTop: number | null) {
-    analytics.track('send_asset_selected', { asset });
+  function handleSelectAsset(asset: FungibleCryptoAsset, assetItemElementOffsetTop: number | null) {
+    analytics.track('send_asset_selected', { asset: asset.symbol });
     selectAsset(asset);
     if (selectedAccount) {
       navigate('form', {

@@ -19,16 +19,18 @@ interface SchemaCreationParams {
   calculateStxMaxSpend: CalculateStxMaxSpend;
   payerAddress: string;
   chainId: number;
+  assetDecimals?: number;
 }
 
 export function useStxSendFormSchema({
   calculateStxMaxSpend,
   payerAddress,
   chainId,
+  assetDecimals,
 }: SchemaCreationParams) {
   return useMemo(
-    () => createStxSendFormSchema({ calculateStxMaxSpend, payerAddress, chainId }),
-    [calculateStxMaxSpend, payerAddress, chainId]
+    () => createStxSendFormSchema({ calculateStxMaxSpend, payerAddress, chainId, assetDecimals }),
+    [calculateStxMaxSpend, payerAddress, chainId, assetDecimals]
   );
 }
 
@@ -36,13 +38,16 @@ function createStxSendFormSchema({
   calculateStxMaxSpend,
   payerAddress,
   chainId,
+  assetDecimals,
 }: SchemaCreationParams) {
   const errorMessages = getErrorMessages();
 
   return z.object({
     amount: z
       .string()
-      .superRefine((amount, context) => stxAmountValidator(amount, context, calculateStxMaxSpend)),
+      .superRefine((amount, context) =>
+        stxAmountValidator(amount, context, calculateStxMaxSpend, assetDecimals)
+      ),
     recipient: z
       .string()
       .refine(isValidStacksAddress, errorMessages.invalidAddress)
@@ -77,11 +82,13 @@ function stxComplianceValidator(chainId: ChainId) {
 function stxAmountValidator(
   amount: string,
   context: z.RefinementCtx,
-  calculateStxMaxSpend: CalculateStxMaxSpend
+  calculateStxMaxSpend: CalculateStxMaxSpend,
+  assetDecimals?: number
 ) {
   const numericAmount = parseFloat(amount);
   const maxSpend = calculateStxMaxSpend();
   const errorMessages = getErrorMessages();
+  const decimals = assetDecimals ?? STX_DECIMALS;
 
   if (isNaN(numericAmount)) {
     context.addIssue({
@@ -103,10 +110,10 @@ function stxAmountValidator(
     return z.NEVER;
   }
 
-  if (!isValidPrecision(numericAmount, STX_DECIMALS)) {
+  if (!isValidPrecision(numericAmount, decimals)) {
     context.addIssue({
       code: z.ZodIssueCode.custom,
-      message: errorMessages.invalidPrecision(STX_DECIMALS),
+      message: errorMessages.invalidPrecision(decimals),
     });
   }
 

@@ -8,6 +8,8 @@ import { StacksTxSigner } from '@/features/stacks-tx-signer/stacks-tx-signer';
 
 import { Box } from '@leather.io/ui/native';
 
+import { Sip10Approver } from '../forms/stx/sip10-approval';
+
 export function Approval() {
   const { goBack } = useSendNavigation();
   const route = useSendRoute<'approval'>();
@@ -25,7 +27,7 @@ export function Approval() {
   return (
     <>
       <ScrollBuffer />
-      {selectedAsset === 'btc' && (
+      {selectedAsset.protocol === 'nativeBtc' && (
         <PsbtSigner
           feeEditorEnabled
           accountIndex={selectedAccount.accountIndex}
@@ -38,8 +40,18 @@ export function Approval() {
           }}
         />
       )}
-      {selectedAsset === 'stx' && (
+      {selectedAsset.protocol === 'nativeStx' && (
         <StacksTxSigner
+          txHex={txHex}
+          onEdit={goBack}
+          onSuccess={() => {
+            sendSheetRef.current?.close();
+          }}
+          accountId={selectedAccount.id}
+        />
+      )}
+      {selectedAsset.protocol === 'sip10' && (
+        <Sip10Approver
           txHex={txHex}
           onEdit={goBack}
           onSuccess={() => {

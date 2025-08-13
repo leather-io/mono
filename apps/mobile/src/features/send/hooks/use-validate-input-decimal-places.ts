@@ -7,10 +7,13 @@ import { Currency } from '@leather.io/models';
 
 const allowedDecimalPlacesFallback = 2;
 
-export function useValidateInputDecimalPlaces(currency: Currency) {
+export function useValidateInputDecimalPlaces(currency: Currency, decimals?: number) {
   return useCallback(
     (value: string) =>
-      validateDecimalPlaces(value, currencyDecimalsMap[currency] ?? allowedDecimalPlacesFallback),
-    [currency]
+      validateDecimalPlaces(
+        value,
+        currencyDecimalsMap[currency] ?? decimals ?? allowedDecimalPlacesFallback
+      ),
+    [currency, decimals]
   );
 }

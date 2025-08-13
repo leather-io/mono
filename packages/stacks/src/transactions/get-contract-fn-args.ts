@@ -1,8 +1,10 @@
 import {
   ClarityValue,
+  bufferCVFromString,
   createAddress,
   deserializeCV,
   noneCV,
+  someCV,
   standardPrincipalCVFromAddress,
   uintCV,
 } from '@stacks/transactions';
@@ -11,18 +13,20 @@ interface GetSip10FnArgs {
   amount: number;
   senderStacksAddress: string;
   recipientStacksAddress: string;
+  memo?: string;
 }
 
 export function createSip10FnArgs({
   amount,
   senderStacksAddress,
   recipientStacksAddress,
+  memo,
 }: GetSip10FnArgs) {
   const fnArgs: ClarityValue[] = [
     uintCV(amount),
     standardPrincipalCVFromAddress(createAddress(senderStacksAddress)),
     standardPrincipalCVFromAddress(createAddress(recipientStacksAddress)),
-    noneCV(), // Add memo to SIP-30?
+    memo && memo !== '' ? someCV(bufferCVFromString(memo)) : noneCV(),
   ];
   return fnArgs;
 }

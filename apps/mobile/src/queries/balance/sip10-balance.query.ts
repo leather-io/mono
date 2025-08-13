@@ -40,7 +40,7 @@ function useSip10AggregateBalanceQuery(addresses: string[]) {
   });
 }
 
-function useSip10AddressBalanceQuery(address: string) {
+export function useSip10AddressBalanceQuery(address: string) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['sip10-balances-service-get-sip10-address-balance', address, fiatCurrencyPreference],

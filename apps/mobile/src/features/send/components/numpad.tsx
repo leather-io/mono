@@ -11,6 +11,7 @@ interface SendFormNumpadProps extends NumpadProps {
   spendableAmount: BigNumber;
   currency: Currency;
   onBlur(): void;
+  assetDecimals?: number;
 }
 
 const { call: trackEnterAmountEvent } = funnel(
@@ -28,9 +29,10 @@ export function Numpad({
   onChange,
   onBlur,
   currency,
+  assetDecimals,
   ...props
 }: SendFormNumpadProps) {
-  const validateInputDecimalPlaces = useValidateInputDecimalPlaces(currency);
+  const validateInputDecimalPlaces = useValidateInputDecimalPlaces(currency, assetDecimals);
 
   function handleChange(value: string) {
     if (value !== spendableAmount.toString()) {

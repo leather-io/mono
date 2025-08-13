@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { calculateDefaultStacksFee } from '@/features/send/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { t } from '@lingui/core/macro';
 import { bytesToHex } from '@noble/hashes/utils';
@@ -17,14 +18,18 @@ import {
 } from '@stacks/transactions';
 
 import { FeeTypes } from '@leather.io/models';
-import { StacksSigner } from '@leather.io/stacks';
+import { StacksSigner, createTransferSip10TxHex } from '@leather.io/stacks';
 import {
   AnimalChameleonIcon,
   AnimalEagleIcon,
   AnimalRabbitIcon,
   AnimalSnailIcon,
 } from '@leather.io/ui/native';
-import { convertToMoneyTypeWithDefaultOfZero, match } from '@leather.io/utils';
+import {
+  convertToMoneyTypeWithDefaultOfZero,
+  createMoneyFromDecimal,
+  match,
+} from '@leather.io/utils';
 
 export type ApproverState = 'start' | 'submitting' | 'submitted';
 
@@ -145,4 +150,21 @@ export function useTxOptions(signer: StacksSigner): TxOptions {
   const stacksNetwork = useNetworkPreferenceStacksNetwork();
 
   return useMemo(() => getTxOptions(signer, stacksNetwork), [signer, stacksNetwork]);
+}
+
+export function getDefaultFee() {
+  const defaultFee = calculateDefaultStacksFee();
+  return createMoneyFromDecimal(defaultFee, 'STX');
+}
+
+export function getTransferSip10TxHex(props: {
+  signer: StacksSigner;
+  assetId: string;
+  recipient: string;
+  amount: number;
+  nonce: number;
+  memo?: string;
+}) {
+  const fee = getDefaultFee();
+  return createTransferSip10TxHex({ ...props, fee });
 }
