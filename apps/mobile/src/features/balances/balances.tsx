@@ -1,5 +1,4 @@
 import { configureAccountParamsSchema } from '@/app/(tabs)/(index)/account/[accountId]';
-import { configureTokenParamsSchema } from '@/app/(tabs)/(index)/token/[tokenId]';
 import {
   BitcoinBalance,
   BitcoinBalanceByAccount,
@@ -17,8 +16,6 @@ import { AssetsBalanceByAccount } from './assets/assets-balance-by-account';
 
 export function AllAccountBalancesWidget() {
   const tokenDetailsFlag = useTokenDetailsFlag();
-  // const params = useLocalSearchParams();
-  // const { tokenId } = configureTokenParamsSchema.parse(params);
 
   function onOpenToken(tokenId: string) {
     router.navigate({
@@ -79,7 +76,3 @@ export function AccountBalances({ fingerprint, accountIndex }: AccountId) {
     </>
   );
 }
-
-// >> PETE - SIP-10 address token details not working
-// - showing account all the time and not address
-// - need to also fix the icon for address list

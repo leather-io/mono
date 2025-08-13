@@ -13,59 +13,20 @@ import { ChevronRightIcon, Text } from '@leather.io/ui/native';
 import { isDefined } from '@leather.io/utils';
 
 import { AccountAvatar } from '../account/components/account-avatar';
-import { BitcoinAccountListItem } from './bitcoin/bitcoin-token-details';
 import { TokenDetailsCard } from './components/token-details-card';
-import { useGetAccountTokenBalance } from './hooks/use-get-token-balance';
-import { Sip10AccountListItem } from './stacks/sip10-token-details';
-import { StacksAccountListItem } from './stacks/stacks-token-details';
 
 interface AccountListProps {
-  tokenId: string;
+  listItem: (account: Account, wallet: WalletStore) => React.ReactNode;
 }
 
-// AccountList should be a wrapper that gets its specific AccountListItem based on the tokenId context
-// PETE this is the last hurrah before removing useGetAccountTokenBalance and the final refactor
-
-export function AccountList({ tokenId }: AccountListProps) {
+export function AccountList({ listItem }: AccountListProps) {
   const accounts = useAccounts('active');
 
   return (
     <TokenDetailsCard title={t`Accounts`}>
       {accounts.list.map(account => (
         <WalletLoader fingerprint={account.fingerprint} key={account.id}>
-          {/* try achieve this with component composition */}
-          {wallet => {
-            switch (tokenId) {
-              case 'BTC':
-                return (
-                  <BitcoinAccountListItem
-                    account={account}
-                    wallet={wallet}
-                    accountIndex={account.accountIndex}
-                    fingerprint={account.fingerprint}
-                  />
-                );
-              case 'STX':
-                return (
-                  <StacksAccountListItem
-                    account={account}
-                    wallet={wallet}
-                    accountIndex={account.accountIndex}
-                    fingerprint={account.fingerprint}
-                  />
-                );
-              default:
-                return (
-                  <Sip10AccountListItem
-                    account={account}
-                    wallet={wallet}
-                    accountIndex={account.accountIndex}
-                    fingerprint={account.fingerprint}
-                    tokenId={tokenId}
-                  />
-                );
-            }
-          }}
+          {wallet => listItem(account, wallet)}
         </WalletLoader>
       ))}
     </TokenDetailsCard>
@@ -88,8 +49,9 @@ export function TokenDetailsAccountListItem({
   tokenId,
 }: AccountListItemProps) {
   const tokenDetailsFlag = useTokenDetailsFlag();
+  // PETE could share this from a top level and avoid all the prop drilling
 
-  const onSelectAccount = () => {
+  function onSelectAccount() {
     if (tokenDetailsFlag) {
       router.navigate({
         pathname: '/account/[accountId]/token/[tokenId]',

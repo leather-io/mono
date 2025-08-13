@@ -11,8 +11,8 @@ import { WalletStore } from '@/store/wallets/utils';
 import { Sip10AddressBalance, Sip10AggregateBalance, Sip10Balance } from '@leather.io/services';
 import { Box } from '@leather.io/ui/native';
 
-import { AccountList, TokenDetailsAccountListItem } from '../account-list-item';
-import { AddressListItem } from '../address-list';
+import { AccountList, TokenDetailsAccountListItem } from '../account-list';
+import { AddressList, AddressListItem } from '../address-list';
 import { Token } from '../token';
 
 interface Sip10TokenDetailsWrapperProps {
@@ -51,7 +51,17 @@ export function Sip10TokenDetails({ tokenId }: Sip10TokenDetailsProps) {
 
   return (
     <Sip10TokenDetailsWrapper data={data} tokenId={tokenId}>
-      <AccountList tokenId={tokenId} />
+      <AccountList
+        listItem={(account, wallet) => (
+          <Sip10AccountListItem
+            account={account}
+            wallet={wallet}
+            accountIndex={account.accountIndex}
+            fingerprint={account.fingerprint}
+            tokenId={tokenId}
+          />
+        )}
+      />
     </Sip10TokenDetailsWrapper>
   );
 }
@@ -73,7 +83,7 @@ export function Sip10TokenDetailsByAccount({
   }
   return (
     <Sip10TokenDetailsWrapper data={data} tokenId={tokenId}>
-      <Sip10AccountAddressList account={account} tokenId={tokenId} />
+      <Sip10AddressList account={account} tokenId={tokenId} />
     </Sip10TokenDetailsWrapper>
   );
 }
@@ -114,11 +124,11 @@ export function Sip10AccountListItem({
   );
 }
 
-interface Sip10AccountAddressListProps {
+interface Sip10AddressListProps {
   account: Account;
   tokenId: string;
 }
-export function Sip10AccountAddressList({ account, tokenId }: Sip10AccountAddressListProps) {
+export function Sip10AddressList({ account, tokenId }: Sip10AddressListProps) {
   const stxAddress = useStacksSignerAddressFromAccountIndex(
     account.fingerprint,
     account.accountIndex
@@ -126,15 +136,15 @@ export function Sip10AccountAddressList({ account, tokenId }: Sip10AccountAddres
   const sip10Balances = useSip10AccountBalance(account.fingerprint, account.accountIndex);
   const sip10Balance = sip10Balances.value?.sip10s.find(sip10 => sip10.asset.symbol === tokenId);
   return (
-    <Box>
-      <AddressListItem
-        accountName={account.name}
-        address={stxAddress ?? ''}
-        name={sip10Balance?.asset.name ?? ''}
-        tokenId={tokenId}
-        availableBalance={sip10Balance?.crypto.availableBalance}
-        quoteBalance={sip10Balance?.quote.availableBalance}
-      />
-    </Box>
+    <AddressList account={account}>
+      <Box>
+        <AddressListItem
+          address={stxAddress ?? ''}
+          name={sip10Balance?.asset.name ?? ''}
+          availableBalance={sip10Balance?.crypto.availableBalance}
+          quoteBalance={sip10Balance?.quote.availableBalance}
+        />
+      </Box>
+    </AddressList>
   );
 }
