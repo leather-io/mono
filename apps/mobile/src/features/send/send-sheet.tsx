@@ -39,6 +39,7 @@ function useInitialSendParams() {
   const accountId = isString(params.accountId) ? params.accountId : undefined;
   const tokenId = isString(params.tokenId) ? params.tokenId : undefined;
 
+  // TODO: refactor sendable asset to be uppercase / lowercase agnostic OR switch tokenId to be lowercase?
   const asset: SendableAsset | undefined =
     tokenId === 'BTC' || tokenId === 'STX' ? (tokenId.toLowerCase() as SendableAsset) : undefined;
 

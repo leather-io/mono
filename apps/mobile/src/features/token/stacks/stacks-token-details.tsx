@@ -1,17 +1,19 @@
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
+import {
+  useAccountActivityByAsset,
+  useTotalActivityByAsset,
+} from '@/queries/activity/account-activity.query';
 import { useStxAccountBalance, useStxTotalBalance } from '@/queries/balance/stx-balance.query';
-import { Account } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
-import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
-import { WalletStore } from '@/store/wallets/utils';
 import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
-import { Box, StxAvatarIcon } from '@leather.io/ui/native';
+import { StxAvatarIcon } from '@leather.io/ui/native';
 
-import { AccountList, TokenDetailsAccountListItem } from '../account-list';
-import { AddressList, AddressListItem } from '../address-list';
+import { AccountList } from '../components/account-list';
 import { Token } from '../token';
+import { StacksAccountListItem } from './stacks-account-list';
+import { StacksAddressList } from './stacks-address-list';
 
 type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
 export function StacksTokenBalance(props: StacksTokenBalanceProps) {
@@ -20,7 +22,7 @@ export function StacksTokenBalance(props: StacksTokenBalanceProps) {
 
 export function StacksTokenDetails() {
   const { state, value } = useStxTotalBalance();
-
+  const activity = useTotalActivityByAsset(stxAsset);
   const availableBalance = value?.stx.availableUnlockedBalance;
   const quoteBalance = value?.quote.availableUnlockedBalance;
   if (!availableBalance || !quoteBalance) {
@@ -32,6 +34,7 @@ export function StacksTokenDetails() {
       asset={stxAsset}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
+      activity={activity}
       canSend={true}
     >
       <AccountList
@@ -57,7 +60,7 @@ export function StacksTokenDetailsByAccount({
   fingerprint,
 }: StacksTokenDetailsByAccountProps) {
   const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
-
+  const activity = useAccountActivityByAsset(fingerprint, accountIndex, stxAsset);
   const availableBalance = value?.stx.availableUnlockedBalance;
   const quoteBalance = value?.quote.availableUnlockedBalance;
   const account = useAccountByIndex(fingerprint, accountIndex);
@@ -71,64 +74,10 @@ export function StacksTokenDetailsByAccount({
       asset={stxAsset}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
+      activity={activity}
       canSend={true}
     >
       <StacksAddressList account={account} />
     </Token>
-  );
-}
-
-interface StacksAccountListItemProps {
-  account: Account;
-  wallet: WalletStore;
-  accountIndex: number;
-  fingerprint: string;
-}
-export function StacksAccountListItem({
-  account,
-  wallet,
-  accountIndex,
-  fingerprint,
-}: StacksAccountListItemProps) {
-  const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
-
-  const availableBalance = value?.stx.availableUnlockedBalance;
-  const quoteBalance = value?.quote.availableUnlockedBalance;
-
-  if (!availableBalance || !quoteBalance) {
-    return null;
-  }
-
-  return (
-    <TokenDetailsAccountListItem
-      account={account}
-      wallet={wallet}
-      tokenId="STX"
-      availableBalance={availableBalance}
-      quoteBalance={quoteBalance}
-    />
-  );
-}
-
-export function StacksAddressList({ account }: { account: Account }) {
-  const stxAddress = useStacksSignerAddressFromAccountIndex(
-    account.fingerprint,
-    account.accountIndex
-  );
-  const stxBalance = useStxAccountBalance(account.fingerprint, account.accountIndex);
-  if (!stxAddress || !stxBalance) {
-    return null;
-  }
-  return (
-    <AddressList account={account}>
-      <Box>
-        <AddressListItem
-          address={stxAddress}
-          name={t`STX`}
-          availableBalance={stxBalance.value?.stx.availableBalance}
-          quoteBalance={stxBalance.value?.quote.availableBalance}
-        />
-      </Box>
-    </AddressList>
   );
 }

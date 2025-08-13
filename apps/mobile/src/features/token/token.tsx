@@ -1,5 +1,6 @@
 import { ActionButtons } from '@/components/action-buttons';
 import { Balance } from '@/components/balance/balance';
+import { FetchState } from '@/components/loading/fetch-state';
 import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
 import { NetworkBadge } from '@/features/settings/network-badge';
@@ -17,27 +18,33 @@ import {
 } from '@/queries/assets/fungible-asset-info.query';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 
-import { FungibleCryptoAsset, Money } from '@leather.io/models';
+import { Activity, FungibleCryptoAsset, Money } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
 interface TokenProps {
-  children?: React.ReactNode;
-  accountId?: string;
-  tokenId: string;
+  activity: FetchState<Activity[]>;
   asset: FungibleCryptoAsset;
-  canSend: boolean;
   availableBalance: Money;
+  canSend?: boolean;
+  children?: React.ReactNode;
+  tokenId: string;
   quoteBalance: Money;
 }
 
-export function Token({ children, asset, availableBalance, quoteBalance, tokenId }: TokenProps) {
+export function Token({
+  activity,
+  asset,
+  availableBalance,
+  canSend = true,
+  children,
+  quoteBalance,
+  tokenId,
+}: TokenProps) {
   const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const marketData = useMarketDataQuery(asset);
   const price = marketData.data?.price;
   const { data: assetPriceChange } = useAssetPriceChangeQuery(asset);
   const changePercent = assetPriceChange?.changePercent ?? 0;
-
-  const canSend = tokenId === 'BTC' || tokenId === 'STX';
 
   return (
     <Screen>

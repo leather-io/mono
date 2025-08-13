@@ -12,8 +12,8 @@ import { Money } from '@leather.io/models';
 import { ChevronRightIcon, Text } from '@leather.io/ui/native';
 import { isDefined } from '@leather.io/utils';
 
-import { AccountAvatar } from '../account/components/account-avatar';
-import { TokenDetailsCard } from './components/token-details-card';
+import { AccountAvatar } from '../../account/components/account-avatar';
+import { TokenDetailsCard } from './token-details-card';
 
 interface AccountListProps {
   listItem: (account: Account, wallet: WalletStore) => React.ReactNode;
@@ -49,7 +49,6 @@ export function TokenDetailsAccountListItem({
   tokenId,
 }: AccountListItemProps) {
   const tokenDetailsFlag = useTokenDetailsFlag();
-  // PETE could share this from a top level and avoid all the prop drilling
 
   function onSelectAccount() {
     if (tokenDetailsFlag) {
@@ -58,10 +57,9 @@ export function TokenDetailsAccountListItem({
         params: { tokenId: tokenId, accountId: account.id },
       });
     }
-  };
+  }
 
   // Hide if no balance
-  // probably also hide BTC/STX if no balance
   if (!isDefined(availableBalance) && !isDefined(quoteBalance)) {
     return null;
   }
