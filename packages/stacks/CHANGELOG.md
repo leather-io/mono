@@ -510,6 +510,13 @@
     * @leather.io/crypto bumped to 1.11.4
     * @leather.io/utils bumped to 0.42.2
 
+## [1.16.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.15.1...@leather.io/stacks-v1.16.0) (2025-08-14)
+
+
+### Features
+
+* add sip10 sends ([a6f138e](https://github.com/leather-io/mono/commit/a6f138e5dee444516c45aef6cfbfc2074a511002))
+
 ## [1.15.1](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.15.0...@leather.io/stacks-v1.15.1) (2025-08-14)
 
 

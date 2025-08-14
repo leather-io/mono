@@ -698,6 +698,12 @@
     * @leather.io/stacks bumped to 1.15.0
     * @leather.io/utils bumped to 0.42.3
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/stacks bumped to 1.16.0
+
 ## [2.41.6](https://github.com/leather-io/mono/compare/@leather.io/query-v2.41.5...@leather.io/query-v2.41.6) (2025-08-14)
 
 

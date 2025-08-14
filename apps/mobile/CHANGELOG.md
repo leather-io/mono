@@ -2,6 +2,22 @@
 
 # Changelog
 
+## [2.65.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.64.1...@leather.io/mobile-v2.65.0) (2025-08-14)
+
+
+### Features
+
+* add sip10 sends ([a6f138e](https://github.com/leather-io/mono/commit/a6f138e5dee444516c45aef6cfbfc2074a511002))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.41.7
+    * @leather.io/stacks bumped to 1.16.0
+    * @leather.io/ui bumped to 1.78.0
+
 ## [2.64.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.64.0...@leather.io/mobile-v2.64.1) (2025-08-14)
 
 

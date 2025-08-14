@@ -475,6 +475,19 @@
   * devDependencies
     * @leather.io/models bumped to 0.39.1
 
+## [1.78.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.77.6...@leather.io/ui-v1.78.0) (2025-08-14)
+
+
+### Features
+
+* add sip10 sends ([a6f138e](https://github.com/leather-io/mono/commit/a6f138e5dee444516c45aef6cfbfc2074a511002))
+
+
+### Bug Fixes
+
+* **ui:** fix shrinking labeled icon buttons ([25e1d05](https://github.com/leather-io/mono/commit/25e1d056a9b07ba2d5c0525c52394f168a8d5f11))
+* **ui:** specify text color on ghost & outline button variants ([d5f4e50](https://github.com/leather-io/mono/commit/d5f4e50ecd9dcdf5f07776a6feb23fca286f57aa))
+
 ## [1.77.5](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.77.4...@leather.io/ui-v1.77.5) (2025-08-13)
 
 
