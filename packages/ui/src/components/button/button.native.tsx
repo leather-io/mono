@@ -91,8 +91,11 @@ const baseVariantStyles: Record<ButtonVariant, VariantProps> = {
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: 'ink.border-default',
+    color: 'ink.action-primary-default',
   },
-  ghost: {},
+  ghost: {
+    color: 'ink.action-primary-default',
+  },
 };
 
 const intentOverrides: Record<ButtonIntent, Partial<Record<ButtonVariant, VariantProps>>> = {

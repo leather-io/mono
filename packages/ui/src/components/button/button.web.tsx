@@ -77,6 +77,7 @@ const StyledButton = styled('button', {
       },
       outline: {
         border: '1px solid {colors.ink.action-primary-default}',
+        color: 'ink.action-primary-default',
         _hover: {
           bg: 'ink.component-background-hover',
         },
@@ -96,6 +97,7 @@ const StyledButton = styled('button', {
         },
       },
       ghost: {
+        color: 'ink.action-primary-default',
         _active: {
           bg: 'ink.component-background-pressed',
         },
