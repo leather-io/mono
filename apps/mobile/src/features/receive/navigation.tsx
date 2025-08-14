@@ -12,7 +12,7 @@ import { SelectedAsset } from './screens/select-asset';
 export type ReceiveStackParamList = {
   'select-account': undefined;
   'select-asset': { account: Account; previousRoute?: ReceiveRouteKey };
-  'asset-details': { asset: SelectedAsset; accountName: string };
+  'asset-details': { asset: SelectedAsset; accountName: string; previousRoute?: ReceiveRouteKey };
 };
 
 type ReceiveRouteKey = keyof ReceiveStackParamList;

@@ -1,3 +1,4 @@
+import { AssetType } from '@/features/receive/get-assets';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { Account } from '@/store/accounts/accounts';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
@@ -21,6 +22,7 @@ export function Sip10AddressList({ account, tokenId }: Sip10AddressListProps) {
     <AddressList account={account}>
       <Box>
         <AddressListItem
+          assetType={AssetType.Stacks}
           address={stxAddress ?? ''}
           name={data?.asset.name ?? ''}
           availableBalance={data?.crypto.availableBalance}

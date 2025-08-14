@@ -1,3 +1,4 @@
+import { AssetType } from '@/features/receive/get-assets';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { Account } from '@/store/accounts/accounts';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
@@ -21,6 +22,7 @@ export function StacksAddressList({ account }: { account: Account }) {
       <Box>
         <AddressListItem
           address={stxAddress}
+          assetType={AssetType.Stacks}
           name={t`STX`}
           availableBalance={stxBalance.value?.stx.availableBalance}
           quoteBalance={stxBalance.value?.quote.availableBalance}

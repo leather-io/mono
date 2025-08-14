@@ -1,11 +1,18 @@
 import { t } from '@lingui/core/macro';
 
-enum AssetType {
+export enum AssetType {
   NativeSegwit = 'native_segwit',
   Taproot = 'taproot',
   Stacks = 'stacks',
 }
-
+export interface Asset {
+  type: AssetType;
+  address: string;
+  name: string;
+  symbol: string;
+  addressType?: string;
+  description: string;
+}
 export function getAssets({
   nativeSegwitPayerAddress,
   taprootPayerAddress,
@@ -14,7 +21,7 @@ export function getAssets({
   nativeSegwitPayerAddress: string;
   taprootPayerAddress: string;
   stxAddress: string;
-}) {
+}): Asset[] {
   return [
     {
       type: AssetType.NativeSegwit,

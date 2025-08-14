@@ -1,7 +1,9 @@
 import { Balance } from '@/components/balance/balance';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
+import { AssetType } from '@/features/receive/get-assets';
 import { useCopyAddress } from '@/hooks/use-copy-address';
 import { Account } from '@/store/accounts/accounts';
+import { router } from 'expo-router';
 
 import { Money } from '@leather.io/models';
 import { Box, Cell, HasChildren, Text } from '@leather.io/ui/native';
@@ -27,6 +29,7 @@ export function AddressList({ account, children }: HasChildren & { account: Acco
 
 interface AddressListItemProps {
   address: string;
+  assetType: AssetType;
   name: string;
   availableBalance?: Money;
   quoteBalance?: Money;
@@ -34,6 +37,7 @@ interface AddressListItemProps {
 
 export function AddressListItem({
   address,
+  assetType,
   name,
   availableBalance,
   quoteBalance,
@@ -42,8 +46,14 @@ export function AddressListItem({
 
   const onCopyAddress = useCopyAddress();
 
+  function openReceiveSheet() {
+    router.setParams({
+      assetType,
+    });
+    receiveSheetRef.current?.present();
+  }
   return (
-    <Cell.Root pressable={true} onPress={() => receiveSheetRef.current?.present()}>
+    <Cell.Root pressable={true} onPress={openReceiveSheet}>
       <Cell.Content>
         <Cell.Label variant="primary">
           <Text variant="label02">{name}</Text>

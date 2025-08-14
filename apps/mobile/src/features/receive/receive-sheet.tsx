@@ -7,12 +7,13 @@ import { isString } from 'remeda';
 
 import { useHaptics } from '@leather.io/ui/native';
 
+import { AssetType } from './get-assets';
 import { Receive } from './receive';
 
 export function ReceiveSheet() {
   const { receiveSheetRef } = useGlobalSheets();
   const triggerHaptics = useHaptics();
-  const { accountId } = useInitialReceiveParams();
+  const { accountId, assetType, tokenId } = useInitialReceiveParams();
 
   function handleAnimatedPositionChange(fromIndex: number, toIndex: number) {
     if (fromIndex === 0 && toIndex === -1) {
@@ -31,7 +32,7 @@ export function ReceiveSheet() {
       onDismiss={handleDismiss}
     >
       <SheetNavigationContainer base="receive">
-        <Receive accountId={accountId} />
+        <Receive accountId={accountId} assetType={assetType} tokenId={tokenId} />
       </SheetNavigationContainer>
     </FullHeightSheet>
   );
@@ -40,6 +41,8 @@ export function ReceiveSheet() {
 function useInitialReceiveParams() {
   const params = useGlobalSearchParams();
   const accountId = isString(params.accountId) ? params.accountId : undefined;
+  const tokenId = isString(params.tokenId) ? params.tokenId : undefined;
+  const assetType = isString(params.assetType) ? (params.assetType as AssetType) : undefined;
 
-  return { accountId };
+  return { accountId, assetType, tokenId };
 }

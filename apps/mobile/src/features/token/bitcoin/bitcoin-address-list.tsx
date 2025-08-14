@@ -1,3 +1,4 @@
+import { AssetType } from '@/features/receive/get-assets';
 import {
   useBtcAccountNativeSegwitBalance,
   useBtcAccountTaprootBalance,
@@ -26,12 +27,14 @@ export function BitcoinAddressList({ account }: { account: Account }) {
       <Box>
         <AddressListItem
           address={nativeSegwitPayerAddress}
+          assetType={AssetType.NativeSegwit}
           name={t`Native Segwit`}
           availableBalance={btcNativeSegwitBalance.value?.btc.availableBalance}
           quoteBalance={btcNativeSegwitBalance.value?.quote.availableBalance}
         />
         <AddressListItem
           address={taprootPayerAddress}
+          assetType={AssetType.Taproot}
           name={t`Taproot`}
           availableBalance={btcTaprootBalance.value?.btc.availableBalance}
           quoteBalance={btcTaprootBalance.value?.quote.availableBalance}

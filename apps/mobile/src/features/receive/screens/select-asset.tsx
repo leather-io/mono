@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
@@ -8,12 +10,14 @@ import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoi
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
+import { isDefined } from 'remeda';
 
 import { assertExistence } from '@leather.io/utils';
 
 import { ReceiveAssetItem } from '../components/receive-asset-item';
-import { getAssets } from '../get-assets';
+import { AssetType, getAssets } from '../get-assets';
 import { useReceiveNavigation, useReceiveRoute } from '../navigation';
+import { useSelectAssets } from '../use-select-assets';
 
 export interface SelectedAsset {
   symbol: string;
@@ -23,7 +27,11 @@ export interface SelectedAsset {
   description: string;
 }
 
-export function SelectAsset() {
+interface SelectAssetProps {
+  assetType?: AssetType;
+  tokenId?: string;
+}
+export function SelectAsset({ assetType, tokenId }: SelectAssetProps) {
   const { navigate, goBack } = useReceiveNavigation();
   const route = useReceiveRoute<'select-asset'>();
   const {
@@ -34,10 +42,22 @@ export function SelectAsset() {
 
   assertExistence(selectedAccount, "'Select asset' screen expects `selectedAccount` to exist.");
 
+  const selectedAssets = useSelectAssets({ selectedAccount, tokenId, assetType });
+  useEffect(() => {
+    // BTC users need to choose taproot or native segwit address
+    if (isDefined(selectedAssets) && selectedAssets.length === 1) {
+      navigate('asset-details', { asset: selectedAssets[0]!, accountName: selectedAccount?.name });
+    }
+  }, []);
+
   function onSelectAsset(asset: SelectedAsset) {
     selectAsset(asset);
     if (selectedAccount) {
-      navigate('asset-details', { asset, accountName: selectedAccount?.name });
+      navigate('asset-details', {
+        asset,
+        accountName: selectedAccount?.name,
+        previousRoute: 'select-asset',
+      });
     }
   }
 
@@ -53,6 +73,7 @@ export function SelectAsset() {
     ) ?? '';
 
   const assets = getAssets({ nativeSegwitPayerAddress, taprootPayerAddress, stxAddress });
+  const filteredAssets = selectedAssets ? selectedAssets : assets;
   const onCopyAddress = useCopyAddress();
 
   function handleCopyAddress(asset: SelectedAsset) {
@@ -73,7 +94,7 @@ export function SelectAsset() {
           />
         }
       >
-        {assets.map(asset => (
+        {filteredAssets.map(asset => (
           <ReceiveAssetItem
             key={asset.address}
             asset={asset}
