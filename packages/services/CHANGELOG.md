@@ -376,6 +376,25 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.3
 
+## [1.27.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.27.0...@leather.io/services-v1.27.1) (2025-08-14)
+
+
+### Bug Fixes
+
+* update zod patch version ([b552d57](https://github.com/leather-io/mono/commit/b552d57e3af68b941aeb9553d3b9c98d413a6644))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.31.6
+    * @leather.io/constants bumped to 0.25.1
+    * @leather.io/models bumped to 0.39.1
+    * @leather.io/utils bumped to 0.42.4
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.6
+
 ## [1.27.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.26.0...@leather.io/services-v1.27.0) (2025-08-13)
 
 

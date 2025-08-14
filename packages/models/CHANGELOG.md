@@ -30,6 +30,13 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+## [0.39.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.39.0...@leather.io/models-v0.39.1) (2025-08-14)
+
+
+### Bug Fixes
+
+* update zod patch version ([b552d57](https://github.com/leather-io/mono/commit/b552d57e3af68b941aeb9553d3b9c98d413a6644))
+
 ## [0.39.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.38.0...@leather.io/models-v0.39.0) (2025-07-28)
 
 
