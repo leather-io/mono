@@ -48,6 +48,7 @@ export function SelectAsset({ assetType, tokenId }: SelectAssetProps) {
     if (isDefined(selectedAssets) && selectedAssets.length === 1) {
       navigate('asset-details', { asset: selectedAssets[0]!, accountName: selectedAccount?.name });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function onSelectAsset(asset: SelectedAsset) {

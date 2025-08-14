@@ -1047,7 +1047,7 @@ msgstr "Push and email notifications"
 #: src/components/action-buttons.tsx:29
 #: src/features/receive/screens/asset-details.tsx:52
 #: src/features/receive/screens/select-account.tsx:24
-#: src/features/receive/screens/select-asset.tsx:90
+#: src/features/receive/screens/select-asset.tsx:91
 msgid "Receive"
 msgstr "Receive"
 
@@ -1158,7 +1158,7 @@ msgstr "Security"
 msgid "Select account"
 msgstr "Select account"
 
-#: src/features/receive/screens/select-asset.tsx:89
+#: src/features/receive/screens/select-asset.tsx:90
 #: src/features/send/screens/select-asset.tsx:40
 msgid "Select asset"
 msgstr "Select asset"
