@@ -21,11 +21,12 @@ export function StacksTokenBalance(props: StacksTokenBalanceProps) {
 }
 
 export function StacksTokenDetails() {
-  const { state, value } = useStxTotalBalance();
+  const { value } = useStxTotalBalance();
   const activity = useTotalActivityByAsset(stxAsset);
   const availableBalance = value?.stx.availableUnlockedBalance;
   const quoteBalance = value?.quote.availableUnlockedBalance;
   if (!availableBalance || !quoteBalance) {
+    // TODO LEA-3015: add better loading state
     return null;
   }
   return (
@@ -59,12 +60,13 @@ export function StacksTokenDetailsByAccount({
   accountIndex,
   fingerprint,
 }: StacksTokenDetailsByAccountProps) {
-  const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
+  const { value } = useStxAccountBalance(fingerprint, accountIndex);
   const activity = useAccountActivityByAsset(fingerprint, accountIndex, stxAsset);
   const availableBalance = value?.stx.availableUnlockedBalance;
   const quoteBalance = value?.quote.availableUnlockedBalance;
   const account = useAccountByIndex(fingerprint, accountIndex);
   if (!availableBalance || !quoteBalance || !account || !activity.value) {
+    // TODO LEA-3015: add better loading state
     return null;
   }
 

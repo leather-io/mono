@@ -52,8 +52,13 @@ export function useSip10AccountBalanceQuery(request: AccountRequest) {
 // TODO: Update services to return token specific balances for SIP-10
 // centralising token specific filtering here temporarily
 export function useSip10TotalBalanceByAsset(tokenId: string) {
-  const addresses = useStacksSignerAddresses();
-  return toFetchState(useSip10AggregateBalanceByAssetQuery(addresses, tokenId));
+  const accounts = useTotalAccountAddresses();
+  return toFetchState(
+    useSip10AggregateBalanceByAssetQuery(
+      accounts.map(account => ({ account })),
+      tokenId
+    )
+  );
 }
 
 export function useSip10AccountBalanceByAsset(
@@ -61,24 +66,24 @@ export function useSip10AccountBalanceByAsset(
   accountIndex: number,
   tokenId: string
 ) {
-  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
-  if (!address) {
-    throw new Error('Stacks address not found');
-  }
-  return toFetchState(useSip10AddressBalanceByAssetQuery(address, tokenId));
+  const account = useAccountAddresses(fingerprint, accountIndex) ?? '';
+
+  return toFetchState(
+    useSip10AddressBalanceByAssetQuery(account.stacks?.stxAddress ?? '', tokenId)
+  );
 }
 
-function useSip10AggregateBalanceByAssetQuery(addresses: string[], tokenId: string) {
+function useSip10AggregateBalanceByAssetQuery(accounts: AccountRequest[], tokenId: string) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: [
       `sip10-balances-service-get-sip10-aggregate-balance-${tokenId}`,
-      addresses,
+      accounts,
       fiatCurrencyPreference,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService()
-        .getSip10AggregateBalance(addresses, signal)
+        .getSip10AggregateBalance(accounts, signal)
         .then(data => data.sip10s.find((token: Sip10Balance) => token.asset.symbol === tokenId)),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,

@@ -21,6 +21,7 @@ export function Sip10AccountListItem({
   fingerprint,
 }: Sip10AccountListItemProps) {
   const data = useSip10AccountBalance(fingerprint, accountIndex);
+  // TODO LEA-3125: improve this to not always need to get all SIP-10 data
   const availableBalance = data.value?.sip10s.find(
     (token: Sip10Balance) => token.asset.symbol === tokenId
   )?.crypto.availableBalance;

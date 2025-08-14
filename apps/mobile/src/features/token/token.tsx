@@ -77,18 +77,18 @@ export function Token({
               quoteBalance={<Balance balance={quoteBalance} variant="label01" />}
               actionButtons={<ActionButtons canSend={canSend} />}
             />
+            {/* TODO LEA-3015: add better loading state for description*/}
             {assetDescription?.description && (
               <TokenDescription>{assetDescription.description}</TokenDescription>
             )}
             <TokenDetailsTable
-              // PETE simplify this now we have separate screens for BTC, STX & SIP-10 tokens
               name={getTokenName(asset, true)}
               layer={getChainLayerFromAssetProtocol(asset.protocol)}
               price={<Balance balance={price} variant="label02" lineHeight={16} />}
               priceChange={
                 price && (
                   <TokenPriceChange
-                    // PETE this needs the same empty handling state as balances. Maybe pass <Balance in to assetPrice and have it wrapped with isLoading
+                    // TODO LEA-3015: add better loading state for price change - same as balances
                     price={price}
                     changePercent={changePercent}
                   />

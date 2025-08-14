@@ -1,11 +1,12 @@
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { Send } from '@/features/send/send';
-import { SendableAsset } from '@/features/send/types';
 import { analytics } from '@/utils/analytics';
 import { useGlobalSearchParams } from 'expo-router';
 import { isString } from 'remeda';
 
+import { btcAsset, stxAsset } from '@leather.io/constants';
+import { FungibleCryptoAsset } from '@leather.io/models';
 import { useHaptics } from '@leather.io/ui/native';
 
 export function SendSheet() {
@@ -38,10 +39,8 @@ function useInitialSendParams() {
   const params = useGlobalSearchParams();
   const accountId = isString(params.accountId) ? params.accountId : undefined;
   const tokenId = isString(params.tokenId) ? params.tokenId : undefined;
-
-  // TODO: refactor sendable asset to be uppercase / lowercase agnostic OR switch tokenId to be lowercase?
-  const asset: SendableAsset | undefined =
-    tokenId === 'BTC' || tokenId === 'STX' ? (tokenId.toLowerCase() as SendableAsset) : undefined;
+  // FIXME LEA-3125: we need to refactor this so we can also send SIP-10 tokens
+  const asset: FungibleCryptoAsset = tokenId === 'BTC' ? btcAsset : stxAsset;
 
   return { accountId, asset };
 }
