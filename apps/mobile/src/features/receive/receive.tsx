@@ -1,4 +1,5 @@
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
+import { AssetType } from '@/features/receive/get-assets';
 import { ReceiveFlowProvider } from '@/features/receive/receive-flow-provider';
 import { useAccounts } from '@/store/accounts/accounts.read';
 
@@ -9,9 +10,11 @@ import { SelectAsset } from './screens/select-asset';
 
 interface ReceiveProps {
   accountId?: string;
+  assetType?: AssetType | undefined;
+  tokenId?: string;
 }
 
-export function Receive({ accountId }: ReceiveProps) {
+export function Receive({ accountId, assetType, tokenId }: ReceiveProps) {
   const accounts = useAccounts();
   const selectedAccount = accounts.list.find(account => account.id === accountId);
 
@@ -25,7 +28,10 @@ export function Receive({ accountId }: ReceiveProps) {
       <SheetNavigationContainer base="receive">
         <ReceiveNavigator>
           <ReceiveStack.Screen name="select-account" component={SelectAccount} />
-          <ReceiveStack.Screen name="select-asset" component={SelectAsset} />
+          <ReceiveStack.Screen
+            name="select-asset"
+            component={() => <SelectAsset assetType={assetType} tokenId={tokenId} />}
+          />
           <ReceiveStack.Screen name="asset-details" component={AssetDetails} />
         </ReceiveNavigator>
       </SheetNavigationContainer>

@@ -26,6 +26,10 @@ import { useReceiveNavigation, useReceiveRoute } from '../navigation';
 export function AssetDetails() {
   const route = useReceiveRoute<'asset-details'>();
   const navigation = useReceiveNavigation();
+  // Don't allow going back from token-details screen
+  const canGoBack =
+    route.params?.previousRoute === 'select-asset' ||
+    route.params?.previousRoute === 'select-account';
   const asset = route.params.asset;
   const accountName = route.params.accountName;
   const { name, address, addressType, description } = asset;
@@ -47,7 +51,11 @@ export function AssetDetails() {
         <FullHeightSheetHeader
           title={t`Receive`}
           subtitle={accountName}
-          leftElement={<HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />}
+          leftElement={
+            canGoBack ? (
+              <HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />
+            ) : null
+          }
         />
       }
     >
