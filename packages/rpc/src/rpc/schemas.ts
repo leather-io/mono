@@ -69,7 +69,7 @@ export enum RpcErrorCode {
   PERMISSION_DENIED = 7,
   UNAUTHENTICATED = 16,
 }
-const rpcErrorCodeSchema = z.nativeEnum(RpcErrorCode);
+const rpcErrorCodeSchema = z.enum(RpcErrorCode);
 
 export function createRpcErrorBodySchema<TErrorData extends z.ZodTypeAny>(
   errorDataSchema: TErrorData

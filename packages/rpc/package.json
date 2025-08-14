@@ -9,7 +9,7 @@
     "build": "tsup",
     "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "prepublish": "pnpm build",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:unit": "vitest run",
     "typecheck": "tsc --noEmit",
     "types": "tsc --declaration --emitDeclarationOnly"
   },
@@ -26,7 +26,7 @@
     "@scure/btc-signer": "1.6.0",
     "@stacks/network": "7.0.2",
     "@stacks/transactions": "7.0.5",
-    "zod": "4.0.14"
+    "zod": "4.0.17"
   },
   "devDependencies": {
     "tsup": "8.4.0",

@@ -453,8 +453,8 @@ importers:
         specifier: 11.1.0
         version: 11.1.0
       zod:
-        specifier: 4.0.14
-        version: 4.0.14
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       '@babel/core':
         specifier: 7.27.1
@@ -646,8 +646,8 @@ importers:
         specifier: 1.1.2
         version: 1.1.2(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       zod:
-        specifier: 4.0.14
-        version: 4.0.14
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: 1.10.2
@@ -914,8 +914,8 @@ importers:
         specifier: 9.1.2
         version: 9.1.2
       zod:
-        specifier: 4.0.14
-        version: 4.0.14
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -985,8 +985,8 @@ importers:
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
       zod:
-        specifier: 4.0.14
-        version: 4.0.14
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -1079,8 +1079,8 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
       zod:
-        specifier: 4.0.14
-        version: 4.0.14
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -1134,8 +1134,8 @@ importers:
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
       zod:
-        specifier: 4.0.14
-        version: 4.0.14
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       tsup:
         specifier: 8.4.0
@@ -1156,8 +1156,8 @@ importers:
         specifier: 1.3.0
         version: 1.3.0
       zod:
-        specifier: 4.0.14
-        version: 4.0.14
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       expect-type:
         specifier: 1.2.0
@@ -1217,8 +1217,8 @@ importers:
         specifier: 11.1.0
         version: 11.1.0
       zod:
-        specifier: 4.0.14
-        version: 4.0.14
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -1296,8 +1296,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
       zod:
-        specifier: 4.0.14
-        version: 4.0.14
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       tsup:
         specifier: 8.4.0
@@ -16659,8 +16659,8 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
-  zod@4.0.14:
-    resolution: {integrity: sha512-nGFJTnJN6cM2v9kXL+SOBq3AtjQby3Mv5ySGFof5UGRHrRioSJ5iG680cYNjE/yWk671nROcpPj4hAS8nyLhSw==}
+  zod@4.0.17:
+    resolution: {integrity: sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ==}
 
   zone-file@2.0.0-beta.3:
     resolution: {integrity: sha512-6tE3PSRcpN5lbTTLlkLez40WkNPc9vw/u1J2j6DBiy0jcVX48nCkWrx2EC+bWHqC2SLp069Xw4AdnYn/qp/W5g==}
@@ -34824,6 +34824,6 @@ snapshots:
 
   zod@3.25.76: {}
 
-  zod@4.0.14: {}
+  zod@4.0.17: {}
 
   zone-file@2.0.0-beta.3: {}

@@ -29,7 +29,7 @@
     "@stacks/network": "7.0.2",
     "@stacks/profile": "6.15.0",
     "@stacks/transactions": "7.0.5",
-    "zod": "4.0.14"
+    "zod": "4.0.17"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",
