@@ -3,7 +3,7 @@ import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 import { analytics } from '@/utils/analytics';
 import { useGlobalSearchParams } from 'expo-router';
-import { isString } from 'remeda';
+import { isDefined, isString } from 'remeda';
 
 import { useHaptics } from '@leather.io/ui/native';
 
@@ -42,7 +42,9 @@ function useInitialReceiveParams() {
   const params = useGlobalSearchParams();
   const accountId = isString(params.accountId) ? params.accountId : undefined;
   const tokenId = isString(params.tokenId) ? params.tokenId : undefined;
-  const assetType = isString(params.assetType) ? (params.assetType as AssetType) : undefined;
+  const assetType = isDefined(params.assetType)
+    ? (params.assetType as unknown as AssetType)
+    : undefined;
 
   return { accountId, assetType, tokenId };
 }

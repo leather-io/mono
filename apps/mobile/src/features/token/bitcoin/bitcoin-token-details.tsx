@@ -23,11 +23,12 @@ export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
 }
 
 export function BitcoinTokenDetails() {
-  const { state, value } = useBtcTotalBalance();
+  const { value } = useBtcTotalBalance();
   const { value: activity } = useTotalActivityByAsset(btcAsset);
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
   if (!availableBalance || !quoteBalance) {
+    // TODO LEA-3015: add better loading state
     return null;
   }
 
@@ -61,12 +62,13 @@ export function BitcoinTokenDetailsByAccount({
   accountIndex,
   fingerprint,
 }: BitcoinTokenDetailsByAccountProps) {
-  const { state, value } = useBtcAccountBalance(fingerprint, accountIndex);
+  const { value } = useBtcAccountBalance(fingerprint, accountIndex);
   const account = useAccountByIndex(fingerprint, accountIndex);
   const activity = useAccountActivityByAsset(fingerprint, accountIndex, btcAsset);
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
   if (!availableBalance || !quoteBalance || !account) {
+    // TODO LEA-3015: add better loading state
     return null;
   }
   return (

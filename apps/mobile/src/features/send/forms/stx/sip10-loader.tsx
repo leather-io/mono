@@ -63,6 +63,7 @@ interface Sip10DataLoaderProps {
 
 export function Sip10DataLoader(props: Sip10DataLoaderProps) {
   const sip10Data = useSip10AccountBalance(props.account.fingerprint, props.account.accountIndex);
+  // TODO LEA-3125: improve this to not always need to get all SIP-10 data
   const token = sip10Data.value?.sip10s.find(
     sip10 => props.asset.protocol === 'sip10' && sip10.asset.assetId === props.asset.assetId
   );

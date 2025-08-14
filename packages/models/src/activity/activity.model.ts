@@ -116,7 +116,7 @@ export interface GeneralActivity extends AppLevelActivity {
   readonly title: string;
   readonly message: string;
 }
-
+// Currently we only support on-chain activities
 export type OnChainActivity =
   | DeploySmartContractActivity
   | ExecuteSmartContractActivity

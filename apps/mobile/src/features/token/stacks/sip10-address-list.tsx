@@ -17,6 +17,7 @@ export function Sip10AddressList({ account, tokenId }: Sip10AddressListProps) {
     account.accountIndex
   );
   const sip10Balance = useSip10AccountBalance(account.fingerprint, account.accountIndex);
+  // TODO LEA-3125: improve this to not always need to get all SIP-10 data
   const data = sip10Balance.value?.sip10s.find(sip10 => sip10.asset.symbol === tokenId);
   return (
     <AddressList account={account}>

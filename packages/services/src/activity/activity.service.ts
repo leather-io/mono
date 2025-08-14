@@ -66,13 +66,15 @@ export class ActivityService {
 
   /*
    * Gets activity list for an account restricted to a single asset
-  */
+   */
   public async getTotalActivityByAsset(
     accounts: AccountAddresses[],
     asset: CryptoAsset,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    const activityLists = await Promise.all(accounts.map(a => this.getActivityByAsset(a, asset, signal)));
+    const activityLists = await Promise.all(
+      accounts.map(a => this.getActivityByAsset(a, asset, signal))
+    );
     return activityLists.flat().sort(sortActivityByTimestampDesc);
   }
   /*

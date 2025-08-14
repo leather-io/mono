@@ -16,12 +16,13 @@ export function StacksAccountListItem({
   accountIndex,
   fingerprint,
 }: StacksAccountListItemProps) {
-  const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
+  const { value } = useStxAccountBalance(fingerprint, accountIndex);
 
   const availableBalance = value?.stx.availableUnlockedBalance;
   const quoteBalance = value?.quote.availableUnlockedBalance;
 
   if (!availableBalance || !quoteBalance) {
+    // TODO LEA-3015: add better loading state
     return null;
   }
 
