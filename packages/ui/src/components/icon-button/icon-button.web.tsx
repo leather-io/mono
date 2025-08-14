@@ -14,13 +14,16 @@ export function IconButton({ icon, label, disabled, ...rest }: IconButtonProps) 
     <Button
       key={label}
       color="ink.text-primary"
-      p={label ? 'space.01' : 'space.02'}
+      px={label ? 'space.01' : 'space.02'}
+      py={label ? 'space.01' : 'space.02'}
+      height={label ? 'auto' : undefined}
       textStyle="label.02"
       variant="ghost"
       width={label ? 'iconButtonWithLabelWidth' : 'unset'}
       outline="none"
       opacity={disabled ? '0.5' : '1'}
       disabled={disabled}
+      rounded="sm"
       {...rest}
     >
       <Stack alignItems="center" gap="space.01">
