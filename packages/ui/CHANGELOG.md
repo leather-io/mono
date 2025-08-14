@@ -467,6 +467,14 @@
   * dependencies
     * @leather.io/utils bumped to 0.42.2
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.42.4
+  * devDependencies
+    * @leather.io/models bumped to 0.39.1
+
 ## [1.77.5](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.77.4...@leather.io/ui-v1.77.5) (2025-08-13)
 
 

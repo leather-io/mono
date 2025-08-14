@@ -338,6 +338,21 @@
   * dependencies
     * @leather.io/utils bumped to 0.42.3
 
+## [2.20.6](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.20.5...@leather.io/rpc-v2.20.6) (2025-08-14)
+
+
+### Bug Fixes
+
+* update zod patch version ([b552d57](https://github.com/leather-io/mono/commit/b552d57e3af68b941aeb9553d3b9c98d413a6644))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.39.1
+    * @leather.io/utils bumped to 0.42.4
+
 ## [2.20.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.19.0...@leather.io/rpc-v2.20.0) (2025-07-28)
 
 

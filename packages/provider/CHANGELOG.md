@@ -277,6 +277,22 @@
     * @leather.io/rpc bumped to 2.20.5
     * @leather.io/utils bumped to 0.42.3
 
+## [1.5.7](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.5.6...@leather.io/provider-v1.5.7) (2025-08-14)
+
+
+### Bug Fixes
+
+* update zod patch version ([b552d57](https://github.com/leather-io/mono/commit/b552d57e3af68b941aeb9553d3b9c98d413a6644))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.39.1
+    * @leather.io/rpc bumped to 2.20.6
+    * @leather.io/utils bumped to 0.42.4
+
 ## [1.5.1](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.5.0...@leather.io/provider-v1.5.1) (2025-07-28)
 
 

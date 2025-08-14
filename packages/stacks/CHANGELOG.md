@@ -510,6 +510,23 @@
     * @leather.io/crypto bumped to 1.11.4
     * @leather.io/utils bumped to 0.42.2
 
+## [1.15.1](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.15.0...@leather.io/stacks-v1.15.1) (2025-08-14)
+
+
+### Bug Fixes
+
+* update zod patch version ([b552d57](https://github.com/leather-io/mono/commit/b552d57e3af68b941aeb9553d3b9c98d413a6644))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.25.1
+    * @leather.io/crypto bumped to 1.11.6
+    * @leather.io/models bumped to 0.39.1
+    * @leather.io/utils bumped to 0.42.4
+
 ## [1.15.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.14.4...@leather.io/stacks-v1.15.0) (2025-08-13)
 
 
