@@ -35,7 +35,7 @@ export function AccountListItem({
         <Cell.Label variant="primary">{balance}</Cell.Label>
         <Cell.Label variant="secondary">{secondaryAside}</Cell.Label>
       </Cell.Aside>
-      {chevron && <Cell.Icon>{chevron}</Cell.Icon>}
+      {chevron && <Cell.Icon mr="-1">{chevron}</Cell.Icon>}
     </Cell.Root>
   );
 }

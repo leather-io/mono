@@ -9,7 +9,7 @@ import { t } from '@lingui/core/macro';
 import { router } from 'expo-router';
 
 import { Money } from '@leather.io/models';
-import { ChevronRightIcon, Text } from '@leather.io/ui/native';
+import { Box, ChevronRightIcon, Text } from '@leather.io/ui/native';
 import { isDefined } from '@leather.io/utils';
 
 import { AccountAvatar } from '../../account/components/account-avatar';
@@ -24,11 +24,13 @@ export function AccountList({ listItem }: AccountListProps) {
 
   return (
     <TokenDetailsCard title={t`Accounts`}>
-      {accounts.list.map(account => (
-        <WalletLoader fingerprint={account.fingerprint} key={account.id}>
-          {wallet => listItem(account, wallet)}
-        </WalletLoader>
-      ))}
+      <Box mx="-5">
+        {accounts.list.map(account => (
+          <WalletLoader fingerprint={account.fingerprint} key={account.id}>
+            {wallet => listItem(account, wallet)}
+          </WalletLoader>
+        ))}
+      </Box>
     </TokenDetailsCard>
   );
 }
@@ -65,7 +67,6 @@ export function TokenDetailsAccountListItem({
   }
   return (
     <AccountListItem
-      px="0"
       accountName={account.name}
       walletName={
         <Text variant="caption01" lineHeight={16}>

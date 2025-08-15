@@ -55,7 +55,7 @@ export function AddressListItem({
     receiveSheetRef.current?.present();
   }
   return (
-    <Cell.Root pressable={true} onPress={openReceiveSheet}>
+    <Cell.Root pressable={true} onPress={openReceiveSheet} mx="-5">
       <Cell.Content>
         <Cell.Label variant="primary">
           <Text variant="label02">{name}</Text>
