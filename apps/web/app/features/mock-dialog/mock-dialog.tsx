@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import { WhenClient } from '~/components/client-only';
+import { WhenClient } from '~/components/when-client';
 import {
   dispatchMockResponseEvent,
   useMockLeatherRequestsEventListener,

@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { IntegerType } from '@stacks/common';
 import {
   Pox4SignatureTopic,
@@ -12,13 +14,13 @@ export interface GenerateSignatureOptions {
   rewardCycle: number;
   poxAddress: string;
   period: number;
-  topic: Pox4SignatureTopic;
+  method: Pox4SignatureTopic;
   maxAmount: IntegerType;
   authId: IntegerType;
 }
-export async function requestStackingSignature(options: GenerateSignatureOptions) {
+async function requestStackingSignature(options: GenerateSignatureOptions) {
   const { message, domain } = pox4SignatureMessage({
-    topic: options.topic,
+    topic: options.method,
     period: options.period,
     network: options.network,
     rewardCycle: options.rewardCycle,
@@ -33,7 +35,7 @@ export async function requestStackingSignature(options: GenerateSignatureOptions
   });
 
   const isValid = verifyPox4SignatureHash({
-    topic: options.topic,
+    topic: options.method,
     period: options.period,
     network: options.network,
     rewardCycle: options.rewardCycle,
@@ -44,5 +46,25 @@ export async function requestStackingSignature(options: GenerateSignatureOptions
     publicKey: signatureData.publicKey,
   });
 
-  return { signatureData, isValid };
+  return {
+    ...signatureData,
+    isValid,
+    poxAddress: options.poxAddress,
+    authId: options.authId,
+    method: options.method,
+    rewardCycle: options.rewardCycle,
+  };
+}
+
+type SignerKeyResult = Awaited<ReturnType<typeof requestStackingSignature>>;
+
+export function useSignerKeyAction() {
+  const [result, setResult] = useState<SignerKeyResult | null>(null);
+
+  async function requestSignerKey(options: GenerateSignatureOptions) {
+    const response = await requestStackingSignature(options);
+    setResult(response);
+  }
+
+  return { result, requestSignerKey };
 }

@@ -1,4 +1,4 @@
-import { WhenClient } from '~/components/client-only';
+import { WhenClient } from '~/components/when-client';
 import { StartPooledStacking } from '~/features/stacking/start-pooled-stacking/start-pooled-stacking';
 import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 import { Page } from '~/layouts/page/page';

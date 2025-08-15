@@ -2,8 +2,8 @@ import { ReactNode } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
-import { WhenClient } from '~/components/client-only';
 import { MockModeToggle } from '~/components/mock-mode-toggle';
+import { WhenClient } from '~/components/when-client';
 import { SignInButton } from '~/features/sign-in-button/sign-in-button';
 import { getPostHref } from '~/utils/post-link';
 
