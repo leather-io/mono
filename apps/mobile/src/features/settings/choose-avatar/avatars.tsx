@@ -1,5 +1,6 @@
 import { accountIconMap } from '@/features/account/components/account-avatar';
 import { AccountIcon } from '@/store/accounts/utils';
+import { keys } from 'remeda';
 
 import { Box } from '@leather.io/ui/native';
 
@@ -13,7 +14,7 @@ interface AvatarProps {
 export function Avatars({ setNewIcon, currentIcon }: AvatarProps) {
   return (
     <Box flexDirection="row" gap="5" flexWrap="wrap" justifyContent="center">
-      {Object.keys(accountIconMap).map(icon => (
+      {keys(accountIconMap).map(icon => (
         <AvatarButton
           isSelected={currentIcon === icon}
           onPress={() => setNewIcon(icon)}

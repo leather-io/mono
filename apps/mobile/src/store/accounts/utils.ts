@@ -21,7 +21,7 @@ export const accountIcons = [
   'box',
   'heart',
   'flag',
-];
+] as const;
 
 export type AccountIcon = (typeof accountIcons)[number];
 export type AccountStatus = 'active' | 'hidden';

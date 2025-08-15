@@ -32,7 +32,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
 
   const isSubmitDisabled = newIcon === null;
 
-  function setAvatar(icon: string) {
+  function setAvatar(icon: AccountIcon) {
     const payload = { fingerprint, accountIndex, icon };
     dispatch(userUpdatesAccountIcon(payload));
     router.back();
