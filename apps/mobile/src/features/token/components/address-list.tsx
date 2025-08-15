@@ -9,15 +9,17 @@ import { Money } from '@leather.io/models';
 import { Box, Cell, HasChildren, Text } from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
-import { AccountAvatar } from '../../account/components/account-avatar';
+import { accountIconMap } from '../../account/components/account-avatar';
 import { TokenDetailsCard } from './token-details-card';
 
 export function AddressList({ account, children }: HasChildren & { account: Account }) {
+  const AccountIcon = accountIconMap[account.icon];
+
   return (
     <TokenDetailsCard
       title={
-        <Box flexDirection="row" alignItems="center" gap="2">
-          <AccountAvatar icon={account.icon} size={16} borderWidth={0} />
+        <Box flexDirection="row" alignItems="center" gap="2" mb="2">
+          <AccountIcon variant="small" />
           <Text variant="label03">{account.name}</Text>
         </Box>
       }

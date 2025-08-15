@@ -15,7 +15,7 @@ import {
   makeAccountIdentifer,
   selectNextDistinctAccountIcon,
 } from '../utils';
-import { AccountStatus, AccountStore, accountStoreSchema } from './utils';
+import { AccountIcon, AccountStatus, AccountStore, accountStoreSchema } from './utils';
 
 export const accountsAdapter = createEntityAdapter<AccountStore, string>({
   selectId: account => account.id,
@@ -154,7 +154,7 @@ interface RenameAccountPayload {
 export const userRenamesAccount = createAction<RenameAccountPayload>('accounts/renameAccount');
 
 interface UpdateAccountIconPayload extends AccountId {
-  icon: string;
+  icon: AccountIcon;
 }
 export const userUpdatesAccountIcon = createAction<UpdateAccountIconPayload>(
   'accounts/addIconToAccount'

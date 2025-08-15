@@ -19,6 +19,7 @@ import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { AccountLookup } from '@/shared/types';
 import { Account as AccountType } from '@/store/accounts/accounts';
+import { AccountIcon } from '@/store/accounts/utils';
 import { t } from '@lingui/core/macro';
 import { router } from 'expo-router';
 
@@ -141,7 +142,7 @@ export function Account({ account, walletName }: AccountProps) {
 }
 
 interface StickerHeaderProps {
-  icon: string;
+  icon: AccountIcon;
 }
 
 function StickyHeader({ icon }: StickerHeaderProps) {

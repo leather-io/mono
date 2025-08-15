@@ -105,7 +105,7 @@ msgstr "Accounts"
 msgid "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 
-#: src/features/account/account.tsx:122
+#: src/features/account/account.tsx:123
 #: src/features/navigation/tab-layout.tsx:57
 #: src/features/token/components/token-activity.tsx:26
 msgid "Activity"
@@ -396,7 +396,7 @@ msgid "Code"
 msgstr "Code"
 
 #: src/app/(tabs)/(index)/account/[accountId]/collectibles.tsx:17
-#: src/features/account/account.tsx:132
+#: src/features/account/account.tsx:133
 msgid "Collectibles"
 msgstr "Collectibles"
 
@@ -946,7 +946,7 @@ msgid "Name"
 msgstr "Name"
 
 #: src/features/receive/get-assets.ts:31
-#: src/features/token/bitcoin/bitcoin-address-list.tsx:31
+#: src/features/token/bitcoin/bitcoin-address-list.tsx:30
 msgid "Native Segwit"
 msgstr "Native Segwit"
 
@@ -1267,7 +1267,7 @@ msgstr "Stacks address"
 msgid "Standard"
 msgstr "Standard"
 
-#: src/features/token/stacks/stacks-address-list.tsx:26
+#: src/features/token/stacks/stacks-address-list.tsx:25
 msgid "STX"
 msgstr "STX"
 
@@ -1300,7 +1300,7 @@ msgid "Tap to view Secret Key"
 msgstr "Tap to view Secret Key"
 
 #: src/features/receive/get-assets.ts:39
-#: src/features/token/bitcoin/bitcoin-address-list.tsx:38
+#: src/features/token/bitcoin/bitcoin-address-list.tsx:37
 msgid "Taproot"
 msgstr "Taproot"
 
@@ -1384,7 +1384,7 @@ msgstr "Token Details"
 msgid "Token Transfer"
 msgstr "Token Transfer"
 
-#: src/features/account/account.tsx:110
+#: src/features/account/account.tsx:111
 msgid "Tokens"
 msgstr "Tokens"
 
