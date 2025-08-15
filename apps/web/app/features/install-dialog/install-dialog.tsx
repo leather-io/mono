@@ -1,5 +1,5 @@
 import { Flex, styled } from 'leather-styles/jsx';
-import { WhenClient } from '~/components/client-only';
+import { WhenClient } from '~/components/when-client';
 import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
 

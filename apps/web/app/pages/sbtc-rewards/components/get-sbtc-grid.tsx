@@ -1,7 +1,7 @@
 import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
-import { WhenClient } from '~/components/client-only';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
+import { WhenClient } from '~/components/when-client';
 import { content } from '~/data/content';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { GetSbtcGridLayout } from '~/pages/sbtc-rewards/components/get-sbtc-grid.layout';

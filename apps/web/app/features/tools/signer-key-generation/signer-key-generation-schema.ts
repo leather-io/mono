@@ -14,7 +14,7 @@ export const maxU128 = microStxToStxBigint(maxU128BigInt);
 export const signerKeySignatureFormSchema = z.object({
   rewardCycle: z.coerce.number(),
   bitcoinRewardAddress: z.string().nonempty().and(btcAddressValidator()),
-  topic: z.string(),
+  method: z.string(),
   maxAmount: z.string(),
   authId: z.string(),
   duration: z.coerce.number(),
@@ -23,7 +23,7 @@ export const signerKeySignatureFormSchema = z.object({
 export type SignerKeySignatureForm = z.infer<typeof signerKeySignatureFormSchema>;
 
 export const signerKeyDefaults: Partial<SignerKeySignatureForm> = {
-  topic: Pox4SignatureTopic.StackStx,
+  method: Pox4SignatureTopic.StackStx,
   maxAmount: maxU128BigInt.toString(),
   duration: 1,
 };

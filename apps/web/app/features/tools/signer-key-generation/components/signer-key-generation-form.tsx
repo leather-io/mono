@@ -53,12 +53,12 @@ export function SignerKeyGenerationForm({ poxInfo }: SignerKeyGenerationFormProp
         )}
       </FormSection>
 
-      <FormSection title="Topic">
+      <FormSection title="Method">
         {/* https://github.com/radix-ui/primitives/issues/2817 */}
         <Select
-          id="topic"
-          label="Select the topic (stacking method) for this signature"
-          {...form.register('topic')}
+          id="method"
+          label="Select the method (stacking topic) for this signature"
+          {...form.register('method')}
         >
           {Object.values(Pox4SignatureTopic).map(key => (
             <option value={key} key={key}>

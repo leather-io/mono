@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router';
 
 import { StacksNetwork } from '@stacks/network';
 import { atom, useAtom, useAtomValue } from 'jotai';
@@ -41,6 +42,7 @@ async function waitForExtensionConnectAnimationToFinish() {
 }
 
 export function useLeatherConnect() {
+  const navigate = useNavigate();
   const [addresses, setAddresses] = useAtom(addressesAtom);
   const stacksNetwork = useStacksNetwork();
   const extensionState = useAtomValue(extensionStateAtom);
@@ -114,8 +116,9 @@ export function useLeatherConnect() {
         });
       }
     },
-    disconnect() {
+    async disconnect() {
       analytics.untypedTrack('sign_out_clicked');
+      await navigate('/');
       setAddresses([]);
     },
   };
