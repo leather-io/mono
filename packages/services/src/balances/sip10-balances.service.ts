@@ -6,6 +6,7 @@ import {
   baseCurrencyAmountInQuote,
   createBaseCryptoAssetBalance,
   createMoney,
+  hasStacksAddress,
 } from '@leather.io/utils';
 
 import { Sip10AssetService } from '../assets/sip10-asset.service';
@@ -13,6 +14,7 @@ import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
+import { AccountRequest } from '../types';
 import { combineSip10Balances, sortByAvailableQuoteBalance } from './sip10-balances.utils';
 
 export interface Sip10Balance {
@@ -27,7 +29,7 @@ export interface Sip10AggregateBalance {
 }
 
 export interface Sip10AddressBalance extends Sip10AggregateBalance {
-  address: string;
+  address?: string;
 }
 
 @injectable()
@@ -43,11 +45,11 @@ export class Sip10BalancesService {
    * Gets combined SIP10 token balances of provided Stacks address list. Includes cumulative quote currency value.
    */
   public async getSip10AggregateBalance(
-    addresses: string[],
+    requests: AccountRequest[],
     signal?: AbortSignal
   ): Promise<Sip10AggregateBalance> {
     const addressBalances = await Promise.all(
-      addresses.map(address => this.getSip10AddressBalance(address, signal))
+      requests.map(request => this.getSip10AccountBalance(request, signal))
     );
 
     const cumulativeQuoteBalance =
@@ -63,15 +65,33 @@ export class Sip10BalancesService {
     };
   }
 
+  public async getSip10AccountBalance(
+    request: AccountRequest,
+    signal?: AbortSignal
+  ): Promise<Sip10AddressBalance> {
+    if (!hasStacksAddress(request.account)) {
+      return {
+        quote: createBaseCryptoAssetBalance(
+          createMoney(0, this.settingsService.getSettings().quoteCurrency)
+        ),
+        sip10s: [],
+      };
+    }
+    return this.getSip10AddressBalance(request.account.stacks.stxAddress, signal);
+  }
+
   /**
-   * Gets all SIP10 balances for given address. Includes cumulative quote currency value.
+   * Gets all SIP-10 balances for given account. Includes cumulative quote currency value.
    */
   public async getSip10AddressBalance(
     address: string,
     signal?: AbortSignal
   ): Promise<Sip10AddressBalance> {
-    const ftBalances = (await this.stacksApiClient.getAddressFtBalances(address, { signal }))
-      .results;
+    const ftBalances = (
+      await this.stacksApiClient.getAddressFtBalances(address, {
+        signal,
+      })
+    ).results;
 
     const sip10Balances = (
       await Promise.allSettled(

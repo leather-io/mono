@@ -15,6 +15,7 @@ import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
+import { AccountRequest } from '../types';
 import { combineRunesBalances, readRunesOutputsBalances } from './runes-balances.utils';
 import { sortByAvailableQuoteBalance } from './sip10-balances.utils';
 
@@ -45,11 +46,11 @@ export class RunesBalancesService {
    * Gets combined Runes balances of provided Bitcoin accounts list. Includes cumulative quote currency value.
    */
   public async getRunesAggregateBalance(
-    accounts: AccountAddresses[],
+    requests: AccountRequest[],
     signal?: AbortSignal
   ): Promise<RunesAggregateBalance> {
     const accountBalances = await Promise.all(
-      accounts.map(account => this.getRunesAccountBalance(account, signal))
+      requests.map(request => this.getRunesAccountBalance(request, signal))
     );
 
     const cumulativeQuoteBalance =
@@ -69,14 +70,16 @@ export class RunesBalancesService {
    * Gets all Rune balances for given account. Includes cumulative quote currency value.
    */
   public async getRunesAccountBalance(
-    account: AccountAddresses,
+    request: AccountRequest,
     signal?: AbortSignal
   ): Promise<RunesAccountBalance> {
     const runesOutputs = [];
-    if (hasBitcoinAddress(account)) {
+    if (hasBitcoinAddress(request.account)) {
       const [taprootRunesOutputs, nativeSegwitRunesOutputs] = await Promise.all([
-        this.bisApiClient.fetchRunesValidOutputs(account.bitcoin.taprootDescriptor, { signal }),
-        this.bisApiClient.fetchRunesValidOutputs(account.bitcoin.nativeSegwitDescriptor, {
+        this.bisApiClient.fetchRunesValidOutputs(request.account.bitcoin.taprootDescriptor, {
+          signal,
+        }),
+        this.bisApiClient.fetchRunesValidOutputs(request.account.bitcoin.nativeSegwitDescriptor, {
           signal,
         }),
       ]);
@@ -101,7 +104,7 @@ export class RunesBalancesService {
           );
 
     return {
-      account,
+      account: request.account,
       quote: cumulativeQuoteBalance,
       runes: runesBalances.sort(sortByAvailableQuoteBalance),
     };

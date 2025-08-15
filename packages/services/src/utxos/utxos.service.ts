@@ -6,7 +6,7 @@ import { hasBitcoinAddress } from '@leather.io/utils';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
-import { BtcAccountRequest, BtcAccountRequestUtxoProtectionOptions } from '../types/btc.types';
+import { AccountRequest, AccountRequestUtxoProtectionOptions } from '../types/request.types';
 import {
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
@@ -52,7 +52,7 @@ export class UtxosService {
    * An optional list of unprotected UTXOs can be provided on request to selectively move UTXO values from protected to available.
    */
   public async getAccountUtxos(
-    { account, protections, exclusions }: BtcAccountRequest,
+    { account, protections, exclusions }: AccountRequest,
     signal?: AbortSignal
   ): Promise<UtxoTotals> {
     if (!hasBitcoinAddress(account)) return emptyUtxos;
@@ -94,7 +94,7 @@ export class UtxosService {
   public async getDescriptorUtxos(
     fingerprint: string,
     descriptor: string,
-    protections: BtcAccountRequestUtxoProtectionOptions = {},
+    protections: AccountRequestUtxoProtectionOptions = {},
     signal?: AbortSignal
   ): Promise<UtxoTotals> {
     const [totalUtxos, protectedUtxos, btcTxs] = await Promise.all([
@@ -129,7 +129,7 @@ export class UtxosService {
   private async getDescriptorProtectedUtxos(
     fingerprint: string,
     descriptor: string,
-    { discardedInscriptions = [], discardRunes = false }: BtcAccountRequestUtxoProtectionOptions,
+    { discardedInscriptions = [], discardRunes = false }: AccountRequestUtxoProtectionOptions,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
     const [utxos, inscriptions, runeOutputs] = await Promise.all([

@@ -7,6 +7,7 @@ import {
   baseCurrencyAmountInQuote,
   createMoney,
   createStxBalance,
+  hasStacksAddress,
 } from '@leather.io/utils';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
@@ -18,6 +19,7 @@ import type { SettingsService } from '../infrastructure/settings/settings.servic
 import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
 import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
+import { AccountRequest } from '../types';
 import { calculateInboundStxBalance, calculateOutboundStxBalance } from './stx-balances.utils';
 
 export interface QuotedStxBalance {
@@ -26,7 +28,7 @@ export interface QuotedStxBalance {
 }
 
 export interface AddressQuotedStxBalance extends QuotedStxBalance {
-  address: string;
+  address?: string;
 }
 
 const stxAssetZeroBalance = createStxBalance(createMoney(0, 'STX'));
@@ -44,11 +46,11 @@ export class StxBalancesService {
    * Gets cumulative STX balance of Stacks address list, denominated in both STX and quote currency.
    */
   public async getStxAggregateBalance(
-    addresses: string[],
+    requests: AccountRequest[],
     signal?: AbortSignal
   ): Promise<QuotedStxBalance> {
     const addressBalances = await Promise.all(
-      addresses.map(address => this.getStxAddressBalance(address, signal))
+      requests.map(request => this.getStxAccountBalance(request, signal))
     );
 
     const cumulativeStxBalance =
@@ -66,10 +68,22 @@ export class StxBalancesService {
       quote: cumulativeQuoteBalance,
     };
   }
-
   /**
-   * Gets STX balance of given address, denominated in both STX and quote currency.
+   * Gets STX balance of given account, denominated in both STX and quote currency.
    */
+  public async getStxAccountBalance(
+    request: AccountRequest,
+    signal?: AbortSignal
+  ): Promise<AddressQuotedStxBalance> {
+    if (!hasStacksAddress(request.account)) {
+      return {
+        stx: stxAssetZeroBalance,
+        quote: createStxBalance(createMoney(0, this.settingsService.getSettings().quoteCurrency)),
+      };
+    }
+    return this.getStxAddressBalance(request.account.stacks.stxAddress, signal);
+  }
+
   public async getStxAddressBalance(
     address: string,
     signal?: AbortSignal

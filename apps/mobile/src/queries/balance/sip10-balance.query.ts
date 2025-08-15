@@ -1,36 +1,30 @@
 import { toFetchState } from '@/components/loading/fetch-state';
-import {
-  useStacksSignerAddressFromAccountIndex,
-  useStacksSignerAddresses,
-} from '@/store/keychains/stacks/stacks-keychains.read';
+import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { getSip10BalancesService } from '@leather.io/services';
+import { AccountRequest, getSip10BalancesService } from '@leather.io/services';
 
 export function useSip10TotalBalance() {
-  const addresses = useStacksSignerAddresses();
-  return toFetchState(useSip10AggregateBalanceQuery(addresses));
+  const accounts = useTotalAccountAddresses();
+  return toFetchState(useSip10AggregateBalanceQuery(accounts.map(account => ({ account }))));
 }
 
 export function useSip10AccountBalance(fingerprint: string, accountIndex: number) {
-  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
-  if (!address) {
-    throw new Error('Stacks address not found');
-  }
-  return toFetchState(useSip10AddressBalanceQuery(address));
+  const account = useAccountAddresses(fingerprint, accountIndex);
+  return toFetchState(useSip10AccountBalanceQuery({ account }));
 }
 
-function useSip10AggregateBalanceQuery(addresses: string[]) {
+function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: [
       'sip10-balances-service-get-sip10-aggregate-balance',
-      addresses,
+      requests,
       fiatCurrencyPreference,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AggregateBalance(addresses, signal),
+      getSip10BalancesService().getSip10AggregateBalance(requests, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -40,12 +34,12 @@ function useSip10AggregateBalanceQuery(addresses: string[]) {
   });
 }
 
-export function useSip10AddressBalanceQuery(address: string) {
+export function useSip10AccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['sip10-balances-service-get-sip10-address-balance', address, fiatCurrencyPreference],
+    queryKey: ['sip10-balances-service-get-sip10-account-balance', request, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AddressBalance(address, signal),
+      getSip10BalancesService().getSip10AccountBalance(request, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
