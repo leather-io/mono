@@ -1,7 +1,7 @@
 import { Error } from '@/components/error/error';
 import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
-import { useStxAddressBalanceQuery } from '@/queries/balance/stx-balance.query';
+import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
@@ -18,27 +18,27 @@ interface StxData {
 
 function useStxData({ fingerprint, accountIndex }: AccountId): FetchState<StxData> {
   const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
-  const balance = useStxAddressBalanceQuery(address);
+  const balance = useStxAccountBalance(fingerprint, accountIndex);
   const marketData = useStxMarketDataQuery();
   const nextNonce = useNextNonce(address);
 
   // TODO: Replace with aggregate queries once we have more flexible query API
   const isReady =
-    balance.status === 'success' &&
+    balance.state === 'success' &&
     marketData.status === 'success' &&
     nextNonce.status === 'success';
   const isLoading =
-    balance.status === 'pending' ||
+    balance.state === 'loading' ||
     marketData.status === 'pending' ||
     nextNonce.status === 'pending';
   const isError =
-    balance.status === 'error' || marketData.status === 'error' || nextNonce.status === 'error';
+    balance.state === 'error' || marketData.status === 'error' || nextNonce.status === 'error';
 
   return toFetchState({
     data: isReady
       ? {
-          availableBalance: balance.data.stx.availableUnlockedBalance,
-          quoteBalance: balance.data.quote.availableUnlockedBalance,
+          availableBalance: balance.value.stx.availableUnlockedBalance,
+          quoteBalance: balance.value.quote.availableUnlockedBalance,
           nonce: nextNonce.data?.nonce,
           marketData: marketData.data,
         }

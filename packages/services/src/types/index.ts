@@ -1,2 +1,2 @@
 export * from './asset.types';
-export * from './btc.types';
+export * from './request.types';

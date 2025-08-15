@@ -12,7 +12,7 @@ import {
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
-import { BtcAccountRequest } from '../types/btc.types';
+import { AccountRequest } from '../types/request.types';
 import { UtxosService } from '../utxos/utxos.service';
 import { sumUtxoValues } from '../utxos/utxos.utils';
 
@@ -38,7 +38,7 @@ export class BtcBalancesService {
    * Gets cumulative BTC balance of requested Bitcoin accounts list, denominated in both BTC and quote currency.
    */
   public async getBtcAggregateBalance(
-    balanceRequests: BtcAccountRequest[],
+    balanceRequests: AccountRequest[],
     signal?: AbortSignal
   ): Promise<QuotedBtcBalance> {
     const accountBalances = await Promise.all(
@@ -69,7 +69,7 @@ export class BtcBalancesService {
    * A list of selectively unprotected UTXOs provided on the request will move the UTXO values from protected to available balance.
    */
   public async getBtcAccountBalance(
-    request: BtcAccountRequest,
+    request: AccountRequest,
     signal?: AbortSignal
   ): Promise<AccountQuotedBtcBalance> {
     const utxos = await this.utxosService.getAccountUtxos(request, signal);

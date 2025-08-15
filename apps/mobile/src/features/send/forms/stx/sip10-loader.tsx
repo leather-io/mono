@@ -1,10 +1,7 @@
 import { Error } from '@/components/error/error';
 import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
-import {
-  useSip10AccountBalance,
-  useSip10AddressBalanceQuery,
-} from '@/queries/balance/sip10-balance.query';
+import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import '@/queries/balance/stx-balance.query';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
@@ -27,21 +24,21 @@ function useSip10Data({
   token,
 }: { token: Sip10Balance } & AccountId): FetchState<Sip10Data> {
   const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
-  const balance = useSip10AddressBalanceQuery(address);
+  const balance = useSip10AccountBalance(fingerprint, accountIndex);
   const nextNonce = useNextNonce(address);
   const marketData = useMarketDataQuery(token.asset);
 
   // TODO: Replace with aggregate queries once we have more flexible query API
   const isReady =
-    balance.status === 'success' &&
+    balance.state === 'success' &&
     marketData.status === 'success' &&
     nextNonce.status === 'success';
   const isLoading =
-    balance.status === 'pending' ||
+    balance.state === 'loading' ||
     marketData.status === 'pending' ||
     nextNonce.status === 'pending';
   const isError =
-    balance.status === 'error' || marketData.status === 'error' || nextNonce.status === 'error';
+    balance.state === 'error' || marketData.status === 'error' || nextNonce.status === 'error';
 
   return toFetchState({
     data: isReady

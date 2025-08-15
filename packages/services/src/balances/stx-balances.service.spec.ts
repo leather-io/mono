@@ -4,10 +4,13 @@ import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.
 import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from '../market-data/market-data.service';
 import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
+import { AccountRequest } from '../types';
 import { StxBalancesService } from './stx-balances.service';
 
 describe(StxBalancesService.name, () => {
-  const stacksAddress = 'STACKS_ADDRESS';
+  const stacksAddress1 = 'STACKS_ADDRESS1';
+  const stacksAddress2 = 'STACKS_ADDRESS2';
+  const stacksAddress3 = 'STACKS_ADDRESS3';
 
   const mockSettingsService = {
     getSettings: vi.fn().mockResolvedValue({
@@ -34,7 +37,21 @@ describe(StxBalancesService.name, () => {
       {
         tx_type: 'token_transfer',
         token_transfer: {
-          recipient_address: stacksAddress,
+          recipient_address: stacksAddress1,
+          amount: '1000000',
+        },
+      },
+      {
+        tx_type: 'token_transfer',
+        token_transfer: {
+          recipient_address: stacksAddress2,
+          amount: '1000000',
+        },
+      },
+      {
+        tx_type: 'token_transfer',
+        token_transfer: {
+          recipient_address: stacksAddress3,
           amount: '1000000',
         },
       },
@@ -48,19 +65,27 @@ describe(StxBalancesService.name, () => {
     mockStacksTransactionsService
   );
 
-  describe('getStxAddressBalance', () => {
+  describe('getStxAccountBalance', () => {
+    const request = {
+      account: {
+        stacks: {
+          stxAddress: stacksAddress1,
+        },
+      },
+    } as AccountRequest;
+
     beforeEach(() => {
       vi.clearAllMocks();
     });
 
     it('retrieves stx balance using stacks api account balance and pending transactions', async () => {
       const signal = new AbortController().signal;
-      const balance = await stxBalancesService.getStxAddressBalance(stacksAddress, signal);
-      expect(mockStacksApiClient.getAddressStxBalance).toHaveBeenCalledWith(stacksAddress, {
+      const balance = await stxBalancesService.getStxAccountBalance(request, signal);
+      expect(mockStacksApiClient.getAddressStxBalance).toHaveBeenCalledWith(stacksAddress1, {
         signal,
       });
       expect(mockStacksTransactionsService.getPendingTransactions).toHaveBeenCalledWith(
-        stacksAddress,
+        stacksAddress1,
         signal
       );
       expect(balance.stx.totalBalance.amount).toEqual(initBigNumber(5000000));
@@ -74,7 +99,7 @@ describe(StxBalancesService.name, () => {
     });
 
     it('uses market data to calculate usd-denominated balances', async () => {
-      const balance = await stxBalancesService.getStxAddressBalance(stacksAddress);
+      const balance = await stxBalancesService.getStxAccountBalance(request);
       expect(mockMarketDataService.getMarketData).toHaveBeenCalled();
       expect(balance.quote.totalBalance.amount).toEqual(initBigNumber(500));
       expect(balance.quote.lockedBalance.amount).toEqual(initBigNumber(100));
@@ -88,15 +113,37 @@ describe(StxBalancesService.name, () => {
   });
 
   describe('getStxAggregateBalance', () => {
+    const request1 = {
+      account: {
+        stacks: {
+          stxAddress: stacksAddress1,
+        },
+      },
+    } as AccountRequest;
+    const request2 = {
+      account: {
+        stacks: {
+          stxAddress: stacksAddress2,
+        },
+      },
+    } as AccountRequest;
+    const request3 = {
+      account: {
+        stacks: {
+          stxAddress: stacksAddress3,
+        },
+      },
+    } as AccountRequest;
+
     beforeEach(() => {
       vi.clearAllMocks();
     });
 
     it('sums address balances into aggregate stx and usd balances', async () => {
       const aggregateBalance = await stxBalancesService.getStxAggregateBalance([
-        stacksAddress,
-        stacksAddress,
-        stacksAddress,
+        request1,
+        request2,
+        request3,
       ]);
       expect(aggregateBalance.stx.totalBalance.amount).toEqual(initBigNumber(5000000 * 3));
       expect(aggregateBalance.stx.lockedBalance.amount).toEqual(initBigNumber(1000000 * 3));

@@ -1,32 +1,26 @@
 import { toFetchState } from '@/components/loading/fetch-state';
-import {
-  useStacksSignerAddressFromAccountIndex,
-  useStacksSignerAddresses,
-} from '@/store/keychains/stacks/stacks-keychains.read';
+import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { getStxBalancesService } from '@leather.io/services';
+import { AccountRequest, getStxBalancesService } from '@leather.io/services';
 
 export function useStxTotalBalance() {
-  const addresses = useStacksSignerAddresses();
-  return toFetchState(useStxAggregateBalanceQuery(addresses));
+  const accounts = useTotalAccountAddresses();
+  return toFetchState(useStxAggregateBalanceQuery(accounts.map(account => ({ account }))));
 }
 
 export function useStxAccountBalance(fingerprint: string, accountIndex: number) {
-  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
-  if (!address) {
-    throw new Error('Stacks address not found');
-  }
-  return toFetchState(useStxAddressBalanceQuery(address));
+  const account = useAccountAddresses(fingerprint, accountIndex);
+  return toFetchState(useStxAccountBalanceQuery({ account }));
 }
 
-function useStxAggregateBalanceQuery(addresses: string[]) {
+function useStxAggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['stx-balances-service-get-stx-aggregate-balance', addresses, fiatCurrencyPreference],
+    queryKey: ['stx-balances-service-get-stx-aggregate-balance', requests, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getStxBalancesService().getStxAggregateBalance(addresses, signal),
+      getStxBalancesService().getStxAggregateBalance(requests, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -36,12 +30,12 @@ function useStxAggregateBalanceQuery(addresses: string[]) {
   });
 }
 
-export function useStxAddressBalanceQuery(address: string) {
+export function useStxAccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['stx-balances-service-get-stx-address-balance', address, fiatCurrencyPreference],
+    queryKey: ['stx-balances-service-get-stx-account-balance', request, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getStxBalancesService().getStxAddressBalance(address, signal),
+      getStxBalancesService().getStxAccountBalance(request, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

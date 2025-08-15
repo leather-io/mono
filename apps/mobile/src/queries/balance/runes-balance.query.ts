@@ -4,30 +4,29 @@ import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-accou
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { AccountAddresses } from '@leather.io/models';
-import { getRunesBalancesService } from '@leather.io/services';
+import { AccountRequest, getRunesBalancesService } from '@leather.io/services';
 
 export function useRunesTotalBalance() {
   const accounts = useTotalAccountAddresses();
-  return toFetchState(useRunesAggregateBalanceQuery(accounts));
+  return toFetchState(useRunesAggregateBalanceQuery(accounts.map(account => ({ account }))));
 }
 
 export function useRunesAccountBalance(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useRunesAccountBalanceQuery(account));
+  return toFetchState(useRunesAccountBalanceQuery({ account }));
 }
 
-function useRunesAggregateBalanceQuery(accounts: AccountAddresses[]) {
+function useRunesAggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
   const runeFlag = useRunesFlag();
   return useQuery({
     queryKey: [
       'runes-balances-service-get-runes-aggregate-balance',
-      accounts,
+      requests,
       fiatCurrencyPreference,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getRunesBalancesService().getRunesAggregateBalance(accounts, signal),
+      getRunesBalancesService().getRunesAggregateBalance(requests, signal),
     enabled: runeFlag,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
@@ -38,13 +37,13 @@ function useRunesAggregateBalanceQuery(accounts: AccountAddresses[]) {
   });
 }
 
-function useRunesAccountBalanceQuery(account: AccountAddresses) {
+function useRunesAccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference } = useSettings();
   const runeFlag = useRunesFlag();
   return useQuery({
-    queryKey: ['runes-balances-service-get-runes-account-balance', account, fiatCurrencyPreference],
+    queryKey: ['runes-balances-service-get-runes-account-balance', request, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getRunesBalancesService().getRunesAccountBalance(account, signal),
+      getRunesBalancesService().getRunesAccountBalance(request, signal),
     enabled: runeFlag,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,

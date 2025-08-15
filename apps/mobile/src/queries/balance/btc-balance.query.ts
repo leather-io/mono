@@ -3,7 +3,7 @@ import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-accou
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { BtcAccountRequest, getBtcBalancesService } from '@leather.io/services';
+import { AccountRequest, getBtcBalancesService } from '@leather.io/services';
 
 export function useBtcTotalBalance() {
   const accounts = useTotalAccountAddresses();
@@ -59,7 +59,7 @@ export function useBtcAccountTaprootBalance(fingerprint: string, accountIndex: n
   );
 }
 
-function useBtcAccountBalanceQuery(request: BtcAccountRequest) {
+function useBtcAccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['btc-balance-service-get-btc-account-balance', request, fiatCurrencyPreference],
@@ -74,7 +74,7 @@ function useBtcAccountBalanceQuery(request: BtcAccountRequest) {
   });
 }
 
-function useBtcAggregateBalanceQuery(requests: BtcAccountRequest[]) {
+function useBtcAggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['btc-balance-service-get-btc-aggregate-balance', requests, fiatCurrencyPreference],
