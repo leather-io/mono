@@ -108,6 +108,7 @@ export function useLeatherConnect() {
           stacksNetwork.network,
           result.addresses.find(address => address.symbol === 'STX')?.address
         );
+        return result.addresses;
       } catch {
         analytics.untypedTrack('sign_in_clicked', {
           status: 'error',
