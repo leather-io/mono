@@ -39,7 +39,7 @@ export function SignerKeyGeneration({ poxInfo }: SignerKeyGenerationProps) {
       network: 'mainnet',
       rewardCycle: values.rewardCycle,
       poxAddress: values.bitcoinRewardAddress,
-      period: poxInfo.reward_cycle_id + 1,
+      period: values.duration,
       method: values.method as Pox4SignatureTopic,
       maxAmount: values.maxAmount,
       authId: values.authId,
