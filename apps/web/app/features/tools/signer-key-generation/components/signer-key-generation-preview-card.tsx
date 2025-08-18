@@ -9,7 +9,7 @@ export function SignerKeyGenerationPreviewCard() {
   const watchedValues = form.watch();
 
   return (
-    <InfoCard w={['100%', '100%', '360px']} title="Summary">
+    <InfoCard w={['100%', null, null, '360px']} title="Summary">
       <InfoCard.Section>
         <InfoCard.Row>
           <InfoCard.Label>Reward cycle</InfoCard.Label>

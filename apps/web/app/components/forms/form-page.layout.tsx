@@ -10,12 +10,15 @@ export function FormPageLayout(props: FormLayoutProps) {
   const { preview, form, ...rest } = props;
   return (
     <Flex
-      flexDirection={['column', 'column', 'row']}
+      flexDirection={['column', null, null, 'row']}
       justifyContent="center"
       alignItems="flex-start"
       {...rest}
     >
-      <Box maxWidth={[null, null, '380px', '500px']} mr={[null, null, 'space.05', 'space.08']}>
+      <Box
+        maxWidth={[null, null, null, '380px', '500px']}
+        mr={[null, null, null, 'space.05', 'space.08']}
+      >
         {form}
       </Box>
       {preview}
