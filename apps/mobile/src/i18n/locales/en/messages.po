@@ -625,7 +625,7 @@ msgstr "Enable to receive notifications about transactions"
 msgid "Enabled"
 msgstr "Enabled"
 
-#: src/features/earn/earn-card.tsx:89
+#: src/features/earn/earn-card.tsx:87
 msgid "Enroll"
 msgstr "Enroll"
 
