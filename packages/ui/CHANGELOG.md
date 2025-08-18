@@ -475,6 +475,18 @@
   * devDependencies
     * @leather.io/models bumped to 0.39.1
 
+## [1.79.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.78.0...@leather.io/ui-v1.79.0) (2025-08-18)
+
+
+### Features
+
+* **web:** advanced tools, closes LEA-3099 LEA-3118 ([0663588](https://github.com/leather-io/mono/commit/06635883dc338bd9bda18ee2bebfa058657e1441))
+
+
+### Bug Fixes
+
+* **web:** mobile nav, responsive styles ([a3c940c](https://github.com/leather-io/mono/commit/a3c940c4e5e40e68c9b00711badb1f8828e64cd3))
+
 ## [1.78.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.77.6...@leather.io/ui-v1.78.0) (2025-08-14)
 
 

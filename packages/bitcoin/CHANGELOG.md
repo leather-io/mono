@@ -843,6 +843,19 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.6
 
+## [0.32.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.31.6...@leather.io/bitcoin-v0.32.0) (2025-08-18)
+
+
+### Features
+
+* **web:** add signature preview box ([c322acf](https://github.com/leather-io/mono/commit/c322acfb2f1a459a457d124b30456478fdaa14cd))
+* **web:** advanced tools, closes LEA-3099 LEA-3118 ([0663588](https://github.com/leather-io/mono/commit/06635883dc338bd9bda18ee2bebfa058657e1441))
+
+
+### Bug Fixes
+
+* **web:** mobile nav, responsive styles ([a3c940c](https://github.com/leather-io/mono/commit/a3c940c4e5e40e68c9b00711badb1f8828e64cd3))
+
 ## [0.31.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.30.0...@leather.io/bitcoin-v0.31.0) (2025-07-28)
 
 

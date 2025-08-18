@@ -704,6 +704,12 @@
   * dependencies
     * @leather.io/stacks bumped to 1.16.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.0
+
 ## [2.41.6](https://github.com/leather-io/mono/compare/@leather.io/query-v2.41.5...@leather.io/query-v2.41.6) (2025-08-14)
 
 
