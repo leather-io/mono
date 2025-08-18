@@ -66,6 +66,42 @@ export class RunesBalancesService {
     };
   }
 
+  public async getRuneAggregateBalanceByRuneName(
+    requests: AccountRequest[],
+    runeName: string,
+    signal?: AbortSignal
+  ): Promise<RuneBalance> {
+    const accountRuneBalances = await Promise.all(
+      requests.map(request => this.getRuneBalanceByRuneName(request, runeName, signal))
+    );
+    return {
+      asset: accountRuneBalances[0].asset,
+      quote: aggregateBaseCryptoAssetBalances(accountRuneBalances.map(r => r.quote)),
+      crypto: aggregateBaseCryptoAssetBalances(accountRuneBalances.map(r => r.crypto)),
+    };
+  }
+
+  public async getRuneBalanceByRuneName(
+    request: AccountRequest,
+    runeName: string,
+    signal?: AbortSignal
+  ): Promise<RuneBalance> {
+    const runeAsset = await this.runeAssetService.getAsset(runeName, signal);
+    const accountBalance = await this.getRunesAccountBalance(request, signal);
+    const runeBalance = accountBalance.runes.find(rune => rune.asset.runeName === runeName);
+    return {
+      asset: runeAsset,
+      quote:
+        runeBalance?.quote ??
+        createBaseCryptoAssetBalance(
+          createMoney(0, this.settingsService.getSettings().quoteCurrency)
+        ),
+      crypto:
+        runeBalance?.crypto ??
+        createBaseCryptoAssetBalance(createMoney(0, runeAsset.runeName, runeAsset.decimals)),
+    };
+  }
+
   /**
    * Gets all Rune balances for given account. Includes cumulative quote currency value.
    */

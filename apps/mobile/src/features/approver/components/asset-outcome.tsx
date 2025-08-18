@@ -1,5 +1,5 @@
 import { TokenBalance } from '@/features/token/components/token-balance';
-import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
+import { useSip10BalanceByContractId } from '@/queries/balance/sip10-balance.query';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 import { useGetContractInterface } from '@/queries/stacks/contract-interface.query';
 import { deserializeAccountId } from '@/store/accounts/accounts';
@@ -49,7 +49,11 @@ export function AssetOutcome({ txHex, accountId }: { txHex: string; accountId: s
     contractName.content
   );
   const { fingerprint, accountIndex } = deserializeAccountId(accountId);
-  const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
+  const sip10 = useSip10BalanceByContractId(
+    fingerprint,
+    accountIndex,
+    `${contractAddress}.${contractName.content}`
+  );
 
   if (!contractInterfaceData) return null;
 
@@ -60,12 +64,8 @@ export function AssetOutcome({ txHex, accountId }: { txHex: string; accountId: s
   });
 
   if (!transferAmount) return null;
-  // TODO LEA-3125: improve this to not always need to get all SIP-10 data
-  const token = sip10Data.value?.sip10s.find(
-    sip10 => sip10.asset.contractId === `${contractAddress}.${contractName.content}`
-  );
 
-  if (!token) return null;
+  if (!sip10.value) return null;
 
-  return <AssetOutcomeBalance token={token} amount={transferAmount} />;
+  return <AssetOutcomeBalance token={sip10.value} amount={transferAmount} />;
 }

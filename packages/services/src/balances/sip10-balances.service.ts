@@ -65,6 +65,67 @@ export class Sip10BalancesService {
     };
   }
 
+  public async getSip10AggregateBalanceByAssetId(
+    requests: AccountRequest[],
+    assetId: string,
+    signal?: AbortSignal
+  ): Promise<Sip10Balance> {
+    const accountSip10Balances = await Promise.all(
+      requests.map(request => this.getSip10BalanceByAssetId(request, assetId, signal))
+    );
+    return {
+      asset: accountSip10Balances[0].asset,
+      quote: aggregateBaseCryptoAssetBalances(accountSip10Balances.map(r => r.quote)),
+      crypto: aggregateBaseCryptoAssetBalances(accountSip10Balances.map(r => r.crypto)),
+    };
+  }
+
+  public async getSip10BalanceByAssetId(
+    request: AccountRequest,
+    assetId: string,
+    signal?: AbortSignal
+  ): Promise<Sip10Balance> {
+    const sip10Asset = await this.sip10TokensService.getAsset(assetId, signal);
+    const accountBalance = await this.getSip10AccountBalance(request, signal);
+    const sip10Balance = accountBalance.sip10s.find(sip10 => sip10.asset.assetId === assetId);
+    return {
+      asset: sip10Asset,
+      quote:
+        sip10Balance?.quote ??
+        createBaseCryptoAssetBalance(
+          createMoney(0, this.settingsService.getSettings().quoteCurrency)
+        ),
+      crypto:
+        sip10Balance?.crypto ??
+        createBaseCryptoAssetBalance(createMoney(0, sip10Asset.symbol, sip10Asset.decimals)),
+    };
+  }
+
+  public async getSip10BalanceByContractId(
+    request: AccountRequest,
+    contractId: string,
+    signal?: AbortSignal
+  ): Promise<Sip10Balance | null> {
+    const accountBalance = await this.getSip10AccountBalance(request, signal);
+    const sip10Balance = accountBalance.sip10s.find(sip10 => sip10.asset.contractId === contractId);
+    if (!sip10Balance) {
+      return null;
+    }
+    return {
+      asset: sip10Balance.asset,
+      quote:
+        sip10Balance?.quote ??
+        createBaseCryptoAssetBalance(
+          createMoney(0, this.settingsService.getSettings().quoteCurrency)
+        ),
+      crypto:
+        sip10Balance?.crypto ??
+        createBaseCryptoAssetBalance(
+          createMoney(0, sip10Balance.asset.symbol, sip10Balance.asset.decimals)
+        ),
+    };
+  }
+
   public async getSip10AccountBalance(
     request: AccountRequest,
     signal?: AbortSignal
@@ -118,11 +179,11 @@ export class Sip10BalancesService {
   }
 
   private async getSip10TokenBalance(
-    tokenId: string,
+    assetId: string,
     amount: number,
     signal?: AbortSignal
   ): Promise<Sip10Balance> {
-    const asset = await this.sip10TokensService.getAsset(tokenId, signal);
+    const asset = await this.sip10TokensService.getAsset(assetId, signal);
     const totalBalance = createMoney(amount, asset.symbol, asset.decimals);
     const marketData = await this.marketDataService.getMarketData(asset, signal);
 

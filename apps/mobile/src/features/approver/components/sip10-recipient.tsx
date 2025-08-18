@@ -1,4 +1,4 @@
-import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
+import { useSip10BalanceByContractId } from '@/queries/balance/sip10-balance.query';
 import { useGetContractInterface } from '@/queries/stacks/contract-interface.query';
 import { deserializeAccountId } from '@/store/accounts/accounts';
 import { deserializeTransaction } from '@stacks/transactions';
@@ -20,7 +20,11 @@ export function Sip10Recipient({ txHex, accountId }: { txHex: string; accountId:
     contractName.content
   );
   const { fingerprint, accountIndex } = deserializeAccountId(accountId);
-  const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
+  const sip10 = useSip10BalanceByContractId(
+    fingerprint,
+    accountIndex,
+    `${contractAddress}.${contractName.content}`
+  );
 
   if (!contractInterfaceData) return null;
 
@@ -32,12 +36,7 @@ export function Sip10Recipient({ txHex, accountId }: { txHex: string; accountId:
 
   if (!recipient) return null;
 
-  // TODO LEA-3125: improve this to not always need to get all SIP-10 data
-  const token = sip10Data.value?.sip10s.find(
-    sip10 => sip10.asset.contractId === `${contractAddress}.${contractName.content}`
-  );
-
-  if (!token) return null;
+  if (!sip10.value) return null;
 
   return <OutcomeAddressesCard addresses={[recipient]} />;
 }
