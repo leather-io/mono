@@ -79,16 +79,12 @@ function EarnFooter({ description, onPress }: EarnFooterProps) {
       gap="5"
       height={80}
     >
-      <Box width={201} height={48}>
+      <Box flex={1.5} height={48}>
         <Text variant="caption01" fontSize={13} letterSpacing={0.065} lineHeight={16}>
           {description}
         </Text>
       </Box>
-      <Box width={51} height={36}>
-        <Button p="2" justifyContent="center" alignItems="center" gap="1" onPress={onPress}>
-          {t`Enroll`}
-        </Button>
-      </Box>
+      <Button size="md" onPress={onPress}>{t`Enroll`}</Button>
     </Box>
   );
 }
