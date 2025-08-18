@@ -31,8 +31,8 @@ export function AdvancedToolItemWithAuth({ name, description, to }: AdvancedTool
         name={name}
         description={description}
         onClick={async () => {
-          await connect();
-          setTimeout(() => navigate(to), 100);
+          const addresses = await connect();
+          if (addresses) setTimeout(() => navigate(to), 100);
         }}
       />
     ),
