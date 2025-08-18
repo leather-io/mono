@@ -376,6 +376,21 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.3
 
+## [1.28.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.27.1...@leather.io/services-v1.28.0) (2025-08-18)
+
+
+### Features
+
+* add service calls by asset id ([26b0d1b](https://github.com/leather-io/mono/commit/26b0d1be753f584c786da6d98c55c0da914a589e))
+* normalize account service request usage ([a3ccac0](https://github.com/leather-io/mono/commit/a3ccac0ce7217a633a361cb6afed5c772df853f1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.0
+
 ## [1.27.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.27.0...@leather.io/services-v1.27.1) (2025-08-14)
 
 

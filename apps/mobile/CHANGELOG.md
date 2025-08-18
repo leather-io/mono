@@ -2,6 +2,33 @@
 
 # Changelog
 
+## [2.66.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.65.0...@leather.io/mobile-v2.66.0) (2025-08-18)
+
+
+### Features
+
+* add service calls by asset id ([26b0d1b](https://github.com/leather-io/mono/commit/26b0d1be753f584c786da6d98c55c0da914a589e))
+* normalize account service request usage ([a3ccac0](https://github.com/leather-io/mono/commit/a3ccac0ce7217a633a361cb6afed5c772df853f1))
+* **web:** advanced tools, closes LEA-3099 LEA-3118 ([0663588](https://github.com/leather-io/mono/commit/06635883dc338bd9bda18ee2bebfa058657e1441))
+
+
+### Bug Fixes
+
+* **mobile:** fix account avatar typings ([198382d](https://github.com/leather-io/mono/commit/198382d90cfdb4cd2acfa35b20dbe1f8cf90729d))
+* **mobile:** fix cell spacings in token details ([7a26f59](https://github.com/leather-io/mono/commit/7a26f59ea565d6c336fb58bfa46b85dd219f873b))
+* **mobile:** fix squeezed buttons in the earn card ([f6c4ca8](https://github.com/leather-io/mono/commit/f6c4ca85056b82562404d42bb01e0f7a28805917))
+* **web:** mobile nav, responsive styles ([a3c940c](https://github.com/leather-io/mono/commit/a3c940c4e5e40e68c9b00711badb1f8828e64cd3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.0
+    * @leather.io/query bumped to 2.41.8
+    * @leather.io/services bumped to 1.28.0
+    * @leather.io/ui bumped to 1.79.0
+
 ## [2.65.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.64.1...@leather.io/mobile-v2.65.0) (2025-08-14)
 
 
