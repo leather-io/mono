@@ -1,8 +1,6 @@
-import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
+import { useSip10BalanceByAssetId } from '@/queries/balance/sip10-balance.query';
 import { Account } from '@/store/accounts/accounts';
 import { WalletStore } from '@/store/wallets/utils';
-
-import { Sip10Balance } from '@leather.io/services';
 
 import { TokenDetailsAccountListItem } from '../components/account-list';
 
@@ -20,22 +18,15 @@ export function Sip10AccountListItem({
   accountIndex,
   fingerprint,
 }: Sip10AccountListItemProps) {
-  const data = useSip10AccountBalance(fingerprint, accountIndex);
-  // TODO LEA-3125: improve this to not always need to get all SIP-10 data
-  const availableBalance = data.value?.sip10s.find(
-    (token: Sip10Balance) => token.asset.symbol === tokenId
-  )?.crypto.availableBalance;
-  const quoteBalance = data.value?.sip10s.find(
-    (token: Sip10Balance) => token.asset.symbol === tokenId
-  )?.quote.totalBalance;
+  const data = useSip10BalanceByAssetId(fingerprint, accountIndex, tokenId);
 
-  if (!availableBalance || !quoteBalance) {
+  if (data.state !== 'success') {
     return null;
   }
   return (
     <TokenDetailsAccountListItem
-      availableBalance={availableBalance}
-      quoteBalance={quoteBalance}
+      availableBalance={data.value.crypto.availableBalance}
+      quoteBalance={data.value.quote.totalBalance}
       account={account}
       wallet={wallet}
       tokenId={tokenId}

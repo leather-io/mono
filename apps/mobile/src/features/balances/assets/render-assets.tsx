@@ -16,7 +16,7 @@ export function renderAsset({
         <Sip10TokenBalance
           key={item.asset.contractId}
           item={item as Sip10Balance}
-          onPress={() => onPress?.(item.asset.symbol)}
+          onPress={() => onPress?.((item as Sip10Balance).asset.assetId)}
         />
       );
     case 'rune':

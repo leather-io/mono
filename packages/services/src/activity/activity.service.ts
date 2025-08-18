@@ -7,7 +7,6 @@ import {
   CryptoAssetCategories,
   OnChainActivity,
   OnChainActivityTypes,
-  Sip10Asset,
 } from '@leather.io/models';
 import {
   baseCurrencyAmountInQuote,
@@ -77,6 +76,18 @@ export class ActivityService {
     );
     return activityLists.flat().sort(sortActivityByTimestampDesc);
   }
+
+  public async getTotalSip10ActivityByAssetId(
+    accounts: AccountAddresses[],
+    assetId: string,
+    signal?: AbortSignal
+  ): Promise<OnChainActivity[]> {
+    const activityLists = await Promise.all(
+      accounts.map(a => this.getSip10ActivityByAssetId(a, assetId, signal))
+    );
+    return activityLists.flat().sort(sortActivityByTimestampDesc);
+  }
+
   /*
    * Gets activity list for an account
    */
@@ -105,7 +116,7 @@ export class ActivityService {
       case 'nativeStx':
         return await this.getStxActivity(account, signal);
       case 'sip10':
-        return await this.getSip10Activity(asset, account, signal);
+        return await this.getSip10ActivityByAssetId(account, asset.assetId, signal);
       default:
         return [];
     }
@@ -212,9 +223,9 @@ export class ActivityService {
   /*
    *  Gets SIP10 asset activity list for an account
    */
-  public async getSip10Activity(
-    asset: Sip10Asset,
+  public async getSip10ActivityByAssetId(
     account: AccountAddresses,
+    assetId: string,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
     if (!hasStacksAddress(account)) return [];
@@ -241,7 +252,7 @@ export class ActivityService {
             pc.asset.contract_address,
             pc.asset.contract_name,
             pc.asset.asset_name
-          ) === asset.assetId
+          ) === assetId
       )
     );
     const activityList: OnChainActivity[] = [];

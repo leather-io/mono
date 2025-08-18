@@ -1,14 +1,12 @@
 import {
-  useAccountActivityByAsset,
-  useTotalActivityByAsset,
-} from '@/queries/activity/account-activity.query';
+  useSip10ActivityByAssetId,
+  useSip10TotalActivityByAssetId,
+} from '@/queries/activity/sip10-activity.query';
 import {
-  useSip10AccountBalanceByAsset,
-  useSip10TotalBalanceByAsset,
+  useSip10BalanceByAssetId,
+  useSip10TotalBalanceByAssetId,
 } from '@/queries/balance/sip10-balance.query';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
-
-import { CryptoAsset } from '@leather.io/models';
 
 import { AccountList } from '../components/account-list';
 import { Token } from '../token';
@@ -19,20 +17,17 @@ interface Sip10TokenDetailsProps {
   tokenId: string;
 }
 export function Sip10TokenDetails({ tokenId }: Sip10TokenDetailsProps) {
-  const data = useSip10TotalBalanceByAsset(tokenId);
-  const availableBalance = data.value?.crypto.availableBalance;
-  const quoteBalance = data.value?.quote.totalBalance;
-  const asset = data.value?.asset;
-  const activity = useTotalActivityByAsset(asset as CryptoAsset);
-  if (!availableBalance || !quoteBalance || !asset) {
+  const balance = useSip10TotalBalanceByAssetId(tokenId);
+  const activity = useSip10TotalActivityByAssetId(tokenId);
+  if (balance.state !== 'success') {
     return null;
   }
   return (
     <Token
-      tokenId={tokenId}
-      asset={asset}
-      availableBalance={availableBalance}
-      quoteBalance={quoteBalance}
+      tokenId={balance.value.asset.symbol}
+      asset={balance.value.asset}
+      availableBalance={balance.value.crypto.availableBalance}
+      quoteBalance={balance.value.quote.totalBalance}
       canSend={false}
       activity={activity.value ?? []}
     >
@@ -61,21 +56,18 @@ export function Sip10TokenDetailsByAccount({
   accountIndex,
   fingerprint,
 }: Sip10TokenDetailsByAccountProps) {
-  const data = useSip10AccountBalanceByAsset(fingerprint, accountIndex, tokenId);
-  const availableBalance = data.value?.crypto.availableBalance;
-  const quoteBalance = data.value?.quote.totalBalance;
-  const asset = data.value?.asset;
-  const activity = useAccountActivityByAsset(fingerprint, accountIndex, asset as CryptoAsset);
+  const balance = useSip10BalanceByAssetId(fingerprint, accountIndex, tokenId);
+  const activity = useSip10ActivityByAssetId(fingerprint, accountIndex, tokenId);
   const account = useAccountByIndex(fingerprint, accountIndex);
-  if (!account || !availableBalance || !quoteBalance || !asset) {
+  if (!account || balance.state !== 'success') {
     return null;
   }
   return (
     <Token
-      tokenId={tokenId}
-      asset={asset}
-      availableBalance={availableBalance}
-      quoteBalance={quoteBalance}
+      tokenId={balance.value.asset.symbol}
+      asset={balance.value.asset}
+      availableBalance={balance.value.crypto.availableBalance}
+      quoteBalance={balance.value.quote.totalBalance}
       canSend={false}
       activity={activity.value ?? []}
     >

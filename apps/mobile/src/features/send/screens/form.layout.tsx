@@ -68,14 +68,14 @@ export function FormLayout({
     case 'sip10':
       return (
         <Sip10DataLoader account={selectedAccount} asset={selectedAsset}>
-          {({ availableBalance, quoteBalance, marketData, nonce }) => {
+          {({ balance, marketData, nonce }) => {
             return (
               <Sip10Form
                 account={selectedAccount}
                 asset={selectedAsset}
                 marketData={marketData}
-                availableBalance={availableBalance}
-                quoteBalance={quoteBalance}
+                availableBalance={balance.crypto.availableBalance}
+                quoteBalance={balance.quote.availableBalance}
                 quoteCurrency={fiatCurrencyPreference}
                 nonce={nonce}
                 onOpenAssetPicker={handleOpenAssetPicker}
