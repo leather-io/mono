@@ -15,7 +15,7 @@ interface SignerKeyGenerationFormProps {
 export function SignerKeyGenerationForm({ poxInfo }: SignerKeyGenerationFormProps) {
   const form = useSignerKeyGenerationForm();
   return (
-    <Flex flexDir="column" width={[null, null, null, '500px']}>
+    <Flex flexDir="column" width={[null, null, null, null, '500px']}>
       <styled.p textStyle="label.01">
         When making certain Stacking transactions, it's required that you provide a signature and
         other information to ensure that the signer you're using is authorizing the transaction.

@@ -114,6 +114,8 @@ export function Nav() {
             right="space.06"
             borderRadius="50%"
             bg="white"
+            width="40px"
+            height="40px"
             boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
             pos="fixed"
             zIndex={99}

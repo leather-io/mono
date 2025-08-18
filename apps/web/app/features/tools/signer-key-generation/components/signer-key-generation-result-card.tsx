@@ -17,7 +17,7 @@ export function SignerKeyGenerationResultCard({
   }
 
   return (
-    <InfoCard w={['100%', '100%', '360px']} title="Your signer key signature" {...rest}>
+    <InfoCard w={['100%', null, null, '360px']} title="Your signer key signature" {...rest}>
       {Object.entries(result).map(([key, value]) => (
         <InfoCard.Row
           key={key}

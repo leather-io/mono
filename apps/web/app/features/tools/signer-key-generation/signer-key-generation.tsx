@@ -54,7 +54,7 @@ export function SignerKeyGeneration({ poxInfo }: SignerKeyGenerationProps) {
           my="space.09"
           form={<SignerKeyGenerationForm poxInfo={poxInfo} />}
           preview={
-            <Box>
+            <Box width={['100%', null, null, 'auto']}>
               <SignerKeyGenerationPreviewCard />
               {result && <SignerKeyGenerationResultCard mt="space.05" result={result} />}
             </Box>
