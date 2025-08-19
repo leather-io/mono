@@ -11,18 +11,22 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { AccountId, CryptoAssetProtocol } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
+import { TokenDetailsProps } from '../token/types';
 import { AssetsBalance } from './assets/assets-balance';
 import { AssetsBalanceByAccount } from './assets/assets-balance-by-account';
 
 export function AllAccountBalancesWidget() {
   const tokenDetailsFlag = useTokenDetailsFlag();
 
-  function onOpenToken(assetProtocol: CryptoAssetProtocol, tokenId: string) {
+  function onOpenToken(tokenDetails: TokenDetailsProps) {
     router.navigate({
       pathname: '/token/[assetProtocol]/[tokenId]',
-      params: { assetProtocol, tokenId },
+      params: { assetProtocol: tokenDetails.assetProtocol, tokenId: tokenDetails.tokenId },
     });
-    analytics.track('token_details_opened', { tokenId, source: 'all_account_balances' });
+    analytics.track('token_details_opened', {
+      tokenId: tokenDetails.tokenId,
+      source: 'all_account_balances',
+    });
   }
 
   const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;
@@ -44,12 +48,19 @@ export function AccountBalances({ fingerprint, accountIndex }: AccountId) {
 
   const tokenDetailsFlag = useTokenDetailsFlag();
 
-  function onOpenToken(assetProtocol: CryptoAssetProtocol, tokenId: string) {
+  function onOpenToken(tokenDetails: TokenDetailsProps) {
     router.navigate({
       pathname: '/account/[accountId]/token/[assetProtocol]/[tokenId]',
-      params: { tokenId, accountId, assetProtocol },
+      params: {
+        tokenId: tokenDetails.tokenId,
+        accountId,
+        assetProtocol: tokenDetails.assetProtocol,
+      },
     });
-    analytics.track('token_details_opened', { tokenId, source: 'account_balances' });
+    analytics.track('token_details_opened', {
+      tokenId: tokenDetails.tokenId,
+      source: 'account_balances',
+    });
   }
 
   const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;

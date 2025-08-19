@@ -5,11 +5,12 @@ import { StacksBalance } from '@/features/balances/stacks/stacks-balance';
 import { sortSip10Balances } from '@/features/balances/utils/sort-sip10-balances';
 import { useRunesFlag } from '@/features/feature-flags';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
+import { TokenDetailsProps } from '@/features/token/types';
 import { useRunesTotalBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10TotalBalance } from '@/queries/balance/sip10-balance.query';
 import { FlashList } from '@shopify/flash-list';
 
-import { CryptoAssetProtocol, CryptoAssetProtocols } from '@leather.io/models';
+import { CryptoAssetProtocols } from '@leather.io/models';
 import { RuneBalance, Sip10Balance } from '@leather.io/services';
 
 import { renderAsset } from './render-assets';
@@ -18,7 +19,7 @@ interface AssetsFlashListProps {
   sip10Data: ReturnType<typeof useSip10TotalBalance>;
   runesData: ReturnType<typeof useRunesTotalBalance>;
   header: ReactNode;
-  onPressToken?: (assetProtocol: CryptoAssetProtocol, tokenId: string) => void;
+  onPressToken?: (tokenDetails: TokenDetailsProps) => void;
 }
 
 export function AssetsFlashList({
@@ -49,7 +50,10 @@ export function AssetsFlashList({
           renderAsset({
             item,
             onPress: () =>
-              onPressToken?.(item.asset.protocol, (item as Sip10Balance).asset.assetId),
+              onPressToken?.({
+                assetProtocol: item.asset.protocol,
+                tokenId: (item as Sip10Balance).asset.assetId,
+              }),
           })
         }
         getItemType={item => {
@@ -60,8 +64,16 @@ export function AssetsFlashList({
         ListHeaderComponent={
           <>
             {header}
-            <BitcoinBalance onPress={() => onPressToken?.(CryptoAssetProtocols.nativeBtc, 'BTC')} />
-            <StacksBalance onPress={() => onPressToken?.(CryptoAssetProtocols.nativeStx, 'STX')} />
+            <BitcoinBalance
+              onPress={() =>
+                onPressToken?.({ assetProtocol: CryptoAssetProtocols.nativeBtc, tokenId: 'BTC' })
+              }
+            />
+            <StacksBalance
+              onPress={() =>
+                onPressToken?.({ assetProtocol: CryptoAssetProtocols.nativeStx, tokenId: 'STX' })
+              }
+            />
           </>
         }
       />

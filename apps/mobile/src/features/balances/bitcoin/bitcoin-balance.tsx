@@ -1,8 +1,9 @@
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
+import { OnPressTokenDetails } from '@/features/token/types';
 import { useBtcAccountBalance, useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/core/macro';
 
-import { CryptoAssetProtocol, CryptoAssetProtocols } from '@leather.io/models';
+import { AccountId, CryptoAssetProtocols } from '@leather.io/models';
 import { BtcAvatarIcon } from '@leather.io/ui/native';
 
 type BitcoinTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
@@ -11,11 +12,7 @@ export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
   return <TokenBalance ticker="BTC" icon={<BtcAvatarIcon />} tokenName={t`Bitcoin`} {...props} />;
 }
 
-interface BitcoinBalanceProps {
-  onPress?: (assetProtocol: CryptoAssetProtocol, tokenId: string) => void;
-}
-
-export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
+export function BitcoinBalance({ onPress }: OnPressTokenDetails) {
   const { state, value } = useBtcTotalBalance();
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
@@ -27,21 +24,16 @@ export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
       isLoading={state === 'loading'}
-      onPress={() => onPress?.(CryptoAssetProtocols.nativeBtc, 'BTC')}
+      onPress={() => onPress?.({ assetProtocol: CryptoAssetProtocols.nativeBtc, tokenId: 'BTC' })}
     />
   );
 }
 
-interface BitcoinBalanceByAccountProps {
-  accountIndex: number;
-  fingerprint: string;
-  onPress?: (assetProtocol: CryptoAssetProtocol, tokenId: string) => void;
-}
 export function BitcoinBalanceByAccount({
   accountIndex,
   fingerprint,
   onPress,
-}: BitcoinBalanceByAccountProps) {
+}: OnPressTokenDetails & AccountId) {
   const { state, value } = useBtcAccountBalance(fingerprint, accountIndex);
 
   const availableBalance = value?.btc.availableBalance;
@@ -53,7 +45,7 @@ export function BitcoinBalanceByAccount({
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.(CryptoAssetProtocols.nativeBtc, 'BTC')}
+      onPress={() => onPress?.({ assetProtocol: CryptoAssetProtocols.nativeBtc, tokenId: 'BTC' })}
       isLoading={state === 'loading'}
     />
   );

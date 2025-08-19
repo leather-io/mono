@@ -1,8 +1,9 @@
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
+import { OnPressTokenDetails } from '@/features/token/types';
 import { useStxAccountBalance, useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
 
-import { CryptoAssetProtocol, CryptoAssetProtocols } from '@leather.io/models';
+import { AccountId, CryptoAssetProtocols } from '@leather.io/models';
 import { StxAvatarIcon } from '@leather.io/ui/native';
 
 type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
@@ -10,11 +11,7 @@ export function StacksTokenBalance(props: StacksTokenBalanceProps) {
   return <TokenBalance ticker="STX" icon={<StxAvatarIcon />} tokenName={t`Stacks`} {...props} />;
 }
 
-interface StacksBalanceProps {
-  onPress?: (assetProtocol: CryptoAssetProtocol, tokenId: string) => void;
-}
-
-export function StacksBalance({ onPress }: StacksBalanceProps) {
+export function StacksBalance({ onPress }: OnPressTokenDetails) {
   const { state, value } = useStxTotalBalance();
 
   const availableBalance = value?.stx.availableUnlockedBalance;
@@ -26,22 +23,17 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.(CryptoAssetProtocols.nativeStx, 'STX')}
+      onPress={() => onPress?.({ assetProtocol: CryptoAssetProtocols.nativeStx, tokenId: 'STX' })}
       isLoading={state === 'loading'}
     />
   );
 }
 
-interface StacksBalanceByAccountProps {
-  accountIndex: number;
-  fingerprint: string;
-  onPress?: (assetProtocol: CryptoAssetProtocol, tokenId: string) => void;
-}
 export function StacksBalanceByAccount({
   accountIndex,
   fingerprint,
   onPress,
-}: StacksBalanceByAccountProps) {
+}: OnPressTokenDetails & AccountId) {
   const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
 
   const availableBalance = value?.stx.availableUnlockedBalance;
@@ -55,7 +47,7 @@ export function StacksBalanceByAccount({
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.(CryptoAssetProtocols.nativeStx, 'STX')}
+      onPress={() => onPress?.({ assetProtocol: CryptoAssetProtocols.nativeStx, tokenId: 'STX' })}
       isLoading={state === 'loading'}
     />
   );

@@ -3,6 +3,7 @@ import { HeaderTitleWithSubtitle } from '@/components/screen/screen-header/compo
 import { AssetsFlashList } from '@/features/balances/assets/assets-flashlist';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { useTokenDetailsFlag } from '@/features/feature-flags';
+import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
@@ -27,12 +28,15 @@ export default function BalancesScreen() {
 
   const tokenDetailsFlag = useTokenDetailsFlag();
 
-  function onOpenToken(assetProtocol: CryptoAssetProtocol, tokenId: string) {
+  function onOpenToken(tokenDetails: TokenDetailsProps) {
     router.navigate({
       pathname: '/account/[accountId]/token/[assetProtocol]/[tokenId]',
-      params: { accountId, assetProtocol, tokenId },
+      params: { accountId, ...tokenDetails },
     });
-    analytics.track('token_details_opened', { tokenId, source: 'all_account_balances' });
+    analytics.track('token_details_opened', {
+      tokenId: tokenDetails.tokenId,
+      source: 'all_account_balances',
+    });
   }
   const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;
 
