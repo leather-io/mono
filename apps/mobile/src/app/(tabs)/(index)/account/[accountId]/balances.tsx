@@ -8,11 +8,9 @@ import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { deserializeAccountId } from '@/store/accounts/accounts';
-import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 import { router, useLocalSearchParams } from 'expo-router';
 
-import { CryptoAssetProtocol } from '@leather.io/models';
 import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
 
 import { configureAccountParamsSchema } from './index';
@@ -32,10 +30,6 @@ export default function BalancesScreen() {
     router.navigate({
       pathname: '/account/[accountId]/token/[assetProtocol]/[tokenId]',
       params: { accountId, ...tokenDetails },
-    });
-    analytics.track('token_details_opened', {
-      tokenId: tokenDetails.tokenId,
-      source: 'all_account_balances',
     });
   }
   const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;

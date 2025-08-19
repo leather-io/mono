@@ -212,7 +212,7 @@ msgstr "All Activity"
 msgid "All collectibles"
 msgstr "All collectibles"
 
-#: src/app/(tabs)/(index)/account/[accountId]/balances.tsx:43
+#: src/app/(tabs)/(index)/account/[accountId]/balances.tsx:37
 #: src/app/(tabs)/(index)/balances/index.tsx:15
 #: src/app/(tabs)/(index)/index.tsx:52
 msgid "All tokens"
