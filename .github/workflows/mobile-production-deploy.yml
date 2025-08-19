@@ -41,10 +41,12 @@ jobs:
         id: build_and_submit
         working-directory: ./apps/mobile
         run: |
-          echo build_output=$(eas build --non-interactive --json --no-wait --auto-submit --platform=all --profile=production); >> $GITHUB_OUTPUT
-          echo android_build_id=$(echo $build_output | jq -r '.[0].["id"]') >> $GITHUB_OUTPUT
-          echo ios_build_id=$(echo $build_output | jq -r '.[1].["id"]') >> $GITHUB_OUTPUT
-          echo build_version=$(eas config -e production -p android --json --non-interactive | jq -r '.["appConfig"].["version"]') >> $GITHUB_OUTPUT
+          build_output=$(eas build --non-interactive --json --no-wait --auto-submit --platform=all --profile=production); >> $GITHUB_OUTPUT
+          echo "build_output=$build_output" >> $GITHUB_OUTPUT
+          echo "build_output=$build_output" >> $GITHUB_OUTPUT
+          echo "android_build_id=$(echo "$build_output" | jq -r '.[0].["id"]')" >> $GITHUB_OUTPUT
+          echo "ios_build_id=$(echo "$build_output" | jq -r '.[1].["id"]')" >> $GITHUB_OUTPUT
+          echo "build_version=$(eas config -e production -p android --json --non-interactive | jq -r '.appConfig.version')" >> $GITHUB_OUTPUT
 
   create-github-release:
     runs-on: ubuntu-latest
