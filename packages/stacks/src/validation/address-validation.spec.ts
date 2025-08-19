@@ -152,7 +152,7 @@ describe('contractPrincipalSchema', () => {
 
   it('should accept contract names with valid characters', () => {
     const validNames = ['contract-name', 'contract_name', 'contract123', 'my-contract_v2'];
-    
+
     for (const name of validNames) {
       const contractPrincipal = `${TEST_ACCOUNT_1_STX_ADDRESS}.${name}`;
       const result = contractPrincipalSchema.safeParse(contractPrincipal);
@@ -184,7 +184,7 @@ describe('contractPrincipalSchema', () => {
 
   it('should reject contract names with invalid characters', () => {
     const invalidNames = ['contract@name', 'contract.name', 'contract name', 'contract!', ''];
-    
+
     for (const name of invalidNames) {
       const contractPrincipal = `${TEST_ACCOUNT_1_STX_ADDRESS}.${name}`;
       const result = contractPrincipalSchema.safeParse(contractPrincipal);

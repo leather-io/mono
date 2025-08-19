@@ -28,7 +28,7 @@ jobs:
       - uses: ./.github/actions/provision
 
       - name: Build web app
-        run: pnpm --filter @leather.io/web build
+        run: pnpm turbo run build --filter="@leather.io/web"
 
       - name: Upload preview version
         working-directory: apps/web

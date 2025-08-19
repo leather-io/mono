@@ -107,9 +107,7 @@ function chooseFeeValueFromDefaultAndHiroFee(
   const hiroFeeInStx = microStxToStx(hiroFee);
 
   if (hiroFeeInStx.isGreaterThan(maxValue)) {
-    if (type === 'high') {
-      return hiroFeeInStx;
-    }
+    if (type === 'high') return hiroFeeInStx;
     return maxValue;
   }
 
@@ -118,9 +116,7 @@ function chooseFeeValueFromDefaultAndHiroFee(
   }
 
   if (hiroFeeInStx.isLessThan(minValue)) {
-    if (type === 'low') {
-      return hiroFeeInStx;
-    }
+    if (type === 'low') return hiroFeeInStx;
     return minValue;
   }
 
@@ -173,6 +169,62 @@ export function getFeeEstimationsBasedOnDefaultMinMaxValues({
   return fees;
 }
 
+// Stacks blockchain nodes reject transactions where the fee set is less than `tx
+// bytes * 1µSTX`
+export function enforceContractCallMinimumFees(
+  feeEstimates: StacksFeeEstimate[],
+  txByteLength: number | null,
+  payloadType: PayloadType | undefined
+): StacksFeeEstimate[] {
+  // Only apply minimum fee enforcement for contract calls
+  if (payloadType !== PayloadType.ContractCall || !txByteLength) {
+    return feeEstimates;
+  }
+
+  // Calculate minimum fee requirement: tx size in bytes * 1 µSTX
+  const minimumFeeInMicroStx = txByteLength * 1;
+  const minimumFeeInStx = createMoney(minimumFeeInMicroStx, 'STX');
+
+  // Ensure each fee meets the minimum requirement
+  const adjustedFees = feeEstimates.map(estimate => {
+    if (estimate.fee.amount.isLessThan(minimumFeeInStx.amount)) {
+      return {
+        ...estimate,
+        fee: minimumFeeInStx,
+      };
+    }
+    return estimate;
+  });
+
+  // Ensure proper ordering: low <= medium <= high
+  // If fees are equal after minimum enforcement, add small increments to maintain ordering
+  const [lowFee, mediumFee, highFee] = adjustedFees;
+
+  const adjustedLowFee = lowFee;
+  let adjustedMediumFee = mediumFee;
+  let adjustedHighFee = highFee;
+
+  // If medium fee is not higher than low fee, increase it
+  if (adjustedMediumFee.fee.amount.isLessThanOrEqualTo(adjustedLowFee.fee.amount)) {
+    const incrementedAmount = adjustedLowFee.fee.amount.plus(500); // Add 500 µSTX
+    adjustedMediumFee = {
+      ...adjustedMediumFee,
+      fee: createMoney(incrementedAmount, 'STX'),
+    };
+  }
+
+  // If high fee is not higher than medium fee, increase it
+  if (adjustedHighFee.fee.amount.isLessThanOrEqualTo(adjustedMediumFee.fee.amount)) {
+    const incrementedAmount = adjustedMediumFee.fee.amount.plus(500); // Add 500 µSTX
+    adjustedHighFee = {
+      ...adjustedHighFee,
+      fee: createMoney(incrementedAmount, 'STX'),
+    };
+  }
+
+  return [adjustedLowFee, adjustedMediumFee, adjustedHighFee];
+}
+
 interface ParseStacksTxFeeEstimationResponseArgs {
   feeEstimation: StacksTxFeeEstimation;
   payloadType: PayloadType | undefined;
@@ -205,12 +257,14 @@ export function parseStacksTxFeeEstimationResponse({
   }
 
   if (payloadType === PayloadType.ContractCall && contractCallDefaultFeeEstimations) {
+    const baseEstimates = getFeeEstimationsBasedOnDefaultMinMaxValues({
+      defaultEstimations: contractCallDefaultFeeEstimations,
+      hiroFeeEstimations: feeEstimation.estimations,
+    });
+
     return {
       blockchain: 'stacks',
-      estimates: getFeeEstimationsBasedOnDefaultMinMaxValues({
-        defaultEstimations: contractCallDefaultFeeEstimations,
-        hiroFeeEstimations: feeEstimation.estimations,
-      }),
+      estimates: enforceContractCallMinimumFees(baseEstimates, txByteLength, payloadType),
       calculation: FeeCalculationTypes.Default,
     };
   }
@@ -250,15 +304,20 @@ export function parseStacksTxFeeEstimationResponse({
       maxValues,
       minValues
     );
+
     return {
       blockchain: 'stacks',
-      estimates: feeEstimationsWithCappedValues,
+      estimates: enforceContractCallMinimumFees(
+        feeEstimationsWithCappedValues,
+        txByteLength,
+        payloadType
+      ),
       calculation: FeeCalculationTypes.FeesCapped,
     };
   }
   return {
     blockchain: 'stacks',
-    estimates: stacksFeeEstimates ?? [],
+    estimates: enforceContractCallMinimumFees(stacksFeeEstimates ?? [], txByteLength, payloadType),
     calculation: FeeCalculationTypes.Api,
   };
 }

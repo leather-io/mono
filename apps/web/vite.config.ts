@@ -46,7 +46,8 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
     svgr({ include: '**/*.svg' }),
     viteCommonjs(),
     reactRouter(),
-    sentryReactRouter(sentryConfig, { command, mode, isSsrBuild }),
+    process.env.LEATHER_TARGET === 'production' &&
+      sentryReactRouter(sentryConfig, { command, mode, isSsrBuild }),
     tsconfigPaths(),
   ],
   sentryConfig,
