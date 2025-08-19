@@ -2,6 +2,14 @@
 
 # Changelog
 
+## [2.66.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.66.0...@leather.io/mobile-v2.66.1) (2025-08-19)
+
+
+### Bug Fixes
+
+* issues with prod builds ([161dac1](https://github.com/leather-io/mono/commit/161dac1346c2925773b0724c8c26bcfb60587db7))
+* try to fix android builds ([b31fdaa](https://github.com/leather-io/mono/commit/b31fdaa217ccaef664de52efe37c639819e9fef7))
+
 ## [2.66.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.65.0...@leather.io/mobile-v2.66.0) (2025-08-18)
 
 
