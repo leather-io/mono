@@ -41,9 +41,8 @@ jobs:
         id: build_and_submit
         working-directory: ./apps/mobile
         run: |
-          build_output=$(eas build --non-interactive --json --no-wait --auto-submit --platform=all --profile=production); >> $GITHUB_OUTPUT
-          echo "build_output=$build_output" >> $GITHUB_OUTPUT
-          echo "build_output=$build_output" >> $GITHUB_OUTPUT
+          build_output=$(eas build --non-interactive --json --no-wait --auto-submit --platform=all --profile=production)
+          echo "build_output=$(echo "$build_output" | base64 -w 0)" >> $GITHUB_OUTPUT
           echo "android_build_id=$(echo "$build_output" | jq -r '.[0].["id"]')" >> $GITHUB_OUTPUT
           echo "ios_build_id=$(echo "$build_output" | jq -r '.[1].["id"]')" >> $GITHUB_OUTPUT
           echo "build_version=$(eas config -e production -p android --json --non-interactive | jq -r '.appConfig.version')" >> $GITHUB_OUTPUT
@@ -72,23 +71,23 @@ jobs:
           files: /tmp/build_output.json
 
   # Useful for testing the workflow without having to run tons of builds to completion
-  # cleanup-builds-if-cancelled:
-  #   runs-on: ubuntu-latest
-  #   needs: build-and-submit-mobile
-  #   # if: ${{ always }}
-  #   # NOTE: This could be something like `if: ${{ cancelled() && needs.build-and-submit-mobile.result == 'success' }}`
-  #   # if: ${{ cancelled() && needs.build-and-submit-mobile.result == 'success' }}
-  #   steps:
-  #     - uses: actions/checkout@v4
+  cleanup-builds-if-cancelled:
+    runs-on: ubuntu-latest
+    needs: build-and-submit-mobile
+    if: always()
+    # NOTE: This could be something like `if: ${{ cancelled() && needs.build-and-submit-mobile.result == 'success' }}`
+    # if: ${{ cancelled() && needs.build-and-submit-mobile.result == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
 
-  #     - name: Cleanup Android build if cancelled
-  #       uses: ./.github/actions/cancel-expo-build
-  #       with:
-  #         build_id: ${{ needs.build-and-submit-mobile.outputs.android_build_id }}
-  #         token: ${{ secrets.EXPO_TOKEN }}
+      - name: Cleanup Android build if cancelled
+        uses: ./.github/actions/cancel-expo-build
+        with:
+          build_id: ${{ needs.build-and-submit-mobile.outputs.android_build_id }}
+          token: ${{ secrets.EXPO_TOKEN }}
 
-  #     - name: Cleanup iOS build if cancelled
-  #       uses: ./.github/actions/cancel-expo-build
-  #       with:
-  #         build_id: ${{ needs.build-and-submit-mobile.outputs.ios_build_id }}
-  #         token: ${{ secrets.EXPO_TOKEN }}
+      - name: Cleanup iOS build if cancelled
+        uses: ./.github/actions/cancel-expo-build
+        with:
+          build_id: ${{ needs.build-and-submit-mobile.outputs.ios_build_id }}
+          token: ${{ secrets.EXPO_TOKEN }}
