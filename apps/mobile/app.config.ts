@@ -1,6 +1,5 @@
 import { ConfigContext, ExpoConfig } from 'expo/config';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     name: 'Leather',
@@ -69,11 +68,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
       },
     },
-    notification: {
-      icon: './src/assets/adaptive-icon.png',
-      color: '#12100F',
-    },
     android: {
+      ...config.android,
       package: 'io.leather.mobilewallet',
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json',
       edgeToEdgeEnabled: true,
@@ -93,8 +89,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
     },
     plugins: [
-      '@react-native-firebase/app',
       '@react-native-firebase/messaging',
+      '@react-native-firebase/app',
       [
         '@sentry/react-native/expo',
         {
