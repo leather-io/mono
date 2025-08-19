@@ -3,6 +3,7 @@ import { sentryOnBuildEnd } from '@sentry/react-router';
 
 // eslint-disable-next-line func-style
 const buildEnd: Config['buildEnd'] = async ({ viteConfig, reactRouterConfig, buildManifest }) => {
+  if (process.env.LEATHER_TARGET !== 'production') return;
   await sentryOnBuildEnd({ viteConfig, reactRouterConfig, buildManifest });
 };
 
