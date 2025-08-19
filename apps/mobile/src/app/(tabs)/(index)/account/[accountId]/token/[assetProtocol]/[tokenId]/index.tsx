@@ -2,22 +2,36 @@ import { BitcoinTokenDetailsByAccount } from '@/features/token/bitcoin/bitcoin-t
 import { Sip10TokenDetailsByAccount } from '@/features/token/stacks/sip10-token-details';
 import { StacksTokenDetailsByAccount } from '@/features/token/stacks/stacks-token-details';
 import { deserializeAccountId } from '@/store/accounts/accounts';
+import * as Sentry from '@sentry/react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { z } from 'zod';
 
-import { CryptoAssetProtocols } from '@leather.io/models';
+import { CryptoAssetProtocol, CryptoAssetProtocols } from '@leather.io/models';
+import { assertUnreachable } from '@leather.io/utils';
 
-export const configureTokenParamsSchema = z.object({
-  accountId: z.string().optional(),
-  assetProtocol: z.string(),
-  tokenId: z.string(),
-});
+// export const configureTokenParamsSchema = z.object({
+//   accountId: z.string().optional(),
+//   assetProtocol: z.string(),
+//   tokenId: z.string(),
+// });
+// just add the only supported asset protocols here
+type SupportedAssetProtocols = Pick<CryptoAssetProtocol, 'nativeBtc' | 'nativeStx' | 'sip10'>;
+
+// using this I can assertUnreachable properly
+type SupportedAssetProtocol = 'nativeBtc' | 'nativeStx' | 'sip10';
+
+type AccountTokenScreenProps = {
+  accountId: string;
+  assetProtocol: SupportedAssetProtocol;
+  tokenId: string;
+};
 
 export default function AccountTokenScreen() {
-  const params = useLocalSearchParams();
-  const { assetProtocol, tokenId, accountId } = configureTokenParamsSchema.parse(params);
+  // const params = useLocalSearchParams<AccountTokenScreenProps>();
+  const { assetProtocol, tokenId, accountId } = useLocalSearchParams<AccountTokenScreenProps>();
   if (!accountId) {
-    throw new Error('accountId is required');
+    // throw new Error('accountId is required');
+    Sentry.captureException(new Error('accountId is required'));
+    return null;
   }
   const { accountIndex, fingerprint } = deserializeAccountId(accountId);
 
@@ -35,6 +49,6 @@ export default function AccountTokenScreen() {
         />
       );
     default:
-      throw new Error(`Unknown asset protocol: ${assetProtocol}`);
+      assertUnreachable(assetProtocol);
   }
 }
