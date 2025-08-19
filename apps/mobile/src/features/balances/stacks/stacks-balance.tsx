@@ -2,6 +2,7 @@ import { TokenBalance, TokenBalanceProps } from '@/features/token/components/tok
 import { useStxAccountBalance, useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
 
+import { CryptoAssetProtocol, CryptoAssetProtocols } from '@leather.io/models';
 import { StxAvatarIcon } from '@leather.io/ui/native';
 
 type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
@@ -10,7 +11,7 @@ export function StacksTokenBalance(props: StacksTokenBalanceProps) {
 }
 
 interface StacksBalanceProps {
-  onPress?: (tokenId: string) => void;
+  onPress?: (assetProtocol: CryptoAssetProtocol, tokenId: string) => void;
 }
 
 export function StacksBalance({ onPress }: StacksBalanceProps) {
@@ -25,7 +26,7 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.('STX')}
+      onPress={() => onPress?.(CryptoAssetProtocols.nativeStx, 'STX')}
       isLoading={state === 'loading'}
     />
   );
@@ -34,7 +35,7 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
 interface StacksBalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?: (tokenId: string) => void;
+  onPress?: (assetProtocol: CryptoAssetProtocol, tokenId: string) => void;
 }
 export function StacksBalanceByAccount({
   accountIndex,
@@ -54,7 +55,7 @@ export function StacksBalanceByAccount({
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.('STX')}
+      onPress={() => onPress?.(CryptoAssetProtocols.nativeStx, 'STX')}
       isLoading={state === 'loading'}
     />
   );

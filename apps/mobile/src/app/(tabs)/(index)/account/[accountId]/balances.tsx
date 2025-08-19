@@ -11,6 +11,7 @@ import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 import { router, useLocalSearchParams } from 'expo-router';
 
+import { CryptoAssetProtocol } from '@leather.io/models';
 import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
 
 import { configureAccountParamsSchema } from './index';
@@ -26,10 +27,10 @@ export default function BalancesScreen() {
 
   const tokenDetailsFlag = useTokenDetailsFlag();
 
-  function onOpenToken(tokenId: string) {
+  function onOpenToken(assetProtocol: CryptoAssetProtocol, tokenId: string) {
     router.navigate({
-      pathname: '/account/[accountId]/token/[tokenId]',
-      params: { accountId, tokenId },
+      pathname: '/account/[accountId]/token/[assetProtocol]/[tokenId]',
+      params: { accountId, assetProtocol, tokenId },
     });
     analytics.track('token_details_opened', { tokenId, source: 'all_account_balances' });
   }

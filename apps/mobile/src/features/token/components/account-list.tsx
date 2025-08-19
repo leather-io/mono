@@ -8,7 +8,7 @@ import { WalletLoader } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';
 import { router } from 'expo-router';
 
-import { Money } from '@leather.io/models';
+import { CryptoAssetProtocol, Money } from '@leather.io/models';
 import { Box, ChevronRightIcon, Text } from '@leather.io/ui/native';
 import { isDefined } from '@leather.io/utils';
 
@@ -37,26 +37,32 @@ export function AccountList({ listItem }: AccountListProps) {
 
 interface AccountListItemProps {
   account: Account;
-  wallet: WalletStore;
-  tokenId: string;
+  assetProtocol: CryptoAssetProtocol;
   availableBalance: Money;
   quoteBalance: Money;
+  tokenId: string;
+  wallet: WalletStore;
 }
 
 export function TokenDetailsAccountListItem({
   account,
-  wallet,
+  assetProtocol,
   availableBalance,
   quoteBalance,
   tokenId,
+  wallet,
 }: AccountListItemProps) {
   const tokenDetailsFlag = useTokenDetailsFlag();
 
   function onSelectAccount() {
     if (tokenDetailsFlag) {
       router.navigate({
-        pathname: '/account/[accountId]/token/[tokenId]',
-        params: { tokenId: tokenId, accountId: account.id },
+        pathname: '/account/[accountId]/token/[assetProtocol]/[tokenId]',
+        params: {
+          tokenId: tokenId,
+          accountId: account.id,
+          assetProtocol,
+        },
       });
     }
   }

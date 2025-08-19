@@ -9,6 +9,7 @@ import { useRunesTotalBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10TotalBalance } from '@/queries/balance/sip10-balance.query';
 import { FlashList } from '@shopify/flash-list';
 
+import { CryptoAssetProtocol, CryptoAssetProtocols } from '@leather.io/models';
 import { RuneBalance, Sip10Balance } from '@leather.io/services';
 
 import { renderAsset } from './render-assets';
@@ -17,7 +18,7 @@ interface AssetsFlashListProps {
   sip10Data: ReturnType<typeof useSip10TotalBalance>;
   runesData: ReturnType<typeof useRunesTotalBalance>;
   header: ReactNode;
-  onPressToken?: (tokenId: string) => void;
+  onPressToken?: (assetProtocol: CryptoAssetProtocol, tokenId: string) => void;
 }
 
 export function AssetsFlashList({
@@ -47,7 +48,8 @@ export function AssetsFlashList({
         renderItem={({ item }) =>
           renderAsset({
             item,
-            onPress: () => onPressToken?.(item.asset.symbol),
+            onPress: () =>
+              onPressToken?.(item.asset.protocol, (item as Sip10Balance).asset.assetId),
           })
         }
         getItemType={item => {
@@ -58,8 +60,8 @@ export function AssetsFlashList({
         ListHeaderComponent={
           <>
             {header}
-            <BitcoinBalance onPress={() => onPressToken?.('BTC')} />
-            <StacksBalance onPress={() => onPressToken?.('STX')} />
+            <BitcoinBalance onPress={() => onPressToken?.(CryptoAssetProtocols.nativeBtc, 'BTC')} />
+            <StacksBalance onPress={() => onPressToken?.(CryptoAssetProtocols.nativeStx, 'STX')} />
           </>
         }
       />

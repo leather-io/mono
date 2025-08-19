@@ -8,7 +8,7 @@ import { useTokenDetailsFlag } from '@/features/feature-flags';
 import { analytics } from '@/utils/analytics';
 import { router, useLocalSearchParams } from 'expo-router';
 
-import { AccountId } from '@leather.io/models';
+import { AccountId, CryptoAssetProtocol } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
 import { AssetsBalance } from './assets/assets-balance';
@@ -17,10 +17,10 @@ import { AssetsBalanceByAccount } from './assets/assets-balance-by-account';
 export function AllAccountBalancesWidget() {
   const tokenDetailsFlag = useTokenDetailsFlag();
 
-  function onOpenToken(tokenId: string) {
+  function onOpenToken(assetProtocol: CryptoAssetProtocol, tokenId: string) {
     router.navigate({
-      pathname: '/token/[tokenId]',
-      params: { tokenId },
+      pathname: '/token/[assetProtocol]/[tokenId]',
+      params: { assetProtocol, tokenId },
     });
     analytics.track('token_details_opened', { tokenId, source: 'all_account_balances' });
   }
@@ -44,10 +44,10 @@ export function AccountBalances({ fingerprint, accountIndex }: AccountId) {
 
   const tokenDetailsFlag = useTokenDetailsFlag();
 
-  function onOpenToken(tokenId: string) {
+  function onOpenToken(assetProtocol: CryptoAssetProtocol, tokenId: string) {
     router.navigate({
-      pathname: '/account/[accountId]/token/[tokenId]',
-      params: { tokenId, accountId },
+      pathname: '/account/[accountId]/token/[assetProtocol]/[tokenId]',
+      params: { tokenId, accountId, assetProtocol },
     });
     analytics.track('token_details_opened', { tokenId, source: 'account_balances' });
   }

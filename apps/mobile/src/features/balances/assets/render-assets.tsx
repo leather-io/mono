@@ -1,3 +1,4 @@
+import { CryptoAssetProtocol, CryptoAssetProtocols } from '@leather.io/models';
 import { RuneBalance, Sip10Balance } from '@leather.io/services';
 
 import { RunesTokenBalance } from '../bitcoin/runes-token-balance';
@@ -8,7 +9,7 @@ export function renderAsset({
   onPress,
 }: {
   item: Sip10Balance | RuneBalance;
-  onPress?(tokenId: string): void;
+  onPress?(assetProtocol: CryptoAssetProtocol, tokenId: string): void;
 }) {
   switch (item.asset.protocol) {
     case 'sip10':
@@ -16,7 +17,9 @@ export function renderAsset({
         <Sip10TokenBalance
           key={item.asset.contractId}
           item={item as Sip10Balance}
-          onPress={() => onPress?.((item as Sip10Balance).asset.assetId)}
+          onPress={() =>
+            onPress?.(CryptoAssetProtocols.sip10, (item as Sip10Balance).asset.assetId)
+          }
         />
       );
     case 'rune':

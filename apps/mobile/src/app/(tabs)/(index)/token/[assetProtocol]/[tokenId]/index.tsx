@@ -4,20 +4,26 @@ import { StacksTokenDetails } from '@/features/token/stacks/stacks-token-details
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 
+import { CryptoAssetProtocols } from '@leather.io/models';
+import { assertUnreachable } from '@leather.io/utils';
+
 export const configureTokenParamsSchema = z.object({
+  assetProtocol: z.string(),
   tokenId: z.string(),
 });
 
 export default function TokenScreen() {
   const params = useLocalSearchParams();
-  const { tokenId } = configureTokenParamsSchema.parse(params);
+  const { assetProtocol, tokenId } = configureTokenParamsSchema.parse(params);
 
-  switch (tokenId) {
-    case 'BTC':
+  switch (assetProtocol) {
+    case CryptoAssetProtocols.nativeBtc:
       return <BitcoinTokenDetails />;
-    case 'STX':
+    case CryptoAssetProtocols.nativeStx:
       return <StacksTokenDetails />;
-    default:
+    case CryptoAssetProtocols.sip10:
       return <Sip10TokenDetails tokenId={tokenId} />;
+    default:
+      assertUnreachable(assetProtocol as never);
   }
 }

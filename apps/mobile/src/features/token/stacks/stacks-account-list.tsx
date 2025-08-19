@@ -2,6 +2,8 @@ import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { Account } from '@/store/accounts/accounts';
 import { WalletStore } from '@/store/wallets/utils';
 
+import { CryptoAssetProtocols } from '@leather.io/models';
+
 import { TokenDetailsAccountListItem } from '../components/account-list';
 
 interface StacksAccountListItemProps {
@@ -29,10 +31,11 @@ export function StacksAccountListItem({
   return (
     <TokenDetailsAccountListItem
       account={account}
-      wallet={wallet}
-      tokenId="STX"
+      assetProtocol={CryptoAssetProtocols.nativeStx}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
+      tokenId="STX"
+      wallet={wallet}
     />
   );
 }

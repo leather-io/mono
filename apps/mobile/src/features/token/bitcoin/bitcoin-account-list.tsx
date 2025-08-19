@@ -2,6 +2,8 @@ import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { Account } from '@/store/accounts/accounts';
 import { WalletStore } from '@/store/wallets/utils';
 
+import { CryptoAssetProtocols } from '@leather.io/models';
+
 import { TokenDetailsAccountListItem } from '../components/account-list';
 
 interface BitcoinAccountListItemProps {
@@ -27,10 +29,11 @@ export function BitcoinAccountListItem({
   return (
     <TokenDetailsAccountListItem
       account={account}
-      wallet={wallet}
-      tokenId="BTC"
+      assetProtocol={CryptoAssetProtocols.nativeBtc}
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
+      tokenId="BTC"
+      wallet={wallet}
     />
   );
 }

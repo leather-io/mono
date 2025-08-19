@@ -3,12 +3,14 @@ import { useMemo } from 'react';
 import { useRunesTotalBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10TotalBalance } from '@/queries/balance/sip10-balance.query';
 
+import { CryptoAssetProtocol } from '@leather.io/models';
+
 import { useRunesFlag } from '../../feature-flags';
 import { ASSETS_BALANCES_WIDGET_LIMIT } from '../constants';
 import { renderAsset } from './render-assets';
 
 interface AssetsBalanceProps {
-  onPress?: (tokenId: string) => void;
+  onPress?: (assetProtocol: CryptoAssetProtocol, tokenId: string) => void;
 }
 export function AssetsBalance({ onPress }: AssetsBalanceProps) {
   const sip10Data = useSip10TotalBalance();

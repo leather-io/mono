@@ -2,6 +2,8 @@ import { useSip10BalanceByAssetId } from '@/queries/balance/sip10-balance.query'
 import { Account } from '@/store/accounts/accounts';
 import { WalletStore } from '@/store/wallets/utils';
 
+import { CryptoAssetProtocols } from '@leather.io/models';
+
 import { TokenDetailsAccountListItem } from '../components/account-list';
 
 interface Sip10AccountListItemProps {
@@ -25,11 +27,12 @@ export function Sip10AccountListItem({
   }
   return (
     <TokenDetailsAccountListItem
+      account={account}
+      assetProtocol={CryptoAssetProtocols.sip10}
       availableBalance={data.value.crypto.availableBalance}
       quoteBalance={data.value.quote.totalBalance}
-      account={account}
-      wallet={wallet}
       tokenId={tokenId}
+      wallet={wallet}
     />
   );
 }
