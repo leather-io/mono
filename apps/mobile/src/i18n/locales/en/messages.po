@@ -277,7 +277,7 @@ msgstr "App Store"
 #: src/features/approver/components/approver-buttons.tsx:24
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:67
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:164
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:68
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:63
 msgid "Approve"
 msgstr "Approve"
 
@@ -370,10 +370,9 @@ msgstr "Charisma"
 msgid "Check your email for verification"
 msgstr "Check your email for verification"
 
-#. js-lingui-explicit-id
-#: src/features/approver/layouts/get-addresses.layout.tsx:44
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:41
-msgid "browser.approver.choose-account"
+#: src/features/approver/layouts/get-addresses.layout.tsx:43
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:40
+msgid "Choose an account"
 msgstr "Choose an account"
 
 #: src/features/account/sheets/add-account-sheet.tsx:31
@@ -419,7 +418,7 @@ msgstr ""
 
 #: src/features/approver/components/memo-sheet.tsx:18
 #: src/features/approver/components/nonce-sheet.tsx:18
-#: src/features/approver/layouts/get-addresses.layout.tsx:66
+#: src/features/approver/layouts/get-addresses.layout.tsx:61
 #: src/features/send/components/memo.tsx:90
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
@@ -518,8 +517,8 @@ msgstr "Custom fees"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:64
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:161
-#: src/features/approver/layouts/get-addresses.layout.tsx:63
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:65
+#: src/features/approver/layouts/get-addresses.layout.tsx:58
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:60
 msgid "Deny"
 msgstr "Deny"
 
@@ -915,7 +914,7 @@ msgstr "Memo updated"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:49
 #: src/features/approver/structured-message.section.tsx:48
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:54
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:49
 msgid "Message"
 msgstr "Message"
 

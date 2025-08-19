@@ -40,12 +40,7 @@ export function GetAddressesApproverLayout({
           ) : (
             <Cell.Root pressable={true} onPress={onOpenAccountSelection}>
               <Cell.Content>
-                <Cell.Label variant="primary">
-                  {t({
-                    id: `browser.approver.choose-account`,
-                    message: 'Choose an account',
-                  })}
-                </Cell.Label>
+                <Cell.Label variant="primary">{t`Choose an account`}</Cell.Label>
               </Cell.Content>
               <Cell.Aside>
                 <ChevronRightIcon />
