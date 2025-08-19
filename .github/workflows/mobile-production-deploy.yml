@@ -69,25 +69,3 @@ jobs:
             # Android Build:
             https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${{ needs.build-and-submit-mobile.outputs.android_build_id }}
           files: /tmp/build_output.json
-
-  # Useful for testing the workflow without having to run tons of builds to completion
-  cleanup-builds-if-cancelled:
-    runs-on: ubuntu-latest
-    needs: build-and-submit-mobile
-    if: always()
-    # NOTE: This could be something like `if: ${{ cancelled() && needs.build-and-submit-mobile.result == 'success' }}`
-    # if: ${{ cancelled() && needs.build-and-submit-mobile.result == 'success' }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cleanup Android build if cancelled
-        uses: ./.github/actions/cancel-expo-build
-        with:
-          build_id: ${{ needs.build-and-submit-mobile.outputs.android_build_id }}
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Cleanup iOS build if cancelled
-        uses: ./.github/actions/cancel-expo-build
-        with:
-          build_id: ${{ needs.build-and-submit-mobile.outputs.ios_build_id }}
-          token: ${{ secrets.EXPO_TOKEN }}
