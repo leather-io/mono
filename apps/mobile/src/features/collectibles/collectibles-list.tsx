@@ -1,48 +1,31 @@
-import { useCallback } from 'react';
-import { Dimensions } from 'react-native';
+import { ReactElement } from 'react';
 
-import { FetchState } from '@/components/loading';
-import { serializeCollectibles } from '@/features/collectibles';
+import { Screen } from '@/components/screen/screen';
+import { RefreshControl } from '@/features/refresh-control/refresh-control';
+import { useTotalCollectibles } from '@/queries/collectibles/account-collectibles.query';
 
-import { NonFungibleCryptoAsset } from '@leather.io/models';
-import { CollectibleCard, useTheme } from '@leather.io/ui/native';
+import { EmptyCollectiblesState } from './empty-collectibles-state';
+import { renderCollectible } from './render-collectible';
 
-const { width } = Dimensions.get('window');
 interface CollectiblesListProps {
-  collectibles: FetchState<NonFungibleCryptoAsset[]>;
-  mode: 'widget' | 'gallery';
+  collectiblesData: ReturnType<typeof useTotalCollectibles>;
+  header: ReactElement;
 }
-export function CollectiblesList({ collectibles, mode }: CollectiblesListProps) {
-  const displayLimit = mode === 'widget' ? 9 : undefined;
-  const theme = useTheme();
-  // TODO: not a good fix, it should be automatically adjusted without this mathematics on our side.
-  // Will open a ticket for this one in the future
-  const edgeToEdgeThumbnailWidth = (width - 2 * theme.spacing[5] - theme.spacing[4]) / 2;
-  const thumbnailSize = mode === 'widget' ? 200 : edgeToEdgeThumbnailWidth;
 
-  const collectiblesList = useCallback(
-    (collectibles: FetchState<NonFungibleCryptoAsset[]>) => {
-      if (collectibles.state !== 'success') return [];
-      if (mode === 'widget') {
-        return serializeCollectibles(collectibles.value).slice(0, displayLimit);
-      }
-      return serializeCollectibles(collectibles.value);
-    },
-    [mode, displayLimit]
-  );
+export function CollectiblesList({ collectiblesData, header }: CollectiblesListProps) {
+  const collectibles = collectiblesData.state === 'success' ? collectiblesData.value : [];
 
   return (
-    <>
-      {collectiblesList(collectibles).map(({ name, type, mimeType, src }, index) => (
-        <CollectibleCard
-          key={index}
-          name={name}
-          type={type}
-          mimeType={mimeType}
-          size={thumbnailSize}
-          src={src}
-        />
-      ))}
-    </>
+    <Screen.FlashList
+      numColumns={2}
+      data={collectibles}
+      renderItem={renderCollectible}
+      getItemType={item => {
+        return item.protocol;
+      }}
+      refreshControl={<RefreshControl />}
+      ListHeaderComponent={header}
+      ListEmptyComponent={<EmptyCollectiblesState />}
+    />
   );
 }

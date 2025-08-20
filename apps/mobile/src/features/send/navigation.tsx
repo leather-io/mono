@@ -1,5 +1,4 @@
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { Account } from '@/store/accounts/accounts';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -9,7 +8,6 @@ import { HasChildren, useTheme } from '@leather.io/ui/native';
 // Required to use a type alias: https://reactnavigation.org/docs/typescript#typechecking-the-navigator
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type SendStackParamList = {
-  'select-account'?: { previousRoute: SendRouteKey };
   'select-asset'?: { previousRoute: SendRouteKey };
   form?: {
     previousRoute: SendRouteKey;
@@ -24,12 +22,10 @@ export const SendStack = createStackNavigator<SendStackParamList>();
 
 export function SendNavigator({ children }: HasChildren) {
   const {
-    state: { selectedAccount, selectedAsset, accounts },
+    state: { selectedAsset },
   } = useSendFlowContext();
   const initialRouteName = getInitialRouteName({
-    selectedAccount,
     selectedAsset,
-    totalAccountNumber: accounts.length,
   });
   const theme = useTheme();
 
@@ -58,22 +54,12 @@ export function useSendRoute<RouteKey extends SendRouteKey>() {
 }
 
 interface DeriveInitialRouteParams {
-  selectedAccount: Account | null;
   selectedAsset: FungibleCryptoAsset | null;
-  totalAccountNumber: number;
 }
 
-function getInitialRouteName({
-  selectedAccount,
-  selectedAsset,
-  totalAccountNumber,
-}: DeriveInitialRouteParams): SendRouteKey {
+function getInitialRouteName({ selectedAsset }: DeriveInitialRouteParams): SendRouteKey {
   if (!selectedAsset) {
     return 'select-asset';
-  }
-
-  if (!selectedAccount) {
-    return totalAccountNumber > 1 ? 'select-account' : 'form';
   }
 
   return 'form';

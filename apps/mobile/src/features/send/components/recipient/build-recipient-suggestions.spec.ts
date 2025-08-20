@@ -63,14 +63,14 @@ const testActivity = [
   createActivityItem({ id: 'tx5', receiver: 'address-5' }),
 ];
 
-const selectedAccount = testAccounts[0];
+const currentAccount = testAccounts[0];
 
 function invokeWithDefaults(overrides: Partial<BuildRecipientSuggestionsParams> = {}) {
-  assert(selectedAccount);
+  assert(currentAccount);
   return buildRecipientSuggestions({
     searchTerm: '',
     accounts: testAccounts,
-    selectedAccount,
+    currentAccount: currentAccount,
     activity: testActivity,
     canSelfSend: true,
     findAccountByAddress: callbackReturns(null),
@@ -160,7 +160,7 @@ describe('with empty search term', () => {
     assert(accounts[1]);
     const sections = await invokeWithDefaults({
       accounts,
-      selectedAccount: accounts[0],
+      currentAccount: accounts[0],
       canSelfSend: false,
     });
     assert(sections[1]);

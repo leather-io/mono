@@ -2,6 +2,7 @@ import { ActionButtons } from '@/components/action-buttons';
 import { Balance } from '@/components/balance/balance';
 import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { TokenActivity } from '@/features/token/components/token-activity';
 import { TokenDescription } from '@/features/token/components/token-description';
@@ -19,6 +20,11 @@ import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 
 import { FungibleCryptoAsset, Money, OnChainActivity } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
+import { match } from '@leather.io/utils';
+
+import { ReceiveType } from '../receive/receive-flow-provider';
+
+const protocolMatch = match<FungibleCryptoAsset['protocol']>();
 
 interface TokenProps {
   activity: OnChainActivity[];
@@ -39,11 +45,21 @@ export function Token({
   quoteBalance,
   tokenId,
 }: TokenProps) {
+  const { sendSheetRef, receiveSheetRef } = useGlobalSheets();
   const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const marketData = useMarketDataQuery(asset);
   const price = marketData.data?.price;
   const { data: assetPriceChange } = useAssetPriceChangeQuery(asset);
   const changePercent = assetPriceChange?.changePercent ?? 0;
+  const receiveType = protocolMatch<ReceiveType>(asset.protocol, {
+    sip10: 'stacks',
+    rune: 'taproot',
+    brc20: 'taproot',
+    src20: 'taproot',
+    nativeBtc: 'bitcoin',
+    stx20: 'stacks',
+    nativeStx: 'stacks',
+  });
 
   return (
     <Screen>
@@ -75,7 +91,13 @@ export function Token({
                 </Box>
               }
               quoteBalance={<Balance balance={quoteBalance} variant="label01" />}
-              actionButtons={<ActionButtons canSend={canSend} />}
+              actionButtons={
+                <ActionButtons
+                  onSend={() => sendSheetRef.current?.present()}
+                  onReceive={() => receiveSheetRef.current?.present(receiveType)}
+                  canSend={canSend}
+                />
+              }
             />
             {/* TODO LEA-3015: add better loading state for description*/}
             {assetDescription?.description && (

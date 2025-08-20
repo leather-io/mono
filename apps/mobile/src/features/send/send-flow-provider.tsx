@@ -4,25 +4,20 @@ import { Account } from '@/store/accounts/accounts';
 import { InputCurrencyMode } from '@/utils/types';
 
 import { FungibleCryptoAsset } from '@leather.io/models';
-import { isDefined } from '@leather.io/utils';
 
 interface SendState {
-  selectedAccount: Account | null;
   selectedAsset: FungibleCryptoAsset | null;
+  currentAccount: Account;
   inputCurrencyMode: InputCurrencyMode;
-  accounts: Account[];
 }
 
 type Action =
-  | { type: 'SET_ACCOUNT'; payload: Account }
   | { type: 'SET_ASSET'; payload: FungibleCryptoAsset }
   | { type: 'SET_INPUT_CURRENCY_MODE'; payload: InputCurrencyMode }
   | { type: 'RESET' };
 
 function reducer(state: SendState, action: Action) {
   switch (action.type) {
-    case 'SET_ACCOUNT':
-      return { ...state, selectedAccount: action.payload };
     case 'SET_ASSET':
       return { ...state, selectedAsset: action.payload };
     case 'SET_INPUT_CURRENCY_MODE':
@@ -32,33 +27,21 @@ function reducer(state: SendState, action: Action) {
   }
 }
 
-interface InitializerParams {
-  accounts: Account[];
-  selectedAccount?: Account;
+interface InitialData {
   selectedAsset?: FungibleCryptoAsset;
+  currentAccount: Account;
 }
 
-function initializer({ accounts, selectedAccount, selectedAsset }: InitializerParams): SendState {
-  if (accounts.length === 1 && isDefined(accounts[0])) {
-    return {
-      selectedAccount: accounts[0],
-      selectedAsset: null,
-      inputCurrencyMode: 'crypto',
-      accounts,
-    };
-  }
-
+function initializer({ selectedAsset, currentAccount }: InitialData): SendState {
   return {
-    selectedAccount: selectedAccount ?? null,
     selectedAsset: selectedAsset ?? null,
     inputCurrencyMode: 'crypto',
-    accounts,
+    currentAccount,
   };
 }
 
 interface SendFlowContextValue {
   state: SendState;
-  selectAccount(account: Account | null): void;
   selectAsset(asset: FungibleCryptoAsset | null): void;
   selectInputCurrencyMode(mode: InputCurrencyMode): void;
 }
@@ -67,19 +50,11 @@ const SendFlowContext = createContext<SendFlowContextValue | null>(null);
 
 interface SendProviderProps {
   children: ReactNode;
-  initialData: {
-    accounts: Account[];
-    selectedAccount?: Account;
-    selectedAsset?: FungibleCryptoAsset;
-  };
+  initialData: InitialData;
 }
 
 export function SendFlowProvider({ initialData, children }: SendProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialData, initializer);
-
-  function selectAccount(account: Account) {
-    dispatch({ type: 'SET_ACCOUNT', payload: account });
-  }
 
   function selectAsset(asset: FungibleCryptoAsset) {
     dispatch({ type: 'SET_ASSET', payload: asset });
@@ -90,9 +65,7 @@ export function SendFlowProvider({ initialData, children }: SendProviderProps) {
   }
 
   return (
-    <SendFlowContext.Provider
-      value={{ state, selectAccount, selectAsset, selectInputCurrencyMode }}
-    >
+    <SendFlowContext.Provider value={{ state, selectAsset, selectInputCurrencyMode }}>
       {children}
     </SendFlowContext.Provider>
   );

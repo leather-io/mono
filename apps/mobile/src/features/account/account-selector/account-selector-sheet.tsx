@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
+import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
 import { useAppDispatch } from '@/store/utils';
@@ -10,7 +11,7 @@ import { AccountSelectorSheetLayout } from './account-selector-sheet.layout';
 
 interface AccountSelectedSheetProps {
   sheetRef: SheetRef;
-  onAccountPress: (accountId: string) => void;
+  onAccountPress: (account: Account) => void;
 }
 
 export function AccountSelectorSheet({ sheetRef, onAccountPress }: AccountSelectedSheetProps) {

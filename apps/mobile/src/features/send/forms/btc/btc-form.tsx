@@ -9,7 +9,6 @@ import { SendFormContainer, SendFormFooter } from '@/features/send/components/se
 import { locale } from '@/features/send/constants';
 import { useBtcForm } from '@/features/send/forms/btc/use-btc-form';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { type Account } from '@/store/accounts/accounts';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
@@ -27,7 +26,6 @@ import { isNumber } from '@leather.io/utils';
 const asset = btcAsset;
 
 interface BtcFormProps {
-  account: Account;
   availableBalance: Money;
   quoteBalance: Money;
   feeRates: AverageBitcoinFeeRates;
@@ -41,7 +39,6 @@ export function BtcForm({
   quoteBalance,
   availableBalance,
   marketData,
-  account,
   utxos,
   feeRates,
   quoteCurrency: quoteCurrency,
@@ -49,13 +46,17 @@ export function BtcForm({
   assetItemAnimationOffsetTop,
 }: BtcFormProps) {
   const {
-    state: { inputCurrencyMode },
+    state: { inputCurrencyMode, currentAccount },
   } = useSendFlowContext();
   const currency = whenInputCurrencyMode(inputCurrencyMode)({
     crypto: asset.symbol,
     quote: quoteCurrency,
   });
-  const { form, schema, maxSpend, onSetMax, onSubmit } = useBtcForm({ account, feeRates, utxos });
+  const { form, schema, maxSpend, onSetMax, onSubmit } = useBtcForm({
+    account: currentAccount,
+    feeRates,
+    utxos,
+  });
 
   return (
     <SendFormContainer>
@@ -96,6 +97,7 @@ export function BtcForm({
             value={value}
             onChange={onChange}
             recipientSchema={schema.shape.recipient}
+            currentAccount={currentAccount}
           />
         )}
       />

@@ -27,7 +27,7 @@ import {
   type SquircleBoxProps,
   ZapIcon,
 } from '@leather.io/ui/native';
-import { isString } from '@leather.io/utils';
+import { isString, match } from '@leather.io/utils';
 
 export const accountIconMap: Record<AccountIcon, ComponentType<IconProps>> = {
   pizza: PizzaIcon,
@@ -52,19 +52,31 @@ export const accountIconMap: Record<AccountIcon, ComponentType<IconProps>> = {
   flag: FlagIcon,
 } as const;
 
+type AccountAvatarVariant = 'sm' | 'md';
+
 interface AccountAvatarProps extends SquircleBoxProps {
   icon: AccountIcon | ComponentType;
+  variant?: AccountAvatarVariant;
 }
 
-export function AccountAvatar(props: AccountAvatarProps) {
+export function AccountAvatar({ variant = 'md', ...props }: AccountAvatarProps) {
   const Icon = isString(props.icon) ? accountIconMap[props.icon] : props.icon;
+  const variantMatcher = match<AccountAvatarVariant>();
+  const size = variantMatcher(variant, {
+    sm: 40,
+    md: 48,
+  });
+  const borderRadius = variantMatcher(variant, {
+    sm: 16,
+    md: 18,
+  });
   return (
     <SquircleBox
-      width={48}
-      height={48}
+      width={size}
+      height={size}
       borderWidth={1}
       borderColor="ink.border-default"
-      borderRadius={18}
+      borderRadius={borderRadius}
       cornerSmoothing={100}
       preserveSmoothing={true}
       justifyContent="center"

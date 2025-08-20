@@ -7,14 +7,14 @@ import { AddressList, AddressListItem } from '../components/address-list';
 
 interface Sip10AddressListProps {
   account: Account;
-  tokenId: string;
+  assetId: string;
 }
-export function Sip10AddressList({ account, tokenId }: Sip10AddressListProps) {
+export function Sip10AddressList({ account, assetId }: Sip10AddressListProps) {
   const stxAddress = useStacksSignerAddressFromAccountIndex(
     account.fingerprint,
     account.accountIndex
   );
-  const balance = useSip10BalanceByAssetId(account.fingerprint, account.accountIndex, tokenId);
+  const balance = useSip10BalanceByAssetId(account.fingerprint, account.accountIndex, assetId);
   return (
     <AddressList account={account}>
       <AddressListItem

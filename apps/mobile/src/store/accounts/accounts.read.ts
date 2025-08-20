@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 
 import { RootState } from '..';
+import { useAppSelector } from '../utils';
 import { initalizeAccount } from './accounts';
 import { accountsAdapter } from './accounts.write';
 import { AccountStatus } from './utils';
@@ -74,4 +75,12 @@ export function useAccounts(status: AccountStatus = 'active') {
 
 export function useAccountByIndex(fingerprint: string, index: number) {
   return useSelector(selectAccountByIndex(fingerprint, index));
+}
+
+export function useAccountByAccoundId(accountId: string) {
+  return useAppSelector(state => {
+    const account = selectors.selectById(state, accountId);
+    if (account) return initalizeAccount(account);
+    return;
+  });
 }

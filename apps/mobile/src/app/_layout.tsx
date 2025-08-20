@@ -10,6 +10,7 @@ import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-scree
 import { StatusBar } from '@/components/status-bar';
 import { ToastWrapper } from '@/components/toast/toast-context';
 import { VersionGuard } from '@/components/version-guard/version-guard';
+import { CurrentAccountProvider, useCurrentAccount } from '@/core/current-account-provider';
 import { GlobalSheetProvider } from '@/core/global-sheet-provider';
 import { HapticsProvider } from '@/core/haptics-provider';
 import { LeatherQueryProvider } from '@/core/leather-query-provider';
@@ -20,6 +21,7 @@ import { featureFlagClient, setupFeatureFlags } from '@/features/feature-flags';
 import { useWatchNotificationAddresses } from '@/features/notifications/use-notifications';
 import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
+import { DescriptionSheet } from '@/features/settings/description-sheet';
 import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { usePageViewTracking } from '@/hooks/use-page-view-tracking';
 import { I18nProvider } from '@/i18n/i18n';
@@ -63,6 +65,7 @@ ErrorUtils.setGlobalHandler(error => {
 function App() {
   useWatchNotificationAddresses();
   usePageViewTracking();
+  const { currentAccount } = useCurrentAccount();
 
   useEffect(() => {
     void trackFirstAppOpen();
@@ -76,11 +79,16 @@ function App() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
         </Stack>
-        <SendSheet />
-        <ReceiveSheet />
+        {currentAccount && (
+          <>
+            <SendSheet />
+            <ReceiveSheet />
+          </>
+        )}
         <AddAccountSheet />
         <AddWalletSheet />
         <AppUpdateRequiredSheet />
+        <DescriptionSheet />
       </ErrorBoundary>
     </Box>
   );
@@ -92,31 +100,33 @@ function RootLayout() {
       <LDProvider client={featureFlagClient}>
         <ReduxProvider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <I18nProvider>
-              <SafeAreaProvider>
-                <QueryClientProvider client={queryClient}>
-                  <LeatherQueryProvider>
-                    <QueryPreloader>
-                      <ThemeProvider>
-                        <GestureHandlerRootView style={{ flex: 1 }}>
-                          <ToastWrapper>
-                            <SplashScreenGuard>
-                              <HapticsProvider>
-                                <GlobalSheetProvider>
-                                  <SheetModalProvider>
-                                    <App />
-                                  </SheetModalProvider>
-                                </GlobalSheetProvider>
-                              </HapticsProvider>
-                            </SplashScreenGuard>
-                          </ToastWrapper>
-                        </GestureHandlerRootView>
-                      </ThemeProvider>
-                    </QueryPreloader>
-                  </LeatherQueryProvider>
-                </QueryClientProvider>
-              </SafeAreaProvider>
-            </I18nProvider>
+            <CurrentAccountProvider>
+              <I18nProvider>
+                <SafeAreaProvider>
+                  <QueryClientProvider client={queryClient}>
+                    <LeatherQueryProvider>
+                      <QueryPreloader>
+                        <ThemeProvider>
+                          <GestureHandlerRootView style={{ flex: 1 }}>
+                            <ToastWrapper>
+                              <SplashScreenGuard>
+                                <HapticsProvider>
+                                  <GlobalSheetProvider>
+                                    <SheetModalProvider>
+                                      <App />
+                                    </SheetModalProvider>
+                                  </GlobalSheetProvider>
+                                </HapticsProvider>
+                              </SplashScreenGuard>
+                            </ToastWrapper>
+                          </GestureHandlerRootView>
+                        </ThemeProvider>
+                      </QueryPreloader>
+                    </LeatherQueryProvider>
+                  </QueryClientProvider>
+                </SafeAreaProvider>
+              </I18nProvider>
+            </CurrentAccountProvider>
           </PersistGate>
         </ReduxProvider>
       </LDProvider>

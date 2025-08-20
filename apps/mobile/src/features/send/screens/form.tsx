@@ -18,7 +18,7 @@ export function Form() {
   const { canGoBack, goBack } = useSendNavigation();
   const { params } = useSendRoute<'form'>();
   const {
-    state: { selectedAsset, selectedAccount },
+    state: { selectedAsset, currentAccount },
     selectAsset,
   } = useSendFlowContext();
   const assetPickerSheetRef = useRef<SheetInstance>(null);
@@ -27,7 +27,7 @@ export function Form() {
     ? params?.assetItemElementInitialOffset
     : undefined;
 
-  if (!selectedAsset || !selectedAccount) {
+  if (!selectedAsset) {
     return null;
   }
 
@@ -48,14 +48,14 @@ export function Form() {
         header={
           <FullHeightSheetHeader
             title={t`Send`}
-            subtitle={selectedAccount.name}
+            subtitle={currentAccount.name}
             leftElement={canGoBack() ? <HeaderBackButton onPress={goBack} /> : null}
           />
         }
       >
         <FormLayout
+          currentAccount={currentAccount}
           selectedAsset={selectedAsset}
-          selectedAccount={selectedAccount}
           handleOpenAssetPicker={handleOpenAssetPicker}
           assetItemElementInitialOffset={assetItemElementInitialOffset}
         />
@@ -63,7 +63,8 @@ export function Form() {
 
       <InlineAssetPicker
         sheetRef={assetPickerSheetRef}
-        account={selectedAccount}
+        fingerprint={currentAccount.fingerprint}
+        accountIndex={currentAccount.accountIndex}
         onSelectAsset={handleInlineAssetSelection}
       />
     </>

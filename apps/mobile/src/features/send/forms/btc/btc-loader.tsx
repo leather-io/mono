@@ -7,16 +7,11 @@ import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
+import { Account } from '@/store/accounts/accounts';
 import { useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
-import {
-  AccountId,
-  AverageBitcoinFeeRates,
-  MarketData,
-  Money,
-  OwnedUtxo,
-} from '@leather.io/models';
+import { AverageBitcoinFeeRates, MarketData, Money, OwnedUtxo } from '@leather.io/models';
 
 interface BtcData {
   availableBalance: Money;
@@ -26,8 +21,9 @@ interface BtcData {
   marketData: MarketData;
 }
 
-function useBtcData({ fingerprint, accountIndex }: AccountId): FetchState<BtcData> {
+function useBtcData(account: Account): FetchState<BtcData> {
   const feeRates = useAverageBitcoinFeeRates();
+  const { fingerprint, accountIndex } = account;
   const accountUtxos = useAccountUtxos(fingerprint, accountIndex);
   const btcBalance = useBtcAccountBalance(fingerprint, accountIndex);
   const marketData = useBtcMarketDataQuery();
@@ -69,7 +65,7 @@ function useBtcData({ fingerprint, accountIndex }: AccountId): FetchState<BtcDat
 }
 
 interface BtcDataLoaderProps {
-  account: AccountId;
+  account: Account;
   children(data: BtcData): ReactNode;
 }
 

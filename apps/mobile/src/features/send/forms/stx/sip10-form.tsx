@@ -9,7 +9,6 @@ import { Recipient } from '@/features/send/components/recipient/recipient';
 import { SendFormContainer, SendFormFooter } from '@/features/send/components/send-form-layout';
 import { locale } from '@/features/send/constants';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { Account } from '@/store/accounts/accounts';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
@@ -20,7 +19,6 @@ import { isNumber } from '@leather.io/utils';
 import { useSip10Form } from './use-sip10-form';
 
 interface Sip10FormProps {
-  account: Account;
   availableBalance: Money;
   quoteBalance: Money;
   nonce: number | undefined;
@@ -39,18 +37,17 @@ export function Sip10Form({
   marketData,
   nonce,
   onOpenAssetPicker,
-  account,
   asset,
 }: Sip10FormProps) {
   const {
-    state: { inputCurrencyMode },
+    state: { inputCurrencyMode, currentAccount },
   } = useSendFlowContext();
   const currency = whenInputCurrencyMode(inputCurrencyMode)({
     crypto: asset.symbol,
     quote: quoteCurrency,
   });
   const { form, schema, maxSpend, onSetMax, onSubmit } = useSip10Form({
-    account,
+    account: currentAccount,
     availableBalance,
     nonce,
     asset,
@@ -99,6 +96,7 @@ export function Sip10Form({
         name="recipient"
         render={({ field: { value, onChange } }) => (
           <Recipient
+            currentAccount={currentAccount}
             asset={asset}
             value={value}
             onChange={onChange}

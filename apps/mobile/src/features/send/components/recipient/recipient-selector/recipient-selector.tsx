@@ -16,7 +16,7 @@ import {
   useRecipientSuggestions,
 } from '@/features/send/components/recipient/use-recipient-suggestions';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
-import { type Account } from '@/store/accounts/accounts';
+import { Account } from '@/store/accounts/accounts';
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
 import { type ZodSchema } from 'zod';
@@ -26,22 +26,20 @@ import { Box, IconButton, QrCodeIcon } from '@leather.io/ui/native';
 
 interface RecipientSelectorProps {
   activity: SendAssetActivity[];
-  accounts: Account[];
-  selectedAccount: Account;
   recipientSchema: ZodSchema;
   asset: FungibleCryptoAsset;
   onSelectAddress(address: string): void;
   onQrButtonPress(source: 'toggle' | 'input'): void;
+  currentAccount: Account;
 }
 
 export function RecipientSelector({
   activity,
-  accounts,
-  selectedAccount,
   recipientSchema,
   asset,
   onSelectAddress,
   onQrButtonPress,
+  currentAccount,
 }: RecipientSelectorProps) {
   const pasteButtonEnabled = useSendPasteButton();
   const [searchTerm, setSearchTerm] = useState('');
@@ -49,9 +47,8 @@ export function RecipientSelector({
     searchTerm,
     recipientSchema,
     activity,
-    accounts,
-    selectedAccount,
     asset,
+    currentAccount,
   });
   const isPerformingSearch = normalizeSearchTerm(searchTerm).length > 0;
   const isBnsLookup = isBnsLookupCandidate(normalizeSearchTerm(searchTerm));

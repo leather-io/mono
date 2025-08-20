@@ -1,4 +1,5 @@
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
+import { useCurrentAccount } from '@/core/current-account-provider';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { Send } from '@/features/send/send';
 import { analytics } from '@/utils/analytics';
@@ -8,11 +9,14 @@ import { isString } from 'remeda';
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import { FungibleCryptoAsset } from '@leather.io/models';
 import { useHaptics } from '@leather.io/ui/native';
+import { assertExistence } from '@leather.io/utils';
 
 export function SendSheet() {
   const { sendSheetRef } = useGlobalSheets();
   const triggerHaptics = useHaptics();
-  const { accountId, asset } = useInitialSendParams();
+  const { currentAccount } = useCurrentAccount();
+  const { asset } = useInitialSendParams();
+  assertExistence(currentAccount, `"Send Sheet expects currentAccount to be set`);
 
   function handleAnimatedPositionChange(fromIndex: number, toIndex: number) {
     if (fromIndex === 0 && toIndex === -1) {
@@ -30,7 +34,7 @@ export function SendSheet() {
       onAnimate={handleAnimatedPositionChange}
       onDismiss={handleDismiss}
     >
-      <Send accountId={accountId} asset={asset} />
+      <Send currentAccount={currentAccount} asset={asset} />
     </FullHeightSheet>
   );
 }

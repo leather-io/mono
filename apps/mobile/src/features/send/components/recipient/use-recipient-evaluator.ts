@@ -2,8 +2,7 @@ import {
   isNewAddress,
   recipientSchemaResultContainsError,
 } from '@/features/send/components/recipient/recipient.utils';
-import { useAccountHelpers } from '@/features/send/components/recipient/use-shameful-account-helpers';
-import { Account } from '@/store/accounts/accounts';
+import { useAccountHelpers } from '@/features/send/components/recipient/use-account-helpers';
 import { t } from '@lingui/core/macro';
 import { ZodSchema } from 'zod';
 
@@ -103,19 +102,17 @@ export function createRecipientEvaluator({
 }
 
 interface UseRecipientEvaluatorParams {
-  accounts: Account[];
   asset: FungibleCryptoAsset;
   recipientSchema: ZodSchema;
   activity?: SendAssetActivity[];
 }
 
 export function useRecipientEvaluator({
-  accounts,
   activity = [],
   asset,
   recipientSchema,
 }: UseRecipientEvaluatorParams) {
-  const { findAccountByAddress } = useAccountHelpers(accounts, asset);
+  const { findAccountByAddress } = useAccountHelpers(asset);
 
   const evaluateRecipient = createRecipientEvaluator({
     schema: recipientSchema,

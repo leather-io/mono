@@ -10,6 +10,7 @@ import { RecipientToggle } from '@/features/send/components/recipient/recipient-
 import { useRecipientState } from '@/features/send/components/recipient/use-recipient-state';
 import { matchRelevantActivityResult } from '@/features/send/components/recipient/use-relevant-activity';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
+import { Account } from '@/store/accounts/accounts';
 import { analytics } from '@/utils/analytics';
 import { type ZodSchema } from 'zod';
 
@@ -20,66 +21,66 @@ interface RecipientProps {
   onChange(value: string): void;
   asset: FungibleCryptoAsset;
   recipientSchema: ZodSchema;
+  currentAccount: Account;
 }
 
-export const Recipient = memo(({ value, onChange, asset, recipientSchema }: RecipientProps) => {
-  const {
-    accounts,
-    selectedAccount,
-    relevantActivityResult,
-    confirmAddressSelection,
-    onSelectAddress,
-    guardResult,
-    guardSheetRef,
-    sheetRef,
-    openRecipientSheet,
-    openScannerSheet,
-    scannerSheetRef,
-    closeScannerSheet,
-    onQrScanned,
-  } = useRecipientState({ asset, recipientSchema, onChange });
+export const Recipient = memo(
+  ({ value, onChange, asset, recipientSchema, currentAccount }: RecipientProps) => {
+    const {
+      relevantActivityResult,
+      confirmAddressSelection,
+      onSelectAddress,
+      guardResult,
+      guardSheetRef,
+      sheetRef,
+      openRecipientSheet,
+      openScannerSheet,
+      scannerSheetRef,
+      closeScannerSheet,
+      onQrScanned,
+    } = useRecipientState({ asset, recipientSchema, onChange, currentAccount });
 
-  function onTogglePress() {
-    analytics.track('send_recipient_sheet_opened');
-    openRecipientSheet();
+    function onTogglePress() {
+      analytics.track('send_recipient_sheet_opened');
+      openRecipientSheet();
+    }
+
+    function onQrButtonPress(source: 'toggle' | 'input') {
+      analytics.track('send_qr_scanner_opened', { source });
+      openScannerSheet();
+    }
+
+    return (
+      <>
+        <RecipientToggle value={value} onPress={onTogglePress} onQrButtonPress={onQrButtonPress} />
+        <RecipientSheet sheetRef={sheetRef}>
+          {matchRelevantActivityResult({
+            result: relevantActivityResult,
+            loading: <SendFormLoadingSpinner />,
+            error: () => <RecipientSelectorError />,
+            success: data => (
+              <RecipientSelector
+                onQrButtonPress={onQrButtonPress}
+                asset={asset}
+                activity={data}
+                onSelectAddress={onSelectAddress}
+                recipientSchema={recipientSchema}
+                currentAccount={currentAccount}
+              />
+            ),
+          })}
+        </RecipientSheet>
+        <RecipientQrSheet sheetRef={scannerSheetRef}>
+          <RecipientQrScanner onClose={closeScannerSheet} onScanned={onQrScanned} />
+        </RecipientQrSheet>
+        <RecipientGuardSheet
+          sheetRef={guardSheetRef}
+          config={guardResult}
+          onConfirm={confirmAddressSelection}
+        />
+      </>
+    );
   }
-
-  function onQrButtonPress(source: 'toggle' | 'input') {
-    analytics.track('send_qr_scanner_opened', { source });
-    openScannerSheet();
-  }
-
-  return (
-    <>
-      <RecipientToggle value={value} onPress={onTogglePress} onQrButtonPress={onQrButtonPress} />
-      <RecipientSheet sheetRef={sheetRef}>
-        {matchRelevantActivityResult({
-          result: relevantActivityResult,
-          loading: <SendFormLoadingSpinner />,
-          error: () => <RecipientSelectorError />,
-          success: data => (
-            <RecipientSelector
-              onQrButtonPress={onQrButtonPress}
-              asset={asset}
-              activity={data}
-              accounts={accounts}
-              selectedAccount={selectedAccount}
-              onSelectAddress={onSelectAddress}
-              recipientSchema={recipientSchema}
-            />
-          ),
-        })}
-      </RecipientSheet>
-      <RecipientQrSheet sheetRef={scannerSheetRef}>
-        <RecipientQrScanner onClose={closeScannerSheet} onScanned={onQrScanned} />
-      </RecipientQrSheet>
-      <RecipientGuardSheet
-        sheetRef={guardSheetRef}
-        config={guardResult}
-        onConfirm={confirmAddressSelection}
-      />
-    </>
-  );
-});
+);
 
 Recipient.displayName = 'Recipient';

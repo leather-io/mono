@@ -1,37 +1,23 @@
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
-import { AssetType } from '@/features/receive/get-assets';
-import { ReceiveFlowProvider } from '@/features/receive/receive-flow-provider';
-import { useAccounts } from '@/store/accounts/accounts.read';
+import { ReceiveFlowProvider, ReceiveType } from '@/features/receive/receive-flow-provider';
+import { Account } from '@/store/accounts/accounts';
 
 import { ReceiveNavigator, ReceiveStack } from './navigation';
 import { AssetDetails } from './screens/asset-details';
-import { SelectAccount } from './screens/select-account';
-import { SelectAsset } from './screens/select-asset';
+import { SelectAsset, SelectedAsset } from './screens/select-asset';
 
 interface ReceiveProps {
-  accountId?: string;
-  assetType?: AssetType | undefined;
-  tokenId?: string;
+  selectedAsset?: SelectedAsset;
+  currentAccount: Account;
+  receiveType: ReceiveType;
 }
 
-export function Receive({ accountId, assetType, tokenId }: ReceiveProps) {
-  const accounts = useAccounts();
-  const selectedAccount = accounts.list.find(account => account.id === accountId);
-
+export function Receive({ currentAccount, receiveType, selectedAsset }: ReceiveProps) {
   return (
-    <ReceiveFlowProvider
-      initialData={{
-        accounts: accounts.list,
-        selectedAccount,
-      }}
-    >
+    <ReceiveFlowProvider initialData={{ currentAccount, receiveType, selectedAsset }}>
       <SheetNavigationContainer base="receive">
         <ReceiveNavigator>
-          <ReceiveStack.Screen name="select-account" component={SelectAccount} />
-          <ReceiveStack.Screen
-            name="select-asset"
-            component={() => <SelectAsset assetType={assetType} tokenId={tokenId} />}
-          />
+          <ReceiveStack.Screen name="select-asset" component={SelectAsset} />
           <ReceiveStack.Screen name="asset-details" component={AssetDetails} />
         </ReceiveNavigator>
       </SheetNavigationContainer>

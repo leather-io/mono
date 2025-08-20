@@ -10,40 +10,40 @@ import {
   normalizeSearchTerm,
 } from '@/features/send/components/recipient/recipient.utils';
 import { type Account } from '@/store/accounts/accounts';
-import { filter, isShallowEqual, map, pipe, prop, sortBy, take, uniqueBy } from 'remeda';
+import { filter, map, pipe, prop, sortBy, take, uniqueBy } from 'remeda';
 
 import { SendAssetActivity } from '@leather.io/models';
 
 export interface BuildRecipientSuggestionsParams {
   searchTerm: string;
   accounts: Account[];
-  selectedAccount: Account;
   canSelfSend: boolean;
   activity: SendAssetActivity[];
   findAccountByAddress: (address: string) => Account | null;
   getAddressByAccount: (fingerprint: string, accountIndex: number) => string | null;
   performBnsLookup: (name: string) => Promise<string | null>;
   validateAddress: (value: string) => Promise<boolean>;
+  currentAccount: Account;
 }
 
 export async function buildRecipientSuggestions({
   searchTerm,
   accounts,
-  selectedAccount,
   activity,
   canSelfSend,
   findAccountByAddress,
   getAddressByAccount,
   performBnsLookup,
   validateAddress,
+  currentAccount,
 }: BuildRecipientSuggestionsParams): Promise<RecipientSection[]> {
   const normalizedSearchTerm = normalizeSearchTerm(searchTerm);
   const recentEntries = getRecents({ activity, findAccountByAddress });
   const accountEntries = getAccounts({
     accounts,
-    selectedAccount,
     canSelfSend,
     getAddressByAccount,
+    currentAccount,
   });
 
   function getSearchResults() {
@@ -128,20 +128,20 @@ export function getRecents({
 
 interface GetAccountsParams {
   accounts: Account[];
-  selectedAccount: Account;
   getAddressByAccount: (fingerprint: string, accountIndex: number) => string | null;
   canSelfSend: boolean;
+  currentAccount: Account;
 }
 
 export function getAccounts({
   accounts,
-  selectedAccount,
   getAddressByAccount,
   canSelfSend,
+  currentAccount,
 }: GetAccountsParams): InternalRecipientSuggestionEntry[] {
   return pipe(
     accounts,
-    filter(account => canSelfSend || !isShallowEqual(account, selectedAccount)),
+    filter(account => canSelfSend || account.id !== currentAccount.id),
     map(account => ({
       type: 'internal' as const,
       id: account.id,

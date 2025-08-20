@@ -1,13 +1,13 @@
 import { Balance } from '@/components/balance/balance';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AssetType } from '@/features/receive/get-assets';
+import { ReceiveType } from '@/features/receive/receive-flow-provider';
 import { useCopyAddress } from '@/hooks/use-copy-address';
 import { Account } from '@/store/accounts/accounts';
-import { router } from 'expo-router';
 
 import { Money } from '@leather.io/models';
 import { Box, Cell, HasChildren, Text } from '@leather.io/ui/native';
-import { truncateMiddle } from '@leather.io/utils';
+import { match, truncateMiddle } from '@leather.io/utils';
 
 import { accountIconMap } from '../../account/components/account-avatar';
 import { TokenDetailsCard } from './token-details-card';
@@ -37,10 +37,11 @@ interface AddressListItemProps {
   quoteBalance?: Money;
 }
 
+const assetTypeMatch = match<AssetType>();
 export function AddressListItem({
   address,
-  assetType,
   name,
+  assetType,
   availableBalance,
   quoteBalance,
 }: AddressListItemProps) {
@@ -49,10 +50,13 @@ export function AddressListItem({
   const onCopyAddress = useCopyAddress();
 
   function openReceiveSheet() {
-    router.setParams({
-      assetType,
+    const receiveType = assetTypeMatch<ReceiveType>(assetType, {
+      stacks: 'stacks',
+      taproot: 'taproot',
+      native_segwit: 'native-segwit',
     });
-    receiveSheetRef.current?.present();
+
+    receiveSheetRef.current?.present(receiveType);
   }
   return (
     <Cell.Root pressable={true} onPress={openReceiveSheet} mx="-5">

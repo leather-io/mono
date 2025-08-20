@@ -22,7 +22,6 @@ import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
-import { destructAccountIdentifier } from '@/store/utils';
 import { analytics } from '@/utils/analytics';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
@@ -36,14 +35,16 @@ interface StacksTxSignerProps {
   txHex: string;
   onEdit(): void;
   onSuccess(): void;
-  accountId: string;
+  fingerprint: string;
+  accountIndex: number;
 }
 
 export function StacksTxSigner({
   txHex: _txHex,
   onEdit,
   onSuccess,
-  accountId,
+  fingerprint,
+  accountIndex,
 }: StacksTxSignerProps) {
   const stacksNetwork = useNetworkPreferenceStacksNetwork();
   const [txHex, setTxHex] = useState(_txHex);
@@ -61,7 +62,6 @@ export function StacksTxSigner({
   const principalSpend = createMoney(tx.payload.amount, 'STX');
   const totalSpend = getTotalSpendMoney(tx.payload, tx.auth.spendingCondition.fee);
   const totalSpendQuote = baseCurrencyAmountInQuoteWithFallback(totalSpend, stxMarketData);
-  const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
   const signer = useStacksSigners().fromAccountIndex(fingerprint, accountIndex)[0];
   assertStacksSigner(signer);
 

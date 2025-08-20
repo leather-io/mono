@@ -4,10 +4,11 @@ import { SendFormLoadingSpinner } from '@/features/send/components/send-form-lay
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
+import { Account } from '@/store/accounts/accounts';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { AccountId, MarketData, Money } from '@leather.io/models';
+import { MarketData, Money } from '@leather.io/models';
 
 interface StxData {
   availableBalance: Money;
@@ -16,7 +17,8 @@ interface StxData {
   marketData: MarketData;
 }
 
-function useStxData({ fingerprint, accountIndex }: AccountId): FetchState<StxData> {
+function useStxData(account: Account): FetchState<StxData> {
+  const { fingerprint, accountIndex } = account;
   const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
   const balance = useStxAccountBalance(fingerprint, accountIndex);
   const marketData = useStxMarketDataQuery();
@@ -50,8 +52,8 @@ function useStxData({ fingerprint, accountIndex }: AccountId): FetchState<StxDat
 }
 
 interface StxDataLoaderProps {
-  account: AccountId;
   children(data: StxData): React.ReactNode;
+  account: Account;
 }
 
 export function StxDataLoader({ account, children }: StxDataLoaderProps) {

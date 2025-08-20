@@ -4,10 +4,11 @@ import {
   getLookupHelperByChain,
   recipientSchemaResultContainsError,
 } from '@/features/send/components/recipient/recipient.utils';
-import { useAccountHelpers } from '@/features/send/components/recipient/use-shameful-account-helpers';
+import { useAccountHelpers } from '@/features/send/components/recipient/use-account-helpers';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useBnsV2Client } from '@/queries/stacks/bns/bns-v2-client';
 import { Account } from '@/store/accounts/accounts';
+import { useAccounts } from '@/store/accounts/accounts.read';
 import { UseQueryResult, keepPreviousData, useQuery } from '@tanstack/react-query';
 import { ZodSchema } from 'zod';
 
@@ -16,25 +17,24 @@ import { FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
 interface UseRecipientSuggestionsParams {
   searchTerm: string;
   activity: SendAssetActivity[];
-  accounts: Account[];
-  selectedAccount: Account;
   recipientSchema: ZodSchema;
   asset: FungibleCryptoAsset;
+  currentAccount: Account;
 }
 
 export function useRecipientSuggestions({
   searchTerm,
   activity,
-  accounts,
-  selectedAccount,
   asset,
   recipientSchema,
+  currentAccount,
 }: UseRecipientSuggestionsParams) {
   const debounceDelay = searchTerm.length === 0 ? 0 : 500;
   const debouncedSearchTerm = useDebouncedValue(searchTerm, debounceDelay);
-  const { getAddressByAccount, findAccountByAddress } = useAccountHelpers(accounts, asset);
+  const { getAddressByAccount, findAccountByAddress } = useAccountHelpers(asset);
   const bnsV2Client = useBnsV2Client();
   const bnsLookupHelper = getLookupHelperByChain(asset);
+  const { list: accounts } = useAccounts();
 
   return useQuery({
     queryKey: ['recipient-suggestions', debouncedSearchTerm],
@@ -43,7 +43,7 @@ export function useRecipientSuggestions({
       buildRecipientSuggestions({
         searchTerm: debouncedSearchTerm,
         accounts,
-        selectedAccount,
+        currentAccount,
         activity,
         getAddressByAccount,
         findAccountByAddress,

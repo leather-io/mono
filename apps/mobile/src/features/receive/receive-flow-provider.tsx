@@ -3,23 +3,18 @@ import { ReactNode, createContext, useContext, useReducer } from 'react';
 import { SelectedAsset } from '@/features/receive/screens/select-asset';
 import { Account } from '@/store/accounts/accounts';
 
-import { isDefined } from '@leather.io/utils';
+export type ReceiveType = 'stacks' | 'bitcoin' | 'native-segwit' | 'taproot' | 'all';
 
 interface ReceiveState {
-  selectedAccount: Account | null;
   selectedAsset: SelectedAsset | null;
-  accounts: Account[];
+  currentAccount: Account;
+  receiveType: ReceiveType;
 }
 
-type Action =
-  | { type: 'SET_ACCOUNT'; payload: Account }
-  | { type: 'SET_ASSET'; payload: SelectedAsset }
-  | { type: 'RESET' };
+type Action = { type: 'SET_ASSET'; payload: SelectedAsset } | { type: 'RESET' };
 
 function reducer(state: ReceiveState, action: Action) {
   switch (action.type) {
-    case 'SET_ACCOUNT':
-      return { ...state, selectedAccount: action.payload };
     case 'SET_ASSET':
       return { ...state, selectedAsset: action.payload };
     default:
@@ -27,35 +22,22 @@ function reducer(state: ReceiveState, action: Action) {
   }
 }
 
-interface InitializerParams {
-  accounts: Account[];
-  selectedAccount?: Account;
+interface InitialData {
   selectedAsset?: SelectedAsset;
+  currentAccount: Account;
+  receiveType: ReceiveType;
 }
 
-function initializer({
-  accounts,
-  selectedAccount,
-  selectedAsset,
-}: InitializerParams): ReceiveState {
-  if (accounts.length === 1 && isDefined(accounts[0])) {
-    return {
-      selectedAccount: accounts[0],
-      selectedAsset: null,
-      accounts,
-    };
-  }
-
+function initializer({ selectedAsset, currentAccount, receiveType }: InitialData): ReceiveState {
   return {
-    selectedAccount: selectedAccount ?? null,
     selectedAsset: selectedAsset ?? null,
-    accounts,
+    currentAccount,
+    receiveType,
   };
 }
 
 interface ReceiveFlowContextValue {
   state: ReceiveState;
-  selectAccount(account: Account | null): void;
   selectAsset(asset: SelectedAsset | null): void;
 }
 
@@ -63,26 +45,18 @@ const ReceiveFlowContext = createContext<ReceiveFlowContextValue | null>(null);
 
 interface ReceiveProviderProps {
   children: ReactNode;
-  initialData: {
-    accounts: Account[];
-    selectedAccount?: Account;
-    selectedAsset?: SelectedAsset;
-  };
+  initialData: InitialData;
 }
 
 export function ReceiveFlowProvider({ initialData, children }: ReceiveProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialData, initializer);
-
-  function selectAccount(account: Account) {
-    dispatch({ type: 'SET_ACCOUNT', payload: account });
-  }
 
   function selectAsset(asset: SelectedAsset) {
     dispatch({ type: 'SET_ASSET', payload: asset });
   }
 
   return (
-    <ReceiveFlowContext.Provider value={{ state, selectAccount, selectAsset }}>
+    <ReceiveFlowContext.Provider value={{ state, selectAsset }}>
       {children}
     </ReceiveFlowContext.Provider>
   );
