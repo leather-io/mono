@@ -32,6 +32,8 @@ import * as Sentry from '@sentry/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import * as Linking from 'expo-linking';
+import { router } from 'expo-router';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -66,6 +68,40 @@ function App() {
 
   useEffect(() => {
     void trackFirstAppOpen();
+  }, []);
+
+  // Handle deep links for .locker magic links
+  useEffect(() => {
+    const handleDeepLink = (url: string) => {
+      const parsed = Linking.parse(url);
+
+      // Check if it's a .locker domain, leather.io, or any other URL we want to open in browser
+      if (
+        parsed.hostname === 'app.my.locker' ||
+        parsed.hostname === 'leather.io' ||
+        parsed.queryParams?.openInBrowser
+      ) {
+        // Navigate to browser tab with the full URL
+        router.push({
+          pathname: '/(tabs)/browser',
+          params: { url: url },
+        });
+      }
+    };
+
+    // Handle app opened from closed state
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        handleDeepLink(url);
+      }
+    });
+
+    // Handle app opened from background
+    const subscription = Linking.addEventListener('url', ({ url }) => {
+      handleDeepLink(url);
+    });
+
+    return () => subscription?.remove();
   }, []);
 
   return (
