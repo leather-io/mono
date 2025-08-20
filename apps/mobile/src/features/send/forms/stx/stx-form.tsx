@@ -10,7 +10,6 @@ import { SendFormContainer, SendFormFooter } from '@/features/send/components/se
 import { locale } from '@/features/send/constants';
 import { useStxForm } from '@/features/send/forms/stx/use-stx-form';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { Account } from '@/store/accounts/accounts';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
@@ -22,7 +21,6 @@ import { isNumber } from '@leather.io/utils';
 const asset = stxAsset;
 
 interface StxFormProps {
-  account: Account;
   availableBalance: Money;
   quoteBalance: Money;
   nonce: number | undefined;
@@ -40,17 +38,16 @@ export function StxForm({
   marketData,
   nonce,
   onOpenAssetPicker,
-  account,
 }: StxFormProps) {
   const {
-    state: { inputCurrencyMode },
+    state: { inputCurrencyMode, currentAccount },
   } = useSendFlowContext();
   const currency = whenInputCurrencyMode(inputCurrencyMode)({
     crypto: asset.symbol,
     quote: quoteCurrency,
   });
   const { form, schema, maxSpend, onSetMax, onSubmit } = useStxForm({
-    account,
+    account: currentAccount,
     availableBalance,
     nonce,
   });
@@ -95,6 +92,7 @@ export function StxForm({
             value={value}
             onChange={onChange}
             recipientSchema={schema.shape.recipient}
+            currentAccount={currentAccount}
           />
         )}
       />

@@ -2,34 +2,28 @@ import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 import { SendNavigator, SendStack } from '@/features/send/navigation';
 import { Approval } from '@/features/send/screens/approval';
 import { Form } from '@/features/send/screens/form';
-import { SelectAccount } from '@/features/send/screens/select-account';
 import { SelectAsset } from '@/features/send/screens/select-asset';
 import { SendFlowProvider } from '@/features/send/send-flow-provider';
-import { useAccounts } from '@/store/accounts/accounts.read';
+import { Account } from '@/store/accounts/accounts';
 
 import { FungibleCryptoAsset } from '@leather.io/models';
 
 interface SendProps {
-  accountId?: string;
   asset?: FungibleCryptoAsset;
+  currentAccount: Account;
 }
 
-export function Send({ accountId, asset }: SendProps) {
-  const accounts = useAccounts();
-  const selectedAccount = accounts.list.find(account => account.id === accountId);
-
+export function Send({ asset, currentAccount }: SendProps) {
   return (
     <SendFlowProvider
       initialData={{
-        accounts: accounts.list,
-        selectedAccount,
         selectedAsset: asset,
+        currentAccount,
       }}
     >
       <SheetNavigationContainer base="send">
         <SendNavigator>
           <SendStack.Screen name="select-asset" component={SelectAsset} />
-          <SendStack.Screen name="select-account" component={SelectAccount} />
           <SendStack.Screen name="form" component={Form} />
           <SendStack.Screen name="approval" component={Approval} />
         </SendNavigator>

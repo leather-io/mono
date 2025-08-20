@@ -28,7 +28,7 @@ import { AccountCard } from '../components/account-card';
 
 interface AccountSelectorSheetLayoutProps {
   accounts: Account[];
-  onAccountPress: (accountId: string) => void;
+  onAccountPress: (account: Account) => void;
   swapAccountIndexes: (from: number, to: number) => void;
   sheetRef: SheetRef;
 }
@@ -79,7 +79,7 @@ export function AccountSelectorSheetLayout({
                 cardsLength={accounts.length}
                 key={account.id}
                 cardId={account.id}
-                onCardPress={() => onAccountPress(account.id)}
+                onCardPress={() => onAccountPress(account)}
                 swapCardIndexes={swapAccountIndexes}
                 // TODO: disable reorder for now before the release
                 disableReorder

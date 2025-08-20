@@ -8,9 +8,14 @@ import { filter, isDefined, isShallowEqual, pipe } from 'remeda';
 import { Activity, FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
 import { getActivityService } from '@leather.io/services';
 
-export function useRelevantActivity(account: Account, asset: FungibleCryptoAsset) {
-  const { fingerprint, accountIndex } = account;
+interface UseRelevantActivityProps {
+  asset: FungibleCryptoAsset;
+  currentAccount: Account;
+}
+
+export function useRelevantActivity({ asset, currentAccount }: UseRelevantActivityProps) {
   const { fiatCurrencyPreference } = useSettings();
+  const { fingerprint, accountIndex } = currentAccount;
   const accountAddresses = useAccountAddresses(fingerprint, accountIndex);
 
   // TODO: Duplicate of useActivityQuery with the same key but different selection.

@@ -12,10 +12,8 @@ import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 import { isDefined } from 'remeda';
 
-import { assertExistence } from '@leather.io/utils';
-
 import { ReceiveAssetItem } from '../components/receive-asset-item';
-import { AssetType, getAssets } from '../get-assets';
+import { getAssets } from '../get-assets';
 import { useReceiveNavigation, useReceiveRoute } from '../navigation';
 import { useSelectAssets } from '../use-select-assets';
 
@@ -27,50 +25,41 @@ export interface SelectedAsset {
   description: string;
 }
 
-interface SelectAssetProps {
-  assetType?: AssetType;
-  tokenId?: string;
-}
-export function SelectAsset({ assetType, tokenId }: SelectAssetProps) {
+export function SelectAsset() {
   const { navigate, goBack } = useReceiveNavigation();
   const route = useReceiveRoute<'select-asset'>();
   const {
     selectAsset,
-    state: { selectedAccount },
+    state: { currentAccount, receiveType },
   } = useReceiveFlowContext();
   const canGoBack = route.params?.previousRoute === 'select-account';
 
-  assertExistence(selectedAccount, "'Select asset' screen expects `selectedAccount` to exist.");
-
-  const selectedAssets = useSelectAssets({ selectedAccount, tokenId, assetType });
+  const selectedAssets = useSelectAssets({ currentAccount, receiveType });
   useEffect(() => {
     // BTC users need to choose taproot or native segwit address
     if (isDefined(selectedAssets) && selectedAssets.length === 1) {
-      navigate('asset-details', { asset: selectedAssets[0]!, accountName: selectedAccount?.name });
+      navigate('asset-details', { asset: selectedAssets[0]!, accountName: currentAccount.name });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function onSelectAsset(asset: SelectedAsset) {
     selectAsset(asset);
-    if (selectedAccount) {
-      navigate('asset-details', {
-        asset,
-        accountName: selectedAccount?.name,
-        previousRoute: 'select-asset',
-      });
-    }
+    navigate('asset-details', {
+      asset,
+      accountName: currentAccount.name,
+      previousRoute: 'select-asset',
+    });
   }
 
-  const { nativeSegwitPayerAddress, taprootPayerAddress } =
-    useBitcoinPayerAddressFromAccountIndex(
-      selectedAccount.fingerprint,
-      selectedAccount.accountIndex
-    ) ?? '';
+  const { nativeSegwitPayerAddress, taprootPayerAddress } = useBitcoinPayerAddressFromAccountIndex(
+    currentAccount.fingerprint,
+    currentAccount.accountIndex
+  );
   const stxAddress =
     useStacksSignerAddressFromAccountIndex(
-      selectedAccount.fingerprint,
-      selectedAccount.accountIndex
+      currentAccount.fingerprint,
+      currentAccount.accountIndex
     ) ?? '';
 
   const assets = getAssets({ nativeSegwitPayerAddress, taprootPayerAddress, stxAddress });

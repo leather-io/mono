@@ -1,5 +1,6 @@
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
+import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
@@ -8,6 +9,7 @@ import { Box, Eye1ClosedIcon, Eye1Icon, IconButton, SettingsGearIcon } from '@le
 export function HeaderActions() {
   const router = useRouter();
   const { changePrivacyModePreference, privacyModePreference } = useSettings();
+  const { hasWallets } = useWallets();
 
   function onUpdatePrivacyMode() {
     changePrivacyModePreference(privacyModePreference === 'visible' ? 'hidden' : 'visible');
@@ -15,12 +17,14 @@ export function HeaderActions() {
 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="center">
-      <IconButton
-        label={getPrivacyLabel(privacyModePreference)}
-        icon={privacyModePreference === 'visible' ? <Eye1Icon /> : <Eye1ClosedIcon />}
-        onPress={() => onUpdatePrivacyMode()}
-        testID={TestId.homePrivacyButton}
-      />
+      {hasWallets && (
+        <IconButton
+          label={getPrivacyLabel(privacyModePreference)}
+          icon={privacyModePreference === 'visible' ? <Eye1Icon /> : <Eye1ClosedIcon />}
+          onPress={() => onUpdatePrivacyMode()}
+          testID={TestId.homePrivacyButton}
+        />
+      )}
 
       <IconButton
         label={t`Settings`}

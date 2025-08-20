@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
 import { GetAddressesApproverLayout } from '@/features/approver/layouts/get-addresses.layout';
+import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userConnectsApp } from '@/store/apps/apps.write';
 import { App } from '@/store/apps/utils';
@@ -71,8 +72,8 @@ export function GetAddressesApprover(props: GetAddressesApproverProps) {
   function onOpenAccountSelection() {
     accountSelecterSheetRef.current?.present();
   }
-  function onAccountPress(accountId: string) {
-    setSelectedAccountId(accountId);
+  function onAccountPress(account: Account) {
+    setSelectedAccountId(account.id);
     accountSelecterSheetRef.current?.close();
   }
   return (

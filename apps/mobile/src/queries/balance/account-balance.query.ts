@@ -66,3 +66,47 @@ export function useAccountBalance(accountId: AccountId): AccountBalance {
     }),
   };
 }
+
+export function useAccountUnlockedBalance(accountId: AccountId): AccountBalance {
+  const { fingerprint, accountIndex } = accountId;
+  const { fiatCurrencyPreference } = useSettings();
+  const zeroMoneyQuote = createMoney(0, fiatCurrencyPreference);
+
+  const btcAccountBalance = useBtcAccountBalance(fingerprint, accountIndex);
+  const stxAccountBalance = useStxAccountBalance(fingerprint, accountIndex);
+  const sip10AccountBalance = useSip10AccountBalance(fingerprint, accountIndex);
+  const runesAccountBalance = useRunesAccountBalance(fingerprint, accountIndex);
+
+  const isLoading =
+    btcAccountBalance.state === 'loading' &&
+    stxAccountBalance.state === 'loading' &&
+    sip10AccountBalance.state === 'loading' &&
+    runesAccountBalance.state === 'loading';
+  const isError =
+    btcAccountBalance.state === 'error' &&
+    stxAccountBalance.state === 'error' &&
+    sip10AccountBalance.state === 'error' &&
+    runesAccountBalance.state === 'error';
+  const accountBalance = sumMoney(
+    [
+      zeroMoneyQuote,
+      btcAccountBalance.value?.quote.availableBalance,
+      stxAccountBalance.value?.quote.availableUnlockedBalance,
+      sip10AccountBalance.value?.quote.availableBalance,
+      runesAccountBalance.value?.quote.availableBalance,
+    ].filter(isDefined)
+  );
+
+  return {
+    btc: btcAccountBalance,
+    stx: stxAccountBalance,
+    sip10: sip10AccountBalance,
+    runes: runesAccountBalance,
+    totalBalance: toFetchState({
+      isLoading,
+      data: accountBalance,
+      isError,
+      error: new Error('Error loading balance data'),
+    }),
+  };
+}

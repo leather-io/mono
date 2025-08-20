@@ -1,8 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { serializeCollectibles } from './collectibles-serializer';
+import { NonFungibleCryptoAsset } from '@leather.io/models';
+import { CollectibleCardProps } from '@leather.io/ui/native';
+
+import { serializeCollectible } from './collectibles-serializer';
 import { mockCollectibles } from './collectibles.mocks';
 import { formatInsciptionName, isValidInscription, isValidSip9 } from './collectibles.utils';
+
+function serializeCollectibles(collectibles: NonFungibleCryptoAsset[]) {
+  return collectibles.map(serializeCollectible) as CollectibleCardProps[];
+}
 
 // Mock @lingui/macro
 vi.mock('@lingui/macro', () => ({

@@ -12,23 +12,23 @@ import { Sip10DataLoader } from '../forms/stx/sip10-loader';
 
 interface FormLayoutProps {
   selectedAsset: FungibleCryptoAsset;
-  selectedAccount: Account;
+  currentAccount: Account;
   handleOpenAssetPicker(): void;
   assetItemElementInitialOffset: number | null | undefined;
 }
 
 export function FormLayout({
   selectedAsset,
-  selectedAccount,
   handleOpenAssetPicker,
   assetItemElementInitialOffset,
+  currentAccount,
 }: FormLayoutProps) {
   const { fiatCurrencyPreference } = useSettings();
 
   switch (selectedAsset.protocol) {
     case 'nativeBtc':
       return (
-        <BtcDataLoader account={selectedAccount}>
+        <BtcDataLoader account={currentAccount}>
           {({ availableBalance, quoteBalance, feeRates, utxos, marketData }) => {
             return (
               <BtcForm
@@ -38,7 +38,6 @@ export function FormLayout({
                 quoteBalance={quoteBalance}
                 feeRates={feeRates}
                 utxos={utxos}
-                account={selectedAccount}
                 assetItemAnimationOffsetTop={assetItemElementInitialOffset}
                 onOpenAssetPicker={handleOpenAssetPicker}
               />
@@ -48,11 +47,10 @@ export function FormLayout({
       );
     case 'nativeStx':
       return (
-        <StxDataLoader account={selectedAccount}>
+        <StxDataLoader account={currentAccount}>
           {({ availableBalance, quoteBalance, marketData, nonce }) => {
             return (
               <StxForm
-                account={selectedAccount}
                 marketData={marketData}
                 availableBalance={availableBalance}
                 quoteBalance={quoteBalance}
@@ -67,11 +65,10 @@ export function FormLayout({
       );
     case 'sip10':
       return (
-        <Sip10DataLoader account={selectedAccount} asset={selectedAsset}>
+        <Sip10DataLoader account={currentAccount} asset={selectedAsset}>
           {({ balance, marketData, nonce }) => {
             return (
               <Sip10Form
-                account={selectedAccount}
                 asset={selectedAsset}
                 marketData={marketData}
                 availableBalance={balance.crypto.availableBalance}

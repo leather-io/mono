@@ -20,19 +20,21 @@ import {
   Text,
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
+import { assertExistence } from '@leather.io/utils';
 
 import { useReceiveNavigation, useReceiveRoute } from '../navigation';
+import { useReceiveFlowContext } from '../receive-flow-provider';
 
 export function AssetDetails() {
   const route = useReceiveRoute<'asset-details'>();
   const navigation = useReceiveNavigation();
   // Don't allow going back from token-details screen
-  const canGoBack =
-    route.params?.previousRoute === 'select-asset' ||
-    route.params?.previousRoute === 'select-account';
-  const asset = route.params.asset;
-  const accountName = route.params.accountName;
-  const { name, address, addressType, description } = asset;
+  const canGoBack = route.params?.previousRoute === 'select-asset';
+  const {
+    state: { selectedAsset, currentAccount },
+  } = useReceiveFlowContext();
+  assertExistence(selectedAsset, 'selectedAsset should be set in AssetDetails');
+  const { name, address, addressType, description } = selectedAsset;
   const onCopyAddress = useCopyAddress();
 
   function handleCopyAddress() {
@@ -50,7 +52,7 @@ export function AssetDetails() {
       header={
         <FullHeightSheetHeader
           title={t`Receive`}
-          subtitle={accountName}
+          subtitle={currentAccount.name}
           leftElement={
             canGoBack ? (
               <HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />

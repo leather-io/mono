@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
+import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
@@ -66,8 +67,8 @@ export function SignMessageApprover(props: SignMessageApproverProps) {
   function onOpenAccountSelection() {
     accountSelecterSheetRef.current?.present();
   }
-  function onAccountPress(accountId: string) {
-    setSelectedAccountId(accountId);
+  function onAccountPress(account: Account) {
+    setSelectedAccountId(account.id);
     accountSelecterSheetRef.current?.close();
   }
   return (

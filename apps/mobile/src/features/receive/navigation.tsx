@@ -21,13 +21,12 @@ export const ReceiveStack = createStackNavigator<ReceiveStackParamList>();
 
 export function ReceiveNavigator({ children }: HasChildren) {
   const {
-    state: { selectedAccount, selectedAsset, accounts },
+    state: { selectedAsset },
   } = useReceiveFlowContext();
   const theme = useTheme();
+
   const initialRouteName = getInitialRouteName({
-    selectedAccount,
     selectedAsset,
-    totalAccountNumber: accounts.length,
   });
 
   return (
@@ -58,23 +57,10 @@ export function useReceiveNavigation() {
 }
 
 interface GetInitialRouteParams {
-  selectedAccount: Account | null;
   selectedAsset: SelectedAsset | null;
-  totalAccountNumber: number;
 }
 
-function getInitialRouteName({
-  selectedAccount,
-  selectedAsset,
-  totalAccountNumber,
-}: GetInitialRouteParams): ReceiveRouteKey {
-  if (!selectedAccount) {
-    return totalAccountNumber > 1 ? 'select-account' : 'select-asset';
-  }
-
-  if (!selectedAsset) {
-    return 'select-asset';
-  }
-
-  return 'asset-details';
+function getInitialRouteName({ selectedAsset }: GetInitialRouteParams): ReceiveRouteKey {
+  if (selectedAsset) return 'asset-details';
+  return 'select-asset';
 }

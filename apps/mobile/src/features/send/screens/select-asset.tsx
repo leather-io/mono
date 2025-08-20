@@ -13,33 +13,32 @@ import { FungibleCryptoAsset } from '@leather.io/models';
 export function SelectAsset() {
   const { navigate } = useSendNavigation();
   const {
-    state: { selectedAccount },
     selectAsset,
+    state: { currentAccount },
   } = useSendFlowContext();
+  const { fingerprint, accountIndex } = currentAccount;
   // Preload relevant data to ensure smooth transition animation to form screen
-  usePreloadBtcData(selectedAccount);
-  usePreloadStxData(selectedAccount);
+  usePreloadBtcData(currentAccount);
+  usePreloadStxData(currentAccount);
 
   function handleSelectAsset(asset: FungibleCryptoAsset, assetItemElementOffsetTop: number | null) {
     analytics.track('send_asset_selected', { asset: asset.symbol });
     selectAsset(asset);
-    if (selectedAccount) {
-      navigate('form', {
-        previousRoute: 'select-asset',
-        assetItemElementInitialOffset: assetItemElementOffsetTop,
-      });
-    } else {
-      navigate('select-account', {
-        previousRoute: 'select-asset',
-      });
-    }
+    navigate('form', {
+      previousRoute: 'select-asset',
+      assetItemElementInitialOffset: assetItemElementOffsetTop,
+    });
   }
 
   return (
     <FullHeightSheetLayout
       header={<FullHeightSheetHeader title={t`Select asset`} subtitle={t`Send`} />}
     >
-      <AssetPicker account={selectedAccount} onSelectAsset={handleSelectAsset} />
+      <AssetPicker
+        fingerprint={fingerprint}
+        accountIndex={accountIndex}
+        onSelectAsset={handleSelectAsset}
+      />
     </FullHeightSheetLayout>
   );
 }

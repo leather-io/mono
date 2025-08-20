@@ -6,33 +6,34 @@ import {
   useRecipientEvaluator,
 } from '@/features/send/components/recipient/use-recipient-evaluator';
 import { useRelevantActivity } from '@/features/send/components/recipient/use-relevant-activity';
-import { useSendFlowContext } from '@/features/send/send-flow-provider';
+import { Account } from '@/store/accounts/accounts';
 import type { ZodSchema } from 'zod';
 
 import { FungibleCryptoAsset, SupportedBlockchains } from '@leather.io/models';
 import { SheetInstance } from '@leather.io/ui/native';
-import { assertExistence } from '@leather.io/utils';
 
 interface UseRecipientStateParams {
   recipientSchema: ZodSchema;
   asset: FungibleCryptoAsset;
   onChange: (address: string) => void;
+  currentAccount: Account;
 }
 
-export function useRecipientState({ asset, recipientSchema, onChange }: UseRecipientStateParams) {
+export function useRecipientState({
+  asset,
+  recipientSchema,
+  onChange,
+  currentAccount,
+}: UseRecipientStateParams) {
   const sheetRef = useRef<SheetInstance>(null);
   const guardSheetRef = useRef<SheetInstance>(null);
   const scannerSheetRef = useRef<SheetInstance>(null);
-  const {
-    state: { accounts, selectedAccount },
-  } = useSendFlowContext();
-  assertExistence(selectedAccount, "'selectedAccount' is required in the recipient flow");
-  const relevantActivityResult = useRelevantActivity(selectedAccount, asset);
+
+  const relevantActivityResult = useRelevantActivity({ asset, currentAccount });
   const [guardResult, setGuardResult] = useState<GuardResult>({ severity: 'none' });
   const { evaluateRecipient } = useRecipientEvaluator({
     recipientSchema,
     activity: relevantActivityResult.value,
-    accounts,
     asset,
   });
 
@@ -98,8 +99,6 @@ export function useRecipientState({ asset, recipientSchema, onChange }: UseRecip
     confirmAddressSelection,
     onSelectAddress,
     onQrScanned,
-    accounts,
-    selectedAccount,
     relevantActivityResult,
     openRecipientSheet,
     closeRecipientSheet,

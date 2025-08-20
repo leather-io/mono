@@ -79,12 +79,6 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
                   iconTestID={defaultIconTestId(account.icon)}
                   primaryTitle={account.name}
                   caption={wallet.name}
-                  onPress={() => {
-                    router.navigate({
-                      pathname: '/account/[accountId]',
-                      params: { accountId: account.id },
-                    });
-                  }}
                 />
               )}
             </WalletLoader>

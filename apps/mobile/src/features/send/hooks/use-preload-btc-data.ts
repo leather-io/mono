@@ -6,11 +6,10 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { getUtxosService } from '@leather.io/services';
 
-export function usePreloadBtcData(account: Account | null) {
+export function usePreloadBtcData(account: Account) {
   useAverageBitcoinFeeRates();
   useBtcMarketDataQuery();
-  const enabled = account !== null;
-  const { accountIndex, fingerprint } = account ?? { accountIndex: 0, fingerprint: '' };
+  const { fingerprint, accountIndex } = account;
   const accountAddresses = useAccountAddresses(fingerprint, accountIndex);
 
   useQuery({
@@ -23,6 +22,5 @@ export function usePreloadBtcData(account: Account | null) {
     retryOnMount: false,
     staleTime: 30 * 1000,
     gcTime: 30 * 1000,
-    enabled,
   });
 }

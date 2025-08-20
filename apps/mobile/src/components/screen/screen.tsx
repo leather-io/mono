@@ -7,6 +7,8 @@ import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
 
 import { Box, BoxProps, HasChildren, Text } from '@leather.io/ui/native';
 
+import { ScreenFlashlist } from './screen-flashlist';
+
 export function Screen(props: BoxProps) {
   return (
     <ScreenScrollProvider>
@@ -43,4 +45,5 @@ Screen.Footer = Footer;
 Screen.Header = ScreenHeader;
 Screen.HeaderAnimationTarget = ScreenHeaderAnimationTarget;
 Screen.ScrollView = ScreenScrollView;
+Screen.FlashList = ScreenFlashlist;
 Screen.List = ScreenList;

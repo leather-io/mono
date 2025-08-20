@@ -15,7 +15,7 @@ export function CollectibleImage({ alt, source, size = 200 }: CollectibleImagePr
   }
 
   return (
-    <Box width={size} height={size} borderRadius="lg" overflow="hidden">
+    <Box width={size} height={size} overflow="hidden">
       <Image source={{ uri: source }} alt={alt} style={{ width: '100%', height: '100%' }} />
     </Box>
   );
@@ -26,7 +26,6 @@ function BnsImage({ alt, source, size = 200 }: CollectibleImageProps) {
     <Box
       width={size}
       height={size}
-      borderRadius="lg"
       overflow="hidden"
       bg="ink.background-secondary"
       position="relative"

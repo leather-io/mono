@@ -15,11 +15,12 @@ export function Approval() {
   const route = useSendRoute<'approval'>();
   const txHex = route.params.hex;
   const {
-    state: { selectedAsset, selectedAccount },
+    state: { selectedAsset, currentAccount },
   } = useSendFlowContext();
+  const { fingerprint, accountIndex, id: accountId } = currentAccount;
   const { sendSheetRef } = useGlobalSheets();
 
-  if (!selectedAsset || !selectedAccount || !txHex) {
+  if (!selectedAsset || !txHex) {
     // TODO: This only can happen due to developer error. Find the best way to log & represent this.
     return null;
   }
@@ -30,8 +31,8 @@ export function Approval() {
       {selectedAsset.protocol === 'nativeBtc' && (
         <PsbtSigner
           feeEditorEnabled
-          accountIndex={selectedAccount.accountIndex}
-          fingerprint={selectedAccount.fingerprint}
+          fingerprint={fingerprint}
+          accountIndex={accountIndex}
           broadcast
           psbtHex={txHex}
           onBack={goBack}
@@ -47,7 +48,8 @@ export function Approval() {
           onSuccess={() => {
             sendSheetRef.current?.close();
           }}
-          accountId={selectedAccount.id}
+          fingerprint={fingerprint}
+          accountIndex={accountIndex}
         />
       )}
       {selectedAsset.protocol === 'sip10' && (
@@ -57,7 +59,7 @@ export function Approval() {
           onSuccess={() => {
             sendSheetRef.current?.close();
           }}
-          accountId={selectedAccount.id}
+          accountId={accountId}
         />
       )}
     </>
