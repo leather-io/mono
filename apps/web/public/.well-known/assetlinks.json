@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "scheme": "leather",
+    "ios": {
+      "associatedDomains": ["applinks:app.my.locker", "applinks:leather.io"],
+      "bundleIdentifier": "io.leather.mobilewallet"
+    },
+    "android": {
+      "package": "io.leather.wallet",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "category": ["DEFAULT", "BROWSABLE"],
+          "data": {
+            "scheme": "https",
+            "host": "app.my.locker"
+          }
+        }
+      ]
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
