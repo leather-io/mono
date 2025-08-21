@@ -10,28 +10,50 @@ permissions:
   pull-requests: write
 
 jobs:
-  deploy-eas-ios-pr:
+  mobile-pr-build:
     if: contains(github.event.pull_request.labels.*.name, 'build:mobile:simulator')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/eas-deploy-ios
-        with:
-          EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
-          GOOGLE_SERVICES_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST_B64 }}
-          IS_MAIN_BRANCH: false
 
-  deploy-eas-android-pr:
-    if: contains(github.event.pull_request.labels.*.name, 'build:mobile:simulator')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/eas-deploy-android
+      - name: Provision the app
+        uses: ./.github/actions/provision
         with:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
-          IS_MAIN_BRANCH: false
+          PROVISION_MOBILE: true
+          GOOGLE_SERVICES_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST_B64 }}
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install jq tool
+        run: |
+          sudo apt-get update
+          sudo apt-get install jq
+
+      - name: Build and submit mobile
+        id: build_and_submit
+        working-directory: ./apps/mobile
+        run: |
+          echo build_output=$(eas build --non-interactive --json --platform=all --profile=preview); >> $GITHUB_OUTPUT
+          echo android_build_id=$(echo $build_output | jq -r '.[0].["id"]') >> $GITHUB_OUTPUT
+          echo ios_build_id=$(echo $build_output | jq -r '.[1].["id"]') >> $GITHUB_OUTPUT
+
+      - name: Publish simulator expo link in PR
+        uses: actions/github-script@v7
+        env:
+          BUILD_LINK: ${{ steps.simulator_build.outputs.BUILD_LINK }}
+        with:
+          github-token: ${{ inputs.LEATHER_BOT }}
+          script: |
+            const { BUILD_LINK } = process.env
+            if(BUILD_LINK) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: "Expo simulator build link: " + BUILD_LINK
+              })
+            }
