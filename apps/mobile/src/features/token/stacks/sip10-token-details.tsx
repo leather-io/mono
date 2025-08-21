@@ -5,11 +5,11 @@ import { Account } from '@/store/accounts/accounts';
 import { Token } from '../token';
 import { Sip10AddressList } from './sip10-address-list';
 
-interface Sip10TokenDetailsByAccountProps {
+interface Sip10TokenDetailsProps {
   account: Account;
   assetId: string;
 }
-export function Sip10TokenDetailsByAccount({ assetId, account }: Sip10TokenDetailsByAccountProps) {
+export function Sip10TokenDetails({ assetId, account }: Sip10TokenDetailsProps) {
   const { fingerprint, accountIndex } = account;
   const balance = useSip10BalanceByAssetId(fingerprint, accountIndex, assetId);
   const activity = useSip10ActivityByAssetId(fingerprint, accountIndex, assetId);

@@ -15,10 +15,10 @@ export function StacksTokenBalance(props: StacksTokenBalanceProps) {
   return <TokenBalance ticker="STX" icon={<StxAvatarIcon />} tokenName={t`Stacks`} {...props} />;
 }
 
-interface StacksTokenDetailsByAccountProps {
+interface StacksTokenDetailsProps {
   account: Account;
 }
-export function StacksTokenDetailsByAccount({ account }: StacksTokenDetailsByAccountProps) {
+export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
   const { fingerprint, accountIndex } = account;
   const { value } = useStxAccountBalance(fingerprint, accountIndex);
   const activity = useAccountActivityByAsset(fingerprint, accountIndex, stxAsset);
