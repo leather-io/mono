@@ -6,6 +6,10 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 import { AccountAddresses } from '@leather.io/models';
 import { getCollectiblesService } from '@leather.io/services';
 
+/**
+ * @deprecated useTotalCollectibles is not used now we have moved to single account view
+ * @see useAccountCollectibles
+ */
 export function useTotalCollectibles() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useTotalCollectiblesQuery(accounts));
@@ -16,6 +20,10 @@ export function useAccountCollectibles(fingerprint: string, accountIndex: number
   return toFetchState(useAccountCollectiblesQuery(account));
 }
 
+/**
+ * @deprecated useTotalCollectiblesQuery is not used now we have moved to single account view
+ * @see useAccountCollectiblesQuery
+ */
 function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
   const inscriptionsFlag = useInscriptionsFlag();
   if (!inscriptionsFlag) {

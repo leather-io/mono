@@ -19,6 +19,10 @@ export function useStxAccountBalance(fingerprint: string, accountIndex: number) 
   return toFetchState(useStxAccountBalanceQuery({ account }));
 }
 
+/**
+ * @deprecated useStxAggregateBalanceQuery is not used now we have moved to single account view
+ * @see useStxAccountBalanceQuery
+ */
 function useStxAggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({

@@ -19,6 +19,10 @@ export function useSip10AccountBalance(fingerprint: string, accountIndex: number
   return toFetchState(useSip10AccountBalanceQuery({ account }));
 }
 
+/**
+ * @deprecated useSip10TotalBalanceByAssetId is not used now we have moved to single account view
+ * @see useSip10AccountBalanceByAssetId
+ */
 export function useSip10TotalBalanceByAssetId(assetId: string) {
   const accounts = useTotalAccountAddresses();
   return toFetchState(
@@ -47,6 +51,10 @@ export function useSip10BalanceByContractId(
   return toFetchState(useSip10BalanceByContractIdQuery({ account }, contractId));
 }
 
+/**
+ * @deprecated useSip10AggregateBalanceQuery is not used now we have moved to single account view
+ * @see useSip10AccountBalanceQuery
+ */
 function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
@@ -81,6 +89,10 @@ export function useSip10AccountBalanceQuery(request: AccountRequest) {
   });
 }
 
+/**
+ * @deprecated useSip10AggregateBalanceByAssetIdQuery is not used now we have moved to single account view
+ * @see useSip10AccountBalanceByAssetIdQuery
+ */
 function useSip10AggregateBalanceByAssetIdQuery(requests: AccountRequest[], assetId: string) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({

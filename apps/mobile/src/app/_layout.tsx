@@ -14,7 +14,6 @@ import { CurrentAccountProvider, useCurrentAccount } from '@/core/current-accoun
 import { GlobalSheetProvider } from '@/core/global-sheet-provider';
 import { HapticsProvider } from '@/core/haptics-provider';
 import { LeatherQueryProvider } from '@/core/leather-query-provider';
-import { QueryPreloader } from '@/core/query-preloader';
 import { ThemeProvider } from '@/core/theme-provider';
 import { AddAccountSheet } from '@/features/account/sheets/add-account-sheet';
 import { featureFlagClient, setupFeatureFlags } from '@/features/feature-flags';
