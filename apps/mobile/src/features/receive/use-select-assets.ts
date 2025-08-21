@@ -1,4 +1,4 @@
-import { AssetType, getAssets } from '@/features/receive/get-assets';
+import { AssetType, ReceivableAsset, getAssets } from '@/features/receive/get-assets';
 import { Account } from '@/store/accounts/accounts';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
@@ -9,7 +9,10 @@ interface UseSelectAssetProps {
   currentAccount: Account;
   receiveType: ReceiveType;
 }
-export function useSelectAssets({ currentAccount, receiveType }: UseSelectAssetProps) {
+export function useSelectAssets({
+  currentAccount,
+  receiveType,
+}: UseSelectAssetProps): ReceivableAsset[] {
   const { nativeSegwitPayerAddress, taprootPayerAddress } = useBitcoinPayerAddressFromAccountIndex(
     currentAccount.fingerprint,
     currentAccount.accountIndex

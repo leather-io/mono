@@ -1,9 +1,10 @@
 import { ReactElement, useMemo } from 'react';
 
 import { Screen } from '@/components/screen/screen';
-import { sortSip10Balances } from '@/features/balances/utils/sort-sip10-balances';
+import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import { useRunesFlag } from '@/features/feature-flags';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
+import { TokenDetailsProps } from '@/features/token/types';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 
@@ -15,7 +16,7 @@ interface AssetsListProps {
   sip10Data: ReturnType<typeof useSip10AccountBalance>;
   runesData: ReturnType<typeof useRunesAccountBalance>;
   header: ReactElement;
-  onPressToken?: (tokenId: string) => void;
+  onPressToken?: (tokenDetails: TokenDetailsProps) => void;
 }
 
 export function AssetsList({ sip10Data, runesData, header, onPressToken }: AssetsListProps) {
@@ -35,7 +36,11 @@ export function AssetsList({ sip10Data, runesData, header, onPressToken }: Asset
         renderAsset({
           item,
           onPress: () => {
-            if (item.asset.protocol === 'sip10') onPressToken?.(item.asset.assetId);
+            if (item.asset.protocol === 'sip10')
+              onPressToken?.({
+                assetId: item.asset.assetId,
+                assetProtocol: item.asset.protocol,
+              });
           },
         })
       }

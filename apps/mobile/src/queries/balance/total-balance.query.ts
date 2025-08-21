@@ -22,7 +22,10 @@ export interface TotalBalance {
   runes: FetchState<RunesAggregateBalance>;
   totalBalance: FetchState<Money>;
 }
-
+/**
+ * @deprecated useTotalBalance is not used now we have moved to single account view
+ * @see useAccountBalance
+ */
 export function useTotalBalance(): TotalBalance {
   const { fiatCurrencyPreference } = useSettings();
   const zeroMoneyQuote = createMoney(0, fiatCurrencyPreference);

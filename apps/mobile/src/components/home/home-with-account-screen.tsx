@@ -12,12 +12,14 @@ import { CollectiblesList } from '@/features/collectibles/collectibles-list';
 import { useTokenDetailsFlag } from '@/features/feature-flags';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
+import { TokenDetailsProps } from '@/features/token/types';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { Account } from '@/store/accounts/accounts';
 import { useRouter } from 'expo-router';
 
+import { CryptoAssetProtocols } from '@leather.io/models';
 import { SheetInstance } from '@leather.io/ui/native';
 
 import { AccountScreenHeader } from './account-screen-header';
@@ -48,10 +50,10 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     setCurrentAccount(account);
   }
   const router = useRouter();
-  function onOpenToken(assetId: string) {
+  function onOpenToken({ assetId, assetProtocol }: TokenDetailsProps) {
     router.navigate({
-      pathname: '/(tabs)/(index)/[assetId]',
-      params: { assetId },
+      pathname: '/(tabs)/(index)/[assetProtocol]/[assetId]',
+      params: { assetId, assetProtocol },
     });
   }
   const tokenDetailsFlag = useTokenDetailsFlag();
@@ -71,12 +73,16 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
               <BitcoinBalanceByAccount
                 fingerprint={fingerprint}
                 accountIndex={accountIndex}
-                onPress={onPressToken}
+                onPress={() =>
+                  onPressToken?.({ assetProtocol: CryptoAssetProtocols.nativeBtc, assetId: 'BTC' })
+                }
               />
               <StacksBalanceByAccount
                 fingerprint={fingerprint}
                 accountIndex={accountIndex}
-                onPress={onPressToken}
+                onPress={() =>
+                  onPressToken?.({ assetProtocol: CryptoAssetProtocols.nativeStx, assetId: 'STX' })
+                }
               />
             </>
           }

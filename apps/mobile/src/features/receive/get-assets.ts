@@ -5,7 +5,7 @@ export enum AssetType {
   Taproot = 'taproot',
   Stacks = 'stacks',
 }
-export interface Asset {
+export interface ReceivableAsset {
   type: AssetType;
   address: string;
   name: string;
@@ -21,7 +21,7 @@ export function getAssets({
   nativeSegwitPayerAddress: string;
   taprootPayerAddress: string;
   stxAddress: string;
-}): Asset[] {
+}): ReceivableAsset[] {
   return [
     {
       type: AssetType.NativeSegwit,

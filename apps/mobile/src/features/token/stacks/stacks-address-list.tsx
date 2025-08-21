@@ -13,6 +13,7 @@ export function StacksAddressList({ account }: { account: Account }) {
   );
   const stxBalance = useStxAccountBalance(account.fingerprint, account.accountIndex);
   if (!stxAddress || !stxBalance) {
+    // TODO LEA-3015: add better loading state
     return null;
   }
   return (

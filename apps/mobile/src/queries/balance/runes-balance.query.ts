@@ -6,6 +6,10 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountRequest, getRunesBalancesService } from '@leather.io/services';
 
+/**
+ * @deprecated useRunesTotalBalance is not used now we have moved to single account view
+ * @see useRunesAccountBalance
+ */
 export function useRunesTotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useRunesAggregateBalanceQuery(accounts.map(account => ({ account }))));
