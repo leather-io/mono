@@ -35,6 +35,10 @@ export function useAccountActivityByAsset(
   return toFetchState(useAccountActivityByAssetQuery(account, asset));
 }
 
+/**
+ * @deprecated useTotalActivityQuery is not used now we have moved to single account view
+ * @see useAccountActivityQuery
+ */
 export function useTotalActivityQuery(accounts: AccountAddresses[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
@@ -65,6 +69,10 @@ export function useAccountActivityQuery(account: AccountAddresses) {
   });
 }
 
+/**
+ * @deprecated useTotalActivityByAssetQuery is not used now we have moved to single account view
+ * @see useAccountActivityByAssetQuery
+ */
 export function useTotalActivityByAssetQuery(accounts: AccountAddresses[], asset: CryptoAsset) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({

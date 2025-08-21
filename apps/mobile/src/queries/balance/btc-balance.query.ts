@@ -13,7 +13,10 @@ export function useBtcTotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useBtcAggregateBalanceQuery(accounts.map(account => ({ account }))));
 }
-
+/**
+ * @deprecated useBtcTotalNativeSegwitBalance is not used now we have moved to single account view
+ * @see useBtcAccountNativeSegwitBalance
+ */
 export function useBtcTotalNativeSegwitBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(
@@ -26,6 +29,10 @@ export function useBtcTotalNativeSegwitBalance() {
   );
 }
 
+/**
+ * @deprecated useBtcTotalTaprootBalance is not used now we have moved to single account view
+ * @see useBtcAccountTaprootBalance
+ */
 export function useBtcTotalTaprootBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(
@@ -78,6 +85,10 @@ function useBtcAccountBalanceQuery(request: AccountRequest) {
   });
 }
 
+/**
+ * @deprecated useBtcAggregateBalanceQuery is not used now we have moved to single account view
+ * @see useBtcAccountBalanceQuery
+ */
 function useBtcAggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
