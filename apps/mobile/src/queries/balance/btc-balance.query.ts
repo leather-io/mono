@@ -5,6 +5,10 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountRequest, getBtcBalancesService } from '@leather.io/services';
 
+/**
+ * @deprecated useBtcTotalBalance is not used now we have moved to single account view
+ * @see useBtcAccountBalance
+ */
 export function useBtcTotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useBtcAggregateBalanceQuery(accounts.map(account => ({ account }))));

@@ -14,6 +14,7 @@ export function Sip10TokenDetailsByAccount({ assetId, account }: Sip10TokenDetai
   const balance = useSip10BalanceByAssetId(fingerprint, accountIndex, assetId);
   const activity = useSip10ActivityByAssetId(fingerprint, accountIndex, assetId);
   if (balance.state !== 'success') {
+    // TODO LEA-3015: add better loading state
     return null;
   }
   return (

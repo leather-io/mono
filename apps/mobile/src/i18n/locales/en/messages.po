@@ -312,11 +312,9 @@ msgstr "Back up your Secret Key"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:10
+#: src/features/balances/bitcoin/bitcoin-balance.tsx:12
 #: src/features/receive/get-assets.ts:29
 #: src/features/receive/get-assets.ts:37
-#: src/features/send/forms/btc/btc-form.tsx:64
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:16
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -908,7 +906,6 @@ msgid "Name"
 msgstr "Name"
 
 #: src/features/receive/get-assets.ts:31
-#: src/features/token/bitcoin/bitcoin-address-list.tsx:28
 msgid "Native Segwit"
 msgstr "Native Segwit"
 
@@ -1206,10 +1203,8 @@ msgstr "Something went wrong"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:9
+#: src/features/balances/stacks/stacks-balance.tsx:11
 #: src/features/receive/get-assets.ts:45
-#: src/features/send/forms/stx/stx-form.tsx:58
-#: src/features/token/stacks/stacks-token-details.tsx:15
 msgid "Stacks"
 msgstr "Stacks"
 
@@ -1221,7 +1216,7 @@ msgstr "Stacks address"
 msgid "Standard"
 msgstr "Standard"
 
-#: src/features/token/stacks/stacks-address-list.tsx:23
+#: src/features/token/stacks/stacks-address-list.tsx:24
 msgid "STX"
 msgstr "STX"
 
@@ -1254,7 +1249,6 @@ msgid "Tap to view Secret Key"
 msgstr "Tap to view Secret Key"
 
 #: src/features/receive/get-assets.ts:39
-#: src/features/token/bitcoin/bitcoin-address-list.tsx:35
 msgid "Taproot"
 msgstr "Taproot"
 

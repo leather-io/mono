@@ -5,25 +5,31 @@ import { StacksTokenDetailsByAccount } from '@/features/token/stacks/stacks-toke
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 
-import { assertExistence } from '@leather.io/utils';
+import { CryptoAssetProtocols } from '@leather.io/models';
+import { assertExistence, assertUnreachable } from '@leather.io/utils';
 
 export const configureTokenParamsSchema = z.object({
   assetId: z.string(),
+  assetProtocol: z.string(),
 });
+
+// type SupportedAssetProtocol = 'nativeBtc' | 'nativeStx' | 'sip10';
 
 export default function AccountTokenScreen() {
   const params = useLocalSearchParams();
-  const { assetId } = configureTokenParamsSchema.parse(params);
+  const { assetId, assetProtocol } = configureTokenParamsSchema.parse(params);
   const { currentAccount } = useCurrentAccount();
 
   assertExistence(currentAccount, 'Current account is required for AccountTokenScreen');
 
-  switch (assetId) {
-    case 'BTC':
+  switch (assetProtocol) {
+    case CryptoAssetProtocols.nativeBtc:
       return <BitcoinTokenDetailsByAccount account={currentAccount} />;
-    case 'STX':
+    case CryptoAssetProtocols.nativeStx:
       return <StacksTokenDetailsByAccount account={currentAccount} />;
-    default:
+    case CryptoAssetProtocols.sip10:
       return <Sip10TokenDetailsByAccount account={currentAccount} assetId={assetId} />;
+    default:
+      assertUnreachable(assetProtocol as never); // fix this later
   }
 }

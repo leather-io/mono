@@ -5,6 +5,10 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountRequest, getStxBalancesService } from '@leather.io/services';
 
+/**
+ * @deprecated useStxTotalBalance is not used now we have moved to single account view
+ * @see useStxAccountBalance
+ */
 export function useStxTotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useStxAggregateBalanceQuery(accounts.map(account => ({ account }))));
