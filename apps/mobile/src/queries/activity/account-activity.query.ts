@@ -6,6 +6,11 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 import { AccountAddresses, CryptoAsset } from '@leather.io/models';
 import { getActivityService } from '@leather.io/services';
 
+/**
+ * @deprecated useTotalActivity is not used now we have moved to single account view
+ * @see useAccountActivity
+ */
+
 export function useTotalActivity() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useTotalActivityQuery(accounts));
