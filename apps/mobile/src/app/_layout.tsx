@@ -105,23 +105,21 @@ function RootLayout() {
                 <SafeAreaProvider>
                   <QueryClientProvider client={queryClient}>
                     <LeatherQueryProvider>
-                      <QueryPreloader>
-                        <ThemeProvider>
-                          <GestureHandlerRootView style={{ flex: 1 }}>
-                            <ToastWrapper>
-                              <SplashScreenGuard>
-                                <HapticsProvider>
-                                  <GlobalSheetProvider>
-                                    <SheetModalProvider>
-                                      <App />
-                                    </SheetModalProvider>
-                                  </GlobalSheetProvider>
-                                </HapticsProvider>
-                              </SplashScreenGuard>
-                            </ToastWrapper>
-                          </GestureHandlerRootView>
-                        </ThemeProvider>
-                      </QueryPreloader>
+                      <ThemeProvider>
+                        <GestureHandlerRootView style={{ flex: 1 }}>
+                          <ToastWrapper>
+                            <SplashScreenGuard>
+                              <HapticsProvider>
+                                <GlobalSheetProvider>
+                                  <SheetModalProvider>
+                                    <App />
+                                  </SheetModalProvider>
+                                </GlobalSheetProvider>
+                              </HapticsProvider>
+                            </SplashScreenGuard>
+                          </ToastWrapper>
+                        </GestureHandlerRootView>
+                      </ThemeProvider>
                     </LeatherQueryProvider>
                   </QueryClientProvider>
                 </SafeAreaProvider>
