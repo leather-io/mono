@@ -16,10 +16,10 @@ export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
   return <TokenBalance ticker="BTC" icon={<BtcAvatarIcon />} tokenName={t`Bitcoin`} {...props} />;
 }
 
-interface BitcoinTokenDetailsByAccountProps {
+interface BitcoinTokenDetailsProps {
   account: Account;
 }
-export function BitcoinTokenDetailsByAccount({ account }: BitcoinTokenDetailsByAccountProps) {
+export function BitcoinTokenDetails({ account }: BitcoinTokenDetailsProps) {
   const { fingerprint, accountIndex } = account;
   const { value } = useBtcAccountBalance(fingerprint, accountIndex);
   const activity = useAccountActivityByAsset(fingerprint, accountIndex, btcAsset);
