@@ -16,3 +16,4 @@ export * from './activity/activity.service';
 export * from './infrastructure/environment';
 export * from './types';
 export * from './bns/bns.service';
+export * from './swap/swap.service';

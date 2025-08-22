@@ -8,6 +8,15 @@ export function initAppServices() {
     env: {
       environment: process.env.EXPO_PUBLIC_NODE_ENV ?? 'development',
       leatherApiUrl: process.env.EXPO_PUBLIC_LEATHER_API_URL,
+      bitflow: {
+        bitflowApiHost: process.env.EXPO_PUBLIC_BITFLOW_API_HOST ?? '',
+        bitflowApiKey: process.env.EXPO_PUBLIC_BITFLOW_API_KEY ?? '',
+        bitflowProviderAddress: process.env.EXPO_PUBLIC_BITFLOW_PROVIDER_ADDRESS ?? '',
+        readonlyCallApiHost: process.env.EXPO_PUBLIC_BITFLOW_READONLY_CALL_API_HOST ?? '',
+        readonlyCallApiKey: process.env.EXPO_PUBLIC_BITFLOW_READONLY_CALL_API_KEY ?? '',
+        keeperApiHost: process.env.EXPO_PUBLIC_BITFLOW_KEEPER_API_HOST ?? '',
+        keeperApiKey: process.env.EXPO_PUBLIC_BITFLOW_KEEPER_API_KEY ?? '',
+      },
     },
     cacheService: MobileHttpCacheService,
     settingsService: MobileSettingsService,

@@ -28,6 +28,8 @@ export type LeatherApiTokenPriceHistory =
 export type LeatherApiLocale = Required<
   NonNullable<paths['/v1/tokens/native/{symbol}/description']['get']['parameters']['query']>
 >['locale'];
+export type LeatherApiSwapDex =
+  paths['/v1/swap/dexes']['get']['responses'][200]['content']['application/json'][string];
 
 @injectable()
 export class LeatherApiClient {
@@ -651,5 +653,18 @@ export class LeatherApiClient {
           ['leather-api-register-notifications', addresses, notificationToken, chain],
           fetchFn
         );
+  }
+
+  async fetchSwapDexes({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
+        this.client.GET('/v1/swap/dexes', { signal })
+      );
+      return data!;
+    };
+
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-swap-dexes'], fetchFn);
   }
 }

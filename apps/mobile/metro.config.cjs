@@ -49,6 +49,15 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName.startsWith('@/')) {
     return context.resolveRequest(context, moduleName, platform);
   }
+
+  // Block @stacks/connect-ui which contains webpack-specific dynamic imports
+  // that Metro can't handle (used by @bitflowlabs/core-sdk)
+  if (moduleName.startsWith('@stacks/connect-ui')) {
+    return {
+      type: 'empty',
+    };
+  }
+
   // Use the browser version of the package for React Native
   // Tracking here: https://github.com/axios/axios/issues/6899#issuecomment-2864940687
   if (moduleName === 'axios' || moduleName.startsWith('axios/')) {

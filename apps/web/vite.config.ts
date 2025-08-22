@@ -33,6 +33,8 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
       'leather-styles': path.resolve(__dirname, 'leather-styles'),
       axios: path.resolve(__dirname, 'node_modules/axios/dist/esm/axios.js'),
       'msw/node': path.resolve(__dirname, 'node_modules/msw/lib/node/index.js'),
+      // Stub out @bitflowlabs/core-sdk for browser compatibility
+      '@bitflowlabs/core-sdk': path.resolve(__dirname, 'stubs/bitflow-sdk-stub.js'),
     },
   },
   define: {

@@ -82,7 +82,7 @@ export function getOutboundUtxos(
     .map(readTxOwnedVins)
     .flat()
     .map(vin => ({
-      txid: vin.txid,
+      txid: vin.txid!,
       vout: vin.n,
       address: vin.address ?? '',
       path: vin.path ?? '',
@@ -90,7 +90,7 @@ export function getOutboundUtxos(
       keyOrigin: vin.path ? getKeyOrigin(fingerprint, vin.path) : '',
       // there's a chance the page of txs doesnt include the original, to get height but because its outbound, we know it is confirmed.
       // in these cases, fallback to a default height
-      height: txMap.get(vin.txid)?.height ?? fallbackUtxoHeight,
+      height: txMap.get(vin.txid!)?.height ?? fallbackUtxoHeight,
     }));
 }
 
