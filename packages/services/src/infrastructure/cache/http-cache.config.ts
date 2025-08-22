@@ -1,4 +1,4 @@
-import { daysInMs, minutesInMs, secondsInMs, weeksInMs } from '@leather.io/utils';
+import { daysInMs, hoursInMs, minutesInMs, secondsInMs, weeksInMs } from '@leather.io/utils';
 
 import { HttpCacheOptions } from './http-cache.service';
 
@@ -50,7 +50,21 @@ export type HttpCacheKey =
   | 'leather-api-sip10-token'
   | 'leather-api-sip10-token-description'
   | 'leather-api-sip10-token-history'
-  | 'leather-api-register-notifications';
+  | 'leather-api-register-notifications'
+  | 'leather-api-swap-dexes'
+
+  // BitflowSdkClient
+  | 'bitflow-sdk-available-tokens'
+  | 'bitflow-sdk-all-possible-token-y'
+  | 'bitflow-sdk-get-quote-for-route'
+
+  // AlexSdkClient
+  | 'alex-sdk-fetch-swappable-currency'
+
+  // VelarSdkClient
+  | 'velar-sdk-get-tokens'
+  | 'velar-sdk-get-token-pairs'
+  | 'velar-sdk-get-computed-amount';
 
 export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'bns-v2-api-name': { ttl: minutesInMs(2) },
@@ -97,4 +111,15 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-sip10-token-description': { ttl: daysInMs(1) },
   'leather-api-sip10-token-history': { ttl: minutesInMs(5) },
   'leather-api-register-notifications': { ttl: secondsInMs(10) },
+  'leather-api-swap-dexes': { ttl: daysInMs(1) },
+
+  'bitflow-sdk-available-tokens': { ttl: hoursInMs(6) },
+  'bitflow-sdk-all-possible-token-y': { ttl: hoursInMs(1) },
+  'bitflow-sdk-get-quote-for-route': { ttl: secondsInMs(30) },
+
+  'alex-sdk-fetch-swappable-currency': { ttl: hoursInMs(6) },
+
+  'velar-sdk-get-tokens': { ttl: hoursInMs(6) },
+  'velar-sdk-get-token-pairs': { ttl: hoursInMs(1) },
+  'velar-sdk-get-computed-amount': { ttl: secondsInMs(30) },
 };

@@ -8,7 +8,7 @@ export const CryptoAssetCategories = {
   fungible: 'fungible',
   nft: 'nft',
 } as const;
-export const CryptoAssetProtocols = {
+export const FungibleCryptoAssetProtocols = {
   nativeBtc: 'nativeBtc',
   nativeStx: 'nativeStx',
   sip10: 'sip10',
@@ -16,14 +16,22 @@ export const CryptoAssetProtocols = {
   src20: 'src20',
   stx20: 'stx20',
   rune: 'rune',
+} as const;
+export const NonFungibleCryptoAssetProtocols = {
   stamp: 'stamp',
   sip9: 'sip9',
   inscription: 'inscription',
 } as const;
+export const CryptoAssetProtocols = {
+  ...FungibleCryptoAssetProtocols,
+  ...NonFungibleCryptoAssetProtocols,
+} as const;
 
 export type CryptoAssetChain = keyof typeof CryptoAssetChains;
 export type CryptoAssetCategory = keyof typeof CryptoAssetCategories;
-export type CryptoAssetProtocol = keyof typeof CryptoAssetProtocols;
+export type FungibleCryptoAssetProtocol = keyof typeof FungibleCryptoAssetProtocols;
+export type NonFungibleCryptoAssetProtocol = keyof typeof NonFungibleCryptoAssetProtocols;
+export type CryptoAssetProtocol = FungibleCryptoAssetProtocol | NonFungibleCryptoAssetProtocol;
 
 export interface BaseCryptoAsset {
   readonly chain: CryptoAssetChain;
@@ -34,6 +42,7 @@ export interface BaseCryptoAsset {
 // Fungible asset types
 interface BaseFungibleCryptoAsset extends BaseCryptoAsset {
   readonly category: 'fungible';
+  readonly protocol: FungibleCryptoAssetProtocol;
   readonly symbol: string;
   readonly decimals: number;
   readonly hasMemo: boolean;
@@ -95,6 +104,7 @@ export type FungibleCryptoAsset =
 // NFT asset types
 interface BaseNonFungibleCryptoAsset extends BaseCryptoAsset {
   readonly category: 'nft';
+  readonly protocol: NonFungibleCryptoAssetProtocol;
 }
 export interface InscriptionAsset extends BaseNonFungibleCryptoAsset {
   readonly chain: 'bitcoin';
@@ -135,3 +145,8 @@ export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
 export type NonFungibleCryptoAsset = InscriptionAsset | StampAsset | Sip9Asset;
 
 export type CryptoAsset = FungibleCryptoAsset | NonFungibleCryptoAsset;
+
+export interface FungibleAssetId {
+  protocol: FungibleCryptoAssetProtocol;
+  id: string;
+}

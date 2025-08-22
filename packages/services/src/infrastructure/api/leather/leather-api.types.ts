@@ -117,8 +117,8 @@ export interface paths {
                 /** @description Block Time */
                 time?: number;
                 vin: {
-                  txid: string;
                   n: number;
+                  txid?: string;
                   /** @description Is Own Address */
                   owned?: boolean;
                   address?: string;
@@ -1782,6 +1782,73 @@ export interface paths {
         };
         /** @description Not Found */
         404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/swap/dexes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Swap Dexes */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              [key: string]: {
+                /** @enum {string} */
+                id: 'bitflow' | 'sbtc-bridge' | 'alex' | 'velar';
+                name: string;
+                url: string;
+                logo: string;
+                description: string;
+              };
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
           headers: {
             [name: string]: unknown;
           };

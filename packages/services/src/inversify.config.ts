@@ -21,6 +21,7 @@ import { SettingsService } from './infrastructure/settings/settings.service';
 import { Types } from './inversify.types';
 import { MarketDataService } from './market-data/market-data.service';
 import { NotificationsService } from './notifications/notifications.service';
+import { SwapService } from './swap/swap.service';
 import { BitcoinTransactionsService } from './transactions/bitcoin-transactions.service';
 import { StacksTransactionsService } from './transactions/stacks-transactions.service';
 import { UtxosService } from './utxos/utxos.service';
@@ -106,6 +107,9 @@ export function getBnsService() {
 }
 export function getAccountBalancesService() {
   return getServicesContainer().get(AccountBalancesService);
+}
+export function getSwapService() {
+  return getServicesContainer().get(SwapService);
 }
 /* 
   API Layer Clients

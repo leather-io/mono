@@ -12,6 +12,14 @@ export function matchesAssetId(asset: CryptoAsset, assetId: CryptoAssetId) {
   return getAssetId(asset).protocol === assetId.protocol && getAssetId(asset).id === assetId.id;
 }
 
+export function isSameAssetId(assetId1: CryptoAssetId, assetId2: CryptoAssetId) {
+  return assetId1.protocol === assetId2.protocol && assetId1.id === assetId2.id;
+}
+
+export function isSameAsset(asset1: CryptoAsset, asset2: CryptoAsset) {
+  return isSameAssetId(getAssetId(asset1), getAssetId(asset2));
+}
+
 export function getAssetId(asset: CryptoAsset): CryptoAssetId {
   switch (asset.protocol) {
     case 'nativeBtc':

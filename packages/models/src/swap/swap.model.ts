@@ -1,0 +1,63 @@
+import { CryptoAssetId } from '../assets/asset-id.model';
+import { FungibleCryptoAsset } from '../assets/asset.model';
+import { Money } from '../money.model';
+
+export interface SwapAsset {
+  asset: FungibleCryptoAsset;
+  providerAssets: SwapProviderAsset[];
+}
+
+export const swapProviderIds = ['bitflow-sdk', 'sbtc-bridge', 'alex-sdk', 'velar-sdk'] as const;
+export type SwapProviderId = (typeof swapProviderIds)[number];
+
+export interface SwapProvider {
+  id: SwapProviderId;
+  isAggregator: boolean;
+}
+
+export interface SwapProviderAsset {
+  providerId: SwapProviderId;
+  providerAssetId: string;
+  assetId: CryptoAssetId;
+}
+
+export interface SwapQuote {
+  executionType: SwapExecutionType;
+  providerId: SwapProviderId;
+  providerQuoteData: unknown;
+  baseAmount: number;
+  targetAmount: number;
+  quote: Money;
+  dexPath: SwapDex[];
+  assetPath: FungibleCryptoAsset[];
+}
+
+export interface SwapDex {
+  name: string;
+  url: string;
+  logo: string;
+  description: string;
+}
+
+export const swapExecutionTypes = ['stacks-contract-call', 'sbtc-bridge-transfer'] as const;
+export type SwapExecutionType = (typeof swapExecutionTypes)[number];
+
+export interface BaseSwapExecutionData {
+  executionType: SwapExecutionType;
+  providerId: SwapProviderId;
+}
+export interface StacksContractCallSwapExecutionData extends BaseSwapExecutionData {
+  executionType: 'stacks-contract-call';
+  contractAddress: string;
+  contractName: string;
+  functionName: string;
+  functionArgs: unknown[];
+  postConditions: unknown[];
+  postConditionMode?: unknown;
+}
+export interface SbtcBridgeTransferSwapExecutionData extends BaseSwapExecutionData {
+  executionType: 'sbtc-bridge-transfer';
+}
+export type SwapExecutionData =
+  | StacksContractCallSwapExecutionData
+  | SbtcBridgeTransferSwapExecutionData;
