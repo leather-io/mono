@@ -43,13 +43,19 @@ jobs:
 
       - name: Publish simulator expo link in PR
         uses: actions/github-script@v7
-        if: steps.preview_build.outcome == 'success'
+        if: ${{ steps.preview_build.outcome == 'success' }}
+        env:
+          ANDROID_BUILD_ID: ${{ steps.preview_build.outputs.android_build_id }}
+          IOS_BUILD_ID: ${{ steps.preview_build.outputs.ios_build_id }}
         with:
           github-token: ${{ secrets.LEATHER_BOT }}
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "# iOS Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${{ steps.preview_build.outputs.ios_build_id }}\n\n# Android Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${{ steps.preview_build.outputs.android_build_id }}"
-            })
+            const { ANDROID_BUILD_ID, IOS_BUILD_ID } = process.env;
+            if (ANDROID_BUILD_ID && IOS_BUILD_ID) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `# iOS Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${IOS_BUILD_ID}\n\n# Android Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${ANDROID_BUILD_ID}`
+              })
+            }
