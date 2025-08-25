@@ -97,7 +97,7 @@ msgstr "Account name cannot be empty"
 #: src/components/activity/activity-with-account.screen.tsx:22
 #: src/components/activity/activity-without-account-screen.tsx:12
 #: src/features/navigation/tab-layout.tsx:57
-#: src/features/token/components/token-activity.tsx:26
+#: src/features/token/components/token-activity.tsx:30
 msgid "Activity"
 msgstr "Activity"
 
@@ -316,7 +316,7 @@ msgstr "BIP39 passphrase"
 #: src/features/receive/get-assets.ts:29
 #: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:16
+#: src/features/token/bitcoin/bitcoin-token-details.tsx:17
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -514,7 +514,8 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
-#: src/features/token/components/token-description.tsx:9
+#: src/features/token/components/token-loading.tsx:38
+#: src/features/token/token.tsx:97
 msgid "Description"
 msgstr "Description"
 
@@ -787,7 +788,7 @@ msgstr "Language"
 msgid "Layer"
 msgstr "Layer"
 
-#: src/features/token/utils/get-chain-layer-from-protocol.ts:8
+#: src/features/token/bitcoin/bitcoin-token-details.tsx:35
 msgid "Layer 1"
 msgstr "Layer 1"
 
@@ -796,11 +797,11 @@ msgstr "Layer 1"
 msgid "Layer 1 • Bitcoin"
 msgstr "Layer 1 • Bitcoin"
 
-#: src/features/token/utils/get-chain-layer-from-protocol.ts:10
+#: src/features/token/stacks/stacks-token-details.tsx:36
 msgid "Layer 2"
 msgstr "Layer 2"
 
-#: src/features/token/utils/get-chain-layer-from-protocol.ts:12
+#: src/features/token/stacks/sip10-token-details.tsx:38
 msgid "Layer 2 · Stacks"
 msgstr "Layer 2 · Stacks"
 
@@ -1075,10 +1076,6 @@ msgstr "Reveal account"
 msgid "Review"
 msgstr "Review"
 
-#: src/features/token/utils/get-chain-layer-from-protocol.ts:14
-msgid "Runes"
-msgstr "Runes"
-
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:74
 #: src/features/settings/email-address-sheet.tsx:45
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:19
@@ -1209,7 +1206,7 @@ msgstr "StackingDAO"
 #: src/features/balances/stacks/stacks-balance.tsx:11
 #: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
-#: src/features/token/stacks/stacks-token-details.tsx:15
+#: src/features/token/stacks/stacks-token-details.tsx:16
 msgid "Stacks"
 msgstr "Stacks"
 

@@ -5,7 +5,7 @@ import { Money } from '@leather.io/models';
 import { SkeletonLoader, Text, TextProps } from '@leather.io/ui/native';
 import { FormatAmountOptions } from '@leather.io/utils';
 
-const EmptyBalanceDisplay = '-.--';
+import { EmptyBalanceDisplay } from './constants';
 
 interface BalanceProps extends TextProps {
   balance?: Money;

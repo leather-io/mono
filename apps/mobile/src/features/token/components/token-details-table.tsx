@@ -6,8 +6,8 @@ import { t } from '@lingui/core/macro';
 import { TokenDetailsCard } from './token-details-card';
 
 interface TokenDetailsTableProps {
-  name: string;
-  layer: string;
+  name: ReactNode;
+  layer: ReactNode;
   price: ReactNode;
   priceChange: ReactNode;
 }

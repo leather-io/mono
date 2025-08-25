@@ -1,8 +1,9 @@
-import { Balance } from '@/components/balance/balance';
-
 import { Money } from '@leather.io/models';
-import { ArrowTriangleTopIcon, Box, Text } from '@leather.io/ui/native';
+import { ArrowTriangleTopIcon, SkeletonLoader, Text } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
+
+import { Balance } from './balance';
+import { EmptyBalanceDisplay } from './constants';
 
 function getPriceChangeColor(changePercent: number) {
   if (changePercent > 0) {
@@ -14,21 +15,32 @@ function getPriceChangeColor(changePercent: number) {
   }
 }
 
-export function TokenPriceChange({
-  price,
-  changePercent,
-}: {
-  price: Money;
-  changePercent: number;
-}) {
+interface PriceChange {
+  price?: Money;
+  changePercent?: number;
+  isLoading: boolean;
+}
+export function PriceChange({ price, changePercent, isLoading }: PriceChange) {
+  if (isLoading) {
+    return <SkeletonLoader height={16} width={100} isLoading />;
+  }
+
+  if (!price || !changePercent) {
+    return (
+      <Text variant="label02" color="ink.text-primary">
+        {EmptyBalanceDisplay}
+      </Text>
+    );
+  }
+
   const priceAmount = typeof price.amount === 'number' ? price.amount : Number(price.amount);
   const priceChange = (priceAmount * changePercent) / 100;
   const priceChangeFiat = createMoney(priceChange, price.symbol);
   const color = getPriceChangeColor(changePercent);
 
   return (
-    <Box flexDirection="row" alignItems="baseline" gap="1">
-      {changePercent !== 0 && (
+    <>
+      {!isLoading && changePercent !== 0 && (
         <ArrowTriangleTopIcon
           color={color}
           width={8}
@@ -39,9 +51,11 @@ export function TokenPriceChange({
           }}
         />
       )}
-      <Text variant="label02" color={color}>
-        {`${changePercent.toFixed(2)}% `}
-      </Text>
+      {!isLoading && (
+        <Text variant="label02" color={color}>
+          {`${changePercent.toFixed(2)}% `}
+        </Text>
+      )}
       <Balance
         formattingOptions={{ numberFormatOptions: { signDisplay: 'never' } }}
         forceVisible
@@ -49,7 +63,8 @@ export function TokenPriceChange({
         variant="label02"
         lineHeight={16}
         color={color}
+        isLoading={isLoading}
       />
-    </Box>
+    </>
   );
 }

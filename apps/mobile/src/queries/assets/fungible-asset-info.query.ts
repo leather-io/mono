@@ -1,3 +1,4 @@
+import { toFetchState } from '@/components/loading';
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
@@ -6,6 +7,10 @@ import { getFungibleAssetInfoService } from '@leather.io/services';
 
 const DEFAULT_LOCALE = 'en';
 const DEFAULT_PRICE_HISTORY_PERIOD = '24h';
+
+export function useAssetDescription(asset: FungibleCryptoAsset) {
+  return toFetchState(useAssetDescriptionQuery(asset));
+}
 
 export function useAssetDescriptionQuery(asset: FungibleCryptoAsset) {
   return useQuery({

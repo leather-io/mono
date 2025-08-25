@@ -3,6 +3,7 @@ import { useAccountActivityByAsset } from '@/queries/activity/account-activity.q
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
+import { capitalize } from 'remeda';
 
 import { stxAsset } from '@leather.io/constants';
 import { StxAvatarIcon } from '@leather.io/ui/native';
@@ -20,23 +21,21 @@ interface StacksTokenDetailsProps {
 }
 export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
   const { fingerprint, accountIndex } = account;
-  const { value } = useStxAccountBalance(fingerprint, accountIndex);
+  const balance = useStxAccountBalance(fingerprint, accountIndex);
   const activity = useAccountActivityByAsset(fingerprint, accountIndex, stxAsset);
-  const availableBalance = value?.stx.availableUnlockedBalance;
-  const quoteBalance = value?.quote.availableUnlockedBalance;
-  if (!availableBalance || !quoteBalance || !activity.value) {
-    // TODO LEA-3015: add better loading state
-    return null;
-  }
 
+  const chain = capitalize(stxAsset.chain);
+  const name = `${chain} (${stxAsset.symbol})`;
   return (
     <Token
-      tokenId="STX"
       asset={stxAsset}
-      availableBalance={availableBalance}
-      quoteBalance={quoteBalance}
-      activity={activity.value}
+      icon={<StxAvatarIcon />}
+      balance={balance}
+      activity={activity}
       canSend={true}
+      layer={t`Layer 2`}
+      title={chain}
+      name={name}
     >
       <StacksAddressList account={account} />
     </Token>

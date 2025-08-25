@@ -3,6 +3,7 @@ import { useAccountActivityByAsset } from '@/queries/activity/account-activity.q
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
+import { capitalize } from 'remeda';
 
 import { btcAsset } from '@leather.io/constants';
 import { BtcAvatarIcon } from '@leather.io/ui/native';
@@ -21,21 +22,19 @@ interface BitcoinTokenDetailsProps {
 }
 export function BitcoinTokenDetails({ account }: BitcoinTokenDetailsProps) {
   const { fingerprint, accountIndex } = account;
-  const { value } = useBtcAccountBalance(fingerprint, accountIndex);
+  const balance = useBtcAccountBalance(fingerprint, accountIndex);
   const activity = useAccountActivityByAsset(fingerprint, accountIndex, btcAsset);
-  const availableBalance = value?.btc.availableBalance;
-  const quoteBalance = value?.quote.availableBalance;
-  if (!availableBalance || !quoteBalance) {
-    // TODO LEA-3015: add better loading state
-    return null;
-  }
+  const chain = capitalize(btcAsset.chain);
+  const name = `${chain} (${btcAsset.symbol})`;
   return (
     <Token
-      tokenId="BTC"
       asset={btcAsset}
-      availableBalance={availableBalance}
-      quoteBalance={quoteBalance}
-      activity={activity.value ?? []}
+      icon={<BtcAvatarIcon />}
+      balance={balance}
+      activity={activity}
+      layer={t`Layer 1`}
+      title={chain}
+      name={name}
     >
       <BitcoinAddressList account={account} />
     </Token>
