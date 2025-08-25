@@ -70,7 +70,7 @@ export function useBtcAccountTaprootBalance(fingerprint: string, accountIndex: n
   );
 }
 
-function useBtcAccountBalanceQuery(request: AccountRequest) {
+export function useBtcAccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['btc-balance-service-get-btc-account-balance', request, fiatCurrencyPreference],
