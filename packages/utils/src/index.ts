@@ -11,6 +11,7 @@ export * from './assets/sort-assets';
 export * from './assets/asset-display-name';
 export * from './assets/balance-helpers';
 export * from './assets/inscription-helpers';
+export * from './assets/asset-id';
 export * from './truncate-middle';
 export * from './time';
 export * from './market-data';

@@ -1,4 +1,4 @@
-import { InscriptionMimeType } from './inscription-mime-type.model';
+import { InscriptionMimeType } from '../inscription-mime-type.model';
 
 export const CryptoAssetChains = {
   bitcoin: 'bitcoin',

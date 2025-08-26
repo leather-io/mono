@@ -1,4 +1,4 @@
-import { InscriptionAsset } from './asset.model';
+import { InscriptionAsset } from './assets/asset.model';
 
 /**
  * Inscriptions contain arbitrary data. When retrieving an inscription, it should be

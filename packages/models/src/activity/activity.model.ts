@@ -1,7 +1,7 @@
 import type { BigNumber } from 'bignumber.js';
 
 import { AccountId } from '../account.model';
-import { CryptoAsset } from '../asset.model';
+import { CryptoAsset } from '../assets/asset.model';
 import { Money } from '../money.model';
 import { ActivityLevel } from './activity-level.model';
 import { OnChainActivityStatus } from './activity-status.model';
