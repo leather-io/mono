@@ -1,4 +1,4 @@
-name: Trigger mobile preview builds for iOS and Android in PRs
+name: Mobile Preview Builds
 on:
   pull_request:
     types:
@@ -37,7 +37,7 @@ jobs:
         id: preview_build
         working-directory: ./apps/mobile
         run: |
-          echo build_output=$(eas build --non-interactive --json --platform=all --profile=preview); >> $GITHUB_OUTPUT
+          echo build_output=$(eas build --no-wait --non-interactive --json --platform=all --profile=preview); >> $GITHUB_OUTPUT
           echo android_build_id=$(echo $build_output | jq -r '.[0].["id"]') >> $GITHUB_OUTPUT
           echo ios_build_id=$(echo $build_output | jq -r '.[1].["id"]') >> $GITHUB_OUTPUT
 
@@ -51,11 +51,9 @@ jobs:
           github-token: ${{ secrets.LEATHER_BOT }}
           script: |
             const { ANDROID_BUILD_ID, IOS_BUILD_ID } = process.env;
-            if (ANDROID_BUILD_ID && IOS_BUILD_ID) {
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `# iOS Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${IOS_BUILD_ID}\n\n# Android Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${ANDROID_BUILD_ID}`
-              })
-            }
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `# iOS Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${IOS_BUILD_ID}\n\n# Android Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${ANDROID_BUILD_ID}`
+            })
