@@ -30,6 +30,13 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+## [0.40.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.39.1...@leather.io/models-v0.40.0) (2025-08-26)
+
+
+### Features
+
+* add token id model and utils ([9f4e166](https://github.com/leather-io/mono/commit/9f4e166f1c66d4aa2a23d621fcfca86b07af68ce))
+
 ## [0.39.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.39.0...@leather.io/models-v0.39.1) (2025-08-14)
 
 

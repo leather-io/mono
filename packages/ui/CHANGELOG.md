@@ -475,6 +475,22 @@
   * devDependencies
     * @leather.io/models bumped to 0.39.1
 
+## [1.80.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.79.0...@leather.io/ui-v1.80.0) (2025-08-26)
+
+
+### Features
+
+* move to single account home page structure ([c397da5](https://github.com/leather-io/mono/commit/c397da5f1f803ef09bc783588c09e2b99d6c97e9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.43.0
+  * devDependencies
+    * @leather.io/models bumped to 0.40.0
+
 ## [1.79.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.78.0...@leather.io/ui-v1.79.0) (2025-08-18)
 
 

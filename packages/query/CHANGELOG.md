@@ -710,6 +710,25 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.32.0
 
+## [2.41.9](https://github.com/leather-io/mono/compare/@leather.io/query-v2.41.8...@leather.io/query-v2.41.9) (2025-08-26)
+
+
+### Bug Fixes
+
+* broken stacks fee estimation, ref [#6251](https://github.com/leather-io/mono/issues/6251) ([a4a0205](https://github.com/leather-io/mono/commit/a4a0205f327521a1f838c23d6e47dbc85fbfc5f8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.1
+    * @leather.io/constants bumped to 0.25.2
+    * @leather.io/models bumped to 0.40.0
+    * @leather.io/rpc bumped to 2.20.7
+    * @leather.io/stacks bumped to 1.16.1
+    * @leather.io/utils bumped to 0.43.0
+
 ## [2.41.6](https://github.com/leather-io/mono/compare/@leather.io/query-v2.41.5...@leather.io/query-v2.41.6) (2025-08-14)
 
 

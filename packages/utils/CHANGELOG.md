@@ -332,6 +332,21 @@
     * @leather.io/constants bumped to 0.25.1
     * @leather.io/models bumped to 0.39.1
 
+## [0.43.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.42.4...@leather.io/utils-v0.43.0) (2025-08-26)
+
+
+### Features
+
+* add token id model and utils ([9f4e166](https://github.com/leather-io/mono/commit/9f4e166f1c66d4aa2a23d621fcfca86b07af68ce))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.25.2
+    * @leather.io/models bumped to 0.40.0
+
 ## [0.42.3](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.42.2...@leather.io/utils-v0.42.3) (2025-08-13)
 
 
