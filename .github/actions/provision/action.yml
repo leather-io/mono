@@ -4,8 +4,6 @@ inputs:
   PROVISION_MOBILE:
     description: 'Boolean value to identify if this is running on the main branch or not'
     required: true
-  GOOGLE_SERVICES_INFO_PLIST_B64:
-    description: 'Google Services Info.plist file (base64 encoded)'
 
 runs:
   using: 'composite'
@@ -27,18 +25,3 @@ runs:
         PROVISION_MOBILE: ${{ inputs.PROVISION_MOBILE }}
       run: pnpm install
       shell: bash
-
-    - name: Decode GOOGLE_SERVICES_INFO_PLIST
-      if: ${{ inputs.PROVISION_MOBILE == 'true' && inputs.GOOGLE_SERVICES_INFO_PLIST_B64 != '' }}
-      shell: bash
-      working-directory: ./apps/mobile
-      run: |
-        if [[ ${{ inputs.GOOGLE_SERVICES_INFO_PLIST_B64}} == "" ]]; then
-          echo "GOOGLE_SERVICES_INFO_PLIST_B64 is empty. Please provide the base64 encoded value in the action inputs."
-          exit 0
-        else
-          echo $GOOGLE_SERVICES_INFO_PLIST_B64 | base64 --decode > ./GoogleService-Info.plist
-          ls -l ./GoogleService-Info.plist
-        fi
-      env:
-        GOOGLE_SERVICES_INFO_PLIST_B64: ${{ inputs.GOOGLE_SERVICES_INFO_PLIST_B64 }}

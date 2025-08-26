@@ -24,7 +24,6 @@ jobs:
         uses: ./.github/actions/provision
         with:
           PROVISION_MOBILE: true
-          GOOGLE_SERVICES_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST_B64 }}
 
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
