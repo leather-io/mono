@@ -510,6 +510,23 @@
     * @leather.io/crypto bumped to 1.11.4
     * @leather.io/utils bumped to 0.42.2
 
+## [1.16.1](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.16.0...@leather.io/stacks-v1.16.1) (2025-08-26)
+
+
+### Bug Fixes
+
+* broken stacks fee estimation, ref [#6251](https://github.com/leather-io/mono/issues/6251) ([a4a0205](https://github.com/leather-io/mono/commit/a4a0205f327521a1f838c23d6e47dbc85fbfc5f8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.25.2
+    * @leather.io/crypto bumped to 1.11.7
+    * @leather.io/models bumped to 0.40.0
+    * @leather.io/utils bumped to 0.43.0
+
 ## [1.16.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.15.1...@leather.io/stacks-v1.16.0) (2025-08-14)
 
 
