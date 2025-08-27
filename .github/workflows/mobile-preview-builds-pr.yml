@@ -37,9 +37,11 @@ jobs:
         id: preview_build
         working-directory: ./apps/mobile
         run: |
-          echo build_output=$(eas build --no-wait --non-interactive --json --platform=all --profile=preview); >> $GITHUB_OUTPUT
-          echo android_build_id=$(echo $build_output | jq -r '.[0].["id"]') >> $GITHUB_OUTPUT
-          echo ios_build_id=$(echo $build_output | jq -r '.[1].["id"]') >> $GITHUB_OUTPUT
+          build_output=$(eas build --no-wait --non-interactive --json --platform=all --profile=preview)
+          android_build_id=$(echo $build_output | jq -r '.[0].["id"]')
+          ios_build_id=$(echo $build_output | jq -r '.[1].["id"]')
+          echo "android_build_id=$android_build_id" >> $GITHUB_OUTPUT
+          echo "ios_build_id=$ios_build_id" >> $GITHUB_OUTPUT
 
       - name: Publish simulator expo link in PR
         uses: actions/github-script@v7
