@@ -16,6 +16,7 @@ export * from './truncate-middle';
 export * from './time';
 export * from './market-data';
 export * from './currency-formatter/currency-formatter';
+export * from './flatten-object';
 
 export { spamFilter } from './spam-filter/spam-filter';
 export { extractPhraseFromString } from './extract-phrase-from-string/extract-phrase-from-string';
