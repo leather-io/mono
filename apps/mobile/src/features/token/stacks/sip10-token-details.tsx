@@ -31,7 +31,6 @@ export function Sip10TokenDetails({ assetId, account }: Sip10TokenDetailsProps) 
       }
       asset={asset}
       balance={balance}
-      canSend={false}
       activity={activity}
       title={name}
       name={name}

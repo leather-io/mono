@@ -38,7 +38,7 @@ export class Sip10BalancesService {
     @inject(Types.SettingsService) private readonly settingsService: SettingsService,
     private readonly stacksApiClient: HiroStacksApiClient,
     private readonly marketDataService: MarketDataService,
-    private readonly sip10TokensService: Sip10AssetService
+    private readonly sip10AssetsService: Sip10AssetService
   ) {}
 
   /**
@@ -85,7 +85,7 @@ export class Sip10BalancesService {
     assetId: string,
     signal?: AbortSignal
   ): Promise<Sip10Balance> {
-    const sip10Asset = await this.sip10TokensService.getAsset(assetId, signal);
+    const sip10Asset = await this.sip10AssetsService.getAsset(assetId, signal);
     const accountBalance = await this.getSip10AccountBalance(request, signal);
     const sip10Balance = accountBalance.sip10s.find(sip10 => sip10.asset.assetId === assetId);
     return {
@@ -183,7 +183,7 @@ export class Sip10BalancesService {
     amount: number,
     signal?: AbortSignal
   ): Promise<Sip10Balance> {
-    const asset = await this.sip10TokensService.getAsset(assetId, signal);
+    const asset = await this.sip10AssetsService.getAsset(assetId, signal);
     const totalBalance = createMoney(amount, asset.symbol, asset.decimals);
     const marketData = await this.marketDataService.getMarketData(asset, signal);
 

@@ -1,21 +1,28 @@
+import { RefObject, useImperativeHandle, useRef, useState } from 'react';
+
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { useCurrentAccount } from '@/core/current-account-provider';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
+import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 import { Send } from '@/features/send/send';
 import { analytics } from '@/utils/analytics';
-import { useGlobalSearchParams } from 'expo-router';
-import { isString } from 'remeda';
 
-import { btcAsset, stxAsset } from '@leather.io/constants';
 import { FungibleCryptoAsset } from '@leather.io/models';
-import { useHaptics } from '@leather.io/ui/native';
+import { SheetInstance, useHaptics } from '@leather.io/ui/native';
 import { assertExistence } from '@leather.io/utils';
+
+export interface SendSheetInstance {
+  present(asset?: FungibleCryptoAsset): void;
+  dismiss(): void;
+}
+export type SendSheetRef = RefObject<SendSheetInstance | null>;
 
 export function SendSheet() {
   const { sendSheetRef } = useGlobalSheets();
+  const ref = useRef<SheetInstance>(null);
   const triggerHaptics = useHaptics();
   const { currentAccount } = useCurrentAccount();
-  const { asset } = useInitialSendParams();
+  const [asset, setAsset] = useState<FungibleCryptoAsset | undefined>(undefined);
   assertExistence(currentAccount, `"Send Sheet expects currentAccount to be set`);
 
   function handleAnimatedPositionChange(fromIndex: number, toIndex: number) {
@@ -28,23 +35,25 @@ export function SendSheet() {
     analytics.track('send_sheet_dismissed');
   }
 
+  useImperativeHandle(sendSheetRef, () => ({
+    present(newAsset) {
+      setAsset(newAsset);
+      ref.current?.present();
+    },
+    dismiss() {
+      ref.current?.dismiss();
+    },
+  }));
+
   return (
     <FullHeightSheet
-      sheetRef={sendSheetRef}
+      sheetRef={ref}
       onAnimate={handleAnimatedPositionChange}
       onDismiss={handleDismiss}
     >
-      <Send currentAccount={currentAccount} asset={asset} />
+      <SheetNavigationContainer base="send">
+        <Send currentAccount={currentAccount} asset={asset} />
+      </SheetNavigationContainer>
     </FullHeightSheet>
   );
-}
-
-function useInitialSendParams() {
-  const params = useGlobalSearchParams();
-  const accountId = isString(params.accountId) ? params.accountId : undefined;
-  const tokenId = isString(params.tokenId) ? params.tokenId : undefined;
-  // FIXME LEA-3125: we need to refactor this so we can also send SIP-10 tokens
-  const asset: FungibleCryptoAsset = tokenId === 'BTC' ? btcAsset : stxAsset;
-
-  return { accountId, asset };
 }

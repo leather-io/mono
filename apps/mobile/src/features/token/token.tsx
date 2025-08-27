@@ -21,15 +21,15 @@ import { useGetTokenDetails } from './use-get-token-details';
 import { getAvailableBalance, getQuoteBalance } from './utils/get-balance';
 
 interface TokenProps {
-  canSend?: boolean;
-  children?: React.ReactNode;
+  activity: FetchState<OnChainActivity[]>;
   asset: FungibleCryptoAsset;
   balance: FetchState<TokenBalance>;
-  activity: FetchState<OnChainActivity[]>;
+  canSend?: boolean;
+  children?: React.ReactNode;
   icon: React.ReactNode;
   layer: string;
-  title: string;
   name: string;
+  title: string;
 }
 
 export function Token({
@@ -86,7 +86,7 @@ export function Token({
               }
               actionButtons={
                 <ActionButtons
-                  onSend={() => sendSheetRef.current?.present()}
+                  onSend={() => asset && sendSheetRef.current?.present(asset)}
                   onReceive={() => receiveType && receiveSheetRef.current?.present(receiveType)}
                   canSend={canSend}
                 />
