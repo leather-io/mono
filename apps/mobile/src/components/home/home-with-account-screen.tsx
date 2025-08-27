@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 
+import { FetchErrorCallout } from '@/components/error/fetch-error';
 import { Screen } from '@/components/screen/screen';
 import { useCurrentAccount } from '@/core/current-account-provider';
 import { AccountDetails } from '@/features/account/account-details';
@@ -13,6 +14,7 @@ import { useTokenDetailsFlag } from '@/features/feature-flags';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { TokenDetailsProps } from '@/features/token/types';
+import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
@@ -58,10 +60,17 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   }
   const tokenDetailsFlag = useTokenDetailsFlag();
   const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;
+  const { totalBalance } = useAccountBalance({
+    fingerprint: currentAccount.fingerprint,
+    accountIndex: currentAccount.accountIndex,
+  });
+  const isErrorTotalBalance = totalBalance.state === 'error';
 
   return (
     <Screen>
       <AccountScreenHeader account={currentAccount} onOpenAccountSelector={onOpenAccountSelector} />
+      {isErrorTotalBalance && <FetchErrorCallout />}
+
       {listTab === 'tokens' && (
         <AssetsList
           header={

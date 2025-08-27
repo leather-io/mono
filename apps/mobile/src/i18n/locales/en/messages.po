@@ -1335,8 +1335,8 @@ msgstr "Token Transfer"
 msgid "Tokens"
 msgstr "Tokens"
 
-#: src/features/account/components/account-total-balance.tsx:42
-#: src/features/account/components/account-total-balance.tsx:50
+#: src/features/account/components/account-total-balance.tsx:40
+#: src/features/account/components/account-total-balance.tsx:48
 msgid "Total balance"
 msgstr "Total balance"
 
@@ -1507,7 +1507,7 @@ msgstr "Your Secret Key"
 msgid "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
 msgstr "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
 
-#: src/features/account/components/account-total-balance.tsx:43
+#: src/features/account/components/account-total-balance.tsx:41
 msgid "Your total tokens on chain. Includes both available and locked amounts."
 msgstr "Your total tokens on chain. Includes both available and locked amounts."
 

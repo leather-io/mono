@@ -1,4 +1,3 @@
-import { FetchErrorCallout } from '@/components/error/fetch-error';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { NetworkBadge } from '@/features/settings/network-badge';
@@ -28,12 +27,11 @@ export function AccountTotalBalance({ account }: AccountTotalBalanceProps) {
     accountIndex: account.accountIndex,
   });
   const isLoadingTotalBalance = totalBalance.state === 'loading';
-  const isErrorTotalBalance = totalBalance.state === 'error';
+
   if (!hasWallets) return null;
+
   return (
     <Box px="5" pb="5" pt="3">
-      {isErrorTotalBalance && <FetchErrorCallout />}
-
       <Box flexDirection="row" justifyContent="space-between">
         <Pressable
           pressEffects={legacyTouchablePressEffect}
