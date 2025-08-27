@@ -35,13 +35,11 @@ Running on Android device
 
 #### Credentials
 
-1. When running `pnpm run ios` or `pnpm run android`, you are going to be prompted for the firebase login.
-   That is essential for building the app and it is needed for firebase push notifications
-2. You would also need to have .env setup.
+1. You will need a .env setup.
    You can either do it yourself using .env.example file or you can use 1password cli to download it from the vault.
    To do that you would need to run `pnpm run 1password:env:dev` to install the .env file.
 
-To make sure you have 1password cli installed and signed in on your machine, follow these instructions: https://developer.1password.com/docs/cli/get-started
+To make sure you have 1password cli installed and signed in on your machine, follow these instructions: <https://developer.1password.com/docs/cli/get-started>
 
 ### Running the application
 
