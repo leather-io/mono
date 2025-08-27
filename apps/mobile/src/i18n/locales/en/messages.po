@@ -801,7 +801,7 @@ msgstr "Layer 1 • Bitcoin"
 msgid "Layer 2"
 msgstr "Layer 2"
 
-#: src/features/token/stacks/sip10-token-details.tsx:38
+#: src/features/token/stacks/sip10-token-details.tsx:37
 msgid "Layer 2 · Stacks"
 msgstr "Layer 2 · Stacks"
 

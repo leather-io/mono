@@ -1,6 +1,7 @@
 import { createContext, useContext, useRef } from 'react';
 
 import { ReceiveSheetInstance, ReceiveSheetRef } from '@/features/receive/receive-sheet';
+import { SendSheetInstance, SendSheetRef } from '@/features/send/send-sheet';
 import {
   DescriptionSheetInstance,
   DescriptionSheetRef,
@@ -9,7 +10,7 @@ import {
 import { HasChildren, SheetInstance, SheetRef } from '@leather.io/ui/native';
 
 interface GlobalSheetContextValue {
-  sendSheetRef: SheetRef;
+  sendSheetRef: SendSheetRef;
   receiveSheetRef: ReceiveSheetRef;
   browserSheetRef: SheetRef;
   addAccountSheetRef: SheetRef;
@@ -27,7 +28,7 @@ export function useGlobalSheets() {
 }
 
 export function GlobalSheetProvider({ children }: HasChildren) {
-  const sendSheetRef = useRef<SheetInstance>(null);
+  const sendSheetRef = useRef<SendSheetInstance>(null);
   const receiveSheetRef = useRef<ReceiveSheetInstance>(null);
   const browserSheetRef = useRef<SheetInstance>(null);
   const addAccountSheetRef = useRef<SheetInstance>(null);

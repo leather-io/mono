@@ -37,7 +37,7 @@ export function Approval() {
           psbtHex={txHex}
           onBack={goBack}
           onResult={() => {
-            sendSheetRef.current?.close();
+            sendSheetRef.current?.dismiss();
           }}
         />
       )}
@@ -46,7 +46,7 @@ export function Approval() {
           txHex={txHex}
           onEdit={goBack}
           onSuccess={() => {
-            sendSheetRef.current?.close();
+            sendSheetRef.current?.dismiss();
           }}
           fingerprint={fingerprint}
           accountIndex={accountIndex}
@@ -57,7 +57,7 @@ export function Approval() {
           txHex={txHex}
           onEdit={goBack}
           onSuccess={() => {
-            sendSheetRef.current?.close();
+            sendSheetRef.current?.dismiss();
           }}
           accountId={accountId}
         />
