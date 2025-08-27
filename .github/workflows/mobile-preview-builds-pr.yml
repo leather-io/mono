@@ -20,7 +20,6 @@ jobs:
         uses: ./.github/actions/provision
         with:
           PROVISION_MOBILE: true
-          GOOGLE_SERVICES_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST_B64 }}
 
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
@@ -57,5 +56,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `# iOS Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${IOS_BUILD_ID}\n\n# Android Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${ANDROID_BUILD_ID}`
+              body: `iOS Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${IOS_BUILD_ID}\n\n Android Build: https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${ANDROID_BUILD_ID}`
             })
