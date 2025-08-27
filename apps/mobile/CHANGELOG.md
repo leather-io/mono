@@ -19,6 +19,28 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.67.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.66.2...@leather.io/mobile-v2.67.0) (2025-08-27)
+
+
+### Features
+
+* **mobile:** check in Google Services config files ([53a4ebf](https://github.com/leather-io/mono/commit/53a4ebfff26bbc0a1198a904c65177cc44f69818))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.2
+    * @leather.io/crypto bumped to 1.11.8
+    * @leather.io/provider bumped to 1.5.9
+    * @leather.io/query bumped to 2.41.10
+    * @leather.io/rpc bumped to 2.20.8
+    * @leather.io/services bumped to 1.28.2
+    * @leather.io/stacks bumped to 1.16.2
+    * @leather.io/ui bumped to 1.80.1
+    * @leather.io/utils bumped to 0.44.0
+
 ## [2.66.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.66.0...@leather.io/mobile-v2.66.1) (2025-08-19)
 
 

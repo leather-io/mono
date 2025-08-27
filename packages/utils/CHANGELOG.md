@@ -332,6 +332,13 @@
     * @leather.io/constants bumped to 0.25.1
     * @leather.io/models bumped to 0.39.1
 
+## [0.44.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.43.0...@leather.io/utils-v0.44.0) (2025-08-27)
+
+
+### Features
+
+* flatten object util ([cdebfec](https://github.com/leather-io/mono/commit/cdebfec46d68cb1ac9d12b844b9b4c7e976237d4))
+
 ## [0.43.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.42.4...@leather.io/utils-v0.43.0) (2025-08-26)
 
 

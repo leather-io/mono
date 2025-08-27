@@ -5,7 +5,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     name: 'Leather',
     owner: 'leather-wallet',
     slug: 'leather-wallet-mobile',
-    version: '2.66.1', // x-release-please-version
+    version: '2.67.0', // x-release-please-version
     runtimeVersion: {
       policy: 'fingerprint',
     },
