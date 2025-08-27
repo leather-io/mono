@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
 
-const stampSchema = z.object({
+const stampSchema = z.looseObject({
   stamp: z.number(),
   block_index: z.number().optional(),
   cpid: z.string().optional(),
@@ -32,11 +32,11 @@ const stampSchema = z.object({
 
 export type Stamp = z.infer<typeof stampSchema>;
 
-const src20TokenSchema = z.object({
+const src20TokenSchema = z.looseObject({
   id: z.string().optional(),
-  address: z.string(),
+  address: z.string().optional(),
   cpid: z.string().optional(),
-  p: z.string(),
+  p: z.string().optional(),
   tick: z.string(),
   amt: z.string().optional(),
   block_time: z.string(),
@@ -47,7 +47,7 @@ const src20TokenSchema = z.object({
 
 export type Src20Token = z.infer<typeof src20TokenSchema>;
 
-const stampsByAdressSchema = z.object({
+const stampsByAdressSchema = z.looseObject({
   page: z.number(),
   limit: z.number(),
   totalPages: z.number(),
