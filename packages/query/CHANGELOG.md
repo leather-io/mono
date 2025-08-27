@@ -710,6 +710,23 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.32.0
 
+## [2.41.10](https://github.com/leather-io/mono/compare/@leather.io/query-v2.41.9...@leather.io/query-v2.41.10) (2025-08-27)
+
+
+### Bug Fixes
+
+* **query:** stamps schema fails ([d81df8b](https://github.com/leather-io/mono/commit/d81df8bf439e47e4d253b8f23224287dd5c500db))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.2
+    * @leather.io/rpc bumped to 2.20.8
+    * @leather.io/stacks bumped to 1.16.2
+    * @leather.io/utils bumped to 0.44.0
+
 ## [2.41.9](https://github.com/leather-io/mono/compare/@leather.io/query-v2.41.8...@leather.io/query-v2.41.9) (2025-08-26)
 
 
