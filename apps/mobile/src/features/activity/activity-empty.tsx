@@ -7,7 +7,7 @@ import { Image } from 'expo-image';
 import { Box, Text } from '@leather.io/ui/native';
 
 const { width } = Dimensions.get('window');
-const netSize = width * 0.45;
+const netSize = width * 0.65;
 
 export function ActivityEmpty() {
   return (
