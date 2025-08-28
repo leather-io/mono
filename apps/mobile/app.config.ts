@@ -2,6 +2,7 @@ import { ConfigContext, ExpoConfig } from 'expo/config';
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
+    ...config,
     name: 'Leather',
     owner: 'leather-wallet',
     slug: 'leather-wallet-mobile',
@@ -9,22 +10,17 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     runtimeVersion: {
       policy: 'fingerprint',
     },
+    notification: {
+      icon: './src/assets/icon.png',
+    },
     orientation: 'portrait',
     icon: './src/assets/icon.png',
     scheme: 'leather',
     userInterfaceStyle: 'automatic',
     platforms: ['ios', 'android'],
-    updates: {
-      fallbackToCacheTimeout: 0,
-      url: 'https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
-      codeSigningCertificate: './certs/certificate.pem',
-      codeSigningMetadata: {
-        keyid: 'main',
-        alg: 'rsa-v1_5-sha256',
-      },
-    },
     assetBundlePatterns: ['**/*'],
     ios: {
+      ...config.ios,
       config: {
         usesNonExemptEncryption: false,
       },
