@@ -22,6 +22,7 @@
     "lingui:compile": "lingui compile --typescript --strict",
     "lingui:extract": "lingui extract --clean --overwrite",
     "postinstall": "pnpm lingui:compile && if [ \"$PROVISION_MOBILE\" = \"true\" ]; then pnpm -w build:mobile; fi",
+    "prebuild": "expo prebuild --clean",
     "preios": "pnpm run check:cocoapods",
     "start": "expo start",
     "storybook": "cross-env STORYBOOK_ENABLED='true' expo start",
