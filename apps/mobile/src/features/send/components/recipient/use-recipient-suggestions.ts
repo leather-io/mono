@@ -6,10 +6,14 @@ import {
 } from '@/features/send/components/recipient/recipient.utils';
 import { useAccountHelpers } from '@/features/send/components/recipient/use-account-helpers';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
-import { useBnsV2Client } from '@/queries/stacks/bns/bns-v2-client';
 import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
-import { UseQueryResult, keepPreviousData, useQuery } from '@tanstack/react-query';
+import {
+  QueryFunctionContext,
+  UseQueryResult,
+  keepPreviousData,
+  useQuery,
+} from '@tanstack/react-query';
 import { ZodSchema } from 'zod';
 
 import { FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
@@ -32,14 +36,13 @@ export function useRecipientSuggestions({
   const debounceDelay = searchTerm.length === 0 ? 0 : 500;
   const debouncedSearchTerm = useDebouncedValue(searchTerm, debounceDelay);
   const { getAddressByAccount, findAccountByAddress } = useAccountHelpers(asset);
-  const bnsV2Client = useBnsV2Client();
   const bnsLookupHelper = getLookupHelperByChain(asset);
   const { list: accounts } = useAccounts();
 
   return useQuery({
     queryKey: ['recipient-suggestions', debouncedSearchTerm],
     placeholderData: keepPreviousData,
-    queryFn: async () =>
+    queryFn: async ({ signal }: QueryFunctionContext) =>
       buildRecipientSuggestions({
         searchTerm: debouncedSearchTerm,
         accounts,
@@ -48,7 +51,7 @@ export function useRecipientSuggestions({
         getAddressByAccount,
         findAccountByAddress,
         canSelfSend: asset.chain === 'bitcoin',
-        performBnsLookup: (name: string) => bnsLookupHelper(bnsV2Client, name.toLowerCase()),
+        performBnsLookup: (name: string) => bnsLookupHelper(name.toLowerCase(), signal),
         validateAddress: (value: string) =>
           recipientSchema
             .safeParseAsync(value)

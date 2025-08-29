@@ -4,7 +4,7 @@ import { isDefined } from 'remeda';
 import { ZodSafeParseResult } from 'zod';
 
 import { FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
-import { fetchBtcNameOwner, fetchStacksNameOwner } from '@leather.io/query';
+import { getBnsService } from '@leather.io/services';
 
 export function recipientSchemaResultContainsError(
   schemaParserResult: ZodSafeParseResult<unknown>,
@@ -17,9 +17,19 @@ export function recipientSchemaResultContainsError(
 
 export function getLookupHelperByChain(asset: FungibleCryptoAsset) {
   return {
-    bitcoin: fetchBtcNameOwner,
-    stacks: fetchStacksNameOwner,
+    bitcoin: getBnsProfileBitcoinPaymentAddress,
+    stacks: getBnsProfileStacksAddress,
   }[asset.chain];
+}
+
+async function getBnsProfileBitcoinPaymentAddress(bnsName: string, signal: AbortSignal) {
+  const profile = await getBnsService().getBnsProfile(bnsName, signal);
+  return profile?.profileData.addresses?.bitcoinPayment ?? null;
+}
+
+async function getBnsProfileStacksAddress(bnsName: string, signal: AbortSignal) {
+  const profile = await getBnsService().getBnsProfile(bnsName, signal);
+  return profile?.bnsName.owner ?? null;
 }
 
 export function isBnsLookupCandidate(input: string) {
