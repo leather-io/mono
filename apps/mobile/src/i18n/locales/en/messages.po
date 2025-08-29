@@ -792,6 +792,10 @@ msgstr "Layer"
 msgid "Layer 1"
 msgstr "Layer 1"
 
+#: src/features/token/bitcoin/rune-token-details.tsx:40
+msgid "Layer 1 · Bitcoin"
+msgstr "Layer 1 · Bitcoin"
+
 #: src/features/settings/account-identifier-sheet.tsx:19
 #: src/features/settings/account-identifier-sheet.tsx:20
 msgid "Layer 1 • Bitcoin"
@@ -1252,6 +1256,7 @@ msgstr "Tap to view Secret Key"
 
 #: src/features/receive/get-assets.ts:39
 #: src/features/token/bitcoin/bitcoin-address-list.tsx:35
+#: src/features/token/bitcoin/rune-token-details.tsx:47
 msgid "Taproot"
 msgstr "Taproot"
 

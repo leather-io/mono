@@ -11,7 +11,6 @@ export function useGetTokenDetails({ asset }: { asset: FungibleCryptoAsset }) {
   const marketData = useMarketDataQuery(asset);
   const assetPriceChangeQuery = useAssetPriceChangeQuery(asset);
   const assetDescriptionQuery = useAssetDescriptionQuery(asset);
-
   return {
     tokenDetails: toFetchState({
       data: {
