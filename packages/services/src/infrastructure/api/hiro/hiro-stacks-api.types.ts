@@ -10,6 +10,7 @@ import {
   Transaction,
   TransactionEvent,
 } from '@stacks/stacks-blockchain-api-types';
+import { ClarityValue } from '@stacks/transactions';
 
 export interface HiroPageRequest {
   limit: number;
@@ -34,6 +35,9 @@ export type HiroTransactionEventsResponse = AddressAssetsListResponse;
 export type HiroStacksTransaction = Transaction;
 export type HiroStacksMempoolTransaction = MempoolTransaction;
 export type HiroNftHolding = NonFungibleTokenHolding;
+export type HiroReadOnlyFunctionResponse =
+  | { okay: true; result: string }
+  | { okay: false; cause: string };
 
 export interface HiroAddressStxBalanceResponse {
   balance: string;
@@ -51,3 +55,12 @@ export interface HiroAddressFtBalanceResult {
 }
 
 export type HiroAddressFtBalancesResponse = HiroPageResponse<HiroAddressFtBalanceResult>;
+
+export interface CallReadOnlyFunctionArgs {
+  contractAddress: string;
+  contractName: string;
+  functionName: string;
+  functionArgs: ClarityValue[];
+  senderAddress?: string;
+  tip?: string;
+}

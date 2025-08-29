@@ -3,6 +3,12 @@ import { daysInMs, minutesInMs, secondsInMs, weeksInMs } from '@leather.io/utils
 import { HttpCacheOptions } from './http-cache.service';
 
 export type HttpCacheKey =
+  // BnsV2Client
+  | 'bns-v2-api-name'
+  | 'bns-v2-api-address-names'
+  | 'bns-v2-api-zone-file-raw'
+  | 'bns-v2-sdk-primary-name'
+
   // BestInSlotApiClient
   | 'bis-brc20-market-info'
   | 'bis-inscriptions'
@@ -17,6 +23,7 @@ export type HttpCacheKey =
   | 'hiro-stacks-get-address-mempool-transactions'
   | 'hiro-stacks-get-nft-metadata'
   | 'hiro-stacks-get-nft-holdings'
+  | 'hiro-stacks-call-read-only-function'
 
   // LeatherApiClient
   | 'leather-api-utxos'
@@ -46,6 +53,11 @@ export type HttpCacheKey =
   | 'leather-api-register-notifications';
 
 export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
+  'bns-v2-api-name': { ttl: minutesInMs(2) },
+  'bns-v2-api-address-names': { ttl: minutesInMs(2) },
+  'bns-v2-api-zone-file-raw': { ttl: minutesInMs(2) },
+  'bns-v2-sdk-primary-name': { ttl: minutesInMs(2) },
+
   'bis-brc20-market-info': { ttl: minutesInMs(2) },
   'bis-inscriptions': { ttl: secondsInMs(30) },
   'bis-runes-valid-outputs': { ttl: secondsInMs(30) },
@@ -58,6 +70,7 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'hiro-stacks-get-address-mempool-transactions': { ttl: secondsInMs(10) },
   'hiro-stacks-get-nft-metadata': { ttl: weeksInMs(8) },
   'hiro-stacks-get-nft-holdings': { ttl: secondsInMs(10) },
+  'hiro-stacks-call-read-only-function': { ttl: secondsInMs(15) },
 
   'leather-api-utxos': { ttl: secondsInMs(10) },
   'leather-api-transactions': { ttl: secondsInMs(10) },

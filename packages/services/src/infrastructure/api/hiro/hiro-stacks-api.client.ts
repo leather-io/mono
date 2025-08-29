@@ -2,7 +2,14 @@ import {
   MempoolTransactionListResponse,
   NonFungibleTokenHoldingsList,
 } from '@stacks/stacks-blockchain-api-types';
-import axios, { AxiosError, AxiosInstance } from 'axios';
+import {
+  ClarityValue,
+  cvToHex,
+  getAddressFromPrivateKey,
+  hexToCV,
+  makeRandomPrivKey,
+} from '@stacks/transactions';
+import axios, { AxiosInstance } from 'axios';
 import { inject, injectable } from 'inversify';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
@@ -16,6 +23,7 @@ import { ApiRequestOptions } from '../types';
 import { HiroMultiPageRequest, fetchHiroPages } from './hiro-multi-page';
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
 import {
+  CallReadOnlyFunctionArgs,
   HiroAddressBalanceResponse,
   HiroAddressFtBalancesResponse,
   HiroAddressStxBalanceResponse,
@@ -25,6 +33,7 @@ import {
   HiroNftHolding,
   HiroNftMetadataResponse,
   HiroPageRequest,
+  HiroReadOnlyFunctionResponse,
   HiroTransactionEvent,
   HiroTransactionEventsResponse,
 } from './hiro-stacks-api.types';
@@ -288,32 +297,23 @@ export class HiroStacksApiClient {
     principal: string,
     tokenId: number,
     { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<HiroNftMetadataResponse | null> {
-    const fetchFn = async () =>
-      await this.limiter.add(
+  ): Promise<HiroNftMetadataResponse> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
         RateLimiterType.HiroStacks,
-        async () => {
-          try {
-            const res = await this._axios.get<HiroNftMetadataResponse>(
-              `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/nft/${principal}/${tokenId}`,
-              { signal }
-            );
-            return res.data;
-          } catch (error) {
-            if (
-              error instanceof AxiosError &&
-              (error.request?.status === 404 || error.request?.status === 422)
-            )
-              return null;
-            throw error;
-          }
-        },
+        async () =>
+          this._axios.get<HiroNftMetadataResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/nft/${principal}/${tokenId}`,
+            { signal }
+          ),
         {
           priority: hiroApiRequestsPriorityLevels.getNftMetadata,
           signal,
           throwOnTimeout: true,
         }
       );
+      return res.data;
+    };
 
     return skipCache
       ? await fetchFn()
@@ -321,6 +321,7 @@ export class HiroStacksApiClient {
           [
             'hiro-stacks-get-nft-metadata',
             principal,
+            tokenId,
             selectStacksChainId(this.settings.getSettings()),
           ],
           fetchFn
@@ -358,6 +359,63 @@ export class HiroStacksApiClient {
             'hiro-stacks-get-nft-holdings',
             principal,
             selectStacksChainId(this.settings.getSettings()),
+          ],
+          fetchFn
+        );
+  }
+
+  private generateRandomAddress() {
+    const randomPrivateKey = makeRandomPrivKey();
+    const privateKeyString = randomPrivateKey;
+    const randomAddress = getAddressFromPrivateKey(privateKeyString);
+    return randomAddress;
+  }
+
+  public async callReadOnlyFunction(
+    {
+      contractAddress,
+      contractName,
+      functionName,
+      functionArgs,
+      senderAddress,
+      tip = 'latest',
+    }: CallReadOnlyFunctionArgs,
+    { signal, skipCache }: ApiRequestOptions
+  ): Promise<ClarityValue> {
+    const body = {
+      sender: senderAddress ?? this.generateRandomAddress(),
+      arguments: functionArgs.map(arg => cvToHex(arg)),
+    };
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.post<HiroReadOnlyFunctionResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/v2/contracts/call-read/${contractAddress}/${contractName}/${functionName}?tip=${tip}`,
+            body,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.callReadOnlyFunction,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      if (!res.data.okay) {
+        throw new Error(res.data.cause);
+      }
+      return hexToCV(res.data.result);
+    };
+
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          [
+            'hiro-stacks-call-read-only-function',
+            contractAddress,
+            contractName,
+            functionName,
+            body.arguments,
           ],
           fetchFn
         );

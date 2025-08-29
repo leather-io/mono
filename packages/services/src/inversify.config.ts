@@ -8,8 +8,10 @@ import { BtcBalancesService } from './balances/btc-balances.service';
 import { RunesBalancesService } from './balances/runes-balances.service';
 import { Sip10BalancesService } from './balances/sip10-balances.service';
 import { StxBalancesService } from './balances/stx-balances.service';
+import { BnsService } from './bns/bns.service';
 import { CollectiblesService } from './collectibles/collectibles.service';
 import { BestInSlotApiClient } from './infrastructure/api/best-in-slot/best-in-slot-api.client';
+import { BnsV2ApiClient } from './infrastructure/api/bns-v2/bns-v2-api.client';
 import { HiroStacksApiClient } from './infrastructure/api/hiro/hiro-stacks-api.client';
 import { LeatherApiClient } from './infrastructure/api/leather/leather-api.client';
 import { HttpCacheService } from './infrastructure/cache/http-cache.service';
@@ -98,6 +100,9 @@ export function getNotificationsService() {
 export function getFungibleAssetInfoService() {
   return getServicesContainer().get(FungibleAssetInfoService);
 }
+export function getBnsService() {
+  return getServicesContainer().get(BnsService);
+}
 /* 
   API Layer Clients
 */
@@ -109,4 +114,7 @@ export function getHiroStacksApiClient() {
 }
 export function getBisApiClient() {
   return getServicesContainer().get(BestInSlotApiClient);
+}
+export function getBnsV2ApiClient() {
+  return getServicesContainer().get(BnsV2ApiClient);
 }

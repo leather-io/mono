@@ -73,21 +73,14 @@ export class CollectiblesService {
   ): Promise<{ asset: Sip9Asset; blockHeight: number }[]> {
     try {
       const nftHoldings = await this.stacksApiClient.getNftHoldings(stxAddress, { signal });
-      const BATCH_SIZE = 6;
-      const sip9s = [];
-      for (let i = 0; i < nftHoldings.length; i += BATCH_SIZE) {
-        const results = await Promise.all(
-          nftHoldings
-            .slice(i, i + BATCH_SIZE)
-            .map(holding =>
-              this.getOptionalSip9Asset(holding, signal).then(asset =>
-                asset ? { asset, blockHeight: holding.block_height } : undefined
-              )
-            )
-        );
-        sip9s.push(...results.filter(isDefined));
-      }
-      return sip9s;
+      const results = await Promise.all(
+        nftHoldings.map(holding =>
+          this.getOptionalSip9Asset(holding, signal).then(asset =>
+            asset ? { asset, blockHeight: holding.block_height } : undefined
+          )
+        )
+      );
+      return results.filter(isDefined);
     } catch {
       return [];
     }
