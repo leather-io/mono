@@ -50,7 +50,7 @@
     "@leather.io/rpc": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "dotenv-cli": "8.0.0",
-    "eslint": "9.16.0",
+    "eslint": "9.28",
     "openapi-typescript": "7.6.1",
     "prettier": "3.5.1",
     "tslib": "2.6.2",

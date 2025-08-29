@@ -1,0 +1,31 @@
+name: Deploy Sanity Studio
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy-sanity-studio:
+    runs-on: ubuntu-latest
+    name: Deploy Sanity Studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Build CMS app deps
+        run: pnpm turbo run build --filter="@leather.io/cms"
+
+      - name: Build Sanity Studio
+        working-directory: packages/cms
+        run: pnpm run sanity:build
+
+      - name: Deploy CMS app
+        working-directory: packages/cms
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        run: pnpm run sanity:deploy

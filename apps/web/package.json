@@ -18,7 +18,8 @@
     "test:coverage": "vitest run --coverage",
     "test:integration": "playwright test",
     "test:unit": "vitest run",
-    "typecheck": "pnpm cf-typegen && react-router typegen && tsc -b"
+    "typecheck": "pnpm cf-typegen && react-router typegen && tsc -b",
+    "typegen": "pnpm cf-typegen && react-router typegen && tsc -b"
   },
   "msw": {
     "workerDirectory": [
@@ -29,6 +30,7 @@
     "@hookform/resolvers": "5.2.1",
     "@leather.io/analytics": "workspace:*",
     "@leather.io/bitcoin": "workspace:*",
+    "@leather.io/cms": "workspace:*",
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/panda-preset": "workspace:*",
@@ -39,8 +41,10 @@
     "@leather.io/stacks": "workspace:*",
     "@leather.io/ui": "workspace:*",
     "@leather.io/utils": "workspace:*",
+    "@portabletext/react": "4.0.2",
     "@react-router/node": "7.8.0",
     "@react-router/serve": "7.8.0",
+    "@sanity/image-url": "1.2.0",
     "@segment/analytics-next": "1.81.0",
     "@sentry/profiling-node": "9.15.0",
     "@sentry/react-router": "9.15.0",

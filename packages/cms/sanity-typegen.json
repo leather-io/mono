@@ -1,0 +1,5 @@
+{
+    "path": "./src/**/*.ts",
+    "schema": "schema.json",
+    "generates": "./src/generated/types.ts"
+}
