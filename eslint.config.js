@@ -55,9 +55,8 @@ export default tseslint.config(
     extends: [reactConfig],
   },
   {
-    name: 'query',
-    files: ['packages/query/src/**/*.{ts,tsx}'],
-    extends: [reactConfig, pluginQuery.configs['flat/recommended']],
+    name: 'cms',
+    files: ['packages/cms/src/**/*.{ts,tsx}'],
   },
   {
     name: 'cms',
