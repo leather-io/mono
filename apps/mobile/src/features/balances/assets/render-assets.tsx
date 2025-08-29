@@ -36,7 +36,18 @@ export function renderAsset({
     );
   }
   if (isRuneBalance(item)) {
-    return <RunesTokenBalance key={item.asset.symbol} item={item} />;
+    return (
+      <RunesTokenBalance
+        key={item.asset.symbol}
+        item={item}
+        onPress={() =>
+          onPress?.({
+            assetId: item.asset.runeName,
+            assetProtocol: item.asset.protocol,
+          })
+        }
+      />
+    );
   }
   return null;
 }

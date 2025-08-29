@@ -15,6 +15,21 @@ export function useRunesTotalBalance() {
   return toFetchState(useRunesAggregateBalanceQuery(accounts.map(account => ({ account }))));
 }
 
+export function useRuneBalanceByRuneName(
+  fingerprint: string,
+  accountIndex: number,
+  runeName: string
+) {
+  const runesBalances = useRunesAccountBalance(fingerprint, accountIndex);
+  const runeBalance = runesBalances.value?.runes.find(rune => rune.asset.runeName === runeName);
+  return toFetchState({
+    data: runeBalance,
+    isLoading: runesBalances.state === 'loading',
+    isError: runesBalances.state === 'error',
+    error: runesBalances.errorMessage ? new Error(runesBalances.errorMessage) : null,
+  });
+}
+
 export function useRunesAccountBalance(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
   return toFetchState(useRunesAccountBalanceQuery({ account }));
