@@ -1,0 +1,49 @@
+{
+  "name": "@leather.io/cms",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "pnpm sanity:schema-extract && pnpm sanity:generate && tsup && tsc --emitDeclarationOnly",
+    "build:watch": "nodemon",
+    "dev": "concurrently \"sanity dev\" \"nodemon\"",
+    "sanity:build": "sanity build",
+    "sanity:deploy": "sanity deploy",
+    "sanity:deploy-graphql": "sanity graphql deploy",
+    "sanity:generate": "sanity typegen generate",
+    "sanity:schema-extract": "sanity schema extract",
+    "sanity:start": "sanity start",
+    "typecheck": "tsc --noEmit --project ./tsconfig.json"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.js",
+      "require": "./dist/client/index.js"
+    }
+  },
+  "dependencies": {
+    "@sanity/client": "7.10.0",
+    "groq": "4.6.0",
+    "sanity": "4.6.1"
+  },
+  "devDependencies": {
+    "@sanity/eslint-config-studio": "5.0.2",
+    "@sanity/vision": "4.6.1",
+    "@types/react": "19.0.12",
+    "concurrently": "8.2.2",
+    "eslint": "9.28",
+    "nodemon": "3.1.10",
+    "prettier": "3.5.1",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "styled-components": "6.1.18",
+    "tsup": "8.4.0",
+    "typescript": "5.8.3"
+  },
+  "keywords": [
+    "cms",
+    "sanity"
+  ],
+  "main": "index.ts",
+  "private": true
+}

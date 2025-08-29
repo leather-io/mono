@@ -46,6 +46,7 @@ export default tseslint.config(
       '**/tsup.config*.ts',
       '**/.react-router/',
       '**/.wrangler/',
+      '**/generated/',
     ],
   },
   {
@@ -57,6 +58,10 @@ export default tseslint.config(
     name: 'query',
     files: ['packages/query/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
+  },
+  {
+    name: 'cms',
+    files: ['packages/cms/src/**/*.{ts,tsx}'],
   },
   {
     name: 'web',

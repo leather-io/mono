@@ -27,7 +27,7 @@ Site is deployed on Cloudflare workers. See [deployment workflow](../../.github/
 Create a `.env` file to set local environment variables. Only `LEATHER_` prefixed
 variables are accessible at runtime.
 
-```
+```sh
 LEATHER_TARGET=development
 LEATHER_MOCK_MODE=true
 ```
