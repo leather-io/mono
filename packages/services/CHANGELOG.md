@@ -396,6 +396,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.8
 
+## [1.29.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.28.2...@leather.io/services-v1.29.0) (2025-08-29)
+
+
+### Features
+
+* **mobile:** connect SIP-10 sends in token details, ref LEA-3140 ([e8be8a8](https://github.com/leather-io/mono/commit/e8be8a8d9bd7df39fa686e8f9881c263ce7a8760))
+
 ## [1.28.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.27.1...@leather.io/services-v1.28.0) (2025-08-18)
 
 

@@ -19,6 +19,28 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.68.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.67.0...@leather.io/mobile-v2.68.0) (2025-08-29)
+
+
+### Features
+
+* **mobile:** connect SIP-10 sends in token details, ref LEA-3140 ([e8be8a8](https://github.com/leather-io/mono/commit/e8be8a8d9bd7df39fa686e8f9881c263ce7a8760))
+
+
+### Bug Fixes
+
+* **mobile:** full width balances warning ([644cd7f](https://github.com/leather-io/mono/commit/644cd7fe396887a4b54d9238da7272b3f727d720))
+* **mobile:** mobile nonce cache stale time, ref LEA-3129 ([68158c6](https://github.com/leather-io/mono/commit/68158c66a63763894e9efe9066966250eb9b978b))
+* **mobile:** update sticker sizes ([e8eda69](https://github.com/leather-io/mono/commit/e8eda69c5448a349af375627ab70cc5996c2db8a))
+* remove updates from config until fix found ([5a0c7be](https://github.com/leather-io/mono/commit/5a0c7bea416e9accf7a630a68e504fbaad277d92))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.29.0
+
 ## [2.67.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.66.2...@leather.io/mobile-v2.67.0) (2025-08-27)
 
 
