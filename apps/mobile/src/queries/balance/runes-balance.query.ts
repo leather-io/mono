@@ -20,14 +20,8 @@ export function useRuneBalanceByRuneName(
   accountIndex: number,
   runeName: string
 ) {
-  const runesBalances = useRunesAccountBalance(fingerprint, accountIndex);
-  const runeBalance = runesBalances.value?.runes.find(rune => rune.asset.runeName === runeName);
-  return toFetchState({
-    data: runeBalance,
-    isLoading: runesBalances.state === 'loading',
-    isError: runesBalances.state === 'error',
-    error: runesBalances.errorMessage ? new Error(runesBalances.errorMessage) : null,
-  });
+  const account = useAccountAddresses(fingerprint, accountIndex);
+  return toFetchState(useRuneBalanceByRuneNameQuery({ account }, runeName));
 }
 
 export function useRunesAccountBalance(fingerprint: string, accountIndex: number) {
@@ -63,6 +57,28 @@ function useRunesAccountBalanceQuery(request: AccountRequest) {
     queryKey: ['runes-balances-service-get-runes-account-balance', request, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAccountBalance(request, signal),
+    enabled: runeFlag,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    retryOnMount: false,
+    staleTime: 1 * 1000,
+    gcTime: 1 * 1000,
+  });
+}
+
+function useRuneBalanceByRuneNameQuery(request: AccountRequest, runeName: string) {
+  const { fiatCurrencyPreference } = useSettings();
+  const runeFlag = useRunesFlag();
+  return useQuery({
+    queryKey: [
+      'runes-balances-service-get-rune-balance-by-rune-name',
+      request,
+      fiatCurrencyPreference,
+      runeName,
+    ],
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getRunesBalancesService().getRuneBalanceByRuneName(request, runeName, signal),
     enabled: runeFlag,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
