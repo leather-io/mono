@@ -36,16 +36,8 @@ export function useBrowserFlag() {
   return useBoolVariation('release_browser_feature', false);
 }
 
-export function useCollectiblesFlag() {
-  return useBoolVariation('release_collectibles_feature', false);
-}
-
 export function useNotificationsFlag() {
   return useBoolVariation('release_push_notifications', false);
-}
-
-export function useInscriptionsFlag() {
-  return useBoolVariation('release_inscriptions_feature', false);
 }
 
 export function useRunesFlag() {

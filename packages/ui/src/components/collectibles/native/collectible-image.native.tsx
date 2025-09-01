@@ -8,9 +8,13 @@ interface CollectibleImageProps {
   size?: number;
 }
 export function CollectibleImage({ alt, source, size = 200 }: CollectibleImageProps) {
+  console.log('source', source);
+  console.log('alt', alt);
   const isBns = alt.includes('.btc') || source.includes('BNS-V2');
+  // const isBns = source.includes('BNS');
 
   if (isBns) {
+    // console.log('isBns', alt);
     return <BnsImage alt={alt} source={source} size={size} />;
   }
 

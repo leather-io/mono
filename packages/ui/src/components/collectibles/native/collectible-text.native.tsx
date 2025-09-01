@@ -18,8 +18,16 @@ export function CollectibleText({ src, size = 200 }: CollectibleTextProps) {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const data = await response.json();
-        setContent(JSON.stringify(data, null, 2));
+        // Try to parse as JSON, but fall back to text if it fails
+        let data;
+        try {
+          data = await response.json();
+          setContent(JSON.stringify(data, null, 2));
+        } catch {
+          // If not JSON, try as plain text
+          const text = await response.text();
+          setContent(text);
+        }
       } catch {
         setContent('Content not found');
       }

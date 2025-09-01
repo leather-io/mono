@@ -9,7 +9,7 @@ export function isValidSip9(collectible: Sip9Asset) {
   return (
     !isEmptyString(collectible.cachedImage) &&
     isDefined(collectible.cachedImage) &&
-    collectible.name !== 'BNS - Archive'
+    collectible.name !== 'BNS - Archive' // this seems buggy perhaps?
   );
 }
 

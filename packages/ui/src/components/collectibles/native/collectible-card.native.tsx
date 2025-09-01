@@ -6,8 +6,9 @@ import { CollectibleHtml } from './collectible-html.native';
 import { CollectibleImage } from './collectible-image.native';
 import { CollectibleText } from './collectible-text.native';
 
+type InscriptionMimeType = 'audio' | 'text' | 'html' | 'gltf' | 'svg' | 'video' | 'image';
 export interface CollectibleCardProps {
-  mimeType?: string;
+  mimeType: InscriptionMimeType;
   name: string;
   size: number;
   src: string;
@@ -21,6 +22,7 @@ export function CollectibleCard({ mimeType, name, size = 200, src, type }: Colle
         return <CollectibleAudio size={size} />;
       case 'text':
         return <CollectibleText src={src} size={size} />;
+      // return <CollectibleImage source={src} alt={name} size={size} />;
       case 'html':
       case 'gltf':
       case 'svg':
@@ -29,7 +31,7 @@ export function CollectibleCard({ mimeType, name, size = 200, src, type }: Colle
       case 'image':
         return <CollectibleImage source={src} alt={name} size={size} />;
       default:
-        assertUnreachable(mimeType as never);
+        assertUnreachable(mimeType);
     }
   }
 
