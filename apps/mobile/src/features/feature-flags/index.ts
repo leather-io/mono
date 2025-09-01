@@ -37,7 +37,7 @@ export function useBrowserFlag() {
 }
 
 export function useCollectiblesFlag() {
-  return useBoolVariation('release_collectibles_feature', false);
+  return useBoolVariation('release_collectibles_feature', true);
 }
 
 export function useNotificationsFlag() {
@@ -45,7 +45,7 @@ export function useNotificationsFlag() {
 }
 
 export function useInscriptionsFlag() {
-  return useBoolVariation('release_inscriptions_feature', false);
+  return useBoolVariation('release_inscriptions_feature', true);
 }
 
 export function useRunesFlag() {

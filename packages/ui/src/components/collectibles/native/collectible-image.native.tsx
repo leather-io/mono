@@ -1,6 +1,6 @@
 import { Image } from 'react-native';
 
-import { Box, Text } from '../../../../native';
+import { Box, Eye1ClosedIcon, Text } from '../../../../native';
 
 interface CollectibleImageProps {
   alt: string;
@@ -9,6 +9,24 @@ interface CollectibleImageProps {
 }
 export function CollectibleImage({ alt, source, size = 200 }: CollectibleImageProps) {
   const isBns = alt.includes('.btc') || source.includes('BNS-V2');
+
+  // Don't render if source is empty
+  if (!source || source.trim() === '') {
+    return (
+      <Box
+        width={size}
+        height={size}
+        bg="ink.background-secondary"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Eye1ClosedIcon />
+        <Text variant="label02" color="ink.text-subdued">
+          No Image
+        </Text>
+      </Box>
+    );
+  }
 
   if (isBns) {
     return <BnsImage alt={alt} source={source} size={size} />;
@@ -30,7 +48,15 @@ function BnsImage({ alt, source, size = 200 }: CollectibleImageProps) {
       bg="ink.background-secondary"
       position="relative"
     >
-      <Image source={{ uri: source }} alt={alt} height={58} width={164} style={{ marginTop: 44 }} />
+      {source && source.trim() !== '' && (
+        <Image
+          source={{ uri: source }}
+          alt={alt}
+          height={58}
+          width={164}
+          style={{ marginTop: 44 }}
+        />
+      )}
       <Box
         position="absolute"
         bottom={0}

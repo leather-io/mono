@@ -25,12 +25,12 @@ export function useAccountCollectibles(fingerprint: string, accountIndex: number
  * @see useAccountCollectiblesQuery
  */
 function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
-  const inscriptionsFlag = useInscriptionsFlag();
-  if (!inscriptionsFlag) {
-    accounts.forEach(account => {
-      account.bitcoin = undefined;
-    });
-  }
+  // const inscriptionsFlag = useInscriptionsFlag();
+  // if (!inscriptionsFlag) {
+  //   accounts.forEach(account => {
+  //     account.bitcoin = undefined;
+  //   });
+  // }
   return useQuery({
     queryKey: ['collectibles-service-get-total-collectibles', accounts],
     queryFn: ({ signal }: QueryFunctionContext) =>
@@ -45,10 +45,10 @@ function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
 }
 
 function useAccountCollectiblesQuery(account: AccountAddresses) {
-  const inscriptionsFlag = useInscriptionsFlag();
-  if (!inscriptionsFlag) {
-    account.bitcoin = undefined;
-  }
+  // const inscriptionsFlag = useInscriptionsFlag();
+  // if (!inscriptionsFlag) {
+  //   account.bitcoin = undefined;
+  // }
   return useQuery({
     queryKey: ['collectibles-service-get-account-collectibles', account],
     queryFn: ({ signal }: QueryFunctionContext) =>
