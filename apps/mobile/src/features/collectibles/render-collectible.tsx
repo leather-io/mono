@@ -1,19 +1,23 @@
 import { NonFungibleCryptoAsset } from '@leather.io/models';
-import { CollectibleCard } from '@leather.io/ui/native';
+import { assertUnreachable } from '@leather.io/utils';
 
-import { serializeCollectible } from './collectibles-serializer';
+import { Inscription } from './components/inscription';
+import { Sip9 } from './components/sip9';
+import { Stamp } from './components/stamp';
 
-export function renderCollectible({ item }: { item: NonFungibleCryptoAsset }) {
-  const collectible = serializeCollectible(item);
-  const thumbnailSize = 200;
-  if (!collectible) return null;
-  return (
-    <CollectibleCard
-      name={collectible.name}
-      type={collectible.type}
-      mimeType={collectible.mimeType}
-      size={thumbnailSize}
-      src={collectible.src}
-    />
-  );
+interface RenderCollectibleProps {
+  item: NonFungibleCryptoAsset;
+  height: number;
+}
+export function renderCollectible({ item, height }: RenderCollectibleProps) {
+  switch (item.protocol) {
+    case 'stamp':
+      return <Stamp item={item} height={height} />;
+    case 'sip9':
+      return <Sip9 item={item} height={height} />;
+    case 'inscription':
+      return <Inscription item={item} height={height} />;
+    default:
+      return assertUnreachable(item);
+  }
 }

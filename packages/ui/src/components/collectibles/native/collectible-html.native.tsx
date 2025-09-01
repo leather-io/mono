@@ -1,16 +1,25 @@
 import { WebView } from 'react-native-webview';
 
-import { CollectibleCardLayout } from './collectible-card-layout.native';
+import { CollectibleCard } from './collectible-card.native';
 
 interface CollectibleHtmlProps {
   src: string;
-  size?: number;
+  height?: number;
 }
-
-export function CollectibleHtml({ src, size = 200 }: CollectibleHtmlProps) {
+export function CollectibleHtml({ src, height = 200 }: CollectibleHtmlProps) {
   return (
-    <CollectibleCardLayout width={size} height={size}>
-      <WebView source={{ uri: src }} scrollEnabled={false} />
-    </CollectibleCardLayout>
+    <CollectibleCard height={height}>
+      <WebView
+        source={{ uri: src }}
+        scrollEnabled={false}
+        originWhitelist={['*']}
+        mixedContentMode="always"
+        allowsInlineMediaPlayback={true}
+        mediaPlaybackRequiresUserAction={false}
+        startInLoadingState={true}
+        cacheEnabled={false}
+        incognito={true}
+      />
+    </CollectibleCard>
   );
 }

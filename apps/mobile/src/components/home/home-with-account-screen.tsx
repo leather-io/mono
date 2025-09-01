@@ -17,7 +17,6 @@ import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
-import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { useSettings } from '@/store/settings/settings';
 import { useRouter } from 'expo-router';
 
@@ -50,7 +49,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   });
   const hasAssets = !!allSip10Data.value?.sip10s.length || !!allRunesData.value?.runes.length;
 
-  const collectiblesData = useAccountCollectibles(fingerprint, accountIndex);
   function onOpenAccountSelector() {
     accountSelectorSheetRef.current?.present();
   }
@@ -127,13 +125,13 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
       )}
       {listTab === 'collectibles' && (
         <CollectiblesList
+          currentAccount={currentAccount}
           header={
             <>
               <AccountDetails account={currentAccount} />
               <AssetTabs listTab={listTab} setListTab={setListTab} />
             </>
           }
-          collectiblesData={collectiblesData}
         />
       )}
 
