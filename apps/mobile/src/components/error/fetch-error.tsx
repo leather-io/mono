@@ -1,22 +1,6 @@
 import { t } from '@lingui/core/macro';
-import { Image } from 'expo-image';
 
 import { Box, Callout, CloudOffIcon, Text } from '@leather.io/ui/native';
-
-import { EmptyLayout } from '../loading/empty-layout';
-
-interface ErrorProps {
-  errorMessage?: string;
-}
-export function Error({ errorMessage }: ErrorProps) {
-  return (
-    <EmptyLayout image={<Image source={require('@/assets/stickers/net.png')} />}>
-      <Text variant="heading03">{t`Something went wrong`}</Text>
-      <Text variant="label01">{t`Pull to refresh`}</Text>
-      {errorMessage && <Text variant="code">{errorMessage}</Text>}
-    </EmptyLayout>
-  );
-}
 
 export function FetchErrorCallout() {
   return (

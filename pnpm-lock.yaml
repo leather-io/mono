@@ -1426,6 +1426,9 @@ importers:
       '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
+      '@leather.io/query':
+        specifier: workspace:*
+        version: link:../query
       '@leather.io/tokens':
         specifier: workspace:*
         version: link:../tokens

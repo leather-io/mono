@@ -541,7 +541,7 @@ msgstr "Don't notify me"
 msgid "Done"
 msgstr "Done"
 
-#: src/components/error/error.tsx:53
+#: src/components/error/error.tsx:65
 msgid "Drag to refresh"
 msgstr "Drag to refresh"
 
@@ -1021,7 +1021,6 @@ msgid "Provide an email address for receiving notifications"
 msgstr "Provide an email address for receiving notifications"
 
 #: src/components/error/fetch-error.tsx:15
-#: src/components/error/fetch-error.tsx:31
 msgid "Pull to refresh"
 msgstr "Pull to refresh"
 
@@ -1214,12 +1213,12 @@ msgstr "Skip for now"
 msgid "Slow"
 msgstr "Slow"
 
-#: src/components/error/fetch-error.tsx:24
+#: src/components/error/fetch-error.tsx:8
 msgid "Some balances couldn’t load."
 msgstr "Some balances couldn’t load."
 
-#: src/components/error/error.tsx:46
-#: src/components/error/fetch-error.tsx:14
+#: src/components/error/error.tsx:34
+#: src/components/error/error.tsx:58
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
@@ -1383,7 +1382,7 @@ msgstr "Transaction failed due to an unexpected error"
 msgid "Transaction is sent!"
 msgstr "Transaction is sent!"
 
-#: src/components/error/error.tsx:49
+#: src/components/error/error.tsx:61
 msgid "Try again"
 msgstr "Try again"
 
