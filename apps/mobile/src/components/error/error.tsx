@@ -7,7 +7,7 @@ import { Image } from 'expo-image';
 
 import { Box, Button, HasChildren, Text } from '@leather.io/ui/native';
 
-import { EmptyLayout } from '../loading/empty-layout';
+import { EmptyLayout, EmptyLayoutTab } from '../loading/empty-layout';
 
 function WidgetWrap({ children }: HasChildren) {
   return (
@@ -17,9 +17,65 @@ function WidgetWrap({ children }: HasChildren) {
   );
 }
 
+export function ErrorFallbackTab() {
+  return (
+    <EmptyLayoutTab
+      image={
+        <Box>
+          <Image
+            style={{ height: 219, width: 270 }}
+            contentFit="contain"
+            source={require('@/assets/stickers/egg.png')}
+          />
+        </Box>
+      }
+    >
+      <Text variant="heading03" textAlign="center" fontSize={32}>
+        {t`Something went wrong`}
+      </Text>
+    </EmptyLayoutTab>
+  );
+}
+
 interface ErrorProps {
   error?: Error;
   onRetry?: () => void;
+}
+export function ErrorFallback({ error, onRetry }: ErrorProps) {
+  return (
+    <EmptyLayout
+      image={
+        <Box pt="8">
+          <Image
+            style={{ height: 219, width: 270 }}
+            contentFit="contain"
+            source={require('@/assets/stickers/egg.png')}
+          />
+        </Box>
+      }
+    >
+      <Text variant="heading03" textAlign="center" fontSize={32}>
+        {t`Something went wrong`}
+      </Text>
+      {onRetry ? (
+        <Button onPress={onRetry}>{t`Try again`}</Button>
+      ) : (
+        <>
+          <Text variant="label01" textAlign="center">
+            {t`Drag to refresh`}
+          </Text>
+
+          {error && (
+            <Box width={218} height="auto" alignItems="flex-start" bg="ink.background-secondary">
+              <Text variant="code" textAlign="center">
+                {error.message}
+              </Text>
+            </Box>
+          )}
+        </>
+      )}
+    </EmptyLayout>
+  );
 }
 
 export function Error({ error, onRetry }: ErrorProps) {
@@ -31,43 +87,7 @@ export function Error({ error, onRetry }: ErrorProps) {
       refreshControl={<RefreshControl />}
     >
       <WidgetWrap>
-        <EmptyLayout
-          image={
-            <Box pt="8">
-              <Image
-                style={{ height: 219, width: 270 }}
-                contentFit="contain"
-                source={require('@/assets/stickers/egg.png')}
-              />
-            </Box>
-          }
-        >
-          <Text variant="heading03" textAlign="center" fontSize={32}>
-            {t`Something went wrong`}
-          </Text>
-          {onRetry ? (
-            <Button onPress={onRetry}>{t`Try again`}</Button>
-          ) : (
-            <>
-              <Text variant="label01" textAlign="center">
-                {t`Drag to refresh`}
-              </Text>
-
-              {error && (
-                <Box
-                  width={218}
-                  height="auto"
-                  alignItems="flex-start"
-                  bg="ink.background-secondary"
-                >
-                  <Text variant="code" textAlign="center">
-                    {error.message}
-                  </Text>
-                </Box>
-              )}
-            </>
-          )}
-        </EmptyLayout>
+        <ErrorFallback error={error} onRetry={onRetry} />
       </WidgetWrap>
     </ScrollView>
   );

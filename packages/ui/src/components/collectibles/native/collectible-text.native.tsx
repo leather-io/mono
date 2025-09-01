@@ -1,47 +1,51 @@
-import { useEffect, useState } from 'react';
+import { WebView } from 'react-native-webview';
 
-import { Text } from '../../text/text.native';
-import { CollectibleCardLayout } from './collectible-card-layout.native';
+import { Text } from '../../../../native';
+import { CollectibleCard } from './collectible-card.native';
 
 interface CollectibleTextProps {
   src: string;
-  size?: number;
+  height?: number;
 }
 
-export function CollectibleText({ src, size = 200 }: CollectibleTextProps) {
-  const [content, setContent] = useState<string | null>(null);
+export function CollectibleText({ src, height = 200 }: CollectibleTextProps) {
+  // Check if content contains HTML tags (safe, non-polynomial regex)
+  const htmlRegex = /<\w+[\s\S]*?>/;
+  const isHtml = htmlRegex.test(src);
 
-  useEffect(() => {
-    async function fetchContent() {
-      try {
-        const response = await fetch(src);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setContent(JSON.stringify(data, null, 2));
-      } catch {
-        setContent('Content not found');
-      }
-    }
-
-    void fetchContent();
-  }, [src]);
-
-  if (!content) return null;
+  if (isHtml) {
+    return (
+      <CollectibleCard height={height}>
+        <WebView
+          source={{ html: src }}
+          scrollEnabled={false}
+          originWhitelist={['*']}
+          mixedContentMode="always"
+          allowsInlineMediaPlayback={true}
+          mediaPlaybackRequiresUserAction={false}
+          startInLoadingState={true}
+          cacheEnabled={false}
+          incognito={true}
+          textZoom={Math.max(50, Math.min(100, height))}
+        />
+      </CollectibleCard>
+    );
+  }
 
   return (
-    <CollectibleCardLayout bg="ink.text-primary" p="4" width={size} height={size}>
-      {/* 
-       TODO: assess security implications of rendering HTML content
-       - XSS attacks seem unlikely on React Native 
-      - I tried using RenderHtml, but it was not working as expected
-      - sanitize-html is a popular library for this, but it's a little heavy for this use case
-      - I tried regex's but theres always a new case to catch and it actually removes some valid content
-       */}
-      <Text color="ink.background-secondary" variant="code">
-        {content}
+    <CollectibleCard bg="ink.text-primary" height={height}>
+      <Text color="ink.background-secondary" variant="code" p="4">
+        {(() => {
+          try {
+            // Try to pretty-print if it's valid JSON
+            const parsed = JSON.parse(src);
+            return JSON.stringify(parsed, null, 2);
+          } catch {
+            // Fallback to raw text if not JSON
+            return src;
+          }
+        })()}
       </Text>
-    </CollectibleCardLayout>
+    </CollectibleCard>
   );
 }
