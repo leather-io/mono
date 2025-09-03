@@ -1,6 +1,5 @@
 import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
-import { PostPageHeading } from '~/components/posts/post-page-heading';
 import { PostSectionHeading } from '~/components/posts/post-section-heading';
 import { StacksAccountLoader } from '~/components/stacks-account-loader';
 import { content } from '~/data/content';
@@ -11,6 +10,7 @@ import { IndependentStackingLink } from './components/independent-stacking-link'
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
 import { StackingExplainer } from './components/stacking-explainer';
 import { StackingFaq } from './components/stacking-faq';
+import { StackingPageHeading } from './components/stacking-page-heading';
 import {
   LiquidStackingProviderTable,
   StackingProviderTable,
@@ -21,7 +21,7 @@ export function Stacking() {
     <Page>
       <Page.Header title="Stacking" />
 
-      <PostPageHeading post={content.posts.stacking} />
+      <StackingPageHeading />
 
       <ApyRewardHeroCard
         apyRange="6–10%"
