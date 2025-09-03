@@ -19,6 +19,26 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.69.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.68.0...@leather.io/mobile-v2.69.0) (2025-09-03)
+
+
+### Features
+
+* **mobile:** rune token details, ref LEA-3140 ([159f69c](https://github.com/leather-io/mono/commit/159f69cf4c1a0f7c196d21c0d81d095226f1dcdd))
+* **mobile:** update useRuneBalanceByRuneName to use specific service, ref LEA-3140 ([5bbcb7a](https://github.com/leather-io/mono/commit/5bbcb7ab86ef4119c11ffe56489a07dbc8f6455f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.3
+    * @leather.io/provider bumped to 1.5.10
+    * @leather.io/query bumped to 2.41.11
+    * @leather.io/rpc bumped to 2.20.9
+    * @leather.io/services bumped to 1.29.1
+    * @leather.io/stacks bumped to 1.16.3
+
 ## [2.68.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.67.0...@leather.io/mobile-v2.68.0) (2025-08-29)
 
 

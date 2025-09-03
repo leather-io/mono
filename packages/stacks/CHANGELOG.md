@@ -517,6 +517,13 @@
     * @leather.io/crypto bumped to 1.11.8
     * @leather.io/utils bumped to 0.44.0
 
+## [1.16.3](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.16.2...@leather.io/stacks-v1.16.3) (2025-09-03)
+
+
+### Bug Fixes
+
+* **stacks:** validate clarity contract length, ref leather-io/extension[#6149](https://github.com/leather-io/mono/issues/6149) ([1ab5318](https://github.com/leather-io/mono/commit/1ab5318db806fae99d8ec06a37072eff5a156bd3))
+
 ## [1.16.1](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.16.0...@leather.io/stacks-v1.16.1) (2025-08-26)
 
 

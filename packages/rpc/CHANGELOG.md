@@ -351,6 +351,20 @@
   * dependencies
     * @leather.io/utils bumped to 0.44.0
 
+## [2.20.9](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.20.8...@leather.io/rpc-v2.20.9) (2025-09-03)
+
+
+### Bug Fixes
+
+* **stacks:** validate clarity contract length, ref leather-io/extension[#6149](https://github.com/leather-io/mono/issues/6149) ([1ab5318](https://github.com/leather-io/mono/commit/1ab5318db806fae99d8ec06a37072eff5a156bd3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/stacks bumped to 1.16.3
+
 ## [2.20.6](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.20.5...@leather.io/rpc-v2.20.6) (2025-08-14)
 
 
