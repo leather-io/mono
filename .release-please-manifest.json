@@ -1,5 +1,5 @@
 {
-  "apps/mobile": "2.69.0",
+  "apps/mobile": "2.69.1",
   "packages/analytics": "3.13.0",
   "packages/bitcoin": "0.32.3",
   "packages/constants": "0.25.2",
@@ -16,6 +16,6 @@
   "packages/stacks": "1.16.3",
   "packages/tokens": "0.23.0",
   "packages/tsconfig-config": "0.11.0",
-  "packages/ui": "1.80.1",
+  "packages/ui": "1.80.2",
   "packages/utils": "0.44.0"
 }

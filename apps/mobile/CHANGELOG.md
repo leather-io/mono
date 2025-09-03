@@ -19,6 +19,21 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.69.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.69.0...@leather.io/mobile-v2.69.1) (2025-09-03)
+
+
+### Bug Fixes
+
+* account design fixes ([9ed32f6](https://github.com/leather-io/mono/commit/9ed32f68a4d7f1eb1aa7a39599813ab5845eaecb))
+* **mobile:** don't allow pressable on assets if token details disabled, ref LEA-3140 ([58b97cd](https://github.com/leather-io/mono/commit/58b97cd16b3def16f186e157671eba70680467ce))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.80.2
+
 ## [2.69.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.68.0...@leather.io/mobile-v2.69.0) (2025-09-03)
 
 

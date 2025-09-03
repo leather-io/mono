@@ -481,6 +481,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.44.0
 
+## [1.80.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.80.1...@leather.io/ui-v1.80.2) (2025-09-03)
+
+
+### Bug Fixes
+
+* account design fixes ([9ed32f6](https://github.com/leather-io/mono/commit/9ed32f68a4d7f1eb1aa7a39599813ab5845eaecb))
+
 ## [1.80.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.79.0...@leather.io/ui-v1.80.0) (2025-08-26)
 
 
