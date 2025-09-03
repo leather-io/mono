@@ -3,7 +3,7 @@ import { defineQuery } from 'groq';
 export const allPostsQuery = defineQuery(`*[
   _type == "post"
   && defined(slug.current)
-]|order(publishedAt desc)[0...12]{_id, title, slug, publishedAt}`);
+]|order(publishedAt desc)[0...12]`);
 
 export const stackingPostQuery = defineQuery(`*[
   _type == "post"
@@ -13,4 +13,13 @@ export const stackingPostQuery = defineQuery(`*[
 export const postBySlugQuery = defineQuery(`*[
   _type == "post"
   && slug.current == $slug
+][0]`);
+
+export const sbtcPoolsQuery = defineQuery(`*[
+  _type == "sbtcPool"
+]`);
+
+export const sbtcBasicEnrollQuery = defineQuery(`*[
+  _type == "sbtcPool"
+  && id == "basic"
 ][0]`);
