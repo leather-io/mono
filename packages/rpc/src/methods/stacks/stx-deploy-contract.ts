@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { clarityContractSchema } from '@leather.io/stacks';
+
 import { defineRpcEndpoint } from '../../rpc/schemas';
 import {
   baseStacksTransactionConfigSchema,
@@ -13,7 +15,7 @@ export const stxDeployContract = defineRpcEndpoint({
   params: z.intersection(
     z.object({
       name: z.string(),
-      clarityCode: z.string(),
+      clarityCode: clarityContractSchema,
       clarityVersion: z.coerce.number().optional(),
     }),
     baseStacksTransactionConfigSchema
