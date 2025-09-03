@@ -59,7 +59,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     });
   }
   const tokenDetailsFlag = useTokenDetailsFlag();
-  const onPressToken = tokenDetailsFlag ? onOpenToken : undefined;
   const { totalBalance } = useAccountBalance({
     fingerprint: currentAccount.fingerprint,
     accountIndex: currentAccount.accountIndex,
@@ -82,22 +81,34 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
               <BitcoinBalanceByAccount
                 fingerprint={fingerprint}
                 accountIndex={accountIndex}
-                onPress={() =>
-                  onPressToken?.({ assetProtocol: CryptoAssetProtocols.nativeBtc, assetId: 'BTC' })
+                onPress={
+                  tokenDetailsFlag
+                    ? () =>
+                        onOpenToken?.({
+                          assetProtocol: CryptoAssetProtocols.nativeBtc,
+                          assetId: 'BTC',
+                        })
+                    : undefined
                 }
               />
               <StacksBalanceByAccount
                 fingerprint={fingerprint}
                 accountIndex={accountIndex}
-                onPress={() =>
-                  onPressToken?.({ assetProtocol: CryptoAssetProtocols.nativeStx, assetId: 'STX' })
+                onPress={
+                  tokenDetailsFlag
+                    ? () =>
+                        onOpenToken?.({
+                          assetProtocol: CryptoAssetProtocols.nativeStx,
+                          assetId: 'STX',
+                        })
+                    : undefined
                 }
               />
             </>
           }
           sip10Data={sip10Data}
           runesData={runesData}
-          onPressToken={onPressToken}
+          onPressToken={tokenDetailsFlag ? onOpenToken : undefined}
         />
       )}
       {listTab === 'collectibles' && (

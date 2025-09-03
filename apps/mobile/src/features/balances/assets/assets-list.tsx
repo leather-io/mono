@@ -35,18 +35,20 @@ export function AssetsList({ sip10Data, runesData, header, onPressToken }: Asset
       renderItem={({ item }) =>
         renderAsset({
           item,
-          onPress: () => {
-            if (item.asset.protocol === 'sip10')
-              onPressToken?.({
-                assetId: item.asset.assetId,
-                assetProtocol: item.asset.protocol,
-              });
-            if (runesFlag && item.asset.protocol === 'rune')
-              onPressToken?.({
-                assetId: item.asset.runeName,
-                assetProtocol: item.asset.protocol,
-              });
-          },
+          onPress: onPressToken
+            ? () => {
+                if (item.asset.protocol === 'sip10')
+                  onPressToken?.({
+                    assetId: item.asset.assetId,
+                    assetProtocol: item.asset.protocol,
+                  });
+                if (runesFlag && item.asset.protocol === 'rune')
+                  onPressToken?.({
+                    assetId: item.asset.runeName,
+                    assetProtocol: item.asset.protocol,
+                  });
+              }
+            : undefined,
         })
       }
       getItemType={item => item.asset.protocol}

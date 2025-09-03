@@ -29,7 +29,11 @@ export function StacksBalanceByAccount({
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.({ assetProtocol: CryptoAssetProtocols.nativeStx, assetId: 'STX' })}
+      onPress={
+        onPress
+          ? () => onPress?.({ assetProtocol: CryptoAssetProtocols.nativeStx, assetId: 'STX' })
+          : undefined
+      }
       isLoading={state === 'loading'}
     />
   );
