@@ -25,6 +25,7 @@ export function normalizeBestInSlotInscriptionResponse(
 export function createBestInSlotInscription(
   bisInscription: BestInSlotInscriptionResponse
 ): Inscription {
+  console.log('createBestInSlotInscription bisInscription', bisInscription);
   const mimeType = bisInscription.delegate?.mime_type ?? bisInscription.mime_type;
   return createInscriptionAsset({
     id: bisInscription.inscription_id,
