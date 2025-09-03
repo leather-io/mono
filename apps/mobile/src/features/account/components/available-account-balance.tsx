@@ -29,7 +29,32 @@ export function AvailableAccountBalance({ account }: AvailableAccountBalanceProp
           onPress={() => {
             descriptionSheetRef.current?.present({
               title: t`Available balance`,
-              description: t`Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing: \n\nOutbound balance: funds already on their way to someone else. \n\nProtected Bitcoin balance: funds kept safe and unavailable for spending\n\nLocked Stacks balance: funds temporarily locked in a stacking pool and not yet spendable.\n\nUneconomical balance: tiny amounts that cost more to send than they’re worth.`,
+              data: [
+                {
+                  key: 'paragraph',
+                  text: t`Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:`,
+                },
+                {
+                  key: 'bullet',
+                  title: t`Outbound balance:`,
+                  text: t`funds already on their way to someone else.`,
+                },
+                {
+                  key: 'bullet',
+                  title: t`Protected Bitcoin balance:`,
+                  text: t`funds kept safe and unavailable for spending`,
+                },
+                {
+                  key: 'bullet',
+                  title: t`Locked Stacks balance:`,
+                  text: t`funds temporarily locked in a stacking pool and not yet spendable.`,
+                },
+                {
+                  key: 'bullet',
+                  title: t`Uneconomical balance:`,
+                  text: t`tiny amounts that cost more to send than they’re worth.`,
+                },
+              ],
             });
           }}
           flexDirection="row"

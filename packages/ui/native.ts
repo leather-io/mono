@@ -1,6 +1,9 @@
 export { Accordion } from './src/components/accordion/accordion.native';
 export { Avatar } from './src/components/avatar/avatar.native';
-export { BulletSeparator } from './src/components/bullet-separator/bullet-separator.native';
+export {
+  BulletSeparator,
+  BulletOperator,
+} from './src/components/bullet-separator/bullet-separator.native';
 export { ActivityAvatarIcon } from './src/components/avatar/activity-avatar-icon.native';
 export { BtcAvatarIcon } from './src/components/avatar/btc-avatar-icon.native';
 export { RunesAvatarIcon } from './src/components/avatar/runes-avatar-icon.native';

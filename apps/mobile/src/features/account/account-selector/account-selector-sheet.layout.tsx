@@ -4,27 +4,20 @@ import { useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Draggable } from '@/components/draggable';
+import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
+import { useCurrentAccount } from '@/core/current-account-provider';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { HEADER_HEIGHT } from '@/shared/constants';
-import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
 import { getConnectedAppsToAccountIdMap, useApps } from '@/store/apps/apps.read';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
-import { t } from '@lingui/core/macro';
-import { router } from 'expo-router';
 
-import {
-  Box,
-  Pressable,
-  SettingsGearIcon,
-  Sheet,
-  SheetRef,
-  legacyTouchablePressEffect,
-} from '@leather.io/ui/native';
+import { Box, Sheet, SheetRef, useTheme } from '@leather.io/ui/native';
 
 import { AccountAddress } from '../components/account-address';
 import { AccountCard } from '../components/account-card';
+import { PortfolioHeader } from '../components/portfolio-header';
 
 interface AccountSelectorSheetLayoutProps {
   accounts: Account[];
@@ -40,34 +33,28 @@ export function AccountSelectorSheetLayout({
   sheetRef,
 }: AccountSelectorSheetLayoutProps) {
   const { top } = useSafeAreaInsets();
+  const theme = useTheme();
   const scrollViewRef = useRef<ScrollView>(null);
   const placeholderIdx = useSharedValue<null | number>(null);
   const direction = useSharedValue<'down' | 'up'>('down');
   const { list: connectedApps } = useApps('connected');
   const connectedAppsToAccountIdMap = getConnectedAppsToAccountIdMap(connectedApps);
+  const { currentAccount } = useCurrentAccount();
 
   return (
-    <Sheet
-      ref={sheetRef}
+    <FullHeightSheet
+      sheetRef={sheetRef}
       maxDynamicContentSize={Dimensions.get('screen').height - top - HEADER_HEIGHT}
     >
-      <Sheet.ScrollView ref={scrollViewRef} stickyHeaderIndices={[0]}>
-        <Sheet.Header
-          centerElement={<Sheet.Title>{t`All accounts`}</Sheet.Title>}
-          rightElement={
-            <Pressable
-              hitSlop={12}
-              onPress={() => {
-                sheetRef.current?.close();
-                router.navigate('/settings/wallet');
-              }}
-              testID={TestId.settingsWalletAndAccountsButton}
-              pressEffects={legacyTouchablePressEffect}
-            >
-              <SettingsGearIcon />
-            </Pressable>
-          }
-        />
+      <Box
+        bg="ink.background-primary"
+        px="5"
+        pb="5"
+        style={{ paddingTop: top + theme.spacing['5'] }}
+      >
+        <PortfolioHeader />
+      </Box>
+      <Sheet.ScrollView ref={scrollViewRef}>
         <Box px="5" pb="7">
           <Box gap="2">
             {accounts.map((account, idx) => (
@@ -87,6 +74,7 @@ export function AccountSelectorSheetLayout({
                 <WalletLoader fingerprint={account.fingerprint} key={account.id}>
                   {wallet => (
                     <AccountCard
+                      isSelected={account.id === currentAccount?.id}
                       caption={wallet.name}
                       primaryTitle={account.name}
                       appOrigins={connectedAppsToAccountIdMap[account.id]?.map(app => app.origin)}
@@ -113,6 +101,6 @@ export function AccountSelectorSheetLayout({
           </Box>
         </Box>
       </Sheet.ScrollView>
-    </Sheet>
+    </FullHeightSheet>
   );
 }

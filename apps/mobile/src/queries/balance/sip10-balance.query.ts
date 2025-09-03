@@ -5,10 +5,6 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountRequest, getSip10BalancesService } from '@leather.io/services';
 
-/**
- * @deprecated useSip10TotalBalance is not used now we have moved to single account view
- * @see useSip10AccountBalance
- */
 export function useSip10TotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useSip10AggregateBalanceQuery(accounts.map(account => ({ account }))));
@@ -51,10 +47,6 @@ export function useSip10BalanceByContractId(
   return toFetchState(useSip10BalanceByContractIdQuery({ account }, contractId));
 }
 
-/**
- * @deprecated useSip10AggregateBalanceQuery is not used now we have moved to single account view
- * @see useSip10AccountBalanceQuery
- */
 function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({

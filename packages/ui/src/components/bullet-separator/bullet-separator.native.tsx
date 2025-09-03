@@ -1,15 +1,25 @@
 import { ReactNode } from 'react';
 
-import { Box, TextProps } from '../../../native';
+import { Box, BoxProps, TextProps } from '../../../native';
 import { BulletSeparator as BulletSeparatorContainer } from './bullet-separator.shared';
 
 interface BulletOperatorProps {
-  color: TextProps['color'];
+  color?: TextProps['color'];
+  borderRadius?: BoxProps['borderRadius'];
 }
 
-function BulletOperator({ color }: BulletOperatorProps) {
+export function BulletOperator({
+  color = 'ink.text-primary',
+  borderRadius = 'xs',
+}: BulletOperatorProps) {
   return (
-    <Box width={6} height={6} borderRadius="xs" backgroundColor={color} marginHorizontal="1" />
+    <Box
+      width={6}
+      height={6}
+      borderRadius={borderRadius}
+      backgroundColor={color}
+      marginHorizontal="1"
+    />
   );
 }
 

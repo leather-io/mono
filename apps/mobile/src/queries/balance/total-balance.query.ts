@@ -22,10 +22,7 @@ export interface TotalBalance {
   runes: FetchState<RunesAggregateBalance>;
   totalBalance: FetchState<Money>;
 }
-/**
- * @deprecated useTotalBalance is not used now we have moved to single account view
- * @see useAccountBalance
- */
+
 export function useTotalBalance(): TotalBalance {
   const { fiatCurrencyPreference } = useSettings();
   const zeroMoneyQuote = createMoney(0, fiatCurrencyPreference);
@@ -36,14 +33,14 @@ export function useTotalBalance(): TotalBalance {
   const runesTotalBalance = useRunesTotalBalance();
 
   const isLoading =
-    btcTotalBalance.state === 'loading' &&
-    stxTotalBalance.state === 'loading' &&
-    sip10TotalBalance.state === 'loading' &&
+    btcTotalBalance.state === 'loading' ||
+    stxTotalBalance.state === 'loading' ||
+    sip10TotalBalance.state === 'loading' ||
     runesTotalBalance.state === 'loading';
   const isError =
-    btcTotalBalance.state === 'error' &&
-    stxTotalBalance.state === 'error' &&
-    sip10TotalBalance.state === 'error' &&
+    btcTotalBalance.state === 'error' ||
+    stxTotalBalance.state === 'error' ||
+    sip10TotalBalance.state === 'error' ||
     runesTotalBalance.state === 'error';
   const accountBalance = sumMoney(
     [

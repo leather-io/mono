@@ -1,7 +1,9 @@
 import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { Account } from '@/store/accounts/accounts';
+import { useAccounts } from '@/store/accounts/accounts.read';
+import { useWalletByFingerprint, useWallets } from '@/store/wallets/wallets.read';
 
-import { Box, ChevronDownIcon, Pressable, Text } from '@leather.io/ui/native';
+import { Box, Pressable, Text } from '@leather.io/ui/native';
 
 interface AccountHeaderProps {
   account: Account;
@@ -9,13 +11,29 @@ interface AccountHeaderProps {
 }
 
 export function AccountHeader({ account, onPress }: AccountHeaderProps) {
-  const { icon, name } = account;
+  const { icon, name, fingerprint } = account;
+  const { list: accounts } = useAccounts();
+  const { list: wallets } = useWallets();
+  const wallet = useWalletByFingerprint(fingerprint);
+
+  const hasOneAccount = accounts.length === 1;
+  const hasOneWallet = wallets.length === 1;
   return (
-    <Pressable onPress={onPress} flexDirection="row" alignItems="center" gap="3">
+    <Pressable
+      onPress={onPress}
+      disabled={hasOneAccount}
+      flexDirection="row"
+      alignItems="center"
+      gap="3"
+    >
       <AccountAvatar variant="sm" icon={icon} />
-      <Box flexDirection="row" alignItems="center" gap="1">
+      <Box>
         <Text variant="label01">{name}</Text>
-        <ChevronDownIcon variant="small" />
+        {!hasOneWallet && wallet && (
+          <Text variant="label02" color="ink.text-subdued">
+            {wallet.name}
+          </Text>
+        )}
       </Box>
     </Pressable>
   );

@@ -15,6 +15,7 @@ export function AccountActions() {
         fullWidth
         onSend={() => sendSheetRef.current?.present()}
         onReceive={() => receiveSheetRef.current?.present('all')}
+        size="lg"
       />
     </Box>
   );
