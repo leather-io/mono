@@ -2,11 +2,22 @@ import { RefObject, useImperativeHandle, useRef, useState } from 'react';
 
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 
-import { Box, Sheet, SheetRef, Text } from '@leather.io/ui/native';
+import { Box, BulletOperator, Sheet, SheetRef, Text } from '@leather.io/ui/native';
+
+type DescriptionData =
+  | {
+      text: string;
+      key: 'paragraph';
+    }
+  | {
+      text: string;
+      title?: string;
+      key: 'bullet';
+    };
 
 interface DescriptionSheetData {
   title: string;
-  description: string;
+  data: DescriptionData[];
 }
 
 export interface DescriptionSheetInstance {
@@ -31,18 +42,41 @@ export function DescriptionSheet() {
     },
   }));
 
-  if (!sheetData) {
-    return null;
-  }
-
   return (
     <Sheet ref={ref}>
-      <Sheet.View gap="3">
-        <Sheet.Header leftElement={<Sheet.Title>{sheetData.title}</Sheet.Title>} />
-        <Box px="5">
-          <Text variant="body01">{sheetData.description}</Text>
-        </Box>
-      </Sheet.View>
+      {sheetData && (
+        <Sheet.View gap="3">
+          <Sheet.Header leftElement={<Sheet.Title>{sheetData.title}</Sheet.Title>} />
+          <Box px="5" pb="5" gap="5">
+            {sheetData.data.map(paragraph => {
+              switch (paragraph.key) {
+                case 'paragraph': {
+                  return (
+                    <Text key={paragraph.text} variant="body01">
+                      {paragraph.text}
+                    </Text>
+                  );
+                }
+                case 'bullet': {
+                  return (
+                    <Box key={paragraph.text} flexDirection="row" gap="1">
+                      <Box pt="2">
+                        <BulletOperator borderRadius="round" />
+                      </Box>
+                      <Text variant="body01" style={{ flexShrink: 1 }}>
+                        <Text fontWeight={900}>{paragraph.title} </Text>
+                        {paragraph.text}
+                      </Text>
+                    </Box>
+                  );
+                }
+                default:
+                  return null;
+              }
+            })}
+          </Box>
+        </Sheet.View>
+      )}
     </Sheet>
   );
 }

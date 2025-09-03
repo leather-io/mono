@@ -36,12 +36,11 @@ export function AssetTabs({ listTab, setListTab }: AssetTabsProps) {
         />
       </Box>
       <Box>
-        {/* TODO: height={2} */}
-        <Box height={1} flex={1} bg="ink.border-default" />
+        <Box height={2} flex={1} bg="ink.border-default" />
         <Box
           left={tabIndex * TAB_WIDTH}
           position="absolute"
-          height={1}
+          height={2}
           width={TAB_WIDTH}
           bg="ink.text-primary"
         />

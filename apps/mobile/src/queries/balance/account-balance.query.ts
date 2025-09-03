@@ -34,14 +34,14 @@ export function useAccountBalance(accountId: AccountId): AccountBalance {
   const runesAccountBalance = useRunesAccountBalance(fingerprint, accountIndex);
 
   const isLoading =
-    btcAccountBalance.state === 'loading' &&
-    stxAccountBalance.state === 'loading' &&
-    sip10AccountBalance.state === 'loading' &&
+    btcAccountBalance.state === 'loading' ||
+    stxAccountBalance.state === 'loading' ||
+    sip10AccountBalance.state === 'loading' ||
     runesAccountBalance.state === 'loading';
   const isError =
-    btcAccountBalance.state === 'error' &&
-    stxAccountBalance.state === 'error' &&
-    sip10AccountBalance.state === 'error' &&
+    btcAccountBalance.state === 'error' ||
+    stxAccountBalance.state === 'error' ||
+    sip10AccountBalance.state === 'error' ||
     runesAccountBalance.state === 'error';
   const accountBalance = sumMoney(
     [
@@ -78,14 +78,14 @@ export function useAccountUnlockedBalance(accountId: AccountId): AccountBalance 
   const runesAccountBalance = useRunesAccountBalance(fingerprint, accountIndex);
 
   const isLoading =
-    btcAccountBalance.state === 'loading' &&
-    stxAccountBalance.state === 'loading' &&
-    sip10AccountBalance.state === 'loading' &&
+    btcAccountBalance.state === 'loading' ||
+    stxAccountBalance.state === 'loading' ||
+    sip10AccountBalance.state === 'loading' ||
     runesAccountBalance.state === 'loading';
   const isError =
-    btcAccountBalance.state === 'error' &&
-    stxAccountBalance.state === 'error' &&
-    sip10AccountBalance.state === 'error' &&
+    btcAccountBalance.state === 'error' ||
+    stxAccountBalance.state === 'error' ||
+    sip10AccountBalance.state === 'error' ||
     runesAccountBalance.state === 'error';
   const accountBalance = sumMoney(
     [

@@ -22,6 +22,7 @@ interface AccountCardProps extends PressableProps {
   appOrigins?: string[];
   isLoading?: boolean;
   width?: number;
+  isSelected?: boolean;
 }
 
 export function AccountCard({
@@ -35,6 +36,7 @@ export function AccountCard({
   isLoading,
   width,
   testID,
+  isSelected,
 }: AccountCardProps) {
   if (isLoading) {
     return <Loading mode="widget" />;
@@ -48,6 +50,7 @@ export function AccountCard({
       shadowOpacity={0.04}
       shadowOffset={{ width: 0, height: 2 }}
       shadowRadius={6}
+      borderColor={isSelected ? 'ink.action-primary-default' : 'ink.border-transparent'}
       testID={testID}
     >
       <Box flexDirection="row" justifyContent="space-between">

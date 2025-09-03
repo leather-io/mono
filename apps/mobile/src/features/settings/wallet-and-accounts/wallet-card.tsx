@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { SpinnerIcon } from '@/components/spinner-icon';
 import { useToastContext } from '@/components/toast/toast-context';
+import { useCurrentAccount } from '@/core/current-account-provider';
 import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountCard } from '@/features/account/components/account-card';
 import { AccountBalance } from '@/features/balances/total-balance';
@@ -41,6 +42,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   const { displayToast } = useToastContext();
   const router = useRouter();
   const [isAddingAccount, setIsAddingAccount] = useState(false);
+  const { currentAccount } = useCurrentAccount();
 
   function onSelectAccount(account: Account) {
     router.navigate({
@@ -91,6 +93,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
         <Box flexDirection="column" gap="3">
           {accounts.map(account => (
             <AccountCard
+              isSelected={account.id === currentAccount?.id}
               key={account.id}
               primaryTitle={account.name}
               secondaryTitle={

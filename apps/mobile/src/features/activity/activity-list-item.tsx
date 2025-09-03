@@ -74,6 +74,7 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
           captionRight={
             value?.crypto ? (
               <Balance
+                formattingOptions={{ showCurrency: false }}
                 balance={value.crypto}
                 variant="caption01"
                 color="ink.text-subdued"

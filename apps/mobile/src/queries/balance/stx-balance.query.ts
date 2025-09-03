@@ -5,10 +5,6 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountRequest, getStxBalancesService } from '@leather.io/services';
 
-/**
- * @deprecated useStxTotalBalance is not used now we have moved to single account view
- * @see useStxAccountBalance
- */
 export function useStxTotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useStxAggregateBalanceQuery(accounts.map(account => ({ account }))));
@@ -19,10 +15,6 @@ export function useStxAccountBalance(fingerprint: string, accountIndex: number) 
   return toFetchState(useStxAccountBalanceQuery({ account }));
 }
 
-/**
- * @deprecated useStxAggregateBalanceQuery is not used now we have moved to single account view
- * @see useStxAccountBalanceQuery
- */
 function useStxAggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({

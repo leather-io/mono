@@ -2,6 +2,7 @@ import { Divider } from '@/components/divider';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
+import { PortfolioHeader } from '@/features/account/components/portfolio-header';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { EmptyWalletsScreen } from '@/features/settings/wallet-and-accounts/components/empty-wallets-screen';
 import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-list';
@@ -10,7 +11,7 @@ import { useWallets } from '@/store/wallets/wallets.read';
 import { plural, t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
-import { Eye1ClosedIcon, PlusIcon } from '@leather.io/ui/native';
+import { Box, Eye1ClosedIcon, PlusIcon } from '@leather.io/ui/native';
 
 export default function SettingsWalletScreen() {
   const router = useRouter();
@@ -22,6 +23,9 @@ export default function SettingsWalletScreen() {
 
   return (
     <SettingsLayout title={t`Wallets`}>
+      <Box px="5" pb="3">
+        <PortfolioHeader />
+      </Box>
       {hasWallets ? (
         <>
           <WalletsList variant="active" />

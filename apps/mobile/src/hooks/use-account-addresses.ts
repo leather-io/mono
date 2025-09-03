@@ -113,10 +113,6 @@ function filterAccountsByActiveAccounts(
   );
 }
 
-/**
- * @deprecated useTotalAccountAddresses is not used now we have moved to single account view
- * @see useAccountAddresses
- */
 export function useTotalAccountAddresses(status: AccountStatus = 'active') {
   const wallets = useWallets();
   const bitcoinAccounts = useBitcoinAccounts();

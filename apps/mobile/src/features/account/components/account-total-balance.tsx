@@ -31,14 +31,19 @@ export function AccountTotalBalance({ account }: AccountTotalBalanceProps) {
   if (!hasWallets) return null;
 
   return (
-    <Box px="5" pb="5" pt="3">
+    <Box px="5" pb="5" pt="3" gap="1">
       <Box flexDirection="row" justifyContent="space-between">
         <Pressable
           pressEffects={legacyTouchablePressEffect}
           onPress={() => {
             descriptionSheetRef.current?.present({
               title: t`Total balance`,
-              description: t`Your total tokens on chain. Includes both available and locked amounts.`,
+              data: [
+                {
+                  key: 'paragraph',
+                  text: t`Your total tokens on chain. Includes both available and locked amounts.`,
+                },
+              ],
             });
           }}
           flexDirection="row"
@@ -57,7 +62,7 @@ export function AccountTotalBalance({ account }: AccountTotalBalanceProps) {
           <AccountBalance
             fingerprint={account.fingerprint}
             accountIndex={account.accountIndex}
-            variant="heading03"
+            variant="heading02"
           />
         )}
       </Box>

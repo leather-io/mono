@@ -1,10 +1,17 @@
 import { Balance } from '@/components/balance/balance';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { isStacking } from '@/features/balances/utils';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 
-import { Box, LockIcon, Text } from '@leather.io/ui/native';
+import {
+  Box,
+  Pressable,
+  QuestionCircleIcon,
+  Text,
+  legacyTouchablePressEffect,
+} from '@leather.io/ui/native';
 
 interface AccountStacking {
   account: Account;
@@ -12,17 +19,34 @@ interface AccountStacking {
 
 export function AccountStacking({ account }: AccountStacking) {
   const stxBalance = useStxAccountBalance(account.fingerprint, account.accountIndex);
+  const { descriptionSheetRef } = useGlobalSheets();
   const userIsStacking = stxBalance.state == 'success' && isStacking(stxBalance);
 
   if (!userIsStacking) return null;
   return (
     <Box px="5" pb="5">
-      <Box mb="3" height={1} flex={1} bg="ink.border-default" />
+      <Box mb="3" height={1} flex={1} bg="ink.component-background-non-interactive" />
       <Box gap="1">
-        <Box flexDirection="row" alignItems="center" gap="1">
-          <Text variant="label01">{t`Locked`}</Text>
-          <LockIcon variant="small" />
-        </Box>
+        <Pressable
+          pressEffects={legacyTouchablePressEffect}
+          onPress={() => {
+            descriptionSheetRef.current?.present({
+              title: t`Locked`,
+              data: [
+                {
+                  key: 'paragraph',
+                  text: t`Amount you’ve committed to stacking. You won’t be able to move or spend it until the stacking period ends.`,
+                },
+              ],
+            });
+          }}
+          flexDirection="row"
+          gap="1"
+          alignItems="center"
+        >
+          <Text variant="label02">{t`Locked`}</Text>
+          <QuestionCircleIcon variant="small" />
+        </Pressable>
 
         <Balance balance={stxBalance.value?.quote.lockedBalance} variant="heading05" />
       </Box>

@@ -1,10 +1,11 @@
 import { t } from '@lingui/core/macro';
 
-import { Button } from '@leather.io/ui/native';
+import { Button, ButtonProps } from '@leather.io/ui/native';
 
 interface ActionButtonsProps {
   canSend?: boolean;
   fullWidth?: boolean;
+  size?: ButtonProps['size'];
   onSend(): void;
   onReceive(): void;
 }
@@ -12,19 +13,26 @@ interface ActionButtonsProps {
 export function ActionButtons({
   canSend = true,
   fullWidth = false,
+  size = 'md',
   onSend,
   onReceive,
 }: ActionButtonsProps) {
   return (
     <>
-      <Button onPress={onSend} disabled={!canSend} minWidth={86} size="md" flex={fullWidth ? 1 : 0}>
+      <Button
+        onPress={onSend}
+        disabled={!canSend}
+        minWidth={86}
+        size={size}
+        flex={fullWidth ? 1 : 0}
+      >
         {t`Send`}
       </Button>
 
       <Button
         onPress={onReceive}
         minWidth={86}
-        size="md"
+        size={size}
         variant="outline"
         flex={fullWidth ? 1 : 0}
       >
