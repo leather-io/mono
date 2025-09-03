@@ -10,15 +10,15 @@
     "sanity:deploy": "sanity deploy",
     "sanity:deploy-graphql": "sanity graphql deploy",
     "sanity:generate": "sanity typegen generate",
-    "sanity:schema-extract": "sanity schema extract",
+    "sanity:schema-extract": "sanity schema extract --enforce-required-fields",
     "sanity:start": "sanity start",
     "typecheck": "tsc --noEmit --project ./tsconfig.json"
   },
   "exports": {
     ".": {
       "types": "./dist/client/index.d.ts",
-      "import": "./dist/client/index.js",
-      "require": "./dist/client/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
     }
   },
   "dependencies": {
