@@ -1,25 +1,21 @@
 import { ReactElement } from 'react';
+import { useLoaderData } from 'react-router';
 
 import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
-import { AlexLogo } from '~/components/icons/alex-logo';
-import { BitflowLogo } from '~/components/icons/bitflow-logo';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
-import { SbtcLogo } from '~/components/icons/sbtc-logo';
-import { VelarLogo } from '~/components/icons/velar-logo';
-import { ZestLogo } from '~/components/icons/zest-logo';
-import { PostPageHeading } from '~/components/posts/post-page-heading';
 import { PostSectionHeading } from '~/components/posts/post-section-heading';
 import { content } from '~/data/content';
-import { sbtcEnroll as sbtcEnrollData, sbtcPools } from '~/data/data';
 import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { Page } from '~/layouts/page/page';
+import { SbtcRewardsPageHeading } from '~/pages/sbtc-rewards/components/sbtc-rewards-page-heading';
+import { loader } from '~/pages/sbtc-rewards/sbtc.route';
 import { useRemainingSbtcSupply } from '~/queries/sbtc/use-remaining-sbtc-supply';
 import { useLeatherConnect } from '~/store/addresses';
 import { analytics } from '~/utils/analytics/analytics';
 import { openExternalLink } from '~/utils/external-links';
 import { leather } from '~/utils/leather-sdk';
-import { formatPostPrompt, getPosts } from '~/utils/post-utils';
+import { getPosts } from '~/utils/post-utils';
 
 import { Button, Hr } from '@leather.io/ui';
 
@@ -44,44 +40,9 @@ export interface RewardProtocolInfo {
 
 const posts = getPosts();
 
-const sbtcEnroll = {
-  id: sbtcEnrollData.id,
-  logo: <SbtcLogo size="32px" />,
-  title: sbtcEnrollData.title,
-  description: formatPostPrompt(posts.sbtcRewardsBasic?.prompt || ''),
-  tvl: sbtcEnrollData.tvl,
-  tvlUsd: sbtcEnrollData.tvlUsd,
-  minCommitment: sbtcEnrollData.minCommitment,
-  minCommitmentUsd: sbtcEnrollData.minCommitmentUsd,
-  apr: sbtcEnrollData.apr,
-  payoutToken: sbtcEnrollData.payoutToken,
-} as const;
-
-const logoMap: Record<string, ReactElement> = {
-  alex: <AlexLogo size="32px" />,
-  bitflow: <BitflowLogo size="32px" />,
-  velar: <VelarLogo size="32px" />,
-  zest: <ZestLogo size="32px" />,
-};
-
-// Map the data from sbtcPools to the format expected by SbtcProtocolRewardGrid
-const formattedSbtcPools = sbtcPools.map(pool => ({
-  id: pool.id,
-  logo: logoMap[pool.id] || null,
-  title: pool.title,
-  description: pool.description,
-  tvl: pool.tvl,
-  tvlUsd: pool.tvlUsd,
-  minCommitment: pool.minCommitment,
-  minCommitmentUsd: pool.minCommitmentUsd,
-  apr: pool.apr,
-  payoutToken: pool.payoutToken,
-  url: pool.url,
-}));
-
 export function SbtcRewards(): ReactElement {
+  const { sbtcPools, sbtcEnroll } = useLoaderData<typeof loader>();
   const { status, whenExtensionState } = useLeatherConnect();
-  const postSlug = 'sbtcRewards';
   const remainingSbtcPegCapSupply = useRemainingSbtcSupply();
 
   async function bridgeSbtc() {
@@ -107,7 +68,7 @@ export function SbtcRewards(): ReactElement {
       <Page>
         <Page.Header title="sBTC Rewards" />
 
-        <PostPageHeading post={posts[postSlug]} />
+        <SbtcRewardsPageHeading />
 
         <ApyRewardHeroCard
           apyRange="5–8%"
@@ -126,13 +87,15 @@ export function SbtcRewards(): ReactElement {
         <styled.section mt="space.08">
           <PostSectionHeading post={posts.sbtcRewardsProvider} prefix="Step 2: " />
 
-          <SbtcProtocolRewardGrid
-            enrollAction={<SbtcEnrollButton />}
-            mt="space.05"
-            rewardProtocol={sbtcEnroll}
-          />
+          {sbtcEnroll && (
+            <SbtcProtocolRewardGrid
+              enrollAction={<SbtcEnrollButton />}
+              mt="space.05"
+              rewardProtocol={sbtcEnroll}
+            />
+          )}
 
-          {formattedSbtcPools.map(pool => (
+          {sbtcPools.map(pool => (
             <SbtcProtocolRewardGrid
               enrollAction={
                 <Button size="sm" fullWidth onClick={() => openExternalLink(pool.url)}>

@@ -3,6 +3,14 @@ import { MetaDescriptor } from 'react-router';
 import { SbtcRewards } from '~/pages/sbtc-rewards/sbtc-rewards';
 import { formatPostPrompt, getPosts } from '~/utils/post-utils';
 
+import { client, sbtcBasicEnrollQuery, sbtcPoolsQuery } from '@leather.io/cms';
+
+export async function loader() {
+  const sbtcPools = await client.fetch(sbtcPoolsQuery);
+  const sbtcEnroll = await client.fetch(sbtcBasicEnrollQuery);
+  return { sbtcPools, sbtcEnroll };
+}
+
 export function meta() {
   const posts = getPosts();
   return [

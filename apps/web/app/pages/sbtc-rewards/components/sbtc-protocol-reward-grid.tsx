@@ -4,10 +4,10 @@ import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
 import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { RewardProtocolInfo } from '~/data/data';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { getPosts } from '~/utils/post-utils';
 
+import { SbtcPool } from '@leather.io/cms';
 import { Flag } from '@leather.io/ui';
 import { ensureArray } from '@leather.io/utils';
 
@@ -15,7 +15,7 @@ import { SbtcProtocolRewardGridLayout } from './sbtc-protocol-reward-grid.layout
 import { SbtcProviderIcon } from './sbtc-provider-icon';
 
 interface RewardProtocolCellProps {
-  rewardProtocol: RewardProtocolInfo;
+  rewardProtocol: SbtcPool;
 }
 
 function RewardProtocolEnrollCell({
@@ -132,7 +132,7 @@ function PayoutTokenCell({ rewardProtocol }: RewardProtocolCellProps): ReactElem
 }
 
 interface SbtcProtocolRewardGridProps extends GridProps {
-  rewardProtocol: RewardProtocolInfo;
+  rewardProtocol: SbtcPool;
   enrollAction: React.ReactElement;
 }
 export function SbtcProtocolRewardGrid({
