@@ -26,11 +26,14 @@ export function renderAsset({
       <Sip10TokenBalance
         key={item.asset.contractId}
         item={item}
-        onPress={() =>
-          onPress?.({
-            assetId: item.asset.assetId,
-            assetProtocol: item.asset.protocol,
-          })
+        onPress={
+          onPress
+            ? () =>
+                onPress?.({
+                  assetId: item.asset.assetId,
+                  assetProtocol: item.asset.protocol,
+                })
+            : undefined
         }
       />
     );
@@ -40,11 +43,14 @@ export function renderAsset({
       <RunesTokenBalance
         key={item.asset.symbol}
         item={item}
-        onPress={() =>
-          onPress?.({
-            assetId: item.asset.runeName,
-            assetProtocol: item.asset.protocol,
-          })
+        onPress={
+          onPress
+            ? () =>
+                onPress?.({
+                  assetId: item.asset.runeName,
+                  assetProtocol: item.asset.protocol,
+                })
+            : undefined
         }
       />
     );

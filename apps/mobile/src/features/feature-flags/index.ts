@@ -77,7 +77,7 @@ export function useSendPasteButton() {
 }
 
 export function useTokenDetailsFlag() {
-  return useBoolVariation('token_details', true);
+  return useBoolVariation('token_details', false);
 }
 
 // Setting an empty string will not enforce a minimum version and will skip the check.

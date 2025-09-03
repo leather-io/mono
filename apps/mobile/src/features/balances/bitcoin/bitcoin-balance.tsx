@@ -28,7 +28,11 @@ export function BitcoinBalanceByAccount({
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.({ assetProtocol: CryptoAssetProtocols.nativeBtc, assetId: 'BTC' })}
+      onPress={
+        onPress
+          ? () => onPress?.({ assetProtocol: CryptoAssetProtocols.nativeBtc, assetId: 'BTC' })
+          : undefined
+      }
       isLoading={state === 'loading'}
     />
   );
