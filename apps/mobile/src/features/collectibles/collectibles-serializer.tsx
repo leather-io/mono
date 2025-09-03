@@ -19,7 +19,6 @@ export function serializeCollectible(collectible: NonFungibleCryptoAsset) {
         mimeType: collectible.mimeType,
       };
     case 'sip9':
-      // this could exclude sip9s that have no image
       if (!isValidSip9(collectible)) return null;
       return {
         name: collectible.name,

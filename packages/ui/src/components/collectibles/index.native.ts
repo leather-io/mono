@@ -3,3 +3,4 @@ export * from './native/collectible-image.native';
 export * from './native/collectible-text.native';
 export * from './native/collectible-card.native';
 export * from './native/collectible-card-layout.native';
+export * from './native/image-unavailable.native';

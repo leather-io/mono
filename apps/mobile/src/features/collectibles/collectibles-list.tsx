@@ -34,7 +34,9 @@ export function CollectiblesList({ currentAccount, header }: CollectiblesListPro
           {data.state === 'error' && <ErrorFallbackTab />}
         </>
       }
-      ListEmptyComponent={<EmptyCollectiblesState />}
+      ListEmptyComponent={
+        data.state !== 'loading' && data.state !== 'error' ? <EmptyCollectiblesState /> : undefined
+      }
     />
   );
 }

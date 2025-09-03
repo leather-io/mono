@@ -6,11 +6,7 @@ export function isValidInscription(collectible: InscriptionAsset) {
 }
 
 export function isValidSip9(collectible: Sip9Asset) {
-  return (
-    !isEmptyString(collectible.cachedImage) &&
-    isDefined(collectible.cachedImage) &&
-    collectible.name !== 'BNS - Archive'
-  );
+  return collectible.name !== 'BNS - Archive';
 }
 
 export function isValidStamp(collectible: StampAsset) {
