@@ -1,19 +1,28 @@
 import { useEffect, useState } from 'react';
 import WebView from 'react-native-webview';
 
-// fetchInscriptionTextContent is a simple axios get
-// maybe its better to use axios directly in UI?
-// better yet would be to add the text content to the collectible object
-// in the service and then we can use that here
-// i tried that but it was not working as expected
 import { fetchInscriptionTextContent } from '@leather.io/query';
 
-import { Text } from '../../text/text.native';
+import { Text } from '../../../../native';
 import { CollectibleCardLayout } from './collectible-card-layout.native';
 
 interface CollectibleTextProps {
   src: string;
   size?: number;
+}
+
+// Inscription-specific sanitizer
+// TODO: pre fetch and sanitize in the service
+function sanitizeInscription(html: string): string {
+  // Bitcoin inscriptions are often untrusted content
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/on\w+="[^"]*"/g, '')
+    .replace(/javascript:/gi, '')
+    .replace(/data:/gi, '') // Block data URLs
+    .replace(/<iframe[^>]*>/gi, '<div>') // Convert iframes
+    .replace(/<object[^>]*>/gi, '<div>')
+    .replace(/<embed[^>]*>/gi, '<div>');
 }
 
 export function CollectibleText({ src, size = 200 }: CollectibleTextProps) {
@@ -36,12 +45,7 @@ export function CollectibleText({ src, size = 200 }: CollectibleTextProps) {
 
   if (content.includes('<html')) {
     // remove any script tags
-    const sanitizedHtml = content.replace(
-      /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-      ''
-    );
-
-    // If the content is HTML, render it directly in a WebView by passing the HTML string as the source.
+    const sanitizedHtml = sanitizeInscription(content);
     return (
       <WebView
         originWhitelist={['*']}
@@ -50,6 +54,7 @@ export function CollectibleText({ src, size = 200 }: CollectibleTextProps) {
         domStorageEnabled={false}
         startInLoadingState={false}
         scalesPageToFit={false}
+        scrollEnabled={false}
       />
     );
   }

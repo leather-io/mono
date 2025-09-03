@@ -1,6 +1,6 @@
-import { Image } from 'react-native';
+import { Image } from 'expo-image';
 
-import { Box, Eye1ClosedIcon, Text } from '../../../../native';
+import { Box, Text } from '../../../../native';
 
 interface CollectibleImageProps {
   alt: string;
@@ -8,28 +8,11 @@ interface CollectibleImageProps {
   size?: number;
 }
 export function CollectibleImage({ alt, source, size = 200 }: CollectibleImageProps) {
-  const isBns = alt.includes('.btc') || source.includes('BNS-V2');
-
-  // Don't render if source is empty
-  if (!source || source.trim() === '') {
-    return (
-      <Box
-        width={size}
-        height={size}
-        bg="ink.background-secondary"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Eye1ClosedIcon />
-        <Text variant="label02" color="ink.text-subdued">
-          No Image
-        </Text>
-      </Box>
-    );
-  }
+  const isBns = source === 'bns';
+  console.log('isBns', isBns);
 
   if (isBns) {
-    return <BnsImage alt={alt} source={source} size={size} />;
+    return <BnsImage alt={alt} size={size} />;
   }
 
   return (
@@ -39,7 +22,8 @@ export function CollectibleImage({ alt, source, size = 200 }: CollectibleImagePr
   );
 }
 
-function BnsImage({ alt, source, size = 200 }: CollectibleImageProps) {
+function BnsImage({ alt, size = 200 }: Pick<CollectibleImageProps, 'alt' | 'size'>) {
+  console.log('BnsImage', alt, size);
   return (
     <Box
       width={size}
@@ -48,15 +32,11 @@ function BnsImage({ alt, source, size = 200 }: CollectibleImageProps) {
       bg="ink.background-secondary"
       position="relative"
     >
-      {source && source.trim() !== '' && (
-        <Image
-          source={{ uri: source }}
-          alt={alt}
-          height={58}
-          width={164}
-          style={{ marginTop: 44 }}
-        />
-      )}
+      <Image
+        source={require('../../../assets-native/images/bnsv2.png')}
+        alt={alt}
+        style={{ width: '100%', height: '100%' }}
+      />
       <Box
         position="absolute"
         bottom={0}

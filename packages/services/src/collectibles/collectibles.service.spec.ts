@@ -9,6 +9,7 @@ import {
 } from '@leather.io/models';
 
 import { Sip9AssetService } from '../assets/sip9-asset.service';
+import { BnsService } from '../bns/bns.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { CollectiblesService } from './collectibles.service';
@@ -69,10 +70,18 @@ describe(CollectiblesService.name, () => {
     ),
   } as unknown as Sip9AssetService;
 
+  const mockBnsService = {
+    getBnsName: vi.fn().mockResolvedValue({
+      protocol: CryptoAssetProtocols.sip9,
+      assetId: 'SP000.nft-1',
+    }),
+  } as unknown as BnsService;
+
   const collectiblesService = new CollectiblesService(
     mockBisApiClient,
     mockStacksApiClient,
-    mockSip9AssetService
+    mockSip9AssetService,
+    mockBnsService
   );
 
   describe('getTotalCollectibles', () => {
