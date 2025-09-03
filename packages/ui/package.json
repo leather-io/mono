@@ -29,6 +29,7 @@
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tokens": "workspace:*",
     "@leather.io/utils": "workspace:*",
+    "@leather.io/query": "workspace:*",
     "@react-native/assets-registry": "0.73.1",
     "@rnx-kit/metro-resolver-symlinks": "0.2.3",
     "@shopify/restyle": "2.4.2",

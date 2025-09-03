@@ -1,4 +1,12 @@
 import { useEffect, useState } from 'react';
+import WebView from 'react-native-webview';
+
+// fetchInscriptionTextContent is a simple axios get
+// maybe its better to use axios directly in UI?
+// better yet would be to add the text content to the collectible object
+// in the service and then we can use that here
+// i tried that but it was not working as expected
+import { fetchInscriptionTextContent } from '@leather.io/query';
 
 import { Text } from '../../text/text.native';
 import { CollectibleCardLayout } from './collectible-card-layout.native';
@@ -14,12 +22,8 @@ export function CollectibleText({ src, size = 200 }: CollectibleTextProps) {
   useEffect(() => {
     async function fetchContent() {
       try {
-        const response = await fetch(src);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setContent(JSON.stringify(data, null, 2));
+        const response = await fetchInscriptionTextContent(src);
+        setContent(response);
       } catch {
         setContent('Content not found');
       }
@@ -30,15 +34,28 @@ export function CollectibleText({ src, size = 200 }: CollectibleTextProps) {
 
   if (!content) return null;
 
+  if (content.includes('<html')) {
+    // remove any script tags
+    const sanitizedHtml = content.replace(
+      /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+      ''
+    );
+
+    // If the content is HTML, render it directly in a WebView by passing the HTML string as the source.
+    return (
+      <WebView
+        originWhitelist={['*']}
+        source={{ html: sanitizedHtml }}
+        javaScriptEnabled={false}
+        domStorageEnabled={false}
+        startInLoadingState={false}
+        scalesPageToFit={false}
+      />
+    );
+  }
+
   return (
     <CollectibleCardLayout bg="ink.text-primary" p="4" width={size} height={size}>
-      {/* 
-       TODO: assess security implications of rendering HTML content
-       - XSS attacks seem unlikely on React Native 
-      - I tried using RenderHtml, but it was not working as expected
-      - sanitize-html is a popular library for this, but it's a little heavy for this use case
-      - I tried regex's but theres always a new case to catch and it actually removes some valid content
-       */}
       <Text color="ink.background-secondary" variant="code">
         {content}
       </Text>
