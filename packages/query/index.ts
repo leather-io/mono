@@ -66,7 +66,6 @@ export * from './test/mock-btc-txs';
 export * from './test/mock-inscriptions';
 export * from './test/mock-utxos';
 export * from './types/api-types';
-export * from './types/inscription';
 export * from './types/remote-config';
 export * from './types/utxo';
 export * from './src/stacks/bns/bns-v2-client';

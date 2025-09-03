@@ -1,32 +1,10 @@
-import { serializeSatPoint } from '@leather.io/bitcoin';
-import { HIRO_INSCRIPTIONS_API_URL, Inscription } from '@leather.io/models';
+import { Inscription } from '@leather.io/models';
 import { createInscriptionAsset } from '@leather.io/utils';
 
-import { InscriptionResponseHiro } from '../../../types/inscription';
 import {
   BestInSlotInscriptionResponse,
   BestinSlotInscriptionBatchInfoResponse,
 } from '../clients/best-in-slot';
-
-export function createHiroInscription(inscriptionResponse: InscriptionResponseHiro) {
-  const inscription: Inscription = createInscriptionAsset({
-    id: inscriptionResponse.id,
-    number: inscriptionResponse.number,
-    contentSrc: `${HIRO_INSCRIPTIONS_API_URL}/${inscriptionResponse.id}/content`,
-    mimeType: inscriptionResponse.mime_type ?? inscriptionResponse.content_type,
-    ownerAddress: inscriptionResponse.address,
-    satPoint: serializeSatPoint(
-      inscriptionResponse.tx_id,
-      inscriptionResponse.output,
-      inscriptionResponse.offset
-    ),
-    genesisBlockHash: inscriptionResponse.genesis_block_hash,
-    genesisBlockHeight: inscriptionResponse.genesis_block_height,
-    genesisTimestamp: inscriptionResponse.genesis_timestamp,
-    outputValue: inscriptionResponse.value,
-  });
-  return inscription;
-}
 
 // there are disrepancies in inscription models in BiS api
 export function normalizeBestInSlotInscriptionResponse(
