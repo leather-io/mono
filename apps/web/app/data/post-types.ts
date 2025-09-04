@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+/**
+ * @deprecated This is a legacy interface for blog posts via GPTs / Notion. We should begin using Sanity for these purposes.
+ */
 export interface Post {
   id: string;
   title: string;
@@ -39,7 +42,10 @@ export interface EarnProvider {
   id: string;
 }
 
-// Define a type for raw post data with PascalCase properties
+/**
+ *  @deprecated This should be converted to a component that is not `Post` aw
+ *  Define a type for raw post data with PascalCase properties
+ * */
 export interface RawPost {
   id: string;
   Title: string;
@@ -68,7 +74,9 @@ export interface RawPost {
   'Data point value': string;
   Created_time: string;
 }
-
+/**
+ * @deprecated
+ */
 export interface PostsCollection {
   [slug: string]: Post;
 }
@@ -85,7 +93,9 @@ export const earnProviderSchema = z.object({
   id: z.string(),
 });
 
-// Zod schema for Post
+/**
+ * @deprecated
+ */
 export const postSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -122,7 +132,9 @@ function toCamelCase(str: string): string {
   return str.replace(/-([a-z])/g, g => g[1].toUpperCase());
 }
 
-// Utility to convert raw post objects from PascalCase to camelCase
+/**
+ * @deprecated
+ */
 export function normalizePost(rawData: unknown): Post {
   // Cast the unknown data to RawPost type
   const raw = rawData as RawPost;
@@ -160,6 +172,9 @@ export function normalizePost(rawData: unknown): Post {
   return postSchema.parse(normalizedPost);
 }
 
+/**
+ * @deprecated
+ */
 export function normalizePosts(rawPosts: Record<string, unknown>): PostsCollection {
   const normalized: PostsCollection = {};
   for (const slug in rawPosts) {

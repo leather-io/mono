@@ -161,7 +161,7 @@ function PoolCell({ pool, poolSlug }: PoolOverviewProps): ReactElement {
       {post && (
         <styled.div textStyle="caption.01">
           {post.sentence}
-          <LearnMoreLink destination={post.slug} precedingText={post.sentence} />
+          <LearnMoreLink destination={post.slug} />
         </styled.div>
       )}
     </VStack>

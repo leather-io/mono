@@ -164,11 +164,7 @@ function ProtocolCell({ description, icon, name, postSlug }: ProtocolCellProps):
       {hasValidPost ? (
         <styled.div textStyle="caption.01">
           {post?.sentence || ''}
-          {post?.slug && post?.sentence ? (
-            <LearnMoreLink destination={post.slug} precedingText={post.sentence} />
-          ) : (
-            <></>
-          )}
+          {post?.slug && post?.sentence && <LearnMoreLink destination={post.slug} />}
         </styled.div>
       ) : (
         <styled.div textStyle="caption.01">{description}</styled.div>

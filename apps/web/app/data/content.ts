@@ -91,67 +91,13 @@ export const content = {
     },
   ],
   // Merge the validated posts with our custom posts
+  /**
+   * @deprecated We should begin migrating all of this data to Sanity CMS.
+   */
   posts: {
     ...validatedPosts,
     ...customPosts,
   },
-
-  // --- Consolidated content below ---
-
-  sbtcPools: [
-    {
-      id: 'alex',
-      title: 'ALEX',
-      description: `Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards`,
-      tvl: '1,880 BTC',
-      tvlUsd: '$113,960,000',
-      minCommitment: '0.01 BTC',
-      minCommitmentUsd: '$605.00',
-      apr: '5.2%',
-      payoutToken: 'sBTC',
-      url: 'https://app.alexlab.co/pool',
-      logoKey: 'AlexLogo',
-    },
-    {
-      id: 'bitflow',
-      title: 'Bitflow',
-      description: `Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards`,
-      tvl: '1,420 BTC',
-      tvlUsd: '$86,020,000',
-      minCommitment: '0.008 BTC',
-      minCommitmentUsd: '$484.00',
-      apr: '5.1%',
-      payoutToken: 'sBTC',
-      url: 'https://app.bitflow.finance/sbtc#earn3',
-      logoKey: 'BitflowLogo',
-    },
-    {
-      id: 'velar',
-      title: 'Velar',
-      description: `Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards`,
-      tvl: '3,100 BTC',
-      tvlUsd: '$187,050,000',
-      minCommitment: '0.015 BTC',
-      minCommitmentUsd: '$907.50',
-      apr: '5.0%',
-      payoutToken: 'sBTC',
-      url: 'https://app.velar.com/pool',
-      logoKey: 'VelarLogo',
-    },
-    {
-      id: 'zest',
-      title: 'Zest',
-      description: `Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards`,
-      tvl: '950 BTC',
-      tvlUsd: '$57,950,000',
-      minCommitment: '0.007 BTC',
-      minCommitmentUsd: '$423.50',
-      apr: '5.3%',
-      payoutToken: 'sBTC',
-      url: 'https://app.zestprotocol.com',
-      logoKey: 'ZestLogo',
-    },
-  ],
 
   stackingConditions: [
     {
@@ -269,10 +215,3 @@ export const content = {
     addressIncorrectNetwork: 'Address is for incorrect network',
   },
 } as const;
-
-export async function fetchPostsFromCMS(): Promise<PostsCollection> {
-  const res = await fetch('https://leather-cms.s3.amazonaws.com/posts.json');
-  if (!res.ok) throw new Error('Failed to fetch posts.json');
-  const rawData = await res.json();
-  return postsCollectionSchema.parse(normalizePosts(rawData));
-}

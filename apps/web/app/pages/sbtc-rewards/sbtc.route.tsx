@@ -1,23 +1,41 @@
 import { MetaDescriptor } from 'react-router';
 
+import { cmsClient } from '~/constants/cms-client';
 import { SbtcRewards } from '~/pages/sbtc-rewards/sbtc-rewards';
-import { formatPostPrompt, getPosts } from '~/utils/post-utils';
 
-import { client, sbtcBasicEnrollQuery, sbtcPoolsQuery } from '@leather.io/cms';
+import {
+  sbtcBasicEnrollQuery,
+  sbtcConceptsQuery,
+  sbtcFaqQuery,
+  sbtcPoolsQuery,
+} from '@leather.io/cms';
 
 export async function loader() {
-  const sbtcPools = await client.fetch(sbtcPoolsQuery);
-  const sbtcEnroll = await client.fetch(sbtcBasicEnrollQuery);
-  return { sbtcPools, sbtcEnroll };
+  const sbtcPools = await cmsClient.fetch(sbtcPoolsQuery);
+  const sbtcEnroll = await cmsClient.fetch(sbtcBasicEnrollQuery);
+  const sbtcFaq = await cmsClient.fetch(sbtcFaqQuery);
+  const sbtcConcepts = await cmsClient.fetch(sbtcConceptsQuery);
+  const { historicalYield, minimumCommitment, rewardsToken, tvl } = sbtcConcepts;
+  return {
+    sbtcPools,
+    sbtcEnroll,
+    sbtcFaq,
+    concepts: {
+      tvlConcept: tvl,
+      minimumCommitmentConcept: minimumCommitment,
+      historicalYieldConcept: historicalYield,
+      rewardsTokenConcept: rewardsToken,
+    },
+  };
 }
 
 export function meta() {
-  const posts = getPosts();
   return [
     { title: 'sBTC Rewards – Leather' },
     {
       name: 'description',
-      content: formatPostPrompt(posts.sbtcRewardsBasic?.prompt || ''),
+      content:
+        'Earn sBTC yield through integrated DeFi protocols while maintaining control of your Bitcoin.',
     },
   ] satisfies MetaDescriptor[];
 }

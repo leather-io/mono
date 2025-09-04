@@ -1,49 +1,29 @@
-import { HTMLStyledProps, styled } from 'leather-styles/jsx';
-import type { Post } from '~/data/post-types';
+import { useLoaderData } from 'react-router';
+
+import { styled } from 'leather-styles/jsx';
+import { loader } from '~/pages/sbtc-rewards/sbtc.route';
 import { getPostHref } from '~/utils/post-link';
-import { getPosts } from '~/utils/post-utils';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
 import { Accordion, Link } from '@leather.io/ui';
 
-// List of sBTC-related post keys in order of appearance on the page
-const sbtcFaqPostKeysRaw = [
-  // Main heading
-  'sbtcRewards',
-  // TVL and yield in value cards and tables
-  'historicalYield',
-  // Step 1: Get sBTC
-  'sbtcBridge',
-  'stacksSwaps',
-  // Step 2: Choose reward protocol (protocol grid)
-  'sbtcRewardsBasic',
-  'alexSbtcPools',
-  'bitflowSbtcPools',
-  'velarSbtcPools',
-  'zestSbtcPools',
-  // Table posts
-  'totalLockedValueTvl',
-  'sbtcRewardsMinimumCommitment',
-  'sbtcRewardsTokens',
-];
-const sbtcFaqPostKeys = Array.from(new Set(sbtcFaqPostKeysRaw));
+export function SbtcRewardsFaq() {
+  const { sbtcFaq } = useLoaderData<typeof loader>();
 
-export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
-  // Get posts and filter out undefined/invalid posts
-  const posts = getPosts();
-  const faqPosts = sbtcFaqPostKeys
-    .map(key => posts[key])
-    .filter((post): post is Post => Boolean(post && post.question && post.summary));
+  if (!sbtcFaq) {
+    return null;
+  }
 
+  const { faqBuilder } = sbtcFaq;
   return (
-    <styled.div {...props}>
+    <styled.div mb="space.07">
       <Accordion.Root
         type="single"
-        defaultValue={faqPosts.length ? faqPosts[0].slug : undefined}
+        defaultValue={faqBuilder.length ? faqBuilder[0]._id : undefined}
         collapsible
       >
-        {faqPosts.map(post => (
-          <Accordion.Item value={post.slug} key={post.slug}>
+        {faqBuilder.map(post => (
+          <Accordion.Item value={post._id} key={post._id}>
             <Accordion.Trigger>{sanitizeContent(post.question)}</Accordion.Trigger>
             <Accordion.Content>
               <styled.div
@@ -51,8 +31,13 @@ export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
                 mb="space.02"
                 style={{ whiteSpace: 'pre-line', color: 'black' }}
               >
-                {sanitizeContent(post.summary)}{' '}
-                <Link href={getPostHref(post.slug)} style={{ fontSize: 'inherit' }}>
+                {sanitizeContent(post.answer)}
+                <br />
+                <br />
+                <Link
+                  href={getPostHref(post.legacyPost?.slug.current)}
+                  style={{ fontSize: 'inherit' }}
+                >
                   Learn more
                 </Link>
               </styled.div>
