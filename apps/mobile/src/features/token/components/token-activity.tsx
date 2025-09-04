@@ -6,9 +6,7 @@ import { ActivityListItem } from '@/features/activity/activity-list-item';
 import { t } from '@lingui/core/macro';
 
 import { OnChainActivity } from '@leather.io/models';
-import { Box } from '@leather.io/ui/native';
-
-import { TokenDetailsCard } from './token-details-card';
+import { Box, Text } from '@leather.io/ui/native';
 
 interface TokenActivityProps {
   activity: FetchState<OnChainActivity[]>;
@@ -27,7 +25,11 @@ export function TokenActivity({ activity, ListHeader }: TokenActivityProps) {
       ListHeaderComponent={() => (
         <Box gap="1" backgroundColor="ink.background-secondary">
           {ListHeader}
-          {(isLoading || hasActivity) && <TokenDetailsCard title={t`Activity`} />}
+          {(isLoading || hasActivity) && (
+            <Box backgroundColor="ink.background-primary" px="5" pt="3">
+              <Text variant="label03" py="2">{t`Activity`}</Text>
+            </Box>
+          )}
         </Box>
       )}
     />
