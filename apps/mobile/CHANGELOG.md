@@ -19,6 +19,15 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.69.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.69.1...@leather.io/mobile-v2.69.2) (2025-09-04)
+
+
+### Bug Fixes
+
+* **mobile:** only show balance list for BTC, ref LEA-3175 ([e580220](https://github.com/leather-io/mono/commit/e580220b68a789dcab555742aab98f4ffb6fe7a6))
+* **mobile:** only show balance list for BTC, ref LEA-3176 ([e580220](https://github.com/leather-io/mono/commit/e580220b68a789dcab555742aab98f4ffb6fe7a6))
+* **mobile:** remove space in activity header, ref LEA-3176 ([b9d03a4](https://github.com/leather-io/mono/commit/b9d03a44f2a9c77137f0fc8bec5d7a099f2dc513))
+
 ## [2.69.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.69.0...@leather.io/mobile-v2.69.1) (2025-09-03)
 
 
