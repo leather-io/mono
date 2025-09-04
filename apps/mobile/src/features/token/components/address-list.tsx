@@ -3,24 +3,20 @@ import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AssetType } from '@/features/receive/get-assets';
 import { ReceiveType } from '@/features/receive/receive-flow-provider';
 import { useCopyAddress } from '@/hooks/use-copy-address';
-import { Account } from '@/store/accounts/accounts';
+import { t } from '@lingui/core/macro';
 
 import { Money } from '@leather.io/models';
 import { Box, Cell, HasChildren, Text } from '@leather.io/ui/native';
 import { match, truncateMiddle } from '@leather.io/utils';
 
-import { accountIconMap } from '../../account/components/account-avatar';
 import { TokenDetailsCard } from './token-details-card';
 
-export function AddressList({ account, children }: HasChildren & { account: Account }) {
-  const AccountIcon = accountIconMap[account.icon];
-
+export function AddressList({ children }: HasChildren) {
   return (
     <TokenDetailsCard
       title={
         <Box flexDirection="row" alignItems="center" gap="2" mb="2">
-          <AccountIcon variant="small" />
-          <Text variant="label03">{account.name}</Text>
+          <Text variant="label03">{t`Balances`}</Text>
         </Box>
       }
     >
@@ -64,8 +60,12 @@ export function AddressListItem({
         <Cell.Label variant="primary">
           <Text variant="label02">{name}</Text>
         </Cell.Label>
-        <Cell.Label variant="secondary" onPress={() => void onCopyAddress(address)}>
-          {truncateMiddle(address)}
+        <Cell.Label
+          variant="secondary"
+          onPress={() => void onCopyAddress(address)}
+          textDecorationLine="underline"
+        >
+          {truncateMiddle(address, 7)}
         </Cell.Label>
       </Cell.Content>
       <Cell.Aside>
