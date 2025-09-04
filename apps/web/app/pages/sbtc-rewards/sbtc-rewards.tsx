@@ -3,9 +3,8 @@ import { useLoaderData } from 'react-router';
 
 import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
+import { BasicPageSectionHeading } from '~/components/basic-page/basic-page-section-heading';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
-import { PostSectionHeading } from '~/components/posts/post-section-heading';
-import { content } from '~/data/content';
 import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { Page } from '~/layouts/page/page';
 import { SbtcRewardsPageHeading } from '~/pages/sbtc-rewards/components/sbtc-rewards-page-heading';
@@ -15,7 +14,6 @@ import { useLeatherConnect } from '~/store/addresses';
 import { analytics } from '~/utils/analytics/analytics';
 import { openExternalLink } from '~/utils/external-links';
 import { leather } from '~/utils/leather-sdk';
-import { getPosts } from '~/utils/post-utils';
 
 import { Button, Hr } from '@leather.io/ui';
 
@@ -23,22 +21,6 @@ import { GetSbtcGrid } from './components/get-sbtc-grid';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';
 import { SbtcRewardContext } from './sbtc-rewards-context';
-
-export interface RewardProtocolInfo {
-  id: string;
-  url?: string;
-  logo: ReactElement;
-  title: string;
-  description: string;
-  tvl: string;
-  tvlUsd: string;
-  minCommitment: string;
-  minCommitmentUsd: string;
-  apr: string;
-  payoutToken: string | string[];
-}
-
-const posts = getPosts();
 
 export function SbtcRewards(): ReactElement {
   const { sbtcPools, sbtcEnroll } = useLoaderData<typeof loader>();
@@ -80,18 +62,30 @@ export function SbtcRewards(): ReactElement {
         />
 
         <styled.section mt="space.09">
-          <PostSectionHeading post={posts.getSbtc} prefix="Step 1: " />
+          <BasicPageSectionHeading
+            prefix="Step 1: "
+            title="Get sBTC"
+            description="Get sBTC by bridging BTC or swapping other Stacks assets like STX through integrated DeFi protocols."
+            slug="get-sbtc"
+            disclaimer="Leather does not operate the sBTC bridge or token swap protocols. Users are responsible for reviewing all terms, pricing, and risks before initiating any transactions."
+          />
           <GetSbtcGrid mt="space.05" />
         </styled.section>
 
         <styled.section mt="space.08">
-          <PostSectionHeading post={posts.sbtcRewardsProvider} prefix="Step 2: " />
+          <BasicPageSectionHeading
+            prefix="Step 2: "
+            title="Choose sBTC rewards provider"
+            description="An sBTC rewards provider is any DeFi protocol that lets users earn yield by deploying sBTC in supported strategies."
+            slug="sbtc-rewards-provider"
+            disclaimer="sBTC rewards providers are independent third-party protocols. Leather does not control their reward logic or smart contracts. Users should review platform-specific documentation before committing sBTC."
+          />
 
           {sbtcEnroll && (
             <SbtcProtocolRewardGrid
               enrollAction={<SbtcEnrollButton />}
               mt="space.05"
-              rewardProtocol={sbtcEnroll}
+              pool={sbtcEnroll}
             />
           )}
 
@@ -99,12 +93,12 @@ export function SbtcRewards(): ReactElement {
             <SbtcProtocolRewardGrid
               enrollAction={
                 <Button size="sm" fullWidth onClick={() => openExternalLink(pool.url)}>
-                  {content.labels.startEarning} <RotatedArrow />
+                  Start earning <RotatedArrow />
                 </Button>
               }
               key={pool.id}
               mt="space.06"
-              rewardProtocol={pool}
+              pool={pool}
             />
           ))}
         </styled.section>
@@ -117,7 +111,7 @@ export function SbtcRewards(): ReactElement {
           Frequently asked questions
         </styled.h2>
 
-        <SbtcRewardsFaq mb="space.07" />
+        <SbtcRewardsFaq />
       </Page>
     </SbtcRewardContext.Provider>
   );

@@ -16,6 +16,9 @@ interface PostValueHoverCardProps {
   label?: string;
 }
 
+/**
+ * @deprecated This should be converted to a component that is not `Post` aware.
+ */
 export function PostValueHoverCard({
   postKey,
   post: propPost,

@@ -2,7 +2,6 @@ import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
 import { WhenClient } from '~/components/when-client';
-import { content } from '~/data/content';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { GetSbtcGridLayout } from '~/pages/sbtc-rewards/components/get-sbtc-grid.layout';
 
@@ -17,7 +16,7 @@ function MaxCapacity({ bridgingStatus }: { bridgingStatus: BridgingStatus }) {
 
 function BridgeToSbtcCell() {
   const { onBridgeSbtc, bridgingStatus, whenExtensionState } = useSbtcRewardContext();
-  const sbtcBridgePost = content.posts.sbtcBridge;
+
   return (
     <Flex flexDir={['column', 'row', 'column', 'row']} justifyContent="space-between" p="space.05">
       <Flex flexDir="column" flex={1} justifyContent="space-between">
@@ -26,15 +25,11 @@ function BridgeToSbtcCell() {
         <Box mt="space.04">
           <styled.h4 textStyle="heading.05">Bridge BTC to sBTC</styled.h4>
           <MaxCapacity bridgingStatus={bridgingStatus} />
-          {sbtcBridgePost && (
-            <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
-              {sbtcBridgePost.prompt}
-              <LearnMoreLink
-                destination={sbtcBridgePost.slug}
-                precedingText={sbtcBridgePost.prompt}
-              />
-            </styled.p>
-          )}
+          <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
+            Bridge BTC to Stacks using the sBTC protocol and unlock new ways to earn Bitcoin through
+            DeFi apps in Leather.
+            <LearnMoreLink destination="sbtc-bridge" />
+          </styled.p>
         </Box>
       </Flex>
 
@@ -64,7 +59,7 @@ function BridgeToSbtcCell() {
 
 function SwapStxToSbtcCell() {
   const { onSwapStxSbtc, whenExtensionState } = useSbtcRewardContext();
-  const stacksSwapsPost = content.posts.stacksSwaps;
+
   return (
     <Flex
       flexDir={['column', 'row', 'column', 'row']}
@@ -77,15 +72,11 @@ function SwapStxToSbtcCell() {
 
         <Box mt="space.04">
           <styled.h4 textStyle="heading.05">Swap Stacks tokens for sBTC</styled.h4>
-          {stacksSwapsPost && (
-            <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
-              {stacksSwapsPost.prompt}
-              <LearnMoreLink
-                destination={stacksSwapsPost.slug}
-                precedingText={stacksSwapsPost.prompt}
-              />
-            </styled.p>
-          )}
+          <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
+            Swap assets like STX, sBTC, and stablecoins directly from your Leather wallet using
+            integrated DeFi protocols.
+            <LearnMoreLink destination="stacks-swap" />
+          </styled.p>
         </Box>
       </Flex>
       <Flex alignItems="flex-end">

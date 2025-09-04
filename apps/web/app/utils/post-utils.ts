@@ -44,6 +44,7 @@ export function formatPostContent(text: string | undefined | null): string {
 }
 
 /**
+ * @deprecated We should begin migrating all of this data to Sanity CMS.
  * Safe access to the posts collection with proper typing
  * @returns The validated posts collection
  */

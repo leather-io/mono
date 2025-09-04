@@ -15,6 +15,7 @@ interface PostLabelHoverCardProps {
 }
 
 /**
+ * @deprecated This should be converted to a component that is not `Post` aware.
  * Displays a label with hover functionality showing more information about a post
  */
 export function PostLabelHoverCard({

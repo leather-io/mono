@@ -30,3 +30,6 @@
 
 # Dotenv and similar local-only files
 *.local
+.env
+.env.*
+!.env.example

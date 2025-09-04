@@ -50,21 +50,17 @@ export function PageHeading({ title, subtitle, children }: PageHeadingProps) {
  */
 interface LearnMoreLinkProps {
   destination: string;
-  precedingText?: string;
 }
-export function LearnMoreLink({ destination, precedingText }: LearnMoreLinkProps) {
+
+export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
   if (!destination) return null;
-  const needsPeriod =
-    precedingText &&
-    !precedingText.trim().endsWith('.') &&
-    !precedingText.trim().endsWith('!') &&
-    !precedingText.trim().endsWith('?');
+
   // Simple URL check
   const isUrl = /^https?:\/\//.test(destination);
   const href = isUrl ? destination : getPostHref(destination);
   return (
     <styled.span>
-      {precedingText && needsPeriod ? '. ' : ' '}
+      &nbsp;
       <Link href={href} style={{ fontSize: 'inherit', display: 'inline' }}>
         {'Learn more'}
       </Link>

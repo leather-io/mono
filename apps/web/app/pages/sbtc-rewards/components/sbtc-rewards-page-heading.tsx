@@ -10,12 +10,11 @@ export function SbtcRewardsPageHeading(): ReactElement {
       subtitle={
         <>
           sBTC rewards are earned when users mint sBTC by locking BTC and use it in DeFi protocols
-          that offer yield in BTC or other tokens
+          that offer yield in BTC or other tokens.
           <LearnMoreLink destination="sbtc-rewards" />
           <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.02" borderRadius="sm">
             Leather does not operate the sBTC bridge or any yield protocols. Users should review
             each app’s documentation before committing assets.
-            <br />
             <br />
             Leather gives you secure access to these opportunities but does not control how rewards
             are structured or distributed.
