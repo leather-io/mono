@@ -19,6 +19,31 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.70.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.69.2...@leather.io/mobile-v2.70.0) (2025-09-04)
+
+
+### Features
+
+* add bns types and app-layer service ([fb47a28](https://github.com/leather-io/mono/commit/fb47a2884eab5a6a20ecc089af8ef8b21ee16df5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.13.1
+    * @leather.io/bitcoin bumped to 0.32.4
+    * @leather.io/constants bumped to 0.25.3
+    * @leather.io/crypto bumped to 1.11.9
+    * @leather.io/models bumped to 0.41.0
+    * @leather.io/provider bumped to 1.5.11
+    * @leather.io/query bumped to 2.41.12
+    * @leather.io/rpc bumped to 2.20.10
+    * @leather.io/services bumped to 1.30.0
+    * @leather.io/stacks bumped to 1.16.4
+    * @leather.io/ui bumped to 1.80.3
+    * @leather.io/utils bumped to 0.44.1
+
 ## [2.69.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.69.1...@leather.io/mobile-v2.69.2) (2025-09-04)
 
 

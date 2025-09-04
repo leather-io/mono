@@ -30,6 +30,13 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+## [0.41.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.40.0...@leather.io/models-v0.41.0) (2025-09-04)
+
+
+### Features
+
+* add bns types and app-layer service ([fb47a28](https://github.com/leather-io/mono/commit/fb47a2884eab5a6a20ecc089af8ef8b21ee16df5))
+
 ## [0.40.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.39.1...@leather.io/models-v0.40.0) (2025-08-26)
 
 
