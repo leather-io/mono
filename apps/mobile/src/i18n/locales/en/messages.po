@@ -288,6 +288,10 @@ msgstr "Avatar"
 msgid "Back up your Secret Key"
 msgstr "Back up your Secret Key"
 
+#: src/features/token/components/address-list.tsx:19
+msgid "Balances"
+msgstr "Balances"
+
 #: src/features/recover-wallet/recover-wallet.layout.tsx:68
 #: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:18
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:20
@@ -786,7 +790,7 @@ msgstr "Layer"
 msgid "Layer 1"
 msgstr "Layer 1"
 
-#: src/features/token/bitcoin/rune-token-details.tsx:40
+#: src/features/token/bitcoin/rune-token-details.tsx:31
 msgid "Layer 1 · Bitcoin"
 msgstr "Layer 1 · Bitcoin"
 
@@ -795,11 +799,11 @@ msgstr "Layer 1 · Bitcoin"
 msgid "Layer 1 • Bitcoin"
 msgstr "Layer 1 • Bitcoin"
 
-#: src/features/token/stacks/stacks-token-details.tsx:36
+#: src/features/token/stacks/stacks-token-details.tsx:35
 msgid "Layer 2"
 msgstr "Layer 2"
 
-#: src/features/token/stacks/sip10-token-details.tsx:37
+#: src/features/token/stacks/sip10-token-details.tsx:36
 msgid "Layer 2 · Stacks"
 msgstr "Layer 2 · Stacks"
 
@@ -1222,7 +1226,7 @@ msgstr "StackingDAO"
 #: src/features/balances/stacks/stacks-balance.tsx:11
 #: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
-#: src/features/token/stacks/stacks-token-details.tsx:16
+#: src/features/token/stacks/stacks-token-details.tsx:15
 msgid "Stacks"
 msgstr "Stacks"
 
@@ -1233,10 +1237,6 @@ msgstr "Stacks address"
 #: src/features/approver/utils.tsx:47
 msgid "Standard"
 msgstr "Standard"
-
-#: src/features/token/stacks/stacks-address-list.tsx:24
-msgid "STX"
-msgstr "STX"
 
 #: src/features/approver/components/approver-buttons.tsx:38
 msgid "Submitted"
@@ -1268,7 +1268,6 @@ msgstr "Tap to view Secret Key"
 
 #: src/features/receive/get-assets.ts:39
 #: src/features/token/bitcoin/bitcoin-address-list.tsx:35
-#: src/features/token/bitcoin/rune-token-details.tsx:47
 msgid "Taproot"
 msgstr "Taproot"
 

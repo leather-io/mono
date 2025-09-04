@@ -21,7 +21,7 @@ export function BitcoinAddressList({ account }: { account: Account }) {
   );
 
   return (
-    <AddressList account={account}>
+    <AddressList>
       <AddressListItem
         address={nativeSegwitPayerAddress}
         assetType={AssetType.NativeSegwit}

@@ -9,7 +9,6 @@ import { stxAsset } from '@leather.io/constants';
 import { StxAvatarIcon } from '@leather.io/ui/native';
 
 import { Token } from '../token';
-import { StacksAddressList } from './stacks-address-list';
 
 type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
 export function StacksTokenBalance(props: StacksTokenBalanceProps) {
@@ -36,8 +35,6 @@ export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
       layer={t`Layer 2`}
       title={chain}
       name={name}
-    >
-      <StacksAddressList account={account} />
-    </Token>
+    />
   );
 }
