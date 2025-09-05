@@ -14,7 +14,7 @@ import { useTokenDetailsFlag } from '@/features/feature-flags';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { TokenDetailsProps } from '@/features/token/types';
-import { useAccountBalance } from '@/queries/balance/account-balance.query';
+import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
@@ -59,7 +59,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     });
   }
   const tokenDetailsFlag = useTokenDetailsFlag();
-  const { totalBalance } = useAccountBalance({
+  const totalBalance = useAccountTotalBalance({
     fingerprint: currentAccount.fingerprint,
     accountIndex: currentAccount.accountIndex,
   });

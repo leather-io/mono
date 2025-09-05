@@ -4,6 +4,7 @@ import { ActivityService } from './activity/activity.service';
 import { FungibleAssetInfoService } from './assets/fungible-asset-info.service';
 import { RuneAssetService } from './assets/rune-asset.service';
 import { Sip10AssetService } from './assets/sip10-asset.service';
+import { AccountBalancesService } from './balances/account-balances.service';
 import { BtcBalancesService } from './balances/btc-balances.service';
 import { RunesBalancesService } from './balances/runes-balances.service';
 import { Sip10BalancesService } from './balances/sip10-balances.service';
@@ -102,6 +103,9 @@ export function getFungibleAssetInfoService() {
 }
 export function getBnsService() {
   return getServicesContainer().get(BnsService);
+}
+export function getAccountBalancesService() {
+  return getServicesContainer().get(AccountBalancesService);
 }
 /* 
   API Layer Clients
