@@ -4,7 +4,8 @@ import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-accou
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { AccountRequest, getRunesBalancesService } from '@leather.io/services';
+import { AccountRequest, RuneBalance, getRunesBalancesService } from '@leather.io/services';
+import { getAssetId } from '@leather.io/utils';
 
 import { balanceQueryOptions } from './balance-query-options';
 
@@ -22,9 +23,31 @@ export function useRuneBalanceByRuneName(
   return toFetchState(useRuneBalanceByRuneNameQuery({ account }, runeName));
 }
 
-export function useRunesAccountBalance(fingerprint: string, accountIndex: number) {
+export function useRunesAccountBalance(
+  fingerprint: string,
+  accountIndex: number,
+  options?: {
+    returnAllAssets?: boolean;
+  }
+) {
+  const { assetVisibility } = useSettings();
+
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useRunesAccountBalanceQuery({ account }));
+  const queryResult = useRunesAccountBalanceQuery({
+    account,
+    filters: options?.returnAllAssets ? undefined : { assetVisibility },
+  });
+  return toFetchState(queryResult);
+}
+
+export function useManagedRunesTools(fingerprint: string, accountIndex: number) {
+  const enabledRunes = useRunesAccountBalance(fingerprint, accountIndex);
+  return {
+    isEnabled: (token: RuneBalance) =>
+      !!enabledRunes.value?.runes.find(rune => {
+        return getAssetId(rune.asset).id === getAssetId(token.asset).id;
+      }),
+  };
 }
 
 function useRunesAggregateBalanceQuery(requests: AccountRequest[]) {

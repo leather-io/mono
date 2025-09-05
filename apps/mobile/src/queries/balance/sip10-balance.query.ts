@@ -3,7 +3,8 @@ import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-accou
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { AccountRequest, getSip10BalancesService } from '@leather.io/services';
+import { AccountRequest, Sip10Balance, getSip10BalancesService } from '@leather.io/services';
+import { getAssetId } from '@leather.io/utils';
 
 import { balanceQueryOptions } from './balance-query-options';
 
@@ -12,9 +13,32 @@ export function useSip10TotalBalance() {
   return toFetchState(useSip10AggregateBalanceQuery(accounts.map(account => ({ account }))));
 }
 
-export function useSip10AccountBalance(fingerprint: string, accountIndex: number) {
+export function useSip10AccountBalance(
+  fingerprint: string,
+  accountIndex: number,
+  options?: {
+    returnAllAssets?: boolean;
+  }
+) {
+  const { assetVisibility } = useSettings();
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useSip10AccountBalanceQuery({ account }));
+  const queryResult = useSip10AccountBalanceQuery({
+    account,
+    filters: options?.returnAllAssets ? undefined : { assetVisibility },
+  });
+
+  return toFetchState(queryResult);
+}
+
+export function useManagedSip10Tools(fingerprint: string, accountIndex: number) {
+  const enabledSip10s = useSip10AccountBalance(fingerprint, accountIndex);
+
+  return {
+    isEnabled: (token: Sip10Balance) =>
+      !!enabledSip10s.value?.sip10s.find(sip10 => {
+        return getAssetId(sip10.asset).id === getAssetId(token.asset).id;
+      }),
+  };
 }
 
 /**

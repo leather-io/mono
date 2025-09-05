@@ -205,7 +205,7 @@ msgstr "Allow collection of data"
 msgid "Amount must be greater than zero"
 msgstr "Amount must be greater than zero"
 
-#: src/features/account/components/available-account-balance.tsx:35
+#: src/features/account/components/available-account-balance.tsx:44
 msgid "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 msgstr "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 
@@ -272,11 +272,11 @@ msgstr "Arkadiko"
 msgid "Authentication failed"
 msgstr "Authentication failed"
 
-#: src/features/account/components/available-account-balance.tsx:64
+#: src/features/account/components/available-account-balance.tsx:73
 msgid "Available"
 msgstr "Available"
 
-#: src/features/account/components/available-account-balance.tsx:31
+#: src/features/account/components/available-account-balance.tsx:40
 msgid "Available balance"
 msgstr "Available balance"
 
@@ -665,15 +665,15 @@ msgstr "Fees"
 msgid "For your eyes only"
 msgstr "For your eyes only"
 
-#: src/features/account/components/available-account-balance.tsx:40
+#: src/features/account/components/available-account-balance.tsx:49
 msgid "funds already on their way to someone else."
 msgstr "funds already on their way to someone else."
 
-#: src/features/account/components/available-account-balance.tsx:45
+#: src/features/account/components/available-account-balance.tsx:54
 msgid "funds kept safe and unavailable for spending"
 msgstr "funds kept safe and unavailable for spending"
 
-#: src/features/account/components/available-account-balance.tsx:50
+#: src/features/account/components/available-account-balance.tsx:59
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 
@@ -842,7 +842,7 @@ msgstr "Lock failed"
 msgid "Locked"
 msgstr "Locked"
 
-#: src/features/account/components/available-account-balance.tsx:49
+#: src/features/account/components/available-account-balance.tsx:58
 msgid "Locked Stacks balance:"
 msgstr "Locked Stacks balance:"
 
@@ -857,6 +857,10 @@ msgstr "Mainnet, testnet or signet"
 #: src/features/activity/activity-empty.tsx:28
 msgid "Make your first transaction to get started"
 msgstr "Make your first transaction to get started"
+
+#: src/features/balances/manage-tokens.sheet.tsx:74
+msgid "Manage tokens"
+msgstr "Manage tokens"
 
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-section-header.tsx:24
 msgid "Matching"
@@ -967,7 +971,7 @@ msgstr "OK"
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
 
-#: src/features/account/components/available-account-balance.tsx:39
+#: src/features/account/components/available-account-balance.tsx:48
 msgid "Outbound balance:"
 msgstr "Outbound balance:"
 
@@ -1008,7 +1012,7 @@ msgstr "Proceed with caution since the wallet will be removed entirely from this
 msgid "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
 msgstr "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
 
-#: src/features/account/components/available-account-balance.tsx:44
+#: src/features/account/components/available-account-balance.tsx:53
 msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
@@ -1324,7 +1328,7 @@ msgstr "This is your Taproot address for receiving tokens on the Bitcoin network
 msgid "This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent."
 msgstr "This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent."
 
-#: src/features/account/components/available-account-balance.tsx:55
+#: src/features/account/components/available-account-balance.tsx:64
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
@@ -1403,7 +1407,7 @@ msgstr "Unable to open app store. Please update the app manually from your devic
 msgid "Unable to Open Store"
 msgstr "Unable to Open Store"
 
-#: src/features/account/components/available-account-balance.tsx:54
+#: src/features/account/components/available-account-balance.tsx:63
 msgid "Uneconomical balance:"
 msgstr "Uneconomical balance:"
 

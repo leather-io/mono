@@ -1,4 +1,5 @@
 import { AccountAddresses } from '@leather.io/models';
+import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 /* 
   Services request DTO for requests made in an account context
@@ -7,6 +8,7 @@ export interface AccountRequest {
   account: AccountAddresses;
   protections?: AccountRequestUtxoProtectionOptions;
   exclusions?: AccountRequestAddressExclusionOptions;
+  filters?: AccountRequestFilteringOptions;
 }
 
 export interface AccountRequestUtxoProtectionOptions {
@@ -21,4 +23,8 @@ export interface AccountRequestAddressExclusionOptions {
   nativeSegwitAddresses?: boolean;
   /** Skips taproot (P2TR) addresses */
   taprootAddresses?: boolean;
+}
+
+export interface AccountRequestFilteringOptions {
+  assetVisibility?: Record<SerializedCryptoAssetId, boolean>;
 }
