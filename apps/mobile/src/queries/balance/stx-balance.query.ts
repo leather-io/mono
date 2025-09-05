@@ -5,6 +5,8 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountRequest, getStxBalancesService } from '@leather.io/services';
 
+import { balanceQueryOptions } from './balance-query-options';
+
 export function useStxTotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useStxAggregateBalanceQuery(accounts.map(account => ({ account }))));
@@ -21,12 +23,7 @@ function useStxAggregateBalanceQuery(requests: AccountRequest[]) {
     queryKey: ['stx-balances-service-get-stx-aggregate-balance', requests, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getStxBalancesService().getStxAggregateBalance(requests, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }
 
@@ -36,11 +33,6 @@ export function useStxAccountBalanceQuery(request: AccountRequest) {
     queryKey: ['stx-balances-service-get-stx-account-balance', request, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getStxBalancesService().getStxAccountBalance(request, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }

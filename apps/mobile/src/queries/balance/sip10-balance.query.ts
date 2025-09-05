@@ -5,6 +5,8 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountRequest, getSip10BalancesService } from '@leather.io/services';
 
+import { balanceQueryOptions } from './balance-query-options';
+
 export function useSip10TotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useSip10AggregateBalanceQuery(accounts.map(account => ({ account }))));
@@ -57,12 +59,7 @@ function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AggregateBalance(requests, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }
 
@@ -72,12 +69,7 @@ export function useSip10AccountBalanceQuery(request: AccountRequest) {
     queryKey: ['sip10-balances-service-get-sip10-account-balance', request, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AccountBalance(request, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }
 
@@ -96,12 +88,7 @@ function useSip10AggregateBalanceByAssetIdQuery(requests: AccountRequest[], asse
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AggregateBalanceByAssetId(requests, assetId, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }
 
@@ -116,12 +103,7 @@ function useSip10BalanceByAssetIdQuery(request: AccountRequest, assetId: string)
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10BalanceByAssetId(request, assetId, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }
 
@@ -136,11 +118,6 @@ function useSip10BalanceByContractIdQuery(request: AccountRequest, contractId: s
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10BalanceByContractId(request, contractId, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }

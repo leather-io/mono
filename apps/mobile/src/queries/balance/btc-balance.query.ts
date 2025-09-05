@@ -5,6 +5,8 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountRequest, getBtcBalancesService } from '@leather.io/services';
 
+import { balanceQueryOptions } from './balance-query-options';
+
 export function useBtcTotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useBtcAggregateBalanceQuery(accounts.map(account => ({ account }))));
@@ -72,12 +74,7 @@ export function useBtcAccountBalanceQuery(request: AccountRequest) {
     queryKey: ['btc-balance-service-get-btc-account-balance', request, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBtcBalancesService().getBtcAccountBalance(request, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }
 
@@ -87,11 +84,6 @@ function useBtcAggregateBalanceQuery(requests: AccountRequest[]) {
     queryKey: ['btc-balance-service-get-btc-aggregate-balance', requests, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBtcBalancesService().getBtcAggregateBalance(requests, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }
