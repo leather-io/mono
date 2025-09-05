@@ -92,3 +92,7 @@ export function useBtcConversionUnitFlag() {
 export function useInternationalizationFlag() {
   return useBoolVariation('internationalization', false);
 }
+
+export function useTokenManagementFlag() {
+  return useBoolVariation('release_token_management', false);
+}

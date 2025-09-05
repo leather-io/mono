@@ -1,5 +1,6 @@
 import { Balance } from '@/components/balance/balance';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
+import { useTokenManagementFlag } from '@/features/feature-flags';
 import { useAccountUnlockedBalance } from '@/queries/balance/account-balance.query';
 import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
@@ -8,21 +9,29 @@ import {
   Box,
   Pressable,
   QuestionCircleIcon,
+  SettingsSliderHorIcon,
   Text,
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 interface AvailableAccountBalanceProps {
   account: Account;
+  onOpenManageTokens(): void;
+  hasAssets: boolean;
 }
-export function AvailableAccountBalance({ account }: AvailableAccountBalanceProps) {
+export function AvailableAccountBalance({
+  account,
+  onOpenManageTokens,
+  hasAssets,
+}: AvailableAccountBalanceProps) {
+  const isTokenManagementReleased = useTokenManagementFlag();
   const { descriptionSheetRef } = useGlobalSheets();
   const unlockedBalance = useAccountUnlockedBalance({
     fingerprint: account.fingerprint,
     accountIndex: account.accountIndex,
   });
   return (
-    <Box p="5">
+    <Box p="5" flexDirection="row" justifyContent="space-between">
       <Box flexDirection="column">
         <Pressable
           pressEffects={legacyTouchablePressEffect}
@@ -68,6 +77,11 @@ export function AvailableAccountBalance({ account }: AvailableAccountBalanceProp
           <Balance balance={unlockedBalance.value} variant="heading05" />
         )}
       </Box>
+      {isTokenManagementReleased && hasAssets && (
+        <Pressable p="2" pressEffects={legacyTouchablePressEffect} onPress={onOpenManageTokens}>
+          <SettingsSliderHorIcon />
+        </Pressable>
+      )}
     </Box>
   );
 }

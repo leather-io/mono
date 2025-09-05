@@ -16,9 +16,10 @@ export function handleLanguagePreferenceHydration(state: any, action: Action) {
   if (action.payload?.settings.languagePreferenceSource !== 'user-selection') {
     return {
       ...state,
+      ...action.payload?.settings,
       languagePreference: detectLanguage(),
     };
   }
 
-  return state;
+  return { ...state, ...action.payload.settings };
 }

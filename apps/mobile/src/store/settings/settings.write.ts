@@ -9,6 +9,7 @@ import {
   DefaultNetworkConfigurations,
   QuoteCurrency,
 } from '@leather.io/models';
+import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { handleAppResetWithState } from '../global-action';
 import { handleLanguagePreferenceHydration } from './language-preference-hydration';
@@ -69,6 +70,18 @@ export const settingsSlice = createSlice({
     userChangedLanguagePreferenceSource(state, action: PayloadAction<LanguagePreferenceSource>) {
       state.languagePreferenceSource = action.payload;
     },
+    userChangedAssetVisibility(
+      state,
+      action: PayloadAction<{
+        assetId: SerializedCryptoAssetId;
+        value: boolean;
+      }>
+    ) {
+      state.assetVisibility = {
+        ...state.assetVisibility,
+        [action.payload.assetId]: action.payload.value,
+      };
+    },
   },
   extraReducers: builder => {
     builder.addCase(...handleAppResetWithState(initialState));
@@ -91,4 +104,5 @@ export const {
   userChangedNotificationPreference,
   userChangedLanguagePreference,
   userChangedLanguagePreferenceSource,
+  userChangedAssetVisibility,
 } = settingsSlice.actions;

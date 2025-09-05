@@ -11,6 +11,7 @@ import {
 } from '@leather.io/utils';
 
 import { RuneAssetService } from '../assets/rune-asset.service';
+import { filterUsingAssetVisibility } from '../filtering/filtering';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
@@ -130,7 +131,8 @@ export class RunesBalancesService {
       )
     )
       .filter(result => result.status === 'fulfilled')
-      .map(b => b.value);
+      .map(b => b.value)
+      .filter(ft => filterUsingAssetVisibility(ft.asset, request.filters?.assetVisibility));
 
     const cumulativeQuoteBalance =
       runesBalances.length > 0
