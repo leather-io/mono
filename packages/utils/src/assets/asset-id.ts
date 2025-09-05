@@ -1,4 +1,10 @@
-import { CryptoAsset, CryptoAssetId, Sip9Asset } from '@leather.io/models';
+import {
+  CryptoAsset,
+  CryptoAssetId,
+  CryptoAssetProtocol,
+  CryptoAssetProtocols,
+  Sip9Asset,
+} from '@leather.io/models';
 
 import { assertUnreachable } from '../index';
 
@@ -64,5 +70,22 @@ function buildSip9AssetId(asset: Sip9Asset): CryptoAssetId {
   return {
     protocol: asset.protocol,
     id: `${asset.assetId}|${asset.tokenId}`,
+  };
+}
+
+export type SerializedCryptoAssetId = `${string}|${string}`;
+
+export function serializeAssetId(assetId: CryptoAssetId): SerializedCryptoAssetId {
+  return `${assetId.protocol}|${assetId.id}`;
+}
+
+export function deserializeAssetId(serializedAssetId: SerializedCryptoAssetId): CryptoAssetId {
+  const [protocol, id] = serializedAssetId.split('|');
+  if (!Object.keys(CryptoAssetProtocols).includes(protocol)) {
+    throw new Error(`Unrecognized Asset Protocol: ${protocol}`);
+  }
+  return {
+    protocol: protocol as CryptoAssetProtocol,
+    id,
   };
 }

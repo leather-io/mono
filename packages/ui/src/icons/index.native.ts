@@ -150,6 +150,7 @@ export * from './qr-code-icon.native';
 export * from './question-circle-icon.native';
 export * from './search-icon.native';
 export * from './settings-gear-icon.native';
+export * from './settings-slider-hor-icon.native';
 export * from './settings-slider-three-icon.native';
 export * from './shield-icon.native';
 export * from './signal-icon.native';

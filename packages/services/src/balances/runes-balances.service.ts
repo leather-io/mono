@@ -17,7 +17,7 @@ import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
 import { AccountRequest } from '../types';
 import { combineRunesBalances, readRunesOutputsBalances } from './runes-balances.utils';
-import { sortByAvailableQuoteBalance } from './sip10-balances.utils';
+import { filterUsingAssetVisibility, sortByAvailableQuoteBalance } from './sip10-balances.utils';
 
 export interface RuneBalance {
   asset: RuneAsset;
@@ -130,7 +130,8 @@ export class RunesBalancesService {
       )
     )
       .filter(result => result.status === 'fulfilled')
-      .map(b => b.value);
+      .map(b => b.value)
+      .filter(ft => filterUsingAssetVisibility(ft.asset, request.filters?.assetVisibility));
 
     const cumulativeQuoteBalance =
       runesBalances.length > 0

@@ -8,6 +8,7 @@ import { AccountSelectorSheet } from '@/features/account/account-selector/accoun
 import { AvailableAccountBalance } from '@/features/account/components/available-account-balance';
 import { AssetsList } from '@/features/balances/assets/assets-list';
 import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-balance';
+import { ManageTokensSheet } from '@/features/balances/manage-tokens.sheet';
 import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
 import { CollectiblesList } from '@/features/collectibles/collectibles-list';
 import { useTokenDetailsFlag } from '@/features/feature-flags';
@@ -34,14 +35,18 @@ interface HomeScreenWithAccountProps {
 
 export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountProps) {
   const notificationSheetRef = useRef<SheetInstance>(null);
+  const manageTokensSheetRef = useRef<SheetInstance>(null);
   const { fingerprint, accountIndex } = currentAccount;
   const { setCurrentAccount } = useCurrentAccount();
   const [listTab, setListTab] = useState<ListTab>('tokens');
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
-
   const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
   const runesData = useRunesAccountBalance(fingerprint, accountIndex);
+  const allSip10Data = useSip10AccountBalance(fingerprint, accountIndex, { returnAllAssets: true });
+  const allRunesData = useRunesAccountBalance(fingerprint, accountIndex, { returnAllAssets: true });
+  const hasAssets = !!allSip10Data.value?.sip10s.length || !!allRunesData.value?.runes.length;
+
   const collectiblesData = useAccountCollectibles(fingerprint, accountIndex);
   function onOpenAccountSelector() {
     accountSelectorSheetRef.current?.present();
@@ -77,7 +82,13 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
               {/* TODO: research better way of switching between flashlists */}
               <AccountDetails account={currentAccount} />
               <AssetTabs listTab={listTab} setListTab={setListTab} />
-              <AvailableAccountBalance account={currentAccount} />
+              <AvailableAccountBalance
+                account={currentAccount}
+                onOpenManageTokens={() => {
+                  manageTokensSheetRef.current?.present();
+                }}
+                hasAssets={hasAssets}
+              />
               <BitcoinBalanceByAccount
                 fingerprint={fingerprint}
                 accountIndex={accountIndex}
@@ -125,6 +136,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
 
       <NotificationsSheet sheetRef={notificationSheetRef} />
       <AccountSelectorSheet sheetRef={accountSelectorSheetRef} onAccountPress={onAccountPress} />
+      <ManageTokensSheet sheetRef={manageTokensSheetRef} currentAccount={currentAccount} />
     </Screen>
   );
 }

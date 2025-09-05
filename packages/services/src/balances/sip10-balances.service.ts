@@ -14,8 +14,12 @@ import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
-import { AccountRequest } from '../types';
-import { combineSip10Balances, sortByAvailableQuoteBalance } from './sip10-balances.utils';
+import { AccountRequest, AccountRequestFilteringOptions } from '../types';
+import {
+  combineSip10Balances,
+  filterUsingAssetVisibility,
+  sortByAvailableQuoteBalance,
+} from './sip10-balances.utils';
 
 export interface Sip10Balance {
   asset: Sip10Asset;
@@ -138,7 +142,11 @@ export class Sip10BalancesService {
         sip10s: [],
       };
     }
-    return this.getSip10AddressBalance(request.account.stacks.stxAddress, signal);
+    return this.getSip10AddressBalance(
+      request.account.stacks.stxAddress,
+      request.filters?.assetVisibility,
+      signal
+    );
   }
 
   /**
@@ -146,6 +154,7 @@ export class Sip10BalancesService {
    */
   public async getSip10AddressBalance(
     address: string,
+    assetVisibility?: AccountRequestFilteringOptions['assetVisibility'],
     signal?: AbortSignal
   ): Promise<Sip10AddressBalance> {
     const ftBalances = (
@@ -162,7 +171,8 @@ export class Sip10BalancesService {
       )
     )
       .filter(result => result.status === 'fulfilled')
-      .map(result => result.value);
+      .map(result => result.value)
+      .filter(ft => filterUsingAssetVisibility(ft.asset, assetVisibility));
 
     const cumulativeQuoteBalance =
       sip10Balances.length > 0

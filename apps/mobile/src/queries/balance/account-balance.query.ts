@@ -10,12 +10,21 @@ import { balanceQueryOptions } from './balance-query-options';
 
 export function useAccountTotalBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
-  return toFetchState(useGetAccountTotalBalanceQuery({ account }));
+  const { assetVisibility } = useSettings();
+  return toFetchState(
+    useGetAccountTotalBalanceQuery({
+      account,
+      filters: {
+        assetVisibility,
+      },
+    })
+  );
 }
 
 export function useAccountUnlockedBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
-  return toFetchState(useGetAccountUnlockedBalanceQuery({ account }));
+  const { assetVisibility } = useSettings();
+  return toFetchState(useGetAccountUnlockedBalanceQuery({ account, filters: { assetVisibility } }));
 }
 
 export function useGetAccountTotalBalanceQuery(request: AccountRequest) {

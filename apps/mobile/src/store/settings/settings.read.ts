@@ -94,6 +94,8 @@ export const selectLanguagePreferenceSource = createSelector(
   state => state.languagePreferenceSource
 );
 
+export const selectAssetVisibility = createSelector(selectSettings, state => state.assetVisibility);
+
 export function usePrivacyMode() {
   const privacyMode = useSelector(selectPrivacyModePreference);
   return privacyMode === 'hidden';

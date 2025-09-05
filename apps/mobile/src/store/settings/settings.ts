@@ -13,11 +13,13 @@ import {
   QuoteCurrency,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
+import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { useAppDispatch } from '../utils';
 import {
   selectAccountDisplayPreference,
   selectAnalyticsPreference,
+  selectAssetVisibility,
   selectBitcoinUnitPreference,
   selectCurrencyPreference,
   selectEmailAddressPreference,
@@ -34,6 +36,7 @@ import {
 import {
   userChangedAccountDisplayPreference,
   userChangedAnalyticsPreference,
+  userChangedAssetVisibility,
   userChangedBitcoinUnitPreference,
   userChangedEmailAddressPreference,
   userChangedHapticsPreference,
@@ -74,6 +77,7 @@ export const initialState: SettingsState = {
   notificationsPreference: 'not-selected',
   languagePreference: defaultLanguage,
   languagePreferenceSource: 'system',
+  assetVisibility: {},
 };
 
 export function useSettings() {
@@ -94,6 +98,7 @@ export function useSettings() {
   const notificationsPreference = useSelector(selectNotificationsPreference);
   const languagePreference = useSelector(selectLanguagePreference);
   const languagePreferenceSource = useSelector(selectLanguagePreferenceSource);
+  const assetVisibility = useSelector(selectAssetVisibility);
 
   const themeDerivedFromThemePreference =
     (themePreference === 'system' ? systemTheme : themePreference) ?? 'light';
@@ -114,7 +119,11 @@ export function useSettings() {
     notificationsPreference,
     languagePreference,
     languagePreferenceSource,
+    assetVisibility,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
+    changeAssetVisibility(assetId: SerializedCryptoAssetId, value: boolean) {
+      dispatch(userChangedAssetVisibility({ assetId, value }));
+    },
     changeAccountDisplayPreference(type: AccountDisplayPreference) {
       dispatch(userChangedAccountDisplayPreference(type));
       analytics.track('user_setting_updated', {
