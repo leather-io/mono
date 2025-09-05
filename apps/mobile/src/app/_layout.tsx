@@ -14,6 +14,7 @@ import { CurrentAccountProvider, useCurrentAccount } from '@/core/current-accoun
 import { GlobalSheetProvider } from '@/core/global-sheet-provider';
 import { HapticsProvider } from '@/core/haptics-provider';
 import { LeatherQueryProvider } from '@/core/leather-query-provider';
+import { QueryPreloader } from '@/core/query-preloader';
 import { ThemeProvider } from '@/core/theme-provider';
 import { AddAccountSheet } from '@/features/account/sheets/add-account-sheet';
 import { featureFlagClient, setupFeatureFlags } from '@/features/feature-flags';
@@ -103,23 +104,25 @@ function RootLayout() {
               <I18nProvider>
                 <SafeAreaProvider>
                   <QueryClientProvider client={queryClient}>
-                    <LeatherQueryProvider>
-                      <ThemeProvider>
-                        <GestureHandlerRootView style={{ flex: 1 }}>
-                          <ToastWrapper>
-                            <SplashScreenGuard>
-                              <HapticsProvider>
-                                <GlobalSheetProvider>
-                                  <SheetModalProvider>
-                                    <App />
-                                  </SheetModalProvider>
-                                </GlobalSheetProvider>
-                              </HapticsProvider>
-                            </SplashScreenGuard>
-                          </ToastWrapper>
-                        </GestureHandlerRootView>
-                      </ThemeProvider>
-                    </LeatherQueryProvider>
+                    <QueryPreloader>
+                      <LeatherQueryProvider>
+                        <ThemeProvider>
+                          <GestureHandlerRootView style={{ flex: 1 }}>
+                            <ToastWrapper>
+                              <SplashScreenGuard>
+                                <HapticsProvider>
+                                  <GlobalSheetProvider>
+                                    <SheetModalProvider>
+                                      <App />
+                                    </SheetModalProvider>
+                                  </GlobalSheetProvider>
+                                </HapticsProvider>
+                              </SplashScreenGuard>
+                            </ToastWrapper>
+                          </GestureHandlerRootView>
+                        </ThemeProvider>
+                      </LeatherQueryProvider>
+                    </QueryPreloader>
                   </QueryClientProvider>
                 </SafeAreaProvider>
               </I18nProvider>
