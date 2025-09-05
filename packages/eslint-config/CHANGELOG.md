@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.13.0...@leather.io/eslint-config-v0.14.0) (2025-09-05)
+
+
+### Features
+
+* **cms:** initial creation of cms package with cms studio and client ([20d85b4](https://github.com/leather-io/mono/commit/20d85b4b9045921714b01b11b53790e28b0cf698))
+
 ## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.12.0...@leather.io/eslint-config-v0.13.0) (2025-07-28)
 
 
