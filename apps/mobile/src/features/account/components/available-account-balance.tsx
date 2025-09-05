@@ -17,7 +17,7 @@ interface AvailableAccountBalanceProps {
 }
 export function AvailableAccountBalance({ account }: AvailableAccountBalanceProps) {
   const { descriptionSheetRef } = useGlobalSheets();
-  const { totalBalance } = useAccountUnlockedBalance({
+  const unlockedBalance = useAccountUnlockedBalance({
     fingerprint: account.fingerprint,
     accountIndex: account.accountIndex,
   });
@@ -64,8 +64,8 @@ export function AvailableAccountBalance({ account }: AvailableAccountBalanceProp
           <Text variant="label03">{t`Available`}</Text>
           <QuestionCircleIcon variant="small" />
         </Pressable>
-        {totalBalance.state === 'success' && (
-          <Balance balance={totalBalance.value} variant="heading05" />
+        {unlockedBalance.state === 'success' && (
+          <Balance balance={unlockedBalance.value} variant="heading05" />
         )}
       </Box>
     </Box>

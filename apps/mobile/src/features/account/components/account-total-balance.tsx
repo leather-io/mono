@@ -1,7 +1,7 @@
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { NetworkBadge } from '@/features/settings/network-badge';
-import { useAccountBalance } from '@/queries/balance/account-balance.query';
+import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { Account } from '@/store/accounts/accounts';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';
@@ -22,7 +22,7 @@ interface AccountTotalBalanceProps {
 export function AccountTotalBalance({ account }: AccountTotalBalanceProps) {
   const { hasWallets } = useWallets();
   const { descriptionSheetRef } = useGlobalSheets();
-  const { totalBalance } = useAccountBalance({
+  const totalBalance = useAccountTotalBalance({
     fingerprint: account.fingerprint,
     accountIndex: account.accountIndex,
   });

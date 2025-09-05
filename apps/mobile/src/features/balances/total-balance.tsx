@@ -1,5 +1,5 @@
 import { Balance } from '@/components/balance/balance';
-import { useAccountBalance } from '@/queries/balance/account-balance.query';
+import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { AccountLookup } from '@/shared/types';
 
@@ -15,7 +15,7 @@ export function TotalBalance(props: TextProps) {
 interface AccountBalanceProps extends AccountLookup, TextProps {}
 
 export function AccountBalance({ fingerprint, accountIndex, ...props }: AccountBalanceProps) {
-  const { totalBalance } = useAccountBalance({ fingerprint, accountIndex });
+  const totalBalance = useAccountTotalBalance({ fingerprint, accountIndex });
 
   const balance = totalBalance.state === 'success' ? totalBalance.value : undefined;
   return <Balance balance={balance} isLoading={totalBalance.state === 'loading'} {...props} />;
