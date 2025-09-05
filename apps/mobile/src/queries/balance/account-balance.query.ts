@@ -38,11 +38,13 @@ export function useAccountBalance(accountId: AccountId): AccountBalance {
     stxAccountBalance.state === 'loading' ||
     sip10AccountBalance.state === 'loading' ||
     runesAccountBalance.state === 'loading';
+
   const isError =
     btcAccountBalance.state === 'error' ||
     stxAccountBalance.state === 'error' ||
     sip10AccountBalance.state === 'error' ||
     runesAccountBalance.state === 'error';
+
   const accountBalance = sumMoney(
     [
       zeroMoneyQuote,
@@ -62,7 +64,7 @@ export function useAccountBalance(accountId: AccountId): AccountBalance {
       isLoading,
       data: accountBalance,
       isError,
-      error: new Error('Error loading balance data'),
+      error: isError ? new Error('Error loading balance data') : null,
     }),
   };
 }
@@ -82,11 +84,13 @@ export function useAccountUnlockedBalance(accountId: AccountId): AccountBalance 
     stxAccountBalance.state === 'loading' ||
     sip10AccountBalance.state === 'loading' ||
     runesAccountBalance.state === 'loading';
+
   const isError =
     btcAccountBalance.state === 'error' ||
     stxAccountBalance.state === 'error' ||
     sip10AccountBalance.state === 'error' ||
     runesAccountBalance.state === 'error';
+
   const accountBalance = sumMoney(
     [
       zeroMoneyQuote,
@@ -106,7 +110,7 @@ export function useAccountUnlockedBalance(accountId: AccountId): AccountBalance 
       isLoading,
       data: accountBalance,
       isError,
-      error: new Error('Error loading balance data'),
+      error: isError ? new Error('Error loading balance data') : null,
     }),
   };
 }
