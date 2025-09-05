@@ -19,6 +19,20 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.70.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.70.0...@leather.io/mobile-v2.70.1) (2025-09-05)
+
+
+### Bug Fixes
+
+* wallet settings portfolio ([6a97878](https://github.com/leather-io/mono/commit/6a9787877eb3a5c90cbae20a214e9e3b20572d0f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.31.0
+
 ## [2.70.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.69.2...@leather.io/mobile-v2.70.0) (2025-09-04)
 
 
