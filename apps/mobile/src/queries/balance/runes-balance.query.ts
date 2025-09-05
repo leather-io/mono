@@ -6,6 +6,8 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountRequest, getRunesBalancesService } from '@leather.io/services';
 
+import { balanceQueryOptions } from './balance-query-options';
+
 export function useRunesTotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useRunesAggregateBalanceQuery(accounts.map(account => ({ account }))));
@@ -37,12 +39,7 @@ function useRunesAggregateBalanceQuery(requests: AccountRequest[]) {
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAggregateBalance(requests, signal),
     enabled: runeFlag,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }
 
@@ -54,12 +51,7 @@ function useRunesAccountBalanceQuery(request: AccountRequest) {
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAccountBalance(request, signal),
     enabled: runeFlag,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }
 
@@ -76,11 +68,6 @@ function useRuneBalanceByRuneNameQuery(request: AccountRequest, runeName: string
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRuneBalanceByRuneName(request, runeName, signal),
     enabled: runeFlag,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...balanceQueryOptions,
   });
 }
