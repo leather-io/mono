@@ -21,7 +21,7 @@ msgstr "{accountIdentifierType, select, native_segwit {Native Segwit address} ta
 msgid "{feeRate} sats/vB · {formattedQuoteFee}"
 msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 
-#: src/app/settings/wallet/index.tsx:37
+#: src/app/settings/wallet/index.tsx:39
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
@@ -126,7 +126,7 @@ msgstr "Add to existing wallet"
 msgid "Add to new wallet"
 msgstr "Add to new wallet"
 
-#: src/app/settings/wallet/index.tsx:50
+#: src/app/settings/wallet/index.tsx:52
 #: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:26
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:75
 msgid "Add wallet"
@@ -716,7 +716,7 @@ msgid "Hermetica"
 msgstr "Hermetica"
 
 #: src/app/settings/wallet/hidden-accounts.tsx:7
-#: src/app/settings/wallet/index.tsx:36
+#: src/app/settings/wallet/index.tsx:38
 msgid "Hidden accounts"
 msgstr "Hidden accounts"
 

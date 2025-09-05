@@ -23,9 +23,11 @@ export default function SettingsWalletScreen() {
 
   return (
     <SettingsLayout title={t`Wallets`}>
-      <Box px="5" pb="3">
-        <PortfolioHeader />
-      </Box>
+      {hasWallets && (
+        <Box px="5" pb="3">
+          <PortfolioHeader />
+        </Box>
+      )}
       {hasWallets ? (
         <>
           <WalletsList variant="active" />
