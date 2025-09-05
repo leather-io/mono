@@ -38,9 +38,9 @@ export function useTotalBalance(): TotalBalance {
     sip10TotalBalance.state === 'loading' ||
     runesTotalBalance.state === 'loading';
   const isError =
-    btcTotalBalance.state === 'error' ||
-    stxTotalBalance.state === 'error' ||
-    sip10TotalBalance.state === 'error' ||
+    btcTotalBalance.state === 'error' &&
+    stxTotalBalance.state === 'error' &&
+    sip10TotalBalance.state === 'error' &&
     runesTotalBalance.state === 'error';
   const accountBalance = sumMoney(
     [
