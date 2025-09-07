@@ -8,7 +8,8 @@ export const balanceQueryOptions = {
   refetchOnWindowFocus: false,
   staleTime: secondsInMs(10),
   gcTime: minutesInMs(10),
-  retry: 1,
+  retry: (failureCount: number, error: Error) =>
+    error?.name === 'AbortError' || error?.name === 'CanceledError' ? failureCount < 2 : false,
 } satisfies Partial<UseQueryOptions>;
 
 export const balanceQueryOptionsWithRefetch = {

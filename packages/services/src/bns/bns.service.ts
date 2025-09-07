@@ -52,8 +52,11 @@ export class BnsService {
     }
   }
 
-  public async getAddressPrimaryBnsName(stacksAddress: string): Promise<BnsName | null> {
-    const primaryName = await this.getPrimaryName(stacksAddress);
+  public async getAddressPrimaryBnsName(
+    stacksAddress: string,
+    signal?: AbortSignal
+  ): Promise<BnsName | null> {
+    const primaryName = await this.getPrimaryName(stacksAddress, signal);
     return primaryName
       ? buildBnsName(stacksAddress, primaryName.name, primaryName.namespace)
       : null;
@@ -69,7 +72,7 @@ export class BnsService {
 
     const [bnsV2ApiAddressNamesRes, primaryBnsName] = await Promise.all([
       this.bnsV2ApiClient.fetchAddressBnsNames(request.account.stacks.stxAddress, { signal }),
-      this.getAddressPrimaryBnsName(request.account.stacks.stxAddress),
+      this.getAddressPrimaryBnsName(request.account.stacks.stxAddress, signal),
     ]);
 
     return bnsV2ApiAddressNamesRes.names.map(n => ({
@@ -85,7 +88,10 @@ export class BnsService {
     if (!request.account.stacks?.stxAddress) {
       return null;
     }
-    const primaryName = await this.getAddressPrimaryBnsName(request.account.stacks.stxAddress);
+    const primaryName = await this.getAddressPrimaryBnsName(
+      request.account.stacks.stxAddress,
+      signal
+    );
     if (!primaryName) {
       return null;
     }

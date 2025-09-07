@@ -80,4 +80,16 @@ export class PriorityQueue implements Queue<RunFunction, PriorityQueueOptions> {
   get size(): number {
     return this.queue.length;
   }
+
+  setPriority(id: string, priority: number) {
+    const index: number = this.queue.findIndex(
+      (element: Readonly<PriorityQueueOptions>) => element.id === id
+    );
+    if (index === -1) {
+      throw new ReferenceError(`No promise function with the id "${id}" exists in the queue.`);
+    }
+
+    const [item] = this.queue.splice(index, 1);
+    this.enqueue(item.run, { priority, id });
+  }
 }
