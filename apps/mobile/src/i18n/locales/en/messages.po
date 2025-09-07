@@ -661,6 +661,10 @@ msgstr "Fee updated"
 msgid "Fees"
 msgstr "Fees"
 
+#: src/features/swap/components/flip-button.tsx:43
+msgid "Flip assets"
+msgstr "Flip assets"
+
 #: src/app/create-new-wallet.tsx:108
 msgid "For your eyes only"
 msgstr "For your eyes only"
@@ -1094,9 +1098,7 @@ msgstr "Restore wallet"
 msgid "Reveal account"
 msgstr "Reveal account"
 
-#: src/features/send/forms/btc/btc-form.tsx:126
-#: src/features/send/forms/stx/sip10-form.tsx:149
-#: src/features/send/forms/stx/stx-form.tsx:140
+#: src/features/swap/swap.tsx:50
 msgid "Review"
 msgstr "Review"
 
