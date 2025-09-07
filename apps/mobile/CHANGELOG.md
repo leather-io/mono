@@ -19,6 +19,26 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.71.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.70.1...@leather.io/mobile-v2.71.0) (2025-09-07)
+
+
+### Features
+
+* add sensible shared balance query options ([2326ca5](https://github.com/leather-io/mono/commit/2326ca598a5d2f4cc9d6b6deb3e61f14e2237ede))
+
+
+### Bug Fixes
+
+* query cancellation issues ([01c1a42](https://github.com/leather-io/mono/commit/01c1a4281bedd426ad22d22a7191c4c0ba4a7555))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.41.13
+    * @leather.io/services bumped to 1.31.1
+
 ## [2.70.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.70.0...@leather.io/mobile-v2.70.1) (2025-09-05)
 
 

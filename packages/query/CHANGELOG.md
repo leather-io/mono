@@ -729,6 +729,13 @@
     * @leather.io/stacks bumped to 1.16.4
     * @leather.io/utils bumped to 0.44.1
 
+## [2.41.13](https://github.com/leather-io/mono/compare/@leather.io/query-v2.41.12...@leather.io/query-v2.41.13) (2025-09-07)
+
+
+### Bug Fixes
+
+* query cancellation issues ([01c1a42](https://github.com/leather-io/mono/commit/01c1a4281bedd426ad22d22a7191c4c0ba4a7555))
+
 ## [2.41.10](https://github.com/leather-io/mono/compare/@leather.io/query-v2.41.9...@leather.io/query-v2.41.10) (2025-08-27)
 
 

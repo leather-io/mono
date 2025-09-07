@@ -404,6 +404,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.9
 
+## [1.31.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.31.0...@leather.io/services-v1.31.1) (2025-09-07)
+
+
+### Bug Fixes
+
+* query cancellation issues ([01c1a42](https://github.com/leather-io/mono/commit/01c1a4281bedd426ad22d22a7191c4c0ba4a7555))
+
 ## [1.31.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.30.0...@leather.io/services-v1.31.0) (2025-09-05)
 
 
