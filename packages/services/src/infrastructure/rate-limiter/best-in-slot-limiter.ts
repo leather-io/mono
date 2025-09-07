@@ -1,6 +1,5 @@
 import PQueue from 'p-queue';
 
-import { PriorityQueue } from './priority-queue';
 import { RateLimiterQueueOptions } from './rate-limiter.service';
 
 export const bestInSlotApiLimiterSettings: RateLimiterQueueOptions = {
@@ -9,12 +8,10 @@ export const bestInSlotApiLimiterSettings: RateLimiterQueueOptions = {
   timeout: 60000,
 };
 
-export const bestInSlotMainnetApiLimiter = new PQueue({
+export const bestInSlotMainnetApiLimiter: PQueue = new PQueue({
   ...bestInSlotApiLimiterSettings,
-  queueClass: PriorityQueue,
 });
 
-export const bestInSlotTestnetApiLimiter = new PQueue({
+export const bestInSlotTestnetApiLimiter: PQueue = new PQueue({
   ...bestInSlotApiLimiterSettings,
-  queueClass: PriorityQueue,
 });

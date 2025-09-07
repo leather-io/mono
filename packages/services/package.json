@@ -40,7 +40,7 @@
     "bignumber.js": "9.1.2",
     "inversify": "7.1.0",
     "openapi-fetch": "0.13.5",
-    "p-queue": "8.0.1",
+    "p-queue": "8.1.1",
     "reflect-metadata": "0.2.2",
     "uuid": "11.1.0",
     "zod": "4.0.17"

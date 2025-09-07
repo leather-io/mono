@@ -14,9 +14,15 @@ import { leatherApiLimiter } from './leather-rate-limiter';
 if (!AbortSignal.prototype.throwIfAborted) {
   AbortSignal.prototype.throwIfAborted = function throwIfAborted() {
     if (this.aborted) {
-      throw new Error('AbortError');
+      throwAbortError();
     }
   };
+}
+
+function throwAbortError() {
+  const abortError = new Error('AbortError');
+  abortError.name = 'AbortError';
+  throw abortError;
 }
 
 export enum RateLimiterType {
@@ -70,10 +76,22 @@ export class RateLimiterService {
         this.settingsService.getSettings().network.chain.bitcoin.mode
       )
     );
-    const result = await limiter.add(fn, options);
-    if (result === undefined) {
-      throw new Error('Rate limited call aborted');
+    let result = undefined;
+    try {
+      result = await limiter.add(fn, options);
+    } catch (error) {
+      if (!error && options?.signal?.aborted) {
+        throwAbortError();
+      }
+      throw error;
     }
-    return result;
+    if (result === undefined) {
+      if (options?.signal?.aborted) {
+        throwAbortError();
+      } else {
+        throw new Error('Rate limited call undefined');
+      }
+    }
+    return result as T;
   }
 }

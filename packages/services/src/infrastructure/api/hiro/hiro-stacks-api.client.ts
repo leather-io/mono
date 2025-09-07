@@ -9,7 +9,7 @@ import {
   hexToCV,
   makeRandomPrivKey,
 } from '@stacks/transactions';
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { inject, injectable } from 'inversify';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
@@ -297,22 +297,32 @@ export class HiroStacksApiClient {
     principal: string,
     tokenId: number,
     { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<HiroNftMetadataResponse> {
+  ): Promise<HiroNftMetadataResponse | null> {
     const fetchFn = async () => {
-      const res = await this.limiter.add(
-        RateLimiterType.HiroStacks,
-        async () =>
-          this._axios.get<HiroNftMetadataResponse>(
-            `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/nft/${principal}/${tokenId}`,
-            { signal }
-          ),
-        {
-          priority: hiroApiRequestsPriorityLevels.getNftMetadata,
-          signal,
-          throwOnTimeout: true,
+      try {
+        const res = await this.limiter.add(
+          RateLimiterType.HiroStacks,
+          async () =>
+            this._axios.get<HiroNftMetadataResponse>(
+              `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/nft/${principal}/${tokenId}`,
+              { signal }
+            ),
+          {
+            priority: hiroApiRequestsPriorityLevels.getNftMetadata,
+            signal,
+            throwOnTimeout: true,
+          }
+        );
+        return res.data;
+      } catch (error) {
+        if (
+          error instanceof AxiosError &&
+          (error.request?.status === 404 || error.request?.status === 422)
+        ) {
+          return null;
         }
-      );
-      return res.data;
+        throw error;
+      }
     };
 
     return skipCache

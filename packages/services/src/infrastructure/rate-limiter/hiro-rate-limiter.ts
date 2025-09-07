@@ -1,6 +1,5 @@
 import PQueue from 'p-queue';
 
-import { PriorityQueue } from './priority-queue';
 import { RateLimiterQueueOptions } from './rate-limiter.service';
 
 export const hiroStacksApiLimiterSettings: RateLimiterQueueOptions = {
@@ -9,12 +8,10 @@ export const hiroStacksApiLimiterSettings: RateLimiterQueueOptions = {
   timeout: 60000,
 };
 
-export const hiroStacksMainnetApiLimiter = new PQueue({
+export const hiroStacksMainnetApiLimiter: PQueue = new PQueue({
   ...hiroStacksApiLimiterSettings,
-  queueClass: PriorityQueue,
 });
 
-export const hiroStacksTestnetApiLimiter = new PQueue({
+export const hiroStacksTestnetApiLimiter: PQueue = new PQueue({
   ...hiroStacksApiLimiterSettings,
-  queueClass: PriorityQueue,
 });

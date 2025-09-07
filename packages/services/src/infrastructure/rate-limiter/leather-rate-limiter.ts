@@ -1,6 +1,5 @@
 import PQueue from 'p-queue';
 
-import { PriorityQueue } from './priority-queue';
 import { RateLimiterQueueOptions } from './rate-limiter.service';
 
 export const leatherApiLimiterSettings: RateLimiterQueueOptions = {
@@ -9,9 +8,8 @@ export const leatherApiLimiterSettings: RateLimiterQueueOptions = {
   timeout: 60000,
 };
 
-export const leatherApiLimiter = new PQueue({
+export const leatherApiLimiter: PQueue = new PQueue({
   ...leatherApiLimiterSettings,
-  queueClass: PriorityQueue,
 });
 
 export const leatherPriorityLevels = {
