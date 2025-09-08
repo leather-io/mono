@@ -489,6 +489,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.81.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.80.3...@leather.io/ui-v1.81.0) (2025-09-08)
+
+
+### Features
+
+* **cms:** stub out sanity cms package ([698075a](https://github.com/leather-io/mono/commit/698075a1b90c620f2e48789fc3f90d39e8215154))
+
 ## [1.80.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.80.1...@leather.io/ui-v1.80.2) (2025-09-03)
 
 

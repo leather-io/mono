@@ -19,6 +19,21 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.72.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.71.0...@leather.io/mobile-v2.72.0) (2025-09-08)
+
+
+### Features
+
+* **cms:** stub out sanity cms package ([698075a](https://github.com/leather-io/mono/commit/698075a1b90c620f2e48789fc3f90d39e8215154))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.42.0
+    * @leather.io/ui bumped to 1.81.0
+
 ## [2.71.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.70.1...@leather.io/mobile-v2.71.0) (2025-09-07)
 
 
