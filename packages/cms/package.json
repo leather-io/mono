@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/cms",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "scripts": {
     "build": "pnpm sanity:schema-extract && pnpm sanity:generate && tsup && tsc --emitDeclarationOnly",

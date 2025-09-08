@@ -729,6 +729,13 @@
     * @leather.io/stacks bumped to 1.16.4
     * @leather.io/utils bumped to 0.44.1
 
+## [2.42.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.41.13...@leather.io/query-v2.42.0) (2025-09-08)
+
+
+### Features
+
+* **cms:** stub out sanity cms package ([698075a](https://github.com/leather-io/mono/commit/698075a1b90c620f2e48789fc3f90d39e8215154))
+
 ## [2.41.13](https://github.com/leather-io/mono/compare/@leather.io/query-v2.41.12...@leather.io/query-v2.41.13) (2025-09-07)
 
 
