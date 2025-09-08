@@ -565,7 +565,7 @@ msgstr "Email"
 msgid "Email address"
 msgstr "Email address"
 
-#: src/app/secure-your-wallet.tsx:49
+#: src/app/secure-your-wallet.tsx:47
 msgid "Enable device security"
 msgstr "Enable device security"
 
@@ -1202,7 +1202,7 @@ msgstr "Sign Message"
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
-#: src/app/secure-your-wallet.tsx:42
+#: src/app/secure-your-wallet.tsx:40
 msgid "Skip for now"
 msgstr "Skip for now"
 
@@ -1431,7 +1431,7 @@ msgstr "Update from {storeName}"
 msgid "Update the app to get access to the latest features."
 msgstr "Update the app to get access to the latest features."
 
-#: src/app/secure-your-wallet.tsx:27
+#: src/app/secure-your-wallet.tsx:26
 msgid "Use your device PIN, Face ID or other biometrics to secure your wallets"
 msgstr "Use your device PIN, Face ID or other biometrics to secure your wallets"
 

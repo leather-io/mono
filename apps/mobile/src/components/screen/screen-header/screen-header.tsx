@@ -58,9 +58,7 @@ export function ScreenHeader({
           bottom={0}
           left={0}
         >
-          {centerElement ? (
-            <FadingView opacity={headerVisibility}>{centerElement}</FadingView>
-          ) : null}
+          <FadingView opacity={headerVisibility}>{centerElement}</FadingView>
         </Box>
         <Box zIndex="20">{rightElement}</Box>
       </Box>

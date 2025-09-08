@@ -19,23 +19,21 @@ export default function SecureYourWalletScreen() {
   return (
     <Screen>
       <Screen.Header />
-      <Screen.ScrollView>
-        <Screen.Title>{pageTitle}</Screen.Title>
-        <Box px="5">
-          <Box gap="3">
-            <Text variant="label01">
-              {t`Use your device PIN, Face ID or other biometrics to secure your wallets`}
-            </Text>
-          </Box>
-          <Box justifyContent="center" alignItems="center" aspectRatio={1}>
-            <Image
-              style={{ height: 270, width: 270 }}
-              source={require('@/assets/stickers/lock.png')}
-              contentFit="contain"
-            />
-          </Box>
+      <Screen.Title>{pageTitle}</Screen.Title>
+      <Box px="5">
+        <Box gap="3">
+          <Text variant="label01">
+            {t`Use your device PIN, Face ID or other biometrics to secure your wallets`}
+          </Text>
         </Box>
-      </Screen.ScrollView>
+        <Box justifyContent="center" alignItems="center" aspectRatio={1}>
+          <Image
+            style={{ height: 270, width: 270 }}
+            source={require('@/assets/stickers/lock.png')}
+            contentFit="contain"
+          />
+        </Box>
+      </Box>
 
       <Screen.Footer>
         <Button onPress={() => sheetRef.current?.present()} pb="4" variant="ghost">
