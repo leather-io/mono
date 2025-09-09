@@ -1,10 +1,10 @@
 import type { ReactElement, ReactNode } from 'react';
 import { NavLink } from 'react-router';
 
-import { css } from 'leather-styles/css';
 import { Box, styled } from 'leather-styles/jsx';
+import { RotatedArrow } from '~/components/icons/rotated-icon';
 
-import { ExternalLinkIcon, Flag } from '@leather.io/ui';
+import { Flag } from '@leather.io/ui';
 
 const StyledNavLink = styled(NavLink);
 
@@ -44,9 +44,10 @@ export function NavItem({ children, icon, href, newTab }: NavItemProps) {
             alignItems="center"
             justifyContent="center"
             mr="space.04"
-            className={css({ display: 'none', _groupHover: { display: 'flex' } })}
+            display="none"
+            _groupHover={{ display: 'flex' }}
           >
-            <ExternalLinkIcon type="small" color="ink.text-subdued" />
+            <RotatedArrow color="ink.text-subdued" />
           </Box>
         )}
       </Box>
