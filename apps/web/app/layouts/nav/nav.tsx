@@ -10,7 +10,14 @@ import { StackingIcon } from '~/components/icons/stacking-icon';
 import { advancedModeEnabled } from '~/pages/advanced/advanced.route';
 import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
-import { BarsTwoIcon, GridIcon, IconButton, SupportIcon, WalletIcon } from '@leather.io/ui';
+import {
+  BarsTwoIcon,
+  CodeIcon,
+  GridIcon,
+  IconButton,
+  SupportIcon,
+  WalletIcon,
+} from '@leather.io/ui';
 
 import { NavItem } from './nav-item.layout';
 
@@ -66,6 +73,9 @@ export function NavContents() {
       )}
 
       <styled.div mt="auto" mb={[null, null, 'space.06']}>
+        <NavItem href={externalLeatherNavigator.docs} newTab icon={<CodeIcon variant="small" />}>
+          Developers
+        </NavItem>
         <NavItem href={externalLeatherNavigator.support} icon={<SupportIcon variant="small" />}>
           Help
         </NavItem>
