@@ -1,14 +1,21 @@
 import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
-import {
-  formatInsciptionName,
-  isValidInscription,
-  isValidSip9,
-  isValidStamp,
-} from './collectibles.utils';
+import { formatInsciptionName, isValidInscription, isValidStamp } from './collectibles.utils';
+
+function isBnsName(collectible: NonFungibleCryptoAsset) {
+  return 'fullName' in collectible;
+}
 
 export function serializeCollectible(collectible: NonFungibleCryptoAsset) {
+  if (isBnsName(collectible)) {
+    return {
+      name: collectible.fullName,
+      type: 'bns',
+      src: 'bns',
+    };
+  }
+
   switch (collectible.protocol) {
     case 'inscription':
       if (!isValidInscription(collectible)) return null;
@@ -19,7 +26,6 @@ export function serializeCollectible(collectible: NonFungibleCryptoAsset) {
         mimeType: collectible.mimeType,
       };
     case 'sip9':
-      if (!isValidSip9(collectible)) return null;
       return {
         name: collectible.name,
         type: collectible.protocol,

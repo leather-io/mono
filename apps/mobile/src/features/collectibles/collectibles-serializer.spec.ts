@@ -5,7 +5,7 @@ import { CollectibleCardProps } from '@leather.io/ui/native';
 
 import { serializeCollectible } from './collectibles-serializer';
 import { mockCollectibles } from './collectibles.mocks';
-import { formatInsciptionName, isValidInscription, isValidSip9 } from './collectibles.utils';
+import { formatInsciptionName, isValidInscription } from './collectibles.utils';
 
 function serializeCollectibles(collectibles: NonFungibleCryptoAsset[]) {
   return collectibles.map(serializeCollectible) as CollectibleCardProps[];
@@ -76,14 +76,6 @@ describe('isValidInscription', () => {
     const inscription = mockCollectibles.find(c => c.protocol === 'inscription');
     if (!inscription) throw new Error('No inscription found in test data');
     expect(isValidInscription(inscription)).toBe(true);
-  });
-});
-
-describe('isValidSip9', () => {
-  it('should return true for valid sip9s', () => {
-    const sip9 = mockCollectibles.find(c => c.protocol === 'sip9');
-    if (!sip9) throw new Error('No sip9 found in test data');
-    expect(isValidSip9(sip9)).toBe(true);
   });
 });
 

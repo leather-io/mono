@@ -14,13 +14,15 @@ import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { mapBisInscriptionToCreateInscriptionData, sortByBlockHeight } from './collectibles.utils';
+import { BnsService } from '../bns/bns.service';
 
 @injectable()
 export class CollectiblesService {
   constructor(
     private readonly bisApiClient: BestInSlotApiClient,
     private readonly stacksApiClient: HiroStacksApiClient,
-    private readonly sip9AssetsService: Sip9AssetService
+    private readonly sip9AssetsService: Sip9AssetService,
+    private readonly bnsService: BnsService
   ) {}
 
   public async getTotalCollectibles(
@@ -30,7 +32,7 @@ export class CollectiblesService {
     const stacksCollectibles = await Promise.all(
       accounts
         .filter(a => a.stacks)
-        .map(a => this.getSip9sWithBlockHeight(a.stacks!.stxAddress, signal))
+        .map(a => this.getSip9sWithBlockHeight(accounts.find(account => account.stacks!.stxAddress === a.stacks!.stxAddress)!, signal))
     );
     const bitcoinCollectibles = await Promise.all(
       accounts
@@ -58,7 +60,7 @@ export class CollectiblesService {
         ? this.getInscriptionsWithBlockHeight(account.bitcoin, signal)
         : Promise.resolve([]),
       account.stacks
-        ? this.getSip9sWithBlockHeight(account.stacks.stxAddress, signal)
+        ? this.getSip9sWithBlockHeight(account, signal)
         : Promise.resolve([]),
     ]);
     return [
@@ -68,19 +70,23 @@ export class CollectiblesService {
   }
 
   private async getSip9sWithBlockHeight(
-    stxAddress: string,
+    account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<{ asset: Sip9Asset; blockHeight: number }[]> {
     try {
-      const nftHoldings = await this.stacksApiClient.getNftHoldings(stxAddress, { signal });
+      const nftHoldings = await this.stacksApiClient.getNftHoldings(account.stacks!.stxAddress, { signal });
+      const bnsNames = await this.bnsService.getAccountBnsNames({ account }, signal);
+      const bnsNamesArray = bnsNames.map(bns => bns.fullName);
+
       const results = await Promise.all(
         nftHoldings.map(holding =>
           this.getOptionalSip9Asset(holding, signal).then(asset =>
-            asset ? { asset, blockHeight: holding.block_height } : undefined
+            asset ? { asset, blockHeight: holding.block_height } : undefined 
           )
         )
       );
-      return results.filter(isDefined);
+      // filter our BNS Archive + all other address BNS names
+      return results.filter(isDefined).filter(asset => asset.asset.name !== 'BNS - Archive').filter(asset => !bnsNamesArray.includes(asset.asset.name));
     } catch {
       return [];
     }

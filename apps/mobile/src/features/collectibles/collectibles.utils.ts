@@ -5,10 +5,6 @@ export function isValidInscription(collectible: InscriptionAsset) {
   return !isEmptyString(collectible.src) && isDefined(collectible.src);
 }
 
-export function isValidSip9(collectible: Sip9Asset) {
-  return collectible.name !== 'BNS - Archive';
-}
-
 export function isValidStamp(collectible: StampAsset) {
   return !isEmptyString(collectible.stampUrl) && isDefined(collectible.stampUrl);
 }
