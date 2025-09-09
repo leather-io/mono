@@ -5,6 +5,7 @@ import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { t } from '@lingui/core/macro';
+import { captureException } from '@sentry/react-native';
 
 export function NonceLoader({
   accountId,
@@ -19,23 +20,19 @@ export function NonceLoader({
   assertStacksSigner(signer);
   const currentStacksAddress = signer.address;
 
-  const {
-    data: nonceResponse,
-    isLoading: isNonceLoading,
-    isError,
-  } = useNextNonce(currentStacksAddress);
+  const { data, isLoading, error } = useNextNonce(currentStacksAddress);
 
   useEffect(() => {
-    if (!isNonceLoading && (isError || !nonceResponse?.nonce)) {
-      // TODO: track this
+    if (error) {
+      captureException(error, { extra: { context: 'nonce-loader' } });
       displayToast({
         title: t`Failed to load latest nonce`,
         type: 'error',
       });
     }
-  }, [displayToast, isError, nonceResponse?.nonce, isNonceLoading]);
+  }, [displayToast, error]);
 
-  if (isNonceLoading) return null;
+  if (isLoading) return null;
 
-  return children(nonceResponse?.nonce || 1);
+  return children(data?.nonce ?? 0);
 }

@@ -640,7 +640,7 @@ msgstr "Failed to change memo"
 msgid "Failed to change nonce"
 msgstr "Failed to change nonce"
 
-#: src/features/browser/approver-sheet/stx/nonce-loader.tsx:32
+#: src/features/browser/approver-sheet/stx/nonce-loader.tsx:29
 msgid "Failed to load latest nonce"
 msgstr "Failed to load latest nonce"
 

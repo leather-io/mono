@@ -44,8 +44,7 @@ export function useCallContractTxHex({
         functionArgs: request.params.functionArgs ?? [],
         publicKey: bytesToHex(signer.publicKey),
       });
-      const txHex = tx.serialize();
-      return txHex;
+      return tx.serialize();
     },
     [
       signer,
@@ -56,6 +55,6 @@ export function useCallContractTxHex({
     ]
   );
   useOnMount(() => {
-    void getTxHex().then(txHex => setTxHex(txHex));
+    void getTxHex().then(setTxHex);
   });
 }
