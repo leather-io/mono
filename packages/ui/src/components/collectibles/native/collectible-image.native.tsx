@@ -5,37 +5,35 @@ import { Box, Text } from '../../../../native';
 interface CollectibleImageProps {
   alt: string;
   source: string;
-  size?: number;
+  height?: number;
 }
-export function CollectibleImage({ alt, source, size = 200 }: CollectibleImageProps) {
+export function CollectibleImage({ alt, source, height = 200 }: CollectibleImageProps) {
   const isBns = source === 'bns';
-  console.log('isBns', isBns);
 
   if (isBns) {
-    return <BnsImage alt={alt} size={size} />;
+    return <BnsImage alt={alt} height={height} />;
   }
 
   return (
-    <Box width={size} height={size} overflow="hidden">
-      <Image source={{ uri: source }} alt={alt} style={{ width: '100%', height: '100%' }} />
+    <Box overflow="hidden" height={height}>
+      <Image
+        source={{ uri: source }}
+        alt={alt}
+        style={{
+          height: height,
+        }}
+      />
     </Box>
   );
 }
 
-function BnsImage({ alt, size = 200 }: Pick<CollectibleImageProps, 'alt' | 'size'>) {
-  console.log('BnsImage', alt, size);
+function BnsImage({ alt, height = 200 }: Pick<CollectibleImageProps, 'alt' | 'height'>) {
   return (
-    <Box
-      width={size}
-      height={size}
-      overflow="hidden"
-      bg="ink.background-secondary"
-      position="relative"
-    >
+    <Box height={height} overflow="hidden" bg="ink.background-secondary" position="relative">
       <Image
         source={require('../../../assets-native/images/bnsv2.png')}
         alt={alt}
-        style={{ width: '100%', height: '100%' }}
+        style={{ height: height }}
       />
       <Box
         position="absolute"

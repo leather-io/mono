@@ -4,12 +4,12 @@ import { CollectibleCardLayout } from './collectible-card-layout.native';
 
 interface CollectibleHtmlProps {
   src: string;
-  size?: number;
+  height?: number;
 }
 
-export function CollectibleHtml({ src, size = 200 }: CollectibleHtmlProps) {
+export function CollectibleHtml({ src, height = 200 }: CollectibleHtmlProps) {
   return (
-    <CollectibleCardLayout width={size} height={size}>
+    <CollectibleCardLayout height={height}>
       <WebView source={{ uri: src }} scrollEnabled={false} />
     </CollectibleCardLayout>
   );

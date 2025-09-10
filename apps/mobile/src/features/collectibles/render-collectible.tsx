@@ -7,7 +7,6 @@ import { serializeCollectible } from './collectibles-serializer';
 
 export function renderCollectible({ item }: { item: NonFungibleCryptoAsset }) {
   const collectible = serializeCollectible(item);
-  const thumbnailSize = 200;
   if (!collectible) return null;
 
   if (!collectible.src)
@@ -16,13 +15,12 @@ export function renderCollectible({ item }: { item: NonFungibleCryptoAsset }) {
         <Text textAlign="center">{t`Image currently unavailable`}</Text>
       </ImageUnavailable>
     );
-  // console.log('collectible.src', collectible.name);
   return (
     <CollectibleCard
       name={collectible.name}
       type={collectible.type as CryptoAssetProtocol}
       mimeType={collectible.mimeType}
-      size={thumbnailSize}
+      height={200}
       src={collectible.src}
     />
   );

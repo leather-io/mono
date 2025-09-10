@@ -3,15 +3,14 @@ import { Eye1ClosedIcon } from '../../../icons/eye-1-closed-icon.native';
 import { CollectibleCardLayout } from './collectible-card-layout.native';
 
 interface ImageUnavailableProps extends HasChildren {
-  size?: number;
+  height?: number;
 }
 
-export function ImageUnavailable({ children, size = 200 }: ImageUnavailableProps) {
+export function ImageUnavailable({ children, height = 200 }: ImageUnavailableProps) {
   return (
     <CollectibleCardLayout>
       <Box
-        width={size}
-        height={size}
+        height={height}
         bg="ink.background-secondary"
         justifyContent="center"
         alignItems="center"

@@ -8,7 +8,7 @@ import { CollectibleCardLayout } from './collectible-card-layout.native';
 
 interface CollectibleTextProps {
   src: string;
-  size?: number;
+  height?: number;
 }
 
 // Inscription-specific sanitizer
@@ -25,7 +25,7 @@ function sanitizeInscription(html: string): string {
     .replace(/<embed[^>]*>/gi, '<div>');
 }
 
-export function CollectibleText({ src, size = 200 }: CollectibleTextProps) {
+export function CollectibleText({ src, height = 200 }: CollectibleTextProps) {
   const [content, setContent] = useState<string | null>(null);
 
   useEffect(() => {
@@ -60,8 +60,8 @@ export function CollectibleText({ src, size = 200 }: CollectibleTextProps) {
   }
 
   return (
-    <CollectibleCardLayout bg="ink.text-primary" p="4" width={size} height={size}>
-      <Text color="ink.background-secondary" variant="code">
+    <CollectibleCardLayout bg="ink.text-primary" height={height}>
+      <Text color="ink.background-secondary" variant="code" p="4">
         {content}
       </Text>
     </CollectibleCardLayout>

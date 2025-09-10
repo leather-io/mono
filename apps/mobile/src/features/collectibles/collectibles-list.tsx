@@ -8,6 +8,7 @@ import { useAccountBnsNames } from '@/queries/bns/bns.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { Account } from '@/store/accounts/accounts';
 
+import { BnsNameAsset } from '@leather.io/models';
 import { CryptoAssetProtocols, NonFungibleCryptoAsset } from '@leather.io/models';
 
 import { EmptyCollectiblesState } from './empty-collectibles-state';
@@ -20,11 +21,13 @@ interface CollectiblesListProps {
 
 export function CollectiblesList({ currentAccount, header }: CollectiblesListProps) {
   const { fingerprint, accountIndex } = currentAccount;
-  const data = useAccountCollectibles(fingerprint, accountIndex);
-  const { value: bnsNames } = useAccountBnsNames(fingerprint, accountIndex);
-  console.log('bnsNames', bnsNames);
+  const { value: collectibles, state: collectiblesState } = useAccountCollectibles(
+    fingerprint,
+    accountIndex
+  );
+  const { value: bnsNames, state: bnsNamesState } = useAccountBnsNames(fingerprint, accountIndex);
   const collectibleData: NonFungibleCryptoAsset[] = [
-    ...(data?.value ?? []),
+    ...(collectibles ?? []),
     ...(bnsNames?.map(
       bns =>
         ({
@@ -32,43 +35,32 @@ export function CollectiblesList({ currentAccount, header }: CollectiblesListPro
           protocol: CryptoAssetProtocols.sip9,
           category: 'nft',
           chain: 'stacks',
-          assetId: bns.name,
-          contractId: bns.name,
-          tokenId: Number(bns.name),
-          cachedImage: '',
-          cachedImageThumbnail: '',
-          description: `BNS name: ${bns.fullName}`,
           name: bns.fullName,
           collection: 'bns',
-          type: 'sip9',
-          // category: 'nft',
-          // assetId: bns.name,
-          // contractId: bns.name,
-          // tokenId: Number(bns.name),
-          // cachedImage: '',
-          // cachedImageThumbnail: '',
-          // description: `BNS name: ${bns.fullName}`,
-        }) as NonFungibleCryptoAsset
+        }) as BnsNameAsset
     ) ?? []),
   ];
+
+  const isSuccess = collectiblesState === 'success' && bnsNamesState === 'success';
+  const isLoading = collectiblesState === 'loading' || bnsNamesState === 'loading';
+  const isError = collectiblesState === 'error' || bnsNamesState === 'error';
+
   return (
     <Screen.FlashList
       numColumns={2}
       data={collectibleData}
-      renderItem={data.state === 'success' ? renderCollectible : undefined}
+      renderItem={isSuccess ? renderCollectible : undefined}
       getItemType={item => item.protocol}
       refreshControl={<RefreshControl />}
       ListHeaderComponent={
         <>
           {header}
           {/* TODO: ask design for loading state for collectibles */}
-          {data.state === 'loading' && <Loading mode="widget" count={1} />}
-          {data.state === 'error' && <ErrorFallbackTab />}
+          {isLoading && <Loading mode="widget" count={1} />}
+          {isError && <ErrorFallbackTab />}
         </>
       }
-      ListEmptyComponent={
-        data.state !== 'loading' && data.state !== 'error' ? <EmptyCollectiblesState /> : undefined
-      }
+      ListEmptyComponent={!isLoading && !isError ? <EmptyCollectiblesState /> : undefined}
     />
   );
 }
