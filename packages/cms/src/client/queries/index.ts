@@ -105,3 +105,25 @@ export const sbtcConceptsQuery = defineQuery(`{
     }
   }[0]
 }`);
+
+export const legacyGuidesQuery = defineQuery(`{
+  "legacyGuides": *[ 
+    _id == "417c80eb-4fd6-436a-a8d3-2f53acdda714"
+  ] {
+      sections[]->{
+        "title": sectionTitle,
+        _id,        
+        "categories": sectionCategories[]{
+          _id,
+          "title": categoryTitle,
+          "posts": categoryPosts[]->{
+            ...
+          }
+        }
+    }
+  }[0]
+}`);
+
+export const legacyGuideBySlugQuery = defineQuery(`*[
+  _type == "post" && slug.current == $slug
+][0]`);
