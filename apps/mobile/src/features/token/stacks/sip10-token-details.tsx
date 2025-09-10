@@ -1,15 +1,15 @@
 import { useSip10ActivityByAssetId } from '@/queries/activity/sip10-activity.query';
 import { useSip10BalanceByAssetId } from '@/queries/balance/sip10-balance.query';
-import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 
+import { AccountId } from '@leather.io/models';
 import { Sip10AvatarIcon } from '@leather.io/ui/native';
 
 import { TokenLoading } from '../components/token-loading';
 import { Token } from '../token';
 
 interface Sip10TokenDetailsProps {
-  account: Account;
+  account: AccountId;
   assetId: string;
 }
 export function Sip10TokenDetails({ assetId, account }: Sip10TokenDetailsProps) {

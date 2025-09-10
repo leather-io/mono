@@ -6,7 +6,6 @@ import {
 } from '@/features/send/components/recipient/recipient.utils';
 import { useAccountHelpers } from '@/features/send/components/recipient/use-account-helpers';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
-import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import {
   QueryFunctionContext,
@@ -16,14 +15,14 @@ import {
 } from '@tanstack/react-query';
 import { ZodSchema } from 'zod';
 
-import { FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
+import { AccountId, FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
 
 interface UseRecipientSuggestionsParams {
   searchTerm: string;
   activity: SendAssetActivity[];
   recipientSchema: ZodSchema;
   asset: FungibleCryptoAsset;
-  currentAccount: Account;
+  currentAccount: AccountId;
 }
 
 export function useRecipientSuggestions({

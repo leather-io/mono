@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 
 import { FetchErrorCallout } from '@/components/error/fetch-error';
 import { Screen } from '@/components/screen/screen';
-import { useCurrentAccount } from '@/core/current-account-provider';
 import { AccountDetails } from '@/features/account/account-details';
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
 import { AvailableAccountBalance } from '@/features/account/components/available-account-balance';
@@ -19,10 +18,10 @@ import { useAccountTotalBalance } from '@/queries/balance/account-balance.query'
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
-import { Account } from '@/store/accounts/accounts';
+import { useSettings } from '@/store/settings/settings';
 import { useRouter } from 'expo-router';
 
-import { CryptoAssetProtocols } from '@leather.io/models';
+import { AccountId, CryptoAssetProtocols } from '@leather.io/models';
 import { SheetInstance } from '@leather.io/ui/native';
 
 import { AccountScreenHeader } from './account-screen-header';
@@ -30,14 +29,14 @@ import { AssetTabs } from './components/asset-tabs';
 import { ListTab } from './constants';
 
 interface HomeScreenWithAccountProps {
-  currentAccount: Account;
+  currentAccount: AccountId;
 }
 
 export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountProps) {
   const notificationSheetRef = useRef<SheetInstance>(null);
   const manageTokensSheetRef = useRef<SheetInstance>(null);
   const { fingerprint, accountIndex } = currentAccount;
-  const { setCurrentAccount } = useCurrentAccount();
+  const { changeCurrentAccount } = useSettings();
   const [listTab, setListTab] = useState<ListTab>('tokens');
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
@@ -52,9 +51,9 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     accountSelectorSheetRef.current?.present();
   }
 
-  function onAccountPress(account: Account) {
+  function onAccountPress(account: AccountId) {
     accountSelectorSheetRef.current?.close();
-    setCurrentAccount(account);
+    changeCurrentAccount(account);
   }
   const router = useRouter();
   function onOpenToken({ assetId, assetProtocol }: TokenDetailsProps) {

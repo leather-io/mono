@@ -8,7 +8,6 @@ import {
   NotifyUserSheetLayout,
 } from '@/components/sheets/notify-user-sheet.layout';
 import { useToastContext } from '@/components/toast/toast-context';
-import { useCurrentAccount } from '@/core/current-account-provider';
 import { useWaitlistFlag } from '@/features/feature-flags';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-sheet';
@@ -80,11 +79,10 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const walletNameSheetRef = useRef<SheetInstance>(null);
   const removeWalletSheetRef = useRef<SheetInstance>(null);
   const dispatch = useAppDispatch();
-  const { securityLevelPreference } = useSettings();
+  const { securityLevelPreference, currentAccount, changeCurrentAccount } = useSettings();
   const { authenticate } = useAuthentication();
   const releaseWaitlistFeatures = useWaitlistFlag();
   const { displayToast } = useToastContext();
-  const { currentAccount, setCurrentAccount } = useCurrentAccount();
 
   function setName(name: string) {
     if (name === '') {
@@ -106,7 +104,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   function removeWallet() {
     router.back();
     if (currentAccount?.fingerprint === wallet.fingerprint) {
-      setCurrentAccount(null);
+      changeCurrentAccount(null);
     }
     dispatch(userRemovesWallet({ fingerprint: wallet.fingerprint }));
   }

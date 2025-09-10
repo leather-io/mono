@@ -1,12 +1,12 @@
 import { Screen } from '@/components/screen/screen';
 import { HeaderActions } from '@/components/screen/screen-header/components/header-actions';
 import { AccountHeader } from '@/features/account/components/account-header';
-import { Account } from '@/store/accounts/accounts';
 
+import { AccountId } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
 interface AccountScreenHeaderProps {
-  account: Account;
+  account: AccountId;
   onOpenAccountSelector(): void;
 }
 

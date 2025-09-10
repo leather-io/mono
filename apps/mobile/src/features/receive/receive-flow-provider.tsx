@@ -1,13 +1,14 @@
 import { ReactNode, createContext, useContext, useReducer } from 'react';
 
 import { SelectedAsset } from '@/features/receive/screens/select-asset';
-import { Account } from '@/store/accounts/accounts';
+
+import { AccountId } from '@leather.io/models';
 
 export type ReceiveType = 'stacks' | 'bitcoin' | 'native-segwit' | 'taproot' | 'all';
 
 interface ReceiveState {
   selectedAsset: SelectedAsset | null;
-  currentAccount: Account;
+  currentAccount: AccountId;
   receiveType: ReceiveType;
 }
 
@@ -24,7 +25,7 @@ function reducer(state: ReceiveState, action: Action) {
 
 interface InitialData {
   selectedAsset?: SelectedAsset;
-  currentAccount: Account;
+  currentAccount: AccountId;
   receiveType: ReceiveType;
 }
 

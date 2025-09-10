@@ -2,10 +2,10 @@ import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
-import { Account } from '@/store/accounts/accounts';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';
 
+import { AccountId } from '@leather.io/models';
 import {
   Box,
   Pressable,
@@ -16,7 +16,7 @@ import {
 } from '@leather.io/ui/native';
 
 interface AccountTotalBalanceProps {
-  account: Account;
+  account: AccountId;
 }
 
 export function AccountTotalBalance({ account }: AccountTotalBalanceProps) {

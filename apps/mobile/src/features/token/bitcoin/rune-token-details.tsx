@@ -1,14 +1,14 @@
 import { useRuneBalanceByRuneName } from '@/queries/balance/runes-balance.query';
-import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 
+import { AccountId } from '@leather.io/models';
 import { RunesAvatarIcon } from '@leather.io/ui/native';
 
 import { TokenLoading } from '../components/token-loading';
 import { Token } from '../token';
 
 interface RuneTokenDetailsProps {
-  account: Account;
+  account: AccountId;
   assetId: string;
 }
 export function RuneTokenDetails({ assetId, account }: RuneTokenDetailsProps) {

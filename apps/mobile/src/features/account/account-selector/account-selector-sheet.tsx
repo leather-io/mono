@@ -1,17 +1,17 @@
 import { useCallback, useMemo } from 'react';
 
-import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
 import { useAppDispatch } from '@/store/utils';
 
+import { AccountId } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
 
 import { AccountSelectorSheetLayout } from './account-selector-sheet.layout';
 
 interface AccountSelectedSheetProps {
   sheetRef: SheetRef;
-  onAccountPress: (account: Account) => void;
+  onAccountPress: (account: AccountId) => void;
 }
 
 export function AccountSelectorSheet({ sheetRef, onAccountPress }: AccountSelectedSheetProps) {

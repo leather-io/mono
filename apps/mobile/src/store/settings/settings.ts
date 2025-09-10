@@ -22,6 +22,7 @@ import {
   selectAssetVisibility,
   selectBitcoinUnitPreference,
   selectCurrencyPreference,
+  selectCurrentAccount,
   selectEmailAddressPreference,
   selectHapticsPreference,
   selectLanguagePreference,
@@ -38,6 +39,7 @@ import {
   userChangedAnalyticsPreference,
   userChangedAssetVisibility,
   userChangedBitcoinUnitPreference,
+  userChangedCurrentAccount,
   userChangedEmailAddressPreference,
   userChangedHapticsPreference,
   userChangedLanguagePreference,
@@ -51,6 +53,7 @@ import {
   userChangedThemePreference,
 } from './settings.write';
 import {
+  CurrentAccount,
   HapticsPreference,
   LanguagePreferenceSource,
   LastActiveTimestamp,
@@ -78,6 +81,7 @@ export const initialState: SettingsState = {
   languagePreference: defaultLanguage,
   languagePreferenceSource: 'system',
   assetVisibility: {},
+  currentAccount: null,
 };
 
 export function useSettings() {
@@ -99,6 +103,7 @@ export function useSettings() {
   const languagePreference = useSelector(selectLanguagePreference);
   const languagePreferenceSource = useSelector(selectLanguagePreferenceSource);
   const assetVisibility = useSelector(selectAssetVisibility);
+  const currentAccount = useSelector(selectCurrentAccount);
 
   const themeDerivedFromThemePreference =
     (themePreference === 'system' ? systemTheme : themePreference) ?? 'light';
@@ -120,7 +125,11 @@ export function useSettings() {
     languagePreference,
     languagePreferenceSource,
     assetVisibility,
+    currentAccount,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
+    changeCurrentAccount(account: CurrentAccount) {
+      dispatch(userChangedCurrentAccount({ account }));
+    },
     changeAssetVisibility(assetId: SerializedCryptoAssetId, value: boolean) {
       dispatch(userChangedAssetVisibility({ assetId, value }));
     },

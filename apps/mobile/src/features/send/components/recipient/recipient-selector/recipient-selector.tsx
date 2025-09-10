@@ -16,12 +16,11 @@ import {
   useRecipientSuggestions,
 } from '@/features/send/components/recipient/use-recipient-suggestions';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
-import { Account } from '@/store/accounts/accounts';
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
 import { type ZodSchema } from 'zod';
 
-import { type FungibleCryptoAsset, type SendAssetActivity } from '@leather.io/models';
+import { AccountId, type FungibleCryptoAsset, type SendAssetActivity } from '@leather.io/models';
 import { Box, IconButton, QrCodeIcon } from '@leather.io/ui/native';
 
 interface RecipientSelectorProps {
@@ -30,7 +29,7 @@ interface RecipientSelectorProps {
   asset: FungibleCryptoAsset;
   onSelectAddress(address: string): void;
   onQrButtonPress(source: 'toggle' | 'input'): void;
-  currentAccount: Account;
+  currentAccount: AccountId;
 }
 
 export function RecipientSelector({

@@ -10,10 +10,10 @@ import {
   useManagedSip10Tools,
   useSip10AccountBalance,
 } from '@/queries/balance/sip10-balance.query';
-import { Account } from '@/store/accounts/accounts';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
+import { AccountId } from '@leather.io/models';
 import {
   Box,
   RunesAvatarIcon,
@@ -29,7 +29,7 @@ import { TokenSwitch } from '../token/components/token-switch';
 
 interface ManageTokenSheetProps {
   sheetRef: SheetRef;
-  currentAccount: Account;
+  currentAccount: AccountId;
 }
 
 export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheetProps) {

@@ -6,6 +6,7 @@ import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/ful
 import { InlineAssetPicker } from '@/features/send/components/inline-asset-picker';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
+import { useAccounts } from '@/store/accounts/accounts.read';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 
@@ -21,6 +22,7 @@ export function Form() {
     state: { selectedAsset, currentAccount },
     selectAsset,
   } = useSendFlowContext();
+  const { fromAccountIndex } = useAccounts();
   const assetPickerSheetRef = useRef<SheetInstance>(null);
   const [shouldAnimateAssetItem, setShouldAnimateAssetItem] = useState(true);
   const assetItemElementInitialOffset = shouldAnimateAssetItem
@@ -42,13 +44,15 @@ export function Form() {
     selectAsset(asset);
   }
 
+  const account = fromAccountIndex(currentAccount.fingerprint, currentAccount.accountIndex)[0];
+
   return (
     <>
       <FullHeightSheetLayout
         header={
           <FullHeightSheetHeader
             title={t`Send`}
-            subtitle={currentAccount.name}
+            subtitle={account?.name}
             leftElement={canGoBack() ? <HeaderBackButton onPress={goBack} /> : null}
           />
         }

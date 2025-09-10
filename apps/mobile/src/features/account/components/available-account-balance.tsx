@@ -2,9 +2,9 @@ import { Balance } from '@/components/balance/balance';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useTokenManagementFlag } from '@/features/feature-flags';
 import { useAccountUnlockedBalance } from '@/queries/balance/account-balance.query';
-import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 
+import { AccountId } from '@leather.io/models';
 import {
   Box,
   Pressable,
@@ -15,7 +15,7 @@ import {
 } from '@leather.io/ui/native';
 
 interface AvailableAccountBalanceProps {
-  account: Account;
+  account: AccountId;
   onOpenManageTokens(): void;
   hasAssets: boolean;
 }

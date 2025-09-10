@@ -4,11 +4,10 @@ import { useSip10BalanceByAssetId } from '@/queries/balance/sip10-balance.query'
 import '@/queries/balance/stx-balance.query';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
-import { Account } from '@/store/accounts/accounts';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { MarketData, Sip10Asset } from '@leather.io/models';
+import { AccountId, MarketData, Sip10Asset } from '@leather.io/models';
 import { Sip10Balance } from '@leather.io/services';
 
 interface Sip10SendLoaderData {
@@ -18,7 +17,7 @@ interface Sip10SendLoaderData {
 }
 
 interface Sip10DataLoaderProps {
-  account: Account;
+  account: AccountId;
   children(data: Sip10SendLoaderData): React.ReactNode;
   asset: Sip10Asset;
 }

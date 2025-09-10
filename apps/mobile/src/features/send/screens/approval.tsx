@@ -5,6 +5,7 @@ import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { StacksTxSigner } from '@/features/stacks-tx-signer/stacks-tx-signer';
+import { makeAccountIdentifer } from '@/store/utils';
 
 import { Box } from '@leather.io/ui/native';
 
@@ -17,7 +18,8 @@ export function Approval() {
   const {
     state: { selectedAsset, currentAccount },
   } = useSendFlowContext();
-  const { fingerprint, accountIndex, id: accountId } = currentAccount;
+  const { fingerprint, accountIndex } = currentAccount;
+  const accountId = makeAccountIdentifer(fingerprint, accountIndex);
   const { sendSheetRef } = useGlobalSheets();
 
   if (!selectedAsset || !txHex) {

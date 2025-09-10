@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { SpinnerIcon } from '@/components/spinner-icon';
 import { useToastContext } from '@/components/toast/toast-context';
-import { useCurrentAccount } from '@/core/current-account-provider';
 import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountCard } from '@/features/account/components/account-card';
 import { AccountBalance } from '@/features/balances/total-balance';
@@ -10,6 +9,7 @@ import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
+import { useSettings } from '@/store/settings/settings';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
@@ -29,6 +29,7 @@ import {
 } from '@leather.io/ui/native';
 
 import { WalletViewVariant } from './types';
+import { getIsAccountSelected } from './utils';
 
 interface WalletCardProps extends WalletId {
   variant: WalletViewVariant;
@@ -42,7 +43,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   const { displayToast } = useToastContext();
   const router = useRouter();
   const [isAddingAccount, setIsAddingAccount] = useState(false);
-  const { currentAccount } = useCurrentAccount();
+  const { currentAccount } = useSettings();
 
   function onSelectAccount(account: Account) {
     router.navigate({
@@ -93,7 +94,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
         <Box flexDirection="column" gap="3">
           {accounts.map(account => (
             <AccountCard
-              isSelected={account.id === currentAccount?.id}
+              isSelected={getIsAccountSelected(account.id, currentAccount)}
               key={account.id}
               primaryTitle={account.name}
               secondaryTitle={

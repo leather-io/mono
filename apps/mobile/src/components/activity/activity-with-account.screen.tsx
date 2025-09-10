@@ -1,13 +1,13 @@
 import { Screen } from '@/components/screen/screen';
 import { ActivityList } from '@/features/activity/activity-list';
 import { useAccountActivity } from '@/queries/activity/account-activity.query';
-import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 
+import { AccountId } from '@leather.io/models';
 import { Text } from '@leather.io/ui/native';
 
 interface ActivityScreenWithAccountProps {
-  currentAccount: Account;
+  currentAccount: AccountId;
 }
 export default function ActivityScreenWithAccount({
   currentAccount,

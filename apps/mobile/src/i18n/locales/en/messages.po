@@ -68,11 +68,11 @@ msgstr "24 Hour Change"
 msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:125
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:126
 msgid "Account created"
 msgstr "Account created"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:131
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:132
 msgid "Account creation failed"
 msgstr "Account creation failed"
 
@@ -103,7 +103,7 @@ msgstr "Activity"
 
 #: src/features/account/components/create-wallet-card.tsx:22
 #: src/features/account/sheets/add-account-sheet.tsx:26
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:143
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:144
 msgid "Add account"
 msgstr "Add account"
 
@@ -140,7 +140,7 @@ msgstr "Add your collection here"
 msgid "Add, configure and remove"
 msgstr "Add, configure and remove"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:143
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:144
 msgid "Adding account..."
 msgstr "Adding account..."
 
@@ -168,19 +168,19 @@ msgstr "Address is for incorrect network"
 msgid "Address is not valid"
 msgstr "Address is not valid"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:48
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:47
 msgid "Address reuse"
 msgstr "Address reuse"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:53
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:52
 msgid "Address scan range"
 msgstr "Address scan range"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:58
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:57
 msgid "Address types"
 msgstr "Address types"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:185
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:183
 #: src/features/recover-wallet/recover-wallet.layout.tsx:48
 msgid "Advanced options"
 msgstr "Advanced options"
@@ -268,7 +268,7 @@ msgstr "Argument {argumentNumber}"
 msgid "Arkadiko"
 msgstr "Arkadiko"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:121
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:119
 msgid "Authentication failed"
 msgstr "Authentication failed"
 
@@ -390,7 +390,7 @@ msgstr ""
 "Configure\n"
 "account"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:148
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:146
 msgid ""
 "Configure\n"
 "wallet"
@@ -463,7 +463,7 @@ msgstr "Copy address"
 msgid "Create new wallet"
 msgstr "Create new wallet"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:210
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:208
 msgid "Creation date"
 msgstr "Creation date"
 
@@ -609,11 +609,11 @@ msgstr "Expand your Bitcoin knowledge"
 msgid "Explore"
 msgstr "Explore"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:68
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:67
 msgid "Export key"
 msgstr "Export key"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:63
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:62
 msgid "Export xPub"
 msgstr "Export xPub"
 
@@ -920,7 +920,7 @@ msgid "Name"
 msgstr "Name"
 
 #: src/features/receive/get-assets.ts:31
-#: src/features/token/bitcoin/bitcoin-address-list.tsx:28
+#: src/features/token/bitcoin/bitcoin-address-list.tsx:29
 msgid "Native Segwit"
 msgstr "Native Segwit"
 
@@ -967,7 +967,7 @@ msgstr "Notify me"
 msgid "OK"
 msgstr "OK"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:76
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:77
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
 
@@ -1035,8 +1035,8 @@ msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
 #: src/components/action-buttons.tsx:39
-#: src/features/receive/screens/asset-details.tsx:54
-#: src/features/receive/screens/select-asset.tsx:80
+#: src/features/receive/screens/asset-details.tsx:57
+#: src/features/receive/screens/select-asset.tsx:83
 msgid "Receive"
 msgstr "Receive"
 
@@ -1065,12 +1065,12 @@ msgstr "Recently viewed"
 msgid "Recents"
 msgstr "Recents"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:174
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:172
 #: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:17
 msgid "Remove wallet"
 msgstr "Remove wallet"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:166
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:164
 msgid "Rename wallet"
 msgstr "Rename wallet"
 
@@ -1116,7 +1116,7 @@ msgstr "Save to..."
 msgid "Scan a Bitcoin or Stacks address"
 msgstr "Scan a Bitcoin or Stacks address"
 
-#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:69
+#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:68
 #: src/features/send/components/recipient/recipient-toggle.tsx:61
 msgid "Scan a QR code"
 msgstr "Scan a QR code"
@@ -1138,13 +1138,13 @@ msgstr "Secure your wallet"
 msgid "Security"
 msgstr "Security"
 
-#: src/features/receive/screens/select-asset.tsx:79
+#: src/features/receive/screens/select-asset.tsx:82
 #: src/features/send/screens/select-asset.tsx:35
 msgid "Select asset"
 msgstr "Select asset"
 
 #: src/components/action-buttons.tsx:29
-#: src/features/send/screens/form.tsx:50
+#: src/features/send/screens/form.tsx:54
 #: src/features/send/screens/select-asset.tsx:35
 msgid "Send"
 msgstr "Send"
@@ -1180,7 +1180,7 @@ msgstr "Sent"
 msgid "Settings"
 msgstr "Settings"
 
-#: src/features/receive/screens/asset-details.tsx:105
+#: src/features/receive/screens/asset-details.tsx:108
 msgid "Share"
 msgstr "Share"
 
@@ -1271,7 +1271,7 @@ msgid "Tap to view Secret Key"
 msgstr "Tap to view Secret Key"
 
 #: src/features/receive/get-assets.ts:39
-#: src/features/token/bitcoin/bitcoin-address-list.tsx:35
+#: src/features/token/bitcoin/bitcoin-address-list.tsx:36
 msgid "Taproot"
 msgstr "Taproot"
 
@@ -1373,9 +1373,9 @@ msgstr "Total spend"
 msgid "Transaction confirmations"
 msgstr "Transaction confirmations"
 
-#: src/features/send/forms/btc/use-btc-form.ts:79
-#: src/features/send/forms/stx/use-sip10-form.ts:88
-#: src/features/send/forms/stx/use-stx-form.ts:77
+#: src/features/send/forms/btc/use-btc-form.ts:78
+#: src/features/send/forms/stx/use-sip10-form.ts:87
+#: src/features/send/forms/stx/use-stx-form.ts:76
 msgid "Transaction failed due to an unexpected error"
 msgstr "Transaction failed due to an unexpected error"
 
@@ -1459,7 +1459,7 @@ msgstr "View and manage all your wallets in one place"
 msgid "View and manage your hidden accounts"
 msgstr "View and manage your hidden accounts"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:155
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:153
 msgid "View Secret Key"
 msgstr "View Secret Key"
 
@@ -1483,7 +1483,7 @@ msgstr "Wallet added"
 msgid "Wallet added already"
 msgstr "Wallet added already"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:92
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:90
 msgid "Wallet name cannot be empty"
 msgstr "Wallet name cannot be empty"
 

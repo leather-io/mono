@@ -3,13 +3,14 @@ import {
   useBtcAccountNativeSegwitBalance,
   useBtcAccountTaprootBalance,
 } from '@/queries/balance/btc-balance.query';
-import { Account } from '@/store/accounts/accounts';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { t } from '@lingui/core/macro';
 
+import { AccountId } from '@leather.io/models';
+
 import { AddressList, AddressListItem } from '../components/address-list';
 
-export function BitcoinAddressList({ account }: { account: Account }) {
+export function BitcoinAddressList({ account }: { account: AccountId }) {
   const { nativeSegwitPayerAddress, taprootPayerAddress } = useBitcoinPayerAddressFromAccountIndex(
     account.fingerprint,
     account.accountIndex

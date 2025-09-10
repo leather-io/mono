@@ -1,8 +1,8 @@
-import { useCurrentAccount } from '@/core/current-account-provider';
 import { BitcoinTokenDetails } from '@/features/token/bitcoin/bitcoin-token-details';
 import { RuneTokenDetails } from '@/features/token/bitcoin/rune-token-details';
 import { Sip10TokenDetails } from '@/features/token/stacks/sip10-token-details';
 import { StacksTokenDetails } from '@/features/token/stacks/stacks-token-details';
+import { useSettings } from '@/store/settings/settings';
 import { useLocalSearchParams } from 'expo-router';
 
 import { CryptoAssetProtocols } from '@leather.io/models';
@@ -15,7 +15,7 @@ export default function AccountTokenScreen() {
     assetId: string;
     assetProtocol: SupportedAssetProtocol;
   }>();
-  const { currentAccount } = useCurrentAccount();
+  const { currentAccount } = useSettings();
 
   assertExistence(currentAccount, 'Current account is required for AccountTokenScreen');
 

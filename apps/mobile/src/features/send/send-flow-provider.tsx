@@ -1,13 +1,12 @@
 import { ReactNode, createContext, useContext, useReducer } from 'react';
 
-import { Account } from '@/store/accounts/accounts';
 import { InputCurrencyMode } from '@/utils/types';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
+import { AccountId, FungibleCryptoAsset } from '@leather.io/models';
 
 interface SendState {
   selectedAsset: FungibleCryptoAsset | null;
-  currentAccount: Account;
+  currentAccount: AccountId;
   inputCurrencyMode: InputCurrencyMode;
 }
 
@@ -29,7 +28,7 @@ function reducer(state: SendState, action: Action) {
 
 interface InitialData {
   selectedAsset?: FungibleCryptoAsset;
-  currentAccount: Account;
+  currentAccount: AccountId;
 }
 
 function initializer({ selectedAsset, currentAccount }: InitialData): SendState {

@@ -9,7 +9,7 @@ export function deserializeAccountId(accountId: string) {
   return { fingerprint, accountIndex: Number(accountIndex) };
 }
 
-export function initalizeAccount(account: AccountStore) {
+export function initializeAccount(account: AccountStore) {
   return {
     ...account,
     ...deserializeAccountId(account.id),
@@ -17,7 +17,7 @@ export function initalizeAccount(account: AccountStore) {
   };
 }
 
-export type Account = ReturnType<typeof initalizeAccount>;
+export type Account = ReturnType<typeof initializeAccount>;
 
 interface AccountLoaderProps extends AccountId {
   fallback?: React.ReactNode;

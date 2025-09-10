@@ -7,6 +7,7 @@ import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/ful
 import { QrCard } from '@/features/receive/components/qr-card';
 import { useCopyAddress } from '@/hooks/use-copy-address';
 import { TestId } from '@/shared/test-id';
+import { useAccounts } from '@/store/accounts/accounts.read';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 
@@ -33,6 +34,8 @@ export function AssetDetails() {
   const {
     state: { selectedAsset, currentAccount },
   } = useReceiveFlowContext();
+  const { fromAccountIndex } = useAccounts();
+  const account = fromAccountIndex(currentAccount.fingerprint, currentAccount.accountIndex)[0];
   assertExistence(selectedAsset, 'selectedAsset should be set in AssetDetails');
   const { name, address, addressType, description } = selectedAsset;
   const onCopyAddress = useCopyAddress();
@@ -52,7 +55,7 @@ export function AssetDetails() {
       header={
         <FullHeightSheetHeader
           title={t`Receive`}
-          subtitle={currentAccount.name}
+          subtitle={account?.name}
           leftElement={
             canGoBack ? (
               <HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />

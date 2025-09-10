@@ -6,6 +6,7 @@ import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/ful
 import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
 import { useCopyAddress } from '@/hooks/use-copy-address';
 import { TestId } from '@/shared/test-id';
+import { useAccounts } from '@/store/accounts/accounts.read';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { analytics } from '@/utils/analytics';
@@ -32,13 +33,15 @@ export function SelectAsset() {
     selectAsset,
     state: { currentAccount, receiveType },
   } = useReceiveFlowContext();
+  const { fromAccountIndex } = useAccounts();
+  const account = fromAccountIndex(currentAccount.fingerprint, currentAccount.accountIndex)[0];
   const canGoBack = route.params?.previousRoute === 'select-account';
 
   const selectedAssets = useSelectAssets({ currentAccount, receiveType });
   useEffect(() => {
     // BTC users need to choose taproot or native segwit address
     if (isDefined(selectedAssets) && selectedAssets.length === 1) {
-      navigate('asset-details', { asset: selectedAssets[0]!, accountName: currentAccount.name });
+      navigate('asset-details', { asset: selectedAssets[0]!, accountName: account?.name ?? '' });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -47,7 +50,7 @@ export function SelectAsset() {
     selectAsset(asset);
     navigate('asset-details', {
       asset,
-      accountName: currentAccount.name,
+      accountName: account?.name ?? '',
       previousRoute: 'select-asset',
     });
   }

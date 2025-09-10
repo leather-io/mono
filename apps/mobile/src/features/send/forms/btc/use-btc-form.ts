@@ -9,7 +9,6 @@ import { useCalculateBtcMaxSpend } from '@/features/send/hooks/use-calculate-btc
 import { useSendMax } from '@/features/send/hooks/use-send-max';
 import { useSendNavigation } from '@/features/send/navigation';
 import { btcFormValuesToPsbtHex } from '@/features/send/utils';
-import { Account } from '@/store/accounts/accounts';
 import {
   useBitcoinAccounts,
   useBitcoinPayerFromKeyOrigin,
@@ -19,10 +18,10 @@ import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/core/macro';
 
-import { AverageBitcoinFeeRates, OwnedUtxo } from '@leather.io/models';
+import { AccountId, AverageBitcoinFeeRates, OwnedUtxo } from '@leather.io/models';
 
 interface UseBtcFormProps {
-  account: Account;
+  account: AccountId;
   feeRates: AverageBitcoinFeeRates;
   utxos: OwnedUtxo[];
 }

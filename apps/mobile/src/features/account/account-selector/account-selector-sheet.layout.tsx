@@ -5,11 +5,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Draggable } from '@/components/draggable';
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
-import { useCurrentAccount } from '@/core/current-account-provider';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { HEADER_HEIGHT } from '@/shared/constants';
 import { Account } from '@/store/accounts/accounts';
 import { getConnectedAppsToAccountIdMap, useApps } from '@/store/apps/apps.read';
+import { useSettings } from '@/store/settings/settings';
+import { makeAccountIdentifer } from '@/store/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 
@@ -39,7 +40,7 @@ export function AccountSelectorSheetLayout({
   const direction = useSharedValue<'down' | 'up'>('down');
   const { list: connectedApps } = useApps('connected');
   const connectedAppsToAccountIdMap = getConnectedAppsToAccountIdMap(connectedApps);
-  const { currentAccount } = useCurrentAccount();
+  const { currentAccount } = useSettings();
 
   return (
     <FullHeightSheet
@@ -74,7 +75,14 @@ export function AccountSelectorSheetLayout({
                 <WalletLoader fingerprint={account.fingerprint} key={account.id}>
                   {wallet => (
                     <AccountCard
-                      isSelected={account.id === currentAccount?.id}
+                      isSelected={
+                        !!currentAccount &&
+                        account.id ===
+                          makeAccountIdentifer(
+                            currentAccount?.fingerprint,
+                            currentAccount?.accountIndex
+                          )
+                      }
                       caption={wallet.name}
                       primaryTitle={account.name}
                       appOrigins={connectedAppsToAccountIdMap[account.id]?.map(app => app.origin)}
