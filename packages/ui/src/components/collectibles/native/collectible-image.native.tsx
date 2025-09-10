@@ -1,19 +1,13 @@
 import { Image } from 'expo-image';
 
-import { Box, Text } from '../../../../native';
+import { Box } from '../../../../native';
 
-interface CollectibleImageProps {
+export interface CollectibleImageProps {
   alt: string;
   source: string;
   height?: number;
 }
 export function CollectibleImage({ alt, source, height = 200 }: CollectibleImageProps) {
-  const isBns = source === 'bns';
-
-  if (isBns) {
-    return <BnsImage alt={alt} height={height} />;
-  }
-
   return (
     <Box overflow="hidden" height={height}>
       <Image
@@ -23,37 +17,6 @@ export function CollectibleImage({ alt, source, height = 200 }: CollectibleImage
           height: height,
         }}
       />
-    </Box>
-  );
-}
-
-function BnsImage({ alt, height = 200 }: Pick<CollectibleImageProps, 'alt' | 'height'>) {
-  return (
-    <Box height={height} overflow="hidden" bg="ink.background-secondary" position="relative">
-      <Image
-        source={require('../../../assets-native/images/bnsv2.png')}
-        alt={alt}
-        style={{ height: height }}
-      />
-      <Box
-        position="absolute"
-        bottom={0}
-        left={0}
-        right={0}
-        padding="3"
-        justifyContent="center"
-        alignSelf="stretch"
-      >
-        <Text
-          variant="label02"
-          textAlign="center"
-          style={{ color: '#F09D00' }}
-          numberOfLines={1}
-          ellipsizeMode="tail"
-        >
-          {alt}
-        </Text>
-      </Box>
     </Box>
   );
 }

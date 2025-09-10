@@ -1,5 +1,4 @@
 import {
-  BnsNameAsset,
   CryptoAsset,
   CryptoAssetId,
   CryptoAssetProtocol,
@@ -67,12 +66,12 @@ export function getAssetId(asset: CryptoAsset): CryptoAssetId {
   }
 }
 
-function buildSip9AssetId(asset: Sip9Asset | BnsNameAsset): CryptoAssetId {
-  // BNS SIP-9's have a namespace and name
-  if ('namespace' in asset) {
+function buildSip9AssetId(asset: Sip9Asset): CryptoAssetId {
+  // BNS SIP-9's have a collection and name
+  if (asset.collection === 'bns') {
     return {
       protocol: asset.protocol,
-      id: `${asset.name}|${asset.namespace}`,
+      id: `${asset.name}|${asset.collection}`,
     };
   }
 

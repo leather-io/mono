@@ -27,7 +27,6 @@
     "@expo/vector-icons": "14.1.0",
     "@gorhom/bottom-sheet": "5.1.4",
     "@leather.io/prettier-config": "workspace:*",
-    "@leather.io/query": "workspace:*",
     "@leather.io/tokens": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@react-native/assets-registry": "0.73.1",

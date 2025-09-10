@@ -1,6 +1,6 @@
 import { Box, HasChildren } from '../../../../native';
 import { Eye1ClosedIcon } from '../../../icons/eye-1-closed-icon.native';
-import { CollectibleCardLayout } from './collectible-card-layout.native';
+import { CollectibleCard } from './collectible-card.native';
 
 interface ImageUnavailableProps extends HasChildren {
   height?: number;
@@ -8,7 +8,7 @@ interface ImageUnavailableProps extends HasChildren {
 
 export function ImageUnavailable({ children, height = 200 }: ImageUnavailableProps) {
   return (
-    <CollectibleCardLayout>
+    <CollectibleCard>
       <Box
         height={height}
         bg="ink.background-secondary"
@@ -18,6 +18,6 @@ export function ImageUnavailable({ children, height = 200 }: ImageUnavailablePro
         <Eye1ClosedIcon />
         {children}
       </Box>
-    </CollectibleCardLayout>
+    </CollectibleCard>
   );
 }

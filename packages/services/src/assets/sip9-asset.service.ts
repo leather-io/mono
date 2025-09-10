@@ -23,13 +23,8 @@ export class Sip9AssetService {
   ): Promise<Sip9Asset> {
     const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier);
     const tokenId = getNonFungibleTokenId(tokenHexValue);
-    // PETE this is where we should get the gamma metadata
     const metadata = await this.stacksApiClient.getNftMetadata(principal, tokenId, { signal });
     if (!metadata) throw new Error(`Sip9 Metadata Not Found: ${assetIdentifier}`);
-    // console.log('createSip9Asset', metadata);
-    // if(metadata.metadata?.name === 'BNS - Archive') {
-    //   console.log('metadata.metadata?.name', assetIdentifier);
-    // }
     return createSip9Asset(assetIdentifier, tokenId, metadata);
   }
 }

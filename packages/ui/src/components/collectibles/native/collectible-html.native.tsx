@@ -1,6 +1,6 @@
 import { WebView } from 'react-native-webview';
 
-import { CollectibleCardLayout } from './collectible-card-layout.native';
+import { CollectibleCard } from './collectible-card.native';
 
 interface CollectibleHtmlProps {
   src: string;
@@ -9,8 +9,8 @@ interface CollectibleHtmlProps {
 
 export function CollectibleHtml({ src, height = 200 }: CollectibleHtmlProps) {
   return (
-    <CollectibleCardLayout height={height}>
+    <CollectibleCard height={height}>
       <WebView source={{ uri: src }} scrollEnabled={false} />
-    </CollectibleCardLayout>
+    </CollectibleCard>
   );
 }

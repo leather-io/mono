@@ -8,8 +8,7 @@ import { useAccountBnsNames } from '@/queries/bns/bns.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { Account } from '@/store/accounts/accounts';
 
-import { BnsNameAsset } from '@leather.io/models';
-import { CryptoAssetProtocols, NonFungibleCryptoAsset } from '@leather.io/models';
+import { NonFungibleCryptoAsset } from '@leather.io/models';
 
 import { EmptyCollectiblesState } from './empty-collectibles-state';
 import { renderCollectible } from './render-collectible';
@@ -28,17 +27,19 @@ export function CollectiblesList({ currentAccount, header }: CollectiblesListPro
   const { value: bnsNames, state: bnsNamesState } = useAccountBnsNames(fingerprint, accountIndex);
   const collectibleData: NonFungibleCryptoAsset[] = [
     ...(collectibles ?? []),
-    ...(bnsNames?.map(
-      bns =>
-        ({
-          ...bns,
-          protocol: CryptoAssetProtocols.sip9,
-          category: 'nft',
-          chain: 'stacks',
-          name: bns.fullName,
-          collection: 'bns',
-        }) as BnsNameAsset
-    ) ?? []),
+    ...(bnsNames?.map(bns => ({
+      category: 'nft' as const,
+      chain: 'stacks' as const,
+      protocol: 'sip9' as const,
+      collection: 'bns',
+      name: bns.fullName,
+      assetId: '',
+      contractId: '',
+      tokenId: 0,
+      description: bns.namespace,
+      cachedImage: '',
+      cachedImageThumbnail: '',
+    })) ?? []),
   ];
 
   const isSuccess = collectiblesState === 'success' && bnsNamesState === 'success';
@@ -55,7 +56,7 @@ export function CollectiblesList({ currentAccount, header }: CollectiblesListPro
       ListHeaderComponent={
         <>
           {header}
-          {/* TODO: ask design for loading state for collectibles */}
+          {/* TODO: LEA-3190 loading state for collectibles */}
           {isLoading && <Loading mode="widget" count={1} />}
           {isError && <ErrorFallbackTab />}
         </>

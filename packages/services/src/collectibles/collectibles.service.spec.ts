@@ -71,10 +71,22 @@ describe(CollectiblesService.name, () => {
   } as unknown as Sip9AssetService;
 
   const mockBnsService = {
-    getBnsName: vi.fn().mockResolvedValue({
-      protocol: CryptoAssetProtocols.sip9,
-      assetId: 'SP000.nft-1',
-    }),
+    getAccountBnsNames: vi.fn().mockResolvedValue([
+      {
+        fullName: 'locker.locker',
+        isPrimary: false,
+        name: 'locker',
+        namespace: 'locker',
+        owner: '??????????????',
+      },
+      {
+        fullName: 'btc.btc',
+        isPrimary: true,
+        name: 'btc',
+        namespace: 'btc',
+        owner: '??????????????',
+      },
+    ]),
   } as unknown as BnsService;
 
   const collectiblesService = new CollectiblesService(
