@@ -249,6 +249,7 @@ module.exports = {
           'theme-web',
           'tsup',
           '.stories.',
+          'packages/cms/src/studio', // Sanity Studio is development-only
         ],
       },
       to: {

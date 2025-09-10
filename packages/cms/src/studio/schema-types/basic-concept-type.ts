@@ -1,5 +1,7 @@
 import { defineField, defineType } from 'sanity';
 
+import { slugField } from './utils/slug-type';
+
 export const basicConceptType = defineType({
   name: 'basicConcept',
   title: 'Basic Concept',
@@ -22,22 +24,7 @@ export const basicConceptType = defineType({
       title: 'Common Acronym - Optional',
       type: 'string',
     }),
-    defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      options: {
-        source: 'name',
-        slugify: input =>
-          input
-            .toLowerCase()
-            .replace(/\s+/g, '-')
-            .slice(0, 96)
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, ''),
-      },
-      validation: rule => rule.required(),
-    }),
+    slugField('name'),
     defineField({
       name: 'relatedLegacyPost',
       title: 'Related Legacy Post',
