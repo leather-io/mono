@@ -404,6 +404,23 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.9
 
+## [1.32.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.31.1...@leather.io/services-v1.32.0) (2025-09-10)
+
+
+### Features
+
+* token management ([6681d94](https://github.com/leather-io/mono/commit/6681d949130379907e3aab5e454668aa2159e69e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.5
+    * @leather.io/utils bumped to 0.45.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.11
+
 ## [1.31.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.31.0...@leather.io/services-v1.31.1) (2025-09-07)
 
 
