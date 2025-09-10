@@ -339,6 +339,13 @@
     * @leather.io/constants bumped to 0.25.3
     * @leather.io/models bumped to 0.41.0
 
+## [0.45.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.44.1...@leather.io/utils-v0.45.0) (2025-09-10)
+
+
+### Features
+
+* token management ([6681d94](https://github.com/leather-io/mono/commit/6681d949130379907e3aab5e454668aa2159e69e))
+
 ## [0.44.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.43.0...@leather.io/utils-v0.44.0) (2025-08-27)
 
 

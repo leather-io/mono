@@ -489,6 +489,20 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.82.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.81.0...@leather.io/ui-v1.82.0) (2025-09-10)
+
+
+### Features
+
+* token management ([6681d94](https://github.com/leather-io/mono/commit/6681d949130379907e3aab5e454668aa2159e69e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.45.0
+
 ## [1.81.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.80.3...@leather.io/ui-v1.81.0) (2025-09-08)
 
 

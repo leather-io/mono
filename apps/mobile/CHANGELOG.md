@@ -19,6 +19,33 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.73.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.72.0...@leather.io/mobile-v2.73.0) (2025-09-10)
+
+
+### Features
+
+* token management ([6681d94](https://github.com/leather-io/mono/commit/6681d949130379907e3aab5e454668aa2159e69e))
+
+
+### Bug Fixes
+
+* **mobile:** fix incorrect fallback none loader ([8d4096f](https://github.com/leather-io/mono/commit/8d4096fa4ffbed5d490c6a3c0a6efbbed71c168e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.5
+    * @leather.io/crypto bumped to 1.11.10
+    * @leather.io/provider bumped to 1.5.12
+    * @leather.io/query bumped to 2.42.1
+    * @leather.io/rpc bumped to 2.20.11
+    * @leather.io/services bumped to 1.32.0
+    * @leather.io/stacks bumped to 1.16.5
+    * @leather.io/ui bumped to 1.82.0
+    * @leather.io/utils bumped to 0.45.0
+
 ## [2.72.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.71.0...@leather.io/mobile-v2.72.0) (2025-09-08)
 
 
