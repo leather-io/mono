@@ -2,11 +2,8 @@ import { createContext, useContext } from 'react';
 
 import { ExtensionState, whenExtensionState } from '~/utils/utils';
 
-export type BridgingStatus = 'enabled' | 'disabled';
-
 interface SbtcRewardContextValue {
   whenExtensionState: ReturnType<typeof whenExtensionState>;
-  bridgingStatus: BridgingStatus;
   extensionStatus: ExtensionState;
   onBridgeSbtc(): void;
   onSwapStxSbtc(): void;

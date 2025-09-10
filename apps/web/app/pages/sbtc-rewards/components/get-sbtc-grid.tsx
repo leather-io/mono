@@ -5,17 +5,12 @@ import { WhenClient } from '~/components/when-client';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { GetSbtcGridLayout } from '~/pages/sbtc-rewards/components/get-sbtc-grid.layout';
 
-import { Badge, Button } from '@leather.io/ui';
+import { Button } from '@leather.io/ui';
 
-import { BridgingStatus, useSbtcRewardContext } from '../sbtc-rewards-context';
-
-function MaxCapacity({ bridgingStatus }: { bridgingStatus: BridgingStatus }) {
-  if (bridgingStatus !== 'disabled') return null;
-  return <Badge mt="space.03" mb="space.03" variant="info" label="Max bridging capacity reached" />;
-}
+import { useSbtcRewardContext } from '../sbtc-rewards-context';
 
 function BridgeToSbtcCell() {
-  const { onBridgeSbtc, bridgingStatus, whenExtensionState } = useSbtcRewardContext();
+  const { onBridgeSbtc, whenExtensionState } = useSbtcRewardContext();
 
   return (
     <Flex flexDir={['column', 'row', 'column', 'row']} justifyContent="space-between" p="space.05">
@@ -24,7 +19,7 @@ function BridgeToSbtcCell() {
 
         <Box mt="space.04">
           <styled.h4 textStyle="heading.05">Bridge BTC to sBTC</styled.h4>
-          <MaxCapacity bridgingStatus={bridgingStatus} />
+
           <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
             Bridge BTC to Stacks using the sBTC protocol and unlock new ways to earn Bitcoin through
             DeFi apps in Leather.
@@ -38,7 +33,7 @@ function BridgeToSbtcCell() {
           <Button
             onClick={onBridgeSbtc}
             disabled={whenExtensionState({
-              connected: bridgingStatus !== 'enabled',
+              connected: false,
               detected: true,
               missing: true,
             })}
