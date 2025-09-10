@@ -1,9 +1,9 @@
 import { RefObject, useImperativeHandle, useRef, useState } from 'react';
 
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
-import { useCurrentAccount } from '@/core/current-account-provider';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
+import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 
 import { SheetInstance, useHaptics } from '@leather.io/ui/native';
@@ -24,7 +24,7 @@ export function ReceiveSheet() {
   const ref = useRef<SheetInstance>(null);
   const [receiveType, setReceiveType] = useState<ReceiveType>('all');
   const triggerHaptics = useHaptics();
-  const { currentAccount } = useCurrentAccount();
+  const { currentAccount } = useSettings();
   assertExistence(currentAccount, `"Receive Sheet expects currentAccount to be set`);
 
   function handleAnimatedPositionChange(fromIndex: number, toIndex: number) {

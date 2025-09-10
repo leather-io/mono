@@ -5,7 +5,6 @@ import { getTransferSip10TxHex } from '@/features/approver/utils';
 import { useSendMax } from '@/features/send/hooks/use-send-max';
 import { useSendNavigation } from '@/features/send/navigation';
 import { calculateDefaultStacksFee } from '@/features/send/utils';
-import { Account } from '@/store/accounts/accounts';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
@@ -13,13 +12,13 @@ import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/core/macro';
 
-import { Money, Sip10Asset } from '@leather.io/models';
+import { AccountId, Money, Sip10Asset } from '@leather.io/models';
 import { convertAmountToBaseUnit, unitToFractionalUnit } from '@leather.io/utils';
 
 import { StxFormSchema, useStxSendFormSchema } from './stx-form-schema';
 
 interface UseSip10FormProps {
-  account: Account;
+  account: AccountId;
   asset: Sip10Asset;
   availableBalance: Money;
   nonce: number | undefined;

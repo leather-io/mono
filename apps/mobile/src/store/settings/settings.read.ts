@@ -18,6 +18,7 @@ import {
   bitcoinUnitsKeyedByName,
 } from '@leather.io/constants';
 import {
+  AccountId,
   NetworkConfiguration,
   WalletDefaultNetworkConfigurationIds,
   defaultNetworksKeyedById,
@@ -96,6 +97,8 @@ export const selectLanguagePreferenceSource = createSelector(
 
 export const selectAssetVisibility = createSelector(selectSettings, state => state.assetVisibility);
 
+export const selectCurrentAccount = createSelector(selectSettings, state => state.currentAccount);
+
 export function usePrivacyMode() {
   const privacyMode = useSelector(selectPrivacyModePreference);
   return privacyMode === 'hidden';
@@ -144,4 +147,14 @@ function getNetworkFromNetworkName(stacksNetworkName: StacksNetworkName) {
 export function getStacksNetworkFromName(stacksNetworkName: StacksNetworkName): StacksNetwork {
   const networkConfig = getNetworkFromNetworkName(stacksNetworkName);
   return getStacksNetworkFromNetworkConfig(networkConfig);
+}
+
+interface CurrentAccountLoaderProps {
+  children(data: AccountId): React.ReactNode;
+  fallback: React.ReactNode;
+}
+export function CurrentAccountLoader({ fallback, children }: CurrentAccountLoaderProps) {
+  const { currentAccount } = useSettings();
+  if (currentAccount) return children(currentAccount);
+  return fallback;
 }

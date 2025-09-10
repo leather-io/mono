@@ -2,9 +2,9 @@ import { Balance } from '@/components/balance/balance';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { isStacking } from '@/features/balances/utils';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
-import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 
+import { AccountId } from '@leather.io/models';
 import {
   Box,
   Pressable,
@@ -14,7 +14,7 @@ import {
 } from '@leather.io/ui/native';
 
 interface AccountStacking {
-  account: Account;
+  account: AccountId;
 }
 
 export function AccountStacking({ account }: AccountStacking) {

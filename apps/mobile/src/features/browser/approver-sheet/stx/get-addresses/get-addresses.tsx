@@ -2,14 +2,14 @@ import { useRef, useState } from 'react';
 
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
 import { GetAddressesApproverLayout } from '@/features/approver/layouts/get-addresses.layout';
-import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userConnectsApp } from '@/store/apps/apps.write';
 import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
-import { useAppDispatch } from '@/store/utils';
+import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
 import { bytesToHex } from '@stacks/common';
 
+import { AccountId } from '@leather.io/models';
 import {
   RpcRequest,
   RpcResponse,
@@ -67,8 +67,8 @@ export function StxGetAddressesApprover(props: StxGetAddressesApproverProps) {
   function onOpenAccountSelection() {
     accountSelecterSheetRef.current?.present();
   }
-  function onAccountPress(account: Account) {
-    setSelectedAccountId(account.id);
+  function onAccountPress(account: AccountId) {
+    setSelectedAccountId(makeAccountIdentifer(account.fingerprint, account.accountIndex));
     accountSelecterSheetRef.current?.close();
   }
   return (

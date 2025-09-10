@@ -1,6 +1,7 @@
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 import { ReceiveFlowProvider, ReceiveType } from '@/features/receive/receive-flow-provider';
-import { Account } from '@/store/accounts/accounts';
+
+import { AccountId } from '@leather.io/models';
 
 import { ReceiveNavigator, ReceiveStack } from './navigation';
 import { AssetDetails } from './screens/asset-details';
@@ -8,7 +9,7 @@ import { SelectAsset, SelectedAsset } from './screens/select-asset';
 
 interface ReceiveProps {
   selectedAsset?: SelectedAsset;
-  currentAccount: Account;
+  currentAccount: AccountId;
   receiveType: ReceiveType;
 }
 

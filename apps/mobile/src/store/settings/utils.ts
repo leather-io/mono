@@ -3,6 +3,7 @@ import z from 'zod';
 
 import {
   AccountDisplayPreference,
+  AccountId,
   AnalyticsPreference,
   BitcoinUnit,
   DefaultNetworkConfigurations,
@@ -24,6 +25,7 @@ export type HapticsPreference = 'disabled' | 'enabled';
 export type LastActiveTimestamp = number | null;
 export type LanguagePreferenceSource = 'system' | 'user-selection';
 export type AssetVisibility = Record<SerializedCryptoAssetId, boolean>;
+export type CurrentAccount = AccountId | null;
 
 export interface SettingsState {
   accountDisplayPreference: AccountDisplayPreference;
@@ -42,6 +44,7 @@ export interface SettingsState {
   languagePreference: AvailableLanguageCode;
   languagePreferenceSource: LanguagePreferenceSource;
   assetVisibility: AssetVisibility;
+  currentAccount: CurrentAccount;
 }
 
 // lose schema definition, we don't infer SettingsState type from it to keep it simple
@@ -61,4 +64,5 @@ export const settingsSchema = z.object({
   languagePreference: z.string().optional(),
   languagePreferenceSource: z.string().optional(),
   assetVisibility: z.record(z.string(), z.boolean()),
+  currentAccount: z.union([z.object(), z.null()]),
 });

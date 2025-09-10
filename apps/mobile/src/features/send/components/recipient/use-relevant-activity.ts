@@ -1,16 +1,15 @@
 import { FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
-import { Account } from '@/store/accounts/accounts';
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 import { filter, isDefined, isShallowEqual, pipe } from 'remeda';
 
-import { Activity, FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
+import { AccountId, Activity, FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
 import { getActivityService } from '@leather.io/services';
 
 interface UseRelevantActivityProps {
   asset: FungibleCryptoAsset;
-  currentAccount: Account;
+  currentAccount: AccountId;
 }
 
 export function useRelevantActivity({ asset, currentAccount }: UseRelevantActivityProps) {

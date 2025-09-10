@@ -1,12 +1,13 @@
 import { AssetType, ReceivableAsset, getAssets } from '@/features/receive/get-assets';
-import { Account } from '@/store/accounts/accounts';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
+
+import { AccountId } from '@leather.io/models';
 
 import { ReceiveType } from './receive-flow-provider';
 
 interface UseSelectAssetProps {
-  currentAccount: Account;
+  currentAccount: AccountId;
   receiveType: ReceiveType;
 }
 export function useSelectAssets({

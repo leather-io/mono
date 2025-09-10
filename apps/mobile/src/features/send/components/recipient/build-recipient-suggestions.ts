@@ -10,9 +10,10 @@ import {
   normalizeSearchTerm,
 } from '@/features/send/components/recipient/recipient.utils';
 import { type Account } from '@/store/accounts/accounts';
+import { makeAccountIdentifer } from '@/store/utils';
 import { filter, map, pipe, prop, sortBy, take, uniqueBy } from 'remeda';
 
-import { SendAssetActivity } from '@leather.io/models';
+import { AccountId, SendAssetActivity } from '@leather.io/models';
 
 export interface BuildRecipientSuggestionsParams {
   searchTerm: string;
@@ -23,7 +24,7 @@ export interface BuildRecipientSuggestionsParams {
   getAddressByAccount: (fingerprint: string, accountIndex: number) => string | null;
   performBnsLookup: (name: string) => Promise<string | null>;
   validateAddress: (value: string) => Promise<boolean>;
-  currentAccount: Account;
+  currentAccount: AccountId;
 }
 
 export async function buildRecipientSuggestions({
@@ -130,7 +131,7 @@ interface GetAccountsParams {
   accounts: Account[];
   getAddressByAccount: (fingerprint: string, accountIndex: number) => string | null;
   canSelfSend: boolean;
-  currentAccount: Account;
+  currentAccount: AccountId;
 }
 
 export function getAccounts({
@@ -139,9 +140,13 @@ export function getAccounts({
   canSelfSend,
   currentAccount,
 }: GetAccountsParams): InternalRecipientSuggestionEntry[] {
+  const currentAccountId = makeAccountIdentifer(
+    currentAccount.fingerprint,
+    currentAccount.accountIndex
+  );
   return pipe(
     accounts,
-    filter(account => canSelfSend || account.id !== currentAccount.id),
+    filter(account => canSelfSend || account.id !== currentAccountId),
     map(account => ({
       type: 'internal' as const,
       id: account.id,

@@ -11,10 +11,11 @@ import {
 } from '@leather.io/models';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { handleAppResetWithState } from '../global-action';
-import { handleLanguagePreferenceHydration } from './language-preference-hydration';
+import { handleAppResetWithState, userAddsWallet } from '../global-action';
 import { initialState } from './settings';
+import { handleSettingsRehydration } from './settings-rehydration';
 import {
+  CurrentAccount,
   HapticsPreference,
   LanguagePreferenceSource,
   LastActiveTimestamp,
@@ -82,10 +83,22 @@ export const settingsSlice = createSlice({
         [action.payload.assetId]: action.payload.value,
       };
     },
+    userChangedCurrentAccount(state, action: PayloadAction<{ account: CurrentAccount }>) {
+      state.currentAccount = action.payload.account;
+    },
   },
   extraReducers: builder => {
+    builder.addCase(REHYDRATE, handleSettingsRehydration);
+    builder.addCase(userAddsWallet, (state, action) => {
+      return {
+        ...state,
+        currentAccount: {
+          fingerprint: action.payload.wallet.fingerprint,
+          accountIndex: 0,
+        },
+      };
+    });
     builder.addCase(...handleAppResetWithState(initialState));
-    builder.addCase(REHYDRATE, handleLanguagePreferenceHydration);
   },
 });
 
@@ -105,4 +118,5 @@ export const {
   userChangedLanguagePreference,
   userChangedLanguagePreferenceSource,
   userChangedAssetVisibility,
+  userChangedCurrentAccount,
 } = settingsSlice.actions;

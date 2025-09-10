@@ -1,10 +1,10 @@
 import { RefObject, useImperativeHandle, useRef, useState } from 'react';
 
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
-import { useCurrentAccount } from '@/core/current-account-provider';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 import { Send } from '@/features/send/send';
+import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 
 import { FungibleCryptoAsset } from '@leather.io/models';
@@ -21,7 +21,7 @@ export function SendSheet() {
   const { sendSheetRef } = useGlobalSheets();
   const ref = useRef<SheetInstance>(null);
   const triggerHaptics = useHaptics();
-  const { currentAccount } = useCurrentAccount();
+  const { currentAccount } = useSettings();
   const [asset, setAsset] = useState<FungibleCryptoAsset | undefined>(undefined);
   assertExistence(currentAccount, `"Send Sheet expects currentAccount to be set`);
 

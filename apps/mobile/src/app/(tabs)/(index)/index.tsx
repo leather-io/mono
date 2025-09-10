@@ -1,6 +1,6 @@
 import { HomeScreenWithAccount } from '@/components/home/home-with-account-screen';
 import { HomeScreenWithoutAccount } from '@/components/home/home-without-account-screen';
-import { CurrentAccountLoader } from '@/core/current-account-provider';
+import { CurrentAccountLoader } from '@/store/settings/settings.read';
 
 export default function HomeScreen() {
   return (

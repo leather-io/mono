@@ -6,17 +6,16 @@ import {
   useRecipientEvaluator,
 } from '@/features/send/components/recipient/use-recipient-evaluator';
 import { useRelevantActivity } from '@/features/send/components/recipient/use-relevant-activity';
-import { Account } from '@/store/accounts/accounts';
 import type { ZodSchema } from 'zod';
 
-import { FungibleCryptoAsset, SupportedBlockchains } from '@leather.io/models';
+import { AccountId, FungibleCryptoAsset, SupportedBlockchains } from '@leather.io/models';
 import { SheetInstance } from '@leather.io/ui/native';
 
 interface UseRecipientStateParams {
   recipientSchema: ZodSchema;
   asset: FungibleCryptoAsset;
   onChange: (address: string) => void;
-  currentAccount: Account;
+  currentAccount: AccountId;
 }
 
 export function useRecipientState({

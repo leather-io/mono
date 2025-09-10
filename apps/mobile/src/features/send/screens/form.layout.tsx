@@ -2,17 +2,16 @@ import { BtcForm } from '@/features/send/forms/btc/btc-form';
 import { BtcDataLoader } from '@/features/send/forms/btc/btc-loader';
 import { StxForm } from '@/features/send/forms/stx/stx-form';
 import { StxDataLoader } from '@/features/send/forms/stx/stx-loader';
-import { Account } from '@/store/accounts/accounts';
 import { useSettings } from '@/store/settings/settings';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
+import { AccountId, FungibleCryptoAsset } from '@leather.io/models';
 
 import { Sip10Form } from '../forms/stx/sip10-form';
 import { Sip10DataLoader } from '../forms/stx/sip10-loader';
 
 interface FormLayoutProps {
   selectedAsset: FungibleCryptoAsset;
-  currentAccount: Account;
+  currentAccount: AccountId;
   handleOpenAssetPicker(): void;
   assetItemElementInitialOffset: number | null | undefined;
 }

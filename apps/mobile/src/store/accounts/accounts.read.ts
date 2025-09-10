@@ -4,7 +4,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { RootState } from '..';
 import { useAppSelector } from '../utils';
-import { initalizeAccount } from './accounts';
+import { initializeAccount } from './accounts';
 import { accountsAdapter } from './accounts.write';
 import { AccountStatus } from './utils';
 
@@ -14,11 +14,11 @@ function selectAccounts(status?: AccountStatus) {
   return createSelector(selectors.selectAll, accounts => {
     switch (status) {
       case 'active':
-        return accounts.filter(account => account.status === 'active').map(initalizeAccount);
+        return accounts.filter(account => account.status === 'active').map(initializeAccount);
       case 'hidden':
-        return accounts.filter(account => account.status === 'hidden').map(initalizeAccount);
+        return accounts.filter(account => account.status === 'hidden').map(initializeAccount);
       default:
-        return accounts.map(initalizeAccount);
+        return accounts.map(initializeAccount);
     }
   });
 }
@@ -33,7 +33,7 @@ function selectByAccountIds(accountIds: string[]) {
       .map(id => entities[id])
       .map(account => {
         if (!account) throw new Error('No account found');
-        return initalizeAccount(account);
+        return initializeAccount(account);
       })
   );
 }
@@ -80,7 +80,7 @@ export function useAccountByIndex(fingerprint: string, index: number) {
 export function useAccountByAccoundId(accountId: string) {
   return useAppSelector(state => {
     const account = selectors.selectById(state, accountId);
-    if (account) return initalizeAccount(account);
+    if (account) return initializeAccount(account);
     return;
   });
 }

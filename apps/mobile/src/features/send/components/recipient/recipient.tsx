@@ -10,18 +10,17 @@ import { RecipientToggle } from '@/features/send/components/recipient/recipient-
 import { useRecipientState } from '@/features/send/components/recipient/use-recipient-state';
 import { matchRelevantActivityResult } from '@/features/send/components/recipient/use-relevant-activity';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
-import { Account } from '@/store/accounts/accounts';
 import { analytics } from '@/utils/analytics';
 import { type ZodSchema } from 'zod';
 
-import { type FungibleCryptoAsset } from '@leather.io/models';
+import { AccountId, type FungibleCryptoAsset } from '@leather.io/models';
 
 interface RecipientProps {
   value: string;
   onChange(value: string): void;
   asset: FungibleCryptoAsset;
   recipientSchema: ZodSchema;
-  currentAccount: Account;
+  currentAccount: AccountId;
 }
 
 export const Recipient = memo(
