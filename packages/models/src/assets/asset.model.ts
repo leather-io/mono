@@ -1,4 +1,3 @@
-import { BnsName } from '../bns.model';
 import { InscriptionMimeType } from '../inscription-mime-type.model';
 
 export const CryptoAssetChains = {
@@ -155,12 +154,7 @@ export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   };
 }
 
-export interface BnsNameAsset extends BaseNonFungibleCryptoAsset, BnsName {
-  readonly chain: 'stacks';
-  readonly protocol: 'sip9';
-  readonly collection: 'bns';
-}
-export type NonFungibleCryptoAsset = InscriptionAsset | StampAsset | Sip9Asset | BnsNameAsset;
+export type NonFungibleCryptoAsset = InscriptionAsset | StampAsset | Sip9Asset;
 
 export type CryptoAsset = FungibleCryptoAsset | NonFungibleCryptoAsset;
 

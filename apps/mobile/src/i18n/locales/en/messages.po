@@ -753,7 +753,7 @@ msgstr "Icons"
 msgid "ID copied to clipboard"
 msgstr "ID copied to clipboard"
 
-#: src/features/collectibles/render-collectible.tsx:16
+#: src/features/collectibles/render-collectible.tsx:21
 msgid "Image currently unavailable"
 msgstr "Image currently unavailable"
 
