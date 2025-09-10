@@ -20,5 +20,11 @@ export default [
     index('pages/advanced/advanced.route.tsx'),
     route('signer-key-generation', 'pages/advanced/tools/signer-key-generation.route.tsx'),
   ]),
+  route('help-center', 'pages/help-center/help-center.route.tsx'),
+  ...prefix('help-center/:slug', [
+    index('pages/help-center/category-guides/category-guides.route.tsx'),
+  ]),
+  ...prefix('help-center/guide/:slug', [index('pages/help-center/guide/guide.route.tsx')]),
+  // Fallback route
   route('*', 'pages/error/error-not-found.route.tsx'),
 ] satisfies RouteConfig;

@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "5.0.2",
+    "@sanity/icons": "3.7.4",
     "@sanity/vision": "4.6.1",
     "@types/react": "19.0.12",
     "concurrently": "8.2.2",

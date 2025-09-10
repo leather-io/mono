@@ -76,8 +76,8 @@ export function NavContents() {
         <NavItem href={externalLeatherNavigator.docs} newTab icon={<CodeIcon variant="small" />}>
           Developers
         </NavItem>
-        <NavItem href={externalLeatherNavigator.support} icon={<SupportIcon variant="small" />}>
-          Help
+        <NavItem href="/help-center" icon={<SupportIcon variant="small" />}>
+          Help Center
         </NavItem>
       </styled.div>
     </>

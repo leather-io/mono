@@ -44,8 +44,8 @@ export function NavItem({ children, icon, href, newTab }: NavItemProps) {
             alignItems="center"
             justifyContent="center"
             mr="space.04"
-            display="none"
             _groupHover={{ display: 'flex' }}
+            display="none"
           >
             <RotatedArrow color="ink.text-subdued" />
           </Box>

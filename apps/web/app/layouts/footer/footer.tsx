@@ -7,9 +7,11 @@ function AppFooter() {
     <Footer>
       <Footer.Grid>
         <Footer.Column title="Dive deeper">
-          <Footer.Link href={externalLeatherNavigator.guides}>Guide</Footer.Link>
+          <Footer.Link href="/help-center">Help Center</Footer.Link>
           <Footer.Link href={externalLeatherNavigator.blog}>Blog</Footer.Link>
-          <Footer.Link href={externalLeatherNavigator.docs}>Developer docs</Footer.Link>
+          <Footer.Link withIcon href={externalLeatherNavigator.docs}>
+            Developer docs
+          </Footer.Link>
         </Footer.Column>
 
         <Footer.Column title="Legal & policies">

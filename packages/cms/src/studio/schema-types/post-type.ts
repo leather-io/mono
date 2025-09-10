@@ -1,9 +1,11 @@
+import { ArchiveIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 
 export const postType = defineType({
   name: 'post',
   title: 'Post (Legacy)',
   type: 'document',
+  icon: ArchiveIcon,
   fields: [
     defineField({
       name: 'title',

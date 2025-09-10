@@ -6,6 +6,7 @@ export const csp = builder({
     // Ideally we remove unsafe-inline, however this too involved to add with
     // RR7 for leather web launch
     scriptSrc: [`'self'`, `'unsafe-inline'`],
+    frameSrc: [`'self'`, 'https://www.youtube.com'],
     styleSrc: [`'self'`, "'unsafe-inline'"],
     objectSrc: [`'none'`],
     baseUri: [`'self'`],
