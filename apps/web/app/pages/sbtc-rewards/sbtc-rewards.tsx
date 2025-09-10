@@ -9,7 +9,6 @@ import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { Page } from '~/layouts/page/page';
 import { SbtcRewardsPageHeading } from '~/pages/sbtc-rewards/components/sbtc-rewards-page-heading';
 import { loader } from '~/pages/sbtc-rewards/sbtc.route';
-import { useRemainingSbtcSupply } from '~/queries/sbtc/use-remaining-sbtc-supply';
 import { useLeatherConnect } from '~/store/addresses';
 import { analytics } from '~/utils/analytics/analytics';
 import { openExternalLink } from '~/utils/external-links';
@@ -25,7 +24,6 @@ import { SbtcRewardContext } from './sbtc-rewards-context';
 export function SbtcRewards(): ReactElement {
   const { sbtcPools, sbtcEnroll } = useLoaderData<typeof loader>();
   const { status, whenExtensionState } = useLeatherConnect();
-  const remainingSbtcPegCapSupply = useRemainingSbtcSupply();
 
   async function bridgeSbtc() {
     analytics.untypedTrack('bridge_btc_sbtc_opened');
@@ -41,7 +39,6 @@ export function SbtcRewards(): ReactElement {
     <SbtcRewardContext.Provider
       value={{
         whenExtensionState,
-        bridgingStatus: remainingSbtcPegCapSupply?.isGreaterThan(0) ? 'enabled' : 'disabled',
         extensionStatus: status,
         onBridgeSbtc: bridgeSbtc,
         onSwapStxSbtc: swapStxSbtc,
