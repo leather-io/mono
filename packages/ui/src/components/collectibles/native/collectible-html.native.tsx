@@ -19,6 +19,14 @@ export function CollectibleHtml({ src, height = 200 }: CollectibleHtmlProps) {
         startInLoadingState={true}
         cacheEnabled={false}
         incognito={true}
+        onError={syntheticEvent => {
+          const { nativeEvent } = syntheticEvent;
+          console.warn('WebView error:', nativeEvent.description);
+        }}
+        onHttpError={syntheticEvent => {
+          const { nativeEvent } = syntheticEvent;
+          console.warn('WebView HTTP error:', nativeEvent.statusCode, nativeEvent.description);
+        }}
       />
     </CollectibleCard>
   );
