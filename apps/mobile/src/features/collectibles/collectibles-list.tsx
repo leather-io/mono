@@ -6,15 +6,14 @@ import { Screen } from '@/components/screen/screen';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { useAccountBnsNames } from '@/queries/bns/bns.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
-import { Account } from '@/store/accounts/accounts';
 
-import { NonFungibleCryptoAsset } from '@leather.io/models';
+import { AccountId, NonFungibleCryptoAsset } from '@leather.io/models';
 
 import { EmptyCollectiblesState } from './empty-collectibles-state';
 import { renderCollectible } from './render-collectible';
 
 interface CollectiblesListProps {
-  currentAccount: Account;
+  currentAccount: AccountId;
   header: ReactElement;
 }
 

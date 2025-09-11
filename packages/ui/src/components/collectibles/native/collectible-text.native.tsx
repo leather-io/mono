@@ -17,7 +17,7 @@ export function CollectibleText({ src, height = 200 }: CollectibleTextProps) {
         const response = await fetch(src);
         const textData = await response.text();
         setContent(textData);
-      } catch (error) {
+      } catch {
         setContent('Content not found');
       }
     }
