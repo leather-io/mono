@@ -33,12 +33,12 @@ function Bns({ name }: { name: string }) {
 }
 
 function Sip9({ item }: { item: Sip9Asset }) {
-  if (!item.cachedImage) return <FallbackImage />;
+  if (!item.cachedImage || item.cachedImage.trim() === '') return <FallbackImage />;
   return <CollectibleImage source={item.cachedImage} alt={item.name} height={200} />;
 }
 
 function InscriptionComponent({ item }: { item: InscriptionAsset }) {
-  if (!item.src) return <FallbackImage />;
+  if (!item.src || item.src.trim() === '') return <FallbackImage />;
   return <Inscription name={item.title} mimeType={item.mimeType} height={200} src={item.src} />;
 }
 

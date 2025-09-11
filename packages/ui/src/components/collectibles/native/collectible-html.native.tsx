@@ -6,11 +6,20 @@ interface CollectibleHtmlProps {
   src: string;
   height?: number;
 }
-
 export function CollectibleHtml({ src, height = 200 }: CollectibleHtmlProps) {
   return (
     <CollectibleCard height={height}>
-      <WebView source={{ uri: src }} scrollEnabled={false} />
+      <WebView
+        source={{ uri: src }}
+        scrollEnabled={false}
+        originWhitelist={['*']}
+        mixedContentMode="always"
+        allowsInlineMediaPlayback={true}
+        mediaPlaybackRequiresUserAction={false}
+        startInLoadingState={true}
+        cacheEnabled={false}
+        incognito={true}
+      />
     </CollectibleCard>
   );
 }
