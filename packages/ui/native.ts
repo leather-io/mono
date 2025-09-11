@@ -1,5 +1,5 @@
 export { Accordion } from './src/components/accordion/accordion.native';
-export { Avatar } from './src/components/avatar/avatar.native';
+export { Avatar, type AvatarProps } from './src/components/avatar/avatar.native';
 export {
   BulletSeparator,
   BulletOperator,
