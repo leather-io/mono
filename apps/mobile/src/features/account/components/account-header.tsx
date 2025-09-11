@@ -1,10 +1,21 @@
+import { useEffect } from 'react';
+
 import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWalletByFingerprint, useWallets } from '@/store/wallets/wallets.read';
+import { captureMessage } from '@sentry/react-native';
+import { once } from 'remeda';
 
 import { AccountId } from '@leather.io/models';
 import { Box, Pressable, Text } from '@leather.io/ui/native';
-import { assertExistence } from '@leather.io/utils';
+
+const triggerAccountDataWarning = once(() => {
+  captureMessage('AccountHeader was unable to pull account data from store', {
+    level: 'warning',
+  });
+  // eslint-disable-next-line no-console
+  console.warn('AccountHeader was unable to pull account data from store');
+});
 
 interface AccountHeaderProps {
   account: AccountId;
@@ -21,7 +32,11 @@ export function AccountHeader({ account, onPress }: AccountHeaderProps) {
   const hasOneAccount = accounts.length === 1;
   const hasOneWallet = wallets.length === 1;
 
-  assertExistence(accountData, 'AccountHeader was unable to pull account data from store');
+  useEffect(() => {
+    if (!accountData) {
+      triggerAccountDataWarning();
+    }
+  }, [accountData]);
 
   return (
     <Pressable
@@ -31,9 +46,9 @@ export function AccountHeader({ account, onPress }: AccountHeaderProps) {
       alignItems="center"
       gap="3"
     >
-      <AccountAvatar variant="sm" icon={accountData.icon} />
+      <AccountAvatar variant="sm" icon={accountData?.icon ?? 'home'} />
       <Box>
-        <Text variant="label01">{accountData.name}</Text>
+        <Text variant="label01">{accountData?.name}</Text>
         {!hasOneWallet && wallet && (
           <Text variant="label02" color="ink.text-subdued">
             {wallet.name}
