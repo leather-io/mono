@@ -1,5 +1,5 @@
 import StacksIcon from '../../assets/icons/stacks.svg';
-import { Avatar } from './avatar.native';
+import { Avatar, type AvatarProps } from './avatar.native';
 import { SbtcAvatarIcon } from './sbtc-avatar-icon.native';
 
 function getFallbackAvatar(contractId: string) {
@@ -8,13 +8,20 @@ function getFallbackAvatar(contractId: string) {
   return `https://avatar.vercel.sh/${contractId}?size=36`;
 }
 
-interface Sip10AvatarIconProps {
+interface Sip10AvatarIconProps extends Omit<AvatarProps, 'indicator'> {
+  indicator?: boolean;
   contractId: string;
   imageCanonicalUri: string;
   name: string;
 }
 
-export function Sip10AvatarIcon({ contractId, imageCanonicalUri, name }: Sip10AvatarIconProps) {
+export function Sip10AvatarIcon({
+  contractId,
+  imageCanonicalUri,
+  name,
+  indicator = false,
+  ...props
+}: Sip10AvatarIconProps) {
   // TODO LEA-2551: use leather design system for more avatars
   if (name === 'sBTC') {
     return <SbtcAvatarIcon />;
@@ -23,8 +30,9 @@ export function Sip10AvatarIcon({ contractId, imageCanonicalUri, name }: Sip10Av
     <Avatar
       image={imageCanonicalUri !== '' ? imageCanonicalUri : getFallbackAvatar(contractId)}
       imageAlt={name}
-      indicator={<StacksIcon width={16} height={16} />}
+      indicator={indicator ? <StacksIcon width={16} height={16} /> : undefined}
       showFauxBorder={false}
+      {...props}
     />
   );
 }

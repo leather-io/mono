@@ -33,7 +33,7 @@ const sizeStyles: Record<AvatarSize, BoxProps> = {
 // Using ComponentRef instead of ElementRef for React 19 compatibility
 type AvatarElement = React.ComponentRef<typeof Box>;
 
-interface AvatarProps extends BoxProps {
+export interface AvatarProps extends BoxProps {
   size?: AvatarSize;
   variant?: AvatarVariant;
   icon?: ReactElement<IconProps>;
