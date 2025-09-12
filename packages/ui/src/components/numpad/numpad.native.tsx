@@ -133,7 +133,7 @@ export function Numpad({
   }
 
   return (
-    <Box flexDirection="row" flexWrap="wrap" gap="2" px="2">
+    <Box flexDirection="row" flexWrap="wrap" gap="2">
       {getLayout(mode, decimalSeparator).map((keyItem, index) => {
         return (
           <NumpadKeySlot key={keyItem ? keyItem.id : `empty-slot-${index}`}>
