@@ -1,4 +1,5 @@
 import { t } from '@lingui/core/macro';
+import { useRouter } from 'expo-router';
 
 import { Button, ButtonProps } from '@leather.io/ui/native';
 
@@ -17,6 +18,8 @@ export function ActionButtons({
   onSend,
   onReceive,
 }: ActionButtonsProps) {
+  const { navigate } = useRouter();
+
   return (
     <>
       <Button
@@ -37,6 +40,16 @@ export function ActionButtons({
         flex={fullWidth ? 1 : 0}
       >
         {t`Receive`}
+      </Button>
+
+      <Button
+        onPress={() => navigate({ pathname: '/swap' })}
+        minWidth={86}
+        size={size}
+        variant="outline"
+        flex={fullWidth ? 1 : 0}
+      >
+        {t`Swap`}
       </Button>
     </>
   );

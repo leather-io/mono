@@ -77,6 +77,7 @@ function App() {
         <StatusBar />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="swap" options={{ presentation: 'containedModal' }} />
         </Stack>
         {currentAccount && (
           <>

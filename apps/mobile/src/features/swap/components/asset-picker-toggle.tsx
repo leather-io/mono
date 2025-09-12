@@ -1,0 +1,65 @@
+import { t } from '@lingui/core/macro';
+
+import { FungibleCryptoAsset } from '@leather.io/models';
+import {
+  Box,
+  BtcAvatarIcon,
+  ChevronDownIcon,
+  Pressable,
+  Sip10AvatarIcon,
+  StxAvatarIcon,
+  Text,
+} from '@leather.io/ui/native';
+
+interface AssetPickerTriggerProps {
+  asset: FungibleCryptoAsset | undefined;
+  onPress(): void;
+}
+
+export function AssetPickerToggle({ asset, onPress }: AssetPickerTriggerProps) {
+  return (
+    <Pressable
+      flexDirection="row"
+      alignItems="center"
+      gap="2"
+      pl="1"
+      pr="2"
+      bg="ink.component-background-hover"
+      height={32}
+      borderRadius="round"
+      onPress={onPress}
+    >
+      {renderAvatar(asset)}
+      <Text ml="-0.5" variant="label03">
+        {asset ? asset.symbol : t`Select`}
+      </Text>
+      <ChevronDownIcon variant="small" />
+    </Pressable>
+  );
+}
+
+function renderAvatar(asset: FungibleCryptoAsset | undefined) {
+  if (!asset) {
+    return <Box width={24} height={24} borderRadius="round" bg="ink.action-primary-default" />;
+  }
+
+  if (asset.symbol === 'BTC') {
+    return <BtcAvatarIcon size="sm" />;
+  }
+
+  if (asset.symbol === 'STX') {
+    return <StxAvatarIcon size="sm" />;
+  }
+
+  if (asset?.protocol === 'sip10') {
+    return (
+      <Sip10AvatarIcon
+        size="sm"
+        contractId={asset.contractId}
+        imageCanonicalUri={asset.imageCanonicalUri}
+        name={asset.name}
+      />
+    );
+  }
+  return null;
+}

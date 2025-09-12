@@ -874,6 +874,10 @@ msgstr "Matching"
 msgid "Max"
 msgstr "Max"
 
+#: src/features/swap/components/amount-presets.tsx:19
+msgid "MAX"
+msgstr "MAX"
+
 #: src/components/app-update-required/app-update-required-sheet.tsx:46
 msgid "Maybe later"
 msgstr "Maybe later"
@@ -1038,7 +1042,7 @@ msgstr "Push"
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
-#: src/components/action-buttons.tsx:39
+#: src/components/action-buttons.tsx:42
 #: src/features/receive/screens/asset-details.tsx:57
 #: src/features/receive/screens/select-asset.tsx:83
 msgid "Receive"
@@ -1098,7 +1102,10 @@ msgstr "Restore wallet"
 msgid "Reveal account"
 msgstr "Reveal account"
 
-#: src/features/swap/swap.tsx:50
+#: src/features/send/forms/btc/btc-form.tsx:126
+#: src/features/send/forms/stx/sip10-form.tsx:149
+#: src/features/send/forms/stx/stx-form.tsx:140
+#: src/features/swap/swap.tsx:46
 msgid "Review"
 msgstr "Review"
 
@@ -1139,12 +1146,16 @@ msgstr "Secure your wallet"
 msgid "Security"
 msgstr "Security"
 
+#: src/features/swap/components/asset-picker-toggle.tsx:34
+msgid "Select"
+msgstr "Select"
+
 #: src/features/receive/screens/select-asset.tsx:82
 #: src/features/send/screens/select-asset.tsx:35
 msgid "Select asset"
 msgstr "Select asset"
 
-#: src/components/action-buttons.tsx:29
+#: src/components/action-buttons.tsx:32
 #: src/features/send/screens/form.tsx:54
 #: src/features/send/screens/select-asset.tsx:35
 msgid "Send"
@@ -1250,6 +1261,11 @@ msgstr "Submitted"
 #: src/features/approver/components/approver-buttons.tsx:31
 msgid "Submitting..."
 msgstr "Submitting..."
+
+#: src/app/swap.tsx:12
+#: src/components/action-buttons.tsx:52
+msgid "Swap"
+msgstr "Swap"
 
 #: src/features/activity/utils/format-activity.ts:90
 msgid "Swap Assets"
