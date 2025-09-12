@@ -26,7 +26,7 @@ export function NumpadKey({ element, label, onPress, onLongPress }: NumpadKeyPro
       onLongPress={onLongPress}
     >
       {isString(element) ? (
-        <Text variant="heading04" allowFontScaling={false}>
+        <Text variant="heading04" allowFontScaling={false} fontSize={24}>
           {element}
         </Text>
       ) : (
