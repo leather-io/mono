@@ -1,0 +1,16 @@
+export enum OnboardingSelectors {
+  BackUpSecretKeyBtn = 'back-up-secret-key-btn',
+  LogoRouteToHome = 'logo-route-to-home',
+  NewPasswordInput = 'set-or-enter-password-input',
+  NoAssetsFundAccountLink = 'no-assets-fund-account-link',
+  SecretKey = 'secret-key',
+  SecretKeyInput = 'secret-key-input',
+  SetPasswordBtn = 'set-password-btn',
+  SignInBtn = 'sign-in-btn',
+  SignInLink = 'sign-in-link',
+  SignUpBtn = 'sign-up-btn',
+  StepItemDone = 'step-item-done',
+  StepItemStart = 'step-item-start',
+  StepsList = 'steps-list',
+  SignInSeedError = 'sign-in-seed-error',
+}

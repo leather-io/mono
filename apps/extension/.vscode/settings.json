@@ -1,0 +1,9 @@
+{
+  "prettier.documentSelectors": ["src/**/*.{ts,tsx}", "*.{js,json}"],
+  "vitest.include": ["src/**/*.spec.ts"],
+  "githubPullRequests.ignoredPullRequestBranches": ["dev"],
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "files.associations": {
+    "*.mdx": "markdown"
+  }
+}
