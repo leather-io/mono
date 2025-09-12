@@ -7,9 +7,11 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
-    "build:mobile": "turbo run build --filter=!./apps/web",
+    "build:extension": "turbo run build --filter=!./apps/mobile --filter=!./apps/web",
+    "build:mobile": "turbo run build --filter=!./apps/web --filter=!./apps/extension",
+    "build:packages": "turbo run build --filter=!./apps/*",
     "build:watch": "turbo run build:watch",
-    "build:web": "turbo run build --filter=!./apps/mobile",
+    "build:web": "turbo run build --filter=!./apps/mobile --filter=!./apps/extension",
     "check:all": "turbo run check:all",
     "clean": "git clean -dfX",
     "dev": "turbo run build:watch",
@@ -19,7 +21,7 @@
     "install:fresh": "pnpm install:clean && pnpm i",
     "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
     "knip": "knip",
-    "lint": "eslint --cache --max-warnings 0",
+    "lint": "eslint --cache --max-warnings 0 && turbo run lint",
     "lint:deps": "pnpm dependency-cruiser .",
     "lint:filenames": "pnpm ls-lint",
     "lint:fix": "pnpm lint --fix",
@@ -45,10 +47,11 @@
     "@tanstack/eslint-plugin-query": "5.62.1",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
-    "@trivago/prettier-plugin-sort-imports": "4.3.0",
+    "@trivago/prettier-plugin-sort-imports": "5.2.2",
     "@types/jest": "29.5.12",
     "@types/node": "24.0.8",
     "@vitest/coverage-v8": "2.1.5",
+    "audit-ci": "6.6.1",
     "chalk": "5.3.0",
     "dependency-cruiser": "16.10.0",
     "dotenv": "16.4.5",
@@ -75,7 +78,11 @@
     "overrides": {
       "cross-spawn": "7.0.5",
       "@microsoft/api-extractor": "7.52.8",
-      "@shopify/flash-list>tslib": "2.4.0"
+      "@shopify/flash-list>tslib": "2.4.0",
+      "levelup>semver": "5.7.2",
+      "sha.js": "2.4.12",
+      "sanity>tar-fs": "2.1.4",
+      "prebuild-install>tar-fs": "2.1.4"
     },
     "packageExtensions": {
       "@expo/cli@*": {
@@ -228,6 +235,10 @@
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
       "expo-secure-store@14.2.3": "patches/expo-secure-store@14.2.3.patch",
       "react-native-webview@13.14.1": "patches/react-native-webview@13.14.1.patch"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "sqlite3"
+    ]
   }
 }

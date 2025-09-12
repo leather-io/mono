@@ -1,4 +1,4 @@
-import { sanitize } from 'dompurify';
+import DOMPurify from 'dompurify';
 import { Box } from 'leather-styles/jsx';
 
 import { parseJson } from '@app/components/json';
@@ -35,7 +35,7 @@ export function InscriptionText(props: InscriptionTextProps) {
       textAlign="left"
       width="100%"
     >
-      <pre>{sanitize(parseJson(query.data))}</pre>
+      <pre>{DOMPurify.sanitize(parseJson(query.data))}</pre>
     </Box>
   );
 }

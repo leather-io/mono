@@ -1,7 +1,7 @@
 import type React from 'react';
 
 import { SwapSelectors } from '@tests/selectors/swap.selectors';
-import { sanitize } from 'dompurify';
+import DOMPurify from 'dompurify';
 import { HStack, styled } from 'leather-styles/jsx';
 
 import type { Money } from '@leather.io/models';
@@ -22,7 +22,7 @@ export function SwapAssetItemLayout({ caption, icon, symbol, value }: SwapAssetI
       img={
         isString(icon) ? (
           <styled.img
-            src={sanitize(icon)}
+            src={DOMPurify.sanitize(icon)}
             borderRadius="50%"
             width="48px"
             height="48px"

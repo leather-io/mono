@@ -5,6 +5,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { Tooltip } from '@leather.io/ui';
+
 import '@leather.io/ui/styles';
 
 import { GITHUB_ORG, GITHUB_REPO } from '@shared/constants';
@@ -20,7 +21,9 @@ import { AppRoutes } from '@app/routes/app-routes';
 import { persistor, store } from '@app/store';
 
 import localConfig from '../../config/wallet-config.json';
+
 import './index.css';
+
 import { LeatherQueryProvider } from './query/leather-query-provider';
 import { useCurrentNetwork } from './store/networks/networks.selectors';
 

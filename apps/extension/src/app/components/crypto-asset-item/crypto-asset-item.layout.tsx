@@ -1,4 +1,4 @@
-import { sanitize } from 'dompurify';
+import DOMPurify from 'dompurify';
 import { Box, Flex } from 'leather-styles/jsx';
 
 import type { Money } from '@leather.io/models';
@@ -118,7 +118,7 @@ export function CryptoAssetItemLayout({
     );
 
   return (
-    <Box my="space.02" data-testid={sanitize(dataTestId)}>
+    <Box my="space.02" data-testid={DOMPurify.sanitize(dataTestId)}>
       {content}
     </Box>
   );

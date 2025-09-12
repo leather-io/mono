@@ -1,6 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "packages": {
+    "apps/extension": {
+      "changelog-path": "CHANGELOG.md",
+      "bump-minor-pre-major": false,
+      "bump-patch-for-minor-pre-major": false,
+      "draft": false,
+      "prerelease": false
+    },
     "apps/mobile": {
       "changelog-path": "CHANGELOG.md",
       "bump-minor-pre-major": false,
@@ -147,5 +154,7 @@
       "type": "node-workspace"
     }
   ],
-  "extra-files": ["app.config.ts"]
+  "extra-files": [
+    "app.config.ts"
+  ]
 }

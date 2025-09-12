@@ -6,6 +6,9 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: read
+
 jobs:
   lint-prettier:
     runs-on: ubuntu-latest
@@ -96,3 +99,12 @@ jobs:
         with:
           token: ${{secrets.CODECOV_TOKEN}}
           files: ./app/mobile/coverage/.tmp/coverage-0.json
+
+  audit-dependencies:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Audit
+        run: pnpm audit-ci --high --skip-dev

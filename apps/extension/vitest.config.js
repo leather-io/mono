@@ -4,11 +4,6 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     include: 'src/**/*.spec.{ts,tsx}',
-    coverage: {
-      provider: 'istanbul',
-      reporter: ['text', 'json-summary', 'json', 'html'],
-      reportsDirectory: './coverage',
-    },
     globals: true,
     environment: 'node',
     setupFiles: './tests/unit/unit-test.setup.js',

@@ -1,7 +1,7 @@
 import { useRef, useTransition } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { sanitize } from 'dompurify';
+import DOMPurify from 'dompurify';
 import { Box, VStack } from 'leather-styles/jsx';
 
 import { ItemLayout, Pressable, Switch } from '@leather.io/ui';
@@ -62,7 +62,7 @@ export function CryptoAssetItemToggle({
 
   return (
     <Box my="space.02">
-      <Pressable onClick={onClick} data-testid={sanitize(assetId)}>
+      <Pressable onClick={onClick} data-testid={DOMPurify.sanitize(assetId)}>
         <ItemLayout
           img={icon}
           titleLeft={spamFilter(titleLeft)}

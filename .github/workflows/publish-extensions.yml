@@ -1,10 +1,10 @@
 name: Publish extensions
 
-on:
-  push:
-    tags-ignore:
-      - 'v*beta*'
-  workflow_dispatch:
+on: workflow_dispatch
+
+permissions:
+  contents: read
+  actions: write
 
 env:
   COINBASE_APP_ID: ${{ secrets.COINBASE_APP_ID }}
@@ -12,7 +12,6 @@ env:
   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
   SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY }}
   TRANSAK_API_KEY: ${{ secrets.TRANSAK_API_KEY }}
-  BESTINSLOT_API_KEY: ${{ secrets.BESTINSLOT_API_KEY }}
   BITFLOW_API_HOST: ${{ secrets.BITFLOW_API_HOST }}
   BITFLOW_API_KEY: ${{ secrets.BITFLOW_API_KEY }}
   BITFLOW_READONLY_CALL_API_HOST: ${{ secrets.BITFLOW_READONLY_CALL_API_HOST }}
@@ -42,7 +41,6 @@ jobs:
     name: Publish Chrome extension
     runs-on: ubuntu-24.04
     environment: production
-    if: startsWith(github.ref, 'refs/tags/v')
     needs:
       - extract-version
     outputs:
@@ -53,7 +51,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
 
+      - name: Build packages
+        run: pnpm build:packages
+
       - name: Build project
+        working-directory: apps/extension
         env:
           # We only add the sentry auth token for chrome, as we don't want to
           # create a duplicate release during the ff build
@@ -64,13 +66,15 @@ jobs:
         name: Upload build artifact
         with:
           name: leather-chromium-v${{ needs.extract-version.outputs.new_version }}
-          path: dist
+          path: apps/extension/dist
 
       - name: Build extension
+        working-directory: apps/extension
         run: sh build-ext.sh
 
       - name: Sign and Upload Production Chrome extension
         continue-on-error: true
+        working-directory: apps/extension
         id: publish-chrome
         run: |
           pnpm chrome-webstore-upload upload --auto-publish --source leather-chromium.zip
@@ -84,7 +88,6 @@ jobs:
   publish-firefox-extension:
     name: Publish Firefox extension
     runs-on: ubuntu-24.04
-    if: startsWith(github.ref, 'refs/tags/v')
     env:
       TARGET_BROWSER: firefox
     needs:
@@ -95,18 +98,22 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
 
-      - name: Build project
+      - name: Build packages
+        run: pnpm build:packages
 
-        run: pnpm build
+      - name: Build project
+        working-directory: apps/extension
+        run: pnpm build:extension
 
       - uses: actions/upload-artifact@v4
         name: Upload build artifact
         with:
           name: leather-firefox-v${{ needs.extract-version.outputs.new_version }}
-          path: dist
+          path: apps/extension/dist
 
       - name: Sign and Upload Production Firefox extension
         continue-on-error: true
+        working-directory: apps/extension
         id: publish-firefox
         run: |
           pnpm web-ext-submit --channel listed --artifacts-dir dist
@@ -128,20 +135,19 @@ jobs:
         with:
           path: .
 
-      - name: Download release-notes.txt from create-version workflow
-        uses: dawidd6/action-download-artifact@v6
-        with:
-          workflow: create-version.yml
-          name: release-notes
-          allow_forks: false
+      # Probably no need for release notes as we use release please
+      # - name: Download release-notes.txt from create-version workflow
+      #   uses: dawidd6/action-download-artifact@v6
+      #   with:
+      #     workflow: create-version.yml
+      #     name: release-notes
+      #     allow_forks: false
 
       - name: Zip Firefox build
         run: zip -r leather-firefox.v${{ needs.extract-version.outputs.new_version }}.zip leather-firefox-v${{ needs.extract-version.outputs.new_version }}
 
       - name: Zip Chromium build
         run: zip -r leather-chromium.v${{ needs.extract-version.outputs.new_version }}.zip leather-chromium-v${{ needs.extract-version.outputs.new_version }}
-
-      - run: ls -la .
 
       - name: Release
         uses: softprops/action-gh-release@v1

@@ -110,7 +110,33 @@ module.exports = {
           'packages/ui/leather-styles/types',
           'packages/ui/src/leather-styles/types',
           'packages/panda-preset/leather-styles/types',
+          'apps/extension/',
         ],
+      },
+    },
+    {
+      name: 'no-circular-extension',
+      severity: 'warn',
+      comment:
+        'This dependency is part of a circular relationship. You might want to revise ' +
+        'your solution (i.e. use dependency inversion, make sure the modules have a single responsibility) ',
+      from: {},
+      to: {
+        circular: true,
+        dependencyTypes: ['type-only'],
+        path: ['apps/extension'],
+      },
+    },
+    // TODO: this doesn't work right now
+    {
+      name: 'script-context-not-to-another-extension',
+      comment: 'One script context must not depend on another',
+      severity: 'error',
+      from: { path: '(^apps/extension/src/)([^/]+)/' },
+      to: {
+        path: '^$1',
+        pathNot: ['$1$2', '^apps/extension/src/shared'],
+        dependencyTypesNot: ['type-only'],
       },
     },
     {

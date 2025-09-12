@@ -47,6 +47,7 @@ export default tseslint.config(
       '**/.react-router/',
       '**/.wrangler/',
       '**/generated/',
+      '**/apps/extension/',
     ],
   },
   {
