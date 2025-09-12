@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Web Playwright Tests
 on:
   pull_request:
     paths:

@@ -1,0 +1,49 @@
+name: Code checks
+
+on:
+  merge_group:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  lint-unused-exports:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Lint unused TypeScript exports
+        working-directory: apps/extension
+        run: pnpm lint:unused-exports
+
+  lint-firefox-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - run: pnpm build:packages
+
+      - run: pnpm build
+        working-directory: apps/extension
+        env:
+          TARGET_BROWSER: firefox
+
+      - name: Lint firefox build
+        run: pnpm web-ext lint
+        working-directory: apps/extension
+
+  test-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Build
+        run: pnpm build:extension
+
+      - name: Package extension
+        run: sh build-ext.sh
+        working-directory: apps/extension
+        shell: bash

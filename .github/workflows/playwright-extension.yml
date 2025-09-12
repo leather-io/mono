@@ -1,4 +1,4 @@
-name: Integration tests
+name: Extension Playwright tests
 
 env:
   CI: true
@@ -12,12 +12,12 @@ env:
   BITFLOW_PROVIDER_ADDRESS: ${{ secrets.BITFLOW_PROVIDER_ADDRESS }}
 
 on:
-  push:
-    branches:
-      - gh-readonly-queue/dev/**
   pull_request:
-    branches:
-      - dev
+    paths:
+      - 'apps/extension/**'
+      - 'packages/**'
+      - '!packages/ui/**/*.native.ts'
+      - '!packages/ui/**/*.native.tsx'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,13 +27,15 @@ jobs:
   test:
     name: Shard ${{ matrix.shardIndex }} of ${{ matrix.shardTotal }}
     timeout-minutes: 30
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         shardTotal: [10]
-
+    defaults:
+      run:
+        working-directory: apps/extension
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
@@ -57,6 +59,10 @@ jobs:
         run: pnpm playwright install --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
+      - name: Build packages
+        working-directory: ./
+        run: pnpm build:extension
+
       - name: Build extension in test mode
         run: pnpm build:test
 
@@ -79,57 +85,61 @@ jobs:
         run: xvfb-run pnpm playwright test tests/specs --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --workers=1
         env:
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
-          TEST_ACCOUNT_SECRET_KEY: ${{ secrets.TEST_ACCOUNT_SECRET_KEY }}
+          EXTENSION_INTEGRATION_TEST_MNEMONIC: ${{ secrets.EXTENSION_INTEGRATION_TEST_MNEMONIC }}
 
       - name: Upload blob report to GitHub Actions Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: blob-report-${{ matrix.shardIndex }}
-          path: blob-report
+          path: apps/extension/blob-report
           retention-days: 1
           if-no-files-found: error
 
-  merge-reports:
-    name: Merge reports
-    if: always()
-    needs: test
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download blob reports from GitHub Actions Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: all-blob-reports
-          pattern: blob-report-*
-          merge-multiple: true
-
-      - name: Merge into HTML Report
-        run: npx playwright merge-reports --reporter html ./all-blob-reports
-
-      - name: Extract branch name
-        shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        id: extract_branch
-
-      - uses: Wandalen/wretry.action@master
-        if: github.event_name == 'pull_request'
-        with:
-          action: peaceiris/actions-gh-pages@v3
-          with: |
-            personal_token: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
-            external_repository: leather-io/playwright-reports
-            publish_branch: main
-            publish_dir: ./playwright-report
-            destination_dir: ${{ steps.extract_branch.outputs.branch }}
-
-      - name: Deploy specs.leather.io
-        uses: peaceiris/actions-gh-pages@v3
-        if: steps.extract_branch.outputs.branch == 'dev'
-        with:
-          personal_token: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
-          external_repository: leather-io/specs.leather.io
-          publish_branch: main
-          publish_dir: ./playwright-report
-          cname: specs.leather.io
+  # TODO: remove merging reports for now. Enable after merging extension into monorepo
+  # merge-reports:
+  #   name: Merge reports
+  #   if: always()
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: apps/extension
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - name: Download blob reports from GitHub Actions Artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         path: all-blob-reports
+  #         pattern: blob-report-*
+  #         merge-multiple: true
+  #
+  #     - name: Merge into HTML Report
+  #       run: npx playwright merge-reports --reporter html ./all-blob-reports
+  #
+  #     - name: Extract branch name
+  #       shell: bash
+  #       run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+  #       id: extract_branch
+  #
+  #     - uses: Wandalen/wretry.action@master
+  #       if: github.event_name == 'pull_request'
+  #       with:
+  #         action: peaceiris/actions-gh-pages@v3
+  #         with: |
+  #           personal_token: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+  #           external_repository: leather-io/playwright-reports
+  #           publish_branch: main
+  #           publish_dir: ./playwright-report
+  #           destination_dir: ${{ steps.extract_branch.outputs.branch }}
+  #
+  #     - name: Deploy specs.leather.io
+  #       uses: peaceiris/actions-gh-pages@v3
+  #       if: steps.extract_branch.outputs.branch == 'dev'
+  #       with:
+  #         personal_token: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+  #         external_repository: leather-io/specs.leather.io
+  #         publish_branch: main
+  #         publish_dir: ./playwright-report
+  #         cname: specs.leather.io

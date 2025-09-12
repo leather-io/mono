@@ -12,7 +12,6 @@ env:
   MOONPAY_API_KEY: ${{ secrets.MOONPAY_API_KEY }}
   SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY_STAGING }}
   TRANSAK_API_KEY: ${{ secrets.TRANSAK_API_KEY }}
-  BESTINSLOT_API_KEY: ${{ secrets.BESTINSLOT_API_KEY }}
   BITFLOW_API_HOST: ${{ secrets.BITFLOW_API_HOST }}
   BITFLOW_API_KEY: ${{ secrets.BITFLOW_API_KEY }}
   BITFLOW_READONLY_CALL_API_HOST: ${{ secrets.BITFLOW_READONLY_CALL_API_HOST }}
@@ -33,17 +32,18 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
 
-      - name: Extract version
-        id: extract_version
-        uses: Saionaro/extract-package-version@v1.3.0
-
       - name: Build project
         env:
           IS_PUBLISHING: true
-        run: pnpm build
+        run: pnpm build:extension
+
+      - name: Extract version
+        id: extract_version
+        working-directory: apps/extension
+        uses: Saionaro/extract-package-version@v1.3.0
 
       - uses: actions/upload-artifact@v4
         name: Upload build artifact
         with:
           name: leather-io
-          path: dist
+          path: apps/extension/dist

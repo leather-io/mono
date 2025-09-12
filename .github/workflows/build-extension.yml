@@ -18,7 +18,7 @@ jobs:
         run: echo "SHORT_SHA=`echo ${{ github.event.pull_request.head.sha }} | cut -c1-7`" >> $GITHUB_OUTPUT
 
   set-in-progress-message:
-    if: github.repository == 'leather-io/extension' && github.actor != 'dependabot[bot]'
+    if: github.repository == 'leather-io/mono' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-24.04
     needs:
       - sha-hash
@@ -45,7 +45,7 @@ jobs:
       - uses: ./.github/actions/provision
 
       - name: Build project
-        run: pnpm build
+        run: pnpm build:extension
         env:
           WALLET_ENVIRONMENT: feature
           TARGET_BROWSER: ${{ matrix.target }}
@@ -54,7 +54,6 @@ jobs:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY_STAGING }}
           TRANSAK_API_KEY: ${{ secrets.TRANSAK_API_KEY }}
-          BESTINSLOT_API_KEY: ${{ secrets.BESTINSLOT_API_KEY }}
           BITFLOW_API_HOST: ${{ secrets.BITFLOW_API_HOST }}
           BITFLOW_API_KEY: ${{ secrets.BITFLOW_API_KEY }}
           BITFLOW_READONLY_CALL_API_HOST: ${{ secrets.BITFLOW_READONLY_CALL_API_HOST }}
@@ -69,10 +68,10 @@ jobs:
         name: Upload ${{ matrix.target }} extension zip
         with:
           name: leather-${{ matrix.target }}-${{ needs.sha-hash.outputs.SHORT_SHA }}
-          path: dist
+          path: apps/extension/dist
 
   set-download-link:
-    if: github.repository == 'leather-io/extension' && github.actor != 'dependabot[bot]'
+    if: github.repository == 'leather-io/mono' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-24.04
     needs:
       - sha-hash
