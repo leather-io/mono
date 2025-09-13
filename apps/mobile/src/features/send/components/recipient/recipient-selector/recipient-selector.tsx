@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
+import { SearchInput } from '@/components/search-input';
 import { useSendPasteButton } from '@/features/feature-flags';
 import { IosRecipientPasteButton } from '@/features/send/components/recipient/ios-recipient-paste-button';
-import { RecipientInput } from '@/features/send/components/recipient/recipient-input';
 import { RecipientSelectorHeader } from '@/features/send/components/recipient/recipient-selector/recipient-selector-header';
 import { RecipientSelectorItem } from '@/features/send/components/recipient/recipient-selector/recipient-selector-item';
 import { RecipientSelectorSearchEmptyState } from '@/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state';
@@ -21,7 +21,7 @@ import { t } from '@lingui/core/macro';
 import { type ZodSchema } from 'zod';
 
 import { AccountId, type FungibleCryptoAsset, type SendAssetActivity } from '@leather.io/models';
-import { Box, IconButton, QrCodeIcon } from '@leather.io/ui/native';
+import { Box, IconButton, QrCodeIcon, Sheet } from '@leather.io/ui/native';
 
 interface RecipientSelectorProps {
   activity: SendAssetActivity[];
@@ -60,7 +60,13 @@ export function RecipientSelector({
     <>
       <RecipientSelectorHeader>
         <Box>
-          <RecipientInput value={searchTerm} onChange={setSearchTerm} />
+          <SearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
+            autoFocus
+            placeholder={t`Search for BNS name or address`}
+            TextInputComponent={Sheet.TextInput}
+          />
           {searchTerm.length === 0 && (
             <Box position="absolute" top={12} right={8} flexDirection="row">
               {pasteButtonEnabled && <IosRecipientPasteButton onPress={handlePasteButtonPress} />}
