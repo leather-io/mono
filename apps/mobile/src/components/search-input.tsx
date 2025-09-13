@@ -1,23 +1,34 @@
 import { type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { TextInput } from '@/components/text-input';
 import { t } from '@lingui/core/macro';
 
-import { Box, CloseIcon, IconButton, SearchIcon, Sheet } from '@leather.io/ui/native';
+import {
+  Box,
+  CloseIcon,
+  IconButton,
+  SearchIcon,
+  TextInput as UITextInput,
+} from '@leather.io/ui/native';
 
-interface RecipientInputProps {
+interface SearchInputProps {
   value: string;
   onChange(value: string): void;
   onSubmitEditing?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void;
+  placeholder: string;
   autoFocus?: boolean;
+  TextInputComponent?: typeof UITextInput;
 }
 
-export function RecipientInput({
+export function SearchInput({
   value,
   onChange,
   onSubmitEditing,
+  placeholder,
   autoFocus,
-}: RecipientInputProps) {
+  TextInputComponent = UITextInput,
+}: SearchInputProps) {
   function clearValue() {
     onChange('');
   }
@@ -35,25 +46,30 @@ export function RecipientInput({
           autoCapitalize="none"
           autoComplete="off"
           autoCorrect={false}
-          inputState="focused"
+          inputState="default"
           value={value}
           onChangeText={onChange}
-          placeholder={t`Search for BNS name or address`}
-          TextInputComponent={Sheet.TextInput}
+          placeholder={placeholder}
+          TextInputComponent={TextInputComponent}
           textVariant="label02"
           returnKeyType="done"
           onSubmitEditing={onSubmitEditing}
         />
       </Box>
       {value.length > 0 && (
-        <IconButton
-          label={t`Clear search`}
-          position="absolute"
-          right={8}
-          hitSlop={8}
-          onPress={clearValue}
-          icon={<CloseIcon variant="small" />}
-        />
+        <Animated.View
+          style={{ position: 'absolute', right: 8 }}
+          collapsable
+          entering={FadeIn.delay(250).duration(100)}
+          exiting={FadeOut.duration(100)}
+        >
+          <IconButton
+            label={t`Clear search`}
+            hitSlop={8}
+            onPress={clearValue}
+            icon={<CloseIcon variant="small" color="ink.text-subdued" />}
+          />
+        </Animated.View>
       )}
     </Box>
   );

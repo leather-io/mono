@@ -60,7 +60,7 @@ export function TextInput({
   inputRef,
   errorMessage,
   textVariant,
-  TextInputComponent,
+  TextInputComponent = UITextInput,
   ...rest
 }: Props & {
   inputState: InputState;
@@ -82,11 +82,9 @@ export function TextInput({
     }
   );
 
-  const _TextInput = TextInputComponent ?? UITextInput;
-
   return (
     <Box>
-      <_TextInput
+      <TextInputComponent
         autoCorrect
         ref={inputRef}
         textVariant={textVariant}
