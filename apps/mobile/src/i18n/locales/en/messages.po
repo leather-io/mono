@@ -366,7 +366,7 @@ msgstr "Choose an account"
 msgid "Choose existing wallet"
 msgstr "Choose existing wallet"
 
-#: src/features/send/components/recipient/recipient-input.tsx:50
+#: src/components/search-input.tsx:67
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -1116,8 +1116,7 @@ msgstr "Save to..."
 msgid "Scan a Bitcoin or Stacks address"
 msgstr "Scan a Bitcoin or Stacks address"
 
-#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:68
-#: src/features/send/components/recipient/recipient-toggle.tsx:61
+#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:74
 msgid "Scan a QR code"
 msgstr "Scan a QR code"
 
@@ -1125,7 +1124,7 @@ msgstr "Scan a QR code"
 msgid "Scan QR Code"
 msgstr "Scan QR Code"
 
-#: src/features/send/components/recipient/recipient-input.tsx:41
+#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:67
 msgid "Search for BNS name or address"
 msgstr "Search for BNS name or address"
 
