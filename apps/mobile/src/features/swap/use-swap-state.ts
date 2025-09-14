@@ -26,6 +26,7 @@ export interface SwapState {
   nonce?: number;
   inputCurrencyMode: InputCurrencyMode;
   activeAmountField: 'base' | 'target';
+  selectingAsset: 'base' | 'target' | null;
   validation: []; // TODO
 }
 
@@ -42,10 +43,24 @@ type SwapAction =
   | { type: 'SET_ACTIVE_AMOUNT_FIELD'; payload: 'base' | 'target' }
   | { type: 'SET_SLIPPAGE'; payload: number }
   | { type: 'TOGGLE_SLIPPAGE_EDITING'; payload: boolean }
-  | { type: 'SET_NONCE'; payload: number };
+  | { type: 'SET_NONCE'; payload: number }
+  | { type: 'OPEN_ASSET_SELECTOR'; payload: 'base' | 'target' }
+  | { type: 'CLOSE_ASSET_SELECTOR' };
 
 function swapReducer(state: SwapState, action: SwapAction): SwapState {
   switch (action.type) {
+    case 'OPEN_ASSET_SELECTOR': {
+      return {
+        ...state,
+        selectingAsset: action.payload,
+      };
+    }
+    case 'CLOSE_ASSET_SELECTOR': {
+      return {
+        ...state,
+        selectingAsset: null,
+      };
+    }
     case 'SET_BASE_SWAP_ASSET': {
       return {
         ...state,
@@ -54,12 +69,14 @@ function swapReducer(state: SwapState, action: SwapAction): SwapState {
           target: 'pending',
         },
         baseSwapAsset: action.payload,
+        selectingAsset: null,
       };
     }
     case 'SET_TARGET_SWAP_ASSET': {
       return {
         ...state,
         targetSwapAsset: action.payload,
+        selectingAsset: null,
       };
     }
     case 'CLEAR_ASSET_SELECTION': {
@@ -211,6 +228,7 @@ function initializeState({ baseAsset, targetAsset }: InitializeStateParams): Swa
     inputCurrencyMode: 'crypto',
     slippage: 0.03,
     slippageEditingAllowed: true,
+    selectingAsset: null,
     validation: [],
   };
 }
@@ -285,6 +303,14 @@ export function useSwapState({
     dispatch({ type: 'SET_NONCE', payload: nonce });
   }, []);
 
+  const openAssetSelector = useCallback((type: 'base' | 'target') => {
+    dispatch({ type: 'OPEN_ASSET_SELECTOR', payload: type });
+  }, []);
+
+  const closeAssetSelector = useCallback(() => {
+    dispatch({ type: 'CLOSE_ASSET_SELECTOR' });
+  }, []);
+
   return {
     state,
     baseAssetsQuery,
@@ -301,6 +327,8 @@ export function useSwapState({
       setNonce,
       clearAssetSelection,
       flipAssets,
+      openAssetSelector,
+      closeAssetSelector,
     },
   };
 }

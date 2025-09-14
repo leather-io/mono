@@ -5,6 +5,7 @@ import {
   Box,
   BtcAvatarIcon,
   ChevronDownIcon,
+  PlusIcon,
   Pressable,
   Sip10AvatarIcon,
   StxAvatarIcon,
@@ -16,7 +17,7 @@ interface AssetPickerTriggerProps {
   onPress(): void;
 }
 
-export function AssetPickerToggle({ asset, onPress }: AssetPickerTriggerProps) {
+export function AssetSelectorToggle({ asset, onPress }: AssetPickerTriggerProps) {
   return (
     <Pressable
       flexDirection="row"
@@ -40,7 +41,19 @@ export function AssetPickerToggle({ asset, onPress }: AssetPickerTriggerProps) {
 
 function renderAvatar(asset: FungibleCryptoAsset | undefined) {
   if (!asset) {
-    return <Box width={24} height={24} borderRadius="round" bg="ink.action-primary-default" />;
+    return (
+      <Box
+        borderWidth={1}
+        borderColor="ink.border-transparent"
+        alignItems="center"
+        justifyContent="center"
+        width={24}
+        height={24}
+        borderRadius="round"
+      >
+        <PlusIcon color="ink.text-subdued" variant="small" />
+      </Box>
+    );
   }
 
   if (asset.symbol === 'BTC') {
@@ -51,7 +64,7 @@ function renderAvatar(asset: FungibleCryptoAsset | undefined) {
     return <StxAvatarIcon size="sm" />;
   }
 
-  if (asset?.protocol === 'sip10') {
+  if (asset.protocol === 'sip10') {
     return (
       <Sip10AvatarIcon
         size="sm"
@@ -61,5 +74,6 @@ function renderAvatar(asset: FungibleCryptoAsset | undefined) {
       />
     );
   }
+
   return null;
 }

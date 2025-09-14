@@ -268,6 +268,10 @@ msgstr "Argument {argumentNumber}"
 msgid "Arkadiko"
 msgstr "Arkadiko"
 
+#: src/features/swap/components/asset-selector/asset-selector.tsx:47
+msgid "Assets"
+msgstr "Assets"
+
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:119
 msgid "Authentication failed"
 msgstr "Authentication failed"
@@ -298,11 +302,7 @@ msgstr "Balances"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:12
-#: src/features/receive/get-assets.ts:29
-#: src/features/receive/get-assets.ts:37
-#: src/features/send/forms/btc/btc-form.tsx:64
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:17
+#: src/features/swap/swap.utils.ts:7
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -588,6 +588,10 @@ msgstr "Enter recipient"
 #: src/features/recover-wallet/recover-wallet.tsx:112
 msgid "Enter your Secret Key"
 msgstr "Enter your Secret Key"
+
+#: src/features/swap/components/asset-selector/asset-selector.tsx:39
+msgid "Error loading assets"
+msgstr "Error loading assets"
 
 #: src/features/activity/utils/format-activity.ts:27
 msgid "Executed"
@@ -1102,10 +1106,7 @@ msgstr "Restore wallet"
 msgid "Reveal account"
 msgstr "Reveal account"
 
-#: src/features/send/forms/btc/btc-form.tsx:126
-#: src/features/send/forms/stx/sip10-form.tsx:149
-#: src/features/send/forms/stx/stx-form.tsx:140
-#: src/features/swap/swap.tsx:46
+#: src/features/swap/swap.tsx:69
 msgid "Review"
 msgstr "Review"
 
@@ -1133,6 +1134,10 @@ msgstr "Scan a QR code"
 msgid "Scan QR Code"
 msgstr "Scan QR Code"
 
+#: src/features/swap/components/asset-selector/asset-selector.tsx:37
+msgid "Search for asset"
+msgstr "Search for asset"
+
 #: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:67
 msgid "Search for BNS name or address"
 msgstr "Search for BNS name or address"
@@ -1146,7 +1151,7 @@ msgstr "Secure your wallet"
 msgid "Security"
 msgstr "Security"
 
-#: src/features/swap/components/asset-picker-toggle.tsx:34
+#: src/features/swap/components/asset-selector/asset-selector-toggle.tsx:35
 msgid "Select"
 msgstr "Select"
 
@@ -1239,10 +1244,7 @@ msgstr "Something went wrong"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:11
-#: src/features/receive/get-assets.ts:45
-#: src/features/send/forms/stx/stx-form.tsx:58
-#: src/features/token/stacks/stacks-token-details.tsx:15
+#: src/features/swap/swap.utils.ts:6
 msgid "Stacks"
 msgstr "Stacks"
 

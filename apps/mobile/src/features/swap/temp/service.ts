@@ -77,13 +77,13 @@ function sleep(ms: number): Promise<void> {
 }
 
 export async function getAccountBaseSwapAssets(): Promise<AccountSwapAsset[]> {
-  await sleep(500);
+  await sleep(3500);
   return baseAssetListing;
 }
 
 export async function getAccountTargetSwapAssets(
   baseId: CryptoAssetId
 ): Promise<AccountSwapAsset[]> {
-  await sleep(500);
+  await sleep(3500);
   return targetAssetListingSBTC;
 }
