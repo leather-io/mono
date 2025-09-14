@@ -2,6 +2,7 @@ export * from './bitcoin.model';
 export * from './balance.model';
 export * from './assets/asset.model';
 export * from './assets/asset-id.model';
+export * from './assets/asset-type-guards';
 export * from './inscription-mime-type.model';
 export * from './currencies.model';
 export * from './fees/bitcoin-fees.model';
