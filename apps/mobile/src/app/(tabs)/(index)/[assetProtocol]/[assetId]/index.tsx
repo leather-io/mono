@@ -1,5 +1,7 @@
 import { BitcoinTokenDetails } from '@/features/token/bitcoin/bitcoin-token-details';
+import { InscriptionDetails } from '@/features/token/bitcoin/inscription-details';
 import { RuneTokenDetails } from '@/features/token/bitcoin/rune-token-details';
+import { Sip9TokenDetails } from '@/features/token/stacks/sip9-details';
 import { Sip10TokenDetails } from '@/features/token/stacks/sip10-token-details';
 import { StacksTokenDetails } from '@/features/token/stacks/stacks-token-details';
 import { useSettings } from '@/store/settings/settings';
@@ -8,7 +10,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { CryptoAssetProtocols } from '@leather.io/models';
 import { assertExistence, assertUnreachable } from '@leather.io/utils';
 
-type SupportedAssetProtocol = 'nativeBtc' | 'nativeStx' | 'sip10' | 'rune';
+type SupportedAssetProtocol = 'nativeBtc' | 'nativeStx' | 'sip10' | 'rune' | 'sip9' | 'inscription';
 
 export default function AccountTokenScreen() {
   const { assetId, assetProtocol } = useLocalSearchParams<{
@@ -28,6 +30,10 @@ export default function AccountTokenScreen() {
       return <Sip10TokenDetails account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.rune:
       return <RuneTokenDetails account={currentAccount} assetId={assetId} />;
+    case CryptoAssetProtocols.sip9:
+      return <Sip9TokenDetails account={currentAccount} assetId={assetId} />;
+    case CryptoAssetProtocols.inscription:
+      return <InscriptionDetails account={currentAccount} assetId={assetId} />;
     default:
       assertUnreachable(assetProtocol);
   }

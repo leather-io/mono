@@ -76,12 +76,12 @@ export function getAssetId(asset: CryptoAsset): CryptoAssetId {
 
 function buildSip9AssetId(asset: Sip9Asset): CryptoAssetId {
   // BNS SIP-9's have a collection and name
-  if (asset.collection === 'bns') {
-    return {
-      protocol: asset.protocol,
-      id: `${asset.name}|${asset.collection}`,
-    };
-  }
+  // if (asset.collection === 'bns') {
+  //   return {
+  //     protocol: asset.protocol,
+  //     id: `${asset.name}|${asset.collection}`,
+  //   };
+  // }
 
   return {
     protocol: asset.protocol,

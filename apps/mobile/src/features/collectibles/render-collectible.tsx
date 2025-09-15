@@ -1,3 +1,4 @@
+import { TokenDetailsProps } from '@/features/token/types';
 import { t } from '@lingui/core/macro';
 
 import {
@@ -11,6 +12,7 @@ import {
   CollectibleImage,
   ImageUnavailable,
   Inscription,
+  Sip9,
   Text,
 } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
@@ -23,37 +25,121 @@ function FallbackImage() {
   );
 }
 
-function Stamp({ item }: { item: StampAsset }) {
+interface StampProps {
+  item: StampAsset;
+  onPress?: () => void;
+  height?: number;
+}
+export function Stamp({ item, onPress, height = 200 }: StampProps) {
   if (!item.stampUrl) return <FallbackImage />;
-  return <CollectibleImage source={item.stampUrl} alt={item.stamp.toString()} height={200} />;
+  return (
+    <CollectibleImage
+      source={item.stampUrl}
+      alt={item.stamp.toString()}
+      height={height}
+      onPress={onPress}
+    />
+  );
 }
 
 function Bns({ name }: { name: string }) {
   return <BnsImage alt={name} height={200} />;
 }
-
-function Sip9({ item }: { item: Sip9Asset }) {
-  if (!item.cachedImage || item.cachedImage.trim() === '') return <FallbackImage />;
-  return <CollectibleImage source={item.cachedImage} alt={item.name} height={200} />;
+interface Sip9ComponentProps {
+  item: Sip9Asset;
+  onPress?(): void;
+  height?: number;
 }
-
-function InscriptionComponent({ item }: { item: InscriptionAsset }) {
+export function Sip9Component({ item, onPress, height = 200 }: Sip9ComponentProps) {
+  if (!item.cachedImage || item.cachedImage.trim() === '') return <FallbackImage />;
+  return (
+    <Sip9
+      contentType={item.contentType as 'image/png' | 'image/jpeg' | 'video/mp4' | ''}
+      name={item.name}
+      height={height}
+      src={item.cachedImage}
+      onPress={onPress}
+    />
+  );
+}
+interface InscriptionComponentProps {
+  item: InscriptionAsset;
+  onPress?: () => void;
+  height?: number;
+}
+export function InscriptionComponent({ item, onPress, height = 200 }: InscriptionComponentProps) {
   if (!item.src || item.src.trim() === '') return <FallbackImage />;
-  return <Inscription name={item.title} mimeType={item.mimeType} height={200} src={item.src} />;
+  return (
+    <Inscription
+      name={item.title}
+      mimeType={item.mimeType}
+      height={height}
+      src={item.src}
+      onPress={onPress}
+    />
+  );
 }
 
 function isBns(item: NonFungibleCryptoAsset) {
-  return 'collection' in item && item.collection === 'bns';
+  return 'collection' in item && item.collection.name === 'bns';
 }
 
-export function renderCollectible({ item }: { item: NonFungibleCryptoAsset }) {
+export function renderCollectible({
+  item,
+  onPress,
+}: {
+  item: NonFungibleCryptoAsset;
+  onPress?: (tokenDetails: TokenDetailsProps) => void;
+}) {
+  console.log('renderCollectible', item);
   switch (item.protocol) {
     case 'stamp':
-      return <Stamp item={item} />;
+      return (
+        <Stamp
+          item={item}
+          onPress={
+            onPress
+              ? () =>
+                  onPress?.({
+                    assetId: item.stamp.toString(),
+                    assetProtocol: item.protocol,
+                  })
+              : undefined
+          }
+        />
+      );
     case 'sip9':
-      return isBns(item) ? <Bns name={item.name} /> : <Sip9 item={item} />;
+      return isBns(item) ? (
+        <Bns name={item.name} />
+      ) : (
+        <Sip9Component
+          item={item}
+          onPress={
+            onPress
+              ? () =>
+                  onPress?.({
+                    assetId: item.name,
+                    assetProtocol: item.protocol,
+                  })
+              : undefined
+          }
+        />
+      );
     case 'inscription':
-      return <InscriptionComponent item={item} />;
+      return (
+        <InscriptionComponent
+          item={item}
+          onPress={
+            onPress
+              ? () =>
+                  onPress?.({
+                    assetId: item.id,
+                    assetProtocol: item.protocol,
+                  })
+              : undefined
+          }
+        />
+      );
     default:
       return assertUnreachable(item);
   }

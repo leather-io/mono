@@ -500,10 +500,13 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
-#: src/features/token/components/token-loading.tsx:38
-#: src/features/token/token.tsx:97
+#: src/features/token/collectible.tsx:58
 msgid "Description"
 msgstr "Description"
+
+#: src/features/token/collectible.tsx:62
+msgid "Details"
+msgstr "Details"
 
 #: src/app/settings/index.tsx:144
 msgid "Device ID"
@@ -753,7 +756,7 @@ msgstr "Icons"
 msgid "ID copied to clipboard"
 msgstr "ID copied to clipboard"
 
-#: src/features/collectibles/render-collectible.tsx:21
+#: src/features/collectibles/render-collectible.tsx:23
 msgid "Image currently unavailable"
 msgstr "Image currently unavailable"
 
@@ -916,10 +919,7 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:88
-#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
-#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
-#: src/features/token/components/token-details-table.tsx:19
+#: src/features/token/collectible.tsx:64
 msgid "Name"
 msgstr "Name"
 

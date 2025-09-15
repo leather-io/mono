@@ -1,16 +1,22 @@
 import { BaseTheme, BoxProps } from '@shopify/restyle';
 
-import { Box, Theme } from '../../../../native';
+import { Box, Pressable, Theme } from '../../../../native';
 
 interface CollectibleCardProps<Theme extends BaseTheme> extends BoxProps<Theme> {
   children: React.ReactNode;
   height?: number;
+  onPress?: () => void;
 }
 
-export function CollectibleCard({ children, height = 200, ...props }: CollectibleCardProps<Theme>) {
+export function CollectibleCard({
+  children,
+  height = 200,
+  onPress,
+  ...props
+}: CollectibleCardProps<Theme>) {
   return (
     <Box width="auto" height={height} overflow="hidden" {...props}>
-      {children}
+      <Pressable onPress={onPress}>{children}</Pressable>
     </Box>
   );
 }
