@@ -8,6 +8,7 @@ import {
   BottomSheetView,
   BottomSheetVirtualizedList,
 } from '@gorhom/bottom-sheet';
+import { BottomSheetFlashListProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/BottomSheetFlashList';
 import { BottomSheetScrollViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types';
 import { BottomSheetViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types';
 
@@ -15,44 +16,81 @@ import { useTheme } from '../../hooks/use-theme.native';
 
 const minimumBottomOffset = 24;
 
-function useSheetBorderRadius() {
+function useSheetStyles() {
   const theme = useTheme();
+  const { bottom } = useSafeAreaInsets();
+  const paddingBottom = Math.max(bottom, minimumBottomOffset);
+
   return {
-    borderTopLeftRadius: theme.borderRadii.lg,
-    borderTopRightRadius: theme.borderRadii.lg,
+    root: {
+      borderTopLeftRadius: theme.borderRadii.lg,
+      borderTopRightRadius: theme.borderRadii.lg,
+    },
+    contentContainer: { paddingBottom },
   };
 }
 
 export function SheetView({ style, ...props }: BottomSheetViewProps) {
-  const { bottom } = useSafeAreaInsets();
-  const paddingBottom = Math.max(bottom, minimumBottomOffset);
-  const borderRadius = useSheetBorderRadius();
-
-  return <BottomSheetView style={[{ paddingBottom, ...borderRadius }, style]} {...props} />;
+  const styles = useSheetStyles();
+  return <BottomSheetView style={[styles.root, styles.contentContainer, style]} {...props} />;
 }
 
-export function SheetScrollView({ style, ...props }: BottomSheetScrollViewProps) {
-  const borderRadius = useSheetBorderRadius();
-  return <BottomSheetScrollView style={[borderRadius, style]} {...props} />;
+export function SheetScrollView({
+  style,
+  contentContainerStyle,
+  ...props
+}: BottomSheetScrollViewProps) {
+  const styles = useSheetStyles();
+  return (
+    <BottomSheetScrollView
+      style={[styles.root, style]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
+      {...props}
+    />
+  );
 }
 
 export function SheetSectionList({
   style,
+  contentContainerStyle,
   ...props
 }: ComponentProps<typeof BottomSheetSectionList>) {
-  const borderRadius = useSheetBorderRadius();
-  return <BottomSheetSectionList style={[borderRadius, style]} {...props} />;
+  const styles = useSheetStyles();
+  return (
+    <BottomSheetSectionList
+      style={[styles.root, style]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
+      {...props}
+    />
+  );
 }
 
 export function SheetVirtualizedList({
   style,
+  contentContainerStyle,
   ...props
 }: ComponentProps<typeof BottomSheetVirtualizedList>) {
-  const borderRadius = useSheetBorderRadius();
-  return <BottomSheetVirtualizedList style={[borderRadius, style]} {...props} />;
+  const styles = useSheetStyles();
+  return (
+    <BottomSheetVirtualizedList
+      style={[styles.root, style]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
+      {...props}
+    />
+  );
 }
 
-export function SheetFlashList({ style, ...props }: ComponentProps<typeof BottomSheetFlashList>) {
-  const borderRadius = useSheetBorderRadius();
-  return <BottomSheetFlashList style={[borderRadius, style]} {...props} />;
+export function SheetFlashList<T>({
+  style,
+  contentContainerStyle,
+  ...props
+}: BottomSheetFlashListProps<T>) {
+  const styles = useSheetStyles();
+  return (
+    <BottomSheetFlashList
+      style={[styles.root, style]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
+      {...props}
+    />
+  );
 }
