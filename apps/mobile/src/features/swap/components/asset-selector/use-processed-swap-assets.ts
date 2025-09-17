@@ -1,11 +1,11 @@
 import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
-import { AccountSwapAsset } from '@/features/swap/temp/service';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useSettings } from '@/store/settings/settings';
 import { AssetVisibility } from '@/store/settings/utils';
 import { filter, pipe, sortBy } from 'remeda';
 
 import { isBtcAsset, isSip10Asset, isStxAsset } from '@leather.io/models';
+import { AccountSwapAsset } from '@leather.io/services';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 export function useProcessedSwapAssets(

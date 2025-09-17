@@ -7,11 +7,11 @@ import {
 } from '@/features/swap/components/asset-selector/asset-selector-item';
 import { useProcessedSwapAssets } from '@/features/swap/components/asset-selector/use-processed-swap-assets';
 import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
-import { AccountSwapAsset } from '@/features/swap/temp/service';
 import { matchQueryResult } from '@/queries/matchQueryResult';
 import { t } from '@lingui/core/macro';
 import { UseQueryResult } from '@tanstack/react-query';
 
+import { AccountSwapAsset } from '@leather.io/services';
 import { Box, Sheet } from '@leather.io/ui/native';
 
 import { AssetSelectorError } from './asset-selector-error';

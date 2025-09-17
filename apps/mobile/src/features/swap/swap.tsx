@@ -7,11 +7,11 @@ import { Balance } from '@/features/swap/components/balance';
 import { CurrencyModeSwitcher } from '@/features/swap/components/currency-mode-switcher';
 import { FlipButton } from '@/features/swap/components/flip-button';
 import { TargetAmountPreview } from '@/features/swap/components/target-amount-preview';
-import { AccountSwapAsset } from '@/features/swap/temp/service';
 import { useSwapState } from '@/features/swap/use-swap-state';
 import { t } from '@lingui/core/macro';
 import { doNothing } from 'remeda';
 
+import { AccountSwapAsset } from '@leather.io/services';
 import { Box, Button, Numpad } from '@leather.io/ui/native';
 import { createMoneyFromDecimal } from '@leather.io/utils';
 

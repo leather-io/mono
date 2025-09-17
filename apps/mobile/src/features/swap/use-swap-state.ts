@@ -1,23 +1,24 @@
-import { useCallback, useReducer } from 'react';
+import { useCallback, useEffect, useMemo, useReducer } from 'react';
 
-import { useBaseAssets, useTargetAssets } from '@/features/swap/data';
 import { areSameAssets } from '@/features/swap/helpers';
 import {
-  AccountSwapAsset,
-  getAccountBaseSwapAssets,
-  getAccountTargetSwapAssets,
-} from '@/features/swap/temp/service';
+  createAccountBaseSwapAssetsQuery,
+  createAccountTargetSwapAssetsQuery,
+} from '@/features/swap/swap.queries';
 import { InputCurrencyMode } from '@/utils/types';
 
-import { CryptoAssetId, FungibleCryptoAsset } from '@leather.io/models';
-import { assertUnreachable } from '@leather.io/utils';
+import { FungibleCryptoAsset } from '@leather.io/models';
+import { AccountSwapAsset, SwapService, getSwapService } from '@leather.io/services';
+import { assertUnreachable, getAssetId } from '@leather.io/utils';
+
+const defaultSlippagePercentage = 0.03;
 
 export interface SwapState {
   baseSwapAsset: AccountSwapAsset | null;
   targetSwapAsset: AccountSwapAsset | null;
-  pairValidation: {
-    base: 'pending' | 'validated';
-    target: 'pending' | 'validated';
+  pairReconciliation: {
+    base: 'pending' | 'complete';
+    target: 'pending' | 'complete';
   };
   baseAmount: string;
   targetAmount: string;
@@ -35,8 +36,8 @@ type SwapAction =
   | { type: 'SET_TARGET_SWAP_ASSET'; payload: AccountSwapAsset }
   | { type: 'CLEAR_ASSET_SELECTION' }
   | { type: 'FLIP_ASSETS' }
-  | { type: 'VALIDATE_BASE_ASSET'; payload: AccountSwapAsset[] }
-  | { type: 'VALIDATE_TARGET_ASSET'; payload: AccountSwapAsset[] }
+  | { type: 'RECONCILE_BASE_WITH_PROVIDER'; payload: AccountSwapAsset[] }
+  | { type: 'RECONCILE_TARGET_WITH_PROVIDER'; payload: AccountSwapAsset[] }
   | { type: 'SET_BASE_AMOUNT'; payload: string }
   | { type: 'SET_TARGET_AMOUNT'; payload: string }
   | { type: 'SET_INPUT_CURRENCY_MODE'; payload: 'crypto' | 'quote' }
@@ -64,8 +65,8 @@ function swapReducer(state: SwapState, action: SwapAction): SwapState {
     case 'SET_BASE_SWAP_ASSET': {
       return {
         ...state,
-        pairValidation: {
-          ...state.pairValidation,
+        pairReconciliation: {
+          ...state.pairReconciliation,
           target: 'pending',
         },
         baseSwapAsset: action.payload,
@@ -94,9 +95,9 @@ function swapReducer(state: SwapState, action: SwapAction): SwapState {
       };
     }
     // TODO: Carefully construct many test cases for this
-    case 'VALIDATE_BASE_ASSET': {
-      const { baseSwapAsset, pairValidation } = state;
-      if (pairValidation.base === 'validated') return state;
+    case 'RECONCILE_BASE_WITH_PROVIDER': {
+      const { baseSwapAsset, pairReconciliation } = state;
+      if (pairReconciliation.base === 'complete') return state;
       if (!baseSwapAsset) return state;
 
       const realBaseSwapAsset = action.payload.find(swapAsset => {
@@ -107,9 +108,9 @@ function swapReducer(state: SwapState, action: SwapAction): SwapState {
         return {
           ...state,
           baseSwapAsset: realBaseSwapAsset,
-          pairValidation: {
-            ...pairValidation,
-            base: 'validated',
+          pairReconciliation: {
+            ...pairReconciliation,
+            base: 'complete',
           },
         };
       }
@@ -120,16 +121,24 @@ function swapReducer(state: SwapState, action: SwapAction): SwapState {
         targetSwapAsset: null,
         baseAmount: '0',
         targetAmount: '0',
-        pairValidation: {
+        pairReconciliation: {
           base: 'pending',
           target: 'pending',
         },
       };
     }
-    case 'VALIDATE_TARGET_ASSET': {
-      const { targetSwapAsset, pairValidation } = state;
+    case 'RECONCILE_TARGET_WITH_PROVIDER': {
+      const { targetSwapAsset, pairReconciliation } = state;
 
-      if (!targetSwapAsset) return state;
+      if (!targetSwapAsset) {
+        return {
+          ...state,
+          pairReconciliation: {
+            ...state.pairReconciliation,
+            target: 'complete',
+          },
+        };
+      }
 
       const realTargetSwapAsset = action.payload.find(swapAsset => {
         return areSameAssets(swapAsset.asset, targetSwapAsset.asset);
@@ -139,9 +148,9 @@ function swapReducer(state: SwapState, action: SwapAction): SwapState {
         return {
           ...state,
           targetSwapAsset: realTargetSwapAsset,
-          pairValidation: {
-            ...state.pairValidation,
-            target: 'validated',
+          pairReconciliation: {
+            ...state.pairReconciliation,
+            target: 'complete',
           },
         };
       }
@@ -150,8 +159,8 @@ function swapReducer(state: SwapState, action: SwapAction): SwapState {
         ...state,
         targetSwapAsset: null,
         targetAmount: '0',
-        pairValidation: {
-          ...pairValidation,
+        pairReconciliation: {
+          ...pairReconciliation,
           target: 'pending',
         },
       };
@@ -217,7 +226,7 @@ function initializeState({ baseAsset, targetAsset }: InitializeStateParams): Swa
   return {
     baseSwapAsset: baseSwapAsset,
     targetSwapAsset: targetSwapAsset,
-    pairValidation: {
+    pairReconciliation: {
       base: 'pending',
       target: 'pending',
     },
@@ -226,7 +235,7 @@ function initializeState({ baseAsset, targetAsset }: InitializeStateParams): Swa
     targetAmount: '0',
     activeAmountField: 'base',
     inputCurrencyMode: 'crypto',
-    slippage: 0.03,
+    slippage: defaultSlippagePercentage,
     slippageEditingAllowed: true,
     selectingAsset: null,
     validation: [],
@@ -236,28 +245,39 @@ function initializeState({ baseAsset, targetAsset }: InitializeStateParams): Swa
 interface UseSwapStateProps {
   baseAsset?: FungibleCryptoAsset;
   targetAsset?: FungibleCryptoAsset;
-  baseAssetGetterFn?: () => Promise<AccountSwapAsset[]>;
-  targetAssetGetterFn?: (assetId: CryptoAssetId) => Promise<AccountSwapAsset[]>;
+  swapService?: SwapService;
 }
 
 export function useSwapState({
   baseAsset,
   targetAsset,
-  baseAssetGetterFn = getAccountBaseSwapAssets,
-  targetAssetGetterFn = getAccountTargetSwapAssets,
+  swapService = getSwapService(),
 }: UseSwapStateProps = {}) {
   const [state, dispatch] = useReducer(swapReducer, { baseAsset, targetAsset }, initializeState);
-  // TODO: Consider using hook creators for those
-  const baseAssetsQuery = useBaseAssets(baseAssetGetterFn, {
-    onSuccess: data => {
-      dispatch({ type: 'VALIDATE_BASE_ASSET', payload: data });
-    },
+
+  const queries = useMemo(() => {
+    return {
+      useAccountBaseSwapAssetsQuery: createAccountBaseSwapAssetsQuery(swapService),
+      useAccountTargetSwapAssetsQuery: createAccountTargetSwapAssetsQuery(swapService),
+    };
+  }, [swapService]);
+
+  const baseAssetsQuery = queries.useAccountBaseSwapAssetsQuery();
+  const targetAssetsQuery = queries.useAccountTargetSwapAssetsQuery({
+    baseId: state.baseSwapAsset ? getAssetId(state.baseSwapAsset?.asset) : undefined,
   });
-  const targetAssetsQuery = useTargetAssets(targetAssetGetterFn, state.baseSwapAsset, {
-    onSuccess: data => {
-      dispatch({ type: 'VALIDATE_TARGET_ASSET', payload: data });
-    },
-  });
+
+  useEffect(() => {
+    if (baseAssetsQuery.data) {
+      dispatch({ type: 'RECONCILE_BASE_WITH_PROVIDER', payload: baseAssetsQuery.data });
+    }
+  }, [baseAssetsQuery.data]);
+
+  useEffect(() => {
+    if (targetAssetsQuery.data) {
+      dispatch({ type: 'RECONCILE_TARGET_WITH_PROVIDER', payload: targetAssetsQuery.data });
+    }
+  }, [targetAssetsQuery.data]);
 
   const setBaseSwapAsset = useCallback((asset: AccountSwapAsset) => {
     dispatch({ type: 'SET_BASE_SWAP_ASSET', payload: asset });
