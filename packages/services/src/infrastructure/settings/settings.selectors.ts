@@ -1,4 +1,5 @@
 import { BitcoinNetwork, BitcoinNetworkModes, ChainId } from '@leather.io/models';
+import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { UserSettings } from './settings.service';
 
@@ -16,4 +17,10 @@ export function selectStacksApiUrl(settings: UserSettings): string {
 
 export function selectStacksChainId(settings: UserSettings): ChainId {
   return settings.network.chain.stacks.chainId;
+}
+
+export function selectAssetVisibility(
+  settings: UserSettings
+): Record<SerializedCryptoAssetId, boolean> {
+  return settings.assetVisibility;
 }

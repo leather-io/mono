@@ -42,8 +42,12 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
   const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
   const runesData = useRunesAccountBalance(fingerprint, accountIndex);
-  const allSip10Data = useSip10AccountBalance(fingerprint, accountIndex, { returnAllAssets: true });
-  const allRunesData = useRunesAccountBalance(fingerprint, accountIndex, { returnAllAssets: true });
+  const allSip10Data = useSip10AccountBalance(fingerprint, accountIndex, {
+    includeHiddenAssets: true,
+  });
+  const allRunesData = useRunesAccountBalance(fingerprint, accountIndex, {
+    includeHiddenAssets: true,
+  });
   const hasAssets = !!allSip10Data.value?.sip10s.length || !!allRunesData.value?.runes.length;
 
   const collectiblesData = useAccountCollectibles(fingerprint, accountIndex);

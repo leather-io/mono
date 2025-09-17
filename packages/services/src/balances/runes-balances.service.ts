@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import { isNonNull, isNullish } from 'remeda';
 
 import { AccountAddresses, CryptoAssetBalance, RuneAsset } from '@leather.io/models';
 import {
@@ -11,7 +12,6 @@ import {
 } from '@leather.io/utils';
 
 import { RuneAssetService } from '../assets/rune-asset.service';
-import { filterUsingAssetVisibility } from '../filtering/filtering';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
@@ -123,16 +123,21 @@ export class RunesBalancesService {
       runesOutputs.push(...nativeSegwitRunesOutputs, ...taprootRunesOutputs);
     }
     const runesOutputsBalances = readRunesOutputsBalances(runesOutputs);
+
     const runesBalances = (
       await Promise.allSettled(
         Object.keys(runesOutputsBalances).map(runeName => {
-          return this.getRuneBalance(runeName, runesOutputsBalances[runeName], signal);
+          return this.createRuneBalance(
+            runeName,
+            runesOutputsBalances[runeName],
+            request.assets?.includeHiddenAssets,
+            signal
+          );
         })
       )
     )
-      .filter(result => result.status === 'fulfilled')
-      .map(b => b.value)
-      .filter(ft => filterUsingAssetVisibility(ft.asset, request.filters?.assetVisibility));
+      .map(result => (result.status === 'fulfilled' ? result.value : null))
+      .filter(isNonNull);
 
     const cumulativeQuoteBalance =
       runesBalances.length > 0
@@ -148,16 +153,22 @@ export class RunesBalancesService {
     };
   }
 
-  public async getRuneBalance(
+  public async createRuneBalance(
     runeName: string,
-    amount: string,
+    balanceAmount: string,
+    includeHiddenAssets = false,
     signal?: AbortSignal
-  ): Promise<RuneBalance> {
-    const runeInfo = await this.runeAssetService.getAsset(runeName, signal);
-    const totalBalance = createMoney(initBigNumber(amount), runeInfo.runeName, runeInfo.decimals);
-    const runeMarketData = await this.marketDataService.getMarketData(runeInfo, signal);
+  ): Promise<RuneBalance | null> {
+    const asset = includeHiddenAssets
+      ? await this.runeAssetService.getAsset(runeName, signal)
+      : await this.runeAssetService.getVisibleAsset(runeName, signal);
+    if (isNullish(asset)) {
+      return null;
+    }
+    const runeMarketData = await this.marketDataService.getMarketData(asset, signal);
+    const totalBalance = createMoney(initBigNumber(balanceAmount), asset.runeName, asset.decimals);
     return {
-      asset: runeInfo,
+      asset,
       quote: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, runeMarketData)),
       crypto: createBaseCryptoAssetBalance(totalBalance),
     };

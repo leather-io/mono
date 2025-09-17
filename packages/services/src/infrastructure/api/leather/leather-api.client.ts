@@ -30,6 +30,8 @@ export type LeatherApiLocale = Required<
 >['locale'];
 export type LeatherApiSwapDex =
   paths['/v1/swap/dexes']['get']['responses'][200]['content']['application/json'][string];
+export type LeatherApiAppConfig =
+  paths['/v1/app-config']['get']['responses'][200]['content']['application/json'];
 
 @injectable()
 export class LeatherApiClient {
@@ -666,5 +668,18 @@ export class LeatherApiClient {
     return skipCache
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(['leather-api-swap-dexes'], fetchFn);
+  }
+
+  async fetchAppConfig({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
+        this.client.GET('/v1/app-config', { signal })
+      );
+      return data!;
+    };
+
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-app-config'], fetchFn);
   }
 }

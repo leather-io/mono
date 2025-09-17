@@ -78,12 +78,18 @@ describe(Sip10BalancesService.name, () => {
           stxAddress: 'STACKS_ADDRESS1',
         },
       },
+      assets: {
+        includeHiddenAssets: true,
+      },
     } as AccountRequest;
     const request2 = {
       account: {
         stacks: {
           stxAddress: 'STACKS_ADDRESS2',
         },
+      },
+      assets: {
+        includeHiddenAssets: true,
       },
     } as AccountRequest;
     const request3 = {
@@ -110,6 +116,9 @@ describe(Sip10BalancesService.name, () => {
         stacks: {
           stxAddress: 'STACKS_ADDRESS',
         },
+      },
+      assets: {
+        includeHiddenAssets: true,
       },
     } as AccountRequest;
 
@@ -147,6 +156,9 @@ describe(Sip10BalancesService.name, () => {
         stacks: {
           stxAddress: stacksAddress,
         },
+      },
+      assets: {
+        includeHiddenAssets: true,
       },
     } as AccountRequest;
 
@@ -188,6 +200,9 @@ describe(Sip10BalancesService.name, () => {
             stxAddress: 'STACKS_ADDRESS',
           },
         },
+        assets: {
+          includeHiddenAssets: true,
+        },
       } as AccountRequest);
       expect(balance.quote.availableBalance.amount).toEqual(initBigNumber(2600));
     });
@@ -212,6 +227,9 @@ describe(Sip10BalancesService.name, () => {
           stxAddress: stacksAddress1,
         },
       },
+      assets: {
+        includeHiddenAssets: true,
+      },
     } as AccountRequest;
     const request2 = {
       account: {
@@ -219,12 +237,18 @@ describe(Sip10BalancesService.name, () => {
           stxAddress: stacksAddress2,
         },
       },
+      assets: {
+        includeHiddenAssets: true,
+      },
     } as AccountRequest;
     const request3 = {
       account: {
         stacks: {
           stxAddress: stacksAddress3,
         },
+      },
+      assets: {
+        includeHiddenAssets: true,
       },
     } as AccountRequest;
 

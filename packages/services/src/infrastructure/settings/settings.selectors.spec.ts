@@ -4,12 +4,19 @@ import {
   defaultNetworksKeyedById,
 } from '@leather.io/models';
 
-import { selectBitcoinNetworkMode, selectStacksApiUrl } from './settings.selectors';
+import {
+  selectAssetVisibility,
+  selectBitcoinNetworkMode,
+  selectStacksApiUrl,
+} from './settings.selectors';
 import { UserSettings } from './settings.service';
 
 const userSettings: UserSettings = {
   quoteCurrency: 'USD',
   network: defaultNetworksKeyedById.mainnet,
+  assetVisibility: {
+    'some|asset': true,
+  },
 };
 
 describe(selectBitcoinNetworkMode.name, () => {
@@ -23,5 +30,14 @@ describe(selectStacksApiUrl.name, () => {
   it('should select the Hiro Stacks API url from settings', () => {
     const stacksApiUrl = selectStacksApiUrl(userSettings);
     expect(stacksApiUrl).toEqual(HIRO_API_BASE_URL_MAINNET);
+  });
+});
+
+describe(selectAssetVisibility.name, () => {
+  it('should select the asset visibility from settings', () => {
+    const assetVisibility = selectAssetVisibility(userSettings);
+    expect(assetVisibility).toEqual({
+      'some|asset': true,
+    });
   });
 });

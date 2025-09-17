@@ -52,6 +52,7 @@ export type HttpCacheKey =
   | 'leather-api-sip10-token-history'
   | 'leather-api-register-notifications'
   | 'leather-api-swap-dexes'
+  | 'leather-api-app-config'
 
   // BitflowSdkClient
   | 'bitflow-sdk-available-tokens'
@@ -112,6 +113,7 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-sip10-token-history': { ttl: minutesInMs(5) },
   'leather-api-register-notifications': { ttl: secondsInMs(10) },
   'leather-api-swap-dexes': { ttl: daysInMs(1) },
+  'leather-api-app-config': { ttl: daysInMs(1) },
 
   'bitflow-sdk-available-tokens': { ttl: hoursInMs(6) },
   'bitflow-sdk-all-possible-token-y': { ttl: hoursInMs(1) },
