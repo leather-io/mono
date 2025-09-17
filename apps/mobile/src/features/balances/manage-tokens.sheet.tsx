@@ -37,10 +37,10 @@ export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheet
   const { spacing } = useTheme();
   const { changeAssetVisibility } = useSettings();
   const sip10s = useSip10AccountBalance(currentAccount.fingerprint, currentAccount.accountIndex, {
-    returnAllAssets: true,
+    includeHiddenAssets: true,
   });
   const runes = useRunesAccountBalance(currentAccount.fingerprint, currentAccount.accountIndex, {
-    returnAllAssets: true,
+    includeHiddenAssets: true,
   });
   const { isEnabled: isSip10Enabled } = useManagedSip10Tools(
     currentAccount.fingerprint,

@@ -17,14 +17,13 @@ export function useSip10AccountBalance(
   fingerprint: string,
   accountIndex: number,
   options?: {
-    returnAllAssets?: boolean;
+    includeHiddenAssets?: boolean;
   }
 ) {
-  const { assetVisibility } = useSettings();
   const account = useAccountAddresses(fingerprint, accountIndex);
   const queryResult = useSip10AccountBalanceQuery({
     account,
-    filters: options?.returnAllAssets ? undefined : { assetVisibility },
+    assets: { includeHiddenAssets: options?.includeHiddenAssets },
   });
 
   return toFetchState(queryResult);
@@ -88,9 +87,14 @@ function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
 }
 
 export function useSip10AccountBalanceQuery(request: AccountRequest) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference, assetVisibility } = useSettings();
   return useQuery({
-    queryKey: ['sip10-balances-service-get-sip10-account-balance', request, fiatCurrencyPreference],
+    queryKey: [
+      'sip10-balances-service-get-sip10-account-balance',
+      request,
+      fiatCurrencyPreference,
+      ...(request.assets?.includeHiddenAssets ? [] : [assetVisibility]),
+    ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AccountBalance(request, signal),
     ...balanceQueryOptions,

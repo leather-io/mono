@@ -27,15 +27,13 @@ export function useRunesAccountBalance(
   fingerprint: string,
   accountIndex: number,
   options?: {
-    returnAllAssets?: boolean;
+    includeHiddenAssets?: boolean;
   }
 ) {
-  const { assetVisibility } = useSettings();
-
   const account = useAccountAddresses(fingerprint, accountIndex);
   const queryResult = useRunesAccountBalanceQuery({
     account,
-    filters: options?.returnAllAssets ? undefined : { assetVisibility },
+    assets: { includeHiddenAssets: options?.includeHiddenAssets },
   });
   return toFetchState(queryResult);
 }
@@ -67,10 +65,15 @@ function useRunesAggregateBalanceQuery(requests: AccountRequest[]) {
 }
 
 function useRunesAccountBalanceQuery(request: AccountRequest) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference, assetVisibility } = useSettings();
   const runeFlag = useRunesFlag();
   return useQuery({
-    queryKey: ['runes-balances-service-get-runes-account-balance', request, fiatCurrencyPreference],
+    queryKey: [
+      'runes-balances-service-get-runes-account-balance',
+      request,
+      fiatCurrencyPreference,
+      ...(request.assets?.includeHiddenAssets ? [] : [assetVisibility]),
+    ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAccountBalance(request, signal),
     enabled: runeFlag,

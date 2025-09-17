@@ -10,27 +10,27 @@ import { balanceQueryOptions } from './balance-query-options';
 
 export function useAccountTotalBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
-  const { assetVisibility } = useSettings();
   return toFetchState(
     useGetAccountTotalBalanceQuery({
       account,
-      filters: {
-        assetVisibility,
-      },
     })
   );
 }
 
 export function useAccountUnlockedBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
-  const { assetVisibility } = useSettings();
-  return toFetchState(useGetAccountUnlockedBalanceQuery({ account, filters: { assetVisibility } }));
+  return toFetchState(useGetAccountUnlockedBalanceQuery({ account }));
 }
 
 export function useGetAccountTotalBalanceQuery(request: AccountRequest) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference, assetVisibility } = useSettings();
   return useQuery({
-    queryKey: ['account-balances-service-get-total-balance', request, fiatCurrencyPreference],
+    queryKey: [
+      'account-balances-service-get-total-balance',
+      request,
+      fiatCurrencyPreference,
+      assetVisibility,
+    ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getAccountBalancesService().getTotalBalance(request, signal),
     ...balanceQueryOptions,
@@ -38,9 +38,14 @@ export function useGetAccountTotalBalanceQuery(request: AccountRequest) {
 }
 
 export function useGetAccountUnlockedBalanceQuery(request: AccountRequest) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference, assetVisibility } = useSettings();
   return useQuery({
-    queryKey: ['account-balances-service-get-unlocked-balance', request, fiatCurrencyPreference],
+    queryKey: [
+      'account-balances-service-get-unlocked-balance',
+      request,
+      fiatCurrencyPreference,
+      assetVisibility,
+    ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getAccountBalancesService().getUnlockedBalance(request, signal),
     ...balanceQueryOptions,

@@ -4,6 +4,57 @@
  */
 
 export interface paths {
+  '/v1/app-config': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description App Config */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              assets: {
+                defaultEnabled: string[];
+              };
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/utxos/{descriptor}': {
     parameters: {
       query?: never;
@@ -1838,7 +1889,7 @@ export interface paths {
             'application/json': {
               [key: string]: {
                 /** @enum {string} */
-                id: 'bitflow' | 'sbtc-bridge' | 'alex' | 'velar';
+                id: 'bitflow' | 'sbtc-bridge' | 'alex' | 'velar' | 'arkadiko';
                 name: string;
                 url: string;
                 logo: string;

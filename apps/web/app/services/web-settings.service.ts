@@ -16,6 +16,7 @@ export class WebSettingsService implements SettingsService {
     return {
       quoteCurrency,
       network: defaultNetworksKeyedById[network],
+      assetVisibility: {},
     };
   }
 }

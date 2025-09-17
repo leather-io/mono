@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import { isNonNull, isNullish } from 'remeda';
 
 import { CryptoAssetBalance, Sip10Asset } from '@leather.io/models';
 import {
@@ -10,12 +11,11 @@ import {
 } from '@leather.io/utils';
 
 import { Sip10AssetService } from '../assets/sip10-asset.service';
-import { filterUsingAssetVisibility } from '../filtering/filtering';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
-import { AccountRequest, AccountRequestFilteringOptions } from '../types';
+import { AccountRequest } from '../types';
 import { combineSip10Balances, sortByAvailableQuoteBalance } from './sip10-balances.utils';
 
 export interface Sip10Balance {
@@ -141,17 +141,17 @@ export class Sip10BalancesService {
     }
     return this.getSip10AddressBalance(
       request.account.stacks.stxAddress,
-      request.filters?.assetVisibility,
+      request.assets?.includeHiddenAssets,
       signal
     );
   }
 
   /**
-   * Gets all SIP-10 balances for given account. Includes cumulative quote currency value.
+   * Gets all SIP-10 balances for given Stacks address. Includes cumulative quote currency value.
    */
   public async getSip10AddressBalance(
     address: string,
-    assetVisibility?: AccountRequestFilteringOptions['assetVisibility'],
+    includeHiddenAssets = false,
     signal?: AbortSignal
   ): Promise<Sip10AddressBalance> {
     const ftBalances = (
@@ -164,12 +164,13 @@ export class Sip10BalancesService {
       await Promise.allSettled(
         ftBalances
           .filter(ft => Number(ft.balance ?? 0) !== 0)
-          .map(ft => this.getSip10TokenBalance(ft.token, Number(ft.balance ?? 0), signal))
+          .map(ft =>
+            this.createSip10Balance(ft.token, Number(ft.balance ?? 0), includeHiddenAssets, signal)
+          )
       )
     )
-      .filter(result => result.status === 'fulfilled')
-      .map(result => result.value)
-      .filter(ft => filterUsingAssetVisibility(ft.asset, assetVisibility));
+      .map(result => (result.status === 'fulfilled' ? result.value : null))
+      .filter(isNonNull);
 
     const cumulativeQuoteBalance =
       sip10Balances.length > 0
@@ -185,15 +186,20 @@ export class Sip10BalancesService {
     };
   }
 
-  private async getSip10TokenBalance(
+  private async createSip10Balance(
     assetId: string,
-    amount: number,
+    balanceAmount: number,
+    includeHiddenAssets = false,
     signal?: AbortSignal
-  ): Promise<Sip10Balance> {
-    const asset = await this.sip10AssetsService.getAsset(assetId, signal);
-    const totalBalance = createMoney(amount, asset.symbol, asset.decimals);
+  ): Promise<Sip10Balance | null> {
+    const asset = includeHiddenAssets
+      ? await this.sip10AssetsService.getAsset(assetId, signal)
+      : await this.sip10AssetsService.getVisibleAsset(assetId, signal);
+    if (isNullish(asset)) {
+      return null;
+    }
     const marketData = await this.marketDataService.getMarketData(asset, signal);
-
+    const totalBalance = createMoney(balanceAmount, asset.symbol, asset.decimals);
     return {
       asset,
       quote: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, marketData)),
