@@ -1,3 +1,4 @@
+import { normalizeSearchTerm } from '@/features/swap/helpers';
 import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useSettings } from '@/store/settings/settings';
@@ -16,19 +17,27 @@ export function useProcessedSwapAssets(
   const { assetVisibility } = useSettings();
   const debounceDelay = searchTerm.length === 0 ? 0 : 200;
   const debouncedSearchTerm = useDebouncedValue(searchTerm, debounceDelay);
+  const normalizedSearchTerm = normalizeSearchTerm(debouncedSearchTerm);
 
-  if (!data) return [];
+  if (!data)
+    return {
+      isPerformingSearch: false,
+      processedSwapAssets: [],
+    };
 
-  return pipe(
-    data,
-    filter(swapAsset => isRelevantSwapAsset(swapAsset, assetSelectionType, assetVisibility)),
-    swapAsset => performAssetSearch(swapAsset, debouncedSearchTerm),
-    sortBy(
-      getCurrencyPriority,
-      swapAsset => -getAvailableQuoteBalance(swapAsset),
-      swapAsset => swapAsset.asset.symbol
-    )
-  );
+  return {
+    isPerformingSearch: normalizedSearchTerm.length > 0,
+    processedSwapAssets: pipe(
+      data,
+      filter(swapAsset => isRelevantSwapAsset(swapAsset, assetSelectionType, assetVisibility)),
+      swapAsset => performAssetSearch(swapAsset, normalizedSearchTerm),
+      sortBy(
+        getCurrencyPriority,
+        swapAsset => -getAvailableQuoteBalance(swapAsset),
+        swapAsset => swapAsset.asset.symbol
+      )
+    ),
+  };
 }
 
 function getCurrencyPriority(swapAsset: AccountSwapAsset): number {

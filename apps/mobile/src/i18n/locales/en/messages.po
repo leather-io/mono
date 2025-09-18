@@ -107,6 +107,14 @@ msgstr "Activity"
 msgid "Add account"
 msgstr "Add account"
 
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:31
+msgid ""
+"Add funds to your wallet to start\n"
+"swapping between currencies."
+msgstr ""
+"Add funds to your wallet to start\n"
+"swapping between currencies."
+
 #: src/features/approver/components/memo-sheet.tsx:16
 #: src/features/approver/components/nonce-sheet.tsx:16
 #: src/features/send/components/memo.tsx:34
@@ -366,7 +374,7 @@ msgstr "Choose an account"
 msgid "Choose existing wallet"
 msgstr "Choose existing wallet"
 
-#: src/components/search-input.tsx:67
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:20
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -950,6 +958,14 @@ msgstr "Networks"
 msgid "NFTs"
 msgstr "NFTs"
 
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:29
+msgid "No assets"
+msgstr "No assets"
+
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:19
+msgid "No assets found"
+msgstr "No assets found"
+
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state.tsx:9
 msgid "No results found"
 msgstr "No results found"
@@ -1134,7 +1150,7 @@ msgstr "Scan a QR code"
 msgid "Scan QR Code"
 msgstr "Scan QR Code"
 
-#: src/features/swap/components/asset-selector/asset-selector.tsx:37
+#: src/features/swap/components/asset-selector/asset-selector.tsx:42
 msgid "Search for asset"
 msgstr "Search for asset"
 

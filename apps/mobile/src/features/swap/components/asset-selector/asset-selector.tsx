@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { SearchInput } from '@/components/search-input';
+import { AssetSelectorEmptyState } from '@/features/swap/components/asset-selector/asset-selector-empty-state';
 import {
   AssetAvatar,
   AssetSelectorItem,
@@ -26,7 +27,11 @@ interface AssetSelectorProps {
 
 export function AssetSelector({ type, query, onSelectAsset }: AssetSelectorProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const processedSwapAssets = useProcessedSwapAssets(query.data, type, searchTerm);
+  const { processedSwapAssets, isPerformingSearch } = useProcessedSwapAssets(
+    query.data,
+    type,
+    searchTerm
+  );
 
   return (
     <Box flex={1}>
@@ -41,21 +46,32 @@ export function AssetSelector({ type, query, onSelectAsset }: AssetSelectorProps
       {matchQueryResult(query, {
         pending: () => <AssetSelectorLoadingState />,
         error: error => <AssetSelectorError error={error} />,
-        success: () => (
-          <Sheet.FlashList
-            data={processedSwapAssets}
-            renderItem={({ item }) => (
-              <AssetSelectorItem
-                name={getFungibleAssetDisplayName(item.asset)}
-                symbol={item.asset.symbol}
-                balance={item.balance?.crypto.availableBalance}
-                quoteBalance={item.balance?.quote.availableBalance}
-                icon={<AssetAvatar asset={item.asset} />}
-                onPress={() => onSelectAsset(type, item)}
+        success: () => {
+          if (processedSwapAssets.length === 0) {
+            return (
+              <AssetSelectorEmptyState
+                onClearSearch={() => setSearchTerm('')}
+                isPerformingSearch={isPerformingSearch}
               />
-            )}
-          />
-        ),
+            );
+          }
+
+          return (
+            <Sheet.FlashList
+              data={processedSwapAssets}
+              renderItem={({ item }) => (
+                <AssetSelectorItem
+                  name={getFungibleAssetDisplayName(item.asset)}
+                  symbol={item.asset.symbol}
+                  balance={item.balance?.crypto.availableBalance}
+                  quoteBalance={item.balance?.quote.availableBalance}
+                  icon={<AssetAvatar asset={item.asset} />}
+                  onPress={() => onSelectAsset(type, item)}
+                />
+              )}
+            />
+          );
+        },
       })}
     </Box>
   );

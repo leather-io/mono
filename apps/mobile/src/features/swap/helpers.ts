@@ -6,3 +6,7 @@ export function areSameAssets(first: FungibleCryptoAsset, second: FungibleCrypto
   const secondAssetId = getAssetId(second);
   return firstAssetId.protocol === secondAssetId.protocol && firstAssetId.id === secondAssetId.id;
 }
+
+export function normalizeSearchTerm(input: string) {
+  return input.trim();
+}
