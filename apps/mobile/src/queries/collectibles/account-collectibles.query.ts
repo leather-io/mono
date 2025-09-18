@@ -54,7 +54,7 @@ function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
   });
 }
 
-function useAccountCollectiblesQuery(account: AccountAddresses, assetId?: string) {
+function useAccountCollectiblesQuery(account: AccountAddresses) {
   const collectiblesFlag = useCollectiblesFlag();
   if (!collectiblesFlag) {
     account.bitcoin = undefined;

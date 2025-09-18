@@ -17,13 +17,7 @@ interface CollectibleProps {
   collection?: string;
 }
 
-export function Collectible({
-  collectible,
-  name,
-  description,
-  children,
-  collection,
-}: CollectibleProps) {
+export function Collectible({ name, description, children, collection }: CollectibleProps) {
   const title = name;
   return (
     <Screen>
@@ -68,12 +62,3 @@ export function Collectible({
     </Screen>
   );
 }
-
-// >>> PETE - you made enough of a start here
-// - revisit origial PR and
-// -> roll back SIP-9 create changes
-// -> ask for re-review and update of dynamic size in this PR
-// -> try get that stuff merged first then continue on in smaller chunks
-
-// on chore/collectibles-details video ordinals are not renderig but they work OK on feat/mobile-collectibles-clean ???
-// probably time to start making PRs anyway

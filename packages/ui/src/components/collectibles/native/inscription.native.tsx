@@ -5,7 +5,8 @@ import { CollectibleAudio } from './collectible-audio.native';
 import { CollectibleHtml } from './collectible-html.native';
 import { CollectibleImage } from './collectible-image.native';
 import { CollectibleText } from './collectible-text.native';
-import { CollectibleVideo } from './video/collectible-video.native';
+
+// import { CollectibleVideo } from './video/collectible-video.native';
 
 export interface InscriptionProps {
   mimeType: InscriptionMimeType;

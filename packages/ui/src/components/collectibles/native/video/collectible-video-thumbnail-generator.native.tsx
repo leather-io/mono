@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-const VideoThumbnailGenerator = ({
+function VideoThumbnailGenerator({
   videoUrl,
   onThumbnailGenerated,
   timestamp = 1,
@@ -10,7 +10,7 @@ const VideoThumbnailGenerator = ({
   videoUrl: string;
   onThumbnailGenerated: (thumbnailData: string) => void;
   timestamp: number;
-}) => {
+}) {
   const [isGenerating, setIsGenerating] = useState(true);
   const encodedVideoUrl = encodeURI(videoUrl);
 
@@ -88,7 +88,7 @@ const VideoThumbnailGenerator = ({
     </html>
   `;
 
-  const handleMessage = (event: any) => {
+  function handleMessage(event: any) {
     try {
       const data = JSON.parse(event.nativeEvent.data);
 
@@ -96,14 +96,13 @@ const VideoThumbnailGenerator = ({
         onThumbnailGenerated(data.data);
         setIsGenerating(false);
       } else if (data.type === 'error') {
-        console.error('Thumbnail generation error:', data.message);
         onThumbnailGenerated(null as any);
         setIsGenerating(false);
       }
-    } catch (e) {
-      console.error('Error parsing message:', e);
+    } catch {
+      // Silently ignore JSON parsing errors for invalid messages
     }
-  };
+  }
 
   if (!isGenerating) return null;
 
@@ -119,7 +118,7 @@ const VideoThumbnailGenerator = ({
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   hidden: {

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { BnsImage } from './bns.native';
-// import { CollectibleHtml } from './collectible-html.native';
 import { CollectibleImage } from './collectible-image.native';
 import { VideoThumbnailItem } from './video/collectible-video-thumbnail.native';
 import { CollectibleVideo } from './video/collectible-video.native';
@@ -66,7 +65,7 @@ async function checkContentType(url: string) {
         contentType?.startsWith('image/') || contentType?.includes('application/octet-stream'),
       isAudio: contentType?.startsWith('audio/'),
     };
-  } catch (error) {
+  } catch {
     // Fallback: try to determine from URL extension
     const extension = url.split('.').pop()?.toLowerCase();
     const videoExtensions = ['mp4', 'webm', 'mov', 'avi', 'mkv', 'm4v'];
@@ -102,7 +101,7 @@ export function Sip9({
     if (contentType !== '') {
       return;
     }
-    const checkMedia = async () => {
+    async function checkMedia() {
       const info = await checkContentType(src);
       // Ensure all required fields are present for setMediaInfo
       setMediaInfo({
@@ -113,9 +112,9 @@ export function Sip9({
         isAudio: info.isAudio,
         error: (info as any).error,
       });
-    };
+    }
 
-    checkMedia();
+    void checkMedia();
   }, [src, contentType]);
   if (isBns(collection.name)) {
     return <BnsImage alt={name} height={height} />;

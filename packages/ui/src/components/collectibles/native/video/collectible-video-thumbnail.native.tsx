@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import VideoThumbnailGenerator from './collectible-video-thumbnail-generator.native';
 
-export const VideoThumbnailItem = ({
+export function VideoThumbnailItem({
   video,
   onPress,
 }: {
   video: any;
   onPress: (video: any, thumbnail: string) => void;
-}) => {
+}) {
   const [thumbnail, setThumbnail] = useState(null);
   const [isGenerating, setIsGenerating] = useState(true);
 
@@ -53,7 +53,7 @@ export const VideoThumbnailItem = ({
       </TouchableOpacity>
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   thumbnailContainer: {

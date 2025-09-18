@@ -500,11 +500,11 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
-#: src/features/token/collectible.tsx:58
+#: src/features/token/collectible.tsx:52
 msgid "Description"
 msgstr "Description"
 
-#: src/features/token/collectible.tsx:62
+#: src/features/token/collectible.tsx:56
 msgid "Details"
 msgstr "Details"
 
@@ -919,7 +919,7 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
-#: src/features/token/collectible.tsx:64
+#: src/features/token/collectible.tsx:58
 msgid "Name"
 msgstr "Name"
 

@@ -5,10 +5,9 @@ import { Loading } from '@/components/loading/loading';
 import { Screen } from '@/components/screen/screen';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { TokenDetailsProps } from '@/features/token/types';
-import { useAccountBnsNames } from '@/queries/bns/bns.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 
-import { AccountId, NonFungibleCryptoAsset } from '@leather.io/models';
+import { AccountId } from '@leather.io/models';
 
 import { EmptyCollectiblesState } from './empty-collectibles-state';
 import { renderCollectible } from './render-collectible';
@@ -19,22 +18,12 @@ interface CollectiblesListProps {
   onPressToken?: (tokenDetails: TokenDetailsProps) => void;
 }
 
-/* PETE: what to do :
-//
-// 1. scaffold simple collectibles details with existing data
-// 2. investigate improving service to 
-// => return bns names with sip9 properly 
-// => ordinal text / html 
-// => stamps + gamma api 
-*/
-
 export function CollectiblesList({ currentAccount, header, onPressToken }: CollectiblesListProps) {
   const { fingerprint, accountIndex } = currentAccount;
   const { value: collectibles, state: collectiblesState } = useAccountCollectibles(
     fingerprint,
     accountIndex
   );
-  // console.log('collectibles', collectibles);
 
   const isSuccess = collectiblesState === 'success';
   const isLoading = collectiblesState === 'loading';

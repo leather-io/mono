@@ -9,7 +9,6 @@ import {
 } from '@leather.io/models';
 
 import { Sip9AssetService } from '../assets/sip9-asset.service';
-import { BnsService } from '../bns/bns.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { CollectiblesService } from './collectibles.service';
@@ -70,30 +69,10 @@ describe(CollectiblesService.name, () => {
     ),
   } as unknown as Sip9AssetService;
 
-  const mockBnsService = {
-    getAccountBnsNames: vi.fn().mockResolvedValue([
-      {
-        fullName: 'locker.locker',
-        isPrimary: false,
-        name: 'locker',
-        namespace: 'locker',
-        owner: '??????????????',
-      },
-      {
-        fullName: 'btc.btc',
-        isPrimary: true,
-        name: 'btc',
-        namespace: 'btc',
-        owner: '??????????????',
-      },
-    ]),
-  } as unknown as BnsService;
-
   const collectiblesService = new CollectiblesService(
     mockBisApiClient,
     mockStacksApiClient,
-    mockSip9AssetService,
-    mockBnsService
+    mockSip9AssetService
   );
 
   describe('getTotalCollectibles', () => {

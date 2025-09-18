@@ -25,7 +25,7 @@ export class Sip9AssetService {
     tokenHexValue: string,
     signal?: AbortSignal
   ): Promise<Sip9Asset> {
-    const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier); 
+    const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier);
     const tokenId = getNonFungibleTokenId(tokenHexValue);
     const hiroMetadata = await this.stacksApiClient.getNftMetadata(principal, tokenId, { signal });
     const gammaMetadata = await this.gammaApiClient.getStacksNft(principal, tokenId, { signal });

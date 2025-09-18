@@ -11,9 +11,7 @@ import {
 import { createInscriptionAsset, isDefined } from '@leather.io/utils';
 
 import { Sip9AssetService } from '../assets/sip9-asset.service';
-import { BnsService } from '../bns/bns.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
-import { GammaApiClient } from '../infrastructure/api/gamma/gamma-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { mapBisInscriptionToCreateInscriptionData, sortByBlockHeight } from './collectibles.utils';
 
@@ -21,10 +19,8 @@ import { mapBisInscriptionToCreateInscriptionData, sortByBlockHeight } from './c
 export class CollectiblesService {
   constructor(
     private readonly bisApiClient: BestInSlotApiClient,
-    private readonly bnsService: BnsService,
-    private readonly gammaApiClient: GammaApiClient,
-    private readonly sip9AssetsService: Sip9AssetService,
-    private readonly stacksApiClient: HiroStacksApiClient
+    private readonly stacksApiClient: HiroStacksApiClient,
+    private readonly sip9AssetsService: Sip9AssetService
   ) {}
 
   public async getTotalCollectibles(
@@ -82,28 +78,14 @@ export class CollectiblesService {
       const nftHoldings = await this.stacksApiClient.getNftHoldings(account.stacks!.stxAddress, {
         signal,
       });
-      // const bnsNames = await this.bnsService.getAccountBnsNames({ account }, signal);
-      // const bnsNamesArray = bnsNames.map(bns => bns.fullName);
-
       const results = await Promise.all(
         nftHoldings.map(holding => {
-          // console.log('holding', holding);
-          // PETE for SIP9 check how we can show audio  e.g. "worry-nft-music"
-          // "SPGGAEQWA7Y9HRZY5T0XJCEYEZ28J6RKCCC1HP9M.worry-nft-music::worry-nft-music"
           return this.getOptionalSip9Asset(holding, signal).then(asset =>
             asset ? { asset, blockHeight: holding.block_height } : undefined
-          )
+          );
         })
-        
       );
-// PETE renable for debugging
-      // console.log('nftHoldings', nftHoldings);
-      // console.log('full sip9 results', results); // gives all undefined
-      // filter our BNS Archive + all other BNS names
-      return results
-        .filter(isDefined);
-        // .filter(asset => asset.asset.name !== 'BNS - Archive')
-        // .filter(asset => !bnsNamesArray.includes(asset.asset.name));
+      return results.filter(isDefined);
     } catch {
       return [];
     }
@@ -113,11 +95,8 @@ export class CollectiblesService {
     holding: NonFungibleTokenHolding,
     signal?: AbortSignal
   ): Promise<Sip9Asset | undefined> {
-
-
     try {
-
-   return await this.sip9AssetsService.getAsset(
+      return await this.sip9AssetsService.getAsset(
         holding.asset_identifier,
         holding.value.hex,
         signal

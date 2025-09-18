@@ -1,28 +1,19 @@
-import React, { useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { useRef, useState } from 'react';
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-export const CollectibleVideo = ({
+export function CollectibleVideo({
   videoUrl,
   thumbnailUrl,
 }: {
   videoUrl: string;
   thumbnailUrl: string;
-}) => {
+}) {
   const [showVideo, setShowVideo] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const webViewRef = useRef(null);
 
-  // More robust HTML with better error handling and mobile compatibility
   const videoHtml = `
     <!DOCTYPE html>
     <html>
@@ -170,10 +161,9 @@ export const CollectibleVideo = ({
     </html>
   `;
 
-  const handleMessage = (event: any) => {
+  function handleMessage(event: any) {
     try {
       const data = JSON.parse(event.nativeEvent.data);
-      console.log('WebView message:', data);
 
       switch (data.type) {
         case 'error':
@@ -188,26 +178,22 @@ export const CollectibleVideo = ({
           // setShowVideo(false);
           break;
         case 'debug':
-          console.log('Debug:', data.message);
+        default:
           break;
       }
-    } catch (e) {
-      console.error('Error parsing message:', e);
-    }
-  };
+    } catch {}
+  }
 
-  const handleWebViewError = (syntheticEvent: any) => {
+  function handleWebViewError(syntheticEvent: any) {
     const { nativeEvent } = syntheticEvent;
-    console.error('WebView error:', nativeEvent);
     setError(`WebView error: ${nativeEvent.description || 'Unknown error'}` as any);
     setIsLoading(false);
-  };
+  }
 
   if (!showVideo) {
     return (
       <TouchableOpacity
         onPress={() => {
-          console.log('Playing video:', videoUrl);
           setShowVideo(true);
           setIsLoading(true);
           setError(null);
@@ -216,11 +202,7 @@ export const CollectibleVideo = ({
         activeOpacity={0.9}
       >
         {thumbnailUrl ? (
-          <Image
-            source={{ uri: thumbnailUrl }}
-            style={styles.thumbnail}
-            onError={e => console.log('Thumbnail load error:', e.nativeEvent.error)}
-          />
+          <Image source={{ uri: thumbnailUrl }} style={styles.thumbnail} />
         ) : (
           <View style={styles.placeholder}>
             <Text style={styles.placeholderText}>Tap to play video</Text>
@@ -261,13 +243,7 @@ export const CollectibleVideo = ({
         // Event handlers
         onMessage={handleMessage}
         onError={handleWebViewError}
-        onHttpError={(syntheticEvent: any) => {
-          const { nativeEvent } = syntheticEvent as any;
-          console.error('HTTP error:', nativeEvent);
-          setError(`HTTP error: ${nativeEvent.statusCode}` as any);
-        }}
         onLoadEnd={() => {
-          console.log('WebView loaded');
           // Give it a moment to initialize
           setTimeout(() => {
             if (isLoading) {
@@ -303,7 +279,7 @@ export const CollectibleVideo = ({
       )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
