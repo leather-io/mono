@@ -21,6 +21,7 @@ import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
 import { DescriptionSheet } from '@/features/settings/description-sheet';
 import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
+import { useDeepLinks } from '@/hooks/use-deep-links';
 import { usePageViewTracking } from '@/hooks/use-page-view-tracking';
 import { I18nProvider } from '@/i18n/i18n';
 import { queryClient } from '@/queries/query';
@@ -33,7 +34,7 @@ import * as Sentry from '@sentry/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
 
@@ -69,6 +70,9 @@ function App() {
   useEffect(() => {
     void trackFirstAppOpen();
   }, []);
+
+  // Handle deep links
+  useDeepLinks(router);
 
   return (
     <Box backgroundColor="ink.background-secondary" flex={1}>
