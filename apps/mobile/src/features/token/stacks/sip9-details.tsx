@@ -16,7 +16,6 @@ export function Sip9TokenDetails({ assetId, account }: Sip9TokenDetailsProps) {
 
   const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
 
-  console.log('SIP9 collectible', collectible);
   if (collectible.state === 'loading') {
     return <TokenLoading />;
   }
@@ -30,7 +29,7 @@ export function Sip9TokenDetails({ assetId, account }: Sip9TokenDetailsProps) {
         collectible={collectible.value[0]!}
         name={name}
         description={description}
-        collection="collection.name"
+        collection={collection.name}
       >
         <Sip9Component item={collectible.value[0]! as Sip9Asset} height={342} viewType="full" />
       </Collectible>

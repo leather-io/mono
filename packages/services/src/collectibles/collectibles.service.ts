@@ -16,7 +16,6 @@ import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-
 import { GammaApiClient } from '../infrastructure/api/gamma/gamma-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { mapBisInscriptionToCreateInscriptionData, sortByBlockHeight } from './collectibles.utils';
-import { getAssetNameFromIdentifier, getContractPrincipalFromAssetIdentifier, getNonFungibleTokenId } from '../assets/stacks-asset.utils';
 
 @injectable()
 export class CollectiblesService {
@@ -83,12 +82,12 @@ export class CollectiblesService {
       const nftHoldings = await this.stacksApiClient.getNftHoldings(account.stacks!.stxAddress, {
         signal,
       });
-      const bnsNames = await this.bnsService.getAccountBnsNames({ account }, signal);
-      const bnsNamesArray = bnsNames.map(bns => bns.fullName);
+      // const bnsNames = await this.bnsService.getAccountBnsNames({ account }, signal);
+      // const bnsNamesArray = bnsNames.map(bns => bns.fullName);
 
       const results = await Promise.all(
         nftHoldings.map(holding => {
-          console.log('holding', holding);
+          // console.log('holding', holding);
           // PETE for SIP9 check how we can show audio  e.g. "worry-nft-music"
           // "SPGGAEQWA7Y9HRZY5T0XJCEYEZ28J6RKCCC1HP9M.worry-nft-music::worry-nft-music"
           return this.getOptionalSip9Asset(holding, signal).then(asset =>
@@ -97,9 +96,9 @@ export class CollectiblesService {
         })
         
       );
-
-      console.log('nftHoldings', nftHoldings);
-      console.log('full sip9 results', results); // gives all undefined
+// PETE renable for debugging
+      // console.log('nftHoldings', nftHoldings);
+      // console.log('full sip9 results', results); // gives all undefined
       // filter our BNS Archive + all other BNS names
       return results
         .filter(isDefined);

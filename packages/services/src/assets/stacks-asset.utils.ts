@@ -56,9 +56,8 @@ export function createSip9Asset(
   metadata: HiroNftMetadataResponse | null,
   gammaMetadata: GammaNftMetadata
 ): Sip9Asset {
-  // TODO: add gamma metadata here also
-  const assetName = getAssetNameFromIdentifier(assetIdentifier);
   const { metadata: hiroMetadata } = metadata || {};
+  const assetName = getAssetNameFromIdentifier(assetIdentifier);
   const name = hiroMetadata?.name || gammaMetadata.item.name || assetName;
   const description = hiroMetadata?.description || gammaMetadata.item.description || '';
   const cachedImage =

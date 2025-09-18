@@ -12,6 +12,7 @@ const VideoThumbnailGenerator = ({
   timestamp: number;
 }) => {
   const [isGenerating, setIsGenerating] = useState(true);
+  const encodedVideoUrl = encodeURI(videoUrl);
 
   const thumbnailGeneratorHtml = `
     <!DOCTYPE html>
@@ -39,7 +40,7 @@ const VideoThumbnailGenerator = ({
           const canvas = document.getElementById('canvas');
           const ctx = canvas.getContext('2d');
           
-          video.src = "${videoUrl}";
+          video.src = "${encodedVideoUrl}";
           
           video.addEventListener('loadedmetadata', () => {
             // Set canvas dimensions to match video

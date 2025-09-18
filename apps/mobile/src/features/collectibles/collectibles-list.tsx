@@ -34,30 +34,11 @@ export function CollectiblesList({ currentAccount, header, onPressToken }: Colle
     fingerprint,
     accountIndex
   );
-  // const { value: bnsNames, state: bnsNamesState } = useAccountBnsNames(fingerprint, accountIndex);
-  console.log('collectibles', collectibles);
-  // console.log('bnsNames', bnsNames);
-  // const collectibleData: NonFungibleCryptoAsset[] = [
-  //   ...(collectibles ?? []),
-  //   ...(bnsNames?.map(bns => ({
-  //     category: 'nft' as const,
-  //     chain: 'stacks' as const,
-  //     protocol: 'sip9' as const,
-  //     collection: 'bns',
-  //     name: bns.fullName,
-  //     assetId: '',
-  //     contractId: '',
-  //     tokenId: 0,
-  //     description: bns.namespace,
-  //     cachedImage: '',
-  //     cachedImageThumbnail: '',
-  //     contentType: '',
-  //   })) ?? []),
-  // ];
+  // console.log('collectibles', collectibles);
 
-  const isSuccess = collectiblesState === 'success'; //&& bnsNamesState === 'success';
-  const isLoading = collectiblesState === 'loading'; //|| bnsNamesState === 'loading';
-  const isError = collectiblesState === 'error'; //|| bnsNamesState === 'error';
+  const isSuccess = collectiblesState === 'success';
+  const isLoading = collectiblesState === 'loading';
+  const isError = collectiblesState === 'error';
 
   return (
     <Screen.FlashList

@@ -29,7 +29,6 @@ export class Sip9AssetService {
     const tokenId = getNonFungibleTokenId(tokenHexValue);
     const hiroMetadata = await this.stacksApiClient.getNftMetadata(principal, tokenId, { signal });
     const gammaMetadata = await this.gammaApiClient.getStacksNft(principal, tokenId, { signal });
-
     return createSip9Asset(assetIdentifier, tokenId, hiroMetadata, gammaMetadata);
   }
 }
