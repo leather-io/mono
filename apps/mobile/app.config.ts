@@ -27,6 +27,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       bundleIdentifier: 'io.leather.mobilewallet',
       googleServicesFile: process.env.GOOGLE_SERVICES_INFO_PLIST ?? './GoogleService-Info.plist',
       supportsTablet: false,
+      associatedDomains: ['applinks:connect.leather.io'],
       entitlements: {
         'aps-environment': 'production',
       },
@@ -69,6 +70,17 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       package: 'io.leather.mobilewallet',
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json',
       edgeToEdgeEnabled: true,
+      intentFilters: [
+        {
+          action: 'VIEW',
+          category: ['DEFAULT', 'BROWSABLE'],
+          data: {
+            scheme: 'https',
+            host: 'connect.leather.io',
+          },
+          autoVerify: true,
+        },
+      ],
       adaptiveIcon: {
         foregroundImage: './src/assets/adaptive-icon.png',
         backgroundColor: '#12100F',
