@@ -5,7 +5,7 @@ import { CollectibleAudio } from './collectible-audio.native';
 import { CollectibleHtml } from './collectible-html.native';
 import { CollectibleImage } from './collectible-image.native';
 import { CollectibleText } from './collectible-text.native';
-import { CollectibleVideo } from './collectible-video.native';
+import { CollectibleVideo } from './video/collectible-video.native';
 
 export interface InscriptionProps {
   mimeType: InscriptionMimeType;
@@ -21,13 +21,15 @@ export function Inscription({ mimeType, name, height = 200, src, onPress }: Insc
       return <CollectibleAudio size={height} onPress={onPress} />;
     case 'text':
       return <CollectibleText src={src} height={height} onPress={onPress} />;
-    case 'video':
-      return <CollectibleVideo src={src} height={height} />;
+    // TODO test this with the new video player
+    // case 'video':
+    //   return <CollectibleVideo src={src} height={height} width={undefined} />;
     case 'html':
     case 'gltf':
-    case 'svg':
+    case 'video':
       return <CollectibleHtml src={src} height={height} onPress={onPress} />;
     case 'other':
+    case 'svg':
     case 'image':
       return <CollectibleImage source={src} alt={name} height={height} onPress={onPress} />;
     default:

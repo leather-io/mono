@@ -48,6 +48,9 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     includeHiddenAssets: true,
   });
   const hasAssets = !!allSip10Data.value?.sip10s.length || !!allRunesData.value?.runes.length;
+  function onOpenAccountSelector() {
+    accountSelectorSheetRef.current?.present();
+  }
 
   function onAccountPress(account: AccountId) {
     accountSelectorSheetRef.current?.close();

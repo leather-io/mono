@@ -32,7 +32,7 @@ export function Sip9TokenDetails({ assetId, account }: Sip9TokenDetailsProps) {
         description={description}
         collection="collection.name"
       >
-        <Sip9Component item={collectible.value[0]! as Sip9Asset} height={342} />
+        <Sip9Component item={collectible.value[0]! as Sip9Asset} height={342} viewType="full" />
       </Collectible>
     );
   }

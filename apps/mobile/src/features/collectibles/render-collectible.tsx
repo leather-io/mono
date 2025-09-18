@@ -7,14 +7,7 @@ import {
   Sip9Asset,
   StampAsset,
 } from '@leather.io/models';
-import {
-  BnsImage,
-  CollectibleImage,
-  ImageUnavailable,
-  Inscription,
-  Sip9,
-  Text,
-} from '@leather.io/ui/native';
+import { CollectibleImage, ImageUnavailable, Inscription, Sip9, Text } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
 function FallbackImage() {
@@ -42,23 +35,23 @@ export function Stamp({ item, onPress, height = 200 }: StampProps) {
   );
 }
 
-function Bns({ name }: { name: string }) {
-  return <BnsImage alt={name} height={200} />;
-}
 interface Sip9ComponentProps {
   item: Sip9Asset;
   onPress?(): void;
   height?: number;
+  viewType: 'thumbnail' | 'full';
 }
-export function Sip9Component({ item, onPress, height = 200 }: Sip9ComponentProps) {
+export function Sip9Component({ item, onPress, height = 200, viewType }: Sip9ComponentProps) {
   if (!item.cachedImage || item.cachedImage.trim() === '') return <FallbackImage />;
   return (
     <Sip9
+      collection={item.collection}
       contentType={item.contentType as 'image/png' | 'image/jpeg' | 'video/mp4' | ''}
       name={item.name}
       height={height}
       src={item.cachedImage}
       onPress={onPress}
+      viewType={viewType}
     />
   );
 }
@@ -78,10 +71,6 @@ export function InscriptionComponent({ item, onPress, height = 200 }: Inscriptio
       onPress={onPress}
     />
   );
-}
-
-function isBns(item: NonFungibleCryptoAsset) {
-  return 'collection' in item && item.collection.name === 'bns';
 }
 
 export function renderCollectible({
@@ -109,9 +98,7 @@ export function renderCollectible({
         />
       );
     case 'sip9':
-      return isBns(item) ? (
-        <Bns name={item.name} />
-      ) : (
+      return (
         <Sip9Component
           item={item}
           onPress={
@@ -123,6 +110,7 @@ export function renderCollectible({
                   })
               : undefined
           }
+          viewType="thumbnail"
         />
       );
     case 'inscription':
