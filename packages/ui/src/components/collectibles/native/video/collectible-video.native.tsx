@@ -181,8 +181,14 @@ export function CollectibleVideo({
         default:
           break;
       }
-    } catch {}
+    } catch {
+      // Silently ignore JSON parsing errors for invalid messages
+    }
   }
+
+  // PETE could be good to split this up to smaller PRs again. Maybe re-open original frst one?
+
+  // ordinal render is broken here. Could also stagger in video instead?
 
   function handleWebViewError(syntheticEvent: any) {
     const { nativeEvent } = syntheticEvent;
