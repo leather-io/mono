@@ -9,6 +9,7 @@ import {
 } from '@leather.io/models';
 import { getTicker, isUndefined } from '@leather.io/utils';
 
+import { GammaNftMetadata } from '../infrastructure/api/gamma/gamma-api.client';
 import { HiroNftMetadataResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
 
@@ -52,9 +53,22 @@ export function getNonFungibleTokenId(hex: string): number {
 export function createSip9Asset(
   assetIdentifier: string,
   tokenId: number,
-  { metadata }: HiroNftMetadataResponse
+  metadata: HiroNftMetadataResponse | null,
+  gammaMetadata: GammaNftMetadata
 ): Sip9Asset {
   const assetName = getAssetNameFromIdentifier(assetIdentifier);
+  const { metadata: hiroMetadata } = metadata || {};
+  const name = hiroMetadata?.name || gammaMetadata.item.name || assetName;
+  const description = hiroMetadata?.description || gammaMetadata.item.description || '';
+  const cachedImage =
+    hiroMetadata?.cached_image || gammaMetadata.item.asset_content?.content_url || '';
+  const cachedImageThumbnail =
+    (hiroMetadata as any)?.cached_thumbnail_image ||
+    gammaMetadata.item.asset_content?.content_url ||
+    '';
+  const contentType = gammaMetadata.item.asset_content?.content_type || '';
+  const collection = gammaMetadata.item.collection || hiroMetadata?.properties?.collection || {};
+
   return {
     chain: CryptoAssetChains.stacks,
     category: CryptoAssetCategories.nft,
@@ -62,11 +76,12 @@ export function createSip9Asset(
     assetId: assetIdentifier,
     contractId: getContractPrincipalFromAssetIdentifier(assetIdentifier),
     tokenId,
-    collection: (metadata?.properties as any)?.collection ?? '',
-    name: metadata?.name ?? assetName,
-    description: metadata?.description ?? '',
-    cachedImage: metadata?.cached_image ?? '',
-    cachedImageThumbnail: (metadata as any)?.cached_thumbnail_image ?? '',
+    name,
+    description,
+    cachedImage,
+    cachedImageThumbnail,
+    contentType,
+    collection,
   };
 }
 
