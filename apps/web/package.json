@@ -91,7 +91,7 @@
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
     "@types/valid-url": "1.0.7",
-    "jsdom": "22.1.0",
+    "jsdom": "26.1.0",
     "msw": "2.10.4",
     "react-router-devtools": "5.0.6",
     "rollup-plugin-node-polyfills": "0.2.1",

@@ -1,4 +1,4 @@
-import { sanitize } from 'dompurify';
+import DOMPurify from 'dompurify';
 import { Box } from 'leather-styles/jsx';
 
 interface CollectibleTextLayoutProps {
@@ -25,7 +25,7 @@ export function CollectibleTextLayout({ children }: CollectibleTextLayoutProps) 
       textAlign="left"
       width="100%"
     >
-      <pre>{sanitize(children)}</pre>
+      <pre>{DOMPurify.sanitize(children)}</pre>
     </Box>
   );
 }

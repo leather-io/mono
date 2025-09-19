@@ -1,5 +1,4 @@
 {
-  "filter": "!./apps/extension",
   "dependencyTypes": [
     "prod",
     "dev"

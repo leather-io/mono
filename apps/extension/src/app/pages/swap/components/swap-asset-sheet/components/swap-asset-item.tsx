@@ -1,5 +1,5 @@
 import { SwapSelectors } from '@tests/selectors/swap.selectors';
-import { sanitize } from 'dompurify';
+import DOMPurify from 'dompurify';
 
 import { isFtAsset } from '@leather.io/query';
 import { Avatar, ItemLayout, Pressable } from '@leather.io/ui';
@@ -27,7 +27,7 @@ export function SwapAssetItem({ asset, onClick }: SwapAssetItemProps) {
       <ItemLayout
         img={
           isString(asset.icon) ? (
-            <Avatar image={sanitize(asset.icon)} fallback={fallback} />
+            <Avatar image={DOMPurify.sanitize(asset.icon)} fallback={fallback} />
           ) : (
             asset.icon
           )
