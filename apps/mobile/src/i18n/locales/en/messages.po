@@ -501,6 +501,8 @@ msgid "Deployment failed"
 msgstr "Deployment failed"
 
 #: src/features/token/collectible.tsx:52
+#: src/features/token/components/token-loading.tsx:38
+#: src/features/token/token.tsx:97
 msgid "Description"
 msgstr "Description"
 
@@ -919,7 +921,11 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:88
+#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
+#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
 #: src/features/token/collectible.tsx:58
+#: src/features/token/components/token-details-table.tsx:19
 msgid "Name"
 msgstr "Name"
 
