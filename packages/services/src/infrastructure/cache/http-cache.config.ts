@@ -14,6 +14,10 @@ export type HttpCacheKey =
   | 'bis-inscriptions'
   | 'bis-runes-valid-outputs'
 
+  // GammaApiClient
+  | 'gamma-api-get-stacks-nft'
+  | 'gamma-api-get-stacks-collection'
+
   // HiroStacksApiClient
   | 'hiro-stacks-get-address-balances'
   | 'hiro-stacks-get-address-stx-balance'
@@ -76,6 +80,9 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'bis-brc20-market-info': { ttl: minutesInMs(2) },
   'bis-inscriptions': { ttl: secondsInMs(30) },
   'bis-runes-valid-outputs': { ttl: secondsInMs(30) },
+
+  'gamma-api-get-stacks-nft': { ttl: weeksInMs(8) },
+  'gamma-api-get-stacks-collection': { ttl: weeksInMs(8) },
 
   'hiro-stacks-get-address-balances': { ttl: secondsInMs(10) },
   'hiro-stacks-get-address-stx-balance': { ttl: secondsInMs(10) },

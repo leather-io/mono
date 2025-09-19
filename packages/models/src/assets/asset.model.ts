@@ -136,11 +136,22 @@ export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly assetId: string;
   readonly contractId: string;
   readonly tokenId: number;
-  readonly collection: string;
   readonly name: string;
   readonly description: string;
   readonly cachedImage: string;
   readonly cachedImageThumbnail: string;
+  readonly contentType: string;
+  readonly collection: {
+    id: string;
+    name: string;
+    isVerified: boolean;
+    locationUrl: string;
+    totalItems: number;
+    floorPriceAmount: {
+      amount: number;
+      unit: string;
+    };
+  };
 }
 export type NonFungibleCryptoAsset = InscriptionAsset | StampAsset | Sip9Asset;
 
