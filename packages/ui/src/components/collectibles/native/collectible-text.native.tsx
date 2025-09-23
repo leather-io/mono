@@ -1,14 +1,15 @@
 import { WebView } from 'react-native-webview';
 
-import { Text } from '../../../../native';
+import { Pressable, Text } from '../../../../native';
 import { CollectibleCard } from './collectible-card.native';
 
 interface CollectibleTextProps {
   src: string;
   height?: number;
+  onPress?: () => void;
 }
 
-export function CollectibleText({ src, height = 200 }: CollectibleTextProps) {
+export function CollectibleText({ src, height = 200, onPress }: CollectibleTextProps) {
   // Check if content contains HTML tags (safe, non-polynomial regex)
   // To avoid regex DoS, only check the first 512 characters for HTML tags
   const htmlRegex = /<\w+[\s\S]*?>/;
@@ -17,7 +18,7 @@ export function CollectibleText({ src, height = 200 }: CollectibleTextProps) {
 
   if (isHtml) {
     return (
-      <CollectibleCard height={height}>
+      <CollectibleCard height={height} onPress={onPress}>
         <WebView
           source={{ html: src }}
           scrollEnabled={false}
@@ -33,8 +34,7 @@ export function CollectibleText({ src, height = 200 }: CollectibleTextProps) {
       </CollectibleCard>
     );
   }
-
-  return (
+  const content = (
     <CollectibleCard bg="ink.text-primary" height={height}>
       <Text color="ink.background-secondary" variant="code" p="4">
         {(() => {
@@ -50,4 +50,14 @@ export function CollectibleText({ src, height = 200 }: CollectibleTextProps) {
       </Text>
     </CollectibleCard>
   );
+
+  if (onPress) {
+    return (
+      <Pressable onPress={onPress} haptics="light" pressEffects={{ opacity: { from: 1, to: 0.8 } }}>
+        {content}
+      </Pressable>
+    );
+  }
+
+  return content;
 }
