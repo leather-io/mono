@@ -6,16 +6,12 @@ import { Screen } from '@/components/screen/screen';
 import { EmptyCollectiblesState } from '@/features/collectibles/components/empty-collectibles-state';
 import { Loading } from '@/features/collectibles/components/loading';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
+import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 
 import { AccountId } from '@leather.io/models';
 
 import { renderCollectible } from './render-collectible';
-
-interface CollectiblesListProps {
-  currentAccount: AccountId;
-  header: ReactElement;
-}
 
 export function useCollectibleHeight() {
   const { height } = useWindowDimensions();
@@ -26,7 +22,13 @@ export function useCollectibleHeight() {
   return calculatedHeight;
 }
 
-export function CollectiblesList({ currentAccount, header }: CollectiblesListProps) {
+interface CollectiblesListProps {
+  currentAccount: AccountId;
+  header: ReactElement;
+  onPressToken?: (tokenDetails: TokenDetailsProps) => void;
+}
+
+export function CollectiblesList({ currentAccount, header, onPressToken }: CollectiblesListProps) {
   const { fingerprint, accountIndex } = currentAccount;
   const { value: collectibles, state: collectiblesState } = useAccountCollectibles(
     fingerprint,
@@ -42,7 +44,16 @@ export function CollectiblesList({ currentAccount, header }: CollectiblesListPro
     <Screen.FlashList
       numColumns={2}
       data={collectibles}
-      renderItem={isSuccess ? ({ item }) => renderCollectible({ item, height }) : undefined}
+      renderItem={
+        isSuccess
+          ? ({ item }) =>
+              renderCollectible({
+                item,
+                height,
+                onPress: onPressToken ? onPressToken : undefined,
+              })
+          : undefined
+      }
       getItemType={item => item.protocol}
       refreshControl={<RefreshControl />}
       ListHeaderComponent={

@@ -15,7 +15,13 @@ export interface OnPressTokenDetails {
   onPress?: (tokenDetails: TokenDetailsProps) => void;
 }
 
-export type SupportedAssetProtocol = 'nativeBtc' | 'nativeStx' | 'sip10';
+export type SupportedAssetProtocol =
+  | 'nativeBtc'
+  | 'nativeStx'
+  | 'sip10'
+  | 'rune'
+  | 'sip9'
+  | 'inscription';
 
 export type TokenBalance =
   | AccountQuotedBtcBalance

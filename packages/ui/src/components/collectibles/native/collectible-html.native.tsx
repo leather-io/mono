@@ -5,10 +5,11 @@ import { CollectibleCard } from './collectible-card.native';
 interface CollectibleHtmlProps {
   src: string;
   height?: number;
+  onPress?: () => void;
 }
-export function CollectibleHtml({ src, height = 200 }: CollectibleHtmlProps) {
+export function CollectibleHtml({ src, height = 200, onPress }: CollectibleHtmlProps) {
   return (
-    <CollectibleCard height={height}>
+    <CollectibleCard height={height} onPress={onPress}>
       <WebView
         source={{ uri: src }}
         scrollEnabled={false}

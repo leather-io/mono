@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { TokenDetailsProps } from '@/features/token/types';
 import { t } from '@lingui/core/macro';
 
 import { InscriptionAsset } from '@leather.io/models';
@@ -10,8 +11,13 @@ import { FallbackImage } from './fallback';
 interface InscriptionProps {
   item: InscriptionAsset;
   height: number;
+  onPress?: (tokenDetails: TokenDetailsProps) => void;
 }
-export function Inscription({ item: { src, mimeType, title }, height }: InscriptionProps) {
+export function Inscription({
+  item: { id, mimeType, src, title },
+  height,
+  onPress,
+}: InscriptionProps) {
   const [content, setContent] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   // Only fetch content if it's needed for text type and not already provided
@@ -40,6 +46,7 @@ export function Inscription({ item: { src, mimeType, title }, height }: Inscript
       mimeType={mimeType}
       height={height}
       src={isLoading ? '' : content || src}
+      onPress={onPress ? () => onPress({ assetId: id, assetProtocol: 'inscription' }) : undefined}
     />
   );
 }
