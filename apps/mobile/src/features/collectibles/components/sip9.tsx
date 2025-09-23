@@ -1,3 +1,5 @@
+import { TokenDetailsProps } from '@/features/token/types';
+
 import { Sip9Asset } from '@leather.io/models';
 import { BnsImage, CollectibleImage } from '@leather.io/ui/native';
 
@@ -9,12 +11,22 @@ function isBns(name: string): boolean {
 interface Sip9Props {
   item: Sip9Asset;
   height: number;
+  onPress?: (tokenDetails: TokenDetailsProps) => void;
 }
-export function Sip9({ item, height }: Sip9Props) {
+export function Sip9({ item, height, onPress }: Sip9Props) {
   if (!item.cachedImage || item.cachedImage.trim() === '') return <FallbackImage />;
 
   if (isBns(item.collection.name)) {
     return <BnsImage alt={item.name} height={height} />;
   }
-  return <CollectibleImage source={item.cachedImage} alt={item.name} height={height} />;
+  return (
+    <CollectibleImage
+      source={item.cachedImage}
+      alt={item.name}
+      height={height}
+      onPress={
+        onPress ? () => onPress({ assetId: item.assetId, assetProtocol: 'sip9' }) : undefined
+      }
+    />
+  );
 }

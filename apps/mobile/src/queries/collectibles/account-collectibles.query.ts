@@ -6,6 +6,16 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 import { AccountAddresses } from '@leather.io/models';
 import { getCollectiblesService } from '@leather.io/services';
 
+export function useAccountCollectibleByAssetId(
+  fingerprint: string,
+  accountIndex: number,
+  assetId: string
+) {
+  const account = useAccountAddresses(fingerprint, accountIndex);
+
+  return toFetchState(useAccountCollectibleByAssetIdQuery(account, assetId));
+}
+
 /**
  * @deprecated useTotalCollectibles is not used now we have moved to single account view
  * @see useAccountCollectibles
@@ -53,6 +63,38 @@ function useAccountCollectiblesQuery(account: AccountAddresses) {
     queryKey: ['collectibles-service-get-account-collectibles', account],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getCollectiblesService().getAccountCollectibles(account, signal),
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    retryOnMount: false,
+    staleTime: 1 * 5000,
+    gcTime: 1 * 5000,
+  });
+}
+function useAccountCollectibleByAssetIdQuery(account: AccountAddresses, assetId: string) {
+  const collectiblesFlag = useCollectiblesFlag();
+  if (!collectiblesFlag) {
+    account.bitcoin = undefined;
+  }
+  return useQuery({
+    queryKey: ['collectibles-service-get-account-collectibles', account, assetId],
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getCollectiblesService()
+        .getAccountCollectibles(account, signal)
+        .then(collectibles =>
+          collectibles.filter(collectible => {
+            switch (collectible.protocol) {
+              case 'sip9':
+                return collectible.assetId === assetId;
+              case 'inscription':
+                return collectible.id === assetId;
+              case 'stamp':
+                return collectible.stamp.toString() === assetId;
+              default:
+                return false;
+            }
+          })
+        ),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
