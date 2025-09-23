@@ -10,8 +10,10 @@ interface CollectibleTextProps {
 
 export function CollectibleText({ src, height = 200 }: CollectibleTextProps) {
   // Check if content contains HTML tags (safe, non-polynomial regex)
+  // To avoid regex DoS, only check the first 512 characters for HTML tags
   const htmlRegex = /<\w+[\s\S]*?>/;
-  const isHtml = htmlRegex.test(src);
+  const preview = typeof src === 'string' ? src.slice(0, 512) : '';
+  const isHtml = htmlRegex.test(preview);
 
   if (isHtml) {
     return (

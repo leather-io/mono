@@ -425,6 +425,10 @@ msgstr "Contact us"
 msgid "Contacts"
 msgstr "Contacts"
 
+#: src/features/collectibles/components/inscription.tsx:27
+msgid "Content not found"
+msgstr "Content not found"
+
 #: src/components/sheets/warning-sheet.layout.tsx:48
 #: src/features/recover-wallet/recover-wallet.layout.tsx:88
 msgid "Continue"

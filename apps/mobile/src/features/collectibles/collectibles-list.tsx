@@ -42,13 +42,7 @@ export function CollectiblesList({ currentAccount, header }: CollectiblesListPro
     <Screen.FlashList
       numColumns={2}
       data={collectibles}
-      renderItem={
-        isSuccess
-          ? ({ item }) => {
-              return renderCollectible({ item, height });
-            }
-          : undefined
-      }
+      renderItem={isSuccess ? ({ item }) => renderCollectible({ item, height }) : undefined}
       getItemType={item => item.protocol}
       refreshControl={<RefreshControl />}
       ListHeaderComponent={

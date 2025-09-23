@@ -73,7 +73,6 @@ export class CollectiblesService {
   ): Promise<{ asset: Sip9Asset; blockHeight: number }[]> {
     try {
       const nftHoldings = await this.stacksApiClient.getNftHoldings(stxAddress, { signal });
-
       const results = await Promise.all(
         nftHoldings.map(holding =>
           this.getOptionalSip9Asset(holding, signal).then(asset =>
