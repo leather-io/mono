@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { t } from '@lingui/core/macro';
+
 import { InscriptionAsset } from '@leather.io/models';
 import { Inscription as InscriptionComponent } from '@leather.io/ui/native';
 
@@ -10,7 +12,6 @@ interface InscriptionProps {
   height: number;
 }
 export function Inscription({ item: { src, mimeType, title }, height }: InscriptionProps) {
-  if (!src || src.trim() === '') return <FallbackImage />;
   const [content, setContent] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   // Only fetch content if it's needed for text type and not already provided
@@ -23,7 +24,7 @@ export function Inscription({ item: { src, mimeType, title }, height }: Inscript
           const textData = await response.text();
           setContent(textData);
         } catch {
-          setContent('Content not found');
+          setContent(t`Content not found`);
         } finally {
           setIsLoading(false);
         }
@@ -32,6 +33,7 @@ export function Inscription({ item: { src, mimeType, title }, height }: Inscript
     }
   }, [mimeType, src]);
 
+  if (!src || src.trim() === '') return <FallbackImage />;
   return (
     <InscriptionComponent
       name={title}
