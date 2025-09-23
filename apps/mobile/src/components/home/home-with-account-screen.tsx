@@ -132,6 +132,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
               <AssetTabs listTab={listTab} setListTab={setListTab} />
             </>
           }
+          onPressToken={tokenDetailsFlag ? onOpenToken : undefined}
         />
       )}
 

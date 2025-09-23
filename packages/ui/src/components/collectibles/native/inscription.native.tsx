@@ -11,22 +11,23 @@ export interface InscriptionProps {
   name: string;
   height: number;
   src: string;
+  onPress?: () => void;
 }
 
-export function Inscription({ mimeType, name, height = 200, src }: InscriptionProps) {
+export function Inscription({ mimeType, name, height = 200, src, onPress }: InscriptionProps) {
   switch (mimeType) {
     case 'audio':
-      return <CollectibleAudio size={height} />;
+      return <CollectibleAudio size={height} onPress={onPress} />;
     case 'text':
-      return <CollectibleText src={src} height={height} />;
+      return <CollectibleText src={src} height={height} onPress={onPress} />;
     case 'html':
     case 'gltf':
     case 'svg':
     case 'video':
-      return <CollectibleHtml src={src} height={height} />;
+      return <CollectibleHtml src={src} height={height} onPress={onPress} />;
     case 'other':
     case 'image':
-      return <CollectibleImage source={src} alt={name} height={height} />;
+      return <CollectibleImage source={src} alt={name} height={height} onPress={onPress} />;
     default:
       assertUnreachable(mimeType);
   }
