@@ -54,20 +54,20 @@ export function createSip9Asset(
   assetIdentifier: string,
   tokenId: number,
   metadata: HiroNftMetadataResponse | null,
-  gammaMetadata: GammaNftMetadata
+  gammaMetadata?: GammaNftMetadata | null
 ): Sip9Asset {
   const assetName = getAssetNameFromIdentifier(assetIdentifier);
   const { metadata: hiroMetadata } = metadata || {};
-  const name = hiroMetadata?.name || gammaMetadata.item.name || assetName;
-  const description = hiroMetadata?.description || gammaMetadata.item.description || '';
+  const name = hiroMetadata?.name || gammaMetadata?.item.name || assetName;
+  const description = hiroMetadata?.description || gammaMetadata?.item.description || '';
   const cachedImage =
-    hiroMetadata?.cached_image || gammaMetadata.item.asset_content?.content_url || '';
+    hiroMetadata?.cached_image || gammaMetadata?.item.asset_content?.content_url || '';
   const cachedImageThumbnail =
     (hiroMetadata as any)?.cached_thumbnail_image ||
-    gammaMetadata.item.asset_content?.content_url ||
+    gammaMetadata?.item.asset_content?.content_url ||
     '';
-  const contentType = gammaMetadata.item.asset_content?.content_type || '';
-  const collection = gammaMetadata.item.collection || hiroMetadata?.properties?.collection || {};
+  const contentType = gammaMetadata?.item.asset_content?.content_type || '';
+  const collection = gammaMetadata?.item.collection || hiroMetadata?.properties?.collection || {};
 
   return {
     chain: CryptoAssetChains.stacks,
