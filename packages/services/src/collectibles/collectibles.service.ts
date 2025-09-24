@@ -80,7 +80,8 @@ export class CollectiblesService {
           )
         )
       );
-      return results.filter(isDefined);
+      // We need to filter out the BNS - Archive asset
+      return results.filter(isDefined).filter(result => result.asset.name !== 'BNS - Archive');
     } catch {
       return [];
     }
