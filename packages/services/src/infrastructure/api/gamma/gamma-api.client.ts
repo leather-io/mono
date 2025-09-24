@@ -28,8 +28,8 @@ export class GammaApiClient {
           signal,
         }
       );
-
-      return gammaNftMetadataSchema.parse(JSON.parse(res.data));
+      
+      return gammaNftMetadataSchema.parse(res.data);
     }
     return skipCache
       ? await fetchFn()
@@ -50,7 +50,7 @@ export class GammaApiClient {
           signal,
         }
       );
-      return gammaCollectionMetadataSchema.parse(JSON.parse(res.data));
+      return gammaCollectionMetadataSchema.parse(res.data);
     }
     return skipCache
       ? await fetchFn()
