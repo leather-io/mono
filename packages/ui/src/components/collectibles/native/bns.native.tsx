@@ -3,14 +3,10 @@ import { Image } from 'expo-image';
 import { Box, Text } from '../../../../native';
 import { CollectibleImageProps } from './collectible-image.native';
 
-export function BnsImage({ alt, height = 200 }: Pick<CollectibleImageProps, 'alt' | 'height'>) {
+export function BnsImage({ alt, source, height = 200 }: CollectibleImageProps) {
   return (
     <Box height={height} overflow="hidden" bg="ink.background-secondary" position="relative">
-      <Image
-        source={require('../../../assets-native/images/bnsv2.png')}
-        alt={alt}
-        style={{ height: height }}
-      />
+      <Image source={source} alt={alt} style={{ height: height }} />
       <Box
         position="absolute"
         bottom={0}

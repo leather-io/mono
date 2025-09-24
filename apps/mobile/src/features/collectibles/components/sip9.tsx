@@ -17,7 +17,10 @@ export function Sip9({ item, height, onPress }: Sip9Props) {
   if (!item.cachedImage || item.cachedImage.trim() === '') return <FallbackImage />;
 
   if (isBns(item.collection.name)) {
-    return <BnsImage alt={item.name} height={height} />;
+    const unwantedArchiveBns = item.name === 'BNS - Archive';
+
+    if (unwantedArchiveBns) return null;
+    return <BnsImage source={item.cachedImage} alt={item.name} height={height} />;
   }
   return (
     <CollectibleImage
