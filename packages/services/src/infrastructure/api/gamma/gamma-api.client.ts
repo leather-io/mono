@@ -28,7 +28,7 @@ export class GammaApiClient {
           signal,
         }
       );
-      
+
       return gammaNftMetadataSchema.parse(res.data);
     }
     return skipCache
