@@ -4,6 +4,7 @@ import { getDefaultFee } from '@/features/approver/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { bytesToHex } from '@stacks/common';
+import { StacksNetwork } from '@stacks/network';
 import { Pc, hexToCV, serializeCV } from '@stacks/transactions';
 
 import { RpcRequest, stxTransferSip9Nft } from '@leather.io/rpc';
@@ -21,6 +22,7 @@ interface UseTransferSip9NftTxHex {
   setTxHex(txHex: string): void;
   nonce: number;
   accountId: string;
+  network: StacksNetwork;
 }
 
 export function useTransferSip9NftTxHex({
@@ -28,6 +30,7 @@ export function useTransferSip9NftTxHex({
   accountId,
   setTxHex,
   nonce,
+  network,
 }: UseTransferSip9NftTxHex) {
   const { fromAccountId } = useStacksSigners();
 
@@ -58,6 +61,7 @@ export function useTransferSip9NftTxHex({
         functionName: 'transfer',
         nonce,
         fee,
+        network,
         postConditions: [
           Pc.principal(currentStacksAddress)
             .willSendAsset()
@@ -81,6 +85,7 @@ export function useTransferSip9NftTxHex({
       request.params.recipient,
       accountId,
       nonce,
+      network,
     ]
   );
   useOnMount(() => {

@@ -74,6 +74,7 @@ export function useSip10Form({ account, availableBalance, nonce, asset }: UseSip
       amount: unitToFractionalUnit(asset.decimals)(values.amount).toNumber(),
       nonce: nonce ?? 1,
       memo: values.memo,
+      network: stacksNetwork,
     })
       .then(txHex => {
         navigate('approval', {

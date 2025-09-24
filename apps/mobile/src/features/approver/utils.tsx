@@ -163,6 +163,7 @@ export function getTransferSip10TxHex(props: {
   recipient: string;
   amount: number;
   nonce: number;
+  network: StacksNetwork;
   memo?: string;
 }) {
   const fee = getDefaultFee();

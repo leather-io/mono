@@ -4,6 +4,7 @@ import { getDefaultFee } from '@/features/approver/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { bytesToHex } from '@stacks/common';
+import { StacksNetwork } from '@stacks/network';
 
 import { RpcRequest, stxTransferStx } from '@leather.io/rpc';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
@@ -15,9 +16,16 @@ interface UseTransferStxTxHex {
   setTxHex(txHex: string): void;
   nonce: number;
   accountId: string;
+  network: StacksNetwork;
 }
 
-export function useTransferStxTxHex({ request, setTxHex, nonce, accountId }: UseTransferStxTxHex) {
+export function useTransferStxTxHex({
+  request,
+  setTxHex,
+  nonce,
+  accountId,
+  network,
+}: UseTransferStxTxHex) {
   const { fromAccountId } = useStacksSigners();
   const signer = fromAccountId(accountId)[0];
   const fee = getDefaultFee();
@@ -36,10 +44,11 @@ export function useTransferStxTxHex({ request, setTxHex, nonce, accountId }: Use
         publicKey: bytesToHex(signer.publicKey),
         fee,
         nonce,
+        network,
       });
       return tx.serialize();
     },
-    [fromAccountId, request.params, nonce, fee, accountId]
+    [fromAccountId, request.params, nonce, fee, accountId, network]
   );
   useOnMount(() => {
     void getTxHex().then(txHex => setTxHex(txHex));

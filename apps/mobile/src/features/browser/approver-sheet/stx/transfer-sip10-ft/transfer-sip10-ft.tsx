@@ -49,6 +49,7 @@ export function TransferSip10FtApprover({
     accountId,
     setTxHex,
     nonce,
+    network,
   });
   const signer = useStacksSigners().fromAccountId(accountId)[0];
   const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();

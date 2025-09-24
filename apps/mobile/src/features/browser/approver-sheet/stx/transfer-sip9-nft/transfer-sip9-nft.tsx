@@ -42,7 +42,7 @@ export function TransferSip9NftApprover({
 
   const { list: accounts } = useAccounts();
   const [txHex, setTxHex] = useState<null | string>(null);
-  useTransferSip9NftTxHex({ request, accountId, setTxHex, nonce });
+  useTransferSip9NftTxHex({ request, accountId, setTxHex, nonce, network });
   const signer = useStacksSigners().fromAccountId(accountId)[0];
   const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
 

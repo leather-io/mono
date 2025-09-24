@@ -33,10 +33,10 @@ export function TransferStxApprover({
   accountId,
 }: TransferStxApproverProps) {
   const [txHex, setTxHex] = useState<null | string>(null);
-  useTransferStxTxHex({ request, accountId, setTxHex, nonce });
+  const network = useNetworkPreferenceStacksNetwork();
+  useTransferStxTxHex({ request, accountId, setTxHex, nonce, network });
   const { displayToast } = useToastContext();
 
-  const network = useNetworkPreferenceStacksNetwork();
   const { list: accounts } = useAccounts();
   const signer = useStacksSigners().fromAccountId(accountId)[0];
   const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
