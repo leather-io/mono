@@ -42,7 +42,7 @@ export function DeployContractApprover({
   const defaultNetwork = useNetworkPreferenceStacksNetwork();
   const network = getNetworkFromRequestParams({ params: request.params, defaultNetwork });
   const [txHex, setTxHex] = useState<null | string>(null);
-  useDeployContractTxHex({ request, stxRequestParams, setTxHex, accountId });
+  useDeployContractTxHex({ request, stxRequestParams, setTxHex, accountId, network });
 
   const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
   const { displayToast } = useToastContext();

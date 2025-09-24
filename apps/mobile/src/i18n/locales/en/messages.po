@@ -1381,7 +1381,7 @@ msgid "Transaction confirmations"
 msgstr "Transaction confirmations"
 
 #: src/features/send/forms/btc/use-btc-form.ts:78
-#: src/features/send/forms/stx/use-sip10-form.ts:87
+#: src/features/send/forms/stx/use-sip10-form.ts:88
 #: src/features/send/forms/stx/use-stx-form.ts:76
 msgid "Transaction failed due to an unexpected error"
 msgstr "Transaction failed due to an unexpected error"

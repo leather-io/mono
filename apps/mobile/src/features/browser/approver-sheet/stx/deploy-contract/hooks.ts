@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { bytesToHex } from '@stacks/common';
+import { StacksNetwork } from '@stacks/network';
 
 import { RpcRequest, stxDeployContract } from '@leather.io/rpc';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
@@ -15,6 +16,7 @@ interface UseDeployContractTxHex {
   stxRequestParams: StxRequestParams;
   setTxHex(txHex: string): void;
   accountId: string;
+  network: StacksNetwork;
 }
 
 export function useDeployContractTxHex({
@@ -22,6 +24,7 @@ export function useDeployContractTxHex({
   stxRequestParams,
   setTxHex,
   accountId,
+  network,
 }: UseDeployContractTxHex) {
   const { fromAccountId } = useStacksSigners();
 
@@ -32,6 +35,7 @@ export function useDeployContractTxHex({
 
       const tx = await generateStacksUnsignedTransaction({
         ...stxRequestParams,
+        network,
         txType: TransactionTypes.ContractDeploy,
         contractName: request.params.name,
         codeBody: request.params.clarityCode,
@@ -48,6 +52,7 @@ export function useDeployContractTxHex({
       request.params.name,
       stxRequestParams,
       accountId,
+      network,
     ]
   );
   useOnMount(() => {

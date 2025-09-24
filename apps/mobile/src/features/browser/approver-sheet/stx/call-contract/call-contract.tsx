@@ -43,7 +43,7 @@ export function CallContractApprover({
   const network = getNetworkFromRequestParams({ params: request.params, defaultNetwork });
   const stxRequestParams = getStxRequestParams(request.params, nonce);
   const [txHex, setTxHex] = useState<null | string>(null);
-  useCallContractTxHex({ request, stxRequestParams, setTxHex, accountId });
+  useCallContractTxHex({ request, stxRequestParams, setTxHex, accountId, network });
 
   const { list: accounts } = useAccounts();
   const signer = useStacksSigners().fromAccountId(accountId)[0];
