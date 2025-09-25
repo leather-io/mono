@@ -11,11 +11,15 @@ import {
 } from '@leather.io/cms';
 
 export async function loader() {
-  const sbtcPools = await cmsClient.fetch(sbtcPoolsQuery);
-  const sbtcEnroll = await cmsClient.fetch(sbtcBasicEnrollQuery);
-  const sbtcFaq = await cmsClient.fetch(sbtcFaqQuery);
-  const sbtcConcepts = await cmsClient.fetch(sbtcConceptsQuery);
+  const [sbtcPools, sbtcEnroll, sbtcFaq, sbtcConcepts] = await Promise.all([
+    cmsClient.fetch(sbtcPoolsQuery),
+    cmsClient.fetch(sbtcBasicEnrollQuery),
+    cmsClient.fetch(sbtcFaqQuery),
+    cmsClient.fetch(sbtcConceptsQuery),
+  ]);
+
   const { historicalYield, minimumCommitment, rewardsToken, tvl } = sbtcConcepts;
+
   return {
     sbtcPools,
     sbtcEnroll,
