@@ -3,7 +3,7 @@ import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
 import { WhenClient } from '~/components/when-client';
 import { LearnMoreLink } from '~/layouts/page/page';
-import { GetSbtcGridLayout } from '~/pages/sbtc-rewards/components/get-sbtc-grid.layout';
+import { GetSbtcGridLayout } from '~/pages/sbtc/components/get-sbtc-grid.layout';
 
 import { Button } from '@leather.io/ui';
 

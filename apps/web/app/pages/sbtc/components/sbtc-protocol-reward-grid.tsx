@@ -7,7 +7,7 @@ import { SbtcLogo } from '~/components/icons/sbtc-logo';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { urlFor } from '~/constants/cms-client';
 import { LearnMoreLink } from '~/layouts/page/page';
-import { loader } from '~/pages/sbtc-rewards/sbtc.route';
+import { loader } from '~/pages/sbtc/sbtc.route';
 
 import { SbtcPool } from '@leather.io/cms';
 import { Flag } from '@leather.io/ui';

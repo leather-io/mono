@@ -4,11 +4,11 @@ import { styled } from 'leather-styles/jsx';
 
 import { Link } from '@leather.io/ui';
 
-interface MarkdownComponentsProps {
+interface ContentComponentsProps {
   children?: ReactNode;
 }
 
-function H1({ children }: MarkdownComponentsProps) {
+function H1({ children }: ContentComponentsProps) {
   return (
     <styled.h1 textStyle="heading.03" mt="space.06" mb="space.04">
       {children}
@@ -16,7 +16,7 @@ function H1({ children }: MarkdownComponentsProps) {
   );
 }
 
-function H2({ children }: MarkdownComponentsProps) {
+function H2({ children }: ContentComponentsProps) {
   return (
     <styled.h2 textStyle="heading.04" mt="space.05" mb="space.03">
       {children}
@@ -24,7 +24,7 @@ function H2({ children }: MarkdownComponentsProps) {
   );
 }
 
-function H3({ children }: MarkdownComponentsProps) {
+function H3({ children }: ContentComponentsProps) {
   return (
     <styled.h3 textStyle="heading.05" mt="space.04" mb="space.02">
       {children}
@@ -32,7 +32,7 @@ function H3({ children }: MarkdownComponentsProps) {
   );
 }
 
-function H4({ children }: MarkdownComponentsProps) {
+function H4({ children }: ContentComponentsProps) {
   return (
     <styled.h4 textStyle="label.01" mt="space.03" mb="space.02">
       {children}
@@ -40,7 +40,7 @@ function H4({ children }: MarkdownComponentsProps) {
   );
 }
 
-function H5({ children }: MarkdownComponentsProps) {
+function H5({ children }: ContentComponentsProps) {
   return (
     <styled.h5 textStyle="label.02" mt="space.03" mb="space.02">
       {children}
@@ -48,7 +48,7 @@ function H5({ children }: MarkdownComponentsProps) {
   );
 }
 
-function H6({ children }: MarkdownComponentsProps) {
+function H6({ children }: ContentComponentsProps) {
   return (
     <styled.h6 textStyle="label.03" mt="space.02" mb="space.02">
       {children}
@@ -56,15 +56,15 @@ function H6({ children }: MarkdownComponentsProps) {
   );
 }
 
-function P({ children }: MarkdownComponentsProps) {
+function P({ children }: ContentComponentsProps) {
   return (
-    <styled.p textStyle="body.02" mb="space.04" lineHeight="1.6">
+    <styled.p textStyle="body.02" mb="space.04">
       {children}
     </styled.p>
   );
 }
 
-function Ul({ children }: MarkdownComponentsProps) {
+function Ul({ children }: ContentComponentsProps) {
   return (
     <styled.ul
       textStyle="body.02"
@@ -78,13 +78,13 @@ function Ul({ children }: MarkdownComponentsProps) {
   );
 }
 
-function Ol({ children }: MarkdownComponentsProps) {
+function Ol({ children }: ContentComponentsProps) {
   return (
     <styled.ol
       textStyle="body.02"
       mb="space.04"
       pl="space.05"
-      css={{ listStyleType: 'decimal' }}
+      listStyleType="decimal"
       lineHeight="1.6"
     >
       {children}
@@ -92,7 +92,7 @@ function Ol({ children }: MarkdownComponentsProps) {
   );
 }
 
-function Li({ children }: MarkdownComponentsProps) {
+function Li({ children }: ContentComponentsProps) {
   return (
     <styled.li mb="space.02" ml="space.02">
       {children}
@@ -100,13 +100,12 @@ function Li({ children }: MarkdownComponentsProps) {
   );
 }
 
-function Blockquote({ children }: MarkdownComponentsProps) {
+function Blockquote({ children }: ContentComponentsProps) {
   return (
     <styled.blockquote
       borderLeft="4px solid"
       borderColor="ink.border-default"
       pl="space.04"
-      ml="space.00"
       my="space.04"
       fontStyle="italic"
       color="ink.text-subdued"
@@ -116,7 +115,7 @@ function Blockquote({ children }: MarkdownComponentsProps) {
   );
 }
 
-function Code({ children }: MarkdownComponentsProps) {
+function Code({ children }: ContentComponentsProps) {
   return (
     <styled.code
       bg="ink.background-secondary"
@@ -124,7 +123,6 @@ function Code({ children }: MarkdownComponentsProps) {
       py="2px"
       borderRadius="xs"
       fontFamily="monospace"
-      fontSize="0.9em"
       color="ink.text-primary"
     >
       {children}
@@ -132,7 +130,7 @@ function Code({ children }: MarkdownComponentsProps) {
   );
 }
 
-function Pre({ children }: MarkdownComponentsProps) {
+function Pre({ children }: ContentComponentsProps) {
   return (
     <styled.pre
       bg="ink.background-secondary"
@@ -159,7 +157,7 @@ function Hr() {
   );
 }
 
-function Table({ children }: MarkdownComponentsProps) {
+function Table({ children }: ContentComponentsProps) {
   return (
     <styled.table width="100%" mb="space.04" borderCollapse="collapse">
       {children}
@@ -167,7 +165,7 @@ function Table({ children }: MarkdownComponentsProps) {
   );
 }
 
-function Thead({ children }: MarkdownComponentsProps) {
+function Thead({ children }: ContentComponentsProps) {
   return (
     <styled.thead borderBottom="2px solid" borderColor="ink.border-default">
       {children}
@@ -175,11 +173,11 @@ function Thead({ children }: MarkdownComponentsProps) {
   );
 }
 
-function Tbody({ children }: MarkdownComponentsProps) {
+function Tbody({ children }: ContentComponentsProps) {
   return <styled.tbody>{children}</styled.tbody>;
 }
 
-function Tr({ children }: MarkdownComponentsProps) {
+function Tr({ children }: ContentComponentsProps) {
   return (
     <styled.tr borderBottom="1px solid" borderColor="ink.border-default">
       {children}
@@ -187,7 +185,7 @@ function Tr({ children }: MarkdownComponentsProps) {
   );
 }
 
-function Th({ children }: MarkdownComponentsProps) {
+function Th({ children }: ContentComponentsProps) {
   return (
     <styled.th
       textStyle="label.03"
@@ -201,7 +199,7 @@ function Th({ children }: MarkdownComponentsProps) {
   );
 }
 
-function Td({ children }: MarkdownComponentsProps) {
+function Td({ children }: ContentComponentsProps) {
   return (
     <styled.td textStyle="body.02" p="space.03">
       {children}
@@ -209,7 +207,7 @@ function Td({ children }: MarkdownComponentsProps) {
   );
 }
 
-interface AnchorProps extends MarkdownComponentsProps {
+interface AnchorProps extends ContentComponentsProps {
   href?: string;
 }
 
@@ -238,15 +236,15 @@ function A({ children, href }: AnchorProps) {
   );
 }
 
-function Strong({ children }: MarkdownComponentsProps) {
+function Strong({ children }: ContentComponentsProps) {
   return <styled.strong fontWeight="semibold">{children}</styled.strong>;
 }
 
-function Em({ children }: MarkdownComponentsProps) {
+function Em({ children }: ContentComponentsProps) {
   return <styled.em fontStyle="italic">{children}</styled.em>;
 }
 
-function Del({ children }: MarkdownComponentsProps) {
+function Del({ children }: ContentComponentsProps) {
   return <styled.del textDecoration="line-through">{children}</styled.del>;
 }
 
@@ -316,7 +314,7 @@ function Video({ src, poster, controls = true, autoPlay, loop, muted, width, hei
   );
 }
 
-export const markdownComponents = {
+export const contentComponents = {
   h1: H1,
   h2: H2,
   h3: H3,
