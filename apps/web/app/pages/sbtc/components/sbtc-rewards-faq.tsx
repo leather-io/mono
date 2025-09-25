@@ -1,7 +1,7 @@
 import { useLoaderData } from 'react-router';
 
 import { styled } from 'leather-styles/jsx';
-import { loader } from '~/pages/sbtc-rewards/sbtc.route';
+import { loader } from '~/pages/sbtc/sbtc.route';
 import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
 

@@ -1,7 +1,7 @@
 import { MetaDescriptor } from 'react-router';
 
 import { cmsClient } from '~/constants/cms-client';
-import { SbtcRewards } from '~/pages/sbtc-rewards/sbtc-rewards';
+import { SbtcRewards } from '~/pages/sbtc/sbtc-rewards';
 
 import {
   sbtcBasicEnrollQuery,
@@ -19,7 +19,6 @@ export async function loader() {
   ]);
 
   const { historicalYield, minimumCommitment, rewardsToken, tvl } = sbtcConcepts;
-
   return {
     sbtcPools,
     sbtcEnroll,

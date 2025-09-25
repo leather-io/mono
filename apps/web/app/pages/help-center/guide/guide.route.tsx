@@ -1,7 +1,7 @@
 import { Box } from 'leather-styles/jsx/box';
 import { styled } from 'leather-styles/jsx/factory';
 import { Flex } from 'leather-styles/jsx/flex';
-import Markdown from '~/components/markdown/markdown';
+import Markdown from '~/components/content/markdown-content';
 import { cmsClient } from '~/constants/cms-client';
 import { Page } from '~/layouts/page/page';
 

@@ -7,8 +7,8 @@ import { BasicPageSectionHeading } from '~/components/basic-page/basic-page-sect
 import { RotatedArrow } from '~/components/icons/rotated-icon';
 import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { Page } from '~/layouts/page/page';
-import { SbtcRewardsPageHeading } from '~/pages/sbtc-rewards/components/sbtc-rewards-page-heading';
-import { loader } from '~/pages/sbtc-rewards/sbtc.route';
+import { SbtcRewardsPageHeading } from '~/pages/sbtc/components/sbtc-rewards-page-heading';
+import { loader } from '~/pages/sbtc/sbtc.route';
 import { useLeatherConnect } from '~/store/addresses';
 import { analytics } from '~/utils/analytics/analytics';
 import { openExternalLink } from '~/utils/external-links';

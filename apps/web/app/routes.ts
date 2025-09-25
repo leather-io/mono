@@ -14,7 +14,11 @@ export default [
     route('increase', 'pages/stacking/liquid/liquid-stacking-increase.route.tsx'),
   ]),
   // sBTC
-  route('sbtc', 'pages/sbtc-rewards/sbtc.route.tsx'),
+  route('sbtc', 'pages/sbtc/sbtc.route.tsx'),
+  // Changelog
+  route('changelog', 'pages/changelog/changelog.route.tsx'),
+  route('changelog/:slug', 'pages/changelog/changelog-entry.route.tsx'),
+  route('changelog.xml', 'pages/changelog/changelog-rss.route.tsx'),
   // Advanced Leather tools
   ...prefix('advanced', [
     index('pages/advanced/advanced.route.tsx'),
