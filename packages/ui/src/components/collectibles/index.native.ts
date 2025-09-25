@@ -5,3 +5,4 @@ export * from './native/inscription.native';
 export * from './native/collectible-card.native';
 export * from './native/image-unavailable.native';
 export * from './native/bns.native';
+export * from './native/sip9.native';

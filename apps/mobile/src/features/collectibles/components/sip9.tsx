@@ -1,7 +1,7 @@
 import { TokenDetailsProps } from '@/features/token/types';
 
 import { Sip9Asset } from '@leather.io/models';
-import { BnsImage, CollectibleImage } from '@leather.io/ui/native';
+import { BnsImage, Sip9 as Sip9Component } from '@leather.io/ui/native';
 
 import { FallbackImage } from './fallback';
 
@@ -20,9 +20,8 @@ export function Sip9({ item, height, onPress }: Sip9Props) {
     return <BnsImage source={item.cachedImage} alt={item.name} height={height} />;
   }
   return (
-    <CollectibleImage
-      source={item.cachedImage}
-      alt={item.name}
+    <Sip9Component
+      item={item}
       height={height}
       onPress={
         onPress ? () => onPress({ assetId: item.assetId, assetProtocol: 'sip9' }) : undefined
