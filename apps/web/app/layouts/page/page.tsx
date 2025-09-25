@@ -70,8 +70,9 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
 
 interface PageHeaderProps {
   title: React.ReactNode;
+  children?: React.ReactElement | React.ReactElement[];
 }
-export function PageHeader({ title }: PageHeaderProps) {
+export function PageHeader({ title, children }: PageHeaderProps) {
   return (
     <styled.header
       className={insetPageMarginX}
@@ -81,10 +82,12 @@ export function PageHeader({ title }: PageHeaderProps) {
       borderBottom="default"
       alignItems="center"
     >
-      <styled.h1 textStyle="heading.05" mx={['space.04', 'space.05', 'space.07']}>
-        {title}
-      </styled.h1>
-
+      <Flex alignItems="center" justifyContent="space-between" flex={1}>
+        <styled.h1 textStyle="heading.05" mx={['space.04', 'space.05', 'space.07']}>
+          {title}
+        </styled.h1>
+        {children}
+      </Flex>
       <WhenClient>
         <Flex maxW="fit-content" height="100%">
           <MockModeToggle />

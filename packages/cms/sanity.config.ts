@@ -1,5 +1,7 @@
+import { codeInput } from '@sanity/code-input';
 import { visionTool } from '@sanity/vision';
 import { defineConfig } from 'sanity';
+import { markdownSchema } from 'sanity-plugin-markdown';
 import { structureTool } from 'sanity/structure';
 
 import { sanityDataset, sanityProjectId } from './src/environment';
@@ -13,12 +15,7 @@ export default defineConfig({
   projectId: sanityProjectId,
   dataset: sanityDataset,
 
-  plugins: [
-    structureTool({
-      structure,
-    }),
-    visionTool(),
-  ],
+  plugins: [markdownSchema(), codeInput(), structureTool({ structure }), visionTool()],
 
   schema: {
     types: schemaTypes,
