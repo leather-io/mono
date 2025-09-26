@@ -1,16 +1,17 @@
 import { WebView } from 'react-native-webview';
 
-import { Box, TouchableOpacity } from '../../../../native';
+import { Box, Text, TouchableOpacity } from '../../../../native';
 import { HeadsetIcon } from '../../../icons/headset-icon.native';
 import { CollectibleCard } from './collectible-card.native';
 
 interface CollectibleAudioProps {
   src: string;
+  alt: string;
   size?: number;
   onPress?: () => void;
 }
 
-export function CollectibleAudio({ src, size = 200, onPress }: CollectibleAudioProps) {
+export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleAudioProps) {
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -43,16 +44,22 @@ export function CollectibleAudio({ src, size = 200, onPress }: CollectibleAudioP
     </html>
   `;
   return (
-    <CollectibleCard height={size}>
+    <CollectibleCard>
       {onPress ? (
-        <Box position="relative" height={size} justifyContent="center" alignItems="center">
-          <HeadsetIcon height={36} width={36} />
-          <TouchableOpacity
-            style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-            onPress={onPress}
-            activeOpacity={0.95} // Slight feedback on press
-          />
-        </Box>
+        <TouchableOpacity
+          onPress={onPress}
+          activeOpacity={0.95} // Slight feedback on press
+        >
+          <Box
+            height={size}
+            bg="ink.background-secondary"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <HeadsetIcon height={36} width={36} />
+            <Text textAlign="center">{alt}</Text>
+          </Box>
+        </TouchableOpacity>
       ) : (
         <WebView
           source={{ html: htmlContent }}

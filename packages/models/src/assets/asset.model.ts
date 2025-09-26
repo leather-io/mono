@@ -130,6 +130,80 @@ export interface StampAsset extends BaseNonFungibleCryptoAsset {
   readonly stamp: number;
   readonly stampUrl: string;
 }
+
+export type Sip9ContentType =
+  // Images
+  | 'image/jpeg'
+  | 'image/jpg'
+  | 'image/png'
+  | 'image/gif'
+  | 'image/webp'
+  | 'image/svg+xml'
+  | 'image/bmp'
+  | 'image/tiff'
+  | 'image/avif'
+
+  // Videos
+  | 'video/mp4'
+  | 'video/webm'
+  | 'video/mov'
+  | 'video/quicktime'
+  | 'video/avi'
+  | 'video/x-msvideo'
+  | 'video/ogg'
+
+  // Audio
+  | 'audio/mpeg'
+  | 'audio/mp3'
+  | 'audio/wav'
+  | 'audio/x-wav'
+  | 'audio/ogg'
+  | 'audio/aac'
+  | 'audio/flac'
+  | 'audio/webm'
+
+  // 3D Models
+  | 'model/gltf+json'
+  | 'model/gltf-binary'
+  | 'application/octet-stream' // GLB files sometimes use this
+
+  // Documents/Text
+  | 'text/plain'
+  | 'text/html'
+  | 'text/markdown'
+  | 'application/pdf'
+  | 'application/json'
+
+  // Interactive/Web
+  | 'text/javascript'
+  | 'application/javascript'
+
+  // Archives
+  | 'application/zip'
+
+  // Unknown/Fallback
+  | 'unknown';
+
+export type SupportedSip9ContentType =
+  | Extract<
+      Sip9ContentType,
+      | 'image/jpeg'
+      | 'image/png'
+      | 'image/gif'
+      | 'video/mp4'
+      | 'audio/mpeg'
+      | 'audio/mp3'
+      | 'audio/wav'
+      | 'audio/ogg'
+      | 'audio/aac'
+      | 'audio/flac'
+      | 'audio/webm'
+      | 'text/plain'
+      | 'application/octet-stream'
+      | 'model/gltf+json'
+      | 'model/gltf-binary'
+    >
+  | '';
 export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly chain: 'stacks';
   readonly protocol: 'sip9';
@@ -140,7 +214,7 @@ export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly description: string;
   readonly cachedImage: string;
   readonly cachedImageThumbnail: string;
-  readonly contentType: string;
+  readonly contentType: SupportedSip9ContentType;
   readonly collection: {
     id: string;
     name: string;
