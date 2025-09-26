@@ -1,6 +1,6 @@
+import SbtcIcon from '../../assets/icons/sbtc.svg';
 import StacksIcon from '../../assets/icons/stacks.svg';
 import { Avatar, type AvatarProps } from './avatar.native';
-import { SbtcAvatarIcon } from './sbtc-avatar-icon.native';
 
 function getFallbackAvatar(contractId: string) {
   // TODO LEA-2264 use avatars from Alex API
@@ -24,7 +24,11 @@ export function Sip10AvatarIcon({
 }: Sip10AvatarIconProps) {
   // TODO LEA-2551: use leather design system for more avatars
   if (name === 'sBTC') {
-    return <SbtcAvatarIcon />;
+    <Avatar
+      icon={<SbtcIcon width="100%" height="100%" />}
+      indicator={<StacksIcon width={16} height={16} />}
+      {...props}
+    />;
   }
   return (
     <Avatar
