@@ -1,3 +1,4 @@
+import { useSwapFlag } from '@/features/feature-flags';
 import { t } from '@lingui/core/macro';
 
 import { Button, ButtonProps } from '@leather.io/ui/native';
@@ -19,6 +20,8 @@ export function ActionButtons({
   onReceive,
   onSwap,
 }: ActionButtonsProps) {
+  const isSwapEnabled = useSwapFlag();
+
   return (
     <>
       <Button
@@ -30,7 +33,6 @@ export function ActionButtons({
       >
         {t`Send`}
       </Button>
-
       <Button
         onPress={onReceive}
         minWidth={86}
@@ -40,10 +42,17 @@ export function ActionButtons({
       >
         {t`Receive`}
       </Button>
-
-      <Button onPress={onSwap} minWidth={86} size={size} variant="outline" flex={fullWidth ? 1 : 0}>
-        {t`Swap`}
-      </Button>
+      {isSwapEnabled ? (
+        <Button
+          onPress={onSwap}
+          minWidth={86}
+          size={size}
+          variant="outline"
+          flex={fullWidth ? 1 : 0}
+        >
+          {t`Swap`}
+        </Button>
+      ) : null}
     </>
   );
 }

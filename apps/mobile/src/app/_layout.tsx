@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -15,7 +14,7 @@ import { HapticsProvider } from '@/core/haptics-provider';
 import { LeatherQueryProvider } from '@/core/leather-query-provider';
 import { ThemeProvider } from '@/core/theme-provider';
 import { AddAccountSheet } from '@/features/account/sheets/add-account-sheet';
-import { featureFlagClient, setupFeatureFlags } from '@/features/feature-flags';
+import { featureFlagClient, setupFeatureFlags, useSwapFlag } from '@/features/feature-flags';
 import { useWatchNotificationAddresses } from '@/features/notifications/use-notifications';
 import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
@@ -39,7 +38,7 @@ import { Stack, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { Box, SheetModalProvider } from '@leather.io/ui/native';
+import { Box, SheetModalProvider, useOnMount } from '@leather.io/ui/native';
 
 dayjs.extend(relativeTime);
 
@@ -66,14 +65,11 @@ ErrorUtils.setGlobalHandler(error => {
 function App() {
   useWatchNotificationAddresses();
   usePageViewTracking();
-  const { currentAccount } = useSettings();
-
-  useEffect(() => {
-    void trackFirstAppOpen();
-  }, []);
-
-  // Handle deep links
+  useOnMount(trackFirstAppOpen);
   useDeepLinks(router);
+  const isSwapEnabled = useSwapFlag();
+
+  const { currentAccount } = useSettings();
 
   return (
     <Box backgroundColor="ink.background-secondary" flex={1}>
@@ -87,7 +83,7 @@ function App() {
           <>
             <SendSheet />
             <ReceiveSheet />
-            <SwapSheet />
+            {isSwapEnabled ? <SwapSheet /> : null}
           </>
         )}
         <AddAccountSheet />

@@ -92,3 +92,7 @@ export function useInternationalizationFlag() {
 export function useTokenManagementFlag() {
   return useBoolVariation('release_token_management', false);
 }
+
+export function useSwapFlag() {
+  return useBoolVariation('swap', false);
+}
