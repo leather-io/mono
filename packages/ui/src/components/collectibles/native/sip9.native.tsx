@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import { Sip9Asset } from '@leather.io/models';
+import { Sip9Asset, SupportedSip9ContentType } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
+import { CollectibleAudio } from './collectible-audio.native';
+import { CollectibleGltf } from './collectible-gltf.native';
 import { CollectibleImage } from './collectible-image.native';
-import { VideoThumbnailItem } from './collectible-video-thumbnail.native';
 import { CollectibleVideo } from './collectible-video.native';
 
 export interface Sip9Props {
@@ -13,20 +14,7 @@ export interface Sip9Props {
   onPress?: () => void;
 }
 
-function handleVideoContent(
-  src: string,
-  onPress: () => void,
-  viewType: 'thumbnail' | 'full'
-): React.ReactNode {
-  if (viewType === 'thumbnail') {
-    return <VideoThumbnailItem video={{ url: src }} onPress={() => onPress()} />;
-  } else {
-    return <CollectibleVideo videoUrl={src} thumbnailUrl={src} />;
-  }
-}
-
-// TODO - refactor this to trim down and only return the necessary fields - isImage basically
-async function checkContentType(url: string) {
+async function checkContentType(url: string): Promise<MediaInfo> {
   try {
     // Use HEAD request to get just headers without downloading the file
     const response = await fetch(url, {
@@ -36,12 +24,10 @@ async function checkContentType(url: string) {
       },
     });
 
-    const contentType = response.headers.get('content-type');
-    const contentLength = response.headers.get('content-length');
+    const contentType = response.headers.get('content-type') as SupportedSip9ContentType;
 
     return {
-      contentType,
-      contentLength,
+      contentType: contentType,
       isVideo: contentType?.startsWith('video/'),
       isImage:
         contentType?.startsWith('image/') || contentType?.includes('application/octet-stream'),
@@ -52,13 +38,22 @@ async function checkContentType(url: string) {
     const extension = url.split('.').pop()?.toLowerCase();
     const videoExtensions = ['mp4', 'webm', 'mov', 'avi', 'mkv', 'm4v'];
     const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+    const audioExtensions = ['mp3', 'wav', 'ogg'];
 
     return {
-      contentType: null,
+      contentType: '',
       isVideo: videoExtensions.includes(extension ?? ''),
       isImage: imageExtensions.includes(extension ?? ''),
+      isAudio: audioExtensions.includes(extension ?? ''),
     };
   }
+}
+
+interface MediaInfo {
+  contentType: SupportedSip9ContentType;
+  isVideo: boolean;
+  isImage: boolean;
+  isAudio: boolean;
 }
 
 export function Sip9({
@@ -66,16 +61,13 @@ export function Sip9({
   height = 200,
   onPress,
 }: Sip9Props) {
-  const [mediaInfo, setMediaInfo] = useState<{
-    contentType: string | null;
-    contentLength: string | null;
-    isVideo: boolean | undefined;
-    isImage: boolean | undefined;
-    isAudio: boolean | undefined;
-    error?: string | undefined;
-  } | null>(null);
-
-  const viewType = onPress ? 'thumbnail' : 'full';
+  const [mediaInfo, setMediaInfo] = useState<MediaInfo>({
+    contentType: '',
+    isVideo: false,
+    isImage: false,
+    isAudio: false,
+  });
+  const encodedSrc = encodeURI(cachedImage);
 
   useEffect(() => {
     if (contentType !== '') {
@@ -83,14 +75,13 @@ export function Sip9({
     }
     async function checkMedia() {
       const info = await checkContentType(cachedImage);
+      const { contentType, isVideo, isImage, isAudio } = info;
       // Ensure all required fields are present for setMediaInfo
       setMediaInfo({
-        contentType: info.contentType ?? null,
-        contentLength: info.contentLength ?? null,
-        isVideo: info.isVideo,
-        isImage: info.isImage,
-        isAudio: info.isAudio,
-        error: (info as any).error,
+        contentType: contentType,
+        isVideo: isVideo,
+        isImage: isImage,
+        isAudio: isAudio,
       });
     }
 
@@ -99,23 +90,36 @@ export function Sip9({
 
   switch (contentType) {
     case 'video/mp4':
-      return handleVideoContent(cachedImage, onPress as any, viewType);
+      return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
     case 'image/png':
     case 'image/jpeg':
-      return <CollectibleImage source={cachedImage} alt={name} height={height} onPress={onPress} />;
+    case 'image/gif':
+    case 'application/octet-stream':
+      return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
+    case 'audio/mpeg':
+    case 'audio/wav':
+    case 'audio/ogg':
+    case 'audio/mp3':
+    case 'audio/aac':
+    case 'audio/flac':
+    case 'audio/webm':
+      return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
+    case 'model/gltf+json':
+    case 'model/gltf-binary':
+      return <CollectibleGltf src={encodedSrc} height={height} onPress={onPress} />;
+    case 'text/plain':
     case '':
       // content type is empty, so we need to check if it's a video or an image
       if (mediaInfo?.isImage) {
         return (
-          <CollectibleImage source={cachedImage} alt={name} height={height} onPress={onPress} />
+          <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />
         );
       } else {
         // if it's not an image, it's probably a video
         // some of the videos return 'text/plain' as their type
-        return handleVideoContent(cachedImage, onPress as any, viewType);
+        return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
       }
     default:
-      // TODO - fix this by defining contentType properly in the model
-      assertUnreachable(contentType as never);
+      assertUnreachable(contentType);
   }
 }
