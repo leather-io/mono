@@ -2,10 +2,10 @@ import { InscriptionMimeType } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { CollectibleAudio } from './collectible-audio.native';
-import { CollectibleGltf } from './collectible-gltf.native';
 import { CollectibleHtml } from './collectible-html.native';
 import { CollectibleImage } from './collectible-image.native';
 import { CollectibleText } from './collectible-text.native';
+import { CollectibleVideo } from './collectible-video.native';
 
 export interface InscriptionProps {
   mimeType: InscriptionMimeType;
@@ -23,9 +23,9 @@ export function Inscription({ mimeType, name, height = 200, src, onPress }: Insc
       return <CollectibleText src={src} height={height} onPress={onPress} />;
     case 'html':
     case 'gltf':
-      return <CollectibleGltf src={src} height={height} onPress={onPress} />;
-    case 'video':
       return <CollectibleHtml src={src} height={height} onPress={onPress} />;
+    case 'video':
+      return <CollectibleVideo src={src} alt={name} height={height} onPress={onPress} />;
     case 'other':
     case 'svg':
     case 'image':

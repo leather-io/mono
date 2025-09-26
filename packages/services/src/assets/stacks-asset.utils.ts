@@ -6,6 +6,7 @@ import {
   CryptoAssetProtocols,
   Sip9Asset,
   Sip10Asset,
+  SupportedSip9ContentType,
 } from '@leather.io/models';
 import { getTicker, isUndefined } from '@leather.io/utils';
 
@@ -66,7 +67,8 @@ export function createSip9Asset(
     (hiroMetadata as any)?.cached_thumbnail_image ||
     gammaMetadata?.item.asset_content?.content_url ||
     '';
-  const contentType = gammaMetadata?.item.asset_content?.content_type || '';
+  const contentType =
+    gammaMetadata?.item.asset_content?.content_type || ('' as SupportedSip9ContentType);
   const collection = gammaMetadata?.item.collection || hiroMetadata?.properties?.collection || {};
 
   return {
@@ -80,7 +82,7 @@ export function createSip9Asset(
     description,
     cachedImage,
     cachedImageThumbnail,
-    contentType,
+    contentType: contentType as SupportedSip9ContentType,
     collection,
   };
 }
