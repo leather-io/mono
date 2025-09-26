@@ -35,6 +35,10 @@ msgstr "{symbol, select, USD {United States Dollar} EUR {Euro} GBP {British Poun
 msgid "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
 msgstr "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
 
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:41
+msgid "<0>{assetName}</0> has no available receiving options right now."
+msgstr "<0>{assetName}</0> has no available receiving options right now."
+
 #: src/features/approver/utils.tsx:58
 msgid "~1 hour+"
 msgstr "~1 hour+"
@@ -106,6 +110,14 @@ msgstr "Activity"
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:144
 msgid "Add account"
 msgstr "Add account"
+
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:54
+msgid ""
+"Add funds to your wallet to start\n"
+"swapping between currencies."
+msgstr ""
+"Add funds to your wallet to start\n"
+"swapping between currencies."
 
 #: src/features/approver/components/memo-sheet.tsx:16
 #: src/features/approver/components/nonce-sheet.tsx:16
@@ -302,6 +314,7 @@ msgstr "BIP39 passphrase"
 #: src/features/receive/get-assets.ts:29
 #: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
+#: src/features/swap/swap.utils.ts:7
 #: src/features/token/bitcoin/bitcoin-token-details.tsx:17
 msgid "Bitcoin"
 msgstr "Bitcoin"
@@ -366,7 +379,7 @@ msgstr "Choose an account"
 msgid "Choose existing wallet"
 msgstr "Choose existing wallet"
 
-#: src/components/search-input.tsx:67
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:29
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -504,6 +517,7 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
+#: src/features/token/components/token-loading.tsx:38
 #: src/features/token/token.tsx:98
 msgid "Description"
 msgstr "Description"
@@ -663,6 +677,10 @@ msgstr "Fee updated"
 #: src/app/settings/index.tsx:123
 msgid "Fees"
 msgstr "Fees"
+
+#: src/features/swap/components/flip-button.tsx:53
+msgid "Flip assets"
+msgstr "Flip assets"
 
 #: src/app/create-new-wallet.tsx:108
 msgid "For your eyes only"
@@ -945,9 +963,21 @@ msgstr "Networks"
 msgid "NFTs"
 msgstr "NFTs"
 
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:52
+msgid "No assets"
+msgstr "No assets"
+
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:27
+msgid "No assets found"
+msgstr "No assets found"
+
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state.tsx:9
 msgid "No results found"
 msgstr "No results found"
+
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:39
+msgid "No swaps available"
+msgstr "No swaps available"
 
 #: src/features/approver/components/nonce-card.tsx:18
 msgid "Nonce"
@@ -1041,6 +1071,8 @@ msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
 #: src/components/action-buttons.tsx:41
+#: src/features/receive/screens/asset-details.tsx:57
+#: src/features/receive/screens/select-asset.tsx:83
 msgid "Receive"
 msgstr "Receive"
 
@@ -1129,6 +1161,10 @@ msgstr "Scan a QR code"
 msgid "Scan QR Code"
 msgstr "Scan QR Code"
 
+#: src/features/swap/components/asset-selector/asset-selector.tsx:46
+msgid "Search for asset"
+msgstr "Search for asset"
+
 #: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:67
 msgid "Search for BNS name or address"
 msgstr "Search for BNS name or address"
@@ -1142,12 +1178,18 @@ msgstr "Secure your wallet"
 msgid "Security"
 msgstr "Security"
 
+#: src/features/swap/components/asset-selector/asset-selector-toggle.tsx:38
+msgid "Select"
+msgstr "Select"
+
 #: src/features/receive/screens/select-asset.tsx:82
 #: src/features/send/screens/select-asset.tsx:35
 msgid "Select asset"
 msgstr "Select asset"
 
 #: src/components/action-buttons.tsx:31
+#: src/features/send/screens/form.tsx:54
+#: src/features/send/screens/select-asset.tsx:35
 msgid "Send"
 msgstr "Send"
 
@@ -1232,6 +1274,7 @@ msgstr "StackingDAO"
 #: src/features/balances/stacks/stacks-balance.tsx:11
 #: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
+#: src/features/swap/swap.utils.ts:6
 #: src/features/token/stacks/stacks-token-details.tsx:15
 msgid "Stacks"
 msgstr "Stacks"
@@ -1253,6 +1296,7 @@ msgid "Submitting..."
 msgstr "Submitting..."
 
 #: src/components/action-buttons.tsx:45
+#: src/features/swap/swap.tsx:63
 msgid "Swap"
 msgstr "Swap"
 
@@ -1301,6 +1345,10 @@ msgstr "Theme and account identifier"
 #: src/features/settings/theme-sheet.tsx:22
 msgid "Theme updated"
 msgstr "Theme updated"
+
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:41
+msgid "There are no currencies available to receive for {assetName} right now."
+msgstr "There are no currencies available to receive for {assetName} right now."
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:74
 msgid "This address belongs to a different network. Use an address that matches the active network."
