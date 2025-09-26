@@ -19,6 +19,43 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.74.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.73.0...@leather.io/mobile-v2.74.0) (2025-09-26)
+
+
+### Features
+
+* app config and asset visibility services ([d867859](https://github.com/leather-io/mono/commit/d86785985bcbeffb1396d51683c448e4cb089d9b))
+* create swap service ([168dcbf](https://github.com/leather-io/mono/commit/168dcbfde42ceda8ffd8982d1191d7ce6de70b2f))
+* **mobile:** add generic search input ([212d822](https://github.com/leather-io/mono/commit/212d8222f680a8f1d7c16f6148491b664615a85e))
+* **mobile:** collectibles ui refactor and bug fixes ([b80800e](https://github.com/leather-io/mono/commit/b80800e51c944ce9bfdadb62eeb89ed1f332a35b))
+* **mobile:** deep linking via app links and universal links ([135b1da](https://github.com/leather-io/mono/commit/135b1dafaf7f9b1d71a4d672c5a9c943f486b754))
+* **models:** add user defined type guards for asset types ([353ea63](https://github.com/leather-io/mono/commit/353ea6386b5b458a6bd4a9d2db0ca5d0da30d6af))
+
+
+### Bug Fixes
+
+* account header warning ([0222d49](https://github.com/leather-io/mono/commit/0222d49f1a3b9bb32d81614723b19c527666a97d))
+* current account persist ([52de660](https://github.com/leather-io/mono/commit/52de66098d77e92fea05d3c57627fd5c5c2c004d))
+* testnet approval flow ([62fe0d2](https://github.com/leather-io/mono/commit/62fe0d2c98e488d67355b144e25ad4e285a8a599))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.13.2
+    * @leather.io/bitcoin bumped to 0.32.6
+    * @leather.io/constants bumped to 0.25.4
+    * @leather.io/crypto bumped to 1.11.11
+    * @leather.io/models bumped to 0.42.0
+    * @leather.io/provider bumped to 1.5.13
+    * @leather.io/query bumped to 2.42.2
+    * @leather.io/rpc bumped to 2.20.12
+    * @leather.io/services bumped to 1.33.0
+    * @leather.io/stacks bumped to 1.16.6
+    * @leather.io/ui bumped to 1.83.0
+    * @leather.io/utils bumped to 0.46.0
+
 ## [2.73.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.72.0...@leather.io/mobile-v2.73.0) (2025-09-10)
 
 

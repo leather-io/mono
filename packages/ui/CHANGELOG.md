@@ -489,6 +489,26 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.83.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.82.0...@leather.io/ui-v1.83.0) (2025-09-26)
+
+
+### Features
+
+* **mobile:** collectibles ui refactor and bug fixes ([b80800e](https://github.com/leather-io/mono/commit/b80800e51c944ce9bfdadb62eeb89ed1f332a35b))
+* **models:** add user defined type guards for asset types ([353ea63](https://github.com/leather-io/mono/commit/353ea6386b5b458a6bd4a9d2db0ca5d0da30d6af))
+* **ui:** account for safe areas in sheet scrollables ([ee2b4c5](https://github.com/leather-io/mono/commit/ee2b4c5afd73b80a48e1c5729f5a313f9a551109))
+* **ui:** make asset avatars customizable ([260e5cf](https://github.com/leather-io/mono/commit/260e5cf1bf8c82898a09080270aed49899f1029d))
+* **ui:** tweak numpad styling ([bd2ce28](https://github.com/leather-io/mono/commit/bd2ce284dd20add63f64b08eeb51c13299808966))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.46.0
+  * devDependencies
+    * @leather.io/models bumped to 0.42.0
+
 ## [1.82.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.81.0...@leather.io/ui-v1.82.0) (2025-09-10)
 
 
