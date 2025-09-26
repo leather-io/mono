@@ -4,12 +4,10 @@ import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-heig
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 import { Swap } from '@/features/swap/swap';
-import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 
 import { FungibleCryptoAsset } from '@leather.io/models';
 import { SheetInstance, useHaptics } from '@leather.io/ui/native';
-import { assertExistence } from '@leather.io/utils';
 
 interface SwapSheetPresentParams {
   baseAsset?: FungibleCryptoAsset;
@@ -26,10 +24,8 @@ export function SwapSheet() {
   const { swapSheetRef } = useGlobalSheets();
   const ref = useRef<SheetInstance>(null);
   const triggerHaptics = useHaptics();
-  const { currentAccount } = useSettings();
   const [baseAsset, setBaseAsset] = useState<FungibleCryptoAsset | undefined>(undefined);
   const [targetAsset, setTargetAsset] = useState<FungibleCryptoAsset | undefined>(undefined);
-  assertExistence(currentAccount, `"Swap Sheet expects currentAccount to be set`);
 
   function handleAnimatedPositionChange(fromIndex: number, toIndex: number) {
     if (fromIndex === 0 && toIndex === -1) {
