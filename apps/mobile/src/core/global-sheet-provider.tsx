@@ -6,12 +6,14 @@ import {
   DescriptionSheetInstance,
   DescriptionSheetRef,
 } from '@/features/settings/description-sheet';
+import { SwapSheetInstance, SwapSheetRef } from '@/features/swap/swap-sheet';
 
 import { HasChildren, SheetInstance, SheetRef } from '@leather.io/ui/native';
 
 interface GlobalSheetContextValue {
   sendSheetRef: SendSheetRef;
   receiveSheetRef: ReceiveSheetRef;
+  swapSheetRef: SwapSheetRef;
   browserSheetRef: SheetRef;
   addAccountSheetRef: SheetRef;
   addWalletSheetRef: SheetRef;
@@ -30,6 +32,7 @@ export function useGlobalSheets() {
 export function GlobalSheetProvider({ children }: HasChildren) {
   const sendSheetRef = useRef<SendSheetInstance>(null);
   const receiveSheetRef = useRef<ReceiveSheetInstance>(null);
+  const swapSheetRef = useRef<SwapSheetInstance>(null);
   const browserSheetRef = useRef<SheetInstance>(null);
   const addAccountSheetRef = useRef<SheetInstance>(null);
   const addWalletSheetRef = useRef<SheetInstance>(null);
@@ -41,6 +44,7 @@ export function GlobalSheetProvider({ children }: HasChildren) {
       value={{
         sendSheetRef,
         receiveSheetRef,
+        swapSheetRef,
         browserSheetRef,
         addAccountSheetRef,
         addWalletSheetRef,

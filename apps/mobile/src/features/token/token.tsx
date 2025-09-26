@@ -43,7 +43,7 @@ export function Token({
   name,
   title,
 }: TokenProps) {
-  const { sendSheetRef, receiveSheetRef } = useGlobalSheets();
+  const { sendSheetRef, receiveSheetRef, swapSheetRef } = useGlobalSheets();
   const {
     tokenDetails: { value: tokenDetails, state: tokenDetailsState },
   } = useGetTokenDetails({ asset });
@@ -86,8 +86,9 @@ export function Token({
               }
               actionButtons={
                 <ActionButtons
-                  onSend={() => asset && sendSheetRef.current?.present(asset)}
-                  onReceive={() => receiveType && receiveSheetRef.current?.present(receiveType)}
+                  onSend={() => sendSheetRef.current?.present(asset)}
+                  onReceive={() => receiveSheetRef.current?.present(receiveType)}
+                  onSwap={() => swapSheetRef.current?.present({ baseAsset: asset })}
                   canSend={canSend}
                 />
               }

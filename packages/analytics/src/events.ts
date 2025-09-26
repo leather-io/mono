@@ -30,6 +30,8 @@ export interface Events extends HistoricalEvents {
   add_wallet_sheet_opened: { source: 'action_bar' | 'add_account_sheet' };
   send_sheet_opened: { source: 'action_bar' };
   send_sheet_dismissed: undefined;
+  swap_sheet_opened: { source: 'action_bar' };
+  swap_sheet_dismissed: undefined;
   receive_sheet_opened: { source: 'action_bar' };
   receive_sheet_dismissed: undefined;
   browser_sheet_opened: { source: 'action_bar' };

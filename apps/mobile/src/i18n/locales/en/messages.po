@@ -504,8 +504,7 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
-#: src/features/token/components/token-loading.tsx:38
-#: src/features/token/token.tsx:97
+#: src/features/token/token.tsx:98
 msgid "Description"
 msgstr "Description"
 
@@ -1041,9 +1040,7 @@ msgstr "Push"
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
-#: src/components/action-buttons.tsx:39
-#: src/features/receive/screens/asset-details.tsx:57
-#: src/features/receive/screens/select-asset.tsx:83
+#: src/components/action-buttons.tsx:41
 msgid "Receive"
 msgstr "Receive"
 
@@ -1150,9 +1147,7 @@ msgstr "Security"
 msgid "Select asset"
 msgstr "Select asset"
 
-#: src/components/action-buttons.tsx:29
-#: src/features/send/screens/form.tsx:54
-#: src/features/send/screens/select-asset.tsx:35
+#: src/components/action-buttons.tsx:31
 msgid "Send"
 msgstr "Send"
 
@@ -1256,6 +1251,10 @@ msgstr "Submitted"
 #: src/features/approver/components/approver-buttons.tsx:31
 msgid "Submitting..."
 msgstr "Submitting..."
+
+#: src/components/action-buttons.tsx:45
+msgid "Swap"
+msgstr "Swap"
 
 #: src/features/activity/utils/format-activity.ts:90
 msgid "Swap Assets"
