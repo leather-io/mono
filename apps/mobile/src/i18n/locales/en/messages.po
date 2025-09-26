@@ -379,6 +379,7 @@ msgstr "Choose an account"
 msgid "Choose existing wallet"
 msgstr "Choose existing wallet"
 
+#: src/components/search-input.tsx:67
 #: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:29
 msgid "Clear search"
 msgstr "Clear search"
@@ -1070,7 +1071,7 @@ msgstr "Push"
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
-#: src/components/action-buttons.tsx:41
+#: src/components/action-buttons.tsx:43
 #: src/features/receive/screens/asset-details.tsx:57
 #: src/features/receive/screens/select-asset.tsx:83
 msgid "Receive"
@@ -1187,7 +1188,7 @@ msgstr "Select"
 msgid "Select asset"
 msgstr "Select asset"
 
-#: src/components/action-buttons.tsx:31
+#: src/components/action-buttons.tsx:34
 #: src/features/send/screens/form.tsx:54
 #: src/features/send/screens/select-asset.tsx:35
 msgid "Send"
@@ -1295,7 +1296,7 @@ msgstr "Submitted"
 msgid "Submitting..."
 msgstr "Submitting..."
 
-#: src/components/action-buttons.tsx:45
+#: src/components/action-buttons.tsx:53
 #: src/features/swap/swap.tsx:63
 msgid "Swap"
 msgstr "Swap"
@@ -1345,10 +1346,6 @@ msgstr "Theme and account identifier"
 #: src/features/settings/theme-sheet.tsx:22
 msgid "Theme updated"
 msgstr "Theme updated"
-
-#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:41
-msgid "There are no currencies available to receive for {assetName} right now."
-msgstr "There are no currencies available to receive for {assetName} right now."
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:74
 msgid "This address belongs to a different network. Use an address that matches the active network."
