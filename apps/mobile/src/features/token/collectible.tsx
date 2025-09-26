@@ -35,11 +35,6 @@ export function Collectible({ name, description, children, collection }: Collect
       <Screen.Header
         centerElement={
           <Box flexDirection="column" gap="1" alignItems="center">
-            {/* 
-            HeaderTitle extended to add ellipsis 
-            could just ...props there 
-            investigate inscription + stamp names
-             */}
             <Text
               variant="heading05"
               color="ink.text-primary"

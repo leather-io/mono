@@ -5,7 +5,6 @@ import { Box, Theme } from '../../../../native';
 interface CollectibleCardProps<Theme extends BaseTheme> extends BoxProps<Theme> {
   children: React.ReactNode;
   height?: number;
-  onPress?: () => void;
 }
 
 export function CollectibleCard({ children, height = 200, ...props }: CollectibleCardProps<Theme>) {
