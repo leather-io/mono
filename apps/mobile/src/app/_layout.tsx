@@ -20,6 +20,7 @@ import { useWatchNotificationAddresses } from '@/features/notifications/use-noti
 import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
 import { DescriptionSheet } from '@/features/settings/description-sheet';
+import { SwapSheet } from '@/features/swap/swap-sheet';
 import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { useDeepLinks } from '@/hooks/use-deep-links';
 import { usePageViewTracking } from '@/hooks/use-page-view-tracking';
@@ -86,6 +87,7 @@ function App() {
           <>
             <SendSheet />
             <ReceiveSheet />
+            <SwapSheet />
           </>
         )}
         <AddAccountSheet />

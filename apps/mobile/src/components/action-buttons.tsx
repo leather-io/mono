@@ -8,6 +8,7 @@ interface ActionButtonsProps {
   size?: ButtonProps['size'];
   onSend(): void;
   onReceive(): void;
+  onSwap(): void;
 }
 
 export function ActionButtons({
@@ -16,6 +17,7 @@ export function ActionButtons({
   size = 'md',
   onSend,
   onReceive,
+  onSwap,
 }: ActionButtonsProps) {
   return (
     <>
@@ -37,6 +39,10 @@ export function ActionButtons({
         flex={fullWidth ? 1 : 0}
       >
         {t`Receive`}
+      </Button>
+
+      <Button onPress={onSwap} minWidth={86} size={size} variant="outline" flex={fullWidth ? 1 : 0}>
+        {t`Swap`}
       </Button>
     </>
   );
