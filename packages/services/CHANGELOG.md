@@ -404,6 +404,29 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.9
 
+## [1.33.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.32.0...@leather.io/services-v1.33.0) (2025-09-26)
+
+
+### Features
+
+* app config and asset visibility services ([d867859](https://github.com/leather-io/mono/commit/d86785985bcbeffb1396d51683c448e4cb089d9b))
+* create swap service ([168dcbf](https://github.com/leather-io/mono/commit/168dcbfde42ceda8ffd8982d1191d7ce6de70b2f))
+* **mobile:** collectibles ui refactor and bug fixes ([b80800e](https://github.com/leather-io/mono/commit/b80800e51c944ce9bfdadb62eeb89ed1f332a35b))
+* **mobile:** integrate gamma API ([c271a62](https://github.com/leather-io/mono/commit/c271a62111ab6a876bbfd3d1fb1dd59ece70d4f2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.6
+    * @leather.io/constants bumped to 0.25.4
+    * @leather.io/models bumped to 0.42.0
+    * @leather.io/stacks bumped to 1.16.6
+    * @leather.io/utils bumped to 0.46.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.12
+
 ## [1.32.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.31.1...@leather.io/services-v1.32.0) (2025-09-10)
 
 

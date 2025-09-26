@@ -30,6 +30,15 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+## [0.42.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.41.0...@leather.io/models-v0.42.0) (2025-09-26)
+
+
+### Features
+
+* create swap service ([168dcbf](https://github.com/leather-io/mono/commit/168dcbfde42ceda8ffd8982d1191d7ce6de70b2f))
+* **mobile:** integrate gamma API ([c271a62](https://github.com/leather-io/mono/commit/c271a62111ab6a876bbfd3d1fb1dd59ece70d4f2))
+* **models:** add user defined type guards for asset types ([353ea63](https://github.com/leather-io/mono/commit/353ea6386b5b458a6bd4a9d2db0ca5d0da30d6af))
+
 ## [0.41.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.40.0...@leather.io/models-v0.41.0) (2025-09-04)
 
 

@@ -339,6 +339,21 @@
     * @leather.io/constants bumped to 0.25.3
     * @leather.io/models bumped to 0.41.0
 
+## [0.46.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.45.0...@leather.io/utils-v0.46.0) (2025-09-26)
+
+
+### Features
+
+* create swap service ([168dcbf](https://github.com/leather-io/mono/commit/168dcbfde42ceda8ffd8982d1191d7ce6de70b2f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.25.4
+    * @leather.io/models bumped to 0.42.0
+
 ## [0.45.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.44.1...@leather.io/utils-v0.45.0) (2025-09-10)
 
 
