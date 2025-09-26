@@ -36,8 +36,9 @@ export function SendSheet() {
   }
 
   useImperativeHandle(sendSheetRef, () => ({
-    present(newAsset) {
-      setAsset(newAsset);
+    present(asset) {
+      analytics.track('send_sheet_opened', { asset: asset?.symbol });
+      setAsset(asset);
       ref.current?.present();
     },
     dismiss() {

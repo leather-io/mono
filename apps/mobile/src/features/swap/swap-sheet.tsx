@@ -42,9 +42,10 @@ export function SwapSheet() {
   }
 
   useImperativeHandle(swapSheetRef, () => ({
-    present(args) {
-      setBaseAsset(args?.baseAsset);
-      setTargetAsset(args?.targetAsset);
+    present({ baseAsset, targetAsset } = {}) {
+      analytics.track('swap_sheet_opened', { asset: baseAsset?.symbol });
+      setBaseAsset(baseAsset);
+      setTargetAsset(targetAsset);
       ref.current?.present();
     },
     dismiss() {

@@ -38,8 +38,9 @@ export function ReceiveSheet() {
   }
 
   useImperativeHandle(receiveSheetRef, () => ({
-    present(newReceiveType) {
-      setReceiveType(newReceiveType);
+    present(receiveType) {
+      analytics.track('receive_sheet_opened', { type: receiveType });
+      setReceiveType(receiveType);
       ref.current?.present();
     },
     dismiss() {
