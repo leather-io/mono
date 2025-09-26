@@ -18,7 +18,7 @@ export interface InscriptionProps {
 export function Inscription({ mimeType, name, height = 200, src, onPress }: InscriptionProps) {
   switch (mimeType) {
     case 'audio':
-      return <CollectibleAudio size={height} onPress={onPress} />;
+      return <CollectibleAudio src={src} size={height} onPress={onPress} />;
     case 'text':
       return <CollectibleText src={src} height={height} onPress={onPress} />;
     case 'html':
