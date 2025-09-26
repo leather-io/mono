@@ -4,8 +4,7 @@ import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-c
 
 import { AccountId, InscriptionAsset } from '@leather.io/models';
 
-import { useCollectibleHeight } from '../collectible';
-import { Collectible } from '../collectible';
+import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenLoading } from '../components/token-loading';
 
 interface InscriptionDetailsProps {

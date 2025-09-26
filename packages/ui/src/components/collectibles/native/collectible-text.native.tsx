@@ -16,25 +16,22 @@ export function CollectibleText({ src, height = 200, onPress }: CollectibleTextP
   const preview = typeof src === 'string' ? src.slice(0, 512) : '';
   const isHtml = htmlRegex.test(preview);
 
-  if (isHtml) {
-    return (
-      <CollectibleCard height={height} onPress={onPress}>
-        <WebView
-          source={{ html: src }}
-          scrollEnabled={false}
-          originWhitelist={['*']}
-          mixedContentMode="always"
-          allowsInlineMediaPlayback={true}
-          mediaPlaybackRequiresUserAction={false}
-          startInLoadingState={true}
-          cacheEnabled={false}
-          incognito={true}
-          textZoom={Math.max(50, Math.min(100, height))}
-        />
-      </CollectibleCard>
-    );
-  }
-  const content = (
+  const content = isHtml ? (
+    <CollectibleCard height={height}>
+      <WebView
+        source={{ html: src }}
+        scrollEnabled={false}
+        originWhitelist={['*']}
+        mixedContentMode="always"
+        allowsInlineMediaPlayback={true}
+        mediaPlaybackRequiresUserAction={false}
+        startInLoadingState={true}
+        cacheEnabled={false}
+        incognito={true}
+        textZoom={Math.max(50, Math.min(100, height))}
+      />
+    </CollectibleCard>
+  ) : (
     <CollectibleCard bg="ink.text-primary" height={height}>
       <Text color="ink.background-secondary" variant="code" p="4">
         {(() => {

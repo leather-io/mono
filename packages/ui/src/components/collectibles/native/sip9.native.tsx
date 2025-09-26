@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import { Sip9Asset, SupportedSip9ContentType } from '@leather.io/models';
-import { assertUnreachable } from '@leather.io/utils';
 
 import { CollectibleAudio } from './collectible-audio.native';
-import { CollectibleGltf } from './collectible-gltf.native';
+import { CollectibleHtml } from './collectible-html.native';
 import { CollectibleImage } from './collectible-image.native';
 import { CollectibleVideo } from './collectible-video.native';
 
@@ -76,7 +75,6 @@ export function Sip9({
     async function checkMedia() {
       const info = await checkContentType(cachedImage);
       const { contentType, isVideo, isImage, isAudio } = info;
-      // Ensure all required fields are present for setMediaInfo
       setMediaInfo({
         contentType: contentType,
         isVideo: isVideo,
@@ -94,6 +92,11 @@ export function Sip9({
     case 'image/png':
     case 'image/jpeg':
     case 'image/gif':
+    case 'image/webp':
+    case 'image/svg+xml':
+    case 'image/bmp':
+    case 'image/tiff':
+    case 'image/avif':
     case 'application/octet-stream':
       return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
     case 'audio/mpeg':
@@ -106,7 +109,7 @@ export function Sip9({
       return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
     case 'model/gltf+json':
     case 'model/gltf-binary':
-      return <CollectibleGltf src={encodedSrc} height={height} onPress={onPress} />;
+      return <CollectibleHtml src={encodedSrc} height={height} onPress={onPress} />;
     case 'text/plain':
     case '':
       // content type is empty, so we need to check if it's a video or an image
@@ -120,6 +123,7 @@ export function Sip9({
         return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
       }
     default:
-      assertUnreachable(contentType);
+      // default to image if we can't determine the content type
+      return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
   }
 }

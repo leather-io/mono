@@ -65,14 +65,8 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
         <script>
           try {
             const video = document.getElementById('video');
-            const errorDiv = document.getElementById('error');
-            
-            // Debug logging
-            window.ReactNativeWebView.postMessage(JSON.stringify({
-              type: 'debug',
-              message: 'HTML loaded, setting video source'
-            }));
-            
+            const errorDiv = document.getElementById('error');            
+                      
             // Set video source
             video.src = "${src}";
             
@@ -88,62 +82,7 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
                 }));
               });
             }, 100);
-            
-            // Event listeners
-            video.addEventListener('loadstart', () => {
-              window.ReactNativeWebView.postMessage(JSON.stringify({
-                type: 'loadstart'
-              }));
-            });
-            
-            video.addEventListener('canplay', () => {
-              window.ReactNativeWebView.postMessage(JSON.stringify({
-                type: 'canplay'
-              }));
-            });
-            
-            video.addEventListener('play', () => {
-              window.ReactNativeWebView.postMessage(JSON.stringify({
-                type: 'play'
-              }));
-            });
-            
-            video.addEventListener('pause', () => {
-              window.ReactNativeWebView.postMessage(JSON.stringify({
-                type: 'pause'
-              }));
-            });
-            
-            video.addEventListener('ended', () => {
-              window.ReactNativeWebView.postMessage(JSON.stringify({
-                type: 'ended'
-              }));
-            });
-            
-            video.addEventListener('error', (e) => {
-              const error = video.error;
-              let errorMessage = 'Unknown error';
-              
-              if (error) {
-                switch(error.code) {
-                  case 1: errorMessage = 'Aborted'; break;
-                  case 2: errorMessage = 'Network error'; break;
-                  case 3: errorMessage = 'Decode error'; break;
-                  case 4: errorMessage = 'Source not supported'; break;
-                }
-              }
-              
-              errorDiv.textContent = 'Error loading video: ' + errorMessage;
-              errorDiv.style.display = 'block';
-              video.style.display = 'none';
-              
-              window.ReactNativeWebView.postMessage(JSON.stringify({
-                type: 'error',
-                message: errorMessage,
-                url: "${src}"
-              }));
-            });
-            
+                    
             // iOS specific fullscreen prevention
             video.addEventListener('webkitbeginfullscreen', (e) => {
               e.preventDefault();
@@ -160,31 +99,6 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
       </body>
     </html>
   `;
-
-  function handleMessage(event: any) {
-    try {
-      const data = JSON.parse(event.nativeEvent.data);
-
-      // switch (data.type) {
-      //   case 'error':
-      //     setError(data.message);
-      //     setIsLoading(false);
-      //     break;
-      //   case 'canplay':
-      //     setIsLoading(false);
-      //     break;
-      //   case 'ended':
-      //     // Optionally reset to thumbnail
-      //     // setShowVideo(false);
-      //     break;
-      //   case 'debug':
-      //   default:
-      //     break;
-      // }
-    } catch {
-      // Silently ignore JSON parsing errors for invalid messages
-    }
-  }
 
   return (
     <CollectibleCard>
@@ -223,8 +137,6 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
             // Android specific
             mixedContentMode="always"
             androidHardwareAccelerationDisabled={false}
-            // Event handlers
-            onMessage={handleMessage}
             // Security
             originWhitelist={['*']}
             onShouldStartLoadWithRequest={() => true}
