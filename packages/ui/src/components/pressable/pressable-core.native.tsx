@@ -66,7 +66,12 @@ export type PressableCoreProps = RNPressableProps &
   PressableRestyleProps &
   Pick<
     AnimatedProps<RNPressableProps & PressableRestyleProps>,
-    'animatedProps' | 'style' | 'sharedTransitionStyle' | 'sharedTransitionTag'
+    | 'animatedProps'
+    | 'style'
+    | 'sharedTransitionStyle'
+    | 'sharedTransitionTag'
+    | 'entering'
+    | 'exiting'
   > & { ref?: PressableRef };
 
 export function PressableCore(props: PressableCoreProps) {
