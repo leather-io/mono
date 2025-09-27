@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useReducer } from 'react';
+import { useCallback, useEffect, useMemo, useReducer } from 'react';
 
 import {
   computeSecondaryAmountState,
   convertMoneyToInputValue,
   createSwapAssetsSelector,
+  isAmountEqualToAvailableBalance,
 } from '@/features/swap/swap-state/swap-state.utils';
 import { useDerivedAmounts } from '@/features/swap/swap-state/use-derived-amounts';
 import { useSwapQueries } from '@/features/swap/swap-state/use-swap-queries';
@@ -14,7 +15,7 @@ import { AccountSwapAsset, MarketDataService, SwapService } from '@leather.io/se
 import { getAssetId } from '@leather.io/utils';
 
 import { defaultSlippagePercentage, swapReducer } from './swap-state.reducer';
-import { SwapInternalState, UseSwapStateResult } from './swap-state.types';
+import { PresetPercentage, SwapInternalState, UseSwapStateResult } from './swap-state.types';
 
 export interface InitializeStateParams {
   baseAsset?: FungibleCryptoAsset;
@@ -124,6 +125,10 @@ export function useSwapState({
     dispatch({ type: 'SET_BASE_AMOUNT', payload: amount });
   }, []);
 
+  const setBaseAmountByPercentage = useCallback((percentage: PresetPercentage) => {
+    dispatch({ type: 'SET_BASE_AMOUNT_BY_PERCENTAGE', payload: percentage });
+  }, []);
+
   const toggleInputCurrencyMode = useCallback(() => {
     const nextBaseAmount = whenInputCurrencyMode(state.inputCurrencyMode)({
       crypto: convertMoneyToInputValue(derivedAmounts.quote),
@@ -164,16 +169,24 @@ export function useSwapState({
     derivedAmounts,
   });
 
+  const isSendingMax = useMemo(
+    () =>
+      isAmountEqualToAvailableBalance(derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode),
+    [derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode]
+  );
+
   return {
     state: {
       ...state,
       secondaryAmount,
       assetFlippingAllowed: state.baseSwapAsset !== null && state.targetSwapAsset !== null,
+      isSendingMax,
     },
     actions: {
       setBaseSwapAsset,
       setTargetSwapAsset,
       setBaseAmount,
+      setBaseAmountByPercentage,
       toggleInputCurrencyMode,
       setSlippage,
       toggleSlippageEditing,

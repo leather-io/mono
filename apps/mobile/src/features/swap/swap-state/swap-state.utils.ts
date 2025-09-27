@@ -1,4 +1,9 @@
-import { SecondaryAmount, SwapInternalState } from '@/features/swap/swap-state/swap-state.types';
+import {
+  PresetPercentage,
+  SecondaryAmount,
+  SwapInternalState,
+} from '@/features/swap/swap-state/swap-state.types';
+import { InputCurrencyMode } from '@/utils/types';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import BigNumber from 'bignumber.js';
 import { filter, pipe, sortBy } from 'remeda';
@@ -17,6 +22,21 @@ export function convertMoneyToInputValue(money: Money | null): string {
   return money.amount
     .shiftedBy(-money.decimals)
     .toFixed(money.decimals, BigNumber.ROUND_HALF_UP)
+    .replace(/\.0+$/, '')
+    .replace(/(\.\d*?)0+$/, '$1');
+}
+
+export function calculatePercentageAmount(
+  balance: Money | undefined,
+  percentage: PresetPercentage
+): string {
+  if (!balance) return '0';
+
+  const amount = balance.amount.multipliedBy(percentage);
+  const adjustedAmount = amount.shiftedBy(-balance.decimals);
+
+  return adjustedAmount
+    .toFixed(balance.decimals, BigNumber.ROUND_HALF_UP)
     .replace(/\.0+$/, '')
     .replace(/(\.\d*?)0+$/, '$1');
 }
@@ -126,4 +146,26 @@ function hasPositiveCryptoBalance(swapAsset: AccountSwapAsset): boolean {
 
 function isAllowedZeroBalanceAsset(asset: FungibleCryptoAsset) {
   return isBtcAsset(asset) || isStxAsset(asset);
+}
+
+export function isAmountEqualToAvailableBalance(
+  derivedAmounts: { crypto: Money | null; quote: Money | null },
+  baseSwapAsset: AccountSwapAsset | null,
+  inputCurrencyMode: InputCurrencyMode
+): boolean {
+  if (!baseSwapAsset?.balance) return false;
+
+  const currentAmount = whenInputCurrencyMode(inputCurrencyMode)({
+    crypto: derivedAmounts.crypto,
+    quote: derivedAmounts.quote,
+  });
+
+  if (!currentAmount) return false;
+
+  const availableBalance = whenInputCurrencyMode(inputCurrencyMode)({
+    crypto: baseSwapAsset.balance.crypto.availableBalance,
+    quote: baseSwapAsset.balance.quote.availableBalance,
+  });
+
+  return currentAmount.amount.isEqualTo(availableBalance.amount);
 }

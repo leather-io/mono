@@ -4,6 +4,8 @@ import { UseQueryResult } from '@tanstack/react-query';
 import { Money, QuoteCurrency } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 
+export type PresetPercentage = 0.25 | 0.5 | 0.75 | 1;
+
 export interface SwapInternalState {
   baseSwapAsset: AccountSwapAsset | null;
   targetSwapAsset: AccountSwapAsset | null;
@@ -24,6 +26,7 @@ export interface SwapInternalState {
 export interface SwapState extends SwapInternalState {
   secondaryAmount: SecondaryAmount;
   assetFlippingAllowed: boolean;
+  isSendingMax: boolean;
 }
 
 export type SwapActionObject =
@@ -34,6 +37,7 @@ export type SwapActionObject =
   | { type: 'RECONCILE_BASE_WITH_PROVIDER'; payload: AccountSwapAsset[] }
   | { type: 'RECONCILE_TARGET_WITH_PROVIDER'; payload: AccountSwapAsset[] }
   | { type: 'SET_BASE_AMOUNT'; payload: string }
+  | { type: 'SET_BASE_AMOUNT_BY_PERCENTAGE'; payload: PresetPercentage }
   | { type: 'TOGGLE_INPUT_CURRENCY_MODE'; payload: { nextBaseAmount: string } }
   | { type: 'SET_SLIPPAGE'; payload: number }
   | { type: 'TOGGLE_SLIPPAGE_EDITING'; payload: boolean }
@@ -45,6 +49,7 @@ export interface SwapActions {
   setBaseSwapAsset: (asset: AccountSwapAsset) => void;
   setTargetSwapAsset: (asset: AccountSwapAsset) => void;
   setBaseAmount: (amount: string) => void;
+  setBaseAmountByPercentage: (percentage: PresetPercentage) => void;
   toggleInputCurrencyMode: () => void;
   setSlippage: (slippage: number) => void;
   toggleSlippageEditing: (enabled: boolean) => void;
