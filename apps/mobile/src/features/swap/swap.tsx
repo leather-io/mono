@@ -10,13 +10,13 @@ import { currencyDecimalsMap } from '@leather.io/constants';
 import { FungibleCryptoAsset } from '@leather.io/models';
 import { AccountSwapAsset, getMarketDataService, getSwapService } from '@leather.io/services';
 import { Box, Button, Numpad } from '@leather.io/ui/native';
-import { createMoneyFromDecimal, getAssetId, serializeAssetId } from '@leather.io/utils';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { AmountField } from './components/amount-field/amount-field';
 import { AssetSelector } from './components/asset-selector/asset-selector';
 import { AssetSelectorSheet } from './components/asset-selector/asset-selector-sheet';
 import { AssetSelectorToggle } from './components/asset-selector/asset-selector-toggle';
-import { Balance } from './components/balance';
+import { BaseAssetBalance } from './components/base-asset-balance';
 import { FlipButton } from './components/flip-button';
 import * as Panel from './components/panel';
 import { TargetAmountPreview } from './components/target-amount-preview';
@@ -79,7 +79,10 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
                 asset={state.baseSwapAsset?.asset}
                 onPress={() => openAssetSelector('base')}
               />
-              <Balance balance={createMoneyFromDecimal(0.00980035, 'BTC')} />
+              <BaseAssetBalance
+                balance={state.baseSwapAsset?.balance}
+                inputCurrencyMode={state.inputCurrencyMode}
+              />
             </Box>
           </Panel.CardRow>
         </Panel.Card>
