@@ -1,16 +1,12 @@
-import { useCallback, useEffect, useMemo, useReducer } from 'react';
+import { useCallback, useEffect, useReducer } from 'react';
 
 import {
   computeSecondaryAmountState,
   convertMoneyToInputValue,
   createSwapAssetsSelector,
 } from '@/features/swap/swap-state/swap-state.utils';
-import {
-  createAccountBaseSwapAssetsQuery,
-  createAccountTargetSwapAssetsQuery,
-  createAssetMarketDataQuery,
-} from '@/features/swap/swap-state/swap.queries';
 import { useDerivedAmounts } from '@/features/swap/swap-state/use-derived-amounts';
+import { useSwapQueries } from '@/features/swap/swap-state/use-swap-queries';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
 import { AccountAddresses, FungibleCryptoAsset, QuoteCurrency } from '@leather.io/models';
@@ -78,16 +74,7 @@ export function useSwapState({
     initializeState
   );
 
-  const queries = useMemo(() => {
-    return {
-      useAccountBaseSwapAssetsQuery: createAccountBaseSwapAssetsQuery(swapService, accountRequest),
-      useAccountTargetSwapAssetsQuery: createAccountTargetSwapAssetsQuery(
-        swapService,
-        accountRequest
-      ),
-      useAssetMarketDataQuery: createAssetMarketDataQuery(marketDataService),
-    };
-  }, [accountRequest, swapService, marketDataService]);
+  const queries = useSwapQueries({ swapService, marketDataService, accountRequest });
 
   const baseAssetsQuery = queries.useAccountBaseSwapAssetsQuery({
     queryOptions: { select: createSwapAssetsSelector('base', isAssetAllowed) },
