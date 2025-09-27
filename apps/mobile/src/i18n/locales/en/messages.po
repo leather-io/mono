@@ -896,6 +896,10 @@ msgstr "Matching"
 msgid "Max"
 msgstr "Max"
 
+#: src/features/swap/components/amount-presets.tsx:23
+msgid "MAX"
+msgstr "MAX"
+
 #: src/components/app-update-required/app-update-required-sheet.tsx:46
 msgid "Maybe later"
 msgstr "Maybe later"
@@ -1131,9 +1135,7 @@ msgstr "Restore wallet"
 msgid "Reveal account"
 msgstr "Reveal account"
 
-#: src/features/send/forms/btc/btc-form.tsx:126
-#: src/features/send/forms/stx/sip10-form.tsx:149
-#: src/features/send/forms/stx/stx-form.tsx:140
+#: src/features/swap/swap.tsx:106
 msgid "Review"
 msgstr "Review"
 
@@ -1296,8 +1298,7 @@ msgstr "Submitted"
 msgid "Submitting..."
 msgstr "Submitting..."
 
-#: src/components/action-buttons.tsx:53
-#: src/features/swap/swap.tsx:63
+#: src/features/swap/swap.tsx:65
 msgid "Swap"
 msgstr "Swap"
 
