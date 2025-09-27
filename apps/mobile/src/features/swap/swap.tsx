@@ -40,6 +40,7 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
       setBaseSwapAsset,
       setTargetSwapAsset,
       setBaseAmount,
+      setBaseAmountByPercentage,
       flipAssets,
       toggleInputCurrencyMode,
     },
@@ -100,7 +101,7 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
       </Panel.Root>
 
       <Box flex={1} justifyContent="flex-end" gap="4">
-        <AmountPresets />
+        <AmountPresets onSelectPercentage={setBaseAmountByPercentage} />
         <Numpad
           value={state.baseAmount}
           onChange={setBaseAmount}

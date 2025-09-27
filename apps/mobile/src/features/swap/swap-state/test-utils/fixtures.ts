@@ -97,8 +97,8 @@ export function createAccountSwapAsset({
     result.balance = {
       quote: createBalance({
         amount: quoteAmount,
-        symbol: asset.symbol,
-        decimals: asset.decimals,
+        symbol: 'USD',
+        decimals: 2,
       }),
       crypto: createBalance({
         amount: cryptoAmount,
