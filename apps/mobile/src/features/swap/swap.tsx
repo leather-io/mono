@@ -1,16 +1,18 @@
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
+import { AmountPresets } from '@/features/swap/components/amount-presets';
 import { useAccountRequest } from '@/hooks/use-account-request';
 import { useSettings } from '@/store/settings/settings';
 import { AssetVisibility } from '@/store/settings/utils';
 import { t } from '@lingui/core/macro';
 
+import { currencyDecimalsMap } from '@leather.io/constants';
 import { FungibleCryptoAsset } from '@leather.io/models';
 import { AccountSwapAsset, getMarketDataService, getSwapService } from '@leather.io/services';
-import { Box } from '@leather.io/ui/native';
+import { Box, Button, Numpad } from '@leather.io/ui/native';
 import { createMoneyFromDecimal, getAssetId, serializeAssetId } from '@leather.io/utils';
 
-import { AmountField } from './components/amount-field';
+import { AmountField } from './components/amount-field/amount-field';
 import { AssetSelector } from './components/asset-selector/asset-selector';
 import { AssetSelectorSheet } from './components/asset-selector/asset-selector-sheet';
 import { AssetSelectorToggle } from './components/asset-selector/asset-selector-toggle';
@@ -37,6 +39,7 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
       closeAssetSelector,
       setBaseSwapAsset,
       setTargetSwapAsset,
+      setBaseAmount,
       flipAssets,
       toggleInputCurrencyMode,
     },
@@ -65,11 +68,11 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
         <Panel.Card type="pay">
           <Panel.CardRow>
             <AmountField
-              onModeSwitch={toggleInputCurrencyMode}
               secondaryAmount={state.secondaryAmount}
-              asset={state.baseSwapAsset?.asset}
               inputCurrencyMode={state.inputCurrencyMode}
+              onInputCurrencyModeSwitch={toggleInputCurrencyMode}
               value={state.baseAmount}
+              quoteCurrencyPreference={state.quoteCurrencyPreference}
             />
             <Box alignItems="flex-end" gap="3" flexShrink={0}>
               <AssetSelectorToggle
@@ -93,6 +96,22 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
         <FlipButton isVisible={state.assetFlippingAllowed} onPress={flipAssets} />
       </Panel.Root>
 
+      <Box flex={1} justifyContent="flex-end" gap="4">
+        <AmountPresets />
+        <Numpad
+          value={state.baseAmount}
+          onChange={setBaseAmount}
+          allowNextValue={createDecimalPlaceValidator(
+            state.inputCurrencyMode === 'crypto'
+              ? state.baseSwapAsset?.asset.decimals
+              : currencyDecimalsMap[state.quoteCurrencyPreference]
+          )}
+        />
+        <Box px="5" mt="3">
+          <Button>{t`Review`}</Button>
+        </Box>
+      </Box>
+
       <AssetSelectorSheet isOpen={state.selectingAsset !== null} onClose={closeAssetSelector}>
         {state.selectingAsset && (
           <AssetSelector
@@ -106,6 +125,12 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
       </AssetSelectorSheet>
     </FullHeightSheetLayout>
   );
+}
+
+function createDecimalPlaceValidator(decimals = Infinity) {
+  return function (value: string) {
+    return (value.split('.')[1] ?? '').length <= decimals;
+  };
 }
 
 function createAssetVisibilityPredicate(assetVisibility: AssetVisibility) {
