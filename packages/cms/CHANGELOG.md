@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.1.0...@leather.io/cms-v1.2.0) (2025-09-29)
+
+
+### Features
+
+* **cms:** guides page builder schema and queries ([bbd81d8](https://github.com/leather-io/mono/commit/bbd81d810c55aacd67c226bb1f124d434e79500e))
+* **web:** use sanity for guides, render markdown ([5926d5b](https://github.com/leather-io/mono/commit/5926d5bca3ebd4b0a6bb6d0d532626cda70d47e7))
+
 ## [1.1.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.0.0...@leather.io/cms-v1.1.0) (2025-09-08)
 
 

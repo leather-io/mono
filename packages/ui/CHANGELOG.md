@@ -489,6 +489,19 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.84.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.83.0...@leather.io/ui-v1.84.0) (2025-09-29)
+
+
+### Features
+
+* **mobile:** put Swap under a flag ([f0ac2e6](https://github.com/leather-io/mono/commit/f0ac2e605030c17b93f5b52be6bfe71b0f938d97))
+* **ui:** expose "entering" and "exiting" props from pressable ([d95637e](https://github.com/leather-io/mono/commit/d95637e6e5fd20c675f63eec6e24259c0fc97239))
+
+
+### Bug Fixes
+
+* **ui:** remove SbtcAvatarIcon ([2c7b2a9](https://github.com/leather-io/mono/commit/2c7b2a9c4ea55a89caf8c732b5df3cf13d85ce7a))
+
 ## [1.83.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.82.0...@leather.io/ui-v1.83.0) (2025-09-26)
 
 

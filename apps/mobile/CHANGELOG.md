@@ -19,6 +19,26 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.75.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.74.0...@leather.io/mobile-v2.75.0) (2025-09-29)
+
+
+### Features
+
+* **mobile:** add Swap building blocks and asset selection ([532b820](https://github.com/leather-io/mono/commit/532b820074df7162ff86bef607cd7b47de56bd15))
+* **mobile:** add swap sheet ([0152f2f](https://github.com/leather-io/mono/commit/0152f2fe686a7039878f3625c08fbd702d8a864d))
+* **mobile:** add swap state machine ([c01ab88](https://github.com/leather-io/mono/commit/c01ab88155fe153f8dc7cd432e0cca817d77324f))
+* **mobile:** add swap state tests ([4ea1ae1](https://github.com/leather-io/mono/commit/4ea1ae1374464cbb70cfb92f32eaab98ac13f695))
+* **mobile:** put Swap under a flag ([f0ac2e6](https://github.com/leather-io/mono/commit/f0ac2e605030c17b93f5b52be6bfe71b0f938d97))
+* **mobile:** restore lost "*_sheet_opened" event tracking ([99d0fb0](https://github.com/leather-io/mono/commit/99d0fb06d3b85fcc537daf2b39a2445532797f77))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.14.0
+    * @leather.io/ui bumped to 1.84.0
+
 ## [2.74.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.73.0...@leather.io/mobile-v2.74.0) (2025-09-26)
 
 
