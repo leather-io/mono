@@ -4,6 +4,7 @@ import { AmountPresets } from '@/features/swap/components/amount-presets';
 import { useAccountRequest } from '@/hooks/use-account-request';
 import { useSettings } from '@/store/settings/settings';
 import { AssetVisibility } from '@/store/settings/utils';
+import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
 import { currencyDecimalsMap } from '@leather.io/constants';
@@ -53,6 +54,12 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
     baseAsset,
     targetAsset,
   });
+  const validateDecimalPlaces = createDecimalPlaceValidator(
+    whenInputCurrencyMode(state.inputCurrencyMode)({
+      crypto: state.baseSwapAsset?.asset.decimals,
+      quote: currencyDecimalsMap[state.quoteCurrencyPreference],
+    })
+  );
 
   function handleAssetSelection(type: 'base' | 'target', asset: AccountSwapAsset) {
     const action = {
@@ -105,11 +112,7 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
         <Numpad
           value={state.baseAmount}
           onChange={setBaseAmount}
-          allowNextValue={createDecimalPlaceValidator(
-            state.inputCurrencyMode === 'crypto'
-              ? state.baseSwapAsset?.asset.decimals
-              : currencyDecimalsMap[state.quoteCurrencyPreference]
-          )}
+          allowNextValue={validateDecimalPlaces}
         />
         <Box px="5" mt="3">
           <Button>{t`Review`}</Button>
