@@ -96,6 +96,15 @@
   * devDependencies
     * @leather.io/models bumped to 0.42.0
 
+## [3.14.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.13.2...@leather.io/analytics-v3.14.0) (2025-09-29)
+
+
+### Features
+
+* **mobile:** add swap sheet ([0152f2f](https://github.com/leather-io/mono/commit/0152f2fe686a7039878f3625c08fbd702d8a864d))
+* **mobile:** put Swap under a flag ([f0ac2e6](https://github.com/leather-io/mono/commit/f0ac2e605030c17b93f5b52be6bfe71b0f938d97))
+* **mobile:** restore lost "*_sheet_opened" event tracking ([99d0fb0](https://github.com/leather-io/mono/commit/99d0fb06d3b85fcc537daf2b39a2445532797f77))
+
 ## [3.13.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.12.1...@leather.io/analytics-v3.13.0) (2025-08-26)
 
 
