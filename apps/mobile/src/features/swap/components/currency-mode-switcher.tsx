@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
+import { EmptyAmountPlaceholder } from '@/components/balance/constants';
 import { formatCurrency } from '@/utils/currency-formatter';
 
 import {
@@ -30,10 +31,9 @@ export function CurrencyModeSwitcher({ secondaryAmount, onModeSwitch }: Currency
       case 'pending':
         return <PendingIndicator />;
       case 'error':
-        // TODO: Extremely rare, needs better design.
         return (
           <Text variant="label02" color="ink.text-subdued">
-            –
+            {EmptyAmountPlaceholder}
           </Text>
         );
       case 'success':

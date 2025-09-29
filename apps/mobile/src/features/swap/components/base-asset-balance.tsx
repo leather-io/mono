@@ -2,6 +2,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { Balance } from '@/components/balance/balance';
 import { InputCurrencyMode } from '@/utils/types';
+import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
 import { CryptoAssetBalance } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
@@ -15,10 +16,10 @@ interface BalancePreviewProps {
 }
 
 export function BaseAssetBalance({ balance, inputCurrencyMode }: BalancePreviewProps) {
-  const displayBalance =
-    inputCurrencyMode === 'crypto'
-      ? balance?.crypto.availableBalance
-      : balance?.quote.availableBalance;
+  const displayBalance = whenInputCurrencyMode(inputCurrencyMode)({
+    crypto: balance?.crypto.availableBalance,
+    quote: balance?.quote.availableBalance,
+  });
 
   return (
     <Box height={16}>

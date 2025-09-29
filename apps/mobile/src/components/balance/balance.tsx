@@ -5,7 +5,7 @@ import { Money } from '@leather.io/models';
 import { SkeletonLoader, Text, TextProps } from '@leather.io/ui/native';
 import { FormatAmountOptions } from '@leather.io/utils';
 
-import { EmptyBalanceDisplay } from './constants';
+import { EmptyAmountPlaceholder } from './constants';
 
 interface BalanceProps extends TextProps {
   balance?: Money;
@@ -34,7 +34,7 @@ export function Balance({
   if (!balance) {
     return (
       <DisplayText color={color} variant={variant}>
-        {EmptyBalanceDisplay}
+        {EmptyAmountPlaceholder}
       </DisplayText>
     );
   }

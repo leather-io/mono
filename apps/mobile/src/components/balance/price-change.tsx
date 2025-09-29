@@ -3,7 +3,7 @@ import { ArrowTriangleTopIcon, SkeletonLoader, Text } from '@leather.io/ui/nativ
 import { createMoney } from '@leather.io/utils';
 
 import { Balance } from './balance';
-import { EmptyBalanceDisplay } from './constants';
+import { EmptyAmountPlaceholder } from './constants';
 
 function getPriceChangeColor(changePercent: number) {
   if (changePercent > 0) {
@@ -28,7 +28,7 @@ export function PriceChange({ price, changePercent, isLoading }: PriceChange) {
   if (!price || !changePercent) {
     return (
       <Text variant="label02" color="ink.text-primary">
-        {EmptyBalanceDisplay}
+        {EmptyAmountPlaceholder}
       </Text>
     );
   }
