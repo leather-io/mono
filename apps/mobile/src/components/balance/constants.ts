@@ -1,1 +1,1 @@
-export const EmptyBalanceDisplay = '-.--';
+export const EmptyAmountPlaceholder = '-.--';

@@ -35,6 +35,10 @@ msgstr "{symbol, select, USD {United States Dollar} EUR {Euro} GBP {British Poun
 msgid "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
 msgstr "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
 
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:41
+msgid "<0>{assetName}</0> has no available receiving options right now."
+msgstr "<0>{assetName}</0> has no available receiving options right now."
+
 #: src/features/approver/utils.tsx:58
 msgid "~1 hour+"
 msgstr "~1 hour+"
@@ -107,7 +111,7 @@ msgstr "Activity"
 msgid "Add account"
 msgstr "Add account"
 
-#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:51
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:54
 msgid ""
 "Add funds to your wallet to start\n"
 "swapping between currencies."
@@ -376,7 +380,7 @@ msgid "Choose existing wallet"
 msgstr "Choose existing wallet"
 
 #: src/components/search-input.tsx:67
-#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:28
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:29
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -964,11 +968,11 @@ msgstr "Networks"
 msgid "NFTs"
 msgstr "NFTs"
 
-#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:49
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:52
 msgid "No assets"
 msgstr "No assets"
 
-#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:26
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:27
 msgid "No assets found"
 msgstr "No assets found"
 
@@ -976,7 +980,7 @@ msgstr "No assets found"
 msgid "No results found"
 msgstr "No results found"
 
-#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:38
+#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:39
 msgid "No swaps available"
 msgstr "No swaps available"
 
@@ -1131,6 +1135,9 @@ msgstr "Restore wallet"
 msgid "Reveal account"
 msgstr "Reveal account"
 
+#: src/features/send/forms/btc/btc-form.tsx:126
+#: src/features/send/forms/stx/sip10-form.tsx:149
+#: src/features/send/forms/stx/stx-form.tsx:140
 #: src/features/swap/swap.tsx:115
 msgid "Review"
 msgstr "Review"
@@ -1294,6 +1301,7 @@ msgstr "Submitted"
 msgid "Submitting..."
 msgstr "Submitting..."
 
+#: src/components/action-buttons.tsx:53
 #: src/features/swap/swap.tsx:67
 msgid "Swap"
 msgstr "Swap"
@@ -1343,10 +1351,6 @@ msgstr "Theme and account identifier"
 #: src/features/settings/theme-sheet.tsx:22
 msgid "Theme updated"
 msgstr "Theme updated"
-
-#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:40
-msgid "There are no currencies available to receive for {assetName} right now."
-msgstr "There are no currencies available to receive for {assetName} right now."
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:74
 msgid "This address belongs to a different network. Use an address that matches the active network."
