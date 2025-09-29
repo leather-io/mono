@@ -4,13 +4,12 @@ import { Box, styled } from 'leather-styles/jsx';
 
 import { isFunction, isString } from '@leather.io/utils';
 
-import { HasChildren } from '../../../utils/has-children.shared';
 import { Favicon } from '../../favicon/favicon.web';
 import { Flag } from '../../flag/flag.web';
 import { ApproverHeaderAnimation } from '../animations/approver-animation.web';
 import { useApproverContext, useRegisterApproverChild } from '../approver-context.shared';
 
-interface ApproverHeaderProps extends HasChildren {
+interface ApproverHeaderProps {
   title: ReactNode;
   info?: ReactNode;
   showLargeFavicon?: boolean;

@@ -1,12 +1,8 @@
 import { ReactNode } from 'react';
 
-import { Box } from '@leather.io/ui/native';
+import { Box, HasChildren } from '@leather.io/ui/native';
 
-interface RootProps {
-  children: ReactNode;
-}
-
-export function Root({ children }: RootProps) {
+export function Root({ children }: HasChildren) {
   return <Box px="5">{children}</Box>;
 }
 
@@ -44,11 +40,7 @@ export function Card({ type, children }: CardProps) {
   );
 }
 
-interface CardRowProps {
-  children: ReactNode;
-}
-
-export function CardRow({ children }: CardRowProps) {
+export function CardRow({ children }: HasChildren) {
   return (
     <Box flexDirection="row" alignItems="center" justifyContent="space-between" gap="2">
       {children}
