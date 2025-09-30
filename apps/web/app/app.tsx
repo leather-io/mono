@@ -54,7 +54,7 @@ export function Layout({ children }: HasChildren) {
 export default function App() {
   const navigate = useNavigate();
 
-  useOnRouteChange(location => analytics.page(location.pathname));
+  useOnRouteChange(() => analytics.page());
   useOnRouteChange(
     location => location.pathname === '/' && navigate('/stacking', { replace: true })
   );
