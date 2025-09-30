@@ -404,6 +404,27 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.9
 
+## [1.34.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.33.0...@leather.io/services-v1.34.0) (2025-09-30)
+
+
+### Features
+
+* **mobile:** exclude BNS - Archive at source ([9c9ab2b](https://github.com/leather-io/mono/commit/9c9ab2bd12bc1f449fb016a06d0409a71524b9dd))
+* **mobile:** fix bug parsing Gamma API data ([e150855](https://github.com/leather-io/mono/commit/e150855cc917c4bb03f8b1d0b95aa6d0de607767))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.7
+    * @leather.io/constants bumped to 0.25.5
+    * @leather.io/models bumped to 0.43.0
+    * @leather.io/stacks bumped to 1.16.7
+    * @leather.io/utils bumped to 0.46.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.13
+
 ## [1.33.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.32.0...@leather.io/services-v1.33.0) (2025-09-26)
 
 

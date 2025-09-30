@@ -489,6 +489,27 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.85.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.84.0...@leather.io/ui-v1.85.0) (2025-09-30)
+
+
+### Features
+
+* **mobile:** add basic handling of ordinal audio ([f2cc759](https://github.com/leather-io/mono/commit/f2cc759bd14c215ae3f1e6b7c40fd531feeed2bc))
+* **mobile:** add better support for ordinal gltf format ([024d671](https://github.com/leather-io/mono/commit/024d671e19d173854d1d4e6fc97b45100ff5ebc3))
+* **mobile:** add SIP9 content type handling + remove thumbnail generation ([8cf1964](https://github.com/leather-io/mono/commit/8cf196421728ebb86b2dadda796d81ace7a29073))
+* **mobile:** add support for sip-9 videos ([40f4292](https://github.com/leather-io/mono/commit/40f42922b2ece21ee2c476344996b12ba8c05b33))
+* **mobile:** collectible details ([8bd0505](https://github.com/leather-io/mono/commit/8bd0505f6c2fd936db0016f33c22b18a20045469))
+* **mobile:** show correct .locker image and exclude BNS - Archive ([caed0d3](https://github.com/leather-io/mono/commit/caed0d39ae63c4dbcb80693adb828ca1e17a8922))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.46.1
+  * devDependencies
+    * @leather.io/models bumped to 0.43.0
+
 ## [1.84.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.83.0...@leather.io/ui-v1.84.0) (2025-09-29)
 
 

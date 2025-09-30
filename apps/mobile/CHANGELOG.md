@@ -19,6 +19,43 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.76.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.75.0...@leather.io/mobile-v2.76.0) (2025-09-30)
+
+
+### Features
+
+* **mobile:** add support for sip-9 videos ([40f4292](https://github.com/leather-io/mono/commit/40f42922b2ece21ee2c476344996b12ba8c05b33))
+* **mobile:** add Swap amount entry ([517da1b](https://github.com/leather-io/mono/commit/517da1b2e9512dcf3f2b53b755ea44b9015adf3a))
+* **mobile:** collectible details ([8bd0505](https://github.com/leather-io/mono/commit/8bd0505f6c2fd936db0016f33c22b18a20045469))
+* **mobile:** exclude BNS - Archive at source ([9c9ab2b](https://github.com/leather-io/mono/commit/9c9ab2bd12bc1f449fb016a06d0409a71524b9dd))
+* **mobile:** show correct .locker image and exclude BNS - Archive ([caed0d3](https://github.com/leather-io/mono/commit/caed0d39ae63c4dbcb80693adb828ca1e17a8922))
+* **mobile:** show selected swap asset balance ([ac00e44](https://github.com/leather-io/mono/commit/ac00e44ecedcbb35b146321372b009e603b1eea4))
+* **mobile:** use the existing empty amount placeholder for swap amount quote display ([08c7fe9](https://github.com/leather-io/mono/commit/08c7fe9e9c078ce04ec97aba5f17b55a725f5dc4))
+* **mobile:** wire up swap amount presets, derive isSendingMax ([c42bca6](https://github.com/leather-io/mono/commit/c42bca6e4100fd3ab1b31111b8db97cfaf96bc80))
+
+
+### Bug Fixes
+
+* **mobile:** add associated domains entitlement for deep linking ([b027192](https://github.com/leather-io/mono/commit/b0271923ae598cce2c95f33d39693185c52750d9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.14.1
+    * @leather.io/bitcoin bumped to 0.32.7
+    * @leather.io/constants bumped to 0.25.5
+    * @leather.io/crypto bumped to 1.11.12
+    * @leather.io/models bumped to 0.43.0
+    * @leather.io/provider bumped to 1.5.14
+    * @leather.io/query bumped to 2.42.3
+    * @leather.io/rpc bumped to 2.20.13
+    * @leather.io/services bumped to 1.34.0
+    * @leather.io/stacks bumped to 1.16.7
+    * @leather.io/ui bumped to 1.85.0
+    * @leather.io/utils bumped to 0.46.1
+
 ## [2.75.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.74.0...@leather.io/mobile-v2.75.0) (2025-09-29)
 
 
