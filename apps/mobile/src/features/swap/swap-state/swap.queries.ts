@@ -1,9 +1,9 @@
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import { isDefined } from 'remeda';
 
 import {
   CryptoAssetId,
-  FungibleAssetId,
   FungibleCryptoAsset,
   MarketData,
   SwapAsset,
@@ -50,44 +50,23 @@ export function createAccountTargetSwapAssetsQuery(service: SwapService, request
   };
 }
 
-export function createBaseSwapAssetsQuery(service: SwapService) {
-  return function useBaseSwapAssetsQuery(params?: {
-    queryOptions?: CustomQueryOptions<SwapAsset[]>;
-  }) {
-    const { queryOptions } = params ?? {};
-    return useQuery({
-      queryKey: ['base-swap-assets'],
-      queryFn: ({ signal }) => service.getBaseSwapAssets(signal),
-      ...queryOptions,
-    });
-  };
-}
-
-export function createTargetSwapAssetsQuery(service: SwapService) {
-  return function useTargetSwapAssetsQuery(params: {
-    baseAssetId: FungibleAssetId;
-    queryOptions?: CustomQueryOptions<SwapAsset[]>;
-  }) {
-    const { baseAssetId, queryOptions } = params;
-    return useQuery({
-      queryKey: ['target-swap-assets', { baseAssetId }],
-      queryFn: ({ signal }) => service.getTargetSwapAssets(baseAssetId, signal),
-      ...queryOptions,
-    });
-  };
-}
-
 export function createSwapQuotesQuery(service: SwapService) {
   return function useSwapQuotesQuery(params: {
-    baseAsset: SwapAsset;
-    targetAsset: SwapAsset;
+    baseSwapAsset?: SwapAsset | null;
+    targetSwapAsset?: SwapAsset | null;
     baseAmount: number;
     queryOptions?: CustomQueryOptions<SwapQuote[]>;
   }) {
-    const { baseAsset, targetAsset, baseAmount, queryOptions } = params;
+    const { baseSwapAsset, targetSwapAsset, baseAmount, queryOptions } = params;
+    const debouncedBaseAmount = useDebouncedValue(baseAmount, 200);
+
     return useQuery({
-      queryKey: ['swap-quotes', { baseAsset, targetAsset, baseAmount }],
-      queryFn: ({ signal }) => service.getSwapQuotes(baseAsset, targetAsset, baseAmount, signal),
+      queryKey: ['swap-quotes', { baseSwapAsset, targetSwapAsset, debouncedBaseAmount }],
+      queryFn: ({ signal }) => {
+        if (!baseSwapAsset || !targetSwapAsset) return [];
+        return service.getSwapQuotes(baseSwapAsset, targetSwapAsset, debouncedBaseAmount, signal);
+      },
+      enabled: !!(baseSwapAsset && targetSwapAsset && debouncedBaseAmount > 0),
       ...queryOptions,
     });
   };
@@ -110,7 +89,7 @@ export function createSwapExecutionDataQuery(service: SwapService, request: Acco
 
 export function createAssetMarketDataQuery(service: MarketDataService) {
   return function useAssetMarketDataQuery(params: {
-    asset: FungibleCryptoAsset | null;
+    asset?: FungibleCryptoAsset;
     queryOptions?: CustomQueryOptions<MarketData>;
   }) {
     const { asset, queryOptions } = params;

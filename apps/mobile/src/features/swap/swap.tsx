@@ -31,24 +31,10 @@ interface SwapProps {
 export function Swap({ baseAsset, targetAsset }: SwapProps) {
   const { assetVisibility, fiatCurrencyPreference } = useSettings();
   const accountRequest = useAccountRequest();
-  const {
-    baseAssetsQuery,
-    targetAssetsQuery,
-    state,
-    actions: {
-      openAssetSelector,
-      closeAssetSelector,
-      setBaseSwapAsset,
-      setTargetSwapAsset,
-      setBaseAmount,
-      setBaseAmountByPercentage,
-      flipAssets,
-      toggleInputCurrencyMode,
-    },
-  } = useSwapState({
+  const { state, actions, baseAssetsQuery, targetAssetsQuery } = useSwapState({
+    accountRequest,
     marketDataService: getMarketDataService(),
     swapService: getSwapService(),
-    accountRequest,
     quoteCurrencyPreference: fiatCurrencyPreference,
     isAssetAllowed: createAssetVisibilityPredicate(assetVisibility),
     baseAsset,
@@ -63,8 +49,8 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
 
   function handleAssetSelection(type: 'base' | 'target', asset: AccountSwapAsset) {
     const action = {
-      base: setBaseSwapAsset,
-      target: setTargetSwapAsset,
+      base: actions.setBaseSwapAsset,
+      target: actions.setTargetSwapAsset,
     };
 
     action[type](asset);
@@ -78,14 +64,14 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
             <AmountField
               secondaryAmount={state.secondaryAmount}
               inputCurrencyMode={state.inputCurrencyMode}
-              onInputCurrencyModeSwitch={toggleInputCurrencyMode}
+              onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
               value={state.baseAmount}
               quoteCurrencyPreference={state.quoteCurrencyPreference}
             />
             <Box alignItems="flex-end" gap="3" flexShrink={0}>
               <AssetSelectorToggle
                 asset={state.baseSwapAsset?.asset}
-                onPress={() => openAssetSelector('base')}
+                onPress={() => actions.openAssetSelector('base')}
               />
               <BaseAssetBalance
                 balance={state.baseSwapAsset?.balance}
@@ -94,24 +80,25 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
             </Box>
           </Panel.CardRow>
         </Panel.Card>
+
         <Panel.Card type="receive">
           <Panel.CardRow>
             <TargetAmountPreview />
             <AssetSelectorToggle
               asset={state.targetSwapAsset?.asset}
-              onPress={() => openAssetSelector('target')}
+              onPress={() => actions.openAssetSelector('target')}
               disabled={state.baseSwapAsset === null}
             />
           </Panel.CardRow>
         </Panel.Card>
-        <FlipButton isVisible={state.assetFlippingAllowed} onPress={flipAssets} />
+        <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
       </Panel.Root>
 
       <Box flex={1} justifyContent="flex-end" gap="4">
-        <AmountPresets onSelectPercentage={setBaseAmountByPercentage} />
+        <AmountPresets onSelectPercentage={actions.setBaseAmountByPercentage} />
         <Numpad
           value={state.baseAmount}
-          onChange={setBaseAmount}
+          onChange={actions.setBaseAmount}
           allowNextValue={validateDecimalPlaces}
         />
         <Box px="5" mt="3">
@@ -119,7 +106,10 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
         </Box>
       </Box>
 
-      <AssetSelectorSheet isOpen={state.selectingAsset !== null} onClose={closeAssetSelector}>
+      <AssetSelectorSheet
+        isOpen={state.selectingAsset !== null}
+        onClose={actions.closeAssetSelector}
+      >
         {state.selectingAsset && (
           <AssetSelector
             selectedBaseAsset={state.baseSwapAsset}

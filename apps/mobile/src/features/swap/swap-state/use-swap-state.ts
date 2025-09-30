@@ -85,7 +85,12 @@ export function useSwapState({
     queryOptions: { select: createSwapAssetsSelector('target', isAssetAllowed) },
   });
   const marketDataQuery = queries.useAssetMarketDataQuery({
-    asset: state.baseSwapAsset?.asset ?? null,
+    asset: state.baseSwapAsset?.asset,
+  });
+  const quoteQuery = queries.useSwapQuoteQuery({
+    baseSwapAsset: state.baseSwapAsset,
+    targetSwapAsset: state.targetSwapAsset,
+    baseAmount: Number(state.baseAmount),
   });
 
   const { derivedAmounts, lockDerivedAmountsForNextRender } = useDerivedAmounts(
@@ -198,5 +203,6 @@ export function useSwapState({
     },
     baseAssetsQuery,
     targetAssetsQuery,
+    quoteQuery,
   };
 }
