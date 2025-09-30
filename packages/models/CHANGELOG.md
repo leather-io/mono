@@ -30,6 +30,13 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+## [0.43.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.42.0...@leather.io/models-v0.43.0) (2025-09-30)
+
+
+### Features
+
+* **mobile:** add SIP9 content type handling + remove thumbnail generation ([8cf1964](https://github.com/leather-io/mono/commit/8cf196421728ebb86b2dadda796d81ace7a29073))
+
 ## [0.42.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.41.0...@leather.io/models-v0.42.0) (2025-09-26)
 
 
