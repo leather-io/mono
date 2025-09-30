@@ -10,7 +10,7 @@ import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-bal
 import { ManageTokensSheet } from '@/features/balances/manage-tokens.sheet';
 import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
 import { CollectiblesList } from '@/features/collectibles/collectibles-list';
-import { useTokenDetailsFlag } from '@/features/feature-flags';
+import { useCollectibleDetailsFlag, useTokenDetailsFlag } from '@/features/feature-flags';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { TokenDetailsProps } from '@/features/token/types';
@@ -67,6 +67,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     });
   }
   const tokenDetailsFlag = useTokenDetailsFlag();
+  const collectiblesDetailsFlag = useCollectibleDetailsFlag();
   const totalBalance = useAccountTotalBalance({
     fingerprint: currentAccount.fingerprint,
     accountIndex: currentAccount.accountIndex,
@@ -134,7 +135,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
               <AssetTabs listTab={listTab} setListTab={setListTab} />
             </>
           }
-          onPressToken={tokenDetailsFlag ? onOpenToken : undefined}
+          onPressToken={collectiblesDetailsFlag ? onOpenToken : undefined}
         />
       )}
 

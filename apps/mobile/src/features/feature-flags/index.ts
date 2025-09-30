@@ -39,6 +39,9 @@ export function useBrowserFlag() {
 export function useCollectiblesFlag() {
   return useBoolVariation('release_collectibles_feature', false);
 }
+export function useCollectibleDetailsFlag() {
+  return useBoolVariation('collectible_details', false);
+}
 
 export function useNotificationsFlag() {
   return useBoolVariation('release_push_notifications', false);
