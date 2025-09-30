@@ -27,8 +27,10 @@ export class Sip9AssetService {
   ): Promise<Sip9Asset> {
     const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier);
     const tokenId = getNonFungibleTokenId(tokenHexValue);
-    const hiroMetadata = await this.stacksApiClient.getNftMetadata(principal, tokenId, { signal });
-    const gammaMetadata = await this.gammaApiClient.getStacksNft(principal, tokenId, { signal });
+    const [hiroMetadata, gammaMetadata] = await Promise.all([
+      this.stacksApiClient.getNftMetadata(principal, tokenId, { signal }),
+      this.gammaApiClient.getStacksNft(principal, tokenId, { signal }),
+    ]);
 
     return createSip9Asset(assetIdentifier, tokenId, hiroMetadata, gammaMetadata);
   }
