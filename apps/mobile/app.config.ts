@@ -30,6 +30,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       associatedDomains: ['applinks:connect.leather.io'],
       entitlements: {
         'aps-environment': 'production',
+        'com.apple.developer.associated-domains': [
+          'applinks:connect.leather.io',
+          'webcredentials:connect.leather.io',
+        ],
       },
       infoPlist: {
         UIBackgroundModes: ['remote-notification', 'fetch'],
