@@ -46,4 +46,4 @@ export const STACKING_TRACKER_API_URL = 'https://api.stacking-tracker.com';
 export const EM_DASH = '—';
 
 export const FRONT_APP_SUPPORT_FORM_WEBHOOK_URL =
-  'https://webhook.frontapp.com/forms/50d1c719ca0a60c39f4a/B9hyvGi0oIyoqcSVKcYibYtptDsvXCCqTHtRjl1bdn2MW2GKAjWPVkQPNuKt3h1VqBXc0Rh0g7b9zMk8aHrMfFGRbgdId6Is5_Ti_DTzbfLgf7yWT3o1lES_JhnrfA';
+  'https://webhook.frontapp.com/forms/50d1c719ca0a60c39f4a/SLAznwljgK4F9jDEY11npXBUkcSczgLujb9-iA49rmZIrrM3IIsLM0nI2NLWye3kzKFwMeu2Y-bpJfcRkEYg8PjLTCSz0xaG04EdXvGdoFKnVfOFYMr72dhDDdaDew';
