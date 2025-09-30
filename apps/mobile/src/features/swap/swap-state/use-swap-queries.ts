@@ -6,6 +6,7 @@ import {
   createAccountBaseSwapAssetsQuery,
   createAccountTargetSwapAssetsQuery,
   createAssetMarketDataQuery,
+  createSwapQuotesQuery,
 } from './swap.queries';
 
 interface UseSwapQueriesArgs {
@@ -18,6 +19,7 @@ interface UseSwapQueriesResult {
   useAccountBaseSwapAssetsQuery: ReturnType<typeof createAccountBaseSwapAssetsQuery>;
   useAccountTargetSwapAssetsQuery: ReturnType<typeof createAccountTargetSwapAssetsQuery>;
   useAssetMarketDataQuery: ReturnType<typeof createAssetMarketDataQuery>;
+  useSwapQuoteQuery: ReturnType<typeof createSwapQuotesQuery>;
 }
 
 export function useSwapQueries({
@@ -33,6 +35,7 @@ export function useSwapQueries({
         accountRequest
       ),
       useAssetMarketDataQuery: createAssetMarketDataQuery(marketDataService),
+      useSwapQuoteQuery: createSwapQuotesQuery(swapService),
     };
   }, [accountRequest, swapService, marketDataService]);
 }

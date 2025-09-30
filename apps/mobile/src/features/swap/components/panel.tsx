@@ -3,7 +3,11 @@ import { ReactNode } from 'react';
 import { Box, HasChildren } from '@leather.io/ui/native';
 
 export function Root({ children }: HasChildren) {
-  return <Box px="5">{children}</Box>;
+  return (
+    <Box mt="-3" px="5">
+      {children}
+    </Box>
+  );
 }
 
 interface CardProps {

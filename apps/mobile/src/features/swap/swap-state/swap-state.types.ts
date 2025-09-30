@@ -1,7 +1,7 @@
 import { InputCurrencyMode } from '@/utils/types';
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { Money, QuoteCurrency } from '@leather.io/models';
+import { Money, QuoteCurrency, SwapQuote } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 
 export type PresetPercentage = 0.25 | 0.5 | 0.75 | 1;
@@ -65,6 +65,7 @@ export interface UseSwapStateResult {
   actions: SwapActions;
   baseAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   targetAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
+  quoteQuery: UseQueryResult<SwapQuote[], Error>;
 }
 
 export type SecondaryAmount =
