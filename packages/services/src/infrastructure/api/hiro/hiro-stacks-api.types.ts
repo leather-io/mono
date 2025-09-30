@@ -1,4 +1,8 @@
-import { FtMetadataResponse, NftMetadataResponse } from '@hirosystems/token-metadata-api-client';
+import {
+  FtMetadataResponse,
+  Metadata,
+  NftMetadataResponse,
+} from '@hirosystems/token-metadata-api-client';
 import {
   AddressAssetsListResponse,
   AddressBalanceResponse,
@@ -30,6 +34,7 @@ export type HiroAddressBalanceResponse = AddressBalanceResponse;
 export type HiroMempoolTransactionListResponse = MempoolTransactionListResponse;
 export type HiroFtMetadataResponse = FtMetadataResponse;
 export type HiroNftMetadataResponse = NftMetadataResponse;
+export type HiroMetadata = Metadata;
 export type HiroTransactionEvent = TransactionEvent;
 export type HiroTransactionEventsResponse = AddressAssetsListResponse;
 export type HiroStacksTransaction = Transaction;
