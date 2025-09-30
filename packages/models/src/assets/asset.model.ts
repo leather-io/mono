@@ -209,6 +209,79 @@ export type SupportedSip9ContentType =
       | 'model/gltf-binary'
     >
   | '';
+
+// interface GammaCollection {
+//   collection_id?: string;
+//   collection_name?: string;
+//   collection_image?: string;
+//   // add other gamma collection fields as needed
+// }
+
+// export interface HiroCollection {
+//   collection_id?: string;
+//   collection_name?: string;
+//   collection_image?: string;
+//   // add other hiro collection fields as needed
+// }
+
+// export interface Sip9Collection {
+//   collectionId?: string;
+//   collectionName?: string;
+//   collectionImage?: string;
+//   // add other internal collection fields as needed
+// }
+export interface Sip9Collection {
+  id: string;
+  type?: string;
+  name: string;
+  isVerified: boolean;
+  locationUrl: string;
+  totalItems?: number;
+  floorPrice?: {
+    amount: number;
+    unit: string;
+  };
+}
+
+export interface Sip9Owner {
+  address: string;
+  chain: string;
+  id: string;
+  displayName: string;
+  slug: string;
+  avatarUrl: string | null;
+  avatarContentType: string | null;
+  profileUrl: string;
+  bio: string | null;
+  isVerified: boolean;
+}
+
+export interface Sip9AssetContent {
+  contentUrl: string;
+  contentType: string;
+}
+
+export interface Sip9Attribute {
+  traitType: string;
+  displayType?: string;
+  value: any;
+  rarityPercent?: number;
+}
+
+export interface Sip9Details {
+  id?: string;
+  name: string;
+  description: string;
+  assetContent?: Sip9AssetContent;
+  cachedImage: string;
+  cachedImageThumbnail: string;
+  contentType: SupportedSip9ContentType;
+  locationUrl?: string;
+  collection?: Sip9Collection;
+  owner?: Sip9Owner;
+  attributes?: Sip9Attribute[];
+  rarityRank?: number;
+}
 export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly chain: 'stacks';
   readonly protocol: 'sip9';
@@ -220,17 +293,7 @@ export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly cachedImage: string;
   readonly cachedImageThumbnail: string;
   readonly contentType: SupportedSip9ContentType;
-  readonly collection: {
-    id: string;
-    name: string;
-    isVerified: boolean;
-    locationUrl: string;
-    totalItems: number;
-    floorPriceAmount: {
-      amount: number;
-      unit: string;
-    };
-  };
+  readonly details: Sip9Details;
 }
 export type NonFungibleCryptoAsset = InscriptionAsset | StampAsset | Sip9Asset;
 
