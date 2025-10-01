@@ -246,6 +246,34 @@ msgstr "Analytics and app authentication"
 msgid "Analytics updated"
 msgstr "Analytics updated"
 
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:48
+msgid "Another address {shortenedPcAddress} will keep"
+msgstr "Another address {shortenedPcAddress} will keep"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:47
+msgid "Another address {shortenedPcAddress} will transfer"
+msgstr "Another address {shortenedPcAddress} will transfer"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:44
+msgid "Another address {shortenedPcAddress} will transfer equal to or greater than"
+msgstr "Another address {shortenedPcAddress} will transfer equal to or greater than"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:42
+msgid "Another address {shortenedPcAddress} will transfer exactly"
+msgstr "Another address {shortenedPcAddress} will transfer exactly"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:45
+msgid "Another address {shortenedPcAddress} will transfer less than"
+msgstr "Another address {shortenedPcAddress} will transfer less than"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:46
+msgid "Another address {shortenedPcAddress} will transfer less than or equal to"
+msgstr "Another address {shortenedPcAddress} will transfer less than or equal to"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:43
+msgid "Another address {shortenedPcAddress} will transfer more than"
+msgstr "Another address {shortenedPcAddress} will transfer more than"
+
 #: src/app/settings/security/index.tsx:45
 #: src/features/settings/app-authentication-sheet.tsx:57
 #: src/features/settings/app-authentication-sheet.tsx:62
@@ -267,7 +295,7 @@ msgstr "App Store"
 
 #: src/features/approver/components/approver-buttons.tsx:24
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:67
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:164
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:174
 #: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:63
 msgid "Approve"
 msgstr "Approve"
@@ -340,6 +368,14 @@ msgstr "BNS name"
 msgid "Browser"
 msgstr "Browser"
 
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:14
+msgid "By approving, this app can move your assets anytime, without asking again. Only proceed if you fully trust it."
+msgstr "By approving, this app can move your assets anytime, without asking again. Only proceed if you fully trust it."
+
+#: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:38
+msgid "By signing, this app can move your assets anytime."
+msgstr "By signing, this app can move your assets anytime."
+
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:62
 msgid "Can’t send to the same address"
 msgstr "Can’t send to the same address"
@@ -353,6 +389,10 @@ msgstr "Cancel"
 #: src/features/send/error-messages.ts:18
 msgid "Cannot send to yourself"
 msgstr "Cannot send to yourself"
+
+#: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:34
+msgid "Careful. This transaction could drain your wallet."
+msgstr "Careful. This transaction could drain your wallet."
 
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:17
 msgid "Change name"
@@ -500,7 +540,7 @@ msgid "Custom fees"
 msgstr "Custom fees"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:64
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:161
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
 #: src/features/approver/layouts/get-addresses.layout.tsx:58
 #: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:60
 msgid "Deny"
@@ -555,6 +595,10 @@ msgstr "Display"
 #: src/app/settings/help/index.tsx:24
 msgid "Dive into feature details"
 msgstr "Dive into feature details"
+
+#: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:55
+msgid "Do not proceed"
+msgstr "Do not proceed"
 
 #: src/features/notifications/notifications-sheet.tsx:30
 msgid "Don't notify me"
@@ -751,7 +795,7 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:148
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:158
 #: src/features/psbt-signer/psbt-signer.tsx:275
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
@@ -763,6 +807,10 @@ msgstr "Hide balances"
 #: src/features/navigation/tab-layout.tsx:48
 msgid "Home"
 msgstr "Home"
+
+#: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:47
+msgid "I’m aware of the risks"
+msgstr "I’m aware of the risks"
 
 #: src/components/sheets/notify-user-sheet.layout.tsx:46
 msgid "I'm interested"
@@ -779,6 +827,10 @@ msgstr "Icons"
 #: src/app/settings/index.tsx:51
 msgid "ID copied to clipboard"
 msgstr "ID copied to clipboard"
+
+#: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:41
+msgid "If unsafe, your wallet could be drained."
+msgstr "If unsafe, your wallet could be drained."
 
 #: src/features/collectibles/components/fallback.tsx:8
 msgid "Image currently unavailable"
@@ -982,6 +1034,10 @@ msgstr "No assets"
 msgid "No assets found"
 msgstr "No assets found"
 
+#: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:40
+msgid "No confirmations will appear."
+msgstr "No confirmations will appear."
+
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state.tsx:9
 msgid "No results found"
 msgstr "No results found"
@@ -1051,6 +1107,10 @@ msgstr "Portfolio"
 #: src/features/token/components/token-details-table.tsx:20
 msgid "Price"
 msgstr "Price"
+
+#: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:52
+msgid "Proceed to transaction"
+msgstr "Proceed to transaction"
 
 #: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:18
 msgid "Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you’ve stored its Secret Key elsewhere securely."
@@ -1244,7 +1304,7 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:147
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:157
 #: src/features/psbt-signer/psbt-signer.tsx:274
 msgid "Show advanced options"
 msgstr "Show advanced options"
@@ -1258,7 +1318,7 @@ msgstr "Show balances"
 msgid "Sign Message"
 msgstr "Sign Message"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:92
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:109
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
@@ -1345,6 +1405,34 @@ msgstr "Taproot address"
 msgid "The address you entered isn’t valid. Verify and try again"
 msgstr "The address you entered isn’t valid. Verify and try again"
 
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:32
+msgid "The contract will keep"
+msgstr "The contract will keep"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:31
+msgid "The contract will transfer"
+msgstr "The contract will transfer"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:28
+msgid "The contract will transfer equal to or greater than"
+msgstr "The contract will transfer equal to or greater than"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:26
+msgid "The contract will transfer exactly"
+msgstr "The contract will transfer exactly"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:29
+msgid "The contract will transfer less than"
+msgstr "The contract will transfer less than"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:30
+msgid "The contract will transfer less than or equal to"
+msgstr "The contract will transfer less than or equal to"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:27
+msgid "The contract will transfer more than"
+msgstr "The contract will transfer more than"
+
 #: src/app/settings/display/index.tsx:55
 #: src/features/settings/theme-sheet.tsx:28
 msgid "Theme"
@@ -1374,6 +1462,10 @@ msgstr "This app would like to"
 msgid "This feature is not available yet, but we can notify you when ready."
 msgstr "This feature is not available yet, but we can notify you when ready."
 
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:13
+msgid "This is an “Allow Mode” transaction"
+msgstr "This is an “Allow Mode” transaction"
+
 #: src/features/receive/get-assets.ts:47
 msgid "This is your address for receiving tokens on the Stacks network."
 msgstr "This is your address for receiving tokens on the Stacks network."
@@ -1394,8 +1486,8 @@ msgstr "This merges your existing funds into a single output. It incurs a fee bu
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:113
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:130
+#: src/features/approver/components/sip10-recipient.tsx:43
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:132
 #: src/features/psbt-signer/psbt-signer.tsx:255
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:145
 msgid "To address"
@@ -1577,7 +1669,34 @@ msgstr "You will find the apps you are connected to here"
 msgid "You will find the apps you recently viewed here"
 msgstr "You will find the apps you recently viewed here"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:104
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:21
+msgid "You will keep"
+msgstr "You will keep"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:20
+msgid "You will transfer"
+msgstr "You will transfer"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:17
+msgid "You will transfer equal to or greater than"
+msgstr "You will transfer equal to or greater than"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:15
+msgid "You will transfer exactly"
+msgstr "You will transfer exactly"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:18
+msgid "You will transfer less than"
+msgstr "You will transfer less than"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:19
+msgid "You will transfer less than or equal to"
+msgstr "You will transfer less than or equal to"
+
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:16
+msgid "You will transfer more than"
+msgstr "You will transfer more than"
+
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:123
 #: src/features/psbt-signer/psbt-signer.tsx:249
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:139

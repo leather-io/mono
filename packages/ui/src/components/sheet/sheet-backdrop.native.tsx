@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import Animated, {
   Extrapolation,
@@ -7,7 +8,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-import { BottomSheetBackdrop, BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { BlurView } from 'expo-blur';
 
 const backdropColor = 'rgba(18,16,15,.5)';
@@ -15,7 +16,7 @@ const blurIntensity = 13;
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
-export function SheetNativeBackdrop(props: BottomSheetBackdropProps) {
+export function SheetNativeBackdrop(props: ComponentProps<typeof BottomSheetBackdrop>) {
   return (
     <>
       <BlurBackdrop animatedIndex={props.animatedIndex} />
