@@ -15,8 +15,7 @@ interface Sip9Props {
 }
 export function Sip9({ item, height, onPress }: Sip9Props) {
   if (!item.cachedImage || item.cachedImage.trim() === '') return <FallbackImage />;
-
-  if (isBns(item?.details?.collection?.name ?? '')) {
+  if (isBns(item?.collection?.name ?? '')) {
     return <BnsImage source={item.cachedImage} alt={item.name} height={height} />;
   }
   return (
