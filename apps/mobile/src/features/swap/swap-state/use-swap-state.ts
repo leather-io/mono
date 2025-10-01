@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer } from 'react';
+import { useEffect, useMemo, useReducer } from 'react';
 
 import {
   computeSecondaryAmountState,
@@ -98,75 +98,6 @@ export function useSwapState({
     marketDataQuery.data
   );
 
-  useEffect(() => {
-    if (baseAssetsQuery.data) {
-      dispatch({ type: 'RECONCILE_BASE_WITH_PROVIDER', payload: baseAssetsQuery.data });
-    }
-  }, [baseAssetsQuery.data]);
-
-  useEffect(() => {
-    if (targetAssetsQuery.data) {
-      dispatch({ type: 'RECONCILE_TARGET_WITH_PROVIDER', payload: targetAssetsQuery.data });
-    }
-  }, [targetAssetsQuery.data]);
-
-  const setBaseSwapAsset = useCallback((asset: AccountSwapAsset) => {
-    dispatch({ type: 'SET_BASE_SWAP_ASSET', payload: asset });
-  }, []);
-
-  const setTargetSwapAsset = useCallback((asset: AccountSwapAsset) => {
-    dispatch({ type: 'SET_TARGET_SWAP_ASSET', payload: asset });
-  }, []);
-
-  const clearAssetSelection = useCallback(() => {
-    dispatch({ type: 'CLEAR_ASSET_SELECTION' });
-  }, []);
-
-  const flipAssets = useCallback(() => {
-    dispatch({ type: 'FLIP_ASSETS' });
-  }, []);
-
-  const setBaseAmount = useCallback((amount: string) => {
-    dispatch({ type: 'SET_BASE_AMOUNT', payload: amount });
-  }, []);
-
-  const setBaseAmountByPercentage = useCallback((percentage: PresetPercentage) => {
-    dispatch({ type: 'SET_BASE_AMOUNT_BY_PERCENTAGE', payload: percentage });
-  }, []);
-
-  const toggleInputCurrencyMode = useCallback(() => {
-    const nextBaseAmount = whenInputCurrencyMode(state.inputCurrencyMode)({
-      crypto: convertMoneyToInputValue(derivedAmounts.quote),
-      quote: convertMoneyToInputValue(derivedAmounts.crypto),
-    });
-
-    lockDerivedAmountsForNextRender();
-    dispatch({
-      type: 'TOGGLE_INPUT_CURRENCY_MODE',
-      payload: { nextBaseAmount: nextBaseAmount },
-    });
-  }, [state.inputCurrencyMode, derivedAmounts, lockDerivedAmountsForNextRender]);
-
-  const setSlippage = useCallback((slippage: number) => {
-    dispatch({ type: 'SET_SLIPPAGE', payload: slippage });
-  }, []);
-
-  const toggleSlippageEditing = useCallback((allowed: boolean) => {
-    dispatch({ type: 'TOGGLE_SLIPPAGE_EDITING', payload: allowed });
-  }, []);
-
-  const setNonce = useCallback((nonce: number) => {
-    dispatch({ type: 'SET_NONCE', payload: nonce });
-  }, []);
-
-  const openAssetSelector = useCallback((type: 'base' | 'target') => {
-    dispatch({ type: 'OPEN_ASSET_SELECTOR', payload: type });
-  }, []);
-
-  const closeAssetSelector = useCallback(() => {
-    dispatch({ type: 'CLOSE_ASSET_SELECTOR' });
-  }, []);
-
   const secondaryAmount = computeSecondaryAmountState({
     state,
     queryStatus: marketDataQuery.status,
@@ -179,6 +110,75 @@ export function useSwapState({
       isAmountEqualToAvailableBalance(derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode),
     [derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode]
   );
+
+  useEffect(() => {
+    if (baseAssetsQuery.data) {
+      dispatch({ type: 'RECONCILE_BASE_WITH_PROVIDER', payload: baseAssetsQuery.data });
+    }
+  }, [baseAssetsQuery.data]);
+
+  useEffect(() => {
+    if (targetAssetsQuery.data) {
+      dispatch({ type: 'RECONCILE_TARGET_WITH_PROVIDER', payload: targetAssetsQuery.data });
+    }
+  }, [targetAssetsQuery.data]);
+
+  function setBaseSwapAsset(asset: AccountSwapAsset) {
+    dispatch({ type: 'SET_BASE_SWAP_ASSET', payload: asset });
+  }
+
+  function setTargetSwapAsset(asset: AccountSwapAsset) {
+    dispatch({ type: 'SET_TARGET_SWAP_ASSET', payload: asset });
+  }
+
+  function clearAssetSelection() {
+    dispatch({ type: 'CLEAR_ASSET_SELECTION' });
+  }
+
+  function flipAssets() {
+    dispatch({ type: 'FLIP_ASSETS' });
+  }
+
+  function setBaseAmount(amount: string) {
+    dispatch({ type: 'SET_BASE_AMOUNT', payload: amount });
+  }
+
+  function setBaseAmountByPercentage(percentage: PresetPercentage) {
+    dispatch({ type: 'SET_BASE_AMOUNT_BY_PERCENTAGE', payload: percentage });
+  }
+
+  function toggleInputCurrencyMode() {
+    const nextBaseAmount = whenInputCurrencyMode(state.inputCurrencyMode)({
+      crypto: convertMoneyToInputValue(derivedAmounts.quote),
+      quote: convertMoneyToInputValue(derivedAmounts.crypto),
+    });
+
+    lockDerivedAmountsForNextRender();
+    dispatch({
+      type: 'TOGGLE_INPUT_CURRENCY_MODE',
+      payload: { nextBaseAmount: nextBaseAmount },
+    });
+  }
+
+  function setSlippage(slippage: number) {
+    dispatch({ type: 'SET_SLIPPAGE', payload: slippage });
+  }
+
+  function toggleSlippageEditing(allowed: boolean) {
+    dispatch({ type: 'TOGGLE_SLIPPAGE_EDITING', payload: allowed });
+  }
+
+  function setNonce(nonce: number) {
+    dispatch({ type: 'SET_NONCE', payload: nonce });
+  }
+
+  function openAssetSelector(type: 'base' | 'target') {
+    dispatch({ type: 'OPEN_ASSET_SELECTOR', payload: type });
+  }
+
+  function closeAssetSelector() {
+    dispatch({ type: 'CLOSE_ASSET_SELECTOR' });
+  }
 
   return {
     state: {
