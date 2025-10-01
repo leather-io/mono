@@ -4,10 +4,14 @@
   "compatibility_date": "2025-04-04",
   "main": "./workers/app.ts",
   "workers_dev": true,
-  "send_metrics": false,
+  "send_metrics": true,
   "name": "leather-web",
   "observability": {
-    "enabled": true
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
   },
   "env": {
     "staging": {
