@@ -1,5 +1,6 @@
+import { Linking } from 'react-native';
+
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
-import { useOpenURL } from '@/features/browser/browser/use-open-url';
 import { t } from '@lingui/core/macro';
 
 import { Pressable, Text } from '@leather.io/ui/native';
@@ -10,7 +11,7 @@ import { TokenDetailsCard } from '../components/token-details-card';
 function formatLabel(key: string): string {
   // Special case for locationUrl in collection context
   if (key === 'location_url') {
-    return 'Collection URL';
+    return t`Collection URL`;
   }
 
   // Replace underscores with spaces
@@ -23,13 +24,10 @@ function formatLabel(key: string): string {
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
 
-// Helper function to render value
 function renderValue(value: any, key: string): React.ReactNode {
-  const { openURL } = useOpenURL();
   const stringValue = Array.isArray(value) ? JSON.stringify(value) : String(value);
 
   const keysToTruncate = ['address', 'id', 'assetId', 'contractId', 'txid'];
-  // Truncate if key is in keysToTruncate
   if (keysToTruncate.includes(key)) {
     return truncateMiddle(stringValue, 4);
   }
@@ -38,7 +36,7 @@ function renderValue(value: any, key: string): React.ReactNode {
   if (key === 'location_url' && typeof stringValue === 'string') {
     const fullUrl = `https://gamma.io${stringValue}`;
     return (
-      <Pressable onPress={() => openURL(fullUrl)}>
+      <Pressable onPress={() => Linking.openURL(fullUrl)}>
         {({ pressed }) => (
           <Text textDecorationLine="underline" opacity={pressed ? 0.5 : 1}>
             {t`View`}
@@ -48,10 +46,10 @@ function renderValue(value: any, key: string): React.ReactNode {
     );
   }
 
-  // Check if value is a URL
+  // If value is a URL, make it clickable
   if (typeof stringValue === 'string' && stringValue.startsWith('https://')) {
     return (
-      <Pressable onPress={() => openURL(stringValue)}>
+      <Pressable onPress={() => Linking.openURL(stringValue)}>
         {({ pressed }) => (
           <Text textDecorationLine="underline" opacity={pressed ? 0.5 : 1}>
             {t`View`}
@@ -93,8 +91,8 @@ export function renderCollectibleDetailsRecursively(
     // Skip undefined or empty string values
     if (value === undefined || value === '') return;
 
-    // Skip description key as its shown elsewhere
-    if (key.toLowerCase() === 'description') return;
+    const keysToSkip = ['description', 'floorPrice', 'floor_price_amount'];
+    if (keysToSkip.includes(key.toLowerCase())) return;
     // Filter out any keys that begin with 'genesis' (ordinals related keys)
     if (key.toLowerCase().startsWith('genesis')) return;
 
@@ -112,13 +110,11 @@ export function renderCollectibleDetailsRecursively(
   // Only render card if there are items to show
   if (items.length === 0 && nestedCards.length === 0) return [];
 
-  // Create the current card with its items
   const currentCard = (
     <TokenDetailsCard key={title || 'details'} title={title || t`Details`}>
       <SummaryTableRoot>{items}</SummaryTableRoot>
     </TokenDetailsCard>
   );
 
-  // Return current card followed by all nested cards
   return [currentCard, ...nestedCards];
 }
