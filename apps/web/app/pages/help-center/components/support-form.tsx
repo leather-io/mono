@@ -29,6 +29,17 @@ export function SupportForm() {
           <br />
           Never share your Secret Key or personal information—not even with Leather staff. We will
           never ask for it to resolve any issue. Keep it private and secure at all times.
+          <br />
+          <br />
+          Contact us via{' '}
+          <styled.a
+            href="mailto:support@leather.io"
+            color="ink.action-primary-hover"
+            textDecoration="underline"
+          >
+            support@leather.io
+          </styled.a>{' '}
+          or use the contact form.
         </styled.p>
       </Box>
       <Box border="default" borderRadius="md" pt="space.01">
