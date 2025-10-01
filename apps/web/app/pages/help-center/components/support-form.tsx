@@ -1,5 +1,6 @@
+import { Form } from 'react-router';
+
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { FRONT_APP_SUPPORT_FORM_WEBHOOK_URL } from '~/constants/constants';
 
 import { Button, InfoCircleIcon } from '@leather.io/ui';
 import { delay } from '@leather.io/utils';
@@ -9,8 +10,8 @@ import { useSupportForm } from './support-form-schema';
 export function SupportForm() {
   const form = useSupportForm();
 
-  async function onSubmit() {
-    await delay(1000);
+  async function onSuccess() {
+    await delay(400);
     form.reset();
     alert('Thank you for your message. We will get back to you soon!');
   }
@@ -32,10 +33,7 @@ export function SupportForm() {
         </styled.p>
       </Box>
       <Box border="default" borderRadius="md" pt="space.01">
-        <styled.form
-          onSubmit={form.handleSubmit(onSubmit)}
-          action={FRONT_APP_SUPPORT_FORM_WEBHOOK_URL}
-        >
+        <Form name="fa-form-1" method="post" encType="multipart/form-data" onSubmit={onSuccess}>
           <Flex flexDirection="column">
             <styled.input
               placeholder="Name"
@@ -86,8 +84,8 @@ export function SupportForm() {
 
             <styled.textarea
               placeholder="Message (Required)"
-              id="message"
-              {...form.register('message')}
+              id="body"
+              {...form.register('body')}
               width="100%"
               p="space.03"
               fontSize="14px"
@@ -97,19 +95,21 @@ export function SupportForm() {
               minHeight="150px"
               resize="none"
             />
-            {form.formState.errors.message && (
-              <ErrorText message={form.formState.errors.message.message} />
+            {form.formState.errors.body && (
+              <ErrorText message={form.formState.errors.body.message} />
             )}
           </Flex>
           <Button
             type="submit"
             borderRadius="unset"
-            disabled={form.formState.isSubmitting}
+            disabled={
+              form.formState.isSubmitting || (form.formState.isSubmitted && !form.formState.isValid)
+            }
             fullWidth
           >
             {form.formState.isSubmitting ? 'Sending...' : 'Send Message'}
           </Button>
-        </styled.form>
+        </Form>
       </Box>
     </Box>
   );

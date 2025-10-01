@@ -23,6 +23,7 @@ export const csp = builder({
       'api.leather.io',
       '*.api.leather.io',
       'https://sbtc-emily.com',
+      'https://webhook.frontapp.com',
     ],
   },
 });

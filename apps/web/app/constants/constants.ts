@@ -45,5 +45,4 @@ export const STACKING_TRACKER_API_URL = 'https://api.stacking-tracker.com';
 
 export const EM_DASH = '—';
 
-export const FRONT_APP_SUPPORT_FORM_WEBHOOK_URL =
-  'https://webhook.frontapp.com/forms/50d1c719ca0a60c39f4a/9tziBbjoSymO5y7H22bsgFXXMvuFdmpkgHCut4rSh_mmCb-MOz_AU_dttw6NceX9l-hebD-C_vwk7_j4P6zSZOBxB3IuWrnZkNMdx5lVUzs-i9hBrClMgc3XJK_-Rw';
+export const FRONT_CHANNEL_ID = 'cha_8yhht';
