@@ -2,20 +2,21 @@ import { useWindowDimensions } from 'react-native';
 
 import { Screen } from '@/components/screen/screen';
 import { HeaderSubtitle } from '@/components/screen/screen-header/components/header-title';
-import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { t } from '@lingui/core/macro';
 
-import { Sip9Collection } from '@leather.io/models';
+import { NonFungibleCryptoAsset, Sip9Collection } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
 import { TokenDetailsCard } from './components/token-details-card';
+import { renderCollectibleDetailsRecursively } from './utils/render-collectible-details';
 
 interface CollectibleProps {
   children: React.ReactNode;
   name?: string;
   description?: string;
   collection?: Sip9Collection;
+  details?: NonFungibleCryptoAsset;
 }
 
 export function useCollectibleHeight() {
@@ -27,7 +28,13 @@ export function useCollectibleHeight() {
   return calculatedHeight;
 }
 
-export function Collectible({ name, description, collection, children }: CollectibleProps) {
+export function Collectible({
+  name,
+  description,
+  collection,
+  details,
+  children,
+}: CollectibleProps) {
   return (
     <Screen>
       <Screen.Header
@@ -58,23 +65,7 @@ export function Collectible({ name, description, collection, children }: Collect
               <Text variant="caption01">{description}</Text>
             </TokenDetailsCard>
           )}
-          <TokenDetailsCard title={t`Details`}>
-            <SummaryTableItem label={t`Name`} value={name} />
-            <SummaryTableRoot>
-              {collection &&
-                Object.entries(collection).map(([key, value]) => (
-                  <SummaryTableItem
-                    key={key}
-                    label={`${key.charAt(0).toUpperCase() + key.slice(1)}`}
-                    value={
-                      typeof value === 'object' && value !== null
-                        ? JSON.stringify(value)
-                        : String(value)
-                    }
-                  />
-                ))}
-            </SummaryTableRoot>
-          </TokenDetailsCard>
+          {details && renderCollectibleDetailsRecursively(details)}
         </Box>
       </Screen.ScrollView>
     </Screen>
