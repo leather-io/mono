@@ -432,6 +432,10 @@ msgstr "Close the scanner"
 msgid "Code"
 msgstr "Code"
 
+#: src/features/token/utils/render-collectible-details.tsx:14
+msgid "Collection URL"
+msgstr "Collection URL"
+
 #: src/features/send/error-messages.ts:17
 msgid "Compliance check failed"
 msgstr "Compliance check failed"
@@ -564,7 +568,7 @@ msgstr "Deployment failed"
 msgid "Description"
 msgstr "Description"
 
-#: src/features/token/utils/render-collectible-details.tsx:117
+#: src/features/token/utils/render-collectible-details.tsx:114
 msgid "Details"
 msgstr "Details"
 
@@ -1604,8 +1608,8 @@ msgstr "Verify full address"
 msgid "Version"
 msgstr "Version"
 
-#: src/features/token/utils/render-collectible-details.tsx:44
-#: src/features/token/utils/render-collectible-details.tsx:57
+#: src/features/token/utils/render-collectible-details.tsx:42
+#: src/features/token/utils/render-collectible-details.tsx:55
 msgid "View"
 msgstr "View"
 

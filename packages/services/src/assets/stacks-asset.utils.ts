@@ -118,46 +118,6 @@ export function mapToSip9Details(
   };
 }
 
-// export function createSip9Asset(
-//   assetIdentifier: string,
-//   tokenId: number,
-//   metadata: HiroNftMetadataResponse | null,
-//   gammaMetadata?: GammaNftMetadata | null
-// ): Sip9Asset {
-//   const assetName = getAssetNameFromIdentifier(assetIdentifier);
-//   const { metadata: hiroMetadata } = metadata || {};
-//   const name = hiroMetadata?.name || gammaMetadata?.item.name || assetName;
-//   const description = hiroMetadata?.description || gammaMetadata?.item.description || '';
-//   const cachedImage =
-//     hiroMetadata?.cached_image || gammaMetadata?.item.asset_content?.content_url || '';
-//   const cachedImageThumbnail =
-//     (hiroMetadata as any)?.cached_thumbnail_image ||
-//     gammaMetadata?.item.asset_content?.content_url ||
-//     '';
-//   const contentType =
-//     gammaMetadata?.item.asset_content?.content_type || ('' as SupportedSip9ContentType);
-//   const collection = mapToSip9Collection(
-//     gammaMetadata?.item.collection,
-//     hiroMetadata?.properties?.collection
-//   );
-
-//   return {
-//     chain: CryptoAssetChains.stacks,
-//     category: CryptoAssetCategories.nft,
-//     protocol: CryptoAssetProtocols.sip9,
-//     assetId: assetIdentifier,
-//     contractId: getContractPrincipalFromAssetIdentifier(assetIdentifier),
-//     tokenId,
-//     name,
-//     description,
-//     cachedImage,
-//     cachedImageThumbnail,
-//     contentType: contentType as SupportedSip9ContentType,
-//     collection,
-//   };
-// }
-
-// Simplified createSip9Asset function
 export function createSip9Asset(
   assetIdentifier: string,
   tokenId: number,

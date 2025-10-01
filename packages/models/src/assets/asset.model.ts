@@ -210,26 +210,6 @@ export type SupportedSip9ContentType =
     >
   | '';
 
-// interface GammaCollection {
-//   collection_id?: string;
-//   collection_name?: string;
-//   collection_image?: string;
-//   // add other gamma collection fields as needed
-// }
-
-// export interface HiroCollection {
-//   collection_id?: string;
-//   collection_name?: string;
-//   collection_image?: string;
-//   // add other hiro collection fields as needed
-// }
-
-// export interface Sip9Collection {
-//   collectionId?: string;
-//   collectionName?: string;
-//   collectionImage?: string;
-//   // add other internal collection fields as needed
-// }
 export interface Sip9Collection {
   id: string;
   type?: string;
@@ -294,6 +274,7 @@ export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly cachedImageThumbnail: string;
   readonly contentType: SupportedSip9ContentType;
   readonly details: Sip9Details;
+  readonly collection?: Sip9Collection;
 }
 export type NonFungibleCryptoAsset = InscriptionAsset | StampAsset | Sip9Asset;
 
