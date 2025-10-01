@@ -57,6 +57,7 @@ export * from './chevron-right-icon.native';
 export * from './chevron-up-icon.native';
 export * from './chevrons-right-icon.native';
 export * from './circle-icon.native';
+export * from './circled-function-icon.native';
 export * from './clock-icon.native';
 export * from './close-icon.native';
 export * from './cloud-off-icon.native';

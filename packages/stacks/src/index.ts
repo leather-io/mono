@@ -8,6 +8,7 @@ export * from './transactions/get-contract-fn-args';
 export * from './transactions/get-error-message';
 export * from './transactions/post-condition.utils';
 export * from './transactions/sip-10-contract-call.utils';
+export * from './transactions/sip-9-contract-call.utils';
 export * from './transactions/transaction.types';
 export * from './validation/address-validation';
 export * from './validation/memo-validation';

@@ -44,6 +44,7 @@ export {
   type PermanentSheetInstance,
   SheetModalProvider,
 } from './src/components/sheet/sheet.native';
+export { SheetNativeBackdrop } from './src/components/sheet/sheet-backdrop.native';
 export { RadioButton } from './src/components/radio-button/radio-button.native';
 export { Switch } from './src/components/switch/switch.native';
 export * from './src/components/collectibles/index.native';

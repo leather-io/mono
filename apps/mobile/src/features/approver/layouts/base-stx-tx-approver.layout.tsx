@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
 import { StacksOutcome } from '@/features/approver/components/stacks-outcome';
@@ -20,14 +22,20 @@ import {
 import { Account } from '@/store/accounts/accounts';
 import { makeAccountIdentifer } from '@/store/utils';
 import { t } from '@lingui/core/macro';
-import { deserializeTransaction, isTokenTransferPayload } from '@stacks/transactions';
+import {
+  PostConditionMode,
+  deserializeTransaction,
+  isTokenTransferPayload,
+} from '@stacks/transactions';
 
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
-import { Approver, Button, SentIcon } from '@leather.io/ui/native';
+import { Approver, Button, SentIcon, SheetInstance } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
-import { AssetOutcome } from '../components/asset-outcome';
-import { Sip10Recipient } from '../components/sip10-recipient';
+import { AllowModeWarningSheet } from '../components/allow-mode-warning-sheet/allow-mode-warning-sheet';
+import { AllowModePostConditionWarning } from '../components/post-conditions/post-conditions-warning';
+import { SipRecipient } from '../components/sip10-recipient';
+import { ContractCallPostConditionsSection } from '../contract-call-post-conditions.section';
 import { useStxTransactionUpdatesHandler } from '../stx/hooks';
 
 interface BaseStxTxApproverLayoutProps {
@@ -55,9 +63,17 @@ export function BaseStxTxApproverLayout({
   backButtonTitle,
   sendButtonTitle,
 }: BaseStxTxApproverLayoutProps) {
+  const approverWarningSheetRef = useRef<SheetInstance>(null);
   const tx = deserializeTransaction(txHex);
   const { changeFeeToastHandler, changeMemoToastHandler, changeNonceToastHandler } =
     useStxTransactionUpdatesHandler();
+
+  useEffect(() => {
+    if (tx.postConditionMode === PostConditionMode.Allow) {
+      approverWarningSheetRef.current?.present();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onChangeMemo = changeMemoToastHandler(async (memo: string) => {
     assertTokenTransferPayload(tx.payload);
@@ -87,84 +103,80 @@ export function BaseStxTxApproverLayout({
   });
 
   return (
-    <Approver requester={origin}>
-      <Approver.Container>
-        <Approver.Header title={t`Sign Transaction`} />
-        <Approver.Section>
-          <ApproverAccountCard
-            accounts={accounts.filter(
-              acc => makeAccountIdentifer(acc.fingerprint, acc.accountIndex) === accountId
-            )}
-          />
-        </Approver.Section>
-        {isTokenTransferPayload(tx.payload) && (
-          <Approver.Overview>
-            <Approver.Section mb="-3">
-              <Approver.Subheader icon={<SentIcon variant="small" />}>
-                {t`You’ll send`}
-              </Approver.Subheader>
+    <>
+      <Approver requester={origin}>
+        <Approver.Container>
+          <Approver.Header title={t`Sign Transaction`} />
+          {isContractCall(tx.payload) && <AllowModePostConditionWarning txHex={txHex} />}
+          <Approver.Section>
+            <ApproverAccountCard
+              accounts={accounts.filter(
+                acc => makeAccountIdentifer(acc.fingerprint, acc.accountIndex) === accountId
+              )}
+              displayPreference="stacks"
+            />
+          </Approver.Section>
+          {isTokenTransferPayload(tx.payload) && (
+            <Approver.Overview>
+              <Approver.Section mb="-3">
+                <Approver.Subheader icon={<SentIcon variant="small" />}>
+                  {t`You’ll send`}
+                </Approver.Subheader>
 
-              <StacksOutcome
-                amount={getTotalSpendMoney(tx.payload, tx.auth.spendingCondition.fee)}
-              />
-            </Approver.Section>
+                <StacksOutcome
+                  amount={getTotalSpendMoney(tx.payload, tx.auth.spendingCondition.fee)}
+                />
+              </Approver.Section>
 
-            <Approver.Section>
-              <Approver.Subheader>{t`To address`}</Approver.Subheader>
+              <Approver.Section>
+                <Approver.Subheader>{t`To address`}</Approver.Subheader>
 
-              <OutcomeAddressesCard addresses={[getTxRecipient(tx.payload)]} />
-            </Approver.Section>
-          </Approver.Overview>
-        )}
-        {isContractCall(tx.payload) && accountId && (
-          <Approver.Overview>
-            <Approver.Section mb="-3">
-              <Approver.Subheader icon={<SentIcon variant="small" />}>
-                {t`You’ll send`}
-              </Approver.Subheader>
+                <OutcomeAddressesCard addresses={[getTxRecipient(tx.payload)]} />
+              </Approver.Section>
+            </Approver.Overview>
+          )}
+          {isContractCall(tx.payload) && accountId && (
+            <Approver.Overview>
+              <ContractCallPostConditionsSection txHex={txHex} />
 
-              <AssetOutcome txHex={txHex} accountId={accountId} />
-            </Approver.Section>
+              <SipRecipient txHex={txHex} />
+            </Approver.Overview>
+          )}
 
-            <Approver.Section>
-              <Approver.Subheader>{t`To address`}</Approver.Subheader>
-
-              <Sip10Recipient txHex={txHex} accountId={accountId} />
-            </Approver.Section>
-          </Approver.Overview>
-        )}
-        {isContractCall(tx.payload) && <ContractCallSummarySection txHex={txHex} />}
-        {isContractDeploy(tx.payload) && <ContractDeploySummarySection txHex={txHex} />}
-        <StacksFeesSection txHex={txHex} onChangeFee={onChangeFee} />
-        {isTokenTransfer(tx.payload) && (
-          <MemoSection
-            memo={tx.payload.memo.content}
-            isMemoEditable={false}
-            onChangeMemo={onChangeMemo}
-          />
-        )}
-        <Approver.Advanced
-          titleClosed={t`Show advanced options`}
-          titleOpened={t`Hide advanced options`}
-        >
-          {isContractCall(tx.payload) && <ContractCallArgsSection txHex={txHex} />}
-          {isContractDeploy(tx.payload) && <ContractDeployCodeSection txHex={txHex} />}
-          <NonceSection
-            nonce={tx.auth.spendingCondition.nonce.toString()}
-            onChangeNonce={onChangeNonce}
-          />
-        </Approver.Advanced>
-      </Approver.Container>
-      <Approver.Footer>
-        <Approver.Actions>
-          <Button variant="outline" flex={1} onPress={onCloseApprover}>
-            {backButtonTitle ?? t`Deny`}
-          </Button>
-          <Button flex={1} onPress={onApprove}>
-            {sendButtonTitle ?? t`Approve`}
-          </Button>
-        </Approver.Actions>
-      </Approver.Footer>
-    </Approver>
+          {isContractCall(tx.payload) && <ContractCallSummarySection txHex={txHex} />}
+          {isContractDeploy(tx.payload) && <ContractDeploySummarySection txHex={txHex} />}
+          <StacksFeesSection txHex={txHex} onChangeFee={onChangeFee} />
+          {isTokenTransfer(tx.payload) && (
+            <MemoSection
+              memo={tx.payload.memo.content}
+              isMemoEditable={false}
+              onChangeMemo={onChangeMemo}
+            />
+          )}
+          <Approver.Advanced
+            titleClosed={t`Show advanced options`}
+            titleOpened={t`Hide advanced options`}
+          >
+            {isContractCall(tx.payload) && <ContractCallArgsSection txHex={txHex} />}
+            {isContractDeploy(tx.payload) && <ContractDeployCodeSection txHex={txHex} />}
+            <NonceSection
+              nonce={tx.auth.spendingCondition.nonce.toString()}
+              onChangeNonce={onChangeNonce}
+            />
+          </Approver.Advanced>
+        </Approver.Container>
+        <Approver.Footer>
+          <Approver.Actions>
+            <Button variant="outline" flex={1} onPress={onCloseApprover}>
+              {backButtonTitle ?? t`Deny`}
+            </Button>
+            <Button flex={1} onPress={onApprove}>
+              {sendButtonTitle ?? t`Approve`}
+            </Button>
+          </Approver.Actions>
+        </Approver.Footer>
+      </Approver>
+      <AllowModeWarningSheet ref={approverWarningSheetRef} onDismiss={onCloseApprover} />
+    </>
   );
 }

@@ -7,9 +7,16 @@ import { AccountBalance } from '@/features/balances/total-balance';
 import { Account } from '@/store/accounts/accounts';
 import { useWallets } from '@/store/wallets/wallets.read';
 
+import { AccountDisplayPreference } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
-function AccountItem({ account, onPress }: { account: Account; onPress?: () => void }) {
+interface AccountItemsProps {
+  account: Account;
+  onPress?: () => void;
+  displayPreference?: AccountDisplayPreference;
+}
+
+function AccountItem({ account, onPress, displayPreference }: AccountItemsProps) {
   const { list: walletsList } = useWallets();
 
   const walletName = useMemo(
@@ -23,7 +30,11 @@ function AccountItem({ account, onPress }: { account: Account; onPress?: () => v
       key={account.id}
       accountName={account.name}
       secondaryAside={
-        <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
+        <AccountAddress
+          accountIndex={account.accountIndex}
+          fingerprint={account.fingerprint}
+          displayPreference={displayPreference}
+        />
       }
       balance={
         <AccountBalance
@@ -39,17 +50,26 @@ function AccountItem({ account, onPress }: { account: Account; onPress?: () => v
   );
 }
 
+interface ApproverAccountCardProps {
+  accounts: Account[];
+  onPress?: () => void;
+  displayPreference?: AccountDisplayPreference;
+}
+
 export function ApproverAccountCard({
   accounts,
   onPress,
-}: {
-  accounts: Account[];
-  onPress?: () => void;
-}) {
+  displayPreference,
+}: ApproverAccountCardProps) {
   return (
     <Box mx="-5">
       {accounts.map(account => (
-        <AccountItem onPress={onPress} key={account.id} account={account} />
+        <AccountItem
+          onPress={onPress}
+          key={account.id}
+          account={account}
+          displayPreference={displayPreference}
+        />
       ))}
     </Box>
   );

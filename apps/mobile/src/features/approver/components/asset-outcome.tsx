@@ -5,18 +5,18 @@ import { useGetContractInterface } from '@/queries/stacks/contract-interface.que
 import { deserializeAccountId } from '@/store/accounts/accounts';
 import { deserializeTransaction } from '@stacks/transactions';
 
-import { Sip10Balance } from '@leather.io/services';
+import { Sip10Asset } from '@leather.io/models';
 import { getSip10TransferAmount } from '@leather.io/stacks';
 import { Sip10AvatarIcon } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import { assertContractCallPayload, getContractAddress } from '../utils';
 
-function AssetOutcomeBalance({ token, amount }: { token: Sip10Balance; amount: number }) {
-  const marketData = useMarketDataQuery(token.asset);
+export function AssetOutcomeBalance({ asset, amount }: { asset: Sip10Asset; amount: number }) {
+  const marketData = useMarketDataQuery(asset);
   if (!marketData.data) return null;
 
-  const baseAmount = createMoney(amount, marketData.data.pair.base, token.asset.decimals);
+  const baseAmount = createMoney(amount, marketData.data.pair.base, asset.decimals);
   const resultAmount = baseCurrencyAmountInQuote(baseAmount, marketData.data);
 
   return (
@@ -24,15 +24,15 @@ function AssetOutcomeBalance({ token, amount }: { token: Sip10Balance; amount: n
       mx="-5"
       icon={
         <Sip10AvatarIcon
-          contractId={token.asset.contractId}
-          imageCanonicalUri={token.asset.imageCanonicalUri}
-          name={token.asset.name}
+          contractId={asset.contractId}
+          imageCanonicalUri={asset.imageCanonicalUri}
+          name={asset.name}
         />
       }
       availableBalance={baseAmount}
       quoteBalance={resultAmount}
-      tokenName={token.asset.name}
-      ticker={token.asset.symbol}
+      tokenName={asset.name}
+      ticker={asset.symbol}
     />
   );
 }
@@ -67,5 +67,5 @@ export function AssetOutcome({ txHex, accountId }: { txHex: string; accountId: s
 
   if (!sip10.value) return null;
 
-  return <AssetOutcomeBalance token={sip10.value} amount={transferAmount} />;
+  return <AssetOutcomeBalance asset={sip10.value.asset} amount={transferAmount} />;
 }
