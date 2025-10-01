@@ -24,13 +24,9 @@ export function Sip9TokenDetails({ assetId, account }: Sip9TokenDetailsProps) {
     return <ErrorFallbackTab />;
   }
   if (collectible.state === 'success' && collectible.value.length > 0) {
-    const { name, description, details } = collectible.value?.[0] as Sip9Asset;
+    const { name, description } = collectible.value?.[0] as Sip9Asset;
     return (
-      <Collectible
-        name={name}
-        description={description}
-        collection={details.collection ?? undefined}
-      >
+      <Collectible name={name} description={description} details={collectible.value?.[0]}>
         <Sip9 item={collectible.value[0]! as Sip9Asset} height={height} />
       </Collectible>
     );
