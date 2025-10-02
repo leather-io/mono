@@ -1,11 +1,17 @@
+import { swapQuoteSelector } from '@/features/swap/swap-state/swap-quote-selector';
+import {
+  SwapQuoteSelectionResult,
+  SwapQuoteStrategy,
+} from '@/features/swap/swap-state/swap-state.types';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { UseQueryOptions, useQuery } from '@tanstack/react-query';
-import { isDefined } from 'remeda';
+import { isDefined, isNonNullish } from 'remeda';
 
 import {
   CryptoAssetId,
   FungibleCryptoAsset,
   MarketData,
+  Money,
   SwapAsset,
   SwapExecutionData,
   SwapQuote,
@@ -17,7 +23,10 @@ import {
   SwapService,
 } from '@leather.io/services';
 
-type CustomQueryOptions<T> = Omit<UseQueryOptions<T>, 'queryKey' | 'queryFn'>;
+type CustomQueryOptions<TQueryFnData, TError = Error, TData = TQueryFnData> = Omit<
+  UseQueryOptions<TQueryFnData, TError, TData>,
+  'queryKey' | 'queryFn'
+>;
 
 export function createAccountBaseSwapAssetsQuery(service: SwapService, request: AccountRequest) {
   return function useAccountBaseSwapAssetsQuery(params: {
@@ -54,19 +63,33 @@ export function createSwapQuotesQuery(service: SwapService) {
   return function useSwapQuotesQuery(params: {
     baseSwapAsset?: SwapAsset | null;
     targetSwapAsset?: SwapAsset | null;
-    baseAmount: number;
-    queryOptions?: CustomQueryOptions<SwapQuote[]>;
+    baseAmount?: Money | null;
+    strategy: SwapQuoteStrategy;
+    queryOptions?: CustomQueryOptions<SwapQuote[], Error, SwapQuoteSelectionResult>;
   }) {
-    const { baseSwapAsset, targetSwapAsset, baseAmount, queryOptions } = params;
+    const { baseSwapAsset, targetSwapAsset, baseAmount, strategy, queryOptions } = params;
     const debouncedBaseAmount = useDebouncedValue(baseAmount, 200);
 
     return useQuery({
-      queryKey: ['swap-quotes', { baseSwapAsset, targetSwapAsset, debouncedBaseAmount }],
+      queryKey: ['swap-quotes', { baseSwapAsset, targetSwapAsset, debouncedBaseAmount, strategy }],
       queryFn: ({ signal }) => {
-        if (!baseSwapAsset || !targetSwapAsset) return [];
-        return service.getSwapQuotes(baseSwapAsset, targetSwapAsset, debouncedBaseAmount, signal);
+        if (!baseSwapAsset || !targetSwapAsset || !debouncedBaseAmount) return [];
+        return service.getSwapQuotes(
+          baseSwapAsset,
+          targetSwapAsset,
+          debouncedBaseAmount.amount
+            .shiftedBy(baseSwapAsset ? -baseSwapAsset.asset.decimals : 0)
+            .toNumber(),
+          signal
+        );
       },
-      enabled: !!(baseSwapAsset && targetSwapAsset && debouncedBaseAmount > 0),
+      select: data => swapQuoteSelector(data, strategy),
+      enabled: !!(
+        baseSwapAsset &&
+        targetSwapAsset &&
+        isNonNullish(debouncedBaseAmount) &&
+        !debouncedBaseAmount.amount.isZero()
+      ),
       ...queryOptions,
     });
   };

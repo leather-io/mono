@@ -1,19 +1,22 @@
 import {
   defaultBaseSwapAssets,
+  defaultSwapQuotes,
   getDefaultTargetSwapAssets,
 } from '@/features/swap/swap-state/test-utils/fixtures';
 
-import { CryptoAssetId, MarketData } from '@leather.io/models';
+import { CryptoAssetId, MarketData, SwapQuote } from '@leather.io/models';
 import { AccountSwapAsset, MarketDataService, SwapService } from '@leather.io/services';
 
 export interface StubSwapServiceConfig {
   baseSwapAssets?: AccountSwapAsset[];
   targetSwapAssets?: AccountSwapAsset[];
+  swapQuotes?: SwapQuote[];
 }
 
 export function createStubSwapService({
   baseSwapAssets,
   targetSwapAssets,
+  swapQuotes,
 }: StubSwapServiceConfig = {}) {
   return {
     async getAccountBaseSwapAssets(): Promise<AccountSwapAsset[]> {
@@ -22,6 +25,10 @@ export function createStubSwapService({
 
     async getAccountTargetSwapAssets(baseId: CryptoAssetId): Promise<AccountSwapAsset[]> {
       return Promise.resolve(targetSwapAssets ?? getDefaultTargetSwapAssets(baseId));
+    },
+
+    async getSwapQuotes(): Promise<SwapQuote[]> {
+      return Promise.resolve(swapQuotes ?? defaultSwapQuotes);
     },
   } as unknown as SwapService;
 }

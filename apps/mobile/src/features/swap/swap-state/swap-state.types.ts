@@ -1,10 +1,19 @@
 import { InputCurrencyMode } from '@/utils/types';
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { Money, QuoteCurrency, SwapQuote } from '@leather.io/models';
+import {
+  FungibleCryptoAsset,
+  Money,
+  QuoteCurrency,
+  SwapDex,
+  SwapProviderId,
+  SwapQuote,
+} from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 
 export type PresetPercentage = 0.25 | 0.5 | 0.75 | 1;
+
+export type SwapQuoteStrategy = 'best' | 'fastest' | 'cheapest';
 
 export interface SwapInternalState {
   baseSwapAsset: AccountSwapAsset | null;
@@ -17,6 +26,7 @@ export interface SwapInternalState {
   slippage: number;
   slippageEditingAllowed: boolean;
   quoteCurrencyPreference: QuoteCurrency;
+  quoteStrategy: SwapQuoteStrategy;
   nonce?: number;
   inputCurrencyMode: InputCurrencyMode;
   selectingAsset: 'base' | 'target' | null;
@@ -65,7 +75,7 @@ export interface UseSwapStateResult {
   actions: SwapActions;
   baseAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   targetAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
-  quoteQuery: UseQueryResult<SwapQuote[], Error>;
+  quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
 }
 
 export type SecondaryAmount =
@@ -73,3 +83,19 @@ export type SecondaryAmount =
   | { status: 'pending'; value: null }
   | { status: 'error'; value: null }
   | { status: 'success'; value: Money; isFetching: boolean };
+
+export interface EnrichedSwapQuote {
+  rawSwapQuote: SwapQuote;
+  rate: number;
+  dexPath: SwapDex[];
+  assetPath: FungibleCryptoAsset[];
+  quoteAmount: Money;
+  provider: SwapProviderId;
+  providerFee?: number;
+  score: number;
+}
+
+export interface SwapQuoteSelectionResult {
+  quotes: EnrichedSwapQuote[];
+  selected: EnrichedSwapQuote | undefined;
+}
