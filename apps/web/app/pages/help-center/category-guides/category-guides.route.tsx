@@ -5,6 +5,7 @@ import { cmsClient } from '~/constants/cms-client';
 import { Page } from '~/layouts/page/page';
 import { SimpleGuideList } from '~/pages/help-center/components/simple-guide-list';
 import { SupportFormProvider } from '~/pages/help-center/components/support-form-provider';
+import { handleSupportFormAction } from '~/utils/support/support-form-action';
 
 import {
   LegacyHelpCenterCategoryBySlugQueryResult,
@@ -18,6 +19,10 @@ export function meta() {
     { title: 'Guides – Leather' },
     { name: 'description', content: 'Leather wallet user guides for every stage' },
   ] satisfies MetaDescriptor[];
+}
+
+export async function action({ request }: Route.ActionArgs) {
+  return handleSupportFormAction(request);
 }
 
 export async function loader({ params }: Route.LoaderArgs): Promise<{
