@@ -6,7 +6,11 @@ import {
   Currency,
   FungibleCryptoAsset,
   Sip10Asset,
+  SwapDex,
+  SwapExecutionType,
   SwapProviderAsset,
+  SwapProviderId,
+  SwapQuote,
 } from '@leather.io/models';
 import { AccountRequest, AccountSwapAsset } from '@leather.io/services';
 import { createMoney } from '@leather.io/utils';
@@ -150,3 +154,58 @@ export function getDefaultTargetSwapAssets(id: CryptoAssetId) {
     return [createAccountSwapAsset({ asset: defaultSbtcAsset })];
   } else return defaultBaseSwapAssets.filter(swapAsset => swapAsset.asset.protocol !== 'nativeBtc');
 }
+
+interface CreateSwapQuoteParams {
+  executionType?: SwapExecutionType;
+  providerId?: SwapProviderId;
+  baseAmount?: number;
+  targetAmount?: number;
+  baseAsset?: FungibleCryptoAsset;
+  targetAsset?: FungibleCryptoAsset;
+  dexPath?: SwapDex[];
+  providerQuoteData?: unknown;
+}
+
+export function createSwapQuote({
+  executionType = 'stacks-contract-call',
+  providerId = 'alex-sdk',
+  baseAmount = 100_000_000,
+  targetAmount = 500_000_000,
+  baseAsset = defaultBtcAsset,
+  targetAsset = defaultStxAsset,
+  dexPath = [
+    {
+      name: 'AlexLab',
+      url: 'https://alexlab.co',
+      logo: 'https://alexlab.co/logo.png',
+      description: 'AlexLab DEX',
+    },
+  ],
+  providerQuoteData = { valid: true },
+}: CreateSwapQuoteParams = {}): SwapQuote {
+  return {
+    executionType,
+    providerId,
+    baseAmount,
+    targetAmount,
+    assetPath: [baseAsset, targetAsset],
+    dexPath,
+    quote: createMoney(targetAmount, targetAsset.symbol, targetAsset.decimals),
+    providerQuoteData,
+  };
+}
+
+export const defaultSwapQuotes = [
+  createSwapQuote({
+    targetAmount: 600_000_000,
+    providerId: 'alex-sdk',
+  }),
+  createSwapQuote({
+    targetAmount: 550_000_000,
+    providerId: 'velar-sdk',
+  }),
+  createSwapQuote({
+    targetAmount: 500_000_000,
+    providerId: 'bitflow-sdk',
+  }),
+];

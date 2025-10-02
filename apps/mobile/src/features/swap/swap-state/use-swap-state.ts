@@ -41,6 +41,7 @@ function initializeState({
     nonce: undefined,
     baseAmount: '0',
     quoteCurrencyPreference,
+    quoteStrategy: 'best',
     inputCurrencyMode: 'crypto',
     slippage: defaultSlippagePercentage,
     slippageEditingAllowed: true,
@@ -87,11 +88,6 @@ export function useSwapState({
   const marketDataQuery = queries.useAssetMarketDataQuery({
     asset: state.baseSwapAsset?.asset,
   });
-  const quoteQuery = queries.useSwapQuoteQuery({
-    baseSwapAsset: state.baseSwapAsset,
-    targetSwapAsset: state.targetSwapAsset,
-    baseAmount: Number(state.baseAmount),
-  });
 
   const { derivedAmounts, lockDerivedAmountsForNextRender } = useDerivedAmounts(
     state,
@@ -103,6 +99,13 @@ export function useSwapState({
     queryStatus: marketDataQuery.status,
     isFetching: marketDataQuery.isFetching,
     derivedAmounts,
+  });
+
+  const quoteQuery = queries.useSwapQuoteQuery({
+    baseSwapAsset: state.baseSwapAsset,
+    targetSwapAsset: state.targetSwapAsset,
+    baseAmount: derivedAmounts.crypto,
+    strategy: state.quoteStrategy,
   });
 
   const isSendingMax = useMemo(
