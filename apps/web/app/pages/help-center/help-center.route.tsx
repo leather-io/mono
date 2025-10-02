@@ -2,10 +2,7 @@ import { MetaDescriptor } from 'react-router';
 
 import { cmsClient } from '~/constants/cms-client';
 import { HelpCenter } from '~/pages/help-center/help-center';
-import {
-  frontSupportMessageSchema,
-  postFrontAppSupportMessage,
-} from '~/utils/support/front-app-integration';
+import { handleSupportFormAction } from '~/utils/support/support-form-action';
 
 import { LegacyHelpCenterPageQueryResult, legacyHelpCenterPageQuery } from '@leather.io/cms';
 
@@ -19,31 +16,7 @@ export function meta() {
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  const form = await request.formData();
-
-  const payload = {
-    name: form.getAll('name')[0],
-    email: form.getAll('email')[0],
-    subject: form.getAll('subject')[0],
-    body: form.getAll('body')[0],
-  };
-
-  const parsedData = frontSupportMessageSchema.safeParse(payload);
-
-  if (!parsedData.success) {
-    // eslint-disable-next-line no-console
-    console.error('Error submitting form:', parsedData.error);
-    return;
-  }
-
-  const resp = await postFrontAppSupportMessage(parsedData.data).catch(error => {
-    // fail silently
-    // eslint-disable-next-line no-console
-    console.error(error);
-    return error;
-  });
-
-  return resp.status;
+  return handleSupportFormAction(request);
 }
 
 type LoaderResult = Promise<{
@@ -54,7 +27,7 @@ export async function loader(): LoaderResult {
 
   if (!categories) throw new Error('Categories not found', { cause: 404 });
 
-  return { categories: categories.categories };
+  return categories;
 }
 
 export default function GuidesRoute() {

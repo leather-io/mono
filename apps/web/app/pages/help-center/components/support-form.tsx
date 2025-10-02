@@ -2,38 +2,28 @@ import { Form } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { Button, InfoCircleIcon } from '@leather.io/ui';
+import { Button } from '@leather.io/ui';
 import { delay } from '@leather.io/utils';
 
 import { useSupportForm } from './support-form-schema';
 
-export function SupportForm() {
+interface SupportFormProps {
+  onSuccess?: () => void;
+}
+
+export function SupportForm({ onSuccess }: SupportFormProps) {
   const form = useSupportForm();
 
-  async function onSuccess() {
+  async function handleSuccess() {
     await delay(400);
     form.reset();
-    alert('Thank you for your message. We will get back to you soon!');
+    onSuccess?.();
   }
 
   return (
     <Box width="100%" maxW="600px">
-      <Box mb="space.07" bg="ink.background-secondary" p="space.04" borderRadius="md">
-        <Box display="flex" justifyContent="space-between" mb="space.02" pr="space.03">
-          <styled.h4 textStyle="label.02">Stay safe from scams</styled.h4>
-          <InfoCircleIcon color="ink.text-subdued" variant="medium" />
-        </Box>
-        <styled.p textStyle="caption.01" color="ink.action-primary-hover">
-          Leather will never contact you first via direct messages on any platform. If someone
-          reaches out claiming to be from Leather and offering help, they're a scammer.
-          <br />
-          <br />
-          Never share your Secret Key or personal information—not even with Leather staff. We will
-          never ask for it to resolve any issue. Keep it private and secure at all times.
-        </styled.p>
-      </Box>
       <Box border="default" borderRadius="md" pt="space.01">
-        <Form name="fa-form-1" method="post" encType="multipart/form-data" onSubmit={onSuccess}>
+        <Form name="fa-form-1" method="post" encType="multipart/form-data" onSubmit={handleSuccess}>
           <Flex flexDirection="column">
             <styled.input
               placeholder="Name"
