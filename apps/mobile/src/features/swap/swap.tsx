@@ -7,7 +7,7 @@ import { AssetVisibility } from '@/store/settings/utils';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
-import { currencyDecimalsMap } from '@leather.io/constants';
+import { currencyDecimalsMap, stxAsset } from '@leather.io/constants';
 import { FungibleCryptoAsset } from '@leather.io/models';
 import { AccountSwapAsset, getMarketDataService, getSwapService } from '@leather.io/services';
 import { Box, Button, Numpad } from '@leather.io/ui/native';
@@ -28,10 +28,10 @@ interface SwapProps {
   targetAsset?: FungibleCryptoAsset;
 }
 
-export function Swap({ baseAsset, targetAsset }: SwapProps) {
+export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
   const { assetVisibility, fiatCurrencyPreference } = useSettings();
   const accountRequest = useAccountRequest();
-  const { state, actions, baseAssetsQuery, targetAssetsQuery } = useSwapState({
+  const { state, actions, baseAssetsQuery, targetAssetsQuery, quoteQuery } = useSwapState({
     accountRequest,
     marketDataService: getMarketDataService(),
     swapService: getSwapService(),
@@ -83,7 +83,7 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
 
         <Panel.Card type="receive">
           <Panel.CardRow>
-            <TargetAmountPreview />
+            <TargetAmountPreview quoteQuery={quoteQuery} baseAmount={state.baseAmount} />
             <AssetSelectorToggle
               asset={state.targetSwapAsset?.asset}
               onPress={() => actions.openAssetSelector('target')}

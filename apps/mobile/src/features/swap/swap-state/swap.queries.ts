@@ -4,7 +4,7 @@ import {
   SwapQuoteStrategy,
 } from '@/features/swap/swap-state/swap-state.types';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
-import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+import { UseQueryOptions, keepPreviousData, useQuery } from '@tanstack/react-query';
 import { isDefined, isNonNullish } from 'remeda';
 
 import {
@@ -68,7 +68,8 @@ export function createSwapQuotesQuery(service: SwapService) {
     queryOptions?: CustomQueryOptions<SwapQuote[], Error, SwapQuoteSelectionResult>;
   }) {
     const { baseSwapAsset, targetSwapAsset, baseAmount, strategy, queryOptions } = params;
-    const debouncedBaseAmount = useDebouncedValue(baseAmount, 200);
+    const debounceDelay = 350;
+    const debouncedBaseAmount = useDebouncedValue(baseAmount, debounceDelay);
 
     return useQuery({
       queryKey: ['swap-quotes', { baseSwapAsset, targetSwapAsset, debouncedBaseAmount, strategy }],
@@ -90,6 +91,7 @@ export function createSwapQuotesQuery(service: SwapService) {
         isNonNullish(debouncedBaseAmount) &&
         !debouncedBaseAmount.amount.isZero()
       ),
+      placeholderData: keepPreviousData,
       ...queryOptions,
     });
   };
