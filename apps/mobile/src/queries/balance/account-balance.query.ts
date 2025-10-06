@@ -3,32 +3,40 @@ import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { AccountId } from '@leather.io/models';
+import { AccountId, QuoteCurrency } from '@leather.io/models';
 import { AccountRequest, getAccountBalancesService } from '@leather.io/services';
 
 import { balanceQueryOptions } from './balance-query-options';
 
-export function useAccountTotalBalance(accountId: AccountId) {
+export function useAccountTotalBalance(
+  accountId: AccountId,
+  overrideFiatCurrencyPreference?: QuoteCurrency
+) {
+  const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
+  return toFetchState(useGetAccountTotalBalanceQuery({ account }, overrideFiatCurrencyPreference));
+}
+
+export function useAccountUnlockedBalance(
+  accountId: AccountId,
+  overrideFiatCurrencyPreference?: QuoteCurrency
+) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
   return toFetchState(
-    useGetAccountTotalBalanceQuery({
-      account,
-    })
+    useGetAccountUnlockedBalanceQuery({ account }, overrideFiatCurrencyPreference)
   );
 }
 
-export function useAccountUnlockedBalance(accountId: AccountId) {
-  const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
-  return toFetchState(useGetAccountUnlockedBalanceQuery({ account }));
-}
-
-export function useGetAccountTotalBalanceQuery(request: AccountRequest) {
+export function useGetAccountTotalBalanceQuery(
+  request: AccountRequest,
+  overrideFiatCurrencyPreference?: QuoteCurrency
+) {
   const { fiatCurrencyPreference, assetVisibility } = useSettings();
+  const currencyPreference = overrideFiatCurrencyPreference ?? fiatCurrencyPreference;
   return useQuery({
     queryKey: [
       'account-balances-service-get-total-balance',
       request,
-      fiatCurrencyPreference,
+      currencyPreference,
       assetVisibility,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
@@ -37,13 +45,17 @@ export function useGetAccountTotalBalanceQuery(request: AccountRequest) {
   });
 }
 
-export function useGetAccountUnlockedBalanceQuery(request: AccountRequest) {
+export function useGetAccountUnlockedBalanceQuery(
+  request: AccountRequest,
+  overrideFiatCurrencyPreference?: QuoteCurrency
+) {
   const { fiatCurrencyPreference, assetVisibility } = useSettings();
+  const currencyPreference = overrideFiatCurrencyPreference ?? fiatCurrencyPreference;
   return useQuery({
     queryKey: [
       'account-balances-service-get-unlocked-balance',
       request,
-      fiatCurrencyPreference,
+      currencyPreference,
       assetVisibility,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>

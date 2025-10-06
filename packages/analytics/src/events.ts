@@ -3,6 +3,14 @@ import { DefaultNetworkConfigurations, StxBalance } from '@leather.io/models';
 
 // https://segment.com/academy/collecting-data/naming-conventions-for-clean-data/
 export interface Events extends HistoricalEvents {
+  balance_updated: {
+    walletAccountId: string;
+    platform: 'mobile' | 'extension';
+    stxAvailableBalance: number;
+    stxLockedBalance: number;
+    usdBalance: number;
+    btcBalance: number;
+  };
   user_setting_updated: UserSettingValue;
   wallet_created: WalletCreatedValue;
   wallet_restored: WalletCreatedValue;
@@ -156,9 +164,7 @@ type UserSettingValue =
   | { email_address: string }
   | { fiat_currency: string }
   | { quote_currency: string }
-  | {
-      network: DefaultNetworkConfigurations;
-    }
+  | { network: DefaultNetworkConfigurations }
   | { privacy_mode: 'hidden' | 'visible' }
   | { haptics: 'disabled' | 'enabled' }
   | { theme: 'light' | 'dark' | 'system' }

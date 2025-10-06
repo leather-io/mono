@@ -6,6 +6,8 @@ import { createClient } from '@segment/analytics-react-native';
 
 import { configureAnalyticsClient } from '@leather.io/analytics';
 
+import { getDeviceId } from './get-device-id';
+
 const FIRST_OPEN_KEY = 'first_open_tracked';
 
 const segmentClient = createClient({
@@ -15,6 +17,14 @@ const segmentClient = createClient({
 });
 
 segmentClient.add({ plugin: new AppLifecycleEventPlugin() });
+
+async function identifyUserByDeviceId() {
+  const id = await getDeviceId();
+  if (id) {
+    return analytics.identify(id);
+  }
+}
+void identifyUserByDeviceId();
 
 const analyticsClient = configureAnalyticsClient({
   client: segmentClient,

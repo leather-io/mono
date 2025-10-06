@@ -18,6 +18,7 @@ import { useAccountTotalBalance } from '@/queries/balance/account-balance.query'
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useSettings } from '@/store/settings/settings';
+import { useAccountScaledBalanceAnalytics } from '@/utils/analytics-hooks';
 import { useRouter } from 'expo-router';
 
 import { AccountId, CryptoAssetProtocols } from '@leather.io/models';
@@ -38,6 +39,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   const { changeCurrentAccount } = useSettings();
   const [listTab, setListTab] = useState<ListTab>('tokens');
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
+  useAccountScaledBalanceAnalytics({ currentAccount });
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
   const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
   const runesData = useRunesAccountBalance(fingerprint, accountIndex);
