@@ -54,7 +54,7 @@ function Amount({ value }: { value: string }) {
   return (
     <Text
       variant="heading02"
-      fontSize={28}
+      fontSize={24}
       lineHeight={36}
       style={{ paddingTop: 1, marginBottom: -1 }}
       color={value === '0' ? 'ink.text-subdued' : 'ink.text-primary'}

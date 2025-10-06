@@ -4,6 +4,7 @@ import type {
   BitcoinUnit,
   BitcoinUnitInfo,
   BtcAsset,
+  CryptoCurrency,
   Currency,
   StxAsset,
 } from '@leather.io/models';
@@ -145,6 +146,15 @@ export const stxAsset: StxAsset = {
   category: 'fungible',
   decimals: 6,
   hasMemo: false,
+};
+
+export const cryptoAssetColors: Record<CryptoCurrency, string> = {
+  BTC: '#F59300',
+  STX: '#FC6432',
+  sBTC: '#DC7045',
+  VELAR: '#966D3D',
+  aeUSDC: '#4A73BE',
+  USDh: '#E39B53',
 };
 
 export const ALEX_LINK = 'https://alexgo.io/';
