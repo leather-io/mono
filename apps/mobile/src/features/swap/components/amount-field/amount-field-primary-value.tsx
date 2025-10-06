@@ -1,27 +1,56 @@
+import { ReactNode, useState } from 'react';
+import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native';
+
 import { Currency } from '@leather.io/models';
-import { Text } from '@leather.io/ui/native';
+import { Box, Text } from '@leather.io/ui/native';
 
 const textOpticalAlignmentStyle = { paddingTop: 1, marginBottom: -1 };
+
+const baseFontSize = 24;
+const baseLineHeight = 36;
+const baseGlyphHeight = 26;
 
 interface PrimaryValueProps {
   value: string;
   invalid?: boolean;
+  caret: ReactNode;
 }
 
-export function PrimaryValue({ value }: PrimaryValueProps) {
+export function PrimaryValue({ value, caret }: PrimaryValueProps) {
+  const [lineHeight, setLineHeight] = useState(baseLineHeight);
+
+  function handleTextLayout(event: NativeSyntheticEvent<TextLayoutEventData>) {
+    const line = event.nativeEvent.lines[0];
+    if (!line) return;
+    const { descender, capHeight } = line;
+    const glyphHeight = Math.round(capHeight + descender);
+    const changeRatio = glyphHeight / baseGlyphHeight;
+    const newLineHeight = Math.round(baseLineHeight * changeRatio);
+    setLineHeight(newLineHeight);
+  }
+
   return (
-    <Text
-      color={value === '0' ? 'ink.text-subdued' : 'ink.text-primary'}
-      variant="heading02"
-      fontSize={28}
-      lineHeight={36}
-      style={textOpticalAlignmentStyle}
-      numberOfLines={1}
-      adjustsFontSizeToFit
-      allowFontScaling={false}
+    <Box
+      height={baseLineHeight}
+      flexDirection="row"
+      alignItems="center"
+      style={{ paddingRight: 2 }}
     >
-      {value}
-    </Text>
+      <Text
+        color={value === '0' ? 'ink.text-subdued' : 'ink.text-primary'}
+        variant="heading02"
+        fontSize={baseFontSize}
+        lineHeight={lineHeight}
+        style={textOpticalAlignmentStyle}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        allowFontScaling={false}
+        onTextLayout={handleTextLayout}
+      >
+        {value}
+      </Text>
+      {caret}
+    </Box>
   );
 }
 

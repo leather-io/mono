@@ -62,6 +62,7 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
         <Panel.Card type="pay">
           <Panel.CardRow>
             <AmountField
+              asset={state.baseSwapAsset?.asset}
               secondaryAmount={state.secondaryAmount}
               inputCurrencyMode={state.inputCurrencyMode}
               onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
