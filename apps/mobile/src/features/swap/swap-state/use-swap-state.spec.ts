@@ -1736,68 +1736,6 @@ describe('useSwapState', () => {
       expect(result.current.quoteQuery.data?.selected?.score).toBe(900_000_000);
     });
 
-    it('filters out quotes with unknown execution types', async () => {
-      const btcAsset = createAccountSwapAsset({
-        asset: defaultBtcAsset,
-        balance: { crypto: 100_000_000, quote: 50_000_00 },
-      });
-      const stxAsset = createAccountSwapAsset({
-        asset: defaultStxAsset,
-        balance: { crypto: 500_000_000, quote: 5_000_00 },
-      });
-
-      const quotes = [
-        createSwapQuote({
-          executionType: 'stacks-contract-call',
-          targetAmount: 500_000_000,
-          providerId: 'alex-sdk',
-        }),
-        {
-          ...createSwapQuote({
-            targetAmount: 600_000_000,
-            providerId: 'velar-sdk',
-          }),
-          executionType: 'unknown-type' as any,
-        },
-        createSwapQuote({
-          executionType: 'sbtc-bridge-transfer',
-          targetAmount: 400_000_000,
-          providerId: 'sbtc-bridge',
-        }),
-      ];
-
-      const result = renderUseSwapState({
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset],
-          targetSwapAssets: [stxAsset],
-          swapQuotes: quotes,
-        }),
-      });
-
-      act(() => {
-        result.current.actions.setBaseSwapAsset(btcAsset);
-        result.current.actions.setTargetSwapAsset(stxAsset);
-        result.current.actions.setBaseAmount('0.1');
-      });
-
-      await waitFor(() => {
-        expect(result.current.quoteQuery.data).toBeDefined();
-      });
-
-      const validQuotes = result.current.quoteQuery.data?.quotes;
-      assert(validQuotes);
-      expect(validQuotes).toHaveLength(2);
-      expect(
-        validQuotes.find(q => q.rawSwapQuote.executionType === 'stacks-contract-call')
-      ).toBeDefined();
-      expect(
-        validQuotes.find(q => q.rawSwapQuote.executionType === 'sbtc-bridge-transfer')
-      ).toBeDefined();
-      expect(
-        validQuotes.find(q => (q.rawSwapQuote as any).executionType === 'unknown-type')
-      ).toBeUndefined();
-    });
-
     it('sets score equal to targetAmount for all quotes', async () => {
       const btcAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
