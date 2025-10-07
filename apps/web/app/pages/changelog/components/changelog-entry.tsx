@@ -1,12 +1,11 @@
 import { createContext, useContext } from 'react';
 import { Link } from 'react-router';
 
-import { Box, BoxProps, HStack, HTMLStyledProps, HstackProps, styled } from 'leather-styles/jsx';
+import { Box, BoxProps, HTMLStyledProps, styled } from 'leather-styles/jsx';
 import PortableTextContent from '~/components/content/portable-text-content';
 import { urlFor } from '~/constants/cms-client';
 
 import type { ChangelogEntryBySlugQueryResult } from '@leather.io/cms';
-import { Badge } from '@leather.io/ui';
 
 const ChangelogEntryContext = createContext<ChangelogEntryBySlugQueryResult>(null);
 
@@ -35,19 +34,6 @@ function Title(props: HTMLStyledProps<'h1'>) {
         {entry.title}
       </Link>
     </styled.h2>
-  );
-}
-
-function Tags(props: HstackProps) {
-  const entry = useChangelogEntry();
-  const tags = entry.tags ?? [];
-  if (tags.length === 0) return null;
-  return (
-    <HStack gap="space.03" {...props}>
-      {tags.map(tag => (
-        <Badge key={tag._id} label={tag.name} {...props}></Badge>
-      ))}
-    </HStack>
   );
 }
 
@@ -95,4 +81,3 @@ ChangelogEntry.Title = Title;
 ChangelogEntry.PublishDate = PublishDate;
 ChangelogEntry.Image = Image;
 ChangelogEntry.Body = Body;
-ChangelogEntry.Tags = Tags;

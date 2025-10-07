@@ -19,7 +19,6 @@ export function ChangelogPage({ entries }: ChangelogPageProps) {
             <ChangelogEntry.Title />
             <ChangelogEntry.Image />
             <ChangelogEntry.Body mt="space.03" />
-            <ChangelogEntry.Tags />
           </ChangelogEntryLayout>
         </ChangelogEntry>
       ))}

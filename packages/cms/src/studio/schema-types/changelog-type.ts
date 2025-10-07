@@ -38,7 +38,7 @@ You are a changelog editor. Your task:
 2. **Rewrite** the text to match these guidelines:
    - Begin with a short, clear feature or change title
    - Add a one-to-two sentence summary if missing
-   - Use present-tense active verbs (“Fixed”, “Added”, “Improved”)
+   - Use present-tense active verbs ("Fixed", "Added", "Improved")
    - Present details as concise bulleted lists grouped by category
    - Remove filler words, keep entries short
    - Add links or references where useful
@@ -53,7 +53,20 @@ The  original text is below. Rewrite it in concise, structured, technical change
       `,
       type: 'array',
       of: [
-        { type: 'block' },
+        {
+          type: 'block',
+          styles: [
+            { title: 'Normal', value: 'normal' },
+            { title: 'Heading 2', value: 'h2' },
+          ],
+          marks: {
+            decorators: [
+              { title: 'Strong', value: 'strong' },
+              { title: 'Emphasis', value: 'em' },
+              { title: 'Code', value: 'code' },
+            ],
+          },
+        },
         { type: 'image' },
         { type: 'code', options: { highlightedLines: true } },
       ],

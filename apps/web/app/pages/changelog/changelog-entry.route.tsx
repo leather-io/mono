@@ -54,7 +54,6 @@ export default function ChangelogEntryRoute({ loaderData }: Route.ComponentProps
           <ChangelogEntry.PublishDate />
           <ChangelogEntry.Image />
           <ChangelogEntry.Body />
-          <ChangelogEntry.Tags />
         </ChangelogEntryLayout>
       </ChangelogEntry>
     </ChangelogPageLayout>

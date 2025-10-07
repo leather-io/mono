@@ -10,8 +10,7 @@ export function ChangelogPageLayout(props: ChangelogPageLayoutProps) {
   return (
     <Page>
       <Page.Header title="Changelog" />
-      <Page.Heading title="Leather updates" />
-      {props.children}
+      <Box maxW="960px">{props.children}</Box>
     </Page>
   );
 }
@@ -32,7 +31,7 @@ export function ChangelogEntryLayout(props: ChangelogEntryLayoutProps) {
           {props.leftColumn}
         </Box>
       </Box>
-      <Flex flexDir="column" ml={['none', null, null, 'space.05']} gap="space.02">
+      <Flex flexDir="column" ml={['none', null, null, 'space.05']}>
         {props.children}
       </Flex>
     </Flex>

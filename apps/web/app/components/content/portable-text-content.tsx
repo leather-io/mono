@@ -10,7 +10,11 @@ const { code: Code, a: A } = contentComponents;
 // Reuse the same styles as markdownComponents
 const portableTextComponents: PortableTextComponents = {
   types: {
-    code: ({ value }) => <Code>{value.code}</Code>,
+    code: ({ value }) => (
+      <Code className={value.language ? `language-${value.language}` : undefined}>
+        {value.code}
+      </Code>
+    ),
   },
   marks: {
     strong: contentComponents.strong,

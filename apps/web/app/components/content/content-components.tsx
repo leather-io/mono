@@ -1,4 +1,6 @@
 import { ReactNode } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { styled } from 'leather-styles/jsx';
 
@@ -115,7 +117,32 @@ function Blockquote({ children }: ContentComponentsProps) {
   );
 }
 
-function Code({ children }: ContentComponentsProps) {
+interface CodeProps extends ContentComponentsProps {
+  className?: string;
+}
+
+function Code({ children, className }: CodeProps) {
+  const match = /language-(\w+)/.exec(className || '');
+  const language = match ? match[1] : '';
+
+  if (language && typeof children === 'string') {
+    return (
+      <SyntaxHighlighter
+        style={tomorrow}
+        language={language}
+        PreTag="div"
+        customStyle={{
+          margin: 0,
+          marginBottom: '1em',
+          borderRadius: '6px',
+          fontSize: '0.9em',
+        }}
+      >
+        {children.trim()}
+      </SyntaxHighlighter>
+    );
+  }
+
   return (
     <styled.code
       bg="ink.background-secondary"
