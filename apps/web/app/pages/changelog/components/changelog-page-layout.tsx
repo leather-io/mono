@@ -1,7 +1,7 @@
 import { Box, Flex } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
 
-import { HasChildren } from '@leather.io/ui';
+import { HasChildren, Link } from '@leather.io/ui';
 
 interface ChangelogPageLayoutProps {
   children: React.ReactNode;
@@ -9,8 +9,16 @@ interface ChangelogPageLayoutProps {
 export function ChangelogPageLayout(props: ChangelogPageLayoutProps) {
   return (
     <Page>
-      <Page.Header title="Changelog" />
-      <Box maxW="960px">{props.children}</Box>
+      <Page.Header title="Changelog">
+        <Box mr="space.06">
+          <Link display="inline-block" href="/changelog.xml">
+            Subscribe to RSS feed
+          </Link>
+        </Box>
+      </Page.Header>
+      <Box maxW="960px" mt="space.08">
+        {props.children}
+      </Box>
     </Page>
   );
 }

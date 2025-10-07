@@ -47,6 +47,7 @@ function PublishDate(props: HTMLStyledProps<'time'>) {
       textStyle="label.02"
       color="ink.text-subdued"
       dateTime={entry.publishedAt}
+      my="space.02"
       {...props}
     >
       {formattedDate}
@@ -62,6 +63,7 @@ function Image(props: HTMLStyledProps<'img'>) {
       src={urlFor(entry.heroImage).format('webp').quality(75).url()}
       width="800"
       height="400"
+      mt="space.02"
       alt={entry.title}
       {...props}
     />

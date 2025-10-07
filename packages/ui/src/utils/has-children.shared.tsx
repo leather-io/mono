@@ -1,7 +1,7 @@
 import { ReactElement, ReactNode } from 'react';
 
 export interface HasChildren {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export interface RequiresChildren {
