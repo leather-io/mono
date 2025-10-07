@@ -4,14 +4,14 @@ import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
 import { DummyIcon } from '~/components/dummy';
 import { InfoGrid } from '~/components/info-grid/info-grid';
-import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
+import { LearnHoverCard } from '~/components/learn-hover-card';
 import {
   ValueDisplayerWithCustomLoader,
   ValueDisplayerWithLoader,
 } from '~/components/value-displayer/value-displayer-with-loader';
-import { content } from '~/data/content';
+import { learnArticles } from '~/content/learn-content';
+import { stackingContent } from '~/content/stacking-content';
 import { useActivePoolInfo } from '~/features/stacking/hooks/use-active-pool-info';
-import { getPosts } from '~/utils/post-utils';
 import { toHumanReadableDays, toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import {
@@ -39,7 +39,6 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
   const { mutateAsync: revokeDelegateStx } = useRevokeDelegateStxMutation();
   const poolInfo = useActivePoolInfo();
   const { fakeLoading } = useUserPositionsFakeLoading(poolInfo.isLoading);
-  const posts = getPosts();
 
   function openRevokeStackingContractCall() {
     return revokeDelegateStx().then(() => navigate('/stacking'));
@@ -154,9 +153,9 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         <InfoGrid.Cell>
           <ValueDisplayerWithLoader
             name={
-              <PostLabelHoverCard
-                post={posts.stackingAmount}
-                label={posts.stackingAmount?.title || 'Amount'}
+              <LearnHoverCard
+                article={learnArticles.stackingAmount}
+                label={learnArticles.stackingAmount?.title || 'Amount'}
                 textStyle="label.03"
               />
             }
@@ -171,9 +170,9 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         <InfoGrid.Cell>
           <ValueDisplayerWithLoader
             name={
-              <PostLabelHoverCard
-                post={posts.historicalYield}
-                label={posts.historicalYield?.title || 'APR'}
+              <LearnHoverCard
+                article={learnArticles.historicalYield}
+                label={learnArticles.historicalYield?.title || 'APR'}
                 textStyle="label.03"
               />
             }
@@ -184,9 +183,9 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         <InfoGrid.Cell>
           <ValueDisplayerWithLoader
             name={
-              <PostLabelHoverCard
-                post={posts.pooledStackingUpcomingRewards}
-                label={posts.pooledStackingUpcomingRewards?.title || 'Next rewards'}
+              <LearnHoverCard
+                article={learnArticles.pooledStackingUpcomingRewards}
+                label={learnArticles.pooledStackingUpcomingRewards?.title || 'Next rewards'}
                 textStyle="label.03"
               />
             }
@@ -197,9 +196,9 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         <InfoGrid.Cell>
           <ValueDisplayerWithCustomLoader
             name={
-              <PostLabelHoverCard
-                post={posts.stackingRewardsTokens}
-                label={posts.stackingRewardsTokens?.title || 'Rewards token'}
+              <LearnHoverCard
+                article={learnArticles.stackingRewardsTokens}
+                label={learnArticles.stackingRewardsTokens?.title || 'Rewards token'}
                 textStyle="label.03"
               />
             }
@@ -231,7 +230,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
             img={<QuestionCircleIcon variant="small" color={'inherit' as any} />}
             spacing="space.01"
           >
-            {content.stacking.unpoolingInfo}
+            {stackingContent.unpoolingInfo}
           </Flag>
         </styled.div>
       )}

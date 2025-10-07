@@ -1,21 +1,21 @@
 import { styled } from 'leather-styles/jsx';
-import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
-import type { Post } from '~/data/post-types';
+import { LearnHoverCard } from '~/components/learn-hover-card';
+import type { LearnArticle } from '~/content/learn-content';
 
 interface StackingFormItemTitleProps {
   title: string;
-  post?: Post;
+  article?: LearnArticle;
   labelTagName?: 'h1' | 'h2' | 'h3' | 'h4' | 'span';
 }
 
 export function StackingFormItemTitle(props: StackingFormItemTitleProps) {
-  const { title, post, labelTagName = 'h1' } = props;
+  const { title, article, labelTagName = 'h1' } = props;
   const Tag = styled[labelTagName];
 
-  if (post) {
-    const label = post.title ?? title;
+  if (article) {
+    const label = article.title ?? title;
     return (
-      <PostLabelHoverCard post={post} label={label} textStyle="label.01" tagName={labelTagName} />
+      <LearnHoverCard article={article} label={label} textStyle="label.01" tagName={labelTagName} />
     );
   }
 

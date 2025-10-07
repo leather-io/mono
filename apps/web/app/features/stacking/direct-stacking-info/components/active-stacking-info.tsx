@@ -1,7 +1,8 @@
 import { StackerInfo } from '@stacks/stacking';
 import BigNumber from 'bignumber.js';
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { content } from '~/data/content';
+import { statusMessages } from '~/content/messages';
+import { stackingSectionHeaders } from '~/content/stacking-content';
 import { Address } from '~/features/stacking/components/address';
 import { LiquidStackingActionButtons } from '~/features/stacking/direct-stacking-info/components/liquid-stacking-action-buttons';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
@@ -47,27 +48,23 @@ export function ActiveStackingInfo({
       <Box my="space.10">
         <Box mx="space.04">
           <Flex flexDirection="column" pt="space.06" pb="space.05">
-            <styled.h2 textStyle="heading.02">{content.statusMessages.youAreStacking}</styled.h2>
+            <styled.h2 textStyle="heading.02">{statusMessages.youAreStacking}</styled.h2>
             <styled.p textStyle="heading.02" fontSize="24px" fontWeight={500}>
               {toHumanReadableStx(lockedAmount)}
             </styled.p>
 
             {isBeforeFirstRewardCycle && (
               <Box pb="space.04">
-                <styled.p textStyle="label.02">
-                  {content.statusMessages.waitingForCycleToStart}
-                </styled.p>
-                <styled.p>{content.statusMessages.stackingReady}</styled.p>
+                <styled.p textStyle="label.02">{statusMessages.waitingForCycleToStart}</styled.p>
+                <styled.p>{statusMessages.stackingReady}</styled.p>
               </Box>
             )}
 
             {pendingStackIncrease && (
               <Box pb="space.04">
-                <styled.p textStyle="label.02">
-                  {content.statusMessages.waitingForTxConfirmation}
-                </styled.p>
+                <styled.p textStyle="label.02">{statusMessages.waitingForTxConfirmation}</styled.p>
                 <styled.p>
-                  {content.statusMessages.stackingSubmitted.replace(
+                  {statusMessages.stackingSubmitted.replace(
                     'an additional amount',
                     `an additional amount of ${toHumanReadableStx(pendingStackIncrease.increaseBy)}`
                   )}
@@ -84,21 +81,21 @@ export function ActiveStackingInfo({
             <Box pt="space.04">
               <Box>
                 <Box>
-                  <styled.p textStyle="label.02">{content.sectionHeaders.duration}</styled.p>
+                  <styled.p textStyle="label.02">{stackingSectionHeaders.duration}</styled.p>
                   <styled.p>
                     {elapsedStackingCycles} / {details.lock_period}
                   </styled.p>
                 </Box>
                 <Box>
-                  <styled.p textStyle="label.02">{content.sectionHeaders.start}</styled.p>
+                  <styled.p textStyle="label.02">{stackingSectionHeaders.start}</styled.p>
                   <styled.p>Cycle {details.first_reward_cycle}</styled.p>
                 </Box>
                 <Box>
-                  <styled.p textStyle="label.02">{content.sectionHeaders.end}</styled.p>
+                  <styled.p textStyle="label.02">{stackingSectionHeaders.end}</styled.p>
                   <styled.p>Cycle {details.first_reward_cycle + details.lock_period - 1}</styled.p>
                 </Box>
                 <Box>
-                  <styled.p textStyle="label.02">{content.sectionHeaders.bitcoinAddress}</styled.p>
+                  <styled.p textStyle="label.02">{stackingSectionHeaders.bitcoinAddress}</styled.p>
                   <Address address={poxAddress} />
                 </Box>
                 <LiquidStackingActionButtons protocolSlug={protocolSlug} />

@@ -9,6 +9,7 @@ import { Flex, Stack } from 'leather-styles/jsx';
 import { LiquidStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { FormPageLayout } from '~/components/forms/form-page.layout';
 import { ProtocolOverview } from '~/components/protocol-overview';
+import { learnArticles } from '~/content/learn-content';
 import { StackingContractDetails } from '~/features/stacking/components/stacking-contract-details';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
@@ -31,7 +32,6 @@ import { useProtocolInfo } from '~/queries/protocols/use-protocol-info';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { leather } from '~/utils/leather-sdk';
-import { getPosts } from '~/utils/post-utils';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 
@@ -122,10 +122,9 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
 
   const stackingAmount = formMethods.watch('amount') as number;
 
-  // Get posts with direct access
-  const posts = getPosts();
-  const stackingAmountPost = posts.stackingAmount;
-  const stackingContractDetailsPost = posts.stackingContractDetails;
+  // Get articles with direct access
+  const stackingAmountArticle = learnArticles.stackingAmount;
+  const stackingContractDetailsArticle = learnArticles.stackingContractDetails;
 
   if (getSecondsUntilNextCycleQuery.isLoading || protocolInfo.isLoading) {
     return (
@@ -158,7 +157,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
             <Form>
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Amount" post={stackingAmountPost} />
+                  <StackingFormItemTitle title="Amount" article={stackingAmountArticle} />
                   <ChooseStackingAmount
                     availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
@@ -168,7 +167,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Details" post={stackingContractDetailsPost} />
+                  <StackingFormItemTitle title="Details" article={stackingContractDetailsArticle} />
                   {/* TODO: fix contractAddress value */}
                   <StackingContractDetails
                     addressTitle="Protocol address"

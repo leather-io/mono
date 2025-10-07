@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
 import { UI_IMPOSED_MAX_STACKING_AMOUNT_USTX } from '~/constants/constants';
-import { content } from '~/data/content';
+import { validationMessages } from '~/content/messages';
 
 import { stxToMicroStx } from '@leather.io/utils';
 
@@ -10,10 +10,10 @@ export function stxAmountSchema() {
     .number({
       error: issue =>
         issue.input === undefined
-          ? content.validationMessages.enterAmount
-          : content.validationMessages.invalidAmount,
+          ? validationMessages.enterAmount
+          : validationMessages.invalidAmount,
     })
-    .positive(content.validationMessages.mustStackAmount);
+    .positive(validationMessages.mustStackAmount);
 }
 
 export function validateMinStackingAmount(value: number, minimumDelegationAmount: number) {

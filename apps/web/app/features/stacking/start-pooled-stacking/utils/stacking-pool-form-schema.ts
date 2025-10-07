@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
-import { content } from '~/data/content';
+import { validationMessages } from '~/content/messages';
 import { StackingProviderId } from '~/data/data';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import {
@@ -42,15 +42,15 @@ export function createStackingPoolFormValidationSchema({
             return true;
           },
           {
-            message: `${content.validationMessages.mustDelegateMore} (${toHumanReadableMicroStx(stackedAmount ?? 0)})`,
+            message: `${validationMessages.mustDelegateMore} (${toHumanReadableMicroStx(stackedAmount ?? 0)})`,
           }
         ),
       rewardAddress: z
         .string()
-        .refine(isValidBitcoinAddress, content.validationMessages.addressNotValid) // TODO: invalidAddress
+        .refine(isValidBitcoinAddress, validationMessages.addressNotValid) // TODO: invalidAddress
         .refine(
           btcAddressNetworkValidator(networkMode),
-          content.validationMessages.addressIncorrectNetwork
+          validationMessages.addressIncorrectNetwork
         ), // incorrectNetworkAddress
     })
     .superRefine((data, ctx) => {
@@ -60,7 +60,7 @@ export function createStackingPoolFormValidationSchema({
       if (!validateMinStackingAmount(amount, minDelegatedStackingAmount)) {
         ctx.addIssue({
           code: 'custom',
-          message: `${content.validationMessages.mustDelegateAtLeast} ${toHumanReadableMicroStx(minDelegatedStackingAmount)}`,
+          message: `${validationMessages.mustDelegateAtLeast} ${toHumanReadableMicroStx(minDelegatedStackingAmount)}`,
           path: ['amount'],
         });
       }

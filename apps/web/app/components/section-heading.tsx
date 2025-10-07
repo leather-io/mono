@@ -1,37 +1,22 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { Post } from '~/data/post-types';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
-export const styleTokens = {
-  whiteSpace: {
-    preLine: 'pre-line',
-    nowrap: 'nowrap',
-    normal: 'normal',
-  },
-  textDecoration: {
-    underline: 'underline',
-    none: 'none',
-  },
-  borderStyle: {
-    solid: 'solid',
-    dashed: 'dashed',
-    dotted: 'dotted',
-    none: 'none',
-  },
-} as const;
-
-interface PostSectionHeadingProps {
-  post: Post;
+interface SectionHeadingProps {
+  title: string;
+  sentence?: string;
+  disclaimer?: string;
+  learnMoreSlug?: string;
   prefix?: string;
 }
 
-/**
- *
- * @deprecated This should be converted to a component that is not `Post` aware
- */
-export function PostSectionHeading({ post, prefix }: PostSectionHeadingProps) {
-  if (!post) return null;
+export function SectionHeading({
+  title,
+  sentence,
+  disclaimer,
+  learnMoreSlug,
+  prefix,
+}: SectionHeadingProps) {
   return (
     <Flex
       flexDir={['column', 'column', 'row']}
@@ -44,7 +29,7 @@ export function PostSectionHeading({ post, prefix }: PostSectionHeadingProps) {
       <Box flex={1}>
         <styled.h2 textStyle="heading.03" maxW="400px" m={0} mr="space.03">
           {prefix}
-          {sanitizeContent(post.title)}
+          {sanitizeContent(title)}
         </styled.h2>
       </Box>
       <Flex
@@ -54,21 +39,16 @@ export function PostSectionHeading({ post, prefix }: PostSectionHeadingProps) {
         flex={1}
       >
         <Flex alignItems="flex-start" gap="space.02">
-          {post.sentence && (
-            <styled.p
-              textStyle="body.01"
-              mb="space.01"
-              display="inline"
-              whiteSpace={styleTokens.whiteSpace.preLine}
-            >
-              {sanitizeContent(post.sentence)}
-              <LearnMoreLink destination={post.slug} />
+          {sentence && (
+            <styled.p textStyle="body.01" mb="space.01" display="inline" whiteSpace="pre-line">
+              {sanitizeContent(sentence)}
+              {learnMoreSlug && <LearnMoreLink destination={learnMoreSlug} />}
             </styled.p>
           )}
         </Flex>
-        {post.disclaimer && (
+        {disclaimer && (
           <styled.p textStyle="body.02" color="ink.text-subdued" mb="space.01" borderRadius="sm">
-            {sanitizeContent(post.disclaimer)}
+            {sanitizeContent(disclaimer)}
           </styled.p>
         )}
       </Flex>

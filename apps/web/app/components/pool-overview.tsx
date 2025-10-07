@@ -3,13 +3,12 @@ import { ReactElement } from 'react';
 import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
-import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
+import { LearnHoverCard, SupportedTags } from '~/components/learn-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { EM_DASH } from '~/constants/constants';
-import { StackingPool, getPostSlugForProvider } from '~/data/data';
+import { learnArticles } from '~/content/learn-content';
+import { StackingPool } from '~/data/data';
 import { LearnMoreLink } from '~/layouts/page/page';
-import { TextElementTag } from '~/utils/post-types';
-import { getPosts, usePost } from '~/utils/post-utils';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 interface RewardTokenCellProps {
@@ -17,12 +16,11 @@ interface RewardTokenCellProps {
   value?: string;
 }
 function RewardTokenCell({ token, value }: RewardTokenCellProps): ReactElement {
-  const posts = getPosts();
-  const post = posts.stackingRewardsTokens;
-  const label = post?.title ?? 'Rewards token';
+  const article = learnArticles.stackingRewardsTokens;
+  const label = article?.title ?? 'Rewards token';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
+      name={<LearnHoverCard article={article} label={label} textStyle="label.03" />}
       value={
         <>
           {token}
@@ -37,12 +35,11 @@ interface LockupPeriodCellProps {
   minLockupPeriodDays: number;
 }
 function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps): ReactElement {
-  const posts = getPosts();
-  const post = posts.stackingMinimumLockupPeriod;
-  const label = post?.title ?? 'Minimum lockup period';
+  const article = learnArticles.stackingMinimumLockupPeriod;
+  const label = article?.title ?? 'Minimum lockup period';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
+      name={<LearnHoverCard article={article} label={label} textStyle="label.03" />}
       value={<>{minLockupPeriodDays} days</>}
     />
   );
@@ -58,12 +55,11 @@ function DaysUntilNextCycleCell({
   nextCycleNumber,
   nextCycleBlocks,
 }: DaysUntilNextCycleCellProps): ReactElement {
-  const posts = getPosts();
-  const post = posts.stackingUpcomingCycle;
-  const label = post?.title ?? 'Days until next cycle';
+  const article = learnArticles.stackingUpcomingCycle;
+  const label = article?.title ?? 'Days until next cycle';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
+      name={<LearnHoverCard article={article} label={label} textStyle="label.03" />}
       value={
         <>
           {daysUntilNextCycle} days
@@ -84,9 +80,8 @@ function MinimumCommitmentCell({
   minimumCommitment,
   minimumCommitmentUsd,
 }: MinimumCommitmentCellProps): ReactElement {
-  const posts = getPosts();
-  const post = posts.stackingMinimumCommitment;
-  const label = post?.title ?? 'Minimum commitment';
+  const article = learnArticles.stackingMinimumCommitment;
+  const label = article?.title ?? 'Minimum commitment';
 
   const displayValue =
     typeof minimumCommitment === 'number'
@@ -95,7 +90,7 @@ function MinimumCommitmentCell({
 
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
+      name={<LearnHoverCard article={article} label={label} textStyle="label.03" />}
       value={
         <>
           {displayValue}{' '}
@@ -110,12 +105,11 @@ interface HistoricalAprCellProps {
   historicalApr?: string | null;
 }
 function HistoricalAprCell({ historicalApr }: HistoricalAprCellProps): ReactElement {
-  const posts = getPosts();
-  const post = posts.historicalYield;
-  const label = post?.title ?? 'Historical yield';
+  const article = learnArticles.historicalYield;
+  const label = article?.title ?? 'Historical yield';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
+      name={<LearnHoverCard article={article} label={label} textStyle="label.03" />}
       value={<>{historicalApr || EM_DASH}</>}
     />
   );
@@ -129,12 +123,11 @@ function TotalValueLockedCell({
   totalValueLocked,
   totalValueLockedUsd,
 }: TotalValueLockedCellProps): ReactElement {
-  const posts = getPosts();
-  const post = posts.totalLockedValueTvl;
-  const label = post?.title ?? 'Total value locked';
+  const article = learnArticles.totalLockedValueTvl;
+  const label = article?.title ?? 'Total value locked';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
+      name={<LearnHoverCard article={article} label={label} textStyle="label.03" />}
       value={
         <>
           {totalValueLocked || EM_DASH}{' '}
@@ -149,19 +142,17 @@ interface PoolOverviewProps {
   pool: StackingPool;
   poolSlug: string;
 }
-function PoolCell({ pool, poolSlug }: PoolOverviewProps): ReactElement {
-  const postSlug = getPostSlugForProvider(poolSlug) ?? '';
-  const post = usePost(postSlug);
+function PoolCell({ pool }: PoolOverviewProps): ReactElement {
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
       {'icon' in pool ? (pool as any).icon : null}
       <styled.h4 textDecoration="underline" textStyle="label.01">
-        {post?.title || ''}
+        {pool.name}
       </styled.h4>
-      {post && (
+      {pool.description && (
         <styled.div textStyle="caption.01">
-          {post.sentence}
-          <LearnMoreLink destination={post.slug} />
+          {pool.description}
+          {pool.website && <LearnMoreLink destination={pool.website} />}
         </styled.div>
       )}
     </VStack>
@@ -238,10 +229,9 @@ export function StackingAmountLabel({
   tagName = 'h1',
 }: {
   textStyle?: string;
-  tagName?: TextElementTag;
+  tagName?: SupportedTags;
 }): ReactElement {
-  const posts = getPosts();
-  const post = posts.stackingAmount;
-  const label = post?.title ?? 'Amount';
-  return <PostLabelHoverCard post={post} label={label} textStyle={textStyle} tagName={tagName} />;
+  const article = learnArticles.stackingAmount;
+  const label = article?.title ?? 'Amount';
+  return <LearnHoverCard article={article} label={label} textStyle={textStyle} tagName={tagName} />;
 }

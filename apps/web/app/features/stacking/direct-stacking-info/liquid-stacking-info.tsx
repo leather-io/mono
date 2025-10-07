@@ -1,6 +1,6 @@
 import { Box, HStack, VStack, styled } from 'leather-styles/jsx';
 import { ProtocolOverview } from '~/components/protocol-overview';
-import { content } from '~/data/content';
+import { statusMessages } from '~/content/messages';
 import { PendingStackExtendAlert } from '~/features/stacking/components/pending-stack-extend-alert';
 import { useGetHasPendingStackingTransactionQuery } from '~/features/stacking/direct-stacking-info/use-get-has-pending-tx-query';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
@@ -116,11 +116,9 @@ export function LiquidStackingInfo({ protocolSlug }: DirectStackingInfoProps) {
 
       {getHasPendingStackIncreaseQuery.data && (
         <Box pb="space.04">
-          <styled.p textStyle="label.02">
-            {content.statusMessages.waitingForTxConfirmation}
-          </styled.p>
+          <styled.p textStyle="label.02">{statusMessages.waitingForTxConfirmation}</styled.p>
           <styled.p>
-            {content.statusMessages.stackingSubmitted.replace(
+            {statusMessages.stackingSubmitted.replace(
               'an additional amount',
               `an additional amount of ${toHumanReadableMicroStx(getHasPendingStackIncreaseQuery.data.increaseBy)}`
             )}
@@ -130,8 +128,8 @@ export function LiquidStackingInfo({ protocolSlug }: DirectStackingInfoProps) {
 
       {isBeforeFirstRewardCycle && (
         <Box pb="space.04">
-          <styled.p textStyle="label.02">{content.statusMessages.waitingForCycleToStart}</styled.p>
-          <styled.p>{content.statusMessages.stackingReady}</styled.p>
+          <styled.p textStyle="label.02">{statusMessages.waitingForCycleToStart}</styled.p>
+          <styled.p>{statusMessages.stackingReady}</styled.p>
         </Box>
       )}
     </VStack>

@@ -1,8 +1,8 @@
 import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
-import { PostSectionHeading } from '~/components/posts/post-section-heading';
+import { SectionHeading } from '~/components/section-heading';
 import { StacksAccountLoader } from '~/components/stacks-account-loader';
-import { content } from '~/data/content';
+import { learnArticles } from '~/content/learn-content';
 import { UserPositions } from '~/features/stacking/user-positions/user-positions';
 import { Page } from '~/layouts/page/page';
 
@@ -35,11 +35,21 @@ export function Stacking() {
         {stacksAccount => <UserPositions stacksAddress={stacksAccount.address} />}
       </StacksAccountLoader>
 
-      <PostSectionHeading post={content.posts.pooledStacking} />
+      <SectionHeading
+        title={learnArticles.pooledStacking.title}
+        sentence={learnArticles.pooledStacking.sentence}
+        disclaimer={learnArticles.pooledStacking.disclaimer}
+        learnMoreSlug={learnArticles.pooledStacking.slug}
+      />
       <StackingExplainer mt="space.05" />
       <StackingProviderTable mt="space.05" />
       <IndependentStackingLink />
-      <PostSectionHeading post={content.posts.liquidStacking} />
+      <SectionHeading
+        title={learnArticles.liquidStacking.title}
+        sentence={learnArticles.liquidStacking.sentence}
+        disclaimer={learnArticles.liquidStacking.disclaimer}
+        learnMoreSlug={learnArticles.liquidStacking.slug}
+      />
       <LiquidStackingExplainer mt="space.04" />
       <LiquidStackingProviderTable mt="space.05" />
 
