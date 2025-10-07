@@ -1,4 +1,4 @@
-import { content } from '~/data/content';
+import { stackingConditions } from '~/content/stacking-content';
 import { StackingConditions } from '~/features/stacking/components/stacking-conditions';
 
 import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
@@ -13,7 +13,7 @@ const iconMap = {
  * Component for choosing pooled stacking conditions
  */
 export function ChoosePoolingConditions() {
-  const poolingConditions = content.stackingConditions.map(condition => ({
+  const poolingConditions = stackingConditions.map(condition => ({
     icon: iconMap[condition.iconKey] || null,
     title: condition.title,
     description: condition.description,

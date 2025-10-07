@@ -2,7 +2,7 @@ import { isRouteErrorResponse } from 'react-router';
 
 import * as Sentry from '@sentry/react-router';
 import { Flex } from 'leather-styles/jsx';
-import { content } from '~/data/content';
+import { errorMessages } from '~/content/messages';
 
 import type { Route } from '../../+types/root';
 
@@ -11,16 +11,14 @@ export interface ErrorLayoutProps {
 }
 
 export function ErrorLayout({ error }: ErrorLayoutProps) {
-  let message: string = content.errorMessages.oops;
-  let details: string = content.errorMessages.unexpected;
+  let message: string = errorMessages.oops;
+  let details: string = errorMessages.unexpected;
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? content.errorMessages.error404 : content.errorMessages.error;
+    message = error.status === 404 ? errorMessages.error404 : errorMessages.error;
     details =
-      error.data ||
-      (error.status === 404 ? content.errorMessages.notFound : error.statusText) ||
-      details;
+      error.data || (error.status === 404 ? errorMessages.notFound : error.statusText) || details;
     Sentry.captureException(error);
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;

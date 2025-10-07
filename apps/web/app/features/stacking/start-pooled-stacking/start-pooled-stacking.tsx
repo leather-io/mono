@@ -11,6 +11,7 @@ import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { PooledStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { FormPageLayout } from '~/components/forms/form-page.layout';
 import { PoolOverview } from '~/components/pool-overview';
+import { learnArticles } from '~/content/learn-content';
 import { ChooseStackingAmount } from '~/features/stacking/components/choose-stacking-amount';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
@@ -37,7 +38,6 @@ import { useStacksClient } from '~/queries/stacks/stacks-client';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { leather } from '~/utils/leather-sdk';
-import { getPosts } from '~/utils/post-utils';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 
@@ -229,13 +229,12 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     return confirmed;
   }, [hasUserConfirmedPoolWrapperContract, network, pool.providerId]);
 
-  // Get posts with direct access
-  const posts = getPosts();
-  const stackingAmountPost = posts.stackingAmount;
-  const stackingRewardsAddressPost = posts.stackingRewardsAddress;
-  const stackingDurationPost = posts.stackingDuration;
-  const stackingContractDetailsPost = posts.stackingContractDetails;
-  const pooledStackingConditionsPost = posts.pooledStackingConditions;
+  // Get articles with direct access
+  const stackingAmountArticle = learnArticles.stackingAmount;
+  const stackingRewardsAddressArticle = learnArticles.stackingRewardsAddress;
+  const stackingDurationArticle = learnArticles.stackingDuration;
+  const stackingContractDetailsArticle = learnArticles.stackingContractDetails;
+  const pooledStackingConditionsArticle = learnArticles.pooledStackingConditions;
 
   if (getSecondsUntilNextCycleQuery.isLoading || poolInfo.isLoading) {
     return (
@@ -321,7 +320,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
             <Form>
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Amount" post={stackingAmountPost} />
+                  <StackingFormItemTitle title="Amount" article={stackingAmountArticle} />
                   <ChooseStackingAmount
                     availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
@@ -333,7 +332,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                   <Stack gap="space.02">
                     <StackingFormItemTitle
                       title="Address to receive rewards"
-                      post={stackingRewardsAddressPost}
+                      article={stackingRewardsAddressArticle}
                     />
                     <ChooseRewardsAddress
                       disabled={!poolRewardProtocolInfo.allowCustomRewardAddress}
@@ -347,14 +346,14 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Duration" post={stackingDurationPost} />
+                  <StackingFormItemTitle title="Duration" article={stackingDurationArticle} />
                   <ChoosePoolingDuration />
                 </Stack>
 
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Details" post={stackingContractDetailsPost} />
+                  <StackingFormItemTitle title="Details" article={stackingContractDetailsArticle} />
                   <StackingContractDetails
                     addressTitle="Pool address"
                     address={poolStxAddress}
@@ -367,7 +366,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 <Stack gap="space.04">
                   <StackingFormItemTitle
                     title="Pooling conditions"
-                    post={pooledStackingConditionsPost}
+                    article={pooledStackingConditionsArticle}
                   />
                   <ChoosePoolingConditions />
                 </Stack>
