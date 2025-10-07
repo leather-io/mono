@@ -119,6 +119,7 @@ export function useSwapState({
     targetSwapAsset: state.targetSwapAsset,
     baseAmount: derivedAmounts.crypto,
     strategy: state.quoteStrategy,
+    slippage: state.slippage,
     fairMarketRate,
   });
 

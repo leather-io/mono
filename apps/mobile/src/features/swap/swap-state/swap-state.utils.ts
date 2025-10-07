@@ -204,3 +204,9 @@ export function calculateFairMarketRate({
 
   return basePrice.div(targetPrice).toNumber();
 }
+
+export function estimateExchangeRate(baseAmount: number, targetAmount: number): number {
+  const base = new BigNumber(baseAmount);
+  if (base.isZero()) return 0;
+  return new BigNumber(targetAmount).div(base).toNumber();
+}

@@ -90,6 +90,7 @@ export interface EnrichedSwapQuote {
   dexPath: SwapDex[];
   assetPath: FungibleCryptoAsset[];
   quoteAmount: Money;
+  minReceive?: Money;
   provider: SwapProviderId;
   providerFee?: number;
   score: number;
