@@ -1,13 +1,5 @@
 import { useEffect, useMemo, useReducer } from 'react';
 
-import {
-  computeSecondaryAmountState,
-  convertMoneyToInputValue,
-  createSwapAssetsSelector,
-  isAmountEqualToAvailableBalance,
-} from '@/features/swap/swap-state/swap-state.utils';
-import { useDerivedAmounts } from '@/features/swap/swap-state/use-derived-amounts';
-import { useSwapQueries } from '@/features/swap/swap-state/use-swap-queries';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
 import { AccountAddresses, FungibleCryptoAsset, QuoteCurrency } from '@leather.io/models';
@@ -16,6 +8,15 @@ import { getAssetId } from '@leather.io/utils';
 
 import { defaultSlippagePercentage, swapReducer } from './swap-state.reducer';
 import { PresetPercentage, SwapInternalState, UseSwapStateResult } from './swap-state.types';
+import {
+  calculateFairMarketRate,
+  computeSecondaryAmountState,
+  convertMoneyToInputValue,
+  createSwapAssetsSelector,
+  isAmountEqualToAvailableBalance,
+} from './swap-state.utils';
+import { useDerivedAmounts } from './use-derived-amounts';
+import { useSwapQueries } from './use-swap-queries';
 
 export interface InitializeStateParams {
   baseAsset?: FungibleCryptoAsset;
@@ -85,27 +86,40 @@ export function useSwapState({
     baseId: state.baseSwapAsset ? getAssetId(state.baseSwapAsset?.asset) : undefined,
     queryOptions: { select: createSwapAssetsSelector('target', isAssetAllowed) },
   });
-  const marketDataQuery = queries.useAssetMarketDataQuery({
+  const baseMarketDataQuery = queries.useAssetMarketDataQuery({
     asset: state.baseSwapAsset?.asset,
+  });
+  const targetMarketDataQuery = queries.useAssetMarketDataQuery({
+    asset: state.targetSwapAsset?.asset,
   });
 
   const { derivedAmounts, lockDerivedAmountsForNextRender } = useDerivedAmounts(
     state,
-    marketDataQuery.data
+    baseMarketDataQuery.data
   );
 
   const secondaryAmount = computeSecondaryAmountState({
     state,
-    queryStatus: marketDataQuery.status,
-    isFetching: marketDataQuery.isFetching,
+    queryStatus: baseMarketDataQuery.status,
+    isFetching: baseMarketDataQuery.isFetching,
     derivedAmounts,
   });
+
+  const fairMarketRate = useMemo(
+    () =>
+      calculateFairMarketRate({
+        baseMarketData: baseMarketDataQuery.data,
+        targetMarketData: targetMarketDataQuery.data,
+      }),
+    [baseMarketDataQuery.data, targetMarketDataQuery.data]
+  );
 
   const quoteQuery = queries.useSwapQuoteQuery({
     baseSwapAsset: state.baseSwapAsset,
     targetSwapAsset: state.targetSwapAsset,
     baseAmount: derivedAmounts.crypto,
     strategy: state.quoteStrategy,
+    fairMarketRate,
   });
 
   const isSendingMax = useMemo(

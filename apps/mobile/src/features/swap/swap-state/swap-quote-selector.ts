@@ -3,25 +3,26 @@ import {
   SwapQuoteSelectionResult,
   SwapQuoteStrategy,
 } from '@/features/swap/swap-state/swap-state.types';
+import { calculatePriceImpactPercentage } from '@/features/swap/swap-state/swap-state.utils';
 import BigNumber from 'bignumber.js';
-import { compact } from 'knip/dist/util/array';
-import { map, pipe, prop, sortBy } from 'remeda';
+import { filter, isDefined, map, pipe, prop, sortBy } from 'remeda';
 
 import { SwapDex, SwapExecutionType, SwapQuote } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
 export function swapQuoteSelector(
   swapQuotes: SwapQuote[],
-  strategy: SwapQuoteStrategy
+  strategy: SwapQuoteStrategy,
+  fairMarketRate: number | null
 ): SwapQuoteSelectionResult {
   const quotes = pipe(
     swapQuotes,
     map(swapQuote => {
       const selector = selectors[swapQuote.executionType];
       if (!selector) return;
-      return selector(swapQuote);
+      return selector(swapQuote, fairMarketRate);
     }),
-    compact,
+    filter(isDefined),
     sortBy([prop('score'), 'desc'])
   );
 
@@ -53,14 +54,18 @@ function selectQuoteByStrategy(
   }
 }
 
-type QuoteSelector = (swapQuotes: SwapQuote) => EnrichedSwapQuote;
+type QuoteSelector = (swapQuotes: SwapQuote, fairMarketRate: number | null) => EnrichedSwapQuote;
 
 const selectors: Record<SwapExecutionType, QuoteSelector> = {
   'stacks-contract-call': stacksContractCallSelector,
   'sbtc-bridge-transfer': sbtcBridgeTransferSelector,
 };
 
-function stacksContractCallSelector(swapQuote: SwapQuote): EnrichedSwapQuote {
+function stacksContractCallSelector(
+  swapQuote: SwapQuote,
+  fairMarketRate: number | null
+): EnrichedSwapQuote {
+  const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
   return {
     rawSwapQuote: swapQuote,
     dexPath: swapQuote.dexPath,
@@ -70,10 +75,15 @@ function stacksContractCallSelector(swapQuote: SwapQuote): EnrichedSwapQuote {
     providerFee: estimateLiquidityFeePercentage(swapQuote.dexPath),
     rate: estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount),
     score: swapQuote.targetAmount,
+    priceImpactPercentage: calculatePriceImpactPercentage(rate, fairMarketRate),
   };
 }
 
-function sbtcBridgeTransferSelector(swapQuote: SwapQuote): EnrichedSwapQuote {
+function sbtcBridgeTransferSelector(
+  swapQuote: SwapQuote,
+  fairMarketRate: number | null
+): EnrichedSwapQuote {
+  const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
   return {
     rawSwapQuote: swapQuote,
     dexPath: swapQuote.dexPath,
@@ -82,6 +92,7 @@ function sbtcBridgeTransferSelector(swapQuote: SwapQuote): EnrichedSwapQuote {
     provider: swapQuote.providerId,
     rate: estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount),
     score: swapQuote.targetAmount,
+    priceImpactPercentage: calculatePriceImpactPercentage(rate, fairMarketRate),
   };
 }
 
