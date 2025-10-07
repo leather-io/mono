@@ -19,6 +19,35 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.77.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.76.0...@leather.io/mobile-v2.77.0) (2025-10-07)
+
+
+### Features
+
+* add postconditions ([8629f8f](https://github.com/leather-io/mono/commit/8629f8fc05e6a4d9ff07b7f6838e8de566182684))
+* **mobile:** add price impact to swap quote enrichment ([842941b](https://github.com/leather-io/mono/commit/842941b8ffd6387f84d1b3aa530e45befaa3d863))
+* **mobile:** add quote enrichment by execution type, basic scoring, and best quote selection ([98aae4e](https://github.com/leather-io/mono/commit/98aae4e109a2e80e638af69d66100f7d222a67cd))
+* **mobile:** add swap quote query and a preview shell ([345a687](https://github.com/leather-io/mono/commit/345a6875f39bc6f71db9e1c5e43b19d37418326c))
+* **mobile:** add swap target amount preview ([6c0d5af](https://github.com/leather-io/mono/commit/6c0d5af107b7eb7984f891dfeca8a1e9c3f5798d))
+
+
+### Bug Fixes
+
+* make children required on HasChildren type ([2e0fe7a](https://github.com/leather-io/mono/commit/2e0fe7ab7431b8ca686de7953a8272ca0ebe2bd8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.8
+    * @leather.io/provider bumped to 1.5.15
+    * @leather.io/query bumped to 2.42.4
+    * @leather.io/rpc bumped to 2.20.14
+    * @leather.io/services bumped to 1.34.1
+    * @leather.io/stacks bumped to 1.17.0
+    * @leather.io/ui bumped to 1.86.0
+
 ## [2.76.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.75.0...@leather.io/mobile-v2.76.0) (2025-09-30)
 
 

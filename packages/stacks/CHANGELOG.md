@@ -551,6 +551,13 @@
     * @leather.io/models bumped to 0.43.0
     * @leather.io/utils bumped to 0.46.1
 
+## [1.17.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.16.7...@leather.io/stacks-v1.17.0) (2025-10-07)
+
+
+### Features
+
+* add postconditions ([8629f8f](https://github.com/leather-io/mono/commit/8629f8fc05e6a4d9ff07b7f6838e8de566182684))
+
 ## [1.16.3](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.16.2...@leather.io/stacks-v1.16.3) (2025-09-03)
 
 
