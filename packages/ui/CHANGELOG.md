@@ -489,6 +489,26 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.86.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.85.0...@leather.io/ui-v1.86.0) (2025-10-07)
+
+
+### Features
+
+* add postconditions ([8629f8f](https://github.com/leather-io/mono/commit/8629f8fc05e6a4d9ff07b7f6838e8de566182684))
+
+
+### Bug Fixes
+
+* extension approver animation ([654ae49](https://github.com/leather-io/mono/commit/654ae49f60bae3f5f3d108a736db2a00be954efb))
+* make children required on HasChildren type ([2e0fe7a](https://github.com/leather-io/mono/commit/2e0fe7ab7431b8ca686de7953a8272ca0ebe2bd8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.14.2
+
 ## [1.85.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.84.0...@leather.io/ui-v1.85.0) (2025-09-30)
 
 
