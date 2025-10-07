@@ -93,6 +93,7 @@ export interface EnrichedSwapQuote {
   provider: SwapProviderId;
   providerFee?: number;
   score: number;
+  priceImpactPercentage: number | null;
 }
 
 export interface SwapQuoteSelectionResult {

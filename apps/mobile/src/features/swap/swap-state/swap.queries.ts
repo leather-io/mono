@@ -65,9 +65,11 @@ export function createSwapQuotesQuery(service: SwapService) {
     targetSwapAsset?: SwapAsset | null;
     baseAmount?: Money | null;
     strategy: SwapQuoteStrategy;
+    fairMarketRate: number | null;
     queryOptions?: CustomQueryOptions<SwapQuote[], Error, SwapQuoteSelectionResult>;
   }) {
-    const { baseSwapAsset, targetSwapAsset, baseAmount, strategy, queryOptions } = params;
+    const { baseSwapAsset, targetSwapAsset, baseAmount, strategy, fairMarketRate, queryOptions } =
+      params;
     const debounceDelay = 350;
     const debouncedBaseAmount = useDebouncedValue(baseAmount, debounceDelay);
 
@@ -84,7 +86,7 @@ export function createSwapQuotesQuery(service: SwapService) {
           signal
         );
       },
-      select: data => swapQuoteSelector(data, strategy),
+      select: data => swapQuoteSelector(data, strategy, fairMarketRate),
       enabled: !!(
         baseSwapAsset &&
         targetSwapAsset &&
