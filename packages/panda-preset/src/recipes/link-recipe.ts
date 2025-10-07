@@ -9,11 +9,12 @@ export const linkRecipe = defineRecipe({
     display: 'inline',
     mb: 'space.01',
     p: 'unset',
-    pos: 'relative',
-    position: 'relative',
     pt: 'space.01',
     textAlign: 'left',
+    textUnderlineOffset: '3px',
+    textDecorationThickness: '2px',
   },
+
   variants: {
     size: {
       sm: {
@@ -26,69 +27,36 @@ export const linkRecipe = defineRecipe({
         textStyle: 'label.01',
       },
     },
+
     variant: {
       underlined: {
-        _before: {
-          content: '""',
-          background: 'ink.text-non-interactive',
-          bottom: '-2px',
-          height: '2px',
-          left: 0,
-          position: 'absolute',
-          right: 0,
-        },
+        textDecoration: 'underline',
         _active: {
-          _before: {
-            background: 'ink.text-primary',
-          },
           color: 'ink.text-primary',
         },
         _focus: {
-          _before: { background: 'focus' },
-          color: 'ink.text-primary',
+          textDecorationColor: 'blue.border',
           outline: 0,
         },
         _hover: {
-          _before: {
-            background: 'ink.action-primary-hover',
-          },
+          textDecorationColor: 'ink.text-primary',
         },
-        color: 'ink.text-primary',
+        textDecorationColor: 'ink.text-non-interactive',
       },
 
       text: {
-        _before: {
-          content: '""',
-          background: 'ink.action-primary-hover',
-          bottom: '-2px',
-          height: '2px',
-          left: 0,
-          position: 'absolute',
-          right: 0,
-          visibility: 'hidden',
-        },
         _active: {
-          _before: {
-            background: 'ink.text-primary',
-          },
           color: 'ink.text-primary',
-          visibility: 'visible',
+          textDecoration: 'underline',
         },
         _focus: {
-          _before: {
-            background: 'focus',
-            visibility: 'visible',
-          },
           color: 'ink.text-primary',
           outline: 0,
+          textDecoration: 'underline',
         },
         _hover: {
-          _before: {
-            background: 'ink.action-primary-hover',
-            visibility: 'visible',
-          },
+          textDecoration: 'underline',
         },
-        color: 'ink.text-primary',
       },
     },
 
@@ -105,58 +73,30 @@ export const linkRecipe = defineRecipe({
   compoundVariants: [
     {
       css: {
-        _focus: {
-          _before: {
-            background: 'ink.background-primary',
-            visibility: 'visible',
-          },
-          outline: 0,
-        },
-        _hover: {
-          _before: {
-            background: 'ink.background-primary',
-            visibility: 'visible',
-          },
-        },
         color: 'ink.background-secondary',
+        outline: 0,
+        textDecoration: 'underline',
       },
       invert: true,
       variant: 'underlined',
     },
     {
-      css: {
-        _before: {
-          content: '""',
-          background: 'ink.text-non-interactive',
-          bottom: '-2px',
-          height: '2px',
-          left: 0,
-          position: 'absolute',
-          right: 0,
-        },
-        color: 'ink.text-non-interactive',
-        cursor: 'not-allowed',
-      },
       disabled: true,
       variant: 'underlined',
-    },
-    {
       css: {
-        _before: {
-          content: '""',
-          background: 'ink.text-non-interactive',
-          bottom: '-2px',
-          height: '2px',
-          left: 0,
-          position: 'absolute',
-          right: 0,
-          visibility: 'visible',
-        },
         color: 'ink.text-non-interactive',
         cursor: 'not-allowed',
+        textDecoration: 'underline',
       },
+    },
+    {
       disabled: true,
       variant: 'text',
+      css: {
+        color: 'ink.text-non-interactive',
+        cursor: 'not-allowed',
+        textDecoration: 'none',
+      },
     },
   ],
 });
