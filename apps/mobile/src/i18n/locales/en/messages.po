@@ -338,12 +338,7 @@ msgstr "Balances"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:12
-#: src/features/receive/get-assets.ts:29
-#: src/features/receive/get-assets.ts:37
-#: src/features/send/forms/btc/btc-form.tsx:64
 #: src/features/swap/swap.utils.ts:7
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:17
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -1204,9 +1199,6 @@ msgstr "Restore wallet"
 msgid "Reveal account"
 msgstr "Reveal account"
 
-#: src/features/send/forms/btc/btc-form.tsx:126
-#: src/features/send/forms/stx/sip10-form.tsx:149
-#: src/features/send/forms/stx/stx-form.tsx:140
 #: src/features/swap/swap.tsx:106
 msgid "Review"
 msgstr "Review"
@@ -1253,7 +1245,7 @@ msgstr "Secure your wallet"
 msgid "Security"
 msgstr "Security"
 
-#: src/features/swap/components/asset-selector/asset-selector-toggle.tsx:38
+#: src/features/swap/components/asset-selector/asset-selector-toggle.tsx:39
 msgid "Select"
 msgstr "Select"
 
@@ -1346,11 +1338,7 @@ msgstr "Something went wrong"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:11
-#: src/features/receive/get-assets.ts:45
-#: src/features/send/forms/stx/stx-form.tsx:58
 #: src/features/swap/swap.utils.ts:6
-#: src/features/token/stacks/stacks-token-details.tsx:15
 msgid "Stacks"
 msgstr "Stacks"
 
@@ -1370,7 +1358,6 @@ msgstr "Submitted"
 msgid "Submitting..."
 msgstr "Submitting..."
 
-#: src/components/action-buttons.tsx:53
 #: src/features/swap/swap.tsx:60
 msgid "Swap"
 msgstr "Swap"

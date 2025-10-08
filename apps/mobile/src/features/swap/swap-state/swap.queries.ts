@@ -1,5 +1,6 @@
 import { swapQuoteSelector } from '@/features/swap/swap-state/swap-quote-selector';
 import {
+  SupportedAsset,
   SwapQuoteSelectionResult,
   SwapQuoteStrategy,
 } from '@/features/swap/swap-state/swap-state.types';
@@ -9,7 +10,6 @@ import { isDefined, isNonNullish } from 'remeda';
 
 import {
   CryptoAssetId,
-  FungibleCryptoAsset,
   MarketData,
   Money,
   SwapAsset,
@@ -124,7 +124,7 @@ export function createSwapExecutionDataQuery(service: SwapService, request: Acco
 
 export function createAssetMarketDataQuery(service: MarketDataService) {
   return function useAssetMarketDataQuery(params: {
-    asset?: FungibleCryptoAsset;
+    asset?: SupportedAsset;
     queryOptions?: CustomQueryOptions<MarketData>;
   }) {
     const { asset, queryOptions } = params;

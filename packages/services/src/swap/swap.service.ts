@@ -1,18 +1,19 @@
 import { inject, injectable } from 'inversify';
-import { groupBy, isNonNullish } from 'remeda';
+import { groupBy, isNonNullish, keys } from 'remeda';
 
 import {
   CryptoAssetBalance,
   CryptoAssetId,
   FungibleAssetId,
+  FungibleCryptoAsset,
   SwapAsset,
   SwapExecutionData,
   SwapProviderAsset,
   SwapProviderId,
   SwapQuote,
+  isSwappableAsset,
 } from '@leather.io/models';
 import {
-  SerializedCryptoAssetId,
   deserializeAssetId,
   getAssetId,
   isSameAsset,
@@ -166,20 +167,26 @@ export class SwapService {
     const groupedAssets = groupBy(providerSwapAssets, providerAsset =>
       serializeAssetId(providerAsset.assetId)
     );
-    return (
-      await Promise.allSettled(
-        Object.keys(groupedAssets).map(key =>
-          this.fungibleAssetService.getAsset(
-            deserializeAssetId(key as SerializedCryptoAssetId) as FungibleAssetId
-          )
-        )
+
+    const assetResults = await Promise.allSettled(
+      keys(groupedAssets).map(key =>
+        this.fungibleAssetService.getAsset(deserializeAssetId(key) as FungibleAssetId)
       )
-    )
-      .filter(result => result.status === 'fulfilled')
-      .map(result => ({
-        asset: result.value,
-        providerAssets: groupedAssets[serializeAssetId(getAssetId(result.value))],
-      }));
+    );
+
+    function assetsToSwapAssets(result: PromiseSettledResult<FungibleCryptoAsset>) {
+      if (result.status !== 'fulfilled') return [];
+      if (!isSwappableAsset(result.value)) return [];
+
+      return [
+        {
+          asset: result.value,
+          providerAssets: groupedAssets[serializeAssetId(getAssetId(result.value))],
+        },
+      ];
+    }
+
+    return assetResults.flatMap(assetsToSwapAssets);
   }
 
   public async getSwapQuotes(

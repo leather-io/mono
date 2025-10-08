@@ -2,14 +2,17 @@ import { InputCurrencyMode } from '@/utils/types';
 import { UseQueryResult } from '@tanstack/react-query';
 
 import {
-  FungibleCryptoAsset,
   Money,
+  NativeCryptoAsset,
   QuoteCurrency,
+  Sip10Asset,
   SwapDex,
   SwapProviderId,
   SwapQuote,
 } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
+
+export type SupportedAsset = NativeCryptoAsset | Sip10Asset;
 
 export type PresetPercentage = 0.25 | 0.5 | 0.75 | 1;
 
@@ -88,7 +91,7 @@ export interface EnrichedSwapQuote {
   rawSwapQuote: SwapQuote;
   rate: number;
   dexPath: SwapDex[];
-  assetPath: FungibleCryptoAsset[];
+  assetPath: SupportedAsset[];
   quoteAmount: Money;
   minReceive?: Money;
   provider: SwapProviderId;

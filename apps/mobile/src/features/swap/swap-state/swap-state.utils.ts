@@ -1,6 +1,7 @@
 import {
   PresetPercentage,
   SecondaryAmount,
+  SupportedAsset,
   SwapInternalState,
 } from '@/features/swap/swap-state/swap-state.types';
 import { InputCurrencyMode } from '@/utils/types';
@@ -8,14 +9,7 @@ import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import BigNumber from 'bignumber.js';
 import { filter, pipe, sortBy } from 'remeda';
 
-import {
-  FungibleCryptoAsset,
-  MarketData,
-  Money,
-  isBtcAsset,
-  isSip10Asset,
-  isStxAsset,
-} from '@leather.io/models';
+import { MarketData, Money, isBtcAsset, isSip10Asset, isStxAsset } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 
 export function convertMoneyToInputValue(money: Money | null): string {
@@ -98,7 +92,7 @@ export function computeSecondaryAmountState({
 
 export function createSwapAssetsSelector(
   assetSelectionType: 'base' | 'target',
-  isAssetAllowed?: (asset: FungibleCryptoAsset) => boolean
+  isAssetAllowed?: (asset: SupportedAsset) => boolean
 ) {
   return (data: AccountSwapAsset[]): AccountSwapAsset[] => {
     return pipe(
@@ -116,7 +110,7 @@ export function createSwapAssetsSelector(
 function isRelevantSwapAsset(
   swapAsset: AccountSwapAsset,
   type: 'base' | 'target',
-  isAssetAllowed?: (asset: FungibleCryptoAsset) => boolean
+  isAssetAllowed?: (asset: SupportedAsset) => boolean
 ) {
   if (isAssetAllowed && !isAssetAllowed(swapAsset.asset)) {
     return false;
@@ -145,7 +139,7 @@ function hasPositiveCryptoBalance(swapAsset: AccountSwapAsset): boolean {
   return cryptoBalance > 0;
 }
 
-function isAllowedZeroBalanceAsset(asset: FungibleCryptoAsset) {
+function isAllowedZeroBalanceAsset(asset: SupportedAsset) {
   return isBtcAsset(asset) || isStxAsset(asset);
 }
 
