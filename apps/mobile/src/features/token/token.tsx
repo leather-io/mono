@@ -11,7 +11,7 @@ import { TokenDetailsTable } from '@/features/token/components/token-details-tab
 import { TokenOverview } from '@/features/token/components/token-overview';
 import { t } from '@lingui/core/macro';
 
-import { FungibleCryptoAsset, OnChainActivity } from '@leather.io/models';
+import { FungibleCryptoAsset, OnChainActivity, isSwappableAsset } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
 import { getReceiveType } from '../receive/utils/get-receive-type';
@@ -86,10 +86,13 @@ export function Token({
               }
               actionButtons={
                 <ActionButtons
-                  onSend={() => sendSheetRef.current?.present(asset)}
+                  onSend={canSend ? () => sendSheetRef.current?.present(asset) : undefined}
                   onReceive={() => receiveSheetRef.current?.present(receiveType)}
-                  onSwap={() => swapSheetRef.current?.present({ baseAsset: asset })}
-                  canSend={canSend}
+                  onSwap={
+                    isSwappableAsset(asset)
+                      ? () => swapSheetRef.current?.present({ baseAsset: asset })
+                      : undefined
+                  }
                 />
               }
             />
