@@ -6,6 +6,10 @@ import { useOnMount } from '../../../utils/use-on-mount.shared';
 
 const animationSelector = '& > *:not(.skip-animation)';
 
+export const childElementInitialAnimationState = css({
+  [animationSelector]: { opacity: 0, transform: 'translateY(-16px)' },
+});
+
 const staggerMenuItems = stagger(0.06, { startDelay: 0.3 });
 
 export function useApproverChildrenEntryAnimation() {
@@ -16,7 +20,7 @@ export function useApproverChildrenEntryAnimation() {
     try {
       animate(
         animationSelector,
-        { opacity: [0, 1], transform: ['translateY(-16px)', 'translateY(0)'] },
+        { opacity: 1, transform: 'translateY(0)' },
         {
           duration: 0.36,
           delay: staggerMenuItems,
@@ -36,8 +40,8 @@ interface ApproverHeaderAnimationProps extends HasChildren {
 export function ApproverHeaderAnimation({ delay = 0, ...props }: ApproverHeaderAnimationProps) {
   return (
     <motion.div
-      animate={{ x: [-18, 0], opacity: [0, 1] }}
-      transition={{ duration: 0.4, delay, ease: 'easeOut' }}
+      initial={{ x: -18, opacity: 0 }}
+      animate={{ x: 0, opacity: 1, transition: { duration: 0.4, delay, ease: 'easeOut' } }}
       {...props}
     />
   );
@@ -47,10 +51,11 @@ const actionsContainerDelay = 0.64;
 export function ApproverActionsAnimationContainer(props: HasChildren) {
   return (
     <motion.div
+      initial={{ opacity: 0 }}
       animate={{
-        opacity: [0, 1],
+        opacity: 1,
+        transition: { duration: 0.3, delay: actionsContainerDelay, ease: 'easeOut' },
       }}
-      transition={{ duration: 0.3, delay: actionsContainerDelay, ease: 'easeOut' }}
       {...props}
     />
   );
@@ -65,8 +70,8 @@ export function ApproverActionAnimation({ children, index }: ApproverActionAnima
     <motion.div
       style={{ display: 'flex' }}
       className={css({ '& > *': { flex: 1 } })}
-      animate={{ opacity: [0, 1] }}
-      transition={{ duration: 0.48, delay, ease: 'easeOut' }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, transition: { duration: 0.48, delay, ease: 'easeOut' } }}
     >
       {children}
     </motion.div>
