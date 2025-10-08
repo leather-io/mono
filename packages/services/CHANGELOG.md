@@ -413,6 +413,25 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.34.2](https://github.com/leather-io/mono/compare/@leather.io/services-v1.34.1...@leather.io/services-v1.34.2) (2025-10-08)
+
+
+### Bug Fixes
+
+* uneconomical utxos threshold ([63ea036](https://github.com/leather-io/mono/commit/63ea036d79deac79c4eb83a594133d1416b36825))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.9
+    * @leather.io/constants bumped to 0.26.0
+    * @leather.io/stacks bumped to 1.17.1
+    * @leather.io/utils bumped to 0.46.2
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.15
+
 ## [1.34.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.33.0...@leather.io/services-v1.34.0) (2025-09-30)
 
 

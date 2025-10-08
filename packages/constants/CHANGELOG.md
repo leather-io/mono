@@ -207,6 +207,13 @@
   * dependencies
     * @leather.io/models bumped to 0.43.0
 
+## [0.26.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.25.5...@leather.io/constants-v0.26.0) (2025-10-08)
+
+
+### Features
+
+* **mobile:** improve swap amount value positioning, add faux caret ([e793339](https://github.com/leather-io/mono/commit/e7933397e11641f05e205bd42df6eca32091f077))
+
 ## [0.25.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.24.0...@leather.io/constants-v0.25.0) (2025-07-28)
 
 
