@@ -34,32 +34,23 @@ export function filterVerboseUnusedTransactionWithTransfersData(
 }
 
 // Utility functions to map metadata from Hiro to Sip9Collection
-export function mapHiroCollection(collection?: any): Sip9Collection | undefined {
+export function transformHiroSip9Collection(collection?: any): Sip9Collection | undefined {
   if (!collection) return undefined;
 
   return {
-    id: collection.collection_id || collection.id || '',
     name: collection.collection_name || collection.name || '',
-    isVerified: collection.is_verified || false,
-    locationUrl: collection.location_url || '',
+    collectionExplorerUrl: collection.location_url || '',
     totalItems: collection.total_items,
-    floorPrice: collection.floor_price_amount
-      ? {
-          amount: collection.floor_price_amount.amount,
-          unit: collection.floor_price_amount.unit,
-        }
-      : undefined,
   };
 }
 
-export function mapHiroAttributes(
+export function transformHiroSip9Attributes(
   attributes?: HiroMetadata['attributes']
 ): Sip9Attribute[] | undefined {
   if (!attributes) return undefined;
 
   return attributes.map(attr => ({
-    traitType: attr.trait_type,
-    displayType: attr.display_type,
-    value: attr.value,
+    attributeTraitType: attr.trait_type,
+    attributeValue: attr.value,
   }));
 }
