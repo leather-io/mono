@@ -13,10 +13,10 @@ import { getTicker, isUndefined } from '@leather.io/utils';
 
 import { GammaNftMetadata } from '../infrastructure/api/gamma/gamma-api.client';
 import {
-  mapGammaAssetContent,
-  mapGammaAttributes,
-  mapGammaCollection,
-  mapGammaOwner,
+  transformGammaAssetContent,
+  transformGammaAttributes,
+  transformGammaCollection,
+  transformGammaOwner,
 } from '../infrastructure/api/gamma/gamma-api.utils';
 import {
   HiroMetadata,
@@ -93,20 +93,20 @@ export function mapToSip9Details(
     '') as SupportedSip9ContentType;
 
   const collection =
-    mapGammaCollection(gammaMetadata?.item.collection) ||
+    transformGammaCollection(gammaMetadata?.item.collection) ||
     mapHiroCollection(hiroMetadata?.properties?.collection);
 
-  const owner = mapGammaOwner(gammaMetadata?.item.owner);
+  const owner = transformGammaOwner(gammaMetadata?.item.owner);
 
   const attributes =
-    mapGammaAttributes(gammaMetadata?.attribute_groups) ||
+    transformGammaAttributes(gammaMetadata?.attribute_groups) ||
     mapHiroAttributes(hiroMetadata?.attributes);
 
   return {
     id: gammaMetadata?.item.id,
     name,
     description,
-    assetContent: mapGammaAssetContent(gammaMetadata?.item.asset_content),
+    assetContent: transformGammaAssetContent(gammaMetadata?.item.asset_content),
     cachedImage,
     cachedImageThumbnail,
     contentType,

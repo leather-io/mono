@@ -4,9 +4,17 @@ import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
 import { t } from '@lingui/core/macro';
 
 import { Pressable, Text } from '@leather.io/ui/native';
-import { truncateMiddle } from '@leather.io/utils';
+import { isObject, truncateMiddle } from '@leather.io/utils';
 
 import { TokenDetailsCard } from '../components/token-details-card';
+
+function replaceUnderscores(str: string) {
+  return str.replace(/_/g, ' ');
+}
+
+function addPascalCaseSpaces(str: string) {
+  return str.replace(/([a-z])([A-Z])/g, '$1 $2');
+}
 
 function formatLabel(key: string): string {
   // Special case for locationUrl in collection context
@@ -14,17 +22,10 @@ function formatLabel(key: string): string {
     return t`Collection URL`;
   }
 
-  // Replace underscores with spaces
-  let formatted = key.replace(/_/g, ' ');
-
-  // Add spaces between PascalCase words
-  formatted = formatted.replace(/([a-z])([A-Z])/g, '$1 $2');
-
-  // Capitalize first letter
-  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+  return addPascalCaseSpaces(replaceUnderscores(key)).replace(/^./, c => c.toUpperCase());
 }
 
-function renderValue(value: any, key: string): React.ReactNode {
+function renderValue(value: unknown, key: string): React.ReactNode {
   const stringValue = Array.isArray(value) ? JSON.stringify(value) : String(value);
 
   const keysToTruncate = ['address', 'id', 'assetId', 'contractId', 'txid'];
@@ -87,25 +88,31 @@ export function renderCollectibleDetailsRecursively(
 
   // Defined sort order for the collectible details
   const sortOrder = ['name', 'tokenId', 'assetId', 'contractId', 'mimetype', 'contentType'];
-  getSortedEntries(obj, sortOrder).forEach(([key, value]) => {
-    // Skip undefined or empty string values
-    if (value === undefined || value === '') return;
+  getSortedEntries(obj, sortOrder)
+    .map(([key, value]) => {
+      // Skip undefined or empty string values
+      if (value === undefined || value === '') return null;
 
-    const keysToSkip = ['description', 'floorPrice', 'floor_price_amount'];
-    if (keysToSkip.includes(key.toLowerCase())) return;
-    // Filter out any keys that begin with 'genesis' (ordinals related keys)
-    if (key.toLowerCase().startsWith('genesis')) return;
+      const keysToSkip = ['description', 'floorPrice', 'floor_price_amount'];
+      if (keysToSkip.includes(key.toLowerCase())) return null;
+      // Filter out any keys that begin with 'genesis' (ordinals related keys)
+      if (key.toLowerCase().startsWith('genesis')) return null;
 
-    const label = formatLabel(key);
+      const label = formatLabel(key);
 
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      // Collect nested cards to render after this card
-      nestedCards.push(...renderCollectibleDetailsRecursively(value, label));
-    } else {
-      // Collect primitive values as table items
-      items.push(<SummaryTableItem key={key} label={label} value={renderValue(value, key)} />);
-    }
-  });
+      if (isObject(value) && value !== null && !Array.isArray(value)) {
+        // Collect nested cards to render after this card
+        nestedCards.push(...renderCollectibleDetailsRecursively(value, label));
+        return null;
+      } else {
+        // Collect primitive values as table items
+        return <SummaryTableItem key={key} label={label} value={renderValue(value, key)} />;
+      }
+    })
+    .filter(Boolean)
+    .forEach(item => {
+      if (item) items.push(item);
+    });
 
   // Only render card if there are items to show
   if (items.length === 0 && nestedCards.length === 0) return [];

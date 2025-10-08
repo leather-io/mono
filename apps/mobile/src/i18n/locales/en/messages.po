@@ -432,7 +432,7 @@ msgstr "Close the scanner"
 msgid "Code"
 msgstr "Code"
 
-#: src/features/token/utils/render-collectible-details.tsx:14
+#: src/features/token/utils/render-collectible-details.tsx:22
 msgid "Collection URL"
 msgstr "Collection URL"
 
@@ -568,7 +568,7 @@ msgstr "Deployment failed"
 msgid "Description"
 msgstr "Description"
 
-#: src/features/token/utils/render-collectible-details.tsx:114
+#: src/features/token/utils/render-collectible-details.tsx:121
 msgid "Details"
 msgstr "Details"
 
@@ -1608,8 +1608,8 @@ msgstr "Verify full address"
 msgid "Version"
 msgstr "Version"
 
-#: src/features/token/utils/render-collectible-details.tsx:42
-#: src/features/token/utils/render-collectible-details.tsx:55
+#: src/features/token/utils/render-collectible-details.tsx:43
+#: src/features/token/utils/render-collectible-details.tsx:56
 msgid "View"
 msgstr "View"
 
