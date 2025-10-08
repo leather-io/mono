@@ -3,6 +3,7 @@ export * from './balance.model';
 export * from './assets/asset.model';
 export * from './assets/asset-id.model';
 export * from './assets/asset-type-guards';
+export * from './assets/sip9-asset.model';
 export * from './inscription-mime-type.model';
 export * from './currencies.model';
 export * from './fees/bitcoin-fees.model';

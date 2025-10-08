@@ -7,13 +7,13 @@ import {
   NativeCryptoAsset,
   NonFungibleCryptoAsset,
   RuneAsset,
-  Sip9Asset,
   Sip10Asset,
   Src20Asset,
   StampAsset,
   Stx20Asset,
   StxAsset,
 } from './asset.model';
+import { Sip9Asset } from './sip9-asset.model';
 
 export function isFungibleAsset(asset: CryptoAsset): asset is FungibleCryptoAsset {
   return asset.category === 'fungible';

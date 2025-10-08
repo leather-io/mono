@@ -1608,8 +1608,8 @@ msgstr "Verify full address"
 msgid "Version"
 msgstr "Version"
 
-#: src/features/token/utils/render-collectible-details.tsx:43
-#: src/features/token/utils/render-collectible-details.tsx:56
+#: src/features/token/utils/render-collectible-details.tsx:44
+#: src/features/token/utils/render-collectible-details.tsx:57
 msgid "View"
 msgstr "View"
 

@@ -32,9 +32,10 @@ function renderValue(value: unknown, key: string): React.ReactNode {
   if (keysToTruncate.includes(key)) {
     return truncateMiddle(stringValue, 4);
   }
+  console.log('key', key);
 
   // Special handling for location_url - prepend gamma.io domain
-  if (key === 'location_url' && typeof stringValue === 'string') {
+  if (key === 'collectionExplorerUrl' && typeof stringValue === 'string') {
     const fullUrl = `https://gamma.io${stringValue}`;
     return (
       <Pressable onPress={() => Linking.openURL(fullUrl)}>
@@ -93,8 +94,7 @@ export function renderCollectibleDetailsRecursively(
       // Skip undefined or empty string values
       if (value === undefined || value === '') return null;
 
-      const keysToSkip = ['description', 'floorPrice', 'floor_price_amount'];
-      if (keysToSkip.includes(key.toLowerCase())) return null;
+      if (key === 'description') return null;
       // Filter out any keys that begin with 'genesis' (ordinals related keys)
       if (key.toLowerCase().startsWith('genesis')) return null;
 

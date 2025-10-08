@@ -10,7 +10,6 @@ import {
   Sip9Attribute,
   Sip9Collection,
   Sip9Details,
-  Sip9Owner,
   SupportedSip9ContentType,
 } from '@leather.io/models';
 
@@ -20,11 +19,13 @@ import {
   HiroNftMetadataResponse,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
-  mapHiroAttributes,
-  mapHiroCollection,
+  transformHiroSip9Attributes,
+  transformHiroSip9Collection,
 } from '../infrastructure/api/hiro/hiro-stacks-api.utils';
-import { getAssetNameFromIdentifier } from './stacks-asset.utils';
-import { getContractPrincipalFromAssetIdentifier } from './stacks-asset.utils';
+import {
+  getAssetNameFromIdentifier,
+  getContractPrincipalFromAssetIdentifier,
+} from './stacks-asset.utils';
 
 type GammaNftMetadata = z.infer<typeof gammaNftMetadataSchema>;
 
@@ -36,49 +37,22 @@ function transformGammaCollectionData(
   collection: GammaNftMetadata['item']['collection']
 ): Sip9Collection {
   return {
-    id: collection.id,
-    type: collection.type,
     name: collection.name,
-    isVerified: collection.is_verified,
-    locationUrl: collection.location_url,
+    collectionExplorerUrl: collection.location_url,
     totalItems: collection.total_items,
-    floorPrice: collection.floor_price_amount
-      ? {
-          amount: collection.floor_price_amount.amount,
-          unit: collection.floor_price_amount.unit,
-        }
-      : undefined,
   };
 }
 
 export const transformGammaCollection = optionalize(transformGammaCollectionData);
-
-function transformGammaOwnerData(owner: GammaNftMetadata['item']['owner']): Sip9Owner | undefined {
-  return {
-    address: owner.address,
-    chain: owner.chain,
-    id: owner.id,
-    displayName: owner.display_name,
-    slug: owner.slug,
-    avatarUrl: owner.avatar_url,
-    avatarContentType: owner.avatar_content_type,
-    profileUrl: owner.profile_url,
-    bio: owner.bio,
-    isVerified: owner.is_verified,
-  };
-}
-
-export const transformGammaOwner = optionalize(transformGammaOwnerData);
 
 function transformGammaAttributesData(
   attributeGroups: GammaNftMetadata['attribute_groups']
 ): Sip9Attribute[] {
   return attributeGroups.flatMap(group =>
     group.attributes.map(attr => ({
-      traitType: attr.label,
-      displayType: attr.type,
-      value: attr.value,
-      rarityPercent: attr.rarity_percent_of_100,
+      attributeTraitType: attr.label,
+      attributeValue: attr.value,
+      attributeRarityPercent: attr.rarity_percent_of_100,
     }))
   );
 }
@@ -130,13 +104,11 @@ export function transformToSip9Details(
 
   const collection =
     transformGammaCollection(gammaMetadata?.item.collection) ||
-    mapHiroCollection(hiroMetadata?.properties?.collection);
-
-  const owner = transformGammaOwner(gammaMetadata?.item.owner);
+    transformHiroSip9Collection(hiroMetadata?.properties?.collection);
 
   const attributes =
     transformGammaAttributes(gammaMetadata?.attribute_groups) ||
-    mapHiroAttributes(hiroMetadata?.attributes);
+    transformHiroSip9Attributes(hiroMetadata?.attributes);
 
   return {
     id: gammaMetadata?.item.id,
@@ -146,11 +118,8 @@ export function transformToSip9Details(
     cachedImage,
     cachedImageThumbnail,
     contentType,
-    locationUrl: gammaMetadata?.item.location_url,
     collection,
-    owner,
     attributes,
-    rarityRank: gammaMetadata?.item.rarity_rank,
   };
 }
 

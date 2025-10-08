@@ -15,7 +15,7 @@ export const gammaNftMetadataSchema = z.object({
       id: z.string(),
       type: z.string(),
       name: z.string(),
-      is_verified: z.boolean(),
+      is_verified: z.boolean().optional(),
       location_url: z.string(),
       total_items: z.number().optional(),
       floor_price_amount: z
