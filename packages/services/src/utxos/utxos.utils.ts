@@ -52,7 +52,7 @@ export function isUnconfirmedUtxo(utxo: Utxo) {
   return !utxo.height;
 }
 
-export const uneconomicalSatThreshold = 10000;
+export const uneconomicalSatThreshold = 500;
 
 export function isUneconomicalUtxo(utxo: Utxo) {
   return Number(utxo.value) < uneconomicalSatThreshold;
