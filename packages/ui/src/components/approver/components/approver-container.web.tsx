@@ -1,7 +1,10 @@
 import { css } from 'leather-styles/css';
 import { Flex, HTMLStyledProps, styled } from 'leather-styles/jsx';
 
-import { useApproverChildrenEntryAnimation } from '../animations/approver-animation.web';
+import {
+  childElementInitialAnimationState,
+  useApproverChildrenEntryAnimation,
+} from '../animations/approver-animation.web';
 import { useApproverContext } from '../approver-context.shared';
 
 const applyMarginsToLastApproverSection = css({
@@ -25,15 +28,14 @@ export function ApproverContainer({ children, ...props }: HTMLStyledProps<'main'
       {...props}
     >
       <Flex
+        className={childElementInitialAnimationState}
         width="100%"
         ref={scope}
         flexDir="column"
         flex={1}
         gap={1}
         background="ink.background-secondary"
-        style={{
-          paddingBottom: `${actionBarHeight + 16}px`,
-        }}
+        style={{ paddingBottom: `${actionBarHeight + 16}px` }}
       >
         {children}
       </Flex>
