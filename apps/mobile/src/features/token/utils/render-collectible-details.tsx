@@ -32,7 +32,6 @@ function renderValue(value: unknown, key: string): React.ReactNode {
   if (keysToTruncate.includes(key)) {
     return truncateMiddle(stringValue, 4);
   }
-  console.log('key', key);
 
   // Special handling for location_url - prepend gamma.io domain
   if (key === 'collectionExplorerUrl' && typeof stringValue === 'string') {
@@ -82,7 +81,8 @@ function getSortedEntries(obj: Record<string, any>, sortOrder: string[]) {
 
 export function renderCollectibleDetailsRecursively(
   obj: Record<string, any>,
-  title?: string
+  title?: string,
+  keyIndex?: number
 ): React.ReactNode[] {
   const items: React.ReactNode[] = [];
   const nestedCards: React.ReactNode[] = [];
@@ -100,7 +100,22 @@ export function renderCollectibleDetailsRecursively(
 
       const label = formatLabel(key);
 
-      if (isObject(value) && value !== null && !Array.isArray(value)) {
+      // Handle arrays - used by attributes
+      if (Array.isArray(value)) {
+        // Skip empty arrays
+        if (value.length === 0) return null;
+
+        // Only process arrays of objects
+        if (isObject(value[0])) {
+          value.map((item, index) => {
+            nestedCards.push(...renderCollectibleDetailsRecursively(item, label, index));
+          });
+          return null;
+        }
+
+        // For arrays of primitives, render as JSON string (existing behavior)
+        return <SummaryTableItem key={key} label={label} value={renderValue(value, key)} />;
+      } else if (isObject(value) && value !== null && !Array.isArray(value)) {
         // Collect nested cards to render after this card
         nestedCards.push(...renderCollectibleDetailsRecursively(value, label));
         return null;
@@ -110,7 +125,7 @@ export function renderCollectibleDetailsRecursively(
       }
     })
     .filter(Boolean)
-    .forEach(item => {
+    .map(item => {
       if (item) items.push(item);
     });
 
@@ -118,7 +133,7 @@ export function renderCollectibleDetailsRecursively(
   if (items.length === 0 && nestedCards.length === 0) return [];
 
   const currentCard = (
-    <TokenDetailsCard key={title || 'details'} title={title || t`Details`}>
+    <TokenDetailsCard key={title + `-${keyIndex}` || 'details'} title={title || t`Details`}>
       <SummaryTableRoot>{items}</SummaryTableRoot>
     </TokenDetailsCard>
   );
