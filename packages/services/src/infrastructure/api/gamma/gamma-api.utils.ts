@@ -6,11 +6,13 @@ import { gammaNftMetadataSchema } from './gamma-api.schema';
 
 type GammaNftMetadata = z.infer<typeof gammaNftMetadataSchema>;
 
-export function mapGammaCollection(
-  collection?: GammaNftMetadata['item']['collection']
-): Sip9Collection | undefined {
-  if (!collection) return undefined;
+function optionalize<A, R>(fn: (a: A) => R) {
+  return (a: A | undefined): R | undefined => (a === undefined ? undefined : fn(a));
+}
 
+function transformGammaCollectionData(
+  collection: GammaNftMetadata['item']['collection']
+): Sip9Collection {
   return {
     id: collection.id,
     type: collection.type,
@@ -27,9 +29,9 @@ export function mapGammaCollection(
   };
 }
 
-export function mapGammaOwner(owner?: GammaNftMetadata['item']['owner']): Sip9Owner | undefined {
-  if (!owner) return undefined;
+export const transformGammaCollection = optionalize(transformGammaCollectionData);
 
+function transformGammaOwnerData(owner: GammaNftMetadata['item']['owner']): Sip9Owner | undefined {
   return {
     address: owner.address,
     chain: owner.chain,
@@ -44,11 +46,11 @@ export function mapGammaOwner(owner?: GammaNftMetadata['item']['owner']): Sip9Ow
   };
 }
 
-export function mapGammaAttributes(
-  attributeGroups?: GammaNftMetadata['attribute_groups']
-): Sip9Attribute[] | undefined {
-  if (!attributeGroups) return undefined;
+export const transformGammaOwner = optionalize(transformGammaOwnerData);
 
+function transformGammaAttributesData(
+  attributeGroups: GammaNftMetadata['attribute_groups']
+): Sip9Attribute[] {
   return attributeGroups.flatMap(group =>
     group.attributes.map(attr => ({
       traitType: attr.label,
@@ -59,13 +61,15 @@ export function mapGammaAttributes(
   );
 }
 
-export function mapGammaAssetContent(
-  assetContent?: GammaNftMetadata['item']['asset_content']
-): Sip9AssetContent | undefined {
-  if (!assetContent) return undefined;
+export const transformGammaAttributes = optionalize(transformGammaAttributesData);
 
+function transformGammaAssetContentData(
+  assetContent: GammaNftMetadata['item']['asset_content']
+): Sip9AssetContent {
   return {
     contentUrl: assetContent.content_url,
     contentType: assetContent.content_type,
   };
 }
+
+export const transformGammaAssetContent = optionalize(transformGammaAssetContentData);

@@ -6,29 +6,25 @@ export const gammaNftMetadataSchema = z.object({
     chain: z.string(),
     name: z.string(),
     description: z.string(),
-    asset_content: z
-      .object({
-        content_url: z.string(),
-        content_type: z.string(),
-      })
-      .optional(),
+    asset_content: z.object({
+      content_url: z.string(),
+      content_type: z.string(),
+    }),
     location_url: z.string(),
-    collection: z
-      .object({
-        id: z.string(),
-        type: z.string(),
-        name: z.string(),
-        is_verified: z.boolean(),
-        location_url: z.string(),
-        total_items: z.number().optional(),
-        floor_price_amount: z
-          .object({
-            amount: z.number(),
-            unit: z.string(),
-          })
-          .optional(),
-      })
-      .optional(),
+    collection: z.object({
+      id: z.string(),
+      type: z.string(),
+      name: z.string(),
+      is_verified: z.boolean(),
+      location_url: z.string(),
+      total_items: z.number().optional(),
+      floor_price_amount: z
+        .object({
+          amount: z.number(),
+          unit: z.string(),
+        })
+        .optional(),
+    }),
     owner: z.object({
       address: z.string(),
       chain: z.string(),
@@ -107,21 +103,19 @@ export const gammaNftMetadataSchema = z.object({
     creator: z.any().nullable(),
     is_original: z.boolean(),
   }),
-  attribute_groups: z
-    .array(
-      z.object({
-        title: z.string(),
-        attributes: z.array(
-          z.object({
-            type: z.string(),
-            label: z.string(),
-            value: z.string(),
-            rarity_percent_of_100: z.number().optional(),
-          })
-        ),
-      })
-    )
-    .optional(),
+  attribute_groups: z.array(
+    z.object({
+      title: z.string(),
+      attributes: z.array(
+        z.object({
+          type: z.string(),
+          label: z.string(),
+          value: z.string(),
+          rarity_percent_of_100: z.number().optional(),
+        })
+      ),
+    })
+  ),
   marketplace_events: z
     .array(
       z.object({
