@@ -19,6 +19,31 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.78.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.77.0...@leather.io/mobile-v2.78.0) (2025-10-08)
+
+
+### Features
+
+* add balance analytics ([fe7cb14](https://github.com/leather-io/mono/commit/fe7cb144d819ad4001c900a62549e0c50f39f48f))
+* **mobile:** improve swap amount value positioning, add faux caret ([e793339](https://github.com/leather-io/mono/commit/e7933397e11641f05e205bd42df6eca32091f077))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.0
+    * @leather.io/bitcoin bumped to 0.32.9
+    * @leather.io/constants bumped to 0.26.0
+    * @leather.io/crypto bumped to 1.11.13
+    * @leather.io/provider bumped to 1.5.16
+    * @leather.io/query bumped to 2.42.5
+    * @leather.io/rpc bumped to 2.20.15
+    * @leather.io/services bumped to 1.34.2
+    * @leather.io/stacks bumped to 1.17.1
+    * @leather.io/ui bumped to 1.86.1
+    * @leather.io/utils bumped to 0.46.2
+
 ## [2.77.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.76.0...@leather.io/mobile-v2.77.0) (2025-10-07)
 
 

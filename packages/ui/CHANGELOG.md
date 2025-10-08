@@ -489,6 +489,20 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.86.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.86.0...@leather.io/ui-v1.86.1) (2025-10-08)
+
+
+### Bug Fixes
+
+* revert fix/extension-approver-animation ([0faede7](https://github.com/leather-io/mono/commit/0faede7723fc5bf95dafd0bd4f44ca2a79819915))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.46.2
+
 ## [1.86.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.85.0...@leather.io/ui-v1.86.0) (2025-10-07)
 
 

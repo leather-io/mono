@@ -768,6 +768,24 @@
     * @leather.io/rpc bumped to 2.20.14
     * @leather.io/stacks bumped to 1.17.0
 
+## [2.42.5](https://github.com/leather-io/mono/compare/@leather.io/query-v2.42.4...@leather.io/query-v2.42.5) (2025-10-08)
+
+
+### Bug Fixes
+
+* **query:** omit unused and massive payloads in `tx.vin[]` ([e1ee373](https://github.com/leather-io/mono/commit/e1ee373d7378b2f27763e3c7e20ac8342b189633))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.32.9
+    * @leather.io/constants bumped to 0.26.0
+    * @leather.io/rpc bumped to 2.20.15
+    * @leather.io/stacks bumped to 1.17.1
+    * @leather.io/utils bumped to 0.46.2
+
 ## [2.42.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.41.13...@leather.io/query-v2.42.0) (2025-09-08)
 
 

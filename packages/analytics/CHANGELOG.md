@@ -102,6 +102,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.43.0
 
+## [3.15.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.14.1...@leather.io/analytics-v3.15.0) (2025-10-08)
+
+
+### Features
+
+* add balance analytics ([fe7cb14](https://github.com/leather-io/mono/commit/fe7cb144d819ad4001c900a62549e0c50f39f48f))
+
 ## [3.14.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.13.2...@leather.io/analytics-v3.14.0) (2025-09-29)
 
 
