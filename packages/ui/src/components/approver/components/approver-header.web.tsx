@@ -6,7 +6,6 @@ import { isFunction, isString } from '@leather.io/utils';
 
 import { Favicon } from '../../favicon/favicon.web';
 import { Flag } from '../../flag/flag.web';
-import { ApproverHeaderAnimation } from '../animations/approver-animation.web';
 import { useApproverContext, useRegisterApproverChild } from '../approver-context.shared';
 
 interface ApproverHeaderProps {
@@ -27,14 +26,14 @@ export function ApproverHeader({ title, info, onPressRequestedByLink }: Approver
       pos="relative"
       backgroundColor="ink.background-primary"
     >
-      <ApproverHeaderAnimation>
+      <Box>
         <styled.h1 textStyle="heading.03" mr={info ? 'space.06' : undefined}>
           {title}
         </styled.h1>
-      </ApproverHeaderAnimation>
-      <ApproverHeaderAnimation delay={0.04}>
+      </Box>
+      <Box>
         <RequesterInfo onPressRequestedByLink={onPressRequestedByLink} />
-      </ApproverHeaderAnimation>
+      </Box>
       {info && (
         <Box pos="absolute" top="space.03" right="space.05" mt="space.02">
           {info}

@@ -30,19 +30,6 @@ export function useApproverChildrenEntryAnimation() {
   return scope;
 }
 
-interface ApproverHeaderAnimationProps extends HasChildren {
-  delay?: number;
-}
-export function ApproverHeaderAnimation({ delay = 0, ...props }: ApproverHeaderAnimationProps) {
-  return (
-    <motion.div
-      animate={{ x: [-18, 0], opacity: [0, 1] }}
-      transition={{ duration: 0.4, delay, ease: 'easeOut' }}
-      {...props}
-    />
-  );
-}
-
 const actionsContainerDelay = 0.64;
 export function ApproverActionsAnimationContainer(props: HasChildren) {
   return (
