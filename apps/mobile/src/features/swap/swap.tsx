@@ -8,7 +8,6 @@ import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
 import { currencyDecimalsMap, stxAsset } from '@leather.io/constants';
-import { FungibleCryptoAsset } from '@leather.io/models';
 import { AccountSwapAsset, getMarketDataService, getSwapService } from '@leather.io/services';
 import { Box, Button, Numpad } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
@@ -21,11 +20,12 @@ import { BaseAssetBalance } from './components/base-asset-balance';
 import { FlipButton } from './components/flip-button';
 import * as Panel from './components/panel';
 import { TargetAmountPreview } from './components/target-amount-preview';
+import { SupportedAsset } from './swap-state/swap-state.types';
 import { useSwapState } from './swap-state/use-swap-state';
 
 interface SwapProps {
-  baseAsset?: FungibleCryptoAsset;
-  targetAsset?: FungibleCryptoAsset;
+  baseAsset?: SupportedAsset;
+  targetAsset?: SupportedAsset;
 }
 
 export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
@@ -132,6 +132,5 @@ function createDecimalPlaceValidator(decimals = Infinity) {
 }
 
 function createAssetVisibilityPredicate(assetVisibility: AssetVisibility) {
-  return (asset: FungibleCryptoAsset) =>
-    assetVisibility[serializeAssetId(getAssetId(asset))] !== false;
+  return (asset: SupportedAsset) => assetVisibility[serializeAssetId(getAssetId(asset))] !== false;
 }

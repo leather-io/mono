@@ -2,12 +2,17 @@ import { useEffect, useMemo, useReducer } from 'react';
 
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
-import { AccountAddresses, FungibleCryptoAsset, QuoteCurrency } from '@leather.io/models';
+import { AccountAddresses, QuoteCurrency } from '@leather.io/models';
 import { AccountSwapAsset, MarketDataService, SwapService } from '@leather.io/services';
 import { getAssetId } from '@leather.io/utils';
 
 import { defaultSlippagePercentage, swapReducer } from './swap-state.reducer';
-import { PresetPercentage, SwapInternalState, UseSwapStateResult } from './swap-state.types';
+import {
+  PresetPercentage,
+  SupportedAsset,
+  SwapInternalState,
+  UseSwapStateResult,
+} from './swap-state.types';
 import {
   calculateFairMarketRate,
   computeSecondaryAmountState,
@@ -19,8 +24,8 @@ import { useDerivedAmounts } from './use-derived-amounts';
 import { useSwapQueries } from './use-swap-queries';
 
 export interface InitializeStateParams {
-  baseAsset?: FungibleCryptoAsset;
-  targetAsset?: FungibleCryptoAsset;
+  baseAsset?: SupportedAsset;
+  targetAsset?: SupportedAsset;
   quoteCurrencyPreference: QuoteCurrency;
 }
 
@@ -53,12 +58,12 @@ function initializeState({
 
 export interface UseSwapStateProps {
   accountRequest: { account: AccountAddresses };
-  baseAsset?: FungibleCryptoAsset;
-  targetAsset?: FungibleCryptoAsset;
+  baseAsset?: SupportedAsset;
+  targetAsset?: SupportedAsset;
   marketDataService: MarketDataService;
   swapService: SwapService;
   // TODO: Come up with a better name. This is an adapter for assetVisibility.
-  isAssetAllowed?: (asset: FungibleCryptoAsset) => boolean;
+  isAssetAllowed?: (asset: SupportedAsset) => boolean;
   quoteCurrencyPreference: QuoteCurrency;
 }
 

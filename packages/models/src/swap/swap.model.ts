@@ -1,9 +1,11 @@
 import { CryptoAssetId } from '../assets/asset-id.model';
-import { FungibleCryptoAsset } from '../assets/asset.model';
+import { NativeCryptoAsset, Sip10Asset } from '../assets/asset.model';
 import { Money } from '../money.model';
 
+export type SwappableFungibleCryptoAsset = NativeCryptoAsset | Sip10Asset;
+
 export interface SwapAsset {
-  asset: FungibleCryptoAsset;
+  asset: SwappableFungibleCryptoAsset;
   providerAssets: SwapProviderAsset[];
 }
 
@@ -29,7 +31,7 @@ export interface SwapQuote {
   targetAmount: number;
   quote: Money;
   dexPath: SwapDex[];
-  assetPath: FungibleCryptoAsset[];
+  assetPath: (NativeCryptoAsset | Sip10Asset)[];
 }
 
 export interface SwapDex {

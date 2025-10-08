@@ -1,6 +1,6 @@
+import { SupportedAsset } from '@/features/swap/swap-state/swap-state.types';
 import { t } from '@lingui/core/macro';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
 import {
   Box,
   BtcAvatarIcon,
@@ -13,7 +13,7 @@ import {
 } from '@leather.io/ui/native';
 
 interface AssetPickerTriggerProps {
-  asset: FungibleCryptoAsset | undefined;
+  asset: SupportedAsset | undefined;
   disabled?: boolean;
   onPress(): void;
 }
@@ -42,7 +42,7 @@ export function AssetSelectorToggle({ asset, onPress, disabled }: AssetPickerTri
   );
 }
 
-function renderAvatar(asset: FungibleCryptoAsset | undefined) {
+function renderAvatar(asset: SupportedAsset | undefined) {
   if (!asset) {
     return (
       <Box

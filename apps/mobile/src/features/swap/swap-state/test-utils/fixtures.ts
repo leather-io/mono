@@ -1,10 +1,11 @@
 /* eslint-disable lingui/no-unlocalized-strings */
+import { SupportedAsset } from '@/features/swap/swap-state/swap-state.types';
+
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import {
   CryptoAssetBalance,
   CryptoAssetId,
   Currency,
-  FungibleCryptoAsset,
   Sip10Asset,
   SwapDex,
   SwapExecutionType,
@@ -15,9 +16,7 @@ import {
 import { AccountRequest, AccountSwapAsset } from '@leather.io/services';
 import { createMoney } from '@leather.io/utils';
 
-export function createFungibleAsset(
-  overrides: Partial<FungibleCryptoAsset> = {}
-): FungibleCryptoAsset {
+export function createFungibleAsset(overrides: Partial<SupportedAsset> = {}): SupportedAsset {
   const protocol = overrides.protocol ?? 'nativeBtc';
 
   switch (protocol) {
@@ -64,7 +63,7 @@ function createBalance({
 }
 
 interface CreateAccountSwapAssetParams {
-  asset: Partial<FungibleCryptoAsset>;
+  asset: Partial<SupportedAsset>;
   balance?: {
     quote?: number;
     crypto?: number;
@@ -160,8 +159,8 @@ interface CreateSwapQuoteParams {
   providerId?: SwapProviderId;
   baseAmount?: number;
   targetAmount?: number;
-  baseAsset?: FungibleCryptoAsset;
-  targetAsset?: FungibleCryptoAsset;
+  baseAsset?: SupportedAsset;
+  targetAsset?: SupportedAsset;
   dexPath?: SwapDex[];
   providerQuoteData?: unknown;
 }

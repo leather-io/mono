@@ -4,6 +4,7 @@ import {
   SwapProviderAsset,
   SwapProviderId,
   SwapQuote,
+  SwappableFungibleCryptoAsset,
 } from '@leather.io/models';
 
 import { AccountRequest } from '../types';
@@ -14,9 +15,9 @@ export interface SwapProviderServiceGetTargetAssetParams {
 }
 
 export interface SwapProviderServiceGetSwapQuotesParams {
-  baseAsset: FungibleCryptoAsset;
+  baseAsset: SwappableFungibleCryptoAsset;
   baseProviderAsset: SwapProviderAsset;
-  targetAsset: FungibleCryptoAsset;
+  targetAsset: SwappableFungibleCryptoAsset;
   targetProviderAsset: SwapProviderAsset;
   baseAmount: number;
 }

@@ -11,6 +11,8 @@ import {
   SwapProviderAsset,
   SwapProviderId,
   SwapQuote,
+  SwappableFungibleCryptoAsset,
+  isSwappableAsset,
 } from '@leather.io/models';
 import { createMoneyFromDecimal, getAssetId } from '@leather.io/utils';
 
@@ -132,7 +134,7 @@ export class BitflowSwapProviderService implements SwapProviderService {
   private async getAssetPathAssets(
     pathKeys: string[],
     signal?: AbortSignal
-  ): Promise<FungibleCryptoAsset[]> {
+  ): Promise<SwappableFungibleCryptoAsset[]> {
     const allSwapAssets = await this.getBaseSwapAssets();
     const promises = pathKeys
       .map(key => allSwapAssets.find(a => a.providerAssetId === key))
@@ -141,7 +143,8 @@ export class BitflowSwapProviderService implements SwapProviderService {
     const results = await Promise.allSettled(promises);
     return results
       .map(result => (result.status === 'fulfilled' ? result.value : null))
-      .filter(isNonNullish);
+      .filter(isNonNullish)
+      .filter(isSwappableAsset);
   }
 
   async getSwapExecutionData({
