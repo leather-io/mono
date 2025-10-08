@@ -56,7 +56,12 @@ interface MediaInfo {
 }
 
 export function Sip9({
-  item: { contentType, name, cachedImage },
+  item: {
+    providerData: {
+      contentType,
+      details: { name, cachedImage },
+    },
+  },
   height = 200,
   onPress,
 }: Sip9Props) {

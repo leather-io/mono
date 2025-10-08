@@ -125,7 +125,7 @@ export function renderCollectibleDetailsRecursively(
       }
     })
     .filter(Boolean)
-    .map(item => {
+    .forEach(item => {
       if (item) items.push(item);
     });
 
@@ -133,7 +133,10 @@ export function renderCollectibleDetailsRecursively(
   if (items.length === 0 && nestedCards.length === 0) return [];
 
   const currentCard = (
-    <TokenDetailsCard key={title + `-${keyIndex}` || 'details'} title={title || t`Details`}>
+    <TokenDetailsCard
+      key={`${title || 'details'}-${keyIndex ? `-${keyIndex}` : ''}`}
+      title={title || t`Details`}
+    >
       <SummaryTableRoot>{items}</SummaryTableRoot>
     </TokenDetailsCard>
   );

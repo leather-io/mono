@@ -4,8 +4,8 @@ import { Sip9Asset } from '@leather.io/models';
 
 import { GammaApiClient } from '../infrastructure/api/gamma/gamma-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
-import { getContractPrincipalFromAssetIdentifier } from './stacks-asset.utils';
 import { createSip9Asset, getNonFungibleTokenId } from './sip9-asset.utils';
+import { getContractPrincipalFromAssetIdentifier } from './stacks-asset.utils';
 
 @injectable()
 export class Sip9AssetService {

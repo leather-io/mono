@@ -107,6 +107,13 @@ export interface Sip9Details {
   collection?: Sip9Collection;
   attributes?: Sip9Attribute[];
 }
+
+interface Sip9ProviderData {
+  attributes?: Sip9Attribute[];
+  contentType: SupportedSip9ContentType;
+  details: Sip9Details;
+}
+
 export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly chain: 'stacks';
   readonly protocol: 'sip9';
@@ -117,7 +124,5 @@ export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly description: string;
   readonly cachedImage: string;
   readonly cachedImageThumbnail: string;
-  readonly contentType: SupportedSip9ContentType;
-  readonly details: Sip9Details;
-  readonly collection?: Sip9Collection;
+  readonly providerData: Sip9ProviderData;
 }
