@@ -4,16 +4,14 @@ import { t } from '@lingui/core/macro';
 import { Button, ButtonProps } from '@leather.io/ui/native';
 
 interface ActionButtonsProps {
-  canSend?: boolean;
   fullWidth?: boolean;
   size?: ButtonProps['size'];
-  onSend(): void;
-  onReceive(): void;
-  onSwap(): void;
+  onSend?(): void;
+  onReceive?(): void;
+  onSwap?(): void;
 }
 
 export function ActionButtons({
-  canSend = true,
   fullWidth = false,
   size = 'md',
   onSend,
@@ -24,25 +22,23 @@ export function ActionButtons({
 
   return (
     <>
-      <Button
-        onPress={onSend}
-        disabled={!canSend}
-        minWidth={86}
-        size={size}
-        flex={fullWidth ? 1 : 0}
-      >
-        {t`Send`}
-      </Button>
-      <Button
-        onPress={onReceive}
-        minWidth={86}
-        size={size}
-        variant="outline"
-        flex={fullWidth ? 1 : 0}
-      >
-        {t`Receive`}
-      </Button>
-      {isSwapEnabled ? (
+      {onSend && (
+        <Button onPress={onSend} minWidth={86} size={size} flex={fullWidth ? 1 : 0}>
+          {t`Send`}
+        </Button>
+      )}
+      {onReceive && (
+        <Button
+          onPress={onReceive}
+          minWidth={86}
+          size={size}
+          variant="outline"
+          flex={fullWidth ? 1 : 0}
+        >
+          {t`Receive`}
+        </Button>
+      )}
+      {onSwap && isSwapEnabled && (
         <Button
           onPress={onSwap}
           minWidth={86}
@@ -52,7 +48,7 @@ export function ActionButtons({
         >
           {t`Swap`}
         </Button>
-      ) : null}
+      )}
     </>
   );
 }
