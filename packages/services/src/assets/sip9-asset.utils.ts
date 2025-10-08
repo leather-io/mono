@@ -142,7 +142,10 @@ export function createSip9Asset(
     description: details.description,
     cachedImage: details.cachedImage,
     cachedImageThumbnail: details.cachedImageThumbnail,
-    contentType: details.contentType,
-    details,
+    providerData: {
+      attributes: details.attributes,
+      contentType: details.contentType,
+      details,
+    },
   };
 }

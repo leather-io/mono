@@ -568,7 +568,7 @@ msgstr "Deployment failed"
 msgid "Description"
 msgstr "Description"
 
-#: src/features/token/utils/render-collectible-details.tsx:136
+#: src/features/token/utils/render-collectible-details.tsx:138
 msgid "Details"
 msgstr "Details"
 
