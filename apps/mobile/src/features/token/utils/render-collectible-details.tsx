@@ -82,7 +82,7 @@ function getSortedEntries(obj: Record<string, any>, sortOrder: string[]) {
 export function renderCollectibleDetailsRecursively(
   obj: Record<string, any>,
   title?: string,
-  keyIndex?: number
+  keyPrefix?: string
 ): React.ReactNode[] {
   const items: React.ReactNode[] = [];
   const nestedCards: React.ReactNode[] = [];
@@ -102,22 +102,23 @@ export function renderCollectibleDetailsRecursively(
 
       // Handle arrays - used by attributes
       if (Array.isArray(value)) {
-        // Skip empty arrays
         if (value.length === 0) return null;
 
         // Only process arrays of objects
         if (isObject(value[0])) {
-          value.map((item, index) => {
-            nestedCards.push(...renderCollectibleDetailsRecursively(item, label, index));
+          value.forEach((item, index) => {
+            const newPrefix = `${keyPrefix || 'root'}-${key}-${index}`;
+            nestedCards.push(...renderCollectibleDetailsRecursively(item, label, newPrefix));
           });
           return null;
         }
 
-        // For arrays of primitives, render as JSON string (existing behavior)
+        // For arrays of primitives, render normally
         return <SummaryTableItem key={key} label={label} value={renderValue(value, key)} />;
       } else if (isObject(value) && value !== null && !Array.isArray(value)) {
         // Collect nested cards to render after this card
-        nestedCards.push(...renderCollectibleDetailsRecursively(value, label));
+        const newPrefix = `${keyPrefix || 'root'}-${key}`;
+        nestedCards.push(...renderCollectibleDetailsRecursively(value, label, newPrefix));
         return null;
       } else {
         // Collect primitive values as table items
@@ -134,7 +135,7 @@ export function renderCollectibleDetailsRecursively(
 
   const currentCard = (
     <TokenDetailsCard
-      key={`${title || 'details'}-${keyIndex ? `-${keyIndex}` : ''}`}
+      key={`${title || 'details'}-${keyPrefix ? `-${keyPrefix}` : ''}`}
       title={title || t`Details`}
     >
       <SummaryTableRoot>{items}</SummaryTableRoot>
