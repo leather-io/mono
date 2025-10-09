@@ -1,6 +1,8 @@
 import z from 'zod';
 
-import { Optional, entitySchema } from '../utils';
+import { entitySchema } from '../entity.helpers';
+
+export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 const abstractWalletSchema = z.object({
   fingerprint: z.string(),

@@ -9,9 +9,10 @@ import {
   DefaultNetworkConfigurations,
   QuoteCurrency,
 } from '@leather.io/models';
+import { handleAppResetWithState } from '@leather.io/state';
+import { userAddsWallet } from '@leather.io/state/wallet';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { handleAppResetWithState, userAddsWallet } from '../global-action';
 import { initialState } from './settings';
 import { handleSettingsRehydration } from './settings-rehydration';
 import {

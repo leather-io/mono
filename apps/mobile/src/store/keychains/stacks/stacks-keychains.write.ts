@@ -1,8 +1,9 @@
 import { userAddsAccount } from '@/store/accounts/accounts.write';
-import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '@/store/global-action';
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
+import { handleAppResetWithState } from '@leather.io/state';
+import { userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
 import { handleEntityActionWith } from '../../utils';
 import { filterKeychainsToRemove } from '../keychains';

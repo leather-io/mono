@@ -4,13 +4,12 @@ import { produce } from 'immer';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
+import { entitySchema, handleAppResetWithState } from '@leather.io/state';
+import { Optional, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
-import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
 import { BitcoinKeychain } from '../keychains/bitcoin/utils';
 import { StacksKeychain } from '../keychains/stacks/utils';
 import {
-  Optional,
-  entitySchema,
   getWalletAccountsByAccountId,
   handleEntityActionWith,
   selectNextDistinctAccountIcon,

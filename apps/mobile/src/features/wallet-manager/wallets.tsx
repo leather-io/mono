@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { WalletStore } from '@/store/wallets/utils';
 import { t } from '@lingui/core/macro';
+
+import { WalletStore } from '@leather.io/state/wallet';
 
 interface WalletListLayoutProps {
   wallets: WalletStore[];
