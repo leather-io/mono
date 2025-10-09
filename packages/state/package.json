@@ -1,0 +1,53 @@
+{
+  "name": "@leather.io/state",
+  "author": "Leather.io contact@leather.io",
+  "description": "Shared state management utilities",
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/leather.io/mono/tree/dev/packages/state",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather.io/mono.git",
+    "directory": "packages/state"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run",
+    "typecheck": "tsc --noEmit -p ./tsconfig.json"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./wallet": "./dist/wallet/index.js"
+  },
+  "bugs": "https://github.com/leather-io/mono/issues",
+  "dependencies": {
+    "@leather.io/models": "workspace:*",
+    "@leather.io/utils": "workspace:*",
+    "@reduxjs/toolkit": "2.8.1",
+    "immer": "10.1.1",
+    "zod": "4.0.17"
+  },
+  "devDependencies": {
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/tsconfig-config": "workspace:*",
+    "prettier": "3.5.1",
+    "tslib": "2.6.2",
+    "tsup": "8.4.0",
+    "typescript": "5.8.3",
+    "vitest": "2.1.9"
+  },
+  "keywords": [
+    "state",
+    "leather",
+    "leather wallet"
+  ],
+  "prettier": "@leather.io/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  }
+}

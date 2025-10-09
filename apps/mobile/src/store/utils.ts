@@ -1,7 +1,6 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import { EntityState, PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
-import z from 'zod';
 
 import {
   extractAddressIndexFromPath,
@@ -85,13 +84,4 @@ export function handleEntityActionWith<State, Payload, R extends AdapterMethod<S
     const selectedPayload = payloadSelector(action.payload, state);
     adapterMethod(state, selectedPayload);
   };
-}
-
-export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
-
-export function entitySchema<T extends z.ZodTypeAny>(genericEntitySchema: T) {
-  return z.object({
-    ids: z.array(z.string()),
-    entities: z.record(z.string(), genericEntitySchema),
-  });
 }

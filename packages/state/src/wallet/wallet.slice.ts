@@ -1,28 +1,11 @@
-import { t } from '@lingui/core/macro';
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
 
 import { WalletId } from '@leather.io/models';
 
-import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
-import { handleEntityActionWith } from '../utils';
-import { PartialWalletStore, WalletStore } from './utils';
-
-function addWalletDefaults({
-  wallet,
-  walletIdx,
-}: {
-  wallet: PartialWalletStore;
-  walletIdx: number;
-}): WalletStore {
-  const updatedWallet = produce(wallet, draftWallet => {
-    if (!draftWallet.name) {
-      draftWallet.name = t`Wallet ${walletIdx}`;
-    }
-    return draftWallet;
-  });
-  return updatedWallet as WalletStore;
-}
+import { handleEntityActionWith } from '../entity.helpers';
+import { handleAppResetWithState } from '../index';
+import { PartialWalletStore, WalletStore } from './wallet.utils';
 
 export const walletAdapter = createEntityAdapter<WalletStore, string>({
   selectId: key => key.fingerprint,
@@ -34,6 +17,34 @@ interface RenameWalletPayload extends WalletId {
   name: string;
 }
 export const userRenamesWallet = createAction<RenameWalletPayload>('accounts/renameAccount');
+
+function addWalletDefaults({
+  wallet,
+  walletIdx,
+}: {
+  wallet: PartialWalletStore;
+  walletIdx: number;
+}): WalletStore {
+  const updatedWallet = produce(wallet, draftWallet => {
+    if (!draftWallet.name) {
+      draftWallet.name = `Wallet ${walletIdx}`;
+    }
+    return draftWallet;
+  });
+  return updatedWallet as WalletStore;
+}
+
+export interface AddWalletAction {
+  wallet: PartialWalletStore;
+  withKeychains: {
+    bitcoin: any[];
+    stacks: any[];
+  };
+}
+export const userAddsWallet = createAction<AddWalletAction>('global/userAddsWallet');
+
+type RemoveWalletAction = WalletId;
+export const userRemovesWallet = createAction<RemoveWalletAction>('global/userRemovesWallet');
 
 export const walletSlice = createSlice({
   name: 'wallets',
