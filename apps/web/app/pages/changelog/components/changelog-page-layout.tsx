@@ -33,7 +33,7 @@ export function ChangelogEntryLayout(props: ChangelogEntryLayoutProps) {
         <Box
           width={['auto', null, null, '200px']}
           position={[null, null, null, 'sticky']}
-          mt={[null, null, null, '6px']}
+          mt={[null, null, null, '2px']}
           top={[null, null, null, '10px']}
         >
           {props.leftColumn}
