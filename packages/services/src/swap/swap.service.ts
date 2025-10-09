@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { groupBy, isNonNullish } from 'remeda';
+import { firstValueFrom } from 'rxjs';
 
 import {
   CryptoAssetBalance,
@@ -70,7 +71,7 @@ export class SwapService {
     const [baseSwapAssets, btcBalance, stxBalance, sip10Balances] = await Promise.all([
       this.getBaseSwapAssets(signal),
       this.btcBalancesService.getBtcAccountBalance(request, signal),
-      this.stxBalancesService.getStxAccountBalance(request, signal),
+      firstValueFrom(this.stxBalancesService.getStxAccountBalance(request, signal)),
       this.sip10BalancesService.getSip10AccountBalance(request, signal),
     ]);
     return baseSwapAssets.map(swapAsset =>
@@ -86,7 +87,7 @@ export class SwapService {
     const [targetSwapAssets, btcBalance, stxBalance, sip10Balances] = await Promise.all([
       this.getTargetSwapAssets(baseId, signal),
       this.btcBalancesService.getBtcAccountBalance(request, signal),
-      this.stxBalancesService.getStxAccountBalance(request, signal),
+      firstValueFrom(this.stxBalancesService.getStxAccountBalance(request, signal)),
       this.sip10BalancesService.getSip10AccountBalance(request, signal),
     ]);
     return targetSwapAssets.map(swapAsset =>

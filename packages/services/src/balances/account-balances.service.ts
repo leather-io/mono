@@ -1,4 +1,5 @@
 import { injectable } from 'inversify';
+import { firstValueFrom } from 'rxjs';
 
 import { Money } from '@leather.io/models';
 import { isDefined, sumMoney } from '@leather.io/utils';
@@ -21,7 +22,7 @@ export class AccountBalancesService {
   public async getTotalBalance(request: AccountRequest, signal?: AbortSignal): Promise<Money> {
     const [btcBalance, stxBalance, sip10Balance, runesBalance] = await Promise.all([
       this.btcBalancesService.getBtcAccountBalance(request, signal),
-      this.stxBalancesService.getStxAccountBalance(request, signal),
+      firstValueFrom(this.stxBalancesService.getStxAccountBalance(request, signal)),
       this.sip10BalancesService.getSip10AccountBalance(request, signal),
       this.runesBalancesService.getRunesAccountBalance(request, signal),
     ]);
@@ -39,7 +40,7 @@ export class AccountBalancesService {
   public async getUnlockedBalance(request: AccountRequest, signal?: AbortSignal): Promise<Money> {
     const [btcBalance, stxBalance, sip10Balance, runesBalance] = await Promise.all([
       this.btcBalancesService.getBtcAccountBalance(request, signal),
-      this.stxBalancesService.getStxAccountBalance(request, signal),
+      firstValueFrom(this.stxBalancesService.getStxAccountBalance(request, signal)),
       this.sip10BalancesService.getSip10AccountBalance(request, signal),
       this.runesBalancesService.getRunesAccountBalance(request, signal),
     ]);

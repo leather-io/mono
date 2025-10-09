@@ -1,3 +1,5 @@
+import { firstValueFrom } from 'rxjs';
+
 import { initBigNumber } from '@leather.io/utils';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
@@ -80,7 +82,9 @@ describe(StxBalancesService.name, () => {
 
     it('retrieves stx balance using stacks api account balance and pending transactions', async () => {
       const signal = new AbortController().signal;
-      const balance = await stxBalancesService.getStxAccountBalance(request, signal);
+      const balance = await firstValueFrom(
+        stxBalancesService.getStxAccountBalance(request, signal)
+      );
       expect(mockStacksApiClient.getAddressStxBalance).toHaveBeenCalledWith(stacksAddress1, {
         signal,
       });
@@ -99,7 +103,7 @@ describe(StxBalancesService.name, () => {
     });
 
     it('uses market data to calculate usd-denominated balances', async () => {
-      const balance = await stxBalancesService.getStxAccountBalance(request);
+      const balance = await firstValueFrom(stxBalancesService.getStxAccountBalance(request));
       expect(mockMarketDataService.getMarketData).toHaveBeenCalled();
       expect(balance.quote.totalBalance.amount).toEqual(initBigNumber(500));
       expect(balance.quote.lockedBalance.amount).toEqual(initBigNumber(100));
@@ -140,11 +144,9 @@ describe(StxBalancesService.name, () => {
     });
 
     it('sums address balances into aggregate stx and usd balances', async () => {
-      const aggregateBalance = await stxBalancesService.getStxAggregateBalance([
-        request1,
-        request2,
-        request3,
-      ]);
+      const aggregateBalance = await firstValueFrom(
+        stxBalancesService.getStxAggregateBalance([request1, request2, request3])
+      );
       expect(aggregateBalance.stx.totalBalance.amount).toEqual(initBigNumber(5000000 * 3));
       expect(aggregateBalance.stx.lockedBalance.amount).toEqual(initBigNumber(1000000 * 3));
       expect(aggregateBalance.stx.unlockedBalance.amount).toEqual(initBigNumber(4000000 * 3));

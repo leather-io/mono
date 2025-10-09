@@ -1,4 +1,6 @@
 import { inject, injectable } from 'inversify';
+import { BehaviorSubject, Observable, combineLatest, map, of } from 'rxjs';
+import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 
 import { stxAsset } from '@leather.io/constants';
 import { StxBalance } from '@leather.io/models';
@@ -35,6 +37,8 @@ const stxAssetZeroBalance = createStxBalance(createMoney(0, 'STX'));
 
 @injectable()
 export class StxBalancesService {
+  stxAccountBalances$ = new BehaviorSubject<QuotedStxBalance | null>(null);
+
   constructor(
     @inject(Types.SettingsService) private readonly settingsService: SettingsService,
     private readonly stacksApiClient: HiroStacksApiClient,
@@ -45,74 +49,84 @@ export class StxBalancesService {
   /**
    * Gets cumulative STX balance of Stacks address list, denominated in both STX and quote currency.
    */
-  public async getStxAggregateBalance(
+  public getStxAggregateBalance(
     requests: AccountRequest[],
     signal?: AbortSignal
-  ): Promise<QuotedStxBalance> {
-    const addressBalances = await Promise.all(
-      requests.map(request => this.getStxAccountBalance(request, signal))
+  ): Observable<QuotedStxBalance> {
+    return combineLatest(requests.map(request => this.getStxAccountBalance(request, signal))).pipe(
+      map(addressBalances => {
+        const cumulativeStxBalance =
+          addressBalances.length > 0
+            ? aggregateStxBalances(addressBalances.map(r => r.stx))
+            : stxAssetZeroBalance;
+
+        const cumulativeQuoteBalance =
+          addressBalances.length > 0
+            ? aggregateStxBalances(addressBalances.map(r => r.quote))
+            : createStxBalance(createMoney(0, this.settingsService.getSettings().quoteCurrency));
+
+        return {
+          stx: cumulativeStxBalance,
+          quote: cumulativeQuoteBalance,
+        };
+      })
     );
-
-    const cumulativeStxBalance =
-      addressBalances.length > 0
-        ? aggregateStxBalances(addressBalances.map(r => r.stx))
-        : stxAssetZeroBalance;
-
-    const cumulativeQuoteBalance =
-      addressBalances.length > 0
-        ? aggregateStxBalances(addressBalances.map(r => r.quote))
-        : createStxBalance(createMoney(0, this.settingsService.getSettings().quoteCurrency));
-
-    return {
-      stx: cumulativeStxBalance,
-      quote: cumulativeQuoteBalance,
-    };
   }
   /**
    * Gets STX balance of given account, denominated in both STX and quote currency.
    */
-  public async getStxAccountBalance(
+  public getStxAccountBalance(
     request: AccountRequest,
     signal?: AbortSignal
-  ): Promise<AddressQuotedStxBalance> {
+  ): Observable<AddressQuotedStxBalance> {
     if (!hasStacksAddress(request.account)) {
-      return {
+      return of({
         stx: stxAssetZeroBalance,
         quote: createStxBalance(createMoney(0, this.settingsService.getSettings().quoteCurrency)),
-      };
+      });
     }
     return this.getStxAddressBalance(request.account.stacks.stxAddress, signal);
   }
 
-  public async getStxAddressBalance(
-    address: string,
-    signal?: AbortSignal
-  ): Promise<AddressQuotedStxBalance> {
-    const [addressStxBalanceResponse, pendingTransactions, stxMarketData] = await Promise.all([
-      this.stacksApiClient.getAddressStxBalance(address, { signal }),
-      this.stacksTransactionsService.getPendingTransactions(address, signal),
-      this.marketDataService.getMarketData(stxAsset, signal),
-    ]);
+  public getStxAddressBalance(address: string, signal?: AbortSignal) {
+    const balance$ = fromPromise(
+      Promise.all([
+        this.stacksApiClient.getAddressStxBalance(address, { signal }),
+        this.stacksTransactionsService.getPendingTransactions(address, signal),
+        this.marketDataService.getMarketData(stxAsset, signal),
+      ])
+    );
 
-    const totalBalanceStx = createMoney(readStxTotalBalance(addressStxBalanceResponse), 'STX');
-    const lockedBalanceStx = createMoney(readStxLockedBalance(addressStxBalanceResponse), 'STX');
-    const inboundBalanceStx = calculateInboundStxBalance(address, pendingTransactions);
-    const outboundBalanceStx = calculateOutboundStxBalance(address, pendingTransactions);
+    return balance$.pipe(
+      map(([addressStxBalanceResponse, pendingTransactions, stxMarketData]) => {
+        const totalBalanceStx = createMoney(readStxTotalBalance(addressStxBalanceResponse), 'STX');
+        const lockedBalanceStx = createMoney(
+          readStxLockedBalance(addressStxBalanceResponse),
+          'STX'
+        );
+        const outboundBalanceStx = calculateOutboundStxBalance(address, pendingTransactions);
+        const inboundBalanceStx = calculateInboundStxBalance(address, pendingTransactions);
 
-    return {
-      address,
-      stx: createStxBalance(
-        totalBalanceStx,
-        inboundBalanceStx,
-        outboundBalanceStx,
-        lockedBalanceStx
-      ),
-      quote: createStxBalance(
-        baseCurrencyAmountInQuote(totalBalanceStx, stxMarketData),
-        baseCurrencyAmountInQuote(inboundBalanceStx, stxMarketData),
-        baseCurrencyAmountInQuote(outboundBalanceStx, stxMarketData),
-        baseCurrencyAmountInQuote(lockedBalanceStx, stxMarketData)
-      ),
-    };
+        return {
+          address,
+          stx: createStxBalance(
+            totalBalanceStx,
+            inboundBalanceStx,
+            outboundBalanceStx,
+            lockedBalanceStx
+          ),
+          quote: createStxBalance(
+            baseCurrencyAmountInQuote(totalBalanceStx, stxMarketData),
+            baseCurrencyAmountInQuote(inboundBalanceStx, stxMarketData),
+            baseCurrencyAmountInQuote(outboundBalanceStx, stxMarketData),
+            baseCurrencyAmountInQuote(lockedBalanceStx, stxMarketData)
+          ),
+        };
+      })
+    );
+  }
+
+  public subscribe() {
+    return [];
   }
 }

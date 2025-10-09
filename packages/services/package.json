@@ -46,6 +46,7 @@
     "p-queue": "8.1.1",
     "reflect-metadata": "0.2.2",
     "remeda": "2.21.2",
+    "rxjs": "7.8.2",
     "uuid": "11.1.0",
     "zod": "4.0.17"
   },
