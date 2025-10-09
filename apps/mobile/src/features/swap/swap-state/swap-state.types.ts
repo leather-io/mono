@@ -1,3 +1,4 @@
+import { ValidationResult } from '@/features/swap/swap-state/validation/swap-validation';
 import { InputCurrencyMode } from '@/utils/types';
 import { UseQueryResult } from '@tanstack/react-query';
 
@@ -33,7 +34,6 @@ export interface SwapInternalState {
   nonce?: number;
   inputCurrencyMode: InputCurrencyMode;
   selectingAsset: 'base' | 'target' | null;
-  validation: [];
 }
 
 export interface SwapState extends SwapInternalState {
@@ -76,6 +76,7 @@ export interface SwapActions {
 export interface UseSwapStateResult {
   state: SwapState;
   actions: SwapActions;
+  validation: ValidationResult;
   baseAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   targetAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;

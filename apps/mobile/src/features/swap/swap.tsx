@@ -1,13 +1,14 @@
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { AmountPresets } from '@/features/swap/components/amount-presets';
+import { ErrorMessage } from '@/features/swap/components/error-message';
 import { useAccountRequest } from '@/hooks/use-account-request';
 import { useSettings } from '@/store/settings/settings';
 import { AssetVisibility } from '@/store/settings/utils';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
-import { currencyDecimalsMap, stxAsset } from '@leather.io/constants';
+import { currencyDecimalsMap } from '@leather.io/constants';
 import { AccountSwapAsset, getMarketDataService, getSwapService } from '@leather.io/services';
 import { Box, Button, Numpad } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
@@ -28,7 +29,7 @@ interface SwapProps {
   targetAsset?: SupportedAsset;
 }
 
-export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
+export function Swap({ baseAsset, targetAsset }: SwapProps) {
   const { assetVisibility, fiatCurrencyPreference } = useSettings();
   const accountRequest = useAccountRequest();
   const { state, actions, baseAssetsQuery, targetAssetsQuery, quoteQuery } = useSwapState({
@@ -94,6 +95,8 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
         </Panel.Card>
         <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
       </Panel.Root>
+
+      <ErrorMessage amount={state.baseAmount} errorMessage="dogs" />
 
       <Box flex={1} justifyContent="flex-end" gap="4">
         <AmountPresets onSelectPercentage={actions.setBaseAmountByPercentage} />

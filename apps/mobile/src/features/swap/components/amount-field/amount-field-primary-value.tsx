@@ -1,6 +1,8 @@
 import { ReactNode, useState } from 'react';
 import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native';
 
+import { decimalSeparator } from '@/features/swap/swap.utils';
+
 import { Currency } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
@@ -67,7 +69,6 @@ export function formatPrimaryValue({
   showCurrency,
   locale = 'en',
 }: FormatPrimaryValueParams) {
-  const decimalSeparator = '.';
   const decimalPart = value.split(decimalSeparator)[1];
   const fractionDigits = decimalPart?.length ?? 0;
 

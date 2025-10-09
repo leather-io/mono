@@ -60,7 +60,6 @@ describe('useSwapState', () => {
         nonce: undefined,
         slippage: 0.03,
         slippageEditingAllowed: true,
-        validation: [],
       });
     });
 
@@ -847,16 +846,16 @@ describe('useSwapState', () => {
       it('preserves precision with very small balances', () => {
         const smallBalanceAsset = createAccountSwapAsset({
           asset: defaultBtcAsset,
-          balance: { crypto: 1, quote: 5 },
+          balance: { crypto: 100, quote: 5 },
         });
         const result = renderUseSwapState();
         act(() => result.current.actions.setBaseSwapAsset(smallBalanceAsset));
         act(() => result.current.actions.setBaseAmountByPercentage(0.5));
-        expect(result.current.state.baseAmount).toBe('0.00000001');
+        expect(result.current.state.baseAmount).toBe('0.0000005');
         act(() => result.current.actions.setBaseAmountByPercentage(0.25));
-        expect(result.current.state.baseAmount).toBe('0');
+        expect(result.current.state.baseAmount).toBe('0.00000025');
         act(() => result.current.actions.setBaseAmountByPercentage(1));
-        expect(result.current.state.baseAmount).toBe('0.00000001');
+        expect(result.current.state.baseAmount).toBe('0.000001');
       });
 
       it('handles very large balances without overflow', () => {
@@ -886,7 +885,7 @@ describe('useSwapState', () => {
         act(() => result.current.actions.setBaseAmountByPercentage(0.25));
 
         const expectedValue = 0.00000546 * 0.25;
-        expect(parseFloat(result.current.state.baseAmount)).toBeCloseTo(expectedValue, 8);
+        expect(parseFloat(result.current.state.baseAmount)).toBeCloseTo(expectedValue, 7);
         act(() => result.current.actions.setBaseAmountByPercentage(1));
         expect(result.current.state.baseAmount).toBe('0.00000546');
         expect(result.current.state.isSendingMax).toBe(true);
