@@ -13,7 +13,7 @@ import {
   isValidStacksMemo,
   validatePayerNotRecipient,
 } from '@leather.io/stacks';
-import { isValidPrecision, stxToMicroStx } from '@leather.io/utils';
+import { countDecimals, stxToMicroStx } from '@leather.io/utils';
 
 interface SchemaCreationParams {
   calculateStxMaxSpend: CalculateStxMaxSpend;
@@ -110,7 +110,7 @@ function stxAmountValidator(
     return z.NEVER;
   }
 
-  if (!isValidPrecision(numericAmount, decimals)) {
+  if (countDecimals(amount) > decimals) {
     context.addIssue({
       code: z.ZodIssueCode.custom,
       message: errorMessages.invalidPrecision(decimals),
