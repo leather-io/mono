@@ -1,4 +1,8 @@
 import {
+  SupportedProtocol,
+  getProtocolStrategy,
+} from '@/features/swap/strategies/protocol/protocol';
+import {
   PresetPercentage,
   SecondaryAmount,
   SupportedAsset,
@@ -9,16 +13,27 @@ import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import BigNumber from 'bignumber.js';
 import { filter, pipe, sortBy } from 'remeda';
 
-import { MarketData, Money, isBtcAsset, isSip10Asset, isStxAsset } from '@leather.io/models';
+import {
+  CryptoAssetBalance,
+  MarketData,
+  Money,
+  isBtcAsset,
+  isSip10Asset,
+  isStxAsset,
+} from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 
 export function convertMoneyToInputValue(money: Money | null): string {
   if (!money) return '';
   return money.amount
     .shiftedBy(-money.decimals)
-    .toFixed(money.decimals, BigNumber.ROUND_HALF_UP)
+    .toFixed(money.decimals, BigNumber.ROUND_DOWN)
     .replace(/\.0+$/, '')
     .replace(/(\.\d*?)0+$/, '$1');
+}
+
+export function isUserInputEffectivelyZero(input: string) {
+  return parseFloat(input) === 0;
 }
 
 export function calculatePercentageAmount(
@@ -27,11 +42,10 @@ export function calculatePercentageAmount(
 ): string {
   if (!balance) return '0';
 
-  const amount = balance.amount.multipliedBy(percentage);
-  const adjustedAmount = amount.shiftedBy(-balance.decimals);
-
-  return adjustedAmount
-    .toFixed(balance.decimals, BigNumber.ROUND_HALF_UP)
+  return balance.amount
+    .multipliedBy(percentage)
+    .shiftedBy(-balance.decimals)
+    .toFixed(balance.decimals, BigNumber.ROUND_DOWN)
     .replace(/\.0+$/, '')
     .replace(/(\.\d*?)0+$/, '$1');
 }
@@ -39,17 +53,12 @@ export function calculatePercentageAmount(
 export function adjustAmountForDecimals(amount: string, maxDecimals: number): string {
   if (amount === '') return amount;
 
-  const [whole = '', fractional = ''] = amount.split('.');
+  const [whole = '', decimals = ''] = amount.split('.');
 
-  if (maxDecimals === 0) {
-    return whole;
-  }
+  if (maxDecimals === 0 || isUserInputEffectivelyZero(amount)) return whole;
+  if (decimals.length <= maxDecimals) return amount;
 
-  if (fractional.length <= maxDecimals) {
-    return amount;
-  }
-
-  const truncatedFractional = fractional.substring(0, maxDecimals);
+  const truncatedFractional = decimals.substring(0, maxDecimals);
   return truncatedFractional ? `${whole}.${truncatedFractional}` : whole;
 }
 
@@ -203,4 +212,30 @@ export function estimateExchangeRate(baseAmount: number, targetAmount: number): 
   const base = new BigNumber(baseAmount);
   if (base.isZero()) return 0;
   return new BigNumber(targetAmount).div(base).toNumber();
+}
+
+export function resolveSpendableBalanceInCurrencyMode(
+  balance: { crypto: CryptoAssetBalance; quote: CryptoAssetBalance } | undefined,
+  protocol: SupportedProtocol | undefined,
+  inputCurrencyMode: InputCurrencyMode
+): Money | null {
+  if (!balance || !protocol) return null;
+
+  const { resolveSpendableBalance: resolve } = getProtocolStrategy(protocol);
+  const selectedBalance = whenInputCurrencyMode(inputCurrencyMode)({
+    crypto: balance.crypto,
+    quote: balance.quote,
+  });
+
+  return resolve(selectedBalance);
+}
+
+export function resolveMinimumSpendAmount(protocol: SupportedProtocol | undefined): number {
+  if (!protocol) return 0;
+  return getProtocolStrategy(protocol).getMinimumSpendAmount();
+}
+
+export function resolveMaximumSpendAmount(protocol: SupportedProtocol | undefined): number {
+  if (!protocol) return Number.POSITIVE_INFINITY;
+  return getProtocolStrategy(protocol).getMaximumSpendAmount();
 }

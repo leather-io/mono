@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useReducer } from 'react';
 
+import { runValidation } from '@/features/swap/swap-state/validation/swap-validation';
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap.constants';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
@@ -53,7 +54,6 @@ function initializeState({
     slippage: DEFAULT_SLIPPAGE_PERCENTAGE,
     slippageEditingAllowed: true,
     selectingAsset: null,
-    validation: [],
   };
 }
 
@@ -63,7 +63,7 @@ export interface UseSwapStateProps {
   targetAsset?: SupportedAsset;
   marketDataService: MarketDataService;
   swapService: SwapService;
-  // TODO: Come up with a better name. This is an adapter for assetVisibility.
+  // TODO: To be removed: https://linear.app/leather-io/issue/LEA-3218/apply-asset-visibility-settings-to-swapasset-lists
   isAssetAllowed?: (asset: SupportedAsset) => boolean;
   quoteCurrencyPreference: QuoteCurrency;
 }
@@ -133,6 +133,11 @@ export function useSwapState({
     () =>
       isAmountEqualToAvailableBalance(derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode),
     [derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode]
+  );
+
+  const validation = useMemo(
+    () => runValidation({ state, derivedAmounts }),
+    [state, derivedAmounts]
   );
 
   useEffect(() => {
@@ -225,6 +230,7 @@ export function useSwapState({
       openAssetSelector,
       closeAssetSelector,
     },
+    validation,
     baseAssetsQuery,
     targetAssetsQuery,
     quoteQuery,

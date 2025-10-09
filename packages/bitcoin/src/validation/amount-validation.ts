@@ -1,6 +1,5 @@
+import { BITCOIN_MINIMUM_SPEND_IN_SATS } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
-
-export const minSpendAmountInSats = 546;
 
 interface isBtcBalanceSufficientParams {
   desiredSpend: Money;
@@ -11,5 +10,5 @@ export function isBtcBalanceSufficient({ desiredSpend, maxSpend }: isBtcBalanceS
 }
 
 export function isBtcMinimumSpend(desiredSpend: Money) {
-  return !desiredSpend.amount.isLessThan(minSpendAmountInSats);
+  return !desiredSpend.amount.isLessThan(BITCOIN_MINIMUM_SPEND_IN_SATS);
 }

@@ -8,3 +8,7 @@ export function getFungibleAssetDisplayName(asset: SupportedAsset) {
 
   return 'name' in asset ? asset.name : asset.symbol;
 }
+
+// This exists to allow tracking and replacing decimal-related logic once we
+// support locales with other decimal separators.
+export const decimalSeparator = '.';
