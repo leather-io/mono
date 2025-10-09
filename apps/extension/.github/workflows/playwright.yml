@@ -1,0 +1,135 @@
+name: Integration tests
+
+env:
+  CI: true
+  WALLET_ENVIRONMENT: testing
+  BITFLOW_API_HOST: ${{ secrets.BITFLOW_API_HOST }}
+  BITFLOW_API_KEY: ${{ secrets.BITFLOW_API_KEY }}
+  BITFLOW_READONLY_CALL_API_HOST: ${{ secrets.BITFLOW_READONLY_CALL_API_HOST }}
+  BITFLOW_READONLY_CALL_API_KEY: ${{ secrets.BITFLOW_READONLY_CALL_API_KEY }}
+  BITFLOW_KEEPER_API_KEY: ${{ secrets.BITFLOW_KEEPER_API_KEY }}
+  BITFLOW_KEEPER_API_HOST: ${{ secrets.BITFLOW_KEEPER_API_HOST }}
+  BITFLOW_PROVIDER_ADDRESS: ${{ secrets.BITFLOW_PROVIDER_ADDRESS }}
+
+on:
+  push:
+    branches:
+      - gh-readonly-queue/dev/**
+  pull_request:
+    branches:
+      - dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Shard ${{ matrix.shardIndex }} of ${{ matrix.shardTotal }}
+    timeout-minutes: 30
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        shardTotal: [10]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package.json').devDependencies['@playwright/test'])")" >> $GITHUB_ENV
+
+      - name: Cache playwright binaries
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-cache-${{ env.PLAYWRIGHT_VERSION }}
+
+      - name: Install Playwright browsers
+        run: pnpm playwright install chrome chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
+      - name: Install Playwright deps
+        run: pnpm playwright install --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
+      - name: Build extension in test mode
+        run: pnpm build:test
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
+        # Playwright can only test extensions in headed mode, see
+        # https://playwright.dev/docs/chrome-extensions. To run a browser in
+        # headed mode, a display server is necessary. However, this job runs on
+        # an Ubuntu worker without a display server.
+        #
+        # The `xvfb-run` utility,
+        # https://manpages.ubuntu.com/manpages/xenial/man1/xvfb-run.1.html,
+        # provides a virtual X display server to the process it runs, allowing
+        # processes that require a display server to run in environments where
+        # one is not available.
+      - name: Run Playwright tests
+        run: xvfb-run pnpm playwright test tests/specs --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --workers=1
+        env:
+          BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+          TEST_ACCOUNT_SECRET_KEY: ${{ secrets.TEST_ACCOUNT_SECRET_KEY }}
+
+      - name: Upload blob report to GitHub Actions Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-${{ matrix.shardIndex }}
+          path: blob-report
+          retention-days: 1
+          if-no-files-found: error
+
+  merge-reports:
+    name: Merge reports
+    if: always()
+    needs: test
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download blob reports from GitHub Actions Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+
+      - name: Merge into HTML Report
+        run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
+      - uses: Wandalen/wretry.action@master
+        if: github.event_name == 'pull_request'
+        with:
+          action: peaceiris/actions-gh-pages@v3
+          with: |
+            personal_token: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+            external_repository: leather-io/playwright-reports
+            publish_branch: main
+            publish_dir: ./playwright-report
+            destination_dir: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Deploy specs.leather.io
+        uses: peaceiris/actions-gh-pages@v3
+        if: steps.extract_branch.outputs.branch == 'dev'
+        with:
+          personal_token: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          external_repository: leather-io/specs.leather.io
+          publish_branch: main
+          publish_dir: ./playwright-report
+          cname: specs.leather.io

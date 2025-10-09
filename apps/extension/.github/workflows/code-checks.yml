@@ -1,0 +1,133 @@
+name: Code checks
+
+on:
+  merge_group:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  lint-prettier:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Lint
+        run: pnpm lint:prettier
+
+  lint-eslint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Lint
+        run: pnpm lint:eslint
+
+  lint-filename:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: File name checker
+        run: pnpm lint:filename
+
+  lint-commit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Lint commit message
+        uses: wagoid/commitlint-github-action@v4
+
+  lint-deps:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Lint dependency rules
+        run: pnpm lint:deps
+
+  lint-message-schema:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Validate message schema
+        run: pnpm lint:remote-wallet-config
+
+  lint-unused-exports:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Lint unused TypeScript exports
+        run: pnpm lint:unused-exports
+
+  lint-firefox-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - run: pnpm build
+        env:
+          TARGET_BROWSER: firefox
+
+      - run: pnpm web-ext lint
+
+  locked-versions:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Check exact versions
+        uses: ./.github/actions/check-version-lock
+
+  typecheck:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+  test-unit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Test
+        run: pnpm test:unit
+
+  test-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Build
+        run: pnpm build
+
+      - name: Package extension
+        run: sh build-ext.sh
+        shell: bash
+
+  audit-dependencies:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Audit
+        run: pnpm audit-ci --high --skip-dev

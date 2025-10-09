@@ -1,0 +1,17 @@
+export enum HomePageSelectors {
+  AssetList = 'asset-list',
+  HomePageContainer = 'home-page-container',
+  ReceiveCryptoAssetBtn = 'receive-crypto-asset-btn',
+  ReceiveBtcNativeSegwitQrCodeBtn = 'receive-native-segwit-qr-code-btn',
+  ReceiveAssetsTab = 'receive-assets-tab',
+  ReceiveCollectiblesTab = 'receive-collectibles-tab',
+  ReceiveBtcTaprootQrCodeBtn = 'receive-taproot-qr-code-btn',
+  ReceiveStxQrCodeBtn = 'receive-stx-qr-code-btn',
+  SendCryptoAssetBtn = 'send-crypto-asset-btn',
+  ActivityTabBtn = 'tab-activity',
+  BalancesTabBtn = 'tab-balances',
+  SwapBtn = 'swap-btn',
+  FundAccountBtn = 'fund-account-btn',
+  ManageTokensBtn = 'manage-tokens-btn',
+  ManageTokensAssetsList = 'manage-tokens-assets-list',
+}

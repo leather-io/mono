@@ -1,0 +1,141 @@
+import { Suspense, lazy, useMemo } from 'react';
+
+import { Box, HStack, Stack, styled } from 'leather-styles/jsx';
+
+import type { SupportedBlockchains } from '@leather.io/models';
+import { BitcoinIcon, Button, Callout, Link, StacksIcon } from '@leather.io/ui';
+
+import { usePlatformInfo } from '@app/common/hooks/use-platform-info';
+import { Divider } from '@app/components/layout/divider';
+
+import { LedgerWrapper } from '../../components/ledger-wrapper';
+
+const PluggingInLedgerCableAnimation = lazy(
+  () => import('../../animations/plugging-in-cable.lottie')
+);
+
+interface ConnectLedgerProps {
+  chain?: SupportedBlockchains;
+  awaitingLedgerConnection?: boolean;
+  warning?: React.ReactNode;
+  showInstructions?: boolean;
+  onConnectLedger?(): void;
+  connectBitcoin?(): void;
+  connectStacks?(): void;
+}
+
+export function ConnectLedger(props: ConnectLedgerProps) {
+  const {
+    onConnectLedger,
+    warning,
+    showInstructions,
+    awaitingLedgerConnection,
+    connectBitcoin,
+    connectStacks,
+    chain,
+  } = props;
+
+  const { isWindows } = usePlatformInfo();
+
+  const showBitcoinConnectButton = useMemo(() => {
+    return chain === 'bitcoin' || !!connectBitcoin;
+  }, [chain, connectBitcoin]);
+
+  const showStacksConnectButton = useMemo(() => {
+    return chain === 'stacks' || !!connectStacks;
+  }, [chain, connectStacks]);
+
+  const instructions = useMemo(() => {
+    const showBothBtns = showBitcoinConnectButton && showStacksConnectButton;
+    return [
+      '1. Connect & unlock your Ledger',
+      `2. Open${showBitcoinConnectButton ? ' Bitcoin' : ''} ${showBothBtns ? 'or' : ''} ${
+        showStacksConnectButton ? 'Stacks' : ''
+      } app`,
+      '3. Click the button below',
+    ];
+  }, [showBitcoinConnectButton, showStacksConnectButton]);
+
+  return (
+    <LedgerWrapper>
+      <Box position="relative" width="100%" minHeight="220px">
+        <Suspense fallback={null}>
+          {<PluggingInLedgerCableAnimation position="absolute" top="-20px" />}
+        </Suspense>
+      </Box>
+
+      <Stack gap="space.04" justifyItems="flex-start" textAlign="start" pb="space.06">
+        <Stack gap="space.01" mb="space.02">
+          {instructions.map((instruction, index) => (
+            <styled.span textStyle="body.01" key={index}>
+              {instruction}
+            </styled.span>
+          ))}
+        </Stack>
+        <HStack>
+          {showBitcoinConnectButton && (
+            <Button
+              onClick={onConnectLedger || connectBitcoin}
+              aria-busy={awaitingLedgerConnection}
+            >
+              <HStack gap="space.01">
+                <BitcoinIcon color="ink.background-primary" />
+                <styled.span textStyle="label.02">Connect Bitcoin</styled.span>
+              </HStack>
+            </Button>
+          )}
+          {showStacksConnectButton && (
+            <Button
+              onClick={onConnectLedger || connectStacks}
+              aria-busy={awaitingLedgerConnection}
+              display="flex"
+              alignItems="center"
+            >
+              <HStack gap="space.01">
+                <StacksIcon color="ink.background-primary" />
+                <styled.span textStyle="label.02">Connect Stacks</styled.span>
+              </HStack>
+            </Button>
+          )}
+        </HStack>
+      </Stack>
+      {warning && (
+        <Box mb="space.04" mx="space.06">
+          {warning}
+        </Box>
+      )}
+
+      {isWindows && (
+        <Callout variant="warning" mb="space.06" mx="space.06" textAlign="left">
+          Ledger devices running newer firmware versions may not work correctly.{' '}
+          <styled.a
+            fontSize="inherit"
+            border={0}
+            textDecoration="underline"
+            href="https://support.ledger.com/article/Windows-Cannot-connect-via-WebUSB"
+            target="_blank"
+          >
+            Learn more about the issue on Ledger's support page
+          </styled.a>
+        </Callout>
+      )}
+
+      {showInstructions ? (
+        <Stack gap="space.05" width="100%">
+          <Divider />
+          <Stack alignItems="center" gap="space.01">
+            <styled.span textStyle="label.03" color="ink.text-subdued">
+              First time using Ledger on Leather?
+            </styled.span>
+            <Link
+              href="https://www.hiro.so/wallet-faq/how-can-i-use-my-ledger-device-with-hiro-wallet"
+              size="sm"
+            >
+              Learn how to use Ledger device with Leather ↗
+            </Link>
+          </Stack>
+        </Stack>
+      ) : null}
+    </LedgerWrapper>
+  );
+}
