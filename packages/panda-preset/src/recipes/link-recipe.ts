@@ -13,6 +13,9 @@ export const linkRecipe = defineRecipe({
     textAlign: 'left',
     textUnderlineOffset: '3px',
     textDecorationThickness: '2px',
+    _before: {
+      display: 'none',
+    },
   },
 
   variants: {
