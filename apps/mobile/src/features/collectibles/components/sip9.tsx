@@ -14,10 +14,11 @@ interface Sip9Props {
   onPress?: (tokenDetails: TokenDetailsProps) => void;
 }
 export function Sip9({ item, height, onPress }: Sip9Props) {
-  if (!item.cachedImage || item.cachedImage.trim() === '') return <FallbackImage />;
-  const collectionName = item?.providerData?.details?.collection?.name ?? '';
+  if (!item?.content?.contentUrl || item?.content?.contentUrl?.trim() === '')
+    return <FallbackImage />;
+  const collectionName = item?.collection?.name ?? '';
   if (isBns(collectionName)) {
-    return <BnsImage source={item.cachedImage} alt={item.name} height={height} />;
+    return <BnsImage source={item.content.contentUrl} alt={item.name} height={height} />;
   }
   return (
     <Sip9Component

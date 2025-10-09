@@ -9,8 +9,6 @@ import {
   Sip9AssetContent,
   Sip9Attribute,
   Sip9Collection,
-  Sip9Details,
-  SupportedSip9ContentType,
 } from '@leather.io/models';
 
 import { gammaNftMetadataSchema } from '../infrastructure/api/gamma/gamma-api.schema';
@@ -43,36 +41,33 @@ function transformGammaCollectionData(
   };
 }
 
-export const transformGammaCollection = optionalize(transformGammaCollectionData);
+const transformGammaCollection = optionalize(transformGammaCollectionData);
 
 function transformGammaAttributesData(
   attributeGroups: GammaNftMetadata['attribute_groups']
 ): Sip9Attribute[] {
   return attributeGroups.flatMap(group =>
     group.attributes.map(attr => ({
-      attributeTraitType: attr.label,
-      attributeValue: attr.value,
-      attributeRarityPercent: attr.rarity_percent_of_100,
+      traitType: attr.label,
+      value: attr.value,
+      rarityPercent: attr.rarity_percent_of_100,
     }))
   );
 }
 
-export const transformGammaAttributes = optionalize(transformGammaAttributesData);
-
-function transformGammaAssetContentData(
-  assetContent: GammaNftMetadata['item']['asset_content']
-): Sip9AssetContent {
-  return {
-    contentUrl: assetContent.content_url,
-    contentType: assetContent.content_type,
-  };
-}
-
-export const transformGammaAssetContent = optionalize(transformGammaAssetContentData);
+const transformGammaAttributes = optionalize(transformGammaAttributesData);
 
 export function getNonFungibleTokenId(hex: string): number {
   const clarityValue = hexToCV(hex);
   return clarityValue.type === 'uint' ? Number(clarityValue.value) : 0;
+}
+
+interface Sip9Details {
+  name: string;
+  description: string;
+  content: Sip9AssetContent;
+  collection: Sip9Collection | undefined;
+  attributes: Sip9Attribute[] | undefined;
 }
 
 export function transformToSip9Details(
@@ -82,25 +77,17 @@ export function transformToSip9Details(
 ): Sip9Details {
   const assetName = getAssetNameFromIdentifier(assetIdentifier);
 
-  // Prioritize Gamma, fallback to Hiro
   const name = gammaMetadata?.item.name || hiroMetadata?.name || assetName;
 
   const description = gammaMetadata?.item.description || hiroMetadata?.description || '';
 
-  const cachedImage =
+  const contentUrl =
     gammaMetadata?.item.asset_content?.content_url ||
     hiroMetadata?.cached_image ||
     hiroMetadata?.image ||
     '';
 
-  const cachedImageThumbnail =
-    gammaMetadata?.item.asset_content?.content_url ||
-    (hiroMetadata as any)?.cached_thumbnail_image ||
-    hiroMetadata?.cached_image ||
-    '';
-
-  const contentType = (gammaMetadata?.item.asset_content?.content_type ||
-    '') as SupportedSip9ContentType;
+  const contentType = gammaMetadata?.item.asset_content?.content_type || '';
 
   const collection =
     transformGammaCollection(gammaMetadata?.item.collection) ||
@@ -111,13 +98,12 @@ export function transformToSip9Details(
     transformHiroSip9Attributes(hiroMetadata?.attributes);
 
   return {
-    id: gammaMetadata?.item.id,
     name,
     description,
-    assetContent: transformGammaAssetContent(gammaMetadata?.item.asset_content),
-    cachedImage,
-    cachedImageThumbnail,
-    contentType,
+    content: {
+      contentUrl,
+      contentType,
+    },
     collection,
     attributes,
   };
@@ -140,12 +126,8 @@ export function createSip9Asset(
     tokenId,
     name: details.name,
     description: details.description,
-    cachedImage: details.cachedImage,
-    cachedImageThumbnail: details.cachedImageThumbnail,
-    providerData: {
-      attributes: details.attributes,
-      contentType: details.contentType,
-      details,
-    },
+    content: details.content,
+    attributes: details.attributes,
+    collection: details.collection,
   };
 }
