@@ -1,5 +1,9 @@
 import { z } from 'zod';
 
+import { Sip9ContentType, sip9ContentTypes } from '@leather.io/models';
+
+const sip9ContentTypeSchema = z.enum(sip9ContentTypes) satisfies z.ZodType<Sip9ContentType>;
+
 export const gammaNftMetadataSchema = z.object({
   item: z.object({
     id: z.string(),
@@ -8,7 +12,7 @@ export const gammaNftMetadataSchema = z.object({
     description: z.string(),
     asset_content: z.object({
       content_url: z.string(),
-      content_type: z.string(),
+      content_type: sip9ContentTypeSchema,
     }),
     location_url: z.string(),
     collection: z.object({

@@ -1,11 +1,46 @@
 import { useEffect, useState } from 'react';
 
-import { Sip9Asset, SupportedSip9ContentType } from '@leather.io/models';
+import { Sip9Asset } from '@leather.io/models';
 
 import { CollectibleAudio } from './collectible-audio.native';
 import { CollectibleHtml } from './collectible-html.native';
 import { CollectibleImage } from './collectible-image.native';
 import { CollectibleVideo } from './collectible-video.native';
+
+const supportedContentTypes = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+  'image/bmp',
+  'image/tiff',
+  'image/avif',
+  'video/mp4',
+  'audio/mpeg',
+  'audio/mp3',
+  'audio/wav',
+  'audio/ogg',
+  'audio/aac',
+  'audio/flac',
+  'audio/webm',
+  'text/plain',
+  'application/octet-stream',
+  'model/gltf+json',
+  'model/gltf-binary',
+  '',
+] as const;
+
+export type SupportedSip9ContentType = (typeof supportedContentTypes)[number];
+
+const supportedContentTypesSet = new Set(supportedContentTypes);
+
+function isSupportedContentType(
+  contentType: string | null
+): contentType is SupportedSip9ContentType {
+  if (contentType === null) return false;
+  return supportedContentTypesSet.has(contentType as SupportedSip9ContentType);
+}
 
 export interface Sip9Props {
   item: Sip9Asset;
@@ -23,14 +58,14 @@ async function checkContentType(url: string): Promise<MediaInfo> {
       },
     });
 
-    const contentType = response.headers.get('content-type') as SupportedSip9ContentType;
+    const rawContentType = response.headers.get('content-type');
+    const contentType = isSupportedContentType(rawContentType) ? rawContentType : '';
 
     return {
-      contentType: contentType,
-      isVideo: contentType?.startsWith('video/'),
-      isImage:
-        contentType?.startsWith('image/') || contentType?.includes('application/octet-stream'),
-      isAudio: contentType?.startsWith('audio/'),
+      contentType,
+      isVideo: contentType.startsWith('video/'),
+      isImage: contentType.startsWith('image/') || contentType === 'application/octet-stream',
+      isAudio: contentType.startsWith('audio/'),
     };
   } catch {
     // Fallback: try to determine from URL extension
@@ -57,10 +92,8 @@ interface MediaInfo {
 
 export function Sip9({
   item: {
-    providerData: {
-      contentType,
-      details: { name, cachedImage },
-    },
+    content: { contentType, contentUrl },
+    name,
   },
   height = 200,
   onPress,
@@ -71,14 +104,14 @@ export function Sip9({
     isImage: false,
     isAudio: false,
   });
-  const encodedSrc = encodeURI(cachedImage);
+  const encodedSrc = encodeURI(contentUrl);
 
   useEffect(() => {
-    if (contentType !== '') {
+    if (contentType) {
       return;
     }
     async function checkMedia() {
-      const info = await checkContentType(cachedImage);
+      const info = await checkContentType(contentUrl);
       const { contentType, isVideo, isImage, isAudio } = info;
       setMediaInfo({
         contentType: contentType,
@@ -89,7 +122,7 @@ export function Sip9({
     }
 
     void checkMedia();
-  }, [cachedImage, contentType]);
+  }, [contentUrl, contentType]);
 
   switch (contentType) {
     case 'video/mp4':

@@ -50,7 +50,7 @@ export function transformHiroSip9Attributes(
   if (!attributes) return undefined;
 
   return attributes.map(attr => ({
-    attributeTraitType: attr.trait_type,
-    attributeValue: attr.value,
+    traitType: attr.trait_type,
+    value: attr.value,
   }));
 }
