@@ -1,3 +1,4 @@
+import { PER_DEX_FEE_PERCENTAGE } from '@/features/swap/swap.constants';
 import BigNumber from 'bignumber.js';
 
 import { Money, SwapDex } from '@leather.io/models';
@@ -13,6 +14,5 @@ export function calculateMinToReceiveAmount(quoteAmount: Money, slippage: number
 }
 
 export function estimateLiquidityFeePercentage(dexPath: SwapDex[]) {
-  const perDexFeePercentage = 0.003;
-  return new BigNumber(dexPath.length).times(perDexFeePercentage).toNumber();
+  return new BigNumber(dexPath.length).times(PER_DEX_FEE_PERCENTAGE).toNumber();
 }
