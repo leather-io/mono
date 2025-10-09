@@ -14,9 +14,11 @@ import {
 } from 'redux-persist';
 import z from 'zod';
 
+import { resetWallet } from '@leather.io/state';
+import { walletEntitySchema, walletSlice } from '@leather.io/state/wallet';
+
 import { accountEntitySchema, accountsSlice } from './accounts/accounts.write';
 import { appsSlice } from './apps/apps.write';
-import { resetWallet } from './global-action';
 import { bitcoinKeychainSlice } from './keychains/bitcoin/bitcoin-keychains.write';
 import { bitcoinKeychainStoreSchema } from './keychains/bitcoin/utils';
 import { stacksKeychainSlice } from './keychains/stacks/stacks-keychains.write';
@@ -24,8 +26,6 @@ import { stacksKeychainStoreSchema } from './keychains/stacks/utils';
 import { settingsSlice } from './settings/settings.write';
 import { settingsSchema } from './settings/utils';
 import { deleteAllMnemonics, persistConfig } from './storage-persistors';
-import { walletEntitySchema } from './wallets/utils';
-import { walletSlice } from './wallets/wallets.write';
 
 export const stateSchema = z.object({
   wallets: walletEntitySchema,

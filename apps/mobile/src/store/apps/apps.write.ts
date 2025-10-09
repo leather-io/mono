@@ -1,6 +1,7 @@
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
-import { handleAppResetWithState } from '../global-action';
+import { handleAppResetWithState } from '@leather.io/state';
+
 import { handleEntityActionWith } from '../utils';
 import { App } from './utils';
 

@@ -1,7 +1,7 @@
-import { entitySchema } from '@/store/utils';
 import z from 'zod';
 
 import { StacksSigner } from '@leather.io/stacks';
+import { entitySchema } from '@leather.io/state';
 
 const stacksKeychainSchema = z.object({
   // Stacks doesn't use the concept of BIP-380 Descriptors the same way Bitcoin

@@ -67,8 +67,7 @@ msgstr "20–30 seconds"
 msgid "24 Hour Change"
 msgstr "24 Hour Change"
 
-#: src/features/wallet-manager/account-list.tsx:23
-#: src/store/accounts/accounts.write.ts:43
+#: src/store/accounts/accounts.write.ts:42
 msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
 
@@ -126,7 +125,7 @@ msgstr ""
 msgid "Add memo"
 msgstr "Add memo"
 
-#: src/features/wallet-manager/wallets.tsx:38
+#: src/features/wallet-manager/wallets.tsx:39
 msgid "Add new account for {fingerprint} 🆕"
 msgstr "Add new account for {fingerprint} 🆕"
 
@@ -180,20 +179,19 @@ msgstr "Address is for incorrect network"
 msgid "Address is not valid"
 msgstr "Address is not valid"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:47
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:45
 msgid "Address reuse"
 msgstr "Address reuse"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:52
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:50
 msgid "Address scan range"
 msgstr "Address scan range"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:57
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:55
 msgid "Address types"
 msgstr "Address types"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:183
-#: src/features/recover-wallet/recover-wallet.layout.tsx:48
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:181
 msgid "Advanced options"
 msgstr "Advanced options"
 
@@ -316,7 +314,7 @@ msgstr "Argument {argumentNumber}"
 msgid "Arkadiko"
 msgstr "Arkadiko"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:119
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:117
 msgid "Authentication failed"
 msgstr "Authentication failed"
 
@@ -456,7 +454,7 @@ msgstr ""
 "Configure\n"
 "account"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:146
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:144
 msgid ""
 "Configure\n"
 "wallet"
@@ -537,7 +535,7 @@ msgstr "Copy address"
 msgid "Create new wallet"
 msgstr "Create new wallet"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:208
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:206
 msgid "Creation date"
 msgstr "Creation date"
 
@@ -704,11 +702,11 @@ msgstr "Expand your Bitcoin knowledge"
 msgid "Explore"
 msgstr "Explore"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:67
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:65
 msgid "Export key"
 msgstr "Export key"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:62
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:60
 msgid "Export xPub"
 msgstr "Export xPub"
 
@@ -1215,12 +1213,11 @@ msgstr "Recently viewed"
 msgid "Recents"
 msgstr "Recents"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:172
-#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:17
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:170
 msgid "Remove wallet"
 msgstr "Remove wallet"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:164
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:162
 msgid "Rename wallet"
 msgstr "Rename wallet"
 
@@ -1673,7 +1670,7 @@ msgstr "View and manage all your wallets in one place"
 msgid "View and manage your hidden accounts"
 msgstr "View and manage your hidden accounts"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:153
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:151
 msgid "View Secret Key"
 msgstr "View Secret Key"
 
@@ -1681,7 +1678,7 @@ msgstr "View Secret Key"
 msgid "View your wallet balance & activity"
 msgstr "View your wallet balance & activity"
 
-#: src/features/wallet-manager/wallets.tsx:26
+#: src/features/wallet-manager/wallets.tsx:27
 msgid "Wallet {fingerprint}"
 msgstr "Wallet {fingerprint}"
 
@@ -1697,7 +1694,7 @@ msgstr "Wallet added"
 msgid "Wallet added already"
 msgstr "Wallet added already"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:90
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:88
 msgid "Wallet name cannot be empty"
 msgstr "Wallet name cannot be empty"
 

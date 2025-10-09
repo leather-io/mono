@@ -15,17 +15,15 @@ import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { useAuthentication } from '@/hooks/use-authentication';
 import { TestId } from '@/shared/test-id';
-import { userRemovesWallet } from '@/store/global-action';
 import { useSettings } from '@/store/settings/settings';
 import { useAppDispatch } from '@/store/utils';
-import { WalletStore } from '@/store/wallets/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
-import { userRenamesWallet } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/core/macro';
 import dayjs from 'dayjs';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
+import { WalletStore, userRemovesWallet, userRenamesWallet } from '@leather.io/state/wallet';
 import {
   Accordion,
   ArrowOutOfBoxIcon,

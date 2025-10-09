@@ -871,6 +871,9 @@ importers:
       '@leather.io/stacks':
         specifier: workspace:*
         version: link:../../packages/stacks
+      '@leather.io/state':
+        specifier: workspace:*
+        version: link:../../packages/state
       '@leather.io/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
@@ -2139,6 +2142,46 @@ importers:
       vitest:
         specifier: 2.1.9
         version: 2.1.9(@types/node@24.3.0)(happy-dom@18.0.1)(jsdom@26.1.0)(lightningcss@1.27.0)(msw@2.10.4(@types/node@24.3.0)(typescript@5.9.2))(terser@5.39.2)
+
+  packages/state:
+    dependencies:
+      '@leather.io/models':
+        specifier: workspace:*
+        version: link:../models
+      '@leather.io/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@reduxjs/toolkit':
+        specifier: 2.8.1
+        version: 2.8.1(react-redux@9.2.0(@types/react@19.1.12)(react@19.1.1)(redux@5.0.1))(react@19.1.1)
+      immer:
+        specifier: 10.1.1
+        version: 10.1.1
+      zod:
+        specifier: 4.0.17
+        version: 4.0.17
+    devDependencies:
+      '@leather.io/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      '@leather.io/tsconfig-config':
+        specifier: workspace:*
+        version: link:../tsconfig-config
+      prettier:
+        specifier: 3.5.1
+        version: 3.5.1
+      tslib:
+        specifier: 2.6.2
+        version: 2.6.2
+      tsup:
+        specifier: 8.4.0
+        version: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@24.3.0))(@swc/core@1.11.24)(jiti@2.5.1)(postcss@8.5.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+      vitest:
+        specifier: 2.1.9
+        version: 2.1.9(@types/node@24.3.0)(happy-dom@18.0.1)(jsdom@26.1.0)(lightningcss@1.27.0)(msw@2.10.4(@types/node@24.3.0)(typescript@5.8.3))(terser@5.39.2)
 
   packages/tokens:
     devDependencies:
@@ -31755,6 +31798,18 @@ snapshots:
       react: 19.0.0
       react-redux: 9.2.0(@types/react@19.0.12)(react@19.0.0)(redux@5.0.1)
 
+  '@reduxjs/toolkit@2.8.1(react-redux@9.2.0(@types/react@19.1.12)(react@19.1.1)(redux@5.0.1))(react@19.1.1)':
+    dependencies:
+      '@standard-schema/spec': 1.0.0
+      '@standard-schema/utils': 0.3.0
+      immer: 10.1.1
+      redux: 5.0.1
+      redux-thunk: 3.1.0(redux@5.0.1)
+      reselect: 5.1.1
+    optionalDependencies:
+      react: 19.1.1
+      react-redux: 9.2.0(@types/react@19.1.12)(react@19.1.1)(redux@5.0.1)
+
   '@remix-run/node-fetch-server@0.8.1': {}
 
   '@remix-run/node-fetch-server@0.9.0': {}
@@ -35311,7 +35366,7 @@ snapshots:
     dependencies:
       minimatch: 9.0.5
       path-browserify: 1.0.1
-      tinyglobby: 0.2.12
+      tinyglobby: 0.2.14
 
   '@tsconfig/node10@1.0.11': {}
 
@@ -47634,6 +47689,16 @@ snapshots:
       '@types/react': 19.0.12
       redux: 5.0.1
 
+  react-redux@9.2.0(@types/react@19.1.12)(react@19.1.1)(redux@5.0.1):
+    dependencies:
+      '@types/use-sync-external-store': 0.0.6
+      react: 19.1.1
+      use-sync-external-store: 1.5.0(react@19.1.1)
+    optionalDependencies:
+      '@types/react': 19.1.12
+      redux: 5.0.1
+    optional: true
+
   react-refractor@4.0.0(react@19.0.0):
     dependencies:
       react: 19.0.0
@@ -49577,7 +49642,7 @@ snapshots:
 
   sucrase@3.35.0:
     dependencies:
-      '@jridgewell/gen-mapping': 0.3.12
+      '@jridgewell/gen-mapping': 0.3.13
       commander: 4.1.1
       glob: 10.4.5
       lines-and-columns: 1.2.4
@@ -50152,7 +50217,7 @@ snapshots:
       picocolors: 1.1.1
       postcss-load-config: 6.0.1(jiti@2.5.1)(postcss@8.5.6)(yaml@2.8.1)
       resolve-from: 5.0.0
-      rollup: 4.46.2
+      rollup: 4.50.0
       source-map: 0.8.0-beta.0
       sucrase: 3.35.0
       tinyexec: 0.3.2
@@ -50181,7 +50246,7 @@ snapshots:
       picocolors: 1.1.1
       postcss-load-config: 6.0.1(jiti@2.5.1)(postcss@8.5.6)(yaml@2.8.1)
       resolve-from: 5.0.0
-      rollup: 4.46.2
+      rollup: 4.50.0
       source-map: 0.8.0-beta.0
       sucrase: 3.35.0
       tinyexec: 0.3.2
@@ -50210,7 +50275,7 @@ snapshots:
       picocolors: 1.1.1
       postcss-load-config: 6.0.1(jiti@2.5.1)(postcss@8.5.6)(yaml@2.8.1)
       resolve-from: 5.0.0
-      rollup: 4.46.2
+      rollup: 4.50.0
       source-map: 0.8.0-beta.0
       sucrase: 3.35.0
       tinyexec: 0.3.2
@@ -50740,6 +50805,11 @@ snapshots:
   use-sync-external-store@1.5.0(react@19.0.0):
     dependencies:
       react: 19.0.0
+
+  use-sync-external-store@1.5.0(react@19.1.1):
+    dependencies:
+      react: 19.1.1
+    optional: true
 
   util-deprecate@1.0.2: {}
 
