@@ -1,6 +1,4 @@
 /* eslint-disable lingui/no-unlocalized-strings */
-import { SupportedAsset } from '@/features/swap/swap-state/swap-state.types';
-
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import {
   CryptoAssetBalance,
@@ -12,11 +10,14 @@ import {
   SwapProviderAsset,
   SwapProviderId,
   SwapQuote,
+  SwappableFungibleCryptoAsset,
 } from '@leather.io/models';
 import { AccountRequest, AccountSwapAsset } from '@leather.io/services';
 import { createMoney } from '@leather.io/utils';
 
-export function createFungibleAsset(overrides: Partial<SupportedAsset> = {}): SupportedAsset {
+export function createFungibleAsset(
+  overrides: Partial<SwappableFungibleCryptoAsset> = {}
+): SwappableFungibleCryptoAsset {
   const protocol = overrides.protocol ?? 'nativeBtc';
 
   switch (protocol) {
@@ -63,7 +64,7 @@ function createBalance({
 }
 
 interface CreateAccountSwapAssetParams {
-  asset: Partial<SupportedAsset>;
+  asset: Partial<SwappableFungibleCryptoAsset>;
   balance?: {
     quote?: number;
     crypto?: number;
@@ -159,8 +160,8 @@ interface CreateSwapQuoteParams {
   providerId?: SwapProviderId;
   baseAmount?: number;
   targetAmount?: number;
-  baseAsset?: SupportedAsset;
-  targetAsset?: SupportedAsset;
+  baseAsset?: SwappableFungibleCryptoAsset;
+  targetAsset?: SwappableFungibleCryptoAsset;
   dexPath?: SwapDex[];
   providerQuoteData?: unknown;
 }

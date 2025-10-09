@@ -1,6 +1,5 @@
 import { swapQuoteSelector } from '@/features/swap/swap-state/swap-quote-selector';
 import {
-  SupportedAsset,
   SwapQuoteSelectionResult,
   SwapQuoteStrategy,
 } from '@/features/swap/swap-state/swap-state.types';
@@ -15,6 +14,7 @@ import {
   SwapAsset,
   SwapExecutionData,
   SwapQuote,
+  SwappableFungibleCryptoAsset,
 } from '@leather.io/models';
 import {
   AccountRequest,
@@ -124,7 +124,7 @@ export function createSwapExecutionDataQuery(service: SwapService, request: Acco
 
 export function createAssetMarketDataQuery(service: MarketDataService) {
   return function useAssetMarketDataQuery(params: {
-    asset?: SupportedAsset;
+    asset?: SwappableFungibleCryptoAsset;
     queryOptions?: CustomQueryOptions<MarketData>;
   }) {
     const { asset, queryOptions } = params;

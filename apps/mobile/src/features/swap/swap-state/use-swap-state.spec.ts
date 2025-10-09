@@ -2,9 +2,9 @@ import { renderHookWithProviders } from '@/tests/test-utils';
 import { act, waitFor } from '@testing-library/react';
 import { assert, describe, expect, it } from 'vitest';
 
+import { SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import { SupportedAsset } from './swap-state.types';
 import {
   createAccountRequest,
   createAccountSwapAsset,
@@ -185,7 +185,7 @@ describe('useSwapState', () => {
         }),
       ];
 
-      function isAssetAllowed(asset: SupportedAsset) {
+      function isAssetAllowed(asset: SwappableFungibleCryptoAsset) {
         return !asset.symbol.startsWith('BLOCKED_TOKEN');
       }
 
@@ -271,7 +271,7 @@ describe('useSwapState', () => {
         }),
       ];
 
-      function isAssetAllowed(asset: SupportedAsset) {
+      function isAssetAllowed(asset: SwappableFungibleCryptoAsset) {
         return !asset.symbol.startsWith('BLOCKED_TOKEN');
       }
 
