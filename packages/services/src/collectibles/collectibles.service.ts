@@ -1,8 +1,8 @@
 import { NonFungibleTokenHolding } from '@stacks/stacks-blockchain-api-types';
 import axios from 'axios';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 
-import { deriveBitcoinPayerFromAccount } from '@leather.io/bitcoin';
+import { bitcoinNetworkModeToCoreNetworkMode, deriveBitcoinPayerFromAccount } from '@leather.io/bitcoin';
 import {
   AccountAddresses,
   BitcoinAddressInfo,
@@ -13,9 +13,12 @@ import {
 } from '@leather.io/models';
 import { createInscriptionAsset, isDefined } from '@leather.io/utils';
 
+import { Types } from '../inversify.types';
 import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { selectBitcoinNetworkMode } from '../infrastructure/settings/settings.selectors';
+import type { SettingsService } from '../infrastructure/settings/settings.service';
 import {
   createStampAsset,
   mapBisInscriptionToCreateInscriptionData,
@@ -27,7 +30,8 @@ export class CollectiblesService {
   constructor(
     private readonly bisApiClient: BestInSlotApiClient,
     private readonly stacksApiClient: HiroStacksApiClient,
-    private readonly sip9AssetsService: Sip9AssetService
+    private readonly sip9AssetsService: Sip9AssetService,
+    @inject(Types.SettingsService) private readonly settingsService: SettingsService
   ) {}
 
   public async getTotalCollectibles(
@@ -153,9 +157,12 @@ export class CollectiblesService {
     signal?: AbortSignal
   ): Promise<{ asset: StampAsset; blockHeight: number }[]> {
     try {
+      const bitcoinNetworkMode = selectBitcoinNetworkMode(this.settingsService.getSettings());
+      const network = bitcoinNetworkModeToCoreNetworkMode(bitcoinNetworkMode);
+
       const taprootAddress = this.deriveAddressFromDescriptor(
         btcAddressInfo.taprootDescriptor,
-        'mainnet'
+        network
       );
 
       if (!taprootAddress) return [];

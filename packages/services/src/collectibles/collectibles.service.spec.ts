@@ -11,6 +11,7 @@ import {
 import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { CollectiblesService } from './collectibles.service';
 
 describe(CollectiblesService.name, () => {
@@ -69,10 +70,23 @@ describe(CollectiblesService.name, () => {
     ),
   } as unknown as Sip9AssetService;
 
+  const mockSettingsService = {
+    getSettings: vi.fn().mockReturnValue({
+      network: {
+        chain: {
+          bitcoin: {
+            mode: 'mainnet',
+          },
+        },
+      },
+    }),
+  } as unknown as SettingsService;
+
   const collectiblesService = new CollectiblesService(
     mockBisApiClient,
     mockStacksApiClient,
-    mockSip9AssetService
+    mockSip9AssetService,
+    mockSettingsService
   );
 
   describe('getTotalCollectibles', () => {
