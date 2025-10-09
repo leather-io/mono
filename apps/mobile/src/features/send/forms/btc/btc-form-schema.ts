@@ -13,7 +13,7 @@ import {
 } from '@leather.io/bitcoin';
 import { BTC_DECIMALS } from '@leather.io/constants';
 import { BitcoinNetworkModes } from '@leather.io/models';
-import { createMoneyFromDecimal, isValidPrecision } from '@leather.io/utils';
+import { countDecimals, createMoneyFromDecimal } from '@leather.io/utils';
 
 interface SchemaCreationParams {
   networkMode: BitcoinNetworkModes;
@@ -35,10 +35,7 @@ function createBtcSendFormSchema({ networkMode, calculateBtcMaxSpend }: SchemaCr
       .object({
         amount: z
           .string()
-          .refine(
-            withNumericStringValidation(btcPrecisionValidator()),
-            errorMessages.invalidPrecision(BTC_DECIMALS)
-          )
+          .refine(btcPrecisionValidator(), errorMessages.invalidPrecision(BTC_DECIMALS))
           .refine(
             withNumericStringValidation(btcMinimumSpendValidator()),
             errorMessages.minimumAmount
@@ -57,7 +54,7 @@ function createBtcSendFormSchema({ networkMode, calculateBtcMaxSpend }: SchemaCr
 }
 
 function btcPrecisionValidator() {
-  return (amount: number) => isValidPrecision(amount, BTC_DECIMALS);
+  return (amount: string) => countDecimals(amount) <= BTC_DECIMALS;
 }
 
 function btcMinimumSpendValidator() {
