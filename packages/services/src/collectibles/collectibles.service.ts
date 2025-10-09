@@ -2,7 +2,12 @@ import { NonFungibleTokenHolding } from '@stacks/stacks-blockchain-api-types';
 import axios from 'axios';
 import { inject, injectable } from 'inversify';
 
-import { bitcoinNetworkModeToCoreNetworkMode, deriveBitcoinPayerFromAccount } from '@leather.io/bitcoin';
+import {
+  bitcoinNetworkModeToCoreNetworkMode,
+  deriveAddressIndexKeychainFromAccount,
+  getTaprootPayment,
+} from '@leather.io/bitcoin';
+import { deriveKeychainFromXpub } from '@leather.io/crypto';
 import {
   AccountAddresses,
   BitcoinAddressInfo,
@@ -69,6 +74,8 @@ export class CollectiblesService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<NonFungibleCryptoAsset[]> {
+    console.log('[getAccountCollectibles] called with account:', JSON.stringify(account, null, 2));
+    console.log('[getAccountCollectibles] account.bitcoin exists?', !!account.bitcoin);
     const [bitcoinInscriptions, bitcoinStamps, stacksCollectibles] = await Promise.all([
       account.bitcoin
         ? this.getInscriptionsWithBlockHeight(account.bitcoin, signal)
@@ -80,6 +87,9 @@ export class CollectiblesService {
         ? this.getSip9sWithBlockHeight(account.stacks.stxAddress, signal)
         : Promise.resolve([]),
     ]);
+    console.log('[getAccountCollectibles] bitcoinInscriptions:', bitcoinInscriptions.length);
+    console.log('[getAccountCollectibles] bitcoinStamps:', bitcoinStamps.length);
+    console.log('[getAccountCollectibles] stacksCollectibles:', stacksCollectibles.length);
     return [
       ...stacksCollectibles.sort(sortByBlockHeight).map(c => c.asset),
       ...bitcoinInscriptions.sort(sortByBlockHeight).map(c => c.asset),
@@ -142,12 +152,19 @@ export class CollectiblesService {
 
   private deriveAddressFromDescriptor(descriptor: string, network: 'mainnet' | 'testnet') {
     try {
-      const payer = deriveBitcoinPayerFromAccount(descriptor, network)({
-        change: 0,
-        addressIndex: 0,
-      });
-      return payer.address;
-    } catch {
+      const xpubMatch = descriptor.match(/tr\(([^)]+)\)/);
+      if (!xpubMatch) return null;
+
+      const xpub = xpubMatch[1];
+      const accountKeychain = deriveKeychainFromXpub(xpub);
+      const addressIndexKeychain = deriveAddressIndexKeychainFromAccount(accountKeychain)(0);
+
+      if (!addressIndexKeychain.publicKey) return null;
+
+      const payment = getTaprootPayment(addressIndexKeychain.publicKey, network);
+      return payment.address ?? null;
+    } catch (error) {
+      console.error('[deriveAddressFromDescriptor] error:', error);
       return null;
     }
   }
@@ -156,26 +173,36 @@ export class CollectiblesService {
     btcAddressInfo: BitcoinAddressInfo,
     signal?: AbortSignal
   ): Promise<{ asset: StampAsset; blockHeight: number }[]> {
+    console.log('[getStampsWithBlockHeight] called with descriptor:', btcAddressInfo.taprootDescriptor);
     try {
       const bitcoinNetworkMode = selectBitcoinNetworkMode(this.settingsService.getSettings());
       const network = bitcoinNetworkModeToCoreNetworkMode(bitcoinNetworkMode);
+      console.log('[getStampsWithBlockHeight] network mode:', bitcoinNetworkMode, 'network:', network);
 
       const taprootAddress = this.deriveAddressFromDescriptor(
         btcAddressInfo.taprootDescriptor,
         network
       );
 
-      if (!taprootAddress) return [];
+      console.log('[getStampsWithBlockHeight] derived taproot address:', taprootAddress);
 
+      if (!taprootAddress) {
+        console.log('[getStampsWithBlockHeight] no taproot address derived, returning empty array');
+        return [];
+      }
+
+      console.log('[getStampsWithBlockHeight] fetching stamps for address:', taprootAddress);
       const response = await axios.get<{
         data: { stamps: Array<{ stamp: number; stamp_url: string; block_index?: number }> };
       }>(`https://stampchain.io/api/v2/balance/${taprootAddress}`, { signal });
 
+      console.log('stamps response', response.data);
       return response.data.data.stamps.map(stamp => ({
         asset: createStampAsset(stamp),
         blockHeight: stamp.block_index ?? 0,
       }));
-    } catch {
+    } catch (error) {
+      console.error('error getting stamps with block height', error);
       return [];
     }
   }
