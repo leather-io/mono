@@ -29,8 +29,8 @@ export function ChangelogEntry({ entry, ...props }: ChangelogEntryProps) {
 function Title(props: HTMLStyledProps<'h1'>) {
   const entry = useChangelogEntry();
   return (
-    <styled.h2 textStyle="heading.04" {...props}>
-      <Link to={`/changelog/${entry.slug.current}`} color="inherit">
+    <styled.h2 textStyle="heading.04" _hover={{ color: 'ink.action-primary-hover' }} {...props}>
+      <Link to={`/changelog/${entry.slug.current}`} style={{ color: 'inherit' }}>
         {entry.title}
       </Link>
     </styled.h2>
