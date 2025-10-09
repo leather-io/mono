@@ -1,3 +1,4 @@
+import { StampAsset } from '@leather.io/models';
 import { CreateInscriptionData } from '@leather.io/utils';
 
 import { BisInscription } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
@@ -17,6 +18,22 @@ export function mapBisInscriptionToCreateInscriptionData(
     genesisTimestamp: bisInscription.genesis_ts,
     genesisBlockHeight: bisInscription.genesis_height,
     outputValue: bisInscription.output_value?.toString() ?? '0',
+  };
+}
+
+export interface StampData {
+  stamp: number;
+  stamp_url: string;
+  block_index?: number;
+}
+
+export function createStampAsset(stampData: StampData): StampAsset {
+  return {
+    chain: 'bitcoin',
+    category: 'nft',
+    protocol: 'stamp',
+    stamp: stampData.stamp,
+    stampUrl: stampData.stamp_url,
   };
 }
 
