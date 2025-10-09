@@ -6,8 +6,6 @@ import { assertUnreachable, isSameAsset } from '@leather.io/utils';
 import { SwapActionObject, SwapInternalState } from './swap-state.types';
 import { adjustAmountForDecimals, calculatePercentageAmount } from './swap-state.utils';
 
-export const defaultSlippagePercentage = 0.03;
-
 export function swapReducer(state: SwapInternalState, action: SwapActionObject): SwapInternalState {
   switch (action.type) {
     case 'OPEN_ASSET_SELECTOR': {

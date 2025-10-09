@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useReducer } from 'react';
 
+import { DEFAULT_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap.constants';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
 import { AccountAddresses, QuoteCurrency } from '@leather.io/models';
 import { AccountSwapAsset, MarketDataService, SwapService } from '@leather.io/services';
 import { getAssetId } from '@leather.io/utils';
 
-import { defaultSlippagePercentage, swapReducer } from './swap-state.reducer';
+import { swapReducer } from './swap-state.reducer';
 import {
   PresetPercentage,
   SupportedAsset,
@@ -49,7 +50,7 @@ function initializeState({
     quoteCurrencyPreference,
     quoteStrategy: 'best',
     inputCurrencyMode: 'crypto',
-    slippage: defaultSlippagePercentage,
+    slippage: DEFAULT_SLIPPAGE_PERCENTAGE,
     slippageEditingAllowed: true,
     selectingAsset: null,
     validation: [],
