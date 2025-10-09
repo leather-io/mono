@@ -1,8 +1,8 @@
 import { t } from '@lingui/core/macro';
 
-import { SupportedAsset } from './swap-state/swap-state.types';
+import { SwappableFungibleCryptoAsset } from '@leather.io/models';
 
-export function getFungibleAssetDisplayName(asset: SupportedAsset) {
+export function getFungibleAssetDisplayName(asset: SwappableFungibleCryptoAsset) {
   if (asset.symbol === 'STX') return t`Stacks`;
   if (asset.symbol === 'BTC') return t`Bitcoin`;
 

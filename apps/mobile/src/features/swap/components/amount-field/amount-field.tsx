@@ -1,16 +1,16 @@
 import { AmountFieldCaret } from '@/features/swap/components/amount-field/amount-field-caret';
 import { CurrencyModeSwitcher } from '@/features/swap/components/currency-mode-switcher';
-import { SecondaryAmount, SupportedAsset } from '@/features/swap/swap-state/swap-state.types';
+import { SecondaryAmount } from '@/features/swap/swap-state/swap-state.types';
 import { InputCurrencyMode } from '@/utils/types';
 
 import { cryptoAssetColors } from '@leather.io/constants';
-import { CryptoCurrency, Currency } from '@leather.io/models';
+import { CryptoCurrency, Currency, SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
 import { PrimaryValue, formatPrimaryValue } from './amount-field-primary-value';
 
 interface AmountFieldProps {
-  asset?: SupportedAsset;
+  asset?: SwappableFungibleCryptoAsset;
   value: string;
   inputCurrencyMode: InputCurrencyMode;
   onInputCurrencyModeSwitch: () => void;
@@ -48,6 +48,6 @@ function isAssetColorDefined(code?: CryptoCurrency): code is keyof typeof crypto
   return code ? code in cryptoAssetColors : false;
 }
 
-function getCaretColor(asset?: SupportedAsset) {
+function getCaretColor(asset?: SwappableFungibleCryptoAsset) {
   return isAssetColorDefined(asset?.symbol) ? cryptoAssetColors[asset?.symbol] : undefined;
 }

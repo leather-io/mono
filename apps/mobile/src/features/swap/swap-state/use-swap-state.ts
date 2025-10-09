@@ -4,17 +4,12 @@ import { runValidation } from '@/features/swap/swap-state/validation/swap-valida
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap.constants';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
-import { AccountAddresses, QuoteCurrency } from '@leather.io/models';
+import { AccountAddresses, QuoteCurrency, SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { AccountSwapAsset, MarketDataService, SwapService } from '@leather.io/services';
 import { getAssetId } from '@leather.io/utils';
 
 import { swapReducer } from './swap-state.reducer';
-import {
-  PresetPercentage,
-  SupportedAsset,
-  SwapInternalState,
-  UseSwapStateResult,
-} from './swap-state.types';
+import { PresetPercentage, SwapInternalState, UseSwapStateResult } from './swap-state.types';
 import {
   calculateFairMarketRate,
   computeSecondaryAmountState,
@@ -26,8 +21,8 @@ import { useDerivedAmounts } from './use-derived-amounts';
 import { useSwapQueries } from './use-swap-queries';
 
 export interface InitializeStateParams {
-  baseAsset?: SupportedAsset;
-  targetAsset?: SupportedAsset;
+  baseAsset?: SwappableFungibleCryptoAsset;
+  targetAsset?: SwappableFungibleCryptoAsset;
   quoteCurrencyPreference: QuoteCurrency;
 }
 
@@ -59,12 +54,12 @@ function initializeState({
 
 export interface UseSwapStateProps {
   accountRequest: { account: AccountAddresses };
-  baseAsset?: SupportedAsset;
-  targetAsset?: SupportedAsset;
+  baseAsset?: SwappableFungibleCryptoAsset;
+  targetAsset?: SwappableFungibleCryptoAsset;
   marketDataService: MarketDataService;
   swapService: SwapService;
   // TODO: To be removed: https://linear.app/leather-io/issue/LEA-3218/apply-asset-visibility-settings-to-swapasset-lists
-  isAssetAllowed?: (asset: SupportedAsset) => boolean;
+  isAssetAllowed?: (asset: SwappableFungibleCryptoAsset) => boolean;
   quoteCurrencyPreference: QuoteCurrency;
 }
 

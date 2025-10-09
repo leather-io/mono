@@ -5,7 +5,6 @@ import {
 import {
   PresetPercentage,
   SecondaryAmount,
-  SupportedAsset,
   SwapInternalState,
 } from '@/features/swap/swap-state/swap-state.types';
 import { InputCurrencyMode } from '@/utils/types';
@@ -17,6 +16,7 @@ import {
   CryptoAssetBalance,
   MarketData,
   Money,
+  SwappableFungibleCryptoAsset,
   isBtcAsset,
   isSip10Asset,
   isStxAsset,
@@ -101,7 +101,7 @@ export function computeSecondaryAmountState({
 
 export function createSwapAssetsSelector(
   assetSelectionType: 'base' | 'target',
-  isAssetAllowed?: (asset: SupportedAsset) => boolean
+  isAssetAllowed?: (asset: SwappableFungibleCryptoAsset) => boolean
 ) {
   return (data: AccountSwapAsset[]): AccountSwapAsset[] => {
     return pipe(
@@ -119,7 +119,7 @@ export function createSwapAssetsSelector(
 function isRelevantSwapAsset(
   swapAsset: AccountSwapAsset,
   type: 'base' | 'target',
-  isAssetAllowed?: (asset: SupportedAsset) => boolean
+  isAssetAllowed?: (asset: SwappableFungibleCryptoAsset) => boolean
 ) {
   if (isAssetAllowed && !isAssetAllowed(swapAsset.asset)) {
     return false;
@@ -148,7 +148,7 @@ function hasPositiveCryptoBalance(swapAsset: AccountSwapAsset): boolean {
   return cryptoBalance > 0;
 }
 
-function isAllowedZeroBalanceAsset(asset: SupportedAsset) {
+function isAllowedZeroBalanceAsset(asset: SwappableFungibleCryptoAsset) {
   return isBtcAsset(asset) || isStxAsset(asset);
 }
 
