@@ -43,7 +43,7 @@
     "expo-linear-gradient": "14.1.4",
     "expo-splash-screen": "0.30.8",
     "expo-squircle-view": "1.1.0",
-    "framer-motion": "12.11.0",
+    "framer-motion": "12.23.22",
     "prism-react-renderer": "2.4.1",
     "prismjs": "1.30.0",
     "radix-ui": "1.4.2",

@@ -127,7 +127,7 @@
     "dotenv": "16.4.5",
     "ecdsa-sig-formatter": "1.0.11",
     "formik": "2.4.6",
-    "framer-motion": "12.11.0",
+    "framer-motion": "12.23.22",
     "jotai": "2.12.5",
     "jotai-redux": "0.2.1",
     "jsontokens": "4.0.1",
