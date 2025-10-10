@@ -84,6 +84,7 @@ export * from './fee-animals/animal-chameleon.native';
 export * from './fee-animals/animal-eagle.native';
 export * from './fee-animals/animal-rabbit.native';
 export * from './fee-animals/animal-snail.native';
+export * from './feed-icon.native';
 export * from './function-icon.native';
 export * from './glasses-icon.native';
 export * from './globe-icon.native';

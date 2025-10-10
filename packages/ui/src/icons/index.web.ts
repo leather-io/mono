@@ -48,6 +48,7 @@ export * from './exit-icon.web';
 export * from './expand-icon.web';
 export * from './external-link-icon.web';
 export * from './eye-1-closed-icon.web';
+export * from './feed-icon.web';
 export * from './eye-1-icon.web';
 export * from './eye-2-icon.web';
 export * from './fee-animals/animal-chameleon.web';
