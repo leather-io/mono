@@ -150,6 +150,7 @@ function Code({ children, className }: CodeProps) {
       py="2px"
       borderRadius="xs"
       fontFamily="monospace"
+      fontSize="0.9em"
       color="ink.text-primary"
     >
       {children}
