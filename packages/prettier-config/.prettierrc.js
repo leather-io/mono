@@ -21,6 +21,7 @@ export default {
   ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
+  importOrderSideEffects: false,
   importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
   // github.com/prettier/prettier/issues/15956#issuecomment-1987146114
   overrides: [

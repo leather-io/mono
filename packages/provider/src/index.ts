@@ -9,7 +9,9 @@ import {
 } from '@leather.io/rpc';
 
 import { addLeatherToProviders } from './add-leather-to-providers';
+
 import './crypto-random-uuid-polyfill';
+
 import { getLegacyRequests } from './legacy-requests';
 import { Platform } from './types';
 

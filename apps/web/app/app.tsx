@@ -1,5 +1,4 @@
 // We need to import the polyfills before any other import
-// sort-imports-ignore
 import './utils/polyfills';
 
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigate } from 'react-router';
@@ -20,7 +19,6 @@ import { Nav } from './layouts/nav/nav';
 import { initAppServices } from './services/init-app-services';
 import { analytics } from './utils/analytics/analytics';
 import { useOnRouteChange } from './utils/analytics/use-on-route-change';
-
 
 initAppServices();
 

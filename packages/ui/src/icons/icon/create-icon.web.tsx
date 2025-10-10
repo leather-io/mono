@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 
 import 'leather-styles/css';
+
 import { ColorToken, token } from 'leather-styles/tokens';
 
 import { IconSize, iconSizeMap } from './icon.shared';
