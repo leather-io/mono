@@ -296,7 +296,7 @@
     "web3"
   ],
   "main": "index.js",
-  "packageManager": "pnpm@9.11.0",
+  "packageManager": "pnpm@10.10.0",
   "private": true,
   "release": {
     "branches": [
