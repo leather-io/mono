@@ -19,6 +19,42 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.79.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.78.0...@leather.io/mobile-v2.79.0) (2025-10-10)
+
+
+### Features
+
+* **mobile:** add swap validation ([572909b](https://github.com/leather-io/mono/commit/572909bfd0aa3adc2ce69f93a1968e23c3d27160))
+* **mobile:** filter out floor price ([dc88f69](https://github.com/leather-io/mono/commit/dc88f692410cac46e938564530accd15c8ad50fd))
+* **mobile:** make ActionButtons dynamic, add isSwappableAsset type guard ([c4b32ed](https://github.com/leather-io/mono/commit/c4b32ede97cba32acd484982198fb442a092ec84))
+* **mobile:** populate collectible details with relevant information ([5ae1024](https://github.com/leather-io/mono/commit/5ae1024b9abb537f4aac0a9acf7820acf91d6f79))
+
+
+### Bug Fixes
+
+* **mobile:** add handling of nested arrays of objects to auto print nft attributes ([ac74ea1](https://github.com/leather-io/mono/commit/ac74ea1f775a6beb91df96f4ecd445e53b82253c))
+* **mobile:** encapsulate SIP9 provider data to keep the interface cleaner ([f7957c9](https://github.com/leather-io/mono/commit/f7957c9367e373c39c3cae3eccf00f224cf3f9bc))
+* **mobile:** fix bug rendering bns names ([d8a724b](https://github.com/leather-io/mono/commit/d8a724bd19b25e32bbc88e450d5af6c257f1e5dc))
+* **mobile:** fix duplicate key error message ([c8404d8](https://github.com/leather-io/mono/commit/c8404d8c6265d8aa713d62bafd95d16b35ab7f43))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.1
+    * @leather.io/bitcoin bumped to 0.33.0
+    * @leather.io/constants bumped to 0.27.0
+    * @leather.io/crypto bumped to 1.11.14
+    * @leather.io/models bumped to 0.44.0
+    * @leather.io/provider bumped to 1.5.17
+    * @leather.io/query bumped to 2.42.6
+    * @leather.io/rpc bumped to 2.20.16
+    * @leather.io/services bumped to 1.35.0
+    * @leather.io/stacks bumped to 1.17.2
+    * @leather.io/ui bumped to 1.86.2
+    * @leather.io/utils bumped to 0.46.3
+
 ## [2.78.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.77.0...@leather.io/mobile-v2.78.0) (2025-10-08)
 
 

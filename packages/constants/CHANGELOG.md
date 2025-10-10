@@ -207,6 +207,20 @@
   * dependencies
     * @leather.io/models bumped to 0.43.0
 
+## [0.27.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.26.0...@leather.io/constants-v0.27.0) (2025-10-10)
+
+
+### Features
+
+* **mobile:** add swap validation ([572909b](https://github.com/leather-io/mono/commit/572909bfd0aa3adc2ce69f93a1968e23c3d27160))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.44.0
+
 ## [0.26.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.25.5...@leather.io/constants-v0.26.0) (2025-10-08)
 
 
