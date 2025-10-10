@@ -1,12 +1,7 @@
-import { AccountId } from '@leather.io/models';
-
 import { createAccountAddresses, hasBitcoinAddress, hasStacksAddress } from './account-addresses';
 
 describe(createAccountAddresses.name, () => {
-  const mockAccountId: AccountId = {
-    fingerprint: 'test-fingerprint',
-    accountIndex: 0,
-  };
+  const mockAccountId = { fingerprint: 'test-fingerprint', accountIndex: 0 };
   const mockBtcDescriptors = ['tr(xpub123)', 'wpkh(xpub456)'];
   const mockStxAddress = 'ST123TEST';
 
