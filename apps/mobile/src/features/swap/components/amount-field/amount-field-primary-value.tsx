@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react';
-import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native';
+import { NativeSyntheticEvent, TextLayoutEventData, TextStyle } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import { decimalSeparator } from '@/features/swap/swap.utils';
 
@@ -12,13 +13,15 @@ const baseFontSize = 24;
 const baseLineHeight = 36;
 const baseGlyphHeight = 26;
 
+const AnimatedText = Animated.createAnimatedComponent(Text);
+
 interface PrimaryValueProps {
   value: string;
-  invalid?: boolean;
   caret: ReactNode;
+  animatedTextStyle?: TextStyle | { color: string };
 }
 
-export function PrimaryValue({ value, caret }: PrimaryValueProps) {
+export function PrimaryValue({ value, caret, animatedTextStyle }: PrimaryValueProps) {
   const [lineHeight, setLineHeight] = useState(baseLineHeight);
 
   function handleTextLayout(event: NativeSyntheticEvent<TextLayoutEventData>) {
@@ -38,19 +41,18 @@ export function PrimaryValue({ value, caret }: PrimaryValueProps) {
       alignItems="center"
       style={{ paddingRight: 2 }}
     >
-      <Text
-        color={value === '0' ? 'ink.text-subdued' : 'ink.text-primary'}
+      <AnimatedText
         variant="heading02"
         fontSize={baseFontSize}
         lineHeight={lineHeight}
-        style={textOpticalAlignmentStyle}
+        style={[textOpticalAlignmentStyle, animatedTextStyle]}
         numberOfLines={1}
         adjustsFontSizeToFit
         allowFontScaling={false}
         onTextLayout={handleTextLayout}
       >
         {value}
-      </Text>
+      </AnimatedText>
       {caret}
     </Box>
   );

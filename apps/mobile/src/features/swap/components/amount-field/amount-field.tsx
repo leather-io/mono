@@ -1,10 +1,10 @@
 import { AmountFieldCaret } from '@/features/swap/components/amount-field/amount-field-caret';
+import { useAmountField } from '@/features/swap/components/amount-field/use-amount-field';
 import { CurrencyModeSwitcher } from '@/features/swap/components/currency-mode-switcher';
 import { SecondaryAmount } from '@/features/swap/swap-state/swap-state.types';
 import { InputCurrencyMode } from '@/utils/types';
 
-import { cryptoAssetColors } from '@leather.io/constants';
-import { CryptoCurrency, Currency, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { Currency, SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
 import { PrimaryValue, formatPrimaryValue } from './amount-field-primary-value';
@@ -16,6 +16,7 @@ interface AmountFieldProps {
   onInputCurrencyModeSwitch: () => void;
   secondaryAmount: SecondaryAmount;
   quoteCurrencyPreference: Currency;
+  invalid?: boolean;
 }
 
 export function AmountField({
@@ -25,16 +26,21 @@ export function AmountField({
   inputCurrencyMode,
   onInputCurrencyModeSwitch,
   quoteCurrencyPreference,
+  invalid,
 }: AmountFieldProps) {
+  const formattedValue = formatPrimaryValue({
+    value,
+    currency: quoteCurrencyPreference,
+    showCurrency: inputCurrencyMode === 'quote',
+  });
+  const { caretColor, animatedTextStyle } = useAmountField({ asset, invalid, value });
+
   return (
     <Box gap="3" flex={1} overflow="hidden">
       <PrimaryValue
-        value={formatPrimaryValue({
-          value,
-          currency: quoteCurrencyPreference,
-          showCurrency: inputCurrencyMode === 'quote',
-        })}
-        caret={<AmountFieldCaret value={value} color={getCaretColor(asset)} />}
+        value={formattedValue}
+        caret={<AmountFieldCaret value={value} color={caretColor} />}
+        animatedTextStyle={animatedTextStyle}
       />
       <CurrencyModeSwitcher
         secondaryAmount={secondaryAmount}
@@ -42,12 +48,4 @@ export function AmountField({
       />
     </Box>
   );
-}
-
-function isAssetColorDefined(code?: CryptoCurrency): code is keyof typeof cryptoAssetColors {
-  return code ? code in cryptoAssetColors : false;
-}
-
-function getCaretColor(asset?: SwappableFungibleCryptoAsset) {
-  return isAssetColorDefined(asset?.symbol) ? cryptoAssetColors[asset?.symbol] : undefined;
 }

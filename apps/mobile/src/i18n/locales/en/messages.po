@@ -213,6 +213,14 @@ msgstr "Allow Camera Access"
 msgid "Allow collection of data"
 msgstr "Allow collection of data"
 
+#: src/features/swap/components/error-message.tsx:27
+msgid "Amount below minimum ({formattedMinimum})"
+msgstr "Amount below minimum ({formattedMinimum})"
+
+#: src/features/swap/components/error-message.tsx:31
+msgid "Amount exceeds maximum ({formattedMaximum})"
+msgstr "Amount exceeds maximum ({formattedMaximum})"
+
 #: src/features/send/error-messages.ts:11
 msgid "Amount must be greater than zero"
 msgstr "Amount must be greater than zero"
@@ -651,6 +659,10 @@ msgstr "Enable to receive notifications about transactions"
 msgid "Enabled"
 msgstr "Enabled"
 
+#: src/features/swap/components/error-message.tsx:18
+msgid "Enter an amount"
+msgstr "Enter an amount"
+
 #: src/features/send/components/recipient/recipient-toggle.tsx:57
 msgid "Enter recipient"
 msgstr "Enter recipient"
@@ -852,9 +864,17 @@ msgstr "Input"
 msgid "Inputs and outputs"
 msgstr "Inputs and outputs"
 
+#: src/features/swap/components/error-message.tsx:34
+msgid "Insufficient balance"
+msgstr "Insufficient balance"
+
 #: src/features/send/error-messages.ts:14
 msgid "Insufficient funds"
 msgstr "Insufficient funds"
+
+#: src/features/swap/components/error-message.tsx:20
+msgid "Invalid amount"
+msgstr "Invalid amount"
 
 #: src/features/settings/email-address-sheet.tsx:23
 msgid "Invalid email address"
@@ -1207,7 +1227,7 @@ msgstr "Reveal account"
 #: src/features/send/forms/btc/btc-form.tsx:126
 #: src/features/send/forms/stx/sip10-form.tsx:149
 #: src/features/send/forms/stx/stx-form.tsx:140
-#: src/features/swap/swap.tsx:109
+#: src/features/swap/swap.tsx:111
 msgid "Review"
 msgstr "Review"
 
@@ -1371,7 +1391,7 @@ msgid "Submitting..."
 msgstr "Submitting..."
 
 #: src/components/action-buttons.tsx:49
-#: src/features/swap/swap.tsx:61
+#: src/features/swap/swap.tsx:62
 msgid "Swap"
 msgstr "Swap"
 
@@ -1515,6 +1535,10 @@ msgstr "Token Transfer"
 #: src/components/home/components/asset-tabs.tsx:25
 msgid "Tokens"
 msgstr "Tokens"
+
+#: src/features/swap/components/error-message.tsx:23
+msgid "Too many decimals (max {maxDecimals})"
+msgstr "Too many decimals (max {maxDecimals})"
 
 #: src/features/account/components/account-total-balance.tsx:40
 #: src/features/account/components/account-total-balance.tsx:53
