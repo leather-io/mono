@@ -927,6 +927,25 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.15
 
+## [0.33.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.32.9...@leather.io/bitcoin-v0.33.0) (2025-10-10)
+
+
+### Features
+
+* **mobile:** add swap validation ([572909b](https://github.com/leather-io/mono/commit/572909bfd0aa3adc2ce69f93a1968e23c3d27160))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.27.0
+    * @leather.io/crypto bumped to 1.11.14
+    * @leather.io/models bumped to 0.44.0
+    * @leather.io/utils bumped to 0.46.3
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.16
+
 ## [0.32.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.31.6...@leather.io/bitcoin-v0.32.0) (2025-08-18)
 
 

@@ -413,6 +413,32 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.35.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.34.2...@leather.io/services-v1.35.0) (2025-10-10)
+
+
+### Features
+
+* **mobile:** filter out floor price ([dc88f69](https://github.com/leather-io/mono/commit/dc88f692410cac46e938564530accd15c8ad50fd))
+
+
+### Bug Fixes
+
+* **mobile:** encapsulate SIP9 provider data to keep the interface cleaner ([f7957c9](https://github.com/leather-io/mono/commit/f7957c9367e373c39c3cae3eccf00f224cf3f9bc))
+* **mobile:** fix duplicate key error message ([c8404d8](https://github.com/leather-io/mono/commit/c8404d8c6265d8aa713d62bafd95d16b35ab7f43))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.33.0
+    * @leather.io/constants bumped to 0.27.0
+    * @leather.io/models bumped to 0.44.0
+    * @leather.io/stacks bumped to 1.17.2
+    * @leather.io/utils bumped to 0.46.3
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.16
+
 ## [1.34.2](https://github.com/leather-io/mono/compare/@leather.io/services-v1.34.1...@leather.io/services-v1.34.2) (2025-10-08)
 
 
