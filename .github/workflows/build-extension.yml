@@ -44,8 +44,12 @@ jobs:
 
       - uses: ./.github/actions/provision
 
+      - name: Build packages
+        run: pnpm build:packages
+
       - name: Build project
-        run: pnpm build:extension
+        working-directory: apps/extension
+        run: pnpm build
         env:
           WALLET_ENVIRONMENT: feature
           TARGET_BROWSER: ${{ matrix.target }}
