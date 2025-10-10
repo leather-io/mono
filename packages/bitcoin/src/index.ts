@@ -32,10 +32,8 @@ export * from './validation/bitcoin-address';
 export * from './validation/bitcoin-error';
 export * from './validation/transaction-validation';
 
+export * from './utils/account-addresses';
 export * from './utils/bitcoin.descriptors';
-export * from './utils/bitcoin.network';
-export * from './utils/bitcoin.utils';
-export * from './utils/lookup-derivation-by-address';
 export * from './utils/bitcoin.network';
 export * from './utils/bitcoin.utils';
 export * from './utils/lookup-derivation-by-address';

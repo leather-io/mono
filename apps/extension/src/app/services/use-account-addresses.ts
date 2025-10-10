@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { createAccountAddresses } from '@leather.io/utils';
+import { createAccountAddresses } from '@leather.io/bitcoin';
 
 import { useBitcoinAccountXpubs } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';

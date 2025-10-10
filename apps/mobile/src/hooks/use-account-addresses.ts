@@ -10,10 +10,10 @@ import {
 } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 
-import { getDescriptorFromKeychain } from '@leather.io/bitcoin';
+import { createAccountAddresses, getDescriptorFromKeychain } from '@leather.io/bitcoin';
 import { extractAccountIndexFromPath } from '@leather.io/crypto';
 import { AccountAddresses } from '@leather.io/models';
-import { createAccountAddresses, isDefined, uniqueArray } from '@leather.io/utils';
+import { isDefined, uniqueArray } from '@leather.io/utils';
 
 type Wallets = ReturnType<typeof useWallets>;
 type BitcoinAccounts = ReturnType<typeof useBitcoinAccounts>;

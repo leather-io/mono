@@ -1,4 +1,5 @@
 import { NonFungibleTokenHolding } from '@stacks/stacks-blockchain-api-types';
+import axios from 'axios';
 import { injectable } from 'inversify';
 
 import {
@@ -7,13 +8,18 @@ import {
   InscriptionAsset,
   NonFungibleCryptoAsset,
   Sip9Asset,
+  StampAsset,
 } from '@leather.io/models';
 import { createInscriptionAsset, isDefined } from '@leather.io/utils';
 
 import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
-import { mapBisInscriptionToCreateInscriptionData, sortByBlockHeight } from './collectibles.utils';
+import {
+  createStampAsset,
+  mapBisInscriptionToCreateInscriptionData,
+  sortByBlockHeight,
+} from './collectibles.utils';
 
 @injectable()
 export class CollectiblesService {
@@ -35,7 +41,14 @@ export class CollectiblesService {
     const bitcoinCollectibles = await Promise.all(
       accounts
         .filter(a => a.bitcoin)
-        .map(a => this.getInscriptionsWithBlockHeight(a.bitcoin!, signal))
+        .map(a =>
+          Promise.all([
+            this.getInscriptionsWithBlockHeight(a.bitcoin!, signal),
+            a.bitcoin!.nativeSegwitAddress
+              ? this.getStampsByAddress(a.bitcoin!.nativeSegwitAddress, signal)
+              : Promise.resolve([]),
+          ]).then(([inscriptions, stamps]) => [...inscriptions, ...stamps])
+        )
     );
     return [
       ...stacksCollectibles
@@ -53,9 +66,12 @@ export class CollectiblesService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<NonFungibleCryptoAsset[]> {
-    const [bitcoinCollectibles, stacksCollectibles] = await Promise.all([
+    const [bitcoinInscriptions, bitcoinStamps, stacksCollectibles] = await Promise.all([
       account.bitcoin
         ? this.getInscriptionsWithBlockHeight(account.bitcoin, signal)
+        : Promise.resolve([]),
+      account.bitcoin?.nativeSegwitAddress
+        ? this.getStampsByAddress(account.bitcoin.nativeSegwitAddress, signal)
         : Promise.resolve([]),
       account.stacks
         ? this.getSip9sWithBlockHeight(account.stacks.stxAddress, signal)
@@ -63,7 +79,8 @@ export class CollectiblesService {
     ]);
     return [
       ...stacksCollectibles.sort(sortByBlockHeight).map(c => c.asset),
-      ...bitcoinCollectibles.sort(sortByBlockHeight).map(c => c.asset),
+      ...bitcoinInscriptions.sort(sortByBlockHeight).map(c => c.asset),
+      ...bitcoinStamps.sort(sortByBlockHeight).map(c => c.asset),
     ];
   }
 
@@ -114,6 +131,24 @@ export class CollectiblesService {
       return [...nativeSegwitInscriptions, ...taprootInscriptions].map(inscription => ({
         asset: createInscriptionAsset(mapBisInscriptionToCreateInscriptionData(inscription)),
         blockHeight: inscription.last_transfer_block_height ?? inscription.genesis_height,
+      }));
+    } catch {
+      return [];
+    }
+  }
+
+  private async getStampsByAddress(
+    address: string,
+    signal?: AbortSignal
+  ): Promise<{ asset: StampAsset; blockHeight: number }[]> {
+    try {
+      const response = await axios.get<{
+        data: { stamps: Array<{ stamp: number; stamp_url: string; block_index?: number }> };
+      }>(`https://stampchain.io/api/v2/balance/${address}`, { signal });
+
+      return response.data.data.stamps.map(stamp => ({
+        asset: createStampAsset(stamp),
+        blockHeight: stamp.block_index ?? 0,
       }));
     } catch {
       return [];
