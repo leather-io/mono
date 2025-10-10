@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { cmsClient } from '~/constants/cms-client';
 
 import { changelogEntryBySlugQuery } from '@leather.io/cms';
-import { Link as LinkButton } from '@leather.io/ui';
+import { ArrowLeftIcon, Button } from '@leather.io/ui';
 
 import { Route } from './+types/changelog-entry.route';
 import { ChangelogEntry } from './components/changelog-entry';
@@ -39,21 +39,25 @@ export default function ChangelogEntryRoute({ loaderData }: Route.ComponentProps
   if (!entry) return null;
 
   return (
-    <ChangelogPageLayout>
+    <ChangelogPageLayout
+      backButton={
+        <Link to="/changelog">
+          <Button variant="ghost" size="sm" iconStart={ArrowLeftIcon} p="space.02" gap="0" />
+        </Link>
+      }
+    >
       <ChangelogEntry entry={entry} key={entry._id}>
         <ChangelogEntryLayout
           leftColumn={
-            <Link to="/changelog">
-              <LinkButton pos="relative" top="-2px">
-                Back to changelog
-              </LinkButton>
-            </Link>
+            <>
+              <ChangelogEntry.PublishDate />
+              <ChangelogEntry.Title />
+            </>
           }
+          isLast
         >
-          <ChangelogEntry.Title />
-          <ChangelogEntry.PublishDate />
           <ChangelogEntry.Image />
-          <ChangelogEntry.Body />
+          <ChangelogEntry.Body mt="space.01" />
         </ChangelogEntryLayout>
       </ChangelogEntry>
     </ChangelogPageLayout>

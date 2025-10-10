@@ -29,11 +29,17 @@ export function ChangelogEntry({ entry, ...props }: ChangelogEntryProps) {
 function Title(props: HTMLStyledProps<'h1'>) {
   const entry = useChangelogEntry();
   return (
-    <styled.h2 textStyle="heading.04" _hover={{ color: 'ink.action-primary-hover' }} {...props}>
+    <styled.h3
+      textStyle="heading.03"
+      _hover={{ color: 'ink.action-primary-hover' }}
+      mt="space.01"
+      mb="space.03"
+      {...props}
+    >
       <Link to={`/changelog/${entry.slug.current}`} style={{ color: 'inherit' }}>
         {entry.title}
       </Link>
-    </styled.h2>
+    </styled.h3>
   );
 }
 
@@ -47,7 +53,6 @@ function PublishDate(props: HTMLStyledProps<'time'>) {
       textStyle="label.02"
       color="ink.text-subdued"
       dateTime={entry.publishedAt}
-      my="space.02"
       {...props}
     >
       {formattedDate}
@@ -64,6 +69,7 @@ function Image(props: HTMLStyledProps<'img'>) {
       width="800"
       height="400"
       mt="space.02"
+      mb="space.04"
       alt={entry.title}
       {...props}
     />
