@@ -1,0 +1,33 @@
+name: Provision
+description: Set up job with tasks needed to run a code check
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Set up pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+    - uses: actions/cache@v4
+      id: cache
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
+    - uses: nick-fields/retry@v3
+      env:
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+      with:
+        timeout_minutes: 5
+        max_attempts: 3
+        command: pnpm install --frozen-lockfile

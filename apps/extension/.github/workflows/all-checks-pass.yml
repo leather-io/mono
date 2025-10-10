@@ -1,0 +1,27 @@
+name: All checks pass
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - labeled
+      - unlabeled
+
+jobs:
+  all-checks:
+    runs-on: ubuntu-latest
+    permissions:
+      checks: read
+      contents: read
+
+    steps:
+      - uses: wechuli/allcheckspassed@v1
+        with:
+          # Initial run delays while we wait for all slow jobs to pass
+          # When running a second time, we want it to run immediately
+          delay: ${{ github.run_attempt == 1 && 4 || 0 }}
+          retries: 20
+          polling_interval: 1
+          checks_exclude: 'Dependabot'

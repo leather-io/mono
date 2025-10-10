@@ -1,0 +1,26 @@
+name: Publish unit test coverage
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  coverage:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/provision
+
+      - name: Build
+        run: pnpm test:coverage
+
+      - name: Make badge maker
+        run: npx make-coverage-badge
+
+      - name: Publish test coverage report
+        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        with:
+          branch: gh-pages
+          folder: coverage
