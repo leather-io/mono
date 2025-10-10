@@ -1,0 +1,38 @@
+import { ErrorFallbackTab } from '@/components/error/error';
+import { Stamp } from '@/features/collectibles/components/stamp';
+import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-collectibles.query';
+import { t } from '@lingui/core/macro';
+
+import { AccountId, StampAsset } from '@leather.io/models';
+
+import { Collectible, useCollectibleHeight } from '../collectible';
+import { TokenLoading } from '../components/token-loading';
+
+interface StampDetailsProps {
+  account: AccountId;
+  assetId: string;
+}
+export function StampDetails({ assetId, account }: StampDetailsProps) {
+  const { fingerprint, accountIndex } = account;
+  const height = useCollectibleHeight();
+
+  const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
+
+  if (collectible.state === 'loading') {
+    return <TokenLoading />;
+  }
+  if (collectible.state === 'error') {
+    return <ErrorFallbackTab />;
+  }
+  if (collectible.state === 'success' && collectible.value.length > 0) {
+    const stampAsset = collectible.value[0] as StampAsset;
+    const name = `${t`Stamp`} #${stampAsset.stamp}`;
+    return (
+      <Collectible name={name} description={name} details={stampAsset}>
+        <Stamp item={stampAsset} height={height} />
+      </Collectible>
+    );
+  }
+
+  return <ErrorFallbackTab />;
+}

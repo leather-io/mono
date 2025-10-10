@@ -130,6 +130,7 @@ export interface StampAsset extends BaseNonFungibleCryptoAsset {
   readonly protocol: 'stamp';
   readonly stamp: number;
   readonly stampUrl: string;
+  readonly stampExplorerUrl: string;
 }
 
 export type NonFungibleCryptoAsset = InscriptionAsset | StampAsset | Sip9Asset;

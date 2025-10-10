@@ -21,7 +21,8 @@ export type SupportedAssetProtocol =
   | 'sip10'
   | 'rune'
   | 'sip9'
-  | 'inscription';
+  | 'inscription'
+  | 'stamp';
 
 export type TokenBalance =
   | AccountQuotedBtcBalance

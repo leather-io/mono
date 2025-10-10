@@ -9,6 +9,8 @@ export const accountIdSchema = walletIdSchema.and(z.object({ accountIndex: z.num
 export const bitcoinAddressInfoSchema = z.object({
   taprootDescriptor: z.string(),
   nativeSegwitDescriptor: z.string(),
+  zeroIndexTaprootPayerAddress: z.string().optional(),
+  zeroIndexNativeSegwitPayerAddress: z.string().optional(),
 });
 
 export const stacksAddressInfoSchema = z.object({

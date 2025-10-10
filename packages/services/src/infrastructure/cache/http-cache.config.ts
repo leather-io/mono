@@ -18,6 +18,9 @@ export type HttpCacheKey =
   | 'gamma-api-get-stacks-nft'
   | 'gamma-api-get-stacks-collection'
 
+  // StampchainApiClient
+  | 'stampchain-api-stamps-by-address'
+
   // HiroStacksApiClient
   | 'hiro-stacks-get-address-balances'
   | 'hiro-stacks-get-address-stx-balance'
@@ -83,6 +86,8 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
 
   'gamma-api-get-stacks-nft': { ttl: weeksInMs(8) },
   'gamma-api-get-stacks-collection': { ttl: weeksInMs(8) },
+
+  'stampchain-api-stamps-by-address': { ttl: secondsInMs(30) },
 
   'hiro-stacks-get-address-balances': { ttl: secondsInMs(10) },
   'hiro-stacks-get-address-stx-balance': { ttl: secondsInMs(10) },
