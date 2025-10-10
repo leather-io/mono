@@ -1,19 +1,25 @@
-import { Box, Flex } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
 
-import { HasChildren, Link } from '@leather.io/ui';
+import { Button, FeedIcon, HasChildren } from '@leather.io/ui';
 
 interface ChangelogPageLayoutProps {
   children: React.ReactNode;
+  backButton?: React.ReactNode;
 }
 export function ChangelogPageLayout(props: ChangelogPageLayoutProps) {
   return (
     <Page>
-      <Page.Header title="Changelog">
-        <Box mr="space.06">
-          <Link display="inline-block" href="/changelog.xml">
-            Subscribe to RSS feed
-          </Link>
+      <Page.Header title={props.backButton || 'Changelog'}>
+        <Box mr="space.04" hideBelow="md">
+          <Button
+            variant="ghost"
+            size="sm"
+            iconStart={FeedIcon}
+            onClick={() => (window.location.href = '/changelog.xml')}
+          >
+            Subscribe
+          </Button>
         </Box>
       </Page.Header>
       <Box maxW="960px" mt="space.08">
@@ -25,21 +31,34 @@ export function ChangelogPageLayout(props: ChangelogPageLayoutProps) {
 
 interface ChangelogEntryLayoutProps extends HasChildren {
   leftColumn: React.ReactNode;
+  isLast?: boolean;
 }
 export function ChangelogEntryLayout(props: ChangelogEntryLayoutProps) {
   return (
-    <Flex flexDir={['column', null, null, 'row']} mb="space.07">
+    <Flex flexDir={['column', null, null, 'row']} mb="space.07" pb="space.07" position="relative">
+      {!props.isLast && (
+        <styled.div
+          position="absolute"
+          bottom="0"
+          left="0"
+          right="0"
+          height="1px"
+          bgGradient="to-r"
+          gradientFrom="transparent"
+          gradientVia="ink.border-default"
+          gradientTo="transparent"
+        />
+      )}
       <Box>
         <Box
-          width={['auto', null, null, '200px']}
+          width={['auto', null, null, '280px']}
           position={[null, null, null, 'sticky']}
-          mt={[null, null, null, '2px']}
           top={[null, null, null, '10px']}
         >
           {props.leftColumn}
         </Box>
       </Box>
-      <Flex flexDir="column" ml={['none', null, null, 'space.05']}>
+      <Flex flexDir="column" ml={['none', null, null, 'space.07']}>
         {props.children}
       </Flex>
     </Flex>

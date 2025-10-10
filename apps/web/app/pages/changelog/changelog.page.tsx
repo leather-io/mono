@@ -8,12 +8,19 @@ interface ChangelogPageProps {
 export function ChangelogPage({ entries }: ChangelogPageProps) {
   return (
     <ChangelogPageLayout>
-      {entries.map(entry => (
+      {entries.map((entry, index) => (
         <ChangelogEntry entry={entry} key={entry._id}>
-          <ChangelogEntryLayout leftColumn={<ChangelogEntry.PublishDate />}>
-            <ChangelogEntry.Title />
+          <ChangelogEntryLayout
+            leftColumn={
+              <>
+                <ChangelogEntry.PublishDate />
+                <ChangelogEntry.Title />
+              </>
+            }
+            isLast={index === entries.length - 1}
+          >
             <ChangelogEntry.Image />
-            <ChangelogEntry.Body mt="space.03" />
+            <ChangelogEntry.Body mt="space.01" />
           </ChangelogEntryLayout>
         </ChangelogEntry>
       ))}
