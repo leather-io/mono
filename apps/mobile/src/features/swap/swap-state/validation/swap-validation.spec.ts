@@ -98,6 +98,7 @@ describe('swap validation', () => {
         expect(result.issues.baseAmount).toEqual({
           field: 'baseAmount',
           code: 'PRECISION_INVALID',
+          context: { decimals: 8 },
         });
       });
 
@@ -151,6 +152,7 @@ describe('swap validation', () => {
           expect(invalidResult.issues.baseAmount).toEqual({
             field: 'baseAmount',
             code: 'PRECISION_INVALID',
+            context: { decimals },
           });
         }
       );
@@ -178,6 +180,7 @@ describe('swap validation', () => {
         expect(result.issues.baseAmount).toEqual({
           field: 'baseAmount',
           code: 'TOO_SMALL',
+          context: { minimum: createMoney(546, 'BTC', 8) },
         });
       });
 
@@ -272,10 +275,12 @@ describe('swap validation', () => {
         expect(cryptoResult.issues.baseAmount).toEqual({
           field: 'baseAmount',
           code: 'TOO_SMALL',
+          context: { minimum: createMoney(546, 'BTC', 8) },
         });
         expect(quoteResult.issues.baseAmount).toEqual({
           field: 'baseAmount',
           code: 'TOO_SMALL',
+          context: { minimum: createMoney(546, 'BTC', 8) },
         });
       });
     });
@@ -303,6 +308,7 @@ describe('swap validation', () => {
         expect(result.issues.baseAmount).toEqual({
           field: 'baseAmount',
           code: 'INSUFFICIENT_BALANCE',
+          context: { balance: createMoney(100_000_000, 'BTC', 8) },
         });
       });
 
@@ -379,6 +385,7 @@ describe('swap validation', () => {
         expect(exceedingResult.issues.baseAmount).toEqual({
           field: 'baseAmount',
           code: 'INSUFFICIENT_BALANCE',
+          context: { balance: createMoney(500_000_000, 'STX', 6) },
         });
         expect(withinResult.issues.baseAmount).toBeUndefined();
       });
@@ -419,10 +426,12 @@ describe('swap validation', () => {
         expect(cryptoResult.issues.baseAmount).toEqual({
           field: 'baseAmount',
           code: 'INSUFFICIENT_BALANCE',
+          context: { balance: createMoney(100_000_000, 'BTC', 8) },
         });
         expect(quoteResult.issues.baseAmount).toEqual({
           field: 'baseAmount',
           code: 'INSUFFICIENT_BALANCE',
+          context: { balance: createMoney(50_000_00, 'USD', 2) },
         });
       });
     });
@@ -505,10 +514,12 @@ describe('swap validation', () => {
       expect(lowResult.issues.slippage).toEqual({
         field: 'slippage',
         code: 'OUT_OF_RANGE',
+        context: { min: 0.005, max: 0.1 },
       });
       expect(highResult.issues.slippage).toEqual({
         field: 'slippage',
         code: 'OUT_OF_RANGE',
+        context: { min: 0.005, max: 0.1 },
       });
     });
 
@@ -724,6 +735,194 @@ describe('swap validation', () => {
         const context = createValidationContext({ state });
         const result = runValidation(context);
         expect(result.isValid).toBe(false);
+      });
+    });
+  });
+
+  describe('type narrowing', () => {
+    describe('baseAmount issue context narrowing', () => {
+      it('narrows PRECISION_INVALID to include decimals context', () => {
+        const btcAsset = createAccountSwapAsset({
+          asset: defaultBtcAsset,
+          balance: { crypto: 100_000_000, quote: 50_000_00 },
+        });
+
+        const context = createValidationContext({
+          state: {
+            baseSwapAsset: btcAsset,
+            baseAmount: '1.123456789',
+          },
+        });
+
+        const result = runValidation(context);
+        const issue = result.issues.baseAmount;
+
+        if (issue?.code === 'PRECISION_INVALID') {
+          expect(issue.context.decimals).toBe(8);
+          expect(typeof issue.context.decimals).toBe('number');
+        } else {
+          throw new Error('Expected PRECISION_INVALID issue');
+        }
+      });
+
+      it('narrows TOO_SMALL to include minimum context', () => {
+        const btcAsset = createAccountSwapAsset({
+          asset: defaultBtcAsset,
+          balance: { crypto: 100_000_000, quote: 50_000_00 },
+        });
+
+        const context = createValidationContext({
+          state: {
+            baseSwapAsset: btcAsset,
+            baseAmount: '0.00000545',
+          },
+          derivedAmounts: {
+            crypto: createMoney(545, 'BTC', 8),
+            quote: createMoney(27, 'USD', 2),
+          },
+        });
+
+        const result = runValidation(context);
+        const issue = result.issues.baseAmount;
+
+        if (issue?.code === 'TOO_SMALL') {
+          expect(issue.context.minimum).toBeDefined();
+          expect(issue.context.minimum.symbol).toBe('BTC');
+          expect(issue.context.minimum.amount.toNumber()).toBe(546);
+        } else {
+          throw new Error('Expected TOO_SMALL issue');
+        }
+      });
+
+      it('narrows INSUFFICIENT_BALANCE to include balance context', () => {
+        const btcAsset = createAccountSwapAsset({
+          asset: defaultBtcAsset,
+          balance: { crypto: 100_000_000, quote: 50_000_00 },
+        });
+
+        const context = createValidationContext({
+          state: {
+            baseSwapAsset: btcAsset,
+            baseAmount: '1.5',
+            inputCurrencyMode: 'crypto',
+          },
+          derivedAmounts: {
+            crypto: createMoney(150_000_000, 'BTC', 8),
+            quote: createMoney(75_000_00, 'USD', 2),
+          },
+        });
+
+        const result = runValidation(context);
+        const issue = result.issues.baseAmount;
+
+        if (issue?.code === 'INSUFFICIENT_BALANCE') {
+          expect(issue.context.balance).toBeDefined();
+          expect(issue.context.balance.symbol).toBe('BTC');
+          expect(issue.context.balance.amount.toNumber()).toBe(100_000_000);
+        } else {
+          throw new Error('Expected INSUFFICIENT_BALANCE issue');
+        }
+      });
+
+      it('REQUIRED and INVALID issues do not have context', () => {
+        const requiredContext = createValidationContext({
+          state: { baseAmount: '' },
+        });
+
+        const invalidContext = createValidationContext({
+          state: { baseAmount: 'invalid' },
+        });
+
+        const requiredResult = runValidation(requiredContext);
+        const invalidResult = runValidation(invalidContext);
+
+        const requiredIssue = requiredResult.issues.baseAmount;
+        const invalidIssue = invalidResult.issues.baseAmount;
+
+        if (requiredIssue?.code === 'REQUIRED') {
+          expect('context' in requiredIssue).toBe(false);
+        }
+
+        if (invalidIssue?.code === 'INVALID') {
+          expect('context' in invalidIssue).toBe(false);
+        }
+      });
+    });
+
+    describe('slippage issue context narrowing', () => {
+      it('narrows OUT_OF_RANGE to include min/max context', () => {
+        const context = createValidationContext({ state: { slippage: 0.004 } });
+        const result = runValidation(context);
+        const issue = result.issues.slippage;
+
+        if (issue?.code === 'OUT_OF_RANGE') {
+          expect(issue.context.min).toBe(0.005);
+          expect(issue.context.max).toBe(0.1);
+          expect(typeof issue.context.min).toBe('number');
+          expect(typeof issue.context.max).toBe('number');
+        } else {
+          throw new Error('Expected OUT_OF_RANGE issue');
+        }
+      });
+
+      it('REQUIRED issue does not have context', () => {
+        const context = createValidationContext({
+          state: { slippage: null as unknown as number },
+        });
+
+        const result = runValidation(context);
+        const issue = result.issues.slippage;
+
+        if (issue?.code === 'REQUIRED') {
+          expect('context' in issue).toBe(false);
+        }
+      });
+    });
+
+    describe('cross-field type safety', () => {
+      it('each field has properly typed issues', () => {
+        const context = createValidationContext({
+          state: {
+            baseSwapAsset: null,
+            targetSwapAsset: null,
+            baseAmount: '',
+            slippage: null as unknown as number,
+          },
+        });
+
+        const result = runValidation(context);
+
+        const baseSwapAssetIssue = result.issues.baseSwapAsset;
+        const targetSwapAssetIssue = result.issues.targetSwapAsset;
+        const baseAmountIssue = result.issues.baseAmount;
+        const slippageIssue = result.issues.slippage;
+
+        if (baseSwapAssetIssue) {
+          expect(baseSwapAssetIssue.field).toBe('baseSwapAsset');
+          expect(baseSwapAssetIssue.code).toBe('REQUIRED');
+        }
+
+        if (targetSwapAssetIssue) {
+          expect(targetSwapAssetIssue.field).toBe('targetSwapAsset');
+          expect(targetSwapAssetIssue.code).toBe('REQUIRED');
+        }
+
+        if (baseAmountIssue) {
+          expect(baseAmountIssue.field).toBe('baseAmount');
+          expect([
+            'REQUIRED',
+            'INVALID',
+            'PRECISION_INVALID',
+            'TOO_SMALL',
+            'TOO_LARGE',
+            'INSUFFICIENT_BALANCE',
+          ]).toContain(baseAmountIssue.code);
+        }
+
+        if (slippageIssue) {
+          expect(slippageIssue.field).toBe('slippage');
+          expect(['REQUIRED', 'INVALID', 'OUT_OF_RANGE']).toContain(slippageIssue.code);
+        }
       });
     });
   });

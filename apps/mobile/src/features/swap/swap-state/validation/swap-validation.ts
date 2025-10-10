@@ -12,9 +12,10 @@ import {
   isWithinRange,
 } from '@/features/swap/swap-state/validation/swap-validation.utils';
 import { MAX_SLIPPAGE_PERCENTAGE, MIN_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap.constants';
-import { filter, first, isNonNull, map, pipe } from 'remeda';
+import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
 import { Money } from '@leather.io/models';
+import { createMoney } from '@leather.io/utils';
 
 export type Field = 'baseSwapAsset' | 'targetSwapAsset' | 'baseAmount' | 'slippage' | 'nonce';
 
@@ -32,23 +33,42 @@ export interface CodesByField {
   slippage: 'REQUIRED' | 'INVALID' | 'OUT_OF_RANGE';
 }
 
-export type Issue = {
-  [K in Field]: {
-    field: K;
-    code: CodesByField[K];
-  };
-}[Field];
+export type BaseAmountIssue =
+  | { field: 'baseAmount'; code: 'REQUIRED' }
+  | { field: 'baseAmount'; code: 'INVALID' }
+  | { field: 'baseAmount'; code: 'PRECISION_INVALID'; context: { decimals: number } }
+  | { field: 'baseAmount'; code: 'TOO_SMALL'; context: { minimum: Money } }
+  | { field: 'baseAmount'; code: 'TOO_LARGE'; context: { maximum: Money } }
+  | { field: 'baseAmount'; code: 'INSUFFICIENT_BALANCE'; context: { balance: Money } };
 
-type ByField = { [K in Field]: Extract<Issue, { field: K }> | undefined };
+type SlippageIssue =
+  | { field: 'slippage'; code: 'REQUIRED' }
+  | { field: 'slippage'; code: 'INVALID' }
+  | { field: 'slippage'; code: 'OUT_OF_RANGE'; context: { min: number; max: number } };
 
-function rules(...pairs: [boolean, Issue][]): Issue | undefined {
-  return pipe(
-    pairs,
-    filter(([condition]) => !condition),
-    map(([, i]) => i),
-    first()
-  );
+interface BaseSwapAssetIssue {
+  field: 'baseSwapAsset';
+  code: 'REQUIRED';
 }
+interface TargetSwapAssetIssue {
+  field: 'targetSwapAsset';
+  code: 'REQUIRED';
+}
+interface NonceIssue {
+  field: 'nonce';
+  code: 'INVALID';
+}
+
+export type Issue =
+  | BaseAmountIssue
+  | SlippageIssue
+  | BaseSwapAssetIssue
+  | TargetSwapAssetIssue
+  | NonceIssue;
+
+type ByField = {
+  [F in Field]: Extract<Issue, { field: F }> | undefined;
+};
 
 interface ValidationContext {
   state: SwapInternalState;
@@ -60,88 +80,139 @@ export interface ValidationResult {
   issues: ByField;
 }
 
-function validateAmount(context: ValidationContext): Issue | undefined {
+function validateAmount(context: ValidationContext): BaseAmountIssue | undefined {
   const { state, derivedAmounts } = context;
-  const { baseSwapAsset, baseAmount, inputCurrencyMode } = state;
-  const decimals = baseSwapAsset?.asset.decimals;
-  const canonicalCryptoAmount = derivedAmounts.crypto;
-  const activeAmount = derivedAmounts[inputCurrencyMode];
-  const spendableBalance = resolveSpendableBalanceInCurrencyMode(
-    baseSwapAsset?.balance,
-    baseSwapAsset?.asset.protocol,
-    inputCurrencyMode
-  );
-  const needsBalanceValidation =
-    isNonNull(activeAmount) &&
-    isNonNull(canonicalCryptoAmount) &&
-    isNonNull(spendableBalance) &&
-    isNonNull(baseSwapAsset);
-  const minAmount = resolveMinimumSpendAmount(baseSwapAsset?.asset.protocol);
-  const maxAmount = resolveMaximumSpendAmount(baseSwapAsset?.asset.protocol);
+  const { baseAmount, baseSwapAsset, inputCurrencyMode } = state;
 
-  const pairs: [boolean, Issue][] = [
-    [isPresent(baseAmount), { field: 'baseAmount', code: 'REQUIRED' }],
-    [isParsableNumber(baseAmount), { field: 'baseAmount', code: 'INVALID' }],
-    [hasValidPrecision(baseAmount, decimals), { field: 'baseAmount', code: 'PRECISION_INVALID' }],
-  ];
-
-  if (needsBalanceValidation) {
-    pairs.push(
-      [canonicalCryptoAmount.amount.gte(minAmount), { field: 'baseAmount', code: 'TOO_SMALL' }],
-      [canonicalCryptoAmount.amount.lte(maxAmount), { field: 'baseAmount', code: 'TOO_LARGE' }],
-      [
-        isAmountWithinBalance(activeAmount, spendableBalance),
-        { field: 'baseAmount', code: 'INSUFFICIENT_BALANCE' },
-      ]
-    );
+  if (!isPresent(baseAmount)) {
+    return { field: 'baseAmount', code: 'REQUIRED' };
   }
 
-  return rules(...pairs);
+  if (!isParsableNumber(baseAmount)) {
+    return { field: 'baseAmount', code: 'INVALID' };
+  }
+
+  if (baseSwapAsset) {
+    const decimals = baseSwapAsset.asset.decimals;
+    if (!hasValidPrecision(baseAmount, decimals)) {
+      return { field: 'baseAmount', code: 'PRECISION_INVALID', context: { decimals } };
+    }
+  }
+
+  if (derivedAmounts.crypto && baseSwapAsset) {
+    const protocol = baseSwapAsset.asset.protocol;
+    const minimum = resolveMinimumSpendAmount(protocol);
+    const maximum = resolveMaximumSpendAmount(protocol);
+
+    const cryptoAmountInBaseUnits = derivedAmounts.crypto.amount.toNumber();
+
+    if (!isWithinRange(cryptoAmountInBaseUnits, minimum, maximum)) {
+      if (cryptoAmountInBaseUnits < minimum) {
+        return {
+          field: 'baseAmount',
+          code: 'TOO_SMALL',
+          context: {
+            minimum: createMoney(
+              minimum,
+              derivedAmounts.crypto.symbol,
+              derivedAmounts.crypto.decimals
+            ),
+          },
+        };
+      }
+      return {
+        field: 'baseAmount',
+        code: 'TOO_LARGE',
+        context: {
+          maximum: createMoney(
+            maximum,
+            derivedAmounts.crypto.symbol,
+            derivedAmounts.crypto.decimals
+          ),
+        },
+      };
+    }
+  }
+
+  if (baseSwapAsset?.balance && derivedAmounts.crypto && derivedAmounts.quote) {
+    const spendableBalance = resolveSpendableBalanceInCurrencyMode(
+      baseSwapAsset.balance,
+      baseSwapAsset.asset.protocol,
+      inputCurrencyMode
+    );
+
+    if (spendableBalance) {
+      const currentAmount = whenInputCurrencyMode(inputCurrencyMode)({
+        crypto: derivedAmounts.crypto,
+        quote: derivedAmounts.quote,
+      });
+
+      if (currentAmount && !isAmountWithinBalance(currentAmount, spendableBalance)) {
+        return {
+          field: 'baseAmount',
+          code: 'INSUFFICIENT_BALANCE',
+          context: { balance: spendableBalance },
+        };
+      }
+    }
+  }
+
+  return undefined;
 }
 
-function validateSlippage(context: ValidationContext): Issue | undefined {
+function validateSlippage(context: ValidationContext): SlippageIssue | undefined {
   const { state } = context;
   const { slippage } = state;
 
-  return rules(
-    [isPresent(slippage), { field: 'slippage', code: 'REQUIRED' }],
-    [
-      isWithinRange(slippage, MIN_SLIPPAGE_PERCENTAGE, MAX_SLIPPAGE_PERCENTAGE),
-      { field: 'slippage', code: 'OUT_OF_RANGE' },
-    ]
-  );
+  if (!isPresent(slippage)) {
+    return { field: 'slippage', code: 'REQUIRED' };
+  }
+
+  if (!isWithinRange(slippage, MIN_SLIPPAGE_PERCENTAGE, MAX_SLIPPAGE_PERCENTAGE)) {
+    return {
+      field: 'slippage',
+      code: 'OUT_OF_RANGE',
+      context: { min: MIN_SLIPPAGE_PERCENTAGE, max: MAX_SLIPPAGE_PERCENTAGE },
+    };
+  }
+
+  return undefined;
 }
 
-function validateBaseAssetSelected(context: ValidationContext): Issue | undefined {
-  if (!context.state.baseSwapAsset) {
+function validateBaseAssetSelected(context: ValidationContext): BaseSwapAssetIssue | undefined {
+  const { state } = context;
+
+  if (!state.baseSwapAsset) {
     return { field: 'baseSwapAsset', code: 'REQUIRED' };
   }
-  return;
+
+  return undefined;
 }
 
-function validateTargetAssetSelected(context: ValidationContext): Issue | undefined {
-  if (!context.state.targetSwapAsset) {
+function validateTargetAssetSelected(context: ValidationContext): TargetSwapAssetIssue | undefined {
+  const { state } = context;
+
+  if (!state.targetSwapAsset) {
     return { field: 'targetSwapAsset', code: 'REQUIRED' };
   }
-  return;
+
+  return undefined;
 }
 
 export function runValidation(context: ValidationContext): ValidationResult {
-  const allIssues = [
-    validateAmount,
-    validateSlippage,
-    validateBaseAssetSelected,
-    validateTargetAssetSelected,
-  ].flatMap(validator => validator(context));
+  const baseSwapAsset = validateBaseAssetSelected(context);
+  const targetSwapAsset = validateTargetAssetSelected(context);
+  const baseAmount = validateAmount(context);
+  const slippage = validateSlippage(context);
 
   return {
-    isValid: allIssues.filter(Boolean).length === 0,
+    isValid: !baseSwapAsset && !targetSwapAsset && !baseAmount && !slippage,
     issues: {
-      baseSwapAsset: allIssues.find(i => i?.field === 'baseSwapAsset'),
-      targetSwapAsset: allIssues.find(i => i?.field === 'targetSwapAsset'),
-      baseAmount: allIssues.find(i => i?.field === 'baseAmount'),
-      slippage: allIssues.find(i => i?.field === 'slippage'),
-      nonce: allIssues.find(i => i?.field === 'nonce'),
+      baseSwapAsset,
+      targetSwapAsset,
+      baseAmount,
+      slippage,
+      nonce: undefined,
     },
   };
 }
