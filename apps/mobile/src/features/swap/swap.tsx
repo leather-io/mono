@@ -32,15 +32,16 @@ interface SwapProps {
 export function Swap({ baseAsset, targetAsset }: SwapProps) {
   const { assetVisibility, fiatCurrencyPreference } = useSettings();
   const accountRequest = useAccountRequest();
-  const { state, actions, baseAssetsQuery, targetAssetsQuery, quoteQuery } = useSwapState({
-    accountRequest,
-    marketDataService: getMarketDataService(),
-    swapService: getSwapService(),
-    quoteCurrencyPreference: fiatCurrencyPreference,
-    isAssetAllowed: createAssetVisibilityPredicate(assetVisibility),
-    baseAsset,
-    targetAsset,
-  });
+  const { state, actions, validation, baseAssetsQuery, targetAssetsQuery, quoteQuery } =
+    useSwapState({
+      accountRequest,
+      marketDataService: getMarketDataService(),
+      swapService: getSwapService(),
+      quoteCurrencyPreference: fiatCurrencyPreference,
+      isAssetAllowed: createAssetVisibilityPredicate(assetVisibility),
+      baseAsset,
+      targetAsset,
+    });
   const validateDecimalPlaces = createDecimalPlaceValidator(
     whenInputCurrencyMode(state.inputCurrencyMode)({
       crypto: state.baseSwapAsset?.asset.decimals,
@@ -63,6 +64,7 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
         <Panel.Card type="pay">
           <Panel.CardRow>
             <AmountField
+              invalid={!!validation.issues.baseAmount}
               asset={state.baseSwapAsset?.asset}
               secondaryAmount={state.secondaryAmount}
               inputCurrencyMode={state.inputCurrencyMode}
@@ -96,7 +98,7 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
         <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
       </Panel.Root>
 
-      <ErrorMessage amount={state.baseAmount} errorMessage="dogs" />
+      <ErrorMessage amount={state.baseAmount} issue={validation.issues.baseAmount} />
 
       <Box flex={1} justifyContent="flex-end" gap="4">
         <AmountPresets onSelectPercentage={actions.setBaseAmountByPercentage} />
