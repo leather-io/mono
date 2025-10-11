@@ -4,6 +4,7 @@ import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-heig
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 import { Swap } from '@/features/swap/swap';
+import { usePreloadSwapData } from '@/features/swap/use-preload-swap-data';
 import { analytics } from '@/utils/analytics';
 
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
@@ -21,6 +22,7 @@ export interface SwapSheetInstance {
 export type SwapSheetRef = RefObject<SwapSheetInstance | null>;
 
 export function SwapSheet() {
+  usePreloadSwapData();
   const { swapSheetRef } = useGlobalSheets();
   const ref = useRef<SheetInstance>(null);
   const triggerHaptics = useHaptics();
