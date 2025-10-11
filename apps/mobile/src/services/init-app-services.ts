@@ -1,3 +1,5 @@
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
 import { initServicesContainer } from '@leather.io/services';
 
 import { MobileHttpCacheService } from './mobile-http-cache.service';
@@ -20,5 +22,12 @@ export function initAppServices() {
     },
     cacheService: MobileHttpCacheService,
     settingsService: MobileSettingsService,
+  });
+
+  GoogleSignin.configure({
+    webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+    scopes: ['https://www.googleapis.com/auth/drive.appdata'],
+    offlineAccess: true,
+    forceCodeForRefreshToken: true,
   });
 }

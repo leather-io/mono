@@ -1,0 +1,60 @@
+{
+  "name": "@leather.io/google-backup",
+  "author": "Leather.io contact@leather.io",
+  "description": "Google Drive backup package for Leather wallet encryption and storage",
+  "version": "1.0.0",
+  "license": "MIT",
+  "homepage": "https://github.com/leather.io/mono/tree/dev/packages/google-backup",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather.io/mono.git",
+    "directory": "packages/google-backup"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "bugs": "https://github.com/leather-io/mono/issues",
+  "dependencies": {
+    "@leather.io/crypto": "workspace:*",
+    "@leather.io/models": "workspace:*",
+    "@leather.io/utils": "workspace:*",
+    "@noble/ciphers": "2.0.1",
+    "@noble/hashes": "1.5.0",
+    "libsodium-wrappers": "0.7.15",
+    "zxcvbn": "4.4.2"
+  },
+  "devDependencies": {
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/tsconfig-config": "workspace:*",
+    "@types/node": "24.0.8",
+    "@types/zxcvbn": "4.4.5",
+    "prettier": "3.5.1",
+    "tsup": "8.4.0",
+    "typescript": "5.8.3",
+    "vitest": "2.1.9"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "leather",
+    "leather wallet",
+    "google drive",
+    "backup",
+    "encryption"
+  ],
+  "prettier": "@leather.io/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  }
+}

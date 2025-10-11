@@ -11,7 +11,7 @@ import { getDeviceId } from './get-device-id';
 const FIRST_OPEN_KEY = 'first_open_tracked';
 
 const segmentClient = createClient({
-  writeKey: process.env.EXPO_PUBLIC_SEGMENT_WRITE_KEY || '',
+  writeKey: process.env.EXPO_PUBLIC_SEGMENT_WRITE_KEY || 'dummy-key-for-development',
   trackAppLifecycleEvents: true,
   debug: false,
 });

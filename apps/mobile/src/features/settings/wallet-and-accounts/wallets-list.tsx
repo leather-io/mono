@@ -1,3 +1,4 @@
+import { isGoogleWallet } from '@/hooks/use-google-wallet';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 
@@ -20,6 +21,7 @@ export function WalletsList({ variant }: { variant: WalletViewVariant }) {
         name={wallet.name}
         key={wallet.fingerprint}
         fingerprint={wallet.fingerprint}
+        isGoogle={isGoogleWallet(wallet)}
       />
     );
   });

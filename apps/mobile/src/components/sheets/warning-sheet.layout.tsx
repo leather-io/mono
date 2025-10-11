@@ -19,6 +19,7 @@ interface WarningSheetLayoutProps {
   onSubmit(): unknown;
   onPressSupport?: () => void;
   variant?: WarningSheetVariant;
+  onCancel?: () => void;
 }
 export function WarningSheetLayout({
   sheetRef,
@@ -27,6 +28,7 @@ export function WarningSheetLayout({
   onSubmit,
   variant = 'normal',
   onPressSupport,
+  onCancel,
 }: WarningSheetLayoutProps) {
   return (
     <Sheet ref={sheetRef}>
@@ -47,7 +49,13 @@ export function WarningSheetLayout({
             <Button onPress={onSubmit} intent={variant === 'critical' ? 'danger' : undefined}>
               {t`Continue`}
             </Button>
-            <Button onPress={() => sheetRef.current?.dismiss()} variant="ghost">
+            <Button
+              onPress={() => {
+                onCancel?.();
+                sheetRef.current?.dismiss();
+              }}
+              variant="ghost"
+            >
               {t`Cancel`}
             </Button>
           </Box>

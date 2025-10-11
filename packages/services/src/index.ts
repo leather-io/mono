@@ -18,3 +18,6 @@ export * from './infrastructure/environment';
 export * from './types';
 export * from './bns/bns.service';
 export * from './swap/swap.service';
+export * from './google-backup/google-backup.service';
+export * from './google-backup/google-backup.utils';
+export * from './infrastructure/api/google/google-backup-api.client';

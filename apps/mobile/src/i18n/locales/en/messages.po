@@ -67,16 +67,20 @@ msgstr "20–30 seconds"
 msgid "24 Hour Change"
 msgstr "24 Hour Change"
 
+#: src/features/settings/wallet-and-accounts/override-wallet-google-sheet.tsx:22
+msgid "A Google Drive backup for your account already exists. Continuing will delete the previous backup and replace it with a copy of this one. Are you sure you want to proceed?"
+msgstr "A Google Drive backup for your account already exists. Continuing will delete the previous backup and replace it with a copy of this one. Are you sure you want to proceed?"
+
 #: src/features/wallet-manager/account-list.tsx:23
 #: src/store/accounts/accounts.write.ts:43
 msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:126
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:133
 msgid "Account created"
 msgstr "Account created"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:132
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:139
 msgid "Account creation failed"
 msgstr "Account creation failed"
 
@@ -105,9 +109,7 @@ msgstr "Account name cannot be empty"
 msgid "Activity"
 msgstr "Activity"
 
-#: src/features/account/components/create-wallet-card.tsx:22
-#: src/features/account/sheets/add-account-sheet.tsx:26
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:144
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:151
 msgid "Add account"
 msgstr "Add account"
 
@@ -138,9 +140,7 @@ msgstr "Add to existing wallet"
 msgid "Add to new wallet"
 msgstr "Add to new wallet"
 
-#: src/app/settings/wallet/index.tsx:52
-#: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:26
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:75
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:78
 msgid "Add wallet"
 msgstr "Add wallet"
 
@@ -152,7 +152,7 @@ msgstr "Add your collection here"
 msgid "Add, configure and remove"
 msgstr "Add, configure and remove"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:144
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:151
 msgid "Adding account..."
 msgstr "Adding account..."
 
@@ -180,20 +180,19 @@ msgstr "Address is for incorrect network"
 msgid "Address is not valid"
 msgstr "Address is not valid"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:47
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:51
 msgid "Address reuse"
 msgstr "Address reuse"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:52
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:56
 msgid "Address scan range"
 msgstr "Address scan range"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:57
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:61
 msgid "Address types"
 msgstr "Address types"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:183
-#: src/features/recover-wallet/recover-wallet.layout.tsx:48
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:251
 msgid "Advanced options"
 msgstr "Advanced options"
 
@@ -229,7 +228,7 @@ msgstr "Amount you’ve committed to stacking. You won’t be able to move or sp
 msgid "An error has occurred"
 msgstr "An error has occurred"
 
-#: src/hooks/use-create-wallet.ts:51
+#: src/hooks/use-create-wallet.ts:60
 msgid "An error occurred"
 msgstr "An error occurred"
 
@@ -308,7 +307,7 @@ msgstr "Argument {argumentNumber}"
 msgid "Arkadiko"
 msgstr "Arkadiko"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:119
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:127
 msgid "Authentication failed"
 msgstr "Authentication failed"
 
@@ -327,6 +326,26 @@ msgstr "Avatar"
 #: src/app/create-new-wallet.tsx:79
 msgid "Back up your Secret Key"
 msgstr "Back up your Secret Key"
+
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:69
+msgid "Backing up to Google Drive"
+msgstr "Backing up to Google Drive"
+
+#: src/hooks/use-google-wallet.ts:223
+msgid "Backup Deleted Successfully"
+msgstr "Backup Deleted Successfully"
+
+#: src/hooks/use-google-wallet.ts:143
+msgid "Backup Failed"
+msgstr "Backup Failed"
+
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:42
+msgid "Backup Found"
+msgstr "Backup Found"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:222
+msgid "Backup To Google"
+msgstr "Backup To Google"
 
 #: src/features/token/components/address-list.tsx:19
 msgid "Balances"
@@ -380,9 +399,7 @@ msgstr "By signing, this app can move your assets anytime."
 msgid "Can’t send to the same address"
 msgstr "Can’t send to the same address"
 
-#: src/components/sheets/warning-sheet.layout.tsx:51
-#: src/features/qr-scanner/use-camera-permission.ts:39
-#: src/features/send/components/recipient/recipient-guard-sheet.tsx:31
+#: src/components/sheets/warning-sheet.layout.tsx:59
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -428,6 +445,18 @@ msgstr "Clear search"
 msgid "Close the scanner"
 msgstr "Close the scanner"
 
+#: src/hooks/use-google-wallet.ts:331
+msgid "Cloud backup created"
+msgstr "Cloud backup created"
+
+#: src/hooks/use-google-wallet.ts:342
+msgid "Cloud backup failed"
+msgstr "Cloud backup failed"
+
+#: src/hooks/use-google-wallet.ts:331
+msgid "Cloud backup updated"
+msgstr "Cloud backup updated"
+
 #: src/features/approver/components/code-card.tsx:10
 msgid "Code"
 msgstr "Code"
@@ -448,7 +477,7 @@ msgstr ""
 "Configure\n"
 "account"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:146
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:195
 msgid ""
 "Configure\n"
 "wallet"
@@ -469,6 +498,10 @@ msgstr "Confirm"
 msgid "Connect"
 msgstr "Connect"
 
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:223
+msgid "Connecting to Google..."
+msgstr "Connecting to Google..."
+
 #: src/app/app-connections.tsx:12
 #: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:20
 msgid "Connections"
@@ -487,10 +520,13 @@ msgstr "Contacts"
 msgid "Content not found"
 msgstr "Content not found"
 
-#: src/components/sheets/warning-sheet.layout.tsx:48
-#: src/features/recover-wallet/recover-wallet.layout.tsx:88
+#: src/components/sheets/warning-sheet.layout.tsx:50
 msgid "Continue"
 msgstr "Continue"
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:97
+msgid "Continue with Google"
+msgstr "Continue with Google"
 
 #: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:15
 msgid "Continue without security"
@@ -521,11 +557,23 @@ msgstr "Copy"
 msgid "Copy address"
 msgstr "Copy address"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:80
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:37
+msgid "Create Cloud Wallet Backup"
+msgstr "Create Cloud Wallet Backup"
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:83
 msgid "Create new wallet"
 msgstr "Create new wallet"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:208
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:39
+msgid "Create Wallet"
+msgstr "Create Wallet"
+
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:64
+msgid "Creating your wallet..."
+msgstr "Creating your wallet..."
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:276
 msgid "Creation date"
 msgstr "Creation date"
 
@@ -542,6 +590,10 @@ msgstr "Custom"
 #: src/app/settings/index.tsx:176
 msgid "Custom fees"
 msgstr "Custom fees"
+
+#: src/features/wallet-manager/import-google-wallet/forgot-password-sheet.tsx:17
+msgid "Delete Google Backup?"
+msgstr "Delete Google Backup?"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:64
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
@@ -612,6 +664,10 @@ msgstr "Don't notify me"
 msgid "Done"
 msgstr "Done"
 
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:68
+msgid "Downloading from Google Drive"
+msgstr "Downloading from Google Drive"
+
 #: src/components/error/error.tsx:65
 msgid "Drag to refresh"
 msgstr "Drag to refresh"
@@ -655,6 +711,10 @@ msgstr "Enabled"
 msgid "Enter recipient"
 msgstr "Enter recipient"
 
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:43
+msgid "Enter the password you created for backup. Not your Google account password."
+msgstr "Enter the password you created for backup. Not your Google account password."
+
 #: src/features/recover-wallet/recover-wallet.layout.tsx:40
 #: src/features/recover-wallet/recover-wallet.tsx:112
 msgid "Enter your Secret Key"
@@ -680,11 +740,11 @@ msgstr "Expand your Bitcoin knowledge"
 msgid "Explore"
 msgstr "Explore"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:67
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:71
 msgid "Export key"
 msgstr "Export key"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:62
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:66
 msgid "Export xPub"
 msgstr "Export xPub"
 
@@ -710,6 +770,14 @@ msgstr "Failed to change memo"
 #: src/features/approver/stx/hooks.ts:49
 msgid "Failed to change nonce"
 msgstr "Failed to change nonce"
+
+#: src/app/import-google-restore.tsx:35
+msgid "Failed to delete back-up. Please try again."
+msgstr "Failed to delete back-up. Please try again."
+
+#: src/hooks/use-google-wallet.ts:228
+msgid "Failed to Delete Backup"
+msgstr "Failed to Delete Backup"
 
 #: src/features/browser/approver-sheet/stx/nonce-loader.tsx:29
 msgid "Failed to load latest nonce"
@@ -752,10 +820,13 @@ msgstr "funds kept safe and unavailable for spending"
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 
-#: src/features/account/sheets/add-account-sheet.tsx:37
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:81
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:84
 msgid "Generate new Secret Key for self-custody"
 msgstr "Generate new Secret Key for self-custody"
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:98
+msgid "Generate or import accounts from Google"
+msgstr "Generate or import accounts from Google"
 
 #: src/app/settings/help/index.tsx:18
 #: src/app/settings/index.tsx:100
@@ -766,9 +837,18 @@ msgstr "Get support or provide feedback"
 msgid "Get the latest version of the Leather app"
 msgstr "Get the latest version of the Leather app"
 
+#: src/features/wallet-manager/import-google-wallet/password-strength-indicator.tsx:24
+#: src/features/wallet-manager/import-google-wallet/password-strength-indicator.tsx:28
+msgid "Good"
+msgstr "Good"
+
 #: src/utils/app-store-utils.ts:40
 msgid "Google Play"
 msgstr "Google Play"
+
+#: src/hooks/use-google-wallet.ts:100
+msgid "Google Play Services Required"
+msgstr "Google Play Services Required"
 
 #: src/utils/dapps.ts:75
 msgid "Granite"
@@ -812,6 +892,10 @@ msgstr "Hide balances"
 msgid "Home"
 msgstr "Home"
 
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:130
+msgid "I forgot my password"
+msgstr "I forgot my password"
+
 #: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:47
 msgid "I’m aware of the risks"
 msgstr "I’m aware of the risks"
@@ -836,11 +920,15 @@ msgstr "ID copied to clipboard"
 msgid "If unsafe, your wallet could be drained."
 msgstr "If unsafe, your wallet could be drained."
 
+#: src/features/wallet-manager/import-google-wallet/forgot-password-sheet.tsx:18
+msgid "If you forgot your password, you'll need to delete your Google Drive backup to create a new one. This action cannot be undone. Make sure you have your Secret Key backed up elsewhere."
+msgstr "If you forgot your password, you'll need to delete your Google Drive backup to create a new one. This action cannot be undone. Make sure you have your Secret Key backed up elsewhere."
+
 #: src/features/collectibles/components/fallback.tsx:8
 msgid "Image currently unavailable"
 msgstr "Image currently unavailable"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:88
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:91
 msgid "Import existing accounts from self-custody"
 msgstr "Import existing accounts from self-custody"
 
@@ -859,6 +947,10 @@ msgstr "Insufficient funds"
 #: src/features/settings/email-address-sheet.tsx:23
 msgid "Invalid email address"
 msgstr "Invalid email address"
+
+#: src/hooks/use-google-wallet.ts:176
+msgid "Invalid password corrupted"
+msgstr "Invalid password corrupted"
 
 #: src/features/recover-wallet/components/error-message.tsx:5
 msgid "Invalid words: {joinedInvalidWords}"
@@ -998,8 +1090,7 @@ msgstr "Minimum version format is invalid"
 msgid "minutes ago"
 msgstr "minutes ago"
 
-#: src/app/settings/index.tsx:110
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:95
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:105
 msgid "More options"
 msgstr "More options"
 
@@ -1074,7 +1165,7 @@ msgstr "Notify me"
 msgid "OK"
 msgstr "OK"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:77
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:84
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
 
@@ -1090,6 +1181,18 @@ msgstr "Output"
 msgid "Passphrase"
 msgstr "Passphrase"
 
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:93
+msgid "Password"
+msgstr "Password"
+
+#: src/features/wallet-manager/import-google-wallet/password-strength-indicator.tsx:65
+msgid "Password must be at least 12 characters"
+msgstr "Password must be at least 12 characters"
+
+#: src/features/wallet-manager/import-google-wallet/password-strength-indicator.tsx:61
+msgid "Password strength:"
+msgstr "Password strength:"
+
 #: src/features/recover-wallet/recover-wallet.tsx:101
 msgid "Paste"
 msgstr "Paste"
@@ -1101,6 +1204,10 @@ msgstr "Paste or type Secret Key to add wallet"
 #: src/utils/dapps.ts:40
 msgid "PlanBetter"
 msgstr "PlanBetter"
+
+#: src/features/wallet-manager/import-google-wallet/password-strength-indicator.tsx:20
+msgid "Poor"
+msgstr "Poor"
 
 #: src/features/account/components/portfolio-header.tsx:21
 #: src/features/account/components/portfolio-header.tsx:34
@@ -1175,14 +1282,25 @@ msgstr "Recently viewed"
 msgid "Recents"
 msgstr "Recents"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:172
-#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:17
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:230
 msgid "Remove wallet"
 msgstr "Remove wallet"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:164
+#: src/features/settings/wallet-and-accounts/remove-wallet-google-sheet.tsx:15
+msgid "Remove wallet and cloud backup"
+msgstr "Remove wallet and cloud backup"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:239
+msgid "Remove wallet from cloud"
+msgstr "Remove wallet from cloud"
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:213
 msgid "Rename wallet"
 msgstr "Rename wallet"
+
+#: src/features/settings/wallet-and-accounts/override-wallet-google-sheet.tsx:21
+msgid "Replace existing cloud backup?"
+msgstr "Replace existing cloud backup?"
 
 #: src/features/approver/components/approver-permissions.tsx:14
 msgid "Request approval for transactions"
@@ -1196,9 +1314,25 @@ msgstr "Require biometrics or PIN"
 msgid "Restake"
 msgstr "Restake"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:87
+#: src/hooks/use-google-wallet.ts:197
+msgid "Restore Failed"
+msgstr "Restore Failed"
+
+#: src/app/import-google-restore.tsx:25
+msgid "Restore failed. Please try again."
+msgstr "Restore failed. Please try again."
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:90
 msgid "Restore wallet"
 msgstr "Restore wallet"
+
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:44
+msgid "Restore Wallet"
+msgstr "Restore Wallet"
+
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:64
+msgid "Restoring your wallet..."
+msgstr "Restoring your wallet..."
 
 #: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:114
 msgid "Reveal account"
@@ -1325,6 +1459,10 @@ msgstr "Sign Message"
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
+#: src/hooks/use-google-wallet.ts:101
+msgid "Sign-In Failed"
+msgstr "Sign-In Failed"
+
 #: src/app/secure-your-wallet.tsx:42
 msgid "Skip for now"
 msgstr "Skip for now"
@@ -1361,6 +1499,10 @@ msgstr "Stacks address"
 #: src/features/approver/utils.tsx:47
 msgid "Standard"
 msgstr "Standard"
+
+#: src/features/wallet-manager/import-google-wallet/password-strength-indicator.tsx:28
+msgid "Strong"
+msgstr "Strong"
 
 #: src/features/approver/components/approver-buttons.tsx:38
 msgid "Submitted"
@@ -1484,6 +1626,14 @@ msgstr "This is your Taproot address for receiving tokens on the Bitcoin network
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:55
 msgid "This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent."
 msgstr "This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent."
+
+#: src/features/wallet-manager/import-google-wallet/google-password-screen.tsx:38
+msgid "This password protects your Google Drive backup. You'll need it when restoring your wallet."
+msgstr "This password protects your Google Drive backup. You'll need it when restoring your wallet."
+
+#: src/features/settings/wallet-and-accounts/remove-wallet-google-sheet.tsx:16
+msgid "This will permanently delete both your wallet from this device and its backup from Google Drive. Your assets will not be recoverable unless you've stored your Secret Key elsewhere securely."
+msgstr "This will permanently delete both your wallet from this device and its backup from Google Drive. Your assets will not be recoverable unless you've stored your Secret Key elsewhere securely."
 
 #: src/features/account/components/available-account-balance.tsx:64
 msgid "tiny amounts that cost more to send than they’re worth."
@@ -1621,7 +1771,7 @@ msgstr "View and manage all your wallets in one place"
 msgid "View and manage your hidden accounts"
 msgstr "View and manage your hidden accounts"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:153
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:202
 msgid "View Secret Key"
 msgstr "View Secret Key"
 
@@ -1633,21 +1783,33 @@ msgstr "View your wallet balance & activity"
 msgid "Wallet {fingerprint}"
 msgstr "Wallet {fingerprint}"
 
-#: src/store/wallets/wallets.write.ts:20
+#: src/store/wallets/wallets.write.ts:21
 msgid "Wallet {walletIdx}"
 msgstr "Wallet {walletIdx}"
 
-#: src/hooks/use-create-wallet.ts:33
+#: src/hooks/use-create-wallet.ts:42
 msgid "Wallet added"
 msgstr "Wallet added"
 
-#: src/hooks/use-create-wallet.ts:43
+#: src/hooks/use-create-wallet.ts:52
 msgid "Wallet added already"
 msgstr "Wallet added already"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:90
+#: src/hooks/use-google-wallet.ts:138
+msgid "Wallet Created Successfully"
+msgstr "Wallet Created Successfully"
+
+#: src/app/import-google-new.tsx:18
+msgid "Wallet creation failed. Please try again."
+msgstr "Wallet creation failed. Please try again."
+
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:98
 msgid "Wallet name cannot be empty"
 msgstr "Wallet name cannot be empty"
+
+#: src/hooks/use-google-wallet.ts:192
+msgid "Wallet Restored Successfully"
+msgstr "Wallet Restored Successfully"
 
 #: src/app/settings/wallet/index.tsx:25
 msgid "Wallets"
@@ -1656,6 +1818,10 @@ msgstr "Wallets"
 #: src/app/settings/index.tsx:60
 msgid "Wallets and accounts"
 msgstr "Wallets and accounts"
+
+#: src/features/wallet-manager/import-google-wallet/password-strength-indicator.tsx:22
+msgid "Weak"
+msgstr "Weak"
 
 #: src/app/(tabs)/browser.tsx:63
 msgid "Wrong URL"

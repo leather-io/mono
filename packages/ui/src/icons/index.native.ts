@@ -173,4 +173,5 @@ export * from './users-two-icon.native';
 export * from './wallet-icon.native';
 export * from './wallet-plus-icon.native';
 export * from './x-logo-icon.native';
+export * from './logos/logo-google.native';
 export { type IconProps } from './icon/create-icon.native';

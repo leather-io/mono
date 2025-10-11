@@ -1,3 +1,5 @@
+import { GoogleUserData } from '@/hooks/use-google-wallet';
+
 import {
   makeNativeSegwitAccountDerivationPath,
   makeTaprootAccountDerivationPath,
@@ -64,10 +66,12 @@ export function useKeyStore() {
       biometrics,
       mnemonic,
       passphrase,
+      googleData,
     }: {
       mnemonic: string;
       biometrics: boolean;
       passphrase?: string;
+      googleData?: GoogleUserData;
     }) {
       const fingerprint = await getMnemonicRootKeyFingerprint(mnemonic, passphrase);
       if (this.isWalletInKeychain({ fingerprint })) {
@@ -80,8 +84,23 @@ export function useKeyStore() {
         passphrase,
       });
 
+      const wallet = {
+        type: 'software' as const,
+        fingerprint,
+        createdOn: new Date().toISOString(),
+        googleData: googleData
+          ? {
+              googleId: googleData.googleId,
+              email: googleData.email,
+              photo: googleData.photo ?? null,
+              familyName: googleData.familyName ?? null,
+              givenName: googleData.givenName ?? null,
+            }
+          : undefined,
+      };
+
       wallets.add({
-        wallet: { type: 'software', fingerprint, createdOn: new Date().toISOString() },
+        wallet,
         withKeychains: { bitcoin: bitcoinKeychains, stacks: stacksKeychains },
       });
     },

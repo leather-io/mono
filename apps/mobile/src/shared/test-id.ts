@@ -38,7 +38,11 @@ export enum TestId {
   walletListSettingsButton = 'walletListSettingsButton',
   walletManagementClearButton = 'walletManagementClearButton',
   walletSettingsRemoveWalletButton = 'walletSettingsRemoveWalletButton',
+  walletSettingsRemoveWalletFromCloudButton = 'walletSettingsRemoveWalletFromCloudButton',
+  walletSettingsAddWalletButton = 'walletSettingsAddWalletButton',
   walletSettingsRenameWalletButton = 'walletSettingsRenameWalletButton',
   walletSettingsViewSecretKeyButton = 'walletSettingsViewSecretKeyButton',
+  walletSettingsBackupToCloudPasswordScreen = 'walletSettingsBackupToCloudPasswordScreen',
+  walletSettingsBackupToCloudButton = 'walletSettingsBackupToCloudButton',
   walletSettingsAccountNameCell = 'walletSettingsAccountNameCell',
 }

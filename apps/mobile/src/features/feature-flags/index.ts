@@ -8,8 +8,7 @@ import {
 import * as Application from 'expo-application';
 
 export const featureFlagClient = new ReactNativeLDClient(
-  // TODO: do not fallback to empty string
-  process.env.EXPO_PUBLIC_LAUNCH_DARKLY ?? '',
+  process.env.EXPO_PUBLIC_LAUNCH_DARKLY ?? 'test-key',
   AutoEnvAttributes.Enabled,
   {
     debug: false,

@@ -10,10 +10,13 @@ import {
 import { useToastContext } from '@/components/toast/toast-context';
 import { useWaitlistFlag } from '@/features/feature-flags';
 import SettingsLayout from '@/features/settings/settings-layout';
+import { GoogleWalletOverrideSheet } from '@/features/settings/wallet-and-accounts/override-wallet-google-sheet';
+import { RemoveGoogleWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-google-sheet';
 import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-sheet';
 import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { useAuthentication } from '@/hooks/use-authentication';
+import { isGoogleWallet, useGoogleWallet } from '@/hooks/use-google-wallet';
 import { TestId } from '@/shared/test-id';
 import { userRemovesWallet } from '@/store/global-action';
 import { useSettings } from '@/store/settings/settings';
@@ -34,6 +37,7 @@ import {
   Box,
   Eye1ClosedIcon,
   InboxIcon,
+  LogoGoogle,
   SheetInstance,
   SquareLinesBottomIcon,
   Text,
@@ -78,11 +82,15 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const router = useRouter();
   const walletNameSheetRef = useRef<SheetInstance>(null);
   const removeWalletSheetRef = useRef<SheetInstance>(null);
+  const removeWalletGoogleSheetRef = useRef<SheetInstance>(null);
+  const backupOverrideSheetRef = useRef<SheetInstance>(null);
   const dispatch = useAppDispatch();
   const { securityLevelPreference, currentAccount, changeCurrentAccount } = useSettings();
   const { authenticate } = useAuthentication();
   const releaseWaitlistFeatures = useWaitlistFlag();
   const { displayToast } = useToastContext();
+  const isGoogle = isGoogleWallet(wallet);
+  const { deleteCloudBackup, prepareGoogleBackup, isLoading } = useGoogleWallet();
 
   function setName(name: string) {
     if (name === '') {
@@ -133,12 +141,53 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
 
   const notifySheetRef = useRef<SheetInstance>(null);
   const [notifySheetData, setNotifySheetData] = useState<NotifyUserSheetData | null>(null);
+  const [isPreparingBackup, setIsPreparingBackup] = useState(false);
 
   function onOpenSheet(option: NotifyUserSheetData) {
     return () => {
       setNotifySheetData(option);
       notifySheetRef.current?.present();
     };
+  }
+
+  function navigateToGoogleBackup(skipOverridePrompt: boolean) {
+    router.navigate({
+      pathname: '/settings/wallet/configure/[wallet]/backup-google',
+      params: {
+        fingerprint: wallet.fingerprint,
+        wallet: wallet.fingerprint,
+        skipOverridePrompt: skipOverridePrompt ? '1' : '0',
+      },
+    });
+  }
+
+  async function handleAddToCloud() {
+    if (isPreparingBackup || isLoading) return;
+
+    setIsPreparingBackup(true);
+    try {
+      const hasExistingBackup = await prepareGoogleBackup();
+
+      if (hasExistingBackup === null) return;
+
+      if (hasExistingBackup) {
+        backupOverrideSheetRef.current?.present();
+        return;
+      }
+
+      navigateToGoogleBackup(false);
+    } finally {
+      setIsPreparingBackup(false);
+    }
+  }
+
+  function handleOverrideConfirm() {
+    backupOverrideSheetRef.current?.dismiss();
+    navigateToGoogleBackup(true);
+  }
+
+  function handleOverrideCancel() {
+    backupOverrideSheetRef.current?.dismiss();
   }
 
   return (
@@ -168,6 +217,15 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               }}
               testID={TestId.walletSettingsRenameWalletButton}
             />
+            {!isGoogle && (
+              <SettingsListItem
+                title={t`Backup To Google`}
+                caption={isPreparingBackup ? t`Connecting to Google...` : undefined}
+                icon={<LogoGoogle />}
+                onPress={handleAddToCloud}
+                testID={TestId.walletSettingsBackupToCloudButton}
+              />
+            )}
             <SettingsListItem
               title={t`Remove wallet`}
               icon={<TrashIcon color="red.action-primary-default" />}
@@ -176,6 +234,16 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               }}
               testID={TestId.walletSettingsRemoveWalletButton}
             />
+            {isGoogle && (
+              <SettingsListItem
+                title={t`Remove wallet from cloud`}
+                icon={<TrashIcon color="red.action-primary-default" />}
+                onPress={() => {
+                  removeWalletGoogleSheetRef.current?.present();
+                }}
+                testID={TestId.walletSettingsRemoveWalletFromCloudButton}
+              />
+            )}
           </SettingsList>
           {releaseWaitlistFeatures && (
             <Box px="5">
@@ -214,6 +282,18 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
       </SettingsLayout>
       <WalletNameSheet sheetRef={walletNameSheetRef} name={wallet.name} setName={setName} />
       <RemoveWalletSheet onSubmit={onRemoveWallet} sheetRef={removeWalletSheetRef} />
+      <RemoveGoogleWalletSheet
+        onSubmit={async () => {
+          await onRemoveWallet();
+          await deleteCloudBackup(wallet.fingerprint);
+        }}
+        sheetRef={removeWalletGoogleSheetRef}
+      />
+      <GoogleWalletOverrideSheet
+        sheetRef={backupOverrideSheetRef}
+        onConfirm={handleOverrideConfirm}
+        onCancel={handleOverrideCancel}
+      />
       <NotifyUserSheetLayout sheetData={notifySheetData} sheetRef={notifySheetRef} />
     </>
   );

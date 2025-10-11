@@ -1,3 +1,4 @@
+import { googleUserDataSchema } from '@/hooks/use-google-wallet';
 import z from 'zod';
 
 import { Optional, entitySchema } from '../utils';
@@ -10,6 +11,7 @@ const abstractWalletSchema = z.object({
 
 const softwareWalletSchema = abstractWalletSchema.extend({
   type: z.literal('software'),
+  googleData: googleUserDataSchema.optional(),
 });
 
 const ledgerWalletSchema = abstractWalletSchema.extend({

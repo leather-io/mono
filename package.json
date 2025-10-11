@@ -70,7 +70,7 @@
     "yarn": "please-use-pnpm"
   },
   "keywords": [],
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.18.0",
   "pnpm": {
     "overrides": {
       "cross-spawn": "7.0.5",
@@ -228,6 +228,10 @@
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
       "expo-secure-store@14.2.3": "patches/expo-secure-store@14.2.3.patch",
       "react-native-webview@13.14.1": "patches/react-native-webview@13.14.1.patch"
+    },
+    "dependencies": {
+      "@noble/ciphers": "2.0.1",
+      "@noble/hashes": "1.5.0"
     }
   }
 }

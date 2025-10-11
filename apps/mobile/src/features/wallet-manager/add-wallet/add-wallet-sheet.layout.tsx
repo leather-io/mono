@@ -15,6 +15,7 @@ import {
   ArrowRotateClockwiseIcon,
   Box,
   EllipsisVIcon,
+  LogoGoogle,
   PlusIcon,
   Sheet,
   SheetRef,
@@ -34,12 +35,14 @@ interface AddWalletSheetBaseProps {
 interface AddWalletSheetLayoutProps extends AddWalletSheetBaseProps {
   createWallet(): unknown;
   restoreWallet(): unknown;
+  googleWallet(): unknown;
   opensFully?: boolean;
 }
 export function AddWalletSheetLayout({
   addWalletSheetRef,
   createWallet,
   restoreWallet,
+  googleWallet,
   opensFully,
 }: AddWalletSheetLayoutProps) {
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(!!opensFully);
@@ -88,6 +91,13 @@ export function AddWalletSheetLayout({
                 caption={t`Import existing accounts from self-custody`}
                 testID={TestId.restoreWalletSheetButton}
                 icon={<ArrowRotateClockwiseIcon />}
+              />
+              <AddWalletCell
+                onPress={googleWallet}
+                title={t`Continue with Google`}
+                caption={t`Generate or import accounts from Google`}
+                testID={TestId.restoreWalletSheetButton}
+                icon={<LogoGoogle />}
               />
               {releaseWaitlistFeatures && (
                 <AddWalletCell

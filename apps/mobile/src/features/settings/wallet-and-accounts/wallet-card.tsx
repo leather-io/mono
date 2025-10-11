@@ -21,6 +21,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   IconButton,
+  LogoGoogle,
   PlusIcon,
   Pressable,
   SettingsGearIcon,
@@ -33,9 +34,10 @@ import { getIsAccountSelected } from './utils';
 
 interface WalletCardProps extends WalletId {
   variant: WalletViewVariant;
+  isGoogle?: boolean;
   name: string;
 }
-export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
+export function WalletCard({ fingerprint, variant, name, isGoogle }: WalletCardProps) {
   const { list: accounts } = useAccountsByFingerprint(fingerprint, variant);
   const hasAccounts = accounts.length > 0;
   const [expanded, setExpanded] = useState(true);
@@ -64,6 +66,11 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
             onPress={() => setExpanded(!expanded)}
             pressEffects={legacyTouchablePressEffect}
           >
+            {isGoogle && (
+              <Box px="1" py="0.5" bg="ink.background-secondary" borderRadius="round">
+                <LogoGoogle />
+              </Box>
+            )}
             <Text variant="label01">{name}</Text>
             {expanded ? (
               <ChevronUpIcon color="ink.text-primary" variant="small" />

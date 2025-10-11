@@ -8,6 +8,8 @@ import { useRouter } from 'expo-router';
 
 import { useHaptics } from '@leather.io/ui/native';
 
+import { GoogleUserData } from './use-google-wallet';
+
 export function useCreateWallet() {
   const router = useRouter();
   const toastContext = useToastContext();
@@ -15,7 +17,13 @@ export function useCreateWallet() {
   const keyStore = useKeyStore();
   const { changeSecurityLevelPreference, securityLevelPreference } = useSettings();
 
-  async function createWallet({ biometrics }: { biometrics: boolean }) {
+  async function createWallet({
+    biometrics,
+    googleData,
+  }: {
+    biometrics: boolean;
+    googleData?: GoogleUserData;
+  }) {
     changeSecurityLevelPreference(biometrics ? 'secure' : 'insecure');
     const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
     if (mnemonic) {
@@ -26,6 +34,7 @@ export function useCreateWallet() {
           mnemonic,
           biometrics,
           passphrase: passphrase ?? undefined,
+          googleData,
         });
         void triggerHapticFeedback('success');
         toastContext.displayToast({

@@ -1,6 +1,7 @@
+import { GoogleUserData } from '@/hooks/use-google-wallet';
 import { t } from '@lingui/core/macro';
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { produce } from 'immer';
+import { produce, type Draft } from 'immer';
 
 import { WalletId } from '@leather.io/models';
 
@@ -35,6 +36,20 @@ interface RenameWalletPayload extends WalletId {
 }
 export const userRenamesWallet = createAction<RenameWalletPayload>('accounts/renameAccount');
 
+interface MarkWalletAsGooglePayload extends WalletId {
+  googleData: GoogleUserData;
+}
+export const userMarksWalletAsGoogle = createAction<MarkWalletAsGooglePayload>(
+  'wallets/markWalletAsGoogle'
+);
+
+export const userClearsWalletGoogleMetadata = createAction<WalletId>('wallets/clearGoogleMetadata');
+
+function clearGoogleData(wallet?: Draft<WalletStore>) {
+  if (!wallet || wallet.type !== 'software') return;
+  wallet.googleData = undefined;
+}
+
 export const walletSlice = createSlice({
   name: 'wallets',
   initialState,
@@ -58,6 +73,33 @@ export const walletSlice = createSlice({
         handleEntityActionWith(walletAdapter.updateOne, payload => ({
           id: payload.fingerprint,
           changes: { name: payload.name },
+        }))
+      )
+      .addCase(userMarksWalletAsGoogle, (state, action) => {
+        const { fingerprint, googleData } = action.payload;
+
+        state.ids.forEach(id => {
+          if (id === fingerprint) return;
+          const wallet = state.entities[id];
+          clearGoogleData(wallet);
+        });
+
+        const target = state.entities[fingerprint];
+        if (!target || target.type !== 'software') return;
+
+        target.googleData = {
+          googleId: googleData.googleId,
+          email: googleData.email,
+          photo: googleData.photo ?? null,
+          familyName: googleData.familyName ?? null,
+          givenName: googleData.givenName ?? null,
+        };
+      })
+      .addCase(
+        userClearsWalletGoogleMetadata,
+        handleEntityActionWith(walletAdapter.updateOne, payload => ({
+          id: payload.fingerprint,
+          changes: { googleData: undefined },
         }))
       )
 
