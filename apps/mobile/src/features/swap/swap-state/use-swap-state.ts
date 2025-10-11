@@ -3,8 +3,14 @@ import { useEffect, useMemo, useReducer } from 'react';
 import { runValidation } from '@/features/swap/swap-state/validation/swap-validation';
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap.constants';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
+import BigNumber from 'bignumber.js';
 
-import { AccountAddresses, QuoteCurrency, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import {
+  AccountAddresses,
+  Money,
+  QuoteCurrency,
+  SwappableFungibleCryptoAsset,
+} from '@leather.io/models';
 import { AccountSwapAsset, MarketDataService, SwapService } from '@leather.io/services';
 import { getAssetId } from '@leather.io/utils';
 
@@ -229,5 +235,42 @@ export function useSwapState({
     baseAssetsQuery,
     targetAssetsQuery,
     quoteQuery,
+    isSwapExecutable: determineSwapExecutability({
+      validation,
+      isQuoteFetching: quoteQuery.isFetching,
+      quoteBaseAmount: quoteQuery.data?.selected?.rawSwapQuote.baseAmount,
+      currentInput: derivedAmounts.crypto,
+    }),
   };
+}
+
+export interface SwapExecutabilityParams {
+  validation: { isValid: boolean };
+  isQuoteFetching: boolean;
+  quoteBaseAmount: number | undefined;
+  currentInput: Money | null;
+}
+
+export function determineSwapExecutability({
+  validation,
+  isQuoteFetching,
+  quoteBaseAmount,
+  currentInput,
+}: SwapExecutabilityParams): boolean {
+  return (
+    validation.isValid &&
+    !isQuoteFetching &&
+    isQuoteAlignedWithCurrentInput(quoteBaseAmount, currentInput)
+  );
+}
+
+function isQuoteAlignedWithCurrentInput(
+  quoteBaseAmount: number | undefined,
+  input: Money | null
+): boolean {
+  if (quoteBaseAmount == null || !input) return false;
+
+  const decimals = input.decimals;
+  const quoteQuantized = BigNumber(quoteBaseAmount.toFixed(decimals));
+  return input.amount.shiftedBy(-decimals).isEqualTo(quoteQuantized);
 }

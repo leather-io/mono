@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
@@ -10,7 +11,8 @@ import { SwapQuoteSelectionResult } from '@/features/swap/swap-state/swap-state.
 import { formatCurrency } from '@/utils/currency-formatter';
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
+import { Money } from '@leather.io/models';
+import { Text } from '@leather.io/ui/native';
 
 interface TargetAmountPreviewProps {
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult>;
@@ -18,50 +20,52 @@ interface TargetAmountPreviewProps {
 }
 
 export function TargetAmountPreview({ quoteQuery, baseAmount }: TargetAmountPreviewProps) {
-  const animatedStyle = usePulsingAnimation(quoteQuery.isRefetching);
+  const { displayAmount } = useDisplayAmount({ baseAmount, quoteQuery });
+  const animatedStyle = usePulsingAnimation(quoteQuery.isFetching);
+  const formattedAmount = formatAmount(displayAmount);
 
-  if (quoteQuery.isLoading) return <LoadingIndicator />;
+  return (
+    <Animated.View style={animatedStyle}>
+      <Text
+        variant="heading02"
+        fontSize={24}
+        lineHeight={36}
+        style={{ paddingTop: 1, marginBottom: -1 }}
+        color={formattedAmount === '0' ? 'ink.text-subdued' : 'ink.text-primary'}
+      >
+        {formattedAmount}
+      </Text>
+    </Animated.View>
+  );
+}
 
-  const hasNonZeroBaseAmount = Number(baseAmount) !== 0;
+interface UseDisplayAmountParams {
+  baseAmount: string;
+  quoteQuery: UseQueryResult<SwapQuoteSelectionResult>;
+}
 
-  if (quoteQuery.isSuccess && quoteQuery.data.selected && hasNonZeroBaseAmount) {
-    return (
-      <Animated.View style={animatedStyle}>
-        <Amount
-          value={formatCurrency(quoteQuery.data.selected.quoteAmount, {
-            showCurrency: false,
-            compactThreshold: 10_000_000,
-          })}
-        />
-      </Animated.View>
-    );
+// Ensure minimal transitions of target amount as user edits base amount:
+// 1. Don't reset when the base amount is effectively 0 but likely in flight, e.g., 0.0000
+// 2. Maintain the previous target amount while a new quote is being fetched.
+function useDisplayAmount({ baseAmount, quoteQuery }: UseDisplayAmountParams) {
+  const lastStableQuoteAmount = useRef<Money | null>(null);
+  const currentQuoteAmount = quoteQuery.data?.selected?.quoteAmount;
+
+  if (baseAmount === '0') {
+    lastStableQuoteAmount.current = null;
+    return { displayAmount: null };
   }
 
-  return <Amount value="0" />;
+  if (!quoteQuery.isFetching && currentQuoteAmount !== undefined) {
+    lastStableQuoteAmount.current = currentQuoteAmount ?? null;
+  }
+
+  return { displayAmount: currentQuoteAmount ?? lastStableQuoteAmount.current };
 }
 
-function LoadingIndicator() {
-  return (
-    <Box width={120} height={36} justifyContent="center">
-      <Box height={24}>
-        <SkeletonLoader isLoading />
-      </Box>
-    </Box>
-  );
-}
-
-function Amount({ value }: { value: string }) {
-  return (
-    <Text
-      variant="heading02"
-      fontSize={24}
-      lineHeight={36}
-      style={{ paddingTop: 1, marginBottom: -1 }}
-      color={value === '0' ? 'ink.text-subdued' : 'ink.text-primary'}
-    >
-      {value}
-    </Text>
-  );
+function formatAmount(amount: Money | null): string {
+  if (!amount) return '0';
+  return formatCurrency(amount, { showCurrency: false, compactThreshold: 1_000_000 });
 }
 
 function usePulsingAnimation(enabled: boolean) {

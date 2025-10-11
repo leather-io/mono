@@ -77,6 +77,7 @@ export interface UseSwapStateResult {
   baseAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   targetAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
+  isSwapExecutable: boolean;
 }
 
 export type SecondaryAmount =
