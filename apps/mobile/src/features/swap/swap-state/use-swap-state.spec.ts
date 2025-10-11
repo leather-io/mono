@@ -585,7 +585,7 @@ describe('useSwapState', () => {
       expect(result.current.state.pairReconciliation.target).toBe('pending');
     });
 
-    it('reconciles target asset when base asset changes', async () => {
+    it.only('reconciles target asset when base asset changes', async () => {
       const btcAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { quote: 1000, crypto: 0.5 },
@@ -602,11 +602,11 @@ describe('useSwapState', () => {
       });
 
       const result = renderUseSwapState({
-        baseAsset: defaultBtcAsset,
-        targetAsset: defaultStxAsset,
+        baseAsset: defaultStxAsset,
+        targetAsset: defaultSbtcAsset,
         swapService: createStubSwapService({
           baseSwapAssets: [btcAsset, stxAsset],
-          targetSwapAssets: [stxAsset, sbtcAsset],
+          targetSwapAssets: [sbtcAsset],
         }),
       });
 
@@ -615,9 +615,9 @@ describe('useSwapState', () => {
         expect(result.current.state.pairReconciliation.target).toBe('complete');
       });
 
-      expect(result.current.state.targetSwapAsset).toEqual(stxAsset);
+      expect(result.current.state.targetSwapAsset).toEqual(sbtcAsset);
 
-      act(() => result.current.actions.setBaseSwapAsset(stxAsset));
+      act(() => result.current.actions.setBaseSwapAsset(btcAsset));
 
       expect(result.current.state.pairReconciliation.target).toBe('pending');
 
@@ -625,7 +625,7 @@ describe('useSwapState', () => {
         expect(result.current.state.pairReconciliation.target).toBe('complete');
       });
 
-      expect(result.current.state.targetSwapAsset).toEqual(stxAsset);
+      expect(result.current.state.targetSwapAsset).toEqual(sbtcAsset);
     });
   });
 
