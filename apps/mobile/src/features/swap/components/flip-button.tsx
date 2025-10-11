@@ -65,7 +65,7 @@ export function FlipButton({ isVisible, onPress }: FlipButtonProps) {
 
 function enteringAnimation() {
   'worklet';
-  const delay = 120;
+  const delay = 60;
   const springConfig = { damping: 15, stiffness: 200 };
 
   return {
