@@ -585,7 +585,7 @@ describe('useSwapState', () => {
       expect(result.current.state.pairReconciliation.target).toBe('pending');
     });
 
-    it.only('reconciles target asset when base asset changes', async () => {
+    it('reconciles target asset when base asset changes', async () => {
       const btcAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { quote: 1000, crypto: 0.5 },
@@ -754,6 +754,42 @@ describe('useSwapState', () => {
       act(() => result.current.actions.flipAssets());
       expect(result.current.state.pairReconciliation.base).toBe('pending');
       expect(result.current.state.pairReconciliation.target).toBe('pending');
+    });
+
+    it('flips automatically when selecting current target as new base', () => {
+      const btcAsset = createAccountSwapAsset({
+        asset: defaultBtcAsset,
+        balance: { quote: 1000, crypto: 0.5 },
+      });
+
+      const stxAsset = createAccountSwapAsset({
+        asset: defaultStxAsset,
+        balance: { quote: 500, crypto: 100 },
+      });
+
+      const result = renderUseSwapState({
+        baseAsset: defaultBtcAsset,
+        targetAsset: defaultStxAsset,
+      });
+
+      act(() => {
+        result.current.actions.setBaseSwapAsset(btcAsset);
+        result.current.actions.setTargetSwapAsset(stxAsset);
+        result.current.actions.setBaseAmount('123.45');
+      });
+
+      expect(result.current.state.baseSwapAsset).toEqual(btcAsset);
+      expect(result.current.state.targetSwapAsset).toEqual(stxAsset);
+      expect(result.current.state.baseAmount).toBe('123.45');
+
+      act(() => result.current.actions.setBaseSwapAsset(stxAsset));
+
+      expect(result.current.state.baseSwapAsset).toEqual(stxAsset);
+      expect(result.current.state.targetSwapAsset).toEqual(btcAsset);
+      expect(result.current.state.baseAmount).toBe('0');
+      expect(result.current.state.pairReconciliation.base).toBe('pending');
+      expect(result.current.state.pairReconciliation.target).toBe('pending');
+      expect(result.current.state.selectingAsset).toBeNull();
     });
   });
   describe('amount presets', () => {

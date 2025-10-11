@@ -7,8 +7,9 @@ import { useSettings } from '@/store/settings/settings';
 import { AssetVisibility } from '@/store/settings/utils';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
+import { isDefined } from 'remeda';
 
-import { currencyDecimalsMap } from '@leather.io/constants';
+import { currencyDecimalsMap, stxAsset } from '@leather.io/constants';
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { AccountSwapAsset, getMarketDataService, getSwapService } from '@leather.io/services';
 import { Box, Button, Numpad } from '@leather.io/ui/native';
@@ -29,7 +30,7 @@ interface SwapProps {
   targetAsset?: SwappableFungibleCryptoAsset;
 }
 
-export function Swap({ baseAsset, targetAsset }: SwapProps) {
+export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
   const { assetVisibility, fiatCurrencyPreference } = useSettings();
   const accountRequest = useAccountRequest();
   const { state, actions, validation, baseAssetsQuery, targetAssetsQuery, quoteQuery } =
@@ -108,7 +109,9 @@ export function Swap({ baseAsset, targetAsset }: SwapProps) {
           allowNextValue={validateDecimalPlaces}
         />
         <Box px="5" mt="3">
-          <Button>{t`Review`}</Button>
+          <Button
+            disabled={!validation.isValid || isDefined(quoteQuery.data?.selected)}
+          >{t`Review`}</Button>
         </Box>
       </Box>
 

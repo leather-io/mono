@@ -21,6 +21,10 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
       };
     }
     case 'SET_BASE_SWAP_ASSET': {
+      if (state.targetSwapAsset && isSameAsset(action.payload.asset, state.targetSwapAsset.asset)) {
+        return createFlippedState(state);
+      }
+
       return {
         ...state,
         pairReconciliation: {
@@ -55,16 +59,7 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
     case 'FLIP_ASSETS': {
       if (!state.baseSwapAsset || !state.targetSwapAsset) return state;
 
-      return {
-        ...state,
-        baseSwapAsset: state.targetSwapAsset,
-        targetSwapAsset: state.baseSwapAsset,
-        baseAmount: '0',
-        pairReconciliation: {
-          base: 'pending',
-          target: 'pending',
-        },
-      };
+      return createFlippedState(state);
     }
     case 'RECONCILE_BASE_WITH_PROVIDER': {
       const { baseSwapAsset, pairReconciliation } = state;
@@ -182,4 +177,18 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
       return assertUnreachable(action);
     }
   }
+}
+
+function createFlippedState(state: SwapInternalState): SwapInternalState {
+  return {
+    ...state,
+    baseSwapAsset: state.targetSwapAsset,
+    targetSwapAsset: state.baseSwapAsset,
+    baseAmount: '0',
+    pairReconciliation: {
+      base: 'pending',
+      target: 'pending',
+    },
+    selectingAsset: null,
+  };
 }
