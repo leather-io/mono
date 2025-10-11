@@ -7,7 +7,6 @@ import { useSettings } from '@/store/settings/settings';
 import { AssetVisibility } from '@/store/settings/utils';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
-import { isDefined } from 'remeda';
 
 import { currencyDecimalsMap, stxAsset } from '@leather.io/constants';
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
@@ -33,16 +32,23 @@ interface SwapProps {
 export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
   const { assetVisibility, fiatCurrencyPreference } = useSettings();
   const accountRequest = useAccountRequest();
-  const { state, actions, validation, baseAssetsQuery, targetAssetsQuery, quoteQuery } =
-    useSwapState({
-      accountRequest,
-      marketDataService: getMarketDataService(),
-      swapService: getSwapService(),
-      quoteCurrencyPreference: fiatCurrencyPreference,
-      isAssetAllowed: createAssetVisibilityPredicate(assetVisibility),
-      baseAsset,
-      targetAsset,
-    });
+  const {
+    state,
+    actions,
+    validation,
+    baseAssetsQuery,
+    targetAssetsQuery,
+    quoteQuery,
+    isSwapExecutable,
+  } = useSwapState({
+    accountRequest,
+    marketDataService: getMarketDataService(),
+    swapService: getSwapService(),
+    quoteCurrencyPreference: fiatCurrencyPreference,
+    isAssetAllowed: createAssetVisibilityPredicate(assetVisibility),
+    baseAsset,
+    targetAsset,
+  });
   const validateDecimalPlaces = createDecimalPlaceValidator(
     whenInputCurrencyMode(state.inputCurrencyMode)({
       crypto: state.baseSwapAsset?.asset.decimals,
@@ -109,9 +115,7 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
           allowNextValue={validateDecimalPlaces}
         />
         <Box px="5" mt="3">
-          <Button
-            disabled={!validation.isValid || isDefined(quoteQuery.data?.selected)}
-          >{t`Review`}</Button>
+          <Button disabled={!isSwapExecutable}>{t`Review`}</Button>
         </Box>
       </Box>
 

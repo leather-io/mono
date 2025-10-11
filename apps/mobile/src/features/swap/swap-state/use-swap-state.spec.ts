@@ -14,7 +14,7 @@ import {
   defaultStxAsset,
 } from './test-utils/fixtures';
 import { createStubMarketDataService, createStubSwapService } from './test-utils/services.stub';
-import { UseSwapStateProps, useSwapState } from './use-swap-state';
+import { UseSwapStateProps, determineSwapExecutability, useSwapState } from './use-swap-state';
 
 function renderUseSwapState({
   accountRequest = createAccountRequest(),
@@ -1827,5 +1827,117 @@ describe('useSwapState', () => {
         expect(enrichedQuote.score).toBe(enrichedQuote.rawSwapQuote.targetAmount);
       });
     });
+  });
+});
+
+describe('determineSwapExecutability', () => {
+  it('returns true when all conditions satisfied', () => {
+    const result = determineSwapExecutability({
+      validation: { isValid: true },
+      isQuoteFetching: false,
+      quoteBaseAmount: 0.5,
+      currentInput: createMoney(50_000_000, 'BTC', 8),
+    });
+    expect(result).toBe(true);
+  });
+
+  it('returns false when validation invalid', () => {
+    const result = determineSwapExecutability({
+      validation: { isValid: false },
+      isQuoteFetching: false,
+      quoteBaseAmount: 0.5,
+      currentInput: createMoney(50_000_000, 'BTC', 8),
+    });
+    expect(result).toBe(false);
+  });
+
+  it('returns false when quote is fetching', () => {
+    const result = determineSwapExecutability({
+      validation: { isValid: true },
+      isQuoteFetching: true,
+      quoteBaseAmount: 0.5,
+      currentInput: createMoney(50_000_000, 'BTC', 8),
+    });
+    expect(result).toBe(false);
+  });
+
+  it('returns false when quoteBaseAmount is undefined', () => {
+    const result = determineSwapExecutability({
+      validation: { isValid: true },
+      isQuoteFetching: false,
+      quoteBaseAmount: undefined,
+      currentInput: createMoney(50_000_000, 'BTC', 8),
+    });
+    expect(result).toBe(false);
+  });
+
+  it('returns false when currentInput is null', () => {
+    const result = determineSwapExecutability({
+      validation: { isValid: true },
+      isQuoteFetching: false,
+      quoteBaseAmount: 0.5,
+      currentInput: null,
+    });
+    expect(result).toBe(false);
+  });
+
+  it('returns true when amounts align for BTC 8 decimals', () => {
+    const result = determineSwapExecutability({
+      validation: { isValid: true },
+      isQuoteFetching: false,
+      quoteBaseAmount: 0.12345678,
+      currentInput: createMoney(12_345_678, 'BTC', 8),
+    });
+    expect(result).toBe(true);
+  });
+
+  it('returns true when amounts align for STX 6 decimals', () => {
+    const result = determineSwapExecutability({
+      validation: { isValid: true },
+      isQuoteFetching: false,
+      quoteBaseAmount: 100.123456,
+      currentInput: createMoney(100_123_456, 'STX', 6),
+    });
+    expect(result).toBe(true);
+  });
+
+  it('returns false when amounts differ by 1 satoshi', () => {
+    const result = determineSwapExecutability({
+      validation: { isValid: true },
+      isQuoteFetching: false,
+      quoteBaseAmount: 0.5,
+      currentInput: createMoney(50_000_001, 'BTC', 8),
+    });
+    expect(result).toBe(false);
+  });
+
+  it('returns false when amounts completely different', () => {
+    const result = determineSwapExecutability({
+      validation: { isValid: true },
+      isQuoteFetching: false,
+      quoteBaseAmount: 1.0,
+      currentInput: createMoney(50_000_000, 'BTC', 8),
+    });
+    expect(result).toBe(false);
+  });
+
+  it('handles zero amounts correctly', () => {
+    const result = determineSwapExecutability({
+      validation: { isValid: true },
+      isQuoteFetching: false,
+      quoteBaseAmount: 0,
+      currentInput: createMoney(0, 'BTC', 8),
+    });
+    expect(result).toBe(true);
+  });
+
+  it('handles floating point precision for 0.1', () => {
+    const result = determineSwapExecutability({
+      validation: { isValid: true },
+      isQuoteFetching: false,
+      quoteBaseAmount: 0.1,
+      currentInput: createMoney(10_000_000, 'BTC', 8),
+    });
+    expect(result).toBe(true);
   });
 });
