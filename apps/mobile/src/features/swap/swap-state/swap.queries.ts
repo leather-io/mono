@@ -29,9 +29,11 @@ type CustomQueryOptions<TQueryFnData, TError = Error, TData = TQueryFnData> = Om
 >;
 
 export function createAccountBaseSwapAssetsQuery(service: SwapService, request: AccountRequest) {
-  return function useAccountBaseSwapAssetsQuery(params: {
-    queryOptions?: CustomQueryOptions<AccountSwapAsset[]>;
-  }) {
+  return function useAccountBaseSwapAssetsQuery(
+    params: {
+      queryOptions?: CustomQueryOptions<AccountSwapAsset[]>;
+    } = {}
+  ) {
     const { queryOptions } = params;
     return useQuery({
       queryKey: ['account-base-swap-assets', { request }],
