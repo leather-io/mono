@@ -161,12 +161,6 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
         slippage: action.payload,
       };
     }
-    case 'TOGGLE_SLIPPAGE_EDITING': {
-      return {
-        ...state,
-        slippageEditingAllowed: action.payload,
-      };
-    }
     case 'SET_NONCE': {
       return {
         ...state,

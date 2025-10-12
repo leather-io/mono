@@ -25,7 +25,6 @@ export interface SwapInternalState {
   };
   baseAmount: string;
   slippage: number;
-  slippageEditingAllowed: boolean;
   quoteCurrencyPreference: QuoteCurrency;
   quoteStrategy: SwapQuoteStrategy;
   nonce?: number;
@@ -50,7 +49,6 @@ export type SwapActionObject =
   | { type: 'SET_BASE_AMOUNT_BY_PERCENTAGE'; payload: PresetPercentage }
   | { type: 'TOGGLE_INPUT_CURRENCY_MODE'; payload: { nextBaseAmount: string } }
   | { type: 'SET_SLIPPAGE'; payload: number }
-  | { type: 'TOGGLE_SLIPPAGE_EDITING'; payload: boolean }
   | { type: 'SET_NONCE'; payload: number }
   | { type: 'OPEN_ASSET_SELECTOR'; payload: 'base' | 'target' }
   | { type: 'CLOSE_ASSET_SELECTOR' };
@@ -62,7 +60,6 @@ export interface SwapActions {
   setBaseAmountByPercentage: (percentage: PresetPercentage) => void;
   toggleInputCurrencyMode: () => void;
   setSlippage: (slippage: number) => void;
-  toggleSlippageEditing: (enabled: boolean) => void;
   setNonce: (nonce: number) => void;
   clearAssetSelection: () => void;
   flipAssets: () => void;
@@ -92,6 +89,7 @@ export interface EnrichedSwapQuote {
   dexPath: SwapDex[];
   assetPath: SwappableFungibleCryptoAsset[];
   quoteAmount: Money;
+  slippageApplicable: boolean;
   minReceive?: Money;
   provider: SwapProviderId;
   providerFee?: number;

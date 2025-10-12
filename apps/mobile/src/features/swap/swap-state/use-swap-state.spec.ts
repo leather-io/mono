@@ -63,7 +63,6 @@ describe('useSwapState', () => {
         },
         nonce: undefined,
         slippage: 0.03,
-        slippageEditingAllowed: true,
       });
     });
 

@@ -22,7 +22,6 @@ function createValidationContext({
     inputCurrencyMode: 'crypto',
     quoteCurrencyPreference: 'USD',
     quoteStrategy: 'best',
-    slippageEditingAllowed: true,
     selectingAsset: null,
     nonce: undefined,
     pairReconciliation: { base: 'pending', target: 'pending' },

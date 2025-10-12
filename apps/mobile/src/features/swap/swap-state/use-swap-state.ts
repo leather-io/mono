@@ -53,7 +53,6 @@ function initializeState({
     quoteStrategy: 'best',
     inputCurrencyMode: 'crypto',
     slippage: DEFAULT_SLIPPAGE_PERCENTAGE,
-    slippageEditingAllowed: true,
     selectingAsset: null,
   };
 }
@@ -194,10 +193,6 @@ export function useSwapState({
     dispatch({ type: 'SET_SLIPPAGE', payload: slippage });
   }
 
-  function toggleSlippageEditing(allowed: boolean) {
-    dispatch({ type: 'TOGGLE_SLIPPAGE_EDITING', payload: allowed });
-  }
-
   function setNonce(nonce: number) {
     dispatch({ type: 'SET_NONCE', payload: nonce });
   }
@@ -224,7 +219,6 @@ export function useSwapState({
       setBaseAmountByPercentage,
       toggleInputCurrencyMode,
       setSlippage,
-      toggleSlippageEditing,
       setNonce,
       clearAssetSelection,
       flipAssets,
