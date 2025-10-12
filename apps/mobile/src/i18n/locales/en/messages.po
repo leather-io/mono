@@ -473,6 +473,10 @@ msgstr ""
 msgid "Confirm"
 msgstr "Confirm"
 
+#: src/features/swap/screens/swap-review-screen.tsx:32
+msgid "Confirm Swap"
+msgstr "Confirm Swap"
+
 #: src/features/approver/layouts/get-addresses.layout.tsx:31
 msgid "Connect"
 msgstr "Connect"
@@ -550,6 +554,10 @@ msgstr "Custom"
 #: src/app/settings/index.tsx:176
 msgid "Custom fees"
 msgstr "Custom fees"
+
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:40
+msgid "Decrease slippage"
+msgstr "Decrease slippage"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:64
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
@@ -632,6 +640,10 @@ msgstr "Edit"
 #: src/features/send/components/memo.tsx:34
 msgid "Edit memo"
 msgstr "Edit memo"
+
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:26
+msgid "Edit Slippage"
+msgstr "Edit Slippage"
 
 #: src/app/settings/notifications/_layout.tsx:29
 #: src/app/settings/notifications/_layout.tsx:45
@@ -855,6 +867,10 @@ msgstr "Image currently unavailable"
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:88
 msgid "Import existing accounts from self-custody"
 msgstr "Import existing accounts from self-custody"
+
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:42
+msgid "Increase slippage"
+msgstr "Increase slippage"
 
 #: src/features/approver/components/inputs-outputs-card.tsx:35
 msgid "Input"
@@ -1131,6 +1147,10 @@ msgstr "Portfolio"
 msgid "Price"
 msgstr "Price"
 
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:28
+msgid "Price moving against you past this percentage will cancel the swap."
+msgstr "Price moving against you past this percentage will cancel the swap."
+
 #: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:52
 msgid "Proceed to transaction"
 msgstr "Proceed to transaction"
@@ -1227,7 +1247,7 @@ msgstr "Reveal account"
 #: src/features/send/forms/btc/btc-form.tsx:126
 #: src/features/send/forms/stx/sip10-form.tsx:149
 #: src/features/send/forms/stx/stx-form.tsx:140
-#: src/features/swap/swap.tsx:118
+#: src/features/swap/screens/swap-form-screen.tsx:103
 msgid "Review"
 msgstr "Review"
 
@@ -1391,7 +1411,7 @@ msgid "Submitting..."
 msgstr "Submitting..."
 
 #: src/components/action-buttons.tsx:49
-#: src/features/swap/swap.tsx:69
+#: src/features/swap/screens/swap-form-screen.tsx:54
 msgid "Swap"
 msgstr "Swap"
 
@@ -1611,6 +1631,10 @@ msgstr "Unlock"
 #: src/utils/app-store-utils.ts:51
 msgid "Update from {storeName}"
 msgstr "Update from {storeName}"
+
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:46
+msgid "Update slippage"
+msgstr "Update slippage"
 
 #: src/components/app-update-required/app-update-required-sheet.tsx:26
 msgid "Update the app to get access to the latest features."
