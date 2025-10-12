@@ -1,6 +1,6 @@
 import { renderHookWithProviders } from '@/tests/test-utils';
 import { act, waitFor } from '@testing-library/react';
-import { assert, describe, expect, it } from 'vitest';
+import { assert, describe, expect, it, vi } from 'vitest';
 
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
@@ -15,6 +15,10 @@ import {
 } from './test-utils/fixtures';
 import { createStubMarketDataService, createStubSwapService } from './test-utils/services.stub';
 import { UseSwapStateProps, determineSwapExecutability, useSwapState } from './use-swap-state';
+
+vi.mock('@/hooks/use-debounced-value', () => ({
+  useDebouncedValue: <T>(value: T) => value,
+}));
 
 function renderUseSwapState({
   accountRequest = createAccountRequest(),

@@ -9,6 +9,9 @@ function createTestQueryClient() {
       queries: {
         retry: false,
         gcTime: Infinity,
+        staleTime: Infinity,
+        refetchInterval: false,
+        refetchOnWindowFocus: false,
       },
       mutations: {
         retry: false,
