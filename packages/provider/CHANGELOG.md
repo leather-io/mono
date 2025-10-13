@@ -350,6 +350,24 @@
     * @leather.io/rpc bumped to 2.20.16
     * @leather.io/utils bumped to 0.46.3
 
+## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.5.17...@leather.io/provider-v1.6.0) (2025-10-13)
+
+
+### Features
+
+* prepare extension for monorepo ([59a58c3](https://github.com/leather-io/mono/commit/59a58c3deee76b95e720bb7c16d8160b4622820c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.44.1
+    * @leather.io/rpc bumped to 2.20.17
+    * @leather.io/utils bumped to 0.46.4
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.0
+
 ## [1.5.7](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.5.6...@leather.io/provider-v1.5.7) (2025-08-14)
 
 

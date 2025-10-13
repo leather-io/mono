@@ -489,6 +489,25 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.87.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.86.2...@leather.io/ui-v1.87.0) (2025-10-13)
+
+
+### Features
+
+* prepare extension for monorepo ([59a58c3](https://github.com/leather-io/mono/commit/59a58c3deee76b95e720bb7c16d8160b4622820c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/prettier-config bumped to 0.9.0
+    * @leather.io/tokens bumped to 0.23.1
+    * @leather.io/utils bumped to 0.46.4
+  * devDependencies
+    * @leather.io/models bumped to 0.44.1
+    * @leather.io/panda-preset bumped to 0.14.3
+
 ## [1.86.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.86.1...@leather.io/ui-v1.86.2) (2025-10-10)
 
 

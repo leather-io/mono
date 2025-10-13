@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/prettier-config-v0.8.1...@leather.io/prettier-config-v0.9.0) (2025-10-13)
+
+
+### Features
+
+* prepare extension for monorepo ([59a58c3](https://github.com/leather-io/mono/commit/59a58c3deee76b95e720bb7c16d8160b4622820c))
+
 ## [0.8.1](https://github.com/leather-io/mono/compare/@leather.io/prettier-config-v0.8.0...@leather.io/prettier-config-v0.8.1) (2025-07-28)
 
 
