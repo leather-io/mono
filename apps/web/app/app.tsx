@@ -3,10 +3,11 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigate } from 're
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Flex, styled } from 'leather-styles/jsx';
+import { Buffer } from 'safe-buffer';
 import { queryClient } from '~/constants/query-client';
 
 import type { LeatherProvider } from '@leather.io/rpc';
-import { HasChildren, Tooltip } from '@leather.io/ui';
+import { HasChildren, Tooltip, useOnMount } from '@leather.io/ui';
 
 import { defaultMetaTags } from './constants/meta-tags';
 import { InstallDialog } from './features/install-dialog/install-dialog';
