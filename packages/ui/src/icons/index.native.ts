@@ -132,6 +132,7 @@ export * from './logos/logo-mpc-privy.native';
 export * from './logos/logo-mpc-qredo.native';
 export * from './magic-book-icon.native';
 export * from './megaphone-icon.native';
+export * from './minus-icon.native';
 export * from './moon-icon.native';
 export * from './newspaper-icon.native';
 export * from './note-empty-icon.native';
