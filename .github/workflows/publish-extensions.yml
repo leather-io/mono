@@ -40,7 +40,7 @@ jobs:
   publish-chrome-extension:
     name: Publish Chrome extension
     runs-on: ubuntu-24.04
-    environment: production
+    environment: extension:production
     needs:
       - extract-version
     outputs:
