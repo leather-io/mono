@@ -19,6 +19,34 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.80.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.79.0...@leather.io/mobile-v2.80.0) (2025-10-13)
+
+
+### Features
+
+* prepare extension for monorepo ([59a58c3](https://github.com/leather-io/mono/commit/59a58c3deee76b95e720bb7c16d8160b4622820c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.2
+    * @leather.io/bitcoin bumped to 0.33.1
+    * @leather.io/constants bumped to 0.27.1
+    * @leather.io/crypto bumped to 1.11.15
+    * @leather.io/models bumped to 0.44.1
+    * @leather.io/provider bumped to 1.6.0
+    * @leather.io/query bumped to 2.43.0
+    * @leather.io/rpc bumped to 2.20.17
+    * @leather.io/services bumped to 1.36.0
+    * @leather.io/stacks bumped to 1.17.3
+    * @leather.io/tokens bumped to 0.23.1
+    * @leather.io/ui bumped to 1.87.0
+    * @leather.io/utils bumped to 0.46.4
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.0
+
 ## [2.79.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.78.0...@leather.io/mobile-v2.79.0) (2025-10-10)
 
 

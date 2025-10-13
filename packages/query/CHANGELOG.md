@@ -779,6 +779,32 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.43.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.42.6...@leather.io/query-v2.43.0) (2025-10-13)
+
+
+### Features
+
+* prepare extension for monorepo ([59a58c3](https://github.com/leather-io/mono/commit/59a58c3deee76b95e720bb7c16d8160b4622820c))
+
+
+### Bug Fixes
+
+* **query:** test commit for extension move ([fc59d17](https://github.com/leather-io/mono/commit/fc59d17b20792fb7309152d424c0df80ae2693db))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.33.1
+    * @leather.io/constants bumped to 0.27.1
+    * @leather.io/models bumped to 0.44.1
+    * @leather.io/rpc bumped to 2.20.17
+    * @leather.io/stacks bumped to 1.17.3
+    * @leather.io/utils bumped to 0.46.4
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.0
+
 ## [2.42.5](https://github.com/leather-io/mono/compare/@leather.io/query-v2.42.4...@leather.io/query-v2.42.5) (2025-10-08)
 
 

@@ -30,6 +30,12 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.0
+
 ## [0.44.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.43.0...@leather.io/models-v0.44.0) (2025-10-10)
 
 

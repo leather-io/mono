@@ -15,6 +15,104 @@
 * post-release merge back ([ff1667b](https://github.com/leather-io/extension/commit/ff1667beaaac6bc87e41b36ab567d7a775cfdf0f))
 * stacks transaction summary LEA-3200 ([e529df6](https://github.com/leather-io/extension/commit/e529df60d87c2a1ead5e4f24b03e8fc500df5d45))
 
+## [6.74.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.73.4...@leather.io/extension-v6.74.0) (2025-10-13)
+
+
+### Features
+
+* add bitflow env provider address ([cd8ce4d](https://github.com/leather-io/mono/commit/cd8ce4d7aa629faf6a98642da24491f98318a7f4))
+* apply visibility services ([5947a36](https://github.com/leather-io/mono/commit/5947a364a56213c580f9024d8aa84e566d0a51aa))
+* **extension:** leather-io/extension into feat/extension-move ([2803db6](https://github.com/leather-io/mono/commit/2803db658af7194f01b8eb4ee4be28e7a38b10ff))
+* implement balance services ([5aa1cd6](https://github.com/leather-io/mono/commit/5aa1cd6ee13370a725342ea18a3ef841b288bb60))
+* install leather services package ([371730e](https://github.com/leather-io/mono/commit/371730e566948d6ca563595946acbbde5f438232))
+* **ledger:** add windows firmware warning ([fd4419b](https://github.com/leather-io/mono/commit/fd4419bffb4158c853337ebb9362abad852a98a3))
+* more obvious full page button ([2fd63c4](https://github.com/leather-io/mono/commit/2fd63c4340c37530bee9e5f32a8b4b708b929ea2))
+* prepare extension for monorepo ([59a58c3](https://github.com/leather-io/mono/commit/59a58c3deee76b95e720bb7c16d8160b4622820c))
+* promo bannar tracking, closes LEA-2980 ([33c842c](https://github.com/leather-io/mono/commit/33c842cfd00bbcb9f1eeac2d535960d97345c026))
+* promo banner, closes LEA-2978 ([1867629](https://github.com/leather-io/mono/commit/1867629a1cf49d9b5a18ce4dda7300afb1ec5c8c))
+* track session duration ([bcc8e96](https://github.com/leather-io/mono/commit/bcc8e96dca6060e798cda3617cc7885940cfeb25))
+* update bitflow sdk to 2.4 ([6da3e95](https://github.com/leather-io/mono/commit/6da3e95fe98132743432e67b9f9f305002746aa3))
+
+
+### Bug Fixes
+
+* accessible button markup ([e81fe5c](https://github.com/leather-io/mono/commit/e81fe5c01037687c6302c7f6075a3f7ffa402db5))
+* add analytics to investigate BadNonce errors ([3817403](https://github.com/leather-io/mono/commit/38174036af4063cf9f49bd60d1ff3892e97d4f59))
+* add api nonce values to report ([deb3a53](https://github.com/leather-io/mono/commit/deb3a53e2921b42e82489c33ddd87e0fcd903692))
+* add fullscreen btn to lock screen ([39c4b97](https://github.com/leather-io/mono/commit/39c4b972192a091dc19e47533e7467a9b5fc392d))
+* advanced menu in settings dropdown ([7a3b3e9](https://github.com/leather-io/mono/commit/7a3b3e93cc4484e718b7a1e16386bfac1c80db6c))
+* **analytics:** cap session duration tracking ([f34c15d](https://github.com/leather-io/mono/commit/f34c15de0b3df2e94ef57460503337d72b67c751))
+* bignumber shiftedby error ([855b375](https://github.com/leather-io/mono/commit/855b375f79708b5c5ed9a998647873dd9fb01202))
+* bitflow gh actions env var ([d2745d6](https://github.com/leather-io/mono/commit/d2745d6418193b3a9e102593dd2481633a237223))
+* downgrade react to 19 ([dc41d8e](https://github.com/leather-io/mono/commit/dc41d8e16d6e4f14955cbb838fd89120041a3d92))
+* icon export bug ([e1dffba](https://github.com/leather-io/mono/commit/e1dffba2b99dbd7527f65f399bb86da96388f448))
+* issues introduced with zod upgrade ([d47043e](https://github.com/leather-io/mono/commit/d47043e107241a7a477e057225e4999faf60ec4f))
+* ledger contract deploy details, closes LEA-3045 ([8792e8b](https://github.com/leather-io/mono/commit/8792e8bc1bd9e8a380fb9ec7e5fed86450004f67))
+* **ledger:** sbtc deposit ([a8ea282](https://github.com/leather-io/mono/commit/a8ea282661f45c4704d6e98f8119862f9a6c5227))
+* **ledger:** sbtc incompatibility ([a66ff36](https://github.com/leather-io/mono/commit/a66ff365bc03e1b3026c2c69a3b8bc4aff05e841))
+* **ledger:** sbtc routing ([730e68a](https://github.com/leather-io/mono/commit/730e68a3de51744539596172f09089e47a3728f1))
+* legacy auth with missing gaia, closes (leather-io/extension[#6302](https://github.com/leather-io/mono/issues/6302)) ([a82329b](https://github.com/leather-io/mono/commit/a82329b5fc80c0cbaba83ce92b840fe5592482f2))
+* missing resp data check ([f37a287](https://github.com/leather-io/mono/commit/f37a28706d23d172a671cc6f2e92cc9bda9e3697))
+* missing swap event tracking, closes LEA-3088 ([9683573](https://github.com/leather-io/mono/commit/9683573a50df380f84f0007aea6ca534b5317b33))
+* nested button error ([fc229b9](https://github.com/leather-io/mono/commit/fc229b9298f9817bfc23f3ec56eb51b73099b336))
+* open swap request double popup ([f783c15](https://github.com/leather-io/mono/commit/f783c1503da446c26888f49823236b045280b042))
+* refresh on install, closes LEA-2745 ([a97770e](https://github.com/leather-io/mono/commit/a97770ea14c8befda34c17638b82784730a43ad5))
+* remove console.log ([eb64532](https://github.com/leather-io/mono/commit/eb6453292a852e2f321e45f816e605ebfe9ef7ea))
+* remove old sbtc withdrawal warning ([d3df67a](https://github.com/leather-io/mono/commit/d3df67ad1ac6af47deaf053f1691a0b6a9ffddeb))
+* remove outdated color definitions from sign out flow buttons ([129983d](https://github.com/leather-io/mono/commit/129983d6b9174563aae5c772f5a84789a37c0880))
+* rephase promo cards ([69446cd](https://github.com/leather-io/mono/commit/69446cd7560636816b270bdd8f723343846793cc))
+* replace all in tx status badge ([b84b7f4](https://github.com/leather-io/mono/commit/b84b7f492db542eac601f0dff201d220bae0a8f6))
+* report the actual unnsigned tx nonce ([25ee4a2](https://github.com/leather-io/mono/commit/25ee4a2b3defff592a71d9a83a7ffe833c48100f))
+* revert pnpm-lock ([c271d5e](https://github.com/leather-io/mono/commit/c271d5e6538d27fd7906e6e40e306fdc23b18a87))
+* rpc events etc should not allow fullscreen ([d71e519](https://github.com/leather-io/mono/commit/d71e519d6b07b15400419c5b192c590ede6a246e))
+* rpc flow sbtc sponsorship, closes ENG-97 ([2cd56e4](https://github.com/leather-io/mono/commit/2cd56e41ba61adb45918636b81effefe5eccb3c1))
+* rpc sponsored txs, closes ENG-98 ([3ca6a95](https://github.com/leather-io/mono/commit/3ca6a958c224210a36c6fd344067d596491ca96d))
+* runtime event handler err with collectible cards ([68adabc](https://github.com/leather-io/mono/commit/68adabc4e9119d7c3fe06f09de67a625de7c91aa))
+* sbtc analytics ([45844cd](https://github.com/leather-io/mono/commit/45844cdd17586f1629854601be2ea1e98d7a7355))
+* **sbtc:** navigate to error page ([276f245](https://github.com/leather-io/mono/commit/276f24513227bea50b7397eac962bc5f81d6d6b5))
+* **sbtc:** passing non-finalized tx ([f2b07a3](https://github.com/leather-io/mono/commit/f2b07a38ed9732117f4b4ab0426ffc7d32f6d5f0))
+* **sbtc:** use leather client for signer key fetch ([7713669](https://github.com/leather-io/mono/commit/771366948d38d49ecc47943a5b2ccef97eb2ea23))
+* share manage token state across accounts ([199a192](https://github.com/leather-io/mono/commit/199a192b53c70b20f347c6fcce768fa3d044e2f8))
+* sip10 send asset name ([4895a7c](https://github.com/leather-io/mono/commit/4895a7c05b6e280135912a3614b7673bf1a8e569))
+* stale nonce problem ([835dab4](https://github.com/leather-io/mono/commit/835dab4c78da42a7be88e1c0b5fed50c892cbcb6))
+* stamp schema fails ([7abeefc](https://github.com/leather-io/mono/commit/7abeefcb8b12eec0c62e78cb9151c5d21b4fdb16))
+* ststxbtc contract address ([128e558](https://github.com/leather-io/mono/commit/128e558ce0c959a12ad713bde1ebd8db34f00e4c))
+* **swap:** max swap amount ([c7a4ff7](https://github.com/leather-io/mono/commit/c7a4ff7d8e7cd3ed315fecba01c8a69981479b2c))
+* swaps with undefined route ([bfe7dc8](https://github.com/leather-io/mono/commit/bfe7dc89afec48189fe8678f45f150eb985211a7))
+* update [@leather](https://github.com/leather).io/services to 1.34.2 ([bd884e1](https://github.com/leather-io/mono/commit/bd884e17bf5348757567598dba7cc26878283072))
+* update all packages ([d43297c](https://github.com/leather-io/mono/commit/d43297ce8178d88236d762f48b4a79a96c3c643b))
+* update icons ([fa9ab50](https://github.com/leather-io/mono/commit/fa9ab5079a61458b9c7e5e99bbc2eb9564ba71f4))
+* update ui package ([a67c36d](https://github.com/leather-io/mono/commit/a67c36d228ae3485794d3b45194b1303b2b14973))
+* upgrade tanstack query ([f61c7d7](https://github.com/leather-io/mono/commit/f61c7d743e5f4b64f4d109ec14c7c6ee91d5ea09))
+* use a custom component for fee items ([3bfcd8f](https://github.com/leather-io/mono/commit/3bfcd8f8050a1b9b96b2d99726c363d1b201b95a))
+* use constant route, divergence introduced loads of bugs ([2c7a1aa](https://github.com/leather-io/mono/commit/2c7a1aad66b5903e0a3d632e380d4d2261438818))
+* use correct balance in the "insufficient balance" message for sip-10 send ([5e18eaa](https://github.com/leather-io/mono/commit/5e18eaa1a17d1ef74b7f491d0f42600347d46bda))
+* use new protections api ([d44161c](https://github.com/leather-io/mono/commit/d44161ce6189ee1fdc34667e874fe21464d86a97))
+* webpack dev server ([387e466](https://github.com/leather-io/mono/commit/387e4661aabeda994ce67d71fbe8e5cceac5f61c))
+* wrong prop passed to migration fn ([168e3c1](https://github.com/leather-io/mono/commit/168e3c12a5c74c2c30e4feb6a2ef48de0bcc5ace))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.2
+    * @leather.io/bitcoin bumped to 0.33.1
+    * @leather.io/constants bumped to 0.27.1
+    * @leather.io/crypto bumped to 1.11.15
+    * @leather.io/models bumped to 0.44.1
+    * @leather.io/provider bumped to 1.6.0
+    * @leather.io/query bumped to 2.43.0
+    * @leather.io/rpc bumped to 2.20.17
+    * @leather.io/services bumped to 1.36.0
+    * @leather.io/stacks bumped to 1.17.3
+    * @leather.io/tokens bumped to 0.23.1
+    * @leather.io/ui bumped to 1.87.0
+    * @leather.io/utils bumped to 0.46.4
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.14.3
+    * @leather.io/prettier-config bumped to 0.9.0
+
 ## [6.73.3](https://github.com/leather-io/extension/compare/v6.73.2...v6.73.3) (2025-09-17)
 
 
