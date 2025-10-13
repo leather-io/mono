@@ -107,7 +107,7 @@ function TransactionsApi(basePath: string) {
     },
 
     async broadcastTransaction(tx: string) {
-      // TODO: refactor to use `axios`
+      // TODO: refactor to use `axios` instead of `fetch`
       // https://github.com/leather-io/extension/issues/4521
       return fetch(`${basePath}/tx`, {
         method: 'POST',
