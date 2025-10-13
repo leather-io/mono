@@ -91,10 +91,10 @@ export function Pressable({
       ref={ref}
       onPress={handlePress}
       onLongPress={shouldPassLongPress ? handleLongPress : undefined}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
       style={[pressEffectStyle, style]}
       {...rest}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
     />
   );
 }

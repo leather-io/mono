@@ -73,6 +73,7 @@ export * from './ledger-icon.web';
 export * from './lock-icon.web';
 export * from './magnifying-glass-icon.web';
 export * from './megaphone-icon.web';
+export * from './minus-icon.web';
 export * from './mobile-icon.web';
 export * from './moon-icon.web';
 export * from './newspaper-icon.web';

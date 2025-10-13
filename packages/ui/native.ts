@@ -57,7 +57,7 @@ export {
 export { Numpad, type NumpadProps } from './src/components/numpad/numpad.native';
 export { Highlighter } from './src/components/highlighting/highlighter.native';
 export { Prism, type PrismType } from './src/components/highlighting/clarity-prism.shared';
-export { IconButton } from './src/components/icon-button/icon-button.native';
+export { IconButton, type IconButtonProps } from './src/components/icon-button/icon-button.native';
 export { usePressedState } from './src/hooks/use-pressed-state.native';
 export { useHaptics, HapticsProvider } from './src/hooks/use-haptics.native';
 export { useTheme } from './src/hooks/use-theme.native';
@@ -66,3 +66,7 @@ export { Badge, type BadgeProps } from './src/components/badge/badge.native';
 export * from './src/utils/has-children.shared';
 export { SkeletonLoader } from './src/components/skeleton-loader/skeleton-loader.native';
 export { Favicon } from './src/components/favicon/favicon.native';
+export {
+  NumericInput,
+  type NumericInputProps,
+} from './src/components/numeric-input/numeric-input.native';

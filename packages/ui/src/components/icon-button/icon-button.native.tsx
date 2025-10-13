@@ -6,7 +6,7 @@ import {
   legacyTouchablePressEffect,
 } from '../pressable/pressable.native';
 
-interface IconButtonProps extends Omit<PressableProps, 'accessibilityLabel'> {
+export interface IconButtonProps extends Omit<PressableProps, 'accessibilityLabel'> {
   label: string;
   icon: ReactNode;
 }

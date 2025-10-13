@@ -4,11 +4,12 @@ import { type TextProps as RNTexProps } from 'react-native';
 import { type TextProps as RestyleTextProps, createText } from '@shopify/restyle';
 
 import { Theme } from '../../theme-native';
+import { BoxProps } from '../box/box.native';
 
 const RestyleText = createText<Theme>();
 
 type TextElement = ElementRef<typeof RestyleText>;
-export type TextProps = RNTexProps & RestyleTextProps<Theme>;
+export type TextProps = RNTexProps & RestyleTextProps<Theme> & BoxProps;
 
 // Manually adjust vertical centering of text affected by incorrect rendering of react-native:
 // https://github.com/facebook/react-native/issues/29507
