@@ -1,6 +1,4 @@
-// We need to import the polyfills before any other import
-import './utils/polyfills';
-
+import { useEffect } from 'react';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigate } from 'react-router';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -16,11 +14,8 @@ import { MockLeatherDialog } from './features/mock-dialog/mock-dialog';
 import { Footer } from './layouts/footer/footer';
 import { GlobalLoader } from './layouts/nav/global-loader';
 import { Nav } from './layouts/nav/nav';
-import { initAppServices } from './services/init-app-services';
 import { analytics } from './utils/analytics/analytics';
 import { useOnRouteChange } from './utils/analytics/use-on-route-change';
-
-initAppServices();
 
 declare global {
   interface Window {
@@ -58,6 +53,14 @@ export function Layout({ children }: HasChildren) {
 
 export default function App() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Required async import otherwise Buffer is undefined
+    import('~/services/init-app-services')
+      .then(({ initAppServices }) => initAppServices())
+      // eslint-disable-next-line no-console
+      .catch(console.error);
+  }, []);
 
   useOnRouteChange(() => analytics.page());
   useOnRouteChange(
