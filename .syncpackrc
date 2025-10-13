@@ -1,4 +1,12 @@
 {
+  "versionGroups": [
+    {
+      "dependencies": [
+        "react-router"
+      ],
+      "isIgnored": true
+    }
+  ],
   "dependencyTypes": [
     "prod",
     "dev"

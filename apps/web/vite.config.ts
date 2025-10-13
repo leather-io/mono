@@ -39,7 +39,6 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
   define: {
     // Required for some libs e.g. pbkdf2
     global: 'globalThis',
-    'process.version': JSON.stringify(process.version),
     'import.meta.env.CLOUDFLARE_ENV': JSON.stringify(process.env.CLOUDFLARE_ENV),
   },
   plugins: [
