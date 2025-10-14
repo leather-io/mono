@@ -1,5 +1,6 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
+import { openExternalLink } from '~/utils/external-links';
 
 import { Button, FeedIcon, HasChildren } from '@leather.io/ui';
 
@@ -16,7 +17,7 @@ export function ChangelogPageLayout(props: ChangelogPageLayoutProps) {
             variant="ghost"
             size="sm"
             iconStart={FeedIcon}
-            onClick={() => (window.location.href = '/changelog.xml')}
+            onClick={() => openExternalLink(`${window.location.origin}/changelog.xml`)}
           >
             Subscribe
           </Button>
