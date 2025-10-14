@@ -5,8 +5,8 @@ import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { StacksTxSigner } from '@/features/stacks-tx-signer/stacks-tx-signer';
-import { makeAccountIdentifer } from '@/store/utils';
 
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import { Box } from '@leather.io/ui/native';
 
 import { Sip10Approver } from '../forms/stx/sip10-approval';

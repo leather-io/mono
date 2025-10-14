@@ -8,6 +8,7 @@ import {
   deriveRootBip32Keychain,
   generateMnemonic,
   getMnemonicRootKeyFingerprint,
+  makeAccountIdentifer,
 } from '@leather.io/crypto';
 import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
 
@@ -15,7 +16,7 @@ import { userAddsAccount, userTogglesHideAccount } from './accounts/accounts.wri
 import { useBitcoinAccounts } from './keychains/bitcoin/bitcoin-keychains.read';
 import { findHighestAccountIndexOfFingerprint } from './keychains/keychains';
 import { mnemonicStore } from './storage-persistors';
-import { makeAccountIdentifer, useAppDispatch } from './utils';
+import { useAppDispatch } from './utils';
 import { useWallets } from './wallets/wallets.read';
 
 type DeriveNextAccountKeychainsProps =

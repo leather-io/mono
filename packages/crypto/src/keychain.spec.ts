@@ -6,6 +6,7 @@ import {
   deriveKeychainExtendedPublicKeyDescriptor,
   deriveRootBip32Keychain,
   getMnemonicRootKeyFingerprint,
+  makeAccountIdentifer,
 } from './keychain';
 
 const passphrase = 'abandoned cactus';
@@ -36,3 +37,13 @@ describe(deriveKeychainExtendedPublicKeyDescriptor.name, () => {
     ).toThrow();
   });
 });
+
+const fingerprint = 'yg82822e'
+const accountIndex = 42
+const accountId = 'yg82822e/42'
+
+describe(makeAccountIdentifer.name, () => {
+  test('it makes correct accountId', () => {
+    expect(makeAccountIdentifer(fingerprint, accountIndex)).toEqual(accountId)
+  })
+})

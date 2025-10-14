@@ -3,7 +3,7 @@ import {
   findAccountByAddress,
   useBitcoinAccounts,
 } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
-import { destructAccountIdentifier, makeAccountIdentifer } from '@/store/utils';
+import { destructAccountIdentifier } from '@/store/utils';
 import { bytesToHex } from '@noble/hashes/utils';
 
 import {
@@ -18,6 +18,7 @@ import {
 import {
   extractAccountIndexFromDescriptor,
   extractFingerprintFromDescriptor,
+  makeAccountIdentifer,
 } from '@leather.io/crypto';
 import { BitcoinNetworkModes } from '@leather.io/models';
 import { RpcRequests } from '@leather.io/rpc';

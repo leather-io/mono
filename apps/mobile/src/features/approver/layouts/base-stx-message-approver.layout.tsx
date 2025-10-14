@@ -1,8 +1,8 @@
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { Account } from '@/store/accounts/accounts';
-import { makeAccountIdentifer } from '@/store/utils';
 import { t } from '@lingui/core/macro';
 
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import { Approver, Button, Cell, Text } from '@leather.io/ui/native';
 
 import { StructuredMessageSection } from '../structured-message.section';

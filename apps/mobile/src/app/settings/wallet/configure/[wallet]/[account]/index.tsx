@@ -11,13 +11,14 @@ import { AccountNameSheet } from '@/features/settings/wallet-and-accounts/accoun
 import { TestId } from '@/shared/test-id';
 import { Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
-import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
+import { useAppDispatch } from '@/store/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/core/macro';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
 import {
   Box,

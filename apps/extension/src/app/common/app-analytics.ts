@@ -2,7 +2,9 @@ import { useEffect } from 'react';
 
 import { z } from 'zod';
 
-import { HIRO_API_BASE_URL_MAINNET, HIRO_API_BASE_URL_TESTNET } from '@leather.io/models';
+import { makeAccountIdentifer } from '@leather.io/crypto';
+import { HIRO_API_BASE_URL_MAINNET, HIRO_API_BASE_URL_TESTNET, Money } from '@leather.io/models';
+import { convertAmountToBaseUnit, isDefined, scaleValue, toHexString } from '@leather.io/utils';
 
 import { IS_TEST_ENV, SEGMENT_WRITE_KEY } from '@shared/environment';
 import {
@@ -11,8 +13,12 @@ import {
   initAnalytics,
 } from '@shared/utils/analytics';
 
+import { useNativeSegwitBtcAccountBalance } from '@app/query/bitcoin/balance/btc-balance.hooks';
+import { useAccountTotalBalance } from '@app/query/common/account-balance/account-balance.query';
+import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { store } from '@app/store';
 import { selectWalletType } from '@app/store/common/wallet-type.selectors';
+import { useWalletFingerprint } from '@app/store/in-memory-key/in-memory-key.hooks';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useOnMount } from './hooks/use-on-mount';
@@ -91,4 +97,51 @@ export function useHandleQueuedBackgroundAnalytics() {
     }
     void handleQueuedAnalytics();
   });
+}
+
+export function useAccountScaledBalanceAnalytics({ accountIndex }: { accountIndex: number }) {
+  const btcBalance = useNativeSegwitBtcAccountBalance(accountIndex);
+  const stxBalance = useStxAccountBalance(accountIndex);
+
+  const totalBalance = useAccountTotalBalance(accountIndex);
+  function getScaledValueFromMoney(money: Money | undefined) {
+    return money ? scaleValue(Number(convertAmountToBaseUnit(money))) : undefined;
+  }
+  const scaledStxAvailableBalance = getScaledValueFromMoney(
+    stxBalance.value?.stx.availableUnlockedBalance
+  );
+  const scaledStxLockedBalance = getScaledValueFromMoney(stxBalance.value?.stx.lockedBalance);
+  const scaledBtcAvailableBalance = getScaledValueFromMoney(btcBalance.value?.btc.availableBalance);
+  const scaledUsdBalance = getScaledValueFromMoney(totalBalance.value);
+
+  const fingerprint = useWalletFingerprint();
+
+  const accountId = fingerprint
+    ? makeAccountIdentifer(toHexString(fingerprint), accountIndex)
+    : undefined;
+
+  useEffect(() => {
+    if (
+      isDefined(scaledStxAvailableBalance) &&
+      isDefined(scaledStxLockedBalance) &&
+      isDefined(scaledUsdBalance) &&
+      isDefined(scaledBtcAvailableBalance) &&
+      isDefined(accountId)
+    ) {
+      void analytics.track('balance_updated', {
+        platform: 'extension',
+        walletAccountId: accountId,
+        stxAvailableBalance: scaledStxAvailableBalance,
+        stxLockedBalance: scaledStxLockedBalance,
+        usdBalance: scaledUsdBalance,
+        btcBalance: scaledBtcAvailableBalance,
+      });
+    }
+  }, [
+    accountId,
+    scaledBtcAvailableBalance,
+    scaledStxAvailableBalance,
+    scaledStxLockedBalance,
+    scaledUsdBalance,
+  ]);
 }

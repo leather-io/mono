@@ -10,9 +10,9 @@ import {
   normalizeSearchTerm,
 } from '@/features/send/components/recipient/recipient.utils';
 import { type Account } from '@/store/accounts/accounts';
-import { makeAccountIdentifer } from '@/store/utils';
 import { filter, map, pipe, prop, sortBy, take, uniqueBy } from 'remeda';
 
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId, SendAssetActivity } from '@leather.io/models';
 
 export interface BuildRecipientSuggestionsParams {
