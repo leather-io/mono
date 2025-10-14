@@ -492,6 +492,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.46.4
 
+## [1.12.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.11.15...@leather.io/crypto-v1.12.0) (2025-10-14)
+
+
+### Features
+
+* balance analytics extension ([75a4773](https://github.com/leather-io/mono/commit/75a4773b9a8879bf9ee3425ed47f29b224d5fb6a))
+
 ## [1.11.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.10.0...@leather.io/crypto-v1.11.0) (2025-07-28)
 
 

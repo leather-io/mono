@@ -21,6 +21,26 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.75.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.74.1...@leather.io/extension-v6.75.0) (2025-10-14)
+
+
+### Features
+
+* balance analytics extension ([75a4773](https://github.com/leather-io/mono/commit/75a4773b9a8879bf9ee3425ed47f29b224d5fb6a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.33.2
+    * @leather.io/crypto bumped to 1.12.0
+    * @leather.io/provider bumped to 1.6.1
+    * @leather.io/query bumped to 2.43.1
+    * @leather.io/rpc bumped to 2.20.18
+    * @leather.io/services bumped to 1.36.1
+    * @leather.io/stacks bumped to 1.17.4
+
 ## [6.74.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.73.4...@leather.io/extension-v6.74.0) (2025-10-13)
 
 
