@@ -1,8 +1,9 @@
-import { swapQuoteSelector } from '@/features/swap/swap-state/swap-quote-selector';
 import {
   SwapQuoteSelectionResult,
   SwapQuoteStrategy,
 } from '@/features/swap/swap-state/swap-state.types';
+import { createSwapAssetsSelector } from '@/features/swap/swap-state/utils/asset-selection';
+import { swapQuoteSelector } from '@/features/swap/swap-state/utils/swap-quote-selection';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import { isDefined, isNonNullish } from 'remeda';
@@ -28,118 +29,142 @@ type CustomQueryOptions<TQueryFnData, TError = Error, TData = TQueryFnData> = Om
   'queryKey' | 'queryFn'
 >;
 
-export function createAccountBaseSwapAssetsQuery(service: SwapService, request: AccountRequest) {
-  return function useAccountBaseSwapAssetsQuery(
-    params: {
-      queryOptions?: CustomQueryOptions<AccountSwapAsset[]>;
-    } = {}
-  ) {
-    const { queryOptions } = params;
-    return useQuery({
-      queryKey: ['account-base-swap-assets', { request }],
-      queryFn: ({ signal }) => service.getAccountBaseSwapAssets(request, signal),
-      ...queryOptions,
-    });
-  };
+interface UseAccountBaseSwapAssetsQueryParams {
+  swapService: SwapService;
+  accountRequest: AccountRequest;
+  queryOptions?: CustomQueryOptions<AccountSwapAsset[]>;
 }
 
-export function createAccountTargetSwapAssetsQuery(service: SwapService, request: AccountRequest) {
-  return function useAccountTargetSwapAssetsQuery(params: {
-    baseId?: CryptoAssetId;
-    queryOptions?: CustomQueryOptions<AccountSwapAsset[]>;
-  }) {
-    const { baseId, queryOptions } = params;
-    return useQuery({
-      queryKey: ['account-target-swap-assets', { baseId, request }],
-      queryFn: ({ signal }) => {
-        if (!baseId) return [];
-        return service.getAccountTargetSwapAssets(request, baseId, signal);
-      },
-      enabled: isDefined(baseId),
-      ...queryOptions,
-    });
-  };
+export function useAccountBaseSwapAssetsQuery({
+  swapService,
+  accountRequest,
+  queryOptions,
+}: UseAccountBaseSwapAssetsQueryParams) {
+  return useQuery({
+    queryKey: ['account-base-swap-assets', { request: accountRequest }],
+    queryFn: ({ signal }) => swapService.getAccountBaseSwapAssets(accountRequest, signal),
+    select: createSwapAssetsSelector('base'),
+    ...queryOptions,
+  });
 }
 
-export function createSwapQuotesQuery(service: SwapService) {
-  return function useSwapQuotesQuery(params: {
-    baseSwapAsset?: SwapAsset | null;
-    targetSwapAsset?: SwapAsset | null;
-    baseAmount?: Money | null;
-    strategy: SwapQuoteStrategy;
-    fairMarketRate: number | null;
-    slippage: number;
-    queryOptions?: CustomQueryOptions<SwapQuote[], Error, SwapQuoteSelectionResult>;
-  }) {
-    const {
-      baseSwapAsset,
-      targetSwapAsset,
-      baseAmount,
-      strategy,
-      fairMarketRate,
-      slippage,
-      queryOptions,
-    } = params;
-    const debounceDelay = 350;
-    const debouncedBaseAmount = useDebouncedValue(baseAmount, debounceDelay);
-
-    return useQuery({
-      queryKey: ['swap-quotes', { baseSwapAsset, targetSwapAsset, debouncedBaseAmount, strategy }],
-      queryFn: async ({ signal }) => {
-        if (!baseSwapAsset || !targetSwapAsset || !debouncedBaseAmount) return [];
-
-        return service.getSwapQuotes(
-          baseSwapAsset,
-          targetSwapAsset,
-          debouncedBaseAmount.amount
-            .shiftedBy(baseSwapAsset ? -baseSwapAsset.asset.decimals : 0)
-            .toNumber(),
-          signal
-        );
-      },
-      gcTime: 0,
-      select: data => swapQuoteSelector(data, strategy, fairMarketRate, slippage),
-      enabled: !!(
-        baseSwapAsset &&
-        targetSwapAsset &&
-        isNonNullish(debouncedBaseAmount) &&
-        !debouncedBaseAmount.amount.isZero()
-      ),
-      ...queryOptions,
-    });
-  };
+interface UseAccountTargetSwapAssetsQueryParams {
+  swapService: SwapService;
+  accountRequest: AccountRequest;
+  baseId?: CryptoAssetId;
+  queryOptions?: CustomQueryOptions<AccountSwapAsset[]>;
 }
 
-export function createSwapExecutionDataQuery(service: SwapService, request: AccountRequest) {
-  return function useSwapExecutionDataQuery(params: {
-    quote: SwapQuote;
-    slippage: number;
-    queryOptions?: CustomQueryOptions<SwapExecutionData>;
-  }) {
-    const { quote, slippage, queryOptions } = params;
-    return useQuery({
-      queryKey: ['swap-execution-data', { request, quote, slippage }],
-      queryFn: ({ signal }) => service.getSwapExecutionData(request, quote, slippage, signal),
-      ...queryOptions,
-    });
-  };
+export function useAccountTargetSwapAssetsQuery({
+  swapService,
+  accountRequest,
+  baseId,
+  queryOptions,
+}: UseAccountTargetSwapAssetsQueryParams) {
+  return useQuery({
+    queryKey: ['account-target-swap-assets', { baseId, request: accountRequest }],
+    queryFn: ({ signal }) => {
+      if (!baseId) return [];
+      return swapService.getAccountTargetSwapAssets(accountRequest, baseId, signal);
+    },
+    enabled: isDefined(baseId),
+    select: createSwapAssetsSelector('target'),
+    ...queryOptions,
+  });
 }
 
-export function createAssetMarketDataQuery(service: MarketDataService) {
-  return function useAssetMarketDataQuery(params: {
-    asset?: SwappableFungibleCryptoAsset;
-    queryOptions?: CustomQueryOptions<MarketData>;
-  }) {
-    const { asset, queryOptions } = params;
-    return useQuery({
-      queryKey: ['asset-market-data', { asset }],
-      queryFn: ({ signal }) => {
-        if (!asset) throw new Error('Asset is required');
-        return service.getMarketData(asset, signal);
-      },
-      enabled: isDefined(asset),
-      refetchInterval: 30000, // Refetch every 30 seconds
-      ...queryOptions,
-    });
-  };
+interface UseSwapQuotesQueryParams {
+  swapService: SwapService;
+  baseSwapAsset?: SwapAsset | null;
+  targetSwapAsset?: SwapAsset | null;
+  baseAmount?: Money | null;
+  strategy: SwapQuoteStrategy;
+  fairMarketRate: number | null;
+  slippage: number;
+  queryOptions?: CustomQueryOptions<SwapQuote[], Error, SwapQuoteSelectionResult>;
+}
+
+export function useSwapQuotesQuery({
+  swapService,
+  baseSwapAsset,
+  targetSwapAsset,
+  baseAmount,
+  strategy,
+  fairMarketRate,
+  slippage,
+  queryOptions,
+}: UseSwapQuotesQueryParams) {
+  const debounceDelay = 350;
+  const debouncedBaseAmount = useDebouncedValue(baseAmount, debounceDelay);
+
+  return useQuery({
+    queryKey: ['swap-quotes', { baseSwapAsset, targetSwapAsset, debouncedBaseAmount, strategy }],
+    queryFn: async ({ signal }) => {
+      if (!baseSwapAsset || !targetSwapAsset || !debouncedBaseAmount) return [];
+
+      return swapService.getSwapQuotes(
+        baseSwapAsset,
+        targetSwapAsset,
+        debouncedBaseAmount.amount
+          .shiftedBy(baseSwapAsset ? -baseSwapAsset.asset.decimals : 0)
+          .toNumber(),
+        signal
+      );
+    },
+    gcTime: 0,
+    select: data => swapQuoteSelector(data, strategy, fairMarketRate, slippage),
+    enabled: !!(
+      baseSwapAsset &&
+      targetSwapAsset &&
+      isNonNullish(debouncedBaseAmount) &&
+      !debouncedBaseAmount.amount.isZero()
+    ),
+    ...queryOptions,
+  });
+}
+
+interface UseSwapExecutionDataQueryParams {
+  swapService: SwapService;
+  accountRequest: AccountRequest;
+  quote: SwapQuote;
+  slippage: number;
+  queryOptions?: CustomQueryOptions<SwapExecutionData>;
+}
+
+export function useSwapExecutionDataQuery({
+  swapService,
+  accountRequest,
+  quote,
+  slippage,
+  queryOptions,
+}: UseSwapExecutionDataQueryParams) {
+  return useQuery({
+    queryKey: ['swap-execution-data', { request: accountRequest, quote, slippage }],
+    queryFn: ({ signal }) =>
+      swapService.getSwapExecutionData(accountRequest, quote, slippage, signal),
+    ...queryOptions,
+  });
+}
+
+interface UseAssetMarketDataQueryParams {
+  marketDataService: MarketDataService;
+  asset?: SwappableFungibleCryptoAsset;
+  queryOptions?: CustomQueryOptions<MarketData>;
+}
+
+export function useAssetMarketDataQuery({
+  marketDataService,
+  asset,
+  queryOptions,
+}: UseAssetMarketDataQueryParams) {
+  return useQuery({
+    queryKey: ['asset-market-data', { asset }],
+    queryFn: ({ signal }) => {
+      if (!asset) throw new Error('Asset is required');
+      return marketDataService.getMarketData(asset, signal);
+    },
+    enabled: isDefined(asset),
+    refetchInterval: 30000, // Refetch every 30 seconds
+    ...queryOptions,
+  });
 }

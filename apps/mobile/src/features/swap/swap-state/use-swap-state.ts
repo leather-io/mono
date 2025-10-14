@@ -1,30 +1,141 @@
-import { useEffect, useMemo, useReducer } from 'react';
+import { useMemo, useReducer } from 'react';
 
-import { runValidation } from '@/features/swap/swap-state/validation/swap-validation';
-import { DEFAULT_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap.constants';
-import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
-import BigNumber from 'bignumber.js';
-
+import { useSwapExecutability } from '@/features/swap/swap-state/hooks/use-swap-executability';
 import {
-  AccountAddresses,
-  Money,
-  QuoteCurrency,
-  SwappableFungibleCryptoAsset,
-} from '@leather.io/models';
+  useAccountBaseSwapAssetsQuery,
+  useAccountTargetSwapAssetsQuery,
+  useAssetMarketDataQuery,
+} from '@/features/swap/swap-state/swap.queries';
+import { useDerivedAmounts } from '@/features/swap/swap-state/use-derived-amounts';
+import { isAmountEqualToAvailableBalance } from '@/features/swap/swap-state/utils/amount-operations';
+import { computeSecondaryAmountState } from '@/features/swap/swap-state/utils/secondary-amount';
+import { DEFAULT_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap.constants';
+
+import { AccountAddresses, QuoteCurrency, SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { AccountSwapAsset, MarketDataService, SwapService } from '@leather.io/services';
 import { getAssetId } from '@leather.io/utils';
 
+import { createSwapActions } from './actions/swap-actions';
+import { useSwapAssetReconciliation } from './hooks/use-swap-asset-reconciliation';
+import { useSwapQuotes } from './hooks/use-swap-quotes';
+import { useSwapValidation } from './hooks/use-swap-validation';
 import { swapReducer } from './swap-state.reducer';
-import { PresetPercentage, SwapInternalState, UseSwapStateResult } from './swap-state.types';
-import {
-  calculateFairMarketRate,
-  computeSecondaryAmountState,
-  convertMoneyToInputValue,
-  createSwapAssetsSelector,
-  isAmountEqualToAvailableBalance,
-} from './swap-state.utils';
-import { useDerivedAmounts } from './use-derived-amounts';
-import { useSwapQueries } from './use-swap-queries';
+import { SwapInternalState, UseSwapStateResult } from './swap-state.types';
+
+export interface UseSwapStateProps {
+  accountRequest: { account: AccountAddresses };
+  baseAsset?: SwappableFungibleCryptoAsset;
+  targetAsset?: SwappableFungibleCryptoAsset;
+  marketDataService: MarketDataService;
+  swapService: SwapService;
+  quoteCurrencyPreference: QuoteCurrency;
+}
+
+export function useSwapState({
+  accountRequest,
+  swapService,
+  marketDataService,
+  baseAsset,
+  targetAsset,
+  quoteCurrencyPreference,
+}: UseSwapStateProps): UseSwapStateResult {
+  const [state, dispatch] = useReducer(
+    swapReducer,
+    { baseAsset, targetAsset, quoteCurrencyPreference },
+    initializeState
+  );
+
+  const baseMarketDataQuery = useAssetMarketDataQuery({
+    marketDataService,
+    asset: state.baseSwapAsset?.asset,
+  });
+
+  const targetMarketDataQuery = useAssetMarketDataQuery({
+    marketDataService,
+    asset: state.targetSwapAsset?.asset,
+  });
+
+  const baseAssetsQuery = useAccountBaseSwapAssetsQuery({
+    accountRequest,
+    swapService,
+  });
+
+  const targetAssetsQuery = useAccountTargetSwapAssetsQuery({
+    swapService,
+    accountRequest,
+    baseId: state.baseSwapAsset ? getAssetId(state.baseSwapAsset?.asset) : undefined,
+  });
+
+  useSwapAssetReconciliation({
+    baseSwapAssets: baseAssetsQuery.data,
+    targetSwapAssets: targetAssetsQuery.data,
+    dispatch,
+  });
+
+  const { derivedAmounts, lockDerivedAmountsForNextRender } = useDerivedAmounts(
+    state,
+    baseMarketDataQuery.data
+  );
+
+  const secondaryAmount = useMemo(
+    () =>
+      computeSecondaryAmountState({
+        state,
+        queryStatus: baseMarketDataQuery.status,
+        isFetching: baseMarketDataQuery.isFetching,
+        derivedAmounts,
+      }),
+    [state, baseMarketDataQuery.status, baseMarketDataQuery.isFetching, derivedAmounts]
+  );
+
+  const isSendingMax = useMemo(
+    () =>
+      isAmountEqualToAvailableBalance(derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode),
+    [derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode]
+  );
+
+  const { quoteQuery } = useSwapQuotes({
+    swapService,
+    state,
+    derivedAmounts,
+    baseMarketData: baseMarketDataQuery.data,
+    targetMarketData: targetMarketDataQuery.data,
+  });
+
+  const validation = useSwapValidation({ state, derivedAmounts });
+
+  const actions = useMemo(
+    () =>
+      createSwapActions({
+        dispatch,
+        lockDerivedAmountsForNextRender,
+        state,
+        derivedAmounts,
+      }),
+    [lockDerivedAmountsForNextRender, state, derivedAmounts]
+  );
+
+  const isSwapExecutable = useSwapExecutability({
+    validation,
+    quoteQuery,
+    derivedAmounts,
+  });
+
+  return {
+    state: {
+      ...state,
+      secondaryAmount,
+      assetFlippingAllowed: isAssetFlippingAllowed(state.baseSwapAsset, state.targetSwapAsset),
+      isSendingMax,
+    },
+    actions,
+    validation,
+    baseAssetsQuery,
+    targetAssetsQuery,
+    quoteQuery,
+    isSwapExecutable,
+  };
+}
 
 export interface InitializeStateParams {
   baseAsset?: SwappableFungibleCryptoAsset;
@@ -57,214 +168,9 @@ function initializeState({
   };
 }
 
-export interface UseSwapStateProps {
-  accountRequest: { account: AccountAddresses };
-  baseAsset?: SwappableFungibleCryptoAsset;
-  targetAsset?: SwappableFungibleCryptoAsset;
-  marketDataService: MarketDataService;
-  swapService: SwapService;
-  // TODO: To be removed: https://linear.app/leather-io/issue/LEA-3218/apply-asset-visibility-settings-to-swapasset-lists
-  isAssetAllowed?: (asset: SwappableFungibleCryptoAsset) => boolean;
-  quoteCurrencyPreference: QuoteCurrency;
-}
-
-export function useSwapState({
-  accountRequest,
-  swapService,
-  marketDataService,
-  baseAsset,
-  targetAsset,
-  quoteCurrencyPreference,
-  isAssetAllowed,
-}: UseSwapStateProps): UseSwapStateResult {
-  const [state, dispatch] = useReducer(
-    swapReducer,
-    { baseAsset, targetAsset, quoteCurrencyPreference },
-    initializeState
-  );
-
-  const queries = useSwapQueries({ swapService, marketDataService, accountRequest });
-
-  const baseAssetsQuery = queries.useAccountBaseSwapAssetsQuery({
-    queryOptions: { select: createSwapAssetsSelector('base', isAssetAllowed) },
-  });
-  const targetAssetsQuery = queries.useAccountTargetSwapAssetsQuery({
-    baseId: state.baseSwapAsset ? getAssetId(state.baseSwapAsset?.asset) : undefined,
-    queryOptions: { select: createSwapAssetsSelector('target', isAssetAllowed) },
-  });
-  const baseMarketDataQuery = queries.useAssetMarketDataQuery({
-    asset: state.baseSwapAsset?.asset,
-  });
-  const targetMarketDataQuery = queries.useAssetMarketDataQuery({
-    asset: state.targetSwapAsset?.asset,
-  });
-
-  const { derivedAmounts, lockDerivedAmountsForNextRender } = useDerivedAmounts(
-    state,
-    baseMarketDataQuery.data
-  );
-
-  const secondaryAmount = computeSecondaryAmountState({
-    state,
-    queryStatus: baseMarketDataQuery.status,
-    isFetching: baseMarketDataQuery.isFetching,
-    derivedAmounts,
-  });
-
-  const fairMarketRate = useMemo(
-    () =>
-      calculateFairMarketRate({
-        baseMarketData: baseMarketDataQuery.data,
-        targetMarketData: targetMarketDataQuery.data,
-      }),
-    [baseMarketDataQuery.data, targetMarketDataQuery.data]
-  );
-
-  const quoteQuery = queries.useSwapQuoteQuery({
-    baseSwapAsset: state.baseSwapAsset,
-    targetSwapAsset: state.targetSwapAsset,
-    baseAmount: derivedAmounts.crypto,
-    strategy: state.quoteStrategy,
-    slippage: state.slippage,
-    fairMarketRate,
-  });
-
-  const isSendingMax = useMemo(
-    () =>
-      isAmountEqualToAvailableBalance(derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode),
-    [derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode]
-  );
-
-  const validation = useMemo(
-    () => runValidation({ state, derivedAmounts }),
-    [state, derivedAmounts]
-  );
-
-  useEffect(() => {
-    if (baseAssetsQuery.data) {
-      dispatch({ type: 'RECONCILE_BASE_WITH_PROVIDER', payload: baseAssetsQuery.data });
-    }
-  }, [baseAssetsQuery.data]);
-
-  useEffect(() => {
-    if (targetAssetsQuery.data) {
-      dispatch({ type: 'RECONCILE_TARGET_WITH_PROVIDER', payload: targetAssetsQuery.data });
-    }
-  }, [targetAssetsQuery.data]);
-
-  function setBaseSwapAsset(asset: AccountSwapAsset) {
-    dispatch({ type: 'SET_BASE_SWAP_ASSET', payload: asset });
-  }
-
-  function setTargetSwapAsset(asset: AccountSwapAsset) {
-    dispatch({ type: 'SET_TARGET_SWAP_ASSET', payload: asset });
-  }
-
-  function clearAssetSelection() {
-    dispatch({ type: 'CLEAR_ASSET_SELECTION' });
-  }
-
-  function flipAssets() {
-    dispatch({ type: 'FLIP_ASSETS' });
-  }
-
-  function setBaseAmount(amount: string) {
-    dispatch({ type: 'SET_BASE_AMOUNT', payload: amount });
-  }
-
-  function setBaseAmountByPercentage(percentage: PresetPercentage) {
-    dispatch({ type: 'SET_BASE_AMOUNT_BY_PERCENTAGE', payload: percentage });
-  }
-
-  function toggleInputCurrencyMode() {
-    const nextBaseAmount = whenInputCurrencyMode(state.inputCurrencyMode)({
-      crypto: convertMoneyToInputValue(derivedAmounts.quote),
-      quote: convertMoneyToInputValue(derivedAmounts.crypto),
-    });
-
-    lockDerivedAmountsForNextRender();
-    dispatch({
-      type: 'TOGGLE_INPUT_CURRENCY_MODE',
-      payload: { nextBaseAmount: nextBaseAmount },
-    });
-  }
-
-  function setSlippage(slippage: number) {
-    dispatch({ type: 'SET_SLIPPAGE', payload: slippage });
-  }
-
-  function setNonce(nonce: number) {
-    dispatch({ type: 'SET_NONCE', payload: nonce });
-  }
-
-  function openAssetSelector(type: 'base' | 'target') {
-    dispatch({ type: 'OPEN_ASSET_SELECTOR', payload: type });
-  }
-
-  function closeAssetSelector() {
-    dispatch({ type: 'CLOSE_ASSET_SELECTOR' });
-  }
-
-  return {
-    state: {
-      ...state,
-      secondaryAmount,
-      assetFlippingAllowed: state.baseSwapAsset !== null && state.targetSwapAsset !== null,
-      isSendingMax,
-    },
-    actions: {
-      setBaseSwapAsset,
-      setTargetSwapAsset,
-      setBaseAmount,
-      setBaseAmountByPercentage,
-      toggleInputCurrencyMode,
-      setSlippage,
-      setNonce,
-      clearAssetSelection,
-      flipAssets,
-      openAssetSelector,
-      closeAssetSelector,
-    },
-    validation,
-    baseAssetsQuery,
-    targetAssetsQuery,
-    quoteQuery,
-    isSwapExecutable: determineSwapExecutability({
-      validation,
-      isQuoteFetching: quoteQuery.isFetching,
-      quoteBaseAmount: quoteQuery.data?.selected?.rawSwapQuote.baseAmount,
-      currentInput: derivedAmounts.crypto,
-    }),
-  };
-}
-
-export interface SwapExecutabilityParams {
-  validation: { isValid: boolean };
-  isQuoteFetching: boolean;
-  quoteBaseAmount: number | undefined;
-  currentInput: Money | null;
-}
-
-export function determineSwapExecutability({
-  validation,
-  isQuoteFetching,
-  quoteBaseAmount,
-  currentInput,
-}: SwapExecutabilityParams): boolean {
-  return (
-    validation.isValid &&
-    !isQuoteFetching &&
-    isQuoteAlignedWithCurrentInput(quoteBaseAmount, currentInput)
-  );
-}
-
-function isQuoteAlignedWithCurrentInput(
-  quoteBaseAmount: number | undefined,
-  input: Money | null
-): boolean {
-  if (quoteBaseAmount == null || !input) return false;
-
-  const decimals = input.decimals;
-  const quoteQuantized = BigNumber(quoteBaseAmount.toFixed(decimals));
-  return input.amount.shiftedBy(-decimals).isEqualTo(quoteQuantized);
+function isAssetFlippingAllowed(
+  baseSwapAsset: AccountSwapAsset | null,
+  targetSwapAsset: AccountSwapAsset | null
+) {
+  return baseSwapAsset !== null && targetSwapAsset !== null;
 }

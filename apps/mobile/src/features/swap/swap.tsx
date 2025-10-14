@@ -2,12 +2,11 @@ import { useState } from 'react';
 
 import { useAccountRequest } from '@/hooks/use-account-request';
 import { useSettings } from '@/store/settings/settings';
-import { AssetVisibility } from '@/store/settings/utils';
 
 import { stxAsset } from '@leather.io/constants';
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { getMarketDataService, getSwapService } from '@leather.io/services';
-import { assertUnreachable, getAssetId, serializeAssetId } from '@leather.io/utils';
+import { assertUnreachable } from '@leather.io/utils';
 
 import { SwapFormScreen } from './screens/swap-form-screen';
 import { SwapReviewScreen } from './screens/swap-review-screen';
@@ -23,14 +22,13 @@ interface SwapProps {
 export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
   const [currentScreen, setCurrentScreen] = useState<SwapScreen>('form');
 
-  const { assetVisibility, fiatCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference } = useSettings();
   const accountRequest = useAccountRequest();
   const swapState = useSwapState({
     accountRequest,
     marketDataService: getMarketDataService(),
     swapService: getSwapService(),
     quoteCurrencyPreference: fiatCurrencyPreference,
-    isAssetAllowed: createAssetVisibilityPredicate(assetVisibility),
     baseAsset,
     targetAsset,
   });
@@ -51,9 +49,4 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
     default:
       assertUnreachable(currentScreen);
   }
-}
-
-function createAssetVisibilityPredicate(assetVisibility: AssetVisibility) {
-  return (asset: SwappableFungibleCryptoAsset) =>
-    assetVisibility[serializeAssetId(getAssetId(asset))] !== false;
 }

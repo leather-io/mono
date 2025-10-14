@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { createAccountBaseSwapAssetsQuery } from '@/features/swap/swap-state/swap.queries';
+import { useAccountBaseSwapAssetsQuery } from '@/features/swap/swap-state/swap.queries';
 import { useAccountRequest } from '@/hooks/use-account-request';
 
 import { getSwapService } from '@leather.io/services';
@@ -21,9 +21,10 @@ function useDelayedFlag() {
 export function usePreloadSwapData() {
   const isReadyToPreload = useDelayedFlag();
   const accountRequest = useAccountRequest();
-  const useBaseAssets = createAccountBaseSwapAssetsQuery(getSwapService(), accountRequest);
 
-  useBaseAssets({
+  useAccountBaseSwapAssetsQuery({
+    swapService: getSwapService(),
+    accountRequest,
     queryOptions: {
       enabled: isReadyToPreload,
     },

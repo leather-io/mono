@@ -4,7 +4,7 @@ import { currencyDecimalsMap } from '@leather.io/constants';
 import { assertUnreachable, isSameAsset } from '@leather.io/utils';
 
 import { SwapActionObject, SwapInternalState } from './swap-state.types';
-import { adjustAmountForDecimals, calculatePercentageAmount } from './swap-state.utils';
+import { adjustAmountForDecimals, calculatePercentageAmount } from './utils/amount-operations';
 
 export function swapReducer(state: SwapInternalState, action: SwapActionObject): SwapInternalState {
   switch (action.type) {

@@ -1,8 +1,8 @@
+import { determineSwapExecutability } from '@/features/swap/swap-state/hooks/use-swap-executability';
 import { renderHookWithProviders } from '@/tests/test-utils';
 import { act, waitFor } from '@testing-library/react';
 import { assert, describe, expect, it, vi } from 'vitest';
 
-import { SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import {
@@ -14,7 +14,7 @@ import {
   defaultStxAsset,
 } from './test-utils/fixtures';
 import { createStubMarketDataService, createStubSwapService } from './test-utils/services.stub';
-import { UseSwapStateProps, determineSwapExecutability, useSwapState } from './use-swap-state';
+import { UseSwapStateProps, useSwapState } from './use-swap-state';
 
 vi.mock('@/hooks/use-debounced-value', () => ({
   useDebouncedValue: <T>(value: T) => value,
@@ -168,48 +168,6 @@ describe('useSwapState', () => {
       expect(filteredAssets.find(a => a.asset.symbol === 'ZERO_TOKEN')).toBeUndefined();
     });
 
-    it('filters assets based on isAssetAllowed predicate', async () => {
-      const baseSwapAssets = [
-        createAccountSwapAsset({
-          asset: { protocol: 'sip10', symbol: 'ALLOWED_TOKEN_1' },
-          balance: { quote: 200, crypto: 50 },
-        }),
-        createAccountSwapAsset({
-          asset: { protocol: 'sip10', symbol: 'ALLOWED_TOKEN_2' },
-          balance: { quote: 250, crypto: 60 },
-        }),
-        createAccountSwapAsset({
-          asset: { protocol: 'sip10', symbol: 'BLOCKED_TOKEN_1' },
-          balance: { quote: 300, crypto: 75 },
-        }),
-        createAccountSwapAsset({
-          asset: { protocol: 'sip10', symbol: 'BLOCKED_TOKEN_2' },
-          balance: { quote: 350, crypto: 85 },
-        }),
-      ];
-
-      function isAssetAllowed(asset: SwappableFungibleCryptoAsset) {
-        return !asset.symbol.startsWith('BLOCKED_TOKEN');
-      }
-
-      const result = renderUseSwapState({
-        swapService: createStubSwapService({ baseSwapAssets }),
-        isAssetAllowed,
-      });
-
-      await waitFor(() => {
-        expect(result.current.baseAssetsQuery.data).toBeDefined();
-      });
-
-      const filteredAssets = result.current.baseAssetsQuery.data;
-      assert(filteredAssets);
-      const symbols = filteredAssets.map(a => a.asset.symbol);
-      expect(symbols).not.toContain('BLOCKED_TOKEN_1');
-      expect(symbols).not.toContain('BLOCKED_TOKEN_2');
-      expect(symbols).toContain('ALLOWED_TOKEN_1');
-      expect(symbols).toContain('ALLOWED_TOKEN_2');
-    });
-
     it('sorts target assets with BTC, STX, sBTC priority, then by balance descending', async () => {
       const targetSwapAssets = [
         createAccountSwapAsset({
@@ -252,49 +210,6 @@ describe('useSwapState', () => {
         'TOKEN2',
         'TOKEN1',
       ]);
-    });
-
-    it('filters target assets based on isAssetAllowed predicate', async () => {
-      const targetSwapAssets = [
-        createAccountSwapAsset({
-          asset: { protocol: 'sip10', symbol: 'ALLOWED_TOKEN_1' },
-          balance: { quote: 200, crypto: 50 },
-        }),
-        createAccountSwapAsset({
-          asset: { protocol: 'sip10', symbol: 'ALLOWED_TOKEN_2' },
-          balance: { quote: 250, crypto: 60 },
-        }),
-        createAccountSwapAsset({
-          asset: { protocol: 'sip10', symbol: 'BLOCKED_TOKEN_1' },
-          balance: { quote: 300, crypto: 75 },
-        }),
-        createAccountSwapAsset({
-          asset: { protocol: 'sip10', symbol: 'BLOCKED_TOKEN_2' },
-          balance: { quote: 350, crypto: 85 },
-        }),
-      ];
-
-      function isAssetAllowed(asset: SwappableFungibleCryptoAsset) {
-        return !asset.symbol.startsWith('BLOCKED_TOKEN');
-      }
-
-      const result = renderUseSwapState({
-        swapService: createStubSwapService({ targetSwapAssets }),
-        baseAsset: defaultBtcAsset,
-        isAssetAllowed,
-      });
-
-      await waitFor(() => {
-        expect(result.current.targetAssetsQuery.data).toBeDefined();
-      });
-
-      const filteredAssets = result.current.targetAssetsQuery.data;
-      assert(filteredAssets);
-      const symbols = filteredAssets.map(a => a.asset.symbol);
-      expect(symbols).not.toContain('BLOCKED_TOKEN_1');
-      expect(symbols).not.toContain('BLOCKED_TOKEN_2');
-      expect(symbols).toContain('ALLOWED_TOKEN_1');
-      expect(symbols).toContain('ALLOWED_TOKEN_2');
     });
 
     it('includes all target assets regardless of balance', async () => {
