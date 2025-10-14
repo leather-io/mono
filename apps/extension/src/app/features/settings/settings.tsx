@@ -117,7 +117,7 @@ export function Settings({
           >
             <Flag
               color="red.action-primary-default"
-              img={<ExitIcon />}
+              img={<ExitIcon color="red.action-primary-default" />}
               textStyle="label.02"
               width="100%"
             >
