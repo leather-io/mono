@@ -19,6 +19,30 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.81.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.80.0...@leather.io/mobile-v2.81.0) (2025-10-14)
+
+
+### Features
+
+* **mobile:** add ability to provide context with validation messages ([49f2775](https://github.com/leather-io/mono/commit/49f2775e7302566f33afa2af6f26c924110d502a))
+* **mobile:** add preloading to base swap assets ([5647cc1](https://github.com/leather-io/mono/commit/5647cc1e4367acbbe3159b2279ea9dd96c2f56ac))
+* **mobile:** add swap amount field validation ([ef58db1](https://github.com/leather-io/mono/commit/ef58db13508c0c62d7e44dd829c0d03bd0753d98))
+* **mobile:** automatically flip swap assets ([a7c1ed8](https://github.com/leather-io/mono/commit/a7c1ed80604777ac5947339afb0e6023893c696a))
+* **mobile:** refactor target amount preview and add "isSwapExecutable" logic ([ee659a1](https://github.com/leather-io/mono/commit/ee659a198d22e47c5d610af5770266dbbde248a7))
+
+
+### Bug Fixes
+
+* **mobile:** fix incorrect swap asset reconciliation test ([70246ad](https://github.com/leather-io/mono/commit/70246ad291d1ab9f52f83803ccf11430d364a8bd))
+* remove redux state reset ([6a5d130](https://github.com/leather-io/mono/commit/6a5d13041f492c1e282e0b58d92187a06b2b81d9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.88.0
+
 ## [2.80.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.79.0...@leather.io/mobile-v2.80.0) (2025-10-13)
 
 
