@@ -15,6 +15,12 @@
 * post-release merge back ([ff1667b](https://github.com/leather-io/extension/commit/ff1667beaaac6bc87e41b36ab567d7a775cfdf0f))
 * stacks transaction summary LEA-3200 ([e529df6](https://github.com/leather-io/extension/commit/e529df60d87c2a1ead5e4f24b03e8fc500df5d45))
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.88.0
+
 ## [6.74.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.73.4...@leather.io/extension-v6.74.0) (2025-10-13)
 
 
