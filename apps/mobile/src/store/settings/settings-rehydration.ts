@@ -32,6 +32,10 @@ export function handleSettingsRehydration(state: any, action: Action): SettingsS
   return {
     ...state,
     ...action.payload?.settings,
+    hapticsPreference: action.payload?.settings.hapticsPreference ?? state.hapticsPreference,
+    notificationsPreference:
+      action.payload?.settings.notificationsPreference ?? state.notificationsPreference,
+    assetVisibility: action.payload?.settings.assetVisibility ?? state.assetVisibility,
     languagePreference,
     currentAccount,
   };
