@@ -1,4 +1,4 @@
-import { getExecutionTypeStrategy } from '@/features/swap/strategies/execution-type/execution-type';
+import { getExecutionTypeStrategy } from '@/features/swap/swap-state/strategies/execution-type/execution-type';
 import {
   EnrichedSwapQuote,
   SwapQuoteSelectionResult,

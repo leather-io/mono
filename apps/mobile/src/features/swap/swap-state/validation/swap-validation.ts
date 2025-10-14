@@ -3,7 +3,7 @@ import {
   resolveMaximumSpendAmount,
   resolveMinimumSpendAmount,
   resolveSpendableBalanceInCurrencyMode,
-} from '@/features/swap/swap-state/swap-state.utils';
+} from '@/features/swap/swap-state/utils/protocol-operations';
 import {
   hasValidPrecision,
   isAmountWithinBalance,

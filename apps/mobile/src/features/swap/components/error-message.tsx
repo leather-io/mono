@@ -1,6 +1,6 @@
 import Animated, { withTiming } from 'react-native-reanimated';
 
-import { isUserInputEffectivelyZero } from '@/features/swap/swap-state/swap-state.utils';
+import { isUserInputEffectivelyZero } from '@/features/swap/swap-state/utils/amount-operations';
 import { BaseAmountIssue } from '@/features/swap/swap-state/validation/swap-validation';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';

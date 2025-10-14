@@ -1,12 +1,12 @@
 import {
   calculateMinToReceiveAmount,
   estimateLiquidityFeePercentage,
-} from '@/features/swap/strategies/execution-type/execution-type.utils';
+} from '@/features/swap/swap-state/strategies/execution-type/execution-type.utils';
 import { EnrichedSwapQuote } from '@/features/swap/swap-state/swap-state.types';
 import {
   calculatePriceImpactPercentage,
   estimateExchangeRate,
-} from '@/features/swap/swap-state/swap-state.utils';
+} from '@/features/swap/swap-state/utils/market-rates';
 
 import { SwapQuote } from '@leather.io/models';
 
