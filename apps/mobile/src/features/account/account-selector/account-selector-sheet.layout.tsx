@@ -10,10 +10,10 @@ import { HEADER_HEIGHT } from '@/shared/constants';
 import { Account } from '@/store/accounts/accounts';
 import { getConnectedAppsToAccountIdMap, useApps } from '@/store/apps/apps.read';
 import { useSettings } from '@/store/settings/settings';
-import { makeAccountIdentifer } from '@/store/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import { Box, Sheet, SheetRef, useTheme } from '@leather.io/ui/native';
 
 import { AccountAddress } from '../components/account-address';

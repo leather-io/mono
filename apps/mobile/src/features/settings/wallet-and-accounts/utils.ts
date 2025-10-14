@@ -1,5 +1,6 @@
 import { CurrentAccount } from '@/store/settings/utils';
-import { makeAccountIdentifer } from '@/store/utils';
+
+import { makeAccountIdentifer } from '@leather.io/crypto';
 
 export function getIsAccountSelected(accountId: string, currentAccount: CurrentAccount) {
   if (currentAccount) {

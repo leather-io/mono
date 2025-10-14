@@ -93,7 +93,7 @@ msgstr "Account identifier updated"
 msgid "Account label"
 msgstr "Account label"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:44
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:45
 msgid "Account name cannot be empty"
 msgstr "Account name cannot be empty"
 
@@ -328,7 +328,7 @@ msgstr "Available"
 msgid "Available balance"
 msgstr "Available balance"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:97
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:98
 msgid "Avatar"
 msgstr "Avatar"
 
@@ -448,7 +448,7 @@ msgstr "Collection URL"
 msgid "Compliance check failed"
 msgstr "Compliance check failed"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:64
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:65
 msgid ""
 "Configure\n"
 "account"
@@ -807,7 +807,7 @@ msgstr "Hermetica"
 msgid "Hidden accounts"
 msgstr "Hidden accounts"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:108
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:109
 msgid "Hide account"
 msgstr "Hide account"
 
@@ -1023,7 +1023,7 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:88
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
 #: src/features/token/components/token-details-table.tsx:19
@@ -1220,7 +1220,7 @@ msgstr "Restake"
 msgid "Restore wallet"
 msgstr "Restore wallet"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:114
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:115
 msgid "Reveal account"
 msgstr "Reveal account"
 

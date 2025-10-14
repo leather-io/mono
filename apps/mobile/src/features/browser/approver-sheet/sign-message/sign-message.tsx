@@ -5,8 +5,9 @@ import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
-import { destructAccountIdentifier, makeAccountIdentifer } from '@/store/utils';
+import { destructAccountIdentifier } from '@/store/utils';
 
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
 import { RpcRequest, RpcResponse, createRpcSuccessResponse, signMessage } from '@leather.io/rpc';
 import { SheetInstance } from '@leather.io/ui/native';

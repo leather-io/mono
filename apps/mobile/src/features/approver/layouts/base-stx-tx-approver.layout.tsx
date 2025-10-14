@@ -20,7 +20,6 @@ import {
   isTokenTransfer,
 } from '@/features/approver/utils';
 import { Account } from '@/store/accounts/accounts';
-import { makeAccountIdentifer } from '@/store/utils';
 import { t } from '@lingui/core/macro';
 import {
   PostConditionMode,
@@ -28,6 +27,7 @@ import {
   isTokenTransferPayload,
 } from '@stacks/transactions';
 
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { Approver, Button, SentIcon, SheetInstance } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';

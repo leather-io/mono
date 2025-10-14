@@ -5,9 +5,9 @@ import { GetAddressesApproverLayout } from '@/features/approver/layouts/get-addr
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userConnectsApp } from '@/store/apps/apps.write';
 import { App } from '@/store/apps/utils';
-import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
+import { useAppDispatch } from '@/store/utils';
 
-import { keyOriginToDerivationPath } from '@leather.io/crypto';
+import { keyOriginToDerivationPath, makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
 import { RpcRequest, RpcResponse, createRpcSuccessResponse, getAddresses } from '@leather.io/rpc';
 import { SheetInstance } from '@leather.io/ui/native';

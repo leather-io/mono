@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
-import { makeAccountIdentifer } from '@/store/utils';
 import { analytics } from '@/utils/analytics';
 
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId, Money } from '@leather.io/models';
 import { convertAmountToBaseUnit, isDefined, scaleValue } from '@leather.io/utils';
 

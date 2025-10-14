@@ -6,9 +6,10 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 import { userConnectsApp } from '@/store/apps/apps.write';
 import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
-import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
+import { useAppDispatch } from '@/store/utils';
 import { bytesToHex } from '@stacks/common';
 
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
 import {
   RpcRequest,

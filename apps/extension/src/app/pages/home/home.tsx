@@ -5,6 +5,7 @@ import { Box, Stack } from 'leather-styles/jsx';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { useAccountScaledBalanceAnalytics } from '@app/common/app-analytics';
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state';
@@ -41,6 +42,7 @@ export function Home() {
   const currentAccountIndex = useCurrentAccountIndex();
   const isPrivateMode = useIsPrivateMode();
   const togglePrivateMode = useTogglePrivateMode();
+  useAccountScaledBalanceAnalytics({ accountIndex: currentAccountIndex });
 
   useOnFinishedOnboarding(() => refreshLeatherTabs());
 

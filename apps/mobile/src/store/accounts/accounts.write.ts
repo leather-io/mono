@@ -2,6 +2,7 @@ import { t } from '@lingui/core/macro';
 import { EntityState, createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
 
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
 
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
@@ -12,7 +13,6 @@ import {
   entitySchema,
   getWalletAccountsByAccountId,
   handleEntityActionWith,
-  makeAccountIdentifer,
   selectNextDistinctAccountIcon,
 } from '../utils';
 import { AccountIcon, AccountStatus, AccountStore, accountStoreSchema } from './utils';

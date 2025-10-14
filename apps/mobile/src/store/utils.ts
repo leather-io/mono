@@ -3,7 +3,11 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { EntityState, PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import z from 'zod';
 
-import { extractAddressIndexFromPath, extractFingerprintFromDescriptor } from '@leather.io/crypto';
+import {
+  extractAddressIndexFromPath,
+  extractFingerprintFromDescriptor,
+  makeAccountIdentifer,
+} from '@leather.io/crypto';
 import { isDefined } from '@leather.io/utils';
 
 import { AccountIcon, AccountStore, accountIcons } from './accounts/utils';
@@ -17,9 +21,6 @@ export const useAppDispatch: () => AppDispatch = useDispatch;
 
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export function makeAccountIdentifer(fingerprint: string, accountIndex: number) {
-  return [fingerprint, accountIndex].join('/');
-}
 export function destructAccountIdentifier(accountId: string) {
   const [fingerprint, accountIndex, ...rest] = accountId.split('/');
   if (
