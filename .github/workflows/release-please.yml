@@ -24,14 +24,11 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          command: manifest
           # this assumes that you have created a personal access token (PAT)
           token: ${{ secrets.LEATHER_BOT }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          default-branch: dev
-          release-type: 'minor'
-          signoff: 'leather-bot <leather-bot@leather.io>'
+          target-branch: ${{ github.ref_name }}
 
     # The logic below handles the npm publication:
   deploy:
