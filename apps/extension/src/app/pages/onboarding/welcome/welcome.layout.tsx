@@ -3,8 +3,6 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import { Button, LeatherLettermarkIcon, LeatherLogomarkIcon, Link } from '@leather.io/ui';
 
-import { useThemeSwitcher } from '@app/common/theme-provider';
-
 interface WelcomeLayoutProps {
   isGeneratingWallet: boolean;
   onSelectConnectLedger(): void;
@@ -17,81 +15,48 @@ export function WelcomeLayout({
   onSelectConnectLedger,
   onRestoreWallet,
 }: WelcomeLayoutProps): React.JSX.Element {
-  // On this page 'theme' is used to set specific colours and bypass automatic theming
-  const { theme } = useThemeSwitcher();
-  // hardcoded specific instances of colour variables needed to bypass theme
-  const inkBgSecondary = '#F5F1ED';
-  const inkTextPrimary = '#12100F';
-
-  const primaryActionButton = {
-    p: 'space.03',
-    minWidth: '148px',
-    bg: {
-      base: inkBgSecondary,
-      md: theme === 'light' ? inkBgSecondary : inkTextPrimary,
-    },
-    color: {
-      base: inkTextPrimary,
-      md: theme === 'light' ? inkTextPrimary : inkBgSecondary,
-    },
-
-    _hover: {
-      bg: 'ink.action-primary-hover',
-      color: theme === 'light' ? inkBgSecondary : inkTextPrimary,
-    },
-  };
-  const secondaryActionButton = {
-    p: 'space.03',
-    minWidth: '148px',
-    color: { base: inkBgSecondary, md: theme === 'light' ? inkBgSecondary : inkTextPrimary },
-    border: `1px solid ${inkBgSecondary}`,
-    borderColor: { base: inkBgSecondary, md: theme === 'light' ? inkBgSecondary : inkTextPrimary },
-    _hover: {
-      bg: 'ink.action-primary-hover',
-      color: 'ink.background-secondary',
-    },
-  };
-
-  const tagline = 'Bitcoin for the rest of us';
+  const tagline = (
+    <>
+      <styled.span whiteSpace="nowrap">Buy. send.</styled.span>
+      <br />
+      <styled.span whiteSpace="nowrap">swap. earn.</styled.span>
+      <br />
+      grow.
+    </>
+  );
   const taglineExtended = 'The bitcoin wallet for the rest of us';
   const subheader =
-    'Leather is the only Bitcoin wallet you need to tap into the emerging Bitcoin economy';
+    'Leather is a wallet for Bitcoin and Stacks, designed for security, clarity, and growth. Join 100,000+ users on your favorite platform.';
 
   return (
-    <Flex flexDir={{ base: 'column-reverse', md: 'row' }} minW="100vw" minH="100vh">
-      <Flex
-        flexDir="column"
-        bg={{ base: inkTextPrimary, md: 'ink.text-primary' }}
-        flex={{ base: 1, md: 2 }}
-        p="space.05"
-      >
+    <Flex flexDir={['column-reverse', null, 'row']} minW="100vw" minH="100vh">
+      <Flex flexDir="column" bg="ink.background-primary" flex={[1, null, 2]} p="space.05">
         <Flex
           flexDir="column"
-          flex={{ base: 1, md: 0 }}
-          justifyContent={{ base: 'end', md: 'flex-start' }}
-          color={{ base: inkBgSecondary, md: 'ink.background-primary' }}
+          flex={[1, null, 0]}
+          justifyContent={['end', null, 'flex-start']}
+          color="ink.text-primary"
         >
-          <styled.h1 hideBelow="md" textStyle="display.01" maxWidth="880px">
+          <styled.h1 hideBelow="md" textStyle="display.01" fontSize="9vw" lineHeight="7vw">
             {tagline}
           </styled.h1>
-          <styled.h1 hideFrom="md" textStyle="heading.03" maxWidth="880px">
+          <styled.h1 hideFrom="md" textStyle="heading.03" maxWidth="996px">
             {taglineExtended}
           </styled.h1>
 
           <styled.h2
-            textStyle={{ base: 'label.01', md: 'heading.04' }}
-            mt={{ base: 'space.02', md: 'space.07' }}
+            textStyle={['label.01', 'heading.04']}
+            mt={['space.02', 'space.07']}
             maxW="556px"
           >
             {subheader}
           </styled.h2>
         </Flex>
-        <Flex flexDir={{ base: 'column', md: 'row' }} gap="space.04" mt="space.07" width="100%">
+        <Flex flexDir={['column', null, 'row']} gap="space.04" mt="space.07" width="100%">
           <Button
             onClick={onStartOnboarding}
             data-testid={OnboardingSelectors.SignUpBtn}
             aria-busy={isGeneratingWallet}
-            css={primaryActionButton}
           >
             Create new wallet
           </Button>
@@ -102,18 +67,11 @@ export function WelcomeLayout({
               fullWidth
               flex={1}
               onClick={onRestoreWallet}
-              css={secondaryActionButton}
               data-testid={OnboardingSelectors.SignInLink}
             >
               Use existing key
             </Button>
-            <Button
-              variant="outline"
-              fullWidth
-              flex={1}
-              onClick={onSelectConnectLedger}
-              css={secondaryActionButton}
-            >
+            <Button variant="outline" fullWidth flex={1} onClick={onSelectConnectLedger}>
               Use Ledger
             </Button>
           </Flex>
@@ -121,20 +79,25 @@ export function WelcomeLayout({
       </Flex>
       <Flex
         p="space.05"
-        bg={{ base: inkTextPrimary, md: 'ink.background-secondary' }}
-        color={{ base: inkBgSecondary, md: 'ink.text-primary' }}
+        bg={['ink.background-primary', null, 'ink.text-primary']}
+        color={['ink.text-primary', null, 'ink.background-primary']}
         flexDir="column"
         justifyContent="space-between"
-        flex={{ base: 0, md: 1 }}
+        flex={[0, 1]}
       >
         <Flex justifyContent="space-between">
-          <LeatherLogomarkIcon height={34} width={150} />
-          <Link href="https://leather.io/" hideBelow="md" variant="text">
+          <Box hideFrom="md">
+            <LeatherLogomarkIcon height={34} width={150} color="ink.action-primary-default" />
+          </Box>
+          <Box hideBelow="md">
+            <LeatherLogomarkIcon height={34} width={150} color="ink.background-primary" />
+          </Box>
+          <Link href="https://leather.io/" hideBelow="md" variant="text" mt="13px">
             leather.io
           </Link>
         </Flex>
         <Box hideBelow="md">
-          <LeatherLettermarkIcon height="auto" width="100%" />
+          <LeatherLettermarkIcon height="auto" width="100%" color="ink.background-primary" />
         </Box>
       </Flex>
     </Flex>
