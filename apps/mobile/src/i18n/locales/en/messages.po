@@ -201,7 +201,7 @@ msgstr "Advanced options"
 msgid "Alex"
 msgstr "Alex"
 
-#: src/store/storage-persistors.ts:33
+#: src/store/storage-persistors.ts:22
 msgid "Allow app to access secure storage"
 msgstr "Allow app to access secure storage"
 
