@@ -85,50 +85,12 @@ jobs:
           CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
 
-  publish-firefox-extension:
-    name: Publish Firefox extension
-    runs-on: ubuntu-24.04
-    env:
-      TARGET_BROWSER: firefox
-    needs:
-      - extract-version
-    outputs:
-      publish_status: ${{ steps.publish-firefox.outputs.publish_status }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - name: Build packages
-        run: pnpm build:packages
-
-      - name: Build project
-        working-directory: apps/extension
-        run: pnpm build:extension
-
-      - uses: actions/upload-artifact@v4
-        name: Upload build artifact
-        with:
-          name: leather-firefox-v${{ needs.extract-version.outputs.new_version }}
-          path: apps/extension/dist
-
-      - name: Sign and Upload Production Firefox extension
-        continue-on-error: true
-        working-directory: apps/extension
-        id: publish-firefox
-        run: |
-          pnpm web-ext-submit --channel listed --artifacts-dir dist
-          echo "::set-output name=publish_status::${?}"
-        env:
-          WEB_EXT_API_KEY: ${{ secrets.FIREFOX_API_KEY }}
-          WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_API_SECRET }}
-
   create-github-release:
     name: Create Github release
     runs-on: ubuntu-24.04
     needs:
       - extract-version
       - publish-chrome-extension
-      - publish-firefox-extension
     steps:
       - name: Download extension build
         uses: actions/download-artifact@v4
@@ -143,9 +105,6 @@ jobs:
       #     name: release-notes
       #     allow_forks: false
 
-      - name: Zip Firefox build
-        run: zip -r leather-firefox.v${{ needs.extract-version.outputs.new_version }}.zip leather-firefox-v${{ needs.extract-version.outputs.new_version }}
-
       - name: Zip Chromium build
         run: zip -r leather-chromium.v${{ needs.extract-version.outputs.new_version }}.zip leather-chromium-v${{ needs.extract-version.outputs.new_version }}
 
@@ -157,15 +116,12 @@ jobs:
           body_path: release-notes.txt
           files: |
             leather-chromium.v${{ needs.extract-version.outputs.new_version }}.zip
-            leather-firefox.v${{ needs.extract-version.outputs.new_version }}.zip
 
   post_run:
     runs-on: ubuntu-24.04
     needs:
       - publish-chrome-extension
-      - publish-firefox-extension
     steps:
       - name: Publish Statuses
         run: |
-          echo "::warning::Firefox Publish Status: $([[ "${{ needs.publish-firefox-extension.outputs.publish_status }}" = "0" ]] && echo 'SUCCESS' || echo 'FAILED')"
           echo "::warning::Chrome Publish Status: $([[ "${{ needs.publish-chrome-extension.outputs.publish_status }}" = "0" ]] && echo 'SUCCESS' || echo 'FAILED')"
