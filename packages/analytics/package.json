@@ -12,8 +12,8 @@
   },
   "type": "module",
   "scripts": {
-    "build": "tsup",
-    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "build": "tsdown",
+    "build:watch": "tsdown --watch --onSuccess 'tsdown --dts-only'",
     "format": "prettier . --write \"src/**/*.ts\" --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check \"src/**/*.ts\" --ignore-path ../../.prettierignore",
     "test": "vitest run",
@@ -32,7 +32,7 @@
     "@types/node": "24.0.8",
     "concurrently": "8.2.2",
     "prettier": "3.5.1",
-    "tsup": "8.5.0",
+    "tsdown": "0.15.7",
     "typescript": "5.8.3",
     "vitest": "2.1.9"
   },

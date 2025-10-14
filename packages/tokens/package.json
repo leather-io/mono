@@ -11,8 +11,8 @@
     "directory": "packages/tokens"
   },
   "scripts": {
-    "build": "tsup",
-    "build:watch": "tsup --watch",
+    "build": "tsdown",
+    "build:watch": "tsdown --watch",
     "prepare": "pnpm build",
     "prepublish": "pnpm build",
     "typecheck": "tsc --noEmit"
@@ -25,7 +25,7 @@
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "prettier": "3.5.1",
-    "tsup": "8.5.0"
+    "tsdown": "0.15.7"
   },
   "keywords": [
     "leather",

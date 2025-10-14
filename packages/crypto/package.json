@@ -5,8 +5,8 @@
   "version": "1.11.14",
   "license": "MIT",
   "scripts": {
-    "build": "tsup",
-    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "build": "tsdown",
+    "build:watch": "tsdown --watch --onSuccess 'tsdown --dts-only'",
     "prepublish": "pnpm build",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
@@ -22,7 +22,7 @@
     "just-memoize": "2.2.0"
   },
   "devDependencies": {
-    "tsup": "8.5.0",
+    "tsdown": "0.15.7",
     "vitest": "2.1.9"
   },
   "files": [

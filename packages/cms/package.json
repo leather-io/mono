@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm sanity:schema-extract && pnpm sanity:generate && tsup && tsc --emitDeclarationOnly",
+    "build": "pnpm sanity:schema-extract && pnpm sanity:generate && tsdown && tsc --emitDeclarationOnly",
     "build:watch": "nodemon",
     "dev": "concurrently \"sanity dev\" \"nodemon\"",
     "sanity:build": "sanity build",
@@ -41,7 +41,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "styled-components": "6.1.18",
-    "tsup": "8.5.0",
+    "tsdown": "0.15.7",
     "typescript": "5.8.3",
     "vitest": "2.1.9"
   },

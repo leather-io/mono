@@ -1,11 +1,10 @@
 import { copy } from 'esbuild-plugin-copy';
 import svgrPlugin from 'esbuild-plugin-svgr';
-import { type Options, defineConfig } from 'tsup';
+import { defineConfig } from 'tsup';
 
 export default defineConfig({
   entry: ['./src/**/*.{web,shared}.{ts,tsx}', './src/**/index.ts'],
   bundle: false,
-  external: ['react', 'react-dom'],
   esbuildPlugins: [
     svgrPlugin({ typescript: true }),
     copy({

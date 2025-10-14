@@ -12,8 +12,8 @@
   },
   "type": "module",
   "scripts": {
-    "build": "tsup ",
-    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "build": "tsdown ",
+    "build:watch": "tsdown --watch --onSuccess 'tsdown --dts-only'",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "typecheck": "tsc --noEmit"
@@ -30,7 +30,7 @@
     "@leather.io/tsconfig-config": "workspace:*",
     "concurrently": "8.2.2",
     "prettier": "3.5.1",
-    "tsup": "8.5.0",
+    "tsdown": "0.15.7",
     "typescript": "5.8.3"
   },
   "keywords": [

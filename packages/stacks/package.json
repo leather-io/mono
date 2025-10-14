@@ -6,8 +6,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "tsup",
-    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "build": "tsdown",
+    "build:watch": "tsdown --watch --onSuccess 'tsdown --dts-only'",
     "prepublish": "pnpm build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -35,7 +35,7 @@
     "zod": "4.0.17"
   },
   "devDependencies": {
-    "tsup": "8.5.0",
+    "tsdown": "0.15.7",
     "vitest": "2.1.9"
   },
   "files": [

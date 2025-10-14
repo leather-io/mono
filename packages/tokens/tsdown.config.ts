@@ -1,4 +1,4 @@
-import { defineConfig } from 'tsup';
+import { type Options, defineConfig } from 'tsdown';
 
 export default defineConfig({
   entry: ['src/index.ts'],

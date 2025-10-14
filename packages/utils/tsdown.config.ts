@@ -1,9 +1,10 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from 'tsdown';
 
 export default defineConfig({
   entry: ['src/index.ts'],
   sourcemap: true,
   clean: false,
   dts: true,
-  format: ['esm', 'cjs'],
+  format: 'esm',
+  external: ['dompurify'],
 });
