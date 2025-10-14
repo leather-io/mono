@@ -41,7 +41,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "styled-components": "6.1.18",
-    "tsup": "8.4.0",
+    "tsup": "8.5.0",
     "typescript": "5.8.3",
     "vitest": "2.1.9"
   },
