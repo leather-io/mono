@@ -5,6 +5,11 @@ on:
   push:
     branches:
       - '**'
+    paths:
+      - 'apps/extension/**'
+      - 'packages/**'
+      - '!packages/ui/**/*.native.ts'
+      - '!packages/ui/**/*.native.tsx'
 
 permissions:
   contents: read

@@ -1,6 +1,13 @@
 name: PR extension build
 
-on: [pull_request, workflow_dispatch]
+on:
+  pull_request:
+    paths:
+      - 'apps/extension/**'
+      - 'packages/**'
+      - '!packages/ui/**/*.native.ts'
+      - '!packages/ui/**/*.native.tsx'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -29,7 +36,7 @@ jobs:
     steps:
       - uses: kyranjamie/pull-request-fixed-header@v1.0.1
         with:
-          header: '> _Building Leather at commit ${{ needs.sha-hash.outputs.SHORT_SHA }}_'
+          header: '> _Building extension at commit ${{ needs.sha-hash.outputs.SHORT_SHA }}_'
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
 
   build:
