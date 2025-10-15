@@ -25,7 +25,7 @@ import {
   HiroStacksTransaction,
   HiroTransactionEvent,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
-import { MarketDataService } from '../market-data/market-data.service';
+import { MarketDataService } from '../market/market-data.service';
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
 import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
 import { sortActivityByTimestampDesc } from './activity.utils';

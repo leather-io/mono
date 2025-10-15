@@ -14,7 +14,7 @@ import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
-import { MarketDataService } from '../market-data/market-data.service';
+import { MarketDataService } from '../market/market-data.service';
 import { AccountRequest } from '../types';
 import { combineSip10Balances, sortByAvailableQuoteBalance } from './sip10-balances.utils';
 

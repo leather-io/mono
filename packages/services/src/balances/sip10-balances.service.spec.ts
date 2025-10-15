@@ -8,7 +8,7 @@ import {
 } from '../assets/stacks-asset.utils';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { SettingsService } from '../infrastructure/settings/settings.service';
-import { MarketDataService } from '../market-data/market-data.service';
+import { MarketDataService } from '../market/market-data.service';
 import { AccountRequest } from '../types';
 import { Sip10BalancesService } from './sip10-balances.service';
 

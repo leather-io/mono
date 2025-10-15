@@ -11,7 +11,7 @@ import {
 
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
-import { MarketDataService } from '../market-data/market-data.service';
+import { MarketDataService } from '../market/market-data.service';
 import { AccountRequest } from '../types/request.types';
 import { UtxosService } from '../utxos/utxos.service';
 import { sumUtxoValues } from '../utxos/utxos.utils';

@@ -31,6 +31,80 @@ export interface paths {
               assets: {
                 defaultEnabled: string[];
               };
+              fees: {
+                stacks: {
+                  minimumRelayFeeRate: number;
+                  globalMaximumFee: number;
+                  transfers: {
+                    low: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                    standard: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                    high: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                  };
+                  contractCalls: {
+                    low: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                    standard: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                    high: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                  };
+                  contractDeployments: {
+                    low: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                    standard: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                    high: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                  };
+                  sipTokenSends: {
+                    low: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                    standard: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                    high: {
+                      minimum: number;
+                      default: number;
+                      maximum: number;
+                    };
+                  };
+                };
+              };
             };
           };
         };
@@ -470,7 +544,9 @@ export interface paths {
     /** @description Get native token price history */
     get: {
       parameters: {
-        query?: never;
+        query?: {
+          period?: '1d' | '1w' | '1m' | '3m' | '6m' | '1y';
+        };
         header?: never;
         path: {
           symbol: string;
@@ -486,10 +562,13 @@ export interface paths {
           };
           content: {
             'application/json': {
-              price: number;
-              /** Format: date-time */
-              timestamp: string;
-            }[];
+              changePercentage: number;
+              snapshots: {
+                price: number;
+                /** Format: date-time */
+                timestamp: string;
+              }[];
+            };
           };
         };
         /** @description Bad Request */
@@ -715,7 +794,9 @@ export interface paths {
     /** @description Get SIP10 token price history */
     get: {
       parameters: {
-        query?: never;
+        query?: {
+          period?: '1d' | '1w' | '1m' | '3m' | '6m' | '1y';
+        };
         header?: never;
         path: {
           principal: string;
@@ -731,10 +812,13 @@ export interface paths {
           };
           content: {
             'application/json': {
-              price: number;
-              /** Format: date-time */
-              timestamp: string;
-            }[];
+              changePercentage: number;
+              snapshots: {
+                price: number;
+                /** Format: date-time */
+                timestamp: string;
+              }[];
+            };
           };
         };
         /** @description Bad Request */
@@ -960,7 +1044,9 @@ export interface paths {
     /** @description Get Rune price history */
     get: {
       parameters: {
-        query?: never;
+        query?: {
+          period?: '1d' | '1w' | '1m' | '3m' | '6m' | '1y';
+        };
         header?: never;
         path: {
           runeName: string;
@@ -976,10 +1062,13 @@ export interface paths {
           };
           content: {
             'application/json': {
-              price: number;
-              /** Format: date-time */
-              timestamp: string;
-            }[];
+              changePercentage: number;
+              snapshots: {
+                price: number;
+                /** Format: date-time */
+                timestamp: string;
+              }[];
+            };
           };
         };
         /** @description Bad Request */
@@ -995,139 +1084,6 @@ export interface paths {
         };
         /** @description Not Found */
         404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': {
-              error: string;
-            };
-          };
-        };
-        /** @description Internal Server Error */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': {
-              error: string;
-            };
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/v1/market/crypto-prices': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get current native cryptocurrency prices */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': {
-              /** Format: date-time */
-              timestamp: string;
-              prices: {
-                STX: number;
-                BTC: number;
-              };
-            };
-          };
-        };
-        /** @description Bad Request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': {
-              error: string;
-            };
-          };
-        };
-        /** @description Internal Server Error */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': {
-              error: string;
-            };
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/v1/market/sip10-prices': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get current SIP10 token prices */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': {
-              /** Format: date-time */
-              timestamp: string;
-              prices: {
-                price: number;
-                /** Format: date-time */
-                lastPriceAt: string;
-                change24h: number | null;
-                principal: string;
-              }[];
-            };
-          };
-        };
-        /** @description Bad Request */
-        400: {
           headers: {
             [name: string]: unknown;
           };
@@ -1400,7 +1356,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Get SIP-10 Token */
+    /** @description Get SIP-10 */
     get: {
       parameters: {
         query?: never;
@@ -1478,7 +1434,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Get SIP-10 Token Description */
+    /** @description Get SIP-10 Description */
     get: {
       parameters: {
         query?: {

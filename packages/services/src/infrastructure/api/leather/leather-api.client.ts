@@ -3,7 +3,7 @@ import createClient from 'openapi-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
 import { LEATHER_API_URL_PRODUCTION, LEATHER_API_URL_STAGING } from '@leather.io/constants';
-import { SupportedBlockchains } from '@leather.io/models';
+import { HistoricalPeriod, SupportedBlockchains } from '@leather.io/models';
 
 import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
@@ -234,14 +234,18 @@ export class LeatherApiClient {
         );
   }
 
-  async fetchNativeTokenHistory(symbol: string, { signal, skipCache }: ApiRequestOptions = {}) {
+  async fetchNativeTokenHistory(
+    symbol: string,
+    period: HistoricalPeriod,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ) {
     const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () =>
           this.client.GET('/v1/market/prices/native/{symbol}/history', {
             signal,
-            params: { path: { symbol } },
+            params: { path: { symbol }, query: { period } },
           }),
         {
           priority: leatherApiPriorities.nativeTokenHistory,
@@ -253,7 +257,7 @@ export class LeatherApiClient {
     return skipCache
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(
-          ['leather-api-native-token-history', symbol],
+          ['leather-api-native-token-history', symbol, period],
           fetchFn
         );
   }
@@ -416,19 +420,26 @@ export class LeatherApiClient {
         );
   }
 
-  async fetchRuneHistory(runeName: string, { signal, skipCache }: ApiRequestOptions = {}) {
+  async fetchRuneHistory(
+    runeName: string,
+    period: HistoricalPeriod,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ) {
     const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
         this.client.GET('/v1/market/prices/runes/{runeName}/history', {
           signal,
-          params: { path: { runeName } },
+          params: { path: { runeName }, query: { period } },
         })
       );
       return data!;
     };
     return skipCache
       ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-rune-history', runeName], fetchFn);
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-rune-history', runeName, period],
+          fetchFn
+        );
   }
 
   async fetchSip10PriceList({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -599,12 +610,16 @@ export class LeatherApiClient {
         );
   }
 
-  async fetchSip10TokenHistory(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
+  async fetchSip10TokenHistory(
+    principal: string,
+    period: HistoricalPeriod,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ) {
     const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
         this.client.GET('/v1/market/prices/sip10s/{principal}/history', {
           signal,
-          params: { path: { principal } },
+          params: { path: { principal }, query: { period } },
         })
       );
       return data!;
@@ -612,7 +627,7 @@ export class LeatherApiClient {
     return skipCache
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(
-          ['leather-api-sip10-token-history', principal],
+          ['leather-api-sip10-token-history', principal, period],
           fetchFn
         );
   }

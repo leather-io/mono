@@ -9,7 +9,7 @@ export * from './infrastructure/cache/http-cache.config';
 export * from './infrastructure/settings/settings.service';
 export * from './infrastructure/api/gamma/gamma-api.schema';
 export * from './inversify.config';
-export * from './market-data/market-data.service';
+export * from './market/market-data.service';
 export * from './transactions/stacks-transactions.service';
 export * from './transactions/bitcoin-transactions.service';
 export * from './utxos/utxos.service';
