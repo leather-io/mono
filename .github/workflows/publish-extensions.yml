@@ -1,127 +1,124 @@
-name: Publish extensions
+name: Test version update
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - chore/github-release
+  workflow_dispatch:
 
 permissions:
   contents: read
   actions: write
 
-env:
-  COINBASE_APP_ID: ${{ secrets.COINBASE_APP_ID }}
-  MOONPAY_API_KEY: ${{ secrets.MOONPAY_API_KEY }}
-  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-  SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY }}
-  TRANSAK_API_KEY: ${{ secrets.TRANSAK_API_KEY }}
-  BITFLOW_API_HOST: ${{ secrets.BITFLOW_API_HOST }}
-  BITFLOW_API_KEY: ${{ secrets.BITFLOW_API_KEY }}
-  BITFLOW_READONLY_CALL_API_HOST: ${{ secrets.BITFLOW_READONLY_CALL_API_HOST }}
-  BITFLOW_READONLY_CALL_API_KEY: ${{ secrets.BITFLOW_READONLY_CALL_API_KEY }}
-  BITFLOW_KEEPER_API_KEY: ${{ secrets.BITFLOW_KEEPER_API_KEY }}
-  BITFLOW_KEEPER_API_HOST: ${{ secrets.BITFLOW_KEEPER_API_HOST }}
-  BITFLOW_PROVIDER_ADDRESS: ${{ secrets.BITFLOW_PROVIDER_ADDRESS }}
-  WALLET_ENVIRONMENT: production
-  IS_PUBLISHING: true
+# env:
+#   COINBASE_APP_ID: ${{ secrets.COINBASE_APP_ID }}
+#   MOONPAY_API_KEY: ${{ secrets.MOONPAY_API_KEY }}
+#   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+#   SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY }}
+#   TRANSAK_API_KEY: ${{ secrets.TRANSAK_API_KEY }}
+#   BITFLOW_API_HOST: ${{ secrets.BITFLOW_API_HOST }}
+#   BITFLOW_API_KEY: ${{ secrets.BITFLOW_API_KEY }}
+#   BITFLOW_READONLY_CALL_API_HOST: ${{ secrets.BITFLOW_READONLY_CALL_API_HOST }}
+#   BITFLOW_READONLY_CALL_API_KEY: ${{ secrets.BITFLOW_READONLY_CALL_API_KEY }}
+#   BITFLOW_KEEPER_API_KEY: ${{ secrets.BITFLOW_KEEPER_API_KEY }}
+#   BITFLOW_KEEPER_API_HOST: ${{ secrets.BITFLOW_KEEPER_API_HOST }}
+#   BITFLOW_PROVIDER_ADDRESS: ${{ secrets.BITFLOW_PROVIDER_ADDRESS }}
+#   WALLET_ENVIRONMENT: production
+#   IS_PUBLISHING: true
 
 jobs:
-  extract-version:
-    runs-on: ubuntu-24.04
-    outputs:
-      new_version: ${{ steps.extract_version.outputs.version }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Extract version
-        id: extract_version
-        uses: Saionaro/extract-package-version@v1.3.0
-
-      - name: Print version
-        run: echo ${{ steps.extract_version.outputs.version }}
-
-  publish-chrome-extension:
-    name: Publish Chrome extension
-    runs-on: ubuntu-24.04
-    environment: extension:production
-    needs:
-      - extract-version
-    outputs:
-      publish_status: ${{ steps.publish-chrome.outputs.publish_status }}
-    env:
-      TARGET_BROWSER: chromium
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - name: Build packages
-        run: pnpm build:packages
-
-      - name: Build project
-        working-directory: apps/extension
-        env:
-          # We only add the sentry auth token for chrome, as we don't want to
-          # create a duplicate release during the ff build
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: pnpm build
-
-      - uses: actions/upload-artifact@v4
-        name: Upload build artifact
-        with:
-          name: leather-chromium-v${{ needs.extract-version.outputs.new_version }}
-          path: apps/extension/dist
-
-      - name: Build extension
-        working-directory: apps/extension
-        run: sh build-ext.sh
-
-      - name: Sign and Upload Production Chrome extension
-        continue-on-error: true
-        working-directory: apps/extension
-        id: publish-chrome
-        run: |
-          pnpm chrome-webstore-upload upload --auto-publish --source leather-chromium.zip
-          echo "::set-output name=publish_status::${?}"
-        env:
-          EXTENSION_ID: ${{ secrets.CHROME_APP_ID }}
-          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
-          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+  # extract-version:
+  #   runs-on: ubuntu-24.04
+  #   outputs:
+  #     new_version: ${{ steps.extract_version.outputs.version }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - name: Extract version
+  #       id: extract_version
+  #       uses: Saionaro/extract-package-version@v1.3.0
+  #
+  #     - name: Print version
+  #       run: echo ${{ steps.extract_version.outputs.version }}
+  #
+  # publish-chrome-extension:
+  #   name: Publish Chrome extension
+  #   runs-on: ubuntu-24.04
+  #   environment: extension:production
+  #   needs:
+  #     - extract-version
+  #   outputs:
+  #     publish_status: ${{ steps.publish-chrome.outputs.publish_status }}
+  #   env:
+  #     TARGET_BROWSER: chromium
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: ./.github/actions/provision
+  #
+  #     - name: Build packages
+  #       run: pnpm build:packages
+  #
+  #     - name: Build project
+  #       working-directory: apps/extension
+  #       env:
+  #         # We only add the sentry auth token for chrome, as we don't want to
+  #         # create a duplicate release during the ff build
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #       run: pnpm build
+  #
+  #     - uses: actions/upload-artifact@v4
+  #       name: Upload build artifact
+  #       with:
+  #         name: leather-chromium-v${{ needs.extract-version.outputs.new_version }}
+  #         path: apps/extension/dist
+  #
+  #     - name: Build extension
+  #       working-directory: apps/extension
+  #       run: sh build-ext.sh
+  #
+  #     - name: Sign and Upload Production Chrome extension
+  #       continue-on-error: true
+  #       working-directory: apps/extension
+  #       id: publish-chrome
+  #       run: |
+  #         pnpm chrome-webstore-upload upload --auto-publish --source leather-chromium.zip
+  #         echo "::set-output name=publish_status::${?}"
+  #       env:
+  #         EXTENSION_ID: ${{ secrets.CHROME_APP_ID }}
+  #         CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+  #         CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+  #         REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
 
   create-github-release:
     name: Create Github release
     runs-on: ubuntu-24.04
-    needs:
-      - extract-version
-      - publish-chrome-extension
+    # needs:
+    #   - extract-version
+    #   - publish-chrome-extension
     steps:
-      - name: Download extension build
-        uses: actions/download-artifact@v4
-        with:
-          path: .
-
-      # Probably no need for release notes as we use release please
-      # - name: Download release-notes.txt from create-version workflow
-      #   uses: dawidd6/action-download-artifact@v6
+      # - name: Download extension build
+      #   uses: actions/download-artifact@v4
       #   with:
-      #     workflow: create-version.yml
-      #     name: release-notes
-      #     allow_forks: false
+      #     path: .
+      #
+      # - name: Zip Chromium build
+      #   run: zip -r leather-chromium.v${{ needs.extract-version.outputs.new_version }}.zip leather-chromium-v${{ needs.extract-version.outputs.new_version }}
 
-      - name: Zip Chromium build
-        run: zip -r leather-chromium.v${{ needs.extract-version.outputs.new_version }}.zip leather-chromium-v${{ needs.extract-version.outputs.new_version }}
+      - run: echo "test" >> test.txt
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
+      - name: Update Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
         with:
-          prerelease: false
-          tag_name: v${{ needs.extract-version.outputs.new_version }}
-          body_path: release-notes.txt
+          tag_name: ${{ github.ref_name }}
           files: |
-            leather-chromium.v${{ needs.extract-version.outputs.new_version }}.zip
+            test.txt
 
-  post_run:
-    runs-on: ubuntu-24.04
-    needs:
-      - publish-chrome-extension
-    steps:
-      - name: Publish Statuses
-        run: |
-          echo "::warning::Chrome Publish Status: $([[ "${{ needs.publish-chrome-extension.outputs.publish_status }}" = "0" ]] && echo 'SUCCESS' || echo 'FAILED')"
+  # post_run:
+  #   runs-on: ubuntu-24.04
+  #   needs:
+  #     - publish-chrome-extension
+  #   steps:
+  #     - name: Publish Statuses
+  #       run: |
+  #         echo "::warning::Chrome Publish Status: $([[ "${{ needs.publish-chrome-extension.outputs.publish_status }}" = "0" ]] && echo 'SUCCESS' || echo 'FAILED')"
