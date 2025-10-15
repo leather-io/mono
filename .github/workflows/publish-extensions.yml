@@ -3,7 +3,7 @@ name: Publish extensions
 on: workflow_dispatch
 
 permissions:
-  contents: read
+  contents: write
   actions: write
 
 env:
@@ -97,23 +97,14 @@ jobs:
         with:
           path: .
 
-      # Probably no need for release notes as we use release please
-      # - name: Download release-notes.txt from create-version workflow
-      #   uses: dawidd6/action-download-artifact@v6
-      #   with:
-      #     workflow: create-version.yml
-      #     name: release-notes
-      #     allow_forks: false
-
       - name: Zip Chromium build
         run: zip -r leather-chromium.v${{ needs.extract-version.outputs.new_version }}.zip leather-chromium-v${{ needs.extract-version.outputs.new_version }}
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
+      - name: Update Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
         with:
-          prerelease: false
-          tag_name: v${{ needs.extract-version.outputs.new_version }}
-          body_path: release-notes.txt
+          tag_name: ${{ github.ref_name }}
           files: |
             leather-chromium.v${{ needs.extract-version.outputs.new_version }}.zip
 
