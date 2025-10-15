@@ -24,3 +24,17 @@ export function createMarketData(pair: MarketPair, price: Money): MarketData {
     throw new Error('Cannot create market data when price does not match quote');
   return Object.freeze({ pair, price });
 }
+
+export const historicalPeriods = ['1d', '1w', '1m', '3m', '6m', '1y'] as const;
+export type HistoricalPeriod = (typeof historicalPeriods)[number];
+
+export interface MarketPriceSnapshot {
+  price: Money;
+  timestamp: number;
+}
+
+export interface MarketPriceHistory {
+  period: HistoricalPeriod;
+  changePercentage: number;
+  prices: MarketPriceSnapshot[];
+}

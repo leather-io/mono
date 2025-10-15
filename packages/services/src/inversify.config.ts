@@ -19,7 +19,8 @@ import { HttpCacheService } from './infrastructure/cache/http-cache.service';
 import { Environment } from './infrastructure/environment';
 import { SettingsService } from './infrastructure/settings/settings.service';
 import { Types } from './inversify.types';
-import { MarketDataService } from './market-data/market-data.service';
+import { MarketDataService } from './market/market-data.service';
+import { MarketHistoryService } from './market/market-history.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { SwapService } from './swap/swap.service';
 import { BitcoinTransactionsService } from './transactions/bitcoin-transactions.service';
@@ -110,6 +111,9 @@ export function getAccountBalancesService() {
 }
 export function getSwapService() {
   return getServicesContainer().get(SwapService);
+}
+export function getMarketHistoryService() {
+  return getServicesContainer().get(MarketHistoryService);
 }
 /* 
   API Layer Clients

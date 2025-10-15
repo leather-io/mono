@@ -17,7 +17,7 @@ import {
 } from '../infrastructure/api/hiro/hiro-stacks-api.utils';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
-import { MarketDataService } from '../market-data/market-data.service';
+import { MarketDataService } from '../market/market-data.service';
 import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
 import { AccountRequest } from '../types';
 import { calculateInboundStxBalance, calculateOutboundStxBalance } from './stx-balances.utils';

@@ -15,7 +15,7 @@ import { RuneAssetService } from '../assets/rune-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
-import { MarketDataService } from '../market-data/market-data.service';
+import { MarketDataService } from '../market/market-data.service';
 import { AccountRequest } from '../types';
 import { combineRunesBalances, readRunesOutputsBalances } from './runes-balances.utils';
 import { sortByAvailableQuoteBalance } from './sip10-balances.utils';

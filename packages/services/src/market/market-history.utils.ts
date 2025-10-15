@@ -1,11 +1,11 @@
 import { currencyDecimalsMap } from '@leather.io/constants';
+import { MarketPriceSnapshot } from '@leather.io/models';
 import { convertAmountToFractionalUnit, createMoney, initBigNumber } from '@leather.io/utils';
 
-import { LeatherApiTokenPriceHistory } from '../infrastructure/api/leather/leather-api.client';
-import { AssetPriceSnapshot } from '../types';
-
-export function mapPriceHistory(history: LeatherApiTokenPriceHistory): AssetPriceSnapshot[] {
-  return history.map(h => ({
+export function convertApiPriceSnapshots(
+  snapshots: { price: number; timestamp: string }[]
+): MarketPriceSnapshot[] {
+  return snapshots.map(h => ({
     price: createMoney(
       convertAmountToFractionalUnit(initBigNumber(h.price), currencyDecimalsMap['USD']),
       'USD'

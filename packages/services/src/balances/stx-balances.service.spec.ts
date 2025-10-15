@@ -2,7 +2,7 @@ import { initBigNumber } from '@leather.io/utils';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { SettingsService } from '../infrastructure/settings/settings.service';
-import { MarketDataService } from '../market-data/market-data.service';
+import { MarketDataService } from '../market/market-data.service';
 import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
 import { AccountRequest } from '../types';
 import { StxBalancesService } from './stx-balances.service';
