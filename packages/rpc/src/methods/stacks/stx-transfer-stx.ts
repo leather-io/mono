@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { principalSchema, stacksMemoSchema } from '@leather.io/stacks';
+
 import { defineRpcEndpoint } from '../../rpc/schemas';
 import {
   baseStacksTransactionConfigSchema,
@@ -10,9 +12,9 @@ export const stxTransferStx = defineRpcEndpoint({
   method: 'stx_transferStx',
   params: z.intersection(
     z.object({
-      recipient: z.string(),
+      recipient: principalSchema,
       amount: z.coerce.number().int('Amount must be an integer describing µSTX'),
-      memo: z.string().optional(),
+      memo: stacksMemoSchema.optional(),
     }),
     baseStacksTransactionConfigSchema
   ),
