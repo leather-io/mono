@@ -29,6 +29,9 @@ export function useApps(status?: AppStatus) {
   return {
     list,
     hasAccounts: list.length > 0,
+    fromOrigin(origin: string | undefined) {
+      return list.find(app => app.origin === origin);
+    },
   };
 }
 
