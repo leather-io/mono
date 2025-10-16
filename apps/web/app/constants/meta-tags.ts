@@ -15,11 +15,11 @@ export const defaultMetaTags = [
   },
   {
     name: 'twitter:creator',
-    content: '@leatherBTC',
+    content: '@LeatherBTC',
   },
   {
     name: 'twitter:site',
-    content: '@leatherBTC',
+    content: '@LeatherBTC',
   },
   {
     name: 'author',

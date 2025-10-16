@@ -1,6 +1,6 @@
-import { Link } from 'react-router';
+import { Link, MetaDescriptor } from 'react-router';
 
-import { cmsClient } from '~/constants/cms-client';
+import { cmsClient, getBlockText, urlFor } from '~/constants/cms-client';
 
 import { changelogEntryBySlugQuery } from '@leather.io/cms';
 import { ArrowLeftIcon, Button } from '@leather.io/ui';
@@ -20,17 +20,38 @@ export async function loader({ params }: Route.LoaderArgs) {
 export function meta({ loaderData }: Route.MetaArgs) {
   if (!loaderData?.entry) {
     return [
-      { title: 'Changelog Entry Not Found – Leather' },
+      { title: 'Leather Changelog Not Found – Leather' },
       { name: 'description', content: 'Changelog entry not found' },
     ];
   }
 
   const { entry } = loaderData;
+  const title = entry.title ?? 'Changelog';
+  const textBlocks = entry.body.filter(block => '_type' in block && block._type === 'block');
+  const fullText = getBlockText(textBlocks, ' ');
+  const description = fullText.split(/(?<!\d)\.(?!\d)|[!?]/)[0].trim() + '.';
+  const imageUrl = entry.heroImage?.asset?._ref
+    ? urlFor(entry.heroImage).auto('format').format('webp').width(600).height(338).url()
+    : undefined;
 
-  return [
-    { title: `${entry.title} – Leather` },
-    { name: 'description', content: `Changelog entry: ${entry.title}` },
+  const metaTags: MetaDescriptor[] = [
+    { title: `${title} – Leather Changelog` },
+    { name: 'description', content: `${description}` },
+    { property: 'og:title', content: `${title} – Leather Changelog` },
+    { property: 'og:description', content: `${description}` },
+    { name: 'twitter:title', content: `${title} – Leather Changelog` },
+    { name: 'twitter:description', content: `${description}` },
+    { name: 'twitter:card', content: 'summary_large_image' },
   ];
+
+  if (imageUrl) {
+    metaTags.push(
+      { name: 'twitter:image', content: imageUrl },
+      { property: 'og:image', content: imageUrl }
+    );
+  }
+
+  return metaTags;
 }
 
 export default function ChangelogEntryRoute({ loaderData }: Route.ComponentProps) {
