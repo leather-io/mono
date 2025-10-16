@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import type { HasChildren } from '@app/common/has-children';
 
@@ -15,15 +15,7 @@ export function SwapProvider<T extends BaseSwapContext<T>>({
   const [isFetchingExchangeRate, setIsFetchingExchangeRate] = useState(false);
   const [isPreparingSwapReview, setIsPreparingSwapReview] = useState(false);
   const [isSendingMax, setIsSendingMax] = useState(false);
-  const [swapData, setSwapData] = useState<T>(initialData);
-
-  useEffect(() => {
-    setSwapData(prev => ({
-      ...prev,
-      swappableAssetsBase: initialData.swappableAssetsBase,
-      swappableAssetsQuote: initialData.swappableAssetsQuote,
-    }));
-  }, [initialData.swappableAssetsBase, initialData.swappableAssetsQuote]);
+  const [swapData, setSwapData] = useState<Partial<T>>({});
 
   function onSetSwapData(data: Partial<T>) {
     setSwapData(prev => ({ ...prev, ...data }));
@@ -36,7 +28,7 @@ export function SwapProvider<T extends BaseSwapContext<T>>({
         isFetchingExchangeRate,
         isPreparingSwapReview,
         isSendingMax,
-        swapData,
+        swapData: { ...initialData, ...swapData },
         onSetSwapData,
         onSetIsCrossChainSwap: (value: boolean) => setIsCrossChainSwap(value),
         onSetIsFetchingExchangeRate: (value: boolean) => setIsFetchingExchangeRate(value),
