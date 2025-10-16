@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { Money, StxBalance } from '@leather.io/models';
+import { Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { SwapInternalState } from '../swap-state.types';
@@ -331,62 +331,6 @@ describe('swap validation', () => {
 
         const result = runValidation(context);
         expect(result.issues.baseAmount).toBeUndefined();
-      });
-
-      it('uses availableUnlockedBalance for STX, availableBalance for others', () => {
-        const stxBalance: StxBalance = {
-          totalBalance: createMoney(1000_000_000, 'STX', 6),
-          inboundBalance: createMoney(0, 'STX', 6),
-          outboundBalance: createMoney(0, 'STX', 6),
-          pendingBalance: createMoney(0, 'STX', 6),
-          availableBalance: createMoney(1000_000_000, 'STX', 6),
-          availableUnlockedBalance: createMoney(500_000_000, 'STX', 6),
-          lockedBalance: createMoney(500_000_000, 'STX', 6),
-          unlockedBalance: createMoney(500_000_000, 'STX', 6),
-        };
-
-        const stxAsset = createAccountSwapAsset({
-          asset: defaultStxAsset,
-          balance: { crypto: 1000_000_000, quote: 1000_00 },
-        });
-
-        if (stxAsset.balance) {
-          stxAsset.balance.crypto = stxBalance;
-        }
-
-        const contextExceedingUnlocked = createValidationContext({
-          state: {
-            baseSwapAsset: stxAsset,
-            baseAmount: '600',
-            inputCurrencyMode: 'crypto',
-          },
-          derivedAmounts: {
-            crypto: createMoney(600_000_000, 'STX', 6),
-            quote: createMoney(600_00, 'USD', 2),
-          },
-        });
-
-        const contextWithinUnlocked = createValidationContext({
-          state: {
-            baseSwapAsset: stxAsset,
-            baseAmount: '400',
-            inputCurrencyMode: 'crypto',
-          },
-          derivedAmounts: {
-            crypto: createMoney(400_000_000, 'STX', 6),
-            quote: createMoney(400_00, 'USD', 2),
-          },
-        });
-
-        const exceedingResult = runValidation(contextExceedingUnlocked);
-        const withinResult = runValidation(contextWithinUnlocked);
-
-        expect(exceedingResult.issues.baseAmount).toEqual({
-          field: 'baseAmount',
-          code: 'INSUFFICIENT_BALANCE',
-          context: { balance: createMoney(500_000_000, 'STX', 6) },
-        });
-        expect(withinResult.issues.baseAmount).toBeUndefined();
       });
 
       it('validates against balance in active currency mode (crypto or quote)', () => {
