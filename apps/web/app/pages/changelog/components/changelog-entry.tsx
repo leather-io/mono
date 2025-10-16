@@ -32,8 +32,8 @@ function Title(props: HTMLStyledProps<'h1'>) {
     <styled.h3
       textStyle="heading.03"
       _hover={{ color: 'ink.action-primary-hover' }}
-      mt="space.01"
-      mb="space.03"
+      mt="space.02"
+      mb="space.04"
       {...props}
     >
       <Link to={`/changelog/${entry.slug.current}`} style={{ color: 'inherit' }}>
