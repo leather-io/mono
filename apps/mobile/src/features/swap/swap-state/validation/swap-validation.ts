@@ -12,7 +12,6 @@ import {
   isWithinRange,
 } from '@/features/swap/swap-state/validation/swap-validation.utils';
 import { MAX_SLIPPAGE_PERCENTAGE, MIN_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap.constants';
-import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
 import { Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
@@ -82,7 +81,21 @@ export interface ValidationResult {
 
 function validateAmount(context: ValidationContext): BaseAmountIssue | undefined {
   const { state, derivedAmounts } = context;
-  const { baseAmount, baseSwapAsset, inputCurrencyMode } = state;
+  const { baseSwapAsset, baseAmount, inputCurrencyMode } = state;
+  const unselectedAssetMaxDecimals = 32;
+  const maxAllowedDecimals = baseSwapAsset
+    ? baseSwapAsset.asset.decimals
+    : unselectedAssetMaxDecimals;
+  const canonicalCryptoAmount = derivedAmounts.crypto;
+  const activeAmount = derivedAmounts[inputCurrencyMode];
+  const minAmount = resolveMinimumSpendAmount(baseSwapAsset?.asset.protocol);
+  const maxAmount = resolveMaximumSpendAmount(baseSwapAsset?.asset.protocol);
+
+  const spendableBalance = resolveSpendableBalanceInCurrencyMode(
+    baseSwapAsset?.balance,
+    baseSwapAsset?.asset.protocol,
+    inputCurrencyMode
+  );
 
   if (!isPresent(baseAmount)) {
     return { field: 'baseAmount', code: 'REQUIRED' };
@@ -92,69 +105,52 @@ function validateAmount(context: ValidationContext): BaseAmountIssue | undefined
     return { field: 'baseAmount', code: 'INVALID' };
   }
 
-  if (baseSwapAsset) {
-    const decimals = baseSwapAsset.asset.decimals;
-    if (!hasValidPrecision(baseAmount, decimals)) {
-      return { field: 'baseAmount', code: 'PRECISION_INVALID', context: { decimals } };
-    }
+  if (!hasValidPrecision(baseAmount, maxAllowedDecimals)) {
+    return {
+      field: 'baseAmount',
+      code: 'PRECISION_INVALID',
+      context: { decimals: maxAllowedDecimals },
+    };
   }
 
-  if (derivedAmounts.crypto && baseSwapAsset) {
-    const protocol = baseSwapAsset.asset.protocol;
-    const minimum = resolveMinimumSpendAmount(protocol);
-    const maximum = resolveMaximumSpendAmount(protocol);
-
-    const cryptoAmountInBaseUnits = derivedAmounts.crypto.amount.toNumber();
-
-    if (!isWithinRange(cryptoAmountInBaseUnits, minimum, maximum)) {
-      if (cryptoAmountInBaseUnits < minimum) {
-        return {
-          field: 'baseAmount',
-          code: 'TOO_SMALL',
-          context: {
-            minimum: createMoney(
-              minimum,
-              derivedAmounts.crypto.symbol,
-              derivedAmounts.crypto.decimals
-            ),
-          },
-        };
-      }
-      return {
-        field: 'baseAmount',
-        code: 'TOO_LARGE',
-        context: {
-          maximum: createMoney(
-            maximum,
-            derivedAmounts.crypto.symbol,
-            derivedAmounts.crypto.decimals
-          ),
-        },
-      };
-    }
+  if (!activeAmount || !canonicalCryptoAmount || !spendableBalance || !baseSwapAsset) {
+    return undefined;
   }
 
-  if (baseSwapAsset?.balance && derivedAmounts.crypto && derivedAmounts.quote) {
-    const spendableBalance = resolveSpendableBalanceInCurrencyMode(
-      baseSwapAsset.balance,
-      baseSwapAsset.asset.protocol,
-      inputCurrencyMode
-    );
+  if (canonicalCryptoAmount.amount.isLessThan(minAmount)) {
+    return {
+      field: 'baseAmount',
+      code: 'TOO_SMALL',
+      context: {
+        minimum: createMoney(
+          minAmount,
+          canonicalCryptoAmount.symbol,
+          canonicalCryptoAmount.decimals
+        ),
+      },
+    };
+  }
 
-    if (spendableBalance) {
-      const currentAmount = whenInputCurrencyMode(inputCurrencyMode)({
-        crypto: derivedAmounts.crypto,
-        quote: derivedAmounts.quote,
-      });
+  if (canonicalCryptoAmount.amount.isGreaterThan(maxAmount)) {
+    return {
+      field: 'baseAmount',
+      code: 'TOO_LARGE',
+      context: {
+        maximum: createMoney(
+          maxAmount,
+          canonicalCryptoAmount.symbol,
+          canonicalCryptoAmount.decimals
+        ),
+      },
+    };
+  }
 
-      if (currentAmount && !isAmountWithinBalance(currentAmount, spendableBalance)) {
-        return {
-          field: 'baseAmount',
-          code: 'INSUFFICIENT_BALANCE',
-          context: { balance: spendableBalance },
-        };
-      }
-    }
+  if (!isAmountWithinBalance(activeAmount, spendableBalance)) {
+    return {
+      field: 'baseAmount',
+      code: 'INSUFFICIENT_BALANCE',
+      context: { balance: spendableBalance },
+    };
   }
 
   return undefined;

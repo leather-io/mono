@@ -14,7 +14,7 @@ export function isPresent(value: unknown): boolean {
   return true;
 }
 
-export function hasValidPrecision(value: string, maxDecimals = Infinity): boolean {
+export function hasValidPrecision(value: string, maxDecimals: number): boolean {
   return countDecimals(value) <= maxDecimals;
 }
 
