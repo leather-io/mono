@@ -144,6 +144,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.24.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.23.1...@leather.io/tokens-v0.24.0) (2025-10-16)
+
+
+### Features
+
+* changelog ([2bb0c3d](https://github.com/leather-io/mono/commit/2bb0c3d895e31849adeced87641744a58b6c62a1))
+
 ## [0.23.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.22.0...@leather.io/tokens-v0.23.0) (2025-07-28)
 
 

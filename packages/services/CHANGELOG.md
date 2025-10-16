@@ -413,6 +413,26 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.37.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.36.1...@leather.io/services-v1.37.0) (2025-10-16)
+
+
+### Features
+
+* add stamps service and integrate to collectibles on mobile ([2037431](https://github.com/leather-io/mono/commit/2037431540b0e7ddb4e144a192ac816941997653))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.34.0
+    * @leather.io/constants bumped to 0.27.2
+    * @leather.io/models bumped to 0.45.0
+    * @leather.io/stacks bumped to 1.17.5
+    * @leather.io/utils bumped to 0.47.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.19
+
 ## [1.36.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.36.0...@leather.io/services-v1.36.1) (2025-10-15)
 
 

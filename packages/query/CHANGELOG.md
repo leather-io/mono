@@ -779,6 +779,20 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.43.2](https://github.com/leather-io/mono/compare/@leather.io/query-v2.43.1...@leather.io/query-v2.43.2) (2025-10-16)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.34.0
+    * @leather.io/constants bumped to 0.27.2
+    * @leather.io/models bumped to 0.45.0
+    * @leather.io/rpc bumped to 2.20.19
+    * @leather.io/stacks bumped to 1.17.5
+    * @leather.io/utils bumped to 0.47.0
+
 ## [2.43.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.43.0...@leather.io/query-v2.43.1) (2025-10-15)
 
 
