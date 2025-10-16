@@ -14,7 +14,12 @@ import { selectBitcoinNetwork } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import { ApiRequestOptions } from '../types';
 import { LeatherApiError } from './leather-api.error';
-import { LeatherApiPageRequest, getPageRequestQueryParams } from './leather-api.pagination';
+import {
+  LeatherApiPage,
+  LeatherApiPageRequest,
+  emptyPage,
+  getPageRequestQueryParams,
+} from './leather-api.pagination';
 import { paths } from './leather-api.types';
 
 export type LeatherApiBitcoinTransaction =
@@ -66,6 +71,9 @@ export class LeatherApiClient {
   async fetchUtxos(descriptor: string, { signal, skipCache }: ApiRequestOptions = {}) {
     const network = this.settingsService.getSettings().network.chain.bitcoin.bitcoinNetwork;
     const fetchFn = async () => {
+      if (network === 'regtest') {
+        return emptyPage as LeatherApiPage<LeatherApiUtxo>;
+      }
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () =>
@@ -93,6 +101,9 @@ export class LeatherApiClient {
     const params = getPageRequestQueryParams(pageRequest);
     const network = selectBitcoinNetwork(this.settingsService.getSettings());
     const fetchFn = async () => {
+      if (network === 'regtest') {
+        return emptyPage as LeatherApiPage<LeatherApiBitcoinTransaction>;
+      }
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () =>

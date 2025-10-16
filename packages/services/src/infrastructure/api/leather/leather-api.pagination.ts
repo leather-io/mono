@@ -1,5 +1,15 @@
 import { ZodSchema, z } from 'zod';
 
+export const emptyPage: LeatherApiPage<unknown> = {
+  meta: {
+    page: 0,
+    pageSize: 0,
+    totalPages: 0,
+    totalItems: 0,
+  },
+  data: [],
+};
+
 export interface LeatherApiPage<T> {
   meta: {
     page: number;
