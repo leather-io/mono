@@ -27,6 +27,7 @@ export function useBitcoinSwap(signer: BitcoinSigner<P2Ret>, utxos: UtxoResponse
       }
 
       const depositData = await onReviewDepositSbtc({ values, swapData, isSendingMax });
+
       if (!depositData) return logger.error('No deposit to review');
 
       return depositData;
