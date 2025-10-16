@@ -1,7 +1,10 @@
+import { z } from 'zod';
+
 // Branded type for Bitcoin addresses
 export type BitcoinAddress = string & { readonly __brand: unique symbol };
 
-export type BitcoinUnit = 'bitcoin' | 'satoshi';
+export const bitcoinUnitSchema = z.enum(['bitcoin', 'satoshi']);
+export type BitcoinUnit = z.infer<typeof bitcoinUnitSchema>;
 
 export type BitcoinUnitSymbol = 'BTC' | 'sat';
 

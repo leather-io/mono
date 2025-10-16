@@ -38,7 +38,16 @@ export enum WalletDefaultNetworkConfigurationIds {
   devnet = 'devnet',
 }
 
-export type DefaultNetworkConfigurations = keyof typeof WalletDefaultNetworkConfigurationIds;
+export const defaultNetworkConfigurationsSchema = z.enum([
+  'mainnet',
+  'testnet',
+  'testnet4',
+  'signet',
+  'sbtcTestnet',
+  'sbtcDevenv',
+  'devnet',
+]);
+export type DefaultNetworkConfigurations = z.infer<typeof defaultNetworkConfigurationsSchema>;
 
 export const supportedBlockchains = ['stacks', 'bitcoin'] as const;
 
