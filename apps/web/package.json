@@ -85,7 +85,7 @@
     "@msw/playwright": "0.4.2",
     "@originjs/vite-plugin-commonjs": "1.0.3",
     "@pandacss/dev": "0.53.6",
-    "@playwright/test": "1.54.2",
+    "@playwright/test": "1.56.0",
     "@react-router/cloudflare": "7.9.4",
     "@react-router/dev": "7.9.4",
     "@types/node": "24.0.8",

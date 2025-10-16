@@ -43,7 +43,7 @@
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "@ls-lint/ls-lint": "2.2.3",
-    "@playwright/test": "1.54.2",
+    "@playwright/test": "1.56.0",
     "@tanstack/eslint-plugin-query": "5.62.1",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
@@ -61,7 +61,7 @@
     "lint-staged": "15.2.10",
     "prettier": "3.5.1",
     "syncpack": "13.0.0",
-    "turbo": "2.4.2",
+    "turbo": "2.5.8",
     "typescript": "5.8.3",
     "typescript-eslint": "8.18.0",
     "vitest": "2.1.9"
@@ -73,7 +73,7 @@
     "yarn": "please-use-pnpm"
   },
   "keywords": [],
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.18.3+sha512.bbd16e6d7286fd7e01f6b3c0b3c932cda2965c06a908328f74663f10a9aea51f1129eea615134bf992831b009eabe167ecb7008b597f40ff9bc75946aadfb08d",
   "pnpm": {
     "overrides": {
       "cross-spawn": "7.0.5",

@@ -177,7 +177,6 @@
     "typescript": "5.8.3",
     "vitest": "2.1.9"
   },
-  "packageManager": "pnpm@10.10.0",
   "private": true,
   "publishConfig": {
     "access": "public"
