@@ -15,3 +15,4 @@ export * from './validation/memo-validation';
 export * from './validation/stacks-error';
 export * from './validation/transaction-validation';
 export * from './schemas/clarity-contract.schema';
+export * from './schemas/memo.schema';
