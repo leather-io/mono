@@ -137,7 +137,7 @@ export function BaseStxTxApproverLayout({
           )}
           {isContractCall(tx.payload) && accountId && (
             <Approver.Overview>
-              <ContractCallPostConditionsSection txHex={txHex} />
+              <ContractCallPostConditionsSection txHex={txHex} origin={origin} />
 
               <SipRecipient txHex={txHex} />
             </Approver.Overview>
