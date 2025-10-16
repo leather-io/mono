@@ -28,10 +28,15 @@ export function PooledStackingActionButtons({
 
   return (
     <Flex gap="space.04" {...flexProps}>
-      <Button fullWidth variant="outline" onClick={handleStopStackingClick} disabled={isPending}>
+      <Button
+        width="220px"
+        variant="outline"
+        onClick={handleStopStackingClick}
+        disabled={isPending}
+      >
         Stop pooling
       </Button>
-      <Button fullWidth onClick={handleIncreaseStackingClick}>
+      <Button width="220px" onClick={handleIncreaseStackingClick}>
         Increase pooling amount
       </Button>
     </Flex>
