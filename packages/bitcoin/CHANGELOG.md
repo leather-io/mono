@@ -939,6 +939,25 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.34.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.33.2...@leather.io/bitcoin-v0.34.0) (2025-10-16)
+
+
+### Features
+
+* add stamps service and integrate to collectibles on mobile ([2037431](https://github.com/leather-io/mono/commit/2037431540b0e7ddb4e144a192ac816941997653))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.27.2
+    * @leather.io/crypto bumped to 1.12.1
+    * @leather.io/models bumped to 0.45.0
+    * @leather.io/utils bumped to 0.47.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.19
+
 ## [0.33.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.33.1...@leather.io/bitcoin-v0.33.2) (2025-10-15)
 
 

@@ -19,6 +19,32 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.83.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.82.0...@leather.io/mobile-v2.83.0) (2025-10-16)
+
+
+### Features
+
+* add stamps service and integrate to collectibles on mobile ([2037431](https://github.com/leather-io/mono/commit/2037431540b0e7ddb4e144a192ac816941997653))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.3
+    * @leather.io/bitcoin bumped to 0.34.0
+    * @leather.io/constants bumped to 0.27.2
+    * @leather.io/crypto bumped to 1.12.1
+    * @leather.io/models bumped to 0.45.0
+    * @leather.io/provider bumped to 1.6.2
+    * @leather.io/query bumped to 2.43.2
+    * @leather.io/rpc bumped to 2.20.19
+    * @leather.io/services bumped to 1.37.0
+    * @leather.io/stacks bumped to 1.17.5
+    * @leather.io/tokens bumped to 0.24.0
+    * @leather.io/ui bumped to 1.89.0
+    * @leather.io/utils bumped to 0.47.0
+
 ## [2.82.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.81.0...@leather.io/mobile-v2.82.0) (2025-10-15)
 
 

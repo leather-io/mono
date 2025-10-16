@@ -489,6 +489,24 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.89.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.88.0...@leather.io/ui-v1.89.0) (2025-10-16)
+
+
+### Features
+
+* changelog ([2bb0c3d](https://github.com/leather-io/mono/commit/2bb0c3d895e31849adeced87641744a58b6c62a1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.24.0
+    * @leather.io/utils bumped to 0.47.0
+  * devDependencies
+    * @leather.io/models bumped to 0.45.0
+    * @leather.io/panda-preset bumped to 0.14.4
+
 ## [1.88.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.87.0...@leather.io/ui-v1.88.0) (2025-10-14)
 
 

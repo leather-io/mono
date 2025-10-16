@@ -36,6 +36,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.45.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.44.1...@leather.io/models-v0.45.0) (2025-10-16)
+
+
+### Features
+
+* add stamps service and integrate to collectibles on mobile ([2037431](https://github.com/leather-io/mono/commit/2037431540b0e7ddb4e144a192ac816941997653))
+
 ## [0.44.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.43.0...@leather.io/models-v0.44.0) (2025-10-10)
 
 
