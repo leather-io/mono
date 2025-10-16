@@ -189,7 +189,7 @@
     "@ls-lint/ls-lint": "2.2.3",
     "@mdx-js/loader": "3.0.0",
     "@pandacss/dev": "0.53.6",
-    "@playwright/test": "1.54.2",
+    "@playwright/test": "1.56.0",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.13",
     "@redux-devtools/cli": "4.0.2",
     "@redux-devtools/remote": "0.9.5",
@@ -298,7 +298,6 @@
     "web3"
   ],
   "main": "index.js",
-  "packageManager": "pnpm@10.10.0",
   "private": true,
   "release": {
     "branches": [
