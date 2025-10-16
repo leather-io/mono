@@ -1,4 +1,4 @@
-import { filter, pipe, sortBy } from 'remeda';
+import { filter, map, pipe, sortBy } from 'remeda';
 
 import {
   SwappableFungibleCryptoAsset,
@@ -12,6 +12,7 @@ export function createSwapAssetsSelector(assetSelectionType: 'base' | 'target') 
   return (data: AccountSwapAsset[]): AccountSwapAsset[] => {
     return pipe(
       data,
+      map(mapUnlockedToAvailableBalance),
       filter(swapAsset => isRelevantSwapAsset(swapAsset, assetSelectionType)),
       sortBy(
         getCurrencyPriority,
@@ -19,6 +20,31 @@ export function createSwapAssetsSelector(assetSelectionType: 'base' | 'target') 
         swapAsset => swapAsset.asset.symbol
       )
     );
+  };
+}
+
+// TODO: Temporary workaround - maps availableUnlockedBalance to availableBalance for STX
+function mapUnlockedToAvailableBalance(swapAsset: AccountSwapAsset): AccountSwapAsset {
+  if (!swapAsset.balance) return swapAsset;
+
+  return {
+    ...swapAsset,
+    balance: {
+      crypto:
+        'availableUnlockedBalance' in swapAsset.balance.crypto
+          ? {
+              ...swapAsset.balance.crypto,
+              availableBalance: swapAsset.balance.crypto.availableUnlockedBalance,
+            }
+          : swapAsset.balance.crypto,
+      quote:
+        'availableUnlockedBalance' in swapAsset.balance.quote
+          ? {
+              ...swapAsset.balance.quote,
+              availableBalance: swapAsset.balance.quote.availableUnlockedBalance,
+            }
+          : swapAsset.balance.quote,
+    },
   };
 }
 
