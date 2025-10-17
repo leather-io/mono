@@ -5,14 +5,15 @@ import {
   selectNetworkPreference,
 } from '@/store/settings/settings.read';
 
-import { SettingsService } from '@leather.io/services';
+import { buildUserSettings, resolveNetworkPreferenceId, SettingsService } from '@leather.io/services';
 
 export class MobileSettingsService implements SettingsService {
   getSettings() {
-    return {
-      quoteCurrency: selectCurrencyPreference(store.getState()),
-      network: selectNetworkPreference(store.getState()),
-      assetVisibility: selectAssetVisibility(store.getState()),
-    };
+    const state = store.getState();
+    return buildUserSettings({
+      quoteCurrency: selectCurrencyPreference(state),
+      networkId: resolveNetworkPreferenceId(selectNetworkPreference(state).id),
+      assetVisibility: selectAssetVisibility(state),
+    });
   }
 }

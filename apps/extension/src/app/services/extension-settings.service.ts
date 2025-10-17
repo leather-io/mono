@@ -1,4 +1,4 @@
-import { SettingsService } from '@leather.io/services';
+import { buildUserSettings, resolveNetworkPreferenceId, SettingsService } from '@leather.io/services';
 import { serializeAssetId } from '@leather.io/utils';
 
 import { store } from '@app/store';
@@ -7,18 +7,21 @@ import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 export class ExtensionSettingsService implements SettingsService {
   getSettings() {
-    return {
+    const state = store.getState();
+    const assetVisibility = Object.fromEntries(
+      Object.values(selectTokenState(state).entities).map(tokenSetting => [
+        serializeAssetId({
+          protocol: tokenSetting.id.includes('::') ? 'sip10' : 'rune',
+          id: tokenSetting.id,
+        }),
+        tokenSetting.enabled,
+      ])
+    );
+
+    return buildUserSettings({
       quoteCurrency: 'USD',
-      network: selectCurrentNetwork(store.getState()),
-      assetVisibility: Object.fromEntries(
-        Object.values(selectTokenState(store.getState()).entities).map(tokenSetting => [
-          serializeAssetId({
-            protocol: tokenSetting.id.includes('::') ? 'sip10' : 'rune',
-            id: tokenSetting.id,
-          }),
-          tokenSetting.enabled,
-        ])
-      ),
-    };
+      networkId: resolveNetworkPreferenceId(selectCurrentNetwork(state).id),
+      assetVisibility,
+    });
   }
 }

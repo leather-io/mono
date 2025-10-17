@@ -20,9 +20,9 @@ import {
 import {
   AccountId,
   NetworkConfiguration,
-  WalletDefaultNetworkConfigurationIds,
   defaultNetworksKeyedById,
 } from '@leather.io/models';
+import { resolveNetworkPreference, resolveNetworkPreferenceId } from '@leather.io/services';
 import { whenStacksChainId } from '@leather.io/stacks';
 
 import type { RootState } from '..';
@@ -137,11 +137,9 @@ export function useNetworkPreferenceBitcoinScureLibNetworkConfig() {
 }
 
 function getNetworkFromNetworkName(stacksNetworkName: StacksNetworkName) {
-  if (stacksNetworkName === 'testnet')
-    return defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.testnet4];
-  if (stacksNetworkName === 'mainnet')
-    return defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.mainnet];
-  throw new Error('This network is currently not supported');
+  return resolveNetworkPreference({
+    id: resolveNetworkPreferenceId(stacksNetworkName),
+  });
 }
 
 export function getStacksNetworkFromName(stacksNetworkName: StacksNetworkName): StacksNetwork {
