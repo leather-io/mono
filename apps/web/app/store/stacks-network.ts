@@ -3,7 +3,7 @@ import { useAtom } from 'jotai/index';
 import { atomWithStorage } from 'jotai/utils';
 import { getNetworkInstance } from '~/features/stacking/utils/stacking-network-utils';
 
-import { defaultNetworksKeyedById } from '@leather.io/models';
+import { resolveNetworkPreference, resolveNetworkPreferenceId } from '@leather.io/services';
 
 export const networkNameAtom = atomWithStorage<StacksNetworkName>('network', 'mainnet');
 
@@ -14,8 +14,9 @@ export function useStacksNetwork() {
 
   const networkInstance = getNetworkInstance(network);
 
-  const networkPreference =
-    defaultNetworksKeyedById[networkName === 'mocknet' ? 'testnet' : networkName];
+  const networkPreference = resolveNetworkPreference({
+    id: resolveNetworkPreferenceId(networkName),
+  });
 
   return {
     networkName,

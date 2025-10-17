@@ -2,8 +2,11 @@ import { getDefaultStore } from 'jotai';
 import { quoteCurrencyAtom } from '~/store/quote-currency';
 import { networkNameAtom } from '~/store/stacks-network';
 
-import { defaultNetworksKeyedById } from '@leather.io/models';
-import { SettingsService } from '@leather.io/services';
+import {
+  SettingsService,
+  buildUserSettings,
+  resolveNetworkPreferenceId,
+} from '@leather.io/services';
 
 export class WebSettingsService implements SettingsService {
   getSettings() {
@@ -11,12 +14,10 @@ export class WebSettingsService implements SettingsService {
     const quoteCurrency = store.get(quoteCurrencyAtom);
     const network = store.get(networkNameAtom);
 
-    if (network === 'mocknet') throw Error('Mocknet is not supported.');
-
-    return {
+    return buildUserSettings({
       quoteCurrency,
-      network: defaultNetworksKeyedById[network],
+      networkId: resolveNetworkPreferenceId(network),
       assetVisibility: {},
-    };
+    });
   }
 }
