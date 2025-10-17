@@ -1,26 +1,20 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import * as secp from '@noble/secp256k1';
 import * as btc from '@scure/btc-signer';
-import * as bitcoin from 'bitcoinjs-lib';
 
 import { ecdsaPublicKeyToSchnorr } from '../utils/bitcoin.utils';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
-import {
-  createNativeSegwitBitcoinJsSigner,
-  createTaprootBitcoinJsSigner,
-  createToSpendTx,
-  signBip322MessageSimple,
-} from './sign-message-bip322-bitcoinjs';
+import { createToSpendTx, signBip322MessageSimple } from './sign-message-bip322';
 
 const address = createBitcoinAddress('bc1q9vza2e8x573nczrlzms0wvx3gsqjx7vavgkx0l');
 
 describe(createToSpendTx.name, () => {
-  test('bitcoinjs example', () => {
+  test('transaction and script match expected bitcoinjs output', () => {
     const result = createToSpendTx(address, 'generatedWithBitcoinJs', 'mainnet');
 
-    expect(result.script.toString('hex')).toEqual('00142b05d564e6a7a33c087f16e0f730d1440123799d');
+    expect(bytesToHex(result.script)).toEqual('00142b05d564e6a7a33c087f16e0f730d1440123799d');
 
-    expect(result.virtualToSpend.toHex()).toEqual(
+    expect(result.virtualToSpend.hex).toEqual(
       '00000000010000000000000000000000000000000000000000000000000000000000000000ffffffff220020093bbd44da65116318b960749b3d6172ab9775b5d1923a7c71e18845c6524852000000000100000000000000001600142b05d564e6a7a33c087f16e0f730d1440123799d00000000'
     );
   });
@@ -35,9 +29,10 @@ describe(signBip322MessageSimple.name, () => {
     const rawNativeSegwitAddress = btc.getAddress('wpkh', testVectorKey);
     const payment = btc.p2wpkh(secp.getPublicKey(testVectorKey, true));
 
-    function signPsbt(psbt: bitcoin.Psbt) {
-      psbt.signAllInputs(createNativeSegwitBitcoinJsSigner(Buffer.from(testVectorKey)));
-      return Promise.resolve(btc.Transaction.fromPSBT(psbt.toBuffer()));
+    function signPsbt(tx: btc.Transaction) {
+      tx.sign(testVectorKey);
+      tx.finalizeIdx(0);
+      return Promise.resolve(tx);
     }
 
     if (!rawNativeSegwitAddress) throw new Error('nativeSegwitAddress is undefined');
@@ -58,10 +53,10 @@ describe(signBip322MessageSimple.name, () => {
         network: 'mainnet',
         signPsbt,
       });
-      expect(emptyStringToSpend.getId()).toEqual(
+      expect(emptyStringToSpend.id).toEqual(
         'c5680aa69bb8d860bf82d4e9cd3504b55dde018de765a91bb566283c545a99a7'
       );
-      expect(emptyStringToSign.getId()).toEqual(
+      expect(emptyStringToSign.id).toEqual(
         '1e9654e951a5ba44c8604c4de6c67fd78a27e81dcadcfe1edf638ba3aaebaed6'
       );
 
@@ -84,17 +79,17 @@ describe(signBip322MessageSimple.name, () => {
         });
 
       // section 3
-      expect(virtualToSpend.getId()).toEqual(
+      expect(virtualToSpend.id).toEqual(
         'b79d196740ad5217771c1098fc4a4b51e0535c32236c71f1ea4d61a2d603352b'
       );
 
-      // sectuion 4.3 expectedid
-      expect(virtualToSign.getId()).toEqual(
+      // section 4.3 expectedid
+      expect(virtualToSign.id).toEqual(
         '88737ae86f2077145f93cc4b153ae9a1cb8d56afa511988c149c5c8c9d93bddf'
       );
 
-      // sectioun 5.2 witness
-      expect(virtualToSign.ins[0].witness.map(bytesToHex).join(' ')).toEqual(
+      const witness = virtualToSign.getInput(0).finalScriptWitness?.map(bytesToHex).join(' ');
+      expect(witness).toEqual(
         '3045022100ecf2ca796ab7dde538a26bfb09a6c487a7b3fff33f397db6a20eb9af77c0ee8c022062e67e44c8070f49c3a37f5940a8850842daf7cca35e6af61a6c7c91f1e1a1a301 02c7f12003196442943d8588e01aee840423cc54fc1521526a3b85c2b0cbd58872'
       );
 
@@ -117,16 +112,12 @@ describe(signBip322MessageSimple.name, () => {
     if (!rawTaprootAddress) throw new Error('Could not generate taproot address');
 
     const taprootAddress = createBitcoinAddress(rawTaprootAddress);
-    const payment = btc.p2tr(
-      ecdsaPublicKeyToSchnorr(secp.getPublicKey(Buffer.from(testVectorKey), true))
-    );
+    const payment = btc.p2tr(ecdsaPublicKeyToSchnorr(secp.getPublicKey(testVectorKey, true)));
 
-    function signPsbt(psbt: bitcoin.Psbt) {
-      psbt.data.inputs.forEach(
-        input => (input.tapInternalKey = Buffer.from(payment.tapInternalKey))
-      );
-      psbt.signAllInputs(createTaprootBitcoinJsSigner(Buffer.from(testVectorKey)));
-      return Promise.resolve(btc.Transaction.fromPSBT(psbt.toBuffer()));
+    function signPsbt(tx: btc.Transaction) {
+      tx.sign(testVectorKey);
+      tx.finalizeIdx(0);
+      return Promise.resolve(tx);
     }
 
     test('Addresses against taproot test vectors', () => {

@@ -2,11 +2,11 @@ import { signTx } from '@/features/psbt-signer/signer';
 import { NetworkState } from '@/queries/leather-query-provider';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { destructAccountIdentifier } from '@/store/utils';
-import * as bitcoin from 'bitcoinjs-lib';
+import * as btc from '@scure/btc-signer';
 
 import {
-  payerToBip32DerivationBitcoinJsLib,
-  payerToTapBip32DerivationBitcoinJsLib,
+  payerToBip32Derivation,
+  payerToTapBip32Derivation,
   signBip322MessageSimple,
 } from '@leather.io/bitcoin';
 import { RpcRequest, RpcResult, signMessage } from '@leather.io/rpc';
@@ -38,14 +38,14 @@ export async function signBip322Message({
         message: message.params.message,
         address: taprootPayer.address,
         network: network.chain.bitcoin.mode,
-        signPsbt(psbt: bitcoin.Psbt) {
-          psbt.data.inputs.forEach((_, idx) => {
+        signPsbt(psbt: btc.Transaction) {
+          for (let idx = 0; idx < psbt.inputsLength; idx++) {
             psbt.updateInput(idx, {
-              tapInternalKey: Buffer.from(taprootPayer.payment.tapInternalKey),
-              tapBip32Derivation: [payerToTapBip32DerivationBitcoinJsLib(taprootPayer)],
+              tapInternalKey: taprootPayer.payment.tapInternalKey,
+              tapBip32Derivation: [payerToTapBip32Derivation(taprootPayer)],
             });
-          });
-          return signTx(psbt.toBuffer());
+          }
+          return signTx(psbt.toPSBT());
         },
       });
 
@@ -61,13 +61,13 @@ export async function signBip322Message({
         message: message.params.message,
         address: nativeSegwitPayer.address,
         network: network.chain.bitcoin.mode,
-        signPsbt(psbt: bitcoin.Psbt) {
-          psbt.data.inputs.forEach((_, idx) => {
+        signPsbt(psbt: btc.Transaction) {
+          for (let idx = 0; idx < psbt.inputsLength; idx++) {
             psbt.updateInput(idx, {
-              bip32Derivation: [payerToBip32DerivationBitcoinJsLib(nativeSegwitPayer)],
+              bip32Derivation: [payerToBip32Derivation(nativeSegwitPayer)],
             });
-          });
-          return signTx(psbt.toBuffer());
+          }
+          return signTx(psbt.toPSBT());
         },
       });
       return {
