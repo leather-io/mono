@@ -3,9 +3,11 @@ import { useWindowDimensions } from 'react-native';
 import { Screen } from '@/components/screen/screen';
 import { HeaderSubtitle } from '@/components/screen/screen-header/components/header-title';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
+import { ChainId } from '@stacks/network';
 
-import { NonFungibleCryptoAsset, Sip9Collection } from '@leather.io/models';
+import { NonFungibleCryptoAsset, } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
 import { TokenDetailsCard } from './components/token-details-card';
@@ -15,7 +17,6 @@ interface CollectibleProps {
   children: React.ReactNode;
   name?: string;
   description?: string;
-  collection?: Sip9Collection;
   details?: NonFungibleCryptoAsset;
 }
 
@@ -31,10 +32,13 @@ export function useCollectibleHeight() {
 export function Collectible({
   name,
   description,
-  collection,
   details,
   children,
 }: CollectibleProps) {
+  const collection = details && 'collection' in details ? details.collection : undefined;
+  const { networkPreference } = useSettings();
+  const chainName = networkPreference.chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet';
+
   return (
     <Screen>
       <Screen.Header
@@ -65,7 +69,7 @@ export function Collectible({
               <Text variant="caption01">{description}</Text>
             </TokenDetailsCard>
           )}
-          {details && renderCollectibleDetailsRecursively(details)}
+          {details && renderCollectibleDetailsRecursively(details, chainName)}
         </Box>
       </Screen.ScrollView>
     </Screen>
