@@ -1,4 +1,4 @@
-import { PayloadType, StacksTransactionWire, serializePayload } from '@stacks/transactions';
+import { PayloadType } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
 
 import { DEFAULT_FEE_RATE } from '@leather.io/constants';
@@ -43,14 +43,6 @@ export const defaultStacksFees: Fees = {
 
 export function feeEstimationQueryFailedSilently(feeEstimation: StacksTxFeeEstimation) {
   return !!(feeEstimation && (!!feeEstimation.error || !feeEstimation.estimations.length));
-}
-
-export function getEstimatedUnsignedStacksTxByteLength(transaction: StacksTransactionWire) {
-  return transaction.serializeBytes().byteLength;
-}
-
-export function getSerializedUnsignedStacksTxPayload(transaction: StacksTransactionWire) {
-  return serializePayload(transaction.payload);
 }
 
 export function getFeeEstimationsWithCappedValues(

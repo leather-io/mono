@@ -1,4 +1,30 @@
-import { ClarityAbi, ClarityType, ClarityValue } from '@stacks/transactions';
+import {
+  ClarityAbi,
+  ClarityType,
+  ClarityValue,
+  ContractCallPayload,
+  StacksTransactionWire,
+} from '@stacks/transactions';
+
+export function isSip10TransferContactCall(
+  tx: StacksTransactionWire
+): tx is StacksTransactionWire & { payload: ContractCallPayload } {
+  if (tx.payload && 'functionName' in tx.payload) {
+    if (
+      tx.payload.functionName.content === 'transfer' &&
+      (tx.payload.functionArgs.length === 3 || tx.payload.functionArgs.length === 4)
+    ) {
+      if (
+        tx.payload.functionArgs[0].type === ClarityType.UInt &&
+        tx.payload.functionArgs[1].type === ClarityType.PrincipalStandard &&
+        tx.payload.functionArgs[2].type === ClarityType.PrincipalStandard
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 export function isSip10Transfer({
   functionName,

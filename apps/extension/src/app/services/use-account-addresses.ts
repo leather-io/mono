@@ -1,6 +1,10 @@
 import { useMemo } from 'react';
 
-import { deriveAddressIndexZeroFromAccount, getNativeSegwitPaymentFromAddressIndex, getTaprootPaymentFromAddressIndex } from '@leather.io/bitcoin';
+import {
+  deriveAddressIndexZeroFromAccount,
+  getNativeSegwitPaymentFromAddressIndex,
+  getTaprootPaymentFromAddressIndex,
+} from '@leather.io/bitcoin';
 import { createAccountAddresses } from '@leather.io/utils';
 
 import { useBitcoinAccountXpubs } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';

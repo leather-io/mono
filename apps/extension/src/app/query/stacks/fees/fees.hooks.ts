@@ -7,10 +7,12 @@ import {
   createPostStacksFeeTransactionQueryOptions,
   defaultFeesMaxValuesAsMoney,
   defaultFeesMinValuesAsMoney,
-  getEstimatedUnsignedStacksTxByteLength,
-  getSerializedUnsignedStacksTxPayload,
   parseStacksTxFeeEstimationResponse,
 } from '@leather.io/query';
+import {
+  getEstimatedUnsignedStacksTxByteLength,
+  getSerializedUnsignedStacksTxPayload,
+} from '@leather.io/stacks';
 
 import {
   useConfigFeeEstimationsMaxEnabled,

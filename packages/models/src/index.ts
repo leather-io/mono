@@ -9,6 +9,7 @@ export * from './currencies.model';
 export * from './fees/bitcoin-fees.model';
 export * from './fees/fees.model';
 export * from './fees/stacks-fees.model';
+export * from './fees/transaction-fees.model';
 export * from './market.model';
 export * from './types';
 export * from './types.utils';
