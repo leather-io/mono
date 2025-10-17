@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 
 import * as btc from '@scure/btc-signer';
-import * as bitcoin from 'bitcoinjs-lib';
 
 import { createBitcoinAddress, signBip322MessageSimple } from '@leather.io/bitcoin';
 import { BitcoinAddress } from '@leather.io/models';
@@ -51,7 +50,7 @@ const allowTimeForUserToReadToast = createDelay(1200);
 
 interface SignBip322MessageFactoryArgs {
   address: BitcoinAddress;
-  signPsbt(a: bitcoin.Psbt): Promise<btc.Transaction>;
+  signPsbt(tx: btc.Transaction): Promise<btc.Transaction>;
 }
 function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFactoryArgs) {
   const network = useCurrentNetwork();
@@ -125,9 +124,11 @@ function useSignBip322MessageTaproot() {
     payment: { tapInternalKey, address },
   } = createTaprootSigner(0);
 
-  async function signPsbt(psbt: bitcoin.Psbt) {
-    psbt.data.inputs.forEach(input => (input.tapInternalKey = Buffer.from(tapInternalKey)));
-    return sign(psbt.toBuffer());
+  async function signPsbt(tx: btc.Transaction) {
+    for (let index = 0; index < tx.inputsLength; index++) {
+      tx.updateInput(index, { tapInternalKey });
+    }
+    return sign(tx.toPSBT());
   }
   const signerAddress = createBitcoinAddress(address ?? '');
   return useSignBip322MessageFactory({ address: signerAddress, signPsbt });
@@ -145,8 +146,8 @@ function useSignBip322MessageNativeSegwit() {
     payment: { address },
   } = createNativeSegwitSigner(0);
 
-  async function signPsbt(psbt: bitcoin.Psbt) {
-    return sign(psbt.toBuffer());
+  async function signPsbt(tx: btc.Transaction) {
+    return sign(tx.toPSBT());
   }
 
   return useSignBip322MessageFactory({
