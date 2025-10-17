@@ -19,6 +19,25 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.83.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.83.0...@leather.io/mobile-v2.83.1) (2025-10-17)
+
+
+### Bug Fixes
+
+* try to use connect account first for post conditions ([bb864cd](https://github.com/leather-io/mono/commit/bb864cd2257e5653686b88c6040084000884f155))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.34.1
+    * @leather.io/provider bumped to 1.6.3
+    * @leather.io/query bumped to 2.43.3
+    * @leather.io/rpc bumped to 2.20.20
+    * @leather.io/services bumped to 1.37.1
+    * @leather.io/stacks bumped to 1.17.6
+
 ## [2.83.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.82.0...@leather.io/mobile-v2.83.0) (2025-10-16)
 
 

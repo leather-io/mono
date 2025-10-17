@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.3.0...@leather.io/cms-v1.3.1) (2025-10-17)
+
+
+### Bug Fixes
+
+* **cms:** ensure we sort the changelog correctly ([35fc4db](https://github.com/leather-io/mono/commit/35fc4dbc4fde72e0228eabb70ef7a5c5d7e80592))
+
 ## [1.3.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.2.0...@leather.io/cms-v1.3.0) (2025-10-16)
 
 

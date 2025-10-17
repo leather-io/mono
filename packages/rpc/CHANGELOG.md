@@ -411,6 +411,20 @@
     * @leather.io/stacks bumped to 1.17.3
     * @leather.io/utils bumped to 0.46.4
 
+## [2.20.20](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.20.19...@leather.io/rpc-v2.20.20) (2025-10-17)
+
+
+### Bug Fixes
+
+* **stacks:** improve address and memo validation ([c7b70df](https://github.com/leather-io/mono/commit/c7b70df7ea6fa27caea76b35c2c587941da42f74))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/stacks bumped to 1.17.6
+
 ## [2.20.19](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.20.18...@leather.io/rpc-v2.20.19) (2025-10-16)
 
 
