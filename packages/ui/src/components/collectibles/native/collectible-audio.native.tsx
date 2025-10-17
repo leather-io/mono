@@ -12,37 +12,6 @@ interface CollectibleAudioProps {
 }
 
 export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleAudioProps) {
-  const htmlContent = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          body { 
-            margin: 0; 
-            padding: 20px; 
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-          }
-          audio {
-            width: 100%;
-            max-width: 400px;
-          }
-        </style>
-      </head>
-      <body>
-        <audio controls preload="metadata">
-          <source src="${src}" type="audio/mpeg">
-          <source src="${src}" type="audio/wav">
-          <source src="${src}" type="audio/ogg">
-          Your browser does not support the audio element.
-        </audio>
-      </body>
-    </html>
-  `;
   return (
     <CollectibleCard>
       {onPress ? (
@@ -62,7 +31,7 @@ export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleA
         </TouchableOpacity>
       ) : (
         <WebView
-          source={{ html: htmlContent }}
+          source={{ uri: src }}
           style={{ flex: 1 }}
           scrollEnabled={false}
           originWhitelist={['*']}

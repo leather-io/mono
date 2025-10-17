@@ -3,17 +3,39 @@ import { useWindowDimensions } from 'react-native';
 
 import { ErrorFallbackTab } from '@/components/error/error';
 import { Screen } from '@/components/screen/screen';
-import { EmptyCollectiblesState } from '@/features/collectibles/components/empty-collectibles-state';
-import { Loading } from '@/features/collectibles/components/loading';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
+import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
+import { Loading } from '@/features/token/components/loading';
 import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 
-import { AccountId } from '@leather.io/models';
+import { AccountId, NonFungibleCryptoAsset } from '@leather.io/models';
+import { assertUnreachable } from '@leather.io/utils';
 
-import { renderCollectible } from './render-collectible';
+import { Inscription } from './bitcoin/inscription';
+import { Stamp } from './bitcoin/stamp';
+import { Sip9 } from './stacks/sip9';
 
-export function useCollectibleHeight() {
+interface RenderCollectibleProps {
+  item: NonFungibleCryptoAsset;
+  height: number;
+  onPress?: (tokenDetails: TokenDetailsProps) => void;
+}
+
+function renderCollectible({ item, height, onPress }: RenderCollectibleProps) {
+  switch (item.protocol) {
+    case 'stamp':
+      return <Stamp item={item} height={height} onPress={onPress} />;
+    case 'sip9':
+      return <Sip9 item={item} height={height} onPress={onPress} />;
+    case 'inscription':
+      return <Inscription item={item} height={height} onPress={onPress} />;
+    default:
+      return assertUnreachable(item);
+  }
+}
+
+function useCollectibleListHeight() {
   const { height } = useWindowDimensions();
   // Set height to 25% of screen, but clamp between 160 and 200
   // Going above 200px leaves visible gaps between some images
@@ -34,7 +56,7 @@ export function CollectiblesList({ currentAccount, header, onPressToken }: Colle
     fingerprint,
     accountIndex
   );
-  const height = useCollectibleHeight();
+  const height = useCollectibleListHeight();
 
   const isSuccess = collectiblesState === 'success';
   const isLoading = collectiblesState === 'loading';

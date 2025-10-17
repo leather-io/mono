@@ -1,12 +1,12 @@
 import { ErrorFallbackTab } from '@/components/error/error';
-import { Sip9 } from '@/features/collectibles/components/sip9';
 import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-collectibles.query';
 
 import { AccountId, isSip9Asset } from '@leather.io/models';
+import { Sip9 } from '@leather.io/ui/native';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
-import { TokenLoading } from '../components/token-loading';
+import { CollectibleLoading } from '../components/collectible-loading';
 
 interface Sip9TokenDetailsProps {
   account: AccountId;
@@ -19,7 +19,7 @@ export function Sip9TokenDetails({ assetId, account }: Sip9TokenDetailsProps) {
   const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
 
   if (collectible.state === 'loading') {
-    return <TokenLoading />;
+    return <CollectibleLoading height={height} />;
   }
   if (collectible.state === 'error') {
     return <ErrorFallbackTab />;

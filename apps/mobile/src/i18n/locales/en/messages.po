@@ -13,6 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/features/token/stacks/sip9-token-details.tsx:50
+msgid "?? of {0}"
+msgstr "?? of {0}"
+
+#: src/features/token/stacks/sip9-token-details.tsx:48
+msgid "?? of {totalItems}"
+msgstr "?? of {totalItems}"
+
 #: src/app/settings/display/index.tsx:101
 msgid "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
 msgstr "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
@@ -81,11 +89,11 @@ msgid "Account creation failed"
 msgstr "Account creation failed"
 
 #: src/app/settings/display/index.tsx:100
-#: src/features/settings/account-identifier-sheet.tsx:45
+#: src/features/settings/account-identifier-sheet.tsx:37
 msgid "Account identifier"
 msgstr "Account identifier"
 
-#: src/features/settings/account-identifier-sheet.tsx:37
+#: src/features/settings/account-identifier-sheet.tsx:29
 msgid "Account identifier updated"
 msgstr "Account identifier updated"
 
@@ -144,7 +152,7 @@ msgstr "Add to new wallet"
 msgid "Add wallet"
 msgstr "Add wallet"
 
-#: src/features/collectibles/components/empty-collectibles-state.tsx:19
+#: src/features/token/components/empty-collectibles-state.tsx:19
 msgid "Add your collection here"
 msgstr "Add your collection here"
 
@@ -316,6 +324,10 @@ msgstr "Argument {argumentNumber}"
 msgid "Arkadiko"
 msgstr "Arkadiko"
 
+#: src/features/token/stacks/sip9-token-details.tsx:64
+msgid "Attributes"
+msgstr "Attributes"
+
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:117
 msgid "Authentication failed"
 msgstr "Authentication failed"
@@ -352,6 +364,7 @@ msgstr "BIP39 passphrase"
 #: src/features/send/forms/btc/btc-form.tsx:64
 #: src/features/swap/swap.utils.ts:7
 #: src/features/token/bitcoin/bitcoin-token-details.tsx:17
+#: src/shared/display-preference.ts:65
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -368,9 +381,13 @@ msgstr "Bitcoin unit updated"
 msgid "Bitflow"
 msgstr "Bitflow"
 
-#: src/shared/display-preference.ts:31
+#: src/shared/display-preference.ts:36
 msgid "BNS name"
 msgstr "BNS name"
+
+#: src/shared/display-preference.ts:68
+msgid "BRC-20"
+msgstr "BRC-20"
 
 #: src/features/navigation/tab-layout.tsx:66
 msgid "Browser"
@@ -440,9 +457,13 @@ msgstr "Close the scanner"
 msgid "Code"
 msgstr "Code"
 
-#: src/features/token/utils/render-collectible-details.tsx:22
-msgid "Collection URL"
-msgstr "Collection URL"
+#: src/features/token/stacks/sip9-token-details.tsx:40
+msgid "Collectible Info"
+msgstr "Collectible Info"
+
+#: src/features/token/stacks/sip9-token-details.tsx:44
+msgid "Collection"
+msgstr "Collection"
 
 #: src/features/send/error-messages.ts:17
 msgid "Compliance check failed"
@@ -495,7 +516,7 @@ msgstr "Contact us"
 msgid "Contacts"
 msgstr "Contacts"
 
-#: src/features/collectibles/components/inscription.tsx:31
+#: src/features/token/bitcoin/inscription.tsx:31
 msgid "Content not found"
 msgstr "Content not found"
 
@@ -507,6 +528,10 @@ msgstr "Continue"
 #: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:15
 msgid "Continue without security"
 msgstr "Continue without security"
+
+#: src/features/token/stacks/sip9-token-details.tsx:52
+msgid "Contract"
+msgstr "Contract"
 
 #: src/features/approver/contract-call-args.section.tsx:21
 msgid "Contract arguments"
@@ -540,6 +565,10 @@ msgstr "Create new wallet"
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:206
 msgid "Creation date"
 msgstr "Creation date"
+
+#: src/features/token/stacks/sip9-token-details.tsx:47
+msgid "Creator"
+msgstr "Creator"
 
 #: src/hooks/use-version-check.ts:44
 msgid "Current app version format is invalid"
@@ -578,15 +607,11 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
-#: src/features/token/collectible.tsx:64
+#: src/features/token/components/token-description.tsx:19
 #: src/features/token/components/token-loading.tsx:38
 #: src/features/token/token.tsx:101
 msgid "Description"
 msgstr "Description"
-
-#: src/features/token/utils/render-collectible-details.tsx:139
-msgid "Details"
-msgstr "Details"
 
 #: src/app/settings/index.tsx:144
 msgid "Device ID"
@@ -756,6 +781,10 @@ msgstr "Fee updated"
 msgid "Fees"
 msgstr "Fees"
 
+#: src/features/token/stacks/sip9-token-details.tsx:60
+msgid "File type"
+msgstr "File type"
+
 #: src/features/swap/components/flip-button.tsx:53
 msgid "Flip assets"
 msgstr "Flip assets"
@@ -780,6 +809,14 @@ msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:81
 msgid "Generate new Secret Key for self-custody"
 msgstr "Generate new Secret Key for self-custody"
+
+#: src/features/token/bitcoin/inscription-token-details.tsx:50
+msgid "Genesis block"
+msgstr "Genesis block"
+
+#: src/features/token/bitcoin/inscription-token-details.tsx:47
+msgid "Genesis time"
+msgstr "Genesis time"
 
 #: src/app/settings/help/index.tsx:18
 #: src/app/settings/index.tsx:100
@@ -860,7 +897,7 @@ msgstr "ID copied to clipboard"
 msgid "If unsafe, your wallet could be drained."
 msgstr "If unsafe, your wallet could be drained."
 
-#: src/features/collectibles/components/fallback.tsx:8
+#: src/features/token/components/fallback.tsx:8
 msgid "Image currently unavailable"
 msgstr "Image currently unavailable"
 
@@ -879,6 +916,10 @@ msgstr "Input"
 #: src/features/approver/components/inputs-outputs-card.tsx:33
 msgid "Inputs and outputs"
 msgstr "Inputs and outputs"
+
+#: src/shared/display-preference.ts:63
+msgid "Inscription"
+msgstr "Inscription"
 
 #: src/features/swap/components/error-message.tsx:34
 msgid "Insufficient balance"
@@ -905,7 +946,11 @@ msgstr "Invalid words: {joinedInvalidWords}"
 msgid "Language"
 msgstr "Language"
 
-#: src/features/token/components/token-details-table.tsx:22
+#: src/features/token/bitcoin/stamp-token-details.tsx:36
+msgid "Last observed block"
+msgstr "Last observed block"
+
+#: src/features/token/stacks/sip9-token-details.tsx:49
 msgid "Layer"
 msgstr "Layer"
 
@@ -917,8 +962,9 @@ msgstr "Layer 1"
 msgid "Layer 1 · Bitcoin"
 msgstr "Layer 1 · Bitcoin"
 
-#: src/features/settings/account-identifier-sheet.tsx:19
-#: src/features/settings/account-identifier-sheet.tsx:20
+#: src/shared/display-preference.ts:51
+#: src/shared/display-preference.ts:52
+#: src/shared/display-preference.ts:53
 msgid "Layer 1 • Bitcoin"
 msgstr "Layer 1 • Bitcoin"
 
@@ -930,8 +976,8 @@ msgstr "Layer 2"
 msgid "Layer 2 · Stacks"
 msgstr "Layer 2 · Stacks"
 
-#: src/features/settings/account-identifier-sheet.tsx:21
-#: src/features/settings/account-identifier-sheet.tsx:22
+#: src/shared/display-preference.ts:54
+#: src/shared/display-preference.ts:55
 msgid "Layer 2 • Stacks"
 msgstr "Layer 2 • Stacks"
 
@@ -1039,10 +1085,7 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
-#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
-#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
-#: src/features/token/components/token-details-table.tsx:19
+#: src/features/token/stacks/sip9-token-details.tsx:42
 msgid "Name"
 msgstr "Name"
 
@@ -1051,7 +1094,7 @@ msgstr "Name"
 msgid "Native Segwit"
 msgstr "Native Segwit"
 
-#: src/shared/display-preference.ts:21
+#: src/shared/display-preference.ts:26
 msgid "Native Segwit address"
 msgstr "Native Segwit address"
 
@@ -1122,6 +1165,10 @@ msgstr "Outbound balance:"
 msgid "Output"
 msgstr "Output"
 
+#: src/features/token/bitcoin/inscription-token-details.tsx:58
+msgid "Output value"
+msgstr "Output value"
+
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:21
 msgid "Passphrase"
 msgstr "Passphrase"
@@ -1167,6 +1214,10 @@ msgstr "Proceed with caution since your wallet will not be protected by your dev
 msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
+#: src/features/token/stacks/sip9-token-details.tsx:50
+msgid "Protocol"
+msgstr "Protocol"
+
 #: src/features/settings/email-address-sheet.tsx:43
 msgid "Provide an email address for receiving notifications"
 msgstr "Provide an email address for receiving notifications"
@@ -1183,6 +1234,18 @@ msgstr "Push"
 #: src/app/settings/index.tsx:92
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
+
+#: src/features/token/stacks/sip9-token-details.tsx:48
+msgid "Rarity rank"
+msgstr "Rarity rank"
+
+#: src/features/token/components/token-description.tsx:25
+msgid "Read less"
+msgstr "Read less"
+
+#: src/features/token/components/token-description.tsx:25
+msgid "Read more"
+msgstr "Read more"
 
 #: src/components/action-buttons.tsx:38
 #: src/features/receive/screens/asset-details.tsx:57
@@ -1215,6 +1278,10 @@ msgstr "Recently viewed"
 msgid "Recents"
 msgstr "Recents"
 
+#: src/features/token/stacks/bns-token-details.tsx:38
+msgid "Registered at block"
+msgstr "Registered at block"
+
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:170
 #: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:17
 msgid "Remove wallet"
@@ -1223,6 +1290,10 @@ msgstr "Remove wallet"
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:162
 msgid "Rename wallet"
 msgstr "Rename wallet"
+
+#: src/features/token/stacks/bns-token-details.tsx:41
+msgid "Renewal height"
+msgstr "Renewal height"
 
 #: src/features/approver/components/approver-permissions.tsx:14
 msgid "Request approval for transactions"
@@ -1250,6 +1321,10 @@ msgstr "Reveal account"
 #: src/features/swap/screens/swap-form-screen.tsx:103
 msgid "Review"
 msgstr "Review"
+
+#: src/shared/display-preference.ts:71
+msgid "Rune"
+msgstr "Rune"
 
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:74
 #: src/features/settings/email-address-sheet.tsx:45
@@ -1365,6 +1440,14 @@ msgstr "Sign Message"
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
+#: src/shared/display-preference.ts:62
+msgid "SIP-009"
+msgstr "SIP-009"
+
+#: src/shared/display-preference.ts:67
+msgid "SIP-010"
+msgstr "SIP-010"
+
 #: src/app/secure-your-wallet.tsx:42
 msgid "Skip for now"
 msgstr "Skip for now"
@@ -1382,6 +1465,10 @@ msgstr "Some balances couldn’t load."
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
+#: src/shared/display-preference.ts:69
+msgid "SRC-20"
+msgstr "SRC-20"
+
 #: src/utils/dapps.ts:60
 msgid "StackingDAO"
 msgstr "StackingDAO"
@@ -1391,20 +1478,30 @@ msgstr "StackingDAO"
 #: src/features/send/forms/stx/stx-form.tsx:58
 #: src/features/swap/swap.utils.ts:6
 #: src/features/token/stacks/stacks-token-details.tsx:15
+#: src/shared/display-preference.ts:66
 msgid "Stacks"
 msgstr "Stacks"
 
-#: src/shared/display-preference.ts:36
+#: src/shared/display-preference.ts:41
 msgid "Stacks address"
 msgstr "Stacks address"
 
-#: src/features/token/bitcoin/stamp-details.tsx:30
+#: src/features/token/bitcoin/stamp-token-details.tsx:17
+#: src/shared/display-preference.ts:64
 msgid "Stamp"
 msgstr "Stamp"
+
+#: src/features/token/bitcoin/stamp-token-details.tsx:39
+msgid "Stamp URL"
+msgstr "Stamp URL"
 
 #: src/features/approver/utils.tsx:47
 msgid "Standard"
 msgstr "Standard"
+
+#: src/shared/display-preference.ts:70
+msgid "STX-20"
+msgstr "STX-20"
 
 #: src/features/approver/components/approver-buttons.tsx:38
 msgid "Submitted"
@@ -1444,7 +1541,7 @@ msgstr "Tap to view Secret Key"
 msgid "Taproot"
 msgstr "Taproot"
 
-#: src/shared/display-preference.ts:26
+#: src/shared/display-preference.ts:31
 msgid "Taproot address"
 msgstr "Taproot address"
 
@@ -1584,6 +1681,10 @@ msgstr "Transaction confirmations"
 msgid "Transaction failed due to an unexpected error"
 msgstr "Transaction failed due to an unexpected error"
 
+#: src/features/token/bitcoin/inscription-token-details.tsx:52
+msgid "Transaction ID"
+msgstr "Transaction ID"
+
 #: src/features/send/forms/stx/sip10-approval.tsx:50
 msgid "Transaction is sent!"
 msgstr "Transaction is sent!"
@@ -1659,11 +1760,6 @@ msgstr "Verify full address"
 #: src/app/settings/index.tsx:136
 msgid "Version"
 msgstr "Version"
-
-#: src/features/token/utils/render-collectible-details.tsx:43
-#: src/features/token/utils/render-collectible-details.tsx:56
-msgid "View"
-msgstr "View"
 
 #: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:20
 msgid "View and manage all your wallets in one place"

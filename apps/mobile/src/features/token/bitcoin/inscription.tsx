@@ -7,7 +7,7 @@ import { InscriptionAsset } from '@leather.io/models';
 import { Inscription as InscriptionComponent } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
-import { FallbackImage } from './fallback';
+import { FallbackImage } from '../components/fallback';
 
 interface InscriptionProps {
   item: InscriptionAsset;

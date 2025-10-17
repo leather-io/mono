@@ -29,14 +29,19 @@ export function mapBisInscriptionToCreateInscriptionData(
 export function sortByBlockHeight(a: { blockHeight: number }, b: { blockHeight: number }) {
   return b.blockHeight - a.blockHeight;
 }
-
-export function createStampAsset(stampData: { stamp: number; stamp_url: string }): StampAsset {
+interface StampData {
+  stamp: number;
+  stampUrl: string;
+  blockHeight: number;
+}
+export function createStampAsset({ stamp, stampUrl, blockHeight }: StampData): StampAsset {
   return {
     chain: CryptoAssetChains.bitcoin,
     category: CryptoAssetCategories.nft,
     protocol: CryptoAssetProtocols.stamp,
-    stamp: stampData.stamp,
-    stampUrl: stampData.stamp_url,
-    stampExplorerUrl: `https://stampchain.io/stamp/${stampData.stamp}`,
+    stamp,
+    stampUrl,
+    stampExplorerUrl: `https://stampchain.io/stamp/${stamp}`,
+    blockHeight,
   };
 }
