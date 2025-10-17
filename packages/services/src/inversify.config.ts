@@ -11,6 +11,8 @@ import { Sip10BalancesService } from './balances/sip10-balances.service';
 import { StxBalancesService } from './balances/stx-balances.service';
 import { BnsService } from './bns/bns.service';
 import { CollectiblesService } from './collectibles/collectibles.service';
+import { BitcoinTransactionFeesService } from './fees/bitcoin-transaction-fees.service';
+import { StacksTransactionFeesService } from './fees/stacks-transaction-fees.service';
 import { BestInSlotApiClient } from './infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { BnsV2ApiClient } from './infrastructure/api/bns-v2/bns-v2-api.client';
 import { HiroStacksApiClient } from './infrastructure/api/hiro/hiro-stacks-api.client';
@@ -114,6 +116,12 @@ export function getSwapService() {
 }
 export function getMarketHistoryService() {
   return getServicesContainer().get(MarketHistoryService);
+}
+export function getStacksTransactionFeesService() {
+  return getServicesContainer().get(StacksTransactionFeesService);
+}
+export function getBitcoinTransactionFeesService() {
+  return getServicesContainer().get(BitcoinTransactionFeesService);
 }
 /* 
   API Layer Clients

@@ -31,6 +31,8 @@ export type HttpCacheKey =
   | 'hiro-stacks-get-nft-metadata'
   | 'hiro-stacks-get-nft-holdings'
   | 'hiro-stacks-call-read-only-function'
+  | 'hiro-stacks-get-transfer-fee-rate'
+  | 'hiro-stacks-get-transaction-fee-estimate'
 
   // LeatherApiClient
   | 'leather-api-utxos'
@@ -98,6 +100,8 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'hiro-stacks-get-nft-metadata': { ttl: weeksInMs(8) },
   'hiro-stacks-get-nft-holdings': { ttl: secondsInMs(10) },
   'hiro-stacks-call-read-only-function': { ttl: secondsInMs(15) },
+  'hiro-stacks-get-transfer-fee-rate': { ttl: secondsInMs(4) },
+  'hiro-stacks-get-transaction-fee-estimate': { ttl: secondsInMs(4) },
 
   'leather-api-utxos': { ttl: secondsInMs(10) },
   'leather-api-transactions': { ttl: secondsInMs(10) },

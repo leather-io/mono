@@ -13,6 +13,7 @@ import {
   NonFungibleTokenHolding,
   Transaction,
   TransactionEvent,
+  TransactionFeeEstimateResponse,
 } from '@stacks/stacks-blockchain-api-types';
 import { ClarityValue } from '@stacks/transactions';
 
@@ -43,6 +44,7 @@ export type HiroNftHolding = NonFungibleTokenHolding;
 export type HiroReadOnlyFunctionResponse =
   | { okay: true; result: string }
   | { okay: false; cause: string };
+export type HiroTransactionFeeEstimateResponse = TransactionFeeEstimateResponse;
 
 export interface HiroAddressStxBalanceResponse {
   balance: string;

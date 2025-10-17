@@ -1,6 +1,8 @@
 import { injectable } from 'inversify';
 
-import { LeatherApiClient } from '../api/leather/leather-api.client';
+import { LeatherApiAppConfig, LeatherApiClient } from '../api/leather/leather-api.client';
+
+export type StacksFeeConfig = LeatherApiAppConfig['fees']['stacks'];
 
 @injectable()
 export class AppConfigService {
@@ -13,5 +15,10 @@ export class AppConfigService {
   async getDefaultEnabledAssets(signal?: AbortSignal) {
     const appConfig = await this.getAppConfig(signal);
     return appConfig.assets.defaultEnabled;
+  }
+
+  async getStacksTransactionFeeConfig(signal?: AbortSignal): Promise<StacksFeeConfig> {
+    const appConfig = await this.getAppConfig(signal);
+    return appConfig.fees.stacks;
   }
 }

@@ -2,17 +2,12 @@ import {
   MempoolTransactionListResponse,
   NonFungibleTokenHoldingsList,
 } from '@stacks/stacks-blockchain-api-types';
-import {
-  ClarityValue,
-  cvToHex,
-  getAddressFromPrivateKey,
-  hexToCV,
-  makeRandomPrivKey,
-} from '@stacks/transactions';
+import { ClarityValue, cvToHex, hexToCV } from '@stacks/transactions';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { inject, injectable } from 'inversify';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
+import { generateRandomStacksAddress } from '@leather.io/stacks';
 
 import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
@@ -36,12 +31,14 @@ import {
   HiroReadOnlyFunctionResponse,
   HiroTransactionEvent,
   HiroTransactionEventsResponse,
+  HiroTransactionFeeEstimateResponse,
 } from './hiro-stacks-api.types';
 import { filterVerboseUnusedTransactionWithTransfersData } from './hiro-stacks-api.utils';
 
 @injectable()
 export class HiroStacksApiClient {
   private readonly _axios: AxiosInstance;
+  private readonly _randomStacksAddress = generateRandomStacksAddress();
 
   constructor(
     @inject(Types.CacheService) private readonly cache: HttpCacheService,
@@ -374,13 +371,6 @@ export class HiroStacksApiClient {
         );
   }
 
-  private generateRandomAddress() {
-    const randomPrivateKey = makeRandomPrivKey();
-    const privateKeyString = randomPrivateKey;
-    const randomAddress = getAddressFromPrivateKey(privateKeyString);
-    return randomAddress;
-  }
-
   public async callReadOnlyFunction(
     {
       contractAddress,
@@ -393,7 +383,7 @@ export class HiroStacksApiClient {
     { signal, skipCache }: ApiRequestOptions
   ): Promise<ClarityValue> {
     const body = {
-      sender: senderAddress ?? this.generateRandomAddress(),
+      sender: senderAddress ?? this._randomStacksAddress,
       arguments: functionArgs.map(arg => cvToHex(arg)),
     };
     const fetchFn = async () => {
@@ -427,6 +417,67 @@ export class HiroStacksApiClient {
             functionName,
             body.arguments,
           ],
+          fetchFn
+        );
+  }
+
+  public async getTransferFeeRate({ signal, skipCache }: ApiRequestOptions = {}): Promise<number> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<number>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/v2/fees/transfer`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getTransferFeeRate,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          ['hiro-stacks-get-transfer-fee-rate', selectStacksChainId(this.settings.getSettings())],
+          fetchFn
+        );
+  }
+
+  public async getTransactionFeeEstimate(
+    txPayload: string,
+    txByteLength: number | null,
+    { signal, skipCache }: ApiRequestOptions
+  ): Promise<HiroTransactionFeeEstimateResponse> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.post<HiroTransactionFeeEstimateResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/v2/fees/transaction`,
+            {
+              estimated_len: txByteLength,
+              transaction_payload: txPayload,
+            },
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.callReadOnlyFunction,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          // shouldnt need to add entire txPayload to cache key, estimatedLen + sufficiently
+          // low cache times should ensure acceptable refetching
+          ['hiro-stacks-get-transaction-fee-estimate', txByteLength],
           fetchFn
         );
   }
