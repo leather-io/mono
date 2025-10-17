@@ -65,13 +65,8 @@ function Image(props: HTMLStyledProps<'img'>) {
   if (!entry.heroImage?.asset?._ref) return null;
   return (
     <styled.img
-      src={urlFor(entry.heroImage)
-        .format('webp')
-        .width(800)
-        .height(450)
-        .auto('format')
-        .quality(75)
-        .url()}
+      src={urlFor(entry.heroImage).format('webp').quality(75).url()}
+      maxW="100%"
       mt="space.02"
       mb="space.04"
       alt={entry.title}

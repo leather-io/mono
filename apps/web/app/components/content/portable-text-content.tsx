@@ -2,6 +2,7 @@ import { ComponentProps } from 'react';
 
 import { PortableText, PortableTextComponents } from '@portabletext/react';
 import { styled } from 'leather-styles/jsx';
+import { urlFor } from '~/constants/cms-client';
 
 import { contentComponents } from './content-components';
 
@@ -15,6 +16,15 @@ const portableTextComponents: PortableTextComponents = {
         {value.code}
       </Code>
     ),
+    image: ({ value }) => {
+      return (
+        <styled.img
+          src={urlFor(value).quality(80).format('webp').url()}
+          maxW="100%"
+          alt={value.alt ?? ''}
+        />
+      );
+    },
   },
   marks: {
     strong: contentComponents.strong,
