@@ -21,6 +21,9 @@ const portableTextComponents: PortableTextComponents = {
         <styled.img
           src={urlFor(value).quality(80).format('webp').url()}
           maxW="100%"
+          border="1px solid"
+          borderColor="ink.border-transparent"
+          borderRadius="md"
           alt={value.alt ?? ''}
         />
       );
