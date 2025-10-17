@@ -30,7 +30,7 @@ function Title(props: HTMLStyledProps<'h1'>) {
   const entry = useChangelogEntry();
   return (
     <styled.h3
-      textStyle="heading.03"
+      textStyle="heading.05"
       _hover={{ color: 'ink.action-primary-hover' }}
       mt="space.02"
       mb="space.04"

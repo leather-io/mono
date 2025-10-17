@@ -45,8 +45,7 @@ export function ChangelogEntryLayout(props: ChangelogEntryLayoutProps) {
           right="0"
           height="1px"
           bgGradient="to-r"
-          gradientFrom="transparent"
-          gradientVia="ink.border-default"
+          gradientFrom="ink.border-default"
           gradientTo="transparent"
         />
       )}
