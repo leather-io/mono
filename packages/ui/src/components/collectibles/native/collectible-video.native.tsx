@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState, type  ReactNode  } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Image } from 'expo-image';
-import { WebView , type WebViewMessageEvent } from 'react-native-webview';
+import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 
 import { Box, CollectibleCard, Text, TouchableOpacity } from '../../../../native';
 import { PaperPlaneIcon } from '../../../icons/paper-plane-icon.native';
@@ -101,6 +101,7 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
   );
   const [shouldCapture, setShouldCapture] = useState<boolean>(() => Boolean(src && !thumbnailCache.has(src)));
   const [captureError, setCaptureError] = useState<string | null>(null);
+  const contentFit = onPress ? 'cover' : 'contain';
 
   useEffect(() => {
     if (!src) {
@@ -209,17 +210,17 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
 
   function renderPlaceholder() {
     return (
-    <Box
-      height={height}
-      bg="ink.background-secondary"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <PaperPlaneIcon />
-      <Text variant="caption01" textAlign="center">{alt}</Text>
-    </Box>
-  );
-}
+      <Box
+        height={height}
+        bg="ink.background-secondary"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <PaperPlaneIcon />
+        <Text textAlign="center">{alt}</Text>
+      </Box>
+    );
+  }
 
   if (onPress) {
     return (
@@ -231,7 +232,7 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
                 <Image
                   source={{ uri: thumbnailUri }}
                   style={{ height, width: '100%' }}
-                  contentFit="cover"
+                  contentFit={contentFit}
                 />
                 <Box
                   position="absolute"
@@ -262,6 +263,13 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
   return (
     <CollectibleCard>
       <Container height={height}>
+        {thumbnailUri ? (
+          <Image
+            source={{ uri: thumbnailUri }}
+            style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+            contentFit={contentFit}
+          />
+        ) : null}
         {!thumbnailUri && (
           <Box
             position="absolute"

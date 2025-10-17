@@ -60,12 +60,18 @@ async function checkContentType(url: string): Promise<MediaInfo> {
 
     const rawContentType = response.headers.get('content-type');
     const contentType = isSupportedContentType(rawContentType) ? rawContentType : '';
+    const isVideo = rawContentType?.startsWith('video/') ?? false;
+    const isImage =
+      (rawContentType?.startsWith('image/') ?? false) || rawContentType === 'application/octet-stream';
+    const isAudio = rawContentType?.startsWith('audio/') ?? false;
+    const isHtml = rawContentType?.startsWith('model/gltf') ?? false;
 
     return {
       contentType,
-      isVideo: contentType.startsWith('video/'),
-      isImage: contentType.startsWith('image/') || contentType === 'application/octet-stream',
-      isAudio: contentType.startsWith('audio/'),
+      isVideo,
+      isImage,
+      isAudio,
+      isHtml,
     };
   } catch {
     // Fallback: try to determine from URL extension
@@ -73,12 +79,19 @@ async function checkContentType(url: string): Promise<MediaInfo> {
     const videoExtensions = ['mp4', 'webm', 'mov', 'avi', 'mkv', 'm4v'];
     const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
     const audioExtensions = ['mp3', 'wav', 'ogg'];
+    const htmlExtensions = ['gltf', 'glb'];
+
+    const isVideo = videoExtensions.includes(extension ?? '');
+    const isImage = imageExtensions.includes(extension ?? '');
+    const isAudio = audioExtensions.includes(extension ?? '');
+    const isHtml = htmlExtensions.includes(extension ?? '');
 
     return {
-      contentType: '',
-      isVideo: videoExtensions.includes(extension ?? ''),
-      isImage: imageExtensions.includes(extension ?? ''),
-      isAudio: audioExtensions.includes(extension ?? ''),
+      contentType: isHtml ? 'model/gltf+json' : '',
+      isVideo,
+      isImage,
+      isAudio,
+      isHtml,
     };
   }
 }
@@ -88,6 +101,7 @@ interface MediaInfo {
   isVideo: boolean;
   isImage: boolean;
   isAudio: boolean;
+  isHtml: boolean;
 }
 
 export function Sip9({
@@ -103,21 +117,30 @@ export function Sip9({
     isVideo: false,
     isImage: false,
     isAudio: false,
+    isHtml: false,
   });
   const encodedSrc = encodeURI(contentUrl);
 
   useEffect(() => {
-    if (contentType) {
+    const needsDetection =
+      contentType === '' ||
+      contentType === null ||
+      contentType === undefined ||
+      contentType === 'text/plain' ||
+      contentType === 'application/octet-stream';
+
+    if (!needsDetection) {
       return;
     }
     async function checkMedia() {
       const info = await checkContentType(contentUrl);
-      const { contentType, isVideo, isImage, isAudio } = info;
+      const { contentType, isVideo, isImage, isAudio, isHtml } = info;
       setMediaInfo({
         contentType: contentType,
         isVideo: isVideo,
         isImage: isImage,
         isAudio: isAudio,
+        isHtml,
       });
     }
 
@@ -149,18 +172,48 @@ export function Sip9({
     case 'model/gltf-binary':
       return <CollectibleHtml src={encodedSrc} height={height} onPress={onPress} />;
     case 'text/plain':
-    case '':
-      // content type is empty, so we need to check if it's a video or an image
-      if (mediaInfo?.isImage) {
+      if (mediaInfo.isHtml) {
+        return <CollectibleHtml src={encodedSrc} height={height} onPress={onPress} />;
+      }
+      if (mediaInfo.isVideo) {
+        return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      }
+      if (mediaInfo.isAudio) {
+        return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
+      }
+      if (mediaInfo.isImage) {
         return (
           <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />
         );
-      } else {
-        // if it's not an image, it's probably a video
-        // some of the videos return 'text/plain' as their type
+      }
+      return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
+    case '':
+      // content type is empty, so we need to check if it's a video or an image
+      if (mediaInfo.isHtml) {
+        return <CollectibleHtml src={encodedSrc} height={height} onPress={onPress} />;
+      }
+      if (mediaInfo.isVideo) {
         return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
       }
+      if (mediaInfo.isAudio) {
+        return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
+      }
+      if (mediaInfo.isImage) {
+        return (
+          <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />
+        );
+      }
+      return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
     default:
+      if (contentType.startsWith('video/')) {
+        return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      }
+      if (contentType.startsWith('audio/')) {
+        return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
+      }
+      if (contentType.startsWith('model/gltf')) {
+        return <CollectibleHtml src={encodedSrc} height={height} onPress={onPress} />;
+      }
       // default to image if we can't determine the content type
       return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
   }

@@ -12,7 +12,6 @@ import {
 
 import { gammaNftMetadataSchema } from '../infrastructure/api/gamma/gamma-api.schema';
 import {
-  HiroNftMetadataResponse,
   HiroMetadata,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
