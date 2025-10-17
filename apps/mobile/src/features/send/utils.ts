@@ -111,5 +111,6 @@ async function rawAddressComplianceValidator({
 }
 
 export const addressComplianceValidator = memoize(rawAddressComplianceValidator, {
-  cacheKey: ([argument]) => argument.address,
+  cacheKey: ([{ address, chain, shouldCheckCompliance }]) =>
+    JSON.stringify({ address, chain, shouldCheckCompliance }),
 });
