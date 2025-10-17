@@ -67,6 +67,9 @@ function Image(props: HTMLStyledProps<'img'>) {
     <styled.img
       src={urlFor(entry.heroImage).format('webp').quality(75).url()}
       maxW="100%"
+      border="1px solid"
+      borderColor="ink.border-transparent"
+      borderRadius="md"
       mt="space.02"
       mb="space.04"
       alt={entry.title}
