@@ -2,26 +2,18 @@ import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER } from '@/shared/constants';
-import { getAccountDisplayPreferencesKeyedByType } from '@/shared/display-preference';
+import {
+  getAccountDisplayPreferencesKeyedByType,
+  getChainDisplayLabel,
+} from '@/shared/display-preference';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
 import { AccountDisplayPreference } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
-import { match } from '@leather.io/utils';
 
 import { useOpenURL } from '../browser/browser/use-open-url';
 import { SettingsSheetLayout } from './settings-sheet.layout';
-
-function getAccountDisplayPrefDescription(preference: AccountDisplayPreference) {
-  const matchPreference = match<AccountDisplayPreference>();
-  return matchPreference(preference, {
-    taproot: t`Layer 1 • Bitcoin`,
-    'native-segwit': t`Layer 1 • Bitcoin`,
-    bns: t`Layer 2 • Stacks`,
-    stacks: t`Layer 2 • Stacks`,
-  });
-}
 
 interface AccountIdentifierSheetProps {
   sheetRef: SheetRef;
@@ -52,7 +44,7 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
           <SettingsListItem
             key={accountDisplayPref.name}
             title={accountDisplayPref.name}
-            caption={getAccountDisplayPrefDescription(accountDisplayPref.type)}
+            caption={getChainDisplayLabel(accountDisplayPref.type)}
             onPress={() => onUpdateAccountDisplayPreference(accountDisplayPref.type)}
             type="radio"
             isRadioSelected={settings.accountDisplayPreference.type === accountDisplayPref.type}

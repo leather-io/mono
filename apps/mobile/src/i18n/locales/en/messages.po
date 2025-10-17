@@ -80,12 +80,11 @@ msgstr "Account created"
 msgid "Account creation failed"
 msgstr "Account creation failed"
 
-#: src/app/settings/display/index.tsx:100
-#: src/features/settings/account-identifier-sheet.tsx:45
+#: src/features/settings/account-identifier-sheet.tsx:37
 msgid "Account identifier"
 msgstr "Account identifier"
 
-#: src/features/settings/account-identifier-sheet.tsx:37
+#: src/features/settings/account-identifier-sheet.tsx:29
 msgid "Account identifier updated"
 msgstr "Account identifier updated"
 
@@ -316,6 +315,10 @@ msgstr "Argument {argumentNumber}"
 msgid "Arkadiko"
 msgstr "Arkadiko"
 
+#: src/features/token/utils/render-collectible-details.tsx:237
+msgid "Attributes"
+msgstr "Attributes"
+
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:119
 msgid "Authentication failed"
 msgstr "Authentication failed"
@@ -368,7 +371,7 @@ msgstr "Bitcoin unit updated"
 msgid "Bitflow"
 msgstr "Bitflow"
 
-#: src/shared/display-preference.ts:31
+#: src/shared/display-preference.ts:32
 msgid "BNS name"
 msgstr "BNS name"
 
@@ -440,7 +443,15 @@ msgstr "Close the scanner"
 msgid "Code"
 msgstr "Code"
 
-#: src/features/token/utils/render-collectible-details.tsx:22
+#: src/features/token/utils/render-collectible-details.tsx:177
+msgid "Collection "
+msgstr "Collection "
+
+#: src/features/token/utils/render-collectible-details.tsx:165
+msgid "Collection Name"
+msgstr "Collection Name"
+
+#: src/features/token/utils/render-collectible-details.tsx:51
 msgid "Collection URL"
 msgstr "Collection URL"
 
@@ -512,6 +523,10 @@ msgstr "Continue without security"
 msgid "Contract arguments"
 msgstr "Contract arguments"
 
+#: src/features/token/utils/render-collectible-details.tsx:47
+msgid "Contract Details"
+msgstr "Contract Details"
+
 #: src/app/settings/display/index.tsx:92
 #: src/features/settings/conversion-unit-sheet.tsx:29
 msgid "Conversion unit"
@@ -578,13 +593,11 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
-#: src/features/token/collectible.tsx:64
-#: src/features/token/components/token-loading.tsx:38
-#: src/features/token/token.tsx:101
+#: src/features/token/collectible.tsx:68
 msgid "Description"
 msgstr "Description"
 
-#: src/features/token/utils/render-collectible-details.tsx:139
+#: src/features/token/utils/render-collectible-details.tsx:229
 msgid "Details"
 msgstr "Details"
 
@@ -880,6 +893,10 @@ msgstr "Input"
 msgid "Inputs and outputs"
 msgstr "Inputs and outputs"
 
+#: src/features/token/utils/render-collectible-details.tsx:67
+msgid "Inscription"
+msgstr "Inscription"
+
 #: src/features/swap/components/error-message.tsx:34
 msgid "Insufficient balance"
 msgstr "Insufficient balance"
@@ -905,7 +922,7 @@ msgstr "Invalid words: {joinedInvalidWords}"
 msgid "Language"
 msgstr "Language"
 
-#: src/features/token/components/token-details-table.tsx:22
+#: src/features/token/utils/render-collectible-details.tsx:43
 msgid "Layer"
 msgstr "Layer"
 
@@ -917,8 +934,9 @@ msgstr "Layer 1"
 msgid "Layer 1 · Bitcoin"
 msgstr "Layer 1 · Bitcoin"
 
-#: src/features/settings/account-identifier-sheet.tsx:19
-#: src/features/settings/account-identifier-sheet.tsx:20
+#: src/shared/display-preference.ts:47
+#: src/shared/display-preference.ts:48
+#: src/shared/display-preference.ts:49
 msgid "Layer 1 • Bitcoin"
 msgstr "Layer 1 • Bitcoin"
 
@@ -930,8 +948,8 @@ msgstr "Layer 2"
 msgid "Layer 2 · Stacks"
 msgstr "Layer 2 · Stacks"
 
-#: src/features/settings/account-identifier-sheet.tsx:21
-#: src/features/settings/account-identifier-sheet.tsx:22
+#: src/shared/display-preference.ts:50
+#: src/shared/display-preference.ts:51
 msgid "Layer 2 • Stacks"
 msgstr "Layer 2 • Stacks"
 
@@ -1051,7 +1069,7 @@ msgstr "Name"
 msgid "Native Segwit"
 msgstr "Native Segwit"
 
-#: src/shared/display-preference.ts:21
+#: src/shared/display-preference.ts:22
 msgid "Native Segwit address"
 msgstr "Native Segwit address"
 
@@ -1394,7 +1412,7 @@ msgstr "StackingDAO"
 msgid "Stacks"
 msgstr "Stacks"
 
-#: src/shared/display-preference.ts:36
+#: src/shared/display-preference.ts:37
 msgid "Stacks address"
 msgstr "Stacks address"
 
@@ -1444,7 +1462,7 @@ msgstr "Tap to view Secret Key"
 msgid "Taproot"
 msgstr "Taproot"
 
-#: src/shared/display-preference.ts:26
+#: src/shared/display-preference.ts:27
 msgid "Taproot address"
 msgstr "Taproot address"
 
@@ -1660,8 +1678,7 @@ msgstr "Verify full address"
 msgid "Version"
 msgstr "Version"
 
-#: src/features/token/utils/render-collectible-details.tsx:43
-#: src/features/token/utils/render-collectible-details.tsx:56
+#: src/features/token/utils/render-collectible-details.tsx:96
 msgid "View"
 msgstr "View"
 

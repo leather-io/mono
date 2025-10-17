@@ -1,6 +1,7 @@
 import { t } from '@lingui/core/macro';
 
 import { AccountDisplayPreference, AccountDisplayPreferenceInfo } from '@leather.io/models';
+import { match } from '@leather.io/utils';
 
 enum AccountDisplayPreferenceType {
   NativeSegwit = 'native-segwit',
@@ -36,4 +37,17 @@ export function getAccountDisplayPreferencesKeyedByType(): Record<
       name: t`Stacks address`,
     },
   };
+}
+
+export function getChainDisplayLabel(
+  chainOrPreference: 'bitcoin' | 'stacks' | AccountDisplayPreference
+): string {
+  const matchChain = match<'bitcoin' | 'stacks' | AccountDisplayPreference>();
+  return matchChain(chainOrPreference, {
+    bitcoin: t`Layer 1 • Bitcoin`,
+    taproot: t`Layer 1 • Bitcoin`,
+    'native-segwit': t`Layer 1 • Bitcoin`,
+    stacks: t`Layer 2 • Stacks`,
+    bns: t`Layer 2 • Stacks`,
+  });
 }

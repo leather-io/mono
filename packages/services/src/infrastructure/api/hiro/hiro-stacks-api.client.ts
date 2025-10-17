@@ -31,7 +31,7 @@ import {
   HiroAddressTransactionsResponse,
   HiroMempoolTransactionListResponse,
   HiroNftHolding,
-  HiroNftMetadataResponse,
+  HiroMetadata,
   HiroPageRequest,
   HiroReadOnlyFunctionResponse,
   HiroTransactionEvent,
@@ -297,13 +297,13 @@ export class HiroStacksApiClient {
     principal: string,
     tokenId: number,
     { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<HiroNftMetadataResponse | null> {
+  ): Promise<HiroMetadata | null> {
     const fetchFn = async () => {
       try {
         const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           async () =>
-            this._axios.get<HiroNftMetadataResponse>(
+            this._axios.get<HiroMetadata>(
               `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/nft/${principal}/${tokenId}`,
               { signal }
             ),
