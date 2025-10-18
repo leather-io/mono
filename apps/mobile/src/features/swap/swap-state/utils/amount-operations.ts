@@ -1,10 +1,7 @@
 import { PresetPercentage } from '@/features/swap/swap-state/swap-state.types';
-import { InputCurrencyMode } from '@/utils/types';
-import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import BigNumber from 'bignumber.js';
 
 import { Money } from '@leather.io/models';
-import { AccountSwapAsset } from '@leather.io/services';
 
 export function calculatePercentageAmount(
   balance: Money | undefined,
@@ -34,28 +31,6 @@ export function adjustAmountForDecimals(amount: string, maxDecimals: number): st
 
   const truncatedFractional = decimals.substring(0, maxDecimals);
   return truncatedFractional ? `${whole}.${truncatedFractional}` : whole;
-}
-
-export function isAmountEqualToAvailableBalance(
-  derivedAmounts: { crypto: Money | null; quote: Money | null },
-  baseSwapAsset: AccountSwapAsset | null,
-  inputCurrencyMode: InputCurrencyMode
-): boolean {
-  if (!baseSwapAsset?.balance) return false;
-
-  const currentAmount = whenInputCurrencyMode(inputCurrencyMode)({
-    crypto: derivedAmounts.crypto,
-    quote: derivedAmounts.quote,
-  });
-
-  if (!currentAmount) return false;
-
-  const availableBalance = whenInputCurrencyMode(inputCurrencyMode)({
-    crypto: baseSwapAsset.balance.crypto.availableBalance,
-    quote: baseSwapAsset.balance.quote.availableBalance,
-  });
-
-  return currentAmount.amount.isEqualTo(availableBalance.amount);
 }
 
 export function convertMoneyToInputValue(money: Money | null): string {
