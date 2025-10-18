@@ -1,5 +1,7 @@
 import { useMemo, useReducer } from 'react';
 
+import { useIsSendingMax } from '@/features/swap/swap-state/hooks/use-is-sending-max';
+import { useSecondaryAmount } from '@/features/swap/swap-state/hooks/use-secondary-amount';
 import { useSwapExecutability } from '@/features/swap/swap-state/hooks/use-swap-executability';
 import {
   useAccountBaseSwapAssetsQuery,
@@ -7,8 +9,6 @@ import {
   useAssetMarketDataQuery,
 } from '@/features/swap/swap-state/swap.queries';
 import { useDerivedAmounts } from '@/features/swap/swap-state/use-derived-amounts';
-import { isAmountEqualToAvailableBalance } from '@/features/swap/swap-state/utils/amount-operations';
-import { computeSecondaryAmountState } from '@/features/swap/swap-state/utils/secondary-amount';
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap.constants';
 
 import { AccountAddresses, QuoteCurrency, SwappableFungibleCryptoAsset } from '@leather.io/models';
@@ -77,22 +77,17 @@ export function useSwapState({
     baseMarketDataQuery.data
   );
 
-  const secondaryAmount = useMemo(
-    () =>
-      computeSecondaryAmountState({
-        state,
-        queryStatus: baseMarketDataQuery.status,
-        isFetching: baseMarketDataQuery.isFetching,
-        derivedAmounts,
-      }),
-    [state, baseMarketDataQuery.status, baseMarketDataQuery.isFetching, derivedAmounts]
-  );
+  const secondaryAmount = useSecondaryAmount({
+    state,
+    baseMarketDataQuery,
+    derivedAmounts,
+  });
 
-  const isSendingMax = useMemo(
-    () =>
-      isAmountEqualToAvailableBalance(derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode),
-    [derivedAmounts, state.baseSwapAsset, state.inputCurrencyMode]
-  );
+  const isSendingMax = useIsSendingMax({
+    baseSwapAsset: state.baseSwapAsset,
+    inputCurrencyMode: state.inputCurrencyMode,
+    derivedAmounts,
+  });
 
   const { quoteQuery } = useSwapQuotes({
     swapService,
@@ -105,21 +100,11 @@ export function useSwapState({
   const validation = useSwapValidation({ state, derivedAmounts });
 
   const actions = useMemo(
-    () =>
-      createSwapActions({
-        dispatch,
-        lockDerivedAmountsForNextRender,
-        state,
-        derivedAmounts,
-      }),
+    () => createSwapActions({ dispatch, lockDerivedAmountsForNextRender, state, derivedAmounts }),
     [lockDerivedAmountsForNextRender, state, derivedAmounts]
   );
 
-  const isSwapExecutable = useSwapExecutability({
-    validation,
-    quoteQuery,
-    derivedAmounts,
-  });
+  const isSwapExecutable = useSwapExecutability({ validation, quoteQuery, derivedAmounts });
 
   return {
     state: {
