@@ -51,6 +51,7 @@ export * from './browse-default-icon.native';
 export * from './browser-icon.native';
 export * from './checkmark-circle-icon.native';
 export * from './checkmark-icon.native';
+export * from './changelog-icon.native';
 export * from './chevron-down-icon.native';
 export * from './chevron-left-icon.native';
 export * from './chevron-right-icon.native';
