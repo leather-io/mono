@@ -7,7 +7,7 @@ import { t } from '@lingui/core/macro';
 
 import { ArrowTopRightIcon, Box, Pressable, Text } from '@leather.io/ui/native';
 import { createMoney, isObject, truncateMiddle } from '@leather.io/utils';
-
+import { isBns } from './is-bns';
 import { TokenDetailsCard } from '../components/token-details-card';
 
 function replaceUnderscores(str: string) {
@@ -121,7 +121,7 @@ export function renderCollectibleDetailsRecursively(
 ): React.ReactNode[] {
   const items: React.ReactNode[] = [];
   const attributeItems: React.ReactNode[] = [];
-
+  const isBnsCollectible = isBns(obj?.collection?.name);
   const sortOrder = [
     'name',
     'tokenId',
@@ -137,6 +137,7 @@ export function renderCollectibleDetailsRecursively(
   function processEntry(key: string, value: unknown, labelPrefix = '') {
     if (value === undefined || value === '') return null;
     if (key === 'description' || key === 'assetId' || key === 'category') return null;
+    if (key === 'attributes' && isBnsCollectible) return null;
     if (key.toLowerCase().startsWith('genesis')) return null;
 
     const label = labelPrefix + formatLabel(key);
@@ -181,7 +182,7 @@ export function renderCollectibleDetailsRecursively(
       return;
     }
 
-    if (key === 'attributes' && Array.isArray(value)) {
+    if (key === 'attributes' && Array.isArray(value) && !isBnsCollectible) {
       value.forEach((attr, index) => {
         if (!isObject(attr)) return;
 
@@ -232,7 +233,7 @@ export function renderCollectibleDetailsRecursively(
     );
   }
 
-  if (attributeItems.length > 0) {
+  if (attributeItems.length > 0 && !isBnsCollectible) {
     cards.push(
       <TokenDetailsCard key="attributes" title={t`Attributes`}>
         <SummaryTableRoot>{attributeItems}</SummaryTableRoot>
