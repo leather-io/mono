@@ -316,7 +316,7 @@ msgstr "Argument {argumentNumber}"
 msgid "Arkadiko"
 msgstr "Arkadiko"
 
-#: src/features/token/utils/render-collectible-details.tsx:237
+#: src/features/token/utils/render-collectible-details.tsx:238
 msgid "Attributes"
 msgstr "Attributes"
 
@@ -444,11 +444,11 @@ msgstr "Close the scanner"
 msgid "Code"
 msgstr "Code"
 
-#: src/features/token/utils/render-collectible-details.tsx:177
+#: src/features/token/utils/render-collectible-details.tsx:178
 msgid "Collection "
 msgstr "Collection "
 
-#: src/features/token/utils/render-collectible-details.tsx:165
+#: src/features/token/utils/render-collectible-details.tsx:166
 msgid "Collection Name"
 msgstr "Collection Name"
 
@@ -600,7 +600,7 @@ msgstr "Deployment failed"
 msgid "Description"
 msgstr "Description"
 
-#: src/features/token/utils/render-collectible-details.tsx:229
+#: src/features/token/utils/render-collectible-details.tsx:230
 msgid "Details"
 msgstr "Details"
 

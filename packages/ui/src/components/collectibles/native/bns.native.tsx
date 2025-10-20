@@ -1,12 +1,13 @@
 import { Image } from 'expo-image';
 
-import { Box, Text } from '../../../../native';
+import { Box, Text, Pressable } from '../../../../native';
 import { CollectibleImageProps } from './collectible-image.native';
 
-export function BnsImage({ alt, source, height = 200 }: CollectibleImageProps) {
+export function BnsImage({ alt, source, height = 200, onPress }: CollectibleImageProps) {
   return (
+    <Pressable onPress={onPress} disabled={!onPress}>
     <Box height={height} overflow="hidden" bg="ink.background-secondary" position="relative">
-      <Image source={source} alt={alt} style={{ height: height }} />
+      <Image source={{ uri: source }} alt={alt} style={{ height: height }} />
       <Box
         position="absolute"
         bottom={0}
@@ -27,5 +28,6 @@ export function BnsImage({ alt, source, height = 200 }: CollectibleImageProps) {
         </Text>
       </Box>
     </Box>
+    </Pressable>
   );
 }
