@@ -12,6 +12,7 @@ import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
 import {
   BarsTwoIcon,
+  ChangelogIcon,
   CodeIcon,
   GridIcon,
   IconButton,
@@ -73,6 +74,9 @@ export function NavContents() {
       )}
 
       <styled.div mt="auto" mb={[null, null, 'space.06']}>
+        <NavItem href="/changelog" icon={<ChangelogIcon variant="small" />}>
+          Changelog
+        </NavItem>
         <NavItem href={externalLeatherNavigator.docs} newTab icon={<CodeIcon variant="small" />}>
           Developers
         </NavItem>
