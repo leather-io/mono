@@ -1,7 +1,7 @@
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
 
-import { WalletId } from '@leather.io/models';
+import { SupportedBlockchains, WalletId } from '@leather.io/models';
 
 import { handleEntityActionWith } from '../entity.helpers';
 import { handleAppResetWithState } from '../index';
@@ -34,17 +34,14 @@ function addWalletDefaults({
   return updatedWallet as WalletStore;
 }
 
-export interface AddWalletAction {
+export interface AddWalletPayload {
   wallet: PartialWalletStore;
-  withKeychains: {
-    bitcoin: any[];
-    stacks: any[];
-  };
+  accountKeychains: { descriptor: string; chain: SupportedBlockchains }[];
 }
-export const userAddsWallet = createAction<AddWalletAction>('global/userAddsWallet');
+export const userAddsWallet = createAction<AddWalletPayload>('global/userAddsWallet');
 
-type RemoveWalletAction = WalletId;
-export const userRemovesWallet = createAction<RemoveWalletAction>('global/userRemovesWallet');
+type RemoveWalletPayload = WalletId;
+export const userRemovesWallet = createAction<RemoveWalletPayload>('global/userRemovesWallet');
 
 export const walletSlice = createSlice({
   name: 'wallets',

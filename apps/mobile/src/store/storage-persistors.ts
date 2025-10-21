@@ -3,17 +3,19 @@ import { useEffect, useState } from 'react';
 import { t } from '@lingui/core/macro';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
-import { PersistConfig } from 'redux-persist';
+import { PersistConfig, createMigrate } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { z } from 'zod';
 
 import { RootState } from '.';
+import { migrations } from './migrations';
 
 export const persistConfig: PersistConfig<RootState> = {
   key: 'root',
   stateReconciler: autoMergeLevel2,
-  version: 0,
+  version: 1,
   storage: AsyncStorage,
+  migrate: createMigrate(migrations, { debug: process.env.NODE_ENV === 'development' }),
   whitelist: ['wallets', 'accounts', 'keychains', 'settings', 'apps'],
 };
 

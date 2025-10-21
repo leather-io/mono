@@ -83,7 +83,7 @@ export function useKeyStore() {
 
       wallets.add({
         wallet: { type: 'software', fingerprint, createdOn: new Date().toISOString() },
-        withKeychains: { bitcoin: bitcoinKeychains, stacks: stacksKeychains },
+        accountKeychains: [...bitcoinKeychains, ...stacksKeychains],
       });
     },
 
@@ -94,10 +94,7 @@ export function useKeyStore() {
       dispatch(
         userAddsAccount({
           account: { id: makeAccountIdentifer(fingerprint, accountIndex) },
-          withKeychains: {
-            bitcoin: bitcoinKeychains,
-            stacks: stacksKeychains,
-          },
+          accountKeychains: [...bitcoinKeychains, ...stacksKeychains],
         })
       );
     },
@@ -147,7 +144,10 @@ export function useKeyStore() {
         fingerprintAccounts.length === 0 ? 0 : highestKeychainAccountIndex + 1;
 
       const stacksKeychainDescriptors = [
-        { descriptor: stacksRootKeychainToAccountDescriptor(rootKeychain, nextAccountIndex) },
+        {
+          descriptor: stacksRootKeychainToAccountDescriptor(rootKeychain, nextAccountIndex),
+          chain: 'stacks' as const,
+        },
       ];
 
       const bitcoinKeychainDescriptors = [
@@ -157,6 +157,7 @@ export function useKeyStore() {
         makeTaprootAccountDerivationPath('testnet', nextAccountIndex),
       ].map(path => ({
         descriptor: deriveKeychainExtendedPublicKeyDescriptor(rootKeychain, path),
+        chain: 'bitcoin' as const,
       }));
 
       return {

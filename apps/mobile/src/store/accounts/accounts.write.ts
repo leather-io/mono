@@ -132,10 +132,7 @@ type PartialAccountStore = Optional<AccountStore, 'icon' | 'name' | 'status'>;
 
 interface AddAccountPayload {
   account: PartialAccountStore;
-  withKeychains: {
-    bitcoin: BitcoinKeychain[];
-    stacks: StacksKeychain[];
-  };
+  accountKeychains: (BitcoinKeychain | StacksKeychain)[];
 }
 export const userAddsAccount = createAction<AddAccountPayload>('accounts/userAddsAccount');
 

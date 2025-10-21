@@ -31,7 +31,6 @@ import { ListTab } from './constants';
 interface HomeScreenWithAccountProps {
   currentAccount: AccountId;
 }
-
 export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountProps) {
   const notificationSheetRef = useRef<SheetInstance>(null);
   const manageTokensSheetRef = useRef<SheetInstance>(null);
@@ -59,6 +58,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     accountSelectorSheetRef.current?.close();
     changeCurrentAccount(account);
   }
+
   const router = useRouter();
   function onOpenToken({ assetId, assetProtocol }: TokenDetailsProps) {
     router.navigate({
