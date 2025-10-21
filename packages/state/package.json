@@ -42,9 +42,9 @@
     "vitest": "2.1.9"
   },
   "keywords": [
-    "state",
     "leather",
-    "leather wallet"
+    "leather wallet",
+    "state"
   ],
   "prettier": "@leather.io/prettier-config",
   "publishConfig": {
