@@ -59,7 +59,9 @@ export function Browser({
   async function handleWebViewNavigationStateChange(newNavState: WebViewNavigation) {
     setNavState(newNavState);
     const url = new URL(newNavState.url);
-    goToUrl(newNavState.url);
+    if (!newNavState.loading && newNavState.url !== searchUrl) {
+      goToUrl(newNavState.url);
+    }
     if (newNavState.loading) return;
 
     const screenshotUri = await captureScreenshot(viewShotRef, url.hostname);
