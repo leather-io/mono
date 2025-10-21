@@ -67,6 +67,7 @@ msgstr "20–30 seconds"
 msgid "24 Hour Change"
 msgstr "24 Hour Change"
 
+#: src/features/wallet-manager/account-list.tsx:23
 #: src/store/accounts/accounts.write.ts:42
 msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
@@ -192,6 +193,7 @@ msgid "Address types"
 msgstr "Address types"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:181
+#: src/features/recover-wallet/recover-wallet.layout.tsx:48
 msgid "Advanced options"
 msgstr "Advanced options"
 
@@ -1214,6 +1216,7 @@ msgid "Recents"
 msgstr "Recents"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:170
+#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:17
 msgid "Remove wallet"
 msgstr "Remove wallet"
 
@@ -1681,10 +1684,6 @@ msgstr "View your wallet balance & activity"
 #: src/features/wallet-manager/wallets.tsx:27
 msgid "Wallet {fingerprint}"
 msgstr "Wallet {fingerprint}"
-
-#: src/store/wallets/wallets.write.ts:20
-msgid "Wallet {walletIdx}"
-msgstr "Wallet {walletIdx}"
 
 #: src/hooks/use-create-wallet.ts:33
 msgid "Wallet added"
