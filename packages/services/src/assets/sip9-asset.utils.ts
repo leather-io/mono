@@ -11,9 +11,7 @@ import {
 } from '@leather.io/models';
 
 import { gammaNftMetadataSchema } from '../infrastructure/api/gamma/gamma-api.schema';
-import {
-  HiroMetadata,
-} from '../infrastructure/api/hiro/hiro-stacks-api.types';
+import { HiroMetadata } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
   transformHiroSip9Attributes,
   transformHiroSip9Collection,
@@ -60,14 +58,13 @@ export function getNonFungibleTokenId(hex: string): number {
   return clarityValue.type === 'uint' ? Number(clarityValue.value) : 0;
 }
 
-
 export function createSip9Asset(
   assetIdentifier: string,
   tokenId: number,
   hiroMetadata: HiroMetadata | null,
   gammaMetadata?: GammaNftMetadata | null
 ): Sip9Asset {
-    const assetName = getAssetNameFromIdentifier(assetIdentifier);
+  const assetName = getAssetNameFromIdentifier(assetIdentifier);
 
   const name = gammaMetadata?.item.name || hiroMetadata?.name || assetName;
 
@@ -85,12 +82,18 @@ export function createSip9Asset(
     transformGammaCollection(gammaMetadata?.item.collection) ||
     transformHiroSip9Collection(hiroMetadata?.properties?.collection);
 
-    const creator = gammaMetadata?.item.creator || hiroMetadata?.properties?.creator;
-    const floorPrice = gammaMetadata?.item.collection?.floor_price_amount || hiroMetadata?.properties?.floor_price;
- 
+    // creator is always null so should remove
+  const creator = gammaMetadata?.item.creator || hiroMetadata?.properties?.creator;
+  const floorPrice =
+    gammaMetadata?.item.collection?.floor_price_amount || hiroMetadata?.properties?.floor_price;
+
   const attributes =
     transformGammaAttributes(gammaMetadata?.attribute_groups) ||
     transformHiroSip9Attributes(hiroMetadata?.attributes);
+
+  const rarityRank = gammaMetadata?.item.rarity_rank;
+  console.log('createSip9Asset', creator, floorPrice, rarityRank);
+  console.log('gammaMetadata marketplace_events', gammaMetadata?.marketplace_events);
 
   return {
     chain: CryptoAssetChains.stacks,
@@ -102,7 +105,7 @@ export function createSip9Asset(
     name,
     description,
     content: {
-      contentUrl,
+      contentUrl: encodeURI(contentUrl),
       contentType,
     },
     collection,

@@ -4,7 +4,7 @@ import { TokenDetailsProps } from '@/features/token/types';
 import { t } from '@lingui/core/macro';
 
 import { InscriptionAsset } from '@leather.io/models';
-import { Inscription as InscriptionComponent } from '@leather.io/ui/native';
+import { CollectibleImage, Inscription as InscriptionComponent } from '@leather.io/ui/native';
 
 import { FallbackImage } from './fallback';
 
@@ -14,7 +14,7 @@ interface InscriptionProps {
   onPress?: (tokenDetails: TokenDetailsProps) => void;
 }
 export function Inscription({
-  item: { id, mimeType, src, title },
+  item: { id, mimeType, src, title, preview },
   height,
   onPress,
 }: InscriptionProps) {
@@ -40,13 +40,25 @@ export function Inscription({
   }, [mimeType, src]);
 
   if (!src || src.trim() === '') return <FallbackImage />;
+
+  const handlePress =
+    onPress !== undefined ? () => onPress({ assetId: id, assetProtocol: 'inscription' }) : undefined;
+
+  const shouldShowPreviewCard =
+    Boolean(handlePress) && (mimeType === 'html' || mimeType === 'gltf') && Boolean(preview);
+
+  if (shouldShowPreviewCard) {
+    return <CollectibleImage alt={title} height={height} onPress={handlePress} source={preview} />;
+  }
+
   return (
     <InscriptionComponent
       name={title}
       mimeType={mimeType}
       height={height}
+      previewSrc={preview}
       src={isLoading ? '' : content || src}
-      onPress={onPress ? () => onPress({ assetId: id, assetProtocol: 'inscription' }) : undefined}
+      onPress={handlePress}
     />
   );
 }

@@ -7,7 +7,15 @@ export function BnsImage({ alt, source, height = 200, onPress }: CollectibleImag
   return (
     <Pressable onPress={onPress} disabled={!onPress}>
     <Box height={height} overflow="hidden" bg="ink.background-secondary" position="relative">
-      <Image source={{ uri: source }} alt={alt} style={{ height: height }} />
+      <Image
+        source={{ uri: source }}
+        alt={alt}
+        contentFit="cover"
+        transition={200}
+        cachePolicy="memory-disk"
+        recyclingKey={source}
+        style={{ height: height, width: '100%' }}
+      />
       <Box
         position="absolute"
         bottom={0}

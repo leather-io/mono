@@ -119,9 +119,10 @@ export function Sip9({
     isAudio: false,
     isHtml: false,
   });
-  const encodedSrc = encodeURI(contentUrl);
+  // const contentUrl = encodeURI(contentUrl);
 
   useEffect(() => {
+    console.log('contentType', contentType, contentUrl, contentUrl);
     const needsDetection =
       contentType === '' ||
       contentType === null ||
@@ -149,7 +150,7 @@ export function Sip9({
 
   switch (contentType) {
     case 'video/mp4':
-      return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      return <CollectibleVideo src={contentUrl} alt={name} height={height} onPress={onPress} />;
     case 'image/png':
     case 'image/jpeg':
     case 'image/gif':
@@ -159,7 +160,7 @@ export function Sip9({
     case 'image/tiff':
     case 'image/avif':
     case 'application/octet-stream':
-      return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      return <CollectibleImage source={contentUrl} alt={name} height={height} onPress={onPress} />;
     case 'audio/mpeg':
     case 'audio/wav':
     case 'audio/ogg':
@@ -167,54 +168,54 @@ export function Sip9({
     case 'audio/aac':
     case 'audio/flac':
     case 'audio/webm':
-      return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
+      return <CollectibleAudio src={contentUrl} alt={name} size={height} onPress={onPress} />;
     case 'model/gltf+json':
     case 'model/gltf-binary':
-      return <CollectibleHtml src={encodedSrc} height={height} onPress={onPress} />;
+      return <CollectibleHtml src={contentUrl} height={height} onPress={onPress} />;
     case 'text/plain':
       if (mediaInfo.isHtml) {
-        return <CollectibleHtml src={encodedSrc} height={height} onPress={onPress} />;
+        return <CollectibleHtml src={contentUrl} height={height} onPress={onPress} />;
       }
       if (mediaInfo.isVideo) {
-        return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
+        return <CollectibleVideo src={contentUrl} alt={name} height={height} onPress={onPress} />;
       }
       if (mediaInfo.isAudio) {
-        return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
+        return <CollectibleAudio src={contentUrl} alt={name} size={height} onPress={onPress} />;
       }
       if (mediaInfo.isImage) {
         return (
-          <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />
+          <CollectibleImage source={contentUrl} alt={name} height={height} onPress={onPress} />
         );
       }
-      return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      return <CollectibleImage source={contentUrl} alt={name} height={height} onPress={onPress} />;
     case '':
       // content type is empty, so we need to check if it's a video or an image
       if (mediaInfo.isHtml) {
-        return <CollectibleHtml src={encodedSrc} height={height} onPress={onPress} />;
+        return <CollectibleHtml src={contentUrl} height={height} onPress={onPress} />;
       }
       if (mediaInfo.isVideo) {
-        return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
+        return <CollectibleVideo src={contentUrl} alt={name} height={height} onPress={onPress} />;
       }
       if (mediaInfo.isAudio) {
-        return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
+        return <CollectibleAudio src={contentUrl} alt={name} size={height} onPress={onPress} />;
       }
       if (mediaInfo.isImage) {
         return (
-          <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />
+          <CollectibleImage source={contentUrl} alt={name} height={height} onPress={onPress} />
         );
       }
-      return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      return <CollectibleImage source={contentUrl} alt={name} height={height} onPress={onPress} />;
     default:
       if (contentType.startsWith('video/')) {
-        return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
+        return <CollectibleVideo src={contentUrl} alt={name} height={height} onPress={onPress} />;
       }
       if (contentType.startsWith('audio/')) {
-        return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
+        return <CollectibleAudio src={contentUrl} alt={name} size={height} onPress={onPress} />;
       }
       if (contentType.startsWith('model/gltf')) {
-        return <CollectibleHtml src={encodedSrc} height={height} onPress={onPress} />;
+        return <CollectibleHtml src={contentUrl} height={height} onPress={onPress} />;
       }
       // default to image if we can't determine the content type
-      return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      return <CollectibleImage source={contentUrl} alt={name} height={height} onPress={onPress} />;
   }
 }

@@ -10,6 +10,7 @@ interface CollectibleVideoProps {
   alt: string;
   height?: number;
   onPress?: () => void;
+  previewSrc?: string | null;
 }
 
 interface CaptureMessage {
@@ -95,11 +96,20 @@ function Container({ children, height }: { children: ReactNode; height: number }
   );
 }
 
-export function CollectibleVideo({ src, alt, height = 200, onPress }: CollectibleVideoProps) {
-  const [thumbnailUri, setThumbnailUri] = useState<string | null>(() =>
-    src ? thumbnailCache.get(src) ?? null : null
+export function CollectibleVideo({
+  src,
+  alt,
+  height = 200,
+  onPress,
+  previewSrc = null,
+}: CollectibleVideoProps) {
+  const [thumbnailUri, setThumbnailUri] = useState<string | null>(() => {
+    if (!src) return null;
+    return thumbnailCache.get(src) ?? previewSrc ?? null;
+  });
+  const [shouldCapture, setShouldCapture] = useState<boolean>(() =>
+    Boolean(src && !thumbnailCache.has(src) && !previewSrc)
   );
-  const [shouldCapture, setShouldCapture] = useState<boolean>(() => Boolean(src && !thumbnailCache.has(src)));
   const [captureError, setCaptureError] = useState<string | null>(null);
   const contentFit = onPress ? 'cover' : 'contain';
 
@@ -116,12 +126,16 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
       setThumbnailUri(cached);
       setShouldCapture(false);
       setCaptureError(null);
+    } else if (previewSrc) {
+      setThumbnailUri(previewSrc);
+      setShouldCapture(false);
+      setCaptureError(null);
     } else {
       setThumbnailUri(null);
       setShouldCapture(true);
       setCaptureError(null);
     }
-  }, [src]);
+  }, [previewSrc, src]);
 
   const handleCaptureMessage = useCallback(
     (event: WebViewMessageEvent) => {
@@ -217,7 +231,9 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
         alignItems="center"
       >
         <PaperPlaneIcon />
-        <Text textAlign="center">{alt}</Text>
+        <Text variant="caption01" textAlign="center">
+          {alt}
+        </Text>
       </Box>
     );
   }
@@ -233,6 +249,7 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
                   source={{ uri: thumbnailUri }}
                   style={{ height, width: '100%' }}
                   contentFit={contentFit}
+                  recyclingKey={thumbnailUri}
                 />
                 <Box
                   position="absolute"
@@ -268,6 +285,7 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
             source={{ uri: thumbnailUri }}
             style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
             contentFit={contentFit}
+            recyclingKey={thumbnailUri}
           />
         ) : null}
         {!thumbnailUri && (
@@ -283,7 +301,9 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
             pointerEvents="none"
           >
             <PaperPlaneIcon />
-            <Text textAlign="center">{captureError ?? alt}</Text>
+            <Text variant="caption01" textAlign="center">
+              {captureError ?? alt}
+            </Text>
           </Box>
         )}
         {src ? (

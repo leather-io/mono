@@ -72,4 +72,5 @@ export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly creator?: string;
   readonly floorPrice?: number;
   readonly attributes?: Sip9Attribute[];
+  readonly rarityRank?: number;
 }

@@ -9,7 +9,7 @@ import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 
-import { AccountId } from '@leather.io/models';
+import { AccountId, NonFungibleCryptoAsset } from '@leather.io/models';
 
 import { renderCollectible } from './render-collectible';
 
@@ -41,9 +41,9 @@ export function CollectiblesList({ currentAccount, header, onPressToken }: Colle
   const isError = collectiblesState === 'error';
 
   return (
-    <Screen.FlashList
+    <Screen.FlashList<NonFungibleCryptoAsset>
       numColumns={2}
-      data={collectibles}
+      data={collectibles ?? []}
       renderItem={
         isSuccess
           ? ({ item }) =>
@@ -54,7 +54,12 @@ export function CollectiblesList({ currentAccount, header, onPressToken }: Colle
               })
           : undefined
       }
-      getItemType={item => item.protocol}
+      getItemType={(item: NonFungibleCryptoAsset) => item.protocol}
+      keyExtractor={(item: NonFungibleCryptoAsset) => {
+        if (item.protocol === 'sip9') return item.assetId;
+        if (item.protocol === 'inscription') return item.id;
+        return String(item.stamp);
+      }}
       refreshControl={<RefreshControl />}
       ListHeaderComponent={
         <>

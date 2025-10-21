@@ -19,7 +19,7 @@ export function Sip9({ item, height, onPress }: Sip9Props) {
   const onPressHandler = onPress ? () => onPress({ assetId: item.assetId, assetProtocol: 'sip9' }) : undefined;
 
   if (isBns(collectionName)) {
-    return <BnsImage source={encodeURI(item.content.contentUrl)} alt={item.name} height={height} onPress={onPressHandler} />;
+    return <BnsImage source={item.content.contentUrl} alt={item.name} height={height} onPress={onPressHandler} />;
   }
   return (
     <Sip9Component
