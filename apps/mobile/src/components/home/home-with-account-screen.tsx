@@ -19,10 +19,11 @@ import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useSettings } from '@/store/settings/settings';
 import { useAccountScaledBalanceAnalytics } from '@/utils/analytics-hooks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 
 import { AccountId, CryptoAssetProtocols } from '@leather.io/models';
-import { SheetInstance } from '@leather.io/ui/native';
+import { Button, SheetInstance } from '@leather.io/ui/native';
 
 import { AccountScreenHeader } from './account-screen-header';
 import { AssetTabs } from './components/asset-tabs';

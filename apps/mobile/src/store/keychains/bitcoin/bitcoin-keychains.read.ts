@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { RootState } from '@/store';
 import { selectNetworkPreference } from '@/store/settings/settings.read';
 import { destructAccountIdentifier } from '@/store/utils';
 import { useWallets } from '@/store/wallets/wallets.read';
@@ -30,12 +29,8 @@ import {
 import { BitcoinNetworkModes, bitcoinNetworkToNetworkMode } from '@leather.io/models';
 
 import { descriptorKeychainSelectors, filterKeychainsByAccountIndex } from '../keychains';
-import { bitcoinKeychainAdapter } from './bitcoin-keychains.write';
+import { keychainSelectors } from '../keychains.read';
 import { BitcoinKeychain } from './utils';
-
-const bitcoinKeychainSelectors = bitcoinKeychainAdapter.getSelectors(
-  (state: RootState) => state.keychains.bitcoin
-);
 
 // These are expensive actions that may be called several times
 const memoizedInitalizeBitcoinKeychain = memoize(initializeBitcoinAccountKeychainFromDescriptor);
@@ -66,13 +61,16 @@ function deriveBitcoinPayersFromStore(keychains: BitcoinKeychain[], network: Bit
 }
 
 const bitcoinKeychains = createSelector(
-  bitcoinKeychainSelectors.selectAll,
+  keychainSelectors.selectAll,
   selectNetworkPreference,
-  (keychains, network) =>
-    deriveBitcoinPayersFromStore(
-      keychains,
+  (keychains, network) => {
+    const x = keychains.filter(keychain => keychain.chain === 'bitcoin');
+    console.log(x);
+    return deriveBitcoinPayersFromStore(
+      keychains.filter(keychain => keychain.chain === 'bitcoin'),
       bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork)
-    )
+    );
+  }
 );
 
 interface SplitByPaymentTypesReturn {

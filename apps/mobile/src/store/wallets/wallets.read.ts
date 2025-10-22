@@ -1,6 +1,6 @@
 import { WalletId } from '@leather.io/models';
 import {
-  AddWalletAction,
+  AddWalletPayload,
   WalletStore,
   userAddsWallet,
   userRemovesWallet,
@@ -25,7 +25,7 @@ export function useWallets() {
   return {
     list,
     hasWallets: list.length > 0,
-    add(action: AddWalletAction) {
+    add(action: AddWalletPayload) {
       return dispatch(userAddsWallet(action));
     },
     remove(fingerprint: string) {

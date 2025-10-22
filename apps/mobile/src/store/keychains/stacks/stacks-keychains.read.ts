@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { RootState } from '@/store';
 import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { selectNetworkPreference } from '@/store/settings/settings.read';
@@ -19,9 +18,7 @@ import {
 } from '@leather.io/stacks';
 
 import { descriptorKeychainSelectors, filterKeychainsByStacksAccount } from '../keychains';
-import { adapter } from './stacks-keychains.write';
-
-const stacksKeychainSelectors = adapter.getSelectors((state: RootState) => state.keychains.stacks);
+import { keychainSelectors } from '../keychains.read';
 
 function createSignFnFromBiometricMnemonicStore(descriptor: string) {
   const { keyOrigin, fingerprint } = decomposeDescriptor(descriptor);
@@ -39,26 +36,30 @@ function createSignStructuredMessageFnFromBiometricMnemonicStore(descriptor: str
 }
 
 const stacksSigners = createSelector(
-  stacksKeychainSelectors.selectAll,
+  keychainSelectors.selectAll,
   selectNetworkPreference,
-  (accounts, network) =>
-    accounts.map(account =>
-      initalizeStacksSigner({
-        descriptor: account.descriptor,
-        network: stacksChainIdToCoreNetworkMode(network.chain.stacks.chainId),
-        signFn: createSignFnFromBiometricMnemonicStore(account.descriptor),
-        signMessageFn: createSignMessageFnFromBiometricMnemonicStore(account.descriptor),
-        signStructuredMessageFn: createSignStructuredMessageFnFromBiometricMnemonicStore(
-          account.descriptor
-        ),
-      })
-    )
+  (keychains, network) =>
+    keychains
+      .filter(keychain => keychain.chain === 'stacks')
+      .map(keychain =>
+        initalizeStacksSigner({
+          descriptor: keychain.descriptor,
+          network: stacksChainIdToCoreNetworkMode(network.chain.stacks.chainId),
+          signFn: createSignFnFromBiometricMnemonicStore(keychain.descriptor),
+          signMessageFn: createSignMessageFnFromBiometricMnemonicStore(keychain.descriptor),
+          signStructuredMessageFn: createSignStructuredMessageFnFromBiometricMnemonicStore(
+            keychain.descriptor
+          ),
+        })
+      )
 );
 
 export function useStacksSigners() {
   const list = useSelector(stacksSigners);
   return useMemo(
-    () => ({ ...descriptorKeychainSelectors(list, filterKeychainsByStacksAccount) }),
+    () => ({
+      ...descriptorKeychainSelectors(list, filterKeychainsByStacksAccount),
+    }),
     [list]
   );
 }
@@ -87,7 +88,5 @@ export function useStacksSignerAddressFromAccountIndex(fingerprint: string, acco
 }
 
 export function stacksSignerFromAddress(address: string) {
-  return function (signer: StacksSigner) {
-    return signer.address === address;
-  };
+  return (signer: StacksSigner) => signer.address === address;
 }
