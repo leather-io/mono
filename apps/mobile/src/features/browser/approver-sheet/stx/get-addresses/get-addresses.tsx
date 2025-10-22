@@ -63,6 +63,7 @@ export function StxGetAddressesApprover(props: StxGetAddressesApproverProps) {
     );
 
     sendResult(response);
+    props.closeApprover();
   }
 
   function onOpenAccountSelection() {
@@ -75,13 +76,13 @@ export function StxGetAddressesApprover(props: StxGetAddressesApproverProps) {
   return (
     <>
       <GetAddressesApproverLayout
-        requester={props.origin}
-        onApprove={onApprove}
-        onOpenAccountSelection={onOpenAccountSelection}
-        onCloseApprover={props.closeApprover}
         accounts={accounts}
-        selectedAccountId={selectedAccountId}
         isSubmitDisabled={isSubmitDisabled}
+        onApprove={onApprove}
+        onCloseApprover={props.closeApprover}
+        onOpenAccountSelection={onOpenAccountSelection}
+        requester={props.origin}
+        selectedAccountId={selectedAccountId}
       />
       <AccountSelectorSheet sheetRef={accountSelecterSheetRef} onAccountPress={onAccountPress} />
     </>

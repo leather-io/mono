@@ -40,7 +40,7 @@ export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps)
 
   const mempoolExplorerTxUrl = getMempoolExplorerLink({
     id: txid,
-    type: 'txid',
+    type: 'tx',
     networkPreference: bitcoinNetwork as BitcoinNetworkPreference,
   });
 

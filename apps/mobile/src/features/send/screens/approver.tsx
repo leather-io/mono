@@ -4,16 +4,16 @@ import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { StacksTxSigner } from '@/features/stacks-tx-signer/stacks-tx-signer';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { Box } from '@leather.io/ui/native';
 
-import { Sip10Approver } from '../forms/stx/sip10-approval';
+import { Sip10Approver } from '../forms/stx/sip10-approver';
+import { StxApprover } from '../forms/stx/stx-approver';
 
-export function Approval() {
+export function SendApprover() {
   const { goBack } = useSendNavigation();
-  const route = useSendRoute<'approval'>();
+  const route = useSendRoute<'approver'>();
   const txHex = route.params.hex;
   const {
     state: { selectedAsset, currentAccount },
@@ -38,27 +38,29 @@ export function Approval() {
           broadcast
           psbtHex={txHex}
           onBack={goBack}
-          onResult={() => {
+          onClose={() => {
             sendSheetRef.current?.dismiss();
+          }}
+          onResult={() => {
+            // sendSheetRef.current?.dismiss();
           }}
         />
       )}
       {selectedAsset.protocol === 'nativeStx' && (
-        <StacksTxSigner
+        <StxApprover
           txHex={txHex}
           onEdit={goBack}
-          onSuccess={() => {
+          closeApprover={() => {
             sendSheetRef.current?.dismiss();
           }}
-          fingerprint={fingerprint}
-          accountIndex={accountIndex}
+          accountId={accountId}
         />
       )}
       {selectedAsset.protocol === 'sip10' && (
         <Sip10Approver
           txHex={txHex}
           onEdit={goBack}
-          onSuccess={() => {
+          closeApprover={() => {
             sendSheetRef.current?.dismiss();
           }}
           accountId={accountId}

@@ -14,6 +14,9 @@ interface CreateGetTransactionByIdQueryOptionsArgs {
   client: StacksClient;
   txid: string;
 }
+/**
+ * @deprecated use getStacksTransactionsService().getTransactionById
+ */
 export function createGetTransactionByIdQueryOptions({
   client,
   txid,

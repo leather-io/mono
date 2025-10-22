@@ -8,8 +8,9 @@ import { NonceSheet } from './components/nonce-sheet';
 interface NonceSectionProps {
   nonce: string;
   onChangeNonce(nonce: string): void;
+  disabled?: boolean;
 }
-export function NonceSection({ nonce, onChangeNonce }: NonceSectionProps) {
+export function NonceSection({ nonce, onChangeNonce, disabled }: NonceSectionProps) {
   const nonceSheetRef = useRef<SheetInstance>(null);
 
   return (
@@ -20,6 +21,7 @@ export function NonceSection({ nonce, onChangeNonce }: NonceSectionProps) {
           onPress={() => {
             nonceSheetRef.current?.present();
           }}
+          disabled={disabled}
         />
       </Approver.Section>
       <NonceSheet sheetRef={nonceSheetRef} nonce={nonce} onChangeNonce={onChangeNonce} />

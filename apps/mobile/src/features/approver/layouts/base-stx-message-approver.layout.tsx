@@ -3,13 +3,14 @@ import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { Approver, Button, Cell, Text } from '@leather.io/ui/native';
+import { Approver, Cell, Text } from '@leather.io/ui/native';
 
+import { ApproverButtons } from '../components/approver-buttons';
 import { StructuredMessageSection } from '../structured-message.section';
 
 interface BaseStxMessageApproverLayoutProps {
   origin: string;
-  onApprove(): void;
+  onApprove(): Promise<void>;
   onCloseApprover(): void;
   accountId: string | null;
   accounts: Account[];
@@ -59,14 +60,7 @@ export function BaseStxMessageApproverLayout({
         )}
       </Approver.Container>
       <Approver.Footer>
-        <Approver.Actions>
-          <Button variant="outline" flex={1} onPress={onCloseApprover}>
-            {t`Deny`}
-          </Button>
-          <Button flex={1} onPress={onApprove}>
-            {t`Approve`}
-          </Button>
-        </Approver.Actions>
+        <ApproverButtons onBack={onCloseApprover} onClose={onCloseApprover} onApprove={onApprove} />
       </Approver.Footer>
     </Approver>
   );

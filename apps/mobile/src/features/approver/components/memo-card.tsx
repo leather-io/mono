@@ -5,13 +5,13 @@ import { Avatar, Box, Cell, ChevronRightIcon, NoteTextIcon } from '@leather.io/u
 interface MemoCardProps {
   memo: string;
   onPress(): void;
-  isEditable: boolean;
+  disabled?: boolean;
 }
 
-export function MemoCard({ memo, onPress, isEditable }: MemoCardProps) {
+export function MemoCard({ memo, onPress, disabled }: MemoCardProps) {
   return (
     <Box mx="-5">
-      <Cell.Root pressable={isEditable} onPress={onPress}>
+      <Cell.Root pressable={!disabled} onPress={onPress} disabled={disabled}>
         <Cell.Icon>
           <Avatar icon={<NoteTextIcon />} />
         </Cell.Icon>
@@ -23,7 +23,7 @@ export function MemoCard({ memo, onPress, isEditable }: MemoCardProps) {
             <Cell.Label variant="primary" numberOfLines={1} style={{ flexShrink: 1 }}>
               {memo}
             </Cell.Label>
-            {isEditable && (
+            {!disabled && (
               <Cell.Icon>
                 <ChevronRightIcon variant="small" />
               </Cell.Icon>

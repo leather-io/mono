@@ -9,14 +9,16 @@ interface FeeCardProps {
   feeType: FeeTypes;
   amount: Money;
   onPress(): void;
+  disabled?: boolean;
 }
 
-export function BitcoinFeeCard({ feeType, amount, onPress }: FeeCardProps) {
+export function BitcoinFeeCard({ feeType, amount, onPress, disabled }: FeeCardProps) {
   const { data: btcMarketData } = useBtcMarketDataQuery();
   const { icon, title, time } = getBitcoinFeeData(feeType);
 
   return (
     <BaseFeeCard
+      disabled={disabled}
       amount={amount}
       onPress={onPress}
       marketData={btcMarketData}

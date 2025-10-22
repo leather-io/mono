@@ -27,8 +27,6 @@ import {
 } from '@leather.io/ui/native';
 import { convertToMoneyTypeWithDefaultOfZero, createMoneyFromDecimal } from '@leather.io/utils';
 
-export type ApproverState = 'start' | 'submitting' | 'submitted';
-
 function getBaseFeeData(feeType: FeeTypes) {
   const icon = {
     [FeeTypes.Low]: <AnimalSnailIcon />,

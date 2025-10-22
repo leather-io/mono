@@ -14,9 +14,10 @@ import { getTxFeeMoney } from './utils';
 interface StacksFeesSectionProps {
   txHex: string;
   onChangeFee(fee: number): void;
+  disabled?: boolean;
 }
 
-export function StacksFeesSection({ txHex, onChangeFee }: StacksFeesSectionProps) {
+export function StacksFeesSection({ txHex, onChangeFee, disabled }: StacksFeesSectionProps) {
   const tx = deserializeTransaction(txHex);
   const { data: stxFees } = useCalculateStacksTxFees(tx);
   const fee = tx.auth.spendingCondition.fee;
@@ -55,6 +56,7 @@ export function StacksFeesSection({ txHex, onChangeFee }: StacksFeesSectionProps
           onPress={() => {
             feeSheetRef.current?.present();
           }}
+          disabled={disabled}
         />
       </Approver.Section>
       <StacksFeesSheet

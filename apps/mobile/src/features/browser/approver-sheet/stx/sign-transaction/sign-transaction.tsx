@@ -57,18 +57,21 @@ export function SignTransactionApprover({
       },
     });
     sendResult(response);
+
+    return signedTx.txid();
   }
 
   return (
     <BaseStxTxApproverLayout
-      txHex={txHex}
-      setTxHex={setTxHex}
-      txOptions={txOptions}
-      onCloseApprover={closeApprover}
       accountId={accountId}
       accounts={accounts}
       onApprove={onApprove}
+      onBack={closeApprover}
+      onCloseApprover={closeApprover}
       origin={app.origin}
+      setTxHex={setTxHex}
+      txHex={txHex}
+      txOptions={txOptions}
     />
   );
 }

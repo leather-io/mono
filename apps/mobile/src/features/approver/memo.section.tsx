@@ -7,11 +7,11 @@ import { MemoSheet } from './components/memo-sheet';
 
 interface MemoSectionProps {
   memo: string;
-  isMemoEditable: boolean;
+  disabled?: boolean;
   onChangeMemo(memo: string): void;
 }
 
-export function MemoSection({ memo, isMemoEditable, onChangeMemo }: MemoSectionProps) {
+export function MemoSection({ memo, disabled, onChangeMemo }: MemoSectionProps) {
   const memoSheetRef = useRef<SheetInstance>(null);
 
   return (
@@ -19,7 +19,7 @@ export function MemoSection({ memo, isMemoEditable, onChangeMemo }: MemoSectionP
       <Approver.Section>
         <MemoCard
           memo={memo}
-          isEditable={isMemoEditable}
+          disabled={disabled}
           onPress={() => {
             memoSheetRef.current?.present();
           }}

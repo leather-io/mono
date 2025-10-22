@@ -18,6 +18,7 @@ import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
+import * as Clipboard from 'expo-clipboard';
 
 import {
   PsbtOutputWithAddress,
@@ -36,9 +37,11 @@ import { RpcParams, signPsbt } from '@leather.io/rpc';
 import { Approver, Box, SentIcon, SheetInstance, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback, createMoney, sumMoney } from '@leather.io/utils';
 
+import { makeActivityLink } from '../activity/utils/make-activity-link';
 import { ApproverButtons } from '../approver/components/approver-buttons';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
-import { ApproverState } from '../approver/utils';
+import { BtcStatusRow } from '../approver/components/status-row/btc-status-row';
+import { useOpenURL } from '../browser/browser/use-open-url';
 import { signTx } from './signer';
 import { useAccountsFromPsbt } from './use-accounts-from-psbt';
 import { usePsbtPayers } from './use-psbt-payers';
@@ -54,6 +57,7 @@ interface PsbtSignerProps extends AccountId {
   feeEditorEnabled: boolean;
   onBack(): void;
   onResult(result: { hex: string; txid?: string }): void;
+  onClose(): void;
 }
 export function PsbtSigner(props: PsbtSignerProps) {
   const { data: feeRates } = useAverageBitcoinFeeRates();
@@ -64,23 +68,27 @@ export function PsbtSigner(props: PsbtSignerProps) {
 interface BasePsbtSignerProps extends PsbtSignerProps {
   feeRates: AverageBitcoinFeeRates;
 }
-function BasePsbtSigner({
-  psbtHex: _psbtHex,
-  fingerprint,
-  accountIndex,
-  onBack,
-  onResult,
-  feeRates,
-  signAtIndex,
-  allowedSighash,
-  broadcast,
-  feeEditorEnabled,
-  network: requestedNetwork,
-  origin,
-}: BasePsbtSignerProps) {
+function BasePsbtSigner(props: BasePsbtSignerProps) {
+  const {
+    psbtHex: _psbtHex,
+    fingerprint,
+    accountIndex,
+    onBack,
+    onResult,
+    feeRates,
+    signAtIndex,
+    allowedSighash,
+    broadcast,
+    feeEditorEnabled,
+    network: requestedNetwork,
+    origin,
+    onClose,
+  } = props;
   const [psbtHex, setPsbtHex] = useState(_psbtHex);
+  const [broadcastedTxid, setBroadcastedTxid] = useState<null | string>(null);
   const psbtAccounts = useAccountsFromPsbt({ psbtHex });
   const psbtPayers = usePsbtPayers({ psbtHex });
+  const { openURL } = useOpenURL();
 
   const { displayToast } = useToastContext();
 
@@ -99,7 +107,6 @@ function BasePsbtSigner({
   const currentNetwork = useCurrentNetworkState();
   const network = requestedNetwork ? getPsbtNetwork(requestedNetwork) : currentNetwork;
   const { broadcastTx } = useBitcoinBroadcastTransaction();
-  const [approverState, setApproverState] = useState<ApproverState>('start');
   const { data: btcMarketData } = useBtcMarketDataQuery();
   const feeSheetRef = useRef<SheetInstance>(null);
 
@@ -197,7 +204,6 @@ function BasePsbtSigner({
 
   async function onSubmitTransaction() {
     analytics.track('request_sign_psbt_submit');
-    setApproverState('submitting');
     try {
       const psbt = getPsbtAsTransaction(psbtHex);
       const signedTx = await signTx(psbt.toPSBT(), {
@@ -213,28 +219,43 @@ function BasePsbtSigner({
       }
 
       analytics.track('broadcast_transaction', { symbol: 'BTC' });
-      await broadcastTx({
+
+      const txid = await broadcastTx({
         skipSpendableCheckUtxoIds: 'all',
         tx: signedTx.hex,
-        onResult(txid) {
-          setApproverState('submitted');
-          setTimeout(() => onResult({ hex: signedTx.hex, txid }), 1000);
-        },
-        onError() {
-          displayToast({
-            title: t`Failed to broadcast transaction`,
-            type: 'error',
-          });
-          setApproverState('start');
-        },
       });
-    } catch {
+      if (txid) {
+        setBroadcastedTxid(txid);
+        onResult({ hex: signedTx.hex, txid });
+      } else {
+        throw new Error('Failed to broadcast');
+      }
+    } catch (err) {
       displayToast({
         title: t`Failed to broadcast transaction`,
         type: 'error',
       });
-      setApproverState('start');
+      throw err;
     }
+  }
+
+  function onViewDetails() {
+    if (!broadcastedTxid) return;
+
+    const activityLink = makeActivityLink({
+      txid: broadcastedTxid,
+      networkPreference: network,
+      chain: 'bitcoin',
+    });
+
+    if (!activityLink) return;
+
+    openURL(activityLink);
+    onClose();
+  }
+  function onCopy() {
+    if (!broadcastedTxid) return;
+    void Clipboard.setStringAsync(broadcastedTxid);
   }
 
   return (
@@ -242,6 +263,7 @@ function BasePsbtSigner({
       <Approver requester={origin}>
         <Approver.Container>
           <Approver.Header title={t`Send token`} />
+          {broadcastedTxid && <BtcStatusRow txid={broadcastedTxid} />}
 
           <Approver.Overview>
             <Approver.Section mb="-3">
@@ -261,15 +283,14 @@ function BasePsbtSigner({
             <ApproverAccountCard accounts={psbtAccounts} />
           </Approver.Section>
 
-          {feeEditorEnabled && (
-            <Approver.Section>
-              <BitcoinFeeCard
-                feeType={selectedFeeType}
-                amount={psbtDetails.fee}
-                onPress={() => feeSheetRef.current?.present()}
-              />
-            </Approver.Section>
-          )}
+          <Approver.Section>
+            <BitcoinFeeCard
+              disabled={!feeEditorEnabled}
+              feeType={selectedFeeType}
+              amount={psbtDetails.fee}
+              onPress={() => feeSheetRef.current?.present()}
+            />
+          </Approver.Section>
           <Approver.Advanced
             titleClosed={t`Show advanced options`}
             titleOpened={t`Hide advanced options`}
@@ -287,24 +308,14 @@ function BasePsbtSigner({
             <Text variant="label02">{t`Total spend`}</Text>
             <Text variant="label02">{formatCurrency(totalSpendQuote)}</Text>
           </Box>
-          <Approver.Actions>
-            <ApproverButtons
-              approverState={approverState}
-              onBack={onBack}
-              onApprove={onSubmitTransaction}
-            />
-          </Approver.Actions>
-        </Approver.Footer>
-        {approverState !== 'start' && (
-          <Box
-            position="absolute"
-            top={0}
-            bottom={0}
-            right={0}
-            left={0}
-            backgroundColor="ink.background-overlay"
+          <ApproverButtons
+            onBack={onBack}
+            onApprove={onSubmitTransaction}
+            onCopy={broadcast ? onCopy : undefined}
+            onViewDetails={broadcast ? onViewDetails : undefined}
+            onClose={onClose}
           />
-        )}
+        </Approver.Footer>
       </Approver>
       <BitcoinFeesSheet
         sheetRef={feeSheetRef}

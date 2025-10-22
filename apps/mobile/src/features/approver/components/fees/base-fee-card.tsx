@@ -13,14 +13,23 @@ interface BaseFeeCardProps {
   icon: ReactElement<IconProps>;
   title: string;
   time: string;
+  disabled?: boolean;
 }
 
-export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: BaseFeeCardProps) {
+export function BaseFeeCard({
+  amount,
+  onPress,
+  marketData,
+  icon,
+  title,
+  time,
+  disabled,
+}: BaseFeeCardProps) {
   const quoteAmount = baseCurrencyAmountInQuoteWithFallback(amount, marketData);
 
   return (
     <Box mx="-5">
-      <Cell.Root pressable onPress={onPress}>
+      <Cell.Root pressable={!disabled} onPress={onPress} disabled={disabled}>
         <Cell.Icon>
           <Avatar icon={icon} />
         </Cell.Icon>
@@ -39,7 +48,7 @@ export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: 
                 forceVisible
               />
             </Box>
-            <ChevronRightIcon variant="small" />
+            {!disabled && <ChevronRightIcon variant="small" />}
           </Box>
         </Cell.Aside>
       </Cell.Root>

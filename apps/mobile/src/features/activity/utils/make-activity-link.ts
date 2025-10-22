@@ -2,7 +2,7 @@
 import { getStacksNetworkMode } from '@/queries/leather-query-provider';
 
 import { HIRO_EXPLORER_URL } from '@leather.io/constants';
-import { CryptoAsset, NetworkConfiguration } from '@leather.io/models';
+import { NetworkConfiguration, SupportedBlockchains } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
 export type BitcoinNetworkPreference = 'mainnet' | 'testnet4' | 'signet';
@@ -11,12 +11,12 @@ type StacksNetworkPreference = 'mainnet' | 'testnet';
 interface MakeActivityArgs {
   txid: string;
   networkPreference: NetworkConfiguration;
-  asset?: CryptoAsset;
+  chain: SupportedBlockchains;
 }
-export function makeActivityLink({ txid, networkPreference, asset }: MakeActivityArgs) {
-  if (txid && asset) {
+export function makeActivityLink({ txid, networkPreference, chain }: MakeActivityArgs) {
+  if (txid && chain) {
     return makeActivityExplorerLink({
-      asset,
+      chain,
       txid,
       networkPreference,
     });
@@ -25,20 +25,20 @@ export function makeActivityLink({ txid, networkPreference, asset }: MakeActivit
 }
 
 interface MakeActivityExplorerLinkArgs {
-  asset: CryptoAsset;
+  chain: SupportedBlockchains;
   txid: string;
   networkPreference: NetworkConfiguration;
 }
 function makeActivityExplorerLink({
-  asset,
+  chain,
   txid,
   networkPreference,
 }: MakeActivityExplorerLinkArgs) {
-  if (asset.chain === 'bitcoin') {
+  if (chain === 'bitcoin') {
     return getMempoolExplorerLink({
       networkPreference: networkPreference.chain.bitcoin.bitcoinNetwork as BitcoinNetworkPreference,
       id: txid,
-      type: 'txid',
+      type: 'tx',
     });
   }
   return makeStacksTxExplorerLink({
@@ -64,7 +64,7 @@ function makeStacksTxExplorerLink({
 
 interface getMempoolExplorerLinkArgs {
   id: string;
-  type: 'txid' | 'block';
+  type: 'tx' | 'block';
   networkPreference: BitcoinNetworkPreference;
 }
 

@@ -9,9 +9,10 @@ interface FeeCardProps {
   feeType: FeeTypes;
   amount: Money;
   onPress(): void;
+  disabled?: boolean;
 }
 
-export function StacksFeeCard({ feeType, amount, onPress }: FeeCardProps) {
+export function StacksFeeCard({ feeType, amount, onPress, disabled }: FeeCardProps) {
   const { data: stxMarketData } = useStxMarketDataQuery();
   const { icon, title, time } = getStacksFeeData(feeType);
 
@@ -23,6 +24,7 @@ export function StacksFeeCard({ feeType, amount, onPress }: FeeCardProps) {
       icon={icon}
       title={title}
       time={time}
+      disabled={disabled}
     />
   );
 }
