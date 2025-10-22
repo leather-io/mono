@@ -13,6 +13,19 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/features/approver/components/status-row/status-row-base.tsx:40
+msgid " on {date}"
+msgstr " on {date}"
+
+#: src/features/approver/components/status-row/status-row-base.tsx:39
+msgid " on {date} "
+msgstr " on {date} "
+
+#: src/features/approver/components/status-row/status-row-base.tsx:38
+#: src/features/approver/components/status-row/status-row-base.tsx:41
+msgid " since {date}"
+msgstr " since {date}"
+
 #: src/app/settings/display/index.tsx:101
 msgid "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
 msgstr "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
@@ -43,27 +56,27 @@ msgstr "{themePreference, select, light {Light} dark {Dark} system {System} othe
 msgid "<0>{assetName}</0> has no available receiving options right now."
 msgstr "<0>{assetName}</0> has no available receiving options right now."
 
-#: src/features/approver/utils.tsx:54
+#: src/features/approver/utils.tsx:52
 msgid "~1 hour+"
 msgstr "~1 hour+"
 
-#: src/features/approver/utils.tsx:56
+#: src/features/approver/utils.tsx:54
 msgid "~10 – 20min"
 msgstr "~10 – 20min"
 
-#: src/features/approver/utils.tsx:55
+#: src/features/approver/utils.tsx:53
 msgid "~30 min"
 msgstr "~30 min"
 
-#: src/features/approver/utils.tsx:66
+#: src/features/approver/utils.tsx:64
 msgid "1–2 minutes"
 msgstr "1–2 minutes"
 
-#: src/features/approver/utils.tsx:68
+#: src/features/approver/utils.tsx:66
 msgid "10 seconds"
 msgstr "10 seconds"
 
-#: src/features/approver/utils.tsx:67
+#: src/features/approver/utils.tsx:65
 msgid "20–30 seconds"
 msgstr "20–30 seconds"
 
@@ -297,10 +310,7 @@ msgstr "App is not protected with device-level PIN or biometrics."
 msgid "App Store"
 msgstr "App Store"
 
-#: src/features/approver/components/approver-buttons.tsx:24
-#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:67
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:174
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:63
+#: src/features/approver/components/approver-buttons/index.tsx:40
 msgid "Approve"
 msgstr "Approve"
 
@@ -394,6 +404,8 @@ msgid "Can’t send to the same address"
 msgstr "Can’t send to the same address"
 
 #: src/components/sheets/warning-sheet.layout.tsx:51
+#: src/features/approver/components/approver-buttons/index.tsx:37
+#: src/features/approver/components/approver-buttons/index.tsx:49
 #: src/features/qr-scanner/use-camera-permission.ts:39
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:31
 msgid "Cancel"
@@ -423,8 +435,8 @@ msgstr "Charisma"
 msgid "Check your email for verification"
 msgstr "Check your email for verification"
 
-#: src/features/approver/layouts/get-addresses.layout.tsx:43
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:40
+#: src/features/approver/layouts/get-addresses.layout.tsx:45
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:41
 msgid "Choose an account"
 msgstr "Choose an account"
 
@@ -440,6 +452,10 @@ msgstr "Clear search"
 #: src/features/qr-scanner/qr-scanner-chrome.tsx:31
 msgid "Close the scanner"
 msgstr "Close the scanner"
+
+#: src/features/approver/components/approver-buttons/index.tsx:93
+msgid "Close window"
+msgstr "Close window"
 
 #: src/features/approver/components/code-card.tsx:10
 msgid "Code"
@@ -480,7 +496,6 @@ msgstr ""
 
 #: src/features/approver/components/memo-sheet.tsx:18
 #: src/features/approver/components/nonce-sheet.tsx:18
-#: src/features/approver/layouts/get-addresses.layout.tsx:61
 #: src/features/send/components/memo.tsx:90
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
@@ -491,7 +506,7 @@ msgstr "Confirm"
 msgid "Confirm Swap"
 msgstr "Confirm Swap"
 
-#: src/features/approver/layouts/get-addresses.layout.tsx:31
+#: src/features/approver/layouts/get-addresses.layout.tsx:33
 msgid "Connect"
 msgstr "Connect"
 
@@ -551,6 +566,10 @@ msgstr "Copy"
 msgid "Copy address"
 msgstr "Copy address"
 
+#: src/features/approver/components/approver-buttons/index.tsx:83
+msgid "Copy ID"
+msgstr "Copy ID"
+
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:80
 msgid "Create new wallet"
 msgstr "Create new wallet"
@@ -567,9 +586,9 @@ msgstr "Creator"
 msgid "Current app version format is invalid"
 msgstr "Current app version format is invalid"
 
-#: src/features/approver/utils.tsx:45
-#: src/features/approver/utils.tsx:57
-#: src/features/approver/utils.tsx:69
+#: src/features/approver/utils.tsx:43
+#: src/features/approver/utils.tsx:55
+#: src/features/approver/utils.tsx:67
 msgid "Custom"
 msgstr "Custom"
 
@@ -580,13 +599,6 @@ msgstr "Custom fees"
 #: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:43
 msgid "Decrease slippage"
 msgstr "Decrease slippage"
-
-#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:64
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
-#: src/features/approver/layouts/get-addresses.layout.tsx:58
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:60
-msgid "Deny"
-msgstr "Deny"
 
 #: src/features/activity/utils/format-activity.ts:32
 msgid "Deployed"
@@ -650,11 +662,6 @@ msgstr "Done"
 #: src/components/error/error.tsx:65
 msgid "Drag to refresh"
 msgstr "Drag to refresh"
-
-#: src/features/approver/components/approver-buttons.tsx:21
-#: src/features/send/forms/stx/sip10-approval.tsx:67
-msgid "Edit"
-msgstr "Edit"
 
 #: src/features/send/components/memo.tsx:34
 msgid "Edit memo"
@@ -731,14 +738,16 @@ msgstr "Export key"
 msgid "Export xPub"
 msgstr "Export xPub"
 
+#: src/features/approver/components/status-row/status-row-base.tsx:29
+msgid "Failed"
+msgstr "Failed"
+
 #: src/features/settings/app-authentication-sheet.tsx:41
 #: src/features/settings/app-authentication-sheet.tsx:48
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:225
-#: src/features/psbt-signer/psbt-signer.tsx:233
-#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:94
+#: src/features/psbt-signer/psbt-signer.tsx:235
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
 
@@ -758,7 +767,7 @@ msgstr "Failed to change nonce"
 msgid "Failed to load latest nonce"
 msgstr "Failed to load latest nonce"
 
-#: src/features/approver/utils.tsx:44
+#: src/features/approver/utils.tsx:42
 msgid "Fast"
 msgstr "Fast"
 
@@ -767,7 +776,7 @@ msgid "FastPool"
 msgstr "FastPool"
 
 #: src/features/approver/stx/hooks.ts:27
-#: src/features/psbt-signer/psbt-signer.tsx:192
+#: src/features/psbt-signer/psbt-signer.tsx:199
 msgid "Fee updated"
 msgstr "Fee updated"
 
@@ -859,8 +868,8 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:158
-#: src/features/psbt-signer/psbt-signer.tsx:275
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:170
+#: src/features/psbt-signer/psbt-signer.tsx:296
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -1072,9 +1081,9 @@ msgstr "Memo must be less than 34-bytes"
 msgid "Memo updated"
 msgstr "Memo updated"
 
-#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:49
+#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:50
 #: src/features/approver/structured-message.section.tsx:48
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:49
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:50
 msgid "Message"
 msgstr "Message"
 
@@ -1150,7 +1159,7 @@ msgstr "No results found"
 msgid "No swaps available"
 msgstr "No swaps available"
 
-#: src/features/approver/components/nonce-card.tsx:18
+#: src/features/approver/components/nonce-card.tsx:19
 msgid "Nonce"
 msgstr "Nonce"
 
@@ -1206,6 +1215,11 @@ msgstr "Paste"
 #: src/features/recover-wallet/recover-wallet.layout.tsx:43
 msgid "Paste or type Secret Key to add wallet"
 msgstr "Paste or type Secret Key to add wallet"
+
+#: src/features/approver/components/status-row/status-row-base.tsx:27
+#: src/features/approver/components/status-row/status-row-base.tsx:30
+msgid "Pending"
+msgstr "Pending"
 
 #: src/utils/dapps.ts:40
 msgid "PlanBetter"
@@ -1345,6 +1359,10 @@ msgstr "Restake"
 msgid "Restore wallet"
 msgstr "Restore wallet"
 
+#: src/features/approver/components/approver-buttons/index.tsx:52
+msgid "Retry"
+msgstr "Retry"
+
 #: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:115
 msgid "Reveal account"
 msgstr "Reveal account"
@@ -1421,8 +1439,7 @@ msgstr "Send"
 msgid "Send Failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:244
-#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:134
+#: src/features/psbt-signer/psbt-signer.tsx:265
 msgid "Send token"
 msgstr "Send token"
 
@@ -1456,8 +1473,8 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:157
-#: src/features/psbt-signer/psbt-signer.tsx:274
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:169
+#: src/features/psbt-signer/psbt-signer.tsx:295
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -1465,12 +1482,12 @@ msgstr "Show advanced options"
 msgid "Show balances"
 msgstr "Show balances"
 
-#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:39
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:28
+#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:40
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:29
 msgid "Sign Message"
 msgstr "Sign Message"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:109
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:119
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
@@ -1486,7 +1503,7 @@ msgstr "SIP-010"
 msgid "Skip for now"
 msgstr "Skip for now"
 
-#: src/features/approver/utils.tsx:42
+#: src/features/approver/utils.tsx:40
 msgid "Slow"
 msgstr "Slow"
 
@@ -1529,7 +1546,7 @@ msgstr "Stamp"
 msgid "Stamp URL"
 msgstr "Stamp URL"
 
-#: src/features/approver/utils.tsx:43
+#: src/features/approver/utils.tsx:41
 msgid "Standard"
 msgstr "Standard"
 
@@ -1537,13 +1554,17 @@ msgstr "Standard"
 msgid "STX-20"
 msgstr "STX-20"
 
-#: src/features/approver/components/approver-buttons.tsx:38
+#: src/features/approver/components/approver-buttons/index.tsx:73
 msgid "Submitted"
 msgstr "Submitted"
 
-#: src/features/approver/components/approver-buttons.tsx:31
+#: src/features/approver/components/approver-buttons/index.tsx:60
 msgid "Submitting..."
 msgstr "Submitting..."
+
+#: src/features/approver/components/status-row/status-row-base.tsx:28
+msgid "Success"
+msgstr "Success"
 
 #: src/components/action-buttons.tsx:49
 #: src/features/swap/screens/swap-form-screen.tsx:47
@@ -1665,9 +1686,8 @@ msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
 #: src/features/approver/components/sip10-recipient.tsx:43
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:132
-#: src/features/psbt-signer/psbt-signer.tsx:255
-#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:145
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:144
+#: src/features/psbt-signer/psbt-signer.tsx:277
 msgid "To address"
 msgstr "To address"
 
@@ -1700,8 +1720,7 @@ msgstr "Too many decimals (max {maxDecimals})"
 msgid "Total balance"
 msgstr "Total balance"
 
-#: src/features/psbt-signer/psbt-signer.tsx:287
-#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:168
+#: src/features/psbt-signer/psbt-signer.tsx:308
 msgid "Total spend"
 msgstr "Total spend"
 
@@ -1719,7 +1738,8 @@ msgstr "Transaction failed due to an unexpected error"
 msgid "Transaction ID"
 msgstr "Transaction ID"
 
-#: src/features/send/forms/stx/sip10-approval.tsx:50
+#: src/features/send/forms/stx/sip10-approver.tsx:47
+#: src/features/send/forms/stx/stx-approver.tsx:42
 msgid "Transaction is sent!"
 msgstr "Transaction is sent!"
 
@@ -1753,9 +1773,9 @@ msgstr "Uneconomical balance:"
 
 #: src/features/activity/utils/format-activity.ts:88
 #: src/features/activity/utils/format-activity.ts:94
-#: src/features/approver/utils.tsx:46
-#: src/features/approver/utils.tsx:58
-#: src/features/approver/utils.tsx:70
+#: src/features/approver/utils.tsx:44
+#: src/features/approver/utils.tsx:56
+#: src/features/approver/utils.tsx:68
 msgid "Unknown"
 msgstr "Unknown"
 
@@ -1802,6 +1822,10 @@ msgstr "View and manage all your wallets in one place"
 #: src/features/settings/wallet-and-accounts/components/empty-hidden-accounts.tsx:16
 msgid "View and manage your hidden accounts"
 msgstr "View and manage your hidden accounts"
+
+#: src/features/approver/components/approver-buttons/index.tsx:89
+msgid "View details"
+msgstr "View details"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:151
 msgid "View Secret Key"
@@ -1883,9 +1907,8 @@ msgstr "You will transfer less than or equal to"
 msgid "You will transfer more than"
 msgstr "You will transfer more than"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:123
-#: src/features/psbt-signer/psbt-signer.tsx:249
-#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:139
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:135
+#: src/features/psbt-signer/psbt-signer.tsx:271
 msgid "You’ll send"
 msgstr "You’ll send"
 

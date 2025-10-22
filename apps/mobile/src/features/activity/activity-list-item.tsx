@@ -38,7 +38,8 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
     <Pressable
       disabled={!txid}
       onPress={() => {
-        const activityLink = makeActivityLink({ txid, networkPreference, asset });
+        if (!asset) return;
+        const activityLink = makeActivityLink({ txid, networkPreference, chain: asset.chain });
         if (activityLink) {
           openURL(activityLink);
         }

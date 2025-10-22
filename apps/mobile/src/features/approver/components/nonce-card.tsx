@@ -5,12 +5,13 @@ import { Avatar, Box, Cell, ChevronRightIcon, NumberedListIcon, Text } from '@le
 interface NonceCardProps {
   nonce: string;
   onPress(): void;
+  disabled?: boolean;
 }
 
-export function NonceCard({ nonce, onPress }: NonceCardProps) {
+export function NonceCard({ nonce, onPress, disabled }: NonceCardProps) {
   return (
     <Box mx="-5">
-      <Cell.Root pressable onPress={onPress}>
+      <Cell.Root pressable={!disabled} onPress={onPress} disabled={disabled}>
         <Cell.Icon>
           <Avatar icon={<NumberedListIcon />} />
         </Cell.Icon>

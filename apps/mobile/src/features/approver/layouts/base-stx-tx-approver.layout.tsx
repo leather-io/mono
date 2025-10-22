@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+import { makeActivityLink } from '@/features/activity/utils/make-activity-link';
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
 import { StacksOutcome } from '@/features/approver/components/stacks-outcome';
@@ -19,6 +20,8 @@ import {
   isContractDeploy,
   isTokenTransfer,
 } from '@/features/approver/utils';
+import { useOpenURL } from '@/features/browser/browser/use-open-url';
+import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 import {
@@ -26,29 +29,32 @@ import {
   deserializeTransaction,
   isTokenTransferPayload,
 } from '@stacks/transactions';
+import * as Clipboard from 'expo-clipboard';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
-import { Approver, Button, SentIcon, SheetInstance } from '@leather.io/ui/native';
+import { Approver, SentIcon, SheetInstance } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
 import { AllowModeWarningSheet } from '../components/allow-mode-warning-sheet/allow-mode-warning-sheet';
+import { ApproverButtons } from '../components/approver-buttons';
 import { AllowModePostConditionWarning } from '../components/post-conditions/post-conditions-warning';
 import { SipRecipient } from '../components/sip10-recipient';
+import { StxStatusRow } from '../components/status-row/stx-status-row';
 import { ContractCallPostConditionsSection } from '../contract-call-post-conditions.section';
 import { useStxTransactionUpdatesHandler } from '../stx/hooks';
 
 interface BaseStxTxApproverLayoutProps {
-  onApprove(): void;
+  onApprove(): Promise<string>;
   onCloseApprover(): void;
+  onBack(): void;
   accountId: string | null;
   accounts: Account[];
   txHex: string;
   setTxHex(txHex: string): void;
   txOptions: TxOptions;
   origin?: string;
-  backButtonTitle?: string;
-  sendButtonTitle?: string;
+  onBack(): void;
 }
 
 export function BaseStxTxApproverLayout({
@@ -60,13 +66,15 @@ export function BaseStxTxApproverLayout({
   setTxHex,
   txOptions,
   origin,
-  backButtonTitle,
-  sendButtonTitle,
+  onBack,
 }: BaseStxTxApproverLayoutProps) {
   const approverWarningSheetRef = useRef<SheetInstance>(null);
   const tx = deserializeTransaction(txHex);
   const { changeFeeToastHandler, changeMemoToastHandler, changeNonceToastHandler } =
     useStxTransactionUpdatesHandler();
+  const [broadcastedTxid, setBroadcastedTxid] = useState<null | string>(null);
+  const network = useCurrentNetworkState();
+  const { openURL } = useOpenURL();
 
   useEffect(() => {
     if (tx.postConditionMode === PostConditionMode.Allow) {
@@ -102,12 +110,16 @@ export function BaseStxTxApproverLayout({
     setTxHex(newTxHex);
   });
 
+  const isModifyingDisabled = !!broadcastedTxid;
+
   return (
     <>
       <Approver requester={origin}>
         <Approver.Container>
           <Approver.Header title={t`Sign Transaction`} />
           {isContractCall(tx.payload) && <AllowModePostConditionWarning txHex={txHex} />}
+          {broadcastedTxid && <StxStatusRow txid={broadcastedTxid} />}
+
           <Approver.Section>
             <ApproverAccountCard
               accounts={accounts.filter(
@@ -145,13 +157,13 @@ export function BaseStxTxApproverLayout({
 
           {isContractCall(tx.payload) && <ContractCallSummarySection txHex={txHex} />}
           {isContractDeploy(tx.payload) && <ContractDeploySummarySection txHex={txHex} />}
-          <StacksFeesSection txHex={txHex} onChangeFee={onChangeFee} />
+          <StacksFeesSection
+            disabled={isModifyingDisabled}
+            txHex={txHex}
+            onChangeFee={onChangeFee}
+          />
           {isTokenTransfer(tx.payload) && (
-            <MemoSection
-              memo={tx.payload.memo.content}
-              isMemoEditable={false}
-              onChangeMemo={onChangeMemo}
-            />
+            <MemoSection memo={tx.payload.memo.content} disabled onChangeMemo={onChangeMemo} />
           )}
           <Approver.Advanced
             titleClosed={t`Show advanced options`}
@@ -162,18 +174,37 @@ export function BaseStxTxApproverLayout({
             <NonceSection
               nonce={tx.auth.spendingCondition.nonce.toString()}
               onChangeNonce={onChangeNonce}
+              disabled={isModifyingDisabled}
             />
           </Approver.Advanced>
         </Approver.Container>
         <Approver.Footer>
-          <Approver.Actions>
-            <Button variant="outline" flex={1} onPress={onCloseApprover}>
-              {backButtonTitle ?? t`Deny`}
-            </Button>
-            <Button flex={1} onPress={onApprove}>
-              {sendButtonTitle ?? t`Approve`}
-            </Button>
-          </Approver.Actions>
+          <ApproverButtons
+            onBack={onBack}
+            onClose={onCloseApprover}
+            onApprove={async () => {
+              const txid = await onApprove();
+              setBroadcastedTxid(txid);
+            }}
+            onCopy={() => {
+              if (!broadcastedTxid) return;
+              void Clipboard.setStringAsync(broadcastedTxid);
+            }}
+            onViewDetails={() => {
+              if (!broadcastedTxid) return;
+
+              const activityLink = makeActivityLink({
+                txid: broadcastedTxid,
+                networkPreference: network,
+                chain: 'stacks',
+              });
+
+              if (!activityLink) return;
+
+              openURL(activityLink);
+              onCloseApprover();
+            }}
+          />
         </Approver.Footer>
       </Approver>
       <AllowModeWarningSheet ref={approverWarningSheetRef} onDismiss={onCloseApprover} />

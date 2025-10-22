@@ -52,12 +52,12 @@ export function StxSignMessageApprover({
 
   return (
     <BaseStxMessageApproverLayout
-      origin={app.origin}
-      onCloseApprover={closeApprover}
       accountId={accountId}
       accounts={accounts}
-      onApprove={onApprove}
       messageToSign={request.params}
+      onApprove={onApprove}
+      onCloseApprover={closeApprover}
+      origin={app.origin}
     />
   );
 }

@@ -48,6 +48,7 @@ export function Button({
       flexDirection="row"
       alignItems="center"
       justifyContent="center"
+      disabled={disabled}
       px="3"
       // TODO: Designs for pressed state are more elaborate, update using transitionProperty when Reanimated v4 is ready
       pressEffects={legacyTouchablePressEffect}

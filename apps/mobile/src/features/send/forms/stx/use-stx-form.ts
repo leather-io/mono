@@ -65,7 +65,7 @@ export function useStxForm({ account, availableBalance, nonce }: UseStxFormProps
 
     stxFormValuesToSerializedTransaction(values, stxSigner.publicKey, stacksNetwork)
       .then(txHex =>
-        navigate('approval', {
+        navigate('approver', {
           hex: txHex,
           fingerprint: account.fingerprint,
           accountIndex: account.accountIndex,

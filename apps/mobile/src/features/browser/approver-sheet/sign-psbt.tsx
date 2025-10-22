@@ -46,6 +46,7 @@ export function SignPsbtApprover(props: SignPsbtApproverProps) {
       network={networkMode}
       feeEditorEnabled={false}
       onBack={props.closeApprover}
+      onClose={props.closeApprover}
       onResult={(result: RpcResult<typeof signPsbt>) => {
         const rpcSuccessResponse = createRpcSuccessResponse('signPsbt', {
           id: props.request.id,

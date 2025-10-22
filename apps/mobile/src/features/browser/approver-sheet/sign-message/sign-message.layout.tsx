@@ -1,12 +1,13 @@
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
+import { ApproverButtons } from '@/features/approver/components/approver-buttons';
 import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { Approver, Button, Cell, ChevronRightIcon, Text } from '@leather.io/ui/native';
+import { Approver, Cell, ChevronRightIcon, Text } from '@leather.io/ui/native';
 
 interface SignMessageApproverLayoutProps {
-  onApprove(): void;
+  onApprove(): Promise<void>;
   onOpenAccountSelection(): void;
   onCloseApprover(): void;
   selectedAccountId: string | null;
@@ -55,14 +56,7 @@ export function SignMessageApproverLayout({
         </Approver.Section>
       </Approver.Container>
       <Approver.Footer>
-        <Approver.Actions>
-          <Button variant="outline" flex={1} onPress={onCloseApprover}>
-            {t`Deny`}
-          </Button>
-          <Button flex={1} onPress={onApprove}>
-            {t`Approve`}
-          </Button>
-        </Approver.Actions>
+        <ApproverButtons onBack={onCloseApprover} onClose={onCloseApprover} onApprove={onApprove} />
       </Approver.Footer>
     </Approver>
   );

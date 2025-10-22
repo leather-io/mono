@@ -4,7 +4,9 @@ import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { Approver, Button, Cell, ChevronRightIcon } from '@leather.io/ui/native';
+import { Approver, Cell, ChevronRightIcon } from '@leather.io/ui/native';
+
+import { ApproverButtons } from '../components/approver-buttons';
 
 interface GetAddressesApproverLayoutProps {
   requester: string;
@@ -53,14 +55,12 @@ export function GetAddressesApproverLayout({
         </Approver.Section>
       </Approver.Container>
       <Approver.Footer>
-        <Approver.Actions>
-          <Button variant="outline" flex={1} onPress={onCloseApprover}>
-            {t`Deny`}
-          </Button>
-          <Button flex={1} disabled={isSubmitDisabled} onPress={onApprove}>
-            {t`Confirm`}
-          </Button>
-        </Approver.Actions>
+        <ApproverButtons
+          onBack={onCloseApprover}
+          onClose={onCloseApprover}
+          isSubmitDisabled={isSubmitDisabled}
+          onApprove={onApprove}
+        />
       </Approver.Footer>
     </Approver>
   );

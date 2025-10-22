@@ -129,6 +129,7 @@ function BaseSendTransferApprover(
       psbtHex={psbtHex}
       network={networkMode}
       onBack={props.closeApprover}
+      onClose={props.closeApprover}
       onResult={result => {
         if (result.txid) {
           const rpcSuccessResponse = createRpcSuccessResponse('sendTransfer', {

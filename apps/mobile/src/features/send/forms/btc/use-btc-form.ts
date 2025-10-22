@@ -72,7 +72,7 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
       payerLookup: payerFromKeyOrigin,
       changeAddress: nativeSegwit.derivePayer({ change: 0, addressIndex: 0 }).address,
     })
-      .then((psbtHex: string) => navigate('approval', { hex: psbtHex, accountIndex, fingerprint }))
+      .then((psbtHex: string) => navigate('approver', { hex: psbtHex, accountIndex, fingerprint }))
       .catch(() =>
         displayToast({
           title: t`Transaction failed due to an unexpected error`,

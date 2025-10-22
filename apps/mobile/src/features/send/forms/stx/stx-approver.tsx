@@ -11,17 +11,14 @@ import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.rea
 import { t } from '@lingui/core/macro';
 import { deserializeTransaction } from '@stacks/transactions';
 
-export function Sip10Approver({
-  txHex: _txHex,
-  onEdit,
-  onSuccess,
-  accountId,
-}: {
+interface StxApproverProps {
   txHex: string;
   onEdit(): void;
-  onSuccess(): void;
   accountId: string;
-}) {
+  closeApprover(): void;
+}
+
+export function StxApprover({ txHex: _txHex, onEdit, accountId, closeApprover }: StxApproverProps) {
   const [txHex, setTxHex] = useState<string>(_txHex);
 
   const network = useNetworkPreferenceStacksNetwork();
@@ -40,31 +37,27 @@ export function Sip10Approver({
 
     const signedTx = await signer?.sign(tx);
 
-    await broadcastTransaction(
-      { tx: signedTx, stacksNetwork: network },
-      {
-        onError(err) {
-          displayToast({ type: 'error', title: err.message });
-        },
-        onSuccess() {
-          displayToast({ type: 'success', title: t`Transaction is sent!` });
+    try {
+      const broadcastResult = await broadcastTransaction({ tx: signedTx, stacksNetwork: network });
+      displayToast({ type: 'success', title: t`Transaction is sent!` });
 
-          onSuccess();
-        },
-      }
-    );
+      return broadcastResult.txid;
+    } catch (err) {
+      if (err instanceof Error) displayToast({ type: 'error', title: err.message });
+      throw err;
+    }
   }
 
   return (
     <BaseStxTxApproverLayout
-      txHex={txHex}
-      setTxHex={setTxHex}
-      txOptions={txOptions}
-      onCloseApprover={onEdit}
       accountId={accountId}
       accounts={accounts}
       onApprove={onApprove}
-      backButtonTitle={t`Edit`}
+      onBack={onEdit}
+      onCloseApprover={closeApprover}
+      setTxHex={setTxHex}
+      txHex={txHex}
+      txOptions={txOptions}
     />
   );
 }

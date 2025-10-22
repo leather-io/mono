@@ -57,36 +57,35 @@ export function TransferSip9NftApprover({
     assertStacksSigner(signer);
     const signedTx = await signer?.sign(tx);
 
-    await broadcastTransaction(
-      { tx: signedTx, stacksNetwork: network },
-      {
-        onError(err) {
-          displayToast({ type: 'error', title: err.message });
+    try {
+      const broadcastResult = await broadcastTransaction({ tx: signedTx, stacksNetwork: network });
+      const response = createRpcSuccessResponse('stx_transferSip9Nft', {
+        id: request.id,
+        result: {
+          transaction: signedTx.serialize(),
+          txid: broadcastResult.txid,
         },
-        onSuccess(resp) {
-          const response = createRpcSuccessResponse('stx_transferSip9Nft', {
-            id: request.id,
-            result: {
-              transaction: signedTx.serialize(),
-              txid: resp.txid,
-            },
-          });
-          sendResult(response);
-        },
-      }
-    );
+      });
+      sendResult(response);
+
+      return broadcastResult.txid;
+    } catch (err) {
+      if (err instanceof Error) displayToast({ type: 'error', title: err.message });
+      throw err;
+    }
   }
 
   return (
     <BaseStxTxApproverLayout
-      origin={app.origin}
-      txHex={txHex}
-      setTxHex={setTxHex}
-      txOptions={txOptions}
-      onCloseApprover={closeApprover}
       accountId={accountId}
       accounts={accounts}
       onApprove={onApprove}
+      onBack={closeApprover}
+      onCloseApprover={closeApprover}
+      origin={app.origin}
+      setTxHex={setTxHex}
+      txHex={txHex}
+      txOptions={txOptions}
     />
   );
 }

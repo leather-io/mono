@@ -77,7 +77,7 @@ export function useSip10Form({ account, availableBalance, nonce, asset }: UseSip
       network: stacksNetwork,
     })
       .then(txHex => {
-        navigate('approval', {
+        navigate('approver', {
           hex: txHex,
           fingerprint: account.fingerprint,
           accountIndex: account.accountIndex,
