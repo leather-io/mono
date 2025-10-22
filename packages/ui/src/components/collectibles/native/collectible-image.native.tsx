@@ -11,7 +11,8 @@ export function CollectibleImage({ alt, source, height = 200, onPress }: Collect
   const content = (
     <CollectibleCard height={height}>
       <Image
-        source={{ uri: source }}
+        // source={{ uri: source }}
+        source={source}
         alt={alt}
         style={{
           height: height,

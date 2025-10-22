@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import { Sip9Asset } from '@leather.io/models';
 
-import { CollectibleAudio } from './collectible-audio.native';
 import { CollectibleHtml } from './collectible-html.native';
 import { CollectibleImage } from './collectible-image.native';
 import { CollectibleVideo } from './collectible-video.native';
@@ -122,7 +121,6 @@ export function Sip9({
   // const contentUrl = encodeURI(contentUrl);
 
   useEffect(() => {
-    console.log('contentType', contentType, contentUrl, contentUrl);
     const needsDetection =
       contentType === '' ||
       contentType === null ||
@@ -168,19 +166,16 @@ export function Sip9({
     case 'audio/aac':
     case 'audio/flac':
     case 'audio/webm':
-      return <CollectibleAudio src={contentUrl} alt={name} size={height} onPress={onPress} />;
     case 'model/gltf+json':
     case 'model/gltf-binary':
-      return <CollectibleHtml src={contentUrl} height={height} onPress={onPress} />;
+      return <CollectibleHtml src={contentUrl} height={height} onPress={onPress} contentType={contentType} />;
     case 'text/plain':
-      if (mediaInfo.isHtml) {
-        return <CollectibleHtml src={contentUrl} height={height} onPress={onPress} />;
+      console.log('contentType is text/plain', contentUrl, 'mediaInfo', mediaInfo, 'needsDetection');
+      if (mediaInfo.isHtml || mediaInfo.isAudio) {
+        return <CollectibleHtml src={contentUrl} height={height} onPress={onPress} contentType={contentType} />;
       }
       if (mediaInfo.isVideo) {
         return <CollectibleVideo src={contentUrl} alt={name} height={height} onPress={onPress} />;
-      }
-      if (mediaInfo.isAudio) {
-        return <CollectibleAudio src={contentUrl} alt={name} size={height} onPress={onPress} />;
       }
       if (mediaInfo.isImage) {
         return (
@@ -189,33 +184,30 @@ export function Sip9({
       }
       return <CollectibleImage source={contentUrl} alt={name} height={height} onPress={onPress} />;
     case '':
+      console.log('contentType is empty', contentUrl, 'mediaInfo', mediaInfo, 'needsDetection');
       // content type is empty, so we need to check if it's a video or an image
-      if (mediaInfo.isHtml) {
-        return <CollectibleHtml src={contentUrl} height={height} onPress={onPress} />;
-      }
-      if (mediaInfo.isVideo) {
-        return <CollectibleVideo src={contentUrl} alt={name} height={height} onPress={onPress} />;
-      }
-      if (mediaInfo.isAudio) {
-        return <CollectibleAudio src={contentUrl} alt={name} size={height} onPress={onPress} />;
-      }
-      if (mediaInfo.isImage) {
-        return (
-          <CollectibleImage source={contentUrl} alt={name} height={height} onPress={onPress} />
-        );
-      }
+      // if (mediaInfo.isHtml || mediaInfo.isAudio) {
+      //   return <CollectibleHtml src={contentUrl} height={height} onPress={onPress} />;
+      // }
+      // if (mediaInfo.isVideo) {
+      //   return <CollectibleVideo src={contentUrl} alt={name} height={height} onPress={onPress} />;
+      // }
+      // if (mediaInfo.isImage) {
+      //   return (
+      //     <CollectibleImage source={contentUrl} alt={name} height={height} onPress={onPress} />
+      //   );
+      // }
       return <CollectibleImage source={contentUrl} alt={name} height={height} onPress={onPress} />;
     default:
+      console.log('contentType is default', contentType, contentUrl, 'mediaInfo', mediaInfo, 'needsDetection');
       if (contentType.startsWith('video/')) {
         return <CollectibleVideo src={contentUrl} alt={name} height={height} onPress={onPress} />;
       }
-      if (contentType.startsWith('audio/')) {
-        return <CollectibleAudio src={contentUrl} alt={name} size={height} onPress={onPress} />;
-      }
-      if (contentType.startsWith('model/gltf')) {
+      if (contentType.startsWith('model/gltf') || contentType.startsWith('audio/')) {
         return <CollectibleHtml src={contentUrl} height={height} onPress={onPress} />;
       }
       // default to image if we can't determine the content type
       return <CollectibleImage source={contentUrl} alt={name} height={height} onPress={onPress} />;
   }
 }
+
