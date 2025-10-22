@@ -60,7 +60,7 @@ export function AccountActions() {
           data-testid={HomePageSelectors.FundAccountBtn}
           icon={<CreditCardIcon />}
           label="Buy"
-          onClick={() => navigate(RouteUrls.FundChooseCurrency)}
+          onClick={() => navigate(RouteUrls.Fund)}
         />
       )}
       <BasicTooltip label={swapsEnabled ? '' : <SwapsDisabledTooltipLabel />} side="left" asChild>

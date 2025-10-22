@@ -25,7 +25,6 @@ import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-t
 import { UnsupportedBrowserLayout } from '@app/features/ledger/generic-steps';
 import { ConnectLedgerStart } from '@app/features/ledger/generic-steps/connect-device/connect-ledger-start';
 import { RetrieveTaprootToNativeSegwit } from '@app/features/retrieve-taproot-to-native-segwit/retrieve-taproot-to-native-segwit';
-import { ChooseCryptoAssetToFund } from '@app/pages/fund/choose-asset-to-fund/choose-asset-to-fund';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { LegacyAccountAuth } from '@app/pages/legacy-account-auth/legacy-account-auth';
@@ -33,8 +32,6 @@ import { BackUpSecretKeyPage } from '@app/pages/onboarding/back-up-secret-key/ba
 import { ForgotPassword } from '@app/pages/onboarding/sign-in/forgot-password';
 import { SignIn } from '@app/pages/onboarding/sign-in/sign-in';
 import { WelcomePage } from '@app/pages/onboarding/welcome/welcome';
-import { ReceiveBtcModal } from '@app/pages/receive/receive-btc';
-import { ReceiveStxModal } from '@app/pages/receive/receive-stx';
 import { RequestError } from '@app/pages/request-error/request-error';
 import { BroadcastError } from '@app/pages/send/broadcast-error/broadcast-error';
 import { sendOrdinalRoutes } from '@app/pages/send/ordinal-inscription/ordinal-routes';
@@ -166,20 +163,7 @@ function useAppRoutes() {
                 <FundPage />
               </AccountGate>
             }
-          >
-            <Route path={RouteUrls.ReceiveStx} element={<ReceiveStxModal />} />
-            <Route path={RouteUrls.ReceiveBtc} element={<ReceiveBtcModal />} />
-          </Route>
-          <Route
-            path={RouteUrls.FundChooseCurrency}
-            element={
-              <AccountGate>
-                <ChooseCryptoAssetToFund />
-              </AccountGate>
-            }
-          >
-            <Route path={RouteUrls.ReceiveStx} element={<ReceiveStxModal />} />
-          </Route>
+          />
 
           {sendCryptoAssetFormRoutes}
 
