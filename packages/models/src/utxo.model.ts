@@ -1,15 +1,15 @@
 export interface UtxoId {
-  txid: string;
-  vout: number;
+  readonly txid: string;
+  readonly vout: number;
 }
 
 export interface Utxo extends UtxoId {
-  height?: number; // no height indicates unconfirmed tx
-  value: number; // sats
+  readonly height?: number; // no height indicates unconfirmed tx
+  readonly value: number; // sats
 }
 
 export interface OwnedUtxo extends Utxo {
-  address: string;
-  path: string;
-  keyOrigin: string;
+  readonly address: string;
+  readonly path: string;
+  readonly keyOrigin: string;
 }

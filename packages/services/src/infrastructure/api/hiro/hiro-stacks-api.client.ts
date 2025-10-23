@@ -29,6 +29,8 @@ import {
   HiroNftMetadataResponse,
   HiroPageRequest,
   HiroReadOnlyFunctionResponse,
+  HiroStacksMempoolTransaction,
+  HiroStacksTransaction,
   HiroTransactionEvent,
   HiroTransactionEventsResponse,
   HiroTransactionFeeEstimateResponse,
@@ -284,6 +286,48 @@ export class HiroStacksApiClient {
           [
             'hiro-stacks-get-address-mempool-transactions',
             address,
+            selectStacksChainId(this.settings.getSettings()),
+          ],
+          fetchFn
+        );
+  }
+
+  public async getTransactionById(
+    txid: string,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<HiroStacksTransaction | HiroStacksMempoolTransaction | null> {
+    const fetchFn = async () => {
+      try {
+        const res = await this.limiter.add(
+          RateLimiterType.HiroStacks,
+          () =>
+            this._axios.get<HiroStacksTransaction | HiroStacksMempoolTransaction>(
+              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tx/${txid}`,
+              { signal }
+            ),
+          {
+            priority: hiroApiRequestsPriorityLevels.getTransactionById,
+            signal,
+            throwOnTimeout: true,
+          }
+        );
+        return res.data;
+      } catch (error) {
+        if (
+          error instanceof AxiosError &&
+          (error.request?.status === 404 || error.request?.status === 422)
+        ) {
+          return null;
+        }
+        throw error;
+      }
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          [
+            'hiro-stacks-get-transaction-by-id',
+            txid,
             selectStacksChainId(this.settings.getSettings()),
           ],
           fetchFn

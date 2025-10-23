@@ -199,6 +199,197 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/transactions/bitcoin/descriptors/{descriptor}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description List Bitcoin Transactions for a descriptor */
+    get: {
+      parameters: {
+        query: {
+          network: 'mainnet' | 'testnet3' | 'testnet4' | 'regtest' | 'signet';
+          page: string;
+          pageSize: string;
+        };
+        header?: never;
+        path: {
+          descriptor: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              meta: {
+                page: number;
+                pageSize: number;
+                totalPages: number;
+                totalItems: number;
+              };
+              data: {
+                txid: string;
+                /** @description Block Height */
+                height?: number;
+                /** @description Block Time */
+                time?: number;
+                vin: {
+                  n: number;
+                  txid?: string;
+                  /** @description Is Own Address */
+                  owned?: boolean;
+                  address?: string;
+                  path?: string;
+                  value: string;
+                }[];
+                vout: {
+                  n: number;
+                  /** @description Is Own Address */
+                  owned?: boolean;
+                  address?: string;
+                  path?: string;
+                  value: string;
+                }[];
+              }[];
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/transactions/bitcoin/{txid}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get Bitcoin Transaction By TxId */
+    get: {
+      parameters: {
+        query: {
+          network: 'mainnet' | 'testnet3' | 'testnet4' | 'regtest' | 'signet';
+        };
+        header?: never;
+        path: {
+          txid: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              txid: string;
+              /** @description Block Height */
+              height?: number;
+              /** @description Block Time */
+              time?: number;
+              vin: {
+                n: number;
+                txid?: string;
+                /** @description Is Own Address */
+                owned?: boolean;
+                address?: string;
+                path?: string;
+                value: string;
+              }[];
+              vout: {
+                n: number;
+                /** @description Is Own Address */
+                owned?: boolean;
+                address?: string;
+                path?: string;
+                value: string;
+              }[];
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/transactions/{descriptor}': {
     parameters: {
       query?: never;

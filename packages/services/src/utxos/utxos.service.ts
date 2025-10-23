@@ -8,6 +8,7 @@ import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.clie
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
 import { AccountRequest, AccountRequestUtxoProtectionOptions } from '../types/request.types';
 import {
+  createOwnedUtxo,
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
   getInscriptionProtectedUtxoIds,
@@ -15,7 +16,6 @@ import {
   getRuneProtectedUtxoIds,
   isUnconfirmedUtxo,
   isUneconomicalUtxo,
-  mapLeatherApiUtxoToOwnedUtxo,
   selectUniqueUtxoIds,
 } from './utxos.utils';
 
@@ -153,6 +153,6 @@ export class UtxosService {
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
     const utxos = await this.leatherApiClient.fetchUtxos(descriptor, { signal });
-    return utxos.map(utxo => mapLeatherApiUtxoToOwnedUtxo(utxo, fingerprint));
+    return utxos.map(utxo => createOwnedUtxo(utxo, fingerprint));
   }
 }

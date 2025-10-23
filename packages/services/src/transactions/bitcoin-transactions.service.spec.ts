@@ -39,7 +39,8 @@ describe(BitcoinTransactionsService.name, () => {
       const service = new BitcoinTransactionsService(mockLeatherApiClient);
       const result = await service.getAccountTransactions(mockAccount);
       expect(result).toHaveLength(2);
-      expect(result).toEqual(expect.arrayContaining([duplicateTx, uniqueTx]));
+      expect(result[0].txid).toEqual(duplicateTx.txid);
+      expect(result[1].txid).toEqual(uniqueTx.txid);
     });
 
     it('should return empty array for accounts without bitcoin address info', async () => {

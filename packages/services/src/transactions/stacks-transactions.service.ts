@@ -11,6 +11,11 @@ import {
 @injectable()
 export class StacksTransactionsService {
   constructor(private readonly stacksApiClient: HiroStacksApiClient) {}
+
+  public async getTransactionById(txid: string, signal?: AbortSignal): Promise<StacksTx | null> {
+    return await this.stacksApiClient.getTransactionById(txid, { signal });
+  }
+
   /**
    * Gets pending Stacks transactions from mempool by address.
    */
