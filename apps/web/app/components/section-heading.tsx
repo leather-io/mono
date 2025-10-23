@@ -27,7 +27,7 @@ export function SectionHeading({
       mt="space.07"
     >
       <Box flex={1}>
-        <styled.h2 textStyle="heading.03" maxW="400px" m={0} mr="space.03">
+        <styled.h2 textStyle="heading.03" id={title} maxW="400px" m={0} mr="space.03">
           {prefix}
           {sanitizeContent(title)}
         </styled.h2>
