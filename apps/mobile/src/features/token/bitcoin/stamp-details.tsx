@@ -6,7 +6,7 @@ import { t } from '@lingui/core/macro';
 import { AccountId, StampAsset } from '@leather.io/models';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
-import { TokenLoading } from '../components/token-loading';
+import { CollectibleLoading } from '../components/collectible-loading';
 
 interface StampDetailsProps {
   account: AccountId;
@@ -19,7 +19,7 @@ export function StampDetails({ assetId, account }: StampDetailsProps) {
   const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
 
   if (collectible.state === 'loading') {
-    return <TokenLoading />;
+    return <CollectibleLoading height={height} />;
   }
   if (collectible.state === 'error') {
     return <ErrorFallbackTab />;

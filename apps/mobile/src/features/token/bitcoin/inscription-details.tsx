@@ -5,7 +5,7 @@ import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-c
 import { AccountId, InscriptionAsset } from '@leather.io/models';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
-import { TokenLoading } from '../components/token-loading';
+import { CollectibleLoading } from '../components/collectible-loading';
 
 interface InscriptionDetailsProps {
   account: AccountId;
@@ -17,7 +17,7 @@ export function InscriptionDetails({ assetId, account }: InscriptionDetailsProps
 
   const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
   if (collectible.state === 'loading') {
-    return <TokenLoading />;
+    return <CollectibleLoading height={height} />;
   }
   if (collectible.state === 'error') {
     return <ErrorFallbackTab />;

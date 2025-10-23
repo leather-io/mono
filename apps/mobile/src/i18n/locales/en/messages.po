@@ -595,6 +595,7 @@ msgid "Deployment failed"
 msgstr "Deployment failed"
 
 #: src/features/token/collectible.tsx:68
+#: src/features/token/components/collectible-loading.tsx:18
 #: src/features/token/components/token-loading.tsx:38
 #: src/features/token/token.tsx:101
 msgid "Description"

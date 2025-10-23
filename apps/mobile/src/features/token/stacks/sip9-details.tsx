@@ -5,7 +5,7 @@ import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-c
 import { AccountId, isSip9Asset } from '@leather.io/models';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
-import { TokenLoading } from '../components/token-loading';
+import { CollectibleLoading } from '../components/collectible-loading';
 
 interface Sip9TokenDetailsProps {
   account: AccountId;
@@ -19,7 +19,7 @@ export function Sip9TokenDetails({ assetId, tokenId, account }: Sip9TokenDetails
   const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
 
   if (collectible.state === 'loading') {
-    return <TokenLoading />;
+    return <CollectibleLoading height={height} />;
   }
   if (collectible.state === 'error') {
     return <ErrorFallbackTab />;
