@@ -5,7 +5,7 @@ import { createMoney } from '@leather.io/utils';
 import { HiroTransactionFeeEstimateResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { StacksFeeConfig } from '../infrastructure/app-config/app-config.service';
 import {
-  createStacksTxFeeQuote,
+  createStacksTransactionFeeQuote,
   getStacksTxFeeBoundedEstimates,
   getStacksTxFeeDefaultAmounts,
   getStacksTxPayloadTypeFees,
@@ -263,12 +263,12 @@ describe(getStacksTxFeeBoundedEstimates.name, () => {
   });
 });
 
-describe(createStacksTxFeeQuote.name, () => {
+describe(createStacksTransactionFeeQuote.name, () => {
   it('should create a fee quote with correct properties', () => {
     const fee = 2000;
     const estimatedTxSize = 200;
 
-    const result = createStacksTxFeeQuote(fee, estimatedTxSize);
+    const result = createStacksTransactionFeeQuote(fee, estimatedTxSize);
 
     expect(result).toEqual({
       type: 'feeRate',
@@ -284,7 +284,7 @@ describe(createStacksTxFeeQuote.name, () => {
     const fee = 1500;
     const estimatedTxSize = 200;
 
-    const result = createStacksTxFeeQuote(fee, estimatedTxSize);
+    const result = createStacksTransactionFeeQuote(fee, estimatedTxSize);
 
     expect(result.rate).toBe(8);
   });
@@ -293,7 +293,7 @@ describe(createStacksTxFeeQuote.name, () => {
     const fee = 0;
     const estimatedTxSize = 200;
 
-    const result = createStacksTxFeeQuote(fee, estimatedTxSize);
+    const result = createStacksTransactionFeeQuote(fee, estimatedTxSize);
 
     expect(result).toEqual({
       type: 'feeRate',
@@ -309,7 +309,7 @@ describe(createStacksTxFeeQuote.name, () => {
     const fee = 1;
     const estimatedTxSize = 200;
 
-    const result = createStacksTxFeeQuote(fee, estimatedTxSize);
+    const result = createStacksTransactionFeeQuote(fee, estimatedTxSize);
 
     expect(result.rate).toBe(1);
   });

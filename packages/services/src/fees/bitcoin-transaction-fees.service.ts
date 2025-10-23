@@ -2,43 +2,61 @@ import { injectable } from 'inversify';
 
 import { CoinSelectionRecipient } from '@leather.io/bitcoin';
 import { TransactionFees } from '@leather.io/models';
-import { createMoney } from '@leather.io/utils';
+
+import { BitcoinCoinSelectionService } from '../coin-selection/bitcoin-coin-selection.service';
+import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
+import { AccountRequest } from '../types';
+import { createBitcoinTransactionFeeQuote } from './bitcoin-transaction-fees.utils';
 
 @injectable()
 export class BitcoinTransactionFeesService {
+  constructor(
+    private readonly leatherApiClient: LeatherApiClient,
+    private readonly coinSelectionService: BitcoinCoinSelectionService
+  ) {}
+
   async getBitcoinTransactionFees(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    recipients: CoinSelectionRecipient,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    account: AccountRequest,
+    recipients: CoinSelectionRecipient[],
+    isMaxSpend = false,
     signal?: AbortSignal
   ): Promise<TransactionFees> {
+    const feeRates = await this.leatherApiClient.fetchBitcoinFeeRates({ signal });
+
+    const [
+      { fee: lowFee, estimatedTxSize: lowTxVBytes },
+      { fee: standardFee, estimatedTxSize: standardTxVBytes },
+      { fee: highFee, estimatedTxSize: highTxVBytes },
+    ] = await Promise.all([
+      this.coinSelectionService.performCoinSelection({
+        account,
+        recipients,
+        isMaxSpend,
+        feeRate: feeRates.low.rate,
+      }),
+      this.coinSelectionService.performCoinSelection({
+        account,
+        recipients,
+        isMaxSpend,
+        feeRate: feeRates.standard.rate,
+      }),
+      this.coinSelectionService.performCoinSelection({
+        account,
+        recipients,
+        isMaxSpend,
+        feeRate: feeRates.high.rate,
+      }),
+    ]);
     return await Promise.resolve({
       chain: 'bitcoin',
       options: {
-        low: {
-          type: 'feeRate',
-          rate: 1,
-          rateUnit: 'sats/vB',
-          estimatedTxSize: 101,
-          sizeUnit: 'vB',
-          value: createMoney(1, 'BTC'),
-        },
-        standard: {
-          type: 'feeRate',
-          rate: 2,
-          rateUnit: 'sats/vB',
-          estimatedTxSize: 102,
-          sizeUnit: 'vB',
-          value: createMoney(2, 'BTC'),
-        },
-        high: {
-          type: 'feeRate',
-          rate: 3,
-          rateUnit: 'sats/vB',
-          estimatedTxSize: 103,
-          sizeUnit: 'vB',
-          value: createMoney(3, 'BTC'),
-        },
+        low: createBitcoinTransactionFeeQuote(lowFee, feeRates.low.rate, lowTxVBytes),
+        standard: createBitcoinTransactionFeeQuote(
+          standardFee,
+          feeRates.standard.rate,
+          standardTxVBytes
+        ),
+        high: createBitcoinTransactionFeeQuote(highFee, feeRates.high.rate, highTxVBytes),
       },
     });
   }

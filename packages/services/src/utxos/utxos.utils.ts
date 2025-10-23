@@ -52,10 +52,11 @@ export function isUnconfirmedUtxo(utxo: Utxo) {
   return !utxo.height;
 }
 
-export const uneconomicalSatThreshold = 500;
+export const dustSatThreshold = 500;
 
-export function isUneconomicalUtxo(utxo: Utxo) {
-  return Number(utxo.value) < uneconomicalSatThreshold;
+// TODO: Add address-type specific dust thresholds
+export function isDustUtxo(utxo: Utxo) {
+  return Number(utxo.value) < dustSatThreshold;
 }
 
 export function sumUtxoValues(utxos: Utxo[]) {

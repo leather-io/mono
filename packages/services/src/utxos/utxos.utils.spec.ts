@@ -11,6 +11,7 @@ import {
 } from '../infrastructure/api/leather/leather-api.client';
 import {
   createOwnedUtxo,
+  dustSatThreshold,
   fallbackUtxoHeight,
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
@@ -20,11 +21,10 @@ import {
   getRuneProtectedUtxoIds,
   getUtxoIdFromOutpoint,
   getUtxoIdFromSatpoint,
+  isDustUtxo,
   isUnconfirmedUtxo,
-  isUneconomicalUtxo,
   selectUniqueUtxoIds,
   sumUtxoValues,
-  uneconomicalSatThreshold,
   utxoToId,
 } from './utxos.utils';
 
@@ -211,16 +211,16 @@ describe(utxoToId.name, () => {
   });
 });
 
-describe(isUneconomicalUtxo.name, () => {
-  it('returns a boolean reflecting whether utxo value is less than uneconomical sat threshold', () => {
-    const uneconomicalUtxo = {
-      value: uneconomicalSatThreshold - 1,
+describe(isDustUtxo.name, () => {
+  it('returns a boolean reflecting whether utxo value is less than dust sat threshold', () => {
+    const dustUtxo = {
+      value: dustSatThreshold - 1,
     } as unknown as Utxo;
-    const economicalUtxo = {
-      value: uneconomicalSatThreshold + 1,
+    const nonDustUtxo = {
+      value: dustSatThreshold + 1,
     } as unknown as Utxo;
-    expect(isUneconomicalUtxo(uneconomicalUtxo)).toEqual(true);
-    expect(isUneconomicalUtxo(economicalUtxo)).toEqual(false);
+    expect(isDustUtxo(dustUtxo)).toEqual(true);
+    expect(isDustUtxo(nonDustUtxo)).toEqual(false);
   });
 });
 

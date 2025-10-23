@@ -555,6 +555,76 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/market/bitcoin/fees': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get Bitcoin fee rate estimates */
+    get: {
+      parameters: {
+        query?: {
+          network?: 'mainnet' | 'testnet3' | 'testnet4' | 'regtest' | 'signet';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              low: {
+                rate: number;
+              };
+              standard: {
+                rate: number;
+              };
+              high: {
+                rate: number;
+              };
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/market/prices/native': {
     parameters: {
       query?: never;
