@@ -6,7 +6,7 @@ import { HIRO_EXPLORER_URL } from '@leather.io/constants';
 
 export function openExternalLink(url: string) {
   if (!isWebUri(url)) return;
-  analytics.untypedTrack('external_link_clicked', { url });
+  analytics.untypedTrack('external_link_clicked', { url, location: window.location.href });
   return window.open(url, '_blank', 'noopener,noreferrer');
 }
 

@@ -26,7 +26,6 @@ export function NavItem({ children, icon, href, newTab }: NavItemProps) {
       }
       className="group"
       userSelect="none"
-      role="link"
       textStyle="label.02"
       pl="space.04"
       py="space.04"

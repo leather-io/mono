@@ -6,6 +6,7 @@ import { learnArticles } from '~/content/learn-content';
 import { UserPositions } from '~/features/stacking/user-positions/user-positions';
 import { Page } from '~/layouts/page/page';
 
+import { DualStackingPromo } from './components/dual-stacking-promo';
 import { IndependentStackingLink } from './components/independent-stacking-link';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
 import { StackingExplainer } from './components/stacking-explainer';
@@ -52,6 +53,9 @@ export function Stacking() {
       />
       <LiquidStackingExplainer mt="space.04" />
       <LiquidStackingProviderTable mt="space.05" />
+
+      <SectionHeading title="Dual stacking" />
+      <DualStackingPromo />
 
       <Page.Divider my="space.07" />
 
