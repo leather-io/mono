@@ -1,14 +1,13 @@
-import { userAddsAccount } from '@/store/accounts/accounts.write';
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
-import { handleAppResetWithState } from '@leather.io/state';
-import { userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
-import { handleEntityActionWith } from '../utils';
-import { BitcoinKeychain } from './bitcoin/utils';
-import { filterKeychainsToRemove } from './keychains';
-import { StacksKeychain } from './stacks/utils';
+import { handleEntityActionWith } from '../entity.helpers';
+import { handleAppResetWithState } from '../index';
+import { userAddsWallet, userRemovesWallet } from '../wallet/wallet.slice';
+import { BitcoinKeychain } from './bitcoin/bitcoin-keychain.utils';
+import { filterKeychainsToRemove } from './keychain.utils';
+import { StacksKeychain } from './stacks/stacks-keychain.utils';
 
 export type Keychain = BitcoinKeychain | StacksKeychain;
 
@@ -17,6 +16,12 @@ export const keychainAdapter = createEntityAdapter<Keychain, string>({
 });
 
 const initialState = keychainAdapter.getInitialState();
+
+interface AddAccountPayload {
+  account: { id: string };
+  accountKeychains: Keychain[];
+}
+export const userAddsAccount = createAction<AddAccountPayload>('accounts/userAddsAccount');
 
 export const keychainSlice = createSlice({
   name: 'keychains',

@@ -22,10 +22,12 @@
   },
   "exports": {
     ".": "./dist/index.js",
-    "./wallet": "./dist/wallet/index.js"
+    "./wallet": "./dist/wallet/index.js",
+    "./keychains": "./dist/keychains/index.js"
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
+    "@leather.io/crypto": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@reduxjs/toolkit": "2.8.1",

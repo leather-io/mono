@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 
 export * from './entity.helpers';
+export * from './keychains';
 
 export const resetWallet = createAction('global/resetWallet');
 

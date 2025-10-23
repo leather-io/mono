@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { entitySchema } from '@leather.io/state';
+import { entitySchema } from '../../entity.helpers';
 
 const bitcoinKeychainSchema = z.object({
   descriptor: z.string(),

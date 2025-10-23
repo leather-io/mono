@@ -68,7 +68,7 @@ msgid "24 Hour Change"
 msgstr "24 Hour Change"
 
 #: src/features/wallet-manager/account-list.tsx:23
-#: src/store/accounts/accounts.write.ts:42
+#: src/store/accounts/accounts.write.ts:37
 msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
 
