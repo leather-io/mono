@@ -85,7 +85,7 @@ export function getStacksTxFeeBoundedEstimates(
   };
 }
 
-export function createStacksTxFeeQuote(
+export function createStacksTransactionFeeQuote(
   fee: number,
   estimatedTxSize: number
 ): FeeRateTransactionFeeQuote {

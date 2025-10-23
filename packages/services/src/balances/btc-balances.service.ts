@@ -78,7 +78,7 @@ export class BtcBalancesService {
     const inboundBalance = createMoney(sumUtxoValues(utxos.inbound), 'BTC');
     const outboundBalance = createMoney(sumUtxoValues(utxos.outbound), 'BTC');
     const protectedBalance = createMoney(sumUtxoValues(utxos.protected), 'BTC');
-    const uneconomicalBalance = createMoney(sumUtxoValues(utxos.uneconomical), 'BTC');
+    const dustBalance = createMoney(sumUtxoValues(utxos.dust), 'BTC');
     const unspendableBalance = createMoney(sumUtxoValues(utxos.unspendable), 'BTC');
 
     const btcMarketData = await this.marketDataService.getMarketData(btcAsset, signal);
@@ -90,7 +90,7 @@ export class BtcBalancesService {
         inboundBalance,
         outboundBalance,
         protectedBalance,
-        uneconomicalBalance,
+        dustBalance,
         unspendableBalance
       ),
       quote: createBtcBalance(
@@ -98,7 +98,7 @@ export class BtcBalancesService {
         baseCurrencyAmountInQuote(inboundBalance, btcMarketData),
         baseCurrencyAmountInQuote(outboundBalance, btcMarketData),
         baseCurrencyAmountInQuote(protectedBalance, btcMarketData),
-        baseCurrencyAmountInQuote(uneconomicalBalance, btcMarketData),
+        baseCurrencyAmountInQuote(dustBalance, btcMarketData),
         baseCurrencyAmountInQuote(unspendableBalance, btcMarketData)
       ),
     };

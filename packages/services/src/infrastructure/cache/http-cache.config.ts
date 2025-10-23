@@ -40,6 +40,7 @@ export type HttpCacheKey =
   | 'leather-api-bitcoin-descriptor-transactions'
   | 'leather-api-bitcoin-transaction-by-txid'
   | 'leather-api-usd-exchange-rates'
+  | 'leather-api-bitcoin-fee-rates'
   | 'leather-api-native-token-price-list'
   | 'leather-api-native-token-price-map'
   | 'leather-api-native-token-price'
@@ -110,6 +111,7 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-bitcoin-descriptor-transactions': { ttl: secondsInMs(10) },
   'leather-api-bitcoin-transaction-by-txid': { ttl: secondsInMs(10) },
   'leather-api-usd-exchange-rates': { ttl: daysInMs(1) },
+  'leather-api-bitcoin-fee-rates': { ttl: secondsInMs(10) },
   'leather-api-native-token-price-list': { ttl: minutesInMs(5) },
   'leather-api-native-token-price-map': { ttl: minutesInMs(5) },
   'leather-api-native-token-price': { ttl: minutesInMs(5) },

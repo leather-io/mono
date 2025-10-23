@@ -32,6 +32,8 @@ export type LeatherApiSwapDex =
   paths['/v1/swap/dexes']['get']['responses'][200]['content']['application/json'][string];
 export type LeatherApiAppConfig =
   paths['/v1/app-config']['get']['responses'][200]['content']['application/json'];
+export type LeatherApiBitcoinFeeRates =
+  paths['/v1/market/bitcoin/fees']['get']['responses'][200]['content']['application/json'];
 
 @injectable()
 export class LeatherApiClient {
@@ -172,6 +174,28 @@ export class LeatherApiClient {
     return skipCache
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(['leather-api-usd-exchange-rates'], fetchFn);
+  }
+
+  async fetchBitcoinFeeRates({
+    signal,
+    skipCache,
+  }: ApiRequestOptions = {}): Promise<LeatherApiBitcoinFeeRates> {
+    const network = selectBitcoinNetwork(this.settingsService.getSettings());
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/market/bitcoin/fees', { signal, params: { query: { network } } }),
+        {
+          priority: leatherApiPriorities.bitcoinFeeRates,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-bitcoin-fee-rates', network], fetchFn);
   }
 
   async fetchNativeTokenPriceList({ signal, skipCache }: ApiRequestOptions = {}) {

@@ -14,8 +14,8 @@ import {
   getInscriptionProtectedUtxoIds,
   getOutboundUtxos,
   getRuneProtectedUtxoIds,
+  isDustUtxo,
   isUnconfirmedUtxo,
-  isUneconomicalUtxo,
   selectUniqueUtxoIds,
 } from './utxos.utils';
 
@@ -24,7 +24,7 @@ export interface UtxoTotals {
   inbound: OwnedUtxo[];
   outbound: OwnedUtxo[];
   protected: OwnedUtxo[];
-  uneconomical: OwnedUtxo[];
+  dust: OwnedUtxo[];
   unspendable: OwnedUtxo[];
   available: OwnedUtxo[];
 }
@@ -34,7 +34,7 @@ const emptyUtxos: UtxoTotals = {
   inbound: [],
   outbound: [],
   protected: [],
-  uneconomical: [],
+  dust: [],
   unspendable: [],
   available: [],
 };
@@ -80,7 +80,7 @@ export class UtxosService {
       inbound: [...nativeSegwitUtxos.inbound, ...taprootUtxos.inbound],
       outbound: [...nativeSegwitUtxos.outbound, ...taprootUtxos.outbound],
       protected: [...nativeSegwitUtxos.protected, ...taprootUtxos.protected],
-      uneconomical: [...nativeSegwitUtxos.uneconomical, ...taprootUtxos.uneconomical],
+      dust: [...nativeSegwitUtxos.dust, ...taprootUtxos.dust],
       unspendable: [...nativeSegwitUtxos.unspendable, ...taprootUtxos.unspendable],
       available: [...nativeSegwitUtxos.available, ...taprootUtxos.available],
     };
@@ -108,11 +108,11 @@ export class UtxosService {
       ...totalUtxos.filter(filterOutMatchesAnyUtxoId(unconfirmedUtxos)),
       ...outboundUtxos,
     ];
-    const uneconomicalUtxos = confirmedUtxos.filter(isUneconomicalUtxo);
+    const dustUtxos = confirmedUtxos.filter(isDustUtxo);
     const unspendableUtxos = selectUniqueUtxoIds([
       ...outboundUtxos,
       ...protectedUtxos,
-      ...uneconomicalUtxos,
+      ...dustUtxos,
     ]);
     const availableUtxos = confirmedUtxos.filter(filterOutMatchesAnyUtxoId(unspendableUtxos));
     return {
@@ -120,7 +120,7 @@ export class UtxosService {
       inbound: unconfirmedUtxos,
       outbound: outboundUtxos,
       protected: protectedUtxos,
-      uneconomical: uneconomicalUtxos,
+      dust: dustUtxos,
       unspendable: unspendableUtxos,
       available: availableUtxos,
     };

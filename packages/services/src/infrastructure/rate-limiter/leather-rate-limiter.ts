@@ -21,6 +21,7 @@ export const leatherPriorityLevels = {
 export const leatherApiPriorities = {
   utxos: leatherPriorityLevels.MEDIUM,
   bitcoinTransactions: leatherPriorityLevels.LOW,
+  bitcoinFeeRates: leatherPriorityLevels.LOW,
   fiatExchangeRates: leatherPriorityLevels.HIGH,
   nativeTokenPriceList: leatherPriorityLevels.HIGH,
   nativeTokenPriceMap: leatherPriorityLevels.HIGH,

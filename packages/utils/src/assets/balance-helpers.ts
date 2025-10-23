@@ -24,20 +24,20 @@ export function createBtcBalance(
   inboundBal?: Money,
   outboundBal?: Money,
   protectedBal?: Money,
-  uneconomicalBal?: Money,
+  dustBal?: Money,
   unspendableBal?: Money
 ): BtcBalance {
   const zeroBalance = createMoney(0, totalBalance.symbol);
   const inboundBalance = inboundBal ?? zeroBalance;
   const outboundBalance = outboundBal ?? zeroBalance;
   const protectedBalance = protectedBal ?? zeroBalance;
-  const uneconomicalBalance = uneconomicalBal ?? zeroBalance;
+  const dustBalance = dustBal ?? zeroBalance;
   const unspendableBalance = unspendableBal ?? zeroBalance;
   const baseBalance = createBaseCryptoAssetBalance(totalBalance, inboundBalance, outboundBalance);
   return {
     ...baseBalance,
     protectedBalance,
-    uneconomicalBalance,
+    dustBalance,
     availableBalance: subtractMoney(totalBalance, unspendableBalance),
     unspendableBalance,
   };
@@ -80,7 +80,7 @@ export function aggregateBtcBalances(balances: BtcBalance[]): BtcBalance {
     sumMoney(balances.map(b => b.inboundBalance)),
     sumMoney(balances.map(b => b.outboundBalance)),
     sumMoney(balances.map(b => b.protectedBalance)),
-    sumMoney(balances.map(b => b.uneconomicalBalance)),
+    sumMoney(balances.map(b => b.dustBalance)),
     sumMoney(balances.map(b => b.unspendableBalance))
   );
 }

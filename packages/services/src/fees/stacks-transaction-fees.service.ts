@@ -7,7 +7,7 @@ import { getSerializedUnsignedStacksTxPayload } from '@leather.io/stacks';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { AppConfigService } from '../infrastructure/app-config/app-config.service';
 import {
-  createStacksTxFeeQuote,
+  createStacksTransactionFeeQuote,
   getStacksTxFeeBoundedEstimates,
   getStacksTxFeeDefaultAmounts,
 } from './stacks-transaction-fees.utils';
@@ -28,9 +28,9 @@ export class StacksTransactionFeesService {
     return {
       chain: 'stacks',
       options: {
-        low: createStacksTxFeeQuote(fees.low, estimatedTxSize),
-        standard: createStacksTxFeeQuote(fees.standard, estimatedTxSize),
-        high: createStacksTxFeeQuote(fees.high, estimatedTxSize),
+        low: createStacksTransactionFeeQuote(fees.low, estimatedTxSize),
+        standard: createStacksTransactionFeeQuote(fees.standard, estimatedTxSize),
+        high: createStacksTransactionFeeQuote(fees.high, estimatedTxSize),
       },
     };
   }
