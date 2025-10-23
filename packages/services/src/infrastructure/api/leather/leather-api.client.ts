@@ -96,7 +96,7 @@ export class LeatherApiClient {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () =>
-          this.client.GET(`/v1/transactions/{descriptor}`, {
+          this.client.GET(`/v1/transactions/bitcoin/descriptors/{descriptor}`, {
             params: {
               path: { descriptor },
               query: {
@@ -117,7 +117,42 @@ export class LeatherApiClient {
     return skipCache
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(
-          ['leather-api-transactions', descriptor, params.toString()],
+          ['leather-api-bitcoin-descriptor-transactions', descriptor, params.toString()],
+          fetchFn
+        );
+  }
+
+  async fetchBitcoinTransactionByTxId(txid: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const network = selectBitcoinNetwork(this.settingsService.getSettings());
+    const fetchFn = async () => {
+      try {
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/transactions/bitcoin/{txid}', {
+              signal,
+              params: { path: { txid }, query: { network } },
+            }),
+          {
+            priority: leatherApiPriorities.bitcoinTransactions,
+            signal,
+          }
+        );
+        return data!;
+      } catch (error) {
+        if (
+          LeatherApiError.isLeatherApiError(error) &&
+          (error.isNotFound() || error.isUnprocessableEntity())
+        ) {
+          return null;
+        }
+        throw error;
+      }
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-bitcoin-transaction-by-txid', network, txid],
           fetchFn
         );
   }

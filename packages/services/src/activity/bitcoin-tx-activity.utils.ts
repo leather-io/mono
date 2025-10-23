@@ -2,6 +2,7 @@ import { btcAsset } from '@leather.io/constants';
 import {
   AccountAddresses,
   ActivityLevels,
+  BitcoinTransaction,
   OnChainActivityStatuses,
   OnChainActivityTypes,
   ReceiveAssetActivity,
@@ -9,18 +10,16 @@ import {
 } from '@leather.io/models';
 import { dateToUnixTimestamp, isDefined, sumNumbers, uniqueArray } from '@leather.io/utils';
 
-import { LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
-
-export function mapBitcoinTxBlockTime(tx: LeatherApiBitcoinTransaction) {
+export function mapBitcoinTxBlockTime(tx: BitcoinTransaction) {
   return tx.height && tx.time ? tx.time : dateToUnixTimestamp(new Date());
 }
 
-export function mapBitcoinTxStatus(tx: LeatherApiBitcoinTransaction) {
+export function mapBitcoinTxStatus(tx: BitcoinTransaction) {
   return tx.height ? OnChainActivityStatuses.success : OnChainActivityStatuses.pending;
 }
 
 export function mapBitcoinTxToActivity(
-  tx: LeatherApiBitcoinTransaction,
+  tx: BitcoinTransaction,
   account: AccountAddresses
 ): SendAssetActivity | ReceiveAssetActivity | undefined {
   const isSend = tx.vin.some(input => input.owned);

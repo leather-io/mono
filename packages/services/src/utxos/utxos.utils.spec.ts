@@ -10,6 +10,7 @@ import {
   LeatherApiUtxo,
 } from '../infrastructure/api/leather/leather-api.client';
 import {
+  createOwnedUtxo,
   fallbackUtxoHeight,
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
@@ -21,7 +22,6 @@ import {
   getUtxoIdFromSatpoint,
   isUnconfirmedUtxo,
   isUneconomicalUtxo,
-  mapLeatherApiUtxoToOwnedUtxo,
   selectUniqueUtxoIds,
   sumUtxoValues,
   uneconomicalSatThreshold,
@@ -403,7 +403,7 @@ describe(getOutboundUtxos.name, () => {
   });
 });
 
-describe(mapLeatherApiUtxoToOwnedUtxo.name, () => {
+describe(createOwnedUtxo.name, () => {
   it('maps a Leather API UTXO to an Owned UTXO', () => {
     const fingerprint = 'deadbeef';
     const utxo = {
@@ -413,7 +413,7 @@ describe(mapLeatherApiUtxoToOwnedUtxo.name, () => {
       address: 'bc1q123',
       path: 'bc1q123-path',
     } as unknown as LeatherApiUtxo;
-    const ownedUtxo = mapLeatherApiUtxoToOwnedUtxo(utxo, fingerprint);
+    const ownedUtxo = createOwnedUtxo(utxo, fingerprint);
     expect(ownedUtxo.txid).toEqual(utxo.txid);
     expect(ownedUtxo.vout).toEqual(utxo.vout);
     expect(ownedUtxo.value).toEqual(utxo.value);

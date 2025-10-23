@@ -1,4 +1,30 @@
-// Source: https://github.com/Blockstream/esplora/blob/master/API.md#transaction-format
+export interface BitcoinTransaction {
+  readonly txid: string;
+  readonly height?: number;
+  readonly time?: number;
+  readonly vin: BitcoinTransactionVin[];
+  readonly vout: BitcoinTransactionVout[];
+}
+
+export interface BitcoinTransactionVin {
+  readonly n: number;
+  readonly txid?: string;
+  readonly owned?: boolean;
+  readonly address?: string;
+  readonly path?: string;
+  readonly value: string;
+}
+
+export interface BitcoinTransactionVout {
+  readonly n: number;
+  readonly owned?: boolean;
+  readonly address?: string;
+  readonly path?: string;
+  readonly value: string;
+}
+
+// EXTERNAL LEGACY MODEL - To be replaced by internal type: BitcoinTransaction
+// -- Source: https://github.com/Blockstream/esplora/blob/master/API.md#transaction-format
 interface BitcoinTransactionIssuance {
   asset_id: string;
   is_reissuance: boolean;

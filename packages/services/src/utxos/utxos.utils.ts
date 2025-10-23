@@ -94,10 +94,7 @@ export function getOutboundUtxos(
     }));
 }
 
-export function mapLeatherApiUtxoToOwnedUtxo(
-  utxo: LeatherApiUtxo,
-  masterFingerprint: string
-): OwnedUtxo {
+export function createOwnedUtxo(utxo: LeatherApiUtxo, masterFingerprint: string): OwnedUtxo {
   return {
     ...utxo,
     value: Number(utxo.value),
