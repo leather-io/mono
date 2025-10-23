@@ -68,13 +68,13 @@ export function getAssetId(asset: CryptoAsset): CryptoAssetId {
         id: asset.stamp.toString(),
       };
     case 'sip9':
-      return buildSip9AssetId(asset);
+      return createSip9AssetId(asset);
     default:
       assertUnreachable(asset);
   }
 }
 
-function buildSip9AssetId(asset: Sip9Asset): CryptoAssetId {
+export function createSip9AssetId(asset: Sip9Asset): CryptoAssetId {
   return {
     protocol: asset.protocol,
     id: `${asset.assetId}|${asset.tokenId}`,
