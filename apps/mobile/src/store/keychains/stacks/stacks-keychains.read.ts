@@ -16,8 +16,11 @@ import {
   initalizeStacksSigner,
   stacksChainIdToCoreNetworkMode,
 } from '@leather.io/stacks';
+import {
+  descriptorKeychainSelectors,
+  filterKeychainsByStacksAccount,
+} from '@leather.io/state/keychains';
 
-import { descriptorKeychainSelectors, filterKeychainsByStacksAccount } from '../keychains';
 import { keychainSelectors } from '../keychains.read';
 
 function createSignFnFromBiometricMnemonicStore(descriptor: string) {

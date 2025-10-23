@@ -27,10 +27,13 @@ import {
   validateKeyOriginPath,
 } from '@leather.io/crypto';
 import { BitcoinNetworkModes, bitcoinNetworkToNetworkMode } from '@leather.io/models';
+import {
+  BitcoinKeychain,
+  descriptorKeychainSelectors,
+  filterKeychainsByAccountIndex,
+} from '@leather.io/state/keychains';
 
-import { descriptorKeychainSelectors, filterKeychainsByAccountIndex } from '../keychains';
 import { keychainSelectors } from '../keychains.read';
-import { BitcoinKeychain } from './utils';
 
 // These are expensive actions that may be called several times
 const memoizedInitalizeBitcoinKeychain = memoize(initializeBitcoinAccountKeychainFromDescriptor);

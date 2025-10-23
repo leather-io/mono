@@ -4,16 +4,11 @@ import { produce } from 'immer';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
-import { entitySchema, handleAppResetWithState } from '@leather.io/state';
+import { entitySchema, handleAppResetWithState, handleEntityActionWith } from '@leather.io/state';
+import { userAddsAccount } from '@leather.io/state/keychains';
 import { Optional, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
-import { BitcoinKeychain } from '../keychains/bitcoin/utils';
-import { StacksKeychain } from '../keychains/stacks/utils';
-import {
-  getWalletAccountsByAccountId,
-  handleEntityActionWith,
-  selectNextDistinctAccountIcon,
-} from '../utils';
+import { getWalletAccountsByAccountId, selectNextDistinctAccountIcon } from '../utils';
 import { AccountIcon, AccountStatus, AccountStore, accountStoreSchema } from './utils';
 
 export const accountsAdapter = createEntityAdapter<AccountStore, string>({
@@ -129,12 +124,6 @@ export const accountsSlice = createSlice({
 });
 
 type PartialAccountStore = Optional<AccountStore, 'icon' | 'name' | 'status'>;
-
-interface AddAccountPayload {
-  account: PartialAccountStore;
-  accountKeychains: (BitcoinKeychain | StacksKeychain)[];
-}
-export const userAddsAccount = createAction<AddAccountPayload>('accounts/userAddsAccount');
 
 interface ToggleHideAccountPayload {
   accountId: string;

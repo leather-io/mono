@@ -14,12 +14,11 @@ import {
 } from 'redux-persist';
 import z from 'zod';
 
-import { resetWallet } from '@leather.io/state';
+import { keychainSlice, resetWallet } from '@leather.io/state';
 import { walletEntitySchema, walletSlice } from '@leather.io/state/wallet';
 
 import { accountEntitySchema, accountsSlice } from './accounts/accounts.write';
 import { appsSlice } from './apps/apps.write';
-import { keychainSlice } from './keychains/keychains.write';
 import { settingsSlice } from './settings/settings.write';
 import { settingsSchema } from './settings/utils';
 import { deleteAllMnemonics, persistConfig } from './storage-persistors';

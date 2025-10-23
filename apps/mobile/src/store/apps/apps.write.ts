@@ -1,8 +1,7 @@
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
-import { handleAppResetWithState } from '@leather.io/state';
+import { handleAppResetWithState, handleEntityActionWith } from '@leather.io/state';
 
-import { handleEntityActionWith } from '../utils';
 import { App } from './utils';
 
 export const appsAdapter = createEntityAdapter<App, string>({

@@ -1,6 +1,6 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
-import { EntityState, PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
+import { EntityState, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
 import {
   extractAddressIndexFromPath,
@@ -67,21 +67,4 @@ export function selectNextDistinctAccountIcon(
   const candidates = unused.length > 0 ? unused : distinctFromPrevious;
 
   return candidates[Math.floor(Math.random() * candidates.length)] ?? defaultFirstWalletIcon;
-}
-
-type AdapterMethod<T> = (state: EntityState<T, string>, args: any) => void;
-
-export function handleEntityActionWith<State, Payload, R extends AdapterMethod<State>>(
-  adapterMethod: R,
-  // Payload selector fn expected to return the value passed to second
-  // parameter of the adapter method
-  payloadSelector: (
-    payload: Payload,
-    state: EntityState<State, string>
-  ) => Parameters<R>[1]['payload']
-) {
-  return (state: EntityState<State, string>, action: PayloadAction<Payload>) => {
-    const selectedPayload = payloadSelector(action.payload, state);
-    adapterMethod(state, selectedPayload);
-  };
 }

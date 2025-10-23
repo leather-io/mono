@@ -11,10 +11,10 @@ import {
   makeAccountIdentifer,
 } from '@leather.io/crypto';
 import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
+import { findHighestAccountIndexOfFingerprint, userAddsAccount } from '@leather.io/state/keychains';
 
-import { userAddsAccount, userTogglesHideAccount } from './accounts/accounts.write';
+import { userTogglesHideAccount } from './accounts/accounts.write';
 import { useBitcoinAccounts } from './keychains/bitcoin/bitcoin-keychains.read';
-import { findHighestAccountIndexOfFingerprint } from './keychains/keychains';
 import { mnemonicStore } from './storage-persistors';
 import { useAppDispatch } from './utils';
 import { useWallets } from './wallets/wallets.read';
