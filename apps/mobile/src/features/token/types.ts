@@ -9,6 +9,7 @@ import {
 export interface TokenDetailsProps {
   assetProtocol: CryptoAssetProtocol;
   assetId: string;
+  tokenId?: string;
 }
 
 export interface OnPressTokenDetails {

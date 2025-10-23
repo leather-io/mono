@@ -60,10 +60,10 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   }
 
   const router = useRouter();
-  function onOpenToken({ assetId, assetProtocol }: TokenDetailsProps) {
+  function onOpenToken({ assetId, assetProtocol, tokenId }: TokenDetailsProps) {
     router.navigate({
       pathname: '/(tabs)/(index)/[assetProtocol]/[assetId]',
-      params: { assetId, assetProtocol },
+      params: { assetId, assetProtocol, tokenId: tokenId ?? '' },
     });
   }
   const tokenDetailsFlag = useTokenDetailsFlag();

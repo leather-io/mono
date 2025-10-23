@@ -13,9 +13,10 @@ import { CryptoAssetProtocols } from '@leather.io/models';
 import { assertExistence, assertUnreachable } from '@leather.io/utils';
 
 export default function AccountTokenScreen() {
-  const { assetId, assetProtocol } = useLocalSearchParams<{
+  const { assetId, assetProtocol, tokenId } = useLocalSearchParams<{
     assetId: string;
     assetProtocol: SupportedAssetProtocol;
+    tokenId?: string;
   }>();
   const { currentAccount } = useSettings();
 
@@ -31,7 +32,7 @@ export default function AccountTokenScreen() {
     case CryptoAssetProtocols.rune:
       return <RuneTokenDetails account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.sip9:
-      return <Sip9TokenDetails account={currentAccount} assetId={assetId} />;
+      return <Sip9TokenDetails account={currentAccount} assetId={assetId} tokenId={tokenId} />;
     case CryptoAssetProtocols.inscription:
       return <InscriptionDetails account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.stamp:
