@@ -3,6 +3,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ViewShot from 'react-native-view-shot';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 
+import * as Linking from 'expo-linking';
+
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { BrowserLoadingMethods } from '@/features/account/components/browser-loading';
 import { userAddsApp } from '@/store/apps/apps.write';
@@ -83,6 +85,35 @@ export function Browser({
     setMessage(null);
   }
 
+  function onShouldStartLoadWithRequest(event: any) {
+    const { url } = event;
+
+        // Allow normal web URLs
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+        return true;
+      }
+
+    // If URL contains browser_fallback_url, extract and open it with Linking
+    if (url.includes(';S.browser_fallback_url=')) {
+      const fallbackMatch = url.match(/S\.browser_fallback_url=([^;]+)/);
+      if (fallbackMatch && fallbackMatch[1]) {
+        const fallbackUrl = decodeURIComponent(fallbackMatch[1]);
+        Linking.openURL(fallbackUrl);
+      }
+      return false;
+    }
+    // Handle all other deep links normally
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      Linking.openURL(url);
+
+      return false;
+    }
+  
+    return true;
+  }
+  
+  
+
   function onMessageHandler(event: WebViewMessageEvent) {
     const newMessage = JSON.parse(event.nativeEvent.data);
     const parsedMessage = parseEndpointRequest(newMessage);
@@ -106,6 +137,7 @@ export function Browser({
     <Box flex={1} bg="ink.background-primary">
       <ViewShot ref={viewShotRef} style={{ flex: 1, paddingTop: top }}>
         <WebView
+         originWhitelist={['*']}
           onScroll={({ nativeEvent }) => {
             if (nativeEvent.contentOffset.y < -CONTENT_OFFSET_FOR_BROWSER_CLOSE) {
               browserSheetRef.current?.close();
@@ -115,6 +147,7 @@ export function Browser({
           onOpenWindow={e => {
             goToUrl(e.nativeEvent.targetUrl);
           }}
+          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
           nestedScrollEnabled
           onMessage={onMessageHandler}
           allowsInlineMediaPlayback={true}
