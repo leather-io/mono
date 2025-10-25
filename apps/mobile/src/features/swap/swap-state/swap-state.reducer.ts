@@ -4,7 +4,7 @@ import { currencyDecimalsMap } from '@leather.io/constants';
 import { assertUnreachable, isSameAsset } from '@leather.io/utils';
 
 import { SwapActionObject, SwapInternalState } from './swap-state.types';
-import { adjustAmountForDecimals, calculatePercentageAmount } from './utils/amount-operations';
+import { adjustAmountForDecimals } from './utils/amount-operations';
 
 export function swapReducer(state: SwapInternalState, action: SwapActionObject): SwapInternalState {
   switch (action.type) {
@@ -40,6 +40,8 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
           })
         ),
         selectingAsset: null,
+        feeTier: 'standard',
+        customFee: null,
       };
     }
     case 'SET_TARGET_SWAP_ASSET': {
@@ -135,19 +137,6 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
         baseAmount: action.payload,
       };
     }
-    case 'SET_BASE_AMOUNT_BY_PERCENTAGE': {
-      if (!state.baseSwapAsset?.balance) return state;
-
-      const availableBalance = whenInputCurrencyMode(state.inputCurrencyMode)({
-        crypto: state.baseSwapAsset.balance.crypto.availableBalance,
-        quote: state.baseSwapAsset.balance.quote.availableBalance,
-      });
-
-      return {
-        ...state,
-        baseAmount: calculatePercentageAmount(availableBalance, action.payload),
-      };
-    }
     case 'TOGGLE_INPUT_CURRENCY_MODE': {
       return {
         ...state,
@@ -155,6 +144,17 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
         baseAmount: action.payload.nextBaseAmount,
       };
     }
+    case 'SET_FEE_TIER':
+      return {
+        ...state,
+        feeTier: action.payload,
+        customFee: null,
+      };
+    case 'SET_CUSTOM_FEE':
+      return {
+        ...state,
+        customFee: action.payload,
+      };
     case 'SET_SLIPPAGE': {
       return {
         ...state,
@@ -184,5 +184,7 @@ function createFlippedState(state: SwapInternalState): SwapInternalState {
       target: 'pending',
     },
     selectingAsset: null,
+    feeTier: 'standard',
+    customFee: null,
   };
 }

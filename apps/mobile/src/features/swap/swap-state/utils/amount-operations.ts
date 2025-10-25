@@ -4,15 +4,15 @@ import BigNumber from 'bignumber.js';
 import { Money } from '@leather.io/models';
 
 export function calculatePercentageAmount(
-  balance: Money | undefined,
+  total: Money | undefined,
   percentage: PresetPercentage
 ): string {
-  if (!balance) return '0';
+  if (!total) return '0';
 
-  return balance.amount
-    .multipliedBy(percentage)
-    .shiftedBy(-balance.decimals)
-    .toFixed(balance.decimals, BigNumber.ROUND_DOWN)
+  return total.amount
+    .multipliedBy(BigNumber(percentage))
+    .shiftedBy(-total.decimals)
+    .toFixed(total.decimals, BigNumber.ROUND_DOWN)
     .replace(/\.0+$/, '')
     .replace(/(\.\d*?)0+$/, '$1');
 }

@@ -2,25 +2,17 @@ import {
   SupportedProtocol,
   getProtocolStrategy,
 } from '@/features/swap/swap-state/strategies/protocol/protocol';
-import { InputCurrencyMode } from '@/utils/types';
-import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
-import { CryptoAssetBalance, Money } from '@leather.io/models';
+import { CryptoAssetBalance } from '@leather.io/models';
 
-export function resolveSpendableBalanceInCurrencyMode(
+export function resolveSpendableBalance(
   balance: { crypto: CryptoAssetBalance; quote: CryptoAssetBalance } | undefined,
-  protocol: SupportedProtocol | undefined,
-  inputCurrencyMode: InputCurrencyMode
-): Money | null {
+  protocol: SupportedProtocol | undefined
+) {
   if (!balance || !protocol) return null;
 
-  const { resolveSpendableBalance: resolve } = getProtocolStrategy(protocol);
-  const selectedBalance = whenInputCurrencyMode(inputCurrencyMode)({
-    crypto: balance.crypto,
-    quote: balance.quote,
-  });
-
-  return resolve(selectedBalance);
+  const { resolveSpendableAmount } = getProtocolStrategy(protocol);
+  return resolveSpendableAmount(balance.crypto);
 }
 
 export function resolveMinimumSpendAmount(protocol: SupportedProtocol | undefined): number {
