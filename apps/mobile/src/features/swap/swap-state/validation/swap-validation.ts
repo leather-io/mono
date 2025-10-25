@@ -1,5 +1,9 @@
 import { DerivedAmounts, SwapInternalState } from '@/features/swap/swap-state/swap-state.types';
 import {
+  MAX_SLIPPAGE_PERCENTAGE,
+  MIN_SLIPPAGE_PERCENTAGE,
+} from '@/features/swap/swap-state/swap.constants';
+import {
   resolveMaximumSpendAmount,
   resolveMinimumSpendAmount,
   resolveSpendableBalanceInCurrencyMode,
@@ -11,7 +15,6 @@ import {
   isPresent,
   isWithinRange,
 } from '@/features/swap/swap-state/validation/swap-validation.utils';
-import { MAX_SLIPPAGE_PERCENTAGE, MIN_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap.constants';
 
 import { Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';

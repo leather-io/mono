@@ -555,7 +555,7 @@ msgstr "Custom"
 msgid "Custom fees"
 msgstr "Custom fees"
 
-#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:40
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:43
 msgid "Decrease slippage"
 msgstr "Decrease slippage"
 
@@ -641,7 +641,7 @@ msgstr "Edit"
 msgid "Edit memo"
 msgstr "Edit memo"
 
-#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:26
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:29
 msgid "Edit Slippage"
 msgstr "Edit Slippage"
 
@@ -868,7 +868,7 @@ msgstr "Image currently unavailable"
 msgid "Import existing accounts from self-custody"
 msgstr "Import existing accounts from self-custody"
 
-#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:42
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:45
 msgid "Increase slippage"
 msgstr "Increase slippage"
 
@@ -1147,7 +1147,7 @@ msgstr "Portfolio"
 msgid "Price"
 msgstr "Price"
 
-#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:28
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:31
 msgid "Price moving against you past this percentage will cancel the swap."
 msgstr "Price moving against you past this percentage will cancel the swap."
 
@@ -1636,7 +1636,7 @@ msgstr "Unlock"
 msgid "Update from {storeName}"
 msgstr "Update from {storeName}"
 
-#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:46
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:49
 msgid "Update slippage"
 msgstr "Update slippage"
 
