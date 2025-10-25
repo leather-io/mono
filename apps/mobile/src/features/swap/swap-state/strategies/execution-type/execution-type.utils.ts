@@ -1,4 +1,4 @@
-import { PER_DEX_FEE_PERCENTAGE } from '@/features/swap/swap.constants';
+import { PER_DEX_FEE_PERCENTAGE } from '@/features/swap/swap-state/swap.constants';
 import BigNumber from 'bignumber.js';
 
 import { Money, SwapDex } from '@leather.io/models';

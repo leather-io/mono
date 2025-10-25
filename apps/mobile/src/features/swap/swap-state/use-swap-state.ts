@@ -1,15 +1,15 @@
 import { useMemo, useReducer } from 'react';
 
+import { useDerivedAmounts } from '@/features/swap/swap-state/hooks/use-derived-amounts';
 import { useIsSendingMax } from '@/features/swap/swap-state/hooks/use-is-sending-max';
 import { useSecondaryAmount } from '@/features/swap/swap-state/hooks/use-secondary-amount';
 import { useSwapExecutability } from '@/features/swap/swap-state/hooks/use-swap-executability';
+import { DEFAULT_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap-state/swap.constants';
 import {
   useAccountBaseSwapAssetsQuery,
   useAccountTargetSwapAssetsQuery,
   useAssetMarketDataQuery,
 } from '@/features/swap/swap-state/swap.queries';
-import { useDerivedAmounts } from '@/features/swap/swap-state/use-derived-amounts';
-import { DEFAULT_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap.constants';
 
 import { AccountAddresses, QuoteCurrency, SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { AccountSwapAsset, MarketDataService, SwapService } from '@leather.io/services';
