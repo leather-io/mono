@@ -16,6 +16,36 @@ export type PresetPercentage = 0.25 | 0.5 | 0.75 | 1;
 
 export type SwapQuoteStrategy = 'best' | 'fastest' | 'cheapest';
 
+export interface DerivedAmounts {
+  crypto: Money | null;
+  quote: Money | null;
+}
+
+export type SecondaryAmount =
+  | { status: 'idle'; value: null }
+  | { status: 'pending'; value: null }
+  | { status: 'error'; value: null }
+  | { status: 'success'; value: Money; isFetching: boolean };
+
+export interface EnrichedSwapQuote {
+  rawSwapQuote: SwapQuote;
+  rate: number;
+  dexPath: SwapDex[];
+  assetPath: SwappableFungibleCryptoAsset[];
+  quoteAmount: Money;
+  slippageApplicable: boolean;
+  minReceive?: Money;
+  provider: SwapProviderId;
+  providerFee?: number;
+  score: number;
+  priceImpactPercentage: number | null;
+}
+
+export interface SwapQuoteSelectionResult {
+  quotes: EnrichedSwapQuote[];
+  selected: EnrichedSwapQuote | undefined;
+}
+
 export interface SwapInternalState {
   baseSwapAsset: AccountSwapAsset | null;
   targetSwapAsset: AccountSwapAsset | null;
@@ -75,29 +105,4 @@ export interface UseSwapStateResult {
   targetAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   isSwapExecutable: boolean;
-}
-
-export type SecondaryAmount =
-  | { status: 'idle'; value: null }
-  | { status: 'pending'; value: null }
-  | { status: 'error'; value: null }
-  | { status: 'success'; value: Money; isFetching: boolean };
-
-export interface EnrichedSwapQuote {
-  rawSwapQuote: SwapQuote;
-  rate: number;
-  dexPath: SwapDex[];
-  assetPath: SwappableFungibleCryptoAsset[];
-  quoteAmount: Money;
-  slippageApplicable: boolean;
-  minReceive?: Money;
-  provider: SwapProviderId;
-  providerFee?: number;
-  score: number;
-  priceImpactPercentage: number | null;
-}
-
-export interface SwapQuoteSelectionResult {
-  quotes: EnrichedSwapQuote[];
-  selected: EnrichedSwapQuote | undefined;
 }

@@ -1,16 +1,20 @@
 import { convertMoneyToInputValue } from '@/features/swap/swap-state/utils/amount-operations';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
-import { Money } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 
-import { PresetPercentage, SwapActionObject, SwapInternalState } from '../swap-state.types';
+import {
+  DerivedAmounts,
+  PresetPercentage,
+  SwapActionObject,
+  SwapInternalState,
+} from '../swap-state.types';
 
 interface CreateSwapActionsParams {
   dispatch: (action: SwapActionObject) => void;
   lockDerivedAmountsForNextRender: () => void;
   state: SwapInternalState;
-  derivedAmounts: { crypto: Money | null; quote: Money | null };
+  derivedAmounts: DerivedAmounts;
 }
 
 export function createSwapActions({
