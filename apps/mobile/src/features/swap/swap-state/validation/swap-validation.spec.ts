@@ -1,9 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import { SwapInternalState } from '../swap-state.types';
+import { DerivedAmounts, SwapInternalState } from '../swap-state.types';
 import { createAccountSwapAsset, defaultBtcAsset, defaultStxAsset } from '../test-utils/fixtures';
 import { runValidation } from './swap-validation';
 
@@ -12,7 +11,7 @@ function createValidationContext({
   derivedAmounts,
 }: {
   state: Partial<SwapInternalState>;
-  derivedAmounts?: { crypto: Money | null; quote: Money | null };
+  derivedAmounts?: DerivedAmounts;
 }) {
   const defaultState: SwapInternalState = {
     baseSwapAsset: null,

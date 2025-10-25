@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
 
-import { MarketData, Money } from '@leather.io/models';
+import { MarketData } from '@leather.io/models';
 import { SwapService } from '@leather.io/services';
 
-import { SwapInternalState } from '../swap-state.types';
+import { DerivedAmounts, SwapInternalState } from '../swap-state.types';
 import { useSwapQuotesQuery } from '../swap.queries';
 import { calculateFairMarketRate } from '../utils/market-rates';
 
 interface UseSwapQuotesParams {
   swapService: SwapService;
   state: SwapInternalState;
-  derivedAmounts: { crypto: Money | null; quote: Money | null };
+  derivedAmounts: DerivedAmounts;
   baseMarketData: MarketData | undefined;
   targetMarketData: MarketData | undefined;
 }

@@ -1,4 +1,4 @@
-import { SwapInternalState } from '@/features/swap/swap-state/swap-state.types';
+import { DerivedAmounts, SwapInternalState } from '@/features/swap/swap-state/swap-state.types';
 import {
   resolveMaximumSpendAmount,
   resolveMinimumSpendAmount,
@@ -71,7 +71,7 @@ type ByField = {
 
 interface ValidationContext {
   state: SwapInternalState;
-  derivedAmounts: { crypto: Money | null; quote: Money | null };
+  derivedAmounts: DerivedAmounts;
 }
 
 export interface ValidationResult {

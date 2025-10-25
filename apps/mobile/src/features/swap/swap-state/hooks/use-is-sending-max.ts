@@ -1,11 +1,11 @@
+import { DerivedAmounts } from '@/features/swap/swap-state/swap-state.types';
 import { InputCurrencyMode } from '@/utils/types';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
-import { Money } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 
 interface UseIsSendingMaxParams {
-  derivedAmounts: { crypto: Money | null; quote: Money | null };
+  derivedAmounts: DerivedAmounts;
   baseSwapAsset: AccountSwapAsset | null;
   inputCurrencyMode: InputCurrencyMode;
 }
