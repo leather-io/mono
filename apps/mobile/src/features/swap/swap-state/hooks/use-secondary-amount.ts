@@ -1,14 +1,12 @@
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { Money } from '@leather.io/models';
-
-import { SecondaryAmount, SwapInternalState } from '../swap-state.types';
+import { DerivedAmounts, SecondaryAmount, SwapInternalState } from '../swap-state.types';
 
 interface UseSecondaryAmountParams {
   state: SwapInternalState;
   baseMarketDataQuery: UseQueryResult<unknown>;
-  derivedAmounts: { crypto: Money | null; quote: Money | null };
+  derivedAmounts: DerivedAmounts;
 }
 
 export function useSecondaryAmount({

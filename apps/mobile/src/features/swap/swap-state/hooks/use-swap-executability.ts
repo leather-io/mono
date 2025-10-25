@@ -5,12 +5,12 @@ import BigNumber from 'bignumber.js';
 
 import { Money } from '@leather.io/models';
 
-import { SwapQuoteSelectionResult } from '../swap-state.types';
+import { DerivedAmounts, SwapQuoteSelectionResult } from '../swap-state.types';
 
 interface UseSwapExecutabilityParams {
   validation: { isValid: boolean };
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult>;
-  derivedAmounts: { crypto: Money | null; quote: Money | null };
+  derivedAmounts: DerivedAmounts;
 }
 
 export function useSwapExecutability({
