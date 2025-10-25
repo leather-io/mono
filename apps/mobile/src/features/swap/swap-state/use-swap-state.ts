@@ -1,43 +1,72 @@
-import { useMemo, useReducer } from 'react';
+import { useReducer } from 'react';
 
-import { useDerivedAmounts } from '@/features/swap/swap-state/hooks/use-derived-amounts';
-import { useIsSendingMax } from '@/features/swap/swap-state/hooks/use-is-sending-max';
-import { useSecondaryAmount } from '@/features/swap/swap-state/hooks/use-secondary-amount';
-import { useSwapExecutability } from '@/features/swap/swap-state/hooks/use-swap-executability';
-import { DEFAULT_SLIPPAGE_PERCENTAGE } from '@/features/swap/swap-state/swap.constants';
+import { useNetworkFee } from '@/features/swap/swap-state/hooks/use-network-fee';
+import * as btc from '@scure/btc-signer';
+import { StacksNetwork } from '@stacks/network';
+
+import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import {
-  useAccountBaseSwapAssetsQuery,
-  useAccountTargetSwapAssetsQuery,
-  useAssetMarketDataQuery,
-} from '@/features/swap/swap-state/swap.queries';
-
-import { AccountAddresses, QuoteCurrency, SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { AccountSwapAsset, MarketDataService, SwapService } from '@leather.io/services';
+  AccountAddresses,
+  NetworkConfiguration,
+  QuoteCurrency,
+  SwappableFungibleCryptoAsset,
+} from '@leather.io/models';
+import {
+  AccountSwapAsset,
+  BitcoinTransactionFeesService,
+  MarketDataService,
+  StacksTransactionFeesService,
+  SwapService,
+} from '@leather.io/services';
+import { StacksSigner } from '@leather.io/stacks';
 import { getAssetId } from '@leather.io/utils';
 
 import { createSwapActions } from './actions/swap-actions';
+import { useDerivedAmounts } from './hooks/use-derived-amounts';
+import { useIsSendingMax } from './hooks/use-is-sending-max';
+import { useSecondaryAmount } from './hooks/use-secondary-amount';
 import { useSwapAssetReconciliation } from './hooks/use-swap-asset-reconciliation';
+import { useSwapExecutability } from './hooks/use-swap-executability';
 import { useSwapQuotes } from './hooks/use-swap-quotes';
 import { useSwapValidation } from './hooks/use-swap-validation';
 import { swapReducer } from './swap-state.reducer';
 import { SwapInternalState, UseSwapStateResult } from './swap-state.types';
+import { DEFAULT_SLIPPAGE_PERCENTAGE } from './swap.constants';
+import {
+  useAccountBaseSwapAssetsQuery,
+  useAccountTargetSwapAssetsQuery,
+  useAssetMarketDataQuery,
+} from './swap.queries';
 
 export interface UseSwapStateProps {
   accountRequest: { account: AccountAddresses };
   baseAsset?: SwappableFungibleCryptoAsset;
   targetAsset?: SwappableFungibleCryptoAsset;
-  marketDataService: MarketDataService;
-  swapService: SwapService;
   quoteCurrencyPreference: QuoteCurrency;
+  swapService: SwapService;
+  marketDataService: MarketDataService;
+  stacksTransactionFeesService: StacksTransactionFeesService;
+  bitcoinTransactionFeesService: BitcoinTransactionFeesService;
+  bitcoinPayer: BitcoinNativeSegwitPayer;
+  stacksSigner: StacksSigner;
+  signBitcoinPsbt: (psbt: Uint8Array) => Promise<btc.Transaction>;
+  network: NetworkConfiguration;
+  stacksNetwork: StacksNetwork;
 }
 
 export function useSwapState({
   accountRequest,
   swapService,
   marketDataService,
+  stacksTransactionFeesService,
+  bitcoinTransactionFeesService,
   baseAsset,
   targetAsset,
   quoteCurrencyPreference,
+  stacksSigner,
+  stacksNetwork,
+  network,
+  bitcoinPayer,
 }: UseSwapStateProps): UseSwapStateResult {
   const [state, dispatch] = useReducer(
     swapReducer,
@@ -97,12 +126,33 @@ export function useSwapState({
     targetMarketData: targetMarketDataQuery.data,
   });
 
+  const networkFeeQuery = useNetworkFee({
+    state,
+    derivedAmounts,
+    isSendingMax,
+    swapService,
+    quote: quoteQuery.data?.selected?.rawSwapQuote,
+    baseAmount: derivedAmounts.crypto?.amount
+      .shiftedBy(-derivedAmounts.crypto?.decimals)
+      .toNumber(),
+    slippage: state.slippage,
+    stacksTransactionFeesService,
+    bitcoinTransactionFeesService,
+    bitcoinPayer,
+    network,
+    stacksNetwork,
+    stacksSigner,
+    accountRequest,
+  });
+
   const validation = useSwapValidation({ state, derivedAmounts });
 
-  const actions = useMemo(
-    () => createSwapActions({ dispatch, lockDerivedAmountsForNextRender, state, derivedAmounts }),
-    [lockDerivedAmountsForNextRender, state, derivedAmounts]
-  );
+  const actions = createSwapActions({
+    dispatch,
+    lockDerivedAmountsForNextRender,
+    state,
+    derivedAmounts,
+  });
 
   const isSwapExecutable = useSwapExecutability({ validation, quoteQuery, derivedAmounts });
 
@@ -118,6 +168,7 @@ export function useSwapState({
     baseAssetsQuery,
     targetAssetsQuery,
     quoteQuery,
+    networkFeeQuery,
     isSwapExecutable,
   };
 }
@@ -139,10 +190,7 @@ function initializeState({
   return {
     baseSwapAsset: baseSwapAsset,
     targetSwapAsset: targetSwapAsset,
-    pairReconciliation: {
-      base: 'pending',
-      target: 'pending',
-    },
+    pairReconciliation: { base: 'pending', target: 'pending' },
     nonce: undefined,
     baseAmount: '0',
     quoteCurrencyPreference,
@@ -150,6 +198,8 @@ function initializeState({
     inputCurrencyMode: 'crypto',
     slippage: DEFAULT_SLIPPAGE_PERCENTAGE,
     selectingAsset: null,
+    feeTier: 'standard',
+    customFee: null,
   };
 }
 

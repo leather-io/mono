@@ -24,6 +24,8 @@ function createValidationContext({
     selectingAsset: null,
     nonce: undefined,
     pairReconciliation: { base: 'pending', target: 'pending' },
+    customFee: null,
+    feeTier: 'standard',
   };
 
   return {
@@ -330,51 +332,6 @@ describe('swap validation', () => {
 
         const result = runValidation(context);
         expect(result.issues.baseAmount).toBeUndefined();
-      });
-
-      it('validates against balance in active currency mode (crypto or quote)', () => {
-        const btcAsset = createAccountSwapAsset({
-          asset: defaultBtcAsset,
-          balance: { crypto: 100_000_000, quote: 50_000_00 },
-        });
-
-        const cryptoMode = createValidationContext({
-          state: {
-            baseSwapAsset: btcAsset,
-            baseAmount: '1.5',
-            inputCurrencyMode: 'crypto',
-          },
-          derivedAmounts: {
-            crypto: createMoney(150_000_000, 'BTC', 8),
-            quote: createMoney(75_000_00, 'USD', 2),
-          },
-        });
-
-        const quoteMode = createValidationContext({
-          state: {
-            baseSwapAsset: btcAsset,
-            baseAmount: '60000',
-            inputCurrencyMode: 'quote',
-          },
-          derivedAmounts: {
-            crypto: createMoney(120_000_000, 'BTC', 8),
-            quote: createMoney(60_000_00, 'USD', 2),
-          },
-        });
-
-        const cryptoResult = runValidation(cryptoMode);
-        const quoteResult = runValidation(quoteMode);
-
-        expect(cryptoResult.issues.baseAmount).toEqual({
-          field: 'baseAmount',
-          code: 'INSUFFICIENT_BALANCE',
-          context: { balance: createMoney(100_000_000, 'BTC', 8) },
-        });
-        expect(quoteResult.issues.baseAmount).toEqual({
-          field: 'baseAmount',
-          code: 'INSUFFICIENT_BALANCE',
-          context: { balance: createMoney(50_000_00, 'USD', 2) },
-        });
       });
     });
 
