@@ -5,8 +5,10 @@ import { AccountSwapAsset } from '@leather.io/services';
 
 import {
   DerivedAmounts,
+  FeeTier,
   PresetPercentage,
   SwapActionObject,
+  SwapActions,
   SwapInternalState,
 } from '../swap-state.types';
 
@@ -22,7 +24,7 @@ export function createSwapActions({
   lockDerivedAmountsForNextRender,
   state,
   derivedAmounts,
-}: CreateSwapActionsParams) {
+}: CreateSwapActionsParams): SwapActions {
   return {
     setBaseSwapAsset(asset: AccountSwapAsset) {
       dispatch({ type: 'SET_BASE_SWAP_ASSET', payload: asset });
@@ -74,6 +76,12 @@ export function createSwapActions({
 
     closeAssetSelector() {
       dispatch({ type: 'CLOSE_ASSET_SELECTOR' });
+    },
+    setFeeTier(tier: FeeTier) {
+      dispatch({ type: 'SET_FEE_TIER', payload: tier });
+    },
+    setCustomFee(fee: number) {
+      dispatch({ type: 'SET_CUSTOM_FEE', payload: fee });
     },
   };
 }

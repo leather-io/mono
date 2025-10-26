@@ -9,12 +9,50 @@ import {
   SwapProviderId,
   SwapQuote,
   SwappableFungibleCryptoAsset,
+  TransactionFeeQuote,
+  TransactionFeeTier,
 } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 
 export type PresetPercentage = 0.25 | 0.5 | 0.75 | 1;
 
 export type SwapQuoteStrategy = 'best' | 'fastest' | 'cheapest';
+
+export type FeeTier = TransactionFeeTier | 'custom';
+
+export type FeeMode = 'fixed' | 'tiered';
+
+export type CustomFeeConfig =
+  | { enabled: false }
+  | {
+      enabled: true;
+      constraints: {
+        networkMin: number;
+        networkMax: number;
+        recommendedMin: number;
+        recommendedMax: number;
+      };
+    };
+
+export interface FeeOption {
+  tier: FeeTier;
+  calculation: TransactionFeeQuote;
+  value: Money;
+}
+
+export type FeeSelection =
+  | { type: 'tiered'; tier: TransactionFeeTier }
+  | { type: 'custom'; value: number };
+
+export type NetworkFee =
+  | { mode: 'fixed'; value: Money }
+  | {
+      mode: 'tiered';
+      value: Money;
+      options: FeeOption[];
+      selected: FeeSelection;
+      customFeeConfig: CustomFeeConfig;
+    };
 
 export interface DerivedAmounts {
   crypto: Money | null;
@@ -60,6 +98,8 @@ export interface SwapInternalState {
   nonce?: number;
   inputCurrencyMode: InputCurrencyMode;
   selectingAsset: 'base' | 'target' | null;
+  feeTier: FeeTier;
+  customFee: number | null;
 }
 
 export interface SwapState extends SwapInternalState {
@@ -81,7 +121,9 @@ export type SwapActionObject =
   | { type: 'SET_SLIPPAGE'; payload: number }
   | { type: 'SET_NONCE'; payload: number }
   | { type: 'OPEN_ASSET_SELECTOR'; payload: 'base' | 'target' }
-  | { type: 'CLOSE_ASSET_SELECTOR' };
+  | { type: 'CLOSE_ASSET_SELECTOR' }
+  | { type: 'SET_FEE_TIER'; payload: FeeTier }
+  | { type: 'SET_CUSTOM_FEE'; payload: number };
 
 export interface SwapActions {
   setBaseSwapAsset: (asset: AccountSwapAsset) => void;
@@ -95,6 +137,8 @@ export interface SwapActions {
   flipAssets: () => void;
   openAssetSelector: (target: 'base' | 'target') => void;
   closeAssetSelector: () => void;
+  setFeeTier: (tier: TransactionFeeTier) => void;
+  setCustomFee: (fee: number) => void;
 }
 
 export interface UseSwapStateResult {
@@ -104,5 +148,6 @@ export interface UseSwapStateResult {
   baseAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   targetAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
+  networkFeeQuery: UseQueryResult<NetworkFee, Error>;
   isSwapExecutable: boolean;
 }

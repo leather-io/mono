@@ -24,6 +24,8 @@ function createValidationContext({
     selectingAsset: null,
     nonce: undefined,
     pairReconciliation: { base: 'pending', target: 'pending' },
+    customFee: null,
+    feeTier: 'standard',
   };
 
   return {

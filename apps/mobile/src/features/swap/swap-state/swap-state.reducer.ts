@@ -155,6 +155,17 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
         baseAmount: action.payload.nextBaseAmount,
       };
     }
+    case 'SET_FEE_TIER':
+      return {
+        ...state,
+        feeTier: action.payload,
+        customFee: null,
+      };
+    case 'SET_CUSTOM_FEE':
+      return {
+        ...state,
+        customFee: action.payload,
+      };
     case 'SET_SLIPPAGE': {
       return {
         ...state,

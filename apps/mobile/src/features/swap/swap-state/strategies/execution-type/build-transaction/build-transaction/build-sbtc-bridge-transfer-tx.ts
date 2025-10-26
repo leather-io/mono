@@ -34,7 +34,7 @@ export interface SbtcDeposit {
 }
 
 export async function buildSbtcBridgeTransferTx(
-  amount: number,
+  amountSats: number | bigint,
   network: NetworkConfiguration,
   account: AccountAddresses,
   payer: BitcoinNativeSegwitPayer
@@ -42,7 +42,7 @@ export async function buildSbtcBridgeTransferTx(
   const client = network.chain.bitcoin.mode === 'mainnet' ? clientMainnet : clientTestnet;
 
   return buildSbtcDepositTx({
-    amountSats: amount,
+    amountSats,
     network: getSbtcNetworkConfig(network.chain.bitcoin.mode),
     stacksAddress: account.stacks?.stxAddress ?? '', // TODO: ???
     maxSignerFee: DEFAULT_MAX_SIGNER_FEE,
