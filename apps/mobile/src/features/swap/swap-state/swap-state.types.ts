@@ -116,7 +116,6 @@ export type SwapActionObject =
   | { type: 'RECONCILE_BASE_WITH_PROVIDER'; payload: AccountSwapAsset[] }
   | { type: 'RECONCILE_TARGET_WITH_PROVIDER'; payload: AccountSwapAsset[] }
   | { type: 'SET_BASE_AMOUNT'; payload: string }
-  | { type: 'SET_BASE_AMOUNT_BY_PERCENTAGE'; payload: PresetPercentage }
   | { type: 'TOGGLE_INPUT_CURRENCY_MODE'; payload: { nextBaseAmount: string } }
   | { type: 'SET_SLIPPAGE'; payload: number }
   | { type: 'SET_NONCE'; payload: number }

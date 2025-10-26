@@ -1,5 +1,9 @@
+import { createMoney } from '@leather.io/utils';
+
 export const DEFAULT_SLIPPAGE_PERCENTAGE = 0.03;
 export const MIN_SLIPPAGE_PERCENTAGE = 0.005;
 export const MAX_SLIPPAGE_PERCENTAGE = 0.1;
 
 export const PER_DEX_FEE_PERCENTAGE = 0.003;
+
+export const STX_SAFETY_BUFFER = createMoney(500_000, 'STX');

@@ -6,11 +6,10 @@ import {
 import {
   resolveMaximumSpendAmount,
   resolveMinimumSpendAmount,
-  resolveSpendableBalanceInCurrencyMode,
+  resolveSpendableBalance,
 } from '@/features/swap/swap-state/utils/protocol-operations';
 import {
   hasValidPrecision,
-  isAmountWithinBalance,
   isParsableNumber,
   isPresent,
   isWithinRange,
@@ -91,10 +90,9 @@ function validateAmount(context: ValidationContext): BaseAmountIssue | undefined
   const minAmount = resolveMinimumSpendAmount(baseSwapAsset?.asset.protocol);
   const maxAmount = resolveMaximumSpendAmount(baseSwapAsset?.asset.protocol);
 
-  const spendableBalance = resolveSpendableBalanceInCurrencyMode(
+  const spendableBalance = resolveSpendableBalance(
     baseSwapAsset?.balance,
-    baseSwapAsset?.asset.protocol,
-    inputCurrencyMode
+    baseSwapAsset?.asset.protocol
   );
 
   if (!isPresent(baseAmount)) {
@@ -141,7 +139,7 @@ function validateAmount(context: ValidationContext): BaseAmountIssue | undefined
     };
   }
 
-  if (!isAmountWithinBalance(activeAmount, spendableBalance)) {
+  if (canonicalCryptoAmount.amount.isGreaterThan(spendableBalance.amount)) {
     return {
       field: 'baseAmount',
       code: 'INSUFFICIENT_BALANCE',

@@ -1,7 +1,12 @@
-import { convertMoneyToInputValue } from '@/features/swap/swap-state/utils/amount-operations';
+import { getProtocolStrategy } from '@/features/swap/swap-state/strategies/protocol/protocol';
+import {
+  calculatePercentageAmount,
+  convertMoneyToInputValue,
+} from '@/features/swap/swap-state/utils/amount-operations';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
 import { AccountSwapAsset } from '@leather.io/services';
+import { createMoney } from '@leather.io/utils';
 
 import {
   DerivedAmounts,
@@ -39,7 +44,41 @@ export function createSwapActions({
     },
 
     setBaseAmountByPercentage(percentage: PresetPercentage) {
-      dispatch({ type: 'SET_BASE_AMOUNT_BY_PERCENTAGE', payload: percentage });
+      if (!state.baseSwapAsset?.balance) {
+        return;
+      }
+
+      const rate = state.baseSwapAsset.balance.quote.availableBalance.amount.dividedBy(
+        state.baseSwapAsset.balance.crypto.availableBalance.amount
+      );
+
+      const availableBalance = whenInputCurrencyMode(state.inputCurrencyMode)({
+        crypto: state.baseSwapAsset.balance.crypto.availableBalance,
+        quote: state.baseSwapAsset.balance.quote.availableBalance,
+      });
+
+      const cryptoSpendableAmount = getProtocolStrategy(
+        state.baseSwapAsset.asset.protocol
+      ).resolveSpendableAmount(state.baseSwapAsset.balance.crypto);
+
+      const quoteSpendableAmount = createMoney(
+        cryptoSpendableAmount.amount.times(rate),
+        state.baseSwapAsset.balance.quote.availableBalance.symbol,
+        state.baseSwapAsset.balance.quote.availableBalance.decimals
+      );
+
+      const spendableAmount = whenInputCurrencyMode(state.inputCurrencyMode)({
+        crypto: cryptoSpendableAmount,
+        quote: quoteSpendableAmount,
+      });
+
+      const isSendingMax = percentage === 1;
+      const percentageSource = isSendingMax ? spendableAmount : availableBalance;
+
+      dispatch({
+        type: 'SET_BASE_AMOUNT',
+        payload: calculatePercentageAmount(percentageSource, percentage),
+      });
     },
 
     toggleInputCurrencyMode() {

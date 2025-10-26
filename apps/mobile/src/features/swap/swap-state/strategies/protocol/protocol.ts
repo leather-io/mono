@@ -1,12 +1,14 @@
 import { CustomFeeConfig, FeeMode } from '@/features/swap/swap-state/swap-state.types';
+import { STX_SAFETY_BUFFER } from '@/features/swap/swap-state/swap.constants';
 
 import { BITCOIN_MINIMUM_SPEND_IN_SATS } from '@leather.io/constants';
 import { CryptoAssetBalance, Money } from '@leather.io/models';
+import { subtractMoney } from '@leather.io/utils';
 
 export type SupportedProtocol = 'nativeBtc' | 'nativeStx' | 'sip10';
 
 export interface ProtocolStrategy {
-  resolveSpendableBalance(balance: CryptoAssetBalance): Money | null;
+  resolveSpendableAmount(balance: CryptoAssetBalance): Money;
   getMinimumSpendAmount(): number;
   getMaximumSpendAmount(): number;
   getFeeCapabilities(): FeeCapabilities;
@@ -18,7 +20,7 @@ export interface FeeCapabilities {
 }
 
 const nativeBtcStrategy: ProtocolStrategy = {
-  resolveSpendableBalance(balance: CryptoAssetBalance): Money | null {
+  resolveSpendableAmount(balance: CryptoAssetBalance): Money {
     return balance.availableBalance;
   },
   getMinimumSpendAmount() {
@@ -45,8 +47,10 @@ const nativeBtcStrategy: ProtocolStrategy = {
 };
 
 const nativeStxStrategy: ProtocolStrategy = {
-  resolveSpendableBalance(balance: CryptoAssetBalance): Money | null {
-    return 'availableUnlockedBalance' in balance ? balance.availableUnlockedBalance : null;
+  resolveSpendableAmount(balance: CryptoAssetBalance): Money {
+    return subtractMoney(balance.availableBalance, STX_SAFETY_BUFFER);
+    // return createMoney(balance.availableBalance.amount.minus(STX_SAFETY_BUFFER.amount), 'STX');
+    // return balance.availableBalance;
   },
   getMinimumSpendAmount() {
     return 0;
@@ -72,7 +76,7 @@ const nativeStxStrategy: ProtocolStrategy = {
 };
 
 const sip10Strategy: ProtocolStrategy = {
-  resolveSpendableBalance(balance: CryptoAssetBalance): Money | null {
+  resolveSpendableAmount(balance: CryptoAssetBalance): Money {
     return balance.availableBalance;
   },
   getMinimumSpendAmount() {
