@@ -1,6 +1,6 @@
 export const defaultVitestUnitTestingConfig = {
   test: {
-    include: 'src/**/*.spec.{ts,tsx}',
+    include: ['src/**/*.spec.{ts,tsx}'],
     coverage: {
       reporter: ['text', 'json-summary', 'json', 'html'],
       reportsDirectory: './coverage',
@@ -9,5 +9,6 @@ export const defaultVitestUnitTestingConfig = {
     environment: 'node',
     deps: { interopDefault: true },
     silent: false,
+    passWithNoTests: true,
   },
 } as const;

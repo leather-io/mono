@@ -120,18 +120,21 @@ export function useSendInscriptionForm() {
       logger.debug('Pre-finalized inscription PSBT', signedTx.hex);
 
       const feeRowValue = formFeeRowValue(values.feeRate, isCustomFee);
-      void navigate(`/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionReview}`, {
-        state: {
-          fee: feeValue,
-          inscription,
-          utxo,
-          recipient: values.recipient,
-          time,
-          feeRowValue,
-          signedTx: signedTx.extract(),
-          backgroundLocation: { pathname: RouteUrls.Home },
-        },
-      });
+      void navigate(
+        `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionReview}`,
+        {
+          state: {
+            fee: feeValue,
+            inscription,
+            utxo,
+            recipient: values.recipient,
+            time,
+            feeRowValue,
+            signedTx: signedTx.extract(),
+            backgroundLocation: { pathname: RouteUrls.Home },
+          },
+        }
+      );
     },
 
     validationSchema: yup.object({

@@ -16,6 +16,7 @@ import { ThemeProvider } from '@/core/theme-provider';
 import { AddAccountSheet } from '@/features/account/sheets/add-account-sheet';
 import { featureFlagClient, setupFeatureFlags, useSwapFlag } from '@/features/feature-flags';
 import { useWatchNotificationAddresses } from '@/features/notifications/use-notifications';
+import { RampSheet } from '@/features/ramp/ramp-sheet';
 import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
 import { DescriptionSheet } from '@/features/settings/description-sheet';
@@ -85,6 +86,7 @@ function App() {
           <>
             <SendSheet />
             <ReceiveSheet />
+            <RampSheet />
             {isSwapEnabled ? <SwapSheet /> : null}
           </>
         )}

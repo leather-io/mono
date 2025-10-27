@@ -1,37 +1,3 @@
-export {
-  AddressDisplayer,
-  type AddressDisplayerProps,
-} from './components/address-displayer/address-displayer.web';
-export { Accordion } from './components/accordion/accordion.web';
-export { Avatar, type AvatarProps } from './components/avatar/avatar.web';
-export { Badge, type BadgeProps } from './components/badge/badge.web';
-export { BulletSeparator } from './components/bullet-separator/bullet-separator.web';
-export { Button, type ButtonProps } from './components/button/button.web';
-export { Callout, type CalloutProps } from './components/callout/callout.web';
-export { DropdownMenu } from './components/dropdown-menu/dropdown-menu.web';
-export { DynamicColorCircle } from './components/dynamic-color-circle.web';
-export { Flag, type FlagProps } from './components/flag/flag.web';
-export { Highlighter, type HighlighterProps } from './components/highlighting/highlighter.web';
-export { Hr, DashedHr, type HrProps } from './components/hr.web';
-export { IconButton } from './components/icon-button/icon-button.web';
-export { Input } from './components/input/input.web';
-export { ItemLayout } from './components/item-layout/item-layout.web';
-export { ItemLayoutWithButtons } from './components/item-layout/item-layout-with-buttons.web';
-export { Link } from './components/link/link.web';
-export { LoadingSpinner, Spinner } from './components/spinner';
-export { Logo } from './components/logo.web';
-export { NetworkModeBadge } from './components/network-mode-badge/network-mode-badge.web';
-export { Prism, type PrismType } from './components/highlighting/clarity-prism.shared';
-export { shimmerStyles } from './components/skeleton-loader/shimmer.styles.web';
-export { SkeletonLoader } from './components/skeleton-loader/skeleton-loader.web';
-export { Slider } from './components/slider/slider.web';
-export { Tabs } from './components/tabs/tabs.web';
-export { useClipboard } from './utils/use-clipboard.web';
-export { useCountdown } from './utils/use-countdown.shared';
-export { useInterval } from './utils/use-interval.shared';
-export { useOnMount } from './utils/use-on-mount.shared';
-export { usePressable } from './hooks/use-pressable.web';
-export { sanitizeContent } from './utils/sanitize-content';
 export * from './components/approver/approver.web';
 export * from './components/avatar';
 export * from './components/collectibles/index.web';
@@ -45,4 +11,38 @@ export * from './components/tooltip';
 export * from './components/typography/index.web';
 export * from './icons/index.web';
 export * from './utils/has-children.shared';
+export { Accordion } from './components/accordion/accordion.web';
+export {
+  AddressDisplayer,
+  type AddressDisplayerProps,
+} from './components/address-displayer/address-displayer.web';
+export { Avatar, type AvatarProps } from './components/avatar/avatar.web';
+export { Badge, type BadgeProps } from './components/badge/badge.web';
+export { BulletSeparator } from './components/bullet-separator/bullet-separator.web';
+export { Button, type ButtonProps } from './components/button/button.web';
+export { Callout, type CalloutProps } from './components/callout/callout.web';
+export { DropdownMenu } from './components/dropdown-menu/dropdown-menu.web';
+export { DynamicColorCircle } from './components/dynamic-color-circle.web';
+export { Flag, type FlagProps } from './components/flag/flag.web';
+export { Highlighter, type HighlighterProps } from './components/highlighting/highlighter.web';
 export { HoverCard } from './components/hover-card/hover-card.web';
+export { Hr, DashedHr, type HrProps } from './components/hr.web';
+export { IconButton } from './components/icon-button/icon-button.web';
+export { Input } from './components/input/input.web';
+export { ItemLayout } from './components/item-layout/item-layout.web';
+export { ItemLayoutWithButtons } from './components/item-layout/item-layout-with-buttons.web';
+export { Link } from './components/link/link.web';
+export { LoadingSpinner, Spinner } from './components/spinner';
+export { Logo } from './components/logo.web';
+export { NetworkModeBadge } from './components/network-mode-badge/network-mode-badge.web';
+export { Prism, type PrismType } from './components/highlighting/clarity-prism.shared';
+export { SkeletonLoader } from './components/skeleton-loader/skeleton-loader.web';
+export { Slider } from './components/slider/slider.web';
+export { Tabs } from './components/tabs/tabs.web';
+export { sanitizeContent } from './utils/sanitize-content';
+export { shimmerStyles } from './components/skeleton-loader/shimmer.styles.web';
+export { useClipboard } from './utils/use-clipboard.web';
+export { useCountdown } from './utils/use-countdown.shared';
+export { useInterval } from './utils/use-interval.shared';
+export { useOnMount } from './utils/use-on-mount.shared';
+export { usePressable } from './hooks/use-pressable.web';

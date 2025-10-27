@@ -1,0 +1,52 @@
+{
+  "name": "@leather.io/features",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": " pnpm build:native && pnpm build:web",
+    "build:native": "tsup --config tsup.config.native.ts",
+    "build:native:watch": "concurrently \"pnpm build:native --watch -- --preserveWatchOutput\"",
+    "build:watch": "concurrently  \"pnpm build:native --watch -- --preserveWatchOutput\" \"pnpm build:web --watch\" ",
+    "build:web": "tsup --config tsup.config.web.ts",
+    "format": "prettier . --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
+    "test:unit": "vitest run",
+    "typecheck": "tsc --noEmit --project ./tsconfig.json"
+  },
+  "exports": {
+    ".": "./dist-web/exports.web.js",
+    "./native": "./dist-native/exports.native.js"
+  },
+  "dependencies": {
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/tokens": "workspace:*",
+    "@noble/hashes": "1.5.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-native": "0.79.2",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-webview": "13.14.1"
+  },
+  "devDependencies": {
+    "@babel/core": "7.27.1",
+    "@babel/runtime": "7.26.0",
+    "@testing-library/react": "16.3.0",
+    "@types/react": "19.0.12",
+    "@types/react-dom": "19.0.4",
+    "babel-preset-expo": "13.0.0",
+    "concurrently": "8.2.2",
+    "happy-dom": "18.0.1",
+    "tslib": "2.6.2",
+    "tsup": "8.4.0",
+    "typescript": "5.8.3",
+    "vitest": "2.1.9"
+  },
+  "files": [
+    "dist-web",
+    "dist-native"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

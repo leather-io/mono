@@ -1,4 +1,4 @@
-import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
+import { asyncWithLDProvider, useFlags as useLDFlags } from 'launchdarkly-react-client-sdk';
 
 import { getClientId } from '@app/common/client-id';
 
@@ -17,4 +17,12 @@ export function createLDProvider() {
     },
     reactOptions: { useCamelCaseFlagKeys: false },
   });
+}
+
+interface FeatureFlags {
+  release_onramper_buy: boolean;
+}
+
+export function useFlags() {
+  return useLDFlags<FeatureFlags>();
 }

@@ -6,8 +6,12 @@ import { Box, Flex } from 'leather-styles/jsx';
 import { ArrowsRepeatLeftRightIcon, CreditCardIcon, IconButton, InboxIcon } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
+import { closeWindow } from '@shared/utils';
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
+import { whenPageMode } from '@app/common/utils';
+import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
+import { useFlags } from '@app/features/feature-flags';
 import {
   useConfigBitcoinEnabled,
   useConfigSwapsEnabled,
@@ -29,6 +33,8 @@ export function AccountActions() {
   const btcAccount = currentBtcSigner?.address;
   const { isTestnet } = useCurrentNetworkState();
 
+  const { release_onramper_buy } = useFlags();
+
   const swapsEnabled = useConfigSwapsEnabled();
   const swapsBtnDisabled = !swapsEnabled || !stacksAccount || isTestnet;
 
@@ -45,6 +51,18 @@ export function AccountActions() {
     );
   }
 
+  function pageModeRoutingAction(url: string) {
+    whenPageMode({
+      full() {
+        void navigate(url);
+      },
+      popup() {
+        openIndexPageInNewTab(url);
+        closeWindow();
+      },
+    })();
+  }
+
   return (
     <Flex gap={{ base: 'space.01', md: 'space.04' }} py="space.04" justifyContent="space-between">
       <SendButton />
@@ -55,12 +73,12 @@ export function AccountActions() {
         onClick={() => navigate(receivePath, { state: { backgroundLocation: location } })}
       />
 
-      {(!!stacksAccount || !!btcAccount) && (
+      {(!!stacksAccount || !!btcAccount) && release_onramper_buy && (
         <IconButton
           data-testid={HomePageSelectors.FundAccountBtn}
           icon={<CreditCardIcon />}
           label="Buy"
-          onClick={() => navigate(RouteUrls.Fund)}
+          onClick={() => pageModeRoutingAction(RouteUrls.Fund)}
         />
       )}
       <BasicTooltip label={swapsEnabled ? '' : <SwapsDisabledTooltipLabel />} side="left" asChild>
