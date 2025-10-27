@@ -1,4 +1,4 @@
-import { useSwapFlag } from '@/features/feature-flags';
+import { useOnramperBuyFlag, useOnramperSellFlag, useSwapFlag } from '@/features/feature-flags';
 import { t } from '@lingui/core/macro';
 
 import { Button, ButtonProps } from '@leather.io/ui/native';
@@ -9,6 +9,8 @@ interface ActionButtonsProps {
   onSend?(): void;
   onReceive?(): void;
   onSwap?(): void;
+  onBuy?(): void;
+  onSell?(): void;
 }
 
 export function ActionButtons({
@@ -17,8 +19,12 @@ export function ActionButtons({
   onSend,
   onReceive,
   onSwap,
+  onBuy,
+  onSell,
 }: ActionButtonsProps) {
   const isSwapEnabled = useSwapFlag();
+  const isOnramperBuyEnabled = useOnramperBuyFlag();
+  const isOnramperSellEnabled = useOnramperSellFlag();
 
   return (
     <>
@@ -36,6 +42,28 @@ export function ActionButtons({
           flex={fullWidth ? 1 : 0}
         >
           {t`Receive`}
+        </Button>
+      )}
+      {onBuy && isOnramperBuyEnabled && (
+        <Button
+          onPress={onBuy}
+          minWidth={86}
+          size={size}
+          variant="outline"
+          flex={fullWidth ? 1 : 0}
+        >
+          {t`Buy`}
+        </Button>
+      )}
+      {onSell && isOnramperSellEnabled && (
+        <Button
+          onPress={onSell}
+          minWidth={86}
+          size={size}
+          variant="outline"
+          flex={fullWidth ? 1 : 0}
+        >
+          {t`Sell`}
         </Button>
       )}
       {onSwap && isSwapEnabled && (

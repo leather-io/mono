@@ -4,6 +4,7 @@ import {
   ApproverSheetInstance,
   type ApproverSheetRef,
 } from '@/features/browser/approver-sheet/approver-sheet';
+import { RampSheetInstance, RampSheetRef } from '@/features/ramp/ramp-sheet';
 import { ReceiveSheetInstance, ReceiveSheetRef } from '@/features/receive/receive-sheet';
 import { SendSheetInstance, SendSheetRef } from '@/features/send/send-sheet';
 import {
@@ -18,6 +19,7 @@ interface GlobalSheetContextValue {
   sendSheetRef: SendSheetRef;
   receiveSheetRef: ReceiveSheetRef;
   swapSheetRef: SwapSheetRef;
+  rampSheetRef: RampSheetRef;
   browserSheetRef: SheetRef;
   addAccountSheetRef: SheetRef;
   addWalletSheetRef: SheetRef;
@@ -44,6 +46,7 @@ export function GlobalSheetProvider({ children }: HasChildren) {
   const versionGuardSheetRef = useRef<SheetInstance>(null);
   const descriptionSheetRef = useRef<DescriptionSheetInstance>(null);
   const approverSheetRef = useRef<ApproverSheetInstance>(null);
+  const rampSheetRef = useRef<RampSheetInstance>(null);
 
   return (
     <GlobalSheetContext.Provider
@@ -57,6 +60,7 @@ export function GlobalSheetProvider({ children }: HasChildren) {
         versionGuardSheetRef,
         descriptionSheetRef,
         approverSheetRef,
+        rampSheetRef,
       }}
     >
       {children}

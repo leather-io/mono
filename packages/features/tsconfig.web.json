@@ -1,0 +1,28 @@
+{
+  "extends": "../tsconfig-config/tsconfig.base",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "DOM"],
+    "baseUrl": "./src",
+    "outDir": "./dist-web",
+    "paths": {
+      "leather-styles/*": ["../leather-styles/*"]
+    }
+  },
+  "include": [
+    "**/*.web.ts",
+    "**/*.web.tsx",
+    "web.exports.ts",
+    "**/*.shared.tsx",
+    "global.d.ts",
+    "leather-styles"
+  ],
+  "exclude": [
+    "node_modules",
+    "babel.config.cjs",
+    "metro.config.cjs",
+    "tsup.config.*.ts",
+    "**/*.js",
+    "./dist-*"
+  ]
+}

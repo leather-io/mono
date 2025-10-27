@@ -42,7 +42,7 @@ export function Token({
   name,
   title,
 }: TokenProps) {
-  const { sendSheetRef, receiveSheetRef, swapSheetRef } = useGlobalSheets();
+  const { sendSheetRef, receiveSheetRef, swapSheetRef, rampSheetRef } = useGlobalSheets();
   const {
     tokenDetails: { value: tokenDetails, state: tokenDetailsState },
   } = useGetTokenDetails({ asset });
@@ -102,6 +102,12 @@ export function Token({
                       ? () => swapSheetRef.current?.present({ baseAsset: asset })
                       : undefined
                   }
+                  onBuy={() => {
+                    rampSheetRef.current?.present('buy', asset);
+                  }}
+                  onSell={() => {
+                    rampSheetRef.current?.present('sell', asset);
+                  }}
                 />
               }
             />

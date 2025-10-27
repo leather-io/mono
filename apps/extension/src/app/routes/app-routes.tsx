@@ -17,6 +17,7 @@ import { CancelStacksTransactionSheet } from '@app/features/dialogs/transaction-
 import { IncreaseBtcFeeSheet } from '@app/features/dialogs/transaction-action-dialog/increase-btc-fee-dialog';
 import { IncreaseStacksTransactionFeeSheet } from '@app/features/dialogs/transaction-action-dialog/increase-stacks-fee-sheet';
 import { RouterErrorBoundary } from '@app/features/errors/app-error-boundary';
+import { useFlags } from '@app/features/feature-flags';
 import { ledgerBitcoinTxSigningRoutes } from '@app/features/ledger/flows/bitcoin-tx-signing/ledger-bitcoin-sign-tx-container';
 import { ledgerJwtSigningRoutes } from '@app/features/ledger/flows/jwt-signing/ledger-sign-jwt.routes';
 import { requestBitcoinKeysRoutes } from '@app/features/ledger/flows/request-bitcoin-keys/ledger-request-bitcoin-keys';
@@ -70,6 +71,7 @@ export const homePageModalRoutes = (
 );
 
 function useAppRoutes() {
+  const { release_onramper_buy } = useFlags();
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
       <Route element={<Container />}>
@@ -156,14 +158,16 @@ function useAppRoutes() {
             }
           />
 
-          <Route
-            path={RouteUrls.Fund}
-            element={
-              <AccountGate>
-                <FundPage />
-              </AccountGate>
-            }
-          />
+          {release_onramper_buy && (
+            <Route
+              path={RouteUrls.Fund}
+              element={
+                <AccountGate>
+                  <FundPage />
+                </AccountGate>
+              }
+            />
+          )}
 
           {sendCryptoAssetFormRoutes}
 

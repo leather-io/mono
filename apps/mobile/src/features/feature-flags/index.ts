@@ -95,3 +95,11 @@ export function useTokenManagementFlag() {
 export function useSwapFlag() {
   return useBoolVariation('swap', false);
 }
+
+export function useOnramperBuyFlag() {
+  return useBoolVariation('release_onramper_buy', false);
+}
+
+export function useOnramperSellFlag() {
+  return useBoolVariation('release_onramper_sell', false);
+}

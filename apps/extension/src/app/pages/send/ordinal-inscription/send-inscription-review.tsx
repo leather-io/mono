@@ -45,25 +45,31 @@ export function SendInscriptionReview() {
       async onSuccess(txid: string) {
         void analytics.track('broadcast_ordinal_transaction');
         await filteredUtxosQuery.refetch();
-        void navigate(`/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionSent}`, {
-          state: {
-            inscription,
-            recipient,
-            arrivesIn,
-            txid,
-            feeRowValue,
-            backgroundLocation: { pathname: RouteUrls.Home },
-          },
-        });
+        void navigate(
+          `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionSent}`,
+          {
+            state: {
+              inscription,
+              recipient,
+              arrivesIn,
+              txid,
+              feeRowValue,
+              backgroundLocation: { pathname: RouteUrls.Home },
+            },
+          }
+        );
       },
       onError(e) {
         void analytics.track('broadcast_ordinal_error', { error: e });
-        void navigate(`/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionError}`, {
-          state: {
-            error: e,
-            backgroundLocation: { pathname: RouteUrls.Home },
-          },
-        });
+        void navigate(
+          `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionError}`,
+          {
+            state: {
+              error: e,
+              backgroundLocation: { pathname: RouteUrls.Home },
+            },
+          }
+        );
       },
     });
   }
