@@ -70,3 +70,4 @@ export {
   NumericInput,
   type NumericInputProps,
 } from './src/components/numeric-input/numeric-input.native';
+export { slidePair } from './src/animations/slide-pair.native';
