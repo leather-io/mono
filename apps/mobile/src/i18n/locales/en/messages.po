@@ -213,14 +213,6 @@ msgstr "Allow Camera Access"
 msgid "Allow collection of data"
 msgstr "Allow collection of data"
 
-#: src/features/swap/components/error-message.tsx:27
-msgid "Amount below minimum ({formattedMinimum})"
-msgstr "Amount below minimum ({formattedMinimum})"
-
-#: src/features/swap/components/error-message.tsx:31
-msgid "Amount exceeds maximum ({formattedMaximum})"
-msgstr "Amount exceeds maximum ({formattedMaximum})"
-
 #: src/features/send/error-messages.ts:11
 msgid "Amount must be greater than zero"
 msgstr "Amount must be greater than zero"
@@ -680,7 +672,7 @@ msgstr "Enable to receive notifications about transactions"
 msgid "Enabled"
 msgstr "Enabled"
 
-#: src/features/swap/components/error-message.tsx:18
+#: src/features/swap/components/amount-field/amount-field-error-messages.ts:12
 msgid "Enter an amount"
 msgstr "Enter an amount"
 
@@ -893,7 +885,7 @@ msgstr "Inputs and outputs"
 msgid "Inscription"
 msgstr "Inscription"
 
-#: src/features/swap/components/error-message.tsx:34
+#: src/features/swap/components/amount-field/amount-field-error-messages.ts:28
 msgid "Insufficient balance"
 msgstr "Insufficient balance"
 
@@ -901,7 +893,7 @@ msgstr "Insufficient balance"
 msgid "Insufficient funds"
 msgstr "Insufficient funds"
 
-#: src/features/swap/components/error-message.tsx:20
+#: src/features/swap/components/amount-field/amount-field-error-messages.ts:14
 msgid "Invalid amount"
 msgstr "Invalid amount"
 
@@ -1012,6 +1004,10 @@ msgstr "Max"
 msgid "MAX"
 msgstr "MAX"
 
+#: src/features/swap/components/amount-field/amount-field-error-messages.ts:25
+msgid "Maximum {formattedMaximum}"
+msgstr "Maximum {formattedMaximum}"
+
 #: src/components/app-update-required/app-update-required-sheet.tsx:46
 msgid "Maybe later"
 msgstr "Maybe later"
@@ -1036,6 +1032,10 @@ msgstr "Memo updated"
 #: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:49
 msgid "Message"
 msgstr "Message"
+
+#: src/features/swap/components/amount-field/amount-field-error-messages.ts:21
+msgid "Minimum {formattedMinimum}"
+msgstr "Minimum {formattedMinimum}"
 
 #: src/features/send/error-messages.ts:13
 msgid "Minimum is {minimumBtcSpendAmount}"
@@ -1275,7 +1275,7 @@ msgstr "Reveal account"
 #: src/features/send/forms/btc/btc-form.tsx:126
 #: src/features/send/forms/stx/sip10-form.tsx:149
 #: src/features/send/forms/stx/stx-form.tsx:140
-#: src/features/swap/screens/swap-form-screen.tsx:103
+#: src/features/swap/screens/swap-form-screen.tsx:101
 msgid "Review"
 msgstr "Review"
 
@@ -1610,7 +1610,7 @@ msgstr "Token Transfer"
 msgid "Tokens"
 msgstr "Tokens"
 
-#: src/features/swap/components/error-message.tsx:23
+#: src/features/swap/components/amount-field/amount-field-error-messages.ts:17
 msgid "Too many decimals (max {maxDecimals})"
 msgstr "Too many decimals (max {maxDecimals})"
 

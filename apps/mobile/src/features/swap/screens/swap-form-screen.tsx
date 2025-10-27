@@ -1,7 +1,7 @@
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
+import { getAmountErrorMessage } from '@/features/swap/components/amount-field/amount-field-error-messages';
 import { AmountPresets } from '@/features/swap/components/amount-presets';
-import { ErrorMessage } from '@/features/swap/components/error-message';
 import { UseSwapStateResult } from '@/features/swap/swap-state/swap-state.types';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
@@ -56,13 +56,13 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
         <Panel.Card type="pay">
           <Panel.CardRow>
             <AmountField
-              invalid={!!validation.issues.baseAmount}
               asset={state.baseSwapAsset?.asset}
               secondaryAmount={state.secondaryAmount}
               inputCurrencyMode={state.inputCurrencyMode}
               onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
               value={state.baseAmount}
               quoteCurrencyPreference={state.quoteCurrencyPreference}
+              errorMessage={getAmountErrorMessage(validation.issues.baseAmount)}
             />
             <Box alignItems="flex-end" gap="3" flexShrink={0}>
               <AssetSelectorToggle
@@ -89,8 +89,6 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
         </Panel.Card>
         <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
       </Panel.Root>
-
-      <ErrorMessage amount={state.baseAmount} issue={validation.issues.baseAmount} />
 
       <Box flex={1} justifyContent="flex-end" gap="4">
         <AmountPresets onSelectPercentage={actions.setBaseAmountByPercentage} />
