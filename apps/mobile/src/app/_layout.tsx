@@ -72,7 +72,7 @@ function App() {
   const { currentAccount } = useSettings();
 
   return (
-    <Box backgroundColor="ink.background-secondary" flex={1}>
+    <Box backgroundColor="ink.background-primary" flex={1}>
       <ErrorBoundary>
         <VersionGuard />
         <StatusBar />
