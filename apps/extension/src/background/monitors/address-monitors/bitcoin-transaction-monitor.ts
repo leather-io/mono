@@ -106,10 +106,6 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
       await handleMessageEvent(event);
     };
 
-    _ws.onerror = error => {
-      logger.error('Mempool WebSocket Error, ', error);
-    };
-
     _ws.onclose = event => {
       logTxMonitorEvent('Disconnected from Mempool WebSocket.', event.reason);
       if (_addresses.length > 0) {

@@ -32,6 +32,8 @@ function useNativeSegwitBtcAccountBalanceWithFallback(accountIndex: number) {
 
 export function useNativeSegwitBtcAccountBalance(accountIndex: number) {
   const account = useAccountAddresses(accountIndex);
+  console.log({ account });
+
   const discardedInscriptions = useDiscardedInscriptions();
   return toFetchState(
     useGetBtcAccountBalanceQuery({

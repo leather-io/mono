@@ -20,6 +20,7 @@ export function useAccountAddresses(accountIndex: number) {
 
   return useMemo(() => {
     const baseAddresses = createAccountAddresses(
+      // Dummy fingerprint used here
       { fingerprint: 'master', accountIndex },
       accountXpubs,
       stxAccount?.address
@@ -33,6 +34,7 @@ export function useAccountAddresses(accountIndex: number) {
           nativeSegwitAccount.network
         ).address
       : '';
+    console.log({ nativeSegwitAddress });
 
     const taprootAddress = taprootAccount
       ? getTaprootPaymentFromAddressIndex(
