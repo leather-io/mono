@@ -52,6 +52,7 @@ export async function signBip322Message({
       return {
         signature,
         address: taprootPayer.address,
+        message: message.params.message,
       };
     }
     case 'p2wpkh': {

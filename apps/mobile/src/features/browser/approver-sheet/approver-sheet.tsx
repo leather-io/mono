@@ -1,33 +1,63 @@
-import { useEffect, useRef } from 'react';
+import { type RefObject, useImperativeHandle, useRef, useState } from 'react';
+import { useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
-import { useAppByOrigin } from '@/store/apps/apps.read';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useTheme } from '@shopify/restyle';
 
 import { RpcErrorCode, RpcResponses, createRpcErrorResponse } from '@leather.io/rpc';
-import { Box, SheetInstance } from '@leather.io/ui/native';
+import { Box, type SheetInstance } from '@leather.io/ui/native';
 
 import { BrowserApprover } from './browser-approver';
 import { BrowserMessage, RpcErrorMessage } from './utils';
 
 interface ApproverSheetProps {
-  request: BrowserMessage;
   sendResult(result: RpcResponses): void;
-  origin: string;
 }
 
+export interface ApproverSheetInstance {
+  present(request: BrowserMessage, origin: string): void;
+  dismiss(): void;
+}
+export type ApproverSheetRef = RefObject<ApproverSheetInstance | null>;
+
+const sheetClosedIndex = -1;
+
 export function ApproverSheet(props: ApproverSheetProps) {
-  const approverSheetRef = useRef<SheetInstance>(null);
-  const app = useAppByOrigin(props.origin);
+  const { approverSheetRef } = useGlobalSheets();
+  const ref = useRef<SheetInstance>(null);
+  const [request, setRequest] = useState<BrowserMessage>(null);
+  const [origin, setOrigin] = useState<null | string>(null);
+  const animatedIndex = useSharedValue(sheetClosedIndex);
+
+  useImperativeHandle(approverSheetRef, () => ({
+    present(_request, _origin) {
+      setRequest(_request);
+      setOrigin(_origin);
+      // if the sheet is still somewhat open, wait a little bit before opening it up again
+      if (animatedIndex.value !== sheetClosedIndex) {
+        setTimeout(() => {
+          ref.current?.present();
+        }, 500);
+      } else {
+        ref.current?.present();
+      }
+    },
+    dismiss() {
+      ref.current?.dismiss();
+      setRequest(null);
+      setOrigin(null);
+    },
+  }));
+
   const { top } = useSafeAreaInsets();
   const theme = useTheme();
 
   function closeApprover() {
-    approverSheetRef.current?.close();
-    if (props.request) {
-      const errorResponse = createRpcErrorResponse(props.request.method, {
-        id: props.request.id,
+    if (request) {
+      const errorResponse = createRpcErrorResponse(request.method, {
+        id: request.id,
         error: {
           code: RpcErrorCode.USER_REJECTION,
           message: RpcErrorMessage.UserRejectedOperation,
@@ -35,23 +65,21 @@ export function ApproverSheet(props: ApproverSheetProps) {
       });
       props.sendResult(errorResponse);
     }
+    approverSheetRef.current?.dismiss();
   }
 
-  useEffect(() => {
-    if (props.request === null) {
-      approverSheetRef.current?.close();
-    } else {
-      approverSheetRef.current?.present();
-    }
-  }, [props.request]);
-
-  if (!app) return null;
-
   return (
-    <FullHeightSheet sheetRef={approverSheetRef}>
-      <Box style={{ paddingTop: top + theme.spacing['5'], flex: 1 }}>
-        <BrowserApprover app={app} closeApprover={closeApprover} {...props} />
-      </Box>
+    <FullHeightSheet animatedIndex={animatedIndex} sheetRef={ref}>
+      {request && origin && (
+        <Box style={{ paddingTop: top + theme.spacing['5'], flex: 1 }}>
+          <BrowserApprover
+            closeApprover={closeApprover}
+            request={request}
+            origin={origin}
+            {...props}
+          />
+        </Box>
+      )}
     </FullHeightSheet>
   );
 }
