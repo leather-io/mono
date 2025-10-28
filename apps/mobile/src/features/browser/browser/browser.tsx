@@ -98,13 +98,13 @@ export function Browser({
       const fallbackMatch = url.match(/S\.browser_fallback_url=([^;]+)/);
       if (fallbackMatch && fallbackMatch[1]) {
         const fallbackUrl = decodeURIComponent(fallbackMatch[1]);
-        Linking.openURL(fallbackUrl);
+        void Linking.openURL(fallbackUrl);
       }
       return false;
     }
     // Handle all other deep links normally
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      Linking.openURL(url);
+      void Linking.openURL(url);
 
       return false;
     }
