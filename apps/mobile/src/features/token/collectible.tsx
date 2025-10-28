@@ -4,13 +4,12 @@ import { Screen } from '@/components/screen/screen';
 import { HeaderSubtitle } from '@/components/screen/screen-header/components/header-title';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/core/macro';
 import { ChainId } from '@stacks/network';
 
-import { NonFungibleCryptoAsset, } from '@leather.io/models';
+import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
-import { TokenDetailsCard } from './components/token-details-card';
+
 import { renderCollectibleDetailsRecursively } from './utils/render-collectible-details';
 
 interface CollectibleProps {
@@ -31,11 +30,11 @@ export function useCollectibleHeight() {
 
 export function Collectible({
   name,
-  description,
   details,
   children,
 }: CollectibleProps) {
   const collection = details && 'collection' in details ? details.collection : undefined;
+  // TODO: add chain name to the collectible - make a component for this to update the link
   const { networkPreference } = useSettings();
   const chainName = networkPreference.chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet';
 
@@ -61,14 +60,12 @@ export function Collectible({
       />
       <Screen.ScrollView>
         <Box gap="1" backgroundColor="ink.background-secondary">
-          <Box p="5" backgroundColor="ink.background-primary">
             {children}
-          </Box>
-          {description && (
+           {/* {description && (
             <TokenDetailsCard title={t`Description`}>
               <Text variant="caption01">{description}</Text>
             </TokenDetailsCard>
-          )}
+          )} */}
           {details && renderCollectibleDetailsRecursively(details, chainName)}
         </Box>
       </Screen.ScrollView>

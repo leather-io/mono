@@ -17,7 +17,7 @@ function SummaryTableLabel({ children }: HasChildren) {
 function SummaryTableValue({ children }: HasChildren) {
   return (
     <Box flex={1} maxWidth="100%" alignItems="flex-end">
-      <Text variant="label02" numberOfLines={1} ellipsizeMode="tail" style={{ maxWidth: '100%' }}>
+      <Text variant="body02" numberOfLines={1} ellipsizeMode="tail" style={{ maxWidth: '100%' }}>
         {children}
       </Text>
     </Box>
