@@ -13,7 +13,7 @@ export default function ActivityScreenWithAccount({
   currentAccount,
 }: ActivityScreenWithAccountProps) {
   const activity = useAccountActivity(currentAccount.fingerprint, currentAccount.accountIndex);
-  const pageTitle = t`Activity`;
+  const pageTitle = t`Activity Page`;
 
   return (
     <Screen>
