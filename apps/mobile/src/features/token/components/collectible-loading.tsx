@@ -10,15 +10,15 @@ export function CollectibleLoading({ height }: { height: number }) {
   return (
     <Screen>
       <Screen.Header rightElement={<NetworkBadge />} />
-     <Screen.ScrollView>
+      <Screen.ScrollView>
         <Box gap="1" backgroundColor="ink.background-secondary">
           <Box p="5" backgroundColor="ink.background-primary">
             <SkeletonLoader height={height} width="100%" isLoading={true} />
           </Box>
-            <TokenDetailsCard title={t`Description`}>
-              <SkeletonLoader height={24} width="100%" isLoading={true} />
-            </TokenDetailsCard>
-         </Box>
+          <TokenDetailsCard title={t`Collectible Info`}>
+            <SkeletonLoader height={24} width="100%" isLoading={true} />
+          </TokenDetailsCard>
+        </Box>
       </Screen.ScrollView>
     </Screen>
   );
