@@ -13,7 +13,6 @@ import { RpcResponses, getInfo, parseEndpointRequest, supportedMethods } from '@
 import { Box, useTheme } from '@leather.io/ui/native';
 
 import { ApproverSheet } from '../approver-sheet/approver-sheet';
-import { BrowserMessage } from '../approver-sheet/utils';
 import { captureScreenshot, createGetInfoResponse, createSupportedMethodsResponse } from './utils';
 
 const CONTENT_OFFSET_FOR_BROWSER_CLOSE = 150;
@@ -37,10 +36,10 @@ export function Browser({
 }: BrowserProps) {
   const { top } = useSafeAreaInsets();
   const viewShotRef = useRef<ViewShot>(null);
+  const { approverSheetRef } = useGlobalSheets();
   const [origin, setOrigin] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const theme = useTheme();
-  const [message, setMessage] = useState<BrowserMessage>(null);
   const { browserSheetRef } = useGlobalSheets();
 
   useEffect(() => {
@@ -80,7 +79,7 @@ export function Browser({
 
   function sendResult(result: RpcResponses) {
     postMessage(JSON.stringify(result));
-    setMessage(null);
+    approverSheetRef.current?.dismiss();
   }
 
   function onMessageHandler(event: WebViewMessageEvent) {
@@ -98,8 +97,7 @@ export function Browser({
     if (supportedMethodsMessage.success) {
       return sendResult(createSupportedMethodsResponse(supportedMethodsMessage.data));
     }
-
-    return setMessage(parsedMessage);
+    if (origin) approverSheetRef.current?.present(parsedMessage, origin);
   }
 
   return (
@@ -133,7 +131,7 @@ export function Browser({
           onNavigationStateChange={handleWebViewNavigationStateChange}
         />
       </ViewShot>
-      {origin && <ApproverSheet request={message} origin={origin} sendResult={sendResult} />}
+      <ApproverSheet sendResult={sendResult} />
     </Box>
   );
 }

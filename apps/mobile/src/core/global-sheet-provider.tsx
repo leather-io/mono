@@ -1,5 +1,9 @@
 import { createContext, useContext, useRef } from 'react';
 
+import {
+  ApproverSheetInstance,
+  type ApproverSheetRef,
+} from '@/features/browser/approver-sheet/approver-sheet';
 import { ReceiveSheetInstance, ReceiveSheetRef } from '@/features/receive/receive-sheet';
 import { SendSheetInstance, SendSheetRef } from '@/features/send/send-sheet';
 import {
@@ -19,6 +23,7 @@ interface GlobalSheetContextValue {
   addWalletSheetRef: SheetRef;
   versionGuardSheetRef: SheetRef;
   descriptionSheetRef: DescriptionSheetRef;
+  approverSheetRef: ApproverSheetRef;
 }
 
 const GlobalSheetContext = createContext<GlobalSheetContextValue | null>(null);
@@ -38,6 +43,7 @@ export function GlobalSheetProvider({ children }: HasChildren) {
   const addWalletSheetRef = useRef<SheetInstance>(null);
   const versionGuardSheetRef = useRef<SheetInstance>(null);
   const descriptionSheetRef = useRef<DescriptionSheetInstance>(null);
+  const approverSheetRef = useRef<ApproverSheetInstance>(null);
 
   return (
     <GlobalSheetContext.Provider
@@ -50,6 +56,7 @@ export function GlobalSheetProvider({ children }: HasChildren) {
         addWalletSheetRef,
         versionGuardSheetRef,
         descriptionSheetRef,
+        approverSheetRef,
       }}
     >
       {children}
