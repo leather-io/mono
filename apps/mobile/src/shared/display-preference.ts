@@ -1,6 +1,10 @@
 import { t } from '@lingui/core/macro';
 
-import { AccountDisplayPreference, AccountDisplayPreferenceInfo, CryptoAssetProtocol } from '@leather.io/models';
+import {
+  AccountDisplayPreference,
+  AccountDisplayPreferenceInfo,
+  CryptoAssetProtocol,
+} from '@leather.io/models';
 import { match } from '@leather.io/utils';
 
 enum AccountDisplayPreferenceType {
@@ -52,9 +56,7 @@ export function getChainDisplayLabel(
   });
 }
 
-export function getProtocolDisplayLabel(
-  protocol: CryptoAssetProtocol
-): string {
+export function getProtocolDisplayLabel(protocol: CryptoAssetProtocol): string {
   const matchProtocol = match<CryptoAssetProtocol>();
   return matchProtocol(protocol, {
     sip9: t`SIP-009`,

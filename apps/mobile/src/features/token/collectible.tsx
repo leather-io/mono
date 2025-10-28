@@ -9,7 +9,6 @@ import { ChainId } from '@stacks/network';
 import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
-
 import { renderCollectibleDetailsRecursively } from './utils/render-collectible-details';
 
 interface CollectibleProps {
@@ -28,15 +27,12 @@ export function useCollectibleHeight() {
   return calculatedHeight;
 }
 
-export function Collectible({
-  name,
-  details,
-  children,
-}: CollectibleProps) {
+export function Collectible({ name, details, children }: CollectibleProps) {
   const collection = details && 'collection' in details ? details.collection : undefined;
   // TODO: add chain name to the collectible - make a component for this to update the link
   const { networkPreference } = useSettings();
-  const chainName = networkPreference.chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet';
+  const chainName =
+    networkPreference.chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet';
 
   return (
     <Screen>
@@ -60,8 +56,8 @@ export function Collectible({
       />
       <Screen.ScrollView>
         <Box gap="1" backgroundColor="ink.background-secondary">
-            {children}
-           {/* {description && (
+          {children}
+          {/* {description && (
             <TokenDetailsCard title={t`Description`}>
               <Text variant="caption01">{description}</Text>
             </TokenDetailsCard>

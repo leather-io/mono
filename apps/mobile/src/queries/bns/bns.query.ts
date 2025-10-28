@@ -19,8 +19,7 @@ export function useGetBnsName(fullName?: string) {
   return useQuery({
     queryKey: ['bns-service-get-bns-name', fullName],
     enabled: !!fullName,
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getBnsService().getBnsName(fullName!, signal),
+    queryFn: ({ signal }: QueryFunctionContext) => getBnsService().getBnsName(fullName!, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

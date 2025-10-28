@@ -8,6 +8,7 @@ import { CollectibleLoading } from '../components/collectible-loading';
 import { isBns } from '../utils/is-bns';
 import { BnsTokenDetails } from './bns-token-details';
 import { Sip9TokenDetails as Sip9TokenDetailsComponent } from './sip9-token-details';
+
 interface Sip9TokenDetailsProps {
   account: AccountId;
   assetId: string;
@@ -34,11 +35,11 @@ export function Sip9TokenDetails({ assetId, tokenId, account }: Sip9TokenDetails
       return <ErrorFallbackTab />;
     }
 
-   if(isBns(asset?.collection?.name ?? '')){
-    return <BnsTokenDetails asset={asset} />;
-   }
+    if (isBns(asset?.collection?.name ?? '')) {
+      return <BnsTokenDetails asset={asset} />;
+    }
 
-   return <Sip9TokenDetailsComponent asset={asset} />;
+    return <Sip9TokenDetailsComponent asset={asset} />;
   }
 
   return <ErrorFallbackTab />;

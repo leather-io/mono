@@ -7,8 +7,9 @@ import { t } from '@lingui/core/macro';
 
 import { ArrowTopRightIcon, Box, Pressable, Text } from '@leather.io/ui/native';
 import { createMoney, isObject, truncateMiddle } from '@leather.io/utils';
-import { isBns } from './is-bns';
+
 import { TokenDetailsCard } from '../components/token-details-card';
+import { isBns } from './is-bns';
 
 function replaceUnderscores(str: string) {
   return str.replace(/_/g, ' ');
@@ -23,6 +24,7 @@ function renderLink(url: string, label: string) {
     <Pressable onPress={() => Linking.openURL(url)}>
       {({ pressed }) => (
         <Box flexDirection="row" alignItems="center" gap="1">
+          <ArrowTopRightIcon color="ink.text-subdued" variant="small" />
           <Text
             variant="label02"
             textDecorationLine="underline"
@@ -31,7 +33,6 @@ function renderLink(url: string, label: string) {
           >
             {label}
           </Text>
-          <ArrowTopRightIcon color="ink.text-subdued" variant="small" />
         </Box>
       )}
     </Pressable>
@@ -79,7 +80,7 @@ function renderValue(value: unknown, key: string, chainName?: string): React.Rea
     }
   }
 
-  const keysToTruncate = ['address', 'id','txid'];
+  const keysToTruncate = ['address', 'id', 'txid'];
   if (keysToTruncate.includes(key)) {
     return truncateMiddle(stringValue, 4);
   }
@@ -89,7 +90,6 @@ function renderValue(value: unknown, key: string, chainName?: string): React.Rea
     const fullUrl = `https://explorer.hiro.so/address/${stringValue}?chain=${chainName}`;
     return renderLink(fullUrl, truncateMiddle(stringValue, 2));
   }
-
 
   // If value is a URL, make it clickable
   if (typeof stringValue === 'string' && stringValue.startsWith('https://')) {
@@ -168,9 +168,7 @@ export function renderCollectibleDetailsRecursively(
             ? renderLink(`https://gamma.io${collectionExplorerUrl}`, String(collectionValue))
             : String(collectionValue);
 
-          items.push(
-            <SummaryTableItem key="collection-name" label={label} value={value} />
-          );
+          items.push(<SummaryTableItem key="collection-name" label={label} value={value} />);
           return;
         }
 
@@ -198,11 +196,7 @@ export function renderCollectibleDetailsRecursively(
           : String(attrValue);
 
         attributeItems.push(
-          <SummaryTableItem
-            key={`attribute-${index}`}
-            label={traitType}
-            value={formattedValue}
-          />
+          <SummaryTableItem key={`attribute-${index}`} label={traitType} value={formattedValue} />
         );
       });
       return;

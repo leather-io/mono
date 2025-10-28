@@ -1,5 +1,6 @@
-import { Linking } from "react-native";
-import { ArrowTopRightIcon, Box, Pressable, Text } from "@leather.io/ui/native";
+import { Linking } from 'react-native';
+
+import { ArrowTopRightIcon, Box, Pressable, Text } from '@leather.io/ui/native';
 
 interface DetailsLinkProps {
   url: string;
@@ -7,7 +8,7 @@ interface DetailsLinkProps {
 }
 export function DetailsLink({ url, label }: DetailsLinkProps) {
   return (
-      <Pressable onPress={() => Linking.openURL(url)}>
+    <Pressable onPress={() => Linking.openURL(url)}>
       {({ pressed }) => (
         <Box flexDirection="row" alignItems="center" gap="1">
           <ArrowTopRightIcon color="ink.text-subdued" variant="small" />
