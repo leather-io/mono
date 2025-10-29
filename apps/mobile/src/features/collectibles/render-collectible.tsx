@@ -1,4 +1,4 @@
-import { CollectibleDetailsProps } from '@/features/token/types';
+import { TokenDetailsProps } from '@/features/token/types';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
@@ -10,7 +10,7 @@ import { Stamp } from './components/stamp';
 interface RenderCollectibleProps {
   item: NonFungibleCryptoAsset;
   height: number;
-  onPress?: (collectibleDetails: CollectibleDetailsProps) => void;
+  onPress?: (tokenDetails: TokenDetailsProps) => void;
 }
 export function renderCollectible({ item, height, onPress }: RenderCollectibleProps) {
   switch (item.protocol) {

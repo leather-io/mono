@@ -346,7 +346,7 @@ msgstr "Balances"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:12
+#: src/features/balances/bitcoin/bitcoin-balance.tsx:14
 #: src/features/receive/get-assets.ts:29
 #: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
@@ -495,7 +495,7 @@ msgstr "Contact us"
 msgid "Contacts"
 msgstr "Contacts"
 
-#: src/features/collectibles/components/inscription.tsx:35
+#: src/features/collectibles/components/inscription.tsx:31
 msgid "Content not found"
 msgstr "Content not found"
 
@@ -913,7 +913,7 @@ msgstr "Layer"
 msgid "Layer 1"
 msgstr "Layer 1"
 
-#: src/features/token/bitcoin/rune-token-details.tsx:31
+#: src/features/token/bitcoin/rune-token-details.tsx:37
 msgid "Layer 1 · Bitcoin"
 msgstr "Layer 1 · Bitcoin"
 
@@ -926,7 +926,7 @@ msgstr "Layer 1 • Bitcoin"
 msgid "Layer 2"
 msgstr "Layer 2"
 
-#: src/features/token/stacks/sip10-token-details.tsx:36
+#: src/features/token/stacks/sip10-token-details.tsx:42
 msgid "Layer 2 · Stacks"
 msgstr "Layer 2 · Stacks"
 
@@ -1386,7 +1386,7 @@ msgstr "Something went wrong"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:11
+#: src/features/balances/stacks/stacks-balance.tsx:13
 #: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
 #: src/features/swap/swap.utils.ts:6
@@ -1398,7 +1398,7 @@ msgstr "Stacks"
 msgid "Stacks address"
 msgstr "Stacks address"
 
-#: src/features/token/bitcoin/stamp-details.tsx:29
+#: src/features/token/bitcoin/stamp-details.tsx:30
 msgid "Stamp"
 msgstr "Stamp"
 

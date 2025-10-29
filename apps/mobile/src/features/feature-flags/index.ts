@@ -47,10 +47,6 @@ export function useNotificationsFlag() {
   return useBoolVariation('release_push_notifications', false);
 }
 
-export function useRunesFlag() {
-  return useBoolVariation('release_runes_feature', false);
-}
-
 export function useWaitlistFlag() {
   return useBoolVariation('release_waitlist_features', false);
 }

@@ -5,6 +5,7 @@ import { t } from '@lingui/core/macro';
 
 import { AccountId, StampAsset } from '@leather.io/models';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
+
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenLoading } from '../components/token-loading';
 

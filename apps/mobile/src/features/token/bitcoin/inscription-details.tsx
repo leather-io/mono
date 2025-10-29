@@ -3,10 +3,10 @@ import { Inscription } from '@/features/collectibles/components/inscription';
 import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-collectibles.query';
 
 import { AccountId, InscriptionAsset } from '@leather.io/models';
+import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenLoading } from '../components/token-loading';
-import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 interface InscriptionDetailsProps {
   account: AccountId;

@@ -6,7 +6,7 @@ import { Screen } from '@/components/screen/screen';
 import { EmptyCollectiblesState } from '@/features/collectibles/components/empty-collectibles-state';
 import { Loading } from '@/features/collectibles/components/loading';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import { CollectibleDetailsProps } from '@/features/token/types';
+import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 
 import { AccountId } from '@leather.io/models';
@@ -25,7 +25,7 @@ export function useCollectibleHeight() {
 interface CollectiblesListProps {
   currentAccount: AccountId;
   header: ReactElement;
-  onPressToken?: (collectibleDetails: CollectibleDetailsProps) => void;
+  onPressToken?: (tokenDetails: TokenDetailsProps) => void;
 }
 
 export function CollectiblesList({ currentAccount, header, onPressToken }: CollectiblesListProps) {

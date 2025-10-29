@@ -1,5 +1,4 @@
 import { toFetchState } from '@/components/loading/fetch-state';
-import { useRunesFlag } from '@/features/feature-flags';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
@@ -50,7 +49,6 @@ export function useManagedRunesTools(fingerprint: string, accountIndex: number) 
 
 function useRunesAggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
-  const runeFlag = useRunesFlag();
   return useQuery({
     queryKey: [
       'runes-balances-service-get-runes-aggregate-balance',
@@ -59,14 +57,12 @@ function useRunesAggregateBalanceQuery(requests: AccountRequest[]) {
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAggregateBalance(requests, signal),
-    enabled: runeFlag,
     ...balanceQueryOptions,
   });
 }
 
 function useRunesAccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference, assetVisibility } = useSettings();
-  const runeFlag = useRunesFlag();
   return useQuery({
     queryKey: [
       'runes-balances-service-get-runes-account-balance',
@@ -76,14 +72,12 @@ function useRunesAccountBalanceQuery(request: AccountRequest) {
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAccountBalance(request, signal),
-    enabled: runeFlag,
     ...balanceQueryOptions,
   });
 }
 
 function useRuneBalanceByRuneNameQuery(request: AccountRequest, runeName: string) {
   const { fiatCurrencyPreference } = useSettings();
-  const runeFlag = useRunesFlag();
   return useQuery({
     queryKey: [
       'runes-balances-service-get-rune-balance-by-rune-name',
@@ -93,7 +87,6 @@ function useRuneBalanceByRuneNameQuery(request: AccountRequest, runeName: string
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRuneBalanceByRuneName(request, runeName, signal),
-    enabled: runeFlag,
     ...balanceQueryOptions,
   });
 }

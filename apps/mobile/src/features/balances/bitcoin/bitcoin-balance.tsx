@@ -3,8 +3,10 @@ import { OnPressTokenDetails } from '@/features/token/types';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/core/macro';
 
+import { btcAsset } from '@leather.io/constants';
 import { AccountId, CryptoAssetProtocols } from '@leather.io/models';
 import { BtcAvatarIcon } from '@leather.io/ui/native';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 type BitcoinTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
 
@@ -30,7 +32,11 @@ export function BitcoinBalanceByAccount({
       quoteBalance={quoteBalance}
       onPress={
         onPress
-          ? () => onPress?.({ assetProtocol: CryptoAssetProtocols.nativeBtc, assetId: 'BTC' })
+          ? () =>
+              onPress?.({
+                assetProtocol: CryptoAssetProtocols.nativeBtc,
+                assetId: serializeAssetId(getAssetId(btcAsset)),
+              })
           : undefined
       }
       isLoading={state === 'loading'}
