@@ -6,10 +6,11 @@ import { AccountId, InscriptionAsset } from '@leather.io/models';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenLoading } from '../components/token-loading';
+import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 interface InscriptionDetailsProps {
   account: AccountId;
-  assetId: string;
+  assetId: SerializedCryptoAssetId;
 }
 export function InscriptionDetails({ assetId, account }: InscriptionDetailsProps) {
   const { fingerprint, accountIndex } = account;

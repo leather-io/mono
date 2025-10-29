@@ -495,7 +495,7 @@ msgstr "Contact us"
 msgid "Contacts"
 msgstr "Contacts"
 
-#: src/features/collectibles/components/inscription.tsx:33
+#: src/features/collectibles/components/inscription.tsx:35
 msgid "Content not found"
 msgstr "Content not found"
 

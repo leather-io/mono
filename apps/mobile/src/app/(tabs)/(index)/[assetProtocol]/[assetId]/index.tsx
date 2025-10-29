@@ -9,12 +9,13 @@ import { SupportedAssetProtocol } from '@/features/token/types';
 import { useSettings } from '@/store/settings/settings';
 import { useLocalSearchParams } from 'expo-router';
 
-import { CryptoAssetProtocols } from '@leather.io/models';
-import { assertExistence, assertUnreachable } from '@leather.io/utils';
+import {  CryptoAssetProtocols } from '@leather.io/models';
+import { assertExistence, assertUnreachable, SerializedCryptoAssetId } from '@leather.io/utils';
 
 export default function AccountTokenScreen() {
+  // FIXME - need to serialize assetId for rune and sip10
   const { assetId, assetProtocol } = useLocalSearchParams<{
-    assetId: string;
+    assetId: SerializedCryptoAssetId;
     assetProtocol: SupportedAssetProtocol;
   }>();
   const { currentAccount } = useSettings();

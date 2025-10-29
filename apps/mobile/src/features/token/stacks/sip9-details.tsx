@@ -3,22 +3,19 @@ import { Sip9 } from '@/features/collectibles/components/sip9';
 import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-collectibles.query';
 
 import { AccountId, isSip9Asset } from '@leather.io/models';
-import { assertExistence } from '@leather.io/utils';
-
+import { SerializedCryptoAssetId } from '@leather.io/utils';
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenLoading } from '../components/token-loading';
 
 interface Sip9TokenDetailsProps {
   account: AccountId;
-  assetId: string;
+  assetId: SerializedCryptoAssetId;
 }
 export function Sip9TokenDetails({ assetId, account }: Sip9TokenDetailsProps) {
   const { fingerprint, accountIndex } = account;
   const height = useCollectibleHeight();
 
-  const [sip9AssetId, tokenId] = assetId.split('|');
-  assertExistence(sip9AssetId, 'SIP-9 Asset ID is required');
-  const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, sip9AssetId);
+  const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
 
   if (collectible.state === 'loading') {
     return <TokenLoading />;
@@ -27,10 +24,7 @@ export function Sip9TokenDetails({ assetId, account }: Sip9TokenDetailsProps) {
     return <ErrorFallbackTab />;
   }
   if (collectible.state === 'success' && collectible.value.length > 0) {
-    const sip9Assets = collectible.value.filter(isSip9Asset);
-    const asset = tokenId
-      ? sip9Assets.find(candidate => candidate.tokenId?.toString() === tokenId)
-      : sip9Assets[0];
+     const asset = collectible.value.find(isSip9Asset);
     if (!asset) {
       return <ErrorFallbackTab />;
     }
