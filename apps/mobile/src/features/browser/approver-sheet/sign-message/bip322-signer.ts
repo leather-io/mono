@@ -74,6 +74,7 @@ export async function signBip322Message({
       return {
         signature,
         address: nativeSegwitPayer.address,
+        message: message.params.message,
       };
     }
     default:

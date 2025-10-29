@@ -19,8 +19,9 @@ export const signMessageRequestParamsSchema = z.looseObject({
 export const signMessage = defineRpcEndpoint({
   method: 'signMessage',
   params: signMessageRequestParamsSchema,
-  result: z.looseObject({
+  result: z.object({
     signature: z.string(),
     address: z.string(),
+    message: z.string(),
   }),
 });

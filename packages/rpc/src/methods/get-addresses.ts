@@ -10,7 +10,7 @@ export type PaymentTypes = BitcoinPaymentTypes;
 
 //
 // Bitcoin
-export const btcAddressBaseSchema = z.looseObject({
+export const btcAddressBaseSchema = z.object({
   symbol: z.literal('BTC'),
   type: bitcoinPaymentTypesSchema,
   address: z.string(),
@@ -42,7 +42,7 @@ export type BtcAddress = z.infer<typeof btcAddressSchema>;
 
 //
 // Stacks
-export const stxAddressSchema = z.looseObject({
+export const stxAddressSchema = z.object({
   symbol: z.literal('STX'),
   address: z.string(),
   publicKey: z.string(),
@@ -56,7 +56,7 @@ export type Address = z.infer<typeof addressSchema>;
 
 //
 // Combined addresses response
-export const addressResponseBodySchema = z.looseObject({ addresses: z.array(addressSchema) });
+export const addressResponseBodySchema = z.object({ addresses: z.array(addressSchema) });
 
 export const getAddresses = defineRpcEndpoint({
   method: 'getAddresses',
