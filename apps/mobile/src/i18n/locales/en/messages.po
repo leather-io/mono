@@ -149,7 +149,7 @@ msgstr "Add to new wallet"
 msgid "Add wallet"
 msgstr "Add wallet"
 
-#: src/features/collectibles/components/empty-collectibles-state.tsx:19
+#: src/features/token/components/empty-collectibles-state.tsx:19
 msgid "Add your collection here"
 msgstr "Add your collection here"
 
@@ -456,13 +456,11 @@ msgstr "Code"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:40
 #: src/features/token/bitcoin/stamp-token-details.tsx:27
-#: src/features/token/components/collectible-loading.tsx:19
 #: src/features/token/stacks/bns-token-details.tsx:34
 #: src/features/token/stacks/sip9-token-details.tsx:40
 msgid "Collectible Info"
 msgstr "Collectible Info"
 
-#: src/features/token/components/collectible-loading.tsx:26
 #: src/features/token/stacks/sip9-token-details.tsx:44
 msgid "Collection"
 msgstr "Collection"
@@ -518,7 +516,7 @@ msgstr "Contact us"
 msgid "Contacts"
 msgstr "Contacts"
 
-#: src/features/collectibles/components/inscription.tsx:33
+#: src/features/token/bitcoin/inscription.tsx:33
 msgid "Content not found"
 msgstr "Content not found"
 
@@ -568,7 +566,6 @@ msgstr "Create new wallet"
 msgid "Creation date"
 msgstr "Creation date"
 
-#: src/features/token/components/collectible-loading.tsx:30
 #: src/features/token/stacks/sip9-token-details.tsx:47
 msgid "Creator"
 msgstr "Creator"
@@ -901,7 +898,7 @@ msgstr "ID copied to clipboard"
 msgid "If unsafe, your wallet could be drained."
 msgstr "If unsafe, your wallet could be drained."
 
-#: src/features/collectibles/components/fallback.tsx:8
+#: src/features/token/components/fallback.tsx:8
 msgid "Image currently unavailable"
 msgstr "Image currently unavailable"
 
@@ -956,7 +953,6 @@ msgstr "Last observed block"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:43
 #: src/features/token/bitcoin/stamp-token-details.tsx:33
-#: src/features/token/components/token-details-table.tsx:22
 #: src/features/token/stacks/bns-token-details.tsx:42
 #: src/features/token/stacks/sip9-token-details.tsx:52
 msgid "Layer"
@@ -1093,13 +1089,8 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
-#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
-#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
 #: src/features/token/bitcoin/inscription-token-details.tsx:42
 #: src/features/token/bitcoin/stamp-token-details.tsx:30
-#: src/features/token/components/collectible-loading.tsx:22
-#: src/features/token/components/token-details-table.tsx:19
 #: src/features/token/stacks/bns-token-details.tsx:36
 #: src/features/token/stacks/sip9-token-details.tsx:42
 msgid "Name"
@@ -1506,7 +1497,6 @@ msgid "Stacks address"
 msgstr "Stacks address"
 
 #: src/features/token/bitcoin/stamp-token-details.tsx:17
-#: src/shared/display-preference.ts:64
 msgid "Stamp"
 msgstr "Stamp"
 

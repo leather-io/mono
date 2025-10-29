@@ -3,8 +3,8 @@ import { useWindowDimensions } from 'react-native';
 
 import { ErrorFallbackTab } from '@/components/error/error';
 import { Screen } from '@/components/screen/screen';
-import { EmptyCollectiblesState } from '@/features/collectibles/components/empty-collectibles-state';
-import { Loading } from '@/features/collectibles/components/loading';
+import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
+import { Loading } from '@/features/token/components/loading';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';

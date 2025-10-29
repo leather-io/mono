@@ -1,6 +1,6 @@
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
-import { DetailsLink } from '@/features/collectibles/components/details-link';
-import { Sip9 } from '@/features/collectibles/components/sip9';
+import { DetailsLink } from '@/features/token/components/details-link';
+import { Sip9 } from '@/features/token/stacks/sip9';
 // FIXME: This locale is still hardcoded in Send
 import { locale } from '@/features/send/constants';
 import { useGetBnsName } from '@/queries/bns/bns.query';

@@ -1,6 +1,6 @@
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
-import { DetailsLink } from '@/features/collectibles/components/details-link';
-import { Sip9 } from '@/features/collectibles/components/sip9';
+import { DetailsLink } from '@/features/token/components/details-link';
+import { Sip9 } from '@/features/token/stacks/sip9';
 import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-preference';
 import { t } from '@lingui/core/macro';
 

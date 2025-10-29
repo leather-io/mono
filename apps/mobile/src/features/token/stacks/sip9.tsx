@@ -4,7 +4,7 @@ import { isBns } from '@/features/token/utils/is-bns';
 import { Sip9Asset } from '@leather.io/models';
 import { BnsImage, Sip9 as Sip9Component } from '@leather.io/ui/native';
 
-import { FallbackImage } from './fallback';
+import { FallbackImage } from '../components/fallback';
 
 interface Sip9Props {
   item: Sip9Asset;

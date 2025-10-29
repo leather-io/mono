@@ -9,7 +9,7 @@ import { AssetsList } from '@/features/balances/assets/assets-list';
 import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-balance';
 import { ManageTokensSheet } from '@/features/balances/manage-tokens.sheet';
 import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
-import { CollectiblesList } from '@/features/collectibles/collectibles-list';
+import { CollectiblesList } from '@/features/token/collectibles-list';
 import { useCollectibleDetailsFlag, useTokenDetailsFlag } from '@/features/feature-flags';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';

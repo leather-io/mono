@@ -1,6 +1,6 @@
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
-import { DetailsLink } from '@/features/collectibles/components/details-link';
-import { Stamp } from '@/features/collectibles/components/stamp';
+import { DetailsLink } from '@/features/token/components/details-link';
+import { Stamp } from '@/features/token/bitcoin/stamp';
 import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-preference';
 import { t } from '@lingui/core/macro';
 
