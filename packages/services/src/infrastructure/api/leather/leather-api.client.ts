@@ -65,7 +65,10 @@ export class LeatherApiClient {
     });
   }
 
-  async fetchUtxos(descriptor: string, { signal, skipCache }: ApiRequestOptions = {}) {
+  async fetchUtxos(
+    descriptor: string,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<LeatherApiUtxo[]> {
     const network = this.settingsService.getSettings().network.chain.bitcoin.bitcoinNetwork;
     const fetchFn = async () => {
       const { data } = await this.rateLimiter.add(

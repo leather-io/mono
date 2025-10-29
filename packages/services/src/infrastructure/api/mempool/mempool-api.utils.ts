@@ -1,0 +1,15 @@
+import { WalletDefaultNetworkConfigurationIds } from '@leather.io/models';
+
+import {
+  selectBitcoinApiUrl,
+  selectNetworkConfigurationId,
+} from '../../settings/settings.selectors';
+import { UserSettings } from '../../settings/settings.service';
+
+export function getMempoolUrlFromUserSettings(settings: UserSettings): string | null {
+  const networkConfigurationId = selectNetworkConfigurationId(settings);
+  return networkConfigurationId === WalletDefaultNetworkConfigurationIds.sbtcTestnet ||
+    networkConfigurationId === WalletDefaultNetworkConfigurationIds.sbtcDevenv
+    ? selectBitcoinApiUrl(settings)
+    : null;
+}

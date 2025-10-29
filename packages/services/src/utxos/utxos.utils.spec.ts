@@ -10,7 +10,7 @@ import {
   LeatherApiUtxo,
 } from '../infrastructure/api/leather/leather-api.client';
 import {
-  createOwnedUtxo,
+  createOwnedUtxoFromLeather,
   dustSatThreshold,
   fallbackUtxoHeight,
   filterMatchesAnyUtxoId,
@@ -403,7 +403,7 @@ describe(getOutboundUtxos.name, () => {
   });
 });
 
-describe(createOwnedUtxo.name, () => {
+describe(createOwnedUtxoFromLeather.name, () => {
   it('maps a Leather API UTXO to an Owned UTXO', () => {
     const fingerprint = 'deadbeef';
     const utxo = {
@@ -413,7 +413,7 @@ describe(createOwnedUtxo.name, () => {
       address: 'bc1q123',
       path: 'bc1q123-path',
     } as unknown as LeatherApiUtxo;
-    const ownedUtxo = createOwnedUtxo(utxo, fingerprint);
+    const ownedUtxo = createOwnedUtxoFromLeather(utxo, fingerprint);
     expect(ownedUtxo.txid).toEqual(utxo.txid);
     expect(ownedUtxo.vout).toEqual(utxo.vout);
     expect(ownedUtxo.value).toEqual(utxo.value);

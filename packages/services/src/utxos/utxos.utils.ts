@@ -1,19 +1,18 @@
-import { OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
+import { BitcoinTransaction, OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
 import { isDefined, sumNumbers } from '@leather.io/utils';
 
 import {
   BisInscription,
   BisRuneValidOutput,
 } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
-import {
-  LeatherApiBitcoinTransaction,
-  LeatherApiUtxo,
-} from '../infrastructure/api/leather/leather-api.client';
+import { LeatherApiUtxo } from '../infrastructure/api/leather/leather-api.client';
+import { MempoolDescriptorUtxo } from '../infrastructure/api/mempool/mempool-api.schema';
 import {
   isOutboundTx,
   isPendingTx,
   readTxOwnedVins,
 } from '../transactions/bitcoin-transactions.utils';
+import { UtxoTotals } from './utxos.service';
 
 export function getUtxoIdFromSatpoint(satpoint: string) {
   const splits = satpoint?.split(':');
@@ -72,10 +71,7 @@ export function selectUniqueUtxoIds<T extends UtxoId>(ids: T[]) {
 
 export const fallbackUtxoHeight = 800_000;
 
-export function getOutboundUtxos(
-  txs: LeatherApiBitcoinTransaction[],
-  fingerprint: string
-): OwnedUtxo[] {
+export function getOutboundUtxos(txs: BitcoinTransaction[], fingerprint: string): OwnedUtxo[] {
   const txMap = new Map(txs.map(tx => [tx.txid, tx]));
   return txs
     .filter(isPendingTx)
@@ -95,7 +91,21 @@ export function getOutboundUtxos(
     }));
 }
 
-export function createOwnedUtxo(utxo: LeatherApiUtxo, masterFingerprint: string): OwnedUtxo {
+export function createOwnedUtxoFromMempool(
+  utxo: MempoolDescriptorUtxo,
+  masterFingerprint: string
+): OwnedUtxo {
+  return {
+    ...utxo,
+    ...(utxo.status.block_height !== undefined ? { height: utxo.status.block_height } : {}),
+    keyOrigin: getKeyOrigin(masterFingerprint, utxo.path),
+  };
+}
+
+export function createOwnedUtxoFromLeather(
+  utxo: LeatherApiUtxo,
+  masterFingerprint: string
+): OwnedUtxo {
   return {
     ...utxo,
     value: Number(utxo.value),
@@ -127,4 +137,30 @@ export function getRuneProtectedUtxoIds(
   return discardAllRunes
     ? []
     : selectUniqueUtxoIds(runeOutputs.map(r => getUtxoIdFromOutpoint(r.output)).filter(isDefined));
+}
+
+export function getUtxoTotals(
+  accountFingerprint: string,
+  totalUtxos: OwnedUtxo[],
+  protectedUtxos: OwnedUtxo[],
+  btcTxs: BitcoinTransaction[]
+): UtxoTotals {
+  const outboundUtxos = getOutboundUtxos(btcTxs, accountFingerprint);
+  const unconfirmedUtxos = totalUtxos.filter(isUnconfirmedUtxo);
+  const confirmedUtxos = [
+    ...totalUtxos.filter(filterOutMatchesAnyUtxoId(unconfirmedUtxos)),
+    ...outboundUtxos,
+  ];
+  const dustUtxos = confirmedUtxos.filter(isDustUtxo);
+  const unspendableUtxos = selectUniqueUtxoIds([...outboundUtxos, ...protectedUtxos, ...dustUtxos]);
+  const availableUtxos = confirmedUtxos.filter(filterOutMatchesAnyUtxoId(unspendableUtxos));
+  return {
+    confirmed: confirmedUtxos,
+    inbound: unconfirmedUtxos,
+    outbound: outboundUtxos,
+    protected: protectedUtxos,
+    dust: dustUtxos,
+    unspendable: unspendableUtxos,
+    available: availableUtxos,
+  };
 }

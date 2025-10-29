@@ -1,6 +1,10 @@
 import { BitcoinTransaction } from '@leather.io/models';
 
 import { LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
+import {
+  MempoolDescriptorFields,
+  MempoolTransaction,
+} from '../infrastructure/api/mempool/mempool-api.schema';
 
 export function isPendingTx(bitcoinTx: LeatherApiBitcoinTransaction) {
   return bitcoinTx.height === undefined;
@@ -18,7 +22,9 @@ export function readTxOwnedVouts(bitcoinTx: LeatherApiBitcoinTransaction) {
   return bitcoinTx.vout.filter(vout => vout.owned);
 }
 
-export function createBitcoinTransaction(tx: LeatherApiBitcoinTransaction): BitcoinTransaction {
+export function createBitcoinTransactionFromLeather(
+  tx: LeatherApiBitcoinTransaction
+): BitcoinTransaction {
   return {
     txid: tx.txid,
     height: tx.height,
@@ -37,6 +43,29 @@ export function createBitcoinTransaction(tx: LeatherApiBitcoinTransaction): Bitc
       address: vout.address,
       path: vout.path,
       value: vout.value,
+    })),
+  };
+}
+
+export function createBitcoinTransactionFromMempool(
+  tx: MempoolTransaction & Partial<MempoolDescriptorFields>
+): BitcoinTransaction {
+  return {
+    txid: tx.txid,
+    ...(tx.status.block_height !== undefined ? { height: tx.status.block_height } : {}),
+    ...(tx.status.block_time !== undefined ? { time: tx.status.block_time } : {}),
+    vin: tx.vin.map(vin => ({
+      txid: vin.txid,
+      n: vin.vout,
+      address: vin.prevout?.scriptpubkey_address ?? '',
+      ...(vin.prevout?.scriptpubkey_address === tx.address ? { owned: true, path: tx.path } : {}),
+      value: vin.prevout?.value?.toString() ?? '0',
+    })),
+    vout: tx.vout.map((vout, i) => ({
+      n: i,
+      address: vout.scriptpubkey_address,
+      ...(vout.scriptpubkey_address === tx.address ? { owned: true, path: tx.path } : {}),
+      value: vout.value?.toString() ?? '0',
     })),
   };
 }

@@ -11,6 +11,10 @@ export function selectBitcoinNetwork(settings: UserSettings): BitcoinNetwork {
   return settings.network.chain.bitcoin.bitcoinNetwork;
 }
 
+export function selectNetworkConfigurationId(settings: UserSettings): string {
+  return settings.network.id;
+}
+
 export function selectStacksApiUrl(settings: UserSettings): string {
   return settings.network.chain.stacks.url;
 }
@@ -23,4 +27,8 @@ export function selectAssetVisibility(
   settings: UserSettings
 ): Record<SerializedCryptoAssetId, boolean> {
   return settings.assetVisibility;
+}
+
+export function selectBitcoinApiUrl(settings: UserSettings): string {
+  return settings.network.chain.bitcoin.bitcoinUrl;
 }

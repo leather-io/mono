@@ -1,22 +1,23 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 
 import { OwnedUtxo } from '@leather.io/models';
 import { hasBitcoinAddress } from '@leather.io/utils';
 
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
+import { MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
+import { selectBitcoinNetworkMode } from '../infrastructure/settings/settings.selectors';
+import type { SettingsService } from '../infrastructure/settings/settings.service';
+import { Types } from '../inversify.types';
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
 import { AccountRequest, AccountRequestUtxoProtectionOptions } from '../types/request.types';
 import {
-  createOwnedUtxo,
+  createOwnedUtxoFromLeather,
+  createOwnedUtxoFromMempool,
   filterMatchesAnyUtxoId,
-  filterOutMatchesAnyUtxoId,
   getInscriptionProtectedUtxoIds,
-  getOutboundUtxos,
   getRuneProtectedUtxoIds,
-  isDustUtxo,
-  isUnconfirmedUtxo,
-  selectUniqueUtxoIds,
+  getUtxoTotals,
 } from './utxos.utils';
 
 export interface UtxoTotals {
@@ -44,7 +45,9 @@ export class UtxosService {
   constructor(
     private readonly leatherApiClient: LeatherApiClient,
     private readonly bisApiClient: BestInSlotApiClient,
-    private readonly bitcoinTransactionsService: BitcoinTransactionsService
+    private readonly mempoolApiClient: MempoolApiClient,
+    private readonly bitcoinTransactionsService: BitcoinTransactionsService,
+    @inject(Types.SettingsService) private readonly settings: SettingsService
   ) {}
   /**
    * Retrieve categorized UTXO lists for given Bitcoin account.
@@ -98,32 +101,11 @@ export class UtxosService {
     signal?: AbortSignal
   ): Promise<UtxoTotals> {
     const [totalUtxos, protectedUtxos, btcTxs] = await Promise.all([
-      this.getTotalUtxos(descriptor, fingerprint, signal),
+      this.getDescriptorTotalUtxos(descriptor, fingerprint, signal),
       this.getDescriptorProtectedUtxos(fingerprint, descriptor, protections, signal),
       this.bitcoinTransactionsService.getDescriptorTransactions(descriptor, signal),
     ]);
-    const outboundUtxos = getOutboundUtxos(btcTxs, fingerprint);
-    const unconfirmedUtxos = totalUtxos.filter(isUnconfirmedUtxo);
-    const confirmedUtxos = [
-      ...totalUtxos.filter(filterOutMatchesAnyUtxoId(unconfirmedUtxos)),
-      ...outboundUtxos,
-    ];
-    const dustUtxos = confirmedUtxos.filter(isDustUtxo);
-    const unspendableUtxos = selectUniqueUtxoIds([
-      ...outboundUtxos,
-      ...protectedUtxos,
-      ...dustUtxos,
-    ]);
-    const availableUtxos = confirmedUtxos.filter(filterOutMatchesAnyUtxoId(unspendableUtxos));
-    return {
-      confirmed: confirmedUtxos,
-      inbound: unconfirmedUtxos,
-      outbound: outboundUtxos,
-      protected: protectedUtxos,
-      dust: dustUtxos,
-      unspendable: unspendableUtxos,
-      available: availableUtxos,
-    };
+    return getUtxoTotals(fingerprint, totalUtxos, protectedUtxos, btcTxs);
   }
 
   private async getDescriptorProtectedUtxos(
@@ -132,8 +114,12 @@ export class UtxosService {
     { discardedInscriptions = [], discardRunes = false }: AccountRequestUtxoProtectionOptions,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
+    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
+    if (networkMode === 'regtest') {
+      return []; // short-circuit on regtest mode
+    }
     const [utxos, inscriptions, runeOutputs] = await Promise.all([
-      this.getTotalUtxos(descriptor, fingerprint, signal),
+      this.getDescriptorTotalUtxos(descriptor, fingerprint, signal),
       this.bisApiClient.fetchInscriptions(descriptor, { signal }),
       this.bisApiClient.fetchRunesValidOutputs(descriptor, { signal }),
     ]);
@@ -147,12 +133,19 @@ export class UtxosService {
     );
   }
 
-  private async getTotalUtxos(
+  private async getDescriptorTotalUtxos(
     descriptor: string,
     fingerprint: string,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
-    const utxos = await this.leatherApiClient.fetchUtxos(descriptor, { signal });
-    return utxos.map(utxo => createOwnedUtxo(utxo, fingerprint));
+    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
+    if (networkMode === 'regtest') {
+      const mempoolApiUtxos = await this.mempoolApiClient.fetchDescriptorUtxos(descriptor, {
+        signal,
+      });
+      return mempoolApiUtxos.map(utxo => createOwnedUtxoFromMempool(utxo, fingerprint));
+    }
+    const leatherApiUtxos = await this.leatherApiClient.fetchUtxos(descriptor, { signal });
+    return leatherApiUtxos.map(utxo => createOwnedUtxoFromLeather(utxo, fingerprint));
   }
 }

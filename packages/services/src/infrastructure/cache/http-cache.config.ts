@@ -35,6 +35,11 @@ export type HttpCacheKey =
   | 'hiro-stacks-get-transfer-fee-rate'
   | 'hiro-stacks-get-transaction-fee-estimate'
 
+  // MempoolApiClient
+  | 'mempool-api-address-utxos'
+  | 'mempool-api-address-transactions'
+  | 'mempool-api-transaction-by-txid'
+
   // LeatherApiClient
   | 'leather-api-utxos'
   | 'leather-api-bitcoin-descriptor-transactions'
@@ -106,6 +111,10 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'hiro-stacks-call-read-only-function': { ttl: secondsInMs(15) },
   'hiro-stacks-get-transfer-fee-rate': { ttl: secondsInMs(4) },
   'hiro-stacks-get-transaction-fee-estimate': { ttl: secondsInMs(4) },
+
+  'mempool-api-address-utxos': { ttl: secondsInMs(5) },
+  'mempool-api-address-transactions': { ttl: secondsInMs(5) },
+  'mempool-api-transaction-by-txid': { ttl: secondsInMs(5) },
 
   'leather-api-utxos': { ttl: secondsInMs(10) },
   'leather-api-bitcoin-descriptor-transactions': { ttl: secondsInMs(10) },
