@@ -23,6 +23,7 @@ import { SwapSheet } from '@/features/swap/swap-sheet';
 import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { useDeepLinks } from '@/hooks/use-deep-links';
 import { usePageViewTracking } from '@/hooks/use-page-view-tracking';
+import { useUpdateAnalyticsPlugin } from '@/hooks/use-update-analytics-plugin';
 import { I18nProvider } from '@/i18n/i18n';
 import { queryClient } from '@/queries/query';
 import { initAppServices } from '@/services/init-app-services';
@@ -63,6 +64,7 @@ ErrorUtils.setGlobalHandler(error => {
 });
 
 function App() {
+  useUpdateAnalyticsPlugin();
   useWatchNotificationAddresses();
   usePageViewTracking();
   useOnMount(trackFirstAppOpen);
