@@ -76,7 +76,7 @@ const StyledButton = styled('button', {
         },
       },
       outline: {
-        border: '1px solid {colors.ink.action-primary-default}',
+        border: '1px solid {colors.ink.border-default}',
         color: 'ink.action-primary-default',
         _hover: {
           bg: 'ink.component-background-hover',

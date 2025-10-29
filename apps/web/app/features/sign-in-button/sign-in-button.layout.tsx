@@ -12,7 +12,7 @@ import {
 import { truncateMiddle } from '@leather.io/utils';
 
 export function SignInButtonLayout(props: ButtonProps) {
-  return <Button height="60px !important" borderRadius="0" width="120px" fullWidth {...props} />;
+  return <Button alignSelf="center" {...props} />;
 }
 
 interface ActiveAccountButtonLayoutProps {
@@ -30,21 +30,11 @@ export function ActiveAccountButtonLayout({
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <styled.button
-          userSelect="none"
-          textAlign="left"
-          px="space.05"
-          height="100%"
-          textStyle="label.03"
-          outline="none"
-          appearance="none"
-          borderLeft="default"
-          _focusVisible={{ textDecoration: 'underline' }}
-        >
-          <Flag reverse img={<ChevronDownIcon variant="small" />}>
+        <Button textAlign="left" variant="outline" width="138px" alignSelf="center">
+          <Flag reverse spacing="space.01" img={<ChevronDownIcon variant="small" />}>
             {truncateMiddle(address, 4)}
           </Flag>
-        </styled.button>
+        </Button>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>

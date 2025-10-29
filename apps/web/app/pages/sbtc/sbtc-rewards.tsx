@@ -100,9 +100,7 @@ export function SbtcRewards(): ReactElement {
           ))}
         </styled.section>
 
-        <Page.Inset>
-          <Hr my="space.09" />
-        </Page.Inset>
+        <Hr my="space.09" />
 
         <styled.h2 textStyle="heading.05" mb="space.05">
           Frequently asked questions

@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigate } from 'react-router';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Flex, styled } from 'leather-styles/jsx';
+import { css } from 'leather-styles/css';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 import { queryClient } from '~/constants/query-client';
 
 import type { LeatherProvider } from '@leather.io/rpc';
@@ -23,6 +24,12 @@ declare global {
   }
 }
 
+const maxWidthCss = css({
+  maxWidth: '1200px',
+  margin: '0 auto',
+  width: '100%',
+});
+
 export function Layout({ children }: HasChildren) {
   return (
     <html lang="en">
@@ -36,11 +43,18 @@ export function Layout({ children }: HasChildren) {
       <styled.body>
         <GlobalLoader />
         <Nav />
-        <Flex flexDir="column" marginLeft={[null, null, 'navbar']} minHeight="100vh">
-          <styled.main flex={1} bg="ink.background-primary">
+        <Flex
+          flexDir="column"
+          marginLeft={[null, null, 'navbar']}
+          minHeight="100vh"
+          px={['space.04', null, 'space.07']}
+        >
+          <styled.main flex={1} bg="ink.background-primary" className={maxWidthCss}>
             {children}
           </styled.main>
-          <Footer />
+          <Box className={maxWidthCss}>
+            <Footer />
+          </Box>
         </Flex>
         <InstallDialog />
         <MockLeatherDialog />

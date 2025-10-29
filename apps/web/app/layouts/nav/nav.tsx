@@ -17,7 +17,6 @@ import {
   GridIcon,
   IconButton,
   SupportIcon,
-  WalletIcon,
 } from '@leather.io/ui';
 
 import { NavItem } from './nav-item.layout';
@@ -41,9 +40,6 @@ export function NavContents() {
         sBTC
       </NavItem>
 
-      <NavItem href={externalLeatherNavigator.wallet} icon={<WalletIcon variant="small" />}>
-        Wallet
-      </NavItem>
       <NavItem href={externalLeatherNavigator.apps} icon={<GridIcon variant="small" />}>
         Apps
       </NavItem>
@@ -106,15 +102,15 @@ export function Nav() {
         flexDirection="column"
         width="navbar"
         minWidth="navbar"
-        borderRight="default"
         minHeight="fit-content"
+        pl="space.02"
       >
         <Flex>
           <LeatherLogoHomeLink
             // To baseline align with the text in the header
-            mt="2px"
+            mt="7px"
             p="space.04"
-            mb="41px"
+            mb="40px"
           />
         </Flex>
         <NavContents />

@@ -39,9 +39,6 @@ function AppFooter() {
           <Footer.Link withIcon href="https://twitter.com/leatherbtc">
             X
           </Footer.Link>
-          <Footer.Link withIcon href="https://discord.gg/leatherwallet">
-            Discord
-          </Footer.Link>
           <Footer.Link withIcon href="https://www.youtube.com/@Leather-io">
             YouTube
           </Footer.Link>
@@ -52,7 +49,7 @@ function AppFooter() {
       </Footer.Grid>
 
       <Footer.LegalText
-        mt="space.10"
+        mt="space.08"
         product="A Trust Machines product"
         // Hard coding date as Cloudflare Workers renders new Date() as epoch
         // start time

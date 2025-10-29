@@ -26,7 +26,7 @@ export function HelpCenter() {
           </styled.p>
         }
       />
-      <Page.Inset
+      <styled.div
         pos="relative"
         bg="black"
         color="white"
