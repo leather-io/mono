@@ -1,6 +1,6 @@
 import { store } from '@/store';
 import { selectAnalyticsPreference } from '@/store/settings/settings.read';
-import { AppLifecycleEventPlugin } from '@/utils/analytics-plugins';
+import { contextMiddlewarePluginInstance } from '@/utils/analytics-plugins';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@segment/analytics-react-native';
 
@@ -15,8 +15,7 @@ const segmentClient = createClient({
   trackAppLifecycleEvents: true,
   debug: false,
 });
-
-segmentClient.add({ plugin: new AppLifecycleEventPlugin() });
+segmentClient.add({ plugin: contextMiddlewarePluginInstance });
 
 async function identifyUserByDeviceId() {
   const id = await getDeviceId();
