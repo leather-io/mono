@@ -32,6 +32,7 @@ export function NavItem({ children, icon, href, newTab }: NavItemProps) {
       py="space.04"
       lineHeight="1.05"
       outline="none"
+      borderRadius="99px"
       _hover={{ bg: 'ink.component-background-hover' }}
       _focusVisible={{ textDecoration: 'underline' }}
     >

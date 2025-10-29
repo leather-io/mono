@@ -29,7 +29,6 @@ import {
   getPoxWrapperContract2,
   requiresAllowContractCaller,
 } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
-import { Page } from '~/layouts/page/page';
 import {
   useStxAvailableUnlockedBalance,
   useStxBalance,
@@ -306,12 +305,10 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   return (
     <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
       {poolRewardProtocolInfo && (
-        <Page.Inset>
-          <PoolOverview
-            pool={mapPoolRewardProtocolInfoToStackingPool(poolRewardProtocolInfo)}
-            poolSlug={poolSlug}
-          />
-        </Page.Inset>
+        <PoolOverview
+          pool={mapPoolRewardProtocolInfoToStackingPool(poolRewardProtocolInfo)}
+          poolSlug={poolSlug}
+        />
       )}
 
       <FormProvider {...formMethods}>

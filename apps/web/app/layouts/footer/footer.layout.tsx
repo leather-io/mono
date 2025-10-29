@@ -1,4 +1,6 @@
 import {
+  Box,
+  BoxProps,
   Flex,
   type FlexProps,
   Grid,
@@ -9,23 +11,16 @@ import {
 } from 'leather-styles/jsx';
 import { ExternalLink } from '~/components/external-link';
 
-import { Flag, FlagProps, LeatherLettermarkIcon } from '@leather.io/ui';
+import { LeatherLettermarkIcon } from '@leather.io/ui';
 
 export function FooterLayout(props: HTMLStyledProps<'footer'>) {
-  return (
-    <styled.footer
-      px="space.07"
-      pb="space.05"
-      backgroundColor="ink.background-secondary"
-      borderTop="default"
-      {...props}
-    />
-  );
+  return <styled.footer pb="space.05" {...props} />;
 }
 
 function FooterGrid(props: GridProps) {
   return (
     <Grid
+      width="100%"
       gap={['space.07', 'space.07', 'space.09']}
       gridTemplateColumns={['repeat(2, 1fr)', null, null, 'repeat(4, 1fr)']}
       mt="space.07"
@@ -45,7 +40,7 @@ function FooterColumn({ title, children, ...props }: FooterColumnProps) {
   return (
     <Flex>
       <Flex flexDir="column" {...props}>
-        <styled.h4 textStyle="label.02" mb="space.03" whiteSpace="nowrap">
+        <styled.h4 textStyle="heading.05" mb="space.03" whiteSpace="nowrap">
           {title}
         </styled.h4>
         <VStack alignItems="flex-start" gap="space.03" whiteSpace="nowrap">
@@ -56,18 +51,25 @@ function FooterColumn({ title, children, ...props }: FooterColumnProps) {
   );
 }
 
-interface FooterLegalTextProps extends FlagProps {
+interface FooterLegalTextProps extends BoxProps {
   product: string;
   copyright: string;
 }
 function FooterLegalText({ product, copyright, ...props }: FooterLegalTextProps) {
   return (
-    <Flag spacing="space.05" img={<LeatherLettermarkIcon />} {...props}>
-      <Flex flexDir="column" textStyle="caption.01" fontSize="12px" color="ink.text-subdued">
+    <Box {...props}>
+      <LeatherLettermarkIcon />
+      <Flex
+        flexDir="column"
+        textStyle="caption.01"
+        fontSize="12px"
+        color="ink.text-subdued"
+        mt="space.04"
+      >
         <styled.span>{product}</styled.span>
         <styled.span>{copyright}</styled.span>
       </Flex>
-    </Flag>
+    </Box>
   );
 }
 

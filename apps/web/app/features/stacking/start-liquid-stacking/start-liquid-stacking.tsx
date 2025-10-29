@@ -23,7 +23,6 @@ import {
 } from '~/features/stacking/start-liquid-stacking/utils/stacking-liquid-schema';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { createDepositStxMutationOptions } from '~/features/stacking/start-liquid-stacking/utils/utils-liquid-stacking-stx';
-import { Page } from '~/layouts/page/page';
 import {
   useStxAvailableUnlockedBalance,
   useStxBalance,
@@ -148,9 +147,8 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
 
   return (
     <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
-      <Page.Inset>
-        {protocolInfo.info && <ProtocolOverview info={protocolInfo.info} isStackingPage />}
-      </Page.Inset>
+      {protocolInfo.info && <ProtocolOverview info={protocolInfo.info} isStackingPage />}
+
       <FormProvider {...formMethods}>
         <FormPageLayout
           form={

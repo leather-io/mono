@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 
-import { css } from 'leather-styles/css';
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { MockModeToggle } from '~/components/mock-mode-toggle';
 import { WhenClient } from '~/components/when-client';
@@ -9,14 +8,8 @@ import { getPostHref } from '~/utils/post-link';
 
 import { Link } from '@leather.io/ui';
 
-export const insetPageMarginX = css({ mx: ['-space.04', '-space.05', '-space.07'] });
-
 export function Page(props: HTMLStyledProps<'div'>) {
-  return <styled.div mx={['space.04', 'space.05', 'space.07']} {...props} />;
-}
-
-export function PageInset(props: HTMLStyledProps<'div'>) {
-  return <styled.div className={insetPageMarginX} {...props} />;
+  return <styled.div {...props} />;
 }
 
 interface PageHeadingProps {
@@ -62,7 +55,7 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
     <styled.span>
       &nbsp;
       <Link href={href} style={{ fontSize: 'inherit', display: 'inline' }}>
-        {'Learn more'}
+        Learn more
       </Link>
     </styled.span>
   );
@@ -74,18 +67,9 @@ interface PageHeaderProps {
 }
 export function PageHeader({ title, children }: PageHeaderProps) {
   return (
-    <styled.header
-      className={insetPageMarginX}
-      display="flex"
-      justifyContent="space-between"
-      h="60px"
-      borderBottom="default"
-      alignItems="center"
-    >
+    <styled.header display="flex" justifyContent="space-between" h="60px" alignItems="center">
       <Flex alignItems="center" justifyContent="space-between" flex={1}>
-        <styled.h1 textStyle="heading.05" mx={['space.04', 'space.05', 'space.07']}>
-          {title}
-        </styled.h1>
+        <styled.h1 textStyle="heading.05">{title}</styled.h1>
         {children}
       </Flex>
       <WhenClient>
@@ -99,14 +83,7 @@ export function PageHeader({ title, children }: PageHeaderProps) {
 }
 
 export function PageDivider(props: HTMLStyledProps<'hr'>) {
-  return (
-    <styled.hr
-      className={insetPageMarginX}
-      color="ink.background-primary"
-      borderBottom="default"
-      {...props}
-    />
-  );
+  return <styled.hr color="ink.background-primary" borderBottom="default" {...props} />;
 }
 
 export function PageTitle({ ...props }: HTMLStyledProps<'h2'>) {
@@ -122,4 +99,3 @@ Page.Header = PageHeader;
 Page.Heading = PageHeading;
 Page.Title = PageTitle;
 Page.Subtitle = PageSubtitle;
-Page.Inset = PageInset;
