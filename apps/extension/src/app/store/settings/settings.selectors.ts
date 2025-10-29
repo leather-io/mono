@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
 
-import type { Inscription } from '@leather.io/models';
+import type { InscriptionAsset } from '@leather.io/models';
 
 import { useCurrentAccountInscriptions } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
 import { RootState } from '@app/store';
@@ -56,7 +56,7 @@ const selectDiscardedInscriptions = createSelector(
   state => state.discardedInscriptions
 );
 
-type InscriptionIdentifier = Pick<Inscription, 'txid' | 'output' | 'offset'>;
+type InscriptionIdentifier = Pick<InscriptionAsset, 'txid' | 'output' | 'offset'>;
 
 export function useDiscardedInscriptions() {
   return useSelector(selectDiscardedInscriptions);

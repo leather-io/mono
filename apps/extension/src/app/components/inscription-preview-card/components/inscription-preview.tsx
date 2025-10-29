@@ -1,6 +1,6 @@
 import { BoxProps, Flex } from 'leather-styles/jsx';
 
-import type { Inscription } from '@leather.io/models';
+import type { InscriptionAsset } from '@leather.io/models';
 import { OrdinalAvatarIcon } from '@leather.io/ui';
 
 import { InscriptionImage } from './inscription-image';
@@ -8,7 +8,7 @@ import { InscriptionPreviewContainer } from './inscription-preview-container';
 import { InscriptionText } from './inscription-text';
 
 interface InscriptionPreviewProps extends BoxProps {
-  inscription: Inscription;
+  inscription: InscriptionAsset;
 }
 export function InscriptionPreview({ inscription, ...props }: InscriptionPreviewProps) {
   switch (inscription.mimeType) {

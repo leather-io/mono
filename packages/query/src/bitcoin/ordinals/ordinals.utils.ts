@@ -1,8 +1,8 @@
-import { Inscription } from '@leather.io/models';
+import { InscriptionAsset } from '@leather.io/models';
 
 interface FindInscriptionsOnUtxoArgs {
   index: number;
-  inscriptions: Inscription[];
+  inscriptions: InscriptionAsset[];
   txId: string;
 }
 export function findInscriptionsOnUtxo({ index, inscriptions, txId }: FindInscriptionsOnUtxoArgs) {

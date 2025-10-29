@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { Box, styled } from 'leather-styles/jsx';
 
-import { type Inscription } from '@leather.io/models';
+import { type InscriptionAsset } from '@leather.io/models';
 import {
   DropdownMenu,
   EllipsisVIcon,
@@ -31,7 +31,7 @@ import { HighSatValueUtxoWarning } from './high-sat-value-utxo';
 import { InscriptionText } from './inscription-text';
 
 interface InscriptionProps {
-  inscription: Inscription;
+  inscription: InscriptionAsset;
 }
 
 function openInscriptionUrl(num: number) {

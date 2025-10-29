@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { Box, Flex, HStack, Stack } from 'leather-styles/jsx';
 import get from 'lodash.get';
 
-import type { Blockchain, Inscription } from '@leather.io/models';
+import type { Blockchain, InscriptionAsset } from '@leather.io/models';
 import { CheckmarkIcon, CopyIcon, ExternalLinkIcon, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -25,7 +25,7 @@ function useSendInscriptionSummaryState() {
     txid: get(location.state, 'txid') as string,
     recipient: get(location.state, 'recipient', '') as string,
     arrivesIn: get(location.state, 'arrivesIn') as string,
-    inscription: get(location.state, 'inscription') as Inscription,
+    inscription: get(location.state, 'inscription') as InscriptionAsset,
     feeRowValue: get(location.state, 'feeRowValue') as string,
   };
 }

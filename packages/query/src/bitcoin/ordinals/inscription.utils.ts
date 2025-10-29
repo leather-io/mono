@@ -1,4 +1,4 @@
-import { Inscription } from '@leather.io/models';
+import { InscriptionAsset } from '@leather.io/models';
 import { createInscriptionAsset } from '@leather.io/utils';
 
 import {
@@ -24,7 +24,7 @@ export function normalizeBestInSlotInscriptionResponse(
 
 export function createBestInSlotInscription(
   bisInscription: BestInSlotInscriptionResponse
-): Inscription {
+): InscriptionAsset {
   const mimeType = bisInscription.delegate?.mime_type ?? bisInscription.mime_type;
   return createInscriptionAsset({
     id: bisInscription.inscription_id,

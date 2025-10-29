@@ -4,7 +4,7 @@ import type { TransactionInput } from '@scure/btc-signer/psbt';
 import { bytesToHex } from '@stacks/common';
 
 import { getBitcoinInputAddress, getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
-import type { Inscription } from '@leather.io/models';
+import type { InscriptionAsset } from '@leather.io/models';
 import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { getBitcoinInputValue } from '@shared/crypto/bitcoin/bitcoin.utils';
@@ -17,7 +17,7 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 export interface PsbtInput {
   address: string | null;
   index?: number;
-  inscription?: Inscription;
+  inscription?: InscriptionAsset;
   isMutable: boolean;
   toSign: boolean;
   txid: string;

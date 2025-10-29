@@ -1,9 +1,9 @@
 import { makeNativeSegwitAddressIndexDerivationPath } from '@leather.io/bitcoin';
-import type { BitcoinNetworkModes, Inscription } from '@leather.io/models';
+import type { BitcoinNetworkModes, InscriptionAsset } from '@leather.io/models';
 import type { UtxoWithDerivationPath } from '@leather.io/query';
 
 interface CreateUtxoFromInscriptionArgs {
-  inscription: Inscription;
+  inscription: InscriptionAsset;
   network: BitcoinNetworkModes;
   accountIndex: number;
   inscriptionAddressIdx: number;

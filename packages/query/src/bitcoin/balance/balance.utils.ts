@@ -1,4 +1,4 @@
-import { Inscription } from '@leather.io/models';
+import { InscriptionAsset } from '@leather.io/models';
 import { createMoney, sumNumbers } from '@leather.io/utils';
 
 import { UtxoWithDerivationPath } from '../../../types/utxo';
@@ -8,7 +8,7 @@ const RETRIEVE_UTXO_DUST_AMOUNT = 10000;
 
 export function filterUninscribedUtxosToRecoverFromTaproot(
   utxos: UtxoWithDerivationPath[],
-  inscriptions: Inscription[]
+  inscriptions: InscriptionAsset[]
 ) {
   const filteredUtxosList = utxos
     .filter(utxo => utxo.status.confirmed)
