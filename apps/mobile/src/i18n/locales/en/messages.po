@@ -13,7 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#. placeholder {0}: collection?.totalItems ?? ''
 #: src/features/token/stacks/sip9-token-details.tsx:50
 msgid "?? of {0}"
 msgstr "?? of {0}"
