@@ -3,17 +3,18 @@ import { useCollectiblesFlag } from '@/features/feature-flags';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { AccountAddresses } from '@leather.io/models';
+import { AccountAddresses, CryptoAssetId } from '@leather.io/models';
 import { getCollectiblesService } from '@leather.io/services';
+import { deserializeAssetId, matchesAssetId, SerializedCryptoAssetId } from '@leather.io/utils';
 
 export function useAccountCollectibleByAssetId(
   fingerprint: string,
   accountIndex: number,
-  assetId: string
+  assetId: SerializedCryptoAssetId
 ) {
   const account = useAccountAddresses(fingerprint, accountIndex);
 
-  return toFetchState(useAccountCollectibleByAssetIdQuery(account, assetId));
+  return toFetchState(useAccountCollectibleByAssetIdQuery(account, deserializeAssetId(assetId)));
 }
 
 /**
@@ -71,7 +72,7 @@ function useAccountCollectiblesQuery(account: AccountAddresses) {
     gcTime: 1 * 5000,
   });
 }
-function useAccountCollectibleByAssetIdQuery(account: AccountAddresses, assetId: string) {
+function useAccountCollectibleByAssetIdQuery(account: AccountAddresses, assetId: CryptoAssetId) {
   const collectiblesFlag = useCollectiblesFlag();
   if (!collectiblesFlag) {
     account.bitcoin = undefined;
@@ -82,18 +83,7 @@ function useAccountCollectibleByAssetIdQuery(account: AccountAddresses, assetId:
       getCollectiblesService()
         .getAccountCollectibles(account, signal)
         .then(collectibles =>
-          collectibles.filter(collectible => {
-            switch (collectible.protocol) {
-              case 'sip9':
-                return collectible.assetId === assetId;
-              case 'inscription':
-                return collectible.id === assetId;
-              case 'stamp':
-                return collectible.stamp.toString() === assetId;
-              default:
-                return false;
-            }
-          })
+          collectibles.filter(collectible =>  matchesAssetId(collectible, assetId))           
         ),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,

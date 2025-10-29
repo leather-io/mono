@@ -1,8 +1,8 @@
-import { TokenDetailsProps } from '@/features/token/types';
+import { CollectibleDetailsProps } from '@/features/token/types';
 
 import { Sip9Asset } from '@leather.io/models';
 import { BnsImage, Sip9 as Sip9Component } from '@leather.io/ui/native';
-import { createSip9AssetId } from '@leather.io/utils';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { FallbackImage } from './fallback';
 
@@ -12,16 +12,13 @@ function isBns(name: string): boolean {
 interface Sip9Props {
   item: Sip9Asset;
   height: number;
-  onPress?: (tokenDetails: TokenDetailsProps) => void;
+  onPress?: (collectibleDetails: CollectibleDetailsProps) => void;
 }
 export function Sip9({ item, height, onPress }: Sip9Props) {
   if (!item?.content?.contentUrl || item?.content?.contentUrl?.trim() === '')
     return <FallbackImage />;
   const collectionName = item?.collection?.name ?? '';
-
-  // SIP-9 items in the same collection have the same assetId and contractId so we need to construct the assetId
-  const { id: assetId, protocol: assetProtocol } = createSip9AssetId(item);
-  const onPressHandler = onPress ? () => onPress({ assetId, assetProtocol }) : undefined;
+  const onPressHandler = onPress ? () => onPress({ assetId: serializeAssetId(getAssetId(item)), assetProtocol: 'sip9' }) : undefined;
 
   if (isBns(collectionName)) {
     return (

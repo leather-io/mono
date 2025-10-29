@@ -4,13 +4,13 @@ import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-c
 import { t } from '@lingui/core/macro';
 
 import { AccountId, StampAsset } from '@leather.io/models';
-
+import { SerializedCryptoAssetId } from '@leather.io/utils';
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenLoading } from '../components/token-loading';
 
 interface StampDetailsProps {
   account: AccountId;
-  assetId: string;
+  assetId: SerializedCryptoAssetId;
 }
 export function StampDetails({ assetId, account }: StampDetailsProps) {
   const { fingerprint, accountIndex } = account;

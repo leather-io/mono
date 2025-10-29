@@ -1,14 +1,14 @@
-import { TokenDetailsProps } from '@/features/token/types';
+import { CollectibleDetailsProps } from '@/features/token/types';
 
 import { StampAsset } from '@leather.io/models';
 import { CollectibleImage } from '@leather.io/ui/native';
-
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 import { FallbackImage } from './fallback';
 
 interface StampProps {
   item: StampAsset;
   height: number;
-  onPress?: (tokenDetails: TokenDetailsProps) => void;
+  onPress?: (collectibleDetails: CollectibleDetailsProps) => void;
 }
 export function Stamp({ item, height, onPress }: StampProps) {
   if (!item.stampUrl) return <FallbackImage />;
@@ -19,7 +19,7 @@ export function Stamp({ item, height, onPress }: StampProps) {
       height={height}
       onPress={
         onPress
-          ? () => onPress({ assetId: item.stamp.toString(), assetProtocol: 'stamp' })
+          ? () => onPress({ assetId: serializeAssetId(getAssetId(item)), assetProtocol: 'stamp' })
           : undefined
       }
     />

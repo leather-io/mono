@@ -5,10 +5,15 @@ import {
   RuneBalance,
   Sip10Balance,
 } from '@leather.io/services';
+import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 export interface TokenDetailsProps {
   assetProtocol: CryptoAssetProtocol;
   assetId: string;
+}
+export interface CollectibleDetailsProps {
+  assetProtocol: CryptoAssetProtocol;
+  assetId: SerializedCryptoAssetId;
 }
 
 export interface OnPressTokenDetails {
