@@ -1,21 +1,27 @@
+import { ErrorFallbackTab } from '@/components/error/error';
 import { useRuneBalanceByRuneName } from '@/queries/balance/runes-balance.query';
 import { t } from '@lingui/core/macro';
 
 import { AccountId } from '@leather.io/models';
 import { RunesAvatarIcon } from '@leather.io/ui/native';
+import { SerializedCryptoAssetId, deserializeAssetId } from '@leather.io/utils';
 
 import { TokenLoading } from '../components/token-loading';
 import { Token } from '../token';
 
 interface RuneTokenDetailsProps {
   account: AccountId;
-  assetId: string;
+  assetId: SerializedCryptoAssetId;
 }
 export function RuneTokenDetails({ assetId, account }: RuneTokenDetailsProps) {
   const { fingerprint, accountIndex } = account;
-  const balance = useRuneBalanceByRuneName(fingerprint, accountIndex, assetId);
+  const { id } = deserializeAssetId(assetId);
+  const balance = useRuneBalanceByRuneName(fingerprint, accountIndex, id);
 
-  if (balance.state === 'loading' || !balance.value) {
+  if (balance.state === 'error') {
+    return <ErrorFallbackTab />;
+  }
+  if (balance.state === 'loading') {
     return <TokenLoading />;
   }
   const { asset } = balance.value;

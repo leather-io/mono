@@ -5,7 +5,7 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountAddresses, CryptoAssetId } from '@leather.io/models';
 import { getCollectiblesService } from '@leather.io/services';
-import { deserializeAssetId, matchesAssetId, SerializedCryptoAssetId } from '@leather.io/utils';
+import { SerializedCryptoAssetId, deserializeAssetId, matchesAssetId } from '@leather.io/utils';
 
 export function useAccountCollectibleByAssetId(
   fingerprint: string,
@@ -83,7 +83,7 @@ function useAccountCollectibleByAssetIdQuery(account: AccountAddresses, assetId:
       getCollectiblesService()
         .getAccountCollectibles(account, signal)
         .then(collectibles =>
-          collectibles.filter(collectible =>  matchesAssetId(collectible, assetId))           
+          collectibles.filter(collectible => matchesAssetId(collectible, assetId))
         ),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,

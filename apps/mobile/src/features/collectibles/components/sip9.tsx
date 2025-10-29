@@ -1,4 +1,4 @@
-import { CollectibleDetailsProps } from '@/features/token/types';
+import { TokenDetailsProps } from '@/features/token/types';
 
 import { Sip9Asset } from '@leather.io/models';
 import { BnsImage, Sip9 as Sip9Component } from '@leather.io/ui/native';
@@ -12,13 +12,15 @@ function isBns(name: string): boolean {
 interface Sip9Props {
   item: Sip9Asset;
   height: number;
-  onPress?: (collectibleDetails: CollectibleDetailsProps) => void;
+  onPress?: (tokenDetails: TokenDetailsProps) => void;
 }
 export function Sip9({ item, height, onPress }: Sip9Props) {
   if (!item?.content?.contentUrl || item?.content?.contentUrl?.trim() === '')
     return <FallbackImage />;
   const collectionName = item?.collection?.name ?? '';
-  const onPressHandler = onPress ? () => onPress({ assetId: serializeAssetId(getAssetId(item)), assetProtocol: 'sip9' }) : undefined;
+  const onPressHandler = onPress
+    ? () => onPress({ assetId: serializeAssetId(getAssetId(item)), assetProtocol: 'sip9' })
+    : undefined;
 
   if (isBns(collectionName)) {
     return (

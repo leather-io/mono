@@ -4,6 +4,7 @@ import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-c
 
 import { AccountId, isSip9Asset } from '@leather.io/models';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
+
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenLoading } from '../components/token-loading';
 
@@ -24,7 +25,7 @@ export function Sip9TokenDetails({ assetId, account }: Sip9TokenDetailsProps) {
     return <ErrorFallbackTab />;
   }
   if (collectible.state === 'success' && collectible.value.length > 0) {
-     const asset = collectible.value.find(isSip9Asset);
+    const asset = collectible.value.find(isSip9Asset);
     if (!asset) {
       return <ErrorFallbackTab />;
     }

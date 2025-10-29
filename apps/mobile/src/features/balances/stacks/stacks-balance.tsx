@@ -3,8 +3,10 @@ import { OnPressTokenDetails } from '@/features/token/types';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
 
+import { stxAsset } from '@leather.io/constants';
 import { AccountId, CryptoAssetProtocols } from '@leather.io/models';
 import { StxAvatarIcon } from '@leather.io/ui/native';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
 export function StacksTokenBalance(props: StacksTokenBalanceProps) {
@@ -31,7 +33,11 @@ export function StacksBalanceByAccount({
       quoteBalance={quoteBalance}
       onPress={
         onPress
-          ? () => onPress?.({ assetProtocol: CryptoAssetProtocols.nativeStx, assetId: 'STX' })
+          ? () =>
+              onPress?.({
+                assetProtocol: CryptoAssetProtocols.nativeStx,
+                assetId: serializeAssetId(getAssetId(stxAsset)),
+              })
           : undefined
       }
       isLoading={state === 'loading'}

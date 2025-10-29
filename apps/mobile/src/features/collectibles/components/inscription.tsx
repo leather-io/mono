@@ -1,24 +1,20 @@
 import { useEffect, useState } from 'react';
 
-import { CollectibleDetailsProps } from '@/features/token/types';
+import { TokenDetailsProps } from '@/features/token/types';
 import { t } from '@lingui/core/macro';
 
 import { InscriptionAsset } from '@leather.io/models';
 import { Inscription as InscriptionComponent } from '@leather.io/ui/native';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { FallbackImage } from './fallback';
-import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 interface InscriptionProps {
   item: InscriptionAsset;
   height: number;
-  onPress?: (collectibleDetails: CollectibleDetailsProps) => void;
+  onPress?: (tokenDetails: TokenDetailsProps) => void;
 }
-export function Inscription({
-  item,
-  height,
-  onPress,
-}: InscriptionProps) {
+export function Inscription({ item, height, onPress }: InscriptionProps) {
   const [content, setContent] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { mimeType, src, title } = item;
@@ -48,7 +44,12 @@ export function Inscription({
       mimeType={mimeType}
       height={height}
       src={isLoading ? '' : content || src}
-      onPress={onPress ? () => onPress({ assetId: serializeAssetId(getAssetId(item)), assetProtocol: 'inscription' }) : undefined}
+      onPress={
+        onPress
+          ? () =>
+              onPress({ assetId: serializeAssetId(getAssetId(item)), assetProtocol: 'inscription' })
+          : undefined
+      }
     />
   );
 }
