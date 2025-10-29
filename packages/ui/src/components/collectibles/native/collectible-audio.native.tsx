@@ -12,7 +12,6 @@ interface CollectibleAudioProps {
 }
 
 export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleAudioProps) {
-
   return (
     <CollectibleCard>
       {onPress ? (
@@ -48,8 +47,3 @@ export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleA
     </CollectibleCard>
   );
 }
-
-// back to basics here and it's looking good
-// bug with the onpress going to old pages though - need to check the routes
-// finish the details pages in this clean PR and I can add the video thumnails later
-// that un-focused and derailed me from the main goal of this PR

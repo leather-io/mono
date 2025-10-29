@@ -3,13 +3,9 @@ import { useWindowDimensions } from 'react-native';
 import { Screen } from '@/components/screen/screen';
 import { HeaderSubtitle } from '@/components/screen/screen-header/components/header-title';
 import { NetworkBadge } from '@/features/settings/network-badge';
-import { useSettings } from '@/store/settings/settings';
-import { ChainId } from '@stacks/network';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
-
-import { renderCollectibleDetailsRecursively } from './utils/render-collectible-details';
 
 interface CollectibleProps {
   children: React.ReactNode;
@@ -29,10 +25,6 @@ export function useCollectibleHeight() {
 
 export function Collectible({ name, details, children }: CollectibleProps) {
   const collection = details && 'collection' in details ? details.collection : undefined;
-  // TODO: add chain name to the collectible - make a component for this to update the link
-  const { networkPreference } = useSettings();
-  const chainName =
-    networkPreference.chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet';
 
   return (
     <Screen>
@@ -57,12 +49,6 @@ export function Collectible({ name, details, children }: CollectibleProps) {
       <Screen.ScrollView>
         <Box gap="1" backgroundColor="ink.background-secondary">
           {children}
-          {/* {description && (
-            <TokenDetailsCard title={t`Description`}>
-              <Text variant="caption01">{description}</Text>
-            </TokenDetailsCard>
-          )} */}
-          {details && renderCollectibleDetailsRecursively(details, chainName)}
         </Box>
       </Screen.ScrollView>
     </Screen>

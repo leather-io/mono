@@ -19,23 +19,24 @@ interface BnsTokenDetailsProps {
 
 export function BnsTokenDetails({ asset }: BnsTokenDetailsProps) {
   const height = useCollectibleHeight();
-  const { data: profile } = useGetBnsName(asset?.name);
+  const { data: bnsData } = useGetBnsName(asset?.name);
 
   const formatter = new Intl.NumberFormat(locale);
-  const renewalHeight = formatter.format(parseInt(profile?.renewalHeight ?? '0', 10));
-  const registeredAtBlockNumber = parseInt(profile?.registeredAt ?? '0', 10);
-  const registeredAtBlock = formatter.format(registeredAtBlockNumber);
+  const renewalHeight = formatter.format(parseInt(bnsData?.renewalHeight ?? '0', 10));
+  const registeredAtBlockNumber = parseInt(bnsData?.registeredAt ?? '0', 10);
   const hiroBlockUrl = useGetHiroExplorerUrl({ type: 'block', value: registeredAtBlockNumber });
 
   return (
     <Collectible name={asset.name} description={asset.description} details={asset}>
-      <Sip9 item={asset} height={height} />
+      <TokenDetailsCard>
+        <Sip9 item={asset} height={height} />
+      </TokenDetailsCard>
       <TokenDetailsCard title={t`Collectible Info`}>
         <SummaryTableRoot>
           <SummaryTableItem label={t`Name`} value={asset?.name ?? ''} />
           <SummaryTableItem
             label={t`Registered at block`}
-            value={<DetailsLink url={hiroBlockUrl} label={`#${registeredAtBlock}`} />}
+            value={<DetailsLink url={hiroBlockUrl} label={`#${registeredAtBlockNumber}`} />}
           />
           <SummaryTableItem label={t`Renewal height`} value={renewalHeight} />
           <SummaryTableItem label={t`Layer`} value={getChainDisplayLabel(asset?.chain)} />

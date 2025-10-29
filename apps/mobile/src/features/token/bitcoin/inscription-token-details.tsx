@@ -53,6 +53,9 @@ export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps)
             value={<DetailsLink url={mempoolExplorerTxUrl} label={truncateMiddle(txid ?? '', 5)} />}
           />
           <SummaryTableItem label={t`File type`} value={mimeType ?? ''} />
+          {/* TODO: add this to summary at top level to add more fields later when BIS api is connected https://api.bestinslot.xyz/v3/inscription/single_info_id
+           */}
+          <SummaryTableItem label={t`Output value`} value={`${value} sats`} />
         </SummaryTableRoot>
       </TokenDetailsCard>
     </Collectible>

@@ -322,7 +322,6 @@ msgid "Arkadiko"
 msgstr "Arkadiko"
 
 #: src/features/token/stacks/sip9-token-details.tsx:70
-#: src/features/token/utils/render-collectible-details.tsx:232
 msgid "Attributes"
 msgstr "Attributes"
 
@@ -456,8 +455,9 @@ msgid "Code"
 msgstr "Code"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:40
+#: src/features/token/bitcoin/stamp-token-details.tsx:27
 #: src/features/token/components/collectible-loading.tsx:18
-#: src/features/token/stacks/bns-token-details.tsx:33
+#: src/features/token/stacks/bns-token-details.tsx:34
 #: src/features/token/stacks/sip9-token-details.tsx:43
 msgid "Collectible Info"
 msgstr "Collectible Info"
@@ -465,18 +465,6 @@ msgstr "Collectible Info"
 #: src/features/token/stacks/sip9-token-details.tsx:47
 msgid "Collection"
 msgstr "Collection"
-
-#: src/features/token/utils/render-collectible-details.tsx:176
-msgid "Collection "
-msgstr "Collection "
-
-#: src/features/token/utils/render-collectible-details.tsx:166
-msgid "Collection Name"
-msgstr "Collection Name"
-
-#: src/features/token/utils/render-collectible-details.tsx:52
-msgid "Collection URL"
-msgstr "Collection URL"
 
 #: src/features/send/error-messages.ts:17
 msgid "Compliance check failed"
@@ -549,10 +537,6 @@ msgstr "Contract"
 #: src/features/approver/contract-call-args.section.tsx:21
 msgid "Contract arguments"
 msgstr "Contract arguments"
-
-#: src/features/token/utils/render-collectible-details.tsx:48
-msgid "Contract Details"
-msgstr "Contract Details"
 
 #: src/app/settings/display/index.tsx:92
 #: src/features/settings/conversion-unit-sheet.tsx:29
@@ -629,10 +613,6 @@ msgstr "Deployment failed"
 #: src/features/token/token.tsx:101
 msgid "Description"
 msgstr "Description"
-
-#: src/features/token/utils/render-collectible-details.tsx:224
-msgid "Details"
-msgstr "Details"
 
 #: src/app/settings/index.tsx:144
 msgid "Device ID"
@@ -939,7 +919,6 @@ msgstr "Input"
 msgid "Inputs and outputs"
 msgstr "Inputs and outputs"
 
-#: src/features/token/utils/render-collectible-details.tsx:68
 #: src/shared/display-preference.ts:63
 msgid "Inscription"
 msgstr "Inscription"
@@ -969,11 +948,15 @@ msgstr "Invalid words: {joinedInvalidWords}"
 msgid "Language"
 msgstr "Language"
 
+#: src/features/token/bitcoin/stamp-token-details.tsx:36
+msgid "Last observed block"
+msgstr "Last observed block"
+
 #: src/features/token/bitcoin/inscription-token-details.tsx:43
+#: src/features/token/bitcoin/stamp-token-details.tsx:33
 #: src/features/token/components/token-details-table.tsx:22
-#: src/features/token/stacks/bns-token-details.tsx:41
+#: src/features/token/stacks/bns-token-details.tsx:42
 #: src/features/token/stacks/sip9-token-details.tsx:55
-#: src/features/token/utils/render-collectible-details.tsx:44
 msgid "Layer"
 msgstr "Layer"
 
@@ -1112,8 +1095,9 @@ msgstr "More options"
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
 #: src/features/token/bitcoin/inscription-token-details.tsx:42
+#: src/features/token/bitcoin/stamp-token-details.tsx:30
 #: src/features/token/components/token-details-table.tsx:19
-#: src/features/token/stacks/bns-token-details.tsx:35
+#: src/features/token/stacks/bns-token-details.tsx:36
 #: src/features/token/stacks/sip9-token-details.tsx:45
 msgid "Name"
 msgstr "Name"
@@ -1194,6 +1178,10 @@ msgstr "Outbound balance:"
 msgid "Output"
 msgstr "Output"
 
+#: src/features/token/bitcoin/inscription-token-details.tsx:58
+msgid "Output value"
+msgstr "Output value"
+
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:21
 msgid "Passphrase"
 msgstr "Passphrase"
@@ -1240,7 +1228,8 @@ msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:44
-#: src/features/token/stacks/bns-token-details.tsx:42
+#: src/features/token/bitcoin/stamp-token-details.tsx:34
+#: src/features/token/stacks/bns-token-details.tsx:43
 #: src/features/token/stacks/sip9-token-details.tsx:56
 msgid "Protocol"
 msgstr "Protocol"
@@ -1297,7 +1286,7 @@ msgstr "Recently viewed"
 msgid "Recents"
 msgstr "Recents"
 
-#: src/features/token/stacks/bns-token-details.tsx:37
+#: src/features/token/stacks/bns-token-details.tsx:38
 msgid "Registered at block"
 msgstr "Registered at block"
 
@@ -1310,7 +1299,7 @@ msgstr "Remove wallet"
 msgid "Rename wallet"
 msgstr "Rename wallet"
 
-#: src/features/token/stacks/bns-token-details.tsx:40
+#: src/features/token/stacks/bns-token-details.tsx:41
 msgid "Renewal height"
 msgstr "Renewal height"
 
@@ -1505,10 +1494,14 @@ msgstr "Stacks"
 msgid "Stacks address"
 msgstr "Stacks address"
 
-#: src/features/token/bitcoin/stamp-details.tsx:29
+#: src/features/token/bitcoin/stamp-token-details.tsx:17
 #: src/shared/display-preference.ts:64
 msgid "Stamp"
 msgstr "Stamp"
+
+#: src/features/token/bitcoin/stamp-token-details.tsx:39
+msgid "Stamp URL"
+msgstr "Stamp URL"
 
 #: src/features/approver/utils.tsx:47
 msgid "Standard"
@@ -1775,10 +1768,6 @@ msgstr "Verify full address"
 #: src/app/settings/index.tsx:136
 msgid "Version"
 msgstr "Version"
-
-#: src/features/token/utils/render-collectible-details.tsx:96
-msgid "View"
-msgstr "View"
 
 #: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:20
 msgid "View and manage all your wallets in one place"

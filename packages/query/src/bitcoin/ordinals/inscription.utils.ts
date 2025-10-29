@@ -37,8 +37,5 @@ export function createBestInSlotInscription(
     genesisTimestamp: bisInscription.genesis_ts,
     genesisBlockHeight: bisInscription.genesis_height,
     outputValue: bisInscription.output_value?.toString() ?? '0',
-    metadata: bisInscription.metadata ?? undefined,
-    collectionName: bisInscription.collection_name ?? undefined,
-    lastSalePrice: bisInscription.last_sale_price ?? undefined,
   });
 }
