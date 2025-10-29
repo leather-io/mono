@@ -3,8 +3,8 @@ import {
   BitcoinNetworkPreference,
   makeMempoolExplorerLink,
 } from '@/features/activity/utils/make-activity-link';
-import { DetailsLink } from '@/features/token/components/details-link';
 import { Inscription } from '@/features/token/bitcoin/inscription';
+import { DetailsLink } from '@/features/token/components/details-link';
 import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-preference';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';

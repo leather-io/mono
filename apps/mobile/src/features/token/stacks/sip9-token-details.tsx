@@ -10,7 +10,7 @@ import { truncateMiddle } from '@leather.io/utils';
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenDescription } from '../components/token-description';
 import { TokenDetailsCard } from '../components/token-details-card';
-import { useGetHiroExplorerUrl } from './use-get-hiro-explorer-link';
+import { useGetHiroExplorerUrl } from '../hooks/use-get-hiro-explorer-link';
 
 interface Sip9TokenDetailsProps {
   asset: Sip9Asset;
