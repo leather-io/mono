@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { AccountAddresses } from '@leather.io/models';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
+import { MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
+import { SettingsService } from '../infrastructure/settings/settings.service';
 import { BitcoinTransactionsService } from './bitcoin-transactions.service';
 
 describe(BitcoinTransactionsService.name, () => {
@@ -36,7 +38,13 @@ describe(BitcoinTransactionsService.name, () => {
         },
       } as unknown as LeatherApiClient;
 
-      const service = new BitcoinTransactionsService(mockLeatherApiClient);
+      const service = new BitcoinTransactionsService(
+        mockLeatherApiClient,
+        {} as unknown as MempoolApiClient,
+        {
+          getSettings: () => ({ network: { chain: { bitcoin: { bitcoinNetwork: 'mainnet' } } } }),
+        } as unknown as SettingsService
+      );
       const result = await service.getAccountTransactions(mockAccount);
       expect(result).toHaveLength(2);
       expect(result[0].txid).toEqual(duplicateTx.txid);
@@ -50,7 +58,11 @@ describe(BitcoinTransactionsService.name, () => {
           accountIndex: 0,
         },
       };
-      const service = new BitcoinTransactionsService({} as unknown as LeatherApiClient);
+      const service = new BitcoinTransactionsService(
+        {} as unknown as LeatherApiClient,
+        {} as unknown as MempoolApiClient,
+        {} as unknown as SettingsService
+      );
       const result = await service.getAccountTransactions(mockAccount);
       expect(result).toEqual([]);
     });

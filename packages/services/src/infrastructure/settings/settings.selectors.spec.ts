@@ -6,6 +6,7 @@ import {
 
 import {
   selectAssetVisibility,
+  selectBitcoinApiUrl,
   selectBitcoinNetworkMode,
   selectStacksApiUrl,
 } from './settings.selectors';
@@ -39,5 +40,12 @@ describe(selectAssetVisibility.name, () => {
     expect(assetVisibility).toEqual({
       'some|asset': true,
     });
+  });
+});
+
+describe(selectBitcoinApiUrl.name, () => {
+  it('should select the Bitcoin API url from settings', () => {
+    const bitcoinApiUrl = selectBitcoinApiUrl(userSettings);
+    expect(bitcoinApiUrl).toEqual(defaultNetworksKeyedById.mainnet.chain.bitcoin.bitcoinUrl);
   });
 });
