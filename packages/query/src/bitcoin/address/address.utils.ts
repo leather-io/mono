@@ -1,5 +1,5 @@
 import { BTC_DECIMALS } from '@leather.io/constants';
-import type { BitcoinTx, Inscription, Money } from '@leather.io/models';
+import type { BitcoinTx, InscriptionAsset, Money } from '@leather.io/models';
 import { isEmptyArray, sumNumbers } from '@leather.io/utils';
 
 import { UtxoResponseItem } from '../../../types/utxo';
@@ -44,7 +44,7 @@ interface UtxoIdentifier {
   vout: number;
 }
 
-export function filterUtxosWithInscriptions(inscriptions: Inscription[]) {
+export function filterUtxosWithInscriptions(inscriptions: InscriptionAsset[]) {
   return <T extends UtxoIdentifier>(utxo: T) => {
     return !inscriptions.some(
       inscription =>

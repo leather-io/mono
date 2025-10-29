@@ -1,9 +1,9 @@
 import { Circle } from 'leather-styles/jsx';
 
-import type { Inscription } from '@leather.io/models';
+import type { InscriptionAsset } from '@leather.io/models';
 import { OrdinalAvatarIcon } from '@leather.io/ui';
 
-export function InscriptionIcon({ inscription, ...rest }: { inscription: Inscription }) {
+export function InscriptionIcon({ inscription, ...rest }: { inscription: InscriptionAsset }) {
   switch (inscription.mimeType) {
     case 'image':
       return (

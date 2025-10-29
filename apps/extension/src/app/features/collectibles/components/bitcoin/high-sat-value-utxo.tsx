@@ -1,13 +1,13 @@
 import { Box, Circle } from 'leather-styles/jsx';
 
-import type { Inscription } from '@leather.io/models';
+import type { InscriptionAsset } from '@leather.io/models';
 
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 const featureBuilt = false;
 
 interface HighSatValueUtxoProps {
-  inscription: Inscription;
+  inscription: InscriptionAsset;
 }
 
 export function HighSatValueUtxoWarning({ inscription }: HighSatValueUtxoProps) {

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
-import { BtcFeeType, Inscription, btcTxTimeMap } from '@leather.io/models';
+import { BtcFeeType, InscriptionAsset, btcTxTimeMap } from '@leather.io/models';
 import { type UtxoWithDerivationPath } from '@leather.io/query';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
@@ -16,7 +16,7 @@ import { useGenerateUnsignedOrdinalTx } from './use-generate-ordinal-tx';
 interface UseSendInscriptionFeesListArgs {
   recipient: string;
   utxo: UtxoWithDerivationPath;
-  inscription: Inscription;
+  inscription: InscriptionAsset;
 }
 
 export function useSendInscriptionFeesList({

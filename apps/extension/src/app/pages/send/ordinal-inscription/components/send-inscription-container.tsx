@@ -5,7 +5,7 @@ import get from 'lodash.get';
 
 import { createBitcoinAddress, lookupDerivationByAddress } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath } from '@leather.io/crypto';
-import type { AverageBitcoinFeeRates, BtcFeeType, Inscription } from '@leather.io/models';
+import type { AverageBitcoinFeeRates, BtcFeeType, InscriptionAsset } from '@leather.io/models';
 import { type UtxoWithDerivationPath } from '@leather.io/query';
 
 import { analytics } from '@shared/utils/analytics';
@@ -22,7 +22,7 @@ import { SendInscriptionLoader } from './send-inscription-loader';
 
 interface SendInscriptionContextState {
   feeRates: AverageBitcoinFeeRates;
-  inscription: Inscription;
+  inscription: InscriptionAsset;
   selectedFeeType: BtcFeeType;
   setSelectedFeeType(value: BtcFeeType | null): void;
   utxo: UtxoWithDerivationPath;
@@ -35,7 +35,7 @@ export function useSendInscriptionState() {
 
 export function SendInscriptionContainer() {
   const [selectedFeeType, setSelectedFeeType] = useState<BtcFeeType | null>(null);
-  const [inscription, setInscription] = useState<Inscription | null>(null);
+  const [inscription, setInscription] = useState<InscriptionAsset | null>(null);
   const [utxo, setUtxo] = useState<UtxoWithDerivationPath | null>(null);
 
   const routeState = useSendInscriptionRouteState();

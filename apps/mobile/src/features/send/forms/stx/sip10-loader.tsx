@@ -1,7 +1,9 @@
 import { Error } from '@/components/error/error';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { useSip10BalanceByAssetId } from '@/queries/balance/sip10-balance.query';
+
 import '@/queries/balance/stx-balance.query';
+
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';

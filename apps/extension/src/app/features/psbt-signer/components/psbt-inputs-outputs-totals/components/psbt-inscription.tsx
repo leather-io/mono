@@ -1,4 +1,4 @@
-import type { Inscription } from '@leather.io/models';
+import type { InscriptionAsset } from '@leather.io/models';
 import { OrdinalAvatarIcon } from '@leather.io/ui';
 import { isUndefined } from '@leather.io/utils';
 
@@ -9,7 +9,7 @@ import { useInscription } from '@app/query/bitcoin/ordinals/inscription.hooks';
 import { PsbtAddressTotalItem } from './psbt-address-total-item';
 
 interface PsbtInscriptionProps {
-  inscription: Inscription;
+  inscription: InscriptionAsset;
 }
 export function PsbtInscription({ inscription }: PsbtInscriptionProps) {
   const { isLoading, isError, data: supportedInscription } = useInscription(inscription?.id ?? '');

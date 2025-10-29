@@ -1,5 +1,3 @@
-import { InscriptionAsset } from './assets/asset.model';
-
 /**
  * Inscriptions contain arbitrary data. When retrieving an inscription, it should be
  * classified into one of the types below, indicating that the app can handle it
@@ -18,18 +16,3 @@ export const inscriptionMimeTypes = [
 ] as const;
 
 export type InscriptionMimeType = (typeof inscriptionMimeTypes)[number];
-
-/* Deprecated: Made obsolete by InscriptionAsset; Will be removed */
-export interface Inscription extends InscriptionAsset {
-  preview: string;
-  src: string;
-  title: string;
-  output: string;
-  txid: string;
-  offset: string;
-  address: string;
-  genesisBlockHash: string;
-  genesisTimestamp: number;
-  genesisBlockHeight: number;
-  value: string;
-}
