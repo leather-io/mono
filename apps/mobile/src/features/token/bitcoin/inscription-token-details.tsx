@@ -33,7 +33,7 @@ export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps)
 
   const height = useCollectibleHeight();
   return (
-    <Collectible name={title} description={title} details={asset}>
+    <Collectible name={title} details={asset}>
       <TokenDetailsCard>
         <Inscription item={asset} height={height} />
       </TokenDetailsCard>

@@ -27,7 +27,7 @@ export function BnsTokenDetails({ asset }: BnsTokenDetailsProps) {
   const hiroBlockUrl = useGetHiroExplorerUrl({ type: 'block', value: registeredAtBlockNumber });
 
   return (
-    <Collectible name={asset.name} description={asset.description} details={asset}>
+    <Collectible name={asset.name} details={asset}>
       <TokenDetailsCard>
         <Sip9 item={asset} height={height} />
       </TokenDetailsCard>

@@ -1,4 +1,5 @@
 import { Screen } from '@/components/screen/screen';
+import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { t } from '@lingui/core/macro';
 
@@ -16,7 +17,20 @@ export function CollectibleLoading({ height }: { height: number }) {
             <SkeletonLoader height={height} width="100%" isLoading={true} />
           </Box>
           <TokenDetailsCard title={t`Collectible Info`}>
-            <SkeletonLoader height={24} width="100%" isLoading={true} />
+            <SummaryTableRoot>
+              <SummaryTableItem
+                label={t`Name`}
+                value={<SkeletonLoader height={24} width="80%" isLoading={true} />}
+              />
+              <SummaryTableItem
+                label={t`Collection`}
+                value={<SkeletonLoader height={24} width="100%" isLoading={true} />}
+              />
+              <SummaryTableItem
+                label={t`Creator`}
+                value={<SkeletonLoader height={24} width="100%" isLoading={true} />}
+              />
+            </SummaryTableRoot>
           </TokenDetailsCard>
         </Box>
       </Screen.ScrollView>

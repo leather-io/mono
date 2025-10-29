@@ -5,10 +5,10 @@ import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-
 import { t } from '@lingui/core/macro';
 
 import { Sip9Asset } from '@leather.io/models';
-import { Text } from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
+import { TokenDescription } from '../components/token-description';
 import { TokenDetailsCard } from '../components/token-details-card';
 import { useGetHiroExplorerUrl } from './use-get-hiro-explorer-link';
 
@@ -30,15 +30,12 @@ export function Sip9TokenDetails({ asset }: Sip9TokenDetailsProps) {
   const { name, description, tokenId } = asset;
 
   return (
-    <Collectible name={name ?? ''} description={description ?? ''} details={asset}>
+    <Collectible name={name} details={asset}>
       <TokenDetailsCard>
         <Sip9 item={asset} height={height} />
       </TokenDetailsCard>
-      {description && (
-        <TokenDetailsCard title={t`Description`}>
-          <Text variant="caption01">{description}</Text>
-        </TokenDetailsCard>
-      )}
+
+      {description && <TokenDescription description={description} />}
 
       <TokenDetailsCard title={t`Collectible Info`}>
         <SummaryTableRoot>
