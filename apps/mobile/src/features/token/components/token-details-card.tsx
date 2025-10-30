@@ -6,10 +6,12 @@ interface TokenDetailsCardProps extends HasChildren {
 export function TokenDetailsCard({ children, title }: TokenDetailsCardProps) {
   return (
     <Box backgroundColor="ink.background-primary" px="5" py="3">
-      {title && (
+      {typeof title === 'string' ? (
         <Text variant="label03" py="2">
-          {typeof title === 'string' ? title : <>{title}</>}
+          {title}
         </Text>
+      ) : (
+        title
       )}
       {children}
     </Box>

@@ -20,7 +20,10 @@ export function BnsDetails({ asset }: BnsDetailsProps) {
   const { data: bnsData } = useGetBnsName(asset?.name);
 
   const { renewalHeight, registeredAtBlockNumber } = bnsData ?? {};
-  const hiroBlockUrl = useGetHiroExplorerUrl({ type: 'block', value: registeredAtBlockNumber ?? 0 });
+  const hiroBlockUrl = useGetHiroExplorerUrl({
+    type: 'block',
+    value: registeredAtBlockNumber ?? 0,
+  });
 
   return (
     <Collectible name={asset.name} details={asset}>
