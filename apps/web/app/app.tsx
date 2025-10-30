@@ -34,10 +34,10 @@ export function Layout({ children }: HasChildren) {
   return (
     <html lang="en">
       <head>
+        <Meta />
         {defaultMetaTags.map((meta, i) => (
           <meta key={'meta' + i} {...meta} />
         ))}
-        <Meta />
         <Links />
       </head>
       <styled.body>
