@@ -63,7 +63,7 @@ const dropdownContentStyles = css({
   alignItems: 'center',
   '--base-menu-padding': '0px',
   bg: 'ink.background-primary',
-  borderRadius: 'xs',
+  borderRadius: 'sm',
   boxShadow:
     '0px 12px 24px 0px rgba(18, 16, 15, 0.08), 0px 4px 8px 0px rgba(18, 16, 15, 0.08), 0px 0px 2px 0px rgba(18, 16, 15, 0.08)',
   p: '0',
