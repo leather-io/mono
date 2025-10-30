@@ -34,6 +34,10 @@ export const defaultMetaTags = [
     content: 'website',
   },
   {
+    property: 'og:image',
+    content: '/images/leather-og.png',
+  },
+  {
     name: 'robots',
     content: 'index, follow',
   },
