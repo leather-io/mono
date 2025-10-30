@@ -1,25 +1,27 @@
 import { ErrorFallbackTab } from '@/components/error/error';
-import { Sip9 } from '@/features/token/stacks/sip9';
 import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-collectibles.query';
 
 import { AccountId, isSip9Asset } from '@leather.io/models';
+import { getStacksContractAssetName } from '@leather.io/stacks';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { Collectible, useCollectibleHeight } from '../collectible';
-import { TokenLoading } from '../components/token-loading';
+import { useCollectibleHeight } from '../collectible';
+import { CollectibleLoading } from '../components/collectible-loading';
+import { BnsDetails } from './bns-details';
+import { Sip9TokenDetails } from './sip9-token-details';
 
-interface Sip9TokenDetailsProps {
+interface Sip9DetailsProps {
   account: AccountId;
   assetId: SerializedCryptoAssetId;
 }
-export function Sip9TokenDetails({ assetId, account }: Sip9TokenDetailsProps) {
+export function Sip9Details({ assetId, account }: Sip9DetailsProps) {
   const { fingerprint, accountIndex } = account;
   const height = useCollectibleHeight();
 
   const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
 
   if (collectible.state === 'loading') {
-    return <TokenLoading />;
+    return <CollectibleLoading height={height} />;
   }
   if (collectible.state === 'error') {
     return <ErrorFallbackTab />;
@@ -29,12 +31,11 @@ export function Sip9TokenDetails({ assetId, account }: Sip9TokenDetailsProps) {
     if (!asset) {
       return <ErrorFallbackTab />;
     }
-    const { name, description } = asset;
-    return (
-      <Collectible name={name} description={description} details={asset}>
-        <Sip9 item={asset} height={height} />
-      </Collectible>
-    );
+    const assetName = getStacksContractAssetName(asset.assetId);
+    if (assetName === 'BNS-V2') {
+      return <BnsDetails asset={asset} />;
+    }
+    return <Sip9TokenDetails asset={asset} />;
   }
 
   return <ErrorFallbackTab />;

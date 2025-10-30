@@ -12,8 +12,8 @@ import { useAccountCollectibles } from '@/queries/collectibles/account-collectib
 import { AccountId, NonFungibleCryptoAsset } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
+import { Inscription } from './bitcoin/inscription';
 import { Stamp } from './bitcoin/stamp';
-import { Inscription } from './components/inscription';
 import { Sip9 } from './stacks/sip9';
 
 interface RenderCollectibleProps {

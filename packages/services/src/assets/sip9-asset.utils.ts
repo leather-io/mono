@@ -6,16 +6,13 @@ import {
   CryptoAssetChains,
   CryptoAssetProtocols,
   Sip9Asset,
-  Sip9AssetContent,
   Sip9Attribute,
   Sip9Collection,
 } from '@leather.io/models';
+import { createMoney } from '@leather.io/utils';
 
 import { gammaNftMetadataSchema } from '../infrastructure/api/gamma/gamma-api.schema';
-import {
-  HiroMetadata,
-  HiroNftMetadataResponse,
-} from '../infrastructure/api/hiro/hiro-stacks-api.types';
+import { HiroMetadata } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
   transformHiroSip9Attributes,
   transformHiroSip9Collection,
@@ -62,19 +59,12 @@ export function getNonFungibleTokenId(hex: string): number {
   return clarityValue.type === 'uint' ? Number(clarityValue.value) : 0;
 }
 
-interface Sip9Details {
-  name: string;
-  description: string;
-  content: Sip9AssetContent;
-  collection: Sip9Collection | undefined;
-  attributes: Sip9Attribute[] | undefined;
-}
-
-export function transformToSip9Details(
+export function createSip9Asset(
   assetIdentifier: string,
-  gammaMetadata?: GammaNftMetadata | null,
-  hiroMetadata?: HiroMetadata | null
-): Sip9Details {
+  tokenId: number,
+  hiroMetadata?: HiroMetadata | null,
+  gammaMetadata?: GammaNftMetadata | null
+): Sip9Asset {
   const assetName = getAssetNameFromIdentifier(assetIdentifier);
 
   const name = gammaMetadata?.item.name || hiroMetadata?.name || assetName;
@@ -93,29 +83,16 @@ export function transformToSip9Details(
     transformGammaCollection(gammaMetadata?.item.collection) ||
     transformHiroSip9Collection(hiroMetadata?.properties?.collection);
 
+  const creator = gammaMetadata?.item.creator || hiroMetadata?.properties?.creator;
+  const floorPrice =
+    gammaMetadata?.item.collection?.floor_price_amount || hiroMetadata?.properties?.floor_price;
+  const latestSale =
+    gammaMetadata?.item.market_summary?.latest_sale?.price_amount ||
+    hiroMetadata?.properties?.latest_sale;
   const attributes =
     transformGammaAttributes(gammaMetadata?.attribute_groups) ||
     transformHiroSip9Attributes(hiroMetadata?.attributes);
-
-  return {
-    name,
-    description,
-    content: {
-      contentUrl,
-      contentType,
-    },
-    collection,
-    attributes,
-  };
-}
-
-export function createSip9Asset(
-  assetIdentifier: string,
-  tokenId: number,
-  metadata: HiroNftMetadataResponse | null,
-  gammaMetadata?: GammaNftMetadata | null
-): Sip9Asset {
-  const details = transformToSip9Details(assetIdentifier, gammaMetadata, metadata?.metadata);
+  const rarityRank = gammaMetadata?.item.rarity_rank || hiroMetadata?.properties?.rarity_rank;
 
   return {
     chain: CryptoAssetChains.stacks,
@@ -124,10 +101,17 @@ export function createSip9Asset(
     assetId: assetIdentifier,
     contractId: getContractPrincipalFromAssetIdentifier(assetIdentifier),
     tokenId,
-    name: details.name,
-    description: details.description,
-    content: details.content,
-    attributes: details.attributes,
-    collection: details.collection,
+    name,
+    description,
+    content: {
+      contentUrl,
+      contentType,
+    },
+    collection,
+    creator,
+    floorPrice: floorPrice ? createMoney(floorPrice.amount, 'STX') : undefined,
+    latestSale: latestSale ? createMoney(latestSale.amount, 'STX') : undefined,
+    attributes,
+    rarityRank,
   };
 }

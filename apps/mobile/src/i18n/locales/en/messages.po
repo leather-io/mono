@@ -25,6 +25,10 @@ msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
+#: src/features/token/stacks/sip9-token-details.tsx:81
+msgid "{rarityRank} of {totalItems}"
+msgstr "{rarityRank} of {totalItems}"
+
 #: src/features/settings/conversion-unit-sheet.tsx:34
 msgctxt "Currency name"
 msgid "{symbol, select, USD {United States Dollar} EUR {Euro} GBP {British Pound} AUD {Australian Dollar} CAD {Canadian Dollar} CNY {Chinese Yuan} JPY {Japanese Yen} KRW {South Korean Won} BTC {Bitcoin} other {{name}}}"
@@ -308,6 +312,10 @@ msgstr "Argument {argumentNumber}"
 msgid "Arkadiko"
 msgstr "Arkadiko"
 
+#: src/features/token/stacks/sip9-token-details.tsx:98
+msgid "Attributes"
+msgstr "Attributes"
+
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:117
 msgid "Authentication failed"
 msgstr "Authentication failed"
@@ -437,13 +445,16 @@ msgstr "Close the scanner"
 msgid "Code"
 msgstr "Code"
 
+#: src/features/token/components/collectible-loading.tsx:26
 #: src/features/token/stacks/bns-details.tsx:33
+#: src/features/token/stacks/sip9-token-details.tsx:67
 msgid "Collectible Info"
 msgstr "Collectible Info"
 
-#: src/features/token/utils/render-collectible-details.tsx:22
-msgid "Collection URL"
-msgstr "Collection URL"
+#: src/features/token/components/collectible-loading.tsx:29
+#: src/features/token/stacks/sip9-token-details.tsx:71
+msgid "Collection"
+msgstr "Collection"
 
 #: src/features/send/error-messages.ts:17
 msgid "Compliance check failed"
@@ -496,7 +507,7 @@ msgstr "Contact us"
 msgid "Contacts"
 msgstr "Contacts"
 
-#: src/features/token/components/inscription.tsx:31
+#: src/features/token/bitcoin/inscription.tsx:31
 msgid "Content not found"
 msgstr "Content not found"
 
@@ -508,6 +519,10 @@ msgstr "Continue"
 #: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:15
 msgid "Continue without security"
 msgstr "Continue without security"
+
+#: src/features/token/stacks/sip9-token-details.tsx:86
+msgid "Contract"
+msgstr "Contract"
 
 #: src/features/approver/contract-call-args.section.tsx:21
 msgid "Contract arguments"
@@ -541,6 +556,10 @@ msgstr "Create new wallet"
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:206
 msgid "Creation date"
 msgstr "Creation date"
+
+#: src/features/token/stacks/sip9-token-details.tsx:76
+msgid "Creator"
+msgstr "Creator"
 
 #: src/hooks/use-version-check.ts:44
 msgid "Current app version format is invalid"
@@ -579,15 +598,12 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
-#: src/features/token/collectible.tsx:64
+#: src/features/token/components/collectible-loading.tsx:23
+#: src/features/token/components/token-description.tsx:19
 #: src/features/token/components/token-loading.tsx:38
 #: src/features/token/token.tsx:101
 msgid "Description"
 msgstr "Description"
-
-#: src/features/token/utils/render-collectible-details.tsx:139
-msgid "Details"
-msgstr "Details"
 
 #: src/app/settings/index.tsx:144
 msgid "Device ID"
@@ -757,9 +773,17 @@ msgstr "Fee updated"
 msgid "Fees"
 msgstr "Fees"
 
+#: src/features/token/stacks/sip9-token-details.tsx:94
+msgid "File type"
+msgstr "File type"
+
 #: src/features/swap/components/flip-button.tsx:53
 msgid "Flip assets"
 msgstr "Flip assets"
+
+#: src/features/token/stacks/sip9-token-details.tsx:60
+msgid "Floor price"
+msgstr "Floor price"
 
 #: src/app/create-new-wallet.tsx:108
 msgid "For your eyes only"
@@ -912,6 +936,7 @@ msgstr "Language"
 
 #: src/features/token/components/token-details-table.tsx:22
 #: src/features/token/stacks/bns-details.tsx:41
+#: src/features/token/stacks/sip9-token-details.tsx:83
 msgid "Layer"
 msgstr "Layer"
 
@@ -1057,8 +1082,10 @@ msgstr "More options"
 #: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
+#: src/features/token/components/collectible-loading.tsx:28
 #: src/features/token/components/token-details-table.tsx:19
 #: src/features/token/stacks/bns-details.tsx:35
+#: src/features/token/stacks/sip9-token-details.tsx:69
 msgid "Name"
 msgstr "Name"
 
@@ -1183,7 +1210,9 @@ msgstr "Proceed with caution since your wallet will not be protected by your dev
 msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
+#: src/features/token/components/collectible-loading.tsx:30
 #: src/features/token/stacks/bns-details.tsx:42
+#: src/features/token/stacks/sip9-token-details.tsx:84
 msgid "Protocol"
 msgstr "Protocol"
 
@@ -1203,6 +1232,18 @@ msgstr "Push"
 #: src/app/settings/index.tsx:92
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
+
+#: src/features/token/stacks/sip9-token-details.tsx:81
+msgid "Rarity rank"
+msgstr "Rarity rank"
+
+#: src/features/token/components/token-description.tsx:25
+msgid "Read less"
+msgstr "Read less"
+
+#: src/features/token/components/token-description.tsx:25
+msgid "Read more"
+msgstr "Read more"
 
 #: src/components/action-buttons.tsx:38
 #: src/features/receive/screens/asset-details.tsx:57
@@ -1225,6 +1266,10 @@ msgstr "Receive transaction notifications"
 #: src/features/activity/utils/format-activity.ts:22
 msgid "Received"
 msgstr "Received"
+
+#: src/features/token/stacks/sip9-token-details.tsx:57
+msgid "Recent sale"
+msgstr "Recent sale"
 
 #: src/app/app-recently-viewed.tsx:14
 msgid "Recently viewed"
@@ -1709,11 +1754,6 @@ msgstr "Verify full address"
 #: src/app/settings/index.tsx:136
 msgid "Version"
 msgstr "Version"
-
-#: src/features/token/utils/render-collectible-details.tsx:43
-#: src/features/token/utils/render-collectible-details.tsx:56
-msgid "View"
-msgstr "View"
 
 #: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:20
 msgid "View and manage all your wallets in one place"

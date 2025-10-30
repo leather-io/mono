@@ -2,7 +2,7 @@ import { BitcoinTokenDetails } from '@/features/token/bitcoin/bitcoin-token-deta
 import { InscriptionDetails } from '@/features/token/bitcoin/inscription-details';
 import { RuneTokenDetails } from '@/features/token/bitcoin/rune-token-details';
 import { StampDetails } from '@/features/token/bitcoin/stamp-details';
-import { Sip9TokenDetails } from '@/features/token/stacks/sip9-details';
+import { Sip9Details } from '@/features/token/stacks/sip9-details';
 import { Sip10TokenDetails } from '@/features/token/stacks/sip10-token-details';
 import { StacksTokenDetails } from '@/features/token/stacks/stacks-token-details';
 import { isSupportedAssetProtocol } from '@/features/token/types';
@@ -30,7 +30,7 @@ export default function AccountTokenScreen() {
     case CryptoAssetProtocols.rune:
       return <RuneTokenDetails account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.sip9:
-      return <Sip9TokenDetails account={currentAccount} assetId={assetId} />;
+      return <Sip9Details account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.inscription:
       return <InscriptionDetails account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.stamp:
