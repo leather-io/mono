@@ -4,7 +4,7 @@ import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
-import { AccountId, CryptoAssetProtocols } from '@leather.io/models';
+import { AccountId } from '@leather.io/models';
 import { StxAvatarIcon } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
@@ -35,7 +35,6 @@ export function StacksBalanceByAccount({
         onPress
           ? () =>
               onPress?.({
-                assetProtocol: CryptoAssetProtocols.nativeStx,
                 assetId: serializeAssetId(getAssetId(stxAsset)),
               })
           : undefined

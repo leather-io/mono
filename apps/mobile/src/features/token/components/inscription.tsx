@@ -44,12 +44,7 @@ export function Inscription({ item, height, onPress }: InscriptionProps) {
       mimeType={mimeType}
       height={height}
       src={isLoading ? '' : content || src}
-      onPress={
-        onPress
-          ? () =>
-              onPress({ assetId: serializeAssetId(getAssetId(item)), assetProtocol: 'inscription' })
-          : undefined
-      }
+      onPress={onPress ? () => onPress({ assetId: serializeAssetId(getAssetId(item)) }) : undefined}
     />
   );
 }

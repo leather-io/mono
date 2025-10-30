@@ -26,7 +26,6 @@ export function renderAsset({
     if (onPress) {
       onPress({
         assetId: serializeAssetId(getAssetId(item.asset)),
-        assetProtocol: item.asset.protocol,
       });
     }
   }

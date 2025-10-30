@@ -22,7 +22,7 @@ import { useAccountScaledBalanceAnalytics } from '@/utils/analytics-hooks';
 import { useRouter } from 'expo-router';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import { AccountId, CryptoAssetProtocols } from '@leather.io/models';
+import { AccountId } from '@leather.io/models';
 import { SheetInstance } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
@@ -63,10 +63,10 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
 
   const router = useRouter();
 
-  function onOpenToken({ assetId, assetProtocol }: TokenDetailsProps) {
+  function onOpenToken({ assetId }: TokenDetailsProps) {
     router.navigate({
-      pathname: '/(tabs)/(index)/[assetProtocol]/[assetId]',
-      params: { assetId, assetProtocol },
+      pathname: '/(tabs)/(index)/[assetId]',
+      params: { assetId },
     });
   }
   const tokenDetailsFlag = useTokenDetailsFlag();
@@ -103,7 +103,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
                   tokenDetailsFlag
                     ? () =>
                         onOpenToken?.({
-                          assetProtocol: CryptoAssetProtocols.nativeBtc,
                           assetId: serializeAssetId(getAssetId(btcAsset)),
                         })
                     : undefined
@@ -116,7 +115,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
                   tokenDetailsFlag
                     ? () =>
                         onOpenToken?.({
-                          assetProtocol: CryptoAssetProtocols.nativeStx,
                           assetId: serializeAssetId(getAssetId(stxAsset)),
                         })
                     : undefined

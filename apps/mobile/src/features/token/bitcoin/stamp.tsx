@@ -18,11 +18,7 @@ export function Stamp({ item, height, onPress }: StampProps) {
       source={item.stampUrl}
       alt={item.stamp.toString()}
       height={height}
-      onPress={
-        onPress
-          ? () => onPress({ assetId: serializeAssetId(getAssetId(item)), assetProtocol: 'stamp' })
-          : undefined
-      }
+      onPress={onPress ? () => onPress({ assetId: serializeAssetId(getAssetId(item)) }) : undefined}
     />
   );
 }
