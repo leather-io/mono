@@ -1,8 +1,6 @@
 import { ExternalLink } from '@/components/external-link';
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
-import { Sip9 } from '@/features/collectibles/components/sip9';
-// FIXME: This locale is still hardcoded in Send
-import { locale } from '@/features/send/constants';
+import { Sip9 } from '@/features/token/stacks/sip9';
 import { useGetHiroExplorerUrl } from '@/hooks/use-get-hiro-explorer-url';
 import { useGetBnsName } from '@/queries/bns/bns.query';
 import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-preference';
@@ -21,10 +19,8 @@ export function BnsDetails({ asset }: BnsDetailsProps) {
   const height = useCollectibleHeight();
   const { data: bnsData } = useGetBnsName(asset?.name);
 
-  const formatter = new Intl.NumberFormat(locale);
-  const renewalHeight = formatter.format(parseInt(bnsData?.renewalHeight ?? '0', 10));
-  const registeredAtBlockNumber = parseInt(bnsData?.registeredAt ?? '0', 10);
-  const hiroBlockUrl = useGetHiroExplorerUrl({ type: 'block', value: registeredAtBlockNumber });
+  const { renewalHeight, registeredAtBlockNumber } = bnsData ?? {};
+  const hiroBlockUrl = useGetHiroExplorerUrl({ type: 'block', value: registeredAtBlockNumber ?? 0 });
 
   return (
     <Collectible name={asset.name} details={asset}>
