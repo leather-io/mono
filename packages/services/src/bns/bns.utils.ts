@@ -26,6 +26,8 @@ export function mapBnsNameFromV2ApiName(bnsV2ApiName: BnsV2ApiName): BnsName {
     name: bnsV2ApiName.name_string,
     namespace: bnsV2ApiName.namespace_string,
     fullName: bnsV2ApiName.full_name,
+    renewalHeight: bnsV2ApiName.renewal_height,
+    registeredAt: bnsV2ApiName.registered_at,
   };
 }
 
@@ -35,6 +37,8 @@ export function mapBnsNameFromV2ApiAddressName(bnsV2ApiAddressName: BnsV2ApiAddr
     name: bnsV2ApiAddressName.name_string,
     namespace: bnsV2ApiAddressName.namespace_string,
     fullName: bnsV2ApiAddressName.full_name,
+    renewalHeight: bnsV2ApiAddressName.renewal_height,
+    registeredAt: bnsV2ApiAddressName.registered_at,
   };
 }
 
@@ -44,6 +48,8 @@ export function buildBnsName(owner: string, name: string, namespace: string): Bn
     name,
     namespace,
     fullName: `${name}.${namespace}`,
+    renewalHeight: '',
+    registeredAt: '',
   };
 }
 

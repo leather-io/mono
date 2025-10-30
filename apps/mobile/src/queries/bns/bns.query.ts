@@ -15,6 +15,20 @@ export function useAccountBnsNames(fingerprint: string, accountIndex: number) {
   return toFetchState(useGetAccountBnsNamesQuery({ account }));
 }
 
+export function useGetBnsName(fullName?: string) {
+  return useQuery({
+    queryKey: ['bns-service-get-bns-name', fullName],
+    enabled: !!fullName,
+    queryFn: ({ signal }: QueryFunctionContext) => getBnsService().getBnsName(fullName!, signal),
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    retryOnMount: false,
+    staleTime: hoursInMs(1),
+    gcTime: hoursInMs(1),
+  });
+}
+
 function useGetAccountPrimaryBnsProfileQuery(request: AccountRequest) {
   return useQuery({
     queryKey: ['bns-service-get-account-primary-bns-profile', request.account.stacks],

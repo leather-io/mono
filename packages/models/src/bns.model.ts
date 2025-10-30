@@ -10,6 +10,8 @@ export interface BnsName {
   name: string;
   namespace: string;
   fullName: string;
+  renewalHeight: string;
+  registeredAt: string;
 }
 
 export interface BnsProfile {

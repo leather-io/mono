@@ -1,14 +1,11 @@
 import { TokenDetailsProps } from '@/features/token/types';
 
 import { Sip9Asset } from '@leather.io/models';
-import { BnsImage, Sip9 as Sip9Component } from '@leather.io/ui/native';
+import { BnsImage, Sip9 as Sip9Component, isBns } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { FallbackImage } from '../components/fallback';
 
-function isBns(name: string): boolean {
-  return name === 'BNS: Bitcoin Name System' || name === 'BNS: Bitcoin Name System (V2)';
-}
 interface Sip9Props {
   item: Sip9Asset;
   height: number;
