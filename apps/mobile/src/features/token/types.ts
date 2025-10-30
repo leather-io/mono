@@ -8,7 +8,6 @@ import {
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 export interface TokenDetailsProps {
-  assetProtocol: CryptoAssetProtocol;
   assetId: SerializedCryptoAssetId;
 }
 
@@ -16,14 +15,23 @@ export interface OnPressTokenDetails {
   onPress?: (tokenDetails: TokenDetailsProps) => void;
 }
 
-export type SupportedAssetProtocol =
-  | 'nativeBtc'
-  | 'nativeStx'
-  | 'sip10'
-  | 'rune'
-  | 'sip9'
-  | 'inscription'
-  | 'stamp';
+const supportedAssetProtocols = [
+  'nativeBtc',
+  'nativeStx',
+  'sip10',
+  'rune',
+  'sip9',
+  'inscription',
+  'stamp',
+] as const;
+
+export type SupportedAssetProtocol = (typeof supportedAssetProtocols)[number];
+
+export function isSupportedAssetProtocol(
+  value: CryptoAssetProtocol
+): value is SupportedAssetProtocol {
+  return (supportedAssetProtocols as readonly string[]).includes(value);
+}
 
 export type TokenBalance =
   | AccountQuotedBtcBalance

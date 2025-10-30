@@ -3,8 +3,8 @@ import {
   CryptoAssetId,
   CryptoAssetProtocol,
   CryptoAssetProtocols,
-  isSip9Asset,
   Sip9Asset,
+  isSip9Asset,
 } from '@leather.io/models';
 
 import { assertUnreachable } from '../index';
@@ -12,8 +12,12 @@ import { assertUnreachable } from '../index';
 export function matchesAssetId(asset: CryptoAsset, assetId: CryptoAssetId) {
   const protocol = getAssetId(asset).protocol;
   const id = getAssetId(asset).id;
-  if(isSip9Asset(asset)) {
-    return protocol === assetId.protocol && assetId.id === asset.assetId && assetId.tokenId === asset.tokenId;
+  if (isSip9Asset(asset)) {
+    return (
+      protocol === assetId.protocol &&
+      assetId.id === asset.assetId &&
+      assetId.tokenId === asset.tokenId
+    );
   }
   return protocol === assetId.protocol && id === assetId.id;
 }

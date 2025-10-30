@@ -19,7 +19,7 @@ export function Sip9({ item, height, onPress }: Sip9Props) {
     return <FallbackImage />;
   const collectionName = item?.collection?.name ?? '';
   const onPressHandler = onPress
-    ? () => onPress({ assetId: serializeAssetId(getAssetId(item)), assetProtocol: 'sip9' })
+    ? () => onPress({ assetId: serializeAssetId(getAssetId(item)) })
     : undefined;
 
   if (isBns(collectionName)) {

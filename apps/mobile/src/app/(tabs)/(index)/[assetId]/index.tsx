@@ -5,20 +5,19 @@ import { StampDetails } from '@/features/token/bitcoin/stamp-details';
 import { Sip9TokenDetails } from '@/features/token/stacks/sip9-details';
 import { Sip10TokenDetails } from '@/features/token/stacks/sip10-token-details';
 import { StacksTokenDetails } from '@/features/token/stacks/stacks-token-details';
-import { SupportedAssetProtocol } from '@/features/token/types';
+import { isSupportedAssetProtocol } from '@/features/token/types';
 import { useSettings } from '@/store/settings/settings';
 import { useLocalSearchParams } from 'expo-router';
 
 import { CryptoAssetProtocols } from '@leather.io/models';
-import { SerializedCryptoAssetId, assertExistence, assertUnreachable } from '@leather.io/utils';
+import { SerializedCryptoAssetId, assertExistence, deserializeAssetId } from '@leather.io/utils';
 
 export default function AccountTokenScreen() {
-  const { assetId, assetProtocol } = useLocalSearchParams<{
+  const { assetId } = useLocalSearchParams<{
     assetId: SerializedCryptoAssetId;
-    assetProtocol: SupportedAssetProtocol;
   }>();
   const { currentAccount } = useSettings();
-
+  const { protocol: assetProtocol } = deserializeAssetId(assetId);
   assertExistence(currentAccount, 'Current account is required for AccountTokenScreen');
 
   switch (assetProtocol) {
@@ -36,8 +35,10 @@ export default function AccountTokenScreen() {
       return <InscriptionDetails account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.stamp:
       return <StampDetails account={currentAccount} assetId={assetId} />;
-
     default:
-      assertUnreachable(assetProtocol);
+      if (!isSupportedAssetProtocol(assetProtocol)) {
+        throw new Error(`Unsupported asset protocol: ${assetProtocol}`);
+      }
+      return null;
   }
 }

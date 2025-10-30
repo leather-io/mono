@@ -39,7 +39,6 @@ export function AssetsList({ sip10Data, runesData, header, onPressToken }: Asset
             ? () =>
                 onPressToken?.({
                   assetId: serializeAssetId(getAssetId(item.asset)),
-                  assetProtocol: item.asset.protocol,
                 })
             : undefined,
         })

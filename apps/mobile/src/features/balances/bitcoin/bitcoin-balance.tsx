@@ -4,7 +4,7 @@ import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/core/macro';
 
 import { btcAsset } from '@leather.io/constants';
-import { AccountId, CryptoAssetProtocols } from '@leather.io/models';
+import { AccountId } from '@leather.io/models';
 import { BtcAvatarIcon } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
@@ -34,7 +34,6 @@ export function BitcoinBalanceByAccount({
         onPress
           ? () =>
               onPress?.({
-                assetProtocol: CryptoAssetProtocols.nativeBtc,
                 assetId: serializeAssetId(getAssetId(btcAsset)),
               })
           : undefined
