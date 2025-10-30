@@ -3,8 +3,8 @@ import {
   CryptoAssetId,
   CryptoAssetProtocol,
   CryptoAssetProtocols,
-  Sip9Asset,
   isSip9Asset,
+  Sip9Asset,
 } from '@leather.io/models';
 
 import { assertUnreachable } from '../index';
@@ -12,11 +12,9 @@ import { assertUnreachable } from '../index';
 export function matchesAssetId(asset: CryptoAsset, assetId: CryptoAssetId) {
   const protocol = getAssetId(asset).protocol;
   const id = getAssetId(asset).id;
-  if (protocol === CryptoAssetProtocols.sip9 && isSip9Asset(asset)) {
-    const { assetId, tokenId } = deserializeSip9AssetId(id);
-    return assetId === asset.assetId && tokenId === asset.tokenId;
+  if(isSip9Asset(asset)) {
+    return protocol === assetId.protocol && assetId.id === asset.assetId && assetId.tokenId === asset.tokenId;
   }
-
   return protocol === assetId.protocol && id === assetId.id;
 }
 
@@ -88,17 +86,6 @@ export function createSip9AssetId(asset: Sip9Asset): CryptoAssetId {
     id: `${asset.assetId}|${asset.tokenId}`,
   };
 }
-interface Sip9AssetId {
-  assetId: string;
-  tokenId: number;
-}
-export function deserializeSip9AssetId(sip9AssetId: string): Sip9AssetId {
-  const [assetId, tokenIdString] = sip9AssetId.split('|');
-  return {
-    assetId,
-    tokenId: parseInt(tokenIdString, 10),
-  };
-}
 
 export type SerializedCryptoAssetId = `${string}|${string}`;
 
@@ -107,12 +94,14 @@ export function serializeAssetId(assetId: CryptoAssetId): SerializedCryptoAssetI
 }
 
 export function deserializeAssetId(serializedAssetId: SerializedCryptoAssetId): CryptoAssetId {
-  const [protocol, id] = serializedAssetId.split('|');
+  const [protocol, id, tokenId] = serializedAssetId.split('|');
   if (!Object.keys(CryptoAssetProtocols).includes(protocol)) {
     throw new Error(`Unrecognized Asset Protocol: ${protocol}`);
   }
+
   return {
     protocol: protocol as CryptoAssetProtocol,
     id,
+    tokenId: tokenId ? parseInt(tokenId, 10) : undefined,
   };
 }
