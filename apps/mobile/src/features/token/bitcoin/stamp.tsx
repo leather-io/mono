@@ -4,7 +4,7 @@ import { StampAsset } from '@leather.io/models';
 import { CollectibleImage } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
-import { FallbackImage } from './fallback';
+import { FallbackImage } from '../components/fallback';
 
 interface StampProps {
   item: StampAsset;

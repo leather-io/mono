@@ -1,5 +1,5 @@
 import { ErrorFallbackTab } from '@/components/error/error';
-import { Inscription } from '@/features/collectibles/components/inscription';
+import { Inscription } from '@/features/token/components/inscription';
 import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-collectibles.query';
 
 import { AccountId, InscriptionAsset } from '@leather.io/models';
