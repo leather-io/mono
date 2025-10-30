@@ -1,7 +1,6 @@
 import { t } from '@lingui/core/macro';
 
 import { Box } from '@leather.io/ui/native';
-import { match } from '@leather.io/utils';
 
 import { ListTab, TAB_WIDTH } from '../constants';
 import { TabButton } from './tab-button';
@@ -12,11 +11,10 @@ interface AssetTabsProps {
 }
 
 export function AssetTabs({ listTab, setListTab }: AssetTabsProps) {
-  const listTabMatcher = match<ListTab>();
-  const tabIndex = listTabMatcher(listTab, {
+  const tabIndex = {
     tokens: 0,
     collectibles: 1,
-  });
+  }[listTab];
   return (
     <Box>
       <Box flexDirection="row">

@@ -25,11 +25,7 @@ import {
   AnimalRabbitIcon,
   AnimalSnailIcon,
 } from '@leather.io/ui/native';
-import {
-  convertToMoneyTypeWithDefaultOfZero,
-  createMoneyFromDecimal,
-  match,
-} from '@leather.io/utils';
+import { convertToMoneyTypeWithDefaultOfZero, createMoneyFromDecimal } from '@leather.io/utils';
 
 export type ApproverState = 'start' | 'submitting' | 'submitted';
 
@@ -65,15 +61,14 @@ export function getBitcoinFeeData(feeType: FeeTypes) {
 }
 
 export function getStacksFeeData(feeType: FeeTypes) {
-  const feeMatcher = match<FeeTypes>();
   const { icon, title } = getBaseFeeData(feeType);
-  const time = feeMatcher(feeType, {
+  const time = {
     [FeeTypes.Low]: t`1–2 minutes`,
     [FeeTypes.Middle]: t`20–30 seconds`,
     [FeeTypes.High]: t`10 seconds`,
     [FeeTypes.Custom]: t`Custom`,
     [FeeTypes.Unknown]: t`Unknown`,
-  });
+  }[feeType];
   return {
     icon,
     title,

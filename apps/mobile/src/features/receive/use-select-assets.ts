@@ -4,7 +4,7 @@ import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks
 
 import { AccountId } from '@leather.io/models';
 
-import { ReceiveType } from './receive-flow-provider';
+import { type ReceiveType } from './utils/get-receive-type';
 
 interface UseSelectAssetProps {
   currentAccount: AccountId;

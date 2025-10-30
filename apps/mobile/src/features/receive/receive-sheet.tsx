@@ -10,8 +10,8 @@ import { SheetInstance, useHaptics } from '@leather.io/ui/native';
 import { assertExistence } from '@leather.io/utils';
 
 import { Receive } from './receive';
-import { ReceiveType } from './receive-flow-provider';
 import { useSelectAssets } from './use-select-assets';
+import { type ReceiveType } from './utils/get-receive-type';
 
 export interface ReceiveSheetInstance {
   present(receiveType: ReceiveType): void;

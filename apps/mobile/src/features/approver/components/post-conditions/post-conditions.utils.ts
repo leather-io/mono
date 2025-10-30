@@ -6,12 +6,10 @@ import {
   addressToString,
 } from '@stacks/transactions';
 
-import { match, truncateMiddle } from '@leather.io/utils';
-
-const conditionCodeMatcher = match<FungibleConditionCode | NonFungibleConditionCode>();
+import { truncateMiddle } from '@leather.io/utils';
 
 function getUserPcTitle(conditionCode: FungibleConditionCode | NonFungibleConditionCode) {
-  return conditionCodeMatcher(conditionCode, {
+  return {
     [FungibleConditionCode.Equal]: t`You will transfer exactly`,
     [FungibleConditionCode.Greater]: t`You will transfer more than`,
     [FungibleConditionCode.GreaterEqual]: t`You will transfer equal to or greater than`,
@@ -19,10 +17,10 @@ function getUserPcTitle(conditionCode: FungibleConditionCode | NonFungibleCondit
     [FungibleConditionCode.LessEqual]: t`You will transfer less than or equal to`,
     [NonFungibleConditionCode.Sends]: t`You will transfer`,
     [NonFungibleConditionCode.DoesNotSend]: t`You will keep`,
-  });
+  }[conditionCode];
 }
 function getContractPcTitle(conditionCode: FungibleConditionCode | NonFungibleConditionCode) {
-  return conditionCodeMatcher(conditionCode, {
+  return {
     [FungibleConditionCode.Equal]: t`The contract will transfer exactly`,
     [FungibleConditionCode.Greater]: t`The contract will transfer more than`,
     [FungibleConditionCode.GreaterEqual]: t`The contract will transfer equal to or greater than`,
@@ -30,7 +28,7 @@ function getContractPcTitle(conditionCode: FungibleConditionCode | NonFungibleCo
     [FungibleConditionCode.LessEqual]: t`The contract will transfer less than or equal to`,
     [NonFungibleConditionCode.Sends]: t`The contract will transfer`,
     [NonFungibleConditionCode.DoesNotSend]: t`The contract will keep`,
-  });
+  }[conditionCode];
 }
 
 function getAddressPcTitle(
@@ -38,7 +36,7 @@ function getAddressPcTitle(
   address: string
 ) {
   const shortenedPcAddress = truncateMiddle(address, 4);
-  return conditionCodeMatcher(conditionCode, {
+  return {
     [FungibleConditionCode.Equal]: t`Another address ${shortenedPcAddress} will transfer exactly`,
     [FungibleConditionCode.Greater]: t`Another address ${shortenedPcAddress} will transfer more than`,
     [FungibleConditionCode.GreaterEqual]: t`Another address ${shortenedPcAddress} will transfer equal to or greater than`,
@@ -46,7 +44,7 @@ function getAddressPcTitle(
     [FungibleConditionCode.LessEqual]: t`Another address ${shortenedPcAddress} will transfer less than or equal to`,
     [NonFungibleConditionCode.Sends]: t`Another address ${shortenedPcAddress} will transfer`,
     [NonFungibleConditionCode.DoesNotSend]: t`Another address ${shortenedPcAddress} will keep`,
-  });
+  }[conditionCode];
 }
 
 interface FormatPostConditionMessageArgs {
