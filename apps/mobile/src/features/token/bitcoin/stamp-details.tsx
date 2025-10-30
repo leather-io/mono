@@ -1,5 +1,5 @@
 import { ErrorFallbackTab } from '@/components/error/error';
-import { Stamp } from '@/features/collectibles/components/stamp';
+import { Stamp } from '@/features/token/bitcoin/stamp';
 import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-collectibles.query';
 import { t } from '@lingui/core/macro';
 

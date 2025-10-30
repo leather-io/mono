@@ -3,9 +3,9 @@ import { TokenDetailsProps } from '@/features/token/types';
 import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
+import { Stamp } from './bitcoin/stamp';
 import { Inscription } from './components/inscription';
-import { Sip9 } from './components/sip9';
-import { Stamp } from './components/stamp';
+import { Sip9 } from './stacks/sip9';
 
 interface RenderCollectibleProps {
   item: NonFungibleCryptoAsset;

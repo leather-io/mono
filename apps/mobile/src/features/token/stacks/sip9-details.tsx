@@ -1,5 +1,5 @@
 import { ErrorFallbackTab } from '@/components/error/error';
-import { Sip9 } from '@/features/collectibles/components/sip9';
+import { Sip9 } from '@/features/token/stacks/sip9';
 import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-collectibles.query';
 
 import { AccountId, isSip9Asset } from '@leather.io/models';
