@@ -1,18 +1,17 @@
-import { FungibleCryptoAsset } from '@leather.io/models';
-import { match } from '@leather.io/utils';
+import { FungibleCryptoAsset, FungibleCryptoAssetProtocol } from '@leather.io/models';
 
-import { ReceiveType } from '../receive-flow-provider';
+export type ReceiveType = 'stacks' | 'bitcoin' | 'native-segwit' | 'taproot' | 'all';
 
-const protocolMatch = match<FungibleCryptoAsset['protocol']>();
+const protocolToReceiveType = {
+  sip10: 'stacks',
+  rune: 'taproot',
+  brc20: 'taproot',
+  src20: 'taproot',
+  nativeBtc: 'bitcoin',
+  stx20: 'stacks',
+  nativeStx: 'stacks',
+} as const satisfies Record<FungibleCryptoAssetProtocol, ReceiveType>;
 
-export function getReceiveType(asset: FungibleCryptoAsset) {
-  return protocolMatch<ReceiveType>(asset?.protocol, {
-    sip10: 'stacks',
-    rune: 'taproot',
-    brc20: 'taproot',
-    src20: 'taproot',
-    nativeBtc: 'bitcoin',
-    stx20: 'stacks',
-    nativeStx: 'stacks',
-  });
+export function getReceiveType(asset: FungibleCryptoAsset): ReceiveType {
+  return protocolToReceiveType[asset?.protocol];
 }

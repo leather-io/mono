@@ -4,7 +4,7 @@ import { SelectedAsset } from '@/features/receive/screens/select-asset';
 
 import { AccountId } from '@leather.io/models';
 
-export type ReceiveType = 'stacks' | 'bitcoin' | 'native-segwit' | 'taproot' | 'all';
+import { type ReceiveType } from './utils/get-receive-type';
 
 interface ReceiveState {
   selectedAsset: SelectedAsset | null;

@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 import { BitcoinTx } from '@leather.io/models';
-import { match } from '@leather.io/utils';
 
 import { UtxoResponseItem } from '../../../types/utxo';
 import { getBitcoinRatelimiter } from '../bitcoin-rate-limiter';
@@ -75,12 +74,11 @@ function FeeEstimatesApi() {
     async getFeeEstimatesFromMempoolSpaceApi(
       network: 'main' | 'test3' | 'test4'
     ): Promise<FeeResult> {
-      const matchNetwork = match<'main' | 'test3' | 'test4'>();
-      const networkApi = matchNetwork(network, {
+      const networkApi = {
         main: 'https://mempool.space/api/v1/fees/recommended',
         test3: 'https://mempool.space/testnet/api/v1/fees/recommended',
         test4: 'https://mempool.space/testnet4/api/v1/fees/recommended',
-      });
+      }[network];
       const resp = await axios.get<FeeEstimateMempoolSpaceApiResponse>(networkApi);
       const { fastestFee, halfHourFee, hourFee } = resp.data;
       return {

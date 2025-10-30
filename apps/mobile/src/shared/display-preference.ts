@@ -5,7 +5,6 @@ import {
   AccountDisplayPreferenceInfo,
   CryptoAssetProtocol,
 } from '@leather.io/models';
-import { match } from '@leather.io/utils';
 
 enum AccountDisplayPreferenceType {
   NativeSegwit = 'native-segwit',
@@ -43,21 +42,19 @@ export function getAccountDisplayPreferencesKeyedByType(): Record<
   };
 }
 export function getChainDisplayLabel(
-  chainOrPreference: 'bitcoin' | 'stacks' | AccountDisplayPreference
+  chainPreference: 'bitcoin' | 'stacks' | AccountDisplayPreference
 ): string {
-  const matchChain = match<'bitcoin' | 'stacks' | AccountDisplayPreference>();
-  return matchChain(chainOrPreference, {
+  return {
     bitcoin: t`Layer 1 • Bitcoin`,
     taproot: t`Layer 1 • Bitcoin`,
     'native-segwit': t`Layer 1 • Bitcoin`,
     stacks: t`Layer 2 • Stacks`,
     bns: t`Layer 2 • Stacks`,
-  });
+  }[chainPreference];
 }
 
 export function getProtocolDisplayLabel(protocol: CryptoAssetProtocol): string {
-  const matchProtocol = match<CryptoAssetProtocol>();
-  return matchProtocol(protocol, {
+  return {
     sip9: t`SIP-009`,
     inscription: t`Inscription`,
     stamp: t`Stamp`,
@@ -68,5 +65,5 @@ export function getProtocolDisplayLabel(protocol: CryptoAssetProtocol): string {
     src20: t`SRC-20`,
     stx20: t`STX-20`,
     rune: t`Rune`,
-  });
+  }[protocol];
 }

@@ -34,12 +34,7 @@ import {
 } from '@leather.io/models';
 import { RpcParams, signPsbt } from '@leather.io/rpc';
 import { Approver, Box, SentIcon, SheetInstance, Text } from '@leather.io/ui/native';
-import {
-  baseCurrencyAmountInQuoteWithFallback,
-  createMoney,
-  match,
-  sumMoney,
-} from '@leather.io/utils';
+import { baseCurrencyAmountInQuoteWithFallback, createMoney, sumMoney } from '@leather.io/utils';
 
 import { ApproverButtons } from '../approver/components/approver-buttons';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
@@ -167,11 +162,13 @@ function BasePsbtSigner({
   // is, only append new inputs and outputs, leaving the existing ones
   // untouched.
   function onChangeFee(feeType: FeeTypes) {
-    const feeRate = match()(feeType, {
+    const feeRateMap: Partial<Record<FeeTypes, number>> = {
       [FeeTypes.Low]: feeRates.hourFee.toNumber(),
       [FeeTypes.Middle]: feeRates.halfHourFee.toNumber(),
       [FeeTypes.High]: feeRates.fastestFee.toNumber(),
-    });
+    };
+
+    const feeRate = feeRateMap[feeType] ?? feeRates.fastestFee.toNumber();
     const totalSendValue =
       psbtDetails.addressNativeSegwitTotal.amount.toNumber() +
       psbtDetails.addressTaprootTotal.amount.toNumber() -

@@ -1,13 +1,13 @@
 import { Balance } from '@/components/balance/balance';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AssetType } from '@/features/receive/get-assets';
-import { ReceiveType } from '@/features/receive/receive-flow-provider';
+import { type ReceiveType } from '@/features/receive/utils/get-receive-type';
 import { useCopyAddress } from '@/hooks/use-copy-address';
 import { t } from '@lingui/core/macro';
 
 import { Money } from '@leather.io/models';
 import { Box, Cell, HasChildren, Text } from '@leather.io/ui/native';
-import { match, truncateMiddle } from '@leather.io/utils';
+import { truncateMiddle } from '@leather.io/utils';
 
 import { TokenDetailsCard } from './token-details-card';
 
@@ -33,7 +33,6 @@ interface AddressListItemProps {
   quoteBalance?: Money;
 }
 
-const assetTypeMatch = match<AssetType>();
 export function AddressListItem({
   address,
   name,
@@ -46,11 +45,11 @@ export function AddressListItem({
   const onCopyAddress = useCopyAddress();
 
   function openReceiveSheet() {
-    const receiveType = assetTypeMatch<ReceiveType>(assetType, {
-      stacks: 'stacks',
-      taproot: 'taproot',
-      native_segwit: 'native-segwit',
-    });
+    const receiveType = {
+      [AssetType.Stacks]: 'stacks',
+      [AssetType.Taproot]: 'taproot',
+      [AssetType.NativeSegwit]: 'native-segwit',
+    }[assetType] as ReceiveType;
 
     receiveSheetRef.current?.present(receiveType);
   }

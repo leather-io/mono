@@ -39,27 +39,27 @@ msgstr "{themePreference, select, light {Light} dark {Dark} system {System} othe
 msgid "<0>{assetName}</0> has no available receiving options right now."
 msgstr "<0>{assetName}</0> has no available receiving options right now."
 
-#: src/features/approver/utils.tsx:58
+#: src/features/approver/utils.tsx:54
 msgid "~1 hour+"
 msgstr "~1 hour+"
 
-#: src/features/approver/utils.tsx:60
+#: src/features/approver/utils.tsx:56
 msgid "~10 – 20min"
 msgstr "~10 – 20min"
 
-#: src/features/approver/utils.tsx:59
+#: src/features/approver/utils.tsx:55
 msgid "~30 min"
 msgstr "~30 min"
 
-#: src/features/approver/utils.tsx:71
+#: src/features/approver/utils.tsx:66
 msgid "1–2 minutes"
 msgstr "1–2 minutes"
 
-#: src/features/approver/utils.tsx:73
+#: src/features/approver/utils.tsx:68
 msgid "10 seconds"
 msgstr "10 seconds"
 
-#: src/features/approver/utils.tsx:72
+#: src/features/approver/utils.tsx:67
 msgid "20–30 seconds"
 msgstr "20–30 seconds"
 
@@ -254,31 +254,31 @@ msgstr "Analytics and app authentication"
 msgid "Analytics updated"
 msgstr "Analytics updated"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:48
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:46
 msgid "Another address {shortenedPcAddress} will keep"
 msgstr "Another address {shortenedPcAddress} will keep"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:47
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:45
 msgid "Another address {shortenedPcAddress} will transfer"
 msgstr "Another address {shortenedPcAddress} will transfer"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:44
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:42
 msgid "Another address {shortenedPcAddress} will transfer equal to or greater than"
 msgstr "Another address {shortenedPcAddress} will transfer equal to or greater than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:42
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:40
 msgid "Another address {shortenedPcAddress} will transfer exactly"
 msgstr "Another address {shortenedPcAddress} will transfer exactly"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:45
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:43
 msgid "Another address {shortenedPcAddress} will transfer less than"
 msgstr "Another address {shortenedPcAddress} will transfer less than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:46
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:44
 msgid "Another address {shortenedPcAddress} will transfer less than or equal to"
 msgstr "Another address {shortenedPcAddress} will transfer less than or equal to"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:43
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:41
 msgid "Another address {shortenedPcAddress} will transfer more than"
 msgstr "Another address {shortenedPcAddress} will transfer more than"
 
@@ -352,7 +352,7 @@ msgstr "BIP39 passphrase"
 #: src/features/send/forms/btc/btc-form.tsx:64
 #: src/features/swap/swap.utils.ts:7
 #: src/features/token/bitcoin/bitcoin-token-details.tsx:17
-#: src/shared/display-preference.ts:64
+#: src/shared/display-preference.ts:61
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -369,11 +369,11 @@ msgstr "Bitcoin unit updated"
 msgid "Bitflow"
 msgstr "Bitflow"
 
-#: src/shared/display-preference.ts:36
+#: src/shared/display-preference.ts:35
 msgid "BNS name"
 msgstr "BNS name"
 
-#: src/shared/display-preference.ts:67
+#: src/shared/display-preference.ts:64
 msgid "BRC-20"
 msgstr "BRC-20"
 
@@ -554,9 +554,9 @@ msgstr "Creation date"
 msgid "Current app version format is invalid"
 msgstr "Current app version format is invalid"
 
-#: src/features/approver/utils.tsx:49
-#: src/features/approver/utils.tsx:61
-#: src/features/approver/utils.tsx:74
+#: src/features/approver/utils.tsx:45
+#: src/features/approver/utils.tsx:57
+#: src/features/approver/utils.tsx:69
 msgid "Custom"
 msgstr "Custom"
 
@@ -726,8 +726,8 @@ msgstr "Export xPub"
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:225
-#: src/features/psbt-signer/psbt-signer.tsx:233
+#: src/features/psbt-signer/psbt-signer.tsx:222
+#: src/features/psbt-signer/psbt-signer.tsx:230
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:94
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
@@ -748,7 +748,7 @@ msgstr "Failed to change nonce"
 msgid "Failed to load latest nonce"
 msgstr "Failed to load latest nonce"
 
-#: src/features/approver/utils.tsx:48
+#: src/features/approver/utils.tsx:44
 msgid "Fast"
 msgstr "Fast"
 
@@ -757,7 +757,7 @@ msgid "FastPool"
 msgstr "FastPool"
 
 #: src/features/approver/stx/hooks.ts:27
-#: src/features/psbt-signer/psbt-signer.tsx:192
+#: src/features/psbt-signer/psbt-signer.tsx:189
 msgid "Fee updated"
 msgstr "Fee updated"
 
@@ -833,7 +833,7 @@ msgid "Hide account"
 msgstr "Hide account"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:158
-#: src/features/psbt-signer/psbt-signer.tsx:275
+#: src/features/psbt-signer/psbt-signer.tsx:272
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -889,7 +889,7 @@ msgstr "Input"
 msgid "Inputs and outputs"
 msgstr "Inputs and outputs"
 
-#: src/shared/display-preference.ts:62
+#: src/shared/display-preference.ts:59
 msgid "Inscription"
 msgstr "Inscription"
 
@@ -931,9 +931,9 @@ msgstr "Layer 1"
 msgid "Layer 1 · Bitcoin"
 msgstr "Layer 1 · Bitcoin"
 
+#: src/shared/display-preference.ts:48
+#: src/shared/display-preference.ts:49
 #: src/shared/display-preference.ts:50
-#: src/shared/display-preference.ts:51
-#: src/shared/display-preference.ts:52
 msgid "Layer 1 • Bitcoin"
 msgstr "Layer 1 • Bitcoin"
 
@@ -945,8 +945,8 @@ msgstr "Layer 2"
 msgid "Layer 2 · Stacks"
 msgstr "Layer 2 · Stacks"
 
-#: src/shared/display-preference.ts:53
-#: src/shared/display-preference.ts:54
+#: src/shared/display-preference.ts:51
+#: src/shared/display-preference.ts:52
 msgid "Layer 2 • Stacks"
 msgstr "Layer 2 • Stacks"
 
@@ -1067,7 +1067,7 @@ msgstr "Name"
 msgid "Native Segwit"
 msgstr "Native Segwit"
 
-#: src/shared/display-preference.ts:26
+#: src/shared/display-preference.ts:25
 msgid "Native Segwit address"
 msgstr "Native Segwit address"
 
@@ -1077,7 +1077,7 @@ msgstr "Native Segwit address"
 msgid "Networks"
 msgstr "Networks"
 
-#: src/components/home/components/asset-tabs.tsx:32
+#: src/components/home/components/asset-tabs.tsx:30
 msgid "NFTs"
 msgstr "NFTs"
 
@@ -1279,7 +1279,7 @@ msgstr "Reveal account"
 msgid "Review"
 msgstr "Review"
 
-#: src/shared/display-preference.ts:70
+#: src/shared/display-preference.ts:67
 msgid "Rune"
 msgstr "Rune"
 
@@ -1344,7 +1344,7 @@ msgstr "Send"
 msgid "Send Failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:244
+#: src/features/psbt-signer/psbt-signer.tsx:241
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:134
 msgid "Send token"
 msgstr "Send token"
@@ -1380,7 +1380,7 @@ msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:157
-#: src/features/psbt-signer/psbt-signer.tsx:274
+#: src/features/psbt-signer/psbt-signer.tsx:271
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -1397,11 +1397,11 @@ msgstr "Sign Message"
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
-#: src/shared/display-preference.ts:61
+#: src/shared/display-preference.ts:58
 msgid "SIP-009"
 msgstr "SIP-009"
 
-#: src/shared/display-preference.ts:66
+#: src/shared/display-preference.ts:63
 msgid "SIP-010"
 msgstr "SIP-010"
 
@@ -1409,7 +1409,7 @@ msgstr "SIP-010"
 msgid "Skip for now"
 msgstr "Skip for now"
 
-#: src/features/approver/utils.tsx:46
+#: src/features/approver/utils.tsx:42
 msgid "Slow"
 msgstr "Slow"
 
@@ -1422,7 +1422,7 @@ msgstr "Some balances couldn’t load."
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
-#: src/shared/display-preference.ts:68
+#: src/shared/display-preference.ts:65
 msgid "SRC-20"
 msgstr "SRC-20"
 
@@ -1435,24 +1435,24 @@ msgstr "StackingDAO"
 #: src/features/send/forms/stx/stx-form.tsx:58
 #: src/features/swap/swap.utils.ts:6
 #: src/features/token/stacks/stacks-token-details.tsx:15
-#: src/shared/display-preference.ts:65
+#: src/shared/display-preference.ts:62
 msgid "Stacks"
 msgstr "Stacks"
 
-#: src/shared/display-preference.ts:41
+#: src/shared/display-preference.ts:40
 msgid "Stacks address"
 msgstr "Stacks address"
 
 #: src/features/token/bitcoin/stamp-details.tsx:30
-#: src/shared/display-preference.ts:63
+#: src/shared/display-preference.ts:60
 msgid "Stamp"
 msgstr "Stamp"
 
-#: src/features/approver/utils.tsx:47
+#: src/features/approver/utils.tsx:43
 msgid "Standard"
 msgstr "Standard"
 
-#: src/shared/display-preference.ts:69
+#: src/shared/display-preference.ts:66
 msgid "STX-20"
 msgstr "STX-20"
 
@@ -1494,7 +1494,7 @@ msgstr "Tap to view Secret Key"
 msgid "Taproot"
 msgstr "Taproot"
 
-#: src/shared/display-preference.ts:31
+#: src/shared/display-preference.ts:30
 msgid "Taproot address"
 msgstr "Taproot address"
 
@@ -1502,31 +1502,31 @@ msgstr "Taproot address"
 msgid "The address you entered isn’t valid. Verify and try again"
 msgstr "The address you entered isn’t valid. Verify and try again"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:32
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:30
 msgid "The contract will keep"
 msgstr "The contract will keep"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:31
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:29
 msgid "The contract will transfer"
 msgstr "The contract will transfer"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:28
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:26
 msgid "The contract will transfer equal to or greater than"
 msgstr "The contract will transfer equal to or greater than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:26
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:24
 msgid "The contract will transfer exactly"
 msgstr "The contract will transfer exactly"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:29
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:27
 msgid "The contract will transfer less than"
 msgstr "The contract will transfer less than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:30
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:28
 msgid "The contract will transfer less than or equal to"
 msgstr "The contract will transfer less than or equal to"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:27
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:25
 msgid "The contract will transfer more than"
 msgstr "The contract will transfer more than"
 
@@ -1585,7 +1585,7 @@ msgstr "tiny amounts that cost more to send than they’re worth."
 
 #: src/features/approver/components/sip10-recipient.tsx:43
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:132
-#: src/features/psbt-signer/psbt-signer.tsx:255
+#: src/features/psbt-signer/psbt-signer.tsx:252
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:145
 msgid "To address"
 msgstr "To address"
@@ -1606,7 +1606,7 @@ msgstr "Token Details"
 msgid "Token Transfer"
 msgstr "Token Transfer"
 
-#: src/components/home/components/asset-tabs.tsx:25
+#: src/components/home/components/asset-tabs.tsx:23
 msgid "Tokens"
 msgstr "Tokens"
 
@@ -1619,7 +1619,7 @@ msgstr "Too many decimals (max {maxDecimals})"
 msgid "Total balance"
 msgstr "Total balance"
 
-#: src/features/psbt-signer/psbt-signer.tsx:287
+#: src/features/psbt-signer/psbt-signer.tsx:284
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:168
 msgid "Total spend"
 msgstr "Total spend"
@@ -1668,9 +1668,9 @@ msgstr "Uneconomical balance:"
 
 #: src/features/activity/utils/format-activity.ts:88
 #: src/features/activity/utils/format-activity.ts:94
-#: src/features/approver/utils.tsx:50
-#: src/features/approver/utils.tsx:62
-#: src/features/approver/utils.tsx:75
+#: src/features/approver/utils.tsx:46
+#: src/features/approver/utils.tsx:58
+#: src/features/approver/utils.tsx:70
 msgid "Unknown"
 msgstr "Unknown"
 
@@ -1775,36 +1775,36 @@ msgstr "You will find the apps you are connected to here"
 msgid "You will find the apps you recently viewed here"
 msgstr "You will find the apps you recently viewed here"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:21
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:19
 msgid "You will keep"
 msgstr "You will keep"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:20
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:18
 msgid "You will transfer"
 msgstr "You will transfer"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:17
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:15
 msgid "You will transfer equal to or greater than"
 msgstr "You will transfer equal to or greater than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:15
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:13
 msgid "You will transfer exactly"
 msgstr "You will transfer exactly"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:18
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:16
 msgid "You will transfer less than"
 msgstr "You will transfer less than"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:19
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:17
 msgid "You will transfer less than or equal to"
 msgstr "You will transfer less than or equal to"
 
-#: src/features/approver/components/post-conditions/post-conditions.utils.ts:16
+#: src/features/approver/components/post-conditions/post-conditions.utils.ts:14
 msgid "You will transfer more than"
 msgstr "You will transfer more than"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:123
-#: src/features/psbt-signer/psbt-signer.tsx:249
+#: src/features/psbt-signer/psbt-signer.tsx:246
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:139
 msgid "You’ll send"
 msgstr "You’ll send"

@@ -224,12 +224,6 @@ export function uniqueArray<T>(arr: T[]) {
   return Array.from(new Set(arr));
 }
 
-export function match<Variant extends string | number>() {
-  return function matchVariant<T>(variant: Variant, match: Record<Variant, T>) {
-    return match[variant];
-  };
-}
-
 export function removeTrailingNullCharacters(s: string) {
   return s.replace(/\0*$/g, '');
 }

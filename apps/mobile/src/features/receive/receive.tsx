@@ -1,5 +1,6 @@
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
-import { ReceiveFlowProvider, ReceiveType } from '@/features/receive/receive-flow-provider';
+import { ReceiveFlowProvider } from '@/features/receive/receive-flow-provider';
+import { type ReceiveType } from '@/features/receive/utils/get-receive-type';
 
 import { AccountId } from '@leather.io/models';
 
