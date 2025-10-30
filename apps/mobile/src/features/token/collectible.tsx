@@ -3,19 +3,14 @@ import { useWindowDimensions } from 'react-native';
 import { Screen } from '@/components/screen/screen';
 import { HeaderSubtitle } from '@/components/screen/screen-header/components/header-title';
 import { NetworkBadge } from '@/features/settings/network-badge';
-import { t } from '@lingui/core/macro';
 
-import { NonFungibleCryptoAsset, Sip9Collection } from '@leather.io/models';
+import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
-
-import { TokenDetailsCard } from './components/token-details-card';
-import { renderCollectibleDetailsRecursively } from './utils/render-collectible-details';
 
 interface CollectibleProps {
   children: React.ReactNode;
   name?: string;
   description?: string;
-  collection?: Sip9Collection;
   details?: NonFungibleCryptoAsset;
 }
 
@@ -28,13 +23,8 @@ export function useCollectibleHeight() {
   return calculatedHeight;
 }
 
-export function Collectible({
-  name,
-  description,
-  collection,
-  details,
-  children,
-}: CollectibleProps) {
+export function Collectible({ name, details, children }: CollectibleProps) {
+  const collection = details && 'collection' in details ? details.collection : undefined;
   return (
     <Screen>
       <Screen.Header
@@ -45,7 +35,7 @@ export function Collectible({
               color="ink.text-primary"
               numberOfLines={1}
               ellipsizeMode="tail"
-              style={{ maxWidth: '100%' }}
+              style={{ maxWidth: '80%' }}
             >
               {name}
             </Text>
@@ -57,15 +47,7 @@ export function Collectible({
       />
       <Screen.ScrollView>
         <Box gap="1" backgroundColor="ink.background-secondary">
-          <Box p="5" backgroundColor="ink.background-primary">
-            {children}
-          </Box>
-          {description && (
-            <TokenDetailsCard title={t`Description`}>
-              <Text variant="caption01">{description}</Text>
-            </TokenDetailsCard>
-          )}
-          {details && renderCollectibleDetailsRecursively(details)}
+          {children}
         </Box>
       </Screen.ScrollView>
     </Screen>

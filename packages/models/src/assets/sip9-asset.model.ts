@@ -1,3 +1,4 @@
+import { Money } from '../money.model';
 import { BaseNonFungibleCryptoAsset } from './asset.model';
 
 export const sip9ContentTypes = [
@@ -70,4 +71,8 @@ export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly content: Sip9AssetContent;
   readonly attributes?: Sip9Attribute[];
   readonly collection?: Sip9Collection;
+  readonly creator?: string;
+  readonly floorPrice?: Money;
+  readonly latestSale?: Money;
+  readonly rarityRank?: number;
 }
