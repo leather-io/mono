@@ -13,6 +13,24 @@ export class FungibleAssetService {
     private readonly sip10AssetService: Sip10AssetService
   ) {}
 
+  public async getVisibleAsset(
+    assetId: FungibleAssetId,
+    signal?: AbortSignal
+  ): Promise<FungibleCryptoAsset | null> {
+    switch (assetId.protocol) {
+      case 'nativeBtc':
+        return btcAsset;
+      case 'nativeStx':
+        return stxAsset;
+      case 'rune':
+        return await this.runeAssetService.getVisibleAsset(assetId.id, signal);
+      case 'sip10':
+        return await this.sip10AssetService.getVisibleAsset(assetId.id, signal);
+      default:
+        throw new Error(`Asset not found: ${assetId.protocol}`);
+    }
+  }
+
   public async getAsset(
     assetId: FungibleAssetId,
     signal?: AbortSignal
