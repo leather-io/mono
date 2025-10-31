@@ -368,6 +368,27 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.48.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.47.0...@leather.io/utils-v0.48.0) (2025-10-31)
+
+
+### Features
+
+* add bitcoin transaction fees service ([cce337c](https://github.com/leather-io/mono/commit/cce337cd13979983f368eda7793d98160ba7adb5))
+
+
+### Bug Fixes
+
+* **mobile:** bugfix token routing,update CryptoAssetId to account for SIP-9 ([e8080fc](https://github.com/leather-io/mono/commit/e8080fc5cc705a3245109c3c33b2a9394696007a))
+* **mobile:** create SIP-9 assetId as unique identifier needed ([87a9104](https://github.com/leather-io/mono/commit/87a91045ed67f0928758fd4a855e057c33061280))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.27.3
+    * @leather.io/models bumped to 0.46.0
+
 ## [0.47.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.46.4...@leather.io/utils-v0.47.0) (2025-10-16)
 
 

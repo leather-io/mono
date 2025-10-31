@@ -939,6 +939,25 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.35.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.34.1...@leather.io/bitcoin-v0.35.0) (2025-10-31)
+
+
+### Features
+
+* add regtest mempool api support to services ([d6d0d68](https://github.com/leather-io/mono/commit/d6d0d6830fe37119c524ec74b00df7c87aff0812))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.27.3
+    * @leather.io/crypto bumped to 1.12.2
+    * @leather.io/models bumped to 0.46.0
+    * @leather.io/utils bumped to 0.48.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.21
+
 ## [0.34.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.34.0...@leather.io/bitcoin-v0.34.1) (2025-10-17)
 
 

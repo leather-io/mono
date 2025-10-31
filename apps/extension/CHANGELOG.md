@@ -21,6 +21,39 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.77.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.76.1...@leather.io/extension-v6.77.0) (2025-10-31)
+
+
+### Features
+
+* connect inscription to ord.io and refactor tech debt ([16bc5d8](https://github.com/leather-io/mono/commit/16bc5d86713cd5aa4be87191fd91e6375e3a4ebb))
+* implement SIP-009 token details ([ab0e283](https://github.com/leather-io/mono/commit/ab0e2832c7626438501378247069d78c64207b52))
+* implement stamp token details ([7aad1ff](https://github.com/leather-io/mono/commit/7aad1ff49cebfa7f1be96c96cbc45e00c079d32a))
+* stacks transaction fees service ([eb921e0](https://github.com/leather-io/mono/commit/eb921e029d51e423847398a5ba15a7529a73638c))
+
+
+### Bug Fixes
+
+* use an iframe to correctly play audio ordinals ([aa405c4](https://github.com/leather-io/mono/commit/aa405c455a4a3902d0638126368549c90d1f7d15))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.4
+    * @leather.io/bitcoin bumped to 0.35.0
+    * @leather.io/constants bumped to 0.27.3
+    * @leather.io/crypto bumped to 1.12.2
+    * @leather.io/models bumped to 0.46.0
+    * @leather.io/provider bumped to 1.6.4
+    * @leather.io/query bumped to 2.44.0
+    * @leather.io/rpc bumped to 2.20.21
+    * @leather.io/services bumped to 1.38.0
+    * @leather.io/stacks bumped to 1.18.0
+    * @leather.io/ui bumped to 1.90.0
+    * @leather.io/utils bumped to 0.48.0
+
 ## [6.76.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.76.0...@leather.io/extension-v6.76.1) (2025-10-17)
 
 

@@ -413,6 +413,33 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.38.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.37.1...@leather.io/services-v1.38.0) (2025-10-31)
+
+
+### Features
+
+* add bitcoin transaction fees service ([cce337c](https://github.com/leather-io/mono/commit/cce337cd13979983f368eda7793d98160ba7adb5))
+* add get-by-id to btc and stx transactions services ([3e1fa58](https://github.com/leather-io/mono/commit/3e1fa589fb72a6ed94d4ccb3f85ced47b5241aaf))
+* add market history service, types, and API integration ([5a1f63d](https://github.com/leather-io/mono/commit/5a1f63d4d33c5b998c9d9a394f8dfe300df065b3))
+* add regtest mempool api support to services ([d6d0d68](https://github.com/leather-io/mono/commit/d6d0d6830fe37119c524ec74b00df7c87aff0812))
+* implement SIP-009 token details ([ab0e283](https://github.com/leather-io/mono/commit/ab0e2832c7626438501378247069d78c64207b52))
+* implement stamp token details ([7aad1ff](https://github.com/leather-io/mono/commit/7aad1ff49cebfa7f1be96c96cbc45e00c079d32a))
+* **mobile:** add bns token details ([3bda486](https://github.com/leather-io/mono/commit/3bda4862a7f550b1292ef517976d12e3c08bc405))
+* stacks transaction fees service ([eb921e0](https://github.com/leather-io/mono/commit/eb921e029d51e423847398a5ba15a7529a73638c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.35.0
+    * @leather.io/constants bumped to 0.27.3
+    * @leather.io/models bumped to 0.46.0
+    * @leather.io/stacks bumped to 1.18.0
+    * @leather.io/utils bumped to 0.48.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.21
+
 ## [1.37.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.37.0...@leather.io/services-v1.37.1) (2025-10-17)
 
 
