@@ -489,6 +489,24 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.90.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.89.0...@leather.io/ui-v1.90.0) (2025-10-31)
+
+
+### Features
+
+* **mobile:** add bns token details ([3bda486](https://github.com/leather-io/mono/commit/3bda4862a7f550b1292ef517976d12e3c08bc405))
+* **ui:** add slidePair animation preset ([ec0390d](https://github.com/leather-io/mono/commit/ec0390d67028914a2a9e9547d8db7dce2ee3e92e))
+* **web:** add changelog to sidebar ([2d8c2bd](https://github.com/leather-io/mono/commit/2d8c2bd58cdb35c4b220607cb4a149f22c4fe382))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.48.0
+  * devDependencies
+    * @leather.io/models bumped to 0.46.0
+
 ## [1.89.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.88.0...@leather.io/ui-v1.89.0) (2025-10-16)
 
 

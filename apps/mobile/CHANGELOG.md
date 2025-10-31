@@ -19,6 +19,49 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.84.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.83.1...@leather.io/mobile-v2.84.0) (2025-10-31)
+
+
+### Features
+
+* add market history service, types, and API integration ([5a1f63d](https://github.com/leather-io/mono/commit/5a1f63d4d33c5b998c9d9a394f8dfe300df065b3))
+* implement SIP-009 token details ([ab0e283](https://github.com/leather-io/mono/commit/ab0e2832c7626438501378247069d78c64207b52))
+* **mobile:** add bns token details ([3bda486](https://github.com/leather-io/mono/commit/3bda4862a7f550b1292ef517976d12e3c08bc405))
+* **mobile:** move swap amount error message into amount field ([2cbb9ca](https://github.com/leather-io/mono/commit/2cbb9ca31be960beea1a5e02d76ee58c31c59548))
+* **mobile:** use consistent background color for app bar, support edge-to-edge appropriate bg color ([71f7b45](https://github.com/leather-io/mono/commit/71f7b4550749043e5efda0b0cf3635be753c718a))
+* stacks transaction fees service ([eb921e0](https://github.com/leather-io/mono/commit/eb921e029d51e423847398a5ba15a7529a73638c))
+* **state:** adds state package ([7064a4b](https://github.com/leather-io/mono/commit/7064a4b8c003c85f8e938672dc73614bfd0c52e9))
+
+
+### Bug Fixes
+
+* add network to analytics in mobile ([e08bb5e](https://github.com/leather-io/mono/commit/e08bb5e76c9177697b1f4d97c60b156efb2496bb))
+* **mobile:** allow deeplinks from leather in-app browser ([21a2168](https://github.com/leather-io/mono/commit/21a21687a8234f6445d10a800c8337bec520364c))
+* **mobile:** create SIP-9 assetId as unique identifier needed ([87a9104](https://github.com/leather-io/mono/commit/87a91045ed67f0928758fd4a855e057c33061280))
+* **mobile:** prevent URL oscillation in browser deep linking ([2ccbb6c](https://github.com/leather-io/mono/commit/2ccbb6cdae6b87cfdd8a1fef19bf2cb5deca7bf9))
+* **mobile:** temporarily map availableUnlockedBalance to available balance for stx swap assets ([375ae4d](https://github.com/leather-io/mono/commit/375ae4d2c0cf536fd6dafc2975ac6a7302338a48))
+* remove loose object zod definitions from rpc results ([dd3b8e4](https://github.com/leather-io/mono/commit/dd3b8e4a664b799153bc9d84390dd3c79fb44f24))
+* subsequent approver requests + signMessage response ([88ca873](https://github.com/leather-io/mono/commit/88ca8735dea1aff5b044c4a28e00abf881d9b1d6))
+* void linking promises and format code, ref LEA-3277 ([5a6d1ec](https://github.com/leather-io/mono/commit/5a6d1ecfc90a2dff8c804199226492a77a47fb52))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.4
+    * @leather.io/bitcoin bumped to 0.35.0
+    * @leather.io/constants bumped to 0.27.3
+    * @leather.io/crypto bumped to 1.12.2
+    * @leather.io/models bumped to 0.46.0
+    * @leather.io/provider bumped to 1.6.4
+    * @leather.io/query bumped to 2.44.0
+    * @leather.io/rpc bumped to 2.20.21
+    * @leather.io/services bumped to 1.38.0
+    * @leather.io/stacks bumped to 1.18.0
+    * @leather.io/ui bumped to 1.90.0
+    * @leather.io/utils bumped to 0.48.0
+
 ## [2.83.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.83.0...@leather.io/mobile-v2.83.1) (2025-10-17)
 
 

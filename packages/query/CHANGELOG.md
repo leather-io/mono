@@ -779,6 +779,25 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.44.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.43.3...@leather.io/query-v2.44.0) (2025-10-31)
+
+
+### Features
+
+* stacks transaction fees service ([eb921e0](https://github.com/leather-io/mono/commit/eb921e029d51e423847398a5ba15a7529a73638c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.35.0
+    * @leather.io/constants bumped to 0.27.3
+    * @leather.io/models bumped to 0.46.0
+    * @leather.io/rpc bumped to 2.20.21
+    * @leather.io/stacks bumped to 1.18.0
+    * @leather.io/utils bumped to 0.48.0
+
 ## [2.43.3](https://github.com/leather-io/mono/compare/@leather.io/query-v2.43.2...@leather.io/query-v2.43.3) (2025-10-17)
 
 

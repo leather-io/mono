@@ -411,6 +411,22 @@
     * @leather.io/stacks bumped to 1.17.3
     * @leather.io/utils bumped to 0.46.4
 
+## [2.20.21](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.20.20...@leather.io/rpc-v2.20.21) (2025-10-31)
+
+
+### Bug Fixes
+
+* remove loose object zod definitions from rpc results ([dd3b8e4](https://github.com/leather-io/mono/commit/dd3b8e4a664b799153bc9d84390dd3c79fb44f24))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.46.0
+    * @leather.io/stacks bumped to 1.18.0
+    * @leather.io/utils bumped to 0.48.0
+
 ## [2.20.20](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.20.19...@leather.io/rpc-v2.20.20) (2025-10-17)
 
 
