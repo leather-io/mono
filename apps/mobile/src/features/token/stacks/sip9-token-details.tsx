@@ -7,25 +7,12 @@ import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
 import { Sip9Asset } from '@leather.io/models';
-import { Box, Text } from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenDescription } from '../components/token-description';
 import { TokenDetailsCard } from '../components/token-details-card';
-
-interface HeroCardContentProps {
-  label: string;
-  value: string;
-}
-function HeroCardContent({ label, value }: HeroCardContentProps) {
-  return (
-    <Box alignItems="flex-start" gap="3" flex={1}>
-      <Text variant="label02">{label}</Text>
-      <Text variant="label01">{value}</Text>
-    </Box>
-  );
-}
+import { TokenStatCard, TokenStatCardItem } from '../components/token-stat-card';
 
 interface Sip9TokenDetailsProps {
   asset: Sip9Asset;
@@ -52,14 +39,14 @@ export function Sip9TokenDetails({ asset }: Sip9TokenDetailsProps) {
       </TokenDetailsCard>
       {!!(latestSale || floorPrice) && (
         <TokenDetailsCard>
-          <Box flexDirection="row" py="3">
+          <TokenStatCard>
             {latestSale && (
-              <HeroCardContent label={t`Recent sale`} value={formatCurrency(latestSale)} />
+              <TokenStatCardItem label={t`Recent sale`} value={formatCurrency(latestSale)} />
             )}
             {floorPrice && (
-              <HeroCardContent label={t`Floor price`} value={formatCurrency(floorPrice)} />
+              <TokenStatCardItem label={t`Floor price`} value={formatCurrency(floorPrice)} />
             )}
-          </Box>
+          </TokenStatCard>
         </TokenDetailsCard>
       )}
       {description && <TokenDescription description={description} />}
