@@ -9,6 +9,7 @@ function AppFooter() {
         <Footer.Column title="Dive deeper">
           <Footer.Link href="/help-center">Help Center</Footer.Link>
           <Footer.Link href="/changelog">Changelog</Footer.Link>
+          <Footer.Link href={externalLeatherNavigator.news}>News</Footer.Link>
           <Footer.Link withIcon href={externalLeatherNavigator.docs}>
             Developer docs
           </Footer.Link>

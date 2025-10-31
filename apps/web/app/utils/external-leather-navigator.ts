@@ -12,13 +12,12 @@ export const externalUrl = whenEnvTarget({
 export function createExternalLeatherNavigator() {
   return {
     home: `${externalUrl}`,
-    blog: `${externalUrl}/blog`,
+    news: `${externalUrl}/news`,
     support: `${externalUrl}/support`,
     guides: `${externalUrl}/guides`,
     docs: 'https://leather.gitbook.io',
     wallet: `${externalUrl}/wallet`,
     apps: `${externalUrl}/apps`,
-    news: `${externalUrl}/news`,
   };
 }
 
