@@ -34,9 +34,10 @@ jobs:
     needs:
       - sha-hash
     steps:
-      - uses: kyranjamie/pull-request-fixed-header@v1.0.1
+      - uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: '> _Building extension at commit ${{ needs.sha-hash.outputs.SHORT_SHA }}_'
+          header: extension-build
+          message: '_Building extension at commit ${{ needs.sha-hash.outputs.SHORT_SHA }}_'
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
 
   build:
@@ -104,13 +105,13 @@ jobs:
           sanitized_branch=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}} | sed 's/[^a-zA-Z0-9_-]/-/g')
           echo "STORYBOOK_BRANCH=${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
 
-      - uses: kyranjamie/pull-request-fixed-header@v1.0.1
+      - uses: marocchino/sticky-pull-request-comment@v2
         env:
           EXTENSION_BUILD_LINK: '[Extension build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
           TEST_REPORT_LINK: '[Test report](https://leather-io.github.io/playwright-reports/${{ env.BRANCH_NAME }})'
           STORYBOOK_LINK: '[Storybook](https://${{ env.STORYBOOK_BRANCH }}--65982789c7e2278518f189e7.chromatic.com)'
           CHROMATIC_LINK: '[Chromatic](https://www.chromatic.com/library?appId=65982789c7e2278518f189e7&branch=${{ env.STORYBOOK_BRANCH }})'
         with:
+          header: extension-build
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
-          header: |
-            > Try out Leather build ${{ needs.sha-hash.outputs.SHORT_SHA }} — ${{ env.EXTENSION_BUILD_LINK }}, ${{ env.TEST_REPORT_LINK }}, ${{ env.STORYBOOK_LINK }}, ${{ env.CHROMATIC_LINK }}
+          message: 'Leather Extension build ${{ needs.sha-hash.outputs.SHORT_SHA }} — ${{ env.EXTENSION_BUILD_LINK }}, ${{ env.TEST_REPORT_LINK }}, ${{ env.STORYBOOK_LINK }}, ${{ env.CHROMATIC_LINK }}'
