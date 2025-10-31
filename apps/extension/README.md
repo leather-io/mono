@@ -85,11 +85,14 @@ pnpm playwright test tests/specs --shard=3/8
 
 To get more information when running tests you can pass the `--debug` flag or the `--ui` flag to playwright.
 
-When running tests locally you must add the following to your `.env` file:
+When running integration tests locally, you must configure your `.env` file with:
 
 ```
 WALLET_ENVIRONMENT=testing
+EXTENSION_INTEGRATION_TEST_MNEMONIC=[mnemonic phrase here]
 ```
+
+The test mnemonic phrase can be found in 1Password under "Wallet for integration tests".
 
 ### Unit tests
 
