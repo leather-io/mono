@@ -145,7 +145,11 @@ export class CollectiblesService {
       const stamps = await this.stampchainApiClient.getStampsByAddress(address, { signal });
 
       return stamps.map(stamp => ({
-        asset: createStampAsset(stamp),
+        asset: createStampAsset({
+          stamp: stamp.stamp,
+          stampUrl: stamp.stamp_url,
+          blockHeight: stamp.block_index ?? 0,
+        }),
         blockHeight: stamp.block_index ?? 0,
       }));
     } catch {

@@ -7,6 +7,7 @@ import {
 import { CreateInscriptionData } from '@leather.io/utils';
 
 import { BisInscription } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
+import { STAMPCHAIN_API_BASE_URL } from '../infrastructure/api/stampchain/stampchain-api.client';
 
 export function mapBisInscriptionToCreateInscriptionData(
   bisInscription: BisInscription
@@ -30,13 +31,20 @@ export function sortByBlockHeight(a: { blockHeight: number }, b: { blockHeight: 
   return b.blockHeight - a.blockHeight;
 }
 
-export function createStampAsset(stampData: { stamp: number; stamp_url: string }): StampAsset {
+interface StampData {
+  stamp: number;
+  stampUrl: string;
+  blockHeight: number;
+}
+
+export function createStampAsset({ stamp, stampUrl, blockHeight }: StampData): StampAsset {
   return {
     chain: CryptoAssetChains.bitcoin,
     category: CryptoAssetCategories.nft,
     protocol: CryptoAssetProtocols.stamp,
-    stamp: stampData.stamp,
-    stampUrl: stampData.stamp_url,
-    stampExplorerUrl: `https://stampchain.io/stamp/${stampData.stamp}`,
+    stamp,
+    stampUrl,
+    stampExplorerUrl: `${STAMPCHAIN_API_BASE_URL}/stamp/${stamp}`,
+    blockHeight,
   };
 }

@@ -2,7 +2,7 @@ import { ExternalLink } from '@/components/external-link';
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
 import {
   BitcoinNetworkPreference,
-  makeMempoolExplorerLink,
+  getMempoolExplorerLink,
 } from '@/features/activity/utils/make-activity-link';
 import { Inscription } from '@/features/token/bitcoin/inscription';
 import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-preference';
@@ -21,11 +21,7 @@ import { TokenStatCard, TokenStatCardItem } from '../components/token-stat-card'
 interface InscriptionTokenDetailsProps {
   asset: InscriptionAsset;
 }
-{
-  /* TODO: investigate using BIS api to add more fields later via single_info_id endpoint
-     https://api.bestinslot.xyz/v3/inscription/single_info_id endpoint when it is available 
-*/
-}
+
 export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps) {
   const {
     number,
@@ -42,9 +38,9 @@ export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps)
   const { networkPreference } = useSettings();
   const bitcoinNetwork = networkPreference.chain.bitcoin.bitcoinNetwork;
 
-  // FIXME: need to refactor makeMempoolExplorerLink - deprecate in extension
-  const mempoolExplorerTxUrl = makeMempoolExplorerLink({
-    txid,
+  const mempoolExplorerTxUrl = getMempoolExplorerLink({
+    id: txid,
+    type: 'txid',
     networkPreference: bitcoinNetwork as BitcoinNetworkPreference,
   });
 
@@ -69,7 +65,6 @@ export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps)
           />
           <SummaryTableItem label={t`Layer`} value={getChainDisplayLabel(chain)} />
           <SummaryTableItem label={t`Protocol`} value={getProtocolDisplayLabel(protocol)} />
-          {/* use formatActivityCaption to format the timestamp */}
           <SummaryTableItem
             label={t`Genesis time`}
             value={dayjs(genesisTimestamp * 1000).format('YYYY-MM-DD HH:mm [UTC]')}

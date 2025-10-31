@@ -5,14 +5,6 @@ import { HIRO_EXPLORER_URL } from '@leather.io/constants';
 import { CryptoAsset, NetworkConfiguration } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
-/**
- * TODO:  Share better with extension
- *  Duplicating this code from the extension now to:
- *  - exclude 'regtest' because we don't support it in mobile yet
- *  - remove the 'isNakamoto' parameter
- *  - avoid refactoring the extension code useCurrentNetworkState
- */
-// these are the only networks we support in mobile
 export type BitcoinNetworkPreference = 'mainnet' | 'testnet4' | 'signet';
 type StacksNetworkPreference = 'mainnet' | 'testnet';
 
@@ -43,9 +35,10 @@ function makeActivityExplorerLink({
   networkPreference,
 }: MakeActivityExplorerLinkArgs) {
   if (asset.chain === 'bitcoin') {
-    return makeMempoolExplorerLink({
+    return getMempoolExplorerLink({
       networkPreference: networkPreference.chain.bitcoin.bitcoinNetwork as BitcoinNetworkPreference,
-      txid,
+      id: txid,
+      type: 'txid',
     });
   }
   return makeStacksTxExplorerLink({
@@ -69,20 +62,26 @@ function makeStacksTxExplorerLink({
   return `${HIRO_EXPLORER_URL}/txid/${txid}?${searchParams.toString()}`;
 }
 
-interface MakeMempoolExplorerLinkArgs {
-  txid: string;
+interface getMempoolExplorerLinkArgs {
+  id: string;
+  type: 'txid' | 'block';
   networkPreference: BitcoinNetworkPreference;
 }
-export function makeMempoolExplorerLink({ txid, networkPreference }: MakeMempoolExplorerLinkArgs) {
+
+export function getMempoolExplorerLink({
+  id,
+  type,
+  networkPreference,
+}: getMempoolExplorerLinkArgs) {
   const mempoolBaseUrl = 'https://mempool.space';
 
   switch (networkPreference) {
     case 'mainnet':
-      return `${mempoolBaseUrl}/tx/${txid}`;
+      return `${mempoolBaseUrl}/${type}/${id}`;
     case 'testnet4':
-      return `${mempoolBaseUrl}/testnet4/tx/${txid}`;
+      return `${mempoolBaseUrl}/testnet4/${type}/${id}`;
     case 'signet':
-      return `${mempoolBaseUrl}/signet/tx/${txid}`;
+      return `${mempoolBaseUrl}/signet/${type}/${id}`;
     default:
       assertUnreachable(networkPreference);
   }
