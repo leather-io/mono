@@ -13,7 +13,7 @@ import { assertUnreachable } from '@leather.io/utils';
  *  - avoid refactoring the extension code useCurrentNetworkState
  */
 // these are the only networks we support in mobile
-type BitcoinNetworkPreference = 'mainnet' | 'testnet4' | 'signet';
+export type BitcoinNetworkPreference = 'mainnet' | 'testnet4' | 'signet';
 type StacksNetworkPreference = 'mainnet' | 'testnet';
 
 interface MakeActivityArgs {
@@ -73,7 +73,7 @@ interface MakeMempoolExplorerLinkArgs {
   txid: string;
   networkPreference: BitcoinNetworkPreference;
 }
-function makeMempoolExplorerLink({ txid, networkPreference }: MakeMempoolExplorerLinkArgs) {
+export function makeMempoolExplorerLink({ txid, networkPreference }: MakeMempoolExplorerLinkArgs) {
   const mempoolBaseUrl = 'https://mempool.space';
 
   switch (networkPreference) {

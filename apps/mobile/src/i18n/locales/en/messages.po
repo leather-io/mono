@@ -25,7 +25,7 @@ msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
-#: src/features/token/stacks/sip9-token-details.tsx:81
+#: src/features/token/stacks/sip9-token-details.tsx:68
 msgid "{rarityRank} of {totalItems}"
 msgstr "{rarityRank} of {totalItems}"
 
@@ -312,7 +312,7 @@ msgstr "Argument {argumentNumber}"
 msgid "Arkadiko"
 msgstr "Arkadiko"
 
-#: src/features/token/stacks/sip9-token-details.tsx:98
+#: src/features/token/stacks/sip9-token-details.tsx:85
 msgid "Attributes"
 msgstr "Attributes"
 
@@ -445,14 +445,11 @@ msgstr "Close the scanner"
 msgid "Code"
 msgstr "Code"
 
-#: src/features/token/components/collectible-loading.tsx:26
-#: src/features/token/stacks/bns-details.tsx:33
-#: src/features/token/stacks/sip9-token-details.tsx:67
+#: src/features/token/bitcoin/inscription-token-details.tsx:53
 msgid "Collectible Info"
 msgstr "Collectible Info"
 
-#: src/features/token/components/collectible-loading.tsx:29
-#: src/features/token/stacks/sip9-token-details.tsx:71
+#: src/features/token/stacks/sip9-token-details.tsx:58
 msgid "Collection"
 msgstr "Collection"
 
@@ -520,7 +517,7 @@ msgstr "Continue"
 msgid "Continue without security"
 msgstr "Continue without security"
 
-#: src/features/token/stacks/sip9-token-details.tsx:86
+#: src/features/token/stacks/sip9-token-details.tsx:73
 msgid "Contract"
 msgstr "Contract"
 
@@ -557,7 +554,7 @@ msgstr "Create new wallet"
 msgid "Creation date"
 msgstr "Creation date"
 
-#: src/features/token/stacks/sip9-token-details.tsx:76
+#: src/features/token/stacks/sip9-token-details.tsx:63
 msgid "Creator"
 msgstr "Creator"
 
@@ -773,7 +770,7 @@ msgstr "Fee updated"
 msgid "Fees"
 msgstr "Fees"
 
-#: src/features/token/stacks/sip9-token-details.tsx:94
+#: src/features/token/bitcoin/inscription-token-details.tsx:70
 msgid "File type"
 msgstr "File type"
 
@@ -781,7 +778,7 @@ msgstr "File type"
 msgid "Flip assets"
 msgstr "Flip assets"
 
-#: src/features/token/stacks/sip9-token-details.tsx:60
+#: src/features/token/stacks/sip9-token-details.tsx:47
 msgid "Floor price"
 msgstr "Floor price"
 
@@ -805,6 +802,14 @@ msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:81
 msgid "Generate new Secret Key for self-custody"
 msgstr "Generate new Secret Key for self-custody"
+
+#: src/features/token/bitcoin/inscription-token-details.tsx:63
+msgid "Genesis block"
+msgstr "Genesis block"
+
+#: src/features/token/bitcoin/inscription-token-details.tsx:60
+msgid "Genesis time"
+msgstr "Genesis time"
 
 #: src/app/settings/help/index.tsx:18
 #: src/app/settings/index.tsx:100
@@ -934,9 +939,7 @@ msgstr "Invalid words: {joinedInvalidWords}"
 msgid "Language"
 msgstr "Language"
 
-#: src/features/token/components/token-details-table.tsx:22
-#: src/features/token/stacks/bns-details.tsx:41
-#: src/features/token/stacks/sip9-token-details.tsx:83
+#: src/features/token/bitcoin/inscription-token-details.tsx:56
 msgid "Layer"
 msgstr "Layer"
 
@@ -1079,13 +1082,7 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
-#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
-#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
-#: src/features/token/components/collectible-loading.tsx:28
-#: src/features/token/components/token-details-table.tsx:19
-#: src/features/token/stacks/bns-details.tsx:35
-#: src/features/token/stacks/sip9-token-details.tsx:69
+#: src/features/token/bitcoin/inscription-token-details.tsx:55
 msgid "Name"
 msgstr "Name"
 
@@ -1165,6 +1162,10 @@ msgstr "Outbound balance:"
 msgid "Output"
 msgstr "Output"
 
+#: src/features/token/bitcoin/inscription-token-details.tsx:49
+msgid "Output value"
+msgstr "Output value"
+
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:21
 msgid "Passphrase"
 msgstr "Passphrase"
@@ -1210,9 +1211,7 @@ msgstr "Proceed with caution since your wallet will not be protected by your dev
 msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
-#: src/features/token/components/collectible-loading.tsx:30
-#: src/features/token/stacks/bns-details.tsx:42
-#: src/features/token/stacks/sip9-token-details.tsx:84
+#: src/features/token/bitcoin/inscription-token-details.tsx:57
 msgid "Protocol"
 msgstr "Protocol"
 
@@ -1233,7 +1232,7 @@ msgstr "Push"
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
-#: src/features/token/stacks/sip9-token-details.tsx:81
+#: src/features/token/stacks/sip9-token-details.tsx:68
 msgid "Rarity rank"
 msgstr "Rarity rank"
 
@@ -1267,7 +1266,7 @@ msgstr "Receive transaction notifications"
 msgid "Received"
 msgstr "Received"
 
-#: src/features/token/stacks/sip9-token-details.tsx:57
+#: src/features/token/stacks/sip9-token-details.tsx:44
 msgid "Recent sale"
 msgstr "Recent sale"
 
@@ -1678,6 +1677,10 @@ msgstr "Transaction confirmations"
 #: src/features/send/forms/stx/use-stx-form.ts:76
 msgid "Transaction failed due to an unexpected error"
 msgstr "Transaction failed due to an unexpected error"
+
+#: src/features/token/bitcoin/inscription-token-details.tsx:65
+msgid "Transaction ID"
+msgstr "Transaction ID"
 
 #: src/features/send/forms/stx/sip10-approval.tsx:50
 msgid "Transaction is sent!"
