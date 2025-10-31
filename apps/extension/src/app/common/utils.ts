@@ -1,13 +1,12 @@
 import { toUnicode } from 'punycode';
 
 import { KEBAB_REGEX } from '@leather.io/constants';
+import { HIRO_EXPLORER_URL } from '@leather.io/constants';
 import {
   type BitcoinChainConfig,
   type BitcoinNetworkModes,
   HIRO_API_BASE_URL_NAKAMOTO_TESTNET,
 } from '@leather.io/models';
-
-import { HIRO_EXPLORER_URL } from '@shared/constants';
 
 function kebabCase(str: string) {
   return str.replace(KEBAB_REGEX, match => '-' + match.toLowerCase());

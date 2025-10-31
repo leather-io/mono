@@ -1,8 +1,7 @@
 import type { P2Ret, P2TROut } from '@scure/btc-signer/payment';
 
 import { BitcoinSigner } from '@leather.io/bitcoin';
-
-import { ZERO_INDEX } from '@shared/constants';
+import { ZERO_INDEX } from '@leather.io/constants';
 
 import { useCurrentAccountNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';

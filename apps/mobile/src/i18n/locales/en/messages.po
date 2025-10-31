@@ -445,10 +445,11 @@ msgstr "Close the scanner"
 msgid "Code"
 msgstr "Code"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:53
+#: src/features/token/bitcoin/inscription-token-details.tsx:64
 msgid "Collectible Info"
 msgstr "Collectible Info"
 
+#: src/features/token/components/collectible-loading.tsx:29
 #: src/features/token/stacks/sip9-token-details.tsx:58
 msgid "Collection"
 msgstr "Collection"
@@ -770,7 +771,7 @@ msgstr "Fee updated"
 msgid "Fees"
 msgstr "Fees"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:70
+#: src/features/token/bitcoin/inscription-token-details.tsx:84
 msgid "File type"
 msgstr "File type"
 
@@ -803,11 +804,11 @@ msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 msgid "Generate new Secret Key for self-custody"
 msgstr "Generate new Secret Key for self-custody"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:63
+#: src/features/token/bitcoin/inscription-token-details.tsx:77
 msgid "Genesis block"
 msgstr "Genesis block"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:60
+#: src/features/token/bitcoin/inscription-token-details.tsx:74
 msgid "Genesis time"
 msgstr "Genesis time"
 
@@ -939,7 +940,7 @@ msgstr "Invalid words: {joinedInvalidWords}"
 msgid "Language"
 msgstr "Language"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:56
+#: src/features/token/bitcoin/inscription-token-details.tsx:70
 msgid "Layer"
 msgstr "Layer"
 
@@ -1082,7 +1083,7 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:55
+#: src/features/token/bitcoin/inscription-token-details.tsx:67
 msgid "Name"
 msgstr "Name"
 
@@ -1162,7 +1163,7 @@ msgstr "Outbound balance:"
 msgid "Output"
 msgstr "Output"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:49
+#: src/features/token/bitcoin/inscription-token-details.tsx:60
 msgid "Output value"
 msgstr "Output value"
 
@@ -1211,7 +1212,7 @@ msgstr "Proceed with caution since your wallet will not be protected by your dev
 msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:57
+#: src/features/token/bitcoin/inscription-token-details.tsx:71
 msgid "Protocol"
 msgstr "Protocol"
 
@@ -1678,7 +1679,7 @@ msgstr "Transaction confirmations"
 msgid "Transaction failed due to an unexpected error"
 msgstr "Transaction failed due to an unexpected error"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:65
+#: src/features/token/bitcoin/inscription-token-details.tsx:79
 msgid "Transaction ID"
 msgstr "Transaction ID"
 
