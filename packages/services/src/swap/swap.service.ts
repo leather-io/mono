@@ -170,13 +170,13 @@ export class SwapService {
 
     const assetResults = await Promise.allSettled(
       keys(groupedAssets).map(key =>
-        this.fungibleAssetService.getAsset(deserializeAssetId(key) as FungibleAssetId)
+        this.fungibleAssetService.getVisibleAsset(deserializeAssetId(key) as FungibleAssetId)
       )
     );
 
-    function assetsToSwapAssets(result: PromiseSettledResult<FungibleCryptoAsset>) {
+    function assetsToSwapAssets(result: PromiseSettledResult<FungibleCryptoAsset | null>) {
       if (result.status !== 'fulfilled') return [];
-      if (!isSwappableAsset(result.value)) return [];
+      if (result.value === null || !isSwappableAsset(result.value)) return [];
 
       return [
         {
