@@ -23,6 +23,7 @@ jobs:
     steps:
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
+          header: web-preview-build
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
           message: |
             _Building web app preview at ${{ github.event.pull_request.head.sha }}_
@@ -57,6 +58,7 @@ jobs:
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
+          header: web-preview-build
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
           message: |
             Leather Web Build ${{ github.event.pull_request.head.sha }} → ${{ env.PREVIEW_URL }}
