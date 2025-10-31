@@ -70,6 +70,8 @@ export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleA
             mediaPlaybackRequiresUserAction={false}
             javaScriptEnabled={true}
             domStorageEnabled={true}
+            cacheEnabled={true}
+            sharedCookiesEnabled={true}
           />
         </Box>
       )}
