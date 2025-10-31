@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { Box, styled } from 'leather-styles/jsx';
 
+import { ORD_IO_URL } from '@leather.io/constants';
 import { type InscriptionAsset } from '@leather.io/models';
 import {
   DropdownMenu,
@@ -16,7 +17,6 @@ import {
   UnlockIcon,
 } from '@leather.io/ui';
 
-import { ORD_IO_URL } from '@shared/constants';
 import { RouteUrls } from '@shared/route-urls';
 
 import { useHoverWithChildren } from '@app/common/hooks/use-hover-with-children';

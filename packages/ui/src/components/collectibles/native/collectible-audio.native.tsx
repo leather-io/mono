@@ -12,44 +12,43 @@ interface CollectibleAudioProps {
 }
 
 export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleAudioProps) {
-  const htmlContent = `
+  const html = `
     <!DOCTYPE html>
     <html>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
         <style>
-          body { 
-            margin: 0; 
-            padding: 20px; 
-            background: #000;
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+          body {
+            width: 100%;
+            height: ${size}px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            background: #000;
           }
-          audio {
+          iframe {
             width: 100%;
-            max-width: 400px;
+            height: 100%;
+            border: none;
           }
         </style>
       </head>
       <body>
-        <audio controls preload="metadata">
-          <source src="${src}" type="audio/mpeg">
-          <source src="${src}" type="audio/wav">
-          <source src="${src}" type="audio/ogg">
-          Your browser does not support the audio element.
-        </audio>
+        <iframe src="${src}" allow="autoplay"></iframe>
       </body>
     </html>
   `;
+
   return (
     <CollectibleCard>
       {onPress ? (
-        <TouchableOpacity
-          onPress={onPress}
-          activeOpacity={0.95} // Slight feedback on press
-        >
+        <TouchableOpacity onPress={onPress} activeOpacity={0.95}>
           <Box
             height={size}
             bg="ink.background-secondary"
@@ -61,19 +60,18 @@ export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleA
           </Box>
         </TouchableOpacity>
       ) : (
-        <WebView
-          source={{ html: htmlContent }}
-          style={{ flex: 1 }}
-          scrollEnabled={false}
-          originWhitelist={['*']}
-          mixedContentMode="always"
-          allowsInlineMediaPlayback={true}
-          mediaPlaybackRequiresUserAction={false}
-          startInLoadingState={true}
-          cacheEnabled={false}
-          incognito={true}
-          preload="none"
-        />
+        <Box height={size} width="100%">
+          <WebView
+            source={{ html }}
+            style={{ height: size, width: '100%' }}
+            scrollEnabled={false}
+            originWhitelist={['*']}
+            allowsInlineMediaPlayback={true}
+            mediaPlaybackRequiresUserAction={false}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+          />
+        </Box>
       )}
     </CollectibleCard>
   );

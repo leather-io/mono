@@ -8,7 +8,9 @@ import { Inscription } from '@/features/token/bitcoin/inscription';
 import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-preference';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
+import dayjs from 'dayjs';
 
+import { ORD_IO_URL } from '@leather.io/constants';
 import { InscriptionAsset } from '@leather.io/models';
 import { truncateMiddle } from '@leather.io/utils';
 
@@ -25,8 +27,17 @@ interface InscriptionTokenDetailsProps {
 */
 }
 export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps) {
-  const { title, chain, mimeType, protocol, genesisTimestamp, genesisBlockHeight, txid, value } =
-    asset;
+  const {
+    number,
+    title,
+    chain,
+    mimeType,
+    protocol,
+    genesisTimestamp,
+    genesisBlockHeight,
+    txid,
+    value,
+  } = asset;
 
   const { networkPreference } = useSettings();
   const bitcoinNetwork = networkPreference.chain.bitcoin.bitcoinNetwork;
@@ -52,19 +63,22 @@ export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps)
       )}
       <TokenDetailsCard title={t`Collectible Info`}>
         <SummaryTableRoot>
-          <SummaryTableItem label={t`Name`} value={title ?? ''} />
+          <SummaryTableItem
+            label={t`Name`}
+            value={<ExternalLink url={`${ORD_IO_URL}/${number}`} label={title} />}
+          />
           <SummaryTableItem label={t`Layer`} value={getChainDisplayLabel(chain)} />
           <SummaryTableItem label={t`Protocol`} value={getProtocolDisplayLabel(protocol)} />
           {/* use formatActivityCaption to format the timestamp */}
           <SummaryTableItem
             label={t`Genesis time`}
-            value={new Date(genesisTimestamp * 1000).toLocaleString()}
+            value={dayjs(genesisTimestamp * 1000).format('YYYY-MM-DD HH:mm [UTC]')}
           />
           <SummaryTableItem label={t`Genesis block`} value={`#${genesisBlockHeight}`} />
           <SummaryTableItem
             label={t`Transaction ID`}
             value={
-              <ExternalLink url={mempoolExplorerTxUrl} label={truncateMiddle(txid ?? '', 5)} />
+              <ExternalLink url={mempoolExplorerTxUrl} label={truncateMiddle(txid ?? '', 8)} />
             }
           />
           <SummaryTableItem label={t`File type`} value={mimeType ?? ''} />
