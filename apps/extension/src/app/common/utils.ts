@@ -1,7 +1,6 @@
 import { toUnicode } from 'punycode';
 
-import { KEBAB_REGEX } from '@leather.io/constants';
-import { HIRO_EXPLORER_URL } from '@leather.io/constants';
+import { KEBAB_REGEX, HIRO_EXPLORER_URL } from '@leather.io/constants';
 import {
   type BitcoinChainConfig,
   type BitcoinNetworkModes,

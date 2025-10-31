@@ -446,6 +446,9 @@ msgid "Code"
 msgstr "Code"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:64
+#: src/features/token/components/collectible-loading.tsx:26
+#: src/features/token/stacks/bns-details.tsx:33
+#: src/features/token/stacks/sip9-token-details.tsx:54
 msgid "Collectible Info"
 msgstr "Collectible Info"
 
@@ -772,6 +775,7 @@ msgid "Fees"
 msgstr "Fees"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:84
+#: src/features/token/stacks/sip9-token-details.tsx:81
 msgid "File type"
 msgstr "File type"
 
@@ -941,6 +945,9 @@ msgid "Language"
 msgstr "Language"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:70
+#: src/features/token/components/token-details-table.tsx:22
+#: src/features/token/stacks/bns-details.tsx:41
+#: src/features/token/stacks/sip9-token-details.tsx:70
 msgid "Layer"
 msgstr "Layer"
 
@@ -1083,7 +1090,14 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
+#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
+#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
 #: src/features/token/bitcoin/inscription-token-details.tsx:67
+#: src/features/token/components/collectible-loading.tsx:28
+#: src/features/token/components/token-details-table.tsx:19
+#: src/features/token/stacks/bns-details.tsx:35
+#: src/features/token/stacks/sip9-token-details.tsx:56
 msgid "Name"
 msgstr "Name"
 
@@ -1213,6 +1227,9 @@ msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:71
+#: src/features/token/components/collectible-loading.tsx:30
+#: src/features/token/stacks/bns-details.tsx:42
+#: src/features/token/stacks/sip9-token-details.tsx:71
 msgid "Protocol"
 msgstr "Protocol"
 
