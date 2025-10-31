@@ -7,7 +7,8 @@ import { ApiRequestOptions } from '../types';
 import { stampchainBalanceResponseSchema } from './stampchain-api.schema';
 import { StampchainStamp } from './stampchain-api.types';
 
-const STAMPCHAIN_API_URL = 'https://stampchain.io/api/v2';
+export const STAMPCHAIN_API_BASE_URL = 'https://stampchain.io';
+const STAMPCHAIN_API_URL = `${STAMPCHAIN_API_BASE_URL}/api/v2`;
 
 @injectable()
 export class StampchainApiClient {

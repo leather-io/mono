@@ -131,6 +131,7 @@ export interface StampAsset extends BaseNonFungibleCryptoAsset {
   readonly stamp: number;
   readonly stampUrl: string;
   readonly stampExplorerUrl: string;
+  readonly blockHeight: number;
 }
 
 export type NonFungibleCryptoAsset = InscriptionAsset | StampAsset | Sip9Asset;

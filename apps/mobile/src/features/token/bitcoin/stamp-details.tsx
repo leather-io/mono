@@ -1,13 +1,12 @@
 import { ErrorFallbackTab } from '@/components/error/error';
 import { Stamp } from '@/features/token/bitcoin/stamp';
 import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-collectibles.query';
-import { t } from '@lingui/core/macro';
 
-import { AccountId, StampAsset } from '@leather.io/models';
+import { AccountId, isStampAsset } from '@leather.io/models';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { Collectible, useCollectibleHeight } from '../collectible';
-import { TokenLoading } from '../components/token-loading';
+import { useCollectibleHeight } from '../collectible';
+import { CollectibleLoading } from '../components/collectible-loading';
 
 interface StampDetailsProps {
   account: AccountId;
@@ -20,19 +19,17 @@ export function StampDetails({ assetId, account }: StampDetailsProps) {
   const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
 
   if (collectible.state === 'loading') {
-    return <TokenLoading />;
+    return <CollectibleLoading height={height} />;
   }
   if (collectible.state === 'error') {
     return <ErrorFallbackTab />;
   }
   if (collectible.state === 'success' && collectible.value.length > 0) {
-    const stampAsset = collectible.value[0] as StampAsset;
-    const name = `${t`Stamp`} #${stampAsset.stamp}`;
-    return (
-      <Collectible name={name} description={name} details={stampAsset}>
-        <Stamp item={stampAsset} height={height} />
-      </Collectible>
-    );
+    const asset = collectible.value[0];
+    if (!asset || !isStampAsset(asset)) {
+      return <ErrorFallbackTab />;
+    }
+    return <Stamp item={asset} height={height} />;
   }
 
   return <ErrorFallbackTab />;

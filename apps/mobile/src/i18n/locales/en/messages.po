@@ -445,7 +445,8 @@ msgstr "Close the scanner"
 msgid "Code"
 msgstr "Code"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:64
+#: src/features/token/bitcoin/inscription-token-details.tsx:60
+#: src/features/token/bitcoin/stamp-token-details.tsx:36
 #: src/features/token/components/collectible-loading.tsx:26
 #: src/features/token/stacks/bns-details.tsx:33
 #: src/features/token/stacks/sip9-token-details.tsx:54
@@ -774,7 +775,7 @@ msgstr "Fee updated"
 msgid "Fees"
 msgstr "Fees"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:84
+#: src/features/token/bitcoin/inscription-token-details.tsx:79
 #: src/features/token/stacks/sip9-token-details.tsx:81
 msgid "File type"
 msgstr "File type"
@@ -808,11 +809,11 @@ msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 msgid "Generate new Secret Key for self-custody"
 msgstr "Generate new Secret Key for self-custody"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:77
+#: src/features/token/bitcoin/inscription-token-details.tsx:72
 msgid "Genesis block"
 msgstr "Genesis block"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:74
+#: src/features/token/bitcoin/inscription-token-details.tsx:69
 msgid "Genesis time"
 msgstr "Genesis time"
 
@@ -944,7 +945,12 @@ msgstr "Invalid words: {joinedInvalidWords}"
 msgid "Language"
 msgstr "Language"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:70
+#: src/features/token/bitcoin/stamp-token-details.tsx:45
+msgid "Last observed block"
+msgstr "Last observed block"
+
+#: src/features/token/bitcoin/inscription-token-details.tsx:66
+#: src/features/token/bitcoin/stamp-token-details.tsx:42
 #: src/features/token/components/token-details-table.tsx:22
 #: src/features/token/stacks/bns-details.tsx:41
 #: src/features/token/stacks/sip9-token-details.tsx:70
@@ -1093,7 +1099,8 @@ msgstr "More options"
 #: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
-#: src/features/token/bitcoin/inscription-token-details.tsx:67
+#: src/features/token/bitcoin/inscription-token-details.tsx:63
+#: src/features/token/bitcoin/stamp-token-details.tsx:39
 #: src/features/token/components/collectible-loading.tsx:28
 #: src/features/token/components/token-details-table.tsx:19
 #: src/features/token/stacks/bns-details.tsx:35
@@ -1177,7 +1184,7 @@ msgstr "Outbound balance:"
 msgid "Output"
 msgstr "Output"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:60
+#: src/features/token/bitcoin/inscription-token-details.tsx:56
 msgid "Output value"
 msgstr "Output value"
 
@@ -1226,7 +1233,8 @@ msgstr "Proceed with caution since your wallet will not be protected by your dev
 msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:71
+#: src/features/token/bitcoin/inscription-token-details.tsx:67
+#: src/features/token/bitcoin/stamp-token-details.tsx:43
 #: src/features/token/components/collectible-loading.tsx:30
 #: src/features/token/stacks/bns-details.tsx:42
 #: src/features/token/stacks/sip9-token-details.tsx:71
@@ -1505,10 +1513,14 @@ msgstr "Stacks"
 msgid "Stacks address"
 msgstr "Stacks address"
 
-#: src/features/token/bitcoin/stamp-details.tsx:30
+#: src/features/token/bitcoin/stamp-token-details.tsx:22
 #: src/shared/display-preference.ts:60
 msgid "Stamp"
 msgstr "Stamp"
+
+#: src/features/token/bitcoin/stamp-token-details.tsx:48
+msgid "Stamp URL"
+msgstr "Stamp URL"
 
 #: src/features/approver/utils.tsx:43
 msgid "Standard"
@@ -1696,7 +1708,7 @@ msgstr "Transaction confirmations"
 msgid "Transaction failed due to an unexpected error"
 msgstr "Transaction failed due to an unexpected error"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:79
+#: src/features/token/bitcoin/inscription-token-details.tsx:74
 msgid "Transaction ID"
 msgstr "Transaction ID"
 
