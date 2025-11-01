@@ -413,6 +413,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.39.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.38.0...@leather.io/services-v1.39.0) (2025-11-01)
+
+
+### Features
+
+* **mobile:** add swap network fee ([2a70fbd](https://github.com/leather-io/mono/commit/2a70fbd48d359a0b7adc8e1d1ff3fe2af6acb03e))
+
 ## [1.38.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.37.1...@leather.io/services-v1.38.0) (2025-10-31)
 
 
