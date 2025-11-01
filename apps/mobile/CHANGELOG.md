@@ -19,6 +19,20 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.85.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.84.0...@leather.io/mobile-v2.85.0) (2025-11-01)
+
+
+### Features
+
+* **mobile:** add swap network fee ([2a70fbd](https://github.com/leather-io/mono/commit/2a70fbd48d359a0b7adc8e1d1ff3fe2af6acb03e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.39.0
+
 ## [2.84.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.83.1...@leather.io/mobile-v2.84.0) (2025-10-31)
 
 
