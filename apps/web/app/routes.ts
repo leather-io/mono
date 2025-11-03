@@ -19,6 +19,7 @@ export default [
   route('changelog', 'pages/changelog/changelog.route.tsx'),
   route('changelog/:slug', 'pages/changelog/changelog-entry.route.tsx'),
   route('changelog.xml', 'pages/changelog/changelog-rss.route.tsx'),
+  route('portfolio', 'pages/portfolio/portfolio.route.tsx'),
   // Advanced Leather tools
   ...prefix('advanced', [
     index('pages/advanced/advanced.route.tsx'),

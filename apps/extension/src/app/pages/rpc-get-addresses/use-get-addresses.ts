@@ -17,8 +17,15 @@ import { analytics } from '@shared/utils/analytics';
 import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
-import { useCurrentAccountNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import {
+  useCurrentAccountNativeSegwitSigner,
+  useGenerateNativeSegwitAccount,
+} from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import {
+  useCurrentAccountTaprootSigner,
+  useGenerateTaprootAccount,
+} from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useAppPermissions } from '@app/store/app-permissions/app-permissions.slice';
 
@@ -34,12 +41,25 @@ function useGetAddressesParams() {
   return { tabId, origin, request: decode(request) };
 }
 
+function useGetDescriptors() {
+  const currentAccountIndex = useCurrentAccountIndex();
+  const nativeSegwitAccount = useGenerateNativeSegwitAccount()(currentAccountIndex);
+  const taprootAccount = useGenerateTaprootAccount()(currentAccountIndex);
+  const wpkhXpub = nativeSegwitAccount?.keychain.publicExtendedKey;
+  const trXpub = taprootAccount?.keychain.publicExtendedKey;
+  return {
+    nativeSegwitDescriptor: wpkhXpub ? `wpkh(${wpkhXpub})` : null,
+    taprootDescriptor: trXpub ? `tr(${trXpub})` : null,
+  };
+}
+
 export function useGetAddresses() {
   const permissions = useAppPermissions();
   const { tabId, origin, request } = useGetAddressesParams();
   const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
   const createTaprootSigner = useCurrentAccountTaprootSigner();
   const stacksAccount = useCurrentStacksAccount();
+  const { nativeSegwitDescriptor, taprootDescriptor } = useGetDescriptors();
 
   function focusInitiatingTab() {
     void analytics.track('user_clicked_requested_by_link', { endpoint: request.method });
@@ -70,6 +90,7 @@ export function useGetAddresses() {
           address: nativeSegwitSigner.address,
           publicKey: bytesToHex(nativeSegwitSigner.publicKey),
           derivationPath: nativeSegwitSigner.derivationPath,
+          descriptor: nativeSegwitDescriptor ?? '',
         };
 
         keysToIncludeInResponse.push(nativeSegwitAddressResponse);
@@ -84,6 +105,7 @@ export function useGetAddresses() {
           publicKey: bytesToHex(taprootSigner.publicKey),
           tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taprootSigner.publicKey)),
           derivationPath: taprootSigner.derivationPath,
+          descriptor: taprootDescriptor ?? '',
         };
         keysToIncludeInResponse.push(taprootAddressResponse);
       }

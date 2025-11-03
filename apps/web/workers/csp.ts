@@ -12,10 +12,11 @@ export const csp = builder({
     baseUri: [`'self'`],
     frameAncestors: [`'none'`],
     workerSrc: [`'self'`, 'blob:'],
-    imgSrc: [`'self'`, 'data:', 'https://images.leather.io', 'https://cdn.sanity.io/'],
+    imgSrc: [`'self'`, 'data:', 'https://images.leather.io', 'https://cdn.sanity.io/', '*'],
     connectSrc: [
       `'self'`,
       '*.hiro.so',
+      'gamma.io',
       '*.ingest.us.sentry.io',
       '*.segment.com',
       '*.segment.io',
@@ -25,6 +26,7 @@ export const csp = builder({
       'https://sbtc-emily.com',
       'https://webhook.frontapp.com',
       '*.launchdarkly.com',
+      'leatherapi.bestinslot.xyz',
     ],
   },
 });

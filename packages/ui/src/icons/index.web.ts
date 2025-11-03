@@ -9,6 +9,7 @@ export * from './arrow-rotate-clockwise-icon.web';
 export * from './arrow-rotate-right-left-icon.web';
 export * from './arrow-top-bottom-icon.web';
 export * from './arrow-top-right-icon.web';
+export * from './arrow-triangle-top-icon.web';
 export * from './arrow-up-icon.web';
 export * from './arrows-repeat-left-right-icon.web';
 export * from './backspace-icon.web';

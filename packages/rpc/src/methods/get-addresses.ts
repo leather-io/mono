@@ -16,6 +16,7 @@ export const btcAddressBaseSchema = z.object({
   address: z.string(),
   publicKey: z.string(),
   derivationPath: z.string(),
+  descriptor: z.string(),
 });
 
 export type BtcAddressBase = z.infer<typeof btcAddressBaseSchema>;

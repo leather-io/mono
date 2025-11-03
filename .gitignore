@@ -14,3 +14,4 @@ architecture/*.svg
 *.code-workspace
 tmp
 **/tsup.config.native.bundled*
+**/.claude/settings.local.json
