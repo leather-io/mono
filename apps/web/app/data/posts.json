@@ -3894,9 +3894,7 @@
     "Prompt": "Learn how to acquire STX and start using it for Bitcoin-native earning strategies through Leather.",
     "Images": [],
     "Sentence": "Buy STX to start participating in Stacking and exploring Bitcoin-native DeFi in the Leather app",
-    "👁️ Views": [
-      "1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -3986,9 +3984,7 @@
     "Prompt": "Learn how long your STX stays locked when participating in Stacking through Leather.",
     "Images": [],
     "Sentence": "The minimum lockup period for Stacking is one cycle, which lasts approximately two weeks",
-    "👁️ Views": [
-      "12a845fc-7c5c-4438-831c-f49940731269"
-    ],
+    "👁️ Views": ["12a845fc-7c5c-4438-831c-f49940731269"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4018,9 +4014,7 @@
     "Prompt": "Stay ahead by tracking when the next Stacking cycle starts so you can join in time.",
     "Images": [],
     "Sentence": "Stacking cycles occur approximately every 2 weeks, and the next one starts soon",
-    "👁️ Views": [
-      "12a845fc-7c5c-4438-831c-f49940731269"
-    ],
+    "👁️ Views": ["12a845fc-7c5c-4438-831c-f49940731269"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4050,10 +4044,7 @@
     "Prompt": "Learn which token you'll receive when earning rewards through solo or pooled Stacking.",
     "Images": [],
     "Sentence": "Stacking rewards are paid in BTC or STX depending on how the pool or method handles distribution",
-    "👁️ Views": [
-      "1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2",
-      "12a845fc-7c5c-4438-831c-f49940731269"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2", "12a845fc-7c5c-4438-831c-f49940731269"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4118,9 +4109,7 @@
     "Prompt": "Understand how long your STX is locked when participating in different forms of Stacking.",
     "Images": [],
     "Sentence": "Stacking typically locks your STX for about two weeks per cycle, except for liquid protocols",
-    "👁️ Views": [
-      "12a845fc-7c5c-4438-831c-f49940731269"
-    ],
+    "👁️ Views": ["12a845fc-7c5c-4438-831c-f49940731269"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4150,9 +4139,7 @@
     "Prompt": "Set or view the address where your Stacking rewards will be sent—BTC or STX depending on the protocol.",
     "Images": [],
     "Sentence": "Stacking rewards are sent to either a Bitcoin or Stacks address, based on how the pool distributes earnings",
-    "👁️ Views": [
-      "12a845fc-7c5c-4438-831c-f49940731269"
-    ],
+    "👁️ Views": ["12a845fc-7c5c-4438-831c-f49940731269"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4212,9 +4199,7 @@
     "Prompt": "Learn how pooled Stacking works and what to expect when joining through Leather.",
     "Images": [],
     "Sentence": "Pooled Stacking lets you earn BTC by joining others to meet the minimum STX threshold for participation",
-    "👁️ Views": [
-      "12a845fc-7c5c-4438-831c-f49940731269"
-    ],
+    "👁️ Views": ["12a845fc-7c5c-4438-831c-f49940731269"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4244,10 +4229,7 @@
     "Prompt": "Learn how smart contracts enable and manage Stacking through Leather.",
     "Images": [],
     "Sentence": "Stacking involves delegating STX to a smart contract that interacts with the Stacks protocol and pool operators",
-    "👁️ Views": [
-      "12a845fc-7c5c-4438-831c-f49940731269",
-      "1c8d74b6-94c7-8044-94aa-d8af7e778f7c"
-    ],
+    "👁️ Views": ["12a845fc-7c5c-4438-831c-f49940731269", "1c8d74b6-94c7-8044-94aa-d8af7e778f7c"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4277,10 +4259,7 @@
     "Prompt": "Understand how your STX contribution affects your Bitcoin rewards when Stacking through Leather.",
     "Images": [],
     "Sentence": "Your Bitcoin rewards increase proportionally with the amount of STX you Stack.",
-    "👁️ Views": [
-      "12a845fc-7c5c-4438-831c-f49940731269",
-      "1c8d74b6-94c7-8044-94aa-d8af7e778f7c"
-    ],
+    "👁️ Views": ["12a845fc-7c5c-4438-831c-f49940731269", "1c8d74b6-94c7-8044-94aa-d8af7e778f7c"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4400,10 +4379,7 @@
     "Prompt": "Learn how the Stacks blockchain connects smart contracts and apps to Bitcoin through Leather.",
     "Images": [],
     "Sentence": "Stacks is a Bitcoin Layer 2 that enables smart contracts, DeFi, and NFTs while using Bitcoin as the base layer",
-    "👁️ Views": [
-      "1952c4a9-2d00-40e5-9821-e6bc4093413c",
-      "1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2"
-    ],
+    "👁️ Views": ["1952c4a9-2d00-40e5-9821-e6bc4093413c", "1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4433,9 +4409,7 @@
     "Prompt": "Learn how to review and disconnect apps you've connected to with Leather.",
     "Images": [],
     "Sentence": "You can disconnect apps from your Leather Extension anytime through the connected apps settings",
-    "👁️ Views": [
-      "6eeac13a-1459-41ef-8320-be0d2cbf3364"
-    ],
+    "👁️ Views": ["6eeac13a-1459-41ef-8320-be0d2cbf3364"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4465,9 +4439,7 @@
     "Prompt": "Start using your Leather wallet with apps built on Stacks and Bitcoin.",
     "Images": [],
     "Sentence": "Use the Leather Extension to connect to dApps with one click and authorize transactions securely",
-    "👁️ Views": [
-      "6eeac13a-1459-41ef-8320-be0d2cbf3364"
-    ],
+    "👁️ Views": ["6eeac13a-1459-41ef-8320-be0d2cbf3364"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4497,9 +4469,7 @@
     "Prompt": "Explore Bitcoin-secured apps powered by the Stacks blockchain through Leather.",
     "Images": [],
     "Sentence": "Stacks apps use smart contracts to bring DeFi, NFTs, and more to Bitcoin without changing Bitcoin itself",
-    "👁️ Views": [
-      "6eeac13a-1459-41ef-8320-be0d2cbf3364"
-    ],
+    "👁️ Views": ["6eeac13a-1459-41ef-8320-be0d2cbf3364"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4529,10 +4499,7 @@
     "Prompt": "Learn how sBTC enables Bitcoin to be used in smart contracts and earn yield through the Stacks network.",
     "Images": [],
     "Sentence": "A Bitcoin-backed asset on Stacks that allows programmable yield and DeFi participation",
-    "👁️ Views": [
-      "1c8d74b6-94c7-8055-a46b-c428e264f12f",
-      "1952c4a9-2d00-40e5-9821-e6bc4093413c"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-8055-a46b-c428e264f12f", "1952c4a9-2d00-40e5-9821-e6bc4093413c"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4562,9 +4529,7 @@
     "Prompt": "Use your sBTC to earn Bitcoin yield through decentralized lending pools on Zest.",
     "Images": [],
     "Sentence": "Earn yield on sBTC by supplying it to non-custodial lending pools on Zest",
-    "👁️ Views": [
-      "1c8d74b6-94c7-8055-a46b-c428e264f12f"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-8055-a46b-c428e264f12f"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4594,9 +4559,7 @@
     "Prompt": "Provide sBTC liquidity on Velar to earn fees and DeFi rewards on Bitcoin.",
     "Images": [],
     "Sentence": "Velar offers sBTC liquidity pools for users to earn swap fees and staking incentives",
-    "👁️ Views": [
-      "1c8d74b6-94c7-8055-a46b-c428e264f12f"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-8055-a46b-c428e264f12f"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4626,9 +4589,7 @@
     "Prompt": "Stake sBTC in Bitflow liquidity routes to earn Bitcoin-backed yield.",
     "Images": [],
     "Sentence": "Bitflow lets you provide sBTC to DeFi liquidity pools and vaults for BTC-denominated returns",
-    "👁️ Views": [
-      "1c8d74b6-94c7-8055-a46b-c428e264f12f"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-8055-a46b-c428e264f12f"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4658,9 +4619,7 @@
     "Prompt": "Earn yield on your sBTC by committing it to structured liquidity pools in ALEX through Leather.",
     "Images": [],
     "Sentence": "ALEX offers sBTC-based pools where users can earn yield by supplying liquidity or supporting DeFi strategies on Stacks",
-    "👁️ Views": [
-      "1c8d74b6-94c7-8055-a46b-c428e264f12f"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-8055-a46b-c428e264f12f"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4690,9 +4649,7 @@
     "Prompt": "Earn sBTC yield through integrated DeFi protocols while maintaining control of your Bitcoin.",
     "Images": [],
     "Sentence": "Earn up to 5% APY paid in sBTC by participating in non-custodial Bitcoin yield opportunities",
-    "👁️ Views": [
-      "1c8d74b6-94c7-8055-a46b-c428e264f12f"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-8055-a46b-c428e264f12f"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4722,9 +4679,7 @@
     "Prompt": "Swap assets like STX, sBTC, and stablecoins directly from your Leather wallet using integrated DeFi protocols.",
     "Images": [],
     "Sentence": "Stacks swaps let users trade tokens like STX and sBTC through decentralized protocols without leaving Leather",
-    "👁️ Views": [
-      "1c8d74b6-94c7-8055-a46b-c428e264f12f"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-8055-a46b-c428e264f12f"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4754,9 +4709,7 @@
     "Prompt": "Bridge BTC to Stacks using the sBTC protocol and unlock new ways to earn Bitcoin through DeFi apps in Leather.",
     "Images": [],
     "Sentence": "The sBTC bridge lets users lock BTC on Bitcoin and mint sBTC on Stacks for use in smart contracts",
-    "👁️ Views": [
-      "1c8d74b6-94c7-8055-a46b-c428e264f12f"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-8055-a46b-c428e264f12f"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4786,10 +4739,7 @@
     "Prompt": "Earn yield with Bitcoin on Stacks",
     "Images": [],
     "Sentence": "sBTC rewards are earned when users mint sBTC by locking BTC and use it in DeFi protocols that offer yield in BTC or other tokens",
-    "👁️ Views": [
-      "1c8d74b6-94c7-8055-a46b-c428e264f12f",
-      "1952c4a9-2d00-40e5-9821-e6bc4093413c"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-8055-a46b-c428e264f12f", "1952c4a9-2d00-40e5-9821-e6bc4093413c"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4819,10 +4769,7 @@
     "Prompt": "Understand how liquid Stacking tokens like stSTX let you earn BTC while staying active in DeFi.",
     "Images": [],
     "Sentence": "Liquid Stacking tokens represent STX deposited into a protocol and can be used while earning BTC rewards",
-    "👁️ Views": [
-      "1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2",
-      "1c8d74b6-94c7-8044-94aa-d8af7e778f7c"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2", "1c8d74b6-94c7-8044-94aa-d8af7e778f7c"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4852,10 +4799,7 @@
     "Prompt": "Understand how STX is temporarily locked to earn BTC through the Stacks consensus protocol.",
     "Images": [],
     "Sentence": "STX is locked for one or more cycles when you commit it to Stacking and is automatically unlocked afterward",
-    "👁️ Views": [
-      "1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2",
-      "12a845fc-7c5c-4438-831c-f49940731269"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2", "12a845fc-7c5c-4438-831c-f49940731269"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4885,10 +4829,7 @@
     "Prompt": "Explore what you can do with STX—the native token of the Stacks blockchain—in Leather.",
     "Images": [],
     "Sentence": "STX is used to pay fees, participate in Stacking, and interact with apps on the Stacks blockchain",
-    "👁️ Views": [
-      "1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2",
-      "1952c4a9-2d00-40e5-9821-e6bc4093413c"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2", "1952c4a9-2d00-40e5-9821-e6bc4093413c"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -4918,10 +4859,7 @@
     "Prompt": "Check minimum STX requirements in Leather and start earning rewards with as little as a few dozen tokens.",
     "Images": [],
     "Sentence": "Stacking minimum commitment is the smallest amount of STX you need to participate in pooled or liquid Stacking and start earning rewards.",
-    "👁️ Views": [
-      "1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2",
-      "12a845fc-7c5c-4438-831c-f49940731269"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2", "12a845fc-7c5c-4438-831c-f49940731269"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -5094,10 +5032,7 @@
       }
     ],
     "Sentence": "A Bitcoin-secured protocol for vault-based borrowing, USDA minting, and decentralized smart contract automation.",
-    "👁️ Views": [
-      "1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2",
-      "1c8d74b6-94c7-8044-94aa-d8af7e778f7c"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2", "1c8d74b6-94c7-8044-94aa-d8af7e778f7c"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -5137,10 +5072,7 @@
       }
     ],
     "Sentence": "Stacking is the process of locking your STX to earn Bitcoin rewards by supporting the Stacks blockchain, either through pooled participation or flexible, DeFi-enabled liquid Stacking.",
-    "👁️ Views": [
-      "1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2",
-      "1952c4a9-2d00-40e5-9821-e6bc4093413c"
-    ],
+    "👁️ Views": ["1c8d74b6-94c7-804e-b218-f0ca2d8ba7f2", "1952c4a9-2d00-40e5-9821-e6bc4093413c"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",
@@ -7455,9 +7387,7 @@
       }
     ],
     "Sentence": "A DeFi platform on Stacks offering swaps, staking, fixed-term lending, and cross-chain liquidity with Bitcoin security",
-    "👁️ Views": [
-      "6eeac13a-1459-41ef-8320-be0d2cbf3364"
-    ],
+    "👁️ Views": ["6eeac13a-1459-41ef-8320-be0d2cbf3364"],
     "📈 Earn providers": [],
     "Data point instructions": "",
     "Aliases": "",

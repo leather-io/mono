@@ -9,7 +9,7 @@ interface PortfolioData {
   color: string;
 }
 
-const portfolioData: PortfolioData[] = [
+const rawPortfolioData: PortfolioData[] = [
   { token: 'BTC', percentage: 40, color: '#F7931A' },
   { token: 'STX', percentage: 30, color: '#5546FF' },
   { token: 'ETH', percentage: 10, color: '#627EEA' },
@@ -19,6 +19,19 @@ const portfolioData: PortfolioData[] = [
   { token: 'MATIC', percentage: 2, color: '#8247E5' },
   { token: 'ADA', percentage: 1, color: '#0033AD' },
 ];
+
+const THRESHOLD_PERCENTAGE = 3;
+
+const portfolioData = (() => {
+  const itemsToGroup = rawPortfolioData.filter(item => item.percentage < THRESHOLD_PERCENTAGE);
+  const mainItems = rawPortfolioData.filter(item => item.percentage >= THRESHOLD_PERCENTAGE);
+
+  if (itemsToGroup.length === 0) return rawPortfolioData;
+
+  const otherPercentage = itemsToGroup.reduce((sum, item) => sum + item.percentage, 0);
+
+  return [...mainItems, { token: 'Other', percentage: otherPercentage, color: '#9CA3AF' }];
+})();
 
 export function PortfolioChart(props: BoxProps) {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -39,10 +52,25 @@ export function PortfolioChart(props: BoxProps) {
         const innerHeight = height - margin.top - margin.bottom;
 
         d3.select(svgRef.current).selectAll('*').remove();
+        d3.selectAll('.portfolio-tooltip').remove();
 
         const svg = d3.select(svgRef.current).attr('width', width).attr('height', height);
 
         const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+        const tooltip = d3
+          .select('body')
+          .append('div')
+          .attr('class', 'portfolio-tooltip')
+          .style('position', 'absolute')
+          .style('visibility', 'hidden')
+          .style('background-color', 'rgba(0, 0, 0, 0.9)')
+          .style('color', 'white')
+          .style('padding', '8px 12px')
+          .style('border-radius', '4px')
+          .style('font-size', '14px')
+          .style('pointer-events', 'none')
+          .style('z-index', '9999');
 
         const xScale = d3.scaleLinear().domain([0, 100]).range([0, innerWidth]);
 
@@ -67,7 +95,17 @@ export function PortfolioChart(props: BoxProps) {
           })
           .attr('height', innerHeight)
           .attr('fill', d => d.color)
-          .attr('rx', 4);
+          .attr('rx', 4)
+          .style('cursor', 'pointer')
+          .on('mouseover', (event, d) => {
+            tooltip.style('visibility', 'visible').html(`${d.token}: ${d.percentage}%`);
+          })
+          .on('mousemove', event => {
+            tooltip.style('top', `${event.pageY - 40}px`).style('left', `${event.pageX - 50}px`);
+          })
+          .on('mouseout', () => {
+            tooltip.style('visibility', 'hidden');
+          });
 
         g.append('rect')
           .attr('x', 0)
@@ -83,6 +121,7 @@ export function PortfolioChart(props: BoxProps) {
 
     return () => {
       resizeObserver.disconnect();
+      d3.selectAll('.portfolio-tooltip').remove();
     };
   }, []);
 
@@ -91,7 +130,7 @@ export function PortfolioChart(props: BoxProps) {
       <styled.h3 textStyle="heading.05" mb="space.04">
         Portfolio performance
       </styled.h3>
-      <Box borderRadius="md" border="default" bg="ink.background-secondary" p="space.05">
+      <Box borderRadius="sm" border="default" bg="ink.background-secondary" p="space.05">
         <svg ref={svgRef} style={{ display: 'block', width: '100%' }} />
       </Box>
     </Box>

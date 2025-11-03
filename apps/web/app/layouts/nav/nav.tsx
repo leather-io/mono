@@ -33,7 +33,7 @@ function LeatherLogoHomeLink(props: HTMLStyledProps<'a'>) {
 export function NavContents() {
   return (
     <>
-      <NavItem href={externalLeatherNavigator.portfolio} icon={<GlobeIcon variant="small" />}>
+      <NavItem href="/portfolio" icon={<GlobeIcon variant="small" />}>
         Portfolio
       </NavItem>
 

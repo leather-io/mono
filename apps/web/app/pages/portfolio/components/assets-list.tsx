@@ -64,7 +64,7 @@ export function AssetsList(props: BoxProps) {
   ];
 
   return (
-    <Box borderRadius="md" border="default" overflow="hidden" {...props}>
+    <Box borderRadius="sm" border="default" overflow="hidden" {...props}>
       <Box bg="ink.background-secondary" px="space.05" py="space.03">
         <Flex justifyContent="space-between" alignItems="center">
           <styled.p textStyle="label.02" color="ink.text-subdued">

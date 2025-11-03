@@ -2,7 +2,7 @@ import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
 
 export function PortfolioSummary(props: BoxProps) {
   return (
-    <Box borderRadius="md" border="default" bg="ink.background-secondary" p="space.05" {...props}>
+    <Box borderRadius="sm" border="default" bg="ink.background-secondary" p="space.05" {...props}>
       <Flex justifyContent="space-between" alignItems="flex-start" flexWrap="wrap" gap="space.04">
         <Box>
           <styled.h3 textStyle="label.02" color="ink.text-subdued" mb="space.02">
