@@ -36,6 +36,7 @@ export function generateTheme(colorScheme: ColorSchemeName) {
       '-9': -64,
       '-10': -72,
       '-11': -128,
+      auto: 'auto',
     },
     borderRadii: {
       xs: 2,
