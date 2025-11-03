@@ -626,7 +626,6 @@ msgstr "Disconnected"
 msgid "Dismiss"
 msgstr "Dismiss"
 
-#: src/app/settings/display/index.tsx:52
 #: src/app/settings/index.tsx:68
 msgid "Display"
 msgstr "Display"
@@ -817,7 +816,6 @@ msgstr "Genesis block"
 msgid "Genesis time"
 msgstr "Genesis time"
 
-#: src/app/settings/help/index.tsx:18
 #: src/app/settings/index.tsx:100
 msgid "Get support or provide feedback"
 msgstr "Get support or provide feedback"
@@ -1092,7 +1090,6 @@ msgid "minutes ago"
 msgstr "minutes ago"
 
 #: src/app/settings/index.tsx:110
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:95
 msgid "More options"
 msgstr "More options"
 
@@ -1117,9 +1114,7 @@ msgstr "Native Segwit"
 msgid "Native Segwit address"
 msgstr "Native Segwit address"
 
-#: src/app/settings/help/index.tsx:14
 #: src/app/settings/index.tsx:82
-#: src/app/settings/networks/index.tsx:47
 msgid "Networks"
 msgstr "Networks"
 
@@ -1160,7 +1155,6 @@ msgid "Not a number"
 msgstr "Not a number"
 
 #: src/app/settings/index.tsx:91
-#: src/app/settings/notifications/_layout.tsx:13
 msgid "Notifications"
 msgstr "Notifications"
 
@@ -1391,7 +1385,6 @@ msgid "Secure your wallet"
 msgstr "Secure your wallet"
 
 #: src/app/settings/index.tsx:75
-#: src/app/settings/security/index.tsx:34
 msgid "Security"
 msgstr "Security"
 
@@ -1436,8 +1429,6 @@ msgid "Sent"
 msgstr "Sent"
 
 #: src/app/settings/index.tsx:57
-#: src/components/screen/screen-header/components/header-actions.tsx:30
-#: src/features/qr-scanner/use-camera-permission.ts:38
 msgid "Settings"
 msgstr "Settings"
 
