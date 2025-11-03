@@ -46,7 +46,7 @@ export function AccountHeader({ account, onPress }: AccountHeaderProps) {
       alignItems="center"
       gap="3"
     >
-      <AccountAvatar variant="sm" icon={accountData?.icon ?? 'home'} />
+      <AccountAvatar size="lg" icon={accountData?.icon ?? 'home'} />
       <Box>
         <Text variant="label01">{accountData?.name}</Text>
         {!hasOneWallet && wallet && (
