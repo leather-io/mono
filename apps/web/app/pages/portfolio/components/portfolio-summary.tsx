@@ -1,6 +1,10 @@
 import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
+import { useTotalPortfolioBalance } from '~/queries/balance/total-balance.hooks';
+import { formatCurrency } from '~/utils/currency-formatter';
 
 export function PortfolioSummary(props: BoxProps) {
+  const totalBalance = useTotalPortfolioBalance();
+
   return (
     <Box borderRadius="md" border="default" bg="ink.background-secondary" p="space.05" {...props}>
       <Flex justifyContent="space-between" alignItems="flex-start" flexWrap="wrap" gap="space.04">
@@ -8,7 +12,9 @@ export function PortfolioSummary(props: BoxProps) {
           <styled.h3 textStyle="label.02" color="ink.text-subdued" mb="space.02">
             Total portfolio value
           </styled.h3>
-          <styled.p textStyle="heading.03">$0.00</styled.p>
+          <styled.p textStyle="heading.03">
+            {totalBalance ? formatCurrency(totalBalance) : '$-.--'}
+          </styled.p>
         </Box>
 
         <Flex gap="space.06">
