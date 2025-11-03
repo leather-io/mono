@@ -52,38 +52,49 @@ export const accountIconMap: Record<AccountIcon, ComponentType<IconProps>> = {
   flag: FlagIcon,
 } as const;
 
-type AccountAvatarVariant = 'sm' | 'md';
+export type AccountAvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 interface AccountAvatarProps extends SquircleBoxProps {
   icon: AccountIcon | ComponentType;
-  variant?: AccountAvatarVariant;
+  size?: AccountAvatarSize;
 }
 
-export function AccountAvatar({ variant = 'md', ...props }: AccountAvatarProps) {
-  const Icon = isString(props.icon) ? accountIconMap[props.icon] : props.icon;
+// Squircle icons are manually customized per variant for best optical alignment
+const sizeStyles: Record<AccountAvatarSize, SquircleBoxProps> = {
+  xs: { width: 16, height: 16 },
+  sm: { width: 24, height: 24, borderRadius: 8 },
+  md: { width: 32, height: 32, borderRadius: 13 },
+  lg: { width: 40, height: 40, borderRadius: 16 },
+  xl: { width: 48, height: 48, borderRadius: 18 },
+};
 
-  const size = {
-    sm: 40,
-    md: 48,
-  }[variant];
-  const borderRadius = {
-    sm: 16,
-    md: 18,
-  }[variant];
+export const iconSizes: Record<
+  AccountAvatarSize,
+  { width?: number; height?: number; variant?: 'small' | 'medium' }
+> = {
+  xs: { width: 7, height: 7 },
+  sm: { width: 14, height: 14 },
+  md: { variant: 'small' },
+  lg: { variant: 'medium' },
+  xl: { variant: 'medium' },
+};
+
+export function AccountAvatar({ size = 'xl', ...props }: AccountAvatarProps) {
+  const Icon = isString(props.icon) ? accountIconMap[props.icon] : props.icon;
+  const iconProps = iconSizes[size];
+
   return (
     <SquircleBox
-      width={size}
-      height={size}
+      {...sizeStyles[size]}
       borderWidth={1}
       borderColor="ink.border-default"
-      borderRadius={borderRadius}
       cornerSmoothing={100}
       preserveSmoothing={true}
       justifyContent="center"
       alignItems="center"
       {...props}
     >
-      {Icon && <Icon />}
+      {Icon && <Icon {...iconProps} />}
     </SquircleBox>
   );
 }
