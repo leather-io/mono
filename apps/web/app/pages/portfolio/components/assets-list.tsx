@@ -4,17 +4,19 @@ import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import { RuneAsset, Sip10Asset } from '@leather.io/models';
-import { RuneBalance, Sip10Balance } from '@leather.io/services';
+import { Sip10Balance } from '@leather.io/services';
+import { Sip10AvatarIcon } from '@leather.io/ui';
 
 interface AssetItemProps {
-  name: string;
-  symbol: string;
-  balance: string;
-  value: string;
+  asset: Sip10Balance;
 }
 
-function AssetItem({ name, symbol, balance, value }: AssetItemProps) {
+function AssetItem({ asset }: AssetItemProps) {
+  const name = asset.asset.name;
+  const symbol = asset.asset.symbol;
+  const balance = formatCurrency(asset.crypto.availableBalance, { showCurrency: false });
+  const value = formatCurrency(asset.quote.availableBalance);
+
   return (
     <Flex
       justifyContent="space-between"
@@ -26,7 +28,11 @@ function AssetItem({ name, symbol, balance, value }: AssetItemProps) {
       cursor="pointer"
     >
       <Flex alignItems="center" gap="space.04">
-        <Box w="40px" h="40px" borderRadius="full" bg="ink.background-secondary" border="default" />
+        <Sip10AvatarIcon
+          contractId={asset.asset.contractId}
+          imageCanonicalUri={asset.asset.imageCanonicalUri || ''}
+          name={asset.asset.name}
+        />
         <Box>
           <styled.p textStyle="body.02" fontWeight="medium">
             {name}
@@ -49,15 +55,7 @@ function AssetItem({ name, symbol, balance, value }: AssetItemProps) {
   );
 }
 
-function isRuneAsset(asset: Sip10Asset | RuneAsset): asset is RuneAsset {
-  return 'runeName' in asset;
-}
-
-function getAssetName(asset: Sip10Asset | RuneAsset): string {
-  return isRuneAsset(asset) ? asset.runeName : asset.name;
-}
-
-function sortAssetsByValue(a: Sip10Balance | RuneBalance, b: Sip10Balance | RuneBalance) {
+function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
   const aValue = Number(a.quote.availableBalance.amount);
   const bValue = Number(b.quote.availableBalance.amount);
 
@@ -73,18 +71,10 @@ export function AssetsList(props: BoxProps) {
 
   const assets = useMemo(() => {
     const sip10Assets = sip10Query.data?.sip10s ?? [];
-
     return sip10Assets.sort(sortAssetsByValue);
   }, [sip10Query.data]);
 
   const isLoading = sip10Query.isPending;
-
-  const assetItems: AssetItemProps[] = assets.map(asset => ({
-    name: getAssetName(asset.asset),
-    symbol: asset.asset.symbol,
-    balance: formatCurrency(asset.crypto.availableBalance, { showCurrency: false }),
-    value: formatCurrency(asset.quote.availableBalance),
-  }));
 
   return (
     <Box borderRadius="sm" border="default" overflow="hidden" {...props}>
@@ -105,8 +95,8 @@ export function AssetsList(props: BoxProps) {
             Loading assets...
           </styled.p>
         </Box>
-      ) : assetItems.length > 0 ? (
-        assetItems.map((asset, index) => <AssetItem key={index} {...asset} />)
+      ) : assets.length > 0 ? (
+        assets.map((asset, index) => <AssetItem key={index} asset={asset} />)
       ) : (
         <Box p="space.06" textAlign="center">
           <styled.p textStyle="body.02" color="ink.text-subdued">

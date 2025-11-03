@@ -12,7 +12,7 @@ export const csp = builder({
     baseUri: [`'self'`],
     frameAncestors: [`'none'`],
     workerSrc: [`'self'`, 'blob:'],
-    imgSrc: [`'self'`, 'data:', 'https://images.leather.io', 'https://cdn.sanity.io/'],
+    imgSrc: [`'self'`, 'data:', 'https://images.leather.io', 'https://cdn.sanity.io/', '*'],
     connectSrc: [
       `'self'`,
       '*.hiro.so',
