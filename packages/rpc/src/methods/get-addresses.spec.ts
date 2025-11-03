@@ -12,6 +12,7 @@ describe('getAddresses', () => {
     address: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
     publicKey: '02d9b4b6e',
     derivationPath: "m/44'/0'/0'/0/0",
+    descriptor: 'wpkh(testing-xpub)',
   };
 
   const baseRespnseBodyStx = {

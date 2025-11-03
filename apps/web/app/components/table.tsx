@@ -34,7 +34,7 @@ export function SortableHeader({ children, ...props }: HTMLStyledProps<'div'>) {
 }
 
 export const TableRoot = forwardRef<HTMLDivElement, HTMLStyledProps<'div'>>((props, ref) => (
-  <styled.div border="default" borderRadius="sm" ref={ref} {...props} />
+  <styled.div ref={ref} {...props} />
 ));
 
 export const StyledTable = forwardRef<HTMLTableElement, HTMLStyledProps<'table'>>((props, ref) => (

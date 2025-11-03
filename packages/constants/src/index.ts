@@ -136,6 +136,7 @@ export const btcAsset: BtcAsset = {
   protocol: 'nativeBtc',
   symbol: 'BTC',
   category: 'fungible',
+  name: 'Bitcoin',
   decimals: 8,
   hasMemo: false,
 };
@@ -145,6 +146,7 @@ export const stxAsset: StxAsset = {
   protocol: 'nativeStx',
   symbol: 'STX',
   category: 'fungible',
+  name: 'Stacks',
   decimals: 6,
   hasMemo: false,
 };

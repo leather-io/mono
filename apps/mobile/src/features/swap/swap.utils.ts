@@ -6,7 +6,7 @@ export function getFungibleAssetDisplayName(asset: SwappableFungibleCryptoAsset)
   if (asset.symbol === 'STX') return t`Stacks`;
   if (asset.symbol === 'BTC') return t`Bitcoin`;
 
-  return 'name' in asset ? asset.name : asset.symbol;
+  return asset.name;
 }
 
 // This exists to allow tracking and replacing decimal-related logic once we

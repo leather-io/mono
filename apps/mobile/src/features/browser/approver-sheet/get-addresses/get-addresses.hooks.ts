@@ -23,5 +23,13 @@ export function useGetAddressesAccount(accountId: string | null) {
   const nativeSegwitPayer = nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 });
   if (!stacksAccount || !nativeSegwitPayer || !taprootPayer)
     throw new Error('some of the accounts are not available');
-  return { fingerprint, accountIndex, taprootPayer, nativeSegwitPayer, stacksAccount };
+  return {
+    fingerprint,
+    accountIndex,
+    taprootPayer,
+    nativeSegwitPayer,
+    stacksAccount,
+    taprootDescriptor: taproot?.descriptor,
+    nativeSegwitDescriptor: nativeSegwit?.descriptor,
+  };
 }
