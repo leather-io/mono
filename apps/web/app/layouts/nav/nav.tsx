@@ -14,6 +14,7 @@ import {
   BarsTwoIcon,
   ChangelogIcon,
   CodeIcon,
+  GlobeIcon,
   GridIcon,
   IconButton,
   SupportIcon,
@@ -32,6 +33,10 @@ function LeatherLogoHomeLink(props: HTMLStyledProps<'a'>) {
 export function NavContents() {
   return (
     <>
+      <NavItem href={externalLeatherNavigator.portfolio} icon={<GlobeIcon variant="small" />}>
+        Portfolio
+      </NavItem>
+
       <NavItem href="/stacking" icon={<SbtcMonogramIcon />}>
         Stacking
       </NavItem>
@@ -43,6 +48,7 @@ export function NavContents() {
       <NavItem href={externalLeatherNavigator.apps} icon={<GridIcon variant="small" />}>
         Apps
       </NavItem>
+
       {advancedModeEnabled && (
         <NavItem
           href="/advanced"

@@ -19,6 +19,7 @@ export function createExternalLeatherNavigator() {
     wallet: `${externalUrl}/wallet`,
     apps: `${externalUrl}/apps`,
     news: `${externalUrl}/news`,
+    portfolio: `${externalUrl}/portfolio`,
   };
 }
 
