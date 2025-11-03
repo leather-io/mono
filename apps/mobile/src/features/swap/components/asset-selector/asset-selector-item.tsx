@@ -2,14 +2,8 @@ import { ReactNode } from 'react';
 
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import {
-  Money,
-  SwappableFungibleCryptoAsset,
-  isBtcAsset,
-  isSip10Asset,
-  isStxAsset,
-} from '@leather.io/models';
-import { BtcAvatarIcon, Cell, Sip10AvatarIcon, StxAvatarIcon } from '@leather.io/ui/native';
+import { Money } from '@leather.io/models';
+import { Cell } from '@leather.io/ui/native';
 
 interface AssetListItemProps {
   name: string;
@@ -43,31 +37,4 @@ export function AssetSelectorItem({
       </Cell.Aside>
     </Cell.Root>
   );
-}
-
-interface AssetAvatarProps {
-  asset: SwappableFungibleCryptoAsset;
-}
-
-export function AssetAvatar({ asset }: AssetAvatarProps) {
-  if (isBtcAsset(asset)) {
-    return <BtcAvatarIcon indicator />;
-  }
-
-  if (isStxAsset(asset)) {
-    return <StxAvatarIcon indicator />;
-  }
-
-  if (isSip10Asset(asset)) {
-    return (
-      <Sip10AvatarIcon
-        name={asset.name}
-        contractId={asset.contractId}
-        imageCanonicalUri={asset.imageCanonicalUri}
-        indicator
-      />
-    );
-  }
-
-  return null;
 }
