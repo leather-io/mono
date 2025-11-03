@@ -1,7 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import * as d3 from 'd3';
 import { Box, BoxProps, styled } from 'leather-styles/jsx';
+
+import { Sip10Balance } from '@leather.io/services';
 
 interface PortfolioData {
   token: string;
@@ -9,32 +11,55 @@ interface PortfolioData {
   color: string;
 }
 
-const rawPortfolioData: PortfolioData[] = [
-  { token: 'BTC', percentage: 40, color: '#F7931A' },
-  { token: 'STX', percentage: 30, color: '#5546FF' },
-  { token: 'ETH', percentage: 10, color: '#627EEA' },
-  { token: 'USDT', percentage: 8, color: '#26A17B' },
-  { token: 'SOL', percentage: 5, color: '#14F195' },
-  { token: 'AVAX', percentage: 4, color: '#E84142' },
-  { token: 'MATIC', percentage: 2, color: '#8247E5' },
-  { token: 'ADA', percentage: 1, color: '#0033AD' },
+interface PortfolioChartProps extends BoxProps {
+  assets: Sip10Balance[];
+}
+
+const THRESHOLD_PERCENTAGE = 1;
+
+const defaultColors = [
+  '#5546FF',
+  '#F7931A',
+  '#627EEA',
+  '#26A17B',
+  '#14F195',
+  '#E84142',
+  '#8247E5',
+  '#0033AD',
+  '#4A90E2',
+  '#50C878',
 ];
 
-const THRESHOLD_PERCENTAGE = 3;
+function getColorForAsset(index: number): string {
+  return defaultColors[index % defaultColors.length];
+}
 
-const portfolioData = (() => {
-  const itemsToGroup = rawPortfolioData.filter(item => item.percentage < THRESHOLD_PERCENTAGE);
-  const mainItems = rawPortfolioData.filter(item => item.percentage >= THRESHOLD_PERCENTAGE);
-
-  if (itemsToGroup.length === 0) return rawPortfolioData;
-
-  const otherPercentage = itemsToGroup.reduce((sum, item) => sum + item.percentage, 0);
-
-  return [...mainItems, { token: 'Other', percentage: otherPercentage, color: '#9CA3AF' }];
-})();
-
-export function PortfolioChart(props: BoxProps) {
+export function PortfolioChart({ assets, ...props }: PortfolioChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+
+  const portfolioData = useMemo(() => {
+    const totalValue = assets.reduce(
+      (sum, asset) => sum + Number(asset.quote.availableBalance.amount),
+      0
+    );
+
+    if (totalValue === 0) return [];
+
+    const rawData: PortfolioData[] = assets.map((asset, index) => ({
+      token: asset.asset.symbol,
+      percentage: (Number(asset.quote.availableBalance.amount) / totalValue) * 100,
+      color: getColorForAsset(index),
+    }));
+
+    const itemsToGroup = rawData.filter(item => item.percentage < THRESHOLD_PERCENTAGE);
+    const mainItems = rawData.filter(item => item.percentage >= THRESHOLD_PERCENTAGE);
+
+    if (itemsToGroup.length === 0) return rawData;
+
+    const otherPercentage = itemsToGroup.reduce((sum, item) => sum + item.percentage, 0);
+
+    return [...mainItems, { token: 'Other', percentage: otherPercentage, color: '#9CA3AF' }];
+  }, [assets]);
 
   useEffect(() => {
     if (!svgRef.current) return;
@@ -123,7 +148,7 @@ export function PortfolioChart(props: BoxProps) {
       resizeObserver.disconnect();
       d3.selectAll('.portfolio-tooltip').remove();
     };
-  }, []);
+  }, [portfolioData]);
 
   return (
     <Box {...props}>

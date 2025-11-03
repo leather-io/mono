@@ -9,9 +9,10 @@ import { Sip10AvatarIcon } from '@leather.io/ui';
 
 interface AssetItemProps {
   asset: Sip10Balance;
+  allocation: number;
 }
 
-function AssetItem({ asset }: AssetItemProps) {
+function AssetItem({ asset, allocation }: AssetItemProps) {
   const name = asset.asset.name;
   const symbol = asset.asset.symbol;
   const balance = formatCurrency(asset.crypto.availableBalance, { showCurrency: false });
@@ -26,8 +27,9 @@ function AssetItem({ asset }: AssetItemProps) {
       borderBottom="default"
       _hover={{ bg: 'ink.background-secondary' }}
       cursor="pointer"
+      gap="space.04"
     >
-      <Flex alignItems="center" gap="space.04">
+      <Flex alignItems="center" gap="space.04" flex="1">
         <Sip10AvatarIcon
           contractId={asset.asset.contractId}
           imageCanonicalUri={asset.asset.imageCanonicalUri || ''}
@@ -43,13 +45,20 @@ function AssetItem({ asset }: AssetItemProps) {
         </Box>
       </Flex>
 
-      <Flex alignItems="flex-end" flexDir="column" gap="space.01">
-        <styled.p textStyle="body.02" fontWeight="medium">
-          {value}
-        </styled.p>
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
-          {balance}
-        </styled.span>
+      <Flex alignItems="center" gap="space.06">
+        <Box textAlign="right" minW="80px">
+          <styled.p textStyle="body.02" fontWeight="medium">
+            {allocation.toFixed(1)}%
+          </styled.p>
+        </Box>
+        <Flex alignItems="flex-end" flexDir="column" gap="space.01" minW="120px">
+          <styled.p textStyle="body.02" fontWeight="medium">
+            {value}
+          </styled.p>
+          <styled.span textStyle="caption.01" color="ink.text-subdued">
+            {balance}
+          </styled.span>
+        </Flex>
       </Flex>
     </Flex>
   );
@@ -69,9 +78,14 @@ function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
 export function AssetsList(props: BoxProps) {
   const sip10Query = useSip10AccountBalance();
 
-  const assets = useMemo(() => {
+  const { assets, totalValue } = useMemo(() => {
     const sip10Assets = sip10Query.data?.sip10s ?? [];
-    return sip10Assets.sort(sortAssetsByValue);
+    const sorted = sip10Assets.sort(sortAssetsByValue);
+    const total = sorted.reduce(
+      (sum, asset) => sum + Number(asset.quote.availableBalance.amount),
+      0
+    );
+    return { assets: sorted, totalValue: total };
   }, [sip10Query.data]);
 
   const isLoading = sip10Query.isPending;
@@ -79,13 +93,18 @@ export function AssetsList(props: BoxProps) {
   return (
     <Box borderRadius="sm" border="default" overflow="hidden" {...props}>
       <Box bg="ink.background-secondary" px="space.05" py="space.03">
-        <Flex justifyContent="space-between" alignItems="center">
-          <styled.p textStyle="label.02" color="ink.text-subdued">
+        <Flex justifyContent="space-between" alignItems="center" gap="space.04">
+          <styled.p textStyle="label.02" color="ink.text-subdued" flex="1">
             Asset
           </styled.p>
-          <styled.p textStyle="label.02" color="ink.text-subdued">
-            Value
-          </styled.p>
+          <Flex alignItems="center" gap="space.06">
+            <styled.p textStyle="label.02" color="ink.text-subdued" minW="80px" textAlign="right">
+              Allocation
+            </styled.p>
+            <styled.p textStyle="label.02" color="ink.text-subdued" minW="120px" textAlign="right">
+              Value
+            </styled.p>
+          </Flex>
         </Flex>
       </Box>
 
@@ -96,7 +115,11 @@ export function AssetsList(props: BoxProps) {
           </styled.p>
         </Box>
       ) : assets.length > 0 ? (
-        assets.map((asset, index) => <AssetItem key={index} asset={asset} />)
+        assets.map((asset, index) => {
+          const allocation =
+            totalValue > 0 ? (Number(asset.quote.availableBalance.amount) / totalValue) * 100 : 0;
+          return <AssetItem key={index} asset={asset} allocation={allocation} />;
+        })
       ) : (
         <Box p="space.06" textAlign="center">
           <styled.p textStyle="body.02" color="ink.text-subdued">
