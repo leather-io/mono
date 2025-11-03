@@ -1,11 +1,16 @@
 import { useWindowDimensions } from 'react-native';
 
-import { BoxProps } from '@shopify/restyle';
+import { Box, type BoxProps } from '@leather.io/ui/native';
 
-import { Box, Theme } from '@leather.io/ui/native';
+interface DividerProps extends BoxProps {
+  fullBleed?: boolean;
+}
 
-export function Divider(props: BoxProps<Theme>) {
-  const { width } = useWindowDimensions();
+export function Divider({ fullBleed, ...boxProps }: DividerProps) {
+  const { width: windowWidth } = useWindowDimensions();
+  const width = fullBleed ? windowWidth : '100%';
 
-  return <Box alignSelf="center" bg="ink.border-transparent" height={1} width={width} {...props} />;
+  return (
+    <Box alignSelf="center" bg="ink.border-transparent" height={1} width={width} {...boxProps} />
+  );
 }

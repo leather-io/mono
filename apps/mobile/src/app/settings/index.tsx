@@ -157,7 +157,7 @@ export default function SettingsScreen() {
           </Box>
         )}
 
-        <Divider my="3" />
+        <Divider my="3" fullBleed />
 
         <Button onPress={lockApp} variant="outline" testID={TestId.settingsLockAppButton}>
           {t`Lock app`}
