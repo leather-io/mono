@@ -87,7 +87,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
   const heading03 = {
     ...commonMarcheProStyles,
     fontSize: transformSize(32),
-    lineHeight: transformSize(28),
+    lineHeight: transformSize(35),
     letterSpacing: 0.64,
   };
   const heading04 = {
