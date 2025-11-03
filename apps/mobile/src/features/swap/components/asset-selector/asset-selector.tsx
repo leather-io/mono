@@ -1,9 +1,7 @@
 import { SearchInput } from '@/components/search-input';
+import { AssetAvatar } from '@/features/swap/components/asset-avatar';
 import { AssetSelectorEmptyState } from '@/features/swap/components/asset-selector/asset-selector-empty-state';
-import {
-  AssetAvatar,
-  AssetSelectorItem,
-} from '@/features/swap/components/asset-selector/asset-selector-item';
+import { AssetSelectorItem } from '@/features/swap/components/asset-selector/asset-selector-item';
 import { useSwapAssetSearch } from '@/features/swap/components/asset-selector/use-swap-asset-search';
 import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
 import { matchQueryResult } from '@/queries/match-query-result';
@@ -73,7 +71,7 @@ export function AssetSelector({
                   symbol={item.asset.symbol}
                   balance={item.balance?.crypto.availableBalance}
                   quoteBalance={item.balance?.quote.availableBalance}
-                  icon={<AssetAvatar asset={item.asset} />}
+                  icon={<AssetAvatar asset={item.asset} indicator />}
                   onPress={() => onSelectAsset(type, item)}
                 />
               )}
