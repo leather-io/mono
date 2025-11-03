@@ -6,13 +6,13 @@ export function PortfolioSummary(props: BoxProps) {
   const totalBalance = useTotalPortfolioBalance();
 
   return (
-    <Box borderRadius="sm" border="default" bg="ink.background-secondary" p="space.05" {...props}>
+    <Box {...props}>
       <Flex justifyContent="space-between" alignItems="flex-start" flexWrap="wrap" gap="space.04">
         <Box>
-          <styled.h3 textStyle="label.02" color="ink.text-subdued" mb="space.02">
-            Total portfolio value
+          <styled.h3 textStyle="label.03" color="ink.text-subdued" mb="space.02">
+            Total balance
           </styled.h3>
-          <styled.p textStyle="heading.03">
+          <styled.p textStyle="heading.04">
             {totalBalance ? formatCurrency(totalBalance) : '$-.--'}
           </styled.p>
         </Box>

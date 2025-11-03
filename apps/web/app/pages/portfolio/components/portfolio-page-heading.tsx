@@ -1,10 +1,9 @@
-import { Page } from '~/layouts/page/page';
+import { styled } from 'leather-styles/jsx';
 
 export function PortfolioPageHeading() {
   return (
-    <Page.Heading
-      title="Your cryptocurrency portfolio"
-      subtitle="Track your digital assets and monitor your portfolio performance in one place. View real-time balances, price changes, and total value across all your holdings."
-    />
+    <styled.h2 textStyle="heading.05" mt="space.07">
+      Overview
+    </styled.h2>
   );
 }

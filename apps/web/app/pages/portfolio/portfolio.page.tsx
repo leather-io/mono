@@ -1,14 +1,12 @@
 import { useMemo } from 'react';
 
-import { styled } from 'leather-styles/jsx';
-import { Page } from '~/layouts/page/page';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 
 import { Sip10Balance } from '@leather.io/services';
 
 import { AssetsList } from './components/assets-list';
 import { PortfolioChart } from './components/portfolio-chart';
-import { PortfolioPageHeading } from './components/portfolio-page-heading';
+import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
 
 function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
@@ -27,20 +25,10 @@ export function PortfolioPage() {
   }, [sip10Query.data]);
 
   return (
-    <Page>
-      <Page.Header title="Portfolio" />
-
-      <PortfolioPageHeading />
-
-      <PortfolioSummary mb="space.06" />
-
-      <PortfolioChart assets={sortedAssets} mb="space.07" />
-
-      <styled.h2 textStyle="heading.05" mb="space.05">
-        Your assets
-      </styled.h2>
-
-      <AssetsList mb="space.07" />
-    </Page>
+    <PortfolioPageLayout
+      overview={<PortfolioSummary />}
+      assetList={<AssetsList />}
+      visualization={<PortfolioChart assets={sortedAssets} />}
+    />
   );
 }

@@ -19,22 +19,15 @@ function AssetItem({ asset, allocation }: AssetItemProps) {
   const value = formatCurrency(asset.quote.availableBalance);
 
   return (
-    <Flex
-      justifyContent="space-between"
-      alignItems="center"
-      py="space.04"
-      px="space.05"
-      borderBottom="default"
-      _hover={{ bg: 'ink.background-secondary' }}
-      cursor="pointer"
-      gap="space.04"
-    >
-      <Flex alignItems="center" gap="space.04" flex="1">
-        <Sip10AvatarIcon
-          contractId={asset.asset.contractId}
-          imageCanonicalUri={asset.asset.imageCanonicalUri || ''}
-          name={asset.asset.name}
-        />
+    <Flex justifyContent="space-between" alignItems="center" py="space.03">
+      <Flex alignItems="center" gap="space.04">
+        <Box>
+          <Sip10AvatarIcon
+            contractId={asset.asset.contractId}
+            imageCanonicalUri={asset.asset.imageCanonicalUri}
+            name={asset.asset.name}
+          />
+        </Box>
         <Box>
           <styled.p textStyle="body.02" fontWeight="medium">
             {name}
@@ -45,16 +38,9 @@ function AssetItem({ asset, allocation }: AssetItemProps) {
         </Box>
       </Flex>
 
-      <Flex alignItems="center" gap="space.06">
-        <Box textAlign="right" minW="80px">
-          <styled.p textStyle="body.02" fontWeight="medium">
-            {allocation.toFixed(1)}%
-          </styled.p>
-        </Box>
-        <Flex alignItems="flex-end" flexDir="column" gap="space.01" minW="120px">
-          <styled.p textStyle="body.02" fontWeight="medium">
-            {value}
-          </styled.p>
+      <Flex alignItems="flex-end" flexDir="column" gap="space.01">
+        <styled.p textStyle="body.02">{value}</styled.p>
+        <Flex alignItems="center" gap="space.02">
           <styled.span textStyle="caption.01" color="ink.text-subdued">
             {balance}
           </styled.span>
@@ -68,9 +54,7 @@ function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
   const aValue = Number(a.quote.availableBalance.amount);
   const bValue = Number(b.quote.availableBalance.amount);
 
-  if (bValue !== aValue) {
-    return bValue - aValue;
-  }
+  if (bValue !== aValue) return bValue - aValue;
 
   return a.asset.symbol.localeCompare(b.asset.symbol);
 }
@@ -91,22 +75,15 @@ export function AssetsList(props: BoxProps) {
   const isLoading = sip10Query.isPending;
 
   return (
-    <Box borderRadius="sm" border="default" overflow="hidden" {...props}>
-      <Box bg="ink.background-secondary" px="space.05" py="space.03">
-        <Flex justifyContent="space-between" alignItems="center" gap="space.04">
-          <styled.p textStyle="label.02" color="ink.text-subdued" flex="1">
-            Asset
-          </styled.p>
-          <Flex alignItems="center" gap="space.06">
-            <styled.p textStyle="label.02" color="ink.text-subdued" minW="80px" textAlign="right">
-              Allocation
-            </styled.p>
-            <styled.p textStyle="label.02" color="ink.text-subdued" minW="120px" textAlign="right">
-              Value
-            </styled.p>
-          </Flex>
-        </Flex>
-      </Box>
+    <Box {...props}>
+      <Flex justifyContent="space-between" alignItems="center">
+        <styled.p textStyle="label.03" color="ink.text-subdued">
+          Asset
+        </styled.p>
+        <styled.p textStyle="label.03" color="ink.text-subdued">
+          Value
+        </styled.p>
+      </Flex>
 
       {isLoading ? (
         <Box p="space.06" textAlign="center">
@@ -121,7 +98,7 @@ export function AssetsList(props: BoxProps) {
           return <AssetItem key={index} asset={asset} allocation={allocation} />;
         })
       ) : (
-        <Box p="space.06" textAlign="center">
+        <Box textAlign="center">
           <styled.p textStyle="body.02" color="ink.text-subdued">
             No assets to display
           </styled.p>

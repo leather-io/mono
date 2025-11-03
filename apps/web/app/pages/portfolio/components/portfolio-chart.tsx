@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 
 import * as d3 from 'd3';
-import { Box, BoxProps, styled } from 'leather-styles/jsx';
+import { BoxProps, styled } from 'leather-styles/jsx';
 
 import { Sip10Balance } from '@leather.io/services';
 
@@ -9,10 +9,6 @@ interface PortfolioData {
   token: string;
   percentage: number;
   color: string;
-}
-
-interface PortfolioChartProps extends BoxProps {
-  assets: Sip10Balance[];
 }
 
 const THRESHOLD_PERCENTAGE = 1;
@@ -32,6 +28,9 @@ const defaultColors = [
 
 function getColorForAsset(index: number): string {
   return defaultColors[index % defaultColors.length];
+}
+interface PortfolioChartProps extends BoxProps {
+  assets: Sip10Balance[];
 }
 
 export function PortfolioChart({ assets, ...props }: PortfolioChartProps) {
@@ -150,14 +149,5 @@ export function PortfolioChart({ assets, ...props }: PortfolioChartProps) {
     };
   }, [portfolioData]);
 
-  return (
-    <Box {...props}>
-      <styled.h3 textStyle="heading.05" mb="space.04">
-        Portfolio performance
-      </styled.h3>
-      <Box borderRadius="sm" border="default" bg="ink.background-secondary" p="space.05">
-        <svg ref={svgRef} style={{ display: 'block', width: '100%' }} />
-      </Box>
-    </Box>
-  );
+  return <styled.svg ref={svgRef} display="block" width="100%" {...props} />;
 }
