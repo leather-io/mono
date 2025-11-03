@@ -1,16 +1,8 @@
+import { AssetAvatar } from '@/features/swap/components/asset-avatar';
 import { t } from '@lingui/core/macro';
 
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
-import {
-  Box,
-  BtcAvatarIcon,
-  ChevronDownIcon,
-  PlusIcon,
-  Pressable,
-  Sip10AvatarIcon,
-  StxAvatarIcon,
-  Text,
-} from '@leather.io/ui/native';
+import { Box, ChevronDownIcon, PlusIcon, Pressable, Text } from '@leather.io/ui/native';
 
 interface AssetPickerTriggerProps {
   asset: SwappableFungibleCryptoAsset | undefined;
@@ -59,24 +51,5 @@ function renderAvatar(asset: SwappableFungibleCryptoAsset | undefined) {
     );
   }
 
-  if (asset.symbol === 'BTC') {
-    return <BtcAvatarIcon size="sm" />;
-  }
-
-  if (asset.symbol === 'STX') {
-    return <StxAvatarIcon size="sm" />;
-  }
-
-  if (asset.protocol === 'sip10') {
-    return (
-      <Sip10AvatarIcon
-        size="sm"
-        contractId={asset.contractId}
-        imageCanonicalUri={asset.imageCanonicalUri}
-        name={asset.name}
-      />
-    );
-  }
-
-  return null;
+  return <AssetAvatar asset={asset} size="sm" />;
 }

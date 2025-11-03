@@ -1378,7 +1378,7 @@ msgstr "Scan a QR code"
 msgid "Scan QR Code"
 msgstr "Scan QR Code"
 
-#: src/features/swap/components/asset-selector/asset-selector.tsx:46
+#: src/features/swap/components/asset-selector/asset-selector.tsx:44
 msgid "Search for asset"
 msgstr "Search for asset"
 
@@ -1395,7 +1395,7 @@ msgstr "Secure your wallet"
 msgid "Security"
 msgstr "Security"
 
-#: src/features/swap/components/asset-selector/asset-selector-toggle.tsx:38
+#: src/features/swap/components/asset-selector/asset-selector-toggle.tsx:30
 msgid "Select"
 msgstr "Select"
 
