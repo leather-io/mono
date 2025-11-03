@@ -11,18 +11,35 @@ interface AmountPresetsProps {
 export function AmountPresets({ onSelectPercentage }: AmountPresetsProps) {
   return (
     <Box flexDirection="row" px="7" gap="3">
-      <Button flex={1} variant="outline" size="sm" onPress={() => onSelectPercentage(0.25)}>
+      <PresetButton onPress={() => onSelectPercentage(0.25)}>
         {formatPercentage(0.25, 0)}
-      </Button>
-      <Button flex={1} variant="outline" size="sm" onPress={() => onSelectPercentage(0.5)}>
+      </PresetButton>
+      <PresetButton onPress={() => onSelectPercentage(0.5)}>
         {formatPercentage(0.5, 0)}
-      </Button>
-      <Button flex={1} variant="outline" size="sm" onPress={() => onSelectPercentage(0.75)}>
+      </PresetButton>
+      <PresetButton onPress={() => onSelectPercentage(0.75)}>
         {formatPercentage(0.75, 0)}
-      </Button>
-      <Button flex={1} variant="outline" size="sm" onPress={() => onSelectPercentage(1)}>
-        {t`MAX`}
-      </Button>
+      </PresetButton>
+      <PresetButton onPress={() => onSelectPercentage(1)}>{t`MAX`}</PresetButton>
     </Box>
+  );
+}
+
+interface PresetButtonProps {
+  children: string;
+  onPress: () => void;
+}
+
+function PresetButton({ children, onPress }: PresetButtonProps) {
+  return (
+    <Button
+      flex={1}
+      variant="outline"
+      size="sm"
+      hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
+      onPress={onPress}
+    >
+      {children}
+    </Button>
   );
 }
