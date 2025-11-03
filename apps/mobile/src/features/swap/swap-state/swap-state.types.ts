@@ -56,6 +56,7 @@ export interface EnrichedSwapQuote {
   rate: number;
   dexPath: SwapDex[];
   assetPath: SwappableFungibleCryptoAsset[];
+  baseAmount: number;
   quoteAmount: Money;
   slippageApplicable: boolean;
   minReceive?: Money;

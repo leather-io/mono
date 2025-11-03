@@ -51,6 +51,7 @@ const stacksContractCallStrategy: ExecutionStrategy = {
     const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
     return {
       rawSwapQuote: swapQuote,
+      baseAmount: swapQuote.baseAmount,
       dexPath: swapQuote.dexPath,
       assetPath: swapQuote.assetPath,
       quoteAmount: swapQuote.quote,
@@ -80,6 +81,7 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
     const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
     return {
       rawSwapQuote: swapQuote,
+      baseAmount: swapQuote.baseAmount,
       dexPath: swapQuote.dexPath,
       assetPath: swapQuote.assetPath,
       quoteAmount: swapQuote.quote,
