@@ -88,7 +88,7 @@ function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
 
 export function AssetsList({ assets, isLoading, ...props }: AssetsListProps) {
   const { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol } = usePortfolioEvents();
-  const { sortedAssets, totalValue } = useMemo(() => {
+  const { totalValue } = useMemo(() => {
     const sorted = assets.sort(sortAssetsByValue);
     const total = sorted.reduce(
       (sum, asset) => sum + Number(asset.quote.availableBalance.amount),
