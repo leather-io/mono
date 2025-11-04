@@ -13,9 +13,10 @@ import { Flex, styled } from 'leather-styles/jsx';
 import { Table, rowPadding } from '~/components/table';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import { BtcAsset, CryptoAssetBalance, Sip10Asset, StxAsset } from '@leather.io/models';
+import { BtcAsset, CryptoAssetBalance, Money, Sip10Asset, StxAsset } from '@leather.io/models';
 
 import { usePortfolioEvents } from '../portfolio-events';
+import { EmptyAmountPlaceholder } from '../portfolio.page';
 import { PortfolioTableEmpty } from './portfolio-empty';
 import { PortfolioTableLoading } from './portfolio-loading';
 import {
@@ -39,36 +40,26 @@ export interface PortfolioAsset {
   crypto: CryptoAssetBalance;
   quote: CryptoAssetBalance;
 }
+export interface PortfolioTableRow extends PortfolioAsset {
+  allocation: number;
+  price?: Money;
+  priceIsLoading: boolean;
+  priceChange?: number;
+  priceChangeIsLoading: boolean;
+}
+
 type ColumnAlignment = 'left' | 'center' | 'right';
 
-interface AssetRow extends PortfolioAsset {
-  allocation: number;
-}
-
 interface PortfolioTableProps {
-  assets: PortfolioAsset[];
+  rows: PortfolioTableRow[];
   isLoading: boolean;
 }
-export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
+export function PortfolioTable({ rows, isLoading }: PortfolioTableProps) {
   const { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol } = usePortfolioEvents();
+  const tokenCount = rows.length;
+  const hasData = tokenCount > 0;
 
-  const data = useMemo<AssetRow[]>(() => {
-    if (!assets?.length) return [];
-    const totalValue = assets.reduce(
-      (sum, asset) => sum + Number(asset.quote.availableBalance.amount),
-      0
-    );
-    return assets.map(asset => ({
-      ...asset,
-      allocation:
-        totalValue > 0 ? (Number(asset.quote.availableBalance.amount) / totalValue) * 100 : 0,
-      priceChange: 0,
-    }));
-  }, [assets]);
-
-  const hasData = data.length > 0;
-
-  const columns = useMemo<ColumnDef<AssetRow>[]>(() => {
+  const columns = useMemo<ColumnDef<PortfolioTableRow>[]>(() => {
     return [
       {
         id: 'asset',
@@ -94,8 +85,10 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
             Price
           </styled.p>
         ),
-        cell: () => {
-          return <TextCell>$0.00</TextCell>;
+        cell: info => {
+          const { price, priceIsLoading } = info.row.original;
+          if (priceIsLoading) return <TextCell>{`${EmptyAmountPlaceholder}`}</TextCell>;
+          return <TextCell>{price ? formatCurrency(price) : `${EmptyAmountPlaceholder}`}</TextCell>;
         },
       },
       {
@@ -121,8 +114,9 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
             24h
           </styled.p>
         ),
-        cell: () => {
-          return <PriceChangeCell priceChange={0} />;
+        cell: info => {
+          const { priceChange, priceChangeIsLoading } = info.row.original;
+          return <PriceChangeCell priceChange={priceChange} isLoading={priceChangeIsLoading} />;
         },
       },
       {
@@ -149,7 +143,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
   const [sorting, setSorting] = useState<SortingState>([{ id: 'balance', desc: true }]);
   const table = useReactTable({
     columns,
-    data,
+    data: rows,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     enableSortingRemoval: false,
@@ -164,19 +158,33 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
     return <PortfolioTableEmpty />;
   }
   return (
-    <>
-      <Table.Root width="100%" overflowX="auto">
-        <Table.Table>
-          <Table.Head>
-            {table.getHeaderGroups().map(headerGroup => (
-              <Table.Row key={headerGroup.id} className={rowPadding}>
-                {headerGroup.headers.map(header => {
-                  const sortState = header.column.getIsSorted();
-                  const canSort = header.column.getCanSort();
-                  const toggleSort = canSort ? header.column.getToggleSortingHandler() : undefined;
-                  const alignment: ColumnAlignment = header.column.columnDef.meta?.align ?? 'left';
-                  const justifyContent = getJustifyContent(alignment);
-                  const ariaSort = getAriaSort(sortState);
+        <>
+          <Flex
+            px="space.04"
+            py="space.03"
+            alignItems="flex-start"
+            gap="space.04"
+            alignSelf="stretch"
+          >
+            <styled.p textStyle="heading.05">
+              Tokens <styled.span color="ink.text-subdued">{rows.length}</styled.span>
+            </styled.p>
+          </Flex>
+          <Table.Root width="100%" overflowX="auto">
+            <Table.Table>
+              <Table.Head>
+                {table.getHeaderGroups().map(headerGroup => (
+                  <Table.Row key={headerGroup.id} className={rowPadding}>
+                    {headerGroup.headers.map(header => {
+                      const sortState = header.column.getIsSorted();
+                      const canSort = header.column.getCanSort();
+                      const toggleSort = canSort
+                        ? header.column.getToggleSortingHandler()
+                        : undefined;
+                      const alignment: ColumnAlignment =
+                        header.column.columnDef.meta?.align ?? 'left';
+                      const justifyContent = getJustifyContent(alignment);
+                      const ariaSort = getAriaSort(sortState);
 
                   return (
                     <Table.Header

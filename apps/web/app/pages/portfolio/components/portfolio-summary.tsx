@@ -2,6 +2,8 @@ import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
 import { useTotalPortfolioBalance } from '~/queries/balance/total-balance.hooks';
 import { formatCurrency } from '~/utils/currency-formatter';
 
+import { EmptyAmountPlaceholder } from '../portfolio.page';
+
 export function PortfolioSummary(props: BoxProps) {
   const totalBalance = useTotalPortfolioBalance();
 
@@ -13,7 +15,7 @@ export function PortfolioSummary(props: BoxProps) {
             Total balance
           </styled.h3>
           <styled.p textStyle="heading.03">
-            {totalBalance ? formatCurrency(totalBalance) : '$–.––'}
+            {totalBalance ? formatCurrency(totalBalance) : `${EmptyAmountPlaceholder}`}
           </styled.p>
         </Box>
       </Flex>

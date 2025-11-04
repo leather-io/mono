@@ -1,6 +1,6 @@
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import { RuneAsset, Sip10Asset } from '@leather.io/models';
-import { initBigNumber } from '@leather.io/utils';
+import { Brc20Asset, RuneAsset, Sip10Asset } from '@leather.io/models';
+import { getAssetId, initBigNumber, serializeAssetId } from '@leather.io/utils';
 
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
@@ -37,10 +37,13 @@ describe(MarketDataService.name, () => {
         JPY: 200,
       },
     }),
+    fetchRunePrice: vi.fn().mockReturnValue({
+      price: 0.001,
+    }),
   } as unknown as LeatherApiClient;
 
   const mockBestInSlotApiClient = {
-    getMarketData: vi.fn(),
+    fetchBrc20MarketInfo: vi.fn().mockResolvedValue({ min_listed_unit_price: 0.0001 }),
   } as unknown as BestInSlotApiClient;
 
   const marketDataService = new MarketDataService(
@@ -129,6 +132,75 @@ describe(MarketDataService.name, () => {
       expect(runeMarketData.pair.quote).toEqual('EUR');
       expect(runeMarketData.price.amount).toEqual(initBigNumber(0.08));
       expect(runeMarketData.price.symbol).toEqual('EUR');
+    });
+  });
+
+  describe(MarketDataService.prototype.getMarketDataBatch.name, () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should batch market data requests per protocol', async () => {
+      const sip10Asset = {
+        chain: 'stacks',
+        protocol: 'sip10',
+        category: 'fungible',
+        symbol: 'SOME',
+        name: 'Some Token',
+        decimals: 6,
+        hasMemo: false,
+        canTransfer: true,
+        assetId: 'SP123.some-token::some',
+        contractId: 'SP123.some-token',
+        imageCanonicalUri: '',
+      } as Sip10Asset;
+
+      const runeAsset = {
+        chain: 'bitcoin',
+        protocol: 'rune',
+        category: 'fungible',
+        symbol: 'SOMERUNE',
+        name: 'Some Rune',
+        spacedRuneName: 'SOME·RUNE',
+        runeName: 'SOMERUNE',
+        decimals: 8,
+        hasMemo: false,
+      } as RuneAsset;
+
+      const brc20Asset = {
+        chain: 'bitcoin',
+        protocol: 'brc20',
+        category: 'fungible',
+        symbol: 'ORDI',
+        name: 'ORDI',
+        decimals: 18,
+        hasMemo: false,
+      } as Brc20Asset;
+
+      const result = await marketDataService.getMarketDataBatch([
+        stxAsset,
+        btcAsset,
+        sip10Asset,
+        runeAsset,
+        brc20Asset,
+      ]);
+
+      expect(result).toBeDefined();
+      const stxKey = serializeAssetId(getAssetId(stxAsset));
+      const sip10Key = serializeAssetId(getAssetId(sip10Asset));
+      const runeKey = serializeAssetId(getAssetId(runeAsset));
+      const brc20Key = serializeAssetId(getAssetId(brc20Asset));
+
+      expect(result[stxKey]?.pair.quote).toEqual('EUR');
+      expect(result[sip10Key]?.pair.quote).toEqual('EUR');
+      expect(result[runeKey]?.pair.quote).toEqual('EUR');
+      expect(result[brc20Key]?.pair.quote).toEqual('EUR');
+
+      expect(mockLeatherApiClient.fetchNativeTokenPriceMap).toHaveBeenCalledTimes(1);
+      expect(mockLeatherApiClient.fetchSip10PriceMap).toHaveBeenCalledTimes(1);
+      expect(mockLeatherApiClient.fetchRunePriceMap).toHaveBeenCalledTimes(1);
+      expect(mockBestInSlotApiClient.fetchBrc20MarketInfo).toHaveBeenCalledTimes(1);
+      expect(mockLeatherApiClient.fetchRunePrice).not.toHaveBeenCalled();
     });
   });
 

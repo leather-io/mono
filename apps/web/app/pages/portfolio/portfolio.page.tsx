@@ -21,6 +21,8 @@ function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
   return a.asset.symbol.localeCompare(b.asset.symbol);
 }
 
+export const EmptyAmountPlaceholder = '-.--';
+
 export function PortfolioPage() {
   const btcQuery = useBtcAccountBalance();
   const sip10Query = useSip10AccountBalance();
@@ -56,9 +58,13 @@ export function PortfolioPage() {
 
   return (
     <PortfolioPageLayout
+      assets={allAssets}
+      isLoading={isLoading}
       overview={<PortfolioSummary />}
       assetCount={allAssets.length}
-      assetList={<PortfolioTable assets={allAssets} isLoading={isLoading} />}
+      renderAssetList={({ rows, isLoading: tableIsLoading }) => (
+        <PortfolioTable rows={rows} isLoading={tableIsLoading} />
+      )}
       visualization={
         <WhenClient fallback={<PortfolioChartPending />}>
           <PortfolioChart assets={allAssets} />

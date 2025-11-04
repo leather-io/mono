@@ -11,10 +11,12 @@ import {
   StxAvatarIcon,
 } from '@leather.io/ui';
 
+import { EmptyAmountPlaceholder } from '../portfolio.page';
 import { SortState } from './utils';
 
 interface PriceChangeCellProps {
-  priceChange: number;
+  priceChange?: number;
+  isLoading?: boolean;
 }
 
 function getPriceChangeColor(priceChange: number) {
@@ -23,19 +25,31 @@ function getPriceChangeColor(priceChange: number) {
   } else if (priceChange < 0) {
     return 'red.action-primary-default';
   } else {
-    return 'ink.text-primary';
+    return 'ink.text-subdued';
   }
 }
-export function PriceChangeCell({ priceChange }: PriceChangeCellProps) {
+export function PriceChangeCell({ priceChange, isLoading }: PriceChangeCellProps) {
+  if (isLoading || priceChange === undefined) {
+    return (
+      <styled.p textStyle="body.02" color="ink.text-subdued">
+        {`${EmptyAmountPlaceholder}`}
+      </styled.p>
+    );
+  }
+
   const color = getPriceChangeColor(priceChange);
+  const shouldShowArrow = priceChange !== 0;
+
   return (
     <Flex alignItems="center" gap="space.01">
-      <ArrowTriangleTopIcon
-        color={color}
-        width={8}
-        height={8}
-        style={{ transform: `rotate(${priceChange < 0 ? 180 : 0}deg)` }}
-      />
+      {shouldShowArrow ? (
+        <ArrowTriangleTopIcon
+          color={color}
+          width={8}
+          height={8}
+          style={{ transform: `rotate(${priceChange < 0 ? 180 : 0}deg)` }}
+        />
+      ) : null}
       <styled.p textStyle="body.02" fontWeight="medium" color={color}>
         {priceChange.toFixed(2)}%
       </styled.p>
