@@ -6,7 +6,7 @@ import { Box, HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { shimmerStyles } from '@leather.io/ui';
 
 import { usePortfolioEvents } from '../portfolio-events';
-import { PortfolioAsset } from './assets-list';
+import { PortfolioAsset } from '../portfolio-table/portfolio-table';
 
 interface PortfolioData {
   token: string;
