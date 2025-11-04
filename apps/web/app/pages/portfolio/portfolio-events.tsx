@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+
+import { atom, useAtom } from 'jotai';
 
 export const bus = new EventTarget();
 
@@ -10,8 +12,10 @@ function emitAssetHoverOff() {
   bus.dispatchEvent(new CustomEvent('cursor-hover-off'));
 }
 
+const hoveredSymbolAtom = atom<string | null>(null);
+
 export function usePortfolioEvents(listener?: (symbol: string | null) => void) {
-  const [hoveredSymbol, setHoveredSymbol] = useState<string | null>(null);
+  const [hoveredSymbol, setHoveredSymbol] = useAtom(hoveredSymbolAtom);
 
   useEffect(() => {
     function handleHoverOn(event: Event) {
@@ -33,7 +37,7 @@ export function usePortfolioEvents(listener?: (symbol: string | null) => void) {
       bus.removeEventListener('cursor-hover-on', handleHoverOn);
       bus.removeEventListener('cursor-hover-off', handleHoverOff);
     };
-  }, [listener]);
+  }, [listener, setHoveredSymbol]);
 
   return { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol };
 }
