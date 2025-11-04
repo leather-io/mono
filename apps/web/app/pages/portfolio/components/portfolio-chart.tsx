@@ -46,8 +46,7 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
     const isHoveredInOtherGroup = hoveredSymbol && groupedItemsRef.current.has(hoveredSymbol);
 
     d3.select(svgRef.current)
-      .selectAll('rect')
-      .filter((d: any) => d && d.token)
+      .selectAll('rect.bar')
       .style('opacity', (d: any) => {
         if (!hoveredSymbol) return 1;
 
@@ -138,10 +137,40 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
         let cumulativePercentage = 0;
         const barPadding = 4;
 
-        g.selectAll('rect')
+        // Create hover handlers
+        function handleMouseMove(event: MouseEvent) {
+          const tooltipNode = tooltip.node();
+          if (!tooltipNode) return;
+
+          const tooltipRect = tooltipNode.getBoundingClientRect();
+          const tooltipWidth = tooltipRect.width;
+          const tooltipHeight = tooltipRect.height;
+
+          let left = event.pageX - tooltipWidth / 2;
+          let top = event.pageY - tooltipHeight - 10;
+
+          // Prevent overflow on right edge
+          if (left + tooltipWidth > window.innerWidth) left = window.innerWidth - tooltipWidth - 10;
+
+          // Prevent overflow on left edge
+          if (left < 10) {
+            left = 10;
+          }
+
+          // Prevent overflow on top edge
+          if (top < 10) {
+            top = event.pageY + 10;
+          }
+
+          tooltip.style('top', `${top}px`).style('left', `${left}px`);
+        }
+
+        // Draw visible bars
+        g.selectAll('rect.bar')
           .data(portfolioData)
           .enter()
           .append('rect')
+          .attr('class', 'bar')
           .attr('x', (d, i) => {
             const x = xScale(cumulativePercentage);
             cumulativePercentage += d.percentage;
@@ -157,38 +186,32 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
           .attr('height', innerHeight)
           .attr('fill', d => d.color)
           .attr('rx', 4)
+          .style('cursor', 'pointer');
+
+        // Reset cumulativePercentage for invisible overlay
+        cumulativePercentage = 0;
+
+        // Create invisible overlay rectangles without gaps
+        g.selectAll('rect.hover-overlay')
+          .data(portfolioData)
+          .enter()
+          .append('rect')
+          .attr('class', 'hover-overlay')
+          .attr('x', d => {
+            const x = xScale(cumulativePercentage);
+            cumulativePercentage += d.percentage;
+            return x;
+          })
+          .attr('y', 0)
+          .attr('width', d => xScale(d.percentage))
+          .attr('height', innerHeight)
+          .attr('fill', 'transparent')
           .style('cursor', 'pointer')
-          .on('mouseover', (event, d) => {
+          .on('mouseover', (_event, d) => {
             emitAssetHoverOn(d.token);
             tooltip.style('visibility', 'visible').html(`${d.token}: ${d.percentage.toFixed(1)}%`);
           })
-          .on('mousemove', event => {
-            const tooltipNode = tooltip.node();
-            if (!tooltipNode) return;
-
-            const tooltipRect = tooltipNode.getBoundingClientRect();
-            const tooltipWidth = tooltipRect.width;
-            const tooltipHeight = tooltipRect.height;
-
-            let left = event.pageX - tooltipWidth / 2;
-            let top = event.pageY - tooltipHeight - 10;
-
-            // Prevent overflow on right edge
-            if (left + tooltipWidth > window.innerWidth)
-              left = window.innerWidth - tooltipWidth - 10;
-
-            // Prevent overflow on left edge
-            if (left < 10) {
-              left = 10;
-            }
-
-            // Prevent overflow on top edge
-            if (top < 10) {
-              top = event.pageY + 10;
-            }
-
-            tooltip.style('top', `${top}px`).style('left', `${left}px`);
-          })
+          .on('mousemove', handleMouseMove)
           .on('mouseleave', () => {
             emitAssetHoverOff();
             tooltip.style('visibility', 'hidden');
