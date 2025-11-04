@@ -38,10 +38,12 @@ export function PortfolioPage() {
     return assets.sort(sortAssetsByValue);
   }, [sip10Query.data, stxQuery.data]);
 
+  const isLoading = sip10Query.isLoading || stxQuery.isLoading;
+
   return (
     <PortfolioPageLayout
       overview={<PortfolioSummary />}
-      assetList={<AssetsList assets={allAssets} />}
+      assetList={<AssetsList assets={allAssets} isLoading={isLoading} />}
       visualization={<PortfolioChart assets={allAssets} />}
     />
   );
