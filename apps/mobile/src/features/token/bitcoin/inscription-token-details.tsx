@@ -1,9 +1,6 @@
 import { ExternalLink } from '@/components/external-link';
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
-import {
-  BitcoinNetworkPreference,
-  getMempoolExplorerLink,
-} from '@/features/activity/utils/make-activity-link';
+import { getMempoolExplorerLink } from '@/features/activity/utils/make-activity-link';
 import { Inscription } from '@/features/token/bitcoin/inscription';
 import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-preference';
 import { useSettings } from '@/store/settings/settings';
@@ -11,7 +8,7 @@ import { t } from '@lingui/core/macro';
 import dayjs from 'dayjs';
 
 import { ORD_IO_URL } from '@leather.io/constants';
-import { InscriptionAsset } from '@leather.io/models';
+import { BitcoinNetworkPreference, InscriptionAsset } from '@leather.io/models';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { Collectible, useCollectibleHeight } from '../collectible';

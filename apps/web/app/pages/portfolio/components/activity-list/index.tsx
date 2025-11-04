@@ -1,0 +1,52 @@
+import { Virtuoso } from 'react-virtuoso';
+
+import { Flex, Stack, styled } from 'leather-styles/jsx';
+
+import { type OnChainActivity } from '@leather.io/models';
+import { LoadingSpinner } from '@leather.io/ui';
+
+import { ActivityItem } from './activity-item';
+
+interface ActivityListProps {
+  isLoading: boolean;
+  activity: OnChainActivity[];
+}
+
+export function ActivityList({ activity, isLoading }: ActivityListProps) {
+  if (isLoading) {
+    return (
+      <Stack flexGrow={1} position="relative">
+        <Flex
+          p="space.06"
+          textAlign="center"
+          fontSize="24px"
+          height="360px"
+          justifyContent="center"
+        >
+          <LoadingSpinner />
+        </Flex>
+      </Stack>
+    );
+  }
+
+  return (
+    <Stack flexGrow={1} position="relative">
+      <Virtuoso
+        data={activity}
+        itemContent={(_, activityItem) => (
+          <ActivityItem key={activityItem.txid} activity={activityItem} />
+        )}
+      />
+      <styled.div
+        position="absolute"
+        bottom="0"
+        left="0"
+        right="0"
+        height="48px"
+        bgGradient="to-t"
+        gradientFrom="ink.background-primary"
+        gradientTo="transparent"
+      />
+    </Stack>
+  );
+}
