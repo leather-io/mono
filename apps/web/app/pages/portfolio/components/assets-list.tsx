@@ -32,6 +32,7 @@ type ColumnAlignment = 'left' | 'center' | 'right';
 
 interface AssetRow {
   asset: Sip10Balance;
+  allocation: number;
 }
 function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
   const aValue = Number(a.quote.availableBalance.amount);
@@ -87,6 +88,24 @@ export function AssetsList(props: BoxProps) {
                 </styled.p>
               </Box>
             </Flex>
+          );
+        },
+      },
+      {
+        id: 'allocation',
+        enableSorting: false,
+        meta: { align: 'left' },
+        header: () => (
+          <styled.p textStyle="label.03" color="ink.text-subdued">
+            Allocation
+          </styled.p>
+        ),
+        cell: info => {
+          const { allocation } = info.row.original;
+          return (
+            <styled.p textStyle="body.02" fontWeight="medium">
+              {allocation}
+            </styled.p>
           );
         },
       },
