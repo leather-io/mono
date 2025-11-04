@@ -42,7 +42,13 @@ function AssetItem({ asset, ...props }: AssetItemProps) {
   const value = formatCurrency(asset.quote.availableBalance);
 
   return (
-    <Flex justifyContent="space-between" alignItems="center" py="space.03" {...props}>
+    <Flex
+      justifyContent="space-between"
+      alignItems="center"
+      py="space.03"
+      pos="relative"
+      {...props}
+    >
       <Flex alignItems="center" gap="space.04">
         <Box>
           <AssetItemIcon asset={asset} />
@@ -126,8 +132,23 @@ export function AssetsList(props: AssetsListProps) {
             <AssetItem
               key={key || index}
               asset={asset}
+              _before={
+                hoveredSymbol === asset.asset.symbol
+                  ? {
+                      content: '""',
+                      position: 'absolute',
+                      mx: '-space.05',
+                      my: 'space.01',
+                      top: 0,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      bg: 'ink.component-background-hover',
+                      zIndex: 9,
+                    }
+                  : {}
+              }
               allocation={allocation}
-              opacity={!hoveredSymbol || hoveredSymbol === asset.asset.symbol ? 1 : 0.6}
               onMouseOver={() => emitAssetHoverOn(asset.asset.symbol)}
               onMouseOut={() => emitAssetHoverOff()}
             />

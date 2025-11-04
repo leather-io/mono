@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import * as d3 from 'd3';
 import { HTMLStyledProps, styled } from 'leather-styles/jsx';
@@ -38,11 +38,9 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const groupedItemsRef = useRef<Set<string>>(new Set());
 
-  const { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol } = usePortfolioEvents(() => {
-    updateChartOpacity();
-  });
+  const { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol } = usePortfolioEvents();
 
-  function updateChartOpacity() {
+  const updateChartOpacity = useCallback(() => {
     if (!svgRef.current) return;
 
     const isHoveredInOtherGroup = hoveredSymbol && groupedItemsRef.current.has(hoveredSymbol);
@@ -63,7 +61,11 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
 
         return 0.6;
       });
-  }
+  }, [hoveredSymbol]);
+
+  useEffect(() => {
+    updateChartOpacity();
+  }, [hoveredSymbol, updateChartOpacity]);
 
   const portfolioData = useMemo(() => {
     const totalValue = assets.reduce(
@@ -172,9 +174,8 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
             let top = event.pageY - tooltipHeight - 10;
 
             // Prevent overflow on right edge
-            if (left + tooltipWidth > window.innerWidth) {
+            if (left + tooltipWidth > window.innerWidth)
               left = window.innerWidth - tooltipWidth - 10;
-            }
 
             // Prevent overflow on left edge
             if (left < 10) {
@@ -188,7 +189,7 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
 
             tooltip.style('top', `${top}px`).style('left', `${left}px`);
           })
-          .on('mouseout', () => {
+          .on('mouseleave', () => {
             emitAssetHoverOff();
             tooltip.style('visibility', 'hidden');
           });
@@ -209,7 +210,7 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
       resizeObserver.disconnect();
       d3.selectAll('.portfolio-tooltip').remove();
     };
-  }, [portfolioData, emitAssetHoverOn, emitAssetHoverOff]);
+  }, [emitAssetHoverOff, emitAssetHoverOn, portfolioData]);
 
   return <styled.svg ref={svgRef} style={{ display: 'block', width: '100%' }} />;
 }
