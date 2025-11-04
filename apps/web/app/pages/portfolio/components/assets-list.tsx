@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
+import { Box, BoxProps, Flex, Grid, styled } from 'leather-styles/jsx';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { formatCurrency } from '~/utils/currency-formatter';
 
@@ -17,9 +17,10 @@ function AssetItem({ asset, allocation }: AssetItemProps) {
   const symbol = asset.asset.symbol;
   const balance = formatCurrency(asset.crypto.availableBalance, { showCurrency: false });
   const value = formatCurrency(asset.quote.availableBalance);
+  const allocationPercentage = `${allocation.toFixed(2)}%`;
 
   return (
-    <Flex justifyContent="space-between" alignItems="center" py="space.03">
+    <Grid py="space.03" gridTemplateColumns="3fr 1fr 1fr" gap="space.04" alignItems="center">
       <Flex alignItems="center" gap="space.04">
         <Box>
           <Sip10AvatarIcon
@@ -38,6 +39,10 @@ function AssetItem({ asset, allocation }: AssetItemProps) {
         </Box>
       </Flex>
 
+      <styled.p textStyle="body.02" textAlign="right">
+        {allocationPercentage}
+      </styled.p>
+
       <Flex alignItems="flex-end" flexDir="column" gap="space.01">
         <styled.p textStyle="body.02">{value}</styled.p>
         <Flex alignItems="center" gap="space.02">
@@ -46,7 +51,7 @@ function AssetItem({ asset, allocation }: AssetItemProps) {
           </styled.span>
         </Flex>
       </Flex>
-    </Flex>
+    </Grid>
   );
 }
 
@@ -57,6 +62,14 @@ function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
   if (bValue !== aValue) return bValue - aValue;
 
   return a.asset.symbol.localeCompare(b.asset.symbol);
+}
+
+function TableHeader({ title }: { title: string }) {
+  return (
+    <styled.p textStyle="label.03" color="ink.text-subdued">
+      {title}
+    </styled.p>
+  );
 }
 
 export function AssetsList(props: BoxProps) {
@@ -76,14 +89,15 @@ export function AssetsList(props: BoxProps) {
 
   return (
     <Box {...props}>
-      <Flex justifyContent="space-between" alignItems="center">
-        <styled.p textStyle="label.03" color="ink.text-subdued">
-          Asset
-        </styled.p>
-        <styled.p textStyle="label.03" color="ink.text-subdued">
-          Value
-        </styled.p>
-      </Flex>
+      <Grid gridTemplateColumns="3fr 1fr 1fr" gap="space.04" alignItems="center">
+        <TableHeader title="Asset" />
+        <Box textAlign="right">
+          <TableHeader title="Allocation" />
+        </Box>
+        <Box textAlign="right">
+          <TableHeader title="Value" />
+        </Box>
+      </Grid>
 
       {isLoading ? (
         <Box p="space.06" textAlign="center">
