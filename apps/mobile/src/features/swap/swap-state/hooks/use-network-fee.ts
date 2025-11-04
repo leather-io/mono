@@ -1,26 +1,16 @@
-import {
-  FeeDependencies,
-  getExecutionTypeStrategy,
-} from '@/features/swap/swap-state/strategies/execution-type/execution-type';
+import { getExecutionTypeStrategy } from '@/features/swap/swap-state/strategies/execution-type/execution-type';
 import { transformTransactionFees } from '@/features/swap/swap-state/strategies/transform-transaction-fees';
 import {
   DerivedAmounts,
   NetworkFee,
+  SwapDependencies,
+  SwapExecutionDependencies,
   SwapInternalState,
 } from '@/features/swap/swap-state/swap-state.types';
-import { StacksNetwork } from '@stacks/network';
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 import { isDefined } from 'remeda';
 
-import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
-import { NetworkConfiguration, SwapQuote } from '@leather.io/models';
-import {
-  AccountRequest,
-  BitcoinTransactionFeesService,
-  StacksTransactionFeesService,
-  SwapService,
-} from '@leather.io/services';
-import { StacksSigner } from '@leather.io/stacks';
+import { SwapQuote } from '@leather.io/models';
 import { assertExistence } from '@leather.io/utils';
 
 interface UseNetworkFeeProps {
@@ -29,34 +19,20 @@ interface UseNetworkFeeProps {
   isSendingMax: boolean;
   quote?: SwapQuote;
   baseAmount?: number;
-  slippage: number;
-  swapService: SwapService;
-  stacksTransactionFeesService: StacksTransactionFeesService;
-  bitcoinTransactionFeesService: BitcoinTransactionFeesService;
-  bitcoinPayer: BitcoinNativeSegwitPayer;
-  network: NetworkConfiguration;
-  stacksNetwork: StacksNetwork;
-  stacksSigner: StacksSigner;
-  accountRequest: AccountRequest;
+  dependencies: SwapDependencies;
 }
 
 export function useNetworkFee({
   state,
   derivedAmounts,
   isSendingMax,
-  swapService,
   quote,
   baseAmount,
-  slippage,
-  stacksTransactionFeesService,
-  bitcoinTransactionFeesService,
-  bitcoinPayer,
-  network,
-  stacksNetwork,
-  stacksSigner,
-  accountRequest,
+  dependencies,
 }: UseNetworkFeeProps): UseQueryResult<NetworkFee, Error> {
   const { baseSwapAsset } = state;
+  const { accountRequest, services } = dependencies;
+  const { swapService } = services;
 
   return useQuery({
     queryKey: [
@@ -68,7 +44,7 @@ export function useNetworkFee({
       quote?.executionType,
       quote?.providerId,
       quote?.assetPath,
-      slippage,
+      state.slippage,
     ],
     queryFn: async ({ signal }) => {
       assertExistence(
@@ -80,25 +56,19 @@ export function useNetworkFee({
       const executionData = await swapService.getSwapExecutionData(
         accountRequest,
         quote,
-        slippage,
+        state.slippage,
         signal
       );
 
-      const feeDependencies: FeeDependencies = {
-        network,
-        accountRequest,
-        bitcoinTransactionFeesService,
-        stacksTransactionFeesService,
-        bitcoinPayer,
-        stacksNetwork,
-        stacksSigner,
+      const executionDependencies: SwapExecutionDependencies = {
+        ...dependencies,
         derivedAmounts,
-        executionData,
         isSendingMax,
+        executionData,
       };
 
       const { getNetworkFee } = getExecutionTypeStrategy(executionData.executionType);
-      return await getNetworkFee(feeDependencies);
+      return await getNetworkFee(executionDependencies, signal);
     },
     select: data => {
       assertExistence(baseSwapAsset, "useNetworkFee expects 'baseSwapAsset' to be set.");

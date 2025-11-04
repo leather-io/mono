@@ -1,18 +1,62 @@
 import { ValidationResult } from '@/features/swap/swap-state/validation/swap-validation';
 import { InputCurrencyMode } from '@/utils/types';
+import * as btc from '@scure/btc-signer';
+import { StacksNetwork } from '@stacks/network';
+import { StacksTransactionWire, TxBroadcastResultOk } from '@stacks/transactions';
 import { UseQueryResult } from '@tanstack/react-query';
 
+import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import {
+  AccountAddresses,
   Money,
+  NetworkConfiguration,
   QuoteCurrency,
   SwapDex,
+  SwapExecutionData,
   SwapProviderId,
   SwapQuote,
   SwappableFungibleCryptoAsset,
   TransactionFeeQuote,
   TransactionFeeTier,
 } from '@leather.io/models';
-import { AccountSwapAsset } from '@leather.io/services';
+import {
+  AccountSwapAsset,
+  BitcoinTransactionFeesService,
+  MarketDataService,
+  StacksTransactionFeesService,
+  SwapService,
+} from '@leather.io/services';
+import { StacksSigner } from '@leather.io/stacks';
+
+export interface SwapDependencies {
+  accountRequest: { account: AccountAddresses };
+  stacks: {
+    stacksSigner: StacksSigner;
+    stacksNetwork: StacksNetwork;
+    broadcast: (params: {
+      tx: StacksTransactionWire;
+      stacksNetwork: StacksNetwork;
+    }) => Promise<TxBroadcastResultOk>;
+  };
+  bitcoin: {
+    bitcoinPayer: BitcoinNativeSegwitPayer;
+    network: NetworkConfiguration;
+    signBitcoinPsbt: (psbt: Uint8Array) => Promise<btc.Transaction>;
+    broadcast: (tx: string) => Promise<string | undefined>;
+  };
+  services: {
+    marketDataService: MarketDataService;
+    bitcoinTransactionFeesService: BitcoinTransactionFeesService;
+    stacksTransactionFeesService: StacksTransactionFeesService;
+    swapService: SwapService;
+  };
+}
+
+export interface SwapExecutionDependencies extends SwapDependencies {
+  derivedAmounts: DerivedAmounts;
+  isSendingMax: boolean;
+  executionData: SwapExecutionData;
+}
 
 export type PresetPercentage = 0.25 | 0.5 | 0.75 | 1;
 
