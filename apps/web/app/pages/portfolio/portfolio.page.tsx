@@ -1,12 +1,13 @@
 import { useMemo } from 'react';
 
+import { WhenClient } from '~/components/when-client';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { useStxAccountBalance } from '~/queries/balance/stx-balance.hooks';
 
 import { stxAsset } from '@leather.io/constants';
 
 import { AssetsList, PortfolioAsset } from './components/assets-list';
-import { PortfolioChart } from './components/portfolio-chart';
+import { PortfolioChart, PortfolioChartPending } from './components/portfolio-chart';
 import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
 
@@ -44,7 +45,11 @@ export function PortfolioPage() {
     <PortfolioPageLayout
       overview={<PortfolioSummary />}
       assetList={<AssetsList assets={allAssets} isLoading={isLoading} />}
-      visualization={<PortfolioChart assets={allAssets} />}
+      visualization={
+        <WhenClient fallback={<PortfolioChartPending />}>
+          <PortfolioChart assets={allAssets} />
+        </WhenClient>
+      }
     />
   );
 }

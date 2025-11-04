@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import * as d3 from 'd3';
-import { HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { Box, HTMLStyledProps, styled } from 'leather-styles/jsx';
+
+import { shimmerStyles } from '@leather.io/ui';
 
 import { usePortfolioEvents } from '../portfolio-events';
 import { PortfolioAsset } from './assets-list';
@@ -235,5 +237,20 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
     };
   }, [emitAssetHoverOff, emitAssetHoverOn, portfolioData]);
 
-  return <styled.svg ref={svgRef} style={{ display: 'block', width: '100%' }} />;
+  if (portfolioData.length === 0) return <PortfolioChartPending />;
+
+  return <styled.svg ref={svgRef} display="block" width="100%" />;
+}
+
+export function PortfolioChartPending() {
+  return (
+    <Box
+      className={shimmerStyles}
+      data-state="loading"
+      width="100%"
+      height="32px"
+      bg="ink.background-secondary"
+      borderRadius="sm"
+    />
+  );
 }
