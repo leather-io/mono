@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useToastContext } from '@/components/toast/toast-context';
 import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx-approver.layout';
 import { getTxOptions } from '@/features/approver/utils';
-import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-transaction';
+import { useBroadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
@@ -44,7 +44,7 @@ export function DeployContractApprover({
   const [txHex, setTxHex] = useState<null | string>(null);
   useDeployContractTxHex({ request, stxRequestParams, setTxHex, accountId, network });
 
-  const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
+  const { mutateAsync: broadcastTransaction } = useBroadcastStacksTransaction();
   const { displayToast } = useToastContext();
 
   const { list: accounts } = useAccounts();
