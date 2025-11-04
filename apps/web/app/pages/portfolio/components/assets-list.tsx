@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 
 import { Box, BoxProps, Flex, FlexProps, styled } from 'leather-styles/jsx';
-import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import { CryptoAssetBalance, Sip10Asset, StxAsset, isStxAsset } from '@leather.io/models';
@@ -36,8 +35,6 @@ function AssetItemIcon({ asset }: { asset: PortfolioAsset }) {
 }
 
 function AssetItem({ asset, ...props }: AssetItemProps) {
-  const name = isStxAsset(asset.asset) ? 'Stacks' : asset.asset.name;
-  const symbol = asset.asset.symbol;
   const balance = formatCurrency(asset.crypto.availableBalance, { showCurrency: false });
   const value = formatCurrency(asset.quote.availableBalance);
 
@@ -55,10 +52,10 @@ function AssetItem({ asset, ...props }: AssetItemProps) {
         </Box>
         <Box>
           <styled.p textStyle="body.02" fontWeight="medium">
-            {name}
+            {asset.asset.name}
           </styled.p>
           <styled.p textStyle="caption.01" color="ink.text-subdued">
-            {symbol}
+            {asset.asset.symbol}
           </styled.p>
         </Box>
       </Flex>
@@ -77,6 +74,7 @@ function AssetItem({ asset, ...props }: AssetItemProps) {
 
 interface AssetsListProps extends BoxProps {
   assets: PortfolioAsset[];
+  isLoading?: boolean;
 }
 
 function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
@@ -88,28 +86,23 @@ function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
   return a.asset.symbol.localeCompare(b.asset.symbol);
 }
 
-export function AssetsList(props: AssetsListProps) {
+export function AssetsList({ assets, isLoading, ...props }: AssetsListProps) {
   const { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol } = usePortfolioEvents();
-  const sip10Query = useSip10AccountBalance();
-
-  const { assets, totalValue } = useMemo(() => {
-    const sip10Assets = sip10Query.data?.sip10s ?? [];
-    const sorted = sip10Assets.sort(sortAssetsByValue);
+  const { sortedAssets, totalValue } = useMemo(() => {
+    const sorted = assets.sort(sortAssetsByValue);
     const total = sorted.reduce(
       (sum, asset) => sum + Number(asset.quote.availableBalance.amount),
       0
     );
-    return { assets: sorted, totalValue: total };
-  }, [sip10Query.data]);
-
-  const isLoading = sip10Query.isPending;
-
+    return { sortedAssets: sorted, totalValue: total };
+  }, [assets]);
   return (
     <Box {...props}>
       <Flex justifyContent="space-between" alignItems="center">
         <styled.p textStyle="label.03" color="ink.text-subdued">
           Asset
         </styled.p>
+
         <styled.p textStyle="label.03" color="ink.text-subdued">
           Value
         </styled.p>
@@ -121,8 +114,8 @@ export function AssetsList(props: AssetsListProps) {
             Loading assets...
           </styled.p>
         </Box>
-      ) : assets.length > 0 ? (
-        assets.map((asset, index) => {
+      ) : sortedAssets.length > 0 ? (
+        sortedAssets.map((asset, index) => {
           const key = isStxAsset(asset.asset) ? 'STX' : asset.asset.contractId;
 
           const allocation =

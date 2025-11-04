@@ -51,11 +51,13 @@ interface BaseFungibleCryptoAsset extends BaseCryptoAsset {
 export interface BtcAsset extends BaseFungibleCryptoAsset {
   readonly chain: 'bitcoin';
   readonly protocol: 'nativeBtc';
+  readonly name: 'Bitcoin';
   readonly symbol: 'BTC';
 }
 export interface StxAsset extends BaseFungibleCryptoAsset {
   readonly chain: 'stacks';
   readonly protocol: 'nativeStx';
+  readonly name: 'Stacks';
   readonly symbol: 'STX';
 }
 export interface Brc20Asset extends BaseFungibleCryptoAsset {
