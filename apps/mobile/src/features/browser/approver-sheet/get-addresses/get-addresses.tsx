@@ -42,11 +42,13 @@ export function GetAddressesApprover(props: GetAddressesApproverProps) {
         address: account.taprootPayer.address,
         publicKey: account.taprootPayer.publicKey,
         derivationPath: keyOriginToDerivationPath(account.taprootPayer.keyOrigin),
+        descriptor: account.taprootDescriptor,
       },
       nativeSegwit: {
         address: account.nativeSegwitPayer.address,
         publicKey: account.nativeSegwitPayer.publicKey,
         derivationPath: keyOriginToDerivationPath(account.nativeSegwitPayer.keyOrigin),
+        descriptor: account.nativeSegwitDescriptor,
       },
       stacksAccount: {
         address: account.stacksAccount.address,

@@ -33,6 +33,8 @@ function getExpectedResponseForKeys(keys: SupportedBlockchains[]) {
       address: 'bc1q530dz4h80kwlzywlhx2qn0k6vdtftd93c499yq',
       publicKey: '030347be500a8b2707a00e7576c0c527a247cddc6e8363ee51147b8e43b590baa9',
       derivationPath: "m/84'/0'/0'/0/0",
+      descriptor:
+        'wpkh(xpub6BuKrNqTrGfsy8VAAdUW2KCxbHywuSKjg7hZuAXERXDv7GfuxUgUWdVRKNsgujcwdjEHCjaXWouPKi1m5gMgdWX8JpRcyMkrSxPe4Da3Lx8)',
     },
     {
       symbol: 'BTC',
@@ -41,6 +43,8 @@ function getExpectedResponseForKeys(keys: SupportedBlockchains[]) {
       publicKey: '0347b913aed4ee088b6fea3e9537836a1c8f1b72111cf010af5589d93f3a433f02',
       tweakedPublicKey: '47b913aed4ee088b6fea3e9537836a1c8f1b72111cf010af5589d93f3a433f02',
       derivationPath: "m/86'/0'/0'/0/0",
+      descriptor:
+        'tr(xpub6C4MQD2bVDTfdnVe5AYKB6gE7BE4yQeKBRgukQ4Hi3phDB5fCYKEAdViQ2n7kZQ1t728QV4wKGgiR5qGigjNNrm5DCGWYUZDRVNWYb8ZWGK)',
     },
   ];
   const stacksKeys = [
