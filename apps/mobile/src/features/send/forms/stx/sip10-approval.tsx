@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useToastContext } from '@/components/toast/toast-context';
 import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx-approver.layout';
 import { getTxOptions } from '@/features/approver/utils';
-import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-transaction';
+import { useBroadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
@@ -31,7 +31,7 @@ export function Sip10Approver({
   assertStacksSigner(signer);
 
   const txOptions = getTxOptions(signer, network);
-  const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
+  const { mutateAsync: broadcastTransaction } = useBroadcastStacksTransaction();
   const { displayToast } = useToastContext();
 
   async function onApprove() {

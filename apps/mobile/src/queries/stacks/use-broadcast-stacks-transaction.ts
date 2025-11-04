@@ -1,0 +1,43 @@
+import { StacksNetwork } from '@stacks/network';
+import { StacksTransactionWire, broadcastTransaction } from '@stacks/transactions';
+import { useMutation } from '@tanstack/react-query';
+
+import { getErrorMessage } from '@leather.io/stacks';
+
+import { fetchFn } from './fetch-fn';
+
+export interface BroadcastStacksTransactionParams {
+  tx: StacksTransactionWire;
+  stacksNetwork: StacksNetwork;
+}
+
+export async function broadcastStacksTransaction({
+  tx,
+  stacksNetwork,
+}: BroadcastStacksTransactionParams) {
+  const response = await broadcastTransaction({
+    transaction: tx,
+    network: stacksNetwork,
+    client: {
+      fetch: fetchFn,
+    },
+  });
+
+  if ('error' in response) {
+    return Promise.reject(new Error(getErrorMessage(response.reason)));
+  }
+
+  // Sometimes we might get "API rate limit exceeded" with no txid
+  if (!response.txid) {
+    return Promise.reject(new Error('Something went wrong'));
+  }
+
+  return Promise.resolve(response);
+}
+
+export function useBroadcastStacksTransaction() {
+  return useMutation({
+    mutationKey: ['broadcast-stx-transaction'],
+    mutationFn: broadcastStacksTransaction,
+  });
+}

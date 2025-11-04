@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useToastContext } from '@/components/toast/toast-context';
 import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx-approver.layout';
 import { getTxOptions } from '@/features/approver/utils';
-import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-transaction';
+import { useBroadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
@@ -44,7 +44,7 @@ export function TransferSip9NftApprover({
   const [txHex, setTxHex] = useState<null | string>(null);
   useTransferSip9NftTxHex({ request, accountId, setTxHex, nonce, network });
   const signer = useStacksSigners().fromAccountId(accountId)[0];
-  const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
+  const { mutateAsync: broadcastTransaction } = useBroadcastStacksTransaction();
 
   assertStacksSigner(signer);
   if (!txHex) return null;
