@@ -1,25 +1,27 @@
 import { useMemo } from 'react';
 
-import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
+import { Box, BoxProps, Flex, FlexProps, styled } from 'leather-styles/jsx';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import { Sip10Balance } from '@leather.io/services';
 import { Sip10AvatarIcon } from '@leather.io/ui';
 
-interface AssetItemProps {
+import { usePortfolioEvents } from '../portfolio-events';
+
+interface AssetItemProps extends FlexProps {
   asset: Sip10Balance;
   allocation: number;
 }
 
-function AssetItem({ asset, allocation }: AssetItemProps) {
+function AssetItem({ asset, allocation, ...props }: AssetItemProps) {
   const name = asset.asset.name;
   const symbol = asset.asset.symbol;
   const balance = formatCurrency(asset.crypto.availableBalance, { showCurrency: false });
   const value = formatCurrency(asset.quote.availableBalance);
 
   return (
-    <Flex justifyContent="space-between" alignItems="center" py="space.03">
+    <Flex justifyContent="space-between" alignItems="center" py="space.03" {...props}>
       <Flex alignItems="center" gap="space.04">
         <Box>
           <Sip10AvatarIcon
@@ -60,6 +62,9 @@ function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
 }
 
 export function AssetsList(props: BoxProps) {
+  const { emitAssetHoverOn, emitAssetHoverOff } = usePortfolioEvents(symbol => {
+    console.log('element hovered on listener list', symbol);
+  });
   const sip10Query = useSip10AccountBalance();
 
   const { assets, totalValue } = useMemo(() => {
@@ -95,7 +100,15 @@ export function AssetsList(props: BoxProps) {
         assets.map((asset, index) => {
           const allocation =
             totalValue > 0 ? (Number(asset.quote.availableBalance.amount) / totalValue) * 100 : 0;
-          return <AssetItem key={index} asset={asset} allocation={allocation} />;
+          return (
+            <AssetItem
+              key={index}
+              asset={asset}
+              allocation={allocation}
+              onMouseOver={() => emitAssetHoverOn(asset.asset.symbol)}
+              onMouseOut={() => emitAssetHoverOff()}
+            />
+          );
         })
       ) : (
         <Box textAlign="center">
