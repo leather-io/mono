@@ -1,49 +1,34 @@
-import { buildSbtcBridgeTransferTx } from '@/features/swap/swap-state/strategies/execution-type/build-transaction/build-transaction/build-sbtc-bridge-transfer-tx';
-import { buildStacksTx } from '@/features/swap/swap-state/strategies/execution-type/build-transaction/build-transaction/build-stacks-tx';
 import {
-  calculateMinToReceiveAmount,
-  estimateLiquidityFeePercentage,
-} from '@/features/swap/swap-state/strategies/execution-type/execution-type.utils';
-import { DerivedAmounts, EnrichedSwapQuote } from '@/features/swap/swap-state/swap-state.types';
+  EnrichedSwapQuote,
+  SwapExecutionDependencies,
+} from '@/features/swap/swap-state/swap-state.types';
 import {
   calculatePriceImpactPercentage,
   estimateExchangeRate,
 } from '@/features/swap/swap-state/utils/market-rates';
-import { StacksNetwork } from '@stacks/network';
 
-import { BitcoinNativeSegwitPayer, CoinSelectionRecipient } from '@leather.io/bitcoin';
+import { CoinSelectionRecipient } from '@leather.io/bitcoin';
 import {
-  NetworkConfiguration,
   StacksContractCallSwapExecutionData,
-  SwapExecutionData,
   SwapExecutionType,
   SwapQuote,
   TransactionFees,
 } from '@leather.io/models';
-import {
-  AccountRequest,
-  BitcoinTransactionFeesService,
-  StacksTransactionFeesService,
-} from '@leather.io/services';
-import { StacksSigner } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
-export interface FeeDependencies {
-  isSendingMax: boolean;
-  derivedAmounts: DerivedAmounts;
-  executionData: SwapExecutionData;
-  stacksTransactionFeesService: StacksTransactionFeesService;
-  bitcoinTransactionFeesService: BitcoinTransactionFeesService;
-  bitcoinPayer: BitcoinNativeSegwitPayer;
-  network: NetworkConfiguration;
-  stacksNetwork: StacksNetwork;
-  stacksSigner: StacksSigner;
-  accountRequest: AccountRequest;
-}
+import { buildSbtcBridgeTransferTx } from './build-transaction/build-transaction/build-sbtc-bridge-transfer-tx';
+import { buildStacksTx } from './build-transaction/build-transaction/build-stacks-tx';
+import {
+  calculateMinToReceiveAmount,
+  estimateLiquidityFeePercentage,
+} from './execution-type.utils';
 
 interface ExecutionStrategy {
   enrichQuote(quote: SwapQuote, fairMarketRate: number | null, slippage: number): EnrichedSwapQuote;
-  getNetworkFee(dependencies: FeeDependencies): Promise<TransactionFees>;
+  getNetworkFee(
+    dependencies: SwapExecutionDependencies,
+    signal?: AbortSignal
+  ): Promise<TransactionFees>;
 }
 
 const stacksContractCallStrategy: ExecutionStrategy = {
@@ -51,6 +36,7 @@ const stacksContractCallStrategy: ExecutionStrategy = {
     const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
     return {
       rawSwapQuote: swapQuote,
+      baseAmount: swapQuote.baseAmount,
       dexPath: swapQuote.dexPath,
       assetPath: swapQuote.assetPath,
       quoteAmount: swapQuote.quote,
@@ -63,15 +49,14 @@ const stacksContractCallStrategy: ExecutionStrategy = {
       priceImpactPercentage: calculatePriceImpactPercentage(rate, fairMarketRate),
     };
   },
-  async getNetworkFee(dependencies: FeeDependencies) {
-    const { executionData, stacksSigner, stacksNetwork, stacksTransactionFeesService } =
-      dependencies;
+  async getNetworkFee(dependencies: SwapExecutionDependencies, signal?: AbortSignal) {
+    const { executionData, stacks, services } = dependencies;
     const unsignedTx = await buildStacksTx(
       executionData as StacksContractCallSwapExecutionData,
-      stacksNetwork,
-      stacksSigner
+      stacks.stacksNetwork,
+      stacks.stacksSigner
     );
-    return stacksTransactionFeesService.getStacksTransactionFees(unsignedTx);
+    return services.stacksTransactionFeesService.getStacksTransactionFees(unsignedTx, signal);
   },
 };
 
@@ -80,6 +65,7 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
     const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
     return {
       rawSwapQuote: swapQuote,
+      baseAmount: swapQuote.baseAmount,
       dexPath: swapQuote.dexPath,
       assetPath: swapQuote.assetPath,
       quoteAmount: swapQuote.quote,
@@ -90,20 +76,13 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
       priceImpactPercentage: calculatePriceImpactPercentage(rate, fairMarketRate),
     };
   },
-  async getNetworkFee(dependencies: FeeDependencies) {
-    const {
-      derivedAmounts,
-      isSendingMax,
-      bitcoinPayer,
-      network,
-      accountRequest,
-      bitcoinTransactionFeesService,
-    } = dependencies;
+  async getNetworkFee(dependencies, signal?: AbortSignal) {
+    const { accountRequest, derivedAmounts, isSendingMax, services, bitcoin } = dependencies;
     const deposit = await buildSbtcBridgeTransferTx(
       derivedAmounts.crypto?.amount.toNumber() ?? 0,
-      network,
+      bitcoin.network,
       accountRequest.account,
-      bitcoinPayer
+      bitcoin.bitcoinPayer
     );
     const recipients: CoinSelectionRecipient[] = [
       {
@@ -111,10 +90,11 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
         amount: derivedAmounts.crypto ?? createMoney(0, 'BTC'),
       },
     ];
-    return bitcoinTransactionFeesService.getBitcoinTransactionFees(
+    return services.bitcoinTransactionFeesService.getBitcoinTransactionFees(
       accountRequest,
       recipients,
-      isSendingMax
+      isSendingMax,
+      signal
     );
   },
 };

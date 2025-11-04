@@ -1,24 +1,9 @@
 import { useReducer } from 'react';
 
 import { useNetworkFee } from '@/features/swap/swap-state/hooks/use-network-fee';
-import * as btc from '@scure/btc-signer';
-import { StacksNetwork } from '@stacks/network';
 
-import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
-import {
-  AccountAddresses,
-  NetworkConfiguration,
-  QuoteCurrency,
-  SwappableFungibleCryptoAsset,
-} from '@leather.io/models';
-import {
-  AccountSwapAsset,
-  BitcoinTransactionFeesService,
-  MarketDataService,
-  StacksTransactionFeesService,
-  SwapService,
-} from '@leather.io/services';
-import { StacksSigner } from '@leather.io/stacks';
+import { QuoteCurrency, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { AccountSwapAsset } from '@leather.io/services';
 import { getAssetId } from '@leather.io/utils';
 
 import { createSwapActions } from './actions/swap-actions';
@@ -30,7 +15,7 @@ import { useSwapExecutability } from './hooks/use-swap-executability';
 import { useSwapQuotes } from './hooks/use-swap-quotes';
 import { useSwapValidation } from './hooks/use-swap-validation';
 import { swapReducer } from './swap-state.reducer';
-import { SwapInternalState, UseSwapStateResult } from './swap-state.types';
+import { SwapDependencies, SwapInternalState, UseSwapStateResult } from './swap-state.types';
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './swap.constants';
 import {
   useAccountBaseSwapAssetsQuery,
@@ -39,35 +24,21 @@ import {
 } from './swap.queries';
 
 export interface UseSwapStateProps {
-  accountRequest: { account: AccountAddresses };
   baseAsset?: SwappableFungibleCryptoAsset;
   targetAsset?: SwappableFungibleCryptoAsset;
   quoteCurrencyPreference: QuoteCurrency;
-  swapService: SwapService;
-  marketDataService: MarketDataService;
-  stacksTransactionFeesService: StacksTransactionFeesService;
-  bitcoinTransactionFeesService: BitcoinTransactionFeesService;
-  bitcoinPayer: BitcoinNativeSegwitPayer;
-  stacksSigner: StacksSigner;
-  signBitcoinPsbt: (psbt: Uint8Array) => Promise<btc.Transaction>;
-  network: NetworkConfiguration;
-  stacksNetwork: StacksNetwork;
+  dependencies: SwapDependencies;
 }
 
 export function useSwapState({
-  accountRequest,
-  swapService,
-  marketDataService,
-  stacksTransactionFeesService,
-  bitcoinTransactionFeesService,
   baseAsset,
   targetAsset,
   quoteCurrencyPreference,
-  stacksSigner,
-  stacksNetwork,
-  network,
-  bitcoinPayer,
+  dependencies,
 }: UseSwapStateProps): UseSwapStateResult {
+  const { accountRequest, services } = dependencies;
+  const { marketDataService, swapService } = services;
+
   const [state, dispatch] = useReducer(
     swapReducer,
     { baseAsset, targetAsset, quoteCurrencyPreference },
@@ -118,6 +89,8 @@ export function useSwapState({
     derivedAmounts,
   });
 
+  const validation = useSwapValidation({ state, derivedAmounts });
+
   const { quoteQuery } = useSwapQuotes({
     swapService,
     state,
@@ -130,22 +103,12 @@ export function useSwapState({
     state,
     derivedAmounts,
     isSendingMax,
-    swapService,
     quote: quoteQuery.data?.selected?.rawSwapQuote,
     baseAmount: derivedAmounts.crypto?.amount
       .shiftedBy(-derivedAmounts.crypto?.decimals)
       .toNumber(),
-    slippage: state.slippage,
-    stacksTransactionFeesService,
-    bitcoinTransactionFeesService,
-    bitcoinPayer,
-    network,
-    stacksNetwork,
-    stacksSigner,
-    accountRequest,
+    dependencies,
   });
-
-  const validation = useSwapValidation({ state, derivedAmounts });
 
   const actions = createSwapActions({
     dispatch,

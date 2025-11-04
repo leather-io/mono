@@ -4,6 +4,8 @@ import { STACKS_MAINNET } from '@stacks/network';
 import { act, waitFor } from '@testing-library/react';
 import { assert, describe, expect, it, vi } from 'vitest';
 
+import { MarketData, SwapQuote } from '@leather.io/models';
+import { AccountSwapAsset } from '@leather.io/services';
 import { createMoney } from '@leather.io/utils';
 
 import {
@@ -29,28 +31,44 @@ vi.mock('@/hooks/use-debounced-value', () => ({
   useDebouncedValue: <T>(value: T) => value,
 }));
 
+interface RenderUseSwapStateParams extends Omit<UseSwapStateProps, 'dependencies'> {
+  baseSwapAssets?: AccountSwapAsset[];
+  targetSwapAssets?: AccountSwapAsset[];
+  swapQuotes?: SwapQuote[];
+  marketData: MarketData;
+}
+
 function renderUseSwapState({
-  accountRequest = createAccountRequest(),
-  swapService = createStubSwapService(),
-  marketDataService = createStubMarketDataService(),
   quoteCurrencyPreference = 'USD',
-  stacksTransactionFeesService = createStubStacksTransactionFeesService(),
-  bitcoinTransactionFeesService = createStubBitcoinTransactionFeesService(),
+  baseSwapAssets,
+  targetSwapAssets,
+  swapQuotes,
+  marketData,
   ...rest
-}: Partial<UseSwapStateProps> = {}) {
+}: Partial<RenderUseSwapStateParams> = {}) {
   const { result } = renderHookWithProviders(() =>
     useSwapState({
-      accountRequest,
-      swapService,
-      marketDataService,
       quoteCurrencyPreference,
-      stacksTransactionFeesService,
-      bitcoinTransactionFeesService,
-      bitcoinPayer: createStubBitcoinPayer(),
-      stacksSigner: createStubStacksSigner(),
-      signBitcoinPsbt: () => ({}) as any,
-      network: createStubNetwork(),
-      stacksNetwork: STACKS_MAINNET,
+      dependencies: {
+        accountRequest: createAccountRequest(),
+        services: {
+          swapService: createStubSwapService({ baseSwapAssets, targetSwapAssets, swapQuotes }),
+          marketDataService: createStubMarketDataService({ marketData }),
+          bitcoinTransactionFeesService: createStubBitcoinTransactionFeesService(),
+          stacksTransactionFeesService: createStubStacksTransactionFeesService(),
+        },
+        stacks: {
+          stacksSigner: createStubStacksSigner(),
+          stacksNetwork: STACKS_MAINNET,
+          broadcast: () => Promise.resolve({ ok: true, txid: 'test-txid' }) as any,
+        },
+        bitcoin: {
+          bitcoinPayer: createStubBitcoinPayer(),
+          network: createStubNetwork(),
+          signBitcoinPsbt: () => ({}) as any,
+          broadcast: () => Promise.resolve('test-txid'),
+        },
+      },
       ...rest,
     })
   );
@@ -128,9 +146,7 @@ describe('useSwapState', () => {
         }),
       ];
 
-      const result = renderUseSwapState({
-        swapService: createStubSwapService({ baseSwapAssets }),
-      });
+      const result = renderUseSwapState({ baseSwapAssets });
 
       await waitFor(() => {
         expect(result.current.baseAssetsQuery.status).toBe('success');
@@ -167,9 +183,7 @@ describe('useSwapState', () => {
         }),
       ];
 
-      const result = renderUseSwapState({
-        swapService: createStubSwapService({ baseSwapAssets }),
-      });
+      const result = renderUseSwapState({ baseSwapAssets });
 
       await waitFor(() => {
         expect(result.current.baseAssetsQuery.data).toBeDefined();
@@ -207,7 +221,7 @@ describe('useSwapState', () => {
       ];
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({ targetSwapAssets }),
+        targetSwapAssets,
         baseAsset: defaultBtcAsset,
       });
 
@@ -247,7 +261,7 @@ describe('useSwapState', () => {
       ];
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({ targetSwapAssets }),
+        targetSwapAssets,
         baseAsset: defaultBtcAsset,
       });
 
@@ -400,9 +414,7 @@ describe('useSwapState', () => {
 
       const result = renderUseSwapState({
         baseAsset: defaultBtcAsset,
-        swapService: createStubSwapService({
-          baseSwapAssets: [realSwapAsset],
-        }),
+        baseSwapAssets: [realSwapAsset],
       });
 
       expect(result.current.state.baseSwapAsset).toEqual({
@@ -427,9 +439,7 @@ describe('useSwapState', () => {
       const result = renderUseSwapState({
         baseAsset: defaultBtcAsset,
         targetAsset: defaultStxAsset,
-        swapService: createStubSwapService({
-          baseSwapAssets: [differentAsset],
-        }),
+        baseSwapAssets: [differentAsset],
       });
 
       act(() => result.current.actions.setBaseAmount('123.45'));
@@ -466,10 +476,8 @@ describe('useSwapState', () => {
       const result = renderUseSwapState({
         baseAsset: defaultBtcAsset,
         targetAsset: defaultStxAsset,
-        swapService: createStubSwapService({
-          baseSwapAssets: [realBaseAsset],
-          targetSwapAssets: [realTargetAsset],
-        }),
+        baseSwapAssets: [realBaseAsset],
+        targetSwapAssets: [realTargetAsset],
       });
 
       expect(result.current.state.targetSwapAsset).toEqual({
@@ -499,10 +507,8 @@ describe('useSwapState', () => {
       const result = renderUseSwapState({
         baseAsset: defaultBtcAsset,
         targetAsset: defaultStxAsset,
-        swapService: createStubSwapService({
-          baseSwapAssets: [realBaseAsset],
-          targetSwapAssets: [differentTargetAsset],
-        }),
+        baseSwapAssets: [realBaseAsset],
+        targetSwapAssets: [differentTargetAsset],
       });
 
       expect(result.current.state.targetSwapAsset).toBeTruthy();
@@ -536,10 +542,8 @@ describe('useSwapState', () => {
       const result = renderUseSwapState({
         baseAsset: defaultStxAsset,
         targetAsset: defaultSbtcAsset,
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset, stxAsset],
-          targetSwapAssets: [sbtcAsset],
-        }),
+        baseSwapAssets: [btcAsset, stxAsset],
+        targetSwapAssets: [sbtcAsset],
       });
 
       await waitFor(() => {
@@ -668,10 +672,8 @@ describe('useSwapState', () => {
       });
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset, stxAsset],
-          targetSwapAssets: [btcAsset, stxAsset],
-        }),
+        baseSwapAssets: [btcAsset, stxAsset],
+        targetSwapAssets: [btcAsset, stxAsset],
       });
 
       act(() => {
@@ -732,7 +734,7 @@ describe('useSwapState', () => {
           balance: { crypto: 100_000_000, quote: 50_000_00 },
         });
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
+          baseSwapAssets: [btcAsset],
         });
 
         act(() => result.current.actions.setBaseSwapAsset(btcAsset));
@@ -758,7 +760,7 @@ describe('useSwapState', () => {
         });
 
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
+          baseSwapAssets: [btcAsset],
         });
 
         act(() => result.current.actions.setBaseSwapAsset(btcAsset));
@@ -847,7 +849,7 @@ describe('useSwapState', () => {
           balance: { crypto: 546, quote: 6 },
         });
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [precisionAsset] }),
+          baseSwapAssets: [precisionAsset],
         });
         act(() => result.current.actions.setBaseSwapAsset(precisionAsset));
         act(() => result.current.actions.setBaseAmountByPercentage(0.25));
@@ -871,8 +873,8 @@ describe('useSwapState', () => {
           price: createMoney(50_000_00, 'USD', 2),
         };
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
-          marketDataService: createStubMarketDataService({ marketData }),
+          baseSwapAssets: [btcAsset],
+          marketData,
         });
 
         act(() => {
@@ -901,8 +903,8 @@ describe('useSwapState', () => {
           price: createMoney(50_000_00, 'USD', 2),
         };
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
-          marketDataService: createStubMarketDataService({ marketData }),
+          baseSwapAssets: [btcAsset],
+          marketData,
         });
         act(() => {
           result.current.actions.setBaseSwapAsset(btcAsset);
@@ -933,8 +935,8 @@ describe('useSwapState', () => {
           price: createMoney(50_000_00, 'USD', 2),
         };
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
-          marketDataService: createStubMarketDataService({ marketData }),
+          baseSwapAssets: [btcAsset],
+          marketData,
         });
 
         act(() => {
@@ -964,7 +966,7 @@ describe('useSwapState', () => {
           balance: { crypto: 100_000_000, quote: 50_000_00 },
         });
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
+          baseSwapAssets: [btcAsset],
         });
 
         act(() => result.current.actions.setBaseSwapAsset(btcAsset));
@@ -984,8 +986,8 @@ describe('useSwapState', () => {
           price: createMoney(50_000_00, 'USD', 2),
         };
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
-          marketDataService: createStubMarketDataService({ marketData }),
+          baseSwapAssets: [btcAsset],
+          marketData,
         });
         act(() => {
           result.current.actions.setBaseSwapAsset(btcAsset);
@@ -1006,7 +1008,7 @@ describe('useSwapState', () => {
           balance: { crypto: 100_000_000, quote: 50_000_00 },
         });
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
+          baseSwapAssets: [btcAsset],
         });
 
         act(() => result.current.actions.setBaseSwapAsset(btcAsset));
@@ -1028,7 +1030,7 @@ describe('useSwapState', () => {
           balance: { crypto: 12345678, quote: 617284 },
         });
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
+          baseSwapAssets: [btcAsset],
         });
 
         act(() => result.current.actions.setBaseSwapAsset(btcAsset));
@@ -1048,8 +1050,8 @@ describe('useSwapState', () => {
           price: createMoney(50_000_00, 'USD', 2),
         };
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
-          marketDataService: createStubMarketDataService({ marketData }),
+          baseSwapAssets: [btcAsset],
+          marketData,
         });
         act(() => {
           result.current.actions.setBaseSwapAsset(btcAsset);
@@ -1069,7 +1071,7 @@ describe('useSwapState', () => {
           balance: { crypto: 100_000_000, quote: 50_000_00 },
         });
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
+          baseSwapAssets: [btcAsset],
         });
 
         act(() => result.current.actions.setBaseSwapAsset(btcAsset));
@@ -1090,8 +1092,8 @@ describe('useSwapState', () => {
           price: createMoney(50_000_00, 'USD', 2),
         };
         const result = renderUseSwapState({
-          swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
-          marketDataService: createStubMarketDataService({ marketData }),
+          baseSwapAssets: [btcAsset],
+          marketData,
         });
         act(() => {
           result.current.actions.setBaseSwapAsset(btcAsset);
@@ -1115,7 +1117,7 @@ describe('useSwapState', () => {
         balance: { crypto: 100_000_000, quote: 50_000_00 },
       });
       const result = renderUseSwapState({
-        swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
+        baseSwapAssets: [btcAsset],
       });
 
       act(() => result.current.actions.setBaseSwapAsset(btcAsset));
@@ -1130,7 +1132,7 @@ describe('useSwapState', () => {
         balance: { crypto: 100_000_000, quote: 50_000_00 },
       });
       const result = renderUseSwapState({
-        swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
+        baseSwapAssets: [btcAsset],
       });
       act(() => result.current.actions.setBaseSwapAsset(btcAsset));
       act(() => result.current.actions.setBaseAmountByPercentage(0.25));
@@ -1147,7 +1149,7 @@ describe('useSwapState', () => {
         balance: { crypto: 100000000, quote: 15000 },
       });
       const result = renderUseSwapState({
-        swapService: createStubSwapService({ baseSwapAssets: [btcAsset, stxAsset] }),
+        baseSwapAssets: [btcAsset, stxAsset],
       });
       act(() => result.current.actions.setBaseSwapAsset(btcAsset));
       act(() => result.current.actions.setBaseAmountByPercentage(1));
@@ -1171,8 +1173,8 @@ describe('useSwapState', () => {
       };
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
-        marketDataService: createStubMarketDataService({ marketData }),
+        baseSwapAssets: [btcAsset],
+        marketData,
       });
 
       act(() => {
@@ -1198,8 +1200,8 @@ describe('useSwapState', () => {
       };
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
-        marketDataService: createStubMarketDataService({ marketData }),
+        baseSwapAssets: [btcAsset],
+        marketData,
       });
 
       act(() => {
@@ -1229,8 +1231,8 @@ describe('useSwapState', () => {
       };
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
-        marketDataService: createStubMarketDataService({ marketData }),
+        baseSwapAssets: [btcAsset],
+        marketData,
       });
 
       act(() => {
@@ -1250,10 +1252,7 @@ describe('useSwapState', () => {
       expect(result.current.state.secondaryAmount.value?.amount.toNumber()).toBe(10_000_00);
     });
     it('returns idle state when no base asset is selected', () => {
-      const result = renderUseSwapState({
-        swapService: createStubSwapService(),
-        marketDataService: createStubMarketDataService(),
-      });
+      const result = renderUseSwapState({});
 
       expect(result.current.state.secondaryAmount.status).toBe('idle');
       expect(result.current.state.secondaryAmount.value).toBeNull();
@@ -1271,8 +1270,8 @@ describe('useSwapState', () => {
       };
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
-        marketDataService: createStubMarketDataService({ marketData }),
+        baseSwapAssets: [btcAsset],
+        marketData,
       });
 
       act(() => result.current.actions.setBaseSwapAsset(btcAsset));
@@ -1287,8 +1286,7 @@ describe('useSwapState', () => {
       });
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({ baseSwapAssets: [btcAsset] }),
-        marketDataService: createStubMarketDataService(),
+        baseSwapAssets: [btcAsset],
       });
 
       act(() => result.current.actions.setBaseSwapAsset(btcAsset));
@@ -1320,11 +1318,9 @@ describe('useSwapState', () => {
       ];
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset],
-          targetSwapAssets: [stxAsset],
-          swapQuotes: quotes,
-        }),
+        baseSwapAssets: [btcAsset],
+        targetSwapAssets: [stxAsset],
+        swapQuotes: quotes,
       });
 
       act(() => {
@@ -1361,11 +1357,9 @@ describe('useSwapState', () => {
       ];
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset],
-          targetSwapAssets: [stxAsset],
-          swapQuotes: quotes,
-        }),
+        baseSwapAssets: [btcAsset],
+        targetSwapAssets: [stxAsset],
+        swapQuotes: quotes,
       });
 
       act(() => {
@@ -1410,11 +1404,9 @@ describe('useSwapState', () => {
       ];
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset],
-          targetSwapAssets: [stxAsset],
-          swapQuotes: quotes,
-        }),
+        baseSwapAssets: [btcAsset],
+        targetSwapAssets: [stxAsset],
+        swapQuotes: quotes,
       });
 
       act(() => {
@@ -1449,11 +1441,9 @@ describe('useSwapState', () => {
       });
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset],
-          targetSwapAssets: [stxAsset],
-          swapQuotes: [],
-        }),
+        baseSwapAssets: [btcAsset],
+        targetSwapAssets: [stxAsset],
+        swapQuotes: [],
       });
 
       act(() => {
@@ -1486,11 +1476,9 @@ describe('useSwapState', () => {
       });
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset],
-          targetSwapAssets: [stxAsset],
-          swapQuotes: [singleQuote],
-        }),
+        baseSwapAssets: [btcAsset],
+        targetSwapAssets: [stxAsset],
+        swapQuotes: [singleQuote],
       });
 
       act(() => {
@@ -1578,11 +1566,9 @@ describe('useSwapState', () => {
       ];
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset],
-          targetSwapAssets: [stxAsset],
-          swapQuotes: quotes,
-        }),
+        baseSwapAssets: [btcAsset],
+        targetSwapAssets: [stxAsset],
+        swapQuotes: quotes,
       });
 
       act(() => {
@@ -1629,11 +1615,9 @@ describe('useSwapState', () => {
       ];
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset],
-          targetSwapAssets: [sbtcAsset],
-          swapQuotes: quotes,
-        }),
+        baseSwapAssets: [btcAsset],
+        targetSwapAssets: [sbtcAsset],
+        swapQuotes: quotes,
       });
 
       act(() => {
@@ -1671,11 +1655,9 @@ describe('useSwapState', () => {
       ];
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset],
-          targetSwapAssets: [stxAsset],
-          swapQuotes: quotes,
-        }),
+        baseSwapAssets: [btcAsset],
+        targetSwapAssets: [stxAsset],
+        swapQuotes: quotes,
       });
 
       act(() => {
@@ -1732,11 +1714,9 @@ describe('useSwapState', () => {
       ];
 
       const result = renderUseSwapState({
-        swapService: createStubSwapService({
-          baseSwapAssets: [btcAsset],
-          targetSwapAssets: [stxAsset],
-          swapQuotes: quotes,
-        }),
+        baseSwapAssets: [btcAsset],
+        targetSwapAssets: [stxAsset],
+        swapQuotes: quotes,
       });
 
       act(() => {
@@ -1802,9 +1782,7 @@ describe('useSwapState', () => {
         const result = renderUseSwapState({
           baseAsset: defaultBtcAsset,
           targetAsset: defaultStxAsset,
-          swapService: createStubSwapService({
-            swapQuotes: [],
-          }),
+          swapQuotes: [],
         });
 
         act(() => {
@@ -2000,9 +1978,7 @@ describe('useSwapState', () => {
         const result = renderUseSwapState({
           baseAsset: defaultBtcAsset,
           targetAsset: defaultStxAsset,
-          swapService: createStubSwapService({
-            baseSwapAssets: [btcAsset, stxAsset],
-          }),
+          baseSwapAssets: [btcAsset, stxAsset],
         });
 
         act(() => result.current.actions.setBaseAmount('0.1'));
@@ -2066,9 +2042,7 @@ describe('useSwapState', () => {
         const result = renderUseSwapState({
           baseAsset: defaultBtcAsset,
           targetAsset: defaultStxAsset,
-          swapService: createStubSwapService({
-            baseSwapAssets: [btcAsset, stxAsset],
-          }),
+          baseSwapAssets: [btcAsset, stxAsset],
         });
 
         act(() => result.current.actions.setBaseAmount('0.1'));
@@ -2095,10 +2069,8 @@ describe('useSwapState', () => {
         });
 
         const result = renderUseSwapState({
-          swapService: createStubSwapService({
-            baseSwapAssets: [btcAsset, stxAsset],
-            targetSwapAssets: [btcAsset, stxAsset],
-          }),
+          baseSwapAssets: [btcAsset, stxAsset],
+          targetSwapAssets: [btcAsset, stxAsset],
         });
 
         act(() => {
