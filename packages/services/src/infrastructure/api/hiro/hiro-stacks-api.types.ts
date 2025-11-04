@@ -11,6 +11,7 @@ import {
   MempoolTransaction,
   MempoolTransactionListResponse,
   NonFungibleTokenHolding,
+  ServerStatusResponse,
   Transaction,
   TransactionEvent,
   TransactionFeeEstimateResponse,
@@ -45,6 +46,7 @@ export type HiroReadOnlyFunctionResponse =
   | { okay: true; result: string }
   | { okay: false; cause: string };
 export type HiroTransactionFeeEstimateResponse = TransactionFeeEstimateResponse;
+export type HiroServerStatusResponse = ServerStatusResponse;
 
 export interface HiroAddressStxBalanceResponse {
   balance: string;

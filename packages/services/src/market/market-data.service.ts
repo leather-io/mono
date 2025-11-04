@@ -130,21 +130,25 @@ export class MarketDataService {
     asset: Sip10Asset,
     signal?: AbortSignal
   ): Promise<MarketData> {
-    const tokenPriceMap = await this.leatherApiClient.fetchSip10PriceMap({ signal });
-    const tokenPriceMatch = tokenPriceMap[asset.contractId];
-    if (!tokenPriceMatch) {
-      return createMarketData(createMarketPair(asset.symbol, 'USD'), createMoney(0, 'USD'));
-    }
+    const tokenPriceUsd = await this.getSip10AssetPriceUsd(asset, signal);
     return createMarketData(
       createMarketPair(asset.symbol, 'USD'),
       createMoney(
-        convertAmountToFractionalUnit(
-          initBigNumber(tokenPriceMatch.price),
-          currencyDecimalsMap['USD']
-        ),
+        convertAmountToFractionalUnit(initBigNumber(tokenPriceUsd), currencyDecimalsMap['USD']),
         'USD'
       )
     );
+  }
+
+  private async getSip10AssetPriceUsd(asset: Sip10Asset, signal?: AbortSignal): Promise<number> {
+    const tokenPriceMap = await this.leatherApiClient.fetchSip10PriceMap({ signal });
+    const tokenPriceMatch = tokenPriceMap[asset.contractId];
+    if (tokenPriceMatch) {
+      return tokenPriceMatch.price;
+    }
+    const bitflowPools = await this.leatherApiClient.fetchBitflowPoolMap({ signal });
+    const poolMatch = bitflowPools[asset.contractId];
+    return poolMatch && poolMatch.poolToken.latestPrice ? poolMatch.poolToken.latestPrice : 0;
   }
 
   private async getRuneMarketDataUsd(asset: RuneAsset, signal?: AbortSignal): Promise<MarketData> {

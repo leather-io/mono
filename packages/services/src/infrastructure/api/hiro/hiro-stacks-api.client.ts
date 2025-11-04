@@ -29,6 +29,7 @@ import {
   HiroNftHolding,
   HiroPageRequest,
   HiroReadOnlyFunctionResponse,
+  HiroServerStatusResponse,
   HiroStacksMempoolTransaction,
   HiroStacksTransaction,
   HiroTransactionEvent,
@@ -522,6 +523,34 @@ export class HiroStacksApiClient {
           // shouldnt need to add entire txPayload to cache key, estimatedLen + sufficiently
           // low cache times should ensure acceptable refetching
           ['hiro-stacks-get-transaction-fee-estimate', txByteLength],
+          fetchFn
+        );
+  }
+
+  public async getApiStatus({
+    signal,
+    skipCache,
+  }: ApiRequestOptions = {}): Promise<HiroServerStatusResponse> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<HiroServerStatusResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getApiStatus,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          ['hiro-stacks-get-api-status', selectStacksChainId(this.settings.getSettings())],
           fetchFn
         );
   }

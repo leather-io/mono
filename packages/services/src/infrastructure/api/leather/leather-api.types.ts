@@ -2147,6 +2147,327 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/defi/bitflow/pools': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get Bitflow Pool Data */
+    get: {
+      parameters: {
+        query?: {
+          format?: 'list' | 'map';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json':
+              | {
+                  /** @enum {string} */
+                  format: 'list';
+                  meta: {
+                    count: number;
+                    /** Format: date-time */
+                    timestamp: string;
+                  };
+                  data: {
+                    tokenXPrincipal: string;
+                    tokenYPrincipal: string;
+                    avgApy: number;
+                    balanceTokenX: number;
+                    balanceTokenY: number;
+                    latestApy: number;
+                    tvl: number;
+                    totalShares: number;
+                    poolToken: {
+                      decimals: number;
+                      creationHeight: number;
+                      name: string;
+                      symbol: string;
+                      principal: string;
+                      latestPrice: number;
+                    };
+                  }[];
+                }
+              | {
+                  /** @enum {string} */
+                  format: 'map';
+                  meta: {
+                    count: number;
+                    /** Format: date-time */
+                    timestamp: string;
+                  };
+                  data: {
+                    [key: string]: {
+                      tokenXPrincipal: string;
+                      tokenYPrincipal: string;
+                      avgApy: number;
+                      balanceTokenX: number;
+                      balanceTokenY: number;
+                      latestApy: number;
+                      tvl: number;
+                      totalShares: number;
+                      poolToken: {
+                        decimals: number;
+                        creationHeight: number;
+                        name: string;
+                        symbol: string;
+                        principal: string;
+                        latestPrice: number;
+                      };
+                    };
+                  };
+                };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/defi/zest/reserves/{principal}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get Zest Reserve */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          principal: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              zTokenPrincipal: string;
+              supplyRate: number;
+              borrowRate: number;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/defi/granite/markets/{principal}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get Granite Market */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          principal: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              earnApy: number;
+              borrowApy: number;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/defi/stacking-dao/rates': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get StackingDAO Rates */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              stx: {
+                ststx: number;
+                ststxbtc: number;
+              };
+              apy: {
+                ststx: number;
+                ststxbtc: number;
+              };
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {

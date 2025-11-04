@@ -34,6 +34,14 @@ export type LeatherApiAppConfig =
   paths['/v1/app-config']['get']['responses'][200]['content']['application/json'];
 export type LeatherApiBitcoinFeeRates =
   paths['/v1/market/bitcoin/fees']['get']['responses'][200]['content']['application/json'];
+export type LeatherApiBitflowPool = Extract<
+  paths['/v1/defi/bitflow/pools']['get']['responses'][200]['content']['application/json'],
+  { format: 'list' }
+>['data'][number];
+export type LeatherApiZestReserve =
+  paths['/v1/defi/zest/reserves/{principal}']['get']['responses'][200]['content']['application/json'];
+export type LeatherApiStackingDaoRates =
+  paths['/v1/defi/stacking-dao/rates']['get']['responses'][200]['content']['application/json'];
 
 @injectable()
 export class LeatherApiClient {
@@ -758,5 +766,94 @@ export class LeatherApiClient {
     return skipCache
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(['leather-api-app-config'], fetchFn);
+  }
+
+  async fetchBitflowPoolMap({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/defi/bitflow/pools', {
+            signal,
+            params: { query: { format: 'map' } },
+          }),
+        {
+          priority: leatherApiPriorities.bitflowPoolsMap,
+          signal,
+        }
+      );
+      if (data?.format !== 'map') {
+        throw new Error('Unrecognized collection format');
+      }
+      return data.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-bitflow-pools-map'], fetchFn);
+  }
+
+  async fetchZestReserve(
+    principal: string,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<LeatherApiZestReserve> {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/defi/zest/reserves/{principal}', {
+            signal,
+            params: { path: { principal } },
+          }),
+        {
+          priority: leatherApiPriorities.zestReserve,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-zest-reserve', principal], fetchFn);
+  }
+
+  async fetchGraniteMarket(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/defi/granite/markets/{principal}', {
+            signal,
+            params: { path: { principal } },
+          }),
+        {
+          priority: leatherApiPriorities.graniteMarket,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-granite-market', principal], fetchFn);
+  }
+
+  async fetchStackingDaoRates({
+    signal,
+    skipCache,
+  }: ApiRequestOptions = {}): Promise<LeatherApiStackingDaoRates> {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () => this.client.GET('/v1/defi/stacking-dao/rates', { signal }),
+        {
+          priority: leatherApiPriorities.stackingDaoRates,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-stacking-dao-rates'], fetchFn);
   }
 }

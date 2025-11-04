@@ -18,6 +18,7 @@ export const hiroApiRequestsPriorityLevels = {
   getContractInterface: 4,
   getTransferFeeRate: 4,
   getTransactionFees: 4,
+  getApiStatus: 4,
 
   getNetworkBlockTimes: 3,
 
