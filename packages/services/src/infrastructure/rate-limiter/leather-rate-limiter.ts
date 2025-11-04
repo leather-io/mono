@@ -44,5 +44,9 @@ export const leatherApiPriorities = {
   sip10Token: leatherPriorityLevels.MEDIUM,
   sip10TokenDescription: leatherPriorityLevels.MEDIUM,
   sip10TokenHistory: leatherPriorityLevels.MEDIUM,
+  bitflowPoolsMap: leatherPriorityLevels.MEDIUM,
+  zestReserve: leatherPriorityLevels.MEDIUM,
   registerAddresses: leatherPriorityLevels.LOW,
+  graniteMarket: leatherPriorityLevels.MEDIUM,
+  stackingDaoRates: leatherPriorityLevels.MEDIUM,
 };

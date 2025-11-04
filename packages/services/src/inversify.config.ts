@@ -12,6 +12,10 @@ import { StxBalancesService } from './balances/stx-balances.service';
 import { BnsService } from './bns/bns.service';
 import { BitcoinCoinSelectionService } from './coin-selection/bitcoin-coin-selection.service';
 import { CollectiblesService } from './collectibles/collectibles.service';
+import { BitflowService } from './defi/bitflow/bitflow.service';
+import { GraniteV1Service } from './defi/granite/granite-v1.service';
+import { StackingDaoService } from './defi/stacking-dao/stacking-dao.service';
+import { ZestBorrowService } from './defi/zest/zest-borrow.service';
 import { BitcoinTransactionFeesService } from './fees/bitcoin-transaction-fees.service';
 import { StacksTransactionFeesService } from './fees/stacks-transaction-fees.service';
 import { BestInSlotApiClient } from './infrastructure/api/best-in-slot/best-in-slot-api.client';
@@ -127,7 +131,19 @@ export function getBitcoinTransactionFeesService() {
 export function getBitcoinCoinSelectionService() {
   return getServicesContainer().get(BitcoinCoinSelectionService);
 }
-/*
+export function getZestBorrowService() {
+  return getServicesContainer().get(ZestBorrowService);
+}
+export function getGraniteV1Service() {
+  return getServicesContainer().get(GraniteV1Service);
+}
+export function getBitflowService() {
+  return getServicesContainer().get(BitflowService);
+}
+export function getStackingDaoService() {
+  return getServicesContainer().get(StackingDaoService);
+}
+/* 
   API Layer Clients
 */
 export function getLeatherApiClient() {

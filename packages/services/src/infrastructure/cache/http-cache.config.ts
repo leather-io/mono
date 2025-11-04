@@ -34,6 +34,7 @@ export type HttpCacheKey =
   | 'hiro-stacks-call-read-only-function'
   | 'hiro-stacks-get-transfer-fee-rate'
   | 'hiro-stacks-get-transaction-fee-estimate'
+  | 'hiro-stacks-get-api-status'
 
   // MempoolApiClient
   | 'mempool-api-address-utxos'
@@ -67,6 +68,10 @@ export type HttpCacheKey =
   | 'leather-api-sip10-token'
   | 'leather-api-sip10-token-description'
   | 'leather-api-sip10-token-history'
+  | 'leather-api-bitflow-pools-map'
+  | 'leather-api-zest-reserve'
+  | 'leather-api-granite-market'
+  | 'leather-api-stacking-dao-rates'
   | 'leather-api-register-notifications'
   | 'leather-api-swap-dexes'
   | 'leather-api-app-config'
@@ -111,6 +116,7 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'hiro-stacks-call-read-only-function': { ttl: secondsInMs(15) },
   'hiro-stacks-get-transfer-fee-rate': { ttl: secondsInMs(4) },
   'hiro-stacks-get-transaction-fee-estimate': { ttl: secondsInMs(4) },
+  'hiro-stacks-get-api-status': { ttl: secondsInMs(10) },
 
   'mempool-api-address-utxos': { ttl: secondsInMs(5) },
   'mempool-api-address-transactions': { ttl: secondsInMs(5) },
@@ -142,6 +148,10 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-sip10-token': { ttl: daysInMs(30) },
   'leather-api-sip10-token-description': { ttl: daysInMs(1) },
   'leather-api-sip10-token-history': { ttl: minutesInMs(5) },
+  'leather-api-bitflow-pools-map': { ttl: minutesInMs(30) },
+  'leather-api-zest-reserve': { ttl: minutesInMs(10) },
+  'leather-api-granite-market': { ttl: minutesInMs(10) },
+  'leather-api-stacking-dao-rates': { ttl: minutesInMs(10) },
   'leather-api-register-notifications': { ttl: secondsInMs(10) },
   'leather-api-swap-dexes': { ttl: daysInMs(1) },
   'leather-api-app-config': { ttl: daysInMs(1) },

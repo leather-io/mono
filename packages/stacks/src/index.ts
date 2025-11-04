@@ -18,3 +18,4 @@ export * from './schemas/clarity-contract.schema';
 export * from './schemas/memo.schema';
 export * from './transactions/serialization';
 export * from './addresses';
+export * from './clarity';
