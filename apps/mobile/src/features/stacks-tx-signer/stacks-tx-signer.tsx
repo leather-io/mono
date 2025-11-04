@@ -17,7 +17,7 @@ import {
   useTxOptions,
 } from '@/features/approver/utils';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
-import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-transaction';
+import { useBroadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
@@ -52,7 +52,7 @@ export function StacksTxSigner({
 
   const { displayToast } = useToastContext();
 
-  const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
+  const { mutateAsync: broadcastTransaction } = useBroadcastStacksTransaction();
 
   const { data: stxMarketData } = useStxMarketDataQuery();
 
