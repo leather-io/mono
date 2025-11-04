@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef } from 'react';
 
 import * as d3 from 'd3';
-import { BoxProps, styled } from 'leather-styles/jsx';
+import { HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 import { Sip10Balance } from '@leather.io/services';
+
+import { usePortfolioEvents } from '../portfolio-events';
 
 interface PortfolioData {
   token: string;
@@ -29,12 +31,15 @@ const defaultColors = [
 function getColorForAsset(index: number): string {
   return defaultColors[index % defaultColors.length];
 }
-interface PortfolioChartProps extends BoxProps {
+interface PortfolioChartProps extends HTMLStyledProps<'svg'> {
   assets: Sip10Balance[];
 }
 
 export function PortfolioChart({ assets, ...props }: PortfolioChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const { emitAssetHoverOn, emitAssetHoverOff } = usePortfolioEvents(symbol => {
+    console.log('element hovered on listener chart', symbol);
+  });
 
   const portfolioData = useMemo(() => {
     const totalValue = assets.reduce(
@@ -122,12 +127,14 @@ export function PortfolioChart({ assets, ...props }: PortfolioChartProps) {
           .attr('rx', 4)
           .style('cursor', 'pointer')
           .on('mouseover', (event, d) => {
+            emitAssetHoverOn(d.token);
             tooltip.style('visibility', 'visible').html(`${d.token}: ${d.percentage}%`);
           })
           .on('mousemove', event => {
             tooltip.style('top', `${event.pageY - 40}px`).style('left', `${event.pageX - 50}px`);
           })
           .on('mouseout', () => {
+            emitAssetHoverOff();
             tooltip.style('visibility', 'hidden');
           });
 

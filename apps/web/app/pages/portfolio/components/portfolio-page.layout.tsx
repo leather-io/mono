@@ -4,7 +4,7 @@ import { Page } from '~/layouts/page/page';
 interface PortfolioPageLayoutProps {
   overview: React.ReactElement;
   assetList: React.ReactElement;
-  visualization?: React.ReactElement;
+  visualization: React.ReactElement;
 }
 export function PortfolioPageLayout({
   overview,
@@ -12,7 +12,7 @@ export function PortfolioPageLayout({
   visualization,
 }: PortfolioPageLayoutProps) {
   return (
-    <Page>
+    <Page overflow="hidden">
       <Page.Header title="Portfolio" />
       <styled.h2 textStyle="heading.05" mt="space.05" mb="space.04">
         Overview
