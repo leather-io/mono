@@ -16,22 +16,6 @@ export function PortfolioSummary(props: BoxProps) {
             {totalBalance ? formatCurrency(totalBalance) : '$–.––'}
           </styled.p>
         </Box>
-
-        <Flex gap="space.06">
-          <Box>
-            <styled.h3 textStyle="label.02" color="ink.text-subdued" mb="space.02">
-              24h change
-            </styled.h3>
-            <styled.p textStyle="body.02">—</styled.p>
-          </Box>
-
-          <Box>
-            <styled.h3 textStyle="label.02" color="ink.text-subdued" mb="space.02">
-              Number of assets
-            </styled.h3>
-            <styled.p textStyle="body.02">0</styled.p>
-          </Box>
-        </Flex>
       </Flex>
     </Box>
   );
