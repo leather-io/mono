@@ -62,9 +62,7 @@ function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
 }
 
 export function AssetsList(props: BoxProps) {
-  const { emitAssetHoverOn, emitAssetHoverOff } = usePortfolioEvents(symbol => {
-    console.log('element hovered on listener list', symbol);
-  });
+  const { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol } = usePortfolioEvents();
   const sip10Query = useSip10AccountBalance();
 
   const { assets, totalValue } = useMemo(() => {
@@ -105,6 +103,7 @@ export function AssetsList(props: BoxProps) {
               key={index}
               asset={asset}
               allocation={allocation}
+              opacity={!hoveredSymbol || hoveredSymbol === asset.asset.symbol ? 1 : 0.6}
               onMouseOver={() => emitAssetHoverOn(asset.asset.symbol)}
               onMouseOut={() => emitAssetHoverOff()}
             />
