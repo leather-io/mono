@@ -13,7 +13,7 @@ export function PortfolioSummary(props: BoxProps) {
             Total balance
           </styled.h3>
           <styled.p textStyle="heading.04">
-            {totalBalance ? formatCurrency(totalBalance) : '$-.--'}
+            {totalBalance ? formatCurrency(totalBalance) : '$–.––'}
           </styled.p>
         </Box>
 

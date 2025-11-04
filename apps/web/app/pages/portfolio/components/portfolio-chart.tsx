@@ -52,13 +52,9 @@ export function PortfolioChart({ assets }: PortfolioChartProps) {
       .style('opacity', (d: any) => {
         if (!hoveredSymbol) return 1;
 
-        if (d.token === 'Other' && isHoveredInOtherGroup) {
-          return 1;
-        }
+        if (d.token === 'Other' && isHoveredInOtherGroup) return 1;
 
-        if (d.token === hoveredSymbol) {
-          return 1;
-        }
+        if (d.token === hoveredSymbol) return 1;
 
         return 0.6;
       });
