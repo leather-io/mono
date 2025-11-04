@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const bus = new EventTarget();
 
@@ -10,15 +10,20 @@ function emitAssetHoverOff() {
   bus.dispatchEvent(new CustomEvent('cursor-hover-off'));
 }
 
-export function usePortfolioEvents(listener: (symbol: string | null) => void) {
+export function usePortfolioEvents(listener?: (symbol: string | null) => void) {
+  const [hoveredSymbol, setHoveredSymbol] = useState<string | null>(null);
+
   useEffect(() => {
     function handleHoverOn(event: Event) {
       const customEvent = event as CustomEvent;
-      listener(customEvent.detail.symbol);
+      const symbol = customEvent.detail.symbol;
+      setHoveredSymbol(symbol);
+      listener?.(symbol);
     }
 
     function handleHoverOff() {
-      listener(null);
+      setHoveredSymbol(null);
+      listener?.(null);
     }
 
     bus.addEventListener('cursor-hover-on', handleHoverOn);
@@ -30,5 +35,5 @@ export function usePortfolioEvents(listener: (symbol: string | null) => void) {
     };
   }, [listener]);
 
-  return { emitAssetHoverOn, emitAssetHoverOff };
+  return { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol };
 }

@@ -37,9 +37,34 @@ interface PortfolioChartProps extends HTMLStyledProps<'svg'> {
 
 export function PortfolioChart({ assets, ...props }: PortfolioChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const { emitAssetHoverOn, emitAssetHoverOff } = usePortfolioEvents(symbol => {
-    console.log('element hovered on listener chart', symbol);
+  const groupedItemsRef = useRef<Set<string>>(new Set());
+
+  const { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol } = usePortfolioEvents(() => {
+    updateChartOpacity();
   });
+
+  function updateChartOpacity() {
+    if (!svgRef.current) return;
+
+    const isHoveredInOtherGroup = hoveredSymbol && groupedItemsRef.current.has(hoveredSymbol);
+
+    d3.select(svgRef.current)
+      .selectAll('rect')
+      .filter((d: any) => d && d.token)
+      .style('opacity', (d: any) => {
+        if (!hoveredSymbol) return 1;
+
+        if (d.token === 'Other' && isHoveredInOtherGroup) {
+          return 1;
+        }
+
+        if (d.token === hoveredSymbol) {
+          return 1;
+        }
+
+        return 0.6;
+      });
+  }
 
   const portfolioData = useMemo(() => {
     const totalValue = assets.reduce(
@@ -58,7 +83,13 @@ export function PortfolioChart({ assets, ...props }: PortfolioChartProps) {
     const itemsToGroup = rawData.filter(item => item.percentage < THRESHOLD_PERCENTAGE);
     const mainItems = rawData.filter(item => item.percentage >= THRESHOLD_PERCENTAGE);
 
-    if (itemsToGroup.length === 0) return rawData;
+    if (itemsToGroup.length === 0) {
+      groupedItemsRef.current.clear();
+      return rawData;
+    }
+
+    groupedItemsRef.current.clear();
+    itemsToGroup.forEach(item => groupedItemsRef.current.add(item.token));
 
     const otherPercentage = itemsToGroup.reduce((sum, item) => sum + item.percentage, 0);
 
@@ -128,10 +159,35 @@ export function PortfolioChart({ assets, ...props }: PortfolioChartProps) {
           .style('cursor', 'pointer')
           .on('mouseover', (event, d) => {
             emitAssetHoverOn(d.token);
-            tooltip.style('visibility', 'visible').html(`${d.token}: ${d.percentage}%`);
+            tooltip.style('visibility', 'visible').html(`${d.token}: ${d.percentage.toFixed(1)}%`);
           })
           .on('mousemove', event => {
-            tooltip.style('top', `${event.pageY - 40}px`).style('left', `${event.pageX - 50}px`);
+            const tooltipNode = tooltip.node();
+            if (!tooltipNode) return;
+
+            const tooltipRect = tooltipNode.getBoundingClientRect();
+            const tooltipWidth = tooltipRect.width;
+            const tooltipHeight = tooltipRect.height;
+
+            let left = event.pageX - tooltipWidth / 2;
+            let top = event.pageY - tooltipHeight - 10;
+
+            // Prevent overflow on right edge
+            if (left + tooltipWidth > window.innerWidth) {
+              left = window.innerWidth - tooltipWidth - 10;
+            }
+
+            // Prevent overflow on left edge
+            if (left < 10) {
+              left = 10;
+            }
+
+            // Prevent overflow on top edge
+            if (top < 10) {
+              top = event.pageY + 10;
+            }
+
+            tooltip.style('top', `${top}px`).style('left', `${left}px`);
           })
           .on('mouseout', () => {
             emitAssetHoverOff();
