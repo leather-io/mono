@@ -25,6 +25,7 @@ export * from './activity/activity-level.model';
 export * from './activity/activity-status.model';
 export * from './activity/activity-type.model';
 export * from './activity/activity.model';
+export * from './activity/activity.utils';
 export * from './account.model';
 export * from './bns.model';
 export * from './swap/swap.model';

@@ -1,15 +1,12 @@
 import { ExternalLink } from '@/components/external-link';
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
-import {
-  BitcoinNetworkPreference,
-  getMempoolExplorerLink,
-} from '@/features/activity/utils/make-activity-link';
+import { getMempoolExplorerLink } from '@/features/activity/utils/make-activity-link';
 import { Stamp } from '@/features/token/bitcoin/stamp';
 import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-preference';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
-import { StampAsset } from '@leather.io/models';
+import { BitcoinNetworkPreference, StampAsset } from '@leather.io/models';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenDetailsCard } from '../components/token-details-card';

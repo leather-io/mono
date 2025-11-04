@@ -1337,6 +1337,9 @@ importers:
       d3:
         specifier: 7.9.0
         version: 7.9.0
+      dayjs:
+        specifier: 1.11.13
+        version: 1.11.13
       dompurify:
         specifier: 3.2.4
         version: 3.2.4
@@ -1373,6 +1376,9 @@ importers:
       react-syntax-highlighter:
         specifier: 15.6.6
         version: 15.6.6(react@19.0.0)
+      react-virtuoso:
+        specifier: 4.9.0
+        version: 4.9.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       rehype-raw:
         specifier: 7.0.0
         version: 7.0.0

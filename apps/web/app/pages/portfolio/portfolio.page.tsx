@@ -1,11 +1,13 @@
 import { useMemo } from 'react';
 
 import { WhenClient } from '~/components/when-client';
+import { useAccountActivity } from '~/queries/activity/account-activity.query';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { useStxAccountBalance } from '~/queries/balance/stx-balance.hooks';
 
 import { stxAsset } from '@leather.io/constants';
 
+import { ActivityList } from './components/activity-list';
 import { PortfolioChart, PortfolioChartPending } from './components/portfolio-chart';
 import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
@@ -21,6 +23,7 @@ function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
 export function PortfolioPage() {
   const sip10Query = useSip10AccountBalance();
   const stxQuery = useStxAccountBalance();
+  const activityQuery = useAccountActivity();
 
   const allAssets = useMemo(() => {
     const assets: PortfolioAsset[] = [];
@@ -39,16 +42,19 @@ export function PortfolioPage() {
     return assets.sort(sortAssetsByValue);
   }, [sip10Query.data, stxQuery.data]);
 
-  const isLoading = sip10Query.isLoading || stxQuery.isLoading;
+  const isLoadingAssets = sip10Query.isLoading || stxQuery.isLoading;
 
   return (
     <PortfolioPageLayout
       overview={<PortfolioSummary />}
-      assetList={<PortfolioTable assets={allAssets} isLoading={isLoading} />}
+      assetList={<PortfolioTable assets={allAssets} isLoading={isLoadingAssets} />}
       visualization={
         <WhenClient fallback={<PortfolioChartPending />}>
           <PortfolioChart assets={allAssets} />
         </WhenClient>
+      }
+      activityList={
+        <ActivityList activity={activityQuery.data ?? []} isLoading={activityQuery.isLoading} />
       }
     />
   );
