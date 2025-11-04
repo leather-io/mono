@@ -1,15 +1,16 @@
 import { useMemo } from 'react';
 
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
+import { useStxAccountBalance } from '~/queries/balance/stx-balance.hooks';
 
-import { Sip10Balance } from '@leather.io/services';
+import { stxAsset } from '@leather.io/constants';
 
-import { AssetsList } from './components/assets-list';
+import { AssetsList, PortfolioAsset } from './components/assets-list';
 import { PortfolioChart } from './components/portfolio-chart';
 import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
 
-function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
+function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
   const aValue = Number(a.quote.availableBalance.amount);
   const bValue = Number(b.quote.availableBalance.amount);
   if (bValue !== aValue) return bValue - aValue;
@@ -18,17 +19,30 @@ function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
 
 export function PortfolioPage() {
   const sip10Query = useSip10AccountBalance();
+  const stxQuery = useStxAccountBalance();
 
-  const sortedAssets = useMemo(() => {
+  const allAssets = useMemo(() => {
+    const assets: PortfolioAsset[] = [];
+
+    if (stxQuery.data) {
+      assets.push({
+        asset: stxAsset,
+        crypto: stxQuery.data.stx,
+        quote: stxQuery.data.quote,
+      });
+    }
+
     const sip10Assets = sip10Query.data?.sip10s ?? [];
-    return [...sip10Assets].sort(sortAssetsByValue);
-  }, [sip10Query.data]);
+    assets.push(...sip10Assets);
+
+    return assets.sort(sortAssetsByValue);
+  }, [sip10Query.data, stxQuery.data]);
 
   return (
     <PortfolioPageLayout
       overview={<PortfolioSummary />}
-      assetList={<AssetsList />}
-      visualization={<PortfolioChart assets={sortedAssets} />}
+      assetList={<AssetsList assets={allAssets} />}
+      visualization={<PortfolioChart assets={allAssets} />}
     />
   );
 }
