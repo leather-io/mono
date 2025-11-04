@@ -4,18 +4,39 @@ import { Box, BoxProps, Flex, FlexProps, styled } from 'leather-styles/jsx';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import { Sip10Balance } from '@leather.io/services';
-import { Sip10AvatarIcon } from '@leather.io/ui';
+import { CryptoAssetBalance, Sip10Asset, StxAsset, isStxAsset } from '@leather.io/models';
+import { Sip10AvatarIcon, StxAvatarIcon } from '@leather.io/ui';
 
 import { usePortfolioEvents } from '../portfolio-events';
 
-interface AssetItemProps extends FlexProps {
-  asset: Sip10Balance;
-  allocation: number;
+export interface PortfolioAsset {
+  asset: Sip10Asset | StxAsset;
+  crypto: CryptoAssetBalance;
+  quote: CryptoAssetBalance;
 }
 
-function AssetItem({ asset, allocation, ...props }: AssetItemProps) {
-  const name = asset.asset.name;
+interface AssetItemProps extends FlexProps {
+  allocation: number;
+  asset: PortfolioAsset;
+}
+
+function AssetItemIcon({ asset }: { asset: PortfolioAsset }) {
+  const isStx = isStxAsset(asset.asset);
+  if (isStx) {
+    return <StxAvatarIcon />;
+  } else {
+    return (
+      <Sip10AvatarIcon
+        contractId={(asset.asset as Sip10Asset).contractId}
+        imageCanonicalUri={(asset.asset as Sip10Asset).imageCanonicalUri}
+        name={(asset.asset as Sip10Asset).name}
+      />
+    );
+  }
+}
+
+function AssetItem({ asset, ...props }: AssetItemProps) {
+  const name = isStxAsset(asset.asset) ? 'Stacks' : asset.asset.name;
   const symbol = asset.asset.symbol;
   const balance = formatCurrency(asset.crypto.availableBalance, { showCurrency: false });
   const value = formatCurrency(asset.quote.availableBalance);
@@ -24,11 +45,7 @@ function AssetItem({ asset, allocation, ...props }: AssetItemProps) {
     <Flex justifyContent="space-between" alignItems="center" py="space.03" {...props}>
       <Flex alignItems="center" gap="space.04">
         <Box>
-          <Sip10AvatarIcon
-            contractId={asset.asset.contractId}
-            imageCanonicalUri={asset.asset.imageCanonicalUri}
-            name={asset.asset.name}
-          />
+          <AssetItemIcon asset={asset} />
         </Box>
         <Box>
           <styled.p textStyle="body.02" fontWeight="medium">
@@ -52,7 +69,11 @@ function AssetItem({ asset, allocation, ...props }: AssetItemProps) {
   );
 }
 
-function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
+interface AssetsListProps extends BoxProps {
+  assets: PortfolioAsset[];
+}
+
+function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
   const aValue = Number(a.quote.availableBalance.amount);
   const bValue = Number(b.quote.availableBalance.amount);
 
@@ -61,7 +82,7 @@ function sortAssetsByValue(a: Sip10Balance, b: Sip10Balance) {
   return a.asset.symbol.localeCompare(b.asset.symbol);
 }
 
-export function AssetsList(props: BoxProps) {
+export function AssetsList(props: AssetsListProps) {
   const { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol } = usePortfolioEvents();
   const sip10Query = useSip10AccountBalance();
 
@@ -96,11 +117,14 @@ export function AssetsList(props: BoxProps) {
         </Box>
       ) : assets.length > 0 ? (
         assets.map((asset, index) => {
+          const key = isStxAsset(asset.asset) ? 'STX' : asset.asset.contractId;
+
           const allocation =
             totalValue > 0 ? (Number(asset.quote.availableBalance.amount) / totalValue) * 100 : 0;
+
           return (
             <AssetItem
-              key={index}
+              key={key || index}
               asset={asset}
               allocation={allocation}
               opacity={!hoveredSymbol || hoveredSymbol === asset.asset.symbol ? 1 : 0.6}

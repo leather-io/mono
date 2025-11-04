@@ -3,9 +3,8 @@ import { useEffect, useMemo, useRef } from 'react';
 import * as d3 from 'd3';
 import { HTMLStyledProps, styled } from 'leather-styles/jsx';
 
-import { Sip10Balance } from '@leather.io/services';
-
 import { usePortfolioEvents } from '../portfolio-events';
+import { PortfolioAsset } from './assets-list';
 
 interface PortfolioData {
   token: string;
@@ -32,10 +31,10 @@ function getColorForAsset(index: number): string {
   return defaultColors[index % defaultColors.length];
 }
 interface PortfolioChartProps extends HTMLStyledProps<'svg'> {
-  assets: Sip10Balance[];
+  assets: PortfolioAsset[];
 }
 
-export function PortfolioChart({ assets, ...props }: PortfolioChartProps) {
+export function PortfolioChart({ assets }: PortfolioChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const groupedItemsRef = useRef<Set<string>>(new Set());
 
@@ -210,7 +209,7 @@ export function PortfolioChart({ assets, ...props }: PortfolioChartProps) {
       resizeObserver.disconnect();
       d3.selectAll('.portfolio-tooltip').remove();
     };
-  }, [portfolioData]);
+  }, [portfolioData, emitAssetHoverOn, emitAssetHoverOff]);
 
-  return <styled.svg ref={svgRef} display="block" width="100%" {...props} />;
+  return <styled.svg ref={svgRef} style={{ display: 'block', width: '100%' }} />;
 }
