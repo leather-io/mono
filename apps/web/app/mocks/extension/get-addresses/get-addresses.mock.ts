@@ -12,6 +12,8 @@ export function createMockGetAddressesResponse(id: string) {
           address: 'bc1qyf4a3taahvv2sfs0zz0mtq2lxdsthmf3wcjjxq',
           publicKey: '02cc42bfd7a7b0e99f78cc617bcf411f791feaa74e583206da59090ecfa1e7184b',
           derivationPath: "m/84'/0'/0'/0/0",
+          descriptor:
+            'wpkh(xpub6BuKrNqTrGfsy8VAAdUW2KCxbHywuSKjg7hZuAXERXDv7GfuxUgUWdVRKNsgujcwdjEHCjaXWouPKi1m5gMgdWX8JpRcyMkrSxPe4Da3Lx8)',
         },
         {
           symbol: 'BTC',
@@ -20,6 +22,8 @@ export function createMockGetAddressesResponse(id: string) {
           publicKey: '0356c2c7329b232612ee1abfc32c41a0ba9198ab63cdb3980a4b3b4ddf8fbb8be7',
           tweakedPublicKey: '56c2c7329b232612ee1abfc32c41a0ba9198ab63cdb3980a4b3b4ddf8fbb8be7',
           derivationPath: "m/86'/0'/0'/0/0",
+          descriptor:
+            'tr(xpub6C4MQD2bVDTfdnVe5AYKB6gE7BE4yQeKBRgukQ4Hi3phDB5fCYKEAdViQ2n7kZQ1t728QV4wKGgiR5qGigjNNrm5DCGWYUZDRVNWYb8ZWGK)',
         },
         {
           symbol: 'STX',
