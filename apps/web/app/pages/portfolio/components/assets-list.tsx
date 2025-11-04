@@ -4,7 +4,7 @@ import { Box, BoxProps, Flex, FlexProps, styled } from 'leather-styles/jsx';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import { CryptoAssetBalance, Sip10Asset, StxAsset, isStxAsset } from '@leather.io/models';
-import { Sip10AvatarIcon, StxAvatarIcon } from '@leather.io/ui';
+import { LoadingSpinner, Sip10AvatarIcon, StxAvatarIcon } from '@leather.io/ui';
 
 import { usePortfolioEvents } from '../portfolio-events';
 
@@ -109,13 +109,17 @@ export function AssetsList({ assets, isLoading, ...props }: AssetsListProps) {
       </Flex>
 
       {isLoading ? (
-        <Box p="space.06" textAlign="center">
-          <styled.p textStyle="body.02" color="ink.text-subdued">
-            Loading assets...
-          </styled.p>
-        </Box>
-      ) : sortedAssets.length > 0 ? (
-        sortedAssets.map((asset, index) => {
+        <Flex
+          p="space.06"
+          textAlign="center"
+          fontSize="24px"
+          height="360px"
+          justifyContent="center"
+        >
+          <LoadingSpinner />
+        </Flex>
+      ) : assets.length > 0 ? (
+        assets.map((asset, index) => {
           const key = isStxAsset(asset.asset) ? 'STX' : asset.asset.contractId;
 
           const allocation =

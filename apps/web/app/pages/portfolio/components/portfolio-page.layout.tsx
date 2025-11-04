@@ -20,7 +20,9 @@ export function PortfolioPageLayout({
       <styled.div borderRadius="sm" border="default" borderTop="none">
         <Box p="space.05">
           {overview}
-          <Box mt="space.04">{visualization}</Box>
+          <Box mt="space.04" height="32px">
+            {visualization}
+          </Box>
         </Box>
         <Box borderTop="default" p="space.05" pb="space.03">
           {assetList}
