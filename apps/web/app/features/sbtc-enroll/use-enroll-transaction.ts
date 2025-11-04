@@ -15,9 +15,9 @@ interface EnrollContractIdentifier {
 }
 const sbtcEnrollContractMap = {
   testnet: {
-    contractAddress: 'ST1SY0NMZMBSA28MH31T09KCQWPZ4H5HRMYRX4XW7',
-    contractName: 'yield-rewards-testnet',
-    contract: 'ST1SY0NMZMBSA28MH31T09KCQWPZ4H5HRMYRX4XW7.yield-rewards-testnet',
+    contractAddress: 'ST25SZ23P3FDTNAEAQTXG0PD34FC51CX33K3SKPXC',
+    contractName: 'yield-dual-stacking-v4',
+    contract: 'ST25SZ23P3FDTNAEAQTXG0PD34FC51CX33K3SKPXC.yield-dual-stacking-v4',
   },
   devnet: {
     contractAddress: 'STB44HYPYAT2BB2QE513NSP81HTMYWBJP02HPGK6',
@@ -25,9 +25,9 @@ const sbtcEnrollContractMap = {
     contract: 'STB44HYPYAT2BB2QE513NSP81HTMYWBJP02HPGK6.yield',
   },
   mainnet: {
-    contractAddress: 'SP804CDG3KBN9M6E00AD744K8DC697G7HBCG520Q',
-    contractName: 'sbtc-yield-rewards-v3',
-    contract: 'SP804CDG3KBN9M6E00AD744K8DC697G7HBCG520Q.sbtc-yield-rewards-v3',
+    contractAddress: 'SP1HFCRKEJ8BYW4D0E3FAWHFDX8A25PPAA83HWWZ9',
+    contractName: 'dual-stacking-v1',
+    contract: 'SP804CDG3KBN9M6E00AD744K8DC697G7HBCG520Q.dual-stacking-v1',
   },
   mocknet: {} as EnrollContractIdentifier,
 } as const satisfies Record<StacksNetworkName, EnrollContractIdentifier>;
