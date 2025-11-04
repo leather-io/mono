@@ -6,10 +6,10 @@ import { useStxAccountBalance } from '~/queries/balance/stx-balance.hooks';
 
 import { stxAsset } from '@leather.io/constants';
 
-import { AssetsList, PortfolioAsset } from './components/assets-list';
 import { PortfolioChart, PortfolioChartPending } from './components/portfolio-chart';
 import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
+import { PortfolioAsset, PortfolioTable } from './portfolio-table/portfolio-table';
 
 function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
   const aValue = Number(a.quote.availableBalance.amount);
@@ -44,7 +44,7 @@ export function PortfolioPage() {
   return (
     <PortfolioPageLayout
       overview={<PortfolioSummary />}
-      assetList={<AssetsList assets={allAssets} isLoading={isLoading} />}
+      assetList={<PortfolioTable assets={allAssets} isLoading={isLoading} />}
       visualization={
         <WhenClient fallback={<PortfolioChartPending />}>
           <PortfolioChart assets={allAssets} />
