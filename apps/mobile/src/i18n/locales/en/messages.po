@@ -346,13 +346,7 @@ msgstr "Balances"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:14
-#: src/features/receive/get-assets.ts:29
-#: src/features/receive/get-assets.ts:37
-#: src/features/send/forms/btc/btc-form.tsx:64
 #: src/features/swap/swap.utils.ts:7
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:17
-#: src/shared/display-preference.ts:61
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -1500,12 +1494,7 @@ msgstr "SRC-20"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:13
-#: src/features/receive/get-assets.ts:45
-#: src/features/send/forms/stx/stx-form.tsx:58
 #: src/features/swap/swap.utils.ts:6
-#: src/features/token/stacks/stacks-token-details.tsx:15
-#: src/shared/display-preference.ts:62
 msgid "Stacks"
 msgstr "Stacks"
 
