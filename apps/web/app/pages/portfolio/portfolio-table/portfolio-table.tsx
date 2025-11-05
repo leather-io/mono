@@ -9,7 +9,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Flex, styled } from 'leather-styles/jsx';
+import { Box, styled } from 'leather-styles/jsx';
 import { Table, rowPadding } from '~/components/table';
 import { formatCurrency } from '~/utils/currency-formatter';
 
@@ -35,11 +35,13 @@ declare module '@tanstack/react-table' {
     _columnDef?: ColumnDef<TData, TValue>;
   }
 }
+
 export interface PortfolioAsset {
   asset: BtcAsset | Sip10Asset | StxAsset;
   crypto: CryptoAssetBalance;
   quote: CryptoAssetBalance;
 }
+
 export interface PortfolioTableRow extends PortfolioAsset {
   allocation: number;
   price?: Money;
@@ -50,10 +52,19 @@ export interface PortfolioTableRow extends PortfolioAsset {
 
 type ColumnAlignment = 'left' | 'center' | 'right';
 
+function HeaderCellText({ children }: { children: React.ReactNode }) {
+  return (
+    <styled.p textStyle="label.03" color="ink.text-subdued">
+      {children}
+    </styled.p>
+  );
+}
+
 interface PortfolioTableProps {
   rows: PortfolioTableRow[];
   isLoading: boolean;
 }
+
 export function PortfolioTable({ rows, isLoading }: PortfolioTableProps) {
   const { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol } = usePortfolioEvents();
   const tokenCount = rows.length;
@@ -65,26 +76,17 @@ export function PortfolioTable({ rows, isLoading }: PortfolioTableProps) {
         id: 'asset',
         enableSorting: false,
         meta: { align: 'left' },
-        header: () => (
-          <styled.p textStyle="label.03" color="ink.text-subdued">
-            Asset
-          </styled.p>
-        ),
+        header: () => <HeaderCellText>Asset</HeaderCellText>,
         cell: info => {
           const { asset } = info.row.original;
-
           return <AssetCell asset={asset} />;
         },
       },
       {
         id: 'price',
         enableSorting: false,
-        meta: { align: 'left' },
-        header: () => (
-          <styled.p textStyle="label.03" color="ink.text-subdued">
-            Price
-          </styled.p>
-        ),
+        meta: { align: 'right' },
+        header: () => <HeaderCellText>Price</HeaderCellText>,
         cell: info => {
           const { price, priceIsLoading } = info.row.original;
           if (priceIsLoading) return <TextCell>{`${EmptyAmountPlaceholder}`}</TextCell>;
@@ -94,12 +96,8 @@ export function PortfolioTable({ rows, isLoading }: PortfolioTableProps) {
       {
         id: 'allocation',
         enableSorting: false,
-        meta: { align: 'left' },
-        header: () => (
-          <styled.p textStyle="label.03" color="ink.text-subdued">
-            Allocation
-          </styled.p>
-        ),
+        meta: { align: 'right' },
+        header: () => <HeaderCellText>Allocation</HeaderCellText>,
         cell: info => {
           const { allocation } = info.row.original;
           return <TextCell>{`${allocation.toFixed(2)}%`}</TextCell>;
@@ -108,12 +106,8 @@ export function PortfolioTable({ rows, isLoading }: PortfolioTableProps) {
       {
         id: 'priceChange',
         enableSorting: false,
-        meta: { align: 'left' },
-        header: () => (
-          <styled.p textStyle="label.03" color="ink.text-subdued">
-            24h
-          </styled.p>
-        ),
+        meta: { align: 'right' },
+        header: () => <HeaderCellText>24h</HeaderCellText>,
         cell: info => {
           const { priceChange, priceChangeIsLoading } = info.row.original;
           return <PriceChangeCell priceChange={priceChange} isLoading={priceChangeIsLoading} />;
@@ -124,16 +118,11 @@ export function PortfolioTable({ rows, isLoading }: PortfolioTableProps) {
         accessorFn: row => Number(row.quote.availableBalance.amount),
         enableSortingRemoval: false,
         meta: { align: 'right' },
-        header: () => (
-          <styled.p textStyle="label.03" color="ink.text-subdued" textAlign="right">
-            Balance
-          </styled.p>
-        ),
+        header: () => <HeaderCellText>Balance</HeaderCellText>,
         cell: info => {
           const { crypto, quote } = info.row.original;
           const balance = formatCurrency(crypto.availableBalance, { showCurrency: false });
           const value = formatCurrency(quote.availableBalance);
-
           return <BalanceCell balance={balance} value={value} />;
         },
       },
@@ -154,37 +143,25 @@ export function PortfolioTable({ rows, isLoading }: PortfolioTableProps) {
   if (isLoading) {
     return <PortfolioTableLoading />;
   }
+
   if (!hasData) {
     return <PortfolioTableEmpty />;
   }
+
   return (
-        <>
-          <Flex
-            px="space.04"
-            py="space.03"
-            alignItems="flex-start"
-            gap="space.04"
-            alignSelf="stretch"
-          >
-            <styled.p textStyle="heading.05">
-              Tokens <styled.span color="ink.text-subdued">{rows.length}</styled.span>
-            </styled.p>
-          </Flex>
-          <Table.Root width="100%" overflowX="auto">
-            <Table.Table>
-              <Table.Head>
-                {table.getHeaderGroups().map(headerGroup => (
-                  <Table.Row key={headerGroup.id} className={rowPadding}>
-                    {headerGroup.headers.map(header => {
-                      const sortState = header.column.getIsSorted();
-                      const canSort = header.column.getCanSort();
-                      const toggleSort = canSort
-                        ? header.column.getToggleSortingHandler()
-                        : undefined;
-                      const alignment: ColumnAlignment =
-                        header.column.columnDef.meta?.align ?? 'left';
-                      const justifyContent = getJustifyContent(alignment);
-                      const ariaSort = getAriaSort(sortState);
+    <Box>
+      <Table.Root width="100%" overflowX="auto">
+        <Table.Table>
+          <Table.Head>
+            {table.getHeaderGroups().map(headerGroup => (
+              <Table.Row key={headerGroup.id} className={rowPadding}>
+                {headerGroup.headers.map(header => {
+                  const sortState = header.column.getIsSorted();
+                  const canSort = header.column.getCanSort();
+                  const toggleSort = canSort ? header.column.getToggleSortingHandler() : undefined;
+                  const alignment: ColumnAlignment = header.column.columnDef.meta?.align ?? 'left';
+                  const justifyContent = getJustifyContent(alignment);
+                  const ariaSort = getAriaSort(sortState);
 
                   return (
                     <Table.Header
@@ -248,6 +225,6 @@ export function PortfolioTable({ rows, isLoading }: PortfolioTableProps) {
           </Table.Body>
         </Table.Table>
       </Table.Root>
-    </>
+    </Box>
   );
 }

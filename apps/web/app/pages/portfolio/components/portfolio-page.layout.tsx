@@ -1,22 +1,21 @@
-import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { useMemo } from 'react';
 
 import { useQueries, useQuery } from '@tanstack/react-query';
+import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { toFetchState } from '~/components/loading/fetch-state';
+import { Page } from '~/layouts/page/page';
 import { createMarketDataBatchQueryOptions } from '~/queries/market-data/market-data.query';
 import { createPriceChangePercentageQueryOptions } from '~/queries/market-history/market-history.query';
-import { Page } from '~/layouts/page/page';
 import { useQuoteCurrency } from '~/store/quote-currency';
 
-import { PortfolioAsset, PortfolioTableRow } from '../portfolio-table/portfolio-table';
-
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
+
+import { PortfolioAsset, PortfolioTableRow } from '../portfolio-table/portfolio-table';
 
 interface PortfolioPageLayoutProps {
   assets: PortfolioAsset[];
   isLoading: boolean;
   overview: React.ReactElement;
-  // assetList: React.ReactElement;
   activityList: React.ReactElement;
   assetCount: number;
   renderAssetList: (props: { rows: PortfolioTableRow[]; isLoading: boolean }) => React.ReactElement;
@@ -27,7 +26,6 @@ export function PortfolioPageLayout({
   assets,
   isLoading,
   overview,
-  // assetList,
   activityList,
   renderAssetList,
   visualization,
@@ -78,7 +76,7 @@ export function PortfolioPageLayout({
           error: marketDataQueryResult.error,
         });
       })
-    : baseRows.map(() => ({ state: 'loading' } as const));
+    : baseRows.map(() => ({ state: 'loading' }) as const);
 
   const priceChangeStates = shouldFetchMarketData
     ? priceChangeQueryResults.map(result =>
@@ -89,7 +87,7 @@ export function PortfolioPageLayout({
           error: result.error,
         })
       )
-    : baseRows.map(() => ({ state: 'loading' } as const));
+    : baseRows.map(() => ({ state: 'loading' }) as const);
 
   const tableRows: PortfolioTableRow[] = baseRows.map((row, index) => {
     const priceState = marketDataStates[index];
@@ -109,7 +107,13 @@ export function PortfolioPageLayout({
     };
   });
 
-  const assetList = renderAssetList({ rows: tableRows, isLoading });
+  const isTableLoading =
+    isLoading ||
+    (!shouldFetchMarketData && hasData) ||
+    marketDataQueryResult.isPending ||
+    priceChangeQueryResults.some(result => result.isPending);
+
+  const assetList = renderAssetList({ rows: tableRows, isLoading: isTableLoading });
 
   return (
     <Page overflow="hidden">

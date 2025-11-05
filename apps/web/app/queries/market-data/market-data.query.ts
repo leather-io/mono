@@ -30,16 +30,11 @@ export function createMarketDataBatchQueryOptions(
 ) {
   const assetIds = assets.map(asset => serializeAssetId(getAssetId(asset)));
   return {
+    // The query depends on the serialized asset ids, so suppress lint warning about the original array
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ['market-data-service-get-market-data-batch', assetIds, currency],
-    queryFn: ({ signal, meta }: QueryFunctionContext<
-      ['market-data-service-get-market-data-batch', string[], QuoteCurrency],
-      never,
-      { assets: FungibleCryptoAsset[] }
-    >) => {
-      const { assets: assetsForQuery } = meta;
-      return getMarketDataService().getMarketDataBatch(assetsForQuery, signal);
-    },
-    meta: { assets },
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getMarketDataService().getMarketDataBatch(assets, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,

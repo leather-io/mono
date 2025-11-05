@@ -28,10 +28,12 @@ function getPriceChangeColor(priceChange: number) {
     return 'ink.text-subdued';
   }
 }
+
+//  all numbers should be right aligned
 export function PriceChangeCell({ priceChange, isLoading }: PriceChangeCellProps) {
   if (isLoading || priceChange === undefined) {
     return (
-      <styled.p textStyle="body.02" color="ink.text-subdued">
+      <styled.p textStyle="label.02" color="ink.text-subdued">
         {`${EmptyAmountPlaceholder}`}
       </styled.p>
     );
@@ -41,16 +43,16 @@ export function PriceChangeCell({ priceChange, isLoading }: PriceChangeCellProps
   const shouldShowArrow = priceChange !== 0;
 
   return (
-    <Flex alignItems="center" gap="space.01">
-      {shouldShowArrow ? (
+    <Flex alignItems="center" gap="space.01" justifyContent="flex-end">
+      {shouldShowArrow && (
         <ArrowTriangleTopIcon
           color={color}
           width={8}
           height={8}
           style={{ transform: `rotate(${priceChange < 0 ? 180 : 0}deg)` }}
         />
-      ) : null}
-      <styled.p textStyle="body.02" fontWeight="medium" color={color}>
+      )}
+      <styled.p textStyle="label.02" fontWeight="medium" color={color}>
         {priceChange.toFixed(2)}%
       </styled.p>
     </Flex>
@@ -81,19 +83,21 @@ export function AssetCell({ asset }: AssetCellProps) {
         )}
       </Box>
       <Box>
-        <styled.p textStyle="body.02" fontWeight="medium">
+        <styled.p textStyle="label.01" fontWeight="medium">
           {name}
         </styled.p>
-        <styled.p textStyle="caption.01" color="ink.text-subdued">
-          {symbol}
-        </styled.p>
+        <styled.p textStyle="caption.01">{symbol}</styled.p>
       </Box>
     </Flex>
   );
 }
 
 export function TextCell({ children }: HasChildren) {
-  return <styled.p textStyle="body.02">{children}</styled.p>;
+  return (
+    <styled.p textStyle="label.02" textAlign="right">
+      {children}
+    </styled.p>
+  );
 }
 
 interface BalanceCellProps {
@@ -102,11 +106,9 @@ interface BalanceCellProps {
 }
 export function BalanceCell({ balance, value }: BalanceCellProps) {
   return (
-    <Flex alignItems="flex-end" flexDir="column" gap="space.01">
-      <styled.p textStyle="body.02">{value}</styled.p>
-      <styled.span textStyle="caption.01" color="ink.text-subdued">
-        {balance}
-      </styled.span>
+    <Flex alignItems="flex-end" flexDir="column">
+      <styled.p textStyle="label.02">{value}</styled.p>
+      <styled.span textStyle="caption.01">{balance}</styled.span>
     </Flex>
   );
 }
