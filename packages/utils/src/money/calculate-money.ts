@@ -4,7 +4,7 @@ import { type MarketData, type Money, type NumType, formatMarketPair } from '@le
 
 import { isNumber } from '..';
 import { initBigNumber } from '../math/helpers';
-import { createMoney, createMoneyFromDecimal } from './create-money';
+import { createMoney } from './create-money';
 import { isMoney } from './is-money';
 
 export function baseCurrencyAmountInQuoteWithFallback(quantity: Money, marketData?: MarketData) {
@@ -28,7 +28,11 @@ export function baseCurrencyAmountInQuote(quantity: Money, { pair, price }: Mark
   );
 }
 
-export function quoteCurrencyAmountToBase(quantity: Money, { pair, price }: MarketData) {
+export function quoteCurrencyAmountToBase(
+  quantity: Money,
+  { pair, price }: MarketData,
+  decimals: number
+) {
   if (quantity.symbol !== pair.quote)
     throw new Error(
       `Cannot calculate value of ${quantity.amount.toString()} ${quantity.symbol} with market pair of ${formatMarketPair(
@@ -36,7 +40,12 @@ export function quoteCurrencyAmountToBase(quantity: Money, { pair, price }: Mark
       )}`
     );
 
-  return createMoneyFromDecimal(quantity.amount.dividedBy(price.amount), pair.base);
+  const baseAmount = quantity.amount
+    .dividedBy(price.amount)
+    .shiftedBy(decimals)
+    .integerValue(BigNumber.ROUND_FLOOR);
+
+  return createMoney(baseAmount, pair.base, decimals);
 }
 
 export function convertAmountToFractionalUnit(num: Money | BigNumber, decimals?: number) {

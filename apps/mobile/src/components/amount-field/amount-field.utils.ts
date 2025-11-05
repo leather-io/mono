@@ -41,7 +41,7 @@ export function calculateSecondaryValue({
   const numericValue = Number(value);
   const baseAmount = createMoneyFromDecimal(numericValue, marketData.pair.base, assetDecimals);
   const converter = mode === 'crypto' ? baseCurrencyAmountInQuote : quoteCurrencyAmountToBase;
-  const resultAmount = converter(baseAmount, marketData);
+  const resultAmount = converter(baseAmount, marketData, assetDecimals ?? 0);
 
   return resultAmount.amount
     .shiftedBy(-resultAmount.decimals)
