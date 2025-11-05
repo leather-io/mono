@@ -1345,7 +1345,7 @@ msgstr "Reveal account"
 #: src/features/send/forms/btc/btc-form.tsx:126
 #: src/features/send/forms/stx/sip10-form.tsx:149
 #: src/features/send/forms/stx/stx-form.tsx:140
-#: src/features/swap/screens/swap-form-screen.tsx:101
+#: src/features/swap/screens/swap-form-screen.tsx:94
 msgid "Review"
 msgstr "Review"
 
@@ -1539,7 +1539,7 @@ msgid "Submitting..."
 msgstr "Submitting..."
 
 #: src/components/action-buttons.tsx:49
-#: src/features/swap/screens/swap-form-screen.tsx:54
+#: src/features/swap/screens/swap-form-screen.tsx:47
 msgid "Swap"
 msgstr "Swap"
 

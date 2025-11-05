@@ -9,8 +9,6 @@ import {
   MAINNET,
   REGTEST,
   type SbtcApiClient,
-  SbtcApiClientMainnet,
-  SbtcApiClientTestnet,
   TESTNET,
   buildSbtcDepositTx,
 } from 'sbtc';
@@ -21,9 +19,6 @@ import {
   type BitcoinNetworkModes,
   type NetworkConfiguration,
 } from '@leather.io/models';
-
-const clientMainnet = new SbtcApiClientMainnet({});
-const clientTestnet = new SbtcApiClientTestnet({});
 
 export interface SbtcDeposit {
   address: string;
@@ -37,10 +32,9 @@ export async function buildSbtcBridgeTransferTx(
   amountSats: number | bigint,
   network: NetworkConfiguration,
   account: AccountAddresses,
-  payer: BitcoinNativeSegwitPayer
+  payer: BitcoinNativeSegwitPayer,
+  sbtcClient: SbtcApiClient
 ): Promise<SbtcDeposit> {
-  const client = network.chain.bitcoin.mode === 'mainnet' ? clientMainnet : clientTestnet;
-
   return buildSbtcDepositTx({
     amountSats,
     network: getSbtcNetworkConfig(network.chain.bitcoin.mode),
@@ -49,8 +43,8 @@ export async function buildSbtcBridgeTransferTx(
     reclaimLockTime: DEFAULT_RECLAIM_LOCK_TIME,
     reclaimPublicKey: bytesToHex(payer.publicKey).slice(2),
     signersPublicKey: await fetchSignersPublicKey({
-      contractAddress: client.config.sbtcContract,
-      client: client.config,
+      contractAddress: sbtcClient.config.sbtcContract,
+      client: sbtcClient.config,
     }),
   });
 }

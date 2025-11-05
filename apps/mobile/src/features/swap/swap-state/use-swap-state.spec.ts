@@ -61,10 +61,12 @@ function renderUseSwapState({
           stacksSigner: createStubStacksSigner(),
           stacksNetwork: STACKS_MAINNET,
           broadcast: () => Promise.resolve({ ok: true, txid: 'test-txid' }) as any,
+          nextNonce: undefined,
         },
         bitcoin: {
           bitcoinPayer: createStubBitcoinPayer(),
           network: createStubNetwork(),
+          sbtcClient: {} as any,
           signBitcoinPsbt: () => ({}) as any,
           broadcast: () => Promise.resolve('test-txid'),
         },
@@ -91,7 +93,8 @@ describe('useSwapState', () => {
         quoteStrategy: 'best',
         baseAmount: '0',
         secondaryAmount: { status: 'idle', value: null },
-        nonce: undefined,
+        nonceOverride: undefined,
+        effectiveNonce: 0,
         slippage: 0.03,
         customFee: null,
         feeTier: 'standard',
@@ -1886,7 +1889,7 @@ describe('useSwapState', () => {
 
           const tierOption = feeData.options.find(opt => opt.tier === tier);
           assert(tierOption);
-          expect(feeData.value).toEqual(tierOption.value);
+          expect(feeData.calculation.value).toEqual(tierOption.value);
         }
       );
     });
@@ -1931,7 +1934,7 @@ describe('useSwapState', () => {
         assert(feeData?.mode === 'tiered');
         assert(feeData.selected.type === 'custom');
 
-        expect(feeData.value.amount.toNumber()).toBe(30000000);
+        expect(feeData.calculation.value.amount.toNumber()).toBe(30000000);
       });
 
       it('custom fee takes precedence over tier when both are set', async () => {
@@ -1959,7 +1962,7 @@ describe('useSwapState', () => {
         assert(feeData?.mode === 'tiered');
         assert(feeData.selected.type === 'custom');
         expect(feeData.selected.value).toBe(35000);
-        expect(feeData.value.amount.toNumber()).toBe(35000000);
+        expect(feeData.calculation.value.amount.toNumber()).toBe(35000000);
       });
     });
 

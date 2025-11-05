@@ -1,8 +1,8 @@
 import { getExecutionTypeStrategy } from '@/features/swap/swap-state/strategies/execution-type/execution-type';
 import {
   EnrichedSwapQuote,
+  SwapQuotePolicy,
   SwapQuoteSelectionResult,
-  SwapQuoteStrategy,
 } from '@/features/swap/swap-state/swap-state.types';
 import { filter, isDefined, map, pipe, prop, sortBy } from 'remeda';
 
@@ -11,7 +11,7 @@ import { assertUnreachable } from '@leather.io/utils';
 
 export function swapQuoteSelector(
   swapQuotes: SwapQuote[],
-  strategy: SwapQuoteStrategy,
+  policy: SwapQuotePolicy,
   fairMarketRate: number | null,
   slippage: number
 ): SwapQuoteSelectionResult {
@@ -27,17 +27,17 @@ export function swapQuoteSelector(
 
   return {
     quotes,
-    selected: selectQuoteByStrategy(quotes, strategy),
+    selected: selectQuoteByPolicy(quotes, policy),
   };
 }
 
-function selectQuoteByStrategy(
+function selectQuoteByPolicy(
   quotes: EnrichedSwapQuote[],
-  strategy: SwapQuoteStrategy
+  policy: SwapQuotePolicy
 ): EnrichedSwapQuote | undefined {
   if (quotes.length === 0) return;
 
-  switch (strategy) {
+  switch (policy) {
     case 'best':
       return quotes[0];
     case 'fastest':
@@ -45,6 +45,6 @@ function selectQuoteByStrategy(
     case 'cheapest':
       return quotes[0];
     default:
-      return assertUnreachable(strategy);
+      return assertUnreachable(policy);
   }
 }

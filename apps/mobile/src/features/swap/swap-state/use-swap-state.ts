@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
 
-import { useNetworkFee } from '@/features/swap/swap-state/hooks/use-network-fee';
+import { useExecuteSwap } from '@/features/swap/swap-state/hooks/use-execute-swap';
 
 import { QuoteCurrency, SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
@@ -9,9 +9,9 @@ import { getAssetId } from '@leather.io/utils';
 import { createSwapActions } from './actions/swap-actions';
 import { useDerivedAmounts } from './hooks/use-derived-amounts';
 import { useIsSendingMax } from './hooks/use-is-sending-max';
+import { useNetworkFee } from './hooks/use-network-fee';
 import { useSecondaryAmount } from './hooks/use-secondary-amount';
 import { useSwapAssetReconciliation } from './hooks/use-swap-asset-reconciliation';
-import { useSwapExecutability } from './hooks/use-swap-executability';
 import { useSwapQuotes } from './hooks/use-swap-quotes';
 import { useSwapValidation } from './hooks/use-swap-validation';
 import { swapReducer } from './swap-state.reducer';
@@ -72,6 +72,8 @@ export function useSwapState({
     dispatch,
   });
 
+  const effectiveNonce = state.nonceOverride ?? dependencies.stacks.nextNonce?.nonce ?? 0;
+
   const { derivedAmounts, lockDerivedAmountsForNextRender } = useDerivedAmounts(
     state,
     baseMarketDataQuery.data
@@ -110,6 +112,17 @@ export function useSwapState({
     dependencies,
   });
 
+  const { canExecute, execute } = useExecuteSwap({
+    state,
+    derivedAmounts,
+    isSendingMax,
+    validation,
+    quoteQuery,
+    networkFeeQuery,
+    nonce: effectiveNonce,
+    dependencies,
+  });
+
   const actions = createSwapActions({
     dispatch,
     lockDerivedAmountsForNextRender,
@@ -117,14 +130,13 @@ export function useSwapState({
     derivedAmounts,
   });
 
-  const isSwapExecutable = useSwapExecutability({ validation, quoteQuery, derivedAmounts });
-
   return {
     state: {
       ...state,
       secondaryAmount,
       assetFlippingAllowed: isAssetFlippingAllowed(state.baseSwapAsset, state.targetSwapAsset),
       isSendingMax,
+      effectiveNonce,
     },
     actions,
     validation,
@@ -132,7 +144,8 @@ export function useSwapState({
     targetAssetsQuery,
     quoteQuery,
     networkFeeQuery,
-    isSwapExecutable,
+    canExecute,
+    execute,
   };
 }
 
@@ -154,10 +167,10 @@ function initializeState({
     baseSwapAsset: baseSwapAsset,
     targetSwapAsset: targetSwapAsset,
     pairReconciliation: { base: 'pending', target: 'pending' },
-    nonce: undefined,
+    nonceOverride: undefined,
     baseAmount: '0',
     quoteCurrencyPreference,
-    quoteStrategy: 'best',
+    quotePolicy: 'best',
     inputCurrencyMode: 'crypto',
     slippage: DEFAULT_SLIPPAGE_PERCENTAGE,
     selectingAsset: null,

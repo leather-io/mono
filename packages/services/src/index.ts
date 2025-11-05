@@ -14,6 +14,7 @@ export * from './transactions/stacks-transactions.service';
 export * from './transactions/bitcoin-transactions.service';
 export * from './fees/stacks-transaction-fees.service';
 export * from './fees/bitcoin-transaction-fees.service';
+export * from './coin-selection/bitcoin-coin-selection.service';
 export * from './transactions/bitcoin-transactions.service';
 export * from './utxos/utxos.service';
 export * from './activity/activity.service';

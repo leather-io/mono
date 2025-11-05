@@ -36,7 +36,7 @@ export function useSwapQuotes({
     baseSwapAsset: state.baseSwapAsset,
     targetSwapAsset: state.targetSwapAsset,
     baseAmount: derivedAmounts.crypto,
-    strategy: state.quoteStrategy,
+    policy: state.quotePolicy,
     slippage: state.slippage,
     fairMarketRate,
   });

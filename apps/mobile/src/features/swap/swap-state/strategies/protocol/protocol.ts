@@ -1,9 +1,10 @@
 import { FeeMode } from '@/features/swap/swap-state/swap-state.types';
 import { STX_SAFETY_BUFFER } from '@/features/swap/swap-state/swap.constants';
+import BigNumber from 'bignumber.js';
 
 import { BITCOIN_MINIMUM_SPEND_IN_SATS } from '@leather.io/constants';
 import { CryptoAssetBalance, Money } from '@leather.io/models';
-import { subtractMoney } from '@leather.io/utils';
+import { createMoney } from '@leather.io/utils';
 
 export type SupportedProtocol = 'nativeBtc' | 'nativeStx' | 'sip10';
 
@@ -38,8 +39,10 @@ const nativeBtcStrategy: ProtocolStrategy = {
 };
 
 const nativeStxStrategy: ProtocolStrategy = {
-  resolveSpendableAmount(balance: CryptoAssetBalance): Money {
-    return subtractMoney(balance.availableBalance, STX_SAFETY_BUFFER);
+  resolveSpendableAmount({ availableBalance }: CryptoAssetBalance): Money {
+    const { amount, symbol, decimals } = availableBalance;
+    const spendableAmount = BigNumber.max(0, amount.minus(STX_SAFETY_BUFFER.amount));
+    return createMoney(spendableAmount, symbol, decimals);
   },
   getMinimumSpendAmount() {
     return 0;
