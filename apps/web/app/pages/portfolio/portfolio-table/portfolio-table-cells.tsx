@@ -1,8 +1,9 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { Sip10Asset, StxAsset, isStxAsset } from '@leather.io/models';
+import { BtcAsset, Sip10Asset, StxAsset, isBtcAsset, isStxAsset } from '@leather.io/models';
 import {
   ArrowTriangleTopIcon,
+  BtcAvatarIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   HasChildren,
@@ -43,16 +44,19 @@ export function PriceChangeCell({ priceChange }: PriceChangeCellProps) {
 }
 
 interface AssetCellProps {
-  asset: Sip10Asset | StxAsset;
+  asset: BtcAsset | Sip10Asset | StxAsset;
 }
 export function AssetCell({ asset }: AssetCellProps) {
+  const isBtc = isBtcAsset(asset);
   const isStx = isStxAsset(asset);
-  const name = isStx ? 'Stacks' : asset.name;
+  const name = isBtc ? 'Bitcoin' : isStx ? 'Stacks' : asset.name;
   const symbol = asset.symbol;
   return (
     <Flex alignItems="center" gap="space.04">
       <Box>
-        {isStx ? (
+        {isBtc ? (
+          <BtcAvatarIcon />
+        ) : isStx ? (
           <StxAvatarIcon />
         ) : (
           <Sip10AvatarIcon

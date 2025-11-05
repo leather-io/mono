@@ -10,7 +10,7 @@ import { leather } from '~/utils/leather-sdk';
 import { type ExtensionState, isLeatherInstalled, whenExtensionState } from '~/utils/utils';
 
 import { ChainId } from '@leather.io/models';
-import { delay } from '@leather.io/utils';
+import { createAccountAddresses, delay } from '@leather.io/utils';
 
 import { useStacksNetwork } from './stacks-network';
 
@@ -55,6 +55,15 @@ export function useLeatherConnect() {
 
   const stacksAccount = useStacksAccount();
 
+  const btcAccount = useMemo(() => {
+    const btcAddresses = addresses.filter(addr => addr.symbol === 'BTC');
+    const descriptors = btcAddresses
+      .filter(addr => 'descriptor' in addr)
+      .map(addr => addr.descriptor);
+
+    return createAccountAddresses({ fingerprint: 'web-sdk', accountIndex: 0 }, descriptors);
+  }, [addresses]);
+
   const btcAddressP2tr = useMemo(
     () => addresses.find(address => 'type' in address && address.type === 'p2tr'),
     [addresses]
@@ -65,7 +74,7 @@ export function useLeatherConnect() {
     [addresses]
   );
 
-  const accounts = { stacksAccount, btcAddressP2tr, btcAddressP2wpkh };
+  const accounts = { stacksAccount, btcAccount, btcAddressP2tr, btcAddressP2wpkh };
 
   return {
     addresses,
