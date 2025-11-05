@@ -9,7 +9,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Flex, styled } from 'leather-styles/jsx';
+import { styled } from 'leather-styles/jsx';
 import { Table, rowPadding } from '~/components/table';
 import { formatCurrency } from '~/utils/currency-formatter';
 
@@ -240,6 +240,16 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
           </Table.Body>
         </Table.Table>
       </Table.Root>
+      <styled.div
+        position="absolute"
+        bottom="0"
+        left="0"
+        right="0"
+        height="48px"
+        bgGradient="to-t"
+        gradientFrom="ink.background-primary"
+        gradientTo="transparent"
+      />
     </>
   );
 }

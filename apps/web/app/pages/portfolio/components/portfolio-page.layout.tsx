@@ -1,5 +1,6 @@
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
+import { useViewportMinWidth } from '~/utils/hooks/use-media-query';
 
 interface PortfolioPageLayoutProps {
   overview: React.ReactElement;
@@ -16,6 +17,8 @@ export function PortfolioPageLayout({
   visualization,
   assetCount,
 }: PortfolioPageLayoutProps) {
+  const isLargeViewport = useViewportMinWidth('md');
+
   return (
     <Page overflow="hidden">
       <Page.Header title="Portfolio" />
@@ -30,20 +33,35 @@ export function PortfolioPageLayout({
           </Box>
         </Box>
 
-        <Flex flexDirection="row" py="space.05" gap="space.05">
-          <Stack height="70vh" minHeight={500} flexGrow={1}>
+        <Flex flexWrap="wrap" flexDirection="row" py="space.05" gap="space.05">
+          <Stack overflowX="scroll" height="70vh" minHeight={500} flexGrow={1}>
             <styled.h2 textStyle="heading.05" mt="space.05" mb="space.02">
               Tokens <styled.span color="ink.text-subdued">{assetCount}</styled.span>
             </styled.h2>
-            <Stack overflow="scroll" flexGrow={1}>
+            <Stack
+              position="relative"
+              overflowY="scroll"
+              borderRadius="sm"
+              border="default"
+              flexGrow={1}
+              minWidth={isLargeViewport ? 400 : 0}
+            >
               {assetList}
             </Stack>
           </Stack>
-          <Stack height="70vh" minHeight={500} flexGrow={1}>
+          <Stack overflowX="scroll" height="70vh" minHeight={500} flexGrow={1}>
             <styled.h2 textStyle="heading.05" mt="space.05" mb="space.02">
               Recent activity
             </styled.h2>
-            <Stack flexGrow={1} border="default" borderRadius="sm" height="100%">
+            <Stack
+              minWidth={isLargeViewport ? 400 : 0}
+              position="relative"
+              flex={1}
+              border="default"
+              borderRadius="sm"
+              height="100%"
+              overflowX="scroll"
+            >
               {activityList}
             </Stack>
           </Stack>
