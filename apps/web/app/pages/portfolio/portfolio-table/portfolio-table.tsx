@@ -1,5 +1,6 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 
+import { useQueries, useQuery } from '@tanstack/react-query';
 import {
   ColumnDef,
   RowData,
@@ -10,12 +11,18 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { Box, styled } from 'leather-styles/jsx';
+import { toFetchState } from '~/components/loading/fetch-state';
 import { Table, rowPadding } from '~/components/table';
+import { createMarketDataBatchQueryOptions } from '~/queries/market-data/market-data.query';
+import { createPriceChangePercentageQueryOptions } from '~/queries/market-history/market-history.query';
+import { useQuoteCurrency } from '~/store/quote-currency';
 import { formatCurrency } from '~/utils/currency-formatter';
+
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { usePortfolioEvents } from '../portfolio-events';
 import { EmptyAmountPlaceholder } from '../portfolio.page';
-import { PortfolioTableRow } from '../portfolio.types';
+import { PortfolioAsset, PortfolioTableRow } from '../portfolio.types';
 import { PortfolioTableEmpty } from './portfolio-empty';
 import { PortfolioTableLoading } from './portfolio-loading';
 import {
@@ -46,12 +53,91 @@ function HeaderCellText({ children }: { children: ReactNode }) {
 }
 
 interface PortfolioTableProps {
-  rows: PortfolioTableRow[];
+  allAssets: PortfolioAsset[];
   isLoading: boolean;
 }
 
-export function PortfolioTable({ rows, isLoading }: PortfolioTableProps) {
+export function PortfolioTable({ allAssets, isLoading }: PortfolioTableProps) {
   const { emitAssetHoverOn, emitAssetHoverOff, hoveredSymbol } = usePortfolioEvents();
+
+  const { quoteCurrency } = useQuoteCurrency();
+  const portfolioAssets = useMemo<PortfolioTableRow[]>(() => {
+    if (!allAssets.length) return [];
+    const totalValue = allAssets.reduce(
+      (sum, asset) => sum + Number(asset.quote.availableBalance.amount),
+      0
+    );
+    return allAssets.map(asset => ({
+      ...asset,
+      allocation:
+        totalValue > 0 ? (Number(asset.quote.availableBalance.amount) / totalValue) * 100 : 0,
+    }));
+  }, [allAssets]);
+
+  const hasTableData = portfolioAssets.length > 0;
+  const marketDataAssets = useMemo(
+    () => portfolioAssets.map(({ asset }) => asset),
+    [portfolioAssets]
+  );
+  const shouldFetchMarketData = hasTableData && !isLoading;
+
+  const marketDataQuery = useQuery({
+    ...createMarketDataBatchQueryOptions(marketDataAssets, quoteCurrency),
+    enabled: shouldFetchMarketData,
+  });
+
+  const priceChangeQueries = useQueries({
+    queries: portfolioAssets.map(({ asset }) => ({
+      ...createPriceChangePercentageQueryOptions(asset, '1d'),
+      enabled: shouldFetchMarketData,
+    })),
+  });
+
+  const marketDataStates = shouldFetchMarketData
+    ? portfolioAssets.map(row => {
+        const assetId = serializeAssetId(getAssetId(row.asset));
+        const marketData =
+          marketDataQuery.data && assetId in marketDataQuery.data
+            ? marketDataQuery.data[assetId]
+            : null;
+        return toFetchState({
+          data: marketData?.price ?? null,
+          isLoading: marketDataQuery.isPending,
+          isError: marketDataQuery.isError,
+          error: marketDataQuery.error,
+        });
+      })
+    : portfolioAssets.map(() => ({ state: 'loading' }) as const);
+
+  const priceChangeStates = shouldFetchMarketData
+    ? priceChangeQueries.map(result =>
+        toFetchState({
+          data: typeof result.data === 'number' ? result.data : null,
+          isLoading: result.isPending,
+          isError: result.isError,
+          error: result.error,
+        })
+      )
+    : portfolioAssets.map(() => ({ state: 'loading' }) as const);
+
+  const rows: PortfolioTableRow[] = portfolioAssets.map((row, index) => {
+    const priceState = marketDataStates[index];
+    const price = priceState?.state === 'success' ? priceState.value : undefined;
+    const priceIsLoading = priceState?.state === 'loading';
+
+    const priceChangeState = priceChangeStates[index];
+    const priceChange = priceChangeState?.state === 'success' ? priceChangeState.value : undefined;
+    const priceChangeIsLoading = priceChangeState?.state === 'loading';
+
+    return {
+      ...row,
+      price,
+      priceIsLoading: Boolean(priceIsLoading),
+      priceChange,
+      priceChangeIsLoading: Boolean(priceChangeIsLoading),
+    };
+  });
+
   const tokenCount = rows.length;
   const hasData = tokenCount > 0;
 
