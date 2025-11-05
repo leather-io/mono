@@ -17,14 +17,14 @@ export function PortfolioPageLayout({
       <styled.h2 textStyle="heading.05" mt="space.05" mb="space.04">
         Overview
       </styled.h2>
-      <styled.div borderRadius="sm" border="default" borderTop="none">
-        <Box p="space.05">
+      <styled.div borderTop="none">
+        <Box borderRadius="sm" border="default" p="space.05">
           {overview}
           <Box mt="space.04" height="32px">
             {visualization}
           </Box>
         </Box>
-        <Box borderTop="default" p="space.05" pb="space.03">
+        <Box borderTop="default" py="space.05" pb="space.03">
           {assetList}
         </Box>
       </styled.div>

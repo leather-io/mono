@@ -9,7 +9,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Box, styled } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Table, rowPadding } from '~/components/table';
 import { formatCurrency } from '~/utils/currency-formatter';
 
@@ -161,79 +161,97 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
       {isLoading ? (
         <PortfolioTableLoading />
       ) : hasData ? (
-        <Table.Root width="100%" overflowX="auto">
-          <Table.Table>
-            <Table.Head>
-              {table.getHeaderGroups().map(headerGroup => (
-                <Table.Row key={headerGroup.id} className={rowPadding}>
-                  {headerGroup.headers.map(header => {
-                    const sortState = header.column.getIsSorted();
-                    const canSort = header.column.getCanSort();
-                    const toggleSort = canSort
-                      ? header.column.getToggleSortingHandler()
-                      : undefined;
-                    const alignment: ColumnAlignment =
-                      header.column.columnDef.meta?.align ?? 'left';
-                    const justifyContent = getJustifyContent(alignment);
-                    const ariaSort = getAriaSort(sortState);
+        <>
+          <Flex
+            px="space.04"
+            py="space.03"
+            alignItems="flex-start"
+            gap="space.04"
+            alignSelf="stretch"
+          >
+            <styled.p textStyle="heading.05">
+              Tokens <styled.span color="ink.text-subdued">{data.length}</styled.span>
+            </styled.p>
+          </Flex>
+          <Table.Root width="100%" overflowX="auto">
+            <Table.Table>
+              <Table.Head>
+                {table.getHeaderGroups().map(headerGroup => (
+                  <Table.Row key={headerGroup.id} className={rowPadding}>
+                    {headerGroup.headers.map(header => {
+                      const sortState = header.column.getIsSorted();
+                      const canSort = header.column.getCanSort();
+                      const toggleSort = canSort
+                        ? header.column.getToggleSortingHandler()
+                        : undefined;
+                      const alignment: ColumnAlignment =
+                        header.column.columnDef.meta?.align ?? 'left';
+                      const justifyContent = getJustifyContent(alignment);
+                      const ariaSort = getAriaSort(sortState);
 
-                    return (
-                      <Table.Header
-                        key={header.id}
-                        colSpan={header.colSpan}
-                        px="space.04"
-                        textAlign={alignment}
-                        cursor={canSort ? 'pointer' : 'default'}
-                        onClick={toggleSort}
-                        onKeyDown={
-                          toggleSort
-                            ? event => {
-                                if (event.key === 'Enter' || event.key === ' ') {
-                                  event.preventDefault();
-                                  toggleSort(event);
+                      return (
+                        <Table.Header
+                          key={header.id}
+                          colSpan={header.colSpan}
+                          px="space.04"
+                          textAlign={alignment}
+                          cursor={canSort ? 'pointer' : 'default'}
+                          onClick={toggleSort}
+                          onKeyDown={
+                            toggleSort
+                              ? event => {
+                                  if (event.key === 'Enter' || event.key === ' ') {
+                                    event.preventDefault();
+                                    toggleSort(event);
+                                  }
                                 }
-                              }
-                            : undefined
-                        }
-                        aria-sort={ariaSort}
-                        tabIndex={canSort ? 0 : undefined}
-                        role={canSort ? 'button' : undefined}
+                              : undefined
+                          }
+                          aria-sort={ariaSort}
+                          tabIndex={canSort ? 0 : undefined}
+                          role={canSort ? 'button' : undefined}
+                        >
+                          <HeaderCell justifyContent={justifyContent} sortState={sortState}>
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                          </HeaderCell>
+                        </Table.Header>
+                      );
+                    })}
+                  </Table.Row>
+                ))}
+              </Table.Head>
+              <Table.Body>
+                {table.getRowModel().rows.map(row => (
+                  <Table.Row
+                    key={row.id}
+                    className={rowPadding}
+                    onMouseEnter={() => emitAssetHoverOn(row.original.asset.symbol)}
+                    onMouseLeave={() => emitAssetHoverOff()}
+                    height="60px"
+                    bg={
+                      hoveredSymbol === row.original.asset.symbol
+                        ? 'ink.component-background-hover'
+                        : 'transparent'
+                    }
+                    transition="background-color 150ms ease-out"
+                  >
+                    {row.getVisibleCells().map(cell => (
+                      <styled.td
+                        key={cell.id}
+                        px="space.04"
+                        py="space.03"
+                        color="ink.text-primary"
+                        textStyle="body.02"
                       >
-                        <HeaderCell justifyContent={justifyContent} sortState={sortState}>
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                        </HeaderCell>
-                      </Table.Header>
-                    );
-                  })}
-                </Table.Row>
-              ))}
-            </Table.Head>
-            <Table.Body>
-              {table.getRowModel().rows.map(row => (
-                <Table.Row
-                  key={row.id}
-                  className={rowPadding}
-                  onMouseEnter={() => emitAssetHoverOn(row.original.asset.symbol)}
-                  onMouseLeave={() => emitAssetHoverOff()}
-                  opacity={!hoveredSymbol || hoveredSymbol === row.original.asset.symbol ? 1 : 0.6}
-                  height="60px"
-                >
-                  {row.getVisibleCells().map(cell => (
-                    <styled.td
-                      key={cell.id}
-                      px="space.04"
-                      py="space.03"
-                      color="ink.text-primary"
-                      textStyle="body.02"
-                    >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </styled.td>
-                  ))}
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table.Table>
-        </Table.Root>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </styled.td>
+                    ))}
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Table>
+          </Table.Root>
+        </>
       ) : (
         <PortfolioTableEmpty />
       )}
