@@ -134,7 +134,7 @@ export function createStubStacksTransactionFeesService({
     chain: 'stacks',
     options: {
       low: {
-        type: 'feeRate',
+        type: 'stacksFeeRate',
         value: createMoney(1000, 'STX'),
         rate: 1,
         rateUnit: 'µSTX/byte',
@@ -142,7 +142,7 @@ export function createStubStacksTransactionFeesService({
         sizeUnit: 'byte',
       },
       standard: {
-        type: 'feeRate',
+        type: 'stacksFeeRate',
         value: createMoney(2000, 'STX'),
         rate: 2,
         rateUnit: 'µSTX/byte',
@@ -150,7 +150,7 @@ export function createStubStacksTransactionFeesService({
         sizeUnit: 'byte',
       },
       high: {
-        type: 'feeRate',
+        type: 'stacksFeeRate',
         value: createMoney(3000, 'STX'),
         rate: 3,
         rateUnit: 'µSTX/byte',
@@ -178,28 +178,61 @@ export function createStubBitcoinTransactionFeesService({
     chain: 'bitcoin',
     options: {
       low: {
-        type: 'feeRate',
+        type: 'bitcoinFeeRate',
         value: createMoney(1000, 'BTC'),
         rate: 10,
         rateUnit: 'sats/vB',
         estimatedTxSize: 100,
         sizeUnit: 'vB',
+        inputs: [
+          {
+            txid: '0000000000000000000000000000000000000000000000000000000000000000',
+            vout: 0,
+            value: 10000,
+            address: 'bc1qtest',
+            path: "m/84'/0'/0'/0/0",
+            keyOrigin: 'test',
+          },
+        ],
+        outputs: [{ value: BigInt(5000), address: 'bc1qrecipient' }, { value: BigInt(4000) }],
       },
       standard: {
-        type: 'feeRate',
+        type: 'bitcoinFeeRate',
         value: createMoney(2000, 'BTC'),
         rate: 20,
         rateUnit: 'sats/vB',
         estimatedTxSize: 100,
         sizeUnit: 'vB',
+        inputs: [
+          {
+            txid: '0000000000000000000000000000000000000000000000000000000000000000',
+            vout: 0,
+            value: 10000,
+            address: 'bc1qtest',
+            path: "m/84'/0'/0'/0/0",
+            keyOrigin: 'test',
+          },
+        ],
+        outputs: [{ value: BigInt(5000), address: 'bc1qrecipient' }, { value: BigInt(3000) }],
       },
       high: {
-        type: 'feeRate',
+        type: 'bitcoinFeeRate',
         value: createMoney(3000, 'BTC'),
         rate: 30,
         rateUnit: 'sats/vB',
         estimatedTxSize: 100,
         sizeUnit: 'vB',
+        inputs: [
+          {
+            txid: '0000000000000000000000000000000000000000000000000000000000000000',
+            vout: 0,
+            value: 10000,
+            address: 'bc1qtest',
+            path: "m/84'/0'/0'/0/0",
+            keyOrigin: 'test',
+          },
+        ],
+        outputs: [{ value: BigInt(5000), address: 'bc1qrecipient' }, { value: BigInt(2000) }],
       },
     },
   };

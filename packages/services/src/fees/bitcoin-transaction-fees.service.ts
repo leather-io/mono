@@ -24,9 +24,14 @@ export class BitcoinTransactionFeesService {
     const feeRates = await this.leatherApiClient.fetchBitcoinFeeRates({ signal });
 
     const [
-      { fee: lowFee, estimatedTxSize: lowTxVBytes },
-      { fee: standardFee, estimatedTxSize: standardTxVBytes },
-      { fee: highFee, estimatedTxSize: highTxVBytes },
+      { fee: lowFee, estimatedTxSize: lowTxVBytes, inputs: lowInputs, outputs: lowOutputs },
+      {
+        fee: standardFee,
+        estimatedTxSize: standardTxVBytes,
+        inputs: standardInputs,
+        outputs: standardOutputs,
+      },
+      { fee: highFee, estimatedTxSize: highTxVBytes, inputs: highInputs, outputs: highOutputs },
     ] = await Promise.all([
       this.coinSelectionService.performCoinSelection({
         account,
@@ -50,13 +55,27 @@ export class BitcoinTransactionFeesService {
     return await Promise.resolve({
       chain: 'bitcoin',
       options: {
-        low: createBitcoinTransactionFeeQuote(lowFee, feeRates.low.rate, lowTxVBytes),
+        low: createBitcoinTransactionFeeQuote(
+          lowFee,
+          feeRates.low.rate,
+          lowTxVBytes,
+          lowInputs,
+          lowOutputs
+        ),
         standard: createBitcoinTransactionFeeQuote(
           standardFee,
           feeRates.standard.rate,
-          standardTxVBytes
+          standardTxVBytes,
+          standardInputs,
+          standardOutputs
         ),
-        high: createBitcoinTransactionFeeQuote(highFee, feeRates.high.rate, highTxVBytes),
+        high: createBitcoinTransactionFeeQuote(
+          highFee,
+          feeRates.high.rate,
+          highTxVBytes,
+          highInputs,
+          highOutputs
+        ),
       },
     });
   }
