@@ -1,5 +1,5 @@
 import { getExecutionTypeStrategy } from '@/features/swap/swap-state/strategies/execution-type/execution-type';
-import { transformTransactionFees } from '@/features/swap/swap-state/strategies/transform-transaction-fees';
+import { transformTransactionFees } from '@/features/swap/swap-state/strategies/execution-type/transform-transaction-fees';
 import {
   DerivedAmounts,
   NetworkFee,
@@ -7,6 +7,7 @@ import {
   SwapExecutionDependencies,
   SwapInternalState,
 } from '@/features/swap/swap-state/swap-state.types';
+import { isQuoteAlignedWithCurrentInput } from '@/features/swap/swap-state/utils/is-quote-aligned-with-current-input';
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 import { isDefined } from 'remeda';
 
@@ -79,6 +80,7 @@ export function useNetworkFee({
         state.customFee
       );
     },
-    enabled: isDefined(quote),
+    enabled:
+      isDefined(quote) && isQuoteAlignedWithCurrentInput(quote.baseAmount, derivedAmounts.crypto),
   });
 }

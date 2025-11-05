@@ -10,6 +10,7 @@ import { RunesBalancesService } from './balances/runes-balances.service';
 import { Sip10BalancesService } from './balances/sip10-balances.service';
 import { StxBalancesService } from './balances/stx-balances.service';
 import { BnsService } from './bns/bns.service';
+import { BitcoinCoinSelectionService } from './coin-selection/bitcoin-coin-selection.service';
 import { CollectiblesService } from './collectibles/collectibles.service';
 import { BitcoinTransactionFeesService } from './fees/bitcoin-transaction-fees.service';
 import { StacksTransactionFeesService } from './fees/stacks-transaction-fees.service';
@@ -123,7 +124,10 @@ export function getStacksTransactionFeesService() {
 export function getBitcoinTransactionFeesService() {
   return getServicesContainer().get(BitcoinTransactionFeesService);
 }
-/* 
+export function getBitcoinCoinSelectionService() {
+  return getServicesContainer().get(BitcoinCoinSelectionService);
+}
+/*
   API Layer Clients
 */
 export function getLeatherApiClient() {

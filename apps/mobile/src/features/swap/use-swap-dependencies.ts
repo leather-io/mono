@@ -1,19 +1,25 @@
 import { SwapDependencies } from '@/features/swap/swap-state/swap-state.types';
 import { useAccountRequest } from '@/hooks/use-account-request';
 import { useBitcoinClient } from '@/queries/clients/bitcoin-client';
+import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { broadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
+import { SbtcApiClientMainnet, SbtcApiClientTestnet } from 'sbtc';
 
 import {
+  getBitcoinCoinSelectionService,
   getBitcoinTransactionFeesService,
   getMarketDataService,
   getStacksTransactionFeesService,
   getSwapService,
 } from '@leather.io/services';
 import { assertExistence } from '@leather.io/utils';
+
+const sbtcClientMainnet = new SbtcApiClientMainnet({});
+const sbtcClientTestnet = new SbtcApiClientTestnet({});
 
 export function useSwapDependencies(): SwapDependencies {
   const accountRequest = useAccountRequest();
@@ -26,9 +32,13 @@ export function useSwapDependencies(): SwapDependencies {
   const { nativeSegwit } = bitcoinAccounts.accountIndexByPaymentType(fingerprint, accountIndex);
   const bitcoinPayer = nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 });
   const { broadcastBitcoinTransaction } = useBroadcastBitcoinTransation();
+  const { data: nextNonce } = useNextNonce(stacksSigner?.address ?? '');
 
   assertExistence(stacksSigner, 'Stacks signer missing during swap initialization');
   assertExistence(bitcoinPayer, 'Bitcoin payer missing during swap initialization.');
+
+  const sbtcClient =
+    networkPreference.chain.bitcoin.mode === 'mainnet' ? sbtcClientMainnet : sbtcClientTestnet;
 
   return {
     accountRequest,
@@ -36,16 +46,19 @@ export function useSwapDependencies(): SwapDependencies {
       stacksTransactionFeesService: getStacksTransactionFeesService(),
       marketDataService: getMarketDataService(),
       bitcoinTransactionFeesService: getBitcoinTransactionFeesService(),
+      bitcoinCoinSelectionService: getBitcoinCoinSelectionService(),
       swapService: getSwapService(),
     },
     stacks: {
       stacksNetwork,
       stacksSigner,
       broadcast: broadcastStacksTransaction,
+      nextNonce,
     },
     bitcoin: {
       network: networkPreference,
       bitcoinPayer,
+      sbtcClient,
       signBitcoinPsbt: () => {
         throw new Error('unimplemented');
       },

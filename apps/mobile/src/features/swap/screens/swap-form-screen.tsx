@@ -25,15 +25,8 @@ interface SwapFormScreenProps {
 }
 
 export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps) {
-  const {
-    state,
-    actions,
-    validation,
-    baseAssetsQuery,
-    targetAssetsQuery,
-    quoteQuery,
-    isSwapExecutable,
-  } = swapState;
+  const { state, actions, validation, baseAssetsQuery, targetAssetsQuery, quoteQuery, canExecute } =
+    swapState;
 
   const validateDecimalPlaces = createDecimalPlaceValidator(
     whenInputCurrencyMode(state.inputCurrencyMode)({
@@ -98,7 +91,7 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
           allowNextValue={validateDecimalPlaces}
         />
         <Box px="5" mt="3">
-          <Button disabled={!isSwapExecutable} onPress={onPressReview}>{t`Review`}</Button>
+          <Button disabled={!canExecute} onPress={onPressReview}>{t`Review`}</Button>
         </Box>
       </Box>
 

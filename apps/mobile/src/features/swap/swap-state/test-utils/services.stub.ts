@@ -15,6 +15,7 @@ import {
 } from '@leather.io/models';
 import {
   AccountSwapAsset,
+  BitcoinCoinSelectionService,
   BitcoinTransactionFeesService,
   MarketDataService,
   StacksTransactionFeesService,
@@ -184,6 +185,37 @@ export function createStubBitcoinTransactionFeesService({
         rateUnit: 'sats/vB',
         estimatedTxSize: 100,
         sizeUnit: 'vB',
+      },
+      standard: {
+        type: 'bitcoinFeeRate',
+        value: createMoney(2000, 'BTC'),
+        rate: 20,
+        rateUnit: 'sats/vB',
+        estimatedTxSize: 100,
+        sizeUnit: 'vB',
+      },
+      high: {
+        type: 'bitcoinFeeRate',
+        value: createMoney(3000, 'BTC'),
+        rate: 30,
+        rateUnit: 'sats/vB',
+        estimatedTxSize: 100,
+        sizeUnit: 'vB',
+      },
+    },
+  };
+
+  return {
+    async getBitcoinTransactionFees(): Promise<TransactionFees> {
+      return Promise.resolve(transactionFees ?? defaultFees);
+    },
+  } as unknown as BitcoinTransactionFeesService;
+}
+
+export function createStubBitcoinCoinSelectionService() {
+  return {
+    performCoinSelection() {
+      return Promise.resolve({
         inputs: [
           {
             txid: '0000000000000000000000000000000000000000000000000000000000000000',
@@ -195,51 +227,9 @@ export function createStubBitcoinTransactionFeesService({
           },
         ],
         outputs: [{ value: BigInt(5000), address: 'bc1qrecipient' }, { value: BigInt(4000) }],
-      },
-      standard: {
-        type: 'bitcoinFeeRate',
-        value: createMoney(2000, 'BTC'),
-        rate: 20,
-        rateUnit: 'sats/vB',
         estimatedTxSize: 100,
-        sizeUnit: 'vB',
-        inputs: [
-          {
-            txid: '0000000000000000000000000000000000000000000000000000000000000000',
-            vout: 0,
-            value: 10000,
-            address: 'bc1qtest',
-            path: "m/84'/0'/0'/0/0",
-            keyOrigin: 'test',
-          },
-        ],
-        outputs: [{ value: BigInt(5000), address: 'bc1qrecipient' }, { value: BigInt(3000) }],
-      },
-      high: {
-        type: 'bitcoinFeeRate',
-        value: createMoney(3000, 'BTC'),
-        rate: 30,
-        rateUnit: 'sats/vB',
-        estimatedTxSize: 100,
-        sizeUnit: 'vB',
-        inputs: [
-          {
-            txid: '0000000000000000000000000000000000000000000000000000000000000000',
-            vout: 0,
-            value: 10000,
-            address: 'bc1qtest',
-            path: "m/84'/0'/0'/0/0",
-            keyOrigin: 'test',
-          },
-        ],
-        outputs: [{ value: BigInt(5000), address: 'bc1qrecipient' }, { value: BigInt(2000) }],
-      },
+        fee: createMoney(1000, 'BTC'),
+      });
     },
-  };
-
-  return {
-    async getBitcoinTransactionFees(): Promise<TransactionFees> {
-      return Promise.resolve(transactionFees ?? defaultFees);
-    },
-  } as unknown as BitcoinTransactionFeesService;
+  } as unknown as BitcoinCoinSelectionService;
 }

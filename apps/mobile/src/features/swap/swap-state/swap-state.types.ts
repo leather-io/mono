@@ -4,6 +4,7 @@ import * as btc from '@scure/btc-signer';
 import { StacksNetwork } from '@stacks/network';
 import { StacksTransactionWire, TxBroadcastResultOk } from '@stacks/transactions';
 import { UseQueryResult } from '@tanstack/react-query';
+import type { SbtcApiClient } from 'sbtc';
 
 import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import {
@@ -19,8 +20,10 @@ import {
   TransactionFeeQuote,
   TransactionFeeTier,
 } from '@leather.io/models';
+import { NextNonce } from '@leather.io/query';
 import {
   AccountSwapAsset,
+  BitcoinCoinSelectionService,
   BitcoinTransactionFeesService,
   MarketDataService,
   StacksTransactionFeesService,
@@ -37,16 +40,19 @@ export interface SwapDependencies {
       tx: StacksTransactionWire;
       stacksNetwork: StacksNetwork;
     }) => Promise<TxBroadcastResultOk>;
+    nextNonce: NextNonce | undefined;
   };
   bitcoin: {
     bitcoinPayer: BitcoinNativeSegwitPayer;
     network: NetworkConfiguration;
+    sbtcClient: SbtcApiClient;
     signBitcoinPsbt: (psbt: Uint8Array) => Promise<btc.Transaction>;
     broadcast: (tx: string) => Promise<string | undefined>;
   };
   services: {
     marketDataService: MarketDataService;
     bitcoinTransactionFeesService: BitcoinTransactionFeesService;
+    bitcoinCoinSelectionService: BitcoinCoinSelectionService;
     stacksTransactionFeesService: StacksTransactionFeesService;
     swapService: SwapService;
   };
@@ -56,11 +62,12 @@ export interface SwapExecutionDependencies extends SwapDependencies {
   derivedAmounts: DerivedAmounts;
   isSendingMax: boolean;
   executionData: SwapExecutionData;
+  nonce?: number;
 }
 
 export type PresetPercentage = 0.25 | 0.5 | 0.75 | 1;
 
-export type SwapQuoteStrategy = 'best' | 'fastest' | 'cheapest';
+export type SwapQuotePolicy = 'best' | 'fastest' | 'cheapest';
 
 export type FeeMode = 'fixed' | 'tiered';
 
@@ -75,10 +82,10 @@ export type FeeSelection =
   | { type: 'custom'; value: number };
 
 export type NetworkFee =
-  | { mode: 'fixed'; value: Money }
+  | { mode: 'fixed'; calculation: TransactionFeeQuote }
   | {
       mode: 'tiered';
-      value: Money;
+      calculation: TransactionFeeQuote;
       options: FeeOption[];
       selected: FeeSelection;
       customFeeEnabled: boolean;
@@ -125,8 +132,8 @@ export interface SwapInternalState {
   baseAmount: string;
   slippage: number;
   quoteCurrencyPreference: QuoteCurrency;
-  quoteStrategy: SwapQuoteStrategy;
-  nonce?: number;
+  quotePolicy: SwapQuotePolicy;
+  nonceOverride?: number;
   inputCurrencyMode: InputCurrencyMode;
   selectingAsset: 'base' | 'target' | null;
   feeTier: TransactionFeeTier;
@@ -137,6 +144,7 @@ export interface SwapState extends SwapInternalState {
   secondaryAmount: SecondaryAmount;
   assetFlippingAllowed: boolean;
   isSendingMax: boolean;
+  effectiveNonce: number;
 }
 
 export type SwapActionObject =
@@ -149,7 +157,7 @@ export type SwapActionObject =
   | { type: 'SET_BASE_AMOUNT'; payload: string }
   | { type: 'TOGGLE_INPUT_CURRENCY_MODE'; payload: { nextBaseAmount: string } }
   | { type: 'SET_SLIPPAGE'; payload: number }
-  | { type: 'SET_NONCE'; payload: number }
+  | { type: 'SET_NONCE_OVERRIDE'; payload: number }
   | { type: 'OPEN_ASSET_SELECTOR'; payload: 'base' | 'target' }
   | { type: 'CLOSE_ASSET_SELECTOR' }
   | { type: 'SET_FEE_TIER'; payload: TransactionFeeTier }
@@ -162,7 +170,7 @@ export interface SwapActions {
   setBaseAmountByPercentage: (percentage: PresetPercentage) => void;
   toggleInputCurrencyMode: () => void;
   setSlippage: (slippage: number) => void;
-  setNonce: (nonce: number) => void;
+  setNonceOverride: (nonce: number) => void;
   clearAssetSelection: () => void;
   flipAssets: () => void;
   openAssetSelector: (target: 'base' | 'target') => void;
@@ -179,5 +187,6 @@ export interface UseSwapStateResult {
   targetAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   networkFeeQuery: UseQueryResult<NetworkFee, Error>;
-  isSwapExecutable: boolean;
+  canExecute: boolean;
+  execute(): void;
 }
