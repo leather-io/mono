@@ -1,12 +1,12 @@
-import { FeeRateTransactionFeeQuote, Money } from '@leather.io/models';
+import { BitcoinTransactionFeeQuote, Money } from '@leather.io/models';
 
 export function createBitcoinTransactionFeeQuote(
   fee: Money,
   feeRate: number,
   txVBytes: number
-): FeeRateTransactionFeeQuote {
+): BitcoinTransactionFeeQuote {
   return {
-    type: 'feeRate',
+    type: 'bitcoinFeeRate',
     value: fee,
     rate: feeRate,
     rateUnit: 'sats/vB',

@@ -1,6 +1,6 @@
 import { PayloadType, StacksTransactionWire } from '@stacks/transactions';
 
-import { FeeRateTransactionFeeQuote, TransactionFeeTier } from '@leather.io/models';
+import { StacksTransactionFeeQuote, TransactionFeeTier } from '@leather.io/models';
 import { isSip9TransferContactCall, isSip10TransferContactCall } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
@@ -88,9 +88,9 @@ export function getStacksTxFeeBoundedEstimates(
 export function createStacksTransactionFeeQuote(
   fee: number,
   estimatedTxSize: number
-): FeeRateTransactionFeeQuote {
+): StacksTransactionFeeQuote {
   return {
-    type: 'feeRate',
+    type: 'stacksFeeRate',
     value: createMoney(fee, 'STX'),
     rate: calculateFeeRate(fee, estimatedTxSize),
     rateUnit: 'µSTX/byte',

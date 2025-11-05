@@ -9,7 +9,12 @@ export interface TransactionFees {
   readonly options: Record<TransactionFeeTier, TransactionFeeQuote>;
 }
 
-export const transactionFeeQuoteType = ['flat', 'feeRate', 'evm1559'] as const;
+export const transactionFeeQuoteType = [
+  'flat',
+  'bitcoinFeeRate',
+  'stacksFeeRate',
+  'evm1559',
+] as const;
 export type TransactionFeeQuoteType = (typeof transactionFeeQuoteType)[number];
 
 export interface BaseTransactionFeeQuote {
@@ -21,12 +26,20 @@ export interface FlatTransactionFeeQuote extends BaseTransactionFeeQuote {
   readonly type: 'flat';
 }
 
-export interface FeeRateTransactionFeeQuote extends BaseTransactionFeeQuote {
-  readonly type: 'feeRate';
+export interface BitcoinTransactionFeeQuote extends BaseTransactionFeeQuote {
+  readonly type: 'bitcoinFeeRate';
   readonly rate: number;
-  readonly rateUnit: 'sats/vB' | 'µSTX/byte';
+  readonly rateUnit: 'sats/vB';
   readonly estimatedTxSize: number;
-  readonly sizeUnit: 'vB' | 'byte';
+  readonly sizeUnit: 'vB';
+}
+
+export interface StacksTransactionFeeQuote extends BaseTransactionFeeQuote {
+  readonly type: 'stacksFeeRate';
+  readonly rate: number;
+  readonly rateUnit: 'µSTX/byte';
+  readonly estimatedTxSize: number;
+  readonly sizeUnit: 'byte';
 }
 
 export interface EvmTransactionFeeQuote extends BaseTransactionFeeQuote {
@@ -38,5 +51,6 @@ export interface EvmTransactionFeeQuote extends BaseTransactionFeeQuote {
 
 export type TransactionFeeQuote =
   | FlatTransactionFeeQuote
-  | FeeRateTransactionFeeQuote
+  | BitcoinTransactionFeeQuote
+  | StacksTransactionFeeQuote
   | EvmTransactionFeeQuote;
