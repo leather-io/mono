@@ -6,12 +6,15 @@ interface PortfolioPageLayoutProps {
   assetList: React.ReactElement;
   activityList: React.ReactElement;
   visualization?: React.ReactElement;
+  assetCount: number;
 }
+
 export function PortfolioPageLayout({
   overview,
   assetList,
   activityList,
   visualization,
+  assetCount,
 }: PortfolioPageLayoutProps) {
   return (
     <Page overflow="hidden">
@@ -29,15 +32,15 @@ export function PortfolioPageLayout({
 
         <Flex flexDirection="row" py="space.05" gap="space.05">
           <Stack height="70vh" minHeight={500} flexGrow={1}>
-            <styled.h2 textStyle="heading.05" mt="space.05" mb="space.05" ml="space.05">
-              Tokens
+            <styled.h2 textStyle="heading.05" mt="space.05" mb="space.02">
+              Tokens <styled.span color="ink.text-subdued">{assetCount}</styled.span>
             </styled.h2>
-            <Stack overflow="scroll" borderRadius="sm" border="default" flexGrow={1}>
+            <Stack overflow="scroll" flexGrow={1}>
               {assetList}
             </Stack>
           </Stack>
           <Stack height="70vh" minHeight={500} flexGrow={1}>
-            <styled.h2 textStyle="heading.05" mt="space.05" mb="space.05" ml="space.05">
+            <styled.h2 textStyle="heading.05" mt="space.05" mb="space.02">
               Recent activity
             </styled.h2>
             <Stack flexGrow={1} border="default" borderRadius="sm" height="100%">
