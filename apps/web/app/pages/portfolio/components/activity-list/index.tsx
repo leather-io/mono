@@ -30,7 +30,7 @@ export function ActivityList({ activity, isLoading }: ActivityListProps) {
   }
 
   return (
-    <Stack flexGrow={1} position="relative">
+    <Stack minWidth={400} overflowX="scroll" flexGrow={1} position="relative">
       <Virtuoso
         data={activity}
         itemContent={(_, activityItem) => (
