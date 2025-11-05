@@ -65,6 +65,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
       priceChange: 0,
     }));
   }, [assets]);
+
   const hasData = data.length > 0;
 
   const columns = useMemo<ColumnDef<AssetRow>[]>(() => {
@@ -164,11 +165,6 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
   }
   return (
     <>
-      <Flex px="space.04" py="space.03" alignItems="flex-start" gap="space.04" alignSelf="stretch">
-        <styled.p textStyle="heading.05">
-          Tokens <styled.span color="ink.text-subdued">{data.length}</styled.span>
-        </styled.p>
-      </Flex>
       <Table.Root width="100%" overflowX="auto">
         <Table.Table>
           <Table.Head>

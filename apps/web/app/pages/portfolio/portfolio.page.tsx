@@ -57,6 +57,7 @@ export function PortfolioPage() {
   return (
     <PortfolioPageLayout
       overview={<PortfolioSummary />}
+      assetCount={allAssets.length}
       assetList={<PortfolioTable assets={allAssets} isLoading={isLoading} />}
       visualization={
         <WhenClient fallback={<PortfolioChartPending />}>
