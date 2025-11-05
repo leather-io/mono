@@ -53,7 +53,7 @@ export function useDerivedAmounts(state: SwapInternalState, marketData: MarketDa
           quoteCurrencyPreference,
           currencyDecimalsMap[quoteCurrencyPreference] ?? 2
         );
-        const crypto = convertQuoteToCrypto(quote, marketData);
+        const crypto = convertQuoteToCrypto(quote, marketData, baseSwapAsset.asset.decimals);
         return { crypto, quote };
       },
     })();
@@ -94,12 +94,13 @@ function convertCryptoToQuote(
 
 function convertQuoteToCrypto(
   quoteAmount: Money | null,
-  marketData: MarketData | undefined
+  marketData: MarketData | undefined,
+  decimals: number
 ): Money | null {
   if (!marketData || !quoteAmount) return null;
 
   try {
-    return quoteCurrencyAmountToBase(quoteAmount, marketData);
+    return quoteCurrencyAmountToBase(quoteAmount, marketData, decimals);
   } catch {
     return null;
   }

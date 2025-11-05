@@ -55,7 +55,7 @@ export class MarketHistoryService {
         period,
         changePercentage,
         prices: prices.map(s => ({
-          price: quoteCurrencyAmountToBase(s.price, usdExchangeRate),
+          price: quoteCurrencyAmountToBase(s.price, usdExchangeRate, asset.decimals),
           timestamp: s.timestamp,
         })),
       };
