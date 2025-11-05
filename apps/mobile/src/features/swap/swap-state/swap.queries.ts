@@ -13,7 +13,6 @@ import {
   MarketData,
   Money,
   SwapAsset,
-  SwapExecutionData,
   SwapQuote,
   SwappableFungibleCryptoAsset,
 } from '@leather.io/models';
@@ -23,7 +22,6 @@ import {
   MarketDataService,
   SwapService,
 } from '@leather.io/services';
-import { assertExistence } from '@leather.io/utils';
 
 type CustomQueryOptions<TQueryFnData, TError = Error, TData = TQueryFnData> = Omit<
   UseQueryOptions<TQueryFnData, TError, TData>,
@@ -120,51 +118,6 @@ export function useSwapQuotesQuery({
       isNonNullish(debouncedBaseAmount) &&
       !debouncedBaseAmount.amount.isZero()
     ),
-    ...queryOptions,
-  });
-}
-
-interface UseSwapExecutionDataQueryParams {
-  swapService: SwapService;
-  accountRequest: AccountRequest;
-  baseAmount?: number;
-  quote?: SwapQuote;
-  slippage: number;
-  queryOptions?: CustomQueryOptions<SwapExecutionData>;
-}
-
-export function useSwapExecutionDataQuery({
-  swapService,
-  accountRequest,
-  quote,
-  baseAmount,
-  slippage,
-  queryOptions,
-}: UseSwapExecutionDataQueryParams) {
-  const isQuoteInSyncWithUserInput = quote?.baseAmount === baseAmount;
-
-  return useQuery({
-    queryKey: [
-      'swap-execution-data',
-      {
-        accountRequest,
-        baseAmount,
-        executionType: quote?.executionType,
-        providerId: quote?.providerId,
-        quoteBaseAmount: quote?.baseAmount,
-        targetAmount: quote?.targetAmount,
-        slippage,
-      },
-    ],
-    queryFn: ({ signal }) => {
-      assertExistence(
-        quote,
-        `useSwapExecutionDataQuery expects a valid quote but got undefined.
-         This means the hook ran without a quote even though it should be disabled.`
-      );
-      return swapService.getSwapExecutionData(accountRequest, quote, slippage, signal);
-    },
-    enabled: isDefined(quote) && isQuoteInSyncWithUserInput,
     ...queryOptions,
   });
 }

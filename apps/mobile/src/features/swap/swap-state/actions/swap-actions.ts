@@ -99,8 +99,8 @@ export function createSwapActions({
       dispatch({ type: 'SET_SLIPPAGE', payload: slippage });
     },
 
-    setNonce(nonce: number) {
-      dispatch({ type: 'SET_NONCE', payload: nonce });
+    setNonceOverride(nonce: number) {
+      dispatch({ type: 'SET_NONCE_OVERRIDE', payload: nonce });
     },
 
     clearAssetSelection() {

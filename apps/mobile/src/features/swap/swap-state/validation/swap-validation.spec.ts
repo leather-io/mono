@@ -22,7 +22,7 @@ function createValidationContext({
     quoteCurrencyPreference: 'USD',
     quoteStrategy: 'best',
     selectingAsset: null,
-    nonce: undefined,
+    nonceOverride: undefined,
     pairReconciliation: { base: 'pending', target: 'pending' },
     customFee: null,
     feeTier: 'standard',

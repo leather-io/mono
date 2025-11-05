@@ -1,14 +1,9 @@
 import { FeeOption, FeeSelection, NetworkFee } from '@/features/swap/swap-state/swap-state.types';
 
-import {
-  Money,
-  TransactionFeeQuote,
-  TransactionFeeTier,
-  TransactionFees,
-} from '@leather.io/models';
+import { TransactionFeeQuote, TransactionFeeTier, TransactionFees } from '@leather.io/models';
 import { assertUnreachable, createMoney } from '@leather.io/utils';
 
-import { SupportedProtocol, getProtocolStrategy } from './protocol/protocol';
+import { SupportedProtocol, getProtocolStrategy } from '../protocol/protocol';
 
 export function transformTransactionFees(
   transactionFees: TransactionFees,
@@ -22,19 +17,18 @@ export function transformTransactionFees(
   if (feeCapabilities.mode === 'fixed') {
     return {
       mode: 'fixed',
-      value: transactionFees.options.standard.value,
+      calculation: transactionFees.options.standard,
     };
   }
 
   const options = buildOptions(transactionFees);
   const selected = buildSelection(feeCapabilities, tier, customFee);
-  const value = calculateSelectedFeeValue(transactionFees, selected);
 
   return {
     mode: 'tiered',
     customFeeEnabled: feeCapabilities.customFeeEnabled,
     options,
-    value,
+    calculation: calculateSelectedFeeCalculation(transactionFees, selected),
     selected,
   };
 }
@@ -70,25 +64,32 @@ function buildSelection(
   return { type: 'tiered', tier };
 }
 
-function calculateSelectedFeeValue(
+function calculateSelectedFeeCalculation(
   transactionFees: TransactionFees,
   selection: FeeSelection
-): Money {
+) {
   switch (selection.type) {
     case 'tiered':
-      return transactionFees.options[selection.tier].value;
+      return transactionFees.options[selection.tier];
     case 'custom':
-      return calculateCustomFee(transactionFees.options.standard, selection.value);
+      return calculateCustomFeeCalculation(transactionFees.options.standard, selection.value);
     default:
       assertUnreachable(selection);
   }
 }
 
-function calculateCustomFee(reference: TransactionFeeQuote, customValue: number) {
-  if (reference.type === 'feeRate') {
+function calculateCustomFeeCalculation(
+  reference: TransactionFeeQuote,
+  customValue: number
+): TransactionFeeQuote {
+  if (reference.type === 'bitcoinFeeRate' || reference.type === 'stacksFeeRate') {
     const feeAmount = Math.ceil(customValue * reference.estimatedTxSize);
-    return createMoney(feeAmount, reference.value.symbol, reference.value.decimals);
+    return {
+      ...reference,
+      rate: customValue,
+      value: createMoney(feeAmount, reference.value.symbol, reference.value.decimals),
+    };
   }
 
-  return createMoney(customValue, reference.value.symbol, reference.value.decimals);
+  return reference;
 }

@@ -1,13 +1,15 @@
 import {
   EnrichedSwapQuote,
+  NetworkFee,
   SwapExecutionDependencies,
 } from '@/features/swap/swap-state/swap-state.types';
 import {
   calculatePriceImpactPercentage,
   estimateExchangeRate,
 } from '@/features/swap/swap-state/utils/market-rates';
+import * as btc from '@scure/btc-signer';
 
-import { CoinSelectionRecipient } from '@leather.io/bitcoin';
+import { CoinSelectionRecipient, getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
 import {
   StacksContractCallSwapExecutionData,
   SwapExecutionType,
@@ -29,6 +31,7 @@ interface ExecutionStrategy {
     dependencies: SwapExecutionDependencies,
     signal?: AbortSignal
   ): Promise<TransactionFees>;
+  executeSwap(dependencies: SwapExecutionDependencies, fee: NetworkFee): Promise<void>;
 }
 
 const stacksContractCallStrategy: ExecutionStrategy = {
@@ -58,6 +61,19 @@ const stacksContractCallStrategy: ExecutionStrategy = {
     );
     return services.stacksTransactionFeesService.getStacksTransactionFees(unsignedTx, signal);
   },
+  async executeSwap(dependencies, fee) {
+    const { executionData, stacks, nonce } = dependencies;
+
+    const unsignedTx = await buildStacksTx(
+      executionData as StacksContractCallSwapExecutionData,
+      stacks.stacksNetwork,
+      stacks.stacksSigner,
+      fee.calculation.value,
+      nonce
+    );
+    const signed = await stacks.stacksSigner.sign(unsignedTx);
+    await stacks.broadcast({ tx: signed, stacksNetwork: stacks.stacksNetwork });
+  },
 };
 
 const sbtcBridgeTransferStrategy: ExecutionStrategy = {
@@ -82,7 +98,8 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
       derivedAmounts.crypto?.amount.toNumber() ?? 0,
       bitcoin.network,
       accountRequest.account,
-      bitcoin.bitcoinPayer
+      bitcoin.bitcoinPayer,
+      bitcoin.sbtcClient
     );
     const recipients: CoinSelectionRecipient[] = [
       {
@@ -96,6 +113,55 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
       isSendingMax,
       signal
     );
+  },
+  async executeSwap(dependencies, fee) {
+    const { accountRequest, derivedAmounts, bitcoin } = dependencies;
+    const deposit = await buildSbtcBridgeTransferTx(
+      derivedAmounts.crypto?.amount.toNumber() ?? 0,
+      bitcoin.network,
+      accountRequest.account,
+      bitcoin.bitcoinPayer,
+      bitcoin.sbtcClient
+    );
+
+    if (fee.calculation.type !== 'bitcoinFeeRate') {
+      return;
+    }
+
+    const networkMode = getBtcSignerLibNetworkConfigByMode(bitcoin.network.chain.bitcoin.mode);
+    const p2wpkh = btc.p2wpkh(bitcoin.bitcoinPayer.publicKey, networkMode);
+    const { inputs, outputs } = fee.calculation;
+
+    inputs.forEach(input => {
+      deposit.transaction.addInput({
+        txid: input.txid,
+        index: input.vout,
+        sequence: 0,
+        witnessUtxo: {
+          script: p2wpkh.script,
+          amount: BigInt(input.value),
+        },
+      });
+    });
+
+    outputs.forEach(output => {
+      // Add change output
+      if (!output.address) {
+        deposit.transaction.addOutputAddress(
+          bitcoin.bitcoinPayer.address,
+          BigInt(output.value),
+          networkMode
+        );
+      }
+    });
+
+    const signedDepositTx = await bitcoin.signBitcoinPsbt(deposit.transaction.toPSBT());
+    signedDepositTx.finalize();
+    await bitcoin.sbtcClient.broadcastTx(signedDepositTx);
+    // Software wallets mutate the original transaction when signing and
+    // finalizing the tx. Ledger devices return a new instance. Override tx
+    // in `deposit` with the signed instance
+    await bitcoin.sbtcClient.notifySbtc({ ...deposit, transaction: signedDepositTx });
   },
 };
 

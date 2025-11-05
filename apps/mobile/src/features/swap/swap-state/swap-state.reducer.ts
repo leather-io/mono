@@ -161,10 +161,10 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
         slippage: action.payload,
       };
     }
-    case 'SET_NONCE': {
+    case 'SET_NONCE_OVERRIDE': {
       return {
         ...state,
-        nonce: action.payload,
+        nonceOverride: action.payload,
       };
     }
     default: {

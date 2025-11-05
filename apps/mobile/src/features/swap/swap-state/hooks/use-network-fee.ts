@@ -1,5 +1,5 @@
 import { getExecutionTypeStrategy } from '@/features/swap/swap-state/strategies/execution-type/execution-type';
-import { transformTransactionFees } from '@/features/swap/swap-state/strategies/transform-transaction-fees';
+import { transformTransactionFees } from '@/features/swap/swap-state/strategies/execution-type/transform-transaction-fees';
 import {
   DerivedAmounts,
   NetworkFee,
