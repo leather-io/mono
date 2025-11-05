@@ -271,7 +271,7 @@ describe(createStacksTransactionFeeQuote.name, () => {
     const result = createStacksTransactionFeeQuote(fee, estimatedTxSize);
 
     expect(result).toEqual({
-      type: 'feeRate',
+      type: 'stacksFeeRate',
       value: createMoney(fee, 'STX'),
       rate: 10,
       rateUnit: 'µSTX/byte',
@@ -296,7 +296,7 @@ describe(createStacksTransactionFeeQuote.name, () => {
     const result = createStacksTransactionFeeQuote(fee, estimatedTxSize);
 
     expect(result).toEqual({
-      type: 'feeRate',
+      type: 'stacksFeeRate',
       value: createMoney(0, 'STX'),
       rate: 0,
       rateUnit: 'µSTX/byte',
