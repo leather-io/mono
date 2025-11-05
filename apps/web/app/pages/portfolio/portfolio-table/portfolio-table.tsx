@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 
 import {
   ColumnDef,
@@ -13,10 +13,9 @@ import { Box, styled } from 'leather-styles/jsx';
 import { Table, rowPadding } from '~/components/table';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import { BtcAsset, CryptoAssetBalance, Money, Sip10Asset, StxAsset } from '@leather.io/models';
-
 import { usePortfolioEvents } from '../portfolio-events';
 import { EmptyAmountPlaceholder } from '../portfolio.page';
+import { PortfolioTableRow } from '../portfolio.types';
 import { PortfolioTableEmpty } from './portfolio-empty';
 import { PortfolioTableLoading } from './portfolio-loading';
 import {
@@ -36,23 +35,9 @@ declare module '@tanstack/react-table' {
   }
 }
 
-export interface PortfolioAsset {
-  asset: BtcAsset | Sip10Asset | StxAsset;
-  crypto: CryptoAssetBalance;
-  quote: CryptoAssetBalance;
-}
-
-export interface PortfolioTableRow extends PortfolioAsset {
-  allocation: number;
-  price?: Money;
-  priceIsLoading: boolean;
-  priceChange?: number;
-  priceChangeIsLoading: boolean;
-}
-
 type ColumnAlignment = 'left' | 'center' | 'right';
 
-function HeaderCellText({ children }: { children: React.ReactNode }) {
+function HeaderCellText({ children }: { children: ReactNode }) {
   return (
     <styled.p textStyle="label.03" color="ink.text-subdued">
       {children}

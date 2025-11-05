@@ -19,7 +19,8 @@ import { ActivityList } from './components/activity-list';
 import { PortfolioChart, PortfolioChartPending } from './components/portfolio-chart';
 import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
-import { PortfolioAsset, PortfolioTable, PortfolioTableRow } from './portfolio-table/portfolio-table';
+import { PortfolioTable } from './portfolio-table/portfolio-table';
+import { PortfolioAsset, PortfolioTableRow } from './portfolio.types';
 
 function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
   const aValue = Number(a.quote.availableBalance.amount);
@@ -64,9 +65,8 @@ export function PortfolioPage() {
 
   const isLoading = btcQuery.isLoading || sip10Query.isLoading || stxQuery.isLoading;
 
-  type BaseRow = PortfolioAsset & { allocation: number };
 
-  const baseRows = useMemo<BaseRow[]>(() => {
+  const portfolioAssets = useMemo<PortfolioTableRow[]>(() => {
     if (!allAssets.length) return [];
     const totalValue = allAssets.reduce(
       (sum, asset) => sum + Number(asset.quote.availableBalance.amount),
@@ -79,8 +79,8 @@ export function PortfolioPage() {
     }));
   }, [allAssets]);
 
-  const hasTableData = baseRows.length > 0;
-  const marketDataAssets = useMemo(() => baseRows.map(({ asset }) => asset), [baseRows]);
+  const hasTableData = portfolioAssets.length > 0;
+  const marketDataAssets = useMemo(() => portfolioAssets.map(({ asset }) => asset), [portfolioAssets]);
   const shouldFetchMarketData = hasTableData && !isLoading;
 
   const marketDataQuery = useQuery({
@@ -89,14 +89,14 @@ export function PortfolioPage() {
   });
 
   const priceChangeQueries = useQueries({
-    queries: baseRows.map(({ asset }) => ({
+    queries: portfolioAssets.map(({ asset }) => ({
       ...createPriceChangePercentageQueryOptions(asset, '1d'),
       enabled: shouldFetchMarketData,
     })),
   });
 
   const marketDataStates = shouldFetchMarketData
-    ? baseRows.map(row => {
+    ? portfolioAssets.map(row => {
         const assetId = serializeAssetId(getAssetId(row.asset));
         const marketData =
           marketDataQuery.data && assetId in marketDataQuery.data
@@ -109,7 +109,7 @@ export function PortfolioPage() {
           error: marketDataQuery.error,
         });
       })
-    : baseRows.map(() => ({ state: 'loading' } as const));
+    : portfolioAssets.map(() => ({ state: 'loading' } as const));
 
   const priceChangeStates = shouldFetchMarketData
     ? priceChangeQueries.map(result =>
@@ -120,9 +120,9 @@ export function PortfolioPage() {
           error: result.error,
         })
       )
-    : baseRows.map(() => ({ state: 'loading' } as const));
+    : portfolioAssets.map(() => ({ state: 'loading' } as const));
 
-  const tableRows: PortfolioTableRow[] = baseRows.map((row, index) => {
+  const tableRows: PortfolioTableRow[] = portfolioAssets.map((row, index) => {
     const priceState = marketDataStates[index];
     const price = priceState?.state === 'success' ? priceState.value : undefined;
     const priceIsLoading = priceState?.state === 'loading';
