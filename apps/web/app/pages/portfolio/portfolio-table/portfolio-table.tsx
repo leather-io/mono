@@ -13,7 +13,7 @@ import { Flex, styled } from 'leather-styles/jsx';
 import { Table, rowPadding } from '~/components/table';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import { CryptoAssetBalance, Sip10Asset, StxAsset } from '@leather.io/models';
+import { BtcAsset, CryptoAssetBalance, Sip10Asset, StxAsset } from '@leather.io/models';
 
 import { usePortfolioEvents } from '../portfolio-events';
 import { PortfolioTableEmpty } from './portfolio-empty';
@@ -35,7 +35,7 @@ declare module '@tanstack/react-table' {
   }
 }
 export interface PortfolioAsset {
-  asset: Sip10Asset | StxAsset;
+  asset: BtcAsset | Sip10Asset | StxAsset;
   crypto: CryptoAssetBalance;
   quote: CryptoAssetBalance;
 }

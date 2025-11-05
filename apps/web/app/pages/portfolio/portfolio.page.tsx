@@ -2,10 +2,11 @@ import { useMemo } from 'react';
 
 import { WhenClient } from '~/components/when-client';
 import { useAccountActivity } from '~/queries/activity/account-activity.query';
+import { useBtcAccountBalance } from '~/queries/balance/btc-balance.hooks';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { useStxAccountBalance } from '~/queries/balance/stx-balance.hooks';
 
-import { stxAsset } from '@leather.io/constants';
+import { btcAsset, stxAsset } from '@leather.io/constants';
 
 import { ActivityList } from './components/activity-list';
 import { PortfolioChart, PortfolioChartPending } from './components/portfolio-chart';
@@ -21,12 +22,21 @@ function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
 }
 
 export function PortfolioPage() {
+  const btcQuery = useBtcAccountBalance();
   const sip10Query = useSip10AccountBalance();
   const stxQuery = useStxAccountBalance();
   const activityQuery = useAccountActivity();
 
   const allAssets = useMemo(() => {
     const assets: PortfolioAsset[] = [];
+
+    if (btcQuery.data) {
+      assets.push({
+        asset: btcAsset,
+        crypto: btcQuery.data.btc,
+        quote: btcQuery.data.quote,
+      });
+    }
 
     if (stxQuery.data) {
       assets.push({
@@ -40,14 +50,14 @@ export function PortfolioPage() {
     assets.push(...sip10Assets);
 
     return assets.sort(sortAssetsByValue);
-  }, [sip10Query.data, stxQuery.data]);
+  }, [btcQuery.data, sip10Query.data, stxQuery.data]);
 
-  const isLoadingAssets = sip10Query.isLoading || stxQuery.isLoading;
+  const isLoading = btcQuery.isLoading || sip10Query.isLoading || stxQuery.isLoading;
 
   return (
     <PortfolioPageLayout
       overview={<PortfolioSummary />}
-      assetList={<PortfolioTable assets={allAssets} isLoading={isLoadingAssets} />}
+      assetList={<PortfolioTable assets={allAssets} isLoading={isLoading} />}
       visualization={
         <WhenClient fallback={<PortfolioChartPending />}>
           <PortfolioChart assets={allAssets} />
