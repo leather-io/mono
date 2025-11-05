@@ -20,7 +20,7 @@ import { PortfolioChart, PortfolioChartPending } from './components/portfolio-ch
 import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
 import { PortfolioTable } from './portfolio-table/portfolio-table';
-import { PortfolioAsset, PortfolioTableRow } from './portfolio.types';
+import { PortfolioAsset, PortfolioAssetWithAllocation, PortfolioTableRow } from './portfolio.types';
 
 function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
   const aValue = Number(a.quote.availableBalance.amount);
