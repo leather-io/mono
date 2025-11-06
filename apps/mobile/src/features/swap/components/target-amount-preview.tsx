@@ -7,21 +7,24 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { SwapQuoteSelectionResult } from '@/features/swap/swap-state/swap-state.types';
 import { formatCurrency } from '@/utils/currency-formatter';
-import { UseQueryResult } from '@tanstack/react-query';
 
 import { Money } from '@leather.io/models';
 import { Text } from '@leather.io/ui/native';
 
 interface TargetAmountPreviewProps {
-  quoteQuery: UseQueryResult<SwapQuoteSelectionResult>;
+  targetAmount: Money | undefined;
+  isLoading: boolean;
   baseAmount: string;
 }
 
-export function TargetAmountPreview({ quoteQuery, baseAmount }: TargetAmountPreviewProps) {
-  const { displayAmount } = useDisplayAmount({ baseAmount, quoteQuery });
-  const animatedStyle = usePulsingAnimation(quoteQuery.isFetching);
+export function TargetAmountPreview({
+  targetAmount,
+  isLoading,
+  baseAmount,
+}: TargetAmountPreviewProps) {
+  const { displayAmount } = useDisplayAmount({ baseAmount, targetAmount, isLoading });
+  const animatedStyle = usePulsingAnimation(isLoading && baseAmount !== '0');
   const formattedAmount = formatAmount(displayAmount);
 
   return (
@@ -41,26 +44,30 @@ export function TargetAmountPreview({ quoteQuery, baseAmount }: TargetAmountPrev
 
 interface UseDisplayAmountParams {
   baseAmount: string;
-  quoteQuery: UseQueryResult<SwapQuoteSelectionResult>;
+  targetAmount: Money | undefined;
+  isLoading: boolean;
 }
 
 // Ensure minimal transitions of target amount as user edits base amount:
 // 1. Don't reset when the base amount is effectively 0 but likely in flight, e.g., 0.0000
 // 2. Maintain the previous target amount while a new quote is being fetched.
-function useDisplayAmount({ baseAmount, quoteQuery }: UseDisplayAmountParams) {
+function useDisplayAmount({ baseAmount, targetAmount, isLoading }: UseDisplayAmountParams) {
   const lastStableQuoteAmount = useRef<Money | null>(null);
-  const currentQuoteAmount = quoteQuery.data?.selected?.quoteAmount;
 
   if (baseAmount === '0') {
     lastStableQuoteAmount.current = null;
     return { displayAmount: null };
   }
 
-  if (!quoteQuery.isFetching && currentQuoteAmount !== undefined) {
-    lastStableQuoteAmount.current = currentQuoteAmount ?? null;
+  if (isLoading) {
+    return { displayAmount: lastStableQuoteAmount.current };
   }
 
-  return { displayAmount: currentQuoteAmount ?? lastStableQuoteAmount.current };
+  if (targetAmount !== undefined) {
+    lastStableQuoteAmount.current = targetAmount;
+  }
+
+  return { displayAmount: targetAmount ?? lastStableQuoteAmount.current };
 }
 
 function formatAmount(amount: Money | null): string {
