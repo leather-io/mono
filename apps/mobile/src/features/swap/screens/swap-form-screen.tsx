@@ -25,8 +25,16 @@ interface SwapFormScreenProps {
 }
 
 export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps) {
-  const { state, actions, validation, baseAssetsQuery, targetAssetsQuery, quoteQuery, canExecute } =
-    swapState;
+  const {
+    state,
+    actions,
+    validation,
+    baseAssetsQuery,
+    targetAssetsQuery,
+    quoteQuery,
+    networkFeeQuery,
+    canExecute,
+  } = swapState;
 
   const validateDecimalPlaces = createDecimalPlaceValidator(
     whenInputCurrencyMode(state.inputCurrencyMode)({
@@ -72,7 +80,11 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
 
         <Panel.Card type="receive">
           <Panel.CardRow>
-            <TargetAmountPreview quoteQuery={quoteQuery} baseAmount={state.baseAmount} />
+            <TargetAmountPreview
+              targetAmount={quoteQuery.data?.selected?.quoteAmount}
+              isLoading={quoteQuery.isFetching || networkFeeQuery.isFetching}
+              baseAmount={state.baseAmount}
+            />
             <AssetSelectorToggle
               asset={state.targetSwapAsset?.asset}
               onPress={() => actions.openAssetSelector('target')}
