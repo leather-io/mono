@@ -3,7 +3,7 @@ import {
   defaultBaseSwapAssets,
   defaultSwapQuotes,
   getDefaultTargetSwapAssets,
-} from '@/features/swap/swap-state/test-utils/fixtures';
+} from '@/features/swap/swap-state/tests/test-utils/fixtures';
 
 import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import {

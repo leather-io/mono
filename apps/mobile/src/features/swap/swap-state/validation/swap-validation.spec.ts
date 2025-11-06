@@ -3,7 +3,11 @@ import { describe, expect, it } from 'vitest';
 import { createMoney } from '@leather.io/utils';
 
 import { DerivedAmounts, SwapInternalState } from '../swap-state.types';
-import { createAccountSwapAsset, defaultBtcAsset, defaultStxAsset } from '../test-utils/fixtures';
+import {
+  createAccountSwapAsset,
+  defaultBtcAsset,
+  defaultStxAsset,
+} from '../tests/test-utils/fixtures';
 import { runValidation } from './swap-validation';
 
 function createValidationContext({
