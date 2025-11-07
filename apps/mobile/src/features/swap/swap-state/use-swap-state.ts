@@ -142,6 +142,8 @@ export function useSwapState({
     validation,
     baseAssetsQuery,
     targetAssetsQuery,
+    baseMarketDataQuery,
+    targetMarketDataQuery,
     quoteQuery,
     networkFeeQuery,
     canExecute,

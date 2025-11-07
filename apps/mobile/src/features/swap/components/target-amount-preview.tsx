@@ -9,23 +9,27 @@ import Animated, {
 
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import { Money } from '@leather.io/models';
-import { Text } from '@leather.io/ui/native';
+import { MarketData, Money } from '@leather.io/models';
+import { Box, Text } from '@leather.io/ui/native';
+import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 interface TargetAmountPreviewProps {
-  targetAmount: Money | undefined;
+  marketData?: MarketData;
+  targetAmount?: Money;
   isLoading: boolean;
   baseAmount: string;
 }
 
 export function TargetAmountPreview({
+  marketData,
   targetAmount,
   isLoading,
   baseAmount,
 }: TargetAmountPreviewProps) {
-  const { displayAmount } = useDisplayAmount({ baseAmount, targetAmount, isLoading });
+  const displayAmount = useDisplayAmount({ baseAmount, targetAmount, isLoading });
   const animatedStyle = usePulsingAnimation(isLoading && baseAmount !== '0');
   const formattedAmount = formatAmount(displayAmount);
+  const secondaryAmount = calculateQuoteCurrencyAmount(displayAmount, marketData);
 
   return (
     <Animated.View style={animatedStyle}>
@@ -38,13 +42,30 @@ export function TargetAmountPreview({
       >
         {formattedAmount}
       </Text>
+      <SecondaryAmountPreview amount={secondaryAmount} />
     </Animated.View>
+  );
+}
+
+interface SecondaryAmountPreviewProps {
+  amount?: Money;
+}
+
+function SecondaryAmountPreview({ amount }: SecondaryAmountPreviewProps) {
+  return (
+    <Box mt="2" height={20}>
+      {amount && (
+        <Text variant="label02" color="ink.text-subdued">
+          {formatCurrency(amount)}
+        </Text>
+      )}
+    </Box>
   );
 }
 
 interface UseDisplayAmountParams {
   baseAmount: string;
-  targetAmount: Money | undefined;
+  targetAmount?: Money;
   isLoading: boolean;
 }
 
@@ -52,27 +73,18 @@ interface UseDisplayAmountParams {
 // 1. Don't reset when the base amount is effectively 0 but likely in flight, e.g., 0.0000
 // 2. Maintain the previous target amount while a new quote is being fetched.
 function useDisplayAmount({ baseAmount, targetAmount, isLoading }: UseDisplayAmountParams) {
-  const lastStableQuoteAmount = useRef<Money | null>(null);
+  const lastStableQuoteAmount = useRef<Money>(undefined);
 
   if (baseAmount === '0') {
-    lastStableQuoteAmount.current = null;
-    return { displayAmount: null };
+    lastStableQuoteAmount.current = undefined;
+    return;
   }
 
-  if (isLoading) {
-    return { displayAmount: lastStableQuoteAmount.current };
-  }
+  if (isLoading) return lastStableQuoteAmount.current;
 
-  if (targetAmount !== undefined) {
-    lastStableQuoteAmount.current = targetAmount;
-  }
+  lastStableQuoteAmount.current = targetAmount;
 
-  return { displayAmount: targetAmount ?? lastStableQuoteAmount.current };
-}
-
-function formatAmount(amount: Money | null): string {
-  if (!amount) return '0';
-  return formatCurrency(amount, { showCurrency: false, compactThreshold: 1_000_000 });
+  return targetAmount ?? lastStableQuoteAmount.current;
 }
 
 function usePulsingAnimation(enabled: boolean) {
@@ -90,4 +102,19 @@ function usePulsingAnimation(enabled: boolean) {
   return useAnimatedStyle(() => ({
     opacity: opacity.value,
   }));
+}
+
+function calculateQuoteCurrencyAmount(displayAmount?: Money, marketData?: MarketData) {
+  if (!marketData) return;
+
+  if (!displayAmount) {
+    return createMoney(0, marketData.price.symbol, marketData.price.decimals);
+  }
+
+  return baseCurrencyAmountInQuote(displayAmount, marketData);
+}
+
+function formatAmount(amount?: Money): string {
+  if (!amount) return '0';
+  return formatCurrency(amount, { showCurrency: false, compactThreshold: 1_000_000 });
 }

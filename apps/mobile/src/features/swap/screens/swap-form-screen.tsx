@@ -31,6 +31,7 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
     validation,
     baseAssetsQuery,
     targetAssetsQuery,
+    targetMarketDataQuery,
     quoteQuery,
     networkFeeQuery,
     canExecute,
@@ -81,6 +82,7 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
         <Panel.Card type="receive">
           <Panel.CardRow>
             <TargetAmountPreview
+              marketData={targetMarketDataQuery.data}
               targetAmount={quoteQuery.data?.selected?.quoteAmount}
               isLoading={quoteQuery.isFetching || networkFeeQuery.isFetching}
               baseAmount={state.baseAmount}
