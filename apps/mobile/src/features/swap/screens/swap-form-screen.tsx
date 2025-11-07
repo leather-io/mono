@@ -11,10 +11,10 @@ import { AccountSwapAsset } from '@leather.io/services';
 import { Box, Button, Numpad } from '@leather.io/ui/native';
 
 import { AmountField } from '../components/amount-field/amount-field';
+import { AssetBalance } from '../components/asset-balance';
 import { AssetSelector } from '../components/asset-selector/asset-selector';
 import { AssetSelectorSheet } from '../components/asset-selector/asset-selector-sheet';
 import { AssetSelectorToggle } from '../components/asset-selector/asset-selector-toggle';
-import { BaseAssetBalance } from '../components/base-asset-balance';
 import { FlipButton } from '../components/flip-button';
 import * as Panel from '../components/panel';
 import { TargetAmountPreview } from '../components/target-amount-preview';
@@ -70,7 +70,7 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
                 asset={state.baseSwapAsset?.asset}
                 onPress={() => actions.openAssetSelector('base')}
               />
-              <BaseAssetBalance
+              <AssetBalance
                 balance={state.baseSwapAsset?.balance}
                 inputCurrencyMode={state.inputCurrencyMode}
               />
@@ -85,11 +85,17 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
               isLoading={quoteQuery.isFetching || networkFeeQuery.isFetching}
               baseAmount={state.baseAmount}
             />
-            <AssetSelectorToggle
-              asset={state.targetSwapAsset?.asset}
-              onPress={() => actions.openAssetSelector('target')}
-              disabled={state.baseSwapAsset === null}
-            />
+            <Box alignItems="flex-end" gap="3" flexShrink={0}>
+              <AssetSelectorToggle
+                asset={state.targetSwapAsset?.asset}
+                onPress={() => actions.openAssetSelector('target')}
+                disabled={state.baseSwapAsset === null}
+              />
+              <AssetBalance
+                balance={state.targetSwapAsset?.balance}
+                inputCurrencyMode={state.inputCurrencyMode}
+              />
+            </Box>
           </Panel.CardRow>
         </Panel.Card>
         <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />

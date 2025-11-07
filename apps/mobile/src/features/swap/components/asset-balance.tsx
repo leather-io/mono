@@ -7,7 +7,7 @@ import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { CryptoAssetBalance } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
-interface BalancePreviewProps {
+interface AssetBalanceProps {
   balance?: {
     quote: CryptoAssetBalance;
     crypto: CryptoAssetBalance;
@@ -15,7 +15,7 @@ interface BalancePreviewProps {
   inputCurrencyMode: InputCurrencyMode;
 }
 
-export function BaseAssetBalance({ balance, inputCurrencyMode }: BalancePreviewProps) {
+export function AssetBalance({ balance, inputCurrencyMode }: AssetBalanceProps) {
   const displayBalance = whenInputCurrencyMode(inputCurrencyMode)({
     crypto: balance?.crypto.availableBalance,
     quote: balance?.quote.availableBalance,
