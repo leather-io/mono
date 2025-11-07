@@ -9,6 +9,7 @@ import type { SbtcApiClient } from 'sbtc';
 import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import {
   AccountAddresses,
+  MarketData,
   Money,
   NetworkConfiguration,
   QuoteCurrency,
@@ -185,6 +186,8 @@ export interface UseSwapStateResult {
   validation: ValidationResult;
   baseAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   targetAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
+  baseMarketDataQuery: UseQueryResult<MarketData, Error>;
+  targetMarketDataQuery: UseQueryResult<MarketData, Error>;
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   networkFeeQuery: UseQueryResult<NetworkFee, Error>;
   canExecute: boolean;
