@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 
-import { useInterval } from './use-interval';
+import { useInterval } from '@leather.io/ui';
 
 // Keys are the seconds to wait before showing the message
 export type WaitingMessages = Record<number, string>;
@@ -32,7 +32,8 @@ export const useWaitingMessage = (
       const newMessage = messageForSecondsPassed(waitingMessages, secondsPassed.current);
       if (newMessage) setWaitingMessage(newMessage);
     },
-    isRunning ? waitingMessageInterval : null
+    waitingMessageInterval,
+    { enabled: isRunning }
   );
 
   return [isRunning, waitingMessage, handlers.startWaitingMessage, handlers.stopWaitingMessage];

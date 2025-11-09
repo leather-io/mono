@@ -27,6 +27,8 @@ export { SkeletonLoader } from './components/skeleton-loader/skeleton-loader.web
 export { Slider } from './components/slider/slider.web';
 export { Tabs } from './components/tabs/tabs.web';
 export { useClipboard } from './utils/use-clipboard.web';
+export { useCountdown } from './utils/use-countdown.shared';
+export { useInterval } from './utils/use-interval.shared';
 export { useOnMount } from './utils/use-on-mount.shared';
 export { usePressable } from './hooks/use-pressable.web';
 export { sanitizeContent } from './utils/sanitize-content';
