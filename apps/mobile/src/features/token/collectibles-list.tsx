@@ -10,6 +10,7 @@ import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 
 import { AccountId, NonFungibleCryptoAsset } from '@leather.io/models';
+import { CollectibleTypeIconOverlay } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { Inscription } from './bitcoin/inscription';
@@ -22,16 +23,22 @@ interface RenderCollectibleProps {
   onPress?: (tokenDetails: TokenDetailsProps) => void;
 }
 function renderCollectible({ item, height, onPress }: RenderCollectibleProps) {
-  switch (item.protocol) {
-    case 'stamp':
-      return <Stamp item={item} height={height} onPress={onPress} />;
-    case 'sip9':
-      return <Sip9 item={item} height={height} onPress={onPress} />;
-    case 'inscription':
-      return <Inscription item={item} height={height} onPress={onPress} />;
-    default:
-      return assertUnreachable(item);
-  }
+  const collectible = (() => {
+    switch (item.protocol) {
+      case 'stamp':
+        return <Stamp item={item} height={height} onPress={onPress} />;
+      case 'sip9':
+        return <Sip9 item={item} height={height} onPress={onPress} />;
+      case 'inscription':
+        return <Inscription item={item} height={height} onPress={onPress} />;
+      default:
+        return assertUnreachable(item);
+    }
+  })();
+
+  return (
+    <CollectibleTypeIconOverlay protocol={item.protocol}>{collectible}</CollectibleTypeIconOverlay>
+  );
 }
 
 function useCollectibleListItemHeight() {
