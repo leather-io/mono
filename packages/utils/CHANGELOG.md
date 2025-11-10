@@ -368,6 +368,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.48.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.48.0...@leather.io/utils-v0.48.1) (2025-11-10)
+
+
+### Bug Fixes
+
+* **utils:** fix quote to base calculation helper ([381f287](https://github.com/leather-io/mono/commit/381f287635419a9501ecd2da12558dde6a270aa9))
+
 ## [0.48.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.47.0...@leather.io/utils-v0.48.0) (2025-10-31)
 
 

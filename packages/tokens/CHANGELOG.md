@@ -144,6 +144,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.24.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.24.0...@leather.io/tokens-v0.24.1) (2025-11-10)
+
+
+### Bug Fixes
+
+* **mobile:** revert heading03 to the correct value ([70d23d2](https://github.com/leather-io/mono/commit/70d23d2e4ba872a72e832fcb0564892112267713))
+
 ## [0.24.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.23.1...@leather.io/tokens-v0.24.0) (2025-10-16)
 
 
