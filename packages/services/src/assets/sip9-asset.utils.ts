@@ -22,7 +22,7 @@ import {
   getContractPrincipalFromAssetIdentifier,
 } from './stacks-asset.utils';
 
-type GammaNftMetadata = z.infer<typeof gammaNftMetadataSchema>;
+export type GammaNftMetadata = z.infer<typeof gammaNftMetadataSchema>;
 
 function optionalize<A, R>(fn: (a: A) => R) {
   return (a: A | undefined): R | undefined => (a === undefined ? undefined : fn(a));
@@ -59,6 +59,25 @@ export function getNonFungibleTokenId(hex: string): number {
   return clarityValue.type === 'uint' ? Number(clarityValue.value) : 0;
 }
 
+const leatherIpfsUrl = 'https://leather.quicknode-ipfs.com/ipfs/';
+
+function toLeatherIpfsUrl(url: string): string {
+  if (!url.includes('/ipfs/')) return url;
+
+  const ipfsPath = url.split('/ipfs/')[1];
+  if (!ipfsPath) return '';
+
+  const pathParts = ipfsPath.split('/');
+  const cid = pathParts[0];
+  const remainingPath = pathParts.slice(1).join('/');
+
+  const encodedPath = remainingPath
+    ? '/' + remainingPath.split('/').map(encodeURIComponent).join('/')
+    : '';
+
+  return `${leatherIpfsUrl}${cid}${encodedPath}`;
+}
+
 export function createSip9Asset(
   assetIdentifier: string,
   tokenId: number,
@@ -71,11 +90,11 @@ export function createSip9Asset(
 
   const description = gammaMetadata?.item.description || hiroMetadata?.description || '';
 
-  const contentUrl =
-    gammaMetadata?.item.asset_content?.content_url ||
-    hiroMetadata?.cached_image ||
-    hiroMetadata?.image ||
-    '';
+  const gammaContentUrl = gammaMetadata?.item.asset_content?.content_url
+    ? toLeatherIpfsUrl(gammaMetadata.item.asset_content.content_url)
+    : undefined;
+
+  const contentUrl = gammaContentUrl || hiroMetadata?.cached_image || hiroMetadata?.image || '';
 
   const contentType = gammaMetadata?.item.asset_content?.content_type || '';
 
