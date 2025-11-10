@@ -489,6 +489,23 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.91.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.90.0...@leather.io/ui-v1.91.0) (2025-11-10)
+
+
+### Features
+
+* **ui:** add "auto" to native space tokens ([be10f07](https://github.com/leather-io/mono/commit/be10f0789fec6f02198123211dce43c40b2d5587))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.24.1
+    * @leather.io/utils bumped to 0.48.1
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.14.5
+
 ## [1.90.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.89.0...@leather.io/ui-v1.90.0) (2025-10-31)
 
 

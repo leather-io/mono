@@ -19,6 +19,29 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.85.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.85.0...@leather.io/mobile-v2.85.1) (2025-11-10)
+
+
+### Bug Fixes
+
+* **utils:** fix quote to base calculation helper ([381f287](https://github.com/leather-io/mono/commit/381f287635419a9501ecd2da12558dde6a270aa9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.35.1
+    * @leather.io/crypto bumped to 1.12.3
+    * @leather.io/provider bumped to 1.6.5
+    * @leather.io/query bumped to 2.44.1
+    * @leather.io/rpc bumped to 2.20.22
+    * @leather.io/services bumped to 1.39.1
+    * @leather.io/stacks bumped to 1.18.1
+    * @leather.io/tokens bumped to 0.24.1
+    * @leather.io/ui bumped to 1.91.0
+    * @leather.io/utils bumped to 0.48.1
+
 ## [2.85.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.84.0...@leather.io/mobile-v2.85.0) (2025-11-01)
 
 

@@ -413,6 +413,25 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.39.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.39.0...@leather.io/services-v1.39.1) (2025-11-10)
+
+
+### Bug Fixes
+
+* use leather IPFS for collectibles, ref LEA-3258 ([6920115](https://github.com/leather-io/mono/commit/69201152304e5bb9d16d3a54f6eedfd60c586d6f))
+* **utils:** fix quote to base calculation helper ([381f287](https://github.com/leather-io/mono/commit/381f287635419a9501ecd2da12558dde6a270aa9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.35.1
+    * @leather.io/stacks bumped to 1.18.1
+    * @leather.io/utils bumped to 0.48.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.22
+
 ## [1.39.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.38.0...@leather.io/services-v1.39.0) (2025-11-01)
 
 

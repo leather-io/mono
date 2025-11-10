@@ -21,6 +21,26 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.77.2](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.77.1...@leather.io/extension-v6.77.2) (2025-11-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.35.1
+    * @leather.io/crypto bumped to 1.12.3
+    * @leather.io/provider bumped to 1.6.5
+    * @leather.io/query bumped to 2.44.1
+    * @leather.io/rpc bumped to 2.20.22
+    * @leather.io/services bumped to 1.39.1
+    * @leather.io/stacks bumped to 1.18.1
+    * @leather.io/tokens bumped to 0.24.1
+    * @leather.io/ui bumped to 1.91.0
+    * @leather.io/utils bumped to 0.48.1
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.14.5
+
 ## [6.77.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.77.0...@leather.io/extension-v6.77.1) (2025-11-01)
 
 
