@@ -7,8 +7,10 @@ export {
 export { ActivityAvatarIcon } from './src/components/avatar/activity-avatar-icon.native';
 export { BtcAvatarIcon } from './src/components/avatar/btc-avatar-icon.native';
 export { RunesAvatarIcon } from './src/components/avatar/runes-avatar-icon.native';
+export { OrdinalAvatarIcon } from './src/components/avatar/ordinal-avatar-icon.native';
 export { Sip10AvatarIcon } from './src/components/avatar/sip10-avatar-icon.native';
 export { StxAvatarIcon } from './src/components/avatar/stx-avatar-icon.native';
+export { StampAvatarIcon } from './src/components/avatar/stamp-avatar-icon.native';
 export { Box, type BoxProps } from './src/components/box/box.native';
 export { SquircleBox, type SquircleBoxProps } from './src/components/box/squircle-box.native';
 export { BlurView } from './src/components/blur-view/blur-view.native';
