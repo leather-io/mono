@@ -18,24 +18,27 @@ export function RuneTokenDetails({ assetId, account }: RuneTokenDetailsProps) {
   const { id } = deserializeAssetId(assetId);
   const balance = useRuneBalanceByRuneName(fingerprint, accountIndex, id);
 
+  if (balance.state === 'loading') {
+    // show full loading screen before <Token handles it more gracefully
+    return <TokenLoading />;
+  }
   if (balance.state === 'error') {
     return <ErrorFallbackTab />;
   }
-  if (balance.state === 'loading') {
-    return <TokenLoading />;
-  }
-  const { asset } = balance.value;
+  if (balance.state === 'success' && balance.value) {
+    const { asset } = balance.value;
 
-  return (
-    <Token
-      icon={<RunesAvatarIcon />}
-      asset={asset}
-      balance={balance}
-      activity={{ state: 'success', value: [] }}
-      title={asset.spacedRuneName}
-      name={`${asset.spacedRuneName} ${asset.symbol}`}
-      layer={t`Layer 1 · Bitcoin`}
-      canSend={false}
-    />
-  );
+    return (
+      <Token
+        icon={<RunesAvatarIcon />}
+        asset={asset}
+        balance={balance}
+        activity={{ state: 'success', value: [] }}
+        title={asset.spacedRuneName}
+        name={`${asset.spacedRuneName} ${asset.symbol}`}
+        layer={t`Layer 1 · Bitcoin`}
+        canSend={false}
+      />
+    );
+  }
 }

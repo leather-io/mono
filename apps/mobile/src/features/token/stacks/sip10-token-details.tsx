@@ -21,25 +21,30 @@ export function Sip10TokenDetails({ assetId, account }: Sip10TokenDetailsProps) 
   const activity = useSip10ActivityByAssetId(fingerprint, accountIndex, id);
   // SIP-10 asset relies on balance being loaded
   const asset = balance.value?.asset;
-  if (balance.state === 'error' || !asset) {
-    return <ErrorFallbackTab />;
-  }
+
   if (balance.state === 'loading') {
+    // show full loading screen before <Token handles it more gracefully
     return <TokenLoading />;
   }
-  const { name, imageCanonicalUri } = asset;
+  if (balance.state === 'error' || (balance.state === 'success' && !asset)) {
+    return <ErrorFallbackTab />;
+  }
 
-  return (
-    <Token
-      icon={
-        <Sip10AvatarIcon contractId={assetId} imageCanonicalUri={imageCanonicalUri} name={name} />
-      }
-      asset={asset}
-      balance={balance}
-      activity={activity}
-      title={name}
-      name={name}
-      layer={t`Layer 2 · Stacks`}
-    />
-  );
+  if (balance.state === 'success' && asset) {
+    const { name, imageCanonicalUri } = asset;
+
+    return (
+      <Token
+        icon={
+          <Sip10AvatarIcon contractId={assetId} imageCanonicalUri={imageCanonicalUri} name={name} />
+        }
+        asset={asset}
+        balance={balance}
+        activity={activity}
+        title={name}
+        name={name}
+        layer={t`Layer 2 · Stacks`}
+      />
+    );
+  }
 }
