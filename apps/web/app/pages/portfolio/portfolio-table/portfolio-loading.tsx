@@ -4,7 +4,16 @@ import { LoadingSpinner } from '@leather.io/ui';
 
 export function PortfolioTableLoading() {
   return (
-    <Flex p="space.06" textAlign="center" fontSize="24px" height="360px" justifyContent="center">
+    <Flex
+      p="space.06"
+      textAlign="center"
+      fontSize="24px"
+      height="360px"
+      justifyContent="center"
+      border="default"
+      borderRadius="sm"
+      flexGrow={1}
+    >
       <LoadingSpinner />
     </Flex>
   );

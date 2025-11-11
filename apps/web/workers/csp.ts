@@ -16,6 +16,7 @@ export const csp = builder({
     connectSrc: [
       `'self'`,
       '*.hiro.so',
+      'gamma.io',
       '*.ingest.us.sentry.io',
       '*.segment.com',
       '*.segment.io',

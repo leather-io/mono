@@ -16,16 +16,25 @@ export function ActivityList({ activity, isLoading }: ActivityListProps) {
   if (isLoading) {
     return (
       <Stack flexGrow={1} position="relative">
-        <Flex
-          p="space.06"
-          textAlign="center"
-          fontSize="24px"
-          height="360px"
-          justifyContent="center"
-        >
+        <Flex p="space.06" textAlign="center" fontSize="24px" justifyContent="center" flexGrow={1}>
           <LoadingSpinner />
         </Flex>
       </Stack>
+    );
+  }
+
+  if (activity.length === 0) {
+    return (
+      <Flex
+        p="space.06"
+        textAlign="center"
+        justifyContent="center"
+        flexGrow={1}
+        textStyle="body.02"
+        color="ink.text-subdued"
+      >
+        No recent activity
+      </Flex>
     );
   }
 

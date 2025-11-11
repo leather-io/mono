@@ -1,6 +1,8 @@
 import { MetaDescriptor } from 'react-router';
 
-import { PortfolioPage } from './portfolio.page';
+import { WhenClient } from '~/components/when-client';
+
+import { PortfolioPage, PortfolioPageSkeleton } from './portfolio.page';
 
 export function meta() {
   return [
@@ -10,5 +12,9 @@ export function meta() {
 }
 
 export default function PortfolioRoute() {
-  return <PortfolioPage />;
+  return (
+    <WhenClient fallback={<PortfolioPageSkeleton />}>
+      <PortfolioPage />
+    </WhenClient>
+  );
 }

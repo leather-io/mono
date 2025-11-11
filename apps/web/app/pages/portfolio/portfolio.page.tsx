@@ -5,6 +5,8 @@ import { useAccountActivity } from '~/queries/activity/account-activity.query';
 import { useBtcAccountBalance } from '~/queries/balance/btc-balance.hooks';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { useStxAccountBalance } from '~/queries/balance/stx-balance.hooks';
+import { useTotalPortfolioBalance } from '~/queries/balance/total-balance.hooks';
+import { useLeatherConnect } from '~/store/addresses';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 
@@ -12,6 +14,7 @@ import { ActivityList } from './components/activity-list';
 import { PortfolioChart, PortfolioChartPending } from './components/portfolio-chart';
 import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
+import { dummyPortfolioAssets, dummyTotalBalance } from './dummy-portfolio-data';
 import { PortfolioAsset, PortfolioTable } from './portfolio-table/portfolio-table';
 
 function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
@@ -21,12 +24,28 @@ function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
   return a.asset.symbol.localeCompare(b.asset.symbol);
 }
 
+export function PortfolioPageSkeleton() {
+  return (
+    <PortfolioPageLayout
+      overview={<PortfolioSummary />}
+      assetCount={dummyPortfolioAssets.length}
+      assetList={<PortfolioTable assets={dummyPortfolioAssets} isLoading={true} />}
+      visualization={<PortfolioChartPending />}
+      activityList={<ActivityList activity={[]} isLoading={true} />}
+    />
+  );
+}
+
 export function PortfolioPage() {
+  const totalBalance = useTotalPortfolioBalance();
+  const { status } = useLeatherConnect();
+
   const btcQuery = useBtcAccountBalance();
   const sip10Query = useSip10AccountBalance();
   const stxQuery = useStxAccountBalance();
   const activityQuery = useAccountActivity();
 
+  const isConnected = status === 'connected';
   const allAssets = useMemo(() => {
     const assets: PortfolioAsset[] = [];
 
@@ -52,11 +71,24 @@ export function PortfolioPage() {
     return assets.sort(sortAssetsByValue);
   }, [btcQuery.data, sip10Query.data, stxQuery.data]);
 
-  const isLoading = btcQuery.isLoading || sip10Query.isLoading || stxQuery.isLoading;
+  if (status !== 'connected') {
+    return (
+      <PortfolioPageLayout
+        overview={<PortfolioSummary balance={dummyTotalBalance} />}
+        assetCount={dummyPortfolioAssets.length}
+        assetList={<PortfolioTable assets={dummyPortfolioAssets} isLoading={false} />}
+        visualization={<PortfolioChart assets={dummyPortfolioAssets} />}
+        activityList={<ActivityList activity={[]} isLoading={false} />}
+      />
+    );
+  }
+
+  const isLoading =
+    isConnected && (btcQuery.isLoading || sip10Query.isLoading || stxQuery.isLoading);
 
   return (
     <PortfolioPageLayout
-      overview={<PortfolioSummary />}
+      overview={<PortfolioSummary balance={isConnected ? totalBalance : dummyTotalBalance} />}
       assetCount={allAssets.length}
       assetList={<PortfolioTable assets={allAssets} isLoading={isLoading} />}
       visualization={
@@ -65,7 +97,10 @@ export function PortfolioPage() {
         </WhenClient>
       }
       activityList={
-        <ActivityList activity={activityQuery.data ?? []} isLoading={activityQuery.isLoading} />
+        <ActivityList
+          activity={isConnected ? (activityQuery.data ?? []) : []}
+          isLoading={isConnected && activityQuery.isLoading}
+        />
       }
     />
   );

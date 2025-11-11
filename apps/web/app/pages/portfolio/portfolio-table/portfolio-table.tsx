@@ -157,12 +157,10 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
     onSortingChange: setSorting,
   });
 
-  if (isLoading) {
-    return <PortfolioTableLoading />;
-  }
-  if (!hasData) {
-    return <PortfolioTableEmpty />;
-  }
+  if (isLoading) return <PortfolioTableLoading />;
+
+  if (!hasData) return <PortfolioTableEmpty />;
+
   return (
     <>
       <Table.Root width="100%" overflowX="auto">
