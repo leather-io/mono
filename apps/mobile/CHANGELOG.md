@@ -19,6 +19,20 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.85.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.85.1...@leather.io/mobile-v2.85.2) (2025-11-11)
+
+
+### Bug Fixes
+
+* add collectible type overlay ([4d91c94](https://github.com/leather-io/mono/commit/4d91c946d895c1fc06c57065d4378fafd9ac0609))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.92.0
+
 ## [2.85.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.85.0...@leather.io/mobile-v2.85.1) (2025-11-10)
 
 
