@@ -19,13 +19,16 @@ export class StampchainApiClient {
     { signal, skipCache }: ApiRequestOptions = {}
   ): Promise<StampchainStamp[]> {
     async function fetchFn() {
-      const res = await axios.get(`${STAMPCHAIN_API_URL}/balance/${address}`, {
-        signal,
-        timeout: 10000,
-      });
-
-      const validated = stampchainBalanceResponseSchema.parse(res.data);
-      return validated.data.stamps;
+      try {
+        const res = await axios.get(`${STAMPCHAIN_API_URL}/balance/${address}`, {
+          signal,
+          timeout: 10000,
+        });
+        const validated = stampchainBalanceResponseSchema.parse(res.data);
+        return validated.data.stamps;
+      } catch {
+        return [];
+      }
     }
 
     return skipCache
