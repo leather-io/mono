@@ -9,13 +9,12 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { TokenActivity } from '@/features/token/components/token-activity';
 import { TokenDetailsTable } from '@/features/token/components/token-details-table';
 import { TokenOverview } from '@/features/token/components/token-overview';
-import { t } from '@lingui/core/macro';
 
 import { FungibleCryptoAsset, OnChainActivity, isSwappableAsset } from '@leather.io/models';
-import { Box, Text } from '@leather.io/ui/native';
+import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
 
 import { getReceiveType } from '../receive/utils/get-receive-type';
-import { TokenDetailsCard } from './components/token-details-card';
+import { TokenDescription } from './components/token-description';
 import { TokenBalance } from './types';
 import { useGetTokenDetails } from './use-get-token-details';
 import { getAvailableBalance, getQuoteBalance } from './utils/get-balance';
@@ -52,7 +51,6 @@ export function Token({
 
   const availableBalance = getAvailableBalance(balance);
   const quoteBalance = getQuoteBalance(balance);
-
   const isLoading = balance.state === 'loading' || tokenDetailsState === 'loading';
 
   return (
@@ -70,19 +68,30 @@ export function Token({
               heading={<Screen.Title>{icon}</Screen.Title>}
               availableBalance={
                 <Box flexDirection="row" alignItems="center" gap="1">
-                  <Balance
-                    balance={availableBalance}
-                    isLoading={isLoading}
-                    formattingOptions={{ showCurrency: false }}
-                    variant="heading03"
-                  />
-                  <Text variant="heading03" color="ink.text-subdued">
-                    {asset.symbol}
-                  </Text>
+                  <SkeletonLoader height={23} maxWidth={120} isLoading={isLoading}>
+                    <Balance
+                      balance={availableBalance}
+                      formattingOptions={{ showCurrency: false }}
+                      variant="heading03"
+                    />
+                  </SkeletonLoader>
+                  <SkeletonLoader height={23} maxWidth={60} isLoading={isLoading}>
+                    <Text variant="heading03" color="ink.text-subdued">
+                      {asset.symbol}
+                    </Text>
+                  </SkeletonLoader>
                 </Box>
               }
               quoteBalance={
-                <Balance balance={quoteBalance} isLoading={isLoading} variant="label01" />
+                <Box flexDirection="row" alignItems="center" gap="1" pt={isLoading ? '1' : '0'}>
+                  <SkeletonLoader height={14} maxWidth={62} isLoading={isLoading}>
+                    <Balance
+                      balance={quoteBalance}
+                      formattingOptions={{ showCurrency: false }}
+                      variant="label01"
+                    />
+                  </SkeletonLoader>
+                </Box>
               }
               actionButtons={
                 <ActionButtons
@@ -97,20 +106,31 @@ export function Token({
               }
             />
 
-            {description && (
-              <TokenDetailsCard title={t`Description`}>
-                <Text variant="caption01">{description}</Text>
-              </TokenDetailsCard>
-            )}
+            <TokenDescription description={description} isLoading={isLoading} />
             <TokenDetailsTable
               name={name}
               layer={layer}
               price={
-                <Balance balance={price} isLoading={isLoading} variant="label02" lineHeight={16} />
+                <Box flexDirection="row" alignItems="center" gap="1">
+                  <SkeletonLoader height={23} maxWidth={120} isLoading={isLoading}>
+                    <Balance
+                      balance={price}
+                      formattingOptions={{ showCurrency: false }}
+                      variant="label02"
+                      lineHeight={16}
+                    />
+                  </SkeletonLoader>
+                </Box>
               }
               priceChange={
                 <Box flexDirection="row" alignItems="baseline" gap="1">
-                  <PriceChange price={price} changePercent={changePercent} isLoading={isLoading} />
+                  <SkeletonLoader height={23} maxWidth={120} isLoading={isLoading}>
+                    <PriceChange
+                      price={price}
+                      changePercent={changePercent}
+                      isLoading={isLoading}
+                    />
+                  </SkeletonLoader>
                 </Box>
               }
             />

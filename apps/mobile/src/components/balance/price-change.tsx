@@ -19,10 +19,11 @@ interface PriceChange {
   price?: Money;
   changePercent?: number;
   isLoading: boolean;
+  loader?: React.ReactNode;
 }
-export function PriceChange({ price, changePercent, isLoading }: PriceChange) {
+export function PriceChange({ price, changePercent, isLoading, loader }: PriceChange) {
   if (isLoading) {
-    return <SkeletonLoader height={16} width={100} isLoading />;
+    return loader ? loader : <SkeletonLoader height={16} width={100} isLoading />;
   }
 
   if (!price || !changePercent) {

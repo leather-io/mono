@@ -600,10 +600,8 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
-#: src/features/token/components/collectible-loading.tsx:23
-#: src/features/token/components/token-description.tsx:19
-#: src/features/token/components/token-loading.tsx:38
-#: src/features/token/token.tsx:101
+#: src/features/token/components/token-description.tsx:29
+#: src/features/token/components/token-description.tsx:43
 msgid "Description"
 msgstr "Description"
 
@@ -961,7 +959,7 @@ msgstr "Layer"
 msgid "Layer 1"
 msgstr "Layer 1"
 
-#: src/features/token/bitcoin/rune-token-details.tsx:37
+#: src/features/token/bitcoin/rune-token-details.tsx:39
 msgid "Layer 1 · Bitcoin"
 msgstr "Layer 1 · Bitcoin"
 
@@ -975,7 +973,7 @@ msgstr "Layer 1 • Bitcoin"
 msgid "Layer 2"
 msgstr "Layer 2"
 
-#: src/features/token/stacks/sip10-token-details.tsx:42
+#: src/features/token/stacks/sip10-token-details.tsx:46
 msgid "Layer 2 · Stacks"
 msgstr "Layer 2 · Stacks"
 
@@ -1262,11 +1260,11 @@ msgstr "Push and email notifications"
 msgid "Rarity rank"
 msgstr "Rarity rank"
 
-#: src/features/token/components/token-description.tsx:25
+#: src/features/token/components/token-description.tsx:49
 msgid "Read less"
 msgstr "Read less"
 
-#: src/features/token/components/token-description.tsx:25
+#: src/features/token/components/token-description.tsx:49
 msgid "Read more"
 msgstr "Read more"
 
