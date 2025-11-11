@@ -57,7 +57,7 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
     fallback,
     fallbackDelayMs = defaultFallbackDelay,
     outlineColor,
-    showFauxBorder = true,
+    showFauxBorder = false,
     ...rest
   } = props;
   const [imageLoadingStatus, setImageLoadingStatus] = useState<ImageLoadingStatus>('idle');
