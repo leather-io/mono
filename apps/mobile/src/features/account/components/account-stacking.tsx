@@ -7,8 +7,10 @@ import { t } from '@lingui/core/macro';
 import { AccountId } from '@leather.io/models';
 import {
   Box,
+  HasChildren,
   Pressable,
   QuestionCircleIcon,
+  SkeletonLoader,
   Text,
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
@@ -19,10 +21,26 @@ interface AccountStacking {
 
 export function AccountStacking({ account }: AccountStacking) {
   const stxBalance = useStxAccountBalance(account.fingerprint, account.accountIndex);
-  const { descriptionSheetRef } = useGlobalSheets();
+  const isLoadingStacking = stxBalance.state === 'loading';
   const userIsStacking = stxBalance.state == 'success' && isStacking(stxBalance);
 
+  if (isLoadingStacking) {
+    return (
+      <AccountStackingComponent>
+        <SkeletonLoader height={16} maxWidth={72} isLoading={isLoadingStacking} />
+      </AccountStackingComponent>
+    );
+  }
   if (!userIsStacking) return null;
+  return (
+    <AccountStackingComponent>
+      <Balance balance={stxBalance.value?.quote.lockedBalance} variant="heading05" />
+    </AccountStackingComponent>
+  );
+}
+
+function AccountStackingComponent({ children }: HasChildren) {
+  const { descriptionSheetRef } = useGlobalSheets();
   return (
     <Box px="5" pb="5">
       <Box mb="3" height={1} flex={1} bg="ink.component-background-non-interactive" />
@@ -44,11 +62,10 @@ export function AccountStacking({ account }: AccountStacking) {
           gap="1"
           alignItems="center"
         >
-          <Text variant="label02">{t`Locked`}</Text>
+          <Text variant="label02">{t`Locked STX`}</Text>
           <QuestionCircleIcon variant="small" />
         </Pressable>
-
-        <Balance balance={stxBalance.value?.quote.lockedBalance} variant="heading05" />
+        {children}
       </Box>
     </Box>
   );
