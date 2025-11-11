@@ -35,7 +35,6 @@ export function Sip10AvatarIcon({
       image={imageCanonicalUri !== '' ? imageCanonicalUri : getFallbackAvatar(contractId)}
       imageAlt={name}
       indicator={indicator ? <StacksIcon width={16} height={16} /> : undefined}
-      showFauxBorder={false}
       {...props}
     />
   );
