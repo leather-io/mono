@@ -225,7 +225,7 @@ msgstr "Amount must be greater than zero"
 msgid "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 msgstr "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 
-#: src/features/account/components/account-stacking.tsx:38
+#: src/features/account/components/account-stacking.tsx:56
 msgid "Amount you’ve committed to stacking. You won’t be able to move or spend it until the stacking period ends."
 msgstr "Amount you’ve committed to stacking. You won’t be able to move or spend it until the stacking period ends."
 
@@ -600,6 +600,7 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
+#: src/features/token/components/collectible-loading.tsx:23
 #: src/features/token/components/token-description.tsx:29
 #: src/features/token/components/token-description.tsx:43
 msgid "Description"
@@ -1006,15 +1007,17 @@ msgstr "Lock Asset"
 msgid "Lock failed"
 msgstr "Lock failed"
 
-#: src/features/account/components/account-stacking.tsx:34
-#: src/features/account/components/account-stacking.tsx:47
-#: src/features/activity/utils/format-activity.ts:38
+#: src/features/account/components/account-stacking.tsx:52
 msgid "Locked"
 msgstr "Locked"
 
 #: src/features/account/components/available-account-balance.tsx:58
 msgid "Locked Stacks balance:"
 msgstr "Locked Stacks balance:"
+
+#: src/features/account/components/account-stacking.tsx:65
+msgid "Locked STX"
+msgstr "Locked STX"
 
 #: src/features/activity/utils/format-activity.ts:39
 msgid "Locking"
@@ -1686,8 +1689,8 @@ msgstr "Tokens"
 msgid "Too many decimals (max {maxDecimals})"
 msgstr "Too many decimals (max {maxDecimals})"
 
-#: src/features/account/components/account-total-balance.tsx:40
-#: src/features/account/components/account-total-balance.tsx:53
+#: src/features/account/components/account-total-balance.tsx:38
+#: src/features/account/components/account-total-balance.tsx:51
 msgid "Total balance"
 msgstr "Total balance"
 
@@ -1897,7 +1900,7 @@ msgstr "Your Secret Key grants you access to your wallet and its assets. Store i
 msgid "Your total tokens across all your accounts."
 msgstr "Your total tokens across all your accounts."
 
-#: src/features/account/components/account-total-balance.tsx:44
+#: src/features/account/components/account-total-balance.tsx:42
 msgid "Your total tokens on chain. Includes both available and locked amounts."
 msgstr "Your total tokens on chain. Includes both available and locked amounts."
 

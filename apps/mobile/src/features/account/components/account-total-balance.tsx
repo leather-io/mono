@@ -26,8 +26,6 @@ export function AccountTotalBalance({ account }: AccountTotalBalanceProps) {
     fingerprint: account.fingerprint,
     accountIndex: account.accountIndex,
   });
-  const isLoadingTotalBalance = totalBalance.state === 'loading';
-
   if (!hasWallets) return null;
 
   return (
@@ -56,15 +54,13 @@ export function AccountTotalBalance({ account }: AccountTotalBalanceProps) {
         <NetworkBadge />
       </Box>
       <Box>
-        {isLoadingTotalBalance ? (
-          <SkeletonLoader height={44} width={132} isLoading={true} />
-        ) : (
+        <SkeletonLoader height={32} width={200} isLoading={totalBalance.state === 'loading'}>
           <AccountBalance
             fingerprint={account.fingerprint}
             accountIndex={account.accountIndex}
             variant="heading02"
           />
-        )}
+        </SkeletonLoader>
       </Box>
     </Box>
   );
