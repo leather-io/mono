@@ -3,11 +3,10 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { TokenActivity } from '@/features/token/components/token-activity';
 import { TokenDetailsTable } from '@/features/token/components/token-details-table';
 import { TokenOverview } from '@/features/token/components/token-overview';
-import { t } from '@lingui/core/macro';
 
 import { Box, SkeletonLoader } from '@leather.io/ui/native';
 
-import { TokenDetailsCard } from './token-details-card';
+import { TokenDescriptionLoading } from './token-description';
 
 function LoadingItem() {
   return <SkeletonLoader height={24} width={80} isLoading={true} />;
@@ -31,13 +30,21 @@ export function TokenLoading() {
                   </Box>
                 </Box>
               }
-              availableBalance={<LoadingItem />}
-              quoteBalance={<></>}
+              availableBalance={
+                <Box flexDirection="row" alignItems="center" gap="1">
+                  <SkeletonLoader height={23} maxWidth={120} isLoading />
+
+                  <SkeletonLoader height={23} maxWidth={60} isLoading />
+                </Box>
+              }
+              quoteBalance={
+                <Box flexDirection="row" alignItems="center" gap="1" pt="1">
+                  <SkeletonLoader height={14} maxWidth={62} isLoading />
+                </Box>
+              }
               actionButtons={<></>}
             />
-            <TokenDetailsCard title={t`Description`}>
-              <SkeletonLoader height={24} width="100%" isLoading={true} />
-            </TokenDetailsCard>
+            <TokenDescriptionLoading />
             <TokenDetailsTable
               name={<LoadingItem />}
               layer={<LoadingItem />}
