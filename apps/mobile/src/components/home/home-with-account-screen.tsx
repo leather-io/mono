@@ -17,6 +17,7 @@ import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
+import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { useSettings } from '@/store/settings/settings';
 import { useAccountScaledBalanceAnalytics } from '@/utils/analytics-hooks';
 import { useRouter } from 'expo-router';
@@ -75,6 +76,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     fingerprint: currentAccount.fingerprint,
     accountIndex: currentAccount.accountIndex,
   });
+  const collectiblesState = useAccountCollectibles(fingerprint, accountIndex);
   const isErrorTotalBalance = totalBalance.state === 'error';
 
   return (
@@ -129,7 +131,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
       )}
       {listTab === 'collectibles' && (
         <CollectiblesList
-          currentAccount={currentAccount}
+          collectiblesState={collectiblesState}
           header={
             <>
               <AccountDetails account={currentAccount} />
