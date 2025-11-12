@@ -960,7 +960,7 @@ msgstr "Layer"
 msgid "Layer 1"
 msgstr "Layer 1"
 
-#: src/features/token/bitcoin/rune-token-details.tsx:39
+#: src/features/token/bitcoin/rune-token-details.tsx:41
 msgid "Layer 1 · Bitcoin"
 msgstr "Layer 1 · Bitcoin"
 

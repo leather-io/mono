@@ -5,7 +5,7 @@ import { ErrorFallbackTab } from '@/components/error/error';
 import { Screen } from '@/components/screen/screen';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
-import { Loading } from '@/features/token/components/loading';
+import { CollectiblesListLoading } from '@/features/token/components/collectibles-list-loading';
 import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 
@@ -65,7 +65,7 @@ export function CollectiblesList({ currentAccount, header, onPressToken }: Colle
   const height = useCollectibleListItemHeight();
 
   const isSuccess = collectiblesState === 'success';
-  const isLoading = collectiblesState === 'loading';
+  const isLoading = true;
   const isError = collectiblesState === 'error';
 
   return (
@@ -87,7 +87,7 @@ export function CollectiblesList({ currentAccount, header, onPressToken }: Colle
       ListHeaderComponent={
         <>
           {header}
-          {isLoading && <Loading count={4} height={height} />}
+          {isLoading && <CollectiblesListLoading count={4} height={height} />}
           {isError && <ErrorFallbackTab />}
         </>
       }
