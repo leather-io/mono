@@ -17,7 +17,7 @@ interface InscriptionProps {
 export function Inscription({ item, height, onPress }: InscriptionProps) {
   const [content, setContent] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { mimeType, src, title } = item;
+  const { mimeType, src, title, thumbnailSrc } = item;
   // Only fetch content if it's needed for text type and not already provided
   useEffect(() => {
     if (mimeType === 'text' && src) {
@@ -44,6 +44,7 @@ export function Inscription({ item, height, onPress }: InscriptionProps) {
       mimeType={mimeType}
       height={height}
       src={isLoading ? '' : content || src}
+      thumbnailSrc={thumbnailSrc}
       onPress={onPress ? () => onPress({ assetId: serializeAssetId(getAssetId(item)) }) : undefined}
     />
   );
