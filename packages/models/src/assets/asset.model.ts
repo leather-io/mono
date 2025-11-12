@@ -121,6 +121,7 @@ export interface InscriptionAsset extends BaseNonFungibleCryptoAsset {
   readonly preview: string;
   readonly src: string;
   readonly thumbnailSrc?: string;
+  readonly inlineHtml?: string;
   readonly value: string;
   readonly genesisBlockHash: string;
   readonly genesisTimestamp: number;

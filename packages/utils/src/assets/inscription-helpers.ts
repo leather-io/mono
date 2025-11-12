@@ -50,6 +50,7 @@ export interface CreateInscriptionData {
   readonly genesisBlockHeight: number;
   readonly outputValue: string;
   readonly thumbnailSrc?: string;
+  readonly inlineHtml?: string;
 }
 
 export function createInscriptionAsset(data: CreateInscriptionData): InscriptionAsset {
@@ -77,6 +78,7 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
     genesisTimestamp: dateToUnixTimestamp(new Date(data.genesisTimestamp)),
     value: data.outputValue,
     thumbnailSrc,
+    inlineHtml: data.inlineHtml,
   };
 
   if (!data.mimeType) {

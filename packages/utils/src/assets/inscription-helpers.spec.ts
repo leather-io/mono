@@ -15,6 +15,7 @@ describe(createInscriptionAsset.name, () => {
     genesisTimestamp: '2025-01-01T12:00:00.000Z',
     outputValue: '1000',
     thumbnailSrc: 'https://example.com/thumb.png',
+    inlineHtml: '<p>test</p>',
   };
 
   it('populates inscription data on asset as expected', () => {
@@ -37,6 +38,7 @@ describe(createInscriptionAsset.name, () => {
     expect(inscription.value).toEqual(mockCreateInscriptionData.outputValue);
     expect(inscription.mimeType).toEqual('svg');
     expect(inscription.thumbnailSrc).toEqual(mockCreateInscriptionData.thumbnailSrc);
+    expect(inscription.inlineHtml).toEqual(mockCreateInscriptionData.inlineHtml);
   });
 
   it('falls back to ordinal preview when no content source is provided', () => {

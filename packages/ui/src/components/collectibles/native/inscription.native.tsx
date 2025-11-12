@@ -14,6 +14,7 @@ export interface InscriptionProps {
   height: number;
   src: string;
   thumbnailSrc?: string;
+  inlineHtml?: string;
   onPress?: () => void;
 }
 
@@ -23,6 +24,7 @@ export function Inscription({
   height = 200,
   src,
   thumbnailSrc,
+  inlineHtml,
   onPress,
 }: InscriptionProps) {
   switch (mimeType) {
@@ -35,6 +37,7 @@ export function Inscription({
         <CollectibleHtml
           src={src}
           thumbnailSrc={thumbnailSrc}
+          inlineHtml={inlineHtml}
           height={height}
           onPress={onPress}
         />
