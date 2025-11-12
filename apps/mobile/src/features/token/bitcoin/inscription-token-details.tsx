@@ -1,5 +1,6 @@
 import { ExternalLink } from '@/components/external-link';
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import {
   BitcoinNetworkPreference,
   getMempoolExplorerLink,
@@ -12,6 +13,12 @@ import dayjs from 'dayjs';
 
 import { ORD_IO_URL } from '@leather.io/constants';
 import { InscriptionAsset } from '@leather.io/models';
+import {
+  Pressable,
+  QuestionCircleIcon,
+  Text,
+  legacyTouchablePressEffect,
+} from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
@@ -23,6 +30,7 @@ interface InscriptionTokenDetailsProps {
 }
 
 export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps) {
+  const { descriptionSheetRef } = useGlobalSheets();
   const {
     number,
     title,
@@ -53,7 +61,32 @@ export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps)
       {!!value && (
         <TokenDetailsCard>
           <TokenStatCard>
-            <TokenStatCardItem label={t`Output value`} value={`${value} sats`} />
+            <TokenStatCardItem
+              label={
+                <Pressable
+                  pressEffects={legacyTouchablePressEffect}
+                  onPress={() => {
+                    descriptionSheetRef.current?.present({
+                      title: t`Output value`,
+                      data: [
+                        {
+                          key: 'paragraph',
+                          text: t`
+The amount of bitcoin assigned to the inscription on-chain. A higher output value indicates a UTXO with more satoshis locked to that collectible.`,
+                        },
+                      ],
+                    });
+                  }}
+                  flexDirection="row"
+                  gap="1"
+                  alignItems="center"
+                >
+                  <Text variant="label02">{t`Output value`}</Text>
+                  <QuestionCircleIcon variant="small" />
+                </Pressable>
+              }
+              value={`${value} sats`}
+            />
           </TokenStatCard>
         </TokenDetailsCard>
       )}

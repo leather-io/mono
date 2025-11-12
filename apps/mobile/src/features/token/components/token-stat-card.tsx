@@ -9,7 +9,7 @@ export function TokenStatCard({ children }: HasChildren) {
 }
 
 interface TokenStatCardProps {
-  label: string;
+  label: string | React.ReactNode;
   value: string;
 }
 

@@ -13,6 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+<<<<<<< HEAD
 #: src/features/approver/components/status-row/status-row-base.tsx:40
 msgid " on {date}"
 msgstr " on {date}"
@@ -25,6 +26,15 @@ msgstr " on {date} "
 #: src/features/approver/components/status-row/status-row-base.tsx:41
 msgid " since {date}"
 msgstr " since {date}"
+=======
+#: src/features/token/bitcoin/inscription-token-details.tsx:74
+msgid ""
+"\n"
+"The amount of bitcoin assigned to the inscription on-chain. A higher output value indicates a UTXO with more satoshis locked to that collectible."
+msgstr ""
+"\n"
+"The amount of bitcoin assigned to the inscription on-chain. A higher output value indicates a UTXO with more satoshis locked to that collectible."
+>>>>>>> 9be5c38cd (fix(mobile): add output value description sheet to inscription details)
 
 #: src/app/settings/display/index.tsx:101
 msgid "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
@@ -461,7 +471,7 @@ msgstr "Close window"
 msgid "Code"
 msgstr "Code"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:60
+#: src/features/token/bitcoin/inscription-token-details.tsx:93
 #: src/features/token/bitcoin/stamp-token-details.tsx:36
 #: src/features/token/components/token-loading.tsx:33
 #: src/features/token/stacks/bns-details.tsx:33
@@ -784,7 +794,7 @@ msgstr "Fee updated"
 msgid "Fees"
 msgstr "Fees"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:79
+#: src/features/token/bitcoin/inscription-token-details.tsx:112
 #: src/features/token/stacks/sip9-token-details.tsx:81
 msgid "File type"
 msgstr "File type"
@@ -818,11 +828,11 @@ msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 msgid "Generate new Secret Key for self-custody"
 msgstr "Generate new Secret Key for self-custody"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:72
+#: src/features/token/bitcoin/inscription-token-details.tsx:105
 msgid "Genesis block"
 msgstr "Genesis block"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:69
+#: src/features/token/bitcoin/inscription-token-details.tsx:102
 msgid "Genesis time"
 msgstr "Genesis time"
 
@@ -958,7 +968,7 @@ msgstr "Language"
 msgid "Last observed block"
 msgstr "Last observed block"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:66
+#: src/features/token/bitcoin/inscription-token-details.tsx:99
 #: src/features/token/bitcoin/stamp-token-details.tsx:42
 #: src/features/token/components/token-details-table.tsx:22
 #: src/features/token/stacks/bns-details.tsx:41
@@ -1111,7 +1121,7 @@ msgstr "More options"
 #: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
-#: src/features/token/bitcoin/inscription-token-details.tsx:63
+#: src/features/token/bitcoin/inscription-token-details.tsx:96
 #: src/features/token/bitcoin/stamp-token-details.tsx:39
 #: src/features/token/components/token-details-table.tsx:19
 #: src/features/token/components/token-loading.tsx:35
@@ -1200,7 +1210,8 @@ msgstr "Outbound balance:"
 msgid "Output"
 msgstr "Output"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:56
+#: src/features/token/bitcoin/inscription-token-details.tsx:70
+#: src/features/token/bitcoin/inscription-token-details.tsx:84
 msgid "Output value"
 msgstr "Output value"
 
@@ -1254,7 +1265,7 @@ msgstr "Proceed with caution since your wallet will not be protected by your dev
 msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:67
+#: src/features/token/bitcoin/inscription-token-details.tsx:100
 #: src/features/token/bitcoin/stamp-token-details.tsx:43
 #: src/features/token/components/token-loading.tsx:37
 #: src/features/token/stacks/bns-details.tsx:42
@@ -1734,7 +1745,7 @@ msgstr "Transaction confirmations"
 msgid "Transaction failed due to an unexpected error"
 msgstr "Transaction failed due to an unexpected error"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:74
+#: src/features/token/bitcoin/inscription-token-details.tsx:107
 msgid "Transaction ID"
 msgstr "Transaction ID"
 
