@@ -70,13 +70,3 @@ export function PriceChange({ price, changePercent, isLoading, loader }: PriceCh
     </>
   );
 }
-
-// PEte - need to fix the type errors then clean this up
-
-// Add colectible details loading state
-
-// finish off TODOs from alex
-// - add price info
-// - add little helper sheet
-
-// BOOM Done
