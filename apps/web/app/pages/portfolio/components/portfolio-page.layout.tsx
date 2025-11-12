@@ -1,4 +1,5 @@
 import { Box, BoxProps, Flex, Stack, styled } from 'leather-styles/jsx';
+import { ActivityButton } from '~/features/activity-button/activity-button';
 import { Page } from '~/layouts/page/page';
 
 interface PortfolioPageLayoutProps extends BoxProps {
@@ -20,7 +21,9 @@ export function PortfolioPageLayout({
 }: PortfolioPageLayoutProps) {
   return (
     <Page overflow="hidden" {...props}>
-      <Page.Header title="Portfolio" />
+      <Page.Header title="Portfolio">
+        <ActivityButton activityList={activityList} />
+      </Page.Header>
 
       <Box
         filter={dummyDataMode ? 'blur(6px)' : 'blur(0px)'}
@@ -46,14 +49,6 @@ export function PortfolioPageLayout({
               </styled.h2>
               <Stack overflow="auto" flexGrow={1}>
                 {assetList}
-              </Stack>
-            </Stack>
-            <Stack height="70vh" minHeight={500} flex={1}>
-              <styled.h2 textStyle="heading.05" mt="space.05" mb="space.02">
-                Recent activity
-              </styled.h2>
-              <Stack flexGrow={1} border="default" borderRadius="sm" height="100%">
-                {activityList}
               </Stack>
             </Stack>
           </Flex>
