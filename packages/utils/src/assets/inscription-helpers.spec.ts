@@ -39,6 +39,15 @@ describe(createInscriptionAsset.name, () => {
     expect(inscription.thumbnailSrc).toEqual(mockCreateInscriptionData.thumbnailSrc);
   });
 
+  it('falls back to ordinal preview when no content source is provided', () => {
+    const inscription = createInscriptionAsset({
+      ...mockCreateInscriptionData,
+      contentSrc: '',
+    });
+
+    expect(inscription.src).toContain('https://ordinals.com/preview/');
+  });
+
   it.each([
     { mimeType: 'text/html', expectedMimeType: 'html' },
     { mimeType: 'model/gltf+json', expectedMimeType: 'gltf' },

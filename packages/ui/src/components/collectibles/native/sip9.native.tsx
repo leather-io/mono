@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Sip9Asset } from '@leather.io/models';
 
 import { CollectibleAudio } from './collectible-audio.native';
-import { CollectibleHtml } from './collectible-html.native';
+import { CollectibleGltf } from './collectible-gltf.native';
 import { CollectibleImage } from './collectible-image.native';
 import { CollectibleVideo } from './collectible-video.native';
 
@@ -147,7 +147,7 @@ export function Sip9({
       return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
     case 'model/gltf+json':
     case 'model/gltf-binary':
-      return <CollectibleHtml src={encodedSrc} height={height} onPress={onPress} />;
+      return <CollectibleGltf src={encodedSrc} height={height} onPress={onPress} />;
     case 'text/plain':
     case '':
       // content type is empty, so we need to check if it's a video or an image

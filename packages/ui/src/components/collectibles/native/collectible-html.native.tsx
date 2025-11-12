@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import { useState } from 'react';
 import { WebView } from 'react-native-webview';
 
@@ -21,55 +22,38 @@ export function CollectibleHtml({
 }: CollectibleHtmlProps) {
   const [hasError, setHasError] = useState(false);
   const showFallback = hasError || !src;
-  const shouldShowThumbnail = Boolean(onPress && thumbnailSrc);
 
-  if (shouldShowThumbnail) {
+  function renderFallback() {
+    if (thumbnailSrc) {
+      return (
+        <CollectibleImage
+          alt="Collectible preview"
+          source={thumbnailSrc}
+          height={height}
+          onPress={onPress}
+        />
+      );
+    }
     return (
-      <CollectibleImage
-        alt="Collectible preview"
-        source={thumbnailSrc as string}
-        height={height}
-        onPress={onPress}
-      />
+      <Box position="relative">
+        <ImageUnavailable height={height} />
+        {onPress ? (
+          <TouchableOpacity style={StyleSheet.absoluteFill} onPress={onPress} activeOpacity={0.95} />
+        ) : null}
+      </Box>
     );
+  };
+
+  if (showFallback) {
+    return renderFallback();
   }
 
   return (
     <CollectibleCard height={height}>
-      {onPress ? (
-        <Box position="relative" height={height}>
-          {showFallback ? (
-            <ImageUnavailable height={height} />
-          ) : (
-            <WebView
-              source={{ uri: src }}
-              style={{ flex: 1, backgroundColor: 'transparent' }}
-              scrollEnabled={false}
-              originWhitelist={['*']}
-              mixedContentMode="always"
-              allowsInlineMediaPlayback={true}
-              mediaPlaybackRequiresUserAction={false}
-              startInLoadingState={true}
-              cacheEnabled={false}
-              incognito={true}
-              bounces={false}
-              overScrollMode="never"
-              pointerEvents="none"
-              onError={() => setHasError(true)}
-              onHttpError={() => setHasError(true)}
-            />
-          )}
-          <TouchableOpacity
-            style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-            onPress={onPress}
-            activeOpacity={0.95}
-          />
-        </Box>
-      ) : showFallback ? (
-        <ImageUnavailable height={height} />
-      ) : (
+      <Box position="relative" height={height}>
         <WebView
           source={{ uri: src }}
+          style={{ flex: 1, backgroundColor: 'transparent' }}
           scrollEnabled={false}
           originWhitelist={['*']}
           mixedContentMode="always"
@@ -78,10 +62,20 @@ export function CollectibleHtml({
           startInLoadingState={true}
           cacheEnabled={false}
           incognito={true}
+          bounces={false}
+          overScrollMode="never"
+          pointerEvents="none"
           onError={() => setHasError(true)}
           onHttpError={() => setHasError(true)}
         />
-      )}
+        {onPress ? (
+          <TouchableOpacity
+            style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+            onPress={onPress}
+            activeOpacity={0.95}
+          />
+        ) : null}
+      </Box>
     </CollectibleCard>
   );
 }
