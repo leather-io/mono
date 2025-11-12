@@ -14,6 +14,7 @@ describe(createInscriptionAsset.name, () => {
     genesisBlockHeight: 100,
     genesisTimestamp: '2025-01-01T12:00:00.000Z',
     outputValue: '1000',
+    thumbnailSrc: 'https://example.com/thumb.png',
   };
 
   it('populates inscription data on asset as expected', () => {
@@ -35,5 +36,20 @@ describe(createInscriptionAsset.name, () => {
     expect(inscription.genesisTimestamp).toEqual(1735732800);
     expect(inscription.value).toEqual(mockCreateInscriptionData.outputValue);
     expect(inscription.mimeType).toEqual('svg');
+    expect(inscription.thumbnailSrc).toEqual(mockCreateInscriptionData.thumbnailSrc);
+  });
+
+  it.each([
+    { mimeType: 'text/html', expectedMimeType: 'html' },
+    { mimeType: 'model/gltf+json', expectedMimeType: 'gltf' },
+  ])('uses contentSrc for %s inscriptions', ({ mimeType, expectedMimeType }) => {
+    const inscription = createInscriptionAsset({
+      ...mockCreateInscriptionData,
+      mimeType,
+      contentSrc: 'https://content.bestinslot.xyz/example',
+    });
+
+    expect(inscription.mimeType).toEqual(expectedMimeType);
+    expect(inscription.src).toEqual('https://content.bestinslot.xyz/example');
   });
 });
