@@ -70,11 +70,11 @@ export function PageHeader({ title, children }: PageHeaderProps) {
     <styled.header display="flex" justifyContent="space-between" h="60px" alignItems="center">
       <Flex alignItems="center" justifyContent="space-between" flex={1}>
         <styled.h1 textStyle="heading.05">{title}</styled.h1>
+        <MockModeToggle />
         {children}
       </Flex>
       <WhenClient>
         <Flex maxW="fit-content" height="100%">
-          <MockModeToggle />
           <SignInButton />
         </Flex>
       </WhenClient>

@@ -6,7 +6,7 @@ import { HIRO_EXPLORER_URL } from '@leather.io/constants';
 import { type OnChainActivity, makeActivityLink } from '@leather.io/models';
 import { ActivityAvatarIcon } from '@leather.io/ui';
 
-import { formatActivityCaption, getActivityTitle, getBalanceColor, getBalancesText } from './utils';
+import { formatActivityCaption, formatActivityStatusLabel, getBalancesText } from './utils';
 
 interface ActivityItemProps {
   activity: OnChainActivity;
@@ -51,9 +51,9 @@ export function ActivityItem({ activity }: ActivityItemProps) {
           </Box>
           <Flex flexDirection="column" alignItems="flex-start">
             <styled.p textStyle="body.02" fontWeight="medium">
-              {getActivityTitle(activity)}
+              {formatActivityStatusLabel(activity)}
             </styled.p>
-            <styled.p textStyle="caption.01" color={getBalanceColor(activity)}>
+            <styled.p textStyle="caption.01" color="ink.text-subdued">
               {formatActivityCaption(activity)}
             </styled.p>
           </Flex>

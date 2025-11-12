@@ -32,20 +32,31 @@ export function MockModeToggle() {
   if (!isMockMode && TARGET === 'production') return null;
 
   return (
-    <Flag
-      spacing="space.02"
-      mr="space.04"
-      textStyle="caption.01"
-      img={
-        <Circle
-          size="6px"
-          bgColor={isMockMode ? 'red.action-primary-default' : 'ink.border-default'}
-        />
-      }
-    >
+    <styled.div position="absolute" bottom="16px" right="16px" zIndex={100}>
       <BasicHoverCard content="Mock mode uses MSW to mock API calls, and adds a mock Leather provider to the page to simulate Leather functionality">
-        <styled.button onClick={handleToggle}>Mock mode {isMockMode ? 'on' : 'off'}</styled.button>
+        <styled.button
+          cursor="pointer"
+          p="space.01"
+          background="ink.background-secondary"
+          border="default"
+          borderRadius="md"
+          onClick={handleToggle}
+        >
+          <Flag
+            spacing="space.02"
+            mr="space.04"
+            textStyle="caption.01"
+            img={
+              <Circle
+                size="6px"
+                bgColor={isMockMode ? 'red.action-primary-default' : 'ink.border-default'}
+              />
+            }
+          >
+            Mock mode {isMockMode ? 'on' : 'off'}
+          </Flag>
+        </styled.button>
       </BasicHoverCard>
-    </Flag>
+    </styled.div>
   );
 }

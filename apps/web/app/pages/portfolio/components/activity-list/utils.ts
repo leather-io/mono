@@ -1,7 +1,13 @@
 import dayjs from 'dayjs';
 import { formatCurrency } from '~/utils/currency-formatter';
 
-import type { BaseOnChainActivity, OnChainActivity } from '@leather.io/models';
+import {
+  type BaseOnChainActivity,
+  type OnChainActivity,
+  isFungibleAsset,
+  isInscriptionAsset,
+  isStampAsset,
+} from '@leather.io/models';
 import { minusSign } from '@leather.io/utils';
 
 function addOperator(balance: string, operator?: string) {
@@ -14,20 +20,10 @@ function getBalanceOperator(activity: OnChainActivity) {
   return undefined;
 }
 
-export function getBalanceColor(activity: OnChainActivity) {
-  if (activity.type === 'receiveAsset' && activity.status === 'success')
-    return 'green.action-primary-default';
-  return 'ink.text-primary';
-}
 interface FormatActivityCaptionProps {
   type: OnChainActivity['type'];
   status: BaseOnChainActivity['status'];
   timestamp: number;
-}
-
-interface getActivityStatusLabelProps {
-  type: OnChainActivity['type'];
-  status: BaseOnChainActivity['status'];
 }
 
 function getActivityStatusMap(): Record<
@@ -37,8 +33,8 @@ function getActivityStatusMap(): Record<
   return {
     sendAsset: {
       success: `Sent`,
-      failed: `Send Failed`,
       pending: `Sending`,
+      failed: `Send Failed`,
     },
     receiveAsset: {
       success: `Received`,
@@ -68,12 +64,31 @@ function getActivityStatusMap(): Record<
     },
   };
 }
-function getActivityStatusLabel({ type, status }: getActivityStatusLabelProps) {
+
+export function formatActivityStatusLabel(activity: OnChainActivity) {
+  const { type, status } = activity;
+
   const activityStatusMap = getActivityStatusMap();
-  return activityStatusMap[type][status];
+
+  switch (type) {
+    case 'deploySmartContract':
+    case 'executeSmartContract':
+      return activity.contractId.split('.').pop() || `Unknown`;
+    case 'swapAssets':
+      if (isFungibleAsset(activity.fromAsset) && isFungibleAsset(activity.toAsset)) {
+        return `${activity.fromAsset.symbol} → ${activity.toAsset.symbol}`;
+      } else if (isStampAsset(activity.fromAsset) && isStampAsset(activity.toAsset)) {
+        return `Stamp → Stamp`;
+      } else if (isInscriptionAsset(activity.fromAsset) && isInscriptionAsset(activity.toAsset)) {
+        return `${activity.fromAsset.title} → ${activity.toAsset.title}`;
+      }
+      return `${activity.fromAsset.category} → ${activity.toAsset.category}`;
+    default:
+      return activityStatusMap[type][status];
+  }
 }
 
-export function formatActivityCaption({ type, status, timestamp }: FormatActivityCaptionProps) {
+export function formatActivityCaption({ timestamp }: FormatActivityCaptionProps) {
   const timestampInSeconds = timestamp * 1000;
   const isRecent = dayjs(timestampInSeconds).isAfter(dayjs().subtract(1, 'hour'));
   const time = dayjs(timestampInSeconds).format('MMM D, YYYY');
@@ -82,8 +97,7 @@ export function formatActivityCaption({ type, status, timestamp }: FormatActivit
     ? `${dayjs().diff(dayjs(timestampInSeconds), 'minute')} ${`minutes ago`}`
     : time;
 
-  const statusText = getActivityStatusLabel({ type, status });
-  return statusText ? `${statusText} ${timestampText}` : timestampText;
+  return timestampText;
 }
 
 export function getActivityTitle(activity: OnChainActivity) {
@@ -104,13 +118,25 @@ export function getActivityTitle(activity: OnChainActivity) {
     case 'swapAssets':
       return `Swap Assets`;
     case 'lockAsset':
-      return `Lock Asse`;
+      return `Lock Asset`;
     default:
       return `Unknown`;
   }
 }
 
 export function getBalancesText(activity: OnChainActivity) {
+  if (activity.type === 'swapAssets') {
+    const formattedToBalanceCrypto =
+      activity.toValue?.crypto && addOperator(formatCurrency(activity.toValue?.crypto, {}), '+');
+    const formattedToBalanceQuote =
+      activity.toValue?.quote && addOperator(formatCurrency(activity.toValue?.quote, {}), '+');
+
+    return {
+      formattedBalanceCrypto: formattedToBalanceCrypto,
+      formattedBalanceQuote: formattedToBalanceQuote,
+    };
+  }
+
   if (!('value' in activity))
     return {
       formattedBalanceCrypto: '',
