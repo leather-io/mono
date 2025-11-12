@@ -28,6 +28,7 @@ export function Inscription({ mimeType, name, height = 200, src, onPress }: Insc
       return <CollectibleVideo src={src} alt={name} height={height} onPress={onPress} />;
     case 'other':
     case 'svg':
+      return <CollectibleHtml src={src} height={height} onPress={onPress} />;
     case 'image':
       return <CollectibleImage source={src} alt={name} height={height} onPress={onPress} />;
     default:

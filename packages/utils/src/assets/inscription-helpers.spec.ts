@@ -36,4 +36,18 @@ describe(createInscriptionAsset.name, () => {
     expect(inscription.value).toEqual(mockCreateInscriptionData.outputValue);
     expect(inscription.mimeType).toEqual('svg');
   });
+
+  it.each([
+    { mimeType: 'text/html', expectedMimeType: 'html' },
+    { mimeType: 'model/gltf+json', expectedMimeType: 'gltf' },
+  ])('uses contentSrc for %s inscriptions', ({ mimeType, expectedMimeType }) => {
+    const inscription = createInscriptionAsset({
+      ...mockCreateInscriptionData,
+      mimeType,
+      contentSrc: 'https://content.bestinslot.xyz/example',
+    });
+
+    expect(inscription.mimeType).toEqual(expectedMimeType);
+    expect(inscription.src).toEqual('https://content.bestinslot.xyz/example');
+  });
 });

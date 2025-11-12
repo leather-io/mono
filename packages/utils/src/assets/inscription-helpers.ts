@@ -52,7 +52,7 @@ export interface CreateInscriptionData {
 }
 
 export function createInscriptionAsset(data: CreateInscriptionData): InscriptionAsset {
-  const iframeSrc = `https://ordinals.com/preview/${data.id}`;
+  const ordinalPreviewSrc = `https://ordinals.com/preview/${data.id}`;
   const preview = `https://ordinals.hiro.so/inscription/${data.id}`;
   const title = `Inscription ${data.number}`;
   const [txid, output, offset] = data.satPoint.split(':');
@@ -88,19 +88,19 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
       ...sharedInfo,
       mimeType: 'audio',
       name: 'inscription',
-      src: iframeSrc,
+      src: ordinalPreviewSrc,
     }),
     gltf: () => ({
       ...sharedInfo,
       mimeType: 'gltf',
       name: 'inscription',
-      src: iframeSrc,
+      src: data.contentSrc || ordinalPreviewSrc,
     }),
     html: () => ({
       ...sharedInfo,
       mimeType: 'html',
       name: 'inscription',
-      src: iframeSrc,
+      src: data.contentSrc || ordinalPreviewSrc,
     }),
     image: () => ({
       ...sharedInfo,
@@ -112,7 +112,7 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
       ...sharedInfo,
       mimeType: 'svg',
       name: 'inscription',
-      src: iframeSrc,
+      src: ordinalPreviewSrc,
     }),
     text: () => ({
       ...sharedInfo,
@@ -124,7 +124,7 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
       ...sharedInfo,
       mimeType: 'video',
       name: 'inscription',
-      src: iframeSrc,
+      src: ordinalPreviewSrc,
     }),
     other: () => ({
       ...sharedInfo,
