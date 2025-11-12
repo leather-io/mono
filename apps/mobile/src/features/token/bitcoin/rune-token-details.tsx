@@ -22,23 +22,24 @@ export function RuneTokenDetails({ assetId, account }: RuneTokenDetailsProps) {
     // show full loading screen before <Token handles it more gracefully
     return <TokenLoading />;
   }
-  if (balance.state === 'error') {
+
+  const isError = balance.state === 'error' || (balance.state === 'success' && !balance.value);
+  if (isError) {
     return <ErrorFallbackTab />;
   }
-  if (balance.state === 'success' && balance.value) {
-    const { asset } = balance.value;
 
-    return (
-      <Token
-        icon={<RunesAvatarIcon />}
-        asset={asset}
-        balance={balance}
-        activity={{ state: 'success', value: [] }}
-        title={asset.spacedRuneName}
-        name={`${asset.spacedRuneName} ${asset.symbol}`}
-        layer={t`Layer 1 · Bitcoin`}
-        canSend={false}
-      />
-    );
-  }
+  const { asset } = balance.value;
+
+  return (
+    <Token
+      icon={<RunesAvatarIcon />}
+      asset={asset}
+      balance={balance}
+      activity={{ state: 'success', value: [] }}
+      title={asset.spacedRuneName}
+      name={`${asset.spacedRuneName} ${asset.symbol}`}
+      layer={t`Layer 1 · Bitcoin`}
+      canSend={false}
+    />
+  );
 }

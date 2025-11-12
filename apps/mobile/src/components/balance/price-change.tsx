@@ -57,15 +57,26 @@ export function PriceChange({ price, changePercent, isLoading, loader }: PriceCh
           {`${changePercent.toFixed(2)}% `}
         </Text>
       )}
-      <Balance
-        formattingOptions={{ numberFormatOptions: { signDisplay: 'never' } }}
-        forceVisible
-        balance={priceChangeFiat}
-        variant="label02"
-        lineHeight={16}
-        color={color}
-        isLoading={isLoading}
-      />
+      <SkeletonLoader height={16} width={100} isLoading={isLoading}>
+        <Balance
+          formattingOptions={{ numberFormatOptions: { signDisplay: 'never' } }}
+          forceVisible
+          balance={priceChangeFiat}
+          variant="label02"
+          lineHeight={16}
+          color={color}
+        />
+      </SkeletonLoader>
     </>
   );
 }
+
+// PEte - need to fix the type errors then clean this up
+
+// Add colectible details loading state
+
+// finish off TODOs from alex
+// - add price info
+// - add little helper sheet
+
+// BOOM Done
