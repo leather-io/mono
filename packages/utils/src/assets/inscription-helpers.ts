@@ -49,10 +49,12 @@ export interface CreateInscriptionData {
   readonly genesisTimestamp: string | number;
   readonly genesisBlockHeight: number;
   readonly outputValue: string;
+  readonly thumbnailSrc?: string;
 }
 
 export function createInscriptionAsset(data: CreateInscriptionData): InscriptionAsset {
   const ordinalPreviewSrc = `https://ordinals.com/preview/${data.id}`;
+  const thumbnailSrc = data.thumbnailSrc ?? ordinalPreviewSrc;
   const preview = `https://ordinals.hiro.so/inscription/${data.id}`;
   const title = `Inscription ${data.number}`;
   const [txid, output, offset] = data.satPoint.split(':');
@@ -73,6 +75,7 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
     genesisBlockHash: data.genesisBlockHash,
     genesisTimestamp: dateToUnixTimestamp(new Date(data.genesisTimestamp)),
     value: data.outputValue,
+    thumbnailSrc,
   };
 
   if (!data.mimeType) {

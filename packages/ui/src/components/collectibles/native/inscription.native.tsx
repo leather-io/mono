@@ -12,10 +12,18 @@ export interface InscriptionProps {
   name: string;
   height: number;
   src: string;
+  thumbnailSrc?: string;
   onPress?: () => void;
 }
 
-export function Inscription({ mimeType, name, height = 200, src, onPress }: InscriptionProps) {
+export function Inscription({
+  mimeType,
+  name,
+  height = 200,
+  src,
+  thumbnailSrc,
+  onPress,
+}: InscriptionProps) {
   switch (mimeType) {
     case 'audio':
       return <CollectibleAudio alt={name} src={src} size={height} onPress={onPress} />;
@@ -23,12 +31,26 @@ export function Inscription({ mimeType, name, height = 200, src, onPress }: Insc
       return <CollectibleText src={src} height={height} onPress={onPress} />;
     case 'html':
     case 'gltf':
-      return <CollectibleHtml src={src} height={height} onPress={onPress} />;
+      return (
+        <CollectibleHtml
+          src={src}
+          thumbnailSrc={thumbnailSrc}
+          height={height}
+          onPress={onPress}
+        />
+      );
     case 'video':
       return <CollectibleVideo src={src} alt={name} height={height} onPress={onPress} />;
     case 'other':
     case 'svg':
-      return <CollectibleHtml src={src} height={height} onPress={onPress} />;
+      return (
+        <CollectibleHtml
+          src={src}
+          thumbnailSrc={thumbnailSrc}
+          height={height}
+          onPress={onPress}
+        />
+      );
     case 'image':
       return <CollectibleImage source={src} alt={name} height={height} onPress={onPress} />;
     default:

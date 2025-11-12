@@ -14,6 +14,7 @@ describe(createInscriptionAsset.name, () => {
     genesisBlockHeight: 100,
     genesisTimestamp: '2025-01-01T12:00:00.000Z',
     outputValue: '1000',
+    thumbnailSrc: 'https://example.com/thumb.png',
   };
 
   it('populates inscription data on asset as expected', () => {
@@ -35,6 +36,7 @@ describe(createInscriptionAsset.name, () => {
     expect(inscription.genesisTimestamp).toEqual(1735732800);
     expect(inscription.value).toEqual(mockCreateInscriptionData.outputValue);
     expect(inscription.mimeType).toEqual('svg');
+    expect(inscription.thumbnailSrc).toEqual(mockCreateInscriptionData.thumbnailSrc);
   });
 
   it.each([
