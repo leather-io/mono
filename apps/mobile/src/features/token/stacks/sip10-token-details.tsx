@@ -23,7 +23,6 @@ export function Sip10TokenDetails({ assetId, account }: Sip10TokenDetailsProps) 
   const asset = balance.value?.asset;
 
   if (balance.state === 'loading') {
-    // show full loading screen before <Token handles it more gracefully
     return <TokenLoading />;
   }
   const isError = balance.state === 'error' || (balance.state === 'success' && !asset);

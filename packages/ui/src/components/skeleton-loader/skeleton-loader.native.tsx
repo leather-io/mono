@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
   Easing,

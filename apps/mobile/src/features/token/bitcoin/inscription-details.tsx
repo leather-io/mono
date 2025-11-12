@@ -4,8 +4,7 @@ import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-c
 import { AccountId, isInscriptionAsset } from '@leather.io/models';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { useCollectibleHeight } from '../collectible';
-import { CollectibleLoading } from '../components/collectible-loading';
+import { TokenLoading } from '../components/token-loading';
 import { InscriptionTokenDetails } from './inscription-token-details';
 
 interface InscriptionDetailsProps {
@@ -14,11 +13,10 @@ interface InscriptionDetailsProps {
 }
 export function InscriptionDetails({ assetId, account }: InscriptionDetailsProps) {
   const { fingerprint, accountIndex } = account;
-  const height = useCollectibleHeight();
 
   const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
   if (collectible.state === 'loading') {
-    return <CollectibleLoading height={height} />;
+    return <TokenLoading variant="collectible" />;
   }
   if (collectible.state === 'error') {
     return <ErrorFallbackTab />;
