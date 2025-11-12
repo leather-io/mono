@@ -2,14 +2,14 @@ import { ReactElement } from 'react';
 import { useWindowDimensions } from 'react-native';
 
 import { ErrorFallbackTab } from '@/components/error/error';
+import { FetchState } from '@/components/loading/fetch-state';
 import { Screen } from '@/components/screen/screen';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
 import { Loading } from '@/features/token/components/loading';
 import { TokenDetailsProps } from '@/features/token/types';
-import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 
-import { AccountId, NonFungibleCryptoAsset } from '@leather.io/models';
+import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { CollectibleTypeIconOverlay } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
@@ -51,22 +51,18 @@ function useCollectibleListItemHeight() {
 }
 
 interface CollectiblesListProps {
-  currentAccount: AccountId;
+  collectiblesState: FetchState<NonFungibleCryptoAsset[]>;
   header: ReactElement;
   onPressToken?: (tokenDetails: TokenDetailsProps) => void;
 }
 
-export function CollectiblesList({ currentAccount, header, onPressToken }: CollectiblesListProps) {
-  const { fingerprint, accountIndex } = currentAccount;
-  const { value: collectibles, state: collectiblesState } = useAccountCollectibles(
-    fingerprint,
-    accountIndex
-  );
+export function CollectiblesList({ collectiblesState, header, onPressToken }: CollectiblesListProps) {
+  const collectibles = collectiblesState.state === 'success' ? collectiblesState.value : [];
   const height = useCollectibleListItemHeight();
 
-  const isSuccess = collectiblesState === 'success';
-  const isLoading = collectiblesState === 'loading';
-  const isError = collectiblesState === 'error';
+  const isSuccess = collectiblesState.state === 'success';
+  const isLoading = collectiblesState.state === 'loading';
+  const isError = collectiblesState.state === 'error';
 
   return (
     <Screen.FlashList
