@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 
-import { WhenClient } from '~/components/when-client';
 import { useAccountActivity } from '~/queries/activity/account-activity.query';
 import { useBtcAccountBalance } from '~/queries/balance/btc-balance.hooks';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
@@ -14,6 +13,7 @@ import { ActivityList } from './components/activity-list';
 import { PortfolioChart, PortfolioChartPending } from './components/portfolio-chart';
 import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
+import { WalletConnectionModal } from './components/wallet-connection-modal';
 import { dummyPortfolioAssets, dummyTotalBalance } from './dummy-portfolio-data';
 import { PortfolioAsset, PortfolioTable } from './portfolio-table/portfolio-table';
 
@@ -27,9 +27,11 @@ function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
 export function PortfolioPageSkeleton() {
   return (
     <PortfolioPageLayout
+      animation="fadein 300ms ease-out 250ms both"
+      opacity={0}
       overview={<PortfolioSummary />}
-      assetCount={dummyPortfolioAssets.length}
-      assetList={<PortfolioTable assets={dummyPortfolioAssets} isLoading={true} />}
+      assetCount={0}
+      assetList={<PortfolioTable assets={[]} isLoading={true} />}
       visualization={<PortfolioChartPending />}
       activityList={<ActivityList activity={[]} isLoading={true} />}
     />
@@ -73,13 +75,17 @@ export function PortfolioPage() {
 
   if (status !== 'connected') {
     return (
-      <PortfolioPageLayout
-        overview={<PortfolioSummary balance={dummyTotalBalance} />}
-        assetCount={dummyPortfolioAssets.length}
-        assetList={<PortfolioTable assets={dummyPortfolioAssets} isLoading={false} />}
-        visualization={<PortfolioChart assets={dummyPortfolioAssets} />}
-        activityList={<ActivityList activity={[]} isLoading={false} />}
-      />
+      <>
+        <PortfolioPageLayout
+          dummyDataMode
+          overview={<PortfolioSummary balance={dummyTotalBalance} />}
+          assetCount={dummyPortfolioAssets.length}
+          assetList={<PortfolioTable assets={dummyPortfolioAssets} isLoading={false} />}
+          visualization={<PortfolioChart assets={dummyPortfolioAssets} />}
+          activityList={<ActivityList activity={[]} isLoading={false} />}
+        />
+        <WalletConnectionModal isOpen={true} />
+      </>
     );
   }
 
@@ -88,14 +94,10 @@ export function PortfolioPage() {
 
   return (
     <PortfolioPageLayout
-      overview={<PortfolioSummary balance={isConnected ? totalBalance : dummyTotalBalance} />}
+      overview={<PortfolioSummary balance={totalBalance} />}
       assetCount={allAssets.length}
       assetList={<PortfolioTable assets={allAssets} isLoading={isLoading} />}
-      visualization={
-        <WhenClient fallback={<PortfolioChartPending />}>
-          <PortfolioChart assets={allAssets} />
-        </WhenClient>
-      }
+      visualization={<PortfolioChart assets={allAssets} />}
       activityList={
         <ActivityList
           activity={isConnected ? (activityQuery.data ?? []) : []}

@@ -163,7 +163,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
 
   return (
     <>
-      <Table.Root width="100%" overflowX="auto">
+      <Table.Root width="100%" overflowX="auto" border="default" borderRadius="md">
         <Table.Table>
           <Table.Head>
             {table.getHeaderGroups().map(headerGroup => (
