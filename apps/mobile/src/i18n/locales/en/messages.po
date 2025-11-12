@@ -445,16 +445,11 @@ msgstr "Close the scanner"
 msgid "Code"
 msgstr "Code"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:60
-#: src/features/token/bitcoin/stamp-token-details.tsx:36
-#: src/features/token/components/collectible-loading.tsx:26
-#: src/features/token/stacks/bns-details.tsx:33
-#: src/features/token/stacks/sip9-token-details.tsx:54
+#: src/features/token/components/token-loading.tsx:33
 msgid "Collectible Info"
 msgstr "Collectible Info"
 
-#: src/features/token/components/collectible-loading.tsx:29
-#: src/features/token/stacks/sip9-token-details.tsx:58
+#: src/features/token/components/token-loading.tsx:36
 msgid "Collection"
 msgstr "Collection"
 
@@ -600,9 +595,8 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
-#: src/features/token/components/collectible-loading.tsx:23
-#: src/features/token/components/token-description.tsx:29
-#: src/features/token/components/token-description.tsx:43
+#: src/features/token/components/token-loading.tsx:30
+#: src/features/token/components/token-loading.tsx:78
 msgid "Description"
 msgstr "Description"
 
@@ -1097,15 +1091,7 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
-#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
-#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
-#: src/features/token/bitcoin/inscription-token-details.tsx:63
-#: src/features/token/bitcoin/stamp-token-details.tsx:39
-#: src/features/token/components/collectible-loading.tsx:28
-#: src/features/token/components/token-details-table.tsx:19
-#: src/features/token/stacks/bns-details.tsx:35
-#: src/features/token/stacks/sip9-token-details.tsx:56
+#: src/features/token/components/token-loading.tsx:35
 msgid "Name"
 msgstr "Name"
 
@@ -1234,11 +1220,7 @@ msgstr "Proceed with caution since your wallet will not be protected by your dev
 msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:67
-#: src/features/token/bitcoin/stamp-token-details.tsx:43
-#: src/features/token/components/collectible-loading.tsx:30
-#: src/features/token/stacks/bns-details.tsx:42
-#: src/features/token/stacks/sip9-token-details.tsx:71
+#: src/features/token/components/token-loading.tsx:37
 msgid "Protocol"
 msgstr "Protocol"
 

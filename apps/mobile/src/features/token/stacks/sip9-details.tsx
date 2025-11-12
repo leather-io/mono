@@ -6,7 +6,7 @@ import { getStacksContractAssetName } from '@leather.io/stacks';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { useCollectibleHeight } from '../collectible';
-import { CollectibleLoading } from '../components/collectible-loading';
+import { TokenLoading } from '../components/token-loading';
 import { BnsDetails } from './bns-details';
 import { Sip9TokenDetails } from './sip9-token-details';
 
@@ -21,7 +21,7 @@ export function Sip9Details({ assetId, account }: Sip9DetailsProps) {
   const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
 
   if (collectible.state === 'loading') {
-    return <CollectibleLoading height={height} />;
+    return <TokenLoading variant="collectible" height={height} />;
   }
   if (collectible.state === 'error') {
     return <ErrorFallbackTab />;

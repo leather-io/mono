@@ -1,18 +1,49 @@
 import { Screen } from '@/components/screen/screen';
+import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { TokenActivity } from '@/features/token/components/token-activity';
 import { TokenDetailsTable } from '@/features/token/components/token-details-table';
 import { TokenOverview } from '@/features/token/components/token-overview';
+import { t } from '@lingui/core/macro';
 
 import { Box, SkeletonLoader } from '@leather.io/ui/native';
 
+import { useCollectibleHeight } from '../collectible';
 import { TokenDescriptionLoading } from './token-description';
+import { TokenDetailsCard } from './token-details-card';
 
 function LoadingItem() {
-  return <SkeletonLoader height={24} width={80} isLoading={true} />;
+  return <SkeletonLoader height={14} width={80} isLoading />;
 }
 
-export function TokenLoading() {
+function TokenLoadingCollectible() {
+  const height = useCollectibleHeight();
+  return (
+    <Screen>
+      <Screen.Header rightElement={<NetworkBadge />} />
+
+      <Screen.ScrollView>
+        <Box gap="1" backgroundColor="ink.background-secondary">
+          <Box p="5" backgroundColor="ink.background-primary">
+            <SkeletonLoader height={height} width="100%" isLoading />
+          </Box>
+          <TokenDetailsCard title={t`Description`}>
+            <TokenDescriptionLoading />
+          </TokenDetailsCard>
+          <TokenDetailsCard title={t`Collectible Info`}>
+            <SummaryTableRoot>
+              <SummaryTableItem label={t`Name`} value={<LoadingItem />} />
+              <SummaryTableItem label={t`Collection`} value={<LoadingItem />} />
+              <SummaryTableItem label={t`Protocol`} value={<LoadingItem />} />
+            </SummaryTableRoot>
+          </TokenDetailsCard>
+        </Box>
+      </Screen.ScrollView>
+    </Screen>
+  );
+}
+
+function TokenLoadingToken() {
   return (
     <Screen>
       <Screen.Header rightElement={<NetworkBadge />} />
@@ -26,7 +57,7 @@ export function TokenLoading() {
               heading={
                 <Box flexDirection="column" justifyContent="space-between" gap="4">
                   <Box alignItems="center" height={48} width={48}>
-                    <SkeletonLoader borderRadius="round" height={48} width={48} isLoading={true} />
+                    <SkeletonLoader borderRadius="round" height={48} width={48} isLoading />
                   </Box>
                 </Box>
               }
@@ -44,7 +75,9 @@ export function TokenLoading() {
               }
               actionButtons={<></>}
             />
-            <TokenDescriptionLoading />
+            <TokenDetailsCard title={t`Description`}>
+              <TokenDescriptionLoading />
+            </TokenDetailsCard>
             <TokenDetailsTable
               name={<LoadingItem />}
               layer={<LoadingItem />}
@@ -56,4 +89,14 @@ export function TokenLoading() {
       />
     </Screen>
   );
+}
+interface TokenLoadingProps {
+  variant?: 'token' | 'collectible';
+}
+
+export function TokenLoading({ variant = 'token' }: TokenLoadingProps) {
+  if (variant === 'collectible') {
+    return <TokenLoadingCollectible />;
+  }
+  return <TokenLoadingToken />;
 }

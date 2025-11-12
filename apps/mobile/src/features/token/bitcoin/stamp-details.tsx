@@ -6,7 +6,7 @@ import { AccountId, isStampAsset } from '@leather.io/models';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { useCollectibleHeight } from '../collectible';
-import { CollectibleLoading } from '../components/collectible-loading';
+import { TokenLoading } from '../components/token-loading';
 
 interface StampDetailsProps {
   account: AccountId;
@@ -19,7 +19,7 @@ export function StampDetails({ assetId, account }: StampDetailsProps) {
   const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
 
   if (collectible.state === 'loading') {
-    return <CollectibleLoading height={height} />;
+    return <TokenLoading variant="collectible" height={height} />;
   }
   if (collectible.state === 'error') {
     return <ErrorFallbackTab />;
