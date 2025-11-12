@@ -6,7 +6,6 @@ describe(mapBisInscriptionToCreateInscriptionData.name, () => {
     inscription_id: 'insc1',
     inscription_number: 1,
     content_url: 'https://example.com/1',
-    render_url: 'https://example.com/preview.png',
     mime_type: 'image/png',
     owner_wallet_addr: 'bc1pabc',
     satpoint: 'abc:0:0',
@@ -29,14 +28,12 @@ describe(mapBisInscriptionToCreateInscriptionData.name, () => {
     expect(createInscriptionData.genesisBlockHeight).toEqual(mockBisInscription.genesis_height);
     expect(createInscriptionData.genesisTimestamp).toEqual(mockBisInscription.genesis_ts);
     expect(createInscriptionData.outputValue).toEqual(mockBisInscription.output_value.toString());
-    expect(createInscriptionData.thumbnailSrc).toEqual(mockBisInscription.render_url);
   });
 
   it('uses delegate object fields when available', () => {
     const delegate = {
       mime_type: 'text/html',
       content_url: 'https://other.example.com/2',
-      render_url: 'https://thumb.example.com/preview.png',
     };
     const createInscriptionData = mapBisInscriptionToCreateInscriptionData({
       ...mockBisInscription,
@@ -44,6 +41,5 @@ describe(mapBisInscriptionToCreateInscriptionData.name, () => {
     } as BisInscription);
     expect(createInscriptionData.mimeType).toEqual(delegate.mime_type);
     expect(createInscriptionData.contentSrc).toEqual(delegate.content_url);
-    expect(createInscriptionData.thumbnailSrc).toEqual(delegate.render_url);
   });
 });

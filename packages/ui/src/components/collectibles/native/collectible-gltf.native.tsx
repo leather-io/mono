@@ -2,12 +2,11 @@ import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 
+import { Box, TouchableOpacity } from '../../../../native';
 import { CollectibleCard } from './collectible-card.native';
-import { CollectibleImage } from './collectible-image.native';
 
 interface CollectibleGltfProps {
   src: string;
-  thumbnailSrc?: string;
   height?: number;
   onPress?: () => void;
 }
@@ -52,34 +51,32 @@ function buildViewerHtml(src: string) {
   `;
 }
 
-export function CollectibleGltf({ src, thumbnailSrc, height = 200, onPress }: CollectibleGltfProps) {
+export function CollectibleGltf({ src, height = 200, onPress }: CollectibleGltfProps) {
   const viewerHtml = useMemo(() => buildViewerHtml(src), [src]);
-
-  if (onPress) {
-    return (
-      <CollectibleImage
-        alt="Collectible preview"
-        source={thumbnailSrc ?? ''}
-        height={height}
-        onPress={onPress}
-      />
-    );
-  }
 
   return (
     <CollectibleCard height={height}>
-      <WebView
-        source={{ html: viewerHtml }}
-        style={StyleSheet.absoluteFill}
-        originWhitelist={['*']}
-        scrollEnabled={false}
-        androidLayerType="hardware"
-        allowsInlineMediaPlayback
-        mediaPlaybackRequiresUserAction={false}
-        startInLoadingState
-        cacheEnabled={false}
-        incognito
-      />
+      <Box position="relative" height={height}>
+        <WebView
+          source={{ html: viewerHtml }}
+          style={StyleSheet.absoluteFill}
+          originWhitelist={['*']}
+          scrollEnabled={false}
+          androidLayerType="hardware"
+          allowsInlineMediaPlayback
+          mediaPlaybackRequiresUserAction={false}
+          startInLoadingState
+          cacheEnabled={false}
+          incognito
+        />
+        {onPress ? (
+          <TouchableOpacity
+            style={StyleSheet.absoluteFill}
+            onPress={onPress}
+            activeOpacity={0.95}
+          />
+        ) : null}
+      </Box>
     </CollectibleCard>
   );
 }

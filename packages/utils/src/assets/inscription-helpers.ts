@@ -1,3 +1,4 @@
+import { ORD_IO_URL } from '@leather.io/constants';
 import {
   CryptoAssetCategories,
   CryptoAssetChains,
@@ -49,14 +50,12 @@ export interface CreateInscriptionData {
   readonly genesisTimestamp: string | number;
   readonly genesisBlockHeight: number;
   readonly outputValue: string;
-  readonly thumbnailSrc?: string;
-  readonly inlineHtml?: string;
 }
 
 export function createInscriptionAsset(data: CreateInscriptionData): InscriptionAsset {
   const ordinalPreviewSrc = `https://ordinals.com/preview/${data.id}`;
-  const thumbnailSrc = data.thumbnailSrc ?? ordinalPreviewSrc;
-  const primarySrc = data.contentSrc || ordinalPreviewSrc;
+  const ordContentSrc = `${ORD_IO_URL}/content/${data.id}`;
+  const primarySrc = ordContentSrc || ordinalPreviewSrc || data.contentSrc;
   const preview = `https://ordinals.hiro.so/inscription/${data.id}`;
   const title = `Inscription ${data.number}`;
   const [txid, output, offset] = data.satPoint.split(':');
@@ -77,8 +76,6 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
     genesisBlockHash: data.genesisBlockHash,
     genesisTimestamp: dateToUnixTimestamp(new Date(data.genesisTimestamp)),
     value: data.outputValue,
-    thumbnailSrc,
-    inlineHtml: data.inlineHtml,
   };
 
   if (!data.mimeType) {
@@ -106,13 +103,13 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
       ...sharedInfo,
       mimeType: 'html',
       name: 'inscription',
-      src: primarySrc,
+      src: ordContentSrc,
     }),
     image: () => ({
       ...sharedInfo,
       mimeType: 'image',
       name: 'inscription',
-      src: data.contentSrc,
+      src: primarySrc,
     }),
     svg: () => ({
       ...sharedInfo,
@@ -124,7 +121,7 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
       ...sharedInfo,
       mimeType: 'text',
       name: 'inscription',
-      src: data.contentSrc,
+      src: primarySrc,
     }),
     video: () => ({
       ...sharedInfo,
@@ -136,7 +133,7 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
       ...sharedInfo,
       mimeType: 'other',
       name: 'inscription',
-      src: data.contentSrc ?? '',
+      src: primarySrc,
     }),
   });
 }

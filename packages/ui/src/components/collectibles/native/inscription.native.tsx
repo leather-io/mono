@@ -13,8 +13,6 @@ export interface InscriptionProps {
   name: string;
   height: number;
   src: string;
-  thumbnailSrc?: string;
-  inlineHtml?: string;
   onPress?: () => void;
 }
 
@@ -23,8 +21,6 @@ export function Inscription({
   name,
   height = 200,
   src,
-  thumbnailSrc,
-  inlineHtml,
   onPress,
 }: InscriptionProps) {
   switch (mimeType) {
@@ -33,36 +29,14 @@ export function Inscription({
     case 'text':
       return <CollectibleText src={src} height={height} onPress={onPress} />;
     case 'html':
-      return (
-        <CollectibleHtml
-          src={src}
-          thumbnailSrc={thumbnailSrc}
-          inlineHtml={inlineHtml}
-          height={height}
-          onPress={onPress}
-        />
-      );
+      return <CollectibleHtml src={src} height={height} onPress={onPress} />;
     case 'gltf':
-      return (
-        <CollectibleGltf
-          src={src}
-          thumbnailSrc={thumbnailSrc}
-          height={height}
-          onPress={onPress}
-        />
-      );
+      return <CollectibleGltf src={src} height={height} onPress={onPress} />;
     case 'video':
       return <CollectibleVideo src={src} alt={name} height={height} onPress={onPress} />;
     case 'other':
     case 'svg':
-      return (
-        <CollectibleHtml
-          src={src}
-          thumbnailSrc={thumbnailSrc}
-          height={height}
-          onPress={onPress}
-        />
-      );
+      return <CollectibleHtml src={src} height={height} onPress={onPress} />;
     case 'image':
       return <CollectibleImage source={src} alt={name} height={height} onPress={onPress} />;
     default:

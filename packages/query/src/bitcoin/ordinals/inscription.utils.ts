@@ -31,7 +31,6 @@ export function createBestInSlotInscription(
     number: bisInscription.inscription_number,
     contentSrc: bisInscription.delegate?.content_url ?? bisInscription.content_url,
     mimeType: mimeType ?? undefined,
-    thumbnailSrc: bisInscription.render_url ?? bisInscription.delegate?.render_url ?? undefined,
     ownerAddress: bisInscription.owner_wallet_addr,
     satPoint: bisInscription.satpoint,
     genesisBlockHash: bisInscription.genesis_block_hash,

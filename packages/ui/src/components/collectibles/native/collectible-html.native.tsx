@@ -1,78 +1,32 @@
-import { StyleSheet } from 'react-native';
 import { useState } from 'react';
 import { WebView } from 'react-native-webview';
 
 import { Box, TouchableOpacity } from '../../../../native';
 import { CollectibleCard } from './collectible-card.native';
-import { CollectibleImage } from './collectible-image.native';
 import { ImageUnavailable } from './image-unavailable.native';
 
 interface CollectibleHtmlProps {
   src: string;
-  thumbnailSrc?: string;
-  inlineHtml?: string;
   height?: number;
   onPress?: () => void;
 }
 
-export function CollectibleHtml({
-  src,
-  thumbnailSrc,
-  inlineHtml,
-  height = 200,
-  onPress,
-}: CollectibleHtmlProps) {
-  const [hasError, setHasError] = useState(false);
-  const hasRenderableSource = Boolean(inlineHtml || src);
-  const showFallback = hasError || !hasRenderableSource;
+export function CollectibleHtml({ src, height = 200, onPress }: CollectibleHtmlProps) {
+  const [hasError, setHasError] = useState(!src);
 
-  function renderFallback() {
-    if (thumbnailSrc) {
-      return (
-        <CollectibleImage
-          alt="Collectible preview"
-          source={thumbnailSrc}
-          height={height}
-          onPress={onPress}
-        />
-      );
-    }
+  if (hasError || !src) {
     return (
-      <Box position="relative">
+      <CollectibleCard height={height}>
         <ImageUnavailable height={height} />
-        {onPress ? (
-          <TouchableOpacity style={StyleSheet.absoluteFill} onPress={onPress} activeOpacity={0.95} />
-        ) : null}
-      </Box>
+      </CollectibleCard>
     );
-  };
-
-  if (onPress) {
-    return renderFallback();
   }
-
-  if (showFallback) {
-    return renderFallback();
-  }
-
-  const webViewSource = inlineHtml
-    ? {
-        html: inlineHtml,
-        baseUrl: (() => {
-          try {
-            return src ? new URL(src).origin : undefined;
-          } catch {
-            return undefined;
-          }
-        })(),
-      }
-    : { uri: src };
 
   return (
     <CollectibleCard height={height}>
       <Box position="relative" height={height}>
         <WebView
-          source={webViewSource}
+          source={{ uri: src }}
           style={{ flex: 1, backgroundColor: 'transparent' }}
           scrollEnabled={false}
           originWhitelist={['*']}

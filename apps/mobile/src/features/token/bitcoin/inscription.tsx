@@ -18,12 +18,7 @@ export function Inscription({ item, height, onPress }: InscriptionProps) {
   const [content, setContent] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // this workm and i see them in the list view 
-// > Pete - instead of inlineHtml, we should replace src for html 
-
-
-
-  const { mimeType, src, title, thumbnailSrc, inlineHtml } = item;
+  const { mimeType, src, title } = item;
   // Only fetch content if it's needed for text type and not already provided
   useEffect(() => {
     if (mimeType === 'text' && src) {
@@ -43,15 +38,14 @@ export function Inscription({ item, height, onPress }: InscriptionProps) {
     }
   }, [mimeType, src]);
 
-  if ((!src || src.trim() === '') && !inlineHtml) return <FallbackImage />;
+  if (!src || src.trim() === '') return <FallbackImage />;
+
   return (
     <InscriptionComponent
       name={title}
       mimeType={mimeType}
       height={height}
       src={isLoading ? '' : content || src}
-      thumbnailSrc={thumbnailSrc}
-      inlineHtml={inlineHtml}
       onPress={onPress ? () => onPress({ assetId: serializeAssetId(getAssetId(item)) }) : undefined}
     />
   );

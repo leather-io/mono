@@ -12,7 +12,10 @@ import {
 import { createInscriptionAsset, isDefined } from '@leather.io/utils';
 
 import { Sip9AssetService } from '../assets/sip9-asset.service';
-import { BestInSlotApiClient, BisInscription } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
+import {
+  BestInSlotApiClient,
+  BisInscription,
+} from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { StampchainApiClient } from '../infrastructure/api/stampchain/stampchain-api.client';
 import {
@@ -128,42 +131,12 @@ export class CollectiblesService {
         this.bisApiClient.fetchInscriptions(btcAddressInfo.taprootDescriptor, { signal }),
         this.bisApiClient.fetchInscriptions(btcAddressInfo.nativeSegwitDescriptor, { signal }),
       ]);
-      const inscriptions = [...nativeSegwitInscriptions, ...taprootInscriptions];
-      return Promise.all(
-        inscriptions.map(inscription => this.createInscriptionWithBlockHeight(inscription, signal))
-      );
+      return [...nativeSegwitInscriptions, ...taprootInscriptions].map(inscription => ({
+        asset: createInscriptionAsset(mapBisInscriptionToCreateInscriptionData(inscription)),
+        blockHeight: inscription.last_transfer_block_height ?? inscription.genesis_height,
+      }));
     } catch {
       return [];
-    }
-  }
-
-  private async createInscriptionWithBlockHeight(
-    inscription: BisInscription,
-    signal?: AbortSignal
-  ): Promise<{ asset: InscriptionAsset; blockHeight: number }> {
-    const inlineHtml = await this.fetchInlineHtmlIfNeeded(inscription, signal);
-    const asset = createInscriptionAsset({
-      ...mapBisInscriptionToCreateInscriptionData(inscription),
-      inlineHtml,
-    });
-    return {
-      asset,
-      blockHeight: inscription.last_transfer_block_height ?? inscription.genesis_height,
-    };
-  }
-
-  private async fetchInlineHtmlIfNeeded(inscription: BisInscription, signal?: AbortSignal) {
-    const mimeType = inscription.delegate?.mime_type ?? inscription.mime_type;
-    if (!mimeType?.startsWith('text/html')) return;
-    const src = inscription.delegate?.content_url ?? inscription.content_url;
-    if (!src) return;
-    try {
-      const response = await fetch(src, { signal });
-      if (!response.ok) return;
-      const html = await response.text();
-      return html;
-    } catch {
-      return;
     }
   }
 
