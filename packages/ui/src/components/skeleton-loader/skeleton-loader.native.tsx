@@ -1,8 +1,7 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
   Easing,
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -13,7 +12,7 @@ import Animated, {
 import { useTheme } from '@shopify/restyle';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { Box } from '../box/box.native';
+import { Box, type BoxProps } from '../box/box.native';
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
@@ -22,35 +21,43 @@ const animationEasing = Easing.ease;
 const leftPosStart = -100;
 const leftPosEnd = 100;
 
-function SkeletonLoaderAnimation(props: React.ComponentProps<typeof Box>) {
+interface SkeletonLoaderAnimationProps extends BoxProps {
+  animationDelay?: number;
+  animationDuration?: number;
+  reverse?: boolean;
+}
+function SkeletonLoaderAnimation({
+  animationDelay = 0,
+  animationDuration = ANIMATION_DURATION,
+  reverse = false,
+  ...props
+}: SkeletonLoaderAnimationProps) {
   const theme = useTheme();
-  const animatedLeft = useSharedValue(leftPosStart);
+
+  // Use animationDelay to create a unique duration for each loader
+  const uniqueDuration = animationDuration + (animationDelay % 500);
+
+  // Flip start/end positions if reversed
+  const startPos = reverse ? leftPosEnd : leftPosStart;
+  const endPos = reverse ? leftPosStart : leftPosEnd;
+
+  const animatedLeft = useSharedValue(startPos);
 
   const color = theme.colors['ink.text-non-interactive'];
 
   useLayoutEffect(() => {
-    const animationProgress = Date.now() % ANIMATION_DURATION;
-    const initialLeftPos = interpolate(
-      animationProgress,
-      [0, ANIMATION_DURATION],
-      [leftPosStart, leftPosEnd]
+    animatedLeft.value = withRepeat(
+      withSequence(
+        withTiming(endPos, {
+          duration: uniqueDuration,
+          easing: animationEasing,
+        }),
+        withTiming(startPos, { duration: 0 })
+      ),
+      -1,
+      false
     );
-
-    // start animation from the interpolated position (synced with other loaders) and then repeat
-    animatedLeft.value = withSequence(
-      withTiming(initialLeftPos, { duration: 0 }),
-      withTiming(leftPosEnd, {
-        duration: ANIMATION_DURATION - animationProgress,
-        easing: animationEasing,
-      }),
-      withTiming(leftPosStart, { duration: 0 }),
-      withRepeat(
-        withTiming(leftPosEnd, { duration: ANIMATION_DURATION, easing: animationEasing }),
-        -1
-      )
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [uniqueDuration, animatedLeft, startPos, endPos]);
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -59,9 +66,13 @@ function SkeletonLoaderAnimation(props: React.ComponentProps<typeof Box>) {
     };
   });
 
+  const gradientColors: readonly [string, string, string] = reverse
+    ? [color, 'rgba(255, 255, 255, 0.75)', color]
+    : [color, 'rgba(255, 255, 255, 0.75)', color];
+
   return (
     <Box
-      flex={1}
+      width="100%"
       backgroundColor="ink.text-non-interactive"
       borderRadius="xs"
       overflow="hidden"
@@ -69,23 +80,39 @@ function SkeletonLoaderAnimation(props: React.ComponentProps<typeof Box>) {
       {...props}
     >
       <AnimatedLinearGradient
-        colors={[color, 'rgba(255, 255, 255, 0.75)', color]}
-        start={{ x: 0.1, y: 1 }}
-        end={{ x: 0.9, y: 1 }}
+        colors={gradientColors}
+        start={{ x: reverse ? 0.9 : 0.1, y: 1 }}
+        end={{ x: reverse ? 0.1 : 0.9, y: 1 }}
         style={[styles.gradientAnimation, animatedStyles]}
       />
     </Box>
   );
 }
-
-interface SkeletonLoaderProps extends React.ComponentProps<typeof Box> {
+interface SkeletonLoaderProps extends BoxProps {
   isLoading: boolean;
+  animationDelay?: number;
+  animationDuration?: number;
   children?: React.ReactNode;
+  reverse?: boolean;
 }
 
-export function SkeletonLoader({ children, isLoading, ...rest }: SkeletonLoaderProps) {
+export function SkeletonLoader({
+  children,
+  isLoading,
+  animationDelay,
+  animationDuration,
+  reverse,
+  ...rest
+}: SkeletonLoaderProps) {
   if (isLoading) {
-    return <SkeletonLoaderAnimation {...rest} />;
+    return (
+      <SkeletonLoaderAnimation
+        animationDelay={animationDelay}
+        animationDuration={animationDuration}
+        reverse={reverse}
+        {...rest}
+      />
+    );
   }
 
   return children ?? null;

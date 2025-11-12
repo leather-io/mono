@@ -4,8 +4,8 @@ import { useWindowDimensions } from 'react-native';
 import { ErrorFallbackTab } from '@/components/error/error';
 import { Screen } from '@/components/screen/screen';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
 import { CollectiblesListLoading } from '@/features/token/components/collectibles-list-loading';
+import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
 import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 
@@ -65,7 +65,7 @@ export function CollectiblesList({ currentAccount, header, onPressToken }: Colle
   const height = useCollectibleListItemHeight();
 
   const isSuccess = collectiblesState === 'success';
-  const isLoading = true;
+  const isLoading = collectiblesState === 'loading';
   const isError = collectiblesState === 'error';
 
   return (
