@@ -125,11 +125,7 @@ export function Token({
               priceChange={
                 <Box flexDirection="row" alignItems="baseline" gap="1">
                   <SkeletonLoader height={23} maxWidth={120} isLoading={isLoading}>
-                    <PriceChange
-                      price={price}
-                      changePercent={changePercent}
-                      isLoading={isLoading}
-                    />
+                    <PriceChange price={price} changePercent={changePercent} />
                   </SkeletonLoader>
                 </Box>
               }

@@ -18,14 +18,8 @@ function getPriceChangeColor(changePercent: number) {
 interface PriceChange {
   price?: Money;
   changePercent?: number;
-  isLoading: boolean;
-  loader?: React.ReactNode;
 }
-export function PriceChange({ price, changePercent, isLoading, loader }: PriceChange) {
-  if (isLoading) {
-    return loader ? loader : <SkeletonLoader height={16} width={100} isLoading />;
-  }
-
+export function PriceChange({ price, changePercent }: PriceChange) {
   if (!price || !changePercent) {
     return (
       <Text variant="label02" color="ink.text-primary">
@@ -41,7 +35,7 @@ export function PriceChange({ price, changePercent, isLoading, loader }: PriceCh
 
   return (
     <>
-      {!isLoading && changePercent !== 0 && (
+      {changePercent !== 0 && (
         <ArrowTriangleTopIcon
           color={color}
           width={8}
@@ -52,12 +46,12 @@ export function PriceChange({ price, changePercent, isLoading, loader }: PriceCh
           }}
         />
       )}
-      {!isLoading && (
+      {
         <Text variant="label02" color={color}>
           {`${changePercent.toFixed(2)}% `}
         </Text>
-      )}
-      <SkeletonLoader height={16} width={100} isLoading={isLoading}>
+      }
+      <SkeletonLoader height={16} width={100} isLoading>
         <Balance
           formattingOptions={{ numberFormatOptions: { signDisplay: 'never' } }}
           forceVisible

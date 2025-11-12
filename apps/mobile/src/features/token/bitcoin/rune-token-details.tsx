@@ -19,7 +19,6 @@ export function RuneTokenDetails({ assetId, account }: RuneTokenDetailsProps) {
   const balance = useRuneBalanceByRuneName(fingerprint, accountIndex, id);
 
   if (balance.state === 'loading') {
-    // show full loading screen before <Token handles it more gracefully
     return <TokenLoading />;
   }
 

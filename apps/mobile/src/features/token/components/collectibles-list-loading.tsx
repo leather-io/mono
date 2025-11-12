@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { Box, SkeletonLoader } from '@leather.io/ui/native';
 
 interface CollectiblesListLoadingProps {
@@ -16,7 +14,7 @@ export function CollectiblesListLoading({ count, height }: CollectiblesListLoadi
             reverse={index % 2 === 0}
             isLoading={true}
             animationDelay={index * 1000}
-            key={`loading-${index}`}
+            animationDuration={(index + 1) * 1000}
           />
         </Box>
       ))}
