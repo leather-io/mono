@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 
-import { selectRootKeychain } from './in-memory-key.selectors';
+import { selectActiveWalletRootKeychain } from './in-memory-key.selectors';
 
 export function useWalletFingerprint() {
-  const rootKeychain = useSelector(selectRootKeychain);
+  const rootKeychain = useSelector(selectActiveWalletRootKeychain);
   return rootKeychain?.fingerprint;
 }

@@ -10,25 +10,29 @@ import {
 } from '@stacks/transactions';
 import { deriveStxPrivateKey } from '@stacks/wallet-sdk';
 
+import type { AccountId } from '@leather.io/models';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { DATA_DERIVATION_PATH, deriveStacksSalt } from '@shared/crypto/stacks/stacks-address-gen';
-import { defaultWalletKeyId } from '@shared/utils';
 
+import { selectActiveAccount } from '@app/store/active/active.selectors';
 import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
-import { selectRootKeychain } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { selectActiveWalletRootKeychain } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { selectDefaultWalletStacksKeys } from '@app/store/ledger/stacks/stacks-key.slice';
 import { getStacksNetworkFromChainId } from '@app/store/networks/networks.hooks';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import type { HardwareStacksAccount, SoftwareStacksAccount } from './stacks-account.models';
 
-function initalizeStacksAccount(rootKeychain: HDKey, index: number) {
-  const stxPrivateKey = deriveStxPrivateKey({ rootNode: rootKeychain, index } as any);
+function initalizeStacksAccount(rootKeychain: HDKey, accountId: AccountId) {
+  const stxPrivateKey = deriveStxPrivateKey({
+    rootNode: rootKeychain,
+    index: accountId.accountIndex,
+  } as any);
   const pubKey = privateKeyToPublic(stxPrivateKey) as string;
 
   const identitiesKeychain = rootKeychain.derive(DATA_DERIVATION_PATH);
-  const identityKeychain = identitiesKeychain.deriveChild(index + HARDENED_OFFSET);
+  const identityKeychain = identitiesKeychain.deriveChild(accountId.accountIndex + HARDENED_OFFSET);
   if (!identityKeychain.privateKey) throw new Error('Must have private key to derive identities');
   const dataPrivateKey = bytesToHex(identityKeychain.privateKey);
 
@@ -37,7 +41,7 @@ function initalizeStacksAccount(rootKeychain: HDKey, index: number) {
   const salt = deriveStacksSalt(identitiesKeychain);
 
   return {
-    index,
+    ...accountId,
     appsKey,
     dataPrivateKey,
     stxPrivateKey,
@@ -48,15 +52,27 @@ function initalizeStacksAccount(rootKeychain: HDKey, index: number) {
   };
 }
 
+export function getCurrentWalletKeyFromChain(chainState: Record<string, any>): string {
+  const keys = Object.keys(chainState);
+  if (keys.length === 1) return keys[0];
+  return 'default';
+}
+
 const selectStacksWalletState = createSelector(
-  selectRootKeychain,
+  selectActiveWalletRootKeychain,
+  selectActiveAccount,
   selectStacksChain,
-  (keychain, chain) => {
+  (keychain, account, chain) => {
     if (!keychain) return;
-    const { highestAccountIndex, currentAccountIndex } = chain[defaultWalletKeyId];
-    const numberOfAccountsToDerive = Math.max(highestAccountIndex, currentAccountIndex) + 1;
+    const chainState = chain[account?.fingerprint ?? 'default'];
+    if (!chainState) return;
+    const { highestAccountIndex } = chainState;
+    const numberOfAccountsToDerive = highestAccountIndex + 1;
     return createNullArrayOfLength(numberOfAccountsToDerive).map((_, index) =>
-      initalizeStacksAccount(keychain, index)
+      initalizeStacksAccount(keychain, {
+        fingerprint: account?.fingerprint ?? 'default',
+        accountIndex: index,
+      })
     );
   }
 );
@@ -109,7 +125,6 @@ export const selectStacksAccountState = createSelector(
     if (ledgerAccounts?.length) {
       return ledgerAccounts;
     }
-
     return softwareAccounts ?? [];
   }
 );

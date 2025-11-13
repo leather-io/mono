@@ -152,7 +152,7 @@ export function useLedgerNavigate() {
       },
 
       cancelLedgerAction() {
-        const fromLocation = location.state.fromLocation ?? undefined;
+        const fromLocation = location.state?.fromLocation ?? undefined;
 
         if (fromLocation) {
           return navigate(fromLocation, { state: { ...fromLocation.state, wentBack: true } });

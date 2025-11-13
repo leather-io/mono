@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useSelector } from 'react-redux';
 
 import { useFormikContext } from 'formik';
 
@@ -11,6 +12,7 @@ import { AccountListItemLayout } from '@app/components/account/account-list-item
 import { AccountNameLayout } from '@app/components/account/account-name';
 import { useNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
+import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface AccountListItemProps {
@@ -26,6 +28,7 @@ export const AccountListItem = memo(function AccountListItem({
   const { setFieldValue, values } = useFormikContext<
     BitcoinSendFormValues | StacksSendFormValues
   >();
+  const currentAccount = useSelector(selectCurrentAccount);
   const stacksAddress = stacksAccount?.address || '';
   const { data: name = '' } = useAccountDisplayName({ address: stacksAddress, index });
   const bitcoinSigner = useNativeSegwitSigner(index);
@@ -39,11 +42,12 @@ export const AccountListItem = memo(function AccountListItem({
 
   return (
     <AccountListItemLayout
+      fingerprint={currentAccount.fingerprint}
+      accountIndex={index}
       accountAddresses={<AccountAddresses index={index} />}
       accountName={<AccountNameLayout>{name}</AccountNameLayout>}
       avatar={<AccountAvatarItem index={index} publicKey={stacksAccount?.stxPublicKey || ''} />}
       balanceLabel={<AccountTotalBalance accountIndex={index} />}
-      index={index}
       isSelected={false}
       isLoading={false}
       onSelectAccount={onSelectAccount}

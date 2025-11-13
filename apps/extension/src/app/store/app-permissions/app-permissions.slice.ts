@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import type { AppPermission } from '@shared/permissions/permission.helpers';
 import { getHostnameFromUrl } from '@shared/utils/urls';
 
-import { useCurrentAccountIndex } from '../accounts/account';
 import { useCurrentNetwork } from '../networks/networks.selectors';
+import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 
 const appPermissionsAdapter = createEntityAdapter<AppPermission, string>({
   selectId: permission => permission.origin,
@@ -23,7 +23,7 @@ export const appPermissionsSlice = createSlice({
 
 export function useAppPermissions() {
   const dispatch = useDispatch();
-  const currentAccountIndex = useCurrentAccountIndex();
+  const currentAccount = useSelector(selectCurrentAccount);
   const currentNetwork = useCurrentNetwork();
 
   return useMemo(
@@ -34,12 +34,13 @@ export function useAppPermissions() {
           appPermissionsSlice.actions.updatePermission({
             origin: url,
             requestedAccounts: new Date().toISOString(),
-            accountIndex: currentAccountIndex,
+            fingerprint: currentAccount.fingerprint,
+            accountIndex: currentAccount.accountIndex,
             networkMode: currentNetwork.chain.bitcoin.mode,
           })
         );
       },
     }),
-    [currentAccountIndex, currentNetwork.chain.bitcoin.mode, dispatch]
+    [currentAccount.fingerprint, currentAccount.accountIndex, currentNetwork.chain.bitcoin.mode, dispatch]
   );
 }

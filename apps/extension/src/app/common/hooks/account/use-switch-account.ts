@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 
+import type { AccountId } from '@leather.io/models';
+
 import {
   useCurrentStacksAccount,
   useStacksAccounts,
@@ -10,8 +12,6 @@ import { useHasSwitchedAccounts } from '@app/store/ui/ui.hooks';
 import { trackSwitchAccount } from '../../analytics/track-switch-account';
 import { useKeyActions } from '../use-key-actions';
 
-const TIMEOUT = 350;
-
 export function useSwitchAccount(callback?: () => void) {
   const { switchAccount } = useKeyActions();
   const currentAccount = useCurrentStacksAccount();
@@ -20,12 +20,12 @@ export function useSwitchAccount(callback?: () => void) {
   const { hasSwitched, setHasSwitched } = useHasSwitchedAccounts();
 
   const handleSwitchAccount = useCallback(
-    async (index: number) => {
+    (accountId: AccountId) => {
       setHasSwitched(true);
-      await switchAccount(index);
-      if (callback) setTimeout(() => callback(), TIMEOUT);
+      switchAccount(accountId);
+      if (callback) callback();
       if (!accounts) return;
-      trackSwitchAccount(accounts[index]?.address, index);
+      trackSwitchAccount(accounts[accountId.accountIndex]?.address, accountId.accountIndex);
     },
     [setHasSwitched, switchAccount, callback, accounts]
   );

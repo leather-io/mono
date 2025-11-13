@@ -4,31 +4,29 @@ import { defaultWalletKeyId } from '@shared/utils';
 
 import { migrateVaultReducerStoreToNewStateStructure } from '../utils/vault-reducer-migration';
 
-interface KeyConfig {
+interface SoftwareKeyConfig {
   type: 'software';
-  id: 'default';
+  id: string;
   encryptedSecretKey: string;
-  salt: string;
 }
-const keyAdapter = createEntityAdapter<KeyConfig>();
+export const keyAdapter = createEntityAdapter<SoftwareKeyConfig>();
 
-export const initialKeysState = keyAdapter.getInitialState();
+export const initialKeysState = keyAdapter.getInitialState<{ salt?: string }>({});
 
 export const keySlice = createSlice({
   name: 'softwareKeys',
   initialState: migrateVaultReducerStoreToNewStateStructure(initialKeysState),
   reducers: {
-    createSoftwareWalletComplete(state, action: PayloadAction<KeyConfig>) {
-      keyAdapter.upsertOne(state as any, action.payload);
+    createSoftwareWalletComplete(state, action: PayloadAction<SoftwareKeyConfig>) {
+      keyAdapter.upsertOne(state, action.payload);
+    },
+
+    addNewWallet(state, action: PayloadAction<SoftwareKeyConfig>) {
+      keyAdapter.addOne(state, action.payload);
     },
 
     signOut(state) {
       keyAdapter.removeOne(state as any, defaultWalletKeyId);
-    },
-
-    debugKillStacks() {
-      // if (state.entities.default?.type !== 'ledger') return;
-      // state.entities.default.publicKeys = [];
     },
   },
 });

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
-import { generateSecretKey } from '@stacks/wallet-sdk';
+import { generateMnemonic } from '@leather.io/crypto';
+import type { AccountId } from '@leather.io/models';
 
 import { logger } from '@shared/logger';
 import { InternalMethods } from '@shared/message-types';
@@ -13,7 +14,8 @@ import { partiallyClearLocalStorage } from '@app/common/store-utils';
 import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { useBnsV2Client } from '@app/query/stacks/bns/bns-v2-client';
 import { useAppDispatch } from '@app/store';
-import { createNewAccount, switchAccount } from '@app/store/chains/stx-chain.actions';
+import { userSwitchesAccount } from '@app/store/active/active.slice';
+import { createNewAccount } from '@app/store/chains/stx-chain.actions';
 import { useStacksClient } from '@app/store/common/api-clients.hooks';
 import { inMemoryKeyActions } from '@app/store/in-memory-key/in-memory-key.actions';
 import { bitcoinKeysSlice } from '@app/store/ledger/bitcoin/bitcoin-key.slice';
@@ -44,7 +46,7 @@ export function useKeyActions() {
           logger.warn('Cannot generate new wallet when wallet already exists');
           return;
         }
-        const secretKey = generateSecretKey(256);
+        const secretKey = generateMnemonic();
         return dispatch(inMemoryKeyActions.generateWalletKey(secretKey));
       },
 
@@ -52,9 +54,12 @@ export function useKeyActions() {
         return dispatch(keyActions.unlockWalletAction(password));
       },
 
-      switchAccount(accountIndex: number) {
-        void sendMessage({ method: InternalMethods.AccountChanged, payload: { accountIndex } });
-        return dispatch(switchAccount(accountIndex));
+      switchAccount(accountId: AccountId) {
+        void sendMessage({
+          method: InternalMethods.AccountChanged,
+          payload: accountId,
+        });
+        return dispatch(userSwitchesAccount(accountId));
       },
 
       createNewAccount() {
