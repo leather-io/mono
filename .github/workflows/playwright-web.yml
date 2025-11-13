@@ -7,6 +7,9 @@ on:
       - '!packages/ui/**/*.native.ts'
       - '!packages/ui/**/*.native.tsx'
 
+env:
+  LEATHER_LAUNCH_DARKLY_KEY: ${{ secrets.WEB_LAUNCH_DARKLY_KEY }}
+
 jobs:
   test:
     timeout-minutes: 60

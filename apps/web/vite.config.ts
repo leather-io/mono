@@ -18,6 +18,9 @@ const sentryConfig: SentryReactRouterBuildOptions = {
 
 export default defineConfig(({ command, mode, isSsrBuild }) => ({
   envPrefix: 'LEATHER_',
+  build: {
+    target: 'es2022',
+  },
   optimizeDeps: {
     exclude: ['axios'],
   },

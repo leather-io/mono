@@ -24,8 +24,11 @@ import localConfig from '../../config/wallet-config.json';
 
 import './index.css';
 
+import { createLDProvider } from './features/feature-flags';
 import { LeatherQueryProvider } from './query/leather-query-provider';
 import { useCurrentNetwork } from './store/networks/networks.selectors';
+
+const LDProvider = await createLDProvider();
 
 const reactQueryDevToolsEnabled = process.env.REACT_QUERY_DEVTOOLS_ENABLED === 'true';
 
@@ -47,10 +50,12 @@ function ConnectedApp() {
           },
         }}
       >
-        <Suspense fallback={<FullPageLoadingSpinner />}>
-          <AppRoutes />
-          {reactQueryDevToolsEnabled && <Devtools />}
-        </Suspense>
+        <LDProvider>
+          <Suspense fallback={<FullPageLoadingSpinner />}>
+            <AppRoutes />
+            {reactQueryDevToolsEnabled && <Devtools />}
+          </Suspense>
+        </LDProvider>
       </LeatherQueryProvider>
     </QueryClientProvider>
   );
