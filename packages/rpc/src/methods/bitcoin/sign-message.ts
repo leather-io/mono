@@ -14,6 +14,7 @@ export const signMessageRequestParamsSchema = z.looseObject({
   account: z.number().optional(),
   message: z.string(),
   paymentType: supportedPaymentTypesSchema,
+  network: z.string().optional(),
 });
 
 export const signMessage = defineRpcEndpoint({

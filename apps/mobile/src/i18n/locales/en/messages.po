@@ -736,8 +736,8 @@ msgstr "Export xPub"
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:222
-#: src/features/psbt-signer/psbt-signer.tsx:230
+#: src/features/psbt-signer/psbt-signer.tsx:225
+#: src/features/psbt-signer/psbt-signer.tsx:233
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:94
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
@@ -767,7 +767,7 @@ msgid "FastPool"
 msgstr "FastPool"
 
 #: src/features/approver/stx/hooks.ts:27
-#: src/features/psbt-signer/psbt-signer.tsx:189
+#: src/features/psbt-signer/psbt-signer.tsx:192
 msgid "Fee updated"
 msgstr "Fee updated"
 
@@ -860,7 +860,7 @@ msgid "Hide account"
 msgstr "Hide account"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:158
-#: src/features/psbt-signer/psbt-signer.tsx:272
+#: src/features/psbt-signer/psbt-signer.tsx:275
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -1155,6 +1155,10 @@ msgstr "Nonce"
 msgid "Nonce updated"
 msgstr "Nonce updated"
 
+#: src/features/approver/components/utxo-row.tsx:25
+msgid "none"
+msgstr "none"
+
 #: src/features/send/error-messages.ts:10
 msgid "Not a number"
 msgstr "Not a number"
@@ -1414,7 +1418,7 @@ msgstr "Send"
 msgid "Send Failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:241
+#: src/features/psbt-signer/psbt-signer.tsx:244
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:134
 msgid "Send token"
 msgstr "Send token"
@@ -1450,7 +1454,7 @@ msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:157
-#: src/features/psbt-signer/psbt-signer.tsx:271
+#: src/features/psbt-signer/psbt-signer.tsx:274
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -1659,7 +1663,7 @@ msgstr "tiny amounts that cost more to send than they’re worth."
 
 #: src/features/approver/components/sip10-recipient.tsx:43
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:132
-#: src/features/psbt-signer/psbt-signer.tsx:252
+#: src/features/psbt-signer/psbt-signer.tsx:255
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:145
 msgid "To address"
 msgstr "To address"
@@ -1693,7 +1697,7 @@ msgstr "Too many decimals (max {maxDecimals})"
 msgid "Total balance"
 msgstr "Total balance"
 
-#: src/features/psbt-signer/psbt-signer.tsx:284
+#: src/features/psbt-signer/psbt-signer.tsx:287
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:168
 msgid "Total spend"
 msgstr "Total spend"
@@ -1877,7 +1881,7 @@ msgid "You will transfer more than"
 msgstr "You will transfer more than"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:123
-#: src/features/psbt-signer/psbt-signer.tsx:246
+#: src/features/psbt-signer/psbt-signer.tsx:249
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:139
 msgid "You’ll send"
 msgstr "You’ll send"

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
-import { useCurrentNetworkState } from '@/queries/leather-query-provider';
+import { useGetBtcNetworkFromRequestParams } from '@/shared/utils';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
@@ -45,7 +45,9 @@ export function SignMessageApprover(props: SignMessageApproverProps) {
   const defaultAccountId = getDefaultAccountId();
 
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(defaultAccountId);
-  const network = useCurrentNetworkState();
+
+  const network = useGetBtcNetworkFromRequestParams(props.request.params.network);
+
   const { accountIndexByPaymentType } = useBitcoinAccounts();
   const { sendResult } = props;
 

@@ -7,10 +7,14 @@ import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { getAddressFromOutScript } from '../utils/bitcoin.utils';
 
 export interface PsbtOutput {
-  address: BitcoinAddress;
+  address: BitcoinAddress | null;
   isMutable: boolean;
   toSign: boolean;
   value: number;
+}
+
+export interface PsbtOutputWithAddress extends PsbtOutput {
+  address: BitcoinAddress;
 }
 
 interface GetParsedOutputsArgs {
@@ -36,11 +40,8 @@ export function getParsedOutputs({
         return;
       }
       const outputAddress = getAddressFromOutScript(output.script, bitcoinNetwork);
-      if (outputAddress === null) {
-        throw new Error('PSBT output has unsupported bitcoin address');
-      }
 
-      const isCurrentAddress = psbtAddresses.includes(outputAddress);
+      const isCurrentAddress = !!outputAddress && psbtAddresses.includes(outputAddress);
 
       return {
         address: outputAddress,
