@@ -1,72 +1,93 @@
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import { isNonNullish } from 'remeda';
 
 import { stxAsset } from '@leather.io/constants';
-import { FungibleCryptoAsset, Money } from '@leather.io/models';
+import {
+  type AccountAddresses,
+  type BitflowAmmLpPool,
+  type BitflowAmmLpPosition,
+  FungibleCryptoAsset,
+  Money,
+  type YieldProduct,
+  YieldProductCategories,
+  type YieldProductCategory,
+  type YieldProductKey,
+  YieldProductKeys,
+  type YieldProvider,
+  type YieldProviderKey,
+  YieldProviderKeys,
+} from '@leather.io/models';
 import { getPrincipalFromAssetString } from '@leather.io/stacks';
 import { baseCurrencyAmountInQuote, createMoney, initBigNumber, sumMoney } from '@leather.io/utils';
 
-import { FungibleAssetService } from '../../assets/fungible-asset.service';
-import { HiroStacksApiClient } from '../../infrastructure/api/hiro/hiro-stacks-api.client';
-import {
+import type { FungibleAssetService } from '../../../assets/fungible-asset.service';
+import type { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
+import type {
   LeatherApiBitflowPool,
   LeatherApiClient,
-} from '../../infrastructure/api/leather/leather-api.client';
-import type { SettingsService } from '../../infrastructure/settings/settings.service';
-import { Types } from '../../inversify.types';
-import { MarketDataService } from '../../market/market-data.service';
+} from '../../../infrastructure/api/leather/leather-api.client';
+import type { MarketDataService } from '../../../market/market-data.service';
+import type { YieldProductService } from '../../yield-product.interface';
 import { calculatePoolUnderlyingTokenBalance } from './bitflow.utils';
 
 export interface BitflowPosition {
   totalValue: Money;
-  pools: BitflowLpPosition[];
-}
-
-export interface BitflowLpPosition {
-  apy: number;
-  poolSharePercentage: number;
-  lpToken: {
-    asset: FungibleCryptoAsset;
-    balance: Money;
-    balanceQuote: Money;
-  };
-  tokenX: {
-    asset: FungibleCryptoAsset;
-    balance: Money;
-    balanceQuote: Money;
-  };
-  tokenY: {
-    asset: FungibleCryptoAsset;
-    balance: Money;
-    balanceQuote: Money;
-  };
 }
 
 @injectable()
-export class BitflowService {
+export class BitflowAmmLpService implements YieldProductService {
+  providerKey: YieldProviderKey = YieldProviderKeys.bitflow;
+  productKey: YieldProductKey = YieldProductKeys.bitflowAmmLp;
+  productCategory: YieldProductCategory = YieldProductCategories.AMM;
+
   constructor(
-    @inject(Types.SettingsService) private readonly settingsService: SettingsService,
     private readonly leatherApiClient: LeatherApiClient,
     private readonly fungibleAssetService: FungibleAssetService,
     private readonly hiroStacksApiClient: HiroStacksApiClient,
     private readonly marketDataService: MarketDataService
   ) {}
 
-  public async getProtocolPosition(address: string, signal: AbortSignal): Promise<BitflowPosition> {
-    const pools = await this.getBitflowLpPositions(address, signal);
-    return {
-      totalValue:
-        pools.length > 0
-          ? sumMoney(pools.map(p => p.lpToken.balanceQuote))
-          : createMoney(0, this.settingsService.getSettings().quoteCurrency),
-      pools,
-    };
+  getProvider(): Promise<YieldProvider> {
+    return Promise.resolve({
+      key: this.providerKey,
+      name: 'Bitflow',
+      logo: '',
+      url: '',
+    });
   }
 
-  private async getBitflowLpPositions(
+  getProduct(): Promise<YieldProduct> {
+    return Promise.resolve({
+      key: this.productKey,
+      provider: this.providerKey,
+      category: this.productCategory,
+      name: 'Bitflow AMM Liquidity Pools',
+      url: '',
+    });
+  }
+  async getAccountPosition(
+    account: AccountAddresses,
+    signal?: AbortSignal
+  ): Promise<BitflowAmmLpPosition | null> {
+    const pools = account.stacks
+      ? await this.getBitflowAmmLpPools(account.stacks?.stxAddress, signal)
+      : [];
+    return pools.length > 0
+      ? {
+          provider: YieldProviderKeys.bitflow,
+          product: YieldProductKeys.bitflowAmmLp,
+          totalBalance: sumMoney(pools.map(p => p.lpToken.balanceQuote)),
+          pools,
+          updatedAtBlockHeight: 0,
+          updatedAt: new Date(),
+        }
+      : null;
+  }
+
+  private async getBitflowAmmLpPools(
     address: string,
-    signal: AbortSignal
-  ): Promise<BitflowLpPosition[]> {
+    signal?: AbortSignal
+  ): Promise<BitflowAmmLpPool[]> {
     const [ftTokensBalances, poolMap] = await Promise.all([
       this.hiroStacksApiClient.getAddressFtBalances(address, { signal }),
       this.leatherApiClient.fetchBitflowPoolMap({ signal }),
@@ -76,7 +97,7 @@ export class BitflowService {
       const principal = getPrincipalFromAssetString(ftBalance.token);
       if (poolMap[principal]) {
         calls.push(
-          this.getBitflowLpPosition(Number(ftBalance.balance ?? 0), poolMap[principal], signal)
+          this.getBitflowAmmLpPool(Number(ftBalance.balance ?? 0), poolMap[principal], signal)
         );
       }
     }
@@ -85,18 +106,18 @@ export class BitflowService {
 
   private async getBitflowPoolAsset(
     principal: string,
-    signal: AbortSignal
+    signal?: AbortSignal
   ): Promise<FungibleCryptoAsset> {
     return principal === stxAsset.symbol
       ? stxAsset
       : await this.fungibleAssetService.getAsset({ protocol: 'sip10', id: principal }, signal);
   }
 
-  private async getBitflowLpPosition(
+  private async getBitflowAmmLpPool(
     lpTokenBalance: number,
     pool: LeatherApiBitflowPool,
-    signal: AbortSignal
-  ): Promise<BitflowLpPosition | null> {
+    signal?: AbortSignal
+  ): Promise<BitflowAmmLpPool | null> {
     try {
       const [tokenXAsset, tokenYAsset, lpTokenAsset] = await Promise.all([
         this.getBitflowPoolAsset(pool.tokenXPrincipal, signal),

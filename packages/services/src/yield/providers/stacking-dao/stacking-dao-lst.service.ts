@@ -3,54 +3,36 @@ import { inject, injectable } from 'inversify';
 import { isNonNullish } from 'remeda';
 
 import { stxAsset } from '@leather.io/constants';
-import { FungibleCryptoAsset, Money } from '@leather.io/models';
+import {
+  type AccountAddresses,
+  type StackingDaoLstHolding,
+  type StackingDaoLstPosition,
+  type StackingDaoLstWithdrawal,
+  type StackingDaoReward,
+  type YieldProduct,
+  YieldProductCategories,
+  type YieldProductCategory,
+  type YieldProductKey,
+  YieldProductKeys,
+  type YieldProvider,
+  type YieldProviderKey,
+  YieldProviderKeys,
+} from '@leather.io/models';
 import { parseClarityUintResponse } from '@leather.io/stacks';
 import { baseCurrencyAmountInQuote, createMoney, sumMoney } from '@leather.io/utils';
 
-import { FungibleAssetService } from '../../assets/fungible-asset.service';
-import { HiroStacksApiClient } from '../../infrastructure/api/hiro/hiro-stacks-api.client';
-import {
+import type { FungibleAssetService } from '../../../assets/fungible-asset.service';
+import type { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
+import type {
   HiroAddressFtBalancesResponse,
   HiroNftHolding,
-} from '../../infrastructure/api/hiro/hiro-stacks-api.types';
-import { LeatherApiClient } from '../../infrastructure/api/leather/leather-api.client';
-import type { SettingsService } from '../../infrastructure/settings/settings.service';
-import { Types } from '../../inversify.types';
-import { MarketDataService } from '../../market/market-data.service';
+} from '../../../infrastructure/api/hiro/hiro-stacks-api.types';
+import type { LeatherApiClient } from '../../../infrastructure/api/leather/leather-api.client';
+import type { SettingsService } from '../../../infrastructure/settings/settings.service';
+import { Types } from '../../../inversify.types';
+import type { MarketDataService } from '../../../market/market-data.service';
+import type { YieldProductService } from '../../yield-product.interface';
 import { parseStackingDaoGetWithdrawalResponseCV } from './stacking-dao.utils';
-
-export interface StackingDaoPosition {
-  totalValue: Money;
-  withdrawalsValue: Money;
-  ststxPosition?: StackingDaoLstPosition;
-  ststxbtcPosition?: StackingDaoLstPosition;
-  sbtcReward?: StackingDaoReward;
-  withdrawals: StackingDaoLstWithdrawal[];
-}
-
-export interface StackingDaoLstPosition {
-  asset: FungibleCryptoAsset;
-  balance: Money;
-  balanceStx: Money;
-  balanceQuote: Money;
-  stxConversionRate: number;
-  apy: number;
-}
-
-export interface StackingDaoReward {
-  asset: FungibleCryptoAsset;
-  balance: Money;
-  balanceQuote: Money;
-}
-
-export interface StackingDaoLstWithdrawal {
-  asset: FungibleCryptoAsset;
-  balance: Money;
-  balanceStx: Money;
-  balanceQuote: Money;
-  burnBlocksUntilUnlock: number;
-  unlockBurnHeight: number;
-}
 
 const stackingDaoProductionAddress = 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG';
 const sbtcAssetIdentifier = 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token';
@@ -65,7 +47,11 @@ const withdrawalNftIdentifiers = {
 };
 
 @injectable()
-export class StackingDaoService {
+export class StackingDaoLstService implements YieldProductService {
+  providerKey: YieldProviderKey = YieldProviderKeys.stackingDao;
+  productKey: YieldProductKey = YieldProductKeys.stackingDaoLst;
+  productCategory: YieldProductCategory = YieldProductCategories.LST;
+
   constructor(
     private readonly leatherApiClient: LeatherApiClient,
     private readonly hiroStacksApiClient: HiroStacksApiClient,
@@ -74,45 +60,72 @@ export class StackingDaoService {
     @inject(Types.SettingsService) private readonly settingsService: SettingsService
   ) {}
 
-  public async getLiquidStackingPosition(
-    address: string,
+  getProvider(): Promise<YieldProvider> {
+    return Promise.resolve({
+      key: this.providerKey,
+      name: 'Stacking DAO',
+      logo: '',
+      url: '',
+    });
+  }
+
+  getProduct(): Promise<YieldProduct> {
+    return Promise.resolve({
+      key: this.productKey,
+      provider: this.providerKey,
+      category: this.productCategory,
+      name: 'Stacking DAO Liquid Stacking',
+      url: '',
+    });
+  }
+
+  async getAccountPosition(
+    account: AccountAddresses,
     signal?: AbortSignal
-  ): Promise<StackingDaoPosition> {
+  ): Promise<StackingDaoLstPosition | null> {
+    if (!account.stacks) {
+      return null;
+    }
+
     const [ftBalances, nftHoldings, sbtcReward] = await Promise.all([
-      this.hiroStacksApiClient.getAddressFtBalances(address, {
+      this.hiroStacksApiClient.getAddressFtBalances(account.stacks.stxAddress, {
         signal,
       }),
-      this.hiroStacksApiClient.getNftHoldings(address, {
+      this.hiroStacksApiClient.getNftHoldings(account.stacks.stxAddress, {
         signal,
       }),
-      this.getSbtcReward(address, signal),
+      this.getSbtcReward(account.stacks.stxAddress, signal),
     ]);
 
-    const [ststxPosition, ststxbtcPosition, ststxWithdrawals, ststxbtcWithdrawals] =
+    const [ststxHolding, ststxbtcHolding, ststxWithdrawals, ststxbtcWithdrawals] =
       await Promise.all([
-        this.getLstPosition('ststx', ftBalances, signal),
-        this.getLstPosition('ststxbtc', ftBalances, signal),
+        this.getLstHolding('ststx', ftBalances, signal),
+        this.getLstHolding('ststxbtc', ftBalances, signal),
         this.getLstWithdrawals('ststx', nftHoldings, signal),
         this.getLstWithdrawals('ststxbtc', nftHoldings, signal),
       ]);
 
     const withdrawals = [...ststxWithdrawals, ...ststxbtcWithdrawals];
-    const withdrawalsValue = withdrawals.length
+    const withdrawalsBalance = withdrawals.length
       ? sumMoney(withdrawals.map(withdrawal => withdrawal.balanceQuote))
       : createMoney(0, this.settingsService.getSettings().quoteCurrency);
 
     return {
-      totalValue: sumMoney([
+      provider: YieldProviderKeys.stackingDao,
+      product: YieldProductKeys.stackingDaoLst,
+      updatedAtBlockHeight: 0,
+      updatedAt: new Date(),
+      totalBalance: sumMoney([
         ...[
-          ststxPosition?.balanceQuote,
-          ststxbtcPosition?.balanceQuote,
+          ststxHolding?.balanceQuote,
+          ststxbtcHolding?.balanceQuote,
           sbtcReward?.balanceQuote,
         ].filter(isNonNullish),
-        withdrawalsValue,
+        withdrawalsBalance,
       ]),
-      withdrawalsValue,
-      ...(ststxPosition && { ststxPosition }),
-      ...(ststxbtcPosition && { ststxbtcPosition }),
+      withdrawalsBalance,
+      ...(ststxHolding && { ststx: ststxHolding }),
+      ...(ststxbtcHolding && { ststxbtc: ststxbtcHolding }),
       ...(sbtcReward && { sbtcReward }),
       withdrawals,
     };
@@ -146,11 +159,11 @@ export class StackingDaoService {
     };
   }
 
-  private async getLstPosition(
+  private async getLstHolding(
     lst: 'ststx' | 'ststxbtc',
     ftBalances: HiroAddressFtBalancesResponse,
     signal?: AbortSignal
-  ): Promise<StackingDaoLstPosition | undefined> {
+  ): Promise<StackingDaoLstHolding | undefined> {
     const ft = ftBalances.results.find(ft => ft.token === lstAssetIdentifier[lst]);
     if (!ft) return;
 

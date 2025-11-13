@@ -12,10 +12,6 @@ import { StxBalancesService } from './balances/stx-balances.service';
 import { BnsService } from './bns/bns.service';
 import { BitcoinCoinSelectionService } from './coin-selection/bitcoin-coin-selection.service';
 import { CollectiblesService } from './collectibles/collectibles.service';
-import { BitflowService } from './defi/bitflow/bitflow.service';
-import { GraniteV1Service } from './defi/granite/granite-v1.service';
-import { StackingDaoService } from './defi/stacking-dao/stacking-dao.service';
-import { ZestBorrowService } from './defi/zest/zest-borrow.service';
 import { BitcoinTransactionFeesService } from './fees/bitcoin-transaction-fees.service';
 import { StacksTransactionFeesService } from './fees/stacks-transaction-fees.service';
 import { BestInSlotApiClient } from './infrastructure/api/best-in-slot/best-in-slot-api.client';
@@ -33,6 +29,11 @@ import { SwapService } from './swap/swap.service';
 import { BitcoinTransactionsService } from './transactions/bitcoin-transactions.service';
 import { StacksTransactionsService } from './transactions/stacks-transactions.service';
 import { UtxosService } from './utxos/utxos.service';
+import { BitflowAmmLpService } from './yield/providers/bitflow/bitflow-amm-lp.service';
+import { GraniteV1Service } from './yield/providers/granite/granite-v1.service';
+import { StackingDaoLstService } from './yield/providers/stacking-dao/stacking-dao-lst.service';
+import { ZestBorrowService } from './yield/providers/zest/zest-borrow.service';
+import { YieldService } from './yield/yield.service';
 
 let servicesContainer: Container;
 
@@ -138,10 +139,13 @@ export function getGraniteV1Service() {
   return getServicesContainer().get(GraniteV1Service);
 }
 export function getBitflowService() {
-  return getServicesContainer().get(BitflowService);
+  return getServicesContainer().get(BitflowAmmLpService);
 }
-export function getStackingDaoService() {
-  return getServicesContainer().get(StackingDaoService);
+export function getStackingDaoLstService() {
+  return getServicesContainer().get(StackingDaoLstService);
+}
+export function getYieldService() {
+  return getServicesContainer().get(YieldService);
 }
 /* 
   API Layer Clients
