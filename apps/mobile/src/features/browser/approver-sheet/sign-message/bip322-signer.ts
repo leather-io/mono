@@ -1,5 +1,4 @@
 import { signTx } from '@/features/psbt-signer/signer';
-import { NetworkState } from '@/queries/leather-query-provider';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { destructAccountIdentifier } from '@/store/utils';
 import * as bitcoin from 'bitcoinjs-lib';
@@ -9,13 +8,14 @@ import {
   payerToTapBip32DerivationBitcoinJsLib,
   signBip322MessageSimple,
 } from '@leather.io/bitcoin';
+import { NetworkConfiguration } from '@leather.io/models';
 import { RpcRequest, RpcResult, signMessage } from '@leather.io/rpc';
 
 interface SignBip322MessageArgs {
   message: RpcRequest<typeof signMessage>;
   accountId: string;
   accountIndexByPaymentType: ReturnType<typeof useBitcoinAccounts>['accountIndexByPaymentType'];
-  network: NetworkState;
+  network: NetworkConfiguration;
 }
 
 export async function signBip322Message({

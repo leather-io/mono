@@ -16,7 +16,7 @@ export function AccountAddress({
 }: AccountAddressProps) {
   const displayAddress = useAccountDisplayAddress({ fingerprint, accountIndex, displayPreference });
   return (
-    <Text variant="label03" color="ink.text-subdued" textTransform="uppercase" {...textProps}>
+    <Text variant="label03" color="ink.text-subdued" {...textProps}>
       {displayAddress}
     </Text>
   );

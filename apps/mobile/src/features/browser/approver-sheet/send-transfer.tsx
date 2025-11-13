@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
+import { useGetBtcNetworkFromRequestParams } from '@/shared/utils';
 import { App } from '@/store/apps/utils';
 import {
   useBitcoinAccounts,
@@ -18,7 +19,7 @@ import {
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
 import { extractAccountIndexFromDescriptor } from '@leather.io/crypto';
-import { AverageBitcoinFeeRates, bitcoinNetworkModesSchema } from '@leather.io/models';
+import { AverageBitcoinFeeRates } from '@leather.io/models';
 import {
   RpcRequest,
   RpcResponse,
@@ -83,11 +84,8 @@ function BaseSendTransferApprover(
     () => accountIdByPaymentType(props.accountId),
     [accountIdByPaymentType, props.accountId]
   );
-
-  const networkMode = useMemo(
-    () => bitcoinNetworkModesSchema.parse(props.request.params.network),
-    [props.request.params.network]
-  );
+  const network = useGetBtcNetworkFromRequestParams(props.request.params.network);
+  const networkMode = network.chain.bitcoin.mode;
 
   const tx = useMemo(
     () =>

@@ -1,4 +1,5 @@
 import { Balance } from '@/components/balance/balance';
+import { t } from '@lingui/core/macro';
 
 import { Money } from '@leather.io/models';
 import { Avatar, Cell, LockIcon, UnlockIcon } from '@leather.io/ui/native';
@@ -6,7 +7,7 @@ import { truncateMiddle } from '@leather.io/utils';
 
 interface UtxoRowProps {
   isLocked: boolean;
-  address: string;
+  address: string | null;
   btcAmount: Money;
   quoteAmount: Money;
   txid?: string;
@@ -21,7 +22,7 @@ export function UtxoRow({ isLocked, address, btcAmount, quoteAmount, txid }: Utx
         <Avatar icon={icon} />
       </Cell.Icon>
       <Cell.Content>
-        <Cell.Label variant="primary">{truncateMiddle(address)}</Cell.Label>
+        <Cell.Label variant="primary">{address ? truncateMiddle(address) : t`none`}</Cell.Label>
         {txid && <Cell.Label variant="secondary">{truncateMiddle(txid)}</Cell.Label>}
       </Cell.Content>
       <Cell.Aside>

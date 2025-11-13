@@ -4,11 +4,11 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx-approver.layout';
 import { getTxOptions } from '@/features/approver/utils';
 import { useBroadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
+import { useGetStxNetworkFromRequestParams } from '@/shared/utils';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
-import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { deserializeTransaction } from '@stacks/transactions';
 
 import {
@@ -18,7 +18,7 @@ import {
   stxCallContract,
 } from '@leather.io/rpc';
 
-import { getNetworkFromRequestParams, getStxRequestParams } from '../utils';
+import { getStxRequestParams } from '../utils';
 import { useCallContractTxHex } from './hooks';
 
 interface CallContractApproverProps {
@@ -39,8 +39,7 @@ export function CallContractApprover({
   accountId,
 }: CallContractApproverProps) {
   const { displayToast } = useToastContext();
-  const defaultNetwork = useNetworkPreferenceStacksNetwork();
-  const network = getNetworkFromRequestParams({ params: request.params, defaultNetwork });
+  const network = useGetStxNetworkFromRequestParams(request.params.network);
   const stxRequestParams = getStxRequestParams(request.params, nonce);
   const [txHex, setTxHex] = useState<null | string>(null);
   useCallContractTxHex({ request, stxRequestParams, setTxHex, accountId, network });

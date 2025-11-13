@@ -2,9 +2,7 @@ import { getDefaultFee } from '@/features/approver/utils';
 import { App, assertAppIsConnected } from '@/store/apps/utils';
 import { stacksSignerFromAddress } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
-import { getStacksNetworkFromName } from '@/store/settings/settings.read';
 import { makeStacksAccountIdentiferFromDescriptor } from '@/store/utils';
-import { StacksNetwork, StacksNetworks } from '@stacks/network';
 import { PostConditionModeName } from '@stacks/transactions';
 
 import { Money } from '@leather.io/models';
@@ -37,24 +35,6 @@ export function getAccountIdFromRequestParams({
   assertAppIsConnected(app);
 
   return app.accountId;
-}
-
-export function getNetworkFromRequestParams({
-  params,
-  defaultNetwork,
-}: {
-  params: BaseStacksTransactionRpcParams;
-  defaultNetwork: StacksNetwork;
-}) {
-  if (params.network) {
-    const stacksNetworkName = StacksNetworks.find(n => n === params.network);
-    if (stacksNetworkName) {
-      return getStacksNetworkFromName(stacksNetworkName);
-    }
-    throw new Error('Wrong network supplied in the rpc request params');
-  }
-
-  return defaultNetwork;
 }
 
 export function getFeeFromRequestParams({ params }: { params: BaseStacksTransactionRpcParams }) {

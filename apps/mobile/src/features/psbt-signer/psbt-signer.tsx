@@ -20,7 +20,7 @@ import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 
 import {
-  createBitcoinAddress,
+  PsbtOutputWithAddress,
   getBitcoinFees,
   getPsbtAsTransaction,
   getPsbtDetails,
@@ -90,7 +90,7 @@ function BasePsbtSigner({
     accountIndex
   );
 
-  const psbtAddresses = psbtPayers.map(payer => createBitcoinAddress(payer.address));
+  const psbtAddresses = psbtPayers.map(payer => payer.address);
 
   if (!nativeSegwitAccount) throw new Error('No account found');
   if (!psbtAccounts[0]) throw new Error('No psbt accounts');
@@ -116,7 +116,10 @@ function BasePsbtSigner({
   );
 
   const recipients = psbtDetails.psbtOutputs
-    .filter(output => !psbtAddresses.includes(createBitcoinAddress(output.address)))
+    .filter(
+      (output): output is PsbtOutputWithAddress =>
+        !!output.address && !psbtAddresses.includes(output.address)
+    )
     .map(output => ({
       amount: createMoney(new BigNumber(output.value), 'BTC'),
       address: output.address,

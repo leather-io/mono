@@ -1,9 +1,9 @@
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
+import { useGetBtcNetworkFromRequestParams } from '@/shared/utils';
 import { deserializeAccountId } from '@/store/accounts/accounts';
 import { App } from '@/store/apps/utils';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 
-import { bitcoinNetworkModesSchema } from '@leather.io/models';
 import {
   RpcRequest,
   RpcResponse,
@@ -22,7 +22,9 @@ interface SignPsbtApproverProps {
 }
 export function SignPsbtApprover(props: SignPsbtApproverProps) {
   const { list: bitcoinAccounts } = useBitcoinAccounts();
-  const networkMode = bitcoinNetworkModesSchema.parse(props.request.params.network);
+
+  const network = useGetBtcNetworkFromRequestParams(props.request.params.network);
+  const networkMode = network.chain.bitcoin.mode;
 
   if (props.app.status !== 'connected') return null;
 
