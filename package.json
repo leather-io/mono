@@ -82,7 +82,8 @@
       "levelup>semver": "5.7.2",
       "sha.js": "2.4.12",
       "sanity>tar-fs": "2.1.4",
-      "prebuild-install>tar-fs": "2.1.4"
+      "prebuild-install>tar-fs": "2.1.4",
+      "@expo/cli>@react-native-community/cli-server-api": "18.0.1"
     },
     "packageExtensions": {
       "@expo/cli@*": {
