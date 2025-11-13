@@ -30,7 +30,7 @@ export function WelcomePage() {
     // #4517 signout other tabs on wallet create
     await keyActions.signOut();
     keyActions.generateWalletKey();
-    void analytics.track('generate_new_secret_key');
+    analytics.track('generate_new_secret_key');
     if (decodedAuthRequest) {
       return navigate(RouteUrls.SetPassword);
     }

@@ -219,7 +219,7 @@ export function useSettings() {
     },
     changeLanguagePreference(language: AvailableLanguageCode) {
       dispatch(userChangedLanguagePreference(language));
-      void analytics?.track('user_setting_updated', {
+      analytics?.track('user_setting_updated', {
         language,
       });
     },

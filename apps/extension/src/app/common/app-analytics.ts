@@ -6,7 +6,7 @@ import { makeAccountIdentifer } from '@leather.io/crypto';
 import { HIRO_API_BASE_URL_MAINNET, HIRO_API_BASE_URL_TESTNET, Money } from '@leather.io/models';
 import { convertAmountToBaseUnit, isDefined, scaleValue, toHexString } from '@leather.io/utils';
 
-import { IS_TEST_ENV, SEGMENT_WRITE_KEY } from '@shared/environment';
+import { IS_TEST_ENV, MIXPANEL_TOKEN } from '@shared/environment';
 import {
   analytics,
   decorateAnalyticsEventsWithContext,
@@ -58,17 +58,14 @@ function getDerivedStateAnalyticsContext() {
   };
 }
 
-export function useInitalizeAnalytics() {
-  useEffect(() => {
-    if (!SEGMENT_WRITE_KEY || IS_TEST_ENV) return;
-    initAnalytics();
-  }, []);
+export function initalizeAnalytics() {
+  if (!MIXPANEL_TOKEN || IS_TEST_ENV) return;
+  initAnalytics();
+  decorateAnalyticsEventsWithContext(() => ({
+    ...defaultStaticAnalyticContext,
+    ...getDerivedStateAnalyticsContext(),
+  }));
 }
-
-decorateAnalyticsEventsWithContext(() => ({
-  ...defaultStaticAnalyticContext,
-  ...getDerivedStateAnalyticsContext(),
-}));
 
 const analyticsQueueItemSchema = z.object({
   eventName: z.string(),
@@ -88,11 +85,11 @@ export function useHandleQueuedBackgroundAnalytics() {
         const events = analyticsQueueSchema.parse(queuedEventsStore[analyticsEventKey] ?? []);
         if (!events.length) return;
         await chrome.storage.local.remove(analyticsEventKey);
-        await Promise.all(
-          events.map(({ eventName, properties }) => analytics.untypedTrack(eventName, properties))
+        events.forEach(({ eventName, properties }) =>
+          analytics.untypedTrack(eventName, properties)
         );
       } catch {
-        void analytics.track('background_analytics_schema_fail');
+        analytics.track('background_analytics_schema_fail');
       }
     }
     void handleQueuedAnalytics();
@@ -128,7 +125,7 @@ export function useAccountScaledBalanceAnalytics({ accountIndex }: { accountInde
       isDefined(scaledBtcAvailableBalance) &&
       isDefined(accountId)
     ) {
-      void analytics.track('balance_updated', {
+      analytics.track('balance_updated', {
         platform: 'extension',
         walletAccountId: accountId,
         stxAvailableBalance: scaledStxAvailableBalance,

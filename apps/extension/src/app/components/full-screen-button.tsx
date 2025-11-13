@@ -27,7 +27,7 @@ export function FullScreenButton() {
             height="40px"
             p="space.02"
             onClick={() => {
-              void analytics.untypedTrack('click_open_in_new_tab', {
+              analytics.untypedTrack('click_open_in_new_tab', {
                 location: 'header',
               });
               void analytics.identify(undefined, { hasVisitedFullPageMode: true });

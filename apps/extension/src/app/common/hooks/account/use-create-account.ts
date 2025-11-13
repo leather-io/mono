@@ -10,7 +10,7 @@ export function useCreateAccount() {
   const toast = useToast();
 
   return useCallback(async () => {
-    void analytics.track('create_new_account');
+    analytics.track('create_new_account');
     try {
       await createNewAccount();
       toast.success('Account created!');

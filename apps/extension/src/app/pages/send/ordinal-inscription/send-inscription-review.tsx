@@ -43,7 +43,7 @@ export function SendInscriptionReview() {
       skipSpendableCheckUtxoIds: [inscription.txid],
       tx: bytesToHex(signedTx),
       async onSuccess(txid: string) {
-        void analytics.track('broadcast_ordinal_transaction');
+        analytics.track('broadcast_ordinal_transaction');
         await refetchUtxos();
         void navigate(
           `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionSent}`,
@@ -60,7 +60,7 @@ export function SendInscriptionReview() {
         );
       },
       onError(e) {
-        void analytics.track('broadcast_ordinal_error', { error: e });
+        analytics.track('broadcast_ordinal_error', { error: e });
         void navigate(
           `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionError}`,
           {

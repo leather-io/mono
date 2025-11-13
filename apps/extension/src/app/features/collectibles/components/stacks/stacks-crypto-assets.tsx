@@ -19,10 +19,12 @@ export function StacksCryptoAssets({ address }: StacksCryptoAssetsProps) {
 
   useEffect(() => {
     if (stacksNftsMetadataResp.length > 0) {
-      void analytics.track('view_collectibles', {
+      analytics.track('view_collectibles', {
         stacks_nfts_count: stacksNftsMetadataResp.length,
       });
-      void analytics.client.identify({ stacks_nfts_count: stacksNftsMetadataResp.length });
+      void analytics.identify(undefined, {
+        stacks_nfts_count: stacksNftsMetadataResp.length,
+      });
     }
   }, [stacksNftsMetadataResp.length]);
 

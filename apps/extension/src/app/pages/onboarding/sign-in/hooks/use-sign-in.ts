@@ -36,7 +36,7 @@ export function useSignIn() {
     ) => {
       setError(message);
       setIsIdle();
-      void analytics.track('submit_invalid_secret_key');
+      analytics.track('submit_invalid_secret_key');
       return;
     },
     [setError, setIsIdle]
@@ -61,7 +61,7 @@ export function useSignIn() {
 
       dispatch(keyActions.signOut());
       dispatch(inMemoryKeyActions.setDefaultKey(parsedKeyInput));
-      void analytics.track('submit_valid_secret_key');
+      analytics.track('submit_valid_secret_key');
       void navigate(RouteUrls.SetPassword);
       setIsIdle();
     },

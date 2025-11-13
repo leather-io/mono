@@ -1,19 +1,17 @@
-import { AnalyticsClientConfig, AnalyticsClientInterface, Events, JsonMap } from './types';
+import { AnalyticsClientConfig, Events, JsonMap } from './types';
 
-export function AnalyticsClient<T extends AnalyticsClientInterface>(
-  config: AnalyticsClientConfig<T>
-) {
+export function AnalyticsClient(config: AnalyticsClientConfig) {
   const { client: analyticsClient, defaultProperties = {}, defaultTraits = {} } = config;
 
   return {
-    async track<K extends keyof Events>(
+    track<K extends keyof Events>(
       event: K,
       ...[properties]: Events[K] extends undefined ? [] : [Events[K]]
     ) {
       return analyticsClient.track(event, { ...properties, ...defaultProperties });
     },
 
-    async untypedTrack(event: string, properties?: JsonMap | Record<string, unknown>) {
+    untypedTrack(event: string, properties?: JsonMap | Record<string, unknown>) {
       if (event.match(/^[a-zA-Z0-9\s][a-zA-Z0-9\s]*$/)) {
         throw new Error('Event must be snake_case');
       }
@@ -23,29 +21,53 @@ export function AnalyticsClient<T extends AnalyticsClientInterface>(
       });
     },
 
-    async screen(name: string, properties?: JsonMap | Record<string, unknown>) {
-      return analyticsClient.screen(name, { ...properties, ...defaultProperties });
-    },
-
-    group(groupId: string, traits?: JsonMap | Record<string, unknown>) {
-      return analyticsClient.group(groupId, { ...traits, ...defaultTraits });
-    },
-
-    async identify(userId?: string, traits?: JsonMap | Record<string, unknown>) {
-      return await analyticsClient.identify(userId, {
-        ...traits,
-        ...defaultTraits,
+    screen(name: string, properties?: JsonMap | Record<string, unknown>) {
+      return analyticsClient.track('screen_view', {
+        screen_name: name,
+        ...properties,
+        ...defaultProperties,
       });
     },
 
-    page(category?: string, name?: string, properties?: JsonMap | Record<string, unknown>) {
-      if (typeof analyticsClient.page === 'function') {
-        return analyticsClient.page(category, name, {
-          ...properties,
-          ...defaultProperties,
+    group(groupId: string, traits: JsonMap | Record<string, unknown>) {
+      if (Object.keys(traits).length === 0) {
+        // eslint-disable-next-line no-console
+        console.warn('Calling group analytics without traits');
+        return;
+      }
+
+      analyticsClient.setGroup('company', groupId);
+      const group = analyticsClient.getGroup('company', groupId);
+      if (group) {
+        Object.entries(traits).forEach(([key, value]) => {
+          group.set(key, JSON.stringify(value));
         });
       }
-      return Promise.resolve();
+      return;
+    },
+
+    async identify(userId?: string, traits?: JsonMap | Record<string, unknown>) {
+      if (userId) {
+        await analyticsClient.identify(userId);
+      }
+
+      const allTraits = { ...traits, ...defaultTraits };
+      if (Object.keys(allTraits).length > 0) {
+        const people = analyticsClient.getPeople();
+        if (people) {
+          return people.set(allTraits);
+        }
+      }
+      return;
+    },
+
+    page(category?: string, name?: string, properties?: JsonMap | Record<string, unknown>) {
+      return analyticsClient.track('page_view', {
+        category,
+        name,
+        ...properties,
+        ...defaultProperties,
+      });
     },
 
     get client() {

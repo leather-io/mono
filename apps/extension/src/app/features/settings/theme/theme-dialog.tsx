@@ -19,7 +19,7 @@ export function ThemeSheet({ onClose }: ThemeSheetProps) {
 
   const handleThemeSelected = useCallback(
     (theme: UserSelectedTheme) => {
-      void analytics.track(`select_theme`, {
+      analytics.track(`select_theme`, {
         theme,
       });
       setUserSelectedTheme(theme);

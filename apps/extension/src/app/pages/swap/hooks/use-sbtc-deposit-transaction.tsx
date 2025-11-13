@@ -197,7 +197,7 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: O
         const amount = deposit.transaction.getOutput(0).amount;
 
         if (amount) {
-          void analytics.untypedTrack('bitcoin_swap_succeeded', { amount: Number(amount) });
+          analytics.untypedTrack('bitcoin_swap_succeeded', { amount: Number(amount) });
         }
 
         // Software wallets mutate the original transaction when signing and
@@ -210,7 +210,7 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: O
       } catch (error) {
         setIsIdle();
         logger.error(`Deposit error: ${error}`);
-        void analytics.untypedTrack('bitcoin_swap_failed', { error });
+        analytics.untypedTrack('bitcoin_swap_failed', { error });
         return navigate(RouteUrls.SwapError, {
           state: { title: 'sBTC swap error', message: serializeError(error).message },
         });

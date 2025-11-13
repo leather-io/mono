@@ -66,7 +66,7 @@ export function useRpcSendTransferActions() {
           async onSuccess(txid) {
             setIsBroadcasting(false);
 
-            void analytics.track('broadcast_transaction', {
+            analytics.track('broadcast_transaction', {
               symbol: 'btc',
               amount: amount.amount.toNumber(),
             });

@@ -235,10 +235,6 @@ export const config = {
       resourceRegExp: /^\.\/wordlists\/(?!english)/,
       contextRegExp: /bip39\/src$/,
     }),
-    new webpack.NormalModuleReplacementPlugin(
-      /@segment\/analytics-next\/dist\/pkg\/lib\/parse-cdn\.js$/,
-      path.resolve(__dirname, '../scripts/dummy-segment-parse-cdn.js')
-    ),
     new HtmlWebpackPlugin({
       template: path.join(SRC_ROOT_PATH, '../', 'public', 'html', 'index.html'),
       filename: 'index.html',

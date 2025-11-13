@@ -46,7 +46,7 @@ export function useAccountScaledBalanceAnalytics({
       isDefined(scaledUsdBalance) &&
       isDefined(scaledBtcAvailableBalance)
     ) {
-      void analytics.track('balance_updated', {
+      analytics.track('balance_updated', {
         platform: 'mobile',
         walletAccountId: accountId,
         stxAvailableBalance: scaledStxAvailableBalance,
@@ -83,7 +83,7 @@ export function useTokenPortfolioAnalytics({
     const sip10TokenCount = sip10Balance.length;
     const runeTokenCount = runeBalance.length;
     const fiatCurrency = sip10Balance[0]?.quote.availableBalance?.symbol;
-    void analytics.track('token_portfolio_summary', {
+    analytics.track('token_portfolio_summary', {
       platform: 'mobile',
       walletAccountId: accountId,
       sip10TokenCount,
@@ -152,7 +152,7 @@ export function useCollectiblesAnalytics({
       return acc;
     }, {});
 
-    void analytics.track('collectibles_summary', {
+    analytics.track('collectibles_summary', {
       platform: 'mobile',
       walletAccountId: accountId,
       totalCollectibles: collectibles.length,

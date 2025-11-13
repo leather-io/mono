@@ -20,7 +20,7 @@ export function ReceiveOrdinalModal() {
     <ReceiveTokensLayout
       address={state.btcAddressTaproot}
       onCopyAddressToClipboard={async () => {
-        void analytics.track('copy_address_to_add_new_inscription');
+        analytics.track('copy_address_to_add_new_inscription');
         await copyToClipboard(state.btcAddressTaproot);
         toast.success('Copied to clipboard!');
       }}

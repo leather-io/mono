@@ -1,16 +1,8 @@
 import { AnalyticsClient } from './client';
-import { AnalyticsClientInterface, DefaultProperties, JsonMap } from './types';
+import { type AnalyticsClientConfig } from './types';
 
 export * from './types';
 
-export function configureAnalyticsClient<T extends AnalyticsClientInterface>({
-  client,
-  defaultProperties,
-  defaultTraits,
-}: {
-  client: T;
-  defaultProperties: DefaultProperties;
-  defaultTraits?: JsonMap;
-}) {
-  return AnalyticsClient<T>({ client, defaultProperties, defaultTraits });
+export function configureAnalyticsClient(options: AnalyticsClientConfig) {
+  return AnalyticsClient(options);
 }

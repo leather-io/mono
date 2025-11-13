@@ -9,24 +9,51 @@ import {
 import { ripemd160 } from '@noble/hashes/ripemd160';
 import { sha256 } from '@noble/hashes/sha256';
 import { base58 } from '@scure/base';
-import { AnalyticsBrowser } from '@segment/analytics-next';
 import { browserTracingIntegration, feedbackIntegration, setTag } from '@sentry/browser';
 import { init as SentryInit, reactRouterV7BrowserTracingIntegration } from '@sentry/react';
 import { token } from 'leather-styles/tokens';
+import mixpanel, { type OverridedMixpanel } from 'mixpanel-browser';
 
 import { configureAnalyticsClient } from '@leather.io/analytics';
+import { noop } from '@leather.io/utils';
 
 import {
+  IS_DEV_ENV,
   IS_TEST_ENV,
-  SEGMENT_WRITE_KEY,
+  MIXPANEL_TOKEN,
   SENTRY_DSN,
   WALLET_ENVIRONMENT,
 } from '@shared/environment';
 
-const segmentClient = new AnalyticsBrowser();
+function configureMixpanel(mixpanelClient: OverridedMixpanel) {
+  return Object.assign(mixpanelClient, {
+    setGroup: mixpanelClient.set_group,
+    getGroup: mixpanelClient.get_group,
+    getPeople() {
+      return mixpanelClient.people;
+    },
+  });
+}
+function getMockedMixpanel() {
+  // eslint-disable-next-line no-console
+  console.warn('Using mocked mixpanel. No analytics are sent');
+  return {
+    identify() {
+      return Promise.resolve();
+    },
+    track: noop,
+    getPeople() {
+      return { set: noop };
+    },
+    setGroup: noop,
+    getGroup() {
+      return { set: noop };
+    },
+  };
+}
 
-export const analytics = configureAnalyticsClient<AnalyticsBrowser>({
-  client: segmentClient,
+export const analytics = configureAnalyticsClient({
+  client: MIXPANEL_TOKEN ? configureMixpanel(mixpanel) : getMockedMixpanel(),
   defaultProperties: {
     platform: 'extension',
   },
@@ -35,37 +62,26 @@ export const analytics = configureAnalyticsClient<AnalyticsBrowser>({
 export function decorateAnalyticsEventsWithContext(
   getEventContextProperties: () => Record<string, unknown>
 ) {
-  void segmentClient.ready(
-    () =>
-      void segmentClient.addSourceMiddleware(({ payload, next }) => {
-        Object.entries(getEventContextProperties()).forEach(([key, value]) => {
-          payload.obj.context = payload.obj.context || {};
-          payload.obj.context.ip = '0.0.0.0';
-          payload.obj.properties = payload.obj.properties || {};
-          payload.obj.properties[key] = value;
-        });
-        next(payload);
-      })
-  );
+  try {
+    mixpanel.register(getEventContextProperties());
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn('Error decorating mixpanel properties', e);
+  }
 }
 
 export function initAnalytics() {
-  return analytics.client.load(
-    { writeKey: SEGMENT_WRITE_KEY },
-    {
-      integrations: {
-        'Segment.io': {
-          deliveryStrategy: {
-            strategy: 'batching',
-            config: {
-              size: 10,
-              timeout: 5000,
-            },
-          },
-        },
-      },
-    }
-  );
+  mixpanel.init(MIXPANEL_TOKEN, {
+    track_pageview: false,
+    persistence: 'localStorage',
+    ip: false,
+    batch_requests: true,
+    batch_size: 10,
+    batch_flush_interval_ms: 5000,
+    debug: IS_DEV_ENV,
+    // Only ignore "Do Not Track" mode in dev
+    ignore_dnt: IS_DEV_ENV,
+  });
 }
 
 // Used to create a unique identifier for a user's key in base58.
@@ -153,7 +169,7 @@ export function initSentry() {
 }
 
 export async function openFeedbackSheet() {
-  void analytics.track('user_clicked_feedback_button');
+  analytics.track('user_clicked_feedback_button');
   const form = await sentryFeedback.createForm();
   if (!form) return null;
   form.appendToDom();

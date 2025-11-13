@@ -41,7 +41,7 @@ export function PromoCard({
 
   function openPromoCardLink() {
     if (stackPosition === 0 && !isDismissing) {
-      void analytics.untypedTrack('promo_banner_clicked', { banner_name: eventName });
+      analytics.untypedTrack('promo_banner_clicked', { banner_name: eventName });
       openInNewTab(linkUrl);
     }
   }

@@ -33,13 +33,13 @@ export function useSignStacksMessage({
   const signMessage = whenWallet({
     async software(unsignedMessage: UnsignedMessage) {
       setIsLoading(true);
-      void analytics.track('request_signature_sign', { type: 'software' });
+      analytics.track('request_signature_sign', { type: 'software' });
 
       const messageSignature = signSoftwareWalletMessage(unsignedMessage);
 
       if (!messageSignature) {
         logger.error('Cannot sign message, no account in state');
-        void analytics.track('request_signature_cannot_sign_message_no_account');
+        analytics.track('request_signature_cannot_sign_message_no_account');
         return;
       }
       await improveUxWithShortDelayAsStacksSigningIsSoFast();
@@ -49,7 +49,7 @@ export function useSignStacksMessage({
     },
 
     async ledger(unsignedMessage: UnsignedMessage) {
-      void analytics.track('request_signature_sign', { type: 'ledger' });
+      analytics.track('request_signature_sign', { type: 'ledger' });
       void ledgerNavigate.toConnectAndSignMessageStep(unsignedMessage);
       try {
         const messageSignature = await listenForStacksMessageSigning(unsignedMessage);

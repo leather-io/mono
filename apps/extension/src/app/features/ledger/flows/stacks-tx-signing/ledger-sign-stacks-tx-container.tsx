@@ -131,7 +131,7 @@ function LedgerSignStacksTxContainer() {
         });
       } catch (e) {
         const error = isError(e) ? e.message : 'Unknown error';
-        void analytics.track('ledger_transaction_publish_error', {
+        analytics.track('ledger_transaction_publish_error', {
           error: {
             message: error,
             error: e,

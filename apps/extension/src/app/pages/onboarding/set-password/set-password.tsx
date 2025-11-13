@@ -52,7 +52,7 @@ function SetPasswordPage() {
   const { decodedAuthRequest } = useOnboardingState();
 
   useEffect(() => {
-    void analytics.page('view', '/set-password');
+    analytics.page('view', '/set-password');
   }, []);
 
   const submit = useCallback(
@@ -79,7 +79,7 @@ function SetPasswordPage() {
       if (!password) return;
       setLoading(true);
       if (strengthResult.meetsAllStrengthRequirements) {
-        void analytics.track('submit_valid_password');
+        analytics.track('submit_valid_password');
         await submit(password);
         return;
       }
@@ -103,7 +103,7 @@ function SetPasswordPage() {
           const result = validatePassword(value);
           setStrengthResult(result);
           if (!result.meetsAllStrengthRequirements) {
-            void analytics.track('submit_invalid_password');
+            analytics.track('submit_invalid_password');
           }
           return result.meetsAllStrengthRequirements;
         }, 60) as unknown as yup.TestFunction<any, any>,

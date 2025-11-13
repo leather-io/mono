@@ -22,7 +22,7 @@ export function ReceiveStxModal() {
       address={currentAccount.address}
       accountName={accountName}
       onCopyAddressToClipboard={async () => {
-        void analytics.track('copy_stx_address_to_clipboard');
+        analytics.track('copy_stx_address_to_clipboard');
         await copyToClipboard(currentAccount.address);
         toast.success('Copied to clipboard!');
       }}

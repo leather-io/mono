@@ -7,7 +7,7 @@ export enum WorkerScript {
 export function createWorker(scriptName: WorkerScript) {
   const worker = new Worker(scriptName);
   worker.addEventListener('error', error => {
-    void analytics?.untypedTrack(`worker_error_thrown_${scriptName}`, { error });
+    analytics?.untypedTrack(`worker_error_thrown_${scriptName}`, { error });
   });
 
   return worker;

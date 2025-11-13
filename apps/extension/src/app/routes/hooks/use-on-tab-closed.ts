@@ -19,7 +19,7 @@ export function useOnOriginTabClose(handler: () => void) {
 
       if (message.payload.tabId === tabId) {
         handler();
-        void analytics.track('requesting_origin_tab_closed_with_pending_action');
+        analytics.track('requesting_origin_tab_closed_with_pending_action');
       }
       sendResponse();
     }

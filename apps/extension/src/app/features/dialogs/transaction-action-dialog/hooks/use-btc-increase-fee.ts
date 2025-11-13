@@ -105,7 +105,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
         const outputDiff = output.value - feeDiff;
 
         if (outputDiff < 0) {
-          void analytics.track('bitcoin_rbf_fee_increase_error', {
+          analytics.track('bitcoin_rbf_fee_increase_error', {
             outputDiff,
           });
           throw new Error('Previous tx inputs cannot cover new fee');
@@ -131,7 +131,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
       async onSuccess(txid) {
         toast.success('Fee increased successfully');
         void navigate(RouteUrls.Activity);
-        void analytics.track('increase_fee_transaction', {
+        analytics.track('increase_fee_transaction', {
           symbol: 'btc',
           txid,
         });

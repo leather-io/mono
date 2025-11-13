@@ -29,7 +29,7 @@ export function SubmittedTransactionItem({ transaction, txid }: SubmittedTransac
   });
 
   function openTxLink() {
-    void analytics.track('view_transaction');
+    analytics.track('view_transaction');
     handleOpenStacksTxLink({
       searchParams: new URLSearchParams('&submitted=true'),
       txid,

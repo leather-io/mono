@@ -107,7 +107,7 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
         })
       );
 
-      void analytics.track('user_approved_message_signing', { origin });
+      analytics.track('user_approved_message_signing', { origin });
 
       await allowTimeForUserToReadToast();
       closeWindow();

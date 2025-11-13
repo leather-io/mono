@@ -1,28 +1,29 @@
-// write tests for the analytics client
 import { AnalyticsClient } from './client';
 
 export const mockExternalAnalyticsClient = {
   track: vi.fn(),
-  screen: vi.fn(),
-  group: vi.fn(),
   identify: vi.fn(),
-  page: vi.fn(),
-  register: vi.fn(),
-  deregister: vi.fn(),
+  setGroup: vi.fn(),
+  getGroup: vi.fn(() => ({
+    set: vi.fn(),
+  })),
+  getPeople: vi.fn(() => ({
+    set: vi.fn(),
+  })),
 };
 
 describe('AnalyticsClient', () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
-  it('should be able to track all events with default properties', async () => {
+  it('should be able to track all events with default properties', () => {
     const analytics = AnalyticsClient({
       client: mockExternalAnalyticsClient,
       defaultProperties: { platform: 'web' },
     });
 
-    await analytics.track('background_analytics_schema_fail');
-    await analytics.screen('/home/screen');
+    analytics.track('background_analytics_schema_fail');
+    analytics.screen('/home/screen');
 
     expect(mockExternalAnalyticsClient.track).toHaveBeenCalledWith(
       'background_analytics_schema_fail',
@@ -31,7 +32,8 @@ describe('AnalyticsClient', () => {
       }
     );
 
-    expect(mockExternalAnalyticsClient.screen).toHaveBeenCalledWith('/home/screen', {
+    expect(mockExternalAnalyticsClient.track).toHaveBeenCalledWith('screen_view', {
+      screen_name: '/home/screen',
       platform: 'web',
     });
   });
@@ -43,15 +45,13 @@ describe('AnalyticsClient', () => {
     });
 
     await analytics.identify('1df3_34j3');
-    await analytics.group('1df3_34j3');
 
-    expect(mockExternalAnalyticsClient.identify).toHaveBeenCalledWith('1df3_34j3', {
+    expect(mockExternalAnalyticsClient.identify).toHaveBeenCalledWith('1df3_34j3');
+    expect(mockExternalAnalyticsClient.getPeople().set).toHaveBeenCalledWith({
       user: 'test',
     });
 
-    expect(mockExternalAnalyticsClient.group).toHaveBeenCalledWith('1df3_34j3', {
-      user: 'test',
-    });
+    expect(mockExternalAnalyticsClient.setGroup).toHaveBeenCalledWith('company', '1df3_34j3');
   });
 
   it('should enforce snake case for untyped track', async () => {

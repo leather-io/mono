@@ -66,7 +66,7 @@ jobs:
           WALLET_ENVIRONMENT: feature
           TARGET_BROWSER: ${{ matrix.target }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY_STAGING }}
+          MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN_STAGING }}
           LAUNCH_DARKLY_KEY: ${{ secrets.EXTENSION_LAUNCH_DARKLY_KEY}}
           BITFLOW_API_HOST: ${{ secrets.BITFLOW_API_HOST }}
           BITFLOW_API_KEY: ${{ secrets.BITFLOW_API_KEY }}

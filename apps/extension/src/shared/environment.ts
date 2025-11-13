@@ -5,7 +5,7 @@ export const COMMIT_SHA = process.env.COMMIT_SHA;
 // ts-unused-exports:disable-next-line
 export const IS_DEV_ENV = process.env.WALLET_ENVIRONMENT === 'development';
 export const IS_TEST_ENV = process.env.WALLET_ENVIRONMENT === 'testing';
-export const SEGMENT_WRITE_KEY = process.env.SEGMENT_WRITE_KEY ?? '';
+export const MIXPANEL_TOKEN = process.env.MIXPANEL_TOKEN ?? '';
 export const SENTRY_DSN = process.env.SENTRY_DSN ?? '';
 export const WALLET_ENVIRONMENT = process.env.WALLET_ENVIRONMENT ?? 'unknown';
 

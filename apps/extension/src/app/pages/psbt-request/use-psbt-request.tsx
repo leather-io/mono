@@ -31,7 +31,7 @@ export function usePsbtRequest() {
       origin,
       psbtHex: payload.hex,
       onDenyPsbtSigning() {
-        void analytics.track('request_psbt_cancel');
+        analytics.track('request_psbt_cancel');
         finalizePsbt({
           data: 'PSBT request was canceled',
           requestPayload: requestToken,
@@ -40,7 +40,7 @@ export function usePsbtRequest() {
       },
       async onSignPsbt() {
         setIsLoading(true);
-        void analytics.track('request_sign_psbt_submit');
+        analytics.track('request_sign_psbt_submit');
 
         const tx = getPsbtAsTransaction(payload.hex);
 

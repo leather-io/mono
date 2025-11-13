@@ -1,21 +1,58 @@
 import { store } from '@/store';
 import { selectAnalyticsPreference } from '@/store/settings/settings.read';
-import { contextMiddlewarePluginInstance } from '@/utils/analytics-plugins';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createClient } from '@segment/analytics-react-native';
+import * as Application from 'expo-application';
+import { Mixpanel } from 'mixpanel-react-native';
 
 import { configureAnalyticsClient } from '@leather.io/analytics';
+import type { NetworkConfiguration } from '@leather.io/models';
+import { noop } from '@leather.io/utils';
 
 import { getDeviceId } from './get-device-id';
 
+type Network = NetworkConfiguration['chain']['bitcoin']['mode'];
+
 const FIRST_OPEN_KEY = 'first_open_tracked';
 
-const segmentClient = createClient({
-  writeKey: process.env.EXPO_PUBLIC_SEGMENT_WRITE_KEY || '',
-  trackAppLifecycleEvents: true,
-  debug: false,
+function getMockedMixpanel() {
+  // eslint-disable-next-line no-console
+  console.warn('Using mocked mixpanel. No analytics are sent');
+  return {
+    identify() {
+      return Promise.resolve();
+    },
+    track: noop,
+    getPeople() {
+      return { set: noop };
+    },
+    setGroup: noop,
+    getGroup() {
+      return { set: noop };
+    },
+    init() {
+      return Promise.resolve();
+    },
+    registerSuperProperties: noop,
+  };
+}
+
+const mixpanelClient = process.env.EXPO_PUBLIC_MIXPANEL_TOKEN
+  ? new Mixpanel(process.env.EXPO_PUBLIC_MIXPANEL_TOKEN, false)
+  : getMockedMixpanel();
+
+void mixpanelClient.init().then(() => {
+  const currentVersion = Application.nativeApplicationVersion || '';
+  const nativeBuildVersion = Application.nativeBuildVersion || '';
+  mixpanelClient.registerSuperProperties({
+    platform: 'mobile',
+    version: currentVersion,
+    buildVersion: nativeBuildVersion,
+  });
 });
-segmentClient.add({ plugin: contextMiddlewarePluginInstance });
+
+export function setAnalyticsNetwork(network: Network) {
+  mixpanelClient.registerSuperProperties({ network });
+}
 
 async function identifyUserByDeviceId() {
   const id = await getDeviceId();
@@ -26,7 +63,7 @@ async function identifyUserByDeviceId() {
 void identifyUserByDeviceId();
 
 const analyticsClient = configureAnalyticsClient({
-  client: segmentClient,
+  client: mixpanelClient,
   defaultProperties: {
     platform: 'mobile',
   },
@@ -67,7 +104,7 @@ export async function trackFirstAppOpen() {
   const hasTrackedFirstOpen = await AsyncStorage.getItem(FIRST_OPEN_KEY);
 
   if (!hasTrackedFirstOpen) {
-    await analytics.track('application_first_opened', {
+    analytics.track('application_first_opened', {
       timestamp: new Date().toISOString(),
     });
     await AsyncStorage.setItem(FIRST_OPEN_KEY, 'true');

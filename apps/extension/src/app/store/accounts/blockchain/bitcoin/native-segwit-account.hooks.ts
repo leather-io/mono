@@ -165,11 +165,11 @@ export function useUpdateLedgerSpecificNativeSegwitUtxoHexForAdddressIndexZero()
         tx.updateInput(index, {
           nonWitnessUtxo: Buffer.from(inputsTxHex[index], 'hex'),
         });
-        void analytics.track('ledger_nativesegwit_add_nonwitnessutxo', {
+        analytics.track('ledger_nativesegwit_add_nonwitnessutxo', {
           action: 'add_nonwitness_utxo',
         });
       } else {
-        void analytics.track('ledger_nativesegwit_add_nonwitnessutxo', {
+        analytics.track('ledger_nativesegwit_add_nonwitnessutxo', {
           action: 'skip_add_nonwitness_utxo',
         });
       }

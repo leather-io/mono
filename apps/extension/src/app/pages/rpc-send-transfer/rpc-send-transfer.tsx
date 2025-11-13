@@ -57,7 +57,7 @@ export function RpcSendTransfer() {
             href="https://leather.io/guides/connect-dapps"
             onPressRequestedByLink={e => {
               e.preventDefault();
-              void analytics.track('user_clicked_requested_by_link', {
+              analytics.track('user_clicked_requested_by_link', {
                 endpoint: 'sendTransfer',
               });
               focusTabAndWindow(tabId);

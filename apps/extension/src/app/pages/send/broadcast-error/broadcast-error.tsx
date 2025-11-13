@@ -23,7 +23,7 @@ export function BroadcastError({ showInSheet = false }: Props) {
   const title = get(state, 'title', 'There was an error broadcasting your transaction');
   const body = get(state, 'body', 'Unable to broadcast transaction');
 
-  useOnMount(() => void analytics.track('bitcoin_contract_error', { msg }));
+  useOnMount(() => analytics.track('bitcoin_contract_error', { msg }));
 
   const layout = (
     <BroadcastErrorLayout
