@@ -10,7 +10,7 @@ import { Box, Text } from '@leather.io/ui/native';
 const textOpticalAlignmentStyle = { paddingTop: 1, marginBottom: -1 };
 
 const baseFontSize = 24;
-const baseLineHeight = 36;
+const baseLineHeight = 32;
 const baseGlyphHeight = 26;
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -42,7 +42,7 @@ export function PrimaryValue({ value, caret, animatedTextStyle }: PrimaryValuePr
       style={{ paddingRight: 2 }}
     >
       <AnimatedText
-        variant="heading02"
+        fontFamily="MarchePro-Super"
         fontSize={baseFontSize}
         lineHeight={lineHeight}
         style={[textOpticalAlignmentStyle, animatedTextStyle]}

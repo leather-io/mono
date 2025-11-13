@@ -23,6 +23,13 @@ vi.mock('@/hooks/use-debounced-value', () => ({
   useDebouncedValue: <T>(value: T) => value,
 }));
 
+vi.mock('@leather.io/utils', async () => {
+  return {
+    ...(await vi.importActual('@leather.io/utils')),
+    delay: () => Promise.resolve(),
+  };
+});
+
 interface RenderUseSwapStateParams extends Omit<UseSwapStateProps, 'dependencies'> {
   baseSwapAssets?: AccountSwapAsset[];
   targetSwapAssets?: AccountSwapAsset[];

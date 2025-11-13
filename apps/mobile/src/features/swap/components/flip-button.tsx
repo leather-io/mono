@@ -44,7 +44,7 @@ export function FlipButton({ isVisible, onPress }: FlipButtonProps) {
       alignItems="center"
       bg="ink.background-primary"
       position="absolute"
-      top={86}
+      top={78}
       left="50%"
       marginLeft="2"
       borderWidth={1}

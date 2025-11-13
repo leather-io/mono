@@ -19,7 +19,7 @@ const caretStyles = {
   height: caretHeight,
   width: caretWidth,
   marginLeft: 1,
-  top: 1,
+  top: 0.5,
 };
 
 interface AmountFieldCaretProps {

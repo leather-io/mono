@@ -30,23 +30,17 @@ export function Card({ type, children }: CardProps) {
 
   return (
     <Box
+      flexDirection="row"
+      justifyContent="space-between"
       p="4"
       bg="ink.background-primary"
       borderColor="ink.border-transparent"
       borderWidth={1}
       borderStyle="solid"
       borderRadius="sm"
-      gap="3"
+      gap="2"
       style={[typeStyle]}
     >
-      {children}
-    </Box>
-  );
-}
-
-export function CardRow({ children }: HasChildren) {
-  return (
-    <Box flexDirection="row" alignItems="center" justifyContent="space-between" gap="2">
       {children}
     </Box>
   );
