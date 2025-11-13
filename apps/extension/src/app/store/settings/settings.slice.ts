@@ -11,6 +11,7 @@ interface InitialState {
   bypassInscriptionChecks?: boolean;
   discardedInscriptions: string[];
   networkBadgeAlwaysOn?: boolean;
+  hasCompletedFingerprintMigration?: boolean;
 }
 
 const initialState: InitialState = {
@@ -65,6 +66,9 @@ export const settingsSlice = createSlice({
     },
     resetInscriptionState(state) {
       state.discardedInscriptions = [];
+    },
+    markFingerprintMigrationComplete(state) {
+      state.hasCompletedFingerprintMigration = true;
     },
   },
 });

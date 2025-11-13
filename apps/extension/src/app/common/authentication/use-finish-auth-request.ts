@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useSelector } from 'react-redux';
 
 import { makeAuthResponse } from '@stacks/wallet-sdk';
 
@@ -12,7 +13,8 @@ import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state'
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { useDefaultWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { useActiveWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 
 import { useGetLegacyAuthBitcoinAddresses } from './use-legacy-auth-bitcoin-addresses';
 
@@ -21,9 +23,10 @@ export function useFinishAuthRequest() {
   const keyActions = useKeyActions();
   const stacksAccounts = useStacksAccounts();
   const { walletType } = useWalletType();
+  const currentAccount = useSelector(selectCurrentAccount);
 
   const { origin, tabId } = useAuthRequestParams();
-  const hasSecretKey = !!useDefaultWalletSecretKey();
+  const hasSecretKey = !!useActiveWalletSecretKey();
 
   // TODO: It would be good to separate out finishing auth by the wallet vs an app
   // so that the additional data we provide apps can be removed from our onboarding.
@@ -60,7 +63,8 @@ export function useFinishAuthRequest() {
             },
           });
 
-          await keyActions.switchAccount(accountIndex);
+          keyActions.switchAccount({ fingerprint: currentAccount.fingerprint, accountIndex });
+
           finalizeAuthResponse({
             decodedAuthRequest,
             authRequest,
@@ -74,15 +78,16 @@ export function useFinishAuthRequest() {
       }
     },
     [
+      stacksAccounts,
       decodedAuthRequest,
       authRequest,
-      stacksAccounts,
       origin,
       tabId,
       walletType,
       hasSecretKey,
       getLegacyAuthBitcoinData,
       keyActions,
+      currentAccount.fingerprint,
     ]
   );
 }

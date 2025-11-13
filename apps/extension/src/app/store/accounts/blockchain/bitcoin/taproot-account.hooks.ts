@@ -17,7 +17,7 @@ import { type BitcoinNetworkModes } from '@leather.io/models';
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 
 import { selectCurrentNetwork, useCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { selectCurrentAccountIndex } from '@app/store/software-keys/software-key.selectors';
+import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 
 import { useCurrentAccountIndex } from '../../account';
 import {
@@ -41,8 +41,8 @@ const selectCurrentNetworkTaprootAccountBuilder = createSelector(
 );
 const selectCurrentTaprootAccount = createSelector(
   selectCurrentNetworkTaprootAccountBuilder,
-  selectCurrentAccountIndex,
-  (taprootKeychain, accountIndex) => taprootKeychain(accountIndex)
+  selectCurrentAccount,
+  (taprootKeychain, account) => taprootKeychain(account.accountIndex)
 );
 
 export function useGenerateTaprootAccount() {

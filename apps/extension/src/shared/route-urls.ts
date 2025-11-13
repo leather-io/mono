@@ -23,6 +23,7 @@ export enum RouteUrls {
 
   // Active wallet routes
   Home = '/',
+  MultiWalletTest = '/multi-wallet-test',
   AddNetwork = '/add-network',
   EditNetwork = '/edit-network',
   SelectNetwork = '/select-network',
