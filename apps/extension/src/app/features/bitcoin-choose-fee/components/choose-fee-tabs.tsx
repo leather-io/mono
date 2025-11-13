@@ -25,7 +25,7 @@ export function ChooseFeeTabs(props: ChooseFeeTabsProps) {
     <Stack flexGrow={1} gap="space.04" mt="space.02" width="100%" {...rest}>
       <Tabs.Root
         defaultValue={defaultToCustomFee ? CustomFeeTabs.Custom : CustomFeeTabs.Recommended}
-        onValueChange={tab => void analytics.page('view', 'custom-fee-tab-' + tab)}
+        onValueChange={tab => analytics.page('view', 'custom-fee-tab-' + tab)}
       >
         <Tabs.List>
           <Tabs.Trigger value={CustomFeeTabs.Recommended} data-testid="tab-recommended">

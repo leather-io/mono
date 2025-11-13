@@ -29,7 +29,7 @@ export function RpcSignPsbtSummary() {
   const { onCopy } = useClipboard(txId);
 
   function onClickLink() {
-    void analytics.track('view_rpc_sign_and_broadcast_psbt_confirmation', { symbol: 'BTC' });
+    analytics.track('view_rpc_sign_and_broadcast_psbt_confirmation', { symbol: 'BTC' });
     handleOpenTxLink(txLink);
   }
 

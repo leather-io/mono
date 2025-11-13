@@ -92,12 +92,12 @@ export function stxAvailableBalanceValidator(availableBalance: Money) {
       test(value: unknown) {
         const fee = new BigNumber(stxToMicroStx(this.parent.fee));
         if (!fee.isFinite()) {
-          void analytics.track('unable_to_read_fee_in_stx_validator');
+          analytics.track('unable_to_read_fee_in_stx_validator');
           return this.createError({ message: 'Unable to read current fee' });
         }
         if (!isNumber(value)) return false;
         if (!availableBalance) {
-          void analytics.track('unable_to_read_available_balance_in_stx_validator');
+          analytics.track('unable_to_read_available_balance_in_stx_validator');
           return this.createError({ message: 'Available balance unknown' });
         }
         const availableBalanceLessFee = availableBalance.amount.minus(fee);

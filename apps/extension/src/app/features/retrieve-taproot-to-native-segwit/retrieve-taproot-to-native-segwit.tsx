@@ -40,7 +40,7 @@ export function RetrieveTaprootToNativeSegwit() {
         toast.success('Transaction submitted!');
         await delay(700);
         void navigate(RouteUrls.Activity);
-        void analytics.track('broadcast_retrieve_taproot_to_native_segwit');
+        analytics.track('broadcast_retrieve_taproot_to_native_segwit');
       },
       onError(e) {
         alert(e);

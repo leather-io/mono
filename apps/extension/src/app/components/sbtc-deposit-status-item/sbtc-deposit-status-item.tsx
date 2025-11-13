@@ -53,7 +53,7 @@ export function SbtcDepositTransactionItem({ deposit }: SbtcDepositTransactionIt
   const depositFailed = status === 'failed';
 
   function openTxLink() {
-    void analytics.track('view_bitcoin_transaction');
+    analytics.track('view_bitcoin_transaction');
     handleOpenTxLink({ txid: bitcoinTxid });
   }
 

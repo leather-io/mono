@@ -40,7 +40,7 @@ export function RequestPassword({ onSuccess, showForgotPassword = false }: Reque
 
   const submit = useCallback(async () => {
     const startUnlockTimeMs = performance.now();
-    void analytics.track('start_unlock');
+    analytics.track('start_unlock');
     startWaitingMessage();
     setError('');
     try {
@@ -51,7 +51,7 @@ export function RequestPassword({ onSuccess, showForgotPassword = false }: Reque
     }
     stopWaitingMessage();
     const unlockSuccessTimeMs = performance.now();
-    void analytics.track('complete_unlock', {
+    analytics.track('complete_unlock', {
       durationMs: unlockSuccessTimeMs - startUnlockTimeMs,
     });
   }, [startWaitingMessage, stopWaitingMessage, unlockWallet, password, onSuccess]);

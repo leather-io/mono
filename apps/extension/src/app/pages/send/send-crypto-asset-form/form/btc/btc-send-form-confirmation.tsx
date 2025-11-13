@@ -91,7 +91,7 @@ export function BtcSendFormConfirmation() {
       skipSpendableCheckUtxoIds: utxosOfSpendableInscriptions.map(utxo => utxo.txid),
       tx: transaction.hex,
       async onSuccess(txid) {
-        void analytics.track('broadcast_transaction', {
+        analytics.track('broadcast_transaction', {
           symbol: 'btc',
           amount: Number(transferAmount),
           fee,
@@ -110,7 +110,7 @@ export function BtcSendFormConfirmation() {
         );
       },
       onError(e) {
-        void analytics.track('broadcast_btc_error', {
+        analytics.track('broadcast_btc_error', {
           error: e,
         });
         void nav.toErrorPage(e);

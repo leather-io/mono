@@ -58,7 +58,7 @@ export function useSignStacksMessageRequest() {
 
   function onCancelMessageSigning() {
     if (!requestToken || !tabId) return;
-    void analytics.track('request_signature_cancel');
+    analytics.track('request_signature_cancel');
     finalizeMessageSignature({ requestPayload: requestToken, tabId, data: 'cancel' });
   }
 

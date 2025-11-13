@@ -14,7 +14,7 @@ export function ViewSecretKey() {
   const [showSecretKey, setShowSecretKey] = useState(false);
 
   useEffect(() => {
-    void analytics.page('view', '/save-secret-key');
+    analytics.page('view', '/save-secret-key');
   }, []);
 
   if (showSecretKey) {

@@ -38,7 +38,7 @@ export async function checkEntityAddressIsCompliant(address: string): Promise<Co
 
   const isOnSanctionsList = entityReport.risk === 'Severe';
 
-  if (isOnSanctionsList) void analytics.track('non_compliant_entity_detected', { address });
+  if (isOnSanctionsList) analytics.track('non_compliant_entity_detected', { address });
 
   return { ...entityReport, isOnSanctionsList };
 }
@@ -63,7 +63,7 @@ export function useBreakOnNonCompliantEntity(address: string | string[] = '') {
   ]);
 
   if (complianceReports.some(report => report.data?.isOnSanctionsList)) {
-    void analytics.track('non_compliant_entity_detected', { address });
+    analytics.track('non_compliant_entity_detected', { address });
     throw new Error(compliantErrorBody);
   }
 }

@@ -27,7 +27,7 @@ export async function stacksBroadcastTransaction({
 }: StacksBroadcastTransactionArgs) {
   const attemptId = crypto.randomUUID();
   try {
-    void analytics.untypedTrack('stacks_transaction_broadcast_initiated', {
+    analytics.untypedTrack('stacks_transaction_broadcast_initiated', {
       attemptId,
     });
 
@@ -58,8 +58,8 @@ export async function stacksBroadcastTransaction({
     }
 
     logger.info('Transaction broadcast', response);
-    void analytics.track('broadcast_transaction', { symbol: 'stx' });
-    void analytics.untypedTrack('stacks_transaction_broadcast_succeeded', {
+    analytics.track('broadcast_transaction', { symbol: 'stx' });
+    analytics.untypedTrack('stacks_transaction_broadcast_succeeded', {
       attemptId,
     });
 
@@ -69,7 +69,7 @@ export async function stacksBroadcastTransaction({
     return;
   } catch (error) {
     logger.error('Transaction error', { error });
-    void analytics.untypedTrack('stacks_transaction_broadcast_failed', {
+    analytics.untypedTrack('stacks_transaction_broadcast_failed', {
       attemptId,
       ...serializeError(error),
     });

@@ -1,11 +1,15 @@
 import { FungibleConditionCode, parsePrincipalString } from '@stacks/transactions';
 import { HEYSTACK_HEY_TX_REQUEST, HEYSTACK_HEY_TX_REQUEST_DECODED } from '@tests/mocks';
+import { setupMixpanelMock } from '@tests/mocks/mock-mixpanel';
 
 import { getLegacyTransactionPayloadFromToken } from '@shared/utils/legacy-requests';
 
 import { formatPostConditionState } from './post-conditions.hooks';
 
 describe(formatPostConditionState.name, () => {
+  beforeEach(() => {
+    setupMixpanelMock();
+  });
   it('formats the post condition correctly', () => {
     const payload = getLegacyTransactionPayloadFromToken(HEYSTACK_HEY_TX_REQUEST);
     const result = formatPostConditionState(payload, 'ST2PHCPANVT8DVPSY5W2ZZ81M285Q5Z8Y6DQMZE7Z');

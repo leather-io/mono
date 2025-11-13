@@ -15,7 +15,7 @@ export function Ordinals() {
     if (!results.inscriptions) return;
     const inscriptionsLength = results.inscriptions.length;
     if (inscriptionsLength > 0) {
-      void analytics.track('view_collectibles', {
+      analytics.track('view_collectibles', {
         ordinals_count: inscriptionsLength,
       });
     }

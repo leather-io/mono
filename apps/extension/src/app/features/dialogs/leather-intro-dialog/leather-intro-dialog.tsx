@@ -38,18 +38,18 @@ export function useLeatherIntroSheetContext() {
 function LeatherIntroSheetContainer() {
   const navigate = useNavigate();
   async function onRevealNewName() {
-    void analytics.track('new_brand_reveal_name');
+    analytics.track('new_brand_reveal_name');
     await delay(4000);
     void navigate('./introducing-leather', { replace: true });
   }
 
   function onAcceptTerms() {
-    void analytics.track('new_brand_accept_terms');
+    analytics.track('new_brand_accept_terms');
     void navigate('../', { replace: true });
   }
 
   function onRejectAndUninstall() {
-    void analytics.track('new_brand_reject_terms');
+    analytics.track('new_brand_reject_terms');
     openInNewTab('https://leather.gitbook.io/guides/troubleshooting/uninstall-wallet');
   }
 

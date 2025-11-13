@@ -56,7 +56,7 @@ export function useSubmitSwap({
 
       const { quote, networkFee } = readiness.prerequisites;
 
-      void trackEvent('swap_submitted', {
+      trackEvent('swap_submitted', {
         baseSymbol: quote.baseAsset.symbol,
         targetSymbol: quote.targetAsset.symbol,
         baseAmount: quote.baseAmount.amount.toNumber(),
@@ -82,7 +82,7 @@ export function useSubmitSwap({
     onSuccess() {
       if (!readiness.canSubmit) return;
       const { quote } = readiness.prerequisites;
-      void trackEvent('swap_submission_success', {
+      trackEvent('swap_submission_success', {
         baseSymbol: quote.baseAsset.symbol,
         targetSymbol: quote.targetAsset.symbol,
         baseAmount: quote.baseAmount.amount.toNumber(),
@@ -93,7 +93,7 @@ export function useSubmitSwap({
     onError(error) {
       if (!readiness.canSubmit) return;
       const { quote } = readiness.prerequisites;
-      void trackEvent('swap_submission_failure', {
+      trackEvent('swap_submission_failure', {
         baseSymbol: quote.baseAsset.symbol,
         targetSymbol: quote.targetAsset.symbol,
         errorMessage: isError(error) ? error.message : 'unknown',

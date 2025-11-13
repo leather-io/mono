@@ -53,7 +53,7 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
   }
 
   function openTxLink() {
-    void analytics.track('view_bitcoin_transaction');
+    analytics.track('view_bitcoin_transaction');
     if (inscriptionData) {
       openInNewTab(inscriptionData.id);
       return;

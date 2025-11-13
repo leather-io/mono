@@ -8,7 +8,7 @@ export function usePageViewTracking() {
   const params = useGlobalSearchParams();
 
   useEffect(() => {
-    void analytics?.screen(pathname, {
+    analytics?.screen(pathname, {
       params,
     });
   }, [pathname, params]);

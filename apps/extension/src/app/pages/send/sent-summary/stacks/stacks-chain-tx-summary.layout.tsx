@@ -39,7 +39,7 @@ export function StacksChainTxSummaryLoading({ txid }: { txid: string }) {
   const { onCopy } = useClipboard(txid);
 
   function onClickLink() {
-    void analytics.untypedTrack('view_transaction_confirmation_while_loading', { symbol: 'STX' });
+    analytics.untypedTrack('view_transaction_confirmation_while_loading', { symbol: 'STX' });
     handleOpenStacksTxLink({ txid });
   }
 
@@ -77,7 +77,7 @@ export function StacksChainTxSummaryLayout(props: StacksChainTxSummaryLayoutProp
   const toast = useToast();
 
   function onClickLink() {
-    void analytics.track('view_transaction_confirmation', { symbol: 'STX' });
+    analytics.track('view_transaction_confirmation', { symbol: 'STX' });
     handleOpenStacksTxLink({ txid });
   }
 

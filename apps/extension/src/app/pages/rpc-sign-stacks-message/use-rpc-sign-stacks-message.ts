@@ -109,7 +109,7 @@ export function useRpcSignStacksMessage() {
 
   function onCancelMessageSigning() {
     if (!requestId || !tabId) return;
-    void analytics.track('request_signature_cancel');
+    analytics.track('request_signature_cancel');
     void chrome.tabs.sendMessage(
       tabId,
       createRpcErrorResponse('stx_signMessage', {

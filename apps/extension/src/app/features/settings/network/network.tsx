@@ -25,17 +25,17 @@ export function NetworkSheet({ onClose }: NetworkSheetProps) {
   const currentNetwork = useCurrentNetworkState();
 
   function addNetwork() {
-    void analytics.track('add_network');
+    analytics.track('add_network');
     void navigate(RouteUrls.AddNetwork);
   }
 
   function removeNetwork(id: string) {
-    void analytics.track('remove_network');
+    analytics.track('remove_network');
     networksActions.removeNetwork(id);
   }
 
   function selectNetwork(id: string) {
-    void analytics.track('change_network', { id });
+    analytics.track('change_network', { id });
     networksActions.changeNetwork(id);
   }
 

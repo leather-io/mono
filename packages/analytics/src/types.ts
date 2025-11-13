@@ -6,18 +6,26 @@ export interface DefaultProperties {
 }
 
 export interface AnalyticsClientInterface {
-  screen(name: string, ...args: any[]): Promise<any>;
-  track(event: string, ...args: any[]): Promise<any>;
-  group(groupId: string, traits?: any, ...args: any[]): Promise<any>;
-  identify(...args: any[]): Promise<any>;
-  page?(category?: string, name?: string, ...args: any[]): Promise<any>;
+  track(eventName: string, properties: Record<string, any>): void;
+  identify(uniqueId: string): Promise<void>;
+  setGroup(groupKey: string, groupId: string): void;
+  getGroup(
+    groupKey: string,
+    groupId: string
+  ): {
+    set(prop: string, to: string): void;
+  };
+  getPeople(): {
+    set(properties: Record<string, any>): void;
+  };
 }
 
-export interface AnalyticsClientConfig<T extends AnalyticsClientInterface> {
-  client: T;
+export interface AnalyticsClientConfig {
+  client: AnalyticsClientInterface;
   defaultProperties?: DefaultProperties;
   defaultTraits?: JsonMap;
 }
+
 export type JsonList = JsonValue[];
 export type JsonValue = boolean | number | string | undefined | null | JsonList | JsonMap | Error;
 export interface JsonMap {

@@ -27,7 +27,7 @@ export function useSendMax({
   const toast = useToast();
 
   return useCallback(() => {
-    void analytics.track('select_maximum_amount_for_send');
+    analytics.track('select_maximum_amount_for_send');
     if (balance.amount.isLessThanOrEqualTo(0)) {
       toast.error('Zero balance');
       return;

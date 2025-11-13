@@ -56,7 +56,7 @@ export function StacksTransactionItem({
   if (!transaction && !hasTransferDetailsData) return null;
 
   function openTxLink() {
-    void analytics.track('view_transaction');
+    analytics.track('view_transaction');
     handleOpenStacksTxLink({
       txid: transaction?.tx_id || link || '',
     });

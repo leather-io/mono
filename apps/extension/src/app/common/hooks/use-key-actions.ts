@@ -70,7 +70,7 @@ export function useKeyActions() {
         dispatch(manageTokensSlice.actions.removeAllTokens());
         await clearChromeStorage();
         partiallyClearLocalStorage();
-        void analytics.track('sign_out');
+        analytics.track('sign_out');
         queryClient.clear();
       },
 

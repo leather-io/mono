@@ -36,7 +36,7 @@ export function useAnalyticsOnlyStacksNonceTracker() {
       if ('name' in serializedError && serializedError.name === 'BadNonce') {
         const report = { ...serializedError, ...context, txNonce };
         if ('stack' in report) delete report.stack;
-        void analytics.untypedTrack('investigation_bad_nonce_increase', report);
+        analytics.untypedTrack('investigation_bad_nonce_increase', report);
       }
     },
   };

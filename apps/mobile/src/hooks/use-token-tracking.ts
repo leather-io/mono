@@ -29,14 +29,14 @@ export function useTokenTracking({
   useEffect(() => {
     if (!assetId) return;
     if (isToken) {
-      void analytics.track('token_details_viewed', {
+      analytics.track('token_details_viewed', {
         assetId,
         protocol: assetProtocol,
         platform: 'mobile',
         walletAccountId,
       });
     } else if (isCollectible) {
-      void analytics.track('collectible_details_viewed', {
+      analytics.track('collectible_details_viewed', {
         assetId,
         protocol: assetProtocol,
         platform: 'mobile',

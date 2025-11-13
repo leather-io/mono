@@ -39,14 +39,14 @@ export function useStacksBroadcastSwap() {
           onSuccess(txId) {
             toast.success('Transaction submitted!');
             setIsIdle();
-            void analytics.untypedTrack('stacks_swap_succeeded', { txid: txId });
+            analytics.untypedTrack('stacks_swap_succeeded', { txid: txId });
             return navigate(RouteUrls.Activity);
           },
           replaceByFee: false,
         })(signedTx);
       } catch (e) {
         setIsIdle();
-        void analytics.untypedTrack('stacks_swap_failed', { error: e });
+        analytics.untypedTrack('stacks_swap_failed', { error: e });
         return navigate(RouteUrls.BroadcastError, {
           state: { message: isError(e) ? e.message : 'Unknown error' },
         });

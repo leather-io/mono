@@ -29,7 +29,7 @@ export function useRpcTransactionRequest(): RpcTransactionRequest {
   }
 
   function onClickRequestedByLink(method: RpcMethodNames) {
-    void analytics.track('user_clicked_requested_by_link', {
+    analytics.track('user_clicked_requested_by_link', {
       endpoint: method,
     });
     focusTabAndWindow(tabId);

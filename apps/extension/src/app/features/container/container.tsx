@@ -5,10 +5,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
-import {
-  useHandleQueuedBackgroundAnalytics,
-  useInitalizeAnalytics,
-} from '@app/common/app-analytics';
+import { initalizeAnalytics, useHandleQueuedBackgroundAnalytics } from '@app/common/app-analytics';
 import { ContainerLayout } from '@app/components/layout';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { SwitchAccountSheet } from '@app/features/dialogs/switch-account-sheet/switch-account-sheet';
@@ -22,6 +19,7 @@ import { switchAccount } from '@app/store/chains/stx-chain.actions';
 import { useSyncAddressMonitor } from '../address-monitor/use-sync-address-monitor';
 import { useRestoreFormState } from '../popup-send-form-restoration/use-restore-form-state';
 
+initalizeAnalytics();
 export function Container() {
   const { pathname: locationPathname } = useLocation();
   const pathname = locationPathname as RouteUrls;
@@ -33,11 +31,10 @@ export function Container() {
   useOnWalletLock(() => closeWindow());
   useOnSignOut(() => closeWindow());
   useRestoreFormState();
-  useInitalizeAnalytics();
   useHandleQueuedBackgroundAnalytics();
   useOnChangeAccount(index => dispatch(switchAccount(index)));
 
-  useEffect(() => void analytics.page('view', `${pathname}`), [pathname]);
+  useEffect(() => analytics.page('view', `${pathname}`), [pathname]);
 
   if (!hasStateRehydrated) return <LoadingSpinner />;
 

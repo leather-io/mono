@@ -19,7 +19,7 @@ export function RecipientAddressDisplayer({ address }: RecipientAddressDisplayer
   function copyToClipboard() {
     toast.success('Copied to clipboard!');
 
-    void analytics.track('copy_recipient_bns_address_to_clipboard');
+    analytics.track('copy_recipient_bns_address_to_clipboard');
     onCopy();
   }
 

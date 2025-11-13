@@ -14,7 +14,7 @@ export function Stamps() {
   useEffect(() => {
     if (!stamps.length) return;
     if (stamps.length > 0) {
-      void analytics.track('view_collectibles', {
+      analytics.track('view_collectibles', {
         stamps_count: stamps.length,
       });
       void analytics.identify(undefined, { stamps_count: stamps.length });

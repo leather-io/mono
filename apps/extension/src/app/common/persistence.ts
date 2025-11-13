@@ -65,7 +65,7 @@ export const queryClient = new QueryClient({
           hash: query.queryHash,
           error: error.toJSON(),
         };
-        void analytics.untypedTrack('api_error', errorReport);
+        analytics.untypedTrack('api_error', errorReport);
       }
 
       if (isZodError(error)) {
@@ -78,7 +78,7 @@ export const queryClient = new QueryClient({
         // Replace with `formatQueryZodErrors` from `@leather.io/query`
         // Example:
         // `void analytics.track(...formatQueryZodErrors(error, query))`
-        void analytics.track('schema_fail', zodErrorReport);
+        analytics.track('schema_fail', zodErrorReport);
       }
     },
   }),

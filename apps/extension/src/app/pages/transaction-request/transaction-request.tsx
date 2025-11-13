@@ -79,7 +79,7 @@ function TransactionRequestBase() {
   const { stacksBroadcastTransaction } = useStacksBroadcastTransaction({ token: 'STX' });
   const signStacksTransaction = useSignStacksTransaction();
 
-  useOnMount(() => void analytics.track('view_transaction_signing'));
+  useOnMount(() => analytics.track('view_transaction_signing'));
 
   async function onSubmit(
     values: StacksTransactionFormValues,
@@ -124,7 +124,7 @@ function TransactionRequestBase() {
       await stacksBroadcastTransaction(unsignedTx);
     }
 
-    void analytics.track('submit_fee_for_transaction', {
+    analytics.track('submit_fee_for_transaction', {
       calculation: stxFees?.calculation || 'unknown',
       fee: values.fee,
       type: values.feeType,

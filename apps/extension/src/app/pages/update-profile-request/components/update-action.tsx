@@ -70,7 +70,7 @@ export function UpdateAction({
   async function onUpdateProfile() {
     if (!requestToken) return;
     setIsLoading(true);
-    void analytics.track('request_update_profile_submit');
+    analytics.track('request_update_profile_submit');
     const result = await updateProfileSoftwareWallet(publicProfile);
     setIsLoading(false);
 
@@ -83,7 +83,7 @@ export function UpdateAction({
 
   function onCancel() {
     if (!requestToken) return;
-    void analytics.track('request_update_profile_cancel');
+    analytics.track('request_update_profile_cancel');
     finalizeProfileUpdate({ requestPayload: requestToken, tabId, data: 'cancel' });
   }
 

@@ -98,7 +98,7 @@ export function Settings({
         canLockWallet && hasKeys && walletType === 'software' && (
           <DropdownMenu.Item
             onSelect={() => {
-              void analytics.track('lock_session');
+              analytics.track('lock_session');
               void lockWallet({
                 afterLock: () => navigate(RouteUrls.Unlock, { state: { from: location.pathname } }),
               });
@@ -184,8 +184,8 @@ export function Settings({
                 <DropdownMenu.Item
                   data-testid={SettingsSelectors.OpenWalletInNewTab}
                   onSelect={() => {
-                    void analytics.track('click_open_in_new_tab_menu_item');
-                    void analytics.untypedTrack('click_open_in_new_tab', {
+                    analytics.track('click_open_in_new_tab_menu_item');
+                    analytics.untypedTrack('click_open_in_new_tab', {
                       location: 'settings-menu',
                     });
                     void analytics.identify(undefined, { hasVisitedFullPageMode: true });
@@ -201,7 +201,7 @@ export function Settings({
               <DropdownMenu.Item
                 data-testid={SettingsSelectors.ChangeNetworkAction}
                 onSelect={() => {
-                  void analytics.track('click_change_network_menu_item');
+                  analytics.track('click_change_network_menu_item');
                   setShowChangeNetwork(!showChangeNetwork);
                 }}
               >
@@ -218,7 +218,7 @@ export function Settings({
               <DropdownMenu.Item
                 data-testid={SettingsSelectors.ToggleTheme}
                 onSelect={() => {
-                  void analytics.track('click_change_theme_menu_item');
+                  analytics.track('click_change_theme_menu_item');
                   setShowChangeTheme(!showChangeTheme);
                 }}
               >
@@ -232,7 +232,7 @@ export function Settings({
               <DropdownMenu.Item
                 data-testid={SettingsSelectors.TogglePrivacy}
                 onSelect={() => {
-                  void analytics.track('click_toggle_privacy');
+                  analytics.track('click_toggle_privacy');
                   togglePrivateMode();
                 }}
               >

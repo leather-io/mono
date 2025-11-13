@@ -36,7 +36,7 @@ export function createSwapActions({
   return {
     setBaseSwapAsset(asset: AccountSwapAsset) {
       dispatch({ type: 'SET_BASE_SWAP_ASSET', payload: asset });
-      void trackEvent('swap_base_asset_selected', {
+      trackEvent('swap_base_asset_selected', {
         symbol: asset.asset.symbol,
         protocol: asset.asset.protocol,
       });
@@ -44,7 +44,7 @@ export function createSwapActions({
 
     setTargetSwapAsset(asset: AccountSwapAsset) {
       dispatch({ type: 'SET_TARGET_SWAP_ASSET', payload: asset });
-      void trackEvent('swap_target_asset_selected', {
+      trackEvent('swap_target_asset_selected', {
         symbol: asset.asset.symbol,
         protocol: asset.asset.protocol,
       });
@@ -93,7 +93,7 @@ export function createSwapActions({
         payload: calculatePercentageAmount(percentageSource, percentage),
       });
       const preset = percentage === 1 ? 'max' : (`${percentage * 100}%` as '25%' | '50%' | '75%');
-      void trackEvent('swap_amount_preset_selected', { preset });
+      trackEvent('swap_amount_preset_selected', { preset });
     },
 
     toggleInputCurrencyMode() {
@@ -107,12 +107,12 @@ export function createSwapActions({
         type: 'TOGGLE_INPUT_CURRENCY_MODE',
         payload: { nextBaseAmount },
       });
-      void trackEvent('swap_currency_mode_toggled', { mode: nextMode });
+      trackEvent('swap_currency_mode_toggled', { mode: nextMode });
     },
 
     setSlippage(slippage: number) {
       dispatch({ type: 'SET_SLIPPAGE', payload: slippage });
-      void trackEvent('swap_slippage_changed', { slippage: slippage * 100 });
+      trackEvent('swap_slippage_changed', { slippage: slippage * 100 });
     },
 
     setNonceOverride(nonce: number) {
@@ -125,7 +125,7 @@ export function createSwapActions({
 
     flipAssets() {
       dispatch({ type: 'FLIP_ASSETS' });
-      void trackEvent('swap_assets_flipped');
+      trackEvent('swap_assets_flipped');
     },
 
     openAssetSelector(type: 'base' | 'target') {
@@ -137,11 +137,11 @@ export function createSwapActions({
     },
     setFeeTier(tier: TransactionFeeTier) {
       dispatch({ type: 'SET_FEE_TIER', payload: tier });
-      void trackEvent('swap_fee_tier_selected', { tier });
+      trackEvent('swap_fee_tier_selected', { tier });
     },
     setCustomFee(fee: number) {
       dispatch({ type: 'SET_CUSTOM_FEE', payload: fee });
-      void trackEvent('swap_custom_fee_entered', { fee });
+      trackEvent('swap_custom_fee_entered', { fee });
     },
   };
 }

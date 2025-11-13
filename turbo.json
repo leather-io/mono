@@ -18,6 +18,8 @@
     "format:check": {},
     "lint": {},
     "lint:fix": {},
+    "test:unit": {},
+    "test:coverage": {},
     "typecheck": {},
     "check:all": {
       "dependsOn": [

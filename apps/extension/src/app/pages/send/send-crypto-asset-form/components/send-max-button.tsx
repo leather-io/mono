@@ -20,7 +20,7 @@ export function SendMaxButton({ balance, sendMaxBalance, ...props }: SendMaxButt
   const toast = useToast();
 
   const onSendMax = useCallback(() => {
-    void analytics.track('select_maximum_amount_for_send');
+    analytics.track('select_maximum_amount_for_send');
     if (balance.amount.isLessThanOrEqualTo(0)) {
       toast.error('Zero balance');
       return;

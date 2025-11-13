@@ -1,6 +1,11 @@
+import { setupMixpanelMock } from '@tests/mocks/mock-mixpanel';
+
 import { deriveAnalyticsIdentifier } from './analytics';
 
 describe(deriveAnalyticsIdentifier.name, () => {
+  beforeEach(() => {
+    setupMixpanelMock();
+  });
   test('the derivation of the users identifier', () =>
     expect(deriveAnalyticsIdentifier(Uint8Array.from([1, 2, 3]))).toBe('T49D6FxBz57'));
 

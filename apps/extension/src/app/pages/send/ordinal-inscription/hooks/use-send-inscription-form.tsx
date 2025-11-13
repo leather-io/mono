@@ -76,7 +76,7 @@ export function useSendInscriptionForm() {
           }
         );
       } catch (error) {
-        void analytics.track('ordinals_dot_com_unavailable', { error });
+        analytics.track('ordinals_dot_com_unavailable', { error });
 
         if (error instanceof BitcoinError && error.message === 'InsufficientFunds') {
           setShowError(FormErrorMessages.InsufficientFundsToCoverFee);

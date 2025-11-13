@@ -29,7 +29,7 @@ const TransactionErrorSuspense = memo(function TransactionErrorSuspense() {
 
   useEffect(() => {
     if (!reason) return;
-    void analytics.track('view_transaction_signing_error', {
+    analytics.track('view_transaction_signing_error', {
       reason: TransactionErrorReason[reason].toLowerCase(),
     });
   }, [reason]);

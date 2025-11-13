@@ -189,9 +189,9 @@ export function useSignLedgerBitcoinTx() {
       // exist, and we want the user to proceed, despite the warning.
       try {
         await addNativeSegwitUtxoHexLedgerProps(psbt, nativeSegwitInputsToSign);
-        void analytics.track('native_segwit_tx_hex_to_ledger_tx', { success: true });
+        analytics.track('native_segwit_tx_hex_to_ledger_tx', { success: true });
       } catch {
-        void analytics.track('native_segwit_tx_hex_to_ledger_tx', { success: false });
+        analytics.track('native_segwit_tx_hex_to_ledger_tx', { success: false });
       }
 
       addNativeSegwitBip32Derivation(psbt, fingerprint, nativeSegwitInputsToSign);
@@ -241,7 +241,7 @@ export function useAddTapInternalKeysIfMissing() {
       }
 
       if (shouldAssumeTxNeedsTaprootInternalKeyAdded()) {
-        void analytics.track('psbt_sign_request_p2tr_missing_taproot_internal_key');
+        analytics.track('psbt_sign_request_p2tr_missing_taproot_internal_key');
         tx.updateInput(index, { ...input, tapInternalKey: taprootSigner.payment.tapInternalKey });
       }
     });

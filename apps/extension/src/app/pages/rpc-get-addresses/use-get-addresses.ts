@@ -62,7 +62,7 @@ export function useGetAddresses() {
   const { nativeSegwitDescriptor, taprootDescriptor } = useGetDescriptors();
 
   function focusInitiatingTab() {
-    void analytics.track('user_clicked_requested_by_link', { endpoint: request.method });
+    analytics.track('user_clicked_requested_by_link', { endpoint: request.method });
     focusTabAndWindow(tabId);
   }
 
@@ -75,7 +75,7 @@ export function useGetAddresses() {
         return;
       }
 
-      void analytics.track('user_approved_get_addresses', { origin });
+      analytics.track('user_approved_get_addresses', { origin });
 
       permissions.hasRequestedAccounts(origin);
 

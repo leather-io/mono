@@ -53,7 +53,7 @@ export function useSubmitTransactionCallback({ loadingKey }: UseSubmitTransactio
 
           await delay(500);
 
-          void analytics.track('broadcast_transaction', {
+          analytics.track('broadcast_transaction', {
             symbol: 'stx',
           });
           onSuccess(response.txid);

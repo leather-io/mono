@@ -22,14 +22,14 @@ export function SheetNavigationContainer({ base, ...props }: SheetNavigationCont
       <NavigationIndependentTree>
         <NavigationContainer
           ref={navigationRef}
-          onStateChange={async () => {
+          onStateChange={() => {
             const previousRouteName = routeNameRef.current;
             const currentRouteName = navigationRef.current?.getCurrentRoute()?.name;
 
             if (previousRouteName !== currentRouteName) {
               // Replace the line below to add the tracker from a mobile analytics SDK
               if (currentRouteName) {
-                await analytics?.screen(`${base}/${currentRouteName}`);
+                analytics?.screen(`${base}/${currentRouteName}`);
               }
             }
 

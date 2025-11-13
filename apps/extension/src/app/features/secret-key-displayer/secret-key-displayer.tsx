@@ -18,7 +18,7 @@ export const SecretKey = memo(function SecretKey({ secretKey }: SecretKeyProps) 
   const navigate = useNavigate();
 
   function copyToClipboard() {
-    void analytics.track('copy_secret_key_to_clipboard');
+    analytics.track('copy_secret_key_to_clipboard');
     onCopy();
   }
 
