@@ -44,9 +44,9 @@ export function CurrencyModeSwitcher({ secondaryAmount, onModeSwitch }: Currency
             exiting={FadeOut.duration(150)}
             flexDirection="row"
             alignItems="center"
-            gap="2"
+            gap="1"
           >
-            <Text variant="label02" color="ink.text-subdued">
+            <Text variant="label03" color="ink.text-subdued" style={{ top: 1 }}>
               {formatCurrency(secondaryAmount.value)}
             </Text>
             <ArrowTopBottomIcon variant="small" color="ink.text-subdued" />

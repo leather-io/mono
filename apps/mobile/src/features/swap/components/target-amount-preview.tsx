@@ -7,114 +7,148 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { LiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
 import { formatCurrency } from '@/utils/currency-formatter';
 
 import { MarketData, Money } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
+const AnimatedBox = Animated.createAnimatedComponent(Box);
+
 interface TargetAmountPreviewProps {
   marketData?: MarketData;
-  targetAmount?: Money;
-  isLoading: boolean;
+  liveEstimate: LiveSwapEstimate;
   baseAmount: string;
 }
 
 export function TargetAmountPreview({
   marketData,
-  targetAmount,
-  isLoading,
+  liveEstimate,
   baseAmount,
 }: TargetAmountPreviewProps) {
-  const displayAmount = useDisplayAmount({ baseAmount, targetAmount, isLoading });
-  const animatedStyle = usePulsingAnimation(isLoading && baseAmount !== '0');
-  const formattedAmount = formatAmount(displayAmount);
-  const secondaryAmount = calculateQuoteCurrencyAmount(displayAmount, marketData);
+  const { status, quoteAmount } = deriveEstimateSnapshot(liveEstimate);
+  const shouldPulse = status === 'loading' && baseAmount !== '0';
+  const pulsingStyle = usePulsingAnimation(shouldPulse);
+  const primaryAmount = useStableTargetAmount({
+    baseAmount,
+    status,
+    nextQuoteAmount: quoteAmount,
+  });
+  const secondaryAmount = getSecondaryAmount(primaryAmount, marketData);
 
   return (
-    <Animated.View style={animatedStyle}>
+    <AnimatedBox style={pulsingStyle} gap="3">
       <Text
-        variant="heading02"
+        fontFamily="MarchePro-Super"
         fontSize={24}
-        lineHeight={36}
+        lineHeight={32}
         style={{ paddingTop: 1, marginBottom: -1 }}
-        color={formattedAmount === '0' ? 'ink.text-subdued' : 'ink.text-primary'}
+        color={getTargetAmountTextColor(primaryAmount)}
       >
-        {formattedAmount}
+        {formatPrimaryAmount(primaryAmount)}
       </Text>
-      <SecondaryAmountPreview amount={secondaryAmount} />
-    </Animated.View>
+      <Box height={16}>
+        {secondaryAmount && (
+          <Text variant="label03" color="ink.text-subdued">
+            {formatCurrency(secondaryAmount)}
+          </Text>
+        )}
+      </Box>
+    </AnimatedBox>
   );
 }
 
-interface SecondaryAmountPreviewProps {
-  amount?: Money;
-}
-
-function SecondaryAmountPreview({ amount }: SecondaryAmountPreviewProps) {
-  return (
-    <Box mt="2" height={20}>
-      {amount && (
-        <Text variant="label02" color="ink.text-subdued">
-          {formatCurrency(amount)}
-        </Text>
-      )}
-    </Box>
-  );
-}
-
-interface UseDisplayAmountParams {
+interface UseStableTargetAmountParams {
   baseAmount: string;
-  targetAmount?: Money;
-  isLoading: boolean;
+  status: LiveSwapEstimate['status'];
+  nextQuoteAmount?: Money;
 }
 
 // Ensure minimal transitions of target amount as user edits base amount:
 // 1. Don't reset when the base amount is effectively 0 but likely in flight, e.g., 0.0000
 // 2. Maintain the previous target amount while a new quote is being fetched.
-function useDisplayAmount({ baseAmount, targetAmount, isLoading }: UseDisplayAmountParams) {
-  const lastStableQuoteAmount = useRef<Money>(undefined);
+function useStableTargetAmount({
+  baseAmount,
+  status,
+  nextQuoteAmount,
+}: UseStableTargetAmountParams) {
+  const lastStableTargetAmount = useRef<Money | undefined>(undefined);
+  const shouldReset = baseAmount === '0' || status === 'error' || status === 'empty';
+  const shouldHoldLast = status === 'loading' || status === 'idle';
 
-  if (baseAmount === '0') {
-    lastStableQuoteAmount.current = undefined;
-    return;
+  if (shouldReset) {
+    lastStableTargetAmount.current = undefined;
+    return undefined;
   }
 
-  if (isLoading) return lastStableQuoteAmount.current;
+  if (shouldHoldLast) {
+    return lastStableTargetAmount.current;
+  }
 
-  lastStableQuoteAmount.current = targetAmount;
-
-  return targetAmount ?? lastStableQuoteAmount.current;
+  lastStableTargetAmount.current = nextQuoteAmount;
+  return nextQuoteAmount;
 }
 
 function usePulsingAnimation(enabled: boolean) {
   const opacity = useDerivedValue(() => {
-    if (enabled) {
-      return withRepeat(
-        withSequence(withTiming(0.5, { duration: 500 }), withTiming(1, { duration: 500 })),
-        -1,
-        true
-      );
-    }
-    return 1;
+    if (!enabled) return 1;
+
+    return withRepeat(
+      withSequence(
+        withTiming(0.5, {
+          duration: 500,
+        }),
+        withTiming(1, {
+          duration: 500,
+        })
+      ),
+      -1,
+      true
+    );
   }, [enabled]);
 
-  return useAnimatedStyle(() => ({
-    opacity: opacity.value,
-  }));
+  return useAnimatedStyle(() => ({ opacity: opacity.value }));
 }
 
-function calculateQuoteCurrencyAmount(displayAmount?: Money, marketData?: MarketData) {
-  if (!marketData) return;
+interface EstimateSnapshot {
+  status: LiveSwapEstimate['status'];
+  quoteAmount?: Money;
+}
 
-  if (!displayAmount) {
+function deriveEstimateSnapshot(liveEstimate: LiveSwapEstimate): EstimateSnapshot {
+  if (liveEstimate.status !== 'success') {
+    return { status: liveEstimate.status };
+  }
+
+  return {
+    status: 'success',
+    quoteAmount: liveEstimate.selectedQuote.quoteAmount,
+  };
+}
+
+function getSecondaryAmount(primaryAmount?: Money, marketData?: MarketData) {
+  if (!marketData) return undefined;
+
+  if (!primaryAmount) {
     return createMoney(0, marketData.price.symbol, marketData.price.decimals);
   }
 
-  return baseCurrencyAmountInQuote(displayAmount, marketData);
+  return baseCurrencyAmountInQuote(primaryAmount, marketData);
 }
 
-function formatAmount(amount?: Money): string {
+function getTargetAmountTextColor(amount?: Money) {
+  if (!amount || amount.amount.isZero()) {
+    return 'ink.text-subdued';
+  }
+  return 'ink.text-primary';
+}
+
+function formatPrimaryAmount(amount?: Money): string {
   if (!amount) return '0';
-  return formatCurrency(amount, { showCurrency: false, compactThreshold: 1_000_000 });
+
+  return formatCurrency(amount, {
+    showCurrency: false,
+    compactThreshold: 1_000_000,
+  });
 }

@@ -18,6 +18,7 @@ import { AssetSelectorToggle } from '../components/asset-selector/asset-selector
 import { FlipButton } from '../components/flip-button';
 import * as Panel from '../components/panel';
 import { TargetAmountPreview } from '../components/target-amount-preview';
+import { useLiveSwapEstimate } from '../hooks/use-live-swap-estimate';
 
 interface SwapFormScreenProps {
   swapState: UseSwapStateResult;
@@ -36,6 +37,7 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
     networkFeeQuery,
     canExecute,
   } = swapState;
+  const liveEstimate = useLiveSwapEstimate({ quoteQuery, networkFeeQuery });
 
   const validateDecimalPlaces = createDecimalPlaceValidator(
     whenInputCurrencyMode(state.inputCurrencyMode)({
@@ -43,6 +45,7 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
       quote: currencyDecimalsMap[state.quoteCurrencyPreference],
     })
   );
+
   function handleAssetSelection(type: 'base' | 'target', asset: AccountSwapAsset) {
     const action = {
       base: actions.setBaseSwapAsset,
@@ -56,61 +59,56 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
     <FullHeightSheetLayout header={<FullHeightSheetHeader title={t`Swap`} />}>
       <Panel.Root>
         <Panel.Card type="pay">
-          <Panel.CardRow>
-            <AmountField
+          <AmountField
+            asset={state.baseSwapAsset?.asset}
+            secondaryAmount={state.secondaryAmount}
+            inputCurrencyMode={state.inputCurrencyMode}
+            onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
+            value={state.baseAmount}
+            quoteCurrencyPreference={state.quoteCurrencyPreference}
+            errorMessage={getAmountErrorMessage(validation.issues.baseAmount)}
+          />
+          <Box alignItems="flex-end" gap="3" flexShrink={0}>
+            <AssetSelectorToggle
               asset={state.baseSwapAsset?.asset}
-              secondaryAmount={state.secondaryAmount}
-              inputCurrencyMode={state.inputCurrencyMode}
-              onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
-              value={state.baseAmount}
-              quoteCurrencyPreference={state.quoteCurrencyPreference}
-              errorMessage={getAmountErrorMessage(validation.issues.baseAmount)}
+              onPress={() => actions.openAssetSelector('base')}
             />
-            <Box alignItems="flex-end" gap="3" flexShrink={0}>
-              <AssetSelectorToggle
-                asset={state.baseSwapAsset?.asset}
-                onPress={() => actions.openAssetSelector('base')}
-              />
-              <AssetBalance
-                balance={state.baseSwapAsset?.balance}
-                inputCurrencyMode={state.inputCurrencyMode}
-              />
-            </Box>
-          </Panel.CardRow>
+            <AssetBalance
+              balance={state.baseSwapAsset?.balance}
+              inputCurrencyMode={state.inputCurrencyMode}
+            />
+          </Box>
         </Panel.Card>
 
         <Panel.Card type="receive">
-          <Panel.CardRow>
-            <TargetAmountPreview
-              marketData={targetMarketDataQuery.data}
-              targetAmount={quoteQuery.data?.selected?.quoteAmount}
-              isLoading={quoteQuery.isFetching || networkFeeQuery.isFetching}
-              baseAmount={state.baseAmount}
+          <TargetAmountPreview
+            marketData={targetMarketDataQuery.data}
+            liveEstimate={liveEstimate}
+            baseAmount={state.baseAmount}
+          />
+          <Box alignItems="flex-end" gap="3" flexShrink={0}>
+            <AssetSelectorToggle
+              asset={state.targetSwapAsset?.asset}
+              onPress={() => actions.openAssetSelector('target')}
+              disabled={state.baseSwapAsset === null}
             />
-            <Box alignItems="flex-end" gap="3" flexShrink={0}>
-              <AssetSelectorToggle
-                asset={state.targetSwapAsset?.asset}
-                onPress={() => actions.openAssetSelector('target')}
-                disabled={state.baseSwapAsset === null}
-              />
-              <AssetBalance
-                balance={state.targetSwapAsset?.balance}
-                inputCurrencyMode={state.inputCurrencyMode}
-              />
-            </Box>
-          </Panel.CardRow>
+            <AssetBalance
+              balance={state.targetSwapAsset?.balance}
+              inputCurrencyMode={state.inputCurrencyMode}
+            />
+          </Box>
         </Panel.Card>
         <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
       </Panel.Root>
 
-      <Box flex={1} justifyContent="flex-end" gap="4">
+      <Box marginTop="auto" gap="3">
         <AmountPresets onSelectPercentage={actions.setBaseAmountByPercentage} />
         <Numpad
           value={state.baseAmount}
           onChange={actions.setBaseAmount}
           allowNextValue={validateDecimalPlaces}
         />
-        <Box px="5" mt="3">
+        <Box px="5" mt="2">
           <Button disabled={!canExecute} onPress={onPressReview}>{t`Review`}</Button>
         </Box>
       </Box>

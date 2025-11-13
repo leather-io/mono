@@ -22,6 +22,7 @@ import {
   MarketDataService,
   SwapService,
 } from '@leather.io/services';
+import { delay } from '@leather.io/utils';
 
 type CustomQueryOptions<TQueryFnData, TError = Error, TData = TQueryFnData> = Omit<
   UseQueryOptions<TQueryFnData, TError, TData>,
@@ -93,6 +94,7 @@ export function useSwapQuotesQuery({
   slippage,
   queryOptions,
 }: UseSwapQuotesQueryParams) {
+  const minFetchDuration = 500;
   const debounceDelay = 350;
   const debouncedBaseAmount = useDebouncedValue(baseAmount, debounceDelay);
 
@@ -101,14 +103,19 @@ export function useSwapQuotesQuery({
     queryFn: async ({ signal }) => {
       if (!baseSwapAsset || !targetSwapAsset || !debouncedBaseAmount) return [];
 
-      return swapService.getSwapQuotes(
-        baseSwapAsset,
-        targetSwapAsset,
-        debouncedBaseAmount.amount
-          .shiftedBy(baseSwapAsset ? -baseSwapAsset.asset.decimals : 0)
-          .toNumber(),
-        signal
-      );
+      const [quotes] = await Promise.all([
+        swapService.getSwapQuotes(
+          baseSwapAsset,
+          targetSwapAsset,
+          debouncedBaseAmount.amount
+            .shiftedBy(baseSwapAsset ? -baseSwapAsset.asset.decimals : 0)
+            .toNumber(),
+          signal
+        ),
+        delay(minFetchDuration),
+      ]);
+
+      return quotes;
     },
     gcTime: 0,
     select: data => swapQuoteSelector(data, policy, fairMarketRate, slippage),

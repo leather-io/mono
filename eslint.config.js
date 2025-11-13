@@ -89,6 +89,7 @@ export default tseslint.config(
             'id',
             'width',
             'height',
+            'fontFamily',
             'displayName',
             'Authorization',
           ],

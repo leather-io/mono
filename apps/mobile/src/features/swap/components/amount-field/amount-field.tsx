@@ -54,7 +54,7 @@ export function AmountField({
         caret={<AmountFieldCaret value={value} color={caretColor} />}
         animatedTextStyle={animatedTextStyle}
       />
-      <Box height={20}>
+      <Box height={16}>
         {showErrorMessage ? (
           <AnimatedBox
             key={1}
