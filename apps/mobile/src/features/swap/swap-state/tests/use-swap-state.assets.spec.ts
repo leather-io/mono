@@ -256,7 +256,7 @@ describe('base asset selection', () => {
     expect(result.current.state.baseSwapAsset).toEqual(newAsset);
   });
 
-  it('preserves existing amount value when setting base asset', () => {
+  it('resets amount to zero when setting base asset', () => {
     const result = renderUseSwapState({
       baseAsset: defaultBtcAsset,
     });
@@ -269,25 +269,7 @@ describe('base asset selection', () => {
     });
 
     act(() => result.current.actions.setBaseSwapAsset(newAsset));
-    expect(result.current.state.baseAmount).toBe('123.45');
-  });
-
-  it('adjusts decimal places to match new asset decimals in crypto input mode', () => {
-    const result = renderUseSwapState({
-      baseAsset: defaultBtcAsset,
-    });
-
-    expect(result.current.state.inputCurrencyMode).toBe('crypto');
-
-    act(() => result.current.actions.setBaseAmount('123.45678912'));
-
-    const twoDecimalAsset = createAccountSwapAsset({
-      asset: { protocol: 'sip10', symbol: 'TWO_DECIMAL', decimals: 2 },
-      balance: { crypto: 50, quote: 100 },
-    });
-
-    act(() => result.current.actions.setBaseSwapAsset(twoDecimalAsset));
-    expect(result.current.state.baseAmount).toBe('123.45');
+    expect(result.current.state.baseAmount).toBe('0');
   });
 
   it('resets asset selection state after base asset is set', () => {

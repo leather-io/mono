@@ -1,10 +1,6 @@
-import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
-
-import { currencyDecimalsMap } from '@leather.io/constants';
 import { assertUnreachable, isSameAsset } from '@leather.io/utils';
 
 import { SwapActionObject, SwapInternalState } from './swap-state.types';
-import { adjustAmountForDecimals } from './utils/amount-operations';
 
 export function swapReducer(state: SwapInternalState, action: SwapActionObject): SwapInternalState {
   switch (action.type) {
@@ -32,13 +28,7 @@ export function swapReducer(state: SwapInternalState, action: SwapActionObject):
           target: 'pending',
         },
         baseSwapAsset: action.payload,
-        baseAmount: adjustAmountForDecimals(
-          state.baseAmount,
-          whenInputCurrencyMode(state.inputCurrencyMode)({
-            crypto: action.payload.asset.decimals,
-            quote: currencyDecimalsMap[state.quoteCurrencyPreference] ?? 2,
-          })
-        ),
+        baseAmount: '0',
         selectingAsset: null,
         feeTier: 'standard',
         customFee: null,
