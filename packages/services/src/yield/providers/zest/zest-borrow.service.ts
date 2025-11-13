@@ -2,7 +2,19 @@ import { principalCV, standardPrincipalCV } from '@stacks/transactions';
 import { injectable } from 'inversify';
 
 import { stxAsset } from '@leather.io/constants';
-import { FungibleCryptoAsset, Money } from '@leather.io/models';
+import {
+  type AccountAddresses,
+  type YieldProduct,
+  YieldProductCategories,
+  type YieldProductCategory,
+  type YieldProductKey,
+  YieldProductKeys,
+  type YieldProvider,
+  type YieldProviderKey,
+  YieldProviderKeys,
+  type ZestBorrowAsset,
+  type ZestBorrowPosition,
+} from '@leather.io/models';
 import { getStacksContractName } from '@leather.io/stacks';
 import {
   baseCurrencyAmountInQuote,
@@ -12,36 +24,25 @@ import {
   sumMoney,
 } from '@leather.io/utils';
 
-import { FungibleAssetService } from '../../assets/fungible-asset.service';
-import { HiroStacksApiClient } from '../../infrastructure/api/hiro/hiro-stacks-api.client';
-import { LeatherApiClient } from '../../infrastructure/api/leather/leather-api.client';
-import { MarketDataService } from '../../market/market-data.service';
+import type { FungibleAssetService } from '../../../assets/fungible-asset.service';
+import type { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
+import type { LeatherApiClient } from '../../../infrastructure/api/leather/leather-api.client';
+import type { MarketDataService } from '../../../market/market-data.service';
+import type { YieldProductService } from '../../yield-product.interface';
 import {
   parseZestGetUserAssetsReadResponseCV,
   parseZestGetZTokenBalanceResponseCV,
   parseZestProtocolGetUserAssetBorrowBalanceResponseCV,
-} from './zest-borrow.utils';
-
-export interface ZestBorrowPosition {
-  totalValue: Money;
-  supplyValue: Money;
-  borrowValue: Money;
-  ltvPercentage: number;
-  borrowAssets: ZestBorrowAsset[];
-  supplyAssets: ZestBorrowAsset[];
-}
-
-export interface ZestBorrowAsset {
-  asset: FungibleCryptoAsset;
-  apy: number;
-  balance: Money;
-  balanceQuote: Money;
-}
+} from './zest.utils';
 
 const zestProductionAddress = 'SP2VCQJGH7PHP2DJK7Z0V48AGBHQAW3R3ZW1QF4N';
 
 @injectable()
-export class ZestBorrowService {
+export class ZestBorrowService implements YieldProductService {
+  providerKey: YieldProviderKey = YieldProviderKeys.zest;
+  productKey: YieldProductKey = YieldProductKeys.zestBorrow;
+  productCategory: YieldProductCategory = YieldProductCategories.LENDING;
+
   constructor(
     private readonly hiroStacksApiClient: HiroStacksApiClient,
     private readonly fungibleAssetService: FungibleAssetService,
@@ -49,27 +50,55 @@ export class ZestBorrowService {
     private readonly leatherApiClient: LeatherApiClient
   ) {}
 
-  public async getBorrowPosition(
-    address: string,
-    signal: AbortSignal
-  ): Promise<ZestBorrowPosition> {
-    const userAssets = await this.callGetUserAssetsRead(address, signal);
+  getProvider(): Promise<YieldProvider> {
+    return Promise.resolve({
+      key: this.providerKey,
+      name: 'Zest',
+      logo: '',
+      url: '',
+    });
+  }
+
+  getProduct(): Promise<YieldProduct> {
+    return Promise.resolve({
+      key: this.productKey,
+      provider: this.providerKey,
+      category: this.productCategory,
+      name: 'Zest Borrow Markets',
+      url: '',
+    });
+  }
+
+  async getAccountPosition(
+    account: AccountAddresses,
+    signal?: AbortSignal
+  ): Promise<ZestBorrowPosition | null> {
+    if (!account.stacks) {
+      return null;
+    }
+
+    const userAssets = await this.callGetUserAssetsRead(account.stacks.stxAddress, signal);
     const borrowPositions = await Promise.all(
       userAssets.borrowedAssetPrincipals.map(async assetPrincipal =>
-        this.getAssetBorrowPosition(address, assetPrincipal, signal)
+        this.getAssetBorrowPosition(account.stacks!.stxAddress, assetPrincipal, signal)
       )
     );
     const supplyPositions = await Promise.all(
       userAssets.suppliedAssetPrincipals.map(async assetPrincipal =>
-        this.getAssetSupplyPosition(address, assetPrincipal, signal)
+        this.getAssetSupplyPosition(account.stacks!.stxAddress, assetPrincipal, signal)
       )
     );
     const supplyValue = sumMoney(supplyPositions.map(p => p.balanceQuote));
     const borrowValue = sumMoney(borrowPositions.map(p => p.balanceQuote));
+
     return {
-      totalValue: subtractMoney(supplyValue, borrowValue),
-      supplyValue,
-      borrowValue,
+      provider: YieldProviderKeys.zest,
+      product: YieldProductKeys.zestBorrow,
+      updatedAtBlockHeight: 0,
+      updatedAt: new Date(),
+      totalBalance: subtractMoney(supplyValue, borrowValue),
+      supplyBalance: supplyValue,
+      borrowBalance: borrowValue,
       ltvPercentage: initBigNumber(borrowValue.amount)
         .dividedBy(initBigNumber(supplyValue.amount))
         .times(100)
@@ -82,7 +111,7 @@ export class ZestBorrowService {
   private async getAssetBorrowPosition(
     address: string,
     assetPrincipal: string,
-    signal: AbortSignal
+    signal?: AbortSignal
   ): Promise<ZestBorrowAsset> {
     const [borrowBalance, reserve, asset] = await Promise.all([
       this.callGetUserBorrowBalance(address, assetPrincipal, signal),
@@ -106,7 +135,7 @@ export class ZestBorrowService {
   private async getAssetSupplyPosition(
     address: string,
     assetPrincipal: string,
-    signal: AbortSignal
+    signal?: AbortSignal
   ): Promise<ZestBorrowAsset> {
     const [reserve, asset] = await Promise.all([
       this.leatherApiClient.fetchZestReserve(assetPrincipal, { signal }),
@@ -125,14 +154,14 @@ export class ZestBorrowService {
     };
   }
 
-  private async getZestAsset(assetPrincipal: string, signal: AbortSignal) {
+  private async getZestAsset(assetPrincipal: string, signal?: AbortSignal) {
     if (assetPrincipal.endsWith('.wstx')) {
       return stxAsset;
     }
     return this.fungibleAssetService.getAsset({ protocol: 'sip10', id: assetPrincipal }, signal);
   }
 
-  private async callGetUserAssetsRead(address: string, signal: AbortSignal) {
+  private async callGetUserAssetsRead(address: string, signal?: AbortSignal) {
     const response = await this.hiroStacksApiClient.callReadOnlyFunction(
       {
         contractAddress: zestProductionAddress,
@@ -148,7 +177,7 @@ export class ZestBorrowService {
   private async callGetUserBorrowBalance(
     address: string,
     assetPrincipal: string,
-    signal: AbortSignal
+    signal?: AbortSignal
   ) {
     const response = await this.hiroStacksApiClient.callReadOnlyFunction(
       {
@@ -165,7 +194,7 @@ export class ZestBorrowService {
   private async callZTokenGetBalance(
     zTokenPrincipal: string,
     address: string,
-    signal: AbortSignal
+    signal?: AbortSignal
   ): Promise<bigint> {
     const contractName = getStacksContractName(zTokenPrincipal);
     const response = await this.hiroStacksApiClient.callReadOnlyFunction(
