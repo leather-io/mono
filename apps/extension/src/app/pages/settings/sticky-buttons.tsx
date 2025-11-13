@@ -13,11 +13,11 @@ import { useHasKeys } from '@app/common/hooks/auth/use-has-keys';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
-import { useHasDefaultInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { useHasActiveInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 
 export function StickyButtons() {
   const { lockWallet } = useKeyActions();
-  const hasDefaultInMemorySecretKey = useHasDefaultInMemoryWalletSecretKey();
+  const hasDefaultInMemorySecretKey = useHasActiveInMemoryWalletSecretKey();
   const { hasKeys } = useHasKeys();
   const { walletType } = useWalletType();
   const navigate = useNavigate();

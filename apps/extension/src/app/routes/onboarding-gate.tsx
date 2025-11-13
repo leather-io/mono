@@ -3,7 +3,7 @@ import { Navigate } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
-import { useHasDefaultInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { useHasActiveInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { useHasLedgerKeys } from '@app/store/ledger/ledger.selectors';
 import { useCurrentKeyDetails } from '@app/store/software-keys/software-key.selectors';
 
@@ -23,7 +23,7 @@ interface OnboardingGateProps {
 }
 export function OnboardingGate({ children }: OnboardingGateProps) {
   const keyDetails = useCurrentKeyDetails();
-  const hasInMemorySecretKey = useHasDefaultInMemoryWalletSecretKey();
+  const hasInMemorySecretKey = useHasActiveInMemoryWalletSecretKey();
   const isLedger = useHasLedgerKeys();
 
   if (

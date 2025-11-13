@@ -11,17 +11,20 @@ import {
   lookUpLedgerKeysByPath,
   makeNativeSegwitAccountDerivationPath,
 } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
+import {
+  deriveRootKeychainFromMnemonicSync,
+  extractAddressIndexFromPath,
+  extractChangeIndexFromPath,
+} from '@leather.io/crypto';
 import { bitcoinNetworkToNetworkMode } from '@leather.io/models';
 import { reverseBytes } from '@leather.io/utils';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { analytics } from '@shared/utils/analytics';
 
-import { mnemonicToRootNode } from '@app/common/keychain/keychain';
 import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { selectCurrentAccountIndex } from '@app/store/software-keys/software-key.selectors';
+import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 
 import { useCurrentAccountIndex } from '../../account';
 import {
@@ -51,8 +54,8 @@ export function useGenerateNativeSegwitAccount() {
 
 const selectCurrentNativeSegwitAccount = createSelector(
   selectCurrentNetworkNativeSegwitAccountBuilder,
-  selectCurrentAccountIndex,
-  (generateAccount, accountIndex) => generateAccount(accountIndex)
+  selectCurrentAccount,
+  (generateAccount, account) => generateAccount(account.accountIndex)
 );
 
 export function useCurrentNativeSegwitAccount() {
@@ -140,7 +143,7 @@ export function useNativeSegwitAccountIndexAddressIndexZero(accountIndex: number
 
 export function getNativeSegwitMainnetAddressFromMnemonic(secretKey: string) {
   return (accountIndex: number) => {
-    const rootNode = mnemonicToRootNode(secretKey);
+    const rootNode = deriveRootKeychainFromMnemonicSync(secretKey);
     const account = deriveNativeSegwitAccountFromRootKeychain(rootNode, 'mainnet')(accountIndex);
     return getNativeSegwitPaymentFromAddressIndex(
       deriveAddressIndexZeroFromAccount(account.keychain),

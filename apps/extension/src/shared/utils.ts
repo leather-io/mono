@@ -3,6 +3,7 @@ import { delay } from '@leather.io/utils';
 
 import { logger } from './logger';
 
+/** @deprecated */
 export const defaultWalletKeyId = 'default';
 
 export function closeWindow() {

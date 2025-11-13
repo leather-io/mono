@@ -72,7 +72,7 @@ export function pullBitcoinKeysFromLedgerDevice(bitcoinApp: BitcoinApp, targetId
         network,
         accountIndex,
       });
-      keys.push({ id: createWalletIdDecoratedPath(path, 'default'), path, policy, targetId });
+      keys.push({ id: createWalletIdDecoratedPath(path, fingerprint), path, policy, targetId });
     }
 
     for (
@@ -87,7 +87,7 @@ export function pullBitcoinKeysFromLedgerDevice(bitcoinApp: BitcoinApp, targetId
         network,
         accountIndex,
       });
-      keys.push({ id: createWalletIdDecoratedPath(path, 'default'), path, policy, targetId });
+      keys.push({ id: createWalletIdDecoratedPath(path, fingerprint), path, policy, targetId });
     }
     await delay(250);
     return { status: 'success', keys };

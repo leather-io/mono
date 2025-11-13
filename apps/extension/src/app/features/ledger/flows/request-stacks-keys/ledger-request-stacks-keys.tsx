@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router';
 import StacksApp from '@zondax/ledger-stacks';
 import { pullStacksKeysFromLedgerDevice } from 'app/features/ledger/flows/request-stacks-keys/request-stacks-keys.utils';
 
-import { defaultWalletKeyId } from '@shared/utils';
-
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
@@ -59,7 +57,8 @@ function LedgerRequestStacksKeys() {
           stacksKeysSlice.actions.addKeys(
             resp.publicKeys.map(keys => ({
               ...keys,
-              id: keys.path.replace('m', defaultWalletKeyId),
+              // Replace with the fingerprint from the device
+              id: keys.path.replace('m', 'default'),
               targetId: latestDeviceResponse?.targetId || '',
             }))
           )

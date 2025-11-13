@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useSelector } from 'react-redux';
 
 import { getSwitchAccountSheetAccountNameSelector } from '@tests/selectors/account.selectors';
 
@@ -10,6 +11,7 @@ import { AccountListItemLayout } from '@app/components/account/account-list-item
 import { AccountNameLayout } from '@app/components/account/account-name';
 import { useNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 import { useLoading } from '@app/store/ui/ui.hooks';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
@@ -27,6 +29,7 @@ export const SwitchAccountListItem = memo(function SwitchAccountListItem({
   const stxAddress = stacksAccount?.address ?? '';
   const bitcoinSigner = useNativeSegwitSigner(index);
   const btcAddress = bitcoinSigner?.({ changeIndex: 0, addressIndex: 0 }).address ?? '';
+  const currentAccount = useSelector(selectCurrentAccount);
 
   const { isLoading, setIsLoading, setIsIdle } = useLoading(
     'SWITCH_ACCOUNTS' + stxAddress || btcAddress
@@ -40,13 +43,15 @@ export const SwitchAccountListItem = memo(function SwitchAccountListItem({
   function handleClick() {
     setIsLoading();
     setTimeout(async () => {
-      await handleSwitchAccount(index);
+      await handleSwitchAccount({ fingerprint: currentAccount.fingerprint, accountIndex: index });
       setIsIdle();
     }, 80);
   }
 
   return (
     <AccountListItemLayout
+      fingerprint={currentAccount.fingerprint}
+      accountIndex={index}
       accountAddresses={<AccountAddresses index={index} />}
       accountName={
         <AccountNameLayout
@@ -58,7 +63,6 @@ export const SwitchAccountListItem = memo(function SwitchAccountListItem({
       }
       avatar={<AccountAvatarItem index={index} publicKey={stacksAccount?.stxPublicKey || ''} />}
       balanceLabel={<AccountTotalBalance accountIndex={index} />}
-      index={index}
       isLoading={isLoading}
       isSelected={currentAccountIndex === index}
       onSelectAccount={handleClick}

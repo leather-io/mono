@@ -1,3 +1,5 @@
+import type { AccountId } from '@leather.io/models';
+
 import { ExtensionMethods, InternalMethods, Message } from '@shared/message-types';
 
 import type { MonitoredAddress } from '@background/monitors/address-monitor';
@@ -15,7 +17,7 @@ type OriginatingTabClosed = BackgroundMessage<
   { tabId: number }
 >;
 
-type AccountChanged = BackgroundMessage<InternalMethods.AccountChanged, { accountIndex: number }>;
+type AccountChanged = BackgroundMessage<InternalMethods.AccountChanged, AccountId>;
 
 type AddressMonitorUpdated = BackgroundMessage<
   InternalMethods.AddressMonitorUpdated,

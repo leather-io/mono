@@ -173,6 +173,9 @@ importers:
       '@leather.io/stacks':
         specifier: workspace:*
         version: link:../../packages/stacks
+      '@leather.io/state':
+        specifier: workspace:*
+        version: link:../../packages/state
       '@leather.io/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
@@ -356,6 +359,15 @@ importers:
       framer-motion:
         specifier: 12.23.22
         version: 12.23.22(@emotion/is-prop-valid@1.4.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      immer:
+        specifier: 10.1.1
+        version: 10.1.1
+      jotai:
+        specifier: 2.12.5
+        version: 2.12.5(@types/react@19.1.17)(react@19.1.0)
+      jotai-redux:
+        specifier: 0.2.1
+        version: 0.2.1(jotai@2.12.5(@types/react@19.1.17)(react@19.1.0))
       jsontokens:
         specifier: 4.0.1
         version: 4.0.1
@@ -17078,6 +17090,11 @@ packages:
 
   jose@5.9.6:
     resolution: {integrity: sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==}
+
+  jotai-redux@0.2.1:
+    resolution: {integrity: sha512-YoS4O341aCJfssUbQ9iJA4WAhOT6nQ+tfAea21m4jK4yiNTxYMeRM1QhsH09YLQ2UQB+DRWLl353SF8ea8vI/A==}
+    peerDependencies:
+      jotai: '>=1.11.0'
 
   jotai@2.12.5:
     resolution: {integrity: sha512-G8m32HW3lSmcz/4mbqx0hgJIQ0ekndKWiYP7kWVKi0p6saLXdSoye+FZiOFyonnd7Q482LCzm8sMDl7Ar1NWDw==}
@@ -42390,6 +42407,10 @@ snapshots:
   jose@4.13.1: {}
 
   jose@5.9.6: {}
+
+  jotai-redux@0.2.1(jotai@2.12.5(@types/react@19.1.17)(react@19.1.0)):
+    dependencies:
+      jotai: 2.12.5(@types/react@19.1.17)(react@19.1.0)
 
   jotai@2.12.5(@types/react@19.1.17)(react@19.1.0):
     optionalDependencies:

@@ -1,0 +1,298 @@
+{
+  "_persist": { "rehydrated": true, "version": 2 },
+  "appPermissions": {
+    "entities": {
+      "app.leather.io": {
+        "accountIndex": 3,
+        "networkMode": "mainnet",
+        "origin": "app.leather.io",
+        "requestedAccounts": "2025-10-16T11:52:02.538Z"
+      }
+    },
+    "ids": ["app.leather.io"]
+  },
+  "chains": {
+    "stx": {
+      "default": {
+        "currentAccountIndex": 0,
+        "currentAccountStacksDescriptor": "",
+        "highestAccountIndex": 0
+      }
+    }
+  },
+  "ledger": {
+    "bitcoin": {
+      "entities": {
+        "default/84'/0'/0'": {
+          "id": "default/84'/0'/0'",
+          "path": "m/84'/0'/0'",
+          "policy": "[48611587/84'/0'/0']xpub6DFfyxrMEUfR9Fyczq5xK1m8C3zKfi97mZDt3u4UnjjaWPW8q1PY4UogPFbdp4ibSDnmaHZrNCUYwmzj2GjBYVcaJMvniK2chBMqdbebH5f",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/84'/0'/1'": {
+          "id": "default/84'/0'/1'",
+          "path": "m/84'/0'/1'",
+          "policy": "[48611587/84'/0'/1']xpub6DFfyxrMEUfRArb44TcHbuHeGQ1qx3KWKsnykm6XMorKSWpCbnMESPHTZVPG3Tu4c7cdm1nPUxVB7214hkniqtYGYy2tXjP4unaobdPH3Wi",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/84'/0'/2'": {
+          "id": "default/84'/0'/2'",
+          "path": "m/84'/0'/2'",
+          "policy": "[48611587/84'/0'/2']xpub6DFfyxrMEUfRCQn3cPkudoGamQQZgExLUepcHduymGMBCBLEZgCoBXrjUWmzF74HXzPMYvsKdL25usDyKYV5PkHtYrM2oSg29j7wj4gu6vW",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/84'/0'/3'": {
+          "id": "default/84'/0'/3'",
+          "path": "m/84'/0'/3'",
+          "policy": "[48611587/84'/0'/3']xpub6DFfyxrMEUfRGTzteDuwAgnWJNMyk5oFnFpHzJ3FZVdhNbUUjQrum1yzZ8pRkSNnYik9f7nZQHVbX2QmVxjQg9QdwhwJBJ5BVU1eNiJn9nx",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/84'/0'/4'": {
+          "id": "default/84'/0'/4'",
+          "path": "m/84'/0'/4'",
+          "policy": "[48611587/84'/0'/4']xpub6DFfyxrMEUfRJ1VrRHkReKDvHt8rVtACtAPSEgDdFLsgWMidSVJmELN6o7mAg3vzsyCxHNxTWbK8py8JsBGG6eE1gyxkXSHW257iGJmGYuw",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/84'/0'/5'": {
+          "id": "default/84'/0'/5'",
+          "path": "m/84'/0'/5'",
+          "policy": "[48611587/84'/0'/5']xpub6DFfyxrMEUfRMHhGfByZfeAocsHvYtuCj5y1KQWrpEgjUrKS8oV2i8FGaVoWWRp71Uz3n4LmPBjnyQFq2GJt6CAozVtUoAVqwg88Zccagcs",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/84'/0'/6'": {
+          "id": "default/84'/0'/6'",
+          "path": "m/84'/0'/6'",
+          "policy": "[48611587/84'/0'/6']xpub6DFfyxrMEUfRNx8MU68Exh7Zu8m9AahHqyhJzPWa9agwTaqzrPQ3nUqF9HcRL5Whg7w84EgETN82MfUDhQPKYBRngSz5Rmm3YBYUPnqGews",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/84'/0'/7'": {
+          "id": "default/84'/0'/7'",
+          "path": "m/84'/0'/7'",
+          "policy": "[48611587/84'/0'/7']xpub6DFfyxrMEUfRTAEKrZYkCysQbApw3uPfhdB1JL4ezrMVsXu5dxzTzBjow5BGhHS34RoEZ9fGAotYmgHV3cFkhtNwa9scg47dgj9rcSskGxw",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/84'/0'/8'": {
+          "id": "default/84'/0'/8'",
+          "path": "m/84'/0'/8'",
+          "policy": "[48611587/84'/0'/8']xpub6DFfyxrMEUfRVkk7Mn3yBkgdvEUMKgcd84ejLXXjaBNANrzdTGDZTNrMV4DGEJJcVwQsirvmuqJTbESpZGtcmMr1p2kTDELcmZNf3zqdaVo",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/84'/0'/9'": {
+          "id": "default/84'/0'/9'",
+          "path": "m/84'/0'/9'",
+          "policy": "[48611587/84'/0'/9']xpub6DFfyxrMEUfRWfkdXNhAwEaVG2q2md4ot1TVw8CbFmZLGTg98S2TthV1nZ1DPyNhtzvvSNtrP4JMFFaJccB8uycFZyULZSoKLzvvtDCTLZr",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/86'/0'/0'": {
+          "id": "default/86'/0'/0'",
+          "path": "m/86'/0'/0'",
+          "policy": "[48611587/86'/0'/0']xpub6CzdSnUocwabCHKqUXo4vNQUg9mvUQJP9PA8VVAGRDXb9twGDUpinY1sz5TfsT4dmrxxEbK7Bq21RMpRHLrJ7rVQTLBeSEzNQqN579gK4qz",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/86'/0'/1'": {
+          "id": "default/86'/0'/1'",
+          "path": "m/86'/0'/1'",
+          "policy": "[48611587/86'/0'/1']xpub6CzdSnUocwabFTNwMSmSY1NHnvek7XzsLHLZcwtn9FRy9bZhcEWUQhQFRj7qc29e7ymFM7aBajJKstoBgAEkJsTRrgM1p4rBW69hKvEeWy9",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/86'/0'/2'": {
+          "id": "default/86'/0'/2'",
+          "path": "m/86'/0'/2'",
+          "policy": "[48611587/86'/0'/2']xpub6CzdSnUocwabGyASjCM24TfrwdQ29qqjUxjt3fLGjGAZnH3BKXUBsVzJyNgHhs5ZVxBNpkbtpgWtv5w8WozKf6XM9Y5Z11vUYMYe7wCXPPf",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/86'/0'/3'": {
+          "id": "default/86'/0'/3'",
+          "path": "m/86'/0'/3'",
+          "policy": "[48611587/86'/0'/3']xpub6CzdSnUocwabL5UM8gcZJ4dPWfjnwcaUqtFch7BWec8S28ygRvKLbhL2vaJkQBYycFnLYBRcQ43Q1WkMTne9DU7UDeFNxzyFUXasxiq4M66",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/86'/0'/4'": {
+          "id": "default/86'/0'/4'",
+          "path": "m/86'/0'/4'",
+          "policy": "[48611587/86'/0'/4']xpub6CzdSnUocwabP8iUbr6LWF49Ama1MpujKipNbNyGMqV9g4QjkHdNs7bnjosyac6Yqh6zox1xiCtt3N1oFnZpkGHYBgP6JE9DVWoodfpnJ3i",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/86'/0'/5'": {
+          "id": "default/86'/0'/5'",
+          "path": "m/86'/0'/5'",
+          "policy": "[48611587/86'/0'/5']xpub6CzdSnUocwabPyyZAYGSkZ3336GMBLvHj6Wikjat3LpJrfnzQJ9XEytArjx14h1HeXJ1qt2fT3EPXiAsjZYPhqRfKNvcSDCsRgHAQZoMsnG",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/86'/0'/6'": {
+          "id": "default/86'/0'/6'",
+          "path": "m/86'/0'/6'",
+          "policy": "[48611587/86'/0'/6']xpub6CzdSnUocwabTTEJtifX4iTsczLJYxnyBtuRoHoWguxQi7oGbYWEWnDT5vZtVJNwWXUmW4uNTxQdZPnNm6Swa1YWdRcjSir8ibHU9ZeToUB",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/86'/0'/7'": {
+          "id": "default/86'/0'/7'",
+          "path": "m/86'/0'/7'",
+          "policy": "[48611587/86'/0'/7']xpub6CzdSnUocwabVrtMZLK2qAY24w6EYJqUkowcbLyrF9wY3MEWjrBYaP8moDbz46XYJ9j9Xg4fqpCvHGUVXP8FQphbgiRmCMM64RYNkziRmbK",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/86'/0'/8'": {
+          "id": "default/86'/0'/8'",
+          "path": "m/86'/0'/8'",
+          "policy": "[48611587/86'/0'/8']xpub6CzdSnUocwabXXcvN5a69XUxyoTfHLFjFicmLXaG4qa8VPESSz4Kqhu84CKbmBvMQBDypnbj2xqA9v4ciEbSw87V2znFkhGc22WBiFA7p9Y",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/86'/0'/9'": {
+          "id": "default/86'/0'/9'",
+          "path": "m/86'/0'/9'",
+          "policy": "[48611587/86'/0'/9']xpub6CzdSnUocwabbUSorRuK5Jg3fyFGKzQehxHhpCaRcG64GEko9buQday6nYpeiaJ3ewAf8MjGopfkydTDb64iLk1HhsRmXtEGMQVaexLAXWN",
+          "targetId": "",
+          "walletId": "default"
+        }
+      },
+      "ids": [
+        "default/84'/0'/0'",
+        "default/84'/0'/1'",
+        "default/84'/0'/2'",
+        "default/84'/0'/3'",
+        "default/84'/0'/4'",
+        "default/84'/0'/5'",
+        "default/84'/0'/6'",
+        "default/84'/0'/7'",
+        "default/84'/0'/8'",
+        "default/84'/0'/9'",
+        "default/86'/0'/0'",
+        "default/86'/0'/1'",
+        "default/86'/0'/2'",
+        "default/86'/0'/3'",
+        "default/86'/0'/4'",
+        "default/86'/0'/5'",
+        "default/86'/0'/6'",
+        "default/86'/0'/7'",
+        "default/86'/0'/8'",
+        "default/86'/0'/9'"
+      ]
+    },
+    "stacks": {
+      "entities": {
+        "default/44'/5757'/0'/0/0": {
+          "dataPublicKey": "04131aa066f3e542646879607e14ae035ff791ca98b677152f196a1b3c168ba6be2ccbf8d0ffea3caeb92873257da7973c170b7a44eeb17ed7ef8626bc19f75a8b",
+          "id": "default/44'/5757'/0'/0/0",
+          "path": "m/44'/5757'/0'/0/0",
+          "stxPublicKey": "033e8d8852ea1beb9bb7f65d1a4f8d56c038e50e65faf7bf1c7e7584d55f11d1f4",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/44'/5757'/0'/0/1": {
+          "dataPublicKey": "045605feab84c73eff83a8328b294a416eb603b90deb9a399d8d37d7c929064d85ae06292915a297acd472a75e3c8c7779b75689e1696850b23b7c41e8282cd2d7",
+          "id": "default/44'/5757'/0'/0/1",
+          "path": "m/44'/5757'/0'/0/1",
+          "stxPublicKey": "024af1cf1974636213c5c197bb5eb8cc34601f17d1923bfb9fbe4f72a45abfa114",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/44'/5757'/0'/0/2": {
+          "dataPublicKey": "04da4fe765edd861d9ff98208971cc7d9361a650a58963e1cde9ae3540822ac2b6ba8e054144ae55ea9a82c9d86b61aefd36f4a3c5f4e8c05858e581c86f851d60",
+          "id": "default/44'/5757'/0'/0/2",
+          "path": "m/44'/5757'/0'/0/2",
+          "stxPublicKey": "03bea6b877b6007ace146b99f96b47373b50a61db4ae0801366ce8e3ffd2e6e1e0",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/44'/5757'/0'/0/3": {
+          "dataPublicKey": "0480f3370263a9023d075c49b73a7926fde3f308cc3976e94d8f0116a0108295daf94cca6ffc98db8c3d3b50e0d713d43cf0794df0da96d1c2ed759014a22451c1",
+          "id": "default/44'/5757'/0'/0/3",
+          "path": "m/44'/5757'/0'/0/3",
+          "stxPublicKey": "03e792bf4a85a3d2bb25d8c8285e74b0b1d1cca2daba3f4b75b03252ac1badead0",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/44'/5757'/0'/0/4": {
+          "dataPublicKey": "04f3d4b3a6133c95834525c760a0fdd9b35fbadfe4719b42264de3239eabf7f55268af17de175a4833f79781ce9fe033b314ad81e4f2bed8e2a430f84357ac0835",
+          "id": "default/44'/5757'/0'/0/4",
+          "path": "m/44'/5757'/0'/0/4",
+          "stxPublicKey": "023fa31e117d19927f652106b24c3a969a1547f2b4d8cdc589226b8fa0e7f790ab",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/44'/5757'/0'/0/5": {
+          "dataPublicKey": "04bb7e69ed1a00a271b6306fb6a4254e0693b79887500acffc6ec5bafa0e531ed8795491835b241492f1abd01e9d5a143ebb917c73d6e776fc1c962b34bd7de1a8",
+          "id": "default/44'/5757'/0'/0/5",
+          "path": "m/44'/5757'/0'/0/5",
+          "stxPublicKey": "02a6400be2393c0b8a7245c270c136e12af1be1ec5ce8cd111b58955c46c8e7257",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/44'/5757'/0'/0/6": {
+          "dataPublicKey": "0457ff3a9a3e8890cb542c9ac4361b902aed1cc07769f4573255f3fb4bb89378878d238f468bda7b898c33595175f2ea01d4ad7693fc97a73ca432ec833a5a990d",
+          "id": "default/44'/5757'/0'/0/6",
+          "path": "m/44'/5757'/0'/0/6",
+          "stxPublicKey": "0317872002e240f0e01f3bdb1d925689db5a6610f0e5c5f78b9772974f8298ddca",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/44'/5757'/0'/0/7": {
+          "dataPublicKey": "040b2c4eeda7b883236ed4cadacabffdd764d6b5584dca722d5374660b25c4ca08f9b95fa6b3c784a5be0294ad4eeac35e81d5c389b91a9590fd6d3d4e9d7d9d8b",
+          "id": "default/44'/5757'/0'/0/7",
+          "path": "m/44'/5757'/0'/0/7",
+          "stxPublicKey": "026a052dce2debd31b4200486610cccd9f82fb85c25a784994b4a180144e980852",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/44'/5757'/0'/0/8": {
+          "dataPublicKey": "049e78a8dba4cfdedae789aa257fa343fb405e038b99e5bcbe7e7ce6ece04075e742c5e97b2ef38cf82c59a754b73c7460adbab25334d849b3e93e008ea7f3c23a",
+          "id": "default/44'/5757'/0'/0/8",
+          "path": "m/44'/5757'/0'/0/8",
+          "stxPublicKey": "02f7ade2f1bb707669ba5bf610814407016dbfbed57e33e390e01d741713d3174b",
+          "targetId": "",
+          "walletId": "default"
+        },
+        "default/44'/5757'/0'/0/9": {
+          "dataPublicKey": "04c78e6bbff52bb273e4163d78c8e9026c5c40c366b6dbdfa73077d659c3bbca4f8b6d3f9e2f8ed2cb30539dc93ec3d768dd7fc03b7f5b6c821ffb9ae05aa5e663",
+          "id": "default/44'/5757'/0'/0/9",
+          "path": "m/44'/5757'/0'/0/9",
+          "stxPublicKey": "03d2a068bc60c85066cffbc682af29b41bfcaa9dc57e66a0ff75249bc708277d8a",
+          "targetId": "",
+          "walletId": "default"
+        }
+      },
+      "ids": [
+        "default/44'/5757'/0'/0/0",
+        "default/44'/5757'/0'/0/1",
+        "default/44'/5757'/0'/0/2",
+        "default/44'/5757'/0'/0/3",
+        "default/44'/5757'/0'/0/4",
+        "default/44'/5757'/0'/0/5",
+        "default/44'/5757'/0'/0/6",
+        "default/44'/5757'/0'/0/7",
+        "default/44'/5757'/0'/0/8",
+        "default/44'/5757'/0'/0/9"
+      ]
+    }
+  },
+  "manageTokens": { "entities": {}, "ids": [] },
+  "networks": { "currentNetworkId": "mainnet", "entities": {}, "ids": [] },
+  "ordinals": {},
+  "settings": {
+    "discardedInscriptions": [],
+    "dismissedMessages": [],
+    "dismissedPromoIndexes": [0, 1, 2],
+    "isNotificationsEnabled": true,
+    "userSelectedTheme": "system"
+  },
+  "softwareKeys": { "entities": {}, "ids": [] }
+}
