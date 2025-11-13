@@ -18,8 +18,8 @@ import {
 const passphrase = 'abandoned cactus';
 
 describe(getMnemonicRootKeyFingerprint.name, () => {
-  test('it derives the correct fingerprint of test mnemonic', async () =>
-    expect(await getMnemonicRootKeyFingerprint(testMnemonic)).toEqual('24682ead'));
+  test('it derives the correct fingerprint of test mnemonic', () =>
+    expect(getMnemonicRootKeyFingerprint(testMnemonic)).toEqual('24682ead'));
 
   test('it derives the correct fingerprint of test mnemonic with passphrase', async () =>
     expect(await getMnemonicRootKeyFingerprint(testMnemonic, passphrase)).toEqual('984c5aea'));

@@ -1,13 +1,12 @@
-import type { BitcoinNetworkModes } from '@leather.io/models';
+import type { AccountId, BitcoinNetworkModes } from '@leather.io/models';
 
 import { getRootState } from '@shared/storage/get-root-state';
 
-export interface AppPermission {
+export interface AppPermission extends AccountId {
   origin: string;
   // Very simple permission system. If property exists with date, user
   // has given permission
   requestedAccounts?: string;
-  accountIndex: number;
   networkMode: BitcoinNetworkModes;
 }
 

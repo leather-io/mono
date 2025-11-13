@@ -30,8 +30,17 @@ export const inMemoryKeySlice = createSlice({
       state.keys[defaultWalletKeyId] = encodeText(action.payload);
     },
 
-    setDefaultKey(state, action: PayloadAction<string>) {
-      state.keys[defaultWalletKeyId] = encodeText(action.payload);
+    setWalletKeys(state, action: PayloadAction<Record<string, string>>) {
+      state.keys = {
+        ...state.keys,
+        ...Object.entries(action.payload).reduce(
+          (acc, [keyId, secretKey]) => {
+            acc[keyId] = encodeText(secretKey);
+            return acc;
+          },
+          {} as Record<string, string>
+        ),
+      };
     },
 
     lockWallet(state) {
@@ -40,7 +49,7 @@ export const inMemoryKeySlice = createSlice({
   },
 
   extraReducers: builder => {
-    builder.addCase(keySlice.actions.signOut.toString(), state => {
+    builder.addCase(keySlice.actions.signOut, state => {
       state.keys = {};
     });
   },

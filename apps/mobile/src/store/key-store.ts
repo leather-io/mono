@@ -71,7 +71,7 @@ export function useKeyStore() {
       biometrics: boolean;
       passphrase?: string;
     }) {
-      const fingerprint = await getMnemonicRootKeyFingerprint(mnemonic, passphrase);
+      const fingerprint = getMnemonicRootKeyFingerprint(mnemonic, passphrase);
       if (this.isWalletInKeychain({ fingerprint })) {
         keychainErrorHandlers.throwKeyExistsError();
         return;
@@ -111,13 +111,13 @@ export function useKeyStore() {
       }
       if ('mnemonic' in props) {
         return this.deriveNextAccountKeychainsImpl({
-          fingerprint: await getMnemonicRootKeyFingerprint(props.mnemonic, props.passphrase),
+          fingerprint: getMnemonicRootKeyFingerprint(props.mnemonic, props.passphrase),
           mnemonic: props.mnemonic,
           passphrase: props.passphrase,
         });
       }
       throw new Error(
-        'deriveNextAccountKeychainsFrom have received neither mnemonic nor fingerprint'
+        'deriveNextAccountKeychainsFrom received neither mnemonic nor fingerprint'
       );
     },
 

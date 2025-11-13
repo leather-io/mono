@@ -10,7 +10,6 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useAppDispatch } from '@app/store';
-import { inMemoryKeyActions } from '@app/store/in-memory-key/in-memory-key.actions';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
 import { useLoading } from '@app/store/ui/ui.hooks';
 
@@ -59,7 +58,7 @@ export function useSignIn() {
       await simulateShortDelayToAvoidImmediateNavigation();
 
       dispatch(keyActions.signOut());
-      dispatch(inMemoryKeyActions.setDefaultKey(parsedKeyInput));
+      // dispatch(inMemoryKeyActions.setDefaultKey(parsedKeyInput));
       analytics.track('submit_valid_secret_key');
       void navigate(RouteUrls.SetPassword);
       setIsIdle();
