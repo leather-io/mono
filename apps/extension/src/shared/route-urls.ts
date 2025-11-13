@@ -24,6 +24,7 @@ export enum RouteUrls {
   // Active wallet routes
   Home = '/',
   TokenDetails = '/token/*',
+  MultiWalletTest = '/multi-wallet-test',
   AddNetwork = '/add-network',
   EditNetwork = '/edit-network',
   SelectNetwork = '/select-network',

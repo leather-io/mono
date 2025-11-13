@@ -22,6 +22,11 @@ export * from './special-char';
 export { spamFilter } from './spam-filter/spam-filter';
 export { extractPhraseFromString } from './extract-phrase-from-string/extract-phrase-from-string';
 export { pxStringToNumber } from './px-string-to-number/px-string-to-number';
+
+/**
+ * @deprecated This constant is deprecated and will be removed in a future version.
+ */
+export const defaultWalletKeyId = 'default';
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }
@@ -92,9 +97,6 @@ export function whenNetwork(mode: NetworkModes) {
 export function isEmptyArray(data: unknown[]) {
   return data.length === 0;
 }
-
-// TODO: extension concept, remove remove from utils
-export const defaultWalletKeyId = 'default';
 
 export function reverseBytes(bytes: Buffer): Buffer;
 export function reverseBytes(bytes: Uint8Array): Uint8Array;

@@ -1,0 +1,48 @@
+{
+  "_persist": { "rehydrated": true, "version": 2 },
+  "appPermissions": {
+    "entities": {
+      "app.leather.io": {
+        "accountIndex": 3,
+        "networkMode": "mainnet",
+        "origin": "app.leather.io",
+        "requestedAccounts": "2025-10-16T11:52:02.538Z"
+      }
+    },
+    "ids": ["app.leather.io"]
+  },
+  "chains": {
+    "stx": {
+      "default": {
+        "currentAccountIndex": 0,
+        "currentAccountStacksDescriptor": "[48611587/44'/5757'/0'/0/0]033e8d8852ea1beb9bb7f65d1a4f8d56c038e50e65faf7bf1c7e7584d55f11d1f4",
+        "highestAccountIndex": 0
+      }
+    }
+  },
+  "ledger": {
+    "bitcoin": { "entities": {}, "ids": [] },
+    "stacks": { "entities": {}, "ids": [] }
+  },
+  "manageTokens": { "entities": {}, "ids": [] },
+  "networks": { "currentNetworkId": "mainnet", "entities": {}, "ids": [] },
+  "ordinals": {},
+  "settings": {
+    "discardedInscriptions": [],
+    "dismissedMessages": [],
+    "dismissedPromoIndexes": [0, 1, 2],
+    "isNotificationsEnabled": true,
+    "userSelectedTheme": "system"
+  },
+  "softwareKeys": {
+    "entities": {
+      "default": {
+        "encryptedSecretKey": "dbd99c464bdcbd60989c9a7c04c2868d7c4de28419506dba2b959cc6a50dcd0b9236960eb46e721f9ba3dfe6ee32532d60bb789670387b4f0f31d22a86e3d91019851f82128c304d5fff7f75203c697b5735b6c7955b0b931509d0f227fa1ece",
+        "id": "default",
+        "salt": "824e35c73aaad6f501c8c11ee6042da5",
+        "type": "software"
+      }
+    },
+    "ids": ["default"]
+  }
+}
