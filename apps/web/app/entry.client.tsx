@@ -5,6 +5,7 @@ import { HydratedRouter } from 'react-router/dom';
 import * as Sentry from '@sentry/react-router';
 
 import { LEATHER_MOCK_MODE } from './constants/environment';
+import { createLDProvider } from './features/feature-flags';
 
 Sentry.init({
   dsn: import.meta.env.LEATHER_SENTRY_DSN,
@@ -35,12 +36,16 @@ async function enableApiMocking() {
   });
 }
 
+const LDProvider = await createLDProvider();
+
 void enableApiMocking().then(() =>
   startTransition(() => {
     hydrateRoot(
       document,
       <StrictMode>
-        <HydratedRouter />
+        <LDProvider>
+          <HydratedRouter />
+        </LDProvider>
       </StrictMode>
     );
   })

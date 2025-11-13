@@ -163,13 +163,13 @@ export const config = {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
         loader: 'esbuild-loader',
-        options: { tsconfig: './tsconfig.json', target: 'es2020' },
+        options: { tsconfig: './tsconfig.json', target: 'es2022' },
       },
       {
         test: /\.(js)$/,
         include: [/node_modules\/@leather.io\/ui/],
         loader: 'esbuild-loader',
-        options: { tsconfig: './tsconfig.json', loader: 'jsx',target: 'es2020' },
+        options: { tsconfig: './tsconfig.json', loader: 'jsx', target: 'es2022' },
       },
       {
         test: /\.mdx?$/,
