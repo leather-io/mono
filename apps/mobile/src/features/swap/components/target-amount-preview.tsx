@@ -123,7 +123,7 @@ function deriveEstimateSnapshot(liveEstimate: LiveSwapEstimate): EstimateSnapsho
 
   return {
     status: 'success',
-    quoteAmount: liveEstimate.selectedQuote.quoteAmount,
+    quoteAmount: liveEstimate.selectedQuote?.quoteAmount,
   };
 }
 

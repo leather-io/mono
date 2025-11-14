@@ -8,6 +8,7 @@ import {
   estimateExchangeRate,
 } from '@/features/swap/swap-state/utils/market-rates';
 import * as btc from '@scure/btc-signer';
+import BigNumber from 'bignumber.js';
 
 import { CoinSelectionRecipient, getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
 import {
@@ -26,7 +27,11 @@ import {
 } from './execution-type.utils';
 
 interface ExecutionStrategy {
-  enrichQuote(quote: SwapQuote, fairMarketRate: number | null, slippage: number): EnrichedSwapQuote;
+  enrichQuote(
+    quote: SwapQuote,
+    fairMarketRate: BigNumber | null,
+    slippage: number
+  ): EnrichedSwapQuote;
   getNetworkFee(
     dependencies: SwapExecutionDependencies,
     signal?: AbortSignal
@@ -35,7 +40,7 @@ interface ExecutionStrategy {
 }
 
 const stacksContractCallStrategy: ExecutionStrategy = {
-  enrichQuote(swapQuote: SwapQuote, fairMarketRate: number | null, slippage: number) {
+  enrichQuote(swapQuote: SwapQuote, fairMarketRate: BigNumber | null, slippage: number) {
     const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
     return {
       rawSwapQuote: swapQuote,
@@ -47,7 +52,7 @@ const stacksContractCallStrategy: ExecutionStrategy = {
       minReceive: calculateMinToReceiveAmount(swapQuote.quote, slippage),
       provider: swapQuote.providerId,
       providerFeePercentage: estimateLiquidityFeePercentage(swapQuote.dexPath),
-      rate: estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount),
+      swapRate: estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount),
       score: swapQuote.targetAmount,
       priceImpactPercentage: calculatePriceImpactPercentage(rate, fairMarketRate),
     };
@@ -77,7 +82,7 @@ const stacksContractCallStrategy: ExecutionStrategy = {
 };
 
 const sbtcBridgeTransferStrategy: ExecutionStrategy = {
-  enrichQuote(swapQuote: SwapQuote, fairMarketRate: number | null) {
+  enrichQuote(swapQuote: SwapQuote, fairMarketRate: BigNumber | null) {
     const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
     return {
       rawSwapQuote: swapQuote,
@@ -87,7 +92,7 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
       quoteAmount: swapQuote.quote,
       slippageApplicable: false,
       provider: swapQuote.providerId,
-      rate: estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount),
+      swapRate: estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount),
       score: swapQuote.targetAmount,
       priceImpactPercentage: calculatePriceImpactPercentage(rate, fairMarketRate),
     };

@@ -10,34 +10,30 @@ interface CalculateFairMarketRateParams {
 export function calculateFairMarketRate({
   baseMarketData,
   targetMarketData,
-}: CalculateFairMarketRateParams): number | null {
+}: CalculateFairMarketRateParams): BigNumber | null {
   if (!baseMarketData || !targetMarketData) return null;
-  if (!baseMarketData.price || !targetMarketData.price) return null;
 
   const basePrice = baseMarketData.price.amount;
   const targetPrice = targetMarketData.price.amount;
 
-  if (basePrice.isZero() || targetPrice.isZero()) return null;
+  if (targetPrice.isZero()) return null;
 
-  return basePrice.div(targetPrice).toNumber();
+  return basePrice.div(targetPrice);
 }
 
 export function calculatePriceImpactPercentage(
-  quotedRate: number,
-  fairMarketRate: number | null
-): number | null {
-  if (fairMarketRate === null || fairMarketRate === 0 || quotedRate === 0) return null;
+  quotedRate: BigNumber,
+  fairMarketRate: BigNumber | null
+): BigNumber | null {
+  if (fairMarketRate === null || fairMarketRate.isZero() || quotedRate.isZero()) return null;
 
-  const priceImpact = new BigNumber(fairMarketRate)
-    .minus(quotedRate)
-    .div(fairMarketRate)
-    .toNumber();
+  const priceImpact = fairMarketRate.minus(quotedRate).div(fairMarketRate);
 
-  return Math.max(0, priceImpact);
+  return BigNumber.max(0, priceImpact);
 }
 
-export function estimateExchangeRate(baseAmount: number, targetAmount: number): number {
-  const base = new BigNumber(baseAmount);
-  if (base.isZero()) return 0;
-  return new BigNumber(targetAmount).div(base).toNumber();
+export function estimateExchangeRate(baseAmount: number, targetAmount: number): BigNumber {
+  const base = BigNumber(baseAmount);
+  if (base.isZero()) return BigNumber(0);
+  return BigNumber(targetAmount).div(base);
 }

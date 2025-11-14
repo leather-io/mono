@@ -14,5 +14,5 @@ export function calculateMinToReceiveAmount(quoteAmount: Money, slippage: number
 }
 
 export function estimateLiquidityFeePercentage(dexPath: SwapDex[]) {
-  return new BigNumber(dexPath.length).times(PER_DEX_FEE_PERCENTAGE).toNumber();
+  return BigNumber(dexPath.length).times(PER_DEX_FEE_PERCENTAGE);
 }

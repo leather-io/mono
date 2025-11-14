@@ -4,6 +4,7 @@ import * as btc from '@scure/btc-signer';
 import { StacksNetwork } from '@stacks/network';
 import { StacksTransactionWire, TxBroadcastResultOk } from '@stacks/transactions';
 import { UseQueryResult } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
 import type { SbtcApiClient } from 'sbtc';
 
 import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
@@ -105,7 +106,7 @@ export type SecondaryAmount =
 
 export interface EnrichedSwapQuote {
   rawSwapQuote: SwapQuote;
-  rate: number;
+  swapRate: BigNumber;
   dexPath: SwapDex[];
   assetPath: SwappableFungibleCryptoAsset[];
   baseAmount: number;
@@ -113,9 +114,9 @@ export interface EnrichedSwapQuote {
   slippageApplicable: boolean;
   minReceive?: Money;
   provider: SwapProviderId;
-  providerFeePercentage?: number;
+  providerFeePercentage?: BigNumber;
   score: number;
-  priceImpactPercentage: number | null;
+  priceImpactPercentage: BigNumber | null;
 }
 
 export interface SwapQuoteSelectionResult {
