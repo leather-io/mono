@@ -18,7 +18,7 @@ interface StampTokenDetailsProps {
   asset: StampAsset;
 }
 export function StampTokenDetails({ asset }: StampTokenDetailsProps) {
-  const { stamp, chain, protocol, stampUrl, stampExplorerUrl, blockHeight } = asset;
+  const { stamp, chain, protocol, stampExplorerUrl, blockHeight } = asset;
   const name = `${t`Stamp`} #${stamp}`;
   const { networkPreference } = useSettings();
   const mempoolExplorerUrl = getMempoolExplorerLink({

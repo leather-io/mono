@@ -11,11 +11,7 @@ interface ImageUnavailableProps extends PropsWithChildren {
 
 const defaultMessage = 'Image currently unavailable';
 
-export function ImageUnavailable({
-  height = 200,
-  message,
-  children,
-}: ImageUnavailableProps) {
+export function ImageUnavailable({ height = 200, message, children }: ImageUnavailableProps) {
   const label = message ?? children ?? defaultMessage;
 
   return (

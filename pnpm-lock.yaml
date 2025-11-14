@@ -2228,9 +2228,6 @@ importers:
       '@gorhom/bottom-sheet':
         specifier: 5.1.4
         version: 5.1.4(@types/react@19.0.12)(react-native-gesture-handler@2.24.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-reanimated@3.17.5(@babel/core@7.27.1)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
-      '@leather.io/constants':
-        specifier: workspace:*
-        version: link:../constants
       '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config

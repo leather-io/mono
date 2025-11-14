@@ -1,5 +1,6 @@
 export * from './native/collectible-html.native';
 export * from './native/collectible-image.native';
+export * from './native/collectible-svg.native';
 export * from './native/collectible-text.native';
 export * from './native/collectible-type-icon-overlay.native';
 export * from './native/inscription.native';

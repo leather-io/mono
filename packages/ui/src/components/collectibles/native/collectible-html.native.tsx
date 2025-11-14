@@ -48,7 +48,7 @@ export function CollectibleHtml({
       <Box position="relative" height={height}>
         <WebView
           source={{ uri: thumbnailSrc ?? src }}
-          style={{ flex: 1, backgroundColor: 'transparent' }}
+          style={{ flex: 1, backgroundColor: 'transparent', height, width: '100%' }}
           scrollEnabled={false}
           originWhitelist={['*']}
           mixedContentMode="always"
