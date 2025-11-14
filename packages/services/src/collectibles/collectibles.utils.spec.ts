@@ -36,7 +36,7 @@ describe(mapBisInscriptionToCreateInscriptionData.name, () => {
     const delegate = {
       mime_type: 'text/html',
       content_url: 'https://other.example.com/2',
-      render_url: 'https://thumb.example.com/preview.png',
+      render_url: 'https://example.com/preview.png',
     };
     const createInscriptionData = mapBisInscriptionToCreateInscriptionData({
       ...mockBisInscription,

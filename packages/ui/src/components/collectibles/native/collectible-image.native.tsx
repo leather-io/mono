@@ -11,6 +11,7 @@ export interface CollectibleImageProps extends PressableProps {
   height?: number;
   thumbnailSrc?: string;
   imageUnavailableLabel?: ReactNode;
+  isSvg?: boolean;
 }
 export function CollectibleImage({
   alt,
@@ -19,6 +20,7 @@ export function CollectibleImage({
   thumbnailSrc,
   onPress,
   imageUnavailableLabel,
+  isSvg = false,
 }: CollectibleImageProps) {
   const [hasError, setHasError] = useState(false);
 
@@ -36,15 +38,20 @@ export function CollectibleImage({
 
   return (
     <Pressable onPress={onPress} disabled={!onPress}>
-      <Box overflow="hidden" height={height}>
+      <Box
+        overflow="hidden"
+        height={height}
+        backgroundColor={isSvg ? 'ink.background-primary' : undefined}
+      >
         <Image
           source={{ uri: thumbnailSrc ?? src }}
           alt={alt}
           style={{
             height,
             width: '100%',
+            backgroundColor: isSvg ? 'ink.background-primary' : undefined,
           }}
-          contentFit="cover"
+          contentFit="contain"
           cachePolicy="disk"
           onError={() => setHasError(true)}
         />
