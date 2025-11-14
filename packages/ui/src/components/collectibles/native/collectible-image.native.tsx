@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 import { Image } from 'expo-image';
 
@@ -10,6 +10,7 @@ export interface CollectibleImageProps extends PressableProps {
   src: string;
   height?: number;
   thumbnailSrc?: string;
+  imageUnavailableLabel?: ReactNode;
 }
 export function CollectibleImage({
   alt,
@@ -17,6 +18,7 @@ export function CollectibleImage({
   height = 200,
   thumbnailSrc,
   onPress,
+  imageUnavailableLabel,
 }: CollectibleImageProps) {
   const [hasError, setHasError] = useState(false);
 
@@ -27,7 +29,7 @@ export function CollectibleImage({
   if (!src || hasError) {
     return (
       <Pressable onPress={onPress} disabled={!onPress}>
-        <ImageUnavailable height={height} />
+        <ImageUnavailable height={height} message={imageUnavailableLabel} />
       </Pressable>
     );
   }

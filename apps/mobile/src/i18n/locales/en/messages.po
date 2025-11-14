@@ -532,7 +532,7 @@ msgstr "Contact us"
 msgid "Contacts"
 msgstr "Contacts"
 
-#: src/features/token/bitcoin/inscription.tsx:31
+#: src/features/token/bitcoin/inscription.tsx:30
 msgid "Content not found"
 msgstr "Content not found"
 
@@ -913,7 +913,7 @@ msgstr "ID copied to clipboard"
 msgid "If unsafe, your wallet could be drained."
 msgstr "If unsafe, your wallet could be drained."
 
-#: src/features/token/components/fallback.tsx:8
+#: src/features/token/utils/image-unavailable-label.ts:7
 msgid "Image currently unavailable"
 msgstr "Image currently unavailable"
 

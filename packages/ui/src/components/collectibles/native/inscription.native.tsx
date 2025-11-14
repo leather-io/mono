@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 import { InscriptionMimeType } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
@@ -15,6 +17,7 @@ export interface InscriptionProps {
   src: string;
   thumbnailSrc?: string;
   onPress?: () => void;
+  imageUnavailableLabel?: ReactNode;
 }
 
 export function Inscription({
@@ -24,6 +27,7 @@ export function Inscription({
   src,
   thumbnailSrc,
   onPress,
+  imageUnavailableLabel,
 }: InscriptionProps) {
   switch (mimeType) {
     case 'audio':
@@ -32,17 +36,28 @@ export function Inscription({
       return <CollectibleText src={src} height={height} onPress={onPress} />;
     case 'html':
       return (
-        <CollectibleHtml src={src} height={height} thumbnailSrc={thumbnailSrc} onPress={onPress} />
+        <CollectibleHtml
+          src={src}
+          height={height}
+          thumbnailSrc={thumbnailSrc}
+          onPress={onPress}
+          imageUnavailableLabel={imageUnavailableLabel}
+        />
       );
     case 'gltf':
       return (
-        <CollectibleGltf src={src} thumbnailSrc={thumbnailSrc} height={height} onPress={onPress} />
+        <CollectibleGltf
+          src={src}
+          thumbnailSrc={thumbnailSrc}
+          height={height}
+          onPress={onPress}
+          imageUnavailableLabel={imageUnavailableLabel}
+        />
       );
     case 'video':
       return <CollectibleVideo src={src} alt={name} height={height} onPress={onPress} />;
     case 'other':
     case 'svg':
-      return <CollectibleHtml src={src} height={height} onPress={onPress} />;
     case 'image':
       return (
         <CollectibleImage
@@ -51,6 +66,7 @@ export function Inscription({
           height={height}
           thumbnailSrc={thumbnailSrc}
           onPress={onPress}
+          imageUnavailableLabel={imageUnavailableLabel}
         />
       );
     default:

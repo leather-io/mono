@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 
@@ -10,6 +10,7 @@ interface CollectibleGltfProps {
   thumbnailSrc?: string;
   height?: number;
   onPress?: () => void;
+  imageUnavailableLabel?: ReactNode;
 }
 
 function buildViewerHtml(src: string) {
@@ -57,6 +58,7 @@ export function CollectibleGltf({
   thumbnailSrc,
   height = 200,
   onPress,
+  imageUnavailableLabel,
 }: CollectibleGltfProps) {
   const viewerHtml = useMemo(() => buildViewerHtml(src), [src]);
 
@@ -67,6 +69,7 @@ export function CollectibleGltf({
         src={thumbnailSrc ?? src}
         height={height}
         onPress={onPress}
+        imageUnavailableLabel={imageUnavailableLabel}
       />
     );
   }
