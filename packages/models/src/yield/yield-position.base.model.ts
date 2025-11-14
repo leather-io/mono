@@ -3,10 +3,13 @@ import type { YieldProductKey } from './yield-product.model';
 import type { YieldProviderKey } from './yield-provider.model';
 
 export interface BaseYieldPosition {
+  readonly id: string;
   readonly provider: YieldProviderKey;
   readonly product: YieldProductKey;
   readonly totalBalance: Money;
-  readonly netApy?: number;
-  readonly updatedAtBlockHeight: number;
-  readonly updatedAt: Date;
+  readonly apy: number;
+}
+
+export interface BasePooledStackingPosition extends BaseYieldPosition {
+  readonly stackedBalanceStx: Money;
 }

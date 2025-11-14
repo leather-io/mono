@@ -1,106 +1,143 @@
 import { injectable } from 'inversify';
-import { isNonNullish } from 'remeda';
 
 import type {
   AccountAddresses,
   YieldPosition,
   YieldProduct,
   YieldProductCategory,
+  YieldProductKey,
   YieldProvider,
+  YieldProviderKey,
 } from '@leather.io/models';
 
-import type { BitflowAmmLpService } from './providers/bitflow/bitflow-amm-lp.service';
-import type { GraniteV1Service } from './providers/granite/granite-v1.service';
-import type { StackingDaoLstService } from './providers/stacking-dao/stacking-dao-lst.service';
-import type { ZestBorrowService } from './providers/zest/zest-borrow.service';
-import type { YieldProductService } from './yield-product.interface';
+import { BitflowAmmLpService } from './providers/bitflow/bitflow-amm-lp.service';
+import { GraniteV1BorrowService } from './providers/granite/granite-v1-borrow.service';
+import { GraniteV1EarnService } from './providers/granite/granite-v1-earn.service';
+import { StackingDaoStStxService } from './providers/stacking-dao/stacking-dao-ststx.service';
+import { StackingDaoStStxBtcService } from './providers/stacking-dao/stacking-dao-ststxbtc.service';
+import { ZestBorrowService } from './providers/zest/zest-borrow.service';
+
+export interface YieldProductService {
+  providerKey: YieldProviderKey;
+  productKey: YieldProductKey;
+  productCategory: YieldProductCategory;
+
+  getProvider(signal?: AbortSignal): Promise<YieldProvider>;
+  getProduct(signal?: AbortSignal): Promise<YieldProduct>;
+  getAccountPositions(account: AccountAddresses, signal?: AbortSignal): Promise<YieldPosition[]>;
+}
 
 @injectable()
 export class YieldService {
   constructor(
     private readonly bitflowAmmLpService: BitflowAmmLpService,
-    private readonly graniteV1Service: GraniteV1Service,
-    private readonly stackingDaoLstService: StackingDaoLstService,
+    private readonly graniteEarnService: GraniteV1EarnService,
+    private readonly graniteBorrowService: GraniteV1BorrowService,
+    private readonly stackingDaoStStxService: StackingDaoStStxService,
+    private readonly stackingDaoStStxBtcService: StackingDaoStStxBtcService,
     private readonly zestBorrowService: ZestBorrowService
   ) {}
 
   private getYieldProductServices(): YieldProductService[] {
     return [
       this.bitflowAmmLpService,
-      this.graniteV1Service,
-      this.stackingDaoLstService,
+      this.graniteEarnService,
+      this.graniteBorrowService,
+      this.stackingDaoStStxService,
+      this.stackingDaoStStxBtcService,
       this.zestBorrowService,
     ];
   }
 
-  async getAllProviders(): Promise<YieldProvider[]> {
-    return await Promise.all(this.getYieldProductServices().map(service => service.getProvider()));
+  async getAllProviders(signal?: AbortSignal): Promise<YieldProvider[]> {
+    return await Promise.all(
+      this.getYieldProductServices().map(service => service.getProvider(signal))
+    );
   }
 
-  async getAllProducts(): Promise<YieldProduct[]> {
-    return await Promise.all(this.getYieldProductServices().map(service => service.getProduct()));
+  async getAllProducts(signal?: AbortSignal): Promise<YieldProduct[]> {
+    return await Promise.all(
+      this.getYieldProductServices().map(service => service.getProduct(signal))
+    );
   }
 
-  async getProductsByProvider(provider: YieldProvider): Promise<YieldProduct[]> {
+  async getProductsByProvider(
+    provider: YieldProvider,
+    signal?: AbortSignal
+  ): Promise<YieldProduct[]> {
     return await Promise.all(
       this.getYieldProductServices()
         .filter(service => service.providerKey === provider.key)
-        .map(service => service.getProduct())
+        .map(service => service.getProduct(signal))
     );
   }
 
-  async getProductsByCategory(category: YieldProductCategory): Promise<YieldProduct[]> {
+  async getProductsByCategory(
+    category: YieldProductCategory,
+    signal?: AbortSignal
+  ): Promise<YieldProduct[]> {
     return await Promise.all(
       this.getYieldProductServices()
         .filter(service => service.productCategory === category)
-        .map(service => service.getProduct())
+        .map(service => service.getProduct(signal))
     );
   }
 
-  async getAllPositions(account: AccountAddresses): Promise<YieldPosition[]> {
-    return (
-      await Promise.all(
-        this.getYieldProductServices().map(service => service.getAccountPosition(account))
-      )
-    ).filter(isNonNullish);
+  async getAllPositions(account: AccountAddresses, signal?: AbortSignal): Promise<YieldPosition[]> {
+    const positionArrays = await Promise.allSettled(
+      this.getYieldProductServices().map(service => service.getAccountPositions(account, signal))
+    );
+    return positionArrays
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value)
+      .flat();
   }
 
   async getPositionsByProvider(
     account: AccountAddresses,
-    provider: YieldProvider
+    provider: YieldProvider,
+    signal?: AbortSignal
   ): Promise<YieldPosition[]> {
-    return (
-      await Promise.all(
-        this.getYieldProductServices()
-          .filter(service => service.providerKey === provider.key)
-          .map(service => service.getAccountPosition(account))
-      )
-    ).filter(isNonNullish);
+    const positionArrays = await Promise.allSettled(
+      this.getYieldProductServices()
+        .filter(service => service.providerKey === provider.key)
+        .map(service => service.getAccountPositions(account, signal))
+    );
+    return positionArrays
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value)
+      .flat();
   }
 
   async getPositionsByProduct(
     account: AccountAddresses,
-    product: YieldProduct
+    product: YieldProduct,
+    signal?: AbortSignal
   ): Promise<YieldPosition[]> {
-    return (
-      await Promise.all(
-        this.getYieldProductServices()
-          .filter(service => service.productKey === product.key)
-          .map(service => service.getAccountPosition(account))
-      )
-    ).filter(isNonNullish);
+    const positionArrays = await Promise.allSettled(
+      this.getYieldProductServices()
+        .filter(service => service.productKey === product.key)
+        .map(service => service.getAccountPositions(account, signal))
+    );
+    return positionArrays
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value)
+      .flat();
   }
 
   async getPositionsByCategory(
     account: AccountAddresses,
-    category: YieldProductCategory
+    category: YieldProductCategory,
+    signal?: AbortSignal
   ): Promise<YieldPosition[]> {
-    return (
-      await Promise.all(
-        this.getYieldProductServices()
-          .filter(service => service.productCategory === category)
-          .map(service => service.getAccountPosition(account))
-      )
-    ).filter(isNonNullish);
+    const positionArrays = await Promise.allSettled(
+      this.getYieldProductServices()
+        .filter(service => service.productCategory === category)
+        .map(service => service.getAccountPositions(account, signal))
+    );
+    return positionArrays
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value)
+      .flat();
   }
 }

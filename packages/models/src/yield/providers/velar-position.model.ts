@@ -1,17 +1,10 @@
 import type { FungibleCryptoAsset } from '../../assets/asset.model';
 import type { Money } from '../../money.model';
 import type { BaseYieldPosition } from '../yield-position.base.model';
-import type { YieldProductKeys } from '../yield-product.model';
-import type { YieldProviderKeys } from '../yield-provider.model';
 
-export interface BitflowAmmLpPosition extends BaseYieldPosition {
-  provider: typeof YieldProviderKeys.bitflow;
-  product: typeof YieldProductKeys.bitflowAmmLp;
-  pools: BitflowAmmLpPool[];
-}
-
-export interface BitflowAmmLpPool {
-  apy: number;
+export interface VelarAmmLpPosition extends BaseYieldPosition {
+  provider: 'velar';
+  product: 'velar-amm-lp';
   poolSharePercentage: number;
   lpToken: {
     asset: FungibleCryptoAsset;
@@ -24,6 +17,21 @@ export interface BitflowAmmLpPool {
     balanceQuote: Money;
   };
   tokenY: {
+    asset: FungibleCryptoAsset;
+    balance: Money;
+    balanceQuote: Money;
+  };
+}
+
+export interface VelarFarmPosition extends BaseYieldPosition {
+  provider: 'velar';
+  product: 'velar-amm-lp-farming';
+  stakedLpToken: {
+    asset: FungibleCryptoAsset;
+    balance: Money;
+    balanceQuote: Money;
+  };
+  rewardToken?: {
     asset: FungibleCryptoAsset;
     balance: Money;
     balanceQuote: Money;
