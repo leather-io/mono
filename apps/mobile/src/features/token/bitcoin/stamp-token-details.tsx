@@ -45,7 +45,6 @@ export function StampTokenDetails({ asset }: StampTokenDetailsProps) {
             label={t`Last observed block`}
             value={<ExternalLink url={mempoolExplorerUrl} label={`#${blockHeight}`} />}
           />
-          <SummaryTableItem label={t`Stamp URL`} value={stampUrl} />
         </SummaryTableRoot>
       </TokenDetailsCard>
     </Collectible>

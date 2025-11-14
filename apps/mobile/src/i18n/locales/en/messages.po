@@ -1551,10 +1551,6 @@ msgstr "Stacks address"
 msgid "Stamp"
 msgstr "Stamp"
 
-#: src/features/token/bitcoin/stamp-token-details.tsx:48
-msgid "Stamp URL"
-msgstr "Stamp URL"
-
 #: src/features/approver/utils.tsx:41
 msgid "Standard"
 msgstr "Standard"

@@ -9,8 +9,15 @@ export interface CollectibleImageProps extends PressableProps {
   alt: string;
   src: string;
   height?: number;
+  thumbnailSrc?: string;
 }
-export function CollectibleImage({ alt, src, height = 200, onPress }: CollectibleImageProps) {
+export function CollectibleImage({
+  alt,
+  src,
+  height = 200,
+  thumbnailSrc,
+  onPress,
+}: CollectibleImageProps) {
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -29,7 +36,7 @@ export function CollectibleImage({ alt, src, height = 200, onPress }: Collectibl
     <Pressable onPress={onPress} disabled={!onPress}>
       <Box overflow="hidden" height={height}>
         <Image
-          source={{ uri: src }}
+          source={{ uri: thumbnailSrc ?? src }}
           alt={alt}
           style={{
             height,
