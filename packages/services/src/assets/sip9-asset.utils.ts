@@ -9,7 +9,7 @@ import {
   Sip9Attribute,
   Sip9Collection,
 } from '@leather.io/models';
-import { createMoney } from '@leather.io/utils';
+import { createMoney, createMoneyFromDecimal } from '@leather.io/utils';
 
 import { gammaNftMetadataSchema } from '../infrastructure/api/gamma/gamma-api.schema';
 import { HiroMetadata } from '../infrastructure/api/hiro/hiro-stacks-api.types';
@@ -113,6 +113,14 @@ export function createSip9Asset(
     transformHiroSip9Attributes(hiroMetadata?.attributes);
   const rarityRank = gammaMetadata?.item.rarity_rank || hiroMetadata?.properties?.rarity_rank;
 
+  const resolvedCollection = collection
+    ? {
+        ...collection,
+        floorPrice: createStxMoneyFromCollectionPriceAmount(floorPrice),
+        latestSale: createStxMoneyFromCollectionPriceAmount(latestSale),
+      }
+    : undefined;
+
   return {
     chain: CryptoAssetChains.stacks,
     category: CryptoAssetCategories.nft,
@@ -126,11 +134,20 @@ export function createSip9Asset(
       contentUrl,
       contentType,
     },
-    collection,
+    collection: resolvedCollection,
     creator,
-    floorPrice: floorPrice ? createMoney(floorPrice.amount, 'STX') : undefined,
-    latestSale: latestSale ? createMoney(latestSale.amount, 'STX') : undefined,
     attributes,
     rarityRank,
   };
+}
+
+interface CollectionPriceAmount {
+  amount: number;
+  unit: 'micro_stacks' | 'stx';
+}
+
+function createStxMoneyFromCollectionPriceAmount({ amount, unit }: CollectionPriceAmount) {
+  return unit === 'micro_stacks'
+    ? createMoney(amount, 'STX')
+    : createMoneyFromDecimal(amount, 'STX');
 }

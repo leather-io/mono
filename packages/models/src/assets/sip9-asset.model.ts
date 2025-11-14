@@ -47,6 +47,8 @@ export interface Sip9Collection {
   name: string;
   collectionExplorerUrl: string;
   totalItems?: number;
+  floorPrice?: Money;
+  latestSale?: Money;
 }
 
 export interface Sip9AssetContent {
@@ -72,7 +74,5 @@ export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly attributes?: Sip9Attribute[];
   readonly collection?: Sip9Collection;
   readonly creator?: string;
-  readonly floorPrice?: Money;
-  readonly latestSale?: Money;
   readonly rarityRank?: number;
 }

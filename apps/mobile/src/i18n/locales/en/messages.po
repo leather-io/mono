@@ -13,8 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+#: src/features/token/bitcoin/inscription-token-stats.tsx:43
+msgid ""
+"\n"
+"The amount of bitcoin assigned to the inscription on-chain. A higher output value indicates a UTXO with more satoshis locked to that collectible."
+msgstr ""
+"\n"
+"The amount of bitcoin assigned to the inscription on-chain. A higher output value indicates a UTXO with more satoshis locked to that collectible."
+
 #: src/features/approver/components/status-row/status-row-base.tsx:40
 msgid " on {date}"
 msgstr " on {date}"
@@ -27,18 +33,6 @@ msgstr " on {date} "
 #: src/features/approver/components/status-row/status-row-base.tsx:41
 msgid " since {date}"
 msgstr " since {date}"
-=======
-#: src/features/token/bitcoin/inscription-token-details.tsx:74
-=======
-#: src/features/token/bitcoin/inscription-token-stats.tsx:43
->>>>>>> 6c736b7b2 (feat(mobile): add quote price information to collectible stats page)
-msgid ""
-"\n"
-"The amount of bitcoin assigned to the inscription on-chain. A higher output value indicates a UTXO with more satoshis locked to that collectible."
-msgstr ""
-"\n"
-"The amount of bitcoin assigned to the inscription on-chain. A higher output value indicates a UTXO with more satoshis locked to that collectible."
->>>>>>> 9be5c38cd (fix(mobile): add output value description sheet to inscription details)
 
 #: src/app/settings/display/index.tsx:101
 msgid "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
@@ -52,7 +46,7 @@ msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
-#: src/features/token/stacks/sip9-token-details.tsx:57
+#: src/features/token/stacks/sip9-token-details.tsx:58
 msgid "{rarityRank} of {totalItems}"
 msgstr "{rarityRank} of {totalItems}"
 
@@ -336,7 +330,7 @@ msgstr "Argument {argumentNumber}"
 msgid "Arkadiko"
 msgstr "Arkadiko"
 
-#: src/features/token/stacks/sip9-token-details.tsx:74
+#: src/features/token/stacks/sip9-token-details.tsx:75
 msgid "Attributes"
 msgstr "Attributes"
 
@@ -479,12 +473,12 @@ msgstr "Code"
 #: src/features/token/bitcoin/stamp-token-details.tsx:36
 #: src/features/token/components/token-loading.tsx:33
 #: src/features/token/stacks/bns-details.tsx:33
-#: src/features/token/stacks/sip9-token-details.tsx:43
+#: src/features/token/stacks/sip9-token-details.tsx:44
 msgid "Collectible Info"
 msgstr "Collectible Info"
 
 #: src/features/token/components/token-loading.tsx:36
-#: src/features/token/stacks/sip9-token-details.tsx:47
+#: src/features/token/stacks/sip9-token-details.tsx:48
 msgid "Collection"
 msgstr "Collection"
 
@@ -551,7 +545,7 @@ msgstr "Continue"
 msgid "Continue without security"
 msgstr "Continue without security"
 
-#: src/features/token/stacks/sip9-token-details.tsx:62
+#: src/features/token/stacks/sip9-token-details.tsx:63
 msgid "Contract"
 msgstr "Contract"
 
@@ -592,7 +586,7 @@ msgstr "Create new wallet"
 msgid "Creation date"
 msgstr "Creation date"
 
-#: src/features/token/stacks/sip9-token-details.tsx:52
+#: src/features/token/stacks/sip9-token-details.tsx:53
 msgid "Creator"
 msgstr "Creator"
 
@@ -799,7 +793,7 @@ msgid "Fees"
 msgstr "Fees"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:73
-#: src/features/token/stacks/sip9-token-details.tsx:70
+#: src/features/token/stacks/sip9-token-details.tsx:71
 msgid "File type"
 msgstr "File type"
 
@@ -976,7 +970,7 @@ msgstr "Last observed block"
 #: src/features/token/bitcoin/stamp-token-details.tsx:42
 #: src/features/token/components/token-details-table.tsx:22
 #: src/features/token/stacks/bns-details.tsx:41
-#: src/features/token/stacks/sip9-token-details.tsx:59
+#: src/features/token/stacks/sip9-token-details.tsx:60
 msgid "Layer"
 msgstr "Layer"
 
@@ -1130,7 +1124,7 @@ msgstr "More options"
 #: src/features/token/components/token-details-table.tsx:19
 #: src/features/token/components/token-loading.tsx:35
 #: src/features/token/stacks/bns-details.tsx:35
-#: src/features/token/stacks/sip9-token-details.tsx:45
+#: src/features/token/stacks/sip9-token-details.tsx:46
 msgid "Name"
 msgstr "Name"
 
@@ -1273,7 +1267,7 @@ msgstr "Protected Bitcoin balance:"
 #: src/features/token/bitcoin/stamp-token-details.tsx:43
 #: src/features/token/components/token-loading.tsx:37
 #: src/features/token/stacks/bns-details.tsx:42
-#: src/features/token/stacks/sip9-token-details.tsx:60
+#: src/features/token/stacks/sip9-token-details.tsx:61
 msgid "Protocol"
 msgstr "Protocol"
 
@@ -1294,7 +1288,7 @@ msgstr "Push"
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
-#: src/features/token/stacks/sip9-token-details.tsx:57
+#: src/features/token/stacks/sip9-token-details.tsx:58
 msgid "Rarity rank"
 msgstr "Rarity rank"
 
