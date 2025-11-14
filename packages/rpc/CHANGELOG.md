@@ -411,6 +411,22 @@
     * @leather.io/stacks bumped to 1.17.3
     * @leather.io/utils bumped to 0.46.4
 
+## [2.20.23](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.20.22...@leather.io/rpc-v2.20.23) (2025-11-14)
+
+
+### Bug Fixes
+
+* psbt testnet ([996d235](https://github.com/leather-io/mono/commit/996d2350f7129bb81d624aa0eadccbbe3e031b51))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.47.0
+    * @leather.io/stacks bumped to 1.19.0
+    * @leather.io/utils bumped to 0.48.2
+
 ## [2.20.22](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.20.21...@leather.io/rpc-v2.20.22) (2025-11-10)
 
 

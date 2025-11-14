@@ -21,6 +21,31 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.78.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.77.3...@leather.io/extension-v6.78.0) (2025-11-14)
+
+
+### Features
+
+* **ui:** add useInterval and useCountdown hooks ([8f504d6](https://github.com/leather-io/mono/commit/8f504d6c6595861fb2628d976132c48a5e3fb6c6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.5
+    * @leather.io/bitcoin bumped to 0.35.2
+    * @leather.io/constants bumped to 0.27.4
+    * @leather.io/crypto bumped to 1.12.4
+    * @leather.io/models bumped to 0.47.0
+    * @leather.io/provider bumped to 1.6.6
+    * @leather.io/query bumped to 2.44.2
+    * @leather.io/rpc bumped to 2.20.23
+    * @leather.io/services bumped to 1.40.0
+    * @leather.io/stacks bumped to 1.19.0
+    * @leather.io/ui bumped to 1.93.0
+    * @leather.io/utils bumped to 0.48.2
+
 ## [6.77.3](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.77.2...@leather.io/extension-v6.77.3) (2025-11-11)
 
 

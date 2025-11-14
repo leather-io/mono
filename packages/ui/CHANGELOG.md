@@ -489,6 +489,22 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.93.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.92.0...@leather.io/ui-v1.93.0) (2025-11-14)
+
+
+### Features
+
+* **ui:** add useInterval and useCountdown hooks ([8f504d6](https://github.com/leather-io/mono/commit/8f504d6c6595861fb2628d976132c48a5e3fb6c6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.48.2
+  * devDependencies
+    * @leather.io/models bumped to 0.47.0
+
 ## [1.92.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.91.0...@leather.io/ui-v1.92.0) (2025-11-11)
 
 

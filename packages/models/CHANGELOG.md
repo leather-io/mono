@@ -36,6 +36,14 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.47.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.46.0...@leather.io/models-v0.47.0) (2025-11-14)
+
+
+### Features
+
+* add defi model types ([695f7e1](https://github.com/leather-io/mono/commit/695f7e1c394c26bd54dfd1d2afc851def35a56a5))
+* **services:** further separate transaction fee quote types ([dcb9c8a](https://github.com/leather-io/mono/commit/dcb9c8ad72cd8f889a758ed66871e7cb2baf2416))
+
 ## [0.46.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.45.0...@leather.io/models-v0.46.0) (2025-10-31)
 
 
