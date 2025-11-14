@@ -188,6 +188,7 @@ export interface UseSwapStateResult {
   targetAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
   baseMarketDataQuery: UseQueryResult<MarketData, Error>;
   targetMarketDataQuery: UseQueryResult<MarketData, Error>;
+  nativeAssetMarketDataQuery: UseQueryResult<MarketData, Error>;
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   networkFeeQuery: UseQueryResult<NetworkFee, Error>;
   canExecute: boolean;
