@@ -30,8 +30,10 @@ import { BitcoinTransactionsService } from './transactions/bitcoin-transactions.
 import { StacksTransactionsService } from './transactions/stacks-transactions.service';
 import { UtxosService } from './utxos/utxos.service';
 import { BitflowAmmLpService } from './yield/providers/bitflow/bitflow-amm-lp.service';
-import { GraniteV1Service } from './yield/providers/granite/granite-v1.service';
-import { StackingDaoLstService } from './yield/providers/stacking-dao/stacking-dao-lst.service';
+import { GraniteV1BorrowService } from './yield/providers/granite/granite-v1-borrow.service';
+import { GraniteV1EarnService } from './yield/providers/granite/granite-v1-earn.service';
+import { StackingDaoStStxService } from './yield/providers/stacking-dao/stacking-dao-ststx.service';
+import { StackingDaoStStxBtcService } from './yield/providers/stacking-dao/stacking-dao-ststxbtc.service';
 import { ZestBorrowService } from './yield/providers/zest/zest-borrow.service';
 import { YieldService } from './yield/yield.service';
 
@@ -135,14 +137,20 @@ export function getBitcoinCoinSelectionService() {
 export function getZestBorrowService() {
   return getServicesContainer().get(ZestBorrowService);
 }
-export function getGraniteV1Service() {
-  return getServicesContainer().get(GraniteV1Service);
+export function getStackingDaoStStxService() {
+  return getServicesContainer().get(StackingDaoStStxService);
 }
-export function getBitflowService() {
+export function getStackingDaoStStxBtcService() {
+  return getServicesContainer().get(StackingDaoStStxBtcService);
+}
+export function getBitflowAmmLpService() {
   return getServicesContainer().get(BitflowAmmLpService);
 }
-export function getStackingDaoLstService() {
-  return getServicesContainer().get(StackingDaoLstService);
+export function getGraniteV1EarnService() {
+  return getServicesContainer().get(GraniteV1EarnService);
+}
+export function getGraniteV1BorrowService() {
+  return getServicesContainer().get(GraniteV1BorrowService);
 }
 export function getYieldService() {
   return getServicesContainer().get(YieldService);

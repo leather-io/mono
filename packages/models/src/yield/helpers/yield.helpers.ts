@@ -1,10 +1,17 @@
-import type { BitflowAmmLpPosition } from '../providers/bitflow.model';
-import type { GraniteV1Position } from '../providers/granite.model';
 import type {
-  StackingDaoLstPosition,
+  BitflowAmmLpPosition,
+  BitflowAmmStakingPosition,
+} from '../providers/bitflow-position.model';
+import type {
+  GraniteV1BorrowPosition,
+  GraniteV1EarnPosition,
+} from '../providers/granite-position.model';
+import type {
   StackingDaoPooledStackingPosition,
-} from '../providers/stacking-dao.model';
-import type { ZestBorrowPosition } from '../providers/zest.model';
+  StackingDaoStStxBtcPosition,
+  StackingDaoStStxPosition,
+} from '../providers/stacking-dao-position.model';
+import type { ZestBorrowMarketPosition } from '../providers/zest-position.model';
 import type { YieldPosition } from '../yield-position.model';
 import {
   YieldProduct,
@@ -12,24 +19,38 @@ import {
   YieldProductCategory,
   YieldProductKey,
   YieldProductKeys,
-  YieldProductToProtocolMap,
+  YieldProductToProviderMap,
 } from '../yield-product.model';
 import { YieldProvider, YieldProviderKey } from '../yield-provider.model';
 
-export function isBitflowPosition(pos: YieldPosition): pos is BitflowAmmLpPosition {
+export function isBitflowAmmLpPosition(pos: YieldPosition): pos is BitflowAmmLpPosition {
   return pos.product === YieldProductKeys.bitflowAmmLp;
 }
 
-export function isZestPosition(pos: YieldPosition): pos is ZestBorrowPosition {
-  return pos.product === YieldProductKeys.zestBorrow;
+export function isBitflowAmmStakingPosition(pos: YieldPosition): pos is BitflowAmmStakingPosition {
+  return pos.product === YieldProductKeys.bitflowAmmStaking;
 }
 
-export function isGranitePosition(pos: YieldPosition): pos is GraniteV1Position {
-  return pos.product === YieldProductKeys.graniteV1;
+export function isZestPosition(pos: YieldPosition): pos is ZestBorrowMarketPosition {
+  return pos.product === YieldProductKeys.zestBorrowMarket;
 }
 
-export function isStackingDaoLstPosition(pos: YieldPosition): pos is StackingDaoLstPosition {
-  return pos.product === YieldProductKeys.stackingDaoLst;
+export function isGraniteEarnPosition(pos: YieldPosition): pos is GraniteV1EarnPosition {
+  return pos.product === YieldProductKeys.graniteV1Earn;
+}
+
+export function isGraniteBorrowPosition(pos: YieldPosition): pos is GraniteV1BorrowPosition {
+  return pos.product === YieldProductKeys.graniteV1Borrow;
+}
+
+export function isStackingDaoStStxPosition(pos: YieldPosition): pos is StackingDaoStStxPosition {
+  return pos.product === YieldProductKeys.stackingDaoStstx;
+}
+
+export function isStackingDaoStStxBtcPosition(
+  pos: YieldPosition
+): pos is StackingDaoStStxBtcPosition {
+  return pos.product === YieldProductKeys.stackingDaoStstxbtc;
 }
 
 export function isStackingDaoPooledPosition(
@@ -38,11 +59,11 @@ export function isStackingDaoPooledPosition(
   return pos.product === YieldProductKeys.stackingDaoPooledStacking;
 }
 
-export function filterPositionsByProtocol(
+export function filterPositionsByProvider(
   positions: YieldPosition[],
-  protocol: YieldProviderKey
+  provider: YieldProviderKey
 ): YieldPosition[] {
-  return positions.filter(p => p.provider === protocol);
+  return positions.filter(p => p.provider === provider);
 }
 
 export function filterPositionsByProduct(
@@ -73,8 +94,8 @@ export function sortPositionsByBalance(
 
 export function sortPositionsByApy(positions: YieldPosition[], ascending = false): YieldPosition[] {
   return [...positions].sort((a, b) => {
-    const apyA = a.netApy ?? 0;
-    const apyB = b.netApy ?? 0;
+    const apyA = a.apy;
+    const apyB = b.apy;
     return ascending ? apyA - apyB : apyB - apyA;
   });
 }
@@ -84,27 +105,27 @@ export function sortPositionsByUpdateTime(
   ascending = false
 ): YieldPosition[] {
   return [...positions].sort((a, b) => {
-    const timeA = a.updatedAt?.getTime() ?? 0;
-    const timeB = b.updatedAt?.getTime() ?? 0;
+    const timeA = 'updatedAt' in a && a.updatedAt instanceof Date ? a.updatedAt.getTime() : 0;
+    const timeB = 'updatedAt' in b && b.updatedAt instanceof Date ? b.updatedAt.getTime() : 0;
     return ascending ? timeA - timeB : timeB - timeA;
   });
 }
 
-export function getProtocolForProduct(product: YieldProductKey): YieldProviderKey {
-  return YieldProductToProtocolMap[product];
+export function getProviderForProduct(product: YieldProductKey): YieldProviderKey {
+  return YieldProductToProviderMap[product];
 }
 
 export function getCategoryForProduct(product: YieldProduct): YieldProductCategory {
   return product.category;
 }
 
-export function isProductInProtocol(product: YieldProductKey, protocol: YieldProviderKey): boolean {
-  return YieldProductToProtocolMap[product] === protocol;
+export function isProductInProvider(product: YieldProductKey, provider: YieldProviderKey): boolean {
+  return YieldProductToProviderMap[product] === provider;
 }
 
-export function getProductsForProtocol(protocol: YieldProviderKey): YieldProductKey[] {
-  return Object.entries(YieldProductToProtocolMap)
-    .filter(([_, p]) => p === protocol)
+export function getProductsForProvider(provider: YieldProviderKey): YieldProductKey[] {
+  return Object.entries(YieldProductToProviderMap)
+    .filter(([_, p]) => p === provider)
     .map(([product]) => product as YieldProductKey);
 }
 
@@ -115,17 +136,17 @@ export function getProductsInCategory(
   return products.filter(p => p.category === category);
 }
 
-export function groupPositionsByProtocol(
+export function groupPositionsByProvider(
   positions: YieldPosition[]
 ): Record<YieldProviderKey, YieldPosition[]> {
   const grouped: Partial<Record<YieldProviderKey, YieldPosition[]>> = {};
 
   for (const position of positions) {
-    const protocol = position.provider;
-    if (!grouped[protocol]) {
-      grouped[protocol] = [];
+    const provider = position.provider;
+    if (!grouped[provider]) {
+      grouped[provider] = [];
     }
-    grouped[protocol].push(position);
+    grouped[provider].push(position);
   }
 
   return grouped as Record<YieldProviderKey, YieldPosition[]>;
@@ -165,11 +186,11 @@ export function getPositionsInCategories(
   });
 }
 
-export function hasPositionsInProtocol(
+export function hasPositionsInProvider(
   positions: YieldPosition[],
-  protocol: YieldProviderKey
+  provider: YieldProviderKey
 ): boolean {
-  return positions.some(p => p.provider === protocol);
+  return positions.some(p => p.provider === provider);
 }
 
 export function hasPositionsInCategory(
@@ -181,11 +202,11 @@ export function hasPositionsInCategory(
   return positions.some(pos => productMap.get(pos.product)?.category === category);
 }
 
-export function enrichPositionWithProtocol<T extends YieldPosition>(
+export function enrichPositionWithProvider<T extends YieldPosition>(
   position: T,
-  protocol: YieldProvider
-): T & { protocolData: YieldProvider } {
-  return { ...position, protocolData: protocol };
+  provider: YieldProvider
+): T & { providerData: YieldProvider } {
+  return { ...position, providerData: provider };
 }
 
 export function enrichPositionWithProduct<T extends YieldPosition>(
@@ -197,19 +218,19 @@ export function enrichPositionWithProduct<T extends YieldPosition>(
 
 export function enrichPositionWithMetadata<T extends YieldPosition>(
   position: T,
-  protocol: YieldProvider,
+  provider: YieldProvider,
   product: YieldProduct
-): T & { protocolData: YieldProvider; productData: YieldProduct } {
-  return { ...position, protocolData: protocol, productData: product };
+): T & { providerData: YieldProvider; productData: YieldProduct } {
+  return { ...position, providerData: provider, productData: product };
 }
 
 export function getCategoryDisplayName(category: YieldProductCategory): string {
   const displayNames: Record<YieldProductCategory, string> = {
     [YieldProductCategories.AMM]: 'Liquidity Pools',
     [YieldProductCategories.LENDING]: 'Lending & Borrowing',
-    [YieldProductCategories.LST]: 'Liquid Stacking',
-    [YieldProductCategories.CDP]: 'Collateralized Debt',
-    [YieldProductCategories.POOLED_STACKING]: 'Stacking',
+    [YieldProductCategories.LIQUID_STACKING]: 'Liquid Stacking',
+    [YieldProductCategories.POOLED_STACKING]: 'Pooled Stacking',
+    [YieldProductCategories.STAKING]: 'Staking',
     [YieldProductCategories.PERPS]: 'Perpetuals',
   };
   return displayNames[category] || category;

@@ -1,5 +1,5 @@
 import { principalCV, standardPrincipalCV } from '@stacks/transactions';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 
 import { stxAsset } from '@leather.io/constants';
 import {
@@ -8,12 +8,10 @@ import {
   YieldProductCategories,
   type YieldProductCategory,
   type YieldProductKey,
-  YieldProductKeys,
   type YieldProvider,
   type YieldProviderKey,
-  YieldProviderKeys,
   type ZestBorrowAsset,
-  type ZestBorrowPosition,
+  type ZestBorrowMarketPosition,
 } from '@leather.io/models';
 import { getStacksContractName } from '@leather.io/stacks';
 import {
@@ -24,30 +22,32 @@ import {
   sumMoney,
 } from '@leather.io/utils';
 
-import type { FungibleAssetService } from '../../../assets/fungible-asset.service';
-import type { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
-import type { LeatherApiClient } from '../../../infrastructure/api/leather/leather-api.client';
-import type { MarketDataService } from '../../../market/market-data.service';
-import type { YieldProductService } from '../../yield-product.interface';
+import { FungibleAssetService } from '../../../assets/fungible-asset.service';
+import { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
+import { LeatherApiClient } from '../../../infrastructure/api/leather/leather-api.client';
+import type { SettingsService } from '../../../infrastructure/settings/settings.service';
+import { Types } from '../../../inversify.types';
+import { MarketDataService } from '../../../market/market-data.service';
+import { YieldProductService } from '../../yield.service';
 import {
   parseZestGetUserAssetsReadResponseCV,
   parseZestGetZTokenBalanceResponseCV,
   parseZestProtocolGetUserAssetBorrowBalanceResponseCV,
-} from './zest.utils';
-
-const zestProductionAddress = 'SP2VCQJGH7PHP2DJK7Z0V48AGBHQAW3R3ZW1QF4N';
+} from './zest-borrow.utils';
+import { zestProductionAddress } from './zest.constants';
 
 @injectable()
 export class ZestBorrowService implements YieldProductService {
-  providerKey: YieldProviderKey = YieldProviderKeys.zest;
-  productKey: YieldProductKey = YieldProductKeys.zestBorrow;
-  productCategory: YieldProductCategory = YieldProductCategories.LENDING;
+  providerKey: YieldProviderKey = 'zest';
+  productKey: YieldProductKey = 'zest-borrow-market';
+  productCategory: YieldProductCategory = 'lending';
 
   constructor(
     private readonly hiroStacksApiClient: HiroStacksApiClient,
     private readonly fungibleAssetService: FungibleAssetService,
     private readonly marketDataService: MarketDataService,
-    private readonly leatherApiClient: LeatherApiClient
+    private readonly leatherApiClient: LeatherApiClient,
+    @inject(Types.SettingsService) private readonly settingsService: SettingsService
   ) {}
 
   getProvider(): Promise<YieldProvider> {
@@ -63,49 +63,63 @@ export class ZestBorrowService implements YieldProductService {
     return Promise.resolve({
       key: this.productKey,
       provider: this.providerKey,
-      category: this.productCategory,
-      name: 'Zest Borrow Markets',
+      category: YieldProductCategories.LENDING,
+      name: 'Zest Borrow',
       url: '',
     });
   }
 
-  async getAccountPosition(
+  async getAccountPositions(
     account: AccountAddresses,
     signal?: AbortSignal
-  ): Promise<ZestBorrowPosition | null> {
+  ): Promise<ZestBorrowMarketPosition[]> {
     if (!account.stacks) {
-      return null;
+      return [];
     }
 
-    const userAssets = await this.callGetUserAssetsRead(account.stacks.stxAddress, signal);
+    const positionAssets = await this.callGetUserAssetsRead(account.stacks.stxAddress, signal);
+
     const borrowPositions = await Promise.all(
-      userAssets.borrowedAssetPrincipals.map(async assetPrincipal =>
+      positionAssets.borrowedAssetPrincipals.map(async assetPrincipal =>
         this.getAssetBorrowPosition(account.stacks!.stxAddress, assetPrincipal, signal)
       )
     );
+
     const supplyPositions = await Promise.all(
-      userAssets.suppliedAssetPrincipals.map(async assetPrincipal =>
+      positionAssets.suppliedAssetPrincipals.map(async assetPrincipal =>
         this.getAssetSupplyPosition(account.stacks!.stxAddress, assetPrincipal, signal)
       )
     );
-    const supplyValue = sumMoney(supplyPositions.map(p => p.balanceQuote));
-    const borrowValue = sumMoney(borrowPositions.map(p => p.balanceQuote));
 
-    return {
-      provider: YieldProviderKeys.zest,
-      product: YieldProductKeys.zestBorrow,
-      updatedAtBlockHeight: 0,
-      updatedAt: new Date(),
-      totalBalance: subtractMoney(supplyValue, borrowValue),
-      supplyBalance: supplyValue,
-      borrowBalance: borrowValue,
-      ltvPercentage: initBigNumber(borrowValue.amount)
-        .dividedBy(initBigNumber(supplyValue.amount))
-        .times(100)
-        .toNumber(),
-      borrowAssets: borrowPositions,
-      supplyAssets: supplyPositions,
-    };
+    if (borrowPositions.length === 0 && supplyPositions.length === 0) {
+      return [];
+    }
+
+    const supplyValue = supplyPositions.length
+      ? sumMoney(supplyPositions.map(p => p.balanceQuote))
+      : createMoney(0, this.settingsService.getSettings().quoteCurrency);
+
+    const borrowValue = borrowPositions.length
+      ? sumMoney(borrowPositions.map(p => p.balanceQuote))
+      : createMoney(0, this.settingsService.getSettings().quoteCurrency);
+
+    return [
+      {
+        id: this.productKey,
+        provider: 'zest',
+        product: 'zest-borrow-market',
+        totalBalance: subtractMoney(supplyValue, borrowValue),
+        apy: 0,
+        supplyBalance: supplyValue,
+        borrowBalance: borrowValue,
+        ltvPercentage: initBigNumber(borrowValue.amount)
+          .dividedBy(initBigNumber(supplyValue.amount))
+          .times(100)
+          .toNumber(),
+        borrowAssets: borrowPositions,
+        supplyAssets: supplyPositions,
+      },
+    ];
   }
 
   private async getAssetBorrowPosition(
@@ -127,8 +141,8 @@ export class ZestBorrowService implements YieldProductService {
     return {
       asset,
       apy: reserve.borrowRate,
-      balanceQuote: baseCurrencyAmountInQuote(assetCompoundedBalance, marketData),
       balance: assetCompoundedBalance,
+      balanceQuote: baseCurrencyAmountInQuote(assetCompoundedBalance, marketData),
     };
   }
 
@@ -149,8 +163,8 @@ export class ZestBorrowService implements YieldProductService {
     return {
       asset,
       apy: reserve.supplyRate,
-      balanceQuote: baseCurrencyAmountInQuote(assetBalance, marketData),
       balance: assetBalance,
+      balanceQuote: baseCurrencyAmountInQuote(assetBalance, marketData),
     };
   }
 

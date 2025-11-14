@@ -3,8 +3,11 @@ export const YieldProviderKeys = {
   zest: 'zest',
   granite: 'granite',
   stackingDao: 'stackingdao',
-  // fastPool: 'fast-pool',
-  // xverse: 'xverse',
+  lisa: 'lisa',
+  hermetica: 'hermetica',
+  fastPool: 'fast-pool',
+  xverse: 'xverse',
+  velar: 'velar',
 } as const;
 export type YieldProviderKey = (typeof YieldProviderKeys)[keyof typeof YieldProviderKeys];
 

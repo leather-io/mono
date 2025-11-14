@@ -4,30 +4,26 @@ import { isNonNullish } from 'remeda';
 import { stxAsset } from '@leather.io/constants';
 import {
   type AccountAddresses,
-  type BitflowAmmLpPool,
   type BitflowAmmLpPosition,
   FungibleCryptoAsset,
   Money,
   type YieldProduct,
-  YieldProductCategories,
   type YieldProductCategory,
   type YieldProductKey,
-  YieldProductKeys,
   type YieldProvider,
   type YieldProviderKey,
-  YieldProviderKeys,
 } from '@leather.io/models';
 import { getPrincipalFromAssetString } from '@leather.io/stacks';
-import { baseCurrencyAmountInQuote, createMoney, initBigNumber, sumMoney } from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoney, initBigNumber } from '@leather.io/utils';
 
-import type { FungibleAssetService } from '../../../assets/fungible-asset.service';
-import type { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
+import { FungibleAssetService } from '../../../assets/fungible-asset.service';
+import { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
 import type {
   LeatherApiBitflowPool,
   LeatherApiClient,
 } from '../../../infrastructure/api/leather/leather-api.client';
-import type { MarketDataService } from '../../../market/market-data.service';
-import type { YieldProductService } from '../../yield-product.interface';
+import { MarketDataService } from '../../../market/market-data.service';
+import { YieldProductService } from '../../yield.service';
 import { calculatePoolUnderlyingTokenBalance } from './bitflow.utils';
 
 export interface BitflowPosition {
@@ -36,9 +32,9 @@ export interface BitflowPosition {
 
 @injectable()
 export class BitflowAmmLpService implements YieldProductService {
-  providerKey: YieldProviderKey = YieldProviderKeys.bitflow;
-  productKey: YieldProductKey = YieldProductKeys.bitflowAmmLp;
-  productCategory: YieldProductCategory = YieldProductCategories.AMM;
+  providerKey: YieldProviderKey = 'bitflow';
+  productKey: YieldProductKey = 'bitflow-amm-lp';
+  productCategory: YieldProductCategory = 'amm';
 
   constructor(
     private readonly leatherApiClient: LeatherApiClient,
@@ -65,31 +61,15 @@ export class BitflowAmmLpService implements YieldProductService {
       url: '',
     });
   }
-  async getAccountPosition(
+  async getAccountPositions(
     account: AccountAddresses,
     signal?: AbortSignal
-  ): Promise<BitflowAmmLpPosition | null> {
-    const pools = account.stacks
-      ? await this.getBitflowAmmLpPools(account.stacks?.stxAddress, signal)
-      : [];
-    return pools.length > 0
-      ? {
-          provider: YieldProviderKeys.bitflow,
-          product: YieldProductKeys.bitflowAmmLp,
-          totalBalance: sumMoney(pools.map(p => p.lpToken.balanceQuote)),
-          pools,
-          updatedAtBlockHeight: 0,
-          updatedAt: new Date(),
-        }
-      : null;
-  }
-
-  private async getBitflowAmmLpPools(
-    address: string,
-    signal?: AbortSignal
-  ): Promise<BitflowAmmLpPool[]> {
+  ): Promise<BitflowAmmLpPosition[]> {
+    if (!account.stacks) {
+      return [];
+    }
     const [ftTokensBalances, poolMap] = await Promise.all([
-      this.hiroStacksApiClient.getAddressFtBalances(address, { signal }),
+      this.hiroStacksApiClient.getAddressFtBalances(account.stacks.stxAddress, { signal }),
       this.leatherApiClient.fetchBitflowPoolMap({ signal }),
     ]);
     const calls = [];
@@ -97,27 +77,18 @@ export class BitflowAmmLpService implements YieldProductService {
       const principal = getPrincipalFromAssetString(ftBalance.token);
       if (poolMap[principal]) {
         calls.push(
-          this.getBitflowAmmLpPool(Number(ftBalance.balance ?? 0), poolMap[principal], signal)
+          this.getBitflowAmmLpPosition(Number(ftBalance.balance ?? 0), poolMap[principal], signal)
         );
       }
     }
     return (await Promise.all(calls)).filter(isNonNullish);
   }
 
-  private async getBitflowPoolAsset(
-    principal: string,
-    signal?: AbortSignal
-  ): Promise<FungibleCryptoAsset> {
-    return principal === stxAsset.symbol
-      ? stxAsset
-      : await this.fungibleAssetService.getAsset({ protocol: 'sip10', id: principal }, signal);
-  }
-
-  private async getBitflowAmmLpPool(
+  private async getBitflowAmmLpPosition(
     lpTokenBalance: number,
     pool: LeatherApiBitflowPool,
     signal?: AbortSignal
-  ): Promise<BitflowAmmLpPool | null> {
+  ): Promise<BitflowAmmLpPosition | null> {
     try {
       const [tokenXAsset, tokenYAsset, lpTokenAsset] = await Promise.all([
         this.getBitflowPoolAsset(pool.tokenXPrincipal, signal),
@@ -150,15 +121,22 @@ export class BitflowAmmLpService implements YieldProductService {
       );
       const assetXBalance = createMoney(tokenXBalance, tokenXAsset.symbol, tokenXAsset.decimals);
       const assetYBalance = createMoney(tokenYBalance, tokenYAsset.symbol, tokenYAsset.decimals);
+
+      const totalBalance = baseCurrencyAmountInQuote(lpAssetBalance, lpTokenMarketData);
+
       return {
+        provider: 'bitflow',
+        product: 'bitflow-amm-lp',
+        id: `${this.productKey}-${pool.poolToken.principal}`,
         apy: pool.avgApy,
+        totalBalance,
         poolSharePercentage: initBigNumber(lpTokenBalance)
           .dividedBy(initBigNumber(pool.totalShares))
           .toNumber(),
         lpToken: {
           asset: lpTokenAsset,
           balance: lpAssetBalance,
-          balanceQuote: baseCurrencyAmountInQuote(lpAssetBalance, lpTokenMarketData),
+          balanceQuote: totalBalance,
         },
         tokenX: {
           asset: tokenXAsset,
@@ -174,5 +152,14 @@ export class BitflowAmmLpService implements YieldProductService {
     } catch {
       return null;
     }
+  }
+
+  private async getBitflowPoolAsset(
+    principal: string,
+    signal?: AbortSignal
+  ): Promise<FungibleCryptoAsset> {
+    return principal === stxAsset.symbol
+      ? stxAsset
+      : await this.fungibleAssetService.getAsset({ protocol: 'sip10', id: principal }, signal);
   }
 }
