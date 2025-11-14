@@ -15,7 +15,7 @@ export function Stamp({ item, height, onPress }: StampProps) {
   if (!item.stampUrl) return <FallbackImage />;
   return (
     <CollectibleImage
-      source={item.stampUrl}
+      src={item.stampUrl}
       alt={item.stamp.toString()}
       height={height}
       onPress={onPress ? () => onPress({ assetId: serializeAssetId(getAssetId(item)) }) : undefined}

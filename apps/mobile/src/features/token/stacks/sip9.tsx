@@ -23,7 +23,7 @@ export function Sip9({ item, height, onPress }: Sip9Props) {
   if (assetName === 'BNS-V2') {
     return (
       <BnsImage
-        source={encodeURI(item.content.contentUrl)}
+        src={encodeURI(item.content.contentUrl)}
         alt={item.name}
         height={height}
         onPress={onPressHandler}

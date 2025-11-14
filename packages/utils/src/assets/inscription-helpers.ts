@@ -1,3 +1,4 @@
+import { ORD_IO_URL } from '@leather.io/constants';
 import {
   CryptoAssetCategories,
   CryptoAssetChains,
@@ -54,6 +55,7 @@ export interface CreateInscriptionData {
 
 export function createInscriptionAsset(data: CreateInscriptionData): InscriptionAsset {
   const ordinalPreviewSrc = `https://ordinals.com/preview/${data.id}`;
+  const ordIoSrc = `${ORD_IO_URL}/content/${data.id}`;
   const thumbnailSrc = data.thumbnailSrc ?? ordinalPreviewSrc;
   const primarySrc = data.contentSrc || ordinalPreviewSrc;
   const preview = `https://ordinals.hiro.so/inscription/${data.id}`;
@@ -104,13 +106,13 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
       ...sharedInfo,
       mimeType: 'html',
       name: 'inscription',
-      src: primarySrc,
+      src: ordIoSrc,
     }),
     image: () => ({
       ...sharedInfo,
       mimeType: 'image',
       name: 'inscription',
-      src: data.contentSrc,
+      src: ordIoSrc,
     }),
     svg: () => ({
       ...sharedInfo,

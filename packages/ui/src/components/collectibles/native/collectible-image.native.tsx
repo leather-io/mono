@@ -7,17 +7,17 @@ import { ImageUnavailable } from './image-unavailable.native';
 
 export interface CollectibleImageProps extends PressableProps {
   alt: string;
-  source: string;
+  src: string;
   height?: number;
 }
-export function CollectibleImage({ alt, source, height = 200, onPress }: CollectibleImageProps) {
+export function CollectibleImage({ alt, src, height = 200, onPress }: CollectibleImageProps) {
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    setHasError(!source);
-  }, [source]);
+    setHasError(!src);
+  }, [src]);
 
-  if (!source || hasError) {
+  if (!src || hasError) {
     return (
       <Pressable onPress={onPress} disabled={!onPress}>
         <ImageUnavailable height={height} />
@@ -29,7 +29,7 @@ export function CollectibleImage({ alt, source, height = 200, onPress }: Collect
     <Pressable onPress={onPress} disabled={!onPress}>
       <Box overflow="hidden" height={height}>
         <Image
-          source={{ uri: source }}
+          source={{ uri: src }}
           alt={alt}
           style={{
             height,
