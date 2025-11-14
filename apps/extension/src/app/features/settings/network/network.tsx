@@ -26,7 +26,7 @@ export function NetworkSheet({ onClose }: NetworkSheetProps) {
 
   function addNetwork() {
     void analytics.track('add_network');
-    navigate(RouteUrls.AddNetwork);
+    void navigate(RouteUrls.AddNetwork);
   }
 
   function removeNetwork(id: string) {
@@ -72,7 +72,7 @@ export function NetworkSheet({ onClose }: NetworkSheetProps) {
           }}
           onEditNetwork={() => {
             onClose();
-            navigate(RouteUrls.EditNetwork, {
+            void navigate(RouteUrls.EditNetwork, {
               state: {
                 network: networks[id],
               },

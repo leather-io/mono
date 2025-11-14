@@ -43,7 +43,7 @@ export function useRpcSendTransferActions() {
       function onError(e: unknown) {
         setIsBroadcasting(false);
         logger.error('Error broadcasting tx', e);
-        navigate(RouteUrls.SendBtcError, {
+        void navigate(RouteUrls.SendBtcError, {
           state: {
             error: e,
           },

@@ -46,7 +46,7 @@ export function Inscription({ inscription }: InscriptionProps) {
     useCurrentAccountDiscardedInscriptions();
 
   const openSendInscriptionModal = useCallback(() => {
-    navigate(RouteUrls.SendOrdinalInscription, {
+    void navigate(RouteUrls.SendOrdinalInscription, {
       state: { inscription, backgroundLocation: location },
     });
   }, [navigate, inscription, location]);

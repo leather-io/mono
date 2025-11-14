@@ -99,7 +99,7 @@ export function BtcSendFormConfirmation() {
           outputs: decodedTx.inputs.length,
         });
         await filteredUtxosQuery.refetch();
-        navigate(RouteUrls.SentBtcTxSummary.replace(':txId', `${txid}`), {
+        void navigate(RouteUrls.SentBtcTxSummary.replace(':txId', `${txid}`), {
           state: formBtcTxSummaryState(txid),
         });
 
@@ -113,7 +113,7 @@ export function BtcSendFormConfirmation() {
         void analytics.track('broadcast_btc_error', {
           error: e,
         });
-        nav.toErrorPage(e);
+        void nav.toErrorPage(e);
       },
     });
     setIsBroadcasting(false);

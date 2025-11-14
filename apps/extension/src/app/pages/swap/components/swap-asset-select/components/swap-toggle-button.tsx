@@ -44,7 +44,7 @@ export function SwapToggleButton<T extends BaseSwapContext<T>>() {
     } else {
       void setFieldValue('swapAmountQuote', Number(prevAmountBase));
     }
-    navigate(
+    void navigate(
       constructSwapRoute({
         chain,
         route: RouteUrls.Swap,

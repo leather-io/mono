@@ -45,7 +45,7 @@ export function PsbtSigner(props: PsbtSignerProps) {
     try {
       return getRawPsbt(psbtHex);
     } catch (e) {
-      navigate(RouteUrls.RequestError, {
+      void navigate(RouteUrls.RequestError, {
         state: { message: isError(e) ? e.message : '', title: 'Failed request' },
       });
       return;

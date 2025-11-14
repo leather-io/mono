@@ -26,7 +26,7 @@ export function useOnFinishedOnboarding(fn: () => void) {
     if (fromOnboarding && !hasCalledFn.current) {
       hasCalledFn.current = true;
       fn();
-      navigate('/', { replace: true, state: { fromOnboarding: false } });
+      void navigate('/', { replace: true, state: { fromOnboarding: false } });
     }
   }, [fn, fromOnboarding, navigate]);
 }

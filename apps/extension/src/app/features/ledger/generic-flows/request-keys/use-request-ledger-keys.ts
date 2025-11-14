@@ -58,7 +58,7 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
       app = await connectApp();
       await checkCorrectAppIsOpenWithFailState(app);
       setAwaitingDeviceConnection(false);
-      ledgerNavigate.toConnectionSuccessStep(chain);
+      void ledgerNavigate.toConnectionSuccessStep(chain);
       await delay(1250);
       await pullKeysFromDevice(app);
       ledgerAnalytics.publicKeysPulledFromLedgerSuccessfully();
@@ -71,7 +71,7 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
         return;
       }
 
-      ledgerNavigate.toErrorStep(chain);
+      void ledgerNavigate.toErrorStep(chain);
       return app?.transport.close();
     }
   }

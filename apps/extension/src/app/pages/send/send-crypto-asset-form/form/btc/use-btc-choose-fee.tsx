@@ -50,7 +50,7 @@ export function useBtcChooseFee() {
 
       signedTx.finalize();
 
-      sendFormNavigate.toConfirmAndSignBtcTransaction({
+      void sendFormNavigate.toConfirmAndSignBtcTransaction({
         tx: signedTx.hex,
         recipient: txValues.recipient,
         fee: feeValue,

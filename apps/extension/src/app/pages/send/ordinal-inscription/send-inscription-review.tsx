@@ -45,7 +45,7 @@ export function SendInscriptionReview() {
       async onSuccess(txid: string) {
         void analytics.track('broadcast_ordinal_transaction');
         await filteredUtxosQuery.refetch();
-        navigate(`/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionSent}`, {
+        void navigate(`/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionSent}`, {
           state: {
             inscription,
             recipient,
@@ -58,7 +58,7 @@ export function SendInscriptionReview() {
       },
       onError(e) {
         void analytics.track('broadcast_ordinal_error', { error: e });
-        navigate(`/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionError}`, {
+        void navigate(`/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionError}`, {
           state: {
             error: e,
             backgroundLocation: { pathname: RouteUrls.Home },

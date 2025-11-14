@@ -55,7 +55,7 @@ export function useSwapAssetList<T extends BaseSwapContext<T>>({
       }
       // Handle swap assets
       onSetIsCrossChainSwap(false);
-      navigate(
+      void navigate(
         constructSwapRoute({
           chain: 'stacks',
           route: RouteUrls.Swap,
@@ -89,7 +89,7 @@ export function useSwapAssetList<T extends BaseSwapContext<T>>({
       }
       // Handle swap assets
       onSetIsCrossChainSwap(false);
-      navigate(
+      void navigate(
         constructSwapRoute({
           chain: 'stacks',
           route: RouteUrls.Swap,
@@ -149,12 +149,12 @@ export function useSwapAssetList<T extends BaseSwapContext<T>>({
       if (isBaseList) {
         baseAsset = asset;
         quoteAsset = values.swapAssetQuote;
-        onSelectBaseAsset(baseAsset);
+        await onSelectBaseAsset(baseAsset);
       }
       if (isQuoteList) {
         baseAsset = values.swapAssetBase;
         quoteAsset = asset;
-        onSelectQuoteAsset(quoteAsset, baseAsset);
+        await onSelectQuoteAsset(quoteAsset, baseAsset);
       }
       if (baseAsset && quoteAsset && values.swapAmountBase) {
         await onFetchQuoteAmount(baseAsset, quoteAsset);

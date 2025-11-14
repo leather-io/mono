@@ -43,7 +43,7 @@ export function IncreaseBtcFeeSheet() {
   ];
 
   const onClose = () => {
-    navigate(RouteUrls.Home);
+    void navigate(RouteUrls.Home);
   };
 
   if (!tx) return null;

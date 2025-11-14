@@ -30,21 +30,21 @@ export function EditNonceSheet() {
     if (search) {
       return navigate('..' + search, { replace: true });
     }
-    navigate(-1);
+    void navigate(-1);
   }, [navigate, search]);
 
   const onBlur = useCallback(() => validateField('nonce'), [validateField]);
 
   const onSubmit = useCallback(async () => {
     await validateField('nonce');
-    if (!errors.nonce) onGoBack();
+    if (!errors.nonce) void onGoBack();
   }, [errors.nonce, onGoBack, validateField]);
 
   const onClose = useCallback(async () => {
     if (!values.nonce) await setFieldValue('nonce', undefined);
     setFieldError('nonce', '');
     await setFieldValue('nonce', loadedNextNonce);
-    onGoBack();
+    void onGoBack();
   }, [loadedNextNonce, onGoBack, setFieldError, setFieldValue, values.nonce]);
 
   return (

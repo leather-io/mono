@@ -28,6 +28,6 @@ export function getStructuredDataPayloadFromToken(requestToken: string) {
   return {
     ...(result as unknown as CommonSignaturePayload),
     message: deserializeCV(result.message),
-    domain: deserializeCV(result.domain) as StructuredMessageDataDomain,
+    domain: deserializeCV(result.domain) satisfies StructuredMessageDataDomain,
   };
 }

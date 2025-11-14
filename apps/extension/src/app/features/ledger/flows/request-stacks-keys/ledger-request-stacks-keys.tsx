@@ -39,22 +39,22 @@ function LedgerRequestStacksKeys() {
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
       onSuccess() {
-        navigate('/', { replace: true });
+        void navigate('/', { replace: true });
       },
       async pullKeysFromDevice(app) {
         const resp = await pullStacksKeysFromLedgerDevice(app)({
           onRequestKey(accountIndex) {
-            ledgerNavigate.toDeviceBusyStep(
+            void ledgerNavigate.toDeviceBusyStep(
               `Requesting STX addresses (${accountIndex + 1}…${defaultNumberOfKeysToPullFromLedgerDevice})`
             );
           },
         });
         if (resp.status === 'failure') {
           toast.error(resp.errorMessage);
-          ledgerNavigate.toErrorStep(chain, resp.errorMessage);
+          void ledgerNavigate.toErrorStep(chain, resp.errorMessage);
           return;
         }
-        ledgerNavigate.toDeviceBusyStep();
+        void ledgerNavigate.toDeviceBusyStep();
         dispatch(
           stacksKeysSlice.actions.addKeys(
             resp.publicKeys.map(keys => ({

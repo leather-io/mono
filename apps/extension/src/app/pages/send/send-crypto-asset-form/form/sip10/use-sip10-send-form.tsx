@@ -75,7 +75,7 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
       const tx = await generateTx(values);
       if (!tx) return logger.error('Attempted to generate unsigned tx, but tx is undefined');
 
-      sendFormNavigate.toConfirmAndSignStacksSip10Transaction({
+      void sendFormNavigate.toConfirmAndSignStacksSip10Transaction({
         decimals: info.decimals,
         name: info.name,
         tx,

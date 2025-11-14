@@ -53,7 +53,7 @@ export function useRecipientSelectFields() {
 
       showRecipientAccountsModal() {
         setSelectedRecipientField('address');
-        navigate(RouteUrls.SendCryptoAssetFormRecipientAccounts, { replace: true });
+        void navigate(RouteUrls.SendCryptoAssetFormRecipientAccounts, { replace: true });
       },
 
       async onSelectRecipientFieldType(recipientType: RecipientIdentifierType) {

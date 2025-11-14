@@ -39,7 +39,7 @@ function LedgerRequestBitcoinKeys() {
       getAppVersion: getBitcoinAppVersion,
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       onSuccess() {
-        navigate('/', { replace: true });
+        void navigate('/', { replace: true });
       },
       async pullKeysFromDevice(app) {
         const { keys } = await pullBitcoinKeysFromLedgerDevice(app)({
@@ -48,12 +48,12 @@ function LedgerRequestBitcoinKeys() {
             const keyGroupFinalIndex = defaultNumberOfKeysToPullFromLedgerDevice - 1;
             const isNativeSegwitkey = index <= keyGroupFinalIndex;
             if (isNativeSegwitkey) {
-              ledgerNavigate.toDeviceBusyStep(
+              void ledgerNavigate.toDeviceBusyStep(
                 `Requesting Bitcoin Native Segwit address (${index + 1}…${defaultNumberOfKeysToPullFromLedgerDevice})`
               );
               return;
             }
-            ledgerNavigate.toDeviceBusyStep(
+            void ledgerNavigate.toDeviceBusyStep(
               `Requesting Bitcoin Taproot address (${index - keyGroupFinalIndex}…${defaultNumberOfKeysToPullFromLedgerDevice})`
             );
           },

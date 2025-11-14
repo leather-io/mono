@@ -49,7 +49,7 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
   if (!transaction) return null;
 
   const onIncreaseFee = () => {
-    navigate(RouteUrls.IncreaseBtcFee, { state: { btcTx: transaction } });
+    void navigate(RouteUrls.IncreaseBtcFee, { state: { btcTx: transaction } });
   };
 
   const openTxLink = () => {

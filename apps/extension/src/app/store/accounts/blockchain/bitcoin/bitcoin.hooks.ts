@@ -281,7 +281,7 @@ export function useSignBitcoinTx() {
         // many routes, in order to achieve a consistent API between
         // Ledger/software, we subscribe to the event that occurs when the
         // unsigned tx is signed
-        ledgerNavigate.toConnectAndSignBitcoinTransactionStep(
+        void ledgerNavigate.toConnectAndSignBitcoinTransactionStep(
           psbt,
           getSigningConfig(inputsToSign),
           location
@@ -310,7 +310,7 @@ function useBitcoinAccountTaprootXpub(accountIndex: number) {
 export function useBitcoinAccountXpubs(accountIndex: number) {
   const nativeSegwitXpub = useBitcoinAccountNativeSegwitXpub(accountIndex);
   const taprootXpub = useBitcoinAccountTaprootXpub(accountIndex);
-  return [nativeSegwitXpub, taprootXpub].filter(xpub => isString(xpub)) as string[];
+  return [nativeSegwitXpub, taprootXpub].filter(xpub => isString(xpub));
 }
 
 export function useCurrentBitcoinAccountNativeSegwitXpub() {

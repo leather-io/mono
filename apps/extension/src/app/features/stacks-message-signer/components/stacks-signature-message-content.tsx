@@ -33,7 +33,7 @@ export function StacksSignatureRequestMessageContent({
       <SignMessageActions
         isLoading={isLoading}
         onSignMessageCancel={onCancelMessageSigning}
-        onSignMessage={() => onSignMessage({ messageType: 'utf8', message: payload.message })}
+        onSignMessage={() => void onSignMessage({ messageType: 'utf8', message: payload.message })}
       />
       <hr />
       <StacksMessageSigningDisclaimer appName={payload.appName} />
