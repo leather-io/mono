@@ -32,8 +32,8 @@ const mockHiroMetadata: HiroMetadata = {
       totalItems: 10,
     },
     creator: 'SP5678',
-    floor_price: { amount: 12, unit: 'STX' },
-    latest_sale: { amount: 22, unit: 'STX' },
+    floor_price: { amount: 12, unit: 'micro_stx' },
+    latest_sale: { amount: 22, unit: 'micro_stx' },
     rarity_rank: 77,
   },
   sip: 0,
@@ -51,14 +51,14 @@ const mockGammaMetadata: GammaNftMetadata = {
       name: 'Gamma Collection',
       location_url: 'https://gamma.io/collection',
       total_items: 100,
-      floor_price_amount: { amount: 99, unit: 'STX' },
+      floor_price_amount: { amount: 99, unit: 'micro_stx' },
       id: '',
       type: '',
     },
     creator: 'SP8888',
     rarity_rank: 42,
     market_summary: {
-      latest_sale: { price_amount: { amount: 55, unit: 'STX' } },
+      latest_sale: { price_amount: { amount: 55, unit: 'micro_stx' } },
       item_id: { id: '', chain: '' },
       meta: {
         can_list: false,
@@ -126,8 +126,8 @@ describe('createSip9Asset', () => {
     });
     expect(asset.content.contentUrl).toContain('leather.quicknode-ipfs.com/ipfs/');
     expect(asset.creator).toBe('SP8888');
-    expect(asset.floorPrice?.amount.toNumber()).toBe(99);
-    expect(asset.latestSale?.amount.toNumber()).toBe(55);
+    expect(asset.collection?.floorPrice?.amount.toNumber()).toBe(99000000);
+    expect(asset.collection?.latestSale?.amount.toNumber()).toBe(55000000);
     expect(asset.rarityRank).toBe(42);
     expect(asset.attributes).toContainEqual({
       traitType: 'Background',
@@ -142,8 +142,8 @@ describe('createSip9Asset', () => {
     expect(asset.collection?.name).toBe('Hiro Collection');
     expect(asset.content.contentUrl).toBe('https://hiro.dev/image.png');
     expect(asset.creator).toBe('SP5678');
-    expect(asset.floorPrice?.amount.toNumber()).toBe(12);
-    expect(asset.latestSale?.amount.toNumber()).toBe(22);
+    expect(asset.collection?.floorPrice?.amount.toNumber()).toBe(12000000);
+    expect(asset.collection?.latestSale?.amount.toNumber()).toBe(22000000);
     expect(asset.rarityRank).toBe(77);
     // There is no transformation for Hiro attributes in the mock, so attributes can be undefined or not
   });
@@ -161,8 +161,22 @@ describe('createSip9Asset', () => {
 
   it('should set floorPrice and latestSale to undefined if not present', () => {
     const asset = createSip9Asset(assetIdentifier, tokenId, undefined, undefined);
-    expect(asset.floorPrice).toBeUndefined();
-    expect(asset.latestSale).toBeUndefined();
+    expect(asset.collection?.floorPrice).toBeUndefined();
+    expect(asset.collection?.latestSale).toBeUndefined();
+  });
+
+  it('handles STX and microSTX units when building collection prices', () => {
+    const gammaMicro = JSON.parse(JSON.stringify(mockGammaMetadata)) as GammaNftMetadata;
+    gammaMicro.item.collection.floor_price_amount = { amount: 1_500_000, unit: 'micro_stacks' };
+    gammaMicro.item.market_summary!.latest_sale!.price_amount = {
+      amount: 2.5,
+      unit: 'STX',
+    };
+
+    const asset = createSip9Asset(assetIdentifier, tokenId, undefined, gammaMicro);
+
+    expect(asset.collection?.floorPrice?.amount.toNumber()).toBe(1_500_000);
+    expect(asset.collection?.latestSale?.amount.toNumber()).toBe(2_500_000);
   });
 
   it('should set attributes and rarityRank to undefined if not present', () => {

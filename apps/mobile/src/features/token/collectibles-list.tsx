@@ -56,7 +56,11 @@ interface CollectiblesListProps {
   onPressToken?: (tokenDetails: TokenDetailsProps) => void;
 }
 
-export function CollectiblesList({ collectiblesState, header, onPressToken }: CollectiblesListProps) {
+export function CollectiblesList({
+  collectiblesState,
+  header,
+  onPressToken,
+}: CollectiblesListProps) {
   const collectibles = collectiblesState.state === 'success' ? collectiblesState.value : [];
   const height = useCollectibleListItemHeight();
 

@@ -24,11 +24,12 @@ export function Sip9TokenDetails({ asset }: Sip9TokenDetailsProps) {
     value: asset?.contractId ?? '',
   });
 
-  const { name, description, tokenId, collection, rarityRank, creator, floorPrice, latestSale } =
-    asset;
+  const { name, description, tokenId, collection, rarityRank, creator } = asset;
   const collectionLink = `https://gamma.io${collection?.collectionExplorerUrl ?? ''}`;
   const collectionName = collection?.name;
   const totalItems = collection?.totalItems;
+  const floorPrice = collection?.floorPrice;
+  const latestSale = collection?.latestSale;
 
   return (
     <Collectible name={name} details={asset}>
