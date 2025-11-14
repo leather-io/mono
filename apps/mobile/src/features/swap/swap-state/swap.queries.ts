@@ -6,6 +6,7 @@ import { createSwapAssetsSelector } from '@/features/swap/swap-state/utils/asset
 import { swapQuoteSelector } from '@/features/swap/swap-state/utils/swap-quote-selection';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
 import { isDefined, isNonNullish } from 'remeda';
 
 import {
@@ -79,7 +80,7 @@ interface UseSwapQuotesQueryParams {
   targetSwapAsset?: SwapAsset | null;
   baseAmount?: Money | null;
   policy: SwapQuotePolicy;
-  fairMarketRate: number | null;
+  fairMarketRate: BigNumber | null;
   slippage: number;
   queryOptions?: CustomQueryOptions<SwapQuote[], Error, SwapQuoteSelectionResult>;
 }
@@ -147,7 +148,7 @@ export function useAssetMarketDataQuery({
       return marketDataService.getMarketData(asset, signal);
     },
     enabled: isDefined(asset),
-    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchInterval: 30000,
     ...queryOptions,
   });
 }

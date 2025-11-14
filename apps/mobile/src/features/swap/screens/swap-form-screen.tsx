@@ -32,12 +32,19 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
     validation,
     baseAssetsQuery,
     targetAssetsQuery,
+    baseMarketDataQuery,
+    nativeAssetMarketDataQuery,
     targetMarketDataQuery,
     quoteQuery,
     networkFeeQuery,
     canExecute,
   } = swapState;
-  const liveEstimate = useLiveSwapEstimate({ quoteQuery, networkFeeQuery });
+  const liveEstimate = useLiveSwapEstimate({
+    quoteQuery,
+    networkFeeQuery,
+    baseMarketDataQuery,
+    nativeAssetMarketDataQuery,
+  });
 
   const validateDecimalPlaces = createDecimalPlaceValidator(
     whenInputCurrencyMode(state.inputCurrencyMode)({

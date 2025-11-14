@@ -1,4 +1,5 @@
 import { act, waitFor } from '@testing-library/react';
+import BigNumber from 'bignumber.js';
 import { assert, describe, expect, it } from 'vitest';
 
 import {
@@ -136,7 +137,7 @@ describe('quote enrichment and selection', () => {
 
     const enrichedQuote = result.current.quoteQuery.data?.quotes[0];
     assert(enrichedQuote);
-    expect(enrichedQuote.rate).toBe(5);
+    expect(enrichedQuote.swapRate).toEqual(BigNumber(5));
     expect(enrichedQuote.score).toBe(500_000_000);
     expect(enrichedQuote.provider).toBe('alex-sdk');
     expect(enrichedQuote.quoteAmount).toBeDefined();
@@ -304,9 +305,9 @@ describe('quote enrichment and selection', () => {
     const doubleDexQuote = enrichedQuotes.find(q => q.dexPath.length === 2);
     const tripleDexQuote = enrichedQuotes.find(q => q.dexPath.length === 3);
 
-    expect(singleDexQuote?.providerFeePercentage).toBeCloseTo(0.003, 5);
-    expect(doubleDexQuote?.providerFeePercentage).toBeCloseTo(0.006, 5);
-    expect(tripleDexQuote?.providerFeePercentage).toBeCloseTo(0.009, 5);
+    expect(singleDexQuote?.providerFeePercentage).toEqual(BigNumber(0.003));
+    expect(doubleDexQuote?.providerFeePercentage).toEqual(BigNumber(0.006));
+    expect(tripleDexQuote?.providerFeePercentage).toEqual(BigNumber(0.009));
   });
 
   it('does not add provider fee for sbtc bridge transfers', async () => {

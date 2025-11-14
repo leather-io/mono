@@ -4,6 +4,7 @@ import {
   SwapQuotePolicy,
   SwapQuoteSelectionResult,
 } from '@/features/swap/swap-state/swap-state.types';
+import BigNumber from 'bignumber.js';
 import { filter, isDefined, map, pipe, prop, sortBy } from 'remeda';
 
 import { SwapQuote } from '@leather.io/models';
@@ -12,7 +13,7 @@ import { assertUnreachable } from '@leather.io/utils';
 export function swapQuoteSelector(
   swapQuotes: SwapQuote[],
   policy: SwapQuotePolicy,
-  fairMarketRate: number | null,
+  fairMarketRate: BigNumber | null,
   slippage: number
 ): SwapQuoteSelectionResult {
   const quotes = pipe(
