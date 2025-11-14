@@ -46,7 +46,7 @@ const stacksContractCallStrategy: ExecutionStrategy = {
       slippageApplicable: true,
       minReceive: calculateMinToReceiveAmount(swapQuote.quote, slippage),
       provider: swapQuote.providerId,
-      providerFee: estimateLiquidityFeePercentage(swapQuote.dexPath),
+      providerFeePercentage: estimateLiquidityFeePercentage(swapQuote.dexPath),
       rate: estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount),
       score: swapQuote.targetAmount,
       priceImpactPercentage: calculatePriceImpactPercentage(rate, fairMarketRate),
