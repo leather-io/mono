@@ -113,7 +113,7 @@ export interface EnrichedSwapQuote {
   slippageApplicable: boolean;
   minReceive?: Money;
   provider: SwapProviderId;
-  providerFee?: number;
+  providerFeePercentage?: number;
   score: number;
   priceImpactPercentage: number | null;
 }

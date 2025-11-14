@@ -304,9 +304,9 @@ describe('quote enrichment and selection', () => {
     const doubleDexQuote = enrichedQuotes.find(q => q.dexPath.length === 2);
     const tripleDexQuote = enrichedQuotes.find(q => q.dexPath.length === 3);
 
-    expect(singleDexQuote?.providerFee).toBeCloseTo(0.003, 5);
-    expect(doubleDexQuote?.providerFee).toBeCloseTo(0.006, 5);
-    expect(tripleDexQuote?.providerFee).toBeCloseTo(0.009, 5);
+    expect(singleDexQuote?.providerFeePercentage).toBeCloseTo(0.003, 5);
+    expect(doubleDexQuote?.providerFeePercentage).toBeCloseTo(0.006, 5);
+    expect(tripleDexQuote?.providerFeePercentage).toBeCloseTo(0.009, 5);
   });
 
   it('does not add provider fee for sbtc bridge transfers', async () => {
@@ -347,7 +347,7 @@ describe('quote enrichment and selection', () => {
 
     const bridgeQuote = result.current.quoteQuery.data?.quotes[0];
     assert(bridgeQuote);
-    expect(bridgeQuote.providerFee).toBeUndefined();
+    expect(bridgeQuote.providerFeePercentage).toBeUndefined();
     expect(bridgeQuote.rawSwapQuote.executionType).toBe('sbtc-bridge-transfer');
   });
 
