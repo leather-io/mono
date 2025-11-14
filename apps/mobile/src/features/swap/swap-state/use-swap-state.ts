@@ -1,6 +1,7 @@
 import { useReducer } from 'react';
 
 import { useExecuteSwap } from '@/features/swap/swap-state/hooks/use-execute-swap';
+import { resolveNativeAsset } from '@/features/swap/swap-state/utils/asset-selection';
 
 import { QuoteCurrency, SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
@@ -48,6 +49,11 @@ export function useSwapState({
   const baseMarketDataQuery = useAssetMarketDataQuery({
     marketDataService,
     asset: state.baseSwapAsset?.asset,
+  });
+
+  const nativeAssetMarketDataQuery = useAssetMarketDataQuery({
+    marketDataService,
+    asset: state.baseSwapAsset ? resolveNativeAsset(state.baseSwapAsset.asset) : undefined,
   });
 
   const targetMarketDataQuery = useAssetMarketDataQuery({
@@ -142,6 +148,7 @@ export function useSwapState({
     validation,
     baseAssetsQuery,
     targetAssetsQuery,
+    nativeAssetMarketDataQuery,
     baseMarketDataQuery,
     targetMarketDataQuery,
     quoteQuery,

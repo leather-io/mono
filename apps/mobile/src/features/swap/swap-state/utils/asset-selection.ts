@@ -1,8 +1,10 @@
 import { filter, map, pipe, sortBy } from 'remeda';
 
+import { btcAsset, stxAsset } from '@leather.io/constants';
 import {
   SwappableFungibleCryptoAsset,
   isBtcAsset,
+  isNativeAsset,
   isSip10Asset,
   isStxAsset,
 } from '@leather.io/models';
@@ -74,4 +76,12 @@ function hasPositiveCryptoBalance(swapAsset: AccountSwapAsset): boolean {
 
 function isAllowedZeroBalanceAsset(asset: SwappableFungibleCryptoAsset) {
   return isBtcAsset(asset) || isStxAsset(asset);
+}
+
+export function resolveNativeAsset(asset: SwappableFungibleCryptoAsset) {
+  if (isNativeAsset(asset)) return asset;
+  return {
+    stacks: stxAsset,
+    bitcoin: btcAsset,
+  }[asset.chain];
 }
