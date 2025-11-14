@@ -3,7 +3,6 @@ import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
 import { Sip9 } from '@/features/token/stacks/sip9';
 import { useGetHiroExplorerUrl } from '@/hooks/use-get-hiro-explorer-url';
 import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-preference';
-import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
 import { Sip9Asset } from '@leather.io/models';
@@ -12,7 +11,7 @@ import { truncateMiddle } from '@leather.io/utils';
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenDescription } from '../components/token-description';
 import { TokenDetailsCard } from '../components/token-details-card';
-import { TokenStatCard, TokenStatCardItem } from '../components/token-stat-card';
+import { Sip9TokenStats } from './sip9-token-stats';
 
 interface Sip9TokenDetailsProps {
   asset: Sip9Asset;
@@ -20,7 +19,6 @@ interface Sip9TokenDetailsProps {
 
 export function Sip9TokenDetails({ asset }: Sip9TokenDetailsProps) {
   const height = useCollectibleHeight();
-
   const hiroExplorerContractUrl = useGetHiroExplorerUrl({
     type: 'address',
     value: asset?.contractId ?? '',
@@ -38,16 +36,7 @@ export function Sip9TokenDetails({ asset }: Sip9TokenDetailsProps) {
         <Sip9 item={asset} height={height} />
       </TokenDetailsCard>
       {!!(latestSale || floorPrice) && (
-        <TokenDetailsCard>
-          <TokenStatCard>
-            {latestSale && (
-              <TokenStatCardItem label={t`Recent sale`} value={formatCurrency(latestSale)} />
-            )}
-            {floorPrice && (
-              <TokenStatCardItem label={t`Floor price`} value={formatCurrency(floorPrice)} />
-            )}
-          </TokenStatCard>
-        </TokenDetailsCard>
+        <Sip9TokenStats floorPrice={floorPrice} latestSale={latestSale} />
       )}
       {description && <TokenDescription description={description} />}
 
