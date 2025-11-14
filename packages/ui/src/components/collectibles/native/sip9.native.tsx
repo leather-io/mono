@@ -136,7 +136,7 @@ export function Sip9({
     case 'image/tiff':
     case 'image/avif':
     case 'application/octet-stream':
-      return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      return <CollectibleImage src={encodedSrc} alt={name} height={height} onPress={onPress} />;
     case 'audio/mpeg':
     case 'audio/wav':
     case 'audio/ogg':
@@ -152,9 +152,7 @@ export function Sip9({
     case '':
       // content type is empty, so we need to check if it's a video or an image
       if (mediaInfo?.isImage) {
-        return (
-          <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />
-        );
+        return <CollectibleImage src={encodedSrc} alt={name} height={height} onPress={onPress} />;
       } else {
         // if it's not an image, it's probably a video
         // some of the videos return 'text/plain' as their type
@@ -162,6 +160,6 @@ export function Sip9({
       }
     default:
       // default to image if we can't determine the content type
-      return <CollectibleImage source={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      return <CollectibleImage src={encodedSrc} alt={name} height={height} onPress={onPress} />;
   }
 }

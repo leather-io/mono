@@ -52,14 +52,19 @@ function buildViewerHtml(src: string) {
   `;
 }
 
-export function CollectibleGltf({ src, thumbnailSrc, height = 200, onPress }: CollectibleGltfProps) {
+export function CollectibleGltf({
+  src,
+  thumbnailSrc,
+  height = 200,
+  onPress,
+}: CollectibleGltfProps) {
   const viewerHtml = useMemo(() => buildViewerHtml(src), [src]);
 
   if (onPress) {
     return (
       <CollectibleImage
         alt="Collectible preview"
-        source={thumbnailSrc ?? ''}
+        src={thumbnailSrc ?? src}
         height={height}
         onPress={onPress}
       />

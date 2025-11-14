@@ -31,37 +31,18 @@ export function Inscription({
     case 'text':
       return <CollectibleText src={src} height={height} onPress={onPress} />;
     case 'html':
-      return (
-        <CollectibleHtml
-          src={src}
-          thumbnailSrc={thumbnailSrc}
-          height={height}
-          onPress={onPress}
-        />
-      );
+      return <CollectibleHtml src={src} height={height} onPress={onPress} />;
     case 'gltf':
       return (
-        <CollectibleGltf
-          src={src}
-          thumbnailSrc={thumbnailSrc}
-          height={height}
-          onPress={onPress}
-        />
+        <CollectibleGltf src={src} thumbnailSrc={thumbnailSrc} height={height} onPress={onPress} />
       );
     case 'video':
       return <CollectibleVideo src={src} alt={name} height={height} onPress={onPress} />;
     case 'other':
     case 'svg':
-      return (
-        <CollectibleHtml
-          src={src}
-          thumbnailSrc={thumbnailSrc}
-          height={height}
-          onPress={onPress}
-        />
-      );
+      return <CollectibleHtml src={src} height={height} onPress={onPress} />;
     case 'image':
-      return <CollectibleImage source={src} alt={name} height={height} onPress={onPress} />;
+      return <CollectibleImage src={src} alt={name} height={height} onPress={onPress} />;
     default:
       assertUnreachable(mimeType);
   }
