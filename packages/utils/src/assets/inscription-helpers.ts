@@ -106,13 +106,15 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
       ...sharedInfo,
       mimeType: 'html',
       name: 'inscription',
-      src: ordIoSrc,
+      thumbnailSrc: ordIoSrc,
+      src: primarySrc,
     }),
     image: () => ({
       ...sharedInfo,
       mimeType: 'image',
       name: 'inscription',
-      src: ordIoSrc,
+      thumbnailSrc: ordIoSrc,
+      src: primarySrc,
     }),
     svg: () => ({
       ...sharedInfo,

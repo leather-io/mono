@@ -31,7 +31,9 @@ export function Inscription({
     case 'text':
       return <CollectibleText src={src} height={height} onPress={onPress} />;
     case 'html':
-      return <CollectibleHtml src={src} height={height} onPress={onPress} />;
+      return (
+        <CollectibleHtml src={src} height={height} thumbnailSrc={thumbnailSrc} onPress={onPress} />
+      );
     case 'gltf':
       return (
         <CollectibleGltf src={src} thumbnailSrc={thumbnailSrc} height={height} onPress={onPress} />
@@ -42,7 +44,15 @@ export function Inscription({
     case 'svg':
       return <CollectibleHtml src={src} height={height} onPress={onPress} />;
     case 'image':
-      return <CollectibleImage src={src} alt={name} height={height} onPress={onPress} />;
+      return (
+        <CollectibleImage
+          src={src}
+          alt={name}
+          height={height}
+          thumbnailSrc={thumbnailSrc}
+          onPress={onPress}
+        />
+      );
     default:
       assertUnreachable(mimeType);
   }

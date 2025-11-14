@@ -9,10 +9,16 @@ import { ImageUnavailable } from './image-unavailable.native';
 interface CollectibleHtmlProps {
   src: string;
   height?: number;
+  thumbnailSrc?: string;
   onPress?: () => void;
 }
 
-export function CollectibleHtml({ src, height = 200, onPress }: CollectibleHtmlProps) {
+export function CollectibleHtml({
+  src,
+  height = 200,
+  thumbnailSrc,
+  onPress,
+}: CollectibleHtmlProps) {
   const [hasError, setHasError] = useState(false);
   const showFallback = hasError || !src;
 
@@ -39,7 +45,7 @@ export function CollectibleHtml({ src, height = 200, onPress }: CollectibleHtmlP
     <CollectibleCard height={height}>
       <Box position="relative" height={height}>
         <WebView
-          source={{ uri: src }}
+          source={{ uri: thumbnailSrc ?? src }}
           style={{ flex: 1, backgroundColor: 'transparent' }}
           scrollEnabled={false}
           originWhitelist={['*']}

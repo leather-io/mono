@@ -1,12 +1,11 @@
 import { ErrorFallbackTab } from '@/components/error/error';
-import { Stamp } from '@/features/token/bitcoin/stamp';
 import { useAccountCollectibleByAssetId } from '@/queries/collectibles/account-collectibles.query';
 
 import { AccountId, isStampAsset } from '@leather.io/models';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { useCollectibleHeight } from '../collectible';
 import { TokenLoading } from '../components/token-loading';
+import { StampTokenDetails } from './stamp-token-details';
 
 interface StampDetailsProps {
   account: AccountId;
@@ -14,7 +13,6 @@ interface StampDetailsProps {
 }
 export function StampDetails({ assetId, account }: StampDetailsProps) {
   const { fingerprint, accountIndex } = account;
-  const height = useCollectibleHeight();
 
   const collectible = useAccountCollectibleByAssetId(fingerprint, accountIndex, assetId);
 
@@ -29,7 +27,7 @@ export function StampDetails({ assetId, account }: StampDetailsProps) {
     if (!asset || !isStampAsset(asset)) {
       return <ErrorFallbackTab />;
     }
-    return <Stamp item={asset} height={height} />;
+    return <StampTokenDetails asset={asset} />;
   }
 
   return <ErrorFallbackTab />;
