@@ -17,7 +17,7 @@ export const BackUpSecretKeyPage = memo(() => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!secretKey) navigate(RouteUrls.Onboarding);
+    if (!secretKey) void navigate(RouteUrls.Onboarding);
   }, [navigate, secretKey]);
 
   if (!secretKey) return null;

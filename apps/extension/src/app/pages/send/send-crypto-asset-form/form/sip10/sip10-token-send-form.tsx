@@ -32,7 +32,7 @@ function Sip10TokenSendFormLoader({ children }: Sip10TokenSendFormLoaderProps) {
 
   if (!tokenBalance) {
     toast.error('Token not found');
-    navigate(RouteUrls.SendCryptoAsset);
+    void navigate(RouteUrls.SendCryptoAsset);
     return null;
   }
 

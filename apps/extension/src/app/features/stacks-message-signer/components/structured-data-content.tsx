@@ -29,7 +29,7 @@ export function SignatureRequestStructuredDataContent({
         isLoading={isLoading}
         onSignMessageCancel={onCancelMessageSigning}
         onSignMessage={() =>
-          onSignMessage({
+          void onSignMessage({
             messageType: 'structured',
             message: payload.message,
             domain: payload.domain,

@@ -43,13 +43,13 @@ export function useSponsorTransactionFees() {
 
         const result = await submitSponsoredSbtcTransaction(sponsorshipApiUrl, signedSponsoredTx);
         if (!result.txid) {
-          navigate(RouteUrls.SwapError, { state: { message: result.error } });
+          void navigate(RouteUrls.SwapError, { state: { message: result.error } });
           return;
         }
 
         toast.success('Transaction submitted!');
         setIsIdle();
-        navigate(RouteUrls.Activity);
+        void navigate(RouteUrls.Activity);
       } catch (error) {
         return logger.error('Failed to submit sponsor transaction', error);
       }

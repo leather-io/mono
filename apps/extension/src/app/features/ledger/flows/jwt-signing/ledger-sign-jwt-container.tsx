@@ -100,7 +100,7 @@ export function LedgerSignJwtContainer() {
           setLatestDeviceResponse({ deviceLocked: true } as any);
           return;
         }
-        ledgerNavigate.toErrorStep(chain);
+        void ledgerNavigate.toErrorStep(chain);
       },
     });
 
@@ -126,7 +126,7 @@ export function LedgerSignJwtContainer() {
     }
 
     try {
-      ledgerNavigate.toConnectionSuccessStep('stacks');
+      void ledgerNavigate.toConnectionSuccessStep('stacks');
       await delay(1000);
 
       const authResponsePayload = await makeLedgerCompatibleUnsignedAuthResponsePayload({
@@ -142,16 +142,16 @@ export function LedgerSignJwtContainer() {
 
       setJwtPayloadHash(getSha256HashOfJwtAuthPayload(authResponsePayload));
 
-      ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
+      void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
 
       const resp = await signLedgerJwtHash(stacks)(authResponsePayload, accountIndex);
 
       if (resp.returnCode === LedgerError.TransactionRejected) {
-        ledgerNavigate.toOperationRejectedStep();
+        void ledgerNavigate.toOperationRejectedStep();
         return;
       }
 
-      ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
+      void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
       const authResponse = addSignatureToAuthResponseJwt(authResponsePayload, resp.signatureDER);
       await delay(600);
       keyActions.switchAccount(accountIndex);
@@ -164,7 +164,7 @@ export function LedgerSignJwtContainer() {
         tabId,
       });
     } catch (e) {
-      ledgerNavigate.toDeviceDisconnectStep();
+      void ledgerNavigate.toDeviceDisconnectStep();
     } finally {
       await stacks.transport.close();
     }

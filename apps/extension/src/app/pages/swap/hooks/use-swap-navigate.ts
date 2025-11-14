@@ -9,7 +9,7 @@ export function useSwapNavigate() {
 
   return useCallback(
     (route: string) => {
-      navigate(
+      void navigate(
         replaceRouteParams(route, {
           base: base ?? '',
           quote: quote ?? '',

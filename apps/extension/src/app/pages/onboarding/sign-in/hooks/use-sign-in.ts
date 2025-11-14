@@ -62,7 +62,7 @@ export function useSignIn() {
       dispatch(keyActions.signOut());
       dispatch(inMemoryKeyActions.setDefaultKey(parsedKeyInput));
       void analytics.track('submit_valid_secret_key');
-      navigate(RouteUrls.SetPassword);
+      void navigate(RouteUrls.SetPassword);
       setIsIdle();
     },
     [setIsLoading, dispatch, navigate, setIsIdle, handleSetError]

@@ -67,7 +67,7 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
           setLatestDeviceResponse({ deviceLocked: true } as any);
           return;
         }
-        ledgerNavigate.toErrorStep(chain);
+        void ledgerNavigate.toErrorStep(chain);
       },
     });
 
@@ -79,13 +79,13 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       return;
     }
 
-    ledgerNavigate.toDeviceBusyStep(`Verifying public key on Ledger…`);
+    void ledgerNavigate.toDeviceBusyStep(`Verifying public key on Ledger…`);
     await verifyLedgerPublicKey(stacksApp);
 
     try {
-      ledgerNavigate.toConnectionSuccessStep('stacks');
+      void ledgerNavigate.toConnectionSuccessStep('stacks');
       await delay(1000);
-      ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
+      void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
 
       const resp = await whenSignableMessageOfType(unsignedMessage)({
         async utf8(msg) {
@@ -103,12 +103,12 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       // Assuming here that public keys are wrong. Alternatively, we may want
       // to proactively check the key before signing
       if (resp.returnCode === LedgerError.DataIsInvalid) {
-        ledgerNavigate.toDevicePayloadInvalid();
+        void ledgerNavigate.toDevicePayloadInvalid();
         return;
       }
 
       if (resp.returnCode === LedgerError.TransactionRejected) {
-        ledgerNavigate.toOperationRejectedStep(`Message signing operation rejected`);
+        void ledgerNavigate.toOperationRejectedStep(`Message signing operation rejected`);
         ledgerAnalytics.messageSignedOnLedgerRejected();
         appEvents.publish('ledgerStacksMessageSigningCancelled', { unsignedMessage });
         return;
@@ -116,7 +116,7 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       if (resp.returnCode !== LedgerError.NoErrors) {
         throw new Error('Some other error');
       }
-      ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
+      void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
       await delay(1000);
 
       ledgerAnalytics.messageSignedOnLedgerSuccessfully();
@@ -131,7 +131,7 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
 
       await stacksApp.transport.close();
     } catch (e) {
-      ledgerNavigate.toDeviceDisconnectStep();
+      void ledgerNavigate.toDeviceDisconnectStep();
     }
   }
 

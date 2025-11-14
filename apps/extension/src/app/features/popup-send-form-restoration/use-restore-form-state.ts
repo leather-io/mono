@@ -28,6 +28,6 @@ export function useRestoreFormState() {
     const state = await chrome.storage.session.get('form-state-' + currentTabId.toString());
     const persistedState = state[key];
     if (!persistedState || !persistedState.symbol) return;
-    navigate('send/' + persistedState.symbol, { state: persistedState });
+    void navigate('send/' + persistedState.symbol, { state: persistedState });
   });
 }

@@ -61,7 +61,7 @@ export function StacksTransactionActionSheetLoader({
 
   if (!rawTx || !tx) {
     toast.error('Transaction not found');
-    navigate(RouteUrls.Home);
+    void navigate(RouteUrls.Home);
     return null;
   }
 

@@ -40,12 +40,12 @@ function LeatherIntroSheetContainer() {
   async function onRevealNewName() {
     void analytics.track('new_brand_reveal_name');
     await delay(4000);
-    navigate('./introducing-leather', { replace: true });
+    void navigate('./introducing-leather', { replace: true });
   }
 
   async function onAcceptTerms() {
     void analytics.track('new_brand_accept_terms');
-    navigate('../', { replace: true });
+    void navigate('../', { replace: true });
   }
 
   function onRejectAndUninstall() {

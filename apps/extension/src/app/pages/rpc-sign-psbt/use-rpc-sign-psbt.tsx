@@ -86,7 +86,7 @@ export function useRpcSignPsbt() {
           txValue: formatCurrency(transferTotalAsMoney),
         };
 
-        navigate(RouteUrls.RpcSignPsbtSummary, { state: psbtTxSummaryState });
+        void navigate(RouteUrls.RpcSignPsbtSummary, { state: psbtTxSummaryState });
       },
       onError(e) {
         if (!requestId) throw new Error('Invalid request id');
@@ -98,7 +98,7 @@ export function useRpcSignPsbt() {
             error: { code: 4002, message: 'Failed to broadcast transaction' },
           })
         );
-        navigate(RouteUrls.RequestError, {
+        void navigate(RouteUrls.RequestError, {
           state: { message: isError(e) ? e.message : '', title: 'Failed to broadcast' },
         });
       },

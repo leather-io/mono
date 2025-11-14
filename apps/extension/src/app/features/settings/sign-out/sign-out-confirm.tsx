@@ -19,7 +19,7 @@ export function SignOut({ onClose }: SignOutProps) {
       isShowing
       onUserDeleteWallet={() => {
         void signOut().finally(() => {
-          navigate(RouteUrls.Onboarding);
+          void navigate(RouteUrls.Onboarding);
         });
       }}
       onClose={onClose}

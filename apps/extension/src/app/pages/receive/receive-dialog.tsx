@@ -61,7 +61,7 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
         stxAddress={stxAddress}
         onClickQrOrdinal={() => {
           void analytics.track('select_inscription_to_add_new_collectible');
-          navigate(`${RouteUrls.Home}${RouteUrls.ReceiveCollectibleOrdinal}`, {
+          void navigate(`${RouteUrls.Home}${RouteUrls.ReceiveCollectibleOrdinal}`, {
             state: {
               btcAddressTaproot,
               backgroundLocation,

@@ -65,7 +65,7 @@ export function useSendInscriptionForm() {
           return;
         }
 
-        navigate(
+        void navigate(
           `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionChooseFee}`,
           {
             state: {
@@ -120,7 +120,7 @@ export function useSendInscriptionForm() {
       logger.debug('Pre-finalized inscription PSBT', signedTx.hex);
 
       const feeRowValue = formFeeRowValue(values.feeRate, isCustomFee);
-      navigate(`/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionReview}`, {
+      void navigate(`/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionReview}`, {
         state: {
           fee: feeValue,
           inscription,

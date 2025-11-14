@@ -18,7 +18,7 @@ export function SwapAssetsPair() {
   const navigate = useNavigate();
 
   if (isUndefined(swapAssetBase) || isUndefined(swapAssetQuote)) {
-    navigate(
+    void navigate(
       constructSwapRoute({
         chain: 'stacks',
         route: RouteUrls.Swap,

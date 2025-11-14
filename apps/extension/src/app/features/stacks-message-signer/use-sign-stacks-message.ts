@@ -50,7 +50,7 @@ export function useSignStacksMessage({
 
     async ledger(unsignedMessage: UnsignedMessage) {
       void analytics.track('request_signature_sign', { type: 'ledger' });
-      ledgerNavigate.toConnectAndSignMessageStep(unsignedMessage);
+      void ledgerNavigate.toConnectAndSignMessageStep(unsignedMessage);
       try {
         const messageSignature = await listenForStacksMessageSigning(unsignedMessage);
         onSignMessageCompleted(messageSignature);

@@ -106,7 +106,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
       tx: tx.hex,
       async onSuccess(txid) {
         toast.success('Fee increased successfully');
-        navigate(RouteUrls.Activity);
+        void navigate(RouteUrls.Activity);
         void analytics.track('increase_fee_transaction', {
           symbol: 'btc',
           txid,
@@ -131,7 +131,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   function onError(error: unknown) {
     const message = isError(error) ? error.message : 'Unknown error';
     toast.error(message);
-    navigate(RouteUrls.Home);
+    void navigate(RouteUrls.Home);
   }
 
   const validationSchema = yup.object({

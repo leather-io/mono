@@ -87,7 +87,7 @@ export function useBtcSendForm() {
     ) {
       // Validate and check high fee warning first
       await formikHelpers.validateForm();
-      sendFormNavigate.toChooseTransactionFee(isSendingMax, utxos, values);
+      void sendFormNavigate.toChooseTransactionFee(isSendingMax, utxos, values);
     },
   };
 }
