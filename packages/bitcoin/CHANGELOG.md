@@ -939,6 +939,25 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.35.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.35.1...@leather.io/bitcoin-v0.35.2) (2025-11-14)
+
+
+### Bug Fixes
+
+* psbt testnet ([996d235](https://github.com/leather-io/mono/commit/996d2350f7129bb81d624aa0eadccbbe3e031b51))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.27.4
+    * @leather.io/crypto bumped to 1.12.4
+    * @leather.io/models bumped to 0.47.0
+    * @leather.io/utils bumped to 0.48.2
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.23
+
 ## [0.35.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.35.0...@leather.io/bitcoin-v0.35.1) (2025-11-10)
 
 

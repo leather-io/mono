@@ -413,6 +413,34 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.40.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.39.1...@leather.io/services-v1.40.0) (2025-11-14)
+
+
+### Features
+
+* add defi model types ([695f7e1](https://github.com/leather-io/mono/commit/695f7e1c394c26bd54dfd1d2afc851def35a56a5))
+* defi integrations ([4684d55](https://github.com/leather-io/mono/commit/4684d55c59c10359fbf21d12a420a0a3facbf6d3))
+* **mobile:** add swap execution ([857de0b](https://github.com/leather-io/mono/commit/857de0b9d775d702f4202b7a2c0a3491ed3bd64d))
+* **services:** further separate transaction fee quote types ([dcb9c8a](https://github.com/leather-io/mono/commit/dcb9c8ad72cd8f889a758ed66871e7cb2baf2416))
+
+
+### Bug Fixes
+
+* protect against failing stampchain call ([26e8b05](https://github.com/leather-io/mono/commit/26e8b050326f58b447ab83b48752514cca17817e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.35.2
+    * @leather.io/constants bumped to 0.27.4
+    * @leather.io/models bumped to 0.47.0
+    * @leather.io/stacks bumped to 1.19.0
+    * @leather.io/utils bumped to 0.48.2
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.23
+
 ## [1.39.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.39.0...@leather.io/services-v1.39.1) (2025-11-10)
 
 

@@ -19,6 +19,38 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.86.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.85.2...@leather.io/mobile-v2.86.0) (2025-11-14)
+
+
+### Features
+
+* **mobile:** add swap execution ([857de0b](https://github.com/leather-io/mono/commit/857de0b9d775d702f4202b7a2c0a3491ed3bd64d))
+* **mobile:** add swap execution tests ([ceaf68d](https://github.com/leather-io/mono/commit/ceaf68dcc1c84a04d4a7d8f6ed89f1973cf20206))
+* **services:** further separate transaction fee quote types ([dcb9c8a](https://github.com/leather-io/mono/commit/dcb9c8ad72cd8f889a758ed66871e7cb2baf2416))
+
+
+### Bug Fixes
+
+* psbt testnet ([996d235](https://github.com/leather-io/mono/commit/996d2350f7129bb81d624aa0eadccbbe3e031b51))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.5
+    * @leather.io/bitcoin bumped to 0.35.2
+    * @leather.io/constants bumped to 0.27.4
+    * @leather.io/crypto bumped to 1.12.4
+    * @leather.io/models bumped to 0.47.0
+    * @leather.io/provider bumped to 1.6.6
+    * @leather.io/query bumped to 2.44.2
+    * @leather.io/rpc bumped to 2.20.23
+    * @leather.io/services bumped to 1.40.0
+    * @leather.io/stacks bumped to 1.19.0
+    * @leather.io/ui bumped to 1.93.0
+    * @leather.io/utils bumped to 0.48.2
+
 ## [2.85.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.85.1...@leather.io/mobile-v2.85.2) (2025-11-11)
 
 
