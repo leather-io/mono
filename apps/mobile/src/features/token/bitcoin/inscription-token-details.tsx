@@ -1,6 +1,5 @@
 import { ExternalLink } from '@/components/external-link';
 import { SummaryTableItem, SummaryTableRoot } from '@/components/summary-table';
-import { useGlobalSheets } from '@/core/global-sheet-provider';
 import {
   BitcoinNetworkPreference,
   getMempoolExplorerLink,
@@ -13,24 +12,17 @@ import dayjs from 'dayjs';
 
 import { ORD_IO_URL } from '@leather.io/constants';
 import { InscriptionAsset } from '@leather.io/models';
-import {
-  Pressable,
-  QuestionCircleIcon,
-  Text,
-  legacyTouchablePressEffect,
-} from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenDetailsCard } from '../components/token-details-card';
-import { TokenStatCard, TokenStatCardItem } from '../components/token-stat-card';
+import { InscriptionTokenStats } from './inscription-token-stats';
 
 interface InscriptionTokenDetailsProps {
   asset: InscriptionAsset;
 }
 
 export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps) {
-  const { descriptionSheetRef } = useGlobalSheets();
   const {
     number,
     title,
@@ -40,7 +32,7 @@ export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps)
     genesisTimestamp,
     genesisBlockHeight,
     txid,
-    value,
+    value: outputValue,
   } = asset;
 
   const { networkPreference } = useSettings();
@@ -58,38 +50,7 @@ export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps)
       <TokenDetailsCard>
         <Inscription item={asset} height={height} />
       </TokenDetailsCard>
-      {!!value && (
-        <TokenDetailsCard>
-          <TokenStatCard>
-            <TokenStatCardItem
-              label={
-                <Pressable
-                  pressEffects={legacyTouchablePressEffect}
-                  onPress={() => {
-                    descriptionSheetRef.current?.present({
-                      title: t`Output value`,
-                      data: [
-                        {
-                          key: 'paragraph',
-                          text: t`
-The amount of bitcoin assigned to the inscription on-chain. A higher output value indicates a UTXO with more satoshis locked to that collectible.`,
-                        },
-                      ],
-                    });
-                  }}
-                  flexDirection="row"
-                  gap="1"
-                  alignItems="center"
-                >
-                  <Text variant="label02">{t`Output value`}</Text>
-                  <QuestionCircleIcon variant="small" />
-                </Pressable>
-              }
-              value={`${value} sats`}
-            />
-          </TokenStatCard>
-        </TokenDetailsCard>
-      )}
+      {!!outputValue && <InscriptionTokenStats outputValue={outputValue} />}
       <TokenDetailsCard title={t`Collectible Info`}>
         <SummaryTableRoot>
           <SummaryTableItem
