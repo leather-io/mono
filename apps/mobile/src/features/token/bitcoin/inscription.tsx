@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 
 import { TokenDetailsProps } from '@/features/token/types';
+import { imageUnavailableLabel } from '@/features/token/utils/image-unavailable-label';
 import { t } from '@lingui/core/macro';
 
 import { InscriptionAsset } from '@leather.io/models';
-import { Inscription as InscriptionComponent } from '@leather.io/ui/native';
+import { ImageUnavailable, Inscription as InscriptionComponent } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
-
-import { FallbackImage } from '../components/fallback';
 
 interface InscriptionProps {
   item: InscriptionAsset;
@@ -37,7 +36,9 @@ export function Inscription({ item, height, onPress }: InscriptionProps) {
     }
   }, [mimeType, src]);
 
-  if (!src || src.trim() === '') return <FallbackImage />;
+  if (!src || src.trim() === '') {
+    return <ImageUnavailable height={height} message={imageUnavailableLabel} />;
+  }
   return (
     <InscriptionComponent
       name={title}
@@ -45,6 +46,7 @@ export function Inscription({ item, height, onPress }: InscriptionProps) {
       height={height}
       src={isLoading ? '' : content || src}
       thumbnailSrc={thumbnailSrc}
+      imageUnavailableLabel={imageUnavailableLabel}
       onPress={onPress ? () => onPress({ assetId: serializeAssetId(getAssetId(item)) }) : undefined}
     />
   );

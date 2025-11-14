@@ -1,14 +1,25 @@
-import { Box, HasChildren } from '../../../../native';
+import { PropsWithChildren, ReactNode } from 'react';
+
+import { Box, Text } from '../../../../native';
 import { Eye1ClosedIcon } from '../../../icons/eye-1-closed-icon.native';
 import { CollectibleCard } from './collectible-card.native';
 
-interface ImageUnavailableProps extends HasChildren {
+interface ImageUnavailableProps extends PropsWithChildren {
   height?: number;
+  message?: ReactNode;
 }
 
-export function ImageUnavailable({ children, height = 200 }: ImageUnavailableProps) {
+const defaultMessage = 'Image currently unavailable';
+
+export function ImageUnavailable({
+  height = 200,
+  message,
+  children,
+}: ImageUnavailableProps) {
+  const label = message ?? children ?? defaultMessage;
+
   return (
-    <CollectibleCard>
+    <CollectibleCard height={height}>
       <Box
         height={height}
         bg="ink.background-secondary"
@@ -16,7 +27,11 @@ export function ImageUnavailable({ children, height = 200 }: ImageUnavailablePro
         alignItems="center"
       >
         <Eye1ClosedIcon />
-        {children}
+        {label ? (
+          <Text textAlign="center" variant="label02">
+            {label}
+          </Text>
+        ) : null}
       </Box>
     </CollectibleCard>
   );

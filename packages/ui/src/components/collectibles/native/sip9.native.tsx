@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 import { Sip9Asset } from '@leather.io/models';
 
@@ -46,6 +46,7 @@ export interface Sip9Props {
   item: Sip9Asset;
   height: number;
   onPress?: () => void;
+  imageUnavailableLabel?: ReactNode;
 }
 
 async function checkContentType(url: string): Promise<MediaInfo> {
@@ -97,6 +98,7 @@ export function Sip9({
   },
   height = 200,
   onPress,
+  imageUnavailableLabel,
 }: Sip9Props) {
   const [mediaInfo, setMediaInfo] = useState<MediaInfo>({
     contentType: '',
@@ -136,7 +138,15 @@ export function Sip9({
     case 'image/tiff':
     case 'image/avif':
     case 'application/octet-stream':
-      return <CollectibleImage src={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      return (
+        <CollectibleImage
+          src={encodedSrc}
+          alt={name}
+          height={height}
+          onPress={onPress}
+          imageUnavailableLabel={imageUnavailableLabel}
+        />
+      );
     case 'audio/mpeg':
     case 'audio/wav':
     case 'audio/ogg':
@@ -147,19 +157,40 @@ export function Sip9({
       return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
     case 'model/gltf+json':
     case 'model/gltf-binary':
-      return <CollectibleGltf src={encodedSrc} height={height} onPress={onPress} />;
+      return (
+        <CollectibleGltf
+          src={encodedSrc}
+          height={height}
+          onPress={onPress}
+          imageUnavailableLabel={imageUnavailableLabel}
+        />
+      );
     case 'text/plain':
     case '':
       // content type is empty, so we need to check if it's a video or an image
-      if (mediaInfo?.isImage) {
-        return <CollectibleImage src={encodedSrc} alt={name} height={height} onPress={onPress} />;
-      } else {
-        // if it's not an image, it's probably a video
-        // some of the videos return 'text/plain' as their type
+      if (mediaInfo?.isVideo) {
         return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      } else {
+        return (
+          <CollectibleImage
+            src={encodedSrc}
+            alt={name}
+            height={height}
+            onPress={onPress}
+            imageUnavailableLabel={imageUnavailableLabel}
+          />
+        );
       }
     default:
       // default to image if we can't determine the content type
-      return <CollectibleImage src={encodedSrc} alt={name} height={height} onPress={onPress} />;
+      return (
+        <CollectibleImage
+          src={encodedSrc}
+          alt={name}
+          height={height}
+          onPress={onPress}
+          imageUnavailableLabel={imageUnavailableLabel}
+        />
+      );
   }
 }

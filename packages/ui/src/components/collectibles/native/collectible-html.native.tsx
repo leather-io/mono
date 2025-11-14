@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 
@@ -11,6 +11,7 @@ interface CollectibleHtmlProps {
   height?: number;
   thumbnailSrc?: string;
   onPress?: () => void;
+  imageUnavailableLabel?: ReactNode;
 }
 
 export function CollectibleHtml({
@@ -18,6 +19,7 @@ export function CollectibleHtml({
   height = 200,
   thumbnailSrc,
   onPress,
+  imageUnavailableLabel,
 }: CollectibleHtmlProps) {
   const [hasError, setHasError] = useState(false);
   const showFallback = hasError || !src;
@@ -25,7 +27,7 @@ export function CollectibleHtml({
   function renderFallback() {
     return (
       <Box position="relative">
-        <ImageUnavailable height={height} />
+        <ImageUnavailable height={height} message={imageUnavailableLabel} />
         {onPress ? (
           <TouchableOpacity
             style={StyleSheet.absoluteFill}
