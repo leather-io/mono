@@ -2,6 +2,7 @@ import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/ful
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { getAmountErrorMessage } from '@/features/swap/components/amount-field/amount-field-error-messages';
 import { AmountPresets } from '@/features/swap/components/amount-presets';
+import { QuotePreview } from '@/features/swap/components/quote-preview/quote-preview';
 import { UseSwapStateResult } from '@/features/swap/swap-state/swap-state.types';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
@@ -18,33 +19,28 @@ import { AssetSelectorToggle } from '../components/asset-selector/asset-selector
 import { FlipButton } from '../components/flip-button';
 import * as Panel from '../components/panel';
 import { TargetAmountPreview } from '../components/target-amount-preview';
-import { useLiveSwapEstimate } from '../hooks/use-live-swap-estimate';
+import { LiveSwapEstimate } from '../hooks/use-live-swap-estimate';
 
 interface SwapFormScreenProps {
-  swapState: UseSwapStateResult;
+  swapStateResult: UseSwapStateResult;
+  liveEstimate: LiveSwapEstimate;
   onPressReview: () => void;
 }
 
-export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps) {
+export function SwapFormScreen({
+  swapStateResult,
+  liveEstimate,
+  onPressReview,
+}: SwapFormScreenProps) {
   const {
     state,
     actions,
     validation,
     baseAssetsQuery,
     targetAssetsQuery,
-    baseMarketDataQuery,
-    nativeAssetMarketDataQuery,
     targetMarketDataQuery,
-    quoteQuery,
-    networkFeeQuery,
     canExecute,
-  } = swapState;
-  const liveEstimate = useLiveSwapEstimate({
-    quoteQuery,
-    networkFeeQuery,
-    baseMarketDataQuery,
-    nativeAssetMarketDataQuery,
-  });
+  } = swapStateResult;
 
   const validateDecimalPlaces = createDecimalPlaceValidator(
     whenInputCurrencyMode(state.inputCurrencyMode)({
@@ -107,6 +103,10 @@ export function SwapFormScreen({ swapState, onPressReview }: SwapFormScreenProps
         </Panel.Card>
         <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
       </Panel.Root>
+
+      <Box mt="4" px="5" flexGrow={1}>
+        <QuotePreview state={state} liveEstimate={liveEstimate} />
+      </Box>
 
       <Box marginTop="auto" gap="3">
         <AmountPresets onSelectPercentage={actions.setBaseAmountByPercentage} />

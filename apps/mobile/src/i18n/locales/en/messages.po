@@ -514,7 +514,7 @@ msgstr ""
 msgid "Confirm"
 msgstr "Confirm"
 
-#: src/features/swap/screens/swap-review-screen.tsx:32
+#: src/features/swap/screens/swap-review-screen.tsx:34
 msgid "Confirm Swap"
 msgstr "Confirm Swap"
 
@@ -721,6 +721,10 @@ msgstr "Enter recipient"
 #: src/features/recover-wallet/recover-wallet.tsx:112
 msgid "Enter your Secret Key"
 msgstr "Enter your Secret Key"
+
+#: src/features/swap/components/quote-preview/quote-preview-content.tsx:49
+msgid "Estimated fees"
+msgstr "Estimated fees"
 
 #: src/features/activity/utils/format-activity.ts:27
 msgid "Executed"
@@ -1163,6 +1167,10 @@ msgstr "No assets found"
 msgid "No confirmations will appear."
 msgstr "No confirmations will appear."
 
+#: src/features/swap/components/quote-preview/quote-preview-empty-state.tsx:8
+msgid "No quotes available for this swap."
+msgstr "No quotes available for this swap."
+
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state.tsx:9
 msgid "No results found"
 msgstr "No results found"
@@ -1186,6 +1194,10 @@ msgstr "none"
 #: src/features/send/error-messages.ts:10
 msgid "Not a number"
 msgstr "Not a number"
+
+#: src/features/swap/components/quote-preview/quote-preview-empty-state.tsx:10
+msgid "Not enough liquidity or no route available right now. Try a smaller amount or check back in a few minutes."
+msgstr "Not enough liquidity or no route available right now. Try a smaller amount or check back in a few minutes."
 
 #: src/app/settings/index.tsx:91
 #: src/app/settings/notifications/_layout.tsx:13
@@ -1296,6 +1308,10 @@ msgstr "Push and email notifications"
 msgid "Rarity rank"
 msgstr "Rarity rank"
 
+#: src/features/swap/components/quote-preview/quote-preview-content.tsx:39
+msgid "Rate"
+msgstr "Rate"
+
 #: src/features/token/components/token-description.tsx:49
 msgid "Read less"
 msgstr "Read less"
@@ -1373,6 +1389,7 @@ msgid "Restore wallet"
 msgstr "Restore wallet"
 
 #: src/features/approver/components/approver-buttons/index.tsx:52
+#: src/features/swap/components/quote-preview/quote-preview-error.tsx:18
 msgid "Retry"
 msgstr "Retry"
 
@@ -1383,7 +1400,7 @@ msgstr "Reveal account"
 #: src/features/send/forms/btc/btc-form.tsx:126
 #: src/features/send/forms/stx/sip10-form.tsx:149
 #: src/features/send/forms/stx/stx-form.tsx:140
-#: src/features/swap/screens/swap-form-screen.tsx:114
+#: src/features/swap/screens/swap-form-screen.tsx:119
 msgid "Review"
 msgstr "Review"
 
@@ -1580,7 +1597,7 @@ msgid "Success"
 msgstr "Success"
 
 #: src/components/action-buttons.tsx:77
-#: src/features/swap/screens/swap-form-screen.tsx:56
+#: src/features/swap/screens/swap-form-screen.tsx:62
 msgid "Swap"
 msgstr "Swap"
 
@@ -1678,6 +1695,10 @@ msgstr "This feature is not available yet, but we can notify you when ready."
 msgid "This is an “Allow Mode” transaction"
 msgstr "This is an “Allow Mode” transaction"
 
+#: src/features/swap/components/quote-preview/quote-preview-error.tsx:15
+msgid "This is usually a temporary network or provider-side issue."
+msgstr "This is usually a temporary network or provider-side issue."
+
 #: src/features/receive/get-assets.ts:47
 msgid "This is your address for receiving tokens on the Stacks network."
 msgstr "This is your address for receiving tokens on the Stacks network."
@@ -1771,6 +1792,10 @@ msgstr "Type URL or search"
 #: src/hooks/use-version-check.ts:33
 msgid "Unable to determine current app version"
 msgstr "Unable to determine current app version"
+
+#: src/features/swap/components/quote-preview/quote-preview-error.tsx:14
+msgid "Unable to load the quote"
+msgstr "Unable to load the quote"
 
 #: src/utils/app-store-utils.ts:31
 msgid "Unable to open app store. Please update the app manually from your device’s app store."

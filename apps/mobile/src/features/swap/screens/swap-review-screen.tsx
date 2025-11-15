@@ -4,24 +4,26 @@ import { HeaderBackButton } from '@/components/screen/screen-header/components/h
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { SlippageSelectorSheet } from '@/features/swap/components/slippage-selector/slippage-selector-sheet';
+import { LiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
 import { UseSwapStateResult } from '@/features/swap/swap-state/swap-state.types';
 import { t } from '@lingui/core/macro';
 
 import { Box, SheetInstance } from '@leather.io/ui/native';
 
 interface SwapReviewScreenProps {
-  swapState: UseSwapStateResult;
+  swapStateResult: UseSwapStateResult;
+  liveEstimate: LiveSwapEstimate;
   onPressBack: () => void;
 }
 
-export function SwapReviewScreen({ swapState, onPressBack }: SwapReviewScreenProps) {
+export function SwapReviewScreen({ swapStateResult, onPressBack }: SwapReviewScreenProps) {
   const slippageSheetRef = useRef<SheetInstance>(null);
 
   function handleBackPress() {
     onPressBack();
   }
 
-  if (!swapState.quoteQuery.data?.selected) {
+  if (!swapStateResult.quoteQuery.data?.selected) {
     return null;
   }
 
@@ -37,8 +39,8 @@ export function SwapReviewScreen({ swapState, onPressBack }: SwapReviewScreenPro
       <Box flex={1} px="5"></Box>
       <SlippageSelectorSheet
         ref={slippageSheetRef}
-        value={swapState.state.slippage}
-        onSave={swapState.actions.setSlippage}
+        value={swapStateResult.state.slippage}
+        onSave={swapStateResult.actions.setSlippage}
       />
     </FullHeightSheetLayout>
   );

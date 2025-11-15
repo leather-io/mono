@@ -27,8 +27,8 @@ export function TargetAmountPreview({
   liveEstimate,
   baseAmount,
 }: TargetAmountPreviewProps) {
-  const { status, quoteAmount } = deriveEstimateSnapshot(liveEstimate);
-  const shouldPulse = status === 'loading' && baseAmount !== '0';
+  const { status, quoteAmount, isRefetching } = deriveEstimateSnapshot(liveEstimate);
+  const shouldPulse = (status === 'loading' || !!isRefetching) && baseAmount !== '0';
   const pulsingStyle = usePulsingAnimation(shouldPulse);
   const primaryAmount = useStableTargetAmount({
     baseAmount,
@@ -114,6 +114,7 @@ function usePulsingAnimation(enabled: boolean) {
 interface EstimateSnapshot {
   status: LiveSwapEstimate['status'];
   quoteAmount?: Money;
+  isRefetching?: boolean;
 }
 
 function deriveEstimateSnapshot(liveEstimate: LiveSwapEstimate): EstimateSnapshot {
@@ -124,6 +125,7 @@ function deriveEstimateSnapshot(liveEstimate: LiveSwapEstimate): EstimateSnapsho
   return {
     status: 'success',
     quoteAmount: liveEstimate.selectedQuote?.quoteAmount,
+    isRefetching: liveEstimate.isRefetching,
   };
 }
 

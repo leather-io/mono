@@ -1,14 +1,18 @@
 import { UseQueryResult } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { isDefined } from 'remeda';
 
 import { MarketData, Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { baseCurrencyAmountInQuote, createMoneyFromDecimal, sumMoney } from '@leather.io/utils';
+import { UseIntervalState, useInterval } from '@leather.io/ui/native';
+import { baseCurrencyAmountInQuote, createMoneyFromDecimal } from '@leather.io/utils';
 
 import {
   EnrichedSwapQuote,
   NetworkFee,
   SwapQuoteSelectionResult,
 } from '../swap-state/swap-state.types';
+
+const refetchInterval = 20000;
 
 export type LiveSwapEstimate =
   | {
@@ -33,12 +37,12 @@ export type LiveSwapEstimate =
       selectedQuote: EnrichedSwapQuote;
       networkFee: NetworkFee;
       fees: {
-        provider: { crypto: Money; fiat: Money } | undefined;
-        network: { crypto: Money; fiat: Money };
-        total: { crypto: Money; fiat: Money };
+        provider: { crypto: Money; quote: Money } | undefined;
+        network: { crypto: Money; quote: Money };
       };
       isRefetching: boolean;
       refetch(): Promise<void>;
+      intervalState: UseIntervalState;
     };
 
 interface UseLiveSwapEstimateProps {
@@ -70,6 +74,10 @@ export function useLiveSwapEstimate({
     networkFeeQuery.isSuccess &&
     baseMarketDataQuery.isSuccess &&
     nativeAssetMarketDataQuery.isSuccess;
+
+  const intervalState = useInterval(refetch, refetchInterval, {
+    enabled: isSuccess && isDefined(quoteQuery.data?.selected),
+  });
 
   async function refetch() {
     // Intentionally sequential to avoid race conditions.
@@ -125,8 +133,6 @@ export function useLiveSwapEstimate({
       baseMarketDataQuery.data
     );
 
-    const totalFees = calculateTotalFees(providerFee, networkFee);
-
     return {
       status: 'success',
       selectedQuote,
@@ -135,10 +141,10 @@ export function useLiveSwapEstimate({
       fees: {
         provider: providerFee,
         network: networkFee,
-        total: totalFees,
       },
       isRefetching: quoteQuery.isRefetching || networkFeeQuery.isRefetching,
       refetch,
+      intervalState,
     };
   }
 
@@ -154,7 +160,7 @@ function calculateProviderFee(
   providerFeePercentage: BigNumber | undefined,
   baseAsset: SwappableFungibleCryptoAsset,
   marketData: MarketData
-): { crypto: Money; fiat: Money } | undefined {
+): { crypto: Money; quote: Money } | undefined {
   if (providerFeePercentage === undefined) return undefined;
 
   const crypto = createMoneyFromDecimal(
@@ -162,28 +168,16 @@ function calculateProviderFee(
     baseAsset.symbol,
     baseAsset.decimals
   );
-  const fiat = baseCurrencyAmountInQuote(crypto, marketData);
-  return { crypto, fiat };
+  const quote = baseCurrencyAmountInQuote(crypto, marketData);
+  return { crypto, quote };
 }
 
 function calculateNetworkFee(
   networkFee: Money,
   marketData: MarketData
-): { crypto: Money; fiat: Money } {
+): { crypto: Money; quote: Money } {
   return {
     crypto: networkFee,
-    fiat: baseCurrencyAmountInQuote(networkFee, marketData),
-  };
-}
-
-function calculateTotalFees(
-  providerFee: { crypto: Money; fiat: Money } | undefined,
-  networkFee: { crypto: Money; fiat: Money }
-): { crypto: Money; fiat: Money } {
-  if (!providerFee) return networkFee;
-
-  return {
-    crypto: sumMoney([providerFee.crypto, networkFee.crypto]),
-    fiat: sumMoney([providerFee.fiat, networkFee.fiat]),
+    quote: baseCurrencyAmountInQuote(networkFee, marketData),
   };
 }
