@@ -19,7 +19,11 @@ import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { useSettings } from '@/store/settings/settings';
-import { useAccountScaledBalanceAnalytics } from '@/utils/analytics-hooks';
+import {
+  useAccountScaledBalanceAnalytics,
+  useCollectiblesAnalytics,
+  useTokenPortfolioAnalytics,
+} from '@/utils/analytics-hooks';
 import { useRouter } from 'expo-router';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
@@ -45,6 +49,11 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
   const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
   const runesData = useRunesAccountBalance(fingerprint, accountIndex);
+  useTokenPortfolioAnalytics({
+    currentAccount,
+    sip10Balance: sip10Data.value?.sip10s ?? [],
+    runeBalance: runesData.value?.runes ?? [],
+  });
   const allSip10Data = useSip10AccountBalance(fingerprint, accountIndex, {
     includeHiddenAssets: true,
   });
@@ -77,6 +86,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     accountIndex: currentAccount.accountIndex,
   });
   const collectiblesState = useAccountCollectibles(fingerprint, accountIndex);
+  useCollectiblesAnalytics({ currentAccount, collectibles: collectiblesState.value ?? [] });
   const isErrorTotalBalance = totalBalance.state === 'error';
 
   return (

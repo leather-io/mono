@@ -6,6 +6,7 @@ import { Sip9Details } from '@/features/token/stacks/sip9-details';
 import { Sip10TokenDetails } from '@/features/token/stacks/sip10-token-details';
 import { StacksTokenDetails } from '@/features/token/stacks/stacks-token-details';
 import { isSupportedAssetProtocol } from '@/features/token/types';
+import { useTokenTracking } from '@/hooks/use-token-tracking';
 import { useSettings } from '@/store/settings/settings';
 import { useLocalSearchParams } from 'expo-router';
 
@@ -19,6 +20,8 @@ export default function AccountTokenScreen() {
   const { currentAccount } = useSettings();
   const { protocol: assetProtocol } = deserializeAssetId(assetId);
   assertExistence(currentAccount, 'Current account is required for AccountTokenScreen');
+
+  useTokenTracking({ currentAccount, assetId, assetProtocol });
 
   switch (assetProtocol) {
     case CryptoAssetProtocols.nativeBtc:
