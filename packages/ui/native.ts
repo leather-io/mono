@@ -16,6 +16,7 @@ export { SquircleBox, type SquircleBoxProps } from './src/components/box/squircl
 export { BlurView } from './src/components/blur-view/blur-view.native';
 export { Callout, type CalloutProps } from './src/components/callout/callout.native';
 export { Chip } from './src/components/chip/chip.native';
+export { CircularProgress } from './src/components/circular-progress/circular-progress.native';
 export { HStack } from './src/components/box/hstack.native';
 export { Stack } from './src/components/box/stack.native';
 export {
