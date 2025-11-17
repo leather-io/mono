@@ -779,6 +779,13 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.45.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.44.2...@leather.io/query-v2.45.0) (2025-11-17)
+
+
+### Features
+
+* rehaul approver flow ([3bf0b99](https://github.com/leather-io/mono/commit/3bf0b99d04f6d2a6ecc6b40d594d91811c003d16))
+
 ## [2.44.2](https://github.com/leather-io/mono/compare/@leather.io/query-v2.44.1...@leather.io/query-v2.44.2) (2025-11-14)
 
 

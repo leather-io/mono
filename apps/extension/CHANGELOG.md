@@ -21,6 +21,28 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.79.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.78.0...@leather.io/extension-v6.79.0) (2025-11-17)
+
+
+### Features
+
+* add ld to extension and web ([2373191](https://github.com/leather-io/mono/commit/23731916e6ae5f54f605b291734409e35d540656))
+
+
+### Bug Fixes
+
+* client id uuid ([4274a34](https://github.com/leather-io/mono/commit/4274a342093cc3997396da30a3ecd74c34cd0388))
+* eslint warnings ([0490f2c](https://github.com/leather-io/mono/commit/0490f2cfc3541ee113cb5dd780f5f840c1291241))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.45.0
+    * @leather.io/services bumped to 1.41.0
+    * @leather.io/ui bumped to 1.94.0
+
 ## [6.78.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.77.3...@leather.io/extension-v6.78.0) (2025-11-14)
 
 
