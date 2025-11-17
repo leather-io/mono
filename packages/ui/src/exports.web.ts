@@ -43,6 +43,6 @@ export { sanitizeContent } from './utils/sanitize-content';
 export { shimmerStyles } from './components/skeleton-loader/shimmer.styles.web';
 export { useClipboard } from './utils/use-clipboard.web';
 export { useCountdown } from './utils/use-countdown.shared';
-export { useInterval } from './utils/use-interval.shared';
+export { useInterval, type UseIntervalState } from './utils/use-interval.shared';
 export { useOnMount } from './utils/use-on-mount.shared';
 export { usePressable } from './hooks/use-pressable.web';
