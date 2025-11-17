@@ -170,6 +170,7 @@
     "url-join": "5.0.0",
     "use-events": "1.4.2",
     "use-latest": "1.2.1",
+    "uuid": "11.1.0",
     "valid-url": "1.0.9",
     "varuint-bitcoin": "1.1.2",
     "webextension-polyfill": "0.12.0",
