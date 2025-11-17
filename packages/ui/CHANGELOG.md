@@ -489,6 +489,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.95.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.94.1...@leather.io/ui-v1.95.0) (2025-11-17)
+
+
+### Features
+
+* add onramper to mobile and move onramper to ui package ([42a4110](https://github.com/leather-io/mono/commit/42a4110becbde9496e814e45371387400f0fd126))
+
 ## [1.94.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.94.0...@leather.io/ui-v1.94.1) (2025-11-17)
 
 

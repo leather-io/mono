@@ -21,6 +21,22 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.80.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.79.1...@leather.io/extension-v6.80.0) (2025-11-17)
+
+
+### Features
+
+* add onramper to mobile and move onramper to ui package ([42a4110](https://github.com/leather-io/mono/commit/42a4110becbde9496e814e45371387400f0fd126))
+* **extension:** example integration of onramper ([68ae101](https://github.com/leather-io/mono/commit/68ae101d1b02b756872a1f072c30125bd1551631))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/features bumped to 1.1.0
+    * @leather.io/ui bumped to 1.95.0
+
 ## [6.79.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.79.0...@leather.io/extension-v6.79.1) (2025-11-17)
 
 
