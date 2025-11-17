@@ -1,9 +1,10 @@
 import * as Sentry from '@sentry/react';
+import { v4 as uuidv4 } from 'uuid';
 
 const clientIdV1Key = 'client-id-v1';
 
 function generateClientId() {
-  return crypto.randomUUID();
+  return uuidv4();
 }
 
 function setClientId(id: string) {
