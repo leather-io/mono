@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
+import { doNothing } from 'remeda';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useInterval } from './use-interval.shared';
@@ -18,10 +19,17 @@ describe('useInterval', () => {
     );
 
     expect(callback).not.toHaveBeenCalled();
-    expect(result.current.status).toBe('idle');
+
+    expect(result.current).toEqual({
+      status: 'idle',
+      interval: 1000,
+      lastStartedAt: null,
+      lastCompletedAt: null,
+      nextRunTime: null,
+    });
 
     act(() => {
-      vi.advanceTimersByTime(2000);
+      void vi.advanceTimersByTime(2000);
     });
     expect(callback).not.toHaveBeenCalled();
     expect(result.current.status).toBe('idle');
@@ -47,14 +55,10 @@ describe('useInterval', () => {
     expect(callback).not.toHaveBeenCalled();
     expect(result.current.status).toBe('scheduled');
 
-    act(() => {
-      vi.advanceTimersByTime(999);
-    });
+    act(() => void vi.advanceTimersByTime(999));
     expect(callback).not.toHaveBeenCalled();
 
-    act(() => {
-      vi.advanceTimersByTime(1);
-    });
+    act(() => void vi.advanceTimersByTime(1));
     expect(callback).toHaveBeenCalledTimes(1);
   });
 
@@ -64,19 +68,13 @@ describe('useInterval', () => {
 
     expect(callback).not.toHaveBeenCalled();
 
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
+    act(() => void vi.advanceTimersByTime(1000));
     expect(callback).toHaveBeenCalledTimes(1);
 
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
+    act(() => void vi.advanceTimersByTime(1000));
     expect(callback).toHaveBeenCalledTimes(2);
 
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
+    act(() => void vi.advanceTimersByTime(1000));
     expect(callback).toHaveBeenCalledTimes(3);
   });
 
@@ -93,15 +91,11 @@ describe('useInterval', () => {
     expect(callback).not.toHaveBeenCalled();
     expect(result.current.status).toBe('scheduled');
 
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
+    act(() => void vi.advanceTimersByTime(1000));
     expect(callback).toHaveBeenCalledTimes(1);
     expect(result.current.status).toBe('invoking');
 
-    act(() => {
-      vi.advanceTimersByTime(10000);
-    });
+    act(() => void vi.advanceTimersByTime(10000));
     expect(callback).toHaveBeenCalledTimes(1);
     expect(result.current.status).toBe('invoking');
 
@@ -113,7 +107,7 @@ describe('useInterval', () => {
     expect(result.current.lastCompletedAt).toBeGreaterThan(0);
 
     act(() => {
-      vi.advanceTimersByTime(1000);
+      void vi.advanceTimersByTime(1000);
     });
     expect(callback).toHaveBeenCalledTimes(2);
     expect(result.current.status).toBe('invoking');
@@ -127,13 +121,13 @@ describe('useInterval', () => {
     expect(initialNextRunTime).toBeGreaterThan(Date.now());
     expect(initialNextRunTime).toBeLessThanOrEqual(Date.now() + 1000);
 
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
+    act(() => void vi.advanceTimersByTime(1000));
     expect(callback).toHaveBeenCalledTimes(1);
 
     const newNextRunTime = result.current.nextRunTime;
-    expect(newNextRunTime).toBeGreaterThan(initialNextRunTime);
+    expect(newNextRunTime).not.toBe(null);
+    expect(initialNextRunTime).not.toBe(null);
+    expect(newNextRunTime!).toBeGreaterThan(initialNextRunTime!);
   });
 
   it('exposes correct lastStartedAt', () => {
@@ -145,12 +139,12 @@ describe('useInterval', () => {
     );
 
     const firstStartedAt = result.current.lastStartedAt;
-    expect(firstStartedAt).toBeGreaterThan(0);
+    expect(firstStartedAt).not.toBe(null);
+    expect(firstStartedAt!).toBeGreaterThan(0);
 
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
-    expect(result.current.lastStartedAt).toBeGreaterThan(firstStartedAt);
+    act(() => void vi.advanceTimersByTime(1000));
+    expect(result.current.lastStartedAt).not.toBe(null);
+    expect(result.current.lastStartedAt!).toBeGreaterThan(firstStartedAt!);
   });
 
   it('exposes correct lastCompletedAt', async () => {
@@ -167,25 +161,25 @@ describe('useInterval', () => {
       })
     );
 
-    expect(result.current.lastCompletedAt).toBe(0);
+    expect(result.current.lastCompletedAt).toBe(null);
 
     await act(async () => {
       resolveCallback();
       await Promise.resolve();
     });
 
-    expect(result.current.lastCompletedAt).toBeGreaterThan(0);
+    expect(result.current.lastCompletedAt).not.toBe(null);
+    expect(result.current.lastCompletedAt!).toBeGreaterThan(0);
     const firstCompletedAt = result.current.lastCompletedAt;
 
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
+    act(() => void vi.advanceTimersByTime(1000));
 
     await act(async () => {
       resolveCallback();
       await Promise.resolve();
     });
-    expect(result.current.lastCompletedAt).toBeGreaterThan(firstCompletedAt);
+    expect(result.current.lastCompletedAt).not.toBe(null);
+    expect(result.current.lastCompletedAt!).toBeGreaterThan(firstCompletedAt!);
   });
 
   it('calls onError and stops when stopOnError=true', () => {
@@ -206,9 +200,10 @@ describe('useInterval', () => {
     expect(onError).toHaveBeenCalledTimes(1);
     expect(onError).toHaveBeenCalledWith(expect.any(Error));
     expect(result.current.status).toBe('idle');
+    expect(result.current.nextRunTime).toBe(null);
 
     act(() => {
-      vi.advanceTimersByTime(2000);
+      void vi.advanceTimersByTime(2000);
     });
     expect(callback).toHaveBeenCalledTimes(1);
     expect(onError).toHaveBeenCalledTimes(1);
@@ -236,16 +231,12 @@ describe('useInterval', () => {
     expect(onError).toHaveBeenCalledTimes(1);
     expect(result.current.status).toBe('scheduled');
 
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
+    act(() => void vi.advanceTimersByTime(1000));
     expect(callback).toHaveBeenCalledTimes(2);
     expect(onError).toHaveBeenCalledTimes(2);
     expect(result.current.status).toBe('scheduled');
 
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
+    act(() => void vi.advanceTimersByTime(1000));
     expect(callback).toHaveBeenCalledTimes(3);
     expect(onError).toHaveBeenCalledTimes(2);
     expect(result.current.status).toBe('scheduled');
@@ -257,9 +248,7 @@ describe('useInterval', () => {
 
     unmount();
 
-    act(() => {
-      vi.advanceTimersByTime(2000);
-    });
+    act(() => void vi.advanceTimersByTime(2000));
     expect(callback).not.toHaveBeenCalled();
   });
 
@@ -273,12 +262,15 @@ describe('useInterval', () => {
     );
 
     expect(result.current.status).toBe('scheduled');
+    expect(result.current.nextRunTime).not.toBe(null);
 
     rerender({ enabled: false });
     expect(result.current.status).toBe('idle');
+    expect(result.current.nextRunTime).toBe(null);
 
     rerender({ enabled: true });
     expect(result.current.status).toBe('scheduled');
+    expect(result.current.nextRunTime).not.toBe(null);
   });
 
   it('updates callback reference without restarting timer', () => {
@@ -297,10 +289,7 @@ describe('useInterval', () => {
 
     rerender();
 
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
-
+    act(() => void vi.advanceTimersByTime(1000));
     expect(callbackValue).toBe('updated');
   });
 
@@ -312,22 +301,225 @@ describe('useInterval', () => {
 
     expect(callback).not.toHaveBeenCalled();
 
-    act(() => {
-      vi.advanceTimersByTime(2000);
-    });
+    act(() => void vi.advanceTimersByTime(2000));
     expect(callback).not.toHaveBeenCalled();
 
     rerender({ enabled: false });
     rerender({ enabled: true });
 
-    act(() => {
-      vi.advanceTimersByTime(4800);
-    });
+    act(() => void vi.advanceTimersByTime(4800));
     expect(callback).not.toHaveBeenCalled();
 
-    act(() => {
-      vi.advanceTimersByTime(250);
-    });
+    act(() => void vi.advanceTimersByTime(250));
     expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  it('initializes with correct state when enabled=true, runImmediately=false', () => {
+    const callback = vi.fn();
+    const { result } = renderHook(() =>
+      useInterval(callback, 1000, { enabled: true, runImmediately: false })
+    );
+
+    expect(result.current.status).toBe('scheduled');
+    expect(result.current.lastStartedAt).not.toBe(null);
+    expect(result.current.lastStartedAt).toBeGreaterThan(0);
+    expect(result.current.lastCompletedAt).toBe(null);
+    expect(result.current.nextRunTime).not.toBe(null);
+    expect(result.current.nextRunTime).toBeGreaterThan(result.current.lastStartedAt!);
+    expect(result.current.nextRunTime).toBeLessThanOrEqual(result.current.lastStartedAt! + 1000);
+  });
+
+  it('initializes with correct state when enabled=true, runImmediately=true', () => {
+    const callback = vi.fn();
+    const { result } = renderHook(() =>
+      useInterval(callback, 1000, { enabled: true, runImmediately: true })
+    );
+
+    expect(result.current.status).toBe('scheduled');
+    expect(result.current.lastStartedAt).not.toBe(null);
+    expect(result.current.lastStartedAt).toBeGreaterThan(0);
+    expect(result.current.lastCompletedAt).not.toBe(null);
+    expect(result.current.nextRunTime).not.toBe(null);
+  });
+
+  it('initializes with null timestamps when enabled=false', () => {
+    const callback = vi.fn();
+    const { result } = renderHook(() => useInterval(callback, 1000, { enabled: false }));
+
+    expect(result.current).toEqual({
+      status: 'idle',
+      interval: 1000,
+      lastStartedAt: null,
+      lastCompletedAt: null,
+      nextRunTime: null,
+    });
+  });
+
+  it('sets lastStartedAt when cycle begins, not when callback invokes', async () => {
+    let resolveCallback: () => void;
+    const callback = vi.fn().mockImplementation(() => {
+      return new Promise<void>(resolve => {
+        resolveCallback = resolve;
+      });
+    });
+
+    const { result } = renderHook(() => useInterval(callback, 1000, { enabled: true }));
+
+    const initialStartedAt = result.current.lastStartedAt;
+    expect(initialStartedAt).not.toBe(null);
+    expect(initialStartedAt).toBeGreaterThan(0);
+
+    act(() => void vi.advanceTimersByTime(1000));
+
+    expect(result.current.status).toBe('invoking');
+    expect(result.current.lastStartedAt).toBe(initialStartedAt);
+
+    await act(async () => {
+      resolveCallback();
+      await Promise.resolve();
+    });
+
+    expect(result.current.status).toBe('scheduled');
+    const afterCompletionStartedAt = result.current.lastStartedAt;
+    expect(afterCompletionStartedAt).toBeGreaterThan(initialStartedAt!);
+
+    act(() => void vi.advanceTimersByTime(1000));
+    expect(result.current.status).toBe('invoking');
+    expect(result.current.lastStartedAt).toBe(afterCompletionStartedAt);
+  });
+
+  it('updates lastStartedAt when new cycle begins after completion', async () => {
+    let resolveCallback: () => void;
+    const callback = vi.fn().mockImplementation(() => {
+      return new Promise<void>(resolve => {
+        resolveCallback = resolve;
+      });
+    });
+
+    const { result } = renderHook(() =>
+      useInterval(callback, 1000, { enabled: true, runImmediately: true })
+    );
+
+    const firstStartedAt = result.current.lastStartedAt;
+
+    act(() => void vi.advanceTimersByTime(100));
+
+    await act(async () => {
+      resolveCallback();
+      await Promise.resolve();
+    });
+
+    const afterFirstCompletion = result.current.lastStartedAt;
+    expect(afterFirstCompletion).toBeGreaterThan(firstStartedAt!);
+  });
+
+  it('maintains invariant: idle status means null nextRunTime', () => {
+    const callback = vi.fn();
+    const { result, rerender } = renderHook(
+      ({ enabled }) => useInterval(callback, 1000, { enabled }),
+      { initialProps: { enabled: true } }
+    );
+
+    expect(result.current.status).toBe('scheduled');
+    expect(result.current.nextRunTime).not.toBe(null);
+
+    rerender({ enabled: false });
+
+    expect(result.current.status).toBe('idle');
+    expect(result.current.nextRunTime).toBe(null);
+  });
+
+  it('maintains invariant: scheduled status means non-null nextRunTime', () => {
+    const callback = vi.fn();
+    const { result } = renderHook(() => useInterval(callback, 1000, { enabled: true }));
+
+    expect(result.current.status).toBe('scheduled');
+    expect(result.current.nextRunTime).not.toBe(null);
+    expect(result.current.nextRunTime).toBeGreaterThan(0);
+  });
+
+  it('maintains invariant: invoking status means non-null nextRunTime', () => {
+    const callback = vi.fn().mockImplementation(() => {
+      return new Promise<void>(doNothing);
+    });
+
+    const { result } = renderHook(() => useInterval(callback, 1000, { enabled: true }));
+
+    act(() => void vi.advanceTimersByTime(1000));
+
+    expect(result.current.status).toBe('invoking');
+    expect(result.current.nextRunTime).not.toBe(null);
+    expect(result.current.nextRunTime).toBeGreaterThan(0);
+  });
+
+  it('maintains invariant: lastStartedAt is before or equal to nextRunTime', () => {
+    const callback = vi.fn();
+    const { result } = renderHook(() => useInterval(callback, 1000, { enabled: true }));
+
+    expect(result.current.lastStartedAt).not.toBe(null);
+    expect(result.current.nextRunTime).not.toBe(null);
+    expect(result.current.lastStartedAt).toBeLessThanOrEqual(result.current.nextRunTime!);
+
+    act(() => void vi.advanceTimersByTime(1000));
+    expect(result.current.lastStartedAt).not.toBe(null);
+    expect(result.current.nextRunTime).not.toBe(null);
+    expect(result.current.lastStartedAt).toBeLessThanOrEqual(result.current.nextRunTime!);
+  });
+
+  it('preserves lastStartedAt and lastCompletedAt when error stops interval', () => {
+    const callback = vi
+      .fn()
+      .mockImplementationOnce(doNothing)
+      .mockImplementationOnce(() => {
+        throw new Error('Test error');
+      });
+
+    const { result } = renderHook(() =>
+      useInterval(callback, 1000, { runImmediately: true, stopOnError: true })
+    );
+
+    act(() => {
+      void vi.advanceTimersByTime(1000);
+    });
+
+    const startedAt = result.current.lastStartedAt;
+    const completedAt = result.current.lastCompletedAt;
+
+    act(() => {
+      void vi.advanceTimersByTime(1000);
+    });
+
+    expect(result.current).toEqual({
+      status: 'idle',
+      interval: 1000,
+      lastStartedAt: startedAt,
+      lastCompletedAt: completedAt,
+      nextRunTime: null,
+    });
+  });
+
+  it('restarts as fresh initialization when re-enabled', () => {
+    const callback = vi.fn();
+    const { result, rerender } = renderHook(
+      ({ enabled }) => useInterval(callback, 1000, { enabled, runImmediately: false }),
+      { initialProps: { enabled: true } }
+    );
+
+    const firstStartedAt = result.current.lastStartedAt;
+
+    rerender({ enabled: false });
+
+    expect(result.current.status).toBe('idle');
+    expect(result.current.nextRunTime).toBe(null);
+
+    act(() => void vi.advanceTimersByTime(100));
+
+    rerender({ enabled: true });
+
+    expect(result.current.status).toBe('scheduled');
+    expect(result.current.lastStartedAt).not.toBe(null);
+    expect(result.current.lastStartedAt).toBeGreaterThan(firstStartedAt!);
+    expect(result.current.nextRunTime).not.toBe(null);
+    expect(result.current.nextRunTime).toBeGreaterThan(result.current.lastStartedAt!);
   });
 });

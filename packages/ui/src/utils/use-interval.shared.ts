@@ -5,17 +5,18 @@ import { isPromise } from 'remeda';
 type UseIntervalStatus = 'idle' | 'invoking' | 'scheduled';
 type UseIntervalCallback = () => void | Promise<void>;
 
-interface UseIntervalState {
+export interface UseIntervalState {
   status: UseIntervalStatus;
-  lastStartedAt: number;
-  lastCompletedAt: number;
-  nextRunTime: number;
+  interval: number;
+  lastStartedAt: number | null;
+  lastCompletedAt: number | null;
+  nextRunTime: number | null;
 }
 
 type UseIntervalAction =
   | { type: 'INVOKE' }
   | { type: 'INVOCATION_COMPLETED' }
-  | { type: 'SCHEDULE'; nextRunTime: number }
+  | { type: 'SCHEDULE'; lastStartedAt: number; nextRunTime: number }
   | { type: 'STOP' };
 
 interface UseIntervalOptions {
@@ -23,13 +24,6 @@ interface UseIntervalOptions {
   runImmediately?: boolean;
   stopOnError?: boolean;
   onError?: (error: unknown) => void;
-}
-
-interface UseIntervalResult {
-  status: UseIntervalStatus;
-  lastStartedAt: number;
-  lastCompletedAt: number;
-  nextRunTime: number;
 }
 
 /**
@@ -54,13 +48,14 @@ interface UseIntervalResult {
 export function useInterval(
   callback: UseIntervalCallback,
   interval: number,
-  { enabled = true, runImmediately = false, stopOnError = false, onError }: UseIntervalOptions
-): UseIntervalResult {
+  { enabled = true, runImmediately = false, stopOnError = false, onError }: UseIntervalOptions = {}
+): UseIntervalState {
   const [state, dispatch] = useReducer(reducer, {
     status: 'idle',
-    lastStartedAt: 0,
-    lastCompletedAt: 0,
-    nextRunTime: 0,
+    interval,
+    lastStartedAt: null,
+    lastCompletedAt: null,
+    nextRunTime: null,
   });
 
   const callbackRef = useRef(callback);
@@ -110,8 +105,9 @@ export function useInterval(
     function scheduleNextRun() {
       if (!isActive) return;
 
-      const nextRunTime = Date.now() + interval;
-      dispatch({ type: 'SCHEDULE', nextRunTime });
+      const lastStartedAt = Date.now();
+      const nextRunTime = lastStartedAt + interval;
+      dispatch({ type: 'SCHEDULE', lastStartedAt, nextRunTime });
 
       timerRef.current = setTimeout(() => {
         if (isActive) executeCallback();
@@ -119,6 +115,8 @@ export function useInterval(
     }
 
     if (runImmediately) {
+      const lastStartedAt = Date.now();
+      dispatch({ type: 'SCHEDULE', lastStartedAt, nextRunTime: lastStartedAt });
       executeCallback();
     } else {
       scheduleNextRun();
@@ -135,6 +133,7 @@ export function useInterval(
 
   return {
     status: state.status,
+    interval,
     lastStartedAt: state.lastStartedAt,
     lastCompletedAt: state.lastCompletedAt,
     nextRunTime: state.nextRunTime,
@@ -144,13 +143,18 @@ export function useInterval(
 function reducer(state: UseIntervalState, action: UseIntervalAction): UseIntervalState {
   switch (action.type) {
     case 'INVOKE':
-      return { ...state, status: 'invoking', lastStartedAt: Date.now(), nextRunTime: 0 };
+      return { ...state, status: 'invoking' };
     case 'INVOCATION_COMPLETED':
       return { ...state, lastCompletedAt: Date.now() };
     case 'SCHEDULE':
-      return { ...state, status: 'scheduled', nextRunTime: action.nextRunTime };
+      return {
+        ...state,
+        status: 'scheduled',
+        lastStartedAt: action.lastStartedAt,
+        nextRunTime: action.nextRunTime,
+      };
     case 'STOP':
-      return { ...state, status: 'idle', nextRunTime: 0 };
+      return { ...state, status: 'idle', nextRunTime: null };
     default:
       return state;
   }
