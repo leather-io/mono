@@ -36,6 +36,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.48.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.47.0...@leather.io/models-v0.48.0) (2025-11-17)
+
+
+### Features
+
+* enhances yield model ([4833500](https://github.com/leather-io/mono/commit/48335001f0eae0eb79e1563d91ed568fff877d3a))
+
 ## [0.47.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.46.0...@leather.io/models-v0.47.0) (2025-11-14)
 
 

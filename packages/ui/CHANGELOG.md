@@ -489,6 +489,25 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.94.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.94.0...@leather.io/ui-v1.94.1) (2025-11-17)
+
+
+### Bug Fixes
+
+* **mobile:** favour ord.io for viewing inscriptions ([ee42dd6](https://github.com/leather-io/mono/commit/ee42dd66ae0074bc1662928755ce418d1da08297))
+* **mobile:** fix fallback ui image ([32a6554](https://github.com/leather-io/mono/commit/32a6554ed2a1b4712b798c6c452933126b1c1f8e))
+* **mobile:** ord.io preview for html and image, fix bug showing stamp-details ([716bf48](https://github.com/leather-io/mono/commit/716bf4802f94ca01d13ececa7ec323845539cbaf))
+* **mobile:** use react-svg for SVGs for improved rendering ([c851a47](https://github.com/leather-io/mono/commit/c851a476f6106617990e9261aee9e957436a24dd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.48.3
+  * devDependencies
+    * @leather.io/models bumped to 0.48.0
+
 ## [1.94.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.93.0...@leather.io/ui-v1.94.0) (2025-11-17)
 
 

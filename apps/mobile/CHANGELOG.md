@@ -19,6 +19,34 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.87.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.87.0...@leather.io/mobile-v2.87.1) (2025-11-17)
+
+
+### Bug Fixes
+
+* **mobile:** favour ord.io for viewing inscriptions ([ee42dd6](https://github.com/leather-io/mono/commit/ee42dd66ae0074bc1662928755ce418d1da08297))
+* **mobile:** fix fallback ui image ([32a6554](https://github.com/leather-io/mono/commit/32a6554ed2a1b4712b798c6c452933126b1c1f8e))
+* **mobile:** ord.io preview for html and image, fix bug showing stamp-details ([716bf48](https://github.com/leather-io/mono/commit/716bf4802f94ca01d13ececa7ec323845539cbaf))
+* **mobile:** use react-svg for SVGs for improved rendering ([c851a47](https://github.com/leather-io/mono/commit/c851a476f6106617990e9261aee9e957436a24dd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.6
+    * @leather.io/bitcoin bumped to 0.35.3
+    * @leather.io/constants bumped to 0.27.5
+    * @leather.io/crypto bumped to 1.12.5
+    * @leather.io/models bumped to 0.48.0
+    * @leather.io/provider bumped to 1.6.7
+    * @leather.io/query bumped to 2.45.1
+    * @leather.io/rpc bumped to 2.20.24
+    * @leather.io/services bumped to 1.42.0
+    * @leather.io/stacks bumped to 1.19.1
+    * @leather.io/ui bumped to 1.94.1
+    * @leather.io/utils bumped to 0.48.3
+
 ## [2.87.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.86.0...@leather.io/mobile-v2.87.0) (2025-11-17)
 
 
