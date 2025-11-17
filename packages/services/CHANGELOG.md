@@ -413,6 +413,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.41.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.40.0...@leather.io/services-v1.41.0) (2025-11-17)
+
+
+### Features
+
+* filter swap assets by visibility ([94df87a](https://github.com/leather-io/mono/commit/94df87a239ae8f6567b05f24861e7add23dfb90b))
+
 ## [1.40.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.39.1...@leather.io/services-v1.40.0) (2025-11-14)
 
 

@@ -19,6 +19,28 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.87.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.86.0...@leather.io/mobile-v2.87.0) (2025-11-17)
+
+
+### Features
+
+* **mobile:** add quote price information to collectible stats page ([9e5af3e](https://github.com/leather-io/mono/commit/9e5af3e4199da3b775f24fb8d80babf54dcb80f0))
+* rehaul approver flow ([3bf0b99](https://github.com/leather-io/mono/commit/3bf0b99d04f6d2a6ecc6b40d594d91811c003d16))
+
+
+### Bug Fixes
+
+* **mobile:** add output value description sheet to inscription details ([06e92dd](https://github.com/leather-io/mono/commit/06e92dd78f9fb4d6a6d169c21ed0f35ad2e6f5c5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.45.0
+    * @leather.io/services bumped to 1.41.0
+    * @leather.io/ui bumped to 1.94.0
+
 ## [2.86.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.85.2...@leather.io/mobile-v2.86.0) (2025-11-14)
 
 
