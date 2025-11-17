@@ -2,7 +2,7 @@ export * from './events';
 
 export interface DefaultProperties {
   platform: 'web' | 'extension' | 'mobile' | 'earn';
-  [key: string]: string | number | boolean | undefined;
+  [key: string]: JsonValue;
 }
 
 export interface AnalyticsClientInterface {

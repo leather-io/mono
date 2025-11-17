@@ -1,5 +1,5 @@
 // All new events should use the object-action framework.
-import { DefaultNetworkConfigurations, StxBalance } from '@leather.io/models';
+import { CryptoAssetProtocol, DefaultNetworkConfigurations, StxBalance } from '@leather.io/models';
 
 // https://segment.com/academy/collecting-data/naming-conventions-for-clean-data/
 export interface Events extends HistoricalEvents {
@@ -56,6 +56,10 @@ export interface Events extends HistoricalEvents {
   token_details_opened: { assetId: string; source: 'all_account_balances' | 'account_balances' };
   receive_address_copied: { asset: string; location: string };
   receive_share_button_pressed: { asset: string };
+  token_portfolio_summary: TokenPortfolioSummary;
+  collectibles_summary: CollectiblesSummary;
+  token_details_viewed: TokenCollectibleDetailsViewed;
+  collectible_details_viewed: TokenCollectibleDetailsViewed;
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.
@@ -178,4 +182,35 @@ interface WalletCreatedValue {
 
 interface SubmitWaitlist {
   feature: string;
+}
+
+interface TokenPortfolioSummary {
+  walletAccountId: string;
+  platform: 'mobile' | 'extension';
+  sip10TokenCount: number;
+  runeTokenCount: number;
+  totalTokenCount: number;
+  sip10TokenValue: number;
+  runeTokenValue: number;
+  totalTokenValue: number;
+  fiatCurrency?: string;
+}
+
+interface CollectiblesSummary {
+  walletAccountId: string;
+  platform: 'mobile' | 'extension';
+  totalCollectibles: number;
+  byProtocol: Partial<Record<CryptoAssetProtocol, CollectibleProtocolBreakdown>>;
+}
+
+interface TokenCollectibleDetailsViewed {
+  assetId: string;
+  protocol: CryptoAssetProtocol;
+  platform: 'mobile' | 'extension';
+  walletAccountId: string;
+}
+
+interface CollectibleProtocolBreakdown {
+  total: number;
+  byContentType?: Record<string, number>;
 }
