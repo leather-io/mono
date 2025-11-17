@@ -4,22 +4,13 @@ import {
   CryptoAssetProtocol,
   CryptoAssetProtocols,
   Sip9Asset,
-  isSip9Asset,
 } from '@leather.io/models';
 
 import { assertUnreachable } from '../index';
 
 export function matchesAssetId(asset: CryptoAsset, assetId: CryptoAssetId) {
-  const protocol = getAssetId(asset).protocol;
-  const id = getAssetId(asset).id;
-  if (isSip9Asset(asset)) {
-    return (
-      protocol === assetId.protocol &&
-      assetId.id === asset.assetId &&
-      assetId.tokenId === asset.tokenId
-    );
-  }
-  return protocol === assetId.protocol && id === assetId.id;
+  const assetIdentifier = getAssetId(asset);
+  return isSameAssetId(assetIdentifier, assetId);
 }
 
 export function isSameAssetId(assetId1: CryptoAssetId, assetId2: CryptoAssetId) {
@@ -87,8 +78,17 @@ export function getAssetId(asset: CryptoAsset): CryptoAssetId {
 export function createSip9AssetId(asset: Sip9Asset): CryptoAssetId {
   return {
     protocol: asset.protocol,
-    id: `${asset.assetId}|${asset.tokenId}`,
+    id: formatSip9IdField(asset),
   };
+}
+
+export function formatSip9IdField(asset: Sip9Asset) {
+  return `${asset.assetId}|${asset.tokenId}`;
+}
+
+export function parseSip9IdField(id: string) {
+  const [assetId, tokenId] = id.split('|');
+  return { assetId, tokenId: Number(tokenId) };
 }
 
 export type SerializedCryptoAssetId = `${string}|${string}`;
@@ -98,7 +98,8 @@ export function serializeAssetId(assetId: CryptoAssetId): SerializedCryptoAssetI
 }
 
 export function deserializeAssetId(serializedAssetId: SerializedCryptoAssetId): CryptoAssetId {
-  const [protocol, id, tokenId] = serializedAssetId.split('|');
+  const [protocol, ...idParts] = serializedAssetId.split('|');
+  const id = idParts.join('|');
   if (!Object.keys(CryptoAssetProtocols).includes(protocol)) {
     throw new Error(`Unrecognized Asset Protocol: ${protocol}`);
   }
@@ -106,6 +107,5 @@ export function deserializeAssetId(serializedAssetId: SerializedCryptoAssetId): 
   return {
     protocol: protocol as CryptoAssetProtocol,
     id,
-    tokenId: tokenId ? parseInt(tokenId, 10) : undefined,
   };
 }
