@@ -1,6 +1,6 @@
 {
-  "apps/mobile": "2.87.1",
-  "apps/extension": "6.79.1",
+  "apps/mobile": "2.88.0",
+  "apps/extension": "6.80.0",
   "packages/analytics": "3.15.6",
   "packages/bitcoin": "0.35.3",
   "packages/constants": "0.27.5",
@@ -17,8 +17,8 @@
   "packages/stacks": "1.19.1",
   "packages/tokens": "0.24.1",
   "packages/tsconfig-config": "0.11.0",
-  "packages/ui": "1.94.1",
-  "packages/features": "1.0.0",
+  "packages/ui": "1.95.0",
+  "packages/features": "1.1.0",
   "packages/utils": "0.48.3",
   "packages/cms": "1.3.1"
 }
