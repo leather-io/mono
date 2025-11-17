@@ -413,6 +413,31 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.42.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.41.0...@leather.io/services-v1.42.0) (2025-11-17)
+
+
+### Features
+
+* enhances yield model ([4833500](https://github.com/leather-io/mono/commit/48335001f0eae0eb79e1563d91ed568fff877d3a))
+
+
+### Bug Fixes
+
+* **mobile:** use react-svg for SVGs for improved rendering ([c851a47](https://github.com/leather-io/mono/commit/c851a476f6106617990e9261aee9e957436a24dd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.35.3
+    * @leather.io/constants bumped to 0.27.5
+    * @leather.io/models bumped to 0.48.0
+    * @leather.io/stacks bumped to 1.19.1
+    * @leather.io/utils bumped to 0.48.3
+  * devDependencies
+    * @leather.io/rpc bumped to 2.20.24
+
 ## [1.41.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.40.0...@leather.io/services-v1.41.0) (2025-11-17)
 
 

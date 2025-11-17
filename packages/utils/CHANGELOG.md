@@ -368,6 +368,22 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.48.3](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.48.2...@leather.io/utils-v0.48.3) (2025-11-17)
+
+
+### Bug Fixes
+
+* **mobile:** favour ord.io for viewing inscriptions ([ee42dd6](https://github.com/leather-io/mono/commit/ee42dd66ae0074bc1662928755ce418d1da08297))
+* **mobile:** ord.io preview for html and image, fix bug showing stamp-details ([716bf48](https://github.com/leather-io/mono/commit/716bf4802f94ca01d13ececa7ec323845539cbaf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.27.5
+    * @leather.io/models bumped to 0.48.0
+
 ## [0.48.2](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.48.1...@leather.io/utils-v0.48.2) (2025-11-14)
 
 
