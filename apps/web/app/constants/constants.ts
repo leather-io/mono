@@ -45,4 +45,4 @@ export const STACKING_TRACKER_API_URL = 'https://api.stacking-tracker.com';
 
 export const EM_DASH = '—';
 
-export const FRONT_CHANNEL_ID = 'cha_8yhht';
+export const FRONT_INBOX_ID = 'inb_6cw7l';

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SupportFormError } from '~/pages/help-center/components/support-form-error';
 import {
   FrontSupportMessageData,
   frontSupportMessageSchema,
@@ -11,11 +12,10 @@ import { ScamWarning } from './scam-warning';
 import { SupportForm } from './support-form';
 import { SupportFormSuccess } from './support-form-success';
 
-interface SupportFormProviderProps {
-  onSuccess?: () => void;
-}
-export function SupportFormProvider({ onSuccess }: SupportFormProviderProps = {}) {
+export function SupportFormProvider() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isError, setIsError] = useState(false);
+
   const form = useForm<FrontSupportMessageData>({
     mode: 'onChange',
     resolver: zodResolver(frontSupportMessageSchema),
@@ -23,7 +23,11 @@ export function SupportFormProvider({ onSuccess }: SupportFormProviderProps = {}
 
   function handleSuccess() {
     setIsSubmitted(true);
-    onSuccess?.();
+  }
+
+  function handleError(): void {
+    setIsError(true);
+    setIsSubmitted(false);
   }
 
   if (isSubmitted) {
@@ -38,7 +42,8 @@ export function SupportFormProvider({ onSuccess }: SupportFormProviderProps = {}
   return (
     <FormProvider {...form}>
       <ScamWarning />
-      <SupportForm onSuccess={handleSuccess} />
+      {isError && <SupportFormError />}
+      <SupportForm onSuccess={handleSuccess} onError={handleError} />
     </FormProvider>
   );
 }

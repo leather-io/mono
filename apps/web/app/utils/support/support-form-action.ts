@@ -16,17 +16,16 @@ export async function handleSupportFormAction(request: Request) {
   const parsedData = frontSupportMessageSchema.safeParse(payload);
 
   if (!parsedData.success) {
-    // eslint-disable-next-line no-console
-    console.error('Error submitting form:', parsedData.error);
-    return;
+    return { success: false, error: 'Validation failed' };
   }
 
-  const resp = await postFrontAppSupportMessage(parsedData.data).catch(error => {
-    // fail silently
-    // eslint-disable-next-line no-console
-    console.error(error);
-    return error;
+  const resp = await postFrontAppSupportMessage(parsedData.data).catch(() => {
+    return null;
   });
 
-  return resp.status;
+  if (!resp) {
+    return { success: false, error: 'Failed to send message' };
+  }
+
+  return { success: true, status: resp.status };
 }
