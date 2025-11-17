@@ -4,6 +4,7 @@ import { devToolsEnhancer } from '@redux-devtools/remote';
 import {
   Action,
   AnyAction,
+  type Store,
   ThunkAction,
   Tuple,
   combineReducers,
@@ -21,6 +22,7 @@ import {
   persistStore,
 } from 'redux-persist';
 import { PersistPartial } from 'redux-persist/es/persistReducer';
+import { Observable } from 'rxjs';
 
 import { persistConfig } from '@shared/storage/redux-pesist';
 
@@ -100,6 +102,21 @@ export const store = configureStore({
         : []
     ),
 });
+
+function toObservable(store: Store<RootState>): Observable<RootState> {
+  return new Observable(observer => {
+    // Emit the current state immediately
+    observer.next(store.getState());
+
+    // Subscribe to store changes and emit new states
+    const unsubscribe = store.subscribe(() => observer.next(store.getState()));
+
+    // Return cleanup function
+    return () => unsubscribe();
+  });
+}
+
+export const store$ = toObservable(store);
 
 export const persistor = persistStore(store);
 

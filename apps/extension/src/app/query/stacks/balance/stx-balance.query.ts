@@ -1,4 +1,7 @@
+import { useMemo, useSyncExternalStore } from 'react';
+
 import { type QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import type { Observable } from 'rxjs';
 
 import { type AccountRequest, getStxBalancesService } from '@leather.io/services';
 
@@ -24,4 +27,29 @@ export function useGetStxAddressBalanceQuery(address: string) {
     enabled: !!address,
     ...balanceQueryOptions,
   });
+}
+
+export function useObservable<T>(observable: Observable<T>): T {
+  const store = useMemo(() => {
+    let currentValue: T;
+    const subscribe = (onChange: (value: any) => void) => {
+      const sub = observable.subscribe(value => {
+        currentValue = value;
+        onChange(value);
+      });
+      return () => sub.unsubscribe();
+    };
+    const getSnapshot = () => currentValue;
+    return { subscribe, getSnapshot };
+  }, [observable]);
+
+  return useSyncExternalStore(store.subscribe, store.getSnapshot);
+}
+
+export function useStxBalanceExperimentalStream(address: string) {
+  const stxBalance$ = useMemo(
+    () => getStxBalancesService().getStxAddressBalanceExperimentalStream(address),
+    [address]
+  );
+  return useObservable(stxBalance$);
 }

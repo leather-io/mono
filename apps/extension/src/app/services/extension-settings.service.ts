@@ -1,11 +1,18 @@
+import { distinctUntilChanged, map } from 'rxjs';
+
 import { SettingsService } from '@leather.io/services';
 import { serializeAssetId } from '@leather.io/utils';
 
-import { store } from '@app/store';
+import { store, store$ } from '@app/store';
 import { selectTokenState } from '@app/store/manage-tokens/manage-tokens.slice';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 export class ExtensionSettingsService implements SettingsService {
+  network$ = store$.pipe(
+    map(state => selectCurrentNetwork(state)),
+    distinctUntilChanged()
+  );
+
   getSettings() {
     return {
       quoteCurrency: 'USD',

@@ -5,6 +5,8 @@ import {
 import { ClarityValue, cvToHex, hexToCV } from '@stacks/transactions';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { inject, injectable } from 'inversify';
+import { Observable, from } from 'rxjs';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
 import { generateRandomStacksAddress } from '@leather.io/stacks';
@@ -120,6 +122,41 @@ export class HiroStacksApiClient {
           ],
           fetchFn
         );
+  }
+
+  public getAddressStxBalanceExperimentalStream(
+    address: string,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Observable<HiroAddressStxBalanceResponse> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<HiroAddressStxBalanceResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v2/addresses/${address}/balances/stx`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getAccountBalance,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+
+    return this.settings.network$.pipe(
+      switchMap(network =>
+        from(
+          skipCache
+            ? fetchFn()
+            : this.cache.fetchWithCache(
+                ['hiro-stacks-get-address-stx-balance', address, network.chain.stacks.chainId],
+                fetchFn
+              )
+        )
+      )
+    );
   }
 
   public async getAddressFtBalances(

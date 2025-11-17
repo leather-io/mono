@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import { Observable, combineLatest, from, map } from 'rxjs';
 
 import { stxAsset } from '@leather.io/constants';
 import { StxBalance } from '@leather.io/models';
@@ -114,5 +115,50 @@ export class StxBalancesService {
         baseCurrencyAmountInQuote(lockedBalanceStx, stxMarketData)
       ),
     };
+  }
+
+  public getStxAddressBalanceExperimentalStream(
+    address: string,
+    signal?: AbortSignal
+  ): Observable<AddressQuotedStxBalance> {
+    //
+    // Combine what resource we're watching into a single stream
+    return combineLatest([
+      //
+      // Wrap promises with from() to convert to observables
+      // As they're promises, they only emit once and won't update later
+      from(this.stacksTransactionsService.getPendingTransactions(address, signal)),
+      from(this.marketDataService.getMarketData(stxAsset, signal)),
+
+      //
+      // Add Observable stream from client
+      // If this stream updates, the stream emits
+      this.stacksApiClient.getAddressStxBalanceExperimentalStream(address, { signal }),
+    ]).pipe(
+      map(([pendingTransactions, stxMarketData, addressStxBalanceResponse]) => {
+        const totalBalanceStx = createMoney(readStxTotalBalance(addressStxBalanceResponse), 'STX');
+        const lockedBalanceStx = createMoney(
+          readStxLockedBalance(addressStxBalanceResponse),
+          'STX'
+        );
+        const inboundBalanceStx = calculateInboundStxBalance(address, pendingTransactions);
+        const outboundBalanceStx = calculateOutboundStxBalance(address, pendingTransactions);
+        return {
+          address,
+          stx: createStxBalance(
+            totalBalanceStx,
+            inboundBalanceStx,
+            outboundBalanceStx,
+            lockedBalanceStx
+          ),
+          quote: createStxBalance(
+            baseCurrencyAmountInQuote(totalBalanceStx, stxMarketData),
+            baseCurrencyAmountInQuote(inboundBalanceStx, stxMarketData),
+            baseCurrencyAmountInQuote(outboundBalanceStx, stxMarketData),
+            baseCurrencyAmountInQuote(lockedBalanceStx, stxMarketData)
+          ),
+        };
+      })
+    );
   }
 }
