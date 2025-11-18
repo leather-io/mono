@@ -83,7 +83,8 @@
       "sha.js": "2.4.12",
       "sanity>tar-fs": "2.1.4",
       "prebuild-install>tar-fs": "2.1.4",
-      "@expo/cli>@react-native-community/cli-server-api": "18.0.1"
+      "@expo/cli>@react-native-community/cli-server-api": "18.0.1",
+      "glob": "11.1.0"
     },
     "packageExtensions": {
       "@expo/cli@*": {

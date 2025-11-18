@@ -1,6 +1,5 @@
 import { sentryWebpackPlugin } from '@sentry/webpack-plugin';
 import webpack from 'webpack';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 
 import packageJson from '../package.json' with { type: 'json' };
 import { config } from './webpack.config.base.js';
@@ -27,7 +26,6 @@ config.optimization = {
 
 config.plugins = [
   ...config.plugins,
-  new CleanWebpackPlugin({ verbose: true, dry: false, cleanStaleWebpackAssets: false }),
   new webpack.SourceMapDevToolPlugin({
     // These entry points are excuted in an app's context. If we generate source
     // maps for them, the browser attempts to load them from the inaccessible
