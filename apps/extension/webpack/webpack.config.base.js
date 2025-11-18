@@ -103,6 +103,7 @@ export const config = {
     path: DIST_ROOT_PATH,
     chunkFilename: !IS_DEV ? '[name].[contenthash:8].chunk.js' : IS_DEV && '[name].chunk.js',
     filename: () => '[name].js',
+    clean: true
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json', '.d.ts', '.mdx'],

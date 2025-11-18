@@ -7,7 +7,6 @@ const { execSync } = require('child_process');
 // plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -89,6 +88,7 @@ const config = {
       }
       return '[name].[contenthash:8].js';
     },
+    clean: true
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json', '.d.ts'],
@@ -183,11 +183,6 @@ const config = {
   ],
 };
 
-if (IS_PROD) {
-  config.plugins.push(
-    new CleanWebpackPlugin({ verbose: true, dry: false, cleanStaleWebpackAssets: false })
-  );
-}
 if (ANALYZE_BUNDLE) {
   config.plugins.push(new BundleAnalyzerPlugin());
 }

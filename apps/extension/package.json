@@ -239,7 +239,6 @@
     "browserslist": "4.23.0",
     "chromatic": "11.4.1",
     "chrome-webstore-upload-cli": "2.2.2",
-    "clean-webpack-plugin": "4.0.0",
     "concurrently": "8.2.2",
     "conventional-changelog-conventionalcommits": "7.0.2",
     "copy-webpack-plugin": "12.0.2",
