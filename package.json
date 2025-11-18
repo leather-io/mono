@@ -50,7 +50,7 @@
     "@trivago/prettier-plugin-sort-imports": "5.2.2",
     "@types/jest": "29.5.12",
     "@types/node": "24.0.8",
-    "@vitest/coverage-v8": "2.1.5",
+    "@vitest/coverage-v8": "4.0.13",
     "audit-ci": "6.6.1",
     "chalk": "5.3.0",
     "dependency-cruiser": "16.10.0",
@@ -64,7 +64,7 @@
     "turbo": "2.5.8",
     "typescript": "5.8.3",
     "typescript-eslint": "8.18.0",
-    "vitest": "2.1.9"
+    "vitest": "4.0.13"
   },
   "engines": {
     "node": ">=22.15.0",
@@ -76,15 +76,10 @@
   "packageManager": "pnpm@10.18.3+sha512.bbd16e6d7286fd7e01f6b3c0b3c932cda2965c06a908328f74663f10a9aea51f1129eea615134bf992831b009eabe167ecb7008b597f40ff9bc75946aadfb08d",
   "pnpm": {
     "overrides": {
-      "cross-spawn": "7.0.5",
-      "@microsoft/api-extractor": "7.52.8",
-      "@shopify/flash-list>tslib": "2.4.0",
       "levelup>semver": "5.7.2",
-      "sha.js": "2.4.12",
-      "sanity>tar-fs": "2.1.4",
-      "prebuild-install>tar-fs": "2.1.4",
       "@expo/cli>@react-native-community/cli-server-api": "18.0.1",
-      "glob": "11.1.0"
+      "@react-native/dev-middleware>ws": "8.17.1",
+      "tough-cookie": "6.0.0"
     },
     "packageExtensions": {
       "@expo/cli@*": {
@@ -92,7 +87,6 @@
           "metro": "*",
           "metro-core": "*",
           "metro-resolver": "*",
-          "glob": "*",
           "@expo/image-utils": "*",
           "lodash": "*",
           "react-native": "*",
@@ -110,11 +104,6 @@
           "resolve-from": "*",
           "expo-router": "*",
           "react-native-reanimated": "*"
-        }
-      },
-      "@react-native/dev-middleware@*": {
-        "dependencies": {
-          "ws": "*"
         }
       },
       "@expo/metro-config@*": {

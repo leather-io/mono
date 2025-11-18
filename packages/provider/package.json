@@ -35,7 +35,7 @@
     "@leather.io/prettier-config": "workspace:*",
     "prettier": "3.5.1",
     "tsup": "8.4.0",
-    "vitest": "2.1.9"
+    "vitest": "4.0.13"
   },
   "files": [
     "dist"

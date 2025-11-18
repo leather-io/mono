@@ -47,7 +47,7 @@
     "@stacks/stacks-blockchain-api-types": "7.14.1",
     "@stacks/transactions": "7.0.5",
     "alex-sdk": "3.1.0",
-    "axios": "1.12.0",
+    "axios": "1.13.2",
     "bignumber.js": "9.1.2",
     "lodash.get": "4.4.2",
     "p-queue": "8.1.1",
@@ -67,7 +67,7 @@
     "prettier": "3.5.1",
     "tsup": "8.4.0",
     "typescript": "5.8.3",
-    "vitest": "2.1.9"
+    "vitest": "4.0.13"
   },
   "keywords": [
     "leather",

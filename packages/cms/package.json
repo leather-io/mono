@@ -46,7 +46,7 @@
     "styled-components": "6.1.18",
     "tsup": "8.4.0",
     "typescript": "5.8.3",
-    "vitest": "2.1.9"
+    "vitest": "4.0.13"
   },
   "keywords": [
     "cms",

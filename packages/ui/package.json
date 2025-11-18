@@ -64,7 +64,7 @@
     "@babel/runtime": "7.26.0",
     "@leather.io/models": "workspace:*",
     "@leather.io/panda-preset": "workspace:*",
-    "@microsoft/api-extractor": "7.47.6",
+    "@microsoft/api-extractor": "7.52.8",
     "@pandacss/dev": "0.53.6",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@storybook/addon-actions": "8.3.2",
@@ -105,7 +105,7 @@
     "tslib": "2.6.2",
     "tsup": "8.4.0",
     "typescript": "5.8.3",
-    "vitest": "2.1.9"
+    "vitest": "4.0.13"
   },
   "files": [
     "dist-web",

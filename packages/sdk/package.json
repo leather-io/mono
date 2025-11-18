@@ -27,7 +27,7 @@
   "devDependencies": {
     "expect-type": "1.2.0",
     "tsup": "8.4.0",
-    "vitest": "2.1.9"
+    "vitest": "4.0.13"
   },
   "files": [
     "dist"
