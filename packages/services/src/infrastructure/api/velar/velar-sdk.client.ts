@@ -22,7 +22,7 @@ export class VelarSdkClient {
   }
 
   public async getTokenPairs(baseSymbol: string): Promise<string[]> {
-    return await this.cacheService.fetchWithCache(['velar-sdk-get-token-pairs'], () =>
+    return await this.cacheService.fetchWithCache(['velar-sdk-get-token-pairs', baseSymbol], () =>
       this.velarSdk.getPairs(baseSymbol)
     );
   }
