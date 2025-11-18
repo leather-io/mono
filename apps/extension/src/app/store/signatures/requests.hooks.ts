@@ -5,7 +5,7 @@ import { SignedMessageType } from '@shared/signature/signature-types';
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { getGenericSignaturePayloadFromToken } from '@app/common/signature/requests';
-import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useExpensiveAllStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 export function useSignatureRequestSearchParams() {
   const { origin, tabId } = useDefaultRequestParams();
@@ -33,7 +33,7 @@ function useSignatureRequestState() {
 
 export function useSignatureRequestAccountIndex() {
   const signaturePayload = useSignatureRequestState();
-  const accounts = useStacksAccounts();
+  const accounts = useExpensiveAllStacksAccounts();
 
   if (!signaturePayload?.stxAddress) return;
   const { stxAddress } = signaturePayload;

@@ -5,7 +5,7 @@ import type { DistributedOmit } from 'type-fest';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import {
   useCurrentStacksAccount,
-  useStacksAccounts,
+  useExpensiveAllStacksAccounts,
 } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
@@ -39,7 +39,7 @@ type StacksAccountLoaderProps = StacksAccountCurrentLoaderProps | StacksAccountI
 export function useStacksAccountLoader(
   props: DistributedOmit<StacksAccountLoaderProps, 'children'>
 ) {
-  const stacksAccounts = useStacksAccounts();
+  const stacksAccounts = useExpensiveAllStacksAccounts();
   const currentAccountIndex = useCurrentAccountIndex();
 
   const properIndex = 'current' in props ? currentAccountIndex : props.index;

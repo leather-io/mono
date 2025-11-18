@@ -12,12 +12,12 @@ import { useTransactionRequestState } from '@app/store/transactions/requests.hoo
 import { hasSwitchedAccountsState, useCurrentAccountIndex } from '../../account';
 import type { StacksAccount } from './stacks-account.models';
 
-export function useStacksAccounts() {
+export function useExpensiveAllStacksAccounts() {
   return useAtomValue(stacksAccountState);
 }
 
 export function useStacksAccount(accountIndex: number) {
-  const accounts = useStacksAccounts();
+  const accounts = useExpensiveAllStacksAccounts();
   return useMemo(() => {
     if (!accounts) return undefined;
     return accounts?.[accountIndex];
@@ -38,7 +38,7 @@ export function useCurrentStacksAccount() {
   const signatureIndex = useSignatureRequestAccountIndex();
   // ⚠️ to refactor, we should not just continually add new conditionals here
   const hasSwitched = useAtomValue(hasSwitchedAccountsState);
-  const accounts = useStacksAccounts();
+  const accounts = useExpensiveAllStacksAccounts();
 
   return useMemo(() => {
     const index = txIndex ?? signatureIndex;

@@ -13,7 +13,7 @@ import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useWalletType } from '@app/common/use-wallet-type';
 import {
   useLegacyStacksWallet,
-  useStacksAccounts,
+  useExpensiveAllStacksAccounts,
 } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 import { useGetLegacyAuthBitcoinAddresses } from './use-legacy-auth-bitcoin-addresses';
@@ -21,7 +21,7 @@ import { useGetLegacyAuthBitcoinAddresses } from './use-legacy-auth-bitcoin-addr
 export function useFinishAuthRequest() {
   const { decodedAuthRequest, authRequest } = useOnboardingState();
   const keyActions = useKeyActions();
-  const stacksAccounts = useStacksAccounts();
+  const stacksAccounts = useExpensiveAllStacksAccounts();
   const { walletType } = useWalletType();
 
   const { origin, tabId } = useAuthRequestParams();

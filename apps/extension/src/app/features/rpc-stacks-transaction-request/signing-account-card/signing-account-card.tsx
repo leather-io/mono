@@ -7,7 +7,7 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { AccountNameLayout } from '@app/components/account/account-name';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
-import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useExpensiveAllStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface SigningAccountCardProps {
@@ -23,7 +23,7 @@ export function SigningAccountCard({
   isLoadingBalance,
 }: SigningAccountCardProps) {
   const index = useCurrentAccountIndex();
-  const stacksAccounts = useStacksAccounts();
+  const stacksAccounts = useExpensiveAllStacksAccounts();
 
   const stxAddress = stacksAccounts[index]?.address || '';
   const { data: name = '', isLoading: isLoadingName } = useAccountDisplayName({

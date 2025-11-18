@@ -24,7 +24,7 @@ import {
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import {
   useCurrentStacksAccount,
-  useStacksAccounts,
+  useExpensiveAllStacksAccounts,
 } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 
@@ -44,7 +44,7 @@ export function LedgerSignJwtContainer() {
 
   const activeAccount = useCurrentStacksAccount();
   const network = useCurrentStacksNetworkState();
-  const accounts = useStacksAccounts();
+  const accounts = useExpensiveAllStacksAccounts();
 
   const getBitcoinAddressesLegacyFormat = useGetLegacyAuthBitcoinAddresses();
 

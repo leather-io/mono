@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useHasSwitchedAccounts } from '@app/store/accounts/account';
 import {
   useCurrentStacksAccount,
-  useStacksAccounts,
+  useExpensiveAllStacksAccounts,
   useTransactionAccountIndex,
 } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
@@ -15,7 +15,7 @@ const TIMEOUT = 350;
 export function useSwitchAccount(callback?: () => void) {
   const { switchAccount } = useKeyActions();
   const currentAccount = useCurrentStacksAccount();
-  const accounts = useStacksAccounts();
+  const accounts = useExpensiveAllStacksAccounts();
   const txIndex = useTransactionAccountIndex();
   const [hasSwitched, setHasSwitched] = useHasSwitchedAccounts();
 

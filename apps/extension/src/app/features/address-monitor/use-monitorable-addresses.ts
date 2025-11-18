@@ -15,7 +15,7 @@ import { createNullArrayOfLength, isDefined } from '@leather.io/utils';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import { useGenerateNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useGenerateTaprootAccount } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
-import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useExpensiveAllStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetworkId } from '@app/store/networks/networks.selectors';
 import type { MonitoredAddress } from '@background/monitors/address-monitor';
 
@@ -33,7 +33,7 @@ export function useMonitorableAddresses() {
   const createNativeSegwitAccount = useGenerateNativeSegwitAccount();
   const createTaprootAccount = useGenerateTaprootAccount();
 
-  const stacksAccounts = useStacksAccounts();
+  const stacksAccounts = useExpensiveAllStacksAccounts();
 
   return useMemo(() => {
     if (!stacksAccounts || !currentNetworkId) return;

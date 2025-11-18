@@ -22,7 +22,7 @@ import {
 import { Content, TwoColumnLayout } from '@app/components/layout';
 import { OnboardingHeader } from '@app/features/container/headers/onboarding.header';
 import { OnboardingGate } from '@app/routes/onboarding-gate';
-import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useExpensiveAllStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 import { PasswordField } from './components/password-field';
 
@@ -45,7 +45,7 @@ const setPasswordFormValues: SetPasswordFormValues = { password: '', confirmPass
 function SetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [strengthResult, setStrengthResult] = useState(blankPasswordValidation);
-  const stacksAccounts = useStacksAccounts();
+  const stacksAccounts = useExpensiveAllStacksAccounts();
   const { setPassword } = useKeyActions();
   const finishSignIn = useFinishAuthRequest();
   const navigate = useNavigate();

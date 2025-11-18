@@ -21,7 +21,7 @@ export function useHasBitcoinLedgerKeychain() {
   return hasNetworkKeys;
 }
 
-export function useFilteredBitcoinAccounts() {
+export function useExpensiveAllBitcoinAccounts() {
   const accounts = useSelector(selectDefaultWalletBitcoinKeys);
   const network = useCurrentNetwork();
 
