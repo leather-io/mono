@@ -7,19 +7,15 @@ import {
   SwapExecutionData,
   SwapProviderAsset,
   SwapProviderId,
-  SwapQuote,
   SwappableFungibleCryptoAsset,
+  type VelarSdkSwapQuote,
   isSwappableAsset,
 } from '@leather.io/models';
 import { createMoney, getAssetId, unitToFractionalUnit } from '@leather.io/utils';
 
 import { FungibleAssetService } from '../assets/fungible-asset.service';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
-import {
-  VelarSdkAmountOutResponse,
-  VelarSdkClient,
-  VelarSdkToken,
-} from '../infrastructure/api/velar/velar-sdk.client';
+import { VelarSdkClient, VelarSdkToken } from '../infrastructure/api/velar/velar-sdk.client';
 import {
   SwapProviderService,
   SwapProviderServiceGetSwapExecutionDataParams,
@@ -40,22 +36,19 @@ export class VelarSwapProviderService implements SwapProviderService {
 
   async getBaseSwapAssets(): Promise<SwapProviderAsset[]> {
     const tokens = await this.velarClient.getTokens();
-    return tokens
-      .filter(token => token.price !== null)
-      .map(token => this.mapTokenToSwapAsset(token));
+    return tokens.map(token => this.mapTokenToSwapAsset(token));
   }
 
   async getTargetAssets({
     baseAsset,
   }: SwapProviderServiceGetTargetAssetParams): Promise<SwapProviderAsset[]> {
-    const [swapAssets, tokenPairs] = await Promise.all([
+    const [velarSupportedTokens, velarTargetSymbols] = await Promise.all([
       this.velarClient.getTokens(),
       this.velarClient.getTokenPairs(baseAsset.symbol),
     ]);
-    return tokenPairs
-      .map(tokenPairSymbol => swapAssets.find(token => token.symbol === tokenPairSymbol))
+    return velarTargetSymbols
+      .map(targetSymbol => velarSupportedTokens.find(token => token.symbol === targetSymbol))
       .filter(isNonNullish)
-      .filter(token => token.price !== null)
       .map(token => this.mapTokenToSwapAsset(token));
   }
 
@@ -82,22 +75,27 @@ export class VelarSwapProviderService implements SwapProviderService {
       baseAmount,
     }: SwapProviderServiceGetSwapQuotesParams,
     signal?: AbortSignal
-  ): Promise<SwapQuote[]> {
+  ): Promise<VelarSdkSwapQuote[]> {
     try {
       const amountOut = await this.velarClient.getComputedAmount(
         baseProviderAsset.providerAssetId,
         targetProviderAsset.providerAssetId,
         baseAmount
       );
+
       const [swapDexMap, assetPath] = await Promise.all([
-        this.leatherApiClient.fetchSwapDexes(),
+        this.leatherApiClient.fetchSwapDexes({ signal }),
         this.getAssetPathAssets(amountOut.route ?? [], signal),
       ]);
+
       return [
         {
           executionType: 'stacks-contract-call',
-          providerId: this.providerId,
-          providerQuoteData: amountOut,
+          providerId: 'velar-sdk',
+          providerQuoteData: {
+            baseProviderAssetId: baseProviderAsset.providerAssetId,
+            targetProviderAssetId: targetProviderAsset.providerAssetId,
+          },
           baseAmount,
           targetAmount: +amountOut.value,
           quote: createMoney(
@@ -135,14 +133,18 @@ export class VelarSwapProviderService implements SwapProviderService {
     quote,
     slippage,
   }: SwapProviderServiceGetSwapExecutionDataParams): Promise<SwapExecutionData> {
-    const velarQuote = quote.providerQuoteData as VelarSdkAmountOutResponse;
+    if (quote.providerId !== 'velar-sdk') {
+      throw new Error('Invalid quote provider id');
+    }
+
     const swapData = await this.velarClient.getSwap(
       request.account.stacks!.stxAddress,
-      velarQuote.route![0],
-      velarQuote.route![velarQuote.route!.length - 1],
+      quote.providerQuoteData.baseProviderAssetId,
+      quote.providerQuoteData.targetProviderAssetId,
       quote.baseAmount,
       slippage
     );
+
     return {
       executionType: quote.executionType,
       providerId: quote.providerId,

@@ -2,6 +2,7 @@ import {
   BitflowSDK,
   QuoteResult,
   RouteQuote,
+  type SelectedSwapRoute,
   SwapDataParamsAndPostConditions,
   SwapExecutionData,
   Token,
@@ -15,6 +16,7 @@ import type { Environment } from '../../environment';
 export type BitflowSdkToken = Token;
 export type BitflowSdkQuoteResult = QuoteResult;
 export type BitflowSdkRouteQuote = RouteQuote;
+export type BitflowSdkSelectedSwapRoute = SelectedSwapRoute;
 export type BitflowSwapExecutionData = SwapExecutionData;
 export type BitflowSwapParams = SwapDataParamsAndPostConditions;
 

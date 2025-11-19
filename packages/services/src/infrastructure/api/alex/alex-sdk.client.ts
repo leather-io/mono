@@ -5,6 +5,7 @@ import { inject, injectable } from 'inversify';
 
 import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
+import { stringToAlexSdkCurrency } from './alex-sdk.utils';
 
 export type AlexSdkTokenInfo = TokenInfo;
 export type AlexSdkCurrency = Currency;
@@ -26,35 +27,41 @@ export class AlexSdkClient {
     );
   }
 
-  public async getRoute(
-    fromCurrency: AlexSdkCurrency,
-    toCurrency: AlexSdkCurrency
-  ): Promise<AlexSdkAMMRoute> {
-    return await this.alex.getRoute(fromCurrency, toCurrency);
+  public async getRoute(from: string, to: string): Promise<AlexSdkAMMRoute> {
+    return await this.alex.getRoute(stringToAlexSdkCurrency(from), stringToAlexSdkCurrency(to));
   }
 
-  public async getFeeRate(
-    fromCurrency: AlexSdkCurrency,
-    toCurrency: AlexSdkCurrency
-  ): Promise<bigint> {
-    return await this.alex.getFeeRate(fromCurrency, toCurrency);
+  public async getFeeRate(from: string, to: string): Promise<bigint> {
+    return await this.alex.getFeeRate(stringToAlexSdkCurrency(from), stringToAlexSdkCurrency(to));
   }
 
   public async getAmountTo(
-    from: AlexSdkCurrency,
-    to: AlexSdkCurrency,
-    amount: bigint
+    from: string,
+    to: string,
+    amount: bigint,
+    route: AlexSdkAMMRoute
   ): Promise<bigint> {
-    return await this.alex.getAmountTo(from, amount, to);
+    return await this.alex.getAmountTo(
+      stringToAlexSdkCurrency(from),
+      amount,
+      stringToAlexSdkCurrency(to),
+      route
+    );
   }
 
   public async getSwapTx(
     stxAddress: string,
-    fromCurrency: AlexSdkCurrency,
-    toCurrency: AlexSdkCurrency,
+    from: string,
+    to: string,
     fromAmount: bigint,
     minToAmount: bigint
   ): Promise<AlexSdkTxToBroadCast> {
-    return await this.alex.runSwap(stxAddress, fromCurrency, toCurrency, fromAmount, minToAmount);
+    return await this.alex.runSwap(
+      stxAddress,
+      stringToAlexSdkCurrency(from),
+      stringToAlexSdkCurrency(to),
+      fromAmount,
+      minToAmount
+    );
   }
 }

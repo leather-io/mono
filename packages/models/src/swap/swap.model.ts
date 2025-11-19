@@ -23,7 +23,13 @@ export interface SwapProviderAsset {
   assetId: CryptoAssetId;
 }
 
-export interface SwapQuote {
+export type SwapQuote =
+  | AlexSdkSwapQuote
+  | VelarSdkSwapQuote
+  | BitflowSdkSwapQuote
+  | SbtcBridgeSwapQuote;
+
+export interface BaseSwapQuote {
   executionType: SwapExecutionType;
   providerId: SwapProviderId;
   providerQuoteData: unknown;
@@ -32,6 +38,34 @@ export interface SwapQuote {
   quote: Money;
   dexPath: SwapDex[];
   assetPath: (NativeCryptoAsset | Sip10Asset)[];
+}
+
+export interface AlexSdkSwapQuote extends BaseSwapQuote {
+  providerId: 'alex-sdk';
+  providerQuoteData: {
+    baseProviderAssetId: string;
+    targetProviderAssetId: string;
+    alexSdkAmmRoute: unknown;
+  };
+}
+
+export interface VelarSdkSwapQuote extends BaseSwapQuote {
+  providerId: 'velar-sdk';
+  providerQuoteData: {
+    baseProviderAssetId: string;
+    targetProviderAssetId: string;
+  };
+}
+
+export interface BitflowSdkSwapQuote extends BaseSwapQuote {
+  providerId: 'bitflow-sdk';
+  providerQuoteData: {
+    bitflowSdkSelectedSwapRoute: unknown;
+  };
+}
+
+export interface SbtcBridgeSwapQuote extends BaseSwapQuote {
+  providerId: 'sbtc-bridge';
 }
 
 export interface SwapDex {

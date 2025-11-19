@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import { groupBy, isNonNullish, keys } from 'remeda';
 
 import {
@@ -25,8 +25,6 @@ import { FungibleAssetService } from '../assets/fungible-asset.service';
 import { AccountQuotedBtcBalance, BtcBalancesService } from '../balances/btc-balances.service';
 import { Sip10AddressBalance, Sip10BalancesService } from '../balances/sip10-balances.service';
 import { AddressQuotedStxBalance, StxBalancesService } from '../balances/stx-balances.service';
-import type { SettingsService } from '../infrastructure/settings/settings.service';
-import { Types } from '../inversify.types';
 import { AccountRequest } from '../types';
 import { AlexSwapProviderService } from './alex-swap-provider.service';
 import { BitflowSwapProviderService } from './bitflow-swap-provider.service';
@@ -44,7 +42,6 @@ export interface AccountSwapAsset extends SwapAsset {
 @injectable()
 export class SwapService {
   constructor(
-    @inject(Types.SettingsService) private readonly settingsService: SettingsService,
     private readonly stxBalancesService: StxBalancesService,
     private readonly btcBalancesService: BtcBalancesService,
     private readonly sip10BalancesService: Sip10BalancesService,
@@ -195,6 +192,8 @@ export class SwapService {
     baseAmount: number,
     signal?: AbortSignal
   ): Promise<SwapQuote[]> {
+    if (baseAmount === 0) return [];
+
     const providerServiceCalls = targetAsset.providerAssets
       .map(targetProviderAsset => {
         const baseProviderAsset = baseAsset.providerAssets.find(

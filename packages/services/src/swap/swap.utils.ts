@@ -1,4 +1,7 @@
-import { SwapDex } from '@leather.io/models';
+import BigNumber from 'bignumber.js';
+
+import { type Money, SwapDex } from '@leather.io/models';
+import { createMoney } from '@leather.io/utils';
 
 import { LeatherApiSwapDex } from '../infrastructure/api/leather/leather-api.client';
 
@@ -26,4 +29,13 @@ export function mapBitflowDexProviderToSwapDexId(dex = 'Unknown') {
     return 'velar';
   }
   return 'unknown';
+}
+
+export function calculateMinToReceiveAmount(quoteAmount: Money, slippage: number): Money {
+  const minReceiveAmount = quoteAmount.amount.times(BigNumber(1).minus(slippage));
+  return createMoney(
+    minReceiveAmount.integerValue(BigNumber.ROUND_DOWN),
+    quoteAmount.symbol,
+    quoteAmount.decimals
+  );
 }

@@ -1,16 +1,15 @@
-import { SelectedSwapRoute } from '@bitflowlabs/core-sdk';
 import { injectable } from 'inversify';
 import { isNonNullish } from 'remeda';
 
 import { stxAsset } from '@leather.io/constants';
 import {
+  type BitflowSdkSwapQuote,
   CryptoAssetProtocols,
   FungibleAssetId,
   FungibleCryptoAsset,
   SwapExecutionData,
   SwapProviderAsset,
   SwapProviderId,
-  SwapQuote,
   SwappableFungibleCryptoAsset,
   isSwappableAsset,
 } from '@leather.io/models';
@@ -20,6 +19,7 @@ import { FungibleAssetService } from '../assets/fungible-asset.service';
 import {
   BitflowSdkClient,
   BitflowSdkRouteQuote,
+  type BitflowSdkSelectedSwapRoute,
 } from '../infrastructure/api/bitflow/bitflow-sdk.client';
 import {
   LeatherApiClient,
@@ -87,7 +87,7 @@ export class BitflowSwapProviderService implements SwapProviderService {
       baseAmount,
     }: SwapProviderServiceGetSwapQuotesParams,
     signal?: AbortSignal
-  ): Promise<SwapQuote[]> {
+  ): Promise<BitflowSdkSwapQuote[]> {
     const [quoteResult, swapDexMap] = await Promise.all([
       this.bitflowSdkClient.getQuoteForRoute(
         baseProviderAsset.providerAssetId,
@@ -114,11 +114,13 @@ export class BitflowSwapProviderService implements SwapProviderService {
     targetAsset: FungibleCryptoAsset,
     swapDexMap: Record<string, LeatherApiSwapDex>,
     signal?: AbortSignal
-  ): Promise<SwapQuote> {
+  ): Promise<BitflowSdkSwapQuote> {
     return {
       executionType: 'stacks-contract-call',
-      providerId: this.providerId,
-      providerQuoteData: route.route,
+      providerId: 'bitflow-sdk',
+      providerQuoteData: {
+        bitflowSdkSelectedSwapRoute: route.route,
+      },
       baseAmount,
       targetAmount: route.quote!,
       quote: createMoneyFromDecimal(route.quote!, targetAsset.symbol, targetAsset.decimals),
@@ -152,18 +154,25 @@ export class BitflowSwapProviderService implements SwapProviderService {
     quote,
     slippage,
   }: SwapProviderServiceGetSwapExecutionDataParams): Promise<SwapExecutionData> {
-    const routeQuote = quote.providerQuoteData as BitflowSdkRouteQuote;
+    if (quote.providerId !== 'bitflow-sdk') {
+      throw new Error('Invalid quote provider id');
+    }
+
+    const selectedSwapRoute = quote.providerQuoteData
+      .bitflowSdkSelectedSwapRoute as BitflowSdkSelectedSwapRoute;
+
     const swapParams = await this.bitflowSdkClient.getSwapParams(
       {
-        route: routeQuote as any as SelectedSwapRoute,
-        tokenXDecimals: routeQuote.tokenXDecimals,
-        tokenYDecimals: routeQuote.tokenYDecimals,
+        route: selectedSwapRoute,
+        tokenXDecimals: selectedSwapRoute.tokenXDecimals,
+        tokenYDecimals: selectedSwapRoute.tokenYDecimals,
         amount: quote.baseAmount,
       },
       request.account.stacks!.stxAddress,
       slippage
     );
     if (!swapParams) throw new Error('Bitflow swap params unavailable');
+
     return {
       providerId: quote.providerId,
       executionType: quote.executionType,
