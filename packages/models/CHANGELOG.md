@@ -36,6 +36,47 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.49.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.48.0...@leather.io/models-v0.49.0) (2025-11-19)
+
+
+### Features
+
+* add alex swap provider ([152fd3a](https://github.com/leather-io/mono/commit/152fd3a6d015aace7bd682819a7d3d6112a64730))
+* add descriptors to get addresses rpc ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* add portfolio table ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* portfolio activity ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* portfolio ui hover, borders, token count ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add empty state ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add hover events ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add portfolio modal ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add stacked bar chart ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add stacks to portfolio list ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add tooltip ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** adjust hover events ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** bitcoin balance for portfolio ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** breakdown by allocation ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** scaffold portfolio page ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** sip10 avatar icons web ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** sip10 balances and assets ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** stacks portfolio balance ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+
+
+### Bug Fixes
+
+* **mobile:** ensure translations updated ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **mobile:** name is now defined for all models used ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* resolve type issues by using activity model util ([2a9cf6a](https://github.com/leather-io/mono/commit/2a9cf6a2f6909b0bf01729e0c7124f53025df305))
+* responsive portfolio ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** a few style fixes ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add loading spinner to asset list ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add loading state to bar ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** ensure stacks renders in list ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** improve hover events and styles ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** invisible hover overlay ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** layout as per designs ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** remove unused ui ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** remove unused var ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+
 ## [0.48.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.47.0...@leather.io/models-v0.48.0) (2025-11-17)
 
 

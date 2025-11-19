@@ -413,6 +413,26 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.43.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.42.1...@leather.io/services-v1.43.0) (2025-11-19)
+
+
+### Features
+
+* add alex swap provider ([152fd3a](https://github.com/leather-io/mono/commit/152fd3a6d015aace7bd682819a7d3d6112a64730))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.35.4
+    * @leather.io/constants bumped to 0.28.0
+    * @leather.io/models bumped to 0.49.0
+    * @leather.io/stacks bumped to 1.19.2
+    * @leather.io/utils bumped to 0.49.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.0
+
 ## [1.42.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.42.0...@leather.io/services-v1.42.1) (2025-11-19)
 
 

@@ -21,6 +21,63 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.81.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.80.1...@leather.io/extension-v6.81.0) (2025-11-19)
+
+
+### Features
+
+* add descriptors to get addresses rpc ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* add portfolio table ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* portfolio activity ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* portfolio ui hover, borders, token count ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add empty state ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add hover events ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add portfolio modal ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add stacked bar chart ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add stacks to portfolio list ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add tooltip ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** adjust hover events ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** bitcoin balance for portfolio ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** breakdown by allocation ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** scaffold portfolio page ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** sip10 avatar icons web ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** sip10 balances and assets ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** stacks portfolio balance ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+
+
+### Bug Fixes
+
+* **mobile:** ensure translations updated ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **mobile:** name is now defined for all models used ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* responsive portfolio ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** a few style fixes ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add loading spinner to asset list ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add loading state to bar ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** ensure stacks renders in list ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** improve hover events and styles ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** invisible hover overlay ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** layout as per designs ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** remove unused ui ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** remove unused var ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.7
+    * @leather.io/bitcoin bumped to 0.35.4
+    * @leather.io/constants bumped to 0.28.0
+    * @leather.io/crypto bumped to 1.12.6
+    * @leather.io/models bumped to 0.49.0
+    * @leather.io/provider bumped to 1.6.8
+    * @leather.io/query bumped to 2.45.2
+    * @leather.io/rpc bumped to 2.21.0
+    * @leather.io/services bumped to 1.43.0
+    * @leather.io/stacks bumped to 1.19.2
+    * @leather.io/ui bumped to 1.97.0
+    * @leather.io/utils bumped to 0.49.0
+
 ## [6.80.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.80.0...@leather.io/extension-v6.80.1) (2025-11-19)
 
 
