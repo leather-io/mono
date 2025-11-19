@@ -19,6 +19,72 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.90.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.89.0...@leather.io/mobile-v2.90.0) (2025-11-19)
+
+
+### Features
+
+* add alex swap provider ([152fd3a](https://github.com/leather-io/mono/commit/152fd3a6d015aace7bd682819a7d3d6112a64730))
+* add descriptors to get addresses rpc ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* add portfolio table ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **mobile:** add fee breakdown to live swap estimate hook, fix precision for various fields ([4987878](https://github.com/leather-io/mono/commit/498787847ed9369b8bd228d3dc4e973b75390404))
+* **mobile:** add live swap estimate hook, simplify swap form layout ([b991721](https://github.com/leather-io/mono/commit/b991721660336333091b424202119598167fe922))
+* **mobile:** add native asset market data query to swap state ([b5074bf](https://github.com/leather-io/mono/commit/b5074bfaa3906b3887fc88eea72f4099cee6936a))
+* **mobile:** add swap quote inline preview ([ae8bd3f](https://github.com/leather-io/mono/commit/ae8bd3f3193a282453ce4ce29f4e6ee2ab7bb6d9))
+* **mobile:** rename swap providerFee -&gt; providerFeePercentage for clarity ([77420d1](https://github.com/leather-io/mono/commit/77420d12f748f29c6e67da746c9970f9422cde53))
+* portfolio activity ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* portfolio ui hover, borders, token count ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add empty state ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add hover events ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add portfolio modal ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add stacked bar chart ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add stacks to portfolio list ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add tooltip ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** adjust hover events ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** bitcoin balance for portfolio ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** breakdown by allocation ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** scaffold portfolio page ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** sip10 avatar icons web ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** sip10 balances and assets ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** stacks portfolio balance ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+
+
+### Bug Fixes
+
+* **mobile:** ensure translations updated ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **mobile:** name is now defined for all models used ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **mobile:** reset swap amount when base asset changes ([0d52f9e](https://github.com/leather-io/mono/commit/0d52f9e8cef0e2211d2975c5300b24c8c112af20))
+* **mobile:** use stable secondary target amount ([4c9989e](https://github.com/leather-io/mono/commit/4c9989e3b28a9f04283b1be7e57cad74a6c5f66f))
+* resolve type issues by using activity model util ([2a9cf6a](https://github.com/leather-io/mono/commit/2a9cf6a2f6909b0bf01729e0c7124f53025df305))
+* responsive portfolio ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** a few style fixes ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add loading spinner to asset list ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** add loading state to bar ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** ensure stacks renders in list ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** improve hover events and styles ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** invisible hover overlay ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** layout as per designs ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** remove unused ui ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+* **web:** remove unused var ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.7
+    * @leather.io/bitcoin bumped to 0.35.4
+    * @leather.io/constants bumped to 0.28.0
+    * @leather.io/crypto bumped to 1.12.6
+    * @leather.io/models bumped to 0.49.0
+    * @leather.io/provider bumped to 1.6.8
+    * @leather.io/query bumped to 2.45.2
+    * @leather.io/rpc bumped to 2.21.0
+    * @leather.io/services bumped to 1.43.0
+    * @leather.io/stacks bumped to 1.19.2
+    * @leather.io/ui bumped to 1.97.0
+    * @leather.io/utils bumped to 0.49.0
+
 ## [2.89.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.88.0...@leather.io/mobile-v2.89.0) (2025-11-19)
 
 
