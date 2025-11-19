@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { useSelector } from 'react-redux';
 
@@ -19,95 +19,139 @@ import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet'
 import { AccountListUnavailable } from './components/account-list-unavailable';
 import { SwitchAccountListItem } from './components/switch-account-list-item';
 
+export interface SwitchAccountSheetOpenDetails {
+  accountType: 'ledger' | 'software';
+  totalAccounts: number;
+  ledgerAccountCount: number;
+  softwareAccountCount: number;
+}
+
 interface SwitchAccountSheetProps {
   isShowing: boolean;
   onClose(): void;
+  onOpenReady?(details: SwitchAccountSheetOpenDetails): void;
 }
 
-export const SwitchAccountSheet = memo(({ isShowing, onClose }: SwitchAccountSheetProps) => {
-  const currentAccountIndex = useCurrentAccountIndex();
-  const highestKnownAccountIndex = useHighestKnownAccountIndex() ?? 0;
-  const createAccount = useCreateAccount();
-  const { whenWallet } = useWalletType();
-  const network = useCurrentNetwork();
-  const ledgerStacksAccounts = useSelector(selectDefaultWalletStacksKeys);
-  const ledgerBitcoinAccounts = useSelector(selectDefaultWalletBitcoinKeys);
+export const SwitchAccountSheet = memo(
+  ({ isShowing, onClose, onOpenReady }: SwitchAccountSheetProps) => {
+    const hasReportedOpenRef = useRef(false);
+    const currentAccountIndex = useCurrentAccountIndex();
+    const highestKnownAccountIndex = useHighestKnownAccountIndex() ?? 0;
+    const createAccount = useCreateAccount();
+    const { whenWallet } = useWalletType();
+    const network = useCurrentNetwork();
+    const ledgerStacksAccounts = useSelector(selectDefaultWalletStacksKeys);
+    const ledgerBitcoinAccounts = useSelector(selectDefaultWalletBitcoinKeys);
 
-  const ledgerStacksAccountCount = ledgerStacksAccounts.length;
-  const ledgerBitcoinAccountCount = useMemo(() => {
-    const networkMode = bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode);
-    const accountsForNetwork = ledgerBitcoinAccounts.filter(v => {
-      return inferNetworkFromPath(v.path) === networkMode;
+    const ledgerStacksAccountCount = ledgerStacksAccounts.length;
+    const ledgerBitcoinAccountCount = useMemo(() => {
+      const networkMode = bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode);
+      const accountsForNetwork = ledgerBitcoinAccounts.filter(v => {
+        return inferNetworkFromPath(v.path) === networkMode;
+      });
+      return accountsForNetwork.length / 2;
+    }, [ledgerBitcoinAccounts, network]);
+
+    const softwareAccountCount = highestKnownAccountIndex + 1;
+    const ledgerAccountCount = ledgerStacksAccountCount || ledgerBitcoinAccountCount;
+    const hasLedgerAccounts = ledgerStacksAccountCount > 0 || ledgerBitcoinAccountCount > 0;
+
+    const onCreateAccount = () => {
+      createAccount();
+      onClose();
+    };
+
+    const accountNum = whenWallet({
+      ledger: ledgerAccountCount,
+      software: softwareAccountCount,
     });
-    return accountsForNetwork.length / 2;
-  }, [ledgerBitcoinAccounts, network]);
+    const hasAccounts = whenWallet({
+      ledger: hasLedgerAccounts,
+      software: softwareAccountCount > 0,
+    });
+    const accountType = whenWallet({
+      ledger: 'ledger' as const,
+      software: 'software' as const,
+    });
 
-  const softwareAccountCount = highestKnownAccountIndex + 1;
-  const ledgerAccountCount = ledgerStacksAccountCount || ledgerBitcoinAccountCount;
-  const hasLedgerAccounts = ledgerStacksAccountCount > 0 || ledgerBitcoinAccountCount > 0;
+    useEffect(() => {
+      if (!isShowing) {
+        hasReportedOpenRef.current = false;
+        return;
+      }
 
-  const onCreateAccount = () => {
-    createAccount();
-    onClose();
-  };
+      if (!hasAccounts || hasReportedOpenRef.current) return;
 
-  // #4370 SMELL without this early return the wallet crashes on new install with
-  // : Wallet is neither of type `ledger` nor `software`
-  // FIXME remove this when adding Create Account to Ledger in #2502 #4983
-  if (!isShowing) return null;
+      onOpenReady?.({
+        accountType,
+        totalAccounts: accountNum,
+        ledgerAccountCount,
+        softwareAccountCount,
+      });
+      hasReportedOpenRef.current = true;
+    }, [
+      accountNum,
+      accountType,
+      hasAccounts,
+      isShowing,
+      ledgerAccountCount,
+      onOpenReady,
+      softwareAccountCount,
+    ]);
 
-  const accountNum = whenWallet({
-    ledger: ledgerAccountCount,
-    software: softwareAccountCount,
-  });
-  const hasAccounts = whenWallet({
-    ledger: hasLedgerAccounts,
-    software: softwareAccountCount > 0,
-  });
+    // #4370 SMELL without this early return the wallet crashes on new install with
+    // : Wallet is neither of type `ledger` nor `software`
+    // FIXME remove this when adding Create Account to Ledger in #2502 #4983
+    if (!isShowing) return null;
 
-  if (!hasAccounts) {
-    return <AccountListUnavailable />;
+    if (!hasAccounts) {
+      return <AccountListUnavailable />;
+    }
+
+    return (
+      <Sheet
+        header={<SheetHeader title="Select account" />}
+        isShowing={isShowing}
+        onClose={onClose}
+        wrapChildren={false}
+      >
+        <VirtuosoWrapperSheet>
+          <Box flex="1">
+            <Virtuoso
+              initialTopMostItemIndex={whenWallet({ ledger: 0, software: currentAccountIndex })}
+              totalCount={accountNum}
+              itemContent={index => (
+                <Box key={index} py="space.03" px="space.05">
+                  <SwitchAccountListItem
+                    handleClose={onClose}
+                    currentAccountIndex={currentAccountIndex}
+                    index={index}
+                  />
+                </Box>
+              )}
+            />
+          </Box>
+          {whenWallet({
+            software: (
+              <Flex
+                borderBottomRadius="md"
+                bg="ink.background-primary"
+                borderTop="default"
+                p="space.05"
+              >
+                <Button
+                  fullWidth
+                  onClick={() => onCreateAccount()}
+                  data-testid="create-account-btn"
+                >
+                  Create new account
+                </Button>
+              </Flex>
+            ),
+            ledger: null,
+          })}
+        </VirtuosoWrapperSheet>
+      </Sheet>
+    );
   }
-
-  return (
-    <Sheet
-      header={<SheetHeader title="Select account" />}
-      isShowing={isShowing}
-      onClose={onClose}
-      wrapChildren={false}
-    >
-      <VirtuosoWrapperSheet>
-        <Box flex="1">
-          <Virtuoso
-            initialTopMostItemIndex={whenWallet({ ledger: 0, software: currentAccountIndex })}
-            totalCount={accountNum}
-            itemContent={index => (
-              <Box key={index} py="space.03" px="space.05">
-                <SwitchAccountListItem
-                  handleClose={onClose}
-                  currentAccountIndex={currentAccountIndex}
-                  index={index}
-                />
-              </Box>
-            )}
-          />
-        </Box>
-        {whenWallet({
-          software: (
-            <Flex
-              borderBottomRadius="md"
-              bg="ink.background-primary"
-              borderTop="default"
-              p="space.05"
-            >
-              <Button fullWidth onClick={() => onCreateAccount()} data-testid="create-account-btn">
-                Create new account
-              </Button>
-            </Flex>
-          ),
-          ledger: null,
-        })}
-      </VirtuosoWrapperSheet>
-    </Sheet>
-  );
-});
+);
