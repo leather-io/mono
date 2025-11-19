@@ -413,6 +413,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.42.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.42.0...@leather.io/services-v1.42.1) (2025-11-19)
+
+
+### Bug Fixes
+
+* velar target swap assets ([bed7bdc](https://github.com/leather-io/mono/commit/bed7bdc38289fe818b347d593ba553cb05a72380))
+
 ## [1.42.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.41.0...@leather.io/services-v1.42.0) (2025-11-17)
 
 

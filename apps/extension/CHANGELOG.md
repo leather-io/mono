@@ -21,6 +21,21 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.80.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.80.0...@leather.io/extension-v6.80.1) (2025-11-19)
+
+
+### Bug Fixes
+
+* glob patch ([2b1225e](https://github.com/leather-io/mono/commit/2b1225ec08f677e18345a72e6a0c284c552f0973))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.42.1
+    * @leather.io/ui bumped to 1.96.0
+
 ## [6.80.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.79.1...@leather.io/extension-v6.80.0) (2025-11-17)
 
 
