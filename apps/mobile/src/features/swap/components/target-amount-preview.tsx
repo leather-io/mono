@@ -30,12 +30,12 @@ export function TargetAmountPreview({
   const { status, quoteAmount, isRefetching } = deriveEstimateSnapshot(liveEstimate);
   const shouldPulse = (status === 'loading' || !!isRefetching) && baseAmount !== '0';
   const pulsingStyle = usePulsingAnimation(shouldPulse);
-  const primaryAmount = useStableTargetAmount({
+  const { primaryAmount, secondaryAmount } = useStableTargetAmounts({
     baseAmount,
     status,
     nextQuoteAmount: quoteAmount,
+    marketData,
   });
-  const secondaryAmount = getSecondaryAmount(primaryAmount, marketData);
 
   return (
     <AnimatedBox style={pulsingStyle} gap="3">
@@ -59,35 +59,44 @@ export function TargetAmountPreview({
   );
 }
 
-interface UseStableTargetAmountParams {
+interface UseStableTargetAmountsParams {
   baseAmount: string;
   status: LiveSwapEstimate['status'];
   nextQuoteAmount?: Money;
+  marketData?: MarketData;
 }
 
-// Ensure minimal transitions of target amount as user edits base amount:
-// 1. Don't reset when the base amount is effectively 0 but likely in flight, e.g., 0.0000
-// 2. Maintain the previous target amount while a new quote is being fetched.
-function useStableTargetAmount({
+interface StableTargetAmounts {
+  primaryAmount?: Money;
+  secondaryAmount?: Money;
+}
+
+function useStableTargetAmounts({
   baseAmount,
   status,
   nextQuoteAmount,
-}: UseStableTargetAmountParams) {
-  const lastStableTargetAmount = useRef<Money | undefined>(undefined);
+  marketData,
+}: UseStableTargetAmountsParams): StableTargetAmounts {
+  const lastStableAmounts = useRef<StableTargetAmounts>({
+    primaryAmount: undefined,
+    secondaryAmount: undefined,
+  });
   const shouldReset = baseAmount === '0' || status === 'error' || status === 'empty';
   const shouldHoldLast = status === 'loading' || status === 'idle';
 
   if (shouldReset) {
-    lastStableTargetAmount.current = undefined;
-    return undefined;
+    lastStableAmounts.current = { primaryAmount: undefined, secondaryAmount: undefined };
+    return lastStableAmounts.current;
   }
 
   if (shouldHoldLast) {
-    return lastStableTargetAmount.current;
+    return lastStableAmounts.current;
   }
 
-  lastStableTargetAmount.current = nextQuoteAmount;
-  return nextQuoteAmount;
+  const primaryAmount = nextQuoteAmount;
+  const secondaryAmount = getSecondaryAmount(primaryAmount, marketData);
+  lastStableAmounts.current = { primaryAmount, secondaryAmount };
+  return lastStableAmounts.current;
 }
 
 function usePulsingAnimation(enabled: boolean) {
