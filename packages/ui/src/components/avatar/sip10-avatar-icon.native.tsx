@@ -23,20 +23,19 @@ export function Sip10AvatarIcon({
   ...props
 }: Sip10AvatarIconProps) {
   // TODO LEA-2551: use leather design system for more avatars
+  const indicatorIcon = indicator ? <StacksIcon width={16} height={16} /> : undefined;
+
   if (name === 'sBTC') {
     return (
-      <Avatar
-        icon={<SbtcIcon width="100%" height="100%" />}
-        indicator={<StacksIcon width={16} height={16} />}
-        {...props}
-      />
+      <Avatar icon={<SbtcIcon width="100%" height="100%" />} indicator={indicatorIcon} {...props} />
     );
   }
+
   return (
     <Avatar
       image={imageCanonicalUri !== '' ? imageCanonicalUri : getFallbackAvatar(contractId)}
       imageAlt={name}
-      indicator={indicator ? <StacksIcon width={16} height={16} /> : undefined}
+      indicator={indicatorIcon}
       {...props}
     />
   );
