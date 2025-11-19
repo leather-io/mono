@@ -27,17 +27,18 @@ import {
   getPsbtDetails,
   getSizeInfo,
 } from '@leather.io/bitcoin';
+import { btcAsset } from '@leather.io/constants';
 import {
   AccountId,
   AverageBitcoinFeeRates,
   BitcoinNetworkModes,
   FeeTypes,
+  makeActivityLink,
 } from '@leather.io/models';
 import { RpcParams, signPsbt } from '@leather.io/rpc';
 import { Approver, Box, SentIcon, SheetInstance, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback, createMoney, sumMoney } from '@leather.io/utils';
 
-import { makeActivityLink } from '../activity/utils/make-activity-link';
 import { ApproverButtons } from '../approver/components/approver-buttons';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { BtcStatusRow } from '../approver/components/status-row/btc-status-row';
@@ -245,7 +246,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
     const activityLink = makeActivityLink({
       txid: broadcastedTxid,
       networkPreference: network,
-      chain: 'bitcoin',
+      asset: btcAsset,
     });
 
     if (!activityLink) return;

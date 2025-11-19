@@ -473,9 +473,9 @@ msgstr "Close window"
 msgid "Code"
 msgstr "Code"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:57
-#: src/features/token/bitcoin/stamp-token-details.tsx:33
-#: src/features/token/components/collectible-loading.tsx:26
+#: src/features/token/bitcoin/inscription-token-details.tsx:54
+#: src/features/token/bitcoin/stamp-token-details.tsx:32
+#: src/features/token/components/token-loading.tsx:33
 #: src/features/token/stacks/bns-details.tsx:33
 #: src/features/token/stacks/sip9-token-details.tsx:44
 msgid "Collectible Info"
@@ -759,7 +759,7 @@ msgstr "Failed"
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:235
+#: src/features/psbt-signer/psbt-signer.tsx:236
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
 
@@ -788,7 +788,7 @@ msgid "FastPool"
 msgstr "FastPool"
 
 #: src/features/approver/stx/hooks.ts:27
-#: src/features/psbt-signer/psbt-signer.tsx:199
+#: src/features/psbt-signer/psbt-signer.tsx:200
 msgid "Fee updated"
 msgstr "Fee updated"
 
@@ -797,7 +797,7 @@ msgid "Fees"
 msgstr "Fees"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:76
-#: src/features/token/stacks/sip9-token-details.tsx:81
+#: src/features/token/stacks/sip9-token-details.tsx:71
 msgid "File type"
 msgstr "File type"
 
@@ -830,11 +830,11 @@ msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 msgid "Generate new Secret Key for self-custody"
 msgstr "Generate new Secret Key for self-custody"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:69
+#: src/features/token/bitcoin/inscription-token-details.tsx:66
 msgid "Genesis block"
 msgstr "Genesis block"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:66
+#: src/features/token/bitcoin/inscription-token-details.tsx:63
 msgid "Genesis time"
 msgstr "Genesis time"
 
@@ -880,8 +880,8 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:170
-#: src/features/psbt-signer/psbt-signer.tsx:296
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
+#: src/features/psbt-signer/psbt-signer.tsx:297
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -966,12 +966,12 @@ msgstr "Invalid words: {joinedInvalidWords}"
 msgid "Language"
 msgstr "Language"
 
-#: src/features/token/bitcoin/stamp-token-details.tsx:42
+#: src/features/token/bitcoin/stamp-token-details.tsx:41
 msgid "Last observed block"
 msgstr "Last observed block"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:63
-#: src/features/token/bitcoin/stamp-token-details.tsx:39
+#: src/features/token/bitcoin/inscription-token-details.tsx:60
+#: src/features/token/bitcoin/stamp-token-details.tsx:38
 #: src/features/token/components/token-details-table.tsx:22
 #: src/features/token/stacks/bns-details.tsx:41
 #: src/features/token/stacks/sip9-token-details.tsx:60
@@ -1123,9 +1123,8 @@ msgstr "More options"
 #: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
-#: src/features/token/bitcoin/inscription-token-details.tsx:60
-#: src/features/token/bitcoin/stamp-token-details.tsx:36
-#: src/features/token/components/collectible-loading.tsx:28
+#: src/features/token/bitcoin/inscription-token-details.tsx:57
+#: src/features/token/bitcoin/stamp-token-details.tsx:35
 #: src/features/token/components/token-details-table.tsx:19
 #: src/features/token/components/token-loading.tsx:35
 #: src/features/token/stacks/bns-details.tsx:35
@@ -1213,7 +1212,8 @@ msgstr "Outbound balance:"
 msgid "Output"
 msgstr "Output"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:53
+#: src/features/token/bitcoin/inscription-token-stats.tsx:39
+#: src/features/token/bitcoin/inscription-token-stats.tsx:53
 msgid "Output value"
 msgstr "Output value"
 
@@ -1267,9 +1267,9 @@ msgstr "Proceed with caution since your wallet will not be protected by your dev
 msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:64
-#: src/features/token/bitcoin/stamp-token-details.tsx:40
-#: src/features/token/components/collectible-loading.tsx:30
+#: src/features/token/bitcoin/inscription-token-details.tsx:61
+#: src/features/token/bitcoin/stamp-token-details.tsx:39
+#: src/features/token/components/token-loading.tsx:37
 #: src/features/token/stacks/bns-details.tsx:42
 #: src/features/token/stacks/sip9-token-details.tsx:61
 msgid "Protocol"
@@ -1456,7 +1456,7 @@ msgstr "Send"
 msgid "Send Failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:265
+#: src/features/psbt-signer/psbt-signer.tsx:266
 msgid "Send token"
 msgstr "Send token"
 
@@ -1490,8 +1490,8 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:169
-#: src/features/psbt-signer/psbt-signer.tsx:295
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:170
+#: src/features/psbt-signer/psbt-signer.tsx:296
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -1504,7 +1504,7 @@ msgstr "Show balances"
 msgid "Sign Message"
 msgstr "Sign Message"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:119
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:120
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
@@ -1554,16 +1554,12 @@ msgstr "Stacks"
 msgid "Stacks address"
 msgstr "Stacks address"
 
-#: src/features/token/bitcoin/stamp-token-details.tsx:19
+#: src/features/token/bitcoin/stamp-token-details.tsx:18
 #: src/shared/display-preference.ts:60
 msgid "Stamp"
 msgstr "Stamp"
 
-#: src/features/token/bitcoin/stamp-token-details.tsx:45
-msgid "Stamp URL"
-msgstr "Stamp URL"
-
-#: src/features/approver/utils.tsx:43
+#: src/features/approver/utils.tsx:41
 msgid "Standard"
 msgstr "Standard"
 
@@ -1703,8 +1699,8 @@ msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
 #: src/features/approver/components/sip10-recipient.tsx:43
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:144
-#: src/features/psbt-signer/psbt-signer.tsx:277
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:145
+#: src/features/psbt-signer/psbt-signer.tsx:278
 msgid "To address"
 msgstr "To address"
 
@@ -1737,7 +1733,7 @@ msgstr "Too many decimals (max {maxDecimals})"
 msgid "Total balance"
 msgstr "Total balance"
 
-#: src/features/psbt-signer/psbt-signer.tsx:308
+#: src/features/psbt-signer/psbt-signer.tsx:309
 msgid "Total spend"
 msgstr "Total spend"
 
@@ -1751,7 +1747,7 @@ msgstr "Transaction confirmations"
 msgid "Transaction failed due to an unexpected error"
 msgstr "Transaction failed due to an unexpected error"
 
-#: src/features/token/bitcoin/inscription-token-details.tsx:71
+#: src/features/token/bitcoin/inscription-token-details.tsx:68
 msgid "Transaction ID"
 msgstr "Transaction ID"
 
@@ -1924,8 +1920,8 @@ msgstr "You will transfer less than or equal to"
 msgid "You will transfer more than"
 msgstr "You will transfer more than"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:135
-#: src/features/psbt-signer/psbt-signer.tsx:271
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:136
+#: src/features/psbt-signer/psbt-signer.tsx:272
 msgid "You’ll send"
 msgstr "You’ll send"
 
