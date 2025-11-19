@@ -1,13 +1,12 @@
 import { Balance } from '@/components/balance/balance';
 import { useSettings } from '@/store/settings/settings';
 
-import { OnChainActivity } from '@leather.io/models';
+import { OnChainActivity, makeActivityLink } from '@leather.io/models';
 import { ActivityAvatarIcon, Flag, ItemLayout, Pressable, Text } from '@leather.io/ui/native';
 import { minusSign } from '@leather.io/utils';
 
 import { useOpenURL } from '../browser/browser/use-open-url';
 import { formatActivityCaption, getActivityTitle } from './utils/format-activity';
-import { makeActivityLink } from './utils/make-activity-link';
 
 interface ActivityListItemProps {
   activity: OnChainActivity;
@@ -39,7 +38,11 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
       disabled={!txid}
       onPress={() => {
         if (!asset) return;
-        const activityLink = makeActivityLink({ txid, networkPreference, chain: asset.chain });
+        const activityLink = makeActivityLink({
+          txid,
+          networkPreference,
+          asset,
+        });
         if (activityLink) {
           openURL(activityLink);
         }

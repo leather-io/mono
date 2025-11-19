@@ -4,24 +4,20 @@ import { ChainId, NetworkConfiguration } from '../network/network.model';
 export type BitcoinNetworkPreference = 'mainnet' | 'testnet4' | 'signet';
 type StacksNetworkPreference = 'mainnet' | 'testnet';
 
+const HIRO_EXPLORER_URL = 'https://explorer.hiro.so';
+const MEMPOOL_BASE_URL = 'https://mempool.space';
+
 export interface MakeActivityArgs {
   txid: string;
   networkPreference: NetworkConfiguration;
   asset?: CryptoAsset;
-  explorerUrl: string;
 }
-export function makeActivityLink({
-  txid,
-  networkPreference,
-  asset,
-  explorerUrl,
-}: MakeActivityArgs) {
+export function makeActivityLink({ txid, networkPreference, asset }: MakeActivityArgs) {
   if (txid && asset) {
     return makeActivityExplorerLink({
       asset,
       txid,
       networkPreference,
-      explorerUrl,
     });
   }
   return null;
@@ -31,13 +27,11 @@ interface MakeActivityExplorerLinkArgs {
   asset: CryptoAsset;
   txid: string;
   networkPreference: NetworkConfiguration;
-  explorerUrl: string;
 }
 function makeActivityExplorerLink({
   asset,
   txid,
   networkPreference,
-  explorerUrl,
 }: MakeActivityExplorerLinkArgs) {
   if (asset.chain === 'bitcoin') {
     return getMempoolExplorerLink({
@@ -51,7 +45,7 @@ function makeActivityExplorerLink({
       networkPreference.chain.stacks.chainId === ChainId.Testnet ? 'testnet' : 'mainnet',
     searchParams: undefined,
     txid,
-    explorerUrl,
+    explorerUrl: HIRO_EXPLORER_URL,
   });
 }
 
@@ -82,15 +76,13 @@ export function getMempoolExplorerLink({
   type,
   networkPreference,
 }: GetMempoolExplorerLinkArgs) {
-  const mempoolBaseUrl = 'https://mempool.space';
-
   switch (networkPreference) {
     case 'mainnet':
-      return `${mempoolBaseUrl}/${type}/${id}`;
+      return `${MEMPOOL_BASE_URL}/${type}/${id}`;
     case 'testnet4':
-      return `${mempoolBaseUrl}/testnet4/${type}/${id}`;
+      return `${MEMPOOL_BASE_URL}/testnet4/${type}/${id}`;
     case 'signet':
-      return `${mempoolBaseUrl}/signet/${type}/${id}`;
+      return `${MEMPOOL_BASE_URL}/signet/${type}/${id}`;
     default:
       return null;
   }
