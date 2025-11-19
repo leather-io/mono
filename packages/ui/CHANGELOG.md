@@ -489,6 +489,19 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.96.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.95.0...@leather.io/ui-v1.96.0) (2025-11-19)
+
+
+### Features
+
+* **ui:** add circular progress component ([76824e6](https://github.com/leather-io/mono/commit/76824e6c36b2fa78992e1bf7f5acc5e675fd6d2b))
+
+
+### Bug Fixes
+
+* **ui:** fix the sBTC avatar indicator ([121de05](https://github.com/leather-io/mono/commit/121de05f0820ea9eda1a8dee2f921e1a2eb4ac97))
+* **ui:** fix useInterval lastUpdatedAt, make metadata nullable ([210cdee](https://github.com/leather-io/mono/commit/210cdeece39c0e80d2e7a88383c579691f93bcdd))
+
 ## [1.95.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.94.1...@leather.io/ui-v1.95.0) (2025-11-17)
 
 

@@ -19,6 +19,23 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.89.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.88.0...@leather.io/mobile-v2.89.0) (2025-11-19)
+
+
+### Features
+
+* **mobile:** show swap target asset balance ([2e830b1](https://github.com/leather-io/mono/commit/2e830b1f2cd6c166fd480d24dda609898d8025d5))
+* **mobile:** show swap target fiat amount ([a79833c](https://github.com/leather-io/mono/commit/a79833c2d7ed92b659d00e7d7a7fb4dda2dcdc6f))
+* **mobile:** sync target amount update with fee status ([89e4d69](https://github.com/leather-io/mono/commit/89e4d69c9e03d3e81925f50900b184b888daee08))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.42.1
+    * @leather.io/ui bumped to 1.96.0
+
 ## [2.88.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.87.1...@leather.io/mobile-v2.88.0) (2025-11-17)
 
 
