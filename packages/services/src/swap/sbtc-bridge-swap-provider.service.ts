@@ -3,10 +3,10 @@ import { injectable } from 'inversify';
 
 import { btcAsset } from '@leather.io/constants';
 import {
+  type SbtcBridgeSwapQuote,
   SwapExecutionData,
   SwapProviderAsset,
   SwapProviderId,
-  SwapQuote,
 } from '@leather.io/models';
 import { createMoneyFromDecimal, getAssetId, isSameAssetId } from '@leather.io/utils';
 
@@ -60,12 +60,12 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
     baseAsset,
     baseAmount,
     targetAsset,
-  }: SwapProviderServiceGetSwapQuotesParams): Promise<SwapQuote[]> {
+  }: SwapProviderServiceGetSwapQuotesParams): Promise<SbtcBridgeSwapQuote[]> {
     const swapDexMap = await this.leatherApiClient.fetchSwapDexes();
     return [
       {
         executionType: 'sbtc-bridge-transfer',
-        providerId: this.providerId,
+        providerId: 'sbtc-bridge',
         providerQuoteData: null,
         baseAmount,
         targetAmount: baseAmount,

@@ -192,7 +192,7 @@ export function createSwapQuote({
     dexPath,
     quote: createMoney(targetAmount, targetAsset.symbol, targetAsset.decimals),
     providerQuoteData,
-  };
+  } as SwapQuote;
 }
 
 export const defaultSwapQuotes = [
