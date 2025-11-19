@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { makeActivityLink } from '@/features/activity/utils/make-activity-link';
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
 import { StacksOutcome } from '@/features/approver/components/stacks-outcome';
@@ -31,7 +30,9 @@ import {
 } from '@stacks/transactions';
 import * as Clipboard from 'expo-clipboard';
 
+import { stxAsset } from '@leather.io/constants';
 import { makeAccountIdentifer } from '@leather.io/crypto';
+import { makeActivityLink } from '@leather.io/models';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { Approver, SentIcon, SheetInstance } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
@@ -196,7 +197,7 @@ export function BaseStxTxApproverLayout({
               const activityLink = makeActivityLink({
                 txid: broadcastedTxid,
                 networkPreference: network,
-                chain: 'stacks',
+                asset: stxAsset,
               });
 
               if (!activityLink) return;

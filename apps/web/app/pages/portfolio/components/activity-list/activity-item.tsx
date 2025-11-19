@@ -2,7 +2,6 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { openExternalLink } from '~/utils/external-links';
 
-import { HIRO_EXPLORER_URL } from '@leather.io/constants';
 import { type OnChainActivity, makeActivityLink } from '@leather.io/models';
 import { ActivityAvatarIcon } from '@leather.io/ui';
 
@@ -21,7 +20,6 @@ export function ActivityItem({ activity }: ActivityItemProps) {
           txid: activity.txid,
           networkPreference,
           asset: activity.asset,
-          explorerUrl: HIRO_EXPLORER_URL,
         })
       : null;
 
