@@ -9,6 +9,7 @@ import {
 } from '@/features/swap/swap-state/swap-state.types';
 import { isQuoteAlignedWithCurrentInput } from '@/features/swap/swap-state/utils/is-quote-aligned-with-current-input';
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
 import { isDefined } from 'remeda';
 
 import { SwapQuote } from '@leather.io/models';
@@ -57,7 +58,7 @@ export function useNetworkFee({
       const executionData = await swapService.getSwapExecutionData(
         accountRequest,
         quote,
-        state.slippage,
+        BigNumber(state.slippage),
         signal
       );
 

@@ -27,13 +27,13 @@ export function TargetAmountPreview({
   liveEstimate,
   baseAmount,
 }: TargetAmountPreviewProps) {
-  const { status, quoteAmount, isRefetching } = deriveEstimateSnapshot(liveEstimate);
+  const { status, targetAmount, isRefetching } = deriveEstimateSnapshot(liveEstimate);
   const shouldPulse = (status === 'loading' || !!isRefetching) && baseAmount !== '0';
   const pulsingStyle = usePulsingAnimation(shouldPulse);
   const { primaryAmount, secondaryAmount } = useStableTargetAmounts({
     baseAmount,
     status,
-    nextQuoteAmount: quoteAmount,
+    targetAmount,
     marketData,
   });
 
@@ -62,7 +62,7 @@ export function TargetAmountPreview({
 interface UseStableTargetAmountsParams {
   baseAmount: string;
   status: LiveSwapEstimate['status'];
-  nextQuoteAmount?: Money;
+  targetAmount?: Money;
   marketData?: MarketData;
 }
 
@@ -74,7 +74,7 @@ interface StableTargetAmounts {
 function useStableTargetAmounts({
   baseAmount,
   status,
-  nextQuoteAmount,
+  targetAmount,
   marketData,
 }: UseStableTargetAmountsParams): StableTargetAmounts {
   const lastStableAmounts = useRef<StableTargetAmounts>({
@@ -93,7 +93,7 @@ function useStableTargetAmounts({
     return lastStableAmounts.current;
   }
 
-  const primaryAmount = nextQuoteAmount;
+  const primaryAmount = targetAmount;
   const secondaryAmount = getSecondaryAmount(primaryAmount, marketData);
   lastStableAmounts.current = { primaryAmount, secondaryAmount };
   return lastStableAmounts.current;
@@ -122,7 +122,7 @@ function usePulsingAnimation(enabled: boolean) {
 
 interface EstimateSnapshot {
   status: LiveSwapEstimate['status'];
-  quoteAmount?: Money;
+  targetAmount?: Money;
   isRefetching?: boolean;
 }
 
@@ -133,7 +133,7 @@ function deriveEstimateSnapshot(liveEstimate: LiveSwapEstimate): EstimateSnapsho
 
   return {
     status: 'success',
-    quoteAmount: liveEstimate.selectedQuote?.quoteAmount,
+    targetAmount: liveEstimate.selectedQuote?.targetAmount,
     isRefetching: liveEstimate.isRefetching,
   };
 }

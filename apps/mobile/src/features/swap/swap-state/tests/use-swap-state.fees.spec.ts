@@ -121,10 +121,12 @@ describe('fee query lifecycle', () => {
       expect(result.current.quoteQuery.status).toBe('success');
     });
 
-    expect(result.current.quoteQuery.data?.selected).toBeDefined();
-    expect(result.current.quoteQuery.data?.selected?.rawSwapQuote.baseAmount).toBe(0.5);
-    expect(result.current.state.baseAmount).toBe('0.1');
+    const selectedQuote = result.current.quoteQuery.data?.selected;
+    assert(selectedQuote);
+    const quoteBaseAmount = selectedQuote.baseAmount;
 
+    expect(quoteBaseAmount.amount.shiftedBy(-quoteBaseAmount.decimals).toNumber()).toBe(0.5);
+    expect(result.current.state.baseAmount).toBe('0.1');
     expect(result.current.networkFeeQuery.fetchStatus).toBe('idle');
   });
 });

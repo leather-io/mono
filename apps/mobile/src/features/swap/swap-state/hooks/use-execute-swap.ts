@@ -9,6 +9,7 @@ import {
 } from '@/features/swap/swap-state/swap-state.types';
 import { ValidationResult } from '@/features/swap/swap-state/validation/swap-validation';
 import { UseQueryResult, useMutation } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
 import { isDefined } from 'remeda';
 
 import { isQuoteAlignedWithCurrentInput } from '../utils/is-quote-aligned-with-current-input';
@@ -59,7 +60,7 @@ export function useExecuteSwap({
       const executionData = await swapService.getSwapExecutionData(
         accountRequest,
         quote.rawSwapQuote,
-        state.slippage
+        BigNumber(state.slippage)
       );
       const executionDependencies: SwapExecutionDependencies = {
         ...dependencies,

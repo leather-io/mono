@@ -105,14 +105,7 @@ export function useSwapQuotesQuery({
       if (!baseSwapAsset || !targetSwapAsset || !debouncedBaseAmount) return [];
 
       const [quotes] = await Promise.all([
-        swapService.getSwapQuotes(
-          baseSwapAsset,
-          targetSwapAsset,
-          debouncedBaseAmount.amount
-            .shiftedBy(baseSwapAsset ? -baseSwapAsset.asset.decimals : 0)
-            .toNumber(),
-          signal
-        ),
+        swapService.getSwapQuotes(baseSwapAsset, targetSwapAsset, debouncedBaseAmount, signal),
         delay(minFetchDuration),
       ]);
 

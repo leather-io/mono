@@ -109,8 +109,8 @@ export interface EnrichedSwapQuote {
   swapRate: BigNumber;
   dexPath: SwapDex[];
   assetPath: SwappableFungibleCryptoAsset[];
-  baseAmount: number;
-  quoteAmount: Money;
+  baseAmount: Money;
+  targetAmount: Money;
   slippageApplicable: boolean;
   minReceive?: Money;
   provider: SwapProviderId;

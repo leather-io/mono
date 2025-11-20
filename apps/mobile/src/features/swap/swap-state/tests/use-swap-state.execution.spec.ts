@@ -1,7 +1,7 @@
 import { act, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { createMoney } from '@leather.io/utils';
+import { createMoney, createMoneyFromDecimal } from '@leather.io/utils';
 
 import {
   createAccountSwapAsset,
@@ -105,7 +105,9 @@ describe('useSwapState - execution', () => {
         expect(result.current.quoteQuery.isFetching).toBe(false);
       });
 
-      expect(result.current.quoteQuery.data?.selected?.baseAmount).toBe(1);
+      expect(result.current.quoteQuery.data?.selected?.baseAmount).toEqual(
+        createMoneyFromDecimal(1, 'BTC')
+      );
       expect(result.current.state.baseAmount).toBe('2');
       expect(result.current.canExecute).toBe(false);
     });
@@ -128,7 +130,9 @@ describe('useSwapState - execution', () => {
         expect(result.current.networkFeeQuery.isSuccess).toBe(true);
       });
 
-      expect(result.current.quoteQuery.data?.selected?.baseAmount).toBe(1.5);
+      expect(result.current.quoteQuery.data?.selected?.baseAmount).toEqual(
+        createMoneyFromDecimal(1.5, 'BTC')
+      );
       expect(result.current.canExecute).toBe(true);
     });
 
@@ -171,7 +175,9 @@ describe('useSwapState - execution', () => {
       });
 
       expect(result.current.state.baseAmount).toBe('100');
-      expect(result.current.quoteQuery.data?.selected?.baseAmount).toBe(0.001);
+      expect(result.current.quoteQuery.data?.selected?.baseAmount).toEqual(
+        createMoneyFromDecimal(0.001, 'BTC')
+      );
       expect(result.current.canExecute).toBe(true);
     });
 

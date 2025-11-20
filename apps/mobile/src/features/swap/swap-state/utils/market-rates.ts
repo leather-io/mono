@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { MarketData } from '@leather.io/models';
+import { MarketData, Money } from '@leather.io/models';
 
 interface CalculateFairMarketRateParams {
   baseMarketData: MarketData | null | undefined;
@@ -32,8 +32,7 @@ export function calculatePriceImpactPercentage(
   return BigNumber.max(0, priceImpact);
 }
 
-export function estimateExchangeRate(baseAmount: number, targetAmount: number): BigNumber {
-  const base = BigNumber(baseAmount);
-  if (base.isZero()) return BigNumber(0);
-  return BigNumber(targetAmount).div(base);
+export function estimateExchangeRate(base: Money, target: Money): BigNumber {
+  if (base.amount.isZero()) return BigNumber(0);
+  return target.amount.shiftedBy(-target.decimals).dividedBy(base.amount.shiftedBy(-base.decimals));
 }
