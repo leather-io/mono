@@ -8,15 +8,12 @@ import { Tabs } from '@leather.io/ui';
 import { RouteUrls } from '@shared/route-urls';
 
 import { LoadingSpinner } from '@app/components/loading-spinner';
-import { useFlags } from '@app/features/feature-flags';
-
-import { HomeTabsV2 } from './home-tabs-v2';
 
 interface HomeTabsProps {
   children: React.ReactNode;
 }
 
-function HomeTabsV1({ children }: HomeTabsProps) {
+export function HomeTabs({ children }: HomeTabsProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -26,6 +23,9 @@ function HomeTabsV1({ children }: HomeTabsProps) {
         <Tabs.List>
           <Tabs.Trigger data-testid="tab-assets" value={RouteUrls.Home}>
             Assets
+          </Tabs.Trigger>
+          <Tabs.Trigger data-testid="tab-collectibles" value={RouteUrls.Collectibles}>
+            NFTs
           </Tabs.Trigger>
           <Tabs.Trigger data-testid="tab-activity" value={RouteUrls.Activity}>
             Activity
@@ -39,11 +39,4 @@ function HomeTabsV1({ children }: HomeTabsProps) {
       </Suspense>
     </Stack>
   );
-}
-
-export function HomeTabs(props: HomeTabsProps) {
-  const { extension_revamp } = useFlags();
-
-  if (extension_revamp) return <HomeTabsV2 {...props} />;
-  return <HomeTabsV1 {...props} />;
 }

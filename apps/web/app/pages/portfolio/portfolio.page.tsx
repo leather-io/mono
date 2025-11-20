@@ -11,12 +11,12 @@ import { openExternalLink } from '~/utils/external-links';
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import {
   type ActivityLinkClickHandler,
-  ActivityList,
-  type OnChainActivity,
   makeActivityLink,
   useAccountActivity,
 } from '@leather.io/features';
+import { type OnChainActivity } from '@leather.io/models';
 
+import { ActivityList } from './components/activity-list';
 import { PortfolioChart, PortfolioChartPending } from './components/portfolio-chart';
 import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
@@ -100,12 +100,9 @@ export function PortfolioPage() {
     [networkPreference]
   );
 
-  const handleActivityLinkClick = useCallback<ActivityLinkClickHandler>(
-    (activityLink, _activity) => {
-      openExternalLink(activityLink);
-    },
-    []
-  );
+  const handleActivityLinkClick = useCallback<ActivityLinkClickHandler>(activityLink => {
+    openExternalLink(activityLink);
+  }, []);
 
   if (status !== 'connected') {
     return (

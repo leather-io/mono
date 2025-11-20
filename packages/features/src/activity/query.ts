@@ -1,8 +1,8 @@
 import {
   QueryFunctionContext,
-  useQuery,
   type QueryKey,
   type UseQueryOptions,
+  useQuery,
 } from '@tanstack/react-query';
 
 import { type AccountAddresses, type OnChainActivity } from '@leather.io/models';
@@ -12,7 +12,7 @@ export type UseAccountActivityQueryOptions = Omit<
   UseQueryOptions<OnChainActivity[], Error, OnChainActivity[], QueryKey>,
   'queryKey' | 'queryFn'
 > & {
-  queryKeyContext?: ReadonlyArray<unknown>;
+  queryKeyContext?: readonly unknown[];
 };
 
 export function useAccountActivityQuery(

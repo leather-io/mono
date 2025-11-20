@@ -13,6 +13,9 @@ import {
 } from '@leather.io/models';
 import { FormatAmountOptions, createCurrencyFormatter, minusSign } from '@leather.io/utils';
 
+import { HIRO_EXPLORER_URL, MEMPOOL_BASE_URL } from './constants';
+import { type BitcoinNetworkPreference, type StacksNetworkPreference } from './types';
+
 const currencyFormatter = createCurrencyFormatter({
   locale: 'en-US',
 });
@@ -168,12 +171,6 @@ export function getBalancesText(activity: OnChainActivity) {
     formattedBalanceQuote,
   };
 }
-
-export type BitcoinNetworkPreference = 'mainnet' | 'testnet4' | 'signet';
-type StacksNetworkPreference = 'mainnet' | 'testnet';
-
-const HIRO_EXPLORER_URL = 'https://explorer.hiro.so';
-const MEMPOOL_BASE_URL = 'https://mempool.space';
 
 interface MakeActivityArgs {
   txid: string;

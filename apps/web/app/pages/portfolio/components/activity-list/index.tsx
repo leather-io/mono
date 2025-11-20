@@ -2,18 +2,13 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
+import { type ActivityLinkClickHandler, type GetActivityLink } from '@leather.io/features';
 import { type OnChainActivity } from '@leather.io/models';
 import { LoadingSpinner } from '@leather.io/ui';
 
-import {
-  ActivityItem,
-  type ActivityItemProps,
-  type ActivityLinkClickHandler,
-} from './activity-item.web';
+import { ActivityItem } from './activity-item';
 
-export type GetActivityLink = (activity: OnChainActivity) => string | null | undefined;
-
-export interface ActivityListProps {
+interface ActivityListProps {
   activity: OnChainActivity[];
   isLoading: boolean;
   getActivityLink?: GetActivityLink;
@@ -53,9 +48,9 @@ export function ActivityList({
     );
   }
 
-  function getItemProps(activityItem: OnChainActivity): Pick<ActivityItemProps, 'activityLink'> {
-    if (!getActivityLink) return { activityLink: null };
-    return { activityLink: getActivityLink(activityItem) ?? null };
+  function getItemProps(activityItem: OnChainActivity) {
+    const activityLink = getActivityLink?.(activityItem) ?? null;
+    return { activityLink };
   }
 
   return (

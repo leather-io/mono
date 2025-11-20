@@ -9,11 +9,11 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { LoadingSpinner } from '@app/components/loading-spinner';
 
-interface HomeTabsV2Props {
+interface HomeTabsProps {
   children: React.ReactNode;
 }
 
-export function HomeTabsV2({ children }: HomeTabsV2Props) {
+export function HomeTabsLegacy({ children }: HomeTabsProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,9 +23,6 @@ export function HomeTabsV2({ children }: HomeTabsV2Props) {
         <Tabs.List>
           <Tabs.Trigger data-testid="tab-assets" value={RouteUrls.Home}>
             Assets
-          </Tabs.Trigger>
-          <Tabs.Trigger data-testid="tab-collectibles" value={RouteUrls.Collectibles}>
-            NFTs
           </Tabs.Trigger>
           <Tabs.Trigger data-testid="tab-activity" value={RouteUrls.Activity}>
             Activity

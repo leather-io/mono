@@ -3,12 +3,12 @@ import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-accou
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { AccountAddresses, CryptoAsset } from '@leather.io/models';
-import { getActivityService } from '@leather.io/services';
 import {
   useAccountActivity as useSharedAccountActivity,
   useAccountActivityQuery as useSharedAccountActivityQuery,
 } from '@leather.io/features';
+import { AccountAddresses, CryptoAsset } from '@leather.io/models';
+import { getActivityService } from '@leather.io/services';
 
 /**
  * @deprecated useTotalActivity is not used now we have moved to single account view

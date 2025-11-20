@@ -475,6 +475,9 @@ msgstr "Code"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:51
 #: src/features/token/bitcoin/stamp-token-details.tsx:33
+#: src/features/token/components/token-loading.tsx:33
+#: src/features/token/stacks/bns-details.tsx:33
+#: src/features/token/stacks/sip9-token-details.tsx:44
 msgid "Collectible Info"
 msgstr "Collectible Info"
 
@@ -788,6 +791,7 @@ msgstr "Fast"
 msgid "FastPool"
 msgstr "FastPool"
 
+#: src/features/approver/stx/hooks.ts:27
 #: src/features/psbt-signer/psbt-signer.tsx:200
 msgid "Fee updated"
 msgstr "Fee updated"
@@ -797,6 +801,7 @@ msgid "Fees"
 msgstr "Fees"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:73
+#: src/features/token/stacks/sip9-token-details.tsx:71
 msgid "File type"
 msgstr "File type"
 
@@ -971,6 +976,9 @@ msgstr "Last observed block"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:57
 #: src/features/token/bitcoin/stamp-token-details.tsx:39
+#: src/features/token/components/token-details-table.tsx:22
+#: src/features/token/stacks/bns-details.tsx:41
+#: src/features/token/stacks/sip9-token-details.tsx:60
 msgid "Layer"
 msgstr "Layer"
 
@@ -1116,8 +1124,15 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:89
+#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
+#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
 #: src/features/token/bitcoin/inscription-token-details.tsx:54
 #: src/features/token/bitcoin/stamp-token-details.tsx:36
+#: src/features/token/components/token-details-table.tsx:19
+#: src/features/token/components/token-loading.tsx:35
+#: src/features/token/stacks/bns-details.tsx:35
+#: src/features/token/stacks/sip9-token-details.tsx:46
 msgid "Name"
 msgstr "Name"
 
@@ -1266,6 +1281,9 @@ msgstr "Protected Bitcoin balance:"
 
 #: src/features/token/bitcoin/inscription-token-details.tsx:58
 #: src/features/token/bitcoin/stamp-token-details.tsx:40
+#: src/features/token/components/token-loading.tsx:37
+#: src/features/token/stacks/bns-details.tsx:42
+#: src/features/token/stacks/sip9-token-details.tsx:61
 msgid "Protocol"
 msgstr "Protocol"
 
@@ -1554,6 +1572,7 @@ msgid "Stacks address"
 msgstr "Stacks address"
 
 #: src/features/token/bitcoin/stamp-token-details.tsx:19
+#: src/shared/display-preference.ts:60
 msgid "Stamp"
 msgstr "Stamp"
 
@@ -1700,6 +1719,7 @@ msgstr "This merges your existing funds into a single output. It incurs a fee bu
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
+#: src/features/approver/components/sip10-recipient.tsx:43
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:145
 #: src/features/psbt-signer/psbt-signer.tsx:278
 msgid "To address"

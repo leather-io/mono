@@ -1,25 +1,18 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { type OnChainActivity } from '@leather.io/models';
-import { ActivityAvatarIcon } from '@leather.io/ui';
-
 import {
+  type ActivityLinkClickHandler,
   formatActivityCaption,
   formatActivityStatusLabel,
   getBalancesText,
-} from './activity.utils.shared';
+} from '@leather.io/features';
+import { type OnChainActivity } from '@leather.io/models';
+import { ActivityAvatarIcon } from '@leather.io/ui';
 
-export type ActivityLinkClickHandler = (activityLink: string, activity: OnChainActivity) => void;
-
-export interface ActivityItemProps {
+interface ActivityItemProps {
   activity: OnChainActivity;
   activityLink?: string | null;
   onActivityLinkClick?: ActivityLinkClickHandler;
-}
-
-function openLink(activityLink: string) {
-  if (typeof window === 'undefined') return;
-  window.open(activityLink, '_blank', 'noopener,noreferrer');
 }
 
 export function ActivityItem({ activity, activityLink, onActivityLinkClick }: ActivityItemProps) {
@@ -36,11 +29,7 @@ export function ActivityItem({ activity, activityLink, onActivityLinkClick }: Ac
       disabled={!clickable}
       onClick={() => {
         if (!activityLink) return;
-        if (onActivityLinkClick) {
-          onActivityLinkClick(activityLink, activity);
-          return;
-        }
-        openLink(activityLink);
+        onActivityLinkClick?.(activityLink, activity);
       }}
     >
       <Flex

@@ -11,7 +11,6 @@ import { Settings } from '@app/features/settings/settings';
 
 export function HomeHeader() {
   const { isShowingSwitchAccount, setIsShowingSwitchAccount } = useSwitchAccountSheet();
-  //  Pete - can use feature flag to show/hide the header and add a new header
   return (
     <Header>
       <HeaderGrid
