@@ -1,9 +1,8 @@
 {
   "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
   "compilerOptions": {
-    "baseUrl": "./src",
     "rootDir": "./src",
-    "outDir": "./dist-web"
+    "outDir": "./dist"
   },
-  "include": ["src/**/*"]
+  "include": ["src"]
 }

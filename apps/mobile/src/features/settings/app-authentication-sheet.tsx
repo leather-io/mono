@@ -8,7 +8,7 @@ import { t } from '@lingui/core/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
 
-import { useOpenURL } from '../browser/browser/use-open-url';
+import { useOpenUrl } from '../browser/browser/use-open-url';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface AppAuthenticationSheetProps {
@@ -18,7 +18,7 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
   const settings = useSettings();
   const { displayToast } = useToastContext();
   const { authenticate } = useAuthentication();
-  const { openURL } = useOpenURL();
+  const { openUrl } = useOpenUrl();
 
   function onUpdateAppAuth() {
     authenticate()
@@ -55,7 +55,7 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
     <SettingsSheetLayout
       sheetRef={sheetRef}
       title={t`App authentication`}
-      onPressSupport={() => openURL(LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION)}
+      onPressSupport={() => openUrl(LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION)}
     >
       <SettingsList>
         <SettingsListItem

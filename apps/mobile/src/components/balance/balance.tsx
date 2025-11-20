@@ -1,17 +1,21 @@
 import { PrivateText } from '@/components/private-text';
-import { formatCurrency } from '@/utils/currency-formatter';
+import { formatCurrency as defaultFormatCurrency } from '@/utils/currency-formatter';
+import type { ResponsiveValue } from '@shopify/restyle';
 
+import { addOperator } from '@leather.io/features';
 import { Money } from '@leather.io/models';
-import { Text, TextProps } from '@leather.io/ui/native';
+import { Text, TextProps, type Theme } from '@leather.io/ui/native';
 import { FormatAmountOptions } from '@leather.io/utils';
 
-import { EmptyAmountPlaceholder } from './constants';
+import { emptyAmountPlaceholder } from './constants';
 
 interface BalanceProps extends TextProps {
   balance?: Money;
   operator?: string;
   formattingOptions?: FormatAmountOptions;
   forceVisible?: boolean;
+  formatCurrency?: (money: Money, options?: FormatAmountOptions) => string;
+  color?: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
 }
 
 export function Balance({
@@ -21,6 +25,7 @@ export function Balance({
   color = 'ink.text-primary',
   formattingOptions,
   forceVisible = false,
+  formatCurrency = defaultFormatCurrency,
   ...props
 }: BalanceProps) {
   const DisplayText = forceVisible ? Text : PrivateText;
@@ -28,7 +33,7 @@ export function Balance({
   if (!balance) {
     return (
       <DisplayText color={color} variant={variant}>
-        {EmptyAmountPlaceholder}
+        {emptyAmountPlaceholder}
       </DisplayText>
     );
   }
@@ -40,8 +45,4 @@ export function Balance({
       {formattedBalance}
     </DisplayText>
   );
-}
-
-function addOperator(balance: string, operator?: string) {
-  return operator ? `${operator} ${balance}` : balance;
 }

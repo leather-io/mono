@@ -1,5 +1,5 @@
 import { WarningSheetLayout } from '@/components/sheets/warning-sheet.layout';
-import { useOpenURL } from '@/features/browser/browser/use-open-url';
+import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { LEATHER_GUIDES_MOBILE_REMOVE_WALLET } from '@/shared/constants';
 import { t } from '@lingui/core/macro';
 
@@ -10,7 +10,7 @@ interface RemoveWalletSheetProps {
   onSubmit(): unknown;
 }
 export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps) {
-  const { openURL } = useOpenURL();
+  const { openUrl } = useOpenUrl();
   return (
     <WarningSheetLayout
       sheetRef={sheetRef}
@@ -18,7 +18,7 @@ export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps
       description={t`Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you’ve stored its Secret Key elsewhere securely.`}
       variant="critical"
       onSubmit={onSubmit}
-      onPressSupport={() => openURL(LEATHER_GUIDES_MOBILE_REMOVE_WALLET)}
+      onPressSupport={() => openUrl(LEATHER_GUIDES_MOBILE_REMOVE_WALLET)}
     />
   );
 }

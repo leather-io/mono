@@ -21,7 +21,7 @@ export function createLDProvider() {
 
 interface FeatureFlags {
   release_onramper_buy: boolean;
-  extension_revamp: boolean;
+  extensionRevamp: boolean;
 }
 
 export function useFlags() {

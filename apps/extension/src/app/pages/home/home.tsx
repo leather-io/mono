@@ -1,9 +1,9 @@
 import { useFlags } from '@app/features/feature-flags';
 
-import { HomeV1 } from './home-v1';
-import { HomeV2 } from './home-v2';
+import { Home as HomeCurrent } from './home-current';
+import { HomeLegacy } from './home-legacy';
 
 export function Home() {
-  const { extension_revamp } = useFlags();
-  return extension_revamp ? <HomeV2 /> : <HomeV1 />;
+  const { extensionRevamp } = useFlags();
+  return extensionRevamp ? <HomeCurrent /> : <HomeLegacy />;
 }

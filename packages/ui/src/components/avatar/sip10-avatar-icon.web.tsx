@@ -2,11 +2,8 @@ import type { ReactElement } from 'react';
 
 import SbtcIcon from '../../assets/icons/sbtc.svg';
 import StacksIcon from '../../assets/icons/stacks.svg';
+import { getSip10AvatarImage } from './avatar.shared';
 import { Avatar, type AvatarProps } from './avatar.web';
-
-function getFallbackAvatar(contractId: string) {
-  return `https://avatar.vercel.sh/${contractId}?size=36`;
-}
 
 interface Sip10AvatarIconProps extends Omit<AvatarProps, 'indicator'> {
   indicator?: 'stacksIcon' | ReactElement;
@@ -35,14 +32,10 @@ export function Sip10AvatarIcon({
     );
   }
 
-  const imageUrl = imageCanonicalUri !== '' ? imageCanonicalUri : getFallbackAvatar(contractId);
-  const fallback = name.substring(0, 2).toUpperCase();
-
   return (
     <Avatar
-      image={imageUrl}
+      image={getSip10AvatarImage({ imageCanonicalUri, contractId, name })}
       imageAlt={name}
-      fallback={fallback}
       indicator={indicatorIcon}
       {...props}
     />

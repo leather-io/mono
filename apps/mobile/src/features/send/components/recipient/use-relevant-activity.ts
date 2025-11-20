@@ -1,11 +1,18 @@
 import { FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { filter, isDefined, isShallowEqual, pipe } from 'remeda';
 
-import { AccountId, Activity, FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
-import { getActivityService } from '@leather.io/services';
+import {
+  AccountId,
+  Activity,
+  FungibleCryptoAsset,
+  QuoteCurrency,
+  SendAssetActivity,
+} from '@leather.io/models';
+import { createActivityQueryConfig } from '@leather.io/queries';
+import { UserSettings } from '@leather.io/services';
 
 interface UseRelevantActivityProps {
   asset: FungibleCryptoAsset;
@@ -13,25 +20,24 @@ interface UseRelevantActivityProps {
 }
 
 export function useRelevantActivity({ asset, currentAccount }: UseRelevantActivityProps) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const { fingerprint, accountIndex } = currentAccount;
   const accountAddresses = useAccountAddresses(fingerprint, accountIndex);
+  const settings: UserSettings = {
+    network: networkPreference,
+    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    assetVisibility,
+  };
 
-  // TODO: Duplicate of useActivityQuery with the same key but different selection.
-  //       Look into removing this by enabling passing options into custom query hooks.
   return toFetchState(
-    useQuery({
-      queryKey: ['activity-service-get-account-activity', accountAddresses, fiatCurrencyPreference],
-      queryFn: ({ signal }: QueryFunctionContext) =>
-        getActivityService().getAccountActivity(accountAddresses, signal),
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      staleTime: 1 * 5000,
-      gcTime: 1 * 5000,
-      select: data => {
-        return pipe(data, filter(isValidSendActivity), filter(isRelevantSendActivity(asset)));
-      },
-    })
+    useQuery(
+      createActivityQueryConfig(accountAddresses, settings, {
+        queryKeyContext: [fiatCurrencyPreference],
+        select: data => {
+          return pipe(data, filter(isValidSendActivity), filter(isRelevantSendActivity(asset)));
+        },
+      })
+    )
   );
 }
 

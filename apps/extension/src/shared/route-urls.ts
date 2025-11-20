@@ -34,6 +34,7 @@ export enum RouteUrls {
 
   // nested routes must have relative paths
   Activity = '/activity',
+  Collectibles = '/collectibles',
   Receive = 'receive',
   ReceiveStx = 'receive/stx',
   ReceiveBtc = 'receive/btc',

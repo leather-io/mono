@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
-import { makeBitcoinTxExplorerLink } from '@app/common/utils';
+import { getMempoolExplorerLink } from '@leather.io/features';
+
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 
 import { openInNewTab } from '../utils/open-in-new-tab';
@@ -14,7 +15,14 @@ export function useBitcoinExplorerLink() {
   const { bitcoin } = chain;
   const handleOpenBitcoinTxLink = useCallback(
     ({ txid }: HandleOpenBitcoinTxLinkArgs) => {
-      openInNewTab(makeBitcoinTxExplorerLink({ txid, bitcoin }));
+      const link = getMempoolExplorerLink({
+        id: txid,
+        type: 'tx',
+        networkPreference: bitcoin.bitcoinNetwork,
+      });
+      if (link) {
+        openInNewTab(link);
+      }
     },
     [bitcoin]
   );
