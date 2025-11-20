@@ -1,7 +1,7 @@
 import { colorThemes } from '@leather.io/tokens';
 
-import { OnramperMode } from './types.shared';
-import { formatColorHexForParams, generateSignature, matchAddresses } from './utils.shared';
+import { OnramperMode } from './types';
+import { formatColorHexForParams, generateSignature, matchAddresses } from './utils';
 
 interface GetIframeProps {
   theme: 'dark' | 'light';

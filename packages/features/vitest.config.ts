@@ -6,6 +6,6 @@ export default defineProject({
   ...defaultVitestUnitTestingConfig,
   test: {
     ...defaultVitestUnitTestingConfig.test,
-    environment: 'happy-dom',
+    env: 'node',
   },
 });

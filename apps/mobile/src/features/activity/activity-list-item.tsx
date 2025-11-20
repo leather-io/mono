@@ -1,7 +1,8 @@
 import { Balance } from '@/components/balance/balance';
 import { useSettings } from '@/store/settings/settings';
 
-import { OnChainActivity, makeActivityLink } from '@leather.io/models';
+import { makeActivityLink } from '@leather.io/features';
+import { OnChainActivity } from '@leather.io/models';
 import { ActivityAvatarIcon, Flag, ItemLayout, Pressable, Text } from '@leather.io/ui/native';
 import { minusSign } from '@leather.io/utils';
 

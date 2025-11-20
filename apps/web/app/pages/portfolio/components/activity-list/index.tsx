@@ -2,17 +2,27 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
+import { type ActivityLinkClickHandler, type GetActivityLink } from '@leather.io/features';
 import { type OnChainActivity } from '@leather.io/models';
 import { LoadingSpinner } from '@leather.io/ui';
 
 import { ActivityItem } from './activity-item';
 
 interface ActivityListProps {
-  isLoading: boolean;
   activity: OnChainActivity[];
+  isLoading: boolean;
+  getActivityLink?: GetActivityLink;
+  onActivityLinkClick?: ActivityLinkClickHandler;
+  minWidth?: string | number;
 }
 
-export function ActivityList({ activity, isLoading }: ActivityListProps) {
+export function ActivityList({
+  activity,
+  isLoading,
+  getActivityLink,
+  onActivityLinkClick,
+  minWidth = 400,
+}: ActivityListProps) {
   if (isLoading) {
     return (
       <Stack flexGrow={1} position="relative">
@@ -38,12 +48,22 @@ export function ActivityList({ activity, isLoading }: ActivityListProps) {
     );
   }
 
+  function getItemProps(activityItem: OnChainActivity) {
+    const activityLink = getActivityLink?.(activityItem) ?? null;
+    return { activityLink };
+  }
+
   return (
-    <Stack minWidth={400} flexGrow={1} position="relative">
+    <Stack minWidth={minWidth} flexGrow={1} position="relative">
       <Virtuoso
         data={activity}
         itemContent={(_, activityItem) => (
-          <ActivityItem key={activityItem.txid} activity={activityItem} />
+          <ActivityItem
+            key={activityItem.txid}
+            activity={activityItem}
+            {...getItemProps(activityItem)}
+            onActivityLinkClick={onActivityLinkClick}
+          />
         )}
       />
       <styled.div

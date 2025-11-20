@@ -3,6 +3,10 @@ import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-accou
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
+import {
+  type UseAccountActivityQueryOptions,
+  getAccountActivityQueryConfig,
+} from '@leather.io/features';
 import { AccountAddresses, CryptoAsset } from '@leather.io/models';
 import { getActivityService } from '@leather.io/services';
 
@@ -21,9 +25,19 @@ export function useTotalActivityByAsset(asset: CryptoAsset) {
   return toFetchState(useTotalActivityByAssetQuery(accounts, asset));
 }
 
+function useBaseAccountActivityQuery(
+  account: AccountAddresses,
+  options: UseAccountActivityQueryOptions = {}
+) {
+  return useQuery(getAccountActivityQueryConfig(account, options));
+}
+
 export function useAccountActivity(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useAccountActivityQuery(account));
+  const { fiatCurrencyPreference } = useSettings();
+  return toFetchState(
+    useBaseAccountActivityQuery(account, { queryKeyContext: [fiatCurrencyPreference] })
+  );
 }
 
 export function useAccountActivityByAsset(
@@ -56,16 +70,8 @@ export function useTotalActivityQuery(accounts: AccountAddresses[]) {
 
 export function useAccountActivityQuery(account: AccountAddresses) {
   const { fiatCurrencyPreference } = useSettings();
-  return useQuery({
-    queryKey: ['activity-service-get-account-activity', account, fiatCurrencyPreference],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getActivityService().getAccountActivity(account, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 5000,
-    gcTime: 1 * 5000,
+  return useBaseAccountActivityQuery(account, {
+    queryKeyContext: [fiatCurrencyPreference],
   });
 }
 

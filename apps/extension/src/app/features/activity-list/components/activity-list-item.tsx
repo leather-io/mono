@@ -1,4 +1,6 @@
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { memo } from 'react';
+
+import { Flex, styled } from 'leather-styles/jsx';
 
 import {
   type ActivityLinkClickHandler,
@@ -9,13 +11,13 @@ import {
 import { type OnChainActivity } from '@leather.io/models';
 import { ActivityAvatarIcon } from '@leather.io/ui';
 
-interface ActivityItemProps {
+interface ListItemProps {
   activity: OnChainActivity;
   activityLink?: string | null;
   onActivityLinkClick?: ActivityLinkClickHandler;
 }
 
-export function ActivityItem({ activity, activityLink, onActivityLinkClick }: ActivityItemProps) {
+function ListItem({ activity, activityLink, onActivityLinkClick }: ListItemProps) {
   const { formattedBalanceCrypto, formattedBalanceQuote } = getBalancesText(activity);
   const clickable = Boolean(activityLink);
 
@@ -42,9 +44,7 @@ export function ActivityItem({ activity, activityLink, onActivityLinkClick }: Ac
         }}
       >
         <Flex alignItems="center" gap="space.04">
-          <Box>
-            <ActivityAvatarIcon activity={activity} />
-          </Box>
+          <ActivityAvatarIcon activity={activity} />
           <Flex flexDirection="column" alignItems="flex-start">
             <styled.p textStyle="body.02" fontWeight="medium">
               {formatActivityStatusLabel(activity)}
@@ -67,3 +67,4 @@ export function ActivityItem({ activity, activityLink, onActivityLinkClick }: Ac
     </styled.button>
   );
 }
+export const ActivityListItem = memo(ListItem);

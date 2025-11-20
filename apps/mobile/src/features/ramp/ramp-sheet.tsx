@@ -4,7 +4,7 @@ import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-heig
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 
-import { type OnramperMode } from '@leather.io/features/native';
+import { type OnramperMode } from '@leather.io/features';
 import type { FungibleCryptoAsset } from '@leather.io/models';
 import { SheetInstance } from '@leather.io/ui/native';
 

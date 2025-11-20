@@ -6,7 +6,7 @@ import {
 } from '@leather.io/features';
 import { type AccountAddresses } from '@leather.io/models';
 
-export function useAccountActivityQuery(
+function useAccountActivityQuery(
   account: AccountAddresses,
   options: UseAccountActivityQueryOptions = {}
 ) {

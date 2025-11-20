@@ -31,6 +31,8 @@ import { SubmittedTransactionList } from './components/submitted-transaction-lis
 import { ActivityListTabWrapper } from './components/tab-wrapper';
 import { TransactionList } from './components/transaction-list/transaction-list';
 
+// TODO: temporary really ugly fix while we address conditional data problem of
+// bitcoin sometimes being undefined
 function useNsBitcoinAddress() {
   try {
     return useCurrentAccountNativeSegwitIndexZeroSigner().address;
@@ -47,7 +49,7 @@ function useTrBitcoinAddress() {
   }
 }
 
-export function ActivityListV2() {
+function ActivityListLegacyInner() {
   const nsBitcoinAddress = useNsBitcoinAddress();
   const trBitcoinAddress = useTrBitcoinAddress();
   const stxAddress = useCurrentStacksAccountAddress();
@@ -163,4 +165,8 @@ export function ActivityListV2() {
       <Outlet />
     </>
   );
+}
+
+export function ActivityListLegacy() {
+  return <ActivityListLegacyInner />;
 }
