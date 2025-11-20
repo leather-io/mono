@@ -2,7 +2,7 @@ import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
 import { Sticker } from '@/components/sticker';
 import { ScreenshotCard } from '@/features/browser/browser/screenshot-card';
-import { useOpenURL } from '@/features/browser/browser/use-open-url';
+import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { useApps } from '@/store/apps/apps.read';
 import { t } from '@lingui/core/macro';
 
@@ -10,7 +10,7 @@ import { Box, Text } from '@leather.io/ui/native';
 
 export default function RecentlyViewedScreen() {
   const { list: appList } = useApps('recently_visited');
-  const { openURL } = useOpenURL();
+  const { openUrl } = useOpenUrl();
   const title = t`Recently viewed`;
 
   const emptyState = (
@@ -36,7 +36,7 @@ export default function RecentlyViewedScreen() {
               key={app.origin}
               app={app}
               onPress={() => {
-                openURL(app.origin);
+                openUrl(app.origin);
               }}
             />
           ))}

@@ -1,8 +1,9 @@
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 
+import { getStacksExplorerLink } from '@leather.io/features';
+import { ChainId } from '@leather.io/models';
 import { Link } from '@leather.io/ui';
 
-import { makeStacksAddressExplorerLink } from '@app/common/utils';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 
@@ -13,6 +14,7 @@ interface FunctionArgumentItemProps {
 }
 export function FunctionArgumentItem({ name, type, value }: FunctionArgumentItemProps) {
   const { chain, isNakamotoTestnet } = useCurrentNetworkState();
+  const networkMode = chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet';
   return (
     <Stack gap="space.03">
       <HStack alignItems="center" flexShrink={0} justifyContent="space-between">
@@ -34,10 +36,11 @@ export function FunctionArgumentItem({ name, type, value }: FunctionArgumentItem
           wordBreak="break-all"
           onClick={() =>
             openInNewTab(
-              makeStacksAddressExplorerLink({
-                address: value,
+              getStacksExplorerLink({
+                mode: networkMode,
+                type: 'address',
+                value,
                 isNakamoto: isNakamotoTestnet,
-                mode: chain.bitcoin.mode,
               })
             )
           }

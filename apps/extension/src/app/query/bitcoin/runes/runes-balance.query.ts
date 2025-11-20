@@ -1,16 +1,13 @@
-import { type QueryFunctionContext, keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import {
-  type AccountRequest,
-  type RuneBalance,
-  getRunesBalancesService,
-} from '@leather.io/services';
+import { createRunesAccountBalanceQueryConfig } from '@leather.io/queries';
+import { type AccountRequest, type RuneBalance } from '@leather.io/services';
 import { isSameAsset } from '@leather.io/utils';
 
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import { balanceQueryOptionsWithRefetch } from '@app/query/common/balance-query-options';
 import { toFetchState } from '@app/services/fetch-state';
 import { useAccountAddresses } from '@app/services/use-account-addresses';
-import { useUserAllTokens } from '@app/store/manage-tokens/manage-tokens.slice';
 
 export function useManagedRunesTools(accountIndex: number) {
   const enabledRunes = useRunesAccountBalance(accountIndex);
@@ -34,11 +31,9 @@ export function useRunesAccountBalance(
 }
 
 function useGetRunesAccountBalanceQuery(request: AccountRequest) {
-  const tokenSettings = useUserAllTokens();
+  const settings = useUserSettings();
   return useQuery({
-    queryKey: ['runes-balances-service-get-runes-account-balance', request, tokenSettings],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getRunesBalancesService().getRunesAccountBalance(request, signal),
+    ...createRunesAccountBalanceQueryConfig(request, settings),
     ...balanceQueryOptionsWithRefetch,
     placeholderData: keepPreviousData,
   });

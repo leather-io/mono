@@ -7,7 +7,7 @@ import { t } from '@lingui/core/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
 
-import { useOpenURL } from '../browser/browser/use-open-url';
+import { useOpenUrl } from '../browser/browser/use-open-url';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface AnalyticsSheetProps {
@@ -16,7 +16,7 @@ interface AnalyticsSheetProps {
 export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
-  const { openURL } = useOpenURL();
+  const { openUrl } = useOpenUrl();
 
   function onUpdateAnalytics() {
     settings.changeAnalyticsPreference(
@@ -32,7 +32,7 @@ export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
     <SettingsSheetLayout
       sheetRef={sheetRef}
       title={t`Analytics`}
-      onPressSupport={() => openURL(LEATHER_GUIDES_MOBILE_ANALYTICS)}
+      onPressSupport={() => openUrl(LEATHER_GUIDES_MOBILE_ANALYTICS)}
     >
       <SettingsList>
         <SettingsListItem

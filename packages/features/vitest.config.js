@@ -2,4 +2,10 @@ import { defineProject } from 'vitest/config';
 
 import { defaultVitestUnitTestingConfig } from '@leather.io/test-config';
 
-export default defineProject({ ...defaultVitestUnitTestingConfig });
+export default defineProject({
+  ...defaultVitestUnitTestingConfig,
+  test: {
+    ...defaultVitestUnitTestingConfig.test,
+    env: 'node',
+  },
+});

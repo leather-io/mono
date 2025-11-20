@@ -59,7 +59,7 @@ export class ActivityService {
     accounts: AccountAddresses[],
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    const activityLists = await Promise.all(accounts.map(a => this.getAccountActivity(a, signal)));
+    const activityLists = await Promise.all(accounts.map(a => this.getActivity(a, signal)));
     return activityLists.flat().sort(sortActivityByTimestampDesc);
   }
 
@@ -91,7 +91,7 @@ export class ActivityService {
   /*
    * Gets activity list for an account
    */
-  public async getAccountActivity(
+  public async getActivity(
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {

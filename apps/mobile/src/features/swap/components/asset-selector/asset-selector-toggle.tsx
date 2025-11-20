@@ -1,8 +1,14 @@
-import { AssetAvatar } from '@/features/swap/components/asset-avatar';
 import { t } from '@lingui/core/macro';
 
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { Box, ChevronDownIcon, PlusIcon, Pressable, Text } from '@leather.io/ui/native';
+import {
+  AssetAvatarIcon,
+  Box,
+  ChevronDownIcon,
+  PlusIcon,
+  Pressable,
+  Text,
+} from '@leather.io/ui/native';
 
 interface AssetPickerTriggerProps {
   asset: SwappableFungibleCryptoAsset | undefined;
@@ -51,5 +57,5 @@ function renderAvatar(asset: SwappableFungibleCryptoAsset | undefined) {
     );
   }
 
-  return <AssetAvatar asset={asset} size="sm" />;
+  return <AssetAvatarIcon asset={asset} size="sm" />;
 }

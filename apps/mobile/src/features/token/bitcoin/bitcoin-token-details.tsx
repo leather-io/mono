@@ -1,5 +1,5 @@
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
-import { useAccountActivityByAsset } from '@/queries/activity/account-activity.query';
+import { useActivityByAsset } from '@/queries/activity/activity.query';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/core/macro';
 import { capitalize } from 'remeda';
@@ -23,7 +23,7 @@ interface BitcoinTokenDetailsProps {
 export function BitcoinTokenDetails({ account }: BitcoinTokenDetailsProps) {
   const { fingerprint, accountIndex } = account;
   const balance = useBtcAccountBalance(fingerprint, accountIndex);
-  const activity = useAccountActivityByAsset(fingerprint, accountIndex, btcAsset);
+  const activity = useActivityByAsset(fingerprint, accountIndex, btcAsset);
   const chain = capitalize(btcAsset.chain);
   const name = `${chain} (${btcAsset.symbol})`;
   return (

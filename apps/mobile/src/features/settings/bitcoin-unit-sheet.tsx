@@ -10,7 +10,7 @@ import { bitcoinUnitsKeyedByName } from '@leather.io/constants';
 import { BitcoinUnit } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
 
-import { useOpenURL } from '../browser/browser/use-open-url';
+import { useOpenUrl } from '../browser/browser/use-open-url';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface BitcoinUnitSheetProps {
@@ -19,7 +19,7 @@ interface BitcoinUnitSheetProps {
 export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
-  const { openURL } = useOpenURL();
+  const { openUrl } = useOpenUrl();
 
   function onUpdateBitcoinUnit(unit: BitcoinUnit) {
     settings.changeBitcoinUnitPreference(unit);
@@ -33,7 +33,7 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
     <SettingsSheetLayout
       sheetRef={sheetRef}
       title={t`Bitcoin unit`}
-      onPressSupport={() => openURL(LEATHER_GUIDES_MOBILE_BITCOIN_UNIT)}
+      onPressSupport={() => openUrl(LEATHER_GUIDES_MOBILE_BITCOIN_UNIT)}
     >
       <SettingsList gap="0">
         {Object.values(bitcoinUnitsKeyedByName).map(unit => (

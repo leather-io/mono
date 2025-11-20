@@ -1,9 +1,14 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import { AccountRequest, getBtcBalancesService } from '@leather.io/services';
+import { QuoteCurrency } from '@leather.io/models';
+import {
+  createBtcAggregateBalanceQueryConfig,
+  createBtcBalanceQueryConfig,
+} from '@leather.io/queries';
+import { AccountRequest, UserSettings } from '@leather.io/services';
 
 import { balanceQueryOptions } from './balance-query-options';
 
@@ -69,21 +74,29 @@ export function useBtcAccountTaprootBalance(fingerprint: string, accountIndex: n
 }
 
 export function useBtcAccountBalanceQuery(request: AccountRequest) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
+  const settings: UserSettings = {
+    network: networkPreference,
+    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    assetVisibility,
+  };
+
   return useQuery({
-    queryKey: ['btc-balance-service-get-btc-account-balance', request, fiatCurrencyPreference],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getBtcBalancesService().getBtcAccountBalance(request, signal),
+    ...createBtcBalanceQueryConfig(request, settings),
     ...balanceQueryOptions,
   });
 }
 
 function useBtcAggregateBalanceQuery(requests: AccountRequest[]) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
+  const settings: UserSettings = {
+    network: networkPreference,
+    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    assetVisibility,
+  };
+
   return useQuery({
-    queryKey: ['btc-balance-service-get-btc-aggregate-balance', requests, fiatCurrencyPreference],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getBtcBalancesService().getBtcAggregateBalance(requests, signal),
+    ...createBtcAggregateBalanceQueryConfig(requests, settings),
     ...balanceQueryOptions,
   });
 }

@@ -1,10 +1,14 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { AccountId, QuoteCurrency } from '@leather.io/models';
-import { AccountRequest, getAccountBalancesService } from '@leather.io/services';
+import {
+  createAccountTotalBalanceQueryConfig,
+  createAccountUnlockedBalanceQueryConfig,
+} from '@leather.io/queries';
+import { AccountRequest, UserSettings } from '@leather.io/services';
 
 import { balanceQueryOptions } from './balance-query-options';
 
@@ -30,17 +34,16 @@ export function useGetAccountTotalBalanceQuery(
   request: AccountRequest,
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {
-  const { fiatCurrencyPreference, assetVisibility } = useSettings();
+  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const currencyPreference = overrideFiatCurrencyPreference ?? fiatCurrencyPreference;
+  const settings: UserSettings = {
+    network: networkPreference,
+    quoteCurrency: currencyPreference,
+    assetVisibility,
+  };
+
   return useQuery({
-    queryKey: [
-      'account-balances-service-get-total-balance',
-      request,
-      currencyPreference,
-      assetVisibility,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getAccountBalancesService().getTotalBalance(request, signal),
+    ...createAccountTotalBalanceQueryConfig(request, settings),
     ...balanceQueryOptions,
   });
 }
@@ -49,17 +52,16 @@ export function useGetAccountUnlockedBalanceQuery(
   request: AccountRequest,
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {
-  const { fiatCurrencyPreference, assetVisibility } = useSettings();
+  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const currencyPreference = overrideFiatCurrencyPreference ?? fiatCurrencyPreference;
+  const settings: UserSettings = {
+    network: networkPreference,
+    quoteCurrency: currencyPreference,
+    assetVisibility,
+  };
+
   return useQuery({
-    queryKey: [
-      'account-balances-service-get-unlocked-balance',
-      request,
-      currencyPreference,
-      assetVisibility,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getAccountBalancesService().getUnlockedBalance(request, signal),
+    ...createAccountUnlockedBalanceQueryConfig(request, settings),
     ...balanceQueryOptions,
   });
 }

@@ -12,7 +12,7 @@ import { t } from '@lingui/core/macro';
 import { AccountDisplayPreference } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
 
-import { useOpenURL } from '../browser/browser/use-open-url';
+import { useOpenUrl } from '../browser/browser/use-open-url';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface AccountIdentifierSheetProps {
@@ -21,7 +21,7 @@ interface AccountIdentifierSheetProps {
 export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
-  const { openURL } = useOpenURL();
+  const { openUrl } = useOpenUrl();
 
   function onUpdateAccountDisplayPreference(identifier: AccountDisplayPreference) {
     settings.changeAccountDisplayPreference(identifier);
@@ -36,7 +36,7 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
       sheetRef={sheetRef}
       title={t`Account identifier`}
       onPressSupport={() => {
-        openURL(LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER);
+        openUrl(LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER);
       }}
     >
       <SettingsList gap="0">

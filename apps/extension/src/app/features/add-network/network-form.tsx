@@ -2,6 +2,7 @@ import { NetworkSelectors } from '@tests/selectors/network.selectors';
 import { Form, Formik } from 'formik';
 import { Stack, styled } from 'leather-styles/jsx';
 
+import { MEMPOOL_BASE_URL } from '@leather.io/constants';
 import { Button, Link } from '@leather.io/ui';
 
 import { ErrorLabel } from '@app/components/error-label';
@@ -52,7 +53,7 @@ export function NetworkForm({ isEditNetworkMode, title }: NetworkFormProps) {
                   Stacks Blockchain API
                 </Link>{' '}
                 or{' '}
-                <Link href="https://mempool.space/docs/api/rest" target="_blank" rel="noreferrer">
+                <Link href={`${MEMPOOL_BASE_URL}/docs/api/rest`} target="_blank" rel="noreferrer">
                   Bitcoin Blockchain API
                 </Link>
                 . Make sure you review and trust the host before you add it.

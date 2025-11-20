@@ -1,15 +1,12 @@
+import type { ReactElement } from 'react';
+
 import SbtcIcon from '../../assets/icons/sbtc.svg';
 import StacksIcon from '../../assets/icons/stacks.svg';
 import { Avatar, type AvatarProps } from './avatar.native';
-
-function getFallbackAvatar(contractId: string) {
-  // TODO LEA-2264 use avatars from Alex API
-  // extension uses StacksAssetAvatar and DynamicColorCircle for this
-  return `https://avatar.vercel.sh/${contractId}?size=36`;
-}
+import { getSip10AvatarImage } from './avatar.shared';
 
 interface Sip10AvatarIconProps extends Omit<AvatarProps, 'indicator'> {
-  indicator?: boolean;
+  indicator?: 'stacksIcon' | ReactElement;
   contractId: string;
   imageCanonicalUri: string;
   name: string;
@@ -19,11 +16,11 @@ export function Sip10AvatarIcon({
   contractId,
   imageCanonicalUri,
   name,
-  indicator = false,
+  indicator,
   ...props
 }: Sip10AvatarIconProps) {
-  // TODO LEA-2551: use leather design system for more avatars
-  const indicatorIcon = indicator ? <StacksIcon width={16} height={16} /> : undefined;
+  const indicatorIcon =
+    indicator === 'stacksIcon' ? <StacksIcon width={16} height={16} /> : indicator;
 
   if (name === 'sBTC') {
     return (
@@ -33,7 +30,7 @@ export function Sip10AvatarIcon({
 
   return (
     <Avatar
-      image={imageCanonicalUri !== '' ? imageCanonicalUri : getFallbackAvatar(contractId)}
+      image={getSip10AvatarImage({ imageCanonicalUri, contractId, name })}
       imageAlt={name}
       indicator={indicatorIcon}
       {...props}

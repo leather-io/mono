@@ -1,9 +1,15 @@
 import { toFetchState } from '@/components/loading';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useSettings } from '@/store/settings/settings';
+import { useQuery } from '@tanstack/react-query';
 
-import { AccountRequest, getBnsService } from '@leather.io/services';
-import { hoursInMs } from '@leather.io/utils';
+import { QuoteCurrency } from '@leather.io/models';
+import {
+  createAccountBnsNamesQueryConfig,
+  createAccountPrimaryBnsProfileQueryConfig,
+  createBnsNameQueryConfig,
+} from '@leather.io/queries';
+import { AccountRequest, UserSettings } from '@leather.io/services';
 
 export function useAccountPrimaryBnsProfile(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
@@ -16,43 +22,41 @@ export function useAccountBnsNames(fingerprint: string, accountIndex: number) {
 }
 
 export function useGetBnsName(fullName?: string) {
+  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
+  const settings: UserSettings = {
+    network: networkPreference,
+    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    assetVisibility,
+  };
+
   return useQuery({
-    queryKey: ['bns-service-get-bns-name', fullName],
     enabled: !!fullName,
-    queryFn: ({ signal }: QueryFunctionContext) => getBnsService().getBnsName(fullName!, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: hoursInMs(1),
-    gcTime: hoursInMs(1),
+    ...createBnsNameQueryConfig(fullName!, settings),
   });
 }
 
 function useGetAccountPrimaryBnsProfileQuery(request: AccountRequest) {
+  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
+  const settings: UserSettings = {
+    network: networkPreference,
+    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    assetVisibility,
+  };
+
   return useQuery({
-    queryKey: ['bns-service-get-account-primary-bns-profile', request.account.stacks],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getBnsService().getAccountPrimaryBnsProfile(request, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: hoursInMs(1),
-    gcTime: hoursInMs(1),
+    ...createAccountPrimaryBnsProfileQueryConfig(request, settings),
   });
 }
 
 function useGetAccountBnsNamesQuery(request: AccountRequest) {
+  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
+  const settings: UserSettings = {
+    network: networkPreference,
+    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    assetVisibility,
+  };
+
   return useQuery({
-    queryKey: ['bns-service-get-account-bns-names', request.account.stacks],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getBnsService().getAccountBnsNames(request, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: hoursInMs(1),
-    gcTime: hoursInMs(1),
+    ...createAccountBnsNamesQueryConfig(request, settings),
   });
 }
