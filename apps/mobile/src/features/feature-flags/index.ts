@@ -7,6 +7,8 @@ import {
 } from '@launchdarkly/react-native-client-sdk';
 import * as Application from 'expo-application';
 
+import { launchDarklyFlagKeys } from '@leather.io/models';
+
 export const featureFlagClient = new ReactNativeLDClient(
   // TODO: do not fallback to empty string
   process.env.EXPO_PUBLIC_LAUNCH_DARKLY ?? '',
@@ -33,73 +35,73 @@ export async function setupFeatureFlags() {
   });
 }
 export function useBrowserFlag() {
-  return useBoolVariation('release_browser_feature', false);
+  return useBoolVariation(launchDarklyFlagKeys.releaseBrowserFeature, false);
 }
 
 export function useCollectiblesFlag() {
-  return useBoolVariation('release_collectibles_feature', false);
+  return useBoolVariation(launchDarklyFlagKeys.releaseCollectiblesFeature, false);
 }
 export function useCollectibleDetailsFlag() {
-  return useBoolVariation('collectible_details', false);
+  return useBoolVariation(launchDarklyFlagKeys.collectibleDetails, false);
 }
 
 export function useNotificationsFlag() {
-  return useBoolVariation('release_push_notifications', false);
+  return useBoolVariation(launchDarklyFlagKeys.releasePushNotifications, false);
 }
 
 export function useWaitlistFlag() {
-  return useBoolVariation('release_waitlist_features', false);
+  return useBoolVariation(launchDarklyFlagKeys.releaseWaitlistFeatures, false);
 }
 
 export function useDynamicFeeFlag() {
-  return useBoolVariation('release_dynamic_fee_feature', false);
+  return useBoolVariation(launchDarklyFlagKeys.releaseDynamicFeeFeature, false);
 }
 
 export function useEarnFlag() {
-  return useBoolVariation('release_earn_feature', false);
+  return useBoolVariation(launchDarklyFlagKeys.releaseEarnFeature, false);
 }
 
 export function useDappSuggestions() {
-  return useBoolVariation('release_dapp_suggestions_feature', false);
+  return useBoolVariation(launchDarklyFlagKeys.releaseDappSuggestionsFeature, false);
 }
 
 export function useSip10SendFlag() {
-  return useBoolVariation('release_sip10_send_feature', false);
+  return useBoolVariation(launchDarklyFlagKeys.releaseSip10SendFeature, false);
 }
 
 export function useSendPasteButton() {
-  return useBoolVariation('send_paste_button', false);
+  return useBoolVariation(launchDarklyFlagKeys.sendPasteButton, false);
 }
 
 export function useTokenDetailsFlag() {
-  return useBoolVariation('token_details', false);
+  return useBoolVariation(launchDarklyFlagKeys.tokenDetails, false);
 }
 
 // Setting an empty string will not enforce a minimum version and will skip the check.
 export function useMinimumAppVersion() {
-  return useStringVariation('minimum_app_version', '');
+  return useStringVariation(launchDarklyFlagKeys.minimumAppVersion, '');
 }
 
 export function useBtcConversionUnitFlag() {
-  return useBoolVariation('release_btc_conversion_unit_feature', false);
+  return useBoolVariation(launchDarklyFlagKeys.releaseBtcConversionUnitFeature, false);
 }
 
 export function useInternationalizationFlag() {
-  return useBoolVariation('internationalization', false);
+  return useBoolVariation(launchDarklyFlagKeys.internationalization, false);
 }
 
 export function useTokenManagementFlag() {
-  return useBoolVariation('release_token_management', false);
+  return useBoolVariation(launchDarklyFlagKeys.releaseTokenManagement, false);
 }
 
 export function useSwapFlag() {
-  return useBoolVariation('swap', false);
+  return useBoolVariation(launchDarklyFlagKeys.swap, false);
 }
 
 export function useOnramperBuyFlag() {
-  return useBoolVariation('release_onramper_buy', false);
+  return useBoolVariation(launchDarklyFlagKeys.releaseOnramperBuy, false);
 }
 
 export function useOnramperSellFlag() {
-  return useBoolVariation('release_onramper_sell', false);
+  return useBoolVariation(launchDarklyFlagKeys.releaseOnramperSell, false);
 }

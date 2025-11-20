@@ -1,7 +1,8 @@
 import { asyncWithLDProvider, useFlags as useLDFlags } from 'launchdarkly-react-client-sdk';
-import { featureFlagDefaults, type FeatureFlags } from '@leather.io/models';
 import { VERSION } from '~/constants/constants';
 import { getClientId } from '~/utils/client-id';
+
+import { type FeatureFlags, featureFlagDefaults } from '@leather.io/models';
 
 export function createLDProvider() {
   return asyncWithLDProvider({
