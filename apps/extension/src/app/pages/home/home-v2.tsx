@@ -8,9 +8,10 @@ import { RouteUrls } from '@shared/route-urls';
 import { formatCurrency } from '@app/common/currency-formatter';
 import { whenPageMode } from '@app/common/utils';
 import { ActivityList } from '@app/features/activity-list/activity-list';
+import { Collectibles } from '@app/features/collectibles/collectibles';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
-import { Assets } from '@app/pages/home/components/assets';
+import { AssetsV2 } from '@app/pages/home/components/assets-v2';
 import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
 import { AccountCard } from '@app/ui/components/account/account.card';
@@ -66,8 +67,11 @@ export function HomeV2() {
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
       <HomeTabs>
         <ModalBackgroundWrapper>
-          <Route index element={<Assets />} />
+          <Route index element={<AssetsV2 />} />
           <Route path={RouteUrls.Activity} element={<ActivityList />}>
+            {homePageModalRoutes}
+          </Route>
+          <Route path={RouteUrls.Collectibles} element={<Collectibles />}>
             {homePageModalRoutes}
           </Route>
           {homePageModalRoutes}

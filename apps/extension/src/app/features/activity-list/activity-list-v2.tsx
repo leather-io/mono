@@ -4,7 +4,6 @@ import { Outlet } from 'react-router';
 import uniqby from 'lodash.uniqby';
 
 import { LoadingSpinner } from '@app/components/loading-spinner';
-import { useFlags } from '@app/features/feature-flags';
 import { useBitcoinPendingTransactions } from '@app/query/bitcoin/address/transactions-by-address.hooks';
 import { useGetBitcoinTransactionsByAddressListQuery } from '@app/query/bitcoin/address/transactions-by-address.query';
 import { useConfigBitcoinEnabled } from '@app/query/common/remote-config/remote-config.query';
@@ -21,7 +20,6 @@ import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/s
 import { useUpdateSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.hooks';
 import { useSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.selectors';
 
-import { ActivityListV2 } from './activity-list-v2';
 import {
   convertBitcoinTxsToListType,
   convertSbtcDepositToListType,
@@ -33,8 +31,6 @@ import { SubmittedTransactionList } from './components/submitted-transaction-lis
 import { ActivityListTabWrapper } from './components/tab-wrapper';
 import { TransactionList } from './components/transaction-list/transaction-list';
 
-// TODO: temporary really ugly fix while we address conditional data problem of
-// bitcoin sometimes being undefined
 function useNsBitcoinAddress() {
   try {
     return useCurrentAccountNativeSegwitIndexZeroSigner().address;
@@ -51,7 +47,7 @@ function useTrBitcoinAddress() {
   }
 }
 
-function ActivityListV1() {
+export function ActivityListV2() {
   const nsBitcoinAddress = useNsBitcoinAddress();
   const trBitcoinAddress = useTrBitcoinAddress();
   const stxAddress = useCurrentStacksAccountAddress();
@@ -167,10 +163,4 @@ function ActivityListV1() {
       <Outlet />
     </>
   );
-}
-
-export function ActivityList() {
-  const { extension_revamp } = useFlags();
-  if (extension_revamp) return <ActivityListV2 />;
-  return <ActivityListV1 />;
 }
