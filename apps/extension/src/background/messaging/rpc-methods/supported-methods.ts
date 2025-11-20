@@ -43,6 +43,10 @@ export const supportedMethodsHandler = defineRpcRequestHandler(
               name: 'openSwap',
               docsUrl: 'https://leather.gitbook.io/developers/bitcoin/swaps/open-swap',
             },
+            {
+              name: 'stx_personalSign',
+              docsUrl: 'https://leather.gitbook.io/developers/stacks/sign-in-with-stacks',
+            },
           ],
         },
       })

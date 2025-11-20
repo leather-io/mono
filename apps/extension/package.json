@@ -164,6 +164,7 @@
     "remark-gfm": "4.0.1",
     "rxjs": "7.8.1",
     "sbtc": "0.3.2",
+    "sign-in-with-stacks": "0.1.6",
     "style-loader": "4.0.0",
     "superjson": "2.2.2",
     "ts-debounce": "4.0.0",

@@ -470,6 +470,9 @@ importers:
       sbtc:
         specifier: 0.3.2
         version: 0.3.2(encoding@0.1.13)
+      sign-in-with-stacks:
+        specifier: 0.1.6
+        version: 0.1.6(@stacks/common@7.0.2)(@stacks/encryption@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
       style-loader:
         specifier: 4.0.0
         version: 4.0.0(webpack@5.94.0)
@@ -1619,7 +1622,7 @@ importers:
         version: 7.10.0(debug@4.4.3)
       '@sanity/code-input':
         specifier: 6.0.1
-        version: 6.0.1(@babel/runtime@7.28.4)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.2.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react-is@19.1.1)(react@19.0.0)(sanity@4.6.1(@emotion/is-prop-valid@1.2.2)(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.1(@types/react@19.0.12)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.0.12)(debug@4.4.1)))(@types/node@24.3.0)(@types/react-dom@19.1.6(@types/react@19.1.12))(@types/react@19.0.12)(immer@10.1.3)(jiti@2.5.1)(lightningcss@1.27.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(terser@5.39.2)(typescript@5.8.3)(yaml@2.8.1))(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))
+        version: 6.0.1(@babel/runtime@7.26.0)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.2.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react-is@19.1.1)(react@19.0.0)(sanity@4.6.1(@emotion/is-prop-valid@1.2.2)(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.1(@types/react@19.0.12)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.0.12)(debug@4.4.1)))(@types/node@24.3.0)(@types/react-dom@19.1.6(@types/react@19.1.12))(@types/react@19.0.12)(immer@10.1.3)(jiti@2.5.1)(lightningcss@1.27.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(terser@5.39.2)(typescript@5.8.3)(yaml@2.8.1))(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))
       groq:
         specifier: 4.6.0
         version: 4.6.0
@@ -1644,7 +1647,7 @@ importers:
         version: 3.7.4(react@19.0.0)
       '@sanity/vision':
         specifier: 4.6.1
-        version: 4.6.1(@babel/runtime@7.28.4)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.2.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react-is@19.1.1)(react@19.0.0)(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))
+        version: 4.6.1(@babel/runtime@7.26.0)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.2.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react-is@19.1.1)(react@19.0.0)(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))
       '@types/react':
         specifier: 19.0.12
         version: 19.0.12
@@ -1748,7 +1751,7 @@ importers:
         version: 15.12.0
       typescript-eslint:
         specifier: 8.18.0
-        version: 8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)
+        version: 8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.8.3)
 
   packages/features:
     dependencies:
@@ -2045,6 +2048,9 @@ importers:
       '@stacks/transactions':
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
+      sign-in-with-stacks:
+        specifier: 0.1.6
+        version: 0.1.6(@stacks/common@7.0.2)(@stacks/encryption@7.2.0)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
       zod:
         specifier: 4.0.17
         version: 4.0.17
@@ -21116,6 +21122,14 @@ packages:
     resolution: {integrity: sha512-7nHlCzhQgVMLBNiXVEgbG/raq48awOW0lYMN5uo1BaB3mp0+k8M8pvDwbfTlr3apcxZJsk9HQsAW1POwoJugpQ==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
+  sign-in-with-stacks@0.1.6:
+    resolution: {integrity: sha512-B4T+5fRrEAX+3mnycjBfbV7nlVNvLb2cPUWCz/yncgW4DiXDJzfbt4LoeGHR/U+H+8wuwvbB11Xiz+v2LljgAw==}
+    peerDependencies:
+      '@stacks/common': ^7.0.2
+      '@stacks/encryption': ^7.0.2
+      '@stacks/network': ^7.0.2
+      '@stacks/transactions': ^7.0.2
+
   signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
 
@@ -31700,9 +31714,9 @@ snapshots:
   '@redux-devtools/ui@1.4.0(@types/react@18.3.24)(@types/styled-components@5.1.34)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.28.4)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))':
     dependencies:
       '@babel/runtime': 7.28.4
-      '@rjsf/core': 5.24.13(@rjsf/utils@5.24.13(react@19.0.0))(react@18.3.1)
+      '@rjsf/core': 5.24.13(@rjsf/utils@5.24.13(react@18.3.1))(react@18.3.1)
       '@rjsf/utils': 5.24.13(react@18.3.1)
-      '@rjsf/validator-ajv8': 5.24.13(@rjsf/utils@5.24.13(react@19.0.0))
+      '@rjsf/validator-ajv8': 5.24.13(@rjsf/utils@5.24.13(react@18.3.1))
       '@types/codemirror': 5.60.16
       '@types/json-schema': 7.0.15
       '@types/react': 18.3.24
@@ -31783,9 +31797,9 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@rjsf/core@5.24.13(@rjsf/utils@5.24.13(react@19.0.0))(react@18.3.1)':
+  '@rjsf/core@5.24.13(@rjsf/utils@5.24.13(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@rjsf/utils': 5.24.13(react@19.0.0)
+      '@rjsf/utils': 5.24.13(react@18.3.1)
       lodash: 4.17.21
       lodash-es: 4.17.21
       markdown-to-jsx: 7.7.6(react@18.3.1)
@@ -31801,18 +31815,9 @@ snapshots:
       react: 18.3.1
       react-is: 18.3.1
 
-  '@rjsf/utils@5.24.13(react@19.0.0)':
+  '@rjsf/validator-ajv8@5.24.13(@rjsf/utils@5.24.13(react@18.3.1))':
     dependencies:
-      json-schema-merge-allof: 0.8.1
-      jsonpointer: 5.0.1
-      lodash: 4.17.21
-      lodash-es: 4.17.21
-      react: 19.0.0
-      react-is: 18.3.1
-
-  '@rjsf/validator-ajv8@5.24.13(@rjsf/utils@5.24.13(react@19.0.0))':
-    dependencies:
-      '@rjsf/utils': 5.24.13(react@19.0.0)
+      '@rjsf/utils': 5.24.13(react@18.3.1)
       ajv: 8.17.1
       ajv-formats: 2.1.1(ajv@8.17.1)
       lodash: 4.17.21
@@ -32106,7 +32111,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@sanity/code-input@6.0.1(@babel/runtime@7.28.4)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.2.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react-is@19.1.1)(react@19.0.0)(sanity@4.6.1(@emotion/is-prop-valid@1.2.2)(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.1(@types/react@19.0.12)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.0.12)(debug@4.4.1)))(@types/node@24.3.0)(@types/react-dom@19.1.6(@types/react@19.1.12))(@types/react@19.0.12)(immer@10.1.3)(jiti@2.5.1)(lightningcss@1.27.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(terser@5.39.2)(typescript@5.8.3)(yaml@2.8.1))(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))':
+  '@sanity/code-input@6.0.1(@babel/runtime@7.26.0)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.2.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react-is@19.1.1)(react@19.0.0)(sanity@4.6.1(@emotion/is-prop-valid@1.2.2)(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.1(@types/react@19.0.12)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.0.12)(debug@4.4.1)))(@types/node@24.3.0)(@types/react-dom@19.1.6(@types/react@19.1.12))(@types/react@19.0.12)(immer@10.1.3)(jiti@2.5.1)(lightningcss@1.27.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(terser@5.39.2)(typescript@5.8.3)(yaml@2.8.1))(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))':
     dependencies:
       '@codemirror/autocomplete': 6.19.0
       '@codemirror/commands': 6.9.0
@@ -32128,7 +32133,7 @@ snapshots:
       '@sanity/incompatible-plugin': 1.0.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@sanity/ui': 3.0.8(@emotion/is-prop-valid@1.2.2)(react-dom@19.0.0(react@19.0.0))(react-is@19.1.1)(react@19.0.0)(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))
       '@uiw/codemirror-themes': 4.25.2(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.38.6)
-      '@uiw/react-codemirror': 4.25.1(@babel/runtime@7.28.4)(@codemirror/autocomplete@6.19.0)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.6)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@uiw/react-codemirror': 4.25.1(@babel/runtime@7.26.0)(@codemirror/autocomplete@6.19.0)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.6)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       sanity: 4.6.1(@emotion/is-prop-valid@1.2.2)(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.1(@types/react@19.0.12)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.0.12)(debug@4.4.1)))(@types/node@24.3.0)(@types/react-dom@19.1.6(@types/react@19.1.12))(@types/react@19.0.12)(immer@10.1.3)(jiti@2.5.1)(lightningcss@1.27.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(terser@5.39.2)(typescript@5.8.3)(yaml@2.8.1)
@@ -32557,7 +32562,7 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
-  '@sanity/vision@4.6.1(@babel/runtime@7.28.4)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.2.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react-is@19.1.1)(react@19.0.0)(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))':
+  '@sanity/vision@4.6.1(@babel/runtime@7.26.0)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.2.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react-is@19.1.1)(react@19.0.0)(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))':
     dependencies:
       '@codemirror/autocomplete': 6.18.7
       '@codemirror/commands': 6.8.1
@@ -32574,7 +32579,7 @@ snapshots:
       '@sanity/icons': 3.7.4(react@19.0.0)
       '@sanity/ui': 3.0.8(@emotion/is-prop-valid@1.2.2)(react-dom@19.0.0(react@19.0.0))(react-is@19.1.1)(react@19.0.0)(styled-components@6.1.18(react-dom@19.0.0(react@19.0.0))(react@19.0.0))
       '@sanity/uuid': 3.0.2
-      '@uiw/react-codemirror': 4.25.1(@babel/runtime@7.28.4)(@codemirror/autocomplete@6.18.7)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@uiw/react-codemirror': 4.25.1(@babel/runtime@7.26.0)(@codemirror/autocomplete@6.18.7)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       is-hotkey-esm: 1.0.0
       json-2-csv: 5.5.9
       json5: 2.2.3
@@ -36120,23 +36125,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/eslint-plugin@8.18.0(@typescript-eslint/parser@8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)':
-    dependencies:
-      '@eslint-community/regexpp': 4.12.1
-      '@typescript-eslint/parser': 8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)
-      '@typescript-eslint/scope-manager': 8.18.0
-      '@typescript-eslint/type-utils': 8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)
-      '@typescript-eslint/utils': 8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)
-      '@typescript-eslint/visitor-keys': 8.18.0
-      eslint: 9.28.0(jiti@2.5.1)
-      graphemer: 1.4.0
-      ignore: 5.3.2
-      natural-compare: 1.4.0
-      ts-api-utils: 1.4.3(typescript@5.9.2)
-      typescript: 5.9.2
-    transitivePeerDependencies:
-      - supports-color
-
   '@typescript-eslint/parser@7.5.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.8.3)':
     dependencies:
       '@typescript-eslint/scope-manager': 7.5.0
@@ -36159,18 +36147,6 @@ snapshots:
       debug: 4.4.3(supports-color@8.1.1)
       eslint: 9.28.0(jiti@2.5.1)
       typescript: 5.8.3
-    transitivePeerDependencies:
-      - supports-color
-
-  '@typescript-eslint/parser@8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)':
-    dependencies:
-      '@typescript-eslint/scope-manager': 8.18.0
-      '@typescript-eslint/types': 8.18.0
-      '@typescript-eslint/typescript-estree': 8.18.0(typescript@5.9.2)
-      '@typescript-eslint/visitor-keys': 8.18.0
-      debug: 4.4.3(supports-color@8.1.1)
-      eslint: 9.28.0(jiti@2.5.1)
-      typescript: 5.9.2
     transitivePeerDependencies:
       - supports-color
 
@@ -36214,17 +36190,6 @@ snapshots:
       eslint: 9.28.0(jiti@2.5.1)
       ts-api-utils: 1.4.3(typescript@5.8.3)
       typescript: 5.8.3
-    transitivePeerDependencies:
-      - supports-color
-
-  '@typescript-eslint/type-utils@8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)':
-    dependencies:
-      '@typescript-eslint/typescript-estree': 8.18.0(typescript@5.9.2)
-      '@typescript-eslint/utils': 8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)
-      debug: 4.4.3(supports-color@8.1.1)
-      eslint: 9.28.0(jiti@2.5.1)
-      ts-api-utils: 1.4.3(typescript@5.9.2)
-      typescript: 5.9.2
     transitivePeerDependencies:
       - supports-color
 
@@ -36280,20 +36245,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/typescript-estree@8.18.0(typescript@5.9.2)':
-    dependencies:
-      '@typescript-eslint/types': 8.18.0
-      '@typescript-eslint/visitor-keys': 8.18.0
-      debug: 4.4.3(supports-color@8.1.1)
-      fast-glob: 3.3.3
-      is-glob: 4.0.3
-      minimatch: 9.0.5
-      semver: 7.7.3
-      ts-api-utils: 1.4.3(typescript@5.9.2)
-      typescript: 5.9.2
-    transitivePeerDependencies:
-      - supports-color
-
   '@typescript-eslint/typescript-estree@8.32.1(typescript@5.8.3)':
     dependencies:
       '@typescript-eslint/types': 8.32.1
@@ -36344,17 +36295,6 @@ snapshots:
       '@typescript-eslint/typescript-estree': 8.18.0(typescript@5.8.3)
       eslint: 9.28.0(jiti@2.5.1)
       typescript: 5.8.3
-    transitivePeerDependencies:
-      - supports-color
-
-  '@typescript-eslint/utils@8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)':
-    dependencies:
-      '@eslint-community/eslint-utils': 4.7.0(eslint@9.28.0(jiti@2.5.1))
-      '@typescript-eslint/scope-manager': 8.18.0
-      '@typescript-eslint/types': 8.18.0
-      '@typescript-eslint/typescript-estree': 8.18.0(typescript@5.9.2)
-      eslint: 9.28.0(jiti@2.5.1)
-      typescript: 5.9.2
     transitivePeerDependencies:
       - supports-color
 
@@ -36415,9 +36355,9 @@ snapshots:
       '@codemirror/state': 6.5.2
       '@codemirror/view': 6.38.6
 
-  '@uiw/react-codemirror@4.25.1(@babel/runtime@7.28.4)(@codemirror/autocomplete@6.18.7)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@uiw/react-codemirror@4.25.1(@babel/runtime@7.26.0)(@codemirror/autocomplete@6.18.7)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.2)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.26.0
       '@codemirror/commands': 6.9.0
       '@codemirror/state': 6.5.2
       '@codemirror/theme-one-dark': 6.1.3
@@ -36432,9 +36372,9 @@ snapshots:
       - '@codemirror/lint'
       - '@codemirror/search'
 
-  '@uiw/react-codemirror@4.25.1(@babel/runtime@7.28.4)(@codemirror/autocomplete@6.19.0)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.6)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@uiw/react-codemirror@4.25.1(@babel/runtime@7.26.0)(@codemirror/autocomplete@6.19.0)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.6)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.26.0
       '@codemirror/commands': 6.9.0
       '@codemirror/state': 6.5.2
       '@codemirror/theme-one-dark': 6.1.3
@@ -48910,6 +48850,20 @@ snapshots:
       source-map-support: 0.5.21
       stream-to-promise: 3.0.0
 
+  sign-in-with-stacks@0.1.6(@stacks/common@7.0.2)(@stacks/encryption@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13)):
+    dependencies:
+      '@stacks/common': 7.0.2
+      '@stacks/encryption': 7.0.2
+      '@stacks/network': 7.0.2(encoding@0.1.13)
+      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+
+  sign-in-with-stacks@0.1.6(@stacks/common@7.0.2)(@stacks/encryption@7.2.0)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13)):
+    dependencies:
+      '@stacks/common': 7.0.2
+      '@stacks/encryption': 7.2.0
+      '@stacks/network': 7.0.2(encoding@0.1.13)
+      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+
   signal-exit@3.0.7: {}
 
   signal-exit@4.1.0: {}
@@ -49974,10 +49928,6 @@ snapshots:
     dependencies:
       typescript: 5.8.3
 
-  ts-api-utils@1.4.3(typescript@5.9.2):
-    dependencies:
-      typescript: 5.9.2
-
   ts-api-utils@2.1.0(typescript@5.8.3):
     dependencies:
       typescript: 5.8.3
@@ -50319,16 +50269,6 @@ snapshots:
       '@typescript-eslint/utils': 8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.8.3)
       eslint: 9.28.0(jiti@2.5.1)
       typescript: 5.8.3
-    transitivePeerDependencies:
-      - supports-color
-
-  typescript-eslint@8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2):
-    dependencies:
-      '@typescript-eslint/eslint-plugin': 8.18.0(@typescript-eslint/parser@8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)
-      '@typescript-eslint/parser': 8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)
-      '@typescript-eslint/utils': 8.18.0(eslint@9.28.0(jiti@2.5.1))(typescript@5.9.2)
-      eslint: 9.28.0(jiti@2.5.1)
-      typescript: 5.9.2
     transitivePeerDependencies:
       - supports-color
 

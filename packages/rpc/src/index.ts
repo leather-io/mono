@@ -13,6 +13,7 @@ import { stxCallContract } from './methods/stacks/stx-call-contract';
 import { stxDeployContract } from './methods/stacks/stx-deploy-contract';
 import { stxGetAddresses } from './methods/stacks/stx-get-addresses';
 import { stxGetNetworks } from './methods/stacks/stx-get-networks';
+import { stxPersonalSign } from './methods/stacks/stx-personal-sign';
 import { stxSignMessage } from './methods/stacks/stx-sign-message';
 import { stxSignStructuredMessage } from './methods/stacks/stx-sign-structured-message';
 import { stxSignTransaction } from './methods/stacks/stx-sign-transaction';
@@ -32,6 +33,7 @@ export * from './methods/bitcoin/send-transfer';
 export * from './methods/bitcoin/sign-message';
 export * from './methods/stacks/_clarity-values';
 export * from './methods/stacks/_stacks-helpers';
+export * from './methods/stacks/stx-personal-sign';
 export * from './methods/stacks/stx-sign-message';
 export * from './methods/stacks/stx-sign-structured-message';
 export * from './methods/stacks/stx-sign-transaction';
@@ -58,6 +60,7 @@ export const endpoints = {
   stxDeployContract,
   stxGetAddresses,
   stxGetNetworks,
+  stxPersonalSign,
   stxSignMessage,
   stxSignStructuredMessage,
   stxSignTransaction,

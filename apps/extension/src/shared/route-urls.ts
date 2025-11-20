@@ -93,6 +93,7 @@ export enum RouteUrls {
   RpcSendTransferSummary = '/send-transfer/summary',
   RpcSignBip322Message = '/sign-bip322-message',
   RpcStacksSignature = '/sign-stacks-message',
+  RpcPersonalSign = '/rpc-personal-sign',
 
   // Popup routes
   ChooseAccount = '/choose-account',

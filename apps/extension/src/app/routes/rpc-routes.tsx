@@ -8,6 +8,7 @@ import { ledgerBitcoinTxSigningRoutes } from '@app/features/ledger/flows/bitcoin
 import { ledgerStacksMessageSigningRoutes } from '@app/features/ledger/flows/stacks-message-signing/ledger-stacks-sign-msg.routes';
 import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-tx-signing/ledger-sign-stacks-tx-container';
 import { RpcGetAddresses } from '@app/pages/rpc-get-addresses/rpc-get-addresses';
+import { RpcPersonalSign } from '@app/pages/rpc-personal-sign/rpc-personal-sign';
 import { rpcSendTransferRoutes } from '@app/pages/rpc-send-transfer/rpc-send-transfer.routes';
 import { RpcSignPsbt } from '@app/pages/rpc-sign-psbt/rpc-sign-psbt';
 import { RpcSignPsbtSummary } from '@app/pages/rpc-sign-psbt/rpc-sign-psbt-summary';
@@ -79,6 +80,19 @@ export const rpcRequestRoutes = (
         <AccountGate>
           <Suspense fallback={<SuspenseLoadingSpinner />}>
             <RpcStacksMessageSigning />
+          </Suspense>
+        </AccountGate>
+      }
+    >
+      {ledgerStacksMessageSigningRoutes}
+    </Route>
+
+    <Route
+      path={RouteUrls.RpcPersonalSign}
+      element={
+        <AccountGate>
+          <Suspense fallback={<SuspenseLoadingSpinner />}>
+            <RpcPersonalSign />
           </Suspense>
         </AccountGate>
       }
