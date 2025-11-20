@@ -95,7 +95,7 @@ export function useSwapQuotesQuery({
   slippage,
   queryOptions,
 }: UseSwapQuotesQueryParams) {
-  const minFetchDuration = 1000;
+  const minFetchDuration = 500;
   const debounceDelay = 350;
   const debouncedBaseAmount = useDebouncedValue(baseAmount, debounceDelay);
 
