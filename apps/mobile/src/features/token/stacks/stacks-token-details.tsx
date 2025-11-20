@@ -1,5 +1,5 @@
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
-import { useAccountActivityByAsset } from '@/queries/activity/account-activity.query';
+import { useActivityByAsset } from '@/queries/activity/activity.query';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
 import { capitalize } from 'remeda';
@@ -21,7 +21,7 @@ interface StacksTokenDetailsProps {
 export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
   const { fingerprint, accountIndex } = account;
   const balance = useStxAccountBalance(fingerprint, accountIndex);
-  const activity = useAccountActivityByAsset(fingerprint, accountIndex, stxAsset);
+  const activity = useActivityByAsset(fingerprint, accountIndex, stxAsset);
 
   const chain = capitalize(stxAsset.chain);
   const name = `${chain} (${stxAsset.symbol})`;

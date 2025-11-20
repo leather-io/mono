@@ -15,6 +15,15 @@ export const balanceQueryOptions = {
   gcTime: 5000,
 } satisfies Partial<UseQueryOptions>;
 
+export const activityQueryOptions = {
+  refetchOnReconnect: false,
+  refetchOnWindowFocus: false,
+  refetchOnMount: 'always',
+  retryOnMount: false,
+  staleTime: 5000,
+  gcTime: 5000,
+} satisfies Partial<UseQueryOptions>;
+
 /**
  * Standard query options for market data queries.
  * Market data changes frequently, so we use a 1-minute stale time.

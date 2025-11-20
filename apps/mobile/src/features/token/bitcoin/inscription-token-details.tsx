@@ -7,11 +7,8 @@ import { t } from '@lingui/core/macro';
 import dayjs from 'dayjs';
 
 import { ORD_IO_URL } from '@leather.io/constants';
-import {
-  BitcoinNetworkPreference,
-  InscriptionAsset,
-  getMempoolExplorerLink,
-} from '@leather.io/models';
+import { getMempoolExplorerLink } from '@leather.io/features';
+import { type InscriptionAsset } from '@leather.io/models';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
@@ -40,8 +37,8 @@ export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps)
 
   const mempoolExplorerTxUrl = getMempoolExplorerLink({
     id: txid,
-    type: 'txid',
-    networkPreference: bitcoinNetwork as BitcoinNetworkPreference,
+    type: 'tx',
+    networkPreference: bitcoinNetwork,
   });
 
   const height = useCollectibleHeight();

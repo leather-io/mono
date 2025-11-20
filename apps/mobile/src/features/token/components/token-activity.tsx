@@ -1,31 +1,51 @@
-import React from 'react';
+import { useCallback } from 'react';
 
-import { FetchState, Loading } from '@/components/loading';
+import { FetchState } from '@/components/loading';
 import { Screen } from '@/components/screen/screen';
-import { ActivityListItem } from '@/features/activity/activity-list-item';
+import { ActivityItem } from '@/features/activity/activity-item';
+import { ActivityLoading } from '@/features/activity/activity-loading';
+import { translateActivityStatus } from '@/features/activity/translate-activity-status';
 import { t } from '@lingui/core/macro';
 
-import { OnChainActivity } from '@leather.io/models';
+import { type ActivityView } from '@leather.io/features';
 import { Box, Text } from '@leather.io/ui/native';
 
 interface TokenActivityProps {
-  activity: FetchState<OnChainActivity[]>;
+  activity: FetchState<ActivityView[]>;
   ListHeader: React.ReactNode;
 }
 
 export function TokenActivity({ activity, ListHeader }: TokenActivityProps) {
-  const isLoading = activity.state === 'loading';
+  const renderItem = useCallback(
+    ({ item }: { item: ActivityView }) => <ActivityItem item={item} />,
+    []
+  );
+
+  const keyExtractor = useCallback((item: ActivityView) => item.key, []);
+
+  if (activity.state === 'loading') {
+    return <ActivityLoading />;
+  }
+
   const hasActivity = activity.state === 'success' && activity.value.length > 0;
+
+  const translatedActivity =
+    activity.state === 'success'
+      ? activity.value.map(item => ({
+          ...item,
+          statusLabel: translateActivityStatus(item.statusLabel) as string,
+        }))
+      : [];
+
   return (
     <Screen.List
-      data={hasActivity ? activity.value : []}
-      renderItem={({ item }) => <ActivityListItem activity={item} />}
-      keyExtractor={(_, index) => `activity.${index}`}
-      ListEmptyComponent={() => (isLoading ? <Loading mode="full" count={1} /> : undefined)}
+      data={translatedActivity}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
       ListHeaderComponent={() => (
         <Box gap="1" backgroundColor="ink.background-secondary">
           {ListHeader}
-          {(isLoading || hasActivity) && (
+          {hasActivity && (
             <Box backgroundColor="ink.background-primary" px="5" pt="3">
               <Text variant="label03" py="2">{t`Activity`}</Text>
             </Box>

@@ -62,6 +62,7 @@
   "devDependencies": {
     "@babel/core": "7.27.1",
     "@babel/runtime": "7.26.0",
+    "@leather.io/features": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/panda-preset": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",

@@ -1,18 +1,26 @@
+import { useCallback } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { type OnChainActivity } from '@leather.io/models';
+import { type ActivityView } from '@leather.io/features';
 import { LoadingSpinner } from '@leather.io/ui';
 
 import { ActivityItem } from './activity-item';
 
 interface ActivityListProps {
+  activity: ActivityView[];
   isLoading: boolean;
-  activity: OnChainActivity[];
+  minWidth?: string | number;
 }
 
-export function ActivityList({ activity, isLoading }: ActivityListProps) {
+export function ActivityList({ activity, isLoading, minWidth = 400 }: ActivityListProps) {
+  const itemContent = useCallback(
+    (_: number, item: ActivityView) => <ActivityItem item={item} />,
+    []
+  );
+
+  const computeItemKey = useCallback((_: number, item: ActivityView) => item.key, []);
   if (isLoading) {
     return (
       <Stack flexGrow={1} position="relative">
@@ -39,13 +47,8 @@ export function ActivityList({ activity, isLoading }: ActivityListProps) {
   }
 
   return (
-    <Stack minWidth={400} flexGrow={1} position="relative">
-      <Virtuoso
-        data={activity}
-        itemContent={(_, activityItem) => (
-          <ActivityItem key={activityItem.txid} activity={activityItem} />
-        )}
-      />
+    <Stack minWidth={minWidth} flexGrow={1} position="relative">
+      <Virtuoso data={activity} computeItemKey={computeItemKey} itemContent={itemContent} />
       <styled.div
         position="absolute"
         bottom="0"

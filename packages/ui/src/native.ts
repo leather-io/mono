@@ -5,6 +5,7 @@ export {
   BulletOperator,
 } from './components/bullet-separator/bullet-separator.native';
 export { ActivityAvatarIcon } from './components/avatar/activity-avatar-icon.native';
+export { AssetAvatarIcon } from './components/avatar/asset-avatar-icon.native';
 export { BtcAvatarIcon } from './components/avatar/btc-avatar-icon.native';
 export { RunesAvatarIcon } from './components/avatar/runes-avatar-icon.native';
 export { OrdinalAvatarIcon } from './components/avatar/ordinal-avatar-icon.native';
