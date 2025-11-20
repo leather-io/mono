@@ -1,3 +1,4 @@
+import type BigNumber from 'bignumber.js';
 import { injectable } from 'inversify';
 import { groupBy, isNonNullish, keys } from 'remeda';
 
@@ -6,6 +7,7 @@ import {
   CryptoAssetId,
   FungibleAssetId,
   FungibleCryptoAsset,
+  type Money,
   SwapAsset,
   SwapExecutionData,
   SwapProviderAsset,
@@ -189,41 +191,42 @@ export class SwapService {
   public async getSwapQuotes(
     baseAsset: SwapAsset,
     targetAsset: SwapAsset,
-    baseAmount: number,
+    baseAmount: Money,
     signal?: AbortSignal
   ): Promise<SwapQuote[]> {
-    if (baseAmount === 0) return [];
+    return [];
+    // if (baseAmount === 0) return [];
 
-    const providerServiceCalls = targetAsset.providerAssets
-      .map(targetProviderAsset => {
-        const baseProviderAsset = baseAsset.providerAssets.find(
-          b => b.providerId === targetProviderAsset.providerId
-        );
-        if (!baseProviderAsset) return;
-        return this.getSwapProviderServiceById(targetProviderAsset.providerId).getSwapQuotes(
-          {
-            baseAsset: baseAsset.asset,
-            baseProviderAsset: baseProviderAsset,
-            targetAsset: targetAsset.asset,
-            targetProviderAsset: targetProviderAsset,
-            baseAmount,
-          },
-          signal
-        );
-      })
-      .filter(isNonNullish);
-    const swapQuotes = await Promise.all(providerServiceCalls);
-    return swapQuotes.flat();
+    // const providerServiceCalls = targetAsset.providerAssets
+    //   .map(targetProviderAsset => {
+    //     const baseProviderAsset = baseAsset.providerAssets.find(
+    //       b => b.providerId === targetProviderAsset.providerId
+    //     );
+    //     if (!baseProviderAsset) return;
+    //     return this.getSwapProviderServiceById(targetProviderAsset.providerId).getSwapQuotes(
+    //       {
+    //         baseAsset: baseAsset.asset,
+    //         baseProviderAsset: baseProviderAsset,
+    //         targetAsset: targetAsset.asset,
+    //         targetProviderAsset: targetProviderAsset,
+    //         baseAmount,
+    //       },
+    //       signal
+    //     );
+    //   })
+    //   .filter(isNonNullish);
+    // const swapQuotes = await Promise.all(providerServiceCalls);
+    // return swapQuotes.flat();
   }
 
   public async getSwapExecutionData(
     request: AccountRequest,
     quote: SwapQuote,
-    slippage: number,
+    slippagePercentage: BigNumber,
     signal?: AbortSignal
   ): Promise<SwapExecutionData> {
     return this.getSwapProviderServiceById(quote.providerId).getSwapExecutionData(
-      { request, quote, slippage },
+      { request, quote, slippage: slippagePercentage.toNumber() },
       signal
     );
   }

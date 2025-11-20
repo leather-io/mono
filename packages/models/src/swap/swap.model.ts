@@ -33,9 +33,8 @@ export interface BaseSwapQuote {
   executionType: SwapExecutionType;
   providerId: SwapProviderId;
   providerQuoteData: unknown;
-  baseAmount: number;
-  targetAmount: number;
-  quote: Money;
+  baseAmount: Money;
+  targetAmount: Money;
   dexPath: SwapDex[];
   assetPath: (NativeCryptoAsset | Sip10Asset)[];
 }
