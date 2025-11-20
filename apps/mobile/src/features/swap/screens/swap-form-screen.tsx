@@ -88,6 +88,7 @@ export function SwapFormScreen({
             marketData={targetMarketDataQuery.data}
             liveEstimate={liveEstimate}
             baseAmount={state.baseAmount}
+            isTargetAssetSet={state.targetSwapAsset !== null}
           />
           <Box alignItems="flex-end" gap="3" flexShrink={0}>
             <AssetSelectorToggle

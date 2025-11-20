@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import Animated, {
+  Easing,
   useAnimatedStyle,
   useDerivedValue,
   withRepeat,
@@ -20,16 +21,18 @@ interface TargetAmountPreviewProps {
   marketData?: MarketData;
   liveEstimate: LiveSwapEstimate;
   baseAmount: string;
+  isTargetAssetSet: boolean;
 }
 
 export function TargetAmountPreview({
   marketData,
   liveEstimate,
   baseAmount,
+  isTargetAssetSet,
 }: TargetAmountPreviewProps) {
-  const { status, targetAmount, isRefetching } = deriveEstimateSnapshot(liveEstimate);
-  const shouldPulse = (status === 'loading' || !!isRefetching) && baseAmount !== '0';
-  const pulsingStyle = usePulsingAnimation(shouldPulse);
+  const { status, targetAmount, isRefetching = false } = deriveEstimateSnapshot(liveEstimate);
+  const isPulsing = shouldPulse(status, isTargetAssetSet, isRefetching, baseAmount);
+  const pulsingStyle = usePulsingAnimation(isPulsing);
   const { primaryAmount, secondaryAmount } = useStableTargetAmounts({
     baseAmount,
     status,
@@ -100,16 +103,20 @@ function useStableTargetAmounts({
 }
 
 function usePulsingAnimation(enabled: boolean) {
+  const duration = 350;
+  const easing = Easing.inOut(Easing.cubic);
   const opacity = useDerivedValue(() => {
-    if (!enabled) return 1;
+    if (!enabled) return withTiming(1, { duration, easing });
 
     return withRepeat(
       withSequence(
-        withTiming(0.5, {
-          duration: 500,
+        withTiming(0.6, {
+          duration,
+          easing,
         }),
-        withTiming(1, {
-          duration: 500,
+        withTiming(0.85, {
+          duration,
+          easing,
         })
       ),
       -1,
@@ -162,4 +169,19 @@ function formatPrimaryAmount(amount?: Money): string {
     showCurrency: false,
     compactThreshold: 1_000_000,
   });
+}
+
+function shouldPulse(
+  status: LiveSwapEstimate['status'],
+  isTargetAssetSet: boolean,
+  isRefetching: boolean,
+  baseAmount: string
+): boolean {
+  // Pulse only when amount and target asset, to avoid even slight transitions when form is reset.
+  // `idle` helps start pulsing instantly while in debounce window for quote fetching.
+  return (
+    isTargetAssetSet &&
+    baseAmount !== '0' &&
+    (status === 'loading' || status === 'idle' || isRefetching)
+  );
 }
