@@ -1,14 +1,10 @@
-import BigNumber from 'bignumber.js';
-
 import { Money } from '@leather.io/models';
 
 export function isQuoteAlignedWithCurrentInput(
-  quoteBaseAmount: number | undefined,
+  quoteBaseAmount: Money,
   input: Money | null
 ): boolean {
-  if (quoteBaseAmount == null || !input) return false;
+  if (!input) return false;
 
-  const decimals = input.decimals;
-  const quoteQuantized = BigNumber(quoteBaseAmount.toFixed(decimals));
-  return input.amount.shiftedBy(-decimals).isEqualTo(quoteQuantized);
+  return input.amount.isEqualTo(quoteBaseAmount.amount);
 }

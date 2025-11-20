@@ -13,7 +13,7 @@ import {
   SwappableFungibleCryptoAsset,
 } from '@leather.io/models';
 import { AccountRequest, AccountSwapAsset } from '@leather.io/services';
-import { createMoney } from '@leather.io/utils';
+import { createMoney, createMoneyFromDecimal } from '@leather.io/utils';
 
 export function createFungibleAsset(
   overrides: Partial<SwappableFungibleCryptoAsset> = {}
@@ -186,11 +186,10 @@ export function createSwapQuote({
   return {
     executionType,
     providerId,
-    baseAmount,
-    targetAmount,
+    baseAmount: createMoneyFromDecimal(baseAmount, baseAsset.symbol, baseAsset.decimals),
+    targetAmount: createMoneyFromDecimal(targetAmount, targetAsset.symbol, targetAsset.decimals),
     assetPath: [baseAsset, targetAsset],
     dexPath,
-    quote: createMoney(targetAmount, targetAsset.symbol, targetAsset.decimals),
     providerQuoteData,
   } as SwapQuote;
 }

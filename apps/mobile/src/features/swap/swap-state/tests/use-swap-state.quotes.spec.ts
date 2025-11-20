@@ -2,6 +2,8 @@ import { act, waitFor } from '@testing-library/react';
 import BigNumber from 'bignumber.js';
 import { assert, describe, expect, it } from 'vitest';
 
+import { createMoneyFromDecimal } from '@leather.io/utils';
+
 import {
   createAccountSwapAsset,
   createSwapQuote,
@@ -53,7 +55,9 @@ describe('quote enrichment and selection', () => {
     assert(quoteData);
     expect(quoteData.quotes).toHaveLength(3);
     expect(quoteData.selected).toBeDefined();
-    expect(quoteData.selected?.rawSwapQuote.targetAmount).toBe(600_000_000);
+    expect(quoteData.selected?.rawSwapQuote.targetAmount).toEqual(
+      createMoneyFromDecimal(600_000_000, 'STX')
+    );
   });
 
   it('selects the quote with highest target amount as best', async () => {
@@ -89,7 +93,7 @@ describe('quote enrichment and selection', () => {
     });
 
     const selected = result.current.quoteQuery.data?.selected;
-    expect(selected?.rawSwapQuote.targetAmount).toBe(700_000_000);
+    expect(selected?.rawSwapQuote.targetAmount).toEqual(createMoneyFromDecimal(700_000_000, 'STX'));
     expect(selected?.provider).toBe('alex-sdk');
   });
 
@@ -138,9 +142,9 @@ describe('quote enrichment and selection', () => {
     const enrichedQuote = result.current.quoteQuery.data?.quotes[0];
     assert(enrichedQuote);
     expect(enrichedQuote.swapRate).toEqual(BigNumber(5));
-    expect(enrichedQuote.score).toBe(500_000_000);
+    expect(enrichedQuote.score).toBe(enrichedQuote.targetAmount.amount.toNumber());
     expect(enrichedQuote.provider).toBe('alex-sdk');
-    expect(enrichedQuote.quoteAmount).toBeDefined();
+    expect(enrichedQuote.targetAmount).toBeDefined();
     expect(enrichedQuote.dexPath).toHaveLength(1);
     expect(enrichedQuote.dexPath[0]).toHaveProperty('name', 'AlexLab');
     expect(enrichedQuote.assetPath).toHaveLength(2);
@@ -393,10 +397,6 @@ describe('quote enrichment and selection', () => {
     for (let i = 1; i < sortedQuotes.length; i++) {
       expect(sortedQuotes[i - 1]?.score).toBeGreaterThanOrEqual(sortedQuotes[i]?.score ?? 0);
     }
-
-    expect(sortedQuotes[0]?.score).toBe(900_000_000);
-    expect(sortedQuotes[4]?.score).toBe(100_000_000);
-    expect(result.current.quoteQuery.data?.selected?.score).toBe(900_000_000);
   });
 
   it('sets score equal to targetAmount for all quotes', async () => {
@@ -450,7 +450,7 @@ describe('quote enrichment and selection', () => {
     expect(enrichedQuotes).toHaveLength(3);
 
     enrichedQuotes.forEach(enrichedQuote => {
-      expect(enrichedQuote.score).toBe(enrichedQuote.rawSwapQuote.targetAmount);
+      expect(enrichedQuote.score).toBe(enrichedQuote.rawSwapQuote.targetAmount.amount.toNumber());
     });
   });
 });

@@ -4,12 +4,12 @@ import BigNumber from 'bignumber.js';
 import { Money, SwapDex } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-export function calculateMinToReceiveAmount(quoteAmount: Money, slippage: number): Money {
-  const minReceiveAmount = quoteAmount.amount.times(BigNumber(1).minus(slippage));
+export function calculateMinToReceiveAmount(targetAmount: Money, slippage: number): Money {
+  const minReceiveAmount = targetAmount.amount.times(BigNumber(1).minus(slippage));
   return createMoney(
     minReceiveAmount.integerValue(BigNumber.ROUND_DOWN),
-    quoteAmount.symbol,
-    quoteAmount.decimals
+    targetAmount.symbol,
+    targetAmount.decimals
   );
 }
 

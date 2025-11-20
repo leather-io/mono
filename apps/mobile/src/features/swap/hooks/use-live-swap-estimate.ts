@@ -2,9 +2,9 @@ import { UseQueryResult } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { isDefined } from 'remeda';
 
-import { MarketData, Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { MarketData, Money } from '@leather.io/models';
 import { UseIntervalState, useInterval } from '@leather.io/ui/native';
-import { baseCurrencyAmountInQuote, createMoneyFromDecimal } from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import {
   EnrichedSwapQuote,
@@ -110,16 +110,6 @@ export function useLiveSwapEstimate({
     }
 
     const selectedQuote = quoteQuery.data.selected;
-    const [baseAsset] = selectedQuote.assetPath;
-
-    // TODO: Remove once SwapQuote['baseAmount'] is Money
-    if (!baseAsset) {
-      return {
-        status: 'error',
-        error: new Error('Base asset not found in swap quote'),
-        refetch,
-      };
-    }
 
     const networkFee = calculateNetworkFee(
       networkFeeQuery.data.calculation.value,
@@ -129,7 +119,6 @@ export function useLiveSwapEstimate({
     const providerFee = calculateProviderFee(
       selectedQuote.baseAmount,
       selectedQuote.providerFeePercentage,
-      baseAsset,
       baseMarketDataQuery.data
     );
 
@@ -156,17 +145,16 @@ export function useLiveSwapEstimate({
 }
 
 function calculateProviderFee(
-  baseAmount: number,
+  baseAmount: Money,
   providerFeePercentage: BigNumber | undefined,
-  baseAsset: SwappableFungibleCryptoAsset,
   marketData: MarketData
 ): { crypto: Money; quote: Money } | undefined {
   if (providerFeePercentage === undefined) return undefined;
 
-  const crypto = createMoneyFromDecimal(
-    BigNumber(baseAmount).times(providerFeePercentage),
-    baseAsset.symbol,
-    baseAsset.decimals
+  const crypto = createMoney(
+    baseAmount.amount.times(providerFeePercentage),
+    baseAmount.symbol,
+    baseAmount.decimals
   );
   const quote = baseCurrencyAmountInQuote(crypto, marketData);
   return { crypto, quote };
