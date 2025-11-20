@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { Box, Stack } from 'leather-styles/jsx';
@@ -13,20 +13,41 @@ interface HomeTabsProps {
   children: React.ReactNode;
 }
 
+const homeTabs = [
+  {
+    label: 'Assets',
+    value: RouteUrls.Home,
+    testId: 'tab-assets',
+  },
+  {
+    label: 'NFTs',
+    value: RouteUrls.Collectibles,
+    testId: 'tab-collectibles',
+  },
+  {
+    label: 'Activity',
+    value: RouteUrls.Activity,
+    testId: 'tab-activity',
+  },
+] as const;
+
 export function HomeTabs({ children }: HomeTabsProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const activeTab = useMemo(() => {
+    const matchingTab = homeTabs.find(tab => location.pathname.startsWith(tab.value));
+    return matchingTab?.value ?? RouteUrls.Home;
+  }, [location.pathname]);
 
   return (
     <Stack flexGrow={1} mt={{ base: 0, md: 'space.05' }} gap="space.06">
-      <Tabs.Root onValueChange={slug => navigate(slug)} defaultValue={location.pathname}>
+      <Tabs.Root value={activeTab} onValueChange={slug => navigate(slug)}>
         <Tabs.List>
-          <Tabs.Trigger data-testid="tab-assets" value={RouteUrls.Home}>
-            Assets
-          </Tabs.Trigger>
-          <Tabs.Trigger data-testid="tab-activity" value={RouteUrls.Activity}>
-            Activity
-          </Tabs.Trigger>
+          {homeTabs.map(tab => (
+            <Tabs.Trigger key={tab.value} data-testid={tab.testId} value={tab.value}>
+              {tab.label}
+            </Tabs.Trigger>
+          ))}
         </Tabs.List>
       </Tabs.Root>
       <Suspense fallback={<LoadingSpinner pb="72px" />}>

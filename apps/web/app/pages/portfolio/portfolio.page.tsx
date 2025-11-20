@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useAccountActivity } from '~/queries/activity/account-activity.query';
+import { useActivity } from '~/queries/activity/activity.query';
 import { useBtcAccountBalance } from '~/queries/balance/btc-balance.hooks';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { useStxAccountBalance } from '~/queries/balance/stx-balance.hooks';
@@ -40,12 +40,19 @@ export function PortfolioPageSkeleton() {
 
 export function PortfolioPage() {
   const totalBalance = useTotalPortfolioBalance();
-  const { status } = useLeatherConnect();
+  const { status, stacksAccount, btcAccount } = useLeatherConnect();
 
   const btcQuery = useBtcAccountBalance();
   const sip10Query = useSip10AccountBalance();
   const stxQuery = useStxAccountBalance();
-  const activityQuery = useAccountActivity();
+  const activityAccount = useMemo(
+    () => ({
+      ...btcAccount,
+      stacks: stacksAccount ? { stxAddress: stacksAccount.address } : undefined,
+    }),
+    [btcAccount, stacksAccount]
+  );
+  const activityQuery = useActivity(activityAccount);
 
   const isConnected = status === 'connected';
   const allAssets = useMemo(() => {

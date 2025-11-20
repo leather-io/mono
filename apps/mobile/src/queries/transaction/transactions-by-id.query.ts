@@ -1,8 +1,12 @@
 import { toFetchState } from '@/components/loading';
-import { QueryFunctionContext, useQueries, useQuery } from '@tanstack/react-query';
+import { useUserSettings } from '@/hooks/use-user-settings';
+import { useQueries, useQuery } from '@tanstack/react-query';
 
+import {
+  createBitcoinTransactionByTxIdQueryConfig,
+  createStacksTransactionByIdQueryConfig,
+} from '@leather.io/queries';
 import { createGetTransactionByIdQueryOptions } from '@leather.io/query';
-import { getBitcoinTransactionsService, getStacksTransactionsService } from '@leather.io/services';
 
 import { useStacksClient } from '../stacks/stacks-client';
 
@@ -19,15 +23,13 @@ export function useGetTransactionByIdListQuery(txids: string[]) {
 }
 
 function useGetStxTransactionByIdQuery(txid: string) {
+  const settings = useUserSettings();
   return useQuery({
-    queryKey: ['get-transaction-by-id-query'],
+    ...createStacksTransactionByIdQueryConfig(txid, settings),
     refetchInterval(query) {
       if (!query.state.data || query.state.data.tx_status === 'pending') return 1000;
       return false;
     },
-
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getStacksTransactionsService().getTransactionById(txid, signal),
   });
 }
 
@@ -36,14 +38,13 @@ export function useGetStxTransactionById(txid: string) {
 }
 
 function useGetBtcTransactionByIdQuery(txid: string) {
+  const settings = useUserSettings();
   return useQuery({
-    queryKey: ['get-transaction-by-id-query'],
+    ...createBitcoinTransactionByTxIdQueryConfig(txid, settings),
     refetchInterval(query) {
       if (!query.state.data || query.state.data.time) return 3000;
       return false;
     },
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getBitcoinTransactionsService().getTransactionByTxId(txid, signal),
   });
 }
 

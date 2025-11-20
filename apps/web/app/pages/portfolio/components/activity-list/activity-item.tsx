@@ -1,38 +1,29 @@
+import { memo } from 'react';
+
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { useStacksNetwork } from '~/store/stacks-network';
+import { Balance } from '~/components/balance/balance';
+import { formatCurrency } from '~/utils/currency-formatter';
 import { openExternalLink } from '~/utils/external-links';
 
-import { type OnChainActivity, makeActivityLink } from '@leather.io/models';
+import { type ActivityView } from '@leather.io/features';
 import { ActivityAvatarIcon } from '@leather.io/ui';
 
-import { formatActivityCaption, formatActivityStatusLabel, getBalancesText } from './utils';
-
 interface ActivityItemProps {
-  activity: OnChainActivity;
+  item: ActivityView;
 }
-
-export function ActivityItem({ activity }: ActivityItemProps) {
-  const { formattedBalanceCrypto, formattedBalanceQuote } = getBalancesText(activity);
-  const { networkPreference } = useStacksNetwork();
-  const activityLink =
-    'asset' in activity
-      ? makeActivityLink({
-          txid: activity.txid,
-          networkPreference,
-          asset: activity.asset,
-        })
-      : null;
+function ActivityItemComponent({ item }: ActivityItemProps) {
+  const { activityLink, title, caption, balances } = item;
+  const clickable = Boolean(activityLink);
 
   return (
     <styled.button
-      cursor={activityLink ? 'pointer' : 'default'}
+      type="button"
+      cursor={clickable ? 'pointer' : 'default'}
       display="flex"
       flexDirection="column"
       width="100%"
-      onClick={() => {
-        if (!activityLink) return;
-        openExternalLink(activityLink);
-      }}
+      disabled={!clickable}
+      onClick={activityLink ? () => openExternalLink(activityLink) : undefined}
     >
       <Flex
         justifyContent="space-between"
@@ -45,27 +36,41 @@ export function ActivityItem({ activity }: ActivityItemProps) {
       >
         <Flex alignItems="center" gap="space.04">
           <Box>
-            <ActivityAvatarIcon activity={activity} />
+            <ActivityAvatarIcon activity={item} />
           </Box>
           <Flex flexDirection="column" alignItems="flex-start">
             <styled.p textStyle="body.02" fontWeight="medium">
-              {formatActivityStatusLabel(activity)}
+              {title}
             </styled.p>
             <styled.p textStyle="caption.01" color="ink.text-subdued">
-              {formatActivityCaption(activity)}
+              {caption}
             </styled.p>
           </Flex>
         </Flex>
 
         <Flex alignItems="flex-end" flexDir="column" gap="space.01">
-          <styled.p textStyle="body.02">{formattedBalanceCrypto}</styled.p>
-          <Flex alignItems="center" gap="space.02">
-            <styled.span textStyle="caption.01" color="ink.text-subdued">
-              {formattedBalanceQuote}
-            </styled.span>
-          </Flex>
+          {balances.quote ? (
+            <Balance
+              balance={balances.quote}
+              operator={balances.operator}
+              color={balances.color}
+              textStyle="body.02"
+              formatCurrency={formatCurrency}
+            />
+          ) : null}
+          {balances.crypto ? (
+            <Balance
+              balance={balances.crypto}
+              formattingOptions={{ showCurrency: false }}
+              textStyle="caption.01"
+              color="ink.text-subdued"
+              formatCurrency={formatCurrency}
+            />
+          ) : null}
         </Flex>
       </Flex>
     </styled.button>
   );
 }
+
+export const ActivityItem = memo(ActivityItemComponent);

@@ -1,7 +1,6 @@
 import { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { SearchInput } from '@/components/search-input';
-import { AssetAvatar } from '@/features/swap/components/asset-avatar';
 import { AssetSelectorEmptyState } from '@/features/swap/components/asset-selector/asset-selector-empty-state';
 import { AssetSelectorItem } from '@/features/swap/components/asset-selector/asset-selector-item';
 import { useSwapAssetSearch } from '@/features/swap/components/asset-selector/use-swap-asset-search';
@@ -12,7 +11,7 @@ import { UseQueryResult } from '@tanstack/react-query';
 import { isDefined } from 'remeda';
 
 import { AccountSwapAsset } from '@leather.io/services';
-import { Box, Sheet } from '@leather.io/ui/native';
+import { AssetAvatarIcon, BitcoinIcon, Box, Sheet, StacksIcon } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { AssetSelectorError } from './asset-selector-error';
@@ -25,6 +24,18 @@ interface AssetSelectorProps {
   selectedTargetAsset: AccountSwapAsset | null;
   query: UseQueryResult<AccountSwapAsset[], Error>;
   onSelectAsset(type: 'base' | 'target', asset: AccountSwapAsset): void;
+}
+
+function getAssetIndicator(asset: AccountSwapAsset['asset']) {
+  switch (asset.protocol) {
+    case 'nativeBtc':
+      return <BitcoinIcon variant="small" />;
+    case 'nativeStx':
+    case 'sip10':
+      return <StacksIcon variant="small" />;
+    default:
+      return undefined;
+  }
 }
 
 export function AssetSelector({
@@ -80,7 +91,9 @@ export function AssetSelector({
                   symbol={item.asset.symbol}
                   balance={item.balance?.crypto.availableBalance}
                   quoteBalance={item.balance?.quote.availableBalance}
-                  icon={<AssetAvatar asset={item.asset} indicator />}
+                  icon={
+                    <AssetAvatarIcon asset={item.asset} indicator={getAssetIndicator(item.asset)} />
+                  }
                   onPress={() => onSelectAsset(type, item)}
                 />
               )}

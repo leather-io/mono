@@ -19,7 +19,7 @@ import {
   isContractDeploy,
   isTokenTransfer,
 } from '@/features/approver/utils';
-import { useOpenURL } from '@/features/browser/browser/use-open-url';
+import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/core/macro';
@@ -32,7 +32,7 @@ import * as Clipboard from 'expo-clipboard';
 
 import { stxAsset } from '@leather.io/constants';
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { makeActivityLink } from '@leather.io/models';
+import { makeActivityLink } from '@leather.io/features';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { Approver, SentIcon, SheetInstance } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
@@ -75,7 +75,7 @@ export function BaseStxTxApproverLayout({
     useStxTransactionUpdatesHandler();
   const [broadcastedTxid, setBroadcastedTxid] = useState<null | string>(null);
   const network = useCurrentNetworkState();
-  const { openURL } = useOpenURL();
+  const { openUrl } = useOpenUrl();
 
   useEffect(() => {
     if (tx.postConditionMode === PostConditionMode.Allow) {
@@ -202,7 +202,7 @@ export function BaseStxTxApproverLayout({
 
               if (!activityLink) return;
 
-              openURL(activityLink);
+              openUrl(activityLink);
               onCloseApprover();
             }}
           />
