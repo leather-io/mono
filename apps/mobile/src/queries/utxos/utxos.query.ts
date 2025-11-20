@@ -1,9 +1,11 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useSettings } from '@/store/settings/settings';
+import { useQuery } from '@tanstack/react-query';
 
-import { AccountAddresses } from '@leather.io/models';
-import { getUtxosService } from '@leather.io/services';
+import { AccountAddresses, QuoteCurrency } from '@leather.io/models';
+import { createAccountUtxosQueryConfig } from '@leather.io/queries';
+import { AccountRequest, UserSettings } from '@leather.io/services';
 
 export function useAccountUtxos(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
@@ -11,15 +13,16 @@ export function useAccountUtxos(fingerprint: string, accountIndex: number) {
 }
 
 function useAccountUtxosQuery(account: AccountAddresses) {
+  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
+  const settings: UserSettings = {
+    network: networkPreference,
+    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    assetVisibility,
+  };
+
+  const request: AccountRequest = { account };
+
   return useQuery({
-    queryKey: ['utxos-service-get-account-utxos', account],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getUtxosService().getAccountUtxos({ account }, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 1000,
-    gcTime: 1 * 1000,
+    ...createAccountUtxosQueryConfig(request, settings),
   });
 }

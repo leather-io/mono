@@ -1,13 +1,14 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import { useUserSettings } from '~/hooks/use-user-settings';
 import { useLeatherConnect } from '~/store/addresses';
 
-import { AccountRequest, getStxBalancesService } from '@leather.io/services';
+import { createStxAccountBalanceQueryConfig } from '@leather.io/queries';
+import { AccountRequest } from '@leather.io/services';
 
 function useGetStxAccountBalanceQuery(request: AccountRequest) {
+  const settings = useUserSettings();
   return useQuery({
-    queryKey: ['stx-balances-service-get-stx-account-balance', request],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getStxBalancesService().getStxAccountBalance(request, signal),
+    ...createStxAccountBalanceQueryConfig(request, settings),
     enabled: !!request.account.stacks?.stxAddress,
   });
 }

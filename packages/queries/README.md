@@ -42,7 +42,9 @@ function useMarketData(asset: FungibleCryptoAsset) {
 
 - **Market data** – `createMarketDataQueryKey`, `createMarketDataQueryConfig`
 - **BTC balances** – `createBtcBalanceQueryKey`, `createBtcBalanceQueryConfig`, aggregate helpers
-- **SIP-10 balances** – `createGetSip10*` helpers for account, address, asset, and contract queries
+- **SIP-10 balances** – `createSip10AccountBalanceQueryKey`, `createSip10AccountBalanceQueryConfig`, `createSip10AddressBalanceQueryKey`, `createSip10AddressBalanceQueryConfig`
+- **Activity** – `createActivityQueryKey`, `createActivityQueryConfig`, `createActivityByAssetQueryKey`, `createActivityByAssetQueryConfig`
+- **SIP-10 activity** – `createSip10ActivityByAssetIdQueryKey`, `createSip10ActivityByAssetIdQueryConfig`
 
 Each helper accepts:
 
@@ -83,6 +85,28 @@ Follow this pattern when adding new service query configs:
    - Return a `UseQueryOptions` that spreads the shared query options and calls the service
 5. **Export**
    - Re-export from `index.ts`
+
+## Lint Invariants
+
+To keep this package and its consumers aligned on the “builder only” pattern, a few ESLint rules are enforced:
+
+- **No React Query hooks in `@leather.io/queries`**
+  - `packages/queries` may import types from `@tanstack/react-query` (e.g. `UseQueryOptions`, `QueryFunctionContext`), but importing hooks like `useQuery` or `useInfiniteQuery` is disallowed.
+  - This guarantees the package only exports pure key/config builders and never React hooks.
+- **No `use*` exports in `@leather.io/queries`**
+  - Declarations whose identifiers start with `use[A-Z]` are rejected in this package.
+  - Hooks are defined in apps (`apps/web`, `apps/mobile`, `apps/extension`), not in the query-config layer.
+- **No `*QueryOptions` wrapper types in `@leather.io/queries`**
+  - Type aliases ending in `QueryOptions` are banned here to avoid patterns like `Omit<UseQueryOptions, 'queryKey' | 'queryFn'>`.
+  - Apps should use `UseQueryOptions` (or `Partial<UseQueryOptions<...>>`) directly when they need configuration objects.
+- **App query modules must not import certain `get*Service` helpers**
+  - In `apps/*` query directories we forbid importing `getActivityService`, `getMarketDataService`, and `getBtcBalancesService` from `@leather.io/services`.
+  - Instead, query modules should rely on the corresponding builders exported from `@leather.io/queries` and call `useQuery` themselves.
+- **`useQuery` object calls must be complete or builder-based**
+  - For object-literal `useQuery({ ... })` calls in app query modules, ESLint requires either:
+    - the object spreads an existing query config (e.g. `...createXQueryConfig(...)`), or
+    - it explicitly defines both `queryKey` and `queryFn`.
+  - This helps prevent accidental “wrapper” helpers that partially hide React Query configuration or forget to specify a key or fetch function.
 
 ## Design Principles
 

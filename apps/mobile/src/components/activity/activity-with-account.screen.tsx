@@ -1,6 +1,6 @@
 import { Screen } from '@/components/screen/screen';
 import { ActivityList } from '@/features/activity/activity-list';
-import { useAccountActivity } from '@/queries/activity/account-activity.query';
+import { useActivity } from '@/queries/activity/activity.query';
 import { t } from '@lingui/core/macro';
 
 import { AccountId } from '@leather.io/models';
@@ -12,8 +12,7 @@ interface ActivityScreenWithAccountProps {
 export default function ActivityScreenWithAccount({
   currentAccount,
 }: ActivityScreenWithAccountProps) {
-  const activity = useAccountActivity(currentAccount.fingerprint, currentAccount.accountIndex);
-  const pageTitle = t`Activity`;
+  const activity = useActivity(currentAccount.fingerprint, currentAccount.accountIndex);
 
   return (
     <Screen>
@@ -21,7 +20,7 @@ export default function ActivityScreenWithAccount({
         leftElement={null}
         centerElement={<Text variant="heading05">{t`Activity`}</Text>}
       />
-      <ActivityList data={activity} header={<Screen.Title>{pageTitle}</Screen.Title>} />
+      <ActivityList data={activity} header={<Screen.Title>{t`Activity`}</Screen.Title>} />
     </Screen>
   );
 }

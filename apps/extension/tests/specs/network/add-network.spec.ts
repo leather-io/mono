@@ -1,6 +1,7 @@
 import { NetworkSelectors } from '@tests/selectors/network.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
+import { MEMPOOL_BASE_URL } from '@leather.io/constants';
 import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
 
 import { test } from '../../fixtures/fixtures';
@@ -29,7 +30,7 @@ test.describe('Networks tests', () => {
   test('validation error when stacks api url is empty', async ({ networkPage }) => {
     await networkPage.inputNetworkNameField('Test network');
     await networkPage.inputNetworkStacksAddressField('');
-    await networkPage.inputNetworkBitcoinAddressField('https://mempool.space/testnet/api');
+    await networkPage.inputNetworkBitcoinAddressField(`${MEMPOOL_BASE_URL}/testnet/api`);
     await networkPage.inputNetworkKeyField('test-network');
     await networkPage.clickAddNetwork();
     await networkPage.waitForErrorMessage();

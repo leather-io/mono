@@ -7,7 +7,9 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { whenPageMode } from '@app/common/utils';
+import { emptyAmountPlaceholder } from '@app/components/balance/constants';
 import { ActivityList } from '@app/features/activity-list/activity-list';
+import { Collectibles } from '@app/features/collectibles/collectibles';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
 import { Assets } from '@app/pages/home/components/assets';
@@ -19,9 +21,7 @@ import { AccountActions } from './components/account-actions';
 import { HomeTabs } from './components/home-tabs';
 import { useHomePageState } from './use-home-page-state';
 
-const emptyBalanceDisplay = '-.--';
-
-export function HomeV1() {
+export function Home() {
   const {
     balance,
     isFetchingBnsName,
@@ -34,23 +34,23 @@ export function HomeV1() {
   return (
     <Stack
       data-testid={HomePageSelectors.HomePageContainer}
-      px={{ base: 0, md: 'space.05' }}
-      py={{ base: 0, md: 'space.07' }}
-      gap={{ base: 0, md: 'space.06' }}
+      px={['0', 'space.05']}
+      py={['0', 'space.07']}
+      gap={['0', 'space.06']}
       width="100%"
       bg="ink.1"
       borderRadius="lg"
       animation="fadein"
       animationDuration="500ms"
     >
-      <Box px={{ base: 'space.05', md: 0 }} pb={{ base: 'space.05', md: 0 }}>
+      <Box px={['space.05', 0]} pb={['space.05', 0]}>
         <AccountCard
           name={name}
           availableBalance={
-            balance.state !== 'success' ? emptyBalanceDisplay : formatCurrency(balance.value)
+            balance.state !== 'success' ? emptyAmountPlaceholder : formatCurrency(balance.value)
           }
           totalBalance={
-            balance.state !== 'success' ? emptyBalanceDisplay : formatCurrency(balance.value)
+            balance.state !== 'success' ? emptyAmountPlaceholder : formatCurrency(balance.value)
           }
           toggleSwitchAccount={() => toggleSwitchAccount()}
           isFetchingBnsName={isFetchingBnsName}
@@ -68,6 +68,9 @@ export function HomeV1() {
         <ModalBackgroundWrapper>
           <Route index element={<Assets />} />
           <Route path={RouteUrls.Activity} element={<ActivityList />}>
+            {homePageModalRoutes}
+          </Route>
+          <Route path={RouteUrls.Collectibles} element={<Collectibles />}>
             {homePageModalRoutes}
           </Route>
           {homePageModalRoutes}

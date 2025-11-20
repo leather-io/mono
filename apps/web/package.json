@@ -31,6 +31,7 @@
     "@leather.io/bitcoin": "workspace:*",
     "@leather.io/cms": "workspace:*",
     "@leather.io/constants": "workspace:*",
+    "@leather.io/features": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/panda-preset": "workspace:*",
     "@leather.io/queries": "workspace:*",

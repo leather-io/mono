@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
-import { EmptyAmountPlaceholder } from '@/components/balance/constants';
+import { emptyAmountPlaceholder } from '@/components/balance/constants';
 import { formatCurrency } from '@/utils/currency-formatter';
 
 import { ArrowTopBottomIcon, Box, Pressable, SkeletonLoader, Text } from '@leather.io/ui/native';
@@ -26,7 +26,7 @@ export function CurrencyModeSwitcher({ secondaryAmount, onModeSwitch }: Currency
       case 'error':
         return (
           <Text variant="label02" color="ink.text-subdued">
-            {EmptyAmountPlaceholder}
+            {emptyAmountPlaceholder}
           </Text>
         );
       case 'success':
