@@ -7,21 +7,21 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { whenPageMode } from '@app/common/utils';
-import { ActivityList } from '@app/features/activity-list/activity-list';
+import { ActivityListLegacy } from '@app/features/activity-list/activity-list-legacy';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
-import { Assets } from '@app/pages/home/components/assets';
+import { AssetsLegacy } from '@app/pages/home/components/assets-legacy';
 import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
 import { AccountCard } from '@app/ui/components/account/account.card';
 
 import { AccountActions } from './components/account-actions';
-import { HomeTabs } from './components/home-tabs';
+import { HomeTabsLegacy } from './components/home-tabs-legacy';
 import { useHomePageState } from './use-home-page-state';
 
 const emptyBalanceDisplay = '-.--';
 
-export function HomeV2() {
+export function HomeLegacy() {
   const {
     balance,
     isFetchingBnsName,
@@ -64,15 +64,15 @@ export function HomeV2() {
         <PromoBanner />
       </Box>
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
-      <HomeTabs>
+      <HomeTabsLegacy>
         <ModalBackgroundWrapper>
-          <Route index element={<Assets />} />
-          <Route path={RouteUrls.Activity} element={<ActivityList />}>
+          <Route index element={<AssetsLegacy />} />
+          <Route path={RouteUrls.Activity} element={<ActivityListLegacy />}>
             {homePageModalRoutes}
           </Route>
           {homePageModalRoutes}
         </ModalBackgroundWrapper>
-      </HomeTabs>
+      </HomeTabsLegacy>
     </Stack>
   );
 }

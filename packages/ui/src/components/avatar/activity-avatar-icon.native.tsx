@@ -1,43 +1,46 @@
 import { ReactElement } from 'react';
 
-import { ActivityType, FungibleCryptoAsset, OnChainActivityStatus } from '@leather.io/models';
-import { assertUnreachable } from '@leather.io/utils';
+import type { ActivityAvatar, ActivityStatusIndicatorId, ActivityView } from '@leather.io/features';
+import { CryptoAsset } from '@leather.io/models';
 
 import { FailedIcon } from '../../icons/activity/failed-icon.native';
+import { FunctionActivityIcon } from '../../icons/activity/function-icon.native';
 import { PendingIcon } from '../../icons/activity/pending-icon.native';
 import { ReceivedIcon } from '../../icons/activity/received-icon.native';
 import { SentIcon } from '../../icons/activity/sent-icon.native';
+import { SwapIcon } from '../../icons/activity/swap-icon.native';
 import { Avatar } from './avatar.native';
 import { BtcAvatarIcon } from './btc-avatar-icon.native';
 import { Sip10AvatarIcon } from './sip10-avatar-icon.native';
 import { StxAvatarIcon } from './stx-avatar-icon.native';
 
-interface StatusIndicatorProps {
-  type: ActivityType;
-  status: OnChainActivityStatus;
-}
-function StatusIndicator({ type, status }: StatusIndicatorProps): ReactElement {
-  switch (status) {
+function renderStatusIndicator(indicator: ActivityStatusIndicatorId): ReactElement | null {
+  switch (indicator) {
     case 'pending':
       return <PendingIcon width={16} height={16} />;
-    case 'success':
-      if (type == 'sendAsset') {
-        return <SentIcon width={16} height={16} />;
-      } else {
-        return <ReceivedIcon width={16} height={16} />;
-      }
     case 'failed':
       return <FailedIcon width={16} height={16} />;
+    case 'sent':
+      return <SentIcon width={16} height={16} />;
+    case 'swap':
+      return <SwapIcon width={16} height={16} />;
+    case 'function':
+      return <FunctionActivityIcon width={16} height={16} />;
+    case 'received':
+      return <ReceivedIcon width={16} height={16} />;
+    case 'hidden':
     default:
-      assertUnreachable(status);
+      return null;
   }
 }
 
-function getActivityIcon(type: ActivityType, asset?: FungibleCryptoAsset) {
-  switch (asset?.symbol) {
-    case 'STX':
+function getActivityIcon(avatar: ActivityAvatar, asset?: CryptoAsset) {
+  if (avatar === 'swap') return <SwapIcon width={24} height={24} />;
+
+  switch (asset?.protocol) {
+    case 'nativeStx':
       return <StxAvatarIcon />;
-    case 'BTC':
+    case 'nativeBtc':
       return <BtcAvatarIcon />;
     default:
       if (asset?.protocol === 'sip10') {
@@ -49,20 +52,28 @@ function getActivityIcon(type: ActivityType, asset?: FungibleCryptoAsset) {
           />
         );
       }
-      return <Sip10AvatarIcon contractId={type} imageCanonicalUri="" name="" />;
+      return <Sip10AvatarIcon contractId="" imageCanonicalUri="" name="" />;
   }
 }
 
 interface ActivityIconProps {
-  type: ActivityType;
-  asset?: FungibleCryptoAsset;
-  status: OnChainActivityStatus;
+  activity: ActivityView;
 }
-export function ActivityAvatarIcon({ type, asset, status }: ActivityIconProps) {
-  return (
-    <Avatar
-      icon={getActivityIcon(type, asset)}
-      indicator={<StatusIndicator type={type} status={status} />}
-    />
-  );
+
+export function ActivityAvatarIcon({ activity }: ActivityIconProps) {
+  const indicator = renderStatusIndicator(activity.statusIndicator ?? 'hidden');
+  const avatarType =
+    activity.activityAvatar ??
+    (activity.fromAsset && activity.toAsset
+      ? 'swap'
+      : activity.asset || activity.fromAsset || activity.toAsset
+        ? 'asset'
+        : 'fallback');
+  const asset =
+    avatarType === 'swap'
+      ? (activity.toAsset ?? activity.fromAsset)
+      : (activity.asset ?? undefined);
+  const iconAsset = getActivityIcon(avatarType, asset);
+
+  return <Avatar icon={iconAsset} indicator={indicator ?? undefined} />;
 }

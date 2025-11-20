@@ -4,6 +4,7 @@ import { NetworkSelectors } from '@tests/selectors/network.selectors';
 import { useFormikContext } from 'formik';
 import { HStack, styled } from 'leather-styles/jsx';
 
+import { MEMPOOL_BASE_URL } from '@leather.io/constants';
 import {
   BITCOIN_API_BASE_URL_MAINNET,
   BITCOIN_API_BASE_URL_TESTNET3,
@@ -87,11 +88,11 @@ export function NetworkFormFields({ isEditNetworkMode }: NetworkFormFieldsProps)
         break;
       case 'signet':
         setStacksUrl('https://api.testnet.hiro.so');
-        setBitcoinUrl('https://mempool.space/signet/api');
+        setBitcoinUrl(`${MEMPOOL_BASE_URL}/signet/api`);
         break;
       case 'regtest':
         setStacksUrl('https://api.testnet.hiro.so');
-        setBitcoinUrl('https://mempool.space/testnet/api');
+        setBitcoinUrl(`${MEMPOOL_BASE_URL}/testnet/api`);
         break;
     }
   }

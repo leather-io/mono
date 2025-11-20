@@ -2,13 +2,8 @@ import { ReactElement } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
-import {
-  ActivityType,
-  CryptoAsset,
-  type OnChainActivity,
-  OnChainActivityStatus,
-} from '@leather.io/models';
-import { assertUnreachable } from '@leather.io/utils';
+import type { ActivityStatusIndicatorId, ActivityView } from '@leather.io/features';
+import { type CryptoAsset } from '@leather.io/models';
 
 import { FailedIcon } from '../../icons/activity/failed-icon.web';
 import { FunctionActivityIcon } from '../../icons/activity/function-icon.web';
@@ -21,34 +16,23 @@ import { BtcAvatarIcon } from './btc-avatar-icon.web';
 import { Sip10AvatarIcon } from './sip10-avatar-icon.web';
 import { StxAvatarIcon } from './stx-avatar-icon.web';
 
-interface StatusIndicatorProps {
-  type: ActivityType;
-  status: OnChainActivityStatus;
-}
-
-function StatusIndicator({ type, status }: StatusIndicatorProps): ReactElement {
-  switch (status) {
+function renderStatusIndicator(indicator: ActivityStatusIndicatorId): ReactElement | null {
+  switch (indicator) {
     case 'pending':
       return <PendingIcon width={16} height={16} />;
-    case 'success':
-      if (type == 'sendAsset') {
-        return <SentIcon width={16} height={16} />;
-      }
-      if (type === 'executeSmartContract') {
-        return <FunctionActivityIcon width={16} height={16} />;
-      }
-      if (type === 'swapAssets') {
-        return <SwapIcon width={16} height={16} />;
-      }
-      if (type === 'receiveAsset') {
-        return <ReceivedIcon width={16} height={16} />;
-      }
-      // show hidden icon
-      return <ReceivedIcon width={0} height={0} />;
     case 'failed':
       return <FailedIcon width={16} height={16} />;
+    case 'sent':
+      return <SentIcon width={16} height={16} />;
+    case 'function':
+      return <FunctionActivityIcon width={16} height={16} />;
+    case 'swap':
+      return <SwapIcon width={16} height={16} />;
+    case 'received':
+      return <ReceivedIcon width={16} height={16} />;
+    case 'hidden':
     default:
-      assertUnreachable(status);
+      return null;
   }
 }
 
@@ -106,30 +90,36 @@ function SwapAvatarIcon({ fromAsset, toAsset, indicator }: SwapAvatarIconProps):
 }
 
 interface ActivityIconProps {
-  activity: OnChainActivity;
+  activity: ActivityView;
 }
 export function ActivityAvatarIcon({ activity }: ActivityIconProps) {
-  const statusIndicator = <StatusIndicator type={activity.type} status={activity.status} />;
+  const indicatorElement = renderStatusIndicator(activity.statusIndicator ?? 'hidden');
+  const avatarType =
+    activity.activityAvatar ??
+    (activity.fromAsset && activity.toAsset
+      ? 'swap'
+      : activity.asset || activity.fromAsset || activity.toAsset
+        ? 'asset'
+        : 'fallback');
 
-  if (activity.type === 'swapAssets') {
+  if (avatarType === 'swap' && activity.fromAsset && activity.toAsset) {
     return (
       <SwapAvatarIcon
         fromAsset={activity.fromAsset}
         toAsset={activity.toAsset}
-        indicator={statusIndicator}
+        indicator={indicatorElement ?? undefined}
       />
     );
   }
 
-  const asset = 'asset' in activity ? activity?.asset : undefined;
-  if (asset) {
-    return <AssetAvatar asset={asset} indicator={statusIndicator} />;
+  if (activity.asset) {
+    return <AssetAvatar asset={activity.asset} indicator={indicatorElement ?? undefined} />;
   }
 
   return (
     <Sip10AvatarIcon
-      contractId={activity.type}
-      indicator={statusIndicator}
+      contractId=""
+      indicator={indicatorElement ?? undefined}
       imageCanonicalUri=""
       name=""
     />
