@@ -4,48 +4,41 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": " pnpm build:native && pnpm build:web",
-    "build:native": "tsup --config tsup.config.native.ts",
-    "build:native:watch": "concurrently \"pnpm build:native --watch -- --preserveWatchOutput\"",
-    "build:watch": "concurrently  \"pnpm build:native --watch -- --preserveWatchOutput\" \"pnpm build:web --watch\" ",
-    "build:web": "tsup --config tsup.config.web.ts",
-    "format": "prettier . --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
-    "format:check": "prettier . --check \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
+    "build": "tsup",
+    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "test:unit": "vitest run",
-    "typecheck": "tsc --noEmit --project ./tsconfig.json"
+    "typecheck": "tsc --noEmit"
   },
   "exports": {
-    ".": "./dist-web/exports.web.js",
-    "./native": "./dist-native/exports.native.js"
+    ".": "./dist/index.js"
   },
   "dependencies": {
-    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/constants": "workspace:*",
+    "@leather.io/models": "workspace:*",
+    "@leather.io/services": "workspace:*",
     "@leather.io/tokens": "workspace:*",
+    "@leather.io/utils": "workspace:*",
     "@noble/hashes": "1.5.0",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-native": "0.79.2",
-    "react-native-safe-area-context": "5.4.0",
-    "react-native-webview": "13.14.1"
+    "dayjs": "1.11.13"
   },
   "devDependencies": {
-    "@babel/core": "7.27.1",
-    "@babel/runtime": "7.26.0",
-    "@testing-library/react": "16.3.0",
-    "@types/react": "19.0.12",
-    "@types/react-dom": "19.0.4",
-    "babel-preset-expo": "13.0.0",
-    "concurrently": "8.2.2",
-    "happy-dom": "18.0.1",
-    "tslib": "2.6.2",
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/tsconfig-config": "workspace:*",
+    "prettier": "3.5.1",
     "tsup": "8.4.0",
     "typescript": "5.8.3",
     "vitest": "2.1.9"
   },
   "files": [
-    "dist-web",
-    "dist-native"
+    "dist"
   ],
+  "peerDependencies": {
+    "@tanstack/react-query": "5.85.5",
+    "react": "19.0.0"
+  },
+  "prettier": "@leather.io/prettier-config",
   "publishConfig": {
     "access": "public"
   }

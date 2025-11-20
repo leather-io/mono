@@ -1,9 +1,8 @@
+import { BnsImage, ImageUnavailable, Sip9 as Sip9Component } from '@/features/collectibles';
 import { TokenDetailsProps } from '@/features/token/types';
-import { imageUnavailableLabel } from '@/features/token/utils/image-unavailable-label';
 
 import { Sip9Asset } from '@leather.io/models';
 import { getStacksContractAssetName } from '@leather.io/stacks';
-import { BnsImage, ImageUnavailable, Sip9 as Sip9Component } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 interface Sip9Props {
@@ -13,7 +12,7 @@ interface Sip9Props {
 }
 export function Sip9({ item, height, onPress }: Sip9Props) {
   if (!item?.content?.contentUrl || item?.content?.contentUrl?.trim() === '') {
-    return <ImageUnavailable height={height} message={imageUnavailableLabel} />;
+    return <ImageUnavailable height={height} />;
   }
   const onPressHandler = onPress
     ? () => onPress({ assetId: serializeAssetId(getAssetId(item)) })
@@ -30,12 +29,5 @@ export function Sip9({ item, height, onPress }: Sip9Props) {
       />
     );
   }
-  return (
-    <Sip9Component
-      item={item}
-      height={height}
-      onPress={onPressHandler}
-      imageUnavailableLabel={imageUnavailableLabel}
-    />
-  );
+  return <Sip9Component item={item} height={height} onPress={onPressHandler} />;
 }

@@ -1,77 +1,9 @@
 import { toUnicode } from 'punycode';
 
-import { HIRO_EXPLORER_URL, KEBAB_REGEX } from '@leather.io/constants';
-import {
-  type BitcoinChainConfig,
-  type BitcoinNetworkModes,
-  HIRO_API_BASE_URL_NAKAMOTO_TESTNET,
-} from '@leather.io/models';
+import { KEBAB_REGEX } from '@leather.io/constants';
 
 function kebabCase(str: string) {
   return str.replace(KEBAB_REGEX, match => '-' + match.toLowerCase());
-}
-
-interface MakeStacksTxExplorerLinkArgs {
-  mode: BitcoinNetworkModes;
-  searchParams?: URLSearchParams;
-  txid: string;
-  isNakamoto?: boolean;
-}
-
-export function makeStacksTxExplorerLink({
-  mode,
-  searchParams = new URLSearchParams(),
-  txid,
-  isNakamoto = false,
-}: MakeStacksTxExplorerLinkArgs) {
-  if (mode === 'regtest') return 'http://localhost:8000/txid/' + txid;
-  searchParams.append('chain', mode);
-  if (isNakamoto) searchParams.append('api', HIRO_API_BASE_URL_NAKAMOTO_TESTNET);
-  return `${HIRO_EXPLORER_URL}/txid/${txid}?${searchParams.toString()}`;
-}
-
-interface MakeStacksAddressExplorerLinkArgs {
-  mode: BitcoinNetworkModes;
-  searchParams?: URLSearchParams;
-  address: string;
-  isNakamoto?: boolean;
-}
-
-export function makeStacksAddressExplorerLink({
-  mode,
-  searchParams = new URLSearchParams(),
-  address,
-  isNakamoto = false,
-}: MakeStacksAddressExplorerLinkArgs) {
-  searchParams.append('chain', mode);
-  if (isNakamoto) {
-    searchParams.append('api', HIRO_API_BASE_URL_NAKAMOTO_TESTNET);
-  }
-  return `${HIRO_EXPLORER_URL}/address/${address}?${searchParams.toString()}`;
-}
-
-interface MakeBitcoinTxExplorerLinkArgs {
-  txid: string;
-  bitcoin: BitcoinChainConfig;
-}
-export function makeBitcoinTxExplorerLink({
-  txid,
-  bitcoin: { bitcoinUrl, bitcoinNetwork },
-}: MakeBitcoinTxExplorerLinkArgs) {
-  const mempoolBaseUrl = 'https://mempool.space';
-
-  switch (bitcoinNetwork) {
-    case 'mainnet':
-      return `${mempoolBaseUrl}/tx/${txid}`;
-    case 'testnet3':
-      return `${mempoolBaseUrl}/testnet/tx/${txid}`;
-    case 'testnet4':
-      return `${mempoolBaseUrl}/testnet4/tx/${txid}`;
-    case 'signet':
-      return `${mempoolBaseUrl}/signet/tx/${txid}`;
-    case 'regtest':
-      return `${bitcoinUrl}/tx/${txid}`;
-  }
 }
 
 export function truncateString(str: string, maxLength: number) {

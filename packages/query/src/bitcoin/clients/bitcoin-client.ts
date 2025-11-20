@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import { MEMPOOL_BASE_URL } from '@leather.io/constants';
 import { BitcoinTx } from '@leather.io/models';
 
 import { UtxoResponseItem } from '../../../types/utxo';
@@ -75,9 +76,10 @@ function FeeEstimatesApi() {
       network: 'main' | 'test3' | 'test4'
     ): Promise<FeeResult> {
       const networkApi = {
-        main: 'https://mempool.space/api/v1/fees/recommended',
-        test3: 'https://mempool.space/testnet/api/v1/fees/recommended',
-        test4: 'https://mempool.space/testnet4/api/v1/fees/recommended',
+        main: `${MEMPOOL_BASE_URL}/api/v1/fees/recommended`,
+        test3: `${MEMPOOL_BASE_URL}/testnet/api/v1/fees/recommended`,
+        test4: `${MEMPOOL_BASE_URL}/testnet4/api/v1/fees/recommended`,
+        signet: `${MEMPOOL_BASE_URL}/signet/api/v1/fees/recommended`,
       }[network];
       const resp = await axios.get<FeeEstimateMempoolSpaceApiResponse>(networkApi);
       const { fastestFee, halfHourFee, hourFee } = resp.data;

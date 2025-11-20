@@ -1,67 +1,111 @@
-import { useNavigate } from 'react-router';
+import { useMemo } from 'react';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { styled } from 'leather-styles/jsx';
 
-import { RouteUrls } from '@shared/route-urls';
+import type { NonFungibleCryptoAsset } from '@leather.io/models';
+import { ArrowRotateRightLeftIcon, Callout, Spinner } from '@leather.io/ui';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
-import { useWalletType } from '@app/common/use-wallet-type';
-import { CurrentBitcoinSignerLoader } from '@app/components/loaders/current-bitcoin-signer-loader';
-import { CurrentStacksAccountLoader } from '@app/components/loaders/stacks-account-loader';
-import { useConfigNftMetadataEnabled } from '@app/query/common/remote-config/remote-config.query';
-import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
+import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 
-import { CollectiblesLayout } from '../../components/collectibles/collectible.layout';
-import { AddCollectible } from './components/add-collectible';
-import { Ordinals } from './components/bitcoin/ordinals';
-import { Stamps } from './components/bitcoin/stamps';
-import { StacksCryptoAssets } from './components/stacks/stacks-crypto-assets';
-import { TaprootBalanceDisplayer } from './components/taproot-balance-displayer';
-import { useIsFetchingCollectiblesRelatedQuery } from './hooks/use-is-fetching-collectibles';
+import { CollectibleCard } from './components/collectible-card.web';
+import { CollectibleTypeIconOverlay } from './components/collectible-type-icon-overlay.web';
+import { ImageUnavailable } from './components/image-unavailable.web';
+import { InscriptionCard } from './components/inscription-card';
+import { Sip9Card } from './components/sip9-card';
+import { StampCard } from './components/stamp-card';
+
+const CARD_HEIGHT = 184;
+
+function renderCollectible(item: NonFungibleCryptoAsset) {
+  switch (item.protocol) {
+    case 'stamp':
+      return <StampCard item={item} height={CARD_HEIGHT} />;
+    case 'sip9':
+      return <Sip9Card item={item} height={CARD_HEIGHT} />;
+    case 'inscription':
+      return <InscriptionCard item={item} height={CARD_HEIGHT} />;
+    default:
+      return (
+        <CollectibleCard height={CARD_HEIGHT}>
+          <ImageUnavailable height={CARD_HEIGHT} />
+        </CollectibleCard>
+      );
+  }
+}
 
 export function Collectibles() {
-  const { whenWallet } = useWalletType();
-  const navigate = useNavigate();
-  const isNftMetadataEnabled = useConfigNftMetadataEnabled();
-  const queryClient = useQueryClient();
-  const isFetching = useIsFetchingCollectiblesRelatedQuery();
-  const discardedInscriptions = useCurrentAccountDiscardedInscriptions();
+  const {
+    data: collectibles = [],
+    isLoading,
+    isError,
+    refetch,
+    isRefetching,
+  } = useAccountCollectibles();
+
+  const renderedCollectibles = useMemo(
+    () =>
+      collectibles.map(collectible => {
+        const key = serializeAssetId(getAssetId(collectible));
+        return (
+          <CollectibleTypeIconOverlay protocol={collectible.protocol} key={key}>
+            {renderCollectible(collectible)}
+          </CollectibleTypeIconOverlay>
+        );
+      }),
+    [collectibles]
+  );
 
   return (
-    <CollectiblesLayout
-      title="Collectibles"
-      subHeader={whenWallet({
-        software: (
-          <TaprootBalanceDisplayer
-            onSelectRetrieveBalance={() =>
-              navigate(RouteUrls.RetrieveTaprootFunds, {
-                state: {
-                  backgroundLocation: { pathname: RouteUrls.Home },
-                },
-              })
-            }
-          />
-        ),
-        ledger: null,
-      })}
-      isLoading={isFetching}
-      onRefresh={() => void queryClient.refetchQueries({ type: 'active' })}
-      onDiscardAllInscriptions={() => discardedInscriptions.discardAllInscriptions()}
-      onRecoverAllInscriptions={() => discardedInscriptions.recoverAllInscriptions()}
-    >
-      <CurrentBitcoinSignerLoader>{() => <AddCollectible />}</CurrentBitcoinSignerLoader>
-      {isNftMetadataEnabled && (
-        <CurrentStacksAccountLoader>
-          {account => <StacksCryptoAssets address={account?.address ?? ''} />}
-        </CurrentStacksAccountLoader>
-      )}
-      <CurrentBitcoinSignerLoader>
-        {() => (
-          <>
-            <Stamps />
-            <Ordinals />
-          </>
-        )}
-      </CurrentBitcoinSignerLoader>
-    </CollectiblesLayout>
+    <styled.section display="flex" flexDirection="column" gap="space.04">
+      <styled.div display="flex" alignItems="center" justifyContent="space-between">
+        <styled.h2 textStyle="heading.04" margin="0">
+          Collectibles
+        </styled.h2>
+        <styled.button
+          type="button"
+          px="space.02"
+          py="space.01"
+          onClick={() => {
+            void refetch();
+          }}
+          disabled={isRefetching}
+        >
+          <ArrowRotateRightLeftIcon variant="small" />
+        </styled.button>
+      </styled.div>
+
+      {isLoading ? (
+        <styled.div display="flex" justifyContent="center" py="space.05">
+          <Spinner />
+        </styled.div>
+      ) : null}
+
+      {isError ? (
+        <Callout variant="warning" title="Unable to load collectibles">
+          Try refreshing to fetch the latest gallery.
+        </Callout>
+      ) : null}
+
+      {!isLoading && !isError && collectibles.length === 0 ? (
+        <styled.div
+          border="default"
+          borderRadius="sm"
+          py="space.06"
+          textAlign="center"
+          color="ink.text-subdued"
+        >
+          No collectibles found for this account.
+        </styled.div>
+      ) : null}
+
+      <styled.div
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, minmax(156px, 1fr))"
+        gap="space.04"
+      >
+        {renderedCollectibles}
+      </styled.div>
+    </styled.section>
   );
 }

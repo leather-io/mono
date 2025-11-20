@@ -1,37 +1,35 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { useStacksNetwork } from '~/store/stacks-network';
-import { openExternalLink } from '~/utils/external-links';
 
-import { type OnChainActivity, makeActivityLink } from '@leather.io/models';
+import {
+  type ActivityLinkClickHandler,
+  formatActivityCaption,
+  formatActivityStatusLabel,
+  getBalancesText,
+} from '@leather.io/features';
+import { type OnChainActivity } from '@leather.io/models';
 import { ActivityAvatarIcon } from '@leather.io/ui';
-
-import { formatActivityCaption, formatActivityStatusLabel, getBalancesText } from './utils';
 
 interface ActivityItemProps {
   activity: OnChainActivity;
+  activityLink?: string | null;
+  onActivityLinkClick?: ActivityLinkClickHandler;
 }
 
-export function ActivityItem({ activity }: ActivityItemProps) {
+export function ActivityItem({ activity, activityLink, onActivityLinkClick }: ActivityItemProps) {
   const { formattedBalanceCrypto, formattedBalanceQuote } = getBalancesText(activity);
-  const { networkPreference } = useStacksNetwork();
-  const activityLink =
-    'asset' in activity
-      ? makeActivityLink({
-          txid: activity.txid,
-          networkPreference,
-          asset: activity.asset,
-        })
-      : null;
+  const clickable = Boolean(activityLink);
 
   return (
     <styled.button
-      cursor={activityLink ? 'pointer' : 'default'}
+      type="button"
+      cursor={clickable ? 'pointer' : 'default'}
       display="flex"
       flexDirection="column"
       width="100%"
+      disabled={!clickable}
       onClick={() => {
         if (!activityLink) return;
-        openExternalLink(activityLink);
+        onActivityLinkClick?.(activityLink, activity);
       }}
     >
       <Flex

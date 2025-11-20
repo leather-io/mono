@@ -10,7 +10,7 @@ import { EmptyCollectiblesState } from '@/features/token/components/empty-collec
 import { TokenDetailsProps } from '@/features/token/types';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';
-import { CollectibleTypeIconOverlay } from '@leather.io/ui/native';
+import { CollectibleTypeIconOverlay } from '@/features/collectibles';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { Inscription } from './bitcoin/inscription';

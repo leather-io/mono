@@ -1,82 +1,37 @@
 # Features
 
-This package contains Leather Wallet's features library for our web + React Native applications.
+This package contains shared utilities for Leather Wallet's features for our web + React Native applications.
 
-## Architecture
+## Usage Rules
 
-This package colocates Web and React Native code, such that commonalities such as shared logic and types are shared. **The naming convention must be followed.**
+- **No platform-specific knowledge:** Components and hooks in this package do not contain any logic or imports that are specific to React Native or web platforms. All code is strictly platform-agnostic.
 
-- `*.web.ts` — bundled only for Web
-- `*.native.ts` — bundled only for React Native
-- `*.shared.ts` — bundled for all platforms
+- **Uses only React primitives:** Functionality is built using core React primitives such as hooks (`useState`, `useEffect`, etc.) and contexts (`React.createContext`, `useContext`), ensuring compatibility and reusability.
 
-## Web Setup
+- **Headless components:** There are no presentational components or JSX outputs. All business logic and state management are handled in headless hooks and context providers. You bring your own UI.
 
-Our web apps use [panda css](https://panda-css.com/). To setup in your application you need to:
+- **Render pattern:** All state and actions are exposed via render prop or hook return signatures. The consumer is responsible for supplying rendering logic and defining UI.
 
-- Install `@pandacss/dev`
-- Setup panda css and configure it to acknowledge the library code
-- Configure Webpack to load the files correctly
-- Import the library styles from `@leather.io/ui/styles`
-
-### Panda configuration
-
-Specify the library as part of the `panda.config` `include`:
+### Example
 
 ```js
-  include: [
-    './node_modules/@leather.io/ui/dist-web/**/*.{js,jsx,ts,tsx}',
-    './src/**/*.{js,jsx,ts,tsx}',
-  ],
+// Usage of a headless feature hook
+const { value, setValue } = useSomeFeature();
+
+return (
+  <CustomUIComponent value={value} onChange={setValue} />
+);
 ```
 
-### Webpack configuration
-
-- Alias `react` and `react-dom` to avoid react errors.
-
-- Configure your `module` to handle `jsx` files
+Or with a render prop:
 
 ```js
-export const config = {
-...
-  module: {
-    resolve: {
-    ...
-    alias: {
-    'leather-styles': path.resolve('leather-styles'),
-    'react': path.resolve('./node_modules/react'),
-    'react-dom': path.resolve('./node_modules/react-dom')
-    },
-      ...
-    rules: [
-      ...
-      {
-        test: /\.(js)$/,
-        include: [/node_modules\/@leather.io\/ui/],
-        loader: 'esbuild-loader',
-        options: { tsconfig: './tsconfig.json', loader: {'jsx'},target: 'es2020' },
-      },
-
+<SomeFeatureProvider>
+  {({ value, setValue }) => <CustomUI value={value} onChange={setValue} />}
+</SomeFeatureProvider>
 ```
 
-## Security: Dynamic Content Sanitization
-
-All dynamic HTML content rendered in the web app (such as FAQs, explainers, and CMS-driven posts) is sanitized using [DOMPurify](https://github.com/cure53/DOMPurify) via a shared utility (`sanitizeContent`).
-
-- **Browser:** Uses DOMPurify to remove unsafe HTML and prevent XSS.
-- **SSR:** Falls back to escaping HTML tags to prevent injection.
-
-This is enforced in all UI components that render user- or CMS-driven HTML, including FAQ, explainer, and post-driven UI elements.
-
-A shared utility, `sanitizeContent`, is used throughout the codebase to sanitize any post content before rendering. Example usage:
-
-```ts
-import { sanitizeContent } from '@leather.io/ui/utils/sanitize-content';
-
-const safeHtml = sanitizeContent(post.Summary);
-```
-
-This is applied in all FAQ, explainer, hover card, and heading components that render post content.
+**Note:** No JSX or UI is shipped—every API is logic-only and fully controlled by consumers.
 
 ## License
 

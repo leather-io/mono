@@ -24,6 +24,9 @@ export function HomeTabs({ children }: HomeTabsProps) {
           <Tabs.Trigger data-testid="tab-assets" value={RouteUrls.Home}>
             Assets
           </Tabs.Trigger>
+          <Tabs.Trigger data-testid="tab-collectibles" value={RouteUrls.Collectibles}>
+            NFTs
+          </Tabs.Trigger>
           <Tabs.Trigger data-testid="tab-activity" value={RouteUrls.Activity}>
             Activity
           </Tabs.Trigger>

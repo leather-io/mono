@@ -50,7 +50,6 @@ export {
 export { SheetNativeBackdrop } from './src/components/sheet/sheet-backdrop.native';
 export { RadioButton } from './src/components/radio-button/radio-button.native';
 export { Switch } from './src/components/switch/switch.native';
-export * from './src/components/collectibles/index.native';
 export { useCountdown } from './src/utils/use-countdown.shared';
 export { useInterval, type UseIntervalState } from './src/utils/use-interval.shared';
 export * from './src/utils/use-on-mount.shared';
