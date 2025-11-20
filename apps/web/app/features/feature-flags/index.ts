@@ -1,4 +1,5 @@
-import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
+import { asyncWithLDProvider, useFlags as useLDFlags } from 'launchdarkly-react-client-sdk';
+import { featureFlagDefaults, type FeatureFlags } from '@leather.io/models';
 import { VERSION } from '~/constants/constants';
 import { getClientId } from '~/utils/client-id';
 
@@ -15,6 +16,11 @@ export function createLDProvider() {
       kind: 'clientId',
       key: getClientId(),
     },
-    reactOptions: { useCamelCaseFlagKeys: false },
+    reactOptions: { useCamelCaseFlagKeys: true },
   });
+}
+
+export function useFlags(): FeatureFlags {
+  const flags = useLDFlags<FeatureFlags>();
+  return { ...featureFlagDefaults, ...flags };
 }

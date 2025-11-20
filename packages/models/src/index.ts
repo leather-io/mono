@@ -11,6 +11,7 @@ export * from './balance.model';
 export * from './bitcoin.model';
 export * from './bns.model';
 export * from './currencies.model';
+export * from './feature-flags';
 export * from './fees/bitcoin-fees.model';
 export * from './fees/fees.model';
 export * from './fees/stacks-fees.model';
