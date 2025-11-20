@@ -32,7 +32,7 @@ import * as Clipboard from 'expo-clipboard';
 
 import { stxAsset } from '@leather.io/constants';
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { makeActivityLink } from '@leather.io/models';
+import { makeActivityLink } from '@leather.io/features';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { Approver, SentIcon, SheetInstance } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';

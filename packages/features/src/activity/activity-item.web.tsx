@@ -1,37 +1,46 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { useStacksNetwork } from '~/store/stacks-network';
-import { openExternalLink } from '~/utils/external-links';
 
-import { type OnChainActivity, makeActivityLink } from '@leather.io/models';
+import { type OnChainActivity } from '@leather.io/models';
 import { ActivityAvatarIcon } from '@leather.io/ui';
 
-import { formatActivityCaption, formatActivityStatusLabel, getBalancesText } from './utils';
+import {
+  formatActivityCaption,
+  formatActivityStatusLabel,
+  getBalancesText,
+} from './activity.utils.shared';
 
-interface ActivityItemProps {
+export type ActivityLinkClickHandler = (activityLink: string, activity: OnChainActivity) => void;
+
+export interface ActivityItemProps {
   activity: OnChainActivity;
+  activityLink?: string | null;
+  onActivityLinkClick?: ActivityLinkClickHandler;
 }
 
-export function ActivityItem({ activity }: ActivityItemProps) {
+function openLink(activityLink: string) {
+  if (typeof window === 'undefined') return;
+  window.open(activityLink, '_blank', 'noopener,noreferrer');
+}
+
+export function ActivityItem({ activity, activityLink, onActivityLinkClick }: ActivityItemProps) {
   const { formattedBalanceCrypto, formattedBalanceQuote } = getBalancesText(activity);
-  const { networkPreference } = useStacksNetwork();
-  const activityLink =
-    'asset' in activity
-      ? makeActivityLink({
-          txid: activity.txid,
-          networkPreference,
-          asset: activity.asset,
-        })
-      : null;
+  const clickable = Boolean(activityLink);
 
   return (
     <styled.button
-      cursor={activityLink ? 'pointer' : 'default'}
+      type="button"
+      cursor={clickable ? 'pointer' : 'default'}
       display="flex"
       flexDirection="column"
       width="100%"
+      disabled={!clickable}
       onClick={() => {
         if (!activityLink) return;
-        openExternalLink(activityLink);
+        if (onActivityLinkClick) {
+          onActivityLinkClick(activityLink, activity);
+          return;
+        }
+        openLink(activityLink);
       }}
     >
       <Flex

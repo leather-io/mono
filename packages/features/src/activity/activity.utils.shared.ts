@@ -1,14 +1,32 @@
 import dayjs from 'dayjs';
-import { formatCurrency } from '~/utils/currency-formatter';
 
 import {
   type BaseOnChainActivity,
+  ChainId,
+  CryptoAsset,
+  type Money,
+  NetworkConfiguration,
   type OnChainActivity,
   isFungibleAsset,
   isInscriptionAsset,
   isStampAsset,
 } from '@leather.io/models';
-import { minusSign } from '@leather.io/utils';
+import { FormatAmountOptions, createCurrencyFormatter, minusSign } from '@leather.io/utils';
+
+const currencyFormatter = createCurrencyFormatter({
+  locale: 'en-US',
+});
+
+function formatMoney(money: Money, options?: FormatAmountOptions) {
+  return currencyFormatter.formatAmount(
+    {
+      amount: money.amount.shiftedBy(-money.decimals).toNumber(),
+      currencyCode: money.symbol,
+      decimals: money.decimals,
+    },
+    options
+  );
+}
 
 function addOperator(balance: string, operator?: string) {
   return operator ? `${operator} ${balance}` : balance;
@@ -18,12 +36,6 @@ function getBalanceOperator(activity: OnChainActivity) {
   if (activity.type === 'receiveAsset') return '+';
   if (activity.type === 'sendAsset') return minusSign;
   return undefined;
-}
-
-interface FormatActivityCaptionProps {
-  type: OnChainActivity['type'];
-  status: BaseOnChainActivity['status'];
-  timestamp: number;
 }
 
 function getActivityStatusMap(): Record<
@@ -88,7 +100,9 @@ export function formatActivityStatusLabel(activity: OnChainActivity) {
   }
 }
 
-export function formatActivityCaption({ timestamp }: FormatActivityCaptionProps) {
+export function formatActivityCaption({
+  timestamp,
+}: Pick<OnChainActivity, 'timestamp' | 'status' | 'type'>) {
   const timestampInSeconds = timestamp * 1000;
   const isRecent = dayjs(timestampInSeconds).isAfter(dayjs().subtract(1, 'hour'));
   const time = dayjs(timestampInSeconds).format('MMM D, YYYY');
@@ -106,7 +120,7 @@ export function getActivityTitle(activity: OnChainActivity) {
     case 'receiveAsset':
       if (!activity.value?.crypto?.symbol) {
         // TODO LEA-2622 - Add new design for contract execution and sBTC rewards
-        // we can have type `sendAsse` / `receiveAsset` with an empty symbol/ unknown token
+        // we can have type `sendAsset` / `receiveAsset` with an empty symbol/ unknown token
         // e.g. assetId 'SM1793C4R5PZ4NS4VQ4WMP7SKKYVH8JZEWSZ9HCCR.xyk-pool-sbtc-stx-v-1-1::pool-token'
         // could be an API issue / need to format as sBTC. extension says 'Token transfer'
         return `Token Transfer`;
@@ -127,9 +141,9 @@ export function getActivityTitle(activity: OnChainActivity) {
 export function getBalancesText(activity: OnChainActivity) {
   if (activity.type === 'swapAssets') {
     const formattedToBalanceCrypto =
-      activity.toValue?.crypto && addOperator(formatCurrency(activity.toValue?.crypto, {}), '+');
+      activity.toValue?.crypto && addOperator(formatMoney(activity.toValue?.crypto), '+');
     const formattedToBalanceQuote =
-      activity.toValue?.quote && addOperator(formatCurrency(activity.toValue?.quote, {}), '+');
+      activity.toValue?.quote && addOperator(formatMoney(activity.toValue?.quote), '+');
 
     return {
       formattedBalanceCrypto: formattedToBalanceCrypto,
@@ -144,13 +158,100 @@ export function getBalancesText(activity: OnChainActivity) {
     };
   const formattedBalanceCrypto =
     activity.value?.crypto &&
-    addOperator(formatCurrency(activity.value?.crypto, {}), getBalanceOperator(activity));
+    addOperator(formatMoney(activity.value?.crypto), getBalanceOperator(activity));
   const formattedBalanceQuote =
     activity.value?.quote &&
-    addOperator(formatCurrency(activity.value?.quote, {}), getBalanceOperator(activity));
+    addOperator(formatMoney(activity.value?.quote), getBalanceOperator(activity));
 
   return {
     formattedBalanceCrypto,
     formattedBalanceQuote,
   };
+}
+
+export type BitcoinNetworkPreference = 'mainnet' | 'testnet4' | 'signet';
+type StacksNetworkPreference = 'mainnet' | 'testnet';
+
+const HIRO_EXPLORER_URL = 'https://explorer.hiro.so';
+const MEMPOOL_BASE_URL = 'https://mempool.space';
+
+interface MakeActivityArgs {
+  txid: string;
+  networkPreference: NetworkConfiguration;
+  asset?: CryptoAsset;
+}
+export function makeActivityLink({ txid, networkPreference, asset }: MakeActivityArgs) {
+  if (txid && asset) {
+    return makeActivityExplorerLink({
+      asset,
+      txid,
+      networkPreference,
+    });
+  }
+  return null;
+}
+
+interface MakeActivityExplorerLinkArgs {
+  asset: CryptoAsset;
+  txid: string;
+  networkPreference: NetworkConfiguration;
+}
+function makeActivityExplorerLink({
+  asset,
+  txid,
+  networkPreference,
+}: MakeActivityExplorerLinkArgs) {
+  if (asset.chain === 'bitcoin') {
+    return getMempoolExplorerLink({
+      networkPreference: networkPreference.chain.bitcoin.bitcoinNetwork as BitcoinNetworkPreference,
+      id: txid,
+      type: 'txid',
+    });
+  }
+  return makeStacksTxExplorerLink({
+    networkPreference:
+      networkPreference.chain.stacks.chainId === ChainId.Testnet ? 'testnet' : 'mainnet',
+    searchParams: undefined,
+    txid,
+    explorerUrl: HIRO_EXPLORER_URL,
+  });
+}
+
+interface MakeStacksTxExplorerLinkArgs {
+  networkPreference: StacksNetworkPreference;
+  searchParams?: URLSearchParams;
+  txid: string;
+  explorerUrl: string;
+}
+function makeStacksTxExplorerLink({
+  networkPreference,
+  searchParams = new URLSearchParams(),
+  txid,
+  explorerUrl,
+}: MakeStacksTxExplorerLinkArgs) {
+  searchParams.append('chain', networkPreference);
+  return `${explorerUrl}/txid/${txid}?${searchParams.toString()}`;
+}
+
+export interface GetMempoolExplorerLinkArgs {
+  id: string;
+  type: 'txid' | 'block';
+  networkPreference: BitcoinNetworkPreference;
+}
+
+export function getMempoolExplorerLink({
+  id,
+  type,
+  networkPreference,
+}: GetMempoolExplorerLinkArgs) {
+  switch (networkPreference) {
+    case 'mainnet':
+      return `${MEMPOOL_BASE_URL}/${type}/${id}`;
+    case 'testnet4':
+      return `${MEMPOOL_BASE_URL}/testnet4/${type}/${id}`;
+    case 'signet':
+      return `${MEMPOOL_BASE_URL}/signet/${type}/${id}`;
+    default:
+      return null;
+  }
 }

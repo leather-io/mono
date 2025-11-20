@@ -1,15 +1,22 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
-import { useAccountActivity } from '~/queries/activity/account-activity.query';
 import { useBtcAccountBalance } from '~/queries/balance/btc-balance.hooks';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { useStxAccountBalance } from '~/queries/balance/stx-balance.hooks';
 import { useTotalPortfolioBalance } from '~/queries/balance/total-balance.hooks';
 import { useLeatherConnect } from '~/store/addresses';
+import { useStacksNetwork } from '~/store/stacks-network';
+import { openExternalLink } from '~/utils/external-links';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
+import {
+  type ActivityLinkClickHandler,
+  ActivityList,
+  type OnChainActivity,
+  makeActivityLink,
+  useAccountActivity,
+} from '@leather.io/features';
 
-import { ActivityList } from './components/activity-list';
 import { PortfolioChart, PortfolioChartPending } from './components/portfolio-chart';
 import { PortfolioPageLayout } from './components/portfolio-page.layout';
 import { PortfolioSummary } from './components/portfolio-summary';
@@ -40,12 +47,20 @@ export function PortfolioPageSkeleton() {
 
 export function PortfolioPage() {
   const totalBalance = useTotalPortfolioBalance();
-  const { status } = useLeatherConnect();
+  const { status, stacksAccount, btcAccount } = useLeatherConnect();
+  const { networkPreference } = useStacksNetwork();
 
   const btcQuery = useBtcAccountBalance();
   const sip10Query = useSip10AccountBalance();
   const stxQuery = useStxAccountBalance();
-  const activityQuery = useAccountActivity();
+  const activityAccount = useMemo(
+    () => ({
+      ...btcAccount,
+      stacks: stacksAccount ? { stxAddress: stacksAccount.address } : undefined,
+    }),
+    [btcAccount, stacksAccount]
+  );
+  const activityQuery = useAccountActivity(activityAccount);
 
   const isConnected = status === 'connected';
   const allAssets = useMemo(() => {
@@ -73,6 +88,25 @@ export function PortfolioPage() {
     return assets.sort(sortAssetsByValue);
   }, [btcQuery.data, sip10Query.data, stxQuery.data]);
 
+  const getActivityLink = useCallback(
+    (activity: OnChainActivity) => {
+      if (!('asset' in activity)) return null;
+      return makeActivityLink({
+        txid: activity.txid,
+        networkPreference,
+        asset: activity.asset,
+      });
+    },
+    [networkPreference]
+  );
+
+  const handleActivityLinkClick = useCallback<ActivityLinkClickHandler>(
+    (activityLink, _activity) => {
+      openExternalLink(activityLink);
+    },
+    []
+  );
+
   if (status !== 'connected') {
     return (
       <>
@@ -82,7 +116,14 @@ export function PortfolioPage() {
           assetCount={dummyPortfolioAssets.length}
           assetList={<PortfolioTable assets={dummyPortfolioAssets} isLoading={false} />}
           visualization={<PortfolioChart assets={dummyPortfolioAssets} />}
-          activityList={<ActivityList activity={[]} isLoading={false} />}
+          activityList={
+            <ActivityList
+              activity={[]}
+              isLoading={false}
+              getActivityLink={getActivityLink}
+              onActivityLinkClick={handleActivityLinkClick}
+            />
+          }
         />
         <WalletConnectionModal isOpen={true} />
       </>
@@ -102,6 +143,8 @@ export function PortfolioPage() {
         <ActivityList
           activity={isConnected ? (activityQuery.data ?? []) : []}
           isLoading={isConnected && activityQuery.isLoading}
+          getActivityLink={getActivityLink}
+          onActivityLinkClick={handleActivityLinkClick}
         />
       }
     />

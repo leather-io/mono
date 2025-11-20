@@ -5,7 +5,8 @@ import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
-import { BitcoinNetworkPreference, StampAsset, getMempoolExplorerLink } from '@leather.io/models';
+import { type BitcoinNetworkPreference, getMempoolExplorerLink } from '@leather.io/features';
+import { StampAsset } from '@leather.io/models';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
 import { TokenDetailsCard } from '../components/token-details-card';

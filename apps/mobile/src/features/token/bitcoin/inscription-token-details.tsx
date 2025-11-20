@@ -7,11 +7,8 @@ import { t } from '@lingui/core/macro';
 import dayjs from 'dayjs';
 
 import { ORD_IO_URL } from '@leather.io/constants';
-import {
-  BitcoinNetworkPreference,
-  InscriptionAsset,
-  getMempoolExplorerLink,
-} from '@leather.io/models';
+import { type BitcoinNetworkPreference, getMempoolExplorerLink } from '@leather.io/features';
+import { InscriptionAsset } from '@leather.io/models';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { Collectible, useCollectibleHeight } from '../collectible';

@@ -4,11 +4,11 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": " pnpm build:native && pnpm build:web",
+    "build": "pnpm panda && pnpm build:native && pnpm build:web",
     "build:native": "tsup --config tsup.config.native.ts",
     "build:native:watch": "concurrently \"pnpm build:native --watch -- --preserveWatchOutput\"",
-    "build:watch": "concurrently  \"pnpm build:native --watch -- --preserveWatchOutput\" \"pnpm build:web --watch\" ",
-    "build:web": "tsup --config tsup.config.web.ts",
+    "build:watch": "concurrently \"pnpm panda --watch\" \"pnpm build:native --watch -- --preserveWatchOutput\" \"pnpm build:web --watch\"",
+    "build:web": "panda && tsup --config tsup.config.web.ts",
     "format": "prettier . --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "test:unit": "vitest run",
@@ -19,18 +19,27 @@
     "./native": "./dist-native/exports.native.js"
   },
   "dependencies": {
+    "@leather.io/services": "workspace:*",
+    "@leather.io/models": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tokens": "workspace:*",
+    "@leather.io/ui": "workspace:*",
+    "@leather.io/utils": "workspace:*",
     "@noble/hashes": "1.5.0",
+    "@tanstack/react-query": "5.85.5",
+    "dayjs": "1.11.13",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.2",
     "react-native-safe-area-context": "5.4.0",
-    "react-native-webview": "13.14.1"
+    "react-native-webview": "13.14.1",
+    "react-virtuoso": "4.9.0"
   },
   "devDependencies": {
     "@babel/core": "7.27.1",
     "@babel/runtime": "7.26.0",
+    "@pandacss/dev": "0.53.6",
+    "@leather.io/panda-preset": "workspace:*",
     "@testing-library/react": "16.3.0",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",

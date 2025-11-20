@@ -28,12 +28,12 @@ import {
   getSizeInfo,
 } from '@leather.io/bitcoin';
 import { btcAsset } from '@leather.io/constants';
+import { makeActivityLink } from '@leather.io/features';
 import {
   AccountId,
   AverageBitcoinFeeRates,
   BitcoinNetworkModes,
   FeeTypes,
-  makeActivityLink,
 } from '@leather.io/models';
 import { RpcParams, signPsbt } from '@leather.io/rpc';
 import { Approver, Box, SentIcon, SheetInstance, Text } from '@leather.io/ui/native';

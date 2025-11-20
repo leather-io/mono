@@ -35,4 +35,4 @@ yarn-error.*
 *.tsbuildinfo
 dist-web/
 dist-native/
-
+leather-styles/
