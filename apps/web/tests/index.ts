@@ -17,20 +17,18 @@ export const test = base.extend<Fixtures>({
   page: async ({ page }, use) => {
     const messages: string[] = [];
     page.on('console', msg => {
-      // Ignore regular log messages; we are only interested in errors.
       if (msg.type() === 'error' && !msg.text().includes('Maximum update depth exceeded'))
         messages.push(`[${msg.type()}] ${msg.text()}`);
     });
-    // Uncaught (in promise) TypeError + friends are page errors.
     page.on('pageerror', error => {
       messages.push(`[${error.name}] ${error.message}`);
     });
     await use(page);
-    if (messages.length) {
-      // eslint-disable-next-line no-console
-      console.log(`Console errors: ${messages.join('\n')}`);
+    if (messages.length > 0) {
+      const errorMessage = `Test produced ${messages.length} console error(s):\n${messages.join('\n')}`;
+      console.error(errorMessage);
+      throw new Error(errorMessage);
     }
-    expect(messages).toStrictEqual([]);
   },
   network: createNetworkFixture({
     initialHandlers: [...successHandlers],
