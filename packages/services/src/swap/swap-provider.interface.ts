@@ -1,5 +1,8 @@
+import type BigNumber from 'bignumber.js';
+
 import {
   FungibleCryptoAsset,
+  type Money,
   SwapExecutionData,
   SwapProviderAsset,
   SwapProviderId,
@@ -9,38 +12,35 @@ import {
 
 import { AccountRequest } from '../types';
 
-export interface SwapProviderServiceGetTargetAssetParams {
+export interface GetTargetProviderAssetsParams {
   baseAsset: FungibleCryptoAsset;
   baseProviderAsset: SwapProviderAsset;
 }
 
-export interface SwapProviderServiceGetSwapQuotesParams {
+export interface GetSwapQuotesParams {
   baseAsset: SwappableFungibleCryptoAsset;
   baseProviderAsset: SwapProviderAsset;
   targetAsset: SwappableFungibleCryptoAsset;
   targetProviderAsset: SwapProviderAsset;
-  baseAmount: number;
+  baseAmount: Money;
 }
 
-export interface SwapProviderServiceGetSwapExecutionDataParams {
+export interface GetSwapExecutionDataParams {
   request: AccountRequest;
   quote: SwapQuote;
-  slippage: number;
+  slippagePercentage: BigNumber;
 }
 
 export interface SwapProviderService {
   providerId: SwapProviderId;
-  getBaseSwapAssets(signal?: AbortSignal): Promise<SwapProviderAsset[]>;
-  getTargetAssets(
-    params: SwapProviderServiceGetTargetAssetParams,
+  getBaseProviderAssets(signal?: AbortSignal): Promise<SwapProviderAsset[]>;
+  getTargetProviderAssets(
+    params: GetTargetProviderAssetsParams,
     signal?: AbortSignal
   ): Promise<SwapProviderAsset[]>;
-  getSwapQuotes(
-    params: SwapProviderServiceGetSwapQuotesParams,
-    signal?: AbortSignal
-  ): Promise<SwapQuote[]>;
+  getSwapQuotes(params: GetSwapQuotesParams, signal?: AbortSignal): Promise<SwapQuote[]>;
   getSwapExecutionData(
-    params: SwapProviderServiceGetSwapExecutionDataParams,
+    params: GetSwapExecutionDataParams,
     signal?: AbortSignal
   ): Promise<SwapExecutionData>;
 }

@@ -6,14 +6,13 @@ import {
   type BitflowSdkSwapQuote,
   CryptoAssetProtocols,
   FungibleAssetId,
-  FungibleCryptoAsset,
   SwapExecutionData,
   SwapProviderAsset,
   SwapProviderId,
   SwappableFungibleCryptoAsset,
   isSwappableAsset,
 } from '@leather.io/models';
-import { createMoneyFromDecimal, getAssetId } from '@leather.io/utils';
+import { convertAmountToBaseUnit, createMoneyFromDecimal, getAssetId } from '@leather.io/utils';
 
 import { FungibleAssetService } from '../assets/fungible-asset.service';
 import {
@@ -26,10 +25,10 @@ import {
   LeatherApiSwapDex,
 } from '../infrastructure/api/leather/leather-api.client';
 import {
+  GetSwapExecutionDataParams,
+  GetSwapQuotesParams,
+  GetTargetProviderAssetsParams,
   SwapProviderService,
-  SwapProviderServiceGetSwapExecutionDataParams,
-  SwapProviderServiceGetSwapQuotesParams,
-  SwapProviderServiceGetTargetAssetParams,
 } from './swap-provider.interface';
 import { mapBitflowDexProviderToSwapDexId, mapToSwapDex } from './swap.utils';
 
@@ -43,7 +42,7 @@ export class BitflowSwapProviderService implements SwapProviderService {
     private readonly fungibleAssetService: FungibleAssetService
   ) {}
 
-  async getBaseSwapAssets(): Promise<SwapProviderAsset[]> {
+  async getBaseProviderAssets(): Promise<SwapProviderAsset[]> {
     const tokens = await this.bitflowSdkClient.getAvailableTokens();
     return tokens
       .map(token => {
@@ -69,30 +68,26 @@ export class BitflowSwapProviderService implements SwapProviderService {
       .filter(isNonNullish);
   }
 
-  async getTargetAssets({
+  async getTargetProviderAssets({
     baseProviderAsset,
-  }: SwapProviderServiceGetTargetAssetParams): Promise<SwapProviderAsset[]> {
+  }: GetTargetProviderAssetsParams): Promise<SwapProviderAsset[]> {
     const [swapAssets, tokenYs] = await Promise.all([
-      this.getBaseSwapAssets(),
+      this.getBaseProviderAssets(),
       this.bitflowSdkClient.getAllPossibleTokenY(baseProviderAsset.providerAssetId),
     ]);
     return swapAssets.filter(swapAsset => tokenYs.includes(swapAsset.providerAssetId));
   }
 
   async getSwapQuotes(
-    {
-      baseProviderAsset,
-      targetProviderAsset,
-      targetAsset,
-      baseAmount,
-    }: SwapProviderServiceGetSwapQuotesParams,
+    params: GetSwapQuotesParams,
     signal?: AbortSignal
   ): Promise<BitflowSdkSwapQuote[]> {
+    const { baseProviderAsset, targetProviderAsset, baseAmount } = params;
     const [quoteResult, swapDexMap] = await Promise.all([
       this.bitflowSdkClient.getQuoteForRoute(
         baseProviderAsset.providerAssetId,
         targetProviderAsset.providerAssetId,
-        baseAmount
+        convertAmountToBaseUnit(baseAmount).toNumber()
       ),
       this.leatherApiClient.fetchSwapDexes(),
     ]);
@@ -101,35 +96,35 @@ export class BitflowSwapProviderService implements SwapProviderService {
     const quotes = await Promise.all(
       quoteResult.allRoutes
         .filter(route => !!route.quote)
-        .map(route =>
-          this.mapBitflowRouteToQuote(baseAmount, route, targetAsset, swapDexMap, signal)
-        )
+        .map(route => this.mapBitflowRouteToQuote(route, params, swapDexMap, signal))
     );
     return quotes;
   }
 
   private async mapBitflowRouteToQuote(
-    baseAmount: number,
     route: BitflowSdkRouteQuote,
-    targetAsset: FungibleCryptoAsset,
+    params: GetSwapQuotesParams,
     swapDexMap: Record<string, LeatherApiSwapDex>,
     signal?: AbortSignal
   ): Promise<BitflowSdkSwapQuote> {
+    const { baseAsset, targetAsset, baseAmount } = params;
     return {
+      baseAsset,
+      targetAsset,
       executionType: 'stacks-contract-call',
       providerId: 'bitflow-sdk',
       providerQuoteData: {
         bitflowSdkSelectedSwapRoute: route.route,
       },
       baseAmount,
-      targetAmount: route.quote!,
-      quote: createMoneyFromDecimal(route.quote!, targetAsset.symbol, targetAsset.decimals),
+      targetAmount: createMoneyFromDecimal(route.quote!, targetAsset.symbol, targetAsset.decimals),
       dexPath: route.dexPath
         .map(mapBitflowDexProviderToSwapDexId)
         .map(swapDexId => swapDexMap[swapDexId])
         .filter(isNonNullish)
         .map(mapToSwapDex),
       assetPath: await this.getAssetPathAssets(route.tokenPath, signal),
+      createdAt: new Date(),
     };
   }
 
@@ -137,7 +132,7 @@ export class BitflowSwapProviderService implements SwapProviderService {
     pathKeys: string[],
     signal?: AbortSignal
   ): Promise<SwappableFungibleCryptoAsset[]> {
-    const allSwapAssets = await this.getBaseSwapAssets();
+    const allSwapAssets = await this.getBaseProviderAssets();
     const promises = pathKeys
       .map(key => allSwapAssets.find(a => a.providerAssetId === key))
       .filter(isNonNullish)
@@ -152,8 +147,8 @@ export class BitflowSwapProviderService implements SwapProviderService {
   async getSwapExecutionData({
     request,
     quote,
-    slippage,
-  }: SwapProviderServiceGetSwapExecutionDataParams): Promise<SwapExecutionData> {
+    slippagePercentage,
+  }: GetSwapExecutionDataParams): Promise<SwapExecutionData> {
     if (quote.providerId !== 'bitflow-sdk') {
       throw new Error('Invalid quote provider id');
     }
@@ -166,16 +161,17 @@ export class BitflowSwapProviderService implements SwapProviderService {
         route: selectedSwapRoute,
         tokenXDecimals: selectedSwapRoute.tokenXDecimals,
         tokenYDecimals: selectedSwapRoute.tokenYDecimals,
-        amount: quote.baseAmount,
+        amount: quote.baseAmount.amount.toNumber(),
       },
       request.account.stacks!.stxAddress,
-      slippage
+      slippagePercentage.toNumber()
     );
     if (!swapParams) throw new Error('Bitflow swap params unavailable');
 
     return {
       providerId: quote.providerId,
       executionType: quote.executionType,
+      quote,
       contractAddress: swapParams.contractAddress,
       contractName: swapParams.contractName,
       functionName: swapParams.functionName,
