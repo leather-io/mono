@@ -2,9 +2,11 @@ import { asyncWithLDProvider, useFlags } from 'launchdarkly-react-client-sdk';
 import { VERSION } from '~/constants/constants';
 import { getClientId } from '~/utils/client-id';
 
-export function createLDProvider() {
+export function createLaunchDarklyProvider() {
+  if (!import.meta.env.LEATHER_LAUNCH_DARKLY_KEY) return null;
+
   return asyncWithLDProvider({
-    clientSideID: import.meta.env.LEATHER_LAUNCH_DARKLY_KEY ?? '',
+    clientSideID: import.meta.env.LEATHER_LAUNCH_DARKLY_KEY,
     options: {
       application: {
         id: 'leather-web',
