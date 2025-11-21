@@ -10,7 +10,7 @@ interface ModeOptions {
 
 interface Fixtures {
   network: NetworkFixture;
-  mode: (options?: ModeOptions) => Promise<void>;
+  mode(options?: ModeOptions): Promise<void>;
 }
 
 export const test = base.extend<Fixtures>({
