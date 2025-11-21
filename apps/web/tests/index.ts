@@ -1,5 +1,5 @@
 import { type NetworkFixture, createNetworkFixture } from '@msw/playwright';
-import { test as base, expect } from '@playwright/test';
+import { test as base } from '@playwright/test';
 
 import { successHandlers } from '../app/mocks/api/mock-handlers';
 
@@ -26,6 +26,7 @@ export const test = base.extend<Fixtures>({
     await use(page);
     if (messages.length > 0) {
       const errorMessage = `Test produced ${messages.length} console error(s):\n${messages.join('\n')}`;
+      // eslint-disable-next-line no-console
       console.error(errorMessage);
       throw new Error(errorMessage);
     }
