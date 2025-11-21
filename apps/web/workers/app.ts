@@ -27,6 +27,9 @@ export default {
     headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
     headers.set('Referrer-Policy', 'no-referrer');
     headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+    headers.set('Accept-CH', 'Sec-CH-Prefers-Color-Scheme');
+    headers.set('Vary', 'Sec-CH-Prefers-Color-Scheme');
+    headers.set('Critical-CH', 'Sec-CH-Prefers-Color-Scheme');
 
     return new Response(resp.body, { ...resp, headers });
   },
