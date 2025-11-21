@@ -233,6 +233,7 @@
     "@types/webpack": "5.28.5",
     "@types/zxcvbn": "4.4.5",
     "@typescript-eslint/parser": "7.5.0",
+    "@typescript/native-preview": "7.0.0-dev.20251121.1",
     "base64-loader": "1.0.0",
     "bip32": "4.0.0",
     "blns": "2.0.4",
