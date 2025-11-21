@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: './tests',
   testMatch: '**/*.spec.ts',
 
-  fullyParallel: true,
+  fullyParallel: false,
 
   forbidOnly: !!process.env.CI,
 
