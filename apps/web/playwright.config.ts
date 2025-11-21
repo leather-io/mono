@@ -4,6 +4,8 @@ export default defineConfig({
   testDir: './tests',
   testMatch: '**/*.spec.ts',
 
+  // MSW, used via @msw/playwright is not fully isolated to an individual test,
+  // so this settings must be disabled
   fullyParallel: false,
 
   forbidOnly: !!process.env.CI,
