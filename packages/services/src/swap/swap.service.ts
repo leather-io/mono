@@ -32,6 +32,7 @@ import { AlexSwapProviderService } from './alex-swap-provider.service';
 import { BitflowSwapProviderService } from './bitflow-swap-provider.service';
 import { SbtcBridgeSwapProviderService } from './sbtc-bridge-swap-provider.service';
 import { SwapProviderService } from './swap-provider.interface';
+import { hasValidMinReceiveAmountPostCondition } from './swap.utils';
 import { VelarSwapProviderService } from './velar-swap-provider.service';
 
 export interface AccountSwapAsset extends SwapAsset {
@@ -133,7 +134,7 @@ export class SwapService {
 
   public async getBaseSwapAssets(signal?: AbortSignal): Promise<SwapAsset[]> {
     const providerSwapAssets = await Promise.all(
-      this.getSwapProviderServices().map(service => service.getBaseSwapAssets(signal))
+      this.getSwapProviderServices().map(service => service.getBaseProviderAssets(signal))
     );
     return await this.combineProviderAssets(providerSwapAssets.flat());
   }
@@ -151,7 +152,7 @@ export class SwapService {
       throw new Error('Base swap asset not found');
     }
     const providerServiceCalls = baseSwapAsset.providerAssets.map(providerBaseAsset =>
-      this.getSwapProviderServiceById(providerBaseAsset.providerId).getTargetAssets(
+      this.getSwapProviderServiceById(providerBaseAsset.providerId).getTargetProviderAssets(
         { baseAsset: baseSwapAsset.asset, baseProviderAsset: providerBaseAsset },
         signal
       )
@@ -194,29 +195,28 @@ export class SwapService {
     baseAmount: Money,
     signal?: AbortSignal
   ): Promise<SwapQuote[]> {
-    return [];
-    // if (baseAmount === 0) return [];
+    if (baseAmount.amount.isZero()) return [];
 
-    // const providerServiceCalls = targetAsset.providerAssets
-    //   .map(targetProviderAsset => {
-    //     const baseProviderAsset = baseAsset.providerAssets.find(
-    //       b => b.providerId === targetProviderAsset.providerId
-    //     );
-    //     if (!baseProviderAsset) return;
-    //     return this.getSwapProviderServiceById(targetProviderAsset.providerId).getSwapQuotes(
-    //       {
-    //         baseAsset: baseAsset.asset,
-    //         baseProviderAsset: baseProviderAsset,
-    //         targetAsset: targetAsset.asset,
-    //         targetProviderAsset: targetProviderAsset,
-    //         baseAmount,
-    //       },
-    //       signal
-    //     );
-    //   })
-    //   .filter(isNonNullish);
-    // const swapQuotes = await Promise.all(providerServiceCalls);
-    // return swapQuotes.flat();
+    const providerServiceCalls = targetAsset.providerAssets
+      .map(targetProviderAsset => {
+        const baseProviderAsset = baseAsset.providerAssets.find(
+          b => b.providerId === targetProviderAsset.providerId
+        );
+        if (!baseProviderAsset) return;
+        return this.getSwapProviderServiceById(targetProviderAsset.providerId).getSwapQuotes(
+          {
+            baseAsset: baseAsset.asset,
+            baseProviderAsset: baseProviderAsset,
+            targetAsset: targetAsset.asset,
+            targetProviderAsset: targetProviderAsset,
+            baseAmount,
+          },
+          signal
+        );
+      })
+      .filter(isNonNullish);
+    const swapQuotes = await Promise.all(providerServiceCalls);
+    return swapQuotes.flat();
   }
 
   public async getSwapExecutionData(
@@ -225,9 +225,15 @@ export class SwapService {
     slippagePercentage: BigNumber,
     signal?: AbortSignal
   ): Promise<SwapExecutionData> {
-    return this.getSwapProviderServiceById(quote.providerId).getSwapExecutionData(
-      { request, quote, slippage: slippagePercentage.toNumber() },
-      signal
-    );
+    const executionData = await this.getSwapProviderServiceById(
+      quote.providerId
+    ).getSwapExecutionData({ request, quote, slippagePercentage }, signal);
+    if (
+      executionData.executionType === 'stacks-contract-call' &&
+      !hasValidMinReceiveAmountPostCondition(executionData, slippagePercentage)
+    ) {
+      throw new Error('Min receive amount post condition not found');
+    }
+    return executionData;
   }
 }

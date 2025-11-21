@@ -8,13 +8,14 @@ import {
   SwapProviderAsset,
   SwapProviderId,
 } from '@leather.io/models';
-import { createMoneyFromDecimal, getAssetId, isSameAssetId } from '@leather.io/utils';
+import { createMoney, getAssetId, isSameAssetId } from '@leather.io/utils';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import {
+  type GetSwapExecutionDataParams,
+  GetSwapQuotesParams,
+  GetTargetProviderAssetsParams,
   SwapProviderService,
-  SwapProviderServiceGetSwapQuotesParams,
-  SwapProviderServiceGetTargetAssetParams,
 } from './swap-provider.interface';
 import { mapToSwapDex } from './swap.utils';
 
@@ -40,13 +41,13 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
 
   constructor(private readonly leatherApiClient: LeatherApiClient) {}
 
-  async getBaseSwapAssets(): Promise<SwapProviderAsset[]> {
+  async getBaseProviderAssets(): Promise<SwapProviderAsset[]> {
     return [this.btcSwapAsset, this.sbtcSwapAsset];
   }
 
-  async getTargetAssets({
+  async getTargetProviderAssets({
     baseProviderAsset,
-  }: SwapProviderServiceGetTargetAssetParams): Promise<SwapProviderAsset[]> {
+  }: GetTargetProviderAssetsParams): Promise<SwapProviderAsset[]> {
     if (isSameAssetId(baseProviderAsset.assetId, this.sbtcSwapAsset.assetId)) {
       return [this.btcSwapAsset];
     }
@@ -60,26 +61,32 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
     baseAsset,
     baseAmount,
     targetAsset,
-  }: SwapProviderServiceGetSwapQuotesParams): Promise<SbtcBridgeSwapQuote[]> {
+  }: GetSwapQuotesParams): Promise<SbtcBridgeSwapQuote[]> {
     const swapDexMap = await this.leatherApiClient.fetchSwapDexes();
     return [
       {
         executionType: 'sbtc-bridge-transfer',
         providerId: 'sbtc-bridge',
-        providerQuoteData: null,
+        baseAsset,
+        targetAsset,
         baseAmount,
-        targetAmount: baseAmount,
-        quote: createMoneyFromDecimal(baseAmount, targetAsset.symbol, targetAsset.decimals),
+        targetAmount: createMoney(
+          baseAmount.amount.toNumber(),
+          targetAsset.symbol,
+          targetAsset.decimals
+        ),
         dexPath: swapDexMap['sbtc-bridge'] ? [mapToSwapDex(swapDexMap['sbtc-bridge'])] : [],
         assetPath: [baseAsset, targetAsset],
+        createdAt: new Date(),
       },
     ];
   }
 
-  async getSwapExecutionData(): Promise<SwapExecutionData> {
+  async getSwapExecutionData({ quote }: GetSwapExecutionDataParams): Promise<SwapExecutionData> {
     return {
       executionType: 'sbtc-bridge-transfer',
       providerId: this.providerId,
+      quote,
     };
   }
 }

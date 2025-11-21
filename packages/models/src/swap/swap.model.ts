@@ -32,11 +32,13 @@ export type SwapQuote =
 export interface BaseSwapQuote {
   executionType: SwapExecutionType;
   providerId: SwapProviderId;
-  providerQuoteData: unknown;
+  baseAsset: SwappableFungibleCryptoAsset;
+  targetAsset: SwappableFungibleCryptoAsset;
   baseAmount: Money;
   targetAmount: Money;
   dexPath: SwapDex[];
   assetPath: (NativeCryptoAsset | Sip10Asset)[];
+  createdAt: Date;
 }
 
 export interface AlexSdkSwapQuote extends BaseSwapQuote {
@@ -80,9 +82,11 @@ export type SwapExecutionType = (typeof swapExecutionTypes)[number];
 export interface BaseSwapExecutionData {
   executionType: SwapExecutionType;
   providerId: SwapProviderId;
+  quote: SwapQuote;
 }
 export interface StacksContractCallSwapExecutionData extends BaseSwapExecutionData {
   executionType: 'stacks-contract-call';
+  quote: SwapQuote;
   contractAddress: string;
   contractName: string;
   functionName: string;

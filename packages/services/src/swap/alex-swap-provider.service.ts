@@ -10,12 +10,7 @@ import {
   type SwappableFungibleCryptoAsset,
   isSwappableAsset,
 } from '@leather.io/models';
-import {
-  convertAmountToFractionalUnit,
-  createMoney,
-  getAssetId,
-  initBigNumber,
-} from '@leather.io/utils';
+import { getAssetId } from '@leather.io/utils';
 
 import { FungibleAssetService } from '../assets/fungible-asset.service';
 import {
@@ -25,12 +20,16 @@ import {
 } from '../infrastructure/api/alex/alex-sdk.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import {
+  convertAlexSdkAmountToMoney,
+  convertMoneyToAlexSdkAmount,
+} from './alex-swap-provider.utils';
+import {
+  type GetSwapExecutionDataParams,
+  type GetSwapQuotesParams,
+  type GetTargetProviderAssetsParams,
   SwapProviderService,
-  type SwapProviderServiceGetSwapExecutionDataParams,
-  type SwapProviderServiceGetSwapQuotesParams,
-  type SwapProviderServiceGetTargetAssetParams,
 } from './swap-provider.interface';
-import { calculateMinToReceiveAmount } from './swap.utils';
+import { calculateMinReceiveAmount } from './swap.utils';
 
 @injectable()
 export class AlexSwapProviderService implements SwapProviderService {
@@ -42,13 +41,13 @@ export class AlexSwapProviderService implements SwapProviderService {
     private readonly fungibleAssetService: FungibleAssetService
   ) {}
 
-  async getBaseSwapAssets(): Promise<SwapProviderAsset[]> {
+  async getBaseProviderAssets(): Promise<SwapProviderAsset[]> {
     return this.getSwapAssets();
   }
 
-  async getTargetAssets({
+  async getTargetProviderAssets({
     baseProviderAsset,
-  }: SwapProviderServiceGetTargetAssetParams): Promise<SwapProviderAsset[]> {
+  }: GetTargetProviderAssetsParams): Promise<SwapProviderAsset[]> {
     const targetAssets = await this.getSwapAssets();
     return targetAssets.filter(
       asset => asset.providerAssetId !== baseProviderAsset.providerAssetId
@@ -75,36 +74,25 @@ export class AlexSwapProviderService implements SwapProviderService {
   };
 
   async getSwapQuotes(
-    {
-      baseAsset,
-      baseProviderAsset,
-      targetAsset,
-      targetProviderAsset,
-      baseAmount,
-    }: SwapProviderServiceGetSwapQuotesParams,
+    params: GetSwapQuotesParams,
     signal?: AbortSignal
   ): Promise<AlexSdkSwapQuote[]> {
+    const { baseAsset, baseProviderAsset, targetAsset, targetProviderAsset, baseAmount } = params;
     try {
       const route = await this.alexSdkClient.getRoute(
         baseProviderAsset.providerAssetId,
         targetProviderAsset.providerAssetId
       );
 
-      const baseUnit = convertAmountToFractionalUnit(
-        initBigNumber(baseAmount),
-        baseAsset.decimals
-      ).toNumber();
-
       const [amountTo, swapDexMap] = await Promise.all([
         this.alexSdkClient.getAmountTo(
           baseProviderAsset.providerAssetId,
           targetProviderAsset.providerAssetId,
-          BigInt(baseUnit),
+          convertMoneyToAlexSdkAmount(baseAmount),
           route
         ),
         this.leatherApiClient.fetchSwapDexes({ signal }),
       ]);
-      const amountToNum = Number(amountTo);
 
       return [
         {
@@ -115,14 +103,20 @@ export class AlexSwapProviderService implements SwapProviderService {
             targetProviderAssetId: targetProviderAsset.providerAssetId,
             alexSdkAmmRoute: route,
           },
+          baseAsset,
+          targetAsset,
           baseAmount,
-          targetAmount: amountToNum,
-          quote: createMoney(amountToNum, targetAsset.symbol, targetAsset.decimals),
+          targetAmount: convertAlexSdkAmountToMoney(
+            amountTo,
+            targetAsset.symbol,
+            targetAsset.decimals
+          ),
           dexPath: route.map(() => swapDexMap['alex']),
           assetPath:
             route.length > 1
               ? await this.getAssetPathAssets(route, signal)
               : [baseAsset, targetAsset],
+          createdAt: new Date(),
         },
       ];
     } catch {
@@ -160,25 +154,26 @@ export class AlexSwapProviderService implements SwapProviderService {
   async getSwapExecutionData({
     request,
     quote,
-    slippage,
-  }: SwapProviderServiceGetSwapExecutionDataParams): Promise<SwapExecutionData> {
+    slippagePercentage: slippage,
+  }: GetSwapExecutionDataParams): Promise<SwapExecutionData> {
     if (quote.providerId !== 'alex-sdk') {
       throw new Error('Invalid quote provider id');
     }
 
-    const minToAmount = calculateMinToReceiveAmount(quote.quote, slippage);
+    const minReceiveAmount = calculateMinReceiveAmount(quote.targetAmount, slippage);
 
     const swapTx = await this.alexSdkClient.getSwapTx(
       request.account.stacks!.stxAddress,
       quote.providerQuoteData.baseProviderAssetId,
       quote.providerQuoteData.targetProviderAssetId,
-      BigInt(quote.quote.amount.toNumber()),
-      BigInt(minToAmount.amount.toNumber())
+      convertMoneyToAlexSdkAmount(quote.baseAmount),
+      convertMoneyToAlexSdkAmount(minReceiveAmount)
     );
 
     return {
       executionType: 'stacks-contract-call',
       providerId: 'alex-sdk',
+      quote,
       contractAddress: swapTx.contractAddress,
       contractName: swapTx.contractName,
       functionName: swapTx.functionName,
