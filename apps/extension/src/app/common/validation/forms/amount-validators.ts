@@ -1,8 +1,7 @@
 import BigNumber from 'bignumber.js';
 import * as yup from 'yup';
 
-import type { Money } from '@leather.io/models';
-import type { UtxoResponseItem } from '@leather.io/query';
+import type { Money, OwnedUtxo } from '@leather.io/models';
 import {
   btcToSat,
   convertAmountToBaseUnit,
@@ -33,12 +32,12 @@ function amountValidator() {
 interface BtcInsufficientBalanceValidatorArgs {
   calcMaxSpend(
     recipient: string,
-    utxos: UtxoResponseItem[]
+    utxos: OwnedUtxo[]
   ): {
     spendableBitcoin: BigNumber;
   };
   recipient: string;
-  utxos: UtxoResponseItem[];
+  utxos: OwnedUtxo[];
 }
 export function btcInsufficientBalanceValidator({
   calcMaxSpend,

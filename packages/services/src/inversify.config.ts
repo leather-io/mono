@@ -183,3 +183,9 @@ export function getBisApiClient() {
 export function getBnsV2ApiClient() {
   return getServicesContainer().get(BnsV2ApiClient);
 }
+/* 
+  Infrastructure
+*/
+export function getHttpCacheService() {
+  return getServicesContainer().get(HttpCacheService);
+}

@@ -2,16 +2,12 @@ import { useCallback } from 'react';
 
 import * as btc from '@scure/btc-signer';
 
-import type { Money } from '@leather.io/models';
-import type { UtxoResponseItem } from '@leather.io/query';
+import { determineUtxosForSpend, determineUtxosForSpendAll } from '@leather.io/bitcoin';
+import type { Money, OwnedUtxo } from '@leather.io/models';
 
 import { logger } from '@shared/logger';
 import type { TransferRecipient } from '@shared/models/form.model';
 
-import {
-  determineUtxosForSpend,
-  determineUtxosForSpendAll,
-} from '@app/common/transactions/bitcoin/coinselect/local-coin-selection';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
 import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
@@ -36,7 +32,7 @@ export function useGenerateUnsignedNativeSegwitTx({
     async (
       values: GenerateNativeSegwitTxValues,
       feeRate: number,
-      utxos: UtxoResponseItem[],
+      utxos: OwnedUtxo[],
       isSendingMax?: boolean
     ) => {
       if (!utxos.length) return;
@@ -90,7 +86,7 @@ export function useGenerateUnsignedNativeSegwitTx({
           tx.addOutputAddress(output.address, BigInt(output.value), networkMode);
         });
 
-        return { hex: tx.hex, fee: fee, psbt: tx.toPSBT(), inputs };
+        return { hex: tx.hex, fee: fee.amount.toNumber(), psbt: tx.toPSBT(), inputs };
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log('Error signing bitcoin transaction', e);
