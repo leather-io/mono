@@ -30,7 +30,7 @@ export interface UtxoTotals {
   available: OwnedUtxo[];
 }
 
-const emptyUtxos: UtxoTotals = {
+export const emptyUtxos: UtxoTotals = {
   confirmed: [],
   inbound: [],
   outbound: [],

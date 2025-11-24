@@ -14,8 +14,8 @@ import { FormAddressDisplayer } from '@app/components/address-displayer/form-add
 import { InfoCardRow, InfoCardSeparator } from '@app/components/info-card/info-card';
 import { InscriptionPreview } from '@app/components/inscription-preview-card/components/inscription-preview';
 import { Card } from '@app/components/layout';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/address/utxos-by-address.hooks';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
+import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 
 import { InscriptionPreviewCard } from '../../../components/inscription-preview-card/inscription-preview-card';
 import { useSendInscriptionState } from './components/send-inscription-container';
@@ -35,7 +35,7 @@ export function SendInscriptionReview() {
   const { arrivesIn, signedTx, recipient, feeRowValue } = useSendInscriptionReviewState();
 
   const { inscription } = useSendInscriptionState();
-  const { filteredUtxosQuery } = useCurrentNativeSegwitUtxos();
+  const { refetchUtxos } = useCurrentNativeSegwitUtxos();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
 
   async function sendInscription() {
@@ -44,7 +44,7 @@ export function SendInscriptionReview() {
       tx: bytesToHex(signedTx),
       async onSuccess(txid: string) {
         void analytics.track('broadcast_ordinal_transaction');
-        await filteredUtxosQuery.refetch();
+        await refetchUtxos();
         void navigate(
           `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionSent}`,
           {

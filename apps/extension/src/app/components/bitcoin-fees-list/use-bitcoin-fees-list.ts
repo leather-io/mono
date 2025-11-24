@@ -1,15 +1,14 @@
 import { useMemo } from 'react';
 
-import { BtcFeeType, Money, btcTxTimeMap } from '@leather.io/models';
-import { type UtxoResponseItem } from '@leather.io/query';
-import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
-
-import { formatCurrency } from '@app/common/currency-formatter';
 import {
-  DetermineUtxosForSpendArgs,
+  type DetermineUtxosForSpendArgs,
   determineUtxosForSpend,
   determineUtxosForSpendAll,
-} from '@app/common/transactions/bitcoin/coinselect/local-coin-selection';
+} from '@leather.io/bitcoin';
+import { BtcFeeType, type Money, type OwnedUtxo, btcTxTimeMap } from '@leather.io/models';
+import { baseCurrencyAmountInQuote } from '@leather.io/utils';
+
+import { formatCurrency } from '@app/common/currency-formatter';
 import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
@@ -17,7 +16,7 @@ import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market
 import { FeesListItem } from './bitcoin-fees-list';
 
 function getFeeForList(
-  determineUtxosForFeeArgs: DetermineUtxosForSpendArgs,
+  determineUtxosForFeeArgs: DetermineUtxosForSpendArgs<OwnedUtxo>,
   isSendingMax?: boolean
 ) {
   try {
@@ -34,7 +33,7 @@ interface UseBitcoinFeesListArgs {
   amount: Money;
   isSendingMax?: boolean;
   recipient: string;
-  utxos: UtxoResponseItem[];
+  utxos: OwnedUtxo[];
 }
 
 export function useBitcoinFeesList({
@@ -48,10 +47,8 @@ export function useBitcoinFeesList({
   const { data: feeRates, isLoading } = useAverageBitcoinFeeRates();
 
   const feesList: FeesListItem[] = useMemo(() => {
-    function getFiatFeeValue(fee: number) {
-      return `~ ${formatCurrency(
-        baseCurrencyAmountInQuote(createMoney(Math.ceil(fee), 'BTC'), btcMarketData)
-      )}`;
+    function getFiatFeeValue(fee: Money) {
+      return `~ ${formatCurrency(baseCurrencyAmountInQuote(fee, btcMarketData))}`;
     }
 
     if (!feeRates || !utxos.length) return [];
@@ -80,39 +77,39 @@ export function useBitcoinFeesList({
 
     const feesArr = [];
 
-    const highFeeValue = getFeeForList(determineUtxosForHighFeeArgs, isSendingMax);
-    const standardFeeValue = getFeeForList(determineUtxosForStandardFeeArgs, isSendingMax);
-    const lowFeeValue = getFeeForList(determineUtxosForLowFeeArgs, isSendingMax);
+    const highFee = getFeeForList(determineUtxosForHighFeeArgs, isSendingMax);
+    const standardFee = getFeeForList(determineUtxosForStandardFeeArgs, isSendingMax);
+    const lowFee = getFeeForList(determineUtxosForLowFeeArgs, isSendingMax);
 
-    if (highFeeValue) {
+    if (highFee) {
       feesArr.push({
         label: BtcFeeType.High,
-        value: highFeeValue,
-        btcValue: formatCurrency(createMoney(highFeeValue, 'BTC'), { preset: 'pad-decimals' }),
+        value: highFee.amount.toNumber(),
+        btcValue: formatCurrency(highFee, { preset: 'pad-decimals' }),
         time: btcTxTimeMap.fastestFee,
-        fiatValue: getFiatFeeValue(highFeeValue),
+        fiatValue: getFiatFeeValue(highFee),
         feeRate: feeRates.fastestFee.toNumber(),
       });
     }
 
-    if (standardFeeValue) {
+    if (standardFee) {
       feesArr.push({
         label: BtcFeeType.Standard,
-        value: standardFeeValue,
-        btcValue: formatCurrency(createMoney(standardFeeValue, 'BTC'), { preset: 'pad-decimals' }),
+        value: standardFee.amount.toNumber(),
+        btcValue: formatCurrency(standardFee, { preset: 'pad-decimals' }),
         time: btcTxTimeMap.halfHourFee,
-        fiatValue: getFiatFeeValue(standardFeeValue),
+        fiatValue: getFiatFeeValue(standardFee),
         feeRate: feeRates.halfHourFee.toNumber(),
       });
     }
 
-    if (lowFeeValue) {
+    if (lowFee) {
       feesArr.push({
         label: BtcFeeType.Low,
-        value: lowFeeValue,
-        btcValue: formatCurrency(createMoney(lowFeeValue, 'BTC'), { preset: 'pad-decimals' }),
+        value: lowFee.amount.toNumber(),
+        btcValue: formatCurrency(lowFee, { preset: 'pad-decimals' }),
         time: btcTxTimeMap.hourFee,
-        fiatValue: getFiatFeeValue(lowFeeValue),
+        fiatValue: getFiatFeeValue(lowFee),
         feeRate: feeRates.hourFee.toNumber(),
       });
     }

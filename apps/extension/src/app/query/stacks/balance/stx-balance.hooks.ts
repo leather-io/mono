@@ -1,7 +1,7 @@
 import { createMoney } from '@leather.io/utils';
 
+import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { toFetchState } from '@app/services/fetch-state';
-import { useAccountAddresses } from '@app/services/use-account-addresses';
 
 import { useGetStxAccountBalanceQuery, useGetStxAddressBalanceQuery } from './stx-balance.query';
 

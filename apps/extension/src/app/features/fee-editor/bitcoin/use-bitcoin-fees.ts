@@ -1,7 +1,11 @@
 import { useMemo } from 'react';
 
-import { type AverageBitcoinFeeRates, type Money, btcTxTimeMap } from '@leather.io/models';
-import type { UtxoResponseItem } from '@leather.io/query';
+import {
+  type AverageBitcoinFeeRates,
+  type Money,
+  type OwnedUtxo,
+  btcTxTimeMap,
+} from '@leather.io/models';
 
 import type { TransferRecipient } from '@shared/models/form.model';
 
@@ -13,7 +17,7 @@ interface UseBitcoinFeesArgs {
   feeRates?: AverageBitcoinFeeRates;
   isSendingMax?: boolean;
   recipients: TransferRecipient[];
-  utxos: UtxoResponseItem[];
+  utxos: OwnedUtxo[];
 }
 export function useBitcoinFees({
   amount,

@@ -1,16 +1,12 @@
 import { useCallback } from 'react';
 
-import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
+import { determineUtxosForSpend, determineUtxosForSpendAll } from '@leather.io/bitcoin';
+import { baseCurrencyAmountInQuote } from '@leather.io/utils';
 
 import type { TransferRecipient } from '@shared/models/form.model';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import {
-  type DetermineUtxosForSpendArgs,
-  determineUtxosForSpend,
-  determineUtxosForSpendAll,
-} from '@app/common/transactions/bitcoin/coinselect/local-coin-selection';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/address/utxos-by-address.hooks';
+import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 
 export const MAX_FEE_RATE_MULTIPLIER = 50;
@@ -21,16 +17,16 @@ interface UseBitcoinCustomFeeArgs {
 }
 
 export function useBitcoinCustomFee({ isSendingMax, recipients }: UseBitcoinCustomFeeArgs) {
-  const { data: utxos = [] } = useCurrentNativeSegwitUtxos();
+  const { utxos } = useCurrentNativeSegwitUtxos();
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
 
   return useCallback(
     (feeRate: number) => {
-      if (!feeRate || !utxos.length) return { fee: 0, fiatFeeValue: '' };
+      if (!feeRate || !utxos.available.length) return { fee: 0, fiatFeeValue: '' };
 
-      const determineUtxosArgs: DetermineUtxosForSpendArgs = {
+      const determineUtxosArgs = {
         recipients,
-        utxos,
+        utxos: utxos.available,
         feeRate,
       };
       const { fee } = isSendingMax
@@ -38,10 +34,8 @@ export function useBitcoinCustomFee({ isSendingMax, recipients }: UseBitcoinCust
         : determineUtxosForSpend(determineUtxosArgs);
 
       return {
-        fee,
-        fiatFeeValue: `~ ${formatCurrency(
-          baseCurrencyAmountInQuote(createMoney(Math.ceil(fee), 'BTC'), btcMarketData)
-        )}`,
+        fee: fee.amount.toNumber(),
+        fiatFeeValue: `~ ${formatCurrency(baseCurrencyAmountInQuote(fee, btcMarketData))}`,
       };
     },
     [utxos, isSendingMax, recipients, btcMarketData]

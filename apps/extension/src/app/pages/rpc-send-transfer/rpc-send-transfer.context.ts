@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import type { Money } from '@leather.io/models';
-import type { UtxoResponseItem } from '@leather.io/query';
+import type { Money, OwnedUtxo } from '@leather.io/models';
 
 import type { TransferRecipient } from '@shared/models/form.model';
 
@@ -16,7 +15,7 @@ interface RpcSendTransferContext extends RpcTransactionRequestContext {
   isLoadingBalance: boolean;
   recipients: TransferRecipient[];
   recipientAddresses: string[];
-  utxos: UtxoResponseItem[];
+  utxos: OwnedUtxo[];
 }
 
 const rpcSendTransferContext = createContext<RpcSendTransferContext | null>(null);

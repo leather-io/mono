@@ -1,5 +1,4 @@
-import type { MarketData, Money } from '@leather.io/models';
-import type { UtxoResponseItem } from '@leather.io/query';
+import type { MarketData, Money, OwnedUtxo } from '@leather.io/models';
 
 import type { TransferRecipient } from '@shared/models/form.model';
 
@@ -15,7 +14,7 @@ interface BitcoinFeeEditorProviderProps extends HasChildren {
   marketData: MarketData;
   onGoBack(): void;
   recipients: TransferRecipient[];
-  utxos: UtxoResponseItem[];
+  utxos: OwnedUtxo[];
 }
 export function BitcoinFeeEditorProvider({
   amount,

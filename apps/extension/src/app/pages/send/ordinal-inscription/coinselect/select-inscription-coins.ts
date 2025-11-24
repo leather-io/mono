@@ -1,12 +1,13 @@
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
-import type { UtxoResponseItem, UtxoWithDerivationPath } from '@leather.io/query';
+import type { OwnedUtxo } from '@leather.io/models';
+import type { UtxoWithDerivationPath } from '@leather.io/query';
 import { createCounter, isDefined, sumNumbers } from '@leather.io/utils';
 
 import { BtcSizeFeeEstimator } from '@app/common/transactions/bitcoin/fees/btc-size-fee-estimator';
 
 interface SelectInscriptionCoinSuccess {
   success: true;
-  inputs: UtxoResponseItem[];
+  inputs: OwnedUtxo[];
   outputs: { value: bigint; address: string }[];
   txFee: number;
 }
@@ -19,7 +20,7 @@ type SelectInscriptionCoinResult = SelectInscriptionCoinSuccess | SelectInscript
 
 interface SelectInscriptionTransferCoinsArgs {
   inscriptionInput: UtxoWithDerivationPath;
-  nativeSegwitUtxos: UtxoResponseItem[];
+  nativeSegwitUtxos: OwnedUtxo[];
   feeRate: number;
   recipient: string;
   changeAddress: string;
@@ -42,7 +43,7 @@ export function selectTaprootInscriptionTransferCoins(
     p2wpkh_output_count: 1,
   });
 
-  const neededInputs: UtxoResponseItem[] = [];
+  const neededInputs: OwnedUtxo[] = [];
 
   let txFee = Math.ceil(initialTxSize.txVBytes * feeRate);
 

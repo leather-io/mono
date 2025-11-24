@@ -1,24 +1,21 @@
 import BigNumber from 'bignumber.js';
 import { sha256 } from 'bitcoinjs-lib/src/crypto';
 
-import type { UtxoResponseItem } from '@leather.io/query';
+import type { OwnedUtxo } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { filterUneconomicalUtxos } from '../utils';
 import { calculateMaxBitcoinSpend } from './calculate-max-bitcoin-spend';
 
-function generateTxId(value: number): UtxoResponseItem {
+function generateTxId(value: number): OwnedUtxo {
   const buffer = Buffer.from(Math.random().toString());
   return {
     txid: sha256(sha256(buffer)).toString(),
     vout: 0,
-    status: {
-      confirmed: true,
-      block_height: 2568495,
-      block_hash: '000000000000008622fafce4a5388861b252d534f819d0f7cb5d4f2c5f9c1638',
-      block_time: 1703787327,
-    },
     value,
+    address: 'bc1qtest',
+    path: "m/84'/0'/0'/0/0",
+    keyOrigin: 'test',
   };
 }
 

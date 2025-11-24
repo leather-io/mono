@@ -33,6 +33,8 @@ export function determineUtxosForSpendAll<T extends { value: number; txid: strin
   });
   const filteredUtxos = filterUneconomicalUtxos({ utxos, feeRate, recipients });
 
+  if (!filteredUtxos.length) throw new BitcoinError('InsufficientFunds');
+
   const sizeInfo = getSizeInfo({
     inputLength: filteredUtxos.length,
     isSendMax: true,
