@@ -19,8 +19,8 @@ import {
 } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentTaprootAccount } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 
-import { useGetTaprootUtxosByAddressQuery } from '../../address/utxos-by-address.query';
 import { useBitcoinClient } from '../../clients/bitcoin-client';
+import { useGetTaprootUtxosByAddressQuery } from '../../utxos/utxos.hooks';
 
 interface UseInscriptionArgs {
   xpubs: string[];

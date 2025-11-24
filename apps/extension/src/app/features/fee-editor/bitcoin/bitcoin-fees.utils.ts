@@ -1,28 +1,30 @@
-import { type UtxoResponseItem } from '@leather.io/query';
-import { createMoney } from '@leather.io/utils';
-
-import type { TransferRecipient } from '@shared/models/form.model';
-
 import {
   type DetermineUtxosForSpendArgs,
   determineUtxosForSpend,
   determineUtxosForSpendAll,
-} from '@app/common/transactions/bitcoin/coinselect/local-coin-selection';
+} from '@leather.io/bitcoin';
+import type { OwnedUtxo } from '@leather.io/models';
+import { createMoney } from '@leather.io/utils';
+
+import type { TransferRecipient } from '@shared/models/form.model';
+
 import { getSizeInfo } from '@app/common/transactions/bitcoin/utils';
 
-export function getBitcoinFee(determineUtxosForFeeArgs: DetermineUtxosForSpendArgs) {
+export function getBitcoinFee(determineUtxosForFeeArgs: DetermineUtxosForSpendArgs<OwnedUtxo>) {
   try {
     const { fee } = determineUtxosForSpend(determineUtxosForFeeArgs);
-    return createMoney(fee, 'BTC');
+    return fee;
   } catch {
     return null;
   }
 }
 
-export function getBitcoinSendMaxFee(determineUtxosForFeeArgs: DetermineUtxosForSpendArgs) {
+export function getBitcoinSendMaxFee(
+  determineUtxosForFeeArgs: DetermineUtxosForSpendArgs<OwnedUtxo>
+) {
   try {
     const { fee } = determineUtxosForSpendAll(determineUtxosForFeeArgs);
-    return createMoney(fee, 'BTC');
+    return fee;
   } catch {
     return null;
   }
@@ -35,7 +37,7 @@ export function getApproximateFee({
 }: {
   feeRate: number;
   recipients: TransferRecipient[];
-  utxos: UtxoResponseItem[];
+  utxos: OwnedUtxo[];
 }) {
   const size = getSizeInfo({
     inputLength: utxos.length + 1,

@@ -1,5 +1,4 @@
-import { type Money } from '@leather.io/models';
-import { type UtxoResponseItem } from '@leather.io/query';
+import { type Money, type OwnedUtxo } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import type { TransferRecipient } from '@shared/models/form.model';
@@ -21,7 +20,7 @@ interface BitcoinFeesLoaderProps {
   children({ fees, isLoading, getCustomFee }: BitcoinFees): React.ReactNode;
   isSendingMax?: boolean;
   recipients: TransferRecipient[];
-  utxos: UtxoResponseItem[];
+  utxos: OwnedUtxo[];
 }
 export function BitcoinFeesLoader({
   amount,

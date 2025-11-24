@@ -20,9 +20,9 @@ import {
 import { MAX_FEE_RATE_MULTIPLIER } from '@app/components/bitcoin-custom-fee/hooks/use-bitcoin-custom-fee';
 import { useBitcoinFeesList } from '@app/components/bitcoin-fees-list/use-bitcoin-fees-list';
 import { useToast } from '@app/features/toasts/use-toast';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/address/utxos-by-address.hooks';
 import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
+import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -34,7 +34,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
 
   const { address: currentBitcoinAddress, publicKey } =
     useCurrentAccountNativeSegwitIndexZeroSigner();
-  const { data: utxos = [], filteredUtxosQuery } = useCurrentNativeSegwitUtxos();
+  const { utxos, refetchUtxos } = useCurrentNativeSegwitUtxos();
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
   const recipient = getRecipientAddressFromOutput(btcTx.vout, currentBitcoinAddress) || '';
@@ -55,7 +55,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     amount: createMoney(btcToSat(sendingAmount), 'BTC'),
     isSendingMax: false,
     recipient,
-    utxos,
+    utxos: utxos.available,
   });
 
   function generateUnsignedTx(payload: { feeRate: string; tx: BitcoinTx }) {
@@ -111,7 +111,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
           symbol: 'btc',
           txid,
         });
-        await filteredUtxosQuery.refetch();
+        await refetchUtxos();
         void queryClient.invalidateQueries({ queryKey: ['btc-txs-by-address'] });
       },
       onError,

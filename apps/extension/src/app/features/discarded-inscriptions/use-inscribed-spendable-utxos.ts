@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 
-import { useNativeSegwitUtxosByAddress } from '@app/query/bitcoin/address/utxos-by-address.hooks';
 import { useCurrentNativeSegwitInscriptions } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
-import { useCurrentAccountNativeSegwitIndexZeroSignerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentNativeSegwitInscribedUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
 export function useInscribedSpendableUtxos() {
@@ -10,23 +9,15 @@ export function useInscribedSpendableUtxos() {
 
   const { data: nativeSegwitInscriptions } = useCurrentNativeSegwitInscriptions();
 
-  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSignerNullable();
-  const address = nativeSegwitSigner?.address;
-
   // Utxos but don't filter the inscribed ones
-  const { data: nativeSegwitUtxos } = useNativeSegwitUtxosByAddress({
-    address: address ?? '',
-    filterInscriptionUtxos: false,
-    filterPendingTxsUtxos: true,
-    filterRunesUtxos: true,
-  });
+  const { utxos } = useCurrentNativeSegwitInscribedUtxos();
 
   return useMemo(() => {
-    if (!nativeSegwitUtxos || !nativeSegwitInscriptions) return [];
+    if (!utxos || !nativeSegwitInscriptions) return [];
 
     // Preformatting utxos so that inscriptions are declared as an object
     // property aids the following filter logic
-    const utxosFormatted = nativeSegwitUtxos.map(utxo => ({
+    const utxosFormatted = utxos.map(utxo => ({
       ...utxo,
       inscriptions: nativeSegwitInscriptions.filter(
         inscription => inscription.txid === utxo.txid && Number(inscription.output) === utxo.vout
@@ -44,5 +35,5 @@ export function useInscribedSpendableUtxos() {
       );
 
     return utxosThatCanBeSpentBecauseAllUtxosInsideWereDiscarded;
-  }, [nativeSegwitUtxos, nativeSegwitInscriptions, hasInscriptionBeenDiscarded]);
+  }, [utxos, nativeSegwitInscriptions, hasInscriptionBeenDiscarded]);
 }

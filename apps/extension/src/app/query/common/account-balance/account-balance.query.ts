@@ -4,8 +4,8 @@ import { createAccountTotalBalanceQueryConfig } from '@leather.io/queries';
 import type { AccountRequest } from '@leather.io/services';
 
 import { useUserSettings } from '@app/hooks/use-user-settings';
+import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { toFetchState } from '@app/services/fetch-state';
-import { useAccountAddresses } from '@app/services/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
 import { balanceQueryOptions } from '../balance-query-options';

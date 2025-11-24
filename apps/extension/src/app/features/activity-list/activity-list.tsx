@@ -6,7 +6,7 @@ import { type ActivityView } from '@leather.io/features';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useActivity } from '@app/query/activity/activity.query';
-import { useAccountAddresses } from '@app/services/use-account-addresses';
+import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
 import { ActivityItem } from './components/activity-item';

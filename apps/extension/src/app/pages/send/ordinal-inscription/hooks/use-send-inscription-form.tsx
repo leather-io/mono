@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 
 import * as yup from 'yup';
 
-import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
+import { BitcoinError, bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
 import { isError } from '@leather.io/utils';
 
 import { FormErrorMessages } from '@shared/error-messages';
@@ -14,7 +14,6 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { formFeeRowValue } from '@app/common/send/utils';
-import { InsufficientFundsError } from '@app/common/transactions/bitcoin/coinselect/local-coin-selection';
 import { complianceValidator } from '@app/common/validation/forms/compliance-validators';
 import { useNumberOfInscriptionsOnUtxo } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
@@ -79,7 +78,7 @@ export function useSendInscriptionForm() {
       } catch (error) {
         void analytics.track('ordinals_dot_com_unavailable', { error });
 
-        if (error instanceof InsufficientFundsError) {
+        if (error instanceof BitcoinError && error.message === 'InsufficientFunds') {
           setShowError(FormErrorMessages.InsufficientFundsToCoverFee);
           return;
         }

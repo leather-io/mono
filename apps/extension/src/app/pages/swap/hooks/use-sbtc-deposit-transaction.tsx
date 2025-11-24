@@ -17,9 +17,12 @@ import {
   buildSbtcDepositTx,
 } from 'sbtc';
 
-import { BitcoinSigner } from '@leather.io/bitcoin';
-import type { BitcoinNetworkModes } from '@leather.io/models';
-import { type UtxoResponseItem } from '@leather.io/query';
+import {
+  BitcoinSigner,
+  determineUtxosForSpend,
+  determineUtxosForSpendAll,
+} from '@leather.io/bitcoin';
+import type { BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
 import { btcToSat, createMoney } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
@@ -27,10 +30,6 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { LoadingKeys, useLoading } from '@app/common/hooks/use-loading';
-import {
-  determineUtxosForSpend,
-  determineUtxosForSpendAll,
-} from '@app/common/transactions/bitcoin/coinselect/local-coin-selection';
 import { serializeError } from '@app/common/utils';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
@@ -89,7 +88,7 @@ async function fetchSignersPublicKey({
   return res.value.slice(2);
 }
 
-export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: UtxoResponseItem[]) {
+export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: OwnedUtxo[]) {
   const toast = useToast();
   const { setIsIdle } = useLoading(LoadingKeys.SUBMIT_SWAP_TRANSACTION);
   const stacksAccount = useCurrentStacksAccount();
@@ -168,7 +167,7 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: U
           }
         });
 
-        return { deposit, fee: createMoney(fee, 'BTC') };
+        return { deposit, fee };
       } catch (error) {
         logger.error('Error generating deposit transaction', error);
         return null;
