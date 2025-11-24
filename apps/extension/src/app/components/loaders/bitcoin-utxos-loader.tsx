@@ -1,11 +1,11 @@
-import type { UtxoResponseItem } from '@leather.io/query';
+import type { OwnedUtxo } from '@leather.io/models';
 
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/address/utxos-by-address.hooks';
+import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 
 interface BitcoinUtxosLoaderProps {
-  children(utxos: UtxoResponseItem[]): React.ReactNode;
+  children(utxos: OwnedUtxo[]): React.ReactNode;
 }
 export function BitcoinUtxosLoader({ children }: BitcoinUtxosLoaderProps) {
-  const { data: utxos = [] } = useCurrentNativeSegwitUtxos();
-  return children(utxos);
+  const { utxos } = useCurrentNativeSegwitUtxos();
+  return children(utxos.available);
 }

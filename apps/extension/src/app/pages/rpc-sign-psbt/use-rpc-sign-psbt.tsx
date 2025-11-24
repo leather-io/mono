@@ -15,8 +15,8 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { SignPsbtArgs } from '@app/common/psbt/requests';
 import { useRpcSignPsbtParams } from '@app/common/psbt/use-psbt-request-params';
 import { usePsbtSigner } from '@app/features/psbt-signer/hooks/use-psbt-signer';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/address/utxos-by-address.hooks';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
+import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import {
   useCalculateBitcoinFiatValue,
   useCryptoCurrencyMarketDataMeanAverage,
@@ -35,7 +35,7 @@ export function useRpcSignPsbt() {
   const { broadcast, origin, psbtHex, requestId, signAtIndex, tabId } = useRpcSignPsbtParams();
   const { signPsbt, getPsbtAsTransaction } = usePsbtSigner();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
-  const { filteredUtxosQuery } = useCurrentNativeSegwitUtxos();
+  const { refetchUtxos } = useCurrentNativeSegwitUtxos();
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
   const calculateBitcoinFiatValue = useCalculateBitcoinFiatValue();
   const getDefaultSigningConfig = useGetAssumedZeroIndexSigningConfig();
@@ -70,7 +70,7 @@ export function useRpcSignPsbt() {
           })
         );
 
-        await filteredUtxosQuery.refetch();
+        await refetchUtxos();
 
         const psbtTxSummaryState = {
           fee: formatCurrency(fee, { preset: 'pad-decimals' }),

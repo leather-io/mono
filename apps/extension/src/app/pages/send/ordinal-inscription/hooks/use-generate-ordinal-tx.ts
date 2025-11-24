@@ -1,6 +1,7 @@
 import * as btc from '@scure/btc-signer';
 import { AddressType, getAddressInfo } from 'bitcoin-address-validation';
 
+import { BitcoinError, determineUtxosForSpend } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath } from '@leather.io/crypto';
 import type { UtxoWithDerivationPath } from '@leather.io/query';
 import { createCounter, createMoney } from '@leather.io/utils';
@@ -9,11 +10,7 @@ import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config'
 import { logger } from '@shared/logger';
 import { OrdinalSendFormValues } from '@shared/models/form.model';
 
-import {
-  InsufficientFundsError,
-  determineUtxosForSpend,
-} from '@app/common/transactions/bitcoin/coinselect/local-coin-selection';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/address/utxos-by-address.hooks';
+import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
 import { useCurrentAccountNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
@@ -24,7 +21,7 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
   const createTaprootSigner = useCurrentAccountTaprootSigner();
   const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
   const networkMode = useBitcoinScureLibNetworkConfig();
-  const { data: nativeSegwitUtxos } = useCurrentNativeSegwitUtxos();
+  const { utxos: nativeSegwitUtxos } = useCurrentNativeSegwitUtxos();
 
   function coverFeeFromAdditionalUtxos(values: OrdinalSendFormValues) {
     if (getAddressInfo(values.inscription.address).type === AddressType.p2wpkh) {
@@ -39,12 +36,13 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
     const taprootSigner = createTaprootSigner?.(addressIndex);
     const nativeSegwitSigner = createNativeSegwitSigner?.(0);
 
-    if (!taprootSigner || !nativeSegwitSigner || !nativeSegwitUtxos || !values.feeRate) return;
+    if (!taprootSigner || !nativeSegwitSigner || !nativeSegwitUtxos.available || !values.feeRate)
+      return;
 
     const result = selectTaprootInscriptionTransferCoins({
       recipient: values.recipient,
       inscriptionInput,
-      nativeSegwitUtxos,
+      nativeSegwitUtxos: nativeSegwitUtxos.available,
       changeAddress: nativeSegwitSigner.payment.address!,
       feeRate: values.feeRate,
     });
@@ -102,8 +100,8 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
 
       return { psbt: tx.toPSBT(), signingConfig, txFee };
     } catch (e) {
-      if (e instanceof InsufficientFundsError) {
-        throw new InsufficientFundsError();
+      if (e instanceof BitcoinError && e.message === 'InsufficientFunds') {
+        throw e;
       }
       logger.error('Unable to sign transaction', e);
       return null;
@@ -119,7 +117,7 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
     const determineUtxosArgs = {
       feeRate,
       recipients: [{ address: recipient, amount: createMoney(0, 'BTC') }],
-      utxos: nativeSegwitUtxos,
+      utxos: nativeSegwitUtxos.available,
     };
 
     const { inputs, outputs, fee } = determineUtxosForSpend(determineUtxosArgs);
@@ -154,10 +152,10 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
         tx.addOutputAddress(values.recipient, BigInt(output.value), networkMode);
       });
 
-      return { psbt: tx.toPSBT(), signingConfig: undefined, txFee: fee };
+      return { psbt: tx.toPSBT(), signingConfig: undefined, txFee: fee.amount.toNumber() };
     } catch (e) {
-      if (e instanceof InsufficientFundsError) {
-        throw new InsufficientFundsError();
+      if (e instanceof BitcoinError && e.message === 'InsufficientFunds') {
+        throw e;
       }
       logger.error('Unable to sign transaction', e);
       return null;

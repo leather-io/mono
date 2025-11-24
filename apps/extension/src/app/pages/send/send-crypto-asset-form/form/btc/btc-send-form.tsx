@@ -59,7 +59,7 @@ export function BtcSendForm() {
           >
             {props => {
               onFormStateChange(props.values);
-              const sendMaxCalculation = calcMaxSpend(props.values.recipient, utxos);
+              const sendMaxCalculation = calcMaxSpend(props.values.recipient, utxos.available);
 
               return (
                 <Form>
@@ -117,7 +117,10 @@ export function BtcSendForm() {
                   <Outlet />
 
                   {/* This is for testing purposes only, to make sure the form is ready to be submitted. */}
-                  {calcMaxSpend(props.values.recipient, utxos).spendableBitcoin.toNumber() > 0 ? (
+                  {calcMaxSpend(
+                    props.values.recipient,
+                    utxos.available
+                  ).spendableBitcoin.toNumber() > 0 ? (
                     <Box data-testid={SendCryptoAssetSelectors.SendPageReady}></Box>
                   ) : null}
                 </Form>
