@@ -149,8 +149,6 @@ jobs:
           pattern: blob-report-*
           merge-multiple: true
 
-      - run: ls -R .
-
       - name: Merge into HTML Report
         run: npx playwright merge-reports --reporter html ./all-blob-reports
 
