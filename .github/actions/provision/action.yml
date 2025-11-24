@@ -23,5 +23,9 @@ runs:
     - name: Install dependencies
       env:
         PROVISION_MOBILE: ${{ inputs.PROVISION_MOBILE }}
-      run: pnpm install
+      run: pnpm install --ignore-scripts
+      shell: bash
+
+    - name: Build panda
+      run: pnpm turbo run build --filter="@leather.io/panda-preset"
       shell: bash

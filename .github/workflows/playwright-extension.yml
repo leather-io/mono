@@ -2,6 +2,7 @@ name: Extension Playwright tests
 
 env:
   CI: true
+  DO_NOT_TRACK: 1
   WALLET_ENVIRONMENT: testing
   BITFLOW_API_HOST: ${{ secrets.BITFLOW_API_HOST }}
   BITFLOW_API_KEY: ${{ secrets.BITFLOW_API_KEY }}
@@ -28,8 +29,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  build:
+    name: Build extension
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/extension
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Build packages
+        working-directory: ./
+        run: pnpm turbo build --filter=@leather.io/extension^...
+
+      - name: Build styles
+        working-directory: apps/extension
+        run: pnpm prepare
+
+      - name: Build extension in test mode
+        run: pnpm build:test
+
+      - name: Upload extension build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-dist
+          path: apps/extension/dist
+          retention-days: 1
+          if-no-files-found: error
+
   test:
     name: Shard ${{ matrix.shardIndex }} of ${{ matrix.shardTotal }}
+    needs: build
     timeout-minutes: 30
     runs-on: ubuntu-latest
     strategy:
@@ -43,6 +74,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
+
+      - name: Download extension build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: extension-dist
+          path: apps/extension/dist
+
+      - name: Build packages
+        working-directory: ./
+        run: pnpm turbo build --filter=@leather.io/extension^...
 
       - name: Get installed Playwright version
         id: playwright-version
@@ -62,13 +103,6 @@ jobs:
       - name: Install Playwright deps
         run: pnpm playwright install --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-
-      - name: Build packages
-        working-directory: ./
-        run: pnpm turbo build --filter=@leather.io/extension^...
-
-      - name: Build extension in test mode
-        run: pnpm build:test
 
       - name: Extract branch name
         shell: bash

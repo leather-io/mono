@@ -36,6 +36,7 @@
     "mono:link": "node scripts/mono-link.js && pnpm install",
     "mono:link:ui": "node scripts/mono-link-ui.js && pnpm install",
     "mono:unlink": "node scripts/mono-unlink.js && pnpm install",
+    "prebuild": "pnpm prepare",
     "preinstall": "npx only-allow pnpm",
     "prepare": "panda codegen",
     "prod:analyze": "cross-env WALLET_ENVIRONMENT=production ANALYZE=true webpack -p",
