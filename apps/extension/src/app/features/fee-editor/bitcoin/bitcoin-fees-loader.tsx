@@ -2,7 +2,12 @@ import { useMemo } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { BitcoinTransactionFeeQuote, Money, btcTxTimeMap } from '@leather.io/models';
+import {
+  BitcoinTransactionFeeQuote,
+  Money,
+  TransactionFeeTier,
+  btcTxTimeMap,
+} from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { getBitcoinTransactionFeesService } from '@leather.io/services';

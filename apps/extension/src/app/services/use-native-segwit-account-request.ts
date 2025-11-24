@@ -19,7 +19,7 @@ export function useNativeSegwitAccountRequest(): AccountRequest {
       account,
       protections: {
         discardedInscriptions,
-        discardRunes: !runesEnabled,
+        discardRunes: runesEnabled,
       },
       exclusions: { taprootAddresses: true },
     }),
