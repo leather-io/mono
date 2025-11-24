@@ -88,7 +88,7 @@ const config = {
       }
       return '[name].[contenthash:8].js';
     },
-    clean: true
+    clean: true,
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json', '.d.ts'],
