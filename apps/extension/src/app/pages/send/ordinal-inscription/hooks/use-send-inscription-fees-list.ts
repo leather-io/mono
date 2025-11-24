@@ -6,8 +6,8 @@ import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { FeesListItem } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/address/utxos-by-address.hooks';
 import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
+import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 import { useCurrentAccountNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
@@ -25,7 +25,7 @@ export function useSendInscriptionFeesList({
   inscription,
 }: UseSendInscriptionFeesListArgs) {
   const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
-  const { data: nativeSegwitUtxos } = useCurrentNativeSegwitUtxos();
+  const { utxos: nativeSegwitUtxos } = useCurrentNativeSegwitUtxos();
 
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
   const { data: feeRates, isLoading } = useAverageBitcoinFeeRates();

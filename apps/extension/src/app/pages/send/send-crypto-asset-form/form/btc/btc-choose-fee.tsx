@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router';
 
-import type { BtcFeeType } from '@leather.io/models';
-import type { UtxoResponseItem } from '@leather.io/query';
+import type { BtcFeeType, OwnedUtxo } from '@leather.io/models';
 
 import { BitcoinSendFormValues } from '@shared/models/form.model';
 
@@ -19,7 +18,7 @@ import { useBtcChooseFee } from './use-btc-choose-fee';
 export function useBtcChooseFeeState() {
   const isSendingMax = useLocationStateWithCache('isSendingMax') as boolean;
   const txValues = useLocationStateWithCache('values') as BitcoinSendFormValues;
-  const utxos = useLocationStateWithCache('utxos') as UtxoResponseItem[];
+  const utxos = useLocationStateWithCache('utxos') as OwnedUtxo[];
   return { isSendingMax, txValues, utxos };
 }
 

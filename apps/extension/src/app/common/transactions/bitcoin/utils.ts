@@ -7,8 +7,7 @@ import {
 } from 'bitcoin-address-validation';
 
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
-import type { BitcoinTransactionVectorOutput, BitcoinTx } from '@leather.io/models';
-import type { UtxoResponseItem } from '@leather.io/query';
+import type { BitcoinTransactionVectorOutput, BitcoinTx, OwnedUtxo } from '@leather.io/models';
 import { satToBtc, sumNumbers, truncateMiddle } from '@leather.io/utils';
 
 import type { TransferRecipient } from '@shared/models/form.model';
@@ -27,7 +26,7 @@ export function filterUneconomicalUtxos({
   feeRate,
   recipients,
 }: {
-  utxos: UtxoResponseItem[];
+  utxos: OwnedUtxo[];
   feeRate: number;
   recipients: TransferRecipient[];
 }) {
@@ -127,7 +126,7 @@ export function getBitcoinTxValue(address: string, transaction?: BitcoinTx) {
 }
 
 interface GetSpendableAmountArgs {
-  utxos: UtxoResponseItem[];
+  utxos: OwnedUtxo[];
   feeRate: number;
   recipients: TransferRecipient[];
   isSendMax?: boolean;

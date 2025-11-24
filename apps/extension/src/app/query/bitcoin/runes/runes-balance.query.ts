@@ -6,8 +6,8 @@ import { isSameAsset } from '@leather.io/utils';
 
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { balanceQueryOptionsWithRefetch } from '@app/query/common/balance-query-options';
+import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { toFetchState } from '@app/services/fetch-state';
-import { useAccountAddresses } from '@app/services/use-account-addresses';
 
 export function useManagedRunesTools(accountIndex: number) {
   const enabledRunes = useRunesAccountBalance(accountIndex);

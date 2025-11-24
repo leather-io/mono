@@ -1,8 +1,8 @@
 import type { Sip10Balance } from '@leather.io/services';
 import { isSameAsset } from '@leather.io/utils';
 
+import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { toFetchState } from '@app/services/fetch-state';
-import { useAccountAddresses } from '@app/services/use-account-addresses';
 
 import {
   useGetSip10AccountBalanceQuery,

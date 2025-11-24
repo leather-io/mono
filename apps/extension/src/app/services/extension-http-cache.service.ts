@@ -16,4 +16,10 @@ export class ExtensionHttpCacheService extends HttpCacheService {
       retry: false,
     });
   }
+
+  async clearInternal(prefixedCacheKey: string): Promise<void> {
+    await queryClient.invalidateQueries({
+      queryKey: [prefixedCacheKey],
+    });
+  }
 }

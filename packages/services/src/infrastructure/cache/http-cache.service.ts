@@ -21,11 +21,17 @@ export abstract class HttpCacheService {
     );
   }
 
+  clear(cacheKey: HttpCacheKey): Promise<void> {
+    return this.clearInternal(HttpCacheService.CACHE_KEY_PREFIX + cacheKey);
+  }
+
   abstract fetchWithCacheInternal<T>(
     key: unknown[],
     fetchFn: () => Promise<T>,
     options?: HttpCacheOptions
   ): Promise<T>;
+
+  abstract clearInternal(cacheKey: string): Promise<void>;
 
   private addCachePrefix(key: HttpCacheKeyArray) {
     return [HttpCacheService.CACHE_KEY_PREFIX + key[0], ...key.slice(1)];
