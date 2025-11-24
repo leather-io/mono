@@ -139,9 +139,6 @@ jobs:
     if: always()
     needs: test
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/extension
     steps:
       - uses: actions/checkout@v4
 

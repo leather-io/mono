@@ -1,4 +1,4 @@
-import { BrowserContext, test as base, chromium } from '@playwright/test';
+import { BrowserContext, Page, test as base, chromium } from '@playwright/test';
 import { GlobalPage } from '@tests/page-object-models/global.page';
 import { HomePage } from '@tests/page-object-models/home.page';
 import { NetworkPage } from '@tests/page-object-models/network.page';
@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 
 interface TestFixtures {
   context: BrowserContext;
+  page: Page;
   extensionId: string;
   globalPage: GlobalPage;
   homePage: HomePage;
@@ -36,14 +37,17 @@ export const test = base.extend<TestFixtures>({
       args: [
         `--disable-extensions-except=${pathToExtension}`,
         `--load-extension=${pathToExtension}`,
-        // force GPU hardware acceleration
-        // (even in headless mode)
         '--use-gl=egl',
       ],
     });
     await use(context);
     await context.close();
     await context.browser()?.close();
+  },
+  page: async ({ context }, use) => {
+    const pages = context.pages();
+    const page = pages.length > 0 ? pages[0] : await context.newPage();
+    await use(page);
   },
   extensionId: async ({ context }, use) => {
     let [background] = context.serviceWorkers();

@@ -1,5 +1,3 @@
-import { RootState } from '@app/store';
-
 import { test } from '../../fixtures/fixtures';
 
 test.describe('Store migrations', () => {
@@ -19,30 +17,22 @@ test.describe('Store migrations', () => {
 
       // Force wallet into old state format using Redux Persist serialization
       await page.evaluate(
-        async state =>
-          new Promise(resolve =>
-            chrome.storage.local.set({ ['persist:root']: state }, () => resolve(true))
-          ),
+        async state => chrome.storage.local.set({ ['persist:root']: state }),
         previousSerializedState
       );
+
+      await page.waitForTimeout(3000);
 
       // Refresh to simulate user returning to app for first time since migration
       await globalPage.gotoNakedRoot(extensionId);
 
-      // Rather than adding a static timeout, we wait for the app to make the
-      // background state update. This is the migration happening.
-      await page.evaluate(
-        async () =>
-          new Promise(resolve => chrome.storage.local.onChanged.addListener(() => resolve(true)))
-      );
+      await page.waitForTimeout(3000);
 
       // State now in new format
-      const result: RootState = await page.evaluate(
-        async () =>
-          new Promise(resolve =>
-            chrome.storage.local.get(['persist:root'], state => resolve(state['persist:root']))
-          )
+      const result = await page.evaluate(async () =>
+        chrome.storage.local.get(['persist:root']).then(state => state['persist:root'])
       );
+
       // Assert that old values are present in unserialized format
       test
         .expect(result.softwareKeys.entities['default']?.encryptedSecretKey)
