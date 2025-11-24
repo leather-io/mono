@@ -43,6 +43,10 @@ jobs:
         run: pnpm exec playwright install --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
+      - name: Prepare script
+        working-directory: apps/web
+        run: pnpm prepare
+
       - name: Build packages
         run: pnpm turbo run build --filter="@leather.io/web"
 

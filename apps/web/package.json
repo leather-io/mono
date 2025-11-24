@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "NODE_OPTIONS='--import ./instrument.server.mjs' react-router build",
+    "build": "pnpm prepare && NODE_OPTIONS='--import ./instrument.server.mjs' react-router build",
     "build:watch": "pnpm dev",
     "cf-typegen": "wrangler types",
     "deploy": "pnpm build && wrangler deploy",
