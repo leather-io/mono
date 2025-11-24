@@ -139,9 +139,6 @@ jobs:
     if: always()
     needs: test
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/extension
     steps:
       - uses: actions/checkout@v4
 
@@ -151,6 +148,8 @@ jobs:
           path: all-blob-reports
           pattern: blob-report-*
           merge-multiple: true
+
+      - run: ls -R .
 
       - name: Merge into HTML Report
         run: npx playwright merge-reports --reporter html ./all-blob-reports
