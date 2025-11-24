@@ -14,7 +14,7 @@ interface FinalizeTxSignatureArgs {
 export function finalizeTxSignature({ requestPayload, data, tabId }: FinalizeTxSignatureArgs) {
   try {
     const responseMessage = formatTxSignatureResponse({ payload: requestPayload, response: data });
-    chrome.tabs.sendMessage(tabId, responseMessage);
+    void chrome.tabs.sendMessage(tabId, responseMessage);
     closeWindow();
   } catch (e) {
     // EXPERIMENT:

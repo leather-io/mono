@@ -5,8 +5,10 @@ import { AccountAvatar } from '@app/ui/components/account/account-avatar/account
 interface AccountAvatarItemProps {
   publicKey: string;
   index: number;
-  name: string;
 }
-export const AccountAvatarItem = memo(({ name, publicKey, index }: AccountAvatarItemProps) => {
-  return <AccountAvatar index={index} name={name} publicKey={publicKey} />;
+export const AccountAvatarItem = memo(function AccountAvatarItem({
+  publicKey,
+  index,
+}: AccountAvatarItemProps) {
+  return <AccountAvatar index={index} publicKey={publicKey} />;
 });

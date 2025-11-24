@@ -3,7 +3,7 @@ import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { Pressable, PressableProps, usePressedState } from '@leather.io/ui/native';
 
 interface CardProps extends PressableProps {
-  onPress?: () => void;
+  onPress?(): void;
   height?: number;
 }
 export function Card({ children, onPress, height = 180, ...props }: CardProps) {

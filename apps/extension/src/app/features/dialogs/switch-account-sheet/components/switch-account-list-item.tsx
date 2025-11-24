@@ -18,54 +18,50 @@ interface SwitchAccountListItemProps {
   currentAccountIndex: number;
   index: number;
 }
-export const SwitchAccountListItem = memo(
-  ({ handleClose, currentAccountIndex, index }: SwitchAccountListItemProps) => {
-    const stacksAccount = useStacksAccount(index);
-    const stxAddress = stacksAccount?.address ?? '';
-    const bitcoinSigner = useNativeSegwitSigner(index);
-    const btcAddress = bitcoinSigner?.(0).address ?? '';
+export const SwitchAccountListItem = memo(function SwitchAccountListItem({
+  handleClose,
+  currentAccountIndex,
+  index,
+}: SwitchAccountListItemProps) {
+  const stacksAccount = useStacksAccount(index);
+  const stxAddress = stacksAccount?.address ?? '';
+  const bitcoinSigner = useNativeSegwitSigner(index);
+  const btcAddress = bitcoinSigner?.(0).address ?? '';
 
-    const { isLoading, setIsLoading, setIsIdle } = useLoading(
-      'SWITCH_ACCOUNTS' + stxAddress || btcAddress
-    );
-    const { handleSwitchAccount } = useSwitchAccount(handleClose);
-    const { data: name = '', isFetching: isFetchingBnsName } = useAccountDisplayName({
-      address: stxAddress,
-      index,
-    });
+  const { isLoading, setIsLoading, setIsIdle } = useLoading(
+    'SWITCH_ACCOUNTS' + stxAddress || btcAddress
+  );
+  const { handleSwitchAccount } = useSwitchAccount(handleClose);
+  const { data: name = '', isFetching: isFetchingBnsName } = useAccountDisplayName({
+    address: stxAddress,
+    index,
+  });
 
-    const handleClick = async () => {
-      setIsLoading();
-      setTimeout(async () => {
-        await handleSwitchAccount(index);
-        setIsIdle();
-      }, 80);
-    };
-
-    return (
-      <AccountListItemLayout
-        accountAddresses={<AccountAddresses index={index} />}
-        accountName={
-          <AccountNameLayout
-            data-testid={getSwitchAccountSheetAccountNameSelector(index)}
-            isLoading={isFetchingBnsName}
-          >
-            {name}
-          </AccountNameLayout>
-        }
-        avatar={
-          <AccountAvatarItem
-            index={index}
-            publicKey={stacksAccount?.stxPublicKey || ''}
-            name={name}
-          />
-        }
-        balanceLabel={<AccountTotalBalance accountIndex={index} />}
-        index={index}
-        isLoading={isLoading}
-        isSelected={currentAccountIndex === index}
-        onSelectAccount={handleClick}
-      />
-    );
+  function handleClick() {
+    setIsLoading();
+    setTimeout(async () => {
+      await handleSwitchAccount(index);
+      setIsIdle();
+    }, 80);
   }
-);
+
+  return (
+    <AccountListItemLayout
+      accountAddresses={<AccountAddresses index={index} />}
+      accountName={
+        <AccountNameLayout
+          data-testid={getSwitchAccountSheetAccountNameSelector(index)}
+          isLoading={isFetchingBnsName}
+        >
+          {name}
+        </AccountNameLayout>
+      }
+      avatar={<AccountAvatarItem index={index} publicKey={stacksAccount?.stxPublicKey || ''} />}
+      balanceLabel={<AccountTotalBalance accountIndex={index} />}
+      index={index}
+      isLoading={isLoading}
+      isSelected={currentAccountIndex === index}
+      onSelectAccount={handleClick}
+    />
+  );
+});

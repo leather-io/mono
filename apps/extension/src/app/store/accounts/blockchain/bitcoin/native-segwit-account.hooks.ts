@@ -180,7 +180,7 @@ export function useUpdateLedgerSpecificNativeSegwitUtxoHexForAdddressIndexZero()
 export function useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero() {
   const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
 
-  return async (tx: Psbt, fingerprint: string, inputSigningConfig: BitcoinInputSigningConfig[]) => {
+  return (tx: Psbt, fingerprint: string, inputSigningConfig: BitcoinInputSigningConfig[]) => {
     inputSigningConfig.forEach(({ index, derivationPath }) => {
       const nativeSegwitSigner = createNativeSegwitSigner?.(
         extractAddressIndexFromPath(derivationPath)

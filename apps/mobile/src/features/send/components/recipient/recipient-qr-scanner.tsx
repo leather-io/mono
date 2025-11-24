@@ -6,8 +6,8 @@ import { SupportedBlockchains } from '@leather.io/models';
 import { isValidStacksAddress } from '@leather.io/stacks';
 
 interface RecipientQrScannerProps {
-  onScanned: (data: { address: string; chain: SupportedBlockchains }) => void;
-  onClose: () => void;
+  onScanned(data: { address: string; chain: SupportedBlockchains }): void;
+  onClose(): void;
 }
 
 export function RecipientQrScanner({ onClose, onScanned }: RecipientQrScannerProps) {

@@ -44,7 +44,7 @@ test.describe('RPC: sendTransfer', () => {
   function openSendTransfer(page: Page) {
     return async (params: RpcParams<typeof sendTransfer>) =>
       page.evaluate(
-        async params =>
+        params =>
           (window as any).LeatherProvider?.request('sendTransfer', {
             ...params,
           }).catch((e: unknown) => e),

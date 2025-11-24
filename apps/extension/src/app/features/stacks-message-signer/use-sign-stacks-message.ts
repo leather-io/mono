@@ -54,7 +54,7 @@ export function useSignStacksMessage({
       try {
         const messageSignature = await listenForStacksMessageSigning(unsignedMessage);
         onSignMessageCompleted(messageSignature);
-      } catch (e) {
+      } catch {
         onSignMessageCancelled();
       }
     },

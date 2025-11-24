@@ -15,7 +15,9 @@ import {
 import { startPad } from '../utils/start-pad';
 
 const lineNumberWidth = 60;
-const getLineNumber = (n: number, length: number) => startPad(n + 1, length.toString().length);
+function getLineNumber(n: number, length: number) {
+  return startPad(n + 1, length.toString().length);
+}
 
 function Tokens({
   tokens,
@@ -137,14 +139,18 @@ export interface HighlighterProps {
   prism: PrismType;
 }
 
-export const Highlighter = memo(
-  ({ code, language = 'clarity', showLineNumbers, hideLineHover, prism }: HighlighterProps) => {
-    return (
-      <Highlight theme={theme} code={code} language={language} prism={prism as any}>
-        {props => (
-          <Lines showLineNumbers={showLineNumbers} hideLineHover={hideLineHover} {...props} />
-        )}
-      </Highlight>
-    );
-  }
-);
+export const Highlighter = memo(function Highlighter({
+  code,
+  language = 'clarity',
+  showLineNumbers,
+  hideLineHover,
+  prism,
+}: HighlighterProps) {
+  return (
+    <Highlight theme={theme} code={code} language={language} prism={prism as any}>
+      {props => (
+        <Lines showLineNumbers={showLineNumbers} hideLineHover={hideLineHover} {...props} />
+      )}
+    </Highlight>
+  );
+});

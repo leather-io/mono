@@ -36,6 +36,8 @@ function defaultNetworkIdToBitcoinNetworkMode(
       return 'regtest';
     case 'signet':
       return 'signet';
+    default:
+      throw new Error(`Unknown network ID: ${networkId}`);
   }
 }
 

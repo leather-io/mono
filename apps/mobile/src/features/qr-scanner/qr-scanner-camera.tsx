@@ -16,7 +16,7 @@ import {
 } from 'expo-camera';
 
 interface QrScannerCameraProps extends CameraViewProps {
-  onBarcodeScanned: (result: BarcodeScanningResult) => void;
+  onBarcodeScanned(result: BarcodeScanningResult): void;
 }
 
 export function QrScannerCamera({ onBarcodeScanned }: QrScannerCameraProps) {

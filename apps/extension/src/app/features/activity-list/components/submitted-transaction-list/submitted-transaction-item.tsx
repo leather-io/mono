@@ -28,13 +28,13 @@ export function SubmittedTransactionItem({ transaction, txid }: SubmittedTransac
     txid,
   });
 
-  const openTxLink = () => {
+  function openTxLink() {
     void analytics.track('view_transaction');
     handleOpenStacksTxLink({
       searchParams: new URLSearchParams('&submitted=true'),
       txid,
     });
-  };
+  }
 
   if (!submittedTransactionDetails) return null;
 
@@ -57,7 +57,7 @@ export function SubmittedTransactionItem({ transaction, txid }: SubmittedTransac
             <BasicTooltip
               asChild
               side="bottom"
-              label={'Transaction broadcasted, but not yet in the mempool'}
+              label="Transaction broadcasted, but not yet in the mempool"
             >
               <Caption color="yellow.action-primary-default">Submitted</Caption>
             </BasicTooltip>

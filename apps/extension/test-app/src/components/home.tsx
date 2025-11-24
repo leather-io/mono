@@ -15,7 +15,7 @@ import { Tab } from './tab';
 
 type Tabs = 'status' | 'counter' | 'debug' | 'bns' | 'signature' | 'profile' | 'bitcoin';
 
-const Container: React.FC<BoxProps> = ({ children, ...props }) => {
+function Container({ children, ...props }: BoxProps) {
   return (
     <Box width="100%" px={6} {...props}>
       <Box maxWidth="900px" mx="auto">
@@ -23,9 +23,9 @@ const Container: React.FC<BoxProps> = ({ children, ...props }) => {
       </Box>
     </Box>
   );
-};
+}
 
-const Page: React.FC<{ tab: Tabs; setTab: (value: Tabs) => void }> = ({ tab, setTab }) => {
+function Page({ tab, setTab }: { tab: Tabs; setTab(value: Tabs): void }) {
   return (
     <>
       <Container borderColor="#F0F0F5" borderWidth={0} borderBottomWidth="1px">
@@ -64,9 +64,9 @@ const Page: React.FC<{ tab: Tabs; setTab: (value: Tabs) => void }> = ({ tab, set
       </Container>
     </>
   );
-};
+}
 
-export const Home: React.FC = () => {
+export function Home() {
   const state = useContext(AppContext);
   const [tab, setTab] = useState<Tabs>('debug');
 
@@ -78,4 +78,4 @@ export const Home: React.FC = () => {
       {state.userData ? <Page tab={tab} setTab={setTab} /> : <Auth />}
     </Container>
   );
-};
+}

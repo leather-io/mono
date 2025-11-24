@@ -43,7 +43,7 @@ function LeatherIntroSheetContainer() {
     void navigate('./introducing-leather', { replace: true });
   }
 
-  async function onAcceptTerms() {
+  function onAcceptTerms() {
     void analytics.track('new_brand_accept_terms');
     void navigate('../', { replace: true });
   }

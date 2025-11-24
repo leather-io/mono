@@ -11,21 +11,28 @@ function Portal(props: RadixTooltip.TooltipPortalProps) {
   return <RadixTooltip.Portal {...props} />;
 }
 
-const Trigger: typeof RadixTooltip.Trigger = forwardRef((props, ref) => (
-  <RadixTooltip.Trigger ref={ref} {...props} />
-));
+const Trigger: typeof RadixTooltip.Trigger = forwardRef(function Trigger(props, ref) {
+  return <RadixTooltip.Trigger ref={ref} {...props} />;
+});
 
-const Content: typeof RadixTooltip.Content = forwardRef(({ className, ...props }, ref) => (
-  <RadixTooltip.Content className={`${defaultContentStyles} ${className}`} ref={ref} {...props} />
-));
+const Content: typeof RadixTooltip.Content = forwardRef(function Content(
+  { className, ...props },
+  ref
+) {
+  return (
+    <RadixTooltip.Content className={`${defaultContentStyles} ${className}`} ref={ref} {...props} />
+  );
+});
 
-const Arrow: typeof RadixTooltip.Arrow = forwardRef(({ className, ...props }, ref) => (
-  <RadixTooltip.Arrow
-    className={`${defaultTooltipArrowStyles} ${className}`}
-    ref={ref}
-    {...props}
-  />
-));
+const Arrow: typeof RadixTooltip.Arrow = forwardRef(function Arrow({ className, ...props }, ref) {
+  return (
+    <RadixTooltip.Arrow
+      className={`${defaultTooltipArrowStyles} ${className}`}
+      ref={ref}
+      {...props}
+    />
+  );
+});
 
 export const Tooltip = {
   Root,

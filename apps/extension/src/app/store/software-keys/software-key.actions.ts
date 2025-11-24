@@ -101,7 +101,7 @@ function setWalletEncryptionPassword(args: {
           time: (end - start) / 1000 + ' seconds',
         });
       });
-    } catch (e) {
+    } catch {
       // Errors during account restore are non-critical and can fail silently
     }
 
@@ -113,7 +113,7 @@ function setWalletEncryptionPassword(args: {
         encryptedSecretKey,
       })
     );
-    dispatch(initializeIndexZeroAccount());
+    await dispatch(initializeIndexZeroAccount());
   };
 }
 

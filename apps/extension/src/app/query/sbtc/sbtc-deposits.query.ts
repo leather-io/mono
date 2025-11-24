@@ -45,7 +45,7 @@ async function getSbtcDeposits(apiUrl: string, status: string): Promise<GetSbtcD
 function useGetSbtcDeposits(stxAddress: string, status: string) {
   const { emilyApiUrl } = useConfigSbtc();
   return useQuery({
-    queryKey: ['get-sbtc-deposits', stxAddress, status],
+    queryKey: ['get-sbtc-deposits', emilyApiUrl, stxAddress, status],
     queryFn: () => getSbtcDeposits(emilyApiUrl, status),
     select: resp =>
       resp.deposits.filter(deposit => {

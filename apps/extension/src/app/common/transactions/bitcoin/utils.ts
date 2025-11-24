@@ -81,19 +81,22 @@ export function getRecipientAddressFromOutput(
     ?.scriptpubkey_address;
 }
 
-export const getBitcoinTxCaption = (transaction?: BitcoinTx) =>
-  transaction ? truncateMiddle(transaction.txid, 4) : '';
+export function getBitcoinTxCaption(transaction?: BitcoinTx) {
+  return transaction ? truncateMiddle(transaction.txid, 4) : '';
+}
 
 // If vin array contains a prevout with a scriptpubkey_address equal to
 // the address, then that is the current address making a `Sent` tx (-)
 // and the value of the prevout is the tx amount
-const transactionsSentByAddress = (address: string, transaction: BitcoinTx) =>
-  transaction.vin.filter(input => input.prevout.scriptpubkey_address === address);
+function transactionsSentByAddress(address: string, transaction: BitcoinTx) {
+  return transaction.vin.filter(input => input.prevout.scriptpubkey_address === address);
+}
 
 // If vout array contains a scriptpubkey_address equal to the address,
 // then that is a `Receive` tx (+) and the value is the tx amount
-const transactionsReceivedByAddress = (address: string, transaction: BitcoinTx) =>
-  transaction.vout.filter(output => output.scriptpubkey_address === address);
+function transactionsReceivedByAddress(address: string, transaction: BitcoinTx) {
+  return transaction.vout.filter(output => output.scriptpubkey_address === address);
+}
 
 export function isBitcoinTxInbound(address: string, transaction: BitcoinTx) {
   const inputs = transactionsSentByAddress(address, transaction);

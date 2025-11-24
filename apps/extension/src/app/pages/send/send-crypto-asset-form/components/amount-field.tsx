@@ -66,7 +66,7 @@ export function AmountField({
   const fontSizeModifier = (maxFontSize - minFontSize) / maxLength;
   const subtractedLengthToPositionPrefix = 0.5;
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+  function onChange(event: ChangeEvent<HTMLInputElement>) {
     const value = event.currentTarget.value;
 
     /*
@@ -84,7 +84,7 @@ export function AmountField({
     }
 
     field.onChange(event);
-  };
+  }
 
   useEffect(() => {
     // case, when e.g token doesn't have symbol
@@ -109,7 +109,7 @@ export function AmountField({
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
       const [text] = entries;
-      const [size] = text?.contentBoxSize;
+      const [size] = text?.contentBoxSize || [];
       if (size) {
         const { inlineSize } = size;
         setTextSizeInPx(inlineSize);
@@ -121,7 +121,7 @@ export function AmountField({
     if (sizeReference) {
       resizeObserver.observe(sizeReference);
     }
-    () => resizeObserver.disconnect();
+    return () => resizeObserver.disconnect();
   }, []);
 
   // TODO: could be implemented with html using padded label element

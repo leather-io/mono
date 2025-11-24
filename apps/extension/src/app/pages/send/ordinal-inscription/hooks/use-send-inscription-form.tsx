@@ -40,7 +40,7 @@ export function useSendInscriptionForm() {
   return {
     currentError,
     isCheckingFees,
-    async chooseTransactionFee(values: OrdinalSendFormValues) {
+    chooseTransactionFee(values: OrdinalSendFormValues) {
       setIsCheckingFees(true);
 
       try {

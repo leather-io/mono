@@ -17,6 +17,8 @@
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "gen-api-types": "dotenv -e .env -- openapi-typescript --redocly ./redocly.yaml https://staging.api.leather.io/docs/openapi.json -o ./src/infrastructure/api/leather/leather-api.types.ts && pnpm format",
+    "lint": "eslint --cache --max-warnings 0",
+    "lint:fix": "pnpm lint --fix",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
@@ -55,7 +57,6 @@
     "@leather.io/rpc": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "dotenv-cli": "8.0.0",
-    "eslint": "9.28",
     "openapi-typescript": "7.6.1",
     "prettier": "3.5.1",
     "tsdown": "0.16.5",

@@ -1,5 +1,7 @@
 import { ClarityType, ClarityValue, cvToString } from '@stacks/transactions';
 
+import { assertUnreachable } from '@leather.io/utils';
+
 import {
   TupleDisplayer,
   TupleNodeDisplayer,
@@ -19,7 +21,8 @@ interface ClarityValueListDisplayerProps {
 export function ClarityValueListDisplayer(props: ClarityValueListDisplayerProps) {
   const { val, encoding, isRoot = true } = props;
 
-  switch (val.type) {
+  const valType = val.type;
+  switch (valType) {
     case ClarityType.BoolTrue:
       return wrapText('true');
     case ClarityType.BoolFalse:
@@ -63,5 +66,7 @@ export function ClarityValueListDisplayer(props: ClarityValueListDisplayerProps)
       return wrapText(`"${val.value}"`);
     case ClarityType.StringUTF8:
       return wrapText(`u"${val.value}"`);
+    default:
+      assertUnreachable(valType);
   }
 }

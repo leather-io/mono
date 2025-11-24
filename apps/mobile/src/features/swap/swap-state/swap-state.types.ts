@@ -41,18 +41,18 @@ export interface SwapDependencies {
   stacks: {
     stacksSigner: StacksSigner;
     stacksNetwork: StacksNetwork;
-    broadcast: (params: {
+    broadcast(params: {
       tx: StacksTransactionWire;
       stacksNetwork: StacksNetwork;
-    }) => Promise<TxBroadcastResultOk>;
+    }): Promise<TxBroadcastResultOk>;
     nextNonce: NextNonce | undefined;
   };
   bitcoin: {
     bitcoinPayer: BitcoinNativeSegwitPayer;
     network: NetworkConfiguration;
     sbtcClient: SbtcApiClient;
-    signBitcoinPsbt: (psbt: Uint8Array) => Promise<btc.Transaction>;
-    broadcast: (tx: string) => Promise<string | undefined>;
+    signBitcoinPsbt(psbt: Uint8Array): Promise<btc.Transaction>;
+    broadcast(tx: string): Promise<string | undefined>;
   };
   services: {
     marketDataService: MarketDataService;
@@ -171,19 +171,19 @@ export type SwapActionObject =
   | { type: 'SET_CUSTOM_FEE'; payload: number };
 
 export interface SwapActions {
-  setBaseSwapAsset: (asset: AccountSwapAsset) => void;
-  setTargetSwapAsset: (asset: AccountSwapAsset) => void;
-  setBaseAmount: (amount: string) => void;
-  setBaseAmountByPercentage: (percentage: PresetPercentage) => void;
-  toggleInputCurrencyMode: () => void;
-  setSlippage: (slippage: number) => void;
-  setNonceOverride: (nonce: number) => void;
-  clearAssetSelection: () => void;
-  flipAssets: () => void;
-  openAssetSelector: (target: 'base' | 'target') => void;
-  closeAssetSelector: () => void;
-  setFeeTier: (tier: TransactionFeeTier) => void;
-  setCustomFee: (fee: number) => void;
+  setBaseSwapAsset(asset: AccountSwapAsset): void;
+  setTargetSwapAsset(asset: AccountSwapAsset): void;
+  setBaseAmount(amount: string): void;
+  setBaseAmountByPercentage(percentage: PresetPercentage): void;
+  toggleInputCurrencyMode(): void;
+  setSlippage(slippage: number): void;
+  setNonceOverride(nonce: number): void;
+  clearAssetSelection(): void;
+  flipAssets(): void;
+  openAssetSelector(target: 'base' | 'target'): void;
+  closeAssetSelector(): void;
+  setFeeTier(tier: TransactionFeeTier): void;
+  setCustomFee(fee: number): void;
 }
 
 export interface UseSwapStateResult {

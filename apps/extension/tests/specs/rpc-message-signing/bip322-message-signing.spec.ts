@@ -21,7 +21,7 @@ test.describe('Message signing', () =>
     function initiateMessageSigning(page: Page) {
       return async (message: string) =>
         page.evaluate(
-          async message =>
+          message =>
             (window as any).LeatherProvider.request('signMessage', {
               message,
               paymentType: 'p2wpkh',

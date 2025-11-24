@@ -91,7 +91,7 @@ export function useHandleQueuedBackgroundAnalytics() {
         await Promise.all(
           events.map(({ eventName, properties }) => analytics.untypedTrack(eventName, properties))
         );
-      } catch (e) {
+      } catch {
         void analytics.track('background_analytics_schema_fail');
       }
     }

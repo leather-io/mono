@@ -11,8 +11,11 @@ import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 interface AppVersionLabelProps extends HTMLStyledProps<'span'> {
   isLatestVersion: boolean;
 }
-const AppVersionLabel = forwardRef<HTMLSpanElement, AppVersionLabelProps>(
-  ({ children, isLatestVersion, ...props }: AppVersionLabelProps, ref) => (
+const AppVersionLabel = forwardRef<HTMLSpanElement, AppVersionLabelProps>(function AppVersionLabel(
+  { children, isLatestVersion, ...props }: AppVersionLabelProps,
+  ref
+) {
+  return (
     <Box bg="ink.background-secondary" px="space.04" py="space.01">
       <styled.span
         textStyle="code"
@@ -26,8 +29,8 @@ const AppVersionLabel = forwardRef<HTMLSpanElement, AppVersionLabelProps>(
         {children}
       </styled.span>
     </Box>
-  )
-);
+  );
+});
 
 export function AppVersion() {
   const { pullRequestLink, isLatestBuild } = useIsLatestPullRequestBuild();

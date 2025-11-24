@@ -42,9 +42,9 @@ export function IncreaseBtcFeeSheet() {
     },
   ];
 
-  const onClose = () => {
+  function onClose() {
     void navigate(RouteUrls.Home);
-  };
+  }
 
   if (!tx) return null;
 

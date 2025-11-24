@@ -4,7 +4,7 @@ import { useConnect } from '@stacks/connect-react-jwt';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { Box, styled } from 'leather-styles/jsx';
 
-export const Auth: React.FC = () => {
+export function Auth() {
   const { doOpenAuth } = useConnect();
   return (
     <Box>
@@ -14,4 +14,4 @@ export const Auth: React.FC = () => {
       </styled.button>
     </Box>
   );
-};
+}

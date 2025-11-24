@@ -55,7 +55,7 @@ export function StructuredDataBox(props: {
             </HStack>
             <Divider py="space.01" />
             <Box>
-              <ClarityValueListDisplayer val={message} encoding={'tryAscii'} />
+              <ClarityValueListDisplayer val={message} encoding="tryAscii" />
             </Box>
           </Box>
         </Box>

@@ -6,7 +6,7 @@ import { CollectibleCard } from './collectible-card.native';
 interface CollectibleTextProps {
   src: string;
   height?: number;
-  onPress?: () => void;
+  onPress?(): void;
 }
 
 export function CollectibleText({ src, height = 200, onPress }: CollectibleTextProps) {

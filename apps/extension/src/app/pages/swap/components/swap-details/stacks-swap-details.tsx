@@ -54,13 +54,13 @@ export function StacksSwapDetails() {
     values.swapAssetQuote.balance.decimals
   );
 
-  const getFormattedPoweredBy = () => {
+  function getFormattedPoweredBy() {
     const uniqueDexList = Array.from(new Set(routeQuoteDetails?.dexPath));
     const isOnlySwapProtocol = uniqueDexList.length === 1 && uniqueDexList[0] === swapData.protocol;
     return isOnlySwapProtocol || !uniqueDexList.length
       ? swapData.protocol
       : `${toCommaSeparatedWithAnd(uniqueDexList)} via ${swapData.protocol}`;
-  };
+  }
 
   return (
     <SwapDetailsLayout>

@@ -41,7 +41,7 @@ test.describe('RPC: stx_transferStx', () => {
   function initiateSip30RpcTransferStx(page: Page) {
     return async (params: RpcParams<typeof stxTransferStx>) =>
       page.evaluate(
-        async params =>
+        params =>
           (window as any).LeatherProvider.request('stx_transferStx', {
             ...params,
           }).catch((e: unknown) => e),

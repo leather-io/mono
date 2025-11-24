@@ -101,9 +101,9 @@ function updateValue(currentValue: string, id: KeyId, decimalSeparator: DecimalS
 
 export interface NumpadProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange(value: string): void;
   decimalSeparator?: DecimalSeparator;
-  allowNextValue?: (value: string) => boolean;
+  allowNextValue?(value: string): boolean;
   mode?: Mode;
 }
 

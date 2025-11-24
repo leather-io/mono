@@ -75,7 +75,7 @@ export function useBitcoinExtendedPublicKeyVersions(): Versions | undefined {
           bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode)
         ),
       });
-    } catch (e) {
+    } catch {
       return undefined;
     }
   }, [network, whenWallet]);

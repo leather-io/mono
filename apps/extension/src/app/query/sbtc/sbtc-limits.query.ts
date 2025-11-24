@@ -39,7 +39,7 @@ async function getSbtcLimits(apiUrl: string): Promise<GetSbtcLimitsResponse> {
 export function useGetSbtcLimits() {
   const { emilyApiUrl } = useConfigSbtc();
   return useQuery({
-    queryKey: ['get-sbtc-limits'],
+    queryKey: ['get-sbtc-limits', emilyApiUrl],
     queryFn: () => getSbtcLimits(emilyApiUrl),
   });
 }
@@ -51,7 +51,7 @@ export function useGetCurrentSbtcSupply() {
   const stxAddress = useCurrentStacksAccountAddress();
 
   return useQuery({
-    queryKey: ['get-current-sbtc-supply'],
+    queryKey: ['get-current-sbtc-supply', contractAddress, stxAddress],
     queryFn: () =>
       client.callReadOnlyFunction({
         contractAddress,

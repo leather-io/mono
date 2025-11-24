@@ -9,7 +9,7 @@ import { getAssetId, serializeAssetId } from '@leather.io/utils';
 interface Sip9Props {
   item: Sip9Asset;
   height: number;
-  onPress?: (tokenDetails: TokenDetailsProps) => void;
+  onPress?(tokenDetails: TokenDetailsProps): void;
 }
 export function Sip9({ item, height, onPress }: Sip9Props) {
   if (!item?.content?.contentUrl || item?.content?.contentUrl?.trim() === '') {

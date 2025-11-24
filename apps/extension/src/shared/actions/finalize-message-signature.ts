@@ -15,6 +15,6 @@ export function finalizeMessageSignature({
   tabId,
 }: FinalizeMessageSignatureArgs) {
   const responseMessage = formatMessageSigningResponse({ request: requestPayload, response: data });
-  chrome.tabs.sendMessage(tabId, responseMessage);
+  void chrome.tabs.sendMessage(tabId, responseMessage);
   closeWindow();
 }

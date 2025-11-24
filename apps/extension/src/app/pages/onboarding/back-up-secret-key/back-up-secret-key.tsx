@@ -12,7 +12,7 @@ import { OnboardingHeader } from '@app/features/container/headers/onboarding.hea
 import { SecretKey } from '@app/features/secret-key-displayer/secret-key-displayer';
 import { useDefaultWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 
-export const BackUpSecretKeyPage = memo(() => {
+export const BackUpSecretKeyPage = memo(function BackUpSecretKeyPage() {
   const secretKey = useDefaultWalletSecretKey();
   const navigate = useNavigate();
 

@@ -38,7 +38,7 @@ async function getStacksBlock(basePath: string, block: number): Promise<StacksBl
 
 function makeGetStacksBlockQuery(basePath: string, block: number) {
   return {
-    queryKey: ['get-stacks-block', block],
+    queryKey: ['get-stacks-block', basePath, block],
     async queryFn() {
       return getStacksBlock(basePath, block);
     },

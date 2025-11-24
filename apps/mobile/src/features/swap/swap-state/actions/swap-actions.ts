@@ -19,8 +19,8 @@ import {
 } from '../swap-state.types';
 
 interface CreateSwapActionsParams {
-  dispatch: (action: SwapActionObject) => void;
-  lockDerivedAmountsForNextRender: () => void;
+  dispatch(action: SwapActionObject): void;
+  lockDerivedAmountsForNextRender(): void;
   state: SwapInternalState;
   derivedAmounts: DerivedAmounts;
   trackEvent: TrackEvent;

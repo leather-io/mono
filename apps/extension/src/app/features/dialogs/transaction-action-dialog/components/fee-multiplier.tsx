@@ -17,7 +17,7 @@ export function FeeMultiplier(props: FeeMultiplierProps) {
       {showReset && (
         <FeeMultiplierButton
           multiplier={1}
-          key={`multiply-1`}
+          key="multiply-1"
           onClick={() => onSelectMultiplier(1)}
         />
       )}

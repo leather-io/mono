@@ -121,5 +121,7 @@ export async function generateUnsignedTransaction(options: GenerateUnsignedTrans
       return generateUnsignedContractCallTx({ txData, publicKey, nonce, fee });
     case TransactionTypes.ContractDeploy:
       return generateUnsignedContractDeployTx({ txData, publicKey, nonce, fee });
+    default:
+      throw new Error(`Unsupported transaction type`);
   }
 }

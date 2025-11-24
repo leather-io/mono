@@ -23,6 +23,5 @@ export async function hiroFetchWrapper(input: RequestInfo | URL, init?: RequestI
   // Use the modified headers in the final init object
   const finalInit = { ...init, headers } as const;
 
-  // eslint-disable-next-line no-restricted-globals
   return fetch(input, finalInit);
 }

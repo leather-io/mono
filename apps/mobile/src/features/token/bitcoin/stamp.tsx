@@ -8,7 +8,7 @@ import { getAssetId, serializeAssetId } from '@leather.io/utils';
 interface StampProps {
   item: StampAsset;
   height: number;
-  onPress?: (tokenDetails: TokenDetailsProps) => void;
+  onPress?(tokenDetails: TokenDetailsProps): void;
 }
 export function Stamp({ item, height, onPress }: StampProps) {
   if (!item.stampUrl) {

@@ -6,7 +6,7 @@ export interface AppState {
   userData: UserData | null;
 }
 
-export const defaultState = (): AppState => {
+export function defaultState(): AppState {
   const appConfig = new AppConfig(['store_write'], document.location.href);
   const userSession = new UserSession({ appConfig });
 
@@ -16,6 +16,6 @@ export const defaultState = (): AppState => {
     };
   }
   return { userData: null };
-};
+}
 
 export const AppContext = createContext<AppState>(defaultState());

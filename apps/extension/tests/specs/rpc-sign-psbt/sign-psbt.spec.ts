@@ -91,7 +91,7 @@ test.describe('Sign PSBT', () => {
   function initiatePsbtSigning(page: Page) {
     return async (params: RpcParams<typeof signPsbt> & { broadcast?: boolean }) =>
       page.evaluate(
-        async params =>
+        params =>
           (window as any).LeatherProvider.request('signPsbt', {
             ...params,
           }).catch((e: unknown) => e),

@@ -4,10 +4,9 @@ import { AppContext } from '@common/context';
 import { useAuth } from '@common/use-auth';
 import { Home } from '@components/home';
 import { Connect } from '@stacks/connect-react-jwt';
-import { Box, styled } from 'leather-styles/jsx';
-import { Flex } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 
-export const App: React.FC = () => {
+export function App() {
   const { authOptions, state, authResponse, appPrivateKey, handleSignOut } = useAuth();
 
   return (
@@ -38,4 +37,4 @@ export const App: React.FC = () => {
       </AppContext.Provider>
     </Connect>
   );
-};
+}

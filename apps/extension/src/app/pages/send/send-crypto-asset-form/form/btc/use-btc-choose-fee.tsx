@@ -27,7 +27,7 @@ export function useBtcChooseFee() {
         ? calcMaxSpend(txValues.recipient, utxos, feeRate).amount
         : amountAsMoney;
 
-      const resp = await generateTx(
+      const resp = generateTx(
         {
           amount,
           recipients: [

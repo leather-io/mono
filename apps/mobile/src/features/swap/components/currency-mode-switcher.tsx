@@ -11,7 +11,7 @@ import { SecondaryAmount } from '../swap-state/swap-state.types';
 
 interface CurrencySwitchProps {
   secondaryAmount: SecondaryAmount;
-  onModeSwitch: () => void;
+  onModeSwitch(): void;
 }
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);

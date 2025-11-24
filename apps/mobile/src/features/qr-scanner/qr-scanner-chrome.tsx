@@ -7,7 +7,7 @@ import { t } from '@lingui/core/macro';
 import { ArrowLeftIcon, Box, IconButton, Text } from '@leather.io/ui/native';
 
 interface QrScannerOverlayProps {
-  onClose: () => void;
+  onClose(): void;
   errorMessage?: string;
 }
 

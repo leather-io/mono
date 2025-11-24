@@ -9,9 +9,9 @@ import { Box, ThemeProvider, useHaptics } from '@leather.io/ui/native';
 export type ParserResult<T> = { success: true; data: T } | { success: false; error: string };
 
 interface QrScannerProps<T> {
-  parse: (data: string) => ParserResult<T>;
-  onScanned: (result: T) => void;
-  onClose: () => void;
+  parse(data: string): ParserResult<T>;
+  onScanned(result: T): void;
+  onClose(): void;
 }
 
 export function QrScanner<T>({ onClose, onScanned, parse }: QrScannerProps<T>) {

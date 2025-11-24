@@ -25,7 +25,7 @@ function validatePsbt(hex: string) {
   try {
     btc.Transaction.fromPSBT(hexToBytes(hex));
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -40,7 +40,7 @@ function getRpcSignPsbtParamErrors(obj: unknown) {
 export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (request, port) => {
   if (isUndefined(request.params)) {
     void trackRpcRequestError({ endpoint: request.method, error: 'Undefined parameters' });
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       getTabIdFromPort(port),
       createRpcErrorResponse(request.method, {
         id: request.id,
@@ -52,7 +52,7 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
 
   if (!validateRpcSignPsbtParams(request.params)) {
     void trackRpcRequestError({ endpoint: request.method, error: 'Invalid parameters' });
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       getTabIdFromPort(port),
       createRpcErrorResponse(request.method, {
         id: request.id,
@@ -68,7 +68,7 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
   if (!validatePsbt(request.params.hex)) {
     void trackRpcRequestError({ endpoint: request.method, error: 'Invalid PSBT' });
 
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       getTabIdFromPort(port),
       createRpcErrorResponse('signPsbt', {
         id: request.id,

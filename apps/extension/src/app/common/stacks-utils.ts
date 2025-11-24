@@ -59,7 +59,7 @@ export function validateStacksAddress(stacksAddress: string): boolean {
     }
     c32addressDecode(addressToValidate);
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

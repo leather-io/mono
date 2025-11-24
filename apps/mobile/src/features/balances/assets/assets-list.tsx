@@ -16,7 +16,7 @@ interface AssetsListProps {
   sip10Data: ReturnType<typeof useSip10AccountBalance>;
   runesData: ReturnType<typeof useRunesAccountBalance>;
   header: ReactElement;
-  onPressToken?: (tokenDetails: TokenDetailsProps) => void;
+  onPressToken?(tokenDetails: TokenDetailsProps): void;
 }
 
 export function AssetsList({ sip10Data, runesData, header, onPressToken }: AssetsListProps) {

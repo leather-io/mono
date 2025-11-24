@@ -9,8 +9,8 @@ import { truncateMiddle } from '@leather.io/utils';
 
 interface ReceiveAssetItemProps {
   asset: SelectedAsset;
-  onCopyAddress: (asset: SelectedAsset) => void;
-  onPress: () => void;
+  onCopyAddress(asset: SelectedAsset): void;
+  onPress(): void;
 }
 export function ReceiveAssetItem({ asset, onCopyAddress, onPress }: ReceiveAssetItemProps) {
   const { address, addressType, name } = asset;

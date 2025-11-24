@@ -11,7 +11,7 @@ import { getAssetId, serializeAssetId } from '@leather.io/utils';
 interface InscriptionProps {
   item: InscriptionAsset;
   height: number;
-  onPress?: (tokenDetails: TokenDetailsProps) => void;
+  onPress?(tokenDetails: TokenDetailsProps): void;
 }
 export function Inscription({ item, height, onPress }: InscriptionProps) {
   const [content, setContent] = useState<string | null>(null);

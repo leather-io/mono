@@ -28,7 +28,7 @@ export function ConnectLedgerStacks() {
         });
       },
       popup() {
-        openIndexPageInNewTab(RouteUrls.Home);
+        void openIndexPageInNewTab(RouteUrls.Home);
         closeWindow();
       },
     });

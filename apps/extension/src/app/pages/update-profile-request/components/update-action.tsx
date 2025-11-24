@@ -67,7 +67,8 @@ export function UpdateAction({
 
   if (!requestToken || !tabId) return null;
 
-  const onUpdateProfile = async () => {
+  async function onUpdateProfile() {
+    if (!requestToken) return;
     setIsLoading(true);
     void analytics.track('request_update_profile_submit');
     const result = await updateProfileSoftwareWallet(publicProfile);
@@ -78,12 +79,13 @@ export function UpdateAction({
       tabId,
       data: result === null ? 'cancel' : result, // result is null for hardware wallets
     });
-  };
+  }
 
-  const onCancel = async () => {
+  function onCancel() {
+    if (!requestToken) return;
     void analytics.track('request_update_profile_cancel');
     finalizeProfileUpdate({ requestPayload: requestToken, tabId, data: 'cancel' });
-  };
+  }
 
   return (
     <UpdateActionLayout

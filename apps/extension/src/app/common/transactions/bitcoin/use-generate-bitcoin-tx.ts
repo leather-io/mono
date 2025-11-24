@@ -33,7 +33,7 @@ export function useGenerateUnsignedNativeSegwitTx({
   const networkMode = useBitcoinScureLibNetworkConfig();
 
   return useCallback(
-    async (
+    (
       values: GenerateNativeSegwitTxValues,
       feeRate: number,
       utxos: UtxoResponseItem[],

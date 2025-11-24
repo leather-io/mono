@@ -11,7 +11,7 @@ export function closeWindow() {
     return;
   }
   // We prevent `window.close()` directly as to allow for debugging helper
-  // eslint-disable-next-line no-restricted-properties
+
   window.close();
 }
 

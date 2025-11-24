@@ -40,7 +40,7 @@ export class NetworkPage {
     await this.page.waitForSelector(this.errorTextSelector);
   }
 
-  async getErrorMessage() {
+  getErrorMessage() {
     return this.page.locator(this.errorTextSelector);
   }
 

@@ -69,7 +69,7 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
     address,
     onUserRejectBip322MessageSigningRequest() {
       if (!tabId) return;
-      chrome.tabs.sendMessage(
+      void chrome.tabs.sendMessage(
         tabId,
         createRpcErrorResponse('signMessage', {
           id: requestId,
@@ -99,7 +99,7 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
       await shortPauseBeforeToast();
       toast.success('Message signed successfully');
 
-      chrome.tabs.sendMessage(
+      void chrome.tabs.sendMessage(
         tabId,
         createRpcSuccessResponse('signMessage', {
           id: requestId,
@@ -166,5 +166,7 @@ export function useSignBip322Message() {
       return taprootMsgSigner;
     case 'p2wpkh':
       return nativeSegwitMsgSigner;
+    default:
+      throw new Error(`Unsupported payment type: ${paymentType}`);
   }
 }

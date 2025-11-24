@@ -7,7 +7,7 @@ import { SwapActionObject } from '../swap-state.types';
 interface UseSwapAssetsParams {
   baseSwapAssets?: AccountSwapAsset[];
   targetSwapAssets?: AccountSwapAsset[];
-  dispatch: (action: SwapActionObject) => void;
+  dispatch(action: SwapActionObject): void;
 }
 
 export function useSwapAssetReconciliation({

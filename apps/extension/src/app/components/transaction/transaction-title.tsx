@@ -16,7 +16,9 @@ export function TransactionTitle(props: TransactionTitleProps) {
   const [isEllipsisActive, setIsEllipsisActive] = useState(
     element?.scrollWidth > element?.clientWidth
   );
-  const onResize = () => setIsEllipsisActive(element?.scrollWidth > element?.clientWidth);
+  function onResize() {
+    setIsEllipsisActive(element?.scrollWidth > element?.clientWidth);
+  }
 
   const spamFilter = useSpamFilterWithWhitelist();
 

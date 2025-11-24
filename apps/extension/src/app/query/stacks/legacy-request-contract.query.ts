@@ -30,6 +30,7 @@ function createGetContractInterfaceQueryOptions({
       StacksQueryPrefixes.GetContractInterface,
       (transactionRequest as ContractCallPayload)?.contractName,
       (transactionRequest as ContractCallPayload)?.contractAddress,
+      transactionRequest,
     ],
     queryFn: () => {
       if (!transactionRequest || transactionRequest?.txType !== TransactionTypes.ContractCall)

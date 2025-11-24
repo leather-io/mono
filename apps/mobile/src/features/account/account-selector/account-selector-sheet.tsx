@@ -11,7 +11,7 @@ import { AccountSelectorSheetLayout } from './account-selector-sheet.layout';
 
 interface AccountSelectedSheetProps {
   sheetRef: SheetRef;
-  onAccountPress: (account: AccountId) => void;
+  onAccountPress(account: AccountId): void;
 }
 
 export function AccountSelectorSheet({ sheetRef, onAccountPress }: AccountSelectedSheetProps) {

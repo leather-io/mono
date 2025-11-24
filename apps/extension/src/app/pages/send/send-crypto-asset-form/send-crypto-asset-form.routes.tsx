@@ -34,7 +34,7 @@ const recipientAccountsSheetRoute = (
 
 const editNonceSheetRoute = <Route path={RouteUrls.EditNonce} element={<EditNonceSheet />} />;
 const broadcastErrorSheetRoute = (
-  <Route path={'confirm/broadcast-error'} element={<BroadcastErrorSheet />} />
+  <Route path="confirm/broadcast-error" element={<BroadcastErrorSheet />} />
 );
 
 export const sendCryptoAssetFormRoutes = (

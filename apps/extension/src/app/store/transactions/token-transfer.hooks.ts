@@ -43,7 +43,7 @@ export function useGenerateStxTokenTransferUnsignedTx() {
 
       const options: GenerateUnsignedTransactionOptions = {
         publicKey: account.stxPublicKey,
-        nonce: Number(values?.nonce) ?? nextNonce?.nonce,
+        nonce: values?.nonce ? Number(values.nonce) : nextNonce?.nonce,
         fee: stxToMicroStx(values?.fee || 0).toNumber(),
         txData: {
           txType: TransactionTypes.StxTokenTransfer,
@@ -135,7 +135,7 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
           },
           fee: stxToMicroStx(values?.fee || 0).toNumber(),
           publicKey: account.stxPublicKey,
-          nonce: Number(values?.nonce) ?? nextNonce?.nonce,
+          nonce: values?.nonce ? Number(values.nonce) : nextNonce?.nonce,
         } as const;
 
         return generateUnsignedTransaction(options);

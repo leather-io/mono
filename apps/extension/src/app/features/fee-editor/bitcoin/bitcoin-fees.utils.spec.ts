@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { mockUtxos } from '@leather.io/query';
-import { createMoney } from '@leather.io/utils';
+import { createMoney, noop } from '@leather.io/utils';
 
 import { getApproximateFee, getBitcoinFee, getBitcoinSendMaxFee } from './bitcoin-fees.utils';
 
@@ -24,7 +24,7 @@ describe('bitcoin-fees.utils', () => {
     });
 
     it('returns null when calculation fails', () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(noop);
       const result = getBitcoinFee({
         recipients: [],
         utxos: [],
@@ -46,7 +46,7 @@ describe('bitcoin-fees.utils', () => {
     });
 
     it('returns null when calculation fails', () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(noop);
       const result = getBitcoinSendMaxFee({
         recipients: mockRecipients,
         utxos: [],

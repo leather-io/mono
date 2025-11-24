@@ -22,10 +22,10 @@ export function useSwitchAccount(callback?: () => void) {
   const handleSwitchAccount = useCallback(
     async (index: number) => {
       setHasSwitched(true);
-      switchAccount(index);
+      await switchAccount(index);
       if (callback) setTimeout(() => callback(), TIMEOUT);
       if (!accounts) return;
-      void trackSwitchAccount(accounts[index]?.address, index);
+      trackSwitchAccount(accounts[index]?.address, index);
     },
     [setHasSwitched, switchAccount, callback, accounts]
   );

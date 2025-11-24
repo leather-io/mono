@@ -26,14 +26,14 @@ export const openHandler = defineRpcRequestHandler(open.method, async (request, 
   const hostname = getHostnameFromPort(port);
 
   if (!state) {
-    sendMissingStateErrorToTab({ tabId, method: request.method, id: request.id });
+    void sendMissingStateErrorToTab({ tabId, method: request.method, id: request.id });
     return;
   }
 
   const originPermissions = state.appPermissions.entities[hostname];
 
   if (!originPermissions || !hasRequestedAccountPermission(originPermissions)) {
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       tabId,
       createRpcErrorResponse('open', {
         id: request.id,
@@ -48,7 +48,7 @@ export const openHandler = defineRpcRequestHandler(open.method, async (request, 
 
   switch (request.params.mode) {
     case 'fullpage':
-      openNewTabWithWallet();
+      void openNewTabWithWallet();
       break;
     case 'popup':
     default:
@@ -58,7 +58,7 @@ export const openHandler = defineRpcRequestHandler(open.method, async (request, 
 
   void trackRpcRequestSuccess({ endpoint: request.method });
 
-  chrome.tabs.sendMessage(
+  void chrome.tabs.sendMessage(
     tabId,
     createRpcSuccessResponse('open', {
       id: request.id,

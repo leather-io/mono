@@ -6,11 +6,11 @@ import { Highlighter, HighlighterProps } from './highlighter';
 
 type CodeBlockProps = HighlighterProps & BoxProps;
 
-export const CodeBlock = forwardRef(
-  (
-    { code, showLineNumbers, hideLineHover, style = {}, language, prism, ...rest }: CodeBlockProps,
-    ref: React.Ref<HTMLDivElement>
-  ) => (
+export const CodeBlock = forwardRef(function CodeBlock(
+  { code, showLineNumbers, hideLineHover, style = {}, language, prism, ...rest }: CodeBlockProps,
+  ref: React.Ref<HTMLDivElement>
+) {
+  return (
     <Box
       bg="ink.background-primary"
       borderRadius={[0, 'lg']}
@@ -34,5 +34,5 @@ export const CodeBlock = forwardRef(
         prism={prism}
       />
     </Box>
-  )
-);
+  );
+});

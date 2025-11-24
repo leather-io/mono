@@ -1,15 +1,11 @@
-import { z } from 'zod';
-
 import { createBitcoinTransactionMonitor } from './address-monitors/bitcoin-transaction-monitor';
 
-const monitoredAddressSchema = z.object({
-  chain: z.enum(['bitcoin', 'stacks']),
-  accountIndex: z.number(),
-  isCurrent: z.boolean(),
-  address: z.string(),
-});
-
-export type MonitoredAddress = z.infer<typeof monitoredAddressSchema>;
+export interface MonitoredAddress {
+  chain: 'bitcoin' | 'stacks';
+  accountIndex: number;
+  isCurrent: boolean;
+  address: string;
+}
 
 export interface AddressMonitor {
   syncAddresses(addresses: MonitoredAddress[]): void;

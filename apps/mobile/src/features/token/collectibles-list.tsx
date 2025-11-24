@@ -20,7 +20,7 @@ import { Sip9 } from './stacks/sip9';
 interface RenderCollectibleProps {
   item: NonFungibleCryptoAsset;
   height: number;
-  onPress?: (tokenDetails: TokenDetailsProps) => void;
+  onPress?(tokenDetails: TokenDetailsProps): void;
 }
 function renderCollectible({ item, height, onPress }: RenderCollectibleProps) {
   const collectible = (() => {
@@ -53,7 +53,7 @@ function useCollectibleListItemHeight() {
 interface CollectiblesListProps {
   collectiblesState: FetchState<NonFungibleCryptoAsset[]>;
   header: ReactElement;
-  onPressToken?: (tokenDetails: TokenDetailsProps) => void;
+  onPressToken?(tokenDetails: TokenDetailsProps): void;
 }
 
 export function CollectiblesList({

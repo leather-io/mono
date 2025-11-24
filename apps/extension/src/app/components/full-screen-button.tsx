@@ -31,7 +31,7 @@ export function FullScreenButton() {
                 location: 'header',
               });
               void analytics.identify(undefined, { hasVisitedFullPageMode: true });
-              openIndexPageInNewTab(location.pathname);
+              void openIndexPageInNewTab(location.pathname);
             }}
           >
             <ExpandIcon />

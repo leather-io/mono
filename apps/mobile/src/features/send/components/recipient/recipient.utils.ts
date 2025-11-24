@@ -49,7 +49,7 @@ export function activityContainsRecipient(activity: SendAssetActivity[], recipie
 
 export interface IsNewAddressParams {
   address: string;
-  findAccountByAddress: (address: string) => Account | null;
+  findAccountByAddress(address: string): Account | null;
   activity?: SendAssetActivity[];
 }
 

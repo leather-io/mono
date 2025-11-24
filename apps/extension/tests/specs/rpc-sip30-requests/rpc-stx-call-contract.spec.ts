@@ -87,7 +87,7 @@ test.describe('RPC: stx_callContract', () => {
   function initiateSip30RpcCallContract(page: Page) {
     return async (params: RpcParams<typeof stxCallContract>) =>
       page.evaluate(
-        async params =>
+        params =>
           (window as any).LeatherProvider.request('stx_callContract', {
             ...params,
           }).catch((e: unknown) => e),

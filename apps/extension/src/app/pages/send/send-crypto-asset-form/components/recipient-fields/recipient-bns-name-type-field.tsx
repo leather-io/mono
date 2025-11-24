@@ -34,7 +34,7 @@ export function RecipientBnsNameTypeField({
   // address for generating the unsigned transaction.
   useEffect(() => {
     if (!errors.recipient) {
-      bnsAddress && setShowBnsAddress(true);
+      if (bnsAddress) setShowBnsAddress(true);
       setFieldError('recipientBnsName', undefined);
     }
     if (values.recipient && errors.recipient) {

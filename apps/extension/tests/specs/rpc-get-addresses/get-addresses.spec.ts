@@ -55,6 +55,7 @@ function getExpectedResponseForKeys(keys: SupportedBlockchains[]) {
     },
   ];
   return {
+    id: test.expect.any(String),
     jsonrpc: '2.0',
     result: {
       addresses: [
@@ -71,7 +72,7 @@ async function interceptRequestPopup(context: BrowserContext) {
 
 async function initiateGetAddresses(page: Page, eventName: GetAddressesMethods, params?: any) {
   return page.evaluate(
-    async ({ eventName, params }) => (window as any).LeatherProvider?.request(eventName, params),
+    ({ eventName, params }) => (window as any).LeatherProvider?.request(eventName, params),
     { eventName, params }
   );
 }
@@ -120,9 +121,8 @@ getAddressesMethods.forEach(method => {
 
           const result = await getAddressesPromise;
           if (!result) throw new Error('Expected result');
-          const { id, ...payloadWithoutId } = result;
 
-          test.expect(payloadWithoutId).toEqual(expectedResult);
+          test.expect(result).toEqual(expectedResult);
         });
 
         test('the promise rejects when user closes popup window', async ({ page, context }) => {

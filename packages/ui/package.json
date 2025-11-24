@@ -13,6 +13,8 @@
     "build:web:watch": "concurrently \"pnpm panda --watch\" \"tsdown --watch --config tsdown.config.web.ts\" ",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
+    "lint": "eslint --cache --max-warnings 0",
+    "lint:fix": "pnpm lint --fix",
     "storybook-docs:web": "storybook dev --docs -c ./src/.storybook-web",
     "storybook:android": "expo start --android",
     "storybook:ios": "expo start --ios",

@@ -6,6 +6,7 @@ import {
   type BitcoinNetworkModes,
   HIRO_API_BASE_URL_NAKAMOTO_TESTNET,
 } from '@leather.io/models';
+import { assertUnreachable } from '@leather.io/utils';
 
 function kebabCase(str: string) {
   return str.replace(KEBAB_REGEX, match => '-' + match.toLowerCase());
@@ -71,6 +72,8 @@ export function makeBitcoinTxExplorerLink({
       return `${mempoolBaseUrl}/signet/tx/${txid}`;
     case 'regtest':
       return `${bitcoinUrl}/tx/${txid}`;
+    default:
+      assertUnreachable(bitcoinNetwork);
   }
 }
 
@@ -162,14 +165,14 @@ function isUtf8(buf?: Buffer | Uint8Array): boolean {
   return true;
 }
 
-export const abbreviateNumber = (n: number) => {
+export function abbreviateNumber(n: number) {
   if (n < 1e3) return n.toString();
   if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(2) + 'K';
   if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(2) + 'M';
   if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(2) + 'B';
   if (n >= 1e12) return +(n / 1e12).toFixed(2) + 'T';
   return n.toString();
-};
+}
 
 function isHex(hex: string): boolean {
   const regexp = /^[0-9a-fA-F]+$/;
@@ -235,13 +238,13 @@ export function isPopupMode() {
   return pageMode === 'popup';
 }
 
-export const parseIfValidPunycode = (s: string) => {
+export function parseIfValidPunycode(s: string) {
   try {
     return toUnicode(s);
   } catch {
     return s;
   }
-};
+}
 
 export function capitalize(val: string) {
   return val.charAt(0).toUpperCase() + val.slice(1);

@@ -38,4 +38,4 @@ async function renderApp() {
   return createRoot(container!).render(<App />);
 }
 
-void persistAndRenderApp(renderApp);
+persistAndRenderApp(renderApp);

@@ -20,7 +20,7 @@ interface AmountFieldProps {
   asset?: SwappableFungibleCryptoAsset;
   value: string;
   inputCurrencyMode: InputCurrencyMode;
-  onInputCurrencyModeSwitch: () => void;
+  onInputCurrencyModeSwitch(): void;
   secondaryAmount: SecondaryAmount;
   quoteCurrencyPreference: Currency;
   errorMessage?: string;

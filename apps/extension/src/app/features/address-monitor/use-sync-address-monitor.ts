@@ -18,7 +18,7 @@ export function useSyncAddressMonitor() {
     const monitorableAddresses = isNotificationsEnabled ? addresses : [];
     if (monitorableAddresses && !isEqual(monitorableAddresses, prevAddresses.current)) {
       prevAddresses.current = monitorableAddresses;
-      sendMessage({
+      void sendMessage({
         method: InternalMethods.AddressMonitorUpdated,
         payload: {
           addresses: monitorableAddresses,

@@ -36,7 +36,7 @@ export const openSwapHandler = defineRpcRequestHandler(openSwap.method, async (r
 
   void trackRpcRequestSuccess({ endpoint: request.method });
 
-  chrome.tabs.sendMessage(
+  void chrome.tabs.sendMessage(
     tabId,
     createRpcSuccessResponse('openSwap', {
       id: request.id,

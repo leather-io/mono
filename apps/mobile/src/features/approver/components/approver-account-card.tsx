@@ -12,7 +12,7 @@ import { Box } from '@leather.io/ui/native';
 
 interface AccountItemsProps {
   account: Account;
-  onPress?: () => void;
+  onPress?(): void;
   displayPreference?: AccountDisplayPreference;
 }
 
@@ -52,7 +52,7 @@ function AccountItem({ account, onPress, displayPreference }: AccountItemsProps)
 
 interface ApproverAccountCardProps {
   accounts: Account[];
-  onPress?: () => void;
+  onPress?(): void;
   displayPreference?: AccountDisplayPreference;
 }
 

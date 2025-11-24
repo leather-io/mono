@@ -24,7 +24,7 @@ export enum TransactionErrorReason {
   InvalidContractAddress = 8,
 }
 
-const TransactionErrorSuspense = memo(() => {
+const TransactionErrorSuspense = memo(function TransactionErrorSuspense() {
   const reason = useTransactionError();
 
   useEffect(() => {

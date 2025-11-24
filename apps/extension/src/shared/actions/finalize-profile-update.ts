@@ -32,6 +32,6 @@ interface FinalizeProfileUpdateArgs {
 }
 export function finalizeProfileUpdate({ requestPayload, data, tabId }: FinalizeProfileUpdateArgs) {
   const responseMessage = formatProfileUpdateResponse({ request: requestPayload, response: data });
-  chrome.tabs.sendMessage(tabId, responseMessage);
+  void chrome.tabs.sendMessage(tabId, responseMessage);
   closeWindow();
 }

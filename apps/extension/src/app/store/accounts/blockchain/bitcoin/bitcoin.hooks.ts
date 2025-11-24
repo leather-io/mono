@@ -80,7 +80,7 @@ function useSignBitcoinSoftwareTx() {
   const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
   const createTaprootSigner = useCurrentAccountTaprootSigner();
 
-  return async (psbt: Uint8Array, inputSigningConfig: BitcoinInputSigningConfig[]) => {
+  return (psbt: Uint8Array, inputSigningConfig: BitcoinInputSigningConfig[]) => {
     const tx = btc.Transaction.fromPSBT(psbt);
 
     inputSigningConfig.forEach(({ index, derivationPath }) => {
@@ -97,10 +97,12 @@ function useSignBitcoinSoftwareTx() {
       // Asigna, the Native Segwit key is used to sign a multisig taproot input
       try {
         nativeSegwitSigner.signIndex(tx, index, allSighashTypes);
-      } catch (e) {
+      } catch {
         try {
           taprootSigner.signIndex(tx, index, allSighashTypes);
-        } catch (er) {}
+        } catch {
+          // Signing failed, continue without this signature
+        }
       }
     });
 
@@ -153,7 +155,7 @@ export function useSignLedgerBitcoinTx() {
       .map(([index]) => index);
 
     if (taprootInputsToSign.length) {
-      await updateTaprootLedgerInputs(psbt, fingerprint, taprootInputsToSign);
+      updateTaprootLedgerInputs(psbt, fingerprint, taprootInputsToSign);
 
       const taprootExtendedPublicKey = await app.getExtendedPubkey(
         makeTaprootAccountDerivationPath(bitcoinNetworkMode, accountIndex)
@@ -188,11 +190,11 @@ export function useSignLedgerBitcoinTx() {
       try {
         await addNativeSegwitUtxoHexLedgerProps(psbt, nativeSegwitInputsToSign);
         void analytics.track('native_segwit_tx_hex_to_ledger_tx', { success: true });
-      } catch (e) {
+      } catch {
         void analytics.track('native_segwit_tx_hex_to_ledger_tx', { success: false });
       }
 
-      await addNativeSegwitBip32Derivation(psbt, fingerprint, nativeSegwitInputsToSign);
+      addNativeSegwitBip32Derivation(psbt, fingerprint, nativeSegwitInputsToSign);
 
       const nativeSegwitPolicy = createNativeSegwitDefaultWalletPolicy({
         fingerprint,
@@ -288,7 +290,7 @@ export function useSignBitcoinTx() {
         );
         return listenForBitcoinTxLedgerSigning(bytesToHex(psbt));
       },
-      async software() {
+      software() {
         return signSoftwareTx(psbt, getSigningConfig(inputsToSign));
       },
     })();

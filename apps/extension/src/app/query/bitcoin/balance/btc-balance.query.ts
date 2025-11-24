@@ -11,6 +11,7 @@ export function useGetBtcAccountBalanceQuery(request: AccountRequest) {
     queryKey: [
       'btc-balance-service-get-btc-account-balance',
       network.id,
+      request,
       request.account.id.fingerprint,
       request.account.id.accountIndex,
       request.exclusions,

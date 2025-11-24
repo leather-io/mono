@@ -117,7 +117,7 @@ test.describe('send btc', () => {
         });
       });
 
-      sendPage.page.on('request', async request => {
+      sendPage.page.on('request', request => {
         const parsedUrl = new URL(request.url());
         if (parsedUrl.host === 'ordinals.com') {
           const url = request.url();

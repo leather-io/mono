@@ -28,7 +28,7 @@ export const signMessageHandler = defineRpcRequestHandler(
   async (request, port) => {
     if (isUndefined(request.params)) {
       void trackRpcRequestError({ endpoint: 'signMessage', error: 'Undefined parameters' });
-      chrome.tabs.sendMessage(
+      void chrome.tabs.sendMessage(
         getTabIdFromPort(port),
         createRpcErrorResponse('signMessage', {
           id: request.id,
@@ -41,7 +41,7 @@ export const signMessageHandler = defineRpcRequestHandler(
     if (!validateRpcSignMessageParams(request.params)) {
       void trackRpcRequestError({ endpoint: 'signMessage', error: 'Invalid parameters' });
 
-      chrome.tabs.sendMessage(
+      void chrome.tabs.sendMessage(
         getTabIdFromPort(port),
         createRpcErrorResponse('signMessage', {
           id: request.id,
@@ -60,7 +60,7 @@ export const signMessageHandler = defineRpcRequestHandler(
     if (!isSupportedMessageSigningPaymentType(paymentType)) {
       void trackRpcRequestError({ endpoint: 'signMessage', error: 'Unsupported payment type' });
 
-      chrome.tabs.sendMessage(
+      void chrome.tabs.sendMessage(
         getTabIdFromPort(port),
         createRpcErrorResponse('signMessage', {
           id: request.id,

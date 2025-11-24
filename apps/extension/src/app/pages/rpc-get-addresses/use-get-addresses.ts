@@ -120,7 +120,7 @@ export function useGetAddresses() {
         keysToIncludeInResponse.push(stacksAddressResponse);
       }
 
-      chrome.tabs.sendMessage(
+      void chrome.tabs.sendMessage(
         tabId,
         createRpcSuccessResponse(request.method, {
           id: request.id,

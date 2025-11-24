@@ -20,9 +20,9 @@ export const themeLabelMap = {
 export type UserSelectedTheme = keyof typeof themeLabelMap;
 type ComputedTheme = keyof Pick<typeof themeLabelMap, 'light' | 'dark'>;
 
-export const getThemeLabel = (theme: UserSelectedTheme) => {
+export function getThemeLabel(theme: UserSelectedTheme) {
   return themeLabelMap[theme];
-};
+}
 
 const ThemeContext = createContext<{
   theme: ComputedTheme;
@@ -35,8 +35,9 @@ const ThemeContext = createContext<{
   setUserSelectedTheme: noop,
 });
 
-const getSystemTheme = () =>
-  window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+function getSystemTheme() {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 
 function getComputedTheme(userSelectedTheme: UserSelectedTheme): ComputedTheme {
   if (userSelectedTheme === 'system') return getSystemTheme();
@@ -67,13 +68,13 @@ export function ThemeSwitcherProvider({ children }: ThemeSwitcherProviderProps) 
     switch (userSelectedTheme) {
       case 'system': {
         setTheme(getSystemTheme());
-        const listener = ({ matches }: MediaQueryListEvent) => {
+        function listener({ matches }: MediaQueryListEvent) {
           if (matches) {
             setTheme('dark');
           } else {
             setTheme('light');
           }
-        };
+        }
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', listener);
         return () => {
           window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', listener);
@@ -87,6 +88,8 @@ export function ThemeSwitcherProvider({ children }: ThemeSwitcherProviderProps) 
         setTheme('light');
         return;
       }
+      default:
+        return;
     }
   }, [setTheme, userSelectedTheme]);
 
@@ -99,4 +102,6 @@ export function ThemeSwitcherProvider({ children }: ThemeSwitcherProviderProps) 
   );
 }
 
-export const useThemeSwitcher = () => useContext(ThemeContext);
+export function useThemeSwitcher() {
+  return useContext(ThemeContext);
+}

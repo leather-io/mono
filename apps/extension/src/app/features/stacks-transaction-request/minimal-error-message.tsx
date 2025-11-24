@@ -13,7 +13,7 @@ function MinimalErrorMessageSuspense(props: HstackProps) {
 
   if (!error) return null;
 
-  const getTitle = () => {
+  function getTitle() {
     if (error) {
       switch (error) {
         case TransactionErrorReason.Unauthorized:
@@ -27,10 +27,12 @@ function MinimalErrorMessageSuspense(props: HstackProps) {
           return 'Insufficient balance';
         case TransactionErrorReason.Generic:
           return 'Something went wrong';
+        default:
+          return 'Something went wrong';
       }
     }
     return null;
-  };
+  }
 
   return (
     <HStack

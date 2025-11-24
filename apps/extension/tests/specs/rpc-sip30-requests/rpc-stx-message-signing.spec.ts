@@ -28,7 +28,7 @@ test.describe('stx_signMessage', () => {
   function initiateUtf8MessageSigning(page: Page) {
     return async (message: string) =>
       page.evaluate(
-        async ({ message }) =>
+        ({ message }) =>
           (window as any).LeatherProvider.request('stx_signMessage', {
             message,
             messageType: 'utf8',
@@ -68,7 +68,7 @@ test.describe('stx_signMessage', () => {
     function initiateStxStructuredMessageSigning(page: Page) {
       return async (message: string, domain: string) =>
         page.evaluate(
-          async ({ message, domain }) =>
+          ({ message, domain }) =>
             (window as any).LeatherProvider.request('stx_signMessage', {
               message,
               domain,

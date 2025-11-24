@@ -6,19 +6,19 @@ import { Box, styled } from 'leather-styles/jsx';
 
 import { ExplorerLink } from './explorer-link';
 
-export const Deploy = () => {
+export function Deploy() {
   const [tx, setTx] = React.useState('');
   const { doContractDeploy, userSession } = useConnect();
-  const handleSubmit = () =>
-    doContractDeploy({
+  function handleSubmit() {
+    return doContractDeploy({
       codeBody: SampleContracts[0].contractSource,
       contractName: SampleContracts[0].contractName,
       userSession,
       onFinish: data => {
         setTx(data.txId);
-        console.log('finished!', data);
       },
     });
+  }
   return (
     <Box mb={6} maxWidth="600px" mt={6}>
       <styled.h2 textStyle="body.02" mt={6}>
@@ -33,4 +33,4 @@ export const Deploy = () => {
       </Box>
     </Box>
   );
-};
+}

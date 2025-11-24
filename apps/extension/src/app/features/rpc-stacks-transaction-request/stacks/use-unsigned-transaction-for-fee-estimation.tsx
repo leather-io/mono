@@ -25,7 +25,7 @@ export function useUnsignedStacksTransactionForFeeEstimation({
     [txOptions]
   );
   if (unsignedTx.error) {
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       request.tabId,
       createRpcErrorResponse(method, {
         id: request.requestId,

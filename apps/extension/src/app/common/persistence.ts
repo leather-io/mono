@@ -77,7 +77,7 @@ export const queryClient = new QueryClient({
   },
 });
 
-export async function persistAndRenderApp(renderApp: () => void) {
+export function persistAndRenderApp(renderApp: () => void) {
   if (!IS_TEST_ENV) {
     void persistQueryClient({
       queryClient,

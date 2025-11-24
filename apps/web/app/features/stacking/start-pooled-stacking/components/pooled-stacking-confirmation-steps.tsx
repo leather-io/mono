@@ -16,7 +16,7 @@ export interface PooledStackingConfirmationStepsProps {
     PooledStackingConfirmationStepId,
     ConfirmationStep<PooledStackingConfirmationStepId>['state']
   >;
-  onSubmit: (confirmation: PooledStackingConfirmationStepId) => void | Promise<void>;
+  onSubmit(confirmation: PooledStackingConfirmationStepId): void | Promise<void>;
 }
 
 export function PooledStackingConfirmationSteps({

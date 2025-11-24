@@ -18,7 +18,7 @@ export interface LiquidStackingConfirmationStepsProps {
       ConfirmationStep<LiquidStackingConfirmationStepId>['state']
     >
   >;
-  onSubmit: (confirmation: LiquidStackingConfirmationStepId) => void | Promise<void>;
+  onSubmit(confirmation: LiquidStackingConfirmationStepId): void | Promise<void>;
 }
 
 export function LiquidStackingConfirmationSteps({

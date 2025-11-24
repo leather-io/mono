@@ -11,16 +11,16 @@ import { SecretKeyLayout } from '../../ui/components/secret-key/secret-key.layou
 interface SecretKeyProps {
   secretKey: string;
 }
-export const SecretKey = memo(({ secretKey }: SecretKeyProps) => {
+export const SecretKey = memo(function SecretKey({ secretKey }: SecretKeyProps) {
   const { onCopy, hasCopied } = useClipboard(secretKey || '');
   const { pathname } = useLocation();
 
   const navigate = useNavigate();
 
-  const copyToClipboard = () => {
+  function copyToClipboard() {
     void analytics.track('copy_secret_key_to_clipboard');
     onCopy();
-  };
+  }
 
   const secretKeyWords = useMemo(() => secretKey?.split(' '), [secretKey]);
   const showTitleAndIllustration = pathname === RouteUrls.BackUpSecretKey;

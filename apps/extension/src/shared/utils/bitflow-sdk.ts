@@ -22,7 +22,7 @@ export const bitflow: BitflowSDK = (() => {
       KEEPER_API_HOST: BITFLOW_KEEPER_API_HOST,
       BITFLOW_PROVIDER_ADDRESS: BITFLOW_PROVIDER_ADDRESS,
     });
-  } catch (e) {
+  } catch {
     logger.error('Bitflow SDK initialization failed');
     // return fallback dummy object
     return {} as BitflowSDK;

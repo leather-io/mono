@@ -41,25 +41,25 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import { ExplorerLink } from './explorer-link';
 
-export const Debugger = () => {
+export function Debugger() {
   const { doContractCall, doSTXTransfer, doContractDeploy } = useConnect();
   const address = useSTXAddress() ?? '';
 
   const [txId, setTxId] = useState<string>('');
   const [txType, setTxType] = useState<string>('');
 
-  const clearState = () => {
+  function clearState() {
     setTxId('');
     setTxType('');
-  };
+  }
 
-  const setState = (type: string, id: string) => {
+  function setState(type: string, id: string) {
     setTxId(id);
     setTxType(type);
-  };
+  }
 
   // If need to add more test tokens: STW7PFH79HW1C9Z0SXBP5PTPHKZZ58KK9WP1MZZA
-  const handleSponsoredTransactionBroadcast = async (tx: StacksTransactionWire) => {
+  async function handleSponsoredTransactionBroadcast(tx: StacksTransactionWire) {
     const sponsorOptions = {
       fee: 388,
       sponsorPrivateKey: 'b8c6aaef4b6de5e62648a59fff13e389856dff5e58163e676c2cfdf9dd5dd11101',
@@ -68,9 +68,9 @@ export const Debugger = () => {
 
     const sponsoredTx = await sponsorTransaction(sponsorOptions);
     return broadcastTransaction({ transaction: sponsoredTx, network: STACKS_TESTNET });
-  };
+  }
 
-  const callBnsTransfer = async () => {
+  async function callBnsTransfer() {
     // this will fail because the address does not own the name
     clearState();
     const args: ClarityValue[] = [
@@ -98,13 +98,12 @@ export const Debugger = () => {
       attachment: 'This is an attachment',
       postConditions: [serializePostConditionWire(postConditionToWire(pc))],
       onFinish: data => {
-        console.log('finished bns call!', data);
         setState('Contract Call', data.txId);
       },
     });
-  };
+  }
 
-  const callAnimalTransfer = async () => {
+  async function callAnimalTransfer() {
     clearState();
     const args = [
       uintCV(1),
@@ -120,17 +119,16 @@ export const Debugger = () => {
       postConditionMode: PostConditionMode.Allow,
       postConditions: [],
       onFinish: data => {
-        console.log('finished nft transfer!', data);
         setState('Contract Call', data.txId);
       },
     });
-  };
+  }
 
-  const callFaker = async (
+  async function callFaker(
     network: StacksTestnet,
     mode = PostConditionMode.Deny,
     sponsored = false
-  ) => {
+  ) {
     clearState();
     const contractAddress = network.isMainnet()
       ? 'SPY0682ZM7VGPMVGQP99Z05J3QWMVV83RA6N42SA'
@@ -153,7 +151,6 @@ export const Debugger = () => {
       amount: new BN('100', 10).toString(),
     };
 
-    console.log('creating allow mode contract call');
     await doContractCall({
       network,
       contractAddress,
@@ -163,19 +160,18 @@ export const Debugger = () => {
       attachment: 'This is an attachment',
       postConditionMode: mode,
       postConditions: [serializePostConditionWire(postConditionToWire(pc1))],
-      onFinish: async (data: any) => {
-        console.log('finished faker!', data);
-        if (sponsored) handleSponsoredTransactionBroadcast(data.stacksTransaction);
+      onFinish: (data: any) => {
+        if (sponsored) void handleSponsoredTransactionBroadcast(data.stacksTransaction);
         setState('Contract Call', data.txId);
       },
       onCancel: () => {
-        console.log('popup closed!');
+        // Handle cancel
       },
       sponsored,
     });
-  };
+  }
 
-  const stxTransfer = async (amount: string) => {
+  async function stxTransfer(amount: string) {
     clearState();
     await doSTXTransfer({
       network,
@@ -183,32 +179,30 @@ export const Debugger = () => {
       memo: 'From demo app',
       recipient: 'ST1X6M947Z7E58CNE0H8YJVJTVKS9VW0PHEG3NHN3',
       onFinish: data => {
-        console.log('finished stx transfer!', data);
         setState('Stacks Transfer', data?.txId);
       },
       onCancel: () => {
-        console.log('popup closed!');
+        // Handle cancel
       },
     });
-  };
+  }
 
-  const deployContract = async () => {
+  async function deployContract() {
     clearState();
     await doContractDeploy({
       network,
       contractName: `demo-deploy-${new Date().getTime().toString()}`,
       codeBody: demoTokenContract,
       onFinish: data => {
-        console.log('finished stx transfer!', data);
         setState('Contract Deploy', data.txId);
       },
       onCancel: () => {
-        console.log('popup closed!');
+        // Handle cancel
       },
     });
-  };
+  }
 
-  const callNullContract = async () => {
+  async function callNullContract() {
     clearState();
     await doContractCall({
       network,
@@ -217,7 +211,7 @@ export const Debugger = () => {
       functionName: 'faucet',
       functionArgs: [],
     });
-  };
+  }
 
   const pc2: StxPostCondition = {
     type: 'stx-postcondition',
@@ -226,7 +220,7 @@ export const Debugger = () => {
     amount: new BN(42, 10).toString(),
   };
 
-  const getRocketTokens = async () => {
+  async function getRocketTokens() {
     clearState();
     await doContractCall({
       network,
@@ -236,16 +230,15 @@ export const Debugger = () => {
       functionArgs: [serializeCV(uintCV(42))],
       postConditions: [serializePostConditionWire(postConditionToWire(pc2))],
       onFinish: data => {
-        console.log('finished faucet!', data);
         setState('Token Faucet', data.txId);
       },
       onCancel: () => {
-        console.log('popup closed!');
+        // Handle cancel
       },
     });
-  };
+  }
 
-  const getStellaFaucetTokens = async () => {
+  async function getStellaFaucetTokens() {
     clearState();
     await doContractCall({
       network,
@@ -254,14 +247,13 @@ export const Debugger = () => {
       functionName: 'faucet',
       functionArgs: [],
       onFinish: data => {
-        console.log('finished faucet!', data);
         setState('Token Faucet', data.txId);
       },
       onCancel: () => {
-        console.log('popup closed!');
+        // Handle cancel
       },
     });
-  };
+  }
 
   const pc3: FungiblePostCondition = {
     type: 'ft-postcondition',
@@ -271,7 +263,7 @@ export const Debugger = () => {
     asset: 'ST6G7N19FKNW24XH5JQ5P5WR1DN10QWMKQSPSTK7.stella-the-cat::stella-token',
   };
 
-  const sendStellaTokens = async () => {
+  async function sendStellaTokens() {
     clearState();
     await doContractCall({
       network,
@@ -286,14 +278,13 @@ export const Debugger = () => {
       ].map(arg => serializeCV(arg)),
       postConditions: [serializePostConditionWire(postConditionToWire(pc3))],
       onFinish: data => {
-        console.log('finished faucet!', data);
         setState('Token Faucet', data.txId);
       },
       onCancel: () => {
-        console.log('popup closed!');
+        // Handle cancel
       },
     });
-  };
+  }
 
   const pc4: FungiblePostCondition = {
     type: 'ft-postcondition',
@@ -303,7 +294,7 @@ export const Debugger = () => {
     asset: 'ST1X6M947Z7E58CNE0H8YJVJTVKS9VW0PHEG3NHN3.dull-sapphire-bird::rocket-token',
   };
 
-  const sendRocketTokens = async () => {
+  async function sendRocketTokens() {
     clearState();
     await doContractCall({
       network,
@@ -317,14 +308,13 @@ export const Debugger = () => {
       ].map(arg => serializeCV(arg)),
       postConditions: [serializePostConditionWire(postConditionToWire(pc4))],
       onFinish: data => {
-        console.log('finished faucet!', data);
         setState('Token Faucet', data.txId);
       },
       onCancel: () => {
-        console.log('popup closed!');
+        // Handle cancel
       },
     });
-  };
+  }
 
   const pc5: FungiblePostCondition = {
     type: 'ft-postcondition',
@@ -334,7 +324,7 @@ export const Debugger = () => {
     asset: 'SP466FNC0P7JWTNM2R9T199QRZN1MYEDTAR0KP27.miamicoin-token::miami-token',
   };
 
-  const sendMiamiTokens = async () => {
+  async function sendMiamiTokens() {
     clearState();
     await doContractCall({
       network,
@@ -351,10 +341,10 @@ export const Debugger = () => {
         setState('Token Faucet', data.txId);
       },
       onCancel: () => {
-        console.log('popup closed!');
+        // Handle cancel
       },
     });
-  };
+  }
   return (
     <Box py={6}>
       <styled.h2>Debugger</styled.h2>
@@ -433,11 +423,7 @@ export const Debugger = () => {
           </styled.button>
           <styled.button
             mt={3}
-            onClick={() =>
-              fetch('https://api.hiro.so/v2/info')
-                .then(resp => resp.json())
-                .then(console.log)
-            }
+            onClick={() => fetch('https://api.hiro.so/v2/info').then(resp => resp.json())}
           >
             Request API info
           </styled.button>
@@ -445,14 +431,13 @@ export const Debugger = () => {
           <styled.button
             mt={3}
             onClick={() => {
-              console.log('requesting');
               window.btc
                 ?.request('getAddresses')
-                .then(resp => {
-                  console.log({ sucesss: resp });
+                .then(() => {
+                  // Request successful
                 })
-                .catch(error => {
-                  console.log({ error });
+                .catch(() => {
+                  // Request failed
                 });
             }}
           >
@@ -462,4 +447,4 @@ export const Debugger = () => {
       </Box>
     </Box>
   );
-};
+}

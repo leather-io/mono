@@ -5,7 +5,7 @@ import { getHiroApiRateLimiter } from '@leather.io/query';
 
 import { logger } from '@shared/logger';
 import { getLogsFromBrowserStorage } from '@shared/logger-storage';
-import { persistConfig } from '@shared/storage/redux-pesist';
+import { persistConfig } from '@shared/storage/redux-persist';
 
 import { queryClient } from './common/persistence';
 import { store } from './store';
@@ -57,8 +57,8 @@ const debug = {
     queryClient.clear();
   },
   clearChromeStorage() {
-    chrome.storage.local.clear();
-    chrome.storage.session.clear();
+    void chrome.storage.local.clear();
+    void chrome.storage.session.clear();
   },
   bypassInscriptionChecks() {
     store.dispatch(settingsSlice.actions.dangerouslyChosenToBypassAllInscriptionChecks());

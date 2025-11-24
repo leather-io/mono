@@ -50,11 +50,13 @@ export function useGetInscriptionsByAddressQuery(address: string) {
     staleTime: 3 * 60 * 1000,
   });
 
+  const { fetchNextPage, data } = query;
+
   // Auto-trigger next request
   useEffect(() => {
     if (!address) return;
-    void query.fetchNextPage();
-  }, [address, query, query.data]);
+    void fetchNextPage();
+  }, [address, fetchNextPage, data]);
 
   return query;
 }

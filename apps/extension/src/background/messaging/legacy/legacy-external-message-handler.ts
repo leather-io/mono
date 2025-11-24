@@ -1,4 +1,4 @@
-import { isObject } from '@leather.io/utils';
+import { assertUnreachable, isObject } from '@leather.io/utils';
 
 import { formatAuthResponse } from '@shared/actions/finalize-auth-reaponse-format';
 import { formatMessageSigningResponse } from '@shared/actions/finalize-message-signature-format';
@@ -62,7 +62,8 @@ export async function handleLegacyExternalMethodFormat(
 ) {
   const { payload } = message;
 
-  switch (message.method) {
+  const messageMethod = message.method;
+  switch (messageMethod) {
     case ExternalMethods.authenticationRequest: {
       void trackLegacyRequestInitiated({ method: ExternalMethods.authenticationRequest });
 
@@ -173,5 +174,7 @@ export async function handleLegacyExternalMethodFormat(
       listenForOriginTabClose({ tabId });
       break;
     }
+    default:
+      assertUnreachable(messageMethod);
   }
 }

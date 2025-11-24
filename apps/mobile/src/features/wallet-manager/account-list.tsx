@@ -7,7 +7,7 @@ import { t } from '@lingui/core/macro';
 interface AccountListProps {
   fingerprint: string;
   account: Account;
-  onHideAccount: (accountIndex: number) => void;
+  onHideAccount(accountIndex: number): void;
   renderKeychains(fingerprint: string, accountIndex: number): ReactNode;
 }
 export function AccountList({

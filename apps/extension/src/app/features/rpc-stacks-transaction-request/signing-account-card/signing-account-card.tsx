@@ -50,7 +50,7 @@ export function SigningAccountCard({
       <Approver.Subheader>With account</Approver.Subheader>
       <Box mb="space.03">
         <ItemLayout
-          img={<AccountAvatarItem index={index} publicKey="" name="" />}
+          img={<AccountAvatarItem index={index} publicKey="" />}
           titleLeft={<AccountNameLayout isLoading={isLoadingName}>{name}</AccountNameLayout>}
           captionLeft={address}
           titleRight={titleRight}

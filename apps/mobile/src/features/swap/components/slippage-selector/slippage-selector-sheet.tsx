@@ -11,7 +11,7 @@ import { Box, Button, NumericInput, Sheet, type SheetRef, Text } from '@leather.
 
 interface SlippageSelectorSheetProps {
   value: number;
-  onSave: (value: number) => void;
+  onSave(value: number): void;
   ref: SheetRef;
 }
 

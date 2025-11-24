@@ -26,7 +26,7 @@ import { LiveSwapEstimate } from '../hooks/use-live-swap-estimate';
 interface SwapFormScreenProps {
   swapStateResult: UseSwapStateResult;
   liveEstimate: LiveSwapEstimate;
-  onPressReview: () => void;
+  onPressReview(): void;
 }
 
 export function SwapFormScreen({

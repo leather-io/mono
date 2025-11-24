@@ -49,9 +49,7 @@ export function StacksSendFormConfirmation() {
 
   const feeWarningTooltip = showFeeChangeWarning ? (
     <BasicTooltip
-      label={
-        'You are using a nonce for this transaction that is already pending. The fee has been increased so that it is exactly high enough to replace the pending transaction with the same nonce.'
-      }
+      label="You are using a nonce for this transaction that is already pending. The fee has been increased so that it is exactly high enough to replace the pending transaction with the same nonce."
       side="bottom"
     >
       <Stack>

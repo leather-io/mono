@@ -17,7 +17,7 @@ interface WarningSheetLayoutProps {
   title: string;
   description: string;
   onSubmit(): unknown;
-  onPressSupport?: () => void;
+  onPressSupport?(): void;
   variant?: WarningSheetVariant;
 }
 export function WarningSheetLayout({

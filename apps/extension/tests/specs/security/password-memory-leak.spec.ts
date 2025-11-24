@@ -37,10 +37,10 @@ async function takeHeapSnapshot(page: Page): Promise<HeapSnapshot> {
           const snapshotData = JSON.parse(chunks.join(''));
           resolve(snapshotData);
         } catch (error) {
-          reject(error);
+          reject(error as Error);
         }
       },
-      (error: any) => reject(error)
+      (error: any) => reject(error as Error)
     );
   });
 
@@ -214,12 +214,17 @@ test.describe('Security: Password Memory Leak', () => {
     const result = searchHeapForStringWithDetails(snapshot, TEST_PASSWORD);
 
     if (result.found) {
+      // eslint-disable-next-line no-console
       console.error(`\n❌ Security Vulnerability Detected!`);
+      // eslint-disable-next-line no-console
       console.error(`Password found ${result.count} time(s) in heap memory after locking wallet\n`);
+      // eslint-disable-next-line no-console
       console.error(`Sample occurrences (first 3):`);
       result.occurrences.slice(0, 3).forEach((occurrence, index) => {
+        // eslint-disable-next-line no-console
         console.error(`  ${index + 1}. "${occurrence}"`);
       });
+      // eslint-disable-next-line no-console
       console.error('');
     }
 

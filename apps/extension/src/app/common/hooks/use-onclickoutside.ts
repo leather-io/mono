@@ -15,7 +15,7 @@ type Handler = (event: PossibleEvent) => void;
 
 const events: HandledEvents = [MOUSEDOWN, TOUCHSTART];
 
-const getOptions = (event: HandledEventsType) => {
+function getOptions(event: HandledEventsType) {
   if (event !== TOUCHSTART) {
     return;
   }
@@ -25,7 +25,7 @@ const getOptions = (event: HandledEventsType) => {
   }
 
   return;
-};
+}
 
 export function useOnClickOutside(
   ref: RefObject<HTMLElement | null>,
@@ -40,7 +40,7 @@ export function useOnClickOutside(
       return;
     }
 
-    const listener = (event: PossibleEvent) => {
+    function listener(event: PossibleEvent) {
       if (!ref.current || !handlerRef.current || ref.current.contains(event.target as Node)) {
         return;
       }
@@ -54,7 +54,7 @@ export function useOnClickOutside(
       }
 
       handlerRef.current(event);
-    };
+    }
 
     events.forEach(event => {
       document.addEventListener(event, listener, getOptions(event));

@@ -93,9 +93,8 @@ export function FeesRow({
             ? convertAmountToBaseUnit(new BigNumber(Number(defaultFeeValue)), STX_DECIMALS)
             : ''
         );
-      else
-        fees &&
-          void feeHelper.setValue(convertAmountToBaseUnit(fees.estimates[index].fee).toString());
+      else if (fees)
+        void feeHelper.setValue(convertAmountToBaseUnit(fees.estimates[index].fee).toString());
       setFieldWarning('');
       setIsSelectVisible(false);
     },

@@ -22,7 +22,7 @@ export function WelcomePage() {
 
   const startOnboarding = useCallback(async () => {
     if (isPopupMode()) {
-      openIndexPageInNewTab(RouteUrls.Onboarding);
+      void openIndexPageInNewTab(RouteUrls.Onboarding);
       closeWindow();
       return;
     }
@@ -39,19 +39,19 @@ export function WelcomePage() {
 
   useEffect(() => {
     return () => setIsGeneratingWallet(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const pageModeRoutingAction = (url: string) =>
-    whenPageMode({
+  function pageModeRoutingAction(url: string) {
+    return whenPageMode({
       full() {
         return navigate(url);
       },
       popup() {
-        openIndexPageInNewTab(url);
+        void openIndexPageInNewTab(url);
         closeWindow();
       },
     });
+  }
 
   const supportsWebUsbAction = pageModeRoutingAction(
     RouteUrls.Onboarding + '/' + RouteUrls.ConnectLedgerStart

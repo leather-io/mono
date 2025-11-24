@@ -9,15 +9,22 @@
         "{ios,android,build}/**",
         "leather-styles/**"
       ],
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "build:watch": {},
     "format": {},
     "format:check": {},
     "lint": {},
+    "lint:fix": {},
     "typecheck": {},
     "check:all": {
-      "dependsOn": ["build", "format", "typecheck"]
+      "dependsOn": [
+        "build",
+        "format",
+        "typecheck"
+      ]
     },
     "dev": {
       "cache": false,

@@ -5,7 +5,7 @@ import { t } from '@lingui/core/macro';
 import { Box, Button } from '@leather.io/ui/native';
 
 interface AmountPresetsProps {
-  onSelectPercentage: (percentage: PresetPercentage) => void;
+  onSelectPercentage(percentage: PresetPercentage): void;
 }
 
 export function AmountPresets({ onSelectPercentage }: AmountPresetsProps) {
@@ -27,7 +27,7 @@ export function AmountPresets({ onSelectPercentage }: AmountPresetsProps) {
 
 interface PresetButtonProps {
   children: string;
-  onPress: () => void;
+  onPress(): void;
 }
 
 function PresetButton({ children, onPress }: PresetButtonProps) {

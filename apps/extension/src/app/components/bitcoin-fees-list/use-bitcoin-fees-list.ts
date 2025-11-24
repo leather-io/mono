@@ -25,7 +25,7 @@ function getFeeForList(
       ? determineUtxosForSpendAll(determineUtxosForFeeArgs)
       : determineUtxosForSpend(determineUtxosForFeeArgs);
     return fee;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

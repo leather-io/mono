@@ -5,7 +5,7 @@ import { useVersionCheck } from '@/hooks/use-version-check';
 import * as Sentry from '@sentry/react-native';
 
 interface VersionGuardProps {
-  onUpdateRequired?: () => void;
+  onUpdateRequired?(): void;
 }
 
 export function VersionGuard({ onUpdateRequired }: VersionGuardProps) {
