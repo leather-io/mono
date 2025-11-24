@@ -56,7 +56,7 @@ jobs:
           key: ${{ runner.os }}-playwright-cache-${{ env.PLAYWRIGHT_VERSION }}
 
       - name: Install Playwright browsers
-        run: pnpm playwright install chrome chromium
+        run: pnpm playwright install chromium
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: Install Playwright deps
@@ -65,7 +65,7 @@ jobs:
 
       - name: Build packages
         working-directory: ./
-        run: pnpm build:extension
+        run: pnpm turbo build --filter=@leather.io/extension^...
 
       - name: Build extension in test mode
         run: pnpm build:test
