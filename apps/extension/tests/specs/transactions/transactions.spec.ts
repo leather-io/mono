@@ -76,11 +76,10 @@ test.describe('Transaction signing', () => {
 
       if (!displayedFee) throw new Error('Cannot pull fee from UI');
 
-      const requestPromise = transactionRequestPage.page.waitForRequest('*/**/v2/transactions');
-
       await transactionRequestPage.page.route('*/**/v2/transactions', async route => {
         await route.abort();
       });
+      const requestPromise = transactionRequestPage.page.waitForRequest('*/**/v2/transactions');
 
       await transactionRequestPage.clickConfirmTransactionButton();
 
