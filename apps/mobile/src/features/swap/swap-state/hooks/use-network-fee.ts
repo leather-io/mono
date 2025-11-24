@@ -46,7 +46,6 @@ export function useNetworkFee({
       quote?.executionType,
       quote?.providerId,
       quote?.assetPath,
-      state.slippage,
     ],
     queryFn: async ({ signal }) => {
       assertExistence(

@@ -2,7 +2,7 @@ import { useWindowDimensions } from 'react-native';
 
 import { Box, type BoxProps } from '@leather.io/ui/native';
 
-interface DividerProps extends BoxProps {
+export interface DividerProps extends BoxProps {
   fullBleed?: boolean;
 }
 

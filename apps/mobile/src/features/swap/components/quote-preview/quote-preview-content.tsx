@@ -2,14 +2,13 @@ import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 
 import { Divider } from '@/components/divider';
 import { LiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
+import { formatSwapRate, sumFeesInQuoteCurrency } from '@/features/swap/swap.utils';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
-import { BigNumber } from 'bignumber.js';
 import { clamp } from 'remeda';
 
-import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { Box, CircularProgress, Text, useTheme } from '@leather.io/ui/native';
-import { createMoneyFromDecimal, sumMoney } from '@leather.io/utils';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -25,7 +24,11 @@ export function QuotePreviewContent({
   liveEstimate,
 }: QuotePreviewContentProps) {
   const { selectedQuote, fees, intervalState, isRefetching } = liveEstimate;
-  const formattedRate = formatSwapRate(selectedQuote.swapRate, targetAsset);
+  const formattedRate = formatSwapRate({
+    swapRate: selectedQuote.swapRate,
+    baseAsset,
+    targetAsset,
+  });
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
   const progress = calculateRefreshProgress(intervalState.interval, intervalState.lastStartedAt);
 
@@ -40,7 +43,7 @@ export function QuotePreviewContent({
         value={
           <>
             <RefetchIndicator progress={progress} nextRunTime={intervalState.nextRunTime} />
-            <Text variant="label03">{`1 ${baseAsset.symbol} ≈ ${formattedRate}`}</Text>
+            <Text variant="label03">{formattedRate}</Text>
           </>
         }
       />
@@ -105,13 +108,4 @@ function calculateRefreshProgress(interval: number, lastStartedAt: number | null
   const duration = remaining || interval;
 
   return { initialValue, duration };
-}
-
-function formatSwapRate(swapRate: BigNumber, targetAsset: SwappableFungibleCryptoAsset): string {
-  const money = createMoneyFromDecimal(swapRate, targetAsset.symbol, targetAsset.decimals);
-  return formatCurrency(money);
-}
-
-function sumFeesInQuoteCurrency(networkFee: Money, providerFee?: Money): Money {
-  return providerFee ? sumMoney([providerFee, networkFee]) : networkFee;
 }

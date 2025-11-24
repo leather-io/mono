@@ -1,3 +1,5 @@
+import { LayoutAnimationConfig } from 'react-native-reanimated';
+
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { getAmountErrorMessage } from '@/features/swap/components/amount-field/amount-field-error-messages';
@@ -60,50 +62,52 @@ export function SwapFormScreen({
 
   return (
     <FullHeightSheetLayout header={<FullHeightSheetHeader title={t`Swap`} />}>
-      <Panel.Root>
-        <Panel.Card type="pay">
-          <AmountField
-            asset={state.baseSwapAsset?.asset}
-            secondaryAmount={state.secondaryAmount}
-            inputCurrencyMode={state.inputCurrencyMode}
-            onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
-            value={state.baseAmount}
-            quoteCurrencyPreference={state.quoteCurrencyPreference}
-            errorMessage={getAmountErrorMessage(validation.issues.baseAmount)}
-          />
-          <Box alignItems="flex-end" gap="3" flexShrink={0}>
-            <AssetSelectorToggle
+      <LayoutAnimationConfig skipEntering>
+        <Panel.Root>
+          <Panel.Card type="pay">
+            <AmountField
               asset={state.baseSwapAsset?.asset}
-              onPress={() => actions.openAssetSelector('base')}
-            />
-            <AssetBalance
-              balance={state.baseSwapAsset?.balance}
+              secondaryAmount={state.secondaryAmount}
               inputCurrencyMode={state.inputCurrencyMode}
+              onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
+              value={state.baseAmount}
+              quoteCurrencyPreference={state.quoteCurrencyPreference}
+              errorMessage={getAmountErrorMessage(validation.issues.baseAmount)}
             />
-          </Box>
-        </Panel.Card>
+            <Box alignItems="flex-end" gap="3" flexShrink={0}>
+              <AssetSelectorToggle
+                asset={state.baseSwapAsset?.asset}
+                onPress={() => actions.openAssetSelector('base')}
+              />
+              <AssetBalance
+                balance={state.baseSwapAsset?.balance}
+                inputCurrencyMode={state.inputCurrencyMode}
+              />
+            </Box>
+          </Panel.Card>
 
-        <Panel.Card type="receive">
-          <TargetAmountPreview
-            marketData={targetMarketDataQuery.data}
-            liveEstimate={liveEstimate}
-            baseAmount={state.baseAmount}
-            isTargetAssetSet={state.targetSwapAsset !== null}
-          />
-          <Box alignItems="flex-end" gap="3" flexShrink={0}>
-            <AssetSelectorToggle
-              asset={state.targetSwapAsset?.asset}
-              onPress={() => actions.openAssetSelector('target')}
-              disabled={state.baseSwapAsset === null}
+          <Panel.Card type="receive">
+            <TargetAmountPreview
+              marketData={targetMarketDataQuery.data}
+              liveEstimate={liveEstimate}
+              baseAmount={state.baseAmount}
+              isTargetAssetSet={state.targetSwapAsset !== null}
             />
-            <AssetBalance
-              balance={state.targetSwapAsset?.balance}
-              inputCurrencyMode={state.inputCurrencyMode}
-            />
-          </Box>
-        </Panel.Card>
-        <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
-      </Panel.Root>
+            <Box alignItems="flex-end" gap="3" flexShrink={0}>
+              <AssetSelectorToggle
+                asset={state.targetSwapAsset?.asset}
+                onPress={() => actions.openAssetSelector('target')}
+                disabled={state.baseSwapAsset === null}
+              />
+              <AssetBalance
+                balance={state.targetSwapAsset?.balance}
+                inputCurrencyMode={state.inputCurrencyMode}
+              />
+            </Box>
+          </Panel.Card>
+          <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
+        </Panel.Root>
+      </LayoutAnimationConfig>
 
       <Box mt="4" px="5" flexGrow={1}>
         <QuotePreview state={state} liveEstimate={liveEstimate} />
