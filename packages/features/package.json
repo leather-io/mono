@@ -15,6 +15,7 @@
     ".": "./dist/index.js"
   },
   "dependencies": {
+    "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/services": "workspace:*",
     "@leather.io/tokens": "workspace:*",

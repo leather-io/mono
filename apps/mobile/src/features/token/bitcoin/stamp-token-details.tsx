@@ -5,7 +5,7 @@ import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
-import { type BitcoinNetworkPreference, getMempoolExplorerLink } from '@leather.io/features';
+import { getMempoolExplorerLink } from '@leather.io/features';
 import { StampAsset } from '@leather.io/models';
 
 import { Collectible, useCollectibleHeight } from '../collectible';
@@ -21,7 +21,7 @@ export function StampTokenDetails({ asset }: StampTokenDetailsProps) {
   const mempoolExplorerUrl = getMempoolExplorerLink({
     id: blockHeight.toString(),
     type: 'block',
-    networkPreference: networkPreference.chain.bitcoin.bitcoinNetwork as BitcoinNetworkPreference,
+    networkPreference: networkPreference.chain.bitcoin.bitcoinNetwork,
   });
 
   const height = useCollectibleHeight();

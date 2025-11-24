@@ -1,9 +1,12 @@
 import dayjs from 'dayjs';
 
+import { HIRO_EXPLORER_URL, MEMPOOL_BASE_URL } from '@leather.io/constants';
 import {
   type BaseOnChainActivity,
-  ChainId,
+  type BitcoinNetwork,
+  type BitcoinNetworkModes,
   CryptoAsset,
+  HIRO_API_BASE_URL_NAKAMOTO_TESTNET,
   type Money,
   NetworkConfiguration,
   type OnChainActivity,
@@ -12,9 +15,6 @@ import {
   isStampAsset,
 } from '@leather.io/models';
 import { FormatAmountOptions, createCurrencyFormatter, minusSign } from '@leather.io/utils';
-
-import { HIRO_EXPLORER_URL, MEMPOOL_BASE_URL } from './constants';
-import { type BitcoinNetworkPreference, type StacksNetworkPreference } from './types';
 
 const currencyFormatter = createCurrencyFormatter({
   locale: 'en-US',
@@ -200,40 +200,25 @@ function makeActivityExplorerLink({
 }: MakeActivityExplorerLinkArgs) {
   if (asset.chain === 'bitcoin') {
     return getMempoolExplorerLink({
-      networkPreference: networkPreference.chain.bitcoin.bitcoinNetwork as BitcoinNetworkPreference,
+      networkPreference: networkPreference.chain.bitcoin.bitcoinNetwork,
       id: txid,
       type: 'txid',
     });
   }
-  return makeStacksTxExplorerLink({
-    networkPreference:
-      networkPreference.chain.stacks.chainId === ChainId.Testnet ? 'testnet' : 'mainnet',
+  return getHiroExplorerLink({
+    mode: networkPreference.chain.bitcoin.mode,
+    type: 'txid',
+    value: txid,
     searchParams: undefined,
-    txid,
-    explorerUrl: HIRO_EXPLORER_URL,
+    // TODO LEA-2285: fund out if this can be deprecated now
+    isNakamoto: false,
   });
-}
-
-interface MakeStacksTxExplorerLinkArgs {
-  networkPreference: StacksNetworkPreference;
-  searchParams?: URLSearchParams;
-  txid: string;
-  explorerUrl: string;
-}
-function makeStacksTxExplorerLink({
-  networkPreference,
-  searchParams = new URLSearchParams(),
-  txid,
-  explorerUrl,
-}: MakeStacksTxExplorerLinkArgs) {
-  searchParams.append('chain', networkPreference);
-  return `${explorerUrl}/txid/${txid}?${searchParams.toString()}`;
 }
 
 export interface GetMempoolExplorerLinkArgs {
   id: string;
   type: 'txid' | 'block';
-  networkPreference: BitcoinNetworkPreference;
+  networkPreference: BitcoinNetwork;
 }
 
 export function getMempoolExplorerLink({
@@ -244,6 +229,8 @@ export function getMempoolExplorerLink({
   switch (networkPreference) {
     case 'mainnet':
       return `${MEMPOOL_BASE_URL}/${type}/${id}`;
+    case 'testnet3':
+      return `${MEMPOOL_BASE_URL}/testnet/${type}/${id}`;
     case 'testnet4':
       return `${MEMPOOL_BASE_URL}/testnet4/${type}/${id}`;
     case 'signet':
@@ -251,4 +238,25 @@ export function getMempoolExplorerLink({
     default:
       return null;
   }
+}
+
+interface GetHiroExplorerLinkArgs {
+  mode: BitcoinNetworkModes;
+  type: 'txid' | 'address';
+  value: string;
+  searchParams?: URLSearchParams;
+  isNakamoto?: boolean;
+}
+
+export function getHiroExplorerLink({
+  mode,
+  type,
+  value,
+  searchParams = new URLSearchParams(),
+  isNakamoto = false,
+}: GetHiroExplorerLinkArgs) {
+  if (mode === 'regtest' && type === 'txid') return `http://localhost:8000/txid/${value}`;
+  searchParams.append('chain', mode);
+  if (isNakamoto) searchParams.append('api', HIRO_API_BASE_URL_NAKAMOTO_TESTNET);
+  return `${HIRO_EXPLORER_URL}/${type}/${value}?${searchParams.toString()}`;
 }

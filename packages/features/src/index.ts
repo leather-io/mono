@@ -11,13 +11,9 @@ export {
   formatActivityStatusLabel,
   getActivityTitle,
   getBalancesText,
+  getHiroExplorerLink,
 } from './activity/utils';
-export type {
-  ActivityLinkClickHandler,
-  GetActivityLink,
-  BitcoinNetworkPreference,
-  StacksNetworkPreference,
-} from './activity/types';
+export type { ActivityLinkClickHandler, GetActivityLink } from './activity/types';
 
 export type { OnramperMode } from './onramper/types';
 export { getOnramperIframeParams } from './onramper/onramper-params';

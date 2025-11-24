@@ -1,6 +1,7 @@
+import { getHiroExplorerLink } from '@leather.io/features';
+import { ChainId } from '@leather.io/models';
 import { Link } from '@leather.io/ui';
 
-import { makeStacksAddressExplorerLink } from '@app/common/utils';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 
@@ -15,9 +16,10 @@ export function PrincipalValue(props: PrincipalValueProps) {
     <Link
       onClick={() =>
         openInNewTab(
-          makeStacksAddressExplorerLink({
-            mode: chain.bitcoin.mode,
-            address,
+          getHiroExplorerLink({
+            mode: chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet',
+            type: 'address',
+            value: address,
             isNakamoto: isNakamotoTestnet,
           })
         )

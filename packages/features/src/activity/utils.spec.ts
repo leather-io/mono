@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { HIRO_EXPLORER_URL, MEMPOOL_BASE_URL } from '@leather.io/constants';
 import { type OnChainActivity, defaultCurrentNetwork } from '@leather.io/models';
 
 import {
@@ -84,7 +85,7 @@ describe('activity utils', () => {
       },
     });
 
-    expect(btcActivity).toBe('https://mempool.space/txid/abc');
+    expect(btcActivity).toBe(`${MEMPOOL_BASE_URL}/txid/abc`);
 
     const stacksActivity = makeActivityLink({
       txid: 'def',
@@ -100,6 +101,6 @@ describe('activity utils', () => {
       },
     });
 
-    expect(stacksActivity).toBe('https://explorer.hiro.so/txid/def?chain=mainnet');
+    expect(stacksActivity).toBe(`${HIRO_EXPLORER_URL}/txid/def?chain=mainnet`);
   });
 });
