@@ -4,7 +4,7 @@ import {
   TEST_ACCOUNT_1_TAPROOT_ADDRESS,
   TEST_PASSWORD,
 } from '@tests/mocks/constants';
-import { testSoftwareAccountDefaultWalletState } from '@tests/page-object-models/onboarding.page';
+import { getTestSoftwareAccountDefaultWalletState } from '@tests/page-object-models/onboarding.page';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
@@ -61,14 +61,15 @@ test.describe('Onboarding an existing user', () => {
       window.debug.logPersistedStore()
     );
 
+    const testWalletState = getTestSoftwareAccountDefaultWalletState();
+
     // Deleting values that are known to differ at random
     delete (walletState as any).softwareKeys.entities.default.encryptedSecretKey;
     delete (walletState as any).softwareKeys.entities.default.salt;
-    delete (testSoftwareAccountDefaultWalletState as any).softwareKeys.entities.default
-      .encryptedSecretKey;
-    delete (testSoftwareAccountDefaultWalletState as any).softwareKeys.entities.default.salt;
+    delete (testWalletState as any).softwareKeys.entities.default.encryptedSecretKey;
+    delete (testWalletState as any).softwareKeys.entities.default.salt;
 
-    test.expect(walletState).toEqual(testSoftwareAccountDefaultWalletState);
+    test.expect(walletState).toEqual(testWalletState);
   });
 
   test('mnemonic key validation: should show error for invalid mnemonic key words', async ({

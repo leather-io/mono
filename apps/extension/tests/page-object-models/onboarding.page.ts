@@ -11,55 +11,57 @@ import { RouteUrls } from '@shared/route-urls';
 export const TEST_ACCOUNT_SECRET_KEY = process.env.EXTENSION_INTEGRATION_TEST_MNEMONIC ?? '';
 
 // If default wallet state changes, we'll need to update this
-export const testSoftwareAccountDefaultWalletState = {
-  chains: {
-    stx: {
-      default: {
-        highestAccountIndex: 0,
-        currentAccountIndex: 0,
-        currentAccountStacksDescriptor:
-          "[e87a850b/44'/5757'/0'/0/0]0329b076bc20f7b1592b2a1a5cb91dfefe8c966e50e256458e23dd2c5d63f8f1af",
+export function getTestSoftwareAccountDefaultWalletState() {
+  return {
+    chains: {
+      stx: {
+        default: {
+          highestAccountIndex: 0,
+          currentAccountIndex: 0,
+          currentAccountStacksDescriptor:
+            "[e87a850b/44'/5757'/0'/0/0]0329b076bc20f7b1592b2a1a5cb91dfefe8c966e50e256458e23dd2c5d63f8f1af",
+        },
       },
     },
-  },
-  appPermissions: {
-    entities: {},
-    ids: [],
-  },
-  softwareKeys: {
-    ids: ['default'],
-    entities: {
-      default: {
-        type: 'software',
-        id: 'default',
-        salt: 'a086b877fc757a4daa7c6343d2861c05',
-        encryptedSecretKey:
-          'ff735c244c72e1c7f7dc411b240ce6e30f87a43106cd1c87a77d3a6f80679176558ce2e73d1a089d6a83d8764b31d9d9043a6f79ca1104fb8238a6ae4f1e063bc1f1c3ba99c4c4e8b38d871963a7e3d8a0a4ed5e6525ec6702d9074dd9ee376c',
-      },
-    },
-  },
-  ledger: {
-    bitcoin: {
+    appPermissions: {
       entities: {},
       ids: [],
     },
-    stacks: {
-      entities: {},
-      ids: [],
+    softwareKeys: {
+      ids: ['default'],
+      entities: {
+        default: {
+          type: 'software',
+          id: 'default',
+          salt: 'a086b877fc757a4daa7c6343d2861c05',
+          encryptedSecretKey:
+            'ff735c244c72e1c7f7dc411b240ce6e30f87a43106cd1c87a77d3a6f80679176558ce2e73d1a089d6a83d8764b31d9d9043a6f79ca1104fb8238a6ae4f1e063bc1f1c3ba99c4c4e8b38d871963a7e3d8a0a4ed5e6525ec6702d9074dd9ee376c',
+        },
+      },
     },
-  },
-  networks: { ids: [], entities: {}, currentNetworkId: 'mainnet' },
-  ordinals: {},
-  settings: {
-    discardedInscriptions: [],
-    userSelectedTheme: 'system',
-    dismissedMessages: [],
-    dismissedPromoIndexes: [],
-    isNotificationsEnabled: true,
-  },
-  manageTokens: { entities: {}, ids: [] },
-  _persist: { version: 2, rehydrated: true },
-};
+    ledger: {
+      bitcoin: {
+        entities: {},
+        ids: [],
+      },
+      stacks: {
+        entities: {},
+        ids: [],
+      },
+    },
+    networks: { ids: [], entities: {}, currentNetworkId: 'mainnet' },
+    ordinals: {},
+    settings: {
+      discardedInscriptions: [],
+      userSelectedTheme: 'system',
+      dismissedMessages: [],
+      dismissedPromoIndexes: [],
+      isNotificationsEnabled: true,
+    },
+    manageTokens: { entities: {}, ids: [] },
+    _persist: { version: 2, rehydrated: true },
+  };
+}
 
 const ledgerBitcoinKeysState = {
   entities: {
@@ -316,7 +318,7 @@ export class OnboardingPage {
 
       await this.page.evaluate(
         async walletState => chrome.storage.local.set({ 'persist:root': walletState }),
-        testSoftwareAccountDefaultWalletState
+        getTestSoftwareAccountDefaultWalletState()
       );
 
       await this.page.evaluate(

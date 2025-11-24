@@ -80,6 +80,7 @@ export class HomePage {
   // Currently under Ordinals receive flow
   async getReceiveTaprootAddress() {
     await this.goToReceiveDialog();
+    await delay(1000);
     await this.page.getByTestId(HomePageSelectors.ReceiveCollectiblesTab).click();
     await this.page.getByTestId(HomePageSelectors.ReceiveBtcTaprootQrCodeBtn).click();
     // FIXME - add better test for Copy action

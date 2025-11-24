@@ -81,6 +81,10 @@ jobs:
           name: extension-dist
           path: apps/extension/dist
 
+      - name: Build styles
+        working-directory: apps/extension
+        run: pnpm prepare
+
       - name: Build packages
         working-directory: ./
         run: pnpm turbo build --filter=@leather.io/extension^...
