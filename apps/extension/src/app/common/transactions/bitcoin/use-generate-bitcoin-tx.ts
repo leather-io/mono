@@ -1,19 +1,16 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import * as btc from '@scure/btc-signer';
 
 import type { Money } from '@leather.io/models';
-import type { UtxoResponseItem } from '@leather.io/query';
 
+import { getBitcoinCoinSelectionService } from '@leather.io/services';
 import { logger } from '@shared/logger';
 import type { TransferRecipient } from '@shared/models/form.model';
 
-import {
-  determineUtxosForSpend,
-  determineUtxosForSpendAll,
-} from '@app/common/transactions/bitcoin/coinselect/local-coin-selection';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
 import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useNativeSegwitAccountRequest } from '@app/services/use-native-segwit-account-request';
 
 interface GenerateNativeSegwitTxValues {
   amount: Money;
@@ -29,33 +26,36 @@ export function useGenerateUnsignedNativeSegwitTx({
   throwError = false,
 }: UseGenerateUnsignedNativeSegwitTxProps = {}) {
   const signer = useCurrentAccountNativeSegwitIndexZeroSigner();
-
+  const accountRequest = useNativeSegwitAccountRequest();
   const networkMode = useBitcoinScureLibNetworkConfig();
+  const coinSelectionService = useMemo(() => getBitcoinCoinSelectionService(), []);
 
   return useCallback(
     async (
       values: GenerateNativeSegwitTxValues,
       feeRate: number,
-      utxos: UtxoResponseItem[],
       isSendingMax?: boolean
     ) => {
-      if (!utxos.length) return;
       if (!feeRate) return;
 
       try {
         const tx = new btc.Transaction();
 
-        const determineUtxosArgs = {
-          feeRate,
-          recipients: values.recipients,
-          utxos,
-        };
+        const { inputs, outputs, fee } = await coinSelectionService.performCoinSelection(
+          {
+            account: accountRequest,
+            feeRate,
+            recipients: values.recipients,
+            isMaxSpend: isSendingMax,
+          },
+          undefined
+        );
 
-        const { inputs, outputs, fee } = isSendingMax
-          ? determineUtxosForSpendAll(determineUtxosArgs)
-          : determineUtxosForSpend(determineUtxosArgs);
-
-        logger.info('Coin selection', { inputs, outputs, fee });
+        logger.info('Coin selection', {
+          inputs,
+          outputs,
+          fee: fee.amount.toString(),
+        });
 
         if (!inputs.length) throw new Error('No inputs to sign');
         if (!outputs.length) throw new Error('No outputs to sign');
@@ -90,7 +90,7 @@ export function useGenerateUnsignedNativeSegwitTx({
           tx.addOutputAddress(output.address, BigInt(output.value), networkMode);
         });
 
-        return { hex: tx.hex, fee: fee, psbt: tx.toPSBT(), inputs };
+        return { hex: tx.hex, fee: fee.amount.toNumber(), psbt: tx.toPSBT(), inputs };
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log('Error signing bitcoin transaction', e);
@@ -98,6 +98,6 @@ export function useGenerateUnsignedNativeSegwitTx({
         return null;
       }
     },
-    [networkMode, signer.address, signer.publicKey, throwError]
+    [accountRequest, coinSelectionService, networkMode, signer.address, signer.publicKey, throwError]
   );
 }

@@ -2,7 +2,6 @@ import BigNumber from 'bignumber.js';
 import * as yup from 'yup';
 
 import type { Money } from '@leather.io/models';
-import type { UtxoResponseItem } from '@leather.io/query';
 import {
   btcToSat,
   convertAmountToBaseUnit,
@@ -33,26 +32,26 @@ function amountValidator() {
 interface BtcInsufficientBalanceValidatorArgs {
   calcMaxSpend(
     recipient: string,
-    utxos: UtxoResponseItem[]
-  ): {
+    feeRate?: number
+  ): Promise<{
     spendableBitcoin: BigNumber;
-  };
+  }>;
   recipient: string;
-  utxos: UtxoResponseItem[];
+  feeRate?: number;
 }
 export function btcInsufficientBalanceValidator({
   calcMaxSpend,
   recipient,
-  utxos,
+  feeRate,
 }: BtcInsufficientBalanceValidatorArgs) {
   return yup
     .number()
     .typeError(FormErrorMessages.MustBeNumber)
     .test({
       message: FormErrorMessages.InsufficientFunds,
-      test(value) {
+      async test(value) {
         if (!value) return false;
-        const maxSpend = calcMaxSpend(recipient, utxos);
+        const maxSpend = await calcMaxSpend(recipient, feeRate);
         if (!maxSpend) return false;
         const desiredSpend = new BigNumber(value);
         if (desiredSpend.isGreaterThan(maxSpend.spendableBitcoin)) return false;

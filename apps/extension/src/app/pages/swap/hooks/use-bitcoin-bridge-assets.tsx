@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import BtcAvatarIconSrc from '@assets/avatars/btc-avatar-icon.png';
 import BigNumber from 'bignumber.js';
@@ -7,7 +7,6 @@ import type { Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { useCalculateMaxBitcoinSpend } from '@app/common/hooks/balance/use-calculate-max-spend';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/address/utxos-by-address.hooks';
 import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
@@ -20,17 +19,33 @@ function fallbackHardcodedBalanceMinusFee(balance: Money) {
 export function useBtcSwapAsset() {
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSignerNullable();
   const currentBitcoinAddress = nativeSegwitSigner?.address ?? '';
-  const { data: utxos = [] } = useCurrentNativeSegwitUtxos();
   const calcMaxSpend = useCalculateMaxBitcoinSpend();
   const { btc: balance } = useCurrentNativeSegwitBtcBalanceWithFallback();
   const bitcoinMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
 
-  const maxSpendableBalance = useMemo(() => {
-    if (!currentBitcoinAddress || utxos.length === 0)
-      return fallbackHardcodedBalanceMinusFee(balance.availableBalance);
+  const [maxSpendableBalance, setMaxSpendableBalance] = useState<Money>(() =>
+    fallbackHardcodedBalanceMinusFee(balance.availableBalance)
+  );
 
-    return calcMaxSpend(currentBitcoinAddress, utxos).amount;
-  }, [currentBitcoinAddress, utxos, calcMaxSpend, balance.availableBalance]);
+  useEffect(() => {
+    let canceled = false;
+    if (!currentBitcoinAddress) {
+      setMaxSpendableBalance(fallbackHardcodedBalanceMinusFee(balance.availableBalance));
+      return () => {
+        canceled = true;
+      };
+    }
+    void calcMaxSpend(currentBitcoinAddress)
+      .then(result => {
+        if (!canceled && result) setMaxSpendableBalance(result.amount);
+      })
+      .catch(() => {
+        if (!canceled) setMaxSpendableBalance(fallbackHardcodedBalanceMinusFee(balance.availableBalance));
+      });
+    return () => {
+      canceled = true;
+    };
+  }, [balance.availableBalance, calcMaxSpend, currentBitcoinAddress]);
 
   return useMemo((): SwapAsset => {
     return {

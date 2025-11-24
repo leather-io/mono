@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useField } from 'formik';
 import { Stack } from 'leather-styles/jsx';
 
+import { BitcoinError } from '@leather.io/bitcoin';
 import { Input } from '@leather.io/ui';
 import { satToBtc } from '@leather.io/utils';
 
 import type { TransferRecipient } from '@shared/models/form.model';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
-import { InsufficientFundsError } from '@app/common/transactions/bitcoin/coinselect/local-coin-selection';
 
 import { ErrorLabel } from '../error-label';
 import { BitcoinCustomFeeFiat } from './bitcoin-custom-fee-fiat';
@@ -48,6 +48,7 @@ export function BitcoinCustomFeeInput({
   });
   const [unknownError, setUnknownError] = useState(false);
   const [customInsufficientBalanceError, setCustomInsufficientBalanceError] = useState(false);
+  const requestIdRef = useRef(0);
 
   const hasError = hasInsufficientBalanceError || unknownError || customInsufficientBalanceError;
   const errorMessage =
@@ -55,15 +56,18 @@ export function BitcoinCustomFeeInput({
       ? 'Insufficient funds'
       : 'Unknown error';
 
-  function processFeeValue(feeRate: string) {
+  async function processFeeValue(feeRate: string) {
+    const currentRequestId = ++requestIdRef.current;
     try {
-      const feeValues = getCustomFeeValues(Number(feeRate));
+      const feeValues = await getCustomFeeValues(Number(feeRate));
+      if (currentRequestId !== requestIdRef.current) return;
       setFeeValue(feeValues);
 
       setUnknownError(false);
       setCustomInsufficientBalanceError(false);
     } catch (err) {
-      if (err instanceof InsufficientFundsError) {
+      if (currentRequestId !== requestIdRef.current) return;
+      if (err instanceof BitcoinError && err.message === 'InsufficientFunds') {
         return setCustomInsufficientBalanceError(true);
       }
 
@@ -74,11 +78,11 @@ export function BitcoinCustomFeeInput({
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setCustomFeeInitialValue?.(e.target.value);
-    processFeeValue(value);
+    void processFeeValue(value);
   }
 
   useOnMount(() => {
-    processFeeValue(customFeeInitialValue);
+    void processFeeValue(customFeeInitialValue);
   });
   return (
     <Stack gap="space.05">

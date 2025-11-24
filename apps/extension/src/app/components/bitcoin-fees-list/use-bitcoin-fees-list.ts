@@ -1,51 +1,85 @@
 import { useMemo } from 'react';
 
-import { BtcFeeType, Money, btcTxTimeMap } from '@leather.io/models';
-import { type UtxoResponseItem } from '@leather.io/query';
+import { useQuery } from '@tanstack/react-query';
+
+import {
+  BtcFeeType,
+  BitcoinTransactionFeeQuote,
+  Money,
+  TransactionFeeTier,
+  btcTxTimeMap,
+  transactionFeeTiers,
+} from '@leather.io/models';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
+import { getBitcoinTransactionFeesService } from '@leather.io/services';
+
 import { formatCurrency } from '@app/common/currency-formatter';
-import {
-  DetermineUtxosForSpendArgs,
-  determineUtxosForSpend,
-  determineUtxosForSpendAll,
-} from '@app/common/transactions/bitcoin/coinselect/local-coin-selection';
 import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
-import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { useNativeSegwitAccountRequest } from '@app/services/use-native-segwit-account-request';
 
 import { FeesListItem } from './bitcoin-fees-list';
-
-function getFeeForList(
-  determineUtxosForFeeArgs: DetermineUtxosForSpendArgs,
-  isSendingMax?: boolean
-) {
-  try {
-    const { fee } = isSendingMax
-      ? determineUtxosForSpendAll(determineUtxosForFeeArgs)
-      : determineUtxosForSpend(determineUtxosForFeeArgs);
-    return fee;
-  } catch (error) {
-    return null;
-  }
-}
 
 interface UseBitcoinFeesListArgs {
   amount: Money;
   isSendingMax?: boolean;
   recipient: string;
-  utxos: UtxoResponseItem[];
 }
 
-export function useBitcoinFeesList({
+function createRecipients({
   amount,
-  isSendingMax,
   recipient,
-  utxos,
-}: UseBitcoinFeesListArgs) {
+  isSendingMax,
+  availableBalance,
+}: {
+  amount: Money;
+  recipient: string;
+  isSendingMax?: boolean;
+  availableBalance: Money;
+}) {
+  return [
+    {
+      address: recipient,
+      amount: isSendingMax ? availableBalance : amount,
+    },
+  ];
+}
+
+export function useBitcoinFeesList({ amount, isSendingMax, recipient }: UseBitcoinFeesListArgs) {
   const { btc: balance } = useCurrentNativeSegwitBtcBalanceWithFallback();
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
-  const { data: feeRates, isLoading } = useAverageBitcoinFeeRates();
+  const accountRequest = useNativeSegwitAccountRequest();
+  const transactionFeesService = useMemo(() => getBitcoinTransactionFeesService(), []);
+
+  const recipients = useMemo(
+    () =>
+      createRecipients({
+        amount,
+        recipient,
+        isSendingMax,
+        availableBalance: balance.availableBalance,
+      }),
+    [amount, balance.availableBalance, isSendingMax, recipient]
+  );
+
+  const transactionFeesQuery = useQuery({
+    queryKey: [
+      'bitcoin-transaction-fees',
+      accountRequest.account.id.fingerprint,
+      accountRequest.account.id.accountIndex,
+      isSendingMax,
+      recipients.map(({ address, amount }) => `${address}:${amount.amount.toString()}`),
+    ],
+    queryFn: ({ signal }) =>
+      transactionFeesService.getBitcoinTransactionFees(
+        accountRequest,
+        recipients,
+        isSendingMax,
+        signal
+      ),
+    enabled: recipient.length > 0,
+  });
 
   const feesList: FeesListItem[] = useMemo(() => {
     function getFiatFeeValue(fee: number) {
@@ -54,74 +88,34 @@ export function useBitcoinFeesList({
       )}`;
     }
 
-    if (!feeRates || !utxos.length) return [];
+    const transactionFees = transactionFeesQuery.data;
+    if (!transactionFees) return [];
 
-    const determineUtxosDefaultArgs = {
-      recipients: [
-        { address: recipient, amount: isSendingMax ? balance.availableBalance : amount },
-      ],
-      utxos,
+    const tierMetadata: Record<TransactionFeeTier, { label: BtcFeeType; time: string }> = {
+      high: { label: BtcFeeType.High, time: btcTxTimeMap.fastestFee },
+      standard: { label: BtcFeeType.Standard, time: btcTxTimeMap.halfHourFee },
+      low: { label: BtcFeeType.Low, time: btcTxTimeMap.hourFee },
     };
 
-    const determineUtxosForHighFeeArgs = {
-      ...determineUtxosDefaultArgs,
-      feeRate: feeRates.fastestFee.toNumber(),
-    };
-
-    const determineUtxosForStandardFeeArgs = {
-      ...determineUtxosDefaultArgs,
-      feeRate: feeRates.halfHourFee.toNumber(),
-    };
-
-    const determineUtxosForLowFeeArgs = {
-      ...determineUtxosDefaultArgs,
-      feeRate: feeRates.hourFee.toNumber(),
-    };
-
-    const feesArr = [];
-
-    const highFeeValue = getFeeForList(determineUtxosForHighFeeArgs, isSendingMax);
-    const standardFeeValue = getFeeForList(determineUtxosForStandardFeeArgs, isSendingMax);
-    const lowFeeValue = getFeeForList(determineUtxosForLowFeeArgs, isSendingMax);
-
-    if (highFeeValue) {
-      feesArr.push({
-        label: BtcFeeType.High,
-        value: highFeeValue,
-        btcValue: formatCurrency(createMoney(highFeeValue, 'BTC'), { preset: 'pad-decimals' }),
-        time: btcTxTimeMap.fastestFee,
-        fiatValue: getFiatFeeValue(highFeeValue),
-        feeRate: feeRates.fastestFee.toNumber(),
-      });
-    }
-
-    if (standardFeeValue) {
-      feesArr.push({
-        label: BtcFeeType.Standard,
-        value: standardFeeValue,
-        btcValue: formatCurrency(createMoney(standardFeeValue, 'BTC'), { preset: 'pad-decimals' }),
-        time: btcTxTimeMap.halfHourFee,
-        fiatValue: getFiatFeeValue(standardFeeValue),
-        feeRate: feeRates.halfHourFee.toNumber(),
-      });
-    }
-
-    if (lowFeeValue) {
-      feesArr.push({
-        label: BtcFeeType.Low,
-        value: lowFeeValue,
-        btcValue: formatCurrency(createMoney(lowFeeValue, 'BTC'), { preset: 'pad-decimals' }),
-        time: btcTxTimeMap.hourFee,
-        fiatValue: getFiatFeeValue(lowFeeValue),
-        feeRate: feeRates.hourFee.toNumber(),
-      });
-    }
-
-    return feesArr;
-  }, [feeRates, utxos, recipient, isSendingMax, balance.availableBalance, amount, btcMarketData]);
+    return transactionFeeTiers
+      .map(tier => {
+        const feeQuote = transactionFees.options[tier] as BitcoinTransactionFeeQuote | undefined;
+        if (!feeQuote) return null;
+        const feeValue = feeQuote.value.amount.toNumber();
+        return {
+          label: tierMetadata[tier].label,
+          value: feeValue,
+          btcValue: formatCurrency(createMoney(feeValue, 'BTC'), { preset: 'pad-decimals' }),
+          time: tierMetadata[tier].time,
+          fiatValue: getFiatFeeValue(feeValue),
+          feeRate: feeQuote.rate,
+        };
+      })
+      .filter((fee): fee is FeesListItem => !!fee);
+  }, [btcMarketData, transactionFeesQuery.data]);
 
   return {
     feesList,
-    isLoading,
+    isLoading: transactionFeesQuery.isLoading,
   };
 }

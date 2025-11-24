@@ -30,14 +30,13 @@ export function BtcSendForm() {
   const marketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
   const {
     balance,
-    calcMaxSpend,
     chooseTransactionFee,
     currentNetwork,
     formRef,
     isSendingMax,
+    maxSpend,
     onFormStateChange,
     onSetIsSendingMax,
-    utxos,
     validationSchema,
   } = useBtcSendForm();
 
@@ -59,7 +58,6 @@ export function BtcSendForm() {
           >
             {props => {
               onFormStateChange(props.values);
-              const sendMaxCalculation = calcMaxSpend(props.values.recipient, utxos);
 
               return (
                 <Form>
@@ -89,8 +87,8 @@ export function BtcSendForm() {
                           balance={balance.availableBalance}
                           isSendingMax={isSendingMax}
                           onSetIsSendingMax={onSetIsSendingMax}
-                          sendMaxBalance={sendMaxCalculation.spendableBitcoin.toString()}
-                          sendMaxFee={sendMaxCalculation.spendAllFee.toString()}
+                          sendMaxBalance={maxSpend.spendableBitcoin.toString()}
+                          sendMaxFee={maxSpend.spendAllFee.toString()}
                         />
                       }
                       onSetIsSendingMax={onSetIsSendingMax}
@@ -117,7 +115,7 @@ export function BtcSendForm() {
                   <Outlet />
 
                   {/* This is for testing purposes only, to make sure the form is ready to be submitted. */}
-                  {calcMaxSpend(props.values.recipient, utxos).spendableBitcoin.toNumber() > 0 ? (
+                  {maxSpend.spendableBitcoin.toNumber() > 0 ? (
                     <Box data-testid={SendCryptoAssetSelectors.SendPageReady}></Box>
                   ) : null}
                 </Form>

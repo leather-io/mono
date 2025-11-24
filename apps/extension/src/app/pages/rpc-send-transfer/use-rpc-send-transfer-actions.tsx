@@ -20,8 +20,7 @@ import { useRpcSendTransferContext } from './rpc-send-transfer.context';
 
 export function useRpcSendTransferActions() {
   const { availableBalance, selectedFee } = useFeeEditorContext();
-  const { amount, isLoadingBalance, recipients, requestId, tabId, utxos } =
-    useRpcSendTransferContext();
+  const { amount, isLoadingBalance, recipients, requestId, tabId } = useRpcSendTransferContext();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const generateTx = useGenerateUnsignedNativeSegwitTx({ throwError: true });
@@ -53,7 +52,7 @@ export function useRpcSendTransferActions() {
       try {
         const feeRate = selectedFee?.feeRate;
         if (!feeRate) return logger.error('No fee rate to generate tx');
-        const resp = await generateTx({ amount, recipients }, feeRate, utxos);
+        const resp = await generateTx({ amount, recipients }, feeRate);
         if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
 
         const tx = await signTransaction(resp.psbt);
@@ -110,7 +109,6 @@ export function useRpcSendTransferActions() {
     generateTx,
     amount,
     recipients,
-    utxos,
     signTransaction,
     broadcastTx,
     utxosOfSpendableInscriptions,

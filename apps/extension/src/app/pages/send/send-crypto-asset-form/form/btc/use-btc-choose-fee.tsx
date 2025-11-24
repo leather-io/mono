@@ -12,7 +12,7 @@ import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 import { useBtcChooseFeeState } from './btc-choose-fee';
 
 export function useBtcChooseFee() {
-  const { isSendingMax, txValues, utxos } = useBtcChooseFeeState();
+  const { isSendingMax, txValues } = useBtcChooseFeeState();
   const sendFormNavigate = useSendFormNavigate();
   const generateTx = useGenerateUnsignedNativeSegwitTx();
   const calcMaxSpend = useCalculateMaxBitcoinSpend();
@@ -24,7 +24,7 @@ export function useBtcChooseFee() {
 
     async previewTransaction({ feeRate, feeValue, time, isCustomFee }: OnChooseFeeArgs) {
       const amount = isSendingMax
-        ? calcMaxSpend(txValues.recipient, utxos, feeRate).amount
+        ? (await calcMaxSpend(txValues.recipient, feeRate)).amount
         : amountAsMoney;
 
       const resp = await generateTx(
@@ -38,7 +38,6 @@ export function useBtcChooseFee() {
           ],
         },
         feeRate,
-        utxos,
         isSendingMax
       );
       const feeRowValue = formFeeRowValue(feeRate, isCustomFee);

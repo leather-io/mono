@@ -1,9 +1,11 @@
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { FormikHelpers, FormikProps } from 'formik';
+import BigNumber from 'bignumber.js';
 import * as yup from 'yup';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
+import { createMoney } from '@leather.io/utils';
 
 import {
   btcAddressNetworkValidator,
@@ -13,7 +15,6 @@ import {
 import { BitcoinSendFormValues } from '@shared/models/form.model';
 
 import { formatPrecisionError } from '@app/common/error-formatters';
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import {
   btcInsufficientBalanceValidator,
   btcMinimumSpendValidator,
@@ -24,25 +25,52 @@ import {
   currencyAmountValidator,
 } from '@app/common/validation/forms/currency-validators';
 import { useUpdatePersistedSendFormValues } from '@app/features/popup-send-form-restoration/use-update-persisted-send-form-values';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/address/utxos-by-address.hooks';
 import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useCalculateMaxBitcoinSpend } from '../../../../../common/hooks/balance/use-calculate-max-spend';
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 
+const defaultMaxSpend = {
+  spendAllFee: 0,
+  amount: createMoney(0, 'BTC'),
+  spendableBitcoin: new BigNumber(0),
+};
+
 export function useBtcSendForm() {
   const [isSendingMax, setIsSendingMax] = useState(false);
+  const [currentRecipient, setCurrentRecipient] = useState('');
+  const [maxSpend, setMaxSpend] = useState(defaultMaxSpend);
   const formRef = useRef<FormikProps<BitcoinSendFormValues>>(null);
   const currentNetwork = useCurrentNetwork();
-  const { data: utxos = [], filteredUtxosQuery } = useCurrentNativeSegwitUtxos();
   const { btc: balance } = useCurrentNativeSegwitBtcBalanceWithFallback();
   const sendFormNavigate = useSendFormNavigate();
   const calcMaxSpend = useCalculateMaxBitcoinSpend();
-  const { onFormStateChange } = useUpdatePersistedSendFormValues();
+  const { onFormStateChange: updatePersistedFormState } = useUpdatePersistedSendFormValues();
 
-  // Forcing a refetch to ensure UTXOs are fresh
-  useOnMount(() => filteredUtxosQuery.refetch());
+  useEffect(() => {
+    let canceled = false;
+    void calcMaxSpend(currentRecipient)
+      .then(result => {
+        if (!canceled && result) setMaxSpend(result);
+      })
+      .catch(() => {
+        if (!canceled) setMaxSpend(defaultMaxSpend);
+      });
+    return () => {
+      canceled = true;
+    };
+  }, [calcMaxSpend, currentRecipient]);
+
+  const onFormStateChange = useCallback(
+    (values: BitcoinSendFormValues) => {
+      updatePersistedFormState(values);
+      if (values.recipient !== currentRecipient) {
+        setCurrentRecipient(values.recipient);
+      }
+    },
+    [currentRecipient, updatePersistedFormState]
+  );
 
   return {
     balance,
@@ -54,7 +82,7 @@ export function useBtcSendForm() {
     onSetIsSendingMax(value: boolean) {
       setIsSendingMax(value);
     },
-    utxos,
+    maxSpend,
     validationSchema: yup.object({
       amount: yup
         .number()
@@ -67,7 +95,6 @@ export function useBtcSendForm() {
             // TODO: investigate yup features for cross-field validation
             // to prevent need to access form via ref
             recipient: formRef.current?.values.recipient ?? '',
-            utxos,
           })
         ),
       recipient: nonEmptyStringValidator()
@@ -87,7 +114,7 @@ export function useBtcSendForm() {
     ) {
       // Validate and check high fee warning first
       await formikHelpers.validateForm();
-      void sendFormNavigate.toChooseTransactionFee(isSendingMax, utxos, values);
+      void sendFormNavigate.toChooseTransactionFee(isSendingMax, values);
     },
   };
 }

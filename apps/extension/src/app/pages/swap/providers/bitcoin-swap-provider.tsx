@@ -5,7 +5,6 @@ import BigNumber from 'bignumber.js';
 import { DEFAULT_MAX_SIGNER_FEE } from 'sbtc';
 
 import { BitcoinSigner } from '@leather.io/bitcoin';
-import type { UtxoResponseItem } from '@leather.io/query';
 import { createMoney } from '@leather.io/utils';
 
 import { SwapForm } from '../form/swap-form';
@@ -19,16 +18,14 @@ export interface BitcoinSwapContext extends BaseSwapContext<BitcoinSwapContext> 
   deposit?: SbtcDeposit;
   maxSignerFee: number;
   signer: BitcoinSigner<P2Ret>;
-  utxos: UtxoResponseItem[];
 }
 
 interface BitcoinSwapProviderProps {
   signer: BitcoinSigner<P2Ret>;
-  utxos: UtxoResponseItem[];
 }
-export function BitcoinSwapProvider({ signer, utxos }: BitcoinSwapProviderProps) {
+export function BitcoinSwapProvider({ signer }: BitcoinSwapProviderProps) {
   const { allSwappableAssets, bitcoinSwappableAssetsQuote } = useAllSwappableAssets();
-  const { fetchQuoteAmount, onSubmitSwapForReview, onSubmitSwap } = useBitcoinSwap(signer, utxos);
+  const { fetchQuoteAmount, onSubmitSwapForReview, onSubmitSwap } = useBitcoinSwap(signer);
 
   return (
     <SwapProvider<BitcoinSwapContext>
@@ -41,7 +38,6 @@ export function BitcoinSwapProvider({ signer, utxos }: BitcoinSwapProviderProps)
         swappableAssetsBase: allSwappableAssets,
         swappableAssetsQuote: bitcoinSwappableAssetsQuote,
         timestamp: new Date().toISOString(),
-        utxos,
         fetchQuoteAmount,
         onSubmitSwapForReview,
         onSubmitSwap,

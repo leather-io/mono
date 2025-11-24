@@ -34,7 +34,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
 
   const { address: currentBitcoinAddress, publicKey } =
     useCurrentAccountNativeSegwitIndexZeroSigner();
-  const { data: utxos = [], filteredUtxosQuery } = useCurrentNativeSegwitUtxos();
+  const { filteredUtxosQuery } = useCurrentNativeSegwitUtxos();
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
   const recipient = getRecipientAddressFromOutput(btcTx.vout, currentBitcoinAddress) || '';
@@ -55,7 +55,6 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     amount: createMoney(btcToSat(sendingAmount), 'BTC'),
     isSendingMax: false,
     recipient,
-    utxos,
   });
 
   function generateUnsignedTx(payload: { feeRate: string; tx: BitcoinTx }) {

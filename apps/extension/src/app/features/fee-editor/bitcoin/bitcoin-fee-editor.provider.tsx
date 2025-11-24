@@ -1,5 +1,4 @@
 import type { MarketData, Money } from '@leather.io/models';
-import type { UtxoResponseItem } from '@leather.io/query';
 
 import type { TransferRecipient } from '@shared/models/form.model';
 
@@ -15,7 +14,6 @@ interface BitcoinFeeEditorProviderProps extends HasChildren {
   marketData: MarketData;
   onGoBack(): void;
   recipients: TransferRecipient[];
-  utxos: UtxoResponseItem[];
 }
 export function BitcoinFeeEditorProvider({
   amount,
@@ -25,15 +23,9 @@ export function BitcoinFeeEditorProvider({
   marketData,
   onGoBack,
   recipients,
-  utxos,
 }: BitcoinFeeEditorProviderProps) {
   return (
-    <BitcoinFeesLoader
-      amount={amount}
-      isSendingMax={isSendingMax}
-      recipients={recipients}
-      utxos={utxos}
-    >
+    <BitcoinFeesLoader amount={amount} isSendingMax={isSendingMax} recipients={recipients}>
       {({ fees, isLoading, getCustomFee }) => {
         return (
           <FeeEditorProvider

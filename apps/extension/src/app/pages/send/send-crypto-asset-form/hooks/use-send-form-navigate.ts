@@ -4,8 +4,6 @@ import { useLocation, useNavigate } from 'react-router';
 import { StacksTransactionWire } from '@stacks/transactions';
 import { AxiosError } from 'axios';
 
-import type { UtxoResponseItem } from '@leather.io/query';
-
 import { BitcoinSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
@@ -35,15 +33,10 @@ export function useSendFormNavigate() {
 
   return useMemo(
     () => ({
-      toChooseTransactionFee(
-        isSendingMax: boolean,
-        utxos: UtxoResponseItem[],
-        values: BitcoinSendFormValues
-      ) {
+      toChooseTransactionFee(isSendingMax: boolean, values: BitcoinSendFormValues) {
         return navigate(RouteUrls.SendBtcChooseFee, {
           state: {
             isSendingMax,
-            utxos,
             values,
           },
         });

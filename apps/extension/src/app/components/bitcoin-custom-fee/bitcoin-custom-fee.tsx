@@ -49,7 +49,7 @@ export function BitcoinCustomFee({
   const onChooseCustomBtcFee = useCallback(
     async ({ feeRate }: { feeRate: string }) => {
       onSetSelectedFeeType(null);
-      const { fee: feeValue } = getCustomFeeValues(Number(feeRate));
+      const { fee: feeValue } = await getCustomFeeValues(Number(feeRate));
       const isValid = onValidateBitcoinSpend(feeValue);
       if (!isValid) return;
       await onChooseFee({ feeRate: Number(feeRate), feeValue, time: '', isCustomFee: true });

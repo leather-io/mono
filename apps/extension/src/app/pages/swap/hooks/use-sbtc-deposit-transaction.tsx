@@ -19,7 +19,6 @@ import {
 
 import { BitcoinSigner } from '@leather.io/bitcoin';
 import type { BitcoinNetworkModes } from '@leather.io/models';
-import { type UtxoResponseItem } from '@leather.io/query';
 import { btcToSat, createMoney } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
@@ -27,10 +26,6 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { LoadingKeys, useLoading } from '@app/common/hooks/use-loading';
-import {
-  determineUtxosForSpend,
-  determineUtxosForSpendAll,
-} from '@app/common/transactions/bitcoin/coinselect/local-coin-selection';
 import { serializeError } from '@app/common/utils';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
@@ -40,6 +35,9 @@ import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { useNativeSegwitAccountRequest } from '@app/services/use-native-segwit-account-request';
+
+import { getBitcoinCoinSelectionService } from '@leather.io/services';
 
 import type { BitcoinSwapContext } from '../providers/bitcoin-swap-provider';
 import type { SubmitSwapArgs } from '../swap.context';
@@ -89,7 +87,7 @@ async function fetchSignersPublicKey({
   return res.value.slice(2);
 }
 
-export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: UtxoResponseItem[]) {
+export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>) {
   const toast = useToast();
   const { setIsIdle } = useLoading(LoadingKeys.SUBMIT_SWAP_TRANSACTION);
   const stacksAccount = useCurrentStacksAccount();
@@ -98,6 +96,8 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: U
   const navigate = useNavigate();
   const network = useCurrentNetwork();
   const sign = useSignBitcoinTx();
+  const accountRequest = useNativeSegwitAccountRequest();
+  const coinSelectionService = useMemo(() => getBitcoinCoinSelectionService(), []);
 
   const client = useMemo(
     () => (network.chain.bitcoin.mode === 'mainnet' ? clientMainnet : clientTestnet),
@@ -113,7 +113,7 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: U
       swapData,
       isSendingMax,
     }: SubmitSwapArgs<BitcoinSwapContext>) {
-      if (!stacksAccount || !utxos) return;
+      if (!stacksAccount || !feeRates) return;
 
       try {
         const deposit: SbtcDeposit = buildSbtcDepositTx({
@@ -130,20 +130,22 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: U
           reclaimPublicKey: bytesToHex(signer.publicKey).slice(2),
         });
 
-        const determineUtxosArgs = {
-          feeRate: feeRates?.halfHourFee.toNumber() ?? 0,
-          recipients: [
-            {
-              address: deposit.address,
-              amount: createMoney(Number(deposit.transaction.getOutput(0).amount), 'BTC'),
-            },
-          ],
-          utxos,
-        };
+        const feeRate = feeRates.halfHourFee.toNumber();
 
-        const { inputs, outputs, fee } = isSendingMax
-          ? determineUtxosForSpendAll(determineUtxosArgs)
-          : determineUtxosForSpend(determineUtxosArgs);
+        const { inputs, outputs, fee } = await coinSelectionService.performCoinSelection(
+          {
+            account: accountRequest,
+            feeRate,
+            recipients: [
+              {
+                address: deposit.address,
+                amount: createMoney(Number(deposit.transaction.getOutput(0).amount), 'BTC'),
+              },
+            ],
+            isMaxSpend: isSendingMax,
+          },
+          undefined
+        );
 
         const p2wpkh = btc.p2wpkh(signer.publicKey, networkMode);
 
@@ -168,7 +170,7 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: U
           }
         });
 
-        return { deposit, fee: createMoney(fee, 'BTC') };
+        return { deposit, fee };
       } catch (error) {
         logger.error('Error generating deposit transaction', error);
         return null;

@@ -1,21 +1,23 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
-import { type UtxoResponseItem } from '@leather.io/query';
+import { getBitcoinCoinSelectionService } from '@leather.io/services';
 
-import { calculateMaxBitcoinSpend } from '@app/common/transactions/bitcoin/fees/calculate-max-bitcoin-spend';
-import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
+import { useNativeSegwitAccountRequest } from '@app/services/use-native-segwit-account-request';
 
 export function useCalculateMaxBitcoinSpend() {
-  const { data: feeRates } = useAverageBitcoinFeeRates();
+  const accountRequest = useNativeSegwitAccountRequest();
+  const coinSelectionService = useMemo(() => getBitcoinCoinSelectionService(), []);
 
   return useCallback(
-    (address = '', utxos: UtxoResponseItem[], feeRate?: number) =>
-      calculateMaxBitcoinSpend({
-        address,
-        utxos,
-        feeRate,
-        fetchedFeeRates: feeRates,
-      }),
-    [feeRates]
+    (recipient = '', feeRate?: number) =>
+      coinSelectionService.calculateMaxSpend(
+        {
+          account: accountRequest,
+          recipient,
+          feeRate,
+        },
+        undefined
+      ),
+    [accountRequest, coinSelectionService]
   );
 }
