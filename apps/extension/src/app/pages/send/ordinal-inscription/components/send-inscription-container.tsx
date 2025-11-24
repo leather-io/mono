@@ -49,9 +49,16 @@ export function SendInscriptionContainer() {
     if (!routeState.inscription) return;
     const inscriptionAddress = createBitcoinAddress(routeState.inscription.address);
 
+    if (
+      !taprootAccount?.keychain.publicExtendedKey ||
+      !nativeSegwitAccount?.keychain.publicExtendedKey
+    ) {
+      throw new Error('Missing account keychain data');
+    }
+
     const result = lookupDerivationByAddress({
-      taprootXpub: taprootAccount?.keychain.publicExtendedKey!,
-      nativeSegwitXpub: nativeSegwitAccount?.keychain.publicExtendedKey!,
+      taprootXpub: taprootAccount.keychain.publicExtendedKey,
+      nativeSegwitXpub: nativeSegwitAccount.keychain.publicExtendedKey,
       iterationLimit: 100,
     })(inscriptionAddress);
 

@@ -8,8 +8,12 @@ export enum LoadingKeys {
 export function useLoading(key: string) {
   const [state, setState] = useLoadingState(key);
 
-  const setIsLoading = () => setState('loading');
-  const setIsIdle = () => setState('idle');
+  function setIsLoading() {
+    setState('loading');
+  }
+  function setIsIdle() {
+    setState('idle');
+  }
 
   const isLoading = state === 'loading';
   return {

@@ -9,8 +9,12 @@ interface AccountNameLayoutProps extends HTMLStyledProps<'span'> {
   isLoading?: boolean;
 }
 
-export const AccountNameLayout = memo(
-  ({ children, isLoading, ...rest }: AccountNameLayoutProps) => (
+export const AccountNameLayout = memo(function AccountNameLayout({
+  children,
+  isLoading,
+  ...rest
+}: AccountNameLayoutProps) {
+  return (
     <styled.span
       className={shimmerStyles}
       textStyle="label.02"
@@ -20,5 +24,5 @@ export const AccountNameLayout = memo(
     >
       {children}
     </styled.span>
-  )
-);
+  );
+});

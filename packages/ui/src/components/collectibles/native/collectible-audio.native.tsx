@@ -8,7 +8,7 @@ interface CollectibleAudioProps {
   src: string;
   alt: string;
   size?: number;
-  onPress?: () => void;
+  onPress?(): void;
 }
 
 export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleAudioProps) {

@@ -10,7 +10,7 @@ interface CollectibleHtmlProps {
   src: string;
   height?: number;
   thumbnailSrc?: string;
-  onPress?: () => void;
+  onPress?(): void;
   imageUnavailableLabel?: ReactNode;
 }
 

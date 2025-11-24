@@ -12,7 +12,7 @@ export interface TokenDetailsProps {
 }
 
 export interface OnPressTokenDetails {
-  onPress?: (tokenDetails: TokenDetailsProps) => void;
+  onPress?(tokenDetails: TokenDetailsProps): void;
 }
 
 const supportedAssetProtocols = [

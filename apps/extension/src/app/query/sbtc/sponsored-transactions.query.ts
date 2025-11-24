@@ -68,7 +68,7 @@ export async function verifySponsoredSbtcTransaction({
     const serializedTx = sponsoredTx.serialize();
 
     const result = await queryClient.fetchQuery({
-      queryKey: ['verify-sponsored-sbtc-transaction', serializedTx],
+      queryKey: ['verify-sponsored-sbtc-transaction', apiUrl, serializedTx],
       queryFn: async () => {
         const { data } = await axios.post(
           `${apiUrl}/verify`,

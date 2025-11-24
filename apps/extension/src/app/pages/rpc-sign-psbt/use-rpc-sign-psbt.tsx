@@ -62,7 +62,7 @@ export function useRpcSignPsbt() {
       async onSuccess(txid) {
         if (!requestId) throw new Error('Invalid request id');
 
-        chrome.tabs.sendMessage(
+        void chrome.tabs.sendMessage(
           tabId,
           createRpcSuccessResponse('signPsbt', {
             id: requestId,
@@ -91,7 +91,7 @@ export function useRpcSignPsbt() {
       onError(e) {
         if (!requestId) throw new Error('Invalid request id');
 
-        chrome.tabs.sendMessage(
+        void chrome.tabs.sendMessage(
           tabId,
           createRpcErrorResponse('signPsbt', {
             id: requestId,
@@ -122,7 +122,7 @@ export function useRpcSignPsbt() {
         const psbt = signedTx.toPSBT();
 
         if (!broadcast) {
-          chrome.tabs.sendMessage(
+          void chrome.tabs.sendMessage(
             tabId,
             createRpcSuccessResponse('signPsbt', {
               id: requestId,
@@ -164,7 +164,7 @@ export function useRpcSignPsbt() {
       }
     },
     onCancel() {
-      chrome.tabs.sendMessage(
+      void chrome.tabs.sendMessage(
         tabId,
         createRpcErrorResponse('signPsbt', {
           id: requestId,

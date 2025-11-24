@@ -55,12 +55,12 @@ export function StacksTransactionItem({
 
   if (!transaction && !hasTransferDetailsData) return null;
 
-  const openTxLink = () => {
+  function openTxLink() {
     void analytics.track('view_transaction');
     handleOpenStacksTxLink({
       txid: transaction?.tx_id || link || '',
     });
-  };
+  }
 
   const isOriginator = transaction?.sender_address === currentAccount?.address;
   const isPending = transaction && isPendingTx(transaction);

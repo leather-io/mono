@@ -15,7 +15,7 @@ import {
 interface SearchInputProps {
   value: string;
   onChange(value: string): void;
-  onSubmitEditing?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void;
+  onSubmitEditing?(e: NativeSyntheticEvent<TextInputSubmitEditingEventData>): void;
   placeholder: string;
   autoFocus?: boolean;
   TextInputComponent?: typeof UITextInput;

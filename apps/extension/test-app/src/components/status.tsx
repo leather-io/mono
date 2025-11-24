@@ -17,7 +17,7 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import { ExplorerLink } from './explorer-link';
 
-export const Status = () => {
+export function Status() {
   const stxAddress = useSTXAddress();
   const [status, setStatus] = useState('');
   const [readStatus, setReadStatus] = useState('');
@@ -30,16 +30,16 @@ export const Status = () => {
 
   const client = getRPCClient();
 
-  const getAddressCV = () => {
+  function getAddressCV() {
     try {
       return standardPrincipalCV(address);
-    } catch (error) {
+    } catch {
       setError('Invalid address.');
       return null;
     }
-  };
+  }
 
-  const onSubmitRead = async () => {
+  async function onSubmitRead() {
     const addressCV = getAddressCV();
     if (!addressCV) {
       return;
@@ -53,22 +53,19 @@ export const Status = () => {
         args,
         functionName: 'get-status',
       });
-      console.log(data);
       const cv = deserializeCV(Buffer.from(data.result.slice(2), 'hex')) as BufferCV;
-      console.log(cv);
       if (cv.type === ClarityType.Buffer) {
         const ua = Array.from(cv.buffer);
         const str = String.fromCharCode.apply(null, ua);
         setReadStatus(str);
-        console.log(str);
       }
-    } catch (error) {
+    } catch {
       setError('An error occurred while fetching the status contract.');
     }
     setLoading(false);
-  };
+  }
 
-  const onSubmitWrite = async () => {
+  async function onSubmitWrite() {
     const statusArg = bufferCV(Buffer.from(status));
     await doContractCall({
       contractAddress: 'STB44HYPYAT2BB2QE513NSP81HTMYWBJP02HPGK6',
@@ -78,19 +75,18 @@ export const Status = () => {
       contractName: 'status',
       onFinish: data => {
         setTxId(data.txId);
-        console.log('finished!', data);
       },
       postConditionMode: PostConditionMode.Deny,
     });
-  };
+  }
 
-  const handleStatus = (evt: React.FormEvent<HTMLInputElement>) => {
+  function handleStatus(evt: React.FormEvent<HTMLInputElement>) {
     setStatus(evt.currentTarget.value || '');
-  };
+  }
 
-  const handleAddress = (evt: React.FormEvent<HTMLInputElement>) => {
+  function handleAddress(evt: React.FormEvent<HTMLInputElement>) {
     setAddress(evt.currentTarget.value || '');
-  };
+  }
 
   return (
     <Box py={6}>
@@ -186,4 +182,4 @@ export const Status = () => {
       </styled.button>
     </Box>
   );
-};
+}

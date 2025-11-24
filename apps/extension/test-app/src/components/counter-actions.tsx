@@ -7,7 +7,7 @@ import { ExplorerLink } from '@components/explorer-link';
 import { useConnect } from '@stacks/connect-react-jwt';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-export const CounterActions: React.FC = () => {
+export function CounterActions() {
   const { userData } = React.useContext(AppContext);
   const [loading, setLoading] = React.useState(false);
   const [txId, setTxId] = React.useState('');
@@ -15,7 +15,7 @@ export const CounterActions: React.FC = () => {
   const [error, setError] = React.useState('');
   const { doContractCall } = useConnect();
 
-  const callMethod = async (method: string) => {
+  async function callMethod(method: string) {
     setError('');
     setLoading(true);
     await doContractCall({
@@ -26,13 +26,12 @@ export const CounterActions: React.FC = () => {
       contractName: 'counter',
       onFinish: data => {
         setTxId(data.txId);
-        console.log('finished!', data);
         setLoading(false);
       },
     });
-  };
+  }
 
-  const getCounter = async () => {
+  async function getCounter() {
     const client = getRPCClient();
     setLoading(true);
     setError('');
@@ -44,13 +43,12 @@ export const CounterActions: React.FC = () => {
         functionName: 'get-counter',
       });
       const cv = deserializeCV(Buffer.from(data.result.slice(2), 'hex')) as IntCV;
-      console.log(cv.value);
       setCounter(cv.value.toNumber());
       setLoading(false);
-    } catch (error) {
+    } catch {
       setError('Unable to get current counter value.');
     }
-  };
+  }
 
   return (
     <Box>
@@ -81,4 +79,4 @@ export const CounterActions: React.FC = () => {
       )}
     </Box>
   );
-};
+}

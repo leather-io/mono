@@ -61,7 +61,7 @@ export function ReceiveTokensLayout(props: ReceiveTokensLayoutProps) {
               size={132}
               style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
               value={address}
-              viewBox={`0 0 132 132`}
+              viewBox="0 0 132 132"
             />
           </Flex>
         </Box>

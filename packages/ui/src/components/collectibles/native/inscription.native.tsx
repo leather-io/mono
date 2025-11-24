@@ -17,7 +17,7 @@ export interface InscriptionProps {
   height: number;
   src: string;
   thumbnailSrc?: string;
-  onPress?: () => void;
+  onPress?(): void;
   imageUnavailableLabel?: ReactNode;
 }
 

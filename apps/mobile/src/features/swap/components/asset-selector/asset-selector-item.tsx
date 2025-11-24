@@ -11,7 +11,7 @@ interface AssetListItemProps {
   icon: ReactNode;
   balance?: Money;
   quoteBalance?: Money;
-  onPress?: () => void;
+  onPress?(): void;
 }
 
 export function AssetSelectorItem({

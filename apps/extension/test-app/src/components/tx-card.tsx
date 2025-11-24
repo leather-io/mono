@@ -8,7 +8,7 @@ interface TxCardProps {
   tx: ContractCallTransaction;
   label: string;
 }
-export const TxCard: React.FC<TxCardProps> = ({ tx, label }) => {
+export function TxCard({ tx, label }: TxCardProps) {
   const addr = tx.sender_address;
   const shortAddr = `${addr.slice(0, 5)}...${addr.slice(addr.length - 6, addr.length - 1)}`;
   return (
@@ -42,4 +42,4 @@ export const TxCard: React.FC<TxCardProps> = ({ tx, label }) => {
       </styled.span>
     </Box>
   );
-};
+}

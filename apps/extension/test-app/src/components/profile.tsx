@@ -8,7 +8,7 @@ import { PublicPersonProfile, PublicProfile } from '@stacks/profile';
 import { TestAppSelectors } from '@tests/selectors/test-app.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-export const Profile = () => {
+export function Profile() {
   const name = 'Name ' + new Date().getTime().toString();
   const avatarUrl =
     'https://byzantion.mypinata.cloud/ipfs/Qmb84UcaMr1MUwNbYBnXWHM3kEaDcYrKuPWwyRLVTNKELC/2256.png';
@@ -17,7 +17,7 @@ export const Profile = () => {
   const [updatedProfile, setUpdatedProfile] = useState<{ profile?: PublicProfile }>();
   const { authOptions } = useAuth();
 
-  const updateProfile = async (profile: PublicPersonProfile, network?: StacksNetwork) => {
+  async function updateProfile(profile: PublicPersonProfile, network?: StacksNetwork) {
     const defaultNetwork = stacksMainnetNetwork;
 
     await openProfileUpdateRequestPopup({
@@ -25,15 +25,13 @@ export const Profile = () => {
       network: network ?? defaultNetwork,
       appDetails: authOptions.appDetails,
       onFinish: (profile: PublicProfile) => {
-        console.log('profile', profile);
         setUpdatedProfile({ profile });
       },
       onCancel: () => {
         setUpdatedProfile({});
-        console.log('popup closed!');
       },
     });
-  };
+  }
 
   return (
     <Box py={6}>
@@ -94,4 +92,4 @@ export const Profile = () => {
       </Flex>
     </Box>
   );
-};
+}

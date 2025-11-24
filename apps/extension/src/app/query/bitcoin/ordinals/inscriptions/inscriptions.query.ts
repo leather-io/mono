@@ -68,7 +68,11 @@ export function useCurrentTaprootAccountUninscribedUtxos() {
     taprootKeychain: taprootAccount?.keychain,
     currentAccountIndex,
   });
-  const query = useInscriptions({ xpubs: [`tr(${taprootAccount?.keychain.publicExtendedKey!})`] });
+  const query = useInscriptions({
+    xpubs: taprootAccount?.keychain.publicExtendedKey
+      ? [`tr(${taprootAccount.keychain.publicExtendedKey})`]
+      : [],
+  });
   return useMemo(
     () => filterUninscribedUtxosToRecoverFromTaproot(utxos, query.inscriptions ?? []),
     [query.inscriptions, utxos]

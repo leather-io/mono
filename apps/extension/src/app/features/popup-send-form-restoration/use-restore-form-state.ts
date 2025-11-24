@@ -13,7 +13,7 @@ async function run() {
   const tab = await getActiveTab();
   // Tab can sometimes be undefined in mobile extension environments
   // https://trust-machines.sentry.io/issues/3999731741/?project=4504204000952320
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
   if (!tab) return;
   currentTabId = tab.id ?? 0;
 }

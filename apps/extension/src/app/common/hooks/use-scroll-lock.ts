@@ -18,31 +18,31 @@ if (typeof window !== 'undefined') {
   instances = window.__useScrollLockInstances;
 }
 
-const registerInstance = (instance: Record<string, unknown>) => {
+function registerInstance(instance: Record<string, unknown>) {
   if (instances.size === 0) {
     setBodyOverflow(true);
   }
 
   instances.add(instance);
-};
+}
 
-const unregisterInstance = (instance: Record<string, unknown>) => {
+function unregisterInstance(instance: Record<string, unknown>) {
   instances.delete(instance);
 
   if (instances.size === 0) {
     setBodyOverflow(false);
   }
-};
+}
 
-const setBodyOverflow = (shouldLock: boolean) => {
+function setBodyOverflow(shouldLock: boolean) {
   if (shouldLock) {
     document.body.classList.add('no-scroll');
   } else {
     document.body.classList.remove('no-scroll');
   }
-};
+}
 
-export const useScrollLock = (shouldLock: boolean) => {
+export function useScrollLock(shouldLock: boolean) {
   // we generate a unique reference to the component that uses this thing
   const [elementId] = useState({});
 
@@ -54,4 +54,4 @@ export const useScrollLock = (shouldLock: boolean) => {
     // Re-enable scrolling when component unmounts
     return () => unregisterInstance(elementId);
   }, [elementId, shouldLock]); // ensures effect is only run on mount, unmount, and on shouldLock change
-};
+}

@@ -5,8 +5,8 @@ export function useAppState({
   onAppForeground,
   onAppBackground,
 }: {
-  onAppForeground?: () => void;
-  onAppBackground?: () => void;
+  onAppForeground?(): void;
+  onAppBackground?(): void;
 }) {
   const appState = useRef(AppState.currentState);
   useEffect(() => {

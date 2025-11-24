@@ -13,7 +13,7 @@ import {
 interface SettingsSheetLayoutProps extends HasChildren {
   sheetRef: SheetRef;
   title: string;
-  onPressSupport?: () => void;
+  onPressSupport?(): void;
 }
 export function SettingsSheetLayout({
   children,

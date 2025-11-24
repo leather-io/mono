@@ -27,11 +27,11 @@ interface InsufficientFundsActionButtonsProps {
 function InsufficientFundsActionButtons({ eventName }: InsufficientFundsActionButtonsProps) {
   const [isShowingSwitchAccount, setIsShowingSwitchAccount] = useState(false);
 
-  const onGetStx = () => {
+  function onGetStx() {
     void analytics.untypedTrack(eventName);
     closeWindow();
     void chrome.tabs.create({ url: 'index.html#/fund' });
-  };
+  }
 
   return (
     <>
@@ -47,62 +47,66 @@ function InsufficientFundsActionButtons({ eventName }: InsufficientFundsActionBu
   );
 }
 
-export const FeeInsufficientFundsErrorMessage = memo(props => {
-  return (
-    <ErrorMessage
-      title="Insufficient balance"
-      body={`You do not have enough STX to cover the network fees for this transaction.`}
-      actions={<InsufficientFundsActionButtons eventName="get_stx_for_tx_fees" />}
-      {...props}
-    />
-  );
-});
+export const FeeInsufficientFundsErrorMessage = memo(
+  function FeeInsufficientFundsErrorMessage(props) {
+    return (
+      <ErrorMessage
+        title="Insufficient balance"
+        body="You do not have enough STX to cover the network fees for this transaction."
+        actions={<InsufficientFundsActionButtons eventName="get_stx_for_tx_fees" />}
+        {...props}
+      />
+    );
+  }
+);
 
-export const StxTransferInsufficientFundsErrorMessage = memo(props => {
-  const pendingTransaction = useTransactionRequestState();
-  const stxAddress = useCurrentStacksAccountAddress();
-  const availableUnlockedBalance = useStxAddressAvailableUnlockedBalance(stxAddress);
+export const StxTransferInsufficientFundsErrorMessage = memo(
+  function StxTransferInsufficientFundsErrorMessage(props) {
+    const pendingTransaction = useTransactionRequestState();
+    const stxAddress = useCurrentStacksAccountAddress();
+    const availableUnlockedBalance = useStxAddressAvailableUnlockedBalance(stxAddress);
 
-  return (
-    <ErrorMessage
-      title="Insufficient balance"
-      body={
-        <Stack gap="space.05">
-          <Caption color="ink.text-primary">
-            You don't have enough STX to make this transfer. Send some STX to this address, or
-            switch to another account.
-          </Caption>
-          <Stack gap="space.04" justifyContent="flex-end" textAlign="right">
-            <HStack alignItems="center" justifyContent="space-between">
-              <Caption>Current balance</Caption>
-              <Caption>
-                {availableUnlockedBalance
-                  ? stacksValue({
-                      value: availableUnlockedBalance.amount,
-                      withTicker: true,
-                    })
-                  : '--'}
-              </Caption>
-            </HStack>
-            <HStack alignItems="center" justifyContent="space-between">
-              <Caption>Transfer amount</Caption>
-              <Caption>
-                {stacksValue({
-                  value: (pendingTransaction as STXTransferPayload).amount,
-                  withTicker: true,
-                })}
-              </Caption>
-            </HStack>
+    return (
+      <ErrorMessage
+        title="Insufficient balance"
+        body={
+          <Stack gap="space.05">
+            <Caption color="ink.text-primary">
+              You don't have enough STX to make this transfer. Send some STX to this address, or
+              switch to another account.
+            </Caption>
+            <Stack gap="space.04" justifyContent="flex-end" textAlign="right">
+              <HStack alignItems="center" justifyContent="space-between">
+                <Caption>Current balance</Caption>
+                <Caption>
+                  {availableUnlockedBalance
+                    ? stacksValue({
+                        value: availableUnlockedBalance.amount,
+                        withTicker: true,
+                      })
+                    : '--'}
+                </Caption>
+              </HStack>
+              <HStack alignItems="center" justifyContent="space-between">
+                <Caption>Transfer amount</Caption>
+                <Caption>
+                  {stacksValue({
+                    value: (pendingTransaction as STXTransferPayload).amount,
+                    withTicker: true,
+                  })}
+                </Caption>
+              </HStack>
+            </Stack>
           </Stack>
-        </Stack>
-      }
-      actions={<InsufficientFundsActionButtons eventName="get_stx_for_stx_transfer" />}
-      {...props}
-    />
-  );
-});
+        }
+        actions={<InsufficientFundsActionButtons eventName="get_stx_for_stx_transfer" />}
+        {...props}
+      />
+    );
+  }
+);
 
-export const NoContractErrorMessage = memo(props => {
+export const NoContractErrorMessage = memo(function NoContractErrorMessage(props) {
   const network = useCurrentNetworkState();
   const pendingTransaction = useTransactionRequestState();
 
@@ -119,29 +123,31 @@ export const NoContractErrorMessage = memo(props => {
   );
 });
 
-export const IncorrectContractAddressMessage = memo(props => {
-  const pendingTransaction = useTransactionRequestState();
+export const IncorrectContractAddressMessage = memo(
+  function IncorrectContractAddressMessage(props) {
+    const pendingTransaction = useTransactionRequestState();
 
-  if (!pendingTransaction || pendingTransaction.txType !== TransactionTypes.ContractCall)
-    return null;
-  return (
-    <ErrorMessage
-      title="Invalid contract address"
-      body={`The contract address (${truncateMiddle(
-        pendingTransaction.contractAddress
-      )}) that you are trying to call is not a valid Stacks address.`}
-      {...props}
-    />
-  );
-});
+    if (!pendingTransaction || pendingTransaction.txType !== TransactionTypes.ContractCall)
+      return null;
+    return (
+      <ErrorMessage
+        title="Invalid contract address"
+        body={`The contract address (${truncateMiddle(
+          pendingTransaction.contractAddress
+        )}) that you are trying to call is not a valid Stacks address.`}
+        {...props}
+      />
+    );
+  }
+);
 
-export const UnauthorizedRequestRedirect = memo(() => {
+export const UnauthorizedRequestRedirect = memo(function UnauthorizedRequestRedirect() {
   return <Navigate to={RouteUrls.UnauthorizedRequest} />;
 });
 
 // TODO: Change this to new Error component?
 // #4476 TODO: maybe we can do the above now?
-export const ExpiredRequestErrorMessage = memo(props => {
+export const ExpiredRequestErrorMessage = memo(function ExpiredRequestErrorMessage(props) {
   useScrollLock(true);
   return (
     <Flex

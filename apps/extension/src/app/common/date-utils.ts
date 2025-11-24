@@ -34,7 +34,7 @@ export function displayDate(txDate: string): string {
 export function isoDateToLocalDateSafe(isoDate: string) {
   try {
     return isoDateToLocalDate(isoDate);
-  } catch (e) {
+  } catch {
     return;
   }
 }

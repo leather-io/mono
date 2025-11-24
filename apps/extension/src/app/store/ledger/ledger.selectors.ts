@@ -6,7 +6,9 @@ import { sumNumbers } from '@leather.io/utils';
 
 import { RootState } from '..';
 
-const selectLedger = (state: RootState) => state.ledger;
+function selectLedger(state: RootState) {
+  return state.ledger;
+}
 
 const selectNumberOfLedgerKeysPersisted = createSelector(selectLedger, ledger =>
   sumNumbers(Object.values(ledger).map(chain => Object.keys(chain.entities).length))

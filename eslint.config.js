@@ -1,11 +1,11 @@
 import pluginQuery from '@tanstack/eslint-plugin-query';
 import pluginLingui from 'eslint-plugin-lingui';
-import tseslint from 'typescript-eslint';
+import { defineConfig } from 'eslint/config';
 
 import baseConfig from '@leather.io/eslint-config';
 import reactConfig from '@leather.io/eslint-config/react';
 
-export default tseslint.config(
+export default defineConfig(
   {
     files: ['{packages,apps}/**/*.{ts,tsx}'],
     extends: [baseConfig],
@@ -49,13 +49,14 @@ export default tseslint.config(
       '**/lingui.config*.ts',
       '**/sanity.config*.ts',
       '**/react-router.config*.ts',
+      '**/playwright.config*.ts',
       '**/sanity.cli.ts',
       '**/.react-router/',
       '**/.wrangler/',
       '**/generated/',
-      '**/apps/extension/',
       'packages/ui/src/index.ts',
       'packages/ui/src/icons/docs',
+      'apps/extension/.storybook/**/*',
     ],
   },
   {
@@ -82,6 +83,11 @@ export default tseslint.config(
   {
     name: 'web',
     files: ['apps/web/app/**/*.{ts,tsx}'],
+    extends: [reactConfig, pluginQuery.configs['flat/recommended']],
+  },
+  {
+    name: 'extension',
+    files: ['apps/extension/src/**/*.{ts,tsx}', 'apps/extension/.storybook/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
   },
   {

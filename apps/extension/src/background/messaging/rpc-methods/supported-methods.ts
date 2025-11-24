@@ -7,7 +7,7 @@ export const supportedMethodsHandler = defineRpcRequestHandler(
   supportedMethods.method,
   async (request, port) => {
     const { tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port);
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       tabId,
       createRpcSuccessResponse(supportedMethods.method, {
         id: request.id,

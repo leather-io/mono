@@ -9,11 +9,13 @@ export function useCreateAccount() {
   const { createNewAccount } = useKeyActions();
   const toast = useToast();
 
-  return useCallback(() => {
+  return useCallback(async () => {
     void analytics.track('create_new_account');
-    void toast.promise(createNewAccount(), {
-      success: 'Account created!',
-      error: 'Error creating account.',
-    });
+    try {
+      await createNewAccount();
+      toast.success('Account created!');
+    } catch {
+      toast.error('Error creating account.');
+    }
   }, [createNewAccount, toast]);
 }

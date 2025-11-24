@@ -34,7 +34,7 @@ test.describe('Networks tests', () => {
     await networkPage.clickAddNetwork();
     await networkPage.waitForErrorMessage();
 
-    const errorMsgElement = await networkPage.getErrorMessage();
+    const errorMsgElement = networkPage.getErrorMessage();
     const errorMessage = await errorMsgElement.innerText();
     test.expect(errorMessage).toEqual(NetworkSelectors.EmptyStacksAddressError);
   });
@@ -43,7 +43,7 @@ test.describe('Networks tests', () => {
     await networkPage.clickAddNetwork();
     await networkPage.waitForErrorMessage();
 
-    const errorMsgElement = await networkPage.getErrorMessage();
+    const errorMsgElement = networkPage.getErrorMessage();
     const errorMessage = await errorMsgElement.innerText();
     test.expect(errorMessage).toEqual(NetworkSelectors.EmptyNameError);
   });
@@ -53,7 +53,7 @@ test.describe('Networks tests', () => {
     await networkPage.clickAddNetwork();
     await networkPage.waitForErrorMessage();
 
-    const errorMsgElement = await networkPage.getErrorMessage();
+    const errorMsgElement = networkPage.getErrorMessage();
     const errorMessage = await errorMsgElement.innerText();
     test.expect(errorMessage).toEqual(NetworkSelectors.EmptyKeyError);
   });
@@ -65,7 +65,7 @@ test.describe('Networks tests', () => {
     await networkPage.clickAddNetwork();
     await networkPage.waitForErrorMessage();
 
-    const errorMsgElement = await networkPage.getErrorMessage();
+    const errorMsgElement = networkPage.getErrorMessage();
     const errorMessage = await errorMsgElement.innerText();
     test.expect(errorMessage).toEqual(NetworkSelectors.EmptyBitcoinURLError);
   });
@@ -77,7 +77,7 @@ test.describe('Networks tests', () => {
     await networkPage.clickAddNetwork();
     await networkPage.waitForErrorMessage();
 
-    const errorMsgElement = await networkPage.getErrorMessage();
+    const errorMsgElement = networkPage.getErrorMessage();
     const errorMessage = await errorMsgElement.innerText();
     test.expect(errorMessage).toEqual(NetworkSelectors.NoStacksNodeFetch);
   });
@@ -89,7 +89,7 @@ test.describe('Networks tests', () => {
     await networkPage.clickAddNetwork();
     await networkPage.waitForErrorMessage();
 
-    const errorMsgElement = await networkPage.getErrorMessage();
+    const errorMsgElement = networkPage.getErrorMessage();
     const errorMessage = await errorMsgElement.innerText();
     test.expect(errorMessage).toEqual(NetworkSelectors.NoBitcoinNodeFetch);
   });

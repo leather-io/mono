@@ -15,3 +15,7 @@ coverage/
 apps/mobile/index.js
 *.lottie.json
 worker-configuration.d.ts
+.expo/
+expo-env.d.ts
+ios/
+android/

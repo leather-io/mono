@@ -10,7 +10,7 @@ import { selectHighestAccountIndex } from './stx-chain.selectors';
 import { stxChainSlice } from './stx-chain.slice';
 
 export function initializeIndexZeroAccount(): AppThunk {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const state = getState();
     const keychain = selectRootKeychain(state);
 
@@ -28,7 +28,7 @@ export function initializeIndexZeroAccount(): AppThunk {
 }
 
 export function switchAccount(accountIndex: number): AppThunk {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const state = getState();
     const keychain = selectRootKeychain(state);
     if (keychain) {
@@ -41,7 +41,7 @@ export function switchAccount(accountIndex: number): AppThunk {
 }
 
 export function createNewAccount(): AppThunk {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const state = getState();
     const secretKey = selectDefaultWalletKey(state);
     if (!secretKey) throw new Error('Unable to create a new account. Wallet not signed in');

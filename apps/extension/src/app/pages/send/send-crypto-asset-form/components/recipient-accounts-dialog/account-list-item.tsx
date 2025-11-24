@@ -18,7 +18,11 @@ interface AccountListItemProps {
   index: number;
   onClose(): void;
 }
-export const AccountListItem = memo(({ index, stacksAccount, onClose }: AccountListItemProps) => {
+export const AccountListItem = memo(function AccountListItem({
+  index,
+  stacksAccount,
+  onClose,
+}: AccountListItemProps) {
   const { setFieldValue, values } = useFormikContext<
     BitcoinSendFormValues | StacksSendFormValues
   >();
@@ -27,23 +31,17 @@ export const AccountListItem = memo(({ index, stacksAccount, onClose }: AccountL
   const bitcoinSigner = useNativeSegwitSigner(index);
   const bitcoinAddress = bitcoinSigner?.(0).address || '';
 
-  const onSelectAccount = () => {
+  function onSelectAccount() {
     const isBitcoin = values.symbol === 'BTC';
     void setFieldValue('recipient', isBitcoin ? bitcoinAddress : stacksAddress, false);
     onClose();
-  };
+  }
 
   return (
     <AccountListItemLayout
       accountAddresses={<AccountAddresses index={index} />}
       accountName={<AccountNameLayout>{name}</AccountNameLayout>}
-      avatar={
-        <AccountAvatarItem
-          index={index}
-          publicKey={stacksAccount?.stxPublicKey || ''}
-          name={name}
-        />
-      }
+      avatar={<AccountAvatarItem index={index} publicKey={stacksAccount?.stxPublicKey || ''} />}
       balanceLabel={<AccountTotalBalance accountIndex={index} />}
       index={index}
       isSelected={false}

@@ -22,7 +22,7 @@ interface BrowserProps {
   webViewRef: RefObject<WebView | null>;
   searchUrl: string;
   navState: WebViewNavigation | null;
-  setNavState: (navState: WebViewNavigation | null) => void;
+  setNavState(navState: WebViewNavigation | null): void;
   goToUrl(url: string): void;
   browserLoadingRef: RefObject<BrowserLoadingMethods | null>;
 }

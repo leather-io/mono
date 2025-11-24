@@ -9,7 +9,9 @@ import { mnemonicToRootNode } from '@app/common/keychain/keychain';
 
 import { RootState } from '..';
 
-const selectInMemoryKeys = (state: RootState) => state.inMemoryKeys;
+function selectInMemoryKeys(state: RootState) {
+  return state.inMemoryKeys;
+}
 
 const selectDefaultInMemoryWalletKeyBytes = createSelector(
   selectInMemoryKeys,
@@ -26,13 +28,13 @@ export function useHasDefaultInMemoryWalletSecretKey() {
 }
 
 // Not using a memoized "createSelector" to avoid storing the decoded key as cleartext in memory
-export const selectDefaultWalletKey = (state: RootState) => {
+export function selectDefaultWalletKey(state: RootState) {
   const defaultWalletBytes = selectDefaultInMemoryWalletKeyBytes(state);
 
   if (!defaultWalletBytes) return null;
 
   return decodeText(defaultWalletBytes);
-};
+}
 
 export const selectRootKeychain = createSelector(
   selectDefaultInMemoryWalletKeyBytes,

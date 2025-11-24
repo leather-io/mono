@@ -24,6 +24,7 @@ export default tseslint.config(
       '@typescript-eslint/array-type': 'error',
       '@typescript-eslint/no-meaningless-void-operator': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { destructuredArrayIgnorePattern: '^_' }],
+      '@typescript-eslint/no-base-to-string': ['error', { ignoredTypeNames: ['To'] }],
       '@typescript-eslint/no-empty-object-type': 'error',
       '@typescript-eslint/no-unsafe-function-type': 'error',
       '@typescript-eslint/no-wrapper-object-types': 'error',
@@ -33,6 +34,16 @@ export default tseslint.config(
       '@typescript-eslint/no-require-imports': 'off', // valid use-case: expo-image
       '@typescript-eslint/no-deprecated': 'off', // Needs decision. We can't have deprecated usages block the integration since we disallow warnings, but we do want to somehow track them.
       'func-style': ['error', 'declaration'],
+
+      // eslint rules moved from extension
+      '@typescript-eslint/no-floating-promises': ['error'],
+      '@typescript-eslint/no-unnecessary-type-assertion': ['error'],
+      // '@typescript-eslint/explicit-module-boundary-types': [0],
+      // '@typescript-eslint/no-unnecessary-type-constraint': ['off'],
+      // '@typescript-eslint/no-non-null-asserted-optional-chain': ['off'],
+      // '@typescript-eslint/no-unnecessary-condition': 'off',
+      '@typescript-eslint/method-signature-style': ['error', 'method'],
+      // 'no-warning-comments': [0],
     },
   },
   {

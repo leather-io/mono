@@ -37,7 +37,7 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
       const signedTx = await signStacksTransaction(unsignedTx);
 
       if (!signedTx) {
-        chrome.tabs.sendMessage(
+        void chrome.tabs.sendMessage(
           tabId,
           createRpcErrorResponse(method, {
             id: requestId,
@@ -56,7 +56,7 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
       // If the transaction is sponsored, we do not broadcast it
       const isSponsored = signedTx.auth?.authType === AuthType.Sponsored;
       if (isSponsored) {
-        chrome.tabs.sendMessage(
+        void chrome.tabs.sendMessage(
           tabId,
           createRpcSuccessResponse(method, {
             id: requestId,
@@ -80,7 +80,7 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
       async function onSuccess(txid: string, transaction: StacksTransactionWire) {
         onSetTransactionStatus('submitted');
 
-        chrome.tabs.sendMessage(
+        void chrome.tabs.sendMessage(
           tabId,
           createRpcSuccessResponse(method, {
             id: requestId,

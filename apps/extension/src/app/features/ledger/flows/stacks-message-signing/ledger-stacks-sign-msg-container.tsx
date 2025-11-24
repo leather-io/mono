@@ -130,7 +130,7 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       });
 
       await stacksApp.transport.close();
-    } catch (e) {
+    } catch {
       void ledgerNavigate.toDeviceDisconnectStep();
     }
   }

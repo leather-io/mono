@@ -20,6 +20,8 @@
     "lingui": "pnpm run lingui:extract && pnpm run lingui:compile",
     "lingui:compile": "lingui compile --typescript --strict",
     "lingui:extract": "lingui extract --clean --overwrite",
+    "lint": "eslint --cache --max-warnings 0",
+    "lint:fix": "pnpm lint --fix",
     "postinstall": "pnpm lingui:compile && if [ \"$PROVISION_MOBILE\" = \"true\" ]; then pnpm -w build:mobile; fi",
     "prebuild": "expo prebuild --clean",
     "preios": "pnpm run check:cocoapods",

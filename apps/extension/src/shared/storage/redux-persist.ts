@@ -38,7 +38,7 @@ class ExtensionStorage {
     return new Promise((resolve, reject) => {
       this.getDriver().set({ [key]: item }, () => {
         if (this.hasError()) {
-          return reject(this.getError());
+          return reject(new Error(this.getError()));
         }
         return resolve(true);
       });
@@ -49,7 +49,7 @@ class ExtensionStorage {
     return new Promise((resolve, reject) => {
       this.getDriver().get(key, (response: any) => {
         if (this.hasError()) {
-          return reject(this.getError());
+          return reject(new Error(this.getError()));
         }
         return resolve(response[key]);
       });
@@ -60,7 +60,7 @@ class ExtensionStorage {
     return new Promise((resolve, reject) => {
       this.getDriver().remove(key, () => {
         if (this.hasError()) {
-          return reject(this.getError());
+          return reject(new Error(this.getError()));
         }
         return resolve(true);
       });

@@ -22,7 +22,7 @@ import {
 } from 'redux-persist';
 import { PersistPartial } from 'redux-persist/es/persistReducer';
 
-import { persistConfig } from '@shared/storage/redux-pesist';
+import { persistConfig } from '@shared/storage/redux-persist';
 
 import { appPermissionsSlice } from './app-permissions/app-permissions.slice';
 import { stxChainSlice } from './chains/stx-chain.slice';
@@ -103,15 +103,22 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, AnyAction>;
+export type AppThunk<ReturnType = void> = ThunkAction<
+  Promise<ReturnType> | ReturnType,
+  RootState,
+  unknown,
+  AnyAction
+>;
 
-type AppDispatch = typeof store.dispatch & ((action: AppThunk) => void);
+type AppDispatch = typeof store.dispatch & ((action: AppThunk<Promise<void>>) => void);
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 
 export const storeAtom = atomWithStore(store);
 
-const selectHasRehydrated = (state: RootState & PersistPartial) => state._persist.rehydrated;
+function selectHasRehydrated(state: RootState & PersistPartial) {
+  return state._persist.rehydrated;
+}
 
 export function useHasStateRehydrated() {
   return useSelector(selectHasRehydrated);

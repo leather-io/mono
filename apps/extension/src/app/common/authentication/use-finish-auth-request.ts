@@ -62,7 +62,7 @@ export function useFinishAuthRequest() {
             },
           });
 
-          keyActions.switchAccount(accountIndex);
+          await keyActions.switchAccount(accountIndex);
           finalizeAuthResponse({
             decodedAuthRequest,
             authRequest,

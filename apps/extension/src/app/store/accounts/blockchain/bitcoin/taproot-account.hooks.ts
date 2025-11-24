@@ -105,11 +105,7 @@ export function useCurrentAccountTaprootSigner() {
 export function useUpdateLedgerSpecificTaprootInputPropsForAdddressIndexZero() {
   const createTaprootSigner = useCurrentAccountTaprootSigner();
 
-  return async (
-    tx: Psbt,
-    fingerprint: string,
-    inputsToUpdate: BitcoinInputSigningConfig[] = []
-  ) => {
+  return (tx: Psbt, fingerprint: string, inputsToUpdate: BitcoinInputSigningConfig[] = []) => {
     inputsToUpdate.forEach(({ index, derivationPath }) => {
       const taprootAddressIndexSigner = createTaprootSigner?.(
         extractAddressIndexFromPath(derivationPath)

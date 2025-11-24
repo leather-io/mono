@@ -17,7 +17,7 @@ export function validateRpcParams(obj: unknown, validator: z.ZodSchema) {
   try {
     validator.parse(obj);
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

@@ -6,6 +6,7 @@ declare module '*.svg' {
   export default content;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare const VERSION: string;
 
 interface QrOptions {

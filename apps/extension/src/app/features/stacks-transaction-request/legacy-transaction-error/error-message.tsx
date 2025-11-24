@@ -11,7 +11,12 @@ interface ErrorMessageProps {
   border?: string;
   borderColor?: string;
 }
-export const ErrorMessage = memo(({ border, title, body, actions }: ErrorMessageProps) => {
+export const ErrorMessage = memo(function ErrorMessage({
+  border,
+  title,
+  body,
+  actions,
+}: ErrorMessageProps) {
   return (
     <Stack
       bg="ink.background-primary"

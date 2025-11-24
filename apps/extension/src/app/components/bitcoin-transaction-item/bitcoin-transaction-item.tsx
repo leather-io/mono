@@ -48,18 +48,18 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
 
   if (!transaction) return null;
 
-  const onIncreaseFee = () => {
+  function onIncreaseFee() {
     void navigate(RouteUrls.IncreaseBtcFee, { state: { btcTx: transaction } });
-  };
+  }
 
-  const openTxLink = () => {
+  function openTxLink() {
     void analytics.track('view_bitcoin_transaction');
     if (inscriptionData) {
       openInNewTab(inscriptionData.id);
       return;
     }
     handleOpenTxLink({ txid: transaction?.txid || '' });
-  };
+  }
 
   const isOriginator = !isBitcoinTxInbound(bitcoinAddress, transaction);
   const isEnabled =

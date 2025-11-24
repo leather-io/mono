@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { AppContext } from '@common/context';
 import { stacksTestnetNetwork } from '@common/utils';
 import * as btc from '@scure/btc-signer';
 import { bytesToHex, hexToBytes } from '@stacks/common';
-import { PsbtData, PsbtRequestOptions } from '@stacks/connect-jwt';
+import { PsbtRequestOptions } from '@stacks/connect-jwt';
 import { useConnect } from '@stacks/connect-react-jwt';
 import { StacksNetwork } from '@stacks/network';
 import { styled } from 'leather-styles/jsx';
@@ -137,7 +136,6 @@ function buildTestNativeSegwitPsbtRequest(
   });
 
   const psbt = tx.toPSBT();
-  console.log(bytesToHex(psbt));
   // For testing mainnet
   // return { hex: tempHex };
   return { hex: bytesToHex(psbt), broadcast: true };
@@ -327,28 +325,25 @@ function buildTestTaprootPsbtRequestWithIndex(pubKey: Uint8Array): PsbtRequestOp
   return { hex: bytesToHex(psbt), signAtIndex: 2 };
 }
 
-export const Bitcoin = () => {
-  const { userData } = useContext(AppContext);
+export function Bitcoin() {
   const { signPsbt } = useConnect();
   const segwitPubKey = hexToBytes(TEST_TESTNET_ACCOUNT_1_PUBKEY_P2WPKH);
   const taprootPubKey = hexToBytes(TEST_TESTNET_ACCOUNT_1_PUBKEY_TR);
 
-  console.log('userData', userData);
-
-  const signTx = async (options: PsbtRequestOptions, network?: StacksNetwork) => {
+  async function signTx(options: PsbtRequestOptions, network?: StacksNetwork) {
     const defaultNetwork = stacksTestnetNetwork;
 
     await signPsbt({
       ...options,
       network: network ?? defaultNetwork,
-      onFinish: (data: PsbtData) => {
-        console.log('psbt', data);
+      onFinish: () => {
+        // Transaction completed successfully
       },
       onCancel: () => {
-        console.log('popup closed!');
+        // User cancelled the transaction
       },
     });
-  };
+  }
 
   return (
     <div
@@ -406,18 +401,17 @@ export const Bitcoin = () => {
         <styled.button
           mt={3}
           onClick={() => {
-            console.log('requesting');
             window.btc
               ?.request('sendTransfer', {
                 address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
                 amount: '10000',
                 network: 'testnet4',
               })
-              .then(resp => {
-                console.log({ sucesss: resp });
+              .then(() => {
+                // Transfer successful
               })
-              .catch(error => {
-                console.log({ error });
+              .catch(() => {
+                // Transfer failed
               });
           }}
         >
@@ -426,7 +420,6 @@ export const Bitcoin = () => {
         <styled.button
           mt={3}
           onClick={() => {
-            console.log('requesting');
             (window as any).LeatherProvider?.request('sendTransfer', {
               recipients: [
                 {
@@ -440,11 +433,11 @@ export const Bitcoin = () => {
               ],
               network: 'testnet4',
             })
-              .then((resp: any) => {
-                console.log({ sucesss: resp });
+              .then(() => {
+                // Transfer successful
               })
-              .catch((error: Error) => {
-                console.log({ error });
+              .catch(() => {
+                // Transfer failed
               });
           }}
         >
@@ -453,7 +446,6 @@ export const Bitcoin = () => {
         <styled.button
           mt={3}
           onClick={() => {
-            console.log('requesting');
             (window as any).LeatherProvider?.request('sendTransfer', {
               recipients: [
                 {
@@ -467,11 +459,11 @@ export const Bitcoin = () => {
               ],
               network: 'mainnet',
             })
-              .then((resp: any) => {
-                console.log({ sucesss: resp });
+              .then(() => {
+                // Transfer successful
               })
-              .catch((error: Error) => {
-                console.log({ error });
+              .catch(() => {
+                // Transfer failed
               });
           }}
         >
@@ -480,7 +472,6 @@ export const Bitcoin = () => {
         <styled.button
           mt={3}
           onClick={() => {
-            console.log('requesting');
             (window as any).LeatherProvider?.request('sendTransfer', {
               recipients: [
                 {
@@ -494,11 +485,11 @@ export const Bitcoin = () => {
               ],
               network: 'mainnet',
             })
-              .then((resp: any) => {
-                console.log({ sucesss: resp });
+              .then(() => {
+                // Transfer successful
               })
-              .catch((error: Error) => {
-                console.log({ error });
+              .catch(() => {
+                // Transfer failed
               });
           }}
         >
@@ -507,7 +498,6 @@ export const Bitcoin = () => {
         <styled.button
           mt={3}
           onClick={() => {
-            console.log('requesting');
             (window as any).LeatherProvider?.request('sendTransfer', {
               recipients: [
                 {
@@ -520,11 +510,11 @@ export const Bitcoin = () => {
                 },
               ],
             })
-              .then((resp: any) => {
-                console.log({ sucesss: resp });
+              .then(() => {
+                // Transfer successful
               })
-              .catch((error: Error) => {
-                console.log({ error });
+              .catch(() => {
+                // Transfer failed
               });
           }}
         >
@@ -533,4 +523,4 @@ export const Bitcoin = () => {
       </div>
     </div>
   );
-};
+}

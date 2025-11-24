@@ -44,7 +44,7 @@ test.describe('RPC: stx_deployContract', () => {
   function initiateSip30RpcDeployContract(page: Page) {
     return async (params: RpcParams<typeof stxDeployContract>) =>
       page.evaluate(
-        async params =>
+        params =>
           (window as any).LeatherProvider.request('stx_deployContract', {
             ...params,
           }).catch((e: unknown) => e),

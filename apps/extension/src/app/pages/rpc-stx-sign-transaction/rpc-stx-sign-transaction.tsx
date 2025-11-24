@@ -81,7 +81,7 @@ export function RpcStxSignTransaction() {
     const signedTransaction = await signStacksTx(unsignedTxForBroadcast);
 
     if (!signedTransaction) {
-      chrome.tabs.sendMessage(
+      void chrome.tabs.sendMessage(
         tabId,
         createRpcErrorResponse('stx_signTransaction', {
           id: requestId,
@@ -94,7 +94,7 @@ export function RpcStxSignTransaction() {
       throw new Error('Error signing stacks transaction');
     }
 
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       tabId,
       createRpcSuccessResponse('stx_signTransaction', {
         id: requestId,

@@ -32,7 +32,7 @@ export const sendTransferHandler = defineRpcRequestHandler(
     if (isUndefined(request.params)) {
       void trackRpcRequestError({ endpoint: 'sendTransfer', error: 'Undefined parameters' });
 
-      chrome.tabs.sendMessage(
+      void chrome.tabs.sendMessage(
         getTabIdFromPort(port),
         createRpcErrorResponse('sendTransfer', {
           id: request.id,
@@ -50,7 +50,7 @@ export const sendTransferHandler = defineRpcRequestHandler(
     if (!validateRpcSendTransferParams(params)) {
       void trackRpcRequestError({ endpoint: 'sendTransfer', error: 'Invalid parameters' });
 
-      chrome.tabs.sendMessage(
+      void chrome.tabs.sendMessage(
         getTabIdFromPort(port),
         createRpcErrorResponse('sendTransfer', {
           id: request.id,

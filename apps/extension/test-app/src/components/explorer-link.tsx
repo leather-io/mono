@@ -9,7 +9,7 @@ interface LinkProps {
   skipConfirmCheck?: boolean;
 }
 
-export const ExplorerLink: React.FC<LinkProps> = ({ txId, text }) => {
+export function ExplorerLink({ txId, text }: LinkProps) {
   let id = txId.replace('"', '');
   if (!id.startsWith('0x') && !id.includes('.')) {
     id = `0x${id}`;
@@ -22,4 +22,4 @@ export const ExplorerLink: React.FC<LinkProps> = ({ txId, text }) => {
       </Link>
     </Box>
   );
-};
+}

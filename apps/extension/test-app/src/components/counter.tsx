@@ -5,7 +5,7 @@ import { Box, styled } from 'leather-styles/jsx';
 import { CounterActions } from './counter-actions';
 import { ExplorerLink } from './explorer-link';
 
-export const Counter = () => {
+export function Counter() {
   return (
     <Box py={6}>
       <styled.h2>Counter smart contract</styled.h2>
@@ -21,4 +21,4 @@ export const Counter = () => {
       <CounterActions />
     </Box>
   );
-};
+}

@@ -34,7 +34,7 @@ async function handleRpcSignStacksMessage(
 ) {
   if (isUndefined(request.params)) {
     void trackRpcRequestError({ endpoint: method, error: 'Undefined parameters' });
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       getTabIdFromPort(port),
       createRpcErrorResponse(method, {
         id: request.id,
@@ -46,7 +46,7 @@ async function handleRpcSignStacksMessage(
 
   if (!validateRpcSignStacksMessageParams(request.params)) {
     void trackRpcRequestError({ endpoint: method, error: 'Invalid parameters' });
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       getTabIdFromPort(port),
       createRpcErrorResponse(method, {
         id: request.id,

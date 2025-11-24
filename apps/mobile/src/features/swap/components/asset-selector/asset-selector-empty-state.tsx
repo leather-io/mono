@@ -14,7 +14,7 @@ const emptyStateHeightRatio = '55%';
 
 interface AssetSelectorEmptyStateProps {
   isPerformingSearch: boolean;
-  onClearSearch: () => void;
+  onClearSearch(): void;
   type: 'base' | 'target';
   selectedBaseAsset: AccountSwapAsset | null;
 }

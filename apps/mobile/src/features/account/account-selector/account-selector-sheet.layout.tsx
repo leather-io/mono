@@ -22,8 +22,8 @@ import { PortfolioHeader } from '../components/portfolio-header';
 
 interface AccountSelectorSheetLayoutProps {
   accounts: Account[];
-  onAccountPress: (account: Account) => void;
-  swapAccountIndexes: (from: number, to: number) => void;
+  onAccountPress(account: Account): void;
+  swapAccountIndexes(from: number, to: number): void;
   sheetRef: SheetRef;
 }
 

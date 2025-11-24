@@ -60,7 +60,7 @@ export async function rpcMessageHandler(request: RpcRequests, port: chrome.runti
 
   if (handler) return await handler(request, port);
 
-  chrome.tabs.sendMessage(
+  void chrome.tabs.sendMessage(
     getTabIdFromPort(port),
     createRpcErrorResponse(request.method, {
       id: request.id,

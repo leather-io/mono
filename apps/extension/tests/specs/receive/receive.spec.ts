@@ -7,7 +7,7 @@ test.describe('Receive Dialog', () => {
     await homePage.goToReceiveDialog();
   });
 
-  test('That the Receive dialog renders and shows the correct assets', async ({ homePage }) => {
+  test('That the Receive dialog renders and shows the correct assets', ({ homePage }) => {
     test.expect(homePage.page.getByText('CHOOSE ASSET TO RECEIVE')).toBeTruthy();
     test.expect(homePage.page.getByText('Tokens')).toBeTruthy();
     test.expect(homePage.page.getByText('Collectibles')).toBeTruthy();

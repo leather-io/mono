@@ -5,7 +5,7 @@ import { RunesAvatarIcon } from '@leather.io/ui/native';
 
 interface RunesTokenBalanceProps {
   item: RuneBalance;
-  onPress?: () => void;
+  onPress?(): void;
 }
 export function RunesTokenBalance({ item, onPress }: RunesTokenBalanceProps) {
   return (

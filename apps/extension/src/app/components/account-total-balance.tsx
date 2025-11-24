@@ -12,7 +12,9 @@ interface AccountTotalBalanceProps {
   accountIndex: number;
 }
 
-export const AccountTotalBalance = memo(({ accountIndex }: AccountTotalBalanceProps) => {
+export const AccountTotalBalance = memo(function AccountTotalBalance({
+  accountIndex,
+}: AccountTotalBalanceProps) {
   const accountTotalBalance = useAccountTotalBalance(accountIndex);
 
   if (accountTotalBalance.state !== 'loading' && !accountTotalBalance.value) return null;

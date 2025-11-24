@@ -28,6 +28,6 @@ interface FinalizePsbtArgs {
 }
 export function finalizePsbt({ data, requestPayload, tabId }: FinalizePsbtArgs) {
   const responseMessage = formatPsbtResponse({ request: requestPayload, response: data });
-  chrome.tabs.sendMessage(tabId, responseMessage);
+  void chrome.tabs.sendMessage(tabId, responseMessage);
   closeWindow();
 }

@@ -57,7 +57,7 @@ export function AccountActions() {
         void navigate(url);
       },
       popup() {
-        openIndexPageInNewTab(url);
+        void openIndexPageInNewTab(url);
         closeWindow();
       },
     })();

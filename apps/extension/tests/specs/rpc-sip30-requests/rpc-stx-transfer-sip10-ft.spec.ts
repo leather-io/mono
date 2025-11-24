@@ -45,7 +45,7 @@ test.describe('RPC: stx_transferSip10Ft', () => {
   function initiateSip30RpcTransferSip10Ft(page: Page) {
     return async (params: RpcParams<typeof stxTransferSip10Ft>) =>
       page.evaluate(
-        async params =>
+        params =>
           (window as any).LeatherProvider.request('stx_transferSip10Ft', {
             ...params,
           }).catch((e: unknown) => e),

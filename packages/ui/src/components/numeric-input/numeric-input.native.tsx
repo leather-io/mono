@@ -13,13 +13,13 @@ const repeatRate = 150;
 
 export interface NumericInputProps {
   value: number;
-  onChange: (value: number) => void;
+  onChange(value: number): void;
   step?: number;
   min?: number;
   max?: number;
   longPressStep?: number;
   disabled?: boolean;
-  formatter?: (value: number, decimals?: number) => string;
+  formatter?(value: number, decimals?: number): string;
   children: ReactNode;
 }
 
@@ -166,7 +166,7 @@ function Decrement(props: ButtonProps) {
 }
 
 export interface DisplayProps extends TextProps {
-  formatter?: (value: number, decimals?: number) => string;
+  formatter?(value: number, decimals?: number): string;
 }
 
 function Display({ formatter: customFormatter, ...textProps }: DisplayProps) {

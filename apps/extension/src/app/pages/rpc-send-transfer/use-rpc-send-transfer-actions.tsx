@@ -53,7 +53,7 @@ export function useRpcSendTransferActions() {
       try {
         const feeRate = selectedFee?.feeRate;
         if (!feeRate) return logger.error('No fee rate to generate tx');
-        const resp = await generateTx({ amount, recipients }, feeRate, utxos);
+        const resp = generateTx({ amount, recipients }, feeRate, utxos);
         if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
 
         const tx = await signTransaction(resp.psbt);
@@ -71,7 +71,7 @@ export function useRpcSendTransferActions() {
               amount: amount.amount.toNumber(),
             });
 
-            chrome.tabs.sendMessage(
+            void chrome.tabs.sendMessage(
               tabId ?? 0,
               createRpcSuccessResponse('sendTransfer', {
                 id: requestId,

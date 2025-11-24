@@ -17,7 +17,7 @@ export function ConnectLedgerButton({ chain }: ConnectLedgerButtonProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const onClick = () => {
+  function onClick() {
     void navigate(`${chain}/connect-your-ledger`, {
       replace: true,
       state: {
@@ -26,7 +26,7 @@ export function ConnectLedgerButton({ chain }: ConnectLedgerButtonProps) {
         fromLocation: location,
       },
     });
-  };
+  }
 
   return (
     <Button variant="outline" size="md" onClick={onClick}>

@@ -189,7 +189,7 @@ export function Settings({
                       location: 'settings-menu',
                     });
                     void analytics.identify(undefined, { hasVisitedFullPageMode: true });
-                    openIndexPageInNewTab(location.pathname);
+                    void openIndexPageInNewTab(location.pathname);
                   }}
                 >
                   <Flag img={<ExpandIcon />} textStyle="label.02" width="100%">

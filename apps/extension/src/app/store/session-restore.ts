@@ -26,7 +26,7 @@ export async function restoreWalletSession() {
       const secretKey = await decrypt(currentKey.encryptedSecretKey, key.encryptionKey);
       store.dispatch(inMemoryKeyActions.setDefaultKey(secretKey));
     }
-  } catch (e) {
+  } catch {
     logger.error('Failed to decrypt secret key');
   }
 }

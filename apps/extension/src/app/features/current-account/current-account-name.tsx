@@ -18,7 +18,7 @@ function AccountNameTitle({ children, ...props }: HasChildren & BoxProps) {
   );
 }
 
-const AccountNameSuspense = memo((props: BoxProps) => {
+const AccountNameSuspense = memo(function AccountNameSuspense(props: BoxProps) {
   const { data: name = 'Account' } = useCurrentAccountDisplayName();
   // FIXME: The name is truncated here with JS but we could just use CSS to do this
   const nameCharLimit = 18;

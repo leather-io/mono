@@ -1,6 +1,8 @@
 import { RouteUrls } from './route-urls';
 
-const isArrayUnique = (arr: string[]) => Array.isArray(arr) && new Set(arr).size === arr.length;
+function isArrayUnique(arr: string[]) {
+  return Array.isArray(arr) && new Set(arr).size === arr.length;
+}
 
 describe('RouteUrls', () => {
   it('has all unique route paths', () => {

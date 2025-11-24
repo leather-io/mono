@@ -84,7 +84,7 @@ export function useGenerateUnsignedStacksTransaction() {
       return generateUnsignedTransaction({
         ...options,
         fee: stxToMicroStx(values.fee).toNumber(),
-        nonce: Number(values.nonce) ?? nextNonce?.nonce,
+        nonce: values.nonce ? Number(values.nonce) : nextNonce?.nonce,
       });
     },
     [nextNonce?.nonce, stacksTxBaseState]
@@ -134,7 +134,7 @@ export function useSignStacksTransaction() {
         void ledgerNavigate.toConnectAndSignStacksTransactionStep(serializedTx);
         return listenForStacksTxLedgerSigning(serializedTx);
       },
-      async software(tx: StacksTransactionWire) {
+      software(tx: StacksTransactionWire) {
         return signSoftwareTx(tx);
       },
     })(tx);

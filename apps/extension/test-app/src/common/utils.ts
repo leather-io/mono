@@ -8,11 +8,13 @@ dayjs.extend(relativeTime);
 const testnetUrl = 'https://api.testnet.hiro.so/';
 const localhostUrl = 'http://localhost:3999';
 
-export const getRPCClient = () => {
+export function getRPCClient() {
   return new RPCClient(testnetUrl);
-};
+}
 
-export const toRelativeTime = (ts: number): string => dayjs().to(ts);
+export function toRelativeTime(ts: number): string {
+  return dayjs().to(ts);
+}
 
 export const stacksTestnetNetwork = new StacksTestnet({ url: testnetUrl });
 

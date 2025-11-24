@@ -9,18 +9,22 @@ function messageForSecondsPassed(waitingMessages: WaitingMessages, seconds: numb
   return waitingMessages[seconds];
 }
 
-export const useWaitingMessage = (
+export function useWaitingMessage(
   waitingMessages: WaitingMessages,
   { waitingMessageInterval } = {
     waitingMessageInterval: 1000,
   }
-): [boolean, string, () => void, () => void] => {
+): [boolean, string, () => void, () => void] {
   const [isRunning, setIsRunning] = useState(false);
   const [waitingMessage, setWaitingMessage] = useState(messageForSecondsPassed(waitingMessages, 0));
   const handlers = useMemo(
     () => ({
-      startWaitingMessage: () => setIsRunning(true),
-      stopWaitingMessage: () => setIsRunning(false),
+      startWaitingMessage() {
+        setIsRunning(true);
+      },
+      stopWaitingMessage() {
+        setIsRunning(false);
+      },
     }),
     []
   );
@@ -37,4 +41,4 @@ export const useWaitingMessage = (
   );
 
   return [isRunning, waitingMessage, handlers.startWaitingMessage, handlers.stopWaitingMessage];
-};
+}

@@ -45,9 +45,9 @@ function SendButtonSuspense() {
   );
 }
 
-const SendButtonFallback = memo(() => (
-  <IconButton label="Send" icon={<PaperPlaneIcon />} disabled />
-));
+const SendButtonFallback = memo(function SendButtonFallback() {
+  return <IconButton label="Send" icon={<PaperPlaneIcon />} disabled />;
+});
 
 export function SendButton() {
   return (

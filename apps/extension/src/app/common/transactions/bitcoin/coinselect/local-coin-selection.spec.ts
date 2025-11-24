@@ -41,7 +41,6 @@ describe(determineUtxosForSpend.name, () => {
         ],
         feeRate: 20,
       });
-      console.log(estimation);
       expect(estimation.txVBytes).toBeGreaterThan(140);
       expect(estimation.txVBytes).toBeLessThan(142);
     });
@@ -57,7 +56,6 @@ describe(determineUtxosForSpend.name, () => {
         ],
         feeRate: 20,
       });
-      console.log(estimation);
       expect(estimation.txVBytes).toBeGreaterThan(208);
       expect(estimation.txVBytes).toBeLessThan(209);
     });

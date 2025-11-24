@@ -3,8 +3,9 @@ import * as yup from 'yup';
 
 import { isString } from '@leather.io/utils';
 
-const exceedsMaxLengthBytes = (string: string, maxLengthBytes: number): boolean =>
-  string ? Buffer.from(string).length > maxLengthBytes : false;
+function exceedsMaxLengthBytes(string: string, maxLengthBytes: number): boolean {
+  return string ? Buffer.from(string).length > maxLengthBytes : false;
+}
 
 function isTxMemoValid(memo: string) {
   return !exceedsMaxLengthBytes(memo, MEMO_MAX_LENGTH_BYTES);

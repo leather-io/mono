@@ -38,7 +38,7 @@ import { Box, Button, SheetInstance, Text } from '@leather.io/ui/native';
 interface SwapReviewScreenProps {
   swapStateResult: UseSwapStateResult;
   liveEstimate: LiveSwapEstimate;
-  onGoBack: () => void;
+  onGoBack(): void;
 }
 
 export function SwapReviewScreen({

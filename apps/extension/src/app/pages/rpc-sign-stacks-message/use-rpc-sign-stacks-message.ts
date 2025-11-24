@@ -92,7 +92,7 @@ export function useRpcSignStacksMessage() {
 
   const { isLoading, signMessage } = useSignStacksMessage({
     onSignMessageCompleted(messageSignature) {
-      chrome.tabs.sendMessage(
+      void chrome.tabs.sendMessage(
         tabId,
         createRpcSuccessResponse('stx_signMessage', {
           id: requestId,
@@ -110,7 +110,7 @@ export function useRpcSignStacksMessage() {
   function onCancelMessageSigning() {
     if (!requestId || !tabId) return;
     void analytics.track('request_signature_cancel');
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       tabId,
       createRpcErrorResponse('stx_signMessage', {
         id: requestId,

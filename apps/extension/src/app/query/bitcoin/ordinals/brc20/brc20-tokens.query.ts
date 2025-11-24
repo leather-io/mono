@@ -117,12 +117,14 @@ export function useGetBrc20TokensQuery({
     staleTime: 5 * 60 * 1000,
   });
 
+  const { hasNextPage, fetchNextPage, data } = query;
+
   // Auto-trigger next request
   useEffect(() => {
-    if (query.hasNextPage) {
-      void query.fetchNextPage();
+    if (hasNextPage) {
+      void fetchNextPage();
     }
-  }, [query, query.data]);
+  }, [data, hasNextPage, fetchNextPage]);
 
   return query;
 }

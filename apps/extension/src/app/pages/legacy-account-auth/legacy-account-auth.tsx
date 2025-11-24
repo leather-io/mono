@@ -36,7 +36,9 @@ export function LegacyAccountAuth() {
 
   const cancelAuthentication = useCancelAuthRequest();
 
-  const handleUnmount = async () => cancelAuthentication();
+  function handleUnmount() {
+    return cancelAuthentication();
+  }
   useOnMount(() => window.addEventListener('beforeunload', handleUnmount));
 
   async function signIntoAccount(index: number) {

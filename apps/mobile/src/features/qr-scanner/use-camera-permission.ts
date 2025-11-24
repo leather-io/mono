@@ -5,7 +5,7 @@ import { t } from '@lingui/core/macro';
 import { PermissionStatus, useCameraPermissions as useExpoCameraPermissions } from 'expo-camera';
 
 interface UseCameraPermissionProps {
-  onDenied?: () => void;
+  onDenied?(): void;
 }
 
 export function useCameraPermission({ onDenied = showCameraAlert }: UseCameraPermissionProps = {}) {

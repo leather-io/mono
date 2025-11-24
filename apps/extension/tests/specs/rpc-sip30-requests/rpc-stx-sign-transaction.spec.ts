@@ -47,7 +47,7 @@ test.describe('RPC: stx_signTransaction', () => {
   function initiateTxSigningLeatherFormat(page: Page) {
     return async (txHex: string) =>
       page.evaluate(
-        async txHex =>
+        txHex =>
           (window as any).LeatherProvider.request('stx_signTransaction', {
             txHex,
             network: 'mainnet',
@@ -59,7 +59,7 @@ test.describe('RPC: stx_signTransaction', () => {
   function initiateTxSigningSip30Format(page: Page) {
     return async (hex: string) =>
       page.evaluate(
-        async transaction =>
+        transaction =>
           (window as any).LeatherProvider.request('stx_signTransaction', { transaction }).catch(
             (e: unknown) => e
           ),

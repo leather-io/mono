@@ -7,13 +7,13 @@ interface TransactionTypeIconWrapperProps extends CircleProps {
   icon: ReactNode;
 }
 export function TransactionTypeIconWrapper({
-  bg,
+  bg = 'stacks',
   icon,
   ...props
 }: TransactionTypeIconWrapperProps) {
   return (
     <Circle
-      bg="stacks"
+      bg={bg}
       border="background"
       bottom="-2px"
       color="ink.background-primary"

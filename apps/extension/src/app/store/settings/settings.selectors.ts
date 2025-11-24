@@ -10,7 +10,9 @@ import { RootState } from '@app/store';
 
 import { settingsSlice } from './settings.slice';
 
-const selectSettings = (state: RootState) => state.settings;
+function selectSettings(state: RootState) {
+  return state.settings;
+}
 
 const selectUserSelectedTheme = createSelector(selectSettings, state => state.userSelectedTheme);
 

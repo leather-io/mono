@@ -2,7 +2,7 @@ import SbtcAvatarIconSrc from '@assets/avatars/sbtc-avatar-icon.png';
 import { HStack } from 'leather-styles/jsx';
 
 import { Avatar, Caption, Link, Title } from '@leather.io/ui';
-import { satToBtc, truncateMiddle } from '@leather.io/utils';
+import { noop, satToBtc, truncateMiddle } from '@leather.io/utils';
 
 import { analytics } from '@shared/utils/analytics';
 
@@ -62,7 +62,7 @@ export function SbtcDepositTransactionItem({ deposit }: SbtcDepositTransactionIt
 
   return (
     <TransactionItemLayout
-      openTxLink={!depositFailed ? openTxLink : () => {}}
+      openTxLink={!depositFailed ? openTxLink : noop}
       txCaption={truncateMiddle(bitcoinTxid, 4)}
       txIcon={<Avatar fallback="ST" image={SbtcAvatarIconSrc} />}
       txStatus={

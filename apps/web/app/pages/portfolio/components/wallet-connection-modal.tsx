@@ -10,7 +10,7 @@ interface WalletActionItemProps extends FlagProps {
   img: React.ReactElement;
   description: string;
   buttonText: string;
-  onButtonClick?: () => void;
+  onButtonClick?(): void;
 }
 
 function WalletActionItem({

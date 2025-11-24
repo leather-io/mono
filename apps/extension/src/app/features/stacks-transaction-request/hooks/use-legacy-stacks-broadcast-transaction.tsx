@@ -123,7 +123,9 @@ export function useStacksBroadcastTransaction({
         // TODO: Maybe better error handling here?
         if (!signedTx) return;
         return await broadcastTransactionAction(signedTx);
-      } catch (e) {}
+      } catch {
+        // Errors are handled elsewhere
+      }
     }
 
     return {

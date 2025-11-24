@@ -15,8 +15,8 @@ export function ConnectLedgerStart() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const pageModeRoutingAction = (url: string) =>
-    whenPageMode({
+  function pageModeRoutingAction(url: string) {
+    return whenPageMode({
       full() {
         void navigate(url, {
           replace: true,
@@ -24,10 +24,11 @@ export function ConnectLedgerStart() {
         });
       },
       popup() {
-        openIndexPageInNewTab(url);
+        void openIndexPageInNewTab(url);
         closeWindow();
       },
     });
+  }
 
   function connectChain(chain: string) {
     const supportsWebUsbAction = pageModeRoutingAction(
@@ -37,7 +38,7 @@ export function ConnectLedgerStart() {
       RouteUrls.Onboarding + '/' + RouteUrls.LedgerUnsupportedBrowser
     );
 
-    doesBrowserSupportWebUsbApi() ? supportsWebUsbAction() : doesNotSupportWebUsbAction();
+    return doesBrowserSupportWebUsbApi() ? supportsWebUsbAction() : doesNotSupportWebUsbAction();
   }
 
   return (

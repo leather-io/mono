@@ -27,7 +27,7 @@ export function IncreaseFeeField({ initialFee }: IncreaseFeeFieldProps): React.J
   }, [modified, value, initialFee]);
 
   const onSelectMultiplier = useCallback(
-    async (multiplier: number) => {
+    (multiplier: number) => {
       if (!initialFee) return;
       setModified(multiplier !== 1);
       setValue('fee', microStxToStx(initialFee * multiplier).toNumber());

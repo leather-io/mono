@@ -17,7 +17,7 @@ import { type StyledComponent, isCssProperty, styled } from 'leather-styles/jsx'
 type Props = Record<string, unknown>;
 interface Recipe {
   (props?: Props): Props;
-  splitVariantProps: (props: Props) => [Props, Props];
+  splitVariantProps(props: Props): [Props, Props];
 }
 type Slot<R extends Recipe> = keyof ReturnType<R>;
 interface Options {

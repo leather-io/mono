@@ -10,7 +10,8 @@ import { ErrorLabel } from '@app/components/error-label';
 interface EditNonceFieldProps extends StackProps {
   onBlur(): void;
 }
-export const EditNonceField = memo((props: EditNonceFieldProps) => {
+
+export const EditNonceField = memo(function EditNonceField(props: EditNonceFieldProps) {
   const { onBlur } = props;
   const [field, meta, helpers] = useField('nonce');
 

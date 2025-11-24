@@ -74,7 +74,7 @@ export function deriveAnalyticsIdentifier(publicKey: Uint8Array) {
   return base58.encode(ripemd160(sha256(publicKey)).slice(0, 8));
 }
 
-export async function identifyUser(publicKey: Uint8Array) {
+export function identifyUser(publicKey: Uint8Array) {
   return analytics.identify(deriveAnalyticsIdentifier(publicKey));
 }
 
@@ -136,7 +136,7 @@ export function initSentry() {
       'Network request failed',
     ],
     environment: WALLET_ENVIRONMENT,
-    async beforeSend(event) {
+    beforeSend(event) {
       delete event.user?.ip_address;
       delete event.extra?.ip_address;
 

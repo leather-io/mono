@@ -26,14 +26,14 @@ export function useSponsorTransactionFees() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const checkEligibilityForSponsor = async (baseTx: TransactionBase) => {
+  async function checkEligibilityForSponsor(baseTx: TransactionBase) {
     return await verifySponsoredSbtcTransaction({
       apiUrl: sponsorshipApiUrl,
       baseTx,
       nonce: Number(baseTx.options.nonce),
       fee: defaultFeesMaxValuesAsMoney[FeeTypes.Middle].amount.toNumber(),
     });
-  };
+  }
 
   const submitSponsoredTx = useCallback(
     async (unsignedSponsoredTx: StacksTransactionWire) => {

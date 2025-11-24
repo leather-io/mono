@@ -31,7 +31,6 @@ export function useAuth() {
   }, [userSession]);
 
   const onFinish = useCallback(({ userSession, authResponse }) => {
-    console.log({ userSession, authResponse });
     const userData = userSession.loadUserData();
     setAppPrivateKey(userSession.loadUserData().appPrivateKey);
     setAuthResponse(authResponse);
@@ -39,7 +38,7 @@ export function useAuth() {
   }, []);
 
   const onCancel = useCallback(() => {
-    console.log('popup closed!');
+    // Handle cancel logic here if needed
   }, []);
 
   useEffect(() => {

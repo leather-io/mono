@@ -20,10 +20,10 @@ export interface BuildRecipientSuggestionsParams {
   accounts: Account[];
   canSelfSend: boolean;
   activity: SendAssetActivity[];
-  findAccountByAddress: (address: string) => Account | null;
-  getAddressByAccount: (fingerprint: string, accountIndex: number) => string | null;
-  performBnsLookup: (name: string) => Promise<string | null>;
-  validateAddress: (value: string) => Promise<boolean>;
+  findAccountByAddress(address: string): Account | null;
+  getAddressByAccount(fingerprint: string, accountIndex: number): string | null;
+  performBnsLookup(name: string): Promise<string | null>;
+  validateAddress(value: string): Promise<boolean>;
   currentAccount: AccountId;
 }
 
@@ -66,8 +66,8 @@ export async function buildRecipientSuggestions({
 interface PerformSearchParams {
   searchTerm: string;
   staticEntries: RecipientSuggestionEntry[];
-  performBnsLookup: (name: string) => Promise<string | null>;
-  validateAddress: (value: string) => Promise<boolean>;
+  performBnsLookup(name: string): Promise<string | null>;
+  validateAddress(value: string): Promise<boolean>;
 }
 
 async function performSearch({
@@ -100,7 +100,7 @@ async function performSearch({
 
 interface GetRecentsParams {
   activity: SendAssetActivity[];
-  findAccountByAddress: (address: string) => Account | null;
+  findAccountByAddress(address: string): Account | null;
 }
 
 export function getRecents({
@@ -129,7 +129,7 @@ export function getRecents({
 
 interface GetAccountsParams {
   accounts: Account[];
-  getAddressByAccount: (fingerprint: string, accountIndex: number) => string | null;
+  getAddressByAccount(fingerprint: string, accountIndex: number): string | null;
   canSelfSend: boolean;
   currentAccount: AccountId;
 }

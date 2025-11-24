@@ -14,7 +14,7 @@ export function getBitcoinFee(determineUtxosForFeeArgs: DetermineUtxosForSpendAr
   try {
     const { fee } = determineUtxosForSpend(determineUtxosForFeeArgs);
     return createMoney(fee, 'BTC');
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -23,7 +23,7 @@ export function getBitcoinSendMaxFee(determineUtxosForFeeArgs: DetermineUtxosFor
   try {
     const { fee } = determineUtxosForSpendAll(determineUtxosForFeeArgs);
     return createMoney(fee, 'BTC');
-  } catch (error) {
+  } catch {
     return null;
   }
 }

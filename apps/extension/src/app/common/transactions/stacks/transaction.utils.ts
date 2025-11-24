@@ -224,7 +224,7 @@ export function getContractAddressFromContractCallPayload(payload: ContractCallP
 export function safeAddressToString(address: string) {
   try {
     return addressToString(createAddress(address));
-  } catch (error) {
+  } catch {
     return null;
   }
 }

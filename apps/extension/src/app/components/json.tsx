@@ -7,7 +7,7 @@ import { isBigInt, isTypedArray } from '@leather.io/utils';
 export function parseJson(content: string) {
   try {
     return JSON.stringify(JSON.parse(content), null, 2);
-  } catch (e) {
+  } catch {
     return content;
   }
 }

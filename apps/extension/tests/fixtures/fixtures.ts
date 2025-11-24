@@ -29,6 +29,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * https://playwright.dev/docs/chrome-extensions
  */
 export const test = base.extend<TestFixtures>({
+  // Playwright always needs object destructuring for fixtures https://github.com/microsoft/playwright/issues/14590
+  // eslint-disable-next-line no-empty-pattern
   context: async ({}, use) => {
     const pathToExtension = path.join(__dirname, '../../dist');
     const context = await chromium.launchPersistentContext('', {

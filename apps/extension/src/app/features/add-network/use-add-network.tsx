@@ -125,7 +125,7 @@ export function useAddNetwork() {
         const bitcoinMempool = await bitcoinResponse.json();
         if (!Array.isArray(bitcoinMempool))
           throw new Error('Unable to fetch mempool from bitcoin node');
-      } catch (error) {
+      } catch {
         setError('Unable to fetch mempool from bitcoin node');
         setLoading(false);
         return;
@@ -136,7 +136,7 @@ export function useAddNetwork() {
         const stacksResponse = await fetchFn(`${stacksPath}/v2/info`);
         stacksChainInfo = await stacksResponse?.json();
         if (!stacksChainInfo) throw new Error('Unable to fetch info from stacks node');
-      } catch (error) {
+      } catch {
         setError('Unable to fetch info from stacks node');
         setLoading(false);
         return;

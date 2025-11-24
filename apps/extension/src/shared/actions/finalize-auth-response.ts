@@ -41,6 +41,6 @@ export function finalizeAuthResponse({
   }
 
   const responseMessage = formatAuthResponse({ request: authRequest, response: authResponse });
-  chrome.tabs.sendMessage(tabId, responseMessage);
+  void chrome.tabs.sendMessage(tabId, responseMessage);
   closeWindow();
 }

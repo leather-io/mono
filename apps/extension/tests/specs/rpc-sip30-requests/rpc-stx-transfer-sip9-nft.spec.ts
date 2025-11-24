@@ -44,7 +44,7 @@ test.describe('RPC: stx_transferSip9Nft', () => {
   function initiateSip30RpcTransferSip9Nft(page: Page) {
     return async (params: RpcParams<typeof stxTransferSip9Nft>) =>
       page.evaluate(
-        async params =>
+        params =>
           (window as any).LeatherProvider.request('stx_transferSip9Nft', {
             ...params,
           }).catch((e: unknown) => e),

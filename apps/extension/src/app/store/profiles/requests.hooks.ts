@@ -21,7 +21,7 @@ export function useIsProfileUpdateRequestValid() {
         appDomain: origin,
       });
       return !!payload;
-    } catch (e) {
+    } catch {
       return false;
     }
   }, [accounts, requestToken, origin]).result;

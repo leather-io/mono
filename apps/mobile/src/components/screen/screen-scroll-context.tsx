@@ -8,7 +8,7 @@ import { usePathname } from 'expo-router';
 
 type ScreenScrollContextValue = ReturnType<typeof useScreenScroll> & {
   scrollRef: AnimatedRef<any>;
-  registerScrollTarget: () => void;
+  registerScrollTarget(): void;
 };
 
 const ScreenScrollContext = createContext<ScreenScrollContextValue | null>(null);

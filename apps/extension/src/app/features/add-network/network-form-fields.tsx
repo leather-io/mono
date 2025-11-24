@@ -18,6 +18,7 @@ import {
   SelectItemLayout,
   Title,
 } from '@leather.io/ui';
+import { assertUnreachable } from '@leather.io/utils';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
 
@@ -93,6 +94,8 @@ export function NetworkFormFields({ isEditNetworkMode }: NetworkFormFieldsProps)
         setStacksUrl('https://api.testnet.hiro.so');
         setBitcoinUrl('https://mempool.space/testnet/api');
         break;
+      default:
+        assertUnreachable(value);
     }
   }
 

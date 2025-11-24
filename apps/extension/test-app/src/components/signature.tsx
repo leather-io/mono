@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { stacksTestnetNetwork as network, stacksTestnetNetwork } from '@common/utils';
 import { sha256 } from '@noble/hashes/sha256';
@@ -39,7 +38,7 @@ declare global {
   }
 }
 
-export const Signature = () => {
+export function Signature() {
   const [signature, setSignature] = useState<SignatureData | undefined>();
   const [signatureStructured, setSignatureStructured] = useState<SignatureData | undefined>();
   const [signatureIsVerified, setSignatureIsVerified] = useState<boolean | undefined>();
@@ -106,13 +105,13 @@ export const Signature = () => {
     setSignatureIsVerified(verified);
   }, [signatureStructured, currentStructuredData]);
 
-  const clearState = () => {
+  function clearState() {
     setSignatureIsVerified(undefined);
     setSignature(undefined);
     setSignatureStructured(undefined);
-  };
+  }
 
-  const signMessage = async (message: string, network?: StacksNetwork) => {
+  async function signMessage(message: string, network?: StacksNetwork) {
     clearState();
     setCurrentMessage(message);
     const defaultNetwork = stacksTestnetNetwork;
@@ -120,16 +119,15 @@ export const Signature = () => {
       network: network ?? defaultNetwork,
       message,
       onFinish: (sigObj: SignatureData) => {
-        console.log('signature from debugger', sigObj);
         setSignature(sigObj);
       },
       onCancel: () => {
-        console.log('popup closed!');
+        // User cancelled signing
       },
     });
-  };
+  }
 
-  const signMessageRpc = async (message: string) => {
+  async function signMessageRpc(message: string) {
     if (!window.LeatherProvider) throw new Error('LeatherProvider not found');
 
     clearState();
@@ -140,15 +138,11 @@ export const Signature = () => {
       messageType: 'utf8',
     });
 
-    const isValid = verifyMessageSignatureRsv({
+    verifyMessageSignatureRsv({
       ...result.result,
       message: hashMessage(message),
     });
-
-    console.log('Is message valid', isValid);
-
-    console.log('signature from rpc', result);
-  };
+  }
 
   const domain = tupleCV({
     name: stringAsciiCV('hiro.so'),
@@ -156,28 +150,25 @@ export const Signature = () => {
     'chain-id': uintCV(1),
   });
 
-  const signStructure = async (message: ClarityValue, domain: TupleCV) => {
-    console.log('signStructure', message, domain);
+  async function signStructure(message: ClarityValue, domain: TupleCV) {
     clearState();
 
     setCurrentStructuredData({ message, domain });
-    console.log('signStructure', message, domain);
     await signStructuredData({
       /* network: stacksMainnetNetwork, */
       network,
       message,
       domain,
       onFinish: (sigObj: SignatureData) => {
-        console.log('signature from debugger', sigObj);
         setSignatureStructured(sigObj);
       },
       onCancel: () => {
-        console.log('popup closed!');
+        // User cancelled signing
       },
     });
-  };
+  }
 
-  const signStructureRpc = async (message: ClarityValue, domain: TupleCV) => {
+  async function signStructureRpc(message: ClarityValue, domain: TupleCV) {
     if (!window.LeatherProvider) throw new Error('LeatherProvider not found');
 
     clearState();
@@ -194,7 +185,7 @@ export const Signature = () => {
     });
 
     setSignatureStructured(result.result);
-  };
+  }
 
   const sip18Test = [
     {
@@ -259,4 +250,4 @@ export const Signature = () => {
       </styled.button>
     </Box>
   );
-};
+}

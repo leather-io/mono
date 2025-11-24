@@ -60,7 +60,7 @@ export function listenForPopupClose({ id, tabId, response }: ListenForPopupClose
   chrome.windows.onRemoved.addListener(winId => {
     if (winId !== id || !tabId) return;
     const responseMessage = response;
-    chrome.tabs.sendMessage(tabId, responseMessage);
+    void chrome.tabs.sendMessage(tabId, responseMessage);
   });
 }
 
@@ -95,7 +95,7 @@ interface ListenForOriginTabCloseArgs {
 export function listenForOriginTabClose({ tabId }: ListenForOriginTabCloseArgs) {
   chrome.tabs.onRemoved.addListener(closedTabId => {
     if (tabId !== closedTabId) return;
-    sendMessage({ method: InternalMethods.OriginatingTabClosed, payload: { tabId } });
+    void sendMessage({ method: InternalMethods.OriginatingTabClosed, payload: { tabId } });
   });
 }
 
@@ -158,7 +158,7 @@ export function validateRequestParams({
 }: ValidateRequestParamsArgs): { status: ValidationResult } {
   if (isUndefined(params)) {
     void trackRpcRequestError({ endpoint: method, error: RpcErrorMessage.UndefinedParams });
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       getTabIdFromPort(port),
       createRpcErrorResponse(method, {
         id,
@@ -171,7 +171,7 @@ export function validateRequestParams({
   if (!validateRpcParams(params, schema)) {
     void trackRpcRequestError({ endpoint: method, error: RpcErrorMessage.InvalidParams });
 
-    chrome.tabs.sendMessage(
+    void chrome.tabs.sendMessage(
       getTabIdFromPort(port),
       createRpcErrorResponse(method, {
         id,

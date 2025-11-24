@@ -6,9 +6,9 @@ export interface NumericInputContextValue {
   min: number;
   max: number;
   disabled?: boolean;
-  formatter: (value: number, decimals?: number) => string;
-  handlePressIn: (direction: 'increment' | 'decrement') => void;
-  handlePressOut: () => void;
+  formatter(value: number, decimals?: number): string;
+  handlePressIn(direction: 'increment' | 'decrement'): void;
+  handlePressOut(): void;
 }
 
 export const NumericInputContext = createContext<NumericInputContextValue | null>(null);

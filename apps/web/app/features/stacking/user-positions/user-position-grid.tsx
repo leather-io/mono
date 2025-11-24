@@ -28,9 +28,9 @@ interface UserPositionGridProps {
   nextReward?: string;
   rewardTokenIcon?: React.ReactNode;
   rewardTokenSymbol?: string;
-  onViewDetails?: () => void;
-  onIncrease?: () => void;
-  onStopPooling?: () => void;
+  onViewDetails?(): void;
+  onIncrease?(): void;
+  onStopPooling?(): void;
 }
 
 export function UserPositionGrid({

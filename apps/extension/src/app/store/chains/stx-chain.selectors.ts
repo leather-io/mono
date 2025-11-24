@@ -2,7 +2,9 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { RootState } from '@app/store';
 
-export const selectStacksChain = (state: RootState) => state.chains.stx;
+export function selectStacksChain(state: RootState) {
+  return state.chains.stx;
+}
 
 export const selectHighestAccountIndex = createSelector(
   selectStacksChain,

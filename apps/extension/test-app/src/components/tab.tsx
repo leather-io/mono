@@ -6,7 +6,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export const InactiveTab: React.FC<Props> = ({ children }) => {
+export function InactiveTab({ children }: Props) {
   return (
     <Box
       color="ink.text-subdued"
@@ -19,9 +19,9 @@ export const InactiveTab: React.FC<Props> = ({ children }) => {
       {children}
     </Box>
   );
-};
+}
 
-export const ActiveTab: React.FC<Props> = ({ children }) => {
+export function ActiveTab({ children }: Props) {
   return (
     <Box
       color="ink.text-primary"
@@ -34,15 +34,15 @@ export const ActiveTab: React.FC<Props> = ({ children }) => {
       {children}
     </Box>
   );
-};
+}
 
 interface TabProps extends Props {
   active: boolean;
 }
 
-export const Tab: React.FC<TabProps> = ({ active, ...rest }) => {
+export function Tab({ active, ...rest }: TabProps) {
   if (active) {
     return <ActiveTab {...rest} />;
   }
   return <InactiveTab {...rest} />;
-};
+}

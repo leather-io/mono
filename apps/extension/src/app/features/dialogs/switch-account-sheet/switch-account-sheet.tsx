@@ -20,7 +20,10 @@ interface SwitchAccountSheetProps {
   onClose(): void;
 }
 
-export const SwitchAccountSheet = memo(({ isShowing, onClose }: SwitchAccountSheetProps) => {
+export const SwitchAccountSheet = memo(function SwitchAccountSheet({
+  isShowing,
+  onClose,
+}: SwitchAccountSheetProps) {
   const currentAccountIndex = useCurrentAccountIndex();
   const createAccount = useCreateAccount();
   const { whenWallet } = useWalletType();
@@ -29,10 +32,10 @@ export const SwitchAccountSheet = memo(({ isShowing, onClose }: SwitchAccountShe
   const btcAddressesNum = bitcoinAccounts.length / 2;
   const stacksAddressesNum = stacksAccounts.length;
 
-  const onCreateAccount = () => {
-    createAccount();
+  async function onCreateAccount() {
+    await createAccount();
     onClose();
-  };
+  }
 
   if (isShowing && stacksAddressesNum === 0 && btcAddressesNum === 0) {
     return <AccountListUnavailable />;
@@ -75,7 +78,7 @@ export const SwitchAccountSheet = memo(({ isShowing, onClose }: SwitchAccountShe
               borderTop="default"
               p="space.05"
             >
-              <Button fullWidth onClick={() => onCreateAccount()} data-testid="create-account-btn">
+              <Button fullWidth onClick={onCreateAccount} data-testid="create-account-btn">
                 Create new account
               </Button>
             </Flex>

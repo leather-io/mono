@@ -3,7 +3,7 @@ import { makeUUID4, nextMonth } from '@stacks/common';
 import { publicKeyToBtcAddress } from '@stacks/encryption';
 import base64url from 'base64url';
 
-export async function makeLedgerCompatibleUnsignedAuthResponsePayload({
+export function makeLedgerCompatibleUnsignedAuthResponsePayload({
   dataPublicKey,
   profile = {},
   expiresAt = nextMonth().getTime(),
@@ -11,7 +11,7 @@ export async function makeLedgerCompatibleUnsignedAuthResponsePayload({
   dataPublicKey: string;
   profile: any;
   expiresAt?: number;
-}): Promise<string> {
+}): string {
   const address = publicKeyToBtcAddress(dataPublicKey);
 
   const payload = {

@@ -42,7 +42,7 @@ export function useSendInscriptionFeesList({
         });
 
         return tx?.txFee;
-      } catch (error) {
+      } catch {
         return null;
       }
     },

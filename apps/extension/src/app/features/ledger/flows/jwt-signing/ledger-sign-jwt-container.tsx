@@ -67,7 +67,7 @@ export function LedgerSignJwtContainer() {
 
   const chain = 'stacks';
 
-  const signJwtPayload = async () => {
+  async function signJwtPayload() {
     if (!origin) throw new Error('Cannot sign payload for unknown origin');
 
     if (accountIndex === null) {
@@ -129,7 +129,7 @@ export function LedgerSignJwtContainer() {
       void ledgerNavigate.toConnectionSuccessStep('stacks');
       await delay(1000);
 
-      const authResponsePayload = await makeLedgerCompatibleUnsignedAuthResponsePayload({
+      const authResponsePayload = makeLedgerCompatibleUnsignedAuthResponsePayload({
         dataPublicKey: account.dataPublicKey,
         profile: {
           stxAddress: {
@@ -154,7 +154,7 @@ export function LedgerSignJwtContainer() {
       void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
       const authResponse = addSignatureToAuthResponseJwt(authResponsePayload, resp.signatureDER);
       await delay(600);
-      keyActions.switchAccount(accountIndex);
+      await keyActions.switchAccount(accountIndex);
 
       finalizeAuthResponse({
         decodedAuthRequest,
@@ -163,12 +163,12 @@ export function LedgerSignJwtContainer() {
         requestingOrigin: origin,
         tabId,
       });
-    } catch (e) {
+    } catch {
       void ledgerNavigate.toDeviceDisconnectStep();
     } finally {
       await stacks.transport.close();
     }
-  };
+  }
 
   const onCancelConnectLedger = ledgerNavigate.cancelLedgerAction;
 

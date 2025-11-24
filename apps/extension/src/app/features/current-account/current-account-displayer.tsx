@@ -24,13 +24,7 @@ export function CurrentAccountDisplayer({ onSelectAccount }: CurrentAccountDispl
       withChevron
       accountAddresses={<AccountAddresses index={index} />}
       accountName={<AccountNameLayout isLoading={false}>{name}</AccountNameLayout>}
-      avatar={
-        <AccountAvatarItem
-          index={index}
-          publicKey={stacksAccount?.stxPublicKey || ''}
-          name={name}
-        />
-      }
+      avatar={<AccountAvatarItem index={index} publicKey={stacksAccount?.stxPublicKey || ''} />}
       balanceLabel={
         // Hack to center element without adjusting AccountListItemLayout
         <Box pos="relative" top={12}>

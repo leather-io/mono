@@ -10,11 +10,11 @@ export function useOnOriginTabClose(handler: () => void) {
   const { tabId } = useDefaultRequestParams();
 
   useEffect(() => {
-    const messageHandler = (
+    function messageHandler(
       message: BackgroundMessages,
       _sender: chrome.runtime.MessageSender,
       sendResponse: () => void
-    ) => {
+    ) {
       if (message.method !== InternalMethods.OriginatingTabClosed) return;
 
       if (message.payload.tabId === tabId) {
@@ -22,7 +22,7 @@ export function useOnOriginTabClose(handler: () => void) {
         void analytics.track('requesting_origin_tab_closed_with_pending_action');
       }
       sendResponse();
-    };
+    }
 
     chrome.runtime.onMessage.addListener(messageHandler);
 

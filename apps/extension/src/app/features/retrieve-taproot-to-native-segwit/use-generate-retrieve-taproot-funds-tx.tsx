@@ -35,7 +35,7 @@ export function useGenerateRetrieveTaprootFundsTx() {
   }, [feeRates, uninscribedUtxos.length]);
 
   const generateRetrieveTaprootFundsTx = useCallback(
-    async ({ recipient, fee }: { recipient: string; fee: Money }) => {
+    ({ recipient, fee }: { recipient: string; fee: Money }) => {
       const tx = new btc.Transaction();
       const totalAmount = sumNumbers(uninscribedUtxos.map(utxo => utxo.value));
 
@@ -55,8 +55,8 @@ export function useGenerateRetrieveTaprootFundsTx() {
         });
       });
 
-      const zeroInscriptionCheckResults = await Promise.all(
-        uninscribedUtxos.map(utxo => getNumberOfInscriptionOnUtxo(utxo.txid, utxo.vout))
+      const zeroInscriptionCheckResults = uninscribedUtxos.map(utxo =>
+        getNumberOfInscriptionOnUtxo(utxo.txid, utxo.vout)
       );
 
       if (!zeroInscriptionCheckResults.every(inscriptionCount => inscriptionCount === 0)) {

@@ -11,6 +11,7 @@ import {
 } from '@stacks/transactions';
 
 import { getPostCondition } from '@leather.io/stacks';
+import { assertUnreachable } from '@leather.io/utils';
 
 import { stacksValue } from '@app/common/stacks-utils';
 
@@ -19,43 +20,43 @@ import { stacksValue } from '@app/common/stacks-utils';
 // These were used with legacy tx requests, so we have to keep them
 // until we are able to remove that code entirely.
 
-export const getIconStringFromPostCondition = (
+export function getIconStringFromPostCondition(
   pc: STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire
-) => {
+) {
   if (pc.conditionType === PostConditionType.Fungible)
-    return `${addressToString(pc.asset.address)}.${pc.asset.contractName}.${
+    return `${addressToString(pc.asset.address)}.${pc.asset.contractName.content}.${
       pc.asset.assetName.content
     }`;
   if (pc.conditionType === PostConditionType.STX) return 'STX';
   return pc.asset.assetName.content;
-};
+}
 
-export const getAmountFromPostCondition = (
+export function getAmountFromPostCondition(
   pc: STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire
-) => {
+) {
   if (pc.conditionType === PostConditionType.Fungible) return pc.amount.toString();
   if (pc.conditionType === PostConditionType.STX)
     return stacksValue({ value: pc.amount.toString(), withTicker: false });
   return '';
-};
+}
 
-export const getSymbolFromPostCondition = (
+export function getSymbolFromPostCondition(
   pc: STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire
-) => {
+) {
   if ('asset' in pc) {
     return pc.asset.assetName.content.slice(0, 3).toUpperCase();
   }
   return 'STX';
-};
+}
 
-export const getNameFromPostCondition = (
+export function getNameFromPostCondition(
   pc: STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire
-) => {
+) {
   if ('asset' in pc) {
     return pc.asset.assetName.content;
   }
   return 'STX';
-};
+}
 
 export function getPostConditionCodeMessage(
   code: FungibleConditionCode | NonFungibleConditionCode,
@@ -77,6 +78,8 @@ export function getPostConditionCodeMessage(
       return `${sender} will transfer`;
     case NonFungibleConditionCode.DoesNotSend:
       return `${sender} will keep or receive`;
+    default:
+      assertUnreachable(code);
   }
 }
 
@@ -118,7 +121,7 @@ export function handlePostConditions(
   });
 }
 
-const getTitleFromConditionCode = (code: FungibleConditionCode | NonFungibleConditionCode) => {
+function getTitleFromConditionCode(code: FungibleConditionCode | NonFungibleConditionCode) {
   switch (code) {
     case FungibleConditionCode.Equal:
       return 'will transfer exactly';
@@ -137,10 +140,10 @@ const getTitleFromConditionCode = (code: FungibleConditionCode | NonFungibleCond
     default:
       return '';
   }
-};
+}
 
-export const getPostConditionTitle = (
+export function getPostConditionTitle(
   pc: STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire
-) => {
+) {
   return getTitleFromConditionCode(pc.conditionCode) || '';
-};
+}

@@ -239,7 +239,7 @@ export class BtcSizeFeeEstimator {
         inputSize = this.P2TR_IN_SIZE;
         inputWitnessSize = 65; // getSizeOfletInt(schnorrSignature) + schnorrSignature
         break;
-      case 'p2sh':
+      case 'p2sh': {
         redeemScriptSize =
           1 + // OP_M
           this.params.input_n * (1 + this.PUBKEY_SIZE) + // OP_PUSH33 <pubkey>
@@ -252,6 +252,7 @@ export class BtcSizeFeeEstimator {
           redeemScriptSize;
         inputSize = 32 + 4 + this.getSizeOfletInt(scriptSigSize) + scriptSigSize + 4;
         break;
+      }
       case 'p2sh-p2wsh':
       case 'p2wsh':
         redeemScriptSize =
@@ -271,6 +272,9 @@ export class BtcSizeFeeEstimator {
         if (this.params.input_script === 'p2sh-p2wsh') {
           inputSize += 32 + 3; // P2SH wrapper (redeemscript hash) + overhead?
         }
+        break;
+      default:
+        break;
     }
 
     return {

@@ -20,7 +20,7 @@ export function SwapForm<T extends BaseSwapContext<T>>({ children }: HasChildren
   async function onReviewSwap(values: SwapFormValues) {
     onSetIsPreparingSwapReview(true);
     const data = await onSubmitSwapForReview({ values, swapData, isSendingMax });
-    data && onSetSwapData(data);
+    if (data) onSetSwapData(data);
     onSetIsPreparingSwapReview(false);
     swapNavigate(
       constructSwapRoute({

@@ -4,7 +4,7 @@ import { isValidUrl } from '@shared/utils/urls';
 export function openInNewTab(url: string) {
   if (!isValidUrl(url)) return;
   // Only place window.open may be called
-  // eslint-disable-next-line no-restricted-properties
+
   const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
   if (newWindow) newWindow.opener = null;
 }

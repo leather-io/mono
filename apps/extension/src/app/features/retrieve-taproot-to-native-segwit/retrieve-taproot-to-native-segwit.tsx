@@ -34,7 +34,7 @@ export function RetrieveTaprootToNativeSegwit() {
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
 
   async function handleBroadcastRetrieveBitcoinTx() {
-    const tx = await generateRetrieveTaprootFundsTx({ recipient, fee });
+    const tx = generateRetrieveTaprootFundsTx({ recipient, fee });
     await broadcastTx({
       tx,
       async onSuccess() {

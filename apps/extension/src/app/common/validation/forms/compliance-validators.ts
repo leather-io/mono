@@ -19,7 +19,7 @@ export function complianceValidator(
       try {
         const resp = await checkEntityAddressIsCompliant(value);
         return !resp.isOnSanctionsList;
-      } catch (e) {
+      } catch {
         return true;
       }
     },

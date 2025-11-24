@@ -42,6 +42,8 @@ export async function internalBackgroundMessageHandler(
     case InternalMethods.AddressMonitorUpdated:
       await syncAddressMonitor(message.payload.addresses);
       break;
+    default:
+      break;
   }
 
   if (message.method.includes('bitcoinKeys/signOut')) {

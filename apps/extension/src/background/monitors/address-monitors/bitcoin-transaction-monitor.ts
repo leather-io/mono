@@ -22,7 +22,7 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
   let _ws: WebSocket | null = null;
   let _addresses: MonitoredAddress[];
   let _keepAliveInterval: NodeJS.Timeout | null = null;
-  let _btcPriceUsd: number = 0;
+  let _btcPriceUsd = 0;
 
   _addresses = filterAddresses(addresses);
 
@@ -95,15 +95,15 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
 
     _ws = new WebSocket('wss://leather.mempool.space/api/v1/ws');
 
-    _ws.onopen = async () => {
+    _ws.onopen = () => {
       logTxMonitorEvent('Connected to Mempool WebSocket');
       sendWsTrackAddressSubscribe();
       startKeepAlive();
       fetchBtcPrice();
     };
 
-    _ws.onmessage = async event => {
-      await handleMessageEvent(event);
+    _ws.onmessage = event => {
+      handleMessageEvent(event);
     };
 
     _ws.onerror = error => {
@@ -131,16 +131,16 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
       });
   }
 
-  async function handleMessageEvent(event: MessageEvent<any>) {
+  function handleMessageEvent(event: MessageEvent<any>) {
     const message = JSON.parse(event.data);
     if (message['multi-address-transactions']) {
-      await handleTransactionMessage(message);
+      handleTransactionMessage(message);
     } else if (message['conversions']) {
       _btcPriceUsd = readMempooWsBtcPriceUsd(message['conversions']);
     }
   }
 
-  async function handleTransactionMessage(msg: MempoolWsBitcoinTxMessage) {
+  function handleTransactionMessage(msg: MempoolWsBitcoinTxMessage) {
     try {
       for (const address of Object.keys(msg['multi-address-transactions'])
         .filter(address => msg['multi-address-transactions'][address].confirmed.length > 0) // only confirmed transactions
@@ -153,7 +153,7 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
         if (result.satValue > 0) {
           const btcValue = result.satValue / 100_000_000;
           const usdValue = btcValue * _btcPriceUsd;
-          await sendNotification(
+          sendNotification(
             `You ${result.isSender ? 'sent' : 'received'} Bitcoin!`,
             `Account ${address.accountIndex + 1} ${result.isSender ? 'sent' : 'received'} ${btcValue} BTC ($${usdValue.toFixed(2)})`
           );
@@ -164,7 +164,7 @@ export function createBitcoinTransactionMonitor(addresses: MonitoredAddress[]): 
     }
   }
 
-  async function sendNotification(title: string, message: string) {
+  function sendNotification(title: string, message: string) {
     const iconUrl = chrome.runtime.getURL('assets/icons/leather-icon-128.png');
     chrome.notifications.create({
       type: 'basic',

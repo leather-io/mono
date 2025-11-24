@@ -18,7 +18,9 @@ import {
   transformNetworkStateToMultichainStucture,
 } from './networks.utils';
 
-const selectNetworksSlice = (state: RootState) => state.networks;
+function selectNetworksSlice(state: RootState) {
+  return state.networks;
+}
 
 const networksSelectors = networksAdapter.getSelectors<RootState>(selectNetworksSlice);
 

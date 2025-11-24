@@ -16,7 +16,7 @@ export function cvToDisplay(cv: ClarityValue): string {
 export function chainIdToDisplay(chainIdCv: ClarityValue): string {
   if (chainIdCv.type !== ClarityType.UInt) return '';
   const chainIdString = cvToString(chainIdCv);
-  const chainId = parseInt(chainIdString.replace('u', ''));
+  const chainId = parseInt(chainIdString.replace('u', ''), 10);
   if (!Object.values(ChainId).includes(chainId)) return '';
   return capitalize(stacksChainIdToCoreNetworkMode(chainId));
 }

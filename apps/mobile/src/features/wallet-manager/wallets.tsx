@@ -7,8 +7,8 @@ import { WalletStore } from '@leather.io/state/wallet';
 
 interface WalletListLayoutProps {
   wallets: WalletStore[];
-  onRemoveWallet: (fingerprint: string) => void;
-  onCreateNewAccount: (fingerprint: string) => void;
+  onRemoveWallet(fingerprint: string): void;
+  onCreateNewAccount(fingerprint: string): void;
   renderAccount(fingerprint: string): ReactNode;
 }
 export function WalletListLayout({

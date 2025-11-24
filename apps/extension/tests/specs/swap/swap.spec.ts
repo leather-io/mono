@@ -17,7 +17,7 @@ test.describe('Swaps', () => {
     await swapPage.waitForSwapPageReady();
   });
 
-  test('that it defaults to swapping STX', async ({ swapPage }) => {
+  test('that it defaults to swapping STX', ({ swapPage }) => {
     test.expect(swapPage.page.getByText('STX')).toBeTruthy();
   });
 

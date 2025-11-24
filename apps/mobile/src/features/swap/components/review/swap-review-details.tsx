@@ -63,7 +63,7 @@ export function SwapReviewDetailRow({ label, value, info }: SwapReviewDetailRowP
 
 interface SwapReviewDetailToggleProps {
   label: string;
-  onPress: () => void;
+  onPress(): void;
 }
 
 export function SwapReviewDetailToggle({ label, onPress }: SwapReviewDetailToggleProps) {

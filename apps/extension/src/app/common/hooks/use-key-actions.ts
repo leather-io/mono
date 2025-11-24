@@ -5,7 +5,7 @@ import { generateSecretKey } from '@stacks/wallet-sdk';
 import { logger } from '@shared/logger';
 import { InternalMethods } from '@shared/message-types';
 import { sendMessage } from '@shared/messages';
-import { clearChromeStorage } from '@shared/storage/redux-pesist';
+import { clearChromeStorage } from '@shared/storage/redux-persist';
 import { analytics } from '@shared/utils/analytics';
 
 import { queryClient } from '@app/common/persistence';
@@ -33,14 +33,14 @@ export function useKeyActions() {
 
   return useMemo(
     () => ({
-      async setPassword(password: string) {
+      setPassword(password: string) {
         return dispatch(
           keyActions.setWalletEncryptionPassword({ password, stxClient, btcClient, bnsV2Client })
         );
       },
 
       generateWalletKey() {
-        if (!!defaultKeyDetails) {
+        if (defaultKeyDetails) {
           logger.warn('Cannot generate new wallet when wallet already exists');
           return;
         }
@@ -48,16 +48,16 @@ export function useKeyActions() {
         return dispatch(inMemoryKeyActions.generateWalletKey(secretKey));
       },
 
-      async unlockWallet(password: string) {
+      unlockWallet(password: string) {
         return dispatch(keyActions.unlockWalletAction(password));
       },
 
       switchAccount(accountIndex: number) {
-        sendMessage({ method: InternalMethods.AccountChanged, payload: { accountIndex } });
+        void sendMessage({ method: InternalMethods.AccountChanged, payload: { accountIndex } });
         return dispatch(switchAccount(accountIndex));
       },
 
-      async createNewAccount() {
+      createNewAccount() {
         return dispatch(createNewAccount());
       },
 
