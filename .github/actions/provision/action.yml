@@ -14,6 +14,7 @@ runs:
         version: '10.18.3+sha512.bbd16e6d7286fd7e01f6b3c0b3c932cda2965c06a908328f74663f10a9aea51f1129eea615134bf992831b009eabe167ecb7008b597f40ff9bc75946aadfb08d'
 
     - name: Set up node
+      id: setup-node
       uses: actions/setup-node@v4
       with:
         node-version: 22
@@ -21,6 +22,7 @@ runs:
         cache: 'pnpm'
 
     - name: Install dependencies
+      if: steps.setup-node.outputs.cache-hit != 'true'
       env:
         PROVISION_MOBILE: ${{ inputs.PROVISION_MOBILE }}
       run: pnpm install --ignore-scripts
