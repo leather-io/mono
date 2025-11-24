@@ -7,3 +7,6 @@ export const MAX_SLIPPAGE_PERCENTAGE = 0.1;
 export const PER_DEX_FEE_PERCENTAGE = 0.003;
 
 export const STX_SAFETY_BUFFER = createMoney(500_000, 'STX');
+
+export const PRICE_IMPACT_WARNING_THRESHOLD = 0.03;
+export const PRICE_IMPACT_DANGER_THRESHOLD = 0.1;

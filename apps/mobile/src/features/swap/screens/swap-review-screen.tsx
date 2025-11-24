@@ -1,47 +1,187 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
+import { FeesInfoSheet } from '@/features/swap/components/fees-info-sheet';
+import { MinReceiveInfoSheet } from '@/features/swap/components/min-receive-info-sheet';
+import { PriceImpactInfoSheet } from '@/features/swap/components/price-impact-info-sheet';
+import { PriceImpactValue } from '@/features/swap/components/review/price-impact-value';
+import { SwapReviewAccountDetails } from '@/features/swap/components/review/swap-review-account-details';
+import {
+  SwapReviewDetailRow,
+  SwapReviewDetailToggle,
+  SwapReviewDetails,
+  SwapReviewDivider,
+} from '@/features/swap/components/review/swap-review-details';
+import { SwapReviewEmptyState } from '@/features/swap/components/review/swap-review-empty-state';
+import { SwapReviewErrorState } from '@/features/swap/components/review/swap-review-error-state';
+import { SwapReviewFooter } from '@/features/swap/components/review/swap-review-footer';
+import { SwapReviewLoadingState } from '@/features/swap/components/review/swap-review-loading-state';
+import { SwapReviewSummary } from '@/features/swap/components/review/swap-review-summary';
+import { SlippageInfoSheet } from '@/features/swap/components/slippage-info-sheet';
 import { SlippageSelectorSheet } from '@/features/swap/components/slippage-selector/slippage-selector-sheet';
-import { LiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
+import { LiveSwapEstimate, matchLiveEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
 import { UseSwapStateResult } from '@/features/swap/swap-state/swap-state.types';
+import { PRICE_IMPACT_WARNING_THRESHOLD } from '@/features/swap/swap-state/swap.constants';
+import { formatSwapRate, sumFeesInQuoteCurrency } from '@/features/swap/swap.utils';
+import { useAndroidBackHandler } from '@/hooks/use-android-back-handler';
+import { formatCurrency, formatPercentage } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
+import { captureMessage } from '@sentry/react-native';
+import BigNumber from 'bignumber.js';
+import { isNonNullish } from 'remeda';
 
-import { Box, SheetInstance } from '@leather.io/ui/native';
+import { Button, SheetInstance, Text } from '@leather.io/ui/native';
 
 interface SwapReviewScreenProps {
   swapStateResult: UseSwapStateResult;
   liveEstimate: LiveSwapEstimate;
-  onPressBack: () => void;
+  onGoBack: () => void;
 }
 
-export function SwapReviewScreen({ swapStateResult, onPressBack }: SwapReviewScreenProps) {
-  const slippageSheetRef = useRef<SheetInstance>(null);
-
-  function handleBackPress() {
-    onPressBack();
-  }
-
-  if (!swapStateResult.quoteQuery.data?.selected) {
-    return null;
-  }
+export function SwapReviewScreen({
+  swapStateResult,
+  liveEstimate,
+  onGoBack,
+}: SwapReviewScreenProps) {
+  useAndroidBackHandler(onGoBack);
+  useSwapReviewGuard(liveEstimate, onGoBack);
 
   return (
     <FullHeightSheetLayout
       header={
         <FullHeightSheetHeader
-          title={t`Confirm Swap`}
-          leftElement={<HeaderBackButton onPress={handleBackPress} />}
+          title={t`Review Swap`}
+          leftElement={<HeaderBackButton onPress={onGoBack} />}
         />
       }
     >
-      <Box flex={1} px="5"></Box>
+      {matchLiveEstimate(liveEstimate, {
+        idle: () => null,
+        loading: () => <SwapReviewLoadingState />,
+        error: liveEstimate => <SwapReviewErrorState onRetry={liveEstimate.refetch} />,
+        empty: () => <SwapReviewEmptyState onBack={onGoBack} />,
+        success: liveEstimate => (
+          <SwapReviewContent liveEstimate={liveEstimate} swapStateResult={swapStateResult} />
+        ),
+      })}
+    </FullHeightSheetLayout>
+  );
+}
+
+interface SwapReviewContentProps {
+  swapStateResult: UseSwapStateResult;
+  liveEstimate: Extract<LiveSwapEstimate, { status: 'success' }>;
+}
+
+function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentProps) {
+  const slippageSheetRef = useRef<SheetInstance>(null);
+  const { state } = swapStateResult;
+  const { selectedQuote, fees } = liveEstimate;
+  const {
+    baseAsset,
+    targetAsset,
+    swapRate,
+    slippageApplicable,
+    minReceive,
+    priceImpactPercentage,
+  } = selectedQuote;
+  const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
+  const showPriceImpact = shouldShowPriceImpact(priceImpactPercentage);
+
+  return (
+    <>
+      <SwapReviewSummary
+        baseAsset={selectedQuote.baseAsset}
+        targetAsset={selectedQuote.targetAsset}
+        baseAmount={selectedQuote.baseAmount}
+        targetAmount={selectedQuote.targetAmount}
+      />
+
+      <SwapReviewDetails>
+        <SwapReviewAccountDetails />
+
+        <SwapReviewDivider />
+
+        <SwapReviewDetailRow
+          label={t`Rate`}
+          value={formatSwapRate({ swapRate, baseAsset, targetAsset })}
+        />
+
+        {slippageApplicable && (
+          <SwapReviewDetailRow
+            label={t`Slippage`}
+            value={
+              <SwapReviewDetailToggle
+                label={formatPercentage(state.slippage)}
+                onPress={() => slippageSheetRef.current?.present()}
+              />
+            }
+            info={<SlippageInfoSheet />}
+          />
+        )}
+
+        {isNonNullish(minReceive) && (
+          <SwapReviewDetailRow
+            label={t`Min. receive`}
+            value={formatCurrency(minReceive)}
+            info={<MinReceiveInfoSheet />}
+          />
+        )}
+
+        {showPriceImpact && (
+          <SwapReviewDetailRow
+            label={t`Price impact`}
+            value={<PriceImpactValue value={priceImpactPercentage} />}
+            info={<PriceImpactInfoSheet />}
+          />
+        )}
+
+        <SwapReviewDivider />
+
+        <SwapReviewDetailRow
+          label={t`Estimated fees`}
+          value={formatCurrency(totalFees)}
+          info={<FeesInfoSheet fees={fees} provider={selectedQuote.provider} />}
+        />
+      </SwapReviewDetails>
+
+      <SwapReviewFooter>
+        <Text
+          variant="caption01"
+          textAlign="center"
+          color="ink.text-subdued"
+        >{t`Make sure everything looks correct.\nConfirmed transactions cannot be undone.`}</Text>
+        <Button disabled onPress={swapStateResult.execute}>{t`Confirm`}</Button>
+      </SwapReviewFooter>
+
       <SlippageSelectorSheet
         ref={slippageSheetRef}
         value={swapStateResult.state.slippage}
         onSave={swapStateResult.actions.setSlippage}
       />
-    </FullHeightSheetLayout>
+    </>
+  );
+}
+
+function useSwapReviewGuard(liveEstimate: LiveSwapEstimate, onExit: () => void) {
+  useEffect(() => {
+    if (liveEstimate.status === 'idle') {
+      captureMessage('Swap review screen reached with idle estimate state', {
+        level: 'warning',
+        tags: { swap: 'review' },
+      });
+      onExit();
+    }
+  }, [liveEstimate.status, onExit]);
+}
+
+function shouldShowPriceImpact(
+  priceImpactPercentage: BigNumber | null
+): priceImpactPercentage is BigNumber {
+  return (
+    isNonNullish(priceImpactPercentage) &&
+    priceImpactPercentage.isGreaterThanOrEqualTo(PRICE_IMPACT_WARNING_THRESHOLD)
   );
 }
