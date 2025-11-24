@@ -1,11 +1,7 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { AccountRequest } from '@leather.io/services';
 
-import { AccountRequest, getAccountBalancesService } from '@leather.io/services';
+import { useGetAccountTotalBalanceQuery as useSharedGetAccountTotalBalanceQuery } from '@leather.io/features';
 
 export function useGetAccountTotalBalanceQuery(request: AccountRequest) {
-  return useQuery({
-    queryKey: ['account-balances-service-get-total-balance', request],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getAccountBalancesService().getTotalBalance(request, signal),
-  });
+  return useSharedGetAccountTotalBalanceQuery(request, {});
 }

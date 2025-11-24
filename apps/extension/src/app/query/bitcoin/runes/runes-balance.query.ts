@@ -1,11 +1,11 @@
-import { type QueryFunctionContext, keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData } from '@tanstack/react-query';
+
+import { type AccountRequest, type RuneBalance } from '@leather.io/services';
+import { isSameAsset } from '@leather.io/utils';
 
 import {
-  type AccountRequest,
-  type RuneBalance,
-  getRunesBalancesService,
-} from '@leather.io/services';
-import { isSameAsset } from '@leather.io/utils';
+  useGetRunesAccountBalanceQuery as useSharedGetRunesAccountBalanceQuery,
+} from '@leather.io/features';
 
 import { balanceQueryOptionsWithRefetch } from '@app/query/common/balance-query-options';
 import { toFetchState } from '@app/services/fetch-state';
@@ -35,11 +35,9 @@ export function useRunesAccountBalance(
 
 function useGetRunesAccountBalanceQuery(request: AccountRequest) {
   const tokenSettings = useUserAllTokens();
-  return useQuery({
-    queryKey: ['runes-balances-service-get-runes-account-balance', request, tokenSettings],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getRunesBalancesService().getRunesAccountBalance(request, signal),
-    ...balanceQueryOptionsWithRefetch,
+  return useSharedGetRunesAccountBalanceQuery(request, {
+    queryKeyContext: [tokenSettings],
     placeholderData: keepPreviousData,
+    ...balanceQueryOptionsWithRefetch,
   });
 }

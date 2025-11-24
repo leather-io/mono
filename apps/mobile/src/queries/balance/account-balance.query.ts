@@ -1,10 +1,14 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountId, QuoteCurrency } from '@leather.io/models';
-import { AccountRequest, getAccountBalancesService } from '@leather.io/services';
+import { AccountRequest } from '@leather.io/services';
+
+import {
+  useGetAccountTotalBalanceQuery as useSharedGetAccountTotalBalanceQuery,
+  useGetAccountUnlockedBalanceQuery as useSharedGetAccountUnlockedBalanceQuery,
+} from '@leather.io/features';
 
 import { balanceQueryOptions } from './balance-query-options';
 
@@ -32,15 +36,8 @@ export function useGetAccountTotalBalanceQuery(
 ) {
   const { fiatCurrencyPreference, assetVisibility } = useSettings();
   const currencyPreference = overrideFiatCurrencyPreference ?? fiatCurrencyPreference;
-  return useQuery({
-    queryKey: [
-      'account-balances-service-get-total-balance',
-      request,
-      currencyPreference,
-      assetVisibility,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getAccountBalancesService().getTotalBalance(request, signal),
+  return useSharedGetAccountTotalBalanceQuery(request, {
+    queryKeyContext: [currencyPreference, assetVisibility],
     ...balanceQueryOptions,
   });
 }
@@ -51,15 +48,8 @@ export function useGetAccountUnlockedBalanceQuery(
 ) {
   const { fiatCurrencyPreference, assetVisibility } = useSettings();
   const currencyPreference = overrideFiatCurrencyPreference ?? fiatCurrencyPreference;
-  return useQuery({
-    queryKey: [
-      'account-balances-service-get-unlocked-balance',
-      request,
-      currencyPreference,
-      assetVisibility,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getAccountBalancesService().getUnlockedBalance(request, signal),
+  return useSharedGetAccountUnlockedBalanceQuery(request, {
+    queryKeyContext: [currencyPreference, assetVisibility],
     ...balanceQueryOptions,
   });
 }

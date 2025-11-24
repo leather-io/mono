@@ -43,3 +43,16 @@ export function useNativeSegwitBtcAccountBalance(accountIndex: number) {
     })
   );
 }
+
+export function useBtcAccountBalance(accountIndex: number) {
+  const account = useAccountAddresses(accountIndex);
+  const discardedInscriptions = useDiscardedInscriptions();
+  return toFetchState(
+    useGetBtcAccountBalanceQuery({
+      account,
+      protections: {
+        discardedInscriptions,
+      },
+    })
+  );
+}

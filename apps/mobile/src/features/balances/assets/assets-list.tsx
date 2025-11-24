@@ -1,7 +1,7 @@
 import { ReactElement, useMemo } from 'react';
 
 import { Screen } from '@/components/screen/screen';
-import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
+import { sortSip10Balances } from '@leather.io/features';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { TokenDetailsProps } from '@/features/token/types';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';

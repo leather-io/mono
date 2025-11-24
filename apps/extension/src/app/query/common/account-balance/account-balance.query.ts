@@ -1,12 +1,12 @@
-import { type QueryFunctionContext, useQuery } from '@tanstack/react-query';
-
-import { type AccountRequest, getAccountBalancesService } from '@leather.io/services';
+import { type AccountRequest } from '@leather.io/services';
 
 import { useCurrentNetworkState } from '@app/query/leather-query-provider';
 import { toFetchState } from '@app/services/fetch-state';
 import { useAccountAddresses } from '@app/services/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import { useUserAllTokens } from '@app/store/manage-tokens/manage-tokens.slice';
+
+import { useGetAccountTotalBalanceQuery as useSharedGetAccountTotalBalanceQuery } from '@leather.io/features';
 
 import { balanceQueryOptions } from '../balance-query-options';
 
@@ -27,10 +27,8 @@ export function useAccountTotalBalance(accountIndex: number) {
 function useGetAccountTotalBalanceQuery(request: AccountRequest) {
   const network = useCurrentNetworkState();
   const tokenSettings = useUserAllTokens();
-  return useQuery({
-    queryKey: ['account-balances-service-get-total-balance', request, network.id, tokenSettings],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getAccountBalancesService().getTotalBalance(request, signal),
+  return useSharedGetAccountTotalBalanceQuery(request, {
+    queryKeyContext: [network.id, tokenSettings],
     ...balanceQueryOptions,
   });
 }

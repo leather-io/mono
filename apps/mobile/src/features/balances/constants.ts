@@ -1,1 +1,1 @@
-export const ASSETS_BALANCES_WIDGET_LIMIT = 3;
+export { ASSETS_BALANCES_WIDGET_LIMIT } from '@leather.io/features';

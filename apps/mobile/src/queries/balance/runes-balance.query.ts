@@ -1,9 +1,13 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { AccountRequest, RuneBalance } from '@leather.io/services';
 
-import { AccountRequest, RuneBalance, getRunesBalancesService } from '@leather.io/services';
+import {
+  useGetRunesAccountBalanceQuery as useSharedGetRunesAccountBalanceQuery,
+  useGetRunesAggregateBalanceQuery as useSharedGetRunesAggregateBalanceQuery,
+  useGetRuneBalanceByRuneNameQuery as useSharedGetRuneBalanceByRuneNameQuery,
+} from '@leather.io/features';
 import { getAssetId } from '@leather.io/utils';
 
 import { balanceQueryOptions } from './balance-query-options';
@@ -49,44 +53,27 @@ export function useManagedRunesTools(fingerprint: string, accountIndex: number) 
 
 function useRunesAggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
-  return useQuery({
-    queryKey: [
-      'runes-balances-service-get-runes-aggregate-balance',
-      requests,
-      fiatCurrencyPreference,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getRunesBalancesService().getRunesAggregateBalance(requests, signal),
+  return useSharedGetRunesAggregateBalanceQuery(requests, {
+    queryKeyContext: [fiatCurrencyPreference],
     ...balanceQueryOptions,
   });
 }
 
 function useRunesAccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference, assetVisibility } = useSettings();
-  return useQuery({
-    queryKey: [
-      'runes-balances-service-get-runes-account-balance',
-      request,
-      fiatCurrencyPreference,
-      ...(request.assets?.includeHiddenAssets ? [] : [assetVisibility]),
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getRunesBalancesService().getRunesAccountBalance(request, signal),
+  const queryKeyContext = request.assets?.includeHiddenAssets
+    ? [fiatCurrencyPreference]
+    : [fiatCurrencyPreference, assetVisibility];
+  return useSharedGetRunesAccountBalanceQuery(request, {
+    queryKeyContext,
     ...balanceQueryOptions,
   });
 }
 
 function useRuneBalanceByRuneNameQuery(request: AccountRequest, runeName: string) {
   const { fiatCurrencyPreference } = useSettings();
-  return useQuery({
-    queryKey: [
-      'runes-balances-service-get-rune-balance-by-rune-name',
-      request,
-      fiatCurrencyPreference,
-      runeName,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getRunesBalancesService().getRuneBalanceByRuneName(request, runeName, signal),
+  return useSharedGetRuneBalanceByRuneNameQuery(request, runeName, {
+    queryKeyContext: [fiatCurrencyPreference],
     ...balanceQueryOptions,
   });
 }

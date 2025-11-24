@@ -7,11 +7,13 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { whenPageMode } from '@app/common/utils';
+import { useFlags } from '@app/features/feature-flags';
 import { ActivityList } from '@app/features/activity-list/activity-list';
 import { Collectibles } from '@app/features/collectibles/collectibles';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
 import { Assets } from '@app/pages/home/components/assets';
+import { AssetsRevampLegacy } from '@app/pages/home/components/assets-revamp-legacy';
 import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
 import { AccountCard } from '@app/ui/components/account/account.card';
@@ -31,6 +33,7 @@ export function Home() {
     togglePrivateMode,
     toggleSwitchAccount,
   } = useHomePageState();
+  const { extension_asset_balances } = useFlags();
 
   return (
     <Stack
@@ -67,7 +70,10 @@ export function Home() {
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
       <HomeTabs>
         <ModalBackgroundWrapper>
-          <Route index element={<Assets />} />
+          <Route
+            index
+            element={extension_asset_balances ? <Assets /> : <AssetsRevampLegacy />}
+          />
           <Route path={RouteUrls.Activity} element={<ActivityList />}>
             {homePageModalRoutes}
           </Route>

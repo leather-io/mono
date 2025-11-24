@@ -3,12 +3,12 @@ import { Outlet } from 'react-router';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Stack } from 'leather-styles/jsx';
 
-import { AssetBalances } from '@app/features/asset-balances/asset-balances';
+import { AssetList } from '@app/features/asset-list/asset-list';
 
-export function Assets() {
+export function AssetsRevampLegacy() {
   return (
-    <Stack data-testid={HomePageSelectors.AssetList} gap="space.04">
-      <AssetBalances />
+    <Stack data-testid={HomePageSelectors.AssetList}>
+      <AssetList filter="enabled" />
       <Outlet />
     </Stack>
   );

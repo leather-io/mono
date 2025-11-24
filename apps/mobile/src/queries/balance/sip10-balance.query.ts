@@ -1,9 +1,15 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { AccountRequest, Sip10Balance } from '@leather.io/services';
 
-import { AccountRequest, Sip10Balance, getSip10BalancesService } from '@leather.io/services';
+import {
+  useGetSip10AccountBalanceQuery as useSharedGetSip10AccountBalanceQuery,
+  useGetSip10AggregateBalanceQuery as useSharedGetSip10AggregateBalanceQuery,
+  useGetSip10AggregateBalanceByAssetIdQuery as useSharedGetSip10AggregateBalanceByAssetIdQuery,
+  useGetSip10BalanceByAssetIdQuery as useSharedGetSip10BalanceByAssetIdQuery,
+  useGetSip10BalanceByContractIdQuery as useSharedGetSip10BalanceByContractIdQuery,
+} from '@leather.io/features';
 import { getAssetId } from '@leather.io/utils';
 
 import { balanceQueryOptions } from './balance-query-options';
@@ -74,29 +80,19 @@ export function useSip10BalanceByContractId(
 
 function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
-  return useQuery({
-    queryKey: [
-      'sip10-balances-service-get-sip10-aggregate-balance',
-      requests,
-      fiatCurrencyPreference,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AggregateBalance(requests, signal),
+  return useSharedGetSip10AggregateBalanceQuery(requests, {
+    queryKeyContext: [fiatCurrencyPreference],
     ...balanceQueryOptions,
   });
 }
 
 export function useSip10AccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference, assetVisibility } = useSettings();
-  return useQuery({
-    queryKey: [
-      'sip10-balances-service-get-sip10-account-balance',
-      request,
-      fiatCurrencyPreference,
-      ...(request.assets?.includeHiddenAssets ? [] : [assetVisibility]),
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AccountBalance(request, signal),
+  const queryKeyContext = request.assets?.includeHiddenAssets
+    ? [fiatCurrencyPreference]
+    : [fiatCurrencyPreference, assetVisibility];
+  return useSharedGetSip10AccountBalanceQuery(request, {
+    queryKeyContext,
     ...balanceQueryOptions,
   });
 }
@@ -107,45 +103,24 @@ export function useSip10AccountBalanceQuery(request: AccountRequest) {
  */
 function useSip10AggregateBalanceByAssetIdQuery(requests: AccountRequest[], assetId: string) {
   const { fiatCurrencyPreference } = useSettings();
-  return useQuery({
-    queryKey: [
-      'sip10-balances-service-get-sip10-aggregate-balance-by-asset-id',
-      assetId,
-      requests,
-      fiatCurrencyPreference,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AggregateBalanceByAssetId(requests, assetId, signal),
+  return useSharedGetSip10AggregateBalanceByAssetIdQuery(requests, assetId, {
+    queryKeyContext: [fiatCurrencyPreference],
     ...balanceQueryOptions,
   });
 }
 
 function useSip10BalanceByAssetIdQuery(request: AccountRequest, assetId: string) {
   const { fiatCurrencyPreference } = useSettings();
-  return useQuery({
-    queryKey: [
-      'sip10-balances-service-get-sip10-balance-by-asset-id',
-      assetId,
-      request,
-      fiatCurrencyPreference,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10BalanceByAssetId(request, assetId, signal),
+  return useSharedGetSip10BalanceByAssetIdQuery(request, assetId, {
+    queryKeyContext: [fiatCurrencyPreference],
     ...balanceQueryOptions,
   });
 }
 
 function useSip10BalanceByContractIdQuery(request: AccountRequest, contractId: string) {
   const { fiatCurrencyPreference } = useSettings();
-  return useQuery({
-    queryKey: [
-      'sip10-balances-service-get-sip10-balance-by-contract-id',
-      contractId,
-      request,
-      fiatCurrencyPreference,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10BalanceByContractId(request, contractId, signal),
+  return useSharedGetSip10BalanceByContractIdQuery(request, contractId, {
+    queryKeyContext: [fiatCurrencyPreference],
     ...balanceQueryOptions,
   });
 }
