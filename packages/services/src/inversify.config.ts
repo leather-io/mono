@@ -187,5 +187,5 @@ export function getBnsV2ApiClient() {
   Infrastructure
 */
 export function getHttpCacheService() {
-  return getServicesContainer().get(HttpCacheService);
+  return getServicesContainer().get<HttpCacheService>(Types.CacheService);
 }

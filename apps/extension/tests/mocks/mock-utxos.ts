@@ -134,9 +134,10 @@ export async function mockMainnetTestAccountBitcoinRequests(page: Page) {
 }
 
 export async function mockTestnetTestAccountEmptyUtxosRequests(page: Page) {
-  await page.route(`${BITCOIN_API_BASE_URL_TESTNET4}/address/**/utxo`, route =>
-    route.fulfill({
-      json: [],
-    })
-  );
+  await Promise.all([
+    page.route(`${BITCOIN_API_BASE_URL_TESTNET4}/address/**/utxo`, route =>
+      route.fulfill({ json: [] })
+    ),
+    page.route('**/v1/utxos/**', route => route.fulfill({ json: [] })),
+  ]);
 }
