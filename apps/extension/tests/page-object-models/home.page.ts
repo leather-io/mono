@@ -6,6 +6,7 @@ import { SharedComponentsSelectors } from '@tests/selectors/shared-component.sel
 import { createTestSelector } from '@tests/utils';
 
 import { WalletDefaultNetworkConfigurationIds } from '@leather.io/models';
+import { delay } from '@leather.io/utils';
 
 export class HomePage {
   readonly page: Page;
@@ -59,10 +60,7 @@ export class HomePage {
   }
 
   async goToReceiveDialog() {
-    const receiveBtn = this.page.getByTestId(HomePageSelectors.ReceiveCryptoAssetBtn);
-    await receiveBtn.waitFor({ state: 'visible' });
-    await this.page.waitForLoadState('networkidle');
-    await receiveBtn.click();
+    await this.page.getByTestId(HomePageSelectors.ReceiveCryptoAssetBtn).click();
   }
 
   // Open issue with Playwright's ability to copyToClipboard from legacy tests:
@@ -72,52 +70,38 @@ export class HomePage {
   // Using the `Receive` route to get the account address for now.
   async getReceiveNativeSegwitAddress() {
     await this.goToReceiveDialog();
-    const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn);
-    await qrCodeBtn.waitFor({ state: 'attached' });
-    await qrCodeBtn.waitFor({ state: 'visible' });
-    await this.page.waitForLoadState('domcontentloaded');
-    await qrCodeBtn.click();
-    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
-    await addressDisplayer.waitFor({ state: 'attached' });
-    await addressDisplayer.waitFor({ state: 'visible' });
-    const displayerAddress = await addressDisplayer.innerText();
+    await this.page.getByTestId(HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn).click();
+    const displayerAddress = await this.page
+      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
+      .innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
+  // Currently under Ordinals receive flow
   async getReceiveTaprootAddress() {
     await this.goToReceiveDialog();
-    const collectiblesTab = this.page.getByTestId(HomePageSelectors.ReceiveCollectiblesTab);
-    await collectiblesTab.waitFor({ state: 'attached' });
-    await collectiblesTab.waitFor({ state: 'visible' });
-    await collectiblesTab.click();
-    const taprootBtn = this.page.getByTestId(HomePageSelectors.ReceiveBtcTaprootQrCodeBtn);
-    await taprootBtn.waitFor({ state: 'attached' });
-    await taprootBtn.waitFor({ state: 'visible' });
-    await this.page.waitForLoadState('domcontentloaded');
-    await taprootBtn.click();
-    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
-    await addressDisplayer.waitFor({ state: 'attached' });
-    await addressDisplayer.waitFor({ state: 'visible' });
-    const displayerAddress = await addressDisplayer.innerText();
+    await delay(1000);
+    await this.page.getByTestId(HomePageSelectors.ReceiveCollectiblesTab).click();
+    await this.page.getByTestId(HomePageSelectors.ReceiveBtcTaprootQrCodeBtn).click();
+    // FIXME - add better test for Copy action
+    // await this.page.getByRole('button', { name: 'Copy address' }).click();
+    // const address = await this.page.evaluate('navigator.clipboard.readText()');
+    // return address;
+    const displayerAddress = await this.page
+      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
+      .innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
   async getReceiveStxAddress() {
     await this.goToReceiveDialog();
-    await this.page.waitForLoadState('domcontentloaded');
-    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
+    // In Ledger mode, this element isn't visible, so clicking is conditional
     const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
-    const addressAlreadyVisible = await addressDisplayer
-      .isVisible()
-      .catch(() => false);
-    if (!addressAlreadyVisible) {
-      await qrCodeBtn.waitFor({ state: 'attached' });
-      await qrCodeBtn.waitFor({ state: 'visible' });
-      await qrCodeBtn.click();
-    }
-    await addressDisplayer.waitFor({ state: 'attached' });
-    await addressDisplayer.waitFor({ state: 'visible' });
-    const displayerAddress = await addressDisplayer.innerText();
+    await delay(1000);
+    if (await qrCodeBtn.isVisible()) await qrCodeBtn.click({ force: true });
+    const displayerAddress = await this.page
+      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
+      .innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
