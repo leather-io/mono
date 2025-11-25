@@ -1,4 +1,5 @@
-import { RefObject } from 'react';
+import { RefObject, useEffect, useState } from 'react';
+import { BackHandler } from 'react-native';
 
 import BottomSheet, {
   BottomSheetModal,
@@ -6,6 +7,8 @@ import BottomSheet, {
   BottomSheetModalProvider,
   BottomSheetProps,
   BottomSheetTextInput,
+  SNAP_POINT_TYPE,
+  useBottomSheetModal,
 } from '@gorhom/bottom-sheet';
 import { BottomSheetScrollViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types';
 import { BottomSheetViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types';
@@ -33,16 +36,34 @@ export interface SheetProps extends BottomSheetModalProps {
 }
 
 export function Sheet({
+  onChange,
   handlePlacement = defaultHandlePlacement,
   backgroundStyle,
   handleStyle,
   handleIndicatorStyle,
   ...props
 }: SheetProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const styles = useSheetStyles({ handlePlacement });
+  const { dismiss } = useBottomSheetModal();
+
+  function handleChange(index: number, position: number, type: SNAP_POINT_TYPE) {
+    setIsOpen(index >= 0);
+    onChange?.(index, position, type);
+  }
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      dismiss();
+      return true;
+    });
+    return subscription.remove;
+  }, [isOpen, dismiss]);
 
   return (
     <BottomSheetModal
+      onChange={handleChange}
       backdropComponent={SheetNativeBackdrop}
       backgroundStyle={[styles.background, backgroundStyle]}
       handleStyle={[styles.handleContainer, handleStyle]}
