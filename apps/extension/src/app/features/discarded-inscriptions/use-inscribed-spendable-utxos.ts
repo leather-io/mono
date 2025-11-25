@@ -7,19 +7,19 @@ import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/sett
 export function useInscribedSpendableUtxos() {
   const { hasInscriptionBeenDiscarded } = useCurrentAccountDiscardedInscriptions();
 
-  const { data: nativeSegwitInscriptions } = useCurrentNativeSegwitInscriptions();
+  const nativeSegwitInscriptions = useCurrentNativeSegwitInscriptions();
 
   // Utxos but don't filter the inscribed ones
   const { utxos } = useCurrentNativeSegwitInscribedUtxos();
 
   return useMemo(() => {
-    if (!utxos || !nativeSegwitInscriptions) return [];
+    if (!utxos || !nativeSegwitInscriptions.value) return [];
 
     // Preformatting utxos so that inscriptions are declared as an object
     // property aids the following filter logic
     const utxosFormatted = utxos.map(utxo => ({
       ...utxo,
-      inscriptions: nativeSegwitInscriptions.filter(
+      inscriptions: nativeSegwitInscriptions.value.filter(
         inscription => inscription.txid === utxo.txid && Number(inscription.output) === utxo.vout
       ),
     }));

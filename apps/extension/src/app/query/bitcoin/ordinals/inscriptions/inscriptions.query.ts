@@ -1,26 +1,21 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { type QueryFunctionContext, useQueries, useQuery } from '@tanstack/react-query';
 
 import {
   combineInscriptionResults,
-  createBestInSlotInscription,
   createInscriptionByXpubQuery,
   createNumberOfInscriptionsFn,
-  filterUninscribedUtxosToRecoverFromTaproot,
-  utxosToBalance,
 } from '@leather.io/query';
-import { isString } from '@leather.io/utils';
+import { type AccountRequest, getInscriptionsService } from '@leather.io/services';
+import { minutesInMs, secondsInMs } from '@leather.io/utils';
 
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
-import {
-  useCurrentBitcoinAccountNativeSegwitXpub,
-  useCurrentBitcoinAccountXpubs,
-} from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
-import { useCurrentTaprootAccount } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentNetworkState } from '@app/query/leather-query-provider';
+import { useNativeSegwitAccountRequest } from '@app/services/accounts/use-native-segwit-account-request';
+import { toFetchState } from '@app/services/fetch-state';
+import { useCurrentBitcoinAccountXpubs } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 
 import { useBitcoinClient } from '../../clients/bitcoin-client';
-import { useGetTaprootUtxosByAddressQuery } from '../../utxos/utxos.hooks';
 
 interface UseInscriptionArgs {
   xpubs: string[];
@@ -50,36 +45,24 @@ export function useNumberOfInscriptionsOnUtxo() {
 }
 
 export function useCurrentNativeSegwitInscriptions() {
-  const client = useBitcoinClient();
-  const nativeSegwitXpub = useCurrentBitcoinAccountNativeSegwitXpub();
+  const request = useNativeSegwitAccountRequest();
+  return toFetchState(useGetAccountInscriptionsQuery(request));
+}
+
+function useGetAccountInscriptionsQuery(request: AccountRequest) {
+  const network = useCurrentNetworkState();
   return useQuery({
-    ...createInscriptionByXpubQuery(client, nativeSegwitXpub ?? ''),
-    enabled: isString(nativeSegwitXpub),
-    select(data) {
-      return data.data.map(createBestInSlotInscription);
-    },
+    queryKey: [
+      'inscriptions-service-get-account-inscriptions',
+      network.id,
+      request.account.id.fingerprint,
+      request.account.id.accountIndex,
+    ],
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getInscriptionsService().getAccountInscriptions(request, signal),
+    staleTime: secondsInMs(10),
+    gcTime: minutesInMs(5),
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
   });
-}
-
-export function useCurrentTaprootAccountUninscribedUtxos() {
-  const taprootAccount = useCurrentTaprootAccount();
-  const currentAccountIndex = useCurrentAccountIndex();
-  const { data: utxos = [] } = useGetTaprootUtxosByAddressQuery({
-    taprootKeychain: taprootAccount?.keychain,
-    currentAccountIndex,
-  });
-  const query = useInscriptions({
-    xpubs: taprootAccount?.keychain.publicExtendedKey
-      ? [`tr(${taprootAccount.keychain.publicExtendedKey})`]
-      : [],
-  });
-  return useMemo(
-    () => filterUninscribedUtxosToRecoverFromTaproot(utxos, query.inscriptions ?? []),
-    [query.inscriptions, utxos]
-  );
-}
-
-export function useCurrentTaprootAccountBalance() {
-  const uninscribedUtxos = useCurrentTaprootAccountUninscribedUtxos();
-  return useMemo(() => utxosToBalance(uninscribedUtxos), [uninscribedUtxos]);
 }

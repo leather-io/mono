@@ -12,11 +12,9 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import { InfoCardRow, InfoCardSeparator } from '@app/components/info-card/info-card';
 import { useToast } from '@app/features/toasts/use-toast';
-import {
-  useCurrentTaprootAccountBalance,
-  useCurrentTaprootAccountUninscribedUtxos,
-} from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
+import { useCurrentTaprootBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
+import { useCurrentTaprootUninscribedUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 import { RetrieveTaprootToNativeSegwitLayout } from './components/retrieve-taproot-to-native-segwit.layout';
@@ -26,9 +24,9 @@ export function RetrieveTaprootToNativeSegwit() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const balance = useCurrentTaprootAccountBalance();
+  const balance = useCurrentTaprootBtcBalanceWithFallback();
   const recipient = useCurrentAccountNativeSegwitAddressIndexZero();
-  const uninscribedUtxos = useCurrentTaprootAccountUninscribedUtxos();
+  const { utxos: uninscribedUtxos } = useCurrentTaprootUninscribedUtxos();
 
   const { generateRetrieveTaprootFundsTx, fee } = useGenerateRetrieveTaprootFundsTx();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
@@ -59,7 +57,10 @@ export function RetrieveTaprootToNativeSegwit() {
       <Stack width="100%">
         <InfoCardRow title="Your address" value={<FormAddressDisplayer address={recipient} />} />
         <InfoCardSeparator />
-        <InfoCardRow title="Amount" value={formatCurrency(balance, { preset: 'pad-decimals' })} />
+        <InfoCardRow
+          title="Amount"
+          value={formatCurrency(balance.btc.availableBalance, { preset: 'pad-decimals' })}
+        />
         <InfoCardRow title="Fee" value={formatCurrency(fee, { preset: 'pad-decimals' })} />
         <InfoCardSeparator />
         {uninscribedUtxos.map((utxo, i) => (
