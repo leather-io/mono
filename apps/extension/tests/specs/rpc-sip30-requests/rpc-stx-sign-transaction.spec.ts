@@ -24,6 +24,7 @@ test.describe('RPC: stx_signTransaction', () => {
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Approve') => {
       const popup = await context.waitForEvent('page');
+      await popup.waitForLoadState('domcontentloaded');
       await popup.waitForSelector('text="Account 1"');
       await popup.waitForSelector('text="0.0005 STX"');
 
@@ -33,8 +34,8 @@ test.describe('RPC: stx_signTransaction', () => {
         .then((value: string) => value.replaceAll('\n', ''));
       test.expect(displayerAddress).toEqual('SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB');
 
-      await popup.waitForTimeout(500);
       const btn = popup.locator('text="Approve"');
+      await btn.waitFor({ state: 'visible' });
 
       if (buttonToPress === 'Approve') {
         await btn.click();

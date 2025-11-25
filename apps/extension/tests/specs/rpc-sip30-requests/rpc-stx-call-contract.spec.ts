@@ -25,6 +25,7 @@ test.describe('RPC: stx_callContract', () => {
   function checkVisibleContentWithNoPostConditions(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
+      await popup.waitForLoadState('domcontentloaded');
 
       const displayerAddress = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
@@ -41,8 +42,8 @@ test.describe('RPC: stx_callContract', () => {
       await popup.waitForSelector('text="0x74657374"');
       await popup.waitForSelector('text="SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB"');
       await popup.waitForSelector('text="none"');
-      await popup.waitForTimeout(500);
       const btn = popup.locator('text="Confirm"');
+      await btn.waitFor({ state: 'visible' });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();
@@ -55,11 +56,12 @@ test.describe('RPC: stx_callContract', () => {
   function checkVisiblePostConditions(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
+      await popup.waitForLoadState('domcontentloaded');
       await popup.waitForSelector(
         'text="The contract will transfer exactly 0.000042 STX or the transaction will abort."'
       );
-      await popup.waitForTimeout(500);
       const btn = popup.locator('text="Confirm"');
+      await btn.waitFor({ state: 'visible' });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();
@@ -72,9 +74,10 @@ test.describe('RPC: stx_callContract', () => {
   function checkVisiblePostConditionModeWarning(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
+      await popup.waitForLoadState('domcontentloaded');
       await popup.waitForSelector('text="This transaction can transfer any of your assets"');
-      await popup.waitForTimeout(500);
       const btn = popup.locator('text="Confirm"');
+      await btn.waitFor({ state: 'visible' });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();

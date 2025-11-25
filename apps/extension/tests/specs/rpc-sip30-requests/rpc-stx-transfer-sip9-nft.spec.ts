@@ -18,6 +18,7 @@ test.describe('RPC: stx_transferSip9Nft', () => {
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
+      await popup.waitForLoadState('domcontentloaded');
       await popup.waitForSelector('text="LIV"');
       await popup.waitForSelector('text="You will transfer"');
       await popup.waitForSelector('text="living-leather"');
@@ -30,8 +31,8 @@ test.describe('RPC: stx_transferSip9Nft', () => {
         .then((value: string) => value.replaceAll('\n', ''));
       test.expect(displayerAddress).toEqual('SP2XMGYYTA1KRBKBYJHTW8CFWB2QYZKZE4BMHG3PJ');
 
-      await popup.waitForTimeout(500);
       const btn = popup.locator('text="Confirm"');
+      await btn.waitFor({ state: 'visible' });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();
