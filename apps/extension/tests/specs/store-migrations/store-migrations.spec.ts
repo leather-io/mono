@@ -17,21 +17,22 @@ test.describe('Store migrations', () => {
 
       // Force wallet into old state format using Redux Persist serialization
       await page.evaluate(
-        async state => chrome.storage.local.set({ ['persist:root']: state }),
+        async state => await chrome.storage.local.set({ ['persist:root']: state }),
         previousSerializedState
       );
 
-      await page.waitForTimeout(3000);
+      await globalPage.page.waitForTimeout(2000);
 
       // Refresh to simulate user returning to app for first time since migration
       await globalPage.gotoNakedRoot(extensionId);
 
-      await page.waitForTimeout(3000);
-
       // State now in new format
-      const result = await page.evaluate(async () =>
-        chrome.storage.local.get(['persist:root']).then(state => state['persist:root'])
+      const result = await page.evaluate(
+        async () =>
+          await chrome.storage.local.get(['persist:root']).then(state => state['persist:root'])
       );
+
+      await globalPage.page.waitForTimeout(2000);
 
       // Assert that old values are present in unserialized format
       test
