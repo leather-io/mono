@@ -1,7 +1,5 @@
 import type { BrowserContext, Page, Route } from '@playwright/test';
 
-import { delay } from '@leather.io/utils';
-
 import { test } from '../../fixtures/fixtures';
 
 function mockChainalysisEntityRegistrationRequest(context: BrowserContext) {
@@ -84,13 +82,12 @@ test.describe('Compliance checks', () => {
 
     await Promise.all([context.waitForEvent('page'), openIllegalTransfer(page)]);
 
-    // Please forgive this timeout, we need to give the page time in order to
-    // make the request, to be sure it was made. If this test ends up failing
-    // due to a race condition, please let the author know.
-    await delay(2000);
-
     const userAndRecipientAddressCount = 2;
 
-    test.expect(entityCheckCount).toEqual(userAndRecipientAddressCount);
+    await test
+      .expect(async () =>
+        test.expect(entityCheckCount).toEqual(userAndRecipientAddressCount)
+      )
+      .toPass();
   });
 });

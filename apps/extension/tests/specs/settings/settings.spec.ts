@@ -67,7 +67,7 @@ test.describe('Settings menu', () => {
     test.expect(currentNetwork).toContain('mainnet');
 
     await page.getByTestId(SettingsSelectors.ChangeNetworkAction).click();
-    await page.waitForTimeout(1000);
+    await page.getByTestId(SettingsSelectors.NetworkListItem).first().waitFor();
     const networkListItems = await page.getByTestId(SettingsSelectors.NetworkListItem).all();
     test
       .expect(networkListItems)

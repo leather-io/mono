@@ -2,8 +2,6 @@ import { expect } from '@playwright/test';
 import { mockStacksBroadcastTransaction } from '@tests/mocks/mock-stacks-txs';
 import { SwapSelectors } from '@tests/selectors/swap.selectors';
 
-import { delay } from '@leather.io/utils';
-
 import { test } from '../../fixtures/fixtures';
 
 test.describe('Swaps', () => {
@@ -45,7 +43,8 @@ test.describe('Swaps', () => {
     await swapPage.inputSwapAmountBase();
     await swapPage.selectAssetToReceive();
 
-    await swapPage.swapReviewBtn.click({ delay: 2000 });
+    await expect(swapPage.swapReviewBtn).toBeEnabled();
+    await swapPage.swapReviewBtn.click();
     await swapPage.swapSubmitBtn.click();
 
     const toastMessage = 'Transaction submitted!';
@@ -57,11 +56,8 @@ test.describe('Swaps', () => {
     swapPage,
   }) => {
     await swapPage.selectBtcAsBaseAsset();
-    await delay(1000);
-
-    const selectedAssets = await swapPage.page.getByTestId(SwapSelectors.SelectedAssetSymbol).all();
-    const quoteAsset = await selectedAssets[1].innerText();
-    test.expect(quoteAsset).toEqual('sBTC');
+    const selectedAssets = swapPage.page.getByTestId(SwapSelectors.SelectedAssetSymbol);
+    await expect(selectedAssets.nth(1)).toHaveText('sBTC');
 
     await swapPage.selectQuoteAsset();
     await swapPage.page.locator(swapPage.chooseAssetList).waitFor();
