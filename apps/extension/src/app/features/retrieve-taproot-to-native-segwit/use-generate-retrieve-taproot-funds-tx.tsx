@@ -8,17 +8,15 @@ import { createMoney, sumNumbers } from '@leather.io/utils';
 
 import { BtcSizeFeeEstimator } from '@app/common/transactions/bitcoin/fees/btc-size-fee-estimator';
 import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
-import {
-  useCurrentTaprootAccountUninscribedUtxos,
-  useNumberOfInscriptionsOnUtxo,
-} from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
+import { useNumberOfInscriptionsOnUtxo } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
+import { useCurrentTaprootUninscribedUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
 import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 
 export function useGenerateRetrieveTaprootFundsTx() {
   const networkMode = useBitcoinScureLibNetworkConfig();
 
-  const uninscribedUtxos = useCurrentTaprootAccountUninscribedUtxos();
+  const { utxos: uninscribedUtxos } = useCurrentTaprootUninscribedUtxos();
 
   const createSigner = useCurrentAccountTaprootSigner();
   const { data: feeRates } = useAverageBitcoinFeeRates();
@@ -40,7 +38,7 @@ export function useGenerateRetrieveTaprootFundsTx() {
       const totalAmount = sumNumbers(uninscribedUtxos.map(utxo => utxo.value));
 
       uninscribedUtxos.forEach(utxo => {
-        const addressIndex = extractAddressIndexFromPath(utxo.derivationPath);
+        const addressIndex = extractAddressIndexFromPath(utxo.path);
         const signer = createSigner?.(addressIndex);
         if (!signer) return;
 
@@ -68,7 +66,7 @@ export function useGenerateRetrieveTaprootFundsTx() {
       tx.addOutputAddress(recipient, paymentAmount, networkMode);
 
       uninscribedUtxos.forEach(utxo => {
-        const addressIndex = extractAddressIndexFromPath(utxo.derivationPath);
+        const addressIndex = extractAddressIndexFromPath(utxo.path);
         return createSigner?.(addressIndex).sign(tx);
       });
 

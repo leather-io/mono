@@ -313,11 +313,6 @@ export function useBitcoinAccountXpubs(accountIndex: number) {
   return [nativeSegwitXpub, taprootXpub].filter(xpub => isString(xpub));
 }
 
-export function useCurrentBitcoinAccountNativeSegwitXpub() {
-  const accountIndex = useCurrentAccountIndex();
-  return useBitcoinAccountNativeSegwitXpub(accountIndex);
-}
-
 export function useCurrentBitcoinAccountXpubs() {
   const accountIndex = useCurrentAccountIndex();
   return useBitcoinAccountXpubs(accountIndex);
