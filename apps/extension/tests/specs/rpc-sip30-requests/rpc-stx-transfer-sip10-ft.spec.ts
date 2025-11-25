@@ -18,6 +18,7 @@ test.describe('RPC: stx_transferSip10Ft', () => {
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
+      await popup.waitForLoadState('domcontentloaded');
       await popup.waitForSelector('text="LEO"');
       await popup.waitForSelector('text="0.001"');
       await popup.waitForSelector('text="transfer"');
@@ -31,8 +32,8 @@ test.describe('RPC: stx_transferSip10Ft', () => {
         .then((value: string) => value.replaceAll('\n', ''));
       test.expect(displayerAddress).toEqual('SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6');
 
-      await popup.waitForTimeout(500);
       const btn = popup.locator('text="Confirm"');
+      await btn.waitFor({ state: 'visible' });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();

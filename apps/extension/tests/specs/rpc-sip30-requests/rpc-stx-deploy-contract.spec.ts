@@ -19,6 +19,7 @@ test.describe('RPC: stx_deployContract', () => {
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
+      await popup.waitForLoadState('domcontentloaded');
       await popup.waitForSelector('text="mock-contract-name"');
       await popup.waitForSelector(
         'text="Only fees will be transferred from your account or the transaction will abort."'
@@ -30,8 +31,8 @@ test.describe('RPC: stx_deployContract', () => {
         .then((value: string) => value.replaceAll('\n', ''));
       test.expect(displayerAddress).toEqual('SPS8CKF63P16J28AYF7PXW9E5AACH0NZNTEFWSFE');
 
-      await popup.waitForTimeout(500);
       const btn = popup.locator('text="Confirm"');
+      await btn.waitFor({ state: 'visible' });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();

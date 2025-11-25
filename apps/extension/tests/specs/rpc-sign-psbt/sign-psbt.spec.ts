@@ -63,15 +63,16 @@ test.describe('Sign PSBT', () => {
   function clickActionButton(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForTimeout(1000);
+      await popup.waitForLoadState('domcontentloaded');
       const btn = popup.locator(`text="${buttonToPress}"`);
+      await btn.waitFor({ state: 'visible' });
       await btn.click();
     };
   }
 
   async function clickErrorCloseWindowButton(context: BrowserContext) {
     const popup = await context.waitForEvent('page');
-    await popup.waitForTimeout(1000);
+    await popup.waitForLoadState('domcontentloaded');
     const errorMsg = popup.locator('text="Failed to sign"');
     const btn = popup.locator('text="Close window"');
     test.expect(errorMsg).toBeTruthy();
