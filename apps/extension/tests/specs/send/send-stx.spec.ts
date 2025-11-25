@@ -62,10 +62,8 @@ test.describe('send stx: tests on testnet', () => {
 
     await sendPage.amountInput.fill('1');
     await sendPage.amountInput.blur();
-    await sendPage.page.waitForTimeout(2000);
     await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);
     await sendPage.recipientInput.blur();
-    await sendPage.page.waitForTimeout(2000);
     await sendPage.previewSendTxButton.focus();
     await sendPage.previewSendTxButton.click();
 

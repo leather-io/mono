@@ -30,8 +30,9 @@ test.describe('RPC: sendTransfer', () => {
   function clickActionButton(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Approve') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForTimeout(1000);
+      await popup.waitForLoadState('domcontentloaded');
       const btn = popup.locator(`text="${buttonToPress}"`);
+      await btn.waitFor({ state: 'visible' });
       await btn.click();
     };
   }

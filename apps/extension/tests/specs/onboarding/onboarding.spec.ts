@@ -55,7 +55,7 @@ test.describe('Onboarding an existing user', () => {
   }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInExistingUser();
-    await homePage.page.waitForTimeout(1000);
+    await homePage.waitForHomePageReady();
 
     const walletState = await onboardingPage.page.evaluate(async () =>
       window.debug.logPersistedStore()
@@ -109,8 +109,9 @@ test.describe('Onboarding an existing user', () => {
       })
     );
     await homePage.clickActivityTab();
-    const noActivityText = homePage.page.getByText('No activity yet');
-    await test.expect(noActivityText).toBeVisible();
+    await test
+      .expect(homePage.page.getByText('No activity yet'))
+      .toBeVisible();
   });
 
   test.describe('Address generation', () => {

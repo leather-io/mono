@@ -34,7 +34,9 @@ test.describe('send btc', () => {
       await sendPage.amountInput.fill('0.00006');
       await sendPage.recipientInput.fill(' ' + TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS + ' ');
       await sendPage.recipientInput.blur();
-      await sendPage.page.waitForTimeout(1000);
+      await test
+        .expect(sendPage.recipientInput)
+        .toHaveValue(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);
       await sendPage.previewSendTxButton.click();
       await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
 
@@ -49,7 +51,7 @@ test.describe('send btc', () => {
       await sendPage.amountInput.fill(amount);
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);
       await sendPage.recipientInput.blur();
-      await sendPage.page.waitForTimeout(1000);
+      await test.expect(sendPage.recipientInput).toHaveValue(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);
 
       await sendPage.previewSendTxButton.click();
       await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
