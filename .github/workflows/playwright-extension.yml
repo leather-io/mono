@@ -11,7 +11,6 @@ env:
   BITFLOW_KEEPER_API_KEY: ${{ secrets.BITFLOW_KEEPER_API_KEY }}
   BITFLOW_KEEPER_API_HOST: ${{ secrets.BITFLOW_KEEPER_API_HOST }}
   BITFLOW_PROVIDER_ADDRESS: ${{ secrets.BITFLOW_PROVIDER_ADDRESS }}
-  LAUNCH_DARKLY_KEY: ${{ secrets.EXTENSION_LAUNCH_DARKLY_KEY}}
 
 on:
   pull_request:
@@ -85,9 +84,10 @@ jobs:
         working-directory: apps/extension
         run: pnpm prepare
 
-      - name: Build packages
+      - name: Build test dependencies
         working-directory: ./
-        run: pnpm turbo build --filter=@leather.io/extension^...
+        # We need to build these packages as the tests depend on them, listed manually for performance
+        run: pnpm turbo build --filter=@leather.io/{utils,models,bitcoin,stacks,rpc,query,constants}
 
       - name: Get installed Playwright version
         id: playwright-version
@@ -98,14 +98,10 @@ jobs:
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-cache-${{ env.PLAYWRIGHT_VERSION }}
+          key: ${{ runner.os }}-playwright-cache-1-${{ env.PLAYWRIGHT_VERSION }}
 
       - name: Install Playwright browsers
-        run: pnpm playwright install chromium
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-
-      - name: Install Playwright deps
-        run: pnpm playwright install --with-deps
+        run: pnpm playwright install chromium --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: Extract branch name
