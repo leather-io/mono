@@ -5,6 +5,8 @@ import { NetworkPage } from '@tests/page-object-models/network.page';
 import { OnboardingPage } from '@tests/page-object-models/onboarding.page';
 import { SendPage } from '@tests/page-object-models/send.page';
 import { SwapPage } from '@tests/page-object-models/swap.page';
+import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -31,7 +33,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const test = base.extend<TestFixtures>({
   context: async ({}, use) => {
     const pathToExtension = path.join(__dirname, '../../dist');
-    const context = await chromium.launchPersistentContext('', {
+    const userDataDir = await fs.mkdtemp(path.join(os.tmpdir(), 'leather-pw-'));
+    const context = await chromium.launchPersistentContext(userDataDir, {
       headless: false,
       permissions: ['clipboard-read'],
       args: [
@@ -40,9 +43,13 @@ export const test = base.extend<TestFixtures>({
         '--use-gl=egl',
       ],
     });
-    await use(context);
-    await context.close();
-    await context.browser()?.close();
+    try {
+      await use(context);
+    } finally {
+      await context.close();
+      await context.browser()?.close();
+      await fs.rm(userDataDir, { recursive: true, force: true });
+    }
   },
   page: async ({ context }, use) => {
     const pages = context.pages();
