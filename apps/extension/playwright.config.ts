@@ -20,9 +20,10 @@ export default defineConfig({
     [process.env.CI ? 'blob' : 'html', { open: 'never' }],
   ],
   use: {
-    // Traces are heavy so we want to use them sparingly, but having full trace
-    // to reference of the latest dev build is useful to inspect.
-    trace: process.env.BRANCH_NAME === 'dev' ? 'on' : 'on-first-retry',
+    baseURL: 'http://127.0.0.1:3000',
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
   projects: [
     {
@@ -34,5 +35,6 @@ export default defineConfig({
     command: 'pnpm dev:test-app',
     port: 3000,
     timeout: 15000,
+    reuseExistingServer: !process.env.CI,
   },
 });
