@@ -4,7 +4,7 @@
   "exclude": ["./dist/"],
   "compilerOptions": {
     "baseUrl": "src",
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "node"],
     "outDir": "./dist"
   }
 }

@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.27.1",
-    "@babel/runtime": "7.26.0",
+    "@babel/runtime": "7.28.4",
     "@leather.io/models": "workspace:*",
     "@leather.io/panda-preset": "workspace:*",
     "@microsoft/api-extractor": "7.52.8",

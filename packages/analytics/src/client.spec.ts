@@ -1,14 +1,13 @@
 // write tests for the analytics client
 import { AnalyticsClient } from './client';
+import { AnalyticsClientInterface } from './types';
 
-export const mockExternalAnalyticsClient = {
+export const mockExternalAnalyticsClient: AnalyticsClientInterface = {
   track: vi.fn(),
   screen: vi.fn(),
   group: vi.fn(),
   identify: vi.fn(),
   page: vi.fn(),
-  register: vi.fn(),
-  deregister: vi.fn(),
 };
 
 describe('AnalyticsClient', () => {

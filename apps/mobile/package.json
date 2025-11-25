@@ -156,7 +156,7 @@
   "devDependencies": {
     "@babel/core": "7.27.1",
     "@babel/plugin-transform-class-static-block": "7.26.0",
-    "@babel/runtime": "7.26.0",
+    "@babel/runtime": "7.28.4",
     "@leather.io/prettier-config": "workspace:*",
     "@lingui/babel-plugin-lingui-macro": "5.4.0",
     "@lingui/cli": "5.4.0",

@@ -36,7 +36,7 @@
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
-    "@babel/runtime": "7.26.0",
+    "@babel/runtime": "7.28.4",
     "@commitlint/cli": "19.6.0",
     "@commitlint/config-conventional": "19.6.0",
     "@leather.io/eslint-config": "workspace:*",
@@ -76,10 +76,21 @@
   "packageManager": "pnpm@10.18.3+sha512.bbd16e6d7286fd7e01f6b3c0b3c932cda2965c06a908328f74663f10a9aea51f1129eea615134bf992831b009eabe167ecb7008b597f40ff9bc75946aadfb08d",
   "pnpm": {
     "overrides": {
+      "@microsoft/api-extractor": "7.52.8",
       "levelup>semver": "5.7.2",
       "@expo/cli>@react-native-community/cli-server-api": "18.0.1",
       "@react-native/dev-middleware>ws": "8.17.1",
-      "tough-cookie": "6.0.0"
+      "tough-cookie": "6.0.0",
+      "@babel/runtime": "7.28.4",
+      "brace-expansion@1": "1.1.12",
+      "brace-expansion@2": "2.0.2",
+      "esbuild": "0.25.0",
+      "glob@10": "10.5.0",
+      "glob@11": "11.1.0",
+      "js-yaml": "4.1.1",
+      "min-document": "2.19.2",
+      "prismjs": "1.30.0",
+      "vite": "7.1.11"
     },
     "packageExtensions": {
       "@expo/cli@*": {

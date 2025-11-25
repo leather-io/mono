@@ -118,7 +118,7 @@ export const config = {
       vm: require.resolve('vm-browserify'),
       assert: require.resolve('assert'),
       'lottie-web': path.resolve('node_modules/lottie-web/build/player/lottie_light.js'),
-      fs: require.resolve('browserify-fs'),
+      fs: false,
       path: require.resolve('path-browserify'),
       os: require.resolve('os-browserify/browser'),
       process: require.resolve('process/browser'),
