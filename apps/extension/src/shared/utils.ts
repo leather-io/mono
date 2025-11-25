@@ -6,8 +6,14 @@ import { logger } from './logger';
 export const defaultWalletKeyId = 'default';
 
 export function closeWindow() {
-  if (process.env.DEBUG_PREVENT_WINDOW_CLOSE === 'true') {
-    logger.warn('Prevented window close with flag DEBUG_PREVENT_WINDOW_CLOSE');
+  const isAutomationEnv = typeof navigator !== 'undefined' && navigator.webdriver;
+  const preventCloseWithFlag = process.env.DEBUG_PREVENT_WINDOW_CLOSE === 'true';
+  if (preventCloseWithFlag || isAutomationEnv) {
+    logger.warn(
+      preventCloseWithFlag
+        ? 'Prevented window close with flag DEBUG_PREVENT_WINDOW_CLOSE'
+        : 'Prevented window close while running in an automated browser'
+    );
     return;
   }
   // We prevent `window.close()` directly as to allow for debugging helper
