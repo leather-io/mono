@@ -7,7 +7,7 @@ import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 
 const queryOptions = {
   staleTime: secondsInMs(10),
-  gcTime: minutesInMs(10),
+  gcTime: minutesInMs(5),
   refetchOnWindowFocus: false,
   refetchOnMount: true,
 };
