@@ -19,6 +19,32 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.91.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.90.0...@leather.io/mobile-v2.91.0) (2025-11-25)
+
+
+### Features
+
+* decompose collectibles service ([06c88f2](https://github.com/leather-io/mono/commit/06c88f2d336cac777b5acbf2cc933a65eadba7f2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.8
+    * @leather.io/bitcoin bumped to 0.35.5
+    * @leather.io/constants bumped to 0.28.1
+    * @leather.io/crypto bumped to 1.12.7
+    * @leather.io/features bumped to 1.1.1
+    * @leather.io/models bumped to 0.50.0
+    * @leather.io/provider bumped to 1.6.9
+    * @leather.io/query bumped to 2.45.3
+    * @leather.io/rpc bumped to 2.21.1
+    * @leather.io/services bumped to 1.44.0
+    * @leather.io/stacks bumped to 1.19.3
+    * @leather.io/ui bumped to 1.97.1
+    * @leather.io/utils bumped to 0.49.1
+
 ## [2.90.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.89.0...@leather.io/mobile-v2.90.0) (2025-11-19)
 
 
