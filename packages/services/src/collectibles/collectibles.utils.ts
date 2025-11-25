@@ -28,6 +28,13 @@ export function mapBisInscriptionToCreateInscriptionData(
   };
 }
 
+export function sortBisInscriptionByBlockHeight(a: BisInscription, b: BisInscription) {
+  return (
+    b.last_transfer_block_height ??
+    b.genesis_height - (a.last_transfer_block_height ?? a.genesis_height)
+  );
+}
+
 export function sortByBlockHeight(a: { blockHeight: number }, b: { blockHeight: number }) {
   return b.blockHeight - a.blockHeight;
 }

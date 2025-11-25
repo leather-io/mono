@@ -12,6 +12,9 @@ import { StxBalancesService } from './balances/stx-balances.service';
 import { BnsService } from './bns/bns.service';
 import { BitcoinCoinSelectionService } from './coin-selection/bitcoin-coin-selection.service';
 import { CollectiblesService } from './collectibles/collectibles.service';
+import { InscriptionsService } from './collectibles/inscriptions.service';
+import { Sip9sService } from './collectibles/sip9s.service';
+import { StampsService } from './collectibles/stamps.service';
 import { BitcoinTransactionFeesService } from './fees/bitcoin-transaction-fees.service';
 import { StacksTransactionFeesService } from './fees/stacks-transaction-fees.service';
 import { BestInSlotApiClient } from './infrastructure/api/best-in-slot/best-in-slot-api.client';
@@ -155,6 +158,16 @@ export function getGraniteV1BorrowService() {
 export function getYieldService() {
   return getServicesContainer().get(YieldService);
 }
+export function getInscriptionsService() {
+  return getServicesContainer().get(InscriptionsService);
+}
+export function getSip9sService() {
+  return getServicesContainer().get(Sip9sService);
+}
+export function getStampsService() {
+  return getServicesContainer().get(StampsService);
+}
+
 /* 
   API Layer Clients
 */
