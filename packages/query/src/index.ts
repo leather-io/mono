@@ -1,6 +1,5 @@
 export * from './bitcoin/address/address.utils';
 export * from './bitcoin/address/transactions-by-address.query';
-export * from './bitcoin/address/utxos-by-address.query';
 export * from './bitcoin/balance/btc-blockbook-utxos';
 export * from './bitcoin/balance/btc-taproot-balance.query';
 export * from './bitcoin/balance/balance.utils';
