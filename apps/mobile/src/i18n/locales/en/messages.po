@@ -1397,6 +1397,9 @@ msgstr "Retry"
 msgid "Reveal account"
 msgstr "Reveal account"
 
+#: src/features/send/forms/btc/btc-form.tsx:126
+#: src/features/send/forms/stx/sip10-form.tsx:149
+#: src/features/send/forms/stx/stx-form.tsx:140
 #: src/features/swap/screens/swap-form-screen.tsx:120
 msgid "Review"
 msgstr "Review"
@@ -1593,6 +1596,7 @@ msgstr "Submitting..."
 msgid "Success"
 msgstr "Success"
 
+#: src/components/action-buttons.tsx:77
 #: src/features/swap/screens/swap-form-screen.tsx:62
 msgid "Swap"
 msgstr "Swap"
