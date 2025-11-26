@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Animated, { FadeIn, FadeOut, LayoutAnimationConfig } from 'react-native-reanimated';
 
 import { useLiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
 import { useSwapDependencies } from '@/features/swap/use-swap-dependencies';
@@ -49,19 +50,35 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
   switch (currentScreen) {
     case 'form':
       return (
-        <SwapFormScreen
-          swapStateResult={swapStateResult}
-          liveEstimate={liveEstimate}
-          onPressReview={goToReview}
-        />
+        <Animated.View
+          key="form"
+          style={{ flex: 1 }}
+          entering={FadeIn.duration(150)}
+          exiting={FadeOut.duration(150)}
+        >
+          <LayoutAnimationConfig skipEntering>
+            <SwapFormScreen
+              swapStateResult={swapStateResult}
+              liveEstimate={liveEstimate}
+              onPressReview={goToReview}
+            />
+          </LayoutAnimationConfig>
+        </Animated.View>
       );
     case 'review':
       return (
-        <SwapReviewScreen
-          swapStateResult={swapStateResult}
-          liveEstimate={liveEstimate}
-          onPressBack={goToForm}
-        />
+        <Animated.View
+          key="review"
+          style={{ flex: 1 }}
+          entering={FadeIn.duration(150)}
+          exiting={FadeOut.duration(150)}
+        >
+          <SwapReviewScreen
+            swapStateResult={swapStateResult}
+            liveEstimate={liveEstimate}
+            onPressBack={goToForm}
+          />
+        </Animated.View>
       );
     default:
       assertUnreachable(currentScreen);
