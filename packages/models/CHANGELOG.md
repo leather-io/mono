@@ -36,6 +36,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.50.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.49.0...@leather.io/models-v0.50.0) (2025-11-26)
+
+
+### Features
+
+* normalize swap amount and percentage formats ([d5f1075](https://github.com/leather-io/mono/commit/d5f1075e4bf47fc92719d9e7fc604ff21e0d290a))
+
 ## [0.49.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.48.0...@leather.io/models-v0.49.0) (2025-11-19)
 
 

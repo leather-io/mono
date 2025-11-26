@@ -489,6 +489,22 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.98.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.97.0...@leather.io/ui-v1.98.0) (2025-11-26)
+
+
+### Features
+
+* **ui:** bring back android back handler support to Sheet ([9c53294](https://github.com/leather-io/mono/commit/9c532946022d0c0f04c4be4e86ffc7664cd594be))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.49.1
+  * devDependencies
+    * @leather.io/models bumped to 0.50.0
+
 ## [1.97.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.96.0...@leather.io/ui-v1.97.0) (2025-11-19)
 
 
