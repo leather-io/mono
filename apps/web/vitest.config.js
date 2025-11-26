@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { defineProject } from 'vitest/config';
 
-import { defaultVitestUnitTestingConfig } from '../../config/vitest-configs';
+import { defaultVitestUnitTestingConfig } from '@leather.io/test-config';
 
 export default defineProject({
   ...defaultVitestUnitTestingConfig,

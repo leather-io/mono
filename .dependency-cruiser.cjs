@@ -273,7 +273,7 @@ module.exports = {
         pathNot: [
           '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx|ls|coffee|litcoffee|coffee[.]md)$',
           'theme-web',
-          'tsup',
+          'tsdown',
           '.stories.',
           'packages/cms/src/studio', // Sanity Studio is development-only
         ],

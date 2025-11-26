@@ -1,17 +1,56 @@
 import { memo } from 'react';
 
 import { Box, Flex } from 'leather-styles/jsx';
-import { Highlight } from 'prism-react-renderer';
+import { token } from 'leather-styles/tokens';
+import { Highlight, type PrismTheme } from 'prism-react-renderer';
 
 import type { PrismType } from './clarity-prism.shared';
 import { startPad } from './start-pad.shared';
-import {
-  GetGrammaticalTokenProps,
-  GrammaticalToken,
-  Language,
-  RenderProps,
-  theme,
-} from './utils.shared';
+import { GetGrammaticalTokenProps, GrammaticalToken, Language, RenderProps } from './utils.shared';
+
+const theme: PrismTheme = {
+  plain: {
+    color: token('colors.ink.text-primary'),
+  },
+  styles: [
+    {
+      types: ['comment', 'punctuation'],
+      style: {
+        color: token('colors.ink.text-subdued'),
+      },
+    },
+    {
+      types: ['operator'],
+      style: {
+        color: token('colors.ink.text-primary'),
+      },
+    },
+    {
+      types: ['builtin', 'tag', 'changed', 'keyword'],
+      style: {
+        color: token('colors.yellow.action-primary-default'),
+      },
+    },
+    {
+      types: ['function'],
+      style: {
+        color: token('colors.red.action-primary-default'),
+      },
+    },
+    {
+      types: ['number', 'variable', 'inserted'],
+      style: {
+        color: token('colors.yellow.action-primary-default'),
+      },
+    },
+    {
+      types: ['deleted', 'string', 'symbol', 'char'],
+      style: {
+        color: token('colors.green.action-primary-default'),
+      },
+    },
+  ],
+};
 
 const lineNumberWidth = 60;
 function getLineNumber(n: number, length: number) {

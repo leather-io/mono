@@ -1,9 +1,6 @@
 import { CSSProperties } from 'react';
 import type { StyleProp, TextStyle } from 'react-native';
 
-import { token } from 'leather-styles/tokens';
-import { PrismTheme } from 'prism-react-renderer';
-
 type PrismPlatform = 'web' | 'mobile';
 
 export interface GrammaticalToken {
@@ -90,47 +87,3 @@ export type Language =
   | 'typescript'
   | 'wasm'
   | 'yaml';
-
-export const theme: PrismTheme = {
-  plain: {
-    color: token('colors.ink.text-primary'),
-  },
-  styles: [
-    {
-      types: ['comment', 'punctuation'],
-      style: {
-        color: token('colors.ink.text-subdued'),
-      },
-    },
-    {
-      types: ['operator'],
-      style: {
-        color: token('colors.ink.text-primary'),
-      },
-    },
-    {
-      types: ['builtin', 'tag', 'changed', 'keyword'],
-      style: {
-        color: token('colors.yellow.action-primary-default'),
-      },
-    },
-    {
-      types: ['function'],
-      style: {
-        color: token('colors.red.action-primary-default'),
-      },
-    },
-    {
-      types: ['number', 'variable', 'inserted'],
-      style: {
-        color: token('colors.yellow.action-primary-default'),
-      },
-    },
-    {
-      types: ['deleted', 'string', 'symbol', 'char'],
-      style: {
-        color: token('colors.green.action-primary-default'),
-      },
-    },
-  ],
-};

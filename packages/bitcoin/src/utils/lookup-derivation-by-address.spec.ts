@@ -1,6 +1,6 @@
 import { deriveRootKeychainFromMnemonic } from '@leather.io/crypto';
+import { testMnemonic } from '@leather.io/test-config';
 
-import { testMnemonic } from '../../../../config/test-helpers';
 import { deriveTaprootAccount } from '../payments/p2tr-address-gen';
 import { deriveNativeSegwitAccountFromRootKeychain } from '../payments/p2wpkh-address-gen';
 import { createBitcoinAddress } from '../validation/bitcoin-address';

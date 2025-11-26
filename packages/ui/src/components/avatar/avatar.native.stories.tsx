@@ -1,7 +1,7 @@
 import type { Meta } from '@storybook/react';
 
-import { Box, SettingsGearIcon } from '../../../native';
 import BtcIcon from '../../assets/icons/bitcoin.svg';
+import { Box, SettingsGearIcon } from '../../native';
 import { Avatar } from './avatar.native';
 
 const meta: Meta<typeof Avatar> = {

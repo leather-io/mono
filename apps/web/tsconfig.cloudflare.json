@@ -3,6 +3,7 @@
   "include": [
     ".react-router/types/**/*",
     "app/**/*",
+    "tests/**/*",
     "app/**/.server/**/*",
     "app/**/.client/**/*",
     "workers/**/*",

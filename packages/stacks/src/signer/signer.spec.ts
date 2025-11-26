@@ -1,8 +1,8 @@
 import { HDKey } from '@scure/bip32';
 
 import { deriveBip39SeedFromMnemonic } from '@leather.io/crypto';
+import { testMnemonic } from '@leather.io/test-config';
 
-import { testMnemonic } from '../../../../config/test-helpers';
 import { stacksRootKeychainToAccountDescriptor } from '../stacks.utils';
 import { initalizeStacksSigner } from './signer';
 

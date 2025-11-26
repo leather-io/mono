@@ -4,16 +4,19 @@
   "description": "Generic crypto utils package for Leather",
   "version": "1.12.7",
   "license": "MIT",
+  "type": "module",
   "scripts": {
-    "build": "tsup",
-    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "build": "tsdown",
+    "build:watch": "tsdown --watch",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "prepublish": "pnpm build",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
-    ".": "./dist/index.mjs"
+    ".": "./dist/index.js"
   },
   "dependencies": {
     "@leather.io/utils": "workspace:*",
@@ -22,12 +25,16 @@
     "just-memoize": "2.2.0"
   },
   "devDependencies": {
-    "tsup": "8.4.0",
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/test-config": "workspace:*",
+    "prettier": "3.5.1",
+    "tsdown": "0.16.5",
     "vitest": "2.1.9"
   },
   "files": [
     "dist"
   ],
+  "prettier": "@leather.io/prettier-config",
   "publishConfig": {
     "access": "public"
   }

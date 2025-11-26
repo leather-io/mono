@@ -1,11 +1,10 @@
 {
   "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
-  "include": ["**/*"],
-  "exclude": ["./dist"],
+  "include": ["src/**/*"],
   "compilerOptions": {
-    "baseUrl": "src",
+    "baseUrl": "./src",
+    "rootDir": "./src",
     "types": ["vitest/globals"],
-    "outDir": "./dist",
-    "skipLibCheck": true
+    "outDir": "./dist"
   }
 }

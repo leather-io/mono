@@ -1,7 +1,7 @@
 import { InscriptionAsset } from '@leather.io/models';
 import { createMoney, sumNumbers } from '@leather.io/utils';
 
-import { UtxoWithDerivationPath } from '../../../types/utxo';
+import { UtxoWithDerivationPath } from '../../types/utxo';
 import { filterUtxosWithInscriptions } from '../address/address.utils';
 
 const RETRIEVE_UTXO_DUST_AMOUNT = 10000;

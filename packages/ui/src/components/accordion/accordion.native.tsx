@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 
-import { Text, TouchableOpacity } from '../../../native';
+import { Text, TouchableOpacity } from '../../native';
 
 interface AccordionProps {
   content: ReactNode;

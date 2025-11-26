@@ -1,6 +1,6 @@
 import { ReadOnlyFunctionArgs } from '@stacks/stacks-blockchain-api-types';
 
-import { Paginated } from '../../types/api-types';
+import { Paginated } from '../types/api-types';
 
 export interface CallReadOnlyFunctionArgs {
   contractAddress: string;

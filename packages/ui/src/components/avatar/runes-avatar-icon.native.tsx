@@ -1,7 +1,7 @@
 import Svg, { Rect } from 'react-native-svg';
 
 import { useTheme } from '@shopify/restyle';
-import { Theme } from 'src/theme-native/theme';
+import { Theme } from 'theme-native/theme';
 
 import BtcIcon from '../../assets/icons/bitcoin.svg';
 import { Avatar } from './avatar.native';

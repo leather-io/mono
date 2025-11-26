@@ -1,3 +1,69 @@
 {
-  "extends": "./packages/tsconfig-config/tsconfig.base.json"
+  "extends": "./packages/tsconfig-config/tsconfig.base.json",
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/web/tsconfig.json"
+    },
+    {
+      "path": "./apps/mobile/tsconfig.json"
+    },
+    {
+      "path": "./apps/extension/tsconfig.json"
+    },
+    {
+      "path": "./packages/analytics/tsconfig.json"
+    },
+    {
+      "path": "./packages/bitcoin/tsconfig.json"
+    },
+    {
+      "path": "./packages/cms/tsconfig.json"
+    },
+    {
+      "path": "./packages/constants/tsconfig.json"
+    },
+    {
+      "path": "./packages/crypto/tsconfig.json"
+    },
+    {
+      "path": "./packages/features/tsconfig.json"
+    },
+    {
+      "path": "./packages/models/tsconfig.json"
+    },
+    {
+      "path": "./packages/provider/tsconfig.json"
+    },
+    {
+      "path": "./packages/query/tsconfig.json"
+    },
+    {
+      "path": "./packages/rpc/tsconfig.json"
+    },
+    {
+      "path": "./packages/sdk/tsconfig.json"
+    },
+    {
+      "path": "./packages/services/tsconfig.json"
+    },
+    {
+      "path": "./packages/stacks/tsconfig.json"
+    },
+    {
+      "path": "./packages/state/tsconfig.json"
+    },
+    {
+      "path": "./packages/tokens/tsconfig.json"
+    },
+    {
+      "path": "./packages/ui/tsconfig.native.json"
+    },
+    {
+      "path": "./packages/ui/tsconfig.web.json"
+    },
+    {
+      "path": "./packages/utils/tsconfig.json"
+    }
+  ]
 }

@@ -2,7 +2,7 @@ import { BTC_DECIMALS } from '@leather.io/constants';
 import type { BitcoinTx, InscriptionAsset, Money } from '@leather.io/models';
 import { isEmptyArray, sumNumbers } from '@leather.io/utils';
 
-import { UtxoResponseItem } from '../../../types/utxo';
+import { UtxoResponseItem } from '../../types/utxo';
 import { RunesOutputsByAddress } from '../clients/best-in-slot';
 
 export function createBitcoinCryptoCurrencyAssetTypeWrapper(balance: Money) {

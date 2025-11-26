@@ -8,16 +8,16 @@
     "cf-typegen": "wrangler types",
     "deploy": "pnpm build && wrangler deploy",
     "dev": "react-router dev",
-    "format": "prettier --write \"app/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
-    "format:check": "prettier --check \"app/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "lint": "eslint \"app/**/*.{ts,tsx}\"",
     "prepare": "pnpm cf-typegen && panda codegen",
     "preview": "npm run build && vite preview",
     "test:coverage": "vitest run --coverage",
     "test:integration": "playwright test",
     "test:unit": "vitest run",
-    "typecheck": "pnpm cf-typegen && react-router typegen && tsc -b",
-    "typegen": "pnpm cf-typegen && react-router typegen && tsc -b"
+    "typecheck": "pnpm cf-typegen && react-router typegen && tsc --noEmit",
+    "typegen": "pnpm cf-typegen && react-router typegen"
   },
   "msw": {
     "workerDirectory": [
@@ -85,7 +85,8 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.15.2",
-    "@cloudflare/workers-types": "4.20251121.0",
+    "@cloudflare/workers-types": "4.20251011.0",
+    "@leather.io/test-config": "workspace:*",
     "@msw/playwright": "0.4.2",
     "@originjs/vite-plugin-commonjs": "1.0.3",
     "@pandacss/dev": "0.53.6",
@@ -105,7 +106,7 @@
     "rollup-plugin-node-polyfills": "0.2.1",
     "ts-node": "10.9.2",
     "tty-browserify": "0.0.1",
-    "typescript": "5.8.3",
+    "typescript": "5.9.3",
     "vite": "7.0.6",
     "vite-plugin-svgr": "4.3.0",
     "vite-tsconfig-paths": "5.1.4",

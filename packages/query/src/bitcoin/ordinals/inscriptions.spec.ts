@@ -1,4 +1,4 @@
-import { mockInscriptionResponsesList } from '../../../test/mock-inscriptions';
+import { mockInscriptionResponsesList } from '../../test/mock-inscriptions';
 import { createBestInSlotInscription } from './inscription.utils';
 import { findInscriptionsOnUtxo } from './ordinals.utils';
 

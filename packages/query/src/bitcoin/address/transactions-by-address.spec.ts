@@ -3,7 +3,7 @@ import {
   mockPendingTxs1,
   mockPendingTxs2,
   mockPendingTxs3,
-} from '../../../test/mock-btc-txs';
+} from '../../test/mock-btc-txs';
 import { calculateOutboundPendingTxsValue } from './address.utils';
 
 describe(calculateOutboundPendingTxsValue.name, () => {

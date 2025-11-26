@@ -2,10 +2,13 @@
   "name": "@leather.io/cms",
   "version": "1.3.1",
   "license": "MIT",
+  "type": "module",
   "scripts": {
-    "build": "pnpm sanity:schema-extract && pnpm sanity:generate && tsup && tsc --emitDeclarationOnly",
+    "build": "pnpm sanity:schema-extract && pnpm sanity:generate && tsdown",
     "build:watch": "nodemon",
     "dev": "concurrently \"sanity dev\" \"nodemon\"",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "sanity:build": "sanity build",
     "sanity:deploy": "sanity deploy --yes",
     "sanity:deploy-graphql": "sanity graphql deploy",
@@ -14,7 +17,7 @@
     "sanity:start": "sanity start",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit --project ./tsconfig.json"
+    "typecheck": "tsc --noEmit"
   },
   "exports": {
     ".": {
@@ -33,6 +36,7 @@
     "zod": "4.0.17"
   },
   "devDependencies": {
+    "@leather.io/prettier-config": "workspace:*",
     "@sanity/eslint-config-studio": "5.0.2",
     "@sanity/icons": "3.7.4",
     "@sanity/vision": "4.6.1",
@@ -44,8 +48,8 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "styled-components": "6.1.18",
-    "tsup": "8.4.0",
-    "typescript": "5.8.3",
+    "tsdown": "0.16.5",
+    "typescript": "5.9.3",
     "vitest": "2.1.9"
   },
   "keywords": [
@@ -53,5 +57,6 @@
     "sanity"
   ],
   "main": "index.ts",
+  "prettier": "@leather.io/prettier-config",
   "private": true
 }

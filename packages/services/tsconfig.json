@@ -5,8 +5,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "types": ["vitest/globals"],
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "rootDir": "./src"
   },
-  "include": ["**/*", ".*.ts", "config/*.json"],
-  "exclude": ["./dist/"]
+  "include": ["src/**/*"]
 }

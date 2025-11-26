@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Box, ChevronRightIcon } from '../../../native';
+import { Box, ChevronRightIcon } from '../../native';
 import { ItemLayout } from './item-layout.native';
 
 const meta: Meta<typeof ItemLayout> = {

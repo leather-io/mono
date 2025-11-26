@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { BitcoinTx } from '@leather.io/models';
 
-import { UtxoResponseItem } from '../../../types/utxo';
+import { UtxoResponseItem } from '../../types/utxo';
 import { getBitcoinRatelimiter } from '../bitcoin-rate-limiter';
 import { BestInSlotApi } from './best-in-slot';
 

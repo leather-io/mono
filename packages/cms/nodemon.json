@@ -1,15 +1,7 @@
 {
-  "watch": [
-    "src/**/*.ts"
-  ],
+  "watch": ["src/**/*.ts"],
   "ext": "ts",
-  "ignore": [
-    "dist/**",
-    "src/generated/**",
-    "node_modules/**",
-    "*.spec.ts",
-    "*.test.ts"
-  ],
+  "ignore": ["dist/**", "src/generated/**", "node_modules/**", "*.spec.ts", "*.test.ts"],
   "exec": "pnpm build",
   "delay": "300"
 }

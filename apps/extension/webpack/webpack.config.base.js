@@ -1,19 +1,18 @@
-import { execSync } from 'node:child_process';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import Dotenv from 'dotenv-webpack';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { execSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import ProgressBarPlugin from 'progress-bar-webpack-plugin';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
+import * as url from 'url';
 import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import * as url from 'url';
 
 import packageJson from '../package.json' with { type: 'json' };
 import generateManifest from '../scripts/generate-manifest.js';
-
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
@@ -86,7 +85,7 @@ const aliases = {
   '@stacks/transactions': '@stacks/transactions/dist/esm',
   '@stacks/wallet-sdk': '@stacks/wallet-sdk/dist/esm',
   'leather-styles': path.resolve('leather-styles'),
-  'react': path.resolve('./node_modules/react'),
+  react: path.resolve('./node_modules/react'),
   'react-dom': path.resolve('./node_modules/react-dom'),
 };
 
@@ -103,7 +102,7 @@ export const config = {
     path: DIST_ROOT_PATH,
     chunkFilename: !IS_DEV ? '[name].[contenthash:8].chunk.js' : IS_DEV && '[name].chunk.js',
     filename: () => '[name].js',
-    clean: true
+    clean: true,
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json', '.d.ts', '.mdx'],
@@ -112,7 +111,7 @@ export const config = {
     fallback: {
       global: false,
       node: false,
-      buffer: require.resolve("buffer/"),
+      buffer: require.resolve('buffer/'),
       crypto: require.resolve('crypto-browserify'),
       stream: require.resolve('stream-browserify'),
       vm: require.resolve('vm-browserify'),
@@ -192,7 +191,7 @@ export const config = {
         test: /\.svg$/,
         use: [
           {
-            loader: "@svgr/webpack",
+            loader: '@svgr/webpack',
             options: {
               svgoConfig: {
                 plugins: [
@@ -200,13 +199,13 @@ export const config = {
                     name: 'preset-default',
                     params: {
                       overrides: {
-                        removeViewBox: false
+                        removeViewBox: false,
                       },
                     },
                   },
-                ]
-              }
-            }
+                ],
+              },
+            },
           },
         ],
       },

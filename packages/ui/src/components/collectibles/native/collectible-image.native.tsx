@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState } from 'react';
 
 import { Image } from 'expo-image';
 
-import { Box, Pressable, PressableProps } from '../../../../native';
+import { Box, Pressable, PressableProps } from '../../../native';
 import { ImageUnavailable } from './image-unavailable.native';
 
 export interface CollectibleImageProps extends PressableProps {

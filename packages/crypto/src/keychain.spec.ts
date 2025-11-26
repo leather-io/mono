@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
-import { testMnemonic } from '../../../config/test-helpers';
+import { testMnemonic } from '@leather.io/test-config';
+
 import {
   deriveBip39SeedFromMnemonic,
   deriveKeychainExtendedPublicKeyDescriptor,
@@ -38,12 +39,12 @@ describe(deriveKeychainExtendedPublicKeyDescriptor.name, () => {
   });
 });
 
-const fingerprint = 'yg82822e'
-const accountIndex = 42
-const accountId = 'yg82822e/42'
+const fingerprint = 'yg82822e';
+const accountIndex = 42;
+const accountId = 'yg82822e/42';
 
 describe(makeAccountIdentifer.name, () => {
   test('it makes correct accountId', () => {
-    expect(makeAccountIdentifer(fingerprint, accountIndex)).toEqual(accountId)
-  })
-})
+    expect(makeAccountIdentifer(fingerprint, accountIndex)).toEqual(accountId);
+  });
+});

@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+
 import { AppContext } from '@common/context';
 
 export const useSTXAddress = (): string | undefined => {

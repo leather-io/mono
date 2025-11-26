@@ -2,7 +2,7 @@ node_modules
 dist
 tsconfig.tsbuildinfo
 .turbo/
-.tsup/
+.tsdown/
 .idea
 .eslintcache
 # macOS
@@ -13,5 +13,5 @@ coverage
 architecture/*.svg
 *.code-workspace
 tmp
-**/tsup.config.native.bundled*
+**/tsdown.config.native.bundled*
 **/.claude/settings.local.json

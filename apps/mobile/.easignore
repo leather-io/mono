@@ -3,7 +3,7 @@ node_modules
 dist
 tsconfig.tsbuildinfo
 .turbo/
-.tsup/
+.tsdown/
 .idea
 .eslintcache
 # macOS

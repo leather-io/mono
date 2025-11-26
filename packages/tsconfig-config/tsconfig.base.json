@@ -21,8 +21,8 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "incremental": false,
-    "composite": false,
+    "incremental": true,
+    "composite": true,
     "declaration": true,
     "declarationMap": true,
     "isolatedModules": true

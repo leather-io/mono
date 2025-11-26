@@ -72,8 +72,9 @@ export function isTypedArray(val: unknown): val is Uint8Array {
   return val instanceof TypedArray;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export function noop() {}
+export function noop() {
+  // expected to be empty
+}
 
 export function ensureArray<T>(value: T | T[]): T[] {
   return Array.isArray(value) ? value : [value];
@@ -98,7 +99,7 @@ export const defaultWalletKeyId = 'default';
 
 export function reverseBytes(bytes: Buffer): Buffer;
 export function reverseBytes(bytes: Uint8Array): Uint8Array;
-export function reverseBytes(bytes: Buffer | Uint8Array) {
+export function reverseBytes(bytes: Buffer | Uint8Array): Buffer | Uint8Array {
   if (Buffer.isBuffer(bytes)) return Buffer.from(bytes).reverse();
   return new Uint8Array(bytes.slice().reverse());
 }
@@ -159,7 +160,7 @@ export function getTicker(value: string) {
       name = `${getLetters(words[0])}${getLetters(words[1], 2)}`;
     }
   } else if (name.length >= 3) {
-    name = `${getLetters(name, 3)}`;
+    name = getLetters(name, 3);
   }
   return name.toUpperCase();
 }

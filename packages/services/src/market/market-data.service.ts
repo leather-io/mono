@@ -175,8 +175,8 @@ export class MarketDataService {
     signal?: AbortSignal
   ): Promise<MarketData> {
     const [btcMarketData, bisMarketInfo] = await Promise.all([
-      await this.getNativeAssetMarketDataUsd(btcAsset, signal),
-      await this.bestInSlotApiClient.fetchBrc20MarketInfo(asset.symbol, { signal }),
+      this.getNativeAssetMarketDataUsd(btcAsset, signal),
+      this.bestInSlotApiClient.fetchBrc20MarketInfo(asset.symbol, { signal }),
     ]);
     const brc20PriceUsd = baseCurrencyAmountInQuote(
       createMoney(bisMarketInfo.min_listed_unit_price ?? 0, 'BTC'),
