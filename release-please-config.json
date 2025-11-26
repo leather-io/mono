@@ -86,6 +86,13 @@
       "draft": false,
       "prerelease": false
     },
+    "packages/queries": {
+      "changelog-path": "CHANGELOG.md",
+      "bump-minor-pre-major": false,
+      "bump-patch-for-minor-pre-major": false,
+      "draft": false,
+      "prerelease": false
+    },
     "packages/query": {
       "changelog-path": "CHANGELOG.md",
       "bump-minor-pre-major": false,
@@ -169,7 +176,5 @@
       "type": "node-workspace"
     }
   ],
-  "extra-files": [
-    "app.config.ts"
-  ]
+  "extra-files": ["app.config.ts"]
 }

@@ -1,9 +1,9 @@
-import { type QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import type { FungibleCryptoAsset } from '@leather.io/models';
-import { getMarketDataService } from '@leather.io/services';
-import { oneMinInMs } from '@leather.io/utils';
+import { createMarketDataQueryConfig } from '@leather.io/queries';
 
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import { toFetchState } from '@app/services/fetch-state';
 
 export function useMarketData(asset: FungibleCryptoAsset) {
@@ -11,14 +11,6 @@ export function useMarketData(asset: FungibleCryptoAsset) {
 }
 
 function useGetMarketDataQuery(asset: FungibleCryptoAsset) {
-  return useQuery({
-    queryKey: ['market-data-service-get-market-data', asset],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getMarketDataService().getMarketData(asset, signal),
-    refetchOnMount: true,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    staleTime: oneMinInMs,
-    gcTime: oneMinInMs,
-  });
+  const settings = useUserSettings();
+  return useQuery(createMarketDataQueryConfig(asset, settings));
 }

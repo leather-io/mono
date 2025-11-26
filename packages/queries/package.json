@@ -1,0 +1,50 @@
+{
+  "name": "@leather.io/queries",
+  "author": "Leather.io contact@leather.io",
+  "description": "Canonical React Query configurations for Leather services",
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/leather-io/mono/tree/dev/packages/queries",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-io/mono.git",
+    "directory": "packages/queries"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsup index.ts --format esm && tsc --emitDeclarationOnly",
+    "build:watch": "concurrently \"tsc --build --watch --preserveWatchOutput --emitDeclarationOnly\" \"tsup index.ts --format esm --watch\"",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "bugs": "https://github.com/leather-io/mono/issues",
+  "dependencies": {
+    "@leather.io/models": "workspace:*",
+    "@leather.io/services": "workspace:*",
+    "@leather.io/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/tsconfig-config": "workspace:*",
+    "concurrently": "8.2.2",
+    "prettier": "3.5.1",
+    "tsup": "8.4.0",
+    "typescript": "5.9.3",
+    "vitest": "2.1.9"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "5.85.5"
+  },
+  "prettier": "@leather.io/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  }
+}

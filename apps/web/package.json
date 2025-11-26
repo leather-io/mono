@@ -32,6 +32,7 @@
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/panda-preset": "workspace:*",
+    "@leather.io/queries": "workspace:*",
     "@leather.io/query": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/sdk": "workspace:*",
