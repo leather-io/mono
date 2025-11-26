@@ -5,8 +5,8 @@ import { getTaprootAddress, makeNativeSegwitAddressIndexDerivationPath } from '@
 import { NetworkConfiguration } from '@leather.io/models';
 import { createCounter, oneWeekInMs } from '@leather.io/utils';
 
-import { UtxoWithDerivationPath } from '../../../types/utxo';
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
+import { UtxoWithDerivationPath } from '../../types/utxo';
 import { BitcoinClient } from '../clients/bitcoin-client';
 import { hasInscriptions } from './address.utils';
 

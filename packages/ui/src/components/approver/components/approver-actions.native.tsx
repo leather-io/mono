@@ -1,4 +1,4 @@
-import { HasChildren } from 'src/utils/has-children.shared';
+import { HasChildren } from 'utils/has-children.shared';
 
 import { Box } from '../../box/box.native';
 

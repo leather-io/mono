@@ -11,6 +11,10 @@
     "directory": "packages/eslint-config"
   },
   "type": "module",
+  "scripts": {
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore"
+  },
   "exports": {
     ".": "./index.js",
     "./react": "./react.js"
@@ -18,12 +22,14 @@
   "bugs": "https://github.com/leather-io/mono/issues",
   "devDependencies": {
     "@eslint/js": "9.16.0",
+    "@leather.io/prettier-config": "workspace:*",
     "eslint": "9.28",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-react": "7.37.2",
     "eslint-plugin-react-hooks": "5.0.0",
     "globals": "15.12.0",
-    "typescript-eslint": "8.18.0"
+    "prettier": "3.5.1",
+    "typescript-eslint": "8.47.0"
   },
   "keywords": [
     "eslint",
@@ -38,6 +44,7 @@
     "globals": ">=15",
     "typescript-eslint": ">=8"
   },
+  "prettier": "@leather.io/prettier-config",
   "publishConfig": {
     "access": "public"
   }

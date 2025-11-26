@@ -7,7 +7,7 @@ import { Callout } from '../../callout/callout.web';
 import { Flag } from '../../flag/flag.web';
 import { ItemLayout } from '../../item-layout/item-layout.web';
 import { Pressable } from '../../pressable/pressable.web';
-import { BasicTooltip } from '../../tooltip';
+import { BasicTooltip } from '../../tooltip/index.web';
 import { Approver } from '../approver.web';
 
 export function ApproverDemo() {

@@ -1,7 +1,7 @@
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '@shopify/restyle';
-import { HasChildren } from 'src/utils/has-children.shared';
+import { HasChildren } from 'utils/has-children.shared';
 
 import { Theme } from '../../../theme-native';
 import { Box } from '../../box/box.native';

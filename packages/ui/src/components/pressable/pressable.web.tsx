@@ -1,5 +1,3 @@
-import { forwardRef } from 'react';
-
 import { type RecipeVariantProps, css, cva } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
@@ -88,11 +86,8 @@ export const pressableChevronStyles = css({
 
 type PressableVariantProps = RecipeVariantProps<typeof pressableRecipe>;
 
-export const Pressable = forwardRef<
-  HTMLButtonElement,
-  HTMLStyledProps<'button'> & PressableVariantProps
->((props, ref) => {
-  const { disabled, onClick, ...rest } = props;
+export function Pressable(props: HTMLStyledProps<'button'> & PressableVariantProps) {
+  const { disabled, onClick, ref, ...rest } = props;
   const isPressable = isDefined(onClick);
   return (
     <styled.button
@@ -103,6 +98,4 @@ export const Pressable = forwardRef<
       {...rest}
     />
   );
-});
-
-Pressable.displayName = 'Pressable';
+}

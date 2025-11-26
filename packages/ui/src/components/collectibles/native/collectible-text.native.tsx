@@ -1,6 +1,6 @@
 import { WebView } from 'react-native-webview';
 
-import { Pressable, Text } from '../../../../native';
+import { Pressable, Text } from '../../../native';
 import { CollectibleCard } from './collectible-card.native';
 
 interface CollectibleTextProps {

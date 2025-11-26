@@ -1,6 +1,6 @@
 import { BoxProps } from '@shopify/restyle';
 
-import { Box, Text, Theme } from '../../../native';
+import { Box, Text, Theme } from '../../native';
 
 interface ChipProps extends BoxProps<Theme> {
   label: string | number;

@@ -1,28 +1,24 @@
 {
-  "extends": "../tsconfig-config/tsconfig.base",
+  "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["ESNext", "DOM"],
     "baseUrl": "./src",
+    "rootDir": "./src",
     "outDir": "./dist-web",
     "paths": {
       "leather-styles/*": ["../leather-styles/*"]
     }
   },
   "include": [
-    "**/*.web.ts",
-    "**/*.web.tsx",
-    "web.exports.ts",
-    "**/*.shared.tsx",
-    "global.d.ts",
-    "leather-styles"
-  ],
-  "exclude": [
-    "node_modules",
-    "babel.config.cjs",
-    "metro.config.cjs",
-    "tsup.config.*.ts",
-    "**/*.js",
-    "./dist-*"
+    "src/**/*.web.ts",
+    "src/**/*.web.tsx",
+    "src/web.exports.ts",
+    "src/.storybook-web/**/*",
+    "src/**/*.shared.tsx",
+    "src/**/*.shared.ts",
+    "src/**/*.shared.spec.ts",
+    "src/global.d.ts",
+    "leather-styles/"
   ]
 }

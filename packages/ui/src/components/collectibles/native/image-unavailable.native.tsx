@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactNode } from 'react';
 
-import { Box, Text } from '../../../../native';
 import { Eye1ClosedIcon } from '../../../icons/eye-1-closed-icon.native';
+import { Box, Text } from '../../../native';
 import { CollectibleCard } from './collectible-card.native';
 
 interface ImageUnavailableProps extends PropsWithChildren {

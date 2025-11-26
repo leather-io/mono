@@ -1,5 +1,5 @@
-import { mockInscriptionsList } from '../../../test/mock-inscriptions';
-import { mockUtxos } from '../../../test/mock-utxos';
+import { mockInscriptionsList } from '../../test/mock-inscriptions';
+import { mockUtxos } from '../../test/mock-utxos';
 import { filterUtxosWithInscriptions } from './address.utils';
 
 describe(filterUtxosWithInscriptions, () => {

@@ -3,8 +3,8 @@ import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 
 import { Image } from 'expo-image';
 
-import { Box, CollectibleCard, Text, TouchableOpacity } from '../../../../native';
 import { PaperPlaneIcon } from '../../../icons/paper-plane-icon.native';
+import { Box, CollectibleCard, Text, TouchableOpacity } from '../../../native';
 
 interface CollectibleVideoProps {
   src: string;

@@ -3,7 +3,11 @@ import { defineConfig } from '@pandacss/dev';
 export default defineConfig({
   preflight: true,
 
-  include: ['./**/*.web.{ts,tsx}', './**/*.web.stories.{ts,tsx}', './**/*.shared.{ts,tsx}'],
+  include: [
+    './src/**/*.web.{ts,tsx}',
+    './src/**/*.web.stories.{ts,tsx}',
+    './src/**/*.shared.{ts,tsx}',
+  ],
 
   exclude: [],
 

@@ -8,26 +8,20 @@
     "allowJs": false,
     "checkJs": false,
     "noEmit": true,
-    "incremental": true,
     "baseUrl": ".",
     "rootDir": ".",
+    "outDir": "./dist",
     "noUncheckedIndexedAccess": true,
     "paths": {
       "@/*": ["src/*"]
     },
     "typeRoots": ["./src/i18n/lingui.d.ts"]
   },
-  "references": [
-    {
-      "path": "../../packages/ui/tsconfig.native.json"
-    }
-  ],
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     "src/scripts/injected-provider.js",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ],
-  "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "**/dist"]
+  ]
 }

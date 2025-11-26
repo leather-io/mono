@@ -21,7 +21,7 @@ ignore:
   - dist
   - node_modules
   - packages/**/.react-router
-  - packages/*/.tsup
+  - packages/*/.tsdown
   - packages/*/node_modules
   - packages/ui/android
   - packages/ui/dist-native

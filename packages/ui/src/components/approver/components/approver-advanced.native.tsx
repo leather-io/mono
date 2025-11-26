@@ -1,4 +1,4 @@
-import { HasChildren } from 'src/utils/has-children.shared';
+import type { HasChildren } from 'native';
 
 import { ChevronDownIcon } from '../../../icons/chevron-down-icon.native';
 import { ChevronUpIcon } from '../../../icons/chevron-up-icon.native';

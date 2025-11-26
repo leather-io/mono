@@ -1,9 +1,9 @@
 {
   "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
   "compilerOptions": {
+    "moduleResolution": "Bundler",
     "rootDir": "src",
     "outDir": "dist"
   },
-  "include": ["src/**/*"],
-  "exclude": []
+  "include": ["src/**/*"]
 }

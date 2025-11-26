@@ -2,7 +2,7 @@ import { ReactNode, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-import { Box, TouchableOpacity } from '../../../../native';
+import { Box, TouchableOpacity } from '../../../native';
 import { CollectibleCard } from './collectible-card.native';
 import { ImageUnavailable } from './image-unavailable.native';
 

@@ -1,10 +1,11 @@
 node_modules/
 pnpm-lock.yaml
 .turbo/
-.tsup/
+.tsdown/
 dist/
 dist-native/
 dist-web/
+build/
 leather-styles/
 package.json
 CHANGELOG.md
@@ -12,3 +13,5 @@ CHANGELOG.md
 storybook-static/
 coverage/
 apps/mobile/index.js
+*.lottie.json
+worker-configuration.d.ts

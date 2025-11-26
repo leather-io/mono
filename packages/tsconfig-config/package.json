@@ -10,9 +10,17 @@
     "url": "git@github.com:leather-io/mono.git",
     "directory": "packages/tsconfig-config"
   },
+  "scripts": {
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore"
+  },
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
-    "typescript": "5.8.3"
+    "typescript": "5.9.3"
+  },
+  "devDependencies": {
+    "@leather.io/prettier-config": "workspace:*",
+    "prettier": "3.5.1"
   },
   "keywords": [
     "leather",
@@ -20,6 +28,7 @@
     "tsconfig"
   ],
   "main": "tsconfig.base.json",
+  "prettier": "@leather.io/prettier-config",
   "publishConfig": {
     "access": "public"
   }

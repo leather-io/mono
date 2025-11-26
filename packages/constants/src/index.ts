@@ -23,7 +23,7 @@ export const HIGH_FEE_WARNING_LEARN_MORE_URL_STX =
 
 export const DEFAULT_FEE_RATE = 400;
 
-export const PERSISTENCE_CACHE_TIME = 1000 * 60 * 60 * 12; // 12 hours
+export const PERSISTENCE_CACHE_TIME: number = 1000 * 60 * 60 * 12; // 12 hours
 
 export const BTC_DECIMALS = 8;
 export const STX_DECIMALS = 6;
@@ -60,7 +60,7 @@ export const currencyNameMap = {
 // https://bitcoin.stackexchange.com/a/41082/139277
 export const BTC_P2WPKH_DUST_AMOUNT = 294;
 
-export const KEBAB_REGEX = /[A-Z\u00C0-\u00D6\u00D8-\u00DE]/g;
+export const KEBAB_REGEX: RegExp = /[A-Z\u00C0-\u00D6\u00D8-\u00DE]/g;
 
 export const DEFAULT_LIST_LIMIT = 50;
 
@@ -70,7 +70,7 @@ export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
 export const LEATHER_GUIDES_URL = 'https://leather.io/guides';
 
-export const LEATHER_GUIDES_CONNECT_DAPPS = `${LEATHER_GUIDES_URL}/connect-dapps`;
+export const LEATHER_GUIDES_CONNECT_DAPPS: string = `${LEATHER_GUIDES_URL}/connect-dapps`;
 
 export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 

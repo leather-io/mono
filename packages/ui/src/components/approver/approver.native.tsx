@@ -1,6 +1,4 @@
-import { useState } from 'react';
-
-import { HasChildren } from 'src/utils/has-children.shared';
+import { type ReactNode, useState } from 'react';
 
 import { ApproverProvider, useRegisterApproverChildren } from './approver-context.shared';
 import { ApproverActions } from './components/approver-actions.native';
@@ -12,7 +10,8 @@ import { ApproverOverview } from './components/approver-overview.native';
 import { ApproverSection } from './components/approver-section.native';
 import { ApproverSubheader } from './components/approver-subheader.native';
 
-interface ApproverProps extends HasChildren {
+interface ApproverProps {
+  children: ReactNode;
   requester?: string;
 }
 function Approver({ requester, children }: ApproverProps) {

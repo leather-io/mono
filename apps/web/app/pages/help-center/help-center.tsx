@@ -1,11 +1,12 @@
 import { useLoaderData } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { SanityImageAsset } from 'node_modules/@leather.io/cms/dist/client/src/generated/types';
 import { Page } from '~/layouts/page/page';
 import { GuideList } from '~/pages/help-center/components/guide-list';
 import { SupportFormProvider } from '~/pages/help-center/components/support-form-provider';
 import { loader } from '~/pages/help-center/help-center.route';
+
+import type { SanityImageAsset } from '@leather.io/cms';
 
 export function HelpCenter() {
   const { categories } = useLoaderData<typeof loader>();

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Box } from '../../../native';
+import { Box } from '../../native';
 import { Badge } from './badge.native';
 
 const meta: Meta<typeof Badge> = {

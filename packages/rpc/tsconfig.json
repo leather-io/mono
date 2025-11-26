@@ -3,6 +3,7 @@
   "include": ["src/**/*"],
   "compilerOptions": {
     "types": ["vitest/globals"],
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "rootDir": "./src"
   }
 }

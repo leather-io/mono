@@ -12,14 +12,14 @@
   },
   "type": "module",
   "scripts": {
-    "build": "tsup",
-    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "build": "tsdown",
+    "build:watch": "tsdown --watch",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "gen-api-types": "dotenv -e .env -- openapi-typescript --redocly ./redocly.yaml https://staging.api.leather.io/docs/openapi.json -o ./src/infrastructure/api/leather/leather-api.types.ts && pnpm format",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
-    "typecheck": "tsc --noEmit -p ./tsconfig.json"
+    "typecheck": "tsc --noEmit"
   },
   "exports": {
     ".": "./dist/index.js"
@@ -32,6 +32,7 @@
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/stacks": "workspace:*",
+    "@leather.io/test-config": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@stacks/common": "7.0.2",
     "@stacks/network": "7.0.2",
@@ -57,9 +58,9 @@
     "eslint": "9.28",
     "openapi-typescript": "7.6.1",
     "prettier": "3.5.1",
+    "tsdown": "0.16.5",
     "tslib": "2.6.2",
-    "tsup": "8.4.0",
-    "typescript": "5.8.3",
+    "typescript": "5.9.3",
     "vitest": "2.1.9"
   },
   "prettier": "@leather.io/prettier-config",

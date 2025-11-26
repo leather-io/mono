@@ -1,5 +1,5 @@
 # build
-.tsup
+.tsdown
 # debug
 npm-debug.*
 yarn-debug.*

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Text } from '../../../native';
+import { Text } from '../../native';
 import { BulletSeparator } from './bullet-separator.native';
 
 const meta: Meta<typeof BulletSeparator> = {

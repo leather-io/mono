@@ -9,7 +9,7 @@ import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks
 import { useSettings } from '@/store/settings/settings';
 
 import { LEATHER_EARN_URL } from '@leather.io/constants';
-import { type OnramperMode, getOnramperIframeParams } from '@leather.io/features/native';
+import { type OnramperMode, getOnramperIframeParams } from '@leather.io/features';
 import type { FungibleCryptoAsset } from '@leather.io/models';
 import { useTheme } from '@leather.io/ui/native';
 
