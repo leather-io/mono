@@ -14,7 +14,6 @@ import { BottomSheetFlashList } from '@gorhom/bottom-sheet';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import { FungibleCryptoAsset } from '@leather.io/models';
-import { Sip10Balance } from '@leather.io/services';
 
 interface AssetListProps {
   onSelectAsset(asset: FungibleCryptoAsset, assetElementOffsetTop: number | null): void;
@@ -37,7 +36,7 @@ function AssetPickerFlashList({ sip10Data, header, handleSelectAsset }: AssetPic
   }, [sip10Data, isSip10SendEnabled]);
 
   return (
-    <BottomSheetFlashList<Sip10Balance>
+    <BottomSheetFlashList
       data={sip10Memo}
       renderItem={({ item }) => (
         <AssetPickerItem onPress={handleSelectAsset(item.asset)}>
@@ -63,17 +62,17 @@ function AccountAssetPicker({
 
   return (
     <AssetPickerFlashList
-      sip10Data={sip10Data}
       header={
         <>
-          <AssetPickerItem onPress={handleSelectAsset(btcAsset)}>
+          <AssetPickerItem onPress={handleSelectAsset(btcAsset)} canAnimate>
             <BitcoinBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
           </AssetPickerItem>
-          <AssetPickerItem onPress={handleSelectAsset(stxAsset)}>
+          <AssetPickerItem onPress={handleSelectAsset(stxAsset)} canAnimate>
             <StacksBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
           </AssetPickerItem>
         </>
       }
+      sip10Data={sip10Data}
       handleSelectAsset={handleSelectAsset}
     />
   );
