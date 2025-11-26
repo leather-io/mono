@@ -1,0 +1,10 @@
+{
+  "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["vitest/globals"],
+    "outDir": "./dist"
+  },
+  "include": ["**/*", ".*.ts", "config/*.json"],
+  "exclude": ["./dist/"]
+}
