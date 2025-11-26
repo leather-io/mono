@@ -413,6 +413,27 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.44.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.43.0...@leather.io/services-v1.44.0) (2025-11-26)
+
+
+### Features
+
+* decompose collectibles service ([06c88f2](https://github.com/leather-io/mono/commit/06c88f2d336cac777b5acbf2cc933a65eadba7f2))
+* normalize swap amount and percentage formats ([d5f1075](https://github.com/leather-io/mono/commit/d5f1075e4bf47fc92719d9e7fc604ff21e0d290a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.35.5
+    * @leather.io/constants bumped to 0.28.1
+    * @leather.io/models bumped to 0.50.0
+    * @leather.io/stacks bumped to 1.19.3
+    * @leather.io/utils bumped to 0.49.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.1
+
 ## [1.43.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.42.1...@leather.io/services-v1.43.0) (2025-11-19)
 
 

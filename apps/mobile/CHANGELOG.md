@@ -19,6 +19,41 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.91.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.90.0...@leather.io/mobile-v2.91.0) (2025-11-26)
+
+
+### Features
+
+* decompose collectibles service ([06c88f2](https://github.com/leather-io/mono/commit/06c88f2d336cac777b5acbf2cc933a65eadba7f2))
+* **mobile:** add baseAsset and targetAsset to EnrichedSwapQuote ([aef6926](https://github.com/leather-io/mono/commit/aef69262003b028ee4f3e69d6f7b8adbbc7280b3))
+* **mobile:** add basic swap screen transitions ([d829f21](https://github.com/leather-io/mono/commit/d829f21bb4d8876595259977f2669eb08347b907))
+* **mobile:** add refetching to swap queries ([05200fc](https://github.com/leather-io/mono/commit/05200fc3aa94c9db1807a5741b179e8f90edde24))
+
+
+### Bug Fixes
+
+* **mobile:** fix and simplify asset item animation in Send ([37dd62e](https://github.com/leather-io/mono/commit/37dd62e2dd2b262959fdcf2856d3ab231b56a70a))
+* **mobile:** improve the swap target amount animation ([790ea2a](https://github.com/leather-io/mono/commit/790ea2a41f8335802e526168624c5bd7fffa97c0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.15.8
+    * @leather.io/bitcoin bumped to 0.35.5
+    * @leather.io/constants bumped to 0.28.1
+    * @leather.io/crypto bumped to 1.12.7
+    * @leather.io/features bumped to 1.1.1
+    * @leather.io/models bumped to 0.50.0
+    * @leather.io/provider bumped to 1.6.9
+    * @leather.io/query bumped to 2.45.3
+    * @leather.io/rpc bumped to 2.21.1
+    * @leather.io/services bumped to 1.44.0
+    * @leather.io/stacks bumped to 1.19.3
+    * @leather.io/ui bumped to 1.98.0
+    * @leather.io/utils bumped to 0.49.1
+
 ## [2.90.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.89.0...@leather.io/mobile-v2.90.0) (2025-11-19)
 
 
