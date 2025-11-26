@@ -152,6 +152,8 @@ describe('fee tier selection', () => {
     expect(feeData.selected.tier).toBe('standard');
   });
 
+  // check this for activity tests
+
   it.each(['low', 'standard', 'high'] as const)(
     'selecting %s tier updates state and uses correct fee value',
     async tier => {

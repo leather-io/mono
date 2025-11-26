@@ -5,14 +5,14 @@ import { Stack } from 'leather-styles/jsx';
 
 import { AssetList } from '@app/features/asset-list/asset-list';
 import { ManageTokens } from '@app/features/asset-list/manage-tokens/manage-tokens';
-import { Collectibles } from '@app/features/collectibles/collectibles';
+import { CollectiblesLegacy } from '@app/features/collectibles-legacy/collectibles-legacy';
 
 export function AssetsLegacy() {
   return (
     <Stack data-testid={HomePageSelectors.AssetList}>
       <AssetList filter="enabled" />
       <ManageTokens />
-      <Collectibles />
+      <CollectiblesLegacy />
       <Outlet />
     </Stack>
   );

@@ -110,6 +110,8 @@ The preference hierarchy for translations is:
 `t` macro can only be used within functions. In scenarios when this isn't possible, or you need
 to declare strings at module-level, resort to [lazy translations](https://lingui.dev/ref/macro#definemessage):
 
+// check this
+
 ```tsx
 import { i18n } from '@lingui/core';
 import { msg } from '@lingui/core/macro';

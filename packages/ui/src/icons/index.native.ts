@@ -94,6 +94,7 @@ export * from './globe-icon.native';
 export * from './globe-tilted-icon.native';
 export * from './graduate-cap-icon.native';
 export * from './grid-icon.native';
+export * from './headset-icon.native';
 export * from './head-icon.native';
 export * from './home-active-icon.native';
 export * from './home-default-icon.native';

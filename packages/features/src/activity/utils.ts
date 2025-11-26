@@ -20,16 +20,17 @@ const currencyFormatter = createCurrencyFormatter({
   locale: 'en-US',
 });
 
-function formatMoney(money: Money, options?: FormatAmountOptions) {
-  return currencyFormatter.formatAmount(
-    {
-      amount: money.amount.shiftedBy(-money.decimals).toNumber(),
-      currencyCode: money.symbol,
-      decimals: money.decimals,
-    },
-    options
-  );
-}
+// pass this uin from the APP itself
+// function formatMoney(money: Money, options?: FormatAmountOptions) {
+//   return currencyFormatter.formatAmount(
+//     {
+//       amount: money.amount.shiftedBy(-money.decimals).toNumber(),
+//       currencyCode: money.symbol,
+//       decimals: money.decimals,
+//     },
+//     options
+//   );
+// }
 
 function addOperator(balance: string, operator?: string) {
   return operator ? `${operator} ${balance}` : balance;
@@ -41,6 +42,8 @@ function getBalanceOperator(activity: OnChainActivity) {
   return undefined;
 }
 
+// return this from features to mobile UI - maybe using lingui msg
+//
 function getActivityStatusMap(): Record<
   OnChainActivity['type'],
   Record<BaseOnChainActivity['status'], string>
