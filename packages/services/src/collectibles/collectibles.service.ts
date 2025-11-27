@@ -3,9 +3,9 @@ import { injectable } from 'inversify';
 import { NonFungibleCryptoAsset } from '@leather.io/models';
 
 import type { AccountRequest } from '../types';
-import type { InscriptionsService } from './inscriptions.service';
-import type { Sip9sService } from './sip9s.service';
-import type { StampsService } from './stamps.service';
+import { InscriptionsService } from './inscriptions.service';
+import { Sip9sService } from './sip9s.service';
+import { StampsService } from './stamps.service';
 
 @injectable()
 export class CollectiblesService {

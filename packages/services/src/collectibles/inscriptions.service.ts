@@ -3,7 +3,7 @@ import { injectable } from 'inversify';
 import type { InscriptionAsset } from '@leather.io/models';
 import { createInscriptionAsset } from '@leather.io/utils';
 
-import type { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
+import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import type { AccountRequest } from '../types';
 import {
   mapBisInscriptionToCreateInscriptionData,
