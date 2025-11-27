@@ -2,8 +2,8 @@ import { injectable } from 'inversify';
 
 import type { StampAsset } from '@leather.io/models';
 
-import type { StampchainApiClient } from '../infrastructure/api/stampchain/stampchain-api.client';
-import type { AccountRequest } from '../types';
+import { StampchainApiClient } from '../infrastructure/api/stampchain/stampchain-api.client';
+import { AccountRequest } from '../types';
 import { createStampAsset, sortByBlockHeight } from './collectibles.utils';
 
 @injectable()

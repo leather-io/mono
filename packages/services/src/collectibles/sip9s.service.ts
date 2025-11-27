@@ -4,9 +4,9 @@ import { isNonNullish } from 'remeda';
 
 import type { Sip9Asset } from '@leather.io/models';
 
-import type { Sip9AssetService } from '../assets/sip9-asset.service';
-import type { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
-import type { AccountRequest } from '../types';
+import { Sip9AssetService } from '../assets/sip9-asset.service';
+import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { AccountRequest } from '../types';
 import { sortByBlockHeight } from './collectibles.utils';
 
 @injectable()
