@@ -22,6 +22,20 @@ const languagePreferenceSchema = z.enum(['en']);
 const languagePreferenceSourceSchema = z.enum(['system', 'user-selection']);
 const assetVisibilitySchema = z.record(z.string(), z.boolean());
 const currentAccountSchema = z.union([accountIdSchema, z.null()]);
+const appIconPreferenceSchema = z.enum([
+  'default',
+  'icon-1',
+  'icon-2',
+  'icon-3',
+  'icon-4',
+  'icon-5',
+  'icon-6',
+  'icon-7',
+  'icon-8',
+  'icon-9',
+  'icon-10',
+  'icon-11',
+]);
 
 export const settingsSchema = z.object({
   accountDisplayPreference: accountDisplayPreferenceSchema,
@@ -41,6 +55,7 @@ export const settingsSchema = z.object({
   languagePreferenceSource: languagePreferenceSourceSchema.optional().default('system'),
   assetVisibility: assetVisibilitySchema.optional().default({}),
   currentAccount: currentAccountSchema.optional().default(null),
+  appIconPreference: appIconPreferenceSchema.optional().default('default'),
 });
 
 export type SettingsState = z.infer<typeof settingsSchema>;
@@ -55,3 +70,4 @@ export type LastActiveTimestamp = number | null;
 export type LanguagePreferenceSource = z.infer<typeof languagePreferenceSourceSchema>;
 export type AssetVisibility = z.infer<typeof assetVisibilitySchema>;
 export type CurrentAccount = z.infer<typeof currentAccountSchema>;
+export type AppIconPreference = z.infer<typeof appIconPreferenceSchema>;

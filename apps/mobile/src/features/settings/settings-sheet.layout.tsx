@@ -14,17 +14,19 @@ interface SettingsSheetLayoutProps extends HasChildren {
   sheetRef: SheetRef;
   title: string;
   onPressSupport?(): void;
+  onChange?(index: number): void;
 }
 export function SettingsSheetLayout({
   children,
   sheetRef,
   title,
   onPressSupport,
+  onChange,
 }: SettingsSheetLayoutProps) {
   const maxHeight = useSettingsSheetMaxHeight();
 
   return (
-    <Sheet ref={sheetRef} maxDynamicContentSize={maxHeight}>
+    <Sheet ref={sheetRef} maxDynamicContentSize={maxHeight} onChange={onChange}>
       <Sheet.ScrollView stickyHeaderIndices={[0]}>
         <Sheet.Header
           leftElement={<Sheet.Title>{title}</Sheet.Title>}

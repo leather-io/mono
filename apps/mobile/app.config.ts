@@ -154,6 +154,99 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           cameraPermission: 'Camera access enables scanning addresses or opening websites.',
         },
       ],
+      [
+        'expo-alternate-app-icons',
+        [
+          {
+            name: 'Icon1',
+            ios: './src/assets/icon-1.png',
+            android: {
+              foregroundImage: './src/assets/adaptive-icon-1.png',
+              backgroundColor: '#12100F',
+            },
+          },
+          {
+            name: 'Icon2',
+            ios: './src/assets/icon-2.png',
+            android: {
+              foregroundImage: './src/assets/adaptive-icon-2.png',
+              backgroundColor: '#12100F',
+            },
+          },
+          {
+            name: 'Icon3',
+            ios: './src/assets/icon-3.png',
+            android: {
+              foregroundImage: './src/assets/adaptive-icon-3.png',
+              backgroundColor: '#12100F',
+            },
+          },
+          {
+            name: 'Icon4',
+            ios: './src/assets/icon-4.png',
+            android: {
+              foregroundImage: './src/assets/adaptive-icon-4.png',
+              backgroundColor: '#12100F',
+            },
+          },
+          {
+            name: 'Icon5',
+            ios: './src/assets/icon-5.png',
+            android: {
+              foregroundImage: './src/assets/adaptive-icon-5.png',
+              backgroundColor: '#12100F',
+            },
+          },
+          {
+            name: 'Icon6',
+            ios: './src/assets/icon-6.png',
+            android: {
+              foregroundImage: './src/assets/adaptive-icon-6.png',
+              backgroundColor: '#12100F',
+            },
+          },
+          {
+            name: 'Icon7',
+            ios: './src/assets/icon-7.png',
+            android: {
+              foregroundImage: './src/assets/adaptive-icon-7.png',
+              backgroundColor: '#12100F',
+            },
+          },
+          {
+            name: 'Icon8',
+            ios: './src/assets/icon-8.png',
+            android: {
+              foregroundImage: './src/assets/adaptive-icon-8.png',
+              backgroundColor: '#12100F',
+            },
+          },
+          {
+            name: 'Icon9',
+            ios: './src/assets/icon-9.png',
+            android: {
+              foregroundImage: './src/assets/adaptive-icon-9.png',
+              backgroundColor: '#12100F',
+            },
+          },
+          {
+            name: 'Icon10',
+            ios: './src/assets/icon-10.png',
+            android: {
+              foregroundImage: './src/assets/adaptive-icon-10.png',
+              backgroundColor: '#12100F',
+            },
+          },
+          {
+            name: 'Icon11',
+            ios: './src/assets/icon-11.png',
+            android: {
+              foregroundImage: './src/assets/adaptive-icon-11.png',
+              backgroundColor: '#12100F',
+            },
+          },
+        ],
+      ],
     ],
     extra: {
       router: {

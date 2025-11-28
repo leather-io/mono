@@ -177,7 +177,7 @@ msgstr "Add wallet"
 msgid "Add your collection here"
 msgstr "Add your collection here"
 
-#: src/app/settings/index.tsx:60
+#: src/app/settings/index.tsx:63
 msgid "Add, configure and remove"
 msgstr "Add, configure and remove"
 
@@ -279,7 +279,7 @@ msgstr "An error occurred"
 msgid "Analytics"
 msgstr "Analytics"
 
-#: src/app/settings/index.tsx:75
+#: src/app/settings/index.tsx:78
 msgid "Analytics and app authentication"
 msgstr "Analytics and app authentication"
 
@@ -328,6 +328,11 @@ msgstr "App authentication"
 #: src/features/settings/app-authentication-sheet.tsx:36
 msgid "App authorization updated"
 msgstr "App authorization updated"
+
+#: src/app/settings/index.tsx:91
+#: src/features/settings/choose-app-icon/app-icon-picker-sheet.tsx:70
+msgid "App Icon"
+msgstr "App Icon"
 
 #: src/hooks/use-authentication.ts:17
 msgid "App is not protected with device-level PIN or biometrics."
@@ -561,8 +566,8 @@ msgstr "Connections"
 msgid "Contact us"
 msgstr "Contact us"
 
-#: src/app/settings/index.tsx:114
-#: src/app/settings/index.tsx:167
+#: src/app/settings/index.tsx:123
+#: src/app/settings/index.tsx:176
 msgid "Contacts"
 msgstr "Contacts"
 
@@ -634,13 +639,21 @@ msgstr "Current app version format is invalid"
 msgid "Custom"
 msgstr "Custom"
 
-#: src/app/settings/index.tsx:174
+#: src/app/settings/index.tsx:183
 msgid "Custom fees"
 msgstr "Custom fees"
+
+#: src/app/settings/index.tsx:92
+msgid "Customize your app icon"
+msgstr "Customize your app icon"
 
 #: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:43
 msgid "Decrease slippage"
 msgstr "Decrease slippage"
+
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:23
+msgid "Default"
+msgstr "Default"
 
 #: src/features/activity/translate-activity-status.ts:22
 msgid "Deployed"
@@ -661,7 +674,7 @@ msgstr "Deployment failed"
 msgid "Description"
 msgstr "Description"
 
-#: src/app/settings/index.tsx:143
+#: src/app/settings/index.tsx:152
 msgid "Device ID"
 msgstr "Device ID"
 
@@ -681,7 +694,7 @@ msgid "Dismiss"
 msgstr "Dismiss"
 
 #: src/app/settings/display/index.tsx:52
-#: src/app/settings/index.tsx:67
+#: src/app/settings/index.tsx:70
 msgid "Display"
 msgstr "Display"
 
@@ -798,6 +811,10 @@ msgstr "Failed to authenticate"
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
 
+#: src/features/settings/choose-app-icon/app-icon-picker-sheet.tsx:56
+msgid "Failed to change app icon"
+msgstr "Failed to change app icon"
+
 #: src/features/approver/stx/hooks.ts:32
 msgid "Failed to change fee"
 msgstr "Failed to change fee"
@@ -835,7 +852,7 @@ msgstr "Fee charged by {providerName} for facilitating the swap"
 msgid "Fee updated"
 msgstr "Fee updated"
 
-#: src/app/settings/index.tsx:122
+#: src/app/settings/index.tsx:131
 #: src/features/swap/components/fees-info-sheet.tsx:29
 msgid "Fees"
 msgstr "Fees"
@@ -887,7 +904,7 @@ msgid "Genesis time"
 msgstr "Genesis time"
 
 #: src/app/settings/help/index.tsx:18
-#: src/app/settings/index.tsx:99
+#: src/app/settings/index.tsx:108
 msgid "Get support or provide feedback"
 msgstr "Get support or provide feedback"
 
@@ -915,7 +932,7 @@ msgstr "Guides"
 msgid "Haptics"
 msgstr "Haptics"
 
-#: src/app/settings/index.tsx:98
+#: src/app/settings/index.tsx:107
 msgid "Help"
 msgstr "Help"
 
@@ -957,11 +974,55 @@ msgstr "I'm interested"
 msgid "I've backed it up"
 msgstr "I've backed it up"
 
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:24
+msgid "Icon 1"
+msgstr "Icon 1"
+
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:33
+msgid "Icon 10"
+msgstr "Icon 10"
+
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:34
+msgid "Icon 11"
+msgstr "Icon 11"
+
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:25
+msgid "Icon 2"
+msgstr "Icon 2"
+
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:26
+msgid "Icon 3"
+msgstr "Icon 3"
+
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:27
+msgid "Icon 4"
+msgstr "Icon 4"
+
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:28
+msgid "Icon 5"
+msgstr "Icon 5"
+
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:29
+msgid "Icon 6"
+msgstr "Icon 6"
+
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:30
+msgid "Icon 7"
+msgstr "Icon 7"
+
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:31
+msgid "Icon 8"
+msgstr "Icon 8"
+
+#: src/features/settings/choose-app-icon/app-icon.utils.ts:32
+msgid "Icon 9"
+msgstr "Icon 9"
+
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:67
 msgid "Icons"
 msgstr "Icons"
 
-#: src/app/settings/index.tsx:50
+#: src/app/settings/index.tsx:53
 msgid "ID copied to clipboard"
 msgstr "ID copied to clipboard"
 
@@ -1073,7 +1134,7 @@ msgstr "Leather"
 msgid "Lisa"
 msgstr "Lisa"
 
-#: src/app/settings/index.tsx:161
+#: src/app/settings/index.tsx:170
 msgid "Lock app"
 msgstr "Lock app"
 
@@ -1098,7 +1159,7 @@ msgstr "Locked STX"
 msgid "Locking"
 msgstr "Locking"
 
-#: src/app/settings/index.tsx:82
+#: src/app/settings/index.tsx:85
 msgid "Mainnet, testnet or signet"
 msgstr "Mainnet, testnet or signet"
 
@@ -1179,7 +1240,7 @@ msgstr "Minimum receive"
 msgid "Minimum version format is invalid"
 msgstr "Minimum version format is invalid"
 
-#: src/app/settings/index.tsx:109
+#: src/app/settings/index.tsx:118
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:95
 msgid "More options"
 msgstr "More options"
@@ -1210,7 +1271,7 @@ msgid "Network fee"
 msgstr "Network fee"
 
 #: src/app/settings/help/index.tsx:14
-#: src/app/settings/index.tsx:81
+#: src/app/settings/index.tsx:84
 #: src/app/settings/networks/index.tsx:47
 msgid "Networks"
 msgstr "Networks"
@@ -1271,7 +1332,7 @@ msgstr "Not enough liquidity or no route available right now. Try a smaller amou
 msgid "Not enough liquidity or no route available right now. Try a smaller amount or check back later."
 msgstr "Not enough liquidity or no route available right now. Try a smaller amount or check back later."
 
-#: src/app/settings/index.tsx:90
+#: src/app/settings/index.tsx:99
 #: src/app/settings/notifications/_layout.tsx:13
 msgid "Notifications"
 msgstr "Notifications"
@@ -1381,7 +1442,7 @@ msgstr "Pull to refresh"
 msgid "Push"
 msgstr "Push"
 
-#: src/app/settings/index.tsx:91
+#: src/app/settings/index.tsx:100
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
@@ -1553,7 +1614,7 @@ msgstr "Search for BNS name or address"
 msgid "Secure your wallet"
 msgstr "Secure your wallet"
 
-#: src/app/settings/index.tsx:74
+#: src/app/settings/index.tsx:77
 #: src/app/settings/security/index.tsx:34
 msgid "Security"
 msgstr "Security"
@@ -1601,7 +1662,7 @@ msgstr "Sending to your own address isn’t supported. Choose a different addres
 msgid "Sent"
 msgstr "Sent"
 
-#: src/app/settings/index.tsx:56
+#: src/app/settings/index.tsx:59
 #: src/components/screen/screen-header/components/header-actions.tsx:30
 #: src/features/qr-scanner/use-camera-permission.ts:38
 msgid "Settings"
@@ -1803,7 +1864,7 @@ msgstr "The maximum price change you're willing to accept between when you submi
 msgid "Theme"
 msgstr "Theme"
 
-#: src/app/settings/index.tsx:68
+#: src/app/settings/index.tsx:71
 msgid "Theme and account identifier"
 msgstr "Theme and account identifier"
 
@@ -1990,7 +2051,7 @@ msgstr "Velar"
 msgid "Verify full address"
 msgstr "Verify full address"
 
-#: src/app/settings/index.tsx:135
+#: src/app/settings/index.tsx:144
 msgid "Version"
 msgstr "Version"
 
@@ -2035,7 +2096,7 @@ msgstr "Wallet name cannot be empty"
 msgid "Wallets"
 msgstr "Wallets"
 
-#: src/app/settings/index.tsx:59
+#: src/app/settings/index.tsx:62
 msgid "Wallets and accounts"
 msgstr "Wallets and accounts"
 

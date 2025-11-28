@@ -92,6 +92,7 @@
     "dayjs": "1.11.13",
     "eas-build-cache-provider": "16.4.2",
     "expo": "53.0.9",
+    "expo-alternate-app-icons": "7.0.0",
     "expo-application": "6.1.4",
     "expo-asset": "11.1.5",
     "expo-blur": "14.1.4",
