@@ -30,7 +30,7 @@ vi.mock('@leather.io/utils', async () => {
   };
 });
 
-interface RenderUseSwapStateParams extends Omit<UseSwapStateProps, 'dependencies'> {
+interface RenderUseSwapStateParams extends Omit<UseSwapStateProps, 'dependencies' | 'trackEvent'> {
   baseSwapAssets?: AccountSwapAsset[];
   targetSwapAssets?: AccountSwapAsset[];
   swapQuotes?: SwapQuote[];
@@ -50,6 +50,7 @@ export function renderUseSwapState({
   const { result } = renderHookWithProviders(() =>
     useSwapState({
       quoteCurrencyPreference,
+      trackEvent: () => Promise.resolve(),
       dependencies: {
         accountRequest: createAccountRequest(),
         services: {

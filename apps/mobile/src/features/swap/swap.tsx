@@ -4,6 +4,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { useLiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
 import { useSwapDependencies } from '@/features/swap/use-swap-dependencies';
 import { useSettings } from '@/store/settings/settings';
+import { analytics } from '@/utils/analytics';
 
 import { stxAsset } from '@leather.io/constants';
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
@@ -29,6 +30,7 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
     quoteCurrencyPreference: fiatCurrencyPreference,
     baseAsset,
     targetAsset,
+    trackEvent: analytics.track,
   });
 
   const liveEstimate = useLiveSwapEstimate({
@@ -39,6 +41,13 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
   });
 
   function goToReview() {
+    const { state, quoteQuery } = swapStateResult;
+    analytics.track('swap_review_initiated', {
+      baseSymbol: state.baseSwapAsset?.asset.symbol ?? '',
+      targetSymbol: state.targetSwapAsset?.asset.symbol ?? '',
+      baseAmount: Number(state.baseAmount),
+      provider: quoteQuery.data?.selected?.provider ?? '',
+    });
     setCurrentScreen('review');
   }
 

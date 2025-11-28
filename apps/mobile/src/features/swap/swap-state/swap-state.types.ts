@@ -7,6 +7,7 @@ import { UseQueryResult } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import type { SbtcApiClient } from 'sbtc';
 
+import { configureAnalyticsClient } from '@leather.io/analytics';
 import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import {
   AccountAddresses,
@@ -32,6 +33,8 @@ import {
   SwapService,
 } from '@leather.io/services';
 import { StacksSigner } from '@leather.io/stacks';
+
+export type TrackEvent = ReturnType<typeof configureAnalyticsClient>['track'];
 
 export interface SwapDependencies {
   accountRequest: { account: AccountAddresses };
