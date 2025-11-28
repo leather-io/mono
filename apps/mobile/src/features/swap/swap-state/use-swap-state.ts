@@ -16,7 +16,12 @@ import { useSwapAssetReconciliation } from './hooks/use-swap-asset-reconciliatio
 import { useSwapQuotes } from './hooks/use-swap-quotes';
 import { useSwapValidation } from './hooks/use-swap-validation';
 import { swapReducer } from './swap-state.reducer';
-import { SwapDependencies, SwapInternalState, UseSwapStateResult } from './swap-state.types';
+import {
+  SwapDependencies,
+  SwapInternalState,
+  TrackEvent,
+  UseSwapStateResult,
+} from './swap-state.types';
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './swap.constants';
 import {
   useAccountBaseSwapAssetsQuery,
@@ -29,6 +34,7 @@ export interface UseSwapStateProps {
   targetAsset?: SwappableFungibleCryptoAsset;
   quoteCurrencyPreference: QuoteCurrency;
   dependencies: SwapDependencies;
+  trackEvent: TrackEvent;
 }
 
 export function useSwapState({
@@ -36,6 +42,7 @@ export function useSwapState({
   targetAsset,
   quoteCurrencyPreference,
   dependencies,
+  trackEvent,
 }: UseSwapStateProps): UseSwapStateResult {
   const { accountRequest, services } = dependencies;
   const { marketDataService, swapService } = services;
@@ -127,6 +134,7 @@ export function useSwapState({
     networkFeeQuery,
     nonce: effectiveNonce,
     dependencies,
+    trackEvent,
   });
 
   const actions = createSwapActions({
@@ -134,6 +142,7 @@ export function useSwapState({
     lockDerivedAmountsForNextRender,
     state,
     derivedAmounts,
+    trackEvent,
   });
 
   return {

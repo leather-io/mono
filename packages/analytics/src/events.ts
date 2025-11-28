@@ -41,6 +41,40 @@ export interface Events extends HistoricalEvents {
   send_sheet_dismissed: undefined;
   swap_sheet_opened: { asset?: string };
   swap_sheet_dismissed: undefined;
+  swap_base_asset_selected: { symbol: string; protocol: string };
+  swap_target_asset_selected: { symbol: string; protocol: string };
+  swap_amount_preset_selected: { preset: '25%' | '50%' | '75%' | 'max' };
+  swap_assets_flipped: undefined;
+  swap_currency_mode_toggled: { mode: 'crypto' | 'quote' };
+  swap_slippage_changed: { slippage: number };
+  swap_fee_tier_selected: { tier: string };
+  swap_custom_fee_entered: { fee: number };
+  swap_review_initiated: {
+    baseSymbol: string;
+    targetSymbol: string;
+    baseAmount: number;
+    provider: string;
+  };
+  swap_execution_started: {
+    baseSymbol: string;
+    targetSymbol: string;
+    baseAmount: number;
+    targetAmount: number;
+    provider: string;
+  };
+  swap_execution_success: {
+    baseSymbol: string;
+    targetSymbol: string;
+    baseAmount: number;
+    targetAmount: number;
+    provider: string;
+  };
+  swap_execution_failure: {
+    baseSymbol: string;
+    targetSymbol: string;
+    errorMessage: string;
+    provider: string;
+  };
   receive_sheet_opened: { type: string };
   receive_sheet_dismissed: undefined;
   send_asset_selected: { asset?: string };

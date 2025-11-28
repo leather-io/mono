@@ -10,8 +10,9 @@ import {
 import { ValidationResult } from '@/features/swap/swap-state/validation/swap-validation';
 import { UseQueryResult, useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { isDefined } from 'remeda';
+import { isDefined, isError } from 'remeda';
 
+import { TrackEvent } from '../swap-state.types';
 import { isQuoteAlignedWithCurrentInput } from '../utils/is-quote-aligned-with-current-input';
 
 interface UseExecuteSwapProps {
@@ -23,6 +24,7 @@ interface UseExecuteSwapProps {
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   dependencies: SwapDependencies;
   validation: ValidationResult;
+  trackEvent: TrackEvent;
 }
 
 interface SwapExecutionPrerequisites {
@@ -39,6 +41,7 @@ export function useExecuteSwap({
   networkFeeQuery,
   quoteQuery,
   state,
+  trackEvent,
 }: UseExecuteSwapProps) {
   const { accountRequest, services } = dependencies;
   const { swapService } = services;
@@ -57,6 +60,15 @@ export function useExecuteSwap({
       }
 
       const { quote, networkFee } = executability.prerequisites;
+
+      void trackEvent('swap_execution_started', {
+        baseSymbol: quote.baseAsset.symbol,
+        targetSymbol: quote.targetAsset.symbol,
+        baseAmount: quote.baseAmount.amount.toNumber(),
+        targetAmount: quote.targetAmount.amount.toNumber(),
+        provider: quote.provider,
+      });
+
       const executionData = await swapService.getSwapExecutionData(
         accountRequest,
         quote.rawSwapQuote,
@@ -71,6 +83,27 @@ export function useExecuteSwap({
       };
       const strategy = getExecutionTypeStrategy(executionData.executionType);
       await strategy.executeSwap(executionDependencies, networkFee);
+    },
+    onSuccess() {
+      if (!executability.canExecute) return;
+      const { quote } = executability.prerequisites;
+      void trackEvent('swap_execution_success', {
+        baseSymbol: quote.baseAsset.symbol,
+        targetSymbol: quote.targetAsset.symbol,
+        baseAmount: quote.baseAmount.amount.toNumber(),
+        targetAmount: quote.targetAmount.amount.toNumber(),
+        provider: quote.provider,
+      });
+    },
+    onError(error) {
+      if (!executability.canExecute) return;
+      const { quote } = executability.prerequisites;
+      void trackEvent('swap_execution_failure', {
+        baseSymbol: quote.baseAsset.symbol,
+        targetSymbol: quote.targetAsset.symbol,
+        errorMessage: isError(error) ? error.message : 'unknown',
+        provider: quote.provider,
+      });
     },
   });
 
