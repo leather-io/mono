@@ -84,7 +84,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     if (moduleName === '@leather.io/ui/native') {
       return context.resolveRequest(
         context,
-        path.resolve(workspaceRoot, 'packages/ui/native.ts'),
+        path.resolve(workspaceRoot, 'packages/ui/src/native.ts'),
         platform
       );
     }
