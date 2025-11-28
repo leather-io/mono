@@ -16,6 +16,7 @@ import { SerializedCryptoAssetId } from '@leather.io/utils';
 import { initialState } from './settings';
 import { handleSettingsRehydration } from './settings-rehydration';
 import {
+  AppIconPreference,
   CurrentAccount,
   HapticsPreference,
   LanguagePreferenceSource,
@@ -87,6 +88,9 @@ export const settingsSlice = createSlice({
     userChangedCurrentAccount(state, action: PayloadAction<{ account: CurrentAccount }>) {
       state.currentAccount = action.payload.account;
     },
+    userChangedAppIconPreference(state, action: PayloadAction<AppIconPreference>) {
+      state.appIconPreference = action.payload;
+    },
   },
   extraReducers: builder => {
     builder.addCase(REHYDRATE, handleSettingsRehydration);
@@ -120,4 +124,5 @@ export const {
   userChangedLanguagePreferenceSource,
   userChangedAssetVisibility,
   userChangedCurrentAccount,
+  userChangedAppIconPreference,
 } = settingsSlice.actions;

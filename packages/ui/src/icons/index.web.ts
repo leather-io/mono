@@ -1,5 +1,6 @@
 export * from './activity/failed-icon.web';
 export * from './activity/pending-icon.web';
+export * from './app-icon.web';
 export * from './activity/sent-icon.web';
 export * from './activity/received-icon.web';
 export * from './activity/swap-icon.web';

@@ -7,6 +7,7 @@ import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.lay
 import { useAuthContext } from '@/components/splash-screen-guard/use-auth-context';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useNotificationsFlag, useWaitlistFlag } from '@/features/feature-flags';
+import { AppIconPickerSheet } from '@/features/settings/choose-app-icon/app-icon-picker-sheet';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
@@ -18,6 +19,7 @@ import { useRouter } from 'expo-router';
 
 import {
   Accordion,
+  AppIcon,
   BellIcon,
   Box,
   Button,
@@ -37,6 +39,7 @@ import {
 export default function SettingsScreen() {
   const contactsSheetRef = useRef<SheetInstance>(null);
   const feesSheetRef = useRef<SheetInstance>(null);
+  const appIconSheetRef = useRef<SheetInstance>(null);
   const router = useRouter();
   const { lockApp } = useAuthContext();
   const { displayToast } = useToastContext();
@@ -83,6 +86,12 @@ export default function SettingsScreen() {
           icon={<GlobeTiltedIcon />}
           onPress={() => router.navigate('/settings/networks')}
           testID={TestId.settingsNetworkButton}
+        />
+        <SettingsListItem
+          title={t`App Icon`}
+          caption={t`Customize your app icon`}
+          icon={<AppIcon />}
+          onPress={() => appIconSheetRef.current?.present()}
         />
         {releasePushNotifications && (
           <SettingsListItem
@@ -176,6 +185,7 @@ export default function SettingsScreen() {
         }}
         sheetRef={feesSheetRef}
       />
+      <AppIconPickerSheet sheetRef={appIconSheetRef} />
     </SettingsLayout>
   );
 }

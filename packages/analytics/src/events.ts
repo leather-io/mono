@@ -94,6 +94,10 @@ export interface Events extends HistoricalEvents {
   collectibles_summary: CollectiblesSummary;
   token_details_viewed: TokenCollectibleDetailsViewed;
   collectible_details_viewed: TokenCollectibleDetailsViewed;
+  app_icon_picker_sheet_opened: undefined;
+  app_icon_picker_sheet_dismissed: undefined;
+  app_icon_selected: { icon: string; previousIcon: string };
+  app_icon_change_failed: { icon: string; previousIcon: string; error?: string };
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.
@@ -208,7 +212,8 @@ type UserSettingValue =
   | { theme: 'light' | 'dark' | 'system' }
   | { language: string }
   | { security_level: 'insecure' | 'secure' | 'not-selected' }
-  | { notifications: 'disabled' | 'enabled' | 'not-selected' };
+  | { notifications: 'disabled' | 'enabled' | 'not-selected' }
+  | { app_icon: string };
 
 interface WalletCreatedValue {
   type: 'software' | 'ledger';

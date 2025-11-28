@@ -99,6 +99,11 @@ export const selectAssetVisibility = createSelector(selectSettings, state => sta
 
 export const selectCurrentAccount = createSelector(selectSettings, state => state.currentAccount);
 
+export const selectAppIconPreference = createSelector(
+  selectSettings,
+  state => state.appIconPreference
+);
+
 export function usePrivacyMode() {
   const privacyMode = useSelector(selectPrivacyModePreference);
   return privacyMode === 'hidden';

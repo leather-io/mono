@@ -20,6 +20,7 @@ export * from './account-avatars/sparkles.native';
 export * from './account-avatars/zap.native';
 export * from './activity-active-icon.native';
 export * from './activity-default-icon.native';
+export * from './app-icon.native';
 export * from './activity/failed-icon.native';
 export * from './activity/pending-icon.native';
 export * from './activity/received-icon.native';

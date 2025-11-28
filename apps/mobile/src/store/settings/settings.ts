@@ -19,6 +19,7 @@ import { useAppDispatch } from '../utils';
 import {
   selectAccountDisplayPreference,
   selectAnalyticsPreference,
+  selectAppIconPreference,
   selectAssetVisibility,
   selectBitcoinUnitPreference,
   selectCurrencyPreference,
@@ -37,6 +38,7 @@ import {
 import {
   userChangedAccountDisplayPreference,
   userChangedAnalyticsPreference,
+  userChangedAppIconPreference,
   userChangedAssetVisibility,
   userChangedBitcoinUnitPreference,
   userChangedCurrentAccount,
@@ -53,6 +55,7 @@ import {
   userChangedThemePreference,
 } from './settings.write';
 import {
+  AppIconPreference,
   CurrentAccount,
   HapticsPreference,
   LanguagePreferenceSource,
@@ -82,6 +85,7 @@ export const initialState: SettingsState = {
   languagePreferenceSource: 'system',
   assetVisibility: {},
   currentAccount: null,
+  appIconPreference: 'default',
 };
 
 export function useSettings() {
@@ -104,6 +108,7 @@ export function useSettings() {
   const languagePreferenceSource = useSelector(selectLanguagePreferenceSource);
   const assetVisibility = useSelector(selectAssetVisibility);
   const currentAccount = useSelector(selectCurrentAccount);
+  const appIconPreference = useSelector(selectAppIconPreference);
 
   const themeDerivedFromThemePreference =
     (themePreference === 'system' ? systemTheme : themePreference) ?? 'light';
@@ -126,12 +131,19 @@ export function useSettings() {
     languagePreferenceSource,
     assetVisibility,
     currentAccount,
+    appIconPreference,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
     changeCurrentAccount(account: CurrentAccount) {
       dispatch(userChangedCurrentAccount({ account }));
     },
     changeAssetVisibility(assetId: SerializedCryptoAssetId, value: boolean) {
       dispatch(userChangedAssetVisibility({ assetId, value }));
+    },
+    changeAppIconPreference(icon: AppIconPreference) {
+      dispatch(userChangedAppIconPreference(icon));
+      analytics.track('user_setting_updated', {
+        app_icon: icon,
+      });
     },
     changeAccountDisplayPreference(type: AccountDisplayPreference) {
       dispatch(userChangedAccountDisplayPreference(type));
