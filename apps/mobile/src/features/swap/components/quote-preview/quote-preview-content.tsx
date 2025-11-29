@@ -1,14 +1,14 @@
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 import { Divider } from '@/components/divider';
+import { QuoteRefetchIndicator } from '@/features/swap/components/quote-refetch-indicator';
 import { LiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
 import { formatSwapRate, sumFeesInQuoteCurrency } from '@/features/swap/swap.utils';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
-import { clamp } from 'remeda';
 
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { Box, CircularProgress, Text, useTheme } from '@leather.io/ui/native';
+import { Box, Text } from '@leather.io/ui/native';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -30,7 +30,6 @@ export function QuotePreviewContent({
     targetAsset,
   });
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
-  const progress = calculateRefreshProgress(intervalState.interval, intervalState.lastStartedAt);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: withTiming(isRefetching ? 0.5 : 1),
@@ -42,7 +41,11 @@ export function QuotePreviewContent({
         label={t`Rate`}
         value={
           <>
-            <RefetchIndicator progress={progress} nextRunTime={intervalState.nextRunTime} />
+            <QuoteRefetchIndicator
+              interval={intervalState.interval}
+              lastStartedAt={intervalState.lastStartedAt}
+              nextRunTime={intervalState.nextRunTime}
+            />
             <Text variant="label03">{formattedRate}</Text>
           </>
         }
@@ -72,40 +75,4 @@ function QuotePreviewRow({ label, value }: QuotePreviewRowProps) {
       </Box>
     </Box>
   );
-}
-
-interface RefetchIndicatorProps {
-  progress: RefetchProgress;
-  nextRunTime: number | null;
-}
-
-function RefetchIndicator({ progress, nextRunTime }: RefetchIndicatorProps) {
-  const theme = useTheme();
-
-  return (
-    <CircularProgress
-      size={12}
-      strokeWidth={1.5}
-      progress={1}
-      initialValue={progress.initialValue}
-      duration={progress.duration}
-      max={1}
-      activeStrokeColor={theme.colors['ink.text-subdued']}
-      key={nextRunTime}
-    />
-  );
-}
-
-interface RefetchProgress {
-  initialValue: number;
-  duration: number;
-}
-
-function calculateRefreshProgress(interval: number, lastStartedAt: number | null): RefetchProgress {
-  const elapsed = lastStartedAt ? Date.now() - lastStartedAt : 0;
-  const initialValue = clamp(elapsed / interval, { min: 0, max: 1 });
-  const remaining = Math.max(interval - elapsed, 0);
-  const duration = remaining || interval;
-
-  return { initialValue, duration };
 }

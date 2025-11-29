@@ -6,6 +6,7 @@ import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/ful
 import { FeesInfoSheet } from '@/features/swap/components/fees-info-sheet';
 import { MinReceiveInfoSheet } from '@/features/swap/components/min-receive-info-sheet';
 import { PriceImpactInfoSheet } from '@/features/swap/components/price-impact-info-sheet';
+import { QuoteRefetchIndicator } from '@/features/swap/components/quote-refetch-indicator';
 import { PriceImpactValue } from '@/features/swap/components/review/price-impact-value';
 import { SwapReviewAccountDetails } from '@/features/swap/components/review/swap-review-account-details';
 import {
@@ -32,7 +33,7 @@ import { captureMessage } from '@sentry/react-native';
 import BigNumber from 'bignumber.js';
 import { isNonNullish } from 'remeda';
 
-import { Button, SheetInstance, Text } from '@leather.io/ui/native';
+import { Box, Button, SheetInstance, Text } from '@leather.io/ui/native';
 
 interface SwapReviewScreenProps {
   swapStateResult: UseSwapStateResult;
@@ -78,7 +79,7 @@ interface SwapReviewContentProps {
 function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentProps) {
   const slippageSheetRef = useRef<SheetInstance>(null);
   const { state } = swapStateResult;
-  const { selectedQuote, fees } = liveEstimate;
+  const { selectedQuote, fees, intervalState } = liveEstimate;
   const {
     baseAsset,
     targetAsset,
@@ -106,8 +107,25 @@ function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentP
 
         <SwapReviewDetailRow
           label={t`Rate`}
-          value={formatSwapRate({ swapRate, baseAsset, targetAsset })}
+          value={
+            <Box flexDirection="row" alignItems="center" gap="2">
+              <QuoteRefetchIndicator
+                interval={intervalState.interval}
+                lastStartedAt={intervalState.lastStartedAt}
+                nextRunTime={intervalState.nextRunTime}
+              />
+              <Text variant="label02">{formatSwapRate({ swapRate, baseAsset, targetAsset })}</Text>
+            </Box>
+          }
         />
+
+        {isNonNullish(minReceive) && (
+          <SwapReviewDetailRow
+            label={t`Min. receive`}
+            value={formatCurrency(minReceive)}
+            info={<MinReceiveInfoSheet />}
+          />
+        )}
 
         {slippageApplicable && (
           <SwapReviewDetailRow
@@ -119,14 +137,6 @@ function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentP
               />
             }
             info={<SlippageInfoSheet />}
-          />
-        )}
-
-        {isNonNullish(minReceive) && (
-          <SwapReviewDetailRow
-            label={t`Min. receive`}
-            value={formatCurrency(minReceive)}
-            info={<MinReceiveInfoSheet />}
           />
         )}
 
