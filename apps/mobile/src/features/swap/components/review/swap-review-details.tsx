@@ -4,6 +4,8 @@ import Animated, {
   FadeIn,
   LayoutAnimationConfig,
   LinearTransition,
+  useAnimatedStyle,
+  withTiming,
 } from 'react-native-reanimated';
 
 import { DividerProps, Divider as RawDivider } from '@/components/divider';
@@ -15,10 +17,20 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 const LayoutTransition = LinearTransition.springify().mass(2).stiffness(700).damping(200);
 const EnteringLayoutAnimation = FadeIn.easing(Easing.out(Easing.quad)).duration(240).delay(240);
 
-export function SwapReviewDetails({ children }: HasChildren) {
+interface SwapReviewDetailsProps extends HasChildren {
+  isRefetching: boolean;
+}
+
+export function SwapReviewDetails({ children, isRefetching }: SwapReviewDetailsProps) {
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(isRefetching ? 0.5 : 1),
+  }));
+
   return (
     <LayoutAnimationConfig skipEntering>
-      <Box px="7">{children}</Box>
+      <AnimatedBox px="7" style={animatedStyle}>
+        {children}
+      </AnimatedBox>
     </LayoutAnimationConfig>
   );
 }
