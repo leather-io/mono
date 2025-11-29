@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
@@ -78,6 +78,7 @@ interface SwapReviewContentProps {
 
 function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentProps) {
   const slippageSheetRef = useRef<SheetInstance>(null);
+  const onExecuteSwap = usePreventAccidentalDoubleTap(swapStateResult.execute);
   const { state } = swapStateResult;
   const { selectedQuote, fees, intervalState, isRefetching } = liveEstimate;
   const {
@@ -163,7 +164,11 @@ function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentP
           textAlign="center"
           color="ink.text-subdued"
         >{t`Make sure everything looks correct.\nConfirmed transactions cannot be undone.`}</Text>
-        <Button disabled onPress={swapStateResult.execute}>{t`Confirm`}</Button>
+        <Button
+          disabled
+          //disabled={!swapStateResult.canExecute}
+          onPress={onExecuteSwap}
+        >{t`Confirm`}</Button>
       </SwapReviewFooter>
 
       <SlippageSelectorSheet
@@ -193,5 +198,27 @@ function shouldShowPriceImpact(
   return (
     isNonNullish(priceImpactPercentage) &&
     priceImpactPercentage.isGreaterThanOrEqualTo(PRICE_IMPACT_WARNING_THRESHOLD)
+  );
+}
+
+function usePreventAccidentalDoubleTap<T extends (...args: unknown[]) => unknown>(callback: T): T {
+  const pressSuppressionDurationMs = 500;
+  const isPressAllowedRef = useRef(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      isPressAllowedRef.current = true;
+    }, pressSuppressionDurationMs);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return useCallback(
+    ((...args) => {
+      if (!isPressAllowedRef.current) {
+        return undefined;
+      }
+      return callback(...args);
+    }) as T,
+    [callback]
   );
 }

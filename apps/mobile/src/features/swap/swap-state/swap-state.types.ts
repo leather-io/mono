@@ -195,5 +195,5 @@ export interface UseSwapStateResult {
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   networkFeeQuery: UseQueryResult<NetworkFee, Error>;
   canExecute: boolean;
-  execute(): void;
+  execute(): Promise<void>;
 }
