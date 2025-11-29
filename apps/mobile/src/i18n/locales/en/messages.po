@@ -46,6 +46,10 @@ msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
+#: src/features/swap/components/fees-info-sheet.tsx:40
+msgid "{providerName} fee"
+msgstr "{providerName} fee"
+
 #: src/features/token/stacks/sip9-token-details.tsx:58
 msgid "{rarityRank} of {totalItems}"
 msgstr "{rarityRank} of {totalItems}"
@@ -226,6 +230,10 @@ msgstr "Advanced options"
 msgid "Alex"
 msgstr "Alex"
 
+#: src/features/swap/components/fees-info-sheet.tsx:19
+msgid "ALEX"
+msgstr "ALEX"
+
 #: src/store/storage-persistors.ts:24
 msgid "Allow app to access secure storage"
 msgstr "Allow app to access secure storage"
@@ -368,7 +376,7 @@ msgstr "BIP39 passphrase"
 #: src/features/receive/get-assets.ts:29
 #: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
-#: src/features/swap/swap.utils.ts:7
+#: src/features/swap/swap.utils.ts:10
 #: src/features/token/bitcoin/bitcoin-token-details.tsx:17
 #: src/shared/display-preference.ts:61
 msgid "Bitcoin"
@@ -383,6 +391,7 @@ msgstr "Bitcoin unit"
 msgid "Bitcoin unit updated"
 msgstr "Bitcoin unit updated"
 
+#: src/features/swap/components/fees-info-sheet.tsx:18
 #: src/utils/dapps.ts:45
 msgid "Bitflow"
 msgstr "Bitflow"
@@ -510,13 +519,10 @@ msgstr ""
 #: src/features/approver/components/nonce-sheet.tsx:18
 #: src/features/send/components/memo.tsx:90
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
+#: src/features/swap/screens/swap-review-screen.tsx:171
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
 msgid "Confirm"
 msgstr "Confirm"
-
-#: src/features/swap/screens/swap-review-screen.tsx:34
-msgid "Confirm Swap"
-msgstr "Confirm Swap"
 
 #: src/features/approver/layouts/get-addresses.layout.tsx:33
 msgid "Connect"
@@ -722,7 +728,8 @@ msgstr "Enter recipient"
 msgid "Enter your Secret Key"
 msgstr "Enter your Secret Key"
 
-#: src/features/swap/components/quote-preview/quote-preview-content.tsx:49
+#: src/features/swap/components/quote-preview/quote-preview-content.tsx:55
+#: src/features/swap/screens/swap-review-screen.tsx:155
 msgid "Estimated fees"
 msgstr "Estimated fees"
 
@@ -791,12 +798,17 @@ msgstr "Fast"
 msgid "FastPool"
 msgstr "FastPool"
 
+#: src/features/swap/components/fees-info-sheet.tsx:43
+msgid "Fee charged by {providerName} for facilitating the swap"
+msgstr "Fee charged by {providerName} for facilitating the swap"
+
 #: src/features/approver/stx/hooks.ts:27
 #: src/features/psbt-signer/psbt-signer.tsx:200
 msgid "Fee updated"
 msgstr "Fee updated"
 
 #: src/app/settings/index.tsx:123
+#: src/features/swap/components/fees-info-sheet.tsx:29
 msgid "Fees"
 msgstr "Fees"
 
@@ -816,6 +828,10 @@ msgstr "Floor price"
 #: src/app/create-new-wallet.tsx:108
 msgid "For your eyes only"
 msgstr "For your eyes only"
+
+#: src/features/swap/components/review/swap-review-account-details.tsx:23
+msgid "From"
+msgstr "From"
 
 #: src/features/account/components/available-account-balance.tsx:49
 msgid "funds already on their way to someone else."
@@ -850,6 +866,10 @@ msgstr "Get support or provide feedback"
 #: src/components/app-update-required/app-update-required-sheet.tsx:23
 msgid "Get the latest version of the Leather app"
 msgstr "Get the latest version of the Leather app"
+
+#: src/features/swap/components/review/swap-review-empty-state.tsx:25
+msgid "Go back"
+msgstr "Go back"
 
 #: src/utils/app-store-utils.ts:40
 msgid "Google Play"
@@ -932,6 +952,10 @@ msgstr "Import existing accounts from self-custody"
 #: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:45
 msgid "Increase slippage"
 msgstr "Increase slippage"
+
+#: src/features/swap/components/info-sheet/info-sheet.tsx:41
+msgid "Info"
+msgstr "Info"
 
 #: src/features/approver/components/inputs-outputs-card.tsx:35
 msgid "Input"
@@ -1054,6 +1078,14 @@ msgstr "Locking"
 msgid "Mainnet, testnet or signet"
 msgstr "Mainnet, testnet or signet"
 
+#: src/features/swap/screens/swap-review-screen.tsx:166
+msgid ""
+"Make sure everything looks correct.\n"
+"Confirmed transactions cannot be undone."
+msgstr ""
+"Make sure everything looks correct.\n"
+"Confirmed transactions cannot be undone."
+
 #: src/features/activity/activity-empty.tsx:28
 msgid "Make your first transaction to get started"
 msgstr "Make your first transaction to get started"
@@ -1103,6 +1135,10 @@ msgstr "Memo updated"
 msgid "Message"
 msgstr "Message"
 
+#: src/features/swap/screens/swap-review-screen.tsx:125
+msgid "Min. receive"
+msgstr "Min. receive"
+
 #: src/features/swap/components/amount-field/amount-field-error-messages.ts:21
 msgid "Minimum {formattedMinimum}"
 msgstr "Minimum {formattedMinimum}"
@@ -1110,6 +1146,10 @@ msgstr "Minimum {formattedMinimum}"
 #: src/features/send/error-messages.ts:13
 msgid "Minimum is {minimumBtcSpendAmount}"
 msgstr "Minimum is {minimumBtcSpendAmount}"
+
+#: src/features/swap/components/min-receive-info-sheet.tsx:8
+msgid "Minimum receive"
+msgstr "Minimum receive"
 
 #: src/hooks/use-version-check.ts:68
 msgid "Minimum version format is invalid"
@@ -1145,6 +1185,10 @@ msgstr "Native Segwit"
 msgid "Native Segwit address"
 msgstr "Native Segwit address"
 
+#: src/features/swap/components/fees-info-sheet.tsx:32
+msgid "Network fee"
+msgstr "Network fee"
+
 #: src/app/settings/help/index.tsx:14
 #: src/app/settings/index.tsx:82
 #: src/app/settings/networks/index.tsx:47
@@ -1166,6 +1210,10 @@ msgstr "No assets found"
 #: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:40
 msgid "No confirmations will appear."
 msgstr "No confirmations will appear."
+
+#: src/features/swap/components/review/swap-review-empty-state.tsx:19
+msgid "No quotes available"
+msgstr "No quotes available"
 
 #: src/features/swap/components/quote-preview/quote-preview-empty-state.tsx:8
 msgid "No quotes available for this swap."
@@ -1199,6 +1247,10 @@ msgstr "Not a number"
 msgid "Not enough liquidity or no route available right now. Try a smaller amount or check back in a few minutes."
 msgstr "Not enough liquidity or no route available right now. Try a smaller amount or check back in a few minutes."
 
+#: src/features/swap/components/review/swap-review-empty-state.tsx:21
+msgid "Not enough liquidity or no route available right now. Try a smaller amount or check back later."
+msgstr "Not enough liquidity or no route available right now. Try a smaller amount or check back later."
+
 #: src/app/settings/index.tsx:91
 #: src/app/settings/notifications/_layout.tsx:13
 msgid "Notifications"
@@ -1229,6 +1281,10 @@ msgstr "Output"
 msgid "Output value"
 msgstr "Output value"
 
+#: src/features/swap/components/fees-info-sheet.tsx:35
+msgid "Paid to network validators to process your transaction"
+msgstr "Paid to network validators to process your transaction"
+
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:21
 msgid "Passphrase"
 msgstr "Passphrase"
@@ -1258,6 +1314,11 @@ msgstr "Portfolio"
 #: src/features/token/components/token-details-table.tsx:20
 msgid "Price"
 msgstr "Price"
+
+#: src/features/swap/components/price-impact-info-sheet.tsx:8
+#: src/features/swap/screens/swap-review-screen.tsx:146
+msgid "Price impact"
+msgstr "Price impact"
 
 #: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:31
 msgid "Price moving against you past this percentage will cancel the swap."
@@ -1308,7 +1369,8 @@ msgstr "Push and email notifications"
 msgid "Rarity rank"
 msgstr "Rarity rank"
 
-#: src/features/swap/components/quote-preview/quote-preview-content.tsx:39
+#: src/features/swap/components/quote-preview/quote-preview-content.tsx:41
+#: src/features/swap/screens/swap-review-screen.tsx:110
 msgid "Rate"
 msgstr "Rate"
 
@@ -1391,6 +1453,7 @@ msgstr "Restore wallet"
 #: src/features/approver/components/approver-buttons/index.tsx:52
 #: src/features/swap/components/asset-selector/asset-selector-error.tsx:26
 #: src/features/swap/components/quote-preview/quote-preview-error.tsx:18
+#: src/features/swap/components/review/swap-review-error-state.tsx:25
 msgid "Retry"
 msgstr "Retry"
 
@@ -1401,9 +1464,13 @@ msgstr "Reveal account"
 #: src/features/send/forms/btc/btc-form.tsx:126
 #: src/features/send/forms/stx/sip10-form.tsx:149
 #: src/features/send/forms/stx/stx-form.tsx:140
-#: src/features/swap/screens/swap-form-screen.tsx:120
+#: src/features/swap/screens/swap-form-screen.tsx:124
 msgid "Review"
 msgstr "Review"
+
+#: src/features/swap/screens/swap-review-screen.tsx:56
+msgid "Review Swap"
+msgstr "Review Swap"
 
 #: src/shared/display-preference.ts:67
 msgid "Rune"
@@ -1420,6 +1487,10 @@ msgstr "Save"
 #: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:78
 msgid "Save to..."
 msgstr "Save to..."
+
+#: src/features/swap/components/fees-info-sheet.tsx:21
+msgid "sBTC Bridge"
+msgstr "sBTC Bridge"
 
 #: src/features/send/components/recipient/recipient-qr-scanner.tsx:33
 msgid "Scan a Bitcoin or Stacks address"
@@ -1538,6 +1609,14 @@ msgstr "SIP-010"
 msgid "Skip for now"
 msgstr "Skip for now"
 
+#: src/features/swap/screens/swap-review-screen.tsx:133
+msgid "Slippage"
+msgstr "Slippage"
+
+#: src/features/swap/components/slippage-info-sheet.tsx:8
+msgid "Slippage tolerance"
+msgstr "Slippage tolerance"
+
 #: src/features/approver/utils.tsx:40
 msgid "Slow"
 msgstr "Slow"
@@ -1562,7 +1641,7 @@ msgstr "StackingDAO"
 #: src/features/balances/stacks/stacks-balance.tsx:13
 #: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
-#: src/features/swap/swap.utils.ts:6
+#: src/features/swap/swap.utils.ts:9
 #: src/features/token/stacks/stacks-token-details.tsx:15
 #: src/shared/display-preference.ts:62
 msgid "Stacks"
@@ -1598,7 +1677,7 @@ msgid "Success"
 msgstr "Success"
 
 #: src/components/action-buttons.tsx:77
-#: src/features/swap/screens/swap-form-screen.tsx:62
+#: src/features/swap/screens/swap-form-screen.tsx:64
 msgid "Swap"
 msgstr "Swap"
 
@@ -1663,6 +1742,18 @@ msgstr "The contract will transfer less than or equal to"
 msgid "The contract will transfer more than"
 msgstr "The contract will transfer more than"
 
+#: src/features/swap/components/price-impact-info-sheet.tsx:10
+msgid "The difference between the market price and the price you‘ll receive due to your trade size relative to the available liquidity. Larger trades typically have higher price impact."
+msgstr "The difference between the market price and the price you‘ll receive due to your trade size relative to the available liquidity. Larger trades typically have higher price impact."
+
+#: src/features/swap/components/min-receive-info-sheet.tsx:10
+msgid "The guaranteed minimum amount you‘ll receive based on your slippage tolerance. If the final amount falls below this, the transaction will automatically revert."
+msgstr "The guaranteed minimum amount you‘ll receive based on your slippage tolerance. If the final amount falls below this, the transaction will automatically revert."
+
+#: src/features/swap/components/slippage-info-sheet.tsx:10
+msgid "The maximum price change you're willing to accept between when you submit and when your swap executes. If the price moves beyond this threshold, the transaction will revert."
+msgstr "The maximum price change you're willing to accept between when you submit and when your swap executes. If the price moves beyond this threshold, the transaction will revert."
+
 #: src/app/settings/display/index.tsx:55
 #: src/features/settings/theme-sheet.tsx:28
 msgid "Theme"
@@ -1698,6 +1789,7 @@ msgstr "This is an “Allow Mode” transaction"
 
 #: src/features/swap/components/asset-selector/asset-selector-error.tsx:22
 #: src/features/swap/components/quote-preview/quote-preview-error.tsx:15
+#: src/features/swap/components/review/swap-review-error-state.tsx:21
 msgid "This is usually a temporary network or provider-side issue."
 msgstr "This is usually a temporary network or provider-side issue."
 
@@ -1799,6 +1891,10 @@ msgstr "Unable to determine current app version"
 msgid "Unable to load assets"
 msgstr "Unable to load assets"
 
+#: src/features/swap/components/review/swap-review-error-state.tsx:19
+msgid "Unable to load swap details"
+msgstr "Unable to load swap details"
+
 #: src/features/swap/components/quote-preview/quote-preview-error.tsx:14
 msgid "Unable to load the quote"
 msgstr "Unable to load the quote"
@@ -1847,6 +1943,7 @@ msgstr "Update the app to get access to the latest features."
 msgid "Use your device PIN, Face ID or other biometrics to secure your wallets"
 msgstr "Use your device PIN, Face ID or other biometrics to secure your wallets"
 
+#: src/features/swap/components/fees-info-sheet.tsx:20
 #: src/utils/dapps.ts:70
 msgid "Velar"
 msgstr "Velar"
