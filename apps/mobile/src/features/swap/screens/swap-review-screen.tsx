@@ -79,7 +79,7 @@ interface SwapReviewContentProps {
 function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentProps) {
   const slippageSheetRef = useRef<SheetInstance>(null);
   const { state } = swapStateResult;
-  const { selectedQuote, fees, intervalState } = liveEstimate;
+  const { selectedQuote, fees, intervalState, isRefetching } = liveEstimate;
   const {
     baseAsset,
     targetAsset,
@@ -100,7 +100,7 @@ function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentP
         targetAmount={selectedQuote.targetAmount}
       />
 
-      <SwapReviewDetails>
+      <SwapReviewDetails isRefetching={isRefetching}>
         <SwapReviewAccountDetails />
 
         <SwapReviewDivider />
