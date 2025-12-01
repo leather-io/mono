@@ -7,6 +7,7 @@ import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
 import { matchQueryResult } from '@/queries/match-query-result';
 import { t } from '@lingui/core/macro';
 import { UseQueryResult } from '@tanstack/react-query';
+import { isDefined } from 'remeda';
 
 import { AccountSwapAsset } from '@leather.io/services';
 import { Box, Sheet } from '@leather.io/ui/native';
@@ -34,17 +35,21 @@ export function AssetSelector({
     query.data
   );
   const assets = isPerformingSearch ? searchResults : query.data;
+  const showSearchHeader =
+    query.status === 'pending' || (isDefined(assets) && assets.length > 0) || isPerformingSearch;
 
   return (
     <Box flex={1}>
-      <AssetSelectorHeader>
-        <SearchInput
-          value={searchTerm}
-          onChange={setSearchTerm}
-          placeholder={t`Search for asset`}
-          TextInputComponent={Sheet.TextInput}
-        />
-      </AssetSelectorHeader>
+      {showSearchHeader && (
+        <AssetSelectorHeader>
+          <SearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder={t`Search for asset`}
+            TextInputComponent={Sheet.TextInput}
+          />
+        </AssetSelectorHeader>
+      )}
       {matchQueryResult(query, {
         pending: () => <AssetSelectorLoadingState />,
         error: error => <AssetSelectorError error={error} onRetry={query.refetch} />,
