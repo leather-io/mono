@@ -47,7 +47,7 @@ export function AssetSelector({
       </AssetSelectorHeader>
       {matchQueryResult(query, {
         pending: () => <AssetSelectorLoadingState />,
-        error: error => <AssetSelectorError error={error} />,
+        error: error => <AssetSelectorError error={error} onRetry={query.refetch} />,
         success: () => {
           if (assets?.length === 0) {
             return (
