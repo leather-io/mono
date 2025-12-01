@@ -14,4 +14,5 @@ export enum HomePageSelectors {
   FundAccountBtn = 'fund-account-btn',
   ManageTokensBtn = 'manage-tokens-btn',
   ManageTokensAssetsList = 'manage-tokens-assets-list',
+  ReceiveTokensModal = 'receive-tokens-modal',
 }

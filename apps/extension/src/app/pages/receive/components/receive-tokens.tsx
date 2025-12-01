@@ -54,7 +54,7 @@ export function ReceiveTokens({
   );
 
   return (
-    <Stack className={css(receiveTabStyle)}>
+    <Stack className={css(receiveTabStyle)} data-testid={HomePageSelectors.ReceiveTokensModal}>
       <ReceiveItem
         address={btcAddressNativeSegwit}
         icon={<BtcAvatarIcon />}
