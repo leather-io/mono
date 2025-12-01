@@ -4,13 +4,6 @@
     "global": []
   },
   "activeFiatProviders": {
-    "coinbase": {
-      "availableRegions": "global",
-      "enabled": true,
-      "hasFastCheckoutProcess": true,
-      "hasTradingFees": true,
-      "name": "Coinbase"
-    },
     "moonPay": {
       "availableRegions": "global",
       "enabled": true,

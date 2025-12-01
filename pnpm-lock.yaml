@@ -131,9 +131,6 @@ importers:
       '@blockstack/stacks-transactions':
         specifier: 0.7.0
         version: 0.7.0(encoding@0.1.13)
-      '@coinbase/cbpay-js':
-        specifier: 2.1.0
-        version: 2.1.0(regenerator-runtime@0.13.11)
       '@fungible-systems/zone-file':
         specifier: 2.0.0
         version: 2.0.0
@@ -3929,15 +3926,6 @@ packages:
 
   '@codemirror/view@6.38.6':
     resolution: {integrity: sha512-qiS0z1bKs5WOvHIAC0Cybmv4AJSkAXgX5aD6Mqd2epSLlVJsQl8NG23jCVouIgkh4All/mrbdsf2UOLFnJw0tw==}
-
-  '@coinbase/cbpay-js@2.1.0':
-    resolution: {integrity: sha512-J9kuMY7qiEM9fV6k6sBJ44S2fDjdXfX7SeDCDv7fWoni5QnP7Ca3k6pHE0TSBRCkzzC0x1zK6wgieG4RyDPeNw==}
-    engines: {node: '>= 14'}
-    peerDependencies:
-      regenerator-runtime: ^0.13.9
-    peerDependenciesMeta:
-      regenerator-runtime:
-        optional: true
 
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
@@ -26514,10 +26502,6 @@ snapshots:
       style-mod: 4.1.2
       w3c-keyname: 2.2.8
 
-  '@coinbase/cbpay-js@2.1.0(regenerator-runtime@0.13.11)':
-    optionalDependencies:
-      regenerator-runtime: 0.13.11
-
   '@colors/colors@1.5.0':
     optional: true
 
@@ -27143,14 +27127,14 @@ snapshots:
       react: 19.0.0
       tslib: 2.6.2
 
-  '@dnd-kit/modifiers@9.0.0(@dnd-kit/core@6.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+  '@dnd-kit/modifiers@9.0.0(@dnd-kit/core@6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@18.3.1)':
     dependencies:
       '@dnd-kit/core': 6.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@dnd-kit/utilities': 3.2.2(react@18.3.1)
       react: 18.3.1
       tslib: 2.8.1
 
-  '@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+  '@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@18.3.1)':
     dependencies:
       '@dnd-kit/core': 6.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@dnd-kit/utilities': 3.2.2(react@18.3.1)
@@ -32169,8 +32153,8 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.28.4
       '@dnd-kit/core': 6.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@dnd-kit/modifiers': 9.0.0(@dnd-kit/core@6.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
-      '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+      '@dnd-kit/modifiers': 9.0.0(@dnd-kit/core@6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@18.3.1)
+      '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@18.3.1)
       '@dnd-kit/utilities': 3.2.2(react@18.3.1)
       '@emotion/react': 11.14.0(@types/react@18.3.24)(react@18.3.1)
       '@redux-devtools/core': 4.1.1(react-redux@9.2.0(@types/react@19.0.12)(react@19.0.0)(redux@5.0.1))(react@19.0.0)(redux@5.0.1)
