@@ -1,8 +1,11 @@
 import { ReactNode } from 'react';
 
+import { usePathname, useRouter } from 'expo-router';
 import { TabTriggerSlotProps, useTabTrigger } from 'expo-router/ui';
 
 import { Pressable, Text, legacyTouchablePressEffect } from '@leather.io/ui/native';
+
+import { useTabLayoutContext } from './tab-layout-context';
 
 interface TabButtonProps extends Omit<TabTriggerSlotProps, 'ref'> {
   title: string;
@@ -13,10 +16,28 @@ interface TabButtonProps extends Omit<TabTriggerSlotProps, 'ref'> {
 
 export function TabButton({ title, activeIcon, defaultIcon, isFocused, ...props }: TabButtonProps) {
   const { switchTab } = useTabTrigger({ name: props.name });
+  const pathname = usePathname();
+  const router = useRouter();
+  const { scrollToTop } = useTabLayoutContext();
+
+  function handlePress() {
+    if (!isFocused) {
+      switchTab(props.name, {});
+      return;
+    }
+
+    if (isNestedRoute(pathname, props.name)) {
+      router.dismissTo('/(tabs)/(index)');
+      return;
+    }
+
+    scrollToTop(props.name);
+  }
+
   return (
     <Pressable
       {...props}
-      onPress={() => switchTab(props.name, {})}
+      onPress={handlePress}
       pressEffects={legacyTouchablePressEffect}
       justifyContent="center"
       alignItems="center"
@@ -28,4 +49,9 @@ export function TabButton({ title, activeIcon, defaultIcon, isFocused, ...props 
       <Text variant="label03">{title}</Text>
     </Pressable>
   );
+}
+
+function isNestedRoute(pathname: string, tabName: string): boolean {
+  if (tabName !== '(index)') return false;
+  return pathname !== '/' && pathname.startsWith('/');
 }
