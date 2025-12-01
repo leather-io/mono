@@ -1,3 +1,5 @@
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+
 import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
 import { t } from '@lingui/core/macro';
 import { Trans } from '@lingui/react/macro';
@@ -5,6 +7,8 @@ import { Image } from 'expo-image';
 
 import { AccountSwapAsset } from '@leather.io/services';
 import { Box, type BoxProps, Button, Text, TextProps } from '@leather.io/ui/native';
+
+const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 const emptyStateHeightRatio = '55%';
 
@@ -59,7 +63,9 @@ export function AssetSelectorEmptyState({
 
 function Root(props: BoxProps) {
   return (
-    <Box
+    <AnimatedBox
+      entering={FadeIn.duration(100)}
+      exiting={FadeOut.duration(100)}
       p="5"
       height={emptyStateHeightRatio}
       alignItems="center"

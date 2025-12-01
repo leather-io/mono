@@ -1,3 +1,5 @@
+import { FadeIn, FadeOut } from 'react-native-reanimated';
+
 import { SearchInput } from '@/components/search-input';
 import { AssetAvatar } from '@/features/swap/components/asset-avatar';
 import { AssetSelectorEmptyState } from '@/features/swap/components/asset-selector/asset-selector-empty-state';
@@ -67,6 +69,8 @@ export function AssetSelector({
 
           return (
             <Sheet.FlashList
+              entering={FadeIn.duration(100)}
+              exiting={FadeOut.duration(100)}
               data={assets}
               maintainVisibleContentPosition={{ disabled: true }}
               keyExtractor={item => serializeAssetId(getAssetId(item.asset))}
