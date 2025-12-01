@@ -6,7 +6,6 @@ import { SharedComponentsSelectors } from '@tests/selectors/shared-component.sel
 import { createTestSelector } from '@tests/utils';
 
 import { WalletDefaultNetworkConfigurationIds } from '@leather.io/models';
-import { delay } from '@leather.io/utils';
 
 export class HomePage {
   readonly page: Page;
@@ -71,7 +70,9 @@ export class HomePage {
   // Using the `Receive` route to get the account address for now.
   async getReceiveNativeSegwitAddress() {
     await this.goToReceiveDialog();
-    await this.page.getByTestId(HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn).click();
+    await this.page
+      .getByTestId(HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn)
+      .click({ force: true });
     const displayerAddress = await this.page
       .getByTestId(SharedComponentsSelectors.AddressDisplayer)
       .innerText();
@@ -81,9 +82,10 @@ export class HomePage {
   // Currently under Ordinals receive flow
   async getReceiveTaprootAddress() {
     await this.goToReceiveDialog();
-    await delay(1000);
-    await this.page.getByTestId(HomePageSelectors.ReceiveCollectiblesTab).click();
-    await this.page.getByTestId(HomePageSelectors.ReceiveBtcTaprootQrCodeBtn).click();
+    await this.page.getByTestId(HomePageSelectors.ReceiveCollectiblesTab).click({ force: true });
+    await this.page
+      .getByTestId(HomePageSelectors.ReceiveBtcTaprootQrCodeBtn)
+      .click({ force: true });
     // FIXME - add better test for Copy action
     // await this.page.getByRole('button', { name: 'Copy address' }).click();
     // const address = await this.page.evaluate('navigator.clipboard.readText()');
@@ -98,7 +100,6 @@ export class HomePage {
     await this.goToReceiveDialog();
     // In Ledger mode, this element isn't visible, so clicking is conditional
     const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
-    await delay(1000);
     if (await qrCodeBtn.isVisible()) await qrCodeBtn.click({ force: true });
     const displayerAddress = await this.page
       .getByTestId(SharedComponentsSelectors.AddressDisplayer)

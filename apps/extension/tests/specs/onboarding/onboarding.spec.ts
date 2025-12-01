@@ -122,13 +122,11 @@ test.describe('Onboarding an existing user', () => {
 
     test.describe('Bitcoin', () => {
       test('that the wallet generates the correct Native Segwit address', async ({ homePage }) => {
-        test.setTimeout(120_000);
         const nativeSegwitAddress = await homePage.getReceiveNativeSegwitAddress();
         test.expect(nativeSegwitAddress).toEqual(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS);
       });
 
       test('that the wallet generates the correct Taproot address', async ({ homePage }) => {
-        test.setTimeout(120_000);
         const taprootAddress = await homePage.getReceiveTaprootAddress();
         test.expect(taprootAddress).toEqual(TEST_ACCOUNT_1_TAPROOT_ADDRESS);
       });
@@ -136,7 +134,6 @@ test.describe('Onboarding an existing user', () => {
 
     test.describe('Stacks', () => {
       test('that restoring a wallet generates the correct stacks address', async ({ homePage }) => {
-        test.setTimeout(120_000);
         const stacksAddress = await homePage.getReceiveStxAddress();
         await delay(2000);
         test.expect(stacksAddress).toEqual(TEST_ACCOUNT_1_STX_ADDRESS);
