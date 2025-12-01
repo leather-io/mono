@@ -60,7 +60,7 @@ export class HomePage {
 
   async goToReceiveDialog() {
     await this.page.getByTestId(HomePageSelectors.ReceiveCryptoAssetBtn).click();
-    await this.page.getByTestId(HomePageSelectors.ReceiveTokensModal).isVisible();
+    await this.page.getByTestId(HomePageSelectors.ReceiveTokensModal).waitFor({ state: 'visible' });
   }
 
   // Open issue with Playwright's ability to copyToClipboard from legacy tests:
@@ -70,40 +70,40 @@ export class HomePage {
   // Using the `Receive` route to get the account address for now.
   async getReceiveNativeSegwitAddress() {
     await this.goToReceiveDialog();
-    await this.page
-      .getByTestId(HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn)
-      .click({ force: true });
-    const displayerAddress = await this.page
-      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-      .innerText();
+    const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn);
+    await qrCodeBtn.waitFor({ state: 'visible' });
+    await qrCodeBtn.click();
+    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
+    await addressDisplayer.waitFor({ state: 'visible' });
+    const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
   // Currently under Ordinals receive flow
   async getReceiveTaprootAddress() {
     await this.goToReceiveDialog();
-    await this.page.getByTestId(HomePageSelectors.ReceiveCollectiblesTab).click({ force: true });
-    await this.page
-      .getByTestId(HomePageSelectors.ReceiveBtcTaprootQrCodeBtn)
-      .click({ force: true });
-    // FIXME - add better test for Copy action
-    // await this.page.getByRole('button', { name: 'Copy address' }).click();
-    // const address = await this.page.evaluate('navigator.clipboard.readText()');
-    // return address;
-    const displayerAddress = await this.page
-      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-      .innerText();
+    const collectiblesTab = this.page.getByTestId(HomePageSelectors.ReceiveCollectiblesTab);
+    await collectiblesTab.waitFor({ state: 'visible' });
+    await collectiblesTab.click();
+    const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveBtcTaprootQrCodeBtn);
+    await qrCodeBtn.waitFor({ state: 'visible' });
+    await qrCodeBtn.click();
+    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
+    await addressDisplayer.waitFor({ state: 'visible' });
+    const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
   async getReceiveStxAddress() {
     await this.goToReceiveDialog();
-    // In Ledger mode, this element isn't visible, so clicking is conditional
     const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
-    if (await qrCodeBtn.isVisible()) await qrCodeBtn.click({ force: true });
-    const displayerAddress = await this.page
-      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-      .innerText();
+    const isQrCodeBtnVisible = await qrCodeBtn.isVisible({ timeout: 5000 }).catch(() => false);
+    if (isQrCodeBtnVisible) {
+      await qrCodeBtn.click();
+    }
+    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
+    await addressDisplayer.waitFor({ state: 'visible' });
+    const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 

@@ -10,7 +10,6 @@ import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
 import { BITCOIN_API_BASE_URL_MAINNET } from '@leather.io/models';
-import { delay } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -135,7 +134,6 @@ test.describe('Onboarding an existing user', () => {
     test.describe('Stacks', () => {
       test('that restoring a wallet generates the correct stacks address', async ({ homePage }) => {
         const stacksAddress = await homePage.getReceiveStxAddress();
-        await delay(2000);
         test.expect(stacksAddress).toEqual(TEST_ACCOUNT_1_STX_ADDRESS);
       });
     });
