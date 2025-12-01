@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { GradientBorder } from '@/components/gradient-border';
 import { t } from '@lingui/core/macro';
+import { useSegments } from 'expo-router';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
 
 import {
@@ -14,21 +16,23 @@ import {
   useTheme,
 } from '@leather.io/ui/native';
 
-import { BottomGradient } from './bottom-gradient';
 import { TabButton } from './tab-button';
 import { TabLayoutContext } from './tab-layout-context';
+
+const tabsWithGradientBorder = ['(index)', 'activity'];
 
 export function TabLayout() {
   const { bottom } = useSafeAreaInsets();
   const { colors } = useTheme();
   const [tabBarHeight, setTabBarHeight] = useState(0);
-  const [isGradientVisible, setIsGradientVisible] = useState(true);
+  const segments: string[] = useSegments();
+  const isGradientBorderVisible = segments?.[1] && tabsWithGradientBorder.includes(segments[1]);
 
   return (
     <TabLayoutContext.Provider value={{ tabBarHeight }}>
       <Tabs>
         <TabSlot />
-        {isGradientVisible && <BottomGradient />}
+        {isGradientBorderVisible && <GradientBorder />}
 
         <TabList
           onLayout={e => {
@@ -46,7 +50,6 @@ export function TabLayout() {
               defaultIcon={<HomeDefaultIcon />}
               name="(index)"
               title={t`Home`}
-              toggleGradient={() => setIsGradientVisible(true)}
             />
           </TabTrigger>
           <TabTrigger asChild style={{ flex: 1 }} name="activity" href="/(tabs)/activity">
@@ -55,7 +58,6 @@ export function TabLayout() {
               defaultIcon={<ActivityDefaultIcon />}
               name="activity"
               title={t`Activity`}
-              toggleGradient={() => setIsGradientVisible(true)}
             />
           </TabTrigger>
           <TabTrigger asChild style={{ flex: 1 }} name="browser" href="/(tabs)/browser">
@@ -64,7 +66,6 @@ export function TabLayout() {
               defaultIcon={<BrowseDefaultIcon />}
               name="browser"
               title={t`Browser`}
-              toggleGradient={() => setIsGradientVisible(false)}
             />
           </TabTrigger>
         </TabList>

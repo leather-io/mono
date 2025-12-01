@@ -3,11 +3,11 @@ import { Keyboard, TextInput as RNTextInput } from 'react-native';
 import Animated from 'react-native-reanimated';
 import WebView, { WebViewNavigation } from 'react-native-webview';
 
+import { GradientBorder } from '@/components/gradient-border';
 import {
   BrowserLoading,
   BrowserLoadingMethods,
 } from '@/features/account/components/browser-loading';
-import { BottomGradient } from '@/features/navigation/bottom-gradient';
 import { LEATHER_APPS_URL } from '@/shared/constants';
 import { useRouter } from 'expo-router';
 
@@ -68,7 +68,7 @@ export function SearchBar({
         elevation={1}
       >
         <BrowserLoading ref={browserLoadingRef} />
-        <BottomGradient />
+        <GradientBorder />
         <BrowserNavigationBar
           searchUrl={searchUrl}
           onGoBack={goBack}

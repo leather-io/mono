@@ -2,7 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import { useTheme } from '@leather.io/ui/native';
 
-export function BottomGradient() {
+export function GradientBorder() {
   const { colors } = useTheme();
 
   return (
