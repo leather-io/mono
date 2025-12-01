@@ -74,9 +74,11 @@ export function useKeyActions() {
         queryClient.clear();
       },
 
-      async lockWallet() {
+      async lockWallet({ afterLock }: { afterLock?(): void }) {
         await clearWalletSession();
-        return dispatch(inMemoryKeyActions.lockWallet());
+        dispatch(inMemoryKeyActions.lockWallet());
+        afterLock?.();
+        window.location.reload();
       },
     }),
     [bnsV2Client, btcClient, defaultKeyDetails, dispatch, stxClient]
