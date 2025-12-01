@@ -99,8 +99,9 @@ export function Settings({
           <DropdownMenu.Item
             onSelect={() => {
               void analytics.track('lock_session');
-              void lockWallet();
-              void navigate(RouteUrls.Unlock, { state: { from: location.pathname } });
+              void lockWallet({
+                afterLock: () => navigate(RouteUrls.Unlock, { state: { from: location.pathname } }),
+              });
             }}
             data-testid={SettingsSelectors.LockListItem}
           >
