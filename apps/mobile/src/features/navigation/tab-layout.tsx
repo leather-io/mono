@@ -17,7 +17,7 @@ import {
 } from '@leather.io/ui/native';
 
 import { TabButton } from './tab-button';
-import { TabLayoutContext } from './tab-layout-context';
+import { TabLayoutProvider } from './tab-layout-context';
 
 const tabsWithGradientBorder = ['(index)', 'activity'];
 
@@ -29,7 +29,7 @@ export function TabLayout() {
   const isGradientBorderVisible = segments?.[1] && tabsWithGradientBorder.includes(segments[1]);
 
   return (
-    <TabLayoutContext.Provider value={{ tabBarHeight }}>
+    <TabLayoutProvider tabBarHeight={tabBarHeight}>
       <Tabs>
         <TabSlot />
         {isGradientBorderVisible && <GradientBorder />}
@@ -70,6 +70,6 @@ export function TabLayout() {
           </TabTrigger>
         </TabList>
       </Tabs>
-    </TabLayoutContext.Provider>
+    </TabLayoutProvider>
   );
 }
