@@ -18,10 +18,10 @@ function AssetItemPlaceholder() {
       <SkeletonLoader borderRadius="round" flex={0} isLoading width={48} height={48} />
       <Box height={36} flex={1} gap="2" justifyContent="center">
         <Box flexDirection="row" gap="2">
-          <SkeletonLoader borderRadius="sm" isLoading height={12} flexGrow={4} />
-          <SkeletonLoader borderRadius="sm" isLoading height={12} />
+          <SkeletonLoader borderRadius="sm" isLoading height={12} width="75%" />
+          <SkeletonLoader borderRadius="sm" isLoading height={12} width="25%" flexShrink={1} />
         </Box>
-        <SkeletonLoader borderRadius="sm" isLoading flex={0} height={12} />
+        <SkeletonLoader borderRadius="sm" isLoading flex={0} height={12} width="100%" />
       </Box>
     </Box>
   );
