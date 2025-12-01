@@ -9,25 +9,14 @@ interface TabButtonProps extends Omit<TabTriggerSlotProps, 'ref'> {
   activeIcon: ReactNode;
   defaultIcon: ReactNode;
   name: string;
-  toggleGradient(): void;
 }
 
-export function TabButton({
-  title,
-  activeIcon,
-  defaultIcon,
-  isFocused,
-  toggleGradient,
-  ...props
-}: TabButtonProps) {
+export function TabButton({ title, activeIcon, defaultIcon, isFocused, ...props }: TabButtonProps) {
   const { switchTab } = useTabTrigger({ name: props.name });
   return (
     <Pressable
       {...props}
-      onPress={() => {
-        toggleGradient();
-        switchTab(props.name, {});
-      }}
+      onPress={() => switchTab(props.name, {})}
       pressEffects={legacyTouchablePressEffect}
       justifyContent="center"
       alignItems="center"
