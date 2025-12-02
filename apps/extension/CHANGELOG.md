@@ -21,6 +21,41 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.82.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.81.1...@leather.io/extension-v6.82.0) (2025-12-02)
+
+
+### Features
+
+* **tokens:** update color tokens ([6961637](https://github.com/leather-io/mono/commit/6961637e7f9b35f9defe02df37ac10cb623a8d30))
+
+
+### Bug Fixes
+
+* tsdown upgrade ([9bd347b](https://github.com/leather-io/mono/commit/9bd347b62e2deb9f7b65fa462b5fa281f4d106aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.16.0
+    * @leather.io/bitcoin bumped to 0.35.6
+    * @leather.io/constants bumped to 0.28.2
+    * @leather.io/crypto bumped to 1.12.8
+    * @leather.io/features bumped to 1.1.2
+    * @leather.io/models bumped to 0.50.1
+    * @leather.io/provider bumped to 1.6.10
+    * @leather.io/query bumped to 2.45.4
+    * @leather.io/rpc bumped to 2.21.2
+    * @leather.io/services bumped to 1.44.1
+    * @leather.io/stacks bumped to 1.19.4
+    * @leather.io/tokens bumped to 0.25.0
+    * @leather.io/ui bumped to 1.98.1
+    * @leather.io/utils bumped to 0.49.2
+  * devDependencies
+    * @leather.io/eslint-config bumped to 0.14.1
+    * @leather.io/panda-preset bumped to 0.14.6
+
 ## [6.81.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.81.0...@leather.io/extension-v6.81.1) (2025-11-26)
 
 

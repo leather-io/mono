@@ -19,6 +19,48 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.92.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.91.0...@leather.io/mobile-v2.92.0) (2025-12-02)
+
+
+### Features
+
+* **mobile:** add a double tap guard to swap confirm button ([da110d8](https://github.com/leather-io/mono/commit/da110d81513fc8ee6611bfc109199aa1d24ded92))
+* **mobile:** add asset selector error state ([674bd64](https://github.com/leather-io/mono/commit/674bd64859947949b60ff167982243b88cdce8d1))
+* **mobile:** add basic transitions to swap asset list and empty state ([cc95a7d](https://github.com/leather-io/mono/commit/cc95a7dda981ce8ea3f82aa603fd7fa3222874ad))
+* **mobile:** add refetch indicator to  swap review ([25c724b](https://github.com/leather-io/mono/commit/25c724ba36b359cb757cc28ef427d6ef0d710b81))
+* **mobile:** add swap review contents ([d5e0bb0](https://github.com/leather-io/mono/commit/d5e0bb0b1f95f946bf40e8081ee9f78941dfd91c))
+* **mobile:** add telemetry to swap ([e278c70](https://github.com/leather-io/mono/commit/e278c70afa09732bed7204722c87c71b14281295))
+* **mobile:** display swap asset search conditionally ([3971631](https://github.com/leather-io/mono/commit/39716319839c9c18ad1fa8136967d1d56010909d))
+* **mobile:** fade swap review details when refetching ([0d7bafa](https://github.com/leather-io/mono/commit/0d7bafa20df0f2493ff0aadccc9178569887ff25))
+
+
+### Bug Fixes
+
+* **mobile:** fix swap asset selector loading layout after skeleton update ([2a86a8b](https://github.com/leather-io/mono/commit/2a86a8b30877df0013edb5307c932b8d4f6abc89))
+* tsdown upgrade ([9bd347b](https://github.com/leather-io/mono/commit/9bd347b62e2deb9f7b65fa462b5fa281f4d106aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.16.0
+    * @leather.io/bitcoin bumped to 0.35.6
+    * @leather.io/constants bumped to 0.28.2
+    * @leather.io/crypto bumped to 1.12.8
+    * @leather.io/features bumped to 1.1.2
+    * @leather.io/models bumped to 0.50.1
+    * @leather.io/provider bumped to 1.6.10
+    * @leather.io/query bumped to 2.45.4
+    * @leather.io/rpc bumped to 2.21.2
+    * @leather.io/services bumped to 1.44.1
+    * @leather.io/stacks bumped to 1.19.4
+    * @leather.io/tokens bumped to 0.25.0
+    * @leather.io/ui bumped to 1.98.1
+    * @leather.io/utils bumped to 0.49.2
+  * devDependencies
+    * @leather.io/test-config bumped to 0.1.1
+
 ## [2.91.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.90.0...@leather.io/mobile-v2.91.0) (2025-11-26)
 
 

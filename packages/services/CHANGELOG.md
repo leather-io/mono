@@ -413,6 +413,29 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.44.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.44.0...@leather.io/services-v1.44.1) (2025-12-02)
+
+
+### Bug Fixes
+
+* collectibles services type imports ([5ba54a0](https://github.com/leather-io/mono/commit/5ba54a0fa9b7b0cdf99a7c68ee91964120bc84db))
+* tsdown upgrade ([9bd347b](https://github.com/leather-io/mono/commit/9bd347b62e2deb9f7b65fa462b5fa281f4d106aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.35.6
+    * @leather.io/constants bumped to 0.28.2
+    * @leather.io/models bumped to 0.50.1
+    * @leather.io/stacks bumped to 1.19.4
+    * @leather.io/test-config bumped to 0.1.1
+    * @leather.io/utils bumped to 0.49.2
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.2
+    * @leather.io/tsconfig-config bumped to 0.11.1
+
 ## [1.44.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.43.0...@leather.io/services-v1.44.0) (2025-11-26)
 
 

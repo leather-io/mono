@@ -215,6 +215,22 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.28.2](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.28.1...@leather.io/constants-v0.28.2) (2025-12-02)
+
+
+### Bug Fixes
+
+* tsdown upgrade ([9bd347b](https://github.com/leather-io/mono/commit/9bd347b62e2deb9f7b65fa462b5fa281f4d106aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.50.1
+  * devDependencies
+    * @leather.io/tsconfig-config bumped to 0.11.1
+
 ## [0.28.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.28.0...@leather.io/constants-v0.28.1) (2025-11-26)
 
 
