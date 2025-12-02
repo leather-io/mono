@@ -1,6 +1,9 @@
+import { Link } from 'react-router';
+
 import { Box } from 'leather-styles/jsx/box';
 import { styled } from 'leather-styles/jsx/factory';
 import { Flex } from 'leather-styles/jsx/flex';
+import { VStack } from 'leather-styles/jsx/vstack';
 import Markdown from '~/components/content/markdown-content';
 import { cmsClient } from '~/constants/cms-client';
 import { Page } from '~/layouts/page/page';
@@ -70,6 +73,25 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
         </Box>
         <Box flex="2">
           <Markdown>{guide.body}</Markdown>
+          {guide.relatedPosts && guide.relatedPosts.length > 0 && (
+            <VStack alignItems="flex-start" gap="space.03" mt="space.06">
+              <styled.h3 textStyle="heading.05">Related Guides</styled.h3>
+              <styled.ul listStyleType="disc" pl="space.04">
+                {guide.relatedPosts.map(post => (
+                  <styled.li key={post._id} textStyle="body.01">
+                    <Link to={`/help-center/guide/${post.slug.current}`}>
+                      <styled.span
+                        color="ink.action-primary-default"
+                        _hover={{ textDecoration: 'underline' }}
+                      >
+                        {post.title}
+                      </styled.span>
+                    </Link>
+                  </styled.li>
+                ))}
+              </styled.ul>
+            </VStack>
+          )}
         </Box>
       </Flex>
     </Page>

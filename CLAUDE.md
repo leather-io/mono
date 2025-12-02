@@ -1,4 +1,6 @@
-# Code style
+# Claude Instructions
+
+## Code style
 
 - Don't use enums.
 - DO NOT USE COMMENTS UNLESS EXPLICITLY ASKED.
@@ -94,9 +96,16 @@ Use native JS methods for trivial operations where type inference is already cor
 const ids = items.map(x => x.id);
 ```
 
-# Commit conventions
+## Commit conventions
 
 - Use conventional commits format.
 - Use scope to specify affected areas, .e.g., feat(mobile), refactor(web), fix(utils).
 - Use imperative language.
 - Do not add anything to the commit message body unless explicitly asked.
+
+## Tooling
+
+### Package Management
+
+- Our repo is a turbo monorepo which uses `pnpm` for package management and package.json scripts.
+- Many common actions can be found in respective pacakge and apps `scripts` in the package.json.

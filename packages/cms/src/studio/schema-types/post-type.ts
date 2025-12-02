@@ -233,6 +233,12 @@ export const postType = defineType({
       type: 'text',
       description: 'Activity log for tracking changes',
     }),
+    defineField({
+      name: 'relatedPosts',
+      title: 'Related Posts',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'post' }] }],
+    }),
   ],
   preview: {
     select: {
