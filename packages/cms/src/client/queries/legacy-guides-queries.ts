@@ -33,4 +33,11 @@ export const legacyGuidesSectionPostsQuery = defineQuery(`{
 
 export const legacyGuideBySlugQuery = defineQuery(`*[
   _type == "post" && slug.current == $slug
-][0]`);
+][0]{
+  ...,
+  relatedPosts[]->{
+    _id,
+    title,
+    slug
+  }
+}`);
