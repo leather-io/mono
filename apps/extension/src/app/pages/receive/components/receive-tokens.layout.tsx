@@ -7,6 +7,8 @@ import { token } from 'leather-styles/tokens';
 
 import { AddressDisplayer, Button, Sheet, SheetHeader } from '@leather.io/ui';
 
+import { WALLET_ENVIRONMENT } from '@shared/environment';
+
 import { useLocationState } from '@app/common/hooks/use-location-state';
 import { useBackgroundLocationRedirect } from '@app/routes/hooks/use-background-location-redirect';
 
@@ -55,14 +57,16 @@ export function ReceiveTokensLayout(props: ReceiveTokensLayoutProps) {
       >
         <Box mt="space.06" mx="auto">
           <Flex alignItems="center" justifyContent="center" mx="auto" position="relative">
-            <QRCode
-              bgColor={token('colors.ink.background-primary')}
-              fgColor={token('colors.ink.text-primary')}
-              size={132}
-              style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
-              value={address}
-              viewBox={`0 0 132 132`}
-            />
+            {WALLET_ENVIRONMENT !== 'testing' && (
+              <QRCode
+                bgColor={token('colors.ink.background-primary')}
+                fgColor={token('colors.ink.text-primary')}
+                size={132}
+                style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
+                value={address}
+                viewBox={`0 0 132 132`}
+              />
+            )}
           </Flex>
         </Box>
         <Flex alignItems="center" flexDirection="column">
