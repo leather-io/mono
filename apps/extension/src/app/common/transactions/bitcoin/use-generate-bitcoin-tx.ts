@@ -5,10 +5,12 @@ import * as btc from '@scure/btc-signer';
 import { determineUtxosForSpend, determineUtxosForSpendAll } from '@leather.io/bitcoin';
 import type { Money, OwnedUtxo } from '@leather.io/models';
 
+import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { logger } from '@shared/logger';
 import type { TransferRecipient } from '@shared/models/form.model';
 
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
+import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
 import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 interface GenerateNativeSegwitTxValues {
@@ -24,7 +26,8 @@ interface UseGenerateUnsignedNativeSegwitTxProps {
 export function useGenerateUnsignedNativeSegwitTx({
   throwError = false,
 }: UseGenerateUnsignedNativeSegwitTxProps = {}) {
-  const signer = useCurrentAccountNativeSegwitIndexZeroSigner();
+  const indexZeroSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
+  const getSignerForInput = useBitcoinSignerFromInput();
 
   const networkMode = useBitcoinScureLibNetworkConfig();
 
@@ -61,9 +64,13 @@ export function useGenerateUnsignedNativeSegwitTx({
         // if (outputs.length > 2)
         //   throw new Error('Address reuse mode: wallet should have max 2 outputs');
 
-        const p2wpkh = btc.p2wpkh(signer.publicKey, networkMode);
+        const signingConfig: BitcoinInputSigningConfig[] = [];
 
         for (const input of inputs) {
+          const inputSigner = getSignerForInput(input);
+
+          const p2wpkh = btc.p2wpkh(inputSigner.publicKey, networkMode);
+
           tx.addInput({
             txid: input.txid,
             index: input.vout,
@@ -74,19 +81,30 @@ export function useGenerateUnsignedNativeSegwitTx({
               amount: BigInt(input.value),
             },
           });
+
+          signingConfig.push({
+            index: tx.inputsLength - 1,
+            derivationPath: inputSigner.derivationPath,
+          });
         }
 
         outputs.forEach(output => {
           // When coin selection returns output with no address we assume it is
           // a change output
           if (!output.address) {
-            tx.addOutputAddress(signer.address, BigInt(output.value), networkMode);
+            tx.addOutputAddress(indexZeroSigner.address, BigInt(output.value), networkMode);
             return;
           }
           tx.addOutputAddress(output.address, BigInt(output.value), networkMode);
         });
 
-        return { hex: tx.hex, fee: fee.amount.toNumber(), psbt: tx.toPSBT(), inputs };
+        return {
+          hex: tx.hex,
+          fee: fee.amount.toNumber(),
+          psbt: tx.toPSBT(),
+          inputs,
+          signingConfig,
+        };
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log('Error signing bitcoin transaction', e);
@@ -94,6 +112,6 @@ export function useGenerateUnsignedNativeSegwitTx({
         return null;
       }
     },
-    [networkMode, signer.address, signer.publicKey, throwError]
+    [networkMode, indexZeroSigner.address, getSignerForInput, throwError]
   );
 }

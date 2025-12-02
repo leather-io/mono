@@ -56,7 +56,7 @@ export function useRpcSendTransferActions() {
         const resp = await generateTx({ amount, recipients }, feeRate, utxos);
         if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
 
-        const tx = await signTransaction(resp.psbt);
+        const tx = await signTransaction(resp.psbt, resp.signingConfig);
 
         tx.finalize();
 

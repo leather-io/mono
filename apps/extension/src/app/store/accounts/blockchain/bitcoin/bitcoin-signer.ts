@@ -12,9 +12,12 @@ import {
   makeTaprootAddressIndexDerivationPath,
   whenPaymentType,
 } from '@leather.io/bitcoin';
-import type { BitcoinNetworkModes } from '@leather.io/models';
+import { extractAddressIndexFromPath } from '@leather.io/crypto';
+import type { BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
 
 import { useBitcoinExtendedPublicKeyVersions } from './bitcoin-keychain';
+import { useCurrentAccountNativeSegwitSigner } from './native-segwit-account.hooks';
+import { useCurrentAccountTaprootSigner } from './taproot-account.hooks';
 
 enum SignatureHash {
   DEFAULT = 0x00,
@@ -174,5 +177,27 @@ export function useMakeBitcoinNetworkSignersForPaymentType<T>(
       })({ accountIndex, addressIndex: zeroIndex });
     },
     [extendedPublicKeyVersions, mainnetKeychainFn, paymentFn, testnetKeychainFn]
+  );
+}
+
+export function useBitcoinSignerFromInput() {
+  const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
+  const createTaprootSigner = useCurrentAccountTaprootSigner();
+
+  return useCallback(
+    (input: OwnedUtxo): BitcoinSigner<any> => {
+      const addressIndex = extractAddressIndexFromPath(input.path);
+
+      // Try native segwit first (most common)
+      const nativeSegwitSigner = createNativeSegwitSigner?.(addressIndex);
+      if (nativeSegwitSigner) return nativeSegwitSigner;
+
+      // Fall back to taproot
+      const taprootSigner = createTaprootSigner?.(addressIndex);
+      if (taprootSigner) return taprootSigner;
+
+      throw new Error(`No signer found for input at path: ${input.path}`);
+    },
+    [createNativeSegwitSigner, createTaprootSigner]
   );
 }

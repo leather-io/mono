@@ -25,6 +25,7 @@ import {
 import type { BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
 import { btcToSat, createMoney } from '@leather.io/utils';
 
+import type { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
@@ -36,6 +37,7 @@ import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
+import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -49,6 +51,7 @@ export interface SbtcDeposit {
   reclaimScript: string;
   transaction: btc.Transaction;
   trOut: P2TROut;
+  signingConfig: BitcoinInputSigningConfig[];
 }
 
 function getSbtcNetworkConfig(network: BitcoinNetworkModes) {
@@ -97,6 +100,7 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: O
   const navigate = useNavigate();
   const network = useCurrentNetwork();
   const sign = useSignBitcoinTx();
+  const getSignerForInput = useBitcoinSignerFromInput();
 
   const client = useMemo(
     () => (network.chain.bitcoin.mode === 'mainnet' ? clientMainnet : clientTestnet),
@@ -115,19 +119,22 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: O
       if (!stacksAccount || !utxos) return;
 
       try {
-        const deposit: SbtcDeposit = buildSbtcDepositTx({
-          amountSats: btcToSat(values.swapAmountQuote).toNumber(),
-          network: getSbtcNetworkConfig(network.chain.bitcoin.mode),
-          stacksAddress: stacksAccount.address,
-          // Adding retry logic until we can
-          signersPublicKey: await fetchSignersPublicKey({
-            contractAddress: client.config.sbtcContract,
-            client: client.config,
+        const deposit: SbtcDeposit = {
+          ...buildSbtcDepositTx({
+            amountSats: btcToSat(values.swapAmountQuote).toNumber(),
+            network: getSbtcNetworkConfig(network.chain.bitcoin.mode),
+            stacksAddress: stacksAccount.address,
+            // Adding retry logic until we can
+            signersPublicKey: await fetchSignersPublicKey({
+              contractAddress: client.config.sbtcContract,
+              client: client.config,
+            }),
+            maxSignerFee: swapData.maxSignerFee,
+            reclaimLockTime: DEFAULT_RECLAIM_LOCK_TIME,
+            reclaimPublicKey: bytesToHex(signer.publicKey).slice(2),
           }),
-          maxSignerFee: swapData.maxSignerFee,
-          reclaimLockTime: DEFAULT_RECLAIM_LOCK_TIME,
-          reclaimPublicKey: bytesToHex(signer.publicKey).slice(2),
-        });
+          signingConfig: [],
+        };
 
         const determineUtxosArgs = {
           feeRate: feeRates?.halfHourFee.toNumber() ?? 0,
@@ -144,18 +151,21 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: O
           ? determineUtxosForSpendAll(determineUtxosArgs)
           : determineUtxosForSpend(determineUtxosArgs);
 
-        const p2wpkh = btc.p2wpkh(signer.publicKey, networkMode);
-
         for (const input of inputs) {
+          const inputSigner = getSignerForInput(input);
           deposit.transaction.addInput({
             txid: input.txid,
             index: input.vout,
             sequence: 0,
             witnessUtxo: {
-              // script = 0014 + pubKeyHash
-              script: p2wpkh.script,
+              script: inputSigner.payment.script,
               amount: BigInt(input.value),
             },
+          });
+
+          deposit.signingConfig.push({
+            index: deposit.transaction.inputsLength - 1,
+            derivationPath: inputSigner.derivationPath,
           });
         }
 
@@ -176,7 +186,7 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: O
     async onDepositSbtc(deposit?: SbtcDeposit) {
       if (!deposit) return;
       try {
-        const signedDepositTx = await sign(deposit.transaction.toPSBT());
+        const signedDepositTx = await sign(deposit.transaction.toPSBT(), deposit.signingConfig);
         signedDepositTx.finalize();
 
         logger.info('Deposit', { deposit });
