@@ -47,6 +47,16 @@ export const test = base.extend<TestFixtures>({
   page: async ({ context }, use) => {
     const pages = context.pages();
     const page = pages.length > 0 ? pages[0] : await context.newPage();
+    await page.addStyleTag({
+      content: `
+        *, *::before, *::after {
+          animation-duration: 0s !important;
+          animation-delay: 0s !important;
+          transition-duration: 0s !important;
+          transition-delay: 0s !important;
+        }
+      `,
+    });
     await use(page);
   },
   extensionId: async ({ context }, use) => {

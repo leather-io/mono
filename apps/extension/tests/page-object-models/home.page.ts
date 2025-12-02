@@ -61,6 +61,7 @@ export class HomePage {
 
   async goToReceiveDialog() {
     await this.page.getByTestId(HomePageSelectors.ReceiveCryptoAssetBtn).click();
+    await this.page.waitForSelector('[data-state="open"]');
   }
 
   // Open issue with Playwright's ability to copyToClipboard from legacy tests:
