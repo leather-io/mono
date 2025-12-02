@@ -21,6 +21,21 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.83.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.82.0...@leather.io/extension-v6.83.0) (2025-12-02)
+
+
+### Features
+
+* init queries package ([38591fa](https://github.com/leather-io/mono/commit/38591fabf435fdea2d0691adafc12e93f2cb7b2b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/queries bumped to 0.2.0
+    * @leather.io/ui bumped to 1.98.2
+
 ## [6.82.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.81.1...@leather.io/extension-v6.82.0) (2025-12-02)
 
 

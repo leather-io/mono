@@ -19,6 +19,22 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.93.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.92.0...@leather.io/mobile-v2.93.0) (2025-12-02)
+
+
+### Features
+
+* init queries package ([38591fa](https://github.com/leather-io/mono/commit/38591fabf435fdea2d0691adafc12e93f2cb7b2b))
+* **mobile:** add scroll-to-top to global tabs ([74252a6](https://github.com/leather-io/mono/commit/74252a6c478c98efdc0e930da11991d1463eb3c0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/queries bumped to 0.2.0
+    * @leather.io/ui bumped to 1.98.2
+
 ## [2.92.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.91.0...@leather.io/mobile-v2.92.0) (2025-12-02)
 
 
