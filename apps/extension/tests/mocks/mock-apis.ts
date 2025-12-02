@@ -1,6 +1,7 @@
 import { Page } from '@playwright/test';
 import { json } from '@tests/utils';
 
+import { MOCK_REMOTE_CONFIG } from './constants';
 import {
   mockMainnetAlexAssetsRequest,
   mockMainnetAlexTokenPricesRequest,
@@ -8,6 +9,7 @@ import {
 import { mockMainnetTestAccountBrc20TokensRequest } from './mock-brc20';
 import { mockLeatherApiRequests } from './mock-leather-api';
 import { mockMainnetTestAccountRunesOutputsRequest } from './mock-runes';
+import { mockMainnetTestAccountSbtcDepositRequests } from './mock-sbtc';
 import { mockMainnetTestAccountStampchainRequest } from './mock-src20';
 import { mockMainnetTestAccountStacksBalancesRequest } from './mock-stacks-balances';
 import { mockMainnetTestAccountStacksBalancesV2Request } from './mock-stacks-balances-v2';
@@ -22,7 +24,7 @@ import { mockMainnetTestAccountBitcoinRequests } from './mock-utxos';
 export async function setupMockApis(page: Page) {
   await Promise.all([
     page.route(/chrome-extension/, route => route.continue()),
-    page.route(/github/, route => route.fulfill(json({}))),
+    page.route(/github/, route => route.fulfill(json(MOCK_REMOTE_CONFIG))),
     page.route('https://api.hiro.so/', route => route.fulfill()),
     page.route('https://api.testnet.hiro.so/', route => route.fulfill()),
     mockMainnetTestAccountBitcoinRequests(page),
@@ -40,5 +42,6 @@ export async function setupMockApis(page: Page) {
     mockMainnetTestAccountBrc20TokensRequest(page),
     mockMainnetTestAccountStx20TokensRequest(page),
     mockMainnetTestAccountRunesOutputsRequest(page),
+    mockMainnetTestAccountSbtcDepositRequests(page),
   ]);
 }
