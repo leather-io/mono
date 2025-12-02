@@ -144,6 +144,25 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.25.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.24.1...@leather.io/tokens-v0.25.0) (2025-12-02)
+
+
+### Features
+
+* **tokens:** update color tokens ([6961637](https://github.com/leather-io/mono/commit/6961637e7f9b35f9defe02df37ac10cb623a8d30))
+
+
+### Bug Fixes
+
+* tsdown upgrade ([9bd347b](https://github.com/leather-io/mono/commit/9bd347b62e2deb9f7b65fa462b5fa281f4d106aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/tsconfig-config bumped to 0.11.1
+
 ## [0.24.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.24.0...@leather.io/tokens-v0.24.1) (2025-11-10)
 
 

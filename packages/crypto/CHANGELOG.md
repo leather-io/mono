@@ -492,6 +492,22 @@
   * dependencies
     * @leather.io/utils bumped to 0.46.4
 
+## [1.12.8](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.12.7...@leather.io/crypto-v1.12.8) (2025-12-02)
+
+
+### Bug Fixes
+
+* tsdown upgrade ([9bd347b](https://github.com/leather-io/mono/commit/9bd347b62e2deb9f7b65fa462b5fa281f4d106aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.49.2
+  * devDependencies
+    * @leather.io/test-config bumped to 0.1.1
+
 ## [1.12.7](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.12.6...@leather.io/crypto-v1.12.7) (2025-11-26)
 
 

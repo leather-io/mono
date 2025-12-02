@@ -114,6 +114,26 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.16.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.15.8...@leather.io/analytics-v3.16.0) (2025-12-02)
+
+
+### Features
+
+* **mobile:** add telemetry to swap ([e278c70](https://github.com/leather-io/mono/commit/e278c70afa09732bed7204722c87c71b14281295))
+
+
+### Bug Fixes
+
+* tsdown upgrade ([9bd347b](https://github.com/leather-io/mono/commit/9bd347b62e2deb9f7b65fa462b5fa281f4d106aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.50.1
+    * @leather.io/test-config bumped to 0.1.1
+
 ## [3.15.8](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.15.7...@leather.io/analytics-v3.15.8) (2025-11-26)
 
 

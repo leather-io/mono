@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.1](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.14.0...@leather.io/eslint-config-v0.14.1) (2025-12-02)
+
+
+### Bug Fixes
+
+* tsdown upgrade ([9bd347b](https://github.com/leather-io/mono/commit/9bd347b62e2deb9f7b65fa462b5fa281f4d106aa))
+
 ## [0.14.0](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.13.0...@leather.io/eslint-config-v0.14.0) (2025-09-05)
 
 

@@ -247,6 +247,23 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/rpc bumped to 2.20.17
 
+## [1.5.28](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.27...@leather.io/sdk-v1.5.28) (2025-12-02)
+
+
+### Bug Fixes
+
+* tsdown upgrade ([9bd347b](https://github.com/leather-io/mono/commit/9bd347b62e2deb9f7b65fa462b5fa281f4d106aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.50.1
+    * @leather.io/rpc bumped to 2.21.2
+  * devDependencies
+    * @leather.io/test-config bumped to 0.1.1
+
 ## [1.5.27](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.26...@leather.io/sdk-v1.5.27) (2025-11-26)
 
 

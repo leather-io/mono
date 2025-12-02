@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.3.1...@leather.io/cms-v1.3.2) (2025-12-02)
+
+
+### Bug Fixes
+
+* tsdown upgrade ([9bd347b](https://github.com/leather-io/mono/commit/9bd347b62e2deb9f7b65fa462b5fa281f4d106aa))
+
 ## [1.3.1](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.3.0...@leather.io/cms-v1.3.1) (2025-10-17)
 
 
