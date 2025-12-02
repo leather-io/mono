@@ -18,6 +18,7 @@ export default defineConfig({
       '@inpage': path.resolve('./src/inpage'),
       '@app': path.resolve('./src/app'),
       '@tests': path.resolve('./tests'),
+      'leather-styles': path.resolve('./leather-styles'),
     },
   },
 });
