@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/features/token/bitcoin/inscription-token-stats.tsx:43
+#: src/features/token/bitcoin/inscription-token-stats.tsx:36
 msgid ""
 "\n"
 "The amount of bitcoin assigned to the inscription on-chain. A higher output value indicates a UTXO with more satoshis locked to that collectible."
@@ -101,11 +101,11 @@ msgstr "24 Hour Change"
 msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:126
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:123
 msgid "Account created"
 msgstr "Account created"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:132
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:129
 msgid "Account creation failed"
 msgstr "Account creation failed"
 
@@ -136,7 +136,7 @@ msgstr "Activity"
 
 #: src/features/account/components/create-wallet-card.tsx:22
 #: src/features/account/sheets/add-account-sheet.tsx:26
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:144
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:141
 msgid "Add account"
 msgstr "Add account"
 
@@ -150,8 +150,8 @@ msgstr ""
 
 #: src/features/approver/components/memo-sheet.tsx:16
 #: src/features/approver/components/nonce-sheet.tsx:16
-#: src/features/send/components/memo.tsx:34
-#: src/features/send/components/memo.tsx:68
+#: src/features/send/components/memo.tsx:33
+#: src/features/send/components/memo.tsx:66
 msgid "Add memo"
 msgstr "Add memo"
 
@@ -177,11 +177,11 @@ msgstr "Add wallet"
 msgid "Add your collection here"
 msgstr "Add your collection here"
 
-#: src/app/settings/index.tsx:61
+#: src/app/settings/index.tsx:60
 msgid "Add, configure and remove"
 msgstr "Add, configure and remove"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:144
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:141
 msgid "Adding account..."
 msgstr "Adding account..."
 
@@ -250,11 +250,11 @@ msgstr "Allow collection of data"
 msgid "Amount must be greater than zero"
 msgstr "Amount must be greater than zero"
 
-#: src/features/account/components/available-account-balance.tsx:44
+#: src/features/account/components/available-account-balance.tsx:42
 msgid "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 msgstr "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 
-#: src/features/account/components/account-stacking.tsx:56
+#: src/features/account/components/account-stacking.tsx:54
 msgid "Amount you’ve committed to stacking. You won’t be able to move or spend it until the stacking period ends."
 msgstr "Amount you’ve committed to stacking. You won’t be able to move or spend it until the stacking period ends."
 
@@ -271,7 +271,7 @@ msgstr "An error occurred"
 msgid "Analytics"
 msgstr "Analytics"
 
-#: src/app/settings/index.tsx:76
+#: src/app/settings/index.tsx:75
 msgid "Analytics and app authentication"
 msgstr "Analytics and app authentication"
 
@@ -346,11 +346,11 @@ msgstr "Attributes"
 msgid "Authentication failed"
 msgstr "Authentication failed"
 
-#: src/features/account/components/available-account-balance.tsx:73
+#: src/features/account/components/available-account-balance.tsx:71
 msgid "Available"
 msgstr "Available"
 
-#: src/features/account/components/available-account-balance.tsx:40
+#: src/features/account/components/available-account-balance.tsx:38
 msgid "Available balance"
 msgstr "Available balance"
 
@@ -358,7 +358,7 @@ msgstr "Available balance"
 msgid "Avatar"
 msgstr "Avatar"
 
-#: src/app/create-new-wallet.tsx:79
+#: src/app/create-new-wallet.tsx:71
 msgid "Back up your Secret Key"
 msgstr "Back up your Secret Key"
 
@@ -517,7 +517,7 @@ msgstr ""
 
 #: src/features/approver/components/memo-sheet.tsx:18
 #: src/features/approver/components/nonce-sheet.tsx:18
-#: src/features/send/components/memo.tsx:90
+#: src/features/send/components/memo.tsx:88
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
 #: src/features/swap/screens/swap-review-screen.tsx:171
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
@@ -537,8 +537,8 @@ msgstr "Connections"
 msgid "Contact us"
 msgstr "Contact us"
 
-#: src/app/settings/index.tsx:115
-#: src/app/settings/index.tsx:169
+#: src/app/settings/index.tsx:114
+#: src/app/settings/index.tsx:167
 msgid "Contacts"
 msgstr "Contacts"
 
@@ -610,7 +610,7 @@ msgstr "Current app version format is invalid"
 msgid "Custom"
 msgstr "Custom"
 
-#: src/app/settings/index.tsx:176
+#: src/app/settings/index.tsx:174
 msgid "Custom fees"
 msgstr "Custom fees"
 
@@ -637,7 +637,7 @@ msgstr "Deployment failed"
 msgid "Description"
 msgstr "Description"
 
-#: src/app/settings/index.tsx:144
+#: src/app/settings/index.tsx:143
 msgid "Device ID"
 msgstr "Device ID"
 
@@ -657,7 +657,7 @@ msgid "Dismiss"
 msgstr "Dismiss"
 
 #: src/app/settings/display/index.tsx:52
-#: src/app/settings/index.tsx:68
+#: src/app/settings/index.tsx:67
 msgid "Display"
 msgstr "Display"
 
@@ -681,7 +681,7 @@ msgstr "Done"
 msgid "Drag to refresh"
 msgstr "Drag to refresh"
 
-#: src/features/send/components/memo.tsx:34
+#: src/features/send/components/memo.tsx:33
 msgid "Edit memo"
 msgstr "Edit memo"
 
@@ -807,7 +807,7 @@ msgstr "Fee charged by {providerName} for facilitating the swap"
 msgid "Fee updated"
 msgstr "Fee updated"
 
-#: src/app/settings/index.tsx:123
+#: src/app/settings/index.tsx:122
 #: src/features/swap/components/fees-info-sheet.tsx:29
 msgid "Fees"
 msgstr "Fees"
@@ -825,7 +825,7 @@ msgstr "Flip assets"
 msgid "Floor price"
 msgstr "Floor price"
 
-#: src/app/create-new-wallet.tsx:108
+#: src/app/create-new-wallet.tsx:99
 msgid "For your eyes only"
 msgstr "For your eyes only"
 
@@ -833,15 +833,15 @@ msgstr "For your eyes only"
 msgid "From"
 msgstr "From"
 
-#: src/features/account/components/available-account-balance.tsx:49
+#: src/features/account/components/available-account-balance.tsx:47
 msgid "funds already on their way to someone else."
 msgstr "funds already on their way to someone else."
 
-#: src/features/account/components/available-account-balance.tsx:54
+#: src/features/account/components/available-account-balance.tsx:52
 msgid "funds kept safe and unavailable for spending"
 msgstr "funds kept safe and unavailable for spending"
 
-#: src/features/account/components/available-account-balance.tsx:59
+#: src/features/account/components/available-account-balance.tsx:57
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 
@@ -859,7 +859,7 @@ msgid "Genesis time"
 msgstr "Genesis time"
 
 #: src/app/settings/help/index.tsx:18
-#: src/app/settings/index.tsx:100
+#: src/app/settings/index.tsx:99
 msgid "Get support or provide feedback"
 msgstr "Get support or provide feedback"
 
@@ -887,7 +887,7 @@ msgstr "Guides"
 msgid "Haptics"
 msgstr "Haptics"
 
-#: src/app/settings/index.tsx:99
+#: src/app/settings/index.tsx:98
 msgid "Help"
 msgstr "Help"
 
@@ -925,7 +925,7 @@ msgstr "I’m aware of the risks"
 msgid "I'm interested"
 msgstr "I'm interested"
 
-#: src/app/create-new-wallet.tsx:125
+#: src/app/create-new-wallet.tsx:116
 msgid "I've backed it up"
 msgstr "I've backed it up"
 
@@ -933,7 +933,7 @@ msgstr "I've backed it up"
 msgid "Icons"
 msgstr "Icons"
 
-#: src/app/settings/index.tsx:51
+#: src/app/settings/index.tsx:50
 msgid "ID copied to clipboard"
 msgstr "ID copied to clipboard"
 
@@ -1045,7 +1045,7 @@ msgstr "Leather"
 msgid "Lisa"
 msgstr "Lisa"
 
-#: src/app/settings/index.tsx:163
+#: src/app/settings/index.tsx:161
 msgid "Lock app"
 msgstr "Lock app"
 
@@ -1057,16 +1057,16 @@ msgstr "Lock Asset"
 msgid "Lock failed"
 msgstr "Lock failed"
 
-#: src/features/account/components/account-stacking.tsx:52
+#: src/features/account/components/account-stacking.tsx:50
 #: src/features/activity/utils/format-activity.ts:38
 msgid "Locked"
 msgstr "Locked"
 
-#: src/features/account/components/available-account-balance.tsx:58
+#: src/features/account/components/available-account-balance.tsx:56
 msgid "Locked Stacks balance:"
 msgstr "Locked Stacks balance:"
 
-#: src/features/account/components/account-stacking.tsx:65
+#: src/features/account/components/account-stacking.tsx:63
 msgid "Locked STX"
 msgstr "Locked STX"
 
@@ -1074,7 +1074,7 @@ msgstr "Locked STX"
 msgid "Locking"
 msgstr "Locking"
 
-#: src/app/settings/index.tsx:83
+#: src/app/settings/index.tsx:82
 msgid "Mainnet, testnet or signet"
 msgstr "Mainnet, testnet or signet"
 
@@ -1117,7 +1117,7 @@ msgstr "Maybe later"
 #: src/features/approver/components/memo-card.tsx:19
 #: src/features/approver/components/memo-sheet.tsx:17
 #: src/features/approver/components/nonce-sheet.tsx:17
-#: src/features/send/components/memo.tsx:76
+#: src/features/send/components/memo.tsx:74
 msgid "Memo"
 msgstr "Memo"
 
@@ -1159,7 +1159,7 @@ msgstr "Minimum version format is invalid"
 msgid "minutes ago"
 msgstr "minutes ago"
 
-#: src/app/settings/index.tsx:110
+#: src/app/settings/index.tsx:109
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:95
 msgid "More options"
 msgstr "More options"
@@ -1190,7 +1190,7 @@ msgid "Network fee"
 msgstr "Network fee"
 
 #: src/app/settings/help/index.tsx:14
-#: src/app/settings/index.tsx:82
+#: src/app/settings/index.tsx:81
 #: src/app/settings/networks/index.tsx:47
 msgid "Networks"
 msgstr "Networks"
@@ -1251,7 +1251,7 @@ msgstr "Not enough liquidity or no route available right now. Try a smaller amou
 msgid "Not enough liquidity or no route available right now. Try a smaller amount or check back later."
 msgstr "Not enough liquidity or no route available right now. Try a smaller amount or check back later."
 
-#: src/app/settings/index.tsx:91
+#: src/app/settings/index.tsx:90
 #: src/app/settings/notifications/_layout.tsx:13
 msgid "Notifications"
 msgstr "Notifications"
@@ -1264,11 +1264,11 @@ msgstr "Notify me"
 msgid "OK"
 msgstr "OK"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:77
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:75
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
 
-#: src/features/account/components/available-account-balance.tsx:48
+#: src/features/account/components/available-account-balance.tsx:46
 msgid "Outbound balance:"
 msgstr "Outbound balance:"
 
@@ -1276,8 +1276,8 @@ msgstr "Outbound balance:"
 msgid "Output"
 msgstr "Output"
 
-#: src/features/token/bitcoin/inscription-token-stats.tsx:39
-#: src/features/token/bitcoin/inscription-token-stats.tsx:53
+#: src/features/token/bitcoin/inscription-token-stats.tsx:32
+#: src/features/token/bitcoin/inscription-token-stats.tsx:46
 msgid "Output value"
 msgstr "Output value"
 
@@ -1306,8 +1306,8 @@ msgstr "Pending"
 msgid "PlanBetter"
 msgstr "PlanBetter"
 
-#: src/features/account/components/portfolio-header.tsx:21
-#: src/features/account/components/portfolio-header.tsx:34
+#: src/features/account/components/portfolio-header.tsx:14
+#: src/features/account/components/portfolio-header.tsx:27
 msgid "Portfolio"
 msgstr "Portfolio"
 
@@ -1336,7 +1336,7 @@ msgstr "Proceed with caution since the wallet will be removed entirely from this
 msgid "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
 msgstr "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
 
-#: src/features/account/components/available-account-balance.tsx:53
+#: src/features/account/components/available-account-balance.tsx:51
 msgid "Protected Bitcoin balance:"
 msgstr "Protected Bitcoin balance:"
 
@@ -1361,7 +1361,7 @@ msgstr "Pull to refresh"
 msgid "Push"
 msgstr "Push"
 
-#: src/app/settings/index.tsx:92
+#: src/app/settings/index.tsx:91
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
@@ -1383,7 +1383,7 @@ msgid "Read more"
 msgstr "Read more"
 
 #: src/components/action-buttons.tsx:44
-#: src/features/receive/screens/asset-details.tsx:57
+#: src/features/receive/screens/asset-details.tsx:56
 #: src/features/receive/screens/select-asset.tsx:83
 msgid "Receive"
 msgstr "Receive"
@@ -1517,7 +1517,7 @@ msgstr "Search for BNS name or address"
 msgid "Secure your wallet"
 msgstr "Secure your wallet"
 
-#: src/app/settings/index.tsx:75
+#: src/app/settings/index.tsx:74
 #: src/app/settings/security/index.tsx:34
 msgid "Security"
 msgstr "Security"
@@ -1565,13 +1565,13 @@ msgstr "Sending to your own address isn’t supported. Choose a different addres
 msgid "Sent"
 msgstr "Sent"
 
-#: src/app/settings/index.tsx:57
+#: src/app/settings/index.tsx:56
 #: src/components/screen/screen-header/components/header-actions.tsx:30
 #: src/features/qr-scanner/use-camera-permission.ts:38
 msgid "Settings"
 msgstr "Settings"
 
-#: src/features/receive/screens/asset-details.tsx:108
+#: src/features/receive/screens/asset-details.tsx:106
 msgid "Share"
 msgstr "Share"
 
@@ -1697,7 +1697,7 @@ msgstr "Swapped"
 msgid "Swapping"
 msgstr "Swapping"
 
-#: src/app/create-new-wallet.tsx:106
+#: src/app/create-new-wallet.tsx:97
 msgid "Tap to view Secret Key"
 msgstr "Tap to view Secret Key"
 
@@ -1759,7 +1759,7 @@ msgstr "The maximum price change you're willing to accept between when you submi
 msgid "Theme"
 msgstr "Theme"
 
-#: src/app/settings/index.tsx:69
+#: src/app/settings/index.tsx:68
 msgid "Theme and account identifier"
 msgstr "Theme and account identifier"
 
@@ -1809,7 +1809,7 @@ msgstr "This is your Taproot address for receiving tokens on the Bitcoin network
 msgid "This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent."
 msgstr "This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent."
 
-#: src/features/account/components/available-account-balance.tsx:64
+#: src/features/account/components/available-account-balance.tsx:62
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
@@ -1843,8 +1843,8 @@ msgstr "Tokens"
 msgid "Too many decimals (max {maxDecimals})"
 msgstr "Too many decimals (max {maxDecimals})"
 
-#: src/features/account/components/account-total-balance.tsx:38
-#: src/features/account/components/account-total-balance.tsx:51
+#: src/features/account/components/account-total-balance.tsx:30
+#: src/features/account/components/account-total-balance.tsx:43
 msgid "Total balance"
 msgstr "Total balance"
 
@@ -1907,7 +1907,7 @@ msgstr "Unable to open app store. Please update the app manually from your devic
 msgid "Unable to Open Store"
 msgstr "Unable to Open Store"
 
-#: src/features/account/components/available-account-balance.tsx:63
+#: src/features/account/components/available-account-balance.tsx:61
 msgid "Uneconomical balance:"
 msgstr "Uneconomical balance:"
 
@@ -1952,7 +1952,7 @@ msgstr "Velar"
 msgid "Verify full address"
 msgstr "Verify full address"
 
-#: src/app/settings/index.tsx:136
+#: src/app/settings/index.tsx:135
 msgid "Version"
 msgstr "Version"
 
@@ -1996,7 +1996,7 @@ msgstr "Wallet name cannot be empty"
 msgid "Wallets"
 msgstr "Wallets"
 
-#: src/app/settings/index.tsx:60
+#: src/app/settings/index.tsx:59
 msgid "Wallets and accounts"
 msgstr "Wallets and accounts"
 
@@ -2061,16 +2061,16 @@ msgstr "Your accounts"
 msgid "Your Secret Key"
 msgstr "Your Secret Key"
 
-#: src/app/create-new-wallet.tsx:88
+#: src/app/create-new-wallet.tsx:80
 #: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:21
 msgid "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
 msgstr "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
 
-#: src/features/account/components/portfolio-header.tsx:25
+#: src/features/account/components/portfolio-header.tsx:18
 msgid "Your total tokens across all your accounts."
 msgstr "Your total tokens across all your accounts."
 
-#: src/features/account/components/account-total-balance.tsx:42
+#: src/features/account/components/account-total-balance.tsx:34
 msgid "Your total tokens on chain. Includes both available and locked amounts."
 msgstr "Your total tokens on chain. Includes both available and locked amounts."
 

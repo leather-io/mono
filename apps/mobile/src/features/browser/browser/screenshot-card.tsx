@@ -5,7 +5,7 @@ import { App } from '@/store/apps/utils';
 import { useAppDispatch } from '@/store/utils';
 import { Image } from 'expo-image';
 
-import { Box, CloseIcon, Pressable, Text, legacyTouchablePressEffect } from '@leather.io/ui/native';
+import { Box, CloseIcon, Pressable, Text } from '@leather.io/ui/native';
 
 import { getAppDetails } from './utils';
 
@@ -24,7 +24,7 @@ export function ScreenshotCard({ app, onPress }: ScreenshotCardProps) {
   const { name, icon } = getAppDetails(app, { iconSize: 16 });
 
   return (
-    <Pressable onPress={onPress} pressEffects={legacyTouchablePressEffect} maxWidth={width * 0.4}>
+    <Pressable onPress={onPress} maxWidth={width * 0.4}>
       <Box py="3" flexDirection="row" alignItems="center" justifyContent="space-between">
         <Box
           flexDirection="row"
@@ -40,7 +40,6 @@ export function ScreenshotCard({ app, onPress }: ScreenshotCardProps) {
           </Text>
         </Box>
         <Pressable
-          pressEffects={legacyTouchablePressEffect}
           width={24}
           height={24}
           justifyContent="center"

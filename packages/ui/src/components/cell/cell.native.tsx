@@ -51,6 +51,7 @@ export function CellRoot({ style, ...props }: CellProps & { ref?: PressableRef }
         onPressIn={onPressIn}
         onPressOut={onPressOut}
         style={[animatedStyle, style]}
+        pressEffects={{}}
         {...props}
       />
     );

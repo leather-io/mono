@@ -57,7 +57,7 @@ export * from './utils/use-on-mount.shared';
 export {
   Pressable,
   type PressableProps,
-  legacyTouchablePressEffect,
+  defaultPressEffect,
 } from './components/pressable/pressable.native';
 export { Numpad, type NumpadProps } from './components/numpad/numpad.native';
 export { Highlighter } from './components/highlighting/highlighter.native';

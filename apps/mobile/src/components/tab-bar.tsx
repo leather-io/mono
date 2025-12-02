@@ -1,4 +1,4 @@
-import { Box, Pressable, Text, legacyTouchablePressEffect } from '@leather.io/ui/native';
+import { Box, Pressable, Text } from '@leather.io/ui/native';
 
 const tabBarHeight = 56;
 
@@ -29,7 +29,6 @@ export function TabBar({ tabs }: TabBarProps) {
           flex={1}
           height="100%"
           justifyContent="center"
-          pressEffects={legacyTouchablePressEffect}
         >
           <Text color={getTextColor(tab.isActive)} variant="label01">
             {tab.title}

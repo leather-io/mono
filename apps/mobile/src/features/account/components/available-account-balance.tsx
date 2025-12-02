@@ -11,7 +11,6 @@ import {
   QuestionCircleIcon,
   SettingsSliderHorIcon,
   Text,
-  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 interface AvailableAccountBalanceProps {
@@ -34,7 +33,6 @@ export function AvailableAccountBalance({
     <Box p="5" flexDirection="row" justifyContent="space-between">
       <Box flexDirection="column">
         <Pressable
-          pressEffects={legacyTouchablePressEffect}
           onPress={() => {
             descriptionSheetRef.current?.present({
               title: t`Available balance`,
@@ -78,7 +76,7 @@ export function AvailableAccountBalance({
         )}
       </Box>
       {isTokenManagementReleased && hasAssets && (
-        <Pressable p="2" pressEffects={legacyTouchablePressEffect} onPress={onOpenManageTokens}>
+        <Pressable p="2" onPress={onOpenManageTokens}>
           <SettingsSliderHorIcon />
         </Pressable>
       )}

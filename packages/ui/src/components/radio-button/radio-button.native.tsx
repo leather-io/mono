@@ -1,16 +1,12 @@
 import { Box } from '../box/box.native';
-import {
-  Pressable,
-  PressableProps,
-  legacyTouchablePressEffect,
-} from '../pressable/pressable.native';
+import { Pressable, PressableProps } from '../pressable/pressable.native';
 
 export interface RadioButtonProps extends PressableProps {
   isSelected: boolean;
 }
 export function RadioButton({ isSelected, ...props }: RadioButtonProps) {
   return (
-    <Pressable {...props} pressEffects={legacyTouchablePressEffect} role="radio">
+    <Pressable {...props} role="radio">
       <Box
         alignItems="center"
         borderRadius="round"

@@ -1,10 +1,6 @@
 import { ReactNode } from 'react';
 
-import {
-  Pressable,
-  type PressableProps,
-  legacyTouchablePressEffect,
-} from '../pressable/pressable.native';
+import { Pressable, type PressableProps } from '../pressable/pressable.native';
 
 export interface IconButtonProps extends Omit<PressableProps, 'accessibilityLabel'> {
   label: string;
@@ -17,7 +13,6 @@ export function IconButton({ icon, label, disabled, ...pressableProps }: IconBut
       opacity={disabled ? 0.5 : 1}
       accessibilityLabel={label}
       disabled={disabled}
-      pressEffects={legacyTouchablePressEffect}
       {...pressableProps}
     >
       {icon}

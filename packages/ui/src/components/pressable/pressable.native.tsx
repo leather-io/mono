@@ -57,9 +57,22 @@ interface PressableOwnProps {
 
 export type PressableProps = PressableOwnProps & PressableCoreProps;
 
+export const defaultPressEffect = {
+  opacity: {
+    from: 1,
+    to: 0.5,
+    settings: {
+      type: 'spring',
+      config: {
+        duration: 200,
+      },
+    },
+  },
+} as const;
+
 export function Pressable({
   haptics = {},
-  pressEffects = {},
+  pressEffects = defaultPressEffect,
   onPress,
   onLongPress,
   style,
@@ -100,21 +113,3 @@ export function Pressable({
 }
 
 Pressable.displayName = 'Pressable';
-
-/**
- * https://linear.app/leather-io/issue/LEA-1859
- * Press effect preset to mimic react-native Touchable transition.
- * This preset is up for removal. It's only used for components that previously used Touchable, and require a new design for the pressed state.
- * */
-export const legacyTouchablePressEffect = {
-  opacity: {
-    from: 1,
-    to: 0.5,
-    settings: {
-      type: 'spring',
-      config: {
-        duration: 200,
-      },
-    },
-  },
-} as const;

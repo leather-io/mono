@@ -4,14 +4,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { EmptyAmountPlaceholder } from '@/components/balance/constants';
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import {
-  ArrowTopBottomIcon,
-  Box,
-  Pressable,
-  SkeletonLoader,
-  Text,
-  legacyTouchablePressEffect,
-} from '@leather.io/ui/native';
+import { ArrowTopBottomIcon, Box, Pressable, SkeletonLoader, Text } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { SecondaryAmount } from '../swap-state/swap-state.types';
@@ -63,7 +56,6 @@ export function CurrencyModeSwitcher({ secondaryAmount, onModeSwitch }: Currency
       alignItems="center"
       gap="2"
       onPress={onModeSwitch}
-      pressEffects={legacyTouchablePressEffect}
       hitSlop={{ top: 16, bottom: 16, left: 16, right: 24 }}
       disabled={secondaryAmount.status !== 'success'}
     >
