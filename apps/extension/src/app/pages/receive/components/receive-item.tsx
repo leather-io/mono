@@ -1,4 +1,6 @@
-import { CopyIcon, IconButton, ItemLayoutWithButtons, Pressable, QrCodeIcon } from '@leather.io/ui';
+import { Box } from 'leather-styles/jsx';
+
+import { CopyIcon, IconButton, ItemLayoutWithButtons, QrCodeIcon } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 interface ReceiveItemProps {
@@ -19,7 +21,7 @@ export function ReceiveItem({
 }: ReceiveItemProps) {
   if (!address) return null;
   return (
-    <Pressable my="space.02" width="100%">
+    <Box my="space.02" width="100%">
       <ItemLayoutWithButtons
         img={icon}
         title={title}
@@ -38,6 +40,6 @@ export function ReceiveItem({
           </>
         }
       />
-    </Pressable>
+    </Box>
   );
 }

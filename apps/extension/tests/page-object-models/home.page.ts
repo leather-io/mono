@@ -72,6 +72,9 @@ export class HomePage {
   async getReceiveNativeSegwitAddress() {
     await this.goToReceiveDialog();
     await this.page.getByTestId(HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn).click();
+    await this.page
+      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
+      .waitFor({ state: 'visible' });
     const displayerAddress = await this.page
       .getByTestId(SharedComponentsSelectors.AddressDisplayer)
       .innerText();
@@ -100,6 +103,9 @@ export class HomePage {
     const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
     await delay(1000);
     if (await qrCodeBtn.isVisible()) await qrCodeBtn.click({ force: true });
+    await this.page
+      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
+      .waitFor({ state: 'visible' });
     const displayerAddress = await this.page
       .getByTestId(SharedComponentsSelectors.AddressDisplayer)
       .innerText();
