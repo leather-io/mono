@@ -12,7 +12,6 @@ import {
   QuestionCircleIcon,
   SkeletonLoader,
   Text,
-  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 interface AccountStacking {
@@ -46,7 +45,6 @@ function AccountStackingComponent({ children }: HasChildren) {
       <Box mb="3" height={1} flex={1} bg="ink.component-background-non-interactive" />
       <Box gap="1">
         <Pressable
-          pressEffects={legacyTouchablePressEffect}
           onPress={() => {
             descriptionSheetRef.current?.present({
               title: t`Locked`,

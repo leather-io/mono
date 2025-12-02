@@ -2,20 +2,13 @@ import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { TotalBalance } from '@/features/balances/total-balance';
 import { t } from '@lingui/core/macro';
 
-import {
-  Box,
-  Pressable,
-  QuestionCircleIcon,
-  Text,
-  legacyTouchablePressEffect,
-} from '@leather.io/ui/native';
+import { Box, Pressable, QuestionCircleIcon, Text } from '@leather.io/ui/native';
 
 export function PortfolioHeader() {
   const { descriptionSheetRef } = useGlobalSheets();
   return (
     <Box gap="1">
       <Pressable
-        pressEffects={legacyTouchablePressEffect}
         onPress={() => {
           descriptionSheetRef.current?.present({
             title: t`Portfolio`,

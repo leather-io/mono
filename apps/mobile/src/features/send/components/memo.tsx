@@ -13,7 +13,6 @@ import {
   Sheet,
   SheetInstance,
   Text,
-  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 interface MemoProps {
@@ -57,7 +56,6 @@ export function Memo({ value, onChange, onBlur, invalid, isTouched, error }: Mem
         borderRadius="sm"
         onPress={() => sheetRef.current?.present()}
         p="2"
-        pressEffects={legacyTouchablePressEffect}
       >
         <NoteEmptyIcon
           color={shouldMarkToggleAsInvalid ? 'red.action-primary-default' : 'ink.text-primary'}

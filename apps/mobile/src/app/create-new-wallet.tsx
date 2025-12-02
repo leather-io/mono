@@ -11,15 +11,7 @@ import { t } from '@lingui/core/macro';
 import { ImageBackground } from 'expo-image';
 
 import { generateMnemonic } from '@leather.io/crypto';
-import {
-  BlurView,
-  Box,
-  Button,
-  PointerHandIcon,
-  Pressable,
-  Text,
-  legacyTouchablePressEffect,
-} from '@leather.io/ui/native';
+import { BlurView, Box, Button, PointerHandIcon, Pressable, Text } from '@leather.io/ui/native';
 
 function SecretBanner({ children, isHidden }: { children: ReactNode; isHidden: boolean }) {
   const { themeDerivedFromThemePreference } = useSettings();
@@ -98,7 +90,6 @@ export default function CreateNewWallet() {
                   justifyContent="center"
                   alignItems="center"
                   gap="2"
-                  pressEffects={legacyTouchablePressEffect}
                   testID={TestId.walletCreationTapToReveal}
                 >
                   <PointerHandIcon />

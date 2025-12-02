@@ -25,7 +25,6 @@ import {
   Pressable,
   SettingsGearIcon,
   Text,
-  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 import { WalletViewVariant } from './types';
@@ -62,7 +61,6 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
             alignItems="center"
             gap="1"
             onPress={() => setExpanded(!expanded)}
-            pressEffects={legacyTouchablePressEffect}
           >
             <Text variant="label01">{name}</Text>
             {expanded ? (
@@ -84,7 +82,6 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
               flex={1}
               alignItems="flex-end"
               testID={TestId.walletListSettingsButton}
-              pressEffects={legacyTouchablePressEffect}
             />
           )}
         </Box>

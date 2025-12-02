@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { usePathname, useRouter } from 'expo-router';
 import { TabTriggerSlotProps, useTabTrigger } from 'expo-router/ui';
 
-import { Pressable, Text, legacyTouchablePressEffect } from '@leather.io/ui/native';
+import { Pressable, Text } from '@leather.io/ui/native';
 
 import { useTabLayoutContext } from './tab-layout-context';
 
@@ -38,7 +38,6 @@ export function TabButton({ title, activeIcon, defaultIcon, isFocused, ...props 
     <Pressable
       {...props}
       onPress={handlePress}
-      pressEffects={legacyTouchablePressEffect}
       justifyContent="center"
       alignItems="center"
       gap="1"

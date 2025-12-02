@@ -3,11 +3,7 @@ import { ComponentType, ReactNode } from 'react';
 import { IconProps } from '../../icons/icon/create-icon.native';
 import { Theme } from '../../theme-native';
 import { PressableRef, PressableRestyleProps } from '../pressable/pressable-core.native';
-import {
-  Pressable,
-  PressableProps,
-  legacyTouchablePressEffect,
-} from '../pressable/pressable.native';
+import { Pressable, PressableProps } from '../pressable/pressable.native';
 import { Text } from '../text/text.native';
 
 type ButtonVariant = 'solid' | 'outline' | 'ghost';
@@ -50,8 +46,6 @@ export function Button({
       justifyContent="center"
       disabled={disabled}
       px="3"
-      // TODO: Designs for pressed state are more elaborate, update using transitionProperty when Reanimated v4 is ready
-      pressEffects={legacyTouchablePressEffect}
       {...variantProps}
       {...props}
     >

@@ -32,7 +32,6 @@ import {
   Text,
   UsersTwoIcon,
   WalletIcon,
-  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 export default function SettingsScreen() {
@@ -147,7 +146,6 @@ export default function SettingsScreen() {
               alignItems="center"
               justifyContent="space-between"
               onPress={handleCopyDeviceIdToClipboard}
-              pressEffects={legacyTouchablePressEffect}
             >
               <Text variant="caption01" color="ink.text-subdued">
                 {deviceId}

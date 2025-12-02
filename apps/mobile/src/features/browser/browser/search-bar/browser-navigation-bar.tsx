@@ -1,10 +1,4 @@
-import {
-  Box,
-  ChevronLeftIcon,
-  Pressable,
-  Text,
-  legacyTouchablePressEffect,
-} from '@leather.io/ui/native';
+import { Box, ChevronLeftIcon, Pressable, Text } from '@leather.io/ui/native';
 
 interface BrowserNavigationBarProps {
   searchUrl: string;
@@ -28,12 +22,7 @@ export function BrowserNavigationBar({
       paddingBottom="3"
       paddingTop="2"
     >
-      <Pressable
-        p="4"
-        onPress={onGoBack}
-        disabled={!canGoBack}
-        pressEffects={legacyTouchablePressEffect}
-      >
+      <Pressable p="4" onPress={onGoBack} disabled={!canGoBack}>
         <ChevronLeftIcon variant="small" />
       </Pressable>
       <Pressable
@@ -46,7 +35,6 @@ export function BrowserNavigationBar({
         borderRadius="sm"
         p="2"
         onPress={onPressUrl}
-        pressEffects={legacyTouchablePressEffect}
       >
         <Text variant="caption01">{hostname}</Text>
       </Pressable>

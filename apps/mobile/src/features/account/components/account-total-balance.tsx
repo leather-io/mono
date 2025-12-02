@@ -6,14 +6,7 @@ import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';
 
 import { AccountId } from '@leather.io/models';
-import {
-  Box,
-  Pressable,
-  QuestionCircleIcon,
-  SkeletonLoader,
-  Text,
-  legacyTouchablePressEffect,
-} from '@leather.io/ui/native';
+import { Box, Pressable, QuestionCircleIcon, SkeletonLoader, Text } from '@leather.io/ui/native';
 
 interface AccountTotalBalanceProps {
   account: AccountId;
@@ -32,7 +25,6 @@ export function AccountTotalBalance({ account }: AccountTotalBalanceProps) {
     <Box px="5" pb="5" pt="3" gap="1">
       <Box flexDirection="row" justifyContent="space-between">
         <Pressable
-          pressEffects={legacyTouchablePressEffect}
           onPress={() => {
             descriptionSheetRef.current?.present({
               title: t`Total balance`,

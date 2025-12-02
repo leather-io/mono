@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { Pressable, Text, legacyTouchablePressEffect } from '@leather.io/ui/native';
+import { Pressable, Text } from '@leather.io/ui/native';
 
 interface ToolbarButtonProps {
   onPress(): void;
@@ -11,7 +11,6 @@ interface ToolbarButtonProps {
 export function ToolbarButton({ onPress, icon, label }: ToolbarButtonProps) {
   return (
     <Pressable
-      pressEffects={legacyTouchablePressEffect}
       onPress={onPress}
       py="3"
       gap="1"

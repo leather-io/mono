@@ -4,13 +4,7 @@ import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
 import { btcAsset } from '@leather.io/constants';
-import {
-  Box,
-  Pressable,
-  QuestionCircleIcon,
-  Text,
-  legacyTouchablePressEffect,
-} from '@leather.io/ui/native';
+import { Box, Pressable, QuestionCircleIcon, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import { TokenDetailsCard } from '../components/token-details-card';
@@ -33,7 +27,6 @@ export function InscriptionTokenStats({ outputValue }: InscriptionTokenStatsProp
         <TokenStatCardItem
           label={
             <Pressable
-              pressEffects={legacyTouchablePressEffect}
               onPress={() => {
                 descriptionSheetRef.current?.present({
                   title: t`Output value`,

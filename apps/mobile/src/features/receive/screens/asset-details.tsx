@@ -19,7 +19,6 @@ import {
   CopyIcon,
   Pressable,
   Text,
-  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 import { assertExistence } from '@leather.io/utils';
 
@@ -90,7 +89,6 @@ export function AssetDetails() {
           alignItems="center"
           justifyContent="space-between"
           gap="2"
-          pressEffects={legacyTouchablePressEffect}
           onPress={handleCopyAddress}
         >
           <Box flex={1}>
