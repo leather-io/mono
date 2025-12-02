@@ -64,6 +64,10 @@ const config: StorybookConfig = {
   },
   webpackFinal: config => {
     config.resolve ??= {};
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      src: join(__dirname, '../../src'),
+    };
     config.resolve.plugins ??= [];
     config.resolve.plugins.push(
       new TsconfigPathsPlugin({
