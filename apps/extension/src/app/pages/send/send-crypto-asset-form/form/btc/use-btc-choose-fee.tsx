@@ -44,7 +44,7 @@ export function useBtcChooseFee() {
       const feeRowValue = formFeeRowValue(feeRate, isCustomFee);
       if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
 
-      const signedTx = await signTx(resp.psbt);
+      const signedTx = await signTx(resp.psbt, resp.signingConfig);
 
       if (!signedTx) return logger.error('Attempted to sign tx, but no tx exists');
 

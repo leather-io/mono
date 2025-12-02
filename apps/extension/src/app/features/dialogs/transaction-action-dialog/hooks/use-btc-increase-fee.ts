@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import type { BitcoinTx } from '@leather.io/models';
 import { btcToSat, createMoney, isError } from '@leather.io/utils';
 
+import type { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
@@ -24,6 +25,7 @@ import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
+import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
@@ -32,11 +34,15 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   const navigate = useNavigate();
   const networkMode = useBitcoinScureLibNetworkConfig();
 
-  const { address: currentBitcoinAddress, publicKey } =
-    useCurrentAccountNativeSegwitIndexZeroSigner();
+  const {
+    address: currentBitcoinAddress,
+    publicKey,
+    derivationPath: zeroIndexDerivationPath,
+  } = useCurrentAccountNativeSegwitIndexZeroSigner();
   const { utxos, refetchUtxos } = useCurrentNativeSegwitUtxos();
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
+  const getSignerForOwnedUtxo = useBitcoinSignerFromInput();
   const recipient = getRecipientAddressFromOutput(btcTx.vout, currentBitcoinAddress) || '';
 
   const sizeInfo = useMemo(
@@ -62,17 +68,27 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     const newTx = new btc.Transaction();
     const { vin, vout, fee: prevFee } = payload.tx;
     const p2wpkh = btc.p2wpkh(publicKey, networkMode);
+    const availableUtxos = utxos?.available ?? [];
+    const utxoMap = new Map(availableUtxos.map(utxo => [`${utxo.txid}:${utxo.vout}`, utxo]));
+    const signingConfig: BitcoinInputSigningConfig[] = [];
 
     vin.forEach(input => {
+      const ownedUtxo = utxoMap.get(`${input.txid}:${input.vout}`);
+      const signer = ownedUtxo ? getSignerForOwnedUtxo(ownedUtxo) : null;
       newTx.addInput({
         txid: input.txid,
         index: input.vout,
         sequence: input.sequence + 1,
         witnessUtxo: {
           // script = 0014 + pubKeyHash
-          script: p2wpkh.script,
-          amount: BigInt(input.prevout.value),
+          script: signer ? signer.payment.script : p2wpkh.script,
+          amount: ownedUtxo ? BigInt(ownedUtxo.value) : BigInt(input.prevout.value),
         },
+      });
+
+      signingConfig.push({
+        index: newTx.inputsLength - 1,
+        derivationPath: signer ? signer.derivationPath : zeroIndexDerivationPath,
       });
     });
 
@@ -96,11 +112,14 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
       newTx.addOutputAddress(recipient, BigInt(output.value), networkMode);
     });
 
-    return newTx;
+    return { tx: newTx, signingConfig };
   }
 
-  async function initiateTransaction(unsignedTx: btc.Transaction) {
-    const tx = await signTransaction(unsignedTx.toPSBT());
+  async function initiateTransaction(
+    unsignedTx: btc.Transaction,
+    signingConfig: BitcoinInputSigningConfig[]
+  ) {
+    const tx = await signTransaction(unsignedTx.toPSBT(), signingConfig);
     tx.finalize();
     await broadcastTx({
       tx: tx.hex,
@@ -121,8 +140,8 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
 
   async function onSubmit(values: { feeRate: string }) {
     try {
-      const tx = generateUnsignedTx({ feeRate: values.feeRate, tx: btcTx });
-      await initiateTransaction(tx);
+      const { tx, signingConfig } = generateUnsignedTx({ feeRate: values.feeRate, tx: btcTx });
+      await initiateTransaction(tx, signingConfig);
     } catch (e) {
       onError(e);
     }

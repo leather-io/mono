@@ -12,6 +12,7 @@ import { OrdinalSendFormValues } from '@shared/models/form.model';
 
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
+import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
 import { useCurrentAccountNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 
@@ -22,6 +23,7 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
   const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
   const networkMode = useBitcoinScureLibNetworkConfig();
   const { utxos: nativeSegwitUtxos } = useCurrentNativeSegwitUtxos();
+  const getSignerForInput = useBitcoinSignerFromInput();
 
   function coverFeeFromAdditionalUtxos(values: OrdinalSendFormValues) {
     if (getAddressInfo(values.inscription.address).type === AddressType.p2wpkh) {
@@ -34,16 +36,15 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
   function formTaprootOrdinalTx(values: OrdinalSendFormValues) {
     const addressIndex = extractAddressIndexFromPath(inscriptionInput.derivationPath);
     const taprootSigner = createTaprootSigner?.(addressIndex);
-    const nativeSegwitSigner = createNativeSegwitSigner?.(0);
+    const changeSigner = createNativeSegwitSigner?.(0);
 
-    if (!taprootSigner || !nativeSegwitSigner || !nativeSegwitUtxos.available || !values.feeRate)
-      return;
+    if (!taprootSigner || !changeSigner || !nativeSegwitUtxos.available || !values.feeRate) return;
 
     const result = selectTaprootInscriptionTransferCoins({
       recipient: values.recipient,
       inscriptionInput,
       nativeSegwitUtxos: nativeSegwitUtxos.available,
-      changeAddress: nativeSegwitSigner.payment.address!,
+      changeAddress: changeSigner.payment.address!,
       feeRate: values.feeRate,
     });
 
@@ -77,6 +78,7 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
 
       // Fee-covering Native Segwit inputs
       inputs.forEach(input => {
+        const nativeSegwitSigner = getSignerForInput(input);
         tx.addInput({
           txid: input.txid,
           index: input.vout,
@@ -109,10 +111,13 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
   }
 
   function formNativeSegwitOrdinalTx(values: OrdinalSendFormValues) {
-    const nativeSegwitSigner = createNativeSegwitSigner?.(0);
+    const changeSigner = createNativeSegwitSigner?.(0);
+    const inscriptionSigner = createNativeSegwitSigner?.(
+      extractAddressIndexFromPath(inscriptionInput.derivationPath)
+    );
 
     const { feeRate, recipient } = values;
-    if (!nativeSegwitSigner || !nativeSegwitUtxos || !values.feeRate) return;
+    if (!changeSigner || !inscriptionSigner || !nativeSegwitUtxos || !values.feeRate) return;
 
     const determineUtxosArgs = {
       feeRate,
@@ -124,19 +129,39 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
 
     try {
       const tx = new btc.Transaction();
+      const signingConfig: BitcoinInputSigningConfig[] = [];
+
+      tx.addInput({
+        txid: inscriptionInput.txid,
+        index: inscriptionInput.vout,
+        sequence: 0,
+        witnessUtxo: {
+          amount: BigInt(inscriptionInput.value),
+          script: inscriptionSigner.payment.script,
+        },
+      });
+      signingConfig.push({
+        index: tx.inputsLength - 1,
+        derivationPath: inscriptionSigner.derivationPath,
+      });
 
       // Fee-covering Native Segwit inputs
-      [inscriptionInput, ...inputs].forEach(input =>
+      inputs.forEach(input => {
+        const signer = getSignerForInput(input);
         tx.addInput({
           txid: input.txid,
           index: input.vout,
           sequence: 0,
           witnessUtxo: {
             amount: BigInt(input.value),
-            script: nativeSegwitSigner.payment.script,
+            script: signer.payment.script,
           },
-        })
-      );
+        });
+        signingConfig.push({
+          index: tx.inputsLength - 1,
+          derivationPath: signer.derivationPath,
+        });
+      });
 
       // Inscription output
       tx.addOutputAddress(values.recipient, BigInt(inscriptionInput.value), networkMode);
@@ -146,13 +171,13 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
         if (Number(output.value) === 0) return;
 
         if (!output.address) {
-          tx.addOutputAddress(nativeSegwitSigner.address, BigInt(output.value), networkMode);
+          tx.addOutputAddress(changeSigner.address, BigInt(output.value), networkMode);
           return;
         }
         tx.addOutputAddress(values.recipient, BigInt(output.value), networkMode);
       });
 
-      return { psbt: tx.toPSBT(), signingConfig: undefined, txFee: fee.amount.toNumber() };
+      return { psbt: tx.toPSBT(), signingConfig, txFee: fee.amount.toNumber() };
     } catch (e) {
       if (e instanceof BitcoinError && e.message === 'InsufficientFunds') {
         throw e;
