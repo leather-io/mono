@@ -37,7 +37,7 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
     quoteQuery: swapStateResult.quoteQuery,
     networkFeeQuery: swapStateResult.networkFeeQuery,
     baseMarketDataQuery: swapStateResult.baseMarketDataQuery,
-    nativeAssetMarketDataQuery: swapStateResult.nativeAssetMarketDataQuery,
+    nativeAssetMarketDataQuery: swapStateResult.networkFeeAssetMarkedDataQuery,
   });
 
   function goToReview() {

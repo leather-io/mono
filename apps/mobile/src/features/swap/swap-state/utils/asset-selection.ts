@@ -78,10 +78,20 @@ function isAllowedZeroBalanceAsset(asset: SwappableFungibleCryptoAsset) {
   return isBtcAsset(asset) || isStxAsset(asset);
 }
 
-export function resolveNativeAsset(asset: SwappableFungibleCryptoAsset) {
-  if (isNativeAsset(asset)) return asset;
+export function resolveNetworkFeeAsset(
+  baseAsset?: SwappableFungibleCryptoAsset,
+  targetAsset?: SwappableFungibleCryptoAsset
+) {
+  if (!baseAsset) return;
+
+  if (isNativeAsset(baseAsset)) return baseAsset;
+
+  if (baseAsset.symbol === 'sBTC' && targetAsset?.symbol === 'BTC') {
+    return targetAsset;
+  }
+
   return {
     stacks: stxAsset,
     bitcoin: btcAsset,
-  }[asset.chain];
+  }[baseAsset.chain];
 }
