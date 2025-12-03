@@ -98,6 +98,7 @@ export * from './square-lines-bottom-icon.web';
 export * from './stacks-icon.web';
 export * from './stacks-filled-circle-icon.web';
 export * from './star-icon.web';
+export * from './suitcase-icon.web';
 export * from './sun-icon.web';
 export * from './sun-in-cloud-icon.web';
 export * from './support-icon.web';
