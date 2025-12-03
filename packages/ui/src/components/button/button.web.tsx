@@ -1,6 +1,7 @@
-import { ComponentType } from 'react';
+import { ComponentType, ReactElement, ReactNode, isValidElement } from 'react';
 
 import { styled } from 'leather-styles/jsx';
+import { isNullish } from 'remeda';
 
 import { IconProps } from '../../icons/icon/create-icon.web';
 
@@ -187,14 +188,14 @@ const StyledButton = styled('button', {
 });
 
 export interface ButtonProps extends React.ComponentProps<typeof StyledButton> {
-  iconStart?: ComponentType<IconProps>;
-  iconEnd?: ComponentType<IconProps>;
+  iconStart?: ComponentType<IconProps> | ReactElement;
+  iconEnd?: ComponentType<IconProps> | ReactElement;
 }
 
 export function Button(props: ButtonProps) {
   const {
-    iconStart: IconStart,
-    iconEnd: IconEnd,
+    iconStart,
+    iconEnd,
     type = 'button',
     children,
     disabled: disabledProp,
@@ -206,11 +207,19 @@ export function Button(props: ButtonProps) {
 
   return (
     <StyledButton ref={ref} type={type} disabled={disabled} flexShrink={0} {...rest}>
-      {IconStart && <IconStart variant="small" color="current" />}
+      {renderIcon(iconStart, { variant: 'small', color: 'current' })}
       <styled.span opacity={isLoading ? 0 : 1}>{children}</styled.span>
-      {IconEnd && <IconEnd variant="small" color="current" />}
+      {renderIcon(iconEnd, { variant: 'small', color: 'current' })}
     </StyledButton>
   );
 }
 
 Button.displayName = 'Button';
+
+function renderIcon(icon: ComponentType<IconProps> | ReactNode, props: IconProps) {
+  if (isValidElement(icon) || isNullish(icon)) {
+    return icon;
+  }
+  const IconComponent = icon as ComponentType<IconProps>;
+  return <IconComponent {...props} />;
+}
