@@ -7,6 +7,7 @@ import {
   mockMainnetAlexTokenPricesRequest,
 } from './mock-alex-assets';
 import { mockMainnetTestAccountBrc20TokensRequest } from './mock-brc20';
+import { mockLaunchDarkly } from './mock-launchdarkly';
 import { mockLeatherApiRequests } from './mock-leather-api';
 import { mockMainnetTestAccountRunesOutputsRequest } from './mock-runes';
 import { mockMainnetTestAccountSbtcDepositRequests } from './mock-sbtc';
@@ -43,5 +44,6 @@ export async function setupMockApis(page: Page) {
     mockMainnetTestAccountStx20TokensRequest(page),
     mockMainnetTestAccountRunesOutputsRequest(page),
     mockMainnetTestAccountSbtcDepositRequests(page),
+    mockLaunchDarkly(page),
   ]);
 }
