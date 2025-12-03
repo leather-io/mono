@@ -26,7 +26,7 @@ jobs:
       - run: echo "${{ github.workflow }}-${{ github.ref }}"
       - name: make-short-commit-sha
         id: short-sha
-        run: echo "SHORT_SHA=`echo ${{ github.event.pull_request.head.sha }} | cut -c1-7`" >> $GITHUB_OUTPUT
+        run: echo "SHORT_SHA=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-7)" >> "$GITHUB_OUTPUT"
 
   set-in-progress-message:
     if: github.repository == 'leather-io/mono' && github.actor != 'dependabot[bot]'
@@ -97,14 +97,13 @@ jobs:
       - name: extract-and-sanitize-branch-name
         id: extract_branch
         run: |
-          sanitized_branch=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}})
-          echo "BRANCH_NAME=${sanitized_branch}" >> $GITHUB_ENV
+          sanitized_branch="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          echo "BRANCH_NAME=${sanitized_branch}" >> "$GITHUB_ENV"
 
       - name: storybook-parsed-branch-name
         id: storybook_branch
         run: |
-          sanitized_branch=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}} | sed 's/[^a-zA-Z0-9_-]/-/g')
-          echo "STORYBOOK_BRANCH=${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
+          echo "STORYBOOK_BRANCH=${{ env.BRANCH_NAME }}" >> "$GITHUB_ENV"
 
       - uses: marocchino/sticky-pull-request-comment@v2
         env:

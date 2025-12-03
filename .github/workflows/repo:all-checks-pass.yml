@@ -20,13 +20,13 @@ jobs:
     steps:
       - name: check-if-is-merge-queue
         run: |
-          if [[ "${{ github.ref }}" == refs/heads/gh-readonly-queue* ]]; then
-            echo "IS_MERGE_QUEUE=true" >> $GITHUB_ENV
+          if [[ "${{ github.ref }}" =~ ^refs/heads/gh-readonly-queue ]]; then
+            echo "IS_MERGE_QUEUE=true" >> "$GITHUB_ENV"
           else
-            echo "IS_MERGE_QUEUE=false" >> $GITHUB_ENV
+            echo "IS_MERGE_QUEUE=false" >> "$GITHUB_ENV"
           fi
 
       - uses: wechuli/allcheckspassed@v1
         if: env.IS_MERGE_QUEUE != 'true'
         with:
-          checks_exclude: 'Mobile Preview Builds'
+          checks_exclude: 'mobile:preview-builds-pr'
