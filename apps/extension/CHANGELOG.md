@@ -21,6 +21,15 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.83.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.83.0...@leather.io/extension-v6.83.1) (2025-12-03)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.99.0
+
 ## [6.83.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.82.0...@leather.io/extension-v6.83.0) (2025-12-02)
 
 
