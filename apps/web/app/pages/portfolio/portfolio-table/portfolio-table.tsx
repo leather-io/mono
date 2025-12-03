@@ -153,7 +153,10 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     enableSortingRemoval: false,
-    state: { sorting },
+    state: {
+      sorting,
+      columnVisibility: { price: false, priceChange: false },
+    },
     onSortingChange: setSorting,
   });
 
