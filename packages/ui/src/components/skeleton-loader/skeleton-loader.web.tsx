@@ -15,7 +15,7 @@ export function SkeletonLoader({ children, isLoading, ...boxProps }: SkeletonLoa
         height="30px"
         borderRadius="sm"
         className={shimmerStyles}
-        bgColor="ink.text-non-interactive"
+        bgColor="ink.component-background-default"
         data-state="loading"
         {...boxProps}
       />

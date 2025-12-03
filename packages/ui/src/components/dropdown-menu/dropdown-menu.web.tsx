@@ -39,6 +39,7 @@ function Button({ children, ...props }: HTMLStyledProps<'div'>) {
 const dropdownIconButtonStyles = css({
   _hover: { bg: 'ink.component-background-hover' },
   _focus: { outline: 'none' },
+  borderRadius: 'sm',
   p: 'space.02',
 
   '&[data-state=open]': { bg: 'ink.component-background-pressed' },
