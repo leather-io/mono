@@ -1,4 +1,6 @@
-import { ComponentType, ReactNode } from 'react';
+import { ComponentType, ReactElement, ReactNode, isValidElement } from 'react';
+
+import { isNullish } from 'remeda';
 
 import { IconProps } from '../../icons/icon/create-icon.native';
 import { Theme } from '../../theme-native';
@@ -17,8 +19,8 @@ export interface ButtonProps extends PressableProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
   intent?: ButtonIntent;
-  iconStart?: ComponentType<IconProps>;
-  iconEnd?: ComponentType<IconProps>;
+  iconStart?: ComponentType<IconProps> | ReactElement;
+  iconEnd?: ComponentType<IconProps> | ReactElement;
   children: ReactNode;
   disabled?: boolean;
   ref?: PressableRef;
@@ -28,8 +30,8 @@ export function Button({
   variant = 'solid',
   size = 'lg',
   intent = 'default',
-  iconStart: IconStart,
-  iconEnd: IconEnd,
+  iconStart,
+  iconEnd,
   children,
   disabled,
   ref,
@@ -49,13 +51,21 @@ export function Button({
       {...variantProps}
       {...props}
     >
-      {IconStart && <IconStart color={color} variant="small" />}
+      {renderIcon(iconStart, { color, variant: 'small' })}
       <Text variant="label02" color={color}>
         {children}
       </Text>
-      {IconEnd && <IconEnd color={color} variant="small" />}
+      {renderIcon(iconEnd, { color, variant: 'small' })}
     </Pressable>
   );
+}
+
+function renderIcon(icon: ComponentType<IconProps> | ReactNode, props: IconProps) {
+  if (isValidElement(icon) || isNullish(icon)) {
+    return icon;
+  }
+  const IconComponent = icon as ComponentType<IconProps>;
+  return <IconComponent {...props} />;
 }
 
 // Manually define variants and overrides, as Restyle has no compound variants support.
