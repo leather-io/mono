@@ -92,7 +92,7 @@ jobs:
 
       - name: get-installed-playwright-version
         id: playwright-version
-        run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package.json').devDependencies['@playwright/test'])")" >> $GITHUB_ENV
+        run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package.json').devDependencies['@playwright/test'])")" >> "$GITHUB_ENV"
 
       - name: cache-playwright-binaries
         uses: actions/cache@v4
@@ -107,7 +107,7 @@ jobs:
 
       - name: extract-branch-name
         shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
         id: extract_branch
 
         # Playwright can only test extensions in headed mode, see
@@ -155,13 +155,13 @@ jobs:
 
       - name: extract-branch-name
         shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
         id: extract_branch
 
       - uses: Wandalen/wretry.action@master
         if: github.event_name == 'pull_request'
         with:
-          action: peaceiris/actions-gh-pages@v3
+          action: peaceiris/actions-gh-pages@v4
           with: |
             personal_token: ${{ secrets.LEATHER_BOT }}
             external_repository: leather-io/playwright-reports
@@ -170,7 +170,7 @@ jobs:
             destination_dir: ${{ steps.extract_branch.outputs.branch }}
 
       - name: deploy-specs.leather.io
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         if: steps.extract_branch.outputs.branch == 'dev'
         with:
           personal_token: ${{ secrets.LEATHER_BOT }}

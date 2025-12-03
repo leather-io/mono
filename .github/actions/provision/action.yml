@@ -3,7 +3,7 @@ description: Set up job with tasks needed to run a code check
 inputs:
   PROVISION_MOBILE:
     description: 'Boolean value to identify if this is running on the main branch or not'
-    required: true
+    required: false
 
 runs:
   using: 'composite'

@@ -40,5 +40,5 @@ jobs:
       - name: rebase-and-sign-commit
         run: |
           git fetch origin
-          git rebase --exec 'git commit -S --amend --no-edit -n' @{upstream}
+          git rebase --exec 'git commit -S --amend --no-edit -n' '@{upstream}'
           git push --force-with-lease

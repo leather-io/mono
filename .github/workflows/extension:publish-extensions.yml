@@ -79,7 +79,7 @@ jobs:
         id: publish-chrome
         run: |
           pnpm chrome-webstore-upload upload --auto-publish --source leather-chromium.zip
-          echo "::set-output name=publish_status::${?}"
+          echo "publish_status=${?}" >> "$GITHUB_OUTPUT"
         env:
           EXTENSION_ID: ${{ secrets.CHROME_APP_ID }}
           CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}

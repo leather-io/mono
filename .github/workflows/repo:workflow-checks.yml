@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  workflow-names:
+  validate-workflow-names:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
       - name: validate-workflow-naming-convention
         run: bash .github/scripts/validate-workflow-names.sh
 
-  job-names:
+  validate-job-names:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
       - name: validate-job-naming-convention
         run: bash .github/scripts/validate-job-names.sh
 
-  step-names:
+  validate-step-names:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,10 +39,21 @@ jobs:
       - name: validate-step-naming-convention
         run: bash .github/scripts/validate-step-names.sh
 
-  filename-conventions:
+  validate-filenames:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: validate-filename-matches-workflow-name
         run: bash .github/scripts/validate-filename-conventions.sh
+
+  lint-workflows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: install-actionlint
+        id: get_actionlint
+        run: bash .github/scripts/install-action-lint.sh
+
+      - name: lint-github-workflows
+        run: ${{ steps.get_actionlint.outputs.executable }} -color

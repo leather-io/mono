@@ -54,7 +54,7 @@ jobs:
 
       - name: set-preview-url-environment-variable
         working-directory: apps/web
-        run: echo "PREVIEW_URL=$(grep -o 'https://pr-${{ github.event.pull_request.number }}[^ ]*' wrangler-preview.txt | head -1)" >> $GITHUB_ENV
+        run: echo "PREVIEW_URL=$(grep -o 'https://pr-${{ github.event.pull_request.number }}[^ ]*' wrangler-preview.txt | head -1)" >> "$GITHUB_ENV"
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
