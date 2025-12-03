@@ -89,37 +89,33 @@ function SwapAvatarIcon({ fromAsset, toAsset, indicator }: SwapAvatarIconProps):
   );
 }
 
-interface ActivityIconProps {
+interface ActivityAvatarIconProps {
   activity: ActivityView;
 }
-export function ActivityAvatarIcon({ activity }: ActivityIconProps) {
-  const indicatorElement = renderStatusIndicator(activity.statusIndicator ?? 'hidden');
-  const avatarType =
-    activity.activityAvatar ??
-    (activity.fromAsset && activity.toAsset
-      ? 'swap'
-      : activity.asset || activity.fromAsset || activity.toAsset
-        ? 'asset'
-        : 'fallback');
 
-  if (avatarType === 'swap' && activity.fromAsset && activity.toAsset) {
-    return (
-      <SwapAvatarIcon
-        fromAsset={activity.fromAsset}
-        toAsset={activity.toAsset}
-        indicator={indicatorElement ?? undefined}
-      />
-    );
+export function ActivityAvatarIcon({ activity }: ActivityAvatarIconProps) {
+  const indicator = renderStatusIndicator(activity.statusIndicator);
+
+  if (activity.activityAvatar === 'swap') {
+    if (activity.fromAsset && activity.toAsset) {
+      return (
+        <SwapAvatarIcon
+          fromAsset={activity.fromAsset}
+          toAsset={activity.toAsset}
+          indicator={indicator ?? undefined}
+        />
+      );
+    }
   }
 
   if (activity.asset) {
-    return <AssetAvatar asset={activity.asset} indicator={indicatorElement ?? undefined} />;
+    return <AssetAvatar asset={activity.asset} indicator={indicator ?? undefined} />;
   }
 
   return (
     <Sip10AvatarIcon
       contractId=""
-      indicator={indicatorElement ?? undefined}
+      indicator={indicator ?? undefined}
       imageCanonicalUri=""
       name=""
     />

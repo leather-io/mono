@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { Blockchain } from '../types';
 import { networkConfigurationSchema } from './network.schema';
 
-// TODO LEA-2285: Check if these should be here or in constants
 export const HIRO_API_BASE_URL_MAINNET = 'https://api.hiro.so';
 export const HIRO_API_BASE_URL_TESTNET = 'https://api.testnet.hiro.so';
 export const HIRO_API_BASE_URL_NAKAMOTO_TESTNET = 'https://api.nakamoto.testnet.hiro.so';

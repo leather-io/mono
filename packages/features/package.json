@@ -37,7 +37,6 @@
     "dist"
   ],
   "peerDependencies": {
-    "@tanstack/react-query": "5.85.5",
     "react": "19.0.0"
   },
   "prettier": "@leather.io/prettier-config",

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import type { ActivityAvatar, ActivityStatusIndicatorId, ActivityView } from '@leather.io/features';
+import type { ActivityStatusIndicatorId, ActivityView } from '@leather.io/features';
 import { CryptoAsset } from '@leather.io/models';
 
 import { FailedIcon } from '../../icons/activity/failed-icon.native';
@@ -34,26 +34,33 @@ function renderStatusIndicator(indicator: ActivityStatusIndicatorId): ReactEleme
   }
 }
 
-function getActivityIcon(avatar: ActivityAvatar, asset?: CryptoAsset) {
-  if (avatar === 'swap') return <SwapIcon width={24} height={24} />;
-
-  switch (asset?.protocol) {
-    case 'nativeStx':
-      return <StxAvatarIcon />;
-    case 'nativeBtc':
-      return <BtcAvatarIcon />;
-    default:
-      if (asset?.protocol === 'sip10') {
-        return (
-          <Sip10AvatarIcon
-            contractId={asset.contractId}
-            imageCanonicalUri={asset.imageCanonicalUri}
-            name={asset.name}
-          />
-        );
-      }
-      return <Sip10AvatarIcon contractId="" imageCanonicalUri="" name="" />;
+function getAssetIcon(asset: CryptoAsset) {
+  if (asset.protocol === 'nativeStx') {
+    return <StxAvatarIcon />;
   }
+  if (asset.protocol === 'nativeBtc') {
+    return <BtcAvatarIcon />;
+  }
+  if (asset.protocol === 'sip10') {
+    return (
+      <Sip10AvatarIcon
+        contractId={asset.contractId}
+        imageCanonicalUri={asset.imageCanonicalUri}
+        name={asset.name}
+      />
+    );
+  }
+  return <Sip10AvatarIcon contractId="" imageCanonicalUri="" name="" />;
+}
+
+function getActivityIcon(activity: ActivityView) {
+  if (activity.activityAvatar === 'swap') {
+    return <SwapIcon width={24} height={24} />;
+  }
+  if (activity.asset) {
+    return getAssetIcon(activity.asset);
+  }
+  return <Sip10AvatarIcon contractId="" imageCanonicalUri="" name="" />;
 }
 
 interface ActivityIconProps {
@@ -61,19 +68,8 @@ interface ActivityIconProps {
 }
 
 export function ActivityAvatarIcon({ activity }: ActivityIconProps) {
-  const indicator = renderStatusIndicator(activity.statusIndicator ?? 'hidden');
-  const avatarType =
-    activity.activityAvatar ??
-    (activity.fromAsset && activity.toAsset
-      ? 'swap'
-      : activity.asset || activity.fromAsset || activity.toAsset
-        ? 'asset'
-        : 'fallback');
-  const asset =
-    avatarType === 'swap'
-      ? (activity.toAsset ?? activity.fromAsset)
-      : (activity.asset ?? undefined);
-  const iconAsset = getActivityIcon(avatarType, asset);
+  const indicator = renderStatusIndicator(activity.statusIndicator);
+  const icon = getActivityIcon(activity);
 
-  return <Avatar icon={iconAsset} indicator={indicator ?? undefined} />;
+  return <Avatar icon={icon} indicator={indicator ?? undefined} />;
 }
