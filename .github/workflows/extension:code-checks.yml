@@ -1,4 +1,4 @@
-name: Code checks
+name: extension:code-checks
 
 on:
   merge_group:
@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
 
-      - name: Lint unused TypeScript exports
+      - name: lint-unused-typescript-exports
         working-directory: apps/extension
         run: pnpm lint:unused-exports
 
@@ -38,7 +38,7 @@ jobs:
         env:
           TARGET_BROWSER: firefox
 
-      - name: Lint firefox build
+      - name: lint-firefox-build
         run: pnpm web-ext lint
         working-directory: apps/extension
 
@@ -48,10 +48,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
 
-      - name: Build
+      - name: build
         run: pnpm build:extension
 
-      - name: Package extension
+      - name: package-extension
         run: sh build-ext.sh
         working-directory: apps/extension
         shell: bash

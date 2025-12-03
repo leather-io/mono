@@ -1,4 +1,4 @@
-name: Provision
+name: provision
 description: Set up job with tasks needed to run a code check
 inputs:
   PROVISION_MOBILE:
@@ -8,24 +8,21 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
+    - uses: pnpm/action-setup@v4
       with:
         version: '10.18.3+sha512.bbd16e6d7286fd7e01f6b3c0b3c932cda2965c06a908328f74663f10a9aea51f1129eea615134bf992831b009eabe167ecb7008b597f40ff9bc75946aadfb08d'
 
-    - name: Set up node
-      uses: actions/setup-node@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: 22
         registry-url: 'https://registry.npmjs.org/'
         cache: 'pnpm'
 
-    - name: Install dependencies
+    - run: pnpm install --ignore-scripts
       env:
         PROVISION_MOBILE: ${{ inputs.PROVISION_MOBILE }}
-      run: pnpm install --ignore-scripts
       shell: bash
 
-    - name: Build panda
+    - name: build-panda
       run: pnpm turbo run build --filter="@leather.io/panda-preset"
       shell: bash

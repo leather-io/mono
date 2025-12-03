@@ -1,4 +1,4 @@
-name: Close inactive issues
+name: repo:close-stale-issues
 on:
   schedule:
     - cron: '30 1 * * *'

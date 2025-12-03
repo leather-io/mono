@@ -1,4 +1,4 @@
-name: Check Security Headers
+name: web:check-security-headers
 
 on:
   schedule:
@@ -15,7 +15,7 @@ jobs:
       matrix:
         domain: ['leather.io', 'app.leather.io']
     steps:
-      - name: Check for required security headers on ${{ matrix.domain }}
+      - name: check-for-required-security-headers-on-${{ matrix.domain }}
         run: |
           headers=$(curl -sI https://${{ matrix.domain }})
           echo "Headers for ${{ matrix.domain }}:"
@@ -48,7 +48,7 @@ jobs:
 
           echo "All required security headers are present for ${{ matrix.domain }}."
 
-      - name: Send Slack notification on failure
+      - name: send-slack-notification-on-failure
         if: failure()
         uses: slackapi/slack-github-action@v2
         with:

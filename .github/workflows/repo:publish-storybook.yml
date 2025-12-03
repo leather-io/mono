@@ -1,4 +1,4 @@
-name: Publish Storybook
+name: repo:publish-storybook
 
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
       - run: pnpm build-storybook:web
         working-directory: packages/ui
 
-      - name: Deploy storybook.leather.io
+      - name: deploy-storybook.leather.io
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.LEATHER_BOT }}

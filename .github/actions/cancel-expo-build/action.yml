@@ -12,13 +12,13 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Setup Expo and EAS
+    - name: setup-expo-and-eas
       uses: expo/expo-github-action@v8
       with:
         eas-version: latest
         token: ${{ inputs.token }}
 
-    - name: Cancel Expo build
+    - name: cancel-expo-build
       shell: bash
       working-directory: ./apps/mobile
       run: |

@@ -1,4 +1,4 @@
-name: Deploy mobile - Production
+name: mobile:deploy-production
 
 permissions:
   contents: write
@@ -20,23 +20,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Provision the app
+      - name: provision-the-app
         uses: ./.github/actions/provision
         with:
           PROVISION_MOBILE: true
 
-      - name: Setup Expo and EAS
+      - name: setup-expo-and-eas
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Install jq tool
+      - name: install-jq-tool
         run: |
           sudo apt-get update
           sudo apt-get install jq
 
-      - name: Build and submit mobile
+      - name: build-and-submit-mobile
         id: build_and_submit
         working-directory: ./apps/mobile
         run: |
@@ -50,11 +50,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-submit-mobile
     steps:
-      - name: Save build output to file
+      - name: save-build-output-to-file
         run: |
           echo ${{ needs.build-and-submit-mobile.outputs.build_output }} | tee /tmp/build_output.json
 
-      - name: Create release
+      - name: create-release
         id: create_release
         uses: softprops/action-gh-release@v2
         with:

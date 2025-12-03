@@ -1,4 +1,4 @@
-name: Mobile Release Tags
+name: mobile:release-tags
 description: Get the previous mobile release tag and current version
 
 outputs:
