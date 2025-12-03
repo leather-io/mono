@@ -14,9 +14,9 @@ import {
   BarsTwoIcon,
   ChangelogIcon,
   CodeIcon,
-  GlobeIcon,
   GridIcon,
   IconButton,
+  SuitcaseIcon,
   SupportIcon,
 } from '@leather.io/ui';
 
@@ -33,7 +33,7 @@ function LeatherLogoHomeLink(props: HTMLStyledProps<'a'>) {
 export function NavContents() {
   return (
     <>
-      <NavItem href="/portfolio" icon={<GlobeIcon variant="small" />}>
+      <NavItem href="/portfolio" icon={<SuitcaseIcon variant="small" />}>
         Portfolio
       </NavItem>
 
