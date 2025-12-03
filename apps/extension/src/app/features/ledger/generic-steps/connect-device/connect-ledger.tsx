@@ -107,16 +107,8 @@ export function ConnectLedger(props: ConnectLedgerProps) {
 
       {isWindows && (
         <Callout variant="warning" mb="space.06" mx="space.06" textAlign="left">
-          Ledger devices running newer firmware versions may not work correctly.{' '}
-          <styled.a
-            fontSize="inherit"
-            border={0}
-            textDecoration="underline"
-            href="https://support.ledger.com/article/Windows-Cannot-connect-via-WebUSB"
-            target="_blank"
-          >
-            Learn more about the issue on Ledger's support page
-          </styled.a>
+          If you're experiencing problems connecting your Ledger, try updating the firmware to the
+          latest version in Ledger Live.
         </Callout>
       )}
 
