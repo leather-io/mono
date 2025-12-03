@@ -489,6 +489,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.99.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.98.2...@leather.io/ui-v1.99.0) (2025-12-03)
+
+
+### Features
+
+* **ui:** add ReactElement support for button icons ([92ff1ec](https://github.com/leather-io/mono/commit/92ff1ec8fb7a3593a9f232b02b42c22d4558c259))
+
 ## [1.98.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.98.1...@leather.io/ui-v1.98.2) (2025-12-02)
 
 
