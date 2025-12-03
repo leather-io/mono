@@ -3,9 +3,8 @@ import { Suspense, lazy, useMemo } from 'react';
 import { Box, HStack, Stack, styled } from 'leather-styles/jsx';
 
 import type { SupportedBlockchains } from '@leather.io/models';
-import { BitcoinIcon, Button, Callout, Link, StacksIcon } from '@leather.io/ui';
+import { BitcoinIcon, Button, Link, StacksIcon } from '@leather.io/ui';
 
-import { usePlatformInfo } from '@app/common/hooks/use-platform-info';
 import { Divider } from '@app/components/layout/divider';
 
 import { LedgerWrapper } from '../../components/ledger-wrapper';
@@ -34,8 +33,6 @@ export function ConnectLedger(props: ConnectLedgerProps) {
     connectStacks,
     chain,
   } = props;
-
-  const { isWindows } = usePlatformInfo();
 
   const showBitcoinConnectButton = useMemo(() => {
     return chain === 'bitcoin' || !!connectBitcoin;
@@ -103,21 +100,6 @@ export function ConnectLedger(props: ConnectLedgerProps) {
         <Box mb="space.04" mx="space.06">
           {warning}
         </Box>
-      )}
-
-      {isWindows && (
-        <Callout variant="warning" mb="space.06" mx="space.06" textAlign="left">
-          Ledger devices running newer firmware versions may not work correctly.{' '}
-          <styled.a
-            fontSize="inherit"
-            border={0}
-            textDecoration="underline"
-            href="https://support.ledger.com/article/Windows-Cannot-connect-via-WebUSB"
-            target="_blank"
-          >
-            Learn more about the issue on Ledger's support page
-          </styled.a>
-        </Callout>
       )}
 
       {showInstructions ? (
