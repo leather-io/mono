@@ -1,4 +1,4 @@
-name: Contributor automation
+name: repo:contributor-automation
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ jobs:
     # When a fork
     if: github.event.pull_request.head.repo.full_name != github.repository && github.actor != 'dependabot[bot]'
     steps:
-      - name: Add contributor advice
+      - name: add-contributor-advice
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -24,7 +24,7 @@ jobs:
 
             [1]: https://github.com/leather-io/extension/tree/dev/.github/CONTRIBUTING.md
 
-      - name: Add label
+      - name: add-label
         run: gh issue edit "$NUMBER" --add-label "$LABELS"
         env:
           GH_TOKEN: ${{ secrets.LEATHER_BOT }}

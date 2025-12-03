@@ -1,4 +1,4 @@
-name: All checks pass
+name: repo:all-checks-pass
 on:
   merge_group:
   pull_request:
@@ -18,7 +18,7 @@ jobs:
       contents: read
 
     steps:
-      - name: Check if is merge queue
+      - name: check-if-is-merge-queue
         run: |
           if [[ "${{ github.ref }}" == refs/heads/gh-readonly-queue* ]]; then
             echo "IS_MERGE_QUEUE=true" >> $GITHUB_ENV

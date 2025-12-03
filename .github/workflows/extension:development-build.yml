@@ -1,4 +1,4 @@
-name: Development extension
+name: extension:development-build
 
 on:
   push:
@@ -29,22 +29,21 @@ env:
 jobs:
   build-extension:
     runs-on: ubuntu-24.04
-    environment: development
     outputs:
       new_version: ${{ steps.extract_version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
 
-      - name: Build project
+      - name: build-project
         env:
           IS_PUBLISHING: true
         run: pnpm build:extension
 
-      - name: Extract version
+      - name: extract-version
         id: extract_version
         working-directory: apps/extension
-        uses: Saionaro/extract-package-version@v1.3.0
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - uses: actions/upload-artifact@v4
         name: Upload build artifact

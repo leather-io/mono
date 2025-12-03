@@ -1,4 +1,4 @@
-name: Sign Release Commit
+name: repo:sign-release-commit
 
 on:
   pull_request:
@@ -24,12 +24,12 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      - name: Set leather-bot user
+      - name: set-leather-bot-user
         run: |
           git config user.name "leather-bot"
           git config user.email "leather-bot@leather.io"
 
-      - name: Import GPG key
+      - name: import-gpg-key
         uses: crazy-max/ghaction-import-gpg@v5
         with:
           gpg_private_key: ${{ secrets.LEATHER_BOT_GPG_PRIVATE_KEY }}
@@ -37,7 +37,7 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      - name: Rebase and sign commit
+      - name: rebase-and-sign-commit
         run: |
           git fetch origin
           git rebase --exec 'git commit -S --amend --no-edit -n' @{upstream}

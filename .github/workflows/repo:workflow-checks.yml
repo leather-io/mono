@@ -1,0 +1,48 @@
+name: repo:workflow-checks
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - '.github/workflows/**'
+
+permissions:
+  contents: read
+
+jobs:
+  workflow-names:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: validate-workflow-naming-convention
+        run: bash .github/scripts/validate-workflow-names.sh
+
+  job-names:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: validate-job-naming-convention
+        run: bash .github/scripts/validate-job-names.sh
+
+  step-names:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: validate-step-naming-convention
+        run: bash .github/scripts/validate-step-names.sh
+
+  filename-conventions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: validate-filename-matches-workflow-name
+        run: bash .github/scripts/validate-filename-conventions.sh

@@ -1,4 +1,4 @@
-name: Lingui Checks
+name: mobile:lingui-checks
 permissions:
   contents: read
 on:
@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
-      - name: Run lingui
+      - name: run-lingui
         working-directory: ./apps/mobile
         run: |
           pnpm lingui:extract

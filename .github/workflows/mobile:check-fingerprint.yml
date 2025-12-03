@@ -1,33 +1,36 @@
-name: Check Mobile Fingerprint
+name: mobile:check-fingerprint
+
 on: pull_request_target
+
 permissions:
   contents: read
   pull-requests: write
+
 jobs:
   check-mobile-fingerprint:
-    name: Check Mobile Fingerprint
+    name: check-mobile-fingerprint
     runs-on: ubuntu-latest
     # This job is currently too noisy as it triggers on any change, even if unrelated to mobile.
     # Turning it off until we actually start using eas updates
     if: false
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare the app
+      - name: prepare-the-app
         uses: ./.github/actions/provision
 
-      - name: Setup Expo and EAS
+      - name: setup-expo-and-eas
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Install jq tool
+      - name: install-jq-tool
         run: |
           sudo apt-get update
           sudo apt-get install jq
         shell: bash
 
-      - name: Setup eas credentials
+      - name: setup-eas-credentials
         run: |
           echo $(jq --arg APPLE_ID "$APPLE_ID" '.submit.production.ios.appleId = $APPLE_ID' ./apps/mobile/eas.json) > ./apps/mobile/eas.json
           echo $(jq --arg ASC_APP_ID "$ASC_APP_ID" '.submit.production.ios.ascAppId = $ASC_APP_ID' ./apps/mobile/eas.json) > ./apps/mobile/eas.json
@@ -36,7 +39,7 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
 
-      - name: Run fingerprint comparison
+      - name: run-fingerprint-comparison
         id: fingerprint_comparison
         run: |
           # get latest build id
@@ -51,7 +54,7 @@ jobs:
             echo "result=0" >> $GITHUB_OUTPUT
           fi
 
-      - name: Publish simulator expo link in PR
+      - name: publish-simulator-expo-link-in-pr
         uses: actions/github-script@v7
         env:
           COMPARISON_RESULT: ${{ steps.fingerprint_comparison.outputs.result }}

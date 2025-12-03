@@ -1,4 +1,4 @@
-name: PR extension build
+name: extension:pr-build
 
 on:
   pull_request:
@@ -24,7 +24,7 @@ jobs:
       SHORT_SHA: ${{ steps.short-sha.outputs.SHORT_SHA }}
     steps:
       - run: echo "${{ github.workflow }}-${{ github.ref }}"
-      - name: Make short commit SHA
+      - name: make-short-commit-sha
         id: short-sha
         run: echo "SHORT_SHA=`echo ${{ github.event.pull_request.head.sha }} | cut -c1-7`" >> $GITHUB_OUTPUT
 
@@ -56,10 +56,10 @@ jobs:
 
       - uses: ./.github/actions/provision
 
-      - name: Build packages
+      - name: build-packages
         run: pnpm build:packages
 
-      - name: Build project
+      - name: build-project
         working-directory: apps/extension
         run: pnpm build
         env:
@@ -94,13 +94,13 @@ jobs:
       - sha-hash
       - build
     steps:
-      - name: Extract and sanitize branch name
+      - name: extract-and-sanitize-branch-name
         id: extract_branch
         run: |
           sanitized_branch=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}})
           echo "BRANCH_NAME=${sanitized_branch}" >> $GITHUB_ENV
 
-      - name: Storybook parsed branch name
+      - name: storybook-parsed-branch-name
         id: storybook_branch
         run: |
           sanitized_branch=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}} | sed 's/[^a-zA-Z0-9_-]/-/g')

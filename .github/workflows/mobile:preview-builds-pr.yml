@@ -1,4 +1,4 @@
-name: Mobile Preview Builds
+name: mobile:preview-builds-pr
 on:
   pull_request:
     types:
@@ -16,23 +16,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Provision the app
+      - name: provision-the-app
         uses: ./.github/actions/provision
         with:
           PROVISION_MOBILE: true
 
-      - name: Setup Expo and EAS
+      - name: setup-expo-and-eas
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Install jq tool
+      - name: install-jq-tool
         run: |
           sudo apt-get update
           sudo apt-get install jq
 
-      - name: Build and submit mobile
+      - name: build-and-submit-mobile
         id: preview_build
         working-directory: ./apps/mobile
         run: |
@@ -42,7 +42,7 @@ jobs:
           echo "android_build_id=$android_build_id" >> $GITHUB_OUTPUT
           echo "ios_build_id=$ios_build_id" >> $GITHUB_OUTPUT
 
-      - name: Publish simulator expo link in PR
+      - name: publish-simulator-expo-link-in-pr
         uses: actions/github-script@v7
         if: ${{ steps.preview_build.outcome == 'success' }}
         env:
