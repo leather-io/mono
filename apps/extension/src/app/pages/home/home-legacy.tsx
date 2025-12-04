@@ -7,6 +7,7 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { whenPageMode } from '@app/common/utils';
+import { emptyAmountPlaceholder } from '@app/components/balance/constants';
 import { ActivityListLegacy } from '@app/features/activity-list/activity-list-legacy';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
@@ -18,8 +19,6 @@ import { AccountCard } from '@app/ui/components/account/account.card';
 import { AccountActions } from './components/account-actions';
 import { HomeTabsLegacy } from './components/home-tabs-legacy';
 import { useHomePageState } from './use-home-page-state';
-
-const emptyBalanceDisplay = '-.--';
 
 export function HomeLegacy() {
   const {
@@ -47,10 +46,10 @@ export function HomeLegacy() {
         <AccountCard
           name={name}
           availableBalance={
-            balance.state !== 'success' ? emptyBalanceDisplay : formatCurrency(balance.value)
+            balance.state !== 'success' ? emptyAmountPlaceholder : formatCurrency(balance.value)
           }
           totalBalance={
-            balance.state !== 'success' ? emptyBalanceDisplay : formatCurrency(balance.value)
+            balance.state !== 'success' ? emptyAmountPlaceholder : formatCurrency(balance.value)
           }
           toggleSwitchAccount={() => toggleSwitchAccount()}
           isFetchingBnsName={isFetchingBnsName}

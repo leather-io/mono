@@ -109,6 +109,7 @@ msgstr "Account created"
 msgid "Account creation failed"
 msgstr "Account creation failed"
 
+#: src/app/settings/display/index.tsx:100
 #: src/features/settings/account-identifier-sheet.tsx:37
 msgid "Account identifier"
 msgstr "Account identifier"
@@ -273,6 +274,7 @@ msgstr "An error has occurred"
 msgid "An error occurred"
 msgstr "An error occurred"
 
+#: src/app/settings/security/index.tsx:37
 #: src/features/settings/analytics-sheet.tsx:34
 msgid "Analytics"
 msgstr "Analytics"
@@ -317,6 +319,7 @@ msgstr "Another address {shortenedPcAddress} will transfer less than or equal to
 msgid "Another address {shortenedPcAddress} will transfer more than"
 msgstr "Another address {shortenedPcAddress} will transfer more than"
 
+#: src/app/settings/security/index.tsx:45
 #: src/features/settings/app-authentication-sheet.tsx:57
 #: src/features/settings/app-authentication-sheet.tsx:62
 msgid "App authentication"
@@ -391,6 +394,7 @@ msgstr "BIP39 passphrase"
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
+#: src/app/settings/display/index.tsx:72
 #: src/features/settings/bitcoin-unit-sheet.tsx:35
 msgid "Bitcoin unit"
 msgstr "Bitcoin unit"
@@ -826,6 +830,7 @@ msgstr "Feature waitlist notification"
 msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
+#: src/features/approver/stx/hooks.ts:27
 #: src/features/psbt-signer/psbt-signer.tsx:200
 msgid "Fee updated"
 msgstr "Fee updated"
@@ -882,6 +887,7 @@ msgid "Genesis time"
 msgstr "Genesis time"
 
 #: src/app/settings/help/index.tsx:18
+#: src/app/settings/index.tsx:99
 msgid "Get support or provide feedback"
 msgstr "Get support or provide feedback"
 
@@ -1204,6 +1210,8 @@ msgid "Network fee"
 msgstr "Network fee"
 
 #: src/app/settings/help/index.tsx:14
+#: src/app/settings/index.tsx:81
+#: src/app/settings/networks/index.tsx:47
 msgid "Networks"
 msgstr "Networks"
 
@@ -1449,6 +1457,7 @@ msgstr "Recents"
 msgid "Registered at block"
 msgstr "Registered at block"
 
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:170
 #: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:17
 msgid "Remove wallet"
 msgstr "Remove wallet"
@@ -1848,6 +1857,7 @@ msgstr "This merges your existing funds into a single output. It incurs a fee bu
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
+#: src/features/approver/components/sip10-recipient.tsx:43
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:145
 #: src/features/psbt-signer/psbt-signer.tsx:278
 msgid "To address"

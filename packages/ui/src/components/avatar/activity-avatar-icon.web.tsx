@@ -118,12 +118,5 @@ export function ActivityAvatarIcon({ activity }: ActivityAvatarIconProps) {
     return <AssetAvatar asset={activity.asset} indicator={indicator} />;
   }
 
-  return (
-    <Sip10AvatarIcon
-      contractId=""
-      indicator={indicator}
-      imageCanonicalUri=""
-      name=""
-    />
-  );
+  return <Sip10AvatarIcon contractId="" indicator={indicator} imageCanonicalUri="" name="" />;
 }

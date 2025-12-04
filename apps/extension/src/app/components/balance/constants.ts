@@ -1,1 +1,1 @@
-export const EmptyAmountPlaceholder = '-.--';
+export const emptyAmountPlaceholder = '-.--';

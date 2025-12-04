@@ -5,7 +5,7 @@ import { Money } from '@leather.io/models';
 import { type FormatAmountOptions } from '@leather.io/utils';
 
 import { PrivateText } from '../privacy/private-text';
-import { EmptyAmountPlaceholder } from './constants';
+import { emptyAmountPlaceholder } from './constants';
 
 interface BalanceProps extends HTMLStyledProps<'span'> {
   balance?: Money;
@@ -26,7 +26,7 @@ export function Balance({
   const DisplayText = forceVisible ? styled.span : PrivateText;
 
   if (!balance) {
-    return <DisplayText {...props}>{EmptyAmountPlaceholder}</DisplayText>;
+    return <DisplayText {...props}>{emptyAmountPlaceholder}</DisplayText>;
   }
 
   const formattedBalance = addOperator(formatCurrency(balance, formattingOptions), operator);
