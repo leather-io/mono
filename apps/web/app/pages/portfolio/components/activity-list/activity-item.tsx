@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
@@ -15,11 +15,6 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
   const { activityLink, title, caption, balances } = item;
   const clickable = Boolean(activityLink);
 
-  const handleClick = useCallback(() => {
-    if (!activityLink) return;
-    openExternalLink(activityLink);
-  }, [activityLink]);
-
   return (
     <styled.button
       type="button"
@@ -28,7 +23,7 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
       flexDirection="column"
       width="100%"
       disabled={!clickable}
-      onClick={handleClick}
+      onClick={activityLink ? () => openExternalLink(activityLink) : undefined}
     >
       <Flex
         justifyContent="space-between"

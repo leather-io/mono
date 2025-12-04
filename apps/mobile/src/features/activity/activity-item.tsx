@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 
 import { Balance } from '@/components/balance/balance';
 import type { ResponsiveValue } from '@shopify/restyle';
@@ -16,14 +16,11 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
   const { balances, title, caption, activityLink } = item;
   const { openURL } = useOpenURL();
 
-  const handlePress = useCallback(() => {
-    if (activityLink) {
-      openURL(activityLink);
-    }
-  }, [activityLink, openURL]);
-
   return (
-    <Cell.Root pressable={Boolean(activityLink)} onPress={activityLink ? handlePress : undefined}>
+    <Cell.Root
+      pressable={Boolean(activityLink)}
+      onPress={activityLink ? () => openURL(activityLink) : undefined}
+    >
       <Cell.Icon>
         <ActivityAvatarIcon activity={item} />
       </Cell.Icon>

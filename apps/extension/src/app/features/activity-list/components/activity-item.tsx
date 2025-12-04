@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
@@ -19,11 +19,6 @@ function Item({ item, formatCurrency }: ItemProps) {
   const { activityLink, title, caption, balances } = item;
   const clickable = Boolean(activityLink);
 
-  const handleClick = useCallback(() => {
-    if (!activityLink) return;
-    openInNewTab(activityLink);
-  }, [activityLink]);
-
   return (
     <styled.button
       type="button"
@@ -32,7 +27,7 @@ function Item({ item, formatCurrency }: ItemProps) {
       flexDirection="column"
       width="100%"
       disabled={!clickable}
-      onClick={handleClick}
+      onClick={activityLink ? () => openInNewTab(activityLink) : undefined}
     >
       <Flex
         justifyContent="space-between"
