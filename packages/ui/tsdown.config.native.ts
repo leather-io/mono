@@ -5,7 +5,7 @@ import { defineConfig } from 'tsdown';
 export default defineConfig({
   entry: ['native.ts'],
   plugins: [
-    svgr({ native: true, typescript: true }),
+    svgr({ native: true, typescript: true, dimensions: false }),
     copy({
       targets: [
         { src: './src/assets', dest: './dist-native/src' },
