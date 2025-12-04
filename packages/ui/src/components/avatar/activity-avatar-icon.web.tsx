@@ -11,7 +11,8 @@ import { PendingIcon } from '../../icons/activity/pending-icon.web';
 import { ReceivedIcon } from '../../icons/activity/received-icon.web';
 import { SentIcon } from '../../icons/activity/sent-icon.web';
 import { SwapIcon } from '../../icons/activity/swap-icon.web';
-import { AvatarProps } from './avatar.web';
+import { getAvatarUrl } from './avatar.shared';
+import { Avatar, AvatarProps } from './avatar.web';
 import { BtcAvatarIcon } from './btc-avatar-icon.web';
 import { Sip10AvatarIcon } from './sip10-avatar-icon.web';
 import { StxAvatarIcon } from './stx-avatar-icon.web';
@@ -50,7 +51,7 @@ function AssetAvatar({ asset, indicator, size, ...rest }: AssetAvatarProps): Rea
       return <StxAvatarIcon indicator={indicator} size={size} {...rest} />;
     case 'nativeBtc':
       return <BtcAvatarIcon indicator={indicator} size={size} {...rest} />;
-    case 'sip10':
+    case 'sip10': {
       return (
         <Sip10AvatarIcon
           contractId={asset.contractId}
@@ -61,8 +62,18 @@ function AssetAvatar({ asset, indicator, size, ...rest }: AssetAvatarProps): Rea
           {...rest}
         />
       );
-    default:
-      return <Sip10AvatarIcon contractId="" imageCanonicalUri="" name="" size={size} {...rest} />;
+    }
+    default: {
+      // TODO: work is needed to support other protocols
+      return (
+        <Avatar
+          fallback={getAvatarUrl(asset.protocol)}
+          indicator={indicator}
+          size={size}
+          {...rest}
+        />
+      );
+    }
   }
 }
 
@@ -102,21 +113,19 @@ export function ActivityAvatarIcon({ activity }: ActivityAvatarIconProps) {
       <StatusIndicator indicator={activity.statusIndicator} />
     );
 
-  if (activity.activityAvatar === 'swap') {
-    if (activity.fromAsset && activity.toAsset) {
-      return (
-        <SwapAvatarIcon
-          fromAsset={activity.fromAsset}
-          toAsset={activity.toAsset}
-          indicator={indicator}
-        />
-      );
-    }
+  if (activity.activityAvatar === 'swap' && activity.fromAsset && activity.toAsset) {
+    return (
+      <SwapAvatarIcon
+        fromAsset={activity.fromAsset}
+        toAsset={activity.toAsset}
+        indicator={indicator}
+      />
+    );
   }
 
   if (activity.asset) {
     return <AssetAvatar asset={activity.asset} indicator={indicator} />;
   }
 
-  return <Sip10AvatarIcon contractId="" indicator={indicator} imageCanonicalUri="" name="" />;
+  return <Avatar fallback={getAvatarUrl(activity.key)} indicator={indicator} />;
 }
