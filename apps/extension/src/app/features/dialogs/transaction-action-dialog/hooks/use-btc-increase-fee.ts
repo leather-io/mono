@@ -6,7 +6,8 @@ import BigNumber from 'bignumber.js';
 import * as yup from 'yup';
 
 import type { BitcoinTx } from '@leather.io/models';
-import { btcToSat, createMoney, isError } from '@leather.io/utils';
+import { emptyUtxos } from '@leather.io/services';
+import { btcToSat, createMoney, isError, sumMoney } from '@leather.io/utils';
 
 import type { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { RouteUrls } from '@shared/route-urls';
@@ -56,6 +57,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   );
 
   const { btc: balance } = useCurrentNativeSegwitBtcBalanceWithFallback();
+  const rbfAvailableBalance = sumMoney([balance.availableBalance, balance.outboundBalance]);
   const sendingAmount = getBitcoinTxValue(currentBitcoinAddress, btcTx);
   const { feesList } = useBitcoinFeesList({
     amount: createMoney(btcToSat(sendingAmount), 'BTC'),
@@ -68,8 +70,11 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     const newTx = new btc.Transaction();
     const { vin, vout, fee: prevFee } = payload.tx;
     const p2wpkh = btc.p2wpkh(publicKey, networkMode);
-    const availableUtxos = utxos?.available ?? [];
-    const utxoMap = new Map(availableUtxos.map(utxo => [`${utxo.txid}:${utxo.vout}`, utxo]));
+    const rbfAvailableUtxos = [
+      ...(utxos ?? emptyUtxos).available,
+      ...(utxos ?? emptyUtxos).outbound,
+    ];
+    const utxoMap = new Map(rbfAvailableUtxos.map(utxo => [`${utxo.txid}:${utxo.vout}`, utxo]));
     const signingConfig: BitcoinInputSigningConfig[] = [];
 
     vin.forEach(input => {
@@ -181,7 +186,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
           }
 
           // check if fee is higher than the available balance
-          return bnValue.isLessThanOrEqualTo(balance.availableBalance.amount);
+          return bnValue.isLessThanOrEqualTo(rbfAvailableBalance.amount);
         },
       }),
   });

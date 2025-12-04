@@ -52,6 +52,7 @@ export function useCurrentNativeSegwitInscriptions() {
 function useGetAccountInscriptionsQuery(request: AccountRequest) {
   const network = useCurrentNetworkState();
   return useQuery({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       'inscriptions-service-get-account-inscriptions',
       network.id,
