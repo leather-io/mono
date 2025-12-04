@@ -14,7 +14,10 @@ import { BtcAvatarIcon } from './btc-avatar-icon.native';
 import { Sip10AvatarIcon } from './sip10-avatar-icon.native';
 import { StxAvatarIcon } from './stx-avatar-icon.native';
 
-function renderStatusIndicator(indicator: ActivityStatusIndicatorId): ReactElement | null {
+interface StatusIndicatorProps {
+  indicator: ActivityStatusIndicatorId;
+}
+function StatusIndicator({ indicator }: StatusIndicatorProps): ReactElement | null {
   switch (indicator) {
     case 'pending':
       return <PendingIcon width={16} height={16} />;
@@ -34,7 +37,10 @@ function renderStatusIndicator(indicator: ActivityStatusIndicatorId): ReactEleme
   }
 }
 
-function getAssetIcon(asset: CryptoAsset) {
+interface AssetIconProps {
+  asset: CryptoAsset;
+}
+function AssetIcon({ asset }: AssetIconProps) {
   if (asset.protocol === 'nativeStx') {
     return <StxAvatarIcon />;
   }
@@ -53,23 +59,28 @@ function getAssetIcon(asset: CryptoAsset) {
   return <Sip10AvatarIcon contractId="" imageCanonicalUri="" name="" />;
 }
 
-function getActivityIcon(activity: ActivityView) {
+interface ActivityIconProps {
+  activity: ActivityView;
+}
+function ActivityIcon({ activity }: ActivityIconProps) {
   if (activity.activityAvatar === 'swap') {
     return <SwapIcon width={24} height={24} />;
   }
   if (activity.asset) {
-    return getAssetIcon(activity.asset);
+    return <AssetIcon asset={activity.asset} />;
   }
   return <Sip10AvatarIcon contractId="" imageCanonicalUri="" name="" />;
 }
 
-interface ActivityIconProps {
+interface ActivityAvatarIconProps {
   activity: ActivityView;
 }
 
-export function ActivityAvatarIcon({ activity }: ActivityIconProps) {
-  const indicator = renderStatusIndicator(activity.statusIndicator);
-  const icon = getActivityIcon(activity);
+export function ActivityAvatarIcon({ activity }: ActivityAvatarIconProps) {
+  const indicator =
+    activity.statusIndicator === 'hidden' ? undefined : (
+      <StatusIndicator indicator={activity.statusIndicator} />
+    );
 
-  return <Avatar icon={icon} indicator={indicator ?? undefined} />;
+  return <Avatar icon={<ActivityIcon activity={activity} />} indicator={indicator} />;
 }

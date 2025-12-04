@@ -16,7 +16,10 @@ import { BtcAvatarIcon } from './btc-avatar-icon.web';
 import { Sip10AvatarIcon } from './sip10-avatar-icon.web';
 import { StxAvatarIcon } from './stx-avatar-icon.web';
 
-function renderStatusIndicator(indicator: ActivityStatusIndicatorId): ReactElement | null {
+interface StatusIndicatorProps {
+  indicator: ActivityStatusIndicatorId;
+}
+function StatusIndicator({ indicator }: StatusIndicatorProps): ReactElement | null {
   switch (indicator) {
     case 'pending':
       return <PendingIcon width={16} height={16} />;
@@ -94,7 +97,10 @@ interface ActivityAvatarIconProps {
 }
 
 export function ActivityAvatarIcon({ activity }: ActivityAvatarIconProps) {
-  const indicator = renderStatusIndicator(activity.statusIndicator);
+  const indicator =
+    activity.statusIndicator === 'hidden' ? undefined : (
+      <StatusIndicator indicator={activity.statusIndicator} />
+    );
 
   if (activity.activityAvatar === 'swap') {
     if (activity.fromAsset && activity.toAsset) {
@@ -102,20 +108,20 @@ export function ActivityAvatarIcon({ activity }: ActivityAvatarIconProps) {
         <SwapAvatarIcon
           fromAsset={activity.fromAsset}
           toAsset={activity.toAsset}
-          indicator={indicator ?? undefined}
+          indicator={indicator}
         />
       );
     }
   }
 
   if (activity.asset) {
-    return <AssetAvatar asset={activity.asset} indicator={indicator ?? undefined} />;
+    return <AssetAvatar asset={activity.asset} indicator={indicator} />;
   }
 
   return (
     <Sip10AvatarIcon
       contractId=""
-      indicator={indicator ?? undefined}
+      indicator={indicator}
       imageCanonicalUri=""
       name=""
     />
