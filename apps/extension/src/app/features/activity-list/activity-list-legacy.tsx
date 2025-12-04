@@ -49,7 +49,7 @@ function useTrBitcoinAddress() {
   }
 }
 
-function ActivityListLegacyInner() {
+export function ActivityListLegacy() {
   const nsBitcoinAddress = useNsBitcoinAddress();
   const trBitcoinAddress = useTrBitcoinAddress();
   const stxAddress = useCurrentStacksAccountAddress();
@@ -165,8 +165,4 @@ function ActivityListLegacyInner() {
       <Outlet />
     </>
   );
-}
-
-export function ActivityListLegacy() {
-  return <ActivityListLegacyInner />;
 }
