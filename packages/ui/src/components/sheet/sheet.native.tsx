@@ -90,7 +90,7 @@ export function PermanentSheet({
 
   return (
     <BottomSheet
-      backdropComponent={null}
+      backdropComponent={undefined}
       backgroundStyle={[styles.background, backgroundStyle]}
       handleStyle={[styles.handleContainer, handleStyle]}
       handleIndicatorStyle={[styles.handleIndicator, handleIndicatorStyle]}

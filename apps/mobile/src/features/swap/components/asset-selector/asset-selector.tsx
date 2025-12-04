@@ -7,6 +7,7 @@ import { useSwapAssetSearch } from '@/features/swap/components/asset-selector/us
 import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
 import { matchQueryResult } from '@/queries/match-query-result';
 import { t } from '@lingui/core/macro';
+import { ListRenderItemInfo } from '@shopify/flash-list';
 import { UseQueryResult } from '@tanstack/react-query';
 import { isDefined } from 'remeda';
 
@@ -84,8 +85,8 @@ export function AssetSelector({
               exiting={FadeOut.duration(100)}
               data={assets}
               maintainVisibleContentPosition={{ disabled: true }}
-              keyExtractor={item => serializeAssetId(getAssetId(item.asset))}
-              renderItem={({ item }) => (
+              keyExtractor={(item: AccountSwapAsset) => serializeAssetId(getAssetId(item.asset))}
+              renderItem={({ item }: ListRenderItemInfo<AccountSwapAsset>) => (
                 <AssetSelectorItem
                   name={getFungibleAssetDisplayName(item.asset)}
                   symbol={item.asset.symbol}
