@@ -46,6 +46,15 @@ function LedgerAppClosedWarning({ chain }: RequiresChainProp) {
   );
 }
 
+export function LedgerConnectionTroubleshootingWarning() {
+  return (
+    <Callout variant="info" textAlign="left">
+      If you're experiencing problems connecting your Ledger, try updating the firmware to the
+      latest version in Ledger Live.
+    </Callout>
+  );
+}
+
 export function CommonLedgerDeviceInlineWarnings({
   chain,
   latestDeviceResponse,

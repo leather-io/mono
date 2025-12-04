@@ -8,6 +8,7 @@ import { closeWindow } from '@shared/utils';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 
+import { LedgerConnectionTroubleshootingWarning } from '../../components/ledger-inline-warnings';
 import { immediatelyAttemptLedgerConnection } from '../../hooks/use-when-reattempt-ledger-connection';
 import { ConnectLedger } from './connect-ledger';
 
@@ -36,7 +37,7 @@ export function ConnectLedgerStacks() {
 
   return (
     <Sheet isShowing header={<SheetHeader />} onClose={() => navigate('../')}>
-      <ConnectLedger connectStacks={onConnectStacks()} showInstructions />
+      <ConnectLedger connectStacks={onConnectStacks()} showInstructions warning={<LedgerConnectionTroubleshootingWarning />} />
     </Sheet>
   );
 }

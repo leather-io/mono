@@ -8,6 +8,7 @@ import { closeWindow } from '@shared/utils';
 import { doesBrowserSupportWebUsbApi, whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 
+import { LedgerConnectionTroubleshootingWarning } from '../../components/ledger-inline-warnings';
 import { immediatelyAttemptLedgerConnection } from '../../hooks/use-when-reattempt-ledger-connection';
 import { ConnectLedger } from './connect-ledger';
 
@@ -46,6 +47,7 @@ export function ConnectLedgerStart() {
         connectBitcoin={() => connectChain('bitcoin')}
         connectStacks={() => connectChain('stacks')}
         showInstructions
+        warning={<LedgerConnectionTroubleshootingWarning />}
       />
     </Sheet>
   );

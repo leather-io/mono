@@ -8,6 +8,7 @@ import { closeWindow } from '@shared/utils';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 
+import { LedgerConnectionTroubleshootingWarning } from '../../components/ledger-inline-warnings';
 import { immediatelyAttemptLedgerConnection } from '../../hooks/use-when-reattempt-ledger-connection';
 import { ConnectLedger } from './connect-ledger';
 
@@ -36,7 +37,7 @@ export function ConnectLedgerBitcoin() {
 
   return (
     <Sheet isShowing header={<SheetHeader />} onClose={() => navigate('../')}>
-      <ConnectLedger connectBitcoin={onConnectBitcoin()} showInstructions />
+      <ConnectLedger connectBitcoin={onConnectBitcoin()} showInstructions warning={<LedgerConnectionTroubleshootingWarning />} />
     </Sheet>
   );
 }
