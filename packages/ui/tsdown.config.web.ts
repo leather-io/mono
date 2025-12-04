@@ -5,7 +5,7 @@ import { defineConfig } from 'tsdown';
 export default defineConfig({
   entry: ['exports.web.ts'],
   plugins: [
-    svgr({ typescript: true }),
+    svgr({ typescript: true, dimensions: false }),
     copy({
       targets: [
         { src: './src/assets', dest: './dist-web' },
