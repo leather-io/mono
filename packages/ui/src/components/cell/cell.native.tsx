@@ -34,12 +34,11 @@ export function CellRoot({ style, ...props }: CellProps & { ref?: PressableRef }
   const { pressed, onPressIn, onPressOut } = usePressedState();
   const theme = useTheme<Theme>();
 
+  // TODO: Need a way to specify custom pressed transitions
   const animatedStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: withSpring(
-        pressed.value
-          ? theme.colors['ink.background-secondary']
-          : theme.colors['ink.background-primary']
+        pressed ? theme.colors['ink.background-secondary'] : theme.colors['ink.background-primary']
       ),
     };
   });
@@ -51,7 +50,6 @@ export function CellRoot({ style, ...props }: CellProps & { ref?: PressableRef }
         onPressIn={onPressIn}
         onPressOut={onPressOut}
         style={[animatedStyle, style]}
-        pressEffects={{}}
         {...props}
       />
     );

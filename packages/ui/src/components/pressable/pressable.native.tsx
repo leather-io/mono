@@ -1,13 +1,10 @@
 import { type GestureResponderEvent } from 'react-native';
-import { Easing } from 'react-native-reanimated';
 
 import { isDefined, isString } from '@leather.io/utils';
 
 import { useHaptics } from '../../hooks/use-haptics.native';
 import { usePressedState } from '../../hooks/use-pressed-state.native';
 import { PressableCore, PressableCoreProps, PressableRef } from './pressable-core.native';
-import { PressEffects } from './pressable.types.native';
-import { usePressEffectStyle } from './pressable.utils.native';
 
 type PressableHapticFeedbackType = 'soft' | 'light' | 'medium' | 'heavy' | 'rigid';
 
@@ -29,52 +26,12 @@ interface PressableOwnProps {
    * <Pressable haptics={{ onPress: 'light', onLongPress: 'rigid' }} />
    */
   haptics?: PressableHapticFeedbackType | HapticConfig;
-  /**
-   * Specify animations for pressed state
-   *
-   * @example
-   * // Basic property transition
-   * <Pressable pressEffects={{ opacity: { from: 1, to: 0.5 } }} />
-   *
-   * @example
-   * // Multiple properties
-   * <Pressable
-   *   pressEffects={{
-   *     opacity: { from: 1, to: 0.5 },
-   *     backgroundColor: { from: 'ink.background-primary', to: 'ink.background-secondary' },
-   *   }}
-   * />
-   *
-   * @example
-   * // Delay the transition
-   * <Pressable pressEffects={{ opacity: { from: 1, to: 0.5 }, settings: { delay: 150 } }} />
-   *
-   * @example
-   * // Specify react-native-reanimated configuration
-   * <Pressable pressEffects={{ opacity: { from: 1, to: 0.5, settings: { type: 'spring', config: { duration: 300 } } } }} />
-   */
-  pressEffects?: PressEffects;
 }
 
 export type PressableProps = PressableOwnProps & PressableCoreProps;
 
-export const defaultPressEffect: PressEffects = {
-  opacity: {
-    from: 1,
-    to: 0.5,
-    settings: {
-      type: 'timing',
-      config: {
-        duration: 150,
-        easing: Easing.out(Easing.quad),
-      },
-    },
-  },
-} as const;
-
 export function Pressable({
   haptics = {},
-  pressEffects = defaultPressEffect,
   onPress,
   onLongPress,
   style,
@@ -84,7 +41,6 @@ export function Pressable({
   const triggerHaptics = useHaptics();
   const hapticConfig = isString(haptics) ? { onPress: haptics } : haptics;
   const { onPressIn, onPressOut, pressed } = usePressedState(rest);
-  const pressEffectStyle = usePressEffectStyle({ pressed, pressEffects });
   const shouldPassLongPress = isDefined(onLongPress) || isDefined(hapticConfig.onLongPress);
 
   function handlePress(event: GestureResponderEvent) {
@@ -106,7 +62,14 @@ export function Pressable({
       ref={ref}
       onPress={handlePress}
       onLongPress={shouldPassLongPress ? handleLongPress : undefined}
-      style={[pressEffectStyle, style]}
+      style={[
+        {
+          transitionProperty: 'opacity',
+          transitionDuration: 200,
+          opacity: pressed ? 0.5 : 1,
+        },
+        style,
+      ]}
       {...rest}
       onPressIn={onPressIn}
       onPressOut={onPressOut}

@@ -50,7 +50,7 @@ export function CollectibleText({ src, height = 200, onPress }: CollectibleTextP
 
   if (onPress) {
     return (
-      <Pressable onPress={onPress} haptics="light" pressEffects={{ opacity: { from: 1, to: 0.8 } }}>
+      <Pressable onPress={onPress} haptics="light">
         {content}
       </Pressable>
     );

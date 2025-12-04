@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { SectionListRenderItemInfo } from 'react-native';
 
 import { SearchInput } from '@/components/search-input';
 import { useSendPasteButton } from '@/features/feature-flags';
@@ -7,6 +8,10 @@ import { RecipientSelectorHeader } from '@/features/send/components/recipient/re
 import { RecipientSelectorItem } from '@/features/send/components/recipient/recipient-selector/recipient-selector-item';
 import { RecipientSelectorSearchEmptyState } from '@/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state';
 import { RecipientSelectorSectionHeader } from '@/features/send/components/recipient/recipient-selector/recipient-selector-section-header';
+import {
+  RecipientSection,
+  RecipientSuggestionEntry,
+} from '@/features/send/components/recipient/recipient.types';
 import {
   isBnsLookupCandidate,
   normalizeSearchTerm,
@@ -94,12 +99,14 @@ export function RecipientSelector({
             <BottomSheetSectionList
               sections={sections}
               keyboardShouldPersistTaps="handled"
-              keyExtractor={item => item.id}
+              keyExtractor={(item: RecipientSuggestionEntry) => item.id}
               stickySectionHeadersEnabled={false}
-              renderSectionHeader={({ section }) => (
+              renderSectionHeader={({ section }: { section: RecipientSection }) => (
                 <RecipientSelectorSectionHeader id={section.id} />
               )}
-              renderItem={({ item }) => (
+              renderItem={({
+                item,
+              }: SectionListRenderItemInfo<RecipientSuggestionEntry, RecipientSection>) => (
                 <RecipientSelectorItem entry={item} onSelect={onSelectAddress} asset={asset} />
               )}
             />

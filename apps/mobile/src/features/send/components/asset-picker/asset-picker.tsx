@@ -11,9 +11,11 @@ import {
   useSip10TotalBalance,
 } from '@/queries/balance/sip10-balance.query';
 import { BottomSheetFlashList } from '@gorhom/bottom-sheet';
+import { ListRenderItemInfo } from '@shopify/flash-list';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import { FungibleCryptoAsset } from '@leather.io/models';
+import { Sip10Balance } from '@leather.io/services';
 
 interface AssetListProps {
   onSelectAsset(asset: FungibleCryptoAsset, assetElementOffsetTop: number | null): void;
@@ -38,7 +40,7 @@ function AssetPickerFlashList({ sip10Data, header, handleSelectAsset }: AssetPic
   return (
     <BottomSheetFlashList
       data={sip10Memo}
-      renderItem={({ item }) => (
+      renderItem={({ item }: ListRenderItemInfo<Sip10Balance>) => (
         <AssetPickerItem onPress={handleSelectAsset(item.asset)}>
           {renderAsset({ item })}
         </AssetPickerItem>

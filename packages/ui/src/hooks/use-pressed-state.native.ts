@@ -1,6 +1,5 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { GestureResponderEvent } from 'react-native';
-import { useSharedValue } from 'react-native-reanimated';
 
 interface UsePressedStateInputProps {
   onPressIn?: ((event: GestureResponderEvent) => void) | null;
@@ -20,21 +19,27 @@ interface UsePressedStateInputProps {
  * }
  * */
 export function usePressedState({ onPressIn, onPressOut }: UsePressedStateInputProps = {}) {
-  const pressed = useSharedValue(false);
+  const [pressed, setPressed] = useState(false);
 
-  function handlePressIn(event: GestureResponderEvent) {
-    pressed.value = true;
-    onPressIn?.(event);
-  }
+  const handlePressIn = useCallback(
+    (event: GestureResponderEvent) => {
+      setPressed(true);
+      onPressIn?.(event);
+    },
+    [onPressIn]
+  );
 
-  function handlePressOut(event: GestureResponderEvent) {
-    pressed.value = false;
-    onPressOut?.(event);
-  }
+  const handlePressOut = useCallback(
+    (event: GestureResponderEvent) => {
+      setPressed(false);
+      onPressOut?.(event);
+    },
+    [onPressOut]
+  );
 
   return {
-    onPressIn: useCallback(handlePressIn, [onPressIn, pressed]),
-    onPressOut: useCallback(handlePressOut, [onPressOut, pressed]),
+    onPressIn: handlePressIn,
+    onPressOut: handlePressOut,
     pressed,
   };
 }
