@@ -34,16 +34,16 @@ export function HomeLegacy() {
   return (
     <Stack
       data-testid={HomePageSelectors.HomePageContainer}
-      px={{ base: 0, md: 'space.05' }}
-      py={{ base: 0, md: 'space.07' }}
-      gap={{ base: 0, md: 'space.06' }}
+      px={['0', 'space.05']}
+      py={['0', 'space.07']}
+      gap={['0', 'space.06']}
       width="100%"
       bg="ink.1"
       borderRadius="lg"
       animation="fadein"
       animationDuration="500ms"
     >
-      <Box px={{ base: 'space.05', md: 0 }} pb={{ base: 'space.05', md: 0 }}>
+      <Box px={['space.05', 0]} pb={['space.05', 0]}>
         <AccountCard
           name={name}
           availableBalance={
