@@ -33,6 +33,7 @@ export function FundPage() {
     mode: 'buy',
     successRedirectUrl: LEATHER_EARN_URL,
     failureRedirectUrl: LEATHER_EARN_URL,
+    redirectAtCheckout: true,
   });
 
   return (
