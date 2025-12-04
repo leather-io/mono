@@ -42,7 +42,7 @@ import { baseCurrencyAmountInQuoteWithFallback, createMoney, sumMoney } from '@l
 import { ApproverButtons } from '../approver/components/approver-buttons';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { BtcStatusRow } from '../approver/components/status-row/btc-status-row';
-import { useOpenURL } from '../browser/browser/use-open-url';
+import { useOpenUrl } from '../browser/browser/use-open-url';
 import { signTx } from './signer';
 import { useAccountsFromPsbt } from './use-accounts-from-psbt';
 import { usePsbtPayers } from './use-psbt-payers';
@@ -89,7 +89,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
   const [broadcastedTxid, setBroadcastedTxid] = useState<null | string>(null);
   const psbtAccounts = useAccountsFromPsbt({ psbtHex });
   const psbtPayers = usePsbtPayers({ psbtHex });
-  const { openURL } = useOpenURL();
+  const { openUrl } = useOpenUrl();
 
   const { displayToast } = useToastContext();
 
@@ -251,7 +251,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
 
     if (!activityLink) return;
 
-    openURL(activityLink);
+    openUrl(activityLink);
     onClose();
   }
   function onCopy() {

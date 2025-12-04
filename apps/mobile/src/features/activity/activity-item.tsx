@@ -6,7 +6,7 @@ import type { ResponsiveValue } from '@shopify/restyle';
 import { type ActivityView } from '@leather.io/features';
 import { ActivityAvatarIcon, Cell, type Theme } from '@leather.io/ui/native';
 
-import { useOpenURL } from '../browser/browser/use-open-url';
+import { useOpenUrl } from '../browser/browser/use-open-url';
 
 interface ActivityItemProps {
   item: ActivityView;
@@ -14,12 +14,12 @@ interface ActivityItemProps {
 
 function ActivityItemComponent({ item }: ActivityItemProps) {
   const { balances, title, caption, activityLink } = item;
-  const { openURL } = useOpenURL();
+  const { openUrl } = useOpenUrl();
 
   return (
     <Cell.Root
       pressable={Boolean(activityLink)}
-      onPress={activityLink ? () => openURL(activityLink) : undefined}
+      onPress={activityLink ? () => openUrl(activityLink) : undefined}
     >
       <Cell.Icon>
         <ActivityAvatarIcon activity={item} />

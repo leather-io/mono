@@ -6,7 +6,7 @@ import { t } from '@lingui/core/macro';
 
 import { Box, CloseIcon, Pressable, Text } from '@leather.io/ui/native';
 
-import { useOpenURL } from './use-open-url';
+import { useOpenUrl } from './use-open-url';
 import { getAppDetails } from './utils';
 
 interface LinkCardProps {
@@ -14,7 +14,7 @@ interface LinkCardProps {
 }
 
 export function LinkCard({ app }: LinkCardProps) {
-  const { openURL } = useOpenURL();
+  const { openUrl } = useOpenUrl();
   const dispatch = useAppDispatch();
   const { displayToast } = useToastContext();
   function onDeleteApp() {
@@ -36,7 +36,7 @@ export function LinkCard({ app }: LinkCardProps) {
       style={{ width: '100%' }}
     >
       <Pressable
-        onPress={() => openURL(app.origin)}
+        onPress={() => openUrl(app.origin)}
         flexDirection="row"
         flexShrink={1}
         alignItems="center"
