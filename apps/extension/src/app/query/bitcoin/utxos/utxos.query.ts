@@ -15,6 +15,7 @@ const queryOptions = {
 export function useGetAccountUtxosQuery(request: AccountRequest) {
   const network = useCurrentNetworkState();
   return useQuery({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       'utxos-service-get-account-utxos',
       network.id,

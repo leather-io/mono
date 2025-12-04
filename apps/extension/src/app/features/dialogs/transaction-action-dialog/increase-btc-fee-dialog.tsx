@@ -6,7 +6,7 @@ import { Flex, Stack } from 'leather-styles/jsx';
 
 import type { BitcoinTx } from '@leather.io/models';
 import { Caption, Sheet, SheetHeader, Spinner } from '@leather.io/ui';
-import { btcToSat, createMoney } from '@leather.io/utils';
+import { btcToSat, createMoney, sumMoney } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -33,7 +33,7 @@ export function IncreaseBtcFeeSheet() {
   const { isBroadcasting, sizeInfo, onSubmit, validationSchema, recipient } =
     useBtcIncreaseFee(btcTx);
 
-  const btcBalance = formatCurrency(balance.availableBalance);
+  const btcBalance = formatCurrency(sumMoney([balance.availableBalance, balance.outboundBalance]));
 
   const recipients = [
     {
