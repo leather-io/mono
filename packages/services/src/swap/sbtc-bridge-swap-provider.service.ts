@@ -10,7 +10,9 @@ import {
 } from '@leather.io/models';
 import { createMoney, getAssetId, isSameAssetId } from '@leather.io/utils';
 
+import { EmilyApiClient } from '../infrastructure/api/emily/emily-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
+import { getSbtcBridgeExecutionConstraints } from './sbtc-bridge-swap-provider.utils';
 import {
   type GetSwapExecutionDataParams,
   GetSwapQuotesParams,
@@ -39,7 +41,10 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
     },
   };
 
-  constructor(private readonly leatherApiClient: LeatherApiClient) {}
+  constructor(
+    private readonly leatherApiClient: LeatherApiClient,
+    private readonly emilyApiClient: EmilyApiClient
+  ) {}
 
   async getBaseProviderAssets(): Promise<SwapProviderAsset[]> {
     return [this.btcSwapAsset, this.sbtcSwapAsset];
@@ -57,12 +62,19 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
     return [];
   }
 
-  async getSwapQuotes({
-    baseAsset,
-    baseAmount,
-    targetAsset,
-  }: GetSwapQuotesParams): Promise<SbtcBridgeSwapQuote[]> {
-    const swapDexMap = await this.leatherApiClient.fetchSwapDexes();
+  async getSwapQuotes(
+    { baseAsset, baseAmount, targetAsset }: GetSwapQuotesParams,
+    signal?: AbortSignal
+  ): Promise<SbtcBridgeSwapQuote[]> {
+    const [swapDexMap, sbtcLimits] = await Promise.all([
+      this.leatherApiClient.fetchSwapDexes({ signal }),
+      this.emilyApiClient.getSbtcLimits({ signal }),
+    ]);
+    const executionConstraints = getSbtcBridgeExecutionConstraints(
+      baseAsset.symbol === btcAsset.symbol ? 'deposit' : 'withdraw',
+      baseAmount.amount,
+      sbtcLimits
+    );
     return [
       {
         executionType: 'sbtc-bridge-transfer',
@@ -77,6 +89,8 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
         ),
         dexPath: swapDexMap['sbtc-bridge'] ? [mapToSwapDex(swapDexMap['sbtc-bridge'])] : [],
         assetPath: [baseAsset, targetAsset],
+        isExecutable: executionConstraints.length === 0,
+        executionConstraints,
         createdAt: new Date(),
       },
     ];

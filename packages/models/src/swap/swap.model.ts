@@ -5,22 +5,22 @@ import { Money } from '../money.model';
 export type SwappableFungibleCryptoAsset = NativeCryptoAsset | Sip10Asset;
 
 export interface SwapAsset {
-  asset: SwappableFungibleCryptoAsset;
-  providerAssets: SwapProviderAsset[];
+  readonly asset: SwappableFungibleCryptoAsset;
+  readonly providerAssets: SwapProviderAsset[];
 }
 
 export const swapProviderIds = ['bitflow-sdk', 'sbtc-bridge', 'alex-sdk', 'velar-sdk'] as const;
 export type SwapProviderId = (typeof swapProviderIds)[number];
 
 export interface SwapProvider {
-  id: SwapProviderId;
-  isAggregator: boolean;
+  readonly id: SwapProviderId;
+  readonly isAggregator: boolean;
 }
 
 export interface SwapProviderAsset {
-  providerId: SwapProviderId;
-  providerAssetId: string;
-  assetId: CryptoAssetId;
+  readonly providerId: SwapProviderId;
+  readonly providerAssetId: string;
+  readonly assetId: CryptoAssetId;
 }
 
 export type SwapQuote =
@@ -30,20 +30,27 @@ export type SwapQuote =
   | SbtcBridgeSwapQuote;
 
 export interface BaseSwapQuote {
-  executionType: SwapExecutionType;
-  providerId: SwapProviderId;
-  baseAsset: SwappableFungibleCryptoAsset;
-  targetAsset: SwappableFungibleCryptoAsset;
-  baseAmount: Money;
-  targetAmount: Money;
-  dexPath: SwapDex[];
-  assetPath: (NativeCryptoAsset | Sip10Asset)[];
-  createdAt: Date;
+  readonly executionType: SwapExecutionType;
+  readonly providerId: SwapProviderId;
+  readonly baseAsset: SwappableFungibleCryptoAsset;
+  readonly targetAsset: SwappableFungibleCryptoAsset;
+  readonly baseAmount: Money;
+  readonly targetAmount: Money;
+  readonly dexPath: SwapDex[];
+  readonly assetPath: (NativeCryptoAsset | Sip10Asset)[];
+  readonly isExecutable: boolean;
+  readonly executionConstraints: ExecutionConstraint[];
+  readonly createdAt: Date;
+}
+
+export interface ExecutionConstraint {
+  readonly reason: 'minimum-threshold-not-met' | 'maximum-threshold-exceeded';
+  readonly threshold: Money;
 }
 
 export interface AlexSdkSwapQuote extends BaseSwapQuote {
-  providerId: 'alex-sdk';
-  providerQuoteData: {
+  readonly providerId: 'alex-sdk';
+  readonly providerQuoteData: {
     baseProviderAssetId: string;
     targetProviderAssetId: string;
     alexSdkAmmRoute: unknown;
@@ -51,51 +58,51 @@ export interface AlexSdkSwapQuote extends BaseSwapQuote {
 }
 
 export interface VelarSdkSwapQuote extends BaseSwapQuote {
-  providerId: 'velar-sdk';
+  readonly providerId: 'velar-sdk';
   providerQuoteData: {
-    baseProviderAssetId: string;
-    targetProviderAssetId: string;
+    readonly baseProviderAssetId: string;
+    readonly targetProviderAssetId: string;
   };
 }
 
 export interface BitflowSdkSwapQuote extends BaseSwapQuote {
-  providerId: 'bitflow-sdk';
-  providerQuoteData: {
+  readonly providerId: 'bitflow-sdk';
+  readonly providerQuoteData: {
     bitflowSdkSelectedSwapRoute: unknown;
   };
 }
 
 export interface SbtcBridgeSwapQuote extends BaseSwapQuote {
-  providerId: 'sbtc-bridge';
+  readonly providerId: 'sbtc-bridge';
 }
 
 export interface SwapDex {
-  name: string;
-  url: string;
-  logo: string;
-  description: string;
+  readonly name: string;
+  readonly url: string;
+  readonly logo: string;
+  readonly description: string;
 }
 
 export const swapExecutionTypes = ['stacks-contract-call', 'sbtc-bridge-transfer'] as const;
 export type SwapExecutionType = (typeof swapExecutionTypes)[number];
 
 export interface BaseSwapExecutionData {
-  executionType: SwapExecutionType;
-  providerId: SwapProviderId;
-  quote: SwapQuote;
+  readonly executionType: SwapExecutionType;
+  readonly providerId: SwapProviderId;
+  readonly quote: SwapQuote;
 }
 export interface StacksContractCallSwapExecutionData extends BaseSwapExecutionData {
-  executionType: 'stacks-contract-call';
-  quote: SwapQuote;
-  contractAddress: string;
-  contractName: string;
-  functionName: string;
-  functionArgs: unknown[];
-  postConditions: unknown[];
-  postConditionMode?: unknown;
+  readonly executionType: 'stacks-contract-call';
+  readonly quote: SwapQuote;
+  readonly contractAddress: string;
+  readonly contractName: string;
+  readonly functionName: string;
+  readonly functionArgs: unknown[];
+  readonly postConditions: unknown[];
+  readonly postConditionMode?: unknown;
 }
 export interface SbtcBridgeTransferSwapExecutionData extends BaseSwapExecutionData {
-  executionType: 'sbtc-bridge-transfer';
+  readonly executionType: 'sbtc-bridge-transfer';
 }
 export type SwapExecutionData =
   | StacksContractCallSwapExecutionData

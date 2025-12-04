@@ -225,6 +225,9 @@ export class SwapService {
     slippagePercentage: BigNumber,
     signal?: AbortSignal
   ): Promise<SwapExecutionData> {
+    if (!quote.isExecutable) {
+      throw new Error('Quote is not executable');
+    }
     const executionData = await this.getSwapProviderServiceById(
       quote.providerId
     ).getSwapExecutionData({ request, quote, slippagePercentage }, signal);
