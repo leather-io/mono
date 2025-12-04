@@ -3,6 +3,7 @@ import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 
+import { ActivityView, createActivityView } from '@leather.io/features';
 import { AccountAddresses, QuoteCurrency } from '@leather.io/models';
 import { createSip10ActivityByAssetIdQueryConfig } from '@leather.io/queries';
 import type { UserSettings } from '@leather.io/services';
@@ -23,5 +24,9 @@ export function useSip10ActivityByAssetIdQuery(account: AccountAddresses, assetI
     quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
     assetVisibility,
   };
-  return useQuery(createSip10ActivityByAssetIdQueryConfig(account, assetId, settings));
+  return useQuery(
+    createSip10ActivityByAssetIdQueryConfig<ActivityView[]>(account, assetId, settings, {
+      select: activity => activity.map(item => createActivityView(item, settings.network)),
+    })
+  );
 }

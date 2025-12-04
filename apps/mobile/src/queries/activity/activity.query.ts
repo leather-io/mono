@@ -3,6 +3,7 @@ import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 
+import { ActivityView, createActivityView } from '@leather.io/features';
 import { AccountAddresses, CryptoAsset, QuoteCurrency } from '@leather.io/models';
 import {
   type UseActivityQueryOptions,
@@ -11,14 +12,25 @@ import {
 } from '@leather.io/queries';
 import type { UserSettings } from '@leather.io/services';
 
-function useBaseActivityQuery(account: AccountAddresses, options: UseActivityQueryOptions = {}) {
+function useBaseActivityQuery(
+  account: AccountAddresses,
+  options: UseActivityQueryOptions<ActivityView[]> = {}
+) {
   const { networkPreference, fiatCurrencyPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
     quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
     assetVisibility,
   };
-  return useQuery(createActivityQueryConfig(account, settings, options));
+  const { select, ...rest } = options;
+
+  return useQuery(
+    createActivityQueryConfig(account, settings, {
+      ...rest,
+      select:
+        select ?? (activity => activity.map(item => createActivityView(item, settings.network))),
+    })
+  );
 }
 
 export function useActivity(fingerprint: string, accountIndex: number) {
@@ -46,5 +58,9 @@ export function useActivityByAssetQuery(account: AccountAddresses, asset: Crypto
     quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
     assetVisibility,
   };
-  return useQuery(createActivityByAssetQueryConfig(account, asset, settings));
+  return useQuery(
+    createActivityByAssetQueryConfig(account, asset, settings, {
+      select: activity => activity.map(item => createActivityView(item, settings.network)),
+    })
+  );
 }

@@ -4,15 +4,13 @@ import {
   type UseQueryOptions,
 } from '@tanstack/react-query';
 
-import { type ActivityView } from '@leather.io/features';
 import { type AccountAddresses, type Activity } from '@leather.io/models';
 import { type UserSettings, getActivityService } from '@leather.io/services';
 
 import { createServiceQueryKey } from '../shared/query-key.factory';
 import { activityQueryOptions } from '../shared/query-options';
-import { defaultSelect } from './activity.query-config';
 
-type Sip10ActivityQueryOptions<TData = ActivityView[]> = Omit<
+type Sip10ActivityQueryOptions<TData = Activity[]> = Omit<
   UseQueryOptions<Activity[], Error, TData, QueryKey>,
   'queryKey' | 'queryFn'
 > & {
@@ -31,7 +29,7 @@ export function createSip10ActivityByAssetIdQueryKey(
   );
 }
 
-export function createSip10ActivityByAssetIdQueryConfig<TData = ActivityView[]>(
+export function createSip10ActivityByAssetIdQueryConfig<TData = Activity[]>(
   account: AccountAddresses,
   assetId: string,
   settings: UserSettings,
@@ -45,7 +43,7 @@ export function createSip10ActivityByAssetIdQueryConfig<TData = ActivityView[]>(
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getActivityService().getSip10ActivityByAssetId(account, assetId, signal),
-    select: select ?? (activity => defaultSelect(activity, settings)),
+    select,
     ...activityQueryOptions,
     ...queryOptions,
   } as UseQueryOptions<Activity[], Error, TData, QueryKey>;

@@ -1960,9 +1960,6 @@ importers:
 
   packages/queries:
     dependencies:
-      '@leather.io/features':
-        specifier: workspace:*
-        version: link:../features
       '@leather.io/models':
         specifier: workspace:*
         version: link:../models

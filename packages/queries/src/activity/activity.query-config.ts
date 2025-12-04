@@ -4,14 +4,13 @@ import {
   type UseQueryOptions,
 } from '@tanstack/react-query';
 
-import { type ActivityView, createActivityView } from '@leather.io/features';
 import { type AccountAddresses, type Activity, type CryptoAsset } from '@leather.io/models';
 import { type UserSettings, getActivityService } from '@leather.io/services';
 
 import { createServiceQueryKey } from '../shared/query-key.factory';
 import { activityQueryOptions } from '../shared/query-options';
 
-export type UseActivityQueryOptions<TData = ActivityView[]> = Omit<
+export type UseActivityQueryOptions<TData = Activity[]> = Omit<
   UseQueryOptions<Activity[], Error, TData, QueryKey>,
   'queryKey' | 'queryFn'
 > & {
@@ -39,11 +38,7 @@ export function createActivityQueryKey(account: AccountAddresses, settings: User
   );
 }
 
-export function defaultSelect(activity: Activity[], settings: UserSettings): ActivityView[] {
-  return activity.map(item => createActivityView(item, settings.network));
-}
-
-export function createActivityQueryConfig<TData = ActivityView[]>(
+export function createActivityQueryConfig<TData = Activity[]>(
   account: AccountAddresses,
   settings: UserSettings,
   options: UseActivityQueryOptions<TData> = {}
@@ -54,7 +49,7 @@ export function createActivityQueryConfig<TData = ActivityView[]>(
     queryKey: [...createActivityQueryKey(account, settings), ...queryKeyContext],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getActivityService().getActivity(account, signal),
-    select: select ?? (activity => defaultSelect(activity, settings)),
+    select,
     ...activityQueryOptions,
     ...queryOptions,
   } as UseQueryOptions<Activity[], Error, TData, QueryKey>;
@@ -72,7 +67,7 @@ export function createActivityByAssetQueryKey(
   );
 }
 
-export function createActivityByAssetQueryConfig<TData = ActivityView[]>(
+export function createActivityByAssetQueryConfig<TData = Activity[]>(
   account: AccountAddresses,
   asset: CryptoAsset,
   settings: UserSettings,
@@ -83,7 +78,7 @@ export function createActivityByAssetQueryConfig<TData = ActivityView[]>(
     queryKey: [...createActivityByAssetQueryKey(account, asset, settings), ...queryKeyContext],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getActivityService().getActivityByAsset(account, asset, signal),
-    select: select ?? (activity => defaultSelect(activity, settings)),
+    select,
     ...activityQueryOptions,
     ...queryOptions,
   } as UseQueryOptions<Activity[], Error, TData, QueryKey>;
