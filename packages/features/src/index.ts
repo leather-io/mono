@@ -4,6 +4,7 @@ export {
   getBalanceColor,
   getBalanceOperator,
   getBalancesText,
+  addOperator,
 } from './activity/activity-balance';
 export type { GetMempoolExplorerLinkArgs } from './activity/activity-links';
 export {

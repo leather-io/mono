@@ -2,6 +2,7 @@ import { PrivateText } from '@/components/private-text';
 import { formatCurrency as defaultFormatCurrency } from '@/utils/currency-formatter';
 import type { ResponsiveValue } from '@shopify/restyle';
 
+import { addOperator } from '@leather.io/features';
 import { Money } from '@leather.io/models';
 import { Text, TextProps, type Theme } from '@leather.io/ui/native';
 import { FormatAmountOptions } from '@leather.io/utils';
@@ -44,8 +45,4 @@ export function Balance({
       {formattedBalance}
     </DisplayText>
   );
-}
-
-function addOperator(balance: string, operator?: string) {
-  return operator ? `${operator} ${balance}` : balance;
 }

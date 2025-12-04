@@ -5,7 +5,7 @@ import type { ActivityBalances } from './types';
 
 export type FormatMoney = (money: Money, options?: FormatAmountOptions) => string;
 
-function addOperator(balance: string, operator?: string) {
+export function addOperator(balance: string, operator?: string) {
   return operator ? `${operator} ${balance}` : balance;
 }
 
