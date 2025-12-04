@@ -52,7 +52,7 @@ export function createActivityQueryConfig<TData = Activity[]>(
     select,
     ...activityQueryOptions,
     ...queryOptions,
-  } as UseQueryOptions<Activity[], Error, TData, QueryKey>;
+  } satisfies UseQueryOptions<Activity[], Error, TData, QueryKey>;
 }
 
 export function createActivityByAssetQueryKey(
@@ -74,6 +74,7 @@ export function createActivityByAssetQueryConfig<TData = Activity[]>(
   options: UseActivityQueryOptions<TData> = {}
 ): UseQueryOptions<Activity[], Error, TData, QueryKey> {
   const { queryKeyContext = [], select, ...queryOptions } = options;
+
   return {
     queryKey: [...createActivityByAssetQueryKey(account, asset, settings), ...queryKeyContext],
     queryFn: ({ signal }: QueryFunctionContext) =>
@@ -81,5 +82,5 @@ export function createActivityByAssetQueryConfig<TData = Activity[]>(
     select,
     ...activityQueryOptions,
     ...queryOptions,
-  } as UseQueryOptions<Activity[], Error, TData, QueryKey>;
+  } satisfies UseQueryOptions<Activity[], Error, TData, QueryKey>;
 }

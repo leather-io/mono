@@ -46,5 +46,5 @@ export function createSip10ActivityByAssetIdQueryConfig<TData = Activity[]>(
     select,
     ...activityQueryOptions,
     ...queryOptions,
-  } as UseQueryOptions<Activity[], Error, TData, QueryKey>;
+  } satisfies UseQueryOptions<Activity[], Error, TData, QueryKey>;
 }
