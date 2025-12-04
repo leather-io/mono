@@ -5,5 +5,5 @@ import { HomeLegacy } from './home-legacy';
 
 export function Home() {
   const { extensionRevamp } = useFlags();
-  return extensionRevamp ? <HomeCurrent /> : <HomeLegacy />;
+  return !extensionRevamp ? <HomeCurrent /> : <HomeLegacy />;
 }

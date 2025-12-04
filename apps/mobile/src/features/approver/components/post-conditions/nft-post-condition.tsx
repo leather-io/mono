@@ -34,7 +34,7 @@ export function NFTPostCondition({ stacksAddress, postCondition }: NFTPostCondit
   const icon = (
     <Sip10AvatarIcon
       variant="square"
-      indicator
+      indicator="stacksIcon"
       name={asset.data.name}
       contractId={contractId}
       imageCanonicalUri={asset.data.imageCanonicalUri}

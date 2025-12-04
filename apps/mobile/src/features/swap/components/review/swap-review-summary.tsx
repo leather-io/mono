@@ -1,8 +1,7 @@
-import { AssetAvatar } from '@/features/swap/components/asset-avatar';
 import { formatCurrency } from '@/utils/currency-formatter';
 
 import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { Box, Text } from '@leather.io/ui/native';
+import { AssetAvatarIcon, Box, Text } from '@leather.io/ui/native';
 
 const summaryTextProps = {
   variant: 'heading03',
@@ -29,7 +28,7 @@ export function SwapReviewSummary({
   return (
     <Box gap="3" mb="8">
       <Box flexDirection="row" justifyContent="center" alignItems="center">
-        <AssetAvatar asset={baseAsset} opacity={0.65} size="lg" />
+        <AssetAvatarIcon asset={baseAsset} opacity={0.65} size="lg" />
         <Box
           ml="-3"
           borderRadius="round"
@@ -37,7 +36,7 @@ export function SwapReviewSummary({
           borderColor="ink.background-primary"
           borderStyle="solid"
         >
-          <AssetAvatar asset={targetAsset} size="xl" />
+          <AssetAvatarIcon asset={targetAsset} size="xl" />
         </Box>
       </Box>
 

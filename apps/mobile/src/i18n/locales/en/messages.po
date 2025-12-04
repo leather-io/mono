@@ -604,7 +604,7 @@ msgstr "Copied to clipboard"
 msgid "Copy"
 msgstr "Copy"
 
-#: src/features/receive/components/receive-asset-item.tsx:41
+#: src/features/receive/components/receive-asset-item.tsx:52
 msgid "Copy address"
 msgstr "Copy address"
 
@@ -1541,7 +1541,7 @@ msgstr "Scan a QR code"
 msgid "Scan QR Code"
 msgstr "Scan QR Code"
 
-#: src/features/swap/components/asset-selector/asset-selector.tsx:50
+#: src/features/swap/components/asset-selector/asset-selector.tsx:61
 msgid "Search for asset"
 msgstr "Search for asset"
 
@@ -1558,7 +1558,7 @@ msgstr "Secure your wallet"
 msgid "Security"
 msgstr "Security"
 
-#: src/features/swap/components/asset-selector/asset-selector-toggle.tsx:30
+#: src/features/swap/components/asset-selector/asset-selector-toggle.tsx:36
 msgid "Select"
 msgstr "Select"
 

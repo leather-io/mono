@@ -1,10 +1,18 @@
 import { AddressTypeBadge } from '@/components/address-type-badge';
 import { SelectedAsset } from '@/features/receive/screens/select-asset';
-import { TokenIcon } from '@/features/token/components/token-icon';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
 
-import { Box, Cell, CopyIcon, IconButton, Text } from '@leather.io/ui/native';
+import { btcAsset, stxAsset } from '@leather.io/constants';
+import {
+  AssetAvatarIcon,
+  Box,
+  Cell,
+  CopyIcon,
+  IconButton,
+  PlaceholderIcon,
+  Text,
+} from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
 interface ReceiveAssetItemProps {
@@ -23,7 +31,10 @@ export function ReceiveAssetItem({ asset, onCopyAddress, onPress }: ReceiveAsset
       testID={TestId.receiveAssetItem}
     >
       <Cell.Icon>
-        <TokenIcon ticker={asset.symbol} showIndicator />
+        {{
+          BTC: <AssetAvatarIcon asset={btcAsset} size="sm" />,
+          STX: <AssetAvatarIcon asset={stxAsset} size="sm" />,
+        }[asset.symbol] ?? <PlaceholderIcon />}
       </Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary">

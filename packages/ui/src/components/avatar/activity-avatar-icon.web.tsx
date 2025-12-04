@@ -11,11 +11,9 @@ import { PendingIcon } from '../../icons/activity/pending-icon.web';
 import { ReceivedIcon } from '../../icons/activity/received-icon.web';
 import { SentIcon } from '../../icons/activity/sent-icon.web';
 import { SwapIcon } from '../../icons/activity/swap-icon.web';
+import { AssetAvatarIcon } from './asset-avatar-icon.web';
 import { getAvatarUrl } from './avatar.shared';
-import { Avatar, AvatarProps } from './avatar.web';
-import { BtcAvatarIcon } from './btc-avatar-icon.web';
-import { Sip10AvatarIcon } from './sip10-avatar-icon.web';
-import { StxAvatarIcon } from './stx-avatar-icon.web';
+import { Avatar } from './avatar.web';
 
 interface StatusIndicatorProps {
   indicator: ActivityStatusIndicatorId;
@@ -40,43 +38,6 @@ function StatusIndicator({ indicator }: StatusIndicatorProps): ReactElement | nu
   }
 }
 
-interface AssetAvatarProps extends AvatarProps {
-  asset: CryptoAsset;
-  indicator?: ReactElement;
-}
-
-function AssetAvatar({ asset, indicator, size, ...rest }: AssetAvatarProps): ReactElement {
-  switch (asset.protocol) {
-    case 'nativeStx':
-      return <StxAvatarIcon indicator={indicator} size={size} {...rest} />;
-    case 'nativeBtc':
-      return <BtcAvatarIcon indicator={indicator} size={size} {...rest} />;
-    case 'sip10': {
-      return (
-        <Sip10AvatarIcon
-          contractId={asset.contractId}
-          imageCanonicalUri={asset.imageCanonicalUri}
-          indicator={indicator}
-          name={asset.name}
-          size={size}
-          {...rest}
-        />
-      );
-    }
-    default: {
-      // TODO: work is needed to support other protocols
-      return (
-        <Avatar
-          fallback={getAvatarUrl(asset.protocol)}
-          indicator={indicator}
-          size={size}
-          {...rest}
-        />
-      );
-    }
-  }
-}
-
 interface SwapAvatarIconProps {
   fromAsset: CryptoAsset;
   toAsset: CryptoAsset;
@@ -86,7 +47,7 @@ function SwapAvatarIcon({ fromAsset, toAsset, indicator }: SwapAvatarIconProps):
   return (
     <styled.div position="relative" width="40px" height="40px">
       <styled.div position="absolute" top={3} right={15} zIndex={1}>
-        <AssetAvatar asset={fromAsset} size="md" />
+        <AssetAvatarIcon asset={fromAsset} size="md" />
       </styled.div>
       <styled.div
         borderRadius="round"
@@ -97,7 +58,7 @@ function SwapAvatarIcon({ fromAsset, toAsset, indicator }: SwapAvatarIconProps):
         left={8}
         zIndex={2}
       >
-        <AssetAvatar asset={toAsset} indicator={indicator} size="lg" />
+        <AssetAvatarIcon asset={toAsset} indicator={indicator} size="lg" />
       </styled.div>
     </styled.div>
   );
@@ -124,8 +85,8 @@ export function ActivityAvatarIcon({ activity }: ActivityAvatarIconProps) {
   }
 
   if (activity.asset) {
-    return <AssetAvatar asset={activity.asset} indicator={indicator} />;
+    return <AssetAvatarIcon asset={activity.asset} indicator={indicator} />;
   }
 
-  return <Avatar fallback={getAvatarUrl(activity.key)} indicator={indicator} />;
+  return <Avatar image={getAvatarUrl(activity.key)} indicator={indicator} />;
 }
