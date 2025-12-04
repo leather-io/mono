@@ -112,6 +112,8 @@ export class VelarSwapProviderService implements SwapProviderService {
           targetAmount,
           dexPath: swapDexMap['velar'] ? [mapToSwapDex(swapDexMap['velar'])] : [],
           assetPath: assetPath.length > 1 ? assetPath : [baseAsset, targetAsset],
+          isExecutable: true,
+          executionConstraints: [],
           createdAt: new Date(),
         },
       ];

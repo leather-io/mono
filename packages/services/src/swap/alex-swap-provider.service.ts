@@ -116,6 +116,8 @@ export class AlexSwapProviderService implements SwapProviderService {
             route.length > 1
               ? await this.getAssetPathAssets(route, signal)
               : [baseAsset, targetAsset],
+          isExecutable: true,
+          executionConstraints: [],
           createdAt: new Date(),
         },
       ];

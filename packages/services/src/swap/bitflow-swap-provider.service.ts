@@ -124,6 +124,8 @@ export class BitflowSwapProviderService implements SwapProviderService {
         .filter(isNonNullish)
         .map(mapToSwapDex),
       assetPath: await this.getAssetPathAssets(route.tokenPath, signal),
+      isExecutable: true,
+      executionConstraints: [],
       createdAt: new Date(),
     };
   }

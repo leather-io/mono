@@ -22,6 +22,10 @@ export const STX20_API_BASE_URL_MAINNET = 'https://api.stx20.com/api/v1';
 
 export const BNS_V2_API_BASE_URL = 'https://api.bnsv2.com';
 
+export const EMILY_API_BASE_URL_MAINNET = 'https://sbtc-emily.com';
+export const EMILY_API_BASE_URL_TESTNET = 'https://beta.sbtc-emily.com';
+export const EMILY_API_BASE_URL_DEVENV = 'http://localhost:3031';
+
 // Copied from @stacks/transactions to avoid dependencies
 export enum ChainId {
   Testnet = 2147483648,

@@ -87,7 +87,10 @@ export type HttpCacheKey =
   // VelarSdkClient
   | 'velar-sdk-get-tokens'
   | 'velar-sdk-get-token-pairs'
-  | 'velar-sdk-get-computed-amount';
+  | 'velar-sdk-get-computed-amount'
+
+  // EmilyApiClient
+  | 'emily-api-get-sbtc-limits';
 
 export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'bns-v2-api-name': { ttl: minutesInMs(2) },
@@ -165,4 +168,6 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'velar-sdk-get-tokens': { ttl: hoursInMs(6) },
   'velar-sdk-get-token-pairs': { ttl: hoursInMs(1) },
   'velar-sdk-get-computed-amount': { ttl: secondsInMs(30) },
+
+  'emily-api-get-sbtc-limits': { ttl: hoursInMs(12) },
 };
