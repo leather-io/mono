@@ -1,46 +1,19 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
-import { useSettings } from '@/store/settings/settings';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import { AccountRequest, getBtcBalancesService } from '@leather.io/services';
+import { AccountRequest } from '@leather.io/services';
+import {
+  createBtcAggregateBalanceQueryConfig,
+  createBtcBalanceQueryConfig,
+} from '@leather.io/queries';
 
 import { balanceQueryOptions } from './balance-query-options';
+import { useUserSettings } from './use-user-settings';
 
 export function useBtcTotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useBtcAggregateBalanceQuery(accounts.map(account => ({ account }))));
-}
-/**
- * @deprecated useBtcTotalNativeSegwitBalance is not used now we have moved to single account view
- * @see useBtcAccountNativeSegwitBalance
- */
-export function useBtcTotalNativeSegwitBalance() {
-  const accounts = useTotalAccountAddresses();
-  return toFetchState(
-    useBtcAggregateBalanceQuery(
-      accounts.map(account => ({
-        account,
-        exclusions: { taprootAddresses: true },
-      }))
-    )
-  );
-}
-
-/**
- * @deprecated useBtcTotalTaprootBalance is not used now we have moved to single account view
- * @see useBtcAccountTaprootBalance
- */
-export function useBtcTotalTaprootBalance() {
-  const accounts = useTotalAccountAddresses();
-  return toFetchState(
-    useBtcAggregateBalanceQuery(
-      accounts.map(account => ({
-        account,
-        exclusions: { nativeSegwitAddresses: true },
-      }))
-    )
-  );
 }
 
 export function useBtcAccountBalance(fingerprint: string, accountIndex: number) {
@@ -69,21 +42,17 @@ export function useBtcAccountTaprootBalance(fingerprint: string, accountIndex: n
 }
 
 export function useBtcAccountBalanceQuery(request: AccountRequest) {
-  const { fiatCurrencyPreference } = useSettings();
+  const settings = useUserSettings();
   return useQuery({
-    queryKey: ['btc-balance-service-get-btc-account-balance', request, fiatCurrencyPreference],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getBtcBalancesService().getBtcAccountBalance(request, signal),
+    ...createBtcBalanceQueryConfig(request, settings),
     ...balanceQueryOptions,
   });
 }
 
 function useBtcAggregateBalanceQuery(requests: AccountRequest[]) {
-  const { fiatCurrencyPreference } = useSettings();
+  const settings = useUserSettings();
   return useQuery({
-    queryKey: ['btc-balance-service-get-btc-aggregate-balance', requests, fiatCurrencyPreference],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getBtcBalancesService().getBtcAggregateBalance(requests, signal),
+    ...createBtcAggregateBalanceQueryConfig(requests, settings),
     ...balanceQueryOptions,
   });
 }

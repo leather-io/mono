@@ -16,6 +16,7 @@ export function createSip10AccountBalanceQueryKey(request: AccountRequest, setti
     settings
   );
 }
+
 export function createSip10AccountBalanceQueryConfig(
   request: AccountRequest,
   settings: UserSettings
@@ -24,6 +25,29 @@ export function createSip10AccountBalanceQueryConfig(
     queryKey: createSip10AccountBalanceQueryKey(request, settings),
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AccountBalance(request, signal),
+    ...balanceQueryOptions,
+  };
+}
+
+export function createSip10AggregateBalanceQueryKey(
+  requests: AccountRequest[],
+  settings: UserSettings
+) {
+  return createServiceQueryKey(
+    'sip10-balances-service--get-sip10-aggregate-balance',
+    ['aggregate', requests],
+    settings
+  );
+}
+
+export function createSip10AggregateBalanceQueryConfig(
+  requests: AccountRequest[],
+  settings: UserSettings
+) {
+  return {
+    queryKey: createSip10AggregateBalanceQueryKey(requests, settings),
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getSip10BalancesService().getSip10AggregateBalance(requests, signal),
     ...balanceQueryOptions,
   };
 }
