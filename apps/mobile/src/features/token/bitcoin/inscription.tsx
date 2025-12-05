@@ -5,7 +5,10 @@ import { imageUnavailableLabel } from '@/features/token/utils/image-unavailable-
 import { t } from '@lingui/core/macro';
 
 import { InscriptionAsset } from '@leather.io/models';
-import { ImageUnavailable, Inscription as InscriptionComponent } from '@leather.io/ui/native';
+import {
+  ImageUnavailable,
+  Inscription as InscriptionComponent,
+} from '@/features/collectibles/components';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 interface InscriptionProps {

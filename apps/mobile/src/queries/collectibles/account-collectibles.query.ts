@@ -1,10 +1,13 @@
+import { useMemo } from 'react';
+
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useCollectiblesFlag } from '@/features/feature-flags';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
+import { type CollectibleView, createCollectibleView } from '@leather.io/features';
 import { AccountAddresses, CryptoAssetId } from '@leather.io/models';
-import { getCollectiblesService } from '@leather.io/services';
+import { createAccountCollectiblesQueryConfig } from '@leather.io/queries';
 import { SerializedCryptoAssetId, deserializeAssetId, matchesAssetId } from '@leather.io/utils';
 
 export function useAccountCollectibleByAssetId(
@@ -14,49 +17,49 @@ export function useAccountCollectibleByAssetId(
 ) {
   const account = useAccountAddresses(fingerprint, accountIndex);
 
-  return toFetchState(useAccountCollectibleByAssetIdQuery(account, deserializeAssetId(assetId)));
+  return toFetchState<CollectibleView[]>(
+    useAccountCollectibleByAssetIdQuery(account, deserializeAssetId(assetId))
+  );
 }
 
 export function useAccountCollectibles(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useAccountCollectiblesQuery(account));
+  return toFetchState<CollectibleView[]>(useAccountCollectiblesQuery(account));
+}
+
+function useSanitizedAccount(account: AccountAddresses) {
+  const collectiblesFlag = useCollectiblesFlag();
+
+  return useMemo<AccountAddresses>(() => {
+    if (collectiblesFlag) return account;
+    return {
+      ...account,
+      bitcoin: undefined,
+    };
+  }, [account, collectiblesFlag]);
 }
 
 function useAccountCollectiblesQuery(account: AccountAddresses) {
-  const collectiblesFlag = useCollectiblesFlag();
-  if (!collectiblesFlag) {
-    account.bitcoin = undefined;
-  }
-  return useQuery({
-    queryKey: ['collectibles-service-get-account-collectibles', account],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getCollectiblesService().getAccountCollectibles({ account }, signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 5000,
-    gcTime: 1 * 5000,
-  });
+  const sanitizedAccount = useSanitizedAccount(account);
+
+  return useQuery(
+    createAccountCollectiblesQueryConfig(sanitizedAccount, {
+      queryKeyContext: ['all'],
+      select: collectibles => collectibles.map(createCollectibleView),
+    })
+  );
 }
+
 function useAccountCollectibleByAssetIdQuery(account: AccountAddresses, assetId: CryptoAssetId) {
-  const collectiblesFlag = useCollectiblesFlag();
-  if (!collectiblesFlag) {
-    account.bitcoin = undefined;
-  }
-  return useQuery({
-    queryKey: ['collectibles-service-get-account-collectibles', account, assetId],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getCollectiblesService()
-        .getAccountCollectibles({ account }, signal)
-        .then(collectibles =>
-          collectibles.filter(collectible => matchesAssetId(collectible, assetId))
-        ),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 1 * 5000,
-    gcTime: 1 * 5000,
-  });
+  const sanitizedAccount = useSanitizedAccount(account);
+
+  return useQuery(
+    createAccountCollectiblesQueryConfig(sanitizedAccount, {
+      queryKeyContext: ['by-asset', assetId],
+      select: collectibles =>
+        collectibles
+          .filter(collectible => matchesAssetId(collectible, assetId))
+          .map(createCollectibleView),
+    })
+  );
 }

@@ -6,3 +6,4 @@ export * from './src/market-data/market-data.query-config';
 export * from './src/balances/btc-balances.query-config';
 export * from './src/activity/activity.query-config';
 export * from './src/activity/sip10-activity.query-config';
+export * from './src/collectibles/account-collectibles.query-config';
