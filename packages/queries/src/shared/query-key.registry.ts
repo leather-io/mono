@@ -13,6 +13,7 @@ export const querySettingsDepsRegistry = {
   'stx-balances-service--get-stx-address-balance': ['currency', 'network'],
   'sip10-balances-service--get-sip10-address-balance': ['currency', 'network', 'assetVisibility'],
   'sip10-balances-service--get-sip10-account-balance': ['currency', 'network', 'assetVisibility'],
+  'sip10-balances-service--get-sip10-aggregate-balance': ['currency', 'network'],
   'runes-balances-service--get-runes-account-balance': ['currency', 'network', 'assetVisibility'],
   'runes-balances-service--get-runes-aggregate-balance': ['currency', 'network'],
   'runes-balances-service--get-rune-balance-by-rune-name': ['currency', 'network'],

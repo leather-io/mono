@@ -1,11 +1,15 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
-import { useSettings } from '@/store/settings/settings';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import { AccountRequest, getStxBalancesService } from '@leather.io/services';
+import { AccountRequest } from '@leather.io/services';
+import {
+  createStxAccountBalanceQueryConfig,
+  createStxAggregateBalanceQueryConfig,
+} from '@leather.io/queries';
 
 import { balanceQueryOptions } from './balance-query-options';
+import { useUserSettings } from './use-user-settings';
 
 export function useStxTotalBalance() {
   const accounts = useTotalAccountAddresses();
@@ -18,21 +22,17 @@ export function useStxAccountBalance(fingerprint: string, accountIndex: number) 
 }
 
 function useStxAggregateBalanceQuery(requests: AccountRequest[]) {
-  const { fiatCurrencyPreference } = useSettings();
+  const settings = useUserSettings();
   return useQuery({
-    queryKey: ['stx-balances-service-get-stx-aggregate-balance', requests, fiatCurrencyPreference],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getStxBalancesService().getStxAggregateBalance(requests, signal),
+    ...createStxAggregateBalanceQueryConfig(requests, settings),
     ...balanceQueryOptions,
   });
 }
 
 export function useStxAccountBalanceQuery(request: AccountRequest) {
-  const { fiatCurrencyPreference } = useSettings();
+  const settings = useUserSettings();
   return useQuery({
-    queryKey: ['stx-balances-service-get-stx-account-balance', request, fiatCurrencyPreference],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getStxBalancesService().getStxAccountBalance(request, signal),
+    ...createStxAccountBalanceQueryConfig(request, settings),
     ...balanceQueryOptions,
   });
 }
