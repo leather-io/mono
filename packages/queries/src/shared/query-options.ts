@@ -18,7 +18,7 @@ export const balanceQueryOptions = {
 export const activityQueryOptions = {
   refetchOnReconnect: false,
   refetchOnWindowFocus: false,
-  refetchOnMount: true,
+  refetchOnMount: 'always',
   retryOnMount: false,
   staleTime: 5000,
   gcTime: 5000,
