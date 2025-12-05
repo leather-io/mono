@@ -59,12 +59,10 @@ function makeCoinbaseUrl(address: string, symbol: FundCurrencySymbol) {
 
   const onRampURL = generateOnRampURL({
     appId: COINBASE_APP_ID,
-    destinationWallets: [
-      {
-        address,
-        assets: [code],
-      },
-    ],
+    addresses: {
+      [address]: [],
+    },
+    assets: [code],
   });
   return onRampURL;
 }
