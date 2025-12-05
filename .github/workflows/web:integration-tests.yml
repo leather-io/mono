@@ -53,3 +53,12 @@ jobs:
       - name: run-playwright-tests
         working-directory: apps/web
         run: pnpm exec playwright test
+
+      - name: upload-report-to-github-actions-artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: apps/web/test-results
+          retention-days: 1
+          if-no-files-found: error

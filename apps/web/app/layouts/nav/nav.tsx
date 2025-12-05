@@ -7,7 +7,6 @@ import { Drawer } from 'vaul';
 import { LeatherLogo } from '~/components/icons/leather-logo';
 import { SbtcMonogramIcon } from '~/components/icons/sbtc-monogram-icon';
 import { StackingIcon } from '~/components/icons/stacking-icon';
-import { useWebPortfolioFlag } from '~/features/feature-flags';
 import { advancedModeEnabled } from '~/pages/advanced/advanced.route';
 import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
@@ -32,15 +31,11 @@ function LeatherLogoHomeLink(props: HTMLStyledProps<'a'>) {
 }
 
 export function NavContents() {
-  const webPortfolioEnabled = useWebPortfolioFlag();
-
   return (
     <>
-      {webPortfolioEnabled && (
-        <NavItem href="/portfolio" icon={<GlobeIcon variant="small" />}>
-          Portfolio
-        </NavItem>
-      )}
+      <NavItem href="/portfolio" icon={<GlobeIcon variant="small" />}>
+        Portfolio
+      </NavItem>
 
       <NavItem href="/stacking" icon={<SbtcMonogramIcon />}>
         Stacking

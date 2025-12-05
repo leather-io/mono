@@ -3,6 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   testMatch: '**/*.spec.ts',
+  outputDir: './test-results',
 
   // MSW, used via @msw/playwright is not fully isolated to an individual test,
   // so this settings must be disabled
