@@ -3,8 +3,9 @@ import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 
 import { Image } from 'expo-image';
 
-import { PaperPlaneIcon } from '../../../icons/paper-plane-icon.native';
-import { Box, CollectibleCard, Text, TouchableOpacity } from '../../../native';
+import { Box, PaperPlaneIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
+
+import { CollectibleCard } from './collectible-card';
 
 interface CollectibleVideoProps {
   src: string;

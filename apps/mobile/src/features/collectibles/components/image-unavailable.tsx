@@ -1,8 +1,8 @@
 import { PropsWithChildren, ReactNode } from 'react';
 
-import { Eye1ClosedIcon } from '../../../icons/eye-1-closed-icon.native';
-import { Box, Text } from '../../../native';
-import { CollectibleCard } from './collectible-card.native';
+import { Box, Eye1ClosedIcon, Text } from '@leather.io/ui/native';
+
+import { CollectibleCard } from './collectible-card';
 
 interface ImageUnavailableProps extends PropsWithChildren {
   height?: number;

@@ -3,7 +3,11 @@ import { imageUnavailableLabel } from '@/features/token/utils/image-unavailable-
 
 import { Sip9Asset } from '@leather.io/models';
 import { getStacksContractAssetName } from '@leather.io/stacks';
-import { BnsImage, ImageUnavailable, Sip9 as Sip9Component } from '@leather.io/ui/native';
+import {
+  BnsImage,
+  ImageUnavailable,
+  Sip9 as Sip9Component,
+} from '@/features/collectibles/components';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 interface Sip9Props {

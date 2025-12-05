@@ -2,8 +2,9 @@ import { ReactNode, useEffect, useState } from 'react';
 
 import { Image } from 'expo-image';
 
-import { Box, Pressable, PressableProps } from '../../../native';
-import { ImageUnavailable } from './image-unavailable.native';
+import { Box, Pressable, type PressableProps } from '@leather.io/ui/native';
+
+import { ImageUnavailable } from './image-unavailable';
 
 export interface CollectibleImageProps extends PressableProps {
   alt: string;

@@ -1,8 +1,8 @@
 import { WebView } from 'react-native-webview';
 
-import { HeadsetIcon } from '../../../icons/headset-icon.native';
-import { Box, Text, TouchableOpacity } from '../../../native';
-import { CollectibleCard } from './collectible-card.native';
+import { Box, HeadIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
+
+import { CollectibleCard } from './collectible-card';
 
 interface CollectibleAudioProps {
   src: string;
@@ -55,7 +55,7 @@ export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleA
             justifyContent="center"
             alignItems="center"
           >
-            <HeadsetIcon height={36} width={36} />
+            <HeadIcon height={36} width={36} />
             <Text textAlign="center">{alt}</Text>
           </Box>
         </TouchableOpacity>

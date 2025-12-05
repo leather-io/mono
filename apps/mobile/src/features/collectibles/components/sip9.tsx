@@ -2,10 +2,10 @@ import { ReactNode, useEffect, useState } from 'react';
 
 import { Sip9Asset } from '@leather.io/models';
 
-import { CollectibleAudio } from './collectible-audio.native';
-import { CollectibleGltf } from './collectible-gltf.native';
-import { CollectibleImage } from './collectible-image.native';
-import { CollectibleVideo } from './collectible-video.native';
+import { CollectibleAudio } from './collectible-audio';
+import { CollectibleGltf } from './collectible-gltf';
+import { CollectibleImage } from './collectible-image';
+import { CollectibleVideo } from './collectible-video';
 
 const supportedContentTypes = [
   'image/jpeg',

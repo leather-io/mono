@@ -566,7 +566,7 @@ msgstr "Contact us"
 msgid "Contacts"
 msgstr "Contacts"
 
-#: src/features/token/bitcoin/inscription.tsx:30
+#: src/features/token/bitcoin/inscription.tsx:33
 msgid "Content not found"
 msgstr "Content not found"
 

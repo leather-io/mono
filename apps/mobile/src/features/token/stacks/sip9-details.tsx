@@ -25,8 +25,9 @@ export function Sip9Details({ assetId, account }: Sip9DetailsProps) {
     return <ErrorFallbackTab />;
   }
   if (collectible.state === 'success' && collectible.value.length > 0) {
-    const asset = collectible.value.find(isSip9Asset);
-    if (!asset) {
+    const view = collectible.value.find(item => isSip9Asset(item.asset));
+    const asset = view?.asset;
+    if (!asset || !isSip9Asset(asset)) {
       return <ErrorFallbackTab />;
     }
     const assetName = getStacksContractAssetName(asset.assetId);

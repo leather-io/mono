@@ -1,7 +1,8 @@
 import { Image } from 'expo-image';
 
-import { Box, Pressable, Text } from '../../../native';
-import { CollectibleImageProps } from './collectible-image.native';
+import { Box, Pressable, Text } from '@leather.io/ui/native';
+
+import { CollectibleImageProps } from './collectible-image';
 
 export function BnsImage({ alt, src, height = 200, onPress }: CollectibleImageProps) {
   return (

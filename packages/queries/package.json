@@ -11,6 +11,7 @@
     "directory": "packages/queries"
   },
   "type": "module",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsdown",
     "build:watch": "tsdown --watch",

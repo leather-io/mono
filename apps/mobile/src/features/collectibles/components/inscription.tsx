@@ -3,13 +3,13 @@ import { ReactNode } from 'react';
 import { InscriptionMimeType } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
-import { CollectibleAudio } from './collectible-audio.native';
-import { CollectibleGltf } from './collectible-gltf.native';
-import { CollectibleHtml } from './collectible-html.native';
-import { CollectibleImage } from './collectible-image.native';
-import { CollectibleSvg } from './collectible-svg.native';
-import { CollectibleText } from './collectible-text.native';
-import { CollectibleVideo } from './collectible-video.native';
+import { CollectibleAudio } from './collectible-audio';
+import { CollectibleGltf } from './collectible-gltf';
+import { CollectibleHtml } from './collectible-html';
+import { CollectibleImage } from './collectible-image';
+import { CollectibleSvg } from './collectible-svg';
+import { CollectibleText } from './collectible-text';
+import { CollectibleVideo } from './collectible-video';
 
 export interface InscriptionProps {
   mimeType: InscriptionMimeType;
