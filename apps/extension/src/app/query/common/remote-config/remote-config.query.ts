@@ -5,6 +5,7 @@ import axios from 'axios';
 import get from 'lodash.get';
 
 import {
+  type ActiveFiatProvider,
   type DefaultMinMaxRangeFeeEstimations,
   HiroMessage,
   type RemoteConfig,
@@ -21,7 +22,7 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import walletConfig from '../../../../../config/wallet-config.json';
 
-export { HiroMessage } from '@leather.io/query';
+export { AvailableRegions, HiroMessage } from '@leather.io/query';
 
 async function fetchLeatherConfig(): Promise<RemoteConfig> {
   // TODO: BRANCH_NAME is not working here for config changes on PR branches
@@ -112,6 +113,23 @@ function useRemoteConfig() {
   });
 
   return data;
+}
+
+export function useActiveFiatProviders() {
+  const config = useRemoteConfig();
+  if (!config?.activeFiatProviders) return {} as Record<string, ActiveFiatProvider>;
+
+  return Object.fromEntries(
+    Object.entries(config.activeFiatProviders).filter(([, provider]) => provider.enabled)
+  );
+}
+
+export function useHasFiatProviders() {
+  const activeProviders = useActiveFiatProviders();
+  return (
+    activeProviders &&
+    Object.keys(activeProviders).some(key => activeProviders[key].enabled)
+  );
 }
 
 export function useRemoteLeatherMessages(): HiroMessage[] {

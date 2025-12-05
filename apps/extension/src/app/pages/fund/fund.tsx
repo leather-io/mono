@@ -1,52 +1,36 @@
-import { Outlet } from 'react-router';
+import { Outlet, useSearchParams } from 'react-router';
 
-import { LEATHER_EARN_URL } from '@leather.io/constants';
-import { getOnramperIframeParams } from '@leather.io/features';
-
-import {
-  ONRAMPER_API_KEY,
-  ONRAMPER_SIGNING_SECRET,
-  ONRAMPER_WIDGET_HOST,
-} from '@shared/environment';
 import { RouteUrls } from '@shared/route-urls';
 
-import { useThemeSwitcher } from '@app/common/theme-provider';
 import { Content, Page } from '@app/components/layout';
+import { FullPageLoadingSpinner } from '@app/components/loading-spinner';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useCurrentAccountNativeSegwitIndexZeroSignerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
+import { FiatProvidersList } from './fiat-providers-list';
+import { FundLayout } from './components/fund.layout';
+
 export function FundPage() {
   const currentStxAccount = useCurrentStacksAccount();
   const bitcoinSigner = useCurrentAccountNativeSegwitIndexZeroSignerNullable();
-  const btcAddress = bitcoinSigner?.address;
-  const stxAddress = currentStxAccount?.address;
+  const [searchParams] = useSearchParams();
 
-  const { theme } = useThemeSwitcher();
+  const currencyParam = searchParams.get('currency');
+  const symbol = currencyParam === 'BTC' ? 'BTC' : 'STX';
 
-  const params = getOnramperIframeParams({
-    theme,
-    btcAddress,
-    stxAddress,
-    apiKey: ONRAMPER_API_KEY,
-    signingSecret: ONRAMPER_SIGNING_SECRET,
-    mode: 'buy',
-    successRedirectUrl: LEATHER_EARN_URL,
-    failureRedirectUrl: LEATHER_EARN_URL,
-  });
+  const address = symbol === 'BTC' ? bitcoinSigner?.address : currentStxAccount?.address;
+
+  if (!address) return <FullPageLoadingSpinner />;
 
   return (
     <>
       <PageHeader isSettingsVisibleOnSm={false} onBackLocation={RouteUrls.Home} />
       <Content>
         <Page>
-          <iframe
-            title="Onramper Widget"
-            height="585px"
-            width="100%"
-            allow="popups; accelerometer; autoplay; camera; gyroscope; payment; microphone"
-            src={`${ONRAMPER_WIDGET_HOST}?${params.toString()}`}
-          />
+          <FundLayout symbol={symbol}>
+            <FiatProvidersList address={address} symbol={symbol} />
+          </FundLayout>
         </Page>
         <Outlet />
       </Content>
