@@ -25,7 +25,6 @@ export const csp = builder({
       '*.api.leather.io',
       'https://sbtc-emily.com',
       'https://webhook.frontapp.com',
-      '*.launchdarkly.com',
       'leatherapi.bestinslot.xyz',
     ],
   },

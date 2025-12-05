@@ -65,7 +65,6 @@
     "feed": "5.1.0",
     "isbot": "5.1.29",
     "jotai": "2.12.5",
-    "launchdarkly-react-client-sdk": "3.9.0",
     "nprogress": "0.2.0",
     "radix-ui": "1.4.2",
     "react": "19.0.0",
