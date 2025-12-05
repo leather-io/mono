@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { useLiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
 import { useSwapDependencies } from '@/features/swap/use-swap-dependencies';
@@ -59,7 +59,7 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
     <Animated.View
       key={currentScreen}
       style={{ flex: 1 }}
-      entering={FadeIn.duration(150)}
+      entering={FadeIn.easing(Easing.out(Easing.quad)).duration(150)}
       exiting={FadeOut.duration(150)}
     >
       {currentScreen === 'form' && (

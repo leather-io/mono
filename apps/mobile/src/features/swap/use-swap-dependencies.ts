@@ -1,3 +1,4 @@
+import { signTx } from '@/features/psbt-signer/signer';
 import { SwapDependencies } from '@/features/swap/swap-state/swap-state.types';
 import { useAccountRequest } from '@/hooks/use-account-request';
 import { useBitcoinClient } from '@/queries/clients/bitcoin-client';
@@ -59,9 +60,7 @@ export function useSwapDependencies(): SwapDependencies {
       network: networkPreference,
       bitcoinPayer,
       sbtcClient,
-      signBitcoinPsbt: () => {
-        throw new Error('unimplemented');
-      },
+      signBitcoinPsbt: signTx,
       broadcast: broadcastBitcoinTransaction,
     },
   };

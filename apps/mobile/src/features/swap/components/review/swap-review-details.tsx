@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import Animated, {
+import {
   Easing,
   FadeIn,
   LayoutAnimationConfig,
@@ -11,9 +11,16 @@ import Animated, {
 import { DividerProps, Divider as RawDivider } from '@/components/divider';
 import { isString } from 'remeda';
 
-import { Box, Button, HasChildren, SettingsGearIcon, Text, TextProps } from '@leather.io/ui/native';
+import {
+  AnimatedBox,
+  Box,
+  Button,
+  HasChildren,
+  SettingsGearIcon,
+  Text,
+  TextProps,
+} from '@leather.io/ui/native';
 
-const AnimatedBox = Animated.createAnimatedComponent(Box);
 const LayoutTransition = LinearTransition.springify().mass(2).stiffness(700).damping(200);
 const EnteringLayoutAnimation = FadeIn.easing(Easing.out(Easing.quad)).duration(240).delay(240);
 

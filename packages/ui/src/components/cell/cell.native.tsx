@@ -38,7 +38,7 @@ export function CellRoot({ style, ...props }: CellProps & { ref?: PressableRef }
     return {
       backgroundColor: withSpring(
         pressed.value
-          ? theme.colors['ink.background-secondary']
+          ? theme.colors['ink.component-background-hover']
           : theme.colors['ink.background-primary']
       ),
     };

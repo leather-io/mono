@@ -1,4 +1,4 @@
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
 import { t } from '@lingui/core/macro';
@@ -6,9 +6,7 @@ import { Trans } from '@lingui/react/macro';
 import { Image } from 'expo-image';
 
 import { AccountSwapAsset } from '@leather.io/services';
-import { Box, type BoxProps, Button, Text, TextProps } from '@leather.io/ui/native';
-
-const AnimatedBox = Animated.createAnimatedComponent(Box);
+import { AnimatedBox, type BoxProps, Button, Text, TextProps } from '@leather.io/ui/native';
 
 const emptyStateHeightRatio = '55%';
 

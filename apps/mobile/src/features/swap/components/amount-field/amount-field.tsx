@@ -1,5 +1,3 @@
-import Animated from 'react-native-reanimated';
-
 import { AmountFieldCaret } from '@/features/swap/components/amount-field/amount-field-caret';
 import { AmountFieldError } from '@/features/swap/components/amount-field/amount-field-error';
 import { useAmountField } from '@/features/swap/components/amount-field/use-amount-field';
@@ -10,11 +8,9 @@ import { InputCurrencyMode } from '@/utils/types';
 import { isDefined } from 'remeda';
 
 import { Currency, SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { Box, slidePair } from '@leather.io/ui/native';
+import { AnimatedBox, Box, slidePair } from '@leather.io/ui/native';
 
 import { PrimaryValue, formatPrimaryValue } from './amount-field-primary-value';
-
-const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 interface AmountFieldProps {
   asset?: SwappableFungibleCryptoAsset;
