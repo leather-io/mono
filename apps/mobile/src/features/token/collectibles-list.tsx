@@ -9,7 +9,7 @@ import { CollectiblesListLoading } from '@/features/token/components/collectible
 import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
 import { TokenDetailsProps } from '@/features/token/types';
 
-import { NonFungibleCryptoAsset } from '@leather.io/models';
+import { CollectibleView } from '@leather.io/features';
 import { CollectibleTypeIconOverlay } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
@@ -18,26 +18,27 @@ import { Stamp } from './bitcoin/stamp';
 import { Sip9 } from './stacks/sip9';
 
 interface RenderCollectibleProps {
-  item: NonFungibleCryptoAsset;
+  item: CollectibleView;
   height: number;
   onPress?: (tokenDetails: TokenDetailsProps) => void;
 }
 function renderCollectible({ item, height, onPress }: RenderCollectibleProps) {
-  const collectible = (() => {
-    switch (item.protocol) {
+  const asset = item.asset;
+  const content = (() => {
+    switch (asset.protocol) {
       case 'stamp':
-        return <Stamp item={item} height={height} onPress={onPress} />;
+        return <Stamp item={asset} height={height} onPress={onPress} />;
       case 'sip9':
-        return <Sip9 item={item} height={height} onPress={onPress} />;
+        return <Sip9 item={asset} height={height} onPress={onPress} />;
       case 'inscription':
-        return <Inscription item={item} height={height} onPress={onPress} />;
+        return <Inscription item={asset} height={height} onPress={onPress} />;
       default:
-        return assertUnreachable(item);
+        return assertUnreachable(asset);
     }
   })();
 
   return (
-    <CollectibleTypeIconOverlay protocol={item.protocol}>{collectible}</CollectibleTypeIconOverlay>
+    <CollectibleTypeIconOverlay protocol={item.protocol}>{content}</CollectibleTypeIconOverlay>
   );
 }
 
@@ -51,7 +52,7 @@ function useCollectibleListItemHeight() {
 }
 
 interface CollectiblesListProps {
-  collectiblesState: FetchState<NonFungibleCryptoAsset[]>;
+  collectiblesState: FetchState<CollectibleView[]>;
   header: ReactElement;
   onPressToken?: (tokenDetails: TokenDetailsProps) => void;
 }

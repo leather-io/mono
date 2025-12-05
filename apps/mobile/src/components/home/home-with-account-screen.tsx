@@ -86,7 +86,10 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     accountIndex: currentAccount.accountIndex,
   });
   const collectiblesState = useAccountCollectibles(fingerprint, accountIndex);
-  useCollectiblesAnalytics({ currentAccount, collectibles: collectiblesState.value ?? [] });
+  useCollectiblesAnalytics({
+    currentAccount,
+    collectibles: (collectiblesState.value ?? []).map(view => view.asset),
+  });
   const isErrorTotalBalance = totalBalance.state === 'error';
 
   return (
