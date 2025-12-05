@@ -594,7 +594,7 @@ msgstr "Contact us"
 msgid "Contacts"
 msgstr "Contacts"
 
-#: src/features/token/bitcoin/inscription.tsx:30
+#: src/features/token/bitcoin/inscription.tsx:33
 msgid "Content not found"
 msgstr "Content not found"
 
@@ -1061,6 +1061,7 @@ msgstr "ID copied to clipboard"
 msgid "If unsafe, your wallet could be drained."
 msgstr "If unsafe, your wallet could be drained."
 
+#: src/features/collectibles/components/image-unavailable.tsx:15
 #: src/features/token/utils/image-unavailable-label.ts:7
 msgid "Image currently unavailable"
 msgstr "Image currently unavailable"

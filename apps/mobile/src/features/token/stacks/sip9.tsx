@@ -1,9 +1,13 @@
+import {
+  BnsImage,
+  ImageUnavailable,
+  Sip9 as Sip9Component,
+} from '@/features/collectibles/components';
 import { TokenDetailsProps } from '@/features/token/types';
 import { imageUnavailableLabel } from '@/features/token/utils/image-unavailable-label';
 
 import { Sip9Asset } from '@leather.io/models';
 import { getStacksContractAssetName } from '@leather.io/stacks';
-import { BnsImage, ImageUnavailable, Sip9 as Sip9Component } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 interface Sip9Props {
@@ -20,7 +24,9 @@ export function Sip9({ item, height, onPress }: Sip9Props) {
     : undefined;
 
   const assetName = getStacksContractAssetName(item.assetId);
-  if (assetName === 'BNS-V2') {
+  const isBns =
+    item.assetId.toLowerCase().endsWith('.bns::names') || assetName?.toUpperCase() === 'BNS-V2';
+  if (isBns) {
     return (
       <BnsImage
         src={encodeURI(item.content.contentUrl)}

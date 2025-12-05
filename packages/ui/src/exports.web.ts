@@ -1,6 +1,5 @@
 export * from './components/approver/approver.web';
 export * from './components/avatar/index.web';
-export * from './components/collectibles/index.web';
 export * from './components/favicon/favicon.web';
 export * from './components/pressable/pressable.web';
 export * from './components/select/index.web';

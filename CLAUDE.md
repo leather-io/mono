@@ -13,6 +13,11 @@
 - Avoid nested ternary expressions; prefer clear branching or functional expressions.
 - Prefer `const` where possible; avoid `let` when it improves clarity.
 - Prefer constants over magic numbers or strings.
+- Always use `function` declarations for components, never const + arrow component definitions.
+
+## Imports
+
+- Never duplicate imports from the same module; consolidate named imports into a single statement.
 
 ## Naming
 
