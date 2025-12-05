@@ -57,10 +57,21 @@ function makeCoinbaseUrl(address: string, symbol: FundCurrencySymbol) {
     return onRampURL;
   }
 
+  const networks =
+    symbol === 'BTC'
+      ? ['bitcoin']
+      : symbol === 'STX'
+        ? ['stacks']
+        : [];
+
+  if (!networks.length) {
+    return makeFiatProviderFaqUrl(address, 'Coinbase');
+  }
+
   const onRampURL = generateOnRampURL({
     appId: COINBASE_APP_ID,
     addresses: {
-      [address]: [],
+      [address]: networks,
     },
     assets: [code],
   });
