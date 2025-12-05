@@ -17,9 +17,7 @@ export function useAccountCollectibleByAssetId(
 ) {
   const account = useAccountAddresses(fingerprint, accountIndex);
 
-  return toFetchState(
-    useAccountCollectibleByAssetIdQuery(account, deserializeAssetId(assetId))
-  );
+  return toFetchState(useAccountCollectibleByAssetIdQuery(account, deserializeAssetId(assetId)));
 }
 
 export function useAccountCollectibles(fingerprint: string, accountIndex: number) {
