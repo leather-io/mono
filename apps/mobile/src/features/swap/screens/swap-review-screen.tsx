@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
@@ -8,6 +8,7 @@ import { MinReceiveInfoSheet } from '@/features/swap/components/min-receive-info
 import { PriceImpactInfoSheet } from '@/features/swap/components/price-impact-info-sheet';
 import { QuoteRefetchIndicator } from '@/features/swap/components/quote-refetch-indicator';
 import { PriceImpactValue } from '@/features/swap/components/review/price-impact-value';
+import { SwapExecutionOverlay } from '@/features/swap/components/review/swap-execution-overlay';
 import { SwapReviewAccountDetails } from '@/features/swap/components/review/swap-review-account-details';
 import {
   SwapReviewDetailRow,
@@ -27,13 +28,20 @@ import { UseSwapStateResult } from '@/features/swap/swap-state/swap-state.types'
 import { PRICE_IMPACT_WARNING_THRESHOLD } from '@/features/swap/swap-state/swap.constants';
 import { formatSwapRate, sumFeesInQuoteCurrency } from '@/features/swap/swap.utils';
 import { useAndroidBackHandler } from '@/hooks/use-android-back-handler';
+import { ensureAsyncFunctionMinimumDuration } from '@/utils/async';
 import { formatCurrency, formatPercentage } from '@/utils/currency-formatter';
+import { useBottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
 import { captureMessage } from '@sentry/react-native';
 import BigNumber from 'bignumber.js';
 import { isNonNullish } from 'remeda';
 
 import { Box, Button, SheetInstance, Text } from '@leather.io/ui/native';
+
+type ExecutionStatus = 'idle' | 'executing' | 'success' | 'failure';
+
+const executionDisplayDuration = 1500;
+const successfulExitTimeout = 1200;
 
 interface SwapReviewScreenProps {
   swapStateResult: UseSwapStateResult;
@@ -78,10 +86,14 @@ interface SwapReviewContentProps {
 
 function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentProps) {
   const slippageSheetRef = useRef<SheetInstance>(null);
-  const onExecuteSwap = usePreventAccidentalDoubleTap(swapStateResult.execute);
+  const onExecuteSwap = usePreventAccidentalInstantTap(
+    ensureAsyncFunctionMinimumDuration(swapStateResult.execute, executionDisplayDuration)
+  );
   const { state } = swapStateResult;
   const { selectedQuote, fees, intervalState, isRefetching } = liveEstimate;
   const {
+    baseAmount,
+    targetAmount,
     baseAsset,
     targetAsset,
     swapRate,
@@ -91,14 +103,30 @@ function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentP
   } = selectedQuote;
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
   const showPriceImpact = shouldShowPriceImpact(priceImpactPercentage);
+  const [executionStatus, setExecutionStatus] = useState<ExecutionStatus>('idle');
+  const { dismiss } = useBottomSheetModal();
+
+  function handleConfirm() {
+    setExecutionStatus('executing');
+    onExecuteSwap()
+      .then(() => {
+        setExecutionStatus('success');
+        setTimeout(() => {
+          dismiss('swap');
+        }, successfulExitTimeout);
+      })
+      .catch(() => {
+        setExecutionStatus('failure');
+      });
+  }
 
   return (
-    <>
+    <Box gap="8" flex={1}>
       <SwapReviewSummary
-        baseAsset={selectedQuote.baseAsset}
-        targetAsset={selectedQuote.targetAsset}
-        baseAmount={selectedQuote.baseAmount}
-        targetAmount={selectedQuote.targetAmount}
+        baseAsset={baseAsset}
+        targetAsset={targetAsset}
+        baseAmount={baseAmount}
+        targetAmount={targetAmount}
       />
 
       <SwapReviewDetails isRefetching={isRefetching}>
@@ -164,19 +192,29 @@ function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentP
           textAlign="center"
           color="ink.text-subdued"
         >{t`Make sure everything looks correct.\nConfirmed transactions cannot be undone.`}</Text>
+
         <Button
-          disabled
-          //disabled={!swapStateResult.canExecute}
-          onPress={onExecuteSwap}
+          disabled={!swapStateResult.canExecute || executionStatus !== 'idle'}
+          onPress={handleConfirm}
         >{t`Confirm`}</Button>
       </SwapReviewFooter>
+
+      {executionStatus !== 'idle' && (
+        <SwapExecutionOverlay
+          baseAsset={baseAsset}
+          targetAsset={targetAsset}
+          baseAmount={baseAmount}
+          targetAmount={targetAmount}
+          status={executionStatus}
+        />
+      )}
 
       <SlippageSelectorSheet
         ref={slippageSheetRef}
         value={swapStateResult.state.slippage}
         onSave={swapStateResult.actions.setSlippage}
       />
-    </>
+    </Box>
   );
 }
 
@@ -201,14 +239,15 @@ function shouldShowPriceImpact(
   );
 }
 
-function usePreventAccidentalDoubleTap<T extends (...args: unknown[]) => unknown>(callback: T): T {
-  const pressSuppressionDurationMs = 500;
+function usePreventAccidentalInstantTap<T extends (...args: unknown[]) => unknown>(callback: T): T {
+  const pressSuppressionDuration = 500;
   const isPressAllowedRef = useRef(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       isPressAllowedRef.current = true;
-    }, pressSuppressionDurationMs);
+    }, pressSuppressionDuration);
+
     return () => clearTimeout(timer);
   }, []);
 

@@ -3,9 +3,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Sheet, SheetProps, SheetRef } from '@leather.io/ui/native';
 
 interface FullHeightSheetProps extends Omit<SheetProps, 'ref'> {
+  name?: string;
   sheetRef: SheetRef;
 }
-export function FullHeightSheet({ sheetRef, ...sheetProps }: FullHeightSheetProps) {
+export function FullHeightSheet({ sheetRef, name, ...sheetProps }: FullHeightSheetProps) {
   const { top } = useSafeAreaInsets();
   const minimumHandleOffset = 8;
 
@@ -17,6 +18,7 @@ export function FullHeightSheet({ sheetRef, ...sheetProps }: FullHeightSheetProp
       {...sheetProps}
       snapPoints={['100%']}
       enableDynamicSizing={false}
+      name={name}
     />
   );
 }

@@ -58,6 +58,7 @@ export function SwapSheet() {
       sheetRef={ref}
       onAnimate={handleAnimatedPositionChange}
       onDismiss={handleDismiss}
+      name="swap"
     >
       <SheetNavigationContainer base="swap">
         <Swap baseAsset={baseAsset} targetAsset={targetAsset} />

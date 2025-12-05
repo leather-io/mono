@@ -1,4 +1,4 @@
-import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 import { Divider } from '@/components/divider';
 import { QuoteRefetchIndicator } from '@/features/swap/components/quote-refetch-indicator';
@@ -8,9 +8,7 @@ import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { Box, Text } from '@leather.io/ui/native';
-
-const AnimatedBox = Animated.createAnimatedComponent(Box);
+import { AnimatedBox, Box, Text } from '@leather.io/ui/native';
 
 interface QuotePreviewContentProps {
   baseAsset: SwappableFungibleCryptoAsset;

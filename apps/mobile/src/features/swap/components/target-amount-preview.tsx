@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import Animated, {
+import {
   Easing,
   useAnimatedStyle,
   useDerivedValue,
@@ -12,10 +12,8 @@ import { LiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
 import { formatCurrency } from '@/utils/currency-formatter';
 
 import { MarketData, Money } from '@leather.io/models';
-import { Box, Text } from '@leather.io/ui/native';
+import { AnimatedBox, Box, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
-
-const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 interface TargetAmountPreviewProps {
   marketData?: MarketData;

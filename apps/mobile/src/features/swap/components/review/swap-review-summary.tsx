@@ -26,7 +26,7 @@ export function SwapReviewSummary({
   targetAmount,
 }: SwapReviewSummaryProps) {
   return (
-    <Box gap="3" mb="8">
+    <Box gap="3">
       <Box flexDirection="row" justifyContent="center" alignItems="center">
         <AssetAvatarIcon asset={baseAsset} opacity={0.65} size="lg" />
         <Box

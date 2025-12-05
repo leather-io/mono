@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { emptyAmountPlaceholder } from '@/components/balance/constants';
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import { ArrowTopBottomIcon, Box, Pressable, SkeletonLoader, Text } from '@leather.io/ui/native';
+import {
+  AnimatedBox,
+  ArrowTopBottomIcon,
+  Box,
+  Pressable,
+  SkeletonLoader,
+  Text,
+} from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { SecondaryAmount } from '../swap-state/swap-state.types';
@@ -13,8 +20,6 @@ interface CurrencySwitchProps {
   secondaryAmount: SecondaryAmount;
   onModeSwitch(): void;
 }
-
-const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export function CurrencyModeSwitcher({ secondaryAmount, onModeSwitch }: CurrencySwitchProps) {
   function renderContent() {

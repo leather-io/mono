@@ -10,7 +10,11 @@ import {
 import * as btc from '@scure/btc-signer';
 import BigNumber from 'bignumber.js';
 
-import { CoinSelectionRecipient, getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
+import {
+  CoinSelectionRecipient,
+  getBtcSignerLibNetworkConfigByMode,
+  payerToBip32Derivation,
+} from '@leather.io/bitcoin';
 import {
   StacksContractCallSwapExecutionData,
   SwapExecutionType,
@@ -163,6 +167,7 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
           script: p2wpkh.script,
           amount: BigInt(input.value),
         },
+        bip32Derivation: [payerToBip32Derivation(bitcoin.bitcoinPayer)],
       });
     });
 
