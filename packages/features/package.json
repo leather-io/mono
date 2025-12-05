@@ -20,6 +20,7 @@
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/services": "workspace:*",
+    "@leather.io/stacks": "workspace:*",
     "@leather.io/tokens": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@noble/hashes": "1.5.0",

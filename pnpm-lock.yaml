@@ -1784,6 +1784,9 @@ importers:
       '@leather.io/services':
         specifier: workspace:*
         version: link:../services
+      '@leather.io/stacks':
+        specifier: workspace:*
+        version: link:../stacks
       '@leather.io/tokens':
         specifier: workspace:*
         version: link:../tokens
