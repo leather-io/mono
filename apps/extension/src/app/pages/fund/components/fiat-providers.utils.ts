@@ -10,7 +10,12 @@ import OkxIcon from '@assets/images/fund/fiat-providers/okx-icon.png';
 import TransakIcon from '@assets/images/fund/fiat-providers/transak-icon.png';
 import { generateOnRampURL } from '@coinbase/cbpay-js';
 
-import { COINBASE_APP_ID, MOONPAY_API_KEY, TRANSAK_API_KEY } from '@shared/environment';
+import {
+  COINBASE_APP_ID,
+  COINBASE_SESSION_TOKEN,
+  MOONPAY_API_KEY,
+  TRANSAK_API_KEY,
+} from '@shared/environment';
 import { type ActiveFiatProvider } from '@leather.io/query';
 
 // Keys are set in wallet-config.json
@@ -44,6 +49,13 @@ type FundCurrencySymbol = 'BTC' | 'STX';
 
 function makeCoinbaseUrl(address: string, symbol: FundCurrencySymbol) {
   const code = symbol.toUpperCase();
+
+  if (COINBASE_SESSION_TOKEN) {
+    const onRampURL = generateOnRampURL({
+      sessionToken: COINBASE_SESSION_TOKEN,
+    });
+    return onRampURL;
+  }
 
   const onRampURL = generateOnRampURL({
     appId: COINBASE_APP_ID,
