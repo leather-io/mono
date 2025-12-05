@@ -94,6 +94,10 @@ export function useLiveSwapEstimate({
     await networkFeeQuery.refetch();
   }
 
+  if (isPending && !isFetching) {
+    return { status: 'idle' };
+  }
+
   if (isError) {
     return {
       status: 'error',
@@ -103,10 +107,6 @@ export function useLiveSwapEstimate({
         nativeAssetMarketDataQuery.error) as Error,
       refetch,
     };
-  }
-
-  if (isPending && !isFetching) {
-    return { status: 'idle' };
   }
 
   if (isPending) {
