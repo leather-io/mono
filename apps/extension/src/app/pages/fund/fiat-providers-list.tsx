@@ -7,10 +7,13 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { LoadingSpinner } from '@app/components/loading-spinner';
+import { useFlags } from '@app/features/feature-flags';
 import {
+  AvailableRegions,
   useActiveFiatProviders,
   useHasFiatProviders,
 } from '@app/query/common/remote-config/remote-config.query';
+import { CreditCardIcon } from '@leather.io/ui';
 
 import { FiatProviderItem } from './components/fiat-provider-item';
 import { activeFiatProviderIcons, getProviderUrl } from './components/fiat-providers.utils';
@@ -29,6 +32,7 @@ export function FiatProvidersList(props: FiatProvidersProps) {
   const activeProviders = useActiveFiatProviders();
   const hasProviders = useHasFiatProviders();
   const location = useLocation();
+  const { release_onramper_buy } = useFlags();
 
   const routeToQr = useMemo(() => {
     switch (symbol) {
@@ -74,6 +78,19 @@ export function FiatProvidersList(props: FiatProvidersProps) {
           })
         }
       />
+      {release_onramper_buy && (
+        <FiatProviderItem
+          availableRegions={AvailableRegions.Global}
+          hasFastCheckoutProcess
+          hasTradingFees
+          iconComponent={<CreditCardIcon />}
+          onGoToProvider={() => {
+            void analytics.track('select_buy_option', { provider: 'Onramper' });
+            navigate(RouteUrls.FundOnramper);
+          }}
+          title="Onramper"
+        />
+      )}
       {Object.entries(activeProviders).map(([providerKey, providerValue]) => {
         const providerUrl = getProviderUrl({
           address,
