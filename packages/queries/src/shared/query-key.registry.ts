@@ -8,6 +8,9 @@ export const querySettingsDepsRegistry = {
   // balances
   'btc-balances-service--get-btc-account-balance': ['currency', 'network'],
   'btc-balances-service--get-btc-aggregate-balance': ['currency', 'network'],
+  'stx-balances-service--get-stx-account-balance': ['currency', 'network'],
+  'stx-balances-service--get-stx-aggregate-balance': ['currency', 'network'],
+  'stx-balances-service--get-stx-address-balance': ['currency', 'network'],
   'sip10-balances-service--get-sip10-address-balance': ['currency', 'network', 'assetVisibility'],
   'sip10-balances-service--get-sip10-account-balance': ['currency', 'network', 'assetVisibility'],
   // activity
