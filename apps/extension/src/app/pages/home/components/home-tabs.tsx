@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { Box, Stack } from 'leather-styles/jsx';
@@ -16,10 +16,15 @@ interface HomeTabsProps {
 export function HomeTabs({ children }: HomeTabsProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const activeTab = useMemo(() => {
+    if (location.pathname.startsWith(RouteUrls.Activity)) return RouteUrls.Activity;
+    if (location.pathname.startsWith(RouteUrls.Collectibles)) return RouteUrls.Collectibles;
+    return RouteUrls.Home;
+  }, [location.pathname]);
 
   return (
     <Stack flexGrow={1} mt={{ base: 0, md: 'space.05' }} gap="space.06">
-      <Tabs.Root onValueChange={slug => navigate(slug)} defaultValue={location.pathname}>
+      <Tabs.Root value={activeTab} onValueChange={slug => navigate(slug)}>
         <Tabs.List>
           <Tabs.Trigger data-testid="tab-assets" value={RouteUrls.Home}>
             Assets
