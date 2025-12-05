@@ -95,7 +95,9 @@ export function FiatProvidersList(props: FiatProvidersProps) {
         const providerUrl = getProviderUrl({
           address,
           hasFastCheckoutProcess: providerValue.hasFastCheckoutProcess,
+          key: providerKey,
           name: providerValue.name,
+          symbol,
         });
 
         return (

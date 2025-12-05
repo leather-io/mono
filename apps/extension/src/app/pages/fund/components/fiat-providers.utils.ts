@@ -8,6 +8,9 @@ import KuCoinIcon from '@assets/images/fund/fiat-providers/kucoin-icon.png';
 import MoonPayIcon from '@assets/images/fund/fiat-providers/moonpay-icon.png';
 import OkxIcon from '@assets/images/fund/fiat-providers/okx-icon.png';
 import TransakIcon from '@assets/images/fund/fiat-providers/transak-icon.png';
+import { generateOnRampURL } from '@coinbase/cbpay-js';
+
+import { COINBASE_APP_ID, MOONPAY_API_KEY, TRANSAK_API_KEY } from '@shared/environment';
 import { type ActiveFiatProvider } from '@leather.io/query';
 
 // Keys are set in wallet-config.json
@@ -37,6 +40,37 @@ export const activeFiatProviderIcons: Record<ActiveFiatProvider['name'], string>
   [ActiveFiatProviders.Transak]: TransakIcon,
 };
 
+type FundCurrencySymbol = 'BTC' | 'STX';
+
+function makeCoinbaseUrl(address: string, symbol: FundCurrencySymbol) {
+  const code = symbol.toUpperCase();
+
+  const onRampURL = generateOnRampURL({
+    appId: COINBASE_APP_ID,
+    destinationWallets: [
+      {
+        address,
+        assets: [code],
+      },
+    ],
+  });
+  return onRampURL;
+}
+
+function makeMoonPayUrl(address: string, symbol: FundCurrencySymbol) {
+  const code = symbol.toLowerCase();
+  return `https://buy.moonpay.com?apiKey=${MOONPAY_API_KEY}&currencyCode=${code}&walletAddress=${address}`;
+}
+
+function makeTransakUrl(address: string, symbol: FundCurrencySymbol) {
+  const screenTitle = 'Buy Stacks';
+  const code = symbol.toUpperCase();
+
+  return `https://global.transak.com?apiKey=${TRANSAK_API_KEY}&cryptoCurrencyCode=${code}&exchangeScreenTitle=${encodeURI(
+    screenTitle
+  )}&defaultPaymentMethod=credit_debit_card&walletAddress=${address}`;
+}
+
 function makeFiatProviderFaqUrl(address: string, provider: string) {
   // TODO: Add FAQ for BTC
   return `https://hiro.so/wallet-faq/how-do-i-buy-stx-from-an-exchange?provider=${provider}&address=${address}`;
@@ -45,18 +79,29 @@ function makeFiatProviderFaqUrl(address: string, provider: string) {
 interface GetProviderNameArgs {
   address: string;
   hasFastCheckoutProcess: boolean;
+  key: string;
   name: string;
+  symbol: FundCurrencySymbol;
 }
 
 export function getProviderUrl({
   address,
   hasFastCheckoutProcess,
+  key,
   name,
+  symbol,
 }: GetProviderNameArgs) {
   if (!hasFastCheckoutProcess) {
     return makeFiatProviderFaqUrl(address, name);
   }
-  // Direct integration URLs for specific providers have been removed.
-  // For now, always fall back to the FAQ link.
-  return makeFiatProviderFaqUrl(address, name);
+  switch (key) {
+    case ActiveFiatProviders.Coinbase:
+      return makeCoinbaseUrl(address, symbol);
+    case ActiveFiatProviders.MoonPay:
+      return makeMoonPayUrl(address, symbol);
+    case ActiveFiatProviders.Transak:
+      return makeTransakUrl(address, symbol);
+    default:
+      return makeFiatProviderFaqUrl(address, name);
+  }
 }
