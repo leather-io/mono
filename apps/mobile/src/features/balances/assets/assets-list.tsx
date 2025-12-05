@@ -3,11 +3,11 @@ import { ReactElement, useMemo } from 'react';
 import { Screen } from '@/components/screen/screen';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import { TokenDetailsProps } from '@/features/token/types';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 
 import { RuneBalance, Sip10Balance } from '@leather.io/services';
+import { TokenDetailsProps } from '@leather.io/features';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { renderAsset } from './render-assets';

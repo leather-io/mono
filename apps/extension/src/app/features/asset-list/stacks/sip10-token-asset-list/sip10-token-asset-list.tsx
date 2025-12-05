@@ -2,6 +2,7 @@ import { type Dispatch, type SetStateAction, useEffect } from 'react';
 
 import { Stack } from 'leather-styles/jsx';
 
+import type { TokenDetailsProps } from '@leather.io/features';
 import { type AssetFilter } from '@app/common/hooks/use-manage-tokens';
 import {
   useManagedSip10Tools,
@@ -16,6 +17,7 @@ interface Sip10TokenAssetListProps {
   assetFilter?: AssetFilter;
   assetRightElementVariant?: AssetRightElementVariant;
   onSelectAsset?(symbol: string, contractId?: string): void;
+  onOpenToken?(tokenDetails: TokenDetailsProps): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -23,6 +25,7 @@ export function Sip10TokenAssetList({
   accountIndex,
   assetFilter = 'all',
   onSelectAsset,
+  onOpenToken,
   assetRightElementVariant,
   setHasManageableTokens,
 }: Sip10TokenAssetListProps) {
@@ -48,6 +51,7 @@ export function Sip10TokenAssetList({
           balance={sip10}
           isEnabled={isEnabled(sip10)}
           onSelectAsset={onSelectAsset}
+          onOpenToken={onOpenToken}
         />
       ))}
     </Stack>

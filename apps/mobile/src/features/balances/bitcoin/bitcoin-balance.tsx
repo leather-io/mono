@@ -1,11 +1,11 @@
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
-import { OnPressTokenDetails } from '@/features/token/types';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/core/macro';
 
 import { btcAsset } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
 import { BtcAvatarIcon } from '@leather.io/ui/native';
+import { OnPressTokenDetails } from '@leather.io/features';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 type BitcoinTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;

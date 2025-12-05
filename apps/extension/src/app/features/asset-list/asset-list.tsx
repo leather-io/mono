@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { Stack } from 'leather-styles/jsx';
 
+import type { TokenDetailsProps } from '@leather.io/features';
 import { BtcAvatarIcon, StxAvatarIcon } from '@leather.io/ui';
 
 import { Brc20TokensLoader } from '@app/components/loaders/brc20-tokens-loader';
@@ -35,11 +36,13 @@ interface AssetListProps {
   assetRightElementVariant?: AssetRightElementVariant;
   showUnmanageableTokens?: boolean;
   onSelectAsset?(symbol: string, contractId?: string): void;
+  onOpenToken?(tokenDetails: TokenDetailsProps): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
 
 export function AssetList({
   onSelectAsset,
+  onOpenToken,
   variant = 'read-only',
   assetRightElementVariant = 'balance',
   showUnmanageableTokens = true,
@@ -65,6 +68,7 @@ export function AssetList({
                 balance={balance}
                 isLoading={isLoading}
                 onSelectAsset={onSelectAsset}
+                onOpenToken={onOpenToken}
                 isLoadingAdditionalData={isLoadingAdditionalData}
               />
             )}
@@ -89,6 +93,7 @@ export function AssetList({
                 isLoading={isLoading}
                 isPrivate={isPrivate}
                 onSelectAsset={onSelectAsset}
+                onOpenToken={onOpenToken}
               />
             )}
           </StxAssetItemBalanceLoader>
@@ -109,6 +114,7 @@ export function AssetList({
             accountIndex={currentAccountIndex}
             assetFilter={filter}
             onSelectAsset={onSelectAsset}
+            onOpenToken={onOpenToken}
             assetRightElementVariant={assetRightElementVariant}
             setHasManageableTokens={setHasManageableTokens}
           />
@@ -154,6 +160,7 @@ export function AssetList({
             accountIndex={currentAccountIndex}
             filter={filter}
             assetRightElementVariant={assetRightElementVariant}
+            onOpenToken={onOpenToken}
             setHasManageableTokens={setHasManageableTokens}
           />
         </>

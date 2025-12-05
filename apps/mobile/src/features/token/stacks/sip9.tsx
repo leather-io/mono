@@ -1,7 +1,7 @@
-import { TokenDetailsProps } from '@/features/token/types';
 import { imageUnavailableLabel } from '@/features/token/utils/image-unavailable-label';
 
 import { Sip9Asset } from '@leather.io/models';
+import { TokenDetailsProps } from '@leather.io/features';
 import { getStacksContractAssetName } from '@leather.io/stacks';
 import {
   BnsImage,

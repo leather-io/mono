@@ -1,7 +1,7 @@
-import { TokenDetailsProps } from '@/features/token/types';
 import { imageUnavailableLabel } from '@/features/token/utils/image-unavailable-label';
 
 import { StampAsset } from '@leather.io/models';
+import { TokenDetailsProps } from '@leather.io/features';
 import { CollectibleImage, ImageUnavailable } from '@/features/collectibles/components';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 

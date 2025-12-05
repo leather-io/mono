@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 
-import {
-  isSupportedFungibleAssetProtocol,
-  isSupportedNonFungibleAssetProtocol,
-} from '@/features/token/types';
 import { analytics } from '@/utils/analytics';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId, type CryptoAssetProtocol } from '@leather.io/models';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
+import {
+  isSupportedFungibleAssetProtocol,
+  isSupportedNonFungibleAssetProtocol,
+} from '@leather.io/features';
 
 interface UseTokenTrackingProps {
   currentAccount: AccountId;

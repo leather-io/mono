@@ -7,9 +7,8 @@ import { Screen } from '@/components/screen/screen';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { CollectiblesListLoading } from '@/features/token/components/collectibles-list-loading';
 import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
-import { TokenDetailsProps } from '@/features/token/types';
-
 import { CollectibleView } from '@leather.io/features';
+import { TokenDetailsProps } from '@leather.io/features';
 import { CollectibleTypeIconOverlay } from '@/features/collectibles/components';
 import { assertUnreachable } from '@leather.io/utils';
 

@@ -8,10 +8,11 @@ import { RouteUrls } from '@shared/route-urls';
 import { formatCurrency } from '@app/common/currency-formatter';
 import { whenPageMode } from '@app/common/utils';
 import { emptyAmountPlaceholder } from '@app/components/balance/constants';
-import { ActivityList } from '@app/features/activity-list/activity-list';
 import { Collectibles } from '@app/features/collectibles/collectibles';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
+import { ActivityList } from '@app/features/activity-list/activity-list';
+import { TokenDetails } from '@app/features/token/token-details';
 import { Assets } from '@app/pages/home/components/assets';
 import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
@@ -67,6 +68,7 @@ export function Home() {
       <HomeTabs>
         <ModalBackgroundWrapper>
           <Route index element={<Assets />} />
+          <Route path={RouteUrls.TokenDetails} element={<TokenDetails />} />
           <Route path={RouteUrls.Activity} element={<ActivityList />}>
             {homePageModalRoutes}
           </Route>

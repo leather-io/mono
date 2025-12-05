@@ -45,3 +45,12 @@ export const marketDataQueryOptions = {
   staleTime: oneMinInMs,
   gcTime: oneMinInMs,
 } satisfies Partial<UseQueryOptions>;
+
+export const marketHistoryQueryOptions = {
+  refetchOnReconnect: false,
+  refetchOnWindowFocus: false,
+  refetchOnMount: true,
+  retryOnMount: false,
+  staleTime: 30_000,
+  gcTime: 30_000,
+} satisfies Partial<UseQueryOptions>;
