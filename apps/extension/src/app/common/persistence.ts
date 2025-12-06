@@ -1,7 +1,7 @@
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { QueryCache, QueryClient } from '@tanstack/react-query';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
-import { isAxiosError } from 'axios';
+import { HttpStatusCode, isAxiosError } from 'axios';
 import { BigNumber } from 'bignumber.js';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
@@ -11,6 +11,8 @@ import { PERSISTENCE_CACHE_TIME } from '@leather.io/constants';
 import { IS_TEST_ENV } from '@shared/environment';
 import { logger } from '@shared/logger';
 import { analytics } from '@shared/utils/analytics';
+
+const RETRY_LIMIT = 5;
 
 superjson.registerCustom<BigNumber, string>(
   {
@@ -39,6 +41,18 @@ const chromeStorageLocalPersister = createAsyncStoragePersister({
 function isZodError(error: Error): error is ZodError {
   // `instanceof` check doesn't work when ZodError thrown from within a package
   return error instanceof ZodError || error.name === 'ZodError';
+}
+
+function isRetryableError(error: Error): boolean {
+  if (!isAxiosError(error)) return false;
+  if (!error.response) return true;
+  const status = error.response.status;
+
+  return (
+    status >= 500 ||
+    status === HttpStatusCode.RequestTimeout ||
+    status === HttpStatusCode.TooManyRequests
+  );
 }
 
 export const queryClient = new QueryClient({
@@ -72,7 +86,10 @@ export const queryClient = new QueryClient({
     queries: {
       gcTime: PERSISTENCE_CACHE_TIME,
       // https://tanstack.com/query/v4/docs/guides/testing#turn-off-retries
-      retry: IS_TEST_ENV ? false : 3,
+      retry(failureCount, error) {
+        if (IS_TEST_ENV) return false;
+        return isRetryableError(error) && failureCount <= RETRY_LIMIT;
+      },
     },
   },
 });
