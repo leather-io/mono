@@ -1,4 +1,5 @@
 import { type GestureResponderEvent } from 'react-native';
+import { Easing } from 'react-native-reanimated';
 
 import { isDefined, isString } from '@leather.io/utils';
 
@@ -57,14 +58,15 @@ interface PressableOwnProps {
 
 export type PressableProps = PressableOwnProps & PressableCoreProps;
 
-export const defaultPressEffect = {
+export const defaultPressEffect: PressEffects = {
   opacity: {
     from: 1,
     to: 0.5,
     settings: {
-      type: 'spring',
+      type: 'timing',
       config: {
-        duration: 200,
+        duration: 150,
+        easing: Easing.out(Easing.quad),
       },
     },
   },
