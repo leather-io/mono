@@ -8,13 +8,7 @@ import { isDefined } from '@leather.io/utils';
 import { useConfigSbtc } from '../common/remote-config/remote-config.query';
 import { type StacksBlock, useGetStacksBlocks } from './get-stacks-block.query';
 
-export enum SbtcStatus {
-  Pending = 'pending',
-  Reprocessing = 'reprocessing',
-  Accepted = 'accepted',
-  Confirmed = 'confirmed',
-  Failed = 'failed',
-}
+export type SbtcStatus = 'pending' | 'accepted' | 'confirmed' | 'failed' | 'rbf';
 
 interface SbtcDepositInfo {
   amount: number;
@@ -85,25 +79,15 @@ export function useSbtcPendingDeposits(stxAddress: string) {
     stxAddress,
     'pending'
   );
-  const { data: reprocessingDeposits = [], isLoading: isLoadingStatusReprocessing } =
-    useGetSbtcDeposits(stxAddress, 'reprocessing');
   const { data: acceptedDeposits = [], isLoading: isLoadingStatusAccepted } = useGetSbtcDeposits(
     stxAddress,
     'accepted'
   );
 
-  const { isLoadingBlocks, deposits } = useSbtcDeposits([
-    ...pendingDeposits,
-    ...reprocessingDeposits,
-    ...acceptedDeposits,
-  ]);
+  const { isLoadingBlocks, deposits } = useSbtcDeposits([...pendingDeposits, ...acceptedDeposits]);
 
   return {
-    isLoading:
-      isLoadingStatusPending ||
-      isLoadingStatusReprocessing ||
-      isLoadingStatusAccepted ||
-      isLoadingBlocks,
+    isLoading: isLoadingStatusPending || isLoadingStatusAccepted || isLoadingBlocks,
     pendingSbtcDeposits: deposits,
   };
 }
