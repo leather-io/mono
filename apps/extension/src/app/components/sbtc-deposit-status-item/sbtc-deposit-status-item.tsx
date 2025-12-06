@@ -15,12 +15,13 @@ import { TransactionItemLayout } from '../transaction-item/transaction-item.layo
 function getDepositStatus(status: SbtcStatus) {
   switch (status) {
     case 'pending':
-    case 'reprocessing':
       return 'Pending deposit';
     case 'accepted':
       return 'Pending mint';
     case 'failed':
       return 'Failed';
+    case 'rbf':
+      return 'Replaced';
     case 'confirmed':
     default:
       return '';
@@ -30,10 +31,10 @@ function getDepositStatus(status: SbtcStatus) {
 function getDepositStatusTextColor(status: SbtcStatus) {
   switch (status) {
     case 'pending':
-    case 'reprocessing':
     case 'accepted':
       return 'yellow.action-primary-default';
     case 'failed':
+    case 'rbf':
       return 'red.action-primary-default';
     case 'confirmed':
     default:
