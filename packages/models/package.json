@@ -21,7 +21,11 @@
     "typecheck": "tsc --noEmit"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
@@ -44,5 +48,6 @@
   "prettier": "@leather.io/prettier-config",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "types": "./dist/index.d.ts"
 }

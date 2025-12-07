@@ -44,5 +44,6 @@
   "prettier": "@leather.io/prettier-config",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "types": "./dist/index.d.ts"
 }
