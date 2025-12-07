@@ -30,5 +30,6 @@
   "prettier": "@leather.io/prettier-config",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "types": "./dist/preset.d.ts"
 }
