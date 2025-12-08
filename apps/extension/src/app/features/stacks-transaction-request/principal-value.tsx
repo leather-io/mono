@@ -1,4 +1,4 @@
-import { getHiroExplorerLink } from '@leather.io/features';
+import { getStacksExplorerLink } from '@leather.io/features';
 import { ChainId } from '@leather.io/models';
 import { Link } from '@leather.io/ui';
 
@@ -16,7 +16,7 @@ export function PrincipalValue(props: PrincipalValueProps) {
     <Link
       onClick={() =>
         openInNewTab(
-          getHiroExplorerLink({
+          getStacksExplorerLink({
             mode: chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet',
             type: 'address',
             value: address,

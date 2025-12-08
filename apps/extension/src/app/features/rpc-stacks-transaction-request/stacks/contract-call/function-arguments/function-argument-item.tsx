@@ -1,6 +1,6 @@
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 
-import { getHiroExplorerLink } from '@leather.io/features';
+import { getStacksExplorerLink } from '@leather.io/features';
 import { ChainId } from '@leather.io/models';
 import { Link } from '@leather.io/ui';
 
@@ -36,7 +36,7 @@ export function FunctionArgumentItem({ name, type, value }: FunctionArgumentItem
           wordBreak="break-all"
           onClick={() =>
             openInNewTab(
-              getHiroExplorerLink({
+              getStacksExplorerLink({
                 mode: networkMode,
                 type: 'address',
                 value,

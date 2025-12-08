@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { HIRO_EXPLORER_URL, MEMPOOL_BASE_URL } from '@leather.io/constants';
 import { HIRO_API_BASE_URL_NAKAMOTO_TESTNET, defaultCurrentNetwork } from '@leather.io/models';
 
-import { getHiroExplorerLink, getMempoolExplorerLink, makeActivityLink } from './activity-links';
+import { getBitcoinExplorerLink, getStacksExplorerLink, makeActivityLink } from './activity-links';
 
 describe('activity-links', () => {
   describe('makeActivityLink', () => {
@@ -71,9 +71,9 @@ describe('activity-links', () => {
     });
   });
 
-  describe('getMempoolExplorerLink', () => {
+  describe('getBitcoinExplorerLink', () => {
     it('returns mainnet link for mainnet network', () => {
-      const result = getMempoolExplorerLink({
+      const result = getBitcoinExplorerLink({
         id: 'tx123',
         type: 'tx',
         networkPreference: 'mainnet',
@@ -83,7 +83,7 @@ describe('activity-links', () => {
     });
 
     it('returns testnet link for testnet3 network', () => {
-      const result = getMempoolExplorerLink({
+      const result = getBitcoinExplorerLink({
         id: 'tx456',
         type: 'tx',
         networkPreference: 'testnet3',
@@ -93,7 +93,7 @@ describe('activity-links', () => {
     });
 
     it('returns testnet4 link for testnet4 network', () => {
-      const result = getMempoolExplorerLink({
+      const result = getBitcoinExplorerLink({
         id: 'tx789',
         type: 'tx',
         networkPreference: 'testnet4',
@@ -103,7 +103,7 @@ describe('activity-links', () => {
     });
 
     it('returns signet link for signet network', () => {
-      const result = getMempoolExplorerLink({
+      const result = getBitcoinExplorerLink({
         id: 'txabc',
         type: 'tx',
         networkPreference: 'signet',
@@ -113,7 +113,7 @@ describe('activity-links', () => {
     });
 
     it('handles block type instead of tx', () => {
-      const result = getMempoolExplorerLink({
+      const result = getBitcoinExplorerLink({
         id: 'block123',
         type: 'block',
         networkPreference: 'mainnet',
@@ -123,7 +123,7 @@ describe('activity-links', () => {
     });
 
     it('returns null for unknown network', () => {
-      const result = getMempoolExplorerLink({
+      const result = getBitcoinExplorerLink({
         id: 'tx123',
         type: 'tx',
         networkPreference: 'unknown' as any,
@@ -133,9 +133,9 @@ describe('activity-links', () => {
     });
   });
 
-  describe('getHiroExplorerLink', () => {
+  describe('getStacksExplorerLink', () => {
     it('returns mainnet explorer link', () => {
-      const result = getHiroExplorerLink({
+      const result = getStacksExplorerLink({
         mode: 'mainnet',
         type: 'txid',
         value: 'tx123',
@@ -145,7 +145,7 @@ describe('activity-links', () => {
     });
 
     it('returns testnet explorer link', () => {
-      const result = getHiroExplorerLink({
+      const result = getStacksExplorerLink({
         mode: 'testnet',
         type: 'txid',
         value: 'tx456',
@@ -155,7 +155,7 @@ describe('activity-links', () => {
     });
 
     it('handles address type instead of txid', () => {
-      const result = getHiroExplorerLink({
+      const result = getStacksExplorerLink({
         mode: 'mainnet',
         type: 'address',
         value: 'SP123ABC',
@@ -165,7 +165,7 @@ describe('activity-links', () => {
     });
 
     it('appends nakamoto API param when isNakamoto is true', () => {
-      const result = getHiroExplorerLink({
+      const result = getStacksExplorerLink({
         mode: 'testnet',
         type: 'txid',
         value: 'tx789',
@@ -181,7 +181,7 @@ describe('activity-links', () => {
       const searchParams = new URLSearchParams();
       searchParams.append('custom', 'value');
 
-      const result = getHiroExplorerLink({
+      const result = getStacksExplorerLink({
         mode: 'mainnet',
         type: 'txid',
         value: 'txabc',
@@ -192,7 +192,7 @@ describe('activity-links', () => {
     });
 
     it('returns localhost link for regtest with txid', () => {
-      const result = getHiroExplorerLink({
+      const result = getStacksExplorerLink({
         mode: 'regtest',
         type: 'txid',
         value: 'tx123',
@@ -202,7 +202,7 @@ describe('activity-links', () => {
     });
 
     it('returns regular explorer link for regtest with address', () => {
-      const result = getHiroExplorerLink({
+      const result = getStacksExplorerLink({
         mode: 'regtest',
         type: 'address',
         value: 'ST123ABC',

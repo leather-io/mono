@@ -36,13 +36,13 @@ function makeActivityExplorerLink({
   networkPreference,
 }: MakeActivityExplorerLinkArgs) {
   if (asset.chain === 'bitcoin') {
-    return getMempoolExplorerLink({
+    return getBitcoinExplorerLink({
       networkPreference: networkPreference.chain.bitcoin.bitcoinNetwork,
       id: txid,
       type: 'tx',
     });
   }
-  return getHiroExplorerLink({
+  return getStacksExplorerLink({
     mode: networkPreference.chain.bitcoin.mode,
     type: 'txid',
     value: txid,
@@ -57,7 +57,7 @@ export interface GetMempoolExplorerLinkArgs {
   networkPreference: BitcoinNetwork;
 }
 
-export function getMempoolExplorerLink({
+export function getBitcoinExplorerLink({
   id,
   type,
   networkPreference,
@@ -84,7 +84,7 @@ interface GetHiroExplorerLinkArgs {
   isNakamoto?: boolean;
 }
 
-export function getHiroExplorerLink({
+export function getStacksExplorerLink({
   mode,
   type,
   value,

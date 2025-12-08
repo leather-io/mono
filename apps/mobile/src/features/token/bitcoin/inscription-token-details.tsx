@@ -7,7 +7,7 @@ import { t } from '@lingui/core/macro';
 import dayjs from 'dayjs';
 
 import { ORD_IO_URL } from '@leather.io/constants';
-import { getMempoolExplorerLink } from '@leather.io/features';
+import { getBitcoinExplorerLink } from '@leather.io/features';
 import { type InscriptionAsset } from '@leather.io/models';
 import { truncateMiddle } from '@leather.io/utils';
 
@@ -35,7 +35,7 @@ export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps)
   const { networkPreference } = useSettings();
   const bitcoinNetwork = networkPreference.chain.bitcoin.bitcoinNetwork;
 
-  const mempoolExplorerTxUrl = getMempoolExplorerLink({
+  const mempoolExplorerTxUrl = getBitcoinExplorerLink({
     id: txid,
     type: 'tx',
     networkPreference: bitcoinNetwork,

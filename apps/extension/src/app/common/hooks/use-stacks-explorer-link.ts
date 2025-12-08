@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { getHiroExplorerLink } from '@leather.io/features';
+import { getStacksExplorerLink } from '@leather.io/features';
 import { ChainId } from '@leather.io/models';
 
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
@@ -17,7 +17,7 @@ export function useStacksExplorerLink() {
   const handleOpenStacksTxLink = useCallback(
     ({ searchParams, txid }: HandleOpenStacksTxLinkArgs) => {
       openInNewTab(
-        getHiroExplorerLink({
+        getStacksExplorerLink({
           mode: chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet',
           type: 'txid',
           value: txid,
