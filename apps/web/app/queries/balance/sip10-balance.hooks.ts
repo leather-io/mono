@@ -9,10 +9,7 @@ interface UseSip10AccountBalanceOptions {
   includeHiddenAssets?: boolean;
 }
 
-function useGetSip10AccountBalanceQuery(
-  request: AccountRequest,
-  options?: UseSip10AccountBalanceOptions
-) {
+function useGetSip10AccountBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();
   return useQuery({
     ...createSip10AccountBalanceQueryConfig(request, settings),
@@ -30,8 +27,7 @@ export function useSip10AccountBalance(options?: UseSip10AccountBalanceOptions) 
         stacks: stacksAccount ? { stxAddress: stacksAccount.address } : undefined,
       },
       assets: { includeHiddenAssets: options?.includeHiddenAssets },
-    },
-    options
+    }
   );
 
   return query;

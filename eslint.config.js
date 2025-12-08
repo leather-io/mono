@@ -277,7 +277,14 @@ export default defineConfig((
           paths: [
             {
               name: '@leather.io/services',
-              importNames: ['getActivityService', 'getMarketDataService', 'getBtcBalancesService'],
+              importNames: [
+                'getActivityService',
+                'getMarketDataService',
+                'getBtcBalancesService',
+                'getStxBalancesService',
+                'getRunesBalancesService',
+                'getAccountBalancesService',
+              ],
               message:
                 'In query modules, use @leather.io/queries builders instead of importing get*Service directly.',
             },
