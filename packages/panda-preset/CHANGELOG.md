@@ -252,6 +252,20 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.23.1
 
+## [0.14.7](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.14.6...@leather.io/panda-preset-v0.14.7) (2025-12-08)
+
+
+### Bug Fixes
+
+* eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/tokens bumped to 0.25.1
+
 ## [0.14.6](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.14.5...@leather.io/panda-preset-v0.14.6) (2025-12-02)
 
 

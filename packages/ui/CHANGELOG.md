@@ -489,6 +489,28 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.99.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.99.0...@leather.io/ui-v1.99.1) (2025-12-08)
+
+
+### Bug Fixes
+
+* eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
+* **extension:** minor visual tweaks ([fbbcfb0](https://github.com/leather-io/mono/commit/fbbcfb04951275ba6df8e27c571e50c375ed9e36))
+* svgr dimensions ([018729b](https://github.com/leather-io/mono/commit/018729b6d2bcadd80234aa0960f323a4cadec430))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.25.1
+    * @leather.io/utils bumped to 0.49.3
+  * devDependencies
+    * @leather.io/features bumped to 1.1.3
+    * @leather.io/models bumped to 0.50.2
+    * @leather.io/panda-preset bumped to 0.14.7
+    * @leather.io/test-config bumped to 0.1.2
+
 ## [1.99.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.98.2...@leather.io/ui-v1.99.0) (2025-12-03)
 
 

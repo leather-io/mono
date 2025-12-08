@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/cms",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "license": "MIT",
   "type": "module",
   "scripts": {

@@ -215,6 +215,20 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.28.3](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.28.2...@leather.io/constants-v0.28.3) (2025-12-08)
+
+
+### Bug Fixes
+
+* eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.50.2
+
 ## [0.28.2](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.28.1...@leather.io/constants-v0.28.2) (2025-12-02)
 
 

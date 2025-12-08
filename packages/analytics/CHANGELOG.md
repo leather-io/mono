@@ -114,6 +114,21 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.16.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.16.0...@leather.io/analytics-v3.16.1) (2025-12-08)
+
+
+### Bug Fixes
+
+* eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.50.2
+    * @leather.io/test-config bumped to 0.1.2
+
 ## [3.16.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.15.8...@leather.io/analytics-v3.16.0) (2025-12-02)
 
 

@@ -21,6 +21,42 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.84.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.83.1...@leather.io/extension-v6.84.0) (2025-12-08)
+
+
+### Features
+
+* **extension:** use dynamic signer to build psbts ([2fa73ae](https://github.com/leather-io/mono/commit/2fa73ae9af1677ec86c45dfbd1915b8d93516db6))
+
+
+### Bug Fixes
+
+* eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
+* **extension:** incorporate outbound utxos into available during rbf ([5003520](https://github.com/leather-io/mono/commit/50035207501007357e714b396bb3b4aa1df9fd42))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.16.1
+    * @leather.io/bitcoin bumped to 0.35.7
+    * @leather.io/constants bumped to 0.28.3
+    * @leather.io/crypto bumped to 1.12.9
+    * @leather.io/features bumped to 1.1.3
+    * @leather.io/models bumped to 0.50.2
+    * @leather.io/provider bumped to 1.6.11
+    * @leather.io/queries bumped to 0.2.1
+    * @leather.io/query bumped to 2.45.5
+    * @leather.io/rpc bumped to 2.21.3
+    * @leather.io/services bumped to 1.44.2
+    * @leather.io/stacks bumped to 1.19.5
+    * @leather.io/tokens bumped to 0.25.1
+    * @leather.io/ui bumped to 1.99.1
+    * @leather.io/utils bumped to 0.49.3
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.14.7
+
 ## [6.83.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.83.0...@leather.io/extension-v6.83.1) (2025-12-03)
 
 

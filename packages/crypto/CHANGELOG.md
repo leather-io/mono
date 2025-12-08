@@ -492,6 +492,22 @@
   * dependencies
     * @leather.io/utils bumped to 0.46.4
 
+## [1.12.9](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.12.8...@leather.io/crypto-v1.12.9) (2025-12-08)
+
+
+### Bug Fixes
+
+* eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.49.3
+  * devDependencies
+    * @leather.io/test-config bumped to 0.1.2
+
 ## [1.12.8](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.12.7...@leather.io/crypto-v1.12.8) (2025-12-02)
 
 
