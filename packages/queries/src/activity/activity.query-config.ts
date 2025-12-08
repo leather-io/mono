@@ -1,21 +1,10 @@
-import {
-  type QueryFunctionContext,
-  type QueryKey,
-  type UseQueryOptions,
-} from '@tanstack/react-query';
+import { type QueryFunctionContext, type UseQueryOptions } from '@tanstack/react-query';
 
 import { type AccountAddresses, type Activity, type CryptoAsset } from '@leather.io/models';
 import { type UserSettings, getActivityService } from '@leather.io/services';
 
 import { createServiceQueryKey } from '../shared/query-key.factory';
 import { activityQueryOptions } from '../shared/query-options';
-
-export type UseActivityQueryOptions<TData = Activity[]> = Omit<
-  UseQueryOptions<Activity[], Error, TData, QueryKey>,
-  'queryKey' | 'queryFn'
-> & {
-  queryKeyContext?: readonly unknown[];
-};
 
 function createActivityKeyParams(account: AccountAddresses) {
   const { id, bitcoin, stacks } = account;
@@ -38,21 +27,13 @@ export function createActivityQueryKey(account: AccountAddresses, settings: User
   );
 }
 
-export function createActivityQueryConfig<TData = Activity[]>(
-  account: AccountAddresses,
-  settings: UserSettings,
-  options: UseActivityQueryOptions<TData> = {}
-): UseQueryOptions<Activity[], Error, TData, QueryKey> {
-  const { queryKeyContext = [], select, ...queryOptions } = options;
-
+export function createActivityQueryConfig(account: AccountAddresses, settings: UserSettings) {
   return {
-    queryKey: [...createActivityQueryKey(account, settings), ...queryKeyContext],
+    queryKey: createActivityQueryKey(account, settings),
     queryFn: ({ signal }: QueryFunctionContext) =>
       getActivityService().getActivity(account, signal),
-    select,
     ...activityQueryOptions,
-    ...queryOptions,
-  } satisfies UseQueryOptions<Activity[], Error, TData, QueryKey>;
+  } satisfies UseQueryOptions<Activity[], Error>;
 }
 
 export function createActivityByAssetQueryKey(
@@ -67,20 +48,15 @@ export function createActivityByAssetQueryKey(
   );
 }
 
-export function createActivityByAssetQueryConfig<TData = Activity[]>(
+export function createActivityByAssetQueryConfig(
   account: AccountAddresses,
   asset: CryptoAsset,
-  settings: UserSettings,
-  options: UseActivityQueryOptions<TData> = {}
-): UseQueryOptions<Activity[], Error, TData, QueryKey> {
-  const { queryKeyContext = [], select, ...queryOptions } = options;
-
+  settings: UserSettings
+) {
   return {
-    queryKey: [...createActivityByAssetQueryKey(account, asset, settings), ...queryKeyContext],
+    queryKey: createActivityByAssetQueryKey(account, asset, settings),
     queryFn: ({ signal }: QueryFunctionContext) =>
       getActivityService().getActivityByAsset(account, asset, signal),
-    select,
     ...activityQueryOptions,
-    ...queryOptions,
-  } satisfies UseQueryOptions<Activity[], Error, TData, QueryKey>;
+  } satisfies UseQueryOptions<Activity[], Error>;
 }

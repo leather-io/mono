@@ -1,7 +1,9 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useLeatherConnect } from '~/store/addresses';
 
-import { AccountRequest, getSip10BalancesService } from '@leather.io/services';
+import { AccountRequest } from '@leather.io/services';
+import { createSip10AccountBalanceQueryConfig } from '@leather.io/queries';
+import { useUserSettings } from '~/hooks/use-user-settings';
 
 interface UseSip10AccountBalanceOptions {
   includeHiddenAssets?: boolean;
@@ -11,14 +13,9 @@ function useGetSip10AccountBalanceQuery(
   request: AccountRequest,
   options?: UseSip10AccountBalanceOptions
 ) {
+  const settings = useUserSettings();
   return useQuery({
-    queryKey: [
-      'sip10-balances-service-get-sip10-account-balance',
-      request,
-      options?.includeHiddenAssets,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AccountBalance(request, signal),
+    ...createSip10AccountBalanceQueryConfig(request, settings),
     enabled: !!request.account.stacks?.stxAddress,
   });
 }

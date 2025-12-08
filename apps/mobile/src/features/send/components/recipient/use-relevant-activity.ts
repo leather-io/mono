@@ -28,16 +28,16 @@ export function useRelevantActivity({ asset, currentAccount }: UseRelevantActivi
     quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
     assetVisibility,
   };
+  const baseConfig = createActivityQueryConfig(accountAddresses, settings);
+  const queryKeyWithCurrency = [...(baseConfig.queryKey ?? []), fiatCurrencyPreference];
 
   return toFetchState(
-    useQuery(
-      createActivityQueryConfig(accountAddresses, settings, {
-        queryKeyContext: [fiatCurrencyPreference],
-        select: data => {
-          return pipe(data, filter(isValidSendActivity), filter(isRelevantSendActivity(asset)));
-        },
-      })
-    )
+    useQuery<Activity[], Error, SendAssetActivity[]>({
+      ...baseConfig,
+      queryKey: queryKeyWithCurrency,
+      select: data =>
+        pipe(data, filter(isValidSendActivity), filter(isRelevantSendActivity(asset))),
+    })
   );
 }
 

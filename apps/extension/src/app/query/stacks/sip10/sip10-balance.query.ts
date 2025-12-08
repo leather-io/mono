@@ -1,30 +1,30 @@
-import { type QueryFunctionContext, keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { type AccountRequest, getSip10BalancesService } from '@leather.io/services';
+import type { AccountRequest } from '@leather.io/services';
+import {
+  createSip10AccountBalanceQueryConfig,
+  createSip10AddressBalanceQueryConfig,
+} from '@leather.io/queries';
 
 import {
   balanceQueryOptions,
   balanceQueryOptionsWithRefetch,
 } from '@app/query/common/balance-query-options';
-import { useUserAllTokens } from '@app/store/manage-tokens/manage-tokens.slice';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function useGetSip10AccountBalanceQuery(account: AccountRequest) {
-  const tokenSettings = useUserAllTokens();
+  const settings = useUserSettings();
   return useQuery({
-    queryKey: ['sip10-balances-service-get-sip10-account-balance', account, tokenSettings],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AccountBalance(account, signal),
+    ...createSip10AccountBalanceQueryConfig(account, settings),
     ...balanceQueryOptionsWithRefetch,
     placeholderData: keepPreviousData,
   });
 }
 
 export function useGetSip10AddressBalanceQuery(address: string) {
-  const tokenSettings = useUserAllTokens();
+  const settings = useUserSettings();
   return useQuery({
-    queryKey: ['sip10-balances-service-get-sip10-address-balance', address, tokenSettings],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AddressBalance(address, false, signal),
+    ...createSip10AddressBalanceQueryConfig(address, false, settings),
     ...balanceQueryOptions,
   });
 }

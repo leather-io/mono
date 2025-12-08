@@ -3,7 +3,14 @@ import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-accou
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { AccountRequest, Sip10Balance, getSip10BalancesService } from '@leather.io/services';
+import { QuoteCurrency } from '@leather.io/models';
+import { createSip10AccountBalanceQueryConfig } from '@leather.io/queries';
+import {
+  AccountRequest,
+  Sip10Balance,
+  UserSettings,
+  getSip10BalancesService,
+} from '@leather.io/services';
 import { getAssetId } from '@leather.io/utils';
 
 import { balanceQueryOptions } from './balance-query-options';
@@ -87,16 +94,15 @@ function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
 }
 
 export function useSip10AccountBalanceQuery(request: AccountRequest) {
-  const { fiatCurrencyPreference, assetVisibility } = useSettings();
+  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
+  const settings: UserSettings = {
+    network: networkPreference,
+    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    assetVisibility,
+  };
+
   return useQuery({
-    queryKey: [
-      'sip10-balances-service-get-sip10-account-balance',
-      request,
-      fiatCurrencyPreference,
-      ...(request.assets?.includeHiddenAssets ? [] : [assetVisibility]),
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AccountBalance(request, signal),
+    ...createSip10AccountBalanceQueryConfig(request, settings),
     ...balanceQueryOptions,
   });
 }
