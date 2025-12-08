@@ -3,14 +3,13 @@ import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-accou
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 
-import { AccountRequest, RuneBalance } from '@leather.io/services';
 import { QuoteCurrency } from '@leather.io/models';
 import {
   createRuneBalanceByRuneNameQueryConfig,
   createRunesAccountBalanceQueryConfig,
   createRunesAggregateBalanceQueryConfig,
 } from '@leather.io/queries';
-import type { UserSettings } from '@leather.io/services';
+import { AccountRequest, RuneBalance, UserSettings } from '@leather.io/services';
 import { getAssetId } from '@leather.io/utils';
 
 import { balanceQueryOptions } from './balance-query-options';

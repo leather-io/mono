@@ -5,6 +5,9 @@ export type QueryPrefix = keyof typeof querySettingsDepsRegistry;
 export const querySettingsDepsRegistry = {
   // market data
   'market-data-service--get-market-data': ['currency', 'network'],
+  // market history
+  'market-history-service--get-price-change-percentage': ['currency'],
+  'market-history-service--get-price-history': ['currency'],
   // balances
   'btc-balances-service--get-btc-account-balance': ['currency', 'network'],
   'btc-balances-service--get-btc-aggregate-balance': ['currency', 'network'],
@@ -26,6 +29,19 @@ export const querySettingsDepsRegistry = {
   ],
   'account-balances-service--get-total-balance': ['currency', 'network', 'assetVisibility'],
   'account-balances-service--get-unlocked-balance': ['currency', 'network', 'assetVisibility'],
+  // utxos
+  'utxos-service--get-account-utxos': ['network'],
+  // fungible asset info
+  'fungible-asset-info-service--get-asset-description': [],
+  // bns
+  'bns-service--get-bns-name': [],
+  'bns-service--get-account-primary-bns-profile': [],
+  'bns-service--get-account-bns-names': [],
+  // collectibles
+  'collectibles-service--get-account-collectibles': [],
+  // transactions
+  'stacks-transactions-service--get-transaction-by-id': ['network'],
+  'bitcoin-transactions-service--get-transaction-by-tx-id': ['network'],
   // activity
   'activity-service--get-activity': ['network'],
   'activity-service--get-activity-by-asset': ['network'],

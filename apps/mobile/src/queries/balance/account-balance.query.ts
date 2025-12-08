@@ -4,10 +4,11 @@ import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 
 import { AccountId, QuoteCurrency } from '@leather.io/models';
-import { AccountRequest } from '@leather.io/services';
-import { QuoteCurrency as ServicesQuoteCurrency } from '@leather.io/models';
-import { createAccountTotalBalanceQueryConfig, createAccountUnlockedBalanceQueryConfig } from '@leather.io/queries';
-import type { UserSettings } from '@leather.io/services';
+import {
+  createAccountTotalBalanceQueryConfig,
+  createAccountUnlockedBalanceQueryConfig,
+} from '@leather.io/queries';
+import { AccountRequest, UserSettings } from '@leather.io/services';
 
 import { balanceQueryOptions } from './balance-query-options';
 
@@ -37,7 +38,7 @@ export function useGetAccountTotalBalanceQuery(
   const currencyPreference = overrideFiatCurrencyPreference ?? fiatCurrencyPreference;
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: currencyPreference as ServicesQuoteCurrency,
+    quoteCurrency: currencyPreference,
     assetVisibility,
   };
 
