@@ -10,10 +10,7 @@ import {
 import { createServiceQueryKey } from '../shared/query-key.factory';
 import { balanceQueryOptions } from '../shared/query-options';
 
-export function createAccountTotalBalanceQueryKey(
-  request: AccountRequest,
-  settings: UserSettings
-) {
+export function createAccountTotalBalanceQueryKey(request: AccountRequest, settings: UserSettings) {
   return createServiceQueryKey(
     'account-balances-service--get-total-balance',
     ['total', request],
@@ -55,4 +52,3 @@ export function createAccountUnlockedBalanceQueryConfig(
     ...balanceQueryOptions,
   } satisfies UseQueryOptions<Money, Error>;
 }
-

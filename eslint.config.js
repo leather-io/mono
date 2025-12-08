@@ -61,7 +61,7 @@ const leatherCustomPlugin = {
   },
 };
 
-export default defineConfig((
+export default defineConfig([
   {
     files: ['{packages,apps}/**/*.{ts,tsx}'],
     extends: [baseConfig],
@@ -301,4 +301,4 @@ export default defineConfig((
       'leather/use-query-config-or-key': 'error',
     },
   }
-);
+]);

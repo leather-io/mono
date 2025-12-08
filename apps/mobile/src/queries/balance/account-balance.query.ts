@@ -56,7 +56,7 @@ export function useGetAccountUnlockedBalanceQuery(
   const currencyPreference = overrideFiatCurrencyPreference ?? fiatCurrencyPreference;
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: currencyPreference as ServicesQuoteCurrency,
+    quoteCurrency: currencyPreference,
     assetVisibility,
   };
 

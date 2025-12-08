@@ -1,7 +1,11 @@
 import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
 
 import type { FungibleCryptoAsset } from '@leather.io/models';
-import { type AssetDescription, type UserSettings, getFungibleAssetInfoService } from '@leather.io/services';
+import {
+  type AssetDescription,
+  type UserSettings,
+  getFungibleAssetInfoService,
+} from '@leather.io/services';
 
 import { createServiceQueryKey } from '../shared/query-key.factory';
 
@@ -32,4 +36,3 @@ export function createFungibleAssetDescriptionQueryConfig(
     gcTime: 60000,
   } satisfies UseQueryOptions<AssetDescription, Error>;
 }
-

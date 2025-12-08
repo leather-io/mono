@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { useUserSettings } from '~/hooks/use-user-settings';
 import { useLeatherConnect } from '~/store/addresses';
 
-import { AccountRequest } from '@leather.io/services';
 import { createStxAccountBalanceQueryConfig } from '@leather.io/queries';
-import { useUserSettings } from '~/hooks/use-user-settings';
+import { AccountRequest } from '@leather.io/services';
 
 function useGetStxAccountBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();

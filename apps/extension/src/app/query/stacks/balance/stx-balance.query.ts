@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { AccountRequest } from '@leather.io/services';
 import {
   createStxAccountBalanceQueryConfig,
   createStxAddressBalanceQueryConfig,
 } from '@leather.io/queries';
+import type { AccountRequest } from '@leather.io/services';
 
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import {
   balanceQueryOptions,
   balanceQueryOptionsWithRefetch,
 } from '@app/query/common/balance-query-options';
-import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function useGetStxAccountBalanceQuery(account: AccountRequest) {
   const settings = useUserSettings();

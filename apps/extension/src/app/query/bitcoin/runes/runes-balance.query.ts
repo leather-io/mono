@@ -1,13 +1,13 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { type AccountRequest, type RuneBalance } from '@leather.io/services';
 import { createRunesAccountBalanceQueryConfig } from '@leather.io/queries';
+import { type AccountRequest, type RuneBalance } from '@leather.io/services';
 import { isSameAsset } from '@leather.io/utils';
 
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import { balanceQueryOptionsWithRefetch } from '@app/query/common/balance-query-options';
 import { toFetchState } from '@app/services/fetch-state';
 import { useAccountAddresses } from '@app/services/use-account-addresses';
-import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function useManagedRunesTools(accountIndex: number) {
   const enabledRunes = useRunesAccountBalance(accountIndex);

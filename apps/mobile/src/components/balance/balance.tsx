@@ -14,7 +14,7 @@ interface BalanceProps extends TextProps {
   operator?: string;
   formattingOptions?: FormatAmountOptions;
   forceVisible?: boolean;
-  formatCurrency?: (money: Money, options?: FormatAmountOptions) => string;
+  formatCurrency?(money: Money, options?: FormatAmountOptions): string;
   color?: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
 }
 

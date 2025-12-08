@@ -55,10 +55,7 @@ export function createAccountPrimaryBnsProfileQueryConfig(
   } satisfies UseQueryOptions<BnsProfile | null, Error>;
 }
 
-export function createAccountBnsNamesQueryKey(
-  request: AccountRequest,
-  settings: UserSettings
-) {
+export function createAccountBnsNamesQueryKey(request: AccountRequest, settings: UserSettings) {
   return createServiceQueryKey(
     'bns-service--get-account-bns-names',
     [request.account.stacks],
@@ -66,10 +63,7 @@ export function createAccountBnsNamesQueryKey(
   );
 }
 
-export function createAccountBnsNamesQueryConfig(
-  request: AccountRequest,
-  settings: UserSettings
-) {
+export function createAccountBnsNamesQueryConfig(request: AccountRequest, settings: UserSettings) {
   return {
     queryKey: createAccountBnsNamesQueryKey(request, settings),
     queryFn: ({ signal }: QueryFunctionContext) =>
@@ -82,4 +76,3 @@ export function createAccountBnsNamesQueryConfig(
     gcTime: 3600000,
   } satisfies UseQueryOptions<AccountBnsName[], Error>;
 }
-

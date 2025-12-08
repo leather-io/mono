@@ -2,20 +2,17 @@ import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-quer
 
 import {
   type AccountRequest,
-  type UserSettings,
   type RuneBalance,
   type RunesAccountBalance,
   type RunesAggregateBalance,
+  type UserSettings,
   getRunesBalancesService,
 } from '@leather.io/services';
 
 import { createServiceQueryKey } from '../shared/query-key.factory';
 import { balanceQueryOptions } from '../shared/query-options';
 
-export function createRunesAccountBalanceQueryKey(
-  request: AccountRequest,
-  settings: UserSettings
-) {
+export function createRunesAccountBalanceQueryKey(request: AccountRequest, settings: UserSettings) {
   return createServiceQueryKey(
     'runes-balances-service--get-runes-account-balance',
     ['account', request],
@@ -82,4 +79,3 @@ export function createRuneBalanceByRuneNameQueryConfig(
     ...balanceQueryOptions,
   } satisfies UseQueryOptions<RuneBalance, Error>;
 }
-

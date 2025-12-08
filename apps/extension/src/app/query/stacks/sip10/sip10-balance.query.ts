@@ -1,16 +1,16 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import type { AccountRequest } from '@leather.io/services';
 import {
   createSip10AccountBalanceQueryConfig,
   createSip10AddressBalanceQueryConfig,
 } from '@leather.io/queries';
+import type { AccountRequest } from '@leather.io/services';
 
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import {
   balanceQueryOptions,
   balanceQueryOptionsWithRefetch,
 } from '@app/query/common/balance-query-options';
-import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function useGetSip10AccountBalanceQuery(account: AccountRequest) {
   const settings = useUserSettings();

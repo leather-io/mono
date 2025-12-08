@@ -1,14 +1,15 @@
 import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
 
 import type { NonFungibleCryptoAsset } from '@leather.io/models';
-import { type AccountRequest, type UserSettings, getCollectiblesService } from '@leather.io/services';
+import {
+  type AccountRequest,
+  type UserSettings,
+  getCollectiblesService,
+} from '@leather.io/services';
 
 import { createServiceQueryKey } from '../shared/query-key.factory';
 
-export function createAccountCollectiblesQueryKey(
-  request: AccountRequest,
-  settings: UserSettings
-) {
+export function createAccountCollectiblesQueryKey(request: AccountRequest, settings: UserSettings) {
   return createServiceQueryKey(
     'collectibles-service--get-account-collectibles',
     [request],
@@ -32,4 +33,3 @@ export function createAccountCollectiblesQueryConfig(
     gcTime: 5000,
   } satisfies UseQueryOptions<NonFungibleCryptoAsset[], Error>;
 }
-

@@ -1,9 +1,12 @@
 import { toFetchState } from '@/components/loading';
+import { useUserSettings } from '@/hooks/use-user-settings';
 import { useQueries, useQuery } from '@tanstack/react-query';
 
+import {
+  createBitcoinTransactionByTxIdQueryConfig,
+  createStacksTransactionByIdQueryConfig,
+} from '@leather.io/queries';
 import { createGetTransactionByIdQueryOptions } from '@leather.io/query';
-import { createBitcoinTransactionByTxIdQueryConfig, createStacksTransactionByIdQueryConfig } from '@leather.io/queries';
-import { useUserSettings } from '@/hooks/use-user-settings';
 
 import { useStacksClient } from '../stacks/stacks-client';
 

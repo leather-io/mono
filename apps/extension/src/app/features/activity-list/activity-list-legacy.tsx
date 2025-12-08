@@ -36,7 +36,7 @@ import { TransactionList } from './components/transaction-list/transaction-list'
 function useNsBitcoinAddress() {
   try {
     return useCurrentAccountNativeSegwitIndexZeroSigner().address;
-  } catch (e) {
+  } catch {
     return '';
   }
 }
@@ -44,7 +44,7 @@ function useNsBitcoinAddress() {
 function useTrBitcoinAddress() {
   try {
     return useZeroIndexTaprootAddress();
-  } catch (e) {
+  } catch {
     return '';
   }
 }

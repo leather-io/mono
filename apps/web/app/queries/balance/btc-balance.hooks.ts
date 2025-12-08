@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { useUserSettings } from '~/hooks/use-user-settings';
 import { useLeatherConnect } from '~/store/addresses';
 
-import { AccountRequest } from '@leather.io/services';
 import { createBtcBalanceQueryConfig } from '@leather.io/queries';
-import { useUserSettings } from '~/hooks/use-user-settings';
+import { AccountRequest } from '@leather.io/services';
 
 function useGetBtcAccountBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();

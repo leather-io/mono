@@ -1,4 +1,4 @@
-import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
+import { type UseQueryOptions, useQuery } from '@tanstack/react-query';
 
 import { type ActivityView, createActivityView } from '@leather.io/features';
 import { type AccountAddresses, type Activity } from '@leather.io/models';

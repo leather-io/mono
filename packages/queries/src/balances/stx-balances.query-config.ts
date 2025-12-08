@@ -2,8 +2,8 @@ import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-quer
 
 import {
   type AccountRequest,
-  type UserSettings,
   type QuotedStxBalance,
+  type UserSettings,
   getStxBalancesService,
 } from '@leather.io/services';
 
@@ -69,4 +69,3 @@ export function createStxAddressBalanceQueryConfig(address: string, settings: Us
     ...balanceQueryOptions,
   } satisfies UseQueryOptions<QuotedStxBalance, Error>;
 }
-

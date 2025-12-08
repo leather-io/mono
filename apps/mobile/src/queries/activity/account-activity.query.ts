@@ -1,7 +1,7 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
-import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
+import { type UseQueryOptions, useQuery } from '@tanstack/react-query';
 
 import { ActivityView, createActivityView } from '@leather.io/features';
 import { AccountAddresses, Activity, CryptoAsset, QuoteCurrency } from '@leather.io/models';

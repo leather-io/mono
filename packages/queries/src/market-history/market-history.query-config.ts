@@ -1,10 +1,6 @@
 import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
 
-import type {
-  FungibleCryptoAsset,
-  HistoricalPeriod,
-  MarketPriceHistory,
-} from '@leather.io/models';
+import type { FungibleCryptoAsset, HistoricalPeriod, MarketPriceHistory } from '@leather.io/models';
 import { type UserSettings, getMarketHistoryService } from '@leather.io/services';
 
 import { createServiceQueryKey } from '../shared/query-key.factory';
@@ -59,4 +55,3 @@ export function createPriceHistoryQueryConfig(
     ...marketHistoryQueryOptions,
   } satisfies UseQueryOptions<MarketPriceHistory, Error>;
 }
-

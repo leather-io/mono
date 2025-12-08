@@ -8,10 +8,7 @@ export function createAccountUtxosQueryKey(request: AccountRequest, settings: Us
   return createServiceQueryKey('utxos-service--get-account-utxos', [request], settings);
 }
 
-export function createAccountUtxosQueryConfig(
-  request: AccountRequest,
-  settings: UserSettings
-) {
+export function createAccountUtxosQueryConfig(request: AccountRequest, settings: UserSettings) {
   return {
     queryKey: createAccountUtxosQueryKey(request, settings),
     queryFn: ({ signal }: QueryFunctionContext) =>
@@ -24,4 +21,3 @@ export function createAccountUtxosQueryConfig(
     gcTime: 1000,
   } satisfies UseQueryOptions<unknown, Error>;
 }
-
