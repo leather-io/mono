@@ -19,6 +19,36 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.93.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.1...@leather.io/mobile-v2.93.2) (2025-12-08)
+
+
+### Bug Fixes
+
+* eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.16.1
+    * @leather.io/bitcoin bumped to 0.35.7
+    * @leather.io/constants bumped to 0.28.3
+    * @leather.io/crypto bumped to 1.12.9
+    * @leather.io/features bumped to 1.1.3
+    * @leather.io/models bumped to 0.50.2
+    * @leather.io/provider bumped to 1.6.11
+    * @leather.io/queries bumped to 0.2.1
+    * @leather.io/query bumped to 2.45.5
+    * @leather.io/rpc bumped to 2.21.3
+    * @leather.io/services bumped to 1.44.2
+    * @leather.io/stacks bumped to 1.19.5
+    * @leather.io/tokens bumped to 0.25.1
+    * @leather.io/ui bumped to 1.99.1
+    * @leather.io/utils bumped to 0.49.3
+  * devDependencies
+    * @leather.io/test-config bumped to 0.1.2
+
 ## [2.93.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.0...@leather.io/mobile-v2.93.1) (2025-12-03)
 
 

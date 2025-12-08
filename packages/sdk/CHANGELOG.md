@@ -247,6 +247,23 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/rpc bumped to 2.20.17
 
+## [1.5.29](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.28...@leather.io/sdk-v1.5.29) (2025-12-08)
+
+
+### Bug Fixes
+
+* eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.50.2
+    * @leather.io/rpc bumped to 2.21.3
+  * devDependencies
+    * @leather.io/test-config bumped to 0.1.2
+
 ## [1.5.28](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.27...@leather.io/sdk-v1.5.28) (2025-12-02)
 
 

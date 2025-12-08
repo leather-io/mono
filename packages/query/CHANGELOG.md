@@ -779,6 +779,25 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.45.5](https://github.com/leather-io/mono/compare/@leather.io/query-v2.45.4...@leather.io/query-v2.45.5) (2025-12-08)
+
+
+### Bug Fixes
+
+* eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.35.7
+    * @leather.io/constants bumped to 0.28.3
+    * @leather.io/models bumped to 0.50.2
+    * @leather.io/rpc bumped to 2.21.3
+    * @leather.io/stacks bumped to 1.19.5
+    * @leather.io/utils bumped to 0.49.3
+
 ## [2.45.4](https://github.com/leather-io/mono/compare/@leather.io/query-v2.45.3...@leather.io/query-v2.45.4) (2025-12-02)
 
 

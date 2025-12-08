@@ -2,7 +2,7 @@
   "name": "@leather.io/test-config",
   "author": "Leather.io contact@leather.io",
   "description": "Shared test configuration",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/test-config",
   "repository": {

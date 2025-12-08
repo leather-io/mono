@@ -144,6 +144,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.25.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.25.0...@leather.io/tokens-v0.25.1) (2025-12-08)
+
+
+### Bug Fixes
+
+* eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
+
 ## [0.25.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.24.1...@leather.io/tokens-v0.25.0) (2025-12-02)
 
 

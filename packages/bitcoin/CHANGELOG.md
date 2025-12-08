@@ -939,6 +939,26 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.35.7](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.35.6...@leather.io/bitcoin-v0.35.7) (2025-12-08)
+
+
+### Bug Fixes
+
+* eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.28.3
+    * @leather.io/crypto bumped to 1.12.9
+    * @leather.io/models bumped to 0.50.2
+    * @leather.io/utils bumped to 0.49.3
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.3
+    * @leather.io/test-config bumped to 0.1.2
+
 ## [0.35.6](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.35.5...@leather.io/bitcoin-v0.35.6) (2025-12-02)
 
 
