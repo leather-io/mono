@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import * as Sentry from '@sentry/react';
 import { PayloadType, cvToString } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
 
@@ -30,56 +31,73 @@ export function ApproveSignLedgerStacksTx() {
   const transactionDetails: [string, string, string?][] = useMemo(() => {
     if (!transaction || chain !== 'stacks') return [];
 
-    if (transaction.payload.payloadType === PayloadType.TokenTransfer) {
+    try {
+      const details: [string, string, string?][] = [];
+
+      details.push(['Origin', currentAccount?.address ?? '']);
+      details.push(['Nonce', String(transaction.auth.spendingCondition.nonce)]);
+
+      details.push([
+        'Fee (µSTX)',
+        String(transaction.auth.spendingCondition.fee),
+        formatTooltipLabel(transaction.auth.spendingCondition.fee),
+      ]);
+
+      if (transaction.payload.payloadType === PayloadType.TokenTransfer) {
+        details.push(
+          [
+            'Amount (µSTX)',
+            new BigNumber(String(transaction.payload.amount)).toFormat(),
+            formatTooltipLabel(transaction.payload.amount),
+          ],
+          ['To', cvToString(transaction.payload.recipient)],
+          ['Memo', transaction.payload.memo.content]
+        );
+        return details;
+      }
+
+      if (
+        transaction.payload.payloadType === PayloadType.ContractCall ||
+        transaction.payload.payloadType === PayloadType.SmartContract ||
+        transaction.payload.payloadType === PayloadType.VersionedSmartContract
+      ) {
+        details.push(['Contract address', currentAccount?.address ?? '']);
+        details.push(['Contract name', transaction.payload.contractName.content]);
+      }
+
+      if (transaction.payload.payloadType === PayloadType.ContractCall) {
+        details.push(['Function name', transaction.payload.functionName.content]);
+
+        if (transaction.payload.functionArgs.length === 0) {
+          details.push(['Arguments', 'None']);
+        }
+
+        if (isSip10TransferContactCall(transaction)) {
+          transaction.payload.functionArgs.forEach((cv, index) => {
+            details.push([formatSipTenTransferArgument(index), cvToString(cv)]);
+          });
+        } else {
+          transaction.payload.functionArgs.forEach((cv, index) =>
+            details.push([`Argument ${index + 0}`, cvToString(cv)])
+          );
+        }
+      }
+
+      if (
+        transaction.payload.payloadType === PayloadType.SmartContract ||
+        transaction.payload.payloadType === PayloadType.VersionedSmartContract
+      ) {
+        details.push(['Contract code', transaction.payload.codeBody.content]);
+      }
+
+      return details;
+    } catch (error) {
+      Sentry.captureException(error);
       return [
-        ['Origin', currentAccount?.address ?? ''],
-        ['Nonce', String(transaction.auth.spendingCondition.nonce)],
-        [
-          'Fee (µSTX)',
-          String(transaction.auth.spendingCondition.fee),
-          formatTooltipLabel(transaction.auth.spendingCondition.fee),
-        ],
-        [
-          'Amount (µSTX)',
-          new BigNumber(String(transaction.payload.amount)).toFormat(),
-          formatTooltipLabel(transaction.payload.amount),
-        ],
-        ['To', cvToString(transaction.payload.recipient)],
-        ['Memo', transaction.payload.memo.content],
+        ['Status', 'Error parsing arguments'],
+        ['Warning', 'Please verify transaction details on your Ledger device'],
       ];
     }
-
-    if (
-      transaction.payload.payloadType === PayloadType.ContractCall &&
-      isSip10TransferContactCall(transaction)
-    )
-      return transaction.payload.functionArgs
-        .map(cv => cvToString(cv))
-        .map((value, index) => [formatSipTenTransferArgument(index), value]);
-
-    if (transaction.payload.payloadType === PayloadType.ContractCall)
-      return transaction.payload.functionArgs
-        .map(cv => cvToString(cv))
-        .map((value, index) => [`Argument ${index + 0}`, value]);
-
-    if (
-      transaction.payload.payloadType === PayloadType.SmartContract ||
-      transaction.payload.payloadType === PayloadType.VersionedSmartContract
-    ) {
-      return [
-        ['Contract address', currentAccount?.address ?? ''],
-        ['Contract name', transaction.payload.contractName.content],
-        ['Contract code', transaction.payload.codeBody.content],
-        ['Nonce', String(transaction.auth.spendingCondition.nonce)],
-        [
-          'Fee (µSTX)',
-          String(transaction.auth.spendingCondition.fee),
-          formatTooltipLabel(transaction.auth.spendingCondition.fee),
-        ],
-      ];
-    }
-
-    return [];
   }, [chain, currentAccount?.address, transaction]);
 
   return (
