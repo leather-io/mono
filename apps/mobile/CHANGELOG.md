@@ -19,6 +19,15 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.93.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.2...@leather.io/mobile-v2.93.3) (2025-12-09)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.99.2
+
 ## [2.93.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.1...@leather.io/mobile-v2.93.2) (2025-12-08)
 
 
