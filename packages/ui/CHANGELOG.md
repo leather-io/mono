@@ -489,6 +489,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.99.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.99.1...@leather.io/ui-v1.99.2) (2025-12-09)
+
+
+### Bug Fixes
+
+* **web:** update portfolio icon ([45e66d2](https://github.com/leather-io/mono/commit/45e66d2cca1b2c3c519a4a0fc4562ad9183eab25))
+
 ## [1.99.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.99.0...@leather.io/ui-v1.99.1) (2025-12-08)
 
 

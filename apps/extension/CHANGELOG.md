@@ -21,6 +21,26 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.85.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.84.0...@leather.io/extension-v6.85.0) (2025-12-09)
+
+
+### Features
+
+* **mobile:** add rules to query retrying logic ([7f25b94](https://github.com/leather-io/mono/commit/7f25b94feb920175726757dad7a65af4333bb5d1))
+
+
+### Bug Fixes
+
+* **extension:** remove deprecated sbtc reprocessing status ([cb0793d](https://github.com/leather-io/mono/commit/cb0793dd587e4428bb2e799aae6c06ec6393d552))
+* **extension:** remove Windows-specific Ledger warning ([4811ff2](https://github.com/leather-io/mono/commit/4811ff2dc84bf2a138aba76132177452b254fa73))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.99.2
+
 ## [6.84.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.83.1...@leather.io/extension-v6.84.0) (2025-12-08)
 
 
