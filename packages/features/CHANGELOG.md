@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.4](https://github.com/leather-io/mono/compare/@leather.io/features-v1.1.3...@leather.io/features-v1.1.4) (2025-12-09)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.28.4
+    * @leather.io/models bumped to 0.51.0
+    * @leather.io/services bumped to 1.45.0
+    * @leather.io/utils bumped to 0.49.4
+
 ## [1.1.3](https://github.com/leather-io/mono/compare/@leather.io/features-v1.1.2...@leather.io/features-v1.1.3) (2025-12-08)
 
 

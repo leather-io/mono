@@ -36,6 +36,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.51.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.50.2...@leather.io/models-v0.51.0) (2025-12-09)
+
+
+### Features
+
+* **services:** add swap quote execution constraints ([4b01f74](https://github.com/leather-io/mono/commit/4b01f7407c3bfcec660a31ed7de91e97aa252fc0))
+
 ## [0.50.2](https://github.com/leather-io/mono/compare/@leather.io/models-v0.50.1...@leather.io/models-v0.50.2) (2025-12-08)
 
 
