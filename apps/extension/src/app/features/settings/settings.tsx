@@ -35,6 +35,7 @@ import { useWalletType } from '@app/common/use-wallet-type';
 import { truncateString } from '@app/common/utils';
 import { openInNewTab, openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { AppVersion } from '@app/components/app-version';
+import { LaunchDarklyClientId } from '@app/components/launchdarkly-client-id';
 import { Divider } from '@app/components/layout/divider';
 import { NetworkSheet } from '@app/features/settings/network/network';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
@@ -289,6 +290,7 @@ export function Settings({
             )}
 
             <AppVersion />
+            <LaunchDarklyClientId />
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
