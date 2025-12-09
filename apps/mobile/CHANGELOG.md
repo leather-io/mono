@@ -19,6 +19,33 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.93.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.3...@leather.io/mobile-v2.93.4) (2025-12-09)
+
+
+### Bug Fixes
+
+* **mobile:** update font path to fix production build issues ([0d93603](https://github.com/leather-io/mono/commit/0d93603648af750f629b7126afdeaba09fec13c2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.16.2
+    * @leather.io/bitcoin bumped to 0.35.8
+    * @leather.io/constants bumped to 0.28.4
+    * @leather.io/crypto bumped to 1.12.10
+    * @leather.io/features bumped to 1.1.4
+    * @leather.io/models bumped to 0.51.0
+    * @leather.io/provider bumped to 1.6.12
+    * @leather.io/queries bumped to 0.2.2
+    * @leather.io/query bumped to 2.45.6
+    * @leather.io/rpc bumped to 2.21.4
+    * @leather.io/services bumped to 1.45.0
+    * @leather.io/stacks bumped to 1.19.6
+    * @leather.io/ui bumped to 1.99.3
+    * @leather.io/utils bumped to 0.49.4
+
 ## [2.93.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.2...@leather.io/mobile-v2.93.3) (2025-12-09)
 
 
