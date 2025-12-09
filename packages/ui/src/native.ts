@@ -12,7 +12,12 @@ export { OrdinalAvatarIcon } from './components/avatar/ordinal-avatar-icon.nativ
 export { Sip10AvatarIcon } from './components/avatar/sip10-avatar-icon.native';
 export { StxAvatarIcon } from './components/avatar/stx-avatar-icon.native';
 export { StampAvatarIcon } from './components/avatar/stamp-avatar-icon.native';
-export { Box, type BoxProps } from './components/box/box.native';
+export {
+  Box,
+  type BoxProps,
+  AnimatedBox,
+  type AnimatedBoxProps,
+} from './components/box/box.native';
 export { SquircleBox, type SquircleBoxProps } from './components/box/squircle-box.native';
 export { BlurView } from './components/blur-view/blur-view.native';
 export { Callout, type CalloutProps } from './components/callout/callout.native';
