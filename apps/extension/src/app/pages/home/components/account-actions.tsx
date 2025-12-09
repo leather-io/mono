@@ -33,7 +33,7 @@ export function AccountActions() {
   const btcAccount = currentBtcSigner?.address;
   const { isTestnet } = useCurrentNetworkState();
 
-  const { release_onramper_buy } = useFlags();
+  const { releaseOnramperBuy } = useFlags();
 
   const swapsEnabled = useConfigSwapsEnabled();
   const swapsBtnDisabled = !swapsEnabled || !stacksAccount || isTestnet;
@@ -73,7 +73,7 @@ export function AccountActions() {
         onClick={() => navigate(receivePath, { state: { backgroundLocation: location } })}
       />
 
-      {(!!stacksAccount || !!btcAccount) && release_onramper_buy && (
+      {(!!stacksAccount || !!btcAccount) && releaseOnramperBuy && (
         <IconButton
           data-testid={HomePageSelectors.FundAccountBtn}
           icon={<CreditCardIcon />}

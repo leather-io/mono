@@ -19,7 +19,7 @@ export async function mockLaunchDarkly(page: Page) {
           variation: 0,
           version: 8,
         },
-        release_onramper_buy: {
+        releaseOnramperBuy: {
           flagVersion: 7,
           trackEvents: false,
           value: true,
