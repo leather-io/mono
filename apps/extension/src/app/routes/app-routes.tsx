@@ -71,7 +71,7 @@ export const homePageModalRoutes = (
 );
 
 function useAppRoutes() {
-  const { release_onramper_buy } = useFlags();
+  const { releaseOnramperBuy } = useFlags();
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
       <Route element={<Container />}>
@@ -158,7 +158,7 @@ function useAppRoutes() {
             }
           />
 
-          {release_onramper_buy && (
+          {releaseOnramperBuy && (
             <Route
               path={RouteUrls.Fund}
               element={

@@ -15,12 +15,12 @@ export function createLDProvider() {
       kind: 'clientId',
       key: getClientId(),
     },
-    reactOptions: { useCamelCaseFlagKeys: false },
+    reactOptions: { useCamelCaseFlagKeys: true },
   });
 }
 
 interface FeatureFlags {
-  release_onramper_buy: boolean;
+  releaseOnramperBuy: boolean;
   extensionRevamp: boolean;
 }
 
