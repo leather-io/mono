@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
 
-import { useExecuteSwap } from '@/features/swap/swap-state/hooks/use-execute-swap';
+import { useSubmitSwap } from '@/features/swap/swap-state/hooks/use-submit-swap';
 import { resolveNetworkFeeAsset } from '@/features/swap/swap-state/utils/asset-selection';
 
 import { QuoteCurrency, SwappableFungibleCryptoAsset } from '@leather.io/models';
@@ -125,7 +125,7 @@ export function useSwapState({
     dependencies,
   });
 
-  const { canExecute, execute } = useExecuteSwap({
+  const { canSubmit, submit } = useSubmitSwap({
     state,
     derivedAmounts,
     isSendingMax,
@@ -162,8 +162,8 @@ export function useSwapState({
     targetMarketDataQuery,
     quoteQuery,
     networkFeeQuery,
-    canExecute,
-    execute,
+    canSubmit,
+    submit,
   };
 }
 

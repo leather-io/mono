@@ -15,7 +15,7 @@ import { isDefined, isError } from 'remeda';
 import { TrackEvent } from '../swap-state.types';
 import { isQuoteAlignedWithCurrentInput } from '../utils/is-quote-aligned-with-current-input';
 
-interface UseExecuteSwapProps {
+interface UseSubmitSwapProps {
   state: SwapInternalState;
   derivedAmounts: DerivedAmounts;
   nonce: number;
@@ -27,12 +27,12 @@ interface UseExecuteSwapProps {
   trackEvent: TrackEvent;
 }
 
-interface SwapExecutionPrerequisites {
+interface SwapSubmissionPrerequisites {
   quote: NonNullable<SwapQuoteSelectionResult['selected']>;
   networkFee: NetworkFee;
 }
 
-export function useExecuteSwap({
+export function useSubmitSwap({
   dependencies,
   derivedAmounts,
   isSendingMax,
@@ -42,26 +42,21 @@ export function useExecuteSwap({
   quoteQuery,
   state,
   trackEvent,
-}: UseExecuteSwapProps) {
+}: UseSubmitSwapProps) {
   const { accountRequest, services } = dependencies;
   const { swapService } = services;
 
-  const executability = determineSwapExecutability(
-    networkFeeQuery,
-    quoteQuery,
-    validation,
-    derivedAmounts
-  );
+  const readiness = checkSwapReadiness(networkFeeQuery, quoteQuery, validation, derivedAmounts);
 
   const { mutateAsync } = useMutation({
     mutationFn: async () => {
-      if (!executability.canExecute) {
-        throw new Error('execute() called when canExecute=false. Use the canExecute guard');
+      if (!readiness.canSubmit) {
+        throw new Error('submit() called when canSubmit=false. Use the canSubmit guard');
       }
 
-      const { quote, networkFee } = executability.prerequisites;
+      const { quote, networkFee } = readiness.prerequisites;
 
-      void trackEvent('swap_execution_started', {
+      void trackEvent('swap_submitted', {
         baseSymbol: quote.baseAsset.symbol,
         targetSymbol: quote.targetAsset.symbol,
         baseAmount: quote.baseAmount.amount.toNumber(),
@@ -82,12 +77,12 @@ export function useExecuteSwap({
         nonce,
       };
       const strategy = getExecutionTypeStrategy(executionData.executionType);
-      await strategy.executeSwap(executionDependencies, networkFee);
+      await strategy.submitSwap(executionDependencies, networkFee);
     },
     onSuccess() {
-      if (!executability.canExecute) return;
-      const { quote } = executability.prerequisites;
-      void trackEvent('swap_execution_success', {
+      if (!readiness.canSubmit) return;
+      const { quote } = readiness.prerequisites;
+      void trackEvent('swap_submission_success', {
         baseSymbol: quote.baseAsset.symbol,
         targetSymbol: quote.targetAsset.symbol,
         baseAmount: quote.baseAmount.amount.toNumber(),
@@ -96,9 +91,9 @@ export function useExecuteSwap({
       });
     },
     onError(error) {
-      if (!executability.canExecute) return;
-      const { quote } = executability.prerequisites;
-      void trackEvent('swap_execution_failure', {
+      if (!readiness.canSubmit) return;
+      const { quote } = readiness.prerequisites;
+      void trackEvent('swap_submission_failure', {
         baseSymbol: quote.baseAsset.symbol,
         targetSymbol: quote.targetAsset.symbol,
         errorMessage: isError(error) ? error.message : 'unknown',
@@ -108,21 +103,21 @@ export function useExecuteSwap({
   });
 
   return {
-    execute: mutateAsync,
-    canExecute: executability.canExecute,
+    submit: mutateAsync,
+    canSubmit: readiness.canSubmit,
   };
 }
 
-type SwapExecutabilityResult =
-  | { canExecute: true; prerequisites: SwapExecutionPrerequisites }
-  | { canExecute: false };
+type SwapReadinessResult =
+  | { canSubmit: true; prerequisites: SwapSubmissionPrerequisites }
+  | { canSubmit: false };
 
-function determineSwapExecutability(
+function checkSwapReadiness(
   networkFeeQuery: UseQueryResult<NetworkFee, Error>,
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>,
   validation: ValidationResult,
   derivedAmounts: DerivedAmounts
-): SwapExecutabilityResult {
+): SwapReadinessResult {
   const selectedQuote = quoteQuery.data?.selected;
 
   if (
@@ -134,7 +129,7 @@ function determineSwapExecutability(
     isQuoteAlignedWithCurrentInput(selectedQuote.baseAmount, derivedAmounts.crypto)
   ) {
     return {
-      canExecute: true,
+      canSubmit: true,
       prerequisites: {
         quote: selectedQuote,
         networkFee: networkFeeQuery.data,
@@ -142,5 +137,5 @@ function determineSwapExecutability(
     };
   }
 
-  return { canExecute: false };
+  return { canSubmit: false };
 }

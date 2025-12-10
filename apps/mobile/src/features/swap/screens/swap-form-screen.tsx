@@ -41,7 +41,7 @@ export function SwapFormScreen({
     baseAssetsQuery,
     targetAssetsQuery,
     targetMarketDataQuery,
-    canExecute,
+    canSubmit,
   } = swapStateResult;
 
   const validateDecimalPlaces = createDecimalPlaceValidator(
@@ -121,7 +121,7 @@ export function SwapFormScreen({
           allowNextValue={validateDecimalPlaces}
         />
         <Box px="5" mt="2">
-          <Button disabled={!canExecute} onPress={onPressReview}>{t`Review`}</Button>
+          <Button disabled={!canSubmit} onPress={onPressReview}>{t`Review`}</Button>
         </Box>
       </Box>
 

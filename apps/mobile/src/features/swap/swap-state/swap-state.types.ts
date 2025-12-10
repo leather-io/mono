@@ -197,6 +197,6 @@ export interface UseSwapStateResult {
   networkFeeAssetMarkedDataQuery: UseQueryResult<MarketData, Error>;
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   networkFeeQuery: UseQueryResult<NetworkFee, Error>;
-  canExecute: boolean;
-  execute(): Promise<void>;
+  canSubmit: boolean;
+  submit(): Promise<void>;
 }

@@ -2,6 +2,7 @@
 
 - Don't use enums.
 - DO NOT USE COMMENTS UNLESS EXPLICITLY ASKED.
+- DO NOT REMOVE EXISTING COMMENTS.
 - Default to interfaces for object signatures.
 - Use `function` declaration for top-level functions and React components.
 - Use arrow functions for callbacks.

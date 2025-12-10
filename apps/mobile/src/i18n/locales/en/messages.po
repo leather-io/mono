@@ -375,6 +375,10 @@ msgstr "Available balance"
 msgid "Avatar"
 msgstr "Avatar"
 
+#: src/features/swap/components/review/swap-submission-overlay.tsx:158
+msgid "Back to review"
+msgstr "Back to review"
+
 #: src/app/create-new-wallet.tsx:71
 msgid "Back up your Secret Key"
 msgstr "Back up your Secret Key"
@@ -831,7 +835,7 @@ msgstr "Failed to change nonce"
 msgid "Failed to load latest nonce"
 msgstr "Failed to load latest nonce"
 
-#: src/features/swap/components/review/swap-execution-overlay.tsx:103
+#: src/features/swap/components/review/swap-submission-overlay.tsx:111
 msgid "Failed to start a swap"
 msgstr "Failed to start a swap"
 
@@ -1050,7 +1054,7 @@ msgstr "Increase slippage"
 msgid "Info"
 msgstr "Info"
 
-#: src/features/swap/components/review/swap-execution-overlay.tsx:101
+#: src/features/swap/components/review/swap-submission-overlay.tsx:109
 msgid "Initiating the swap..."
 msgstr "Initiating the swap..."
 
@@ -1802,9 +1806,13 @@ msgstr "Swap"
 msgid "Swap failed"
 msgstr "Swap failed"
 
-#: src/features/swap/components/review/swap-execution-overlay.tsx:102
+#: src/features/swap/components/review/swap-submission-overlay.tsx:110
 msgid "Swap initiated"
 msgstr "Swap initiated"
+
+#: src/features/swap/components/review/swap-submission-overlay.tsx:143
+msgid "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
+msgstr "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
 
 #: src/features/activity/translate-activity-status.ts:34
 msgid "Swapped"
