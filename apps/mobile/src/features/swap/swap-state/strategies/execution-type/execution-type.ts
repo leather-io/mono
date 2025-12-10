@@ -40,7 +40,7 @@ interface ExecutionStrategy {
     dependencies: SwapExecutionDependencies,
     signal?: AbortSignal
   ): Promise<TransactionFees>;
-  executeSwap(dependencies: SwapExecutionDependencies, fee: NetworkFee): Promise<void>;
+  submitSwap(dependencies: SwapExecutionDependencies, fee: NetworkFee): Promise<void>;
 }
 
 const stacksContractCallStrategy: ExecutionStrategy = {
@@ -72,7 +72,7 @@ const stacksContractCallStrategy: ExecutionStrategy = {
     );
     return services.stacksTransactionFeesService.getStacksTransactionFees(unsignedTx, signal);
   },
-  async executeSwap(dependencies, fee) {
+  async submitSwap(dependencies, fee) {
     const { executionData, stacks, nonce } = dependencies;
 
     const unsignedTx = await buildStacksTx(
@@ -127,7 +127,7 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
       signal
     );
   },
-  async executeSwap(dependencies, fee) {
+  async submitSwap(dependencies, fee) {
     const { accountRequest, derivedAmounts, isSendingMax, bitcoin, services } = dependencies;
     const deposit = await buildSbtcBridgeTransferTx(
       derivedAmounts.crypto?.amount.toNumber() ?? 0,

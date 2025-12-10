@@ -8,7 +8,6 @@ import { MinReceiveInfoSheet } from '@/features/swap/components/min-receive-info
 import { PriceImpactInfoSheet } from '@/features/swap/components/price-impact-info-sheet';
 import { QuoteRefetchIndicator } from '@/features/swap/components/quote-refetch-indicator';
 import { PriceImpactValue } from '@/features/swap/components/review/price-impact-value';
-import { SwapExecutionOverlay } from '@/features/swap/components/review/swap-execution-overlay';
 import { SwapReviewAccountDetails } from '@/features/swap/components/review/swap-review-account-details';
 import {
   SwapReviewDetailRow,
@@ -21,6 +20,7 @@ import { SwapReviewErrorState } from '@/features/swap/components/review/swap-rev
 import { SwapReviewFooter } from '@/features/swap/components/review/swap-review-footer';
 import { SwapReviewLoadingState } from '@/features/swap/components/review/swap-review-loading-state';
 import { SwapReviewSummary } from '@/features/swap/components/review/swap-review-summary';
+import { SwapSubmissionOverlay } from '@/features/swap/components/review/swap-submission-overlay';
 import { SlippageInfoSheet } from '@/features/swap/components/slippage-info-sheet';
 import { SlippageSelectorSheet } from '@/features/swap/components/slippage-selector/slippage-selector-sheet';
 import { LiveSwapEstimate, matchLiveEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
@@ -38,9 +38,9 @@ import { isNonNullish } from 'remeda';
 
 import { Box, Button, SheetInstance, Text } from '@leather.io/ui/native';
 
-type ExecutionStatus = 'idle' | 'executing' | 'success' | 'failure';
+type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'failure';
 
-const executionDisplayDuration = 1500;
+const submissionDisplayDuration = 1500;
 const successfulExitTimeout = 1200;
 
 interface SwapReviewScreenProps {
@@ -86,8 +86,8 @@ interface SwapReviewContentProps {
 
 function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentProps) {
   const slippageSheetRef = useRef<SheetInstance>(null);
-  const onExecuteSwap = usePreventAccidentalInstantTap(
-    ensureAsyncFunctionMinimumDuration(swapStateResult.execute, executionDisplayDuration)
+  const onSubmitSwap = usePreventAccidentalInstantTap(
+    ensureAsyncFunctionMinimumDuration(swapStateResult.submit, submissionDisplayDuration)
   );
   const { state } = swapStateResult;
   const { selectedQuote, fees, intervalState, isRefetching } = liveEstimate;
@@ -103,20 +103,20 @@ function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentP
   } = selectedQuote;
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
   const showPriceImpact = shouldShowPriceImpact(priceImpactPercentage);
-  const [executionStatus, setExecutionStatus] = useState<ExecutionStatus>('idle');
+  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>('idle');
   const { dismiss } = useBottomSheetModal();
 
   function handleConfirm() {
-    setExecutionStatus('executing');
-    onExecuteSwap()
+    setSubmissionStatus('submitting');
+    onSubmitSwap()
       .then(() => {
-        setExecutionStatus('success');
+        setSubmissionStatus('success');
         setTimeout(() => {
           dismiss('swap');
         }, successfulExitTimeout);
       })
       .catch(() => {
-        setExecutionStatus('failure');
+        setSubmissionStatus('failure');
       });
   }
 
@@ -194,18 +194,19 @@ function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentP
         >{t`Make sure everything looks correct.\nConfirmed transactions cannot be undone.`}</Text>
 
         <Button
-          disabled={!swapStateResult.canExecute || executionStatus !== 'idle'}
+          disabled={!swapStateResult.canSubmit || submissionStatus !== 'idle'}
           onPress={handleConfirm}
         >{t`Confirm`}</Button>
       </SwapReviewFooter>
 
-      {executionStatus !== 'idle' && (
-        <SwapExecutionOverlay
+      {submissionStatus !== 'idle' && (
+        <SwapSubmissionOverlay
           baseAsset={baseAsset}
           targetAsset={targetAsset}
           baseAmount={baseAmount}
           targetAmount={targetAmount}
-          status={executionStatus}
+          status={submissionStatus}
+          onReset={() => setSubmissionStatus('idle')}
         />
       )}
 

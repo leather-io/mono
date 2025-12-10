@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import {
   FadeIn,
   useAnimatedStyle,
@@ -12,44 +11,52 @@ import { SpinnerIcon } from '@/components/spinner-icon';
 import { SwapReviewSummary } from '@/features/swap/components/review/swap-review-summary';
 import { HEADER_HEIGHT } from '@/shared/constants';
 import { t } from '@lingui/core/macro';
+import { Trans } from '@lingui/react/macro';
+import * as Linking from 'expo-linking';
 
+import { LEATHER_SUPPORT_URL } from '@leather.io/constants';
 import { Money, SwappableFungibleCryptoAsset } from '@leather.io/models';
 import {
   AnimatedBox,
+  ArrowLeftIcon,
   Box,
+  Button,
   CheckmarkCircleIcon,
   ErrorCircleIcon,
   Text,
+  useOnMount,
 } from '@leather.io/ui/native';
 
 const overlayEnteringAnimationDuration = 300;
 const summaryAnimationTravelDistance = 120;
 
-interface SwapExecutionOverlayProps {
+interface SwapSubmissionOverlayProps {
   baseAsset: SwappableFungibleCryptoAsset;
   targetAsset: SwappableFungibleCryptoAsset;
   baseAmount: Money;
   targetAmount: Money;
-  status: 'executing' | 'success' | 'failure';
+  status: 'submitting' | 'success' | 'failure';
+  onReset(): void;
 }
 
-export function SwapExecutionOverlay({
+export function SwapSubmissionOverlay({
   baseAmount,
   baseAsset,
   targetAmount,
   targetAsset,
   status,
-}: SwapExecutionOverlayProps) {
+  onReset,
+}: SwapSubmissionOverlayProps) {
   const {
     startEnteringAnimation,
     summaryAnimationStyle,
     statusAnimationStyle,
     messageAnimationStyle,
-  } = useSwapExecutionOverlayAnimation();
+  } = useSwapSubmissionOverlayAnimation();
 
-  useEffect(() => {
+  useOnMount(() => {
     startEnteringAnimation();
-  }, [startEnteringAnimation]);
+  });
 
   return (
     <AnimatedBox
@@ -81,24 +88,25 @@ export function SwapExecutionOverlay({
 
       <Box gap="3">
         <AnimatedBox alignItems="center" style={[statusAnimationStyle]}>
-          <ExecutionStatusDisplay status={status} />
+          <SubmissionStatusDisplay status={status} />
         </AnimatedBox>
 
-        <AnimatedBox alignItems="center" style={[messageAnimationStyle]}>
-          <ExecutionStatusMessage status={status} />
+        <AnimatedBox alignItems="center" gap="3" style={[messageAnimationStyle]}>
+          <SubmissionStatusMessage status={status} />
+          {status === 'failure' && <SubmissionFailureMessage onReset={onReset} />}
         </AnimatedBox>
       </Box>
     </AnimatedBox>
   );
 }
 
-interface ExecutionStatusMessageProps {
-  status: 'executing' | 'success' | 'failure';
+interface SubmissionStatusMessageProps {
+  status: 'submitting' | 'success' | 'failure';
 }
 
-function ExecutionStatusMessage({ status }: ExecutionStatusMessageProps) {
+function SubmissionStatusMessage({ status }: SubmissionStatusMessageProps) {
   const message = {
-    executing: t`Initiating the swap...`,
+    submitting: t`Initiating the swap...`,
     success: t`Swap initiated`,
     failure: t`Failed to start a swap`,
   };
@@ -110,13 +118,13 @@ function ExecutionStatusMessage({ status }: ExecutionStatusMessageProps) {
   );
 }
 
-interface ExecutionStatusProps {
-  status: 'executing' | 'success' | 'failure';
+interface SubmissionStatusDisplayProps {
+  status: 'submitting' | 'success' | 'failure';
 }
 
-function ExecutionStatusDisplay({ status }: ExecutionStatusProps) {
+function SubmissionStatusDisplay({ status }: SubmissionStatusDisplayProps) {
   const render = {
-    executing: <SpinnerIcon width={24} height={24} />,
+    submitting: <SpinnerIcon width={24} height={24} />,
     success: <CheckmarkCircleIcon variant="medium" color="green.action-primary-default" />,
     failure: <ErrorCircleIcon variant="medium" color="red.action-primary-default" />,
   };
@@ -124,7 +132,36 @@ function ExecutionStatusDisplay({ status }: ExecutionStatusProps) {
   return <AnimatedBox>{render[status]}</AnimatedBox>;
 }
 
-function useSwapExecutionOverlayAnimation() {
+interface SubmissionFailureMessageProps {
+  onReset(): void;
+}
+
+function SubmissionFailureMessage({ onReset }: SubmissionFailureMessageProps) {
+  return (
+    <Box alignItems="center" gap="5" px="5">
+      <Text variant="body02" color="ink.text-subdued" textAlign="center" lineHeight={24}>
+        <Trans>
+          Swap wasn't submitted due to an unexpected error. Please try again, or{' '}
+          <Text
+            variant="body02"
+            color="ink.text-subdued"
+            onPress={() => Linking.openURL(LEATHER_SUPPORT_URL)}
+            textDecorationLine="underline"
+            textDecorationStyle="solid"
+          >
+            contact support
+          </Text>{' '}
+          if it persists.
+        </Trans>
+      </Text>
+      <Button size="sm" variant="outline" iconStart={ArrowLeftIcon} onPress={onReset}>
+        {t`Back to review`}
+      </Button>
+    </Box>
+  );
+}
+
+function useSwapSubmissionOverlayAnimation() {
   const summaryPosition = useSharedValue(0);
   const statusOpacity = useSharedValue(0);
   const messageOpacity = useSharedValue(0);

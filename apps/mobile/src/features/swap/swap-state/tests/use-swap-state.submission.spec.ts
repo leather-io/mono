@@ -11,8 +11,8 @@ import {
 } from './test-utils/fixtures';
 import { renderUseSwapState } from './test-utils/render';
 
-describe('useSwapState - execution', () => {
-  describe('canExecute flag', () => {
+describe('useSwapState - submission', () => {
+  describe('canSubmit flag', () => {
     it('enabled when all prerequisites are met', async () => {
       const result = renderUseSwapState({
         baseAsset: defaultBtcAsset,
@@ -33,7 +33,7 @@ describe('useSwapState - execution', () => {
       expect(result.current.quoteQuery.data?.selected).toBeDefined();
       expect(result.current.networkFeeQuery.isFetching).toBe(false);
       expect(result.current.quoteQuery.isRefetching).toBe(false);
-      expect(result.current.canExecute).toBe(true);
+      expect(result.current.canSubmit).toBe(true);
     });
 
     it("disabled when there's no selected quote", async () => {
@@ -53,7 +53,7 @@ describe('useSwapState - execution', () => {
 
       expect(result.current.validation.isValid).toBe(true);
       expect(result.current.quoteQuery.data?.selected).toBeUndefined();
-      expect(result.current.canExecute).toBe(false);
+      expect(result.current.canSubmit).toBe(false);
     });
 
     it('disabled when validation failed', async () => {
@@ -84,7 +84,7 @@ describe('useSwapState - execution', () => {
 
       expect(result.current.validation.isValid).toBe(false);
       expect(result.current.validation.issues.baseAmount?.code).toBe('INSUFFICIENT_BALANCE');
-      expect(result.current.canExecute).toBe(false);
+      expect(result.current.canSubmit).toBe(false);
     });
 
     it('disabled when quote misaligned with current input', async () => {
@@ -109,7 +109,7 @@ describe('useSwapState - execution', () => {
         createMoneyFromDecimal(1, 'BTC')
       );
       expect(result.current.state.baseAmount).toBe('2');
-      expect(result.current.canExecute).toBe(false);
+      expect(result.current.canSubmit).toBe(false);
     });
   });
 
@@ -133,7 +133,7 @@ describe('useSwapState - execution', () => {
       expect(result.current.quoteQuery.data?.selected?.baseAmount).toEqual(
         createMoneyFromDecimal(1.5, 'BTC')
       );
-      expect(result.current.canExecute).toBe(true);
+      expect(result.current.canSubmit).toBe(true);
     });
 
     it('is misaligned when quote is for different amount than current input', async () => {
@@ -146,11 +146,11 @@ describe('useSwapState - execution', () => {
       act(() => result.current.actions.setBaseAmount('0.5'));
       await waitFor(() => {
         expect(result.current.quoteQuery.isSuccess).toBe(true);
-        expect(result.current.canExecute).toBe(true);
+        expect(result.current.canSubmit).toBe(true);
       });
 
       act(() => result.current.actions.setBaseAmount('0.75'));
-      expect(result.current.canExecute).toBe(false);
+      expect(result.current.canSubmit).toBe(false);
     });
 
     it('is aligned when entering amount in fiat mode', async () => {
@@ -178,7 +178,7 @@ describe('useSwapState - execution', () => {
       expect(result.current.quoteQuery.data?.selected?.baseAmount).toEqual(
         createMoneyFromDecimal(0.001, 'BTC')
       );
-      expect(result.current.canExecute).toBe(true);
+      expect(result.current.canSubmit).toBe(true);
     });
 
     it('maintains alignment when switching crypto - fiat - crypto', async () => {
@@ -195,7 +195,7 @@ describe('useSwapState - execution', () => {
       act(() => result.current.actions.setBaseAmount('0.01'));
       await waitFor(() => {
         expect(result.current.quoteQuery.isSuccess).toBe(true);
-        expect(result.current.canExecute).toBe(true);
+        expect(result.current.canSubmit).toBe(true);
       });
 
       expect(result.current.state.inputCurrencyMode).toBe('crypto');
@@ -204,12 +204,12 @@ describe('useSwapState - execution', () => {
       act(() => result.current.actions.toggleInputCurrencyMode());
       expect(result.current.state.inputCurrencyMode).toBe('quote');
       expect(result.current.state.baseAmount).toBe('500');
-      expect(result.current.canExecute).toBe(true);
+      expect(result.current.canSubmit).toBe(true);
 
       act(() => result.current.actions.toggleInputCurrencyMode());
       expect(result.current.state.inputCurrencyMode).toBe('crypto');
       expect(result.current.state.baseAmount).toBe('0.01');
-      expect(result.current.canExecute).toBe(true);
+      expect(result.current.canSubmit).toBe(true);
     });
   });
 });

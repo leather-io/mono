@@ -55,21 +55,21 @@ export interface Events extends HistoricalEvents {
     baseAmount: number;
     provider: string;
   };
-  swap_execution_started: {
+  swap_submitted: {
     baseSymbol: string;
     targetSymbol: string;
     baseAmount: number;
     targetAmount: number;
     provider: string;
   };
-  swap_execution_success: {
+  swap_submission_success: {
     baseSymbol: string;
     targetSymbol: string;
     baseAmount: number;
     targetAmount: number;
     provider: string;
   };
-  swap_execution_failure: {
+  swap_submission_failure: {
     baseSymbol: string;
     targetSymbol: string;
     errorMessage: string;
