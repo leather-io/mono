@@ -6,7 +6,6 @@ import { useOnMount } from '@leather.io/ui';
 
 import { useConfigPromoCardEnabled } from '@app/query/common/remote-config/remote-config.query';
 
-import { PromoBannerNavbar } from './promo-banner-navbar';
 import { PromoCard } from './promo-card';
 import { usePromos } from './use-promos';
 
@@ -31,9 +30,11 @@ const promoCards = [
   },
 ];
 
+const ANIMATION_DURATION = 500;
+
 export function PromoBanner() {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [promoIndexes, setPromoIndexes] = useState<number[]>([]);
+  const [dismissingIndex, setDismissingIndex] = useState<number | null>(null);
   const { dismissPromo, dismissedPromoIndexes } = usePromos();
   const shouldDisplayPromoCard = useConfigPromoCardEnabled();
 
@@ -48,52 +49,41 @@ export function PromoBanner() {
     [promoIndexes, dismissedPromoIndexes]
   );
 
-  function handleDismissCurrentPromo() {
-    const current = visibleIndexes[currentIndex];
-    dismissPromo(current);
+  function handleDismissFrontPromo() {
+    const frontPromoIndex = visibleIndexes[0];
+    setDismissingIndex(frontPromoIndex);
 
-    const newVisibleIndexes = promoIndexes.filter(
-      i => ![...dismissedPromoIndexes, current].includes(i)
-    );
-
-    const newIndex =
-      currentIndex >= newVisibleIndexes.length
-        ? Math.max(newVisibleIndexes.length - 1, 0)
-        : currentIndex;
-
-    setCurrentIndex(newIndex);
-  }
-
-  function onGoForward() {
-    setCurrentIndex(prev => Math.min(prev + 1, visibleIndexes.length - 1));
-  }
-
-  function onGoBackward() {
-    setCurrentIndex(prev => Math.max(prev - 1, 0));
+    setTimeout(() => {
+      dismissPromo(frontPromoIndex);
+      setDismissingIndex(null);
+    }, ANIMATION_DURATION);
   }
 
   if (!shouldDisplayPromoCard || visibleIndexes.length === 0) return null;
 
-  const currentPromoIndex = visibleIndexes[currentIndex];
-  const currentPromo = promoCards[currentPromoIndex];
+  const stackOffset = 5;
+  const topPadding = (visibleIndexes.length - 1) * stackOffset;
 
   return (
-    <Box position="relative" overflow="hidden">
-      <Box position="relative" minHeight="78px">
-        <PromoCard
-          {...currentPromo}
-          currentIndex={currentPromoIndex}
-          onDismissCard={handleDismissCurrentPromo}
-        />
-      </Box>
-      <PromoBannerNavbar
-        currentIndex={currentPromoIndex}
-        promoIndexes={promoIndexes}
-        visibleIndexes={visibleIndexes}
-        onSetCurrentIndex={index => setCurrentIndex(index)}
-        onGoBackward={onGoBackward}
-        onGoForward={onGoForward}
-      />
+    <Box position="relative" minHeight="78px" mt="space.04" pt={`${topPadding}px`}>
+      {visibleIndexes.map((promoIndex, stackPosition) => {
+        const promo = promoCards[promoIndex];
+        const isDismissing = dismissingIndex === promoIndex;
+        const adjustedStackPosition =
+          isDismissing || dismissingIndex === null ? stackPosition : Math.max(stackPosition - 1, 0);
+
+        return (
+          <PromoCard
+            key={promoIndex}
+            {...promo}
+            stackPosition={adjustedStackPosition}
+            totalCards={visibleIndexes.length}
+            stackOffset={stackOffset}
+            isDismissing={isDismissing}
+            onDismissCard={stackPosition === 0 ? handleDismissFrontPromo : undefined}
+          />
+        );
+      })}
     </Box>
   );
 }
