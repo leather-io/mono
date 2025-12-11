@@ -29,34 +29,31 @@ export function BaseFeeOption({
   } as const;
 
   return (
-    <>
-      <Pressable
-        borderColor={borderColor.default}
-        borderWidth={1}
-        borderRadius="xs"
-        flexDirection="row"
-        alignItems="center"
-        p="3"
-        gap="3"
-        onPress={onPress}
-        disabled={disabled}
-        opacity={disabled ? 0.5 : 1}
-        pressEffects={{
-          borderColor: {
-            from: borderColor.default,
-            to: borderColor.pressed,
-            settings: { type: 'timing' },
-          },
-        }}
-      >
-        <Avatar icon={icon} />
-        <ItemLayout
-          titleLeft={title}
-          captionLeft={time}
-          titleRight={formattedFeeAmount}
-          captionRight={formattedQuoteFeeAmount}
-        />
-      </Pressable>
-    </>
+    <Pressable
+      borderColor={borderColor.default}
+      borderWidth={1}
+      borderRadius="xs"
+      flexDirection="row"
+      alignItems="center"
+      p="3"
+      gap="3"
+      onPress={onPress}
+      disabled={disabled}
+      opacity={disabled ? 0.5 : 1}
+      pressEffect={{
+        borderColor: {
+          from: borderColor.default,
+          to: borderColor.pressed,
+        },
+      }}
+    >
+      <Avatar icon={icon} />
+      <ItemLayout
+        titleLeft={title}
+        captionLeft={time}
+        titleRight={formattedFeeAmount}
+        captionRight={formattedQuoteFeeAmount}
+      />
+    </Pressable>
   );
 }

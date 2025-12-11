@@ -13,11 +13,12 @@
   "include": [
     "src/**/*.web.ts",
     "src/**/*.web.tsx",
-    "src/web.exports.ts",
-    "src/.storybook-web/**/*",
+    "src/**/*.web.spec.ts",
     "src/**/*.shared.tsx",
     "src/**/*.shared.ts",
     "src/**/*.shared.spec.ts",
+    "src/web.exports.ts",
+    "src/.storybook-web/**/*",
     "src/global.d.ts",
     "leather-styles/"
   ]

@@ -26,7 +26,7 @@ export function RecipientToggle({ onPress, onQrButtonPress, value }: RecipientTo
   return (
     <Pressable
       onPress={onPress}
-      pressEffects={{
+      pressEffect={{
         backgroundColor: {
           from: 'ink.background-primary',
           to: 'ink.background-secondary',
