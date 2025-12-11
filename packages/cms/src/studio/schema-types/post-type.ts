@@ -80,8 +80,7 @@ export const postType = defineType({
     defineField({
       name: 'body',
       title: 'Body',
-      type: 'text',
-      rows: 8,
+      type: 'markdown',
       description:
         'Main content of the post. Will be imported as markdown and converted to blocks.',
     }),
