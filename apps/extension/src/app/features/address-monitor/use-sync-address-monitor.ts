@@ -2,12 +2,12 @@ import { useEffect, useRef } from 'react';
 
 import isEqual from 'lodash.isequal';
 
-import { InternalMethods } from '@shared/message-types';
-import { sendMessage } from '@shared/messages';
-
 import { useMonitorableAddresses } from '@app/features/address-monitor/use-monitorable-addresses';
 import { useIsNotificationsEnabled } from '@app/store/settings/settings.selectors';
-import type { MonitoredAddress } from '@background/monitors/address-monitor';
+import {
+  ADDRESS_MONITOR_STORE,
+  type MonitoredAddress,
+} from '@background/monitors/address-monitor';
 
 export function useSyncAddressMonitor() {
   const isNotificationsEnabled = useIsNotificationsEnabled();
@@ -18,11 +18,8 @@ export function useSyncAddressMonitor() {
     const monitorableAddresses = isNotificationsEnabled ? addresses : [];
     if (monitorableAddresses && !isEqual(monitorableAddresses, prevAddresses.current)) {
       prevAddresses.current = monitorableAddresses;
-      void sendMessage({
-        method: InternalMethods.AddressMonitorUpdated,
-        payload: {
-          addresses: monitorableAddresses,
-        },
+      void chrome.storage.local.set({
+        [ADDRESS_MONITOR_STORE]: monitorableAddresses,
       });
     }
   }, [addresses, isNotificationsEnabled]);

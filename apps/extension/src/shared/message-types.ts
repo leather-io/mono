@@ -29,7 +29,6 @@ export enum InternalMethods {
   RequestDerivedStxAccounts = 'RequestDerivedStxAccounts',
   OriginatingTabClosed = 'OriginatingTabClosed',
   AccountChanged = 'AccountChanged',
-  AddressMonitorUpdated = 'AddressMonitorUpdated',
 }
 
 export type ExtensionMethods = ExternalMethods | InternalMethods;

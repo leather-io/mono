@@ -16,7 +16,7 @@ import {
   isLegacyMessage,
 } from './messaging/legacy/legacy-external-message-handler';
 import { rpcMessageHandler } from './messaging/rpc-message-handler';
-import { initAddressMonitor } from './monitors/address-monitor';
+import { initAddressMonitor, listenForAddressMonitorChanges } from './monitors/address-monitor';
 
 initContextMenuActions();
 warnUsersAboutDevToolsDangers();
@@ -67,6 +67,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 initAddressMonitor().catch(e => {
   logger.error('Unable to Initialise Address Monitor: ', e);
 });
+
+listenForAddressMonitorChanges();
 
 listenForSessionDurationPort({
   onSessionEnd(sessionMetadata) {
