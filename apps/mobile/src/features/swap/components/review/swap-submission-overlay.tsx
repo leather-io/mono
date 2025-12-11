@@ -170,7 +170,7 @@ function useSwapSubmissionOverlayAnimation() {
     'worklet';
     summaryPosition.value = withDelay(
       overlayEnteringAnimationDuration,
-      withSpring(summaryAnimationTravelDistance, { duration: 1100, dampingRatio: 0.8 })
+      withSpring(summaryAnimationTravelDistance, { duration: 700, dampingRatio: 0.85 })
     );
     statusOpacity.value = withDelay(420, withTiming(1, { duration: 300 }));
     messageOpacity.value = withDelay(520, withTiming(1, { duration: 300 }));
