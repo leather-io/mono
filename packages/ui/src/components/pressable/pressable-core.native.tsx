@@ -38,7 +38,9 @@ export type PressableRestyleProps = OpacityProps<Theme> &
   LayoutProps<Theme> &
   PositionProps<Theme>;
 
-export const AnimatedRestylePressable = Animated.createAnimatedComponent(
+export const AnimatedRestylePressable = Animated.createAnimatedComponent<
+  PressableRestyleProps & RNPressableProps
+>(
   createRestyleComponent<PressableRestyleProps & RNPressableProps, Theme>(
     [
       backgroundColorShorthand,
@@ -62,12 +64,13 @@ export type PressableRef = RefObject<typeof RNPressable>;
 // https://github.com/software-mansion/react-native-reanimated/blob/3f864e6ae89d0edbbeedda17809c4ef9ea927622/packages/react-native-reanimated/src/helperTypes.ts#L48
 // Work around this by defining a narrower signature of props we actually need for Pressable, and exporting a custom
 // wrapper around the component created from Animated HOC to ensure TS correctly resolves to our custom types.
-export type PressableCoreProps = RNPressableProps &
-  PressableRestyleProps &
+export type PressableCoreProps = Omit<RNPressableProps & PressableRestyleProps, 'style'> &
   Pick<
     AnimatedProps<RNPressableProps & PressableRestyleProps>,
-    'animatedProps' | 'style' | 'entering' | 'exiting' | 'layout'
-  > & { ref?: PressableRef };
+    'entering' | 'exiting' | 'style' | 'layout' | 'animatedProps'
+  > & {
+    ref?: PressableRef;
+  };
 
 export function PressableCore(props: PressableCoreProps) {
   return <AnimatedRestylePressable {...props} />;

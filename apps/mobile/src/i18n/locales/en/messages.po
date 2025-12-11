@@ -1627,7 +1627,6 @@ msgstr "sBTC Bridge"
 msgid "Scan a Bitcoin or Stacks address"
 msgstr "Scan a Bitcoin or Stacks address"
 
-#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:79
 #: src/features/send/components/recipient/recipient-toggle.tsx:61
 msgid "Scan a QR code"
 msgstr "Scan a QR code"

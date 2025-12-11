@@ -1,9 +1,4 @@
-import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
-
-import { useTheme } from '@shopify/restyle';
-
 import { usePressedState } from '../../hooks/use-pressed-state.native';
-import { Theme } from '../../theme-native';
 import { Box, BoxProps } from '../box/box.native';
 import { PressableRef } from '../pressable/pressable-core.native';
 import { Pressable, PressableProps } from '../pressable/pressable.native';
@@ -30,18 +25,8 @@ const cellRootStyles: BoxProps = {
   alignItems: 'center',
 };
 
-export function CellRoot({ style, ...props }: CellProps & { ref?: PressableRef }) {
-  const { pressed, onPressIn, onPressOut } = usePressedState();
-  const theme = useTheme<Theme>();
-
-  // TODO: Need a way to specify custom pressed transitions
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      backgroundColor: withSpring(
-        pressed ? theme.colors['ink.background-secondary'] : theme.colors['ink.background-primary']
-      ),
-    };
-  });
+export function CellRoot(props: CellProps & { ref?: PressableRef }) {
+  const { onPressIn, onPressOut } = usePressedState();
 
   if (props.pressable) {
     return (
@@ -49,7 +34,13 @@ export function CellRoot({ style, ...props }: CellProps & { ref?: PressableRef }
         {...cellRootStyles}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
-        style={[animatedStyle, style]}
+        pressEffect={{
+          backgroundColor: {
+            from: 'ink.background-primary',
+            to: 'ink.background-secondary',
+            duration: 150,
+          },
+        }}
         {...props}
       />
     );

@@ -1,4 +1,5 @@
 import { ComponentProps } from 'react';
+import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
@@ -32,7 +33,12 @@ function useSheetStyles() {
 
 export function SheetView({ style, ...props }: BottomSheetViewProps) {
   const styles = useSheetStyles();
-  return <BottomSheetView style={[styles.root, styles.contentContainer, style]} {...props} />;
+  return (
+    <BottomSheetView
+      style={StyleSheet.flatten([styles.root, styles.contentContainer, style])}
+      {...props}
+    />
+  );
 }
 
 export function SheetScrollView({
@@ -43,8 +49,8 @@ export function SheetScrollView({
   const styles = useSheetStyles();
   return (
     <BottomSheetScrollView
-      style={[styles.root, style]}
-      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
+      style={StyleSheet.flatten([styles.root, style])}
+      contentContainerStyle={StyleSheet.flatten([styles.contentContainer, contentContainerStyle])}
       {...props}
     />
   );
@@ -58,8 +64,8 @@ export function SheetSectionList({
   const styles = useSheetStyles();
   return (
     <BottomSheetSectionList
-      style={[styles.root, style]}
-      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
+      style={StyleSheet.flatten([styles.root, style])}
+      contentContainerStyle={StyleSheet.flatten([styles.contentContainer, contentContainerStyle])}
       {...props}
     />
   );
@@ -73,8 +79,8 @@ export function SheetVirtualizedList({
   const styles = useSheetStyles();
   return (
     <BottomSheetVirtualizedList
-      style={[styles.root, style]}
-      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
+      style={StyleSheet.flatten([styles.root, style])}
+      contentContainerStyle={StyleSheet.flatten([styles.contentContainer, contentContainerStyle])}
       {...props}
     />
   );
@@ -88,8 +94,8 @@ export function SheetFlashList<T>({
   const styles = useSheetStyles();
   return (
     <BottomSheetFlashList
-      style={[styles.root, style]}
-      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
+      style={StyleSheet.flatten([styles.root, style])}
+      contentContainerStyle={StyleSheet.flatten([styles.contentContainer, contentContainerStyle])}
       {...props}
     />
   );

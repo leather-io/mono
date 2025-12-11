@@ -30,7 +30,7 @@ export function FlipButton({ isVisible, onPress }: FlipButtonProps) {
   }, [rotation, onPress]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: withSpring(pressed.value ? 0.9 : 1) }, { rotate: `${rotation.value}deg` }],
+    transform: [{ scale: withSpring(pressed ? 0.9 : 1) }, { rotate: `${rotation.value}deg` }],
   }));
 
   if (!isVisible) return null;

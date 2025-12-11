@@ -1,16 +1,10 @@
-import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
-
-import { Pressable, PressableProps, usePressedState } from '@leather.io/ui/native';
+import { Pressable, PressableProps } from '@leather.io/ui/native';
 
 interface CardProps extends PressableProps {
   onPress?(): void;
   height?: number;
 }
 export function Card({ children, onPress, height = 180, ...props }: CardProps) {
-  const { pressed, onPressIn, onPressOut } = usePressedState();
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: withSpring(pressed.value ? 0.95 : 1) }],
-  }));
   return (
     <Pressable
       height={height}
@@ -22,12 +16,10 @@ export function Card({ children, onPress, height = 180, ...props }: CardProps) {
       borderColor="ink.border-transparent"
       borderRadius="md"
       onPress={onPress}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
-      pressEffects={{
+      pressEffect={{
         opacity: { from: 1, to: 0.95 },
+        transform: { from: [{ scale: 1 }], to: [{ scale: 0.95 }] },
       }}
-      style={animatedStyle}
       {...props}
     >
       {children}

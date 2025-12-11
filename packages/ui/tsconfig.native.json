@@ -10,12 +10,13 @@
   "include": [
     "src/**/*.native.ts",
     "src/**/*.native.tsx",
-    "src/native.ts",
-    "src/theme-native/**/*",
-    "src/.storybook-native/**/*",
+    "src/**/*.native.spec.ts",
     "src/**/*.shared.tsx",
     "src/**/*.shared.ts",
     "src/**/*.shared.spec.ts",
+    "src/native.ts",
+    "src/theme-native/**/*",
+    "src/.storybook-native/**/*",
     "src/global.d.ts"
   ]
 }

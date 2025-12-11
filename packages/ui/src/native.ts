@@ -62,11 +62,7 @@ export * from './components/collectibles/index.native';
 export { useCountdown } from './utils/use-countdown.shared';
 export { useInterval, type UseIntervalState } from './utils/use-interval.shared';
 export * from './utils/use-on-mount.shared';
-export {
-  Pressable,
-  type PressableProps,
-  type PressedStyle,
-} from './components/pressable/pressable.native';
+export { Pressable, type PressableProps } from './components/pressable/pressable.native';
 export { Numpad, type NumpadProps } from './components/numpad/numpad.native';
 export { Highlighter } from './components/highlighting/highlighter.native';
 export { Prism, type PrismType } from './components/highlighting/clarity-prism.shared';
