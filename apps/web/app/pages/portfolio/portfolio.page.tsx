@@ -85,6 +85,7 @@ export function PortfolioPage() {
       <>
         <PortfolioPageLayout
           dummyDataMode
+          totalBalance={dummyTotalBalance}
           overview={<PortfolioSummary balance={dummyTotalBalance} />}
           assetCount={dummyPortfolioAssets.length}
           assetList={<PortfolioTable assets={dummyPortfolioAssets} isLoading={false} />}
@@ -101,6 +102,8 @@ export function PortfolioPage() {
 
   return (
     <PortfolioPageLayout
+      isConnected={isConnected}
+      totalBalance={totalBalance}
       overview={<PortfolioSummary balance={totalBalance} />}
       assetCount={allAssets.length}
       assetList={<PortfolioTable assets={allAssets} isLoading={isLoading} />}
