@@ -12,7 +12,14 @@ import { UseQueryResult } from '@tanstack/react-query';
 import { isDefined } from 'remeda';
 
 import { AccountSwapAsset } from '@leather.io/services';
-import { AssetAvatarIcon, BitcoinIcon, Box, Sheet, StacksIcon } from '@leather.io/ui/native';
+import {
+  AnimatedBox,
+  AssetAvatarIcon,
+  BitcoinIcon,
+  Box,
+  Sheet,
+  StacksIcon,
+} from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { AssetSelectorError } from './asset-selector-error';
@@ -80,25 +87,28 @@ export function AssetSelector({
           }
 
           return (
-            <Sheet.FlashList
-              entering={FadeIn.duration(100)}
-              exiting={FadeOut.duration(100)}
-              data={assets}
-              maintainVisibleContentPosition={{ disabled: true }}
-              keyExtractor={(item: AccountSwapAsset) => serializeAssetId(getAssetId(item.asset))}
-              renderItem={({ item }: ListRenderItemInfo<AccountSwapAsset>) => (
-                <AssetSelectorItem
-                  name={getFungibleAssetDisplayName(item.asset)}
-                  symbol={item.asset.symbol}
-                  balance={item.balance?.crypto.availableBalance}
-                  quoteBalance={item.balance?.quote.availableBalance}
-                  icon={
-                    <AssetAvatarIcon asset={item.asset} indicator={getAssetIndicator(item.asset)} />
-                  }
-                  onPress={() => onSelectAsset(type, item)}
-                />
-              )}
-            />
+            <AnimatedBox flex={1} entering={FadeIn.duration(100)} exiting={FadeOut.duration(100)}>
+              <Sheet.FlashList
+                data={assets}
+                maintainVisibleContentPosition={{ disabled: true }}
+                keyExtractor={(item: AccountSwapAsset) => serializeAssetId(getAssetId(item.asset))}
+                renderItem={({ item }: ListRenderItemInfo<AccountSwapAsset>) => (
+                  <AssetSelectorItem
+                    name={getFungibleAssetDisplayName(item.asset)}
+                    symbol={item.asset.symbol}
+                    balance={item.balance?.crypto.availableBalance}
+                    quoteBalance={item.balance?.quote.availableBalance}
+                    icon={
+                      <AssetAvatarIcon
+                        asset={item.asset}
+                        indicator={getAssetIndicator(item.asset)}
+                      />
+                    }
+                    onPress={() => onSelectAsset(type, item)}
+                  />
+                )}
+              />
+            </AnimatedBox>
           );
         },
       })}

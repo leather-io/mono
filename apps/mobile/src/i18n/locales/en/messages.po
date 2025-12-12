@@ -1636,7 +1636,7 @@ msgstr "Scan a QR code"
 msgid "Scan QR Code"
 msgstr "Scan QR Code"
 
-#: src/features/swap/components/asset-selector/asset-selector.tsx:62
+#: src/features/swap/components/asset-selector/asset-selector.tsx:69
 msgid "Search for asset"
 msgstr "Search for asset"
 

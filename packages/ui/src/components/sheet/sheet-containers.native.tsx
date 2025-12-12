@@ -3,15 +3,15 @@ import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
-  BottomSheetFlashList,
   BottomSheetScrollView,
   BottomSheetSectionList,
   BottomSheetView,
   BottomSheetVirtualizedList,
+  useBottomSheetScrollableCreator,
 } from '@gorhom/bottom-sheet';
-import { BottomSheetFlashListProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/BottomSheetFlashList';
 import { BottomSheetScrollViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types';
 import { BottomSheetViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types';
+import { FlashList, FlashListProps } from '@shopify/flash-list';
 
 import { useTheme } from '../../hooks/use-theme.native';
 
@@ -86,14 +86,13 @@ export function SheetVirtualizedList({
   );
 }
 
-export function SheetFlashList<T>({
-  style,
-  contentContainerStyle,
-  ...props
-}: BottomSheetFlashListProps<T>) {
+export function SheetFlashList<T>({ style, contentContainerStyle, ...props }: FlashListProps<T>) {
   const styles = useSheetStyles();
+  const renderScrollComponent = useBottomSheetScrollableCreator();
+
   return (
-    <BottomSheetFlashList
+    <FlashList
+      renderScrollComponent={renderScrollComponent}
       style={StyleSheet.flatten([styles.root, style])}
       contentContainerStyle={StyleSheet.flatten([styles.contentContainer, contentContainerStyle])}
       {...props}
