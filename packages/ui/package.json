@@ -34,6 +34,7 @@
     "@leather.io/utils": "workspace:*",
     "@react-native/assets-registry": "0.73.1",
     "@rnx-kit/metro-resolver-symlinks": "0.2.3",
+    "@shopify/flash-list": "2.0.2",
     "@shopify/restyle": "2.4.2",
     "dompurify": "3.2.4",
     "expo": "53.0.25",
