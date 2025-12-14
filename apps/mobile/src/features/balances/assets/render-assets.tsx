@@ -22,18 +22,17 @@ export function renderAsset({
   item: Sip10Balance | RuneBalance;
   onPress?(tokenDetails: TokenDetailsProps): void;
 }) {
-  function handleOnPress() {
-    if (onPress) {
-      onPress({
-        assetId: serializeAssetId(getAssetId(item.asset)),
-      });
-    }
+  function handlePress() {
+    onPress?.({
+      assetId: serializeAssetId(getAssetId(item.asset)),
+    });
   }
+
   if (isSip10Balance(item)) {
-    return <Sip10TokenBalance key={item.asset.contractId} item={item} onPress={handleOnPress} />;
+    return <Sip10TokenBalance key={item.asset.contractId} item={item} onPress={handlePress} />;
   }
   if (isRuneBalance(item)) {
-    return <RunesTokenBalance key={item.asset.symbol} item={item} onPress={handleOnPress} />;
+    return <RunesTokenBalance key={item.asset.symbol} item={item} onPress={handlePress} />;
   }
   return null;
 }

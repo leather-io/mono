@@ -1,5 +1,6 @@
 import { Controller } from 'react-hook-form';
 
+import { AssetAvatar } from '@/components/asset-avatar';
 import { AmountField } from '@/features/send/components/amount-field';
 import { AssetDisplay } from '@/features/send/components/asset-display';
 import { ErrorMessage } from '@/features/send/components/error-message';
@@ -20,7 +21,7 @@ import {
   type OwnedUtxo,
   type QuoteCurrency,
 } from '@leather.io/models';
-import { BtcAvatarIcon, Button } from '@leather.io/ui/native';
+import { Button } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
 const asset = btcAsset;
@@ -65,7 +66,7 @@ export function BtcForm({
         asset={asset}
         availableBalance={availableBalance}
         quoteBalance={quoteBalance}
-        icon={<BtcAvatarIcon />}
+        icon={<AssetAvatar asset={btcAsset} />}
         onPress={onOpenAssetPicker}
         assetItemElementInitialOffset={assetItemAnimationOffsetTop ?? null}
       />

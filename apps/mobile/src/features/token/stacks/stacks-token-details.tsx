@@ -1,3 +1,4 @@
+import { AssetAvatar } from '@/components/asset-avatar';
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
 import { useActivityByAsset } from '@/queries/activity/activity.query';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
@@ -6,13 +7,19 @@ import { capitalize } from 'remeda';
 
 import { stxAsset } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
-import { StxAvatarIcon } from '@leather.io/ui/native';
 
 import { Token } from '../token';
 
 type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
 export function StacksTokenBalance(props: StacksTokenBalanceProps) {
-  return <TokenBalance ticker="STX" icon={<StxAvatarIcon />} tokenName={t`Stacks`} {...props} />;
+  return (
+    <TokenBalance
+      ticker="STX"
+      icon={<AssetAvatar asset={stxAsset} />}
+      tokenName={t`Stacks`}
+      {...props}
+    />
+  );
 }
 
 interface StacksTokenDetailsProps {
@@ -28,7 +35,7 @@ export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
   return (
     <Token
       asset={stxAsset}
-      icon={<StxAvatarIcon />}
+      icon={<AssetAvatar asset={stxAsset} />}
       balance={balance}
       activity={activity}
       canSend={true}

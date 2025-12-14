@@ -1,5 +1,6 @@
 import { Controller } from 'react-hook-form';
 
+import { AssetAvatar } from '@/components/asset-avatar';
 import { AmountField } from '@/features/send/components/amount-field';
 import { AssetDisplay } from '@/features/send/components/asset-display';
 import { ErrorMessage } from '@/features/send/components/error-message';
@@ -15,7 +16,7 @@ import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
 import { MarketData, Money, QuoteCurrency } from '@leather.io/models';
-import { Button, StxAvatarIcon } from '@leather.io/ui/native';
+import { Button } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
 const asset = stxAsset;
@@ -59,7 +60,7 @@ export function StxForm({
         asset={asset}
         availableBalance={availableBalance}
         quoteBalance={quoteBalance}
-        icon={<StxAvatarIcon />}
+        icon={<AssetAvatar asset={stxAsset} />}
         onPress={onOpenAssetPicker}
         assetItemElementInitialOffset={assetItemAnimationOffsetTop ?? null}
       />

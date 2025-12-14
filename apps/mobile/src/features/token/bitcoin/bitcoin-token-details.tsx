@@ -1,4 +1,4 @@
-import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
+import { AssetAvatar } from '@/components/asset-avatar';
 import { useActivityByAsset } from '@/queries/activity/activity.query';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/core/macro';
@@ -6,16 +6,9 @@ import { capitalize } from 'remeda';
 
 import { btcAsset } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
-import { BtcAvatarIcon } from '@leather.io/ui/native';
 
 import { Token } from '../token';
 import { BitcoinAddressList } from './bitcoin-address-list';
-
-type BitcoinTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
-
-export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
-  return <TokenBalance ticker="BTC" icon={<BtcAvatarIcon />} tokenName={t`Bitcoin`} {...props} />;
-}
 
 interface BitcoinTokenDetailsProps {
   account: AccountId;
@@ -29,7 +22,7 @@ export function BitcoinTokenDetails({ account }: BitcoinTokenDetailsProps) {
   return (
     <Token
       asset={btcAsset}
-      icon={<BtcAvatarIcon />}
+      icon={<AssetAvatar asset={btcAsset} />}
       balance={balance}
       activity={activity}
       layer={t`Layer 1`}

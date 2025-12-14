@@ -1,3 +1,4 @@
+import { AssetAvatar } from '@/components/asset-avatar';
 import { TokenBalance } from '@/features/token/components/token-balance';
 import { useSip10BalanceByContractId } from '@/queries/balance/sip10-balance.query';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
@@ -7,7 +8,6 @@ import { deserializeTransaction } from '@stacks/transactions';
 
 import { Sip10Asset } from '@leather.io/models';
 import { getSip10TransferAmount } from '@leather.io/stacks';
-import { Sip10AvatarIcon } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import { assertContractCallPayload, getContractAddress } from '../utils';
@@ -22,13 +22,7 @@ export function AssetOutcomeBalance({ asset, amount }: { asset: Sip10Asset; amou
   return (
     <TokenBalance
       mx="-5"
-      icon={
-        <Sip10AvatarIcon
-          contractId={asset.contractId}
-          imageCanonicalUri={asset.imageCanonicalUri}
-          name={asset.name}
-        />
-      }
+      icon={<AssetAvatar asset={asset} />}
       availableBalance={baseAmount}
       quoteBalance={resultAmount}
       tokenName={asset.name}

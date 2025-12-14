@@ -1,5 +1,6 @@
 import { Controller } from 'react-hook-form';
 
+import { AssetAvatar } from '@/components/asset-avatar';
 import { AmountField } from '@/features/send/components/amount-field';
 import { AssetDisplay } from '@/features/send/components/asset-display';
 import { ErrorMessage } from '@/features/send/components/error-message';
@@ -13,7 +14,7 @@ import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
 import { MarketData, Money, QuoteCurrency, Sip10Asset } from '@leather.io/models';
-import { Button, Sip10AvatarIcon } from '@leather.io/ui/native';
+import { Button } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
 import { useSip10Form } from './use-sip10-form';
@@ -60,13 +61,7 @@ export function Sip10Form({
         asset={asset}
         availableBalance={availableBalance}
         quoteBalance={quoteBalance}
-        icon={
-          <Sip10AvatarIcon
-            contractId={asset.contractId}
-            imageCanonicalUri={asset.imageCanonicalUri}
-            name={asset.name}
-          />
-        }
+        icon={<AssetAvatar asset={asset} />}
         onPress={onOpenAssetPicker}
         assetItemElementInitialOffset={assetItemAnimationOffsetTop ?? null}
       />

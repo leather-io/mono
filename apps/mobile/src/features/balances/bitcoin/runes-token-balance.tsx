@@ -1,7 +1,7 @@
+import { AssetAvatar } from '@/components/asset-avatar';
 import { TokenBalance } from '@/features/token/components/token-balance';
 
 import { RuneBalance } from '@leather.io/services';
-import { RunesAvatarIcon } from '@leather.io/ui/native';
 
 interface RunesTokenBalanceProps {
   item: RuneBalance;
@@ -10,7 +10,7 @@ interface RunesTokenBalanceProps {
 export function RunesTokenBalance({ item, onPress }: RunesTokenBalanceProps) {
   return (
     <TokenBalance
-      icon={<RunesAvatarIcon />}
+      icon={<AssetAvatar asset={item.asset} />}
       ticker={item.asset.symbol}
       tokenName={item.asset.runeName}
       availableBalance={item.crypto.availableBalance}

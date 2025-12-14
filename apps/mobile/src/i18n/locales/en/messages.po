@@ -393,13 +393,8 @@ msgstr "Balances"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:14
-#: src/features/receive/get-assets.ts:29
-#: src/features/receive/get-assets.ts:37
-#: src/features/send/forms/btc/btc-form.tsx:64
-#: src/features/swap/swap.utils.ts:10
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:17
-#: src/shared/display-preference.ts:61
+#: src/features/balances/bitcoin/bitcoin-balance.tsx:18
+#: src/features/send/forms/btc/btc-form.tsx:65
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -1107,7 +1102,7 @@ msgstr "Last observed block"
 msgid "Layer"
 msgstr "Layer"
 
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:35
+#: src/features/token/bitcoin/bitcoin-token-details.tsx:28
 msgid "Layer 1"
 msgstr "Layer 1"
 
@@ -1121,7 +1116,7 @@ msgstr "Layer 1 · Bitcoin"
 msgid "Layer 1 • Bitcoin"
 msgstr "Layer 1 • Bitcoin"
 
-#: src/features/token/stacks/stacks-token-details.tsx:35
+#: src/features/token/stacks/stacks-token-details.tsx:42
 msgid "Layer 2"
 msgstr "Layer 2"
 
@@ -1570,10 +1565,9 @@ msgstr "Retry"
 msgid "Reveal account"
 msgstr "Reveal account"
 
-#: src/features/send/forms/btc/btc-form.tsx:126
-#: src/features/send/forms/stx/sip10-form.tsx:149
-#: src/features/send/forms/stx/stx-form.tsx:140
-#: src/features/swap/screens/swap-form-screen.tsx:124
+#: src/features/send/forms/btc/btc-form.tsx:127
+#: src/features/send/forms/stx/sip10-form.tsx:144
+#: src/features/send/forms/stx/stx-form.tsx:141
 msgid "Review"
 msgstr "Review"
 
@@ -1759,12 +1753,9 @@ msgstr "SRC-20"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:13
-#: src/features/receive/get-assets.ts:45
-#: src/features/send/forms/stx/stx-form.tsx:58
-#: src/features/swap/swap.utils.ts:9
-#: src/features/token/stacks/stacks-token-details.tsx:15
-#: src/shared/display-preference.ts:62
+#: src/features/balances/stacks/stacks-balance.tsx:17
+#: src/features/send/forms/stx/stx-form.tsx:59
+#: src/features/token/stacks/stacks-token-details.tsx:19
 msgid "Stacks"
 msgstr "Stacks"
 
