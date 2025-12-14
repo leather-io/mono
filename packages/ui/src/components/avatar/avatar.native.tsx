@@ -42,8 +42,7 @@ export interface AvatarProps extends BoxProps {
   imageAlt?: string;
   fallback?: string;
   fallbackDelayMs?: number;
-  outlineColor?: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
-  showFauxBorder?: boolean;
+  outlineColor?: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | 'transparent';
 }
 
 export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
@@ -56,8 +55,7 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
     indicator,
     fallback,
     fallbackDelayMs = defaultFallbackDelay,
-    outlineColor,
-    showFauxBorder = false,
+    outlineColor = isDefined(image) ? 'ink.border-transparent' : 'transparent',
     ...rest
   } = props;
   const [imageLoadingStatus, setImageLoadingStatus] = useState<ImageLoadingStatus>('idle');
@@ -67,7 +65,7 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
       ref={ref}
       alignItems="center"
       justifyContent="center"
-      bg={showFauxBorder ? 'ink.background-secondary' : undefined}
+      bg="ink.background-secondary"
       {...variantStyles[variant]}
       {...sizeStyles[size]}
       {...rest}
@@ -101,15 +99,7 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
         />
       ) : null}
 
-      {showFauxBorder && (
-        <AvatarFauxBorder
-          outlineColor={
-            outlineColor ??
-            (isDefined(image) ? 'ink.border-transparent' : 'ink.component-background-hover')
-          }
-          variant={variant}
-        />
-      )}
+      <AvatarFauxBorder outlineColor={outlineColor} variant={variant} />
 
       {indicator ? (
         <Box
@@ -166,11 +156,15 @@ function AvatarFallback({ content, delayMs, imageLoadingStatus }: AvatarFallback
 
 interface AvatarFauxBorderProps {
   variant: NonNullable<AvatarProps['variant']>;
-  outlineColor: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
+  outlineColor: AvatarProps['outlineColor'];
 }
 
 // Simulate CSS outline behavior, with "border" overlaid on top of content.
 function AvatarFauxBorder({ variant, outlineColor }: AvatarFauxBorderProps) {
+  if (outlineColor === 'transparent') {
+    return null;
+  }
+
   return (
     <Box
       position="absolute"

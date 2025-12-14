@@ -38,21 +38,12 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
     image,
     imageAlt,
     fallback,
-    outlineColor,
+    outlineColor = isDefined(image) ? 'ink.border-transparent' : 'transparent',
     fallbackDelayMs = defaultFallbackDelay,
     ...rest
   } = props;
   return (
-    <AvatarRoot
-      ref={ref}
-      size={size}
-      variant={variant}
-      outlineColor={
-        outlineColor ??
-        (isDefined(image) ? 'ink.border-transparent' : 'ink.component-background-hover')
-      }
-      {...rest}
-    >
+    <AvatarRoot ref={ref} size={size} variant={variant} outlineColor={outlineColor} {...rest}>
       <AvatarImage src={image} alt={imageAlt ?? fallback} />
       <AvatarIcon avatarSize={size} icon={icon} />
       {fallback ? <AvatarFallback delayMs={fallbackDelayMs}>{fallback}</AvatarFallback> : null}
