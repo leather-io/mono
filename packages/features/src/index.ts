@@ -28,3 +28,5 @@ export { formatActivityCaption } from './activity/activity-timestamp';
 export { createActivityView } from './activity/activity-view';
 export type { OnramperMode } from './onramper/types';
 export { getOnramperIframeParams } from './onramper/onramper-params';
+export type { AvatarProps, AssetAvatarProps } from './asset-avatar/asset-avatar';
+export { createAssetAvatar } from './asset-avatar/asset-avatar';

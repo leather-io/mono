@@ -97,6 +97,14 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
         platform
       );
     }
+
+    if (moduleName === '@leather.io/features') {
+      return context.resolveRequest(
+        context,
+        path.resolve(workspaceRoot, 'packages/features/src/index.ts'),
+        platform
+      );
+    }
   }
 
   return symlinkResolver(context, moduleName, platform);
