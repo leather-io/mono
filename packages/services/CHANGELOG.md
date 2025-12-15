@@ -413,6 +413,26 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.46.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.45.0...@leather.io/services-v1.46.0) (2025-12-15)
+
+
+### Features
+
+* add withdrawal and fee logic to sbtc swap provider service ([3d277dd](https://github.com/leather-io/mono/commit/3d277dd8e1f56eae7772b4a042f66288b87101ba))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.0
+    * @leather.io/constants bumped to 0.28.5
+    * @leather.io/models bumped to 0.52.0
+    * @leather.io/stacks bumped to 1.19.7
+    * @leather.io/utils bumped to 0.49.5
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.5
+
 ## [1.45.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.44.2...@leather.io/services-v1.45.0) (2025-12-09)
 
 

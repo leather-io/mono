@@ -21,6 +21,28 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.86.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.86.0...@leather.io/extension-v6.86.1) (2025-12-15)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.17.1
+    * @leather.io/bitcoin bumped to 0.36.0
+    * @leather.io/constants bumped to 0.28.5
+    * @leather.io/crypto bumped to 1.12.11
+    * @leather.io/features bumped to 1.1.5
+    * @leather.io/models bumped to 0.52.0
+    * @leather.io/provider bumped to 1.6.13
+    * @leather.io/queries bumped to 0.2.3
+    * @leather.io/query bumped to 2.45.7
+    * @leather.io/rpc bumped to 2.21.5
+    * @leather.io/services bumped to 1.46.0
+    * @leather.io/stacks bumped to 1.19.7
+    * @leather.io/ui bumped to 1.100.1
+    * @leather.io/utils bumped to 0.49.5
+
 ## [6.86.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.85.1...@leather.io/extension-v6.86.0) (2025-12-15)
 
 

@@ -489,6 +489,23 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.100.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.100.0...@leather.io/ui-v1.100.1) (2025-12-15)
+
+
+### Bug Fixes
+
+* svg logo ([c0163c6](https://github.com/leather-io/mono/commit/c0163c61e747bf1a7c7673401daae319dfb3f945))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.49.5
+  * devDependencies
+    * @leather.io/features bumped to 1.1.5
+    * @leather.io/models bumped to 0.52.0
+
 ## [1.100.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.99.3...@leather.io/ui-v1.100.0) (2025-12-15)
 
 
