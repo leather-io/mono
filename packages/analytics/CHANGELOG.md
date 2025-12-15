@@ -114,6 +114,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.17.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.16.2...@leather.io/analytics-v3.17.0) (2025-12-15)
+
+
+### Features
+
+* **mobile:** add app icon switcher ([d8bd4b2](https://github.com/leather-io/mono/commit/d8bd4b28446f9a7ad01ddbbcef1beb5a0676d8b1))
+
 ## [3.16.2](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.16.1...@leather.io/analytics-v3.16.2) (2025-12-09)
 
 

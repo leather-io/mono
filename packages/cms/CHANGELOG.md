@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.3.3...@leather.io/cms-v1.3.4) (2025-12-15)
+
+
+### Bug Fixes
+
+* ensure related posts are a separate part of post schema ([d26d189](https://github.com/leather-io/mono/commit/d26d18939eb5a510f7b1bd9e5399a85969d01883))
+
 ## [1.3.3](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.3.2...@leather.io/cms-v1.3.3) (2025-12-08)
 
 

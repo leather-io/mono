@@ -21,6 +21,26 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.86.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.85.1...@leather.io/extension-v6.86.0) (2025-12-15)
+
+
+### Features
+
+* **extension:** improve ledger arguments ([59d3837](https://github.com/leather-io/mono/commit/59d383725a6930d4fac92cb2a7dc07b7857d9b8c))
+
+
+### Bug Fixes
+
+* **extension:** z-stack promo banners ([45a10a9](https://github.com/leather-io/mono/commit/45a10a9c56e19671c5a77b8d38ae39632f9ce1a6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.17.0
+    * @leather.io/ui bumped to 1.100.0
+
 ## [6.85.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.85.0...@leather.io/extension-v6.85.1) (2025-12-09)
 
 
