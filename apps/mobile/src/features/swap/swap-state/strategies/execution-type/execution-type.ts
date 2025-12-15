@@ -3,10 +3,7 @@ import {
   NetworkFee,
   SwapExecutionDependencies,
 } from '@/features/swap/swap-state/swap-state.types';
-import {
-  calculatePriceImpactPercentage,
-  estimateExchangeRate,
-} from '@/features/swap/swap-state/utils/market-rates';
+import { estimateExchangeRate } from '@/features/swap/swap-state/utils/market-rates';
 import * as btc from '@scure/btc-signer';
 import BigNumber from 'bignumber.js';
 
@@ -27,6 +24,7 @@ import { buildSbtcBridgeDepositTx } from './build-transaction/build-transaction/
 import { buildStacksTx } from './build-transaction/build-transaction/build-stacks-tx';
 import {
   calculateMinToReceiveAmount,
+  createBaseEnrichedQuote,
   estimateLiquidityFeePercentage,
 } from './execution-type.utils';
 
@@ -45,22 +43,12 @@ interface ExecutionStrategy {
 
 const stacksContractCallStrategy: ExecutionStrategy = {
   enrichQuote(swapQuote: SwapQuote, fairMarketRate: BigNumber | null, slippage: number) {
-    const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
     return {
-      rawSwapQuote: swapQuote,
-      baseAmount: swapQuote.baseAmount,
-      targetAmount: swapQuote.targetAmount,
-      baseAsset: swapQuote.baseAsset,
-      targetAsset: swapQuote.targetAsset,
-      dexPath: swapQuote.dexPath,
-      assetPath: swapQuote.assetPath,
+      ...createBaseEnrichedQuote(swapQuote, fairMarketRate),
       slippageApplicable: true,
-      minReceive: calculateMinToReceiveAmount(swapQuote.targetAmount, slippage),
-      provider: swapQuote.providerId,
-      providerFeePercentage: estimateLiquidityFeePercentage(swapQuote.dexPath),
       swapRate: estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount),
-      score: swapQuote.targetAmount.amount.toNumber(),
-      priceImpactPercentage: calculatePriceImpactPercentage(rate, fairMarketRate),
+      minReceive: calculateMinToReceiveAmount(swapQuote.targetAmount, slippage),
+      providerFeePercentage: estimateLiquidityFeePercentage(swapQuote.dexPath),
     };
   },
   async getNetworkFee(dependencies: SwapExecutionDependencies, signal?: AbortSignal) {
@@ -89,20 +77,10 @@ const stacksContractCallStrategy: ExecutionStrategy = {
 
 const sbtcBridgeDepositStrategy: ExecutionStrategy = {
   enrichQuote(swapQuote: SwapQuote, fairMarketRate: BigNumber | null) {
-    const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
     return {
-      rawSwapQuote: swapQuote,
-      baseAmount: swapQuote.baseAmount,
-      targetAmount: swapQuote.targetAmount,
-      baseAsset: swapQuote.baseAsset,
-      targetAsset: swapQuote.targetAsset,
-      dexPath: swapQuote.dexPath,
-      assetPath: swapQuote.assetPath,
+      ...createBaseEnrichedQuote(swapQuote, fairMarketRate),
       slippageApplicable: false,
-      provider: swapQuote.providerId,
-      swapRate: estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount),
-      score: swapQuote.targetAmount.amount.toNumber(),
-      priceImpactPercentage: calculatePriceImpactPercentage(rate, fairMarketRate),
+      swapRate: BigNumber(1),
     };
   },
   async getNetworkFee(dependencies, signal?: AbortSignal) {
