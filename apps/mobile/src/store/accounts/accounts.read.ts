@@ -2,6 +2,8 @@ import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
 
+import { isDefined } from '@leather.io/utils';
+
 import { RootState } from '..';
 import { useAppSelector } from '../utils';
 import { initializeAccount } from './accounts';
@@ -11,16 +13,14 @@ import { AccountStatus } from './utils';
 const selectors = accountsAdapter.getSelectors((state: RootState) => state.accounts);
 
 function selectAccounts(status?: AccountStatus) {
-  return createSelector(selectors.selectAll, accounts => {
-    switch (status) {
-      case 'active':
-        return accounts.filter(account => account.status === 'active').map(initializeAccount);
-      case 'hidden':
-        return accounts.filter(account => account.status === 'hidden').map(initializeAccount);
-      default:
-        return accounts.map(initializeAccount);
-    }
-  });
+  return createSelector(selectors.selectAll, accounts =>
+    accounts
+      .map(account => initializeAccount(account))
+      .filter(account => {
+        if (status) return account.status === status;
+        return true;
+      })
+  );
 }
 
 export function useSelectByAccountIds(accountIds: string[]) {
@@ -31,10 +31,8 @@ function selectByAccountIds(accountIds: string[]) {
   return createSelector(selectors.selectEntities, entities =>
     accountIds
       .map(id => entities[id])
-      .map(account => {
-        if (!account) throw new Error('No account found');
-        return initializeAccount(account);
-      })
+      .filter(isDefined)
+      .map(account => initializeAccount(account))
   );
 }
 
@@ -59,12 +57,15 @@ export function useAccountsByFingerprint(fingerprint: string, status?: AccountSt
 
 export function useAccounts(status: AccountStatus = 'active') {
   const accountsList = useSelector(selectAccounts(status));
+
   function fromFingerprint(fingerprint: string) {
     return accountsList.filter(account => account.fingerprint === fingerprint);
   }
+
   function fromAccountIndex(fingerprint: string, accountIndex: number) {
     return fromFingerprint(fingerprint).filter(account => account.accountIndex === accountIndex);
   }
+
   return {
     list: accountsList,
     hasAccounts: accountsList.length > 0,
@@ -80,7 +81,7 @@ export function useAccountByIndex(fingerprint: string, index: number) {
 export function useAccountByAccoundId(accountId: string) {
   return useAppSelector(state => {
     const account = selectors.selectById(state, accountId);
-    if (account) return initializeAccount(account);
-    return;
+    if (!account) return;
+    return initializeAccount(account);
   });
 }
