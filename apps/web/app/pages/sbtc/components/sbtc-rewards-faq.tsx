@@ -22,8 +22,8 @@ export function SbtcRewardsFaq() {
         defaultValue={faqBuilder.length ? faqBuilder[0]._id : undefined}
         collapsible
       >
-        {faqBuilder.map((post, index) => (
-          <Accordion.Item value={post._id} key={`${post._id}-${index}`}>
+        {faqBuilder.map(post => (
+          <Accordion.Item value={post._id} key={post._key}>
             <Accordion.Trigger>{sanitizeContent(post.question)}</Accordion.Trigger>
             <Accordion.Content>
               <styled.div

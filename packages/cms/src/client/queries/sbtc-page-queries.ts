@@ -11,15 +11,18 @@ export const sbtcFaqQuery = defineQuery(`*[
 ]{
   title,
   category,
-  faqBuilder[]->{
-    _id,
-    _type,
-    question,
-    answer,
-    tags,
-    legacyPost->{
+  faqBuilder[]{
+    _key,
+    ...@->{
       _id,
-      slug
+      _type,
+      question,
+      answer,
+      tags,
+      legacyPost->{
+        _id,
+        slug
+      }
     }
   }
 }[0]`);
