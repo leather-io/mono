@@ -129,11 +129,22 @@ document.addEventListener(DomEventName.psbtRequest, ((event: PsbtRequestEvent) =
 }) as EventListener);
 
 function addLeatherToPage() {
+  const extensionApi: any = (globalThis as any).chrome ?? (globalThis as any).browser;
+  const getUrl = extensionApi?.runtime?.getURL?.bind(extensionApi.runtime);
+  if (!getUrl) return;
+
   const inpage = document.createElement('script');
-  inpage.src = chrome.runtime.getURL('inpage.js');
+  inpage.src = getUrl('inpage.js');
   inpage.id = 'leather-provider';
-  document.body.appendChild(inpage);
+
+  const container = document.documentElement || document.head;
+  if (!container) return;
+
+  container.appendChild(inpage);
 }
 
-// Don't block thread to add Leather to page
-requestAnimationFrame(() => addLeatherToPage());
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', addLeatherToPage);
+} else {
+  addLeatherToPage();
+}
