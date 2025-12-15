@@ -1,4 +1,4 @@
-import { RefObject } from 'react';
+import { ComponentType, RefObject } from 'react';
 import { Pressable as RNPressable, type PressableProps as RNPressableProps } from 'react-native';
 import Animated, { AnimatedProps } from 'react-native-reanimated';
 
@@ -38,7 +38,9 @@ export type PressableRestyleProps = OpacityProps<Theme> &
   LayoutProps<Theme> &
   PositionProps<Theme>;
 
-export const AnimatedRestylePressable = Animated.createAnimatedComponent(
+export const AnimatedRestylePressable: ReturnType<
+  typeof Animated.createAnimatedComponent<ComponentType<PressableRestyleProps & RNPressableProps>>
+> = Animated.createAnimatedComponent(
   createRestyleComponent<PressableRestyleProps & RNPressableProps, Theme>(
     [
       backgroundColorShorthand,

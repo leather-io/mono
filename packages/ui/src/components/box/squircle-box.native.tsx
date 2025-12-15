@@ -106,7 +106,9 @@ export const boxRestyleFunctions = [
 
 export type SquircleBoxProps = BoxProps & SquircleViewProps;
 
-export const SquircleBox = createRestyleComponent<BoxProps & SquircleViewProps, Theme>(
+export const SquircleBox: ReturnType<
+  typeof createRestyleComponent<BoxProps & SquircleViewProps, Theme>
+> = createRestyleComponent<BoxProps & SquircleViewProps, Theme>(
   boxRestyleFunctions as RestyleFunctionContainer<BoxProps, Theme>[],
   SquircleView
 );

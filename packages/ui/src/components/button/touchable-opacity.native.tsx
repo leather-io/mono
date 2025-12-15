@@ -73,7 +73,9 @@ export const buttonRestyleFunctions = [
   createVariant({ themeKey: 'textVariants', property: 'textVariant' }),
 ];
 
-export const TouchableOpacity = createRestyleComponent<TouchableOpacityProps<Theme>, Theme>(
+export const TouchableOpacity: ReturnType<
+  typeof createRestyleComponent<TouchableOpacityProps<Theme>, Theme>
+> = createRestyleComponent<TouchableOpacityProps<Theme>, Theme>(
   buttonRestyleFunctions as RestyleFunctionContainer<TouchableOpacityProps<Theme>, Theme>[],
   RNTouchableOpacity
 );
