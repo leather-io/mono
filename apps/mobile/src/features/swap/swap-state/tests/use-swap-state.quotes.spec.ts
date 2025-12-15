@@ -326,7 +326,7 @@ describe('quote enrichment and selection', () => {
 
     const quotes = [
       createSwapQuote({
-        executionType: 'sbtc-bridge-transfer',
+        executionType: 'sbtc-bridge-deposit',
         targetAmount: 500_000_000,
         providerId: 'sbtc-bridge',
         baseAsset: defaultBtcAsset,
@@ -353,7 +353,7 @@ describe('quote enrichment and selection', () => {
     const bridgeQuote = result.current.quoteQuery.data?.quotes[0];
     assert(bridgeQuote);
     expect(bridgeQuote.providerFeePercentage).toBeUndefined();
-    expect(bridgeQuote.rawSwapQuote.executionType).toBe('sbtc-bridge-transfer');
+    expect(bridgeQuote.rawSwapQuote.executionType).toBe('sbtc-bridge-deposit');
   });
 
   it('sorts quotes by score in descending order', async () => {
@@ -416,7 +416,7 @@ describe('quote enrichment and selection', () => {
         providerId: 'alex-sdk',
       }),
       createSwapQuote({
-        executionType: 'sbtc-bridge-transfer',
+        executionType: 'sbtc-bridge-deposit',
         targetAmount: 123_456_000,
         providerId: 'sbtc-bridge',
         baseAsset: defaultBtcAsset,

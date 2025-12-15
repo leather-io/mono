@@ -36,3 +36,4 @@ export * from './utils/bitcoin.descriptors';
 export * from './utils/bitcoin.network';
 export * from './utils/bitcoin.utils';
 export * from './utils/lookup-derivation-by-address';
+export * from './utils/deconstruct-btc-address';
