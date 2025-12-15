@@ -3,7 +3,6 @@ import { ReactElement, useMemo } from 'react';
 import { Screen } from '@/components/screen/screen';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import { TokenDetailsProps } from '@/features/token/types';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import {
   useSip10AccountBalance,
@@ -12,6 +11,7 @@ import {
 import { useSettings } from '@/store/settings/settings';
 
 import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
+import { TokenDetailsProps } from '@leather.io/features';
 import { AccountId } from '@leather.io/models';
 import { RuneBalance, Sip10Balance } from '@leather.io/services';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';

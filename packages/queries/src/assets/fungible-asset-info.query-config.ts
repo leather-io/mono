@@ -1,18 +1,14 @@
-import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
+import type { QueryFunctionContext } from '@tanstack/react-query';
 
 import type { FungibleCryptoAsset } from '@leather.io/models';
-import {
-  type AssetDescription,
-  type UserSettings,
-  getFungibleAssetInfoService,
-} from '@leather.io/services';
+import { type UserSettings, getFungibleAssetInfoService } from '@leather.io/services';
 
 import { createServiceQueryKey } from '../shared/query-key.factory';
+import { marketDataQueryOptions } from '../shared/query-options';
 
-export function createFungibleAssetDescriptionQueryKey(
-  asset: FungibleCryptoAsset,
-  settings: UserSettings
-) {
+const DEFAULT_LOCALE = 'en';
+
+export function createAssetDescriptionQueryKey(asset: FungibleCryptoAsset, settings: UserSettings) {
   return createServiceQueryKey(
     'fungible-asset-info-service--get-asset-description',
     [asset],
@@ -20,19 +16,14 @@ export function createFungibleAssetDescriptionQueryKey(
   );
 }
 
-export function createFungibleAssetDescriptionQueryConfig(
+export function createAssetDescriptionQueryConfig(
   asset: FungibleCryptoAsset,
   settings: UserSettings
 ) {
   return {
-    queryKey: createFungibleAssetDescriptionQueryKey(asset, settings),
+    queryKey: createAssetDescriptionQueryKey(asset, settings),
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getFungibleAssetInfoService().getAssetDescription(asset, 'en', signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: 60000,
-    gcTime: 60000,
-  } satisfies UseQueryOptions<AssetDescription, Error>;
+      getFungibleAssetInfoService().getAssetDescription(asset, DEFAULT_LOCALE, signal),
+    ...marketDataQueryOptions,
+  };
 }

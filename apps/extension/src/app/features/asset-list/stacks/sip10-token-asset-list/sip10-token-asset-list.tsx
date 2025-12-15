@@ -3,6 +3,7 @@ import { type Dispatch, type SetStateAction, useEffect } from 'react';
 import { Stack } from 'leather-styles/jsx';
 
 import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
+import type { TokenDetailsProps } from '@leather.io/features';
 
 import { type AssetFilter } from '@app/common/hooks/use-manage-tokens';
 import {
@@ -22,6 +23,7 @@ interface Sip10TokenAssetListProps {
   assetFilter?: AssetFilter;
   assetRightElementVariant?: AssetRightElementVariant;
   onSelectAsset?(symbol: string, contractId?: string): void;
+  onOpenToken?(tokenDetails: TokenDetailsProps): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -29,6 +31,7 @@ export function Sip10TokenAssetList({
   accountIndex,
   assetFilter = 'all',
   onSelectAsset,
+  onOpenToken,
   assetRightElementVariant,
   setHasManageableTokens,
 }: Sip10TokenAssetListProps) {
@@ -37,13 +40,15 @@ export function Sip10TokenAssetList({
   });
   const { isEnabled } = useManagedSip10Tools(accountIndex);
 
+  const hasSip10s = sip10s.state === 'success' && sip10s.value && sip10s.value.sip10s.length > 0;
+
   useEffect(() => {
-    if (sip10s.value && sip10s.value.sip10s.length > 0 && setHasManageableTokens) {
+    if (hasSip10s && setHasManageableTokens) {
       setHasManageableTokens(true);
     }
-  }, [sip10s, setHasManageableTokens]);
+  }, [hasSip10s, setHasManageableTokens]);
 
-  if (sip10s.state !== 'success' && !sip10s.value) return null;
+  if (!hasSip10s) return null;
 
   return (
     <Stack>
@@ -56,6 +61,7 @@ export function Sip10TokenAssetList({
             balance={sip10}
             isEnabled={isEnabled(sip10)}
             onSelectAsset={onSelectAsset}
+            onOpenToken={onOpenToken}
           />
         ))}
     </Stack>

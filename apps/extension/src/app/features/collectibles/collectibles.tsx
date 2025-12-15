@@ -1,6 +1,10 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router';
 
-import { type CollectibleView } from '@leather.io/features';
+import { type CollectibleView, type TokenDetailsProps } from '@leather.io/features';
+import type { SerializedCryptoAssetId } from '@leather.io/utils';
+
+import { RouteUrls } from '@shared/route-urls';
 
 import { useFlags } from '@app/features/feature-flags';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
@@ -16,22 +20,32 @@ import { StampCard } from './components/stamp-card';
 
 const CARD_HEIGHT = 184;
 
-function renderCollectible(view: CollectibleView) {
-  const asset = view.asset;
+function renderCollectible(
+  view: CollectibleView,
+  onOpenToken?: (details: TokenDetailsProps) => void
+) {
+  const handleSelect =
+    onOpenToken && view.key
+      ? () =>
+          onOpenToken({
+            assetId: view.key as SerializedCryptoAssetId,
+          })
+      : undefined;
 
-  switch (asset.protocol) {
+  switch (view.asset.protocol) {
     case 'stamp':
-      return <StampCard item={asset} height={CARD_HEIGHT} />;
+      return <StampCard item={view.asset} height={CARD_HEIGHT} onSelect={handleSelect} />;
     case 'sip9':
-      return <Sip9Card item={asset} height={CARD_HEIGHT} />;
+      return <Sip9Card item={view.asset} height={CARD_HEIGHT} onSelect={handleSelect} />;
     case 'inscription':
-      return <InscriptionCard item={asset} height={CARD_HEIGHT} />;
+      return <InscriptionCard item={view.asset} height={CARD_HEIGHT} onSelect={handleSelect} />;
     default:
       return null;
   }
 }
 
-function CollectiblesCurrent() {
+export function CollectiblesCurrent() {
+  const navigate = useNavigate();
   const accountIndex = useCurrentAccountIndex();
   const account = useAccountAddresses(accountIndex);
   const {
@@ -42,14 +56,21 @@ function CollectiblesCurrent() {
     isRefetching,
   } = useAccountCollectibles(account);
 
+  const handleOpenToken = useCallback(
+    ({ assetId }: TokenDetailsProps) => {
+      void navigate(RouteUrls.TokenDetails.replace(':assetId', assetId));
+    },
+    [navigate]
+  );
+
   const renderedCollectibles = useMemo(
     () =>
       collectibles.map(view => (
         <CollectibleTypeIconOverlay protocol={view.protocol} key={view.key}>
-          {renderCollectible(view)}
+          {renderCollectible(view, handleOpenToken)}
         </CollectibleTypeIconOverlay>
       )),
-    [collectibles]
+    [collectibles, handleOpenToken]
   );
 
   return (
@@ -69,5 +90,5 @@ function CollectiblesCurrent() {
 
 export function Collectibles() {
   const { extensionRevamp } = useFlags();
-  return extensionRevamp ? <CollectiblesCurrent /> : <CollectiblesLegacy />;
+  return !extensionRevamp ? <CollectiblesCurrent /> : <CollectiblesLegacy />;
 }

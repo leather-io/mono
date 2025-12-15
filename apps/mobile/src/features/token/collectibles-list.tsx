@@ -8,9 +8,8 @@ import { CollectibleTypeIconOverlay } from '@/features/collectibles/components';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { CollectiblesListLoading } from '@/features/token/components/collectibles-list-loading';
 import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
-import { TokenDetailsProps } from '@/features/token/types';
 
-import { CollectibleView } from '@leather.io/features';
+import { type CollectibleView, type TokenDetailsProps } from '@leather.io/features';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { Inscription } from './bitcoin/inscription';

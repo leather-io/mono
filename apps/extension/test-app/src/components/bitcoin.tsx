@@ -3,9 +3,8 @@ import React from 'react';
 import { stacksTestnetNetwork } from '@common/utils';
 import * as btc from '@scure/btc-signer';
 import { bytesToHex, hexToBytes } from '@stacks/common';
-import { PsbtRequestOptions } from '@stacks/connect-jwt';
+import { type PsbtRequestOptions } from '@stacks/connect-jwt';
 import { useConnect } from '@stacks/connect-react-jwt';
-import { StacksNetwork } from '@stacks/network';
 import { styled } from 'leather-styles/jsx';
 
 interface BitcoinNetwork {
@@ -330,12 +329,12 @@ export function Bitcoin() {
   const segwitPubKey = hexToBytes(TEST_TESTNET_ACCOUNT_1_PUBKEY_P2WPKH);
   const taprootPubKey = hexToBytes(TEST_TESTNET_ACCOUNT_1_PUBKEY_TR);
 
-  async function signTx(options: PsbtRequestOptions, network?: StacksNetwork) {
-    const defaultNetwork = stacksTestnetNetwork;
+  async function signTx(options: PsbtRequestOptions, network?: unknown) {
+    const resolvedNetwork = (network ?? stacksTestnetNetwork) as PsbtRequestOptions['network'];
 
     await signPsbt({
       ...options,
-      network: network ?? defaultNetwork,
+      network: resolvedNetwork,
       onFinish: () => {
         // Transaction completed successfully
       },
@@ -401,7 +400,7 @@ export function Bitcoin() {
         <styled.button
           mt={3}
           onClick={() => {
-            window.btc
+            (window as any).btc
               ?.request('sendTransfer', {
                 address: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
                 amount: '10000',

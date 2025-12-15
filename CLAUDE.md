@@ -50,6 +50,12 @@
   ComponentNameProps.
 - Destructure props directly in the signature: `function Component({ propA, propB }: ComponentProps)`
 
+## React hooks
+
+- Always follow the Rules of Hooks: call React hooks (including custom hooks like `useUserSettings`) only at the top level of React function components or other hooks.
+- Never call hooks conditionally, inside loops, inside nested functions, or after early returns that would change the order of hook calls between renders.
+- If you need conditional behavior, call the hook unconditionally and branch on its returned values, or extract the conditional logic into a separate component or custom hook.
+
 ## File naming
 
 - Use snake case file names
@@ -59,6 +65,11 @@
   - Barrel exports from library packages
   - Required by file-based router
 - use \*.spec.ts(x) for tests
+
+## Architecture
+
+- When generating new UI, use a container/presentational (dumb) component pattern with separate layout components for view-only concerns.
+- Keep file names and folder structure consistent across platforms (web, extension, mobile) for equivalent features and components.
 
 ## Use Remeda for functional utilities
 

@@ -1,3 +1,9 @@
+type LoadingState<T> = { state: 'loading'; value?: T; errorMessage?: string };
+type ErrorState<T> = { state: 'error'; errorMessage: string; value?: T };
+type SuccessState<T> = { state: 'success'; value: T; errorMessage?: string };
+
+export type FetchState<T> = LoadingState<T> | ErrorState<T> | SuccessState<T>;
+
 export function toFetchState<T>({
   data,
   isLoading,
@@ -8,24 +14,24 @@ export function toFetchState<T>({
   isLoading: boolean;
   isError: boolean;
   error: Error | null;
-}) {
+}): FetchState<T> {
   if (isLoading) {
-    return { state: 'loading' } as const;
+    return { state: 'loading' };
   }
   if (isError) {
     return {
       state: 'error',
       errorMessage: error?.message ?? '',
-    } as const;
+    };
   }
   if (!data) {
     return {
       state: 'error',
       errorMessage: '',
-    } as const;
+    };
   }
   return {
     state: 'success',
     value: data,
-  } as const;
+  };
 }

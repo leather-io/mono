@@ -1,13 +1,13 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
-import { Box, BoxProps, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, styled } from 'leather-styles/jsx';
 
-interface LinkProps {
+interface LinkProps extends BoxProps {
   _hover?: BoxProps;
   onClick(): void;
   children: ReactNode;
-  fontSize: string;
-  textStyle: string;
+  fontSize?: string;
+  textStyle?: string;
 }
 
 export function buildEnterKeyEvent(onClick: () => void) {

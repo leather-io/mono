@@ -1,7 +1,10 @@
 import { styled } from 'leather-styles/jsx';
 
+import { stxAsset } from '@leather.io/constants';
+import type { TokenDetailsProps } from '@leather.io/features';
 import type { AddressQuotedStxBalance } from '@leather.io/services';
 import { Caption, StxAvatarIcon } from '@leather.io/ui';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { CryptoAssetItemLayout } from '@app/components/crypto-asset-item/crypto-asset-item.layout';
@@ -11,6 +14,7 @@ interface StxCryptoAssetItemProps {
   isLoading: boolean;
   isPrivate?: boolean;
   onSelectAsset?(symbol: string): void;
+  onOpenToken?(details: TokenDetailsProps): void;
 }
 
 export function StxCryptoAssetItem({
@@ -18,6 +22,7 @@ export function StxCryptoAssetItem({
   isLoading,
   isPrivate,
   onSelectAsset,
+  onOpenToken,
 }: StxCryptoAssetItemProps) {
   const { lockedBalance, totalBalance } = balance.stx;
   const showLockedBalance = lockedBalance.amount.isGreaterThan(0) && !isPrivate;
@@ -31,6 +36,18 @@ export function StxCryptoAssetItem({
   );
   const captionRightBulletInfo = <Caption>{fiatLockedBalance} locked</Caption>;
 
+  function handleSelectAsset(symbol: string) {
+    if (onOpenToken) {
+      onOpenToken({
+        assetId: serializeAssetId(getAssetId(stxAsset)),
+      });
+      return;
+    }
+    onSelectAsset?.(symbol);
+  }
+
+  const onSelectAssetProp = onOpenToken || onSelectAsset ? handleSelectAsset : undefined;
+
   return (
     <CryptoAssetItemLayout
       availableBalance={totalBalance}
@@ -40,7 +57,7 @@ export function StxCryptoAssetItem({
       icon={<StxAvatarIcon />}
       isLoading={isLoading}
       isPrivate={isPrivate}
-      onSelectAsset={onSelectAsset}
+      onSelectAsset={onSelectAssetProp}
       titleLeft="Stacks"
       titleRightBulletInfo={showLockedBalance && titleRightBulletInfo}
       dataTestId="STX"
