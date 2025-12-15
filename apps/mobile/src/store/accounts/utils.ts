@@ -29,12 +29,12 @@ export type AccountStatus = 'active' | 'hidden';
 export const accountStoreSchema = z.object({
   id: z.string(),
   icon: z.string(),
-  name: z.string(),
-  status: z.string(),
+  name: z.string().optional(),
+  status: z.string().optional(),
 });
 export interface AccountStore {
   id: string;
   icon: AccountIcon;
-  name: string;
-  status: AccountStatus;
+  name?: string;
+  status?: AccountStatus;
 }

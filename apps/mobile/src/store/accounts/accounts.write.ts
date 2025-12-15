@@ -1,12 +1,10 @@
-import { t } from '@lingui/core/macro';
-import { EntityState, createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { produce } from 'immer';
+import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
 import { entitySchema, handleAppResetWithState, handleEntityActionWith } from '@leather.io/state';
 import { userAddsAccount } from '@leather.io/state/keychains';
-import { Optional, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
+import { userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
 import { getWalletAccountsByAccountId, selectNextDistinctAccountIcon } from '../utils';
 import { AccountIcon, AccountStatus, AccountStore, accountStoreSchema } from './utils';
@@ -15,34 +13,6 @@ export const accountsAdapter = createEntityAdapter<AccountStore, string>({
   selectId: account => account.id,
 });
 export const accountEntitySchema = entitySchema(accountStoreSchema);
-
-function addAccountDefaults({
-  state,
-  account,
-  accountIndex,
-}: {
-  state: EntityState<AccountStore, string>;
-  account: PartialAccountStore;
-  accountIndex: number;
-}): AccountStore {
-  const currentWalletAccounts = getWalletAccountsByAccountId(state, account.id);
-  const usedIcons = Object.values(state.entities).map(account => account.icon);
-  const precedingIcon = currentWalletAccounts[currentWalletAccounts.length - 1]?.icon;
-
-  const updatedAccount = produce(account, draftAccount => {
-    if (!draftAccount.icon) {
-      draftAccount.icon = selectNextDistinctAccountIcon(usedIcons, precedingIcon);
-    }
-    if (!draftAccount.name) {
-      draftAccount.name = t`Account ${accountIndex}`;
-    }
-    if (!draftAccount.status) {
-      draftAccount.status = 'active';
-    }
-    return draftAccount;
-  });
-  return updatedAccount as AccountStore;
-}
 
 const initialState = accountsAdapter.getInitialState();
 
@@ -56,15 +26,12 @@ export const accountsSlice = createSlice({
       .addCase(userAddsWallet, (state, action) => {
         const firstAccountIndex = 0;
         const id = makeAccountIdentifer(action.payload.wallet.fingerprint, firstAccountIndex);
+        const usedIcons = Object.values(state.entities).map(account => account.icon);
 
-        accountsAdapter.addOne(
-          state,
-          addAccountDefaults({
-            state,
-            account: { id },
-            accountIndex: 1,
-          })
-        );
+        accountsAdapter.addOne(state, {
+          id,
+          icon: selectNextDistinctAccountIcon(usedIcons),
+        });
       })
 
       .addCase(userRemovesWallet, (state, action) => {
@@ -74,16 +41,17 @@ export const accountsSlice = createSlice({
       })
 
       .addCase(userAddsAccount, (state, action) => {
-        const thisWalletsAccounts = getWalletAccountsByAccountId(state, action.payload.account.id);
-
-        return accountsAdapter.addOne(
+        const currentWalletAccounts = getWalletAccountsByAccountId(
           state,
-          addAccountDefaults({
-            state,
-            account: action.payload.account,
-            accountIndex: thisWalletsAccounts.length + 1,
-          })
+          action.payload.account.id
         );
+        const usedIcons = Object.values(state.entities).map(account => account.icon);
+        const precedingIcon = currentWalletAccounts[currentWalletAccounts.length - 1]?.icon;
+
+        return accountsAdapter.addOne(state, {
+          id: action.payload.account.id,
+          icon: selectNextDistinctAccountIcon(usedIcons, precedingIcon),
+        });
       })
 
       .addCase(
@@ -118,8 +86,6 @@ export const accountsSlice = createSlice({
 
       .addCase(...handleAppResetWithState(initialState)),
 });
-
-type PartialAccountStore = Optional<AccountStore, 'icon' | 'name' | 'status'>;
 
 interface ToggleHideAccountPayload {
   accountId: string;
