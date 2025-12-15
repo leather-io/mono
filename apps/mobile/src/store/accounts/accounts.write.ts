@@ -116,10 +116,6 @@ export const accountsSlice = createSlice({
         }))
       )
 
-      .addCase(userUpdatesAccountOrder, (state, action) => {
-        state.ids = action.payload.accountIds;
-      })
-
       .addCase(...handleAppResetWithState(initialState)),
 });
 
@@ -143,11 +139,4 @@ interface UpdateAccountIconPayload extends AccountId {
 }
 export const userUpdatesAccountIcon = createAction<UpdateAccountIconPayload>(
   'accounts/addIconToAccount'
-);
-
-interface UpdateAccountOrderPayload {
-  accountIds: string[];
-}
-export const userUpdatesAccountOrder = createAction<UpdateAccountOrderPayload>(
-  'accounts/updateAccountOrder'
 );

@@ -1,9 +1,6 @@
-import { useRef } from 'react';
-import { Dimensions, ScrollView } from 'react-native';
-import { useSharedValue } from 'react-native-reanimated';
+import { Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Draggable } from '@/components/draggable';
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { HEADER_HEIGHT } from '@/shared/constants';
@@ -23,21 +20,16 @@ import { PortfolioHeader } from '../components/portfolio-header';
 interface AccountSelectorSheetLayoutProps {
   accounts: Account[];
   onAccountPress(account: Account): void;
-  swapAccountIndexes(from: number, to: number): void;
   sheetRef: SheetRef;
 }
 
 export function AccountSelectorSheetLayout({
   accounts,
   onAccountPress,
-  swapAccountIndexes,
   sheetRef,
 }: AccountSelectorSheetLayoutProps) {
   const { top } = useSafeAreaInsets();
   const theme = useTheme();
-  const scrollViewRef = useRef<ScrollView>(null);
-  const placeholderIdx = useSharedValue<null | number>(null);
-  const direction = useSharedValue<'down' | 'up'>('down');
   const { list: connectedApps } = useApps('connected');
   const connectedAppsToAccountIdMap = getConnectedAppsToAccountIdMap(connectedApps);
   const { currentAccount } = useSettings();
@@ -55,24 +47,12 @@ export function AccountSelectorSheetLayout({
       >
         <PortfolioHeader />
       </Box>
-      <Sheet.ScrollView ref={scrollViewRef}>
+      <Sheet.ScrollView>
         <Box px="5" pb="7">
           <Box gap="2">
-            {accounts.map((account, idx) => (
-              <Draggable
-                idx={idx}
-                direction={direction}
-                scrollViewRef={scrollViewRef}
-                placeholderIdx={placeholderIdx}
-                cardsLength={accounts.length}
-                key={account.id}
-                cardId={account.id}
-                onCardPress={() => onAccountPress(account)}
-                swapCardIndexes={swapAccountIndexes}
-                // TODO: disable reorder for now before the release
-                disableReorder
-              >
-                <WalletLoader fingerprint={account.fingerprint} key={account.id}>
+            {accounts.map(account => (
+              <Box key={account.id} onTouchEnd={() => onAccountPress(account)}>
+                <WalletLoader fingerprint={account.fingerprint}>
                   {wallet => (
                     <AccountCard
                       isSelected={
@@ -104,7 +84,7 @@ export function AccountSelectorSheetLayout({
                     />
                   )}
                 </WalletLoader>
-              </Draggable>
+              </Box>
             ))}
           </Box>
         </Box>
