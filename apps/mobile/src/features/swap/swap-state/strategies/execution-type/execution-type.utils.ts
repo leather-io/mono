@@ -1,7 +1,13 @@
+import { EnrichedSwapQuote } from '@/features/swap/swap-state/swap-state.types';
 import { PER_DEX_FEE_PERCENTAGE } from '@/features/swap/swap-state/swap.constants';
+import {
+  calculatePriceImpactPercentage,
+  estimateExchangeRate,
+} from '@/features/swap/swap-state/utils/market-rates';
 import BigNumber from 'bignumber.js';
+import { pick } from 'remeda';
 
-import { Money, SwapDex } from '@leather.io/models';
+import { Money, SwapDex, SwapQuote } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 export function calculateMinToReceiveAmount(targetAmount: Money, slippage: number): Money {
@@ -15,4 +21,31 @@ export function calculateMinToReceiveAmount(targetAmount: Money, slippage: numbe
 
 export function estimateLiquidityFeePercentage(dexPath: SwapDex[]) {
   return BigNumber(dexPath.length).times(PER_DEX_FEE_PERCENTAGE);
+}
+
+export function createBaseEnrichedQuote(
+  swapQuote: SwapQuote,
+  fairMarketRate: BigNumber | null
+): Omit<
+  EnrichedSwapQuote,
+  'slippageApplicable' | 'minReceive' | 'providerFeePercentage' | 'swapRate'
+> {
+  const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
+  return {
+    rawSwapQuote: swapQuote,
+    ...pick(swapQuote, [
+      'baseAmount',
+      'targetAmount',
+      'baseAsset',
+      'targetAsset',
+      'dexPath',
+      'assetPath',
+      'createdAt',
+      'isExecutable',
+      'executionConstraints',
+    ]),
+    provider: swapQuote.providerId,
+    score: swapQuote.targetAmount.amount.toNumber(),
+    priceImpactPercentage: calculatePriceImpactPercentage(rate, fairMarketRate),
+  };
 }

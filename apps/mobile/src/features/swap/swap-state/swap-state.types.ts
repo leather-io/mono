@@ -11,6 +11,7 @@ import { configureAnalyticsClient } from '@leather.io/analytics';
 import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import {
   AccountAddresses,
+  ExecutionConstraint,
   MarketData,
   Money,
   NetworkConfiguration,
@@ -116,6 +117,9 @@ export interface EnrichedSwapQuote {
   targetAsset: SwappableFungibleCryptoAsset;
   baseAmount: Money;
   targetAmount: Money;
+  isExecutable: boolean;
+  executionConstraints: ExecutionConstraint[];
+  createdAt: Date;
   slippageApplicable: boolean;
   minReceive?: Money;
   provider: SwapProviderId;
