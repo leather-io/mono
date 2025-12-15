@@ -18,10 +18,31 @@ type GetAddressesResult = Awaited<ReturnType<typeof leather.getAddresses>>['addr
 
 export const addressesAtom = atomWithStorage<GetAddressesResult>('addresses', []);
 
+export const leatherInstalledAtom = atom(isLeatherInstalled());
+
+leatherInstalledAtom.onMount = set => {
+  if (typeof window === 'undefined') return;
+
+  function checkInstalled() {
+    if (isLeatherInstalled()) {
+      set(true);
+      clearInterval(intervalId);
+    }
+  }
+
+  // In some browsers the inpage provider is injected asynchronously,
+  // so we poll briefly after mount to detect it.
+  const intervalId = window.setInterval(checkInstalled, 500);
+  checkInstalled();
+
+  return () => clearInterval(intervalId);
+};
+
 export const extensionStateAtom = atom<ExtensionState>(get => {
   const addresses = get(addressesAtom);
+  const leatherInstalled = get(leatherInstalledAtom);
   if (addresses.length !== 0) return 'connected';
-  if (isLeatherInstalled()) return 'detected';
+  if (leatherInstalled) return 'detected';
   return 'missing';
 });
 
