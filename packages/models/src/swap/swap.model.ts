@@ -74,6 +74,9 @@ export interface BitflowSdkSwapQuote extends BaseSwapQuote {
 
 export interface SbtcBridgeSwapQuote extends BaseSwapQuote {
   readonly providerId: 'sbtc-bridge';
+  readonly providerQuoteData: {
+    signerSweepTxFeeSats: number;
+  };
 }
 
 export interface SwapDex {
@@ -83,7 +86,7 @@ export interface SwapDex {
   readonly description: string;
 }
 
-export const swapExecutionTypes = ['stacks-contract-call', 'sbtc-bridge-transfer'] as const;
+export const swapExecutionTypes = ['stacks-contract-call', 'sbtc-bridge-deposit'] as const;
 export type SwapExecutionType = (typeof swapExecutionTypes)[number];
 
 export interface BaseSwapExecutionData {
@@ -93,7 +96,6 @@ export interface BaseSwapExecutionData {
 }
 export interface StacksContractCallSwapExecutionData extends BaseSwapExecutionData {
   readonly executionType: 'stacks-contract-call';
-  readonly quote: SwapQuote;
   readonly contractAddress: string;
   readonly contractName: string;
   readonly functionName: string;
@@ -101,9 +103,9 @@ export interface StacksContractCallSwapExecutionData extends BaseSwapExecutionDa
   readonly postConditions: unknown[];
   readonly postConditionMode?: unknown;
 }
-export interface SbtcBridgeTransferSwapExecutionData extends BaseSwapExecutionData {
-  readonly executionType: 'sbtc-bridge-transfer';
+export interface SbtcBridgeDepositSwapExecutionData extends BaseSwapExecutionData {
+  readonly executionType: 'sbtc-bridge-deposit';
 }
 export type SwapExecutionData =
   | StacksContractCallSwapExecutionData
-  | SbtcBridgeTransferSwapExecutionData;
+  | SbtcBridgeDepositSwapExecutionData;

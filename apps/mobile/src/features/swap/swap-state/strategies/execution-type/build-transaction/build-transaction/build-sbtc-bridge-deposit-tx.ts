@@ -28,7 +28,7 @@ export interface SbtcDeposit {
   trOut: P2TROut;
 }
 
-export async function buildSbtcBridgeTransferTx(
+export async function buildSbtcBridgeDepositTx(
   amountSats: number | bigint,
   network: NetworkConfiguration,
   account: AccountAddresses,

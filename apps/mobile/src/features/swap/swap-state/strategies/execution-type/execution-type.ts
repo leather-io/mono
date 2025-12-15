@@ -23,7 +23,7 @@ import {
 } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import { buildSbtcBridgeTransferTx } from './build-transaction/build-transaction/build-sbtc-bridge-transfer-tx';
+import { buildSbtcBridgeDepositTx } from './build-transaction/build-transaction/build-sbtc-bridge-deposit-tx';
 import { buildStacksTx } from './build-transaction/build-transaction/build-stacks-tx';
 import {
   calculateMinToReceiveAmount,
@@ -87,7 +87,7 @@ const stacksContractCallStrategy: ExecutionStrategy = {
   },
 };
 
-const sbtcBridgeTransferStrategy: ExecutionStrategy = {
+const sbtcBridgeDepositStrategy: ExecutionStrategy = {
   enrichQuote(swapQuote: SwapQuote, fairMarketRate: BigNumber | null) {
     const rate = estimateExchangeRate(swapQuote.baseAmount, swapQuote.targetAmount);
     return {
@@ -107,7 +107,7 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
   },
   async getNetworkFee(dependencies, signal?: AbortSignal) {
     const { accountRequest, derivedAmounts, isSendingMax, services, bitcoin } = dependencies;
-    const deposit = await buildSbtcBridgeTransferTx(
+    const deposit = await buildSbtcBridgeDepositTx(
       derivedAmounts.crypto?.amount.toNumber() ?? 0,
       bitcoin.network,
       accountRequest.account,
@@ -129,7 +129,7 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
   },
   async submitSwap(dependencies, fee) {
     const { accountRequest, derivedAmounts, isSendingMax, bitcoin, services } = dependencies;
-    const deposit = await buildSbtcBridgeTransferTx(
+    const deposit = await buildSbtcBridgeDepositTx(
       derivedAmounts.crypto?.amount.toNumber() ?? 0,
       bitcoin.network,
       accountRequest.account,
@@ -194,7 +194,7 @@ const sbtcBridgeTransferStrategy: ExecutionStrategy = {
 
 const strategyByExecutionType: Record<SwapExecutionType, ExecutionStrategy> = {
   'stacks-contract-call': stacksContractCallStrategy,
-  'sbtc-bridge-transfer': sbtcBridgeTransferStrategy,
+  'sbtc-bridge-deposit': sbtcBridgeDepositStrategy,
 };
 
 export function getExecutionTypeStrategy(type: SwapExecutionType): ExecutionStrategy {
