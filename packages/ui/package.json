@@ -50,8 +50,6 @@
     "prism-react-renderer": "2.4.1",
     "prismjs": "1.30.0",
     "radix-ui": "1.4.2",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
     "react-native": "0.79.2",
     "react-native-gesture-handler": "2.24.0",
     "react-native-reanimated": "3.17.5",
@@ -112,7 +110,13 @@
     "tsdown": "0.16.5",
     "tslib": "2.6.2",
     "typescript": "5.9.3",
-    "vitest": "2.1.9"
+    "vitest": "2.1.9",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "peerDependencies": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "files": [
     "dist-web",
