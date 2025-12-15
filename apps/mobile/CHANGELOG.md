@@ -19,6 +19,28 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.94.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.4...@leather.io/mobile-v2.94.0) (2025-12-15)
+
+
+### Features
+
+* **mobile:** add app icon switcher ([d8bd4b2](https://github.com/leather-io/mono/commit/d8bd4b28446f9a7ad01ddbbcef1beb5a0676d8b1))
+* **mobile:** add swap submission ([89080ea](https://github.com/leather-io/mono/commit/89080eaf5c49a9466a0fdebbfeb46ea58eda563e))
+* **mobile:** rename nativeAsset -&gt; networkFeeAsset ([be7f9c7](https://github.com/leather-io/mono/commit/be7f9c7504539b4d65d8cb5fb2be2de761ae9ca9))
+
+
+### Bug Fixes
+
+* **mobile:** make idle take precedence in swap live estimate ([fe66956](https://github.com/leather-io/mono/commit/fe66956952fc9cf21ba1f7f4773ad6a826b80213))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.17.0
+    * @leather.io/ui bumped to 1.100.0
+
 ## [2.93.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.3...@leather.io/mobile-v2.93.4) (2025-12-09)
 
 

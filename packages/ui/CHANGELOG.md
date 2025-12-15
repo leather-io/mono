@@ -489,6 +489,20 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.100.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.99.3...@leather.io/ui-v1.100.0) (2025-12-15)
+
+
+### Features
+
+* **mobile:** add app icon switcher ([d8bd4b2](https://github.com/leather-io/mono/commit/d8bd4b28446f9a7ad01ddbbcef1beb5a0676d8b1))
+* **mobile:** add swap submission ([89080ea](https://github.com/leather-io/mono/commit/89080eaf5c49a9466a0fdebbfeb46ea58eda563e))
+* **ui:** add and export AnimatedBox from the ui package ([68f23e0](https://github.com/leather-io/mono/commit/68f23e05000af80adc6f1b8796a2fec5bc4c2509))
+
+
+### Bug Fixes
+
+* **ui:** update `defaultPressEffect` to use timing animation with easing ([6fa3b9d](https://github.com/leather-io/mono/commit/6fa3b9d1377e74e4d4c9ad8a12d0563d5feaa4a7))
+
 ## [1.99.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.99.2...@leather.io/ui-v1.99.3) (2025-12-09)
 
 
