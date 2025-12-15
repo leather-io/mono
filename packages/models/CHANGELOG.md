@@ -36,6 +36,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.52.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.51.0...@leather.io/models-v0.52.0) (2025-12-15)
+
+
+### Features
+
+* add withdrawal and fee logic to sbtc swap provider service ([3d277dd](https://github.com/leather-io/mono/commit/3d277dd8e1f56eae7772b4a042f66288b87101ba))
+
 ## [0.51.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.50.2...@leather.io/models-v0.51.0) (2025-12-09)
 
 
