@@ -1,6 +1,8 @@
 import { type Dispatch, type SetStateAction, useEffect } from 'react';
 
+import type { TokenDetailsProps } from '@leather.io/features';
 import { RunesAvatarIcon } from '@leather.io/ui';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { type AssetFilter } from '@app/common/hooks/use-manage-tokens';
@@ -17,6 +19,7 @@ interface RunesAssetListProps {
   accountIndex: number;
   filter?: AssetFilter;
   assetRightElementVariant?: AssetRightElementVariant;
+  onOpenToken?(details: TokenDetailsProps): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -24,6 +27,7 @@ export function RunesAssetList({
   accountIndex,
   filter = 'all',
   assetRightElementVariant,
+  onOpenToken,
   setHasManageableTokens,
 }: RunesAssetListProps) {
   const isPrivate = useIsPrivateMode();
@@ -32,19 +36,28 @@ export function RunesAssetList({
   });
   const { isEnabled } = useManagedRunesTools(accountIndex);
 
+  const hasRunes = runes.state === 'success' && runes.value && runes.value.runes.length > 0;
+
   useEffect(() => {
-    if (runes.value && runes.value.runes.length > 0 && setHasManageableTokens) {
+    if (hasRunes && setHasManageableTokens) {
       setHasManageableTokens(true);
     }
-  }, [runes, setHasManageableTokens]);
+  }, [hasRunes, setHasManageableTokens]);
 
-  if (runes.state !== 'success' && !runes.value) return null;
+  if (!hasRunes) return null;
 
   return runes.value.runes.map((rune, i) => {
     const key = `${rune.asset.symbol}${i}`;
     const captionLeft = 'Runes';
     const icon = <RunesAvatarIcon />;
     const titleLeft = rune.asset.spacedRuneName ?? rune.asset.runeName;
+
+    function handleSelectRune() {
+      if (!onOpenToken) return;
+      onOpenToken({
+        assetId: serializeAssetId(getAssetId(rune.asset)),
+      });
+    }
 
     return (
       <CryptoAssetItem
@@ -65,6 +78,7 @@ export function RunesAssetList({
           titleLeft,
           fiatBalance: formatCurrency(rune.quote.totalBalance),
           dataTestId: rune.asset.runeName,
+          onSelectAsset: onOpenToken ? () => handleSelectRune() : undefined,
         }}
       />
     );

@@ -5,11 +5,11 @@ import { StampDetails } from '@/features/token/bitcoin/stamp-details';
 import { Sip9Details } from '@/features/token/stacks/sip9-details';
 import { Sip10TokenDetails } from '@/features/token/stacks/sip10-token-details';
 import { StacksTokenDetails } from '@/features/token/stacks/stacks-token-details';
-import { isSupportedAssetProtocol } from '@/features/token/types';
 import { useTokenTracking } from '@/hooks/use-token-tracking';
 import { useSettings } from '@/store/settings/settings';
 import { useLocalSearchParams } from 'expo-router';
 
+import { isSupportedAssetProtocol } from '@leather.io/features';
 import { CryptoAssetProtocols } from '@leather.io/models';
 import { SerializedCryptoAssetId, assertExistence, deserializeAssetId } from '@leather.io/utils';
 

@@ -1,5 +1,4 @@
-import { TokenDetailsProps } from '@/features/token/types';
-
+import { TokenDetailsProps } from '@leather.io/features';
 import { CryptoAssetProtocols } from '@leather.io/models';
 import { RuneBalance, Sip10Balance } from '@leather.io/services';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';

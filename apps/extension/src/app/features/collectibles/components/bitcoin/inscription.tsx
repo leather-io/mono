@@ -28,6 +28,7 @@ import { CollectibleIframe } from '../../../../components/collectibles/collectib
 import { CollectibleImage } from '../../../../components/collectibles/collectible-image';
 import { CollectibleOther } from '../../../../components/collectibles/collectible-other';
 import { HighSatValueUtxoWarning } from './high-sat-value-utxo';
+import { InscriptionHtml } from './inscription-html';
 import { InscriptionText } from './inscription-text';
 
 interface InscriptionProps {
@@ -53,18 +54,28 @@ export function Inscription({ inscription }: InscriptionProps) {
 
   const content = useMemo(() => {
     const sharedProps = { onClickSend: () => openSendInscriptionModal() };
+    const inscriptionTitle = `# ${inscription.number}`;
+    const inscriptionSubtitle = 'Ordinal inscription';
     switch (inscription.mimeType) {
       case 'audio':
         return (
           <CollectibleAudio
             icon={<OrdinalAvatarIcon size="lg" />}
             key={inscription.title}
-            subtitle="Ordinal inscription"
-            title={`# ${inscription.number}`}
+            subtitle={inscriptionSubtitle}
+            title={inscriptionTitle}
             {...sharedProps}
           />
         );
       case 'html':
+        return (
+          <InscriptionHtml
+            contentSrc={inscription.src}
+            subtitle={inscriptionSubtitle}
+            title={inscriptionTitle}
+            {...sharedProps}
+          />
+        );
       case 'svg':
       case 'video':
       case 'gltf':
@@ -73,8 +84,8 @@ export function Inscription({ inscription }: InscriptionProps) {
             icon={<OrdinalAvatarIcon size="lg" />}
             key={inscription.title}
             src={inscription.src}
-            subtitle="Ordinal inscription"
-            title={`# ${inscription.number}`}
+            subtitle={inscriptionSubtitle}
+            title={inscriptionTitle}
             {...sharedProps}
           />
         );
@@ -84,8 +95,8 @@ export function Inscription({ inscription }: InscriptionProps) {
             icon={<OrdinalAvatarIcon size="lg" />}
             key={inscription.title}
             src={inscription.src}
-            subtitle="Ordinal inscription"
-            title={`# ${inscription.number}`}
+            subtitle={inscriptionSubtitle}
+            title={inscriptionTitle}
             {...sharedProps}
           />
         );

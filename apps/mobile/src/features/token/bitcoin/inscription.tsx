@@ -4,11 +4,11 @@ import {
   ImageUnavailable,
   Inscription as InscriptionComponent,
 } from '@/features/collectibles/components';
-import { TokenDetailsProps } from '@/features/token/types';
 import { imageUnavailableLabel } from '@/features/token/utils/image-unavailable-label';
 import { t } from '@lingui/core/macro';
 
-import { InscriptionAsset } from '@leather.io/models';
+import { type TokenDetailsProps } from '@leather.io/features';
+import { type InscriptionAsset } from '@leather.io/models';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 interface InscriptionProps {
