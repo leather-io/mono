@@ -35,8 +35,6 @@ function configureMixpanel(mixpanelClient: OverridedMixpanel) {
   });
 }
 function getMockedMixpanel() {
-  // eslint-disable-next-line no-console
-  console.warn('Using mocked mixpanel. No analytics are sent');
   return {
     identify() {
       return Promise.resolve();
