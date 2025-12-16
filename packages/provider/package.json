@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "tsdown && node scripts/prepare-script.js",
-    "build:watch": "tsdown --watch",
+    "build:watch": "tsdown --no-clean --watch",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "lint": "eslint --cache --max-warnings 0",
