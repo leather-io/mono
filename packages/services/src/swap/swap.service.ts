@@ -232,6 +232,7 @@ export class SwapService {
       quote.providerId
     ).getSwapExecutionData({ request, quote, slippagePercentage }, signal);
     if (
+      executionData.providerId !== 'sbtc-bridge' && // slippage PC not relevant for sbtc withdrawal
       executionData.executionType === 'stacks-contract-call' &&
       !hasValidMinReceiveAmountPostCondition(executionData, slippagePercentage)
     ) {
