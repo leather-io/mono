@@ -3,7 +3,7 @@ import { t } from '@lingui/core/macro';
 import { AccountId } from '@leather.io/models';
 
 import { useAccountByIndex } from './accounts.read';
-import { AccountStatus, AccountStore } from './utils';
+import { AccountStatus, AccountStore, deriveIconFromAccountId } from './utils';
 
 export function deserializeAccountId(accountId: string) {
   const [fingerprint, accountIndex] = accountId.split('/');
@@ -20,6 +20,7 @@ export function initializeAccount(account: AccountStore) {
     ...accountId,
     status: account.status ?? ('active' satisfies AccountStatus),
     name: account.name ?? t`Account ${displayIndex}`,
+    icon: account.icon ?? deriveIconFromAccountId(account.id),
   };
 }
 

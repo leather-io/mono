@@ -72,6 +72,7 @@ export function isValidMnemonicWord(word: string): boolean {
 export function isValidMnemonic(mnemonic: string): boolean {
   return validateMnemonic(mnemonic, wordlist);
 }
+
 /**
  * Create a unique accountId using wallet's fingerprint and accountIndex
  */

@@ -22,19 +22,39 @@ export const accountIcons = [
   'heart',
   'flag',
 ] as const;
-
 export type AccountIcon = (typeof accountIcons)[number];
-export type AccountStatus = 'active' | 'hidden';
+
+const accountStatuses = ['active', 'hidden'] as const;
+export type AccountStatus = (typeof accountStatuses)[number];
+
+export interface AccountStore {
+  id: string;
+  icon?: AccountIcon;
+  name?: string;
+  status?: AccountStatus;
+}
 
 export const accountStoreSchema = z.object({
   id: z.string(),
-  icon: z.string(),
+  icon: z.enum(accountIcons).optional(),
   name: z.string().optional(),
-  status: z.string().optional(),
-});
-export interface AccountStore {
-  id: string;
-  icon: AccountIcon;
-  name?: string;
-  status?: AccountStatus;
+  status: z.enum(accountStatuses).optional(),
+}) satisfies z.ZodType<AccountStore>;
+
+function simpleStringHash(input: string): number {
+  let hash = 0;
+  for (let i = 0; i < input.length; i++) {
+    const char = input.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash);
+}
+
+export function deriveIconFromAccountId(accountId: string): AccountIcon {
+  const hash = simpleStringHash(accountId);
+  const index = hash % accountIcons.length;
+  const icon = accountIcons[index];
+  if (!icon) throw new Error('Failed to derive icon from account ID');
+  return icon;
 }

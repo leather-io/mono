@@ -6,7 +6,6 @@ import { entitySchema, handleAppResetWithState, handleEntityActionWith } from '@
 import { userAddsAccount } from '@leather.io/state/keychains';
 import { userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
-import { getWalletAccountsByAccountId, selectNextDistinctAccountIcon } from '../utils';
 import { AccountIcon, AccountStatus, AccountStore, accountStoreSchema } from './utils';
 
 export const accountsAdapter = createEntityAdapter<AccountStore, string>({
@@ -26,12 +25,8 @@ export const accountsSlice = createSlice({
       .addCase(userAddsWallet, (state, action) => {
         const firstAccountIndex = 0;
         const id = makeAccountIdentifer(action.payload.wallet.fingerprint, firstAccountIndex);
-        const usedIcons = Object.values(state.entities).map(account => account.icon);
 
-        accountsAdapter.addOne(state, {
-          id,
-          icon: selectNextDistinctAccountIcon(usedIcons),
-        });
+        accountsAdapter.addOne(state, { id });
       })
 
       .addCase(userRemovesWallet, (state, action) => {
@@ -41,16 +36,8 @@ export const accountsSlice = createSlice({
       })
 
       .addCase(userAddsAccount, (state, action) => {
-        const currentWalletAccounts = getWalletAccountsByAccountId(
-          state,
-          action.payload.account.id
-        );
-        const usedIcons = Object.values(state.entities).map(account => account.icon);
-        const precedingIcon = currentWalletAccounts[currentWalletAccounts.length - 1]?.icon;
-
         return accountsAdapter.addOne(state, {
           id: action.payload.account.id,
-          icon: selectNextDistinctAccountIcon(usedIcons, precedingIcon),
         });
       })
 
