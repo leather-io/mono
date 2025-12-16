@@ -128,10 +128,16 @@ export interface EnrichedSwapQuote {
   priceImpactPercentage: BigNumber | null;
 }
 
-export interface SwapQuoteSelectionResult {
-  quotes: EnrichedSwapQuote[];
-  selected: EnrichedSwapQuote | undefined;
-}
+export type SwapQuoteSelectionResult =
+  | {
+      quotes: EnrichedSwapQuote[];
+      selected: EnrichedSwapQuote;
+    }
+  | {
+      quotes: EnrichedSwapQuote[];
+      selected: undefined;
+      unmetConstraints: ExecutionConstraint[];
+    };
 
 export interface SwapInternalState {
   baseSwapAsset: AccountSwapAsset | null;

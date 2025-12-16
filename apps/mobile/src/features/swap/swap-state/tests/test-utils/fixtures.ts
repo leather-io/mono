@@ -4,6 +4,7 @@ import {
   CryptoAssetBalance,
   CryptoAssetId,
   Currency,
+  ExecutionConstraint,
   Sip10Asset,
   SwapDex,
   SwapExecutionType,
@@ -163,6 +164,9 @@ interface CreateSwapQuoteParams {
   baseAsset?: SwappableFungibleCryptoAsset;
   targetAsset?: SwappableFungibleCryptoAsset;
   dexPath?: SwapDex[];
+  isExecutable?: boolean;
+  executionConstraints?: ExecutionConstraint[];
+  createdAt?: Date;
   providerQuoteData?: unknown;
 }
 
@@ -181,15 +185,23 @@ export function createSwapQuote({
       description: 'AlexLab DEX',
     },
   ],
+  isExecutable = true,
+  executionConstraints = [],
+  createdAt = new Date(),
   providerQuoteData = { valid: true },
 }: CreateSwapQuoteParams = {}): SwapQuote {
   return {
     executionType,
     providerId,
+    baseAsset,
+    targetAsset,
     baseAmount: createMoneyFromDecimal(baseAmount, baseAsset.symbol, baseAsset.decimals),
     targetAmount: createMoneyFromDecimal(targetAmount, targetAsset.symbol, targetAsset.decimals),
     assetPath: [baseAsset, targetAsset],
     dexPath,
+    isExecutable,
+    executionConstraints,
+    createdAt,
     providerQuoteData,
   } as SwapQuote;
 }

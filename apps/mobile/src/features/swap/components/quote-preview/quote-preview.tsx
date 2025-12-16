@@ -5,6 +5,7 @@ import { SwapState } from '@/features/swap/swap-state/swap-state.types';
 
 import { assertExistence, assertUnreachable } from '@leather.io/utils';
 
+import { QuotePreviewConstrained } from './quote-preview-constrained';
 import { QuotePreviewContent } from './quote-preview-content';
 import { QuotePreviewEmptyState } from './quote-preview-empty-state';
 import { QuotePreviewError } from './quote-preview-error';
@@ -35,6 +36,24 @@ export function QuotePreview({ state, liveEstimate }: QuotePreviewProps) {
       return (
         <Animated.View key="empty" entering={Entering} exiting={Exiting}>
           <QuotePreviewEmptyState />
+        </Animated.View>
+      );
+    case 'constrained':
+      assertExistence(
+        state.baseSwapAsset,
+        "QuotePreview expects 'baseSwapAsset' for constrained state."
+      );
+      assertExistence(
+        state.targetSwapAsset,
+        "QuotePreview expects 'targetSwapAsset' for constrained state."
+      );
+      return (
+        <Animated.View key="constrained" entering={Entering} exiting={Exiting}>
+          <QuotePreviewConstrained
+            constraints={liveEstimate.constraints}
+            baseAsset={state.baseSwapAsset.asset}
+            targetAsset={state.targetSwapAsset.asset}
+          />
         </Animated.View>
       );
     case 'success':

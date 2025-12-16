@@ -16,7 +16,7 @@ export function swapQuoteSelector(
   fairMarketRate: BigNumber | null,
   slippage: number
 ): SwapQuoteSelectionResult {
-  const quotes = pipe(
+  const allQuotes = pipe(
     swapQuotes,
     map(swapQuote => {
       const enricher = getExecutionTypeStrategy(swapQuote.executionType).enrichQuote;
@@ -26,10 +26,17 @@ export function swapQuoteSelector(
     sortBy([prop('score'), 'desc'])
   );
 
-  return {
-    quotes,
-    selected: selectQuoteByPolicy(quotes, policy),
-  };
+  const executableQuotes = allQuotes.filter(quote => quote.isExecutable);
+  const selected = selectQuoteByPolicy(executableQuotes, policy);
+
+  if (selected) {
+    return { quotes: allQuotes, selected };
+  }
+
+  const bestNonExecutable = allQuotes.find(quote => !quote.isExecutable);
+  const unmetConstraints = bestNonExecutable?.executionConstraints ?? [];
+
+  return { quotes: allQuotes, selected: undefined, unmetConstraints };
 }
 
 function selectQuoteByPolicy(

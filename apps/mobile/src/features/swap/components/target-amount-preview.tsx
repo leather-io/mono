@@ -82,7 +82,8 @@ function useStableTargetAmounts({
     primaryAmount: undefined,
     secondaryAmount: undefined,
   });
-  const shouldReset = baseAmount === '0' || status === 'error' || status === 'empty';
+  const shouldReset =
+    baseAmount === '0' || status === 'error' || status === 'empty' || status === 'constrained';
   const shouldHoldLast = status === 'loading' || status === 'idle';
 
   if (shouldReset) {

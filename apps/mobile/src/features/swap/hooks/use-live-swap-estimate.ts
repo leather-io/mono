@@ -4,7 +4,7 @@ import { UseQueryResult } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { isDefined } from 'remeda';
 
-import { MarketData, Money } from '@leather.io/models';
+import { ExecutionConstraint, MarketData, Money } from '@leather.io/models';
 import { UseIntervalState, useInterval } from '@leather.io/ui/native';
 import { assertUnreachable, baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
@@ -31,6 +31,11 @@ export type LiveSwapEstimate =
     }
   | {
       status: 'empty';
+      refetch(): Promise<void>;
+    }
+  | {
+      status: 'constrained';
+      constraints: ExecutionConstraint[];
       refetch(): Promise<void>;
     }
   | {
@@ -64,119 +69,124 @@ export function useLiveSwapEstimate({
     networkFeeQuery,
     isDefined(quoteQuery.data?.selected)
   );
-
-  const isFetching = quoteQuery.isFetching || networkFeeQuery.isFetching;
-  const isPending =
-    quoteQuery.isPending ||
-    networkFeeReadiness.isLoading ||
-    baseMarketDataQuery.isPending ||
-    nativeAssetMarketDataQuery.isPending;
-
-  const isError =
-    quoteQuery.isError ||
-    networkFeeQuery.isError ||
-    baseMarketDataQuery.isError ||
-    nativeAssetMarketDataQuery.isError;
-
-  const isSuccess =
-    quoteQuery.isSuccess &&
-    networkFeeReadiness.isReady &&
-    baseMarketDataQuery.isSuccess &&
-    nativeAssetMarketDataQuery.isSuccess;
-
   const intervalState = useInterval(refetch, refetchInterval, {
-    enabled: isSuccess && isDefined(quoteQuery.data?.selected),
+    enabled: networkFeeReadiness.status === 'ready' && isDefined(quoteQuery.data?.selected),
   });
 
   async function refetch() {
-    // Intentionally sequential to avoid race conditions.
     await quoteQuery.refetch();
     await networkFeeQuery.refetch();
   }
 
-  if (isPending && !isFetching) {
+  // Live estimate status is verified in two stages:
+  // 1. Check the status of the quote itself in isolation, handle cases with which the remaining queries are irrelevant.
+  // 2. Check the status of the network fee query and supporting market data queries before alloweing to proceed to success state.
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Stage 1: Quote Query
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  if (quoteQuery.isPending && !quoteQuery.isFetching) {
     return { status: 'idle' };
   }
 
-  if (isError) {
-    return {
-      status: 'error',
-      error: (quoteQuery.error ??
-        networkFeeQuery.error ??
-        baseMarketDataQuery.error ??
-        nativeAssetMarketDataQuery.error) as Error,
-      refetch,
-    };
+  if (quoteQuery.isError) {
+    return { status: 'error', error: quoteQuery.error, refetch };
   }
 
-  if (isPending) {
+  if (quoteQuery.isPending) {
     return { status: 'loading', refetch };
   }
 
-  if (isSuccess) {
-    if (!quoteQuery.data.selected) {
-      return { status: 'empty', refetch };
+  if (!quoteQuery.data.selected) {
+    const { unmetConstraints } = quoteQuery.data;
+    if (unmetConstraints.length > 0) {
+      return { status: 'constrained', constraints: unmetConstraints, refetch };
     }
-
-    if (!networkFeeQuery.data) {
-      return { status: 'loading', refetch };
-    }
-
-    const selectedQuote = quoteQuery.data.selected;
-
-    const networkFeeValue = calculateNetworkFee(
-      networkFeeQuery.data.calculation.value,
-      nativeAssetMarketDataQuery.data
-    );
-
-    const providerFee = calculateProviderFee(
-      selectedQuote.baseAmount,
-      selectedQuote.providerFeePercentage,
-      baseMarketDataQuery.data
-    );
-
-    return {
-      status: 'success',
-      selectedQuote,
-      quotes: quoteQuery.data.quotes,
-      fees: {
-        provider: providerFee,
-        network: networkFeeValue,
-        isRefetching: networkFeeReadiness.isRefetching,
-      },
-      isRefetching: quoteQuery.isRefetching || networkFeeQuery.isRefetching,
-      refetch,
-      intervalState,
-    };
+    return { status: 'empty', refetch };
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Stage 2: Network Fee + Market Data
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  if (networkFeeReadiness.status === 'error') {
+    return { status: 'error', error: networkFeeReadiness.error, refetch };
+  }
+  if (baseMarketDataQuery.isError) {
+    return { status: 'error', error: baseMarketDataQuery.error, refetch };
+  }
+  if (nativeAssetMarketDataQuery.isError) {
+    return { status: 'error', error: nativeAssetMarketDataQuery.error, refetch };
+  }
+
+  if (
+    networkFeeReadiness.status === 'loading' ||
+    baseMarketDataQuery.isPending ||
+    nativeAssetMarketDataQuery.isPending
+  ) {
+    return { status: 'loading', refetch };
+  }
+
+  const networkFeeValue = calculateNetworkFee(
+    networkFeeReadiness.data.calculation.value,
+    nativeAssetMarketDataQuery.data
+  );
+
+  const providerFee = calculateProviderFee(
+    quoteQuery.data.selected.baseAmount,
+    quoteQuery.data.selected.providerFeePercentage,
+    baseMarketDataQuery.data
+  );
+
   return {
-    status: 'error',
-    error: new Error("Failed to retrieve swap estimate. This is likely a bug in 'useSwapEstimate'"),
+    status: 'success',
+    selectedQuote: quoteQuery.data.selected,
+    quotes: quoteQuery.data.quotes,
+    fees: {
+      provider: providerFee,
+      network: networkFeeValue,
+      isRefetching: networkFeeReadiness.isRefetching,
+    },
+    isRefetching: quoteQuery.isRefetching || networkFeeReadiness.isRefetching,
     refetch,
+    intervalState,
   };
 }
 
+type NetworkFeeReadiness =
+  | { status: 'loading' }
+  | { status: 'error'; error: Error }
+  | { status: 'ready'; data: NetworkFee; isRefetching: boolean };
+
 function useNetworkFeeReadiness(
   networkFeeQuery: UseQueryResult<NetworkFee, Error>,
-  hasSelectedQuote: boolean
-) {
+  isEnabled: boolean
+): NetworkFeeReadiness {
   const hasResolved = useRef(false);
 
   if (networkFeeQuery.isSuccess && networkFeeQuery.data) {
     hasResolved.current = true;
   }
-  if (!hasSelectedQuote) {
+  if (!isEnabled) {
     hasResolved.current = false;
+  }
+
+  if (networkFeeQuery.isError && networkFeeQuery.error) {
+    return { status: 'error', error: networkFeeQuery.error };
   }
 
   const hasCached = hasResolved.current && isDefined(networkFeeQuery.data);
 
-  return {
-    isReady: networkFeeQuery.isSuccess || hasCached,
-    isLoading: networkFeeQuery.isPending && !hasCached,
-    isRefetching: hasCached && networkFeeQuery.isFetching,
-  };
+  if (networkFeeQuery.data && (networkFeeQuery.isSuccess || hasCached)) {
+    return {
+      status: 'ready',
+      data: networkFeeQuery.data,
+      isRefetching: hasCached && networkFeeQuery.isFetching,
+    };
+  }
+
+  return { status: 'loading' };
 }
 
 interface LiveEstimateMatchers<T> {
@@ -184,6 +194,7 @@ interface LiveEstimateMatchers<T> {
   loading(estimate: Extract<LiveSwapEstimate, { status: 'loading' }>): T;
   error(estimate: Extract<LiveSwapEstimate, { status: 'error' }>): T;
   empty(estimate: Extract<LiveSwapEstimate, { status: 'empty' }>): T;
+  constrained(estimate: Extract<LiveSwapEstimate, { status: 'constrained' }>): T;
   success(estimate: Extract<LiveSwapEstimate, { status: 'success' }>): T;
 }
 
@@ -191,7 +202,7 @@ export function matchLiveEstimate<T>(
   estimate: LiveSwapEstimate,
   matchers: LiveEstimateMatchers<T>
 ): T {
-  const { idle, empty, loading, success, error } = matchers;
+  const { idle, empty, loading, success, error, constrained } = matchers;
   switch (estimate.status) {
     case 'idle':
       return idle();
@@ -201,6 +212,8 @@ export function matchLiveEstimate<T>(
       return error(estimate);
     case 'empty':
       return empty(estimate);
+    case 'constrained':
+      return constrained(estimate);
     case 'success':
       return success(estimate);
     default:
