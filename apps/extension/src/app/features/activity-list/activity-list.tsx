@@ -27,6 +27,7 @@ export function ActivityList() {
   const activityQuery = useActivity(accountAddresses);
 
   const activity = activityQuery.data ?? [];
+
   const isLoading = activityQuery.isLoading;
 
   const itemContent = useCallback(
@@ -35,6 +36,17 @@ export function ActivityList() {
   );
 
   const computeItemKey = useCallback((_: number, item: ActivityView) => item.key, []);
+
+  if (activityQuery.isError) {
+    return (
+      <ActivityListLayout isLoading={false} hasActivity>
+        <div style={{ padding: '16px', textAlign: 'center' }}>
+          Unable to load activity. Please try again later.
+        </div>
+        <Outlet />
+      </ActivityListLayout>
+    );
+  }
 
   return (
     <ActivityListLayout isLoading={isLoading} hasActivity={activity.length > 0}>
