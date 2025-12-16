@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { inject, injectable } from 'inversify';
+import PQueue from 'p-queue';
 import { z } from 'zod';
 
 import { Types } from '../../../inversify.types';
@@ -10,7 +11,23 @@ import { gammaCollectionMetadataSchema, gammaNftMetadataSchema } from './gamma-a
 export type GammaNftMetadata = z.infer<typeof gammaNftMetadataSchema>;
 export type GammaCollectionMetadata = z.infer<typeof gammaCollectionMetadataSchema>;
 
-const GAMMA_API_URL = 'https://gamma.io/api';
+const defaultGammaApiUrl = 'https://gamma.io/api';
+
+function getGammaApiUrl() {
+  if (typeof process === 'undefined') return defaultGammaApiUrl;
+  if (!process.env) return defaultGammaApiUrl;
+  const overriddenUrl = process.env.NEXT_PUBLIC_GAMMA_API_URL;
+  if (!overriddenUrl || overriddenUrl.trim() === '') return defaultGammaApiUrl;
+  return overriddenUrl;
+}
+
+const GAMMA_API_URL = getGammaApiUrl();
+
+const gammaApiLimiter = new PQueue({
+  interval: 1000,
+  intervalCap: 5,
+  timeout: 60000,
+});
 
 @injectable()
 export class GammaApiClient {
@@ -21,7 +38,7 @@ export class GammaApiClient {
     tokenId: number,
     { signal, skipCache }: ApiRequestOptions = {}
   ): Promise<GammaNftMetadata> {
-    async function fetchFn() {
+    const fetchFn = async () => {
       const res = await axios.get(
         `${GAMMA_API_URL}/get-stacks-nft?id=${contractPrincipal}_${tokenId}`,
         {
@@ -30,12 +47,12 @@ export class GammaApiClient {
       );
 
       return gammaNftMetadataSchema.parse(res.data);
-    }
+    };
     return skipCache
-      ? await fetchFn()
+      ? await gammaApiLimiter.add(fetchFn)
       : await this.cache.fetchWithCache(
           ['gamma-api-get-stacks-nft', contractPrincipal, tokenId],
-          fetchFn
+          () => gammaApiLimiter.add(fetchFn)
         );
   }
 
@@ -43,7 +60,7 @@ export class GammaApiClient {
     contractPrincipal: string,
     { signal, skipCache }: ApiRequestOptions = {}
   ): Promise<GammaCollectionMetadata> {
-    async function fetchFn() {
+    const fetchFn = async () => {
       const res = await axios.get(
         `${GAMMA_API_URL}/get-stacks-collection?contract_id_or_slug=${contractPrincipal}`,
         {
@@ -51,12 +68,12 @@ export class GammaApiClient {
         }
       );
       return gammaCollectionMetadataSchema.parse(res.data);
-    }
+    };
     return skipCache
-      ? await fetchFn()
+      ? await gammaApiLimiter.add(fetchFn)
       : await this.cache.fetchWithCache(
           ['gamma-api-get-stacks-collection', contractPrincipal],
-          fetchFn
+          () => gammaApiLimiter.add(fetchFn)
         );
   }
 }

@@ -6,11 +6,11 @@ import { sanitizeContent } from '@leather.io/utils/sanitize-content';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useGetInscriptionTextContentQuery } from '@app/query/bitcoin/ordinals/inscription-text-content.query';
 
+import { CollectibleIframe } from '../../../../components/collectibles/collectible-iframe';
 import {
   CollectibleItemLayout,
   CollectibleItemLayoutProps,
 } from '../../../../components/collectibles/collectible-item.layout';
-import { CollectibleIframe } from '../../../../components/collectibles/collectible-iframe';
 
 interface InscriptionHtmlProps
   extends Pick<
@@ -37,13 +37,7 @@ export function InscriptionHtml({
         subtitle={subtitle}
         title={title}
       >
-        <Box
-          alignItems="center"
-          display="flex"
-          height="100%"
-          justifyContent="center"
-          width="100%"
-        >
+        <Box alignItems="center" display="flex" height="100%" justifyContent="center" width="100%">
           <LoadingSpinner size="16px" />
         </Box>
       </CollectibleItemLayout>
@@ -53,7 +47,7 @@ export function InscriptionHtml({
   if (query.isError || !query.data) {
     return (
       <CollectibleIframe
-        collectibleTypeIcon={<OrdinalAvatarIcon size="lg" />}
+        icon={<OrdinalAvatarIcon size="lg" />}
         onClickCallToAction={onClickCallToAction}
         onClickSend={onClickSend}
         src={contentSrc}
@@ -83,4 +77,3 @@ export function InscriptionHtml({
     </CollectibleItemLayout>
   );
 }
-
