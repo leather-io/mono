@@ -43,6 +43,13 @@ type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'failure';
 const submissionDisplayDuration = 1500;
 const successfulExitTimeout = 1200;
 
+const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
+  'loading',
+  'empty',
+  'success',
+  'error',
+];
+
 interface SwapReviewScreenProps {
   swapStateResult: UseSwapStateResult;
   liveEstimate: LiveSwapEstimate;
@@ -55,7 +62,7 @@ export function SwapReviewScreen({
   onGoBack,
 }: SwapReviewScreenProps) {
   useAndroidBackHandler(onGoBack);
-  useSwapReviewGuard(liveEstimate, onGoBack);
+  useSwapReviewStatusGuard(liveEstimate, onGoBack);
 
   return (
     <FullHeightSheetLayout
@@ -68,6 +75,7 @@ export function SwapReviewScreen({
     >
       {matchLiveEstimate(liveEstimate, {
         idle: () => null,
+        constrained: () => null,
         loading: () => <SwapReviewLoadingState />,
         error: liveEstimate => <SwapReviewErrorState onRetry={liveEstimate.refetch} />,
         empty: () => <SwapReviewEmptyState onBack={onGoBack} />,
@@ -219,16 +227,16 @@ function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentP
   );
 }
 
-function useSwapReviewGuard(liveEstimate: LiveSwapEstimate, onExit: () => void) {
+function useSwapReviewStatusGuard(liveEstimate: LiveSwapEstimate, exitReview: () => void) {
   useEffect(() => {
-    if (liveEstimate.status === 'idle') {
-      captureMessage('Swap review screen reached with idle estimate state', {
+    if (!supportedLiveEstimateStatuses.includes(liveEstimate.status)) {
+      captureMessage(`Swap review screen reached with ${liveEstimate.status} estimate state.`, {
         level: 'warning',
         tags: { swap: 'review' },
       });
-      onExit();
+      exitReview();
     }
-  }, [liveEstimate.status, onExit]);
+  }, [liveEstimate.status, exitReview]);
 }
 
 function shouldShowPriceImpact(

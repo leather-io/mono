@@ -46,6 +46,14 @@ msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:50
+msgid "{operation} {baseAssetSymbol} to {targetAssetSymbol} is limited to {threshold}"
+msgstr "{operation} {baseAssetSymbol} to {targetAssetSymbol} is limited to {threshold}"
+
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:45
+msgid "{operation} {baseAssetSymbol} to {targetAssetSymbol} requires at least {threshold}"
+msgstr "{operation} {baseAssetSymbol} to {targetAssetSymbol} requires at least {threshold}"
+
 #: src/features/swap/components/fees-info-sheet.tsx:40
 msgid "{providerName} fee"
 msgstr "{providerName} fee"
@@ -264,6 +272,14 @@ msgstr "Amount must be greater than zero"
 #: src/features/account/components/available-account-balance.tsx:42
 msgid "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 msgstr "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
+
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:49
+msgid "Amount too large"
+msgstr "Amount too large"
+
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:44
+msgid "Amount too small"
+msgstr "Amount too small"
 
 #: src/features/account/components/account-stacking.tsx:54
 msgid "Amount you’ve committed to stacking. You won’t be able to move or spend it until the stacking period ends."
@@ -543,7 +559,7 @@ msgstr ""
 #: src/features/approver/components/nonce-sheet.tsx:18
 #: src/features/send/components/memo.tsx:88
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
-#: src/features/swap/screens/swap-review-screen.tsx:199
+#: src/features/swap/screens/swap-review-screen.tsx:207
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
 msgid "Confirm"
 msgstr "Confirm"
@@ -674,6 +690,10 @@ msgstr "Deploying"
 msgid "Deployment failed"
 msgstr "Deployment failed"
 
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:58
+msgid "Depositing"
+msgstr "Depositing"
+
 #: src/features/token/components/token-description.tsx:29
 #: src/features/token/components/token-description.tsx:43
 #: src/features/token/components/token-loading.tsx:30
@@ -773,7 +793,7 @@ msgid "Enter your Secret Key"
 msgstr "Enter your Secret Key"
 
 #: src/features/swap/components/quote-preview/quote-preview-content.tsx:53
-#: src/features/swap/screens/swap-review-screen.tsx:183
+#: src/features/swap/screens/swap-review-screen.tsx:191
 msgid "Estimated fees"
 msgstr "Estimated fees"
 
@@ -1178,7 +1198,7 @@ msgstr "Locking"
 msgid "Mainnet, testnet or signet"
 msgstr "Mainnet, testnet or signet"
 
-#: src/features/swap/screens/swap-review-screen.tsx:194
+#: src/features/swap/screens/swap-review-screen.tsx:202
 msgid ""
 "Make sure everything looks correct.\n"
 "Confirmed transactions cannot be undone."
@@ -1235,7 +1255,7 @@ msgstr "Memo updated"
 msgid "Message"
 msgstr "Message"
 
-#: src/features/swap/screens/swap-review-screen.tsx:153
+#: src/features/swap/screens/swap-review-screen.tsx:161
 msgid "Min. receive"
 msgstr "Min. receive"
 
@@ -1412,7 +1432,7 @@ msgid "Price"
 msgstr "Price"
 
 #: src/features/swap/components/price-impact-info-sheet.tsx:8
-#: src/features/swap/screens/swap-review-screen.tsx:174
+#: src/features/swap/screens/swap-review-screen.tsx:182
 msgid "Price impact"
 msgstr "Price impact"
 
@@ -1466,7 +1486,7 @@ msgid "Rarity rank"
 msgstr "Rarity rank"
 
 #: src/features/swap/components/quote-preview/quote-preview-content.tsx:39
-#: src/features/swap/screens/swap-review-screen.tsx:138
+#: src/features/swap/screens/swap-review-screen.tsx:146
 msgid "Rate"
 msgstr "Rate"
 
@@ -1580,7 +1600,7 @@ msgstr "Reveal account"
 msgid "Review"
 msgstr "Review"
 
-#: src/features/swap/screens/swap-review-screen.tsx:64
+#: src/features/swap/screens/swap-review-screen.tsx:71
 msgid "Review Swap"
 msgstr "Review Swap"
 
@@ -1733,7 +1753,7 @@ msgstr "SIP-010"
 msgid "Skip for now"
 msgstr "Skip for now"
 
-#: src/features/swap/screens/swap-review-screen.tsx:161
+#: src/features/swap/screens/swap-review-screen.tsx:169
 msgid "Slippage"
 msgstr "Slippage"
 
@@ -1822,6 +1842,7 @@ msgid "Swapped"
 msgstr "Swapped"
 
 #: src/features/activity/translate-activity-status.ts:36
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:60
 msgid "Swapping"
 msgstr "Swapping"
 
@@ -2122,6 +2143,10 @@ msgstr "Wallets"
 #: src/app/settings/index.tsx:62
 msgid "Wallets and accounts"
 msgstr "Wallets and accounts"
+
+#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:59
+msgid "Withdrawing"
+msgstr "Withdrawing"
 
 #: src/app/(tabs)/browser.tsx:63
 msgid "Wrong URL"
