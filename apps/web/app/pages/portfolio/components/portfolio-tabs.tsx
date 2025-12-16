@@ -33,11 +33,9 @@ interface TabItemProps {
 
 function TabItem({ label, value, percentChange, isActive, onClick }: TabItemProps) {
   const hasPositiveChange = percentChange !== undefined && percentChange > 0;
-  const hasNegativeChange = percentChange !== undefined && percentChange < 0;
 
   return (
     <Box
-      as="button"
       onClick={onClick}
       pb="space.05"
       pr="space.07"
@@ -68,12 +66,16 @@ function TabItem({ label, value, percentChange, isActive, onClick }: TabItemProp
             px="space.02"
             py="space.01"
             borderRadius="100px"
-            background={hasPositiveChange ? 'green.background-secondary' : 'red.background-secondary'}
+            background={
+              hasPositiveChange ? 'green.background-secondary' : 'red.background-secondary'
+            }
           >
             <styled.span
               textStyle="label.03"
               fontWeight="bold"
-              color={hasPositiveChange ? 'green.action-primary-default' : 'red.action-primary-default'}
+              color={
+                hasPositiveChange ? 'green.action-primary-default' : 'red.action-primary-default'
+              }
             >
               {hasPositiveChange ? '▲' : '▼'} {Math.abs(percentChange).toFixed(2)}%
             </styled.span>
