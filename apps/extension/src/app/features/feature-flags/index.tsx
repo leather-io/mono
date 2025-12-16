@@ -2,7 +2,13 @@ import { asyncWithLDProvider, useFlags as useLDFlags } from 'launchdarkly-react-
 
 import { getClientId } from '@app/common/client-id';
 
+function NoopProvider({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
+
 export function createLDProvider() {
+  if (!process.env.LAUNCH_DARKLY_KEY) return NoopProvider;
+
   return asyncWithLDProvider({
     clientSideID: process.env.LAUNCH_DARKLY_KEY ?? '',
     options: {
