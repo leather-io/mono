@@ -3,7 +3,7 @@ import type BigNumber from 'bignumber.js';
 
 import { deconstructBtcAddress } from '@leather.io/bitcoin';
 import type { ExecutionConstraint, Money, NetworkModes } from '@leather.io/models';
-import { convertAmountToFractionalUnit, createMoney } from '@leather.io/utils';
+import { createMoney } from '@leather.io/utils';
 
 import type { EmilySbtcLimitsResponse } from '../infrastructure/api/emily/emily-api.types';
 
@@ -71,7 +71,7 @@ export function getSbtcWithdrawalContractCallData({
   withdrawalSweepTxFee,
   network,
 }: getSbtcWithdrawalContractCallDataArgs) {
-  const quoteAmountSats = convertAmountToFractionalUnit(quoteAmount).toNumber();
+  const quoteAmountSats = quoteAmount.amount.toNumber();
   const { type, hashbytes } = deconstructBtcAddress(withdrawalBtcAddress);
 
   const recipient = {
@@ -99,7 +99,9 @@ const depositSweepTxFeeWeightVbytes = 250;
 const withdrawalSweepTxFeeWeightVbytes = 170;
 
 export function calculateSignerSweepTxFee(txType: SbtcBridgeTxType, feeRate: number): number {
-  return txType === 'deposit'
-    ? depositSweepTxFeeWeightVbytes * feeRate
-    : withdrawalSweepTxFeeWeightVbytes * feeRate;
+  return Math.ceil(
+    txType === 'deposit'
+      ? depositSweepTxFeeWeightVbytes * feeRate
+      : withdrawalSweepTxFeeWeightVbytes * feeRate
+  );
 }
