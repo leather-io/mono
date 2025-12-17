@@ -16,7 +16,7 @@ export function createGetStx20BalancesQueryOptions({
   client,
 }: CreateGetStx20BalancesQueryOptionsArgs) {
   return {
-    enabled: chainId === ChainId.Mainnet,
+    enabled: !!address && chainId === ChainId.Mainnet,
     queryKey: [StacksQueryPrefixes.GetStx20Balances, address],
     queryFn: ({ signal }: QueryFunctionContext) => client.getStx20Balances(address, signal),
   } as const;
