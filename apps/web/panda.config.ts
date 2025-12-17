@@ -11,7 +11,7 @@ export default defineConfig({
 
   globalCss: globalLoaderCss,
 
-  presets: ['@leather.io/panda-preset'],
+  presets: ['@leather.io/panda-preset/config'],
 
   jsxFramework: 'react',
   prefix: 'leather',

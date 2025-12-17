@@ -13,7 +13,7 @@ export default defineConfig({
 
   prefix: 'leather',
 
-  presets: ['@leather.io/panda-preset'],
+  presets: ['@leather.io/panda-preset/config'],
 
   studio: { logo: '🖤' },
 
