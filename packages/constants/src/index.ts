@@ -168,3 +168,9 @@ export const GRANITE_LINK = 'https://www.granite.world/';
 export const HERMETICA_LINK = 'https://www.hermetica.fi/';
 export const BITFLOW_LINK = 'https://app.bitflow.finance/';
 export const VELAR_LINK = 'https://www.velar.co/';
+
+export const USDCX_ASSET_ID_MAINNET =
+  'SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx::usdcx-token';
+
+export const USDCX_ASSET_ID_TESTNET =
+  'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usdcx::usdcx-token';

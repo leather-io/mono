@@ -9,6 +9,7 @@ import { BtcAssetItemBalanceLoader } from '@app/components/loaders/btc-balance-l
 import { Src20TokensLoader } from '@app/components/loaders/src20-tokens-loader';
 import { Stx20TokensLoader } from '@app/components/loaders/stx20-tokens-loader';
 import { StxAssetItemBalanceLoader } from '@app/components/loaders/stx-balance-loader';
+import { UsdcxAssetItemBalanceLoader } from '@app/components/loaders/usdcx-balance-loader';
 import { Brc20TokenAssetList } from '@app/features/asset-list/bitcoin/brc20-token-asset-list/brc20-token-asset-list';
 import { RunesAssetList } from '@app/features/asset-list/bitcoin/runes-asset-list/runes-asset-list';
 import { Src20TokenAssetList } from '@app/features/asset-list/bitcoin/src20-token-asset-list/src20-token-asset-list';
@@ -24,6 +25,7 @@ import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 import type { AssetFilter } from '../../common/hooks/use-manage-tokens';
 import { ConnectLedgerAssetItemFallback } from './_components/connect-ledger-asset-item-fallback';
 import { BtcCryptoAssetItem } from './bitcoin/btc-crypto-asset-item/btc-crypto-asset-item';
+import { Sip10TokenAssetItem } from './stacks/sip10-token-asset-list/sip10-token-asset-item';
 import { Sip10TokenAssetList } from './stacks/sip10-token-asset-list/sip10-token-asset-list';
 
 export type AssetListVariant = 'interactive' | 'read-only';
@@ -102,6 +104,19 @@ export function AssetList({
             />
           )
         ))}
+
+      {showUnmanageableTokens && currentStacksAccount && (
+        <UsdcxAssetItemBalanceLoader accountIndex={currentAccountIndex}>
+          {balance => (
+            <Sip10TokenAssetItem
+              balance={balance}
+              isEnabled={true}
+              onSelectAsset={onSelectAsset}
+              assetRightElementVariant={assetRightElementVariant}
+            />
+          )}
+        </UsdcxAssetItemBalanceLoader>
+      )}
 
       {currentStacksAccount && (
         <>

@@ -2,6 +2,8 @@ import { type Dispatch, type SetStateAction, useEffect } from 'react';
 
 import { Stack } from 'leather-styles/jsx';
 
+import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
+
 import { type AssetFilter } from '@app/common/hooks/use-manage-tokens';
 import {
   useManagedSip10Tools,
@@ -10,6 +12,10 @@ import {
 
 import type { AssetRightElementVariant } from '../../asset-list';
 import { Sip10TokenAssetItem } from './sip10-token-asset-item';
+
+function isUsdcxAssetId(assetId: string) {
+  return assetId === USDCX_ASSET_ID_MAINNET || assetId === USDCX_ASSET_ID_TESTNET;
+}
 
 interface Sip10TokenAssetListProps {
   accountIndex: number;
@@ -41,15 +47,17 @@ export function Sip10TokenAssetList({
 
   return (
     <Stack>
-      {sip10s.value.sip10s.map(sip10 => (
-        <Sip10TokenAssetItem
-          key={sip10.asset.assetId}
-          assetRightElementVariant={assetRightElementVariant}
-          balance={sip10}
-          isEnabled={isEnabled(sip10)}
-          onSelectAsset={onSelectAsset}
-        />
-      ))}
+      {sip10s.value.sip10s
+        .filter(sip10 => !isUsdcxAssetId(sip10.asset.assetId))
+        .map(sip10 => (
+          <Sip10TokenAssetItem
+            key={sip10.asset.assetId}
+            assetRightElementVariant={assetRightElementVariant}
+            balance={sip10}
+            isEnabled={isEnabled(sip10)}
+            onSelectAsset={onSelectAsset}
+          />
+        ))}
     </Stack>
   );
 }
