@@ -4,6 +4,7 @@ import { useQueries } from '@tanstack/react-query';
 
 import { BitcoinTx } from '@leather.io/models';
 import { createGetBitcoinTransactionsByAddressQueryOptions } from '@leather.io/query';
+import { uniqueArray } from '@leather.io/utils';
 
 import { useBitcoinClient } from '../clients/bitcoin-client';
 
@@ -14,9 +15,10 @@ function useFilterAddressPendingTransactions() {
 export function useBitcoinPendingTransactions(addresses: string[]) {
   const filterPendingTransactions = useFilterAddressPendingTransactions();
   const client = useBitcoinClient();
+  const uniqueAddresses = uniqueArray(addresses);
 
   return useQueries({
-    queries: addresses.map(address => ({
+    queries: uniqueAddresses.map(address => ({
       ...createGetBitcoinTransactionsByAddressQueryOptions({ address, client }),
       select: (resp: BitcoinTx[]) => filterPendingTransactions(resp),
     })),

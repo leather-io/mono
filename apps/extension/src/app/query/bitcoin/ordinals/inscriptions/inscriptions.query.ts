@@ -8,7 +8,7 @@ import {
   createNumberOfInscriptionsFn,
 } from '@leather.io/query';
 import { type AccountRequest, getInscriptionsService } from '@leather.io/services';
-import { minutesInMs, secondsInMs } from '@leather.io/utils';
+import { minutesInMs, secondsInMs, uniqueArray } from '@leather.io/utils';
 
 import { useCurrentNetworkState } from '@app/query/leather-query-provider';
 import { useNativeSegwitAccountRequest } from '@app/services/accounts/use-native-segwit-account-request';
@@ -22,7 +22,8 @@ interface UseInscriptionArgs {
 }
 export function useInscriptions({ xpubs }: UseInscriptionArgs) {
   const client = useBitcoinClient();
-  const queries = xpubs.map(xpub => createInscriptionByXpubQuery(client, xpub));
+  const uniqueXpubs = uniqueArray(xpubs);
+  const queries = uniqueXpubs.map(xpub => createInscriptionByXpubQuery(client, xpub));
   return useQueries({ queries, combine: combineInscriptionResults });
 }
 

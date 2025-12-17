@@ -2,6 +2,7 @@ import { useQueries } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { getHiroApiRateLimiter } from '@leather.io/query';
+import { uniqueArray } from '@leather.io/utils';
 
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
@@ -47,7 +48,8 @@ function makeGetStacksBlockQuery(basePath: string, block: number) {
 
 export function useGetStacksBlocks(blocks: number[]) {
   const network = useCurrentNetwork();
+  const uniqueBlocks = uniqueArray(blocks);
   return useQueries({
-    queries: blocks.map(block => makeGetStacksBlockQuery(network.chain.stacks.url, block)),
+    queries: uniqueBlocks.map(block => makeGetStacksBlockQuery(network.chain.stacks.url, block)),
   });
 }

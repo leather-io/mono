@@ -4,6 +4,7 @@ import { AddressTransactionWithTransfers } from '@stacks/stacks-blockchain-api-t
 import { useQueries } from '@tanstack/react-query';
 
 import { createGetAccountTransactionsWithTransfersQueryOptions } from '@leather.io/query';
+import { uniqueArray } from '@leather.io/utils';
 
 import { useCurrentNetworkState } from '../leather-query-provider';
 import { useStacksClient } from './stacks-client';
@@ -11,8 +12,9 @@ import { useStacksClient } from './stacks-client';
 export function useGetAccountTransactionsWithTransfersQueries(addresses: string[]) {
   const network = useCurrentNetworkState();
   const client = useStacksClient();
+  const uniqueAddresses = uniqueArray(addresses);
   const queries = useQueries({
-    queries: addresses.map(address => ({
+    queries: uniqueAddresses.map(address => ({
       ...createGetAccountTransactionsWithTransfersQueryOptions({
         address,
         client,

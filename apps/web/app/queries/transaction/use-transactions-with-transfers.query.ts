@@ -6,6 +6,7 @@ import { UseQueryResult, useQueries } from '@tanstack/react-query';
 import { useStacksNetwork } from '~/store/stacks-network';
 
 import { createGetAccountTransactionsWithTransfersQueryOptions } from '@leather.io/query';
+import { uniqueArray } from '@leather.io/utils';
 
 import { useStacksClient } from '../stacks/stacks-client';
 
@@ -40,8 +41,9 @@ export function useGetAccountTransactionsWithTransfersQueries(
 ): TransactionsWithTransfersResult {
   const { networkPreference } = useStacksNetwork();
   const client = useStacksClient();
+  const uniqueAddresses = uniqueArray(addresses);
   return useQueries({
-    queries: addresses.map(address => ({
+    queries: uniqueAddresses.map(address => ({
       ...createGetAccountTransactionsWithTransfersQueryOptions({
         address,
         client,
