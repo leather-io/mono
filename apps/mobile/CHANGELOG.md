@@ -19,6 +19,19 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.95.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.95.0...@leather.io/mobile-v2.95.1) (2025-12-17)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.17.2
+    * @leather.io/features bumped to 1.1.6
+    * @leather.io/queries bumped to 0.2.4
+    * @leather.io/services bumped to 1.46.1
+    * @leather.io/ui bumped to 1.100.2
+
 ## [2.95.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.94.0...@leather.io/mobile-v2.95.0) (2025-12-15)
 
 

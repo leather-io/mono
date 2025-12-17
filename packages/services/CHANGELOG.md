@@ -413,6 +413,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.46.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.0...@leather.io/services-v1.46.1) (2025-12-17)
+
+
+### Bug Fixes
+
+* sbtc withdrawal bugs ([8f07d2e](https://github.com/leather-io/mono/commit/8f07d2e61bbcaa97271ebcd37c1137d204a12994))
+
 ## [1.46.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.45.0...@leather.io/services-v1.46.0) (2025-12-15)
 
 
