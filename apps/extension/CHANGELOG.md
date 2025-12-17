@@ -21,6 +21,24 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.86.2](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.86.1...@leather.io/extension-v6.86.2) (2025-12-17)
+
+
+### Bug Fixes
+
+* **extension:** prevent runtime destroy error ([d3cb13a](https://github.com/leather-io/mono/commit/d3cb13a644599ec4a4b261fd76dbf45dd935fe19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.17.2
+    * @leather.io/features bumped to 1.1.6
+    * @leather.io/queries bumped to 0.2.4
+    * @leather.io/services bumped to 1.46.1
+    * @leather.io/ui bumped to 1.100.2
+
 ## [6.86.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.86.0...@leather.io/extension-v6.86.1) (2025-12-15)
 
 

@@ -114,6 +114,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.17.2](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.17.1...@leather.io/analytics-v3.17.2) (2025-12-17)
+
+
+### Bug Fixes
+
+* analytics package return values ([04d87af](https://github.com/leather-io/mono/commit/04d87aff6b381d6388d5ac892cdf1a4db3462c46))
+
 ## [3.17.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.17.0...@leather.io/analytics-v3.17.1) (2025-12-15)
 
 

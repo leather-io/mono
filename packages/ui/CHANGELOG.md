@@ -489,6 +489,15 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.100.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.100.1...@leather.io/ui-v1.100.2) (2025-12-17)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/features bumped to 1.1.6
+
 ## [1.100.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.100.0...@leather.io/ui-v1.100.1) (2025-12-15)
 
 
