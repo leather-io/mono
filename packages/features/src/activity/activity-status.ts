@@ -89,6 +89,21 @@ export function formatActivityStatusLabel(activity: Activity) {
       return contractName ?? 'Unknown';
     }
     case 'swapAssets':
+      if ('sbtcBridgeStatus' in activity && activity.sbtcBridgeStatus) {
+        switch (activity.sbtcBridgeStatus) {
+          case 'pending':
+            return 'Pending deposit';
+          case 'accepted':
+            return 'Pending mint';
+          case 'failed':
+            return 'Failed';
+          case 'rbf':
+            return 'Replaced';
+          case 'confirmed':
+          default:
+            return '';
+        }
+      }
       if (isFungibleAsset(activity.fromAsset) && isFungibleAsset(activity.toAsset)) {
         return `${activity.fromAsset.symbol} → ${activity.toAsset.symbol}`;
       } else if (isStampAsset(activity.fromAsset) && isStampAsset(activity.toAsset)) {

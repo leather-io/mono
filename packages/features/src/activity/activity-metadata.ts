@@ -21,6 +21,9 @@ export function getActivityTitle(activity: Activity) {
     case 'executeSmartContract':
       return activity.contractId.split('.').pop() || `Unknown`;
     case 'swapAssets':
+      if ('sbtcBridgeStatus' in activity) {
+        return `BTC → sBTC`;
+      }
       return `Swap Assets`;
     case 'lockAsset':
       return `Lock Asset`;

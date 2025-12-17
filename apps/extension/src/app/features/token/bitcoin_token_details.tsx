@@ -92,4 +92,3 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
     </Stack>
   );
 }
-

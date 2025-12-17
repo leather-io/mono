@@ -8,11 +8,11 @@ import { selectBitcoinNetworkMode } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import type { ApiRequestOptions } from '../types';
 import {
+  type EmilySbtcDepositStatus,
   type EmilySbtcDepositsResponse,
   type EmilySbtcLimitsResponse,
   emilySbtcDepositsResponseSchema,
   emilySbtcLimitsResponseSchema,
-  type EmilySbtcDepositStatus,
 } from './emily-api.types';
 import { getEmilyApiUrl } from './emily-api.utils';
 
@@ -55,9 +55,6 @@ export class EmilyApiClient {
 
     return skipCache
       ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['emily-api-get-sbtc-deposits', status],
-          fetchFn
-        );
+      : await this.cacheService.fetchWithCache(['emily-api-get-sbtc-deposits', status], fetchFn);
   }
 }

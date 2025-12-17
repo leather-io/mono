@@ -14,7 +14,6 @@ import { CollectibleTypeIconOverlay } from '../collectibles/components/collectib
 import { InscriptionCard } from '../collectibles/components/inscription-card';
 import { Sip9Card } from '../collectibles/components/sip9-card';
 import { StampCard } from '../collectibles/components/stamp-card';
-
 import { TokenActivitySection } from './token_activity.layout';
 
 interface CollectibleDetailsProps {
@@ -105,4 +104,3 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
     </Stack>
   );
 }
-

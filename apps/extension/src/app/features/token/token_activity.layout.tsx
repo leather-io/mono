@@ -29,4 +29,3 @@ export function TokenActivitySection({ heading, activity }: TokenActivitySection
     </Stack>
   );
 }
-
