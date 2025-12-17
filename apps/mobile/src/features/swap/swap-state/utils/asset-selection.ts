@@ -2,13 +2,35 @@ import { filter, map, pipe, sortBy } from 'remeda';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import {
+  CryptoAssetProtocol,
   SwappableFungibleCryptoAsset,
   isBtcAsset,
   isNativeAsset,
-  isSip10Asset,
   isStxAsset,
 } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
+
+interface PriorityAssetConfig {
+  protocol: CryptoAssetProtocol;
+  priority: number;
+}
+
+const assetOrderPriority: Record<string, PriorityAssetConfig> = {
+  BTC: { protocol: 'nativeBtc', priority: 0 },
+  STX: { protocol: 'nativeStx', priority: 1 },
+  sBTC: { protocol: 'sip10', priority: 2 },
+  USDCx: { protocol: 'sip10', priority: 3 },
+  USDh: { protocol: 'sip10', priority: 4 },
+  stSTX: { protocol: 'sip10', priority: 4 },
+  aeUSDC: { protocol: 'sip10', priority: 4 },
+  ALEX: { protocol: 'sip10', priority: 5 },
+  LiSTX: { protocol: 'sip10', priority: 5 },
+  WELSH: { protocol: 'sip10', priority: 5 },
+  DIKO: { protocol: 'sip10', priority: 5 },
+  MIA: { protocol: 'sip10', priority: 6 },
+};
+
+const defaultPriority = 100;
 
 export function createSwapAssetsSelector(assetSelectionType: 'base' | 'target') {
   return (data: AccountSwapAsset[]): AccountSwapAsset[] => {
@@ -59,10 +81,11 @@ function isRelevantSwapAsset(swapAsset: AccountSwapAsset, type: 'base' | 'target
 }
 
 function getCurrencyPriority(swapAsset: AccountSwapAsset): number {
-  if (isBtcAsset(swapAsset.asset)) return 0;
-  if (isStxAsset(swapAsset.asset)) return 1;
-  if (isSip10Asset(swapAsset.asset) && swapAsset.asset.symbol === 'sBTC') return 2;
-  return 3;
+  const config = assetOrderPriority[swapAsset.asset.symbol];
+  if (config && swapAsset.asset.protocol === config.protocol) {
+    return config.priority;
+  }
+  return defaultPriority;
 }
 
 function getAvailableQuoteBalance(swapAsset: AccountSwapAsset): number {
