@@ -3,7 +3,10 @@ import { useUserSettings } from '@/hooks/use-user-settings';
 import { useQuery } from '@tanstack/react-query';
 
 import { FungibleCryptoAsset, HistoricalPeriod } from '@leather.io/models';
-import { createPriceChangePercentageQueryConfig, createPriceHistoryQueryConfig } from '@leather.io/queries';
+import {
+  createPriceChangePercentageQueryConfig,
+  createPriceHistoryQueryConfig,
+} from '@leather.io/queries';
 
 export function usePriceChangePercentage(asset: FungibleCryptoAsset, period?: HistoricalPeriod) {
   return toFetchState(usePriceChangePercentageQuery(asset, period));

@@ -26,12 +26,7 @@ interface RuneTokenDetailsContentProps {
   account: AccountAddresses;
 }
 
-function RuneTokenDetailsContent({
-  asset,
-  crypto,
-  quote,
-  account,
-}: RuneTokenDetailsContentProps) {
+function RuneTokenDetailsContent({ asset, crypto, quote, account }: RuneTokenDetailsContentProps) {
   const description = useAssetDescription(asset);
   const priceChange = usePriceChangePercentage(asset);
   const activityQuery = useActivityByAsset(account, asset);
@@ -121,4 +116,3 @@ export function RuneTokenDetails({ accountIndex, account, assetId }: RuneTokenDe
 
   return <RuneTokenDetailsContent asset={asset} crypto={crypto} quote={quote} account={account} />;
 }
-

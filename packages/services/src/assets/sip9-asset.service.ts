@@ -2,7 +2,10 @@ import { injectable } from 'inversify';
 
 import { Sip9Asset } from '@leather.io/models';
 
-import { GammaApiClient, type GammaNftMetadata } from '../infrastructure/api/gamma/gamma-api.client';
+import {
+  GammaApiClient,
+  type GammaNftMetadata,
+} from '../infrastructure/api/gamma/gamma-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import type { HiroMetadata } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { createSip9Asset, getNonFungibleTokenId } from './sip9-asset.utils';

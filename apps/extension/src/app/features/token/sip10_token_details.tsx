@@ -104,4 +104,3 @@ export function Sip10TokenDetails({ accountIndex, account, assetId }: Sip10Token
     </Stack>
   );
 }
-

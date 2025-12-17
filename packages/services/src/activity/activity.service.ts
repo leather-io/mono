@@ -483,14 +483,17 @@ export class ActivityService {
         }
 
         activityList.push({
-          type: OnChainActivityTypes.lockAsset,
+          type: OnChainActivityTypes.swapAssets,
           timestamp,
           level: ActivityLevels.account,
           account: account.id,
           txid: deposit.bitcoinTxid,
           status: this.mapSbtcStatusToActivityStatus(deposit.status),
-          asset: btcAsset,
-          amount: initBigNumber(deposit.amount),
+          fromAsset: btcAsset,
+          fromAmount: initBigNumber(deposit.amount),
+          toAsset: btcAsset,
+          toAmount: initBigNumber(deposit.amount),
+          sbtcBridgeStatus: deposit.status,
         });
       }
 

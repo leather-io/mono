@@ -92,4 +92,3 @@ export function StacksTokenDetails({ accountIndex, account }: StacksTokenDetails
     </Stack>
   );
 }
-

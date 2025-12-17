@@ -32,4 +32,3 @@ export function TokenMeta({ layer, price }: TokenMetaProps) {
     </Stack>
   );
 }
-
