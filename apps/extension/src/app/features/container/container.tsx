@@ -34,7 +34,9 @@ export function Container() {
   useHandleQueuedBackgroundAnalytics();
   useOnChangeAccount(index => dispatch(switchAccount(index)));
 
-  useEffect(() => analytics.page('view', `${pathname}`), [pathname]);
+  useEffect(() => {
+    analytics.page('view', `${pathname}`);
+  }, [pathname]);
 
   if (!hasStateRehydrated) return <LoadingSpinner />;
 
