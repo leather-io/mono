@@ -1,16 +1,21 @@
-import { useCallback } from 'react';
+import { useEffect } from 'react';
 import { Outlet } from 'react-router';
 import { Virtuoso } from 'react-virtuoso';
 
 import { type ActivityView } from '@leather.io/features';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useActivity } from '@app/query/activity/activity.query';
+import { useStacksPendingTransactions } from '@app/query/stacks/mempool/mempool.hooks';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useUpdateSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.hooks';
+import { useSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.selectors';
 
 import { ActivityItem } from './components/activity-item';
 import { ActivityListLayout } from './components/activity-list.layout';
+import { createSubmittedActivityViews } from './submitted-activity-view';
 
 /*
  * Infinite scroll support is built into this component via the onLoadMore prop,
@@ -24,18 +29,33 @@ import { ActivityListLayout } from './components/activity-list.layout';
 export function ActivityList() {
   const accountIndex = useCurrentAccountIndex();
   const accountAddresses = useAccountAddresses(accountIndex);
+  const { network } = useUserSettings();
   const activityQuery = useActivity(accountAddresses);
+  const submittedTransactions = useSubmittedTransactions();
+  const updateSubmittedTransactions = useUpdateSubmittedTransactions();
 
-  const activity = activityQuery.data ?? [];
+  const stacksAddress = accountAddresses.stacks?.stxAddress ?? '';
+  const { transactions: stacksPendingTransactions } = useStacksPendingTransactions(stacksAddress);
 
+  useEffect(() => {
+    if (!stacksAddress) return;
+    updateSubmittedTransactions(stacksPendingTransactions);
+  }, [stacksAddress, stacksPendingTransactions, updateSubmittedTransactions]);
+
+  const historicalActivity = activityQuery.data ?? [];
+  const submittedActivity = createSubmittedActivityViews({ submittedTransactions, network });
+  const activity = [...submittedActivity, ...historicalActivity];
+
+  const hasActivity = activity.length > 0;
   const isLoading = activityQuery.isLoading;
 
-  const itemContent = useCallback(
-    (_: number, item: ActivityView) => <ActivityItem item={item} formatCurrency={formatCurrency} />,
-    []
-  );
+  function itemContent(_: number, item: ActivityView) {
+    return <ActivityItem item={item} formatCurrency={formatCurrency} />;
+  }
 
-  const computeItemKey = useCallback((_: number, item: ActivityView) => item.key, []);
+  function computeItemKey(_: number, item: ActivityView) {
+    return item.key;
+  }
 
   if (activityQuery.isError) {
     return (
@@ -49,7 +69,7 @@ export function ActivityList() {
   }
 
   return (
-    <ActivityListLayout isLoading={isLoading} hasActivity={activity.length > 0}>
+    <ActivityListLayout isLoading={isLoading} hasActivity={hasActivity}>
       <Virtuoso
         style={{ height: '100%' }}
         data={activity}
