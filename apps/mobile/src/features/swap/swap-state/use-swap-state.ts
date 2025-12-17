@@ -60,7 +60,7 @@ export function useSwapState({
 
   const networkFeeAssetMarkedDataQuery = useAssetMarketDataQuery({
     marketDataService,
-    asset: resolveNetworkFeeAsset(state.baseSwapAsset?.asset, state.targetSwapAsset?.asset),
+    asset: resolveNetworkFeeAsset(state.baseSwapAsset?.asset),
   });
 
   const targetMarketDataQuery = useAssetMarketDataQuery({
