@@ -9,6 +9,7 @@ import { CollectiblesLoading } from './collectibles-loading';
 
 interface CollectiblesLayoutProps {
   children: ReactNode;
+  amount: number;
   isLoading: boolean;
   hasCollectibles: boolean;
   isError: boolean;
@@ -17,6 +18,7 @@ interface CollectiblesLayoutProps {
 }
 
 export function CollectiblesLayout({
+  amount,
   children,
   isLoading,
   hasCollectibles,
@@ -27,9 +29,22 @@ export function CollectiblesLayout({
   return (
     <styled.section display="flex" flexDirection="column" gap="space.04">
       <styled.div display="flex" alignItems="center" justifyContent="space-between">
-        <styled.h2 textStyle="heading.04" margin="0">
-          Collectibles
-        </styled.h2>
+        <styled.div
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          alignSelf="stretch"
+          flexDirection="column"
+        >
+          <styled.span textStyle="label.03" margin="0">
+            Amount
+          </styled.span>
+          <styled.h2 textStyle="heading.05" margin="0">
+            {amount}
+          </styled.h2>
+        </styled.div>
+        {/* TODO - add amount here and filter menu  */}
+
         <styled.button
           type="button"
           px="space.02"
@@ -53,8 +68,8 @@ export function CollectiblesLayout({
 
       <styled.div
         display="grid"
-        gridTemplateColumns="repeat(auto-fill, minmax(156px, 1fr))"
-        gap="space.04"
+        gridTemplateColumns="repeat(auto-fill, minmax(195px, 195px))"
+        // gap="space.04"
       >
         {children}
       </styled.div>

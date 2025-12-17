@@ -18,6 +18,7 @@
 ## Imports
 
 - Never duplicate imports from the same module; consolidate named imports into a single statement.
+ - When adding a new import from a module that is already imported, always merge it into the existing import statement instead of creating a new one.
 
 ## Naming
 
@@ -55,6 +56,7 @@
 - Always follow the Rules of Hooks: call React hooks (including custom hooks like `useUserSettings`) only at the top level of React function components or other hooks.
 - Never call hooks conditionally, inside loops, inside nested functions, or after early returns that would change the order of hook calls between renders.
 - If you need conditional behavior, call the hook unconditionally and branch on its returned values, or extract the conditional logic into a separate component or custom hook.
+ - Avoid `useMemo` and `useCallback` unless they provide a clear, measurable benefit (e.g., preventing an expensive computation on every render or avoiding re-renders of heavy child components). Favor simple code over premature memoization.
 
 ## File naming
 

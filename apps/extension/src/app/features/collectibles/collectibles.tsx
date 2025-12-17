@@ -77,6 +77,7 @@ export function CollectiblesCurrent() {
     <CollectiblesLayout
       isLoading={isLoading}
       isError={isError}
+      amount={collectibles.length}
       hasCollectibles={collectibles.length > 0}
       onRefresh={() => {
         void refetch();
