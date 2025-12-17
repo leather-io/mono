@@ -31,15 +31,11 @@ export class Sip9AssetService {
       this.gammaApiClient.getStacksNft(principal, tokenId, { signal }),
     ]);
 
-    let hiroMetadata: HiroMetadata | undefined;
-    if (hiroResult.status === 'fulfilled') {
-      hiroMetadata = hiroResult.value;
-    }
+    const hiroMetadata: HiroMetadata | undefined =
+      hiroResult.status === 'fulfilled' && hiroResult.value ? hiroResult.value : undefined;
 
-    let gammaMetadata: GammaNftMetadata | null = null;
-    if (gammaResult.status === 'fulfilled') {
-      gammaMetadata = gammaResult.value;
-    }
+    const gammaMetadata: GammaNftMetadata | null =
+      gammaResult.status === 'fulfilled' ? gammaResult.value : null;
 
     return createSip9Asset(assetIdentifier, tokenId, hiroMetadata, gammaMetadata);
   }
