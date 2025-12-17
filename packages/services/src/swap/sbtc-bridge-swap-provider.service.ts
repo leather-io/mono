@@ -98,7 +98,7 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
 
     return [
       {
-        executionType: 'sbtc-bridge-deposit',
+        executionType: bridgeTxType === 'deposit' ? 'sbtc-bridge-deposit' : 'stacks-contract-call',
         providerId: 'sbtc-bridge',
         baseAsset,
         targetAsset,
