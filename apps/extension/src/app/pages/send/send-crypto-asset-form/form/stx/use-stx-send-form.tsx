@@ -38,7 +38,7 @@ export function useStxSendForm() {
 
   // get stx balance
   const balance = useStxAddressBalance(address);
-  const availableBalance = balance.value?.stx.availableUnlockedBalance ?? createMoney(0, 'STX');
+  const availableBalance = balance.data?.stx.availableUnlockedBalance ?? createMoney(0, 'STX');
 
   const sendMaxBalance = useMemo(() => {
     const standardFee = stxFees?.estimates[1]?.fee.amount || 0;

@@ -13,13 +13,13 @@ export function useInscribedSpendableUtxos() {
   const { utxos } = useCurrentNativeSegwitInscribedUtxos();
 
   return useMemo(() => {
-    if (!utxos || !nativeSegwitInscriptions.value) return [];
+    if (!utxos || !nativeSegwitInscriptions.data) return [];
 
     // Preformatting utxos so that inscriptions are declared as an object
     // property aids the following filter logic
     const utxosFormatted = utxos.map(utxo => ({
       ...utxo,
-      inscriptions: nativeSegwitInscriptions.value.filter(
+      inscriptions: nativeSegwitInscriptions.data.filter(
         inscription => inscription.txid === utxo.txid && Number(inscription.output) === utxo.vout
       ),
     }));

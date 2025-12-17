@@ -32,7 +32,7 @@ export function useTransactionError() {
 
   const currentAccount = useCurrentStacksAccount();
   const balance = useStxAddressBalance(currentAccount?.address ?? '');
-  const availableUnlockedBalance = balance.value?.stx.unlockedBalance;
+  const availableUnlockedBalance = balance.data?.stx.unlockedBalance;
 
   const unsignedTx = useUnsignedStacksTransactionBaseState();
   const { data: stxFees } = useCalculateStacksTxFees(unsignedTx.transaction);
@@ -42,7 +42,7 @@ export function useTransactionError() {
   return useMemo<TransactionErrorReason | void>(() => {
     if (!origin) return TransactionErrorReason.ExpiredRequest;
 
-    if (balance.state !== 'success' || isVerifyingSbtcEligibilty) return;
+    if (balance.isLoading || isVerifyingSbtcEligibilty) return;
 
     if (!transactionRequest || !availableUnlockedBalance || !currentAccount) {
       return TransactionErrorReason.Generic;
@@ -75,7 +75,7 @@ export function useTransactionError() {
     }
     return;
   }, [
-    balance.state,
+    balance.isLoading,
     origin,
     transactionRequest,
     contractInterface,

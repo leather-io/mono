@@ -11,7 +11,7 @@ interface StxBalanceProps {
 }
 export function StxBalance(props: StxBalanceProps) {
   const { address } = props;
-  const { value: balance } = useStxAddressBalance(address);
+  const { data: balance } = useStxAddressBalance(address);
 
   const stxBalance = useMemo(
     () =>

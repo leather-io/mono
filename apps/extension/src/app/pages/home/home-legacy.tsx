@@ -46,15 +46,15 @@ export function HomeLegacy() {
         <AccountCard
           name={name}
           availableBalance={
-            balance.state !== 'success' ? emptyAmountPlaceholder : formatCurrency(balance.value)
+            !balance.data ? emptyAmountPlaceholder : formatCurrency(balance.data)
           }
           totalBalance={
-            balance.state !== 'success' ? emptyAmountPlaceholder : formatCurrency(balance.value)
+            !balance.data ? emptyAmountPlaceholder : formatCurrency(balance.data)
           }
           toggleSwitchAccount={() => toggleSwitchAccount()}
           isFetchingBnsName={isFetchingBnsName}
-          isLoadingBalance={balance.state === 'loading'}
-          isLoadingAdditionalData={balance.state === 'loading'}
+          isLoadingBalance={balance.isLoading}
+          isLoadingAdditionalData={balance.isLoading}
           isBalancePrivate={isPrivateMode}
           onShowBalance={togglePrivateMode}
         >

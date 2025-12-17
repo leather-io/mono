@@ -4,7 +4,6 @@ import { createBtcBalance, createMoney } from '@leather.io/utils';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useNativeSegwitAccountRequest } from '@app/services/accounts/use-native-segwit-account-request';
 import { useTaprootAccountRequest } from '@app/services/accounts/use-taproot-account-request';
-import { toFetchState } from '@app/services/fetch-state';
 import { useDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
 import { useGetBtcAccountBalanceQuery } from './btc-balance.query';
@@ -23,24 +22,22 @@ export function useCurrentTaprootBtcBalanceWithFallback() {
 }
 
 function useBtcBalanceWithFallback(request: AccountRequest) {
-  const balance = toFetchState(useGetBtcAccountBalanceQuery(request));
+  const balance = useGetBtcAccountBalanceQuery(request);
   return {
-    isLoading: balance.state !== 'success',
-    btc: balance.value?.btc ?? fallbackBtcBalance,
-    quote: balance.value?.quote ?? fallbackQuoteBalance,
+    isLoading: balance.isLoading,
+    btc: balance.data?.btc ?? fallbackBtcBalance,
+    quote: balance.data?.quote ?? fallbackQuoteBalance,
   };
 }
 
 export function useNativeSegwitBtcAccountBalance(accountIndex: number) {
   const account = useAccountAddresses(accountIndex);
   const discardedInscriptions = useDiscardedInscriptions();
-  return toFetchState(
-    useGetBtcAccountBalanceQuery({
-      account,
-      protections: {
-        discardedInscriptions,
-      },
-      exclusions: { taprootAddresses: true },
-    })
-  );
+  return useGetBtcAccountBalanceQuery({
+    account,
+    protections: {
+      discardedInscriptions,
+    },
+    exclusions: { taprootAddresses: true },
+  });
 }

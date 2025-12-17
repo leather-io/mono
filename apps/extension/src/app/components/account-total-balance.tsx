@@ -17,17 +17,17 @@ export const AccountTotalBalance = memo(function AccountTotalBalance({
 }: AccountTotalBalanceProps) {
   const accountTotalBalance = useAccountTotalBalance(accountIndex);
 
-  if (accountTotalBalance.state !== 'loading' && !accountTotalBalance.value) return null;
+  if (!accountTotalBalance.isLoading && !accountTotalBalance.data) return null;
 
   return (
-    <SkeletonLoader height="20px" isLoading={accountTotalBalance.state === 'loading'}>
+    <SkeletonLoader height="20px" isLoading={accountTotalBalance.isLoading}>
       <styled.span
         className={shimmerStyles}
         textStyle="label.02"
-        data-state={accountTotalBalance.state === 'loading' ? 'loading' : undefined}
+        data-state={accountTotalBalance.isLoading ? 'loading' : undefined}
       >
-        {accountTotalBalance.value && (
-          <PrivateText>{formatCurrency(accountTotalBalance.value)}</PrivateText>
+        {accountTotalBalance.data && (
+          <PrivateText>{formatCurrency(accountTotalBalance.data)}</PrivateText>
         )}
       </styled.span>
     </SkeletonLoader>

@@ -65,7 +65,7 @@ function TransactionRequestBase() {
   const stxAddress = useCurrentStacksAccountAddress();
 
   const stxBalance = useStxAddressBalance(stxAddress);
-  const availableUnlockedBalance = stxBalance.value?.stx.availableUnlockedBalance;
+  const availableUnlockedBalance = stxBalance.data?.stx.availableUnlockedBalance;
 
   const { data: nextNonce, status: nonceQueryStatus } = useNextNonce(stxAddress);
 
@@ -73,7 +73,7 @@ function TransactionRequestBase() {
     useCheckSbtcSponsorshipEligible({ baseTx: unsignedTx, stxFees });
 
   const canSubmit =
-    stxBalance.state === 'success' && nonceQueryStatus === 'success' && !isVerifyingSbtcSponsorship;
+    !stxBalance.isLoading && nonceQueryStatus === 'success' && !isVerifyingSbtcSponsorship;
 
   const navigate = useNavigate();
   const { stacksBroadcastTransaction } = useStacksBroadcastTransaction({ token: 'STX' });

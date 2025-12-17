@@ -20,8 +20,8 @@ interface StxBalanceLoaderProps {
 }
 export function StxBalanceLoader({ address, children }: StxBalanceLoaderProps) {
   const balance = useStxAddressBalance(address);
-  if (!balance.value) return;
-  return children(balance.value.stx, balance.state !== 'success', balance.state !== 'success');
+  if (!balance.data) return;
+  return children(balance.data.stx, balance.isLoading, balance.isLoading);
 }
 
 interface StxAssetItemBalanceLoaderProps {
@@ -37,11 +37,11 @@ export function StxAssetItemBalanceLoader({
   children,
 }: StxAssetItemBalanceLoaderProps) {
   const stxBalance = useStxAccountBalance(accountIndex);
-  const isLoading = stxBalance.state === 'loading';
+  const isLoading = stxBalance.isLoading;
   if (isLoading) return <CryptoAssetItemPlaceholder />;
-  if (stxBalance.state === 'error') {
+  if (stxBalance.isError || !stxBalance.data) {
     return <CryptoAssetItemError caption="STX" icon={<StxAvatarIcon />} title="Stacks" />;
   }
 
-  return children(stxBalance.value, isLoading, false);
+  return children(stxBalance.data, isLoading, false);
 }

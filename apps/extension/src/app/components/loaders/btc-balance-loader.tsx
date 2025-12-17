@@ -19,11 +19,11 @@ export function BtcAssetItemBalanceLoader({
   children,
 }: BtcAssetItemBalanceLoaderProps) {
   const nativeSegwitBalance = useNativeSegwitBtcAccountBalance(accountIndex);
-  const isLoading = nativeSegwitBalance.state === 'loading';
+  const isLoading = nativeSegwitBalance.isLoading;
   if (isLoading) return <CryptoAssetItemPlaceholder />;
-  if (nativeSegwitBalance.state === 'error') {
+  if (nativeSegwitBalance.isError || !nativeSegwitBalance.data) {
     return <CryptoAssetItemError caption="BTC" icon={<BtcAvatarIcon />} title="Bitcoin" />;
   }
 
-  return children(nativeSegwitBalance.value, isLoading, false);
+  return children(nativeSegwitBalance.data, isLoading, false);
 }

@@ -39,7 +39,7 @@ function Sip10TokenSendFormLoader({ children }: Sip10TokenSendFormLoaderProps) {
   return children({
     asset: tokenBalance.asset,
     balance: tokenBalance.crypto,
-    marketData: marketData.value?.price.amount.isGreaterThan(0) ? marketData.value : undefined,
+    marketData: marketData.data?.price.amount.isGreaterThan(0) ? marketData.data : undefined,
   });
 }
 

@@ -23,7 +23,7 @@ function SendButtonSuspense() {
   const stxBalance = useStxAddressBalance(stxAddress);
   const { sip10s: stacksFtAssets } = useSip10AddressTransferableTokenBalances(stxAddress);
 
-  const isDisabled = !btcAddress && !stxBalance.value && stacksFtAssets.length === 0;
+  const isDisabled = !btcAddress && !stxBalance.data && stacksFtAssets.length === 0;
 
   return (
     <IconButton

@@ -105,11 +105,11 @@ export function useAccountScaledBalanceAnalytics({ accountIndex }: { accountInde
     return money ? scaleValue(Number(convertAmountToBaseUnit(money))) : undefined;
   }
   const scaledStxAvailableBalance = getScaledValueFromMoney(
-    stxBalance.value?.stx.availableUnlockedBalance
+    stxBalance.data?.stx.availableUnlockedBalance
   );
-  const scaledStxLockedBalance = getScaledValueFromMoney(stxBalance.value?.stx.lockedBalance);
-  const scaledBtcAvailableBalance = getScaledValueFromMoney(btcBalance.value?.btc.availableBalance);
-  const scaledUsdBalance = getScaledValueFromMoney(totalBalance.value);
+  const scaledStxLockedBalance = getScaledValueFromMoney(stxBalance.data?.stx.lockedBalance);
+  const scaledBtcAvailableBalance = getScaledValueFromMoney(btcBalance.data?.btc.availableBalance);
+  const scaledUsdBalance = getScaledValueFromMoney(totalBalance.data);
 
   const fingerprint = useWalletFingerprint();
 

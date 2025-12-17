@@ -12,7 +12,6 @@ import { minutesInMs, secondsInMs } from '@leather.io/utils';
 
 import { useCurrentNetworkState } from '@app/query/leather-query-provider';
 import { useNativeSegwitAccountRequest } from '@app/services/accounts/use-native-segwit-account-request';
-import { toFetchState } from '@app/services/fetch-state';
 import { useCurrentBitcoinAccountXpubs } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 
 import { useBitcoinClient } from '../../clients/bitcoin-client';
@@ -46,7 +45,7 @@ export function useNumberOfInscriptionsOnUtxo() {
 
 export function useCurrentNativeSegwitInscriptions() {
   const request = useNativeSegwitAccountRequest();
-  return toFetchState(useGetAccountInscriptionsQuery(request));
+  return useGetAccountInscriptionsQuery(request);
 }
 
 function useGetAccountInscriptionsQuery(request: AccountRequest) {

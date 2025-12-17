@@ -2,7 +2,6 @@ import type { Sip10Balance } from '@leather.io/services';
 import { isSameAsset } from '@leather.io/utils';
 
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { toFetchState } from '@app/services/fetch-state';
 
 import {
   useGetSip10AccountBalanceQuery,
@@ -11,7 +10,7 @@ import {
 
 export function useSip10AddressTransferableTokenBalances(address: string) {
   const balance = useSip10AddressBalance(address);
-  if (balance.state !== 'success') {
+  if (balance.isLoading || !balance.data) {
     return {
       isLoading: true,
       sip10s: [],
@@ -19,7 +18,7 @@ export function useSip10AddressTransferableTokenBalances(address: string) {
   }
   return {
     isLoading: false,
-    sip10s: balance.value.sip10s.filter(
+    sip10s: balance.data.sip10s.filter(
       t => t.crypto.availableBalance.amount.isGreaterThan(0) && t.asset.canTransfer
     ),
   };
@@ -30,17 +29,17 @@ export function useManagedSip10Tools(accountIndex: number) {
 
   return {
     isEnabled: (token: Sip10Balance) =>
-      !!enabledSip10s.value?.sip10s.find(sip10 => isSameAsset(sip10.asset, token.asset)),
+      !!enabledSip10s.data?.sip10s.find(sip10 => isSameAsset(sip10.asset, token.asset)),
   };
 }
 
 export function useSip10TokenBalance(accountIndex: number, contractId: string) {
   const balance = useSip10AccountBalance(accountIndex);
-  return balance.value?.sip10s.find(t => t.asset.contractId === contractId);
+  return balance.data?.sip10s.find(t => t.asset.contractId === contractId);
 }
 
 function useSip10AddressBalance(address: string) {
-  return toFetchState(useGetSip10AddressBalanceQuery(address));
+  return useGetSip10AddressBalanceQuery(address);
 }
 
 export function useSip10AccountBalance(
@@ -48,10 +47,8 @@ export function useSip10AccountBalance(
   options?: { includeHiddenAssets?: boolean }
 ) {
   const account = useAccountAddresses(accountIndex);
-  return toFetchState(
-    useGetSip10AccountBalanceQuery({
-      account,
-      assets: { includeHiddenAssets: options?.includeHiddenAssets },
-    })
-  );
+  return useGetSip10AccountBalanceQuery({
+    account,
+    assets: { includeHiddenAssets: options?.includeHiddenAssets },
+  });
 }

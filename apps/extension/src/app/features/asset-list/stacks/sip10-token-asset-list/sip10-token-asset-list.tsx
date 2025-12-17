@@ -32,16 +32,16 @@ export function Sip10TokenAssetList({
   const { isEnabled } = useManagedSip10Tools(accountIndex);
 
   useEffect(() => {
-    if (sip10s.value && sip10s.value.sip10s.length > 0 && setHasManageableTokens) {
+    if (sip10s.data && sip10s.data.sip10s.length > 0 && setHasManageableTokens) {
       setHasManageableTokens(true);
     }
   }, [sip10s, setHasManageableTokens]);
 
-  if (sip10s.state !== 'success' && !sip10s.value) return null;
+  if (!sip10s.data) return null;
 
   return (
     <Stack>
-      {sip10s.value.sip10s.map(sip10 => (
+      {sip10s.data.sip10s.map(sip10 => (
         <Sip10TokenAssetItem
           key={sip10.asset.assetId}
           assetRightElementVariant={assetRightElementVariant}
