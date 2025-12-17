@@ -4,15 +4,16 @@ import { MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
 import { useQueries } from '@tanstack/react-query';
 
 import { createGetAddressMempoolTransactionsQueryOptions } from '@leather.io/query';
-import { isUndefined } from '@leather.io/utils';
+import { isUndefined, uniqueArray } from '@leather.io/utils';
 
 import { useGetTransactionByIdListQuery } from '../transaction/transactions-by-id.query';
 import { useStacksClient } from './stacks-client';
 
 function useGetAddressMempoolTransactionsQueries(addresses: string[]) {
   const client = useStacksClient();
+  const uniqueAddresses = uniqueArray(addresses);
   const queries = useQueries({
-    queries: addresses.map(address => ({
+    queries: uniqueAddresses.map(address => ({
       ...createGetAddressMempoolTransactionsQueryOptions({ address, client }),
     })),
   });

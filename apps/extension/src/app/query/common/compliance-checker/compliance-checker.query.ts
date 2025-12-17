@@ -2,7 +2,7 @@ import { useQueries } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { makeComplianceQuery } from '@leather.io/query';
-import { ensureArray, isEmptyString } from '@leather.io/utils';
+import { ensureArray, isEmptyString, uniqueArray } from '@leather.io/utils';
 
 import { analytics } from '@shared/utils/analytics';
 
@@ -45,10 +45,12 @@ export async function checkEntityAddressIsCompliant(address: string): Promise<Co
 
 export function useCheckAddressComplianceQueries(addresses: string[]) {
   const network = useCurrentNetwork();
+  const filteredAddresses = addresses.filter(address => !isEmptyString(address));
+  const uniqueAddresses = uniqueArray(filteredAddresses);
   return useQueries({
-    queries: addresses
-      .filter(address => !isEmptyString(address))
-      .map(address => makeComplianceQuery({ address, networkMode: network.chain.bitcoin.mode })),
+    queries: uniqueAddresses.map(address =>
+      makeComplianceQuery({ address, networkMode: network.chain.bitcoin.mode })
+    ),
   });
 }
 

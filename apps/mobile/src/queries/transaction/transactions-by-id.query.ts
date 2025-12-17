@@ -7,14 +7,16 @@ import {
   createStacksTransactionByIdQueryConfig,
 } from '@leather.io/queries';
 import { createGetTransactionByIdQueryOptions } from '@leather.io/query';
+import { uniqueArray } from '@leather.io/utils';
 
 import { useStacksClient } from '../stacks/stacks-client';
 
 export function useGetTransactionByIdListQuery(txids: string[]) {
   const client = useStacksClient();
+  const uniqueTxids = uniqueArray(txids);
 
   return useQueries({
-    queries: txids.map(txid => {
+    queries: uniqueTxids.map(txid => {
       return {
         ...createGetTransactionByIdQueryOptions({ client, txid }),
       };

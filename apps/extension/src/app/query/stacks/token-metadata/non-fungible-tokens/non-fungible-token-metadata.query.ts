@@ -22,17 +22,25 @@ export function useGetNonFungibleTokenMetadataListQuery(
   const nftHoldings = useGetNonFungibleTokenHoldingsQuery(address);
 
   return useQueries({
-    queries: (nftHoldings.data?.results ?? []).map(nft => {
-      const address = getPrincipalFromAssetString(nft.asset_identifier);
-      const tokenId = getTokenId(nft.value.hex);
-
-      return {
-        ...createGetNonFungibleTokenMetadataQueryOptions({
-          address,
-          client,
-          tokenId,
-        }),
-      };
-    }),
+    queries: (() => {
+      const seen = new Map<string, { principal: string; tokenId: number }>();
+      for (const nft of nftHoldings.data?.results ?? []) {
+        const principal = getPrincipalFromAssetString(nft.asset_identifier);
+        const tokenId = getTokenId(nft.value.hex);
+        const key = `${principal}:${tokenId}`;
+        if (!seen.has(key)) {
+          seen.set(key, { principal, tokenId });
+        }
+      }
+      return Array.from(seen.values()).map(({ principal, tokenId }) => {
+        return {
+          ...createGetNonFungibleTokenMetadataQueryOptions({
+            address: principal,
+            client,
+            tokenId,
+          }),
+        };
+      });
+    })(),
   });
 }

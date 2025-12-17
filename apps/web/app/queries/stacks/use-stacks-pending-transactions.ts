@@ -8,7 +8,7 @@ import { UseQueryResult, useQueries } from '@tanstack/react-query';
 import { useStacksClient } from '~/queries/stacks/stacks-client';
 
 import { createGetAddressMempoolTransactionsQueryOptions } from '@leather.io/query';
-import { isUndefined } from '@leather.io/utils';
+import { isUndefined, uniqueArray } from '@leather.io/utils';
 
 import { useGetTransactionByIdListQuery } from '../transaction/transactions-by-id.query';
 
@@ -30,8 +30,9 @@ function combineAddressMempoolTransactionsQueries(
 
 export function useGetAddressMempoolTransactionsQueries(addresses: string[]) {
   const client = useStacksClient();
+  const uniqueAddresses = uniqueArray(addresses);
   return useQueries({
-    queries: addresses.map(address => ({
+    queries: uniqueAddresses.map(address => ({
       ...createGetAddressMempoolTransactionsQueryOptions({ address, client }),
     })),
     combine: combineAddressMempoolTransactionsQueries,
