@@ -3,6 +3,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import {
   createSip10AccountBalanceQueryConfig,
   createSip10AddressBalanceQueryConfig,
+  createSip10BalanceByAssetIdConfig,
 } from '@leather.io/queries';
 import type { AccountRequest } from '@leather.io/services';
 
@@ -11,6 +12,14 @@ import {
   balanceQueryOptions,
   balanceQueryOptionsWithRefetch,
 } from '@app/query/common/balance-query-options';
+
+export function useGetSip10BalanceByAssetIdQuery(account: AccountRequest, assetId: string) {
+  const settings = useUserSettings();
+  return useQuery({
+    ...createSip10BalanceByAssetIdConfig(account, assetId, settings),
+    ...balanceQueryOptionsWithRefetch,
+  });
+}
 
 export function useGetSip10AccountBalanceQuery(account: AccountRequest) {
   const settings = useUserSettings();

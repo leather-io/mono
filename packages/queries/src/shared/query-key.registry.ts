@@ -14,6 +14,7 @@ export const querySettingsDepsRegistry = {
   'stx-balances-service--get-stx-account-balance': ['currency', 'network'],
   'stx-balances-service--get-stx-aggregate-balance': ['currency', 'network'],
   'stx-balances-service--get-stx-address-balance': ['currency', 'network'],
+  'sip10-balances-service--get-sip10-balance-by-asset-id': ['currency', 'network'],
   'sip10-balances-service--get-sip10-address-balance': ['currency', 'network', 'assetVisibility'],
   'sip10-balances-service--get-sip10-account-balance': ['currency', 'network', 'assetVisibility'],
   'runes-balances-service--get-runes-account-balance': ['currency', 'network', 'assetVisibility'],
