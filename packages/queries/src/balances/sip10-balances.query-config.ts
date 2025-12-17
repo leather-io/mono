@@ -9,6 +9,30 @@ import {
 import { createServiceQueryKey } from '../shared/query-key.factory';
 import { balanceQueryOptions } from '../shared/query-options';
 
+export function createSip10BalanceByAssetIdQueryKey(
+  request: AccountRequest,
+  assetId: string,
+  settings: UserSettings
+) {
+  return createServiceQueryKey(
+    'sip10-balances-service--get-sip10-balance-by-asset-id',
+    [request, assetId],
+    settings
+  );
+}
+export function createSip10BalanceByAssetIdConfig(
+  request: AccountRequest,
+  assetId: string,
+  settings: UserSettings
+) {
+  return {
+    queryKey: createSip10BalanceByAssetIdQueryKey(request, assetId, settings),
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getSip10BalancesService().getSip10BalanceByAssetId(request, assetId, signal),
+    ...balanceQueryOptions,
+  };
+}
+
 export function createSip10AccountBalanceQueryKey(request: AccountRequest, settings: UserSettings) {
   return createServiceQueryKey(
     'sip10-balances-service--get-sip10-account-balance',
