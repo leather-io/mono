@@ -11,6 +11,12 @@ import { usePromos } from './use-promos';
 
 const promoCards = [
   {
+    eventName: 'usdcx',
+    message: 'USDCx is live on Stacks!\nBridge your USDC now.',
+    imgSrc: 'assets/illustrations/promo-banner-usdcx.svg',
+    linkUrl: 'https://bridge.stacks.co/',
+  },
+  {
     eventName: 'mobile',
     message: 'Mobile app is here for iOS and Android',
     imgSrc: 'assets/illustrations/promo-banner-mobile.svg',
