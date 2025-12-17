@@ -33,14 +33,14 @@ export function RunesAssetList({
   const { isEnabled } = useManagedRunesTools(accountIndex);
 
   useEffect(() => {
-    if (runes.value && runes.value.runes.length > 0 && setHasManageableTokens) {
+    if (runes.data && runes.data.runes.length > 0 && setHasManageableTokens) {
       setHasManageableTokens(true);
     }
   }, [runes, setHasManageableTokens]);
 
-  if (runes.state !== 'success' && !runes.value) return null;
+  if (runes.status !== 'success' && !runes.data) return null;
 
-  return runes.value.runes.map((rune, i) => {
+  return runes.data.runes.map((rune, i) => {
     const key = `${rune.asset.symbol}${i}`;
     const captionLeft = 'Runes';
     const icon = <RunesAvatarIcon />;

@@ -7,13 +7,12 @@ import { isSameAsset } from '@leather.io/utils';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { balanceQueryOptionsWithRefetch } from '@app/query/common/balance-query-options';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { toFetchState } from '@app/services/fetch-state';
 
 export function useManagedRunesTools(accountIndex: number) {
   const enabledRunes = useRunesAccountBalance(accountIndex);
   return {
     isEnabled: (rune: RuneBalance) =>
-      !!enabledRunes.value?.runes.find(r => isSameAsset(r.asset, rune.asset)),
+      !!enabledRunes.data?.runes.find(r => isSameAsset(r.asset, rune.asset)),
   };
 }
 
@@ -22,12 +21,10 @@ export function useRunesAccountBalance(
   options?: { includeHiddenAssets?: boolean }
 ) {
   const account = useAccountAddresses(accountIndex);
-  return toFetchState(
-    useGetRunesAccountBalanceQuery({
-      account,
-      assets: { includeHiddenAssets: options?.includeHiddenAssets },
-    })
-  );
+  return useGetRunesAccountBalanceQuery({
+    account,
+    assets: { includeHiddenAssets: options?.includeHiddenAssets },
+  });
 }
 
 function useGetRunesAccountBalanceQuery(request: AccountRequest) {
