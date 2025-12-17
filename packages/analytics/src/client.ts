@@ -8,21 +8,21 @@ export function AnalyticsClient(config: AnalyticsClientConfig) {
       event: K,
       ...[properties]: Events[K] extends undefined ? [] : [Events[K]]
     ) {
-      return analyticsClient.track(event, { ...properties, ...defaultProperties });
+      analyticsClient.track(event, { ...properties, ...defaultProperties });
     },
 
     untypedTrack(event: string, properties?: JsonMap | Record<string, unknown>) {
       if (event.match(/^[a-zA-Z0-9\s][a-zA-Z0-9\s]*$/)) {
         throw new Error('Event must be snake_case');
       }
-      return analyticsClient.track(event as any, {
+      analyticsClient.track(event as any, {
         ...properties,
         ...defaultProperties,
       });
     },
 
     screen(name: string, properties?: JsonMap | Record<string, unknown>) {
-      return analyticsClient.track('screen_view', {
+      analyticsClient.track('screen_view', {
         screen_name: name,
         ...properties,
         ...defaultProperties,
@@ -43,7 +43,6 @@ export function AnalyticsClient(config: AnalyticsClientConfig) {
           group.set(key, JSON.stringify(value));
         });
       }
-      return;
     },
 
     async identify(userId?: string, traits?: JsonMap | Record<string, unknown>) {
@@ -55,14 +54,13 @@ export function AnalyticsClient(config: AnalyticsClientConfig) {
       if (Object.keys(allTraits).length > 0) {
         const people = analyticsClient.getPeople();
         if (people) {
-          return people.set(allTraits);
+          people.set(allTraits);
         }
       }
-      return;
     },
 
     page(category?: string, name?: string, properties?: JsonMap | Record<string, unknown>) {
-      return analyticsClient.track('page_view', {
+      analyticsClient.track('page_view', {
         category,
         name,
         ...properties,
