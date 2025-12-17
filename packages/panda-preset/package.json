@@ -15,7 +15,8 @@
     "prepare": "pnpm build"
   },
   "exports": {
-    ".": "./dist/preset.js"
+    ".": "./dist/preset.js",
+    "./config": "./src/preset.ts"
   },
   "dependencies": {
     "@pandacss/dev": "0.53.6"
