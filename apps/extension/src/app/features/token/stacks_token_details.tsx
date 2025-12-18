@@ -1,18 +1,26 @@
-import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
+import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import { stxAsset } from '@leather.io/constants';
 import { type AccountAddresses } from '@leather.io/models';
 import { Callout, Spinner, StxAvatarIcon } from '@leather.io/ui';
+import { createMoney } from '@leather.io/utils';
 
+import { formatCurrency } from '@app/common/currency-formatter';
 import { useActivityByAsset } from '@app/query/activity/activity.query';
 import { useAssetDescription } from '@app/query/assets/fungible-asset-info.query';
 import { useMarketData } from '@app/query/common/market-data/market-data.query';
 import { usePriceChangePercentage } from '@app/query/common/market-history/market-history.query';
 import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 
-import { TokenActivitySection } from './token_activity.layout';
-import { TokenHeader } from './token_header.layout';
-import { TokenMeta } from './token_meta.layout';
+import { ActivityItem } from '../activity-list/components/activity-item';
+import {
+  TokenDetailsActionsRow,
+  TokenDetailsBalanceItem,
+  TokenDetailsHero,
+  TokenDetailsRow,
+  TokenDetailsScreen,
+  TokenDetailsSection,
+} from './token-details-screen.layout';
 
 interface StacksTokenDetailsProps {
   accountIndex: number;
@@ -51,44 +59,91 @@ export function StacksTokenDetails({ accountIndex, account }: StacksTokenDetails
   const descriptionText = description.state === 'success' ? description.value.description : '';
   const activity = activityQuery.data ?? [];
 
+  const heroAmount = availableBalance.amount
+    .shiftedBy(-availableBalance.decimals)
+    .toFormat(availableBalance.decimals > 8 ? 8 : availableBalance.decimals);
+  const heroFiat = formatCurrency(fiatBalance);
+
+  const priceChangeDelta =
+    changePercent && price
+      ? formatCurrency(
+          createMoney(price.amount.multipliedBy(changePercent).dividedBy(100), price.symbol)
+        )
+      : '';
+  const priceChangeText =
+    changePercent && priceChangeDelta
+      ? `${changePercent.toFixed(2)}% (${priceChangeDelta})`
+      : changePercent
+        ? `${changePercent.toFixed(2)}%`
+        : '—';
+
   return (
-    <Stack px="space.05" py="space.05" gap="space.05">
-      <TokenHeader
-        icon={<StxAvatarIcon />}
-        name="Stacks"
-        symbol="STX"
-        availableBalance={availableBalance}
-        fiatBalance={fiatBalance}
-      />
-      <TokenMeta layer="Layer 2 · Stacks" price={price} />
+    <TokenDetailsScreen
+      title="Stacks"
+      hero={
+        <TokenDetailsHero
+          icon={<StxAvatarIcon size="xl" />}
+          amount={heroAmount}
+          amountSuffix="STX"
+          fiatAmount={heroFiat}
+          actions={<TokenDetailsActionsRow symbol="STX" />}
+        />
+      }
+    >
       {descriptionText ? (
-        <Stack border="default" borderRadius="md" p="space.04">
-          <styled.h2 textStyle="label.02" margin="0">
-            Description
-          </styled.h2>
-          <styled.p textStyle="body.02" margin="0">
-            {descriptionText}
-          </styled.p>
-        </Stack>
+        <TokenDetailsSection title="Description">
+          <Box px="space.05" pb="space.03">
+            <styled.p textStyle="body.02" margin="0">
+              {descriptionText}
+            </styled.p>
+          </Box>
+        </TokenDetailsSection>
       ) : null}
-      <Flex justifyContent="space-between">
-        <styled.span textStyle="caption.02" color="ink.text-subdued">
-          24h change
-        </styled.span>
-        <styled.span
-          textStyle="caption.02"
-          color={
-            changePercent > 0
-              ? 'green.action-primary-default'
-              : changePercent < 0
-                ? 'red.action-primary-default'
-                : 'ink.text-subdued'
+
+      <TokenDetailsSection title="Token details">
+        <TokenDetailsRow label="Name" value="Stacks (STX)" />
+        <TokenDetailsRow label="Price" value={formatCurrency(price)} />
+        <TokenDetailsRow
+          label="Price change (24hr)"
+          value={
+            <styled.span
+              textStyle="caption.02"
+              color={
+                changePercent > 0
+                  ? 'green.action-primary-default'
+                  : changePercent < 0
+                    ? 'red.action-primary-default'
+                    : 'ink.text-subdued'
+              }
+            >
+              {priceChangeText}
+            </styled.span>
           }
-        >
-          {changePercent ? `${changePercent.toFixed(2)}%` : '—'}
-        </styled.span>
-      </Flex>
-      <TokenActivitySection heading="Recent activity" activity={activity} />
-    </Stack>
+        />
+        <TokenDetailsRow label="Layer" value="Layer 2 (Stacks)" />
+        <TokenDetailsRow label="Contract details" value="—" />
+      </TokenDetailsSection>
+
+      <TokenDetailsSection title="Balances">
+        <TokenDetailsBalanceItem
+          title="Stacks"
+          address={account.stacks?.stxAddress}
+          rightTop={formatCurrency(availableBalance, { preset: 'pad-decimals' })}
+          rightBottom={formatCurrency(fiatBalance)}
+        />
+      </TokenDetailsSection>
+
+      {activity.length ? (
+        <TokenDetailsSection title="Activity">
+          <Stack>
+            {activity.map(item => (
+              <Box key={item.key} px="space.05" py="space.03" bg="ink.background-primary">
+                <ActivityItem item={item} formatCurrency={formatCurrency} />
+              </Box>
+            ))}
+          </Stack>
+        </TokenDetailsSection>
+      ) : null}
+    </TokenDetailsScreen>
   );
 }
