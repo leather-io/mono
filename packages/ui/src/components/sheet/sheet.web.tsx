@@ -14,6 +14,8 @@ export interface SheetProps {
   onClose?(): void;
 }
 interface RadixDialogProps extends SheetProps {
+  title?: string;
+  description?: string;
   children: ReactNode;
   footer?: ReactNode;
   header?: ReactElement<any, string | JSXElementConstructor<any>>;
@@ -40,6 +42,8 @@ export function Sheet({
   onClose,
   isShowing,
   wrapChildren = true,
+  title,
+  description,
 }: RadixDialogProps) {
   const maxHeightOffset = getHeightOffset(header, footer);
   const contentMaxHeight = getContentMaxHeight(maxHeightOffset);
@@ -48,7 +52,8 @@ export function Sheet({
     <RadixDialog.Root open={isShowing}>
       <RadixDialog.Portal>
         <VisuallyHidden.Root>
-          <RadixDialog.Title>Dialog</RadixDialog.Title>
+          <RadixDialog.Title>{title ?? 'Dialog'}</RadixDialog.Title>
+          <RadixDialog.Description>{description ?? 'Dialog description'}</RadixDialog.Description>
         </VisuallyHidden.Root>
         <RadixDialog.Overlay
           className={css({
