@@ -139,6 +139,12 @@ export const config = {
     noParse: /argon2\.wasm$/,
     rules: [
       {
+        test: /\.(js|ts|tsx)$/,
+        include: [/node_modules\/@leather\.io/, /packages\/.*\/dist/],
+        enforce: 'pre',
+        use: ['source-map-loader'],
+      },
+      {
         test: /\.css$/i,
         use: [
           'style-loader',
