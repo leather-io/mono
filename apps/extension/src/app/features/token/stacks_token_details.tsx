@@ -64,16 +64,18 @@ export function StacksTokenDetails({ accountIndex, account }: StacksTokenDetails
     .toFormat(availableBalance.decimals > 8 ? 8 : availableBalance.decimals);
   const heroFiat = formatCurrency(fiatBalance);
 
+  const hasChangePercent = typeof changePercent === 'number' && Number.isFinite(changePercent);
+  const hasPrice = Boolean(price);
   const priceChangeDelta =
-    changePercent && price
+    hasChangePercent && hasPrice
       ? formatCurrency(
           createMoney(price.amount.multipliedBy(changePercent).dividedBy(100), price.symbol)
         )
       : '';
   const priceChangeText =
-    changePercent && priceChangeDelta
+    hasChangePercent && priceChangeDelta
       ? `${changePercent.toFixed(2)}% (${priceChangeDelta})`
-      : changePercent
+      : hasChangePercent
         ? `${changePercent.toFixed(2)}%`
         : '—';
 
