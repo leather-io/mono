@@ -61,21 +61,39 @@ export function getNonFungibleTokenId(hex: string): number {
 
 const leatherIpfsUrl = 'https://leather.quicknode-ipfs.com/ipfs/';
 
+function encodeIpfsPath(path: string) {
+  const normalized = path.replace(/^\/+/, '');
+  if (!normalized) return '';
+  return '/' + normalized.split('/').map(encodeURIComponent).join('/');
+}
+
 function toLeatherIpfsUrl(url: string): string {
-  if (!url.includes('/ipfs/')) return url;
+  if (!url) return '';
 
-  const ipfsPath = url.split('/ipfs/')[1];
-  if (!ipfsPath) return '';
+  // Handle ipfs://<cid>/<path> and ipfs://ipfs/<cid>/<path>
+  if (url.startsWith('ipfs://')) {
+    const withoutScheme = url.replace(/^ipfs:\/\//, '');
+    const withoutPrefix = withoutScheme.startsWith('ipfs/')
+      ? withoutScheme.slice('ipfs/'.length)
+      : withoutScheme;
+    const [cid, ...rest] = withoutPrefix.split('/').filter(Boolean);
+    if (!cid) return '';
+    const encodedPath = encodeIpfsPath(rest.join('/'));
+    return `${leatherIpfsUrl}${cid}${encodedPath}`;
+  }
 
-  const pathParts = ipfsPath.split('/');
-  const cid = pathParts[0];
-  const remainingPath = pathParts.slice(1).join('/');
+  // Handle https://.../ipfs/<cid>/<path>
+  if (url.includes('/ipfs/')) {
+    const ipfsPath = url.split('/ipfs/')[1];
+    if (!ipfsPath) return '';
 
-  const encodedPath = remainingPath
-    ? '/' + remainingPath.split('/').map(encodeURIComponent).join('/')
-    : '';
+    const [cid, ...rest] = ipfsPath.split('/').filter(Boolean);
+    if (!cid) return '';
+    const encodedPath = encodeIpfsPath(rest.join('/'));
+    return `${leatherIpfsUrl}${cid}${encodedPath}`;
+  }
 
-  return `${leatherIpfsUrl}${cid}${encodedPath}`;
+  return url;
 }
 
 export function createSip9Asset(
@@ -94,7 +112,9 @@ export function createSip9Asset(
     ? toLeatherIpfsUrl(gammaMetadata.item.asset_content.content_url)
     : undefined;
 
-  const contentUrl = gammaContentUrl || hiroMetadata?.cached_image || hiroMetadata?.image || '';
+  const hiroContentUrl = toLeatherIpfsUrl(hiroMetadata?.cached_image || hiroMetadata?.image || '');
+
+  const contentUrl = gammaContentUrl || hiroContentUrl || '';
 
   const contentType = gammaMetadata?.item.asset_content?.content_type || '';
 
