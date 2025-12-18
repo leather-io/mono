@@ -1,4 +1,4 @@
-import type { QueryFunctionContext } from '@tanstack/react-query';
+import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
 
 import { ChainId } from '@leather.io/models';
 
@@ -19,5 +19,8 @@ export function createGetStx20BalancesQueryOptions({
     enabled: !!address && chainId === ChainId.Mainnet,
     queryKey: [StacksQueryPrefixes.GetStx20Balances, address],
     queryFn: ({ signal }: QueryFunctionContext) => client.getStx20Balances(address, signal),
-  } as const;
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  } satisfies UseQueryOptions<any, unknown, any>;
 }
