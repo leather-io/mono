@@ -5,13 +5,20 @@ import { t } from '@lingui/core/macro';
 
 import { btcAsset } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
-import { BtcAvatarIcon } from '@leather.io/ui/native';
+import { BitcoinFilledCircleIcon, BtcAvatarIcon } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 type BitcoinTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
 
 export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
-  return <TokenBalance ticker="BTC" icon={<BtcAvatarIcon />} tokenName={t`Bitcoin`} {...props} />;
+  return (
+    <TokenBalance
+      ticker="BTC"
+      icon={<BtcAvatarIcon indicator={<BitcoinFilledCircleIcon variant="small" />} />}
+      tokenName={t`Bitcoin`}
+      {...props}
+    />
+  );
 }
 
 export function BitcoinBalanceByAccount({

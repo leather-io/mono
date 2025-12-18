@@ -57,7 +57,7 @@ export function ReceiveTokens({
     <Stack className={css(receiveTabStyle)}>
       <ReceiveItem
         address={btcAddressNativeSegwit}
-        icon={<BtcAvatarIcon />}
+        icon={<BtcAvatarIcon size="xl" />}
         dataTestId={HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn}
         onCopyAddress={async () => {
           await copyToClipboard(btcAddressNativeSegwit);
@@ -68,7 +68,7 @@ export function ReceiveTokens({
       />
       <ReceiveItem
         address={stxAddress}
-        icon={<StxAvatarIcon />}
+        icon={<StxAvatarIcon size="xl" />}
         dataTestId={HomePageSelectors.ReceiveStxQrCodeBtn}
         onCopyAddress={async () => {
           await copyToClipboard(stxAddress);

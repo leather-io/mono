@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { InscriptionMimeType } from '@leather.io/models';
+import type { InscriptionMimeType } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { CollectibleAudio } from './collectible-audio.native';

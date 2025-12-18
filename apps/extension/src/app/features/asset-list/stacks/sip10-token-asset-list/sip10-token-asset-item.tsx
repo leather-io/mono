@@ -1,11 +1,9 @@
-import SbtcAvatarIconSrc from '@assets/avatars/sbtc-avatar-icon.png';
-
 import type { Sip10Balance } from '@leather.io/services';
+import { Sip10AvatarIcon } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { getSafeImageCanonicalUri } from '@app/common/stacks-utils';
 import { CryptoAssetItem } from '@app/components/crypto-asset-item/crypto-asset-item';
-import { StacksAssetAvatar } from '@app/components/stacks-asset-avatar';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import type { AssetRightElementVariant } from '../../asset-list';
@@ -26,18 +24,16 @@ export function Sip10TokenAssetItem({
 
   const { contractId, assetId, imageCanonicalUri, name, symbol } = balance.asset;
 
+  const safeImageCanonicalUri = getSafeImageCanonicalUri(imageCanonicalUri, name);
+
   const icon = (
-    <>
-      <StacksAssetAvatar
-        color="white"
-        gradientString={contractId}
-        img={
-          symbol === 'sBTC' ? SbtcAvatarIconSrc : getSafeImageCanonicalUri(imageCanonicalUri, name)
-        }
-      >
-        {name[0]}
-      </StacksAssetAvatar>
-    </>
+    <Sip10AvatarIcon
+      indicator="stacksIcon"
+      contractId={contractId}
+      imageCanonicalUri={safeImageCanonicalUri}
+      name={name}
+      size="xl"
+    />
   );
 
   const captionLeft = symbol;

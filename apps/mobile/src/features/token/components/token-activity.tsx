@@ -4,7 +4,6 @@ import { FetchState } from '@/components/loading';
 import { Screen } from '@/components/screen/screen';
 import { ActivityItem } from '@/features/activity/activity-item';
 import { ActivityLoading } from '@/features/activity/activity-loading';
-import { translateActivityStatus } from '@/features/activity/translate-activity-status';
 import { t } from '@lingui/core/macro';
 
 import { type ActivityView } from '@leather.io/features';
@@ -29,17 +28,11 @@ export function TokenActivity({ activity, ListHeader }: TokenActivityProps) {
 
   const hasActivity = activity.state === 'success' && activity.value.length > 0;
 
-  const translatedActivity =
-    activity.state === 'success'
-      ? activity.value.map(item => ({
-          ...item,
-          statusLabel: translateActivityStatus(item.statusLabel) as string,
-        }))
-      : [];
+  const listData = activity.state === 'success' ? activity.value : [];
 
   return (
     <Screen.List
-      data={translatedActivity}
+      data={listData}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       ListHeaderComponent={() => (

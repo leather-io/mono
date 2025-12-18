@@ -1,7 +1,5 @@
 import type { CryptoAssetBalance, MarketData, Sip10Asset } from '@leather.io/models';
-import { StxAvatarIcon } from '@leather.io/ui';
-
-import { StacksAssetAvatar } from '@app/components/stacks-asset-avatar';
+import { AssetAvatarIcon, StxAvatarIcon } from '@leather.io/ui';
 
 import { AmountField } from '../../components/amount-field';
 import { SelectedAssetField } from '../../components/selected-asset-field';
@@ -51,9 +49,17 @@ export function Sip10TokenSendFormContainer({
     <SelectedAssetField
       icon={
         avatar ? (
-          <StacksAssetAvatar gradientString={avatar.avatar} img={avatar.imageCanonicalUri} />
+          <AssetAvatarIcon
+            asset={{
+              protocol: 'sip10',
+              contractId: avatar.avatar,
+              imageCanonicalUri: avatar.imageCanonicalUri ?? '',
+              name: asset.name,
+            }}
+            size="xl"
+          />
         ) : (
-          <StxAvatarIcon />
+          <StxAvatarIcon size="xl" />
         )
       }
       name={symbol}

@@ -1,14 +1,13 @@
 import { PayloadType, StacksTransactionWire, addressToString } from '@stacks/transactions';
-import { CircleProps } from 'leather-styles/jsx';
+import { Box, BoxProps } from 'leather-styles/jsx';
 
 import { StacksTx } from '@leather.io/models';
-import { DynamicColorCircle, StxAvatarIcon } from '@leather.io/ui';
+import { AssetAvatarIcon, Avatar, getAvatarUrl } from '@leather.io/ui';
 
 import { getTxSenderAddress } from '@app/common/transactions/stacks/transaction.utils';
-import { TransactionIconWrapper } from '@app/components/transaction/transaction-icon-wrapper';
 import { TransactionTypeIcon } from '@app/components/transaction/transaction-type-icon';
 
-interface SubmittedTransactionIconProps extends CircleProps {
+interface SubmittedTransactionIconProps extends BoxProps {
   transaction: StacksTransactionWire;
 }
 export function SubmittedTransactionIcon({ transaction, ...rest }: SubmittedTransactionIconProps) {
@@ -17,11 +16,13 @@ export function SubmittedTransactionIcon({ transaction, ...rest }: SubmittedTran
   switch (transaction.payload.payloadType) {
     case PayloadType.SmartContract:
       return (
-        <DynamicColorCircle
-          position="relative"
-          value={`${getTxSenderAddress(transaction)}.${transaction.payload.contractName.content}`}
-          {...rest}
-        >
+        <Box position="relative" {...rest}>
+          <Avatar
+            image={getAvatarUrl(
+              `${getTxSenderAddress(transaction)}.${transaction.payload.contractName.content}`
+            )}
+            size="xl"
+          />
           <TransactionTypeIcon
             transaction={
               {
@@ -31,17 +32,19 @@ export function SubmittedTransactionIcon({ transaction, ...rest }: SubmittedTran
               } as StacksTx
             }
           />
-        </DynamicColorCircle>
+        </Box>
       );
     case PayloadType.ContractCall:
       return (
-        <DynamicColorCircle
-          position="relative"
-          value={`${addressToString(transaction.payload.contractAddress)}.${
-            transaction.payload.contractName.content
-          }::${transaction.payload.functionName.content}`}
-          {...rest}
-        >
+        <Box position="relative" {...rest}>
+          <Avatar
+            image={getAvatarUrl(
+              `${addressToString(transaction.payload.contractAddress)}.${
+                transaction.payload.contractName.content
+              }::${transaction.payload.functionName.content}`
+            )}
+            size="xl"
+          />
           <TransactionTypeIcon
             transaction={
               {
@@ -51,21 +54,22 @@ export function SubmittedTransactionIcon({ transaction, ...rest }: SubmittedTran
               } as StacksTx
             }
           />
-        </DynamicColorCircle>
+        </Box>
       );
     case PayloadType.TokenTransfer:
       return (
-        <TransactionIconWrapper
-          icon={<StxAvatarIcon />}
-          transaction={
-            {
-              sender_address: senderAddress,
-              tx_type: 'token_transfer',
-              tx_status: 'pending',
-            } as StacksTx
-          }
-          {...rest}
-        />
+        <Box position="relative" flexShrink={0} {...rest}>
+          <AssetAvatarIcon asset={{ protocol: 'nativeStx' }} size="xl" />
+          <TransactionTypeIcon
+            transaction={
+              {
+                sender_address: senderAddress,
+                tx_type: 'token_transfer',
+                tx_status: 'pending',
+              } as StacksTx
+            }
+          />
+        </Box>
       );
     default:
       return null;

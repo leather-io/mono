@@ -1,17 +1,18 @@
-import type { ReactNode } from 'react';
+import type { ComponentProps } from 'react';
 
 import {
   AnimalChameleonIcon,
   AnimalEagleIcon,
   AnimalRabbitIcon,
   AnimalSnailIcon,
+  Avatar,
 } from '@leather.io/ui';
-
-import { IconWrapper } from '@app/components/icon-wrapper';
 
 import type { FeePriority } from '../fee-editor.context';
 
-const feeTypeToIconMap: Record<FeePriority, ReactNode> = {
+type AvatarIcon = NonNullable<ComponentProps<typeof Avatar>['icon']>;
+
+const feeTypeToIconMap: Record<FeePriority, AvatarIcon> = {
   slow: <AnimalSnailIcon />,
   standard: <AnimalRabbitIcon />,
   fast: <AnimalEagleIcon />,
@@ -19,11 +20,15 @@ const feeTypeToIconMap: Record<FeePriority, ReactNode> = {
 };
 
 export function FeeItemIcon({ priority }: { priority: FeePriority }) {
-  const icon = feeTypeToIconMap[priority] || null;
+  const icon = feeTypeToIconMap[priority];
+  if (!icon) return null;
 
-  if (!icon) {
-    throw new Error('Invalid fee type');
-  }
-
-  return <IconWrapper>{icon}</IconWrapper>;
+  return (
+    <Avatar
+      size="lg"
+      bg="ink.component-background-hover"
+      outlineColor="ink.component-background-hover"
+      icon={icon}
+    />
+  );
 }

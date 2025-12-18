@@ -2,7 +2,6 @@ import { ReactNode, useCallback } from 'react';
 
 import { FetchState } from '@/components/loading/fetch-state';
 import { Screen } from '@/components/screen/screen';
-import { translateActivityStatus } from '@/features/activity/translate-activity-status';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 
 import { type ActivityView } from '@leather.io/features';
@@ -25,23 +24,24 @@ export function ActivityList({ data, header }: ActivityListProps) {
   const keyExtractor = useCallback((item: ActivityView) => item.key, []);
 
   if (data.state === 'loading') {
-    return <ActivityLoading />;
+    return <ActivityLoading header={header} />;
   }
 
   if (data.state === 'error') {
-    return <ActivityEmpty />;
+    return (
+      <Screen.FlashList
+        data={[]}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        ListHeaderComponent={<>{header}</>}
+        ListEmptyComponent={<ActivityEmpty />}
+      />
+    );
   }
-
-  const translatedActivity = data.value.map(item => {
-    return {
-      ...item,
-      statusLabel: translateActivityStatus(item.statusLabel) as string,
-    };
-  });
 
   return (
     <Screen.FlashList
-      data={translatedActivity}
+      data={data.value}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       refreshControl={<RefreshControl />}

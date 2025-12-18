@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactElement } from 'react';
 
-import { NonFungibleCryptoAsset } from '@leather.io/models';
+import type { NonFungibleCryptoAsset } from '@leather.io/models';
 
 import { OrdinalAvatarIcon } from '../../avatar/ordinal-avatar-icon.native';
 import { StampAvatarIcon } from '../../avatar/stamp-avatar-icon.native';

@@ -137,11 +137,10 @@ msgstr "Account label"
 msgid "Account name cannot be empty"
 msgstr "Account name cannot be empty"
 
-#: src/components/activity/activity-with-account.screen.tsx:21
-#: src/components/activity/activity-with-account.screen.tsx:23
-#: src/components/activity/activity-without-account-screen.tsx:12
+#: src/components/activity/activity-with-account.screen.tsx:19
+#: src/components/activity/activity-without-account-screen.tsx:9
 #: src/features/navigation/tab-layout.tsx:60
-#: src/features/token/components/token-activity.tsx:50
+#: src/features/token/components/token-activity.tsx:43
 msgid "Activity"
 msgstr "Activity"
 
@@ -412,7 +411,7 @@ msgstr "Balances"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:14
+#: src/features/balances/bitcoin/bitcoin-balance.tsx:18
 #: src/features/receive/get-assets.ts:29
 #: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
@@ -1206,7 +1205,7 @@ msgstr ""
 "Make sure everything looks correct.\n"
 "Confirmed transactions cannot be undone."
 
-#: src/features/activity/activity-empty.tsx:28
+#: src/features/activity/activity-empty.tsx:24
 msgid "Make your first transaction to get started"
 msgstr "Make your first transaction to get started"
 
@@ -1782,7 +1781,7 @@ msgstr "SRC-20"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:13
+#: src/features/balances/stacks/stacks-balance.tsx:17
 #: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
 #: src/features/swap/swap.utils.ts:9
@@ -1821,6 +1820,7 @@ msgstr "Success"
 msgid "Swap"
 msgstr "Swap"
 
+#: src/features/activity/activity-item.tsx:31
 #: src/features/activity/translate-activity-status.ts:38
 msgid "Swap failed"
 msgstr "Swap failed"
@@ -1833,10 +1833,12 @@ msgstr "Swap initiated"
 msgid "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
 msgstr "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
 
+#: src/features/activity/activity-item.tsx:33
 #: src/features/activity/translate-activity-status.ts:34
 msgid "Swapped"
 msgstr "Swapped"
 
+#: src/features/activity/activity-item.tsx:29
 #: src/features/activity/translate-activity-status.ts:36
 #: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:60
 msgid "Swapping"

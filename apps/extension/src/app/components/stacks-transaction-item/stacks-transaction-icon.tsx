@@ -1,9 +1,14 @@
-import { BoxProps } from 'leather-styles/jsx';
+import { Box, BoxProps } from 'leather-styles/jsx';
 
 import { StacksTx } from '@leather.io/models';
-import { BarsThreeIcon, DynamicColorCircle, ErrorCircleIcon, StxAvatarIcon } from '@leather.io/ui';
+import {
+  AssetAvatarIcon,
+  Avatar,
+  BarsThreeIcon,
+  ErrorCircleIcon,
+  getAvatarUrl,
+} from '@leather.io/ui';
 
-import { TransactionIconWrapper } from '../transaction/transaction-icon-wrapper';
 import { TransactionTypeIcon } from '../transaction/transaction-type-icon';
 
 interface TransactionIconProps extends BoxProps {
@@ -13,30 +18,55 @@ export function StacksTransactionIcon({ transaction, ...rest }: TransactionIconP
   switch (transaction.tx_type) {
     case 'coinbase':
       return (
-        <TransactionIconWrapper icon={<BarsThreeIcon />} transaction={transaction} {...rest} />
+        <Box position="relative" flexShrink={0} {...rest}>
+          <Avatar
+            size="xl"
+            bg="stacks"
+            color="ink.background-primary"
+            outlineColor="ink.border-transparent"
+            icon={<BarsThreeIcon />}
+          />
+          <TransactionTypeIcon transaction={transaction} />
+        </Box>
       );
     case 'smart_contract':
       return (
-        <DynamicColorCircle value={`${transaction.smart_contract.contract_id}`} {...rest}>
+        <Box position="relative" {...rest}>
+          <Avatar image={getAvatarUrl(`${transaction.smart_contract.contract_id}`)} size="xl" />
           <TransactionTypeIcon transaction={transaction} />
-        </DynamicColorCircle>
+        </Box>
       );
     case 'contract_call':
       return (
-        <DynamicColorCircle
-          value={`${transaction.contract_call.contract_id}::${transaction.contract_call.function_name}`}
-          {...rest}
-        >
+        <Box position="relative" {...rest}>
+          <Avatar
+            image={getAvatarUrl(
+              `${transaction.contract_call.contract_id}::${transaction.contract_call.function_name}`
+            )}
+            size="xl"
+          />
           <TransactionTypeIcon transaction={transaction} />
-        </DynamicColorCircle>
+        </Box>
       );
     case 'token_transfer':
       return (
-        <TransactionIconWrapper icon={<StxAvatarIcon />} transaction={transaction} {...rest} />
+        <Box position="relative" flexShrink={0} {...rest}>
+          <AssetAvatarIcon asset={{ protocol: 'nativeStx' }} size="xl" />
+          <TransactionTypeIcon transaction={transaction} />
+        </Box>
       );
     case 'poison_microblock':
       return (
-        <TransactionIconWrapper icon={<ErrorCircleIcon />} transaction={transaction} {...rest} />
+        <Box position="relative" flexShrink={0} {...rest}>
+          <Avatar
+            size="xl"
+            bg="stacks"
+            color="ink.background-primary"
+            outlineColor="ink.border-transparent"
+            icon={<ErrorCircleIcon />}
+          />
+          <TransactionTypeIcon transaction={transaction} />
+        </Box>
       );
     default:
       return null;

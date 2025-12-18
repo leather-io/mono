@@ -1,9 +1,10 @@
 import { styled } from 'leather-styles/jsx';
 import { token } from 'leather-styles/tokens';
 
+import BtcIcon from '../../assets/icons/bitcoin.svg';
 import { Avatar, type AvatarProps } from './avatar.web';
 
-export function RunesAvatarIcon(props: AvatarProps) {
+export function RunesAvatarIcon({ indicator, ...props }: AvatarProps) {
   return (
     <Avatar
       outlineColor="ink.border-transparent"
@@ -21,6 +22,7 @@ export function RunesAvatarIcon(props: AvatarProps) {
           />{' '}
         </styled.svg>
       }
+      indicator={indicator ?? <BtcIcon width={16} height={16} />}
       {...props}
     />
   );

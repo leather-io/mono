@@ -1,8 +1,9 @@
 import { styled } from 'leather-styles/jsx';
 
+import BtcIcon from '../../assets/icons/bitcoin.svg';
 import { Avatar, type AvatarProps } from './avatar.web';
 
-export function Brc20AvatarIcon(props: AvatarProps) {
+export function Brc20AvatarIcon({ indicator, ...props }: AvatarProps) {
   return (
     <Avatar
       outlineColor="ink.border-transparent"
@@ -51,6 +52,7 @@ export function Brc20AvatarIcon(props: AvatarProps) {
           </defs>
         </styled.svg>
       }
+      indicator={indicator ?? <BtcIcon width={16} height={16} />}
       {...props}
     />
   );

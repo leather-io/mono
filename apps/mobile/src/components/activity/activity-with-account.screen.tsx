@@ -4,7 +4,6 @@ import { useActivity } from '@/queries/activity/activity.query';
 import { t } from '@lingui/core/macro';
 
 import { AccountId } from '@leather.io/models';
-import { Text } from '@leather.io/ui/native';
 
 interface ActivityScreenWithAccountProps {
   currentAccount: AccountId;
@@ -16,10 +15,7 @@ export default function ActivityScreenWithAccount({
 
   return (
     <Screen>
-      <Screen.Header
-        leftElement={null}
-        centerElement={<Text variant="heading05">{t`Activity`}</Text>}
-      />
+      <Screen.Header leftElement={null} />
       <ActivityList data={activity} header={<Screen.Title>{t`Activity`}</Screen.Title>} />
     </Screen>
   );

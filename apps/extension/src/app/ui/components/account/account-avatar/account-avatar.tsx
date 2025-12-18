@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import { Box, CircleProps } from 'leather-styles/jsx';
 
-import { DynamicColorCircle } from '@leather.io/ui';
+import { Avatar, getAvatarUrl } from '@leather.io/ui';
 
 function getAccountNumber(index: number) {
   // Always return account number in the Account Circle
@@ -18,12 +18,25 @@ export const AccountAvatar = memo(function AccountAvatar({
   index,
   ...props
 }: AccountAvatarProps) {
-  const gradient = publicKey + index.toString();
+  const gradient = `${publicKey}-${index}`;
   const text = getAccountNumber(index);
 
   return (
-    <DynamicColorCircle sizeParam="40" value={gradient} {...props}>
-      <Box position="absolute">{text}</Box>
-    </DynamicColorCircle>
+    <Box position="relative" width="48px" height="48px" {...props}>
+      <Avatar image={getAvatarUrl(gradient)} size="xl" />
+      <Box
+        position="absolute"
+        top={0}
+        left={0}
+        width="100%"
+        height="100%"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        textStyle="label.01"
+      >
+        {text}
+      </Box>
+    </Box>
   );
 });

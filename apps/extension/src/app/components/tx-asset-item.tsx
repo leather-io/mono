@@ -1,8 +1,8 @@
 import { HStack, HstackProps, styled } from 'leather-styles/jsx';
 
-import { isValidUrl } from '@shared/utils/urls';
+import { AssetAvatarIcon } from '@leather.io/ui';
 
-import { StacksAssetAvatar } from '@app/components/stacks-asset-avatar';
+import { isValidUrl } from '@shared/utils/urls';
 
 interface TxAssetItemProps extends HstackProps {
   iconString: string;
@@ -12,15 +12,23 @@ interface TxAssetItemProps extends HstackProps {
 export function TxAssetItem(props: TxAssetItemProps) {
   const { iconString, amount, ticker, ...rest } = props;
   const imageCanonicalUri = isValidUrl(iconString) ? iconString : undefined;
+  const isStx = iconString === 'STX';
 
   return (
     <HStack alignItems="center" flexGrow={1} justifyContent="space-between" width="100%" {...rest}>
       <HStack>
-        <StacksAssetAvatar
-          gradientString={iconString}
-          img={imageCanonicalUri}
-          isStx={iconString === 'STX'}
-          size="32"
+        <AssetAvatarIcon
+          asset={
+            isStx
+              ? { protocol: 'nativeStx' }
+              : {
+                  protocol: 'sip10',
+                  contractId: iconString,
+                  imageCanonicalUri: imageCanonicalUri ?? '',
+                  name: ticker,
+                }
+          }
+          size="md"
         />
         <styled.span textStyle="heading.04">{ticker}</styled.span>
       </HStack>

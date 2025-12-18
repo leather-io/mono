@@ -1,7 +1,6 @@
 import { ReactElement } from 'react';
 
 import type { ActivityStatusIndicatorId, ActivityView } from '@leather.io/features';
-import type { CryptoAsset } from '@leather.io/models';
 
 import { FailedIcon } from '../../icons/activity/failed-icon.native';
 import { FunctionActivityIcon } from '../../icons/activity/function-icon.native';
@@ -13,6 +12,7 @@ import { Box } from '../box/box.native';
 import { AssetAvatarIcon } from './asset-avatar-icon.native';
 import { Avatar } from './avatar.native';
 import { getAvatarUrl } from './avatar.shared';
+import type { AssetForAvatar } from './types.shared';
 
 interface StatusIndicatorProps {
   indicator: ActivityStatusIndicatorId;
@@ -38,26 +38,25 @@ function StatusIndicator({ indicator }: StatusIndicatorProps): ReactElement | nu
 }
 
 interface SwapAvatarIconProps {
-  fromAsset: CryptoAsset;
-  toAsset: CryptoAsset;
+  fromAsset: AssetForAvatar;
+  toAsset: AssetForAvatar;
   indicator?: ReactElement;
 }
 
 function SwapAvatarIcon({ fromAsset, toAsset, indicator }: SwapAvatarIconProps) {
   return (
-    <Box position="relative" style={{ width: 40, height: 40 }}>
-      <Box position="absolute" style={{ top: 3, right: 15, zIndex: 1 }}>
-        <AssetAvatarIcon asset={fromAsset} size="md" />
+    <Box position="relative" style={{ width: 76, height: 48 }}>
+      <Box position="absolute" style={{ top: 4, left: 0, zIndex: 1, opacity: 0.6 }}>
+        <AssetAvatarIcon asset={fromAsset} size="lg" />
       </Box>
       <Box
         borderRadius="round"
-        borderWidth={2}
+        borderWidth={3}
         borderColor="ink.background-primary"
         position="absolute"
-        style={{ bottom: 0, left: 8, zIndex: 2 }}
-        overflow="hidden"
+        style={{ top: 0, left: 28, zIndex: 2 }}
       >
-        <AssetAvatarIcon asset={toAsset} indicator={indicator} size="lg" />
+        <AssetAvatarIcon asset={toAsset} indicator={indicator} size="xl" />
       </Box>
     </Box>
   );
@@ -87,5 +86,5 @@ export function ActivityAvatarIcon({ activity }: ActivityAvatarIconProps) {
     return <AssetAvatarIcon asset={activity.asset} indicator={indicator} />;
   }
 
-  return <Avatar image={getAvatarUrl(activity.key)} indicator={indicator} />;
+  return <Avatar image={getAvatarUrl(activity.key)} indicator={indicator} size="xl" />;
 }

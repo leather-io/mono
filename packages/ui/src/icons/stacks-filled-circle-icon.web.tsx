@@ -3,6 +3,7 @@ import { createWebIcon } from './icon/create-icon.web';
 
 export const StacksFilledCircleIcon = createWebIcon({
   icon: {
+    small: StacksFilledCircle,
     medium: StacksFilledCircle,
   },
   displayName: 'StacksCircle',

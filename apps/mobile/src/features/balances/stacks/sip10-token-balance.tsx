@@ -12,6 +12,7 @@ export function Sip10TokenBalance({ item, onPress }: Sip10TokenBalanceProps) {
     <TokenBalance
       icon={
         <Sip10AvatarIcon
+          indicator="stacksIcon"
           contractId={item.asset.contractId}
           imageCanonicalUri={item.asset.imageCanonicalUri}
           name={item.asset.name}

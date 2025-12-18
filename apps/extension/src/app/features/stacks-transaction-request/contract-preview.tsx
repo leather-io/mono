@@ -1,7 +1,7 @@
 import { HStack, Stack } from 'leather-styles/jsx';
 
 import { formatContractId } from '@leather.io/stacks';
-import { Caption, DynamicColorCircle, Title } from '@leather.io/ui';
+import { Avatar, Caption, Title, getAvatarUrl } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 interface ContractPreviewLayoutProps {
@@ -17,6 +17,10 @@ export function ContractPreviewLayout({
   functionName,
   onClick,
 }: ContractPreviewLayoutProps) {
+  const avatarSeed = `${formatContractId(contractAddress, contractName)}${
+    functionName ? `::${functionName}` : ''
+  }`;
+
   return (
     <HStack
       p="space.04"
@@ -33,14 +37,7 @@ export function ContractPreviewLayout({
           : undefined
       }
     >
-      <DynamicColorCircle
-        size="42px"
-        position="relative"
-        value={`${formatContractId(contractAddress, contractName)}${
-          functionName ? `::${functionName}` : ''
-        }`}
-        backgroundSize="100%"
-      />
+      <Avatar image={getAvatarUrl(avatarSeed)} size="xl" />
       <Stack gap="space.03">
         <Title>{functionName || contractName}</Title>
         <Caption>

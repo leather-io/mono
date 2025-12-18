@@ -3,7 +3,6 @@ import { ReactElement } from 'react';
 import { styled } from 'leather-styles/jsx';
 
 import type { ActivityStatusIndicatorId, ActivityView } from '@leather.io/features';
-import { type CryptoAsset } from '@leather.io/models';
 
 import { FailedIcon } from '../../icons/activity/failed-icon.web';
 import { FunctionActivityIcon } from '../../icons/activity/function-icon.web';
@@ -14,6 +13,7 @@ import { SwapIcon } from '../../icons/activity/swap-icon.web';
 import { AssetAvatarIcon } from './asset-avatar-icon.web';
 import { getAvatarUrl } from './avatar.shared';
 import { Avatar } from './avatar.web';
+import type { AssetForAvatar } from './types.shared';
 
 interface StatusIndicatorProps {
   indicator: ActivityStatusIndicatorId;
@@ -39,26 +39,26 @@ function StatusIndicator({ indicator }: StatusIndicatorProps): ReactElement | nu
 }
 
 interface SwapAvatarIconProps {
-  fromAsset: CryptoAsset;
-  toAsset: CryptoAsset;
+  fromAsset: AssetForAvatar;
+  toAsset: AssetForAvatar;
   indicator?: ReactElement;
 }
 function SwapAvatarIcon({ fromAsset, toAsset, indicator }: SwapAvatarIconProps): ReactElement {
   return (
-    <styled.div position="relative" width="40px" height="40px">
-      <styled.div position="absolute" top={3} right={15} zIndex={1}>
-        <AssetAvatarIcon asset={fromAsset} size="md" />
+    <styled.div position="relative" width="76px" height="48px">
+      <styled.div position="absolute" top="4px" left={0} zIndex={1} opacity={0.6}>
+        <AssetAvatarIcon asset={fromAsset} size="lg" />
       </styled.div>
       <styled.div
         borderRadius="round"
-        border="2px solid"
+        border="3px solid"
         borderColor="ink.background-primary"
         position="absolute"
-        bottom={0}
-        left={8}
+        top={0}
+        left="28px"
         zIndex={2}
       >
-        <AssetAvatarIcon asset={toAsset} indicator={indicator} size="lg" />
+        <AssetAvatarIcon asset={toAsset} indicator={indicator} size="xl" />
       </styled.div>
     </styled.div>
   );
@@ -88,5 +88,5 @@ export function ActivityAvatarIcon({ activity }: ActivityAvatarIconProps) {
     return <AssetAvatarIcon asset={activity.asset} indicator={indicator} />;
   }
 
-  return <Avatar image={getAvatarUrl(activity.key)} indicator={indicator} />;
+  return <Avatar image={getAvatarUrl(activity.key)} indicator={indicator} size="xl" />;
 }

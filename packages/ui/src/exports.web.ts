@@ -22,7 +22,6 @@ export { BulletSeparator } from './components/bullet-separator/bullet-separator.
 export { Button, type ButtonProps } from './components/button/button.web';
 export { Callout, type CalloutProps } from './components/callout/callout.web';
 export { DropdownMenu } from './components/dropdown-menu/dropdown-menu.web';
-export { DynamicColorCircle } from './components/dynamic-color-circle.web';
 export { Flag, type FlagProps } from './components/flag/flag.web';
 export { Highlighter, type HighlighterProps } from './components/highlighting/highlighter.web';
 export { HoverCard } from './components/hover-card/hover-card.web';

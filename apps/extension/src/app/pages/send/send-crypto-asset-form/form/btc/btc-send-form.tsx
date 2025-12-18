@@ -99,7 +99,11 @@ export function BtcSendForm() {
                         <SendFiatValue marketData={marketData} assetSymbol={symbol} />
                       }
                     />
-                    <SelectedAssetField icon={<BtcAvatarIcon />} name="Bitcoin" symbol={symbol} />
+                    <SelectedAssetField
+                      icon={<BtcAvatarIcon size="xl" />}
+                      name="Bitcoin"
+                      symbol={symbol}
+                    />
                     <TransferRecipientField />
                     {currentNetwork.chain.bitcoin.mode === 'testnet' && (
                       <Callout variant="warning" title="Funds have no value" mt="space.04">
