@@ -5,8 +5,10 @@ import { Virtuoso } from 'react-virtuoso';
 import { type ActivityView } from '@leather.io/features';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import { SbtcDepositTransactionItem } from '@app/components/sbtc-deposit-status-item/sbtc-deposit-status-item';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useActivity } from '@app/query/activity/activity.query';
+import { useSbtcPendingDeposits } from '@app/query/sbtc/sbtc-deposits.query';
 import { useStacksPendingTransactions } from '@app/query/stacks/mempool/mempool.hooks';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
@@ -16,6 +18,20 @@ import { useSubmittedTransactions } from '@app/store/submitted-transactions/subm
 import { ActivityItem } from './components/activity-item';
 import { ActivityListLayout } from './components/activity-list.layout';
 import { createSubmittedActivityViews } from './submitted-activity-view';
+
+type ActivityListRow =
+  | ActivityView
+  | {
+      key: string;
+      kind: 'sbtc-deposit';
+      deposit: import('@app/query/sbtc/sbtc-deposits.query').SbtcDeposit;
+    };
+
+function isSbtcDepositRow(
+  item: ActivityListRow
+): item is Extract<ActivityListRow, { kind: 'sbtc-deposit' }> {
+  return (item as any).kind === 'sbtc-deposit';
+}
 
 /*
  * Infinite scroll support is built into this component via the onLoadMore prop,
@@ -37,6 +53,8 @@ export function ActivityList() {
   const stacksAddress = accountAddresses.stacks?.stxAddress ?? '';
   const { transactions: stacksPendingTransactions } = useStacksPendingTransactions(stacksAddress);
 
+  const { pendingSbtcDeposits } = useSbtcPendingDeposits(stacksAddress);
+
   useEffect(() => {
     if (!stacksAddress) return;
     updateSubmittedTransactions(stacksPendingTransactions);
@@ -44,16 +62,28 @@ export function ActivityList() {
 
   const historicalActivity = activityQuery.data ?? [];
   const submittedActivity = createSubmittedActivityViews({ submittedTransactions, network });
-  const activity = [...submittedActivity, ...historicalActivity];
+  const sbtcPendingActivity: ActivityListRow[] = pendingSbtcDeposits.map(deposit => ({
+    key: `sbtc-deposit-${deposit.bitcoinTxid}-${deposit.bitcoinTxOutputIndex}`,
+    kind: 'sbtc-deposit',
+    deposit,
+  }));
+  const activity: ActivityListRow[] = [
+    ...submittedActivity,
+    ...sbtcPendingActivity,
+    ...historicalActivity,
+  ];
 
   const hasActivity = activity.length > 0;
   const isLoading = activityQuery.isLoading;
 
-  function itemContent(_: number, item: ActivityView) {
+  function itemContent(_: number, item: ActivityListRow) {
+    if (isSbtcDepositRow(item)) {
+      return <SbtcDepositTransactionItem deposit={item.deposit} />;
+    }
     return <ActivityItem item={item} formatCurrency={formatCurrency} />;
   }
 
-  function computeItemKey(_: number, item: ActivityView) {
+  function computeItemKey(_: number, item: ActivityListRow) {
     return item.key;
   }
 
