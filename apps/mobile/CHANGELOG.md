@@ -19,6 +19,39 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.96.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.95.1...@leather.io/mobile-v2.96.0) (2025-12-18)
+
+
+### Features
+
+* **mobile:** add support for swap execution constraints ([2dcce76](https://github.com/leather-io/mono/commit/2dcce76ea480391b6122e54d924b250334367682))
+* **mobile:** add swap live estimate tests ([04dd110](https://github.com/leather-io/mono/commit/04dd1102eb99df3855e479a7f5b3a8035f6f049f))
+* **mobile:** improve target asset display ordering swap ([f6d7723](https://github.com/leather-io/mono/commit/f6d7723e0980a8d5ba07b2357090df950857a8d4))
+* **mobile:** update enriched swap quotes with new fields ([0346010](https://github.com/leather-io/mono/commit/0346010cd9e9e001eaa6fd142cd6e8fc12c7ad1e))
+
+
+### Bug Fixes
+
+* use uniqueArray to useQueries and cache nft to avoid duplicate queries ([b391f2b](https://github.com/leather-io/mono/commit/b391f2bbb52897d6c8fe6d158bd7409ac9213231))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.1
+    * @leather.io/constants bumped to 0.29.0
+    * @leather.io/crypto bumped to 1.12.12
+    * @leather.io/features bumped to 1.1.7
+    * @leather.io/provider bumped to 1.6.14
+    * @leather.io/queries bumped to 0.3.0
+    * @leather.io/query bumped to 2.45.8
+    * @leather.io/rpc bumped to 2.21.6
+    * @leather.io/services bumped to 1.46.2
+    * @leather.io/stacks bumped to 1.19.8
+    * @leather.io/ui bumped to 1.100.3
+    * @leather.io/utils bumped to 0.49.6
+
 ## [2.95.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.95.0...@leather.io/mobile-v2.95.1) (2025-12-17)
 
 

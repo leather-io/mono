@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.3.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.2.4...@leather.io/queries-v0.3.0) (2025-12-18)
+
+
+### Features
+
+* **extension:** add usdcx balance hook to loader ([38805f9](https://github.com/leather-io/mono/commit/38805f9485d6d09daeaa2f246bbb67375e45ab91))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.46.2
+    * @leather.io/utils bumped to 0.49.6
+
 ## [0.2.4](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.2.3...@leather.io/queries-v0.2.4) (2025-12-17)
 
 

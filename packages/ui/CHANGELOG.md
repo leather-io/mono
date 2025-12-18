@@ -489,6 +489,22 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.100.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.100.2...@leather.io/ui-v1.100.3) (2025-12-18)
+
+
+### Bug Fixes
+
+* **ui:** prevent semantic warnings on missing attributes ([2373565](https://github.com/leather-io/mono/commit/2373565ec3d3fdcc12f7bc388ba1b2f45ccbb0aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.49.6
+  * devDependencies
+    * @leather.io/features bumped to 1.1.7
+
 ## [1.100.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.100.1...@leather.io/ui-v1.100.2) (2025-12-17)
 
 
