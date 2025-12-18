@@ -57,7 +57,7 @@ export function Inscription({ inscription }: InscriptionProps) {
       case 'audio':
         return (
           <CollectibleAudio
-            icon={<OrdinalAvatarIcon size="lg" />}
+            icon={<OrdinalAvatarIcon size="xl" />}
             key={inscription.title}
             subtitle="Ordinal inscription"
             title={`# ${inscription.number}`}
@@ -70,7 +70,7 @@ export function Inscription({ inscription }: InscriptionProps) {
       case 'gltf':
         return (
           <CollectibleIframe
-            icon={<OrdinalAvatarIcon size="lg" />}
+            icon={<OrdinalAvatarIcon size="xl" />}
             key={inscription.title}
             src={inscription.src}
             subtitle="Ordinal inscription"
@@ -81,7 +81,7 @@ export function Inscription({ inscription }: InscriptionProps) {
       case 'image':
         return (
           <CollectibleImage
-            icon={<OrdinalAvatarIcon size="lg" />}
+            icon={<OrdinalAvatarIcon size="xl" />}
             key={inscription.title}
             src={inscription.src}
             subtitle="Ordinal inscription"
@@ -105,7 +105,7 @@ export function Inscription({ inscription }: InscriptionProps) {
             title={`# ${inscription.number}`}
             {...sharedProps}
           >
-            <OrdinalAvatarIcon size="lg" />
+            <OrdinalAvatarIcon size="xl" />
           </CollectibleOther>
         );
       default:

@@ -36,7 +36,7 @@ export function StxSendForm() {
   );
 
   const selectedAssetField = (
-    <SelectedAssetField icon={<StxAvatarIcon />} name="Stacks" symbol={symbol} />
+    <SelectedAssetField icon={<StxAvatarIcon size="xl" />} name="Stacks" symbol={symbol} />
   );
 
   return (

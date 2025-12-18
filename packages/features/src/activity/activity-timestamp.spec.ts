@@ -8,64 +8,64 @@ function createTimestamp(minutesAgo: number) {
 
 describe('activity-timestamp', () => {
   describe('formatActivityCaption', () => {
-    it('formats recent timestamps as minutes ago', () => {
+    it('formats recent timestamps as minutes ago (compact)', () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2024-01-01T12:00:00.000Z'));
 
-      expect(formatActivityCaption({ timestamp: createTimestamp(5) })).toBe('5 minutes ago');
-      expect(formatActivityCaption({ timestamp: createTimestamp(15) })).toBe('15 minutes ago');
-      expect(formatActivityCaption({ timestamp: createTimestamp(45) })).toBe('45 minutes ago');
+      expect(formatActivityCaption({ timestamp: createTimestamp(5) })).toBe('5m ago');
+      expect(formatActivityCaption({ timestamp: createTimestamp(15) })).toBe('15m ago');
+      expect(formatActivityCaption({ timestamp: createTimestamp(45) })).toBe('45m ago');
 
       vi.useRealTimers();
     });
 
-    it('formats timestamps within the last hour as minutes ago', () => {
+    it('formats timestamps within the last hour as minutes ago (compact)', () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2024-01-01T12:00:00.000Z'));
 
-      expect(formatActivityCaption({ timestamp: createTimestamp(59) })).toBe('59 minutes ago');
+      expect(formatActivityCaption({ timestamp: createTimestamp(59) })).toBe('59m ago');
 
       vi.useRealTimers();
     });
 
-    it('formats timestamps older than one hour with date', () => {
+    it('formats timestamps older than one hour as hours ago (compact)', () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2024-01-01T12:00:00.000Z'));
 
       const timestamp61MinutesAgo = Math.floor(
         new Date('2024-01-01T10:59:00.000Z').getTime() / 1000
       );
-      expect(formatActivityCaption({ timestamp: timestamp61MinutesAgo })).toBe('Jan 1, 2024');
+      expect(formatActivityCaption({ timestamp: timestamp61MinutesAgo })).toBe('1h ago');
 
       vi.useRealTimers();
     });
 
-    it('formats old timestamps with full date', () => {
+    it('formats day-old timestamps as days ago (compact)', () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2024-01-15T12:00:00.000Z'));
 
       const oldTimestamp = Math.floor(new Date('2024-01-01T12:00:00.000Z').getTime() / 1000);
-      expect(formatActivityCaption({ timestamp: oldTimestamp })).toBe('Jan 1, 2024');
+      expect(formatActivityCaption({ timestamp: oldTimestamp })).toBe('14d ago');
 
       vi.useRealTimers();
     });
 
-    it('formats timestamps from different months', () => {
+    it('formats timestamps from different months as months ago (compact)', () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2024-03-15T12:00:00.000Z'));
 
       const febTimestamp = Math.floor(new Date('2024-02-20T12:00:00.000Z').getTime() / 1000);
-      expect(formatActivityCaption({ timestamp: febTimestamp })).toBe('Feb 20, 2024');
+      expect(formatActivityCaption({ timestamp: febTimestamp })).toBe('1mo ago');
 
       vi.useRealTimers();
     });
 
-    it('formats timestamps from different years', () => {
+    it('formats timestamps from different years as years ago (compact)', () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2024-01-15T12:00:00.000Z'));
 
       const oldYearTimestamp = Math.floor(new Date('2023-12-25T12:00:00.000Z').getTime() / 1000);
-      expect(formatActivityCaption({ timestamp: oldYearTimestamp })).toBe('Dec 25, 2023');
+      expect(formatActivityCaption({ timestamp: oldYearTimestamp })).toBe('21d ago');
 
       vi.useRealTimers();
     });
@@ -77,7 +77,7 @@ describe('activity-timestamp', () => {
       const timestamp60MinutesAgo = Math.floor(
         new Date('2024-01-01T11:00:00.000Z').getTime() / 1000
       );
-      expect(formatActivityCaption({ timestamp: timestamp60MinutesAgo })).toBe('60 minutes ago');
+      expect(formatActivityCaption({ timestamp: timestamp60MinutesAgo })).toBe('1h ago');
 
       vi.useRealTimers();
     });
@@ -86,7 +86,7 @@ describe('activity-timestamp', () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2024-01-01T12:00:00.000Z'));
 
-      expect(formatActivityCaption({ timestamp: createTimestamp(0) })).toBe('0 minutes ago');
+      expect(formatActivityCaption({ timestamp: createTimestamp(0) })).toBe('Just now');
 
       vi.useRealTimers();
     });

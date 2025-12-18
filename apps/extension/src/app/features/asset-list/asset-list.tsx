@@ -2,7 +2,12 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { Stack } from 'leather-styles/jsx';
 
-import { BtcAvatarIcon, StxAvatarIcon } from '@leather.io/ui';
+import {
+  BitcoinFilledCircleIcon,
+  BtcAvatarIcon,
+  StacksFilledCircleIcon,
+  StxAvatarIcon,
+} from '@leather.io/ui';
 
 import { Brc20TokensLoader } from '@app/components/loaders/brc20-tokens-loader';
 import { BtcAssetItemBalanceLoader } from '@app/components/loaders/btc-balance-loader';
@@ -73,7 +78,9 @@ export function AssetList({
           isLedger && (
             <ConnectLedgerAssetItemFallback
               chain="bitcoin"
-              icon={<BtcAvatarIcon />}
+              icon={
+                <BtcAvatarIcon size="xl" indicator={<BitcoinFilledCircleIcon variant="small" />} />
+              }
               symbol="BTC"
               variant={variant}
             />
@@ -96,7 +103,9 @@ export function AssetList({
           isLedger && (
             <ConnectLedgerAssetItemFallback
               chain="stacks"
-              icon={<StxAvatarIcon />}
+              icon={
+                <StxAvatarIcon size="xl" indicator={<StacksFilledCircleIcon variant="small" />} />
+              }
               symbol="STX"
               variant={variant}
             />

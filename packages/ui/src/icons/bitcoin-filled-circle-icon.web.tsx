@@ -3,6 +3,7 @@ import { createWebIcon } from './icon/create-icon.web';
 
 export const BitcoinFilledCircleIcon = createWebIcon({
   icon: {
+    small: BitcoinFilledCircle,
     medium: BitcoinFilledCircle,
   },
   displayName: 'BitcoinCircle',

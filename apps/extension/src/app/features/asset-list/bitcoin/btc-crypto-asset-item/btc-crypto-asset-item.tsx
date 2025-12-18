@@ -1,5 +1,5 @@
 import type { AccountQuotedBtcBalance } from '@leather.io/services';
-import { BtcAvatarIcon } from '@leather.io/ui';
+import { BitcoinFilledCircleIcon, BtcAvatarIcon } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { CryptoAssetItemLayout } from '@app/components/crypto-asset-item/crypto-asset-item.layout';
@@ -24,7 +24,7 @@ export function BtcCryptoAssetItem({
       availableBalance={balance.btc.totalBalance}
       captionLeft="BTC"
       fiatBalance={formatCurrency(balance.quote.totalBalance)}
-      icon={<BtcAvatarIcon />}
+      icon={<BtcAvatarIcon size="xl" indicator={<BitcoinFilledCircleIcon variant="small" />} />}
       isLoading={isLoading}
       isLoadingAdditionalData={isLoadingAdditionalData}
       isPrivate={isPrivate}

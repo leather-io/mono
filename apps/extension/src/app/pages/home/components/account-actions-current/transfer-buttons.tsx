@@ -20,7 +20,7 @@ export function TransferButtons() {
   const isBitcoinEnabled = useConfigBitcoinEnabled();
 
   const receivePath = isBitcoinEnabled
-    ? RouteUrls.Receive
+    ? `${RouteUrls.Home}${RouteUrls.Receive}`
     : `${RouteUrls.Home}${RouteUrls.ReceiveStx}`;
 
   const { whenWallet } = useWalletType();

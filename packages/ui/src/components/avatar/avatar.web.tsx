@@ -29,9 +29,7 @@ export interface AvatarProps extends ComponentPropsWithoutRef<typeof AvatarRoot>
 
 export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
   const {
-    // TODO: The default size is temporarily set to 'lg' to look correct with current design.
-    //       Set to 'xl', once LEA-2111 is ready.
-    size = 'lg',
+    size = 'xl',
     variant = 'circle',
     icon,
     indicator,
@@ -61,9 +59,14 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
           bg="ink.background-primary"
           borderRadius="round"
           position="absolute"
-          bottom={-4}
-          right={-4}
-          padding={3}
+          bottom={-2}
+          right={-2}
+          width="20px"
+          height="20px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          overflow="hidden"
         >
           {indicator}
         </styled.div>
@@ -118,7 +121,7 @@ const AvatarRoot = styled(RadixAvatar.Root, {
     },
   ],
   defaultVariants: {
-    size: 'lg',
+    size: 'xl',
     variant: 'circle',
   },
 });

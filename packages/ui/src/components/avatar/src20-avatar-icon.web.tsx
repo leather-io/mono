@@ -1,10 +1,9 @@
 import { styled } from 'leather-styles/jsx';
 
+import BtcIcon from '../../assets/icons/bitcoin.svg';
 import { Avatar, type AvatarProps } from './avatar.web';
 
-// Leaving for use with SRC-20 tokens
-// ts-unused-exports:disable-next-line
-export function Src20AvatarIcon(props: AvatarProps) {
+export function Src20AvatarIcon({ indicator, ...props }: AvatarProps) {
   return (
     <Avatar
       outlineColor="ink.border-transparent"
@@ -52,6 +51,7 @@ export function Src20AvatarIcon(props: AvatarProps) {
           </defs>
         </styled.svg>
       }
+      indicator={indicator ?? <BtcIcon width={16} height={16} />}
       {...props}
     />
   );

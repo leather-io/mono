@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react';
 
-import { Circle } from 'leather-styles/jsx';
+import { Box } from 'leather-styles/jsx';
 
-import { StxAvatarIcon } from '@leather.io/ui';
+import { AssetAvatarIcon } from '@leather.io/ui';
 
 import { TransactionTypeIconWrapper } from '@app/components/transaction/transaction-type-icon-wrapper';
 
@@ -11,9 +11,9 @@ interface TxTransferIconWrapperProps {
 }
 export function TxTransferIconWrapper({ icon }: TxTransferIconWrapperProps) {
   return (
-    <Circle position="relative">
-      <StxAvatarIcon />
+    <Box position="relative" width="48px" height="48px" flexShrink={0}>
+      <AssetAvatarIcon asset={{ protocol: 'nativeStx' }} size="xl" />
       <TransactionTypeIconWrapper icon={icon} />
-    </Circle>
+    </Box>
   );
 }

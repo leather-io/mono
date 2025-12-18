@@ -22,7 +22,9 @@ export function BtcAssetItemBalanceLoader({
   const isLoading = nativeSegwitBalance.state === 'loading';
   if (isLoading) return <CryptoAssetItemPlaceholder />;
   if (nativeSegwitBalance.state === 'error') {
-    return <CryptoAssetItemError caption="BTC" icon={<BtcAvatarIcon />} title="Bitcoin" />;
+    return (
+      <CryptoAssetItemError caption="BTC" icon={<BtcAvatarIcon size="xl" />} title="Bitcoin" />
+    );
   }
 
   return children(nativeSegwitBalance.value, isLoading, false);

@@ -1,15 +1,14 @@
 import type { ReactElement } from 'react';
 
-import type { CryptoAsset } from '@leather.io/models';
-
 import { Avatar, type AvatarProps } from './avatar.native';
 import { getAvatarFallbackText, getAvatarUrl } from './avatar.shared';
 import { BtcAvatarIcon } from './btc-avatar-icon.native';
 import { Sip10AvatarIcon } from './sip10-avatar-icon.native';
 import { StxAvatarIcon } from './stx-avatar-icon.native';
+import type { AssetForAvatar } from './types.shared';
 
 export interface AssetAvatarIconProps extends AvatarProps {
-  asset: CryptoAsset;
+  asset: AssetForAvatar;
   indicator?: ReactElement;
 }
 
@@ -20,12 +19,24 @@ export function AssetAvatarIcon({ asset, indicator, size, ...rest }: AssetAvatar
     case 'nativeBtc':
       return <BtcAvatarIcon indicator={indicator} size={size} {...rest} />;
     case 'sip10': {
+      if ('contractId' in asset && 'imageCanonicalUri' in asset && 'name' in asset) {
+        return (
+          <Sip10AvatarIcon
+            contractId={asset.contractId}
+            imageCanonicalUri={asset.imageCanonicalUri}
+            indicator={indicator}
+            name={asset.name}
+            size={size}
+            {...rest}
+          />
+        );
+      }
+      // If we ever receive a malformed sip10 asset, degrade gracefully.
       return (
-        <Sip10AvatarIcon
-          contractId={asset.contractId}
-          imageCanonicalUri={asset.imageCanonicalUri}
+        <Avatar
+          image={getAvatarUrl(asset.protocol)}
+          fallback={getAvatarFallbackText(asset.protocol)}
           indicator={indicator}
-          name={asset.name}
           size={size}
           {...rest}
         />

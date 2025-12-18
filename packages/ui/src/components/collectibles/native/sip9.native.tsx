@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 
-import { Sip9Asset } from '@leather.io/models';
+import type { Sip9Asset } from '@leather.io/models';
 
 import { CollectibleAudio } from './collectible-audio.native';
 import { CollectibleGltf } from './collectible-gltf.native';

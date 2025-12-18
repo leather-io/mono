@@ -39,7 +39,7 @@ export function AccountActions() {
   const swapsBtnDisabled = !swapsEnabled || !stacksAccount || isTestnet;
 
   const receivePath = isBitcoinEnabled
-    ? RouteUrls.Receive
+    ? `${RouteUrls.Home}${RouteUrls.Receive}`
     : `${RouteUrls.Home}${RouteUrls.ReceiveStx}`;
 
   function navigateToDefaultSwapRoute() {

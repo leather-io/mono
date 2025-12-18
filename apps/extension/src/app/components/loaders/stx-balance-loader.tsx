@@ -40,7 +40,7 @@ export function StxAssetItemBalanceLoader({
   const isLoading = stxBalance.state === 'loading';
   if (isLoading) return <CryptoAssetItemPlaceholder />;
   if (stxBalance.state === 'error') {
-    return <CryptoAssetItemError caption="STX" icon={<StxAvatarIcon />} title="Stacks" />;
+    return <CryptoAssetItemError caption="STX" icon={<StxAvatarIcon size="xl" />} title="Stacks" />;
   }
 
   return children(stxBalance.value, isLoading, false);

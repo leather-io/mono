@@ -1,11 +1,10 @@
 import { NonFungiblePostConditionWire, STXPostConditionWire } from '@stacks/transactions';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
-import { ItemLayout, StxAvatarIcon } from '@leather.io/ui';
+import { AssetAvatarIcon, ItemLayout, StxAvatarIcon } from '@leather.io/ui';
 
 import { isValidUrl } from '@shared/utils/urls';
 
-import { StacksAssetAvatar } from '@app/components/stacks-asset-avatar';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 import { formatPostConditionMessage } from './post-conditions.utils';
@@ -32,7 +31,15 @@ export function PostConditionItem({
   const imageCanonicalUri = isValidUrl(iconString) ? iconString : undefined;
 
   const icon = contractId ? (
-    <StacksAssetAvatar gradientString={contractId} img={imageCanonicalUri} />
+    <AssetAvatarIcon
+      asset={{
+        protocol: 'sip10',
+        contractId,
+        imageCanonicalUri: imageCanonicalUri ?? '',
+        name,
+      }}
+      size="xl"
+    />
   ) : (
     <StxAvatarIcon />
   );

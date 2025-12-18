@@ -97,7 +97,7 @@ export function useSwapFlag() {
 }
 
 export function useOnramperBuyFlag() {
-  return useBoolVariation('releaseOnramperBuy', false);
+  return useBoolVariation('release_onramper_buy', false);
 }
 
 export function useOnramperSellFlag() {

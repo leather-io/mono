@@ -1,6 +1,7 @@
 import { ReactNode, isValidElement } from 'react';
 
 import { Box, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
+import { SpacingToken } from 'leather-styles/tokens';
 
 import { CheckmarkIcon } from '../../icons/checkmark-icon.web';
 import { ChevronRightIcon } from '../../icons/chevron-right-icon.web';
@@ -10,6 +11,7 @@ import { pressableCaptionStyles, pressableChevronStyles } from '../pressable/pre
 interface ItemLayoutProps {
   captionLeft: ReactNode;
   captionRight?: ReactNode;
+  gap?: SpacingToken;
   img?: ReactNode;
   isDisabled?: boolean;
   isSelected?: boolean;
@@ -20,6 +22,7 @@ interface ItemLayoutProps {
 export function ItemLayout({
   captionLeft,
   captionRight,
+  gap = 'space.02',
   img,
   isSelected,
   showChevron,
@@ -31,7 +34,7 @@ export function ItemLayout({
       <Stack
         alignItems="start"
         flexGrow={2}
-        gap="2px"
+        gap={gap}
         overflow="hidden"
         textOverflow="ellipsis"
         whiteSpace="nowrap"
@@ -63,8 +66,8 @@ export function ItemLayout({
           </styled.span>
         )}
       </Stack>
-      <HStack gap="space.03">
-        <Stack alignItems="end" gap="2px" height="42px">
+      <HStack gap={gap}>
+        <Stack alignItems="end" gap={gap}>
           {isValidElement(titleRight) ? (
             titleRight
           ) : (

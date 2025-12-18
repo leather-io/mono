@@ -1,71 +1,71 @@
-import { msg } from '@lingui/core/macro';
+import { t } from '@lingui/core/macro';
 
 export function translateActivityStatus(status: string) {
   switch (status) {
     case 'Sent':
-      return msg`Sent`;
+      return t`Sent`;
     case 'Sending':
-      return msg`Sending`;
+      return t`Sending`;
     case 'Send Failed':
-      return msg`Send Failed`;
+      return t`Send Failed`;
     case 'Received':
-      return msg`Received`;
+      return t`Received`;
     case 'Receive fail':
-      return msg`Receive failed`;
+      return t`Receive failed`;
     case 'Executed':
-      return msg`Executed`;
+      return t`Executed`;
     case 'Executing':
-      return msg`Executing`;
+      return t`Executing`;
     case 'Execution failed':
-      return msg`Execution failed`;
+      return t`Execution failed`;
     case 'Deployed':
-      return msg`Deployed`;
+      return t`Deployed`;
     case 'Deploying':
-      return msg`Deploying`;
+      return t`Deploying`;
     case 'Deployment failed':
-      return msg`Deployment failed`;
+      return t`Deployment failed`;
     case 'Locked':
-      return msg`Locked`;
+      return t`Locked`;
     case 'Locking':
-      return msg`Locking`;
+      return t`Locking`;
     case 'Lock failed':
-      return msg`Lock failed`;
+      return t`Lock failed`;
     case 'Swapped':
-      return msg`Swapped`;
+      return t`Swapped`;
     case 'Swapping':
-      return msg`Swapping`;
+      return t`Swapping`;
     case 'Swap failed':
-      return msg`Swap failed`;
+      return t`Swap failed`;
     case 'Connected':
-      return msg`Connected`;
+      return t`Connected`;
     case 'Connecting':
-      return msg`Connecting`;
+      return t`Connecting`;
     case 'Connection failed':
-      return msg`Connection failed`;
+      return t`Connection failed`;
     case 'Signed':
-      return msg`Signed`;
+      return t`Signed`;
     case 'Signing':
-      return msg`Signing`;
+      return t`Signing`;
     case 'Signing failed':
-      return msg`Signing failed`;
+      return t`Signing failed`;
     case 'Wallet added':
-      return msg`Wallet added`;
+      return t`Wallet added`;
     case 'Adding wallet':
-      return msg`Adding wallet`;
+      return t`Adding wallet`;
     case 'Adding wallet failed':
-      return msg`Adding wallet failed`;
+      return t`Adding wallet failed`;
     case 'Announcement received':
-      return msg`Announcement received`;
+      return t`Announcement received`;
     case 'Receiving announcement':
-      return msg`Receiving announcement`;
+      return t`Receiving announcement`;
     case 'Receiving announcement failed':
-      return msg`Receiving announcement failed`;
+      return t`Receiving announcement failed`;
     case 'Feature waitlist notification':
-      return msg`Feature waitlist notification`;
+      return t`Feature waitlist notification`;
     case 'Receiving feature waitlist notification':
-      return msg`Receiving feature waitlist notification`;
+      return t`Receiving feature waitlist notification`;
     case 'Receiving feature waitlist notification failed':
-      return msg`Receiving feature waitlist notification failed`;
+      return t`Receiving feature waitlist notification failed`;
     default:
       return status;
   }

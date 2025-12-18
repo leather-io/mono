@@ -1,15 +1,19 @@
-import { type ReactNode } from 'react';
+import type { ComponentProps } from 'react';
 
 import { css } from 'leather-styles/css';
 
-import { ExternalLinkIcon, ItemLayout, ItemLayoutWithButtons, Switch } from '@leather.io/ui';
-
-import { NewIconWrapper } from '@app/components/icon-wrapper';
+import {
+  Avatar,
+  ExternalLinkIcon,
+  ItemLayout,
+  ItemLayoutWithButtons,
+  Switch,
+} from '@leather.io/ui';
 
 import { TitleWithTooltip } from './title-with-tooltip';
 
 interface GeneralSettingsButtonProps {
-  icon: ReactNode;
+  icon: ComponentProps<typeof Avatar>['icon'] | null;
   title: string;
   onClick(): void;
   tooltipText?: string;
@@ -30,6 +34,7 @@ export function SettingsButton({
   tooltipText,
   ...props
 }: SimpleSettingsButtonProps | SwitchSettingsButtonProps) {
+  const avatarIcon = icon ?? undefined;
   return (
     <button
       className={css({
@@ -45,7 +50,14 @@ export function SettingsButton({
     >
       {props.variant === 'switch' && (
         <ItemLayoutWithButtons
-          img={<NewIconWrapper>{icon}</NewIconWrapper>}
+          img={
+            <Avatar
+              size="lg"
+              bg="ink.component-background-hover"
+              outlineColor="ink.component-background-hover"
+              icon={avatarIcon}
+            />
+          }
           title={
             !tooltipText ? title : <TitleWithTooltip title={title} tooltipText={tooltipText} />
           }
@@ -60,7 +72,14 @@ export function SettingsButton({
         <ItemLayout
           showChevron
           titleRight={null}
-          img={<NewIconWrapper>{icon}</NewIconWrapper>}
+          img={
+            <Avatar
+              size="lg"
+              bg="ink.component-background-hover"
+              outlineColor="ink.component-background-hover"
+              icon={avatarIcon}
+            />
+          }
           titleLeft={
             !tooltipText ? title : <TitleWithTooltip title={title} tooltipText={tooltipText} />
           }
@@ -69,7 +88,14 @@ export function SettingsButton({
       )}
       {props.variant === 'external' && (
         <ItemLayoutWithButtons
-          img={<NewIconWrapper>{icon}</NewIconWrapper>}
+          img={
+            <Avatar
+              size="lg"
+              bg="ink.component-background-hover"
+              outlineColor="ink.component-background-hover"
+              icon={avatarIcon}
+            />
+          }
           title={
             !tooltipText ? title : <TitleWithTooltip title={title} tooltipText={tooltipText} />
           }

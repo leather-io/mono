@@ -116,9 +116,13 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
           bg="ink.background-primary"
           borderRadius="round"
           position="absolute"
-          bottom={-4}
-          right={-4}
-          style={{ padding: 3 }}
+          bottom={-2}
+          right={-2}
+          width={20}
+          height={20}
+          alignItems="center"
+          justifyContent="center"
+          overflow="hidden"
         >
           {indicator}
         </Box>

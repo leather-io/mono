@@ -5,12 +5,19 @@ import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
-import { StxAvatarIcon } from '@leather.io/ui/native';
+import { StacksFilledCircleIcon, StxAvatarIcon } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
 export function StacksTokenBalance(props: StacksTokenBalanceProps) {
-  return <TokenBalance ticker="STX" icon={<StxAvatarIcon />} tokenName={t`Stacks`} {...props} />;
+  return (
+    <TokenBalance
+      ticker="STX"
+      icon={<StxAvatarIcon indicator={<StacksFilledCircleIcon variant="small" />} />}
+      tokenName={t`Stacks`}
+      {...props}
+    />
+  );
 }
 
 export function StacksBalanceByAccount({

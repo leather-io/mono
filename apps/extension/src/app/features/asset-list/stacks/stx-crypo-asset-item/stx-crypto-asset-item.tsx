@@ -1,7 +1,7 @@
 import { styled } from 'leather-styles/jsx';
 
 import type { AddressQuotedStxBalance } from '@leather.io/services';
-import { Caption, StxAvatarIcon } from '@leather.io/ui';
+import { Caption, StacksFilledCircleIcon, StxAvatarIcon } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { CryptoAssetItemLayout } from '@app/components/crypto-asset-item/crypto-asset-item.layout';
@@ -37,7 +37,7 @@ export function StxCryptoAssetItem({
       captionLeft="STX"
       captionRightBulletInfo={showLockedBalance && captionRightBulletInfo}
       fiatBalance={fiatTotalBalance}
-      icon={<StxAvatarIcon />}
+      icon={<StxAvatarIcon size="xl" indicator={<StacksFilledCircleIcon variant="small" />} />}
       isLoading={isLoading}
       isPrivate={isPrivate}
       onSelectAsset={onSelectAsset}
