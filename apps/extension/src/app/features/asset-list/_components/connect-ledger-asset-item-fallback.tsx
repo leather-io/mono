@@ -1,7 +1,9 @@
 import type React from 'react';
 
+import { Box } from 'leather-styles/jsx';
+
 import type { Blockchain, Currency } from '@leather.io/models';
-import { ItemLayout, Pressable } from '@leather.io/ui';
+import { ItemLayout } from '@leather.io/ui';
 
 import { capitalize } from '@app/common/utils';
 import { useCheckLedgerBlockchainAvailable } from '@app/store/accounts/blockchain/utils';
@@ -24,13 +26,13 @@ export function ConnectLedgerAssetItemFallback({
   const checkBlockchainAvailable = useCheckLedgerBlockchainAvailable();
   if (variant === 'interactive' && !checkBlockchainAvailable(chain)) return null;
   return (
-    <Pressable my="space.02">
+    <Box my="space.02">
       <ItemLayout
         img={icon}
         captionLeft={symbol}
         titleLeft={capitalize(chain)}
         titleRight={<ConnectLedgerButton chain={chain} />}
       />
-    </Pressable>
+    </Box>
   );
 }
