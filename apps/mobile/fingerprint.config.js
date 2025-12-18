@@ -1,4 +1,5 @@
-const config = {
+module.exports = {
+  // Use Expo's recommended skips for noisy, non-native-affecting fields.
   sourceSkips: [
     'ExpoConfigRuntimeVersionIfString',
     'ExpoConfigVersions',
@@ -6,17 +7,14 @@ const config = {
     'PackageJsonScriptsAll',
     'GitIgnore',
   ],
-  fileHookTransform: (source, chunk, isEndOfFile, encoding) => {
-    // Remove the google services files from the config to avoid the fingerprinting those when the file path changes based on environment.
-    if (source.type === 'contents' && SourceCode.id === 'expoConfig') {
-      assert(isEndOfFile, 'contents source is expected to have single chunk.');
-      const config = JSON.parse(chunk);
-      delete config.ios.googleServicesFile;
-      delete config.android.googleServicesFile;
-      console.log('config', config);
-      return JSON.stringify(config);
-    }
-  },
+  // Ignore env-specific native config and assets that you don't want to
+  // trigger a "native change" (and therefore a new EAS build).
+  ignorePaths: [
+    // iOS / Android Firebase config that varies per environment.
+    '**/GoogleService-Info*.plist',
+    '**/google-services*.json',
+    // App icon that you tweak frequently but don't need to
+    // force a new native build for.
+    'src/assets/adaptive-icon.png',
+  ],
 };
-
-module.exports = config;
