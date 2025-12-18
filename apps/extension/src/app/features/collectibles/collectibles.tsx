@@ -18,7 +18,8 @@ import { InscriptionCard } from './components/inscription-card';
 import { Sip9Card } from './components/sip9-card';
 import { StampCard } from './components/stamp-card';
 
-const CARD_HEIGHT = 184;
+// Figma spec uses 195px square tiles
+const CARD_HEIGHT = 195;
 
 function renderCollectible(
   view: CollectibleView,

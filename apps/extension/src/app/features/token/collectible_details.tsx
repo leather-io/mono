@@ -90,7 +90,8 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
     );
   }
 
-  const mediaHeight = isPopupMode() ? 240 : 320;
+  // Small-width Figma spec uses a tall media area (~342px) for the sheet layout
+  const mediaHeight = isPopupMode() ? 342 : 320;
 
   let media: React.ReactNode = null;
 
@@ -173,11 +174,11 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
       <Stack
         px={{ base: 'space.04', md: 'space.00' }}
         width="100%"
-        maxWidth={{ base: '100%', md: '640px' }}
+        maxWidth={{ base: '100%', md: '780px' }}
         margin="0 auto"
         gap="space.06"
       >
-        <Box maxWidth={{ base: '280px', md: '320px' }} width="100%" margin="0 auto">
+        <Box bg="ink.background-primary" p="space.05">
           <CollectibleTypeIconOverlay protocol={view.protocol}>{media}</CollectibleTypeIconOverlay>
         </Box>
 

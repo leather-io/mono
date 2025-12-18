@@ -12,7 +12,6 @@ interface Sip9CardProps {
 }
 
 export function Sip9Card({ item, height, onSelect }: Sip9CardProps) {
-  console.log('Sip9 item', item);
   if (!item?.content?.contentUrl || item?.content?.contentUrl?.trim() === '') {
     return <ImageUnavailable height={height} />;
   }

@@ -17,18 +17,20 @@ import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 export function TokenDetailsHeader({ title }: { title: string }) {
   const navigate = useNavigate();
   return (
-    <Header px={{ base: 'space.04', md: 'space.00' }}>
-      <HeaderGrid
-        leftCol={
-          <HeaderActionButton
-            icon={<ArrowLeftIcon />}
-            onAction={() => navigate(-1)}
-            dataTestId="token-details-back"
-          />
-        }
-        centerCol={<styled.span textStyle="heading.05">{title}</styled.span>}
-        rightCol={<Box />}
-      />
+    <Header px={{ base: 'space.03', md: 'space.00' }}>
+      <Box width="100%" maxWidth={{ base: '100%', md: '780px' }} margin="0 auto">
+        <HeaderGrid
+          leftCol={
+            <HeaderActionButton
+              icon={<ArrowLeftIcon />}
+              onAction={() => navigate(-1)}
+              dataTestId="token-details-back"
+            />
+          }
+          centerCol={<styled.span textStyle="heading.05">{title}</styled.span>}
+          rightCol={<Box />}
+        />
+      </Box>
     </Header>
   );
 }
@@ -45,8 +47,13 @@ export function TokenDetailsPillButton({
   return (
     <styled.button
       type="button"
+      display="inline-flex"
+      alignItems="center"
+      justifyContent="center"
       px="space.03"
       py="space.02"
+      height="36px"
+      minWidth="78px"
       bg="ink.background-primary"
       border="default"
       borderRadius="999px"
@@ -95,8 +102,14 @@ export function TokenDetailsActionsRow({
       flexWrap="wrap"
       px="space.05"
       pb="space.01"
+      width="100%"
+      maxWidth="390px"
+      margin="0 auto"
     >
-      <TokenDetailsPillButton label="Send" onClick={() => void navigate(RouteUrls.SendCryptoAsset)} />
+      <TokenDetailsPillButton
+        label="Send"
+        onClick={() => void navigate(RouteUrls.SendCryptoAsset)}
+      />
       <TokenDetailsPillButton
         label="Receive"
         onClick={() => void navigate(receivePath, { state: { backgroundLocation: location } })}
@@ -111,7 +124,9 @@ export function TokenDetailsActionsRow({
         disabled={!isSwapEnabled}
         onClick={() =>
           void navigate(
-            RouteUrls.Swap.replace('{chain}', swapChain).replace(':base', symbol).replace(':quote?', '')
+            RouteUrls.Swap.replace('{chain}', swapChain)
+              .replace(':base', symbol)
+              .replace(':quote?', '')
           )
         }
       />
@@ -119,13 +134,7 @@ export function TokenDetailsActionsRow({
   );
 }
 
-export function TokenDetailsSection({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
+export function TokenDetailsSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <Stack bg="ink.background-primary" py="space.03" width="100%">
       <Box px="space.05" py="space.02">
@@ -146,7 +155,13 @@ export function TokenDetailsRow({
   valueAction?(): void;
 }) {
   return (
-    <Flex px="space.05" py="space.01" alignItems="center" justifyContent="space-between" minHeight="30px">
+    <Flex
+      px="space.05"
+      py="space.01"
+      alignItems="center"
+      justifyContent="space-between"
+      minHeight="30px"
+    >
       <styled.span textStyle="caption.02" color="ink.text-subdued">
         {label}
       </styled.span>
@@ -179,7 +194,13 @@ export function TokenDetailsBalanceItem({
   rightBottom?: ReactNode;
 }) {
   return (
-    <Flex px="space.05" py="space.03" alignItems="center" justifyContent="space-between" gap="space.04">
+    <Flex
+      px="space.05"
+      py="space.03"
+      alignItems="center"
+      justifyContent="space-between"
+      gap="space.04"
+    >
       <Stack gap="space.00" minWidth="0">
         <styled.span textStyle="label.02">{title}</styled.span>
         {address ? (
@@ -214,11 +235,18 @@ export function TokenDetailsHero({
   actions?: ReactNode;
 }) {
   return (
-    <Stack bg="ink.background-primary" alignItems="center" justifyContent="center" p="space.05" gap="space.03">
+    <Stack
+      bg="ink.background-primary"
+      alignItems="center"
+      justifyContent="center"
+      p="space.05"
+      gap="space.03"
+    >
       <Box>{icon}</Box>
       <Stack gap="space.00" alignItems="center">
         <styled.div textStyle="heading.03">
-          {amount} {amountSuffix ? <styled.span color="ink.text-subdued">{amountSuffix}</styled.span> : null}
+          {amount}{' '}
+          {amountSuffix ? <styled.span color="ink.text-subdued">{amountSuffix}</styled.span> : null}
         </styled.div>
         {fiatAmount ? (
           <styled.div textStyle="label.01" color="ink.text-primary">
@@ -243,12 +271,16 @@ export function TokenDetailsScreen({
   return (
     <Stack width="100%" gap="space.00">
       <TokenDetailsHeader title={title} />
-      <Stack bg="ink.background-secondary" borderRadius="md" overflow="hidden">
-        {hero}
-        {children}
-      </Stack>
+      <Box width="100%" maxWidth={{ base: '100%', md: '780px' }} margin="0 auto">
+        <Stack
+          bg="ink.background-secondary"
+          borderRadius={{ base: '0', md: 'md' }}
+          overflow="hidden"
+        >
+          {hero}
+          {children}
+        </Stack>
+      </Box>
     </Stack>
   );
 }
-
-

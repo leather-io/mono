@@ -1,14 +1,14 @@
-import { Content, Page } from '@app/components/layout';
+import { Box } from 'leather-styles/jsx';
+
+import { Content } from '@app/components/layout';
 import { TokenDetails } from '@app/features/token/token-details';
 
 export function TokenDetailsPage() {
   return (
     <Content>
-      <Page>
+      <Box width="100%">
         <TokenDetails />
-      </Page>
+      </Box>
     </Content>
   );
 }
-
-
