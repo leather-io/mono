@@ -5,6 +5,7 @@ lane :build_ios do
   if is_ci  
     setup_ci
   end
+  ENV["SENTRY_ALLOW_FAILURE"] = "true"
   match(type: "appstore", readonly: true)
   build_app(
     scheme: "leatherwalletmobile"
@@ -22,5 +23,4 @@ lane :distribute_ios_beta do
     firebase_release: release
   )
 end
-
 
