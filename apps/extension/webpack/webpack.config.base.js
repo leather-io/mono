@@ -236,6 +236,10 @@ export const config = {
     ].filter(Boolean),
   },
   watch: false,
+  watchOptions: {
+    aggregateTimeout: 500,
+    poll: 1000,
+  },
   plugins: [
     new webpack.IgnorePlugin({
       resourceRegExp: /^\.\/wordlists\/(?!english)/,
