@@ -30,7 +30,6 @@ export * from './validation/address-validation';
 export * from './validation/amount-validation';
 export * from './validation/bitcoin-address';
 export * from './validation/bitcoin-error';
-export * from './validation/transaction-validation';
 
 export * from './utils/bitcoin.descriptors';
 export * from './utils/bitcoin.network';

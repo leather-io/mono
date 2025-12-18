@@ -17,8 +17,7 @@ export function useCalculateBtcMaxSpend(feeRates: AverageBitcoinFeeRates, utxos:
         recipient,
         utxos,
         feeRate,
-        feeRates,
       }),
-    [feeRates, utxos]
+    [utxos]
   );
 }
