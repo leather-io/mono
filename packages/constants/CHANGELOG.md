@@ -215,6 +215,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.29.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.28.5...@leather.io/constants-v0.29.0) (2025-12-18)
+
+
+### Features
+
+* **extension:** usdcx at top of asset list ([59eb61b](https://github.com/leather-io/mono/commit/59eb61ba95d54440b992b813b0b8e7f95911fe03))
+
 ## [0.28.5](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.28.4...@leather.io/constants-v0.28.5) (2025-12-15)
 
 

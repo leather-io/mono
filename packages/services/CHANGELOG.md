@@ -413,6 +413,25 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.46.2](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.1...@leather.io/services-v1.46.2) (2025-12-18)
+
+
+### Bug Fixes
+
+* **services:** use correct execution type for sbtc withdrawals ([cb8bcb7](https://github.com/leather-io/mono/commit/cb8bcb73105f0f3fb5309e11d9a30e36ccf766cb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.1
+    * @leather.io/constants bumped to 0.29.0
+    * @leather.io/stacks bumped to 1.19.8
+    * @leather.io/utils bumped to 0.49.6
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.6
+
 ## [1.46.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.0...@leather.io/services-v1.46.1) (2025-12-17)
 
 

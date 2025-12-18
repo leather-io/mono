@@ -21,6 +21,44 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.87.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.86.2...@leather.io/extension-v6.87.0) (2025-12-18)
+
+
+### Features
+
+* **extension:** add usdcx balance hook to loader ([38805f9](https://github.com/leather-io/mono/commit/38805f9485d6d09daeaa2f246bbb67375e45ab91))
+* **extension:** add usdcx bridge promo banner ([25aa7e3](https://github.com/leather-io/mono/commit/25aa7e366f4ab134dd976e65a30f4a3808cb19d3))
+* **extension:** usdcx at top of asset list ([59eb61b](https://github.com/leather-io/mono/commit/59eb61ba95d54440b992b813b0b8e7f95911fe03))
+
+
+### Bug Fixes
+
+* **extension:** nested &lt;button&gt; runtime error ([8c82f9d](https://github.com/leather-io/mono/commit/8c82f9de821419ee20c9b32d082cb81f17d440e5))
+* **extension:** remove deprecated Lottie lib warning ([5cb0b3f](https://github.com/leather-io/mono/commit/5cb0b3fdcf28b9ad8db28da0af5cae3ac3b5544a))
+* **extension:** slow refreshes to aid external pkg updates ([be720a1](https://github.com/leather-io/mono/commit/be720a16ffc141f407a358e999b08d51de2655fc))
+* **extension:** sourcemaps ([e094dd0](https://github.com/leather-io/mono/commit/e094dd0a4467008fb04200381417f4ec50ef65e5))
+* **extension:** stop LD warnings when key missing ([13c133e](https://github.com/leather-io/mono/commit/13c133ec12b8edb8ddccd15d7658452e081369d1))
+* **extension:** stop Mixpanel warning when key missing ([3f76a51](https://github.com/leather-io/mono/commit/3f76a51ec3d1fc37424fe92afab04d55300a0e14))
+* use uniqueArray to useQueries and cache nft to avoid duplicate queries ([b391f2b](https://github.com/leather-io/mono/commit/b391f2bbb52897d6c8fe6d158bd7409ac9213231))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.1
+    * @leather.io/constants bumped to 0.29.0
+    * @leather.io/crypto bumped to 1.12.12
+    * @leather.io/features bumped to 1.1.7
+    * @leather.io/provider bumped to 1.6.14
+    * @leather.io/queries bumped to 0.3.0
+    * @leather.io/query bumped to 2.45.8
+    * @leather.io/rpc bumped to 2.21.6
+    * @leather.io/services bumped to 1.46.2
+    * @leather.io/stacks bumped to 1.19.8
+    * @leather.io/ui bumped to 1.100.3
+    * @leather.io/utils bumped to 0.49.6
+
 ## [6.86.2](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.86.1...@leather.io/extension-v6.86.2) (2025-12-17)
 
 

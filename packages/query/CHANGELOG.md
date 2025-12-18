@@ -779,6 +779,25 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.45.8](https://github.com/leather-io/mono/compare/@leather.io/query-v2.45.7...@leather.io/query-v2.45.8) (2025-12-18)
+
+
+### Bug Fixes
+
+* prevent calls to .../addresses//balances/ft if no address ([20b6ff7](https://github.com/leather-io/mono/commit/20b6ff7116c85d7c2beb45d515b8ec1b889e6e54))
+* **query:** do not retry unreliable stx20 api ([18b9f84](https://github.com/leather-io/mono/commit/18b9f84524b7ad9fc3896af4bf70598e7be99e76))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.1
+    * @leather.io/constants bumped to 0.29.0
+    * @leather.io/rpc bumped to 2.21.6
+    * @leather.io/stacks bumped to 1.19.8
+    * @leather.io/utils bumped to 0.49.6
+
 ## [2.45.7](https://github.com/leather-io/mono/compare/@leather.io/query-v2.45.6...@leather.io/query-v2.45.7) (2025-12-15)
 
 
