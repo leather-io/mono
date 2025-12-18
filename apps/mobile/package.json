@@ -9,7 +9,7 @@
     "android:release": "expo run:android --variant release",
     "build": "pnpm lingui",
     "check:cocoapods": "sh scripts/enforce-cocoapods-version.sh",
-    "eas-build-post-install": "cd ../.. && pnpm install && pnpm build",
+    "eas-build-post-install": "cd ../.. && pnpm install && pnpm build:mobile",
     "eas-build-pre-install": "corepack enable",
     "firebase:refresh": "firebase login && firebase apps:sdkconfig ANDROID --project leather-b5081 > google-services.json && firebase apps:sdkconfig IOS --project leather-b5081 > GoogleService-Info.plist",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
