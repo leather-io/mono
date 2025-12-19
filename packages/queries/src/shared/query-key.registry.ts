@@ -25,6 +25,7 @@ export const querySettingsDepsRegistry = {
     'assetVisibility',
   ],
   'account-balances-service--get-total-balance': ['currency', 'network', 'assetVisibility'],
+  'account-balances-service--get-available-balance': ['currency', 'network', 'assetVisibility'],
   'account-balances-service--get-unlocked-balance': ['currency', 'network', 'assetVisibility'],
   // utxos
   'utxos-service--get-account-utxos': ['network'],

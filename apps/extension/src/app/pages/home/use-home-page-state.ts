@@ -7,7 +7,10 @@ import { useAccountDisplayName } from '@app/common/hooks/account/use-account-nam
 import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state';
 import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
-import { useCurrentAccountTotalBalance } from '@app/query/common/account-balance/account-balance.query';
+import {
+  useCurrentAccountAvailableBalance,
+  useCurrentAccountTotalBalance,
+} from '@app/query/common/account-balance/account-balance.query';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import {
@@ -34,14 +37,16 @@ export function useHomePageState() {
     index: currentAccountIndex || 0,
   });
 
-  const balance = useCurrentAccountTotalBalance();
+  const totalBalance = useCurrentAccountTotalBalance();
+  const availableBalance = useCurrentAccountAvailableBalance();
 
   useOnMount(() => {
     if (decodedAuthRequest) return navigate(RouteUrls.ChooseAccount);
   });
 
   return {
-    balance,
+    totalBalance,
+    availableBalance,
     isFetchingBnsName,
     isPrivateMode,
     name,

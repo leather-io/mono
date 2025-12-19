@@ -22,13 +22,16 @@ import { useHomePageState } from './use-home-page-state';
 
 export function HomeLegacy() {
   const {
-    balance,
+    totalBalance,
+    availableBalance,
     isFetchingBnsName,
     isPrivateMode,
     name,
     togglePrivateMode,
     toggleSwitchAccount,
   } = useHomePageState();
+
+  const isLoadingBalance = totalBalance.state === 'loading' || availableBalance.state === 'loading';
 
   return (
     <Stack
@@ -46,15 +49,19 @@ export function HomeLegacy() {
         <AccountCard
           name={name}
           availableBalance={
-            balance.state !== 'success' ? emptyAmountPlaceholder : formatCurrency(balance.value)
+            availableBalance.state !== 'success'
+              ? emptyAmountPlaceholder
+              : formatCurrency(availableBalance.value)
           }
           totalBalance={
-            balance.state !== 'success' ? emptyAmountPlaceholder : formatCurrency(balance.value)
+            totalBalance.state !== 'success'
+              ? emptyAmountPlaceholder
+              : formatCurrency(totalBalance.value)
           }
           toggleSwitchAccount={() => toggleSwitchAccount()}
           isFetchingBnsName={isFetchingBnsName}
-          isLoadingBalance={balance.state === 'loading'}
-          isLoadingAdditionalData={balance.state === 'loading'}
+          isLoadingBalance={isLoadingBalance}
+          isLoadingAdditionalData={isLoadingBalance}
           isBalancePrivate={isPrivateMode}
           onShowBalance={togglePrivateMode}
         >
