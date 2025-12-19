@@ -63,6 +63,33 @@ test.describe('send btc', () => {
       test.expect(confirmationAssetValue).toEqual(withNbsp(`${amount} ${amountSymbol}`));
     });
 
+    test('that total spend on preview equals amount plus fee', async ({ sendPage }) => {
+      const amount = '0.00006';
+
+      await sendPage.amountInput.fill(amount);
+      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);
+
+      await sendPage.previewSendTxButton.click();
+
+      const feeType = BtcFeeType.Low;
+      const feeValue = await sendPage.feesListItem
+        .filter({ hasText: feeType })
+        .getByTestId(SharedComponentsSelectors.FeesListItemFeeValue)
+        .innerText();
+
+      await sendPage.feesListItem.filter({ hasText: feeType }).click();
+
+      const totalSpend = await sendPage.confirmationDetails
+        .getByTestId(SendCryptoAssetSelectors.ConfirmationDetailsTotalSpend)
+        .getByTestId(SharedComponentsSelectors.InfoCardRowValue)
+        .innerText();
+
+      const feeNumber = parseFloat(feeValue.replace(/[^\d.]/g, ''));
+      const expectedTotal = (parseFloat(amount) + feeNumber).toFixed(8);
+
+      test.expect(totalSpend).toContain(expectedTotal.replace(/0+$/, ''));
+    });
+
     test('that fee value on preview match chosen one', async ({ sendPage }) => {
       await sendPage.amountInput.fill('0.00006');
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);

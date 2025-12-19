@@ -7,6 +7,7 @@ export enum SendCryptoAssetSelectors {
   ConfirmationDetailsRecipient = 'confirmation-details-recipient',
   ConfirmationDetailsAssetValue = 'confirmation-details-asset-value',
   ConfirmationDetailsFee = 'confirmation-details-fee',
+  ConfirmationDetailsTotalSpend = 'confirmation-details-total-spend',
   ConfirmationDetailsMemo = 'confirmation-details-memo',
   ConfirmationDetailText = 'confirmation-detail-text',
   FormFieldInputErrorLabel = 'form-field-input-error-label',
