@@ -21,6 +21,20 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.87.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.87.0...@leather.io/extension-v6.87.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* update storybook dependancy ([4683726](https://github.com/leather-io/mono/commit/4683726ada4035dba496d34718593e496716f44f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.100.4
+
 ## [6.87.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.86.2...@leather.io/extension-v6.87.0) (2025-12-18)
 
 
