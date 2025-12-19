@@ -489,6 +489,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.100.4](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.100.3...@leather.io/ui-v1.100.4) (2025-12-19)
+
+
+### Bug Fixes
+
+* update storybook dependancy ([4683726](https://github.com/leather-io/mono/commit/4683726ada4035dba496d34718593e496716f44f))
+
 ## [1.100.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.100.2...@leather.io/ui-v1.100.3) (2025-12-18)
 
 
