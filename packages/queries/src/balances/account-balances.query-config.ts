@@ -11,13 +11,8 @@ import { createServiceQueryKey } from '../shared/query-key.factory';
 import { balanceQueryOptions } from '../shared/query-options';
 
 export function createAccountTotalBalanceQueryKey(request: AccountRequest, settings: UserSettings) {
-  return createServiceQueryKey(
-    'account-balances-service--get-total-balance',
-    ['total', request],
-    settings
-  );
+  return createServiceQueryKey('account-balances-service--get-total-balance', [request], settings);
 }
-
 export function createAccountTotalBalanceQueryConfig(
   request: AccountRequest,
   settings: UserSettings
@@ -30,17 +25,38 @@ export function createAccountTotalBalanceQueryConfig(
   } satisfies UseQueryOptions<Money, Error>;
 }
 
+export function createAccountAvailableBalanceQueryKey(
+  request: AccountRequest,
+  settings: UserSettings
+) {
+  return createServiceQueryKey(
+    'account-balances-service--get-available-balance',
+    [request],
+    settings
+  );
+}
+export function createAccountAvailableBalanceQueryConfig(
+  request: AccountRequest,
+  settings: UserSettings
+) {
+  return {
+    queryKey: createAccountAvailableBalanceQueryKey(request, settings),
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getAccountBalancesService().getAvailableBalance(request, signal),
+    ...balanceQueryOptions,
+  } satisfies UseQueryOptions<Money, Error>;
+}
+
 export function createAccountUnlockedBalanceQueryKey(
   request: AccountRequest,
   settings: UserSettings
 ) {
   return createServiceQueryKey(
     'account-balances-service--get-unlocked-balance',
-    ['unlocked', request],
+    [request],
     settings
   );
 }
-
 export function createAccountUnlockedBalanceQueryConfig(
   request: AccountRequest,
   settings: UserSettings

@@ -18,7 +18,7 @@ export class AccountBalancesService {
     private readonly runesBalancesService: RunesBalancesService
   ) {}
 
-  public async getTotalBalance(request: AccountRequest, signal?: AbortSignal): Promise<Money> {
+  public async getAvailableBalance(request: AccountRequest, signal?: AbortSignal): Promise<Money> {
     const [btcBalance, stxBalance, sip10Balance, runesBalance] = await Promise.all([
       this.btcBalancesService.getBtcAccountBalance(request, signal),
       this.stxBalancesService.getStxAccountBalance(request, signal),
@@ -31,6 +31,24 @@ export class AccountBalancesService {
         stxBalance.quote.availableBalance,
         sip10Balance.quote.availableBalance,
         runesBalance.quote.availableBalance,
+      ].filter(isDefined)
+    );
+    return accountBalance;
+  }
+
+  public async getTotalBalance(request: AccountRequest, signal?: AbortSignal): Promise<Money> {
+    const [btcBalance, stxBalance, sip10Balance, runesBalance] = await Promise.all([
+      this.btcBalancesService.getBtcAccountBalance(request, signal),
+      this.stxBalancesService.getStxAccountBalance(request, signal),
+      this.sip10BalancesService.getSip10AccountBalance(request, signal),
+      this.runesBalancesService.getRunesAccountBalance(request, signal),
+    ]);
+    const accountBalance = sumMoney(
+      [
+        btcBalance.quote.totalBalance,
+        stxBalance.quote.totalBalance,
+        sip10Balance.quote.totalBalance,
+        runesBalance.quote.totalBalance,
       ].filter(isDefined)
     );
     return accountBalance;

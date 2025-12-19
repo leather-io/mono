@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { AccountId, QuoteCurrency } from '@leather.io/models';
 import {
-  createAccountTotalBalanceQueryConfig,
+  createAccountAvailableBalanceQueryConfig,
   createAccountUnlockedBalanceQueryConfig,
 } from '@leather.io/queries';
 import { AccountRequest, UserSettings } from '@leather.io/services';
@@ -43,7 +43,7 @@ export function useGetAccountTotalBalanceQuery(
   };
 
   return useQuery({
-    ...createAccountTotalBalanceQueryConfig(request, settings),
+    ...createAccountAvailableBalanceQueryConfig(request, settings),
     ...balanceQueryOptions,
   });
 }
