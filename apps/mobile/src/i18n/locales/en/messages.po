@@ -1210,7 +1210,7 @@ msgstr ""
 msgid "Make your first transaction to get started"
 msgstr "Make your first transaction to get started"
 
-#: src/features/balances/manage-tokens.sheet.tsx:74
+#: src/features/balances/manage-tokens.sheet.tsx:79
 msgid "Manage tokens"
 msgstr "Manage tokens"
 

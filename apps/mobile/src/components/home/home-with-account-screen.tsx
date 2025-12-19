@@ -96,6 +96,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
 
       {listTab === 'tokens' && (
         <AssetsList
+          account={currentAccount}
           header={
             <>
               {/* TODO: research better way of switching between flashlists */}
