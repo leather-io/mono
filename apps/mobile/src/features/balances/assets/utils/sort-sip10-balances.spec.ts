@@ -8,6 +8,36 @@ import { sortSip10Balances } from './sort-sip10-balances';
 const mockBalances: Sip10AggregateBalance['sip10s'] = [
   {
     asset: {
+      assetId: 'SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx::usdcx-token',
+      canTransfer: true,
+      category: 'fungible',
+      chain: 'stacks',
+      contractId: 'SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx',
+      decimals: 6,
+      hasMemo: true,
+      imageCanonicalUri:
+        'https://ipfs.io/ipfs/bafkreiev6flgstwgefqpaieahshidfhz4czgbvryxbtusqzwarmp4mmkfu',
+      name: 'USDCx',
+      protocol: 'sip10',
+      symbol: 'USDCx',
+    },
+    crypto: {
+      availableBalance: createMoney(0, 'USDCx', 2),
+      inboundBalance: createMoney(0, 'USDCx', 2),
+      outboundBalance: createMoney(0, 'USDCx', 2),
+      pendingBalance: createMoney(0, 'USDCx', 2),
+      totalBalance: createMoney(0, 'USDCx', 2),
+    },
+    quote: {
+      availableBalance: createMoney(0, 'USD'),
+      inboundBalance: createMoney(0, 'USD'),
+      outboundBalance: createMoney(0, 'USD'),
+      pendingBalance: createMoney(0, 'USD'),
+      totalBalance: createMoney(0, 'USD'),
+    },
+  },
+  {
+    asset: {
       assetId: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.ststx-token::ststx',
       canTransfer: true,
       category: 'fungible',
@@ -331,6 +361,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
 ];
 
 /** Expected order
+ * USDCx - $0
  * sBTC - $1
  * WELSH - $5
  * LiSTX - $4
@@ -344,31 +375,32 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
  * USDA - $0
  */
 describe('sortSip10Balances', () => {
-  it('should sort sBTC first regardless of balance', () => {
+  it('should sort USDCx first then sBTC regardless of balance', () => {
     const sorted = [...mockBalances].sort(sortSip10Balances);
-    expect(sorted[0]?.asset.symbol).toBe('sBTC');
+    expect(sorted[0]?.asset.symbol).toBe('USDCx');
+    expect(sorted[1]?.asset.symbol).toBe('sBTC');
   });
 
   it('should next sort by quote total balance when symbols are different', () => {
     const sorted = [...mockBalances].sort(sortSip10Balances);
-    expect(sorted[1]?.asset.symbol).toBe('WELSH');
-    expect(sorted[2]?.asset.symbol).toBe('LiSTX');
-    expect(sorted[3]?.asset.symbol).toBe('ALEX');
-    expect(sorted[4]?.asset.symbol).toBe('BAN');
+    expect(sorted[2]?.asset.symbol).toBe('WELSH');
+    expect(sorted[3]?.asset.symbol).toBe('LiSTX');
+    expect(sorted[4]?.asset.symbol).toBe('ALEX');
+    expect(sorted[5]?.asset.symbol).toBe('BAN');
   });
 
   it('should then sort by crypto total balance when quote balances are equal', () => {
     const sorted = [...mockBalances].sort(sortSip10Balances);
-    expect(sorted[5]?.asset.symbol).toBe('stSTX');
-    expect(sorted[6]?.asset.symbol).toBe('aBTC');
+    expect(sorted[6]?.asset.symbol).toBe('stSTX');
+    expect(sorted[7]?.asset.symbol).toBe('aBTC');
   });
 
   it('should then sort alphabetically by symbol', () => {
     const sorted = [...mockBalances].sort(sortSip10Balances);
-    expect(sorted[6]?.asset.symbol).toBe('aBTC');
-    expect(sorted[7]?.asset.symbol).toBe('ALUX');
-    expect(sorted[8]?.asset.symbol).toBe('aUSD');
-    expect(sorted[9]?.asset.symbol).toBe('LEO');
-    expect(sorted[10]?.asset.symbol).toBe('USDA');
+    expect(sorted[7]?.asset.symbol).toBe('aBTC');
+    expect(sorted[8]?.asset.symbol).toBe('ALUX');
+    expect(sorted[9]?.asset.symbol).toBe('aUSD');
+    expect(sorted[10]?.asset.symbol).toBe('LEO');
+    expect(sorted[11]?.asset.symbol).toBe('USDA');
   });
 });
