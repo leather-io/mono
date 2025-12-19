@@ -13,7 +13,7 @@ import { balanceQueryOptions } from '../shared/query-options';
 export function createStxAccountBalanceQueryKey(request: AccountRequest, settings: UserSettings) {
   return createServiceQueryKey(
     'stx-balances-service--get-stx-account-balance',
-    ['account', request],
+    [request],
     settings
   );
 }
@@ -36,7 +36,7 @@ export function createStxAggregateBalanceQueryKey(
 ) {
   return createServiceQueryKey(
     'stx-balances-service--get-stx-aggregate-balance',
-    ['aggregate', requests],
+    [requests],
     settings
   );
 }
@@ -56,7 +56,7 @@ export function createStxAggregateBalanceQueryConfig(
 export function createStxAddressBalanceQueryKey(address: string, settings: UserSettings) {
   return createServiceQueryKey(
     'stx-balances-service--get-stx-address-balance',
-    ['address', address],
+    [address],
     settings
   );
 }
