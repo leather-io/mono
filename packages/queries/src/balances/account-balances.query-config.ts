@@ -11,11 +11,7 @@ import { createServiceQueryKey } from '../shared/query-key.factory';
 import { balanceQueryOptions } from '../shared/query-options';
 
 export function createAccountTotalBalanceQueryKey(request: AccountRequest, settings: UserSettings) {
-  return createServiceQueryKey(
-    'account-balances-service--get-total-balance',
-    ['total', request],
-    settings
-  );
+  return createServiceQueryKey('account-balances-service--get-total-balance', [request], settings);
 }
 
 export function createAccountTotalBalanceQueryConfig(
@@ -36,7 +32,7 @@ export function createAccountUnlockedBalanceQueryKey(
 ) {
   return createServiceQueryKey(
     'account-balances-service--get-unlocked-balance',
-    ['unlocked', request],
+    [request],
     settings
   );
 }

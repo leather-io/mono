@@ -15,7 +15,7 @@ import { balanceQueryOptions } from '../shared/query-options';
 export function createRunesAccountBalanceQueryKey(request: AccountRequest, settings: UserSettings) {
   return createServiceQueryKey(
     'runes-balances-service--get-runes-account-balance',
-    ['account', request],
+    [request],
     settings
   );
 }
@@ -38,7 +38,7 @@ export function createRunesAggregateBalanceQueryKey(
 ) {
   return createServiceQueryKey(
     'runes-balances-service--get-runes-aggregate-balance',
-    ['aggregate', requests],
+    [requests],
     settings
   );
 }
@@ -62,7 +62,7 @@ export function createRuneBalanceByRuneNameQueryKey(
 ) {
   return createServiceQueryKey(
     'runes-balances-service--get-rune-balance-by-rune-name',
-    ['by-rune-name', request, runeName],
+    [request, runeName],
     settings
   );
 }

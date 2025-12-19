@@ -36,7 +36,7 @@ export function createSip10BalanceByAssetIdConfig(
 export function createSip10AccountBalanceQueryKey(request: AccountRequest, settings: UserSettings) {
   return createServiceQueryKey(
     'sip10-balances-service--get-sip10-account-balance',
-    ['account', request],
+    [request],
     settings
   );
 }
@@ -59,7 +59,7 @@ export function createSip10AddressBalanceQueryKey(
 ) {
   return createServiceQueryKey(
     'sip10-balances-service--get-sip10-address-balance',
-    ['address', address, includeHiddenAssets],
+    [address, includeHiddenAssets],
     settings
   );
 }

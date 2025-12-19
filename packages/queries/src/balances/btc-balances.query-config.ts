@@ -12,7 +12,7 @@ import { balanceQueryOptions } from '../shared/query-options';
 export function createBtcBalanceQueryKey(request: AccountRequest, settings: UserSettings) {
   return createServiceQueryKey(
     'btc-balances-service--get-btc-account-balance',
-    ['account', request],
+    [request],
     settings
   );
 }
@@ -31,7 +31,7 @@ export function createBtcAggregateBalanceQueryKey(
 ) {
   return createServiceQueryKey(
     'btc-balances-service--get-btc-aggregate-balance',
-    ['aggregate', requests],
+    [requests],
     settings
   );
 }
