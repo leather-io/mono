@@ -26,7 +26,6 @@ export enum StacksQueryPrefixes {
   GetRawTransactionById = 'get-raw-transaction-by-id',
   GetTransactionById = 'get-transaction-by-id',
   GetAccountTxsWithTransfers = 'get-account-txs-with-transfers',
-  GetStx20Balances = 'get-stx20-balances',
   GetAccountNonces = 'get-account-nonces',
   GetNetworkStatus = 'get-network-status',
   GetAddressMempoolTransactions = 'get-address-mempool-transactions',

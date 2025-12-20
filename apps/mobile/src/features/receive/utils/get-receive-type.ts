@@ -8,7 +8,6 @@ const protocolToReceiveType = {
   brc20: 'taproot',
   src20: 'taproot',
   nativeBtc: 'bitcoin',
-  stx20: 'stacks',
   nativeStx: 'stacks',
 } as const satisfies Record<FungibleCryptoAssetProtocol, ReceiveType>;
 

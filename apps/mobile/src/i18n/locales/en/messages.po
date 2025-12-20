@@ -1604,7 +1604,7 @@ msgstr "Review"
 msgid "Review Swap"
 msgstr "Review Swap"
 
-#: src/shared/display-preference.ts:67
+#: src/shared/display-preference.ts:66
 msgid "Rune"
 msgstr "Rune"
 
@@ -1803,10 +1803,6 @@ msgstr "Stamp"
 #: src/features/approver/utils.tsx:41
 msgid "Standard"
 msgstr "Standard"
-
-#: src/shared/display-preference.ts:66
-msgid "STX-20"
-msgstr "STX-20"
 
 #: src/features/approver/components/approver-buttons/index.tsx:73
 msgid "Submitted"

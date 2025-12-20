@@ -7,13 +7,11 @@ import { BtcAvatarIcon, StxAvatarIcon } from '@leather.io/ui';
 import { Brc20TokensLoader } from '@app/components/loaders/brc20-tokens-loader';
 import { BtcAssetItemBalanceLoader } from '@app/components/loaders/btc-balance-loader';
 import { Src20TokensLoader } from '@app/components/loaders/src20-tokens-loader';
-import { Stx20TokensLoader } from '@app/components/loaders/stx20-tokens-loader';
 import { StxAssetItemBalanceLoader } from '@app/components/loaders/stx-balance-loader';
 import { UsdcxAssetItemBalanceLoader } from '@app/components/loaders/usdcx-balance-loader';
 import { Brc20TokenAssetList } from '@app/features/asset-list/bitcoin/brc20-token-asset-list/brc20-token-asset-list';
 import { RunesAssetList } from '@app/features/asset-list/bitcoin/runes-asset-list/runes-asset-list';
 import { Src20TokenAssetList } from '@app/features/asset-list/bitcoin/src20-token-asset-list/src20-token-asset-list';
-import { Stx20TokenAssetList } from '@app/features/asset-list/stacks/stx20-token-asset-list/stx20-token-asset-list';
 import { StxCryptoAssetItem } from '@app/features/asset-list/stacks/stx-crypo-asset-item/stx-crypto-asset-item';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import { useCurrentAccountNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -119,27 +117,13 @@ export function AssetList({
       )}
 
       {currentStacksAccount && (
-        <>
-          <Sip10TokenAssetList
-            accountIndex={currentAccountIndex}
-            assetFilter={filter}
-            onSelectAsset={onSelectAsset}
-            assetRightElementVariant={assetRightElementVariant}
-            setHasManageableTokens={setHasManageableTokens}
-          />
-          {isReadOnly && (
-            <Stx20TokensLoader address={currentStacksAccount.address} filter={filter}>
-              {({ tokens, preEnabledTokensIds }) => (
-                <Stx20TokenAssetList
-                  tokens={tokens}
-                  assetRightElementVariant={assetRightElementVariant}
-                  preEnabledTokensIds={preEnabledTokensIds}
-                  setHasManageableTokens={setHasManageableTokens}
-                />
-              )}
-            </Stx20TokensLoader>
-          )}
-        </>
+        <Sip10TokenAssetList
+          accountIndex={currentAccountIndex}
+          assetFilter={filter}
+          onSelectAsset={onSelectAsset}
+          assetRightElementVariant={assetRightElementVariant}
+          setHasManageableTokens={setHasManageableTokens}
+        />
       )}
 
       {currentBtcTaprootAccount && currentBtcNativeSegwitAccount && isReadOnly && (

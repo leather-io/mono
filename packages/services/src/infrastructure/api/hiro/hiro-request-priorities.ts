@@ -26,6 +26,4 @@ export const hiroApiRequestsPriorityLevels = {
   getFtMetadata: 2,
   getNftMetadata: 2,
   callReadOnlyFunction: 2,
-
-  getStx20Balances: 1,
 };
