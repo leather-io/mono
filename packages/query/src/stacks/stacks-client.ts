@@ -15,7 +15,6 @@ import { ClarityAbi } from '@stacks/transactions';
 import axios from 'axios';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
-import { STX20_API_BASE_URL_MAINNET } from '@leather.io/models';
 
 import { getHiroApiRateLimiter } from '../rate-limiter/hiro-rate-limiter';
 import type {
@@ -28,8 +27,6 @@ import type {
 import { hiroApiRequestsPriorityLevels } from './hiro-requests-priorities';
 
 import './leather-headers';
-
-import type { Stx20BalanceResponse } from './stx20-api-types';
 
 export function stacksClient(basePath: string) {
   const rateLimiter = getHiroApiRateLimiter(basePath);
@@ -263,20 +260,6 @@ export function stacksClient(basePath: string) {
         }
       );
       return resp.data;
-    },
-    async getStx20Balances(address: string, signal: AbortSignal) {
-      const resp = await rateLimiter.add(
-        () =>
-          axios.get<Stx20BalanceResponse>(`${STX20_API_BASE_URL_MAINNET}/balance/${address}`, {
-            signal,
-          }),
-        {
-          priority: hiroApiRequestsPriorityLevels.getStx20Balances,
-          signal,
-          throwOnTimeout: true,
-        }
-      );
-      return resp.data.balances;
     },
   };
 }

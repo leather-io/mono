@@ -53,11 +53,6 @@ export function getAssetId(asset: CryptoAsset): CryptoAssetId {
         protocol: 'src20',
         id: asset.id,
       };
-    case 'stx20':
-      return {
-        protocol: 'stx20',
-        id: asset.symbol,
-      };
     case 'inscription':
       return {
         protocol: 'inscription',

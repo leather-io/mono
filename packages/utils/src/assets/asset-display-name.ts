@@ -24,8 +24,6 @@ export function getAssetDisplayName(asset: CryptoAsset) {
       return 'stamp';
     case 'src20':
       return 'src-20';
-    case 'stx20':
-      return 'stx-20';
     default:
       assertUnreachable(protocol);
   }

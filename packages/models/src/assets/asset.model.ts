@@ -15,7 +15,6 @@ export const FungibleCryptoAssetProtocols = {
   sip10: 'sip10',
   brc20: 'brc20',
   src20: 'src20',
-  stx20: 'stx20',
   rune: 'rune',
 } as const;
 export const NonFungibleCryptoAssetProtocols = {
@@ -90,18 +89,12 @@ export interface Sip10Asset extends BaseFungibleCryptoAsset {
   readonly imageCanonicalUri: string;
   readonly symbol: string;
 }
-export interface Stx20Asset extends BaseFungibleCryptoAsset {
-  readonly chain: 'stacks';
-  readonly protocol: 'stx20';
-  readonly symbol: string;
-}
 export type NativeCryptoAsset = BtcAsset | StxAsset;
 export type FungibleCryptoAsset =
   | NativeCryptoAsset
   | Sip10Asset
   | Brc20Asset
   | Src20Asset
-  | Stx20Asset
   | RuneAsset;
 
 // NFT asset types

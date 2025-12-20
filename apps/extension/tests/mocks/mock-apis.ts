@@ -19,7 +19,6 @@ import { mockStacksFeeRequests } from './mock-stacks-fees';
 import { mockMainnetTestAccountStacksFTsRequest } from './mock-stacks-fts';
 import { mockMainnetTestAccountStacksNFTsRequest } from './mock-stacks-nfts';
 import { mockMainnetTestAccountStacksTxsRequests } from './mock-stacks-txs';
-import { mockMainnetTestAccountStx20TokensRequest } from './mock-stx20';
 import { mockMainnetTestAccountBitcoinRequests } from './mock-utxos';
 
 export async function setupMockApis(page: Page) {
@@ -41,7 +40,6 @@ export async function setupMockApis(page: Page) {
     mockLeatherApiRequests(page),
     mockMainnetTestAccountStampchainRequest(page),
     mockMainnetTestAccountBrc20TokensRequest(page),
-    mockMainnetTestAccountStx20TokensRequest(page),
     mockMainnetTestAccountRunesOutputsRequest(page),
     mockMainnetTestAccountSbtcDepositRequests(page),
     mockLaunchDarkly(page),

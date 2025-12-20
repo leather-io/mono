@@ -10,7 +10,6 @@ import {
   Sip10Asset,
   Src20Asset,
   StampAsset,
-  Stx20Asset,
   StxAsset,
 } from './asset.model';
 import { Sip9Asset } from './sip9-asset.model';
@@ -49,10 +48,6 @@ export function isBrc20Asset(asset: CryptoAsset): asset is Brc20Asset {
 
 export function isSrc20Asset(asset: CryptoAsset): asset is Src20Asset {
   return asset.protocol === 'src20';
-}
-
-export function isStx20Asset(asset: CryptoAsset): asset is Stx20Asset {
-  return asset.protocol === 'stx20';
 }
 
 export function isRuneAsset(asset: CryptoAsset): asset is RuneAsset {
