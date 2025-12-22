@@ -71,7 +71,7 @@
     "@leather.io/test-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "@microsoft/api-extractor": "7.55.0",
-    "@pandacss/dev": "0.53.6",
+    "@pandacss/dev": "1.7.1",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@storybook/addon-actions": "8.6.15",
     "@storybook/addon-docs": "8.6.15",
