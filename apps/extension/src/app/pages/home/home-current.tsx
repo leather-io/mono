@@ -17,7 +17,7 @@ import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
 import { AccountCard } from '@app/ui/components/account/account.card';
 
-import { AccountActions } from './components/account-actions';
+import { AccountActions } from './components/account-actions-current/account-actions';
 import { HomeTabs } from './components/home-tabs';
 import { useHomePageState } from './use-home-page-state';
 
@@ -65,9 +65,8 @@ export function Home() {
           isLoadingAdditionalData={isLoadingBalance}
           isBalancePrivate={isPrivateMode}
           onShowBalance={togglePrivateMode}
-        >
-          <AccountActions />
-        </AccountCard>
+        />
+        <AccountActions />
         <PromoBanner />
       </Box>
       {whenPageMode({ full: <FeedbackButton />, popup: null })}

@@ -34,6 +34,7 @@ import { ForgotPassword } from '@app/pages/onboarding/sign-in/forgot-password';
 import { SignIn } from '@app/pages/onboarding/sign-in/sign-in';
 import { WelcomePage } from '@app/pages/onboarding/welcome/welcome';
 import { RequestError } from '@app/pages/request-error/request-error';
+import { SellPage } from '@app/pages/sell/sell';
 import { BroadcastError } from '@app/pages/send/broadcast-error/broadcast-error';
 import { sendOrdinalRoutes } from '@app/pages/send/ordinal-inscription/ordinal-routes';
 import { sendCryptoAssetFormRoutes } from '@app/pages/send/send-crypto-asset-form/send-crypto-asset-form.routes';
@@ -71,7 +72,7 @@ export const homePageModalRoutes = (
 );
 
 function useAppRoutes() {
-  const { releaseOnramperBuy } = useFlags();
+  const { releaseOnramperBuy, releaseOnramperSell } = useFlags();
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
       <Route element={<Container />}>
@@ -164,6 +165,17 @@ function useAppRoutes() {
               element={
                 <AccountGate>
                   <FundPage />
+                </AccountGate>
+              }
+            />
+          )}
+
+          {releaseOnramperSell && (
+            <Route
+              path={RouteUrls.Sell}
+              element={
+                <AccountGate>
+                  <SellPage />
                 </AccountGate>
               }
             />

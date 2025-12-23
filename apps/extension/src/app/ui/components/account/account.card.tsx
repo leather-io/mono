@@ -27,7 +27,7 @@ interface AccountCardProps {
   name: string;
   availableBalance: string;
   totalBalance: string;
-  children: ReactNode;
+  children?: ReactNode;
   isFetchingBnsName: boolean;
   isLoadingBalance: boolean;
   isLoadingAdditionalData?: boolean;

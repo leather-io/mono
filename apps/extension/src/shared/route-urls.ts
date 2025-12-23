@@ -26,6 +26,7 @@ export enum RouteUrls {
   AddNetwork = '/add-network',
   EditNetwork = '/edit-network',
   Fund = '/fund',
+  Sell = '/sell',
   IncreaseStacksFee = '/increase-fee/stacks/:txid',
   IncreaseBtcFee = '/increase-fee/btc',
   CancelStacksTransaction = '/cancel-transaction/stacks/:txid',
