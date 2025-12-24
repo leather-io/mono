@@ -1,9 +1,5 @@
 import { useNavigate } from 'react-router';
 
-import { SettingsSelectors } from '@tests/selectors/settings.selectors';
-
-import { BarsTwoIcon } from '@leather.io/ui';
-
 import { RouteUrls } from '@shared/route-urls';
 
 import { FullScreenButton } from '@app/components/full-screen-button';
@@ -24,10 +20,7 @@ export function UnlockHeader() {
         rightCol={
           <HeaderGridRightCol>
             <FullScreenButton />
-            <Settings
-              canLockWallet={false}
-              triggerButton={<BarsTwoIcon data-testid={SettingsSelectors.SettingsMenuBtn} />}
-            />
+            <Settings canLockWallet={false} />
           </HeaderGridRightCol>
         }
       />

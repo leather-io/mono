@@ -1,26 +1,24 @@
-import { SettingsSelectors } from '@tests/selectors/settings.selectors';
-
-import { BarsTwoIcon } from '@leather.io/ui';
-
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import { FullScreenButton } from '@app/components/full-screen-button';
 import { Header } from '@app/components/layout/headers/header';
+import { HeaderAccountSelector } from '@app/components/layout/headers/header-account-selector';
 import { HeaderGrid, HeaderGridRightCol } from '@app/components/layout/headers/header-grid';
 import { LogoBox } from '@app/components/layout/headers/logo-box';
+import { useFlags } from '@app/features/feature-flags';
 import { Settings } from '@app/features/settings/settings';
 
 export function HomeHeader() {
   const { isShowingSwitchAccount, setIsShowingSwitchAccount } = useSwitchAccountSheet();
+  const { extensionRevamp } = useFlags();
 
   return (
     <Header>
       <HeaderGrid
-        leftCol={<LogoBox hideBelow={undefined} />}
+        leftCol={extensionRevamp ? <HeaderAccountSelector /> : <LogoBox hideBelow={undefined} />}
         rightCol={
           <HeaderGridRightCol>
             <FullScreenButton />
             <Settings
-              triggerButton={<BarsTwoIcon data-testid={SettingsSelectors.SettingsMenuBtn} />}
               toggleSwitchAccount={() => setIsShowingSwitchAccount(!isShowingSwitchAccount)}
             />
           </HeaderGridRightCol>
