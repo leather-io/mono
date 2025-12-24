@@ -12,6 +12,8 @@ import { UseQueryResult, useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { isDefined, isError } from 'remeda';
 
+import { Money } from '@leather.io/models';
+
 import { TrackEvent } from '../swap-state.types';
 import { isQuoteAlignedWithCurrentInput } from '../utils/is-quote-aligned-with-current-input';
 
@@ -20,6 +22,7 @@ interface UseSubmitSwapProps {
   derivedAmounts: DerivedAmounts;
   nonce: number;
   isSendingMax: boolean;
+  spendableAmountQuery: UseQueryResult<Money | null, Error>;
   networkFeeQuery: UseQueryResult<NetworkFee, Error>;
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   dependencies: SwapDependencies;
@@ -38,6 +41,7 @@ export function useSubmitSwap({
   isSendingMax,
   nonce,
   validation,
+  spendableAmountQuery,
   networkFeeQuery,
   quoteQuery,
   state,
@@ -46,7 +50,13 @@ export function useSubmitSwap({
   const { accountRequest, services } = dependencies;
   const { swapService } = services;
 
-  const readiness = checkSwapReadiness(networkFeeQuery, quoteQuery, validation, derivedAmounts);
+  const readiness = checkSwapReadiness(
+    spendableAmountQuery,
+    networkFeeQuery,
+    quoteQuery,
+    validation,
+    derivedAmounts
+  );
 
   const { mutateAsync } = useMutation({
     mutationFn: async () => {
@@ -113,6 +123,7 @@ type SwapReadinessResult =
   | { canSubmit: false };
 
 function checkSwapReadiness(
+  spendableAmountQuery: UseQueryResult<Money | null, Error>,
   networkFeeQuery: UseQueryResult<NetworkFee, Error>,
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>,
   validation: ValidationResult,
@@ -121,6 +132,8 @@ function checkSwapReadiness(
   const selectedQuote = quoteQuery.data?.selected;
 
   if (
+    !spendableAmountQuery.isFetching &&
+    spendableAmountQuery.isSuccess &&
     !networkFeeQuery.isFetching &&
     networkFeeQuery.isSuccess &&
     !quoteQuery.isRefetching &&

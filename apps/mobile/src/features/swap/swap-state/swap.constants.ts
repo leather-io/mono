@@ -10,3 +10,6 @@ export const STX_SAFETY_BUFFER = createMoney(500_000, 'STX');
 
 export const PRICE_IMPACT_WARNING_THRESHOLD = 0.03;
 export const PRICE_IMPACT_DANGER_THRESHOLD = 0.1;
+
+export const DUMMY_P2TR_RECIPIENT =
+  'bc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqzk5jj0';

@@ -1,21 +1,16 @@
-import { getProtocolStrategy } from '@/features/swap/swap-state/strategies/protocol/protocol';
 import { DerivedAmounts } from '@/features/swap/swap-state/swap-state.types';
-import { InputCurrencyMode } from '@/utils/types';
 
-import { AccountSwapAsset } from '@leather.io/services';
+import { Money } from '@leather.io/models';
 
 interface UseIsSendingMaxParams {
   derivedAmounts: DerivedAmounts;
-  baseSwapAsset: AccountSwapAsset | null;
-  inputCurrencyMode: InputCurrencyMode;
+  spendableAmount: Money | null;
 }
 
-export function useIsSendingMax({ derivedAmounts, baseSwapAsset }: UseIsSendingMaxParams) {
-  if (!baseSwapAsset?.balance || !derivedAmounts.crypto) return false;
-
-  const spendableBalance = getProtocolStrategy(baseSwapAsset.asset.protocol).resolveSpendableAmount(
-    baseSwapAsset.balance.crypto
-  );
-
-  return derivedAmounts.crypto.amount.isEqualTo(spendableBalance.amount);
+export function useIsSendingMax({
+  derivedAmounts,
+  spendableAmount,
+}: UseIsSendingMaxParams): boolean {
+  if (!spendableAmount || !derivedAmounts.crypto) return false;
+  return derivedAmounts.crypto.amount.isEqualTo(spendableAmount.amount);
 }

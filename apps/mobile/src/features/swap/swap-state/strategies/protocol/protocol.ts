@@ -1,15 +1,28 @@
-import { FeeMode } from '@/features/swap/swap-state/swap-state.types';
-import { STX_SAFETY_BUFFER } from '@/features/swap/swap-state/swap.constants';
+import { FeeMode, SwapDependencies } from '@/features/swap/swap-state/swap-state.types';
+import { DUMMY_P2TR_RECIPIENT, STX_SAFETY_BUFFER } from '@/features/swap/swap-state/swap.constants';
 import BigNumber from 'bignumber.js';
 
 import { BITCOIN_MINIMUM_SPEND_IN_SATS } from '@leather.io/constants';
-import { CryptoAssetBalance, Money } from '@leather.io/models';
+import {
+  BitcoinTransactionFeeQuote,
+  CryptoAssetBalance,
+  Money,
+  TransactionFeeTier,
+} from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 export type SupportedProtocol = 'nativeBtc' | 'nativeStx' | 'sip10';
 
+export interface SpendableAmountContext {
+  balance: CryptoAssetBalance;
+  dependencies: SwapDependencies;
+  feeTier: TransactionFeeTier;
+  customFee: number | null;
+  signal: AbortSignal;
+}
+
 export interface ProtocolStrategy {
-  resolveSpendableAmount(balance: CryptoAssetBalance): Money;
+  resolveSpendableAmount(context: SpendableAmountContext): Promise<Money>;
   getMinimumSpendAmount(): number;
   getMaximumSpendAmount(): number;
   getFeeCapabilities(): FeeCapabilities;
@@ -21,8 +34,30 @@ export interface FeeCapabilities {
 }
 
 const nativeBtcStrategy: ProtocolStrategy = {
-  resolveSpendableAmount(balance: CryptoAssetBalance): Money {
-    return balance.availableBalance;
+  async resolveSpendableAmount({
+    dependencies,
+    feeTier,
+    customFee,
+    signal,
+  }: SpendableAmountContext): Promise<Money> {
+    const { accountRequest, services } = dependencies;
+    const { bitcoinTransactionFeesService, bitcoinCoinSelectionService } = services;
+
+    const feeRate = await resolveFeeRate(
+      customFee,
+      feeTier,
+      accountRequest,
+      bitcoinTransactionFeesService,
+      signal
+    );
+
+    const result = await bitcoinCoinSelectionService.calculateMaxSpend({
+      account: accountRequest,
+      recipient: DUMMY_P2TR_RECIPIENT,
+      feeRate,
+    });
+
+    return result.amount;
   },
   getMinimumSpendAmount() {
     return BITCOIN_MINIMUM_SPEND_IN_SATS;
@@ -39,10 +74,10 @@ const nativeBtcStrategy: ProtocolStrategy = {
 };
 
 const nativeStxStrategy: ProtocolStrategy = {
-  resolveSpendableAmount({ availableBalance }: CryptoAssetBalance): Money {
-    const { amount, symbol, decimals } = availableBalance;
+  resolveSpendableAmount({ balance }: SpendableAmountContext): Promise<Money> {
+    const { amount, symbol, decimals } = balance.availableBalance;
     const spendableAmount = BigNumber.max(0, amount.minus(STX_SAFETY_BUFFER.amount));
-    return createMoney(spendableAmount, symbol, decimals);
+    return Promise.resolve(createMoney(spendableAmount, symbol, decimals));
   },
   getMinimumSpendAmount() {
     return 0;
@@ -59,8 +94,8 @@ const nativeStxStrategy: ProtocolStrategy = {
 };
 
 const sip10Strategy: ProtocolStrategy = {
-  resolveSpendableAmount(balance: CryptoAssetBalance): Money {
-    return balance.availableBalance;
+  resolveSpendableAmount({ balance }: SpendableAmountContext): Promise<Money> {
+    return Promise.resolve(balance.availableBalance);
   },
   getMinimumSpendAmount() {
     return 0;
@@ -84,4 +119,28 @@ const strategyByProtocol: Record<SupportedProtocol, ProtocolStrategy> = {
 
 export function getProtocolStrategy(protocol: SupportedProtocol): ProtocolStrategy {
   return strategyByProtocol[protocol];
+}
+
+async function resolveFeeRate(
+  customFee: number | null,
+  feeTier: TransactionFeeTier,
+  accountRequest: SwapDependencies['accountRequest'],
+  bitcoinTransactionFeesService: SwapDependencies['services']['bitcoinTransactionFeesService'],
+  signal: AbortSignal
+): Promise<number> {
+  if (customFee !== null) {
+    return customFee;
+  }
+
+  // TODO: This does redundant coin selection just to get fee rates.
+  // Consider adding a dedicated fetchFeeRates() method to the service.
+  const transactionFees = await bitcoinTransactionFeesService.getBitcoinTransactionFees(
+    accountRequest,
+    [{ address: DUMMY_P2TR_RECIPIENT, amount: createMoney(0, 'BTC') }],
+    true,
+    signal
+  );
+
+  const feeQuote = transactionFees.options[feeTier] as BitcoinTransactionFeeQuote;
+  return feeQuote.rate;
 }

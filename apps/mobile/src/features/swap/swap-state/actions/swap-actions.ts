@@ -1,11 +1,10 @@
-import { getProtocolStrategy } from '@/features/swap/swap-state/strategies/protocol/protocol';
 import {
   calculatePercentageAmount,
   convertMoneyToInputValue,
 } from '@/features/swap/swap-state/utils/amount-operations';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
-import { TransactionFeeTier } from '@leather.io/models';
+import { Money, TransactionFeeTier } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 import { createMoney } from '@leather.io/utils';
 
@@ -23,6 +22,7 @@ interface CreateSwapActionsParams {
   lockDerivedAmountsForNextRender(): void;
   state: SwapInternalState;
   derivedAmounts: DerivedAmounts;
+  spendableAmount: Money | null;
   trackEvent: TrackEvent;
 }
 
@@ -31,6 +31,7 @@ export function createSwapActions({
   lockDerivedAmountsForNextRender,
   state,
   derivedAmounts,
+  spendableAmount,
   trackEvent,
 }: CreateSwapActionsParams): SwapActions {
   return {
@@ -55,7 +56,7 @@ export function createSwapActions({
     },
 
     setBaseAmountByPercentage(percentage: PresetPercentage) {
-      if (!state.baseSwapAsset?.balance) {
+      if (!state.baseSwapAsset?.balance || !spendableAmount) {
         return;
       }
 
@@ -70,23 +71,19 @@ export function createSwapActions({
         quote: balance.quote.availableBalance,
       });
 
-      const cryptoSpendableAmount = getProtocolStrategy(
-        state.baseSwapAsset.asset.protocol
-      ).resolveSpendableAmount(balance.crypto);
-
       const quoteSpendableAmount = createMoney(
-        cryptoSpendableAmount.amount.times(rate),
+        spendableAmount.amount.times(rate),
         balance.quote.availableBalance.symbol,
         balance.quote.availableBalance.decimals
       );
 
-      const spendableAmount = whenInputCurrencyMode(state.inputCurrencyMode)({
-        crypto: cryptoSpendableAmount,
+      const resolvedSpendableAmount = whenInputCurrencyMode(state.inputCurrencyMode)({
+        crypto: spendableAmount,
         quote: quoteSpendableAmount,
       });
 
       const isSendingMax = percentage === 1;
-      const percentageSource = isSendingMax ? spendableAmount : availableBalance;
+      const percentageSource = isSendingMax ? resolvedSpendableAmount : availableBalance;
 
       dispatch({
         type: 'SET_BASE_AMOUNT',

@@ -144,10 +144,22 @@ export const defaultABCDAsset = createFungibleAsset({
 });
 
 export const defaultBaseSwapAssets = [
-  createAccountSwapAsset({ asset: defaultBtcAsset }),
-  createAccountSwapAsset({ asset: defaultStxAsset }),
-  createAccountSwapAsset({ asset: defaultSbtcAsset }),
-  createAccountSwapAsset({ asset: defaultABCDAsset }),
+  createAccountSwapAsset({
+    asset: defaultBtcAsset,
+    balance: { crypto: 100_000_000, quote: 50_000_00 },
+  }),
+  createAccountSwapAsset({
+    asset: defaultStxAsset,
+    balance: { crypto: 1_000_000_000, quote: 10_000_00 },
+  }),
+  createAccountSwapAsset({
+    asset: defaultSbtcAsset,
+    balance: { crypto: 100_000_000, quote: 50_000_00 },
+  }),
+  createAccountSwapAsset({
+    asset: defaultABCDAsset,
+    balance: { crypto: 100_000_000, quote: 1_000_00 },
+  }),
 ];
 
 export function getDefaultTargetSwapAssets(id: CryptoAssetId) {

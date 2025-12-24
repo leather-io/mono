@@ -231,5 +231,12 @@ export function createStubBitcoinCoinSelectionService() {
         fee: createMoney(1000, 'BTC'),
       });
     },
+    calculateMaxSpend() {
+      return Promise.resolve({
+        amount: createMoney(200_000_000, 'BTC'),
+        fee: createMoney(1000, 'BTC'),
+        estimatedTxSize: 100,
+      });
+    },
   } as unknown as BitcoinCoinSelectionService;
 }
