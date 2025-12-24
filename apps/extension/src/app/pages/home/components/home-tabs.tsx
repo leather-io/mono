@@ -40,7 +40,7 @@ export function HomeTabs({ children }: HomeTabsProps) {
   }, [location.pathname]);
 
   return (
-    <Stack flexGrow={1} mt={{ base: 0, md: 'space.05' }} gap="space.06">
+    <Stack flexGrow={1} gap="space.06">
       <Tabs.Root value={activeTab} onValueChange={slug => navigate(slug)}>
         <Tabs.List>
           {homeTabs.map(tab => (

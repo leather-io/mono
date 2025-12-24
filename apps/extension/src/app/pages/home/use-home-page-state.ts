@@ -11,6 +11,7 @@ import {
   useCurrentAccountAvailableBalance,
   useCurrentAccountTotalBalance,
 } from '@app/query/common/account-balance/account-balance.query';
+import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import {
@@ -39,6 +40,7 @@ export function useHomePageState() {
 
   const totalBalance = useCurrentAccountTotalBalance();
   const availableBalance = useCurrentAccountAvailableBalance();
+  const stxAccountBalance = useStxAccountBalance(currentAccountIndex);
 
   useOnMount(() => {
     if (decodedAuthRequest) return navigate(RouteUrls.ChooseAccount);
@@ -47,6 +49,7 @@ export function useHomePageState() {
   return {
     totalBalance,
     availableBalance,
+    stxAccountBalance,
     isFetchingBnsName,
     isPrivateMode,
     name,

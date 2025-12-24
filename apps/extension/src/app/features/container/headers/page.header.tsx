@@ -1,11 +1,10 @@
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
-import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { styled } from 'leather-styles/jsx';
 
-import { ArrowLeftIcon, BarsTwoIcon, CloseIcon } from '@leather.io/ui';
+import { ArrowLeftIcon, CloseIcon } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -63,7 +62,6 @@ export function PageHeader({
             ) : (
               <styled.div hideBelow={isSettingsVisibleOnSm ? undefined : 'sm'}>
                 <Settings
-                  triggerButton={<BarsTwoIcon data-testid={SettingsSelectors.SettingsMenuBtn} />}
                   toggleSwitchAccount={() => setIsShowingSwitchAccount(!isShowingSwitchAccount)}
                 />
               </styled.div>

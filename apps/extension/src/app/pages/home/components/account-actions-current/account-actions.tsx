@@ -33,7 +33,7 @@ export function AccountActions() {
   }
 
   return (
-    <Flex gap={['space.01', 'space.04']} py="space.04" overflowX="scroll">
+    <Flex gap={['space.01', 'space.04']} overflowX="scroll">
       <FundButtons />
       <TransferButtons />
 

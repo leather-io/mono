@@ -7,6 +7,7 @@ import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import {
   ArrowsRepeatLeftRightIcon,
+  BarsTwoIcon,
   BellAlarmIcon,
   BellIcon,
   Caption,
@@ -21,6 +22,7 @@ import {
   KeyIcon,
   LockIcon,
   MegaphoneIcon,
+  SettingsGearIcon,
   SunInCloudIcon,
   SupportIcon,
 } from '@leather.io/ui';
@@ -50,6 +52,7 @@ import {
   useIsPrivateMode,
 } from '@app/store/settings/settings.selectors';
 
+import { useFlags } from '../feature-flags';
 import { extractDeviceNameFromKnownTargetIds } from '../ledger/utils/generic-ledger-utils';
 import { useToast } from '../toasts/use-toast';
 import { AdvancedMenuItems } from './components/advanced-menu-items';
@@ -57,17 +60,13 @@ import { LedgerDeviceItemRow } from './components/ledger-item-row';
 
 interface SettingsProps {
   canLockWallet?: boolean;
-  triggerButton: React.ReactNode;
   toggleSwitchAccount?(): void;
 }
-export function Settings({
-  canLockWallet = true,
-  triggerButton,
-  toggleSwitchAccount,
-}: SettingsProps) {
+export function Settings({ canLockWallet = true, toggleSwitchAccount }: SettingsProps) {
   const [showSignOut, setShowSignOut] = useState(false);
   const [showChangeTheme, setShowChangeTheme] = useState(false);
   const [showChangeNetwork, setShowChangeNetwork] = useState(false);
+  const { extensionRevamp } = useFlags();
 
   const { hasKeys, hasLedgerKeys } = useHasKeys();
 
@@ -142,7 +141,13 @@ export function Settings({
   return (
     <>
       <DropdownMenu.Root>
-        <DropdownMenu.IconButton>{triggerButton}</DropdownMenu.IconButton>
+        <DropdownMenu.IconButton>
+          {extensionRevamp ? (
+            <SettingsGearIcon data-testid={SettingsSelectors.SettingsMenuBtn} />
+          ) : (
+            <BarsTwoIcon data-testid={SettingsSelectors.SettingsMenuBtn} />
+          )}
+        </DropdownMenu.IconButton>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
             align="end"
