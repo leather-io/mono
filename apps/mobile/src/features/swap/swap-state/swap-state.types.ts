@@ -205,6 +205,7 @@ export interface UseSwapStateResult {
   baseMarketDataQuery: UseQueryResult<MarketData, Error>;
   targetMarketDataQuery: UseQueryResult<MarketData, Error>;
   networkFeeAssetMarkedDataQuery: UseQueryResult<MarketData, Error>;
+  spendableAmountQuery: UseQueryResult<Money | null, Error>;
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   networkFeeQuery: UseQueryResult<NetworkFee, Error>;
   canSubmit: boolean;

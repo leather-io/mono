@@ -6,7 +6,6 @@ import {
 import {
   resolveMaximumSpendAmount,
   resolveMinimumSpendAmount,
-  resolveSpendableBalance,
 } from '@/features/swap/swap-state/utils/protocol-operations';
 import {
   hasValidPrecision,
@@ -71,9 +70,10 @@ type ByField = {
   [F in Field]: Extract<Issue, { field: F }> | undefined;
 };
 
-interface ValidationContext {
+export interface ValidationContext {
   state: SwapInternalState;
   derivedAmounts: DerivedAmounts;
+  spendableAmount: Money | null;
 }
 
 export interface ValidationResult {
@@ -82,7 +82,7 @@ export interface ValidationResult {
 }
 
 function validateAmount(context: ValidationContext): BaseAmountIssue | undefined {
-  const { state, derivedAmounts } = context;
+  const { state, derivedAmounts, spendableAmount } = context;
   const { baseSwapAsset, baseAmount, inputCurrencyMode } = state;
   const unselectedAssetMaxDecimals = 32;
   const maxAllowedDecimals = baseSwapAsset
@@ -92,11 +92,6 @@ function validateAmount(context: ValidationContext): BaseAmountIssue | undefined
   const activeAmount = derivedAmounts[inputCurrencyMode];
   const minAmount = resolveMinimumSpendAmount(baseSwapAsset?.asset.protocol);
   const maxAmount = resolveMaximumSpendAmount(baseSwapAsset?.asset.protocol);
-
-  const spendableBalance = resolveSpendableBalance(
-    baseSwapAsset?.balance,
-    baseSwapAsset?.asset.protocol
-  );
 
   if (!isPresent(baseAmount)) {
     return { field: 'baseAmount', code: 'REQUIRED' };
@@ -114,7 +109,7 @@ function validateAmount(context: ValidationContext): BaseAmountIssue | undefined
     };
   }
 
-  if (!activeAmount || !canonicalCryptoAmount || !spendableBalance || !baseSwapAsset) {
+  if (!activeAmount || !canonicalCryptoAmount || !spendableAmount || !baseSwapAsset) {
     return undefined;
   }
 
@@ -146,11 +141,11 @@ function validateAmount(context: ValidationContext): BaseAmountIssue | undefined
     };
   }
 
-  if (canonicalCryptoAmount.amount.isGreaterThan(spendableBalance.amount)) {
+  if (canonicalCryptoAmount.amount.isGreaterThan(spendableAmount.amount)) {
     return {
       field: 'baseAmount',
       code: 'INSUFFICIENT_BALANCE',
-      context: { balance: spendableBalance },
+      context: { balance: spendableAmount },
     };
   }
 

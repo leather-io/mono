@@ -17,7 +17,7 @@ describe('useSwapState - submission', () => {
       const result = renderUseSwapState({
         baseAsset: defaultBtcAsset,
         targetAsset: defaultStxAsset,
-        swapQuotes: [createSwapQuote({ baseAmount: 1 })], // quotes currently specify base amount as fractional number
+        swapQuotes: [createSwapQuote({ baseAmount: 1 })],
       });
 
       act(() => {
@@ -25,12 +25,14 @@ describe('useSwapState - submission', () => {
       });
 
       await waitFor(() => {
+        expect(result.current.spendableAmountQuery.isSuccess).toBe(true);
         expect(result.current.quoteQuery.isSuccess).toBe(true);
         expect(result.current.networkFeeQuery.isSuccess).toBe(true);
       });
 
       expect(result.current.validation.isValid).toBe(true);
       expect(result.current.quoteQuery.data?.selected).toBeDefined();
+      expect(result.current.spendableAmountQuery.isFetching).toBe(false);
       expect(result.current.networkFeeQuery.isFetching).toBe(false);
       expect(result.current.quoteQuery.isRefetching).toBe(false);
       expect(result.current.canSubmit).toBe(true);
@@ -40,7 +42,7 @@ describe('useSwapState - submission', () => {
       const result = renderUseSwapState({
         baseAsset: defaultBtcAsset,
         targetAsset: defaultStxAsset,
-        swapQuotes: [], // No quotes available
+        swapQuotes: [],
       });
 
       act(() => {
@@ -78,6 +80,7 @@ describe('useSwapState - submission', () => {
         result.current.actions.setBaseAmount('20');
       });
       await waitFor(() => {
+        expect(result.current.spendableAmountQuery.isSuccess).toBe(true);
         expect(result.current.quoteQuery.isSuccess).toBe(true);
         expect(result.current.networkFeeQuery.isSuccess).toBe(true);
       });
@@ -126,6 +129,7 @@ describe('useSwapState - submission', () => {
       });
 
       await waitFor(() => {
+        expect(result.current.spendableAmountQuery.isSuccess).toBe(true);
         expect(result.current.quoteQuery.isSuccess).toBe(true);
         expect(result.current.networkFeeQuery.isSuccess).toBe(true);
       });
@@ -145,6 +149,7 @@ describe('useSwapState - submission', () => {
 
       act(() => result.current.actions.setBaseAmount('0.5'));
       await waitFor(() => {
+        expect(result.current.spendableAmountQuery.isSuccess).toBe(true);
         expect(result.current.quoteQuery.isSuccess).toBe(true);
         expect(result.current.canSubmit).toBe(true);
       });
@@ -170,6 +175,7 @@ describe('useSwapState - submission', () => {
       });
 
       await waitFor(() => {
+        expect(result.current.spendableAmountQuery.isSuccess).toBe(true);
         expect(result.current.quoteQuery.isSuccess).toBe(true);
         expect(result.current.networkFeeQuery.isSuccess).toBe(true);
       });
@@ -194,6 +200,7 @@ describe('useSwapState - submission', () => {
 
       act(() => result.current.actions.setBaseAmount('0.01'));
       await waitFor(() => {
+        expect(result.current.spendableAmountQuery.isSuccess).toBe(true);
         expect(result.current.quoteQuery.isSuccess).toBe(true);
         expect(result.current.canSubmit).toBe(true);
       });

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { DerivedAmounts, SwapInternalState } from '../swap-state.types';
@@ -13,9 +14,11 @@ import { runValidation } from './swap-validation';
 function createValidationContext({
   state,
   derivedAmounts,
+  spendableAmount = null,
 }: {
   state: Partial<SwapInternalState>;
   derivedAmounts?: DerivedAmounts;
+  spendableAmount?: Money | null;
 }) {
   const defaultState: SwapInternalState = {
     baseSwapAsset: null,
@@ -35,6 +38,7 @@ function createValidationContext({
   return {
     state: { ...defaultState, ...state },
     derivedAmounts: derivedAmounts ?? { crypto: null, quote: null },
+    spendableAmount,
   };
 }
 
@@ -178,6 +182,7 @@ describe('swap validation', () => {
             crypto: createMoney(545, 'BTC', 8),
             quote: createMoney(27, 'USD', 2),
           },
+          spendableAmount: createMoney(100_000_000, 'BTC', 8),
         });
 
         const result = runValidation(context);
@@ -203,6 +208,7 @@ describe('swap validation', () => {
             crypto: createMoney(546, 'BTC', 8),
             quote: createMoney(27, 'USD', 2),
           },
+          spendableAmount: createMoney(100_000_000, 'BTC', 8),
         });
 
         const result = runValidation(context);
@@ -226,6 +232,7 @@ describe('swap validation', () => {
             crypto: createMoney(1, 'STX', 6),
             quote: createMoney(0, 'USD', 2),
           },
+          spendableAmount: createMoney(1000_000_000, 'STX', 6),
         });
 
         const sip10Context = createValidationContext({
@@ -234,6 +241,7 @@ describe('swap validation', () => {
             crypto: createMoney(1, 'TOKEN', 6),
             quote: createMoney(0, 'USD', 2),
           },
+          spendableAmount: createMoney(1000_000, 'TOKEN', 6),
         });
 
         const stxResult = runValidation(stxContext);
@@ -259,6 +267,7 @@ describe('swap validation', () => {
             crypto: createMoney(545, 'BTC', 8),
             quote: createMoney(27, 'USD', 2),
           },
+          spendableAmount: createMoney(100_000_000, 'BTC', 8),
         });
 
         const quoteModeContext = createValidationContext({
@@ -271,6 +280,7 @@ describe('swap validation', () => {
             crypto: createMoney(545, 'BTC', 8),
             quote: createMoney(27, 'USD', 2),
           },
+          spendableAmount: createMoney(100_000_000, 'BTC', 8),
         });
 
         const cryptoResult = runValidation(cryptoModeContext);
@@ -306,6 +316,7 @@ describe('swap validation', () => {
             crypto: createMoney(150_000_000, 'BTC', 8),
             quote: createMoney(75_000_00, 'USD', 2),
           },
+          spendableAmount: createMoney(100_000_000, 'BTC', 8),
         });
 
         const result = runValidation(context);
@@ -332,6 +343,7 @@ describe('swap validation', () => {
             crypto: createMoney(100_000_000, 'BTC', 8),
             quote: createMoney(50_000_00, 'USD', 2),
           },
+          spendableAmount: createMoney(100_000_000, 'BTC', 8),
         });
 
         const result = runValidation(context);
@@ -683,6 +695,7 @@ describe('swap validation', () => {
             crypto: createMoney(545, 'BTC', 8),
             quote: createMoney(27, 'USD', 2),
           },
+          spendableAmount: createMoney(100_000_000, 'BTC', 8),
         });
 
         const result = runValidation(context);
@@ -713,6 +726,7 @@ describe('swap validation', () => {
             crypto: createMoney(150_000_000, 'BTC', 8),
             quote: createMoney(75_000_00, 'USD', 2),
           },
+          spendableAmount: createMoney(100_000_000, 'BTC', 8),
         });
 
         const result = runValidation(context);

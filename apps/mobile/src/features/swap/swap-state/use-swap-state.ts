@@ -12,6 +12,7 @@ import { useDerivedAmounts } from './hooks/use-derived-amounts';
 import { useIsSendingMax } from './hooks/use-is-sending-max';
 import { useNetworkFee } from './hooks/use-network-fee';
 import { useSecondaryAmount } from './hooks/use-secondary-amount';
+import { useSpendableAmount } from './hooks/use-spendable-amount';
 import { useSwapAssetReconciliation } from './hooks/use-swap-asset-reconciliation';
 import { useSwapQuotes } from './hooks/use-swap-quotes';
 import { useSwapValidation } from './hooks/use-swap-validation';
@@ -52,6 +53,13 @@ export function useSwapState({
     { baseAsset, targetAsset, quoteCurrencyPreference },
     initializeState
   );
+
+  const spendableAmountQuery = useSpendableAmount({
+    dependencies,
+    baseSwapAsset: state.baseSwapAsset,
+    feeTier: state.feeTier,
+    customFee: state.customFee,
+  });
 
   const baseMarketDataQuery = useAssetMarketDataQuery({
     marketDataService,
@@ -99,12 +107,15 @@ export function useSwapState({
   });
 
   const isSendingMax = useIsSendingMax({
-    baseSwapAsset: state.baseSwapAsset,
-    inputCurrencyMode: state.inputCurrencyMode,
     derivedAmounts,
+    spendableAmount: spendableAmountQuery.data ?? null,
   });
 
-  const validation = useSwapValidation({ state, derivedAmounts });
+  const validation = useSwapValidation({
+    state,
+    derivedAmounts,
+    spendableAmount: spendableAmountQuery.data ?? null,
+  });
 
   const { quoteQuery } = useSwapQuotes({
     swapService,
@@ -130,6 +141,7 @@ export function useSwapState({
     derivedAmounts,
     isSendingMax,
     validation,
+    spendableAmountQuery,
     quoteQuery,
     networkFeeQuery,
     nonce: effectiveNonce,
@@ -142,6 +154,7 @@ export function useSwapState({
     lockDerivedAmountsForNextRender,
     state,
     derivedAmounts,
+    spendableAmount: spendableAmountQuery.data ?? null,
     trackEvent,
   });
 
@@ -160,6 +173,7 @@ export function useSwapState({
     networkFeeAssetMarkedDataQuery,
     baseMarketDataQuery,
     targetMarketDataQuery,
+    spendableAmountQuery,
     quoteQuery,
     networkFeeQuery,
     canSubmit,
