@@ -7,9 +7,9 @@ import { Flag } from '../flag/flag.web';
 
 interface ItemWithButtonsLayoutProps {
   buttons: ReactNode;
-  caption: string;
+  caption?: string;
   img: ReactNode;
-  title: string;
+  title: ReactNode;
 }
 export function ItemLayoutWithButtons({
   buttons,
@@ -29,9 +29,11 @@ export function ItemLayoutWithButtons({
           whiteSpace="nowrap"
         >
           <styled.span textStyle="label.02">{title}</styled.span>
-          <styled.span className={pressableCaptionStyles} textStyle="caption.01">
-            {caption}
-          </styled.span>
+          {caption && (
+            <styled.span className={pressableCaptionStyles} textStyle="caption.01">
+              {caption}
+            </styled.span>
+          )}
         </Stack>
         <HStack alignItems="end" gap="space.00">
           {buttons}

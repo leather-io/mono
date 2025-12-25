@@ -6,19 +6,17 @@ import { ArrowLeftIcon } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
-import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderActionButton } from '@app/components/layout/headers/header-action-button';
-import { HeaderGrid, HeaderGridRightCol } from '@app/components/layout/headers/header-grid';
+import { HeaderGrid } from '@app/components/layout/headers/header-grid';
+import { HeaderSettingsButton } from '@app/components/layout/headers/header-settings-button';
 import { LogoBox } from '@app/components/layout/headers/logo-box';
-import { Settings } from '@app/features/settings/settings';
 
 interface OnboardingHeaderProps {
   hideLogo?: boolean;
 }
 
 export function OnboardingHeader({ hideLogo = false }: OnboardingHeaderProps) {
-  const { isShowingSwitchAccount, setIsShowingSwitchAccount } = useSwitchAccountSheet();
   const navigate = useNavigate();
 
   return (
@@ -34,13 +32,7 @@ export function OnboardingHeader({ hideLogo = false }: OnboardingHeaderProps) {
             {!hideLogo && <LogoBox onClick={() => navigate(RouteUrls.Home)} />}
           </>
         }
-        rightCol={
-          <HeaderGridRightCol>
-            <Settings
-              toggleSwitchAccount={() => setIsShowingSwitchAccount(!isShowingSwitchAccount)}
-            />
-          </HeaderGridRightCol>
-        }
+        rightCol={<HeaderSettingsButton />}
       />
     </Header>
   );

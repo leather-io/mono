@@ -38,6 +38,7 @@ import { SellPage } from '@app/pages/sell/sell';
 import { BroadcastError } from '@app/pages/send/broadcast-error/broadcast-error';
 import { sendOrdinalRoutes } from '@app/pages/send/ordinal-inscription/ordinal-routes';
 import { sendCryptoAssetFormRoutes } from '@app/pages/send/send-crypto-asset-form/send-crypto-asset-form.routes';
+import { SettingsPage } from '@app/pages/settings/settings';
 import { bitcoinSwapRoutes, stacksSwapRoutes } from '@app/pages/swap/swap.routes';
 import { UnauthorizedRequest } from '@app/pages/unauthorized-request/unauthorized-request';
 import { Unlock } from '@app/pages/unlock';
@@ -72,7 +73,8 @@ export const homePageModalRoutes = (
 );
 
 function useAppRoutes() {
-  const { releaseOnramperBuy, releaseOnramperSell } = useFlags();
+  const { releaseOnramperBuy, releaseOnramperSell, extensionRevamp } = useFlags();
+
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
       <Route element={<Container />}>
@@ -254,6 +256,17 @@ function useAppRoutes() {
               </AccountGate>
             }
           />
+
+          {extensionRevamp && (
+            <Route
+              path={RouteUrls.Settings}
+              element={
+                <AccountGate>
+                  <SettingsPage />
+                </AccountGate>
+              }
+            />
+          )}
 
           {/* Popup Routes */}
           {/* ChooseAccount is a popup as shown only in popup when decodedAuthRequest in set-password  */}

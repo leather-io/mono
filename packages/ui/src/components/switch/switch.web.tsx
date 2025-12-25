@@ -6,25 +6,25 @@ import { Switch as RadixSwitch } from 'radix-ui';
 const switchRootStyles = css({
   width: '42px',
   height: '24px',
-  backgroundColor: 'ink.text-subdued',
+  backgroundColor: 'ink.background-primary',
   borderRadius: '9999px',
+  borderColor: 'ink.border-default',
+  borderWidth: 1,
   position: 'relative',
-  '&[data-state="checked"]': {
-    backgroundColor: 'ink.text-primary',
-  },
 });
 
 const switchThumbStyles = css({
   display: 'block',
   width: '18px',
   height: '18px',
-  backgroundColor: 'ink.background-primary',
+  backgroundColor: 'ink.text-non-interactive',
   borderRadius: '9999px',
   transition: 'transform 100ms',
   transform: 'translateX(3px)',
   willChange: 'transform',
   '&[data-state="checked"]': {
     transform: 'translateX(19px)',
+    backgroundColor: 'ink.text-subdued',
   },
 });
 

@@ -125,6 +125,7 @@ interface HistoricalEvents {
   click_open_in_new_tab_menu_item: undefined;
   click_change_network_menu_item: undefined;
   click_change_theme_menu_item: undefined;
+  click_settings_menu_item: undefined;
   click_toggle_privacy: undefined;
   request_psbt_cancel: undefined;
   request_sign_psbt_submit: undefined;
