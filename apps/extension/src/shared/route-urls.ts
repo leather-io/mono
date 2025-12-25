@@ -32,6 +32,7 @@ export enum RouteUrls {
   CancelStacksTransaction = '/cancel-transaction/stacks/:txid',
   Send = '/send-transaction',
   ViewSecretKey = '/view-secret-key',
+  Settings = '/settings',
 
   // nested routes must have relative paths
   Activity = '/activity',

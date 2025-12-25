@@ -65,8 +65,8 @@ const dropdownContentStyles = css({
   '--base-menu-padding': '0px',
   bg: 'ink.background-primary',
   borderRadius: 'sm',
-  boxShadow:
-    '0px 12px 24px 0px rgba(18, 16, 15, 0.08), 0px 4px 8px 0px rgba(18, 16, 15, 0.08), 0px 0px 2px 0px rgba(18, 16, 15, 0.08)',
+  // TODO: remove this boxShadow once we release home screen revamp
+  boxShadow: 'elevationLight',
   p: '0',
   willChange: 'transform, opacity',
   zIndex: 999,
