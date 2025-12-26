@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
@@ -22,8 +21,6 @@ import { useHasKeys } from '@app/common/hooks/auth/use-has-keys';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { AppVersion } from '@app/components/app-version';
-import { NetworkSheet } from '@app/features/settings/network/network';
-import { ThemeSheet } from '@app/features/settings/theme/theme-dialog';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useToggleNotificationsEnabled } from '@app/store/settings/settings.actions';
 import { useIsNotificationsEnabled } from '@app/store/settings/settings.selectors';
@@ -34,8 +31,6 @@ export function MenuButtons() {
   const navigate = useNavigate();
   const { hasKeys } = useHasKeys();
   const { walletType } = useWalletType();
-  const [showChangeTheme, setShowChangeTheme] = useState(false);
-  const [showChangeNetwork, setShowChangeNetwork] = useState(false);
   const isNotificationsEnabled = useIsNotificationsEnabled();
   const toggleNotificationsEnabled = useToggleNotificationsEnabled();
   const toast = useToast();
@@ -58,7 +53,7 @@ export function MenuButtons() {
         title="Theme"
         onClick={() => {
           analytics.track('click_change_theme_menu_item');
-          setShowChangeTheme(!showChangeTheme);
+          void navigate(RouteUrls.SelectTheme);
         }}
         icon={<SunInCloudIcon />}
       />
@@ -69,7 +64,7 @@ export function MenuButtons() {
         title="Network"
         onClick={() => {
           analytics.track('click_change_network_menu_item');
-          setShowChangeNetwork(!showChangeNetwork);
+          void navigate(RouteUrls.SelectNetwork);
         }}
         icon={<GlobeTiltedIcon />}
       />
@@ -118,10 +113,6 @@ export function MenuButtons() {
         <styled.p textStyle="label.02">Version</styled.p>
         <AppVersion />
       </Flex>
-      {showChangeTheme && <ThemeSheet onClose={() => setShowChangeTheme(!showChangeTheme)} />}
-      {showChangeNetwork && (
-        <NetworkSheet onClose={() => setShowChangeNetwork(!showChangeNetwork)} />
-      )}
     </Flex>
   );
 }

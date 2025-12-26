@@ -8,8 +8,8 @@ import { RouteUrls } from '@shared/route-urls';
 import { Content } from '@app/components/layout/layouts/content.layout';
 import { SwitchAccountLayout } from '@app/components/layout/layouts/switch-account.layout';
 import { LoadingSpinner } from '@app/components/loading-spinner';
-import { AddNetwork } from '@app/features/add-network/add-network';
-import { EditNetwork } from '@app/features/add-network/edit-network';
+import { AddNetwork as LegacyAddNetwork } from '@app/features/add-network/add-network';
+import { EditNetwork as LegacyEditNetwork } from '@app/features/add-network/edit-network';
 import { Container } from '@app/features/container/container';
 import { HomeHeader } from '@app/features/container/headers/home.header';
 import { leatherIntroSheetRoutes } from '@app/features/dialogs/leather-intro-dialog/leather-intro-dialog';
@@ -29,6 +29,9 @@ import { RetrieveTaprootToNativeSegwit } from '@app/features/retrieve-taproot-to
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { LegacyAccountAuth } from '@app/pages/legacy-account-auth/legacy-account-auth';
+import { AddNetwork as CurrentAddNetwork } from '@app/pages/network/add-network';
+import { EditNetwork as CurrentEditNetwork } from '@app/pages/network/edit-network';
+import { SelectNetwork } from '@app/pages/network/select-network';
 import { BackUpSecretKeyPage } from '@app/pages/onboarding/back-up-secret-key/back-up-secret-key';
 import { ForgotPassword } from '@app/pages/onboarding/sign-in/forgot-password';
 import { SignIn } from '@app/pages/onboarding/sign-in/sign-in';
@@ -40,6 +43,7 @@ import { sendOrdinalRoutes } from '@app/pages/send/ordinal-inscription/ordinal-r
 import { sendCryptoAssetFormRoutes } from '@app/pages/send/send-crypto-asset-form/send-crypto-asset-form.routes';
 import { SettingsPage } from '@app/pages/settings/settings';
 import { bitcoinSwapRoutes, stacksSwapRoutes } from '@app/pages/swap/swap.routes';
+import { SelectTheme } from '@app/pages/theme/select-theme';
 import { UnauthorizedRequest } from '@app/pages/unauthorized-request/unauthorized-request';
 import { Unlock } from '@app/pages/unlock';
 import { ViewSecretKey } from '@app/pages/view-secret-key/view-secret-key';
@@ -147,7 +151,7 @@ function useAppRoutes() {
             path={RouteUrls.AddNetwork}
             element={
               <AccountGate>
-                <AddNetwork />
+                {extensionRevamp ? <CurrentAddNetwork /> : <LegacyAddNetwork />}
               </AccountGate>
             }
           />
@@ -156,7 +160,7 @@ function useAppRoutes() {
             path={RouteUrls.EditNetwork}
             element={
               <AccountGate>
-                <EditNetwork />
+                {extensionRevamp ? <CurrentEditNetwork /> : <LegacyEditNetwork />}
               </AccountGate>
             }
           />
@@ -263,6 +267,27 @@ function useAppRoutes() {
               element={
                 <AccountGate>
                   <SettingsPage />
+                </AccountGate>
+              }
+            />
+          )}
+
+          {extensionRevamp && (
+            <Route
+              path={RouteUrls.SelectNetwork}
+              element={
+                <AccountGate>
+                  <SelectNetwork />
+                </AccountGate>
+              }
+            />
+          )}
+          {extensionRevamp && (
+            <Route
+              path={RouteUrls.SelectTheme}
+              element={
+                <AccountGate>
+                  <SelectTheme />
                 </AccountGate>
               }
             />

@@ -25,6 +25,8 @@ export enum RouteUrls {
   Home = '/',
   AddNetwork = '/add-network',
   EditNetwork = '/edit-network',
+  SelectNetwork = '/select-network',
+  SelectTheme = '/select-theme',
   Fund = '/fund',
   Sell = '/sell',
   IncreaseStacksFee = '/increase-fee/stacks/:txid',

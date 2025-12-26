@@ -4,12 +4,15 @@ import { HStack, styled } from 'leather-styles/jsx';
 
 import { DropdownMenu, EllipsisVIcon, PencilIcon, TrashIcon } from '@leather.io/ui';
 
+import { useThemeSwitcher } from '@app/common/theme-provider';
+
 interface Props {
   onEditNetwork(): void;
   onClickDeleteNetwork(): void;
 }
 
 export function NetworkItemMenu({ onClickDeleteNetwork, onEditNetwork }: Props) {
+  const { theme } = useThemeSwitcher();
   return (
     <DropdownMenu.Root>
       <DropdownMenu.IconButton data-testid={NetworkSelectors.NetworkMenuBtn}>
@@ -22,6 +25,7 @@ export function NetworkItemMenu({ onClickDeleteNetwork, onEditNetwork }: Props) 
           sideOffset={8}
           className={css({
             width: 'settingsMenuWidth',
+            boxShadow: theme === 'dark' ? 'elevationDark' : 'elevationLight',
           })}
         >
           <DropdownMenu.Group>
