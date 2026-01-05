@@ -28,6 +28,7 @@ export class SendPage {
   readonly feeToBePaid: Locator;
   readonly infoCardButton: Locator;
   readonly broadcastErrorTitle: Locator;
+  readonly inscriptionWarningDialog: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -67,6 +68,9 @@ export class SendPage {
     this.feeToBePaid = page.getByTestId(SharedComponentsSelectors.FeeToBePaidLabel);
     this.infoCardButton = page.getByTestId(SharedComponentsSelectors.InfoCardButton);
     this.broadcastErrorTitle = page.getByTestId(SharedComponentsSelectors.BroadcastErrorTitle);
+    this.inscriptionWarningDialog = page.getByTestId(
+      SendCryptoAssetSelectors.InscriptionWarningDialog
+    );
   }
 
   async selectBtcAndGoToSendForm() {

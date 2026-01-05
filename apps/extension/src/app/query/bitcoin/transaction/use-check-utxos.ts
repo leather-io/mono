@@ -8,14 +8,9 @@ import { isUndefined } from '@leather.io/utils';
 
 import { useCurrentNetworkState, useIsLeatherTestingEnv } from '@app/query/leather-query-provider';
 
+import { InscribedUtxoWarningDialog } from '../../../features/dialogs/inscribed-utxo-warning-dialog/inscribed-utxo-warning-dialog';
 import { useBitcoinClient } from '../clients/bitcoin-client';
 
-class PreventTransactionError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'PreventTransactionError';
-  }
-}
 interface CheckInscribedUtxosByBestinslotArgs {
   inputs: TransactionInput[];
   txids: string[];
@@ -54,22 +49,20 @@ async function checkInscribedUtxosByBestinslot({
   return hasInscribedUtxos;
 }
 
-export function useCheckUnspendableUtxos(blockTxAction?: () => void) {
+function verifyUserConfirmsSpendingInscribedUtxos() {
+  return InscribedUtxoWarningDialog.call();
+}
+
+export function useCheckUnspendableUtxos() {
   const client = useBitcoinClient();
   const [isLoading, setIsLoading] = useState(false);
   const { isTestnet } = useCurrentNetworkState();
   const isTestEnv = useIsLeatherTestingEnv();
 
-  const preventTransaction = useCallback(() => {
-    if (blockTxAction) return blockTxAction();
-    throw new PreventTransactionError(
-      'Transaction is prevented due to inscribed utxos in the transaction. Please contact support for more information.'
-    );
-  }, [blockTxAction]);
-
   const checkIfUtxosListIncludesInscribed = useCallback(
     async (inputs: TransactionInput[]) => {
       setIsLoading(true);
+
       const txids = inputs.map(input => {
         if (!input.txid) throw new Error('Transaction ID is missing in the input');
         return bytesToHex(input.txid);
@@ -98,19 +91,13 @@ export function useCheckUnspendableUtxos(blockTxAction?: () => void) {
 
         const hasInscribedUtxo = ordinalsComResponses.some(resp => resp);
 
-        // if there are inscribed utxos in the transaction, and no error => prevent the transaction
         if (hasInscribedUtxo) {
-          preventTransaction();
-          return true;
+          const { userAcceptedRisk } = await verifyUserConfirmsSpendingInscribedUtxos();
+          return !userAcceptedRisk;
         }
 
-        // if there are no inscribed utxos in the transaction => allow the transaction
         return false;
-      } catch (e) {
-        if (e instanceof PreventTransactionError) {
-          throw e;
-        }
-
+      } catch {
         const hasInscribedUtxo = await checkInscribedUtxosByBestinslot({
           inputs,
           txids,
@@ -118,17 +105,16 @@ export function useCheckUnspendableUtxos(blockTxAction?: () => void) {
         });
 
         if (hasInscribedUtxo) {
-          preventTransaction();
-          return true;
+          const { userAcceptedRisk } = await verifyUserConfirmsSpendingInscribedUtxos();
+          return !userAcceptedRisk;
         }
 
-        // if there are no inscribed utxos in the transaction => allow the transaction
         return false;
       } finally {
         setIsLoading(false);
       }
     },
-    [client, isTestEnv, isTestnet, preventTransaction]
+    [client, isTestEnv, isTestnet]
   );
 
   return {

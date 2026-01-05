@@ -60,6 +60,7 @@ test.describe('send btc', () => {
       const confirmationAssetValue = await sendPage.confirmationDetails
         .getByTestId(SharedComponentsSelectors.InfoCardAssetValue)
         .innerText();
+
       test.expect(confirmationAssetValue).toEqual(withNbsp(`${amount} ${amountSymbol}`));
     });
 
@@ -101,7 +102,7 @@ test.describe('send btc', () => {
 
       await sendPage.clickInfoCardButton();
 
-      await test.expect(sendPage.broadcastErrorTitle).toBeVisible();
+      await test.expect(sendPage.inscriptionWarningDialog).toBeVisible();
     });
 
     test('that fallbacks to other api provider if main fails', async ({ sendPage }) => {
@@ -160,7 +161,7 @@ test.describe('send btc', () => {
 
       await sendPage.clickInfoCardButton();
 
-      await test.expect(sendPage.broadcastErrorTitle).toBeVisible();
+      await test.expect(sendPage.inscriptionWarningDialog).toBeVisible();
     });
   });
 });

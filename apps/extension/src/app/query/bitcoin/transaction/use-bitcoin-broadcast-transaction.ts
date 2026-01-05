@@ -17,7 +17,6 @@ interface BroadcastCallbackArgs {
   onError?(error: Error): void;
   onFinally?(): void;
 }
-
 export function useBitcoinBroadcastTransaction() {
   const client = useBitcoinClient();
   const [isBroadcasting, setIsBroadcasting] = useState(false);

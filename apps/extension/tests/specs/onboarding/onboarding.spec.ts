@@ -55,9 +55,7 @@ test.describe('Onboarding an existing user', () => {
     await onboardingPage.signInExistingUser();
     await homePage.page.waitForTimeout(1000);
 
-    const walletState = await onboardingPage.page.evaluate(async () =>
-      window.debug.logPersistedStore()
-    );
+    const walletState = await onboardingPage.page.evaluate(() => window.debug.getPersistedStore());
 
     const testWalletState = getTestSoftwareAccountDefaultWalletState();
 

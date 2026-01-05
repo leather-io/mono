@@ -36,9 +36,12 @@ const debug = {
       limiter,
     };
   },
-  // Utilised in integration tests
-  async logPersistedStore() {
+  getPersistedStore() {
     return reduxPersist.getStoredState(persistConfig);
+  },
+  logPersistedStore() {
+    // eslint-disable-next-line no-console
+    void reduxPersist.getStoredState(persistConfig).then(state => console.log(state));
   },
   setHighestAccountIndex(index: number) {
     logger.info(`Highest account index set to ${index}`);

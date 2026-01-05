@@ -151,6 +151,7 @@
     "react": "19.0.0",
     "react-animate-height": "3.1.1",
     "react-async-hook": "4.0.0",
+    "react-call": "1.8.1",
     "react-dom": "19.0.0",
     "react-dom-confetti": "0.2.0",
     "react-head": "3.4.2",

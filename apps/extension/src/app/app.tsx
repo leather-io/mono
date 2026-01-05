@@ -24,6 +24,7 @@ import localConfig from '../../config/wallet-config.json';
 
 import './index.css';
 
+import { InscribedUtxoWarningDialog } from './features/dialogs/inscribed-utxo-warning-dialog/inscribed-utxo-warning-dialog';
 import { createLDProvider } from './features/feature-flags';
 import { LeatherQueryProvider } from './query/leather-query-provider';
 import { useCurrentNetwork } from './store/networks/networks.selectors';
@@ -53,6 +54,7 @@ function ConnectedApp() {
         <LDProvider>
           <Suspense fallback={<FullPageLoadingSpinner />}>
             <AppRoutes />
+            <InscribedUtxoWarningDialog.Root />
             {reactQueryDevToolsEnabled && <Devtools />}
           </Suspense>
         </LDProvider>
