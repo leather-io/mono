@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -17,6 +17,8 @@ declare global {
 }
 
 export default function App() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     // Required async import otherwise Buffer is undefined
     import('~/services/init-app-services')
@@ -26,9 +28,9 @@ export default function App() {
   }, []);
 
   useOnRouteChange(() => analytics.page());
-  useOnRouteChange(location => {
-    console.log(location);
-  });
+  useOnRouteChange(
+    location => location.pathname === '/' && navigate('/stacking', { replace: true })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
