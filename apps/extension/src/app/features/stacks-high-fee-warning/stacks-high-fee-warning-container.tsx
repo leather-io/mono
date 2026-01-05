@@ -32,7 +32,7 @@ export function StacksHighFeeWarningContainer({ children }: HasChildren) {
 
   function isHighFeeWithNoFormErrors(errors: FormikErrors<unknown>, fee: number | string) {
     if (hasBypassedFeeWarning) return false;
-    return isEmpty(errors) && new BigNumber(fee).isGreaterThan(HIGH_FEE_AMOUNT_STX);
+    return isEmpty(errors) && new BigNumber(fee).isGreaterThanOrEqualTo(HIGH_FEE_AMOUNT_STX);
   }
 
   return (

@@ -1,79 +1,46 @@
-import { useMemo } from 'react';
-
 import type { StacksTransactionWire } from '@stacks/transactions';
 import { useQuery } from '@tanstack/react-query';
 
 import {
-  createPostStacksFeeTransactionQueryOptions,
-  defaultFeesMaxValuesAsMoney,
-  defaultFeesMinValuesAsMoney,
-  parseStacksTxFeeEstimationResponse,
-} from '@leather.io/query';
-import {
-  getEstimatedUnsignedStacksTxByteLength,
-  getSerializedUnsignedStacksTxPayload,
-} from '@leather.io/stacks';
+  FeeCalculationTypes,
+  type Fees,
+  type StacksTransactionFeeQuote,
+  type TransactionFeeQuote,
+} from '@leather.io/models';
+import { getStacksTransactionFeesService } from '@leather.io/services';
 
-import {
-  useConfigFeeEstimationsMaxEnabled,
-  useConfigFeeEstimationsMaxValues,
-  useConfigFeeEstimationsMinEnabled,
-  useConfigFeeEstimationsMinValues,
-  useConfigStacksContractCallFeeEstimations,
-  useConfigStacksContractDeploymentFeeEstimations,
-  useConfigTokenTransferFeeEstimations,
-} from '@app/query/common/remote-config/remote-config.query';
-import { useStacksClient } from '@app/store/common/api-clients.hooks';
-
-function useFeeEstimationsMaxValues() {
-  const configFeeEstimationsMaxEnabled = useConfigFeeEstimationsMaxEnabled();
-  const configFeeEstimationsMaxValues = useConfigFeeEstimationsMaxValues();
-
-  if (configFeeEstimationsMaxEnabled === false) return;
-  return configFeeEstimationsMaxValues || defaultFeesMaxValuesAsMoney;
-}
-
-function useFeeEstimationsMinValues() {
-  const configFeeEstimationsMinEnabled = useConfigFeeEstimationsMinEnabled();
-  const configFeeEstimationsMinValues = useConfigFeeEstimationsMinValues();
-
-  if (configFeeEstimationsMinEnabled === false) return;
-  return configFeeEstimationsMinValues || defaultFeesMinValuesAsMoney;
+function assertIsStacksFeeRateQuote(
+  quote: TransactionFeeQuote
+): asserts quote is StacksTransactionFeeQuote {
+  if (quote.type !== 'stacksFeeRate') {
+    throw new Error(`Unexpected fee quote type for Stacks transaction: ${quote.type}`);
+  }
 }
 
 export function useCalculateStacksTxFees(unsignedTx?: StacksTransactionWire) {
-  const client = useStacksClient();
-  const feeEstimationsMaxValues = useFeeEstimationsMaxValues();
-  const feeEstimationsMinValues = useFeeEstimationsMinValues();
-  const tokenTransferFeeEstimations = useConfigTokenTransferFeeEstimations();
-  const contractCallDefaultFeeEstimations = useConfigStacksContractCallFeeEstimations();
-  const contractDeploymentDefaultFeeEstimations = useConfigStacksContractDeploymentFeeEstimations();
+  return useQuery<Fees>({
+    enabled: !!unsignedTx,
+    queryKey: ['stacks-tx-fees', unsignedTx] as const,
+    queryFn: async ({ signal }) => {
+      if (!unsignedTx) throw new Error('Stacks tx fees query was called without unsigned tx');
 
-  const { txByteLength, txPayload } = useMemo(() => {
-    if (!unsignedTx) return { txByteLength: null, txPayload: '' };
+      const service = getStacksTransactionFeesService();
+      const res = await service.getStacksTransactionFees(unsignedTx, signal);
+      const { low, standard, high } = res.options;
 
-    return {
-      txByteLength: getEstimatedUnsignedStacksTxByteLength(unsignedTx),
-      txPayload: getSerializedUnsignedStacksTxPayload(unsignedTx),
-    };
-  }, [unsignedTx]);
+      assertIsStacksFeeRateQuote(low);
+      assertIsStacksFeeRateQuote(standard);
+      assertIsStacksFeeRateQuote(high);
 
-  return useQuery({
-    ...createPostStacksFeeTransactionQueryOptions({
-      client,
-      estimatedLen: txByteLength,
-      transactionPayload: txPayload,
-    }),
-    select: resp =>
-      parseStacksTxFeeEstimationResponse({
-        feeEstimation: resp,
-        payloadType: unsignedTx?.payload.payloadType,
-        maxValues: feeEstimationsMaxValues,
-        minValues: feeEstimationsMinValues,
-        txByteLength,
-        tokenTransferFeeEstimations,
-        contractCallDefaultFeeEstimations,
-        contractDeploymentDefaultFeeEstimations,
-      }),
+      return {
+        blockchain: 'stacks',
+        calculation: FeeCalculationTypes.Api,
+        estimates: [
+          { fee: low.value, feeRate: low.rate },
+          { fee: standard.value, feeRate: standard.rate },
+          { fee: high.value, feeRate: high.rate },
+        ],
+      } satisfies Fees;
+    },
   });
 }

@@ -1,6 +1,7 @@
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { useFormikContext } from 'formik';
-import { HStack, Stack } from 'leather-styles/jsx';
+import { HStack, Stack, styled } from 'leather-styles/jsx';
+import { useState } from 'react';
 
 import {
   Button,
@@ -26,13 +27,17 @@ export function HighFeeSheet({ learnMoreUrl }: HighFeeSheetProps) {
   const { handleSubmit, values } = useFormikContext<StacksSendFormValues>();
   const { showHighFeeWarningSheet, setHasBypassedFeeWarning, setShowHighFeeWarningSheet } =
     useStacksHighFeeWarningContext();
+  const [hasConfirmedHighFee, setHasConfirmedHighFee] = useState(false);
 
   return (
     <Sheet
       data-testid={SendCryptoAssetSelectors.HighFeeWarningSheet}
       header={<SheetHeader />}
       isShowing={showHighFeeWarningSheet}
-      onClose={() => setShowHighFeeWarningSheet(false)}
+      onClose={() => {
+        setHasConfirmedHighFee(false);
+        setShowHighFeeWarningSheet(false);
+      }}
       footer={
         <ButtonRow flexDirection="row">
           <Button onClick={() => setShowHighFeeWarningSheet(false)} variant="outline" flexGrow={1}>
@@ -46,8 +51,9 @@ export function HighFeeSheet({ learnMoreUrl }: HighFeeSheetProps) {
             data-testid={SendCryptoAssetSelectors.HighFeeWarningSheetSubmit}
             type="submit"
             flexGrow={1}
+            disabled={!hasConfirmedHighFee}
           >
-            Yes, I'm sure
+            Continue
           </Button>
         </ButtonRow>
       }
@@ -66,6 +72,19 @@ export function HighFeeSheet({ learnMoreUrl }: HighFeeSheetProps) {
             Learn more
           </Link>
         </Caption>
+        <styled.label alignItems="center" display="flex" mt="space.04">
+          <HStack gap="space.03">
+            <input
+              type="checkbox"
+              name="confirmHighFee"
+              checked={hasConfirmedHighFee}
+              onChange={e => setHasConfirmedHighFee(e.target.checked)}
+            />
+            <styled.p textStyle="caption.01" userSelect="none">
+              I understand this fee is high and want to continue.
+            </styled.p>
+          </HStack>
+        </styled.label>
       </Stack>
     </Sheet>
   );
