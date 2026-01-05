@@ -33,4 +33,5 @@ export enum SendCryptoAssetSelectors {
   // inscription
   Inscription = 'inscription',
   InscriptionSendButton = 'inscription-send-button',
+  InscriptionWarningDialog = 'inscription-warning-dialog',
 }
