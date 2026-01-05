@@ -76,6 +76,7 @@ export function HighFeeSheet({ learnMoreUrl }: HighFeeSheetProps) {
         <styled.label alignItems="center" display="flex" mt="space.04">
           <HStack gap="space.03">
             <input
+              data-testid={SendCryptoAssetSelectors.HighFeeWarningSheetConfirmCheckbox}
               type="checkbox"
               name="confirmHighFee"
               checked={hasConfirmedHighFee}

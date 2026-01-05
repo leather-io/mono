@@ -45,6 +45,7 @@ test.describe('send stx: tests on testnet', () => {
     await sendPage.previewSendTxButton.click();
 
     await page.getByTestId(SendCryptoAssetSelectors.HighFeeWarningSheet).isVisible();
+    await page.getByTestId(SendCryptoAssetSelectors.HighFeeWarningSheetConfirmCheckbox).check();
     await page.getByTestId(SendCryptoAssetSelectors.HighFeeWarningSheetSubmit).click();
 
     const details = await sendPage.confirmationDetails.allInnerTexts();
