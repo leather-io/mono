@@ -100,7 +100,7 @@
     "babel-preset-expo": "13.0.0",
     "concurrently": "8.2.2",
     "css-loader": "7.1.2",
-    "happy-dom": "18.0.1",
+    "happy-dom": "20.0.11",
     "postcss-loader": "8.1.1",
     "postcss-preset-env": "10.0.5",
     "prettier": "3.5.1",
