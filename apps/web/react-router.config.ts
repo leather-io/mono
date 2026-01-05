@@ -10,7 +10,7 @@ const buildEnd: Config['buildEnd'] = async ({ viteConfig, reactRouterConfig, bui
 export default {
   ssr: true,
   future: {
-    v8_viteEnvironmentApi: true,
+    unstable_viteEnvironmentApi: true,
   },
   // Hack to get around non-portable type export of `FutureConfig`
   buildEnd: buildEnd as unknown as Config['buildEnd'],
