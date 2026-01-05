@@ -32,6 +32,7 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
   },
   resolve: {
     alias: {
+      '~': path.resolve(__dirname, 'app'),
       'leather-styles': path.resolve(__dirname, 'leather-styles'),
       axios: path.resolve(__dirname, 'node_modules/axios/dist/esm/axios.js'),
       'msw/node': path.resolve(__dirname, 'node_modules/msw/lib/node/index.js'),

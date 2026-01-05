@@ -1,6 +1,8 @@
 import { type RouteConfig, index, prefix, route } from '@react-router/dev/routes';
 
 export default [
+  // Index route redirects to stacking
+  index('pages/index.route.tsx'),
   // Stacking routes
   route('stacking', 'pages/stacking/stacking.route.tsx'),
   ...prefix('stacking/pool/:slug', [

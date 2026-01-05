@@ -53,6 +53,7 @@ export function NavItem({ children, icon, href, newTab }: NavItemProps) {
       </Box>
     </Flag>
   );
+
   if (href.startsWith('https')) {
     return (
       <a href={href} target={newTab ? '_blank' : '_self'} rel="noopener noreferrer">
@@ -60,9 +61,6 @@ export function NavItem({ children, icon, href, newTab }: NavItemProps) {
       </a>
     );
   }
-  return (
-    <StyledNavLink to={href} prefetch="intent">
-      {content}
-    </StyledNavLink>
-  );
+
+  return <StyledNavLink to={href}>{content}</StyledNavLink>;
 }
