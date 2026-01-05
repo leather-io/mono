@@ -35,6 +35,19 @@ const mockedRuneTokenPriceMap = {
 };
 
 export async function mockLeatherApiRequests(page: Page) {
+  await page.route('**/v1/app-config', route =>
+    route.fulfill({
+      json: {
+        fees: {
+          stacks: {
+            // µSTX
+            globalMaximumFee: 5_000_000,
+          },
+        },
+      },
+    })
+  );
+
   await page.route('**/v1/tokens/rune?format=map', route =>
     route.fulfill({
       json: {

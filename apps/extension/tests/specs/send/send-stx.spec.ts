@@ -9,7 +9,8 @@ import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { getDisplayerAddress, withNbsp } from '@tests/utils';
 
-import { HIGH_FEE_AMOUNT_STX, STX_DECIMALS } from '@leather.io/constants';
+import { STX_DECIMALS } from '@leather.io/constants';
+import { microStxToStx } from '@leather.io/utils';
 
 import { FormErrorMessages } from '@shared/error-messages';
 
@@ -28,7 +29,8 @@ test.describe('send stx: tests on testnet', () => {
   });
 
   test('that we show high fee warning in case of high custom fee', async ({ sendPage, page }) => {
-    const highFeeAmount = HIGH_FEE_AMOUNT_STX + 1;
+    // Mirrors mocked `/v1/app-config` response in `tests/mocks/mock-leather-api.ts`
+    const highFeeAmount = microStxToStx(5_000_000).plus(1).toNumber();
     await sendPage.amountInput.fill(amount);
     await sendPage.amountInput.blur();
     await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);

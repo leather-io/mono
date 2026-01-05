@@ -4,13 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import get from 'lodash.get';
 
-import {
-  type DefaultMinMaxRangeFeeEstimations,
-  HiroMessage,
-  type RemoteConfig,
-} from '@leather.io/query';
+import { HiroMessage, type RemoteConfig } from '@leather.io/query';
 import { getPrincipalFromAssetString } from '@leather.io/stacks';
-import { createMoney, isUndefined } from '@leather.io/utils';
 
 import { GITHUB_ORG, GITHUB_REPO } from '@shared/constants';
 import { IS_DEV_ENV, IS_TEST_ENV } from '@shared/environment';
@@ -124,34 +119,6 @@ export function useRecoverUninscribedTaprootUtxosFeatureEnabled() {
   return get(config, 'recoverUninscribedTaprootUtxosFeatureEnabled', false);
 }
 
-export function useConfigFeeEstimationsMaxEnabled() {
-  const config = useRemoteConfig();
-  if (isUndefined(config) || isUndefined(config?.feeEstimationsMinMax)) return;
-  return config.feeEstimationsMinMax.maxValuesEnabled;
-}
-
-export function useConfigFeeEstimationsMaxValues() {
-  const config = useRemoteConfig();
-  if (typeof config?.feeEstimationsMinMax === 'undefined') return;
-  if (!config.feeEstimationsMinMax.maxValues) return;
-  if (!Array.isArray(config.feeEstimationsMinMax.maxValues)) return;
-  return config.feeEstimationsMinMax.maxValues.map(value => createMoney(value, 'STX'));
-}
-
-export function useConfigFeeEstimationsMinEnabled() {
-  const config = useRemoteConfig();
-  if (isUndefined(config) || isUndefined(config?.feeEstimationsMinMax)) return;
-  return config.feeEstimationsMinMax.minValuesEnabled;
-}
-
-export function useConfigFeeEstimationsMinValues() {
-  const config = useRemoteConfig();
-  if (typeof config?.feeEstimationsMinMax === 'undefined') return;
-  if (!config.feeEstimationsMinMax.minValues) return;
-  if (!Array.isArray(config.feeEstimationsMinMax.minValues)) return;
-  return config.feeEstimationsMinMax.minValues.map(value => createMoney(value, 'STX'));
-}
-
 export function useConfigNftMetadataEnabled() {
   const config = useRemoteConfig();
   return config?.nftMetadataEnabled ?? true;
@@ -182,28 +149,9 @@ export function useConfigTokensEnabledByDefault(): string[] {
   return get(config, 'tokensEnabledByDefault', []);
 }
 
-export function useConfigTokenTransferFeeEstimations() {
-  const config = useRemoteConfig();
-  return get(config, 'tokenTransferFeeEstimations', []);
-}
-
 export function useConfigSpamFilterWhitelist(): string[] {
   const config = useRemoteConfig();
   return get(config, 'spamFilterWhitelist', []);
-}
-
-export function useConfigStacksContractCallFeeEstimations():
-  | DefaultMinMaxRangeFeeEstimations
-  | undefined {
-  const config = useRemoteConfig();
-  return get(config, 'stacksContractCallFeeEstimations', undefined);
-}
-
-export function useConfigStacksContractDeploymentFeeEstimations():
-  | DefaultMinMaxRangeFeeEstimations
-  | undefined {
-  const config = useRemoteConfig();
-  return get(config, 'stacksContractDeploymentFeeEstimations', undefined);
 }
 
 export function useConfigPromoCardEnabled() {
