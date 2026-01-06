@@ -1,0 +1,4 @@
+self-hosted-runner:
+  labels:
+    - leather-runner
+    - ubuntu-24-8core

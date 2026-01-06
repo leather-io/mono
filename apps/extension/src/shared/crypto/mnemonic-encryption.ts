@@ -22,7 +22,7 @@ export async function encryptMnemonic({ secretKey, password }: EncryptMnemonicAr
 /**
  * Decrypt an encrypted secret key. If no salt is present, then this encrypted key was
  * generated before introducing Argon2 hashing. If that is true, then
- * decrypt the secret key and re-encrypt it using an Argon2 hashed password.
+ * decrypt the secret key and re-encrypt it using an Argon2 hashed password
  */
 interface DecryptionMnemonic {
   encryptedSecretKey: string;

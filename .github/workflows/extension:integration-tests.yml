@@ -31,7 +31,7 @@ concurrency:
 jobs:
   build:
     name: build-extension
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24-8core
     defaults:
       run:
         working-directory: apps/extension
@@ -62,7 +62,7 @@ jobs:
     name: shard-${{ matrix.shardIndex }}-of-${{ matrix.shardTotal }}
     needs: build
     timeout-minutes: 30
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24-8core
     strategy:
       fail-fast: false
       matrix:
@@ -139,7 +139,7 @@ jobs:
     name: merge-reports
     if: always()
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24-8core
     steps:
       - uses: actions/checkout@v4
 
