@@ -413,6 +413,20 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.46.3](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.2...@leather.io/services-v1.46.3) (2026-01-06)
+
+
+### Bug Fixes
+
+* **extension:** incorrect account balance totals ([a299450](https://github.com/leather-io/mono/commit/a299450ec583a6e7cd82f82ce61e8c0ed57284a5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.2
+
 ## [1.46.2](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.1...@leather.io/services-v1.46.2) (2025-12-18)
 
 

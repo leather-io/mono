@@ -21,6 +21,41 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.88.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.87.1...@leather.io/extension-v6.88.0) (2026-01-06)
+
+
+### Features
+
+* home-overview ([e361021](https://github.com/leather-io/mono/commit/e3610218ab4f14681eecc8f0dd9ffb76ea54dd7c))
+* new action buttons ([6bb4b78](https://github.com/leather-io/mono/commit/6bb4b78db34f306504762d7b87d5f4a7dde41b8a))
+
+
+### Bug Fixes
+
+* build only mobile and related dependencies ([2681dc7](https://github.com/leather-io/mono/commit/2681dc71a2cbf6b0d732b8dbcf04157478537266))
+* change addresses support ([7469bcc](https://github.com/leather-io/mono/commit/7469bcc3bc4b44bda655c5d86b0a66397aea419b))
+* **extension:** incorrect account balance totals ([a299450](https://github.com/leather-io/mono/commit/a299450ec583a6e7cd82f82ce61e8c0ed57284a5))
+* **extension:** package advisories ([1515c6c](https://github.com/leather-io/mono/commit/1515c6c1ce0bd3cf8050dbd585516561f683b9e8))
+* only run panda on build, scope EAS post‑install build to mobile only ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+* point panda to src/preset config as its how we use it mostly ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+* re-add pnpm prepare for web and extension ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+* rollback build change ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+* **ui:** package advisories ([61872cf](https://github.com/leather-io/mono/commit/61872cfeaefcce7b97071ae4d5421ea7a64cb324))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.2
+    * @leather.io/features bumped to 1.1.8
+    * @leather.io/queries bumped to 0.3.1
+    * @leather.io/query bumped to 2.45.9
+    * @leather.io/services bumped to 1.46.3
+    * @leather.io/ui bumped to 1.101.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.14.8
+
 ## [6.87.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.87.0...@leather.io/extension-v6.87.1) (2025-12-19)
 
 

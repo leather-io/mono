@@ -19,6 +19,30 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.96.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.1...@leather.io/mobile-v2.96.2) (2026-01-06)
+
+
+### Bug Fixes
+
+* build only mobile and related dependencies ([2681dc7](https://github.com/leather-io/mono/commit/2681dc71a2cbf6b0d732b8dbcf04157478537266))
+* **ci:** let sentry fail in mobile CI to reduce flakiness ([4a6fb5b](https://github.com/leather-io/mono/commit/4a6fb5b3758e9d26bf330072c5ff3dc83b0c3563))
+* **ci:** reduce noise in fingerprints ([9b22cfd](https://github.com/leather-io/mono/commit/9b22cfddbeae957b8f7bbcc7a1f387ebdb1186cc))
+* **extension:** incorrect account balance totals ([a299450](https://github.com/leather-io/mono/commit/a299450ec583a6e7cd82f82ce61e8c0ed57284a5))
+* **mobile:** package advisories ([50fb598](https://github.com/leather-io/mono/commit/50fb5984f9e9c3e0a1dbd3e7f2b2bcd8083e88e4))
+* **mobile:** remove firebase-tools ([cbbddcc](https://github.com/leather-io/mono/commit/cbbddccf0666df6e5b49f36d7708c3bcea833a6c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.2
+    * @leather.io/features bumped to 1.1.8
+    * @leather.io/queries bumped to 0.3.1
+    * @leather.io/query bumped to 2.45.9
+    * @leather.io/services bumped to 1.46.3
+    * @leather.io/ui bumped to 1.101.0
+
 ## [2.96.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.0...@leather.io/mobile-v2.96.1) (2025-12-19)
 
 

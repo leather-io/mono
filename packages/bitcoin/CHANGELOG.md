@@ -939,6 +939,13 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.36.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.36.1...@leather.io/bitcoin-v0.36.2) (2026-01-06)
+
+
+### Bug Fixes
+
+* change addresses support ([7469bcc](https://github.com/leather-io/mono/commit/7469bcc3bc4b44bda655c5d86b0a66397aea419b))
+
 ## [0.36.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.36.0...@leather.io/bitcoin-v0.36.1) (2025-12-18)
 
 

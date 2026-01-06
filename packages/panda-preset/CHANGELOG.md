@@ -252,6 +252,16 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.23.1
 
+## [0.14.8](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.14.7...@leather.io/panda-preset-v0.14.8) (2026-01-06)
+
+
+### Bug Fixes
+
+* only run panda on build, scope EAS post‑install build to mobile only ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+* point panda to src/preset config as its how we use it mostly ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+* re-add pnpm prepare for web and extension ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+* rollback build change ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+
 ## [0.14.7](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.14.6...@leather.io/panda-preset-v0.14.7) (2025-12-08)
 
 
