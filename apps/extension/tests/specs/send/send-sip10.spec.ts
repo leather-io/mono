@@ -22,7 +22,7 @@ test.describe('Send sip10', () => {
     await sendPage.recipientInput.fill(TEST_ACCOUNT_2_STX_ADDRESS);
     await sendPage.recipientInput.blur();
 
-    await sendPage.previewSendTxButton.click();
+    await sendPage.previewSendTransaction();
     const details = await sendPage.confirmationDetails.allInnerTexts();
 
     test.expect(details).toBeTruthy();

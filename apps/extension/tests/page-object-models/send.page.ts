@@ -131,7 +131,24 @@ export class SendPage {
     }
   }
 
+  private async handleHighFeeWarningIfPresent() {
+    const sheet = this.page.getByTestId(SendCryptoAssetSelectors.HighFeeWarningSheet);
+    // If the sheet isn't shown, `isVisible()` returns false (no throw)
+    if (!(await sheet.isVisible())) return;
+
+    await this.page
+      .getByTestId(SendCryptoAssetSelectors.HighFeeWarningSheetConfirmCheckbox)
+      .check();
+    await this.page.getByTestId(SendCryptoAssetSelectors.HighFeeWarningSheetSubmit).click();
+  }
+
+  async previewSendTransaction() {
+    await this.previewSendTxButton.click();
+    await this.handleHighFeeWarningIfPresent();
+  }
+
   async confirmSendTransaction() {
     await this.page.getByTestId(SendCryptoAssetSelectors.ConfirmSendTxBtn).click();
+    await this.handleHighFeeWarningIfPresent();
   }
 }

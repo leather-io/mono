@@ -5,7 +5,6 @@ import {
   TEST_TESTNET_ACCOUNT_2_STX_ADDRESS,
 } from '@tests/mocks/constants';
 import { mockBnsV2NameLookup, mockBnsV2ZoneFileLookup } from '@tests/mocks/mock-stacks-bns';
-import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { getDisplayerAddress, withNbsp } from '@tests/utils';
 
@@ -42,11 +41,7 @@ test.describe('send stx: tests on testnet', () => {
       .getByTestId(SharedComponentsSelectors.CustomFeeFieldInput)
       .fill(highFeeAmount.toString());
 
-    await sendPage.previewSendTxButton.click();
-
-    await page.getByTestId(SendCryptoAssetSelectors.HighFeeWarningSheet).isVisible();
-    await page.getByTestId(SendCryptoAssetSelectors.HighFeeWarningSheetConfirmCheckbox).check();
-    await page.getByTestId(SendCryptoAssetSelectors.HighFeeWarningSheetSubmit).click();
+    await sendPage.previewSendTransaction();
 
     const details = await sendPage.confirmationDetails.allInnerTexts();
     test.expect(details).toBeTruthy();
@@ -70,7 +65,7 @@ test.describe('send stx: tests on testnet', () => {
     await sendPage.recipientInput.blur();
     await sendPage.page.waitForTimeout(2000);
     await sendPage.previewSendTxButton.focus();
-    await sendPage.previewSendTxButton.click();
+    await sendPage.previewSendTransaction();
 
     const confirmationMemo = await sendPage.memoRow
       .getByTestId(SharedComponentsSelectors.InfoCardRowValue)
@@ -91,7 +86,7 @@ test.describe('send stx: tests on testnet', () => {
     const fees = await sendPage.page
       .getByTestId(SharedComponentsSelectors.FeeToBePaidLabel)
       .innerText();
-    await sendPage.previewSendTxButton.click();
+    await sendPage.previewSendTransaction();
 
     const displayerAddress = await getDisplayerAddress(sendPage.confirmationDetailsRecipient);
 
@@ -157,7 +152,7 @@ test.describe('send stx: tests on testnet', () => {
     test('that the address cannot be same as sender', async ({ sendPage }) => {
       await sendPage.recipientChooseAccountButton.click();
       await sendPage.page.getByTestId('switch-account-item-0').click();
-      await sendPage.previewSendTxButton.click();
+      await sendPage.previewSendTransaction();
       const errorMsg = await sendPage.formInputErrorLabel.innerText();
       test.expect(errorMsg).toContain(FormErrorMessages.SameAddress);
     });
@@ -165,7 +160,7 @@ test.describe('send stx: tests on testnet', () => {
     test('that valid addresses are accepted', async ({ sendPage }) => {
       await sendPage.amountInput.fill('0.000001');
       await sendPage.recipientInput.fill(TEST_ACCOUNT_2_STX_ADDRESS);
-      await sendPage.previewSendTxButton.click();
+      await sendPage.previewSendTransaction();
       const details = await sendPage.confirmationDetails.allInnerTexts();
       test.expect(details).toBeTruthy();
     });
@@ -177,7 +172,7 @@ test.describe('send stx: tests on testnet', () => {
     }) => {
       await sendPage.amountInput.fill('0.000001');
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);
-      await sendPage.previewSendTxButton.click();
+      await sendPage.previewSendTransaction();
       const details = await sendPage.confirmationDetails.allInnerTexts();
       test.expect(details).toBeTruthy();
     });
@@ -188,12 +183,12 @@ test.describe('send stx: tests on testnet', () => {
       await sendPage.amountInput.fill('0.0000001');
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);
 
-      await sendPage.previewSendTxButton.click();
+      await sendPage.previewSendTransaction();
       const errorMsg = await sendPage.amountInputErrorLabel.innerText();
       const error = FormErrorMessages.TooMuchPrecision;
       test.expect(errorMsg).toEqual(error.replace('{decimals}', String(STX_DECIMALS)));
       await sendPage.amountInput.fill('0.000001');
-      await sendPage.previewSendTxButton.click();
+      await sendPage.previewSendTransaction();
       const details = await sendPage.confirmationDetails.allInnerTexts();
       test.expect(details).toBeTruthy();
     });
