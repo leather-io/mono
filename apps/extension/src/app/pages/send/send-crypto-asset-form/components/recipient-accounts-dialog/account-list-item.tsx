@@ -29,7 +29,7 @@ export const AccountListItem = memo(function AccountListItem({
   const stacksAddress = stacksAccount?.address || '';
   const { data: name = '' } = useAccountDisplayName({ address: stacksAddress, index });
   const bitcoinSigner = useNativeSegwitSigner(index);
-  const bitcoinAddress = bitcoinSigner?.(0).address || '';
+  const bitcoinAddress = bitcoinSigner?.({ changeIndex: 0, addressIndex: 0 }).address || '';
 
   function onSelectAccount() {
     const isBitcoin = values.symbol === 'BTC';

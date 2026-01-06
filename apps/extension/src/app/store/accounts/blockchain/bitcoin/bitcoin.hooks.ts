@@ -12,7 +12,7 @@ import {
   makeNativeSegwitAccountDerivationPath,
   makeTaprootAccountDerivationPath,
 } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath } from '@leather.io/crypto';
+import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import { bitcoinNetworkToNetworkMode } from '@leather.io/models';
 import { PaymentTypes } from '@leather.io/rpc';
 import { isNumber, isString, isUndefined } from '@leather.io/utils';
@@ -68,7 +68,8 @@ export function useZeroIndexTaprootAddress(accIndex?: number) {
   if (!account) throw new Error('Expected keychain to be provided');
 
   const address = getTaprootAddress({
-    index: 0,
+    addressIndex: 0,
+    changeIndex: 0,
     keychain: account.keychain,
     network: bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork),
   });
@@ -84,10 +85,10 @@ function useSignBitcoinSoftwareTx() {
     const tx = btc.Transaction.fromPSBT(psbt);
 
     inputSigningConfig.forEach(({ index, derivationPath }) => {
-      const nativeSegwitSigner = createNativeSegwitSigner?.(
-        extractAddressIndexFromPath(derivationPath)
-      );
-      const taprootSigner = createTaprootSigner?.(extractAddressIndexFromPath(derivationPath));
+      const addressIndex = extractAddressIndexFromPath(derivationPath);
+      const changeIndex = extractChangeIndexFromPath(derivationPath);
+      const nativeSegwitSigner = createNativeSegwitSigner?.({ changeIndex, addressIndex });
+      const taprootSigner = createTaprootSigner?.({ changeIndex, addressIndex });
 
       if (!nativeSegwitSigner || !taprootSigner) throw new Error('Signers not available');
 
@@ -219,7 +220,10 @@ export function useAddTapInternalKeysIfMissing() {
 
   return (tx: btc.Transaction, inputIndexes: BitcoinInputSigningConfig[]) =>
     inputIndexes.forEach(({ index, derivationPath }) => {
-      const taprootSigner = createTaprootSigner?.(extractAddressIndexFromPath(derivationPath));
+      const taprootSigner = createTaprootSigner?.({
+        addressIndex: extractAddressIndexFromPath(derivationPath),
+        changeIndex: extractChangeIndexFromPath(derivationPath),
+      });
       if (!taprootSigner) throw new Error('Taproot signer not found');
       const input = tx.getInput(index);
 

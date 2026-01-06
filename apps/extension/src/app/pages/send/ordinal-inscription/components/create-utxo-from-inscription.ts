@@ -6,12 +6,14 @@ interface CreateUtxoFromInscriptionArgs {
   inscription: InscriptionAsset;
   network: BitcoinNetworkModes;
   accountIndex: number;
+  changeIndex: number;
   inscriptionAddressIdx: number;
 }
 export function createUtxoFromInscription({
   inscription,
   network,
   accountIndex,
+  changeIndex,
   inscriptionAddressIdx,
 }: CreateUtxoFromInscriptionArgs): UtxoWithDerivationPath {
   const { genesisBlockHash, genesisTimestamp, genesisBlockHeight, value } = inscription;
@@ -25,10 +27,11 @@ export function createUtxoFromInscription({
       block_time: genesisTimestamp,
     },
     value: Number(value),
-    derivationPath: makeNativeSegwitAddressIndexDerivationPath(
+    derivationPath: makeNativeSegwitAddressIndexDerivationPath({
       network,
       accountIndex,
-      inscriptionAddressIdx
-    ),
+      changeIndex,
+      addressIndex: inscriptionAddressIdx,
+    }),
   };
 }

@@ -6,8 +6,8 @@ import { STANDARD_BIP_FAKE_MNEMONIC } from '@tests/mocks/constants';
 import {
   deriveAddressIndexKeychainFromAccount,
   ecdsaPublicKeyToSchnorr,
-  getNativeSegwitAccountDerivationPath,
-  getTaprootAccountDerivationPath,
+  makeNativeSegwitAccountDerivationPath,
+  makeTaprootAccountDerivationPath,
 } from '@leather.io/bitcoin';
 import { makeNumberRange } from '@leather.io/utils';
 
@@ -21,10 +21,10 @@ describe(getAssumedZeroIndexSigningConfig.name, () => {
 
   test('for a given transaction with p2wpkh', () => {
     const nativeSegwitAccountKeychain = keychain.derive(
-      getNativeSegwitAccountDerivationPath('mainnet', 0)
+      makeNativeSegwitAccountDerivationPath('mainnet', 0)
     );
     const nativeSegwitKeychain = deriveAddressIndexKeychainFromAccount(nativeSegwitAccountKeychain)(
-      0
+      { changeIndex: 0, addressIndex: 0 }
     );
     const nativeSegwitPayment = btc.p2wpkh(nativeSegwitKeychain.publicKey!);
 
@@ -45,8 +45,11 @@ describe(getAssumedZeroIndexSigningConfig.name, () => {
     expect(result).toEqual([{ derivationPath: "m/84'/0'/0'/0/0", index: 0 }]);
   });
 
-  const taprootAccountKeychain = keychain.derive(getTaprootAccountDerivationPath('mainnet', 0));
-  const taprootKeychain = deriveAddressIndexKeychainFromAccount(taprootAccountKeychain)(0);
+  const taprootAccountKeychain = keychain.derive(makeTaprootAccountDerivationPath('mainnet', 0));
+  const taprootKeychain = deriveAddressIndexKeychainFromAccount(taprootAccountKeychain)({
+    changeIndex: 0,
+    addressIndex: 0,
+  });
   const taprootPayment = btc.p2tr(ecdsaPublicKeyToSchnorr(taprootKeychain.publicKey!));
 
   test('for a given transaction with p2tr', () => {

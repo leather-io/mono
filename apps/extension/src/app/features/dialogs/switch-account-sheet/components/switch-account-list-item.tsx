@@ -26,7 +26,7 @@ export const SwitchAccountListItem = memo(function SwitchAccountListItem({
   const stacksAccount = useStacksAccount(index);
   const stxAddress = stacksAccount?.address ?? '';
   const bitcoinSigner = useNativeSegwitSigner(index);
-  const btcAddress = bitcoinSigner?.(0).address ?? '';
+  const btcAddress = bitcoinSigner?.({ changeIndex: 0, addressIndex: 0 }).address ?? '';
 
   const { isLoading, setIsLoading, setIsIdle } = useLoading(
     'SWITCH_ACCOUNTS' + stxAddress || btcAddress

@@ -78,11 +78,15 @@ export function deriveAddressIndexKeychainFromAccount(keychain: HDKey) {
   if (keychain.depth !== DerivationPathDepth.Account)
     throw new Error('Keychain passed is not an account');
 
-  return (index: number) => keychain.deriveChild(0).deriveChild(index);
+  return ({ changeIndex, addressIndex }: { changeIndex: number; addressIndex: number }) =>
+    keychain.deriveChild(changeIndex).deriveChild(addressIndex);
 }
 
 export function deriveAddressIndexZeroFromAccount(keychain: HDKey) {
-  return deriveAddressIndexKeychainFromAccount(keychain)(0);
+  return deriveAddressIndexKeychainFromAccount(keychain)({
+    changeIndex: 0,
+    addressIndex: 0,
+  });
 }
 
 export const ecdsaPublicKeyLength = 33;
@@ -268,38 +272,55 @@ export function lookUpLedgerKeysByPath(
 }
 
 interface GetAddressArgs {
-  index: number;
+  changeIndex: number;
+  addressIndex: number;
   keychain?: HDKey;
   network: BitcoinNetworkModes;
 }
 
-export function getTaprootAddress({ index, keychain, network }: GetAddressArgs) {
+export function getTaprootAddress({
+  changeIndex,
+  addressIndex,
+  keychain,
+  network,
+}: GetAddressArgs) {
   if (!keychain) throw new Error('Expected keychain to be provided');
 
   if (keychain.depth !== DerivationPathDepth.Account)
     throw new Error('Expects keychain to be on the account index');
 
-  const addressIndex = deriveAddressIndexKeychainFromAccount(keychain)(index);
+  const addresskeychain = deriveAddressIndexKeychainFromAccount(keychain)({
+    changeIndex,
+    addressIndex,
+  });
 
-  if (!addressIndex.publicKey) throw new Error('Expected publicKey to be defined');
+  if (!addresskeychain.publicKey) throw new Error('Expected publicKey to be defined');
 
-  const payment = getTaprootPayment(addressIndex.publicKey, network);
+  const payment = getTaprootPayment(addresskeychain.publicKey, network);
 
   if (!payment.address) throw new Error('Expected address to be defined');
   return payment.address;
 }
 
-export function getNativeSegwitAddress({ index, keychain, network }: GetAddressArgs) {
+export function getNativeSegwitAddress({
+  changeIndex,
+  addressIndex,
+  keychain,
+  network,
+}: GetAddressArgs) {
   if (!keychain) throw new Error('Expected keychain to be provided');
 
   if (keychain.depth !== DerivationPathDepth.Account)
     throw new Error('Expects keychain to be on the account index');
 
-  const addressIndex = deriveAddressIndexKeychainFromAccount(keychain)(index);
+  const addressKeychain = deriveAddressIndexKeychainFromAccount(keychain)({
+    changeIndex,
+    addressIndex,
+  });
 
-  if (!addressIndex.publicKey) throw new Error('Expected publicKey to be defined');
+  if (!addressKeychain.publicKey) throw new Error('Expected publicKey to be defined');
 
-  const payment = getNativeSegwitPaymentFromAddressIndex(addressIndex, network);
+  const payment = getNativeSegwitPaymentFromAddressIndex(addressKeychain, network);
 
   if (!payment.address) throw new Error('Expected address to be defined');
   return payment.address;
@@ -358,4 +379,12 @@ export function getBitcoinInputValue(input: TransactionInput) {
     return Number(input.nonWitnessUtxo.outputs[input.index]?.amount);
   // logger.warn('Unable to find either `witnessUtxo` or `nonWitnessUtxo` in input. Defaulting to 0');
   return 0;
+}
+
+export function isTaprootDerivationPath(path: string) {
+  return extractPurposeFromPath(path) === 86;
+}
+
+export function isNativeSegwitDerivationPath(path: string) {
+  return extractPurposeFromPath(path) === 84;
 }

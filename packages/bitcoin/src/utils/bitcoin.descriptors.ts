@@ -71,15 +71,27 @@ export function deriveAddressesFromDescriptor({
 
   const results: DeriveAddressesFromDescriptorResult[] = [];
 
-  for (let i = 0; i < limit; i++) {
-    const address = whenSupportedPaymentType(paymentType)({
-      p2tr: getTaprootAddress({ index: i, keychain: accountKeychain, network }),
-      p2wpkh: getNativeSegwitAddress({ index: i, keychain: accountKeychain, network }),
-    });
-    results.push({
-      address,
-      path: derivationPathFn(network, accountKeychain.index - HARDENED_OFFSET, i),
-    });
+  for (let addressIndex = 0; addressIndex < limit; ++addressIndex) {
+    for (let changeIndex = 0; changeIndex < 2; ++changeIndex) {
+      const address = whenSupportedPaymentType(paymentType)({
+        p2tr: getTaprootAddress({ addressIndex, changeIndex, keychain: accountKeychain, network }),
+        p2wpkh: getNativeSegwitAddress({
+          addressIndex,
+          changeIndex,
+          keychain: accountKeychain,
+          network,
+        }),
+      });
+      results.push({
+        address,
+        path: derivationPathFn({
+          network,
+          accountIndex: accountKeychain.index - HARDENED_OFFSET,
+          addressIndex,
+          changeIndex,
+        }),
+      });
+    }
   }
   return results;
 }

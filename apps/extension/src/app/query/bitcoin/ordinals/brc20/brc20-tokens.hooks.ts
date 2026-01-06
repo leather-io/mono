@@ -6,8 +6,6 @@ import { createBaseCryptoAssetBalance, createMoney, unitToFractionalUnit } from 
 
 import { useCalculateBitcoinFiatValue } from '@app/query/common/market-data/market-data.hooks';
 import { useConfigOrdinalsbot } from '@app/query/common/remote-config/remote-config.query';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useGetBrc20TokensQuery } from './brc20-tokens.query';
@@ -46,13 +44,8 @@ function createBrc20Asset(decimals: number, ticker: string): Brc20Asset {
 
 export function useBrc20Tokens() {
   const calculateBitcoinFiatValue = useCalculateBitcoinFiatValue();
-  const createTaprootSigner = useCurrentAccountTaprootSigner();
-  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
 
-  const result = useGetBrc20TokensQuery({
-    createTaprootSigner,
-    nativeSegwitAddress: nativeSegwitSigner.address,
-  });
+  const result = useGetBrc20TokensQuery();
 
   if (!isFetchedWithSuccess(result)) return [];
 

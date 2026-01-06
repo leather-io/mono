@@ -56,7 +56,7 @@ export function useSendInscriptionFeesList({
       )}`;
     }
 
-    const nativeSegwitSigner = createNativeSegwitSigner?.(0);
+    const nativeSegwitSigner = createNativeSegwitSigner?.({ addressIndex: 0, changeIndex: 0 });
 
     if (!feeRates || !nativeSegwitUtxos || !nativeSegwitSigner) return [];
 

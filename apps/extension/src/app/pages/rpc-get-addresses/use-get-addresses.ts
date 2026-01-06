@@ -82,7 +82,10 @@ export function useGetAddresses() {
       const keysToIncludeInResponse = [];
 
       if (createNativeSegwitSigner) {
-        const nativeSegwitSigner = createNativeSegwitSigner(0);
+        const nativeSegwitSigner = createNativeSegwitSigner({
+          changeIndex: 0,
+          addressIndex: 0,
+        });
 
         const nativeSegwitAddressResponse: BtcAddress = {
           symbol: 'BTC',
@@ -97,7 +100,7 @@ export function useGetAddresses() {
       }
 
       if (createTaprootSigner) {
-        const taprootSigner = createTaprootSigner(0);
+        const taprootSigner = createTaprootSigner({ changeIndex: 0, addressIndex: 0 });
         const taprootAddressResponse: BtcAddress = {
           symbol: 'BTC',
           type: 'p2tr',

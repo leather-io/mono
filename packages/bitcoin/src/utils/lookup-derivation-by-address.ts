@@ -26,6 +26,7 @@ export function lookupDerivationByAddress(args: LookUpDerivationByAddressArgs) {
 
   return (address: BitcoinAddress) => {
     const network = inferNetworkFromAddress(address);
+    const changeIndex = 0;
     const paymentType = inferPaymentTypeFromAddress(address);
 
     const accountIndex = whenSupportedPaymentType(paymentType)({
@@ -33,12 +34,17 @@ export function lookupDerivationByAddress(args: LookUpDerivationByAddressArgs) {
       p2wpkh: nativeSegwitKeychain.index - HARDENED_OFFSET,
     });
 
-    function getTaprootAddressAtIndex(index: number) {
-      return getTaprootAddress({ index, keychain: taprootKeychain, network });
+    function getTaprootAddressAtIndex(addressIndex: number) {
+      return getTaprootAddress({ changeIndex, addressIndex, keychain: taprootKeychain, network });
     }
 
-    function getNativeSegwitAddressAtIndex(index: number) {
-      return getNativeSegwitAddress({ index, keychain: nativeSegwitKeychain, network });
+    function getNativeSegwitAddressAtIndex(addressIndex: number) {
+      return getNativeSegwitAddress({
+        changeIndex,
+        addressIndex,
+        keychain: nativeSegwitKeychain,
+        network,
+      });
     }
 
     const paymentFn = whenSupportedPaymentType(paymentType)({
@@ -69,7 +75,12 @@ export function lookupDerivationByAddress(args: LookUpDerivationByAddressArgs) {
       return {
         status: 'success',
         duration: t1 - t0,
-        path: derivationPathFn(network, accountIndex, currentIndex),
+        path: derivationPathFn({
+          network,
+          accountIndex,
+          addressIndex: currentIndex,
+          changeIndex,
+        }),
       } as const;
     }
 

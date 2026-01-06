@@ -21,12 +21,20 @@ export function makeTaprootAccountDerivationPath(
 /** @deprecated Use makeTaprootAccountDerivationPath */
 export const getTaprootAccountDerivationPath = makeTaprootAccountDerivationPath;
 
-export function makeTaprootAddressIndexDerivationPath(
-  network: BitcoinNetworkModes,
-  accountIndex: number,
-  addressIndex: number
-) {
-  return makeTaprootAccountDerivationPath(network, accountIndex) + `/0/${addressIndex}`;
+export function makeTaprootAddressIndexDerivationPath({
+  network,
+  accountIndex,
+  changeIndex,
+  addressIndex,
+}: {
+  network: BitcoinNetworkModes;
+  accountIndex: number;
+  changeIndex: number;
+  addressIndex: number;
+}) {
+  return (
+    makeTaprootAccountDerivationPath(network, accountIndex) + `/${changeIndex}/${addressIndex}`
+  );
 }
 /** @deprecated Use makeTaprootAddressIndexDerivationPath */
 export const getTaprootAddressIndexDerivationPath = makeTaprootAddressIndexDerivationPath;

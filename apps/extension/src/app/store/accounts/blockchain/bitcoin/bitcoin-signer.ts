@@ -8,11 +8,13 @@ import {
   BitcoinAccount,
   BitcoinSigner,
   deriveAddressIndexKeychainFromAccount,
+  isNativeSegwitDerivationPath,
+  isTaprootDerivationPath,
   makeNativeSegwitAddressIndexDerivationPath,
   makeTaprootAddressIndexDerivationPath,
   whenPaymentType,
 } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath } from '@leather.io/crypto';
+import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import type { BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
 
 import { useBitcoinExtendedPublicKeyVersions } from './bitcoin-keychain';
@@ -80,9 +82,17 @@ export function bitcoinAddressIndexSignerFactory<T extends BitcoinAddressIndexSi
   args: T
 ) {
   const { accountIndex, network, paymentFn, accountKeychain, extendedPublicKeyVersions } = args;
-  return (addressIndex: number): BitcoinSigner<ReturnType<T['paymentFn']>> => {
-    const addressIndexKeychain =
-      deriveAddressIndexKeychainFromAccount(accountKeychain)(addressIndex);
+  return ({
+    changeIndex,
+    addressIndex,
+  }: {
+    changeIndex: number;
+    addressIndex: number;
+  }): BitcoinSigner<ReturnType<T['paymentFn']>> => {
+    const addressIndexKeychain = deriveAddressIndexKeychainFromAccount(accountKeychain)({
+      changeIndex,
+      addressIndex,
+    });
 
     const payment = paymentFn(addressIndexKeychain, network);
 
@@ -93,8 +103,18 @@ export function bitcoinAddressIndexSignerFactory<T extends BitcoinAddressIndexSi
       ),
       network,
       derivationPath: whenPaymentType(payment.type)({
-        p2wpkh: makeNativeSegwitAddressIndexDerivationPath(network, accountIndex, addressIndex),
-        p2tr: makeTaprootAddressIndexDerivationPath(network, accountIndex, addressIndex),
+        p2wpkh: makeNativeSegwitAddressIndexDerivationPath({
+          network,
+          accountIndex,
+          changeIndex,
+          addressIndex,
+        }),
+        p2tr: makeTaprootAddressIndexDerivationPath({
+          network,
+          accountIndex,
+          changeIndex,
+          addressIndex,
+        }),
         'p2wpkh-p2sh': 'Not supported',
         p2pkh: 'Not supported',
         p2sh: 'Not supported',
@@ -129,7 +149,15 @@ function createSignersForAllNetworkTypes<T extends CreateSignersForAllNetworkTyp
   paymentFn,
   extendedPublicKeyVersions,
 }: T) {
-  return ({ accountIndex, addressIndex }: { accountIndex: number; addressIndex: number }) => {
+  return ({
+    accountIndex,
+    changeIndex,
+    addressIndex,
+  }: {
+    accountIndex: number;
+    changeIndex: number;
+    addressIndex: number;
+  }) => {
     const networkMap = new Map();
 
     function makeNetworkSigner(keychain: HDKey, network: BitcoinNetworkModes) {
@@ -139,7 +167,7 @@ function createSignersForAllNetworkTypes<T extends CreateSignersForAllNetworkTyp
         paymentFn: paymentFn as T['paymentFn'],
         network,
         extendedPublicKeyVersions,
-      })(addressIndex);
+      })({ changeIndex, addressIndex });
     }
 
     const mainnetAccount = mainnetKeychainFn(accountIndex);
@@ -167,14 +195,15 @@ export function useMakeBitcoinNetworkSignersForPaymentType<T>(
 
   return useCallback(
     (accountIndex: number) => {
-      const zeroIndex = 0;
+      const zeroChangeIndex = 0;
+      const zeroAddressIndex = 0;
 
       return createSignersForAllNetworkTypes({
         mainnetKeychainFn,
         testnetKeychainFn,
         paymentFn,
         extendedPublicKeyVersions,
-      })({ accountIndex, addressIndex: zeroIndex });
+      })({ accountIndex, changeIndex: zeroChangeIndex, addressIndex: zeroAddressIndex });
     },
     [extendedPublicKeyVersions, mainnetKeychainFn, paymentFn, testnetKeychainFn]
   );
@@ -187,14 +216,17 @@ export function useBitcoinSignerFromInput() {
   return useCallback(
     (input: OwnedUtxo): BitcoinSigner<any> => {
       const addressIndex = extractAddressIndexFromPath(input.path);
+      const changeIndex = extractChangeIndexFromPath(input.path);
 
-      // Try native segwit first (most common)
-      const nativeSegwitSigner = createNativeSegwitSigner?.(addressIndex);
-      if (nativeSegwitSigner) return nativeSegwitSigner;
+      if (isNativeSegwitDerivationPath(input.path)) {
+        const nativeSegwitSigner = createNativeSegwitSigner?.({ changeIndex, addressIndex });
+        if (nativeSegwitSigner) return nativeSegwitSigner;
+      }
 
-      // Fall back to taproot
-      const taprootSigner = createTaprootSigner?.(addressIndex);
-      if (taprootSigner) return taprootSigner;
+      if (isTaprootDerivationPath(input.path)) {
+        const taprootSigner = createTaprootSigner?.({ changeIndex, addressIndex });
+        if (taprootSigner) return taprootSigner;
+      }
 
       throw new Error(`No signer found for input at path: ${input.path}`);
     },
