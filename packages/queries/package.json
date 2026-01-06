@@ -2,7 +2,7 @@
   "name": "@leather.io/queries",
   "author": "Leather.io contact@leather.io",
   "description": "Canonical React Query configurations for Leather services",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/queries",
   "repository": {

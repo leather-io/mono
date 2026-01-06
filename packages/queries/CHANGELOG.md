@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.1](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.3.0...@leather.io/queries-v0.3.1) (2026-01-06)
+
+
+### Bug Fixes
+
+* **extension:** incorrect account balance totals ([a299450](https://github.com/leather-io/mono/commit/a299450ec583a6e7cd82f82ce61e8c0ed57284a5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.46.3
+
 ## [0.3.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.2.4...@leather.io/queries-v0.3.0) (2025-12-18)
 
 

@@ -489,6 +489,30 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.101.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.100.4...@leather.io/ui-v1.101.0) (2026-01-06)
+
+
+### Features
+
+* new action buttons ([6bb4b78](https://github.com/leather-io/mono/commit/6bb4b78db34f306504762d7b87d5f4a7dde41b8a))
+
+
+### Bug Fixes
+
+* only run panda on build, scope EAS post‑install build to mobile only ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+* point panda to src/preset config as its how we use it mostly ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+* re-add pnpm prepare for web and extension ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+* rollback build change ([29690bf](https://github.com/leather-io/mono/commit/29690bfe4901fc691cd06d9d4487b585f9c2f60e))
+* **ui:** package advisories ([61872cf](https://github.com/leather-io/mono/commit/61872cfeaefcce7b97071ae4d5421ea7a64cb324))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/features bumped to 1.1.8
+    * @leather.io/panda-preset bumped to 0.14.8
+
 ## [1.100.4](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.100.3...@leather.io/ui-v1.100.4) (2025-12-19)
 
 
