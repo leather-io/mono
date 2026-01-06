@@ -1,6 +1,9 @@
 import { deriveKeychainFromXpub } from '@leather.io/crypto';
 
-import { deriveNativeSegwitReceiveAddressIndexZero } from './p2wpkh-address-gen';
+import {
+  deriveNativeSegwitReceiveAddressIndexZero,
+  makeNativeSegwitAddressIndexDerivationPath,
+} from './p2wpkh-address-gen';
 
 describe('Bitcoin bech32 (P2WPKH address derivation', () => {
   describe('from extended public key', () => {
@@ -44,5 +47,38 @@ describe('Bitcoin bech32 (P2WPKH address derivation', () => {
       test('bech 32 address', () =>
         expect(payment?.address).toEqual(account.zeroIndexChildAddress));
     });
+  });
+});
+
+describe(makeNativeSegwitAddressIndexDerivationPath.name, () => {
+  it('creates mainnet receive path', () => {
+    expect(
+      makeNativeSegwitAddressIndexDerivationPath({
+        network: 'mainnet',
+        accountIndex: 5,
+        changeIndex: 0,
+        addressIndex: 0,
+      })
+    ).toEqual("m/84'/0'/5'/0/0");
+  });
+  it('creates mainnet change path', () => {
+    expect(
+      makeNativeSegwitAddressIndexDerivationPath({
+        network: 'mainnet',
+        accountIndex: 42,
+        changeIndex: 1,
+        addressIndex: 5,
+      })
+    ).toEqual("m/84'/0'/42'/1/5");
+  });
+  it('creates testnet change path', () => {
+    expect(
+      makeNativeSegwitAddressIndexDerivationPath({
+        network: 'testnet',
+        accountIndex: 0,
+        changeIndex: 1,
+        addressIndex: 1,
+      })
+    ).toEqual("m/84'/1'/0'/1/1");
   });
 });

@@ -123,7 +123,7 @@ function useSignBip322MessageTaproot() {
   const sign = useSignBitcoinTx();
   const {
     payment: { tapInternalKey, address },
-  } = createTaprootSigner(0);
+  } = createTaprootSigner({ addressIndex: 0, changeIndex: 0 });
 
   async function signPsbt(psbt: bitcoin.Psbt) {
     psbt.data.inputs.forEach(input => (input.tapInternalKey = Buffer.from(tapInternalKey)));
@@ -143,7 +143,7 @@ function useSignBip322MessageNativeSegwit() {
 
   const {
     payment: { address },
-  } = createNativeSegwitSigner(0);
+  } = createNativeSegwitSigner({ addressIndex: 0, changeIndex: 0 });
 
   async function signPsbt(psbt: bitcoin.Psbt) {
     return sign(psbt.toBuffer());

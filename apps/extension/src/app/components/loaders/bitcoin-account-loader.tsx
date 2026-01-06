@@ -32,7 +32,7 @@ export function useBitcoinNativeSegwitAccountLoader(
   const signer = useNativeSegwitSigner(properIndex);
 
   if (!signer || !isBitcoinEnabled) return null;
-  return signer(0);
+  return signer({ changeIndex: 0, addressIndex: 0 });
 }
 
 export function BitcoinNativeSegwitAccountLoader({

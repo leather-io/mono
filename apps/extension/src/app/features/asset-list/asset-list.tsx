@@ -139,7 +139,10 @@ export function AssetList({
               />
             )}
           </Brc20TokensLoader>
-          <Src20TokensLoader filter={filter} address={currentBtcNativeSegwitAccount(0).address}>
+          <Src20TokensLoader
+            filter={filter}
+            address={currentBtcNativeSegwitAccount({ changeIndex: 0, addressIndex: 0 }).address}
+          >
             {({ tokens, preEnabledTokensIds }) => (
               <Src20TokenAssetList
                 tokens={tokens}

@@ -4,7 +4,7 @@ import { Outlet, useLocation, useOutletContext } from 'react-router';
 import get from 'lodash.get';
 
 import { createBitcoinAddress, lookupDerivationByAddress } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath } from '@leather.io/crypto';
+import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import type { AverageBitcoinFeeRates, BtcFeeType, InscriptionAsset } from '@leather.io/models';
 import { type UtxoWithDerivationPath } from '@leather.io/query';
 
@@ -74,6 +74,7 @@ export function SendInscriptionContainer() {
     }
 
     const adddressIndex = extractAddressIndexFromPath(result.path);
+    const changeIndex = extractChangeIndexFromPath(result.path);
 
     setInscription(routeState.inscription);
     setUtxo(
@@ -81,6 +82,7 @@ export function SendInscriptionContainer() {
         inscription: routeState.inscription,
         network: network.chain.bitcoin.mode,
         accountIndex: currentAccountIndex,
+        changeIndex,
         inscriptionAddressIdx: adddressIndex,
       })
     );

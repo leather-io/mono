@@ -16,7 +16,14 @@ import { test } from '../../fixtures/fixtures';
 function createKeychainFromTestMnmeonic() {
   const seed = mnemonicToSeedSync(TEST_ACCOUNT_SECRET_KEY);
   const keychain = HDKey.fromMasterSeed(seed);
-  return keychain.derive(makeNativeSegwitAddressIndexDerivationPath('testnet', 0, 0));
+  return keychain.derive(
+    makeNativeSegwitAddressIndexDerivationPath({
+      network: 'testnet',
+      accountIndex: 0,
+      changeIndex: 0,
+      addressIndex: 0,
+    })
+  );
 }
 
 test.describe('Sign PSBT', () => {

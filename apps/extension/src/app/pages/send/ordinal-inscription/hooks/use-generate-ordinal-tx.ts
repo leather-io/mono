@@ -2,7 +2,7 @@ import * as btc from '@scure/btc-signer';
 import { AddressType, getAddressInfo } from 'bitcoin-address-validation';
 
 import { BitcoinError, determineUtxosForSpend } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath } from '@leather.io/crypto';
+import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import type { UtxoWithDerivationPath } from '@leather.io/query';
 import { createCounter, createMoney } from '@leather.io/utils';
 
@@ -34,9 +34,11 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
   }
 
   function formTaprootOrdinalTx(values: OrdinalSendFormValues) {
-    const addressIndex = extractAddressIndexFromPath(inscriptionInput.derivationPath);
-    const taprootSigner = createTaprootSigner?.(addressIndex);
-    const changeSigner = createNativeSegwitSigner?.(0);
+    const taprootSigner = createTaprootSigner?.({
+      changeIndex: extractChangeIndexFromPath(inscriptionInput.derivationPath),
+      addressIndex: extractAddressIndexFromPath(inscriptionInput.derivationPath),
+    });
+    const changeSigner = createNativeSegwitSigner?.({ changeIndex: 0, addressIndex: 0 });
 
     if (!taprootSigner || !changeSigner || !nativeSegwitUtxos.available || !values.feeRate) return;
 
@@ -111,10 +113,11 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
   }
 
   function formNativeSegwitOrdinalTx(values: OrdinalSendFormValues) {
-    const changeSigner = createNativeSegwitSigner?.(0);
-    const inscriptionSigner = createNativeSegwitSigner?.(
-      extractAddressIndexFromPath(inscriptionInput.derivationPath)
-    );
+    const changeSigner = createNativeSegwitSigner?.({ changeIndex: 0, addressIndex: 0 });
+    const inscriptionSigner = createNativeSegwitSigner?.({
+      changeIndex: extractChangeIndexFromPath(inscriptionInput.derivationPath),
+      addressIndex: extractAddressIndexFromPath(inscriptionInput.derivationPath),
+    });
 
     const { feeRate, recipient } = values;
     if (!changeSigner || !inscriptionSigner || !nativeSegwitUtxos || !values.feeRate) return;

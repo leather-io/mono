@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import * as btc from '@scure/btc-signer';
 
-import { extractAddressIndexFromPath } from '@leather.io/crypto';
+import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import type { Money } from '@leather.io/models';
 import { createMoney, sumNumbers } from '@leather.io/utils';
 
@@ -38,8 +38,10 @@ export function useGenerateRetrieveTaprootFundsTx() {
       const totalAmount = sumNumbers(uninscribedUtxos.map(utxo => utxo.value));
 
       uninscribedUtxos.forEach(utxo => {
-        const addressIndex = extractAddressIndexFromPath(utxo.path);
-        const signer = createSigner?.(addressIndex);
+        const signer = createSigner?.({
+          addressIndex: extractAddressIndexFromPath(utxo.path),
+          changeIndex: extractChangeIndexFromPath(utxo.path),
+        });
         if (!signer) return;
 
         tx.addInput({
@@ -66,8 +68,10 @@ export function useGenerateRetrieveTaprootFundsTx() {
       tx.addOutputAddress(recipient, paymentAmount, networkMode);
 
       uninscribedUtxos.forEach(utxo => {
-        const addressIndex = extractAddressIndexFromPath(utxo.path);
-        return createSigner?.(addressIndex).sign(tx);
+        return createSigner?.({
+          addressIndex: extractAddressIndexFromPath(utxo.path),
+          changeIndex: extractChangeIndexFromPath(utxo.path),
+        }).sign(tx);
       });
 
       tx.finalize();

@@ -1,28 +1,25 @@
 import { useCallback, useEffect } from 'react';
 
-import { P2TROut } from '@scure/btc-signer/payment';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import type { BitcoinSigner } from '@leather.io/bitcoin';
-import { BitcoinAddress } from '@leather.io/models';
 import { BitcoinQueryPrefixes } from '@leather.io/query';
 import { createNumArrayOfRange } from '@leather.io/utils';
 
 import { useLeatherNetwork } from '@app/query/leather-query-provider';
 import { useBestInSlotApiRateLimiter } from '@app/query/rate-limiter/best-in-slot-limiter';
+import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 
 import { useBitcoinClient } from '../../clients/bitcoin-client';
 
 const addressesSimultaneousFetchLimit = 3;
 const stopSearchAfterNumberAddressesWithoutBrc20Tokens = 3;
 
-export function useGetBrc20TokensQuery({
-  nativeSegwitAddress,
-  createTaprootSigner,
-}: {
-  nativeSegwitAddress: BitcoinAddress;
-  createTaprootSigner: ((addressIndex: number) => BitcoinSigner<P2TROut>) | undefined;
-}) {
+export function useGetBrc20TokensQuery() {
+  const createTaprootSigner = useCurrentAccountTaprootSigner();
+  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
+  const nativeSegwitAddress = nativeSegwitSigner.address;
+
   const network = useLeatherNetwork();
   const currentNsBitcoinAddress = nativeSegwitAddress;
   const client = useBitcoinClient();
@@ -33,7 +30,7 @@ export function useGetBrc20TokensQuery({
   const getNextTaprootAddressBatch = useCallback(
     (fromIndex: number, toIndex: number) => {
       return createNumArrayOfRange(fromIndex, toIndex - 1).map(num => {
-        const address = createTaprootSigner(num).address;
+        const address = createTaprootSigner({ addressIndex: num, changeIndex: 0 }).address;
         return address;
       });
     },

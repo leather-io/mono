@@ -7,11 +7,11 @@ import { Psbt } from 'bitcoinjs-lib';
 import {
   deriveTaprootAccount,
   ecdsaPublicKeyToSchnorr,
-  getTaprootAccountDerivationPath,
   getTaprootPaymentFromAddressIndex,
   lookUpLedgerKeysByPath,
+  makeTaprootAccountDerivationPath,
 } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath } from '@leather.io/crypto';
+import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import { type BitcoinNetworkModes } from '@leather.io/models';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
@@ -31,7 +31,7 @@ import {
 
 const selectTaprootAccountBuilder = bitcoinAccountBuilderFactory(
   deriveTaprootAccount,
-  lookUpLedgerKeysByPath(getTaprootAccountDerivationPath)
+  lookUpLedgerKeysByPath(makeTaprootAccountDerivationPath)
 );
 
 const selectCurrentNetworkTaprootAccountBuilder = createSelector(
@@ -92,7 +92,7 @@ export function useCurrentAccountTaprootIndexZeroSigner() {
   const signer = useCurrentAccountTaprootSigner();
   return useMemo(() => {
     if (!signer) throw new Error('No signer');
-    return signer(0);
+    return signer({ changeIndex: 0, addressIndex: 0 });
   }, [signer]);
 }
 
@@ -107,9 +107,10 @@ export function useUpdateLedgerSpecificTaprootInputPropsForAdddressIndexZero() {
 
   return (tx: Psbt, fingerprint: string, inputsToUpdate: BitcoinInputSigningConfig[] = []) => {
     inputsToUpdate.forEach(({ index, derivationPath }) => {
-      const taprootAddressIndexSigner = createTaprootSigner?.(
-        extractAddressIndexFromPath(derivationPath)
-      );
+      const taprootAddressIndexSigner = createTaprootSigner?.({
+        changeIndex: extractChangeIndexFromPath(derivationPath),
+        addressIndex: extractAddressIndexFromPath(derivationPath),
+      });
 
       if (!taprootAddressIndexSigner)
         throw new Error(`Unable to update taproot input for path ${derivationPath}}`);

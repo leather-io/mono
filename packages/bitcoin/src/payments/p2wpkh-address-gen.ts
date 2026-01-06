@@ -21,12 +21,20 @@ export function makeNativeSegwitAccountDerivationPath(
 /** @deprecated Use makeNativeSegwitAccountDerivationPath */
 export const getNativeSegwitAccountDerivationPath = makeNativeSegwitAccountDerivationPath;
 
-export function makeNativeSegwitAddressIndexDerivationPath(
-  network: BitcoinNetworkModes,
-  accountIndex: number,
-  addressIndex: number
-) {
-  return makeNativeSegwitAccountDerivationPath(network, accountIndex) + `/0/${addressIndex}`;
+export function makeNativeSegwitAddressIndexDerivationPath({
+  network,
+  accountIndex,
+  changeIndex,
+  addressIndex,
+}: {
+  network: BitcoinNetworkModes;
+  accountIndex: number;
+  changeIndex: number;
+  addressIndex: number;
+}) {
+  return (
+    makeNativeSegwitAccountDerivationPath(network, accountIndex) + `/${changeIndex}/${addressIndex}`
+  );
 }
 
 /** @deprecated Use makeNativeSegwitAddressIndexDerivationPath */

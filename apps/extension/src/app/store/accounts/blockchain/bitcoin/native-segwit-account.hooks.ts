@@ -11,7 +11,7 @@ import {
   lookUpLedgerKeysByPath,
   makeNativeSegwitAccountDerivationPath,
 } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath } from '@leather.io/crypto';
+import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import { bitcoinNetworkToNetworkMode } from '@leather.io/models';
 import { reverseBytes } from '@leather.io/utils';
 
@@ -106,7 +106,7 @@ export function useCurrentAccountNativeSegwitIndexZeroSigner() {
   const signer = useCurrentAccountNativeSegwitSigner();
   return useMemo(() => {
     if (!signer) throw new Error('No signer');
-    return signer(0);
+    return signer({ changeIndex: 0, addressIndex: 0 });
   }, [signer]);
 }
 
@@ -114,7 +114,7 @@ export function useCurrentAccountNativeSegwitIndexZeroSignerNullable() {
   const signer = useCurrentAccountNativeSegwitSigner();
   return useMemo(() => {
     if (!signer) return undefined;
-    return signer(0);
+    return signer({ changeIndex: 0, addressIndex: 0 });
   }, [signer]);
 }
 
@@ -123,14 +123,17 @@ export function useCurrentAccountNativeSegwitIndexZeroSignerNullable() {
  */
 export function useCurrentAccountNativeSegwitAddressIndexZero() {
   const signer = useCurrentAccountNativeSegwitSigner();
-  return useMemo(() => signer?.(0).payment.address, [signer]) as string;
+  return useMemo(
+    () => signer?.({ changeIndex: 0, addressIndex: 0 }).payment.address,
+    [signer]
+  ) as string;
 }
 
 /**
  * @deprecated Use signer.address instead
  */
 export function useNativeSegwitAccountIndexAddressIndexZero(accountIndex: number) {
-  const signer = useNativeSegwitSigner(accountIndex)?.(0);
+  const signer = useNativeSegwitSigner(accountIndex)?.({ changeIndex: 0, addressIndex: 0 });
   // could it be this?
   return signer?.payment.address as string;
 }
@@ -182,9 +185,10 @@ export function useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressInd
 
   return (tx: Psbt, fingerprint: string, inputSigningConfig: BitcoinInputSigningConfig[]) => {
     inputSigningConfig.forEach(({ index, derivationPath }) => {
-      const nativeSegwitSigner = createNativeSegwitSigner?.(
-        extractAddressIndexFromPath(derivationPath)
-      );
+      const nativeSegwitSigner = createNativeSegwitSigner?.({
+        changeIndex: extractChangeIndexFromPath(derivationPath),
+        addressIndex: extractAddressIndexFromPath(derivationPath),
+      });
 
       if (!nativeSegwitSigner)
         throw new Error(`Unable to update input for path ${derivationPath}}`);
