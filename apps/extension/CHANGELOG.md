@@ -21,6 +21,24 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.90.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.89.0...@leather.io/extension-v6.90.0) (2026-01-07)
+
+
+### Features
+
+* other settings pages ([fe93560](https://github.com/leather-io/mono/commit/fe93560e5d936ba11d9800a3986deea205f6287e))
+* updated settings ([af9ddbb](https://github.com/leather-io/mono/commit/af9ddbb0d2124b87dfcc14efbaf1a33faafd7dee))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.18.0
+    * @leather.io/ui bumped to 1.102.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.15.0
+
 ## [6.89.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.88.0...@leather.io/extension-v6.89.0) (2026-01-07)
 
 
