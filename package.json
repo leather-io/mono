@@ -48,6 +48,8 @@
     "@tanstack/eslint-plugin-query": "5.62.1",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
+    "@types/react": "19.0.12",
+    "@types/react-dom": "19.0.4",
     "@trivago/prettier-plugin-sort-imports": "5.2.2",
     "@types/jest": "29.5.12",
     "@types/node": "24.0.8",
@@ -77,6 +79,8 @@
   "packageManager": "pnpm@10.18.3+sha512.bbd16e6d7286fd7e01f6b3c0b3c932cda2965c06a908328f74663f10a9aea51f1129eea615134bf992831b009eabe167ecb7008b597f40ff9bc75946aadfb08d",
   "pnpm": {
     "overrides": {
+      "@types/react": "19.0.12",
+      "@types/react-dom": "19.0.4",
       "cross-spawn": "7.0.5",
       "@shopify/flash-list>tslib": "2.4.0",
       "levelup>semver": "5.7.2",
