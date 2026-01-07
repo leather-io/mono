@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from 'react';
+import { Suspense } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { Box, Stack } from 'leather-styles/jsx';
@@ -34,17 +34,22 @@ const homeTabs = [
 export function HomeTabs({ children }: HomeTabsProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const activeTab = useMemo(() => {
-    const matchingTab = homeTabs.find(tab => location.pathname.startsWith(tab.value));
-    return matchingTab?.value ?? RouteUrls.Home;
-  }, [location.pathname]);
+  const { pathname } = location;
+  const activeTab =
+    [RouteUrls.Activity, RouteUrls.Collectibles].find(route => pathname.startsWith(route)) ??
+    RouteUrls.Home;
 
   return (
     <Stack flexGrow={1} gap="space.06">
-      <Tabs.Root value={activeTab} onValueChange={slug => navigate(slug)}>
+      <Tabs.Root value={activeTab}>
         <Tabs.List>
           {homeTabs.map(tab => (
-            <Tabs.Trigger key={tab.value} data-testid={tab.testId} value={tab.value}>
+            <Tabs.Trigger
+              key={tab.value}
+              data-testid={tab.testId}
+              value={tab.value}
+              onClick={() => navigate(tab.value)}
+            >
               {tab.label}
             </Tabs.Trigger>
           ))}

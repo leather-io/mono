@@ -10,6 +10,8 @@
 - Use arrow functions for callbacks.
 - Use object method shorthand syntax in objects and interfaces.
   constants.ts files.
+- Avoid nested ternary expressions; prefer clear branching or functional expressions.
+- Prefer `const` where possible; avoid `let` when it improves clarity.
 - Prefer constants over magic numbers or strings.
 
 ## Naming
