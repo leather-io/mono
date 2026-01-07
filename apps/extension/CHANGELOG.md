@@ -21,6 +21,18 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.89.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.88.0...@leather.io/extension-v6.89.0) (2026-01-07)
+
+
+### Features
+
+* non-blocking inscription check ([6e08adc](https://github.com/leather-io/mono/commit/6e08adc6fba9128f0bd2718701a0083fa3718150))
+
+
+### Bug Fixes
+
+* **extension:** remove uniqueArray dedupe on BitcoinTransactions query for Ledger Stacks only ([74fa211](https://github.com/leather-io/mono/commit/74fa211d0f4d5e23bdb9b1314972b255fdab3e27))
+
 ## [6.88.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.87.1...@leather.io/extension-v6.88.0) (2026-01-06)
 
 

@@ -19,6 +19,13 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.96.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.2...@leather.io/mobile-v2.96.3) (2026-01-07)
+
+
+### Bug Fixes
+
+* givc usdcx priority in mobile and show in empty wallets ([22d5673](https://github.com/leather-io/mono/commit/22d5673f2f71665fd3346551c6224fa2f64641a3))
+
 ## [2.96.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.1...@leather.io/mobile-v2.96.2) (2026-01-06)
 
 
