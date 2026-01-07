@@ -252,6 +252,13 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.23.1
 
+## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.14.8...@leather.io/panda-preset-v0.15.0) (2026-01-07)
+
+
+### Features
+
+* updated settings ([af9ddbb](https://github.com/leather-io/mono/commit/af9ddbb0d2124b87dfcc14efbaf1a33faafd7dee))
+
 ## [0.14.8](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.14.7...@leather.io/panda-preset-v0.14.8) (2026-01-06)
 
 
