@@ -4,21 +4,15 @@ import { SharedComponentsSelectors } from '@tests/selectors/shared-component.sel
 import { css, cx } from 'leather-styles/css';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { ChainId, type Money } from '@leather.io/models';
-import {
-  Flag,
-  InfoCircleIcon,
-  NetworkModeBadge,
-  SkeletonLoader,
-  shimmerStyles,
-} from '@leather.io/ui';
+import { type Money } from '@leather.io/models';
+import { Flag, InfoCircleIcon, SkeletonLoader, shimmerStyles } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { useScaleText } from '@app/common/hooks/use-scale-text';
 import { Divider } from '@app/components/layout/divider';
 import { PrivateTextLayout } from '@app/components/privacy/private-text.layout';
-import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
+import { NetworkSwitcherBadge } from '@app/pages/settings/components/network-switcher';
 
 import { BasicTooltip } from '../tooltip/basic-tooltip';
 
@@ -52,7 +46,6 @@ export function AccountCard({
   const scaleTextRef = useScaleText();
   const isAtLeastMd = useViewportMinWidth('md');
   const tooltipSide = isAtLeastMd ? 'right' : 'bottom';
-  const { chain, name: chainName } = useCurrentNetworkState();
 
   return (
     <Flex direction="column" rounded="md">
@@ -68,10 +61,7 @@ export function AccountCard({
             </Flag>
           </BasicTooltip>
         </Box>
-        <NetworkModeBadge
-          isTestnetChain={chain.stacks.chainId === ChainId.Testnet}
-          name={chainName}
-        />
+        <NetworkSwitcherBadge />
       </Flex>
       <Flex flexDir={{ base: 'column', md: 'row' }} justify="space-between">
         <Box width="100%" pt="space.02">

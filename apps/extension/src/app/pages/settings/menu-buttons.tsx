@@ -109,6 +109,7 @@ export function MenuButtons() {
         onClick={() => openFeedbackSheet()}
         icon={<MegaphoneIcon />}
       />
+
       <Flex pt="space.03" pb="space.05" direction="column" gap="space.01">
         <styled.p textStyle="label.02">Version</styled.p>
         <AppVersion />

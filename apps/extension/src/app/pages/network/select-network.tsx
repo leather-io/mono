@@ -13,12 +13,14 @@ import { Content } from '@app/components/layout';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
-import { HeaderSettingsButton } from '@app/components/layout/headers/header-settings-button';
 import { useCurrentNetworkState } from '@app/query/leather-query-provider';
 import { useNetworksActions } from '@app/store/networks/networks.hooks';
 import { useNetworks } from '@app/store/networks/networks.selectors';
+import { useToggleNetworkBadgeAlwaysOn } from '@app/store/settings/settings.actions';
+import { useNetworkBadgeAlwaysOn } from '@app/store/settings/settings.selectors';
 
 import { NetworkListItem } from './components/network-list-item';
+import { NetworkListSwitch } from './components/network-list-switch';
 
 const defaultNetworkIds = Object.values(WalletDefaultNetworkConfigurationIds) as string[];
 
@@ -27,6 +29,8 @@ export function SelectNetwork() {
   const networks = useNetworks();
   const networksActions = useNetworksActions();
   const currentNetwork = useCurrentNetworkState();
+  const networkBadgeAlwaysOn = useNetworkBadgeAlwaysOn();
+  const toggleNetworkBadgeAlwaysOn = useToggleNetworkBadgeAlwaysOn();
 
   function addNetwork() {
     analytics.track('add_network');
@@ -46,7 +50,7 @@ export function SelectNetwork() {
   return (
     <Flex height="100vh" direction="column">
       <Header px="space.04">
-        <HeaderGrid leftCol={<HeaderBackButton />} rightCol={<HeaderSettingsButton />} />
+        <HeaderGrid leftCol={<HeaderBackButton />} rightCol={null} />
       </Header>
       <Content>
         <Flex
@@ -85,13 +89,21 @@ export function SelectNetwork() {
           </Flex>
 
           <Flex
-            gap="space.05"
+            gap="space.02"
             pb="space.05"
             pt="space.03"
             background="ink.background-primary"
             position="sticky"
             bottom={0}
+            flexDirection="column"
           >
+            <NetworkListSwitch
+              data-testid={SettingsSelectors.ToggleNetworkBadge}
+              title="Always show network"
+              caption="Switch networks faster"
+              isEnabled={networkBadgeAlwaysOn}
+              onClick={toggleNetworkBadgeAlwaysOn}
+            />
             <Button
               data-testid={SettingsSelectors.AddNewNetworkBtn}
               fullWidth

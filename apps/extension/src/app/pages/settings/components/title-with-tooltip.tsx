@@ -11,7 +11,7 @@ export function TitleWithTooltip({ title, tooltipText }: TitleWithTooltipProps) 
   return (
     <Flex gap="space.01">
       {title}
-      <BasicTooltip side="right" label={tooltipText}>
+      <BasicTooltip side="top" label={tooltipText}>
         <QuestionCircleIcon variant="small" />
       </BasicTooltip>
     </Flex>

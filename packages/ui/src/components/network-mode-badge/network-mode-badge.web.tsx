@@ -3,12 +3,12 @@ import { Flex } from 'leather-styles/jsx';
 import { Badge } from '../badge/badge.web';
 
 interface NetworkBadge {
-  isTestnetChain: boolean;
+  isVisible: boolean;
   name: string;
 }
 
-export function NetworkModeBadge({ isTestnetChain, name }: NetworkBadge) {
-  if (!isTestnetChain) return null;
+export function NetworkModeBadge({ isVisible, name }: NetworkBadge) {
+  if (!isVisible) return null;
 
   return (
     <Flex position="relative" zIndex={999}>

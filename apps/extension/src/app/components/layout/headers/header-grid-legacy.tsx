@@ -30,10 +30,7 @@ export function HeaderGridRightCol({ children }: HasChildren) {
   const { chain, name: chainName } = useCurrentNetworkState();
   return (
     <HStack alignItems="center" justifyContent="flex-end">
-      <NetworkModeBadge
-        isTestnetChain={chain.stacks.chainId === ChainId.Testnet}
-        name={chainName}
-      />
+      <NetworkModeBadge isVisible={chain.stacks.chainId === ChainId.Testnet} name={chainName} />
       {children}
     </HStack>
   );
