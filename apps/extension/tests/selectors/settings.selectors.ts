@@ -29,4 +29,5 @@ export enum SettingsSelectors {
   OpenWalletInNewTab = 'open-wallet-in-new-tab',
   TogglePrivacy = 'toggle-privacy',
   ToggleNotifications = 'toggle-notifications',
+  ToggleNetworkBadge = 'toggle-network-badge',
 }

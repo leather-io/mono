@@ -10,6 +10,7 @@ interface InitialState {
   isNotificationsEnabled?: boolean;
   bypassInscriptionChecks?: boolean;
   discardedInscriptions: string[];
+  networkBadgeAlwaysOn?: boolean;
 }
 
 const initialState: InitialState = {
@@ -46,6 +47,9 @@ export const settingsSlice = createSlice({
     },
     toggleNotificationsEnabled(state) {
       state.isNotificationsEnabled = !state.isNotificationsEnabled;
+    },
+    toggleNetworkBadgeAlwaysOn(state) {
+      state.networkBadgeAlwaysOn = !state.networkBadgeAlwaysOn;
     },
     dangerouslyChosenToBypassAllInscriptionChecks(state) {
       state.bypassInscriptionChecks = true;

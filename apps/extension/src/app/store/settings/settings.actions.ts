@@ -18,3 +18,8 @@ export function useToggleNotificationsEnabled() {
   const dispatch = useDispatch();
   return () => dispatch(settingsActions.toggleNotificationsEnabled());
 }
+
+export function useToggleNetworkBadgeAlwaysOn() {
+  const dispatch = useDispatch();
+  return () => dispatch(settingsActions.toggleNetworkBadgeAlwaysOn());
+}

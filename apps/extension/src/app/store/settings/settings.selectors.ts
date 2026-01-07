@@ -53,6 +53,15 @@ export function useIsNotificationsEnabled() {
   return useSelector(selectIsNotificationsEnabled);
 }
 
+const selectNetworkBadgeAlwaysOn = createSelector(
+  selectSettings,
+  state => state.networkBadgeAlwaysOn ?? false
+);
+
+export function useNetworkBadgeAlwaysOn() {
+  return useSelector(selectNetworkBadgeAlwaysOn);
+}
+
 const selectDiscardedInscriptions = createSelector(
   selectSettings,
   state => state.discardedInscriptions
