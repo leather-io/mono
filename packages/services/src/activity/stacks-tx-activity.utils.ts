@@ -61,11 +61,9 @@ export function isMempoolTx(
 }
 
 export function mapStacksTxStatus(tx: HiroStacksTransaction | HiroStacksMempoolTransaction) {
-  return tx.tx_status === 'success'
-    ? OnChainActivityStatuses.success
-    : tx.tx_status === 'pending'
-      ? OnChainActivityStatuses.pending
-      : OnChainActivityStatuses.failed;
+  if (tx.tx_status === 'success') return OnChainActivityStatuses.success;
+  if (tx.tx_status === 'pending') return OnChainActivityStatuses.pending;
+  return OnChainActivityStatuses.failed;
 }
 
 export function mapTokenTransferActivity(

@@ -5,7 +5,6 @@ import { defineConfig } from 'eslint/config';
 import baseConfig from '@leather.io/eslint-config';
 import reactConfig from '@leather.io/eslint-config/react';
 
-
 const useQueryConfigOrKeyRule = {
   meta: {
     type: 'problem',
@@ -66,6 +65,9 @@ export default defineConfig([
     files: ['{packages,apps}/**/*.{ts,tsx}'],
     extends: [baseConfig],
     rules: {
+      'no-nested-ternary': 'error',
+      'no-var': 'error',
+      'prefer-const': 'error',
       '@typescript-eslint/no-floating-promises': [
         'error',
         {
@@ -169,7 +171,7 @@ export default defineConfig([
       'no-restricted-syntax': [
         'error',
         {
-          selector: "TSTypeAliasDeclaration[id.name=/QueryOptions$/]",
+          selector: 'TSTypeAliasDeclaration[id.name=/QueryOptions$/]',
           message:
             'Do not define *QueryOptions type aliases in @leather.io/queries. Consumers should use UseQueryOptions in app code instead of wrapper types.',
         },
@@ -275,23 +277,23 @@ export default defineConfig([
         'error',
         {
           paths: [
-          {
-            name: '@leather.io/services',
-            importNames: [
-              'getActivityService',
-              'getMarketDataService',
-              'getBtcBalancesService',
-              'getStxBalancesService',
-              'getRunesBalancesService',
-              'getAccountBalancesService',
-              'getFungibleAssetInfoService',
-              'getMarketHistoryService',
-              'getUtxosService',
-              'getBnsService',
-              'getCollectiblesService',
-              'getStacksTransactionsService',
-              'getBitcoinTransactionsService',
-            ],
+            {
+              name: '@leather.io/services',
+              importNames: [
+                'getActivityService',
+                'getMarketDataService',
+                'getBtcBalancesService',
+                'getStxBalancesService',
+                'getRunesBalancesService',
+                'getAccountBalancesService',
+                'getFungibleAssetInfoService',
+                'getMarketHistoryService',
+                'getUtxosService',
+                'getBnsService',
+                'getCollectiblesService',
+                'getStacksTransactionsService',
+                'getBitcoinTransactionsService',
+              ],
               message:
                 'In query modules, use @leather.io/queries builders instead of importing get*Service directly.',
             },
@@ -300,5 +302,5 @@ export default defineConfig([
       ],
       'leather/use-query-config-or-key': 'error',
     },
-  }
+  },
 ]);
