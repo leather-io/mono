@@ -2,6 +2,7 @@ import { TEST_ACCOUNT_1_STX_ADDRESS, TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/m
 import { mockMainnetTestAccountStacksConfirmedTxsRequests } from '@tests/mocks/mock-stacks-txs';
 import type { HomePage } from '@tests/page-object-models/home.page';
 import { makeLedgerTestAccountWalletState } from '@tests/page-object-models/onboarding.page';
+import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
 import { test } from '../../fixtures/fixtures';
@@ -60,6 +61,33 @@ test.describe('App with Ledger', () => {
           await homePage.switchAccount(1);
           const stacksAddress = await homePage.getReceiveStxAddress();
           test.expect(stacksAddress).toEqual(TEST_ACCOUNT_2_STX_ADDRESS);
+        });
+
+        test('that activity page loads without errors', async ({ homePage }) => {
+          const errors: Error[] = [];
+          const consoleErrors: string[] = [];
+
+          homePage.page.on('pageerror', error => {
+            errors.push(error);
+          });
+
+          homePage.page.on('console', msg => {
+            if (msg.type() === 'error') {
+              consoleErrors.push(msg.text());
+            }
+          });
+
+          await homePage.clickActivityTab();
+
+          test.expect(homePage.page.url()).toContain('/activity');
+
+          const activityList = homePage.page.getByTestId(ActivitySelectors.ActivityList);
+          const noActivityText = homePage.page.getByText('No activity yet');
+
+          await test.expect(activityList.or(noActivityText)).toBeVisible();
+
+          test.expect(errors).toHaveLength(0);
+          test.expect(consoleErrors).toHaveLength(0);
         });
       }
 
