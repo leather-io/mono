@@ -367,8 +367,9 @@ describe('initial placholder base asset reconciliation', () => {
     await waitFor(() => {
       expect(result.current.baseAssetsQuery.status).toBe('success');
     });
-
-    expect(result.current.state.baseSwapAsset).toBeNull();
+    await waitFor(() => {
+      expect(result.current.state.baseSwapAsset).toBeNull();
+    });
     expect(result.current.state.targetSwapAsset).toBeNull();
     expect(result.current.state.baseAmount).toBe('0');
     expect(result.current.state.pairReconciliation).toMatchObject({
