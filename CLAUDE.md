@@ -14,6 +14,32 @@
 - Prefer `const` where possible; avoid `let` when it improves clarity.
 - Prefer constants over magic numbers or strings.
 
+### Styling with Panda CSS
+
+Use CSS style props directly on components instead of the `style` object notation:
+
+```tsx
+// ✅ Preferred: CSS style props
+<Box position="absolute" top={0} left={0} bg="ink.background-primary" p="space.04" />
+
+// ❌ Avoid: object notation via style prop
+<Box style={{ position: 'absolute', top: 0, left: 0, backgroundColor: 'red', padding: '16px' }} />
+```
+
+Only use `style={{ }}` when absolutely necessary (e.g., dynamic values that can't be expressed as tokens, or third-party components that don't support Panda props).
+
+For responsive styles, use array notation instead of object notation:
+
+```tsx
+// ✅ Preferred: array notation for responsive values
+<Box width={['100%', '50%', '33%']} p={['space.02', 'space.04']} />
+
+// ❌ Avoid: object notation with breakpoint keys
+<Box width={{ base: '100%', md: '50%', lg: '33%' }} p={{ base: 'space.02', md: 'space.04' }} />
+```
+
+Array values map to breakpoints in order: `[base, sm, md, lg, xl, 2xl]`. Use `null` to skip a breakpoint.
+
 ## Naming
 
 - use camelCase for file-level constants, screaming snake case in the "constants" package or constants.ts files.

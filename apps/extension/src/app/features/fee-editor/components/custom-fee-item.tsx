@@ -42,7 +42,7 @@ export function CustomFeeItem({ fee }: CustomFeeItemProps) {
             }}
           >
             <Stack pt="space.02">
-              <Input.Root style={{ minHeight: '40px' }}>
+              <Input.Root minHeight="40px">
                 <Input.Field
                   ref={inputRef}
                   onChange={e => onSetCustomFee(e.target.value)}

@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 
 import { Flex, FlexProps } from 'leather-styles/jsx';
-import { token } from 'leather-styles/tokens';
 
 interface CardProps {
   children: ReactNode;
@@ -36,7 +35,7 @@ export function Card({
         flexDirection="column"
         width="100%"
         overflowY="auto"
-        style={{ marginBottom: footer ? token('sizes.footerHeight') : 0 }}
+        mb={footer ? 'footerHeight' : 0}
         p="space.05"
         maxHeight={{ base: '70vh', md: '80vh' }}
         {...contentStyle}

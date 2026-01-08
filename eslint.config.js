@@ -54,9 +54,83 @@ const useQueryConfigOrKeyRule = {
   },
 };
 
+const preferStylePropsRule = {
+  meta: {
+    type: 'suggestion',
+    docs: {
+      description:
+        'Prefer Panda CSS style props over inline style={{}} object notation for better consistency and token usage.',
+    },
+    schema: [],
+  },
+  create(context) {
+    return {
+      JSXAttribute(node) {
+        if (
+          node.name.type === 'JSXIdentifier' &&
+          node.name.name === 'style' &&
+          node.value?.type === 'JSXExpressionContainer' &&
+          node.value.expression.type === 'ObjectExpression'
+        ) {
+          context.report({
+            node,
+            message:
+              'Prefer Panda CSS style props over style={{}}. Use props like bg="red" instead of style={{ backgroundColor: "red" }}.',
+          });
+        }
+      },
+    };
+  },
+};
+
+const responsiveBreakpoints = new Set(['base', 'sm', 'md', 'lg', 'xl', '2xl']);
+
+const preferResponsiveArrayRule = {
+  meta: {
+    type: 'suggestion',
+    docs: {
+      description: 'Prefer array notation over object notation for responsive styles in Panda CSS.',
+    },
+    schema: [],
+  },
+  create(context) {
+    return {
+      JSXAttribute(node) {
+        if (
+          node.name.type === 'JSXIdentifier' &&
+          node.name.name !== 'style' &&
+          node.value?.type === 'JSXExpressionContainer' &&
+          node.value.expression.type === 'ObjectExpression'
+        ) {
+          const props = node.value.expression.properties;
+          if (props.length === 0) return;
+
+          const allKeysAreBreakpoints = props.every(prop => {
+            if (prop.type !== 'Property' || prop.computed) return false;
+            const key = prop.key;
+            const keyName =
+              key.type === 'Identifier' ? key.name : key.type === 'Literal' ? key.value : null;
+            return keyName && responsiveBreakpoints.has(keyName);
+          });
+
+          if (allKeysAreBreakpoints) {
+            context.report({
+              node,
+              message:
+                'Prefer array notation for responsive styles. Use width={["100%", "50%"]} instead of width={{ base: "100%", md: "50%" }}.',
+            });
+          }
+        }
+      },
+    };
+  },
+};
+
 const leatherCustomPlugin = {
   rules: {
     'use-query-config-or-key': useQueryConfigOrKeyRule,
+    'prefer-style-props': preferStylePropsRule,
+    'prefer-responsive-array': preferResponsiveArrayRule,
   },
 };
 
@@ -118,6 +192,13 @@ export default defineConfig([
     name: 'ui',
     files: ['packages/ui/src/**/*.{ts,tsx}'],
     extends: [reactConfig],
+    plugins: {
+      leather: leatherCustomPlugin,
+    },
+    rules: {
+      'leather/prefer-style-props': 'warn',
+      'leather/prefer-responsive-array': 'warn',
+    },
   },
   {
     name: 'isolated declarations packages',
@@ -185,18 +266,38 @@ export default defineConfig([
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
     rules: {
       '@typescript-eslint/only-throw-error': 'off',
+      'leather/prefer-style-props': 'warn',
+    },
+    plugins: {
+      leather: leatherCustomPlugin,
+    },
+    rules: {
+      'leather/prefer-style-props': 'warn',
+      'leather/prefer-responsive-array': 'warn',
     },
   },
   {
     name: 'extension',
     files: ['apps/extension/src/**/*.{ts,tsx}', 'apps/extension/.storybook/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
+    plugins: {
+      leather: leatherCustomPlugin,
+    },
+    rules: {
+      'leather/prefer-style-props': 'warn',
+      'leather/prefer-responsive-array': 'warn',
+    },
   },
   {
     name: 'mobile',
     files: ['apps/mobile/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginLingui.configs['flat/recommended']],
+    plugins: {
+      leather: leatherCustomPlugin,
+    },
     rules: {
+      'leather/prefer-style-props': 'warn',
+      'leather/prefer-responsive-array': 'warn',
       'lingui/no-unlocalized-strings': [
         'error',
         // https://github.com/lingui/eslint-plugin/blob/main/docs/rules/no-unlocalized-strings.md
