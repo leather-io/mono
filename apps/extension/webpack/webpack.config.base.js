@@ -140,7 +140,7 @@ export const config = {
     rules: [
       {
         test: /\.(js|ts|tsx)$/,
-        include: [/node_modules\/@leather\.io/, /packages\/.*\/dist/],
+        include: [/node_modules\/@leather\.io/, /node_modules\/@stacks/, /packages\/.*\/dist/],
         enforce: 'pre',
         use: ['source-map-loader'],
       },
