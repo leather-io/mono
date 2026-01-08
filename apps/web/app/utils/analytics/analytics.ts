@@ -7,8 +7,6 @@ import { noop } from '@leather.io/utils';
 const writeKey = import.meta.env.LEATHER_MIXPANEL_TOKEN;
 
 function getMockedMixpanel() {
-  // eslint-disable-next-line no-console
-  console.warn('Using mocked mixpanel. No analytics are sent');
   return {
     identify() {
       return Promise.resolve();
