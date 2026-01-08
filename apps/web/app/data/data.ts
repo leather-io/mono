@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { MIN_DELEGATED_STACKING_AMOUNT_USTX } from '~/constants/constants';
 
 // Providers are partner entities that offer yeild based services
 const providers = {
@@ -198,10 +197,10 @@ export const stackingPoolData = {
     ...providers.stackingDao,
     website: providers.stackingDao.url,
     fee: '5%',
-    minAmount: '100 STX',
+    minAmount: '500 STX',
     rewardsToken: 'BTC',
     estApr: '16%',
-    payout: 'STX',
+    payout: 'BTC',
     description:
       "Enter the STX address of the pool with which you'd like to Stack without your STX leaving your wallet.",
     duration: -1,
@@ -211,7 +210,7 @@ export const stackingPoolData = {
       devnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG',
     },
     poxContract: 'WrapperStackingDao',
-    minimumDelegationAmount: MIN_DELEGATED_STACKING_AMOUNT_USTX,
+    minimumDelegationAmount: 500_000_000,
     disabled: false,
     tvlUsd: '$40,000,000',
     minCommitmentUsd: '$1',
