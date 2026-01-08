@@ -29,15 +29,15 @@ function PostConditionsSuspense(): React.JSX.Element | null {
   if (!postConditions || !pendingTransaction) return <></>;
   if (!IS_TEST_ENV && mode === PostConditionMode.Allow) return null;
 
+  function renderPostConditionsContent() {
+    if (hasPostConditions) return <PostConditionsList />;
+    if (isStxTransfer) return <StxPostCondition />;
+    return <NoPostConditions />;
+  }
+
   return (
     <Flex border="active" borderRadius="sm" flexDirection="column" mb="space.05" width="100%">
-      {hasPostConditions ? (
-        <PostConditionsList />
-      ) : isStxTransfer ? (
-        <StxPostCondition />
-      ) : (
-        <NoPostConditions />
-      )}
+      {renderPostConditionsContent()}
     </Flex>
   );
 }

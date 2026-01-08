@@ -11,6 +11,12 @@ import { NetworkItemMenu } from '@app/features/settings/network/components/netwo
 import { useGetStacksNetworkStatusQuery } from '@app/query/stacks/network/network.query';
 import { useCurrentNetworkId, useNetworks } from '@app/store/networks/networks.selectors';
 
+function getCursorStyle(isOnline: boolean, isActive: boolean) {
+  if (!isOnline) return 'not-allowed';
+  if (isActive) return 'default';
+  return 'pointer';
+}
+
 interface NetworkListItemProps {
   networkId: string;
   isCustom: boolean;
@@ -46,7 +52,7 @@ export function NetworkListItem({
           px: 'space.05',
           py: 'space.03',
           borderRadius: 'xs',
-          cursor: !isOnline ? 'not-allowed' : isActive ? 'default' : 'pointer',
+          cursor: getCursorStyle(isOnline, isActive),
           opacity: !isOnline ? 0.5 : 1,
         })}
         onClick={unselectable ? undefined : onSelectNetwork}

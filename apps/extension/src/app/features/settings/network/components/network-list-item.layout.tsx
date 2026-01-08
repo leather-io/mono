@@ -9,6 +9,12 @@ import { getUrlHostname, truncateString } from '@app/common/utils';
 
 import { NetworkItemMenu } from './network-list-item-menu';
 
+function getCursorStyle(isOnline: boolean, isActive: boolean) {
+  if (!isOnline) return 'not-allowed';
+  if (isActive) return 'default';
+  return 'pointer';
+}
+
 interface NetworkListItemLayoutProps {
   networkId: string;
   isOnline: boolean;
@@ -46,7 +52,7 @@ export function NetworkListItemLayout({
         px="space.05"
         py="space.04"
         onClick={unselectable ? undefined : onSelectNetwork}
-        cursor={!isOnline ? 'not-allowed' : isActive ? 'default' : 'pointer'}
+        cursor={getCursorStyle(isOnline, isActive)}
         opacity={!isOnline ? 0.5 : 1}
         data-testid={network.id}
         aria-disabled={unselectable}

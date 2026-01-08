@@ -77,12 +77,16 @@ function getDelegationStatusFromTransaction(network: StacksNetwork) {
         }
       }
 
-      const delegatedTo =
-        transaction.contract_call.contract_id === poxContracts['WrapperFastPool']
-          ? poxContracts['WrapperFastPool']
-          : transaction.contract_call.contract_id === poxContracts['WrapperRestake']
-            ? poxContracts['WrapperRestake']
-            : safeDelegateToCVToString(delegatedToCV);
+      function getDelegatedTo() {
+        if (transaction.contract_call.contract_id === poxContracts['WrapperFastPool']) {
+          return poxContracts['WrapperFastPool'];
+        }
+        if (transaction.contract_call.contract_id === poxContracts['WrapperRestake']) {
+          return poxContracts['WrapperRestake'];
+        }
+        return safeDelegateToCVToString(delegatedToCV);
+      }
+      const delegatedTo = getDelegatedTo();
 
       function extractPoxAddressFromClarityValue2(poxAddrCV: ClarityValue) {
         const { version, hashBytes } = extractPoxAddressFromClarityValue(poxAddrCV);

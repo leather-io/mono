@@ -10,6 +10,12 @@ import type {
   TransactionListTxs,
 } from '@app/features/activity-list/components/transaction-list/transaction-list.model';
 
+function compareDescending<T>(a: T, b: T): number {
+  if (a > b) return -1;
+  if (a < b) return 1;
+  return 0;
+}
+
 export function getTransactionId(listTx: TransactionListTxs) {
   switch (listTx.blockchain) {
     case 'bitcoin':
@@ -68,14 +74,14 @@ function groupTxsByDateMap(txs: TransactionListTxs[]) {
       const bTxIndex = getTransactionTxIndex(b);
 
       if (!aTxIndex || !bTxIndex) return 0;
-      return aTxIndex > bTxIndex ? -1 : aTxIndex < bTxIndex ? 1 : 0;
+      return compareDescending(aTxIndex, bTxIndex);
     })
     .sort((a, b) => {
       const aBlockHeight = getTransactionBlockHeight(a);
       const bBlockHeight = getTransactionBlockHeight(b);
 
       if (!aBlockHeight || !bBlockHeight) return 0;
-      return aBlockHeight > bBlockHeight ? -1 : aBlockHeight < bBlockHeight ? 1 : 0;
+      return compareDescending(aBlockHeight, bBlockHeight);
     })
     .sort((a, b) => {
       const aTime = getTransactionTime(a);
@@ -86,7 +92,7 @@ function groupTxsByDateMap(txs: TransactionListTxs[]) {
       const aMsTime = new Date(aTime).getTime();
       const bMsTime = new Date(bTime).getTime();
 
-      return aMsTime > bMsTime ? -1 : aMsTime < bMsTime ? 1 : 0;
+      return compareDescending(aMsTime, bMsTime);
     })
     .reduce((txsByDate, tx) => {
       const time = getTransactionTime(tx);
@@ -141,7 +147,7 @@ function sortGroupedTransactions(
     txs: TransactionListTxs[];
   }[]
 ) {
-  return txs.sort((a, b) => (a.date > b.date ? -1 : a.date < b.date ? 1 : 0));
+  return txs.sort((a, b) => compareDescending(a.date, b.date));
 }
 
 export function createTxDateFormatList(

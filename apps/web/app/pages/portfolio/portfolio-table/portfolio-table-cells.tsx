@@ -46,25 +46,31 @@ export function PriceChangeCell({ priceChange }: PriceChangeCellProps) {
 interface AssetCellProps {
   asset: BtcAsset | Sip10Asset | StxAsset;
 }
+function getAssetName(asset: BtcAsset | Sip10Asset | StxAsset) {
+  if (isBtcAsset(asset)) return 'Bitcoin';
+  if (isStxAsset(asset)) return 'Stacks';
+  return asset.name;
+}
+
+function AssetIcon({ asset }: AssetCellProps) {
+  if (isBtcAsset(asset)) return <BtcAvatarIcon />;
+  if (isStxAsset(asset)) return <StxAvatarIcon />;
+  return (
+    <Sip10AvatarIcon
+      contractId={asset.contractId}
+      imageCanonicalUri={asset.imageCanonicalUri}
+      name={asset.name}
+    />
+  );
+}
+
 export function AssetCell({ asset }: AssetCellProps) {
-  const isBtc = isBtcAsset(asset);
-  const isStx = isStxAsset(asset);
-  const name = isBtc ? 'Bitcoin' : isStx ? 'Stacks' : asset.name;
+  const name = getAssetName(asset);
   const symbol = asset.symbol;
   return (
     <Flex alignItems="center" gap="space.04">
       <Box>
-        {isBtc ? (
-          <BtcAvatarIcon />
-        ) : isStx ? (
-          <StxAvatarIcon />
-        ) : (
-          <Sip10AvatarIcon
-            contractId={asset.contractId}
-            imageCanonicalUri={asset.imageCanonicalUri}
-            name={asset.name}
-          />
-        )}
+        <AssetIcon asset={asset} />
       </Box>
       <Box>
         <styled.p textStyle="body.02" fontWeight="medium">

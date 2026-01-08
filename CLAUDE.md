@@ -112,12 +112,33 @@ const ids = items.map(x => x.id);
 - Our repo is a turbo monorepo which uses `pnpm` for package management and package.json scripts.
 - Many common actions can be found in respective pacakge and apps `scripts` in the package.json.
 
-### Updating pnpm version
+### Verify before completing
 
-When updating pnpm, you must update all three locations:
+Verify that no formatting, type, or lint errors are introduced:
 
-1. `.prototools` - version only (e.g., `pnpm = "10.26.0"`)
-2. `.github/actions/provision/action.yml` - version with SHA
-3. `package.json` - `packageManager` field with version and SHA
+```bash
+pnpm format:check
+pnpm lint
+pnpm typecheck
+```
 
-Use the helper script: `./scripts/update-pnpm-version.sh <version>`
+If `format:check` fails, run `pnpm format` to auto-fix formatting issues.
+
+For faster feedback when working in a specific package, use filtered commands:
+
+```bash
+pnpm --filter @leather.io/web lint
+pnpm --filter @leather.io/extension typecheck
+```
+
+Fix any errors before considering the task complete.
+
+### Prettier formatting
+
+Follow the project's Prettier configuration. Key rules:
+- Use single quotes for strings
+- Use trailing commas where valid in ES5 (objects, arrays)
+- 2-space indentation
+- 100 character print width
+- Avoid parentheses around single arrow function parameters: `x => x` not `(x) => x`
+- Imports are auto-sorted: React first, then third-party, then `@leather.io/*`, then relative

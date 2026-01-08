@@ -66,11 +66,15 @@ function FungiblePostConditionItemSuspense(
       )} ${amount} ${ticker} or the transaction will abort.`
     : undefined;
 
+  function getPrincipalPrefix() {
+    if (isContractPrincipal) return 'The contract ';
+    if (isSending) return 'You ';
+    return 'Another address ';
+  }
+
   return (
     <EventCard
-      title={`${
-        isContractPrincipal ? 'The contract ' : isSending ? 'You ' : 'Another address '
-      } ${title}`}
+      title={`${getPrincipalPrefix()} ${title}`}
       left={asset?.name || name}
       right={`${truncateMiddle(address, 4)}${contractName ? `.${contractName}` : ''}`}
       amount={amount}

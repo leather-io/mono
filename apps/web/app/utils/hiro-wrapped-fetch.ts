@@ -1,6 +1,11 @@
+function getUrlString(input: RequestInfo | URL): string {
+  if (input instanceof URL) return input.toString();
+  if (typeof input === 'string') return input;
+  return input.url;
+}
+
 export async function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
-  const url =
-    input instanceof URL ? input.toString() : typeof input === 'string' ? input : input.url;
+  const url = getUrlString(input);
 
   const finalInit = url.includes('hiro.so')
     ? { ...init, headers: { ...init?.headers, 'x-partner': 'Leather' } }
