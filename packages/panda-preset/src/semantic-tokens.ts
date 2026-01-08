@@ -11,5 +11,11 @@ export const semanticTokens = defineSemanticTokens({
         _dark: '{shadows.contentOverflowFadeDark}',
       },
     },
+    elevation: {
+      value: {
+        base: '{shadows.elevationLight}',
+        _dark: '{shadows.elevationDark}',
+      },
+    },
   },
 });
