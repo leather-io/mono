@@ -75,7 +75,7 @@ export const SwitchAccountSheet = memo(function SwitchAccountSheet({
             <Flex
               borderBottomRadius="md"
               bg="ink.background-primary"
-              borderTop="default"
+              boxShadow="contentOverflowFade"
               p="space.05"
             >
               <Button fullWidth onClick={onCreateAccount} data-testid="create-account-btn">

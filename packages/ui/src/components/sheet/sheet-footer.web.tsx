@@ -16,7 +16,7 @@ export function SheetFooter({ children, ...props }: SheetFooterProps) {
       position="fixed"
       borderBottomRadius="md"
       bg="ink.background-primary"
-      borderTop="default"
+      boxShadow="contentOverflowFade"
       {...props}
     >
       {children}

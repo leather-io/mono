@@ -29,9 +29,12 @@ export function StickyButtons() {
         gap="space.05"
         pb="space.05"
         pt="space.03"
+        px="space.05"
+        mx="-space.05"
         background="ink.background-primary"
         position="sticky"
         bottom={0}
+        boxShadow="contentOverflowFade"
       >
         {hasDefaultInMemorySecretKey && hasKeys && walletType === 'software' && (
           <Button

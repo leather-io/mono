@@ -56,6 +56,7 @@ export function Card({
           borderTop={footerBorder ? 'default' : 'unset'}
           borderBottomLeftRadius="lg"
           borderBottomRightRadius="lg"
+          boxShadow="contentOverflowFade"
         >
           {footer}
         </Flex>
