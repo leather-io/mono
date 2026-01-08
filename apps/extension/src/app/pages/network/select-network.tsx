@@ -4,7 +4,7 @@ import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { WalletDefaultNetworkConfigurationIds } from '@leather.io/models';
-import { Button } from '@leather.io/ui';
+import { Button, StickyFooter } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
@@ -59,9 +59,8 @@ export function SelectNetwork() {
           position="relative"
           justifyContent="space-between"
           height="100%"
-          px="space.05"
         >
-          <Flex direction="column">
+          <Flex direction="column" px="space.05">
             <styled.h1 textStyle="heading.03" pb="space.05">
               Network
             </styled.h1>
@@ -88,13 +87,12 @@ export function SelectNetwork() {
             </Flex>
           </Flex>
 
-          <Flex
+          <StickyFooter
             gap="space.02"
             pb="space.05"
             pt="space.03"
             background="ink.background-primary"
-            position="sticky"
-            bottom={0}
+            px="space.05"
             flexDirection="column"
           >
             <NetworkListSwitch
@@ -112,7 +110,7 @@ export function SelectNetwork() {
             >
               Add network
             </Button>
-          </Flex>
+          </StickyFooter>
         </Flex>
       </Content>
     </Flex>

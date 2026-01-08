@@ -4,7 +4,7 @@ import { Form, Formik } from 'formik';
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { MEMPOOL_BASE_URL } from '@leather.io/constants';
-import { Button, Link } from '@leather.io/ui';
+import { Button, Link, StickyFooter } from '@leather.io/ui';
 
 import { analytics } from '@shared/utils/analytics';
 
@@ -33,9 +33,8 @@ export function NetworkForm({ isEditNetworkMode }: NetworkFormProps) {
             position="relative"
             justifyContent="space-between"
             height="100%"
-            px="space.05"
           >
-            <Flex direction="column">
+            <Flex direction="column" px="space.05">
               <styled.h1 textStyle="heading.03" pb="space.05">
                 {title}
               </styled.h1>
@@ -67,13 +66,12 @@ export function NetworkForm({ isEditNetworkMode }: NetworkFormProps) {
                 </Flex>
               </Form>
             </Flex>
-            <Flex
+            <StickyFooter
               gap="space.05"
               pb="space.05"
               pt="space.03"
               background="ink.background-primary"
-              position="sticky"
-              bottom={0}
+              px="space.05"
               zIndex="100"
             >
               <Button
@@ -94,7 +92,7 @@ export function NetworkForm({ isEditNetworkMode }: NetworkFormProps) {
               >
                 {buttonTitle}
               </Button>
-            </Flex>
+            </StickyFooter>
           </Flex>
         </Content>
       )}

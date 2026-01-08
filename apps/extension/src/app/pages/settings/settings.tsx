@@ -22,9 +22,8 @@ export function SettingsPage() {
           position="relative"
           justifyContent="space-between"
           height="100%"
-          px="space.05"
         >
-          <Flex direction="column">
+          <Flex direction="column" px="space.05">
             <styled.h1 textStyle="heading.03" pb="space.05">
               Settings
             </styled.h1>

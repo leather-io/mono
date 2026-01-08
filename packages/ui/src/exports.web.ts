@@ -38,6 +38,7 @@ export { NetworkModeBadge } from './components/network-mode-badge/network-mode-b
 export { Prism, type PrismType } from './components/highlighting/clarity-prism.shared';
 export { SkeletonLoader } from './components/skeleton-loader/skeleton-loader.web';
 export { Slider } from './components/slider/slider.web';
+export { StickyFooter, type StickyFooterProps } from './components/sticky-footer/sticky-footer.web';
 export { Tabs } from './components/tabs/tabs.web';
 export { sanitizeContent } from './utils/sanitize-content/index.web';
 export { shimmerStyles } from './components/skeleton-loader/shimmer.styles.web';

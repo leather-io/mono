@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
-import { Flex } from 'leather-styles/jsx';
 
-import { Button } from '@leather.io/ui';
+import { Button, StickyFooter } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
@@ -25,13 +24,12 @@ export function StickyButtons() {
 
   return (
     <>
-      <Flex
+      <StickyFooter
         gap="space.05"
         pb="space.05"
         pt="space.03"
         background="ink.background-primary"
-        position="sticky"
-        bottom={0}
+        px="space.05"
       >
         {hasDefaultInMemorySecretKey && hasKeys && walletType === 'software' && (
           <Button
@@ -62,7 +60,7 @@ export function StickyButtons() {
             Sign Out
           </Button>
         )}
-      </Flex>
+      </StickyFooter>
       {showSignOut && <SignOut onClose={() => setShowSignOut(!showSignOut)} />}
     </>
   );
