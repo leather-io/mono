@@ -48,6 +48,12 @@ export function formatPostConditionMessage({
       )} ${amount} ${ticker} or the transaction will abort.`
     : undefined;
 
+  function getPrincipalPrefix() {
+    if (isContractPrincipal) return 'The contract ';
+    if (isSending) return 'You ';
+    return 'Another address ';
+  }
+
   return {
     amount,
     contract: `${truncateMiddle(address, 4)}${contractName ? `.${contractName}` : ''}`,
@@ -56,8 +62,6 @@ export function formatPostConditionMessage({
     message,
     name: asset?.name || pcName,
     ticker,
-    title: `${
-      isContractPrincipal ? 'The contract ' : isSending ? 'You ' : 'Another address '
-    } ${pcTitle}`,
+    title: `${getPrincipalPrefix()} ${pcTitle}`,
   };
 }

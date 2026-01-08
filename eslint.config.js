@@ -65,9 +65,6 @@ export default defineConfig([
     files: ['{packages,apps}/**/*.{ts,tsx}'],
     extends: [baseConfig],
     rules: {
-      'no-nested-ternary': 'error',
-      'no-var': 'error',
-      'prefer-const': 'error',
       '@typescript-eslint/no-floating-promises': [
         'error',
         {

@@ -49,9 +49,8 @@ export function ChooseStackingAmount({
 
       <Box textStyle="body.02" color="ink.text-subdued" aria-busy={isLoading}>
         <styled.span textStyle="caption">Available balance:</styled.span>
-        {isLoading ? (
-          <Spinner />
-        ) : availableAmount ? (
+        {isLoading && <Spinner />}
+        {!isLoading && availableAmount && (
           <Button
             variant="ghost"
             size="md"
@@ -61,9 +60,8 @@ export function ChooseStackingAmount({
           >
             {toHumanReadableMicroStx(availableAmount)}
           </Button>
-        ) : (
-          'Failed to load'
         )}
+        {!isLoading && !availableAmount && 'Failed to load'}
       </Box>
 
       {stackedAmount?.isGreaterThan(0) && (

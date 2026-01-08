@@ -19,6 +19,12 @@ const tileWidth = 24;
 const numberOfTiles = Math.ceil(width / 24) + 5;
 const barHeight = 5;
 
+function getTileColor(idx: number, status: PendingStatus, stalledColor: string) {
+  if (idx % 2 !== 0) return '#FFB977';
+  if (status === 'stalled') return stalledColor;
+  return '#F07D12';
+}
+
 export function RunningAnimation({ status }: { status: PendingStatus }) {
   const translateValue = useSharedValue(0);
   const { colors } = useTheme();
@@ -39,12 +45,7 @@ export function RunningAnimation({ status }: { status: PendingStatus }) {
           width={tileWidth}
           height={barHeight}
           style={{
-            backgroundColor:
-              idx % 2 === 0
-                ? status === 'stalled'
-                  ? colors['red.action-primary-default']
-                  : '#F07D12'
-                : '#FFB977',
+            backgroundColor: getTileColor(idx, status, colors['red.action-primary-default']),
             transform: [{ skewX: '-30deg' }],
           }}
         />

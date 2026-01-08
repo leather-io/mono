@@ -15,6 +15,7 @@ export default tseslint.config(
     },
     rules: {
       'prefer-const': ['error', { ignoreReadBeforeAssign: false }],
+      'no-nested-ternary': 'error',
       'no-duplicate-imports': ['error'],
       'no-fallthrough': 'error',
       'default-case': 'error',

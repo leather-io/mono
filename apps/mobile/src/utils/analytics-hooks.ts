@@ -128,12 +128,16 @@ export function useCollectiblesAnalytics({
 
       entry.total += 1;
 
-      const contentType =
-        'mimeType' in collectible && collectible.mimeType
-          ? collectible.mimeType
-          : 'content' in collectible && collectible.content?.contentType
-            ? collectible.content.contentType
-            : undefined;
+      function getContentType() {
+        if ('mimeType' in collectible && collectible.mimeType) {
+          return collectible.mimeType;
+        }
+        if ('content' in collectible && collectible.content?.contentType) {
+          return collectible.content.contentType;
+        }
+        return;
+      }
+      const contentType = getContentType();
 
       if (contentType) {
         entry.byContentType[contentType] = (entry.byContentType[contentType] ?? 0) + 1;
