@@ -72,6 +72,7 @@ export function InscriptionHtml({
         overflow="hidden"
         p="space.04"
         width="100%"
+// FIXME:   dangerouslySetInnerHTML={{ __html: sanitizeContent(query.data) }} is unsafe here
         dangerouslySetInnerHTML={{ __html: sanitizeContent(query.data) }}
       />
     </CollectibleItemLayout>
