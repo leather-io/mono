@@ -25,6 +25,7 @@ export function SheetNativeBackdrop(props: ComponentProps<typeof BottomSheetBack
         disappearsOnIndex={-1}
         appearsOnIndex={0}
         {...props}
+        // eslint-disable-next-line leather/prefer-style-props
         style={{ backgroundColor: backdropColor }}
       />
     </>

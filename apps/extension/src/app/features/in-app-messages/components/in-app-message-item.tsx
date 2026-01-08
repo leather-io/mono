@@ -17,7 +17,7 @@ export function InAppMessageItem(props: InAppMessageItemProps) {
         pos="relative"
         flexDirection={['column', null, 'row']}
         width="100%"
-        maxWidth={{ base: '100vw', md: 'fullPageMaxWidth' }}
+        maxWidth={['100vw', null, 'fullPageMaxWidth']}
         px={['unset', 'space.05']}
       >
         {dismissible && (

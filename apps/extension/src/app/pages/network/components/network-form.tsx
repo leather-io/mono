@@ -1,6 +1,6 @@
 import { NetworkSelectors } from '@tests/selectors/network.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
-import { Form, Formik } from 'formik';
+import { Form, Formik, type FormikProps } from 'formik';
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { MEMPOOL_BASE_URL } from '@leather.io/constants';
@@ -11,6 +11,7 @@ import { analytics } from '@shared/utils/analytics';
 import { ErrorLabel } from '@app/components/error-label';
 import { Content } from '@app/components/layout';
 import { useAddNetwork } from '@app/features/add-network/use-add-network';
+import type { AddNetworkFormValues } from '@app/features/add-network/use-add-network';
 
 import { NetworkFormFields } from './network-form-fields';
 
@@ -24,8 +25,8 @@ export function NetworkForm({ isEditNetworkMode }: NetworkFormProps) {
   const buttonTitle = isEditNetworkMode ? 'Edit network' : 'Add network';
 
   return (
-    <Formik initialValues={initialFormValues} onSubmit={onSubmit}>
-      {({ handleSubmit }) => (
+    <Formik<AddNetworkFormValues> initialValues={initialFormValues} onSubmit={onSubmit}>
+      {({ handleSubmit }: FormikProps<AddNetworkFormValues>) => (
         <Content>
           <Flex
             direction="column"

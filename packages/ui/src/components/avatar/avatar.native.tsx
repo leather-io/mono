@@ -87,6 +87,7 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
           onLoadStart={() => setImageLoadingStatus('loading')}
           onLoad={() => setImageLoadingStatus('loaded')}
           onError={() => setImageLoadingStatus('error')}
+          // eslint-disable-next-line leather/prefer-style-props
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </Box>

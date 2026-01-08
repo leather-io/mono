@@ -29,12 +29,14 @@
       "@inpage/*": ["inpage/*"],
       "@app/*": ["app/*"],
       "@tests/*": ["../tests/*"],
+      "react-dom-confetti": ["types/react-dom-confetti"],
+      "react-qr-code": ["types/react-qr-code"],
       "leather-styles/*": ["../leather-styles/*"]
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["vitest/globals", "chrome"]
+    "types": ["vitest/globals", "chrome", "react", "react-dom"]
   },
   "include": ["./src/**/*", "./tests/**/*", "./scripts-ts/**/*", "leather-styles", "theme"],
   "parserOptions": {

@@ -56,7 +56,7 @@ export function HomeTabs({ children }: HomeTabsProps) {
         </Tabs.List>
       </Tabs.Root>
       <Suspense fallback={<LoadingSpinner pb="72px" />}>
-        <Box px={{ base: 'space.05', md: 0 }} width="100%">
+        <Box px={['space.05', null, 0]} width="100%">
           {children}
         </Box>
       </Suspense>

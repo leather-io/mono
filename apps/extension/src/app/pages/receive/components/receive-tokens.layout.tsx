@@ -59,7 +59,9 @@ export function ReceiveTokensLayout(props: ReceiveTokensLayoutProps) {
               bgColor={token('colors.ink.background-primary')}
               fgColor={token('colors.ink.text-primary')}
               size={132}
-              style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
+              height="auto"
+              width="100%"
+              maxWidth="100%"
               value={address}
               viewBox="0 0 132 132"
             />

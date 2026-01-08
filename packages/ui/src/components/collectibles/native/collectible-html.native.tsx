@@ -48,6 +48,7 @@ export function CollectibleHtml({
       <Box position="relative" height={height}>
         <WebView
           source={{ uri: thumbnailSrc ?? src }}
+          // eslint-disable-next-line leather/prefer-style-props
           style={{ flex: 1, backgroundColor: 'transparent', height, width: '100%' }}
           scrollEnabled={false}
           originWhitelist={['*']}
@@ -65,6 +66,7 @@ export function CollectibleHtml({
         />
         {onPress ? (
           <TouchableOpacity
+            // eslint-disable-next-line leather/prefer-style-props
             style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
             onPress={onPress}
             activeOpacity={0.95}

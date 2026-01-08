@@ -43,11 +43,7 @@ export function TransactionItemLayout({
         titleLeft={txTitle}
         captionLeft={
           <HStack alignItems="center">
-            <Caption
-              overflow="hidden"
-              textOverflow="ellipsis"
-              maxWidth={{ base: '160px', md: 'unset' }}
-            >
+            <Caption overflow="hidden" textOverflow="ellipsis" maxWidth={['160px', null, 'unset']}>
               {txCaption}
             </Caption>
             {txStatus && txStatus}

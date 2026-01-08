@@ -63,6 +63,7 @@ export function CollectibleItemLayout({
           left="0px"
           overflow="hidden"
           position="absolute"
+          // eslint-disable-next-line leather/prefer-style-props
           style={{
             backgroundColor: showBorder
               ? token('colors.ink.background-primary')

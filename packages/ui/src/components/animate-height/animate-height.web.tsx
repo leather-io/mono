@@ -14,6 +14,7 @@ export function AnimateChangeInHeight({ children }: HasChildren) {
 
   return (
     <motion.div
+      // eslint-disable-next-line leather/prefer-style-props
       style={{ height, overflow: 'hidden' }}
       animate={{ height }}
       transition={{ duration: 0.15 }}

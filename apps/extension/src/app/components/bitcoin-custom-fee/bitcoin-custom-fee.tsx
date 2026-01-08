@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useCallback, useRef } from 'react';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-import { Form, Formik } from 'formik';
+import { Form, Formik, type FormikProps } from 'formik';
 import { Stack, styled } from 'leather-styles/jsx';
 import * as yup from 'yup';
 
@@ -27,6 +27,10 @@ interface BitcoinCustomFeeProps {
   recipients: TransferRecipient[];
   setCustomFeeInitialValue: Dispatch<SetStateAction<string>>;
   maxCustomFeeRate: number;
+}
+
+interface BitcoinCustomFeeFormValues {
+  feeRate: string;
 }
 
 export function BitcoinCustomFee({
@@ -71,7 +75,7 @@ export function BitcoinCustomFee({
   });
 
   return (
-    <Formik
+    <Formik<BitcoinCustomFeeFormValues>
       initialValues={{ feeRate: customFeeInitialValue.toString() }}
       onSubmit={onChooseCustomBtcFee}
       validateOnChange={false}
@@ -79,7 +83,7 @@ export function BitcoinCustomFee({
       validateOnMount={false}
       validationSchema={validationSchema}
     >
-      {props => (
+      {(props: FormikProps<BitcoinCustomFeeFormValues>) => (
         <Form>
           <Stack gap="space.06" mt="space.02">
             <Stack gap="space.05">

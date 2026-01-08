@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-import { Form, Formik } from 'formik';
+import { Form, Formik, type FormikProps } from 'formik';
 import { Box, Flex } from 'leather-styles/jsx';
 
 import { Button, OrdinalAvatarIcon, Sheet, SheetHeader } from '@leather.io/ui';
@@ -27,17 +27,20 @@ export function SendInscriptionForm() {
   const { chooseTransactionFee, currentError, validationSchema, isCheckingFees } =
     useSendInscriptionForm();
 
+  const initialValues = {
+    [recipientFieldName]: recipient,
+    inscription,
+    feeRate: feeRates.hourFee.toNumber(),
+  };
+  type SendInscriptionFormValues = typeof initialValues;
+
   return (
-    <Formik
+    <Formik<SendInscriptionFormValues>
       validationSchema={validationSchema}
-      initialValues={{
-        [recipientFieldName]: recipient,
-        inscription,
-        feeRate: feeRates.hourFee.toNumber(),
-      }}
+      initialValues={initialValues}
       onSubmit={chooseTransactionFee}
     >
-      {props => {
+      {(props: FormikProps<SendInscriptionFormValues>) => {
         return (
           <Form>
             <Sheet

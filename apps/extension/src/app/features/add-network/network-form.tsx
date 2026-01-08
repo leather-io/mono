@@ -1,5 +1,5 @@
 import { NetworkSelectors } from '@tests/selectors/network.selectors';
-import { Form, Formik } from 'formik';
+import { Form, Formik, type FormikProps } from 'formik';
 import { Stack, styled } from 'leather-styles/jsx';
 
 import { MEMPOOL_BASE_URL } from '@leather.io/constants';
@@ -10,6 +10,7 @@ import { Card } from '@app/components/layout';
 
 import { NetworkFormFields } from './network-form-fields';
 import { useAddNetwork } from './use-add-network';
+import type { AddNetworkFormValues } from './use-add-network';
 
 interface NetworkFormProps {
   title: string;
@@ -20,8 +21,8 @@ export function NetworkForm({ isEditNetworkMode, title }: NetworkFormProps) {
   const { error, initialFormValues, loading, onSubmit } = useAddNetwork();
 
   return (
-    <Formik initialValues={initialFormValues} onSubmit={onSubmit}>
-      {({ handleSubmit }) => (
+    <Formik<AddNetworkFormValues> initialValues={initialFormValues} onSubmit={onSubmit}>
+      {({ handleSubmit }: FormikProps<AddNetworkFormValues>) => (
         <Card
           footerBorder
           footer={
@@ -40,7 +41,7 @@ export function NetworkForm({ isEditNetworkMode, title }: NetworkFormProps) {
             <Stack
               gap="space.05"
               maxWidth="pageWidth"
-              px={{ base: 'space.00', sm: 'space.04', md: 'space.05' }}
+              px={['space.00', 'space.04', 'space.05']}
               my="space.05"
             >
               <styled.span textStyle="body.02">

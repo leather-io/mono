@@ -9,7 +9,7 @@ interface PageProps {
 
 export function Page({ children }: PageProps) {
   return (
-    <Box width="pageWidth" margin="auto" height={{ base: '100%', md: 'fit-content' }}>
+    <Box width="pageWidth" margin="auto" height={['100%', null, 'fit-content']}>
       {children}
     </Box>
   );

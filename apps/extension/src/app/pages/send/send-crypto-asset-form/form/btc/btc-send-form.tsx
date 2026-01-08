@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-import { Form, Formik } from 'formik';
+import { Form, Formik, type FormikProps } from 'formik';
 import { Box } from 'leather-styles/jsx';
 
 import type { CryptoCurrency } from '@leather.io/models';
@@ -41,23 +41,26 @@ export function BtcSendForm() {
     validationSchema,
   } = useBtcSendForm();
 
+  const initialValues = createDefaultInitialFormValues({
+    ...routeState,
+    recipientBnsName: '',
+    symbol,
+  });
+  type BtcSendFormValues = typeof initialValues;
+
   return (
     <>
       <PageHeader title="Send" />
       <Content>
         <Page>
-          <Formik
-            initialValues={createDefaultInitialFormValues({
-              ...routeState,
-              recipientBnsName: '',
-              symbol,
-            })}
+          <Formik<BtcSendFormValues>
+            initialValues={initialValues}
             onSubmit={chooseTransactionFee}
             validationSchema={validationSchema}
             innerRef={formRef}
             {...defaultSendFormFormikProps}
           >
-            {props => {
+            {(props: FormikProps<BtcSendFormValues>) => {
               onFormStateChange(props.values);
               const sendMaxCalculation = calcMaxSpend(props.values.recipient, utxos.available);
 

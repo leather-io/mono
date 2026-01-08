@@ -17,14 +17,14 @@ import { recurseAccountsForActivity } from '@app/common/account-restoration/acco
 import { mnemonicToRootNode } from '@app/common/keychain/keychain';
 import { queryClient } from '@app/common/persistence';
 import { AppThunk } from '@app/store';
+import { selectDefaultWalletKey } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { inMemoryKeySlice } from '@app/store/in-memory-key/in-memory-key.slice';
 import { initalizeWalletSession } from '@app/store/session-restore';
 
 import { getNativeSegwitMainnetAddressFromMnemonic } from '../accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { getStacksAddressByIndex } from '../accounts/blockchain/stacks/stacks-keychain';
 import { initializeIndexZeroAccount } from '../chains/stx-chain.actions';
 import { stxChainSlice } from '../chains/stx-chain.slice';
-import { selectDefaultWalletKey } from '../in-memory-key/in-memory-key.selectors';
-import { inMemoryKeySlice } from '../in-memory-key/in-memory-key.slice';
 import { selectDefaultSoftwareKey } from './software-key.selectors';
 import { keySlice } from './software-key.slice';
 

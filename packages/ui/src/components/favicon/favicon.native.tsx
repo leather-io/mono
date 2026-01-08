@@ -13,7 +13,8 @@ export function Favicon({ origin, size = 16 }: FaviconProps) {
   return (
     <Image
       source={`https://www.google.com/s2/favicons?domain=${origin}&sz=${size * pixelRatio}`}
-      style={{ width: size, height: size }}
+      width={size}
+      height={size}
       alt={`Favicon of ${origin}`}
     />
   );

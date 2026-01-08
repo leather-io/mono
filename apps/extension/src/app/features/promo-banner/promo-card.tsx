@@ -31,7 +31,7 @@ export function PromoCard({
   onDismissCard,
 }: PromoCardProps) {
   const { theme } = useThemeSwitcher();
-  const invertStyle = whenTheme(theme)({ light: {}, dark: { filter: 'invert()' } });
+  const invertFilter = whenTheme(theme)({ light: 'none', dark: 'invert()' });
 
   const scale = 1 - stackPosition * 0.05;
   const translateY = -stackPosition * stackOffset;
@@ -51,17 +51,15 @@ export function PromoCard({
       position="absolute"
       transition="all 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
       width="100%"
-      style={{
-        transform: `scale(${scale}) translateY(${translateY}px)`,
-        transformOrigin: 'top center',
-        zIndex,
-        opacity,
-      }}
+      transform={`scale(${scale}) translateY(${translateY}px)`}
+      transformOrigin="top center"
+      zIndex={zIndex}
+      opacity={opacity}
     >
       <Box position="relative">
         <PromoCardLayout
           img={
-            <styled.img alt={message} src={imgSrc} height={70} width={100} style={invertStyle} />
+            <styled.img alt={message} src={imgSrc} height={70} width={100} filter={invertFilter} />
           }
           message={message}
           onClickCard={openPromoCardLink}
@@ -78,12 +76,10 @@ export function PromoCard({
             bottom="0"
             borderRadius="md"
             pointerEvents="none"
-            style={{
-              backgroundColor: whenTheme(theme)({
-                light: `rgba(255, 255, 255, ${tintOpacity})`,
-                dark: `rgba(0, 0, 0, ${tintOpacity})`,
-              }),
-            }}
+            bg={whenTheme(theme)({
+              light: `rgba(255, 255, 255, ${tintOpacity})`,
+              dark: `rgba(0, 0, 0, ${tintOpacity})`,
+            })}
           />
         )}
       </Box>

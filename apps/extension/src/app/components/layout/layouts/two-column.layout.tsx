@@ -22,12 +22,12 @@ export function TwoColumnLayout({
 }: TwoColumnLayoutProps): React.JSX.Element {
   return (
     <Flex
-      flexDirection={{ base: 'column', md: 'row' }}
+      flexDirection={['column', null, 'row']}
       pt="space.06"
-      px={{ base: 'space.05', md: 'space.00' }}
-      mx={{ base: 'auto', md: 'space.03', lg: 'space.06' }}
+      px={['space.05', null, 'space.00']}
+      mx={['auto', null, 'space.03', 'space.06']}
       gap="space.05"
-      width={{ base: '100vw', md: 'unset' }}
+      width={['100vw', null, 'unset']}
     >
       <Flex flexDirection="column" gap="space.04">
         <Stack gap="space.04">
@@ -37,19 +37,15 @@ export function TwoColumnLayout({
         </Stack>
       </Flex>
 
-      <Flex gap="space.05" flexDirection="column" mb={{ base: 'space.05', md: '0' }}>
+      <Flex gap="space.05" flexDirection="column" mb={['space.05', null, '0']}>
         <Stack
-          p={{ base: 'space.02', md: 'space.05' }}
+          p={['space.02', null, 'space.05']}
           gap="space.04"
           bg="ink.background-primary"
           border="default"
           borderRadius="lg"
           width="100%"
-          minWidth={{
-            base: '100%',
-            md: '400px',
-            lg: wideChild ? 'twoColumnPageWidth' : 'pageWidth',
-          }}
+          minWidth={['100%', null, '400px', wideChild ? 'twoColumnPageWidth' : 'pageWidth']}
           flex="1"
         >
           {children}

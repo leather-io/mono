@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { Flex, Stack } from 'leather-styles/jsx';
+import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { Caption, Title } from '@leather.io/ui';
 
@@ -31,16 +31,7 @@ function PageTopBase() {
         {caption && <Caption wordBreak="break-word">{caption}</Caption>}
       </Stack>
       {avatarUrl && (
-        <img
-          style={{
-            borderRadius: '100%',
-            width: '50px',
-            height: '50px',
-            alignItems: 'center',
-            marginTop: '32px',
-          }}
-          src={avatarUrl}
-        />
+        <styled.img src={avatarUrl} borderRadius="100%" width="50px" height="50px" mt="32px" />
       )}
     </Flex>
   );

@@ -7,6 +7,7 @@ export function BnsImage({ alt, src, height = 200, onPress }: CollectibleImagePr
   return (
     <Pressable onPress={onPress} disabled={!onPress}>
       <Box height={height} overflow="hidden" bg="ink.background-secondary" position="relative">
+        {/* eslint-disable-next-line leather/prefer-style-props */}
         <Image source={src} alt={alt} style={{ height: height }} />
         <Box
           position="absolute"
@@ -20,6 +21,7 @@ export function BnsImage({ alt, src, height = 200, onPress }: CollectibleImagePr
           <Text
             variant="label02"
             textAlign="center"
+            // eslint-disable-next-line leather/prefer-style-props
             style={{ color: '#F09D00' }}
             numberOfLines={1}
             ellipsizeMode="tail"

@@ -47,11 +47,7 @@ export function SubmittedTransactionItem({ transaction, txid }: SubmittedTransac
         titleLeft={<TransactionTitle title={title} />}
         captionLeft={
           <HStack alignItems="center">
-            <Caption
-              overflow="hidden"
-              textOverflow="ellipsis"
-              maxWidth={{ base: '160px', md: 'unset' }}
-            >
+            <Caption overflow="hidden" textOverflow="ellipsis" maxWidth={['160px', null, 'unset']}>
               {caption}
             </Caption>
             <BasicTooltip

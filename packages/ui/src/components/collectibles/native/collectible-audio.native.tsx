@@ -63,6 +63,7 @@ export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleA
         <Box height={size} width="100%">
           <WebView
             source={{ html }}
+            // eslint-disable-next-line leather/prefer-style-props
             style={{ height: size, width: '100%' }}
             scrollEnabled={false}
             originWhitelist={['*']}

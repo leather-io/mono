@@ -14,7 +14,7 @@ export function HeaderGrid({ leftCol, centerCol, rightCol, ...props }: HeaderGri
       {...props}
     >
       <GridItem justifySelf="start">
-        <Flex py={{ base: 0, md: 'space.01' }} ml="space.02">
+        <Flex py={[0, null, 'space.01']} ml="space.02">
           {leftCol}
         </Flex>
       </GridItem>

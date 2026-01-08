@@ -24,6 +24,7 @@ export function CollectibleHover({
       opacity="0"
       overflow="hidden"
       position="absolute"
+      // eslint-disable-next-line leather/prefer-style-props
       style={{ opacity: isHovered ? 'inherit' : '0' }}
       top="0px"
       width="100%"

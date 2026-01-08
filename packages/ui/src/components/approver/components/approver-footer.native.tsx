@@ -23,6 +23,7 @@ export function ApproverFooter({ children }: HasChildren) {
       pt="5"
       px="5"
       gap="4"
+      // eslint-disable-next-line leather/prefer-style-props
       style={{ paddingBottom: bottom + theme.spacing['5'] }}
     >
       {children}

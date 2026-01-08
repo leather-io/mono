@@ -36,7 +36,7 @@ export function ConnectLedgerErrorLayout(props: ConnectLedgerErrorLayoutProps) {
       <Box mt="space.02">
         <ConnectLedgerErr />
       </Box>
-      <LedgerTitle mt={{ base: 'space.04', sm: 'space.07' }}>
+      <LedgerTitle mt={['space.04', 'space.07']}>
         We're unable to connect to your Ledger device
       </LedgerTitle>
 

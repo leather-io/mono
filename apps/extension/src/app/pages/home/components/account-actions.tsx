@@ -64,7 +64,7 @@ export function AccountActions() {
   }
 
   return (
-    <Flex gap={{ base: 'space.01', md: 'space.04' }} py="space.04" justifyContent="space-between">
+    <Flex gap={['space.01', null, 'space.04']} py="space.04" justifyContent="space-between">
       <SendButton />
       <IconButton
         data-testid={HomePageSelectors.ReceiveCryptoAssetBtn}

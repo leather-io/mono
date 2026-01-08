@@ -17,12 +17,10 @@ export const CodeBlock = forwardRef(function CodeBlock(
       overflowX="auto"
       p="space.04"
       ref={ref}
-      style={{
-        ...style,
-        whiteSpace: 'pre',
-        fontFamily: 'Fira Code, Consolata, monospace',
-        fontSize: '14px',
-      }}
+      style={style}
+      whiteSpace="pre"
+      fontFamily="Fira Code, Consolata, monospace"
+      fontSize="14px"
       width="100%"
       {...rest}
     >

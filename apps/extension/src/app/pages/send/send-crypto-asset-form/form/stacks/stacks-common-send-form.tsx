@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from 'react-router';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-import { Form, Formik, FormikHelpers } from 'formik';
+import { Form, Formik, FormikHelpers, type FormikProps } from 'formik';
 import { Box, Flex } from 'leather-styles/jsx';
 import { ObjectSchema } from 'yup';
 
@@ -51,13 +51,13 @@ export function StacksCommonSendForm({
   const isPrivate = useIsPrivateMode();
   return (
     <Page>
-      <Formik
+      <Formik<StacksSendFormValues>
         initialValues={initialValues}
         onSubmit={onSubmit}
         validationSchema={validationSchema}
         {...defaultSendFormFormikProps}
       >
-        {props => {
+        {(props: FormikProps<StacksSendFormValues>) => {
           onFormStateChange(props.values);
           return (
             <>
@@ -82,11 +82,7 @@ export function StacksCommonSendForm({
                     </ButtonRow>
                   }
                 >
-                  <Flex
-                    width="100%"
-                    flexDirection="column"
-                    marginBottom={{ base: 'unset', sm: '33px' }}
-                  >
+                  <Flex width="100%" flexDirection="column" marginBottom={['unset', '33px']}>
                     {amountField}
                     {selectedAssetField}
                     <StacksRecipientField />

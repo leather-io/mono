@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react';
+
 import { Grid } from 'leather-styles/jsx';
 
 interface SecretKeyGridProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 export function SecretKeyGrid({ children }: SecretKeyGridProps) {
   return (

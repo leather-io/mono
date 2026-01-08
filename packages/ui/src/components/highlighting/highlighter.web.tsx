@@ -89,7 +89,7 @@ function LineNumber({ number, length, ...rest }: { number: number; length: numbe
       borderRightColor="inherit"
       color="ink.text-subdued"
       flexShrink={0}
-      style={{ userSelect: 'none' }}
+      userSelect="none"
       position="absolute"
       left={0}
       height="100%"
@@ -151,6 +151,7 @@ function Lines({
 }: { showLineNumbers?: boolean; hideLineHover?: boolean } & RenderProps<'web'>) {
   return (
     <Box display="block" className={className}>
+      {/* eslint-disable-next-line leather/prefer-style-props */}
       <Box display="block" style={{ fontFamily: 'Fira Code' }}>
         {lines.map((tokens: GrammaticalToken[], i: number) => (
           <Line

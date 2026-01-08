@@ -6,10 +6,10 @@ export function Header({ children, ...props }: HasChildren & BoxProps) {
   return (
     <styled.header
       justifyContent="center"
-      margin={{ base: 0, md: 'auto' }}
+      margin={[0, null, 'auto']}
       p="space.04"
       bg="transparent"
-      maxWidth={{ base: '100vw', md: 'fullPageMaxWidth' }}
+      maxWidth={['100vw', null, 'fullPageMaxWidth']}
       width="100%"
       {...props}
     >

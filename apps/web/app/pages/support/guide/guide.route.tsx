@@ -45,12 +45,12 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
       <Page.Header title="Help Center" />
 
       <Flex
-        flexDirection={{ base: 'column', lg: 'row' }}
+        flexDirection={['column', null, null, 'row']}
         gap="space.07"
         my="space.07"
         justifyContent="space-between"
       >
-        <Box minWidth="200px" pr={{ base: 'none', lg: 'space.04' }} flex="1">
+        <Box minWidth="200px" pr={['none', null, null, 'space.04']} flex="1">
           <styled.span
             textStyle="label.03"
             border="default"

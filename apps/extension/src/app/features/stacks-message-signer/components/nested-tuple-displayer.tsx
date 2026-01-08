@@ -5,15 +5,17 @@ interface TupleDisplayerProps extends BoxProps {
   isRoot: boolean;
 }
 export function TupleDisplayer({ isRoot, ...rest }: TupleDisplayerProps) {
-  const rootStyles = isRoot
-    ? {
-        flex: '1 100%',
-        pt: '12px',
-        marginLeft: 0,
-        fontFamily: 'Fira Code',
-      }
-    : {};
-  return <Box ml="space.04" overflow="visible" {...rest} style={{ ...rootStyles }} />;
+  const marginLeft = isRoot ? 0 : 'space.04';
+  return (
+    <Box
+      ml={marginLeft}
+      overflow="visible"
+      flex={isRoot ? '1 100%' : undefined}
+      pt={isRoot ? '12px' : undefined}
+      fontFamily={isRoot ? 'Fira Code' : undefined}
+      {...rest}
+    />
+  );
 }
 
 interface TupleNodeDisplayerProps {

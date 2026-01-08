@@ -110,7 +110,7 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
           </Tabs.List>
           <Tabs.Content value="tokens">
             {/* FIXME 96px should be sizes.footerHeight */}
-            <Box mb={{ base: '96px', md: 'unset' }}>
+            <Box mb={['96px', null, 'unset']}>
               <ReceiveTokens
                 btcAddressNativeSegwit={btcAddressNativeSegwit}
                 stxAddress={stxAddress}

@@ -14,22 +14,19 @@ export function PrivateTextLayout({
   isPrivate,
   onShowValue,
   children,
-  style = {},
   ...rest
 }: PrivateTextLayoutProps) {
   const canShowValue = isPrivate && onShowValue;
+  const { fontFamily, letterSpacing, ...spanProps } = rest;
 
   return (
     <BasicTooltip label="Show value" disabled={!canShowValue} asChild>
       <styled.span
-        {...rest}
+        {...spanProps}
         onClick={canShowValue ? onShowValue : undefined}
         cursor={canShowValue ? 'pointer' : undefined}
-        style={{
-          ...style,
-          fontFamily: isPrivate ? 'Fira Code, Consolata, monospace' : style?.fontFamily,
-          letterSpacing: isPrivate ? '0.05em' : style?.letterSpacing,
-        }}
+        fontFamily={isPrivate ? 'Fira Code, Consolata, monospace' : fontFamily}
+        letterSpacing={isPrivate ? '0.05em' : letterSpacing}
       >
         {isPrivate ? '***' : children}
       </styled.span>

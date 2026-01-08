@@ -36,7 +36,7 @@ export function PageHeader({
   const onGoBack = onBackLocation ? () => navigate(onBackLocation) : () => navigate(-1);
   const canGoBack = !isSummaryPage;
   return (
-    <Header px={{ base: 'space.04', sm: 'space.00' }}>
+    <Header px={['space.04', 'space.00']}>
       <HeaderGrid
         leftCol={
           <>

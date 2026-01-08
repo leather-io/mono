@@ -35,6 +35,7 @@ export function ApproverContainer({ children, ...props }: HTMLStyledProps<'main'
         flex={1}
         gap={1}
         background="ink.background-secondary"
+        // eslint-disable-next-line leather/prefer-style-props
         style={{ paddingBottom: `${actionBarHeight + 16}px` }}
       >
         {children}

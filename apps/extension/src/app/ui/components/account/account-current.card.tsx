@@ -63,7 +63,7 @@ export function AccountCard({
         </Box>
         <NetworkSwitcherBadge />
       </Flex>
-      <Flex flexDir={{ base: 'column', md: 'row' }} justify="space-between">
+      <Flex flexDir={['column', null, 'row']} justify="space-between">
         <Box width="100%" pt="space.02">
           <SkeletonLoader width="200px" height="46px" isLoading={isLoadingBalance}>
             <Flex direction="column">
@@ -80,12 +80,10 @@ export function AccountCard({
                   })
                 )}
                 data-testid={SharedComponentsSelectors.AccountCardBalanceText}
-                style={{
-                  whiteSpace: 'nowrap',
-                  display: 'inline-block',
-                  transformOrigin: 'left center',
-                  maxWidth: '100%',
-                }}
+                whiteSpace="nowrap"
+                display="inline-block"
+                transformOrigin="left center"
+                maxWidth="100%"
                 ref={scaleTextRef}
               >
                 <PrivateTextLayout
@@ -124,12 +122,10 @@ export function AccountCard({
                     data-state={isLoadingAdditionalData ? 'loading' : undefined}
                     className={shimmerStyles}
                     data-testid={SharedComponentsSelectors.AccountCardBalanceText}
-                    style={{
-                      whiteSpace: 'nowrap',
-                      display: 'inline-block',
-                      transformOrigin: 'left center',
-                      maxWidth: '100%',
-                    }}
+                    whiteSpace="nowrap"
+                    display="inline-block"
+                    transformOrigin="left center"
+                    maxWidth="100%"
                     pt="space.02"
                     ref={scaleTextRef}
                   >

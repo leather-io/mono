@@ -46,6 +46,7 @@ export function CollectibleImage({
         <Image
           source={{ uri: thumbnailSrc ?? src }}
           alt={alt}
+          // eslint-disable-next-line leather/prefer-style-props
           style={{
             height,
             width: '100%',

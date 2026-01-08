@@ -45,8 +45,8 @@ interface SwapAvatarIconProps {
 
 function SwapAvatarIcon({ fromAsset, toAsset, indicator }: SwapAvatarIconProps) {
   return (
-    <Box position="relative" style={{ width: 76, height: 48 }}>
-      <Box position="absolute" style={{ top: 4, left: 0, zIndex: 1, opacity: 0.6 }}>
+    <Box position="relative" width={76} height={48}>
+      <Box position="absolute" top={4} left={0} zIndex={1} opacity={0.6}>
         <AssetAvatarIcon asset={fromAsset} size="lg" />
       </Box>
       <Box
@@ -54,7 +54,9 @@ function SwapAvatarIcon({ fromAsset, toAsset, indicator }: SwapAvatarIconProps) 
         borderWidth={3}
         borderColor="ink.background-primary"
         position="absolute"
-        style={{ top: 0, left: 28, zIndex: 2 }}
+        top={0}
+        left={28}
+        zIndex={2}
       >
         <AssetAvatarIcon asset={toAsset} indicator={indicator} size="xl" />
       </Box>

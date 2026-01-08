@@ -149,7 +149,7 @@ export function AmountField({
           position="relative"
           fontFamily="Marche"
         >
-          {isSendingMax ? <styled.span style={{ fontSize: fontSize + 'px' }}>~</styled.span> : null}
+          {isSendingMax ? <styled.span fontSize={fontSize + 'px'}>~</styled.span> : null}
           <styled.input
             _disabled={{ bg: 'ink.background-primary' }}
             _focus={{
@@ -166,11 +166,9 @@ export function AmountField({
             placeholder="0"
             px="none"
             ring="none"
-            style={{
-              fontSize: fontSize + 'px',
-              marginInlineStart: !field.value?.length ? 0 : -25 + 'px',
-              width: !field.value?.length ? '1ch' : textSizeInPx + 25 + 'px',
-            }}
+            fontSize={fontSize + 'px'}
+            marginInlineStart={!field.value?.length ? 0 : -25 + 'px'}
+            width={!field.value?.length ? '1ch' : textSizeInPx + 25 + 'px'}
             textAlign="right"
             letterSpacing="0.64px"
             /*
@@ -202,7 +200,7 @@ export function AmountField({
             letterSpacing={-0.3 + 'px'}
             fontWeight={500}
             minWidth={1 + 'ch'}
-            style={{ fontSize: fontSize + 'px' }}
+            fontSize={fontSize + 'px'}
           >
             {field.value}
           </styled.span>
@@ -211,7 +209,7 @@ export function AmountField({
             color="ink.text-primary"
             letterSpacing="0.64px"
             pl="space.02"
-            style={{ fontSize: fontSize + 'px' }}
+            fontSize={fontSize + 'px'}
           >
             {symbol.toUpperCase()}
           </styled.span>

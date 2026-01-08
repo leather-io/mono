@@ -24,8 +24,8 @@ export function Card({
     <Flex
       data-testid={dataTestId}
       direction="column"
-      position={{ base: 'unset', sm: 'relative' }}
-      border={{ base: 'unset', sm: 'default' }}
+      position={['unset', 'relative']}
+      border={['unset', 'default']}
       rounded="lg"
       overflow="hidden"
       {...props}
@@ -37,7 +37,7 @@ export function Card({
         overflowY="auto"
         mb={footer ? 'footerHeight' : 0}
         p="space.05"
-        maxHeight={{ base: '70vh', md: '80vh' }}
+        maxHeight={['70vh', null, '80vh']}
         {...contentStyle}
       >
         {children}

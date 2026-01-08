@@ -68,6 +68,7 @@ export function ApproverActionAnimation({ children, index }: ApproverActionAnima
   const delay = actionsContainerDelay + 0.04 + (index + 1) * 0.04;
   return (
     <motion.div
+      // eslint-disable-next-line leather/prefer-style-props
       style={{ display: 'flex' }}
       className={css({ '& > *': { flex: 1 } })}
       initial={{ opacity: 0 }}

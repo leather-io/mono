@@ -5,8 +5,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useClipboard } from '@app/common/hooks/use-copy-to-clipboard';
-
-import { SecretKeyLayout } from '../../ui/components/secret-key/secret-key.layout';
+import { SecretKeyLayout } from '@app/ui/components/secret-key/secret-key.layout';
 
 interface SecretKeyProps {
   secretKey: string;

@@ -207,6 +207,7 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
             {thumbnailUri ? (
               <Image
                 source={{ uri: thumbnailUri }}
+                // eslint-disable-next-line leather/prefer-style-props
                 style={{ height, width: '100%' }}
                 contentFit="cover"
               />
@@ -225,6 +226,7 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
             mixedContentMode="always"
             mediaPlaybackRequiresUserAction={false}
             onMessage={handleCaptureMessage}
+            // eslint-disable-next-line leather/prefer-style-props
             style={{ position: 'absolute', opacity: 0, width: 1, height: 1, top: 0, left: 0 }}
           />
         )}
@@ -237,6 +239,7 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
       <WebView
         key={src}
         source={{ html: playbackHtml }}
+        // eslint-disable-next-line leather/prefer-style-props
         style={{ flex: 1 }}
         allowsInlineMediaPlayback
         mediaPlaybackRequiresUserAction={false}

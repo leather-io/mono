@@ -33,6 +33,7 @@ export function CollectibleImage(props: CollectibleImageProps) {
           setIsLoading(false);
         }}
         src={src}
+        // eslint-disable-next-line leather/prefer-style-props
         style={{
           width: '100%',
           height: '100%',

@@ -55,10 +55,10 @@ export function AccountCard({
   return (
     <Flex
       direction="column"
-      border={{ base: 'active', sm: 'unset' }}
+      border={['active', 'unset']}
       rounded="md"
-      px={{ base: 'space.05', sm: '0' }}
-      pt={{ base: 'space.05', md: '0' }}
+      px={['space.05', '0']}
+      pt={['space.05', null, '0']}
     >
       <Flex flexDir="row" justify="space-between" align="center">
         <Link
@@ -84,7 +84,7 @@ export function AccountCard({
           </Flex>
         </Link>
       </Flex>
-      <Flex flexDir={{ base: 'column', md: 'row' }} justify="space-between">
+      <Flex flexDir={['column', null, 'row']} justify="space-between">
         <Box mb="space.05" mt="space.04">
           <SkeletonLoader width="200px" height="46px" isLoading={isLoadingBalance}>
             <styled.h1
@@ -92,12 +92,10 @@ export function AccountCard({
               data-state={isLoadingAdditionalData ? 'loading' : undefined}
               className={shimmerStyles}
               data-testid={SharedComponentsSelectors.AccountCardBalanceText}
-              style={{
-                whiteSpace: 'nowrap',
-                display: 'inline-block',
-                transformOrigin: 'left center',
-                maxWidth: '100%',
-              }}
+              whiteSpace="nowrap"
+              display="inline-block"
+              transformOrigin="left center"
+              maxWidth="100%"
               ref={scaleTextRef}
             >
               <PrivateTextLayout

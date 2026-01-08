@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 
-import { Formik } from 'formik';
+import { Formik, type FormikProps } from 'formik';
 import { Flex, Stack } from 'leather-styles/jsx';
 
 import type { BitcoinTx } from '@leather.io/models';
@@ -49,10 +49,11 @@ export function IncreaseBtcFeeSheet() {
   if (!tx) return null;
 
   const initialFeeRate = `${(tx.fee / sizeInfo.txVBytes).toFixed(0)}`;
+  type IncreaseBtcFeeFormValues = { feeRate: string };
 
   return (
     <>
-      <Formik
+      <Formik<IncreaseBtcFeeFormValues>
         initialValues={{ feeRate: initialFeeRate }}
         onSubmit={onSubmit}
         validateOnChange={false}
@@ -60,7 +61,7 @@ export function IncreaseBtcFeeSheet() {
         validateOnMount={false}
         validationSchema={validationSchema}
       >
-        {({ submitForm }) => (
+        {({ submitForm }: FormikProps<IncreaseBtcFeeFormValues>) => (
           <>
             <Sheet
               isShowing={location.pathname === RouteUrls.IncreaseBtcFee}

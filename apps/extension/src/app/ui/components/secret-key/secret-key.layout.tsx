@@ -35,7 +35,7 @@ export function SecretKeyLayout({
           />
         ))}
       </SecretKeyGrid>
-      <Flex gap="space.04" direction={{ base: 'column', md: 'row' }}>
+      <Flex gap="space.04" direction={['column', null, 'row']}>
         <Button
           variant="outline"
           iconStart={showSecretKey ? Eye1ClosedIcon : Eye1Icon}

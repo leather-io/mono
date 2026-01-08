@@ -1,5 +1,5 @@
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
-import { Form, Formik } from 'formik';
+import { Form, Formik, type FormikHelpers, type FormikProps } from 'formik';
 import { Stack } from 'leather-styles/jsx';
 
 import { Button } from '@leather.io/ui';
@@ -21,6 +21,7 @@ interface MnemonicFormProps {
   setMnemonic(mnemonic: (string | null)[]): void;
   twentyFourWordMode: boolean;
 }
+type MnemonicFormValues = Record<string, string>;
 export function MnemonicForm({ mnemonic, setMnemonic, twentyFourWordMode }: MnemonicFormProps) {
   const { submitMnemonicForm, error, isLoading } = useSignIn();
 
@@ -30,10 +31,12 @@ export function MnemonicForm({ mnemonic, setMnemonic, twentyFourWordMode }: Mnem
     setMnemonic(newMnemonic);
   }
 
-  function updateEntireKey(key: string, setFieldValue: (name: string, value: number) => void) {
-    const newKey = key.split(' ');
-    newKey.map((index, value) => setFieldValue(`${index + 1}`, value));
-    setMnemonic(newKey);
+  function updateEntireKey(key: string, formik: FormikHelpers<MnemonicFormValues>) {
+    const words = key.split(' ');
+    words.forEach((word, index) => {
+      void formik.setFieldValue(String(index + 1), word);
+    });
+    setMnemonic(words);
     void submitMnemonicForm(key);
   }
 
@@ -41,17 +44,15 @@ export function MnemonicForm({ mnemonic, setMnemonic, twentyFourWordMode }: Mnem
     return void submitMnemonicForm(mnemonic.join(' '));
   }
 
-  const mnemonicFieldArray = mnemonic
-    ? mnemonic
-    : createNullArrayOfLength(twentyFourWordMode ? 24 : 12);
+  const mnemonicFieldArray = mnemonic ?? createNullArrayOfLength(twentyFourWordMode ? 24 : 12);
 
   // set initialValues to avoid throwing uncontrolled inputs error
-  const initialValues = mnemonicFieldArray.reduce(
-    (accumulator, _, index) => ((accumulator[`${index + 1}`] = ''), accumulator),
-    {}
-  );
+  const initialValues: MnemonicFormValues = {};
+  mnemonicFieldArray.forEach((_, index) => {
+    initialValues[String(index + 1)] = '';
+  });
   return (
-    <Formik
+    <Formik<MnemonicFormValues>
       initialValues={initialValues}
       // this onSubmit is to appease Formik and is only really needed in the onClick()
       onSubmit={handleSubmit}
@@ -59,7 +60,8 @@ export function MnemonicForm({ mnemonic, setMnemonic, twentyFourWordMode }: Mnem
       validateOnBlur
       validateOnChange
     >
-      {({ errors, touched, setFieldValue, values, isValid }) => {
+      {(formik: FormikProps<MnemonicFormValues>) => {
+        const { errors, touched, values, isValid } = formik;
         const hasFormValues = hasMnemonicFormValues(values);
         const mnemonicErrorFields = getMnemonicErrorFields(errors, touched, values);
         const showMnemonicErrors = !isEmpty(mnemonicErrorFields) && hasFormValues;
@@ -74,11 +76,12 @@ export function MnemonicForm({ mnemonic, setMnemonic, twentyFourWordMode }: Mnem
                     fieldNumber={i + 1}
                     key={i}
                     value={mnemonic[i] || ''}
-                    onPasteEntireKey={key => {
-                      (document.activeElement as HTMLInputElement).blur();
-                      updateEntireKey(key, setFieldValue);
+                    onPasteEntireKey={(key: string) => {
+                      const activeElement = document.activeElement;
+                      if (activeElement instanceof HTMLElement) activeElement.blur();
+                      updateEntireKey(key, formik);
                     }}
-                    onUpdateWord={w => mnemonicWordUpdate(i, w)}
+                    onUpdateWord={(w: string) => mnemonicWordUpdate(i, w)}
                   />
                 ))}
               </SecretKeyGrid>
