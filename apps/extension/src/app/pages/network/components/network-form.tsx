@@ -71,10 +71,13 @@ export function NetworkForm({ isEditNetworkMode }: NetworkFormProps) {
               gap="space.05"
               pb="space.05"
               pt="space.03"
+              px="space.05"
+              mx="-space.05"
               background="ink.background-primary"
               position="sticky"
               bottom={0}
               zIndex="100"
+              boxShadow="contentOverflowFade"
             >
               <Button
                 disabled={loading}

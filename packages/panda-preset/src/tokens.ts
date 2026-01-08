@@ -65,5 +65,69 @@ export const tokens = defineTokens({
         },
       ],
     },
+    contentOverflowFadeLight: {
+      value: [
+        {
+          offsetX: 0,
+          offsetY: -24,
+          blur: 32,
+          spread: 0,
+          color: 'rgba(255, 255, 255, 0.4)',
+        },
+        {
+          offsetX: 0,
+          offsetY: -12,
+          blur: 24,
+          spread: 0,
+          color: 'rgba(255, 255, 255, 0.7)',
+        },
+        {
+          offsetX: 0,
+          offsetY: -4,
+          blur: 12,
+          spread: 0,
+          color: 'rgba(255, 255, 255, 0.9)',
+        },
+        {
+          offsetX: 0,
+          offsetY: 0,
+          blur: 4,
+          spread: 0,
+          color: 'rgba(255, 255, 255, 1)',
+        },
+      ],
+    },
+    contentOverflowFadeDark: {
+      value: [
+        {
+          offsetX: 0,
+          offsetY: -24,
+          blur: 32,
+          spread: 0,
+          color: 'rgba(18, 16, 15, 0.4)',
+        },
+        {
+          offsetX: 0,
+          offsetY: -12,
+          blur: 24,
+          spread: 0,
+          color: 'rgba(18, 16, 15, 0.7)',
+        },
+        {
+          offsetX: 0,
+          offsetY: -4,
+          blur: 12,
+          spread: 0,
+          color: 'rgba(18, 16, 15, 0.9)',
+        },
+        {
+          offsetX: 0,
+          offsetY: 0,
+          blur: 4,
+          spread: 0,
+          color: 'rgba(18, 16, 15, 1)',
+        },
+      ],
+    },
   },
 });

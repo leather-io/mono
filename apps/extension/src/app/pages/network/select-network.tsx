@@ -92,10 +92,13 @@ export function SelectNetwork() {
             gap="space.02"
             pb="space.05"
             pt="space.03"
+            px="space.05"
+            mx="-space.05"
             background="ink.background-primary"
             position="sticky"
             bottom={0}
             flexDirection="column"
+            boxShadow="contentOverflowFade"
           >
             <NetworkListSwitch
               data-testid={SettingsSelectors.ToggleNetworkBadge}
