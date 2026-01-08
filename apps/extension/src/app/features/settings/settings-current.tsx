@@ -22,7 +22,6 @@ import { analytics } from '@shared/utils/analytics';
 import { useHasKeys } from '@app/common/hooks/auth/use-has-keys';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useModifierKey } from '@app/common/hooks/use-modifier-key';
-import { useThemeSwitcher } from '@app/common/theme-provider';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { Divider } from '@app/components/layout/divider';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
@@ -54,8 +53,6 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
   const showLockWalletItem = canLockWallet && hasKeys && walletType === 'software';
   const showSignOutItem = hasKeys;
 
-  const { theme } = useThemeSwitcher();
-
   return (
     <>
       <DropdownMenu.Root>
@@ -71,7 +68,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
               width: 'settingsMenuWidth',
               maxHeight: 'var(--radix-dropdown-menu-content-available-height)',
               overflowY: 'scroll',
-              boxShadow: theme === 'dark' ? 'elevationDark' : 'elevationLight',
+              boxShadow: 'elevation',
             })}
           >
             <DropdownMenu.Group>
