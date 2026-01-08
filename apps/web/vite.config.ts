@@ -32,6 +32,7 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
   },
   resolve: {
     alias: {
+      '~': path.resolve(__dirname, 'app'),
       'leather-styles': path.resolve(__dirname, 'leather-styles'),
       axios: path.resolve(__dirname, 'node_modules/axios/dist/esm/axios.js'),
       'msw/node': path.resolve(__dirname, 'node_modules/msw/lib/node/index.js'),
@@ -53,6 +54,18 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
     process.env.LEATHER_TARGET === 'production' &&
       sentryReactRouter(sentryConfig, { command, mode, isSsrBuild }),
     tsconfigPaths(),
+    // Temporary hack to fix Cloudflare Workers issue with Vite plugin. To
+    // remove when CI builds without it
+    // https://github.com/cloudflare/workers-sdk/issues/8909#issuecomment-3401112596
+    {
+      name: 'cloudflare-vite-plugin-fix',
+      configEnvironment(name, config) {
+        const isDev = process.env.npm_lifecycle_script?.endsWith('react-router dev');
+        if (name === 'ssr' && !isDev) {
+          delete config.dev;
+        }
+      },
+    },
   ],
   sentryConfig,
 }));

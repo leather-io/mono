@@ -86,8 +86,8 @@
     "zod": "4.0.17"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "1.15.2",
-    "@cloudflare/workers-types": "4.20251011.0",
+    "@cloudflare/vite-plugin": "1.20.1",
+    "@cloudflare/workers-types": "4.20260108.0",
     "@leather.io/test-config": "workspace:*",
     "@msw/playwright": "0.4.2",
     "@originjs/vite-plugin-commonjs": "1.0.3",
@@ -104,15 +104,15 @@
     "@types/valid-url": "1.0.7",
     "jsdom": "26.1.0",
     "msw": "2.10.4",
-    "react-router-devtools": "6.0.0",
+    "react-router-devtools": "6.1.0",
     "rollup-plugin-node-polyfills": "0.2.1",
     "ts-node": "10.9.2",
     "tty-browserify": "0.0.1",
     "typescript": "5.9.3",
-    "vite": "7.0.6",
+    "vite": "7.3.1",
     "vite-plugin-svgr": "4.3.0",
-    "vite-tsconfig-paths": "5.1.4",
+    "vite-tsconfig-paths": "6.0.3",
     "vitest": "2.1.9",
-    "wrangler": "4.50.0"
+    "wrangler": "4.58.0"
   }
 }
