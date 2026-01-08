@@ -48,6 +48,16 @@ uncommon, and typechecking is handled by editors.
 Local checks are optional and configurable to suit developer preferences. On GitHub, these
 checks run automatically on every push through [Code checks](.github/workflows/code-checks.yml), as part of the CI workflow.
 
+### Updating pnpm version
+
+To update pnpm, use the helper script which updates all required locations:
+
+```bash
+./scripts/update-pnpm-version.sh <version>
+```
+
+This updates `.prototools`, `.github/actions/provision/action.yml`, and `package.json` in one command.
+
 ### Documentation
 
 Documentation has been provided from the outset and can be found in `docs/tools/` along with a [TEMPLATE.md](docs/core/TEMPLATE.md) file

@@ -109,3 +109,13 @@ const ids = items.map(x => x.id);
 
 - Our repo is a turbo monorepo which uses `pnpm` for package management and package.json scripts.
 - Many common actions can be found in respective pacakge and apps `scripts` in the package.json.
+
+### Updating pnpm version
+
+When updating pnpm, you must update all three locations:
+
+1. `.prototools` - version only (e.g., `pnpm = "10.26.0"`)
+2. `.github/actions/provision/action.yml` - version with SHA
+3. `package.json` - `packageManager` field with version and SHA
+
+Use the helper script: `./scripts/update-pnpm-version.sh <version>`
