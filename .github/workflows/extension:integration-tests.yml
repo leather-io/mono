@@ -167,7 +167,7 @@ jobs:
             external_repository: leather-io/playwright-reports
             publish_branch: main
             publish_dir: ./playwright-report
-            destination_dir: ${{ steps.extract_branch.outputs.branch }}
+            destination_dir: extension/${{ steps.extract_branch.outputs.branch }}
 
       - name: deploy-specs.leather.io
         uses: peaceiris/actions-gh-pages@v4

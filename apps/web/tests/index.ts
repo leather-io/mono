@@ -57,6 +57,10 @@ export const test = base.extend<Fixtures>({
       await page.goto('http://localhost:5173');
       await page.waitForLoadState('networkidle');
 
+      if (options.mode === 'uninstalled') {
+        // No action needed here, wallet uninstalled is the default state
+      }
+
       if (options.mode === 'mock-installed') {
         await page.evaluate(() => localStorage.setItem('leather-mock-mode', 'true'));
         await page.reload();
@@ -67,10 +71,6 @@ export const test = base.extend<Fixtures>({
         await page.reload();
         await page.getByRole('button', { name: 'Connect' }).click();
         await page.getByRole('button', { name: 'Resolve' }).click();
-      }
-
-      if (options.mode === 'uninstalled') {
-        await page.evaluate(() => ((window as any).LeatherProvider = undefined));
       }
     }
     await use(setMode);
