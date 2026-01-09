@@ -5,6 +5,7 @@ import { reactRouter } from '@react-router/dev/vite';
 import { type SentryReactRouterBuildOptions, sentryReactRouter } from '@sentry/react-router';
 import path from 'node:path';
 import { defineConfig } from 'vite';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -31,14 +32,32 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
     },
   },
   resolve: {
-    alias: {
-      '~': path.resolve(__dirname, 'app'),
-      'leather-styles': path.resolve(__dirname, 'leather-styles'),
-      axios: path.resolve(__dirname, 'node_modules/axios/dist/esm/axios.js'),
-      'msw/node': path.resolve(__dirname, 'node_modules/msw/lib/node/index.js'),
-      // Stub out @bitflowlabs/core-sdk for browser compatibility
-      '@bitflowlabs/core-sdk': path.resolve(__dirname, 'stubs/bitflow-sdk-stub.js'),
-    },
+    alias: [
+      // Shim imports broken in polyfill package plugin. Can be removed in later
+      // version and resolve.alias returned to object syntax
+      // https://github.com/davidmyersdev/vite-plugin-node-polyfills/pull/141
+      {
+        find: /^(vite-plugin-node-polyfills\/shims\/.+)/,
+        replacement: '$1',
+        customResolver(source) {
+          return import.meta.resolve(source).replace(/^file:\/\//, '');
+        },
+      },
+      { find: '~', replacement: path.resolve(__dirname, 'app') },
+      { find: 'leather-styles', replacement: path.resolve(__dirname, 'leather-styles') },
+      {
+        find: 'axios',
+        replacement: path.resolve(__dirname, 'node_modules/axios/dist/esm/axios.js'),
+      },
+      {
+        find: 'msw/node',
+        replacement: path.resolve(__dirname, 'node_modules/msw/lib/node/index.js'),
+      },
+      {
+        find: '@bitflowlabs/core-sdk',
+        replacement: path.resolve(__dirname, 'stubs/bitflow-sdk-stub.js'),
+      },
+    ],
   },
   define: {
     // Required for some libs e.g. pbkdf2
@@ -46,6 +65,12 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
     'import.meta.env.CLOUDFLARE_ENV': JSON.stringify(process.env.CLOUDFLARE_ENV),
   },
   plugins: [
+    nodePolyfills({
+      include: ['process', 'util'],
+      globals: {
+        process: true,
+      },
+    }),
     copyMswWorker(),
     cloudflare({ viteEnvironment: { name: 'ssr' } }),
     svgr({ include: '**/*.svg' }),

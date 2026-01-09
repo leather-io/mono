@@ -24,6 +24,19 @@ export const test = base.extend<Fixtures>({
       messages.push(`[${error.name}] ${error.message}`);
     });
     await use(page);
+
+    await page.evaluate(() => {
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log('Error clearing page storage', e);
+      }
+    });
+
+    await page.close();
+
     if (messages.length > 0) {
       const errorMessage = `Test produced ${messages.length} console error(s):\n${messages.join('\n')}`;
       // eslint-disable-next-line no-console
@@ -41,7 +54,8 @@ export const test = base.extend<Fixtures>({
     network.use();
 
     async function setMode(options: ModeOptions = { mode: 'mock-installed' }) {
-      await page.goto('/');
+      await page.goto('http://localhost:5173');
+      await page.waitForLoadState('networkidle');
 
       if (options.mode === 'mock-installed') {
         await page.evaluate(() => localStorage.setItem('leather-mock-mode', 'true'));

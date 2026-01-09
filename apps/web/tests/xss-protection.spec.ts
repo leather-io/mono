@@ -3,7 +3,6 @@ import { expect, test } from '@playwright/test';
 import { setupXssMocks } from './utils/mock-data';
 
 test.describe('XSS Protection', () => {
-  // Setup mocks before each test
   test.beforeEach(async ({ page }) => {
     await setupXssMocks(page);
   });
