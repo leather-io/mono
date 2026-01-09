@@ -63,55 +63,56 @@ export function RouterErrorBoundary() {
   }
 
   return (
-    <Flex
-      alignItems="center"
-      justifyContent="center"
-      flexDirection="column"
-      px={['space.05', 'unset']}
-      py={['space.05', 'space.06']}
-      width="100%"
-      maxWidth="500px"
-    >
-      <Box mt="space.05">
-        <img src={BroadcastError} alt="Unhappy user interface cloud" width="106px" />
-      </Box>
-
-      <styled.span
-        data-testid={SharedComponentsSelectors.BroadcastErrorTitle}
-        mx="space.05"
-        mt="space.05"
-        textStyle="heading.05"
+    <Center minHeight="100vh" width="100%" px="space.05" py="space.06">
+      <Flex
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+        width="100%"
+        maxWidth="500px"
       >
-        {title}
-      </styled.span>
+        <Box mt="space.05">
+          <img src={BroadcastError} alt="Unhappy user interface cloud" width="106px" />
+        </Box>
 
-      {shouldShowContactSupportMessage(errorText) && <ErroBoundaryBody />}
-
-      {errorText && (
-        <CodeBlock
-          bg="ink.background-secondary"
-          borderRadius="sm"
-          my="space.05"
+        <styled.span
+          data-testid={SharedComponentsSelectors.BroadcastErrorTitle}
           mx="space.05"
-          p="space.04"
-          prism={Prism}
-          code={errorText}
-          language="json"
-          hideLineHover
-        />
-      )}
+          mt="space.05"
+          textStyle="heading.05"
+          textAlign="center"
+        >
+          {title}
+        </styled.span>
 
-      <HStack width="100%" gap="space.04">
-        <Button flex="1" onClick={onClickCopy} variant="outline">
-          <Center gap="5">
-            Copy error
-            <CopyIcon />
-          </Center>
-        </Button>
-        <Button flex="1" onClick={() => window.location.reload()}>
-          Reload extension
-        </Button>
-      </HStack>
-    </Flex>
+        {shouldShowContactSupportMessage(errorText) && <ErroBoundaryBody />}
+
+        {errorText && (
+          <CodeBlock
+            bg="ink.background-secondary"
+            borderRadius="sm"
+            my="space.05"
+            mx="space.05"
+            p="space.04"
+            prism={Prism}
+            code={errorText}
+            language="json"
+            hideLineHover
+          />
+        )}
+
+        <HStack width="100%" gap="space.04">
+          <Button flex="1" onClick={onClickCopy} variant="outline">
+            <Center gap="5">
+              Copy error
+              <CopyIcon />
+            </Center>
+          </Button>
+          <Button flex="1" onClick={() => window.location.reload()}>
+            Reload extension
+          </Button>
+        </HStack>
+      </Flex>
+    </Center>
   );
 }
