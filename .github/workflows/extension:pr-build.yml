@@ -108,7 +108,7 @@ jobs:
       - uses: marocchino/sticky-pull-request-comment@v2
         env:
           EXTENSION_BUILD_LINK: '[Extension build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
-          TEST_REPORT_LINK: '[Test report](https://leather-io.github.io/playwright-reports/${{ env.BRANCH_NAME }})'
+          TEST_REPORT_LINK: '[Extension test report](https://leather-io.github.io/playwright-reports/extension/${{ env.BRANCH_NAME }})'
           STORYBOOK_LINK: '[Storybook](https://${{ env.STORYBOOK_BRANCH }}--65982789c7e2278518f189e7.chromatic.com)'
           CHROMATIC_LINK: '[Chromatic](https://www.chromatic.com/library?appId=65982789c7e2278518f189e7&branch=${{ env.STORYBOOK_BRANCH }})'
         with:

@@ -12,10 +12,17 @@ env:
 
 jobs:
   test:
+    name: shard-${{ matrix.shardIndex }}-of-${{ matrix.shardTotal }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    env:
-      LEATHER_MOCK_MODE: true
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2]
+        shardTotal: [2]
+    defaults:
+      run:
+        working-directory: apps/web
 
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +30,6 @@ jobs:
 
       - name: get-installed-playwright-version
         id: playwright-version
-        working-directory: apps/web
         run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package.json').devDependencies['@playwright/test'])")" >> "$GITHUB_ENV"
 
       - name: cache-playwright-binaries
@@ -34,31 +40,62 @@ jobs:
           key: ${{ runner.os }}-playwright-cache-${{ env.PLAYWRIGHT_VERSION }}
 
       - name: install-playwright-browsers
-        working-directory: apps/web
         run: pnpm exec playwright install chrome chromium
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: install-playwright-deps
-        working-directory: apps/web
         run: pnpm exec playwright install --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: prepare-script
-        working-directory: apps/web
         run: pnpm prepare
 
       - name: build-packages
+        working-directory: ./
         run: pnpm turbo run build --filter="@leather.io/web"
 
       - name: run-playwright-tests
-        working-directory: apps/web
-        run: pnpm exec playwright test
+        run: pnpm exec playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
-      - name: upload-report-to-github-actions-artifacts
+      - name: upload-blob-report-to-github-actions-artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: apps/web/test-results
+          name: blob-report-${{ matrix.shardIndex }}
+          path: apps/web/blob-report
           retention-days: 1
           if-no-files-found: error
+
+  merge-reports:
+    name: merge-reports
+    if: always()
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: download-blob-reports-from-github-actions-artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+
+      - name: merge-into-html-report
+        run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+      - name: extract-branch-name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
+        id: extract_branch
+
+      - uses: Wandalen/wretry.action@master
+        if: github.event_name == 'pull_request'
+        with:
+          action: peaceiris/actions-gh-pages@v4
+          with: |
+            personal_token: ${{ secrets.LEATHER_BOT }}
+            external_repository: leather-io/playwright-reports
+            publish_branch: main
+            publish_dir: ./playwright-report
+            destination_dir: web/${{ steps.extract_branch.outputs.branch }}

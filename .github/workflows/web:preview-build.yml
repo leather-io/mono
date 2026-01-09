@@ -56,9 +56,17 @@ jobs:
         working-directory: apps/web
         run: echo "PREVIEW_URL=$(grep -o 'https://pr-${{ github.event.pull_request.number }}[^ ]*' wrangler-preview.txt | head -1)" >> "$GITHUB_ENV"
 
+      - name: extract-and-sanitize-branch-name
+        id: extract_branch
+        run: |
+          sanitized_branch="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          echo "BRANCH_NAME=${sanitized_branch}" >> "$GITHUB_ENV"
+
       - uses: marocchino/sticky-pull-request-comment@v2
+        env:
+          WEB_PREVIEW_LINK: '[Web preview](${{ env.PREVIEW_URL }})'
+          WEB_TEST_REPORT_LINK: '[Web test report](https://leather-io.github.io/playwright-reports/web/${{ env.BRANCH_NAME }})'
         with:
           header: web-preview-build
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
-          message: |
-            Leather Web Build ${{ github.event.pull_request.head.sha }} → ${{ env.PREVIEW_URL }}
+          message: 'Leather Web build ${{ github.event.pull_request.head.sha }} — ${{ env.WEB_PREVIEW_LINK }}, ${{ env.WEB_TEST_REPORT_LINK }}'
