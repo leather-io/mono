@@ -4,7 +4,6 @@ import { setupProtocolMocks } from './utils/mock-data';
 
 // Using real application routes to test protocol components
 test.describe('ProtocolOverview', () => {
-  // Setup mocks before each test
   test.beforeEach(async ({ page }) => {
     await setupProtocolMocks(page);
   });
