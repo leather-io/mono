@@ -79,7 +79,7 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
               <styled.ul listStyleType="disc" pl="space.04">
                 {guide.relatedPosts.map(post => (
                   <styled.li key={post._id} textStyle="body.01">
-                    <Link to={`/help-center/guide/${post.slug.current}`}>
+                    <Link to={`/support/guide/${post.slug.current}`}>
                       <styled.span
                         color="ink.action-primary-default"
                         _hover={{ textDecoration: 'underline' }}

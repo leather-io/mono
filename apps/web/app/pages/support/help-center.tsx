@@ -2,9 +2,9 @@ import { useLoaderData } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
-import { GuideList } from '~/pages/help-center/components/guide-list';
-import { SupportFormProvider } from '~/pages/help-center/components/support-form-provider';
-import { loader } from '~/pages/help-center/help-center.route';
+import { GuideList } from '~/pages/support/components/guide-list';
+import { SupportFormProvider } from '~/pages/support/components/support-form-provider';
+import { loader } from '~/pages/support/help-center.route';
 
 import type { SanityImageAsset } from '@leather.io/cms';
 
@@ -43,7 +43,7 @@ export function HelpCenter() {
             items={categories.map(category => ({
               id: category._id,
               title: category.categoryName,
-              href: `/help-center/${category.slug.current}`,
+              href: `/support/${category.slug.current}`,
               icon: category.icon?.asset as unknown as SanityImageAsset | undefined,
               guideCount: category.guideCount,
             }))}

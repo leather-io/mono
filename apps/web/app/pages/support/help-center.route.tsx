@@ -1,7 +1,7 @@
 import { MetaDescriptor } from 'react-router';
 
 import { cmsClient } from '~/constants/cms-client';
-import { HelpCenter } from '~/pages/help-center/help-center';
+import { HelpCenter } from '~/pages/support/help-center';
 import { handleSupportFormAction } from '~/utils/support/support-form-action';
 
 import { LegacyHelpCenterPageQueryResult, legacyHelpCenterPageQuery } from '@leather.io/cms';

@@ -18,19 +18,25 @@ const requestHandler = createRequestHandler(
 
 export default {
   async fetch(request, env, ctx) {
-    const resp = await requestHandler(request, {
+    const response = await requestHandler(request, {
       cloudflare: { env, ctx },
     });
 
-    const headers = new Headers(resp.headers);
-    headers.set('Content-Security-Policy', csp);
-    headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
-    headers.set('Referrer-Policy', 'no-referrer');
-    headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
-    headers.set('Accept-CH', 'Sec-CH-Prefers-Color-Scheme');
-    headers.set('Vary', 'Sec-CH-Prefers-Color-Scheme');
-    headers.set('Critical-CH', 'Sec-CH-Prefers-Color-Scheme');
+    const newHeaders = new Headers(response.headers);
 
-    return new Response(resp.body, { ...resp, headers });
+    newHeaders.set('Content-Security-Policy', csp);
+    newHeaders.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    newHeaders.set('Referrer-Policy', 'no-referrer');
+    newHeaders.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+    newHeaders.set('Accept-CH', 'Sec-CH-Prefers-Color-Scheme');
+    newHeaders.set('Vary', 'Sec-CH-Prefers-Color-Scheme');
+    newHeaders.set('Critical-CH', 'Sec-CH-Prefers-Color-Scheme');
+
+    return new Response(response.body, {
+      ...response,
+      headers: newHeaders,
+      status: response.status,
+      statusText: response.statusText,
+    });
   },
 } satisfies ExportedHandler<Env>;

@@ -31,7 +31,7 @@ export function LearnInfoHoverIcon({
   function handleIconClick(e: React.MouseEvent): void {
     e.stopPropagation();
     if (article?.slug) {
-      void navigate(`/help-center/guide/${article.slug}`);
+      void navigate(`/support/guide/${article.slug}`);
     }
   }
 

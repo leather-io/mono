@@ -26,11 +26,12 @@ export default [
     index('pages/advanced/advanced.route.tsx'),
     route('signer-key-generation', 'pages/advanced/tools/signer-key-generation.route.tsx'),
   ]),
-  route('help-center', 'pages/help-center/help-center.route.tsx'),
-  ...prefix('help-center/:slug', [
-    index('pages/help-center/category-guides/category-guides.route.tsx'),
-  ]),
-  ...prefix('help-center/guide/:slug', [index('pages/help-center/guide/guide.route.tsx')]),
+  route('support', 'pages/support/help-center.route.tsx'),
+  ...prefix('support/:slug', [index('pages/support/category-guides/category-guides.route.tsx')]),
+  ...prefix('support/guide/:slug', [index('pages/support/guide/guide.route.tsx')]),
+  // Redirects from old help-center URLs
+  route('help-center', 'pages/redirects/help-center-redirect.route.tsx'),
+  route('help-center/*', 'pages/redirects/help-center-wildcard.route.tsx'),
   // Fallback route
   route('*', 'pages/error/error-not-found.route.tsx'),
 ] satisfies RouteConfig;
