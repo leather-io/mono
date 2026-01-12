@@ -56,7 +56,7 @@ export function setLocalStorageMockMode(enabled: boolean): void {
 }
 
 export function getLeatherMockMode() {
-  return import.meta.env.LEATHER_MOCK_MODE === 'true' || getLocalStorageMockMode();
+  return getLocalStorageMockMode();
 }
 
-export const LEATHER_MOCK_MODE = getLeatherMockMode();
+export const SHOW_MOCK_MODE_TOGGLE = import.meta.env.LEATHER_SHOW_MOCK_MODE_TOGGLE === 'true';
