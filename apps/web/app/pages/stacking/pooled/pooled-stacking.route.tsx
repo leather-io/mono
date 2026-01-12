@@ -1,4 +1,4 @@
-import { MetaDescriptor } from 'react-router';
+import { MetaDescriptor, data } from 'react-router';
 
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
 import { poolSlugSchema } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
@@ -9,7 +9,9 @@ import { Route } from './+types/pooled-stacking.route';
 export function loader({ params }: Route.LoaderArgs) {
   const { success, data: poolSlug } = poolSlugSchema.safeParse(params.slug);
 
-  if (!success) throw new Error(`Invalid pool slug: ${poolSlug}`);
+  if (!success) {
+    throw data(`Pool not found: ${params.slug}`, { status: 404 });
+  }
 
   return { poolSlug };
 }
