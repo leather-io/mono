@@ -9,9 +9,9 @@ import { useAssetDescription } from '@app/query/assets/fungible-asset-info.query
 import { useRunesAccountBalance } from '@app/query/bitcoin/runes/runes-balance.query';
 import { usePriceChangePercentage } from '@app/query/common/market-history/market-history.query';
 
-import { TokenActivitySection } from './token_activity.layout';
-import { TokenHeader } from './token_header.layout';
-import { TokenMeta } from './token_meta.layout';
+import { TokenActivitySection } from './token-activity.layout';
+import { TokenHeader } from './token-header.layout';
+import { TokenMeta } from './token-meta.layout';
 
 interface RuneTokenDetailsProps {
   accountIndex: number;

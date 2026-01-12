@@ -6,11 +6,11 @@ import { sanitizeContent } from '@leather.io/utils/sanitize-content';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useGetInscriptionTextContentQuery } from '@app/query/bitcoin/ordinals/inscription-text-content.query';
 
-import { CollectibleIframe } from '../../../../components/collectibles/collectible-iframe';
+import { CollectibleIframe } from '@app/components/collectibles/collectible-iframe';
 import {
   CollectibleItemLayout,
   CollectibleItemLayoutProps,
-} from '../../../../components/collectibles/collectible-item.layout';
+} from '@app/components/collectibles/collectible-item.layout';
 
 interface InscriptionHtmlProps
   extends Pick<
@@ -72,7 +72,7 @@ export function InscriptionHtml({
         overflow="hidden"
         p="space.04"
         width="100%"
-// FIXME:   dangerouslySetInnerHTML={{ __html: sanitizeContent(query.data) }} is unsafe here
+        // FIXME:   dangerouslySetInnerHTML={{ __html: sanitizeContent(query.data) }} is unsafe here
         dangerouslySetInnerHTML={{ __html: sanitizeContent(query.data) }}
       />
     </CollectibleItemLayout>

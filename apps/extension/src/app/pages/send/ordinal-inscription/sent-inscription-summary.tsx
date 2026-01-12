@@ -17,7 +17,7 @@ import { InscriptionPreview } from '@app/components/inscription-preview-card/com
 import { Card } from '@app/components/layout';
 import { useToast } from '@app/features/toasts/use-toast';
 
-import { InscriptionPreviewCard } from '../../../components/inscription-preview-card/inscription-preview-card';
+import { InscriptionPreviewCard } from '@app/components/inscription-preview-card/inscription-preview-card';
 
 function useSendInscriptionSummaryState() {
   const location = useLocation();

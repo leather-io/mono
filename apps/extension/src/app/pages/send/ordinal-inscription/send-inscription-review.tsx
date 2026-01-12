@@ -17,7 +17,7 @@ import { Card } from '@app/components/layout';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 
-import { InscriptionPreviewCard } from '../../../components/inscription-preview-card/inscription-preview-card';
+import { InscriptionPreviewCard } from '@app/components/inscription-preview-card/inscription-preview-card';
 import { useSendInscriptionState } from './components/send-inscription-container';
 
 function useSendInscriptionReviewState() {

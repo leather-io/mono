@@ -28,7 +28,7 @@ import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
-import { useCalculateMaxBitcoinSpend } from '../../../../../common/hooks/balance/use-calculate-max-spend';
+import { useCalculateMaxBitcoinSpend } from '@app/common/hooks/balance/use-calculate-max-spend';
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 
 export function useBtcSendForm() {

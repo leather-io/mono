@@ -70,7 +70,12 @@ export function CollectiblesMarketplaces() {
           </Flex>
 
           <Stack gap="space.01" flex="1">
-            <styled.span textStyle="label.01" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+            <styled.span
+              textStyle="label.01"
+              overflow="hidden"
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+            >
               {item.name}
             </styled.span>
             <styled.span
@@ -88,5 +93,3 @@ export function CollectiblesMarketplaces() {
     </Stack>
   );
 }
-
-

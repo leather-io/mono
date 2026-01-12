@@ -15,7 +15,7 @@ const htmlRegex = /<\w+[\s\S]*?>/;
 export function CollectibleText({ src, height = 200, onPress }: CollectibleTextProps) {
   const preview = typeof src === 'string' ? src.slice(0, 512) : '';
   const isHtml = htmlRegex.test(preview);
-// FIXME:   dangerouslySetInnerHTML={{ __html: sanitizeContent(src) }} is unsafe here
+  // FIXME:   dangerouslySetInnerHTML={{ __html: sanitizeContent(src) }} is unsafe here
   const content = isHtml ? (
     <Box
       dangerouslySetInnerHTML={{ __html: sanitizeContent(src) }}

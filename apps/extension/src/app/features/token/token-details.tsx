@@ -10,22 +10,28 @@ import {
   deserializeAssetId,
 } from '@leather.io/utils';
 
+import { urlPathToAssetId } from '@app/common/asset-url';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
-import { BitcoinTokenDetails } from './bitcoin_token_details';
-import { CollectibleDetails } from './collectible_details';
-import { RuneTokenDetails } from './rune_token_details';
-import { Sip10TokenDetails } from './sip10_token_details';
-import { StacksTokenDetails } from './stacks_token_details';
+import { BitcoinTokenDetails } from './bitcoin-token-details';
+import { CollectibleDetails } from './collectible-details';
+import { RuneTokenDetails } from './rune-token-details';
+import { Sip10TokenDetails } from './sip10-token-details';
+import { StacksTokenDetails } from './stacks-token-details';
 
 export function TokenDetails() {
-  const { assetId } = useParams();
+  const { '*': assetPath } = useParams();
 
-  const parsedAssetId = useMemo(() => {
-    if (!assetId) return null;
-    return deserializeAssetId(assetId as SerializedCryptoAssetId);
-  }, [assetId]);
+  const { assetId, parsedAssetId } = useMemo(() => {
+    if (!assetPath) return { assetId: null, parsedAssetId: null };
+    try {
+      const serialized = urlPathToAssetId(assetPath);
+      return { assetId: serialized, parsedAssetId: deserializeAssetId(serialized) };
+    } catch {
+      return { assetId: null, parsedAssetId: null };
+    }
+  }, [assetPath]);
 
   const accountIndex = useCurrentAccountIndex();
   const account = useAccountAddresses(accountIndex);

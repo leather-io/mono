@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router';
 import { type CollectibleView, type TokenDetailsProps } from '@leather.io/features';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { RouteUrls } from '@shared/route-urls';
-
+import { createTokenDetailsPath } from '@app/common/asset-url';
 import { useFlags } from '@app/features/feature-flags';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
@@ -59,7 +58,7 @@ export function CollectiblesCurrent() {
 
   const handleOpenToken = useCallback(
     ({ assetId }: TokenDetailsProps) => {
-      void navigate(RouteUrls.TokenDetails.replace(':assetId', assetId));
+      void navigate(createTokenDetailsPath(assetId));
     },
     [navigate]
   );
@@ -92,5 +91,5 @@ export function CollectiblesCurrent() {
 
 export function Collectibles() {
   const { extensionRevamp } = useFlags();
-  return !extensionRevamp ? <CollectiblesCurrent /> : <CollectiblesLegacy />;
+  return extensionRevamp ? <CollectiblesCurrent /> : <CollectiblesLegacy />;
 }

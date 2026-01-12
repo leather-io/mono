@@ -60,7 +60,7 @@
 
 ## File naming
 
-- Use snake case file names
+- Use kebab-case for file names (hyphens, not underscores)
 - File names must explain their contents, e.g., a file containing `AlternateHeaderLayout`
   is called `alternate-header-layout.tsx`
 - Avoid using index.ts(x) files, except for the following scenarios:

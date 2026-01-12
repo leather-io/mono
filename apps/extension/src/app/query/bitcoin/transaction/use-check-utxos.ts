@@ -8,7 +8,7 @@ import { isUndefined } from '@leather.io/utils';
 
 import { useCurrentNetworkState, useIsLeatherTestingEnv } from '@app/query/leather-query-provider';
 
-import { InscribedUtxoWarningDialog } from '../../../features/dialogs/inscribed-utxo-warning-dialog/inscribed-utxo-warning-dialog';
+import { InscribedUtxoWarningDialog } from '@app/features/dialogs/inscribed-utxo-warning-dialog/inscribed-utxo-warning-dialog';
 import { useBitcoinClient } from '../clients/bitcoin-client';
 
 interface CheckInscribedUtxosByBestinslotArgs {
