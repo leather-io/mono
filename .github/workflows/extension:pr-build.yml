@@ -8,6 +8,12 @@ on:
       - '!packages/ui/**/*.native.ts'
       - '!packages/ui/**/*.native.tsx'
   workflow_dispatch:
+    inputs:
+      demo_mode:
+        description: 'Enable demo mode (all feature flags on, bypass LaunchDarkly)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -59,12 +65,23 @@ jobs:
       - name: build-packages
         run: pnpm build:packages
 
+      - name: Check if internal-testing label is present
+        id: check-label
+        run: |
+          if [[ "${{ contains(github.event.pull_request.labels.*.name, 'internal-testing') }}" == "true" ]]; then
+            echo "use_stable_id=true" >> $GITHUB_OUTPUT
+          else
+            echo "use_stable_id=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: build-project
         working-directory: apps/extension
         run: pnpm build
         env:
           WALLET_ENVIRONMENT: feature
           TARGET_BROWSER: ${{ matrix.target }}
+          DEMO_MODE: ${{ github.event.inputs.demo_mode || 'false' }}
+          LD_CLIENT_ID: ${{ steps.check-label.outputs.use_stable_id == 'true' && 'leather-pr-builds' || '' }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN_STAGING }}
           LAUNCH_DARKLY_KEY: ${{ secrets.EXTENSION_LAUNCH_DARKLY_KEY}}

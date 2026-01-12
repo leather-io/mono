@@ -1,5 +1,5 @@
 // LocalStorage keys kept across sign-in/signout sessions
-const PERSISTENT_LOCAL_DATA: string[] = [];
+const PERSISTENT_LOCAL_DATA: string[] = ['client-id-v1'];
 
 export function partiallyClearLocalStorage() {
   const backup = PERSISTENT_LOCAL_DATA.map((key: string) => [key, localStorage.getItem(key)]);

@@ -21,6 +21,12 @@ function setClientId(id: string) {
 }
 
 export function getClientId() {
+  // Dev override: allows stable LD client ID across reinstalls
+  // Set LD_CLIENT_ID in .env (e.g., LD_CLIENT_ID=dev-your-name)
+  if (process.env.LD_CLIENT_ID) {
+    return process.env.LD_CLIENT_ID;
+  }
+
   let id: string | null = null;
   try {
     id = localStorage.getItem(clientIdV1Key);

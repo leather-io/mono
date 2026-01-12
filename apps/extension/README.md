@@ -33,6 +33,56 @@ pnpm i
 pnpm dev
 ```
 
+#### LaunchDarkly setup (optional)
+
+LaunchDarkly uses a client ID to target feature flags. By default, this ID is randomly generated and stored in `localStorage`, which means it changes when you reinstall the extension.
+
+**For local development:**
+
+To use a stable client ID across reinstalls (helpful for testing feature flags):
+
+1. Create a `.env` file in `apps/extension/` (gitignored)
+2. Add: `LD_CLIENT_ID=dev-your-name` (use any stable string)
+3. Add your client ID to the LaunchDarkly dashboard for targeting
+
+**For PR builds:**
+
+PR builds use different client IDs depending on the PR label:
+
+- **Default (no label)**: Random UUID per install (normal behavior, not targetable in LD)
+- **`internal-testing` label**: Stable `LD_CLIENT_ID=leather-pr-builds` (targetable in LD)
+
+To enable stable LD targeting for a PR:
+
+1. Add the `internal-testing` label to your PR
+2. Build artifacts will use `leather-pr-builds` as the client ID
+3. Add `leather-pr-builds` to LD dashboard once (targets all internal-testing PRs)
+
+This keeps most PRs isolated while allowing opt-in LD targeting for specific testing scenarios.
+
+**Demo mode (all flags enabled):**
+
+To create a demo build with all feature flags enabled (bypassing LaunchDarkly):
+
+1. Set `DEMO_MODE=true` in your build environment
+2. All feature flags will be enabled regardless of LaunchDarkly settings
+
+This is useful for:
+
+- Showcasing unreleased features to stakeholders
+- QA testing without LD configuration
+- Design reviews
+
+See [`DEMO_BUILDS.md`](./DEMO_BUILDS.md) for detailed instructions including how to trigger demo PR builds via GitHub Actions.
+
+Example for local demo build:
+
+```bash
+DEMO_MODE=true pnpm build
+```
+
+**Note:** All overrides only work in development/feature builds and won't affect production.
+
 #### Optional: run test app
 
 We bundle a test app to use along with the extension. It gives easy access to the various functions that the extension
