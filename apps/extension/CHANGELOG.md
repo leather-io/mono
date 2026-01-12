@@ -21,6 +21,33 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.91.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.90.0...@leather.io/extension-v6.91.0) (2026-01-12)
+
+
+### Features
+
+* **extension:** fade bottom action bar ([065ec91](https://github.com/leather-io/mono/commit/065ec91a1d52c3cf833b42572eab2c6667bca727))
+* network badge ([7cf9b35](https://github.com/leather-io/mono/commit/7cf9b352f84d7aafb7c502e015527458e589de6b))
+* secret key page ([d96ea91](https://github.com/leather-io/mono/commit/d96ea9160dda0c5b71342c84a6c02e3b0031a4e7))
+
+
+### Bug Fixes
+
+* **extension:** fix bug with tab navigation, ref LEA-3334 ([6030950](https://github.com/leather-io/mono/commit/6030950a3f16616105edc42f45194388d1bc76c0))
+* react router audit ([22190b8](https://github.com/leather-io/mono/commit/22190b8ee76cbb60ec4d5c64b46dec38d3d6a41a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/features bumped to 1.1.9
+    * @leather.io/queries bumped to 0.3.2
+    * @leather.io/services bumped to 1.46.4
+    * @leather.io/ui bumped to 1.103.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.16.0
+
 ## [6.90.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.89.0...@leather.io/extension-v6.90.0) (2026-01-07)
 
 

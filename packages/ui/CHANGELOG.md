@@ -489,6 +489,22 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.103.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.102.0...@leather.io/ui-v1.103.0) (2026-01-12)
+
+
+### Features
+
+* **extension:** fade bottom action bar ([065ec91](https://github.com/leather-io/mono/commit/065ec91a1d52c3cf833b42572eab2c6667bca727))
+* network badge ([7cf9b35](https://github.com/leather-io/mono/commit/7cf9b352f84d7aafb7c502e015527458e589de6b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/features bumped to 1.1.9
+    * @leather.io/panda-preset bumped to 0.16.0
+
 ## [1.102.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.101.0...@leather.io/ui-v1.102.0) (2026-01-07)
 
 

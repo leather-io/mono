@@ -252,6 +252,14 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.23.1
 
+## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.15.0...@leather.io/panda-preset-v0.16.0) (2026-01-12)
+
+
+### Features
+
+* **extension:** fade bottom action bar ([065ec91](https://github.com/leather-io/mono/commit/065ec91a1d52c3cf833b42572eab2c6667bca727))
+* secret key page ([d96ea91](https://github.com/leather-io/mono/commit/d96ea9160dda0c5b71342c84a6c02e3b0031a4e7))
+
 ## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.14.8...@leather.io/panda-preset-v0.15.0) (2026-01-07)
 
 
