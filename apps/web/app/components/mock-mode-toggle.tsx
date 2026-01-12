@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 
 import { Circle, styled } from 'leather-styles/jsx';
-import { TARGET, getLeatherMockMode, setLocalStorageMockMode } from '~/constants/environment';
+import {
+  SHOW_MOCK_MODE_TOGGLE,
+  getLeatherMockMode,
+  setLocalStorageMockMode,
+} from '~/constants/environment';
 
 import { Flag } from '@leather.io/ui';
 import { delay } from '@leather.io/utils';
@@ -30,7 +34,7 @@ export function MockModeToggle() {
     window.location.reload();
   }
 
-  if (!isMockMode && TARGET === 'production') return null;
+  if (!SHOW_MOCK_MODE_TOGGLE) return null;
 
   return (
     <WhenClient>

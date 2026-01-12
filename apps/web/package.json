@@ -63,7 +63,7 @@
     "d3": "7.9.0",
     "dayjs": "1.11.13",
     "dompurify": "3.2.4",
-    "feed": "5.1.0",
+    "feed": "5.2.0",
     "isbot": "5.1.29",
     "jotai": "2.12.5",
     "mixpanel-browser": "2.71.1",
@@ -88,9 +88,9 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.20.1",
-    "@cloudflare/workers-types": "4.20260108.0",
+    "@cloudflare/workers-types": "4.20260111.0",
     "@leather.io/test-config": "workspace:*",
-    "@msw/playwright": "0.4.2",
+    "@msw/playwright": "0.4.5",
     "@originjs/vite-plugin-commonjs": "1.0.3",
     "@pandacss/dev": "1.7.1",
     "@playwright/test": "1.57.0",
@@ -104,7 +104,7 @@
     "@types/react-syntax-highlighter": "15.5.13",
     "@types/valid-url": "1.0.7",
     "jsdom": "26.1.0",
-    "msw": "2.10.4",
+    "msw": "2.12.7",
     "react-router-devtools": "6.1.0",
     "rollup-plugin-node-polyfills": "0.2.1",
     "ts-node": "10.9.2",
@@ -112,7 +112,7 @@
     "typescript": "5.9.3",
     "vite": "7.3.1",
     "vite-plugin-svgr": "4.3.0",
-    "vite-tsconfig-paths": "6.0.3",
+    "vite-tsconfig-paths": "6.0.4",
     "vitest": "2.1.9",
     "wrangler": "4.58.0"
   }

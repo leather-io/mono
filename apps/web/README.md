@@ -29,7 +29,7 @@ variables are accessible at runtime.
 
 ```sh
 LEATHER_TARGET=development
-LEATHER_MOCK_MODE=true
+LEATHER_SHOW_MOCK_MODE_TOGGLE=true
 ```
 
 ## Universal Content Sanitization
