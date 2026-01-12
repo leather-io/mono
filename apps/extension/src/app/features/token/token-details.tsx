@@ -48,9 +48,7 @@ export function TokenDetails() {
     case CryptoAssetProtocols.nativeStx:
       return <StacksTokenDetails accountIndex={accountIndex} account={account} />;
     case CryptoAssetProtocols.sip10:
-      return (
-        <Sip10TokenDetails accountIndex={accountIndex} account={account} assetId={assetId} />
-      );
+      return <Sip10TokenDetails accountIndex={accountIndex} account={account} assetId={assetId} />;
     case CryptoAssetProtocols.rune:
       return <RuneTokenDetails accountIndex={accountIndex} account={account} assetId={assetId} />;
     case CryptoAssetProtocols.brc20:
@@ -63,9 +61,7 @@ export function TokenDetails() {
     case CryptoAssetProtocols.sip9:
     case CryptoAssetProtocols.inscription:
     case CryptoAssetProtocols.stamp:
-      return (
-        <CollectibleDetails account={account} assetId={assetId} protocol={protocol} />
-      );
+      return <CollectibleDetails account={account} assetId={assetId} protocol={protocol} />;
     default:
       assertUnreachable(protocol);
       return (

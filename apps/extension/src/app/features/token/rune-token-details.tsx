@@ -1,7 +1,7 @@
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { type AccountAddresses, type Money } from '@leather.io/models';
-import { Callout, RunesAvatarIcon, Spinner } from '@leather.io/ui';
+import { Callout, RunesAvatarIcon } from '@leather.io/ui';
 import { type SerializedCryptoAssetId, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { useActivityByAsset } from '@app/query/activity/activity.query';
@@ -10,6 +10,7 @@ import { useRunesAccountBalance } from '@app/query/bitcoin/runes/runes-balance.q
 import { usePriceChangePercentage } from '@app/query/common/market-history/market-history.query';
 
 import { TokenActivitySection } from './token-activity.layout';
+import { TokenDetailsLoading } from './token-details-loading';
 import { TokenHeader } from './token-header.layout';
 import { TokenMeta } from './token-meta.layout';
 
@@ -65,10 +66,7 @@ function RuneTokenDetailsContent({ asset, crypto, quote, account }: RuneTokenDet
         <styled.span textStyle="caption.02" color="ink.text-subdued">
           24h change
         </styled.span>
-        <styled.span
-          textStyle="caption.02"
-          color={getPriceChangeColor(changePercent)}
-        >
+        <styled.span textStyle="caption.02" color={getPriceChangeColor(changePercent)}>
           {changePercent ? `${changePercent.toFixed(2)}%` : '—'}
         </styled.span>
       </Flex>
@@ -81,11 +79,7 @@ export function RuneTokenDetails({ accountIndex, account, assetId }: RuneTokenDe
   const runes = useRunesAccountBalance(accountIndex, { includeHiddenAssets: true });
 
   if (runes.state === 'loading') {
-    return (
-      <Box px="space.05" py="space.05" display="flex" justifyContent="center">
-        <Spinner />
-      </Box>
-    );
+    return <TokenDetailsLoading title="Rune" />;
   }
 
   if (runes.state === 'error' || !runes.value) {

@@ -4,7 +4,7 @@ import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import { btcAsset } from '@leather.io/constants';
 import { type AccountAddresses } from '@leather.io/models';
-import { BtcAvatarIcon, Callout, Spinner } from '@leather.io/ui';
+import { BtcAvatarIcon, Callout } from '@leather.io/ui';
 import { createMoney } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -22,6 +22,7 @@ import { useMarketData } from '@app/query/common/market-data/market-data.query';
 import { usePriceChangePercentage } from '@app/query/common/market-history/market-history.query';
 
 import { ActivityItem } from '../activity-list/components/activity-item';
+import { TokenDetailsLoading } from './token-details-loading';
 import {
   TokenDetailsActionsRow,
   TokenDetailsBalanceItem,
@@ -61,11 +62,7 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
     taprootBalance.state === 'loading' ||
     marketData.state === 'loading'
   ) {
-    return (
-      <Box px="space.05" py="space.05" display="flex" justifyContent="center">
-        <Spinner />
-      </Box>
-    );
+    return <TokenDetailsLoading title="Bitcoin" />;
   }
 
   if (
@@ -156,10 +153,7 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
         <TokenDetailsRow
           label="Price change (24hr)"
           value={
-            <styled.span
-              textStyle="caption.02"
-              color={getPriceChangeColor(changePercent)}
-            >
+            <styled.span textStyle="caption.02" color={getPriceChangeColor(changePercent)}>
               {priceChangeText}
             </styled.span>
           }

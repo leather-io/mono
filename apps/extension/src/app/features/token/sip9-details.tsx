@@ -21,7 +21,11 @@ interface Sip9DetailsProps {
   onToggleDescription(): void;
 }
 
-export function Sip9Details({ asset, isDescriptionExpanded, onToggleDescription }: Sip9DetailsProps) {
+export function Sip9Details({
+  asset,
+  isDescriptionExpanded,
+  onToggleDescription,
+}: Sip9DetailsProps) {
   const info = getSip9Info(asset);
   const description = info.description || '';
   const { text: renderedDescription, isTruncated } = isDescriptionExpanded

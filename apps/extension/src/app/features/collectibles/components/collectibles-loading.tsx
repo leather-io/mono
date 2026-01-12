@@ -1,5 +1,23 @@
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
+import { SkeletonLoader } from '@leather.io/ui';
+
+const CARD_SIZE = 195;
+
+function CollectibleCardSkeleton({ index }: { index: number }) {
+  return (
+    <Box width={`${CARD_SIZE}px`} height={`${CARD_SIZE}px`} p="space.02">
+      <SkeletonLoader
+        isLoading
+        width="100%"
+        height="100%"
+        borderRadius="sm"
+        style={{ animationDelay: `${index * 100}ms` }}
+      />
+    </Box>
+  );
+}
+
 export function CollectiblesLoading() {
   return (
     <Stack gap="space.04">
@@ -14,12 +32,7 @@ export function CollectiblesLoading() {
           justifyContent="center"
         >
           {Array.from({ length: 8 }).map((_, i) => (
-            <Box
-              key={i}
-              width="195px"
-              height="195px"
-              bg={i % 2 === 0 ? 'ink.component-background-non-interactive' : 'ink.border-default'}
-            />
+            <CollectibleCardSkeleton key={i} index={i} />
           ))}
         </styled.div>
       </Box>

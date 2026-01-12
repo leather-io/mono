@@ -1,9 +1,6 @@
 import { useState } from 'react';
 
-import {
-  createBitcoinAddress,
-  lookupDerivationByAddress,
-} from '@leather.io/bitcoin';
+import { createBitcoinAddress, lookupDerivationByAddress } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import type { BitcoinNetworkModes, InscriptionAsset } from '@leather.io/models';
 import type { UtxoWithDerivationPath } from '@leather.io/query';

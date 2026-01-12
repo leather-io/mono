@@ -10,7 +10,7 @@ import {
   Sip9Asset,
   StampAsset,
 } from '@leather.io/models';
-import { ArrowLeftIcon, Button, Callout, Spinner } from '@leather.io/ui';
+import { ArrowLeftIcon, Button, Callout } from '@leather.io/ui';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { isPopupMode } from '@app/common/utils';
@@ -25,6 +25,7 @@ import { InscriptionCard } from '../collectibles/components/inscription-card';
 import { Sip9Card } from '../collectibles/components/sip9-card';
 import { StampCard } from '../collectibles/components/stamp-card';
 import { SendInscriptionDialog } from '../send-inscription';
+import { CollectibleDetailsLoading } from './collectible-details-loading';
 import { SectionCard } from './collectible-details.layout';
 import { InscriptionDetails } from './inscription-details';
 import { Sip9Details } from './sip9-details';
@@ -44,11 +45,7 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
   const [sendInscription, setSendInscription] = useState<InscriptionAsset | null>(null);
 
   if (isLoading) {
-    return (
-      <Box px="space.05" py="space.05" display="flex" justifyContent="center">
-        <Spinner />
-      </Box>
-    );
+    return <CollectibleDetailsLoading onBack={() => navigate(-1)} />;
   }
 
   if (isError) {

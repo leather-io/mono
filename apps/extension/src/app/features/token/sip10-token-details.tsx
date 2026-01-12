@@ -2,7 +2,7 @@ import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import { type AccountAddresses } from '@leather.io/models';
 import type { Sip10Balance } from '@leather.io/services';
-import { Callout, Sip10AvatarIcon, Spinner } from '@leather.io/ui';
+import { Callout, Sip10AvatarIcon } from '@leather.io/ui';
 import {
   type SerializedCryptoAssetId,
   createMoney,
@@ -19,6 +19,7 @@ import { usePriceChangePercentage } from '@app/query/common/market-history/marke
 import { useSip10AccountBalance } from '@app/query/stacks/sip10/sip10-balance.hooks';
 
 import { ActivityItem } from '../activity-list/components/activity-item';
+import { TokenDetailsLoading } from './token-details-loading';
 import {
   TokenDetailsActionsRow,
   TokenDetailsBalanceItem,
@@ -119,10 +120,7 @@ function Sip10TokenDetailsContent({ account, entry }: Sip10TokenDetailsContentPr
         <TokenDetailsRow
           label="Price change (24hr)"
           value={
-            <styled.span
-              textStyle="caption.02"
-              color={getPriceChangeColor(changePercent)}
-            >
+            <styled.span textStyle="caption.02" color={getPriceChangeColor(changePercent)}>
               {priceChangeText}
             </styled.span>
           }
@@ -162,11 +160,7 @@ export function Sip10TokenDetails({ accountIndex, account, assetId }: Sip10Token
   );
 
   if (sip10.state === 'loading') {
-    return (
-      <Box px="space.05" py="space.05" display="flex" justifyContent="center">
-        <Spinner />
-      </Box>
-    );
+    return <TokenDetailsLoading title="Token" />;
   }
 
   if (sip10.state === 'error' || !sip10.value || !entry) {

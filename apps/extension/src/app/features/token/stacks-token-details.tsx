@@ -2,7 +2,7 @@ import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import { stxAsset } from '@leather.io/constants';
 import { type AccountAddresses } from '@leather.io/models';
-import { Callout, Spinner, StxAvatarIcon } from '@leather.io/ui';
+import { Callout, StxAvatarIcon } from '@leather.io/ui';
 import { createMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -13,6 +13,7 @@ import { usePriceChangePercentage } from '@app/query/common/market-history/marke
 import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 
 import { ActivityItem } from '../activity-list/components/activity-item';
+import { TokenDetailsLoading } from './token-details-loading';
 import {
   TokenDetailsActionsRow,
   TokenDetailsBalanceItem,
@@ -35,11 +36,7 @@ export function StacksTokenDetails({ accountIndex, account }: StacksTokenDetails
   const activityQuery = useActivityByAsset(account, stxAsset);
 
   if (balance.state === 'loading' || marketData.state === 'loading') {
-    return (
-      <Box px="space.05" py="space.05" display="flex" justifyContent="center">
-        <Spinner />
-      </Box>
-    );
+    return <TokenDetailsLoading title="Stacks" />;
   }
 
   if (balance.state === 'error' || marketData.state === 'error') {
@@ -118,10 +115,7 @@ export function StacksTokenDetails({ accountIndex, account }: StacksTokenDetails
         <TokenDetailsRow
           label="Price change (24hr)"
           value={
-            <styled.span
-              textStyle="caption.02"
-              color={getPriceChangeColor(changePercent)}
-            >
+            <styled.span textStyle="caption.02" color={getPriceChangeColor(changePercent)}>
               {priceChangeText}
             </styled.span>
           }
