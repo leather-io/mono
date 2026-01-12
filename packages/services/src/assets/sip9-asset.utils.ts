@@ -166,7 +166,9 @@ interface CollectionPriceAmount {
   unit: 'micro_stacks' | 'stx';
 }
 
-function createStxMoneyFromCollectionPriceAmount({ amount, unit }: CollectionPriceAmount) {
+function createStxMoneyFromCollectionPriceAmount(priceAmount: CollectionPriceAmount | undefined) {
+  if (!priceAmount) return undefined;
+  const { amount, unit } = priceAmount;
   return unit === 'micro_stacks'
     ? createMoney(amount, 'STX')
     : createMoneyFromDecimal(amount, 'STX');
