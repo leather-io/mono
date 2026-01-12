@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SupportFormError } from '~/pages/help-center/components/support-form-error';
+import { SupportFormError } from '~/pages/support/components/support-form-error';
 import {
   FrontSupportMessageData,
   frontSupportMessageSchema,

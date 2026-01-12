@@ -3,8 +3,8 @@ import { MetaDescriptor } from 'react-router';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { cmsClient } from '~/constants/cms-client';
 import { Page } from '~/layouts/page/page';
-import { SimpleGuideList } from '~/pages/help-center/components/simple-guide-list';
-import { SupportFormProvider } from '~/pages/help-center/components/support-form-provider';
+import { SimpleGuideList } from '~/pages/support/components/simple-guide-list';
+import { SupportFormProvider } from '~/pages/support/components/support-form-provider';
 import { handleSupportFormAction } from '~/utils/support/support-form-action';
 
 import {
@@ -61,7 +61,7 @@ export default function SectionPostsRoute({ loaderData }: Route.ComponentProps) 
             items={data.guides.map(post => ({
               id: post._id,
               title: post.title,
-              href: `/help-center/guide/${post.slug.current}`,
+              href: `/support/guide/${post.slug.current}`,
             }))}
           />
         </Box>
