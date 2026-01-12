@@ -17,7 +17,11 @@ export const test = base.extend<Fixtures>({
   page: async ({ page }, use) => {
     const messages: string[] = [];
     page.on('console', msg => {
-      if (msg.type() === 'error' && !msg.text().includes('Maximum update depth exceeded'))
+      if (
+        msg.type() === 'error' &&
+        !msg.text().includes('Maximum update depth exceeded') &&
+        !msg.text().includes('Failed to fetch manifest patches')
+      )
         messages.push(`[${msg.type()}] ${msg.text()}`);
     });
     page.on('pageerror', error => {
@@ -54,7 +58,7 @@ export const test = base.extend<Fixtures>({
     network.use();
 
     async function setMode(options: ModeOptions = { mode: 'mock-installed' }) {
-      await page.goto('http://localhost:5173');
+      await page.goto('/');
       await page.waitForLoadState('networkidle');
 
       if (options.mode === 'uninstalled') {

@@ -59,4 +59,5 @@ export function getLeatherMockMode() {
   return getLocalStorageMockMode();
 }
 
-export const SHOW_MOCK_MODE_TOGGLE = import.meta.env.LEATHER_SHOW_MOCK_MODE_TOGGLE === 'true';
+export const SHOW_MOCK_MODE_TOGGLE =
+  import.meta.env.LEATHER_SHOW_MOCK_MODE_TOGGLE === 'true' || getLeatherMockMode();
