@@ -413,6 +413,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.46.4](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.3...@leather.io/services-v1.46.4) (2026-01-12)
+
+
+### Bug Fixes
+
+* **extension:** fix bug with tab navigation, ref LEA-3334 ([6030950](https://github.com/leather-io/mono/commit/6030950a3f16616105edc42f45194388d1bc76c0))
+
 ## [1.46.3](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.2...@leather.io/services-v1.46.3) (2026-01-06)
 
 
