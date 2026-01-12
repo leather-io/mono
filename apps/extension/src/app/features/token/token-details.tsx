@@ -4,11 +4,7 @@ import { useParams } from 'react-router';
 import { Box, styled } from 'leather-styles/jsx';
 
 import { CryptoAssetProtocols } from '@leather.io/models';
-import {
-  type SerializedCryptoAssetId,
-  assertUnreachable,
-  deserializeAssetId,
-} from '@leather.io/utils';
+import { assertUnreachable, deserializeAssetId } from '@leather.io/utils';
 
 import { urlPathToAssetId } from '@app/common/asset-url';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
@@ -53,23 +49,12 @@ export function TokenDetails() {
       return <StacksTokenDetails accountIndex={accountIndex} account={account} />;
     case CryptoAssetProtocols.sip10:
       return (
-        <Sip10TokenDetails
-          accountIndex={accountIndex}
-          account={account}
-          assetId={assetId as SerializedCryptoAssetId}
-        />
+        <Sip10TokenDetails accountIndex={accountIndex} account={account} assetId={assetId} />
       );
     case CryptoAssetProtocols.rune:
-      return (
-        <RuneTokenDetails
-          accountIndex={accountIndex}
-          account={account}
-          assetId={assetId as SerializedCryptoAssetId}
-        />
-      );
+      return <RuneTokenDetails accountIndex={accountIndex} account={account} assetId={assetId} />;
     case CryptoAssetProtocols.brc20:
     case CryptoAssetProtocols.src20:
-    case CryptoAssetProtocols.stx20:
       return (
         <Box px="space.05" py="space.04">
           <styled.p textStyle="body.02">Unsupported asset protocol for details view.</styled.p>
@@ -79,11 +64,7 @@ export function TokenDetails() {
     case CryptoAssetProtocols.inscription:
     case CryptoAssetProtocols.stamp:
       return (
-        <CollectibleDetails
-          account={account}
-          assetId={assetId as SerializedCryptoAssetId}
-          protocol={protocol}
-        />
+        <CollectibleDetails account={account} assetId={assetId} protocol={protocol} />
       );
     default:
       assertUnreachable(protocol);

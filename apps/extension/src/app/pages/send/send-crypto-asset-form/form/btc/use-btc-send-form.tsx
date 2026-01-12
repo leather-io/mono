@@ -13,6 +13,7 @@ import {
 import { BitcoinSendFormValues } from '@shared/models/form.model';
 
 import { formatPrecisionError } from '@app/common/error-formatters';
+import { useCalculateMaxBitcoinSpend } from '@app/common/hooks/balance/use-calculate-max-spend';
 import { useOnMount } from '@app/common/hooks/use-on-mount';
 import {
   btcInsufficientBalanceValidator,
@@ -28,7 +29,6 @@ import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
-import { useCalculateMaxBitcoinSpend } from '@app/common/hooks/balance/use-calculate-max-spend';
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 
 export function useBtcSendForm() {

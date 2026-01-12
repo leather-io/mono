@@ -5,9 +5,9 @@ import { ChainId } from '@stacks/network';
 import { UnsignedMessage } from '@shared/signature/signature-types';
 
 import { NoFeesWarningRow } from '@app/components/no-fees-warning-row';
-
 import { MessagePreviewBox } from '@app/features/message-signer/message-preview-box';
 import { SignMessageActions } from '@app/features/message-signer/stacks-sign-message-action';
+
 import { Utf8Payload } from '../stacks-message-signing';
 import { StacksMessageSigningDisclaimer } from './message-signing-disclaimer';
 

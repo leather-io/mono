@@ -14,10 +14,9 @@ import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import { InfoCardBtn, InfoCardRow, InfoCardSeparator } from '@app/components/info-card/info-card';
 import { InscriptionPreview } from '@app/components/inscription-preview-card/components/inscription-preview';
+import { InscriptionPreviewCard } from '@app/components/inscription-preview-card/inscription-preview-card';
 import { Card } from '@app/components/layout';
 import { useToast } from '@app/features/toasts/use-toast';
-
-import { InscriptionPreviewCard } from '@app/components/inscription-preview-card/inscription-preview-card';
 
 function useSendInscriptionSummaryState() {
   const location = useLocation();

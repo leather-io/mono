@@ -1,9 +1,8 @@
 import { Stamp as BitcoinStamp } from '@leather.io/query';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
-import { StampsAvatarIcon } from '@app/ui/components/avatar/stamps-avatar-icon';
-
 import { CollectibleImage } from '@app/components/collectibles/collectible-image';
+import { StampsAvatarIcon } from '@app/ui/components/avatar/stamps-avatar-icon';
 
 const stampChainAssetUrl = 'https://stampchain.io/asset.html?stampNumber=';
 

@@ -1,6 +1,8 @@
+import { useMemo } from 'react';
+
 import { Box, styled } from 'leather-styles/jsx';
 
-import { sanitizeContent } from '@leather.io/utils/sanitize-content';
+import { Iframe } from '@app/ui/components/iframe';
 
 import { CollectibleCard } from './collectible-card.web';
 
@@ -12,19 +14,47 @@ interface CollectibleTextProps {
 
 const htmlRegex = /<\w+[\s\S]*?>/;
 
+function createHtmlDataUrl(html: string): string {
+  // Wrap content in minimal HTML document for proper rendering
+  const wrappedHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: system-ui, sans-serif;
+      background: #12100f;
+      color: #f5f1ed;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>${html}</body>
+</html>`;
+  return `data:text/html;charset=utf-8,${encodeURIComponent(wrappedHtml)}`;
+}
+
 export function CollectibleText({ src, height = 200, onPress }: CollectibleTextProps) {
   const preview = typeof src === 'string' ? src.slice(0, 512) : '';
   const isHtml = htmlRegex.test(preview);
-  // FIXME:   dangerouslySetInnerHTML={{ __html: sanitizeContent(src) }} is unsafe here
+
+  // For HTML content, create a data URL and render in sandboxed iframe
+  // This prevents any script execution in the parent context
+  const dataUrl = useMemo(() => (isHtml ? createHtmlDataUrl(src) : null), [isHtml, src]);
+
   const content = isHtml ? (
-    <Box
-      dangerouslySetInnerHTML={{ __html: sanitizeContent(src) }}
-      color="ink.background-secondary"
-      bg="ink.text-primary"
-      height={height}
-      overflow="hidden"
-      p="space.04"
-    />
+    <Box height={height} overflow="hidden">
+      <Iframe
+        src={dataUrl!}
+        height="100%"
+        width="100%"
+        onError={() => {
+          // Silently handle errors - the iframe will show blank
+        }}
+      />
+    </Box>
   ) : (
     <Box bg="ink.text-primary" height={height} overflow="hidden" p="space.04">
       <styled.pre color="ink.background-secondary" fontFamily="mono" fontSize="sm">

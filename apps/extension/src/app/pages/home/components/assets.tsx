@@ -12,7 +12,7 @@ export function Assets() {
   const navigate = useNavigate();
 
   function handleOpenToken({ assetId }: TokenDetailsProps) {
-    navigate(createTokenDetailsPath(assetId));
+    void navigate(createTokenDetailsPath(assetId));
   }
 
   return (

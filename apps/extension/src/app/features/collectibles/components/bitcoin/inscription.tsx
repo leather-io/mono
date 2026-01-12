@@ -21,12 +21,12 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { useHoverWithChildren } from '@app/common/hooks/use-hover-with-children';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
-import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
-
 import { CollectibleAudio } from '@app/components/collectibles/collectible-audio';
 import { CollectibleIframe } from '@app/components/collectibles/collectible-iframe';
 import { CollectibleImage } from '@app/components/collectibles/collectible-image';
 import { CollectibleOther } from '@app/components/collectibles/collectible-other';
+import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
+
 import { HighSatValueUtxoWarning } from './high-sat-value-utxo';
 import { InscriptionHtml } from './inscription-html';
 import { InscriptionText } from './inscription-text';

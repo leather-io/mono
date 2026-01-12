@@ -1,6 +1,20 @@
-type LoadingState<T> = { state: 'loading'; value?: T; errorMessage?: string };
-type ErrorState<T> = { state: 'error'; errorMessage: string; value?: T };
-type SuccessState<T> = { state: 'success'; value: T; errorMessage?: string };
+interface LoadingState<T> {
+  state: 'loading';
+  value?: T;
+  errorMessage?: string;
+}
+
+interface ErrorState<T> {
+  state: 'error';
+  errorMessage: string;
+  value?: T;
+}
+
+interface SuccessState<T> {
+  state: 'success';
+  value: T;
+  errorMessage?: string;
+}
 
 export type FetchState<T> = LoadingState<T> | ErrorState<T> | SuccessState<T>;
 

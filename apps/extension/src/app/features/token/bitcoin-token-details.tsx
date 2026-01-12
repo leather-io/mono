@@ -110,12 +110,22 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
           createMoney(price.amount.multipliedBy(changePercent).dividedBy(100), price.symbol)
         )
       : '';
-  const priceChangeText =
-    hasChangePercent && priceChangeDelta
-      ? `${changePercent.toFixed(2)}% (${priceChangeDelta})`
-      : hasChangePercent
-        ? `${changePercent.toFixed(2)}%`
-        : '—';
+  function getPriceChangeText() {
+    if (hasChangePercent && priceChangeDelta) {
+      return `${changePercent.toFixed(2)}% (${priceChangeDelta})`;
+    }
+    if (hasChangePercent) {
+      return `${changePercent.toFixed(2)}%`;
+    }
+    return '—';
+  }
+  const priceChangeText = getPriceChangeText();
+
+  function getPriceChangeColor(change: number) {
+    if (change > 0) return 'green.action-primary-default';
+    if (change < 0) return 'red.action-primary-default';
+    return 'ink.text-subdued';
+  }
 
   return (
     <TokenDetailsScreen
@@ -148,13 +158,7 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
           value={
             <styled.span
               textStyle="caption.02"
-              color={
-                changePercent > 0
-                  ? 'green.action-primary-default'
-                  : changePercent < 0
-                    ? 'red.action-primary-default'
-                    : 'ink.text-subdued'
-              }
+              color={getPriceChangeColor(changePercent)}
             >
               {priceChangeText}
             </styled.span>
@@ -170,7 +174,9 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
           address={nativeSegwitAddress}
           rightTop={`${formatCurrency(nativeSegwitBalance.value.btc.availableBalance, { preset: 'pad-decimals' })}`}
           rightBottom={formatCurrency(nativeSegwitBalance.value.quote.availableBalance)}
-          onPressAddress={nativeSegwitAddress ? () => handleCopyAddress(nativeSegwitAddress) : undefined}
+          onPressAddress={
+            nativeSegwitAddress ? () => handleCopyAddress(nativeSegwitAddress) : undefined
+          }
           onPressRow={handleOpenReceive}
         />
         <TokenDetailsBalanceItem

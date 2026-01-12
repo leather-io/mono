@@ -35,6 +35,12 @@ function RuneTokenDetailsContent({ asset, crypto, quote, account }: RuneTokenDet
   const changePercent = priceChange.state === 'success' ? priceChange.value : 0;
   const activity = activityQuery.data ?? [];
 
+  function getPriceChangeColor(change: number) {
+    if (change > 0) return 'green.action-primary-default';
+    if (change < 0) return 'red.action-primary-default';
+    return 'ink.text-subdued';
+  }
+
   return (
     <Stack px="space.05" py="space.05" gap="space.05">
       <TokenHeader
@@ -61,13 +67,7 @@ function RuneTokenDetailsContent({ asset, crypto, quote, account }: RuneTokenDet
         </styled.span>
         <styled.span
           textStyle="caption.02"
-          color={
-            changePercent > 0
-              ? 'green.action-primary-default'
-              : changePercent < 0
-                ? 'red.action-primary-default'
-                : 'ink.text-subdued'
-          }
+          color={getPriceChangeColor(changePercent)}
         >
           {changePercent ? `${changePercent.toFixed(2)}%` : '—'}
         </styled.span>

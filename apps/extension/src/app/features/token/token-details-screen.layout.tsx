@@ -197,32 +197,38 @@ export function TokenDetailsBalanceItem({
   onPressAddress?(): void;
   onPressRow?(): void;
 }) {
+  function renderAddress() {
+    if (!address) return null;
+    if (onPressAddress) {
+      return (
+        <styled.button
+          type="button"
+          textStyle="caption.02"
+          color="ink.text-subdued"
+          textDecoration="underline"
+          textAlign="left"
+          _hover={{ cursor: 'pointer' }}
+          onClick={e => {
+            e.stopPropagation();
+            onPressAddress();
+          }}
+        >
+          {truncateMiddle(address, 6)}
+        </styled.button>
+      );
+    }
+    return (
+      <styled.span textStyle="caption.02" color="ink.text-subdued">
+        {truncateMiddle(address, 6)}
+      </styled.span>
+    );
+  }
+
   const content = (
     <>
       <Stack gap="space.00" minWidth="0">
         <styled.span textStyle="label.02">{title}</styled.span>
-        {address ? (
-          onPressAddress ? (
-            <styled.button
-              type="button"
-              textStyle="caption.02"
-              color="ink.text-subdued"
-              textDecoration="underline"
-              textAlign="left"
-              _hover={{ cursor: 'pointer' }}
-              onClick={e => {
-                e.stopPropagation();
-                onPressAddress();
-              }}
-            >
-              {truncateMiddle(address, 6)}
-            </styled.button>
-          ) : (
-            <styled.span textStyle="caption.02" color="ink.text-subdued">
-              {truncateMiddle(address, 6)}
-            </styled.span>
-          )
-        ) : null}
+        {renderAddress()}
       </Stack>
       <Stack gap="space.00" alignItems="flex-end">
         <styled.span textStyle="label.02">{rightTop}</styled.span>
