@@ -1,3 +1,5 @@
+import { useLocation, useNavigate } from 'react-router';
+
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import { btcAsset } from '@leather.io/constants';
@@ -5,7 +7,11 @@ import { type AccountAddresses } from '@leather.io/models';
 import { BtcAvatarIcon, Callout, Spinner } from '@leather.io/ui';
 import { createMoney } from '@leather.io/utils';
 
+import { RouteUrls } from '@shared/route-urls';
+
 import { formatCurrency } from '@app/common/currency-formatter';
+import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
+import { useToast } from '@app/features/toasts/use-toast';
 import { useActivityByAsset } from '@app/query/activity/activity.query';
 import { useAssetDescription } from '@app/query/assets/fungible-asset-info.query';
 import {
@@ -31,12 +37,24 @@ interface BitcoinTokenDetailsProps {
 }
 
 export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetailsProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const toast = useToast();
   const nativeSegwitBalance = useNativeSegwitBtcAccountBalance(accountIndex);
   const taprootBalance = useTaprootBtcAccountBalance(accountIndex);
   const marketData = useMarketData(btcAsset);
   const description = useAssetDescription(btcAsset);
   const priceChange = usePriceChangePercentage(btcAsset);
   const activityQuery = useActivityByAsset(account, btcAsset);
+
+  function handleCopyAddress(address: string) {
+    void copyToClipboard(address);
+    toast.success('Address copied to clipboard');
+  }
+
+  function handleOpenReceive() {
+    void navigate(`/${RouteUrls.ReceiveBtc}`, { state: { backgroundLocation: location } });
+  }
 
   if (
     nativeSegwitBalance.state === 'loading' ||
@@ -76,6 +94,8 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
   const changePercent = priceChange.state === 'success' ? priceChange.value : 0;
   const descriptionText = description.state === 'success' ? description.value.description : '';
   const activity = activityQuery.data ?? [];
+  const nativeSegwitAddress = account.bitcoin?.zeroIndexNativeSegwitPayerAddress;
+  const taprootAddress = account.bitcoin?.zeroIndexTaprootPayerAddress;
 
   const heroAmount = availableBalance.amount
     .shiftedBy(-availableBalance.decimals)
@@ -147,15 +167,19 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
       <TokenDetailsSection title="Balances">
         <TokenDetailsBalanceItem
           title="Native Segwit"
-          address={account.bitcoin?.zeroIndexNativeSegwitPayerAddress}
+          address={nativeSegwitAddress}
           rightTop={`${formatCurrency(nativeSegwitBalance.value.btc.availableBalance, { preset: 'pad-decimals' })}`}
           rightBottom={formatCurrency(nativeSegwitBalance.value.quote.availableBalance)}
+          onPressAddress={nativeSegwitAddress ? () => handleCopyAddress(nativeSegwitAddress) : undefined}
+          onPressRow={handleOpenReceive}
         />
         <TokenDetailsBalanceItem
           title="Taproot"
-          address={account.bitcoin?.zeroIndexTaprootPayerAddress}
+          address={taprootAddress}
           rightTop={`${formatCurrency(taprootBalance.value.btc.availableBalance, { preset: 'pad-decimals' })}`}
           rightBottom={formatCurrency(taprootBalance.value.quote.availableBalance)}
+          onPressAddress={taprootAddress ? () => handleCopyAddress(taprootAddress) : undefined}
+          onPressRow={handleOpenReceive}
         />
       </TokenDetailsSection>
 
