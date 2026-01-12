@@ -9,8 +9,6 @@ import {
 import * as Sentry from '@sentry/react-router';
 import { isbot } from 'isbot';
 
-import { server } from './mocks/api/node';
-
 // eslint-disable-next-line func-style
 export const handleError: HandleErrorFunction = (error, { request }) => {
   // React Router may abort some interrupted requests, report those
@@ -20,8 +18,6 @@ export const handleError: HandleErrorFunction = (error, { request }) => {
     console.error(error);
   }
 };
-
-server.listen();
 
 async function handleRequest(
   request: Request,
