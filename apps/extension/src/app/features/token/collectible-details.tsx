@@ -15,6 +15,7 @@ import {
 } from '@leather.io/models';
 import {
   ArrowLeftIcon,
+  Button,
   Callout,
   ChevronDownIcon,
   ChevronUpIcon,
@@ -36,6 +37,7 @@ import { CollectibleTypeIconOverlay } from '../collectibles/components/collectib
 import { InscriptionCard } from '../collectibles/components/inscription-card';
 import { Sip9Card } from '../collectibles/components/sip9-card';
 import { StampCard } from '../collectibles/components/stamp-card';
+import { SendInscriptionDialog } from '../send-inscription';
 
 interface CollectibleDetailsProps {
   account: AccountAddresses;
@@ -153,6 +155,7 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
   const network = useCurrentNetwork();
   const { data: collectibles = [], isLoading, isError } = useAccountCollectibles(account);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [sendInscription, setSendInscription] = useState<InscriptionAsset | null>(null);
 
   if (isLoading) {
     return (
@@ -233,6 +236,20 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
         <SectionCard>
           <CollectibleTypeIconOverlay protocol={view.protocol}>{media}</CollectibleTypeIconOverlay>
         </SectionCard>
+
+        {protocol === CryptoAssetProtocols.inscription && (
+          <Button fullWidth onClick={() => setSendInscription(view.asset as InscriptionAsset)}>
+            Send
+          </Button>
+        )}
+
+        {sendInscription && (
+          <SendInscriptionDialog
+            inscription={sendInscription}
+            isOpen={!!sendInscription}
+            onClose={() => setSendInscription(null)}
+          />
+        )}
 
         {protocol === CryptoAssetProtocols.inscription && (
           <InscriptionDetails
