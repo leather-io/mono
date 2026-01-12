@@ -1,4 +1,4 @@
-import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
+import { Box, Flex, Stack } from 'leather-styles/jsx';
 
 import { ArrowLeftIcon, SkeletonLoader } from '@leather.io/ui';
 

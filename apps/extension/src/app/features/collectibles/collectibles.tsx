@@ -44,7 +44,7 @@ function renderCollectible(
   }
 }
 
-export function CollectiblesCurrent() {
+function CollectiblesCurrent() {
   const navigate = useNavigate();
   const accountIndex = useCurrentAccountIndex();
   const account = useAccountAddresses(accountIndex);

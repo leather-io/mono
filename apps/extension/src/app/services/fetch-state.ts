@@ -16,7 +16,7 @@ interface SuccessState<T> {
   errorMessage?: string;
 }
 
-export type FetchState<T> = LoadingState<T> | ErrorState<T> | SuccessState<T>;
+type FetchState<T> = LoadingState<T> | ErrorState<T> | SuccessState<T>;
 
 export function toFetchState<T>({
   data,

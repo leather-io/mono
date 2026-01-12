@@ -11,7 +11,7 @@ import {
  * For native BTC/STX tokens, returns just the symbol (e.g., "BTC", "STX").
  * For other assets, uses "/" as separator instead of "|" (e.g., "sip10/SP...::token").
  */
-export function assetIdToUrlPath(assetId: SerializedCryptoAssetId): string {
+function assetIdToUrlPath(assetId: SerializedCryptoAssetId): string {
   const parsed = deserializeAssetId(assetId);
 
   if (parsed.protocol === CryptoAssetProtocols.nativeBtc) {

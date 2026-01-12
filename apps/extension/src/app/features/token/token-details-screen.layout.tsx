@@ -35,7 +35,7 @@ export function TokenDetailsHeader({ title }: { title: string }) {
   );
 }
 
-export function TokenDetailsPillButton({
+function TokenDetailsPillButton({
   label,
   onClick,
   disabled,
