@@ -1,6 +1,8 @@
 import SbtcAvatarIconSrc from '@assets/avatars/sbtc-avatar-icon.png';
 
+import type { TokenDetailsProps } from '@leather.io/features';
 import type { Sip10Balance } from '@leather.io/services';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { getSafeImageCanonicalUri } from '@app/common/stacks-utils';
@@ -15,11 +17,13 @@ interface Sip10TokenAssetItemProps {
   isEnabled: boolean;
   assetRightElementVariant?: AssetRightElementVariant;
   onSelectAsset?(symbol: string, contractId?: string): void;
+  onOpenToken?(details: TokenDetailsProps): void;
 }
 export function Sip10TokenAssetItem({
   balance,
   isEnabled,
   onSelectAsset,
+  onOpenToken,
   assetRightElementVariant,
 }: Sip10TokenAssetItemProps) {
   const isPrivate = useIsPrivateMode();
@@ -43,6 +47,16 @@ export function Sip10TokenAssetItem({
   const captionLeft = symbol;
   const titleLeft = name;
 
+  function handleSelectAsset(symbol: string, contractId?: string) {
+    if (onOpenToken) {
+      onOpenToken({
+        assetId: serializeAssetId(getAssetId(balance.asset)),
+      });
+      return;
+    }
+    onSelectAsset?.(symbol, contractId);
+  }
+
   return (
     <CryptoAssetItem
       isToggleMode={assetRightElementVariant === 'toggle'}
@@ -62,7 +76,7 @@ export function Sip10TokenAssetItem({
         titleLeft,
         fiatBalance: formatCurrency(balance.quote.availableBalance),
         dataTestId: assetId,
-        onSelectAsset,
+        onSelectAsset: onOpenToken || onSelectAsset ? handleSelectAsset : undefined,
       }}
     />
   );

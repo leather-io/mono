@@ -1,15 +1,16 @@
-import { toFetchState } from '@/components/loading';
-import { useUserSettings } from '@/hooks/use-user-settings';
 import { useQuery } from '@tanstack/react-query';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
+import type { FungibleCryptoAsset } from '@leather.io/models';
 import { createAssetDescriptionQueryConfig } from '@leather.io/queries';
+
+import { useUserSettings } from '@app/hooks/use-user-settings';
+import { toFetchState } from '@app/services/fetch-state';
 
 export function useAssetDescription(asset: FungibleCryptoAsset) {
   return toFetchState(useAssetDescriptionQuery(asset));
 }
 
-export function useAssetDescriptionQuery(asset: FungibleCryptoAsset) {
+function useAssetDescriptionQuery(asset: FungibleCryptoAsset) {
   const settings = useUserSettings();
   return useQuery(createAssetDescriptionQueryConfig(asset, settings));
 }

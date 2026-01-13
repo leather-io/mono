@@ -1,9 +1,9 @@
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
-import { OnPressTokenDetails } from '@/features/token/types';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
+import { OnPressTokenDetails } from '@leather.io/features';
 import { AccountId } from '@leather.io/models';
 import { StxAvatarIcon } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';

@@ -3,7 +3,7 @@ import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 
-import { AccountId, QuoteCurrency } from '@leather.io/models';
+import { AccountId, Money, QuoteCurrency } from '@leather.io/models';
 import {
   createAccountAvailableBalanceQueryConfig,
   createAccountUnlockedBalanceQueryConfig,
@@ -17,7 +17,14 @@ export function useAccountTotalBalance(
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
-  return toFetchState(useGetAccountTotalBalanceQuery({ account }, overrideFiatCurrencyPreference));
+  const query = useGetAccountTotalBalanceQuery({ account }, overrideFiatCurrencyPreference);
+
+  return toFetchState<Money>({
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error ?? null,
+  });
 }
 
 export function useAccountUnlockedBalance(
@@ -25,9 +32,14 @@ export function useAccountUnlockedBalance(
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
-  return toFetchState(
-    useGetAccountUnlockedBalanceQuery({ account }, overrideFiatCurrencyPreference)
-  );
+  const query = useGetAccountUnlockedBalanceQuery({ account }, overrideFiatCurrencyPreference);
+
+  return toFetchState<Money>({
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error ?? null,
+  });
 }
 
 export function useGetAccountTotalBalanceQuery(
