@@ -20,6 +20,10 @@ interface TestFixtures {
   networkPage: NetworkPage;
 }
 
+interface TestOptions {
+  extensionRevamp: boolean;
+}
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
@@ -28,7 +32,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * context in each test. Created by following,
  * https://playwright.dev/docs/chrome-extensions
  */
-export const test = base.extend<TestFixtures>({
+export const test = base.extend<TestFixtures, TestOptions>({
+  extensionRevamp: [true, { option: true, scope: 'worker' }],
   // Playwright always needs object destructuring for fixtures https://github.com/microsoft/playwright/issues/14590
   // eslint-disable-next-line no-empty-pattern
   context: async ({}, use) => {
@@ -67,8 +72,8 @@ export const test = base.extend<TestFixtures>({
     const extensionId = background.url().split('/')[2];
     await use(extensionId);
   },
-  globalPage: async ({ page }, use) => {
-    await use(new GlobalPage(page));
+  globalPage: async ({ page, extensionRevamp }, use) => {
+    await use(new GlobalPage(page, { extensionRevamp }));
   },
   homePage: async ({ page }, use) => {
     await use(new HomePage(page));

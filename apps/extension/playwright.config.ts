@@ -8,9 +8,6 @@ export default defineConfig({
   testDir: './tests',
   timeout: 30 * 1000,
   expect: { timeout: 5000 },
-  // Extensions live cross-worker meaning `chrome.storage` is shared. Disabling
-  // `fullyParallel` means fewer tests run at the same time, but ensures a
-  // truely new context is used each time
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -20,14 +17,40 @@ export default defineConfig({
     [process.env.CI ? 'blob' : 'html', { open: 'never' }],
   ],
   use: {
-    // Traces are heavy so we want to use them sparingly, but having full trace
-    // to reference of the latest dev build is useful to inspect.
     trace: process.env.BRANCH_NAME === 'dev' ? 'on' : 'on-first-retry',
   },
   projects: [
     {
+      name: 'revamp-enabled',
+      testDir: './tests/specs',
+      use: {
+        ...devices['Desktop Chrome'],
+        extensionRevamp: true,
+      },
+    },
+    {
+      name: 'revamp-disabled',
+      testDir: './tests/specs',
+      use: {
+        ...devices['Desktop Chrome'],
+        extensionRevamp: false,
+      },
+    },
+    {
+      name: 'revamp-only',
+      testDir: './tests/specs-revamp',
+      use: {
+        ...devices['Desktop Chrome'],
+        extensionRevamp: true,
+      },
+    },
+    {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      testDir: './tests/specs',
+      use: {
+        ...devices['Desktop Chrome'],
+        extensionRevamp: true,
+      },
     },
   ],
   webServer: {
