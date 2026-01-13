@@ -1,14 +1,17 @@
 import type { ReactNode } from 'react';
 
-import { styled } from 'leather-styles/jsx';
+import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { ArrowRotateRightLeftIcon, Callout } from '@leather.io/ui';
+import { ArrowRotateRightLeftIcon, Callout, InfoCircleIcon } from '@leather.io/ui';
 
 import { CollectiblesEmpty } from './collectibles-empty';
+import { CollectiblesLearn } from './collectibles-learn';
 import { CollectiblesLoading } from './collectibles-loading';
+import { CollectiblesMarketplaces } from './collectibles-marketplaces';
 
 interface CollectiblesLayoutProps {
   children: ReactNode;
+  amount: number;
   isLoading: boolean;
   hasCollectibles: boolean;
   isError: boolean;
@@ -17,6 +20,7 @@ interface CollectiblesLayoutProps {
 }
 
 export function CollectiblesLayout({
+  amount,
   children,
   isLoading,
   hasCollectibles,
@@ -25,39 +29,84 @@ export function CollectiblesLayout({
   isRefetching,
 }: CollectiblesLayoutProps) {
   return (
-    <styled.section display="flex" flexDirection="column" gap="space.04">
-      <styled.div display="flex" alignItems="center" justifyContent="space-between">
-        <styled.h2 textStyle="heading.04" margin="0">
-          Collectibles
-        </styled.h2>
+    <Stack gap="space.04">
+      {/* List summary */}
+      <Flex
+        alignItems="center"
+        justifyContent="space-between"
+        px={{ base: 0, md: 'space.05' }}
+        py="space.05"
+        width="100%"
+      >
+        <Stack gap="space.01">
+          <Flex alignItems="center" gap="space.01">
+            <styled.span textStyle="label.03" margin="0">
+              Amount
+            </styled.span>
+            <InfoCircleIcon color="ink.text-subdued" variant="small" />
+          </Flex>
+          <styled.h2 textStyle="heading.05" margin="0">
+            {amount}
+          </styled.h2>
+        </Stack>
+
         <styled.button
           type="button"
-          px="space.02"
-          py="space.01"
+          height="40px"
+          width="40px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="999px"
+          border="default"
+          bg="ink.background-primary"
+          _hover={
+            isRefetching ? undefined : { bg: 'ink.component-background-hover', cursor: 'pointer' }
+          }
           onClick={onRefresh}
           disabled={isRefetching}
+          aria-label="Refresh collectibles"
         >
           <ArrowRotateRightLeftIcon variant="small" />
         </styled.button>
-      </styled.div>
+      </Flex>
+
+      {isError && (
+        <Box px={{ base: 0, md: 'space.05' }}>
+          <Callout variant="warning" title="Unable to load collectibles">
+            Try refreshing to fetch the latest gallery.
+          </Callout>
+        </Box>
+      )}
 
       {isLoading && <CollectiblesLoading />}
 
-      {isError && (
-        <Callout variant="warning" title="Unable to load collectibles">
-          Try refreshing to fetch the latest gallery.
-        </Callout>
+      {!isLoading && !isError && !hasCollectibles && (
+        <Box px={{ base: 0, md: 'space.05' }}>
+          <CollectiblesEmpty />
+        </Box>
       )}
 
-      {!isLoading && !isError && !hasCollectibles && <CollectiblesEmpty />}
+      {/* Tile grid (full-bleed on small widths) */}
+      {!isLoading && !isError && hasCollectibles ? (
+        <Box width={{ base: 'calc(100% + 48px)', md: '100%' }} marginX={{ base: '-24px', md: 0 }}>
+          <styled.div
+            display="grid"
+            gridTemplateColumns={{ base: 'repeat(2, 195px)', md: 'repeat(4, 195px)' }}
+            justifyContent="center"
+          >
+            {children}
+          </styled.div>
+        </Box>
+      ) : null}
 
-      <styled.div
-        display="grid"
-        gridTemplateColumns="repeat(auto-fill, minmax(156px, 1fr))"
-        gap="space.04"
-      >
-        {children}
-      </styled.div>
-    </styled.section>
+      {/* Widgets */}
+      {!isLoading && !isError ? (
+        <Stack gap="space.04" px={{ base: 0, md: 'space.05' }}>
+          <CollectiblesMarketplaces />
+          <CollectiblesLearn />
+        </Stack>
+      ) : null}
+    </Stack>
   );
 }

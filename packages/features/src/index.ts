@@ -34,6 +34,21 @@ export type { CollectibleView } from './collectibles/collectible-view';
 export { createCollectibleView, createCollectibleViews } from './collectibles/collectible-view';
 export type { Sip9MediaInfo, Sip9SupportedContentType } from './collectibles/sip9-media';
 export { getSip9ContentTypeList, getSip9MediaInfo } from './collectibles/sip9-media';
+export type { InscriptionInfo, Sip9Info, StampInfo } from './collectibles/collectible-details';
+export {
+  DESCRIPTION_TRUNCATE_LENGTH,
+  filterSip9Attributes,
+  formatAttributeValue,
+  getGammaCollectionUrl,
+  getHiroExplorerContractUrl,
+  getInscriptionInfo,
+  getOrdExplorerUrl,
+  getSip9Info,
+  getStampInfo,
+  truncateDescription,
+} from './collectibles/collectible-details';
+export { getChainDisplayLabel, getProtocolDisplayLabel } from './display-labels';
+export { formatSats, formatTimestamp, formatTimestampWithTime } from './formatting';
 export type { OnramperMode } from './onramper/types';
 export { getOnramperIframeParams } from './onramper/onramper-params';
 export type {

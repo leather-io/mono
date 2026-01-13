@@ -1,11 +1,10 @@
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { type CollectibleView, type TokenDetailsProps } from '@leather.io/features';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { RouteUrls } from '@shared/route-urls';
-
+import { createTokenDetailsPath } from '@app/common/asset-url';
 import { useFlags } from '@app/features/feature-flags';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
@@ -18,7 +17,8 @@ import { InscriptionCard } from './components/inscription-card';
 import { Sip9Card } from './components/sip9-card';
 import { StampCard } from './components/stamp-card';
 
-const CARD_HEIGHT = 184;
+// Figma spec uses 195px square tiles
+const CARD_HEIGHT = 195;
 
 function renderCollectible(
   view: CollectibleView,
@@ -44,8 +44,9 @@ function renderCollectible(
   }
 }
 
-export function CollectiblesCurrent() {
+function CollectiblesCurrent() {
   const navigate = useNavigate();
+  const location = useLocation();
   const accountIndex = useCurrentAccountIndex();
   const account = useAccountAddresses(accountIndex);
   const {
@@ -58,9 +59,9 @@ export function CollectiblesCurrent() {
 
   const handleOpenToken = useCallback(
     ({ assetId }: TokenDetailsProps) => {
-      void navigate(RouteUrls.TokenDetails.replace(':assetId', assetId));
+      void navigate(createTokenDetailsPath(assetId), { state: { backgroundLocation: location } });
     },
-    [navigate]
+    [navigate, location]
   );
 
   const renderedCollectibles = useMemo(
@@ -77,6 +78,7 @@ export function CollectiblesCurrent() {
     <CollectiblesLayout
       isLoading={isLoading}
       isError={isError}
+      amount={collectibles.length}
       hasCollectibles={collectibles.length > 0}
       onRefresh={() => {
         void refetch();
@@ -90,5 +92,5 @@ export function CollectiblesCurrent() {
 
 export function Collectibles() {
   const { extensionRevamp } = useFlags();
-  return !extensionRevamp ? <CollectiblesCurrent /> : <CollectiblesLegacy />;
+  return extensionRevamp ? <CollectiblesCurrent /> : <CollectiblesLegacy />;
 }
