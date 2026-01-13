@@ -1,12 +1,20 @@
+import { useMemo } from 'react';
+
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useCollectiblesFlag } from '@/features/feature-flags';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
-import { useQuery } from '@tanstack/react-query';
+import { type UseQueryOptions, useQuery } from '@tanstack/react-query';
 
-import { AccountAddresses, CryptoAssetId, QuoteCurrency } from '@leather.io/models';
+import { type CollectibleView, createCollectibleView } from '@leather.io/features';
+import {
+  type AccountAddresses,
+  type CryptoAssetId,
+  type NonFungibleCryptoAsset,
+  QuoteCurrency,
+} from '@leather.io/models';
 import { createAccountCollectiblesQueryConfig } from '@leather.io/queries';
-import { AccountRequest, UserSettings } from '@leather.io/services';
+import { UserSettings } from '@leather.io/services';
 import { SerializedCryptoAssetId, deserializeAssetId, matchesAssetId } from '@leather.io/utils';
 
 export function useAccountCollectibleByAssetId(
@@ -16,47 +24,62 @@ export function useAccountCollectibleByAssetId(
 ) {
   const account = useAccountAddresses(fingerprint, accountIndex);
 
-  return toFetchState(useAccountCollectibleByAssetIdQuery(account, deserializeAssetId(assetId)));
+  return toFetchState<CollectibleView[]>(
+    useAccountCollectibleByAssetIdQuery(account, deserializeAssetId(assetId))
+  );
 }
 
 export function useAccountCollectibles(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useAccountCollectiblesQuery(account));
+  return toFetchState<CollectibleView[]>(useAccountCollectiblesQuery(account));
 }
 
-function useAccountCollectiblesQuery(account: AccountAddresses) {
+function useSanitizedAccount(account: AccountAddresses) {
   const collectiblesFlag = useCollectiblesFlag();
-  if (!collectiblesFlag) {
-    account.bitcoin = undefined;
-  }
+
+  return useMemo<AccountAddresses>(() => {
+    if (collectiblesFlag) return account;
+    return {
+      ...account,
+      bitcoin: undefined,
+    };
+  }, [account, collectiblesFlag]);
+}
+
+function useAccountCollectiblesQuery(
+  account: AccountAddresses,
+  options: Partial<UseQueryOptions<NonFungibleCryptoAsset[], Error, CollectibleView[]>> = {}
+) {
+  const sanitizedAccount = useSanitizedAccount(account);
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
     quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
     assetVisibility,
   };
-  const request: AccountRequest = { account };
+  const { select, ...rest } = options;
 
-  return useQuery({
-    ...createAccountCollectiblesQueryConfig(request, settings),
+  return useQuery<NonFungibleCryptoAsset[], Error, CollectibleView[]>({
+    ...createAccountCollectiblesQueryConfig(sanitizedAccount, settings, ['all']),
+    ...rest,
+    select: select ?? (collectibles => collectibles.map(createCollectibleView)),
   });
 }
+
 function useAccountCollectibleByAssetIdQuery(account: AccountAddresses, assetId: CryptoAssetId) {
-  const collectiblesFlag = useCollectiblesFlag();
-  if (!collectiblesFlag) {
-    account.bitcoin = undefined;
-  }
+  const sanitizedAccount = useSanitizedAccount(account);
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
     quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
     assetVisibility,
   };
-  const request: AccountRequest = { account };
 
-  return useQuery({
-    ...createAccountCollectiblesQueryConfig(request, settings),
+  return useQuery<NonFungibleCryptoAsset[], Error, CollectibleView[]>({
+    ...createAccountCollectiblesQueryConfig(sanitizedAccount, settings, ['by-asset', assetId]),
     select: collectibles =>
-      collectibles.filter(collectible => matchesAssetId(collectible, assetId)),
+      collectibles
+        .filter(collectible => matchesAssetId(collectible, assetId))
+        .map(createCollectibleView),
   });
 }
