@@ -3,10 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { stacksTestnetNetwork as network, stacksTestnetNetwork } from '@common/utils';
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
-import { SignatureData } from '@stacks/connect-jwt';
+import { SignatureData, type SignatureRequestOptions } from '@stacks/connect-jwt';
 import { useConnect } from '@stacks/connect-react-jwt';
 import { hashMessage, verifyMessageSignatureRsv } from '@stacks/encryption';
-import { StacksNetwork } from '@stacks/network';
 import {
   ClarityValue,
   TupleCV,
@@ -111,12 +110,12 @@ export function Signature() {
     setSignatureStructured(undefined);
   }
 
-  async function signMessage(message: string, network?: StacksNetwork) {
+  async function signMessage(message: string, network?: unknown) {
     clearState();
     setCurrentMessage(message);
     const defaultNetwork = stacksTestnetNetwork;
     await sign({
-      network: network ?? defaultNetwork,
+      network: (network ?? defaultNetwork) as SignatureRequestOptions['network'],
       message,
       onFinish: (sigObj: SignatureData) => {
         setSignature(sigObj);

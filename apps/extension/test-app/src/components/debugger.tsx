@@ -431,7 +431,7 @@ export function Debugger() {
           <styled.button
             mt={3}
             onClick={() => {
-              window.btc
+              (window as any).btc
                 ?.request('getAddresses')
                 .then(() => {
                   // Request successful

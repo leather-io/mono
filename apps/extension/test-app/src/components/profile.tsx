@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 
 import { useAuth } from '@common/use-auth';
 import { stacksMainnetNetwork, stacksTestnetNetwork } from '@common/utils';
-import { openProfileUpdateRequestPopup } from '@stacks/connect-jwt';
-import { StacksNetwork } from '@stacks/network';
+import {
+  type ProfileUpdateRequestOptions,
+  openProfileUpdateRequestPopup,
+} from '@stacks/connect-jwt';
 import { PublicPersonProfile, PublicProfile } from '@stacks/profile';
 import { TestAppSelectors } from '@tests/selectors/test-app.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
@@ -17,12 +19,12 @@ export function Profile() {
   const [updatedProfile, setUpdatedProfile] = useState<{ profile?: PublicProfile }>();
   const { authOptions } = useAuth();
 
-  async function updateProfile(profile: PublicPersonProfile, network?: StacksNetwork) {
+  async function updateProfile(profile: PublicPersonProfile, network?: unknown) {
     const defaultNetwork = stacksMainnetNetwork;
 
     await openProfileUpdateRequestPopup({
       profile,
-      network: network ?? defaultNetwork,
+      network: (network ?? defaultNetwork) as ProfileUpdateRequestOptions['network'],
       appDetails: authOptions.appDetails,
       onFinish: (profile: PublicProfile) => {
         setUpdatedProfile({ profile });
