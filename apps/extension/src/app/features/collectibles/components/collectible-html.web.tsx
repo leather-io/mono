@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { styled } from 'leather-styles/jsx';
+
 import { CollectibleCard } from './collectible-card.web';
 import { ImageUnavailable } from './image-unavailable.web';
 
@@ -24,15 +26,13 @@ export function CollectibleHtml({
   }
 
   const iframe = (
-    <iframe
+    <styled.iframe
       src={thumbnailSrc ?? src}
       height={height}
       width="100%"
-      style={{
-        border: 'none',
-        background: 'transparent',
-        pointerEvents: onPress ? 'none' : undefined,
-      }}
+      border="none"
+      bg="transparent"
+      pointerEvents={onPress ? 'none' : undefined}
       onError={() => setHasError(true)}
     />
   );
@@ -40,13 +40,17 @@ export function CollectibleHtml({
   if (onPress) {
     return (
       <CollectibleCard height={height}>
-        <button
+        <styled.button
           type="button"
           onClick={onPress}
-          style={{ border: 0, padding: 0, margin: 0, background: 'transparent', width: '100%' }}
+          border="none"
+          p={0}
+          m={0}
+          bg="transparent"
+          width="100%"
         >
           {iframe}
-        </button>
+        </styled.button>
       </CollectibleCard>
     );
   }

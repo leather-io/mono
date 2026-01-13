@@ -27,13 +27,17 @@ export function BnsImage({ alt, src, height = 200, onPress }: CollectibleImagePr
   if (onPress) {
     return (
       <CollectibleCard height={height}>
-        <button
+        <styled.button
           type="button"
           onClick={onPress}
-          style={{ border: 0, padding: 0, margin: 0, background: 'transparent', width: '100%' }}
+          border="none"
+          p={0}
+          m={0}
+          bg="transparent"
+          width="100%"
         >
           {image}
-        </button>
+        </styled.button>
       </CollectibleCard>
     );
   }

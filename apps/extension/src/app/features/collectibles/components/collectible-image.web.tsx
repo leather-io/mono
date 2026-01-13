@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { styled } from 'leather-styles/jsx';
+
 import { CollectibleCard } from './collectible-card.web';
 import { ImageUnavailable } from './image-unavailable.web';
 
@@ -31,30 +33,32 @@ export function CollectibleImage({
   }
 
   const content = (
-    <img
+    <styled.img
       src={thumbnailSrc ?? src}
       alt={alt}
       onError={() => setHasError(true)}
-      style={{
-        display: 'block',
-        width: '100%',
-        height,
-        objectFit: 'contain',
-        backgroundColor: isSvg ? 'var(--colors-ink-background-primary)' : undefined,
-      }}
+      display="block"
+      width="100%"
+      height={height}
+      objectFit="contain"
+      bg={isSvg ? 'ink.background-primary' : undefined}
     />
   );
 
   if (onPress) {
     return (
       <CollectibleCard height={height}>
-        <button
+        <styled.button
           type="button"
           onClick={onPress}
-          style={{ border: 0, padding: 0, margin: 0, background: 'transparent', width: '100%' }}
+          border="none"
+          p={0}
+          m={0}
+          bg="transparent"
+          width="100%"
         >
           {content}
-        </button>
+        </styled.button>
       </CollectibleCard>
     );
   }

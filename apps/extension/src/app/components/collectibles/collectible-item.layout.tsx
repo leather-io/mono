@@ -3,7 +3,6 @@ import { useInView } from 'react-intersection-observer';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Box, Stack, styled } from 'leather-styles/jsx';
-import { token } from 'leather-styles/tokens';
 
 import { useHoverWithChildren } from '@app/common/hooks/use-hover-with-children';
 
@@ -67,12 +66,8 @@ export function CollectibleItemLayout({
           left="0px"
           overflow="hidden"
           position="absolute"
-          style={{
-            backgroundColor: showBorder
-              ? 'colors.ink.background-primary'
-              : 'colors.ink.component-background-default',
-            border: showBorder ? token('borders.default') : 'unset',
-          }}
+          bg={showBorder ? 'ink.background-primary' : 'ink.component-background-default'}
+          border={showBorder ? 'default' : 'unset'}
           top="0px"
           width="100%"
         >

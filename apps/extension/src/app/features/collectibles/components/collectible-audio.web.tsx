@@ -15,17 +15,15 @@ export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleA
   if (onPress) {
     return (
       <CollectibleCard height={size}>
-        <button
+        <styled.button
           type="button"
           onClick={onPress}
-          style={{
-            border: 0,
-            padding: 0,
-            margin: 0,
-            background: 'transparent',
-            width: '100%',
-            height: size,
-          }}
+          border="none"
+          p={0}
+          m={0}
+          bg="transparent"
+          width="100%"
+          height={size}
         >
           <Box
             height={size}
@@ -40,22 +38,20 @@ export function CollectibleAudio({ src, alt, size = 200, onPress }: CollectibleA
               {alt}
             </styled.span>
           </Box>
-        </button>
+        </styled.button>
       </CollectibleCard>
     );
   }
 
   return (
     <CollectibleCard height={size}>
-      <audio
+      <styled.audio
         src={src}
         controls
-        style={{
-          width: '100%',
-          height: size,
-          display: 'block',
-          background: 'var(--colors-ink-background-secondary)',
-        }}
+        width="100%"
+        height={size}
+        display="block"
+        bg="ink.background-secondary"
       />
     </CollectibleCard>
   );
