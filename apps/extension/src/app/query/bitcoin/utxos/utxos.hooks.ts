@@ -2,10 +2,10 @@ import { useCallback } from 'react';
 
 import { emptyUtxos, getHttpCacheService } from '@leather.io/services';
 
+import { useNativeSegwitAccountRequest } from '@app/services/accounts/use-native-segwit-account-request';
 import { useTaprootAccountRequest } from '@app/services/accounts/use-taproot-account-request';
 import { toFetchState } from '@app/services/fetch-state';
 
-import { useNativeSegwitAccountRequest } from '../../../services/accounts/use-native-segwit-account-request';
 import { useGetAccountUtxosQuery } from './utxos.query';
 
 export function useCurrentNativeSegwitUtxos() {
