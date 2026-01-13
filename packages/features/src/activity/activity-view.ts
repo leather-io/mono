@@ -34,14 +34,19 @@ export function createActivityView(
   const statusIndicator = getActivityStatusIndicatorId(activity);
   const fromAsset = activity.type === 'swapAssets' ? activity.fromAsset : undefined;
   const toAsset = activity.type === 'swapAssets' ? activity.toAsset : undefined;
-  const activityLink =
-    activity.type === 'swapAssets' &&
-    'sbtcBridgeStatus' in activity &&
-    activity.sbtcBridgeStatus === 'failed'
-      ? `${sbtcReclaimUrl}${activity.txid}`
-      : hasTxDetails(activity) && asset
-        ? makeActivityLink({ txid: activity.txid, networkPreference, asset })
-        : null;
+  const activityLink = (() => {
+    if (
+      activity.type === 'swapAssets' &&
+      'sbtcBridgeStatus' in activity &&
+      activity.sbtcBridgeStatus === 'failed'
+    ) {
+      return `${sbtcReclaimUrl}${activity.txid}`;
+    }
+    if (hasTxDetails(activity) && asset) {
+      return makeActivityLink({ txid: activity.txid, networkPreference, asset });
+    }
+    return null;
+  })();
 
   return {
     key: getActivityKey(activity),
