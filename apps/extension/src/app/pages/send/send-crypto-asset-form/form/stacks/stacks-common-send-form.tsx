@@ -8,6 +8,7 @@ import { ObjectSchema } from 'yup';
 import { HIGH_FEE_WARNING_LEARN_MORE_URL_STX } from '@leather.io/constants';
 import type { Fees, Money } from '@leather.io/models';
 import { Button, Link } from '@leather.io/ui';
+import { isDefined } from '@leather.io/utils';
 
 import { StacksSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
@@ -69,6 +70,7 @@ export function StacksCommonSendForm({
                     <ButtonRow>
                       <Button
                         aria-busy={props.isValidating}
+                        aria-disabled={!isDefined(props.values.nonce)}
                         data-testid={SendCryptoAssetSelectors.PreviewSendTxBtn}
                         type="submit"
                         fullWidth
