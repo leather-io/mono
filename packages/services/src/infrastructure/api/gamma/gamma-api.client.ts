@@ -2,6 +2,8 @@ import axios from 'axios';
 import { inject, injectable } from 'inversify';
 import { z } from 'zod';
 
+import { GAMMA_API_URL } from '@leather.io/constants';
+
 import { Types } from '../../../inversify.types';
 import type { HttpCacheService } from '../../cache/http-cache.service';
 import { ApiRequestOptions } from '../types';
@@ -9,8 +11,6 @@ import { gammaCollectionMetadataSchema, gammaNftMetadataSchema } from './gamma-a
 
 export type GammaNftMetadata = z.infer<typeof gammaNftMetadataSchema>;
 export type GammaCollectionMetadata = z.infer<typeof gammaCollectionMetadataSchema>;
-
-const GAMMA_API_URL = 'https://gamma.io/api';
 
 @injectable()
 export class GammaApiClient {

@@ -1820,7 +1820,7 @@ msgstr "Success"
 msgid "Swap"
 msgstr "Swap"
 
-#: src/features/activity/activity-item.tsx:31
+#: src/features/activity/activity-item.tsx:32
 #: src/features/activity/translate-activity-status.ts:38
 msgid "Swap failed"
 msgstr "Swap failed"
@@ -1833,12 +1833,12 @@ msgstr "Swap initiated"
 msgid "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
 msgstr "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
 
-#: src/features/activity/activity-item.tsx:33
+#: src/features/activity/activity-item.tsx:34
 #: src/features/activity/translate-activity-status.ts:34
 msgid "Swapped"
 msgstr "Swapped"
 
-#: src/features/activity/activity-item.tsx:29
+#: src/features/activity/activity-item.tsx:30
 #: src/features/activity/translate-activity-status.ts:36
 #: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:60
 msgid "Swapping"

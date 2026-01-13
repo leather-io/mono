@@ -1,5 +1,6 @@
 import { HStack } from 'leather-styles/jsx';
 
+import { SBTC_RECLAIM_URL } from '@leather.io/constants';
 import { Caption, Link, SbtcAvatarIcon, Title } from '@leather.io/ui';
 import { noop, satToBtc, truncateMiddle } from '@leather.io/utils';
 
@@ -41,8 +42,6 @@ function getDepositStatusTextColor(status: SbtcStatus) {
   }
 }
 
-const sbtcReclaimUrl = 'https://app.stacks.co/reclaim?depositTxId=';
-
 interface SbtcDepositTransactionItemProps {
   deposit: SbtcDeposit;
 }
@@ -57,7 +56,7 @@ export function SbtcDepositTransactionItem({ deposit }: SbtcDepositTransactionIt
   }
 
   function openReclaimLink() {
-    return openInNewTab(`${sbtcReclaimUrl}${bitcoinTxid}`);
+    return openInNewTab(`${SBTC_RECLAIM_URL}${bitcoinTxid}`);
   }
 
   return (

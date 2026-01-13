@@ -1,19 +1,11 @@
 import { TokenDetailsProps } from '@/features/token/types';
 
-import { CryptoAssetProtocols } from '@leather.io/models';
+import { isRuneBalance, isSip10Balance } from '@leather.io/features';
 import { RuneBalance, Sip10Balance } from '@leather.io/services';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { RunesTokenBalance } from '../bitcoin/runes-token-balance';
 import { Sip10TokenBalance } from '../stacks/sip10-token-balance';
-
-function isSip10Balance(item: Sip10Balance | RuneBalance): item is Sip10Balance {
-  return item.asset.protocol === CryptoAssetProtocols.sip10;
-}
-
-function isRuneBalance(item: Sip10Balance | RuneBalance): item is RuneBalance {
-  return item.asset.protocol === CryptoAssetProtocols.rune;
-}
 
 export function renderAsset({
   item,
