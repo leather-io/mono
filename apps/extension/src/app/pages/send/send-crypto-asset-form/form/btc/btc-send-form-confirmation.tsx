@@ -75,7 +75,7 @@ export function BtcSendFormConfirmation() {
 
   const feeInBtc = satToBtc(fee);
   const totalSpend = formatCurrency(
-    createMoneyFromDecimal(Number(0.1) + Number(feeInBtc), symbol),
+    createMoneyFromDecimal(Number(transferAmount) + Number(feeInBtc), symbol),
     { preset: 'pad-decimals' }
   );
   const sendingValue = formatCurrency(createMoneyFromDecimal(Number(transferAmount), symbol), {
