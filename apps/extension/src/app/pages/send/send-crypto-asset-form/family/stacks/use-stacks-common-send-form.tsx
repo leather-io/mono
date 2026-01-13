@@ -57,7 +57,7 @@ export function useStacksCommonSendForm({
         (acc, key) => ({ ...acc, [key]: true }),
         {}
       );
-      formikHelpers.setTouched(touchedFields);
+      void formikHelpers.setTouched(touchedFields);
       return false;
     }
 
