@@ -23,9 +23,15 @@
     "typecheck": "tsc --noEmit --project ./tsconfig.native.json && tsc --noEmit --project ./tsconfig.web.json"
   },
   "exports": {
-    ".": "./dist-web/exports.web.js",
+    ".": {
+      "types": "./dist-web/exports.web.d.ts",
+      "default": "./dist-web/exports.web.js"
+    },
     "./styles": "./dist-web/styles.css",
-    "./native": "./dist-native/native.js"
+    "./native": {
+      "types": "./dist-native/native.d.ts",
+      "default": "./dist-native/native.js"
+    }
   },
   "dependencies": {
     "@expo/vector-icons": "14.1.0",
