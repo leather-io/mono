@@ -1,6 +1,7 @@
 import { FormikHelpers } from 'formik';
 
 import { FeeTypes, type Money } from '@leather.io/models';
+import { isEmpty } from '@leather.io/utils';
 
 import { FormErrorMessages } from '@shared/error-messages';
 import { StacksSendFormValues } from '@shared/models/form.model';
@@ -49,6 +50,16 @@ export function useStacksCommonSendForm({
     formikHelpers: FormikHelpers<StacksSendFormValues>
   ) {
     const formErrors = await formikHelpers.validateForm();
+
+    // If there are validation errors, touch all error fields to display them
+    if (!isEmpty(formErrors)) {
+      const touchedFields = Object.keys(formErrors).reduce(
+        (acc, key) => ({ ...acc, [key]: true }),
+        {}
+      );
+      formikHelpers.setTouched(touchedFields);
+      return false;
+    }
 
     if (isHighFeeWithNoFormErrors(formErrors, values.fee)) {
       setShowHighFeeWarningSheet(true);
