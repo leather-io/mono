@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { type CollectibleView, type TokenDetailsProps } from '@leather.io/features';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
@@ -46,6 +46,7 @@ function renderCollectible(
 
 function CollectiblesCurrent() {
   const navigate = useNavigate();
+  const location = useLocation();
   const accountIndex = useCurrentAccountIndex();
   const account = useAccountAddresses(accountIndex);
   const {
@@ -58,9 +59,9 @@ function CollectiblesCurrent() {
 
   const handleOpenToken = useCallback(
     ({ assetId }: TokenDetailsProps) => {
-      void navigate(createTokenDetailsPath(assetId));
+      void navigate(createTokenDetailsPath(assetId), { state: { backgroundLocation: location } });
     },
-    [navigate]
+    [navigate, location]
   );
 
   const renderedCollectibles = useMemo(

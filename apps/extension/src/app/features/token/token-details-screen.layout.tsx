@@ -79,6 +79,8 @@ export function TokenDetailsActionsRow({
 }) {
   const navigate = useNavigate();
   const location = useLocation();
+  // Get the backgroundLocation from the current route state (if token details was opened as a modal)
+  const backgroundLocation = location.state?.backgroundLocation || location;
 
   const receivePath = symbol === 'BTC' ? `/${RouteUrls.ReceiveBtc}` : `/${RouteUrls.ReceiveStx}`;
   const swapChain = symbol === 'BTC' ? 'bitcoin' : 'stacks';
@@ -112,7 +114,7 @@ export function TokenDetailsActionsRow({
       />
       <TokenDetailsPillButton
         label="Receive"
-        onClick={() => void navigate(receivePath, { state: { backgroundLocation: location } })}
+        onClick={() => void navigate(receivePath, { state: { backgroundLocation } })}
       />
       <TokenDetailsPillButton
         label="Buy"

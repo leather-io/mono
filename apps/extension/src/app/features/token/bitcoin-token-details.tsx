@@ -48,13 +48,16 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
   const priceChange = usePriceChangePercentage(btcAsset);
   const activityQuery = useActivityByAsset(account, btcAsset);
 
+  // Get the backgroundLocation from the current route state (if token details was opened as a modal)
+  const backgroundLocation = location.state?.backgroundLocation || location;
+
   function handleCopyAddress(address: string) {
     void copyToClipboard(address);
     toast.success('Address copied to clipboard');
   }
 
   function handleOpenReceive() {
-    void navigate(`/${RouteUrls.ReceiveBtc}`, { state: { backgroundLocation: location } });
+    void navigate(`/${RouteUrls.ReceiveBtc}`, { state: { backgroundLocation } });
   }
 
   if (

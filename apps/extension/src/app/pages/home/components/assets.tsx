@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet, useLocation, useNavigate } from 'react-router';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Stack } from 'leather-styles/jsx';
@@ -10,9 +10,10 @@ import { AssetList } from '@app/features/asset-list/asset-list';
 
 export function Assets() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   function handleOpenToken({ assetId }: TokenDetailsProps) {
-    void navigate(createTokenDetailsPath(assetId));
+    void navigate(createTokenDetailsPath(assetId), { state: { backgroundLocation: location } });
   }
 
   return (
