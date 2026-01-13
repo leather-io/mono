@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import get from 'lodash.get';
@@ -10,6 +11,7 @@ import { analytics } from '@shared/utils/analytics';
 import { useOnMount } from '@app/common/hooks/use-on-mount';
 
 import { BroadcastErrorLayout } from './components/broadcast-error.layout';
+import { parseBroadcastError } from './parse-broadcast-error';
 
 interface Props {
   showInSheet?: boolean;
@@ -19,17 +21,21 @@ export function BroadcastError({ showInSheet = false }: Props) {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  const msg = get(state, 'error.message', 'Unknown error response');
-  const title = get(state, 'title', 'There was an error broadcasting your transaction');
-  const body = get(state, 'body', 'Unable to broadcast transaction');
+  const rawErrorMessage =
+    get(state, 'message') || get(state, 'error.message') || 'Unknown error response';
 
-  useOnMount(() => analytics.track('bitcoin_contract_error', { msg }));
+  const parsedError = useMemo(() => parseBroadcastError(rawErrorMessage), [rawErrorMessage]);
+
+  const title = get(state, 'title') || parsedError.title;
+  const body = get(state, 'body') || parsedError.body;
+
+  useOnMount(() => analytics.track('bitcoin_contract_error', { msg: rawErrorMessage }));
 
   const layout = (
     <BroadcastErrorLayout
       my="space.05"
       textAlign="center"
-      errorPayload={msg}
+      errorPayload={rawErrorMessage}
       title={title}
       body={body}
     />
