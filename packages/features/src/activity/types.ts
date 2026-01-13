@@ -24,7 +24,7 @@ export interface ActivityView {
   toAsset?: CryptoAsset;
   title: string;
   caption: string;
-  statusLabel: string;
+  statusLabel: string | null;
   activityLink?: string | null;
   balances: ActivityBalances;
   activityAvatar: ActivityAvatar;

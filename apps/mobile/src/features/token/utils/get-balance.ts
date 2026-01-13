@@ -6,7 +6,7 @@ import {
   isAddressQuotedStxBalance,
   isRuneBalance,
   isSip10Balance,
-} from '../types';
+} from '@leather.io/features';
 
 export function getAvailableBalance(balance: FetchState<TokenBalance>) {
   if (balance.state === 'success') {

@@ -16,6 +16,10 @@ export const ZERO_INDEX = 0;
 export const HIRO_EXPLORER_URL = 'https://explorer.hiro.so';
 export const MEMPOOL_BASE_URL = 'https://mempool.space';
 export const ORD_IO_URL = 'https://ord.io';
+export const GAMMA_URL = 'https://gamma.io';
+export const GAMMA_API_URL: string = `${GAMMA_URL}/api`;
+export const LEATHER_IPFS_GATEWAY_URL = 'https://leather.quicknode-ipfs.com/ipfs/';
+export const SBTC_RECLAIM_URL = 'https://app.stacks.co/reclaim?depositTxId=';
 
 export const HIGH_FEE_AMOUNT_STX = 5;
 export const HIGH_FEE_WARNING_LEARN_MORE_URL_BTC = 'https://bitcoinfees.earn.com/';

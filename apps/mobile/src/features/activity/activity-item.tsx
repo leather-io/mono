@@ -19,10 +19,11 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
     item;
   const { openUrl } = useOpenUrl();
 
-  const titleText = translateActivityStatus(statusLabel);
-  const timestampText = caption.startsWith(statusLabel)
-    ? caption.slice(statusLabel.length).trim()
-    : caption;
+  const titleText = statusLabel ? translateActivityStatus(statusLabel) : null;
+  const timestampText =
+    statusLabel && caption.startsWith(statusLabel)
+      ? caption.slice(statusLabel.length).trim()
+      : caption;
 
   function getSwapStatusText(status: string) {
     if (status === 'pending') {

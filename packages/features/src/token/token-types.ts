@@ -32,6 +32,7 @@ export function isSupportedFungibleAssetProtocol(
 ): value is SupportedFungibleAssetProtocol {
   return (supportedFungibleAssetProtocols as readonly string[]).includes(value);
 }
+
 export function isSupportedNonFungibleAssetProtocol(
   value: CryptoAssetProtocol
 ): value is SupportedNonFungibleAssetProtocol {

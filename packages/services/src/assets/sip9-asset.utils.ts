@@ -1,6 +1,7 @@
 import { hexToCV } from '@stacks/transactions';
 import { z } from 'zod';
 
+import { LEATHER_IPFS_GATEWAY_URL } from '@leather.io/constants';
 import {
   CryptoAssetCategories,
   CryptoAssetChains,
@@ -59,23 +60,39 @@ export function getNonFungibleTokenId(hex: string): number {
   return clarityValue.type === 'uint' ? Number(clarityValue.value) : 0;
 }
 
-const leatherIpfsUrl = 'https://leather.quicknode-ipfs.com/ipfs/';
+function encodeIpfsPath(path: string) {
+  const normalized = path.replace(/^\/+/, '');
+  if (!normalized) return '';
+  return '/' + normalized.split('/').map(encodeURIComponent).join('/');
+}
 
 function toLeatherIpfsUrl(url: string): string {
-  if (!url.includes('/ipfs/')) return url;
+  if (!url) return '';
 
-  const ipfsPath = url.split('/ipfs/')[1];
-  if (!ipfsPath) return '';
+  // Handle ipfs://<cid>/<path> and ipfs://ipfs/<cid>/<path>
+  if (url.startsWith('ipfs://')) {
+    const withoutScheme = url.replace(/^ipfs:\/\//, '');
+    const withoutPrefix = withoutScheme.startsWith('ipfs/')
+      ? withoutScheme.slice('ipfs/'.length)
+      : withoutScheme;
+    const [cid, ...rest] = withoutPrefix.split('/').filter(Boolean);
+    if (!cid) return '';
+    const encodedPath = encodeIpfsPath(rest.join('/'));
+    return `${LEATHER_IPFS_GATEWAY_URL}${cid}${encodedPath}`;
+  }
 
-  const pathParts = ipfsPath.split('/');
-  const cid = pathParts[0];
-  const remainingPath = pathParts.slice(1).join('/');
+  // Handle https://.../ipfs/<cid>/<path>
+  if (url.includes('/ipfs/')) {
+    const ipfsPath = url.split('/ipfs/')[1];
+    if (!ipfsPath) return '';
 
-  const encodedPath = remainingPath
-    ? '/' + remainingPath.split('/').map(encodeURIComponent).join('/')
-    : '';
+    const [cid, ...rest] = ipfsPath.split('/').filter(Boolean);
+    if (!cid) return '';
+    const encodedPath = encodeIpfsPath(rest.join('/'));
+    return `${LEATHER_IPFS_GATEWAY_URL}${cid}${encodedPath}`;
+  }
 
-  return `${leatherIpfsUrl}${cid}${encodedPath}`;
+  return url;
 }
 
 export function createSip9Asset(
@@ -94,7 +111,9 @@ export function createSip9Asset(
     ? toLeatherIpfsUrl(gammaMetadata.item.asset_content.content_url)
     : undefined;
 
-  const contentUrl = gammaContentUrl || hiroMetadata?.cached_image || hiroMetadata?.image || '';
+  const hiroContentUrl = toLeatherIpfsUrl(hiroMetadata?.cached_image || hiroMetadata?.image || '');
+
+  const contentUrl = gammaContentUrl || hiroContentUrl || '';
 
   const contentType = gammaMetadata?.item.asset_content?.content_type || '';
 
@@ -146,7 +165,9 @@ interface CollectionPriceAmount {
   unit: 'micro_stacks' | 'stx';
 }
 
-function createStxMoneyFromCollectionPriceAmount({ amount, unit }: CollectionPriceAmount) {
+function createStxMoneyFromCollectionPriceAmount(priceAmount: CollectionPriceAmount | undefined) {
+  if (!priceAmount) return undefined;
+  const { amount, unit } = priceAmount;
   return unit === 'micro_stacks'
     ? createMoney(amount, 'STX')
     : createMoneyFromDecimal(amount, 'STX');

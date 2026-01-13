@@ -10,13 +10,12 @@ import { TokenActivity } from '@/features/token/components/token-activity';
 import { TokenDetailsTable } from '@/features/token/components/token-details-table';
 import { TokenOverview } from '@/features/token/components/token-overview';
 
-import { type ActivityView } from '@leather.io/features';
+import { type ActivityView, type TokenBalance } from '@leather.io/features';
 import { FungibleCryptoAsset, isSwappableAsset } from '@leather.io/models';
 import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
 
 import { getReceiveType } from '../receive/utils/get-receive-type';
 import { TokenDescription } from './components/token-description';
-import { TokenBalance } from './types';
 import { useGetTokenDetails } from './use-get-token-details';
 import { getAvailableBalance, getQuoteBalance } from './utils/get-balance';
 

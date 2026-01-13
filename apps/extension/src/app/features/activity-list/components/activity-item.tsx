@@ -20,7 +20,7 @@ function Item({ item, formatCurrency }: ItemProps) {
     item;
   const clickable = Boolean(activityLink);
 
-  const normalizedStatusLabel = statusLabel.trim();
+  const normalizedStatusLabel = statusLabel?.trim() ?? '';
 
   const titleText = normalizedStatusLabel || title;
 
