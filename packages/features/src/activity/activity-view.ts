@@ -12,6 +12,8 @@ import { formatActivityStatusLabel, getActivityStatusIndicatorId } from './activ
 import { formatActivityCaption } from './activity-timestamp';
 import type { ActivityView } from './types';
 
+const sbtcReclaimUrl = 'https://app.stacks.co/reclaim?depositTxId=';
+
 function getActivityKey(activity: Activity): string {
   if ('txid' in activity) return activity.txid;
   return `${activity.type}-${activity.timestamp}`;
@@ -32,10 +34,19 @@ export function createActivityView(
   const statusIndicator = getActivityStatusIndicatorId(activity);
   const fromAsset = activity.type === 'swapAssets' ? activity.fromAsset : undefined;
   const toAsset = activity.type === 'swapAssets' ? activity.toAsset : undefined;
-  const activityLink =
-    hasTxDetails(activity) && asset
-      ? makeActivityLink({ txid: activity.txid, networkPreference, asset })
-      : null;
+  const activityLink = (() => {
+    if (
+      activity.type === 'swapAssets' &&
+      'sbtcBridgeStatus' in activity &&
+      activity.sbtcBridgeStatus === 'failed'
+    ) {
+      return `${sbtcReclaimUrl}${activity.txid}`;
+    }
+    if (hasTxDetails(activity) && asset) {
+      return makeActivityLink({ txid: activity.txid, networkPreference, asset });
+    }
+    return null;
+  })();
 
   return {
     key: getActivityKey(activity),

@@ -22,7 +22,7 @@ export function InscriptionDetails({ assetId, account }: InscriptionDetailsProps
     return <ErrorFallbackTab />;
   }
   if (collectible.state === 'success' && collectible.value.length > 0) {
-    const asset = collectible.value?.[0];
+    const asset = collectible.value?.[0]?.asset;
     if (!asset || !isInscriptionAsset(asset)) {
       return <ErrorFallbackTab />;
     }

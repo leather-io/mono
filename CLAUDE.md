@@ -13,6 +13,12 @@
 - Avoid nested ternary expressions; prefer clear branching or functional expressions.
 - Prefer `const` where possible; avoid `let` when it improves clarity.
 - Prefer constants over magic numbers or strings.
+- Always use `function` declarations for components, never const + arrow component definitions.
+
+## Imports
+
+- Never duplicate imports from the same module; consolidate named imports into a single statement.
+ - When adding a new import from a module that is already imported, always merge it into the existing import statement instead of creating a new one.
 
 ## Naming
 
@@ -45,15 +51,27 @@
   ComponentNameProps.
 - Destructure props directly in the signature: `function Component({ propA, propB }: ComponentProps)`
 
+## React hooks
+
+- Always follow the Rules of Hooks: call React hooks (including custom hooks like `useUserSettings`) only at the top level of React function components or other hooks.
+- Never call hooks conditionally, inside loops, inside nested functions, or after early returns that would change the order of hook calls between renders.
+- If you need conditional behavior, call the hook unconditionally and branch on its returned values, or extract the conditional logic into a separate component or custom hook.
+ - Avoid `useMemo` and `useCallback` unless they provide a clear, measurable benefit (e.g., preventing an expensive computation on every render or avoiding re-renders of heavy child components). Favor simple code over premature memoization.
+
 ## File naming
 
-- Use snake case file names
+- Use kebab-case for file names (hyphens, not underscores)
 - File names must explain their contents, e.g., a file containing `AlternateHeaderLayout`
   is called `alternate-header-layout.tsx`
 - Avoid using index.ts(x) files, except for the following scenarios:
   - Barrel exports from library packages
   - Required by file-based router
 - use \*.spec.ts(x) for tests
+
+## Architecture
+
+- When generating new UI, use a container/presentational (dumb) component pattern with separate layout components for view-only concerns.
+- Keep file names and folder structure consistent across platforms (web, extension, mobile) for equivalent features and components.
 
 ## Use Remeda for functional utilities
 

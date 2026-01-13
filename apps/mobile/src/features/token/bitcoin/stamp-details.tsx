@@ -23,7 +23,7 @@ export function StampDetails({ assetId, account }: StampDetailsProps) {
     return <ErrorFallbackTab />;
   }
   if (collectible.state === 'success' && collectible.value.length > 0) {
-    const asset = collectible.value[0];
+    const asset = collectible.value[0]?.asset;
     if (!asset || !isStampAsset(asset)) {
       return <ErrorFallbackTab />;
     }

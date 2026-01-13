@@ -3,7 +3,7 @@ import { useUserSettings } from '@/hooks/use-user-settings';
 import { useQuery } from '@tanstack/react-query';
 
 import { FungibleCryptoAsset } from '@leather.io/models';
-import { createFungibleAssetDescriptionQueryConfig } from '@leather.io/queries';
+import { createAssetDescriptionQueryConfig } from '@leather.io/queries';
 
 export function useAssetDescription(asset: FungibleCryptoAsset) {
   return toFetchState(useAssetDescriptionQuery(asset));
@@ -11,7 +11,5 @@ export function useAssetDescription(asset: FungibleCryptoAsset) {
 
 export function useAssetDescriptionQuery(asset: FungibleCryptoAsset) {
   const settings = useUserSettings();
-  return useQuery({
-    ...createFungibleAssetDescriptionQueryConfig(asset, settings),
-  });
+  return useQuery(createAssetDescriptionQueryConfig(asset, settings));
 }

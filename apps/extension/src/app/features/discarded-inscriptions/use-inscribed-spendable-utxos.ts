@@ -13,7 +13,8 @@ export function useInscribedSpendableUtxos() {
   const { utxos } = useCurrentNativeSegwitInscribedUtxos();
 
   return useMemo(() => {
-    if (!utxos || !nativeSegwitInscriptions.value) return [];
+    if (!utxos) return [];
+    if (nativeSegwitInscriptions.state !== 'success') return [];
 
     // Preformatting utxos so that inscriptions are declared as an object
     // property aids the following filter logic

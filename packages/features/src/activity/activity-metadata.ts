@@ -1,3 +1,4 @@
+import { stxAsset } from '@leather.io/constants';
 import type { Activity, CryptoAsset, OnChainActivityStatus } from '@leather.io/models';
 
 import type { ActivityAvatar } from './types';
@@ -20,6 +21,9 @@ export function getActivityTitle(activity: Activity) {
     case 'executeSmartContract':
       return activity.contractId.split('.').pop() || `Unknown`;
     case 'swapAssets':
+      if ('sbtcBridgeStatus' in activity) {
+        return `BTC → sBTC`;
+      }
       return `Swap Assets`;
     case 'lockAsset':
       return `Lock Asset`;
@@ -40,6 +44,8 @@ export function getActivityTitle(activity: Activity) {
 export function getActivityAsset(activity: Activity): CryptoAsset | undefined {
   if ('asset' in activity) return activity.asset;
   if (activity.type === 'swapAssets') return activity.toAsset;
+  if (activity.type === 'deploySmartContract' || activity.type === 'executeSmartContract')
+    return stxAsset;
   return undefined;
 }
 

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { AppState, defaultState } from '@common/context';
 import { AppConfig, UserSession } from '@stacks/auth';
-import { AuthOptions } from '@stacks/connect-jwt';
+import { AuthOptions, type FinishedAuthData } from '@stacks/connect-jwt';
 
 export function useAuth() {
   const [state, setState] = React.useState<AppState>(defaultState());
@@ -30,7 +30,7 @@ export function useAuth() {
     }
   }, [userSession]);
 
-  const onFinish = useCallback(({ userSession, authResponse }) => {
+  const onFinish = useCallback(({ userSession, authResponse }: FinishedAuthData) => {
     const userData = userSession.loadUserData();
     setAppPrivateKey(userSession.loadUserData().appPrivateKey);
     setAuthResponse(authResponse);

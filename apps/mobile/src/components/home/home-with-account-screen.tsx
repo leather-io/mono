@@ -13,7 +13,6 @@ import { useCollectibleDetailsFlag, useTokenDetailsFlag } from '@/features/featu
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { CollectiblesList } from '@/features/token/collectibles-list';
-import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
@@ -27,6 +26,7 @@ import {
 import { useRouter } from 'expo-router';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
+import { TokenDetailsProps } from '@leather.io/features';
 import { AccountId } from '@leather.io/models';
 import { SheetInstance } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
@@ -86,7 +86,10 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     accountIndex: currentAccount.accountIndex,
   });
   const collectiblesState = useAccountCollectibles(fingerprint, accountIndex);
-  useCollectiblesAnalytics({ currentAccount, collectibles: collectiblesState.value ?? [] });
+  useCollectiblesAnalytics({
+    currentAccount,
+    collectibles: (collectiblesState.value ?? []).map(view => view.asset),
+  });
   const isErrorTotalBalance = totalBalance.state === 'error';
 
   return (
