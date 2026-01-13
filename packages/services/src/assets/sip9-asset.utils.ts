@@ -66,6 +66,12 @@ function encodeIpfsPath(path: string) {
   return '/' + normalized.split('/').map(encodeURIComponent).join('/');
 }
 
+function encodeIpfsPath(path: string) {
+  const normalized = path.replace(/^\/+/, '');
+  if (!normalized) return '';
+  return '/' + normalized.split('/').map(encodeURIComponent).join('/');
+}
+
 function toLeatherIpfsUrl(url: string): string {
   if (!url) return '';
 
