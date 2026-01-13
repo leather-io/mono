@@ -4,28 +4,30 @@ import { useParams } from 'react-router';
 import { Box, styled } from 'leather-styles/jsx';
 
 import { CryptoAssetProtocols } from '@leather.io/models';
-import {
-  type SerializedCryptoAssetId,
-  assertUnreachable,
-  deserializeAssetId,
-} from '@leather.io/utils';
+import { assertUnreachable, deserializeAssetId } from '@leather.io/utils';
 
+import { urlPathToAssetId } from '@app/common/asset-url';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
-import { BitcoinTokenDetails } from './bitcoin_token_details';
-import { CollectibleDetails } from './collectible_details';
-import { RuneTokenDetails } from './rune_token_details';
-import { Sip10TokenDetails } from './sip10_token_details';
-import { StacksTokenDetails } from './stacks_token_details';
+import { BitcoinTokenDetails } from './bitcoin-token-details';
+import { CollectibleDetails } from './collectible-details';
+import { RuneTokenDetails } from './rune-token-details';
+import { Sip10TokenDetails } from './sip10-token-details';
+import { StacksTokenDetails } from './stacks-token-details';
 
 export function TokenDetails() {
-  const { assetId } = useParams();
+  const { '*': assetPath } = useParams();
 
-  const parsedAssetId = useMemo(() => {
-    if (!assetId) return null;
-    return deserializeAssetId(assetId as SerializedCryptoAssetId);
-  }, [assetId]);
+  const { assetId, parsedAssetId } = useMemo(() => {
+    if (!assetPath) return { assetId: null, parsedAssetId: null };
+    try {
+      const serialized = urlPathToAssetId(assetPath);
+      return { assetId: serialized, parsedAssetId: deserializeAssetId(serialized) };
+    } catch {
+      return { assetId: null, parsedAssetId: null };
+    }
+  }, [assetPath]);
 
   const accountIndex = useCurrentAccountIndex();
   const account = useAccountAddresses(accountIndex);
@@ -46,24 +48,11 @@ export function TokenDetails() {
     case CryptoAssetProtocols.nativeStx:
       return <StacksTokenDetails accountIndex={accountIndex} account={account} />;
     case CryptoAssetProtocols.sip10:
-      return (
-        <Sip10TokenDetails
-          accountIndex={accountIndex}
-          account={account}
-          assetId={assetId as SerializedCryptoAssetId}
-        />
-      );
+      return <Sip10TokenDetails accountIndex={accountIndex} account={account} assetId={assetId} />;
     case CryptoAssetProtocols.rune:
-      return (
-        <RuneTokenDetails
-          accountIndex={accountIndex}
-          account={account}
-          assetId={assetId as SerializedCryptoAssetId}
-        />
-      );
+      return <RuneTokenDetails accountIndex={accountIndex} account={account} assetId={assetId} />;
     case CryptoAssetProtocols.brc20:
     case CryptoAssetProtocols.src20:
-    case CryptoAssetProtocols.stx20:
       return (
         <Box px="space.05" py="space.04">
           <styled.p textStyle="body.02">Unsupported asset protocol for details view.</styled.p>
@@ -72,13 +61,7 @@ export function TokenDetails() {
     case CryptoAssetProtocols.sip9:
     case CryptoAssetProtocols.inscription:
     case CryptoAssetProtocols.stamp:
-      return (
-        <CollectibleDetails
-          account={account}
-          assetId={assetId as SerializedCryptoAssetId}
-          protocol={protocol}
-        />
-      );
+      return <CollectibleDetails account={account} assetId={assetId} protocol={protocol} />;
     default:
       assertUnreachable(protocol);
       return (

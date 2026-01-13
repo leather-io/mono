@@ -115,6 +115,7 @@ export function AssetList({
               balance={balance}
               isEnabled={true}
               onSelectAsset={onSelectAsset}
+              onOpenToken={onOpenToken}
               assetRightElementVariant={assetRightElementVariant}
             />
           )}
@@ -126,6 +127,7 @@ export function AssetList({
           accountIndex={currentAccountIndex}
           assetFilter={filter}
           onSelectAsset={onSelectAsset}
+          onOpenToken={onOpenToken}
           assetRightElementVariant={assetRightElementVariant}
           setHasManageableTokens={setHasManageableTokens}
         />
