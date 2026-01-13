@@ -1,16 +1,37 @@
-import { useCallback } from 'react';
+import { useEffect } from 'react';
 import { Outlet } from 'react-router';
 import { Virtuoso } from 'react-virtuoso';
 
 import { type ActivityView } from '@leather.io/features';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import { SbtcDepositTransactionItem } from '@app/components/sbtc-deposit-status-item/sbtc-deposit-status-item';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useActivity } from '@app/query/activity/activity.query';
+import { useSbtcPendingDeposits } from '@app/query/sbtc/sbtc-deposits.query';
+import { useStacksPendingTransactions } from '@app/query/stacks/mempool/mempool.hooks';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useUpdateSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.hooks';
+import { useSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.selectors';
 
 import { ActivityItem } from './components/activity-item';
 import { ActivityListLayout } from './components/activity-list.layout';
+import { createSubmittedActivityViews } from './submitted-activity-view';
+
+type ActivityListRow =
+  | ActivityView
+  | {
+      key: string;
+      kind: 'sbtc-deposit';
+      deposit: import('@app/query/sbtc/sbtc-deposits.query').SbtcDeposit;
+    };
+
+function isSbtcDepositRow(
+  item: ActivityListRow
+): item is Extract<ActivityListRow, { kind: 'sbtc-deposit' }> {
+  return (item as any).kind === 'sbtc-deposit';
+}
 
 /*
  * Infinite scroll support is built into this component via the onLoadMore prop,
@@ -24,18 +45,47 @@ import { ActivityListLayout } from './components/activity-list.layout';
 export function ActivityList() {
   const accountIndex = useCurrentAccountIndex();
   const accountAddresses = useAccountAddresses(accountIndex);
+  const { network } = useUserSettings();
   const activityQuery = useActivity(accountAddresses);
+  const submittedTransactions = useSubmittedTransactions();
+  const updateSubmittedTransactions = useUpdateSubmittedTransactions();
 
-  const activity = activityQuery.data ?? [];
+  const stacksAddress = accountAddresses.stacks?.stxAddress ?? '';
+  const { transactions: stacksPendingTransactions } = useStacksPendingTransactions(stacksAddress);
 
+  const { pendingSbtcDeposits } = useSbtcPendingDeposits(stacksAddress);
+
+  useEffect(() => {
+    if (!stacksAddress) return;
+    updateSubmittedTransactions(stacksPendingTransactions);
+  }, [stacksAddress, stacksPendingTransactions, updateSubmittedTransactions]);
+
+  const historicalActivity = activityQuery.data ?? [];
+  const submittedActivity = createSubmittedActivityViews({ submittedTransactions, network });
+  const sbtcPendingActivity: ActivityListRow[] = pendingSbtcDeposits.map(deposit => ({
+    key: `sbtc-deposit-${deposit.bitcoinTxid}-${deposit.bitcoinTxOutputIndex}`,
+    kind: 'sbtc-deposit',
+    deposit,
+  }));
+  const activity: ActivityListRow[] = [
+    ...submittedActivity,
+    ...sbtcPendingActivity,
+    ...historicalActivity,
+  ];
+
+  const hasActivity = activity.length > 0;
   const isLoading = activityQuery.isLoading;
 
-  const itemContent = useCallback(
-    (_: number, item: ActivityView) => <ActivityItem item={item} formatCurrency={formatCurrency} />,
-    []
-  );
+  function itemContent(_: number, item: ActivityListRow) {
+    if (isSbtcDepositRow(item)) {
+      return <SbtcDepositTransactionItem deposit={item.deposit} />;
+    }
+    return <ActivityItem item={item} formatCurrency={formatCurrency} />;
+  }
 
-  const computeItemKey = useCallback((_: number, item: ActivityView) => item.key, []);
+  function computeItemKey(_: number, item: ActivityListRow) {
+    return item.key;
+  }
 
   if (activityQuery.isError) {
     return (
@@ -49,7 +99,7 @@ export function ActivityList() {
   }
 
   return (
-    <ActivityListLayout isLoading={isLoading} hasActivity={activity.length > 0}>
+    <ActivityListLayout isLoading={isLoading} hasActivity={hasActivity}>
       <Virtuoso
         style={{ height: '100%' }}
         data={activity}

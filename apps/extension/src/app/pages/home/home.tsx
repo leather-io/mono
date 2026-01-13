@@ -11,8 +11,5 @@ export function Home() {
 
   //   - test collectibles UI and UX and make it look good faster
 
-  //  Fix tabs issue and
-  //  https://github.com/leather-io/mono/pull/1908#issuecomment-3632243548
-
-  return !extensionRevamp ? <HomeCurrent /> : <HomeLegacy />;
+  return extensionRevamp ? <HomeCurrent /> : <HomeLegacy />;
 }

@@ -1,12 +1,16 @@
 ls:
-  .ts: regex:[a-z0-9\-\._]+
-  .tsx: regex:[a-z0-9\-\[\]\._]+
-  .js: regex:[a-z0-9\-\._]+
-  .dir: regex:[a-z0-9\(\)\[\]\-\._]+
+  # Kebab-case: allow optional leading underscore (for _layout.tsx etc), then lowercase + numbers + hyphens + dots
+  .ts: regex:_?[a-z0-9\-\.]+
+  .tsx: regex:_?[a-z0-9\-\[\]\.]+
+  .js: regex:_?[a-z0-9\-\.]+
+  # Allow leading underscore for directories (e.g., _components)
+  .dir: regex:_?[a-z0-9\(\)\[\]\-\.]+
 
 ignore:
   - .git
+  - .husky
   - .idea
+  - .pnpm-local
   - .vscode
   - apps/*/node_modules
   - apps/mobile/.expo/*
@@ -16,12 +20,13 @@ ignore:
   - apps/extension/dist
   # Skip names in [brackets] in file-based routing, as they represent variables:
   - apps/mobile/src/app/**//*\[*\]*
-  - apps/web/{.react-router,build}
+  - apps/web/{.react-router,build,.wrangler}
   - apps/web/public
   - dist
   - node_modules
   - packages/**/.react-router
   - packages/*/.tsdown
+  - packages/*/dist
   - packages/*/node_modules
   - packages/ui/android
   - packages/ui/dist-native

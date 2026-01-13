@@ -106,11 +106,18 @@ export class ActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    const [btcActivity, stacksActivity, sbtcActivity] = await Promise.all([
+    // Important: do not let one upstream failure (e.g. Hiro/Bitcoin API hiccup)
+    // take down the entire activity list.
+    const [btcResult, stacksResult, sbtcResult] = await Promise.allSettled([
       this.getBtcActivity(account, signal),
       this.getStacksActivity(account, signal),
       this.getSbtcActivity(account, signal),
     ]);
+
+    const btcActivity = btcResult.status === 'fulfilled' ? btcResult.value : [];
+    const stacksActivity = stacksResult.status === 'fulfilled' ? stacksResult.value : [];
+    const sbtcActivity = sbtcResult.status === 'fulfilled' ? sbtcResult.value : [];
+
     return [...btcActivity, ...stacksActivity, ...sbtcActivity].sort(sortActivityByTimestampDesc);
   }
 
