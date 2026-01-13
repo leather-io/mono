@@ -136,6 +136,28 @@ describe('createSip9Asset', () => {
     });
   });
 
+  it('should transform ipfs:// URLs to the Leather IPFS gateway', () => {
+    const gammaIpfs = JSON.parse(JSON.stringify(mockGammaMetadata)) as GammaNftMetadata;
+    gammaIpfs.item.asset_content.content_url = 'ipfs://QmTestCid/some/image with spaces.png';
+
+    const asset = createSip9Asset(assetIdentifier, tokenId, undefined, gammaIpfs);
+    expect(asset.content.contentUrl).toContain(
+      'https://leather.quicknode-ipfs.com/ipfs/QmTestCid/'
+    );
+    // ensure path is encoded
+    expect(asset.content.contentUrl).toContain('image%20with%20spaces.png');
+  });
+
+  it('should transform hiro image /ipfs/ URLs to the Leather IPFS gateway', () => {
+    const hiroIpfs = JSON.parse(JSON.stringify(mockHiroMetadata)) as HiroMetadata;
+    hiroIpfs.cached_image = 'https://example.com/ipfs/QmHiroCid/path/to/image.png';
+
+    const asset = createSip9Asset(assetIdentifier, tokenId, hiroIpfs, undefined);
+    expect(asset.content.contentUrl).toBe(
+      'https://leather.quicknode-ipfs.com/ipfs/QmHiroCid/path/to/image.png'
+    );
+  });
+
   it('should fallback to mockHiroMetadata when mockGammaMetadata is absent', () => {
     const asset = createSip9Asset(assetIdentifier, tokenId, mockHiroMetadata, undefined);
     expect(asset.name).toBe('Hiro NFT');

@@ -12,6 +12,8 @@ import {
   WalletActivityType,
 } from './activity-type.model';
 
+export type SbtcBridgeStatus = 'pending' | 'accepted' | 'confirmed' | 'failed' | 'rbf';
+
 export interface BaseActivity {
   readonly level: ActivityLevel;
   readonly type: ActivityType;
@@ -91,6 +93,7 @@ export interface SwapAssetsActivity extends BaseOnChainActivity {
     crypto: Money;
     quote: Money;
   };
+  readonly sbtcBridgeStatus?: SbtcBridgeStatus;
 }
 
 // Wallet Activity
