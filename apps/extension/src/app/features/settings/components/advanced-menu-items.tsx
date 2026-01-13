@@ -38,7 +38,7 @@ export function AdvancedMenuItems() {
   return (
     <Box width="100%">
       <DropdownMenu.Item
-        style={{ display: 'block' }}
+        display="block"
         onClick={async () => {
           await copyLogsToClipboard();
           toast.success('Copied to clipboard');
@@ -50,7 +50,7 @@ export function AdvancedMenuItems() {
         </Caption>
       </DropdownMenu.Item>
       <DropdownMenu.Item
-        style={{ display: 'block' }}
+        display="block"
         onClick={async () => {
           await clearBrowserStorageLogs();
           toast.success('Diagnostic logs cleared');

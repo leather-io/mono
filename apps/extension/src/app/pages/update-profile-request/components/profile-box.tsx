@@ -12,7 +12,7 @@ function Value({ v }: { v: any }) {
     return (
       <>
         [
-        <div style={{ textIndent: '0em' }}>
+        <Box textIndent="0em">
           {v.map((entry, index) => {
             return (
               <div key={index}>
@@ -21,7 +21,7 @@ function Value({ v }: { v: any }) {
               </div>
             );
           })}
-        </div>
+        </Box>
         ]
       </>
     );

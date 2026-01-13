@@ -14,9 +14,7 @@ export function PasswordStrengthBars({ bars }: PasswordStrengthBarsProps) {
           mb="0"
           marginInline={index < bars.length - 1 ? '0 8px' : 0}
           mt="0"
-          style={{
-            backgroundColor: bar,
-          }}
+          backgroundColor={bar}
         />
       ))}
     </Flex>

@@ -51,7 +51,7 @@ export function ReceiveTokensLayout(props: ReceiveTokensLayoutProps) {
         flexDirection="column"
         pb={['space.05', 'space.08']}
         px="space.05"
-        style={{ marginBottom: token('sizes.footerHeight') }}
+        marginBottom={token('sizes.footerHeight')}
       >
         <Box mt="space.06" mx="auto">
           <Flex alignItems="center" justifyContent="center" mx="auto" position="relative">

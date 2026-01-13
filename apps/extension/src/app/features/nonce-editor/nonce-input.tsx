@@ -8,7 +8,7 @@ interface NonceInputProps {
 }
 export function NonceInput({ nonce, onSetNonce }: NonceInputProps) {
   return (
-    <Input.Root style={{ minHeight: '40px' }}>
+    <Input.Root minHeight="40px">
       <Input.Field
         onChange={e => onSetNonce(e.target.value)}
         placeholder="Nonce"
