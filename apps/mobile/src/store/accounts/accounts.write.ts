@@ -1,3 +1,4 @@
+import { t } from '@lingui/core/macro';
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
@@ -6,6 +7,7 @@ import { entitySchema, handleAppResetWithState, handleEntityActionWith } from '@
 import { userAddsAccount } from '@leather.io/state/keychains';
 import { userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
+import { getWalletAccountsByAccountId } from '../utils';
 import { AccountIcon, AccountStatus, AccountStore, accountStoreSchema } from './utils';
 
 export const accountsAdapter = createEntityAdapter<AccountStore, string>({
@@ -26,7 +28,11 @@ export const accountsSlice = createSlice({
         const firstAccountIndex = 0;
         const id = makeAccountIdentifer(action.payload.wallet.fingerprint, firstAccountIndex);
 
-        accountsAdapter.addOne(state, { id });
+        accountsAdapter.addOne(state, {
+          id,
+          name: t`Account 1`,
+          status: 'active',
+        });
       })
 
       .addCase(userRemovesWallet, (state, action) => {
@@ -36,8 +42,13 @@ export const accountsSlice = createSlice({
       })
 
       .addCase(userAddsAccount, (state, action) => {
+        const walletsAccounts = getWalletAccountsByAccountId(state, action.payload.account.id);
+        const displayIndex = walletsAccounts.length + 1;
+
         return accountsAdapter.addOne(state, {
           id: action.payload.account.id,
+          name: t`Account ${displayIndex}`,
+          status: 'active',
         });
       })
 

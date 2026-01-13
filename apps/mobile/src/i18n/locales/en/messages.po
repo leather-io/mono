@@ -108,9 +108,13 @@ msgstr "24 Hour Change"
 msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
 
-#: src/store/accounts/accounts.ts:22
+#: src/store/accounts/accounts.write.ts:50
 msgid "Account {displayIndex}"
 msgstr "Account {displayIndex}"
+
+#: src/store/accounts/accounts.write.ts:33
+msgid "Account 1"
+msgstr "Account 1"
 
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:123
 msgid "Account created"

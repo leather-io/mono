@@ -30,15 +30,15 @@ export type AccountStatus = (typeof accountStatuses)[number];
 export interface AccountStore {
   id: string;
   icon?: AccountIcon;
-  name?: string;
-  status?: AccountStatus;
+  name: string;
+  status: AccountStatus;
 }
 
 export const accountStoreSchema = z.object({
   id: z.string(),
   icon: z.enum(accountIcons).optional(),
-  name: z.string().optional(),
-  status: z.enum(accountStatuses).optional(),
+  name: z.string(),
+  status: z.enum(accountStatuses),
 }) satisfies z.ZodType<AccountStore>;
 
 function simpleStringHash(input: string): number {
