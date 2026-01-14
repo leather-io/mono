@@ -68,3 +68,11 @@ export const contractPrincipalSchema = z.string().refine(
 );
 
 export const principalSchema = z.union([standardPrincipalSchema, contractPrincipalSchema]);
+
+export type PrincipalType = 'standard' | 'contract';
+
+export function inferPrincipalTypeFromAddress(principal: string): PrincipalType | 'invalid' {
+  if (contractPrincipalSchema.safeParse(principal).success) return 'contract';
+  if (principalSchema.safeParse(principal).success) return 'standard';
+  return 'invalid';
+}

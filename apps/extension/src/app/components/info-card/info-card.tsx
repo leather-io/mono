@@ -102,12 +102,12 @@ export function InfoCardFooter({ children }: InfoCardFooterProps) {
   return (
     <Flex
       alignItems="center"
-      bg={{ base: 'ink.background-primary', md: '' }}
+      bg={['ink.background-primary', '', '']}
       bottom="0"
       left="0"
       justifyContent="center"
       p="space.05"
-      position={{ base: 'fixed', md: 'unset' }}
+      position={['fixed', 'unset', 'unset']}
       width="100%"
       zIndex={999}
     >

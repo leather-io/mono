@@ -10,7 +10,7 @@ import { analytics } from '@shared/utils/analytics';
 
 import { useClipboard } from '@app/common/hooks/use-copy-to-clipboard';
 import { useStacksExplorerLink } from '@app/common/hooks/use-stacks-explorer-link';
-import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
+import { StacksAddressDisplayer } from '@app/components/address-displayer/stacks-address-displayer';
 import {
   InfoCardAssetValue,
   InfoCardRow,
@@ -106,7 +106,7 @@ export function StacksChainTxSummaryLayout(props: StacksChainTxSummaryLayoutProp
         <Stack pb="space.06" px="space.06" width="100%">
           {recipient && (
             <>
-              <InfoCardRow title="To" value={<FormAddressDisplayer address={recipient} />} />
+              <InfoCardRow title="To" value={<StacksAddressDisplayer address={recipient} />} />
               <InfoCardSeparator />
             </>
           )}

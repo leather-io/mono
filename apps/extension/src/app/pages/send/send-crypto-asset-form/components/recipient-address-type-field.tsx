@@ -21,6 +21,7 @@ export function RecipientAddressTypeField({
   topInputOverlay,
   rightLabel,
   onBlur,
+  placeholder,
 }: RecipientAddressTypeFieldProps) {
   const [field] = useField(name);
   const { setFieldValue } = useFormikContext<BitcoinSendFormValues | StacksSendFormValues>();
@@ -40,7 +41,7 @@ export function RecipientAddressTypeField({
         {topInputOverlay && <Input.Label>{topInputOverlay}</Input.Label>}
         <Input.Field
           data-testid={SendCryptoAssetSelectors.RecipientFieldInput}
-          placeholder="Recipient"
+          placeholder={placeholder}
           {...field}
           onBlur={e => {
             field.onBlur(e);

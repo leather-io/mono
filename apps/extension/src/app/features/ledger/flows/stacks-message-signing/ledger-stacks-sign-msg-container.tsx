@@ -8,6 +8,7 @@ import { LedgerError } from '@zondax/ledger-stacks';
 import { Sheet, SheetHeader } from '@leather.io/ui';
 import { delay, isError } from '@leather.io/utils';
 
+import { logger } from '@shared/logger';
 import { UnsignedMessage, whenSignableMessageOfType } from '@shared/signature/signature-types';
 
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
