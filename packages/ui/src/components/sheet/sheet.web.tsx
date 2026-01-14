@@ -89,6 +89,7 @@ export function Sheet({
             className={css({
               display: 'flex',
               flexDirection: 'column',
+              overflow: 'hidden',
               bg: 'ink.background-primary',
               // remove borderRadius on small to give impression of full page
               borderRadius: { base: '0', md: 'md' },
