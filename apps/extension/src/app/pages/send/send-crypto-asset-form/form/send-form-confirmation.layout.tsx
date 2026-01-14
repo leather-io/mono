@@ -2,10 +2,11 @@ import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Stack } from 'leather-styles/jsx';
 
 import type { Money } from '@leather.io/models';
+import { inferPrincipalTypeFromAddress } from '@leather.io/stacks';
 import { Button, Callout } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
+import { StacksAddressDisplayer } from '@app/components/address-displayer/stacks-address-displayer';
 import {
   InfoCardAssetValue,
   InfoCardRow,
@@ -13,7 +14,7 @@ import {
 } from '@app/components/info-card/info-card';
 import { Card } from '@app/components/layout';
 
-interface SendFormConfirmationProps {
+interface SendFormConfirmationLayoutProps {
   recipient?: string | null;
   fee?: Money;
   totalSpend: string;
@@ -28,7 +29,7 @@ interface SendFormConfirmationProps {
   feeWarningTooltip?: React.ReactNode;
   onBroadcastTransaction(): void;
 }
-export function SendFormConfirmation({
+export function SendFormConfirmationLayout({
   txValue,
   txFiatValue,
   txFiatValueSymbol,
@@ -42,13 +43,13 @@ export function SendFormConfirmation({
   memoDisplayText,
   symbol,
   feeWarningTooltip,
-}: SendFormConfirmationProps) {
+}: SendFormConfirmationLayoutProps) {
+  const principalType = recipient ? inferPrincipalTypeFromAddress(recipient) : 'invalid';
+
   return (
     <Card
       dataTestId={SendCryptoAssetSelectors.ConfirmationDetails}
-      contentStyle={{
-        p: 'space.00',
-      }}
+      contentStyle={{ p: 'space.00' }}
       footer={
         <Button
           aria-busy={isLoading}
@@ -71,15 +72,23 @@ export function SendFormConfirmation({
         value={txValue}
       />
 
-      <Callout variant="info" title="Sending to an exchange?" px="space.03" mb="space.05">
-        {`Make sure you include the memo so the exchange can credit the ${symbol} to your account`}
-      </Callout>
+      {principalType === 'standard' && (
+        <Callout variant="info" title="Sending to an exchange?" px="space.03" mb="space.05">
+          {`Make sure you include the memo so the exchange can credit the ${symbol} to your account`}
+        </Callout>
+      )}
+      {principalType === 'contract' && (
+        <Callout variant="warning" title="Sending to a smart contract" px="space.03" mb="space.05">
+          The recipient is a stacks contract principal. Make sure you trust the contract before
+          sending funds.
+        </Callout>
+      )}
 
       <Stack pb="space.06" px="space.06" width="100%">
         {recipient && (
           <InfoCardRow
             title="To"
-            value={<FormAddressDisplayer address={recipient} />}
+            value={<StacksAddressDisplayer address={recipient} />}
             data-testid={SendCryptoAssetSelectors.ConfirmationDetailsRecipient}
           />
         )}

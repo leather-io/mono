@@ -5,17 +5,22 @@ import {
   ClarityValue,
   PostConditionMode,
   bufferCVFromString,
-  createAddress,
+  contractPrincipalCV,
   createEmptyAddress,
   noneCV,
   serializeCV,
   someCV,
+  standardPrincipalCV,
   standardPrincipalCVFromAddress,
   uintCV,
 } from '@stacks/transactions';
 
 import type { Sip10Asset } from '@leather.io/models';
-import { TransactionTypes, getStacksAssetStringParts } from '@leather.io/stacks';
+import {
+  TransactionTypes,
+  getStacksAssetStringParts,
+  inferPrincipalTypeFromAddress,
+} from '@leather.io/stacks';
 import { stxToMicroStx } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
@@ -31,6 +36,19 @@ import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 
 import { useCurrentStacksAccount } from '../accounts/blockchain/stacks/stacks-account.hooks';
+
+function createPrincipalCV(principal: string) {
+  const principalType = inferPrincipalTypeFromAddress(principal);
+
+  if (principalType === 'contract') {
+    const [address, contractName] = principal.split('.');
+    return contractPrincipalCV(address, contractName);
+  }
+
+  if (principalType === 'standard') return standardPrincipalCV(principal);
+
+  throw new Error(`Invalid principal: ${principal}`);
+}
 
 export function useGenerateStxTokenTransferUnsignedTx() {
   const account = useCurrentStacksAccount();
@@ -91,10 +109,10 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
         if (!account) return;
 
         const functionName = 'transfer';
-        const recipient =
+        const recipientAddressClarityValue =
           values && 'recipient' in values
-            ? createAddress(values.recipient || '')
-            : createEmptyAddress();
+            ? createPrincipalCV(values.recipient)
+            : standardPrincipalCVFromAddress(createEmptyAddress());
         const amount = values && 'amount' in values ? values.amount : 0;
         const memo =
           values && 'memo' in values && values.memo !== ''
@@ -115,8 +133,8 @@ export function useGenerateFtTokenTransferUnsignedTx(info: Sip10Asset) {
         // (transfer (uint principal principal) (response bool uint))
         const functionArgs: ClarityValue[] = [
           uintCV(amountAsFractionalUnit),
-          standardPrincipalCVFromAddress(createAddress(account.address)),
-          standardPrincipalCVFromAddress(recipient),
+          createPrincipalCV(account.address),
+          recipientAddressClarityValue,
         ];
 
         functionArgs.push(memo);

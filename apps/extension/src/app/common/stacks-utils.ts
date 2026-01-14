@@ -1,10 +1,9 @@
 import { ChainId } from '@stacks/network';
-import { type ContractIdString, parseContractId } from '@stacks/transactions';
 import BigNumber from 'bignumber.js';
-import { c32addressDecode } from 'c32check';
 
 import { STX_DECIMALS } from '@leather.io/constants';
 import type { NetworkConfiguration } from '@leather.io/models';
+import { contractPrincipalSchema, principalSchema } from '@leather.io/stacks';
 import { initBigNumber, microStxToStx } from '@leather.io/utils';
 
 import { isValidUrl } from '@shared/utils/urls';
@@ -48,24 +47,25 @@ export function ftUnshiftDecimals(value: number | string | BigNumber, decimals: 
   return amount.shiftedBy(decimals).toString(10);
 }
 
-export function validateStacksAddress(stacksAddress: string): boolean {
-  let addressToValidate = stacksAddress;
-  try {
-    if (stacksAddress.includes('.')) {
-      const [address, name] = parseContractId(stacksAddress as ContractIdString);
-      const isValidContractName = name.length <= 40;
-      if (!isValidContractName) return false;
-      addressToValidate = address;
-    }
-    c32addressDecode(addressToValidate);
-    return true;
-  } catch {
-    return false;
+function extractAddressFromStacksPrincipal(principal: string) {
+  if (contractPrincipalSchema.safeParse(principal).success) {
+    return principal.split('.')[0];
   }
+  return principal;
+}
+
+export function validateStacksAddress(stacksAddress: string): boolean {
+  return principalSchema.safeParse(stacksAddress).success;
 }
 
 export function validateAddressChain(address: string, currentNetwork: NetworkConfiguration) {
-  const prefix = address.slice(0, 2);
+  if (!principalSchema.safeParse(address).success) {
+    return false;
+  }
+
+  const addressToCheck = extractAddressFromStacksPrincipal(address);
+
+  const prefix = addressToCheck.slice(0, 2);
   switch (currentNetwork.chain.stacks.chainId) {
     case ChainId.Mainnet:
       return prefix === 'SM' || prefix === 'SP';

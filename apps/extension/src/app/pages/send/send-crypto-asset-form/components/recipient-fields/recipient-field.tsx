@@ -45,7 +45,7 @@ export function RecipientField({ bnsLookupFn }: RecipientFieldProps) {
           <RecipientAddressTypeField
             name="recipient"
             rightLabel={selectAccountButton}
-            placeholder="Enter recipient address"
+            placeholder="Recipient"
             topInputOverlay={recipientDropdown}
           />
           <TextInputFieldError name="recipient" />

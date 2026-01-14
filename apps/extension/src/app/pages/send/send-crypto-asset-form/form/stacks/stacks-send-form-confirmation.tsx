@@ -24,7 +24,7 @@ import { useStacksBroadcastTransaction } from '@app/features/stacks-transaction-
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
-import { SendFormConfirmation } from '../send-form-confirmation';
+import { SendFormConfirmationLayout } from '../send-form-confirmation.layout';
 
 function useStacksSendFormConfirmationState() {
   return {
@@ -77,7 +77,7 @@ export function StacksSendFormConfirmation() {
         <Page>
           <Outlet />
           {isTokenTransferPayload(tx.payload) && (
-            <SendFormConfirmation
+            <SendFormConfirmationLayout
               txValue={getTokenTransferAmount(tx.payload)}
               txFiatValue={formatCurrency(
                 baseCurrencyAmountInQuote(getTokenTransferAmount(tx.payload), tokenMarketData)
@@ -92,7 +92,7 @@ export function StacksSendFormConfirmation() {
             />
           )}
           {isSip10TransferContactCall(tx) && (
-            <SendFormConfirmation
+            <SendFormConfirmationLayout
               txValue={getSip10TransferAmount(tx.payload, symbol, decimals)}
               totalSpend={[
                 formatCurrency(getSip10TransferAmount(tx.payload, symbol, decimals)),
