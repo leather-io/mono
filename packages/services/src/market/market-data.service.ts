@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify';
 import { btcAsset, currencyDecimalsMap } from '@leather.io/constants';
 import {
   Brc20Asset,
+  type FungibleAssetId,
   FungibleCryptoAsset,
   MarketData,
   NativeCryptoAsset,
@@ -21,6 +22,7 @@ import {
   rebaseMarketData,
 } from '@leather.io/utils';
 
+import { FungibleAssetService } from '../assets/fungible-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
@@ -31,8 +33,14 @@ export class MarketDataService {
   constructor(
     @inject(Types.SettingsService) private readonly settingsService: SettingsService,
     private readonly leatherApiClient: LeatherApiClient,
-    private readonly bestInSlotApiClient: BestInSlotApiClient
+    private readonly bestInSlotApiClient: BestInSlotApiClient,
+    private readonly fungibleAssetService: FungibleAssetService
   ) {}
+
+  public async getMarketDataByAssetId(assetId: FungibleAssetId, signal?: AbortSignal) {
+    const asset = await this.fungibleAssetService.getAsset(assetId, signal);
+    return this.getMarketData(asset, signal);
+  }
 
   /**
    * Retrieves asset market data quoted in user's preferred quote currency.
