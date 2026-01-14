@@ -113,9 +113,11 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
         appEvents.publish('ledgerStacksMessageSigningCancelled', { unsignedMessage });
         return;
       }
+
       if (resp.returnCode !== LedgerError.NoErrors) {
         throw new Error('Some other error');
       }
+
       void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
       await delay(1000);
 
@@ -129,7 +131,11 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
         unsignedMessage,
       });
 
-      await stacksApp.transport.close();
+      try {
+        await stacksApp.transport.close();
+      } catch (e) {
+        logger.error('Error closing transport after message signing', e);
+      }
     } catch {
       void ledgerNavigate.toDeviceDisconnectStep();
     }
