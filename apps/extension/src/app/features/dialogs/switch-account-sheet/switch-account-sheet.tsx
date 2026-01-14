@@ -3,7 +3,7 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { Box, Flex } from 'leather-styles/jsx';
 
-import { Button, Sheet, SheetHeader } from '@leather.io/ui';
+import { Button, Callout, InfoCircleIcon, Link, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { useCreateAccount } from '@app/common/hooks/account/use-create-account';
 import { useWalletType } from '@app/common/use-wallet-type';
@@ -55,6 +55,24 @@ export const SwitchAccountSheet = memo(function SwitchAccountSheet({
       wrapChildren={false}
     >
       <VirtuosoWrapperSheet>
+        {whenWallet({
+          software: null,
+          ledger: (
+            <Box p="0">
+              <Callout
+                variant="info"
+                icon={
+                  <Link href="https://google.com">
+                    <InfoCircleIcon variant="small" />
+                  </Link>
+                }
+              >
+                Stacks addresses beyond the first account are derived differently than by Ledger
+                Live
+              </Callout>
+            </Box>
+          ),
+        })}
         <Box flex="1">
           <Virtuoso
             initialTopMostItemIndex={whenWallet({ ledger: 0, software: currentAccountIndex })}
