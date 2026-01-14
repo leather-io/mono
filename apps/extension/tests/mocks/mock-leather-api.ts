@@ -9,6 +9,15 @@ const mockedSip10TokenMap = {
     image: 'https://storage.googleapis.com/longcoin/LONGcoin-image.png',
     principal: 'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin',
   },
+  'SP000000000000000000002Q6VF78.leather-integration-tests': {
+    assetIdentifier: 'SP000000000000000000002Q6VF78.leather-integration-tests::leather-test-token',
+    name: 'Leather test token',
+    symbol: 'LTT',
+    decimals: 6,
+    image:
+      'https://images.leather.io/tokens/SM26NBC8SFHNW4P1Y4DFH27974P56WN86C92HPEHH.token-lqstx.svg',
+    principal: 'SP000000000000000000002Q6VF78.leather-integration-tests',
+  },
 };
 
 const mockedSip10PriceMap = {
@@ -168,6 +177,45 @@ export async function mockLeatherApiRequests(page: Page) {
             ],
           },
         ],
+      },
+    })
+  );
+
+  await page.route('**/v1/app-config', route =>
+    route.fulfill({
+      json: {
+        assets: {
+          defaultEnabled: [
+            'sip10|SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin::longcoin',
+            'sip10|SP000000000000000000002Q6VF78.leather-integration-tests::leather-test-token',
+          ],
+        },
+        fees: {
+          stacks: {
+            minimumRelayFeeRate: 1,
+            globalMaximumFee: 5000000,
+            transfers: {
+              low: { minimum: 180, default: 240, maximum: 299 },
+              standard: { minimum: 300, default: 400, maximum: 800 },
+              high: { minimum: 801, default: 901, maximum: 1001 },
+            },
+            contractCalls: {
+              low: { minimum: 500, default: 1750, maximum: 2999 },
+              standard: { minimum: 3000, default: 3750, maximum: 10000 },
+              high: { minimum: 10001, default: 50001, maximum: 1000001 },
+            },
+            contractDeployments: {
+              low: { minimum: 10000, default: 30000, maximum: 50000 },
+              standard: { minimum: 50001, default: 100002, maximum: 500000 },
+              high: { minimum: 1000001, default: 1500000, maximum: 2000001 },
+            },
+            sipTokenSends: {
+              low: { minimum: 500, default: 600, maximum: 700 },
+              standard: { minimum: 701, default: 1751, maximum: 4000 },
+              high: { minimum: 4001, default: 4002, maximum: 10001 },
+            },
+          },
+        },
       },
     })
   );
