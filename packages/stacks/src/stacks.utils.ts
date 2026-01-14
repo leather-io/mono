@@ -16,7 +16,7 @@ import {
 import type { NetworkModes } from '@leather.io/models';
 import { assertIsTruthy, isString, toHexString } from '@leather.io/utils';
 
-export const stxDerivationWithAccount = `m/44'/5757'/0'/0/{account}`;
+export const stxDerivationWithAccount = `m/44'/5757'/{account}'/0/0`;
 
 export function makeAccountIndexDerivationPathFactory(derivationPath: string) {
   return (account: number) => derivationPath.replace('{account}', account.toString());
