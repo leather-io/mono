@@ -195,6 +195,25 @@ test.describe('send stx: tests on testnet', () => {
       test.expect(details).toBeTruthy();
     });
   });
+
+  test('can send stx to contract principal', async ({ sendPage }) => {
+    const contractPrincipal = `${TEST_TESTNET_ACCOUNT_2_STX_ADDRESS}.token-contract`;
+    await sendPage.amountInput.fill(amount);
+    await sendPage.amountInput.blur();
+    await sendPage.page.waitForTimeout(2000);
+    await sendPage.recipientInput.fill(contractPrincipal);
+    await sendPage.recipientInput.blur();
+    await sendPage.page.waitForTimeout(2000);
+
+    await sendPage.previewSendTxButton.click();
+
+    const recipientText = await sendPage.confirmationDetailsRecipient.locator('code').innerText();
+    test.expect(recipientText).toContain('token-contract');
+    test.expect(recipientText).toContain(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS);
+
+    const calloutText = await sendPage.page.getByText('Sending to a smart contract').innerText();
+    test.expect(calloutText).toBeTruthy();
+  });
 });
 
 // Those that can should be migrated to testnet tests

@@ -166,9 +166,161 @@ export async function mockStacksPendingTransaction(page: Page) {
 }
 
 export async function mockStacksBroadcastTransaction(page: Page) {
+  const txid = '9b709768122e6c62a37b087106cc9c23280ed6242b565484b6cc4e6a43ae1155';
+
   await page.route(`**/api.hiro.so/v2/transactions`, route =>
     route.fulfill({
-      body: '9b709768122e6c62a37b087106cc9c23280ed6242b565484b6cc4e6a43ae1155',
+      body: txid,
+    })
+  );
+
+  await page.route(`**/api.hiro.so/extended/v1/tx/${txid}`, route =>
+    route.fulfill({
+      json: {
+        tx_id: txid,
+        nonce: 0,
+        fee_rate: '1000',
+        sender_address: TEST_ACCOUNT_1_STX_ADDRESS,
+        sponsored: false,
+        post_condition_mode: 'allow',
+        post_conditions: [],
+        anchor_mode: 'any',
+        tx_status: 'pending',
+        receipt_time: Date.now() / 1000,
+        receipt_time_iso: new Date().toISOString(),
+        tx_type: 'contract_call',
+        contract_call: {
+          contract_id: 'SP000000000000000000002Q6VF78.leather-integration-tests',
+          function_name: 'transfer',
+          function_signature: '',
+          function_args: [],
+        },
+      },
+    })
+  );
+}
+
+export async function mockSip10LeatherTestTokenBalance(page: Page) {
+  await page.route(`**/api.hiro.so/extended/v2/addresses/*/balances`, route =>
+    route.fulfill({
+      json: {
+        limit: 100,
+        offset: 0,
+        total: 55,
+        results: [
+          {
+            token: 'SP000000000000000000002Q6VF78.leather-integration-tests::leather-test-token',
+            balance: '114736',
+          },
+        ],
+      },
+    })
+  );
+  await page.route(`**/staging.api.leather.io/v1/tokens/sip10s`, route =>
+    route.fulfill({
+      json: {
+        format: 'map',
+        meta: {
+          count: 189,
+          timestamp: '2026-01-14T12:34:02.230Z',
+        },
+        data: {
+          'SP000000000000000000002Q6VF78.leather-integration-tests': {
+            assetIdentifier:
+              'SP000000000000000000002Q6VF78.leather-integration-tests::leather-test-token',
+            name: 'Leather test token',
+            symbol: 'LTT',
+            decimals: 6,
+            image:
+              'https://images.leather.io/tokens/SM26NBC8SFHNW4P1Y4DFH27974P56WN86C92HPEHH.token-lqstx.svg',
+          },
+        },
+      },
+    })
+  );
+  await page.route(`**/staging.api.leather.io/v1/app-config`, route =>
+    route.fulfill({
+      json: {
+        assets: {
+          defaultEnabled: [
+            'sip10|SP000000000000000000002Q6VF78.leather-integration-tests::leather-test-token',
+          ],
+        },
+        fees: {
+          stacks: {
+            minimumRelayFeeRate: 1,
+            globalMaximumFee: 5000000,
+            transfers: {
+              low: {
+                minimum: 180,
+                default: 240,
+                maximum: 299,
+              },
+              standard: {
+                minimum: 300,
+                default: 400,
+                maximum: 800,
+              },
+              high: {
+                minimum: 801,
+                default: 901,
+                maximum: 1001,
+              },
+            },
+            contractCalls: {
+              low: {
+                minimum: 500,
+                default: 1750,
+                maximum: 2999,
+              },
+              standard: {
+                minimum: 3000,
+                default: 3750,
+                maximum: 10000,
+              },
+              high: {
+                minimum: 10001,
+                default: 50001,
+                maximum: 1000001,
+              },
+            },
+            contractDeployments: {
+              low: {
+                minimum: 10000,
+                default: 30000,
+                maximum: 50000,
+              },
+              standard: {
+                minimum: 50001,
+                default: 100002,
+                maximum: 500000,
+              },
+              high: {
+                minimum: 1000001,
+                default: 1500000,
+                maximum: 2000001,
+              },
+            },
+            sipTokenSends: {
+              low: {
+                minimum: 500,
+                default: 600,
+                maximum: 700,
+              },
+              standard: {
+                minimum: 701,
+                default: 1751,
+                maximum: 4000,
+              },
+              high: {
+                minimum: 4001,
+                default: 4002,
+                maximum: 10001,
+              },
+            },
+          },
+        },
+      },
     })
   );
 }

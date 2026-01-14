@@ -3,11 +3,15 @@ import type { Page } from '@playwright/test';
 const mockedFtBalancesV2 = {
   limit: 100,
   offset: 0,
-  total: 5,
+  total: 6,
   results: [
     {
       token: 'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin::longcoin',
       balance: '1888888000000',
+    },
+    {
+      token: 'SP000000000000000000002Q6VF78.leather-integration-tests::leather-test-token',
+      balance: '114736',
     },
     {
       token: 'SP102V8P0F7JX67ARQ77WEA3D3CFB5XW39REDT0AM.token-special-vote::special-vote',
