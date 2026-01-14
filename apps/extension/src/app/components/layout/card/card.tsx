@@ -28,6 +28,7 @@ export function Card({
       position={{ base: 'unset', sm: 'relative' }}
       border={{ base: 'unset', sm: 'default' }}
       rounded="lg"
+      overflow="hidden"
       {...props}
     >
       {header}
