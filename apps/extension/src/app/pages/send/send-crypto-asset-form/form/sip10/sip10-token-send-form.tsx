@@ -7,8 +7,8 @@ import { RouteUrls } from '@shared/route-urls';
 import { Content } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useToast } from '@app/features/toasts/use-toast';
-import { useMarketData } from '@app/query/common/market-data/market-data.query';
-import { useSip10TokenBalance } from '@app/query/stacks/sip10/sip10-balance.hooks';
+import { useMarketDataByAssetId } from '@app/query/common/market-data/market-data.query';
+import { useSip10AccountBalance } from '@app/query/stacks/sip10/sip10-balance.hooks';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
 import { Sip10TokenSendFormContainer } from './sip10-token-send-form-container';
@@ -23,12 +23,14 @@ interface Sip10TokenSendFormLoaderProps {
 function Sip10TokenSendFormLoader({ children }: Sip10TokenSendFormLoaderProps) {
   const { contractId } = useParams();
   const accountIndex = useCurrentAccountIndex();
-  const tokenBalance = useSip10TokenBalance(accountIndex, contractId ?? '');
-  const marketData = useMarketData(tokenBalance!.asset);
+  const sip10Balances = useSip10AccountBalance(accountIndex);
+  const marketData = useMarketDataByAssetId({ protocol: 'sip10', id: contractId ?? '' });
   const toast = useToast();
   const navigate = useNavigate();
 
-  if (!contractId) return null;
+  if (!contractId || sip10Balances.state !== 'success') return null;
+
+  const tokenBalance = sip10Balances.value?.sip10s.find(t => t.asset.contractId === contractId);
 
   if (!tokenBalance) {
     toast.error('Token not found');

@@ -2,6 +2,7 @@ import { btcAsset, stxAsset } from '@leather.io/constants';
 import { RuneAsset, Sip10Asset } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
+import type { FungibleAssetService } from '../assets/fungible-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { SettingsService } from '../infrastructure/settings/settings.service';
@@ -43,10 +44,15 @@ describe(MarketDataService.name, () => {
     getMarketData: vi.fn(),
   } as unknown as BestInSlotApiClient;
 
+  const mockFungibleAssetService = {
+    getAsset: vi.fn().mockReturnValue(stxAsset),
+  } as unknown as FungibleAssetService;
+
   const marketDataService = new MarketDataService(
     mockSettingsService,
     mockLeatherApiClient,
-    mockBestInSlotApiClient
+    mockBestInSlotApiClient,
+    mockFungibleAssetService
   );
 
   describe(MarketDataService.prototype.getMarketDataUsd.name, () => {

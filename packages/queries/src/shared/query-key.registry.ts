@@ -5,6 +5,7 @@ export type QueryPrefix = keyof typeof querySettingsDepsRegistry;
 export const querySettingsDepsRegistry = {
   // market data
   'market-data-service--get-market-data': ['currency', 'network'],
+  'market-data-service--get-market-data-by-asset-id': ['currency', 'network'],
   // market history
   'market-history-service--get-price-change-percentage': ['currency'],
   'market-history-service--get-price-history': ['currency'],

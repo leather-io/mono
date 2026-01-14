@@ -50,11 +50,6 @@ export function useManagedSip10Tools(accountIndex: number) {
   };
 }
 
-export function useSip10TokenBalance(accountIndex: number, contractId: string) {
-  const balance = useSip10AccountBalance(accountIndex);
-  return balance.value?.sip10s.find(t => t.asset.contractId === contractId);
-}
-
 function useSip10AddressBalance(address: string) {
   return toFetchState(useGetSip10AddressBalanceQuery(address));
 }
