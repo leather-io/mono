@@ -1,5 +1,5 @@
 import DOMPurify from 'dompurify';
-import { Box } from 'leather-styles/jsx';
+import { Box, styled } from 'leather-styles/jsx';
 
 import { parseJson } from '@app/components/json';
 import { LoadingSpinner } from '@app/components/loading-spinner';
@@ -28,6 +28,7 @@ export function InscriptionText(props: InscriptionTextProps) {
       }}
       color="white"
       fontSize="9px"
+      fontFamily="mono"
       height="100%"
       p="space.03"
       position="relative"
@@ -35,7 +36,7 @@ export function InscriptionText(props: InscriptionTextProps) {
       textAlign="left"
       width="100%"
     >
-      <pre>{DOMPurify.sanitize(parseJson(query.data))}</pre>
+      <styled.pre>{DOMPurify.sanitize(parseJson(query.data))}</styled.pre>
     </Box>
   );
 }
