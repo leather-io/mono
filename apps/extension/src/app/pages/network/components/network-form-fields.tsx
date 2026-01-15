@@ -13,7 +13,7 @@ import {
 import { assertUnreachable } from '@leather.io/utils';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
-import type { AddNetworkFormValues } from '@app/features/add-network/use-add-network';
+import type { AddNetworkFormValues } from '@app/pages/network/components/use-add-network';
 
 import { BitcoinApiSection } from './bitcoin-api-section';
 import { NetworkNameSection } from './network-name-section';

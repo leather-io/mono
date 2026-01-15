@@ -4,7 +4,7 @@ import { Flex, styled } from 'leather-styles/jsx';
 
 import { Input } from '@leather.io/ui';
 
-import type { AddNetworkFormValues } from '@app/features/add-network/use-add-network';
+import type { AddNetworkFormValues } from '@app/pages/network/components/use-add-network';
 
 interface StacksApiSectionProps {
   handleChange: FormikHandlers['handleChange'];

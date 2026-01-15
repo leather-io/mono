@@ -5,7 +5,7 @@ import { Flex, HStack, styled } from 'leather-styles/jsx';
 import { type BitcoinNetwork } from '@leather.io/models';
 import { CheckmarkIcon, ChevronDownIcon, Input, Select, SelectItemLayout } from '@leather.io/ui';
 
-import type { AddNetworkFormValues } from '@app/features/add-network/use-add-network';
+import type { AddNetworkFormValues } from '@app/pages/network/components/use-add-network';
 
 const networks: {
   label: string;

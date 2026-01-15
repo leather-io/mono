@@ -35,13 +35,6 @@ export interface BaseLedgerOperationContext {
   awaitingDeviceConnection: boolean;
 }
 
-const targetIdMap = new Map([
-  ['31100004', 'Nano S'],
-  ['33000004', 'Nano X'],
-]);
-export function extractDeviceNameFromKnownTargetIds(targetId: string) {
-  return targetIdMap.get(targetId);
-}
 export function useLedgerResponseState() {
   return useState<LatestDeviceResponse>(null);
 }

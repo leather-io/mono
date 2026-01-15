@@ -47,10 +47,3 @@ export function useHasLedgerBitcoinKeys() {
 export function useHasLedgerStacksKeys() {
   return useSelector(selectHasLedgerStacksKeys);
 }
-
-export function useLedgerDeviceTargetId() {
-  return useSelector(
-    (state: RootState) =>
-      state.ledger.stacks.entities[0]?.targetId || state.ledger.bitcoin.entities[0]?.targetId || ''
-  );
-}

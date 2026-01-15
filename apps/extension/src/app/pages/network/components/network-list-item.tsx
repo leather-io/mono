@@ -7,7 +7,7 @@ import { defaultCurrentNetwork } from '@leather.io/models';
 import { CheckmarkCircleIcon, CloudOffIcon, ItemLayoutWithButtons } from '@leather.io/ui';
 
 import { getUrlHostname, truncateString } from '@app/common/utils';
-import { NetworkItemMenu } from '@app/features/settings/network/components/network-list-item-menu';
+import { NetworkItemMenu } from '@app/pages/network/components/network-list-item-menu';
 import { useGetStacksNetworkStatusQuery } from '@app/query/stacks/network/network.query';
 import { useCurrentNetworkId, useNetworks } from '@app/store/networks/networks.selectors';
 

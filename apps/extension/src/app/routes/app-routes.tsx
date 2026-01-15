@@ -8,8 +8,6 @@ import { RouteUrls } from '@shared/route-urls';
 import { Content } from '@app/components/layout/layouts/content.layout';
 import { SwitchAccountLayout } from '@app/components/layout/layouts/switch-account.layout';
 import { LoadingSpinner } from '@app/components/loading-spinner';
-import { AddNetwork as LegacyAddNetwork } from '@app/features/add-network/add-network';
-import { EditNetwork as LegacyEditNetwork } from '@app/features/add-network/edit-network';
 import { Container } from '@app/features/container/container';
 import { HomeHeader } from '@app/features/container/headers/home.header';
 import { leatherIntroSheetRoutes } from '@app/features/dialogs/leather-intro-dialog/leather-intro-dialog';
@@ -78,7 +76,7 @@ export const homePageModalRoutes = (
 );
 
 function useAppRoutes() {
-  const { releaseOnramperBuy, releaseOnramperSell, extensionRevamp } = useFlags();
+  const { releaseOnramperBuy, releaseOnramperSell } = useFlags();
 
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
@@ -152,7 +150,7 @@ function useAppRoutes() {
             path={RouteUrls.AddNetwork}
             element={
               <AccountGate>
-                {extensionRevamp ? <CurrentAddNetwork /> : <LegacyAddNetwork />}
+                <CurrentAddNetwork />
               </AccountGate>
             }
           />
@@ -161,7 +159,7 @@ function useAppRoutes() {
             path={RouteUrls.EditNetwork}
             element={
               <AccountGate>
-                {extensionRevamp ? <CurrentEditNetwork /> : <LegacyEditNetwork />}
+                <CurrentEditNetwork />
               </AccountGate>
             }
           />
@@ -261,37 +259,31 @@ function useAppRoutes() {
             }
           />
 
-          {extensionRevamp && (
-            <Route
-              path={RouteUrls.Settings}
-              element={
-                <AccountGate>
-                  <SettingsPage />
-                </AccountGate>
-              }
-            />
-          )}
+          <Route
+            path={RouteUrls.Settings}
+            element={
+              <AccountGate>
+                <SettingsPage />
+              </AccountGate>
+            }
+          />
 
-          {extensionRevamp && (
-            <Route
-              path={RouteUrls.SelectNetwork}
-              element={
-                <AccountGate>
-                  <SelectNetwork />
-                </AccountGate>
-              }
-            />
-          )}
-          {extensionRevamp && (
-            <Route
-              path={RouteUrls.SelectTheme}
-              element={
-                <AccountGate>
-                  <SelectTheme />
-                </AccountGate>
-              }
-            />
-          )}
+          <Route
+            path={RouteUrls.SelectNetwork}
+            element={
+              <AccountGate>
+                <SelectNetwork />
+              </AccountGate>
+            }
+          />
+          <Route
+            path={RouteUrls.SelectTheme}
+            element={
+              <AccountGate>
+                <SelectTheme />
+              </AccountGate>
+            }
+          />
 
           {/* Popup Routes */}
           {/* ChooseAccount is a popup as shown only in popup when decodedAuthRequest in set-password  */}

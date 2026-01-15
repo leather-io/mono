@@ -1,4 +1,3 @@
-import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import { FullScreenButton } from '@app/components/full-screen-button';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderAccountSelector } from '@app/components/layout/headers/header-account-selector';
@@ -8,9 +7,7 @@ import { useFlags } from '@app/features/feature-flags';
 import { Settings } from '@app/features/settings/settings';
 
 export function HomeHeader() {
-  const { isShowingSwitchAccount, setIsShowingSwitchAccount } = useSwitchAccountSheet();
   const { extensionRevamp } = useFlags();
-
   return (
     <Header>
       <HeaderGrid
@@ -18,9 +15,7 @@ export function HomeHeader() {
         rightCol={
           <HeaderGridRightCol>
             <FullScreenButton />
-            <Settings
-              toggleSwitchAccount={() => setIsShowingSwitchAccount(!isShowingSwitchAccount)}
-            />
+            <Settings />
           </HeaderGridRightCol>
         }
       />
