@@ -1,6 +1,6 @@
 import { defineTokens } from '@pandacss/dev';
 
-import { tokens as leatherTokens, zIndices } from '@leather.io/tokens';
+import { tokens as leatherTokens, zIndices } from '@leather.io/tokens/config';
 
 import { colors } from './colors';
 
