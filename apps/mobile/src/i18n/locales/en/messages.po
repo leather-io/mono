@@ -137,10 +137,7 @@ msgstr "Account label"
 msgid "Account name cannot be empty"
 msgstr "Account name cannot be empty"
 
-#: src/components/activity/activity-with-account.screen.tsx:19
-#: src/components/activity/activity-without-account-screen.tsx:9
-#: src/features/navigation/tab-layout.tsx:60
-#: src/features/token/components/token-activity.tsx:43
+#: src/features/token/components/token-activity.tsx:40
 msgid "Activity"
 msgstr "Activity"
 
