@@ -1,8 +1,10 @@
 import { TEST_PASSWORD } from '@tests/mocks/constants';
+import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
+import { LEATHER_HELP_CENTER } from '@leather.io/constants';
 import { WalletDefaultNetworkConfigurationIds } from '@leather.io/models';
 
 import { test } from '../../fixtures/fixtures';
@@ -13,15 +15,15 @@ test.describe('Settings menu', () => {
     await onboardingPage.signInWithTestAccount(extensionId);
   });
 
-  test('that menu item takes user to support page', async ({ page }) => {
-    await page.getByTestId(SettingsSelectors.SettingsMenuBtn).click();
+  test('that menu item takes user to support page', async ({ page, settingsPage }) => {
+    await settingsPage.openSettingsPage();
 
     const [supportPage] = await Promise.all([
       page.waitForEvent('popup'),
       page.getByTestId(SettingsSelectors.GetSupportMenuItem).click(),
     ]);
 
-    await test.expect(supportPage).toHaveURL('https://leather.io/help');
+    await test.expect(supportPage).toHaveURL(LEATHER_HELP_CENTER);
   });
 
   test('that menu item can perform sign out', async ({ homePage, onboardingPage }) => {
@@ -43,12 +45,11 @@ test.describe('Settings menu', () => {
     test.expect(displayName).toEqual('Account 1');
   });
 
-  // TODO 3919 improve tests = This doesn't actually test copy of the value
   test('that menu item allows viewing and saving secret key to clipboard', async ({
     page,
-    homePage,
+    settingsPage,
   }) => {
-    await homePage.goToSecretKey();
+    await settingsPage.openViewSecretKeyPage();
     await page.getByTestId(SettingsSelectors.EnterPasswordInput).fill(TEST_PASSWORD);
     await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
     await page.getByTestId(SettingsSelectors.CopyKeyToClipboardBtn).click();
@@ -60,18 +61,14 @@ test.describe('Settings menu', () => {
     test.expect(copySuccessMessage).toContain('Copied!');
   });
 
-  // TODO 3919 improve tests - this doesn't actually change networks
-  test('that menu item allows changing networks', async ({ homePage, page }) => {
-    await homePage.clickSettingsButton();
-    const currentNetwork = await page.getByTestId(SettingsSelectors.CurrentNetwork).innerText();
-    test.expect(currentNetwork).toContain('mainnet');
+  test('that menu item allows changing networks', async ({ networkPage, settingsPage, page }) => {
+    await page.getByTestId(HomePageSelectors.NetworkSwitcher).isHidden();
+    await networkPage.changeNetwork(WalletDefaultNetworkConfigurationIds.testnet4);
+    await settingsPage.openSettingsPage();
+    await page.getByTestId(HomePageSelectors.NetworkSwitcher).isVisible();
+    const currentNetwork = await page.getByTestId(HomePageSelectors.NetworkSwitcher).innerText();
 
-    await page.getByTestId(SettingsSelectors.ChangeNetworkAction).click();
-    await page.waitForTimeout(1000);
-    const networkListItems = await page.getByTestId(SettingsSelectors.NetworkListItem).all();
-    test
-      .expect(networkListItems)
-      .toHaveLength(Object.keys(WalletDefaultNetworkConfigurationIds).length);
+    test.expect(currentNetwork).toContain('Testnet4');
   });
 
   test('that menu item can toggle privacy', async ({ page, homePage }) => {

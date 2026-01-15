@@ -1,5 +1,4 @@
 import { NetworkSelectors } from '@tests/selectors/network.selectors';
-import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
 import { MEMPOOL_BASE_URL } from '@leather.io/constants';
 import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
@@ -7,16 +6,11 @@ import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
 import { test } from '../../fixtures/fixtures';
 
 test.describe('Networks tests', () => {
-  test.beforeEach(
-    async ({ extensionId, globalPage, onboardingPage, homePage, networkPage, page }) => {
-      await globalPage.setupAndUseApiCalls(extensionId);
-      await onboardingPage.signInWithTestAccount(extensionId);
-      await homePage.clickSettingsButton();
-      await page.getByTestId(SettingsSelectors.ChangeNetworkAction).click();
-      await page.getByTestId(SettingsSelectors.AddNewNetworkBtn).click();
-      await networkPage.waitForNetworkPageReady();
-    }
-  );
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, networkPage }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId);
+    await networkPage.openAddNewNetworkPage();
+  });
 
   test('that bitcoin api url changes on selecting different network', async ({ page }) => {
     await page.getByTestId(NetworkSelectors.AddNetworkBitcoinAPISelector).click();
@@ -95,7 +89,7 @@ test.describe('Networks tests', () => {
     test.expect(errorMessage).toEqual(NetworkSelectors.NoBitcoinNodeFetch);
   });
 
-  test('proper initial values on edit network', async ({ homePage, page, networkPage }) => {
+  test('proper initial values on edit network', async ({ homePage, networkPage }) => {
     await networkPage.inputNetworkNameField('Test network');
     await networkPage.inputNetworkKeyField('test-network');
     await networkPage.inputNetworkStacksAddressField('https://api.testnet.hiro.so');
@@ -103,11 +97,9 @@ test.describe('Networks tests', () => {
     await networkPage.clickAddNetwork();
     await homePage.waitForHomePageReady();
 
-    await homePage.clickSettingsButton();
+    await networkPage.openNetworkPage();
 
-    await page.getByTestId(SettingsSelectors.ChangeNetworkAction).click();
-
-    await networkPage.page.getByTestId(NetworkSelectors.NetworkMenuBtn).click({ force: true });
+    await networkPage.page.getByTestId(NetworkSelectors.NetworkMenuBtn).click();
     await networkPage.page.getByTestId(NetworkSelectors.EditNetworkMenuBtn).click();
 
     const stacksInputText = await networkPage.page
@@ -117,7 +109,7 @@ test.describe('Networks tests', () => {
     test.expect(stacksInputText).toEqual('https://api.testnet.hiro.so');
   });
 
-  test('delete network', async ({ homePage, page, networkPage }) => {
+  test('delete network', async ({ homePage, networkPage }) => {
     const id = 'test-network';
 
     await networkPage.inputNetworkNameField('Test network');
@@ -127,14 +119,13 @@ test.describe('Networks tests', () => {
     await networkPage.clickAddNetwork();
     await homePage.waitForHomePageReady();
 
-    await homePage.clickSettingsButton();
+    await networkPage.openNetworkPage();
 
-    await page.getByTestId(SettingsSelectors.ChangeNetworkAction).click();
     let networkEl = networkPage.page.getByTestId(id);
 
     await test.expect(networkEl).toHaveCount(1);
 
-    await networkPage.page.getByTestId(NetworkSelectors.NetworkMenuBtn).click({ force: true });
+    await networkPage.page.getByTestId(NetworkSelectors.NetworkMenuBtn).click();
     await networkPage.page.getByTestId(NetworkSelectors.DeleteNetworkMenuBtn).click();
 
     networkEl = networkPage.page.getByTestId(id);

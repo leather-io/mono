@@ -1,11 +1,9 @@
 import { Locator, Page } from '@playwright/test';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
-import { NetworkSelectors } from '@tests/selectors/network.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { createTestSelector } from '@tests/utils';
 
-import { WalletDefaultNetworkConfigurationIds } from '@leather.io/models';
 import { delay } from '@leather.io/utils';
 
 export class HomePage {
@@ -15,7 +13,6 @@ export class HomePage {
   readonly sendButton: Locator;
   readonly swapButton: Locator;
   readonly settingsButton: Locator;
-  readonly settingsViewSecretKey: Locator;
   readonly signOutConfirmHasBackupCheckbox: Locator;
   readonly signOutConfirmPasswordDisable: Locator;
   readonly signOutDeleteWalletBtn: Locator;
@@ -41,7 +38,6 @@ export class HomePage {
     this.sendButton = page.getByTestId(HomePageSelectors.SendCryptoAssetBtn);
     this.swapButton = page.getByTestId(HomePageSelectors.SwapBtn);
     this.settingsButton = page.getByTestId(SettingsSelectors.SettingsMenuBtn);
-    this.settingsViewSecretKey = page.getByTestId(SettingsSelectors.ViewSecretKeyListItem);
     this.signOutConfirmHasBackupCheckbox = page.getByTestId(
       SettingsSelectors.SignOutConfirmHasBackupCheckbox
     );
@@ -106,24 +102,12 @@ export class HomePage {
     return displayerAddress.replaceAll('\n', '');
   }
 
-  async selectTestnet() {
-    await this.page.getByTestId(SettingsSelectors.SettingsMenuBtn).click();
-    await this.page.getByTestId(SettingsSelectors.ChangeNetworkAction).click();
-    await this.page.getByTestId(NetworkSelectors.NetworkListActiveNetwork).isVisible();
-    await this.page.getByTestId(WalletDefaultNetworkConfigurationIds.testnet4).click();
-  }
-
   async clickActivityTab() {
     await this.page.getByTestId(HomePageSelectors.ActivityTabBtn).click();
   }
 
   async clickSettingsButton() {
     await this.settingsButton.click({ force: true });
-  }
-
-  async goToSecretKey() {
-    await this.clickSettingsButton();
-    await this.settingsViewSecretKey.click();
   }
 
   async signOut() {

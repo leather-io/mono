@@ -30,4 +30,5 @@ export enum SettingsSelectors {
   TogglePrivacy = 'toggle-privacy',
   ToggleNotifications = 'toggle-notifications',
   ToggleNetworkBadge = 'toggle-network-badge',
+  SettingsPage = 'settings-page',
 }

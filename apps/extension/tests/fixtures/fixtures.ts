@@ -4,6 +4,7 @@ import { HomePage } from '@tests/page-object-models/home.page';
 import { NetworkPage } from '@tests/page-object-models/network.page';
 import { OnboardingPage } from '@tests/page-object-models/onboarding.page';
 import { SendPage } from '@tests/page-object-models/send.page';
+import { SettingsPage } from '@tests/page-object-models/settings.page';
 import { SwapPage } from '@tests/page-object-models/swap.page';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -18,6 +19,7 @@ interface TestFixtures {
   sendPage: SendPage;
   swapPage: SwapPage;
   networkPage: NetworkPage;
+  settingsPage: SettingsPage;
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -84,5 +86,8 @@ export const test = base.extend<TestFixtures>({
   },
   networkPage: async ({ page }, use) => {
     await use(new NetworkPage(page));
+  },
+  settingsPage: async ({ page }, use) => {
+    await use(new SettingsPage(page));
   },
 });
