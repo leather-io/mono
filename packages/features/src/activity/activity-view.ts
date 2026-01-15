@@ -13,11 +13,48 @@ import { formatActivityStatusLabel, getActivityStatusIndicatorId } from './activ
 import { formatActivityCaption } from './activity-timestamp';
 import type { ActivityView } from './types';
 
+function getActivityUniqueIdentifier(activity: Activity): string {
+  switch (activity.type) {
+    case 'receiveAsset': {
+      const sender = activity.senders?.[0] ?? '';
+      const amount = activity.amount.toString();
+      const assetProtocol = activity.asset.protocol;
+      return `${sender}-${amount}-${assetProtocol}`;
+    }
+    case 'sendAsset': {
+      const receiver = activity.receivers?.[0] ?? '';
+      const amount = activity.amount.toString();
+      const assetProtocol = activity.asset.protocol;
+      return `${receiver}-${amount}-${assetProtocol}`;
+    }
+    case 'swapAssets': {
+      const fromAmount = activity.fromAmount.toString();
+      const toAmount = activity.toAmount.toString();
+      return `${activity.fromAsset.protocol}-${fromAmount}-${activity.toAsset.protocol}-${toAmount}`;
+    }
+    case 'lockAsset': {
+      const amount = activity.amount.toString();
+      const assetProtocol = activity.asset.protocol;
+      return `${amount}-${assetProtocol}`;
+    }
+    case 'deploySmartContract':
+      return activity.contractId;
+    case 'executeSmartContract':
+      return `${activity.contractId}-${activity.functionName}`;
+    default:
+      return '';
+  }
+}
+
 function getActivityKey(activity: Activity): string {
   if (activity.level === 'account') {
     const accountKey = `${activity.account.fingerprint}-${activity.account.accountIndex}`;
     if ('txid' in activity) {
-      return `${accountKey}-${activity.txid}-${activity.type}`;
+      const activityKey = getActivityUniqueIdentifier(activity);
+      // Include timestamp to ensure uniqueness for activities that might have identical properties
+      return activityKey
+        ? `${accountKey}-${activity.txid}-${activity.type}-${activityKey}-${activity.timestamp}`
+        : `${accountKey}-${activity.txid}-${activity.type}-${activity.timestamp}`;
     }
     return `${accountKey}-${activity.type}-${activity.timestamp}`;
   }
