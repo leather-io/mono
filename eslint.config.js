@@ -296,7 +296,12 @@ export default defineConfig([
       leather: leatherCustomPlugin,
     },
     rules: {
-      'leather/prefer-style-props': 'warn',
+      // Disable prefer-style-props for React Native - inline styles are required for:
+      // - Third-party components (LottieView, Animated, expo-image, etc.)
+      // - Dynamic values from Dimensions, PixelRatio, calculations
+      // - Platform-specific styling and animations
+      // React Native doesn't use Panda CSS, so this rule doesn't apply
+      'leather/prefer-style-props': 'off',
       'leather/prefer-responsive-array': 'warn',
       'lingui/no-unlocalized-strings': [
         'error',
