@@ -15,7 +15,7 @@ export function createPostStacksFeeTransactionQueryOptions({
 }: CreatePostStacksFeeTransactionQueryOptionsArgs) {
   return {
     enabled: transactionPayload !== '',
-    queryKey: [StacksQueryPrefixes.PostFeeTransaction, transactionPayload],
+    queryKey: [StacksQueryPrefixes.PostFeeTransaction, transactionPayload, estimatedLen],
     queryFn: async () => {
       try {
         return await client.postFeeTransaction(estimatedLen, transactionPayload);
