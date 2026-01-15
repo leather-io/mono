@@ -29,7 +29,7 @@ export function ActivityList({ data, header }: ActivityListProps) {
 
   if (data.state === 'error') {
     return (
-      <Screen.FlashList
+      <Screen.List
         data={[]}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
@@ -40,7 +40,7 @@ export function ActivityList({ data, header }: ActivityListProps) {
   }
 
   return (
-    <Screen.FlashList
+    <Screen.List
       data={data.value}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
