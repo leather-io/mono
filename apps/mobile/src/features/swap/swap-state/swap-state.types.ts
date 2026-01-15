@@ -162,6 +162,7 @@ export interface SwapState extends SwapInternalState {
   assetFlippingAllowed: boolean;
   isSendingMax: boolean;
   effectiveNonce: number;
+  isInputReady: boolean;
 }
 
 export type SwapActionObject =

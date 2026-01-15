@@ -162,6 +162,7 @@ export function useSwapState({
     state: {
       ...state,
       secondaryAmount,
+      isInputReady: state.baseSwapAsset !== null && spendableAmountQuery.isSuccess,
       assetFlippingAllowed: isAssetFlippingAllowed(state.baseSwapAsset, state.targetSwapAsset),
       isSendingMax,
       effectiveNonce,
