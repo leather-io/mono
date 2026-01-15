@@ -45,10 +45,8 @@ interface SwapAvatarIconProps {
 
 function SwapAvatarIcon({ fromAsset, toAsset, indicator }: SwapAvatarIconProps) {
   return (
-    // eslint-disable-next-line leather/prefer-style-props
-    <Box position="relative" style={{ width: 76, height: 48 }}>
-      {/* eslint-disable-next-line leather/prefer-style-props */}
-      <Box position="absolute" style={{ top: 4, left: 0, zIndex: 1, opacity: 0.6 }}>
+    <Box position="relative" style={{ width: 76, height: 48 }}> {/* eslint-disable-line leather/prefer-style-props */}
+      <Box position="absolute" style={{ top: 4, left: 0, zIndex: 1, opacity: 0.6 }}> {/* eslint-disable-line leather/prefer-style-props */}
         <AssetAvatarIcon asset={fromAsset} size="lg" />
       </Box>
       <Box
@@ -57,8 +55,8 @@ function SwapAvatarIcon({ fromAsset, toAsset, indicator }: SwapAvatarIconProps) 
         borderColor="ink.background-primary"
         position="absolute"
         top={0}
-        left={28}
         zIndex={2}
+        style={{ left: 28 }} // eslint-disable-line leather/prefer-style-props
       >
         <AssetAvatarIcon asset={toAsset} indicator={indicator} size="xl" />
       </Box>

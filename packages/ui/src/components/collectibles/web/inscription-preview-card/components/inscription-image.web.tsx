@@ -5,10 +5,9 @@ interface InscriptionImageProps {
 }
 export function InscriptionImage({ src }: InscriptionImageProps) {
   return (
-    // eslint-disable-next-line leather/prefer-style-props
     <styled.img
       src={src}
-      style={{ width: '100%', height: '100%', aspectRatio: '1 / 1', objectFit: 'cover' }}
+      style={{ width: '100%', height: '100%', aspectRatio: '1 / 1', objectFit: 'cover' }} // eslint-disable-line leather/prefer-style-props
     />
   );
 }

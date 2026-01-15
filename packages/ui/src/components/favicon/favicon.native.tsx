@@ -11,10 +11,9 @@ export function Favicon({ origin, size = 16 }: FaviconProps) {
   const pixelRatio = PixelRatio.get();
 
   return (
-    // eslint-disable-next-line leather/prefer-style-props
     <Image
       source={`https://www.google.com/s2/favicons?domain=${origin}&sz=${size * pixelRatio}`}
-      style={{ width: size, height: size }}
+      style={{ width: size, height: size }} // eslint-disable-line leather/prefer-style-props
       alt={`Favicon of ${origin}`}
     />
   );
