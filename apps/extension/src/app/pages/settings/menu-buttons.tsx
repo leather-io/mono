@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
+import { LEATHER_GITBOOK_DEVS, LEATHER_HELP_CENTER } from '@leather.io/constants';
 import {
   BellAlarmIcon,
   BellIcon,
@@ -36,7 +37,7 @@ export function MenuButtons() {
   const toast = useToast();
 
   return (
-    <Flex direction="column" gap="space.01">
+    <Flex direction="column" gap="space.01" data-testid={SettingsSelectors.SettingsPage}>
       {hasKeys && walletType === 'software' && (
         <SettingsButton
           variant="chevron"
@@ -87,7 +88,7 @@ export function MenuButtons() {
         variant="external"
         title="Help"
         onClick={() => {
-          openInNewTab('https://app.leather.io/help-center');
+          openInNewTab(LEATHER_HELP_CENTER);
         }}
         icon={<SupportIcon />}
       />
@@ -96,8 +97,7 @@ export function MenuButtons() {
         variant="external"
         title="Dev docs"
         onClick={() => {
-          openInNewTab('https://leather.gitbook.io/developers');
-          // TODO: where should this navigate to?
+          openInNewTab(LEATHER_GITBOOK_DEVS);
         }}
         icon={<CodeIcon />}
       />

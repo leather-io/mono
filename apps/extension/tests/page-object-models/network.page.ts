@@ -1,6 +1,12 @@
 import { Page } from '@playwright/test';
 import { NetworkSelectors } from '@tests/selectors/network.selectors';
+import { SettingsSelectors } from '@tests/selectors/settings.selectors';
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { createTestSelector } from '@tests/utils';
+
+import { WalletDefaultNetworkConfigurationIds } from '@leather.io/models';
+
+import { SettingsPage } from './settings.page';
 
 export class NetworkPage {
   readonly networkNameSelector = createTestSelector(NetworkSelectors.NetworkName);
@@ -12,7 +18,11 @@ export class NetworkPage {
   readonly btnAddNetworkSelector = createTestSelector(NetworkSelectors.AddNetworkBtn);
   readonly errorTextSelector = createTestSelector(NetworkSelectors.ErrorText);
 
-  constructor(readonly page: Page) {}
+  settingsPage: SettingsPage;
+
+  constructor(readonly page: Page) {
+    this.settingsPage = new SettingsPage(page);
+  }
 
   async waitForNetworkPageReady() {
     await this.page.waitForSelector(createTestSelector(NetworkSelectors.NetworkPageReady), {
@@ -46,5 +56,33 @@ export class NetworkPage {
 
   async clickAddNetwork() {
     await this.page.locator(this.btnAddNetworkSelector).click({ force: true });
+  }
+
+  async openNetworkPage() {
+    await this.settingsPage.openSettingsPage();
+    await this.page.getByTestId(SettingsSelectors.ChangeNetworkAction).click();
+    await this.page.getByTestId(NetworkSelectors.NetworkListActiveNetwork).isVisible();
+  }
+
+  async openAddNewNetworkPage() {
+    await this.openNetworkPage();
+    await this.page.getByTestId(SettingsSelectors.AddNewNetworkBtn).click();
+    await this.waitForNetworkPageReady();
+  }
+
+  async goBackToHome() {
+    await this.page.getByTestId(SharedComponentsSelectors.HeaderBackBtn).click();
+    await this.page.getByTestId(SettingsSelectors.SettingsPage).isVisible();
+    await this.page.getByTestId(SharedComponentsSelectors.HeaderBackBtn).click();
+  }
+
+  async changeNetwork(network: WalletDefaultNetworkConfigurationIds) {
+    await this.openNetworkPage();
+    await this.page.getByTestId(network).click();
+    await this.goBackToHome();
+  }
+
+  async selectTestnet() {
+    await this.changeNetwork(WalletDefaultNetworkConfigurationIds.testnet4);
   }
 }

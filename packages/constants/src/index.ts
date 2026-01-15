@@ -79,6 +79,10 @@ export const LEATHER_GUIDES_CONNECT_DAPPS: string = `${LEATHER_GUIDES_URL}/conne
 
 export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 
+export const LEATHER_HELP_CENTER = 'https://app.leather.io/support';
+
+export const LEATHER_GITBOOK_DEVS = 'https://leather.gitbook.io/developers';
+
 export const LEATHER_EARN_URL = 'https://earn.leather.io';
 
 export const LEATHER_EARN_STACKING_URL = 'https://app.leather.io/stacking';

@@ -24,8 +24,8 @@ test.describe('Send inscription', () => {
   });
 
   test.describe('valid send inscription data', () => {
-    test('should show the inscription review step', async ({ sendPage, homePage }) => {
-      await homePage.selectTestnet();
+    test('should show the inscription review step', async ({ sendPage, networkPage }) => {
+      await networkPage.selectTestnet();
       await sendPage.selectInscription();
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
       const inscriptionSendButton = sendPage.page.getByTestId(
@@ -41,11 +41,11 @@ test.describe('Send inscription', () => {
   test.describe('validation errors', () => {
     test('should show the insufficient balance error', async ({
       globalPage,
-      homePage,
       sendPage,
+      networkPage,
     }) => {
       await mockTestnetTestAccountEmptyUtxosRequests(globalPage.page);
-      await homePage.selectTestnet();
+      await networkPage.selectTestnet();
       await sendPage.selectInscription();
 
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
@@ -58,8 +58,8 @@ test.describe('Send inscription', () => {
       test.expect(errorLabel).toContain(FormErrorMessages.InsufficientFunds);
     });
 
-    test('should show invalid address error', async ({ homePage, sendPage }) => {
-      await homePage.selectTestnet();
+    test('should show invalid address error', async ({ sendPage, networkPage }) => {
+      await networkPage.selectTestnet();
       await sendPage.selectInscription();
 
       await sendPage.recipientInput.fill('123');
@@ -74,8 +74,8 @@ test.describe('Send inscription', () => {
 
     test('should show non-zero offset inscription error', async ({
       globalPage,
-      homePage,
       sendPage,
+      networkPage,
     }) => {
       await mockTestnetTestAccountInscriptionsRequests(globalPage.page, [
         {
@@ -83,7 +83,7 @@ test.describe('Send inscription', () => {
           owner_wallet_addr: TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS,
         },
       ]);
-      await homePage.selectTestnet();
+      await networkPage.selectTestnet();
       await sendPage.selectInscription();
 
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
@@ -99,14 +99,14 @@ test.describe('Send inscription', () => {
 
   test('should show multiple inscription on utxo error', async ({
     globalPage,
-    homePage,
     sendPage,
+    networkPage,
   }) => {
     await mockTestnetTestAccountInscriptionsRequests(globalPage.page, [
       mockInscriptionResp,
       mockInscriptionResp,
     ]);
-    await homePage.selectTestnet();
+    await networkPage.selectTestnet();
     await sendPage.selectInscription();
 
     await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);

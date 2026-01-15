@@ -17,6 +17,7 @@ interface GeneralSettingsButtonProps {
   title: string;
   onClick(): void;
   tooltipText?: string;
+  ['data-testid']?: string;
 }
 
 interface SimpleSettingsButtonProps extends GeneralSettingsButtonProps {
@@ -32,6 +33,7 @@ export function SettingsButton({
   title,
   onClick,
   tooltipText,
+
   ...props
 }: SimpleSettingsButtonProps | SwitchSettingsButtonProps) {
   const avatarIcon = icon ?? undefined;
@@ -47,6 +49,7 @@ export function SettingsButton({
         borderRadius: 'xs',
       })}
       onClick={onClick}
+      data-testid={props['data-testid']}
     >
       {props.variant === 'switch' && (
         <ItemLayoutWithButtons

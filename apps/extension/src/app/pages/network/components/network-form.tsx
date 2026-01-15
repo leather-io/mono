@@ -1,5 +1,4 @@
 import { NetworkSelectors } from '@tests/selectors/network.selectors';
-import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { Form, Formik } from 'formik';
 import { Flex, styled } from 'leather-styles/jsx';
 
@@ -81,7 +80,7 @@ export function NetworkForm({ isEditNetworkMode }: NetworkFormProps) {
             >
               <Button
                 disabled={loading}
-                data-testid={SettingsSelectors.AddNewNetworkBtn}
+                data-testid={NetworkSelectors.AddNetworkBtn}
                 fullWidth
                 variant="outline"
                 onClick={() => {

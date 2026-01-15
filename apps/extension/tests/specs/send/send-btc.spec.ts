@@ -9,14 +9,16 @@ import { BESTINSLOT_API_BASE_URL_TESTNET, BtcFeeType } from '@leather.io/models'
 import { test } from '../../fixtures/fixtures';
 
 test.describe('send btc', () => {
-  test.beforeEach(async ({ extensionId, globalPage, homePage, onboardingPage, sendPage }) => {
-    await globalPage.setupAndUseApiCalls(extensionId);
-    await onboardingPage.signInWithTestAccount(extensionId);
-    await homePage.selectTestnet();
-    await homePage.sendButton.click();
-    await sendPage.selectBtcAndGoToSendForm();
-    await sendPage.waitForSendPageReady();
-  });
+  test.beforeEach(
+    async ({ extensionId, globalPage, homePage, onboardingPage, sendPage, networkPage }) => {
+      await globalPage.setupAndUseApiCalls(extensionId);
+      await onboardingPage.signInWithTestAccount(extensionId);
+      await networkPage.selectTestnet();
+      await homePage.sendButton.click();
+      await sendPage.selectBtcAndGoToSendForm();
+      await sendPage.waitForSendPageReady();
+    }
+  );
 
   test.describe('btc send form', () => {
     test('that it shows preview of tx details to be confirmed', async ({ sendPage }) => {

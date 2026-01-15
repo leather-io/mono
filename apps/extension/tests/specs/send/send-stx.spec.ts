@@ -18,14 +18,16 @@ import { test } from '../../fixtures/fixtures';
 const amount = '0.000001';
 
 test.describe('send stx: tests on testnet', () => {
-  test.beforeEach(async ({ extensionId, globalPage, homePage, onboardingPage, sendPage }) => {
-    await globalPage.setupAndUseApiCalls(extensionId);
+  test.beforeEach(
+    async ({ extensionId, globalPage, homePage, onboardingPage, sendPage, networkPage }) => {
+      await globalPage.setupAndUseApiCalls(extensionId);
 
-    await onboardingPage.signInWithTestAccount(extensionId);
-    await homePage.selectTestnet();
-    await homePage.sendButton.click();
-    await sendPage.selectStxAndGoToSendForm();
-  });
+      await onboardingPage.signInWithTestAccount(extensionId);
+      await networkPage.selectTestnet();
+      await homePage.sendButton.click();
+      await sendPage.selectStxAndGoToSendForm();
+    }
+  );
 
   test('that we show high fee warning in case of high custom fee', async ({ sendPage, page }) => {
     const highFeeAmount = HIGH_FEE_AMOUNT_STX + 1;

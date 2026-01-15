@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 
+import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { styled } from 'leather-styles/jsx';
 
 import { ChainId } from '@leather.io/models';
@@ -22,6 +23,7 @@ export function NetworkSwitcherBadge() {
       }}
     >
       <NetworkModeBadge
+        data-testid={HomePageSelectors.NetworkSwitcher}
         isVisible={networkBadgeAlwaysOn || chain.stacks.chainId === ChainId.Testnet}
         name={chainName}
       />
