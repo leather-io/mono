@@ -54,25 +54,27 @@ export const SwitchAccountSheet = memo(function SwitchAccountSheet({
       onClose={onClose}
       wrapChildren={false}
     >
+      {whenWallet({
+        software: null,
+        ledger: (
+          <Link
+            href="https://app.leather.io/support/guide/why-your-ledger-account-might-not-show-up-in-leather"
+            target="_blank"
+            position="sticky"
+            top="0"
+            zIndex="10"
+            display="block"
+            textDecoration="none"
+            _hover={{ textDecoration: 'none' }}
+          >
+            <Callout variant="info" icon={<InfoCircleIcon variant="small" />}>
+              Only the first Stacks account matches Ledger Live. Additional accounts may not appear
+              here.
+            </Callout>
+          </Link>
+        ),
+      })}
       <VirtuosoWrapperSheet>
-        {whenWallet({
-          software: null,
-          ledger: (
-            <Box p="0">
-              <Callout
-                variant="info"
-                icon={
-                  <Link href="https://google.com">
-                    <InfoCircleIcon variant="small" />
-                  </Link>
-                }
-              >
-                Stacks addresses beyond the first account are derived differently than by Ledger
-                Live
-              </Callout>
-            </Box>
-          ),
-        })}
         <Box flex="1">
           <Virtuoso
             initialTopMostItemIndex={whenWallet({ ledger: 0, software: currentAccountIndex })}
