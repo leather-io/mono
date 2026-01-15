@@ -1,6 +1,6 @@
 import type { UseQueryOptions } from '@tanstack/react-query';
 
-import { oneMinInMs } from '@leather.io/utils';
+import { minutesInMs, oneMinInMs } from '@leather.io/utils';
 
 /**
  * Standard query options for balance queries.
@@ -44,4 +44,13 @@ export const marketHistoryQueryOptions = {
   retryOnMount: false,
   staleTime: 30000,
   gcTime: 30000,
+} satisfies Partial<UseQueryOptions>;
+
+export const collectiblesQueryOptions = {
+  refetchOnReconnect: false,
+  refetchOnWindowFocus: false,
+  refetchOnMount: true,
+  retryOnMount: false,
+  staleTime: minutesInMs(5),
+  gcTime: minutesInMs(5),
 } satisfies Partial<UseQueryOptions>;
