@@ -1,6 +1,6 @@
 import { defineSemanticTokens } from '@pandacss/dev';
 
-import { semanticTokens as leatherSemanticTokens } from '@leather.io/tokens';
+import { semanticTokens as leatherSemanticTokens } from '@leather.io/tokens/config';
 
 export const semanticTokens = defineSemanticTokens({
   ...leatherSemanticTokens,
