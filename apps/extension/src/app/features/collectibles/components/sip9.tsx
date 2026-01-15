@@ -23,7 +23,7 @@ export function Sip9({
   onPress,
 }: Sip9Props) {
   const [mediaInfo, setMediaInfo] = useState<Sip9MediaInfo>({
-    contentType: null,
+    contentType: '',
     isVideo: false,
     isImage: false,
     isAudio: false,
@@ -34,48 +34,37 @@ export function Sip9({
     if (contentType) return;
     let cancelled = false;
     void getSip9MediaInfo(contentUrl).then(info => {
-      if (!cancelled) setMediaInfo(info);
+      if (!cancelled) {
+        setMediaInfo(info);
+      }
     });
+
     return () => {
       cancelled = true;
     };
   }, [contentType, contentUrl]);
 
-  function renderImage() {
+  const resolvedContentType = contentType || mediaInfo.contentType;
+  const isVideo = mediaInfo.isVideo;
+  const isImage = mediaInfo.isImage;
+  const isAudio = mediaInfo.isAudio;
+  const isGltf = resolvedContentType === 'model/gltf-binary';
+
+  if (isVideo) {
+    return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
+  }
+
+  if (isImage) {
     return <CollectibleImage src={encodedSrc} alt={name} height={height} onPress={onPress} />;
   }
 
-  switch (contentType) {
-    case 'video/mp4':
-      return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
-    case 'image/png':
-    case 'image/jpeg':
-    case 'image/gif':
-    case 'image/webp':
-    case 'image/svg+xml':
-    case 'image/bmp':
-    case 'image/tiff':
-    case 'image/avif':
-    case 'application/octet-stream':
-      return renderImage();
-    case 'audio/mpeg':
-    case 'audio/wav':
-    case 'audio/ogg':
-    case 'audio/mp3':
-    case 'audio/aac':
-    case 'audio/flac':
-    case 'audio/webm':
-      return <CollectibleAudio src={encodedSrc} alt={name} size={height} onPress={onPress} />;
-    case 'model/gltf+json':
-    case 'model/gltf-binary':
-      return <CollectibleGltf src={encodedSrc} height={height} onPress={onPress} />;
-    case 'text/plain':
-      return renderImage();
-    default:
-      // content type is empty or unknown, check if it's a video
-      if (mediaInfo.isVideo) {
-        return <CollectibleVideo src={encodedSrc} alt={name} height={height} onPress={onPress} />;
-      }
-      return renderImage();
+  if (isAudio) {
+    return <CollectibleAudio src={encodedSrc} name={name} height={height} onPress={onPress} />;
   }
+
+  if (isGltf) {
+    return <CollectibleGltf src={encodedSrc} name={name} height={height} onPress={onPress} />;
+  }
+
+  return null;
 }
