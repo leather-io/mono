@@ -2,6 +2,7 @@ import { GAMMA_URL, HIRO_EXPLORER_URL, ORD_IO_URL } from '@leather.io/constants'
 import type {
   BitcoinNetwork,
   InscriptionAsset,
+  Money,
   Sip9Asset,
   Sip9Attribute,
   StampAsset,
@@ -67,6 +68,8 @@ export interface Sip9Info {
   contractUrl?: string;
   contentType?: string;
   attributes: Sip9Attribute[];
+  floorPrice?: Money;
+  latestSale?: Money;
 }
 
 export function getSip9Info(asset: Sip9Asset): Sip9Info {
@@ -83,6 +86,8 @@ export function getSip9Info(asset: Sip9Asset): Sip9Info {
     contractUrl: getHiroExplorerContractUrl(asset.contractId),
     contentType: asset.content?.contentType,
     attributes: filterSip9Attributes(asset.attributes),
+    floorPrice: collection?.floorPrice,
+    latestSale: collection?.latestSale,
   };
 }
 

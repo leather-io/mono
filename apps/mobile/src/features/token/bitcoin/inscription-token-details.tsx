@@ -6,8 +6,7 @@ import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 import dayjs from 'dayjs';
 
-import { ORD_IO_URL } from '@leather.io/constants';
-import { getBitcoinExplorerLink } from '@leather.io/features';
+import { getInscriptionInfo } from '@leather.io/features';
 import { type InscriptionAsset } from '@leather.io/models';
 import { truncateMiddle } from '@leather.io/utils';
 
@@ -20,57 +19,57 @@ interface InscriptionTokenDetailsProps {
 }
 
 export function InscriptionTokenDetails({ asset }: InscriptionTokenDetailsProps) {
-  const {
-    number,
-    title,
-    chain,
-    mimeType,
-    protocol,
-    genesisTimestamp,
-    genesisBlockHeight,
-    txid,
-    value: outputValue,
-  } = asset;
-
   const { networkPreference } = useSettings();
   const bitcoinNetwork = networkPreference.chain.bitcoin.bitcoinNetwork;
 
-  const mempoolExplorerTxUrl = getBitcoinExplorerLink({
-    id: txid,
-    type: 'tx',
-    networkPreference: bitcoinNetwork,
-  });
+  const info = getInscriptionInfo(asset, bitcoinNetwork);
+  const hasOutputValue = info.outputValue && Number(info.outputValue) > 0;
 
   const height = useCollectibleHeight();
   return (
-    <Collectible name={title} details={asset}>
+    <Collectible name={info.title} details={asset}>
       <TokenDetailsCard>
         <Inscription item={asset} height={height} />
       </TokenDetailsCard>
-      {!!outputValue && <InscriptionTokenStats outputValue={outputValue} />}
+      {hasOutputValue && <InscriptionTokenStats outputValue={info.outputValue} />}
       <TokenDetailsCard title={t`Collectible Info`}>
         <SummaryTableRoot>
-          <SummaryTableItem
-            label={t`Name`}
-            value={<ExternalLink url={`${ORD_IO_URL}/${number}`} label={title} />}
-          />
-          <SummaryTableItem label={t`Layer`} value={getChainDisplayLabel(chain)} />
-          <SummaryTableItem label={t`Protocol`} value={getProtocolDisplayLabel(protocol)} />
-          <SummaryTableItem
-            label={t`Genesis time`}
-            value={dayjs(genesisTimestamp * 1000).format('YYYY-MM-DD HH:mm [UTC]')}
-          />
-          <SummaryTableItem label={t`Genesis block`} value={`#${genesisBlockHeight}`} />
-          <SummaryTableItem
-            label={t`Transaction ID`}
-            value={
-              <ExternalLink
-                url={mempoolExplorerTxUrl || undefined}
-                label={truncateMiddle(txid ?? '', 8)}
-              />
-            }
-          />
-          <SummaryTableItem label={t`File type`} value={mimeType ?? ''} />
+          {info.title && (
+            <SummaryTableItem
+              label={t`Name`}
+              value={
+                info.ordExplorerUrl ? (
+                  <ExternalLink url={info.ordExplorerUrl} label={info.title} />
+                ) : (
+                  info.title
+                )
+              }
+            />
+          )}
+          <SummaryTableItem label={t`Layer`} value={getChainDisplayLabel(asset.chain)} />
+          <SummaryTableItem label={t`Protocol`} value={getProtocolDisplayLabel(asset.protocol)} />
+          {info.genesisTimestamp && (
+            <SummaryTableItem
+              label={t`Genesis time`}
+              value={dayjs(info.genesisTimestamp * 1000).format('YYYY-MM-DD HH:mm [UTC]')}
+            />
+          )}
+          {info.genesisBlockHeight && (
+            <SummaryTableItem label={t`Genesis block`} value={`#${info.genesisBlockHeight}`} />
+          )}
+          {asset.txid && (
+            <SummaryTableItem
+              label={t`Transaction ID`}
+              value={
+                info.txExplorerUrl ? (
+                  <ExternalLink url={info.txExplorerUrl} label={truncateMiddle(asset.txid, 8)} />
+                ) : (
+                  truncateMiddle(asset.txid, 8)
+                )
+              }
+            />
+          )}
+          {info.mimeType && <SummaryTableItem label={t`File type`} value={info.mimeType} />}
         </SummaryTableRoot>
       </TokenDetailsCard>
     </Collectible>
