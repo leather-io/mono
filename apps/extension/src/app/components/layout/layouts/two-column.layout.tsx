@@ -10,6 +10,9 @@ interface TwoColumnLayoutProps {
   wideChild?: boolean;
 }
 
+/**
+ * @deprecated use TwoColumnLayout from two-column-current.layout.tsx
+ */
 export function TwoColumnLayout({
   title,
   content,

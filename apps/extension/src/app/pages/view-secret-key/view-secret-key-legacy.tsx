@@ -9,6 +9,9 @@ import { OnboardingHeader } from '@app/features/container/headers/onboarding.hea
 import { SecretKey } from '@app/features/secret-key-displayer/secret-key-displayer';
 import { useDefaultWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 
+/**
+ * @deprecated
+ */
 export function ViewSecretKey() {
   const defaultWalletSecretKey = useDefaultWalletSecretKey();
   const [showSecretKey, setShowSecretKey] = useState(false);
