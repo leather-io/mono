@@ -33,6 +33,7 @@ import { AddNetwork as CurrentAddNetwork } from '@app/pages/network/add-network'
 import { EditNetwork as CurrentEditNetwork } from '@app/pages/network/edit-network';
 import { SelectNetwork } from '@app/pages/network/select-network';
 import { BackUpSecretKeyPage } from '@app/pages/onboarding/back-up-secret-key/back-up-secret-key';
+import { SetPasswordPage } from '@app/pages/onboarding/set-password/set-password';
 import { ForgotPassword } from '@app/pages/onboarding/sign-in/forgot-password';
 import { SignIn } from '@app/pages/onboarding/sign-in/sign-in';
 import { WelcomePage } from '@app/pages/onboarding/welcome/welcome';
@@ -234,12 +235,11 @@ function useAppRoutes() {
           />
           <Route
             path={RouteUrls.SetPassword}
-            lazy={async () => {
-              const { SetPasswordRoute } = await import(
-                '@app/pages/onboarding/set-password/set-password'
-              );
-              return { Component: SetPasswordRoute };
-            }}
+            element={
+              <OnboardingGate>
+                <SetPasswordPage />
+              </OnboardingGate>
+            }
           />
 
           <Route

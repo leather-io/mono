@@ -8,6 +8,12 @@ import { ChevronRightIcon } from '../../icons/chevron-right-icon.web';
 import { Flag } from '../flag/flag.web';
 import { pressableCaptionStyles, pressableChevronStyles } from '../pressable/pressable.web';
 
+function componentWithFallback(component: ReactNode, fallback: ReactNode) {
+  if (!component) return null;
+  if (isValidElement(component)) return component;
+  return fallback;
+}
+
 interface ItemLayoutProps {
   captionLeft: ReactNode;
   captionRight?: ReactNode;
@@ -40,9 +46,8 @@ export function ItemLayout({
         whiteSpace="nowrap"
       >
         <HStack gap="space.01">
-          {isValidElement(titleLeft) ? (
-            titleLeft
-          ) : (
+          {componentWithFallback(
+            titleLeft,
             <styled.span
               textStyle="label.02"
               maxWidth={{ base: '175px', md: 'unset' }}
@@ -58,9 +63,8 @@ export function ItemLayout({
             </Box>
           )}
         </HStack>
-        {isValidElement(captionLeft) ? (
-          captionLeft
-        ) : (
+        {componentWithFallback(
+          captionLeft,
           <styled.span className={pressableCaptionStyles} textStyle="caption.01">
             {captionLeft}
           </styled.span>
@@ -68,14 +72,12 @@ export function ItemLayout({
       </Stack>
       <HStack gap={gap}>
         <Stack alignItems="end" gap={gap}>
-          {isValidElement(titleRight) ? (
-            titleRight
-          ) : (
+          {componentWithFallback(
+            titleRight,
             <styled.span textStyle="label.02">{titleRight}</styled.span>
           )}
-          {isValidElement(captionRight) ? (
-            captionRight
-          ) : (
+          {componentWithFallback(
+            captionRight,
             <styled.span className={pressableCaptionStyles} textStyle="caption.01">
               {captionRight}
             </styled.span>
