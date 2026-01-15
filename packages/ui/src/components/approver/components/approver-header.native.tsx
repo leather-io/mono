@@ -13,7 +13,7 @@ export function ApproverHeader({ title, showLargeFavicon }: ApproverHeaderProps)
   const { requester } = useApproverContext();
 
   return (
-    <Box px="5" pt="6" pb="5" backgroundColor="ink.background-primary" marginBottom={-1}>
+    <Box px="5" pt="6" pb="5" backgroundColor="ink.background-primary" marginBottom="-1">
       {requester && showLargeFavicon && <LargeFavicon origin={requester} />}
       <Box gap="2">
         <Text variant="heading03">{title}</Text>
