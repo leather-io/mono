@@ -16,7 +16,7 @@ export function ActivityLoading({ header, count }: ActivityLoadingProps) {
   const resolvedCount = count ?? Math.ceil(height / estimatedRowHeight) + 2;
   const skeletonRows = Array.from({ length: resolvedCount }, (_, index) => index);
   return (
-    <Screen.FlashList
+    <Screen.List
       data={skeletonRows}
       keyExtractor={index => `activity-skeleton-${index}`}
       renderItem={() => <LoadingItem />}
