@@ -1,5 +1,46 @@
 # Claude Instructions
 
+## Architecture
+
+This is a Turborepo monorepo following **CLEAN architecture** with clear layer boundaries:
+
+```
+┌────────────────────────────────────────────┐
+│  Presentation Layer                        │
+│  ├─ apps/ (extension, mobile, web)         │
+│  ├─ ui (components, icons, styles)         │
+│  └─ features (view models, UI transforms)  │
+├────────────────────────────────────────────┤
+│  Application Layer                         │
+│  ├─ queries (React Query configs)          │
+│  └─ services (orchestration + infra only)  │
+├────────────────────────────────────────────┤
+│  Domain Layer (peers)                      │
+│  ├─ domain (business logic + types)        │
+│  ├─ bitcoin (protocol utilities)           │
+│  └─ stacks (protocol utilities)            │
+├────────────────────────────────────────────┤
+│  Foundation                                │
+│  └─ utils, constants, tokens, crypto       │
+└────────────────────────────────────────────┘
+```
+
+### Key packages
+
+- `@leather.io/domain` — Pure business logic and domain types (target for all domain logic)
+- `@leather.io/services` — Orchestration only: API calls, DI, caching (no pure utils)
+- `@leather.io/bitcoin` / `@leather.io/stacks` — Protocol-specific utilities
+- `@leather.io/utils` — Generic utilities (money, formatting, guards)
+- `@leather.io/ui` — Shared React components
+
+### Where does new code go?
+
+- **Pure business logic** → `@leather.io/domain` (organized by feature: `activity/`, `balances/`, `fees/`, etc.)
+- **Orchestration** (API calls, DI, caching) → `@leather.io/services`
+- **Protocol utilities** → `@leather.io/bitcoin` or `@leather.io/stacks`
+- **Generic utilities** → `@leather.io/utils`
+- **UI components** → `@leather.io/ui`
+
 ## Code style
 
 - Don't use enums.
