@@ -8,16 +8,18 @@ import { renderUseSwapState } from './test-utils/render';
 
 describe('amount presets', () => {
   describe('setting preset percentages', () => {
-    it('sets base amount to 25%, 50%, 75%, and 100% of available balance in crypto mode', () => {
+    it('sets base amount to 25%, 50%, 75%, and 100% of available balance in crypto mode', async () => {
       const btcAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { crypto: 100_000_000, quote: 50_000_00 },
       });
       const result = renderUseSwapState({
         baseSwapAssets: [btcAsset],
+        maxSpendAmount: 100_000_000,
       });
 
       act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
       expect(result.current.state.inputCurrencyMode).toBe('crypto');
 
       act(() => result.current.actions.setBaseAmountByPercentage(0.25));
@@ -33,7 +35,7 @@ describe('amount presets', () => {
       expect(result.current.state.baseAmount).toBe('1');
     });
 
-    it('sets base amount to 25%, 50%, 75%, and 100% of available balance in quote mode', () => {
+    it('sets base amount to 25%, 50%, 75%, and 100% of available balance in quote mode', async () => {
       const btcAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { crypto: 100_000_000, quote: 50_000_00 },
@@ -41,9 +43,11 @@ describe('amount presets', () => {
 
       const result = renderUseSwapState({
         baseSwapAssets: [btcAsset],
+        maxSpendAmount: 100_000_000,
       });
 
       act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
       act(() => result.current.actions.toggleInputCurrencyMode());
       expect(result.current.state.inputCurrencyMode).toBe('quote');
 
@@ -80,26 +84,34 @@ describe('amount presets', () => {
       expect(result.current.state.baseAmount).toBe('0');
     });
 
-    it('handles zero available balance correctly', () => {
+    it('handles zero available balance correctly', async () => {
       const zeroBalanceAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { crypto: 0, quote: 0 },
       });
-      const result = renderUseSwapState();
+      const result = renderUseSwapState({
+        baseSwapAssets: [zeroBalanceAsset],
+        maxSpendAmount: 0,
+      });
       act(() => result.current.actions.setBaseSwapAsset(zeroBalanceAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
       act(() => result.current.actions.setBaseAmountByPercentage(0.5));
       expect(result.current.state.baseAmount).toBe('0');
       act(() => result.current.actions.setBaseAmountByPercentage(1));
       expect(result.current.state.baseAmount).toBe('0');
     });
 
-    it('preserves precision with very small balances', () => {
+    it('preserves precision with very small balances', async () => {
       const smallBalanceAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { crypto: 100, quote: 5 },
       });
-      const result = renderUseSwapState();
+      const result = renderUseSwapState({
+        baseSwapAssets: [smallBalanceAsset],
+        maxSpendAmount: 100,
+      });
       act(() => result.current.actions.setBaseSwapAsset(smallBalanceAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
       act(() => result.current.actions.setBaseAmountByPercentage(0.5));
       expect(result.current.state.baseAmount).toBe('0.0000005');
       act(() => result.current.actions.setBaseAmountByPercentage(0.25));
@@ -108,13 +120,17 @@ describe('amount presets', () => {
       expect(result.current.state.baseAmount).toBe('0.000001');
     });
 
-    it('handles very large balances without overflow', () => {
+    it('handles very large balances without overflow', async () => {
       const largeBalanceAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { crypto: 2100000000000000, quote: 105000000000000 },
       });
-      const result = renderUseSwapState();
+      const result = renderUseSwapState({
+        baseSwapAssets: [largeBalanceAsset],
+        maxSpendAmount: 2100000000000000,
+      });
       act(() => result.current.actions.setBaseSwapAsset(largeBalanceAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
       act(() => result.current.actions.setBaseAmountByPercentage(0.25));
       expect(result.current.state.baseAmount).toBe('5250000');
       act(() => result.current.actions.setBaseAmountByPercentage(0.5));
@@ -123,15 +139,17 @@ describe('amount presets', () => {
       expect(result.current.state.baseAmount).toBe('21000000');
     });
 
-    it('maintains precision with very small percentage calculations', () => {
+    it('maintains precision with very small percentage calculations', async () => {
       const precisionAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { crypto: 546, quote: 6 },
       });
       const result = renderUseSwapState({
         baseSwapAssets: [precisionAsset],
+        maxSpendAmount: 546,
       });
       act(() => result.current.actions.setBaseSwapAsset(precisionAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
       act(() => result.current.actions.setBaseAmountByPercentage(0.25));
 
       const expectedValue = 0.00000546 * 0.25;
@@ -157,10 +175,9 @@ describe('amount presets', () => {
         marketData,
       });
 
-      act(() => {
-        result.current.actions.setBaseSwapAsset(btcAsset);
-        result.current.actions.setBaseAmount('0.1');
-      });
+      act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
+      act(() => result.current.actions.setBaseAmount('0.1'));
       await waitFor(() => expect(result.current.state.secondaryAmount.status).toBe('success'));
 
       act(() => result.current.actions.setBaseAmountByPercentage(0.5));
@@ -186,10 +203,9 @@ describe('amount presets', () => {
         baseSwapAssets: [btcAsset],
         marketData,
       });
-      act(() => {
-        result.current.actions.setBaseSwapAsset(btcAsset);
-        result.current.actions.setBaseAmount('0.1');
-      });
+      act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
+      act(() => result.current.actions.setBaseAmount('0.1'));
       await waitFor(() => expect(result.current.state.secondaryAmount.status).toBe('success'));
 
       act(() => result.current.actions.toggleInputCurrencyMode());
@@ -217,12 +233,12 @@ describe('amount presets', () => {
       const result = renderUseSwapState({
         baseSwapAssets: [btcAsset],
         marketData,
+        maxSpendAmount: 100_000_000,
       });
 
-      act(() => {
-        result.current.actions.setBaseSwapAsset(btcAsset);
-        result.current.actions.setBaseAmount('0.1');
-      });
+      act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
+      act(() => result.current.actions.setBaseAmount('0.1'));
       await waitFor(() => expect(result.current.state.secondaryAmount.status).toBe('success'));
       expect(result.current.state.inputCurrencyMode).toBe('crypto');
 
@@ -240,7 +256,7 @@ describe('amount presets', () => {
 
 describe('isSendingMax flag', () => {
   describe('basic isSendingMax detection', () => {
-    it('returns true when amount equals 100% in crypto mode', () => {
+    it('returns true when amount equals 100% in crypto mode', async () => {
       const btcAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { crypto: 100_000_000, quote: 50_000_00 },
@@ -250,6 +266,7 @@ describe('isSendingMax flag', () => {
       });
 
       act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
       expect(result.current.state.inputCurrencyMode).toBe('crypto');
 
       act(() => result.current.actions.setBaseAmountByPercentage(1));
@@ -269,10 +286,9 @@ describe('isSendingMax flag', () => {
         baseSwapAssets: [btcAsset],
         marketData,
       });
-      act(() => {
-        result.current.actions.setBaseSwapAsset(btcAsset);
-        result.current.actions.setBaseAmount('0.1');
-      });
+      act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
+      act(() => result.current.actions.setBaseAmount('0.1'));
       await waitFor(() => expect(result.current.state.secondaryAmount.status).toBe('success'));
 
       act(() => result.current.actions.toggleInputCurrencyMode());
@@ -282,7 +298,7 @@ describe('isSendingMax flag', () => {
       expect(result.current.state.isSendingMax).toBe(true);
     });
 
-    it('returns false when amount is less than 100%', () => {
+    it('returns false when amount is less than 100%', async () => {
       const btcAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { crypto: 100_000_000, quote: 50_000_00 },
@@ -292,6 +308,7 @@ describe('isSendingMax flag', () => {
       });
 
       act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
       act(() => result.current.actions.setBaseAmountByPercentage(0.25));
       expect(result.current.state.isSendingMax).toBe(false);
 
@@ -304,7 +321,7 @@ describe('isSendingMax flag', () => {
   });
 
   describe('isSendingMax with manual input', () => {
-    it('becomes true when manually entering exact available balance in crypto mode', () => {
+    it('becomes true when manually entering exact spendable amount in crypto mode', async () => {
       const btcAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { crypto: 12345678, quote: 617284 },
@@ -314,13 +331,14 @@ describe('isSendingMax flag', () => {
       });
 
       act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
       expect(result.current.state.inputCurrencyMode).toBe('crypto');
 
-      act(() => result.current.actions.setBaseAmount('0.12345678'));
+      act(() => result.current.actions.setBaseAmount('2'));
       expect(result.current.state.isSendingMax).toBe(true);
     });
 
-    it('becomes true when manually entering exact available balance in quote mode', async () => {
+    it('becomes true when manually entering exact spendable amount in quote mode', async () => {
       const btcAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { crypto: 100_000_000, quote: 50_000_00 },
@@ -333,19 +351,18 @@ describe('isSendingMax flag', () => {
         baseSwapAssets: [btcAsset],
         marketData,
       });
-      act(() => {
-        result.current.actions.setBaseSwapAsset(btcAsset);
-        result.current.actions.setBaseAmount('0.1');
-      });
+      act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
+      act(() => result.current.actions.setBaseAmount('0.1'));
       await waitFor(() => expect(result.current.state.secondaryAmount.status).toBe('success'));
       act(() => result.current.actions.toggleInputCurrencyMode());
       expect(result.current.state.inputCurrencyMode).toBe('quote');
 
-      act(() => result.current.actions.setBaseAmount('50000'));
+      act(() => result.current.actions.setBaseAmount('100000'));
       expect(result.current.state.isSendingMax).toBe(true);
     });
 
-    it('becomes false when editing amount down from max', () => {
+    it('becomes false when editing amount down from max', async () => {
       const btcAsset = createAccountSwapAsset({
         asset: defaultBtcAsset,
         balance: { crypto: 100_000_000, quote: 50_000_00 },
@@ -355,6 +372,7 @@ describe('isSendingMax flag', () => {
       });
 
       act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
       act(() => result.current.actions.setBaseAmountByPercentage(1));
       expect(result.current.state.isSendingMax).toBe(true);
 
@@ -375,10 +393,9 @@ describe('isSendingMax flag', () => {
         baseSwapAssets: [btcAsset],
         marketData,
       });
-      act(() => {
-        result.current.actions.setBaseSwapAsset(btcAsset);
-        result.current.actions.setBaseAmount('0.1');
-      });
+      act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+      await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
+      act(() => result.current.actions.setBaseAmount('0.1'));
       await waitFor(() => expect(result.current.state.secondaryAmount.status).toBe('success'));
 
       act(() => result.current.actions.setBaseAmountByPercentage(1));
@@ -391,22 +408,24 @@ describe('isSendingMax flag', () => {
 });
 
 describe('preset and isSendingMax integration', () => {
-  it('sets isSendingMax to true after selecting MAX preset', () => {
+  it('sets isSendingMax to true after selecting MAX preset', async () => {
     const btcAsset = createAccountSwapAsset({
       asset: defaultBtcAsset,
       balance: { crypto: 100_000_000, quote: 50_000_00 },
     });
     const result = renderUseSwapState({
       baseSwapAssets: [btcAsset],
+      maxSpendAmount: 100_000_000,
     });
 
     act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+    await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
     act(() => result.current.actions.setBaseAmountByPercentage(1));
     expect(result.current.state.baseAmount).toBe('1');
     expect(result.current.state.isSendingMax).toBe(true);
   });
 
-  it('sets isSendingMax to false after selecting a preset', () => {
+  it('sets isSendingMax to false after selecting a preset', async () => {
     const btcAsset = createAccountSwapAsset({
       asset: defaultBtcAsset,
       balance: { crypto: 100_000_000, quote: 50_000_00 },
@@ -415,11 +434,12 @@ describe('preset and isSendingMax integration', () => {
       baseSwapAssets: [btcAsset],
     });
     act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+    await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
     act(() => result.current.actions.setBaseAmountByPercentage(0.25));
     expect(result.current.state.isSendingMax).toBe(false);
   });
 
-  it('updates isSendingMax when switching between assets', () => {
+  it('updates isSendingMax when switching between assets', async () => {
     const btcAsset = createAccountSwapAsset({
       asset: defaultBtcAsset,
       balance: { crypto: 100_000_000, quote: 50_000_00 },
@@ -432,6 +452,7 @@ describe('preset and isSendingMax integration', () => {
       baseSwapAssets: [btcAsset, stxAsset],
     });
     act(() => result.current.actions.setBaseSwapAsset(btcAsset));
+    await waitFor(() => expect(result.current.state.isInputReady).toBe(true));
     act(() => result.current.actions.setBaseAmountByPercentage(1));
     expect(result.current.state.isSendingMax).toBe(true);
 

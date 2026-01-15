@@ -212,7 +212,13 @@ export function createStubBitcoinTransactionFeesService({
   } as unknown as BitcoinTransactionFeesService;
 }
 
-export function createStubBitcoinCoinSelectionService() {
+interface StubBitcoinCoinSelectionServiceConfig {
+  maxSpendAmount?: number;
+}
+
+export function createStubBitcoinCoinSelectionService({
+  maxSpendAmount = 200_000_000,
+}: StubBitcoinCoinSelectionServiceConfig = {}) {
   return {
     performCoinSelection() {
       return Promise.resolve({
@@ -233,7 +239,7 @@ export function createStubBitcoinCoinSelectionService() {
     },
     calculateMaxSpend() {
       return Promise.resolve({
-        amount: createMoney(200_000_000, 'BTC'),
+        amount: createMoney(maxSpendAmount, 'BTC'),
         fee: createMoney(1000, 'BTC'),
         estimatedTxSize: 100,
       });

@@ -19,6 +19,7 @@ describe('initialization', () => {
       selectingAsset: null,
       assetFlippingAllowed: false,
       isSendingMax: false,
+      isInputReady: false,
       pairReconciliation: { base: 'pending', target: 'pending' },
       quoteCurrencyPreference: 'USD',
       quotePolicy: 'best',
