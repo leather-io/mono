@@ -14,7 +14,13 @@ import { formatActivityCaption } from './activity-timestamp';
 import type { ActivityView } from './types';
 
 function getActivityKey(activity: Activity): string {
-  if ('txid' in activity) return activity.txid;
+  if (activity.level === 'account') {
+    const accountKey = `${activity.account.fingerprint}-${activity.account.accountIndex}`;
+    if ('txid' in activity) {
+      return `${accountKey}-${activity.txid}-${activity.type}`;
+    }
+    return `${accountKey}-${activity.type}-${activity.timestamp}`;
+  }
   return `${activity.type}-${activity.timestamp}`;
 }
 
