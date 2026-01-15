@@ -86,6 +86,12 @@ This is a Turborepo monorepo following **CLEAN architecture** with clear layer b
   ComponentNameProps.
 - Destructure props directly in the signature: `function Component({ propA, propB }: ComponentProps)`
 
+## Performance optimization
+
+- **Avoid premature optimization**: Do not use `useMemo`, `useCallback`, or `memo` unless there is a measured performance issue.
+- React is fast by default. Most re-renders are cheap and these hooks add complexity/maintenance burden.
+- Only optimize when profiling shows a real problem, or when passing callbacks to heavily-rendered children.
+
 ## File naming
 
 - Use snake case file names

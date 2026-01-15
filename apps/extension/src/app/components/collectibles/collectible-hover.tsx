@@ -20,10 +20,9 @@ export function CollectibleHover({
       display="flex"
       height="100%"
       left="0px"
-      opacity="0"
+      opacity={isHovered ? 'inherit' : '0'}
       overflow="hidden"
       position="absolute"
-      style={{ opacity: isHovered ? 'inherit' : '0' }}
       top="0px"
       width="100%"
     >

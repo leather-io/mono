@@ -29,6 +29,7 @@ interface FeatureFlags {
   releaseOnramperBuy: boolean;
   releaseOnramperSell: boolean;
   extensionRevamp: boolean;
+  collectiblesRevamp: boolean;
 }
 
 export function useFlags() {
