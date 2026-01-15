@@ -11,6 +11,8 @@ import {
 import { deriveStxPrivateKey, generateWallet } from '@stacks/wallet-sdk';
 import { atom } from 'jotai';
 
+import { extractAccountIndexFromPath, extractAddressIndexFromPath } from '@leather.io/crypto';
+import { makeStacksAccountDerivationPath } from '@leather.io/stacks';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { DATA_DERIVATION_PATH, deriveStacksSalt } from '@shared/crypto/stacks/stacks-address-gen';
@@ -25,6 +27,7 @@ import {
 import { selectDefaultWalletStacksKeys } from '@app/store/ledger/stacks/stacks-key.slice';
 import { currentNetworkAtom } from '@app/store/networks/networks';
 import { getStacksNetworkFromChainId } from '@app/store/networks/networks.hooks';
+import type { StacksAccountDerivationPreference } from '@app/store/settings/settings.slice';
 
 import type {
   HardwareStacksAccount,
@@ -62,6 +65,21 @@ const stacksAddressNetworkState = atom(get => {
   return getStacksNetworkFromChainId(currentNetwork.chain.stacks.chainId);
 });
 
+function shouldIncludeLedgerAccount(path: string, preference: StacksAccountDerivationPreference) {
+  const accountIndex = extractAccountIndexFromPath(path);
+  const addressIndex = extractAddressIndexFromPath(path);
+
+  if (accountIndex === 0 && addressIndex === 0) {
+    return true;
+  }
+
+  if (preference === 'stacks') {
+    return accountIndex === 0 && addressIndex > 0;
+  }
+
+  return accountIndex > 0 && addressIndex === 0;
+}
+
 const selectStacksWalletState = createSelector(
   selectRootKeychain,
   selectStacksChain,
@@ -84,15 +102,34 @@ const softwareAccountsState = atom<SoftwareStacksAccount[] | undefined>(get => {
     const address = publicKeyToAddressSingleSig(privateKeyToPublic(account.stxPrivateKey), network);
     const stxPublicKey = privateKeyToPublic(account.stxPrivateKey) as string;
     const dataPublicKey = privateKeyToPublic(account.dataPrivateKey) as string;
-    return { ...account, type: 'software', address, stxPublicKey, dataPublicKey };
+    const path = makeStacksAccountDerivationPath(account.index);
+    return { ...account, type: 'software', address, stxPublicKey, dataPublicKey, path };
   });
 });
 
 const ledgerAccountsState = atom<HardwareStacksAccount[] | undefined>(get => {
+  const store = get(storeAtom);
   const network = get(stacksAddressNetworkState);
-  const ledgerKeys = selectDefaultWalletStacksKeys(get(storeAtom));
+  const ledgerKeys = selectDefaultWalletStacksKeys(store);
+  const preference = store.settings.stacksAccountDerivationPreference ?? 'stacks';
 
-  return ledgerKeys.map((publicKeys, index) => {
+  const filteredKeys = ledgerKeys.filter(key => shouldIncludeLedgerAccount(key.path, preference));
+
+  const sortedKeys = filteredKeys.sort((a, b) => {
+    const aAccountIndex = extractAccountIndexFromPath(a.path);
+    const aAddressIndex = extractAddressIndexFromPath(a.path);
+    const bAccountIndex = extractAccountIndexFromPath(b.path);
+    const bAddressIndex = extractAddressIndexFromPath(b.path);
+
+    if (aAccountIndex === 0 && aAddressIndex === 0) return -1;
+    if (bAccountIndex === 0 && bAddressIndex === 0) return 1;
+
+    const aIndex = Math.max(aAccountIndex, aAddressIndex);
+    const bIndex = Math.max(bAccountIndex, bAddressIndex);
+    return aIndex - bIndex;
+  });
+
+  return sortedKeys.map((publicKeys, index) => {
     const address = publicKeyToAddressSingleSig(
       createStacksPublicKey(publicKeys.stxPublicKey).data,
       network
@@ -103,6 +140,7 @@ const ledgerAccountsState = atom<HardwareStacksAccount[] | undefined>(get => {
       address,
       stxPublicKey: publicKeys.stxPublicKey,
       dataPublicKey: publicKeys.dataPublicKey,
+      path: publicKeys.path,
       index,
     };
   });

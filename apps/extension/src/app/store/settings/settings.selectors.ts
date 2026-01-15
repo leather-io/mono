@@ -62,6 +62,16 @@ export function useNetworkBadgeAlwaysOn() {
   return useSelector(selectNetworkBadgeAlwaysOn);
 }
 
+const selectStacksAccountDerivationPreference = createSelector(
+  selectSettings,
+  state => state.stacksAccountDerivationPreference ?? 'stacks'
+);
+
+// ts-unused-exports:disable-next-line
+export function useStacksAccountDerivationPreference() {
+  return useSelector(selectStacksAccountDerivationPreference);
+}
+
 const selectDiscardedInscriptions = createSelector(
   selectSettings,
   state => state.discardedInscriptions

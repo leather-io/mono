@@ -56,6 +56,7 @@ export function getTestSoftwareAccountDefaultWalletState() {
       userSelectedTheme: 'system',
       dismissedMessages: [],
       dismissedPromoIndexes: [],
+      stacksAccountDerivationPreference: 'stacks',
       isNotificationsEnabled: true,
     },
     manageTokens: { entities: {}, ids: [] },

@@ -23,3 +23,9 @@ export function useToggleNetworkBadgeAlwaysOn() {
   const dispatch = useDispatch();
   return () => dispatch(settingsActions.toggleNetworkBadgeAlwaysOn());
 }
+
+// ts-unused-exports:disable-next-line
+export function useToggleStacksAccountDerivationPreference() {
+  const dispatch = useDispatch();
+  return () => dispatch(settingsActions.toggleStacksAccountDerivationPreference());
+}

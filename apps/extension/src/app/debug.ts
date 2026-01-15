@@ -72,6 +72,9 @@ const debug = {
   resetInscriptionState() {
     store.dispatch(settingsSlice.actions.resetInscriptionState());
   },
+  toggleStacksDerivationPathPreference() {
+    store.dispatch(settingsSlice.actions.toggleStacksAccountDerivationPreference());
+  },
 };
 
 export function setDebugOnGlobal() {

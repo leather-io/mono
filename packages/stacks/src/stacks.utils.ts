@@ -11,27 +11,38 @@ import {
   DerivationPathDepth,
   createDescriptor,
   createKeyOriginPath,
+  extractAccountIndexFromPath,
   extractAddressIndexFromPath,
 } from '@leather.io/crypto';
 import type { NetworkModes } from '@leather.io/models';
 import { assertIsTruthy, isString, toHexString } from '@leather.io/utils';
 
 export const stxDerivationWithAccount = `m/44'/5757'/0'/0/{account}`;
+export const stxDerivationPathLedger = `m/44'/5757'/{account}'/0/0`;
 
 export function makeAccountIndexDerivationPathFactory(derivationPath: string) {
   return (account: number) => derivationPath.replace('{account}', account.toString());
 }
 
+/**
+ * Extracts the intended account index from a Stacks derivation path. This
+ * function is aware of the Ledger / Stacks derivation path format discrepancy
+ */
 export function extractStacksDerivationPathAccountIndex(path: string) {
   if (!path.includes('5757')) throw new Error('Not a valid Stacks derivation path: ' + path);
-  return extractAddressIndexFromPath(path);
+  const accountSegment = extractAccountIndexFromPath(path);
+  const addressIndexSegment = extractAddressIndexFromPath(path);
+  return Math.max(accountSegment, addressIndexSegment);
 }
 
 /**
  * Stacks accounts always use the same derivation path, regardless of network
  */
-export const makeStxDerivationPath =
+export const makeStacksAccountDerivationPath =
   makeAccountIndexDerivationPathFactory(stxDerivationWithAccount);
+
+export const makeStacksAccountLedgerCompatibleDerivationPath =
+  makeAccountIndexDerivationPathFactory(stxDerivationPathLedger);
 
 export function stacksChainIdToCoreNetworkMode(chainId: ChainId): NetworkModes {
   return whenStacksChainId(chainId)({
@@ -51,7 +62,7 @@ export function whenStacksChainId(chainId: ChainId) {
 // From `@stacks/wallet-sdk` package we are trying not to use
 export function deriveStxPrivateKey({ keychain, index }: { keychain: HDKey; index: number }) {
   if (keychain.depth !== DerivationPathDepth.Root) throw new Error('Root keychain must be depth 0');
-  const accountKeychain = keychain.derive(makeStxDerivationPath(index));
+  const accountKeychain = keychain.derive(makeStacksAccountDerivationPath(index));
   assertIsTruthy(accountKeychain.privateKey);
   return compressPrivateKey(accountKeychain.privateKey);
 }
@@ -70,7 +81,7 @@ export function stacksRootKeychainToAccountDescriptor(keychain: HDKey, accountIn
   const fingerprint = toHexString(keychain.fingerprint);
   const publicKey = deriveStxPublicKey({ keychain, index: accountIndex });
   return createDescriptor(
-    createKeyOriginPath(fingerprint, makeStxDerivationPath(accountIndex)),
+    createKeyOriginPath(fingerprint, makeStacksAccountDerivationPath(accountIndex)),
     publicKey
   );
 }

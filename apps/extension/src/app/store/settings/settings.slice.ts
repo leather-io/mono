@@ -2,6 +2,8 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { UserSelectedTheme } from '@app/common/theme-provider';
 
+export type StacksAccountDerivationPreference = 'stacks' | 'ledger';
+
 interface InitialState {
   userSelectedTheme: UserSelectedTheme;
   dismissedMessages: string[];
@@ -11,6 +13,7 @@ interface InitialState {
   bypassInscriptionChecks?: boolean;
   discardedInscriptions: string[];
   networkBadgeAlwaysOn?: boolean;
+  stacksAccountDerivationPreference: StacksAccountDerivationPreference;
 }
 
 const initialState: InitialState = {
@@ -19,6 +22,7 @@ const initialState: InitialState = {
   dismissedPromoIndexes: [],
   discardedInscriptions: [],
   isNotificationsEnabled: true,
+  stacksAccountDerivationPreference: 'stacks',
 };
 
 export const settingsSlice = createSlice({
@@ -50,6 +54,10 @@ export const settingsSlice = createSlice({
     },
     toggleNetworkBadgeAlwaysOn(state) {
       state.networkBadgeAlwaysOn = !state.networkBadgeAlwaysOn;
+    },
+    toggleStacksAccountDerivationPreference(state) {
+      state.stacksAccountDerivationPreference =
+        state.stacksAccountDerivationPreference === 'stacks' ? 'ledger' : 'stacks';
     },
     dangerouslyChosenToBypassAllInscriptionChecks(state) {
       state.bypassInscriptionChecks = true;

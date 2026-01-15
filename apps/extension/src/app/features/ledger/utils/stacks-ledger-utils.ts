@@ -8,8 +8,6 @@ import {
 import StacksApp, { LedgerError, ResponseSign, ResponseVersion } from '@zondax/ledger-stacks';
 import { compare } from 'compare-versions';
 
-import { makeStxDerivationPath, stxDerivationWithAccount } from '@leather.io/stacks';
-
 import {
   LEDGER_APPS_MAP,
   PrepareLedgerDeviceConnectionArgs,
@@ -20,9 +18,9 @@ import {
 } from './generic-ledger-utils';
 
 export function requestPublicKeyForStxAccount(app: StacksApp) {
-  return async (index: number) =>
+  return async (path: string) =>
     app.getAddressAndPubKey(
-      makeStxDerivationPath(index),
+      path,
       // We pass mainnet as it expects something, however this is so it can return a formatted address
       // We only need the public key, and can derive the address later in any network format
       AddressVersion.MainnetSingleSig
@@ -60,18 +58,17 @@ export const prepareLedgerDeviceStacksAppConnection = prepareLedgerDeviceForAppF
 ) as (args: PrepareLedgerDeviceConnectionArgs) => Promise<StacksApp>;
 
 export function signLedgerStacksTransaction(app: StacksApp) {
-  return async (payload: Buffer, accountIndex: number) =>
-    app.sign(stxDerivationWithAccount.replace('{account}', accountIndex.toString()), payload);
+  return async (payload: Buffer, path: string) => app.sign(path, payload);
 }
 
 export function signLedgerStacksUtf8Message(app: StacksApp) {
-  return async (payload: string, accountIndex: number): Promise<ResponseSign> =>
-    app.sign_msg(makeStxDerivationPath(accountIndex), payload);
+  return async (payload: string, path: string): Promise<ResponseSign> =>
+    app.sign_msg(path, payload);
 }
 
 export function signLedgerStacksStructuredMessage(app: StacksApp) {
-  return async (domain: string, payload: string, accountIndex: number): Promise<ResponseSign> =>
-    app.sign_structured_msg(makeStxDerivationPath(accountIndex), domain, payload);
+  return async (domain: string, payload: string, path: string): Promise<ResponseSign> =>
+    app.sign_structured_msg(path, domain, payload);
 }
 
 export function signStacksTransactionWithSignature(transaction: string, signatureVRS: Buffer) {
