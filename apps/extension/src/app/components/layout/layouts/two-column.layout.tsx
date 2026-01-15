@@ -1,59 +1,41 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
-import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
+import { Flex, Stack, styled } from 'leather-styles/jsx';
 
-interface TwoColumnLayoutProps {
-  title: ReactNode;
-  content: ReactNode;
-  action?: ReactNode;
-  children: ReactNode;
-  wideChild?: boolean;
+interface DescriptionColumnProps {
+  title: string;
+  description: string;
+}
+export function DescriptionColumn({ title, description }: DescriptionColumnProps) {
+  return (
+    <Stack gap="space.05">
+      <styled.h1 textStyle="heading.03">{title}</styled.h1>
+      <styled.p textStyle="body.01">{description}</styled.p>
+    </Stack>
+  );
 }
 
-/**
- * @deprecated use TwoColumnLayout from two-column-current.layout.tsx
- */
-export function TwoColumnLayout({
-  title,
-  content,
-  action,
-  children,
-  wideChild,
-}: TwoColumnLayoutProps): React.JSX.Element {
+interface TwoColumnLayoutProps {
+  leftColumn: ReactNode;
+  rightColumn: ReactNode;
+}
+
+export function TwoColumnLayout({ leftColumn, rightColumn }: TwoColumnLayoutProps) {
   return (
     <Flex
-      flexDirection={{ base: 'column', md: 'row' }}
-      pt="space.06"
-      px={{ base: 'space.05', md: 'space.00' }}
-      mx={{ base: 'auto', md: 'space.03', lg: 'space.06' }}
+      flexDirection={['column', 'column', 'row']}
+      pt={[0, 'space.03', 'space.06']}
+      px="space.05"
       gap="space.05"
-      width={{ base: '100vw', md: 'unset' }}
+      width="100%"
+      justifyContent="space-between"
     >
-      <Flex flexDirection="column" gap="space.04">
-        <Stack gap="space.04">
-          <styled.h1 textStyle="heading.03">{title}</styled.h1>
-          <styled.p textStyle="label.02">{content}</styled.p>
-          <Box mt="space.04">{action}</Box>
-        </Stack>
+      <Flex maxWidth={[null, null, '1/3']} flexDirection="column" gap="space.04">
+        {leftColumn}
       </Flex>
 
-      <Flex gap="space.05" flexDirection="column" mb={{ base: 'space.05', md: '0' }}>
-        <Stack
-          p={{ base: 'space.02', md: 'space.05' }}
-          gap="space.04"
-          bg="ink.background-primary"
-          border="default"
-          borderRadius="lg"
-          width="100%"
-          minWidth={{
-            base: '100%',
-            md: '400px',
-            lg: wideChild ? 'twoColumnPageWidth' : 'pageWidth',
-          }}
-          flex="1"
-        >
-          {children}
-        </Stack>
+      <Flex flexGrow={1} gap="space.05" flexDirection="column" mb={['space.05', null, '0']}>
+        {rightColumn}
       </Flex>
     </Flex>
   );

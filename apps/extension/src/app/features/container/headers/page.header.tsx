@@ -8,7 +8,6 @@ import { ArrowLeftIcon, CloseIcon } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
-import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderActionButton } from '@app/components/layout/headers/header-action-button';
 import { HeaderGrid, HeaderGridRightCol } from '@app/components/layout/headers/header-grid';
@@ -29,7 +28,6 @@ export function PageHeader({
   isSettingsVisibleOnSm = true,
   onBackLocation,
 }: PageHeaderProps) {
-  const { isShowingSwitchAccount, setIsShowingSwitchAccount } = useSwitchAccountSheet();
   const navigate = useNavigate();
 
   // pages with nested dialogs specify onBackLocation to prevent navigate(-1) re-opening the dialog
@@ -61,9 +59,7 @@ export function PageHeader({
               />
             ) : (
               <styled.div hideBelow={isSettingsVisibleOnSm ? undefined : 'sm'}>
-                <Settings
-                  toggleSwitchAccount={() => setIsShowingSwitchAccount(!isShowingSwitchAccount)}
-                />
+                <Settings />
               </styled.div>
             )}
           </HeaderGridRightCol>

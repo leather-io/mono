@@ -1,9 +1,20 @@
-import { useFlags } from '@app/features/feature-flags';
+import { useEffect, useState } from 'react';
 
-import { ViewSecretKey as ViewSecretKeyCurrent } from './view-secret-key-current';
-import { ViewSecretKey as ViewSecretKeyLegacy } from './view-secret-key-legacy';
+import { analytics } from '@shared/utils/analytics';
+
+import { LockedViewSecretKey } from './locked-view-secret-key';
+import { UnlockedViewSecretKey } from './unlocked-view-secret-key';
 
 export function ViewSecretKey() {
-  const { extensionRevamp } = useFlags();
-  return extensionRevamp ? <ViewSecretKeyCurrent /> : <ViewSecretKeyLegacy />;
+  const [showSecretKey, setShowSecretKey] = useState(false);
+
+  useEffect(() => {
+    analytics.page('view', '/save-secret-key');
+  }, []);
+
+  if (showSecretKey) {
+    return <UnlockedViewSecretKey />;
+  }
+
+  return <LockedViewSecretKey onUnlock={() => setShowSecretKey(true)} />;
 }

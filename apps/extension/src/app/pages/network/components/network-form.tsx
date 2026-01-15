@@ -10,7 +10,7 @@ import { analytics } from '@shared/utils/analytics';
 
 import { ErrorLabel } from '@app/components/error-label';
 import { Content } from '@app/components/layout';
-import { useAddNetwork } from '@app/features/add-network/use-add-network';
+import { useAddNetwork } from '@app/pages/network/components/use-add-network';
 
 import { NetworkFormFields } from './network-form-fields';
 
