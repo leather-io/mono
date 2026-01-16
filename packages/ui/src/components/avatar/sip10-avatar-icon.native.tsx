@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 
 import StacksIcon from '../../assets/icons/stacks.svg';
 import { Avatar, type AvatarProps } from './avatar.native';
-import { getSip10AvatarImage } from './avatar.shared';
+import { getSip10AvatarImage, isSbtcAsset, isUsdcxAsset } from './avatar.shared';
 import { SbtcAvatarIcon } from './sbtc-avatar-icon.native';
 import { UsdcxAvatarIcon } from './usdcx-avatar-icon.native';
 
@@ -23,11 +23,11 @@ export function Sip10AvatarIcon({
   const indicatorIcon =
     indicator === 'stacksIcon' ? <StacksIcon width={16} height={16} /> : indicator;
 
-  if (name === 'sBTC') {
+  if (isSbtcAsset(contractId)) {
     return <SbtcAvatarIcon indicator={indicatorIcon} {...props} />;
   }
 
-  if (name === 'USDCx') {
+  if (isUsdcxAsset(contractId)) {
     return <UsdcxAvatarIcon indicator={indicatorIcon} {...props} />;
   }
 
