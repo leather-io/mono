@@ -14,7 +14,7 @@ export function ActionDrawer({ children, onClose, isShowing }: ActionDrawerProps
   return (
     <Sheet variant="drawer" wrapChildren={false} onClose={onClose} isShowing={isShowing}>
       <Box
-        mt="space.05"
+        mt="space.06"
         mb="space.08"
         px="space.05"
         display="flex"
