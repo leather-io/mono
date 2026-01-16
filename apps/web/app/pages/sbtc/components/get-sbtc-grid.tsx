@@ -28,7 +28,7 @@ function BridgeToSbtcCell() {
         </Box>
       </Flex>
 
-      <Flex flexDir="column" justifyContent="space-between" alignItems="flex-end">
+      <Flex alignItems="flex-end">
         <WhenClient>
           <Button
             onClick={onBridgeSbtc}
