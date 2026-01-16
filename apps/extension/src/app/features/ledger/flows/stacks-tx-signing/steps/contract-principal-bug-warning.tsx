@@ -4,9 +4,9 @@ import { Box, HStack, styled } from 'leather-styles/jsx';
 import { Button } from '@leather.io/ui';
 import { delay } from '@leather.io/utils';
 
-import { useLoading } from '@app/common/hooks/use-loading';
 import { LedgerTitle } from '@app/features/ledger/components/ledger-title';
 import { LedgerWrapper } from '@app/features/ledger/components/ledger-wrapper';
+import { useLoading } from '@app/store/ui/ui.hooks';
 
 import { useLedgerTxSigningContext } from '../../../generic-flows/tx-signing/ledger-sign-tx.context';
 

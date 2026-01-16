@@ -9,9 +9,9 @@ import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { LoadingKeys, useLoading } from '@app/common/hooks/use-loading';
 import { useSubmitTransactionCallback } from '@app/common/hooks/use-submit-stx-transaction';
 import { useToast } from '@app/features/toasts/use-toast';
+import { LoadingKeys, useLoading } from '@app/store/ui/ui.hooks';
 
 export function useStacksBroadcastSwap() {
   const { setIsIdle } = useLoading(LoadingKeys.SUBMIT_SWAP_TRANSACTION);

@@ -9,7 +9,6 @@ import { defaultFeesMaxValuesAsMoney } from '@leather.io/query';
 import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
 
-import { LoadingKeys, useLoading } from '@app/common/hooks/use-loading';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useConfigSbtc } from '@app/query/common/remote-config/remote-config.query';
 import {
@@ -18,6 +17,7 @@ import {
   verifySponsoredSbtcTransaction,
 } from '@app/query/sbtc/sponsored-transactions.query';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
+import { LoadingKeys, useLoading } from '@app/store/ui/ui.hooks';
 
 export function useSponsorTransactionFees() {
   const { sponsorshipApiUrl } = useConfigSbtc();

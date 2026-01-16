@@ -1,12 +1,11 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { useAtomValue } from 'jotai';
-
 import { useSignatureRequestAccountIndex } from '@app/store/signatures/requests.hooks';
 import { useTransactionRequestState } from '@app/store/transactions/requests.hooks';
+import { useHasSwitchedAccounts } from '@app/store/ui/ui.hooks';
 
-import { hasSwitchedAccountsState, useCurrentAccountIndex } from '../../account';
+import { useCurrentAccountIndex } from '../../account';
 import type { StacksAccount } from './stacks-account.models';
 import { selectStacksAccountState } from './stacks-account.selectors';
 
@@ -35,7 +34,7 @@ export function useCurrentStacksAccount() {
   const txIndex = useTransactionAccountIndex();
   const signatureIndex = useSignatureRequestAccountIndex();
   // ⚠️ to refactor, we should not just continually add new conditionals here
-  const hasSwitched = useAtomValue(hasSwitchedAccountsState);
+  const { hasSwitched } = useHasSwitchedAccounts();
   const accounts = useStacksAccounts();
 
   return useMemo(() => {

@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 
-import { useHasSwitchedAccounts } from '@app/store/accounts/account';
 import {
   useCurrentStacksAccount,
   useStacksAccounts,
   useTransactionAccountIndex,
 } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useHasSwitchedAccounts } from '@app/store/ui/ui.hooks';
 
 import { trackSwitchAccount } from '../../analytics/track-switch-account';
 import { useKeyActions } from '../use-key-actions';
@@ -17,7 +17,7 @@ export function useSwitchAccount(callback?: () => void) {
   const currentAccount = useCurrentStacksAccount();
   const accounts = useStacksAccounts();
   const txIndex = useTransactionAccountIndex();
-  const [hasSwitched, setHasSwitched] = useHasSwitchedAccounts();
+  const { hasSwitched, setHasSwitched } = useHasSwitchedAccounts();
 
   const handleSwitchAccount = useCallback(
     async (index: number) => {

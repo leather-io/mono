@@ -33,6 +33,7 @@ import { networksSlice } from './networks/networks.slice';
 import { settingsSlice } from './settings/settings.slice';
 import { keySlice } from './software-keys/software-key.slice';
 import { submittedTransactionsSlice } from './submitted-transactions/submitted-transactions.slice';
+import { uiSlice } from './ui/ui.slice';
 import { broadcastActionTypeToOtherFramesMiddleware } from './utils/broadcast-action-types';
 
 export interface RootState {
@@ -50,6 +51,7 @@ export interface RootState {
   submittedTransactions: ReturnType<typeof submittedTransactionsSlice.reducer>;
   settings: ReturnType<typeof settingsSlice.reducer>;
   manageTokens: ReturnType<typeof manageTokensSlice.reducer>;
+  ui: ReturnType<typeof uiSlice.reducer>;
 }
 
 const appReducer = combineReducers({
@@ -68,6 +70,7 @@ const appReducer = combineReducers({
   submittedTransactions: submittedTransactionsSlice.reducer,
   settings: settingsSlice.reducer,
   manageTokens: manageTokensSlice.reducer,
+  ui: uiSlice.reducer,
 });
 
 function rootReducer(state: RootState | undefined, action: Action) {

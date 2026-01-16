@@ -4,13 +4,13 @@ import { getSwitchAccountSheetAccountNameSelector } from '@tests/selectors/accou
 
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { useSwitchAccount } from '@app/common/hooks/account/use-switch-account';
-import { useLoading } from '@app/common/hooks/use-loading';
 import { AccountTotalBalance } from '@app/components/account-total-balance';
 import { AccountAddresses } from '@app/components/account/account-addresses';
 import { AccountListItemLayout } from '@app/components/account/account-list-item.layout';
 import { AccountNameLayout } from '@app/components/account/account-name';
 import { useNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useLoading } from '@app/store/ui/ui.hooks';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface SwitchAccountListItemProps {

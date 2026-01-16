@@ -8,8 +8,8 @@ import { Button } from '@leather.io/ui';
 import type { SwapFormValues } from '@shared/models/form.model';
 
 import type { HasChildren } from '@app/common/has-children';
-import { LoadingKeys, useLoading } from '@app/common/hooks/use-loading';
 import { Card } from '@app/components/layout';
+import { LoadingKeys, useLoading } from '@app/store/ui/ui.hooks';
 
 import { type BaseSwapContext, useSwapContext } from '../../swap.context';
 
