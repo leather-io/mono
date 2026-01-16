@@ -28,7 +28,7 @@ interface ItemLayoutProps {
 export function ItemLayout({
   captionLeft,
   captionRight,
-  gap = 'space.02',
+  gap = 'space.01',
   img,
   isSelected,
   showChevron,

@@ -32,7 +32,7 @@ export function Home() {
       direction="column"
       data-testid={HomePageSelectors.HomePageContainer}
       px={['0', 'space.05']}
-      pt="space.05"
+      pt="space.04"
       width="100%"
       bg="ink.1"
       animation="fadein"

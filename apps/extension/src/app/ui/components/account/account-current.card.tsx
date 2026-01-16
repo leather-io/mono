@@ -45,13 +45,13 @@ export function AccountCard({
 }: AccountCardProps) {
   const scaleTextRef = useScaleText();
   const isAtLeastMd = useViewportMinWidth('md');
-  const tooltipSide = isAtLeastMd ? 'right' : 'bottom';
+  const tooltipVariant = isAtLeastMd ? 'md' : 'sm';
 
   return (
     <Flex direction="column" rounded="md">
       <Flex justifyContent="space-between">
         <Box>
-          <BasicTooltip side={tooltipSide} label={totalBalanceTooltipLabel}>
+          <BasicTooltip side="right" variant={tooltipVariant} label={totalBalanceTooltipLabel}>
             <Flag
               reverse
               spacing="space.01"
@@ -103,7 +103,11 @@ export function AccountCard({
                   <Divider my="space.05" />
 
                   <Box>
-                    <BasicTooltip side={tooltipSide} label={lockedBalanceTooltip}>
+                    <BasicTooltip
+                      side="right"
+                      variant={tooltipVariant}
+                      label={lockedBalanceTooltip}
+                    >
                       <Flag
                         reverse
                         spacing="space.01"
