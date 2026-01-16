@@ -1,16 +1,17 @@
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 import { useAtomValue } from 'jotai';
 
-import { stacksAccountState } from '@app/store/accounts/blockchain/stacks/stacks-accounts';
 import { useSignatureRequestAccountIndex } from '@app/store/signatures/requests.hooks';
 import { useTransactionRequestState } from '@app/store/transactions/requests.hooks';
 
 import { hasSwitchedAccountsState, useCurrentAccountIndex } from '../../account';
 import type { StacksAccount } from './stacks-account.models';
+import { selectStacksAccountState } from './stacks-account.selectors';
 
 export function useStacksAccounts() {
-  return useAtomValue(stacksAccountState);
+  return useSelector(selectStacksAccountState);
 }
 
 export function useStacksAccount(accountIndex: number) {
@@ -50,7 +51,7 @@ export function useCurrentStacksAccountAddress() {
 }
 
 export function useTransactionAccountIndex() {
-  const accounts = useAtomValue(stacksAccountState);
+  const accounts = useSelector(selectStacksAccountState);
   const txPayload = useTransactionRequestState();
   const txAddress = txPayload?.stxAddress;
   return useMemo(() => {
