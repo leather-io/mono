@@ -6,11 +6,7 @@ import { vi } from 'vitest';
 import { ExecutionConstraint, MarketData } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import {
-  EnrichedSwapQuote,
-  NetworkFee,
-  SwapQuoteSelectionResult,
-} from '../swap-state/swap-state.types';
+import { EnrichedSwapQuote, NetworkFee, SwapQuoteSelectionResult } from '../swap-state.types';
 import { useLiveSwapEstimate } from './use-live-swap-estimate';
 
 vi.mock('@leather.io/ui/native', () => ({

@@ -1,5 +1,5 @@
 import { InfoSheet } from '@/features/swap/components/info-sheet/info-sheet';
-import { LiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
+import { LiveSwapEstimate } from '@/features/swap/swap-state/hooks/use-live-swap-estimate';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { MessageDescriptor, i18n } from '@lingui/core';
 import { msg, t } from '@lingui/core/macro';

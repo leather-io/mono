@@ -23,7 +23,10 @@ import { SwapReviewSummary } from '@/features/swap/components/review/swap-review
 import { SwapSubmissionOverlay } from '@/features/swap/components/review/swap-submission-overlay';
 import { SlippageInfoSheet } from '@/features/swap/components/slippage-info-sheet';
 import { SlippageSelectorSheet } from '@/features/swap/components/slippage-selector/slippage-selector-sheet';
-import { LiveSwapEstimate, matchLiveEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
+import {
+  LiveSwapEstimate,
+  matchLiveEstimate,
+} from '@/features/swap/swap-state/hooks/use-live-swap-estimate';
 import { UseSwapStateResult } from '@/features/swap/swap-state/swap-state.types';
 import { PRICE_IMPACT_WARNING_THRESHOLD } from '@/features/swap/swap-state/swap.constants';
 import { formatSwapRate, sumFeesInQuoteCurrency } from '@/features/swap/swap.utils';

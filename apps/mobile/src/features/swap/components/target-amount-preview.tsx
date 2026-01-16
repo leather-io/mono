@@ -8,7 +8,7 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
-import { LiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
+import { LiveSwapEstimate } from '@/features/swap/swap-state/hooks/use-live-swap-estimate';
 import { formatCurrency } from '@/utils/currency-formatter';
 
 import { MarketData, Money } from '@leather.io/models';
