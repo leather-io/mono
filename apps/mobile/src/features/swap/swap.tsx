@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
 
-import { useLiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
+import { useLiveSwapEstimate } from '@/features/swap/swap-state/hooks/use-live-swap-estimate';
 import { useSwapDependencies } from '@/features/swap/use-swap-dependencies';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';

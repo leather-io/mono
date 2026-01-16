@@ -2,7 +2,7 @@ import { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 import { Divider } from '@/components/divider';
 import { QuoteRefetchIndicator } from '@/features/swap/components/quote-refetch-indicator';
-import { LiveSwapEstimate } from '@/features/swap/hooks/use-live-swap-estimate';
+import { LiveSwapEstimate } from '@/features/swap/swap-state/hooks/use-live-swap-estimate';
 import { formatSwapRate, sumFeesInQuoteCurrency } from '@/features/swap/swap.utils';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';

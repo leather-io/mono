@@ -8,11 +8,7 @@ import { ExecutionConstraint, MarketData, Money } from '@leather.io/models';
 import { UseIntervalState, useInterval } from '@leather.io/ui/native';
 import { assertUnreachable, baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
-import {
-  EnrichedSwapQuote,
-  NetworkFee,
-  SwapQuoteSelectionResult,
-} from '../swap-state/swap-state.types';
+import { EnrichedSwapQuote, NetworkFee, SwapQuoteSelectionResult } from '../swap-state.types';
 
 const refetchInterval = 30000;
 

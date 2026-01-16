@@ -21,7 +21,7 @@ import { AssetSelectorToggle } from '../components/asset-selector/asset-selector
 import { FlipButton } from '../components/flip-button';
 import * as Panel from '../components/panel';
 import { TargetAmountPreview } from '../components/target-amount-preview';
-import { LiveSwapEstimate } from '../hooks/use-live-swap-estimate';
+import { LiveSwapEstimate } from '../swap-state/hooks/use-live-swap-estimate';
 
 interface SwapFormScreenProps {
   swapStateResult: UseSwapStateResult;
