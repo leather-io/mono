@@ -1,21 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
 
-import { useAtom, useAtomValue } from 'jotai';
-
 import { isDefined } from '@leather.io/utils';
 
 import { useLocationState } from '@app/common/hooks/use-location-state';
-
-import { secretKeyState, seedInputErrorState } from './onboarding';
-
-export function useSeedInputErrorState() {
-  return useAtom(seedInputErrorState);
-}
-
-export function useSecretKeyState() {
-  return useAtomValue(secretKeyState);
-}
 
 export function useOnFinishedOnboarding(fn: () => void) {
   const hasCalledFn = useRef(false);

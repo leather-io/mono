@@ -12,7 +12,6 @@ import { analytics } from '@shared/utils/analytics';
 import { useLoading } from '@app/common/hooks/use-loading';
 import { useAppDispatch } from '@app/store';
 import { inMemoryKeyActions } from '@app/store/in-memory-key/in-memory-key.actions';
-import { useSeedInputErrorState } from '@app/store/onboarding/onboarding.hooks';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
 
 async function simulateShortDelayToAvoidImmediateNavigation() {
@@ -20,7 +19,7 @@ async function simulateShortDelayToAvoidImmediateNavigation() {
 }
 
 export function useSignIn() {
-  const [error, setError] = useSeedInputErrorState();
+  const [error, setError] = useState<string | undefined>();
   const [isKeyMasked, setIsKeyMasked] = useState(true);
 
   const { isLoading, setIsLoading, setIsIdle } = useLoading('useSignIn');
