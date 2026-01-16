@@ -8,7 +8,7 @@ import {
   publicKeyToAddress,
   publicKeyToAddressSingleSig,
 } from '@stacks/transactions';
-import { deriveStxPrivateKey, generateWallet } from '@stacks/wallet-sdk';
+import { deriveStxPrivateKey } from '@stacks/wallet-sdk';
 import { atom } from 'jotai';
 
 import { createNullArrayOfLength } from '@leather.io/utils';
@@ -18,13 +18,10 @@ import { defaultWalletKeyId } from '@shared/utils';
 
 import { storeAtom } from '@app/store';
 import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
-import {
-  selectDefaultWalletKey,
-  selectRootKeychain,
-} from '@app/store/in-memory-key/in-memory-key.selectors';
+import { selectRootKeychain } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { selectDefaultWalletStacksKeys } from '@app/store/ledger/stacks/stacks-key.slice';
-import { currentNetworkAtom } from '@app/store/networks/networks';
 import { getStacksNetworkFromChainId } from '@app/store/networks/networks.hooks';
+import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import type {
   HardwareStacksAccount,
@@ -57,11 +54,6 @@ function initalizeStacksAccount(rootKeychain: HDKey, index: number) {
   };
 }
 
-const stacksAddressNetworkState = atom(get => {
-  const currentNetwork = get(currentNetworkAtom);
-  return getStacksNetworkFromChainId(currentNetwork.chain.stacks.chainId);
-});
-
 const selectStacksWalletState = createSelector(
   selectRootKeychain,
   selectStacksChain,
@@ -77,7 +69,11 @@ const selectStacksWalletState = createSelector(
 
 const softwareAccountsState = atom<SoftwareStacksAccount[] | undefined>(get => {
   const store = get(storeAtom);
-  const network = get(stacksAddressNetworkState) || AddressVersion.TestnetSingleSig;
+  const currentNetwork = selectCurrentNetwork(get(storeAtom));
+
+  const network =
+    getStacksNetworkFromChainId(currentNetwork.chain.stacks.chainId) ||
+    AddressVersion.TestnetSingleSig;
   const accounts = selectStacksWalletState(store);
   if (!accounts) return undefined;
   return accounts.map(account => {
@@ -89,13 +85,14 @@ const softwareAccountsState = atom<SoftwareStacksAccount[] | undefined>(get => {
 });
 
 const ledgerAccountsState = atom<HardwareStacksAccount[] | undefined>(get => {
-  const network = get(stacksAddressNetworkState);
+  const currentNetwork = selectCurrentNetwork(get(storeAtom));
+
   const ledgerKeys = selectDefaultWalletStacksKeys(get(storeAtom));
 
   return ledgerKeys.map((publicKeys, index) => {
     const address = publicKeyToAddressSingleSig(
       createStacksPublicKey(publicKeys.stxPublicKey).data,
-      network
+      getStacksNetworkFromChainId(currentNetwork.chain.stacks.chainId)
     );
     return {
       ...publicKeys,
@@ -117,23 +114,4 @@ export const stacksAccountState = atom<StacksAccount[]>(get => {
   }
 
   return softwareAccounts ?? [];
-});
-
-/**
- * @deprecated
- * This method mocks the `Wallet` type from `@stacks/wallet-sdk`. Internally,
- * this library makes assumptions about how we want to use it. Such as
- * requesting BNS names (1 request per account). If you have many accounts, this
- * adds a huge loading time and stalls the wallet. Some parts of the code rely
- * on the `Wallet` type still, so here we mock it by manipulating it directly
- * (sans unwanted http requests).
- */
-export const legacyStackWallet = atom(async get => {
-  const store = get(storeAtom);
-  const secretKey = selectDefaultWalletKey(store);
-  const accounts = get(softwareAccountsState);
-  if (!secretKey) return;
-  const wallet = await generateWallet({ secretKey, password: '' });
-  wallet.accounts = accounts ?? [];
-  return wallet;
 });
