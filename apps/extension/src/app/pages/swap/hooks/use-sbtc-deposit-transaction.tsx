@@ -30,7 +30,6 @@ import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { LoadingKeys, useLoading } from '@app/common/hooks/use-loading';
 import { serializeError } from '@app/common/utils';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
@@ -41,6 +40,7 @@ import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoi
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { LoadingKeys, useLoading } from '@app/store/ui/ui.hooks';
 
 import type { BitcoinSwapContext } from '../providers/bitcoin-swap-provider';
 import type { SubmitSwapArgs } from '../swap.context';

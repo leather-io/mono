@@ -12,7 +12,6 @@ import { RouteUrls } from '@shared/route-urls';
 import { bitflow } from '@shared/utils/bitflow-sdk';
 import { type ContractCallPayload } from '@shared/utils/legacy-requests';
 
-import { LoadingKeys, useLoading } from '@app/common/hooks/use-loading';
 import {
   type GenerateUnsignedTransactionOptions,
   generateUnsignedTransaction,
@@ -21,6 +20,7 @@ import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
+import { LoadingKeys, useLoading } from '@app/store/ui/ui.hooks';
 
 import { useSponsorTransactionFees } from '../hooks/use-sponsor-tx-fees';
 import { useStacksBroadcastSwap } from '../hooks/use-stacks-broadcast-swap';

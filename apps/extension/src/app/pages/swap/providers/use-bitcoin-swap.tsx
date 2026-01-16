@@ -8,8 +8,8 @@ import { delay, isUndefined } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 
-import { LoadingKeys, useLoading } from '@app/common/hooks/use-loading';
 import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
+import { LoadingKeys, useLoading } from '@app/store/ui/ui.hooks';
 
 import { useSbtcDepositTransaction } from '../hooks/use-sbtc-deposit-transaction';
 import type { SubmitSwapArgs } from '../swap.context';

@@ -8,9 +8,9 @@ import { logger } from '@shared/logger';
 import { analytics } from '@shared/utils/analytics';
 
 import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
-import { useLoading } from '@app/common/hooks/use-loading';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
+import { useLoading } from '@app/store/ui/ui.hooks';
 
 const timeForApiToUpdate = 250;
 

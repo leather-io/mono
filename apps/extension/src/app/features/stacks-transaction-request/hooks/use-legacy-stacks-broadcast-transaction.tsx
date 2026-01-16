@@ -11,7 +11,6 @@ import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
 
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
-import { LoadingKeys } from '@app/common/hooks/use-loading';
 import { useSubmitTransactionCallback } from '@app/common/hooks/use-submit-stx-transaction';
 import {
   StacksTransactionActionType,
@@ -20,6 +19,7 @@ import {
 import { useToast } from '@app/features/toasts/use-toast';
 import { useTransactionRequest } from '@app/store/transactions/requests.hooks';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
+import { LoadingKeys } from '@app/store/ui/ui.hooks';
 
 async function simulateShortDelayToAvoidUndefinedTabId() {
   await delay(1000);

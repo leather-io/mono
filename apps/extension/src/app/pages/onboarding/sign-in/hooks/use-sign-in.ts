@@ -9,10 +9,10 @@ import { delay } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { useLoading } from '@app/common/hooks/use-loading';
 import { useAppDispatch } from '@app/store';
 import { inMemoryKeyActions } from '@app/store/in-memory-key/in-memory-key.actions';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
+import { useLoading } from '@app/store/ui/ui.hooks';
 
 async function simulateShortDelayToAvoidImmediateNavigation() {
   await delay(600);
