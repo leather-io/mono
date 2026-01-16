@@ -9,7 +9,6 @@ import {
   combineReducers,
   configureStore,
 } from '@reduxjs/toolkit';
-import { atomWithStore } from 'jotai-redux';
 import {
   FLUSH,
   PAUSE,
@@ -113,8 +112,6 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 type AppDispatch = typeof store.dispatch & ((action: AppThunk<Promise<void>>) => void);
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
-
-export const storeAtom = atomWithStore(store);
 
 function selectHasRehydrated(state: RootState & PersistPartial) {
   return state._persist.rehydrated;

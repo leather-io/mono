@@ -1,33 +1,27 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import { createSelector } from '@reduxjs/toolkit';
 import { HARDENED_OFFSET, HDKey } from '@scure/bip32';
+import { AddressVersion } from '@stacks/network';
 import {
-  AddressVersion,
   createStacksPublicKey,
   privateKeyToPublic,
   publicKeyToAddress,
   publicKeyToAddressSingleSig,
 } from '@stacks/transactions';
 import { deriveStxPrivateKey } from '@stacks/wallet-sdk';
-import { atom } from 'jotai';
 
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { DATA_DERIVATION_PATH, deriveStacksSalt } from '@shared/crypto/stacks/stacks-address-gen';
 import { defaultWalletKeyId } from '@shared/utils';
 
-import { storeAtom } from '@app/store';
 import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
 import { selectRootKeychain } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { selectDefaultWalletStacksKeys } from '@app/store/ledger/stacks/stacks-key.slice';
 import { getStacksNetworkFromChainId } from '@app/store/networks/networks.hooks';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
-import type {
-  HardwareStacksAccount,
-  SoftwareStacksAccount,
-  StacksAccount,
-} from './stacks-account.models';
+import type { HardwareStacksAccount, SoftwareStacksAccount } from './stacks-account.models';
 
 function initalizeStacksAccount(rootKeychain: HDKey, index: number) {
   const stxPrivateKey = deriveStxPrivateKey({ rootNode: rootKeychain, index } as any);
@@ -67,51 +61,55 @@ const selectStacksWalletState = createSelector(
   }
 );
 
-const softwareAccountsState = atom<SoftwareStacksAccount[] | undefined>(get => {
-  const store = get(storeAtom);
-  const currentNetwork = selectCurrentNetwork(get(storeAtom));
-
-  const network =
-    getStacksNetworkFromChainId(currentNetwork.chain.stacks.chainId) ||
-    AddressVersion.TestnetSingleSig;
-  const accounts = selectStacksWalletState(store);
-  if (!accounts) return undefined;
-  return accounts.map(account => {
-    const address = publicKeyToAddressSingleSig(privateKeyToPublic(account.stxPrivateKey), network);
-    const stxPublicKey = privateKeyToPublic(account.stxPrivateKey) as string;
-    const dataPublicKey = privateKeyToPublic(account.dataPrivateKey) as string;
-    return { ...account, type: 'software', address, stxPublicKey, dataPublicKey };
-  });
-});
-
-const ledgerAccountsState = atom<HardwareStacksAccount[] | undefined>(get => {
-  const currentNetwork = selectCurrentNetwork(get(storeAtom));
-
-  const ledgerKeys = selectDefaultWalletStacksKeys(get(storeAtom));
-
-  return ledgerKeys.map((publicKeys, index) => {
-    const address = publicKeyToAddressSingleSig(
-      createStacksPublicKey(publicKeys.stxPublicKey).data,
-      getStacksNetworkFromChainId(currentNetwork.chain.stacks.chainId)
-    );
-    return {
-      ...publicKeys,
-      type: 'ledger',
-      address,
-      stxPublicKey: publicKeys.stxPublicKey,
-      dataPublicKey: publicKeys.dataPublicKey,
-      index,
-    };
-  });
-});
-
-export const stacksAccountState = atom<StacksAccount[]>(get => {
-  const ledgerAccounts = get(ledgerAccountsState);
-  const softwareAccounts = get(softwareAccountsState);
-
-  if (ledgerAccounts?.length) {
-    return ledgerAccounts;
+const selectSoftwareAccountsState = createSelector(
+  selectCurrentNetwork,
+  selectStacksWalletState,
+  (currentNetwork, accounts) => {
+    const network =
+      getStacksNetworkFromChainId(currentNetwork.chain.stacks.chainId) ||
+      AddressVersion.TestnetSingleSig;
+    if (!accounts) return undefined;
+    return accounts.map(account => {
+      const address = publicKeyToAddressSingleSig(
+        privateKeyToPublic(account.stxPrivateKey),
+        network
+      );
+      const stxPublicKey = privateKeyToPublic(account.stxPrivateKey) as string;
+      const dataPublicKey = privateKeyToPublic(account.dataPrivateKey) as string;
+      return { ...account, type: 'software', address, stxPublicKey, dataPublicKey };
+    }) satisfies SoftwareStacksAccount[] | undefined;
   }
+);
 
-  return softwareAccounts ?? [];
-});
+const selectLedgerAccountsState = createSelector(
+  selectCurrentNetwork,
+  selectDefaultWalletStacksKeys,
+  (currentNetwork, ledgerKeys) => {
+    return ledgerKeys.map((publicKeys, index) => {
+      const address = publicKeyToAddressSingleSig(
+        createStacksPublicKey(publicKeys.stxPublicKey).data,
+        getStacksNetworkFromChainId(currentNetwork.chain.stacks.chainId)
+      );
+      return {
+        ...publicKeys,
+        type: 'ledger',
+        address,
+        stxPublicKey: publicKeys.stxPublicKey,
+        dataPublicKey: publicKeys.dataPublicKey,
+        index,
+      };
+    }) satisfies HardwareStacksAccount[] | undefined;
+  }
+);
+
+export const selectStacksAccountState = createSelector(
+  selectLedgerAccountsState,
+  selectSoftwareAccountsState,
+  (ledgerAccounts, softwareAccounts) => {
+    if (ledgerAccounts?.length) {
+      return ledgerAccounts;
+    }
+
+    return softwareAccounts ?? [];
+  }
+);
