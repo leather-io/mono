@@ -24,7 +24,7 @@ function selectNetworksSlice(state: RootState) {
 
 const networksSelectors = networksAdapter.getSelectors<RootState>(selectNetworksSlice);
 
-export const selectNetworks = createSelector(
+const selectNetworks = createSelector(
   networksSelectors.selectEntities,
   state =>
     ({
@@ -33,10 +33,7 @@ export const selectNetworks = createSelector(
     }) as Record<string, NetworkConfiguration>
 );
 
-export const selectCurrentNetworkId = createSelector(
-  selectNetworksSlice,
-  state => state.currentNetworkId
-);
+const selectCurrentNetworkId = createSelector(selectNetworksSlice, state => state.currentNetworkId);
 
 export const selectAppRequestedNetworkId = createSelector(selectNetworks, networks => {
   // CoreAPI URL and networkChainId are from legacy Stacks transactions

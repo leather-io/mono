@@ -11,10 +11,8 @@ import { useAuthRequestParams } from '@app/common/hooks/auth/use-auth-request-pa
 import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useWalletType } from '@app/common/use-wallet-type';
-import {
-  useLegacyStacksWallet,
-  useStacksAccounts,
-} from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useDefaultWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 
 import { useGetLegacyAuthBitcoinAddresses } from './use-legacy-auth-bitcoin-addresses';
 
@@ -25,8 +23,7 @@ export function useFinishAuthRequest() {
   const { walletType } = useWalletType();
 
   const { origin, tabId } = useAuthRequestParams();
-
-  const wallet = useLegacyStacksWallet();
+  const hasSecretKey = !!useDefaultWalletSecretKey();
 
   // TODO: It would be good to separate out finishing auth by the wallet vs an app
   // so that the additional data we provide apps can be removed from our onboarding.
@@ -47,7 +44,8 @@ export function useFinishAuthRequest() {
       // We can't perform any of this logic for non-software wallets
       // as they require the key to be available in the JS context
       if (walletType === 'software' && account.type === 'software') {
-        if (!wallet) return;
+        // NOTE: not sure if this is needed but it replicates a behavior of a deprecated useLegacyStacksWallet hook
+        if (!hasSecretKey) return;
 
         try {
           const authResponse = await makeAuthResponse({
@@ -82,7 +80,7 @@ export function useFinishAuthRequest() {
       origin,
       tabId,
       walletType,
-      wallet,
+      hasSecretKey,
       getLegacyAuthBitcoinData,
       keyActions,
     ]
