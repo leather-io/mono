@@ -84,3 +84,4 @@ export {
   type NumericInputProps,
 } from './components/numeric-input/numeric-input.native';
 export { slidePair } from './animations/slide-pair.native';
+export { useDebouncedValue } from './utils/use-debounced-value.shared';

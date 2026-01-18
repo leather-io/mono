@@ -5,7 +5,6 @@ import {
   recipientSchemaResultContainsError,
 } from '@/features/send/components/recipient/recipient.utils';
 import { useAccountHelpers } from '@/features/send/components/recipient/use-account-helpers';
-import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import {
   QueryFunctionContext,
@@ -16,6 +15,7 @@ import {
 import { ZodSchema } from 'zod';
 
 import { AccountId, FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
+import { useDebouncedValue } from '@leather.io/ui/native';
 
 interface UseRecipientSuggestionsParams {
   searchTerm: string;

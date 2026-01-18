@@ -5,12 +5,12 @@ import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/ful
 import { getAmountErrorMessage } from '@/features/swap/components/amount-field/amount-field-error-messages';
 import { AmountPresets } from '@/features/swap/components/amount-presets';
 import { QuotePreview } from '@/features/swap/components/quote-preview/quote-preview';
-import { UseSwapStateResult } from '@/features/swap/swap-state/swap-state.types';
-import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
 import { currencyDecimalsMap } from '@leather.io/constants';
+import { whenInputCurrencyMode } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
+import { LiveSwapEstimate, UseSwapStateResult } from '@leather.io/state/swap';
 import { Box, Button, Numpad } from '@leather.io/ui/native';
 
 import { AmountField } from '../components/amount-field/amount-field';
@@ -21,7 +21,6 @@ import { AssetSelectorToggle } from '../components/asset-selector/asset-selector
 import { FlipButton } from '../components/flip-button';
 import * as Panel from '../components/panel';
 import { TargetAmountPreview } from '../components/target-amount-preview';
-import { LiveSwapEstimate } from '../swap-state/hooks/use-live-swap-estimate';
 
 interface SwapFormScreenProps {
   swapStateResult: UseSwapStateResult;

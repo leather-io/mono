@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
 import { getFungibleAssetDisplayName } from '@/features/swap/swap.utils';
-import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
 import { AccountSwapAsset } from '@leather.io/services';
+import { useDebouncedValue } from '@leather.io/ui/native';
 
 export function useSwapAssetSearch(data: AccountSwapAsset[] | undefined) {
   const [searchTerm, setSearchTerm] = useState('');

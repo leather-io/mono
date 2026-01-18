@@ -1,8 +1,6 @@
 import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
 
-import { LiveSwapEstimate } from '@/features/swap/swap-state/hooks/use-live-swap-estimate';
-import { SwapState } from '@/features/swap/swap-state/swap-state.types';
-
+import { LiveSwapEstimate, SwapState } from '@leather.io/state/swap';
 import { assertExistence, assertUnreachable } from '@leather.io/utils';
 
 import { QuotePreviewConstrained } from './quote-preview-constrained';

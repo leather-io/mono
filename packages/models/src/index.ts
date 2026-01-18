@@ -1,5 +1,6 @@
 export * from './account.model';
 export * from './activity/activity-level.model';
+export * from './input-currency-mode.model';
 export * from './activity/activity-status.model';
 export * from './activity/activity-type.model';
 export * from './activity/activity.model';

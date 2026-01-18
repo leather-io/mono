@@ -1,5 +1,4 @@
 import { signTx } from '@/features/psbt-signer/signer';
-import { SwapDependencies } from '@/features/swap/swap-state/swap-state.types';
 import { useAccountRequest } from '@/hooks/use-account-request';
 import { useBitcoinClient } from '@/queries/clients/bitcoin-client';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
@@ -17,6 +16,7 @@ import {
   getStacksTransactionFeesService,
   getSwapService,
 } from '@leather.io/services';
+import { SwapDependencies } from '@leather.io/state/swap';
 import { assertExistence } from '@leather.io/utils';
 
 const sbtcClientMainnet = new SbtcApiClientMainnet({});

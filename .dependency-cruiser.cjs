@@ -275,7 +275,9 @@ module.exports = {
           'theme-web',
           'tsdown',
           '.stories.',
-          'packages/cms/src/studio', // Sanity Studio is development-only
+          'packages/cms/src/studio',
+          'test-utils/',
+          '[.]test-utils[.]',
         ],
       },
       to: {

@@ -25,20 +25,41 @@
   "exports": {
     ".": "./dist/index.js",
     "./wallet": "./dist/wallet/index.js",
-    "./keychains": "./dist/keychains/index.js"
+    "./keychains": "./dist/keychains/index.js",
+    "./swap": "./dist/swap/index.js"
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
+    "@leather.io/analytics": "workspace:*",
+    "@leather.io/bitcoin": "workspace:*",
+    "@leather.io/constants": "workspace:*",
     "@leather.io/crypto": "workspace:*",
     "@leather.io/models": "workspace:*",
+    "@leather.io/query": "workspace:*",
+    "@leather.io/services": "workspace:*",
+    "@leather.io/stacks": "workspace:*",
+    "@leather.io/ui": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@reduxjs/toolkit": "2.8.1",
+    "@scure/btc-signer": "1.6.0",
+    "@stacks/common": "7.0.2",
+    "@stacks/network": "7.0.2",
+    "@stacks/transactions": "7.0.5",
+    "@tanstack/react-query": "5.85.5",
+    "bignumber.js": "9.1.2",
     "immer": "10.1.1",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "remeda": "2.21.2",
+    "sbtc": "0.3.2",
     "zod": "4.0.17"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
+    "@testing-library/react": "16.3.0",
+    "@types/react": "19.0.12",
+    "happy-dom": "20.0.11",
     "prettier": "3.5.1",
     "tsdown": "0.16.5",
     "tslib": "2.6.2",
@@ -50,6 +71,10 @@
     "leather wallet",
     "state"
   ],
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
   "prettier": "@leather.io/prettier-config",
   "publishConfig": {
     "access": "public"

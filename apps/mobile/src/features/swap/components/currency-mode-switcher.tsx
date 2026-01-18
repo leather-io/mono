@@ -4,6 +4,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { emptyAmountPlaceholder } from '@/components/balance/constants';
 import { formatCurrency } from '@/utils/currency-formatter';
 
+import { SecondaryAmount } from '@leather.io/state/swap';
 import {
   AnimatedBox,
   ArrowTopBottomIcon,
@@ -13,8 +14,6 @@ import {
   Text,
 } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
-
-import { SecondaryAmount } from '../swap-state/swap-state.types';
 
 interface CurrencySwitchProps {
   secondaryAmount: SecondaryAmount;

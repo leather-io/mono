@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
 
-import { useLiveSwapEstimate } from '@/features/swap/swap-state/hooks/use-live-swap-estimate';
 import { useSwapDependencies } from '@/features/swap/use-swap-dependencies';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 
 import { stxAsset } from '@leather.io/constants';
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { useLiveSwapEstimate, useSwapState } from '@leather.io/state/swap';
 
 import { SwapFormScreen } from './screens/swap-form-screen';
 import { SwapReviewScreen } from './screens/swap-review-screen';
-import { useSwapState } from './swap-state/use-swap-state';
 
 type SwapScreen = 'form' | 'review';
 
