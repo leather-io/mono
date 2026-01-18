@@ -1,10 +1,10 @@
-import {
-  PRICE_IMPACT_DANGER_THRESHOLD,
-  PRICE_IMPACT_WARNING_THRESHOLD,
-} from '@/features/swap/swap-state/swap.constants';
 import { formatPercentage } from '@/utils/currency-formatter';
 import BigNumber from 'bignumber.js';
 
+import {
+  PRICE_IMPACT_DANGER_THRESHOLD,
+  PRICE_IMPACT_WARNING_THRESHOLD,
+} from '@leather.io/state/swap';
 import { Box, ErrorTriangleIcon, Text, Theme } from '@leather.io/ui/native';
 
 type PriceImpactStatus = 'normal' | 'warn' | 'danger';

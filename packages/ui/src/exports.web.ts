@@ -44,4 +44,5 @@ export { useClipboard } from './utils/use-clipboard.web';
 export { useCountdown } from './utils/use-countdown.shared';
 export { useInterval, type UseIntervalState } from './utils/use-interval.shared';
 export { useOnMount } from './utils/use-on-mount.shared';
+export { useDebouncedValue } from './utils/use-debounced-value.shared';
 export { usePressable } from './hooks/use-pressable.web';

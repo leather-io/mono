@@ -1,16 +1,14 @@
-import { AmountFieldCaret } from '@/features/swap/components/amount-field/amount-field-caret';
-import { AmountFieldError } from '@/features/swap/components/amount-field/amount-field-error';
-import { useAmountField } from '@/features/swap/components/amount-field/use-amount-field';
 import { CurrencyModeSwitcher } from '@/features/swap/components/currency-mode-switcher';
-import { SecondaryAmount } from '@/features/swap/swap-state/swap-state.types';
-import { isUserInputEffectivelyZero } from '@/features/swap/swap-state/utils/amount-operations';
-import { InputCurrencyMode } from '@/utils/types';
 import { isDefined } from 'remeda';
 
-import { Currency, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { Currency, InputCurrencyMode, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { SecondaryAmount, isUserInputEffectivelyZero } from '@leather.io/state/swap';
 import { AnimatedBox, Box, slidePair } from '@leather.io/ui/native';
 
+import { AmountFieldCaret } from './amount-field-caret';
+import { AmountFieldError } from './amount-field-error';
 import { PrimaryValue, formatPrimaryValue } from './amount-field-primary-value';
+import { useAmountField } from './use-amount-field';
 
 interface AmountFieldProps {
   asset?: SwappableFungibleCryptoAsset;

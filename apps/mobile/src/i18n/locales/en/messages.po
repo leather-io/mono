@@ -669,7 +669,7 @@ msgstr "Custom fees"
 msgid "Customize your app icon"
 msgstr "Customize your app icon"
 
-#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:43
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:40
 msgid "Decrease slippage"
 msgstr "Decrease slippage"
 
@@ -748,7 +748,7 @@ msgstr "Drag to refresh"
 msgid "Edit memo"
 msgstr "Edit memo"
 
-#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:29
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:26
 msgid "Edit Slippage"
 msgstr "Edit Slippage"
 
@@ -1068,7 +1068,7 @@ msgstr "Image currently unavailable"
 msgid "Import existing accounts from self-custody"
 msgstr "Import existing accounts from self-custody"
 
-#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:45
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:42
 msgid "Increase slippage"
 msgstr "Increase slippage"
 
@@ -1435,7 +1435,7 @@ msgstr "Price"
 msgid "Price impact"
 msgstr "Price impact"
 
-#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:31
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:28
 msgid "Price moving against you past this percentage will cancel the swap."
 msgstr "Price moving against you past this percentage will cancel the swap."
 
@@ -1595,7 +1595,7 @@ msgstr "Reveal account"
 #: src/features/send/forms/btc/btc-form.tsx:126
 #: src/features/send/forms/stx/sip10-form.tsx:149
 #: src/features/send/forms/stx/stx-form.tsx:140
-#: src/features/swap/screens/swap-form-screen.tsx:124
+#: src/features/swap/screens/swap-form-screen.tsx:123
 msgid "Review"
 msgstr "Review"
 
@@ -1815,7 +1815,7 @@ msgid "Success"
 msgstr "Success"
 
 #: src/components/action-buttons.tsx:77
-#: src/features/swap/screens/swap-form-screen.tsx:64
+#: src/features/swap/screens/swap-form-screen.tsx:63
 msgid "Swap"
 msgstr "Swap"
 
@@ -2071,7 +2071,7 @@ msgstr "Unlock"
 msgid "Update from {storeName}"
 msgstr "Update from {storeName}"
 
-#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:49
+#: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:46
 msgid "Update slippage"
 msgstr "Update slippage"
 

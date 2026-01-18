@@ -1,12 +1,9 @@
 import { useState } from 'react';
 
-import {
-  MAX_SLIPPAGE_PERCENTAGE,
-  MIN_SLIPPAGE_PERCENTAGE,
-} from '@/features/swap/swap-state/swap.constants';
 import { formatPercentage } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
+import { MAX_SLIPPAGE_PERCENTAGE, MIN_SLIPPAGE_PERCENTAGE } from '@leather.io/state/swap';
 import { Box, Button, NumericInput, Sheet, type SheetRef, Text } from '@leather.io/ui/native';
 
 interface SlippageSelectorSheetProps {

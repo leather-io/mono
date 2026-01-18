@@ -1,7 +1,7 @@
-import { BaseAmountIssue } from '@/features/swap/swap-state/validation/swap-validation';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
+import { BaseAmountIssue } from '@leather.io/state/swap';
 import { assertUnreachable } from '@leather.io/utils';
 
 export function getAmountErrorMessage(issue?: BaseAmountIssue): string | undefined {
