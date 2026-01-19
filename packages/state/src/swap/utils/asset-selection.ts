@@ -2,6 +2,7 @@ import { filter, map, pipe, sortBy } from 'remeda';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import {
+  type CryptoAssetId,
   type CryptoAssetProtocol,
   type SwappableFungibleCryptoAsset,
   isBtcAsset,
@@ -9,6 +10,10 @@ import {
   isStxAsset,
 } from '@leather.io/models';
 import { type AccountSwapAsset } from '@leather.io/services';
+import { getAssetId } from '@leather.io/utils';
+
+import { type DisabledPairRule } from '../swap-state.types';
+import { isBaseEntirelyDisabled, isPairDisabled } from './disabled-pairs';
 
 interface PriorityAssetConfig {
   protocol: CryptoAssetProtocol;
@@ -32,12 +37,25 @@ const assetOrderPriority: Record<string, PriorityAssetConfig> = {
 
 const defaultPriority = 100;
 
-export function createSwapAssetsSelector(assetSelectionType: 'base' | 'target') {
+export interface SwapAssetsSelectorOptions {
+  disabledPairs?: DisabledPairRule[];
+  currentBaseId?: CryptoAssetId;
+}
+
+export function createSwapAssetsSelector(
+  assetSelectionType: 'base' | 'target',
+  options?: SwapAssetsSelectorOptions
+) {
+  const { disabledPairs = [], currentBaseId } = options ?? {};
+
   return (data: AccountSwapAsset[]): AccountSwapAsset[] => {
     return pipe(
       data,
       map(mapUnlockedToAvailableBalance),
       filter(swapAsset => isRelevantSwapAsset(swapAsset, assetSelectionType)),
+      filter(swapAsset =>
+        isAssetAllowedByDisabledPairs(swapAsset, assetSelectionType, disabledPairs, currentBaseId)
+      ),
       sortBy(
         getCurrencyPriority,
         swapAsset => -getAvailableQuoteBalance(swapAsset),
@@ -108,4 +126,22 @@ export function resolveNetworkFeeAsset(asset?: SwappableFungibleCryptoAsset) {
     stacks: stxAsset,
     bitcoin: btcAsset,
   }[asset.chain];
+}
+
+function isAssetAllowedByDisabledPairs(
+  swapAsset: AccountSwapAsset,
+  type: 'base' | 'target',
+  disabledPairs: DisabledPairRule[],
+  currentBaseId?: CryptoAssetId
+): boolean {
+  if (disabledPairs.length === 0) return true;
+
+  const assetId = getAssetId(swapAsset.asset);
+
+  if (type === 'base') {
+    return !isBaseEntirelyDisabled(assetId, disabledPairs);
+  }
+
+  if (!currentBaseId) return true;
+  return !isPairDisabled(currentBaseId, assetId, disabledPairs);
 }

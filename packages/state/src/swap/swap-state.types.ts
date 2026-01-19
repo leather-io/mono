@@ -9,6 +9,7 @@ import { type configureAnalyticsClient } from '@leather.io/analytics';
 import { type BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import {
   type AccountAddresses,
+  CryptoAssetId,
   type ExecutionConstraint,
   type InputCurrencyMode,
   type MarketData,
@@ -108,6 +109,11 @@ export type SecondaryAmount =
   | { status: 'pending'; value: null }
   | { status: 'error'; value: null }
   | { status: 'success'; value: Money; isFetching: boolean };
+
+export interface DisabledPairRule {
+  base: CryptoAssetId | '*';
+  target: CryptoAssetId | '*';
+}
 
 export interface EnrichedSwapQuote {
   rawSwapQuote: SwapQuote;

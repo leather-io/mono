@@ -16,6 +16,7 @@ import { useSwapQuotes } from './hooks/use-swap-quotes';
 import { useSwapValidation } from './hooks/use-swap-validation';
 import { swapReducer } from './swap-state.reducer';
 import {
+  DisabledPairRule,
   type SwapDependencies,
   type SwapInternalState,
   type TrackEvent,
@@ -28,12 +29,14 @@ import {
   useAssetMarketDataQuery,
 } from './swap.queries';
 import { resolveNetworkFeeAsset } from './utils/asset-selection';
+import { isPairDisabled } from './utils/disabled-pairs';
 
 export interface UseSwapStateProps {
   baseAsset?: SwappableFungibleCryptoAsset;
   targetAsset?: SwappableFungibleCryptoAsset;
   quoteCurrencyPreference: QuoteCurrency;
   dependencies: SwapDependencies;
+  disabledPairs?: DisabledPairRule[];
   trackEvent: TrackEvent;
 }
 
@@ -42,6 +45,7 @@ export function useSwapState({
   targetAsset,
   quoteCurrencyPreference,
   dependencies,
+  disabledPairs = [],
   trackEvent,
 }: UseSwapStateProps): UseSwapStateResult {
   const { accountRequest, services } = dependencies;
@@ -78,12 +82,14 @@ export function useSwapState({
   const baseAssetsQuery = useAccountBaseSwapAssetsQuery({
     accountRequest,
     swapService,
+    disabledPairs,
   });
 
   const targetAssetsQuery = useAccountTargetSwapAssetsQuery({
     swapService,
     accountRequest,
     baseId: state.baseSwapAsset ? getAssetId(state.baseSwapAsset?.asset) : undefined,
+    disabledPairs,
   });
 
   useSwapAssetReconciliation({
@@ -154,6 +160,7 @@ export function useSwapState({
     state,
     derivedAmounts,
     spendableAmount: spendableAmountQuery.data ?? null,
+    disabledPairs,
     trackEvent,
   });
 
@@ -162,7 +169,11 @@ export function useSwapState({
       ...state,
       secondaryAmount,
       isInputReady: state.baseSwapAsset !== null && spendableAmountQuery.isSuccess,
-      assetFlippingAllowed: isAssetFlippingAllowed(state.baseSwapAsset, state.targetSwapAsset),
+      assetFlippingAllowed: isAssetFlippingAllowed(
+        state.baseSwapAsset,
+        state.targetSwapAsset,
+        disabledPairs
+      ),
       isSendingMax,
       effectiveNonce,
     },
@@ -213,7 +224,11 @@ function initializeState({
 
 function isAssetFlippingAllowed(
   baseSwapAsset: AccountSwapAsset | null,
-  targetSwapAsset: AccountSwapAsset | null
-) {
-  return baseSwapAsset !== null && targetSwapAsset !== null;
+  targetSwapAsset: AccountSwapAsset | null,
+  disabledPairs: DisabledPairRule[]
+): boolean {
+  if (!baseSwapAsset || !targetSwapAsset) return false;
+  const flippedBaseId = getAssetId(targetSwapAsset.asset);
+  const flippedTargetId = getAssetId(baseSwapAsset.asset);
+  return !isPairDisabled(flippedBaseId, flippedTargetId, disabledPairs);
 }

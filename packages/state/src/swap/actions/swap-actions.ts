@@ -1,9 +1,10 @@
 import { type Money, type TransactionFeeTier, whenInputCurrencyMode } from '@leather.io/models';
 import { type AccountSwapAsset } from '@leather.io/services';
-import { createMoney } from '@leather.io/utils';
+import { createMoney, getAssetId } from '@leather.io/utils';
 
 import {
   type DerivedAmounts,
+  type DisabledPairRule,
   type PresetPercentage,
   type SwapActionObject,
   type SwapActions,
@@ -11,6 +12,7 @@ import {
   type TrackEvent,
 } from '../swap-state.types';
 import { calculatePercentageAmount, convertMoneyToInputValue } from '../utils/amount-operations';
+import { isPairDisabled } from '../utils/disabled-pairs';
 
 interface CreateSwapActionsParams {
   dispatch(action: SwapActionObject): void;
@@ -18,6 +20,7 @@ interface CreateSwapActionsParams {
   state: SwapInternalState;
   derivedAmounts: DerivedAmounts;
   spendableAmount: Money | null;
+  disabledPairs: DisabledPairRule[];
   trackEvent: TrackEvent;
 }
 
@@ -27,6 +30,7 @@ export function createSwapActions({
   state,
   derivedAmounts,
   spendableAmount,
+  disabledPairs,
   trackEvent,
 }: CreateSwapActionsParams): SwapActions {
   return {
@@ -116,6 +120,11 @@ export function createSwapActions({
     },
 
     flipAssets() {
+      const { baseSwapAsset, targetSwapAsset } = state;
+      if (!baseSwapAsset || !targetSwapAsset) return;
+      const flippedBaseId = getAssetId(targetSwapAsset.asset);
+      const flippedTargetId = getAssetId(baseSwapAsset.asset);
+      if (isPairDisabled(flippedBaseId, flippedTargetId, disabledPairs)) return;
       dispatch({ type: 'FLIP_ASSETS' });
       trackEvent('swap_assets_flipped');
     },
