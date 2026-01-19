@@ -25,21 +25,23 @@ export function createFungibleAsset(
       return btcAsset;
     case 'nativeStx':
       return stxAsset;
-    case 'sip10':
+    case 'sip10': {
+      const symbol = overrides.symbol ?? 'TOKEN';
       return {
         chain: 'stacks',
         category: 'fungible',
         protocol: 'sip10',
-        symbol: 'TOKEN',
+        symbol,
         decimals: 6,
         hasMemo: false,
         name: 'Test Token',
         canTransfer: true,
-        assetId: 'SP12345::test-token::test-token',
-        contractId: 'SP12345.test-token',
+        assetId: symbol,
+        contractId: symbol,
         imageCanonicalUri: 'https://example.com/token.png',
         ...overrides,
       } as Sip10Asset;
+    }
     default:
       throw new Error(`Unsupported protocol: ${protocol}`);
   }

@@ -16,7 +16,7 @@ import {
 import { useDebouncedValue } from '@leather.io/ui/native';
 import { delay } from '@leather.io/utils';
 
-import { type SwapQuotePolicy } from './swap-state.types';
+import { type DisabledPairRule, type SwapQuotePolicy } from './swap-state.types';
 import { createSwapAssetsSelector } from './utils/asset-selection';
 import { swapQuoteSelector } from './utils/swap-quote-selection';
 
@@ -31,16 +31,18 @@ const globalRefetchOptions = {
 interface UseAccountBaseSwapAssetsQueryParams {
   swapService: SwapService;
   accountRequest: AccountRequest;
+  disabledPairs?: DisabledPairRule[];
 }
 
 export function useAccountBaseSwapAssetsQuery({
   swapService,
   accountRequest,
+  disabledPairs,
 }: UseAccountBaseSwapAssetsQueryParams) {
   return useQuery({
     queryKey: ['account-base-swap-assets', { request: accountRequest }],
     queryFn: ({ signal }) => swapService.getAccountBaseSwapAssets(accountRequest, signal),
-    select: createSwapAssetsSelector('base'),
+    select: createSwapAssetsSelector('base', { disabledPairs }),
     refetchInterval: assetsRefetchInterval,
     ...globalRefetchOptions,
   });
@@ -50,12 +52,14 @@ interface UseAccountTargetSwapAssetsQueryParams {
   swapService: SwapService;
   accountRequest: AccountRequest;
   baseId?: CryptoAssetId;
+  disabledPairs?: DisabledPairRule[];
 }
 
 export function useAccountTargetSwapAssetsQuery({
   swapService,
   accountRequest,
   baseId,
+  disabledPairs,
 }: UseAccountTargetSwapAssetsQueryParams) {
   return useQuery({
     queryKey: ['account-target-swap-assets', { baseId, request: accountRequest }],
@@ -64,7 +68,7 @@ export function useAccountTargetSwapAssetsQuery({
       return swapService.getAccountTargetSwapAssets(accountRequest, baseId, signal);
     },
     enabled: isDefined(baseId),
-    select: createSwapAssetsSelector('target'),
+    select: createSwapAssetsSelector('target', { disabledPairs, currentBaseId: baseId }),
     refetchInterval: assetsRefetchInterval,
     ...globalRefetchOptions,
   });

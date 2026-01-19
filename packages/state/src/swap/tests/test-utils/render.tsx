@@ -8,7 +8,7 @@ import { vi } from 'vitest';
 import { MarketData, SwapQuote } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
 
-import { SwapDependencies } from '../../swap-state.types';
+import { DisabledPairRule, SwapDependencies } from '../../swap-state.types';
 import { UseSwapStateProps, useSwapState } from '../../use-swap-state';
 import { createAccountRequest } from './fixtures';
 import {
@@ -40,6 +40,7 @@ interface RenderUseSwapStateParams extends Omit<UseSwapStateProps, 'dependencies
   marketData: MarketData;
   maxSpendAmount?: number;
   dependencies?: Partial<SwapDependencies>;
+  disabledPairs?: DisabledPairRule[];
 }
 
 export function renderUseSwapState({
@@ -50,11 +51,13 @@ export function renderUseSwapState({
   marketData,
   maxSpendAmount,
   dependencies,
+  disabledPairs,
   ...rest
 }: Partial<RenderUseSwapStateParams> = {}) {
   const { result } = renderHookWithProviders(() =>
     useSwapState({
       quoteCurrencyPreference,
+      disabledPairs,
       trackEvent: () => Promise.resolve(),
       dependencies: {
         accountRequest: createAccountRequest(),
