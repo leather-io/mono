@@ -11,8 +11,7 @@
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "lint": "eslint --cache --max-warnings 0",
-    "lint:fix": "pnpm lint --fix",
-    "prepare": "pnpm build"
+    "lint:fix": "pnpm lint --fix"
   },
   "exports": {
     ".": "./dist/preset.js",
