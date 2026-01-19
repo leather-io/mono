@@ -45,17 +45,9 @@ interface SwapAvatarIconProps {
 
 function SwapAvatarIcon({ fromAsset, toAsset, indicator }: SwapAvatarIconProps) {
   return (
-    <Box position="relative" style={{ width: 76, height: 48 }}>
-      <Box position="absolute" style={{ top: 4, left: 0, zIndex: 1, opacity: 0.6 }}>
-        <AssetAvatarIcon asset={fromAsset} size="lg" />
-      </Box>
-      <Box
-        borderRadius="round"
-        borderWidth={3}
-        borderColor="ink.background-primary"
-        position="absolute"
-        style={{ top: 0, left: 28, zIndex: 2 }}
-      >
+    <Box flexDirection="row" alignItems="center">
+      <AssetAvatarIcon asset={fromAsset} size="lg" opacity={0.5} />
+      <Box borderWidth={3} borderColor="ink.background-primary" borderRadius="round" ml="-3">
         <AssetAvatarIcon asset={toAsset} indicator={indicator} size="xl" />
       </Box>
     </Box>
