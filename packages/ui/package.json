@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "pnpm build:native && pnpm build:web",
+    "build": "sh build-conditional.sh",
     "build-storybook:web": "storybook build -c ./src/.storybook-web",
     "build:native": "tsdown --config tsdown.config.native.ts",
     "build:native:watch": "tsdown --watch --config tsdown.config.native.ts",
