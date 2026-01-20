@@ -1,23 +1,62 @@
 import { describe, expect, test } from 'vitest';
 
-import { testMnemonic } from '@leather.io/test-config';
 
-import {
-  deriveBip39SeedFromMnemonic,
-  deriveKeychainExtendedPublicKeyDescriptor,
-  deriveRootBip32Keychain,
-  getMnemonicRootKeyFingerprint,
-  makeAccountIdentifer,
-} from './keychain';
+
+import { testMnemonic } from '@leather.io/test-config';
+import { createNullArrayOfLength } from '@leather.io/utils';
+
+
+
+import { deriveBip39SeedFromMnemonic, deriveKeychainExtendedPublicKeyDescriptor, deriveRootBip32Keychain, generateMnemonic, getMnemonicRootKeyFingerprint, getMnemonicRootKeyFingerprintBroken, makeAccountIdentifer, safelyReadPaddedFingerprint, safelyReadPaddedFingerprint } from './keychain';
+
+
+
+
 
 const passphrase = 'abandoned cactus';
 
 describe(getMnemonicRootKeyFingerprint.name, () => {
-  test('it derives the correct fingerprint of test mnemonic', async () =>
-    expect(await getMnemonicRootKeyFingerprint(testMnemonic)).toEqual('24682ead'));
+  test('it derives the correct fingerprint of test mnemonic', () =>
+    expect(getMnemonicRootKeyFingerprint(testMnemonic)).toEqual('24682ead'));
 
-  test('it derives the correct fingerprint of test mnemonic with passphrase', async () =>
-    expect(await getMnemonicRootKeyFingerprint(testMnemonic, passphrase)).toEqual('984c5aea'));
+  test('it derives the correct fingerprint of test mnemonic with passphrase', () =>
+    expect(getMnemonicRootKeyFingerprint(testMnemonic, passphrase)).toEqual('984c5aea'));
+
+  test.each(
+    createNullArrayOfLength(40)
+      .fill(null)
+      .map(() => generateMnemonic())
+  )('it always derives a 4 byte length hex string, 8 chars', value => {
+    const result = getMnemonicRootKeyFingerprint(value);
+    expect(result.length).toEqual(8);
+  });
+
+  test('known leading zero case mnemonic', () => {
+    const knownLeadingZeroMnemonic =
+      'figure theory skirt system gasp birth clump exile leg trade matter noise uniform phrase wine oil bird guess dirt deer shoe sketch already bacon';
+
+    const wrongResult = getMnemonicRootKeyFingerprintBroken(knownLeadingZeroMnemonic);
+
+    expect(wrongResult).toEqual('30b34f3');
+    expect(wrongResult.length).toEqual(7);
+
+    const correctResult = getMnemonicRootKeyFingerprint(knownLeadingZeroMnemonic);
+    expect(correctResult).toEqual('030b34f3');
+    expect(correctResult.length).toEqual(8);
+  });
+});
+
+// test safelyReadPaddedFingerprint
+describe(safelyReadPaddedFingerprint.name, () => {
+  test('it pads fingerprint hex strings shorter than 8 characters', () => {
+    expect(safelyReadPaddedFingerprint('1a2b3c')).toEqual('001a2b3c');
+    expect(safelyReadPaddedFingerprint('abcdefg')).toEqual('0abcdefg');
+  });
+
+  test('it returns fingerprint hex strings of length 8 unchanged', () => {
+    expect(safelyReadPaddedFingerprint('12345678')).toEqual('12345678');
+    expect(safelyReadPaddedFingerprint('87654321')).toEqual('87654321');
+  });
 });
 
 describe(deriveKeychainExtendedPublicKeyDescriptor.name, () => {
