@@ -1,7 +1,7 @@
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
-import { OnPressTokenDetails } from '@/features/token/types';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
+import { useRouter } from 'expo-router';
 
 import { stxAsset } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
@@ -20,12 +20,9 @@ export function StacksTokenBalance(props: StacksTokenBalanceProps) {
   );
 }
 
-export function StacksBalanceByAccount({
-  accountIndex,
-  fingerprint,
-  onPress,
-}: OnPressTokenDetails & AccountId) {
+export function StacksBalanceByAccount({ accountIndex, fingerprint }: AccountId) {
   const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
+  const router = useRouter();
 
   const availableBalance = value?.stx.availableUnlockedBalance;
   const quoteBalance = value?.quote.availableUnlockedBalance;
@@ -38,13 +35,11 @@ export function StacksBalanceByAccount({
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={
-        onPress
-          ? () =>
-              onPress?.({
-                assetId: serializeAssetId(getAssetId(stxAsset)),
-              })
-          : undefined
+      onPress={() =>
+        router.navigate({
+          pathname: '/(tabs)/(index)/[assetId]',
+          params: { assetId: serializeAssetId(getAssetId(stxAsset)) },
+        })
       }
       isLoading={state === 'loading'}
     />

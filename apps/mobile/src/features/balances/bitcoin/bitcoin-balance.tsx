@@ -1,7 +1,7 @@
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
-import { OnPressTokenDetails } from '@/features/token/types';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/core/macro';
+import { useRouter } from 'expo-router';
 
 import { btcAsset } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
@@ -21,15 +21,13 @@ export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
   );
 }
 
-export function BitcoinBalanceByAccount({
-  accountIndex,
-  fingerprint,
-  onPress,
-}: OnPressTokenDetails & AccountId) {
+export function BitcoinBalanceByAccount({ accountIndex, fingerprint }: AccountId) {
   const { state, value } = useBtcAccountBalance(fingerprint, accountIndex);
 
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
+  const router = useRouter();
+
   if (!availableBalance || !quoteBalance) {
     return null;
   }
@@ -37,13 +35,11 @@ export function BitcoinBalanceByAccount({
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={
-        onPress
-          ? () =>
-              onPress?.({
-                assetId: serializeAssetId(getAssetId(btcAsset)),
-              })
-          : undefined
+      onPress={() =>
+        router.navigate({
+          pathname: '/(tabs)/(index)/[assetId]',
+          params: { assetId: serializeAssetId(getAssetId(btcAsset)) },
+        })
       }
       isLoading={state === 'loading'}
     />
