@@ -11,11 +11,12 @@ import {
   deriveKeychainFromXpub,
   extractAddressIndexFromPath,
   extractChangeIndexFromPath,
+  fingerprintAsNumberToHex,
   keyOriginToDerivationPath,
 } from '@leather.io/crypto';
 import type { BitcoinAddress, BitcoinNetworkModes, ValueOf } from '@leather.io/models';
 import { PaymentTypes, signatureHash } from '@leather.io/rpc';
-import { hexToNumber, toHexString } from '@leather.io/utils';
+import { hexToNumber } from '@leather.io/utils';
 
 import { getTaprootPaymentFromAddressIndex } from '../payments/p2tr-address-gen';
 import { getNativeSegwitPaymentFromAddressIndex } from '../payments/p2wpkh-address-gen';
@@ -233,7 +234,7 @@ export function extractPayerInfoFromDerivationPath(path: string) {
  */
 export function serializeKeyOrigin({ fingerprint, path }: BtcSignerDerivationPath) {
   const values = path.map(num => (num >= HARDENED_OFFSET ? num - HARDENED_OFFSET + "'" : num));
-  return `${toHexString(fingerprint)}/${values.join('/')}`;
+  return `${fingerprintAsNumberToHex(fingerprint)}/${values.join('/')}`;
 }
 
 /**
