@@ -1,8 +1,6 @@
-import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import {
   mnemonicToSeed,
-  mnemonicToSeedSync,
   generateMnemonic as scureGenerateMnemonic,
   validateMnemonic,
 } from '@scure/bip39';
@@ -26,10 +24,6 @@ export async function deriveBip39SeedFromMnemonic(mnemonic: string, passphrase?:
   return mnemonicToSeed(mnemonic, passphrase);
 }
 
-export function deriveBip39SeedFromMnemonicSync(mnemonic: string, passphrase?: string) {
-  return mnemonicToSeedSync(mnemonic, passphrase);
-}
-
 /** @deprecated Inaccurately named fn, use `deriveBip39SeedFromMnemonic` */
 export const deriveBip39MnemonicFromSeed = deriveBip39SeedFromMnemonic;
 
@@ -39,10 +33,6 @@ export function deriveRootBip32Keychain(seed: Uint8Array) {
 
 export async function deriveRootKeychainFromMnemonic(mnemonic: string, passphrase?: string) {
   return deriveRootBip32Keychain(await deriveBip39SeedFromMnemonic(mnemonic, passphrase));
-}
-
-export function deriveRootKeychainFromMnemonicSync(mnemonic: string, passphrase?: string) {
-  return deriveRootBip32Keychain(deriveBip39SeedFromMnemonicSync(mnemonic, passphrase));
 }
 
 export async function deriveChildKeychainFromMnemnonic(
@@ -71,16 +61,16 @@ export function safelyReadPaddedFingerprint(fingerprintHex: string) {
  * Gets keychain fingerprint directly from mnemonic. This is useful for
  * referencing a mnemonic safely by an identifier.
  */
-export function getMnemonicRootKeyFingerprint(mnemonic: string, passphrase?: string) {
-  const keychain = deriveRootBip32Keychain(deriveBip39SeedFromMnemonicSync(mnemonic, passphrase));
+export async function getMnemonicRootKeyFingerprint(mnemonic: string, passphrase?: string) {
+  const keychain = deriveRootBip32Keychain(await deriveBip39SeedFromMnemonic(mnemonic, passphrase));
   return fingerprintAsNumberToHex(keychain.fingerprint);
 }
 
 /**
  * @deprecated Does not handle leading zeros correctly, use `getMnemonicRootKeyFingerprint` instead
  */
-export function getMnemonicRootKeyFingerprintBroken(mnemonic: string, passphrase?: string) {
-  const keychain = deriveRootBip32Keychain(deriveBip39SeedFromMnemonicSync(mnemonic, passphrase));
+export async function getMnemonicRootKeyFingerprintBroken(mnemonic: string, passphrase?: string) {
+  const keychain = deriveRootBip32Keychain(await deriveBip39SeedFromMnemonic(mnemonic, passphrase));
   return toHexString(keychain.fingerprint);
 }
 
