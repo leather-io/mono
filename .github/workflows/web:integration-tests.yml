@@ -48,7 +48,7 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: prepare-script
-        run: pnpm prepare
+        run: pnpm --filter=@leather.io/web run prepare:build
 
       - name: build-packages
         working-directory: ./

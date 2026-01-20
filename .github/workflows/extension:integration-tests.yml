@@ -45,7 +45,7 @@ jobs:
 
       - name: build-styles
         working-directory: apps/extension
-        run: pnpm prepare
+        run: pnpm run prepare:build
 
       - name: build-extension-in-test-mode
         run: pnpm build:test
@@ -83,7 +83,7 @@ jobs:
 
       - name: build-styles
         working-directory: apps/extension
-        run: pnpm prepare
+        run: pnpm run prepare:build
 
       - name: build-test-dependencies
         working-directory: ./
