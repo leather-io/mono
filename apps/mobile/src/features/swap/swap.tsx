@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { useSwapDependencies } from '@/features/swap/use-swap-dependencies';
+import { useSwapDisabledPairs } from '@/features/swap/use-swap-disabled-pairs';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 
@@ -23,12 +24,14 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
   const [currentScreen, setCurrentScreen] = useState<SwapScreen>('form');
   const { fiatCurrencyPreference } = useSettings();
   const dependencies = useSwapDependencies();
+  const disabledPairs = useSwapDisabledPairs();
 
   const swapStateResult = useSwapState({
     dependencies,
     quoteCurrencyPreference: fiatCurrencyPreference,
     baseAsset,
     targetAsset,
+    disabledPairs,
     trackEvent: analytics.track,
   });
 
