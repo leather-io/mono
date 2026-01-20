@@ -9,11 +9,9 @@ import { AssetsList } from '@/features/balances/assets/assets-list';
 import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-balance';
 import { ManageTokensSheet } from '@/features/balances/manage-tokens.sheet';
 import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
-import { useCollectibleDetailsFlag, useTokenDetailsFlag } from '@/features/feature-flags';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { CollectiblesList } from '@/features/token/collectibles-list';
-import { TokenDetailsProps } from '@/features/token/types';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
@@ -24,12 +22,9 @@ import {
   useCollectiblesAnalytics,
   useTokenPortfolioAnalytics,
 } from '@/utils/analytics-hooks';
-import { useRouter } from 'expo-router';
 
-import { btcAsset, stxAsset } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
 import { SheetInstance } from '@leather.io/ui/native';
-import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { AccountScreenHeader } from './account-screen-header';
 import { AssetTabs } from './components/asset-tabs';
@@ -71,16 +66,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     changeCurrentAccount(account);
   }
 
-  const router = useRouter();
-
-  function onOpenToken({ assetId }: TokenDetailsProps) {
-    router.navigate({
-      pathname: '/(tabs)/(index)/[assetId]',
-      params: { assetId },
-    });
-  }
-  const tokenDetailsFlag = useTokenDetailsFlag();
-  const collectiblesDetailsFlag = useCollectibleDetailsFlag();
   const totalBalance = useAccountTotalBalance({
     fingerprint: currentAccount.fingerprint,
     accountIndex: currentAccount.accountIndex,
@@ -109,35 +94,12 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
                 }}
                 hasAssets={hasAssets}
               />
-              <BitcoinBalanceByAccount
-                fingerprint={fingerprint}
-                accountIndex={accountIndex}
-                onPress={
-                  tokenDetailsFlag
-                    ? () =>
-                        onOpenToken?.({
-                          assetId: serializeAssetId(getAssetId(btcAsset)),
-                        })
-                    : undefined
-                }
-              />
-              <StacksBalanceByAccount
-                fingerprint={fingerprint}
-                accountIndex={accountIndex}
-                onPress={
-                  tokenDetailsFlag
-                    ? () =>
-                        onOpenToken?.({
-                          assetId: serializeAssetId(getAssetId(stxAsset)),
-                        })
-                    : undefined
-                }
-              />
+              <BitcoinBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
+              <StacksBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
             </>
           }
           sip10Data={sip10Data}
           runesData={runesData}
-          onPressToken={tokenDetailsFlag ? onOpenToken : undefined}
         />
       )}
       {listTab === 'collectibles' && (
@@ -149,7 +111,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
               <AssetTabs listTab={listTab} setListTab={setListTab} />
             </>
           }
-          onPressToken={collectiblesDetailsFlag ? onOpenToken : undefined}
         />
       )}
 

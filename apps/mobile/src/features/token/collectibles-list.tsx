@@ -7,12 +7,13 @@ import { Screen } from '@/components/screen/screen';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { CollectiblesListLoading } from '@/features/token/components/collectibles-list-loading';
 import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
-import { TokenDetailsProps } from '@/features/token/types';
+import { useRouter } from 'expo-router';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { CollectibleTypeIconOverlay } from '@leather.io/ui/native';
-import { assertUnreachable } from '@leather.io/utils';
+import { assertUnreachable, getAssetId, serializeAssetId } from '@leather.io/utils';
 
+import { useCollectibleDetailsFlag } from '../feature-flags';
 import { Inscription } from './bitcoin/inscription';
 import { Stamp } from './bitcoin/stamp';
 import { Sip9 } from './stacks/sip9';
@@ -20,7 +21,7 @@ import { Sip9 } from './stacks/sip9';
 interface RenderCollectibleProps {
   item: NonFungibleCryptoAsset;
   height: number;
-  onPress?(tokenDetails: TokenDetailsProps): void;
+  onPress?(): void;
 }
 function renderCollectible({ item, height, onPress }: RenderCollectibleProps) {
   const collectible = (() => {
@@ -53,18 +54,14 @@ function useCollectibleListItemHeight() {
 interface CollectiblesListProps {
   collectiblesState: FetchState<NonFungibleCryptoAsset[]>;
   header: ReactElement;
-  onPressToken?(tokenDetails: TokenDetailsProps): void;
 }
 
-export function CollectiblesList({
-  collectiblesState,
-  header,
-  onPressToken,
-}: CollectiblesListProps) {
+export function CollectiblesList({ collectiblesState, header }: CollectiblesListProps) {
   const collectibles = collectiblesState.state === 'success' ? collectiblesState.value : [];
   const height = useCollectibleListItemHeight();
+  const router = useRouter();
+  const collectiblesDetailsFlag = useCollectibleDetailsFlag();
 
-  const isSuccess = collectiblesState.state === 'success';
   const isLoading = collectiblesState.state === 'loading';
   const isError = collectiblesState.state === 'error';
 
@@ -72,15 +69,18 @@ export function CollectiblesList({
     <Screen.FlashList
       numColumns={2}
       data={collectibles}
-      renderItem={
-        isSuccess
-          ? ({ item }) =>
-              renderCollectible({
-                item,
-                height,
-                onPress: onPressToken ? onPressToken : undefined,
-              })
-          : undefined
+      renderItem={({ item }) =>
+        renderCollectible({
+          item,
+          height,
+          onPress: collectiblesDetailsFlag
+            ? () =>
+                router.navigate({
+                  pathname: '/(tabs)/(index)/[assetId]',
+                  params: { assetId: serializeAssetId(getAssetId(item)) },
+                })
+            : undefined,
+        })
       }
       getItemType={item => item.protocol}
       refreshControl={<RefreshControl />}

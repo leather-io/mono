@@ -3,13 +3,13 @@ import { ReactElement, useMemo } from 'react';
 import { Screen } from '@/components/screen/screen';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
-import { TokenDetailsProps } from '@/features/token/types';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import {
   useSip10AccountBalance,
   useSip10BalanceByAssetId,
 } from '@/queries/balance/sip10-balance.query';
 import { useSettings } from '@/store/settings/settings';
+import { useRouter } from 'expo-router';
 
 import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
@@ -27,18 +27,12 @@ interface AssetsListProps {
   sip10Data: ReturnType<typeof useSip10AccountBalance>;
   runesData: ReturnType<typeof useRunesAccountBalance>;
   header: ReactElement;
-  onPressToken?(tokenDetails: TokenDetailsProps): void;
 }
 
-export function AssetsList({
-  account,
-  sip10Data,
-  runesData,
-  header,
-  onPressToken,
-}: AssetsListProps) {
+export function AssetsList({ account, sip10Data, runesData, header }: AssetsListProps) {
   const { fingerprint, accountIndex } = account;
   const { networkPreference } = useSettings();
+  const router = useRouter();
 
   const usdcxAssetId =
     networkPreference.chain.bitcoin.mode === 'mainnet'
@@ -74,12 +68,13 @@ export function AssetsList({
       renderItem={({ item }) =>
         renderAsset({
           item,
-          onPress: onPressToken
-            ? () =>
-                onPressToken?.({
-                  assetId: serializeAssetId(getAssetId(item.asset)),
-                })
-            : undefined,
+          onPress: () =>
+            router.navigate({
+              pathname: '/(tabs)/(index)/[assetId]',
+              params: {
+                assetId: serializeAssetId(getAssetId(item.asset)),
+              },
+            }),
         })
       }
       getItemType={item => item.asset.protocol}

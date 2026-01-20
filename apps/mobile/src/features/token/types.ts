@@ -5,10 +5,6 @@ export interface TokenDetailsProps {
   assetId: SerializedCryptoAssetId;
 }
 
-export interface OnPressTokenDetails {
-  onPress?(tokenDetails: TokenDetailsProps): void;
-}
-
 const supportedAssetProtocols = [
   'nativeBtc',
   'nativeStx',
