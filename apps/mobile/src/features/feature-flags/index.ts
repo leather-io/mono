@@ -103,3 +103,7 @@ export function useOnramperBuyFlag() {
 export function useOnramperSellFlag() {
   return useBoolVariation('release_onramper_sell', false);
 }
+
+export function useSwapSbtcBridgingFlag() {
+  return useBoolVariation('swap_sbtc_bridging', false);
+}
