@@ -7,13 +7,15 @@ import { PersistConfig, createMigrate } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { z } from 'zod';
 
+import { safelyReadPaddedFingerprint } from '@leather.io/crypto';
+
 import { RootState } from '.';
 import { migrations } from './migrations';
 
 export const persistConfig: PersistConfig<RootState> = {
   key: 'root',
   stateReconciler: autoMergeLevel2,
-  version: 1,
+  version: 2,
   storage: AsyncStorage,
   migrate: createMigrate(migrations, { debug: process.env.NODE_ENV === 'development' }),
   whitelist: ['wallets', 'accounts', 'keychains', 'settings', 'apps'],
@@ -110,24 +112,64 @@ interface MnemonicStore {
 // Mnemonics are accessed directly from SecureStore to avoid leaving them in the
 // app state. Read the key only at the time it is needed for signing.
 export function mnemonicStore(fingerprint: string): MnemonicStore {
-  const passphraseKey = `${fingerprint}_passphrase`;
+  const paddedFingerprint = safelyReadPaddedFingerprint(fingerprint);
+  const passphraseKey = `${paddedFingerprint}_passphrase`;
+  const oldPassphraseKey = fingerprint !== paddedFingerprint ? `${fingerprint}_passphrase` : null;
+
   return {
     async getMnemonic() {
-      const mnemonic = await SecureStore.getItemAsync(fingerprint, getBasicSecureStoreConfig());
-      const passphrase =
-        (await SecureStore.getItemAsync(passphraseKey, getBasicSecureStoreConfig())) ?? undefined;
-      return mnemonicSchema.parse({ mnemonic, passphrase });
+      let mnemonic = await SecureStore.getItemAsync(
+        paddedFingerprint,
+        getBasicSecureStoreConfig()
+      );
+
+      if (!mnemonic && fingerprint !== paddedFingerprint) {
+        mnemonic = await SecureStore.getItemAsync(fingerprint, getBasicSecureStoreConfig());
+        if (mnemonic) {
+          await SecureStore.setItemAsync(
+            paddedFingerprint,
+            mnemonic,
+            getBasicSecureStoreConfig()
+          );
+          await SecureStore.deleteItemAsync(fingerprint, getBasicSecureStoreConfig());
+        }
+      }
+
+      let passphrase = await SecureStore.getItemAsync(passphraseKey, getBasicSecureStoreConfig());
+
+      if (!passphrase && oldPassphraseKey) {
+        passphrase = await SecureStore.getItemAsync(oldPassphraseKey, getBasicSecureStoreConfig());
+        if (passphrase) {
+          await SecureStore.setItemAsync(passphraseKey, passphrase, getBasicSecureStoreConfig());
+          await SecureStore.deleteItemAsync(oldPassphraseKey, getBasicSecureStoreConfig());
+        }
+      }
+
+      return mnemonicSchema.parse({ mnemonic, passphrase: passphrase ?? undefined });
     },
     async setMnemonic({ mnemonic, passphrase, biometrics }) {
       if (passphrase)
         await SecureStore.setItemAsync(passphraseKey, passphrase, getSecureStoreConfig(biometrics));
-      return SecureStore.setItemAsync(fingerprint, mnemonic, getSecureStoreConfig(biometrics));
+      return SecureStore.setItemAsync(
+        paddedFingerprint,
+        mnemonic,
+        getSecureStoreConfig(biometrics)
+      );
     },
     async deleteMnemonic() {
-      return Promise.all([
-        SecureStore.deleteItemAsync(fingerprint, getBasicSecureStoreConfig()),
+      const deletePromises = [
+        SecureStore.deleteItemAsync(paddedFingerprint, getBasicSecureStoreConfig()),
         SecureStore.deleteItemAsync(passphraseKey, getBasicSecureStoreConfig()),
-      ]);
+      ];
+
+      if (oldPassphraseKey) {
+        deletePromises.push(
+          SecureStore.deleteItemAsync(fingerprint, getBasicSecureStoreConfig()),
+          SecureStore.deleteItemAsync(oldPassphraseKey, getBasicSecureStoreConfig())
+        );
+      }
+
+      return Promise.all(deletePromises);
     },
   };
 }

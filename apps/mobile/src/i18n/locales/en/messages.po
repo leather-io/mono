@@ -252,7 +252,7 @@ msgstr "Alex"
 msgid "ALEX"
 msgstr "ALEX"
 
-#: src/store/storage-persistors.ts:24
+#: src/store/storage-persistors.ts:26
 msgid "Allow app to access secure storage"
 msgstr "Allow app to access secure storage"
 
