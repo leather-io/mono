@@ -489,6 +489,31 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.103.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.103.0...@leather.io/ui-v1.103.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* **ci:** decouple mobile build from package lifecycle hooks ([a53e33a](https://github.com/leather-io/mono/commit/a53e33a6d97c3af8b52a3d4972cd7caadac2edae))
+* **extension:** bleeding shadows ([f14bd12](https://github.com/leather-io/mono/commit/f14bd123173f9377eb942de7ec3f03087c51e142))
+* integration tests connected to settings ([19b9213](https://github.com/leather-io/mono/commit/19b92135ac7fce715b96441877301efcb4d0ced9))
+* **mobile:** adjust swap activity icon alignment, simplify styling ([53587a2](https://github.com/leather-io/mono/commit/53587a2f90ba51bd5e814d66afc2ddd26ed7a4c8))
+* **mobile:** refactor avatars + fix regressions to mobile activity ([08465b6](https://github.com/leather-io/mono/commit/08465b6a972002cc957cbcd9f00b7fd8fdee8cf9))
+* more updates for settings revamp ([edb2895](https://github.com/leather-io/mono/commit/edb289521116b96b46afd733071a16ba8ba7f9b5))
+* **ui:** use contractId to identify sBTC and USDCx for custom avatars ([3a3ebcb](https://github.com/leather-io/mono/commit/3a3ebcbf470e0ade89fec2d39fb93e683cbbdceb))
+* update extension revamp ui for tooltips and spacings ([660f4e4](https://github.com/leather-io/mono/commit/660f4e431fbf68d4598a750e8f6b5ecd86235725))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.25.2
+    * @leather.io/utils bumped to 0.49.7
+  * devDependencies
+    * @leather.io/features bumped to 1.1.10
+    * @leather.io/panda-preset bumped to 0.16.1
+
 ## [1.103.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.102.0...@leather.io/ui-v1.103.0) (2026-01-12)
 
 

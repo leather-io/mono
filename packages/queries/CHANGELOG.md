@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.4.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.3.2...@leather.io/queries-v0.4.0) (2026-01-21)
+
+
+### Features
+
+* update query layer for collectibles and add shared utilities ([a7c9046](https://github.com/leather-io/mono/commit/a7c904652b8ec7f61cef415dee4b84a27db52c55))
+
+
+### Bug Fixes
+
+* **extension:** sip10 send form service usage ([c61d4e5](https://github.com/leather-io/mono/commit/c61d4e5de382c4a94686ed751120677dc6d44095))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.46.5
+    * @leather.io/utils bumped to 0.49.7
+
 ## [0.3.2](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.3.1...@leather.io/queries-v0.3.2) (2026-01-12)
 
 

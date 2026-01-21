@@ -577,6 +577,22 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/utils bumped to 0.46.4
 
+## [1.19.9](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.19.8...@leather.io/stacks-v1.19.9) (2026-01-21)
+
+
+### Bug Fixes
+
+* **extension:** contract principal support, closes leather-io/extension[#6334](https://github.com/leather-io/mono/issues/6334) ([b428c1f](https://github.com/leather-io/mono/commit/b428c1f400df8585772622c2ad195d20d6cad08f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.30.0
+    * @leather.io/crypto bumped to 1.12.13
+    * @leather.io/utils bumped to 0.49.7
+
 ## [1.19.8](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.19.7...@leather.io/stacks-v1.19.8) (2025-12-18)
 
 

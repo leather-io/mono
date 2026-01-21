@@ -413,6 +413,25 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.46.5](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.4...@leather.io/services-v1.46.5) (2026-01-21)
+
+
+### Bug Fixes
+
+* **extension:** sip10 send form service usage ([c61d4e5](https://github.com/leather-io/mono/commit/c61d4e5de382c4a94686ed751120677dc6d44095))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.3
+    * @leather.io/constants bumped to 0.30.0
+    * @leather.io/stacks bumped to 1.19.9
+    * @leather.io/utils bumped to 0.49.7
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.7
+
 ## [1.46.4](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.3...@leather.io/services-v1.46.4) (2026-01-12)
 
 
