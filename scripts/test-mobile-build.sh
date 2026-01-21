@@ -16,9 +16,19 @@ echo "🧹 Cleaning build artifacts..."
 rm -rf packages/*/dist packages/*/dist-* apps/mobile/node_modules/.cache
 echo ""
 
-# Install mobile dependencies only
+# Install mobile dependencies only (without running scripts yet)
 echo "📦 Installing mobile dependencies..."
-pnpm install --filter=@leather.io/mobile...
+pnpm install --filter=@leather.io/mobile... --ignore-scripts
+echo ""
+
+# Build tokens package first (required by postinstall Lottie sync)
+echo "🎨 Building tokens package (required for Lottie color sync)..."
+BUILD_TARGET=mobile pnpm --filter=@leather.io/tokens build
+echo ""
+
+# Now run postinstall scripts (sync-lottie-colors needs built tokens)
+echo "🔧 Running postinstall scripts..."
+cd apps/mobile && pnpm rebuild --pending && cd ../..
 echo ""
 
 # Build mobile app
@@ -63,12 +73,30 @@ if [ -d "packages/ui/dist-web" ]; then
   echo "   Build will work but wastes resources"
 fi
 
+# Check Lottie colors were synced with tokens
+echo "🎨 Checking Lottie color sync..."
+# Check for the correct RGB values in the backgroundColor (allowing for whitespace variations)
+if grep -q '"r": 18' apps/mobile/src/assets/lottie-splash-screen-light.json && \
+   grep -q '"g": 16' apps/mobile/src/assets/lottie-splash-screen-light.json && \
+   grep -q '"b": 15' apps/mobile/src/assets/lottie-splash-screen-light.json && \
+   grep -q '"r": 158' apps/mobile/src/assets/lottie-splash-screen-dark.json && \
+   grep -q '"g": 153' apps/mobile/src/assets/lottie-splash-screen-dark.json && \
+   grep -q '"b": 150' apps/mobile/src/assets/lottie-splash-screen-dark.json; then
+  echo "✅ PASS: Lottie colors synced correctly with tokens"
+else
+  echo "❌ FAIL: Lottie colors not synced properly"
+  echo "   Expected light: rgb(18, 16, 15), dark: rgb(158, 153, 150)"
+  FAILURES=$((FAILURES + 1))
+fi
+
 echo ""
 if [ $FAILURES -eq 0 ]; then
   echo "✅ Mobile build validation PASSED"
   echo ""
   echo "Summary:"
   echo "  ✅ No prepare scripts ran during install"
+  echo "  ✅ Tokens built before postinstall"
+  echo "  ✅ Lottie colors synced with design tokens"
   echo "  ✅ Mobile dependencies installed correctly"
   echo "  ✅ Mobile app built successfully"
   echo "  ✅ Web builds skipped (no cross-contamination)"
