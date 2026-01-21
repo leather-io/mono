@@ -8,15 +8,6 @@ interface CollectibleContentWrapperProps {
   children: React.ReactNode;
 }
 
-const InteractiveButton = styled('button', {
-  border: 'none',
-  p: 0,
-  m: 0,
-  bg: 'transparent',
-  width: '100%',
-  cursor: 'pointer',
-});
-
 export function CollectibleContentWrapper({
   height,
   onPress,
@@ -25,9 +16,18 @@ export function CollectibleContentWrapper({
   if (onPress) {
     return (
       <CollectibleCard height={height}>
-        <InteractiveButton type="button" onClick={onPress}>
+        <styled.button
+          type="button"
+          onClick={onPress}
+          border="none"
+          p={0}
+          m={0}
+          bg="transparent"
+          width="100%"
+          cursor="pointer"
+        >
           {children}
-        </InteractiveButton>
+        </styled.button>
       </CollectibleCard>
     );
   }

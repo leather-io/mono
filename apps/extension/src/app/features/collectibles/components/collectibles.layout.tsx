@@ -33,7 +33,7 @@ export function CollectiblesLayout({
       <Flex
         alignItems="center"
         justifyContent="space-between"
-        px={{ base: 0, md: 'space.05' }}
+        px={[0, null, 'space.05']}
         py="space.05"
         width="100%"
       >
@@ -71,7 +71,7 @@ export function CollectiblesLayout({
       </Flex>
 
       {isError && (
-        <Box px={{ base: 0, md: 'space.05' }}>
+        <Box px={[0, null, 'space.05']}>
           <Callout variant="warning" title="Unable to load collectibles">
             Try refreshing to fetch the latest gallery.
           </Callout>
@@ -81,16 +81,16 @@ export function CollectiblesLayout({
       {isLoading && <CollectiblesLoading />}
 
       {!isLoading && !isError && !hasCollectibles && (
-        <Box px={{ base: 0, md: 'space.05' }}>
+        <Box px={[0, null, 'space.05']}>
           <CollectiblesEmpty />
         </Box>
       )}
 
       {!isLoading && !isError && hasCollectibles ? (
-        <Box width={{ base: 'calc(100% + 48px)', md: '100%' }} marginX={{ base: '-24px', md: 0 }}>
+        <Box width={['calc(100% + 48px)', null, '100%']} marginX={['-24px', null, 0]}>
           <styled.div
             display="grid"
-            gridTemplateColumns={{ base: 'repeat(2, 195px)', md: 'repeat(4, 195px)' }}
+            gridTemplateColumns={['repeat(2, 195px)', null, 'repeat(4, 195px)']}
             justifyContent="center"
           >
             {children}
@@ -99,7 +99,7 @@ export function CollectiblesLayout({
       ) : null}
 
       {!isLoading && !isError ? (
-        <Stack gap="space.04" px={{ base: 0, md: 'space.05' }}>
+        <Stack gap="space.04" px={[0, null, 'space.05']}>
           <CollectiblesMarketplaces />
           <CollectiblesLearn />
         </Stack>

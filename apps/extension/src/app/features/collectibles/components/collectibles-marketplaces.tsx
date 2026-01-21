@@ -35,7 +35,7 @@ const marketplaces: MarketplaceItem[] = [
 export function CollectiblesMarketplaces() {
   return (
     <Stack gap="space.00">
-      <styled.div px={{ base: 0, md: 'space.05' }} py="space.03">
+      <styled.div px={[0, null, 'space.05']} py="space.03">
         <styled.h2 textStyle="label.01" margin="0">
           Discover marketplaces
         </styled.h2>
@@ -49,7 +49,7 @@ export function CollectiblesMarketplaces() {
           alignItems="center"
           gap="space.03"
           width="100%"
-          px={{ base: 0, md: 'space.05' }}
+          px={[0, null, 'space.05']}
           py="space.03"
           textAlign="left"
           bg="ink.background-primary"
