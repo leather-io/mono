@@ -6,6 +6,8 @@ import { Box, Flex, Stack } from 'leather-styles/jsx';
 import { RouteUrls } from '@shared/route-urls';
 
 import { whenPageMode } from '@app/common/utils';
+import { ActivityList } from '@app/features/activity-list/activity-list';
+import { ActivityListLegacy } from '@app/features/activity-list/activity-list-legacy';
 import { Collectibles } from '@app/features/collectibles/collectibles';
 import { useFlags } from '@app/features/feature-flags';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
@@ -15,12 +17,11 @@ import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-
 
 import { AccountActionsSwitch } from './components/account-actions-switch';
 import { AccountCardSwitch } from './components/account-card-switch';
-import { ActivitySwitch } from './components/activity-switch';
 import { AssetsSwitch } from './components/assets-switch';
 import { HomeTabsSwitch } from './components/home-tabs-switch';
 
 export function Home() {
-  const { accountRevamp, extensionRevamp, collectiblesRevamp } = useFlags();
+  const { accountRevamp, extensionRevamp, collectiblesRevamp, activityRevamp } = useFlags();
 
   if (extensionRevamp) {
     return (
@@ -43,7 +44,10 @@ export function Home() {
         <HomeTabsSwitch>
           <ModalBackgroundWrapper>
             <Route index element={<AssetsSwitch />} />
-            <Route path={RouteUrls.Activity} element={<ActivitySwitch />}>
+            <Route
+              path={RouteUrls.Activity}
+              element={activityRevamp ? <ActivityList /> : <ActivityListLegacy />}
+            >
               {homePageModalRoutes}
             </Route>
             {collectiblesRevamp && (
@@ -78,7 +82,10 @@ export function Home() {
       <HomeTabsSwitch>
         <ModalBackgroundWrapper>
           <Route index element={<AssetsSwitch />} />
-          <Route path={RouteUrls.Activity} element={<ActivitySwitch />}>
+          <Route
+            path={RouteUrls.Activity}
+            element={activityRevamp ? <ActivityList /> : <ActivityListLegacy />}
+          >
             {homePageModalRoutes}
           </Route>
           {homePageModalRoutes}

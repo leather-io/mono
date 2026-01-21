@@ -31,6 +31,7 @@ interface FeatureFlags {
   extensionRevamp: boolean;
   collectiblesRevamp: boolean;
   accountRevamp: boolean;
+  activityRevamp: boolean;
 }
 
 export function useFlags() {
