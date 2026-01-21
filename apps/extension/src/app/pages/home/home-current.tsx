@@ -10,6 +10,7 @@ import { whenPageMode } from '@app/common/utils';
 import { emptyAmountPlaceholder } from '@app/components/balance/constants';
 import { ActivityList } from '@app/features/activity-list/activity-list';
 import { Collectibles } from '@app/features/collectibles/collectibles';
+import { useFlags } from '@app/features/feature-flags';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
 import { Assets } from '@app/pages/home/components/assets';
@@ -22,6 +23,7 @@ import { HomeTabs } from './components/home-tabs';
 import { useHomePageState } from './use-home-page-state';
 
 export function Home() {
+  const { collectiblesRevamp } = useFlags();
   const { totalBalance, availableBalance, isPrivateMode, togglePrivateMode, stxAccountBalance } =
     useHomePageState();
 
@@ -56,15 +58,17 @@ export function Home() {
         <PromoBanner />
       </Flex>
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
-      <HomeTabs>
+      <HomeTabs showCollectibles={collectiblesRevamp}>
         <ModalBackgroundWrapper>
           <Route index element={<Assets />} />
           <Route path={RouteUrls.Activity} element={<ActivityList />}>
             {homePageModalRoutes}
           </Route>
-          <Route path={RouteUrls.Collectibles} element={<Collectibles />}>
-            {homePageModalRoutes}
-          </Route>
+          {collectiblesRevamp && (
+            <Route path={RouteUrls.Collectibles} element={<Collectibles />}>
+              {homePageModalRoutes}
+            </Route>
+          )}
           {homePageModalRoutes}
         </ModalBackgroundWrapper>
       </HomeTabs>
