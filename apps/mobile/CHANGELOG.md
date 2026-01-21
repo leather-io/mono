@@ -19,6 +19,46 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.97.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.5...@leather.io/mobile-v2.97.0) (2026-01-21)
+
+
+### Features
+
+* **mobile:** add input readiness flag to swap state ([82b2bc0](https://github.com/leather-io/mono/commit/82b2bc0431088e5b1a726837adb823755cf88c4b))
+* **mobile:** disable sBTC bridging via LaunchDarkly flag ([2235048](https://github.com/leather-io/mono/commit/2235048da2bd70046f5e9cce324c7cd6781b38a4))
+* **mobile:** integrate spendable amount query into swap state and readiness checks ([8097563](https://github.com/leather-io/mono/commit/8097563b1d8f02d60b7c957e1dd27cd019f19720))
+
+
+### Bug Fixes
+
+* **ci:** decouple mobile build from package lifecycle hooks ([a53e33a](https://github.com/leather-io/mono/commit/a53e33a6d97c3af8b52a3d4972cd7caadac2edae))
+* include fingerprint in on-chain activity key preventing duplicate keys ([af358e0](https://github.com/leather-io/mono/commit/af358e03c0883f55bfb897b4e217455629fd14b0))
+* **mobile:** refactor avatars + fix regressions to mobile activity ([08465b6](https://github.com/leather-io/mono/commit/08465b6a972002cc957cbcd9f00b7fd8fdee8cf9))
+* **mobile:** remove token details flag ([7ca9251](https://github.com/leather-io/mono/commit/7ca92510f12da9c8b13084c583e42ac6c1b2dacd))
+* **mobile:** show token loading state for btc/stx token details pages ([1466ca8](https://github.com/leather-io/mono/commit/1466ca8670b4fa3b34b3c2e31b68b930518eb25f))
+* **mobile:** skip prepare scripts during EAS build ([0ce669f](https://github.com/leather-io/mono/commit/0ce669fc6b22712ee510efbc066d78fa00d08699))
+* **mobile:** wallet state not rehydrating after dev reload ([145d4c3](https://github.com/leather-io/mono/commit/145d4c3a45488520161c4f58eb06296e1ab31071))
+* use Screen.List for consistent rendering of activity list ([4c21512](https://github.com/leather-io/mono/commit/4c2151276f33c996bd99cc5ee9278a547d918e0f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.3
+    * @leather.io/constants bumped to 0.30.0
+    * @leather.io/crypto bumped to 1.12.13
+    * @leather.io/features bumped to 1.1.10
+    * @leather.io/provider bumped to 1.6.15
+    * @leather.io/queries bumped to 0.4.0
+    * @leather.io/query bumped to 2.45.10
+    * @leather.io/rpc bumped to 2.21.7
+    * @leather.io/services bumped to 1.46.5
+    * @leather.io/stacks bumped to 1.19.9
+    * @leather.io/tokens bumped to 0.25.2
+    * @leather.io/ui bumped to 1.103.1
+    * @leather.io/utils bumped to 0.49.7
+
 ## [2.96.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.4...@leather.io/mobile-v2.96.5) (2026-01-12)
 
 

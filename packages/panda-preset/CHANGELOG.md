@@ -252,6 +252,22 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.23.1
 
+## [0.16.1](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.16.0...@leather.io/panda-preset-v0.16.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* **ci:** decouple mobile build from package lifecycle hooks ([a53e33a](https://github.com/leather-io/mono/commit/a53e33a6d97c3af8b52a3d4972cd7caadac2edae))
+* **mobile:** skip prepare scripts during EAS build ([0ce669f](https://github.com/leather-io/mono/commit/0ce669fc6b22712ee510efbc066d78fa00d08699))
+* **panda-preset:** resolve tokens import during EAS build ([ebabad1](https://github.com/leather-io/mono/commit/ebabad12cbbb1ee2d481e52533d5c9eb30c67f28))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/tokens bumped to 0.25.2
+
 ## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.15.0...@leather.io/panda-preset-v0.16.0) (2026-01-12)
 
 

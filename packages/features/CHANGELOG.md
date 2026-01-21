@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.1.10](https://github.com/leather-io/mono/compare/@leather.io/features-v1.1.9...@leather.io/features-v1.1.10) (2026-01-21)
+
+
+### Bug Fixes
+
+* add unique identifier for activity keys ([2393dda](https://github.com/leather-io/mono/commit/2393dda72affdf595c903b911acafc10f6dd1a70))
+* include fingerprint in on-chain activity key preventing duplicate keys ([af358e0](https://github.com/leather-io/mono/commit/af358e03c0883f55bfb897b4e217455629fd14b0))
+* **mobile:** refactor avatars + fix regressions to mobile activity ([08465b6](https://github.com/leather-io/mono/commit/08465b6a972002cc957cbcd9f00b7fd8fdee8cf9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.30.0
+    * @leather.io/services bumped to 1.46.5
+    * @leather.io/stacks bumped to 1.19.9
+    * @leather.io/tokens bumped to 0.25.2
+    * @leather.io/utils bumped to 0.49.7
+
 ## [1.1.9](https://github.com/leather-io/mono/compare/@leather.io/features-v1.1.8...@leather.io/features-v1.1.9) (2026-01-12)
 
 
