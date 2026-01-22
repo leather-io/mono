@@ -41,8 +41,8 @@ export function SplashScreenGuard({ children }: HasChildren) {
     // just in case splash screen flashes, we want to at least have the correct colors set
     void SystemUI.setBackgroundColorAsync(
       colorScheme === 'dark'
-        ? theme.colors['ink.text-non-interactive']
-        : theme.colors['ink.text-primary']
+        ? theme.colors['ink.background-primary']
+        : theme.colors['ink.background-primary']
     );
     void SplashScreen.hideAsync();
   }, [colorScheme, theme.colors]);
@@ -118,8 +118,8 @@ export function SplashScreenGuard({ children }: HasChildren) {
       {!authState.isUnlocked && (
         <Box
           backgroundColor={whenTheme({
-            light: 'ink.text-primary' as const,
-            dark: 'ink.text-non-interactive' as const,
+            light: 'ink.background-primary' as const,
+            dark: 'ink.background-primary' as const,
           })}
           position="absolute"
           top={0}
