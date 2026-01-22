@@ -19,6 +19,13 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.97.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.1...@leather.io/mobile-v2.97.2) (2026-01-22)
+
+
+### Bug Fixes
+
+* **mobile:** fix status bar color ([d5edeaf](https://github.com/leather-io/mono/commit/d5edeafe7a612f95647525514a9ea92053c2932b))
+
 ## [2.97.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.0...@leather.io/mobile-v2.97.1) (2026-01-21)
 
 
