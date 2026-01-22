@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
+import { mnemonicStore } from '@/store/secure-store/mnemonic-store';
 import { selectNetworkPreference } from '@/store/settings/settings.read';
-import { mnemonicStore } from '@/store/storage-persistors';
 import { createSelector } from '@reduxjs/toolkit';
 
 import { decomposeDescriptor } from '@leather.io/crypto';

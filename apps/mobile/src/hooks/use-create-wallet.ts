@@ -1,7 +1,7 @@
 import { useToastContext } from '@/components/toast/toast-context';
 import { keychainErrorHandlers, useKeyStore } from '@/store/key-store';
+import { tempMnemonicStore } from '@/store/secure-store/temp-mnemonic-store';
 import { useSettings } from '@/store/settings/settings';
-import { tempMnemonicStore } from '@/store/storage-persistors';
 import { nextAnimationFrame } from '@/utils/next-animation-frame';
 import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';

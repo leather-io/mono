@@ -12,6 +12,7 @@ import {
   getMnemonicRootKeyFingerprintBroken,
   makeAccountIdentifer,
   safelyReadPaddedFingerprint,
+  unpadHex,
 } from './keychain';
 
 const passphrase = 'abandoned cactus';
@@ -47,16 +48,27 @@ describe(getMnemonicRootKeyFingerprint.name, () => {
   });
 });
 
-// test safelyReadPaddedFingerprint
 describe(safelyReadPaddedFingerprint.name, () => {
   test('it pads fingerprint hex strings shorter than 8 characters', () => {
     expect(safelyReadPaddedFingerprint('1a2b3c')).toEqual('001a2b3c');
-    expect(safelyReadPaddedFingerprint('abcdefg')).toEqual('0abcdefg');
+    expect(safelyReadPaddedFingerprint('abcdeff')).toEqual('0abcdeff');
   });
 
   test('it returns fingerprint hex strings of length 8 unchanged', () => {
     expect(safelyReadPaddedFingerprint('12345678')).toEqual('12345678');
     expect(safelyReadPaddedFingerprint('87654321')).toEqual('87654321');
+  });
+});
+
+describe(unpadHex.name, () => {
+  test('it unpads hex correctly', () => {
+    expect(unpadHex('001a2b3c')).toEqual('1a2b3c');
+    expect(unpadHex('0abcdeff')).toEqual('abcdeff');
+  });
+
+  test('it returns unpadded hex unchanged', () => {
+    expect(unpadHex('12345678')).toEqual('12345678');
+    expect(unpadHex('87654abc')).toEqual('87654abc');
   });
 });
 

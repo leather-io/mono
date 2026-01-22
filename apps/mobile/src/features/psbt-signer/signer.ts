@@ -1,4 +1,4 @@
-import { mnemonicStore } from '@/store/storage-persistors';
+import { mnemonicStore } from '@/store/secure-store/mnemonic-store';
 import * as btc from '@scure/btc-signer';
 
 import { extractRequiredKeyOrigins, getPsbtTxInputs } from '@leather.io/bitcoin';
