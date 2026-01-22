@@ -174,7 +174,7 @@ export const stackingPoolData = {
     ...providers.xversePool,
     website: providers.xversePool.url,
     fee: '5%',
-    minAmount: '100 STX',
+    minAmount: '500 STX',
     rewardsToken: 'BTC',
     estApr: '10%',
     tvlUsd: '$40,000,000',
