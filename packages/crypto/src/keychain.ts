@@ -57,6 +57,10 @@ export function safelyReadPaddedFingerprint(fingerprintHex: string) {
   return fingerprintHex;
 }
 
+export function unpadHex(hex: string) {
+  return BigInt('0x' + hex).toString(16);
+}
+
 /**
  * Gets keychain fingerprint directly from mnemonic. This is useful for
  * referencing a mnemonic safely by an identifier.

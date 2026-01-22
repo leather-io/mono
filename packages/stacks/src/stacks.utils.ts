@@ -12,6 +12,7 @@ import {
   createDescriptor,
   createKeyOriginPath,
   extractAddressIndexFromPath,
+  fingerprintAsNumberToHex,
 } from '@leather.io/crypto';
 import type { NetworkModes } from '@leather.io/models';
 import { assertIsTruthy, isString, toHexString } from '@leather.io/utils';
@@ -66,8 +67,20 @@ export function deriveStxPublicKey({
   return privateKeyToPublic(deriveStxPrivateKey({ keychain, index })) as string;
 }
 
+/**
+ * @deprecated this function uses unpadded fingerprints. Use stacksRootKeychainToAccountDescriptorV2 instead
+ */
 export function stacksRootKeychainToAccountDescriptor(keychain: HDKey, accountIndex: number) {
   const fingerprint = toHexString(keychain.fingerprint);
+  const publicKey = deriveStxPublicKey({ keychain, index: accountIndex });
+  return createDescriptor(
+    createKeyOriginPath(fingerprint, makeStxDerivationPath(accountIndex)),
+    publicKey
+  );
+}
+
+export function stacksRootKeychainToAccountDescriptorV2(keychain: HDKey, accountIndex: number) {
+  const fingerprint = fingerprintAsNumberToHex(keychain.fingerprint);
   const publicKey = deriveStxPublicKey({ keychain, index: accountIndex });
   return createDescriptor(
     createKeyOriginPath(fingerprint, makeStxDerivationPath(accountIndex)),

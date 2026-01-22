@@ -114,7 +114,8 @@ export function useAccountScaledBalanceAnalytics({ accountIndex }: { accountInde
   const fingerprint = useWalletFingerprint();
 
   const accountId = fingerprint
-    ? makeAccountIdentifer(toHexString(fingerprint), accountIndex)
+    ? // FIXME: using unpadded fingerprint here
+      makeAccountIdentifer(toHexString(fingerprint), accountIndex)
     : undefined;
 
   useEffect(() => {

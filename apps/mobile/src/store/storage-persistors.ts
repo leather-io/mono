@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import { t } from '@lingui/core/macro';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as SecureStore from 'expo-secure-store';
 import { PersistConfig, createMigrate } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
-import { z } from 'zod';
-
-import { safelyReadPaddedFingerprint } from '@leather.io/crypto';
 
 import { RootState } from '.';
 import { migrations } from './migrations';
+import { mnemonicStore } from './secure-store/mnemonic-store';
 
 export const persistConfig: PersistConfig<RootState> = {
   key: 'root',
@@ -20,159 +16,6 @@ export const persistConfig: PersistConfig<RootState> = {
   migrate: createMigrate(migrations, { debug: process.env.NODE_ENV === 'development' }),
   whitelist: ['wallets', 'accounts', 'keychains', 'settings', 'apps'],
 };
-
-function getBasicSecureStoreConfig() {
-  const secureStoreConfig: SecureStore.SecureStoreOptions = {
-    authenticationPrompt: t`Allow app to access secure storage`,
-    keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-  };
-  return secureStoreConfig;
-}
-
-function getBiometricsSecureStoreConfig() {
-  const secureStoreConfigWithBiometrics = {
-    ...getBasicSecureStoreConfig(),
-    requireAuthentication: true,
-  };
-  return secureStoreConfigWithBiometrics;
-}
-
-function getSecureStoreConfig(biometrics: boolean) {
-  if (biometrics) {
-    return getBiometricsSecureStoreConfig();
-  }
-  return getBasicSecureStoreConfig();
-}
-
-const mnemonicSchema = z.object({
-  mnemonic: z.string(),
-  passphrase: z.string().optional(),
-});
-type Mnemonic = z.infer<typeof mnemonicSchema>;
-
-export function deleteAllMnemonics(fingerprintArr: string[]) {
-  return Promise.all(
-    fingerprintArr.map(fingerprint => mnemonicStore(fingerprint).deleteMnemonic())
-  );
-}
-
-const TEMPORARY_MNEMONIC_KEY = 'TEMPORARY_MNEMONIC_KEY';
-const TEMPORARY_MNEMONIC_KEY_PASSPHRASE = 'TEMPORARY_MNEMONIC_KEY_PASSPHRASE';
-
-export const tempMnemonicStore = {
-  async setTemporaryMnemonic(tempMnemonic: string, passphrase?: string) {
-    if (passphrase) {
-      await SecureStore.setItemAsync(
-        TEMPORARY_MNEMONIC_KEY_PASSPHRASE,
-        passphrase,
-        getBasicSecureStoreConfig()
-      );
-    }
-
-    return SecureStore.setItemAsync(
-      TEMPORARY_MNEMONIC_KEY,
-      tempMnemonic,
-      getBasicSecureStoreConfig()
-    );
-  },
-  async getTemporaryMnemonic() {
-    // Whenever you get a value from the store, delete that value from the store
-    const mnemonic = await SecureStore.getItemAsync(
-      TEMPORARY_MNEMONIC_KEY,
-      getBasicSecureStoreConfig()
-    );
-    const passphrase = await SecureStore.getItemAsync(
-      TEMPORARY_MNEMONIC_KEY_PASSPHRASE,
-      getBasicSecureStoreConfig()
-    );
-    return { mnemonic, passphrase };
-  },
-  async deleteTemporaryMnemonic() {
-    await SecureStore.deleteItemAsync(TEMPORARY_MNEMONIC_KEY, getBasicSecureStoreConfig());
-    return SecureStore.deleteItemAsync(
-      TEMPORARY_MNEMONIC_KEY_PASSPHRASE,
-      getBasicSecureStoreConfig()
-    );
-  },
-};
-
-interface MnemonicStore {
-  getMnemonic(passphrase?: string): Promise<Mnemonic>;
-  setMnemonic(params: {
-    mnemonic: string;
-    passphrase?: string;
-    biometrics: boolean;
-  }): Promise<unknown>;
-  deleteMnemonic(): Promise<unknown>;
-}
-
-// On iOS, secure store only prompts for biometrics when we read or update the existing value.
-// Ref: https://docs.expo.dev/versions/latest/sdk/securestore/#securestoreoptions
-//
-// Mnemonics are accessed directly from SecureStore to avoid leaving them in the
-// app state. Read the key only at the time it is needed for signing.
-export function mnemonicStore(fingerprint: string): MnemonicStore {
-  const paddedFingerprint = safelyReadPaddedFingerprint(fingerprint);
-  const passphraseKey = `${paddedFingerprint}_passphrase`;
-  const oldPassphraseKey = fingerprint !== paddedFingerprint ? `${fingerprint}_passphrase` : null;
-
-  return {
-    async getMnemonic() {
-      let mnemonic = await SecureStore.getItemAsync(
-        paddedFingerprint,
-        getBasicSecureStoreConfig()
-      );
-
-      if (!mnemonic && fingerprint !== paddedFingerprint) {
-        mnemonic = await SecureStore.getItemAsync(fingerprint, getBasicSecureStoreConfig());
-        if (mnemonic) {
-          await SecureStore.setItemAsync(
-            paddedFingerprint,
-            mnemonic,
-            getBasicSecureStoreConfig()
-          );
-          await SecureStore.deleteItemAsync(fingerprint, getBasicSecureStoreConfig());
-        }
-      }
-
-      let passphrase = await SecureStore.getItemAsync(passphraseKey, getBasicSecureStoreConfig());
-
-      if (!passphrase && oldPassphraseKey) {
-        passphrase = await SecureStore.getItemAsync(oldPassphraseKey, getBasicSecureStoreConfig());
-        if (passphrase) {
-          await SecureStore.setItemAsync(passphraseKey, passphrase, getBasicSecureStoreConfig());
-          await SecureStore.deleteItemAsync(oldPassphraseKey, getBasicSecureStoreConfig());
-        }
-      }
-
-      return mnemonicSchema.parse({ mnemonic, passphrase: passphrase ?? undefined });
-    },
-    async setMnemonic({ mnemonic, passphrase, biometrics }) {
-      if (passphrase)
-        await SecureStore.setItemAsync(passphraseKey, passphrase, getSecureStoreConfig(biometrics));
-      return SecureStore.setItemAsync(
-        paddedFingerprint,
-        mnemonic,
-        getSecureStoreConfig(biometrics)
-      );
-    },
-    async deleteMnemonic() {
-      const deletePromises = [
-        SecureStore.deleteItemAsync(paddedFingerprint, getBasicSecureStoreConfig()),
-        SecureStore.deleteItemAsync(passphraseKey, getBasicSecureStoreConfig()),
-      ];
-
-      if (oldPassphraseKey) {
-        deletePromises.push(
-          SecureStore.deleteItemAsync(fingerprint, getBasicSecureStoreConfig()),
-          SecureStore.deleteItemAsync(oldPassphraseKey, getBasicSecureStoreConfig())
-        );
-      }
-
-      return Promise.all(deletePromises);
-    },
-  };
-}
 
 export function useMnemonic({
   fingerprint,

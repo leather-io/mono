@@ -1,8 +1,6 @@
 import { EntityState } from '@reduxjs/toolkit';
 import { PersistedState } from 'redux-persist';
 
-import { safelyReadPaddedFingerprint } from '@leather.io/crypto';
-
 interface KeychainEntity {
   descriptor: string;
   chain: 'bitcoin' | 'stacks';
@@ -18,78 +16,80 @@ interface WalletEntity {
   [key: string]: unknown;
 }
 
-type State = {
-  keychains: EntityState<KeychainEntity, 'descriptor'>;
-  accounts: EntityState<AccountEntity, 'id'>;
-  wallets: EntityState<WalletEntity, 'fingerprint'>;
-} & PersistedState;
-
-function updateDescriptorFingerprint(descriptor: string): string {
-  const bracketEndIndex = descriptor.indexOf(']');
-  if (bracketEndIndex === -1) return descriptor;
-
-  const keyOriginPath = descriptor.substring(1, bracketEndIndex);
-  const parts = keyOriginPath.split('/');
-  const fingerprint = parts[0];
-  if (!fingerprint) return descriptor;
-
-  const paddedFingerprint = safelyReadPaddedFingerprint(fingerprint);
-  const pathSegments = parts.slice(1);
-  const newKeyOriginPath = [paddedFingerprint, ...pathSegments].join('/');
-  return `[${newKeyOriginPath}]${descriptor.substring(bracketEndIndex + 1)}`;
+interface AppsEntity {
+  origin: string;
+  accountId?: string;
+  [key: string]: unknown;
 }
 
-function updateAccountId(accountId: string): string {
-  const parts = accountId.split('/');
-  const fingerprint = parts[0];
-  const accountIndex = parts[1];
-  if (!fingerprint || !accountIndex) return accountId;
+type State = {
+  keychains: EntityState<KeychainEntity, string>;
+  accounts: EntityState<AccountEntity, string>;
+  wallets: EntityState<WalletEntity, string>;
+  apps: EntityState<AppsEntity, string>;
+  settings: {
+    currentAccount: {
+      id: string;
+      fingerprint: string;
+      [key: string]: unknown;
+    };
+    [key: string]: unknown;
+  };
+} & PersistedState;
 
-  const paddedFingerprint = safelyReadPaddedFingerprint(fingerprint);
-  return `${paddedFingerprint}/${accountIndex}`;
+function padFingerprint(fingerprint: string): string {
+  return fingerprint.padStart(8, '0');
+}
+
+function padFingerprintInDescriptor(descriptor: string): string {
+  const bracketEnd = descriptor.indexOf('/');
+  if (bracketEnd === -1) return descriptor;
+  const fingerprint = descriptor.slice(1, bracketEnd);
+  if (!fingerprint) return descriptor;
+
+  return '[' + padFingerprint(fingerprint) + descriptor.slice(bracketEnd);
+}
+
+function padKeyOrigin(origin: string): string {
+  const slashIndex = origin.indexOf('/');
+  if (slashIndex === -1) return origin;
+  const fingerprint = origin.slice(0, slashIndex);
+  return padFingerprint(fingerprint) + origin.slice(slashIndex);
+}
+
+function padAccountId(accountId: string): string {
+  return padKeyOrigin(accountId);
 }
 
 export function migratePadFingerprints(state: PersistedState) {
   const typedState = state as State;
 
   const updatedKeychains = {
-    ...typedState.keychains,
+    ids: typedState.keychains.ids.map(id => padKeyOrigin(id)),
     entities: Object.fromEntries(
       Object.entries(typedState.keychains.entities).map(([id, entity]) => {
         if (!entity) return [id, entity];
         return [
-          id,
+          padKeyOrigin(id),
           {
             ...entity,
-            descriptor: updateDescriptorFingerprint(entity.descriptor),
+            descriptor: padFingerprintInDescriptor(entity.descriptor),
           },
         ];
       })
     ),
   };
 
-  const fingerprintMap = new Map<string, string>();
-  Object.values(typedState.wallets.entities).forEach(wallet => {
-    if (!wallet) return;
-    const paddedFingerprint = safelyReadPaddedFingerprint(wallet.fingerprint);
-    if (paddedFingerprint !== wallet.fingerprint) {
-      fingerprintMap.set(wallet.fingerprint, paddedFingerprint);
-    }
-  });
-
   const updatedWallets = {
-    ids: typedState.wallets.ids.map(id =>
-      typeof id === 'string' ? safelyReadPaddedFingerprint(id) : id
-    ),
+    ids: typedState.wallets.ids.map(id => padFingerprint(id)),
     entities: Object.fromEntries(
       Object.entries(typedState.wallets.entities).map(([id, entity]) => {
         if (!entity) return [id, entity];
-        const paddedFingerprint = safelyReadPaddedFingerprint(entity.fingerprint);
         return [
-          paddedFingerprint,
+          padFingerprint(id),
           {
             ...entity,
-            fingerprint: paddedFingerprint,
+            fingerprint: padFingerprint(entity.fingerprint),
           },
         ];
       })
@@ -97,23 +97,46 @@ export function migratePadFingerprints(state: PersistedState) {
   };
 
   const updatedAccounts = {
-    ...typedState.accounts,
-    ids: typedState.accounts.ids.map(id =>
-      typeof id === 'string' ? updateAccountId(id) : id
-    ),
+    ids: typedState.accounts.ids.map(id => padAccountId(id)),
     entities: Object.fromEntries(
       Object.entries(typedState.accounts.entities).map(([id, entity]) => {
         if (!entity) return [id, entity];
-        const newId = updateAccountId(entity.id);
         return [
-          newId,
+          padAccountId(id),
           {
             ...entity,
-            id: newId,
+            id: padAccountId(entity.id),
           },
         ];
       })
     ),
+  };
+
+  const updatedApps = {
+    ...typedState.apps,
+    entities: Object.fromEntries(
+      Object.entries(typedState.apps.entities).map(([id, entity]) => {
+        if (!entity) return [id, entity];
+        if (entity.accountId) {
+          return [
+            id,
+            {
+              ...entity,
+
+              accountId: padAccountId(entity.accountId),
+            },
+          ];
+        }
+        return [id, entity];
+      })
+    ),
+  };
+  const updatedSettings = {
+    ...typedState.settings,
+    currentAccount: {
+      ...typedState.settings.currentAccount,
+      fingerprint: padFingerprint(typedState.settings.currentAccount.fingerprint),
+    },
   };
 
   return {
@@ -121,5 +144,7 @@ export function migratePadFingerprints(state: PersistedState) {
     keychains: updatedKeychains,
     wallets: updatedWallets,
     accounts: updatedAccounts,
+    apps: updatedApps,
+    settings: updatedSettings,
   };
 }

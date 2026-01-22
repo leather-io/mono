@@ -4,7 +4,7 @@ import { Keyboard, TextInput as RNTextInput } from 'react-native';
 import { TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { TestId } from '@/shared/test-id';
-import { tempMnemonicStore } from '@/store/storage-persistors';
+import { tempMnemonicStore } from '@/store/secure-store/temp-mnemonic-store';
 import { t } from '@lingui/core/macro';
 import * as Clipboard from 'expo-clipboard';
 

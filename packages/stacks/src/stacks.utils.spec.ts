@@ -2,7 +2,7 @@ import { HDKey } from '@scure/bip32';
 import { ChainId } from '@stacks/network';
 
 import { deriveBip39SeedFromMnemonic } from '@leather.io/crypto';
-import { testMnemonic } from '@leather.io/test-config';
+import { testMnemonic, testMnemonicWithLeadingZeros } from '@leather.io/test-config';
 
 import {
   cleanHex,
@@ -12,10 +12,14 @@ import {
   getStacksContractAssetName,
   getStacksContractName,
   stacksRootKeychainToAccountDescriptor,
+  stacksRootKeychainToAccountDescriptorV2,
   whenStacksChainId,
 } from './stacks.utils';
 
 const testMnemonicKeychain = HDKey.fromMasterSeed(await deriveBip39SeedFromMnemonic(testMnemonic));
+const testMnemonicKeychainWithLeadingZeros = HDKey.fromMasterSeed(
+  await deriveBip39SeedFromMnemonic(testMnemonicWithLeadingZeros)
+);
 
 describe(whenStacksChainId.name, () => {
   const expectedResult = 'should be this value';
@@ -59,6 +63,29 @@ describe(stacksRootKeychainToAccountDescriptor.name, () => {
     const descriptor = stacksRootKeychainToAccountDescriptor(testMnemonicKeychain, 0);
     expect(descriptor).toEqual(
       "[24682ead/44'/5757'/0'/0/0]025b2c58cbf22ad02e1a53041189ace847192834e0664cab4ed1a39676e8a8ddf8"
+    );
+  });
+
+  test('it derives descriptor with unpadded fingerprint', () => {
+    const descriptor = stacksRootKeychainToAccountDescriptor(
+      testMnemonicKeychainWithLeadingZeros,
+      0
+    );
+    expect(descriptor).toEqual(
+      "[f25e8/44'/5757'/0'/0/0]02ffb37e6635be77b666f94204b20149ff91c7bea3502610d22645b8e0f334efc5"
+    );
+  });
+});
+
+describe(stacksRootKeychainToAccountDescriptorV2.name, () => {
+  test('it derives the correct descriptor', () => {
+    const descriptor = stacksRootKeychainToAccountDescriptorV2(
+      testMnemonicKeychainWithLeadingZeros,
+      0
+    );
+
+    expect(descriptor).toEqual(
+      "[000f25e8/44'/5757'/0'/0/0]02ffb37e6635be77b666f94204b20149ff91c7bea3502610d22645b8e0f334efc5"
     );
   });
 });

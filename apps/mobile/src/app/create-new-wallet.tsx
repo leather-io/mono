@@ -5,8 +5,8 @@ import { Screen } from '@/components/screen/screen';
 import { MnemonicDisplay } from '@/features/wallet-manager/create-new-wallet/mnemonic-display';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { TestId } from '@/shared/test-id';
+import { tempMnemonicStore } from '@/store/secure-store/temp-mnemonic-store';
 import { useSettings } from '@/store/settings/settings';
-import { tempMnemonicStore } from '@/store/storage-persistors';
 import { t } from '@lingui/core/macro';
 import { ImageBackground } from 'expo-image';
 

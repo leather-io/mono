@@ -19,9 +19,10 @@ import { walletEntitySchema, walletSlice } from '@leather.io/state/wallet';
 
 import { accountEntitySchema, accountsSlice } from './accounts/accounts.write';
 import { appsSlice } from './apps/apps.write';
+import { deleteAllMnemonics } from './secure-store/mnemonic-store';
 import { settingsSlice } from './settings/settings.write';
 import { settingsSchema } from './settings/utils';
-import { deleteAllMnemonics, persistConfig } from './storage-persistors';
+import { persistConfig } from './storage-persistors';
 
 export const stateSchema = z.object({
   wallets: walletEntitySchema,

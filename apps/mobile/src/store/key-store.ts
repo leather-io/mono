@@ -10,12 +10,12 @@ import {
   getMnemonicRootKeyFingerprint,
   makeAccountIdentifer,
 } from '@leather.io/crypto';
-import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
+import { stacksRootKeychainToAccountDescriptorV2 } from '@leather.io/stacks';
 import { findHighestAccountIndexOfFingerprint, userAddsAccount } from '@leather.io/state/keychains';
 
 import { userTogglesHideAccount } from './accounts/accounts.write';
 import { useBitcoinAccounts } from './keychains/bitcoin/bitcoin-keychains.read';
-import { mnemonicStore } from './storage-persistors';
+import { mnemonicStore } from './secure-store/mnemonic-store';
 import { useAppDispatch } from './utils';
 import { useWallets } from './wallets/wallets.read';
 
@@ -54,6 +54,7 @@ export function useKeyStore() {
 
     createNewSoftwareWallet() {
       const mnemonic = generateMnemonic();
+      // FIXME: biometrics should not be automatically set to true here. We need to check the security preference first.
       return this.restoreWalletFromMnemonic({ mnemonic, biometrics: true });
     },
 
@@ -145,7 +146,7 @@ export function useKeyStore() {
 
       const stacksKeychainDescriptors = [
         {
-          descriptor: stacksRootKeychainToAccountDescriptor(rootKeychain, nextAccountIndex),
+          descriptor: stacksRootKeychainToAccountDescriptorV2(rootKeychain, nextAccountIndex),
           chain: 'stacks' as const,
         },
       ];

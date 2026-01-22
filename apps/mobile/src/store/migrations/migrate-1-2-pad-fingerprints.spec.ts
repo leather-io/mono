@@ -2,340 +2,427 @@ import { describe, expect, test } from 'vitest';
 
 import { migratePadFingerprints } from './migrate-1-2-pad-fingerprints';
 
-describe('migratePadFingerprints', () => {
-  test('should pad fingerprints with leading zeros in descriptors', () => {
-    const originalState = {
-      _persist: { version: 1, rehydrated: true },
-      keychains: {
-        ids: ["30b34f3/84'/0'/0'"],
-        entities: {
-          "30b34f3/84'/0'/0'": {
-            descriptor: "[30b34f3/84'/0'/0']xpubtest",
-            chain: 'bitcoin' as const,
-          },
-        },
+const v1State = {
+  wallets: {
+    ids: ['f25e8', '24682ead'],
+    entities: {
+      f25e8: {
+        type: 'software',
+        fingerprint: 'f25e8',
+        createdOn: '2026-01-22T10:01:00.999Z',
+        name: 'Wallet 1',
       },
-      wallets: {
-        ids: [],
-        entities: {},
+      '24682ead': {
+        type: 'software',
+        fingerprint: '24682ead',
+        createdOn: '2026-01-22T10:09:41.199Z',
+        name: 'Wallet 2',
       },
-      accounts: {
-        ids: [],
-        entities: {},
+    },
+  },
+  accounts: {
+    ids: ['f25e8/0', 'f25e8/1', '24682ead/0', '24682ead/1'],
+    entities: {
+      'f25e8/0': {
+        id: 'f25e8/0',
       },
-    };
-
-    const result = migratePadFingerprints(originalState);
-
-    expect(result.keychains.entities["30b34f3/84'/0'/0'"]?.descriptor).toEqual(
-      "[030b34f3/84'/0'/0']xpubtest"
-    );
-  });
-
-  test('should pad fingerprints in wallet entities', () => {
-    const originalState = {
-      _persist: { version: 1, rehydrated: true },
-      wallets: {
-        ids: ['30b34f3'],
-        entities: {
-          '30b34f3': {
-            fingerprint: '30b34f3',
-            type: 'software',
-            createdOn: '2024-01-01',
-          },
-        },
+      'f25e8/1': {
+        id: 'f25e8/1',
       },
-      keychains: {
-        ids: [],
-        entities: {},
+      '24682ead/0': {
+        id: '24682ead/0',
       },
-      accounts: {
-        ids: [],
-        entities: {},
+      '24682ead/1': {
+        id: '24682ead/1',
       },
-    };
-
-    const result = migratePadFingerprints(originalState);
-
-    expect(result.wallets.ids).toEqual(['030b34f3']);
-    expect(result.wallets.entities['030b34f3']).toEqual({
-      fingerprint: '030b34f3',
-      type: 'software',
-      createdOn: '2024-01-01',
-    });
-    expect(result.wallets.entities['30b34f3']).toBeUndefined();
-  });
-
-  test('should pad fingerprints in account IDs', () => {
-    const originalState = {
-      _persist: { version: 1, rehydrated: true },
-      accounts: {
-        ids: ['30b34f3/0', '30b34f3/1'],
-        entities: {
-          '30b34f3/0': {
-            id: '30b34f3/0',
-            name: 'Account 1',
-          },
-          '30b34f3/1': {
-            id: '30b34f3/1',
-            name: 'Account 2',
-          },
-        },
+    },
+  },
+  keychains: {
+    ids: [
+      "f25e8/84'/0'/0'",
+      "f25e8/84'/1'/0'",
+      "f25e8/86'/0'/0'",
+      "f25e8/86'/1'/0'",
+      "f25e8/44'/5757'/0'/0/0",
+      "f25e8/84'/0'/1'",
+      "f25e8/84'/1'/1'",
+      "f25e8/86'/0'/1'",
+      "f25e8/86'/1'/1'",
+      "f25e8/44'/5757'/0'/0/1",
+      "24682ead/84'/0'/0'",
+      "24682ead/84'/1'/0'",
+      "24682ead/86'/0'/0'",
+      "24682ead/86'/1'/0'",
+      "24682ead/44'/5757'/0'/0/0",
+      "24682ead/84'/0'/1'",
+      "24682ead/84'/1'/1'",
+      "24682ead/86'/0'/1'",
+      "24682ead/86'/1'/1'",
+      "24682ead/44'/5757'/0'/0/1",
+    ],
+    entities: {
+      "f25e8/84'/0'/0'": {
+        descriptor:
+          "[f25e8/84'/0'/0']xpub6D6TYd2tdvLaJkuNZUWxEiZswdHGfCcg77RQyP1We8ciMFrBsS2bcUdAs8NazSWkt3LAbJatKLqNcgHzcodcsCYZ8MAQ8SRpz1iLVJZhibj",
+        chain: 'bitcoin',
       },
-      keychains: {
-        ids: [],
-        entities: {},
+      "f25e8/84'/1'/0'": {
+        descriptor:
+          "[f25e8/84'/1'/0']xpub6CVWLbT3iigaVWbCXhUt9kkZMgmQpGSfkSZYywRZqLrWfRNWMjQ7qeRrZb4Aaimtkpb4xvoYeME9Rbs51WRHHVVWwkfGZE5KZLYDw7SBeeP",
+        chain: 'bitcoin',
       },
-      wallets: {
-        ids: [],
-        entities: {},
+      "f25e8/86'/0'/0'": {
+        descriptor:
+          "[f25e8/86'/0'/0']xpub6CxWWZyvhM5x98GQtZZQbGcgKZjGmWy5cqwHxApjjp8xcGGe9eR25R63BKrKFH1h3wPfs791zXZZdeC8XxmTwJoeiTDSqeFVJmHq7wNb7VK",
+        chain: 'bitcoin',
       },
-    };
-
-    const result = migratePadFingerprints(originalState);
-
-    expect(result.accounts.ids).toEqual(['030b34f3/0', '030b34f3/1']);
-    expect(result.accounts.entities['030b34f3/0']).toEqual({
-      id: '030b34f3/0',
-      name: 'Account 1',
-    });
-    expect(result.accounts.entities['030b34f3/1']).toEqual({
-      id: '030b34f3/1',
-      name: 'Account 2',
-    });
-  });
-
-  test('should not modify fingerprints that are already correctly padded', () => {
-    const originalState = {
-      _persist: { version: 1, rehydrated: true },
-      wallets: {
-        ids: ['24682ead'],
-        entities: {
-          '24682ead': {
-            fingerprint: '24682ead',
-            type: 'software',
-          },
-        },
+      "f25e8/86'/1'/0'": {
+        descriptor:
+          "[f25e8/86'/1'/0']xpub6D2Us2EbpZUo3TmfkddRDnoBZw2ehf9E6o9i95pJZzm9veSPgbopNZafgHDEk2UcF6ohHQA279EQHv217JfxAHL868VSWEnRJMuHw7sKtUt",
+        chain: 'bitcoin',
       },
-      accounts: {
-        ids: ['24682ead/0'],
-        entities: {
-          '24682ead/0': {
-            id: '24682ead/0',
-            name: 'Account 1',
-          },
-        },
+      "f25e8/44'/5757'/0'/0/0": {
+        descriptor:
+          "[f25e8/44'/5757'/0'/0/0]02ffb37e6635be77b666f94204b20149ff91c7bea3502610d22645b8e0f334efc5",
+        chain: 'stacks',
       },
-      keychains: {
-        ids: ["24682ead/84'/0'/0'"],
-        entities: {
-          "24682ead/84'/0'/0'": {
-            descriptor: "[24682ead/84'/0'/0']xpubtest",
-            chain: 'bitcoin' as const,
-          },
-        },
+      "f25e8/84'/0'/1'": {
+        descriptor:
+          "[f25e8/84'/0'/1']xpub6D6TYd2tdvLaPGYncHmEfzUz7BGJ2ytKrrbGoveZdmaKX5J5FMuYiSiGCNx728maGivqyqrmSogwLzwLB1vouv49F9HMUEUNcShVHTGyB7g",
+        chain: 'bitcoin',
       },
-    };
-
-    const result = migratePadFingerprints(originalState);
-
-    expect(result.wallets.entities['24682ead']?.fingerprint).toEqual('24682ead');
-    expect(result.accounts.entities['24682ead/0']?.id).toEqual('24682ead/0');
-    expect(result.keychains.entities["24682ead/84'/0'/0'"]?.descriptor).toEqual(
-      "[24682ead/84'/0'/0']xpubtest"
-    );
-  });
-
-  test('should handle multiple wallets and accounts with different fingerprints', () => {
-    const originalState = {
-      _persist: { version: 1, rehydrated: true },
-      wallets: {
-        ids: ['30b34f3', '24682ead', 'abcdef1'],
-        entities: {
-          '30b34f3': { fingerprint: '30b34f3', type: 'software' },
-          '24682ead': { fingerprint: '24682ead', type: 'software' },
-          abcdef1: { fingerprint: 'abcdef1', type: 'software' },
-        },
+      "f25e8/84'/1'/1'": {
+        descriptor:
+          "[f25e8/84'/1'/1']xpub6CVWLbT3iigaXnGPVcLsXGQC8TfQ4kNcKrP6zuVecvs996nREJ8tgmoRmFWqPUeCgSEf9Ytm5HXx5oerHFdwKzqHuXtGrds1wfBC3vCZMeo",
+        chain: 'bitcoin',
       },
-      accounts: {
-        ids: ['30b34f3/0', '24682ead/0', 'abcdef1/0'],
-        entities: {
-          '30b34f3/0': { id: '30b34f3/0', name: 'Account 1' },
-          '24682ead/0': { id: '24682ead/0', name: 'Account 2' },
-          'abcdef1/0': { id: 'abcdef1/0', name: 'Account 3' },
-        },
+      "f25e8/86'/0'/1'": {
+        descriptor:
+          "[f25e8/86'/0'/1']xpub6CxWWZyvhM5xA3vvBufWx1FMvr5mNHP2teY9ywP6R8o9AvWEQvw5N2wsvTUKoj2Nh3siXpW9nPgQZYKScSFjt2F9kh3hQtXFsU3FoQebiae",
+        chain: 'bitcoin',
       },
-      keychains: {
-        ids: ['desc-1', 'desc-2', 'desc-3'],
-        entities: {
-          'desc-1': { descriptor: "[30b34f3/84'/0'/0']xpub1", chain: 'bitcoin' as const },
-          'desc-2': { descriptor: "[24682ead/84'/0'/0']xpub2", chain: 'bitcoin' as const },
-          'desc-3': { descriptor: "[abcdef1/84'/0'/0']xpub3", chain: 'bitcoin' as const },
-        },
+      "f25e8/86'/1'/1'": {
+        descriptor:
+          "[f25e8/86'/1'/1']xpub6D2Us2EbpZUo6bPpUHuB6tTJMr724jZGfYZkZaJs3y61p46sib1igk6qC2t1kN3ffjAYm47auc5nnfjWmofR9U7Nyj5pZtQ2AjoupuhBTxK",
+        chain: 'bitcoin',
       },
-    };
-
-    const result = migratePadFingerprints(originalState);
-
-    expect(result.wallets.ids).toEqual(['030b34f3', '24682ead', '0abcdef1']);
-    expect(result.accounts.ids).toEqual(['030b34f3/0', '24682ead/0', '0abcdef1/0']);
-    expect(result.keychains.entities['desc-1']?.descriptor).toEqual("[030b34f3/84'/0'/0']xpub1");
-    expect(result.keychains.entities['desc-2']?.descriptor).toEqual("[24682ead/84'/0'/0']xpub2");
-    expect(result.keychains.entities['desc-3']?.descriptor).toEqual("[0abcdef1/84'/0'/0']xpub3");
-  });
-
-  test('should preserve other state properties unchanged', () => {
-    const originalState = {
-      _persist: { version: 1, rehydrated: true },
-      settings: { theme: 'dark' },
-      apps: { list: [] },
-      wallets: { ids: [], entities: {} },
-      accounts: { ids: [], entities: {} },
-      keychains: { ids: [], entities: {} },
-    };
-
-    const result = migratePadFingerprints(originalState) as any;
-
-    expect(result.settings).toEqual({ theme: 'dark' });
-    expect(result.apps).toEqual({ list: [] });
-  });
-
-  test('should handle empty state gracefully', () => {
-    const originalState = {
-      _persist: { version: 1, rehydrated: true },
-      wallets: { ids: [], entities: {} },
-      accounts: { ids: [], entities: {} },
-      keychains: { ids: [], entities: {} },
-    };
-
-    const result = migratePadFingerprints(originalState);
-
-    expect(result.wallets.ids).toEqual([]);
-    expect(result.accounts.ids).toEqual([]);
-    expect(result.keychains.ids).toEqual([]);
-  });
-
-  test('should update all keychains comprehensively', () => {
-    const originalState = {
-      _persist: { version: 1, rehydrated: true },
-      wallets: {
-        ids: ['30b34f3'],
-        entities: {
-          '30b34f3': { fingerprint: '30b34f3', type: 'software' },
-        },
+      "f25e8/44'/5757'/0'/0/1": {
+        descriptor:
+          "[f25e8/44'/5757'/0'/0/1]026b15fdaf16b01db1eb36314d1bc9edd274ec4bf166123164a62e3715eb42716c",
+        chain: 'stacks',
       },
-      accounts: {
-        ids: ['30b34f3/0'],
-        entities: {
-          '30b34f3/0': { id: '30b34f3/0', name: 'Account 1' },
-        },
+      "24682ead/84'/0'/0'": {
+        descriptor:
+          "[24682ead/84'/0'/0']xpub6D4nuUzLPukRYKmb6ZYxo5khwLJXHarYQutgauqv8UkAVV8NHw23UZPDoXdJZDqv5hHiyh55jCER2KuYt2a7Egnoj7TF8u7scsJbJPeCneM",
+        chain: 'bitcoin',
       },
-      keychains: {
-        ids: ['desc-bitcoin-mainnet', 'desc-bitcoin-testnet', 'desc-stacks'],
-        entities: {
-          'desc-bitcoin-mainnet': {
-            descriptor: "[30b34f3/84'/0'/0']xpubBitcoinMainnet",
-            chain: 'bitcoin' as const,
-          },
-          'desc-bitcoin-testnet': {
-            descriptor: "[30b34f3/84'/1'/0']xpubBitcoinTestnet",
-            chain: 'bitcoin' as const,
-          },
-          'desc-stacks': {
-            descriptor: "[30b34f3/44'/5757'/0']xpubStacks",
-            chain: 'stacks' as const,
-          },
-        },
+      "24682ead/84'/1'/0'": {
+        descriptor:
+          "[24682ead/84'/1'/0']xpub6CqrZidmoeJB1khkcUh81zgdeqy2mLgnAABvpA9HExCMSnBr7qHjJ5ekrPS6emrVGQg7BwSKQ9GWDcv6w5AQo6bn3Vf5oCZ3XAZRXGpbezQ",
+        chain: 'bitcoin',
       },
-    };
-
-    const result = migratePadFingerprints(originalState);
-
-    expect(result.keychains.entities['desc-bitcoin-mainnet']?.descriptor).toEqual(
-      "[030b34f3/84'/0'/0']xpubBitcoinMainnet"
-    );
-    expect(result.keychains.entities['desc-bitcoin-testnet']?.descriptor).toEqual(
-      "[030b34f3/84'/1'/0']xpubBitcoinTestnet"
-    );
-    expect(result.keychains.entities['desc-stacks']?.descriptor).toEqual(
-      "[030b34f3/44'/5757'/0']xpubStacks"
-    );
-  });
-
-  test('should handle multiple wallets each with multiple keychains', () => {
-    const originalState = {
-      _persist: { version: 1, rehydrated: true },
-      wallets: {
-        ids: ['30b34f3', 'abcdef1'],
-        entities: {
-          '30b34f3': { fingerprint: '30b34f3', type: 'software' },
-          abcdef1: { fingerprint: 'abcdef1', type: 'software' },
-        },
+      "24682ead/86'/0'/0'": {
+        descriptor:
+          "[24682ead/86'/0'/0']xpub6Ch5Go7FQLoXjxbAWAPjkYbzbJDrPnLiJAUWUGQUA8CFMVaDweTSn4p3DmrAR7yKHs6gXZ8VbVFBNTMjpevkSaF8wEnNAXXYoymzoAtWmh6",
+        chain: 'bitcoin',
       },
-      accounts: {
-        ids: ['30b34f3/0', 'abcdef1/0'],
-        entities: {
-          '30b34f3/0': { id: '30b34f3/0', name: 'Wallet 1 Account 1' },
-          'abcdef1/0': { id: 'abcdef1/0', name: 'Wallet 2 Account 1' },
-        },
+      "24682ead/86'/1'/0'": {
+        descriptor:
+          "[24682ead/86'/1'/0']xpub6BgaefzDuw4JozeCwk8tkZBo4x2ZNPsqvB5Lryy8WFkruMRX2h9mHJMu6NUfSjo1EjroPSweZdgTU3BvRqH4RzMPUhcwRyisi4eNfTweovR",
+        chain: 'bitcoin',
       },
-      keychains: {
-        ids: [
-          'w1-btc-mainnet',
-          'w1-btc-testnet',
-          'w1-btc-taproot',
-          'w1-stacks',
-          'w2-btc-mainnet',
-          'w2-btc-testnet',
-        ],
-        entities: {
-          'w1-btc-mainnet': {
-            descriptor: "[30b34f3/84'/0'/0']xpub1",
-            chain: 'bitcoin' as const,
-          },
-          'w1-btc-testnet': {
-            descriptor: "[30b34f3/84'/1'/0']xpub2",
-            chain: 'bitcoin' as const,
-          },
-          'w1-btc-taproot': {
-            descriptor: "[30b34f3/86'/0'/0']xpub3",
-            chain: 'bitcoin' as const,
-          },
-          'w1-stacks': {
-            descriptor: "[30b34f3/44'/5757'/0']xpub4",
-            chain: 'stacks' as const,
-          },
-          'w2-btc-mainnet': {
-            descriptor: "[abcdef1/84'/0'/0']xpub5",
-            chain: 'bitcoin' as const,
-          },
-          'w2-btc-testnet': {
-            descriptor: "[abcdef1/84'/1'/0']xpub6",
-            chain: 'bitcoin' as const,
-          },
-        },
+      "24682ead/44'/5757'/0'/0/0": {
+        descriptor:
+          "[24682ead/44'/5757'/0'/0/0]025b2c58cbf22ad02e1a53041189ace847192834e0664cab4ed1a39676e8a8ddf8",
+        chain: 'stacks',
       },
-    };
+      "24682ead/84'/0'/1'": {
+        descriptor:
+          "[24682ead/84'/0'/1']xpub6D4nuUzLPukRaXBXWK55p8s7FCZmmXrhHJU7UJFxc9SMyYVFe4TQCYge95zsshNFk2NNxSRKPg1DGAEv5Gbuy5c7XLg1RawjokbTHD5sV3K",
+        chain: 'bitcoin',
+      },
+      "24682ead/84'/1'/1'": {
+        descriptor:
+          "[24682ead/84'/1'/1']xpub6CqrZidmoeJB3wnjQEkDFn6E2P3B1nwTGezrMqzRgGLHsa83voApMNiskcTAZgB4WbfkqGiZKUNELCB8yK6wDwSXne7GgvwnukmMhBcGznp",
+        chain: 'bitcoin',
+      },
+      "24682ead/86'/0'/1'": {
+        descriptor:
+          "[24682ead/86'/0'/1']xpub6Ch5Go7FQLoXnqHqnzeBWDmr9ag6Qi1URYqcsyjZMotwDsDu1KB8xgzYgkmkdCKr1fcckKjNkCcp2X4QYMq1Kf5fWBX5GLiPVX2bryWna3M",
+        chain: 'bitcoin',
+      },
+      "24682ead/86'/1'/1'": {
+        descriptor:
+          "[24682ead/86'/1'/1']xpub6BgaefzDuw4JsLgfxjaZn3CnHnLGeMDfgEbMq14qSa4AoLVvHwE2vrgnGMQo5wdBbecEQTXG9WFxwVirBhq7uHPEuHP7kQpwSpzUnHjr5zZ",
+        chain: 'bitcoin',
+      },
+      "24682ead/44'/5757'/0'/0/1": {
+        descriptor:
+          "[24682ead/44'/5757'/0'/0/1]02e6d4a2e2c9e822c3ac1890e989d77507bae8fa02cd403bed819716e4ed80997b",
+        chain: 'stacks',
+      },
+    },
+  },
+  settings: {
+    accountDisplayPreference: 'native-segwit',
+    analyticsPreference: 'consent-given',
+    bitcoinUnitPreference: 'bitcoin',
+    createdOn: '2025-10-01T13:19:31.570Z',
+    emailAddressPreference: '',
+    fiatCurrencyPreference: 'USD',
+    networkPreference: 'mainnet',
+    privacyModePreference: 'visible',
+    hapticsPreference: 'enabled',
+    securityLevelPreference: 'secure',
+    themePreference: 'dark',
+    lastActive: 1759742397999,
+    notificationsPreference: 'not-selected',
+    languagePreference: 'en',
+    languagePreferenceSource: 'system',
+    assetVisibility: {},
+    currentAccount: {
+      fingerprint: 'f25e8',
+      accountIndex: 0,
+    },
+    appIconPreference: 'default',
+  },
+  apps: {
+    ids: ['https://www.granite.world', 'https://www.zestprotocol.com'],
+    entities: {
+      'https://www.granite.world': {
+        screenshot:
+          'file:///Users/edgarkhanzadian/Library/Developer/CoreSimulator/Devices/CA9E2A73-6CB1-4F93-8EB8-EC3847198747/data/Containers/Data/Application/CCB52B8B-B871-4079-BBEA-9696690974B4/Documents/www.granite.world_screenshot.jpg',
+        name: 'Granite - Leather – Your Bitcoin Wallet for DeFi, NFTs, Ordinals, and dApps',
+        origin: 'https://www.granite.world',
+        status: 'connected',
+        accountId: 'f25e8/0',
+      },
+      'https://www.zestprotocol.com': {
+        screenshot:
+          'file:///Users/edgarkhanzadian/Library/Developer/CoreSimulator/Devices/CA9E2A73-6CB1-4F93-8EB8-EC3847198747/data/Containers/Data/Application/CCB52B8B-B871-4079-BBEA-9696690974B4/Documents/www.zestprotocol.com_screenshot.jpg',
+        name: 'Zest Protocol - Leather – Your Bitcoin Wallet for DeFi, NFTs, Ordinals, and dApps',
+        origin: 'https://www.zestprotocol.com',
+        status: 'recently_visited',
+      },
+    },
+  },
+  _persist: {
+    version: 1,
+    rehydrated: true,
+  },
+};
 
-    const result = migratePadFingerprints(originalState);
-
-    expect(result.keychains.entities['w1-btc-mainnet']?.descriptor).toEqual(
-      "[030b34f3/84'/0'/0']xpub1"
-    );
-    expect(result.keychains.entities['w1-btc-testnet']?.descriptor).toEqual(
-      "[030b34f3/84'/1'/0']xpub2"
-    );
-    expect(result.keychains.entities['w1-btc-taproot']?.descriptor).toEqual(
-      "[030b34f3/86'/0'/0']xpub3"
-    );
-    expect(result.keychains.entities['w1-stacks']?.descriptor).toEqual(
-      "[030b34f3/44'/5757'/0']xpub4"
-    );
-    expect(result.keychains.entities['w2-btc-mainnet']?.descriptor).toEqual(
-      "[0abcdef1/84'/0'/0']xpub5"
-    );
-    expect(result.keychains.entities['w2-btc-testnet']?.descriptor).toEqual(
-      "[0abcdef1/84'/1'/0']xpub6"
-    );
+const v2State = {
+  wallets: {
+    ids: ['000f25e8', '24682ead'],
+    entities: {
+      '000f25e8': {
+        type: 'software',
+        fingerprint: '000f25e8',
+        createdOn: '2026-01-22T10:01:00.999Z',
+        name: 'Wallet 1',
+      },
+      '24682ead': {
+        type: 'software',
+        fingerprint: '24682ead',
+        createdOn: '2026-01-22T10:09:41.199Z',
+        name: 'Wallet 2',
+      },
+    },
+  },
+  accounts: {
+    ids: ['000f25e8/0', '000f25e8/1', '24682ead/0', '24682ead/1'],
+    entities: {
+      '000f25e8/0': {
+        id: '000f25e8/0',
+      },
+      '000f25e8/1': {
+        id: '000f25e8/1',
+      },
+      '24682ead/0': {
+        id: '24682ead/0',
+      },
+      '24682ead/1': {
+        id: '24682ead/1',
+      },
+    },
+  },
+  keychains: {
+    ids: [
+      "000f25e8/84'/0'/0'",
+      "000f25e8/84'/1'/0'",
+      "000f25e8/86'/0'/0'",
+      "000f25e8/86'/1'/0'",
+      "000f25e8/44'/5757'/0'/0/0",
+      "000f25e8/84'/0'/1'",
+      "000f25e8/84'/1'/1'",
+      "000f25e8/86'/0'/1'",
+      "000f25e8/86'/1'/1'",
+      "000f25e8/44'/5757'/0'/0/1",
+      "24682ead/84'/0'/0'",
+      "24682ead/84'/1'/0'",
+      "24682ead/86'/0'/0'",
+      "24682ead/86'/1'/0'",
+      "24682ead/44'/5757'/0'/0/0",
+      "24682ead/84'/0'/1'",
+      "24682ead/84'/1'/1'",
+      "24682ead/86'/0'/1'",
+      "24682ead/86'/1'/1'",
+      "24682ead/44'/5757'/0'/0/1",
+    ],
+    entities: {
+      "000f25e8/84'/0'/0'": {
+        descriptor:
+          "[000f25e8/84'/0'/0']xpub6D6TYd2tdvLaJkuNZUWxEiZswdHGfCcg77RQyP1We8ciMFrBsS2bcUdAs8NazSWkt3LAbJatKLqNcgHzcodcsCYZ8MAQ8SRpz1iLVJZhibj",
+        chain: 'bitcoin',
+      },
+      "000f25e8/84'/1'/0'": {
+        descriptor:
+          "[000f25e8/84'/1'/0']xpub6CVWLbT3iigaVWbCXhUt9kkZMgmQpGSfkSZYywRZqLrWfRNWMjQ7qeRrZb4Aaimtkpb4xvoYeME9Rbs51WRHHVVWwkfGZE5KZLYDw7SBeeP",
+        chain: 'bitcoin',
+      },
+      "000f25e8/86'/0'/0'": {
+        descriptor:
+          "[000f25e8/86'/0'/0']xpub6CxWWZyvhM5x98GQtZZQbGcgKZjGmWy5cqwHxApjjp8xcGGe9eR25R63BKrKFH1h3wPfs791zXZZdeC8XxmTwJoeiTDSqeFVJmHq7wNb7VK",
+        chain: 'bitcoin',
+      },
+      "000f25e8/86'/1'/0'": {
+        descriptor:
+          "[000f25e8/86'/1'/0']xpub6D2Us2EbpZUo3TmfkddRDnoBZw2ehf9E6o9i95pJZzm9veSPgbopNZafgHDEk2UcF6ohHQA279EQHv217JfxAHL868VSWEnRJMuHw7sKtUt",
+        chain: 'bitcoin',
+      },
+      "000f25e8/44'/5757'/0'/0/0": {
+        descriptor:
+          "[000f25e8/44'/5757'/0'/0/0]02ffb37e6635be77b666f94204b20149ff91c7bea3502610d22645b8e0f334efc5",
+        chain: 'stacks',
+      },
+      "000f25e8/84'/0'/1'": {
+        descriptor:
+          "[000f25e8/84'/0'/1']xpub6D6TYd2tdvLaPGYncHmEfzUz7BGJ2ytKrrbGoveZdmaKX5J5FMuYiSiGCNx728maGivqyqrmSogwLzwLB1vouv49F9HMUEUNcShVHTGyB7g",
+        chain: 'bitcoin',
+      },
+      "000f25e8/84'/1'/1'": {
+        descriptor:
+          "[000f25e8/84'/1'/1']xpub6CVWLbT3iigaXnGPVcLsXGQC8TfQ4kNcKrP6zuVecvs996nREJ8tgmoRmFWqPUeCgSEf9Ytm5HXx5oerHFdwKzqHuXtGrds1wfBC3vCZMeo",
+        chain: 'bitcoin',
+      },
+      "000f25e8/86'/0'/1'": {
+        descriptor:
+          "[000f25e8/86'/0'/1']xpub6CxWWZyvhM5xA3vvBufWx1FMvr5mNHP2teY9ywP6R8o9AvWEQvw5N2wsvTUKoj2Nh3siXpW9nPgQZYKScSFjt2F9kh3hQtXFsU3FoQebiae",
+        chain: 'bitcoin',
+      },
+      "000f25e8/86'/1'/1'": {
+        descriptor:
+          "[000f25e8/86'/1'/1']xpub6D2Us2EbpZUo6bPpUHuB6tTJMr724jZGfYZkZaJs3y61p46sib1igk6qC2t1kN3ffjAYm47auc5nnfjWmofR9U7Nyj5pZtQ2AjoupuhBTxK",
+        chain: 'bitcoin',
+      },
+      "000f25e8/44'/5757'/0'/0/1": {
+        descriptor:
+          "[000f25e8/44'/5757'/0'/0/1]026b15fdaf16b01db1eb36314d1bc9edd274ec4bf166123164a62e3715eb42716c",
+        chain: 'stacks',
+      },
+      "24682ead/84'/0'/0'": {
+        descriptor:
+          "[24682ead/84'/0'/0']xpub6D4nuUzLPukRYKmb6ZYxo5khwLJXHarYQutgauqv8UkAVV8NHw23UZPDoXdJZDqv5hHiyh55jCER2KuYt2a7Egnoj7TF8u7scsJbJPeCneM",
+        chain: 'bitcoin',
+      },
+      "24682ead/84'/1'/0'": {
+        descriptor:
+          "[24682ead/84'/1'/0']xpub6CqrZidmoeJB1khkcUh81zgdeqy2mLgnAABvpA9HExCMSnBr7qHjJ5ekrPS6emrVGQg7BwSKQ9GWDcv6w5AQo6bn3Vf5oCZ3XAZRXGpbezQ",
+        chain: 'bitcoin',
+      },
+      "24682ead/86'/0'/0'": {
+        descriptor:
+          "[24682ead/86'/0'/0']xpub6Ch5Go7FQLoXjxbAWAPjkYbzbJDrPnLiJAUWUGQUA8CFMVaDweTSn4p3DmrAR7yKHs6gXZ8VbVFBNTMjpevkSaF8wEnNAXXYoymzoAtWmh6",
+        chain: 'bitcoin',
+      },
+      "24682ead/86'/1'/0'": {
+        descriptor:
+          "[24682ead/86'/1'/0']xpub6BgaefzDuw4JozeCwk8tkZBo4x2ZNPsqvB5Lryy8WFkruMRX2h9mHJMu6NUfSjo1EjroPSweZdgTU3BvRqH4RzMPUhcwRyisi4eNfTweovR",
+        chain: 'bitcoin',
+      },
+      "24682ead/44'/5757'/0'/0/0": {
+        descriptor:
+          "[24682ead/44'/5757'/0'/0/0]025b2c58cbf22ad02e1a53041189ace847192834e0664cab4ed1a39676e8a8ddf8",
+        chain: 'stacks',
+      },
+      "24682ead/84'/0'/1'": {
+        descriptor:
+          "[24682ead/84'/0'/1']xpub6D4nuUzLPukRaXBXWK55p8s7FCZmmXrhHJU7UJFxc9SMyYVFe4TQCYge95zsshNFk2NNxSRKPg1DGAEv5Gbuy5c7XLg1RawjokbTHD5sV3K",
+        chain: 'bitcoin',
+      },
+      "24682ead/84'/1'/1'": {
+        descriptor:
+          "[24682ead/84'/1'/1']xpub6CqrZidmoeJB3wnjQEkDFn6E2P3B1nwTGezrMqzRgGLHsa83voApMNiskcTAZgB4WbfkqGiZKUNELCB8yK6wDwSXne7GgvwnukmMhBcGznp",
+        chain: 'bitcoin',
+      },
+      "24682ead/86'/0'/1'": {
+        descriptor:
+          "[24682ead/86'/0'/1']xpub6Ch5Go7FQLoXnqHqnzeBWDmr9ag6Qi1URYqcsyjZMotwDsDu1KB8xgzYgkmkdCKr1fcckKjNkCcp2X4QYMq1Kf5fWBX5GLiPVX2bryWna3M",
+        chain: 'bitcoin',
+      },
+      "24682ead/86'/1'/1'": {
+        descriptor:
+          "[24682ead/86'/1'/1']xpub6BgaefzDuw4JsLgfxjaZn3CnHnLGeMDfgEbMq14qSa4AoLVvHwE2vrgnGMQo5wdBbecEQTXG9WFxwVirBhq7uHPEuHP7kQpwSpzUnHjr5zZ",
+        chain: 'bitcoin',
+      },
+      "24682ead/44'/5757'/0'/0/1": {
+        descriptor:
+          "[24682ead/44'/5757'/0'/0/1]02e6d4a2e2c9e822c3ac1890e989d77507bae8fa02cd403bed819716e4ed80997b",
+        chain: 'stacks',
+      },
+    },
+  },
+  settings: {
+    accountDisplayPreference: 'native-segwit',
+    analyticsPreference: 'consent-given',
+    bitcoinUnitPreference: 'bitcoin',
+    createdOn: '2025-10-01T13:19:31.570Z',
+    emailAddressPreference: '',
+    fiatCurrencyPreference: 'USD',
+    networkPreference: 'mainnet',
+    privacyModePreference: 'visible',
+    hapticsPreference: 'enabled',
+    securityLevelPreference: 'secure',
+    themePreference: 'dark',
+    lastActive: 1759742397999,
+    notificationsPreference: 'not-selected',
+    languagePreference: 'en',
+    languagePreferenceSource: 'system',
+    assetVisibility: {},
+    currentAccount: {
+      fingerprint: '000f25e8',
+      accountIndex: 0,
+    },
+    appIconPreference: 'default',
+  },
+  apps: {
+    ids: ['https://www.granite.world', 'https://www.zestprotocol.com'],
+    entities: {
+      'https://www.granite.world': {
+        screenshot:
+          'file:///Users/edgarkhanzadian/Library/Developer/CoreSimulator/Devices/CA9E2A73-6CB1-4F93-8EB8-EC3847198747/data/Containers/Data/Application/CCB52B8B-B871-4079-BBEA-9696690974B4/Documents/www.granite.world_screenshot.jpg',
+        name: 'Granite - Leather – Your Bitcoin Wallet for DeFi, NFTs, Ordinals, and dApps',
+        origin: 'https://www.granite.world',
+        status: 'connected',
+        accountId: '000f25e8/0',
+      },
+      'https://www.zestprotocol.com': {
+        screenshot:
+          'file:///Users/edgarkhanzadian/Library/Developer/CoreSimulator/Devices/CA9E2A73-6CB1-4F93-8EB8-EC3847198747/data/Containers/Data/Application/CCB52B8B-B871-4079-BBEA-9696690974B4/Documents/www.zestprotocol.com_screenshot.jpg',
+        name: 'Zest Protocol - Leather – Your Bitcoin Wallet for DeFi, NFTs, Ordinals, and dApps',
+        origin: 'https://www.zestprotocol.com',
+        status: 'recently_visited',
+      },
+    },
+  },
+  _persist: {
+    version: 1,
+    rehydrated: true,
+  },
+};
+describe(migratePadFingerprints.name, () => {
+  test('function migrates the whole v1state to v2state correctly', () => {
+    expect(migratePadFingerprints(v1State)).toEqual(v2State);
   });
 });
