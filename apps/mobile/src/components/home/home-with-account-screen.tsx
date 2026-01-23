@@ -22,9 +22,12 @@ import {
   useCollectiblesAnalytics,
   useTokenPortfolioAnalytics,
 } from '@/utils/analytics-hooks';
+import { useRouter } from 'expo-router';
 
+import { btcAsset, stxAsset } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
 import { SheetInstance } from '@leather.io/ui/native';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { AccountScreenHeader } from './account-screen-header';
 import { AssetTabs } from './components/asset-tabs';
@@ -49,6 +52,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     sip10Balance: sip10Data.value?.sip10s ?? [],
     runeBalance: runesData.value?.runes ?? [],
   });
+  const router = useRouter();
   const allSip10Data = useSip10AccountBalance(fingerprint, accountIndex, {
     includeHiddenAssets: true,
   });
@@ -94,8 +98,26 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
                 }}
                 hasAssets={hasAssets}
               />
-              <BitcoinBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
-              <StacksBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
+              <BitcoinBalanceByAccount
+                fingerprint={fingerprint}
+                accountIndex={accountIndex}
+                onPress={() =>
+                  router.navigate({
+                    pathname: '/(tabs)/(index)/[assetId]',
+                    params: { assetId: serializeAssetId(getAssetId(btcAsset)) },
+                  })
+                }
+              />
+              <StacksBalanceByAccount
+                fingerprint={fingerprint}
+                accountIndex={accountIndex}
+                onPress={() =>
+                  router.navigate({
+                    pathname: '/(tabs)/(index)/[assetId]',
+                    params: { assetId: serializeAssetId(getAssetId(stxAsset)) },
+                  })
+                }
+              />
             </>
           }
           sip10Data={sip10Data}
