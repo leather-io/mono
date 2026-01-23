@@ -62,9 +62,9 @@ const debug = {
     // eslint-disable-next-line no-console
     void reduxPersist.getStoredState(persistConfig).then(state => console.log(state));
   },
-  setHighestAccountIndex(index: number) {
-    logger.info(`Highest account index set to ${index}`);
-    store.dispatch(stxChainSlice.actions.restoreAccountIndex(index));
+  setHighestAccountIndex(fingerprint: string, accountIndex: number) {
+    logger.info(`Highest account index set to ${accountIndex}`);
+    store.dispatch(stxChainSlice.actions.restoreAccountIndex({ fingerprint, accountIndex }));
   },
   resetMessages() {
     store.dispatch(settingsSlice.actions.resetMessages());

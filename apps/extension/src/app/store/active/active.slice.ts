@@ -1,8 +1,10 @@
 import { createAction, createSlice } from '@reduxjs/toolkit';
 
+import { getMnemonicRootKeyFingerprint } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
+import { resetWallet } from '@leather.io/state';
 
-import { stxChainSlice } from '../chains/stx-chain.slice';
+import { inMemoryKeySlice } from '../in-memory-key/in-memory-key.slice';
 
 export const userSwitchesAccount = createAction<AccountId>('active/userSwitchesAccount');
 
@@ -18,11 +20,16 @@ export const activeSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
+      .addCase(resetWallet, state => {
+        state.account = null;
+      })
       .addCase(userSwitchesAccount, (state, action) => {
         state.account = action.payload;
       })
-      .addCase(stxChainSlice.actions.createNewAccount, (_state, _action) => {
-        // When a new account is created, switch to it
-        // TODO: implement account switching on account creation
+      .addCase(inMemoryKeySlice.actions.generateWalletKey, (state, action) => {
+        state.account = {
+          fingerprint: getMnemonicRootKeyFingerprint(action.payload),
+          accountIndex: 0,
+        };
       }),
 });

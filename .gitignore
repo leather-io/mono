@@ -18,4 +18,3 @@ tmp
 **/tsdown.config.native.bundled*
 **/.claude/settings.local.json
 .cursorrules
-copilot-instructions.md

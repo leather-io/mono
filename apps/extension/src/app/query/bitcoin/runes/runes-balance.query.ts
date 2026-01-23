@@ -1,5 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
+import type { AccountId } from '@leather.io/models';
 import { createRunesAccountBalanceQueryConfig } from '@leather.io/queries';
 import { type AccountRequest, type RuneBalance } from '@leather.io/services';
 import { isSameAsset } from '@leather.io/utils';
@@ -9,8 +10,8 @@ import { balanceQueryOptionsWithRefetch } from '@app/query/common/balance-query-
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { toFetchState } from '@app/services/fetch-state';
 
-export function useManagedRunesTools(accountIndex: number) {
-  const enabledRunes = useRunesAccountBalance(accountIndex);
+export function useManagedRunesTools(accountId: AccountId) {
+  const enabledRunes = useRunesAccountBalance(accountId);
   return {
     isEnabled: (rune: RuneBalance) =>
       !!enabledRunes.value?.runes.find(r => isSameAsset(r.asset, rune.asset)),
@@ -18,10 +19,10 @@ export function useManagedRunesTools(accountIndex: number) {
 }
 
 export function useRunesAccountBalance(
-  accountIndex: number,
+  accountId: AccountId,
   options?: { includeHiddenAssets?: boolean }
 ) {
-  const account = useAccountAddresses(accountIndex);
+  const account = useAccountAddresses(accountId);
   return toFetchState(
     useGetRunesAccountBalanceQuery({
       account,

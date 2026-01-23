@@ -1,6 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
+import type { AccountId } from '@leather.io/models';
 import { userAddsWallet } from '@leather.io/state/wallet';
+
+import { assumedZeroFingerprint } from '@shared/utils';
 
 import { keySlice } from '../software-keys/software-key.slice';
 
@@ -17,12 +20,28 @@ export const stxChainSlice = createSlice({
 
   reducers: {
     createNewAccount(state, action: PayloadAction<{ fingerprint: string; descriptor: string }>) {
-      state[action.payload.fingerprint].highestAccountIndex += 1;
-      state[action.payload.fingerprint].currentAccountStacksDescriptor = action.payload.descriptor;
+      const fingerprint = action.payload.fingerprint;
+      if (!state[fingerprint]) {
+        state[fingerprint] = {
+          highestAccountIndex: 1,
+          currentAccountStacksDescriptor: action.payload.descriptor,
+        };
+      } else {
+        state[fingerprint].highestAccountIndex += 1;
+        state[fingerprint].currentAccountStacksDescriptor = action.payload.descriptor;
+      }
     },
 
-    restoreAccountIndex(state, action: PayloadAction<number>) {
-      state.default.highestAccountIndex = action.payload;
+    restoreAccountIndex(state, action: PayloadAction<AccountId>) {
+      const fingerprint = assumedZeroFingerprint;
+      if (!state[fingerprint]) {
+        state[fingerprint] = {
+          highestAccountIndex: action.payload.accountIndex,
+          currentAccountStacksDescriptor: '',
+        };
+      } else {
+        state[fingerprint].highestAccountIndex = action.payload.accountIndex;
+      }
     },
   },
 

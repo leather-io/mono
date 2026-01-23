@@ -1,7 +1,5 @@
 import { PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
-import { defaultWalletKeyId } from '@shared/utils';
-
 import { migrateVaultReducerStoreToNewStateStructure } from '../utils/vault-reducer-migration';
 
 interface SoftwareKeyConfig {
@@ -17,8 +15,12 @@ export const keySlice = createSlice({
   name: 'softwareKeys',
   initialState: migrateVaultReducerStoreToNewStateStructure(initialKeysState),
   reducers: {
-    createSoftwareWalletComplete(state, action: PayloadAction<SoftwareKeyConfig>) {
-      keyAdapter.upsertOne(state, action.payload);
+    createSoftwareWalletComplete(
+      state,
+      action: PayloadAction<{ salt: string; key: SoftwareKeyConfig }>
+    ) {
+      keyAdapter.upsertOne(state, action.payload.key);
+      state.salt = action.payload.salt;
     },
 
     addNewWallet(state, action: PayloadAction<SoftwareKeyConfig>) {
@@ -26,7 +28,8 @@ export const keySlice = createSlice({
     },
 
     signOut(state) {
-      keyAdapter.removeOne(state as any, defaultWalletKeyId);
+      if (state.salt) delete state.salt;
+      return keyAdapter.removeAll(state);
     },
   },
 });

@@ -7,7 +7,7 @@ import { analytics } from '@shared/utils/analytics';
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useBackgroundLocationRedirect } from '@app/routes/hooks/use-background-location-redirect';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useNativeSegwitAccountIndexAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 import { ReceiveTokensLayout } from './components/receive-tokens.layout';
@@ -22,8 +22,8 @@ export function ReceiveBtcModal({ type = 'btc' }: ReceiveBtcModalType) {
   const { state } = useLocation();
   const toast = useToast();
 
-  const currentAccountIndex = useCurrentAccountIndex();
-  const accountIndex = get(state, 'accountIndex', currentAccountIndex);
+  const currentAccount = useCurrentAccountId();
+  const accountIndex = get(state, 'accountIndex', currentAccount.accountIndex);
 
   const activeAccountBtcAddress = useNativeSegwitAccountIndexAddressIndexZero(accountIndex);
   const btcAddress = get(state, 'btcAddress', activeAccountBtcAddress);

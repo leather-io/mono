@@ -1,4 +1,5 @@
 import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
+import type { AccountId } from '@leather.io/models';
 import type { Sip10Balance } from '@leather.io/services';
 import { isSameAsset } from '@leather.io/utils';
 
@@ -12,8 +13,8 @@ import {
   useGetSip10BalanceByAssetIdQuery,
 } from './sip10-balance.query';
 
-export function useUsdcxAccountBalance(accountIndex: number) {
-  const account = useAccountAddresses(accountIndex);
+export function useUsdcxAccountBalance(accountId: AccountId) {
+  const account = useAccountAddresses(accountId);
   const network = useCurrentNetwork();
   return toFetchState(
     useGetSip10BalanceByAssetIdQuery(
@@ -41,8 +42,8 @@ export function useSip10AddressTransferableTokenBalances(address: string) {
   };
 }
 
-export function useManagedSip10Tools(accountIndex: number) {
-  const enabledSip10s = useSip10AccountBalance(accountIndex);
+export function useManagedSip10Tools(accountId: AccountId) {
+  const enabledSip10s = useSip10AccountBalance(accountId);
 
   return {
     isEnabled: (token: Sip10Balance) =>
@@ -55,10 +56,10 @@ function useSip10AddressBalance(address: string) {
 }
 
 export function useSip10AccountBalance(
-  accountIndex: number,
+  accountId: AccountId,
   options?: { includeHiddenAssets?: boolean }
 ) {
-  const account = useAccountAddresses(accountIndex);
+  const account = useAccountAddresses(accountId);
   return toFetchState(
     useGetSip10AccountBalanceQuery({
       account,

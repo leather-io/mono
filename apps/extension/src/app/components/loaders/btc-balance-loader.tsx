@@ -1,3 +1,4 @@
+import type { AccountId } from '@leather.io/models';
 import type { AccountQuotedBtcBalance } from '@leather.io/services';
 import { BtcAvatarIcon } from '@leather.io/ui';
 
@@ -7,18 +8,15 @@ import { CryptoAssetItemError } from '../crypto-asset-item/crypto-asset-item-err
 import { CryptoAssetItemPlaceholder } from '../crypto-asset-item/crypto-asset-item-placeholder';
 
 interface BtcAssetItemBalanceLoaderProps {
-  accountIndex: number;
+  accountId: AccountId;
   children(
     balance: AccountQuotedBtcBalance,
     isLoading: boolean,
     isLoadingAdditionalData: boolean
   ): React.ReactNode;
 }
-export function BtcAssetItemBalanceLoader({
-  accountIndex,
-  children,
-}: BtcAssetItemBalanceLoaderProps) {
-  const nativeSegwitBalance = useNativeSegwitBtcAccountBalance(accountIndex);
+export function BtcAssetItemBalanceLoader({ accountId, children }: BtcAssetItemBalanceLoaderProps) {
+  const nativeSegwitBalance = useNativeSegwitBtcAccountBalance(accountId);
   const isLoading = nativeSegwitBalance.state === 'loading';
   if (isLoading) return <CryptoAssetItemPlaceholder />;
   if (nativeSegwitBalance.state === 'error') {

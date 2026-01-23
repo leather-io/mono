@@ -4,6 +4,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { deriveRootKeychainFromMnemonicSync } from '@leather.io/crypto';
 
+import { assumedZeroFingerprint } from '@shared/utils';
 import { decodeText } from '@shared/utils/text-encoding';
 
 import { RootState } from '..';
@@ -16,7 +17,7 @@ function selectInMemoryKeys(state: RootState) {
 const selectActiveInMemoryWalletKeyBytes = createSelector(
   selectInMemoryKeys,
   selectActiveAccount,
-  (inMemKeys, activeAccount) => inMemKeys.keys[activeAccount?.fingerprint ?? 'default']
+  (inMemKeys, activeAccount) => inMemKeys.keys[activeAccount?.fingerprint ?? assumedZeroFingerprint]
 );
 
 const selectHasActiveInMemoryWalletKey = createSelector(
@@ -28,22 +29,24 @@ export function useHasActiveInMemoryWalletSecretKey() {
   return useSelector(selectHasActiveInMemoryWalletKey);
 }
 
-// Not using a memoized "createSelector" to avoid storing the decoded key as cleartext in memory
+// No `createSelector` to avoid storing the decoded key as cleartext in memory
 export function selectActiveWalletKey(state: RootState) {
   const activeWalletBytes = selectActiveInMemoryWalletKeyBytes(state);
-
   if (!activeWalletBytes) return null;
   return decodeText(activeWalletBytes);
 }
 
-export const selectActiveWalletRootKeychain = createSelector(
-  selectActiveInMemoryWalletKeyBytes,
-  key => {
-    if (!key) return null;
-    return deriveRootKeychainFromMnemonicSync(decodeText(key));
-  }
-);
-
 export function useActiveWalletSecretKey() {
   return useSelector(selectActiveWalletKey);
 }
+
+export const selectRootKeychains = createSelector(selectInMemoryKeys, inMemKeys =>
+  Object.fromEntries(
+    Object.entries(inMemKeys.keys)
+      .filter(([, keyBytes]) => !!keyBytes)
+      .map(([fingerprint, keyBytes]) => [
+        fingerprint,
+        deriveRootKeychainFromMnemonicSync(decodeText(keyBytes)),
+      ])
+  )
+);

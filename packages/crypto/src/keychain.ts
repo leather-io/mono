@@ -1,4 +1,3 @@
-import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import {
   mnemonicToSeed,
@@ -8,8 +7,6 @@ import {
 } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
 import memoize from 'just-memoize';
-
-import { toHexString } from '@leather.io/utils';
 
 import {
   DerivationPathDepth,

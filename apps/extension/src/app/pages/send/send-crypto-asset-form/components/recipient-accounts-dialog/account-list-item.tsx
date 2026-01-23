@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { useFormikContext } from 'formik';
 
+import type { AccountId } from '@leather.io/models';
+
 import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
 
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
@@ -17,11 +19,11 @@ import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/acc
 
 interface AccountListItemProps {
   stacksAccount: StacksAccount;
-  index: number;
+  accountId: AccountId;
   onClose(): void;
 }
 export const AccountListItem = memo(function AccountListItem({
-  index,
+  accountId,
   stacksAccount,
   onClose,
 }: AccountListItemProps) {
@@ -30,8 +32,11 @@ export const AccountListItem = memo(function AccountListItem({
   >();
   const currentAccount = useSelector(selectCurrentAccount);
   const stacksAddress = stacksAccount?.address || '';
-  const { data: name = '' } = useAccountDisplayName({ address: stacksAddress, index });
-  const bitcoinSigner = useNativeSegwitSigner(index);
+  const { data: name = '' } = useAccountDisplayName({
+    address: stacksAddress,
+    index: accountId.accountIndex,
+  });
+  const bitcoinSigner = useNativeSegwitSigner(accountId);
   const bitcoinAddress = bitcoinSigner?.({ changeIndex: 0, addressIndex: 0 }).address || '';
 
   function onSelectAccount() {
@@ -43,11 +48,16 @@ export const AccountListItem = memo(function AccountListItem({
   return (
     <AccountListItemLayout
       fingerprint={currentAccount.fingerprint}
-      accountIndex={index}
-      accountAddresses={<AccountAddresses index={index} />}
+      accountIndex={accountId.accountIndex}
+      accountAddresses={<AccountAddresses accountId={accountId} />}
       accountName={<AccountNameLayout>{name}</AccountNameLayout>}
-      avatar={<AccountAvatarItem index={index} publicKey={stacksAccount?.stxPublicKey || ''} />}
-      balanceLabel={<AccountTotalBalance accountIndex={index} />}
+      avatar={
+        <AccountAvatarItem
+          index={accountId.accountIndex}
+          publicKey={stacksAccount?.stxPublicKey || ''}
+        />
+      }
+      balanceLabel={<AccountTotalBalance accountId={accountId} />}
       isSelected={false}
       isLoading={false}
       onSelectAccount={onSelectAccount}

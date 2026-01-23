@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import type { AccountId } from '@leather.io/models';
 import {
   createAccountAvailableBalanceQueryConfig,
   createAccountTotalBalanceQueryConfig,
@@ -9,18 +10,18 @@ import type { AccountRequest } from '@leather.io/services';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { toFetchState } from '@app/services/fetch-state';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
 import { balanceQueryOptions } from '../balance-query-options';
 
 export function useCurrentAccountAvailableBalance() {
-  const accountIndex = useCurrentAccountIndex();
-  return useAccountAvailableBalance(accountIndex);
+  const currentAccount = useCurrentAccountId();
+  return useAccountAvailableBalance(currentAccount);
 }
 
-function useAccountAvailableBalance(accountIndex: number) {
-  const account = useAccountAddresses(accountIndex);
+function useAccountAvailableBalance(accountId: AccountId) {
+  const account = useAccountAddresses(accountId);
   const discardedInscriptions = useDiscardedInscriptions();
   return toFetchState(
     useGetAccountAvailableBalanceQuery({
@@ -36,12 +37,12 @@ function useAccountAvailableBalance(accountIndex: number) {
 }
 
 export function useCurrentAccountTotalBalance() {
-  const accountIndex = useCurrentAccountIndex();
-  return useAccountTotalBalance(accountIndex);
+  const currentAccount = useCurrentAccountId();
+  return useAccountTotalBalance(currentAccount);
 }
 
-export function useAccountTotalBalance(accountIndex: number) {
-  const account = useAccountAddresses(accountIndex);
+export function useAccountTotalBalance(accountId: AccountId) {
+  const account = useAccountAddresses(accountId);
   const discardedInscriptions = useDiscardedInscriptions();
   return toFetchState(
     useGetAccountTotalBalanceQuery({

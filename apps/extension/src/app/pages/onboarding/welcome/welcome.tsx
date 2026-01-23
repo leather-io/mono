@@ -9,7 +9,6 @@ import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state'
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { doesBrowserSupportWebUsbApi, isPopupMode, whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
-import { MultiWalletTest } from '@app/pages/multi-wallet-test/multi-wallet-test';
 
 import { WelcomeLayout } from './welcome.layout';
 
@@ -74,7 +73,6 @@ export function WelcomePage() {
 
   return (
     <>
-      <MultiWalletTest />
       <WelcomeLayout
         isGeneratingWallet={isGeneratingWallet}
         onSelectConnectLedger={onSelectConnectLedger}

@@ -2,14 +2,15 @@ import { useCallback } from 'react';
 
 import type { Blockchain } from '@leather.io/models';
 
+import { useHasLedgerStacksKeys } from '@app/store/ledger/ledger.selectors';
+
 import { useHasCurrentBitcoinAccount } from './bitcoin/bitcoin.hooks';
-import { useHasStacksLedgerKeychain } from './stacks/stacks.hooks';
 
 // TODO: Asset refactor: remove if determined unnecessary
 // ts-unused-exports:disable-next-line
 export function useCheckLedgerBlockchainAvailable() {
   const hasBitcoinLedgerKeys = useHasCurrentBitcoinAccount();
-  const hasStacksLedgerKeys = useHasStacksLedgerKeychain();
+  const hasStacksLedgerKeys = useHasLedgerStacksKeys();
 
   return useCallback(
     (chain: Blockchain) => {
