@@ -1,11 +1,6 @@
 import { AddressVersion } from '@stacks/transactions';
 
 import {
-  makeNativeSegwitAccountDerivationPath,
-  makeTaprootAccountDerivationPath,
-} from '@leather.io/bitcoin';
-import {
-  deriveKeychainExtendedPublicKeyDescriptor,
   deriveRootKeychainFromMnemonicSync,
   getMnemonicRootKeyFingerprint,
 } from '@leather.io/crypto';
@@ -16,12 +11,10 @@ import {
   type StacksClient,
   fetchNamesForAddress,
 } from '@leather.io/query';
-import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
 import { userAddsWallet } from '@leather.io/state/wallet';
 
 import { decryptMnemonic, encryptMnemonic } from '@shared/crypto/mnemonic-encryption';
 import { logger } from '@shared/logger';
-import { defaultWalletKeyId } from '@shared/utils';
 import { identifyUser } from '@shared/utils/analytics';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
@@ -31,11 +24,10 @@ import { initalizeWalletSession } from '@app/store/session-restore';
 
 import { getNativeSegwitMainnetAddressFromMnemonic } from '../accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { getStacksAddressByIndex } from '../accounts/blockchain/stacks/stacks-keychain';
-import { userSwitchesAccount } from '../active/active.slice';
 import { stxChainSlice } from '../chains/stx-chain.slice';
 import { selectActiveWalletKey } from '../in-memory-key/in-memory-key.selectors';
 import { inMemoryKeySlice } from '../in-memory-key/in-memory-key.slice';
-import { selectActiveSoftwareKey, selectWalletSalt } from './software-key.selectors';
+import { selectSoftwareKeys, selectWalletSalt } from './software-key.selectors';
 import { keySlice } from './software-key.slice';
 
 function setWalletEncryptionPassword(args: {
@@ -50,7 +42,7 @@ function setWalletEncryptionPassword(args: {
     const secretKey = selectActiveWalletKey(getState());
     if (!secretKey) throw new Error('Cannot generate wallet without first having generated a key');
 
-    const { encryptedSecretKey, encryptionKey } = await encryptMnemonic({
+    const { encryptedSecretKey, encryptionKey, salt } = await encryptMnemonic({
       secretKey,
       password,
     });
@@ -118,26 +110,6 @@ function setWalletEncryptionPassword(args: {
       // Errors during account restore are non-critical and can fail silently
     }
 
-    //
-    // Derive new wallet accounts for store
-    // ------------------------------------
-    const rootKeychain = deriveRootKeychainFromMnemonicSync(secretKey);
-
-    const firstStacksAccount = {
-      descriptor: stacksRootKeychainToAccountDescriptor(rootKeychain, 0),
-      chain: 'stacks',
-    } as const;
-
-    const bitcoinKeychainDescriptors = [
-      makeNativeSegwitAccountDerivationPath('mainnet', 0),
-      makeNativeSegwitAccountDerivationPath('testnet', 0),
-      makeTaprootAccountDerivationPath('mainnet', 0),
-      makeTaprootAccountDerivationPath('testnet', 0),
-    ].map(path => ({
-      descriptor: deriveKeychainExtendedPublicKeyDescriptor(rootKeychain, path),
-      chain: 'bitcoin' as const,
-    }));
-
     // Multi-wallet structure
     dispatch(
       userAddsWallet({
@@ -146,16 +118,19 @@ function setWalletEncryptionPassword(args: {
           fingerprint: getMnemonicRootKeyFingerprint(secretKey),
           type: 'software',
         },
-        accountKeychains: [firstStacksAccount, ...bitcoinKeychainDescriptors],
+        accountKeychains: [],
       })
     );
 
     // Single wallet key slice structure
     dispatch(
       keySlice.actions.createSoftwareWalletComplete({
-        type: 'software',
-        id: defaultWalletKeyId,
-        encryptedSecretKey,
+        salt,
+        key: {
+          type: 'software',
+          id: getMnemonicRootKeyFingerprint(secretKey),
+          encryptedSecretKey,
+        },
       })
     );
   };
@@ -163,28 +138,31 @@ function setWalletEncryptionPassword(args: {
 
 function unlockWalletAction(password: string): AppThunk {
   return async (dispatch, getState) => {
-    const currentKey = selectActiveSoftwareKey(getState());
-    const salt = selectWalletSalt(getState());
-    if (!currentKey) return;
-    if (currentKey.type !== 'software') return;
-    const { secretKey, encryptionKey } = await decryptMnemonic({
-      password,
-      encryptedSecretKey: currentKey.encryptedSecretKey,
-      salt,
-    });
-    await initalizeWalletSession(encryptionKey);
-
-    const rootKey = deriveRootKeychainFromMnemonicSync(secretKey);
-    if (!rootKey.publicKey) throw new Error('Could not derive root key from mnemonic');
-    void identifyUser(rootKey.publicKey);
-
-    //
-    // MIGRATION AT SIGN IN CODE
     const state = getState();
-    const fingerprint = getMnemonicRootKeyFingerprint(secretKey);
-    if (!state.active.account) dispatch(userSwitchesAccount({ fingerprint, accountIndex: 0 }));
+    const salt = selectWalletSalt(state);
+    const softwareKeys = selectSoftwareKeys(state);
 
-    dispatch(inMemoryKeySlice.actions.setWalletKeys({ [fingerprint]: secretKey }));
+    const decryptedResults = await Promise.all(
+      softwareKeys.map(key =>
+        decryptMnemonic({
+          password,
+          encryptedSecretKey: key.encryptedSecretKey,
+          salt,
+        })
+      )
+    );
+
+    await initalizeWalletSession(decryptedResults[0].encryptionKey);
+
+    dispatch(inMemoryKeySlice.actions.setWalletKeys(decryptedResults));
+
+    const firstDecryptedResult = decryptedResults[0];
+
+    if (firstDecryptedResult) {
+      const rootKey = deriveRootKeychainFromMnemonicSync(firstDecryptedResult.secretKey);
+      if (!rootKey.publicKey) throw new Error('Could not derive root key from mnemonic');
+      void identifyUser(rootKey.publicKey);
+    }
   };
 }
 

@@ -380,12 +380,6 @@ importers:
       immer:
         specifier: 10.1.1
         version: 10.1.1
-      jotai:
-        specifier: 2.12.5
-        version: 2.12.5(@types/react@19.1.17)(react@19.1.0)
-      jotai-redux:
-        specifier: 0.2.1
-        version: 0.2.1(jotai@2.12.5(@types/react@19.1.17)(react@19.1.0))
       jsontokens:
         specifier: 4.0.1
         version: 4.0.1
@@ -16874,11 +16868,6 @@ packages:
   jose@5.9.6:
     resolution: {integrity: sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==}
 
-  jotai-redux@0.2.1:
-    resolution: {integrity: sha512-YoS4O341aCJfssUbQ9iJA4WAhOT6nQ+tfAea21m4jK4yiNTxYMeRM1QhsH09YLQ2UQB+DRWLl353SF8ea8vI/A==}
-    peerDependencies:
-      jotai: '>=1.11.0'
-
   jotai@2.12.5:
     resolution: {integrity: sha512-G8m32HW3lSmcz/4mbqx0hgJIQ0ekndKWiYP7kWVKi0p6saLXdSoye+FZiOFyonnd7Q482LCzm8sMDl7Ar1NWDw==}
     engines: {node: '>=12.20.0'}
@@ -28728,7 +28717,7 @@ snapshots:
       '@microsoft/tsdoc': 0.16.0
       ajv: 8.12.0
       jju: 1.4.0
-      resolve: 1.22.10
+      resolve: 1.22.11
 
   '@microsoft/tsdoc@0.16.0': {}
 
@@ -31792,7 +31781,7 @@ snapshots:
       fs-extra: 11.3.0
       import-lazy: 4.0.0
       jju: 1.4.0
-      resolve: 1.22.10
+      resolve: 1.22.11
       semver: 7.5.4
     optionalDependencies:
       '@types/node': 25.0.3
@@ -31803,7 +31792,7 @@ snapshots:
 
   '@rushstack/rig-package@0.6.0':
     dependencies:
-      resolve: 1.22.10
+      resolve: 1.22.11
       strip-json-comments: 3.1.1
 
   '@rushstack/terminal@0.19.3(@types/node@25.0.3)':
@@ -41953,10 +41942,6 @@ snapshots:
   jose@4.13.1: {}
 
   jose@5.9.6: {}
-
-  jotai-redux@0.2.1(jotai@2.12.5(@types/react@19.1.17)(react@19.1.0)):
-    dependencies:
-      jotai: 2.12.5(@types/react@19.1.17)(react@19.1.0)
 
   jotai@2.12.5(@types/react@19.1.17)(react@19.1.0):
     optionalDependencies:

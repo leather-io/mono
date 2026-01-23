@@ -30,16 +30,13 @@ export async function restoreWalletSession() {
     const encryptedKeys = selectSoftwareKeys(store.getState());
 
     const decryptedKeys = await Promise.all(
-      encryptedKeys.map(softwareKey => decrypt(softwareKey.encryptedSecretKey, keyResult.data))
+      encryptedKeys.map(async softwareKey => ({
+        fingerprint: softwareKey.id,
+        secretKey: await decrypt(softwareKey.encryptedSecretKey, keyResult.data),
+      }))
     );
 
-    store.dispatch(
-      inMemoryKeyActions.setWalletKeys(
-        Object.fromEntries(
-          encryptedKeys.map((softwareKey, index) => [softwareKey.id, decryptedKeys[index]])
-        )
-      )
-    );
+    store.dispatch(inMemoryKeyActions.setWalletKeys(decryptedKeys));
   } catch {
     logger.error('Failed to decrypt secret key');
   }

@@ -1,12 +1,12 @@
 import { makeStxDerivationPath } from '@leather.io/stacks';
 
-import { defaultWalletKeyId } from '@shared/utils';
+import { assumedZeroFingerprint } from '@shared/utils';
 
 function processStacksLedgerKeys(stacksKeys: any) {
   const newStacksKeys = stacksKeys.entities.default.publicKeys.reduce(
     (acc: { ids: string[]; entities: Record<string, any> }, item: any, index: number) => {
       const path = makeStxDerivationPath(index);
-      const id = path.replace('m', defaultWalletKeyId);
+      const id = path.replace('m', assumedZeroFingerprint);
 
       acc.ids.push(id);
       acc.entities[id] = {
@@ -25,8 +25,8 @@ function processStacksLedgerKeys(stacksKeys: any) {
   return newStacksKeys;
 }
 
-export async function migrateToRenameKeysStoreModule(state: Promise<any>) {
-  const resolvedState = await Promise.resolve(state);
+export function migrateToRenameKeysStoreModule(state: any): any {
+  const resolvedState = structuredClone(state);
 
   const newStore = {
     ...resolvedState,

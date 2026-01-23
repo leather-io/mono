@@ -13,7 +13,7 @@ import { useWalletType } from '@app/common/use-wallet-type';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 
 import { ConnectAccountLayout } from '../../components/connect-account/connect-account.layout';
 
@@ -25,7 +25,8 @@ function listenForJwtSigningComplete() {
 
 export function LegacyAccountAuth() {
   const { url } = useAppDetails();
-  const accountIndex = useCurrentAccountIndex();
+  const currentAccount = useCurrentAccountId();
+  const accountIndex = currentAccount.accountIndex;
   const finishSignIn = useFinishAuthRequest();
   const { toggleSwitchAccount } = useSwitchAccountSheet();
   const { whenWallet } = useWalletType();

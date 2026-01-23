@@ -38,16 +38,6 @@ async function fetchLeatherConfig(): Promise<RemoteConfig> {
   return resp.data;
 }
 
-export function useConfigBitcoinEnabled() {
-  const { whenWallet } = useWalletType();
-  const config = useRemoteConfig();
-  const hasBitcoinAccount = useHasCurrentBitcoinAccount();
-  return whenWallet({
-    ledger: (config?.bitcoinEnabled ?? true) && hasBitcoinAccount,
-    software: config?.bitcoinEnabled ?? true,
-  });
-}
-
 export function useConfigBitcoinSendEnabled() {
   const { whenWallet } = useWalletType();
   const config = useRemoteConfig();

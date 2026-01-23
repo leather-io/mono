@@ -1,7 +1,8 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
+import { getMnemonicRootKeyFingerprint } from '@leather.io/crypto';
+
 import { logger } from '@shared/logger';
-import { defaultWalletKeyId } from '@shared/utils';
 import { encodeText } from '@shared/utils/text-encoding';
 
 import { keySlice } from '../software-keys/software-key.slice';
@@ -22,24 +23,20 @@ export const inMemoryKeySlice = createSlice({
 
   reducers: {
     generateWalletKey(state, action: PayloadAction<string>) {
-      if (state.keys[defaultWalletKeyId]) {
+      const fingerprint = getMnemonicRootKeyFingerprint(action.payload);
+
+      if (state.keys[fingerprint]) {
         logger.warn('Not generating another wallet, already exists.');
         return;
       }
 
-      state.keys[defaultWalletKeyId] = encodeText(action.payload);
+      state.keys[fingerprint] = encodeText(action.payload);
     },
 
-    setWalletKeys(state, action: PayloadAction<Record<string, string>>) {
+    setWalletKeys(state, action: PayloadAction<{ fingerprint: string; secretKey: string }[]>) {
       state.keys = {
         ...state.keys,
-        ...Object.entries(action.payload).reduce(
-          (acc, [keyId, secretKey]) => {
-            acc[keyId] = encodeText(secretKey);
-            return acc;
-          },
-          {} as Record<string, string>
-        ),
+        ...Object.fromEntries(action.payload.map(k => [k.fingerprint, encodeText(k.secretKey)])),
       };
     },
 

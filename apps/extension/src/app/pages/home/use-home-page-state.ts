@@ -12,7 +12,7 @@ import {
   useCurrentAccountTotalBalance,
 } from '@app/query/common/account-balance/account-balance.query';
 import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import {
   refreshLeatherTabs,
@@ -26,21 +26,21 @@ export function useHomePageState() {
   const { toggleSwitchAccount } = useSwitchAccountSheet();
   const navigate = useNavigate();
   const account = useCurrentStacksAccount();
-  const currentAccountIndex = useCurrentAccountIndex();
+  const currentAccount = useCurrentAccountId();
   const isPrivateMode = useIsPrivateMode();
   const togglePrivateMode = useTogglePrivateMode();
 
-  useAccountScaledBalanceAnalytics({ accountIndex: currentAccountIndex });
+  useAccountScaledBalanceAnalytics(currentAccount);
   useOnFinishedOnboarding(() => refreshLeatherTabs());
 
   const { data: name = '', isFetching: isFetchingBnsName } = useAccountDisplayName({
     address: account?.address || '',
-    index: currentAccountIndex || 0,
+    index: currentAccount.accountIndex || 0,
   });
 
   const totalBalance = useCurrentAccountTotalBalance();
   const availableBalance = useCurrentAccountAvailableBalance();
-  const stxAccountBalance = useStxAccountBalance(currentAccountIndex);
+  const stxAccountBalance = useStxAccountBalance(currentAccount);
 
   useOnMount(() => {
     if (decodedAuthRequest) return navigate(RouteUrls.ChooseAccount);

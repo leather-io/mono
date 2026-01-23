@@ -5,7 +5,7 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { useHasActiveInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { useHasLedgerKeys } from '@app/store/ledger/ledger.selectors';
-import { useCurrentKeyDetails } from '@app/store/software-keys/software-key.selectors';
+import { useActiveSoftwareKey } from '@app/store/software-keys/software-key.selectors';
 
 function hasAlreadyMadeWalletAndPlaintextKeyInMemory(
   hasInMemorySecretKey: boolean,
@@ -22,7 +22,7 @@ interface OnboardingGateProps {
   children: ReactNode;
 }
 export function OnboardingGate({ children }: OnboardingGateProps) {
-  const keyDetails = useCurrentKeyDetails();
+  const keyDetails = useActiveSoftwareKey();
   const hasInMemorySecretKey = useHasActiveInMemoryWalletSecretKey();
   const isLedger = useHasLedgerKeys();
 
