@@ -51,7 +51,7 @@ export function AccountSelectorSheetLayout({
         <Box px="5" pb="7">
           <Box gap="2">
             {accounts.map(account => (
-              <Box key={account.id} onTouchEnd={() => onAccountPress(account)}>
+              <Box key={account.id}>
                 <WalletLoader fingerprint={account.fingerprint}>
                   {wallet => (
                     <AccountCard
@@ -63,6 +63,7 @@ export function AccountSelectorSheetLayout({
                             currentAccount?.accountIndex
                           )
                       }
+                      onPress={() => onAccountPress(account)}
                       caption={wallet.name}
                       primaryTitle={account.name}
                       appOrigins={connectedAppsToAccountIdMap[account.id]?.map(app => app.origin)}
