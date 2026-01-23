@@ -190,7 +190,7 @@ export const stackingPoolData = {
       devnet: 'SPXVRSEH2BKSXAEJ00F1BY562P45D5ERPSKR4Q33',
     },
     poxContract: 'WrapperOneCycle',
-    minimumDelegationAmount: 100_000_000,
+    minimumDelegationAmount: 500_000_000,
     allowCustomRewardAddress: true,
   },
   stackingDao: {
