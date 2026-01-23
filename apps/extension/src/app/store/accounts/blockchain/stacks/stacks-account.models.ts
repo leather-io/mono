@@ -1,20 +1,22 @@
 import type { Account } from '@stacks/wallet-sdk';
 
-// Extending the `Account` type from `@stacks/wallet-sdk`
-export type SoftwareStacksAccount = Account & {
-  type: 'software';
-  index: number;
-  address: string;
-  stxPublicKey: string;
-  dataPublicKey: string;
-};
+import type { AccountId } from '@leather.io/models';
 
-export interface HardwareStacksAccount {
+// Extending the `Account` type from `@stacks/wallet-sdk`
+export type SoftwareStacksAccount = Account &
+  AccountId & {
+    type: 'software';
+    address: string;
+    stxPublicKey: string;
+    dataPublicKey: string;
+  };
+
+export interface HardwareStacksAccount extends AccountId {
   type: 'ledger';
-  index: number;
   address: string;
   stxPublicKey: string;
   dataPublicKey: string;
+  index: number;
 }
 
 export type StacksAccount = SoftwareStacksAccount | HardwareStacksAccount;

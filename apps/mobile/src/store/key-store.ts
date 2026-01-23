@@ -116,9 +116,7 @@ export function useKeyStore() {
           passphrase: props.passphrase,
         });
       }
-      throw new Error(
-        'deriveNextAccountKeychainsFrom received neither mnemonic nor fingerprint'
-      );
+      throw new Error('deriveNextAccountKeychainsFrom received neither mnemonic nor fingerprint');
     },
 
     async deriveNextAccountKeychainsImpl({

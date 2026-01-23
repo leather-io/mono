@@ -9,7 +9,7 @@ import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
-import { useConfigBitcoinEnabled } from '@app/query/common/remote-config/remote-config.query';
+import { useHasCurrentBitcoinAccount } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 
 import { ActionButton } from './action-button';
 import { TransferSheet } from './transfer-sheet';
@@ -17,9 +17,9 @@ import { TransferSheet } from './transfer-sheet';
 export function TransferButtons() {
   const navigate = useNavigate();
   const location = useLocation();
-  const isBitcoinEnabled = useConfigBitcoinEnabled();
+  const hasBitcoinKeys = useHasCurrentBitcoinAccount();
 
-  const receivePath = isBitcoinEnabled
+  const receivePath = hasBitcoinKeys
     ? `${RouteUrls.Home}${RouteUrls.Receive}`
     : `${RouteUrls.Home}${RouteUrls.ReceiveStx}`;
 

@@ -90,13 +90,13 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
 
       const resp = await whenSignableMessageOfType(unsignedMessage)({
         async utf8(msg) {
-          return signLedgerStacksUtf8Message(stacksApp)(msg, account.index);
+          return signLedgerStacksUtf8Message(stacksApp)(msg, account.accountIndex);
         },
         async structured(domain, msg) {
           return signLedgerStacksStructuredMessage(stacksApp)(
             serializeCV(domain),
             serializeCV(msg),
-            account.index
+            account.accountIndex
           );
         },
       });

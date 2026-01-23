@@ -4,7 +4,10 @@ import {
   TEST_ACCOUNT_1_TAPROOT_ADDRESS,
   TEST_PASSWORD,
 } from '@tests/mocks/constants';
-import { getTestSoftwareAccountDefaultWalletState } from '@tests/page-object-models/onboarding.page';
+import {
+  getTestSoftwareAccountDefaultWalletState,
+  testFingerprint,
+} from '@tests/page-object-models/onboarding.page';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
@@ -60,10 +63,12 @@ test.describe('Onboarding an existing user', () => {
     const testWalletState = getTestSoftwareAccountDefaultWalletState();
 
     // Deleting values that are known to differ at random
-    delete (walletState as any).softwareKeys.entities.default.encryptedSecretKey;
-    delete (walletState as any).softwareKeys.entities.default.salt;
-    delete (testWalletState as any).softwareKeys.entities.default.encryptedSecretKey;
-    delete (testWalletState as any).softwareKeys.entities.default.salt;
+    delete (walletState as any).softwareKeys.entities[testFingerprint].encryptedSecretKey;
+    delete (walletState as any).softwareKeys.salt;
+    delete (walletState as any).wallets.entities[testFingerprint].createdOn;
+    delete (testWalletState as any).softwareKeys.entities[testFingerprint].encryptedSecretKey;
+    delete (testWalletState as any).softwareKeys.salt;
+    delete (testWalletState as any).wallets.entities[testFingerprint].createdOn;
 
     test.expect(walletState).toEqual(testWalletState);
   });

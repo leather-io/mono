@@ -3,8 +3,13 @@ import { useEffect } from 'react';
 import { z } from 'zod';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { HIRO_API_BASE_URL_MAINNET, HIRO_API_BASE_URL_TESTNET, Money } from '@leather.io/models';
-import { convertAmountToBaseUnit, isDefined, scaleValue, toHexString } from '@leather.io/utils';
+import {
+  type AccountId,
+  HIRO_API_BASE_URL_MAINNET,
+  HIRO_API_BASE_URL_TESTNET,
+  Money,
+} from '@leather.io/models';
+import { convertAmountToBaseUnit, isDefined, scaleValue } from '@leather.io/utils';
 
 import { IS_TEST_ENV, MIXPANEL_TOKEN } from '@shared/environment';
 import {
@@ -17,8 +22,7 @@ import { useNativeSegwitBtcAccountBalance } from '@app/query/bitcoin/balance/btc
 import { useAccountTotalBalance } from '@app/query/common/account-balance/account-balance.query';
 import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { store } from '@app/store';
-import { selectWalletType } from '@app/store/common/wallet-type.selectors';
-import { useWalletFingerprint } from '@app/store/in-memory-key/in-memory-key.hooks';
+import { selectActiveWalletType } from '@app/store/common/wallet-type.selectors';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useOnMount } from './hooks/use-on-mount';
@@ -35,7 +39,7 @@ const defaultStaticAnalyticContext = {
 function getAnalyticsStateProps() {
   const state = store.getState();
   const currentNetwork = selectCurrentNetwork(state);
-  const walletType = selectWalletType(state);
+  const walletType = selectActiveWalletType(state);
 
   return {
     walletType,
@@ -96,11 +100,11 @@ export function useHandleQueuedBackgroundAnalytics() {
   });
 }
 
-export function useAccountScaledBalanceAnalytics({ accountIndex }: { accountIndex: number }) {
-  const btcBalance = useNativeSegwitBtcAccountBalance(accountIndex);
-  const stxBalance = useStxAccountBalance(accountIndex);
+export function useAccountScaledBalanceAnalytics(accountId: AccountId) {
+  const btcBalance = useNativeSegwitBtcAccountBalance(accountId);
+  const stxBalance = useStxAccountBalance(accountId);
 
-  const totalBalance = useAccountTotalBalance(accountIndex);
+  const totalBalance = useAccountTotalBalance(accountId);
   function getScaledValueFromMoney(money: Money | undefined) {
     return money ? scaleValue(Number(convertAmountToBaseUnit(money))) : undefined;
   }
@@ -110,13 +114,6 @@ export function useAccountScaledBalanceAnalytics({ accountIndex }: { accountInde
   const scaledStxLockedBalance = getScaledValueFromMoney(stxBalance.value?.stx.lockedBalance);
   const scaledBtcAvailableBalance = getScaledValueFromMoney(btcBalance.value?.btc.availableBalance);
   const scaledUsdBalance = getScaledValueFromMoney(totalBalance.value);
-
-  const fingerprint = useWalletFingerprint();
-
-  const accountId = fingerprint
-    ? // FIXME: using unpadded fingerprint here
-      makeAccountIdentifer(toHexString(fingerprint), accountIndex)
-    : undefined;
 
   useEffect(() => {
     if (
@@ -128,7 +125,7 @@ export function useAccountScaledBalanceAnalytics({ accountIndex }: { accountInde
     ) {
       analytics.track('balance_updated', {
         platform: 'extension',
-        walletAccountId: accountId,
+        walletAccountId: makeAccountIdentifer(accountId.fingerprint, accountId.accountIndex),
         stxAvailableBalance: scaledStxAvailableBalance,
         stxLockedBalance: scaledStxLockedBalance,
         usdBalance: scaledUsdBalance,

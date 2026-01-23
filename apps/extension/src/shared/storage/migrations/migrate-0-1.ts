@@ -31,9 +31,7 @@ export async function migrateToUsingNoSerialization() {
   const store = storageVal['persist:root'];
 
   if (typeof store === 'string') {
-    debugger;
-    console.log('LOGGING EVENT TAHT SHOULD ONLY RUN ONCE');
-    void analytics.track('redux_persist_migration_to_no_serialization');
+    analytics.track('redux_persist_migration_to_no_serialization');
     return getStoredState(legacyPersistConfig);
   }
 

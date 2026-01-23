@@ -6,8 +6,7 @@ import { Approver, Caption, ItemLayout, SkeletonLoader } from '@leather.io/ui';
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { AccountNameLayout } from '@app/components/account/account-name';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
-import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface SigningAccountCardProps {
@@ -22,13 +21,12 @@ export function SigningAccountCard({
   fiatBalance,
   isLoadingBalance,
 }: SigningAccountCardProps) {
-  const index = useCurrentAccountIndex();
-  const stacksAccounts = useStacksAccounts();
+  const account = useCurrentStacksAccount();
 
-  const stxAddress = stacksAccounts[index]?.address || '';
+  const stxAddress = account?.address || '';
   const { data: name = '', isLoading: isLoadingName } = useAccountDisplayName({
     address: stxAddress,
-    index,
+    index: account?.accountIndex ?? 0,
   });
 
   const titleRight = (
@@ -50,7 +48,12 @@ export function SigningAccountCard({
       <Approver.Subheader>With account</Approver.Subheader>
       <Box mb="space.03">
         <ItemLayout
-          img={<AccountAvatarItem index={index} publicKey="" />}
+          img={
+            <AccountAvatarItem
+              index={account?.accountIndex ?? 0}
+              publicKey={account?.stxPublicKey ?? ''}
+            />
+          }
           titleLeft={<AccountNameLayout isLoading={isLoadingName}>{name}</AccountNameLayout>}
           captionLeft={address}
           titleRight={titleRight}

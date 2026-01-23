@@ -4,14 +4,10 @@ import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
 import { TransactionInput, TransactionOutput } from '@scure/btc-signer/psbt';
 
-import {
-  DerivationPathDepth,
-  extractAccountIndexFromPath,
-  extractPurposeFromPath,
-} from '@leather.io/crypto';
+import { DerivationPathDepth, extractPurposeFromPath } from '@leather.io/crypto';
 import { BitcoinAddress, BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
 import type { BitcoinPaymentTypes } from '@leather.io/rpc';
-import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather.io/utils';
+import { isDefined, whenNetwork } from '@leather.io/utils';
 
 import { getTaprootPayment } from '../payments/p2tr-address-gen';
 import { getNativeSegwitPaymentFromAddressIndex } from '../payments/p2wpkh-address-gen';
@@ -24,17 +20,6 @@ export interface BitcoinAccount {
   keychain: HDKey;
   accountIndex: number;
   network: BitcoinNetworkModes;
-}
-export function initBitcoinAccount(derivationPath: string, policy: string): BitcoinAccount {
-  const xpub = extractExtendedPublicKeyFromPolicy(policy);
-  const network = inferNetworkFromPath(derivationPath);
-  return {
-    keychain: HDKey.fromExtendedKey(xpub, getHdKeyVersionsFromNetwork(network)),
-    network,
-    derivationPath,
-    type: inferPaymentTypeFromPath(derivationPath),
-    accountIndex: extractAccountIndexFromPath(derivationPath),
-  };
 }
 
 /**
@@ -253,24 +238,6 @@ export function getInputPaymentType(
   throw new Error('Unable to infer payment type from input address');
 }
 
-// Ledger wallets are keyed by their derivation path. To reuse the look up logic
-// between payment types, this factory fn accepts a fn that generates the path
-export function lookUpLedgerKeysByPath(
-  getDerivationPath: (network: BitcoinNetworkModes, accountIndex: number) => string
-) {
-  return (
-      ledgerKeyMap: Record<string, { policy: string } | undefined>,
-      network: BitcoinNetworkModes
-    ) =>
-    (accountIndex: number) => {
-      const path = getDerivationPath(network, accountIndex);
-      // Single wallet mode, hardcoded default walletId
-      const account = ledgerKeyMap[path.replace('m', defaultWalletKeyId)];
-      if (!account) return;
-      return initBitcoinAccount(path, account.policy);
-    };
-}
-
 interface GetAddressArgs {
   changeIndex: number;
   addressIndex: number;
@@ -381,10 +348,10 @@ export function getBitcoinInputValue(input: TransactionInput) {
   return 0;
 }
 
-export function isTaprootDerivationPath(path: string) {
-  return extractPurposeFromPath(path) === 86;
-}
-
 export function isNativeSegwitDerivationPath(path: string) {
   return extractPurposeFromPath(path) === 84;
+}
+
+export function isTaprootDerivationPath(path: string) {
+  return extractPurposeFromPath(path) === 86;
 }

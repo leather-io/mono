@@ -1,14 +1,15 @@
+import type { AccountId } from '@leather.io/models';
 import { Caption } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { BitcoinNativeSegwitAccountLoader } from '../loaders/bitcoin-account-loader';
 
 interface AccountBitcoinAddressProps {
-  index: number;
+  accountId: AccountId;
 }
-export function AccountBitcoinAddress({ index }: AccountBitcoinAddressProps) {
+export function AccountBitcoinAddress({ accountId }: AccountBitcoinAddressProps) {
   return (
-    <BitcoinNativeSegwitAccountLoader index={index}>
+    <BitcoinNativeSegwitAccountLoader accountId={accountId}>
       {signer => <Caption>{truncateMiddle(signer.address, 4)}</Caption>}
     </BitcoinNativeSegwitAccountLoader>
   );

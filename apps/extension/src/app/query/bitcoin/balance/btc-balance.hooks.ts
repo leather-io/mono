@@ -1,3 +1,4 @@
+import type { AccountId } from '@leather.io/models';
 import type { AccountRequest } from '@leather.io/services';
 import { createBtcBalance, createMoney } from '@leather.io/utils';
 
@@ -31,8 +32,8 @@ function useBtcBalanceWithFallback(request: AccountRequest) {
   };
 }
 
-export function useNativeSegwitBtcAccountBalance(accountIndex: number) {
-  const account = useAccountAddresses(accountIndex);
+export function useNativeSegwitBtcAccountBalance(accountId: AccountId) {
+  const account = useAccountAddresses(accountId);
   const discardedInscriptions = useDiscardedInscriptions();
   return toFetchState(
     useGetBtcAccountBalanceQuery({

@@ -2,6 +2,7 @@ import { memo } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
+import type { AccountId } from '@leather.io/models';
 import { SkeletonLoader, shimmerStyles } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -9,13 +10,12 @@ import { PrivateText } from '@app/components/privacy/private-text';
 import { useAccountTotalBalance } from '@app/query/common/account-balance/account-balance.query';
 
 interface AccountTotalBalanceProps {
-  accountIndex: number;
+  accountId: AccountId;
 }
-
 export const AccountTotalBalance = memo(function AccountTotalBalance({
-  accountIndex,
+  accountId,
 }: AccountTotalBalanceProps) {
-  const accountTotalBalance = useAccountTotalBalance(accountIndex);
+  const accountTotalBalance = useAccountTotalBalance(accountId);
 
   if (accountTotalBalance.state !== 'loading' && !accountTotalBalance.value) return null;
 

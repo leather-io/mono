@@ -2,14 +2,14 @@ import { useSelector } from 'react-redux';
 
 import { bitcoinNetworkModeToCoreNetworkMode, inferNetworkFromPath } from '@leather.io/bitcoin';
 
-import { selectDefaultWalletBitcoinKeys } from '@app/store/ledger/bitcoin/bitcoin-key.slice';
+import { selectAllBitcoinKeychains } from '@app/store/ledger/bitcoin/bitcoin-key.slice';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 // TODO: Asset refactor: remove if determined unnecessary
 // ts-unused-exports:disable-next-line
 export function useHasBitcoinLedgerKeychain() {
   const network = useCurrentNetwork();
-  const accounts = useSelector(selectDefaultWalletBitcoinKeys);
+  const accounts = useSelector(selectAllBitcoinKeychains);
 
   const hasNetworkKeys = accounts.some(v => {
     return (
@@ -22,7 +22,7 @@ export function useHasBitcoinLedgerKeychain() {
 }
 
 export function useFilteredBitcoinAccounts() {
-  const accounts = useSelector(selectDefaultWalletBitcoinKeys);
+  const accounts = useSelector(selectAllBitcoinKeychains);
   const network = useCurrentNetwork();
 
   return accounts.filter(v => {

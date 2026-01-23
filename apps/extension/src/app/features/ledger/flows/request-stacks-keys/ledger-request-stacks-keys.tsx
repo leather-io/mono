@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router';
 import StacksApp from '@zondax/ledger-stacks';
 import { pullStacksKeysFromLedgerDevice } from 'app/features/ledger/flows/request-stacks-keys/request-stacks-keys.utils';
 
+import { userAddsWallet } from '@leather.io/state/wallet';
+
+import { assumedZeroFingerprint } from '@shared/utils';
+
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
@@ -20,12 +24,14 @@ import {
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
 import { stacksKeysSlice } from '@app/store/ledger/stacks/stacks-key.slice';
+import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
 function LedgerRequestStacksKeys() {
   const toast = useToast();
   const navigate = useNavigate();
   const ledgerNavigate = useLedgerNavigate();
 
+  const wallets = useWalletEntities();
   const dispatch = useDispatch();
 
   const chain = 'stacks';
@@ -53,16 +59,27 @@ function LedgerRequestStacksKeys() {
           return;
         }
         void ledgerNavigate.toDeviceBusyStep();
-        dispatch(
-          stacksKeysSlice.actions.addKeys(
-            resp.publicKeys.map(keys => ({
-              ...keys,
-              // Replace with the fingerprint from the device
-              id: keys.path.replace('m', 'default'),
-              targetId: latestDeviceResponse?.targetId || '',
-            }))
-          )
-        );
+
+        const keysWithFingerprint = resp.publicKeys.map(keys => ({
+          ...keys,
+          id: keys.path.replace('m', assumedZeroFingerprint),
+          fingerprint: assumedZeroFingerprint,
+        }));
+
+        dispatch(stacksKeysSlice.actions.addKeys(keysWithFingerprint));
+
+        if (!wallets[assumedZeroFingerprint]) {
+          dispatch(
+            userAddsWallet({
+              wallet: {
+                createdOn: new Date().toISOString(),
+                fingerprint: assumedZeroFingerprint,
+                type: 'ledger',
+              },
+              accountKeychains: [],
+            })
+          );
+        }
       },
     });
 

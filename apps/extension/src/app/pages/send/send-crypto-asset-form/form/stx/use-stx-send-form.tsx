@@ -50,22 +50,27 @@ export function useStxSendForm() {
     availableTokenBalance: availableBalance,
   });
 
+  const validationSchema = useMemo(
+    () =>
+      yup.object({
+        amount: stxAmountValidator(availableBalance).concat(
+          stxAvailableBalanceValidator(availableBalance)
+        ),
+        fee: stxFeeValidator(availableBalance),
+        recipient,
+        memo,
+        nonce,
+      }),
+    [availableBalance, recipient, memo, nonce]
+  );
+
   return {
     availableBalance,
     initialValues,
     onFormStateChange,
     sendMaxBalance,
     stxFees,
-
-    validationSchema: yup.object({
-      amount: stxAmountValidator(availableBalance).concat(
-        stxAvailableBalanceValidator(availableBalance)
-      ),
-      fee: stxFeeValidator(availableBalance),
-      recipient,
-      memo,
-      nonce,
-    }),
+    validationSchema,
 
     async previewTransaction(
       values: StacksSendFormValues,
