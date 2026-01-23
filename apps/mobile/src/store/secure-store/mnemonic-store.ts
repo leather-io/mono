@@ -56,23 +56,20 @@ export function mnemonicStore(fingerprint: string): MnemonicStore {
 
   async function getMnemonic() {
     const { mnemonic, passphrase, storeKeys } = await searchForMnemonic(secureStoreKeys);
-    if (!storeKeys || !mnemonic) {
-      // we need to error out here somehow
-      throw new Error('No mnemonic was found');
-    }
-    if (storeKeys.mnemonicStoreKey !== latestStoreKeys.mnemonicStoreKey) {
+
+    if (mnemonic && storeKeys?.mnemonicStoreKey !== latestStoreKeys.mnemonicStoreKey) {
       // NOTE: yea not nice, we technically shouldn't be using store here but
       // there is currently no way of knowing if the mnemonic is already set with biometrics or not
       const securityLevelPreference = selectSecurityLevelPreference(store.getState());
       await setMnemonic({ mnemonic, passphrase, biometrics: securityLevelPreference === 'secure' });
     }
 
-    const release: Partial<Mnemonic> = {};
+    const result: Partial<Mnemonic> = {};
 
-    if (mnemonic) release.mnemonic = mnemonic;
-    if (passphrase) release.passphrase = passphrase;
+    if (mnemonic) result.mnemonic = mnemonic;
+    if (passphrase) result.passphrase = passphrase;
 
-    return mnemonicSchema.parse(release);
+    return mnemonicSchema.parse(result);
   }
 
   async function deleteMnemonic() {
