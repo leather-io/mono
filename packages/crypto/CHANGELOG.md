@@ -492,6 +492,23 @@
   * dependencies
     * @leather.io/utils bumped to 0.46.4
 
+## [1.12.14](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.12.13...@leather.io/crypto-v1.12.14) (2026-01-23)
+
+
+### Bug Fixes
+
+* **crypto:** leading zero loss in fingerprint calc ([af18126](https://github.com/leather-io/mono/commit/af18126bf76f657452539a6d5a6522538d81ce55))
+* update redux migrations and secure store migrations. add tests ([726f23a](https://github.com/leather-io/mono/commit/726f23a5785f2bdfafee890faaa5008ec15b66cb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.49.8
+  * devDependencies
+    * @leather.io/test-config bumped to 0.1.3
+
 ## [1.12.13](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.12.12...@leather.io/crypto-v1.12.13) (2026-01-21)
 
 

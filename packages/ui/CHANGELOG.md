@@ -489,6 +489,18 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.103.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.103.1...@leather.io/ui-v1.103.2) (2026-01-23)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.49.8
+  * devDependencies
+    * @leather.io/features bumped to 1.1.11
+    * @leather.io/test-config bumped to 0.1.3
+
 ## [1.103.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.103.0...@leather.io/ui-v1.103.1) (2026-01-21)
 
 

@@ -939,6 +939,24 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.36.4](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.36.3...@leather.io/bitcoin-v0.36.4) (2026-01-23)
+
+
+### Bug Fixes
+
+* **mobile:** migrate to correct fingerprint format ([ef15f7a](https://github.com/leather-io/mono/commit/ef15f7a3f3ea499bf6f1037d147b95c86aef0535))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.12.14
+    * @leather.io/utils bumped to 0.49.8
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.8
+    * @leather.io/test-config bumped to 0.1.3
+
 ## [0.36.3](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.36.2...@leather.io/bitcoin-v0.36.3) (2026-01-21)
 
 
