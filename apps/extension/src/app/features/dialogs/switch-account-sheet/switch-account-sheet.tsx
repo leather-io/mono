@@ -1,5 +1,5 @@
-import { memo } from 'react';
-import { Virtuoso } from 'react-virtuoso';
+import { memo, useMemo } from 'react';
+import { GroupedVirtuoso } from 'react-virtuoso';
 
 import { Box, Flex } from 'leather-styles/jsx';
 
@@ -7,9 +7,7 @@ import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { useCreateAccount } from '@app/common/hooks/account/use-create-account';
 import { useWalletType } from '@app/common/use-wallet-type';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
-import { useFilteredBitcoinAccounts } from '@app/store/accounts/blockchain/bitcoin/bitcoin.ledger';
-import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
 import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet';
 
 import { AccountListUnavailable } from './components/account-list-unavailable';
@@ -19,33 +17,32 @@ interface SwitchAccountSheetProps {
   isShowing: boolean;
   onClose(): void;
 }
-
 export const SwitchAccountSheet = memo(function SwitchAccountSheet({
   isShowing,
   onClose,
 }: SwitchAccountSheetProps) {
-  const currentAccountIndex = useCurrentAccountIndex();
   const createAccount = useCreateAccount();
   const { whenWallet } = useWalletType();
-  const stacksAccounts = useStacksAccounts();
-  const bitcoinAccounts = useFilteredBitcoinAccounts();
-  const btcAddressesNum = bitcoinAccounts.length / 2;
-  const stacksAddressesNum = stacksAccounts.length;
+  const walletTree = useWalletAccountRefTree();
+
+  const { groupCounts, totalAccounts } = useMemo(() => {
+    const counts = walletTree.map(wallet => wallet.accounts.length);
+    const total = walletTree.reduce((sum, wallet) => sum + wallet.accounts.length, 0);
+    return { groupCounts: counts, totalAccounts: total };
+  }, [walletTree]);
 
   async function onCreateAccount() {
     await createAccount();
     onClose();
   }
 
-  if (isShowing && stacksAddressesNum === 0 && btcAddressesNum === 0) {
+  if (isShowing && totalAccounts === 0) {
     return <AccountListUnavailable />;
   }
   // #4370 SMELL without this early return the wallet crashes on new install with
   // : Wallet is neither of type `ledger` nor `software`
   // FIXME remove this when adding Create Account to Ledger in #2502 #4983
   if (!isShowing) return null;
-
-  const accountNum = stacksAddressesNum || btcAddressesNum;
 
   return (
     <Sheet
@@ -56,18 +53,42 @@ export const SwitchAccountSheet = memo(function SwitchAccountSheet({
     >
       <VirtuosoWrapperSheet>
         <Box flex="1">
-          <Virtuoso
-            initialTopMostItemIndex={whenWallet({ ledger: 0, software: currentAccountIndex })}
-            totalCount={accountNum}
-            itemContent={index => (
-              <Box key={index} py="space.03" px="space.05">
-                <SwitchAccountListItem
-                  handleClose={onClose}
-                  currentAccountIndex={currentAccountIndex}
-                  index={index}
-                />
-              </Box>
-            )}
+          <GroupedVirtuoso
+            groupCounts={groupCounts}
+            groupContent={groupIndex => {
+              const wallet = walletTree[groupIndex];
+              return (
+                <Box
+                  py="space.03"
+                  px="space.05"
+                  bg="ink.background-primary"
+                  position="sticky"
+                  top={0}
+                  zIndex={1}
+                >
+                  <Flex fontWeight="medium" color="ink.text-primary">
+                    {wallet.name}
+                  </Flex>
+                </Box>
+              );
+            }}
+            itemContent={(index, groupIndex) => {
+              const wallet = walletTree[groupIndex];
+              const accountIndexInGroup =
+                index - groupCounts.slice(0, groupIndex).reduce((a, b) => a + b, 0);
+
+              const accountId = wallet.accounts[accountIndexInGroup];
+
+              return (
+                <Box
+                  key={`${accountId.fingerprint}-${accountId.accountIndex}`}
+                  py="space.03"
+                  px="space.05"
+                >
+                  <SwitchAccountListItem accountId={accountId} handleClose={onClose} />
+                </Box>
+              );
+            }}
           />
         </Box>
         {whenWallet({

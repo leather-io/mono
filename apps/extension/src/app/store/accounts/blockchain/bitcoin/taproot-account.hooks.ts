@@ -4,88 +4,92 @@ import { useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { Psbt } from 'bitcoinjs-lib';
 
-import {
-  deriveTaprootAccount,
-  ecdsaPublicKeyToSchnorr,
-  getTaprootPaymentFromAddressIndex,
-  lookUpLedgerKeysByPath,
-  makeTaprootAccountDerivationPath,
-} from '@leather.io/bitcoin';
+import { ecdsaPublicKeyToSchnorr, getTaprootPaymentFromAddressIndex } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
-import { type BitcoinNetworkModes } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 
-import { selectCurrentNetwork, useCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
+import { selectActiveAccount } from '@app/store/active/active.selectors';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
-import { useCurrentAccountIndex } from '../../account';
+import { useCurrentAccountId } from '../../account';
 import {
-  bitcoinAccountBuilderFactory,
+  selectCurrentNetworkBitcoinAccountLookup,
   useBitcoinExtendedPublicKeyVersions,
+  useBitcoinSigningCallbacksLookup,
 } from './bitcoin-keychain';
-import {
-  bitcoinAddressIndexSignerFactory,
-  useMakeBitcoinNetworkSignersForPaymentType,
-} from './bitcoin-signer';
+import { bitcoinSoftwareSignerFactory } from './bitcoin-signer';
 
-const selectTaprootAccountBuilder = bitcoinAccountBuilderFactory(
-  deriveTaprootAccount,
-  lookUpLedgerKeysByPath(makeTaprootAccountDerivationPath)
+const selectTaprootAccountId = createSelector(
+  selectCurrentNetworkBitcoinAccountLookup,
+  accountLookup => (accountId: AccountId) =>
+    accountLookup(accountId.fingerprint)({
+      paymentType: 'p2tr',
+      accountIndex: accountId.accountIndex,
+    })
 );
 
-const selectCurrentNetworkTaprootAccountBuilder = createSelector(
-  selectTaprootAccountBuilder,
-  selectCurrentNetwork,
-  (taprootKeychains, network) => taprootKeychains[network.chain.bitcoin.mode]
-);
 const selectCurrentTaprootAccount = createSelector(
-  selectCurrentNetworkTaprootAccountBuilder,
-  selectCurrentAccount,
-  (taprootKeychain, account) => taprootKeychain(account.accountIndex)
+  selectCurrentNetworkBitcoinAccountLookup,
+  selectActiveAccount,
+  (accountLookup, activeAccount) => {
+    if (!activeAccount) return undefined;
+    return accountLookup(activeAccount.fingerprint)({
+      paymentType: 'p2tr',
+      accountIndex: activeAccount.accountIndex,
+    });
+  }
 );
-
-export function useGenerateTaprootAccount() {
-  return useSelector(selectCurrentNetworkTaprootAccountBuilder);
-}
-
-export function useTaprootAccount(accountIndex: number) {
-  const generateTaprootAccount = useSelector(selectCurrentNetworkTaprootAccountBuilder);
-  return useMemo(
-    () => generateTaprootAccount(accountIndex),
-    [generateTaprootAccount, accountIndex]
-  );
-}
 
 export function useCurrentTaprootAccount() {
   return useSelector(selectCurrentTaprootAccount);
 }
 
-export function useTaprootNetworkSigners() {
-  const { mainnet: mainnetKeychain, testnet: testnetKeychain } = useSelector(
-    selectTaprootAccountBuilder
-  );
-  return useMakeBitcoinNetworkSignersForPaymentType(
-    mainnetKeychain,
-    testnetKeychain,
-    getTaprootPaymentFromAddressIndex
-  );
+export function useTaprootAccount(accountId: AccountId) {
+  const lookupTaprootAccount = useSelector(selectTaprootAccountId);
+  return useMemo(() => lookupTaprootAccount(accountId), [lookupTaprootAccount, accountId]);
 }
 
-function useTaprootSigner(accountIndex: number, network: BitcoinNetworkModes) {
-  const account = useTaprootAccount(accountIndex);
+function useTaprootSigner(accountId: AccountId) {
+  const account = useTaprootAccount(accountId);
+  const network = useCurrentNetwork();
   const extendedPublicKeyVersions = useBitcoinExtendedPublicKeyVersions();
+  const signingCallbacksLookup = useBitcoinSigningCallbacksLookup();
 
   return useMemo(() => {
-    if (!account) return; // TODO: Revisit this return early
-    return bitcoinAddressIndexSignerFactory({
-      accountIndex,
+    if (!account) return;
+    const getSigningCallbacks = signingCallbacksLookup(accountId.fingerprint);
+    if (!getSigningCallbacks) return;
+
+    return bitcoinSoftwareSignerFactory({
+      accountIndex: accountId.accountIndex,
       accountKeychain: account.keychain,
       paymentFn: getTaprootPaymentFromAddressIndex,
-      network,
+      network: network.chain.bitcoin.mode,
       extendedPublicKeyVersions,
+      getSigningCallbacks: ({ changeIndex, addressIndex }) =>
+        getSigningCallbacks({
+          paymentType: 'p2tr',
+          network: network.chain.bitcoin.mode,
+          accountIndex: accountId.accountIndex,
+          changeIndex,
+          addressIndex,
+        }),
     });
-  }, [account, accountIndex, extendedPublicKeyVersions, network]);
+  }, [
+    account,
+    accountId.accountIndex,
+    accountId.fingerprint,
+    extendedPublicKeyVersions,
+    network.chain.bitcoin.mode,
+    signingCallbacksLookup,
+  ]);
+}
+
+export function useCurrentAccountTaprootSigner() {
+  const currentAccount = useCurrentAccountId();
+  return useTaprootSigner(currentAccount);
 }
 
 export function useCurrentAccountTaprootIndexZeroSigner() {
@@ -94,12 +98,6 @@ export function useCurrentAccountTaprootIndexZeroSigner() {
     if (!signer) throw new Error('No signer');
     return signer({ changeIndex: 0, addressIndex: 0 });
   }, [signer]);
-}
-
-export function useCurrentAccountTaprootSigner() {
-  const currentAccountIndex = useCurrentAccountIndex();
-  const network = useCurrentNetwork();
-  return useTaprootSigner(currentAccountIndex, network.chain.bitcoin.mode);
 }
 
 export function useUpdateLedgerSpecificTaprootInputPropsForAdddressIndexZero() {

@@ -6,6 +6,7 @@ import { Psbt } from 'bitcoinjs-lib';
 import AppClient from 'ledger-bitcoin';
 
 import {
+  type SupportedPaymentType,
   getBitcoinJsLibNetworkConfigByMode,
   getInputPaymentType,
   getTaprootAddress,
@@ -13,8 +14,7 @@ import {
   makeTaprootAccountDerivationPath,
 } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
-import { bitcoinNetworkToNetworkMode } from '@leather.io/models';
-import { PaymentTypes } from '@leather.io/rpc';
+import { type AccountId, bitcoinNetworkToNetworkMode } from '@leather.io/models';
 import { isNumber, isString, isUndefined } from '@leather.io/utils';
 
 import {
@@ -38,7 +38,7 @@ import {
 } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
-import { useCurrentAccountIndex } from '../../account';
+import { useCurrentAccountId } from '../../account';
 import { allSighashTypes } from './bitcoin-signer';
 import {
   useCurrentAccountNativeSegwitSigner,
@@ -60,10 +60,10 @@ export function useHasCurrentBitcoinAccount() {
 }
 
 // Temporary - remove with privacy mode
-export function useZeroIndexTaprootAddress(accIndex?: number) {
+export function useZeroIndexTaprootAddress(accountId?: AccountId) {
   const network = useCurrentNetwork();
-  const currentAccountIndex = useCurrentAccountIndex();
-  const account = useTaprootAccount(accIndex ?? currentAccountIndex);
+  const currentAccount = useCurrentAccountId();
+  const account = useTaprootAccount(accountId ?? currentAccount);
 
   if (!account) throw new Error('Expected keychain to be provided');
 
@@ -112,7 +112,7 @@ function useSignBitcoinSoftwareTx() {
 }
 
 export function useSignLedgerBitcoinTx() {
-  const accountIndex = useCurrentAccountIndex();
+  const account = useCurrentAccountId();
   const network = useCurrentNetwork();
 
   const addNativeSegwitUtxoHexLedgerProps =
@@ -147,7 +147,7 @@ export function useSignLedgerBitcoinTx() {
         config,
         getInputPaymentType(btcSignerPsbtClone.getInput(config.index), bitcoinNetworkMode),
       ];
-    }) as readonly [BitcoinInputSigningConfig, PaymentTypes][];
+    }) as readonly [BitcoinInputSigningConfig, SupportedPaymentType][];
 
     //
     // Taproot
@@ -159,12 +159,12 @@ export function useSignLedgerBitcoinTx() {
       updateTaprootLedgerInputs(psbt, fingerprint, taprootInputsToSign);
 
       const taprootExtendedPublicKey = await app.getExtendedPubkey(
-        makeTaprootAccountDerivationPath(bitcoinNetworkMode, accountIndex)
+        makeTaprootAccountDerivationPath(bitcoinNetworkMode, account.accountIndex)
       );
 
       const taprootPolicy = createTaprootDefaultWalletPolicy({
         fingerprint,
-        accountIndex,
+        accountIndex: account.accountIndex,
         network: bitcoinNetworkMode,
         xpub: taprootExtendedPublicKey,
       });
@@ -182,7 +182,7 @@ export function useSignLedgerBitcoinTx() {
 
     if (nativeSegwitInputsToSign.length) {
       const nativeSegwitExtendedPublicKey = await app.getExtendedPubkey(
-        makeNativeSegwitAccountDerivationPath(bitcoinNetworkMode, accountIndex)
+        makeNativeSegwitAccountDerivationPath(bitcoinNetworkMode, account.accountIndex)
       );
 
       // Without adding the full non-witness data, the Ledger will present a
@@ -199,7 +199,7 @@ export function useSignLedgerBitcoinTx() {
 
       const nativeSegwitPolicy = createNativeSegwitDefaultWalletPolicy({
         fingerprint,
-        accountIndex,
+        accountIndex: account.accountIndex,
         network: bitcoinNetworkMode,
         xpub: nativeSegwitExtendedPublicKey,
       });
@@ -253,14 +253,14 @@ export function useAddTapInternalKeysIfMissing() {
 
 export function useGetAssumedZeroIndexSigningConfig() {
   const network = useCurrentNetwork();
-  const accountIndex = useCurrentAccountIndex();
+  const account = useCurrentAccountId();
 
   return (psbt: Uint8Array, indexesToSign?: number[]) =>
     getAssumedZeroIndexSigningConfig({
       psbt,
       network: bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork),
       indexesToSign,
-    }).forAccountIndex(accountIndex);
+    }).forAccountIndex(account.accountIndex);
 }
 
 export function useSignBitcoinTx() {
@@ -301,25 +301,25 @@ export function useSignBitcoinTx() {
   };
 }
 
-function useBitcoinAccountNativeSegwitXpub(accountIndex: number) {
-  const nativeSegwitAccount = useNativeSegwitAccount(accountIndex);
+function useBitcoinAccountNativeSegwitXpub(accountId: AccountId) {
+  const nativeSegwitAccount = useNativeSegwitAccount(accountId);
   if (!nativeSegwitAccount) return null;
   return `wpkh(${nativeSegwitAccount?.keychain.publicExtendedKey})`;
 }
 
-function useBitcoinAccountTaprootXpub(accountIndex: number) {
-  const taprootAccount = useTaprootAccount(accountIndex);
+function useBitcoinAccountTaprootXpub(accountId: AccountId) {
+  const taprootAccount = useTaprootAccount(accountId);
   if (!taprootAccount) return null;
   return `tr(${taprootAccount?.keychain.publicExtendedKey})`;
 }
 
-export function useBitcoinAccountXpubs(accountIndex: number) {
-  const nativeSegwitXpub = useBitcoinAccountNativeSegwitXpub(accountIndex);
-  const taprootXpub = useBitcoinAccountTaprootXpub(accountIndex);
+export function useBitcoinAccountXpubs(accountId: AccountId) {
+  const nativeSegwitXpub = useBitcoinAccountNativeSegwitXpub(accountId);
+  const taprootXpub = useBitcoinAccountTaprootXpub(accountId);
   return [nativeSegwitXpub, taprootXpub].filter(xpub => isString(xpub));
 }
 
 export function useCurrentBitcoinAccountXpubs() {
-  const accountIndex = useCurrentAccountIndex();
-  return useBitcoinAccountXpubs(accountIndex);
+  const currentAccount = useCurrentAccountId();
+  return useBitcoinAccountXpubs(currentAccount);
 }

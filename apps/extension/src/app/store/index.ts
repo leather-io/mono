@@ -14,6 +14,7 @@ import {
   PAUSE,
   PERSIST,
   PURGE,
+  type PersistedState,
   REGISTER,
   REHYDRATE,
   persistReducer,
@@ -40,7 +41,7 @@ import { submittedTransactionsSlice } from './submitted-transactions/submitted-t
 import { uiSlice } from './ui/ui.slice';
 import { broadcastActionTypeToOtherFramesMiddleware } from './utils/broadcast-action-types';
 
-export interface RootState {
+export interface LocalRootState {
   active: ReturnType<typeof activeSlice.reducer>;
   appPermissions: ReturnType<typeof appPermissionsSlice.reducer>;
   chains: {
@@ -60,6 +61,8 @@ export interface RootState {
   manageTokens: ReturnType<typeof manageTokensSlice.reducer>;
   ui: ReturnType<typeof uiSlice.reducer>;
 }
+
+export type RootState = LocalRootState & PersistedState;
 
 const appReducer = combineReducers({
   active: activeSlice.reducer,
@@ -83,7 +86,7 @@ const appReducer = combineReducers({
   ui: uiSlice.reducer,
 });
 
-function rootReducer(state: RootState | undefined, action: Action) {
+function rootReducer(state: LocalRootState | undefined, action: Action) {
   if (action.type === 'keys/signOut') return appReducer(undefined, action);
   return appReducer(state, action);
 }

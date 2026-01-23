@@ -23,10 +23,6 @@ export { spamFilter } from './spam-filter/spam-filter';
 export { extractPhraseFromString } from './extract-phrase-from-string/extract-phrase-from-string';
 export { pxStringToNumber } from './px-string-to-number/px-string-to-number';
 
-/**
- * @deprecated This constant is deprecated and will be removed in a future version.
- */
-export const defaultWalletKeyId = 'default';
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }

@@ -99,7 +99,7 @@ function LedgerSignStacksTxContainer() {
 
       const resp = await signLedgerStacksTransaction(stacksApp)(
         Buffer.from(unsignedTx, 'hex'),
-        account.index
+        account.accountIndex
       );
 
       if (resp.returnCode === LedgerError.DataIsInvalid) {

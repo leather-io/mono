@@ -13,5 +13,5 @@ export const { slice: bitcoinKeysSlice, adapter } =
 
 const selectors = adapter.getSelectors(selectBitcoinKeysSlice);
 
-export const selectDefaultWalletBitcoinKeyEntities = selectors.selectEntities;
-export const selectDefaultWalletBitcoinKeys = selectors.selectAll;
+export const selectBitcoinKeychainEntities = selectors.selectEntities;
+export const selectAllBitcoinKeychains = selectors.selectAll;

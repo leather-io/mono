@@ -2,10 +2,12 @@ import { ReactNode } from 'react';
 
 import type { DistributedOmit } from 'type-fest';
 
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import type { AccountId } from '@leather.io/models';
+
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import {
   useCurrentStacksAccount,
-  useStacksAccounts,
+  useStacksAccount,
 } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
@@ -31,7 +33,7 @@ interface StacksAccountCurrentLoaderProps extends StacksAccountBaseLoaderProps {
 }
 
 interface StacksAccountIndexLoaderProps extends StacksAccountBaseLoaderProps {
-  index: number;
+  accountId: AccountId;
 }
 
 type StacksAccountLoaderProps = StacksAccountCurrentLoaderProps | StacksAccountIndexLoaderProps;
@@ -39,11 +41,10 @@ type StacksAccountLoaderProps = StacksAccountCurrentLoaderProps | StacksAccountI
 export function useStacksAccountLoader(
   props: DistributedOmit<StacksAccountLoaderProps, 'children'>
 ) {
-  const stacksAccounts = useStacksAccounts();
-  const currentAccountIndex = useCurrentAccountIndex();
+  const currentAccount = useCurrentAccountId();
+  const properAccountId = 'current' in props ? currentAccount : props.accountId;
 
-  const properIndex = 'current' in props ? currentAccountIndex : props.index;
-  const account = stacksAccounts[properIndex];
+  const account = useStacksAccount(properAccountId);
 
   if (!account) return null;
   return account;

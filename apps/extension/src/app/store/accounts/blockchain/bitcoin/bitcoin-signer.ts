@@ -6,7 +6,6 @@ import { SigHash } from '@scure/btc-signer';
 import type { P2Ret, P2TROut } from '@scure/btc-signer/payment';
 
 import {
-  BitcoinAccount,
   BitcoinSigner,
   deriveAddressIndexKeychainFromAccount,
   isNativeSegwitDerivationPath,
@@ -18,7 +17,6 @@ import {
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import type { BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
 
-import { useBitcoinExtendedPublicKeyVersions } from './bitcoin-keychain';
 import { useCurrentAccountNativeSegwitSigner } from './native-segwit-account.hooks';
 import { useCurrentAccountTaprootSigner } from './taproot-account.hooks';
 
@@ -72,17 +70,28 @@ function makeBitcoinSigner<T extends MakeBitcoinSignerArgs>(args: T) {
   };
 }
 
-interface BitcoinAddressIndexSignerFactoryArgs {
+interface BitcoinSigningCallbacks {
+  signTransaction(tx: btc.Transaction): void;
+  signTransactionAtIndex(tx: btc.Transaction, index: number, allowedSighash?: number[]): void;
+}
+
+interface BitcoinSoftwareSignerFactoryArgs {
   accountIndex: number;
   accountKeychain: HDKey;
   paymentFn(keychain: HDKey, network: BitcoinNetworkModes): any;
   network: BitcoinNetworkModes;
   extendedPublicKeyVersions?: Versions;
+  getSigningCallbacks(args: { changeIndex: number; addressIndex: number }): BitcoinSigningCallbacks;
 }
-export function bitcoinAddressIndexSignerFactory<T extends BitcoinAddressIndexSignerFactoryArgs>(
-  args: T
-) {
-  const { accountIndex, network, paymentFn, accountKeychain, extendedPublicKeyVersions } = args;
+export function bitcoinSoftwareSignerFactory<T extends BitcoinSoftwareSignerFactoryArgs>(args: T) {
+  const {
+    accountIndex,
+    network,
+    paymentFn,
+    accountKeychain,
+    extendedPublicKeyVersions,
+    getSigningCallbacks,
+  } = args;
   return ({
     changeIndex,
     addressIndex,
@@ -90,18 +99,16 @@ export function bitcoinAddressIndexSignerFactory<T extends BitcoinAddressIndexSi
     changeIndex: number;
     addressIndex: number;
   }): BitcoinSigner<ReturnType<T['paymentFn']>> => {
-    const addressIndexKeychain = deriveAddressIndexKeychainFromAccount(accountKeychain)({
+    const signerKeychain = deriveAddressIndexKeychainFromAccount(accountKeychain)({
       changeIndex,
       addressIndex,
     });
 
-    const payment = paymentFn(addressIndexKeychain, network);
+    const payment = paymentFn(signerKeychain, network);
+    const signingCallbacks = getSigningCallbacks({ changeIndex, addressIndex });
 
     return makeBitcoinSigner({
-      keychain: HDKey.fromExtendedKey(
-        addressIndexKeychain.publicExtendedKey,
-        extendedPublicKeyVersions
-      ),
+      keychain: HDKey.fromExtendedKey(signerKeychain.publicExtendedKey, extendedPublicKeyVersions),
       network,
       derivationPath: whenPaymentType(payment.type)({
         p2wpkh: makeNativeSegwitAddressIndexDerivationPath({
@@ -121,93 +128,10 @@ export function bitcoinAddressIndexSignerFactory<T extends BitcoinAddressIndexSi
         p2sh: 'Not supported',
       }),
       paymentFn,
-      signFn(tx: btc.Transaction) {
-        if (!addressIndexKeychain.privateKey)
-          throw new Error('Unable to sign transaction, no private key found');
-
-        tx.sign(addressIndexKeychain.privateKey);
-      },
-      // TODO: Revisit allowedSighash type if/when fixed in btc-signer
-      signAtIndexFn(tx: btc.Transaction, index: number, allowedSighash?: number[]) {
-        if (!addressIndexKeychain.privateKey)
-          throw new Error('Unable to sign transaction, no private key found');
-
-        tx.signIdx(addressIndexKeychain.privateKey, index, allowedSighash);
-      },
+      signFn: signingCallbacks.signTransaction,
+      signAtIndexFn: signingCallbacks.signTransactionAtIndex,
     });
   };
-}
-
-interface CreateSignersForAllNetworkTypesArgs {
-  paymentFn(keychain: HDKey, network: BitcoinNetworkModes): unknown;
-  mainnetKeychainFn(accountIndex: number): BitcoinAccount | undefined;
-  testnetKeychainFn(accountIndex: number): BitcoinAccount | undefined;
-  extendedPublicKeyVersions?: Versions;
-}
-function createSignersForAllNetworkTypes<T extends CreateSignersForAllNetworkTypesArgs>({
-  mainnetKeychainFn,
-  testnetKeychainFn,
-  paymentFn,
-  extendedPublicKeyVersions,
-}: T) {
-  return ({
-    accountIndex,
-    changeIndex,
-    addressIndex,
-  }: {
-    accountIndex: number;
-    changeIndex: number;
-    addressIndex: number;
-  }) => {
-    const networkMap = new Map();
-
-    function makeNetworkSigner(keychain: HDKey, network: BitcoinNetworkModes) {
-      return bitcoinAddressIndexSignerFactory({
-        accountIndex,
-        accountKeychain: keychain,
-        paymentFn: paymentFn as T['paymentFn'],
-        network,
-        extendedPublicKeyVersions,
-      })({ changeIndex, addressIndex });
-    }
-
-    const mainnetAccount = mainnetKeychainFn(accountIndex);
-    if (mainnetAccount) {
-      networkMap.set('mainnet', makeNetworkSigner(mainnetAccount.keychain, 'mainnet'));
-    }
-
-    const testnetAccount = testnetKeychainFn(accountIndex);
-    if (testnetAccount) {
-      networkMap.set('testnet', makeNetworkSigner(testnetAccount.keychain, 'testnet'));
-      networkMap.set('regtest', makeNetworkSigner(testnetAccount.keychain, 'regtest'));
-      networkMap.set('signet', makeNetworkSigner(testnetAccount.keychain, 'signet'));
-    }
-
-    return Object.fromEntries(networkMap);
-  };
-}
-
-export function useMakeBitcoinNetworkSignersForPaymentType<T>(
-  mainnetKeychainFn: (index: number) => BitcoinAccount | undefined,
-  testnetKeychainFn: (index: number) => BitcoinAccount | undefined,
-  paymentFn: (keychain: HDKey, network: BitcoinNetworkModes) => T
-) {
-  const extendedPublicKeyVersions = useBitcoinExtendedPublicKeyVersions();
-
-  return useCallback(
-    (accountIndex: number) => {
-      const zeroChangeIndex = 0;
-      const zeroAddressIndex = 0;
-
-      return createSignersForAllNetworkTypes({
-        mainnetKeychainFn,
-        testnetKeychainFn,
-        paymentFn,
-        extendedPublicKeyVersions,
-      })({ accountIndex, changeIndex: zeroChangeIndex, addressIndex: zeroAddressIndex });
-    },
-    [extendedPublicKeyVersions, mainnetKeychainFn, paymentFn, testnetKeychainFn]
-  );
 }
 
 export function useBitcoinSignerFromInput() {

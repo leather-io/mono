@@ -362,12 +362,6 @@ importers:
       immer:
         specifier: 10.1.1
         version: 10.1.1
-      jotai:
-        specifier: 2.12.5
-        version: 2.12.5(@types/react@19.1.17)(react@19.1.0)
-      jotai-redux:
-        specifier: 0.2.1
-        version: 0.2.1(jotai@2.12.5(@types/react@19.1.17)(react@19.1.0))
       jsontokens:
         specifier: 4.0.1
         version: 4.0.1
@@ -467,6 +461,9 @@ importers:
       remark-gfm:
         specifier: 4.0.1
         version: 4.0.1
+      remeda:
+        specifier: 2.21.2
+        version: 2.21.2
       rxjs:
         specifier: 7.8.1
         version: 7.8.1
@@ -2972,8 +2969,8 @@ packages:
     resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/code-frame@8.0.0-beta.3':
-    resolution: {integrity: sha512-bCQEw5OhcQSIsknZm3js7Nh7GchgeboNQsC+Frzu6xnOCMdRlc7Y8MgMcqeWcahgtDKRXECmamDH6KBk4bt5bA==}
+  '@babel/code-frame@8.0.0-rc.1':
+    resolution: {integrity: sha512-z8WOUq8TbgYpnNd+hdMF9jyhRRGAbYzSLo7RvgCdjZGxHQGJrSFp2IF5uRTzhQnkaXZ/1TQ9fljSAA5Q0j9Ntw==}
     engines: {node: ^20.19.0 || >=22.12.0}
 
   '@babel/compat-data@7.27.2':
@@ -3122,8 +3119,8 @@ packages:
     resolution: {integrity: sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/helper-validator-identifier@8.0.0-beta.3':
-    resolution: {integrity: sha512-0uFJz8fwc1WRgepEs6L8b+f2n1cTZqAevxJgnIOWRvYiNfGGXrSWCLOPgR3zzNgjaA1O6qvkqKLbTXJ5dYJ89Q==}
+  '@babel/helper-validator-identifier@8.0.0-rc.1':
+    resolution: {integrity: sha512-I4YnARytXC2RzkLNVnf5qFNFMzp679qZpmtw/V3Jt2uGnWiIxyJtaukjG7R8pSx8nG2NamICpGfljQsogj+FbQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
 
   '@babel/helper-validator-option@7.27.1':
@@ -17091,11 +17088,6 @@ packages:
   jose@5.9.6:
     resolution: {integrity: sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==}
 
-  jotai-redux@0.2.1:
-    resolution: {integrity: sha512-YoS4O341aCJfssUbQ9iJA4WAhOT6nQ+tfAea21m4jK4yiNTxYMeRM1QhsH09YLQ2UQB+DRWLl353SF8ea8vI/A==}
-    peerDependencies:
-      jotai: '>=1.11.0'
-
   jotai@2.12.5:
     resolution: {integrity: sha512-G8m32HW3lSmcz/4mbqx0hgJIQ0ekndKWiYP7kWVKi0p6saLXdSoye+FZiOFyonnd7Q482LCzm8sMDl7Ar1NWDw==}
     engines: {node: '>=12.20.0'}
@@ -17119,11 +17111,11 @@ packages:
   js-sha256@0.10.1:
     resolution: {integrity: sha512-5obBtsz9301ULlsgggLg542s/jqtddfOpV5KJc4hajc9JV8GeY2gZHSVpYBn4nWqAUTJ9v+xwtbJ1mIBgIH5Vw==}
 
+  js-tokens@10.0.0:
+    resolution: {integrity: sha512-lM/UBzQmfJRo9ABXbPWemivdCW8V2G8FHaHdypQaIy523snUjog0W71ayWXTjiR+ixeMyVHN2XcpnTd/liPg/Q==}
+
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
-
-  js-tokens@8.0.3:
-    resolution: {integrity: sha512-UfJMcSJc+SEXEl9lH/VLHSZbThQyLpw1vLO1Lb+j4RWDvG3N2f7yj3PVQA3cmkTBNldJ9eFnM+xEXxHIXrYiJw==}
 
   js-yaml@3.14.2:
     resolution: {integrity: sha512-PMSmkqxr106Xa156c2M265Z+FTrPl+oxd/rgOQy2tijQeK5TxQ43psO1ZCwhVOSdnn+RzkzlRz/eY4BgJBYVpg==}
@@ -23771,11 +23763,10 @@ snapshots:
       js-tokens: 4.0.0
       picocolors: 1.1.1
 
-  '@babel/code-frame@8.0.0-beta.3':
+  '@babel/code-frame@8.0.0-rc.1':
     dependencies:
-      '@babel/helper-validator-identifier': 8.0.0-beta.3
-      js-tokens: 8.0.3
-      picocolors: 1.1.1
+      '@babel/helper-validator-identifier': 8.0.0-rc.1
+      js-tokens: 10.0.0
 
   '@babel/compat-data@7.27.2': {}
 
@@ -24094,7 +24085,7 @@ snapshots:
 
   '@babel/helper-validator-identifier@7.28.5': {}
 
-  '@babel/helper-validator-identifier@8.0.0-beta.3': {}
+  '@babel/helper-validator-identifier@8.0.0-rc.1': {}
 
   '@babel/helper-validator-option@7.27.1': {}
 
@@ -29092,7 +29083,7 @@ snapshots:
       '@microsoft/tsdoc': 0.16.0
       ajv: 8.12.0
       jju: 1.4.0
-      resolve: 1.22.10
+      resolve: 1.22.11
 
   '@microsoft/tsdoc@0.16.0': {}
 
@@ -31766,7 +31757,7 @@ snapshots:
 
   '@redux-devtools/inspector-monitor-trace-tab@4.1.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
     dependencies:
-      '@babel/code-frame': 8.0.0-beta.3
+      '@babel/code-frame': 8.0.0-rc.1
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
       '@redux-devtools/inspector-monitor': 6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(redux@5.0.1)
@@ -32221,7 +32212,7 @@ snapshots:
       fs-extra: 11.3.0
       import-lazy: 4.0.0
       jju: 1.4.0
-      resolve: 1.22.10
+      resolve: 1.22.11
       semver: 7.5.4
     optionalDependencies:
       '@types/node': 25.0.3
@@ -32232,7 +32223,7 @@ snapshots:
 
   '@rushstack/rig-package@0.6.0':
     dependencies:
-      resolve: 1.22.10
+      resolve: 1.22.11
       strip-json-comments: 3.1.1
 
   '@rushstack/terminal@0.19.3(@types/node@25.0.3)':
@@ -42408,10 +42399,6 @@ snapshots:
 
   jose@5.9.6: {}
 
-  jotai-redux@0.2.1(jotai@2.12.5(@types/react@19.1.17)(react@19.1.0)):
-    dependencies:
-      jotai: 2.12.5(@types/react@19.1.17)(react@19.1.0)
-
   jotai@2.12.5(@types/react@19.1.17)(react@19.1.0):
     optionalDependencies:
       '@types/react': 19.1.17
@@ -42423,9 +42410,9 @@ snapshots:
 
   js-sha256@0.10.1: {}
 
-  js-tokens@4.0.0: {}
+  js-tokens@10.0.0: {}
 
-  js-tokens@8.0.3: {}
+  js-tokens@4.0.0: {}
 
   js-yaml@3.14.2:
     dependencies:

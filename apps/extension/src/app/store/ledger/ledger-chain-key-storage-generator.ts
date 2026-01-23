@@ -1,16 +1,11 @@
 import { PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
-import { defaultWalletKeyId } from '@shared/utils';
-
-interface RequiresId {
+interface RequiredProps {
   id: string;
-  targetId: string;
+  fingerprint: string;
 }
-
-export function generateLedgerChainKeyStorageSlice<KeyDetails extends RequiresId>(name: string) {
-  type KeyDetailsWithWalletId = KeyDetails & { walletId: string };
-
-  const adapter = createEntityAdapter<KeyDetailsWithWalletId>();
+export function generateLedgerChainKeyStorageSlice<KeyDetails extends RequiredProps>(name: string) {
+  const adapter = createEntityAdapter<KeyDetails>();
 
   const initialState = adapter.getInitialState();
 
@@ -19,14 +14,10 @@ export function generateLedgerChainKeyStorageSlice<KeyDetails extends RequiresId
     initialState,
     reducers: {
       addKeys(state, { payload }: PayloadAction<KeyDetails[]>) {
-        adapter.addMany(
-          state as any,
-          // While we only support a single wallet, we default to the `default` walletId
-          payload.map(key => ({ ...key, walletId: defaultWalletKeyId }))
-        );
+        adapter.addMany(state, payload);
       },
       signOut(state) {
-        adapter.removeAll(state as any);
+        adapter.removeAll(state);
       },
     },
   });
