@@ -19,7 +19,7 @@ import { Brc20TokenList } from '@app/features/asset-list/bitcoin/brc20-token-lis
 import { RunesAssetList } from '@app/features/asset-list/bitcoin/runes-asset-list/runes-asset-list';
 import { Src20TokenList } from '@app/features/asset-list/bitcoin/src20-token-list/src20-token-list';
 import { StxCryptoAssetItem } from '@app/features/asset-list/stacks/stx-crypo-asset-item/stx-crypto-asset-item';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentAccountNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
@@ -30,7 +30,7 @@ import type { AssetFilter } from '../../common/hooks/use-manage-tokens';
 import { ConnectLedgerAssetItemFallback } from './_components/connect-ledger-asset-item-fallback';
 import { BtcCryptoAssetItem } from './bitcoin/btc-crypto-asset-item/btc-crypto-asset-item';
 import { Sip10TokenItem } from './stacks/sip10-token-list/sip10-token-item';
-import { Sip10TokenList } from './stacks/sip10-token-list/sip10-token-list';
+import { Sip10TokenAssetList } from './stacks/sip10-token-list/sip10-token-list';
 
 export type TokenListVariant = 'interactive' | 'read-only';
 export type AssetRightElementVariant = 'balance' | 'toggle';
@@ -54,7 +54,7 @@ export function TokenList({
   setHasManageableTokens,
   filter,
 }: TokenListProps) {
-  const currentAccountIndex = useCurrentAccountIndex();
+  const currentAccount = useCurrentAccountId();
   const currentStacksAccount = useCurrentStacksAccount();
   const currentBtcNativeSegwitAccount = useCurrentAccountNativeSegwitSigner();
   const currentBtcTaprootAccount = useCurrentAccountTaprootSigner();
@@ -67,7 +67,7 @@ export function TokenList({
     <Stack>
       {showUnmanageableTokens &&
         (currentBtcNativeSegwitAccount ? (
-          <BtcAssetItemBalanceLoader accountIndex={currentAccountIndex}>
+          <BtcAssetItemBalanceLoader accountId={currentAccount}>
             {(balance, isLoading, isLoadingAdditionalData) => (
               <BtcCryptoAssetItem
                 balance={balance}
@@ -93,7 +93,7 @@ export function TokenList({
 
       {showUnmanageableTokens &&
         (currentStacksAccount ? (
-          <StxAssetItemBalanceLoader accountIndex={currentAccountIndex}>
+          <StxAssetItemBalanceLoader accountId={currentAccount}>
             {(balance, isLoading) => (
               <StxCryptoAssetItem
                 balance={balance}
@@ -118,7 +118,7 @@ export function TokenList({
         ))}
 
       {showUnmanageableTokens && currentStacksAccount && (
-        <UsdcxAssetItemBalanceLoader accountIndex={currentAccountIndex}>
+        <UsdcxAssetItemBalanceLoader accountId={currentAccount}>
           {balance => (
             <Sip10TokenItem
               balance={balance}
@@ -131,8 +131,8 @@ export function TokenList({
       )}
 
       {currentStacksAccount && (
-        <Sip10TokenList
-          accountIndex={currentAccountIndex}
+        <Sip10TokenAssetList
+          accountId={currentAccount}
           assetFilter={filter}
           onSelectAsset={onSelectAsset}
           assetRightElementVariant={assetRightElementVariant}
@@ -167,7 +167,7 @@ export function TokenList({
             )}
           </Src20TokensLoader>
           <RunesAssetList
-            accountIndex={currentAccountIndex}
+            accountId={currentAccount}
             filter={filter}
             assetRightElementVariant={assetRightElementVariant}
             onSelectAsset={onSelectAsset}

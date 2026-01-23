@@ -11,7 +11,7 @@ import { type UtxoWithDerivationPath } from '@leather.io/query';
 import { analytics } from '@shared/utils/analytics';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentTaprootAccount } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -40,7 +40,8 @@ export function SendInscriptionContainer() {
 
   const routeState = useSendInscriptionRouteState();
   const network = useCurrentNetwork();
-  const currentAccountIndex = useCurrentAccountIndex();
+  const currentAccount = useCurrentAccountId();
+  const currentAccountIndex = currentAccount.accountIndex;
 
   const taprootAccount = useCurrentTaprootAccount();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();

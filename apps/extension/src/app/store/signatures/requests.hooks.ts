@@ -39,7 +39,10 @@ export function useSignatureRequestAccountIndex() {
   const { stxAddress } = signaturePayload;
 
   if (stxAddress && accounts) {
-    return accounts.findIndex(account => account.address === stxAddress); // selected account
+    const account = accounts.find(account => account.address === stxAddress);
+    if (account) {
+      return account.accountIndex;
+    }
   }
   return undefined;
 }

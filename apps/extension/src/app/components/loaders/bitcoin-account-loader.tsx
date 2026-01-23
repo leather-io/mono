@@ -2,9 +2,10 @@ import { P2Ret } from '@scure/btc-signer/payment';
 import type { DistributedOmit } from 'type-fest';
 
 import { BitcoinSigner } from '@leather.io/bitcoin';
+import type { AccountId } from '@leather.io/models';
 
-import { useConfigBitcoinEnabled } from '@app/query/common/remote-config/remote-config.query';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useHasCurrentBitcoinAccount } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 interface BitcoinAccountLoaderBaseProps {
@@ -15,7 +16,7 @@ interface BtcAccountLoaderCurrentProps extends BitcoinAccountLoaderBaseProps {
   current: true;
 }
 interface BtcAccountLoaderIndexProps extends BitcoinAccountLoaderBaseProps {
-  index: number;
+  accountId: AccountId;
 }
 
 type BtcAccountLoaderProps = BtcAccountLoaderCurrentProps | BtcAccountLoaderIndexProps;
@@ -23,11 +24,11 @@ type BtcAccountLoaderProps = BtcAccountLoaderCurrentProps | BtcAccountLoaderInde
 export function useBitcoinNativeSegwitAccountLoader(
   props: DistributedOmit<BtcAccountLoaderProps, 'children' | 'fallback'>
 ) {
-  const isBitcoinEnabled = useConfigBitcoinEnabled();
+  const isBitcoinEnabled = useHasCurrentBitcoinAccount();
 
-  const currentAccountIndex = useCurrentAccountIndex();
+  const currentAccount = useCurrentAccountId();
 
-  const properIndex = 'current' in props ? currentAccountIndex : props.index;
+  const properIndex = 'current' in props ? currentAccount : props.accountId;
 
   const signer = useNativeSegwitSigner(properIndex);
 

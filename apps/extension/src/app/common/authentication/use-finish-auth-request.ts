@@ -12,7 +12,8 @@ import { useAuthRequestParams } from '@app/common/hooks/auth/use-auth-request-pa
 import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useWalletType } from '@app/common/use-wallet-type';
-import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { store } from '@app/store';
+import { selectStacksAccountById } from '@app/store/accounts/blockchain/stacks/stacks-account.selectors';
 import { useActiveWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 
@@ -21,7 +22,6 @@ import { useGetLegacyAuthBitcoinAddresses } from './use-legacy-auth-bitcoin-addr
 export function useFinishAuthRequest() {
   const { decodedAuthRequest, authRequest } = useOnboardingState();
   const keyActions = useKeyActions();
-  const stacksAccounts = useStacksAccounts();
   const { walletType } = useWalletType();
   const currentAccount = useSelector(selectCurrentAccount);
 
@@ -35,9 +35,10 @@ export function useFinishAuthRequest() {
 
   return useCallback(
     async (accountIndex: number) => {
-      const account = stacksAccounts?.[accountIndex];
+      const accountId = { fingerprint: currentAccount.fingerprint, accountIndex };
+      const account = selectStacksAccountById(store.getState(), accountId);
 
-      if (!decodedAuthRequest || !authRequest || !account || !stacksAccounts || !origin || !tabId) {
+      if (!decodedAuthRequest || !authRequest || !account || !origin || !tabId) {
         logger.error('Uh oh! Finished onboarding without auth info.');
         return;
       }
@@ -78,7 +79,6 @@ export function useFinishAuthRequest() {
       }
     },
     [
-      stacksAccounts,
       decodedAuthRequest,
       authRequest,
       origin,

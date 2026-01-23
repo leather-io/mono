@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 import { generateMnemonic } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
+import { resetWallet } from '@leather.io/state';
 
 import { logger } from '@shared/logger';
 import { InternalMethods } from '@shared/message-types';
@@ -14,6 +16,7 @@ import { partiallyClearLocalStorage } from '@app/common/store-utils';
 import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { useBnsV2Client } from '@app/query/stacks/bns/bns-v2-client';
 import { useAppDispatch } from '@app/store';
+import { selectActiveAccount } from '@app/store/active/active.selectors';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
 import { createNewAccount } from '@app/store/chains/stx-chain.actions';
 import { useStacksClient } from '@app/store/common/api-clients.hooks';
@@ -24,11 +27,12 @@ import { manageTokensSlice } from '@app/store/manage-tokens/manage-tokens.slice'
 import { networksSlice } from '@app/store/networks/networks.slice';
 import { clearWalletSession } from '@app/store/session-restore';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
-import { useCurrentKeyDetails } from '@app/store/software-keys/software-key.selectors';
+import { useActiveSoftwareKey } from '@app/store/software-keys/software-key.selectors';
 
 export function useKeyActions() {
   const dispatch = useAppDispatch();
-  const defaultKeyDetails = useCurrentKeyDetails();
+  const activeSoftwareKey = useActiveSoftwareKey();
+  const activeAccount = useSelector(selectActiveAccount);
   const btcClient = useBitcoinClient();
   const stxClient = useStacksClient();
   const bnsV2Client = useBnsV2Client();
@@ -42,12 +46,11 @@ export function useKeyActions() {
       },
 
       generateWalletKey() {
-        if (defaultKeyDetails) {
+        if (activeSoftwareKey) {
           logger.warn('Cannot generate new wallet when wallet already exists');
           return;
         }
-        const secretKey = generateMnemonic();
-        return dispatch(inMemoryKeyActions.generateWalletKey(secretKey));
+        return dispatch(inMemoryKeyActions.generateWalletKey(generateMnemonic()));
       },
 
       unlockWallet(password: string) {
@@ -63,13 +66,15 @@ export function useKeyActions() {
       },
 
       createNewAccount() {
-        return dispatch(createNewAccount());
+        if (!activeAccount) throw new Error('No active account');
+        return dispatch(createNewAccount(activeAccount.fingerprint));
       },
 
       async signOut() {
         await clearWalletSession();
         dispatch(networksSlice.actions.changeNetwork('mainnet'));
         dispatch(keyActions.signOut());
+        dispatch(resetWallet());
         dispatch(bitcoinKeysSlice.actions.signOut());
         dispatch(stacksKeysSlice.actions.signOut());
         dispatch(manageTokensSlice.actions.removeAllTokens());
@@ -86,6 +91,6 @@ export function useKeyActions() {
         window.location.reload();
       },
     }),
-    [bnsV2Client, btcClient, defaultKeyDetails, dispatch, stxClient]
+    [activeAccount, bnsV2Client, btcClient, activeSoftwareKey, dispatch, stxClient]
   );
 }

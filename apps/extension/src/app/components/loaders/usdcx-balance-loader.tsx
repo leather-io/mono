@@ -1,3 +1,4 @@
+import type { AccountId } from '@leather.io/models';
 import type { Sip10Balance } from '@leather.io/services';
 import { UsdcxAvatarIcon } from '@leather.io/ui';
 
@@ -7,15 +8,15 @@ import { CryptoAssetItemError } from '../crypto-asset-item/crypto-asset-item-err
 import { CryptoAssetItemPlaceholder } from '../crypto-asset-item/crypto-asset-item-placeholder';
 
 interface UsdcxAssetItemBalanceLoaderProps {
-  accountIndex: number;
+  accountId: AccountId;
   children(balance: Sip10Balance, isLoading: boolean): React.ReactNode;
 }
 
 export function UsdcxAssetItemBalanceLoader({
-  accountIndex,
+  accountId,
   children,
 }: UsdcxAssetItemBalanceLoaderProps) {
-  const usdcxBalance = useUsdcxAccountBalance(accountIndex);
+  const usdcxBalance = useUsdcxAccountBalance(accountId);
 
   const isLoading = usdcxBalance.state === 'loading';
 

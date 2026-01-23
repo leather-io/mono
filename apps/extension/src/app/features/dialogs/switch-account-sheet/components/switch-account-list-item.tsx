@@ -3,6 +3,10 @@ import { useSelector } from 'react-redux';
 
 import { getSwitchAccountSheetAccountNameSelector } from '@tests/selectors/account.selectors';
 
+import type { AccountId } from '@leather.io/models';
+
+import { isMatchingAccountId } from '@shared/utils';
+
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { useSwitchAccount } from '@app/common/hooks/account/use-switch-account';
 import { AccountTotalBalance } from '@app/components/account-total-balance';
@@ -16,18 +20,17 @@ import { useLoading } from '@app/store/ui/ui.hooks';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface SwitchAccountListItemProps {
+  accountId: AccountId;
   handleClose(): void;
-  currentAccountIndex: number;
-  index: number;
 }
 export const SwitchAccountListItem = memo(function SwitchAccountListItem({
+  accountId,
   handleClose,
-  currentAccountIndex,
-  index,
 }: SwitchAccountListItemProps) {
-  const stacksAccount = useStacksAccount(index);
+  const stacksAccount = useStacksAccount(accountId);
+  // console.log({ ...accountId }, stacksAccount);
   const stxAddress = stacksAccount?.address ?? '';
-  const bitcoinSigner = useNativeSegwitSigner(index);
+  const bitcoinSigner = useNativeSegwitSigner(accountId);
   const btcAddress = bitcoinSigner?.({ changeIndex: 0, addressIndex: 0 }).address ?? '';
   const currentAccount = useSelector(selectCurrentAccount);
 
@@ -37,34 +40,38 @@ export const SwitchAccountListItem = memo(function SwitchAccountListItem({
   const { handleSwitchAccount } = useSwitchAccount(handleClose);
   const { data: name = '', isFetching: isFetchingBnsName } = useAccountDisplayName({
     address: stxAddress,
-    index,
+    index: accountId.accountIndex,
   });
 
   function handleClick() {
     setIsLoading();
-    setTimeout(async () => {
-      await handleSwitchAccount({ fingerprint: currentAccount.fingerprint, accountIndex: index });
-      setIsIdle();
-    }, 80);
+    handleSwitchAccount(accountId);
+    setIsIdle();
   }
+
+  const isSelected = isMatchingAccountId(currentAccount, accountId);
 
   return (
     <AccountListItemLayout
-      fingerprint={currentAccount.fingerprint}
-      accountIndex={index}
-      accountAddresses={<AccountAddresses index={index} />}
+      {...accountId}
+      accountAddresses={<AccountAddresses accountId={accountId} />}
       accountName={
         <AccountNameLayout
-          data-testid={getSwitchAccountSheetAccountNameSelector(index)}
+          data-testid={getSwitchAccountSheetAccountNameSelector(accountId.accountIndex)}
           isLoading={isFetchingBnsName}
         >
           {name}
         </AccountNameLayout>
       }
-      avatar={<AccountAvatarItem index={index} publicKey={stacksAccount?.stxPublicKey || ''} />}
-      balanceLabel={<AccountTotalBalance accountIndex={index} />}
+      avatar={
+        <AccountAvatarItem
+          index={accountId.accountIndex}
+          publicKey={stacksAccount?.stxPublicKey || ''}
+        />
+      }
+      balanceLabel={<AccountTotalBalance accountId={accountId} />}
       isLoading={isLoading}
-      isSelected={currentAccountIndex === index}
+      isSelected={isSelected}
       onSelectAccount={handleClick}
     />
   );

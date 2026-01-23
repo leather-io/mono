@@ -16,7 +16,7 @@
       "default": {
         "currentAccountIndex": 0,
         "currentAccountStacksDescriptor": "[48611587/44'/5757'/0'/0/0]033e8d8852ea1beb9bb7f65d1a4f8d56c038e50e65faf7bf1c7e7584d55f11d1f4",
-        "highestAccountIndex": 0
+        "highestAccountIndex": 10
       }
     }
   },

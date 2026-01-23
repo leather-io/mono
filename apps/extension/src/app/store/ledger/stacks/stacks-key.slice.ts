@@ -7,11 +7,12 @@ function selectStacksKeysSlice(state: RootState) {
   return state.ledger.stacks;
 }
 
-// ts-unused-exports:disable-next-line
-export const { slice: stacksKeysSlice, adapter } = generateLedgerChainKeyStorageSlice<
-  StacksAppKeysResponseItem & { id: string; targetId: string }
+const { slice: stacksKeysSlice, adapter } = generateLedgerChainKeyStorageSlice<
+  StacksAppKeysResponseItem & { id: string; fingerprint: string }
 >('stacks');
+
+export { stacksKeysSlice };
 
 const selectors = adapter.getSelectors(selectStacksKeysSlice);
 
-export const selectDefaultWalletStacksKeys = selectors.selectAll;
+export const selectWalletStacksKeys = selectors.selectAll;

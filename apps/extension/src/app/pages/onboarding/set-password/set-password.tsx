@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
@@ -46,10 +46,6 @@ export function SetPasswordPage() {
   const finishSignIn = useFinishAuthRequest();
   const navigate = useNavigate();
   const { decodedAuthRequest } = useOnboardingState();
-
-  useEffect(() => {
-    analytics.page('view', '/set-password');
-  }, []);
 
   const submit = useCallback(
     async (password: string) => {
