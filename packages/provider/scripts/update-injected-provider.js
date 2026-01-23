@@ -3,7 +3,7 @@ import path from 'path';
 
 export function updateInjectedProvider() {
   const projectRoot = path.resolve(import.meta.dirname, '../');
-  const fileString = fs.readFileSync(path.resolve(projectRoot, 'dist/mobile.js'), {
+  const fileString = fs.readFileSync(path.resolve(projectRoot, 'dist/mobile.iife.js'), {
     encoding: 'utf8',
   });
   fs.writeFileSync(
