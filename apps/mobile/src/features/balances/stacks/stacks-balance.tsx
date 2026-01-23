@@ -1,12 +1,9 @@
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
-import { useRouter } from 'expo-router';
 
-import { stxAsset } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
 import { StacksFilledCircleIcon, StxAvatarIcon } from '@leather.io/ui/native';
-import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
 export function StacksTokenBalance(props: StacksTokenBalanceProps) {
@@ -20,9 +17,16 @@ export function StacksTokenBalance(props: StacksTokenBalanceProps) {
   );
 }
 
-export function StacksBalanceByAccount({ accountIndex, fingerprint }: AccountId) {
+interface StacksBalanceByAccountProps extends AccountId {
+  onPress?(): void;
+}
+
+export function StacksBalanceByAccount({
+  accountIndex,
+  fingerprint,
+  onPress,
+}: StacksBalanceByAccountProps) {
   const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
-  const router = useRouter();
 
   const availableBalance = value?.stx.availableUnlockedBalance;
   const quoteBalance = value?.quote.availableUnlockedBalance;
@@ -35,12 +39,7 @@ export function StacksBalanceByAccount({ accountIndex, fingerprint }: AccountId)
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() =>
-        router.navigate({
-          pathname: '/(tabs)/(index)/[assetId]',
-          params: { assetId: serializeAssetId(getAssetId(stxAsset)) },
-        })
-      }
+      onPress={onPress}
       isLoading={state === 'loading'}
     />
   );

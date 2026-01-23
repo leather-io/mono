@@ -411,7 +411,7 @@ msgstr "Balances"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:18
+#: src/features/balances/bitcoin/bitcoin-balance.tsx:15
 #: src/features/receive/get-assets.ts:29
 #: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
@@ -1781,7 +1781,7 @@ msgstr "SRC-20"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:17
+#: src/features/balances/stacks/stacks-balance.tsx:14
 #: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
 #: src/features/swap/swap.utils.ts:9
