@@ -10,7 +10,13 @@ export default defineConfig([
     fixedExtension: false,
   },
   {
-    entry: ['src/injected-provider.ts', 'src/mobile.ts'],
+    entry: ['src/injected-provider.ts'],
+    dts: true,
+    fixedExtension: false,
+  },
+  {
+    entry: ['src/mobile.ts'],
+    format: 'iife',
     dts: true,
     fixedExtension: false,
   },
