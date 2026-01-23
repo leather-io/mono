@@ -577,6 +577,23 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/utils bumped to 0.46.4
 
+## [1.19.10](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.19.9...@leather.io/stacks-v1.19.10) (2026-01-23)
+
+
+### Bug Fixes
+
+* update redux migrations and secure store migrations. add tests ([726f23a](https://github.com/leather-io/mono/commit/726f23a5785f2bdfafee890faaa5008ec15b66cb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.12.14
+    * @leather.io/utils bumped to 0.49.8
+  * devDependencies
+    * @leather.io/test-config bumped to 0.1.3
+
 ## [1.19.9](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.19.8...@leather.io/stacks-v1.19.9) (2026-01-21)
 
 

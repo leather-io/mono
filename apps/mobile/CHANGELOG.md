@@ -19,6 +19,38 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.97.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.2...@leather.io/mobile-v2.97.3) (2026-01-23)
+
+
+### Bug Fixes
+
+* do not open asset details in send flow ([f930fb6](https://github.com/leather-io/mono/commit/f930fb650e12c5222ffd65feb17c73b365ba2d19))
+* **mobile:** account selector list ([0a0cd66](https://github.com/leather-io/mono/commit/0a0cd66129a15c089e1258cca9a6b3074266e84c))
+* **mobile:** make sure lottie animations stay synced with tokens, ref LEA-3367 ([dde15ed](https://github.com/leather-io/mono/commit/dde15ed5ab3028cb879b516608f0563ffcbc9bd3))
+* **mobile:** migrate to correct fingerprint format ([ef15f7a](https://github.com/leather-io/mono/commit/ef15f7a3f3ea499bf6f1037d147b95c86aef0535))
+* remove premature error in getMnemonic function ([0655589](https://github.com/leather-io/mono/commit/06555892fb28e46f3165d685b780a75d441cb7a2))
+* update redux migrations and secure store migrations. add tests ([726f23a](https://github.com/leather-io/mono/commit/726f23a5785f2bdfafee890faaa5008ec15b66cb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.18.1
+    * @leather.io/bitcoin bumped to 0.36.4
+    * @leather.io/crypto bumped to 1.12.14
+    * @leather.io/features bumped to 1.1.11
+    * @leather.io/provider bumped to 1.6.16
+    * @leather.io/queries bumped to 0.4.1
+    * @leather.io/query bumped to 2.45.11
+    * @leather.io/rpc bumped to 2.21.8
+    * @leather.io/services bumped to 1.46.6
+    * @leather.io/stacks bumped to 1.19.10
+    * @leather.io/ui bumped to 1.103.2
+    * @leather.io/utils bumped to 0.49.8
+  * devDependencies
+    * @leather.io/test-config bumped to 0.1.3
+
 ## [2.97.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.1...@leather.io/mobile-v2.97.2) (2026-01-22)
 
 

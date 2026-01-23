@@ -350,6 +350,23 @@
     * @leather.io/rpc bumped to 2.20.16
     * @leather.io/utils bumped to 0.46.3
 
+## [1.6.16](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.6.15...@leather.io/provider-v1.6.16) (2026-01-23)
+
+
+### Bug Fixes
+
+* **mobile:** injected provider. add tests ([90c66bb](https://github.com/leather-io/mono/commit/90c66bb99c6704e4d3d77e7aa4663d9e53949446))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.21.8
+    * @leather.io/utils bumped to 0.49.8
+  * devDependencies
+    * @leather.io/test-config bumped to 0.1.3
+
 ## [1.6.15](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.6.14...@leather.io/provider-v1.6.15) (2026-01-21)
 
 

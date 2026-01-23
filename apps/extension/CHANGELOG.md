@@ -21,6 +21,31 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.92.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.92.0...@leather.io/extension-v6.92.1) (2026-01-23)
+
+
+### Bug Fixes
+
+* update redux migrations and secure store migrations. add tests ([726f23a](https://github.com/leather-io/mono/commit/726f23a5785f2bdfafee890faaa5008ec15b66cb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.18.1
+    * @leather.io/bitcoin bumped to 0.36.4
+    * @leather.io/crypto bumped to 1.12.14
+    * @leather.io/features bumped to 1.1.11
+    * @leather.io/provider bumped to 1.6.16
+    * @leather.io/queries bumped to 0.4.1
+    * @leather.io/query bumped to 2.45.11
+    * @leather.io/rpc bumped to 2.21.8
+    * @leather.io/services bumped to 1.46.6
+    * @leather.io/stacks bumped to 1.19.10
+    * @leather.io/ui bumped to 1.103.2
+    * @leather.io/utils bumped to 0.49.8
+
 ## [6.92.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.91.0...@leather.io/extension-v6.92.0) (2026-01-21)
 
 

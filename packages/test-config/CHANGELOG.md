@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/leather-io/mono/compare/@leather.io/test-config-v0.1.2...@leather.io/test-config-v0.1.3) (2026-01-23)
+
+
+### Bug Fixes
+
+* update redux migrations and secure store migrations. add tests ([726f23a](https://github.com/leather-io/mono/commit/726f23a5785f2bdfafee890faaa5008ec15b66cb))
+
 ## [0.1.2](https://github.com/leather-io/mono/compare/@leather.io/test-config-v0.1.1...@leather.io/test-config-v0.1.2) (2025-12-08)
 
 
