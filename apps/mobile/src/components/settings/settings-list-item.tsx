@@ -58,7 +58,7 @@ export function SettingsListItem({
     <Cell.Root pressable onPress={onPress} {...rest}>
       {icon && (
         <Cell.Icon>
-          <Avatar icon={icon} />
+          <Avatar showFauxBorder icon={icon} />
         </Cell.Icon>
       )}
       <Cell.Content>
