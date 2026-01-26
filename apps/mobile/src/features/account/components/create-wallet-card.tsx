@@ -12,7 +12,7 @@ interface CreateWalletCardProps {
 
 export function CreateWalletCard({ onPress }: CreateWalletCardProps) {
   const theme = useTheme();
-  const width = Dimensions.get('screen').width - theme.spacing['5'] * 2;
+  const width = Dimensions.get('window').width - theme.spacing['5'] * 2;
 
   return (
     <AccountCard

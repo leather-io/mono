@@ -17,7 +17,8 @@
   },
   "exports": {
     ".": "./index.js",
-    "./react": "./react.js"
+    "./react": "./react.js",
+    "./rules/*": "./rules/*.js"
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "devDependencies": {

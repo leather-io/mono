@@ -4,6 +4,7 @@ import { defineConfig } from 'eslint/config';
 
 import baseConfig from '@leather.io/eslint-config';
 import reactConfig from '@leather.io/eslint-config/react';
+import { noDimensionsScreenRule } from '@leather.io/eslint-config/rules/no-dimensions-screen';
 
 const useQueryConfigOrKeyRule = {
   meta: {
@@ -196,7 +197,15 @@ export default defineConfig([
     name: 'mobile',
     files: ['apps/mobile/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginLingui.configs['flat/recommended']],
+    plugins: {
+      'leather.io': {
+        rules: {
+          'no-dimensions-screen': noDimensionsScreenRule,
+        },
+      },
+    },
     rules: {
+      'leather.io/no-dimensions-screen': 'error',
       'lingui/no-unlocalized-strings': [
         'error',
         // https://github.com/lingui/eslint-plugin/blob/main/docs/rules/no-unlocalized-strings.md
