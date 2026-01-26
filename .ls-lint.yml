@@ -7,8 +7,11 @@ ls:
 ignore:
   - .git
   - .idea
+  - .pnpm-local
   - .vscode
   - apps/*/node_modules
+  - apps/mobile/coverage
+  - apps/web/.wrangler
   - apps/mobile/.expo/*
   - apps/mobile/android
   - apps/mobile/artifacts
@@ -22,6 +25,7 @@ ignore:
   - node_modules
   - packages/**/.react-router
   - packages/*/.tsdown
+  - packages/*/dist
   - packages/*/node_modules
   - packages/ui/android
   - packages/ui/dist-native

@@ -6,6 +6,7 @@ tsconfig.tsbuildinfo
 .idea
 .eslintcache
 .pnpm-store/
+.pnpm-local/
 # macOS
 .DS_Store
 leather-styles
