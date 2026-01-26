@@ -28,7 +28,8 @@ export function createLDProvider() {
 interface FeatureFlags {
   releaseOnramperBuy: boolean;
   releaseOnramperSell: boolean;
-  extensionRevamp: boolean;
+  homeTabsRevamp: boolean;
+  assetsRevamp: boolean;
 }
 
 export function useFlags() {
