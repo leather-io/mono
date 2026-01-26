@@ -321,6 +321,8 @@ module.exports = {
       /* path: an array of regular expressions in strings to match against */
       path: [
         'node_modules',
+        '.pnpm-store',
+        '.pnpm-local',
         // @edgarkhanzadian: Ignoring mobile here was depcruiser doesn't work
         // well with the `@/*` paths. Please take a look and see if there's a
         // workaround for this
