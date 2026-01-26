@@ -37,7 +37,7 @@ export function AccountSelectorSheetLayout({
   return (
     <FullHeightSheet
       sheetRef={sheetRef}
-      maxDynamicContentSize={Dimensions.get('screen').height - top - HEADER_HEIGHT}
+      maxDynamicContentSize={Dimensions.get('window').height - top - HEADER_HEIGHT}
     >
       <Box
         bg="ink.background-primary"
