@@ -19,6 +19,14 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.97.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.3...@leather.io/mobile-v2.97.4) (2026-01-26)
+
+
+### Bug Fixes
+
+* icons sheet performance ([6bc4ee4](https://github.com/leather-io/mono/commit/6bc4ee4013eaeff430551e6666ba78989da17762))
+* menu items ([c90004d](https://github.com/leather-io/mono/commit/c90004d37faa67cf7ed1bd2dc82816b2d905d04f))
+
 ## [2.97.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.2...@leather.io/mobile-v2.97.3) (2026-01-23)
 
 
