@@ -19,6 +19,20 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.97.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.4...@leather.io/mobile-v2.97.5) (2026-01-26)
+
+
+### Bug Fixes
+
+* 16kb memory ([47ea4e4](https://github.com/leather-io/mono/commit/47ea4e4becd5cd51cde3d095c3d7e624bf0cb112))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.103.3
+
 ## [2.97.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.3...@leather.io/mobile-v2.97.4) (2026-01-26)
 
 

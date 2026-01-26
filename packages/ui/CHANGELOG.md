@@ -489,6 +489,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.103.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.103.2...@leather.io/ui-v1.103.3) (2026-01-26)
+
+
+### Bug Fixes
+
+* 16kb memory ([47ea4e4](https://github.com/leather-io/mono/commit/47ea4e4becd5cd51cde3d095c3d7e624bf0cb112))
+
 ## [1.103.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.103.1...@leather.io/ui-v1.103.2) (2026-01-23)
 
 
