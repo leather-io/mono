@@ -11,30 +11,38 @@ import { LoadingSpinner } from '@app/components/loading-spinner';
 
 interface HomeTabsProps {
   children: React.ReactNode;
+  showCollectibles?: boolean;
 }
 
-const homeTabs = [
-  {
-    label: 'Assets',
-    value: RouteUrls.Home,
-    testId: 'tab-assets',
-  },
-  {
-    label: 'NFTs',
-    value: RouteUrls.Collectibles,
-    testId: 'tab-collectibles',
-  },
-  {
-    label: 'Activity',
-    value: RouteUrls.Activity,
-    testId: 'tab-activity',
-  },
-] as const;
+function getHomeTabs(showCollectibles: boolean) {
+  return [
+    {
+      label: 'Assets',
+      value: RouteUrls.Home,
+      testId: 'tab-assets',
+    },
+    ...(showCollectibles
+      ? [
+          {
+            label: 'NFTs',
+            value: RouteUrls.Collectibles,
+            testId: 'tab-collectibles',
+          },
+        ]
+      : []),
+    {
+      label: 'Activity',
+      value: RouteUrls.Activity,
+      testId: 'tab-activity',
+    },
+  ];
+}
 
-export function HomeTabs({ children }: HomeTabsProps) {
+export function HomeTabs({ children, showCollectibles = true }: HomeTabsProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = location;
+  const homeTabs = getHomeTabs(showCollectibles);
   const activeTab =
     [RouteUrls.Activity, RouteUrls.Collectibles].find(route => pathname.startsWith(route)) ??
     RouteUrls.Home;

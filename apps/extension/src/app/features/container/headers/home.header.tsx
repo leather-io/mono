@@ -7,11 +7,11 @@ import { useFlags } from '@app/features/feature-flags';
 import { Settings } from '@app/features/settings/settings';
 
 export function HomeHeader() {
-  const { extensionRevamp } = useFlags();
+  const { accountRevamp } = useFlags();
   return (
     <Header>
       <HeaderGrid
-        leftCol={extensionRevamp ? <HeaderAccountSelector /> : <LogoBox hideBelow={undefined} />}
+        leftCol={accountRevamp ? <HeaderAccountSelector /> : <LogoBox hideBelow={undefined} />}
         rightCol={
           <HeaderGridRightCol>
             <FullScreenButton />
