@@ -21,6 +21,21 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.92.4](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.92.3...@leather.io/extension-v6.92.4) (2026-01-27)
+
+
+### Bug Fixes
+
+* **extension:** enable account revamp ([9892d06](https://github.com/leather-io/mono/commit/9892d0634690c023b429f6f4d80cae40571dc67e))
+* **extension:** move secret key files ([51fe6dc](https://github.com/leather-io/mono/commit/51fe6dc871172403291ed5b0331bfd4a8267af34))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.103.5
+
 ## [6.92.3](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.92.2...@leather.io/extension-v6.92.3) (2026-01-27)
 
 

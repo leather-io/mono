@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.3](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.14.2...@leather.io/eslint-config-v0.14.3) (2026-01-27)
+
+
+### Bug Fixes
+
+* enforce dimensions window ([be0a281](https://github.com/leather-io/mono/commit/be0a2816d5383045045d851c9b7be90432f0554d))
+
 ## [0.14.2](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.14.1...@leather.io/eslint-config-v0.14.2) (2025-12-08)
 
 

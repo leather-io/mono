@@ -19,6 +19,20 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.97.8](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.7...@leather.io/mobile-v2.97.8) (2026-01-27)
+
+
+### Bug Fixes
+
+* enforce dimensions window ([be0a281](https://github.com/leather-io/mono/commit/be0a2816d5383045045d851c9b7be90432f0554d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.103.5
+
 ## [2.97.7](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.6...@leather.io/mobile-v2.97.7) (2026-01-27)
 
 
