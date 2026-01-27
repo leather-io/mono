@@ -23,7 +23,7 @@ interface initInpageProviderArgs {
 export function initInpageProvider({ onDispatch, env }: initInpageProviderArgs) {
   addLeatherToProviders();
 
-  interface LeatherProviderOverrides extends StacksProvider {
+  interface LeatherProviderOverrides extends Omit<StacksProvider, 'profileUpdateRequest'> {
     isLeather: true;
   }
 
