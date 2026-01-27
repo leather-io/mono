@@ -19,6 +19,21 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.97.6](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.5...@leather.io/mobile-v2.97.6) (2026-01-27)
+
+
+### Bug Fixes
+
+* **mobile:** bump expo module version for build compatiblity ([540dc4a](https://github.com/leather-io/mono/commit/540dc4af5db66ca662530f5b5ab2aa8e649a8cf2))
+* **mobile:** migration to v2 for older versions ([51ff2b9](https://github.com/leather-io/mono/commit/51ff2b95aeaf7924d8b572a0983cc849a518e23d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.103.4
+
 ## [2.97.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.4...@leather.io/mobile-v2.97.5) (2026-01-26)
 
 
