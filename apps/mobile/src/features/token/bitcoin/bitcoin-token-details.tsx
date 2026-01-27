@@ -1,3 +1,4 @@
+import { useSwapSbtcBridgingFlag } from '@/features/feature-flags';
 import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
 import { useActivityByAsset } from '@/queries/activity/activity.query';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
@@ -24,6 +25,7 @@ export function BitcoinTokenDetails({ account }: BitcoinTokenDetailsProps) {
   const { fingerprint, accountIndex } = account;
   const balance = useBtcAccountBalance(fingerprint, accountIndex);
   const activity = useActivityByAsset(fingerprint, accountIndex, btcAsset);
+  const sbtcBridgingEnabled = useSwapSbtcBridgingFlag();
   const chain = capitalize(btcAsset.chain);
   const name = `${chain} (${btcAsset.symbol})`;
   return (
@@ -32,6 +34,7 @@ export function BitcoinTokenDetails({ account }: BitcoinTokenDetailsProps) {
       icon={<BtcAvatarIcon />}
       balance={balance}
       activity={activity}
+      canSwap={sbtcBridgingEnabled}
       layer={t`Layer 1`}
       title={chain}
       name={name}

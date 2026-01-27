@@ -24,6 +24,7 @@ interface TokenProps {
   asset: FungibleCryptoAsset;
   balance: FetchState<TokenBalance>;
   canSend?: boolean;
+  canSwap?: boolean;
   children?: React.ReactNode;
   icon: React.ReactNode;
   layer: string;
@@ -36,6 +37,7 @@ export function Token({
   asset,
   balance,
   canSend = true,
+  canSwap = true,
   children,
   icon,
   layer,
@@ -98,7 +100,7 @@ export function Token({
                   onSend={canSend ? () => sendSheetRef.current?.present(asset) : undefined}
                   onReceive={() => receiveSheetRef.current?.present(receiveType)}
                   onSwap={
-                    isSwappableAsset(asset)
+                    isSwappableAsset(asset) && canSwap
                       ? () => swapSheetRef.current?.present({ baseAsset: asset })
                       : undefined
                   }
