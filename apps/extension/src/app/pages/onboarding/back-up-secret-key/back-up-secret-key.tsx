@@ -16,7 +16,7 @@ import {
   TwoColumnLayout,
 } from '@app/components/layout/layouts/two-column.layout';
 import { useDefaultWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
-import { SecretKey } from '@app/ui/components/secret-key-current/secret-key';
+import { SecretKey } from '@app/ui/components/secret-key/secret-key';
 
 interface BulletPointProps {
   icon: ReactNode;
