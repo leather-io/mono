@@ -489,6 +489,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.103.5](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.103.4...@leather.io/ui-v1.103.5) (2026-01-27)
+
+
+### Bug Fixes
+
+* **ui:** enforce logomark dimensions for mobile header ([f50d72b](https://github.com/leather-io/mono/commit/f50d72b738e4af42f377ad04679b83d17f367e58))
+
 ## [1.103.4](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.103.3...@leather.io/ui-v1.103.4) (2026-01-27)
 
 
