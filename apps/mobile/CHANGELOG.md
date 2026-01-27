@@ -19,6 +19,13 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.97.7](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.6...@leather.io/mobile-v2.97.7) (2026-01-27)
+
+
+### Bug Fixes
+
+* **mobile:** add sBTC bridging flag in Bitcoin token details ([466723e](https://github.com/leather-io/mono/commit/466723e3cce622bb5aa9b00d1a5ce6d1fab407f1))
+
 ## [2.97.6](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.5...@leather.io/mobile-v2.97.6) (2026-01-27)
 
 
