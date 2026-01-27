@@ -1,8 +1,9 @@
+import { CollectibleImage } from '@/features/collectibles/components/collectible-image';
+import { ImageUnavailable } from '@/features/collectibles/components/image-unavailable';
 import { TokenDetailsProps } from '@/features/token/types';
 import { getImageUnavailableLabel } from '@/features/token/utils/image-unavailable-label';
 
 import { StampAsset } from '@leather.io/models';
-import { CollectibleImage, ImageUnavailable } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 interface StampProps {

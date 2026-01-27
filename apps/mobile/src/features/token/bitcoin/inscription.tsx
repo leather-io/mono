@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 
+import { ImageUnavailable } from '@/features/collectibles/components/image-unavailable';
+import { Inscription as InscriptionComponent } from '@/features/collectibles/components/inscription';
 import { TokenDetailsProps } from '@/features/token/types';
 import { getImageUnavailableLabel } from '@/features/token/utils/image-unavailable-label';
 import { t } from '@lingui/core/macro';
 
 import { InscriptionAsset } from '@leather.io/models';
-import { ImageUnavailable, Inscription as InscriptionComponent } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 interface InscriptionProps {
