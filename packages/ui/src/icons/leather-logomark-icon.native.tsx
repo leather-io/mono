@@ -10,7 +10,13 @@ export const LeatherLogomarkIcon = forwardRef<Component, SvgProps>((props, ref) 
   const theme = useTheme<Theme>();
 
   return (
-    <LeatherLogomark ref={ref} color={theme.colors['ink.action-primary-default']} {...props} />
+    <LeatherLogomark
+      ref={ref}
+      width={86}
+      height={19}
+      color={theme.colors['ink.action-primary-default']}
+      {...props}
+    />
   );
 });
 
