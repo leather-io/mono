@@ -28,7 +28,7 @@ type State = {
   wallets: EntityState<WalletEntity, string>;
   apps: EntityState<AppsEntity, string>;
   settings: {
-    currentAccount: {
+    currentAccount?: null | {
       id: string;
       fingerprint: string;
       [key: string]: unknown;
@@ -131,12 +131,15 @@ export function migratePadFingerprints(state: PersistedState) {
       })
     ),
   };
+
   const updatedSettings = {
     ...typedState.settings,
-    currentAccount: {
-      ...typedState.settings.currentAccount,
-      fingerprint: padFingerprint(typedState.settings.currentAccount.fingerprint),
-    },
+    currentAccount: typedState.settings.currentAccount
+      ? {
+          ...typedState.settings.currentAccount,
+          fingerprint: padFingerprint(typedState.settings.currentAccount.fingerprint),
+        }
+      : typedState.settings.currentAccount,
   };
 
   return {
