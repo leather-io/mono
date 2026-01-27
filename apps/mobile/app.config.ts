@@ -13,6 +13,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     notification: {
       icon: './src/assets/icon.png',
     },
+    updates: {
+      url: 'https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
+    },
     orientation: 'portrait',
     icon: './src/assets/icon.png',
     scheme: 'leather',
@@ -39,6 +42,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         UIBackgroundModes: ['remote-notification', 'fetch'],
         NSCameraUsageDescription:
           'This app uses the camera to scan QR codes for sending transactions.',
+        CFBundleURLTypes: [
+          {
+            CFBundleURLSchemes: ['leather', 'exp+leather'],
+          },
+        ],
       },
       privacyManifests: {
         NSPrivacyAccessedAPITypes: [
