@@ -4,13 +4,13 @@ import { useWindowDimensions } from 'react-native';
 import { ErrorFallbackTab } from '@/components/error/error';
 import { FetchState } from '@/components/loading/fetch-state';
 import { Screen } from '@/components/screen/screen';
+import { CollectibleTypeIconOverlay } from '@/features/collectibles/components';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { CollectiblesListLoading } from '@/features/token/components/collectibles-list-loading';
 import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
 import { useRouter } from 'expo-router';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';
-import { CollectibleTypeIconOverlay } from '@leather.io/ui/native';
 import { assertUnreachable, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { useCollectibleDetailsFlag } from '../feature-flags';
