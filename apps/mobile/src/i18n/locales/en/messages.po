@@ -416,7 +416,7 @@ msgstr "BIP39 passphrase"
 #: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
 #: src/features/swap/swap.utils.ts:10
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:17
+#: src/features/token/bitcoin/bitcoin-token-details.tsx:18
 #: src/shared/display-preference.ts:61
 msgid "Bitcoin"
 msgstr "Bitcoin"
@@ -1129,7 +1129,7 @@ msgstr "Last observed block"
 msgid "Layer"
 msgstr "Layer"
 
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:35
+#: src/features/token/bitcoin/bitcoin-token-details.tsx:38
 msgid "Layer 1"
 msgstr "Layer 1"
 
