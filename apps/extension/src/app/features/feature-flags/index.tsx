@@ -30,7 +30,6 @@ interface FeatureFlags {
   releaseOnramperSell: boolean;
   homeTabsRevamp: boolean;
   assetsRevamp: boolean;
-  accountRevamp: boolean;
   activityRevamp: boolean;
 }
 

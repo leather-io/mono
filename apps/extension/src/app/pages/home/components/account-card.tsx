@@ -1,20 +1,19 @@
-import { ReactNode } from 'react';
-
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { css, cx } from 'leather-styles/css';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { type Money } from '@leather.io/models';
 import { Flag, InfoCircleIcon, SkeletonLoader, shimmerStyles } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { useScaleText } from '@app/common/hooks/use-scale-text';
+import { emptyAmountPlaceholder } from '@app/components/balance/constants';
 import { Divider } from '@app/components/layout/divider';
 import { PrivateTextLayout } from '@app/components/privacy/private-text.layout';
 import { NetworkSwitcherBadge } from '@app/pages/settings/components/network-switcher';
+import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
-import { BasicTooltip } from '../tooltip/basic-tooltip';
+import { useHomePageState } from '../use-home-page-state';
 
 const totalBalanceTooltipLabel =
   'Your total tokens on chain. Includes both available and locked amounts.';
@@ -22,30 +21,18 @@ const totalBalanceTooltipLabel =
 const lockedBalanceTooltip =
   'Amount you’ve committed to stacking. You won’t be able to move or spend it until the stacking period ends.';
 
-interface AccountCardProps {
-  totalBalance: string;
-  totalBalanceMoney: Money | undefined;
-  lockedBalanceMoney: Money | undefined;
-  children?: ReactNode;
-  isLoadingBalance: boolean;
-  isLoadingAdditionalData?: boolean;
-  isBalancePrivate?: boolean;
-  onShowBalance?(): void;
-}
-
-export function AccountCard({
-  totalBalance,
-  totalBalanceMoney,
-  lockedBalanceMoney,
-  onShowBalance,
-  children,
-  isLoadingBalance,
-  isLoadingAdditionalData,
-  isBalancePrivate,
-}: AccountCardProps) {
+export function AccountCard() {
+  const { totalBalance, availableBalance, stxAccountBalance, isPrivateMode, togglePrivateMode } =
+    useHomePageState();
   const scaleTextRef = useScaleText();
   const isAtLeastMd = useViewportMinWidth('md');
+
   const tooltipVariant = isAtLeastMd ? 'md' : 'sm';
+  const isLoadingBalance = totalBalance.state === 'loading' || availableBalance.state === 'loading';
+  const lockedBalanceMoney = stxAccountBalance.value?.quote.lockedBalance;
+  const totalBalanceMoney = totalBalance.value;
+  const totalBalanceFormatted =
+    totalBalance.state !== 'success' ? emptyAmountPlaceholder : formatCurrency(totalBalance.value);
 
   return (
     <Flex direction="column" rounded="md">
@@ -69,7 +56,7 @@ export function AccountCard({
             <Flex direction="column">
               <styled.h1
                 textStyle="heading.02"
-                data-state={isLoadingAdditionalData ? 'loading' : undefined}
+                data-state={isLoadingBalance ? 'loading' : undefined}
                 className={cx(
                   shimmerStyles,
                   css({
@@ -89,12 +76,12 @@ export function AccountCard({
                 ref={scaleTextRef}
               >
                 <PrivateTextLayout
-                  isPrivate={isBalancePrivate}
-                  onShowValue={onShowBalance}
+                  isPrivate={isPrivateMode}
+                  onShowValue={togglePrivateMode}
                   display="inline-block"
                   overflow="hidden"
                 >
-                  {totalBalance}
+                  {totalBalanceFormatted}
                 </PrivateTextLayout>
               </styled.h1>
 
@@ -125,7 +112,7 @@ export function AccountCard({
                   </Box>
                   <styled.h1
                     textStyle="heading.05"
-                    data-state={isLoadingAdditionalData ? 'loading' : undefined}
+                    data-state={isLoadingBalance ? 'loading' : undefined}
                     className={shimmerStyles}
                     data-testid={SharedComponentsSelectors.AccountCardBalanceText}
                     style={{
@@ -138,8 +125,8 @@ export function AccountCard({
                     ref={scaleTextRef}
                   >
                     <PrivateTextLayout
-                      isPrivate={isBalancePrivate}
-                      onShowValue={onShowBalance}
+                      isPrivate={isPrivateMode}
+                      onShowValue={togglePrivateMode}
                       display="inline-block"
                       overflow="hidden"
                     >
@@ -151,7 +138,6 @@ export function AccountCard({
             </Flex>
           </SkeletonLoader>
         </Box>
-        {children}
       </Flex>
     </Flex>
   );

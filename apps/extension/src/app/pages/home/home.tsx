@@ -15,13 +15,13 @@ import { PromoBanner } from '@app/features/promo-banner/promo-banner';
 import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
 
-import { AccountActionsSwitch } from './components/account-actions-switch';
-import { AccountCardSwitch } from './components/account-card-switch';
+import { AccountActions } from './components/account-actions-current/account-actions';
+import { AccountCard } from './components/account-card';
 import { AssetsSwitch } from './components/assets-switch';
 import { HomeTabsSwitch } from './components/home-tabs-switch';
 
 export function Home() {
-  const { accountRevamp, homeTabsRevamp, activityRevamp } = useFlags();
+  const { homeTabsRevamp, activityRevamp } = useFlags();
 
   return (
     <Flex
@@ -35,8 +35,8 @@ export function Home() {
       animationDuration="500ms"
     >
       <Flex px={['space.05', 0]} pb="space.05" gap="space.05" direction="column">
-        <AccountCardSwitch />
-        {accountRevamp && <AccountActionsSwitch />}
+        <AccountCard />
+        <AccountActions />
         <PromoBanner />
       </Flex>
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
