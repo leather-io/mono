@@ -26,6 +26,19 @@
         "simulator": true
       }
     },
+    "devClient": {
+      "extends": "base",
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "cicd",
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      },
+      "ios": {
+        "buildConfiguration": "Release",
+        "simulator": true
+      }
+    },
     "development": {
       "extends": "base",
       "channel": "development",

@@ -1,0 +1,29 @@
+# Leather Mobile Wallet Smoke Tests (CI with EAS Update deep link)
+appId: io.leather.mobilewallet
+name: Smoke Tests CI
+---
+# Launch the app first (required for deep links to work)
+- launchApp
+
+# Wait for app to fully initialize and register URL schemes (iOS needs this)
+- waitForAnimationToEnd
+
+# Then open the deep link to load EAS Update
+- openLink: ${MAESTRO_DEEP_LINK_URL}
+
+# Handle iOS deep link confirmation prompt if it appears
+- runFlow:
+    when:
+      visible: 'Open'
+    commands:
+      - tapOn: 'Open'
+
+# Wait for EAS Update to load
+- extendedWaitUntil:
+    visible: 'Add account'
+    timeout: 30000
+
+# When the user toggles the settings button it should work
+- tapOn:
+    id: 'homeSettingsButton'
+- assertVisible: 'SETTINGS'
