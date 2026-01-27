@@ -244,9 +244,6 @@ importers:
       '@stacks/network-v6':
         specifier: npm:@stacks/network@6.13.0
         version: '@stacks/network@6.13.0(encoding@0.1.13)'
-      '@stacks/profile':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
       '@stacks/rpc-client':
         specifier: 1.0.3
         version: 1.0.3(encoding@0.1.13)
@@ -1896,9 +1893,6 @@ importers:
         specifier: npm:@stacks/connect@7.4.0
         version: '@stacks/connect@7.4.0(encoding@0.1.13)'
       '@stacks/network':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
-      '@stacks/profile':
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
       '@stacks/transactions':

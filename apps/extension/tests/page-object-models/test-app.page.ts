@@ -8,10 +8,6 @@ export class TestAppPage {
   readonly signInBtnSelector = createTestSelector(OnboardingSelectors.SignUpBtn);
   readonly contractCallBtnSelector = createTestSelector(TestAppSelectors.BtnContractCall);
   readonly stxTransferBtnSelector = createTestSelector(TestAppSelectors.BtnStxTransfer);
-  readonly updateProfileBtnSelector = createTestSelector(TestAppSelectors.BtnUpdateValidProfile);
-  readonly updateInvalidProfileBtnSelector = createTestSelector(
-    TestAppSelectors.BtnUpdateInvalidProfile
-  );
 
   constructor(page: Page) {
     this.page = page;
@@ -29,13 +25,5 @@ export class TestAppPage {
 
   async clickStxTransferButton() {
     return this.page.click(this.stxTransferBtnSelector);
-  }
-
-  async clickUpdateProfileButton() {
-    return this.page.click(this.updateProfileBtnSelector);
-  }
-
-  async clickUpdateInvalidProfileButton() {
-    return this.page.click(this.updateInvalidProfileBtnSelector);
   }
 }

@@ -5,7 +5,6 @@ import {
   SignatureData,
   SponsoredFinishedTxPayload,
 } from '@stacks/connect-jwt';
-import { PublicProfile } from '@stacks/profile';
 
 import type { Platform } from './types';
 
@@ -18,7 +17,6 @@ enum DomEventName {
   signatureRequest = 'hiroWalletSignatureRequest',
   structuredDataSignatureRequest = 'hiroWalletStructuredDataSignatureRequest',
   transactionRequest = 'hiroWalletStacksTransactionRequest',
-  profileUpdateRequest = 'hiroWalletProfileUpdateRequest',
   psbtRequest = 'hiroWalletPsbtRequest',
 }
 
@@ -32,10 +30,6 @@ interface SignatureRequestEventDetails {
 
 interface TransactionRequestEventDetails {
   transactionRequest: string;
-}
-
-interface ProfileUpdateRequestEventDetails {
-  profileUpdateRequest: string;
 }
 
 interface PsbtRequestEventDetails {
@@ -97,14 +91,6 @@ type SignatureResponseMessage = Message<
   }
 >;
 
-type ProfileUpdateResponseMessage = Message<
-  ExternalMethods.profileUpdateResponse,
-  {
-    profileUpdateRequest: string;
-    profileUpdateResponse: PublicProfile | string;
-  }
->;
-
 type PsbtResponseMessage = Message<
   ExternalMethods.psbtResponse,
   {
@@ -127,7 +113,6 @@ type LegacyMessageToContentScript =
   | AuthenticationResponseMessage
   | TransactionResponseMessage
   | SignatureResponseMessage
-  | ProfileUpdateResponseMessage
   | PsbtResponseMessage;
 
 function isValidEvent(event: MessageEvent, method: LegacyMessageToContentScript['method']) {
@@ -176,7 +161,7 @@ async function callAndReceive(
   });
 }
 
-type LegacyRequests = Omit<StacksProvider, 'request' | 'getProductInfo'>;
+type LegacyRequests = Omit<StacksProvider, 'request' | 'getProductInfo' | 'profileUpdateRequest'>;
 
 function placeholderLegacyRequests(): LegacyRequests {
   return {
@@ -204,10 +189,6 @@ function placeholderLegacyRequests(): LegacyRequests {
       throw new Error('This function is deprecated');
     },
     psbtRequest: () => {
-      // TODO: deprecated
-      throw new Error('This function is deprecated');
-    },
-    profileUpdateRequest: () => {
       // TODO: deprecated
       throw new Error('This function is deprecated');
     },
@@ -346,31 +327,6 @@ function legacyRequests(): LegacyRequests {
           }
           if (typeof event.data.payload.psbtResponse !== 'string') {
             resolve(event.data.payload.psbtResponse);
-          }
-        }
-        window.addEventListener('message', handleMessage);
-      });
-    },
-    profileUpdateRequest: async profileUpdateRequest => {
-      const event = new CustomEvent<ProfileUpdateRequestEventDetails>(
-        DomEventName.profileUpdateRequest,
-        {
-          detail: { profileUpdateRequest },
-        }
-      );
-      document.dispatchEvent(event);
-      return new Promise((resolve, reject) => {
-        function handleMessage(event: MessageEvent<ProfileUpdateResponseMessage>) {
-          if (!isValidEvent(event, ExternalMethods.profileUpdateResponse)) return;
-          if (event.data.payload?.profileUpdateRequest !== profileUpdateRequest) return;
-          window.removeEventListener('message', handleMessage);
-          if (event.data.payload.profileUpdateResponse === 'cancel') {
-            // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-            reject(event.data.payload.profileUpdateResponse);
-            return;
-          }
-          if (typeof event.data.payload.profileUpdateResponse !== 'string') {
-            resolve(event.data.payload.profileUpdateResponse);
           }
         }
         window.addEventListener('message', handleMessage);

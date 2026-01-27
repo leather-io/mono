@@ -4,11 +4,6 @@ export enum TransactionRequestSelectors {
   TransactionRequestPage = 'transaction-signing-page',
 }
 
-export enum UpdateProfileRequestSelectors {
-  BtnUpdateProfile = 'btn-update-profile',
-  ErrorMessage = 'update-profile-request-error-message',
-}
-
 export enum PsbtSelectors {
   PsbtSignerCard = 'psbt-signer-card',
 }

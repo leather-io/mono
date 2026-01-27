@@ -72,7 +72,6 @@ const aliases = {
   '@stacks/network/dist/polyfill': '@stacks/network/dist/esm',
   '@stacks/encryption': '@stacks/encryption/dist/esm',
   '@stacks/network': '@stacks/network/dist/esm',
-  '@stacks/profile': '@stacks/profile/dist/esm',
   '@stacks/auth': '@stacks/auth/dist/esm',
   'leather-styles': path.resolve('leather-styles'),
 };

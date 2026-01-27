@@ -7,7 +7,6 @@ export enum DomEventName {
   signatureRequest = 'hiroWalletSignatureRequest',
   structuredDataSignatureRequest = 'hiroWalletStructuredDataSignatureRequest',
   transactionRequest = 'hiroWalletStacksTransactionRequest',
-  profileUpdateRequest = 'hiroWalletProfileUpdateRequest',
   psbtRequest = 'hiroWalletPsbtRequest',
 }
 
@@ -28,12 +27,6 @@ interface TransactionRequestEventDetails {
 }
 
 export type TransactionRequestEvent = CustomEvent<TransactionRequestEventDetails>;
-
-interface ProfileUpdateRequestEventDetails {
-  profileUpdateRequest: string;
-}
-
-export type ProfileUpdateRequestEvent = CustomEvent<ProfileUpdateRequestEventDetails>;
 
 interface PsbtRequestEventDetails {
   psbtRequest: string;

@@ -11,7 +11,6 @@ import { StacksHighFeeWarningContainer } from '@app/features/stacks-high-fee-war
 import { PsbtRequest } from '@app/pages/psbt-request/psbt-request';
 import { SignStacksMessageRequest } from '@app/pages/sign-stacks-message-request/sign-stacks-message-request';
 import { TransactionRequest } from '@app/pages/transaction-request/transaction-request';
-import { ProfileUpdateRequest } from '@app/pages/update-profile-request/update-profile-request';
 import { AccountGate } from '@app/routes/account-gate';
 import { SuspenseLoadingSpinner } from '@app/routes/app-routes';
 
@@ -45,16 +44,6 @@ export const legacyRequestRoutes = (
     >
       {ledgerStacksMessageSigningRoutes}
     </Route>
-    <Route
-      path={RouteUrls.ProfileUpdateRequest}
-      element={
-        <AccountGate>
-          <Suspense fallback={<SuspenseLoadingSpinner />}>
-            <ProfileUpdateRequest />
-          </Suspense>
-        </AccountGate>
-      }
-    />
     <Route
       path={RouteUrls.PsbtRequest}
       element={

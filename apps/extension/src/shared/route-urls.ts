@@ -85,7 +85,6 @@ export enum RouteUrls {
   SwapError = '/swap/error',
 
   // Legacy request routes
-  ProfileUpdateRequest = '/update-profile',
   PsbtRequest = '/psbt',
   SignatureRequest = '/signature',
   TransactionRequest = '/transaction',

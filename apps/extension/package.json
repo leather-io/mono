@@ -87,7 +87,6 @@
     "@stacks/encryption": "7.0.2",
     "@stacks/network": "7.0.2",
     "@stacks/network-v6": "npm:@stacks/network@6.13.0",
-    "@stacks/profile": "7.0.2",
     "@stacks/rpc-client": "1.0.3",
     "@stacks/transactions": "7.0.5",
     "@stacks/transactions-v6": "npm:@stacks/transactions@6.17.0",

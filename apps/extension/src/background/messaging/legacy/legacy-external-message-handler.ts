@@ -2,7 +2,6 @@ import { assertUnreachable, isObject } from '@leather.io/utils';
 
 import { formatAuthResponse } from '@shared/actions/finalize-auth-reaponse-format';
 import { formatMessageSigningResponse } from '@shared/actions/finalize-message-signature-format';
-import { formatProfileUpdateResponse } from '@shared/actions/finalize-profile-update';
 import { formatPsbtResponse } from '@shared/actions/finalize-psbt';
 import { formatTxSignatureResponse } from '@shared/actions/finalize-tx-signature-format';
 import { ExternalMethods, LegacyMessageFromContentScript } from '@shared/message-types';
@@ -136,23 +135,6 @@ export async function handleLegacyExternalMethodFormat(
         id,
         tabId,
         response: formatMessageSigningResponse({ request: payload, response: 'cancel' }),
-      });
-      listenForOriginTabClose({ tabId });
-      break;
-    }
-
-    case ExternalMethods.profileUpdateRequest: {
-      void trackLegacyRequestInitiated({ method: ExternalMethods.profileUpdateRequest });
-
-      const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
-        ['request', payload],
-      ]);
-
-      const { id } = await triggerRequestPopupWindowOpen(RouteUrls.ProfileUpdateRequest, urlParams);
-      listenForPopupClose({
-        id,
-        tabId,
-        response: formatProfileUpdateResponse({ request: payload, response: 'cancel' }),
       });
       listenForOriginTabClose({ tabId });
       break;

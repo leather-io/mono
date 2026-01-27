@@ -8,7 +8,6 @@ import { Bitcoin } from './bitcoin';
 import { Bns } from './bns';
 import { Counter } from './counter';
 import { Debugger } from './debugger';
-import { Profile } from './profile';
 import { Signature } from './signature';
 import { Status } from './status';
 import { Tab } from './tab';
@@ -59,7 +58,7 @@ function Page({ tab, setTab }: { tab: Tabs; setTab(value: Tabs): void }) {
         {tab === 'debug' && <Debugger />}
         {tab === 'bns' && <Bns />}
         {tab === 'signature' && <Signature />}
-        {tab === 'profile' && <Profile />}
+
         {tab === 'bitcoin' && <Bitcoin />}
       </Container>
     </>

@@ -2,7 +2,6 @@ import {
   CommonSignaturePayload as ConnectCommonSignaturePayload,
   ContractCallPayload as ConnectContractCallPayload,
   ContractDeployPayload as ConnectContractDeployPayload,
-  ProfileUpdatePayload as ConnectProfileUpdatePayload,
   STXTransferPayload as ConnectSTXTransferPayload,
 } from '@stacks/connect-jwt';
 import type { StacksNetwork } from '@stacks/network';
@@ -36,12 +35,6 @@ export type STXTransferPayload = ReplaceTypes<
     txType: TransactionTypes.StxTokenTransfer;
     network: StacksNetwork;
     postConditions?: PostCondition[] | PostConditionWire[];
-  }
->;
-export type ProfileUpdatePayload = ReplaceTypes<
-  ConnectProfileUpdatePayload,
-  {
-    network: StacksNetwork;
   }
 >;
 export type CommonSignaturePayload = ReplaceTypes<

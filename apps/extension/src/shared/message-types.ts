@@ -4,7 +4,6 @@ import {
   SignatureData,
   SponsoredFinishedTxPayload,
 } from '@stacks/connect-jwt';
-import { PublicProfile } from '@stacks/profile';
 
 export const MESSAGE_SOURCE = 'stacks-wallet';
 
@@ -19,8 +18,6 @@ export enum ExternalMethods {
   signatureResponse = 'hiroWalletSignatureResponse',
   structuredDataSignatureRequest = 'hiroWalletStructuredDataSignatureRequest',
   structuredDataSignatureResponse = 'hiroWalletStructuredDataSignatureResponse',
-  profileUpdateRequest = 'hiroWalletProfileUpdateRequest',
-  profileUpdateResponse = 'hiroWalletProfileUpdateResponse',
   psbtRequest = 'hiroWalletPsbtRequest',
   psbtResponse = 'hiroWalletPsbtResponse',
 }
@@ -73,16 +70,6 @@ type StructuredDataSignatureRequestMessage = Message<
   string
 >;
 
-type ProfileUpdateRequestMessage = Message<ExternalMethods.profileUpdateRequest, string>;
-
-export type ProfileUpdateResponseMessage = Message<
-  ExternalMethods.profileUpdateResponse,
-  {
-    profileUpdateRequest: string;
-    profileUpdateResponse: PublicProfile | string;
-  }
->;
-
 type PsbtRequestMessage = Message<ExternalMethods.psbtRequest, string>;
 
 export type PsbtResponseMessage = Message<
@@ -110,12 +97,10 @@ export type LegacyMessageFromContentScript =
   | TransactionRequestMessage
   | SignatureRequestMessage
   | StructuredDataSignatureRequestMessage
-  | ProfileUpdateRequestMessage
   | PsbtRequestMessage;
 
 export type LegacyMessageToContentScript =
   | AuthenticationResponseMessage
   | TransactionResponseMessage
   | SignatureResponseMessage
-  | ProfileUpdateResponseMessage
   | PsbtResponseMessage;
