@@ -66,30 +66,24 @@ export function SplashScreenGuard({ children }: HasChildren) {
     }
   }
 
-  const onAppForeground = useCallback(
-    function () {
-      if (securityLevelPreference === 'secure') {
-        void unlockOnForeground();
-        return;
-      } else {
-        bypassSecurity();
-        playSplash();
-      }
-    },
-    [bypassSecurity, playSplash, securityLevelPreference, unlockOnForeground]
-  );
+  const onAppForeground = useCallback(() => {
+    if (securityLevelPreference === 'secure') {
+      void unlockOnForeground();
+      return;
+    } else {
+      bypassSecurity();
+      playSplash();
+    }
+  }, [bypassSecurity, playSplash, securityLevelPreference, unlockOnForeground]);
 
-  const onAppBackground = useCallback(
-    function () {
-      if (securityLevelPreference === 'secure') {
-        lockOnBackground();
-      } else {
-        bypassSecurity();
-        playSplash();
-      }
-    },
-    [bypassSecurity, lockOnBackground, securityLevelPreference, playSplash]
-  );
+  const onAppBackground = useCallback(() => {
+    if (securityLevelPreference === 'secure') {
+      lockOnBackground();
+    } else {
+      bypassSecurity();
+      playSplash();
+    }
+  }, [bypassSecurity, lockOnBackground, securityLevelPreference, playSplash]);
 
   useAppState({
     onAppForeground,

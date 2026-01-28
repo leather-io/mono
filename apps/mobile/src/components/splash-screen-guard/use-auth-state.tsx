@@ -90,69 +90,53 @@ export function useAuthState({ playSplash }: { playSplash(): void }) {
   const { userLeavesApp, lastActive } = useSettings();
   const { authenticate } = useAuthentication();
 
-  const unlockOnOpen = useCallback(
-    async function () {
-      const result = await authenticate();
-      if (result && result.success) {
-        playSplash();
-        dispatch({ type: 'unlockOnOpen' });
-        analytics.track('app_unlocked');
-      } else {
-        dispatch({ type: 'authFailed' });
-      }
-    },
-    [authenticate, playSplash]
-  );
+  const unlockOnOpen = useCallback(async () => {
+    const result = await authenticate();
+    if (result && result.success) {
+      playSplash();
+      dispatch({ type: 'unlockOnOpen' });
+      analytics.track('app_unlocked');
+    } else {
+      dispatch({ type: 'authFailed' });
+    }
+  }, [authenticate, playSplash]);
 
-  const unlockManually = useCallback(
-    async function () {
-      const result = await authenticate();
-      if (result && result.success) {
-        playSplash();
-        dispatch({ type: 'unlockManually' });
-        analytics.track('app_unlocked');
-      } else {
-        dispatch({ type: 'authFailed' });
-      }
-    },
-    [authenticate, playSplash]
-  );
+  const unlockManually = useCallback(async () => {
+    const result = await authenticate();
+    if (result && result.success) {
+      playSplash();
+      dispatch({ type: 'unlockManually' });
+      analytics.track('app_unlocked');
+    } else {
+      dispatch({ type: 'authFailed' });
+    }
+  }, [authenticate, playSplash]);
 
-  const lockOnBackground = useCallback(
-    function () {
-      dispatch({ type: 'lockOnBackground' });
+  const lockOnBackground = useCallback(() => {
+    dispatch({ type: 'lockOnBackground' });
 
-      // add latest active timestamp only if the app was actually unlocked
-      const appUnlocked =
-        state.status === 'passed-on-first' || state.status === 'passed-afterwards';
-      if (appUnlocked) {
-        userLeavesApp(+new Date());
-      }
-    },
-    [state.status, userLeavesApp]
-  );
+    // add latest active timestamp only if the app was actually unlocked
+    const appUnlocked = state.status === 'passed-on-first' || state.status === 'passed-afterwards';
+    if (appUnlocked) {
+      userLeavesApp(+new Date());
+    }
+  }, [state.status, userLeavesApp]);
 
-  const unlockOnForeground = useCallback(
-    async function () {
-      // if in secure mode, skip checks only if unlock time is not exceeding the timeout
-      // and this is not a cold start of the app
-      if (state.status !== 'cold-start' && lastActive && checkUnlockTime(lastActive)) {
-        dispatch({ type: 'unlockOnForeground' });
-        playSplash();
-        return;
-      }
-      await unlockOnOpen();
-    },
-    [lastActive, playSplash, state.status, unlockOnOpen]
-  );
-  const lockManually = useCallback(
-    function () {
-      dispatch({ type: 'lockManually' });
-      userLeavesApp(null);
-      analytics.track('app_locked');
-    },
-    [userLeavesApp]
-  );
+  const unlockOnForeground = useCallback(async () => {
+    // if in secure mode, skip checks only if unlock time is not exceeding the timeout
+    // and this is not a cold start of the app
+    if (state.status !== 'cold-start' && lastActive && checkUnlockTime(lastActive)) {
+      dispatch({ type: 'unlockOnForeground' });
+      playSplash();
+      return;
+    }
+    await unlockOnOpen();
+  }, [lastActive, playSplash, state.status, unlockOnOpen]);
+  const lockManually = useCallback(() => {
+    dispatch({ type: 'lockManually' });
+    userLeavesApp(null);
+    analytics.track('app_locked');
+  }, [userLeavesApp]);
 
   const onFinishAnimation = useCallback(function onFinishAnimation() {
     dispatch({ type: 'onFinishAnimation' });

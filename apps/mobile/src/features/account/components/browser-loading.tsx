@@ -18,7 +18,7 @@ export interface BrowserLoadingMethods {
   activate(): void;
   deactivate(): void;
 }
-export const BrowserLoading = forwardRef<BrowserLoadingMethods>(function (_, ref) {
+export const BrowserLoading = forwardRef<BrowserLoadingMethods>((_, ref) => {
   const gradientWidth = useSharedValue<`${number}%`>(defaultGradientWidth);
   const animatedStyles = useAnimatedStyle(() => ({
     width: gradientWidth.value,

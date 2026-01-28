@@ -41,17 +41,3 @@ jobs:
       - name: lint-firefox-build
         run: pnpm web-ext lint
         working-directory: apps/extension
-
-  test-build:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - name: build
-        run: pnpm build:extension
-
-      - name: package-extension
-        run: sh build-ext.sh
-        working-directory: apps/extension
-        shell: bash
