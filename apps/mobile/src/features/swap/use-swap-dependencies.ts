@@ -5,8 +5,7 @@ import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { broadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
-import { useSettings } from '@/store/settings/settings';
-import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
+import { useNetworkPreferenceStacksNetwork, useSettings } from '@/store/settings/settings';
 import { SbtcApiClientMainnet, SbtcApiClientTestnet } from 'sbtc';
 
 import {

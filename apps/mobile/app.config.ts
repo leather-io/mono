@@ -109,6 +109,29 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
     },
     plugins: [
+      [
+        // 'expo-build-properties' must be first. See https://github.com/invertase/react-native-firebase/issues/8657#issuecomment-3312082933
+
+        'expo-build-properties',
+        {
+          ios: {
+            /**
+             * Helps RNFB to compile correctly on iOS, since firebase-ios-sdk requires use_frameworks
+             * @see https://rnfirebase.io/#configure-react-native-firebase-modules
+             */
+            useFrameworks: 'static',
+            deploymentTarget: '15.1',
+            /**
+             * RNFirebase iOS build fix using static linking (maintainer-recommended).
+             * This `forceStaticLinking` configuration follows the Expo maintainer’s suggested solution:
+             * https://github.com/expo/expo/issues/39607#issuecomment-3337284928
+             * ⚠️ IMPORTANT: If installing/removing react-native-firebase npm packages, ensure you also update this list.
+             * - Look for `s.name` property in node_modules/@react-native-firebase/<module>/<module>.podspec to get the Pod name.
+             */
+            forceStaticLinking: ['RNFBApp', 'RNFBMessaging'],
+          },
+        },
+      ],
       '@react-native-firebase/messaging',
       '@react-native-firebase/app',
       [
@@ -123,15 +146,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         'expo-local-authentication',
         {
           faceIDPermission: 'Allow $(PRODUCT_NAME) to use Face ID biometric data.',
-        },
-      ],
-      [
-        'expo-build-properties',
-        {
-          ios: {
-            useFrameworks: 'static',
-            deploymentTarget: '15.1',
-          },
         },
       ],
       [
@@ -267,6 +281,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     experiments: {
       typedRoutes: true,
       buildCacheProvider: 'eas',
+      autolinkingModuleResolution: true,
     },
   };
 };

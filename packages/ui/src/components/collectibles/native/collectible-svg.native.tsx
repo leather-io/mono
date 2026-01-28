@@ -1,7 +1,8 @@
 import { ReactNode, useState } from 'react';
 import { SvgUri } from 'react-native-svg';
 
-import { Box, Pressable, PressableProps } from '../../../native';
+import { Box } from '../../box/box.native';
+import { Pressable, PressableProps } from '../../pressable/pressable.native';
 import { ImageUnavailable } from './image-unavailable.native';
 
 interface CollectibleSvgProps extends PressableProps {

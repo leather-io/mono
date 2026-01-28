@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
-import { Box, BoxProps, TextProps } from '../../native';
+import { Box, BoxProps } from '../box/box.native';
+import { TextProps } from '../text/text.native';
 import { BulletSeparator as BulletSeparatorContainer } from './bullet-separator.shared';
 
 interface BulletOperatorProps {

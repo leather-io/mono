@@ -6,7 +6,7 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
-import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
+import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings';
 import { deserializeTransaction } from '@stacks/transactions';
 
 import {

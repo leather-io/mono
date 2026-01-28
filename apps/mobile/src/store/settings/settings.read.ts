@@ -1,7 +1,5 @@
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { useSettings } from '@/store/settings/settings';
 import { createSelector } from '@reduxjs/toolkit';
 import {
   ChainId,
@@ -12,13 +10,11 @@ import {
   TransactionVersion,
 } from '@stacks/network';
 
-import { getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
 import {
   accountDisplayPreferencesKeyedByType,
   bitcoinUnitsKeyedByName,
 } from '@leather.io/constants';
 import {
-  AccountId,
   NetworkConfiguration,
   WalletDefaultNetworkConfigurationIds,
   defaultNetworksKeyedById,
@@ -115,7 +111,7 @@ function getNetworkFromChainId(chainId: number) {
   throw new Error(`Unknown chain ID: ${chainId}`);
 }
 
-function getStacksNetworkFromNetworkConfig(networkConfig: NetworkConfiguration) {
+export function getStacksNetworkFromNetworkConfig(networkConfig: NetworkConfiguration) {
   return {
     ...getNetworkFromChainId(networkConfig.chain.stacks.chainId),
     transactionVersion: whenStacksChainId(networkConfig.chain.stacks.chainId)({
@@ -130,17 +126,6 @@ function getStacksNetworkFromNetworkConfig(networkConfig: NetworkConfiguration) 
   };
 }
 
-export function useNetworkPreferenceStacksNetwork(): StacksNetwork {
-  const { networkPreference } = useSettings();
-
-  return useMemo(() => getStacksNetworkFromNetworkConfig(networkPreference), [networkPreference]);
-}
-
-export function useNetworkPreferenceBitcoinScureLibNetworkConfig() {
-  const { networkPreference } = useSettings();
-  return getBtcSignerLibNetworkConfigByMode(networkPreference.chain.bitcoin.mode);
-}
-
 function getNetworkFromNetworkName(stacksNetworkName: StacksNetworkName) {
   if (stacksNetworkName === 'testnet')
     return defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.testnet4];
@@ -152,14 +137,4 @@ function getNetworkFromNetworkName(stacksNetworkName: StacksNetworkName) {
 export function getStacksNetworkFromName(stacksNetworkName: StacksNetworkName): StacksNetwork {
   const networkConfig = getNetworkFromNetworkName(stacksNetworkName);
   return getStacksNetworkFromNetworkConfig(networkConfig);
-}
-
-interface CurrentAccountLoaderProps {
-  children(data: AccountId): React.ReactNode;
-  fallback: React.ReactNode;
-}
-export function CurrentAccountLoader({ fallback, children }: CurrentAccountLoaderProps) {
-  const { currentAccount } = useSettings();
-  if (currentAccount) return children(currentAccount);
-  return fallback;
 }

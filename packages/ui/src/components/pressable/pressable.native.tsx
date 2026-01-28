@@ -4,7 +4,8 @@ import { isDefined, isString } from '@leather.io/utils';
 
 import { useHaptics } from '../../hooks/use-haptics.native';
 import { usePressedState } from '../../hooks/use-pressed-state.native';
-import { type Theme, useTheme } from '../../native';
+import { useTheme } from '../../hooks/use-theme.native';
+import { type Theme } from '../../theme-native';
 import { PressableCore, PressableCoreProps, PressableRef } from './pressable-core.native';
 import { buildPressEffectStyles } from './pressable.build-press-effect-styles.native';
 import { PressEffect, ResolvedPressEffect } from './pressable.types.native';

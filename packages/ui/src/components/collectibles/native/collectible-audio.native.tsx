@@ -1,7 +1,9 @@
 import { WebView } from 'react-native-webview';
 
 import { HeadsetIcon } from '../../../icons/headset-icon.native';
-import { Box, Text, TouchableOpacity } from '../../../native';
+import { Box } from '../../box/box.native';
+import { TouchableOpacity } from '../../button/touchable-opacity.native';
+import { Text } from '../../text/text.native';
 import { CollectibleCard } from './collectible-card.native';
 
 interface CollectibleAudioProps {

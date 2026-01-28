@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { TokenDetailsProps } from '@/features/token/types';
-import { imageUnavailableLabel } from '@/features/token/utils/image-unavailable-label';
+import { getImageUnavailableLabel } from '@/features/token/utils/image-unavailable-label';
 import { t } from '@lingui/core/macro';
 
 import { InscriptionAsset } from '@leather.io/models';
@@ -37,7 +37,7 @@ export function Inscription({ item, height, onPress }: InscriptionProps) {
   }, [mimeType, src]);
 
   if (!src || src.trim() === '') {
-    return <ImageUnavailable height={height} message={imageUnavailableLabel} />;
+    return <ImageUnavailable height={height} message={getImageUnavailableLabel()} />;
   }
   return (
     <InscriptionComponent
@@ -46,7 +46,7 @@ export function Inscription({ item, height, onPress }: InscriptionProps) {
       height={height}
       src={isLoading ? '' : content || src}
       thumbnailSrc={thumbnailSrc}
-      imageUnavailableLabel={imageUnavailableLabel}
+      imageUnavailableLabel={getImageUnavailableLabel()}
       onPress={onPress ? () => onPress({ assetId: serializeAssetId(getAssetId(item)) }) : undefined}
     />
   );
