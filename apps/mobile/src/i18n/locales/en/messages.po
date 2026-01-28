@@ -529,6 +529,10 @@ msgstr "Code"
 msgid "Collectible Info"
 msgstr "Collectible Info"
 
+#: src/components/home/components/asset-tabs.tsx:30
+msgid "Collectibles"
+msgstr "Collectibles"
+
 #: src/features/token/components/token-loading.tsx:36
 #: src/features/token/stacks/sip9-token-details.tsx:53
 msgid "Collection"
@@ -1309,10 +1313,6 @@ msgstr "Network fee"
 #: src/app/settings/networks/index.tsx:47
 msgid "Networks"
 msgstr "Networks"
-
-#: src/components/home/components/asset-tabs.tsx:30
-msgid "NFTs"
-msgstr "NFTs"
 
 #: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:54
 msgid "No assets"
