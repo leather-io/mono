@@ -32,8 +32,8 @@ export function ReceiveAssetItem({ asset, onCopyAddress, onPress }: ReceiveAsset
     >
       <Cell.Icon>
         {{
-          BTC: <AssetAvatarIcon asset={btcAsset} size="sm" />,
-          STX: <AssetAvatarIcon asset={stxAsset} size="sm" />,
+          BTC: <AssetAvatarIcon asset={btcAsset} />,
+          STX: <AssetAvatarIcon asset={stxAsset} />,
         }[asset.symbol] ?? <PlaceholderIcon />}
       </Cell.Icon>
       <Cell.Content>
