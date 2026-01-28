@@ -8,6 +8,7 @@ import { Tabs } from '@leather.io/ui';
 import { RouteUrls } from '@shared/route-urls';
 
 import { LoadingSpinner } from '@app/components/loading-spinner';
+import { useBackgroundLocation } from '@app/routes/hooks/use-background-location';
 
 interface HomeTabsProps {
   children: React.ReactNode;
@@ -24,7 +25,7 @@ function getHomeTabs(showCollectibles: boolean) {
     ...(showCollectibles
       ? [
           {
-            label: 'NFTs',
+            label: 'Collectibles',
             value: RouteUrls.Collectibles,
             testId: 'tab-collectibles',
           },
@@ -38,14 +39,20 @@ function getHomeTabs(showCollectibles: boolean) {
   ];
 }
 
+function getActiveTab(pathname: string) {
+  return (
+    [RouteUrls.Activity, RouteUrls.Collectibles].find(route => pathname.startsWith(route)) ??
+    RouteUrls.Home
+  );
+}
+
 export function HomeTabs({ children, showCollectibles = true }: HomeTabsProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const backgroundLocation = useBackgroundLocation();
   const { pathname } = location;
   const homeTabs = getHomeTabs(showCollectibles);
-  const activeTab =
-    [RouteUrls.Activity, RouteUrls.Collectibles].find(route => pathname.startsWith(route)) ??
-    RouteUrls.Home;
+  const activeTab = getActiveTab(backgroundLocation?.pathname ?? pathname);
 
   return (
     <Stack flexGrow={1} gap="space.06">
