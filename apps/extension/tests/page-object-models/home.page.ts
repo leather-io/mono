@@ -68,9 +68,13 @@ export class HomePage {
   async getReceiveNativeSegwitAddress() {
     await this.goToReceiveDialog();
     await this.page.getByTestId(HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn).click();
-    const displayerAddress = await this.page
-      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-      .innerText();
+    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
+    await addressDisplayer.waitFor({ state: 'visible', timeout: 10000 });
+    await this.page.waitForFunction(() => {
+      const el = document.querySelector('[data-testid="address-displayer"]');
+      return el && el.textContent && el.textContent.trim().length > 0;
+    });
+    const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
@@ -84,9 +88,13 @@ export class HomePage {
     // await this.page.getByRole('button', { name: 'Copy address' }).click();
     // const address = await this.page.evaluate('navigator.clipboard.readText()');
     // return address;
-    const displayerAddress = await this.page
-      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-      .innerText();
+    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
+    await addressDisplayer.waitFor({ state: 'visible', timeout: 10000 });
+    await this.page.waitForFunction(() => {
+      const el = document.querySelector('[data-testid="address-displayer"]');
+      return el && el.textContent && el.textContent.trim().length > 0;
+    });
+    const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
@@ -96,9 +104,13 @@ export class HomePage {
     const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
     await delay(1000);
     if (await qrCodeBtn.isVisible()) await qrCodeBtn.click({ force: true });
-    const displayerAddress = await this.page
-      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-      .innerText();
+    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
+    await addressDisplayer.waitFor({ state: 'visible', timeout: 10000 });
+    await this.page.waitForFunction(() => {
+      const el = document.querySelector('[data-testid="address-displayer"]');
+      return el && el.textContent && el.textContent.trim().length > 0;
+    });
+    const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
