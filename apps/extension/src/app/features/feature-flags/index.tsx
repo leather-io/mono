@@ -28,7 +28,6 @@ export function createLDProvider() {
 interface FeatureFlags {
   releaseOnramperBuy: boolean;
   releaseOnramperSell: boolean;
-  homeTabsRevamp: boolean;
   assetsRevamp: boolean;
   activityRevamp: boolean;
 }

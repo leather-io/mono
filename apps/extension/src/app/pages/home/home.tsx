@@ -18,10 +18,10 @@ import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-
 import { AccountActions } from './components/account-actions-current/account-actions';
 import { AccountCard } from './components/account-card';
 import { AssetsSwitch } from './components/assets-switch';
-import { HomeTabsSwitch } from './components/home-tabs-switch';
+import { HomeTabs } from './components/home-tabs';
 
 export function Home() {
-  const { homeTabsRevamp, activityRevamp } = useFlags();
+  const { activityRevamp } = useFlags();
 
   return (
     <Flex
@@ -40,23 +40,17 @@ export function Home() {
         <PromoBanner />
       </Flex>
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
-      <HomeTabsSwitch>
+      <HomeTabs>
         <ModalBackgroundWrapper>
           <Route index element={<AssetsSwitch />} />
           <Route
             path={RouteUrls.Activity}
             element={activityRevamp ? <ActivityList /> : <ActivityListLegacy />}
-          >
-            {homePageModalRoutes}
-          </Route>
-          {homeTabsRevamp && (
-            <Route path={RouteUrls.Collectibles} element={<Collectibles />}>
-              {homePageModalRoutes}
-            </Route>
-          )}
+          />
+          <Route path={RouteUrls.Collectibles} element={<Collectibles />} />
           {homePageModalRoutes}
         </ModalBackgroundWrapper>
-      </HomeTabsSwitch>
+      </HomeTabs>
     </Flex>
   );
 }

@@ -27,7 +27,7 @@ export function AssetTabs({ listTab, setListTab }: AssetTabsProps) {
         />
         <TabButton
           isActive={listTab === 'collectibles'}
-          title={t`NFTs`}
+          title={t`Collectibles`}
           onPress={() => {
             setListTab('collectibles');
           }}
