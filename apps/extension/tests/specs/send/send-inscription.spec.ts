@@ -1,6 +1,8 @@
+import { expect } from '@playwright/test';
 import { TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS } from '@tests/mocks/constants';
 import { mockTestnetTestAccountInscriptionsRequests } from '@tests/mocks/mock-inscriptions-bis';
 import { mockTestnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxos';
+import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { getDisplayerAddress } from '@tests/utils';
 
@@ -24,8 +26,9 @@ test.describe('Send inscription', () => {
   });
 
   test.describe('valid send inscription data', () => {
-    test('should show the inscription review step', async ({ sendPage, networkPage }) => {
+    test('should show the inscription review step', async ({ homePage, sendPage, networkPage }) => {
       await networkPage.selectTestnet();
+      await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
       const inscriptionSendButton = sendPage.page.getByTestId(
@@ -41,11 +44,13 @@ test.describe('Send inscription', () => {
   test.describe('validation errors', () => {
     test('should show the insufficient balance error', async ({
       globalPage,
+      homePage,
       sendPage,
       networkPage,
     }) => {
       await mockTestnetTestAccountEmptyUtxosRequests(globalPage.page);
       await networkPage.selectTestnet();
+      await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
 
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
@@ -58,8 +63,9 @@ test.describe('Send inscription', () => {
       test.expect(errorLabel).toContain(FormErrorMessages.InsufficientFunds);
     });
 
-    test('should show invalid address error', async ({ sendPage, networkPage }) => {
+    test('should show invalid address error', async ({ homePage, sendPage, networkPage }) => {
       await networkPage.selectTestnet();
+      await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
 
       await sendPage.recipientInput.fill('123');
@@ -74,6 +80,7 @@ test.describe('Send inscription', () => {
 
     test('should show non-zero offset inscription error', async ({
       globalPage,
+      homePage,
       sendPage,
       networkPage,
     }) => {
@@ -84,6 +91,7 @@ test.describe('Send inscription', () => {
         },
       ]);
       await networkPage.selectTestnet();
+      await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
 
       await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
@@ -99,6 +107,7 @@ test.describe('Send inscription', () => {
 
   test('should show multiple inscription on utxo error', async ({
     globalPage,
+    homePage,
     sendPage,
     networkPage,
   }) => {
@@ -107,6 +116,7 @@ test.describe('Send inscription', () => {
       mockInscriptionResp,
     ]);
     await networkPage.selectTestnet();
+    await homePage.clickCollectiblesTab();
     await sendPage.selectInscription();
 
     await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
@@ -117,5 +127,95 @@ test.describe('Send inscription', () => {
 
     const errorLabel = await sendPage.formInputErrorLabel.textContent();
     test.expect(errorLabel).toContain(FormErrorMessages.UtxoWithMultipleInscriptions);
+  });
+
+  test.describe('modal close behavior', () => {
+    test('should return to collectibles tab when closing form via Escape', async ({
+      homePage,
+      sendPage,
+      networkPage,
+      page,
+    }) => {
+      await networkPage.selectTestnet();
+      await homePage.clickCollectiblesTab();
+      await sendPage.selectInscription();
+
+      await expect(sendPage.recipientInput).toBeVisible();
+
+      await page.keyboard.press('Escape');
+
+      const collectiblesTab = page.getByTestId(HomePageSelectors.CollectiblesTabBtn);
+      await expect(collectiblesTab).toHaveAttribute('data-state', 'active');
+    });
+
+    test('should return to collectibles tab when closing form via X button', async ({
+      homePage,
+      sendPage,
+      networkPage,
+      page,
+    }) => {
+      await networkPage.selectTestnet();
+      await homePage.clickCollectiblesTab();
+      await sendPage.selectInscription();
+
+      await expect(sendPage.recipientInput).toBeVisible();
+
+      const closeButton = page
+        .locator('button:has(svg)')
+        .filter({ has: page.locator('path') })
+        .last();
+      await closeButton.click();
+
+      const collectiblesTab = page.getByTestId(HomePageSelectors.CollectiblesTabBtn);
+      await expect(collectiblesTab).toHaveAttribute('data-state', 'active');
+    });
+
+    test('should return to collectibles tab when closing fee step via Escape', async ({
+      homePage,
+      sendPage,
+      networkPage,
+      page,
+    }) => {
+      await networkPage.selectTestnet();
+      await homePage.clickCollectiblesTab();
+      await sendPage.selectInscription();
+      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
+
+      const inscriptionSendButton = page.getByTestId(SendCryptoAssetSelectors.PreviewSendTxBtn);
+      await inscriptionSendButton.click();
+
+      await expect(sendPage.feesListItem.first()).toBeVisible();
+
+      await page.keyboard.press('Escape');
+
+      const collectiblesTab = page.getByTestId(HomePageSelectors.CollectiblesTabBtn);
+      await expect(collectiblesTab).toHaveAttribute('data-state', 'active');
+    });
+
+    test('should return to collectibles tab when closing fee step via X button', async ({
+      homePage,
+      sendPage,
+      networkPage,
+      page,
+    }) => {
+      await networkPage.selectTestnet();
+      await homePage.clickCollectiblesTab();
+      await sendPage.selectInscription();
+      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
+
+      const inscriptionSendButton = page.getByTestId(SendCryptoAssetSelectors.PreviewSendTxBtn);
+      await inscriptionSendButton.click();
+
+      await expect(sendPage.feesListItem.first()).toBeVisible();
+
+      const closeButton = page
+        .locator('button:has(svg)')
+        .filter({ has: page.locator('path') })
+        .last();
+      await closeButton.click();
+
+      const collectiblesTab = page.getByTestId(HomePageSelectors.CollectiblesTabBtn);
+      await expect(collectiblesTab).toHaveAttribute('data-state', 'active');
+    });
   });
 });

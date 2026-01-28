@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { type Location, useNavigate } from 'react-router';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Form, Formik } from 'formik';
@@ -8,6 +8,7 @@ import { Button, OrdinalAvatarIcon, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { ErrorLabel } from '@app/components/error-label';
 import { TextInputFieldError } from '@app/components/field-error';
 import { InscriptionPreview } from '@app/components/inscription-preview-card/components/inscription-preview';
@@ -23,6 +24,7 @@ export const recipientFieldName = 'recipient';
 
 export function SendInscriptionForm() {
   const navigate = useNavigate();
+  const backgroundLocation = useLocationStateWithCache<Location>('backgroundLocation');
   const { feeRates, inscription, recipient } = useSendInscriptionState();
   const { chooseTransactionFee, currentError, validationSchema, isCheckingFees } =
     useSendInscriptionForm();
@@ -44,7 +46,7 @@ export function SendInscriptionForm() {
               header={<SheetHeader title="Send" />}
               onGoBack={() => navigate(-1)}
               isShowing
-              onClose={() => navigate(RouteUrls.Home)}
+              onClose={() => navigate(backgroundLocation ?? RouteUrls.Home)}
               footer={
                 <Button
                   data-testid={SendCryptoAssetSelectors.PreviewSendTxBtn}
