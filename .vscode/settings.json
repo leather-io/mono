@@ -4,5 +4,6 @@
   "typescript.preferences.preferTypeOnlyAutoImports": true,
   "files.associations": {
     "*.mdx": "markdown"
-  }
+  },
+  "vitest.disableWorkspaceWarning": true
 }

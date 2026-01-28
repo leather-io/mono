@@ -1,0 +1,17 @@
+name: manage-changelog
+description: Manage unpublished changelog entries for mobile and extension apps
+
+inputs:
+  app:
+    description: 'The app to manage (mobile or extension)'
+    required: true
+  action:
+    description: 'The action to perform (sync or cut)'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Run changelog manager
+      shell: bash
+      run: pnpm lt changelog ${{ inputs.action }} --app=${{ inputs.app }}

@@ -25,6 +25,7 @@
     "lint:deps": "pnpm dependency-cruiser .",
     "lint:filenames": "pnpm ls-lint",
     "lint:fix": "turbo run lint:fix",
+    "lt": "pnpm --filter @leather.io/tools lt",
     "prepare": "husky",
     "syncpack:fix": "syncpack fix-mismatches",
     "syncpack:format": "syncpack format",

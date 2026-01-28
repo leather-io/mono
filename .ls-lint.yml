@@ -10,6 +10,8 @@ ignore:
   - .pnpm-local
   - .vscode
   - apps/*/node_modules
+  - tools/node_modules
+  - tools/dist
   - apps/mobile/coverage
   - apps/web/.wrangler
   - apps/mobile/.expo/*
