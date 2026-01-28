@@ -21,6 +21,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.88.0
 
+## [6.92.5](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.92.4...@leather.io/extension-v6.92.5) (2026-01-28)
+
+
+### Bug Fixes
+
+* **extension:** adjust size of collectible chain avatar icon, ref LEA-3414 ([994a23a](https://github.com/leather-io/mono/commit/994a23a75a4b4d3a07fa6c14d480e8661e2914bb))
+
 ## [6.92.4](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.92.3...@leather.io/extension-v6.92.4) (2026-01-27)
 
 

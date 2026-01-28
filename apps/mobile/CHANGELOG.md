@@ -19,6 +19,15 @@
     * @leather.io/ui bumped to 1.80.0
     * @leather.io/utils bumped to 0.43.0
 
+## [2.97.9](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.8...@leather.io/mobile-v2.97.9) (2026-01-28)
+
+
+### Bug Fixes
+
+* **mobile:** adjust SkeletonLoader height for total balance ([b33fc95](https://github.com/leather-io/mono/commit/b33fc9531a181b11d9d901d1788acdeaa7d081a4))
+* **mobile:** make sure secret key copy button is visible on small screens ([c2c9359](https://github.com/leather-io/mono/commit/c2c9359c477c3272347a7f2f7df930bd8cc543ad))
+* **mobile:** use correct size for receive screen asset avatar ([62f7148](https://github.com/leather-io/mono/commit/62f7148f949c527c11c6aa381e8617603ceddd8c))
+
 ## [2.97.8](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.7...@leather.io/mobile-v2.97.8) (2026-01-27)
 
 
