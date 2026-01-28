@@ -19,7 +19,7 @@ const mockPostCondition: NonFungiblePostCondition = {
   assetId: hexToCV('0x0100000000000000000000000000000003'),
 };
 
-describe(handlePostConditions.name, function () {
+describe(handlePostConditions.name, () => {
   it('should not modify a post condition where the principal is a contract', () => {
     const transformedPostCondition = handlePostConditions(
       [postConditionToWire(mockPostCondition)],

@@ -6,7 +6,7 @@ interface DeriveEncryptionKeyArgs {
   salt: string;
 }
 export async function deriveEncryptionKey(args: DeriveEncryptionKeyArgs): Promise<string> {
-  return new Promise(function (resolve) {
+  return new Promise(resolve => {
     function handler(e: MessageEvent<string>) {
       return resolve(e.data);
     }

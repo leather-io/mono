@@ -2063,7 +2063,7 @@ msgstr "Unknown"
 msgid "Unknown error during version check"
 msgstr "Unknown error during version check"
 
-#: src/components/splash-screen-guard/splash-screen-guard.tsx:143
+#: src/components/splash-screen-guard/splash-screen-guard.tsx:137
 msgid "Unlock"
 msgstr "Unlock"
 
