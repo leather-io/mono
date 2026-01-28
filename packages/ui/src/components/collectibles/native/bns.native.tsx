@@ -1,6 +1,8 @@
 import { Image } from 'expo-image';
 
-import { Box, Pressable, Text } from '../../../native';
+import { Box } from '../../box/box.native';
+import { Pressable } from '../../pressable/pressable.native';
+import { Text } from '../../text/text.native';
 import { CollectibleImageProps } from './collectible-image.native';
 
 export function BnsImage({ alt, src, height = 200, onPress }: CollectibleImageProps) {

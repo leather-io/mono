@@ -4,7 +4,7 @@ import ViewShot, { captureRef } from 'react-native-view-shot';
 import { App } from '@/store/apps/utils';
 import { getDappMap } from '@/utils/dapps';
 import * as Application from 'expo-application';
-import * as FileSystem from 'expo-file-system';
+import { File, Paths } from 'expo-file-system';
 import { z } from 'zod';
 
 import {
@@ -51,8 +51,8 @@ export const messagePartialZodObject = z.object({
   method: z.string(),
 });
 
-function getScreenshotPath(hostname: string) {
-  return `${FileSystem.documentDirectory}${hostname}_screenshot.jpg`;
+function getScreenshotFile(hostname: string) {
+  return new File(Paths.document, `${hostname}_screenshot.jpg`);
 }
 // Capture screenshot using react-native-view-shot
 export async function captureScreenshot(viewShotRef: RefObject<ViewShot | null>, hostname: string) {
@@ -60,21 +60,24 @@ export async function captureScreenshot(viewShotRef: RefObject<ViewShot | null>,
 
   try {
     // For some reason on iOS we can't read a tmpfile, we need to use b64 here
-    const b64string = await captureRef(viewShotRef, {
+    const tmpFileUri = await captureRef(viewShotRef, {
       format: 'png',
       quality: 0.6,
       width: 300,
       height: 600,
-      result: 'base64',
+      result: 'tmpfile',
     });
 
-    const screenshotPath = getScreenshotPath(hostname);
+    const tmpFile = new File(tmpFileUri);
+    const screenshotFile = getScreenshotFile(hostname);
 
-    await FileSystem.writeAsStringAsync(screenshotPath, b64string, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
+    if (screenshotFile.exists) {
+      screenshotFile.delete();
+    }
 
-    return screenshotPath;
+    tmpFile.copy(screenshotFile);
+
+    return screenshotFile.uri;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error capturing screenshot:', error);

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import { useBitcoinPayerFromKeyOrigin } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
-import { useNetworkPreferenceBitcoinScureLibNetworkConfig } from '@/store/settings/settings.read';
+import { useNetworkPreferenceBitcoinScureLibNetworkConfig } from '@/store/settings/settings';
 
 import { CoinSelectionRecipient, generateBitcoinUnsignedTransaction } from '@leather.io/bitcoin';
 import { Money, OwnedUtxo } from '@leather.io/models';

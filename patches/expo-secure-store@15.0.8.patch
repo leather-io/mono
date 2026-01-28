@@ -1,5 +1,5 @@
 diff --git a/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt b/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
-index 62a9908e1f70620d9e721ae681de43696c0c5395..c43897d715226659654dff790113545d1466b4e5 100644
+index a281b88ec7d9d19870c8707347251cac2137b4c5..07e73a591309a431364168b61422efd32978d037 100644
 --- a/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
 +++ b/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
 @@ -58,8 +58,10 @@ class AuthenticationHelper(
@@ -15,7 +15,7 @@ index 62a9908e1f70620d9e721ae681de43696c0c5395..c43897d715226659654dff790113545d
          throw AuthenticationException("No hardware available for biometric authentication. Use expo-local-authentication to check if the device supports it")
        }
 diff --git a/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt b/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
-index e5729cc74a4d1066f9979e139b31d321e18f9a95..2455cdfc916f52a1b1fad5cfb679340d0cbf275d 100644
+index 7437374f164c7c7a47b7cb78fffb374cf52b6905..92a07c290f296c8fcabce64e761ae39fce0b8895 100644
 --- a/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
 +++ b/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
 @@ -1,6 +1,7 @@
@@ -51,10 +51,10 @@ index 3a12dc996a27c1d97ac110d808f1cdf98e5379b9..d76addfd8d616a2e8d8dae3489936971
  
      val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, keyStore.provider)
 diff --git a/ios/SecureStoreModule.swift b/ios/SecureStoreModule.swift
-index 439b08dec63f7774ce160b149a6cfb189cde0f9b..625fa30955680f082416d46c2d8e0f8abb57cd35 100644
+index 584df218365e2ebf176f6d332970a3ba64d7a12e..83b7eeb4fa62488cf0c7ccfe8889553ed1ee1aaa 100644
 --- a/ios/SecureStoreModule.swift
 +++ b/ios/SecureStoreModule.swift
-@@ -104,7 +104,7 @@ public final class SecureStoreModule: Module {
+@@ -102,7 +102,7 @@ public final class SecureStoreModule: Module {
        }
  
        var error: Unmanaged<CFError>? = nil

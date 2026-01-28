@@ -1,8 +1,5 @@
-import { useSettings } from '@/store/settings/settings';
-import {
-  getStacksNetworkFromName,
-  useNetworkPreferenceStacksNetwork,
-} from '@/store/settings/settings.read';
+import { useNetworkPreferenceStacksNetwork, useSettings } from '@/store/settings/settings';
+import { getStacksNetworkFromName } from '@/store/settings/settings.read';
 import { StacksNetwork, StacksNetworks } from '@stacks/network';
 
 import { NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';

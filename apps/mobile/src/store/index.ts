@@ -1,5 +1,5 @@
 import { isProduction } from '@/shared/environment';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import devToolsEnhancer from 'redux-devtools-expo-dev-plugin';
 import {
@@ -14,12 +14,12 @@ import {
 } from 'redux-persist';
 import z from 'zod';
 
-import { keychainSlice, resetWallet } from '@leather.io/state';
+import { keychainSlice } from '@leather.io/state';
 import { walletEntitySchema, walletSlice } from '@leather.io/state/wallet';
 
 import { accountEntitySchema, accountsSlice } from './accounts/accounts.write';
 import { appsSlice } from './apps/apps.write';
-import { deleteAllMnemonics } from './secure-store/mnemonic-store';
+// import { deleteAllMnemonics } from './secure-store/mnemonic-store';
 import { settingsSlice } from './settings/settings.write';
 import { settingsSchema } from './settings/utils';
 import { persistConfig } from './storage-persistors';
@@ -58,8 +58,8 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-export function clearAllPersistedStorage(fingerprints: string[]) {
-  void Promise.all([deleteAllMnemonics(fingerprints), AsyncStorage.clear()]);
-  store.dispatch(resetWallet());
-}
+// export function clearAllPersistedStorage(fingerprints: string[]) {
+//   void Promise.all([deleteAllMnemonics(fingerprints), AsyncStorage.clear()]);
+//   store.dispatch(resetWallet());
+// }
 export type StoreDispatch = typeof store.dispatch;

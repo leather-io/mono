@@ -1,4 +1,4 @@
-import { AvailableLanguageCode } from '@/i18n/languages';
+import { AvailableLanguageCode, defaultLanguage } from '@/i18n/languages';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { REHYDRATE } from 'redux-persist';
 
@@ -8,12 +8,12 @@ import {
   BitcoinUnit,
   DefaultNetworkConfigurations,
   QuoteCurrency,
+  WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
 import { handleAppResetWithState } from '@leather.io/state';
 import { userAddsWallet } from '@leather.io/state/wallet';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { initialState } from './settings';
 import { handleSettingsRehydration } from './settings-rehydration';
 import {
   AppIconPreference,
@@ -24,8 +24,30 @@ import {
   NotificationsPreference,
   PrivacyModePreference,
   SecurityLevelPreference,
+  type SettingsState,
   ThemePreference,
 } from './utils';
+
+const initialState: SettingsState = {
+  accountDisplayPreference: 'native-segwit',
+  analyticsPreference: 'consent-given',
+  bitcoinUnitPreference: 'bitcoin',
+  createdOn: new Date().toISOString(),
+  emailAddressPreference: '',
+  fiatCurrencyPreference: 'USD', // TODO LEA-2723: migrate to quoteCurrencyPreference
+  networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
+  privacyModePreference: 'visible',
+  hapticsPreference: 'enabled',
+  securityLevelPreference: 'not-selected',
+  themePreference: 'system',
+  lastActive: null,
+  notificationsPreference: 'not-selected',
+  languagePreference: defaultLanguage,
+  languagePreferenceSource: 'system',
+  assetVisibility: {},
+  currentAccount: null,
+  appIconPreference: 'default',
+};
 
 export const settingsSlice = createSlice({
   name: 'settings',

@@ -11,7 +11,7 @@ import {
 } from '@/features/send/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
-import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
+import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/core/macro';

@@ -1,14 +1,35 @@
 import { useSelector } from 'react-redux';
 
+import { t } from '@lingui/core/macro';
 import { createSelector } from '@reduxjs/toolkit';
 
 import { isDefined } from '@leather.io/utils';
 
 import { RootState } from '..';
 import { useAppSelector } from '../utils';
-import { initializeAccount } from './accounts';
 import { accountsAdapter } from './accounts.write';
-import { AccountStatus } from './utils';
+import { AccountStatus, type AccountStore, deriveIconFromAccountId } from './utils';
+
+export function deserializeAccountId(accountId: string) {
+  const [fingerprint, accountIndex] = accountId.split('/');
+  if (!fingerprint || !accountIndex) throw new Error('Invalid account ID ' + accountId);
+  return { fingerprint, accountIndex: Number(accountIndex) };
+}
+
+export function initializeAccount(account: AccountStore) {
+  const accountId = deserializeAccountId(account.id);
+  const displayIndex = accountId.accountIndex + 1;
+
+  return {
+    ...account,
+    ...accountId,
+    status: account.status ?? ('active' satisfies AccountStatus),
+    name: account.name ?? t`Account ${displayIndex}`,
+    icon: account.icon ?? deriveIconFromAccountId(account.id),
+  };
+}
+
+export type Account = ReturnType<typeof initializeAccount>;
 
 const selectors = accountsAdapter.getSelectors((state: RootState) => state.accounts);
 

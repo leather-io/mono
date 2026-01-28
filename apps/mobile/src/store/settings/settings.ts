@@ -1,22 +1,26 @@
+import { useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { AvailableLanguageCode, defaultLanguage } from '@/i18n/languages';
+import { AvailableLanguageCode } from '@/i18n/languages';
 import { analytics } from '@/utils/analytics';
 import { whenTheme } from '@/utils/when-theme';
+import type { StacksNetwork } from '@stacks/network';
 
+import { getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
 import {
   AccountDisplayPreference,
+  type AccountId,
   AnalyticsPreference,
   BitcoinUnit,
   DefaultNetworkConfigurations,
   QuoteCurrency,
-  WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
 import { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { useAppDispatch } from '../utils';
 import {
+  getStacksNetworkFromNetworkConfig,
   selectAccountDisplayPreference,
   selectAnalyticsPreference,
   selectAppIconPreference,
@@ -63,30 +67,8 @@ import {
   NotificationsPreference,
   PrivacyModePreference,
   SecurityLevelPreference,
-  SettingsState,
   ThemePreference,
 } from './utils';
-
-export const initialState: SettingsState = {
-  accountDisplayPreference: 'native-segwit',
-  analyticsPreference: 'consent-given',
-  bitcoinUnitPreference: 'bitcoin',
-  createdOn: new Date().toISOString(),
-  emailAddressPreference: '',
-  fiatCurrencyPreference: 'USD', // TODO LEA-2723: migrate to quoteCurrencyPreference
-  networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
-  privacyModePreference: 'visible',
-  hapticsPreference: 'enabled',
-  securityLevelPreference: 'not-selected',
-  themePreference: 'system',
-  lastActive: null,
-  notificationsPreference: 'not-selected',
-  languagePreference: defaultLanguage,
-  languagePreferenceSource: 'system',
-  assetVisibility: {},
-  currentAccount: null,
-  appIconPreference: 'default',
-};
 
 export function useSettings() {
   const dispatch = useAppDispatch();
@@ -254,4 +236,25 @@ export function useSettings() {
       });
     },
   };
+}
+
+interface CurrentAccountLoaderProps {
+  children(data: AccountId): React.ReactNode;
+  fallback: React.ReactNode;
+}
+export function CurrentAccountLoader({ fallback, children }: CurrentAccountLoaderProps) {
+  const { currentAccount } = useSettings();
+  if (currentAccount) return children(currentAccount);
+  return fallback;
+}
+
+export function useNetworkPreferenceStacksNetwork(): StacksNetwork {
+  const { networkPreference } = useSettings();
+
+  return useMemo(() => getStacksNetworkFromNetworkConfig(networkPreference), [networkPreference]);
+}
+
+export function useNetworkPreferenceBitcoinScureLibNetworkConfig() {
+  const { networkPreference } = useSettings();
+  return getBtcSignerLibNetworkConfigByMode(networkPreference.chain.bitcoin.mode);
 }

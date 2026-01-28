@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { calculateDefaultStacksFee } from '@/features/send/utils';
-import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
+import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import { StacksNetwork } from '@stacks/network';

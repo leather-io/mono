@@ -1,6 +1,7 @@
 import { BaseTheme, BoxProps } from '@shopify/restyle';
 
-import { Box, Theme } from '../../../native';
+import type { Theme } from '../../../theme-native';
+import { Box } from '../../box/box.native';
 
 interface CollectibleCardProps<Theme extends BaseTheme> extends BoxProps<Theme> {
   children: React.ReactNode;
