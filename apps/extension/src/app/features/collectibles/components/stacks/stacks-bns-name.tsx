@@ -9,7 +9,7 @@ export function StacksBnsName(props: { bnsName: string }) {
 
   return (
     <CollectibleItemLayout
-      collectibleTypeIcon={<StxAvatarIcon size="xl" />}
+      collectibleTypeIcon={<StxAvatarIcon size="md" />}
       subtitle="Bitcoin Naming System"
       title={bnsName}
     >

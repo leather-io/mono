@@ -26,7 +26,7 @@ export function InscriptionText({
   return (
     <CollectibleText
       data-testid={SendCryptoAssetSelectors.Inscription}
-      icon={<OrdinalAvatarIcon size="xl" />}
+      icon={<OrdinalAvatarIcon size="md" />}
       key={inscriptionNumber}
       onClickCallToAction={onClickCallToAction}
       onClickSend={onClickSend}
