@@ -46,7 +46,7 @@ export function AccountTotalBalance({ account }: AccountTotalBalanceProps) {
         <NetworkBadge />
       </Box>
       <Box>
-        <SkeletonLoader height={32} width={200} isLoading={totalBalance.state === 'loading'}>
+        <SkeletonLoader height={44} width={200} isLoading={totalBalance.state === 'loading'}>
           <AccountBalance
             fingerprint={account.fingerprint}
             accountIndex={account.accountIndex}
