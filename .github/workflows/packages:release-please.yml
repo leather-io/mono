@@ -50,3 +50,27 @@ jobs:
 
       - name: publish-to-npm
         run: pnpm --filter="./packages/*" publish --no-git-checks
+
+  sync-changelogs:
+    needs: release-please
+    runs-on: ubuntu-latest
+    if: needs.release-please.outputs.releases_created
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.LEATHER_BOT }}
+
+      - uses: ./.github/actions/provision
+
+      - name: sync-unpublished-changelogs
+        run: |
+          pnpm lt changelog sync --app=mobile
+          pnpm lt changelog sync --app=extension
+
+      - name: commit-changelog-updates
+        run: |
+          git config user.name "leather-bot"
+          git config user.email "leather-bot@leather.io"
+          git add apps/mobile/CHANGELOG.md apps/extension/CHANGELOG.md
+          git diff --staged --quiet || git commit -m "chore: sync unpublished changelog sections"
+          git push

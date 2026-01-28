@@ -1,26 +1,10 @@
 # Changelog
 
-# Changelog
+## Unpublished
 
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @leather.io/analytics bumped to 3.13.0
-    * @leather.io/bitcoin bumped to 0.32.1
-    * @leather.io/constants bumped to 0.25.2
-    * @leather.io/crypto bumped to 1.11.7
-    * @leather.io/models bumped to 0.40.0
-    * @leather.io/provider bumped to 1.5.8
-    * @leather.io/query bumped to 2.41.9
-    * @leather.io/rpc bumped to 2.20.7
-    * @leather.io/services bumped to 1.28.1
-    * @leather.io/stacks bumped to 1.16.1
-    * @leather.io/ui bumped to 1.80.0
-    * @leather.io/utils bumped to 0.43.0
+No unreleased changes.
 
 ## [2.97.9](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.8...@leather.io/mobile-v2.97.9) (2026-01-28)
-
 
 ### Bug Fixes
 
@@ -30,11 +14,9 @@
 
 ## [2.97.8](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.7...@leather.io/mobile-v2.97.8) (2026-01-27)
 
-
 ### Bug Fixes
 
 * enforce dimensions window ([be0a281](https://github.com/leather-io/mono/commit/be0a2816d5383045045d851c9b7be90432f0554d))
-
 
 ### Dependencies
 
@@ -44,19 +26,16 @@
 
 ## [2.97.7](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.6...@leather.io/mobile-v2.97.7) (2026-01-27)
 
-
 ### Bug Fixes
 
 * **mobile:** add sBTC bridging flag in Bitcoin token details ([466723e](https://github.com/leather-io/mono/commit/466723e3cce622bb5aa9b00d1a5ce6d1fab407f1))
 
 ## [2.97.6](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.5...@leather.io/mobile-v2.97.6) (2026-01-27)
 
-
 ### Bug Fixes
 
 * **mobile:** bump expo module version for build compatiblity ([540dc4a](https://github.com/leather-io/mono/commit/540dc4af5db66ca662530f5b5ab2aa8e649a8cf2))
 * **mobile:** migration to v2 for older versions ([51ff2b9](https://github.com/leather-io/mono/commit/51ff2b95aeaf7924d8b572a0983cc849a518e23d))
-
 
 ### Dependencies
 
@@ -66,11 +45,9 @@
 
 ## [2.97.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.4...@leather.io/mobile-v2.97.5) (2026-01-26)
 
-
 ### Bug Fixes
 
 * 16kb memory ([47ea4e4](https://github.com/leather-io/mono/commit/47ea4e4becd5cd51cde3d095c3d7e624bf0cb112))
-
 
 ### Dependencies
 
@@ -80,14 +57,12 @@
 
 ## [2.97.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.3...@leather.io/mobile-v2.97.4) (2026-01-26)
 
-
 ### Bug Fixes
 
 * icons sheet performance ([6bc4ee4](https://github.com/leather-io/mono/commit/6bc4ee4013eaeff430551e6666ba78989da17762))
 * menu items ([c90004d](https://github.com/leather-io/mono/commit/c90004d37faa67cf7ed1bd2dc82816b2d905d04f))
 
 ## [2.97.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.2...@leather.io/mobile-v2.97.3) (2026-01-23)
-
 
 ### Bug Fixes
 
@@ -97,7 +72,6 @@
 * **mobile:** migrate to correct fingerprint format ([ef15f7a](https://github.com/leather-io/mono/commit/ef15f7a3f3ea499bf6f1037d147b95c86aef0535))
 * remove premature error in getMnemonic function ([0655589](https://github.com/leather-io/mono/commit/06555892fb28e46f3165d685b780a75d441cb7a2))
 * update redux migrations and secure store migrations. add tests ([726f23a](https://github.com/leather-io/mono/commit/726f23a5785f2bdfafee890faaa5008ec15b66cb))
-
 
 ### Dependencies
 
@@ -120,13 +94,11 @@
 
 ## [2.97.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.1...@leather.io/mobile-v2.97.2) (2026-01-22)
 
-
 ### Bug Fixes
 
 * **mobile:** fix status bar color ([d5edeaf](https://github.com/leather-io/mono/commit/d5edeafe7a612f95647525514a9ea92053c2932b))
 
 ## [2.97.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.0...@leather.io/mobile-v2.97.1) (2026-01-21)
-
 
 ### Bug Fixes
 
@@ -134,13 +106,11 @@
 
 ## [2.97.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.5...@leather.io/mobile-v2.97.0) (2026-01-21)
 
-
 ### Features
 
 * **mobile:** add input readiness flag to swap state ([82b2bc0](https://github.com/leather-io/mono/commit/82b2bc0431088e5b1a726837adb823755cf88c4b))
 * **mobile:** disable sBTC bridging via LaunchDarkly flag ([2235048](https://github.com/leather-io/mono/commit/2235048da2bd70046f5e9cce324c7cd6781b38a4))
 * **mobile:** integrate spendable amount query into swap state and readiness checks ([8097563](https://github.com/leather-io/mono/commit/8097563b1d8f02d60b7c957e1dd27cd019f19720))
-
 
 ### Bug Fixes
 
@@ -152,7 +122,6 @@
 * **mobile:** skip prepare scripts during EAS build ([0ce669f](https://github.com/leather-io/mono/commit/0ce669fc6b22712ee510efbc066d78fa00d08699))
 * **mobile:** wallet state not rehydrating after dev reload ([145d4c3](https://github.com/leather-io/mono/commit/145d4c3a45488520161c4f58eb06296e1ab31071))
 * use Screen.List for consistent rendering of activity list ([4c21512](https://github.com/leather-io/mono/commit/4c2151276f33c996bd99cc5ee9278a547d918e0f))
-
 
 ### Dependencies
 
@@ -174,7 +143,6 @@
 
 ## [2.96.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.4...@leather.io/mobile-v2.96.5) (2026-01-12)
 
-
 ### Dependencies
 
 * The following workspace dependencies were updated
@@ -186,7 +154,6 @@
 
 ## [2.96.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.3...@leather.io/mobile-v2.96.4) (2026-01-07)
 
-
 ### Dependencies
 
 * The following workspace dependencies were updated
@@ -196,13 +163,11 @@
 
 ## [2.96.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.2...@leather.io/mobile-v2.96.3) (2026-01-07)
 
-
 ### Bug Fixes
 
 * givc usdcx priority in mobile and show in empty wallets ([22d5673](https://github.com/leather-io/mono/commit/22d5673f2f71665fd3346551c6224fa2f64641a3))
 
 ## [2.96.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.1...@leather.io/mobile-v2.96.2) (2026-01-06)
-
 
 ### Bug Fixes
 
@@ -212,7 +177,6 @@
 * **extension:** incorrect account balance totals ([a299450](https://github.com/leather-io/mono/commit/a299450ec583a6e7cd82f82ce61e8c0ed57284a5))
 * **mobile:** package advisories ([50fb598](https://github.com/leather-io/mono/commit/50fb5984f9e9c3e0a1dbd3e7f2b2bcd8083e88e4))
 * **mobile:** remove firebase-tools ([cbbddcc](https://github.com/leather-io/mono/commit/cbbddccf0666df6e5b49f36d7708c3bcea833a6c))
-
 
 ### Dependencies
 
@@ -227,7 +191,6 @@
 
 ## [2.96.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.96.0...@leather.io/mobile-v2.96.1) (2025-12-19)
 
-
 ### Dependencies
 
 * The following workspace dependencies were updated
@@ -236,7 +199,6 @@
 
 ## [2.96.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.95.1...@leather.io/mobile-v2.96.0) (2025-12-18)
 
-
 ### Features
 
 * **mobile:** add support for swap execution constraints ([2dcce76](https://github.com/leather-io/mono/commit/2dcce76ea480391b6122e54d924b250334367682))
@@ -244,11 +206,9 @@
 * **mobile:** improve target asset display ordering swap ([f6d7723](https://github.com/leather-io/mono/commit/f6d7723e0980a8d5ba07b2357090df950857a8d4))
 * **mobile:** update enriched swap quotes with new fields ([0346010](https://github.com/leather-io/mono/commit/0346010cd9e9e001eaa6fd142cd6e8fc12c7ad1e))
 
-
 ### Bug Fixes
 
 * use uniqueArray to useQueries and cache nft to avoid duplicate queries ([b391f2b](https://github.com/leather-io/mono/commit/b391f2bbb52897d6c8fe6d158bd7409ac9213231))
-
 
 ### Dependencies
 
@@ -269,7 +229,6 @@
 
 ## [2.95.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.95.0...@leather.io/mobile-v2.95.1) (2025-12-17)
 
-
 ### Dependencies
 
 * The following workspace dependencies were updated
@@ -282,11 +241,9 @@
 
 ## [2.95.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.94.0...@leather.io/mobile-v2.95.0) (2025-12-15)
 
-
 ### Features
 
 * add withdrawal and fee logic to sbtc swap provider service ([3d277dd](https://github.com/leather-io/mono/commit/3d277dd8e1f56eae7772b4a042f66288b87101ba))
-
 
 ### Dependencies
 
@@ -309,18 +266,15 @@
 
 ## [2.94.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.4...@leather.io/mobile-v2.94.0) (2025-12-15)
 
-
 ### Features
 
 * **mobile:** add app icon switcher ([d8bd4b2](https://github.com/leather-io/mono/commit/d8bd4b28446f9a7ad01ddbbcef1beb5a0676d8b1))
 * **mobile:** add swap submission ([89080ea](https://github.com/leather-io/mono/commit/89080eaf5c49a9466a0fdebbfeb46ea58eda563e))
 * **mobile:** rename nativeAsset -&gt; networkFeeAsset ([be7f9c7](https://github.com/leather-io/mono/commit/be7f9c7504539b4d65d8cb5fb2be2de761ae9ca9))
 
-
 ### Bug Fixes
 
 * **mobile:** make idle take precedence in swap live estimate ([fe66956](https://github.com/leather-io/mono/commit/fe66956952fc9cf21ba1f7f4773ad6a826b80213))
-
 
 ### Dependencies
 
@@ -331,11 +285,9 @@
 
 ## [2.93.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.3...@leather.io/mobile-v2.93.4) (2025-12-09)
 
-
 ### Bug Fixes
 
 * **mobile:** update font path to fix production build issues ([0d93603](https://github.com/leather-io/mono/commit/0d93603648af750f629b7126afdeaba09fec13c2))
-
 
 ### Dependencies
 
@@ -358,7 +310,6 @@
 
 ## [2.93.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.2...@leather.io/mobile-v2.93.3) (2025-12-09)
 
-
 ### Dependencies
 
 * The following workspace dependencies were updated
@@ -367,11 +318,9 @@
 
 ## [2.93.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.1...@leather.io/mobile-v2.93.2) (2025-12-08)
 
-
 ### Bug Fixes
 
 * eslint ([46a0d36](https://github.com/leather-io/mono/commit/46a0d36c64e57f5d609738a56b6b0ae6cdb3a03c))
-
 
 ### Dependencies
 
@@ -397,7 +346,6 @@
 
 ## [2.93.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.93.0...@leather.io/mobile-v2.93.1) (2025-12-03)
 
-
 ### Dependencies
 
 * The following workspace dependencies were updated
@@ -406,12 +354,10 @@
 
 ## [2.93.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.92.0...@leather.io/mobile-v2.93.0) (2025-12-02)
 
-
 ### Features
 
 * init queries package ([38591fa](https://github.com/leather-io/mono/commit/38591fabf435fdea2d0691adafc12e93f2cb7b2b))
 * **mobile:** add scroll-to-top to global tabs ([74252a6](https://github.com/leather-io/mono/commit/74252a6c478c98efdc0e930da11991d1463eb3c0))
-
 
 ### Dependencies
 
@@ -421,7 +367,6 @@
     * @leather.io/ui bumped to 1.98.2
 
 ## [2.92.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.91.0...@leather.io/mobile-v2.92.0) (2025-12-02)
-
 
 ### Features
 
@@ -434,12 +379,10 @@
 * **mobile:** display swap asset search conditionally ([3971631](https://github.com/leather-io/mono/commit/39716319839c9c18ad1fa8136967d1d56010909d))
 * **mobile:** fade swap review details when refetching ([0d7bafa](https://github.com/leather-io/mono/commit/0d7bafa20df0f2493ff0aadccc9178569887ff25))
 
-
 ### Bug Fixes
 
 * **mobile:** fix swap asset selector loading layout after skeleton update ([2a86a8b](https://github.com/leather-io/mono/commit/2a86a8b30877df0013edb5307c932b8d4f6abc89))
 * tsdown upgrade ([9bd347b](https://github.com/leather-io/mono/commit/9bd347b62e2deb9f7b65fa462b5fa281f4d106aa))
-
 
 ### Dependencies
 
@@ -464,7 +407,6 @@
 
 ## [2.91.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.90.0...@leather.io/mobile-v2.91.0) (2025-11-26)
 
-
 ### Features
 
 * decompose collectibles service ([06c88f2](https://github.com/leather-io/mono/commit/06c88f2d336cac777b5acbf2cc933a65eadba7f2))
@@ -472,12 +414,10 @@
 * **mobile:** add basic swap screen transitions ([d829f21](https://github.com/leather-io/mono/commit/d829f21bb4d8876595259977f2669eb08347b907))
 * **mobile:** add refetching to swap queries ([05200fc](https://github.com/leather-io/mono/commit/05200fc3aa94c9db1807a5741b179e8f90edde24))
 
-
 ### Bug Fixes
 
 * **mobile:** fix and simplify asset item animation in Send ([37dd62e](https://github.com/leather-io/mono/commit/37dd62e2dd2b262959fdcf2856d3ab231b56a70a))
 * **mobile:** improve the swap target amount animation ([790ea2a](https://github.com/leather-io/mono/commit/790ea2a41f8335802e526168624c5bd7fffa97c0))
-
 
 ### Dependencies
 
@@ -498,7 +438,6 @@
     * @leather.io/utils bumped to 0.49.1
 
 ## [2.90.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.89.0...@leather.io/mobile-v2.90.0) (2025-11-19)
-
 
 ### Features
 
@@ -526,7 +465,6 @@
 * **web:** sip10 balances and assets ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
 * **web:** stacks portfolio balance ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
 
-
 ### Bug Fixes
 
 * **mobile:** ensure translations updated ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
@@ -544,7 +482,6 @@
 * **web:** layout as per designs ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
 * **web:** remove unused ui ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
 * **web:** remove unused var ([0e664a7](https://github.com/leather-io/mono/commit/0e664a7066a31776ac7e5ec60fa5a0ad893b96ff))
-
 
 ### Dependencies
 
@@ -565,13 +502,11 @@
 
 ## [2.89.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.88.0...@leather.io/mobile-v2.89.0) (2025-11-19)
 
-
 ### Features
 
 * **mobile:** show swap target asset balance ([2e830b1](https://github.com/leather-io/mono/commit/2e830b1f2cd6c166fd480d24dda609898d8025d5))
 * **mobile:** show swap target fiat amount ([a79833c](https://github.com/leather-io/mono/commit/a79833c2d7ed92b659d00e7d7a7fb4dda2dcdc6f))
 * **mobile:** sync target amount update with fee status ([89e4d69](https://github.com/leather-io/mono/commit/89e4d69c9e03d3e81925f50900b184b888daee08))
-
 
 ### Dependencies
 
@@ -582,11 +517,9 @@
 
 ## [2.88.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.87.1...@leather.io/mobile-v2.88.0) (2025-11-17)
 
-
 ### Features
 
 * add onramper to mobile and move onramper to ui package ([42a4110](https://github.com/leather-io/mono/commit/42a4110becbde9496e814e45371387400f0fd126))
-
 
 ### Dependencies
 
@@ -597,14 +530,12 @@
 
 ## [2.87.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.87.0...@leather.io/mobile-v2.87.1) (2025-11-17)
 
-
 ### Bug Fixes
 
 * **mobile:** favour ord.io for viewing inscriptions ([ee42dd6](https://github.com/leather-io/mono/commit/ee42dd66ae0074bc1662928755ce418d1da08297))
 * **mobile:** fix fallback ui image ([32a6554](https://github.com/leather-io/mono/commit/32a6554ed2a1b4712b798c6c452933126b1c1f8e))
 * **mobile:** ord.io preview for html and image, fix bug showing stamp-details ([716bf48](https://github.com/leather-io/mono/commit/716bf4802f94ca01d13ececa7ec323845539cbaf))
 * **mobile:** use react-svg for SVGs for improved rendering ([c851a47](https://github.com/leather-io/mono/commit/c851a476f6106617990e9261aee9e957436a24dd))
-
 
 ### Dependencies
 
@@ -625,17 +556,14 @@
 
 ## [2.87.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.86.0...@leather.io/mobile-v2.87.0) (2025-11-17)
 
-
 ### Features
 
 * **mobile:** add quote price information to collectible stats page ([9e5af3e](https://github.com/leather-io/mono/commit/9e5af3e4199da3b775f24fb8d80babf54dcb80f0))
 * rehaul approver flow ([3bf0b99](https://github.com/leather-io/mono/commit/3bf0b99d04f6d2a6ecc6b40d594d91811c003d16))
 
-
 ### Bug Fixes
 
 * **mobile:** add output value description sheet to inscription details ([06e92dd](https://github.com/leather-io/mono/commit/06e92dd78f9fb4d6a6d169c21ed0f35ad2e6f5c5))
-
 
 ### Dependencies
 
@@ -647,18 +575,15 @@
 
 ## [2.86.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.85.2...@leather.io/mobile-v2.86.0) (2025-11-14)
 
-
 ### Features
 
 * **mobile:** add swap execution ([857de0b](https://github.com/leather-io/mono/commit/857de0b9d775d702f4202b7a2c0a3491ed3bd64d))
 * **mobile:** add swap execution tests ([ceaf68d](https://github.com/leather-io/mono/commit/ceaf68dcc1c84a04d4a7d8f6ed89f1973cf20206))
 * **services:** further separate transaction fee quote types ([dcb9c8a](https://github.com/leather-io/mono/commit/dcb9c8ad72cd8f889a758ed66871e7cb2baf2416))
 
-
 ### Bug Fixes
 
 * psbt testnet ([996d235](https://github.com/leather-io/mono/commit/996d2350f7129bb81d624aa0eadccbbe3e031b51))
-
 
 ### Dependencies
 
@@ -679,11 +604,9 @@
 
 ## [2.85.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.85.1...@leather.io/mobile-v2.85.2) (2025-11-11)
 
-
 ### Bug Fixes
 
 * add collectible type overlay ([4d91c94](https://github.com/leather-io/mono/commit/4d91c946d895c1fc06c57065d4378fafd9ac0609))
-
 
 ### Dependencies
 
@@ -693,11 +616,9 @@
 
 ## [2.85.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.85.0...@leather.io/mobile-v2.85.1) (2025-11-10)
 
-
 ### Bug Fixes
 
 * **utils:** fix quote to base calculation helper ([381f287](https://github.com/leather-io/mono/commit/381f287635419a9501ecd2da12558dde6a270aa9))
-
 
 ### Dependencies
 
@@ -716,11 +637,9 @@
 
 ## [2.85.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.84.0...@leather.io/mobile-v2.85.0) (2025-11-01)
 
-
 ### Features
 
 * **mobile:** add swap network fee ([2a70fbd](https://github.com/leather-io/mono/commit/2a70fbd48d359a0b7adc8e1d1ff3fe2af6acb03e))
-
 
 ### Dependencies
 
@@ -729,7 +648,6 @@
     * @leather.io/services bumped to 1.39.0
 
 ## [2.84.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.83.1...@leather.io/mobile-v2.84.0) (2025-10-31)
-
 
 ### Features
 
@@ -744,7 +662,6 @@
 * stacks transaction fees service ([eb921e0](https://github.com/leather-io/mono/commit/eb921e029d51e423847398a5ba15a7529a73638c))
 * **state:** adds state package ([7064a4b](https://github.com/leather-io/mono/commit/7064a4b8c003c85f8e938672dc73614bfd0c52e9))
 
-
 ### Bug Fixes
 
 * add network to analytics in mobile ([e08bb5e](https://github.com/leather-io/mono/commit/e08bb5e76c9177697b1f4d97c60b156efb2496bb))
@@ -756,7 +673,6 @@
 * subsequent approver requests + signMessage response ([88ca873](https://github.com/leather-io/mono/commit/88ca8735dea1aff5b044c4a28e00abf881d9b1d6))
 * use an iframe to correctly play audio ordinals ([aa405c4](https://github.com/leather-io/mono/commit/aa405c455a4a3902d0638126368549c90d1f7d15))
 * void linking promises and format code, ref LEA-3277 ([5a6d1ec](https://github.com/leather-io/mono/commit/5a6d1ecfc90a2dff8c804199226492a77a47fb52))
-
 
 ### Dependencies
 
@@ -777,11 +693,9 @@
 
 ## [2.83.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.83.0...@leather.io/mobile-v2.83.1) (2025-10-17)
 
-
 ### Bug Fixes
 
 * try to use connect account first for post conditions ([bb864cd](https://github.com/leather-io/mono/commit/bb864cd2257e5653686b88c6040084000884f155))
-
 
 ### Dependencies
 
@@ -796,11 +710,9 @@
 
 ## [2.83.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.82.0...@leather.io/mobile-v2.83.0) (2025-10-16)
 
-
 ### Features
 
 * add stamps service and integrate to collectibles on mobile ([2037431](https://github.com/leather-io/mono/commit/2037431540b0e7ddb4e144a192ac816941997653))
-
 
 ### Dependencies
 
@@ -822,13 +734,11 @@
 
 ## [2.82.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.81.0...@leather.io/mobile-v2.82.0) (2025-10-15)
 
-
 ### Features
 
 * balance analytics extension ([75a4773](https://github.com/leather-io/mono/commit/75a4773b9a8879bf9ee3425ed47f29b224d5fb6a))
 * **mobile:** add swap review screen ([027e3a2](https://github.com/leather-io/mono/commit/027e3a27905e36ae91fac6e19a0277fc5ca8dc70))
 * **mobile:** add swap review screen template and slippage editing ([027e3a2](https://github.com/leather-io/mono/commit/027e3a27905e36ae91fac6e19a0277fc5ca8dc70))
-
 
 ### Dependencies
 
@@ -844,7 +754,6 @@
 
 ## [2.81.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.80.0...@leather.io/mobile-v2.81.0) (2025-10-14)
 
-
 ### Features
 
 * **mobile:** add ability to provide context with validation messages ([49f2775](https://github.com/leather-io/mono/commit/49f2775e7302566f33afa2af6f26c924110d502a))
@@ -853,12 +762,10 @@
 * **mobile:** automatically flip swap assets ([a7c1ed8](https://github.com/leather-io/mono/commit/a7c1ed80604777ac5947339afb0e6023893c696a))
 * **mobile:** refactor target amount preview and add "isSwapExecutable" logic ([ee659a1](https://github.com/leather-io/mono/commit/ee659a198d22e47c5d610af5770266dbbde248a7))
 
-
 ### Bug Fixes
 
 * **mobile:** fix incorrect swap asset reconciliation test ([70246ad](https://github.com/leather-io/mono/commit/70246ad291d1ab9f52f83803ccf11430d364a8bd))
 * remove redux state reset ([6a5d130](https://github.com/leather-io/mono/commit/6a5d13041f492c1e282e0b58d92187a06b2b81d9))
-
 
 ### Dependencies
 
@@ -868,11 +775,9 @@
 
 ## [2.80.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.79.0...@leather.io/mobile-v2.80.0) (2025-10-13)
 
-
 ### Features
 
 * prepare extension for monorepo ([59a58c3](https://github.com/leather-io/mono/commit/59a58c3deee76b95e720bb7c16d8160b4622820c))
-
 
 ### Dependencies
 
@@ -896,7 +801,6 @@
 
 ## [2.79.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.78.0...@leather.io/mobile-v2.79.0) (2025-10-10)
 
-
 ### Features
 
 * **mobile:** add swap validation ([572909b](https://github.com/leather-io/mono/commit/572909bfd0aa3adc2ce69f93a1968e23c3d27160))
@@ -904,14 +808,12 @@
 * **mobile:** make ActionButtons dynamic, add isSwappableAsset type guard ([c4b32ed](https://github.com/leather-io/mono/commit/c4b32ede97cba32acd484982198fb442a092ec84))
 * **mobile:** populate collectible details with relevant information ([5ae1024](https://github.com/leather-io/mono/commit/5ae1024b9abb537f4aac0a9acf7820acf91d6f79))
 
-
 ### Bug Fixes
 
 * **mobile:** add handling of nested arrays of objects to auto print nft attributes ([ac74ea1](https://github.com/leather-io/mono/commit/ac74ea1f775a6beb91df96f4ecd445e53b82253c))
 * **mobile:** encapsulate SIP9 provider data to keep the interface cleaner ([f7957c9](https://github.com/leather-io/mono/commit/f7957c9367e373c39c3cae3eccf00f224cf3f9bc))
 * **mobile:** fix bug rendering bns names ([d8a724b](https://github.com/leather-io/mono/commit/d8a724bd19b25e32bbc88e450d5af6c257f1e5dc))
 * **mobile:** fix duplicate key error message ([c8404d8](https://github.com/leather-io/mono/commit/c8404d8c6265d8aa713d62bafd95d16b35ab7f43))
-
 
 ### Dependencies
 
@@ -932,12 +834,10 @@
 
 ## [2.78.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.77.0...@leather.io/mobile-v2.78.0) (2025-10-08)
 
-
 ### Features
 
 * add balance analytics ([fe7cb14](https://github.com/leather-io/mono/commit/fe7cb144d819ad4001c900a62549e0c50f39f48f))
 * **mobile:** improve swap amount value positioning, add faux caret ([e793339](https://github.com/leather-io/mono/commit/e7933397e11641f05e205bd42df6eca32091f077))
-
 
 ### Dependencies
 
@@ -957,7 +857,6 @@
 
 ## [2.77.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.76.0...@leather.io/mobile-v2.77.0) (2025-10-07)
 
-
 ### Features
 
 * add postconditions ([8629f8f](https://github.com/leather-io/mono/commit/8629f8fc05e6a4d9ff07b7f6838e8de566182684))
@@ -966,11 +865,9 @@
 * **mobile:** add swap quote query and a preview shell ([345a687](https://github.com/leather-io/mono/commit/345a6875f39bc6f71db9e1c5e43b19d37418326c))
 * **mobile:** add swap target amount preview ([6c0d5af](https://github.com/leather-io/mono/commit/6c0d5af107b7eb7984f891dfeca8a1e9c3f5798d))
 
-
 ### Bug Fixes
 
 * make children required on HasChildren type ([2e0fe7a](https://github.com/leather-io/mono/commit/2e0fe7ab7431b8ca686de7953a8272ca0ebe2bd8))
-
 
 ### Dependencies
 
@@ -986,7 +883,6 @@
 
 ## [2.76.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.75.0...@leather.io/mobile-v2.76.0) (2025-09-30)
 
-
 ### Features
 
 * **mobile:** add support for sip-9 videos ([40f4292](https://github.com/leather-io/mono/commit/40f42922b2ece21ee2c476344996b12ba8c05b33))
@@ -998,11 +894,9 @@
 * **mobile:** use the existing empty amount placeholder for swap amount quote display ([08c7fe9](https://github.com/leather-io/mono/commit/08c7fe9e9c078ce04ec97aba5f17b55a725f5dc4))
 * **mobile:** wire up swap amount presets, derive isSendingMax ([c42bca6](https://github.com/leather-io/mono/commit/c42bca6e4100fd3ab1b31111b8db97cfaf96bc80))
 
-
 ### Bug Fixes
 
 * **mobile:** add associated domains entitlement for deep linking ([b027192](https://github.com/leather-io/mono/commit/b0271923ae598cce2c95f33d39693185c52750d9))
-
 
 ### Dependencies
 
@@ -1023,7 +917,6 @@
 
 ## [2.75.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.74.0...@leather.io/mobile-v2.75.0) (2025-09-29)
 
-
 ### Features
 
 * **mobile:** add Swap building blocks and asset selection ([532b820](https://github.com/leather-io/mono/commit/532b820074df7162ff86bef607cd7b47de56bd15))
@@ -1032,7 +925,6 @@
 * **mobile:** add swap state tests ([4ea1ae1](https://github.com/leather-io/mono/commit/4ea1ae1374464cbb70cfb92f32eaab98ac13f695))
 * **mobile:** put Swap under a flag ([f0ac2e6](https://github.com/leather-io/mono/commit/f0ac2e605030c17b93f5b52be6bfe71b0f938d97))
 * **mobile:** restore lost "*_sheet_opened" event tracking ([99d0fb0](https://github.com/leather-io/mono/commit/99d0fb06d3b85fcc537daf2b39a2445532797f77))
-
 
 ### Dependencies
 
@@ -1043,7 +935,6 @@
 
 ## [2.74.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.73.0...@leather.io/mobile-v2.74.0) (2025-09-26)
 
-
 ### Features
 
 * app config and asset visibility services ([d867859](https://github.com/leather-io/mono/commit/d86785985bcbeffb1396d51683c448e4cb089d9b))
@@ -1053,13 +944,11 @@
 * **mobile:** deep linking via app links and universal links ([135b1da](https://github.com/leather-io/mono/commit/135b1dafaf7f9b1d71a4d672c5a9c943f486b754))
 * **models:** add user defined type guards for asset types ([353ea63](https://github.com/leather-io/mono/commit/353ea6386b5b458a6bd4a9d2db0ca5d0da30d6af))
 
-
 ### Bug Fixes
 
 * account header warning ([0222d49](https://github.com/leather-io/mono/commit/0222d49f1a3b9bb32d81614723b19c527666a97d))
 * current account persist ([52de660](https://github.com/leather-io/mono/commit/52de66098d77e92fea05d3c57627fd5c5c2c004d))
 * testnet approval flow ([62fe0d2](https://github.com/leather-io/mono/commit/62fe0d2c98e488d67355b144e25ad4e285a8a599))
-
 
 ### Dependencies
 
@@ -1080,16 +969,13 @@
 
 ## [2.73.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.72.0...@leather.io/mobile-v2.73.0) (2025-09-10)
 
-
 ### Features
 
 * token management ([6681d94](https://github.com/leather-io/mono/commit/6681d949130379907e3aab5e454668aa2159e69e))
 
-
 ### Bug Fixes
 
 * **mobile:** fix incorrect fallback none loader ([8d4096f](https://github.com/leather-io/mono/commit/8d4096fa4ffbed5d490c6a3c0a6efbbed71c168e))
-
 
 ### Dependencies
 
@@ -1107,11 +993,9 @@
 
 ## [2.72.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.71.0...@leather.io/mobile-v2.72.0) (2025-09-08)
 
-
 ### Features
 
 * **cms:** stub out sanity cms package ([698075a](https://github.com/leather-io/mono/commit/698075a1b90c620f2e48789fc3f90d39e8215154))
-
 
 ### Dependencies
 
@@ -1122,16 +1006,13 @@
 
 ## [2.71.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.70.1...@leather.io/mobile-v2.71.0) (2025-09-07)
 
-
 ### Features
 
 * add sensible shared balance query options ([2326ca5](https://github.com/leather-io/mono/commit/2326ca598a5d2f4cc9d6b6deb3e61f14e2237ede))
 
-
 ### Bug Fixes
 
 * query cancellation issues ([01c1a42](https://github.com/leather-io/mono/commit/01c1a4281bedd426ad22d22a7191c4c0ba4a7555))
-
 
 ### Dependencies
 
@@ -1142,11 +1023,9 @@
 
 ## [2.70.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.70.0...@leather.io/mobile-v2.70.1) (2025-09-05)
 
-
 ### Bug Fixes
 
 * wallet settings portfolio ([6a97878](https://github.com/leather-io/mono/commit/6a9787877eb3a5c90cbae20a214e9e3b20572d0f))
-
 
 ### Dependencies
 
@@ -1156,11 +1035,9 @@
 
 ## [2.70.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.69.2...@leather.io/mobile-v2.70.0) (2025-09-04)
 
-
 ### Features
 
 * add bns types and app-layer service ([fb47a28](https://github.com/leather-io/mono/commit/fb47a2884eab5a6a20ecc089af8ef8b21ee16df5))
-
 
 ### Dependencies
 
@@ -1181,7 +1058,6 @@
 
 ## [2.69.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.69.1...@leather.io/mobile-v2.69.2) (2025-09-04)
 
-
 ### Bug Fixes
 
 * **mobile:** only show balance list for BTC, ref LEA-3175 ([e580220](https://github.com/leather-io/mono/commit/e580220b68a789dcab555742aab98f4ffb6fe7a6))
@@ -1190,12 +1066,10 @@
 
 ## [2.69.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.69.0...@leather.io/mobile-v2.69.1) (2025-09-03)
 
-
 ### Bug Fixes
 
 * account design fixes ([9ed32f6](https://github.com/leather-io/mono/commit/9ed32f68a4d7f1eb1aa7a39599813ab5845eaecb))
 * **mobile:** don't allow pressable on assets if token details disabled, ref LEA-3140 ([58b97cd](https://github.com/leather-io/mono/commit/58b97cd16b3def16f186e157671eba70680467ce))
-
 
 ### Dependencies
 
@@ -1205,12 +1079,10 @@
 
 ## [2.69.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.68.0...@leather.io/mobile-v2.69.0) (2025-09-03)
 
-
 ### Features
 
 * **mobile:** rune token details, ref LEA-3140 ([159f69c](https://github.com/leather-io/mono/commit/159f69cf4c1a0f7c196d21c0d81d095226f1dcdd))
 * **mobile:** update useRuneBalanceByRuneName to use specific service, ref LEA-3140 ([5bbcb7a](https://github.com/leather-io/mono/commit/5bbcb7ab86ef4119c11ffe56489a07dbc8f6455f))
-
 
 ### Dependencies
 
@@ -1225,11 +1097,9 @@
 
 ## [2.68.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.67.0...@leather.io/mobile-v2.68.0) (2025-08-29)
 
-
 ### Features
 
 * **mobile:** connect SIP-10 sends in token details, ref LEA-3140 ([e8be8a8](https://github.com/leather-io/mono/commit/e8be8a8d9bd7df39fa686e8f9881c263ce7a8760))
-
 
 ### Bug Fixes
 
@@ -1237,7 +1107,6 @@
 * **mobile:** mobile nonce cache stale time, ref LEA-3129 ([68158c6](https://github.com/leather-io/mono/commit/68158c66a63763894e9efe9066966250eb9b978b))
 * **mobile:** update sticker sizes ([e8eda69](https://github.com/leather-io/mono/commit/e8eda69c5448a349af375627ab70cc5996c2db8a))
 * remove updates from config until fix found ([5a0c7be](https://github.com/leather-io/mono/commit/5a0c7bea416e9accf7a630a68e504fbaad277d92))
-
 
 ### Dependencies
 
@@ -1247,11 +1116,9 @@
 
 ## [2.67.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.66.2...@leather.io/mobile-v2.67.0) (2025-08-27)
 
-
 ### Features
 
 * **mobile:** check in Google Services config files ([53a4ebf](https://github.com/leather-io/mono/commit/53a4ebfff26bbc0a1198a904c65177cc44f69818))
-
 
 ### Dependencies
 
@@ -1269,7 +1136,6 @@
 
 ## [2.66.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.66.0...@leather.io/mobile-v2.66.1) (2025-08-19)
 
-
 ### Bug Fixes
 
 * issues with prod builds ([161dac1](https://github.com/leather-io/mono/commit/161dac1346c2925773b0724c8c26bcfb60587db7))
@@ -1277,13 +1143,11 @@
 
 ## [2.66.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.65.0...@leather.io/mobile-v2.66.0) (2025-08-18)
 
-
 ### Features
 
 * add service calls by asset id ([26b0d1b](https://github.com/leather-io/mono/commit/26b0d1be753f584c786da6d98c55c0da914a589e))
 * normalize account service request usage ([a3ccac0](https://github.com/leather-io/mono/commit/a3ccac0ce7217a633a361cb6afed5c772df853f1))
 * **web:** advanced tools, closes LEA-3099 LEA-3118 ([0663588](https://github.com/leather-io/mono/commit/06635883dc338bd9bda18ee2bebfa058657e1441))
-
 
 ### Bug Fixes
 
@@ -1291,7 +1155,6 @@
 * **mobile:** fix cell spacings in token details ([7a26f59](https://github.com/leather-io/mono/commit/7a26f59ea565d6c336fb58bfa46b85dd219f873b))
 * **mobile:** fix squeezed buttons in the earn card ([f6c4ca8](https://github.com/leather-io/mono/commit/f6c4ca85056b82562404d42bb01e0f7a28805917))
 * **web:** mobile nav, responsive styles ([a3c940c](https://github.com/leather-io/mono/commit/a3c940c4e5e40e68c9b00711badb1f8828e64cd3))
-
 
 ### Dependencies
 

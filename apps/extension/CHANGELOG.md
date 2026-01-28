@@ -1,3 +1,41 @@
+# Changelog
+
+## Unpublished
+
+### Features
+
+* enable settings revamp ([406cf48](https://github.com/leather-io/mono/commit/406cf4800756c8f9d6839af49fbe83d1af733c7d))
+* **extension:** make long function argument values expandable values rather than filling the screen ([c67f2de](https://github.com/leather-io/mono/commit/c67f2ded97a74a1991101d852ea9aedce857919c))
+* **extension:** fade bottom action bar ([065ec91](https://github.com/leather-io/mono/commit/065ec91a1d52c3cf833b42572eab2c6667bca727))
+* network badge ([7cf9b35](https://github.com/leather-io/mono/commit/7cf9b352f84d7aafb7c502e015527458e589de6b))
+* secret key page ([d96ea91](https://github.com/leather-io/mono/commit/d96ea9160dda0c5b71342c84a6c02e3b0031a4e7))
+* other settings pages ([fe93560](https://github.com/leather-io/mono/commit/fe93560e5d936ba11d9800a3986deea205f6287e))
+* updated settings ([af9ddbb](https://github.com/leather-io/mono/commit/af9ddbb0d2124b87dfcc14efbaf1a33faafd7dee))
+
+### Bug Fixes
+
+* **extension:** adjust size of collectible chain avatar icon, ref LEA-3414 ([994a23a](https://github.com/leather-io/mono/commit/994a23a75a4b4d3a07fa6c14d480e8661e2914bb))
+* **extension:** enable account revamp ([9892d06](https://github.com/leather-io/mono/commit/9892d0634690c023b429f6f4d80cae40571dc67e))
+* **extension:** move secret key files ([51fe6dc](https://github.com/leather-io/mono/commit/51fe6dc871172403291ed5b0331bfd4a8267af34))
+* update redux migrations and secure store migrations. add tests ([726f23a](https://github.com/leather-io/mono/commit/726f23a5785f2bdfafee890faaa5008ec15b66cb))
+* **ci:** decouple mobile build from package lifecycle hooks ([a53e33a](https://github.com/leather-io/mono/commit/a53e33a6d97c3af8b52a3d4972cd7caadac2edae))
+* do not delete client id on sign out ([20f44cd](https://github.com/leather-io/mono/commit/20f44cdf24d89c13e9dba2b1f0b145a5e9bf6c6f))
+* **extension:** bleeding shadows ([f14bd12](https://github.com/leather-io/mono/commit/f14bd123173f9377eb942de7ec3f03087c51e142))
+* **extension:** catch ledger error ([7fcda54](https://github.com/leather-io/mono/commit/7fcda54e9d8b437cebe6ad7bde7783aacf208a46))
+* **extension:** contract principal support, closes leather-io/extension[#6334](https://github.com/leather-io/mono/issues/6334) ([b428c1f](https://github.com/leather-io/mono/commit/b428c1f400df8585772622c2ad195d20d6cad08f))
+* **extension:** inaccurate total spend ([e5dbd9f](https://github.com/leather-io/mono/commit/e5dbd9fe2138938825d282012eaa4626fbbd881f))
+* **extension:** make sure error boundary is centered, ref LEA-2563 ([9506bba](https://github.com/leather-io/mono/commit/9506bbafcce9a34023f2c0db9c820f5dab409217))
+* **extension:** sip10 send form service usage ([c61d4e5](https://github.com/leather-io/mono/commit/c61d4e5de382c4a94686ed751120677dc6d44095))
+* integration tests connected to settings ([19b9213](https://github.com/leather-io/mono/commit/19b92135ac7fce715b96441877301efcb4d0ced9))
+* make buttons sticky in popup mode ([1786eac](https://github.com/leather-io/mono/commit/1786eac7eaf69442ffe9d1903b9663f498a95f71))
+* **mobile:** refactor avatars + fix regressions to mobile activity ([08465b6](https://github.com/leather-io/mono/commit/08465b6a972002cc957cbcd9f00b7fd8fdee8cf9))
+* more updates for settings revamp ([edb2895](https://github.com/leather-io/mono/commit/edb289521116b96b46afd733071a16ba8ba7f9b5))
+* update extension revamp ui for tooltips and spacings ([660f4e4](https://github.com/leather-io/mono/commit/660f4e431fbf68d4598a750e8f6b5ecd86235725))
+* **extension:** fix bug with tab navigation, ref LEA-3334 ([6030950](https://github.com/leather-io/mono/commit/6030950a3f16616105edc42f45194388d1bc76c0))
+* react router audit ([22190b8](https://github.com/leather-io/mono/commit/22190b8ee76cbb60ec4d5c64b46dec38d3d6a41a))
+
+---
+
 ## [6.73.4](https://github.com/leather-io/extension/compare/v6.73.3...v6.73.4) (2025-10-06)
 
 

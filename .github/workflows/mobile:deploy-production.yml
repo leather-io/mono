@@ -47,26 +47,3 @@ jobs:
             echo "ios_build_id=$(echo "$build_output" | jq -r '.[1].["id"]')"
             echo "build_version=$(eas config -e production -p android --json --non-interactive | jq -r '.appConfig.version')"
           } >> "$GITHUB_OUTPUT"
-
-  create-github-release:
-    runs-on: ubuntu-latest
-    needs: build-and-submit-mobile
-    steps:
-      - name: save-build-output-to-file
-        run: |
-          echo ${{ needs.build-and-submit-mobile.outputs.build_output }} | tee /tmp/build_output.json
-
-      - name: create-release
-        id: create_release
-        uses: softprops/action-gh-release@v2
-        with:
-          token: ${{ secrets.LEATHER_BOT }}
-          tag_name: 'mobile-v${{ needs.build-and-submit-mobile.outputs.build_version }}'
-          name: '@leather.io/mobile: v${{ needs.build-and-submit-mobile.outputs.build_version }}'
-          body: |
-            # iOS Build:
-            https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${{ needs.build-and-submit-mobile.outputs.ios_build_id }}
-
-            # Android Build:
-            https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/${{ needs.build-and-submit-mobile.outputs.android_build_id }}
-          files: /tmp/build_output.json
