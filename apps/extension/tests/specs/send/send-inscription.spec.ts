@@ -1,6 +1,8 @@
+import { expect } from '@playwright/test';
 import { TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS } from '@tests/mocks/constants';
 import { mockTestnetTestAccountInscriptionsRequests } from '@tests/mocks/mock-inscriptions-bis';
 import { mockTestnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxos';
+import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { getDisplayerAddress } from '@tests/utils';
 
@@ -117,5 +119,41 @@ test.describe('Send inscription', () => {
 
     const errorLabel = await sendPage.formInputErrorLabel.textContent();
     test.expect(errorLabel).toContain(FormErrorMessages.UtxoWithMultipleInscriptions);
+  });
+
+  test.describe('modal close behavior', () => {
+    test('should close send inscription form when pressing Escape', async ({
+      sendPage,
+      networkPage,
+      page,
+    }) => {
+      await networkPage.selectTestnet();
+      await sendPage.selectInscription();
+
+      await expect(sendPage.recipientInput).toBeVisible();
+
+      await page.keyboard.press('Escape');
+
+      await expect(page.getByTestId(HomePageSelectors.HomePageContainer)).toBeVisible();
+    });
+
+    test('should close choose fee step when pressing Escape', async ({
+      sendPage,
+      networkPage,
+      page,
+    }) => {
+      await networkPage.selectTestnet();
+      await sendPage.selectInscription();
+      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
+
+      const inscriptionSendButton = page.getByTestId(SendCryptoAssetSelectors.PreviewSendTxBtn);
+      await inscriptionSendButton.click();
+
+      await expect(sendPage.feesListItem.first()).toBeVisible();
+
+      await page.keyboard.press('Escape');
+
+      await expect(page.getByTestId(HomePageSelectors.HomePageContainer)).toBeVisible();
+    });
   });
 });

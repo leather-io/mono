@@ -102,6 +102,14 @@ export class HomePage {
     return displayerAddress.replaceAll('\n', '');
   }
 
+  async clickAssetsTab() {
+    await this.page.getByTestId(HomePageSelectors.AssetsTabBtn).click();
+  }
+
+  async clickCollectiblesTab() {
+    await this.page.getByTestId(HomePageSelectors.CollectiblesTabBtn).click();
+  }
+
   async clickActivityTab() {
     await this.page.getByTestId(HomePageSelectors.ActivityTabBtn).click();
   }
