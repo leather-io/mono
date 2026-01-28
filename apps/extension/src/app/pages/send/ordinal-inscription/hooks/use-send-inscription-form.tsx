@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { Location } from 'react-router';
 import { useNavigate } from 'react-router';
 
 import * as yup from 'yup';
@@ -13,6 +14,7 @@ import { OrdinalSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { formFeeRowValue } from '@app/common/send/utils';
 import { complianceValidator } from '@app/common/validation/forms/compliance-validators';
 import { useNumberOfInscriptionsOnUtxo } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
@@ -28,6 +30,7 @@ export function useSendInscriptionForm() {
   const [isCheckingFees, setIsCheckingFees] = useState(false);
 
   const navigate = useNavigate();
+  const backgroundLocation = useLocationStateWithCache<Location>('backgroundLocation');
   const sign = useSignBitcoinTx();
   const { inscription, utxo } = useSendInscriptionState();
   const currentNetwork = useCurrentNetwork();
@@ -71,7 +74,7 @@ export function useSendInscriptionForm() {
               inscription,
               recipient: values.recipient,
               utxo,
-              backgroundLocation: { pathname: RouteUrls.Home },
+              backgroundLocation,
             },
           }
         );
@@ -130,7 +133,7 @@ export function useSendInscriptionForm() {
             time,
             feeRowValue,
             signedTx: signedTx.extract(),
-            backgroundLocation: { pathname: RouteUrls.Home },
+            backgroundLocation,
           },
         }
       );

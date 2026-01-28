@@ -1,3 +1,4 @@
+import type { Location } from 'react-router';
 import { useLocation, useNavigate } from 'react-router';
 
 import { Box, Flex, HStack, Stack } from 'leather-styles/jsx';
@@ -10,6 +11,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useBitcoinExplorerLink } from '@app/common/hooks/use-bitcoin-explorer-link';
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import { InfoCardBtn, InfoCardRow, InfoCardSeparator } from '@app/components/info-card/info-card';
@@ -34,6 +36,7 @@ export function SendInscriptionSummary() {
   const { txid, recipient, arrivesIn, inscription, feeRowValue } = useSendInscriptionSummaryState();
   const toast = useToast();
   const navigate = useNavigate();
+  const backgroundLocation = useLocationStateWithCache<Location>('backgroundLocation');
   const txLink = {
     blockchain: 'bitcoin' as Blockchain,
     txid,
@@ -53,7 +56,7 @@ export function SendInscriptionSummary() {
   }
 
   return (
-    <Sheet header={<SheetHeader title="Sent" />} isShowing onClose={() => navigate(RouteUrls.Home)}>
+    <Sheet header={<SheetHeader title="Sent" />} isShowing onClose={() => navigate(backgroundLocation ?? RouteUrls.Home)}>
       <Card
         border="unset"
         footer={

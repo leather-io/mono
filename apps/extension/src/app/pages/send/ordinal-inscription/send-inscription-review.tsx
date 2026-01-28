@@ -1,3 +1,4 @@
+import type { Location } from 'react-router';
 import { useLocation, useNavigate } from 'react-router';
 
 import { bytesToHex } from '@noble/hashes/utils';
@@ -10,6 +11,7 @@ import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import { InfoCardRow, InfoCardSeparator } from '@app/components/info-card/info-card';
 import { InscriptionPreview } from '@app/components/inscription-preview-card/components/inscription-preview';
@@ -32,6 +34,7 @@ function useSendInscriptionReviewState() {
 
 export function SendInscriptionReview() {
   const navigate = useNavigate();
+  const backgroundLocation = useLocationStateWithCache<Location>('backgroundLocation');
   const { arrivesIn, signedTx, recipient, feeRowValue } = useSendInscriptionReviewState();
 
   const { inscription } = useSendInscriptionState();
@@ -54,7 +57,7 @@ export function SendInscriptionReview() {
               arrivesIn,
               txid,
               feeRowValue,
-              backgroundLocation: { pathname: RouteUrls.Home },
+              backgroundLocation,
             },
           }
         );
@@ -66,7 +69,7 @@ export function SendInscriptionReview() {
           {
             state: {
               error: e,
-              backgroundLocation: { pathname: RouteUrls.Home },
+              backgroundLocation,
             },
           }
         );
@@ -79,7 +82,7 @@ export function SendInscriptionReview() {
       header={<SheetHeader title="Review" />}
       isShowing
       onGoBack={() => navigate(-1)}
-      onClose={() => navigate(RouteUrls.Home)}
+      onClose={() => navigate(backgroundLocation ?? RouteUrls.Home)}
     >
       <Card
         dataTestId={SendCryptoAssetSelectors.ConfirmationDetails}

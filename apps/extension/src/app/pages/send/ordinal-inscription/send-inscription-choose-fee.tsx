@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { Location } from 'react-router';
 import { Outlet, useNavigate } from 'react-router';
 
 import type { BtcFeeType } from '@leather.io/models';
@@ -7,6 +8,7 @@ import { createMoney } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import {
   BitcoinFeesList,
   OnChooseFeeArgs,
@@ -22,6 +24,7 @@ import { useSendInscriptionForm } from './hooks/use-send-inscription-form';
 export function SendInscriptionChooseFee() {
   const [isLoadingReview, setIsLoadingReview] = useState(false);
   const navigate = useNavigate();
+  const backgroundLocation = useLocationStateWithCache<Location>('backgroundLocation');
   const { recipient, selectedFeeType, setSelectedFeeType, utxo, inscription } =
     useSendInscriptionState();
   const { feesList, isLoading } = useSendInscriptionFeesList({
@@ -63,8 +66,8 @@ export function SendInscriptionChooseFee() {
       <Sheet
         header={<SheetHeader title="Choose fee" />}
         isShowing
-        onGoBack={() => navigate(RouteUrls.Home)}
-        onClose={() => navigate(RouteUrls.Home)}
+        onGoBack={() => navigate(-1)}
+        onClose={() => navigate(backgroundLocation ?? RouteUrls.Home)}
       >
         <BitcoinChooseFee
           amount={createMoney(0, 'BTC')}
