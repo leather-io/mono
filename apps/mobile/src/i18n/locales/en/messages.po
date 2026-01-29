@@ -946,6 +946,10 @@ msgstr "Get support or provide feedback"
 msgid "Get the latest version of the Leather app"
 msgstr "Get the latest version of the Leather app"
 
+#: src/features/learn/learn-widget.tsx:13
+msgid "Getting Started with Leather"
+msgstr "Getting Started with Leather"
+
 #: src/features/swap/components/review/swap-review-empty-state.tsx:25
 msgid "Go back"
 msgstr "Go back"
@@ -1161,6 +1165,7 @@ msgid "Layer 2 • Stacks"
 msgstr "Layer 2 • Stacks"
 
 #: src/app/settings/help/index.tsx:29
+#: src/features/learn/learn-widget.tsx:37
 msgid "Learn"
 msgstr "Learn"
 
@@ -2140,6 +2145,14 @@ msgstr "Wallets"
 #: src/app/settings/index.tsx:62
 msgid "Wallets and accounts"
 msgstr "Wallets and accounts"
+
+#: src/features/learn/learn-widget.tsx:19
+msgid "What are Bitcoin Ordinals?"
+msgstr "What are Bitcoin Ordinals?"
+
+#: src/features/learn/learn-widget.tsx:25
+msgid "What is BNS? (Bitcoin Naming System)"
+msgstr "What is BNS? (Bitcoin Naming System)"
 
 #: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:59
 msgid "Withdrawing"
