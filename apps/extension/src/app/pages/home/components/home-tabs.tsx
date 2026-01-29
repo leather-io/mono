@@ -71,7 +71,7 @@ export function HomeTabs({ children, showCollectibles = true }: HomeTabsProps) {
         </Tabs.List>
       </Tabs.Root>
       <Suspense fallback={<LoadingSpinner pb="72px" />}>
-        <Box px={['space.05', 0]} width="100%">
+        <Box px={['space.05', null, 0]} width="100%">
           {children}
         </Box>
       </Suspense>
