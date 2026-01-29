@@ -17,8 +17,8 @@ import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-
 
 import { AccountActions } from './components/account-actions-current/account-actions';
 import { AccountCard } from './components/account-card';
-import { Assets } from './components/assets';
 import { HomeTabs } from './components/home-tabs';
+import { Tokens } from './components/tokens';
 
 export function Home() {
   const { activityRevamp } = useFlags();
@@ -42,7 +42,7 @@ export function Home() {
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
       <HomeTabs>
         <ModalBackgroundWrapper>
-          <Route index element={<Assets />} />
+          <Route index element={<Tokens />} />
           <Route
             path={RouteUrls.Activity}
             element={activityRevamp ? <ActivityList /> : <ActivityListLegacy />}

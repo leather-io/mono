@@ -11,9 +11,9 @@ import { convertAssetBalanceToFiat } from '@app/common/asset-utils';
 import { useManageTokens } from '@app/common/hooks/use-manage-tokens';
 import { CryptoAssetItem } from '@app/components/crypto-asset-item/crypto-asset-item';
 import type {
-  AssetListVariant,
   AssetRightElementVariant,
-} from '@app/features/asset-list/asset-list';
+  TokenListVariant,
+} from '@app/features/asset-list/token-list';
 import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
@@ -24,9 +24,9 @@ interface Brc20TokenAssetDetails {
   marketData: MarketData;
 }
 
-interface Brc20TokenAssetListProps {
+interface Brc20TokenListProps {
   tokens: Brc20TokenAssetDetails[];
-  variant?: AssetListVariant;
+  variant?: TokenListVariant;
   assetRightElementVariant?: AssetRightElementVariant;
   preEnabledTokensIds: string[];
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
@@ -39,12 +39,12 @@ function getBrc20TokenFiatBalance(token: Brc20TokenAssetDetails) {
   });
 }
 
-export function Brc20TokenAssetList({
+export function Brc20TokenList({
   tokens,
   assetRightElementVariant,
   preEnabledTokensIds,
   setHasManageableTokens,
-}: Brc20TokenAssetListProps) {
+}: Brc20TokenListProps) {
   const { isLoading } = useCurrentNativeSegwitBtcBalanceWithFallback();
   const isPrivate = useIsPrivateMode();
   const { isTokenEnabled } = useManageTokens();

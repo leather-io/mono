@@ -6,20 +6,20 @@ import { getSafeImageCanonicalUri } from '@app/common/stacks-utils';
 import { CryptoAssetItem } from '@app/components/crypto-asset-item/crypto-asset-item';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
-import type { AssetRightElementVariant } from '../../asset-list';
+import type { AssetRightElementVariant } from '../../token-list';
 
-interface Sip10TokenAssetItemProps {
+interface Sip10TokenItemProps {
   balance: Sip10Balance;
   isEnabled: boolean;
   assetRightElementVariant?: AssetRightElementVariant;
   onSelectAsset?(symbol: string, contractId?: string): void;
 }
-export function Sip10TokenAssetItem({
+export function Sip10TokenItem({
   balance,
   isEnabled,
   onSelectAsset,
   assetRightElementVariant,
-}: Sip10TokenAssetItemProps) {
+}: Sip10TokenItemProps) {
   const isPrivate = useIsPrivateMode();
 
   const { contractId, assetId, imageCanonicalUri, name, symbol } = balance.asset;
