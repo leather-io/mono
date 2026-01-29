@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       app:
-        description: 'App to cut changelog for'
+        description: "App to cut changelog for"
         required: true
         type: choice
         options:
@@ -76,6 +76,7 @@ jobs:
       - name: cut-changelog
         env:
           APP: ${{ steps.app.outputs.app }}
+          GH_TOKEN: ${{ secrets.LEATHER_BOT }}
         run: |
           if [[ "$APP" == "both" ]]; then
             pnpm lt changelog cut --app=mobile
