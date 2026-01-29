@@ -121,7 +121,7 @@ export function useRemoteLeatherMessages(): HiroMessage[] {
 
 export function useRecoverUninscribedTaprootUtxosFeatureEnabled() {
   const config = useRemoteConfig();
-  return pathOr(config, ['recoverUninscribedTaprootUtxosFeatureEnabled'], false);
+  return (config as any)?.recoverUninscribedTaprootUtxosFeatureEnabled ?? false;
 }
 
 export function useConfigFeeEstimationsMaxEnabled() {
@@ -169,44 +169,44 @@ export function useConfigOrdinalsbot() {
 
 export function useConfigRunesEnabled() {
   const config = useRemoteConfig();
-  return pathOr(config, ['runesEnabled'], false);
+  return (config as any)?.runesEnabled ?? false;
 }
 
 export function useConfigSwapsEnabled() {
   const config = useRemoteConfig();
-  return pathOr(config, ['swapsEnabled'], false);
+  return (config as any)?.swapsEnabled ?? false;
 }
 
 export function useConfigTokensEnabledByDefault(): string[] {
   const config = useRemoteConfig();
-  return pathOr(config, ['tokensEnabledByDefault'], []);
+  return (config as any)?.tokensEnabledByDefault ?? [];
 }
 
 export function useConfigTokenTransferFeeEstimations() {
   const config = useRemoteConfig();
-  return pathOr(config, ['tokenTransferFeeEstimations'], []);
+  return (config as any)?.tokenTransferFeeEstimations ?? [];
 }
 
 export function useConfigSpamFilterWhitelist(): string[] {
   const config = useRemoteConfig();
-  return pathOr(config, ['spamFilterWhitelist'], []);
+  return (config as any)?.spamFilterWhitelist ?? [];
 }
 
 export function useConfigStacksContractCallFeeEstimations():
   | DefaultMinMaxRangeFeeEstimations
   | undefined {
   const config = useRemoteConfig();
-  return pathOr(config, ['stacksContractCallFeeEstimations'], undefined);
+  return (config as any)?.stacksContractCallFeeEstimations ?? undefined;
 }
 
 export function useConfigStacksContractDeploymentFeeEstimations():
   | DefaultMinMaxRangeFeeEstimations
   | undefined {
   const config = useRemoteConfig();
-  return pathOr(config, ['stacksContractDeploymentFeeEstimations'], undefined);
+  return (config as any)?.stacksContractDeploymentFeeEstimations ?? undefined;
 }
 
 export function useConfigPromoCardEnabled() {
   const config = useRemoteConfig();
-  return pathOr(config, ['promoCardEnabled'], false);
+  return (config as any)?.promoCardEnabled ?? false;
 }
