@@ -43,6 +43,14 @@ const mockedRuneTokenPriceMap = {
   },
 };
 
+export async function mockEmptyLeatherApiUtxosRequest(page: Page) {
+  await page.route('**/v1/utxos/**', route =>
+    route.fulfill({
+      json: [],
+    })
+  );
+}
+
 export async function mockLeatherApiRequests(page: Page) {
   await page.route('**/v1/tokens/rune?format=map', route =>
     route.fulfill({

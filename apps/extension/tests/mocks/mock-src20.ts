@@ -53,6 +53,22 @@ const mockedStampChainResponse = {
   },
 };
 
+export async function mockEmptyStampchainRequest(page: Page) {
+  await page.route('**/stampchain.io/api/v2/balance/**', route =>
+    route.fulfill({
+      json: {
+        page: 1,
+        limit: 1000,
+        totalPages: 0,
+        total: 0,
+        last_block: 864803,
+        btc: { address: '', balance: 0, txCount: 0, unconfirmedBalance: 0, unconfirmedTxCount: 0 },
+        data: { stamps: [], src20: [] },
+      },
+    })
+  );
+}
+
 export async function mockMainnetTestAccountStampchainRequest(page: Page) {
   await page.route('**/stampchain.io/api/v2/balance/**', route =>
     route.fulfill({

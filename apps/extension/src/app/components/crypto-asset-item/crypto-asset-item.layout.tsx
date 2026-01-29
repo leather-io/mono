@@ -55,42 +55,42 @@ export function CryptoAssetItemLayout({
 
   const titleRight = (
     <SkeletonLoader width="126px" isLoading={isLoading}>
-      <BasicTooltip
-        asChild
-        label={formattedBalance.isCompact && !isPrivate ? availableBalanceString : undefined}
-        side="left"
-      >
-        <Flex alignItems="center" gap="space.02" textStyle="label.02">
-          <BulletSeparator>
-            <PrivateTextLayout
-              isPrivate={isPrivate}
-              data-state={isLoadingAdditionalData ? 'loading' : undefined}
-              className={shimmerStyles}
-            >
-              {formattedBalance.value} {balanceSuffix}
-            </PrivateTextLayout>
-            {titleRightBulletInfo}
-          </BulletSeparator>
-        </Flex>
-      </BasicTooltip>
+      <Flex alignItems="center" gap="space.02" textStyle="label.02">
+        <BulletSeparator>
+          <PrivateTextLayout
+            isPrivate={isPrivate}
+            data-state={isLoadingAdditionalData ? 'loading' : undefined}
+            className={shimmerStyles}
+          >
+            {availableBalance.amount.toNumber() > 0 ? fiatBalance : null}
+          </PrivateTextLayout>
+          {titleRightBulletInfo}
+        </BulletSeparator>
+      </Flex>
     </SkeletonLoader>
   );
 
   const captionRight = (
     <SkeletonLoader width="78px" isLoading={isLoading}>
-      <Flex alignItems="center" color="ink.text-subdued" gap="space.02">
-        <BulletSeparator>
-          <Caption
-            data-state={isLoadingAdditionalData ? 'loading' : undefined}
-            className={shimmerStyles}
-          >
-            <PrivateTextLayout isPrivate={isPrivate}>
-              {availableBalance.amount.toNumber() > 0 ? fiatBalance : null}
-            </PrivateTextLayout>
-          </Caption>
-          {captionRightBulletInfo}
-        </BulletSeparator>
-      </Flex>
+      <BasicTooltip
+        asChild
+        label={formattedBalance.isCompact && !isPrivate ? availableBalanceString : undefined}
+        side="left"
+      >
+        <Flex alignItems="center" color="ink.text-subdued" gap="space.02">
+          <BulletSeparator>
+            <Caption
+              data-state={isLoadingAdditionalData ? 'loading' : undefined}
+              className={shimmerStyles}
+            >
+              <PrivateTextLayout isPrivate={isPrivate}>
+                {formattedBalance.value} {balanceSuffix}
+              </PrivateTextLayout>
+            </Caption>
+            {captionRightBulletInfo}
+          </BulletSeparator>
+        </Flex>
+      </BasicTooltip>
     </SkeletonLoader>
   );
 

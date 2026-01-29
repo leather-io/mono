@@ -8,6 +8,7 @@ import { delay } from '@leather.io/utils';
 
 export class HomePage {
   readonly page: Page;
+  readonly availableBalance: Locator;
   readonly headerActionButton: Locator;
   readonly receiveButton: Locator;
   readonly sendButton: Locator;
@@ -33,6 +34,7 @@ export class HomePage {
 
   constructor(page: Page) {
     this.page = page;
+    this.availableBalance = page.getByTestId(HomePageSelectors.AvailableBalance);
     this.headerActionButton = page.getByTestId(SharedComponentsSelectors.HeaderBackBtn);
     this.receiveButton = page.getByTestId(HomePageSelectors.ReceiveCryptoAssetBtn);
     this.sendButton = page.getByTestId(HomePageSelectors.SendCryptoAssetBtn);
@@ -102,8 +104,8 @@ export class HomePage {
     return displayerAddress.replaceAll('\n', '');
   }
 
-  async clickAssetsTab() {
-    await this.page.getByTestId(HomePageSelectors.AssetsTabBtn).click();
+  async clickTokensTab() {
+    await this.page.getByTestId(HomePageSelectors.TokensTabBtn).click();
   }
 
   async clickCollectiblesTab() {

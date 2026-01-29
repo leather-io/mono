@@ -1,5 +1,22 @@
 import type { Page } from '@playwright/test';
 
+const mockedEmptyFtBalancesV2 = {
+  limit: 100,
+  offset: 0,
+  total: 0,
+  results: [],
+};
+
+const mockedEmptyStxBalanceV2 = {
+  balance: '0',
+  total_miner_rewards_received: '0',
+  lock_tx_id: '',
+  locked: '0',
+  lock_height: 0,
+  burnchain_lock_height: 0,
+  burnchain_unlock_height: 0,
+};
+
 const mockedFtBalancesV2 = {
   limit: 100,
   offset: 0,
@@ -52,6 +69,20 @@ export async function mockMainnetTestAccountStacksBalancesV2Request(page: Page) 
   await page.route('**hiro.so/extended/v2/addresses/**/balances/stx', route =>
     route.fulfill({
       json: mockedStxBalanceV2,
+    })
+  );
+}
+
+export async function mockEmptyStacksBalancesV2Request(page: Page) {
+  await page.route('**hiro.so/extended/v2/addresses/**/balances/ft', route =>
+    route.fulfill({
+      json: mockedEmptyFtBalancesV2,
+    })
+  );
+
+  await page.route('**hiro.so/extended/v2/addresses/**/balances/stx', route =>
+    route.fulfill({
+      json: mockedEmptyStxBalanceV2,
     })
   );
 }

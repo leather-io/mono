@@ -5,9 +5,12 @@ import { Stack } from 'leather-styles/jsx';
 
 import { AssetList } from '@app/features/asset-list/asset-list';
 
+import { AssetsTabHeader } from './assets-tab-header';
+
 export function Assets() {
   return (
-    <Stack data-testid={HomePageSelectors.AssetList}>
+    <Stack data-testid={HomePageSelectors.AssetList} gap="space.04" pb="space.03">
+      <AssetsTabHeader />
       <AssetList filter="enabled" />
       <Outlet />
     </Stack>

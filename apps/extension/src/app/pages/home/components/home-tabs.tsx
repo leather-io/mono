@@ -18,9 +18,9 @@ interface HomeTabsProps {
 function getHomeTabs(showCollectibles: boolean) {
   return [
     {
-      label: 'Assets',
+      label: 'Tokens',
       value: RouteUrls.Home,
-      testId: 'tab-assets',
+      testId: 'tab-tokens',
     },
     ...(showCollectibles
       ? [
@@ -71,7 +71,7 @@ export function HomeTabs({ children, showCollectibles = true }: HomeTabsProps) {
         </Tabs.List>
       </Tabs.Root>
       <Suspense fallback={<LoadingSpinner pb="72px" />}>
-        <Box px={{ base: 'space.05', md: 0 }} width="100%">
+        <Box px={['space.05', 0]} width="100%">
           {children}
         </Box>
       </Suspense>
