@@ -1,4 +1,4 @@
-import { Circle } from 'leather-styles/jsx';
+import { Circle, styled } from 'leather-styles/jsx';
 
 import type { InscriptionAsset } from '@leather.io/models';
 import { OrdinalAvatarIcon } from '@leather.io/ui';
@@ -15,15 +15,13 @@ export function InscriptionIcon({ inscription, ...rest }: { inscription: Inscrip
           size="xl"
           {...rest}
         >
-          <img
+          <styled.img
             src={inscription.src}
-            style={{
-              width: '100%',
-              height: '100%',
-              aspectRatio: '1 / 1',
-              objectFit: 'cover',
-              borderRadius: '6px',
-            }}
+            width="100%"
+            height="100%"
+            aspectRatio="1 / 1"
+            objectFit="cover"
+            borderRadius="6px"
           />
         </Circle>
       );

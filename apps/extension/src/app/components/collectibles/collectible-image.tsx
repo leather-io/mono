@@ -1,5 +1,7 @@
 import { ReactNode, useState } from 'react';
 
+import { styled } from 'leather-styles/jsx';
+
 import { isValidUrl } from '@shared/utils/urls';
 
 import { CollectibleItemLayout, CollectibleItemLayoutProps } from './collectible-item.layout';
@@ -22,7 +24,7 @@ export function CollectibleImage(props: CollectibleImageProps) {
       {isError || !isImageAvailable ? (
         <ImageUnavailable />
       ) : (
-        <img
+        <styled.img
           alt={alt}
           onError={() => setIsError(true)}
           loading="lazy"
@@ -32,15 +34,13 @@ export function CollectibleImage(props: CollectibleImageProps) {
             setIsLoading(false);
           }}
           src={src}
-          style={{
-            width: '100%',
-            height: '100%',
-            aspectRatio: '1 / 1',
-            objectFit: 'cover',
-            // display: 'none' breaks onLoad event firing
-            opacity: isLoading ? '0' : '1',
-            imageRendering: width <= 40 ? 'pixelated' : 'auto',
-          }}
+          width="100%"
+          height="100%"
+          aspectRatio="1 / 1"
+          objectFit="cover"
+          // display: 'none' breaks onLoad event firing
+          opacity={isLoading ? '0' : '1'}
+          imageRendering={width <= 40 ? 'pixelated' : 'auto'}
         />
       )}
     </CollectibleItemLayout>

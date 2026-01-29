@@ -2,7 +2,7 @@ import StacksNftBns from '@assets/images/stacks-nft-bns.png';
 
 import { StxAvatarIcon } from '@leather.io/ui';
 
-import { CollectibleItemLayout } from '../../../../components/collectibles/collectible-item.layout';
+import { CollectibleItemLayout } from '@app/components/collectibles/collectible-item.layout';
 
 export function StacksBnsName(props: { bnsName: string }) {
   const { bnsName } = props;

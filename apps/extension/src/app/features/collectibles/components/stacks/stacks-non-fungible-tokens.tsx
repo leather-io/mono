@@ -2,7 +2,7 @@ import { Metadata as StacksNftMetadata } from '@hirosystems/token-metadata-api-c
 
 import { StxAvatarIcon } from '@leather.io/ui';
 
-import { CollectibleImage } from '../../../../components/collectibles/collectible-image';
+import { CollectibleImage } from '@app/components/collectibles/collectible-image';
 
 interface StacksNonFungibleTokensProps {
   metadata: StacksNftMetadata;
