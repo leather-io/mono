@@ -14,7 +14,7 @@ import { useHomePageState } from '../use-home-page-state';
 const availableBalanceTooltipLabel =
   'The amount of tokens available to send, excluding any locked amounts.';
 
-export function AssetsTabHeader() {
+export function TokensTabHeader() {
   const { availableBalance, isPrivateMode, togglePrivateMode } = useHomePageState();
 
   const isLoadingBalance = availableBalance.state === 'loading';

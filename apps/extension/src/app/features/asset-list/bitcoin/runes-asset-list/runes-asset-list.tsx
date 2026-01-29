@@ -11,7 +11,7 @@ import {
 } from '@app/query/bitcoin/runes/runes-balance.query';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
-import type { AssetRightElementVariant } from '../../asset-list';
+import type { AssetRightElementVariant } from '../../token-list';
 
 interface RunesAssetListProps {
   accountIndex: number;

@@ -5,7 +5,7 @@ import { Stack } from 'leather-styles/jsx';
 
 import { Caption, IconButton, SettingsSliderIcon, Sheet, SheetHeader } from '@leather.io/ui';
 
-import { AssetList } from '../asset-list';
+import { TokenList } from '../token-list';
 
 export function ManageTokens() {
   const [showManageTokens, setShowManageTokens] = useState(false);
@@ -27,7 +27,7 @@ export function ManageTokens() {
         header={<SheetHeader title="Manage tokens" />}
       >
         <Stack gap="space.05" px="space.05" data-testid={HomePageSelectors.ManageTokensAssetsList}>
-          <AssetList
+          <TokenList
             assetRightElementVariant="toggle"
             filter="all"
             showUnmanageableTokens={false}

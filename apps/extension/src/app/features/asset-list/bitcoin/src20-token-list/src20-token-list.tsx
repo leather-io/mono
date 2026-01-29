@@ -9,20 +9,20 @@ import type { Src20TokenAssetDetails } from '@app/components/loaders/src20-token
 import { Src20Image } from '@app/components/src20/src20-image';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
-import type { AssetRightElementVariant } from '../../asset-list';
+import type { AssetRightElementVariant } from '../../token-list';
 
-interface Src20TokenAssetListProps {
+interface Src20TokenListProps {
   tokens: Src20TokenAssetDetails[];
   assetRightElementVariant?: AssetRightElementVariant;
   preEnabledTokensIds: string[];
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
-export function Src20TokenAssetList({
+export function Src20TokenList({
   tokens,
   assetRightElementVariant,
   preEnabledTokensIds,
   setHasManageableTokens,
-}: Src20TokenAssetListProps) {
+}: Src20TokenListProps) {
   const isPrivate = useIsPrivateMode();
   const { isTokenEnabled } = useManageTokens();
 
