@@ -17,7 +17,7 @@ import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-
 
 import { AccountActions } from './components/account-actions-current/account-actions';
 import { AccountCard } from './components/account-card';
-import { AssetsSwitch } from './components/assets-switch';
+import { Assets } from './components/assets';
 import { HomeTabs } from './components/home-tabs';
 
 export function Home() {
@@ -42,7 +42,7 @@ export function Home() {
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
       <HomeTabs>
         <ModalBackgroundWrapper>
-          <Route index element={<AssetsSwitch />} />
+          <Route index element={<Assets />} />
           <Route
             path={RouteUrls.Activity}
             element={activityRevamp ? <ActivityList /> : <ActivityListLegacy />}
