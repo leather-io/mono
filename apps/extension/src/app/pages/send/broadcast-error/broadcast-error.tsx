@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router';
 
-import get from 'lodash.get';
+import { pathOr } from 'remeda';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
@@ -19,9 +19,9 @@ export function BroadcastError({ showInSheet = false }: Props) {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  const msg = get(state, 'error.message', 'Unknown error response');
-  const title = get(state, 'title', 'There was an error broadcasting your transaction');
-  const body = get(state, 'body', 'Unable to broadcast transaction');
+  const msg = pathOr(state, ['error', 'message'], 'Unknown error response');
+  const title = state?.title ?? 'There was an error broadcasting your transaction';
+  const body = state?.body ?? 'Unable to broadcast transaction';
 
   useOnMount(() => analytics.track('bitcoin_contract_error', { msg }));
 

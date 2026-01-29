@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import isEqual from 'lodash.isequal';
+import { isDeepEqual } from 'remeda';
 
 import { InternalMethods } from '@shared/message-types';
 import { sendMessage } from '@shared/messages';
@@ -16,7 +16,7 @@ export function useSyncAddressMonitor() {
 
   useEffect(() => {
     const monitorableAddresses = isNotificationsEnabled ? addresses : [];
-    if (monitorableAddresses && !isEqual(monitorableAddresses, prevAddresses.current)) {
+    if (monitorableAddresses && !isDeepEqual(monitorableAddresses, prevAddresses.current)) {
       prevAddresses.current = monitorableAddresses;
       void sendMessage({
         method: InternalMethods.AddressMonitorUpdated,

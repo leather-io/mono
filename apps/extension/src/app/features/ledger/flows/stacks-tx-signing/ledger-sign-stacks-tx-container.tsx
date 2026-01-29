@@ -3,7 +3,6 @@ import { Route, useLocation, useNavigate } from 'react-router';
 
 import { deserializeTransaction } from '@stacks/transactions';
 import StacksApp, { LedgerError } from '@zondax/ledger-stacks';
-import get from 'lodash.get';
 
 import { delay, isError } from '@leather.io/utils';
 
@@ -52,7 +51,7 @@ function LedgerSignStacksTxContainer() {
   const chain = 'stacks';
 
   useEffect(() => {
-    const tx = get(location.state, 'tx');
+    const tx = (location.state as any)?.tx;
     if (tx) setUnsignedTx(tx);
   }, [location.state]);
 

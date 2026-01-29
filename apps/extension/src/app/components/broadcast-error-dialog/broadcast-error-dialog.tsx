@@ -2,14 +2,13 @@ import { useLocation, useNavigate } from 'react-router';
 
 import GenericError from '@assets/images/generic-error.png';
 import { Flex, styled } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 export function BroadcastErrorSheet() {
   const navigate = useNavigate();
   const location = useLocation();
-  const message = get(location.state, 'message', '');
+  const message = (location.state?.message ?? '') as string;
 
   return (
     <Sheet

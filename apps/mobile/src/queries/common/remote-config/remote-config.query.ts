@@ -5,7 +5,7 @@ import {
 } from '@/queries/leather-query-provider';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import get from 'lodash.get';
+import { pathOr } from 'remeda';
 
 import { type DefaultMinMaxRangeFeeEstimations, type RemoteConfig } from '@leather.io/query';
 import { createMoney, isUndefined } from '@leather.io/utils';
@@ -76,19 +76,19 @@ export function useConfigFeeEstimationsMinValues() {
 
 export function useConfigTokenTransferFeeEstimations() {
   const config = useRemoteConfig();
-  return get(config, 'tokenTransferFeeEstimations', []);
+  return pathOr(config, ['tokenTransferFeeEstimations'], []);
 }
 
 export function useConfigStacksContractCallFeeEstimations():
   | DefaultMinMaxRangeFeeEstimations
   | undefined {
   const config = useRemoteConfig();
-  return get(config, 'stacksContractCallFeeEstimations', undefined);
+  return pathOr(config, ['stacksContractCallFeeEstimations'], undefined);
 }
 
 export function useConfigStacksContractDeploymentFeeEstimations():
   | DefaultMinMaxRangeFeeEstimations
   | undefined {
   const config = useRemoteConfig();
-  return get(config, 'stacksContractDeploymentFeeEstimations', undefined);
+  return pathOr(config, ['stacksContractDeploymentFeeEstimations'], undefined);
 }

@@ -1,7 +1,5 @@
 import { useLocation } from 'react-router';
 
-import get from 'lodash.get';
-
 import { GenericError, GenericErrorListItem } from '@app/components/generic-error/generic-error';
 
 const helpTextList = [
@@ -10,8 +8,8 @@ const helpTextList = [
 
 function useRequestErrorState() {
   const location = useLocation();
-  const message = get(location.state, 'message') as string;
-  const title = get(location.state, 'title') as string;
+  const message = (location.state?.message ?? '') as string;
+  const title = (location.state?.title ?? '') as string;
 
   return { message, title };
 }

@@ -3,7 +3,6 @@ import { Outlet, useLocation } from 'react-router';
 
 import { getAddressFromPublicKey } from '@stacks/transactions';
 import { LedgerError } from '@zondax/ledger-stacks';
-import get from 'lodash.get';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
 import { delay, isError } from '@leather.io/utils';
@@ -54,7 +53,7 @@ export function LedgerSignJwtContainer() {
   const [accountIndex, setAccountIndex] = useState<null | number>(null);
 
   useEffect(() => {
-    const index = parseInt(get(location.state, 'index'), 10);
+    const index = parseInt((location.state as any)?.index, 10);
     if (Number.isFinite(index)) setAccountIndex(index);
   }, [location.state]);
 

@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from 'react-router';
 
 import { styled } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -17,8 +16,8 @@ const helpTextList = [
 export function SwapError() {
   const location = useLocation();
   const navigate = useNavigate();
-  const message = get(location.state, 'message') as string;
-  const title = get(location.state, 'title') as string;
+  const message = (location.state?.message ?? '') as string;
+  const title = (location.state?.title ?? '') as string;
 
   return (
     <GenericError

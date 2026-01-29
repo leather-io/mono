@@ -1,5 +1,5 @@
 import type { SignatureData } from '@stacks/connect-jwt';
-import isEqual from 'lodash.isequal';
+import { isDeepEqual } from 'remeda';
 
 import type { UnsignedMessage } from '@shared/signature/signature-types';
 
@@ -10,7 +10,7 @@ export async function listenForStacksMessageSigning(
 ): Promise<SignatureData> {
   return new Promise((resolve, reject) => {
     function stacksMessageSignedHandler(msg: GlobalAppEvents['ledgerStacksMessageSigned']) {
-      if (isEqual(msg.unsignedMessage, unsignedMessage)) {
+      if (isDeepEqual(msg.unsignedMessage, unsignedMessage)) {
         appEvents.unsubscribe('ledgerStacksMessageSigned', stacksMessageSignedHandler);
         appEvents.unsubscribe('ledgerStacksMessageSigningCancelled', signingAbortedHandler);
         resolve(msg.messageSignatures);
@@ -19,7 +19,7 @@ export async function listenForStacksMessageSigning(
     appEvents.subscribe('ledgerStacksMessageSigned', stacksMessageSignedHandler);
 
     function signingAbortedHandler(msg: GlobalAppEvents['ledgerStacksMessageSigningCancelled']) {
-      if (isEqual(msg.unsignedMessage, unsignedMessage)) {
+      if (isDeepEqual(msg.unsignedMessage, unsignedMessage)) {
         appEvents.unsubscribe('ledgerStacksMessageSigningCancelled', signingAbortedHandler);
         appEvents.unsubscribe('ledgerStacksMessageSigned', stacksMessageSignedHandler);
         reject(new Error('User cancelled the signing operation'));

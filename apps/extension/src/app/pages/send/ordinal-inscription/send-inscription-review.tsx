@@ -3,7 +3,6 @@ import { type Location, useLocation, useNavigate } from 'react-router';
 import { bytesToHex } from '@noble/hashes/utils';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Box, Flex, Stack } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
@@ -24,10 +23,10 @@ import { useSendInscriptionState } from './components/send-inscription-container
 function useSendInscriptionReviewState() {
   const location = useLocation();
   return {
-    arrivesIn: get(location.state, 'time') as string,
-    signedTx: get(location.state, 'signedTx') as Uint8Array,
-    recipient: get(location.state, 'recipient', '') as string,
-    feeRowValue: get(location.state, 'feeRowValue') as string,
+    arrivesIn: (location.state as any)?.time as string,
+    signedTx: (location.state as any)?.signedTx as Uint8Array,
+    recipient: ((location.state as any)?.recipient ?? '') as string,
+    feeRowValue: (location.state as any)?.feeRowValue as string,
   };
 }
 

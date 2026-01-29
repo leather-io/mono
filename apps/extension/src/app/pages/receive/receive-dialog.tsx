@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Box } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
 import { Sheet, SheetHeader, Tabs } from '@leather.io/ui';
 
@@ -39,7 +38,7 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
   const location = useLocation();
   const btcAddressNativeSegwit = useCurrentAccountNativeSegwitAddressIndexZero();
   const stxAddress = useCurrentStacksAccountAddress();
-  const accountIndex = get(location.state, 'accountIndex', undefined);
+  const accountIndex = (location.state as any)?.accountIndex ?? undefined;
   const btcAddressTaproot = useZeroIndexTaprootAddress(accountIndex);
 
   const title =

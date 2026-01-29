@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Outlet, useLocation, useOutletContext } from 'react-router';
 
-import get from 'lodash.get';
-
 import { createBitcoinAddress, lookupDerivationByAddress } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import type { AverageBitcoinFeeRates, BtcFeeType, InscriptionAsset } from '@leather.io/models';
@@ -30,7 +28,7 @@ interface SendInscriptionContextState {
 export function useSendInscriptionState() {
   const location = useLocation();
   const context = useOutletContext<SendInscriptionContextState>();
-  return { ...context, recipient: get(location.state, 'recipient', '') as string };
+  return { ...context, recipient: ((location.state as any)?.recipient ?? '') as string };
 }
 
 export function SendInscriptionContainer() {

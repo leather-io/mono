@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
-import get from 'lodash.get';
-
 import { isUndefined } from '@leather.io/utils';
 
 type LocationState = string | boolean | undefined | number | Location;
@@ -16,7 +14,7 @@ export function useLocationState(propName: string): string | undefined;
 export function useLocationState(propName: string, defaultValue: string): string;
 export function useLocationState(propName: string, defaultValue?: string) {
   const location = useLocation();
-  return get(location, `state.${propName}`, defaultValue);
+  return (location.state as any)?.[propName] ?? defaultValue;
 }
 
 export function useLocationStateWithCache<T = string>(propName: string): T | undefined;
@@ -24,7 +22,7 @@ export function useLocationStateWithCache<T = string>(propName: string, defaultV
 export function useLocationStateWithCache<T = string>(propName: string, defaultValue?: T) {
   const location = useLocation();
   const [value, setValue] = useState(defaultValue);
-  const stateVal = get(location, `state.${propName}`);
+  const stateVal = (location.state as any)?.[propName];
 
   useEffect(() => {
     if (!isUndefined(stateVal)) setValue(stateVal);

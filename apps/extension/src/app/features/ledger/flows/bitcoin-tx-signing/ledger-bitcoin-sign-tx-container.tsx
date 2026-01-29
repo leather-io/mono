@@ -5,7 +5,6 @@ import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { hexToBytes } from '@stacks/common';
 import BitcoinApp from 'ledger-bitcoin';
-import get from 'lodash.get';
 
 import { delay } from '@leather.io/utils';
 
@@ -55,7 +54,7 @@ function LedgerSignBitcoinTxContainer() {
   const inputsToSign = useLocationStateWithCache<BitcoinInputSigningConfig[]>('inputsToSign');
 
   useEffect(() => {
-    const tx = get(location.state, 'tx');
+    const tx = (location.state as any)?.tx;
     if (tx) {
       setUnsignedTransactionRaw(tx);
       setUnsignedTransaction(btc.Transaction.fromPSBT(hexToBytes(tx)));

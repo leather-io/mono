@@ -1,7 +1,5 @@
 import { useLocation } from 'react-router';
 
-import get from 'lodash.get';
-
 import { analytics } from '@shared/utils/analytics';
 
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
@@ -23,10 +21,10 @@ export function ReceiveBtcModal({ type = 'btc' }: ReceiveBtcModalType) {
   const toast = useToast();
 
   const currentAccountIndex = useCurrentAccountIndex();
-  const accountIndex = get(state, 'accountIndex', currentAccountIndex);
+  const accountIndex = (state as any)?.accountIndex ?? currentAccountIndex;
 
   const activeAccountBtcAddress = useNativeSegwitAccountIndexAddressIndexZero(accountIndex);
-  const btcAddress = get(state, 'btcAddress', activeAccountBtcAddress);
+  const btcAddress = (state as any)?.btcAddress ?? activeAccountBtcAddress;
 
   return (
     <ReceiveTokensLayout

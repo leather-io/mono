@@ -6,7 +6,6 @@ import * as btc from '@scure/btc-signer';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Stack } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
 import { decodeBitcoinTx } from '@leather.io/bitcoin';
 import type { CryptoCurrency } from '@leather.io/models';
@@ -43,11 +42,11 @@ const symbol: CryptoCurrency = 'BTC';
 function useBtcSendFormConfirmationState() {
   const location = useLocation();
   return {
-    tx: get(location.state, 'tx') as string,
-    fee: get(location.state, 'fee') as number,
-    feeRowValue: get(location.state, 'feeRowValue') as string,
-    arrivesIn: get(location.state, 'time') as string,
-    recipient: get(location.state, 'recipient') as string,
+    tx: (location.state as any)?.tx as string,
+    fee: (location.state as any)?.fee as number,
+    feeRowValue: (location.state as any)?.feeRowValue as string,
+    arrivesIn: (location.state as any)?.time as string,
+    recipient: (location.state as any)?.recipient as string,
   };
 }
 
