@@ -3,21 +3,13 @@ import { useState } from 'react';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Stack } from 'leather-styles/jsx';
 
-import {
-  Caption,
-  IconButton,
-  SettingsSliderIcon,
-  Sheet,
-  SheetHeader,
-  Spinner,
-} from '@leather.io/ui';
+import { Caption, IconButton, SettingsSliderIcon, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { AssetList } from '../asset-list';
 
 export function ManageTokens() {
   const [showManageTokens, setShowManageTokens] = useState(false);
   const [hasManageableTokens, setHasManageableTokens] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <>
@@ -40,16 +32,9 @@ export function ManageTokens() {
             filter="all"
             showUnmanageableTokens={false}
             setHasManageableTokens={setHasManageableTokens}
-            setIsLoading={setIsLoading}
           />
 
-          {isLoading && (
-            <Stack h="100%" justify="center" align="center">
-              <Spinner size="md" />
-            </Stack>
-          )}
-
-          {!isLoading && !hasManageableTokens && (
+          {!hasManageableTokens && (
             <Stack h="100%" justify="center" align="center">
               <Caption>No tokens found</Caption>
             </Stack>

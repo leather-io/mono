@@ -23,7 +23,6 @@ interface Sip10TokenAssetListProps {
   assetRightElementVariant?: AssetRightElementVariant;
   onSelectAsset?(symbol: string, contractId?: string): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
-  setIsLoading?: Dispatch<SetStateAction<boolean>>;
 }
 
 export function Sip10TokenAssetList({
@@ -32,18 +31,11 @@ export function Sip10TokenAssetList({
   onSelectAsset,
   assetRightElementVariant,
   setHasManageableTokens,
-  setIsLoading,
 }: Sip10TokenAssetListProps) {
   const sip10s = useSip10AccountBalance(accountIndex, {
     includeHiddenAssets: assetFilter === 'all',
   });
   const { isEnabled } = useManagedSip10Tools(accountIndex);
-
-  useEffect(() => {
-    if (setIsLoading) {
-      setIsLoading(sip10s.state !== 'success' && !sip10s.value);
-    }
-  }, [sip10s.state, sip10s.value, setIsLoading]);
 
   useEffect(() => {
     if (sip10s.value && sip10s.value.sip10s.length > 0 && setHasManageableTokens) {
