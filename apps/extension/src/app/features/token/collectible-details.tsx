@@ -10,7 +10,7 @@ import {
   Sip9Asset,
   StampAsset,
 } from '@leather.io/models';
-import { ArrowLeftIcon, Button, Callout } from '@leather.io/ui';
+import { ArrowLeftIcon, Callout } from '@leather.io/ui';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { isPopupMode } from '@app/common/utils';
@@ -24,7 +24,6 @@ import { CollectibleTypeIconOverlay } from '../collectibles/components/collectib
 import { InscriptionCard } from '../collectibles/components/inscription-card';
 import { Sip9Card } from '../collectibles/components/sip9-card';
 import { StampCard } from '../collectibles/components/stamp-card';
-import { SendInscriptionDialog } from '../send-inscription';
 import { CollectibleDetailsLoading } from './collectible-details-loading';
 import { SectionCard } from './collectible-details.layout';
 import { InscriptionDetails } from './inscription-details';
@@ -42,7 +41,6 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
   const network = useCurrentNetwork();
   const { data: collectibles = [], isLoading, isError } = useAccountCollectibles(account);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  const [sendInscription, setSendInscription] = useState<InscriptionAsset | null>(null);
 
   if (isLoading) {
     return <CollectibleDetailsLoading onBack={() => navigate(-1)} />;
@@ -119,20 +117,6 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
         <SectionCard>
           <CollectibleTypeIconOverlay protocol={view.protocol}>{media}</CollectibleTypeIconOverlay>
         </SectionCard>
-
-        {protocol === CryptoAssetProtocols.inscription && (
-          <Button fullWidth onClick={() => setSendInscription(view.asset as InscriptionAsset)}>
-            Send
-          </Button>
-        )}
-
-        {sendInscription && (
-          <SendInscriptionDialog
-            inscription={sendInscription}
-            isOpen={!!sendInscription}
-            onClose={() => setSendInscription(null)}
-          />
-        )}
 
         {protocol === CryptoAssetProtocols.inscription && (
           <InscriptionDetails

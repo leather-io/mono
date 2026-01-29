@@ -23,7 +23,7 @@ export function Sip9({
   onPress,
 }: Sip9Props) {
   const [mediaInfo, setMediaInfo] = useState<Sip9MediaInfo>({
-    contentType: '',
+    contentType: null,
     isVideo: false,
     isImage: false,
     isAudio: false,

@@ -5,12 +5,10 @@ import { type CollectibleView, type TokenDetailsProps } from '@leather.io/featur
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { createTokenDetailsPath } from '@app/common/asset-url';
-import { useFlags } from '@app/features/feature-flags';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
-import { CollectiblesLegacy } from './collectibles-legacy';
 import { CollectibleTypeIconOverlay } from './components/collectible-type-icon-overlay.web';
 import { CollectiblesLayout } from './components/collectibles.layout';
 import { InscriptionCard } from './components/inscription-card';
@@ -91,6 +89,5 @@ function CollectiblesCurrent() {
 }
 
 export function Collectibles() {
-  const { extensionRevamp } = useFlags();
-  return extensionRevamp ? <CollectiblesCurrent /> : <CollectiblesLegacy />;
+  return <CollectiblesCurrent />;
 }
