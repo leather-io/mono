@@ -14,7 +14,7 @@ function useAccountCollectiblesQuery(
   const { select, ...rest } = options;
 
   return useQuery<NonFungibleCryptoAsset[], Error, CollectibleView[]>({
-    ...createAccountCollectiblesQueryConfig(account, settings),
+    ...createAccountCollectiblesQueryConfig({ account }, settings),
     ...rest,
     select: select ?? (collectibles => collectibles.map(createCollectibleView)),
   });

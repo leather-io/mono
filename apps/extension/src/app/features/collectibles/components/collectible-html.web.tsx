@@ -5,33 +5,6 @@ import { styled } from 'leather-styles/jsx';
 import { CollectibleCard } from './collectible-card.web';
 import { ImageUnavailable } from './image-unavailable.web';
 
-interface CollectibleHtmlIframeProps {
-  src: string;
-  thumbnailSrc?: string;
-  height: number;
-  onPress?(): void;
-  setHasError(): void;
-}
-function CollectibleHtmlIframe({
-  src,
-  thumbnailSrc,
-  height,
-  onPress,
-  setHasError,
-}: CollectibleHtmlIframeProps) {
-  return (
-    <styled.iframe
-      src={thumbnailSrc ?? src}
-      height={height}
-      width="100%"
-      border="none"
-      bg="transparent"
-      pointerEvents={onPress ? 'none' : undefined}
-      onError={setHasError}
-    />
-  );
-}
-
 interface CollectibleHtmlProps {
   src: string;
   height?: number;
@@ -53,12 +26,14 @@ export function CollectibleHtml({
   }
 
   const iframe = (
-    <CollectibleHtmlIframe
-      src={src}
-      thumbnailSrc={thumbnailSrc}
+    <styled.iframe
+      src={thumbnailSrc ?? src}
       height={height}
-      onPress={onPress}
-      setHasError={() => setHasError(true)}
+      width="100%"
+      border="none"
+      bg="transparent"
+      pointerEvents={onPress ? 'none' : undefined}
+      onError={() => setHasError(true)}
     />
   );
 

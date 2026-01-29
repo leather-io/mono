@@ -15,7 +15,6 @@ interface CollectibleTextProps {
 const htmlRegex = /<\w+[\s\S]*?>/;
 
 function createHtmlDataUrl(html: string): string {
-  // Use <pre> with monospace font to render text inscriptions as before
   const wrappedHtml = `<!DOCTYPE html>
 <html>
 <head>
@@ -24,22 +23,14 @@ function createHtmlDataUrl(html: string): string {
     body {
       margin: 0;
       padding: 16px;
+      font-family: system-ui, sans-serif;
       background: #12100f;
       color: #f5f1ed;
       overflow: hidden;
     }
-    pre {
-      margin: 0;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
-      font-size: 15px;
-      background: none;
-      color: #f5f1ed;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
   </style>
 </head>
-<body><pre>${html}</pre></body>
+<body>${html}</body>
 </html>`;
   return `data:text/html;charset=utf-8,${encodeURIComponent(wrappedHtml)}`;
 }
@@ -48,8 +39,6 @@ export function CollectibleText({ src, height = 200, onPress }: CollectibleTextP
   const preview = typeof src === 'string' ? src.slice(0, 512) : '';
   const isHtml = htmlRegex.test(preview);
 
-  // For HTML content, create a data URL and render in sandboxed iframe
-  // This prevents any script execution in the parent context
   const dataUrl = useMemo(() => (isHtml ? createHtmlDataUrl(src) : null), [isHtml, src]);
 
   const content = isHtml ? (

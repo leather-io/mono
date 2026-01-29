@@ -3,12 +3,10 @@ import { Box, styled } from 'leather-styles/jsx';
 import { CollectibleCard } from './collectible-card.web';
 import { type CollectibleImageProps } from './collectible-image.web';
 
-interface BnsImageLabelProps {
-  alt?: string;
-}
 export function BnsImage({ alt, src, height = 200, onPress }: CollectibleImageProps) {
-  function BnsImageLabel({ alt }: BnsImageLabelProps) {
-    return (
+  const image = (
+    <Box height={height} overflow="hidden" bg="ink.background-secondary" position="relative">
+      <styled.img src={src} alt={alt} height={height} width="100%" objectFit="cover" />
       <Box
         position="absolute"
         bottom={0}
@@ -23,24 +21,8 @@ export function BnsImage({ alt, src, height = 200, onPress }: CollectibleImagePr
           {alt}
         </styled.span>
       </Box>
-    );
-  }
-
-  interface BnsImageContentProps extends BnsImageLabelProps {
-    src: string;
-    height?: number;
-  }
-
-  function BnsImageContent({ alt, src, height }: BnsImageContentProps) {
-    return (
-      <Box height={height} overflow="hidden" bg="ink.background-secondary" position="relative">
-        <styled.img src={src} alt={alt} height={height} width="100%" objectFit="cover" />
-        <BnsImageLabel alt={alt} />
-      </Box>
-    );
-  }
-
-  const image = <BnsImageContent alt={alt} src={src} height={height} />;
+    </Box>
+  );
 
   if (onPress) {
     return (

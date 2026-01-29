@@ -1,9 +1,10 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { type CollectibleView, type TokenDetailsProps } from '@leather.io/features';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
+import { createTokenDetailsPath } from '@app/common/asset-url';
 import { useFlags } from '@app/features/feature-flags';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
@@ -56,14 +57,21 @@ function CollectiblesCurrent() {
     isRefetching,
   } = useAccountCollectibles(account);
 
+  const handleOpenToken = useCallback(
+    ({ assetId }: TokenDetailsProps) => {
+      void navigate(createTokenDetailsPath(assetId), { state: { backgroundLocation: location } });
+    },
+    [navigate, location]
+  );
+
   const renderedCollectibles = useMemo(
     () =>
       collectibles.map(view => (
         <CollectibleTypeIconOverlay protocol={view.protocol} key={view.key}>
-          {renderCollectible(view)}
+          {renderCollectible(view, handleOpenToken)}
         </CollectibleTypeIconOverlay>
       )),
-    [collectibles]
+    [collectibles, handleOpenToken]
   );
 
   return (
