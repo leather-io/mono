@@ -89,6 +89,14 @@ const mockedRunesOutputsByAddress = [
   },
 ];
 
+export async function mockEmptyRunesOutputsRequest(page: Page) {
+  await page.route('**/leatherapi.bestinslot.xyz/v3/runes/wallet_balances**', route =>
+    route.fulfill({
+      json: { block_height: 864803, data: [] },
+    })
+  );
+}
+
 export async function mockMainnetTestAccountRunesOutputsRequest(page: Page) {
   await page.route(
     `**/leatherapi.bestinslot.xyz/v3/runes/wallet_balances?address=${TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS}`,

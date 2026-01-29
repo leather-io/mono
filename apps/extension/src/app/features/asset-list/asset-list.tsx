@@ -41,6 +41,7 @@ interface AssetListProps {
   showUnmanageableTokens?: boolean;
   onSelectAsset?(symbol: string, contractId?: string): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
+  setIsLoading?: Dispatch<SetStateAction<boolean>>;
 }
 
 export function AssetList({
@@ -49,6 +50,7 @@ export function AssetList({
   assetRightElementVariant = 'balance',
   showUnmanageableTokens = true,
   setHasManageableTokens,
+  setIsLoading,
   filter,
 }: AssetListProps) {
   const currentAccountIndex = useCurrentAccountIndex();
@@ -132,6 +134,7 @@ export function AssetList({
           onSelectAsset={onSelectAsset}
           assetRightElementVariant={assetRightElementVariant}
           setHasManageableTokens={setHasManageableTokens}
+          setIsLoading={setIsLoading}
         />
       )}
 

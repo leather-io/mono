@@ -3,6 +3,7 @@ import { mockMainnetTestAccountStacksConfirmedTxsRequests } from '@tests/mocks/m
 import type { HomePage } from '@tests/page-object-models/home.page';
 import { makeLedgerTestAccountWalletState } from '@tests/page-object-models/onboarding.page';
 import { ActivitySelectors } from '@tests/selectors/activity.selectors';
+import { CoreAssetSelectors } from '@tests/selectors/mocked-tokens.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
 import { test } from '../../fixtures/fixtures';
@@ -40,7 +41,31 @@ test.describe('App with Ledger', () => {
         test.expect(homePage.page.url()).toContain('/receive');
       });
 
+      if (testName === 'withBitcoinAndStacksKey') {
+        test('that all core assets are visible', async ({ homePage }) => {
+          const btcAsset = homePage.assetList.getByTestId(CoreAssetSelectors.BtcAsset);
+          const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
+          const usdcxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.UsdcxAsset);
+
+          await test.expect(btcAsset).toBeVisible();
+          await test.expect(stxAsset).toBeVisible();
+          await test.expect(usdcxAsset).toBeVisible();
+        });
+      }
+
       if (testName === 'withStacksKeysOnly') {
+        test('that STX and USDCx are visible but Bitcoin shows connect', async ({ homePage }) => {
+          const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
+          const usdcxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.UsdcxAsset);
+          const connectBitcoin = homePage.assetList.getByTestId(
+            CoreAssetSelectors.ConnectLedgerBitcoin
+          );
+
+          await test.expect(stxAsset).toBeVisible();
+          await test.expect(usdcxAsset).toBeVisible();
+          await test.expect(connectBitcoin).toBeVisible();
+        });
+
         test('stacks address is shown by default', async ({ homePage }) => {
           const stacksAddress = await homePage.getReceiveStxAddress();
           test.expect(stacksAddress).toEqual(TEST_ACCOUNT_1_STX_ADDRESS);
@@ -88,6 +113,24 @@ test.describe('App with Ledger', () => {
 
           test.expect(errors).toHaveLength(0);
           test.expect(consoleErrors).toHaveLength(0);
+        });
+      }
+
+      if (testName === 'withBitcoinKeysOnly') {
+        test('that BTC is visible, Stacks shows connect, and USDCx is hidden', async ({
+          homePage,
+        }) => {
+          const btcAsset = homePage.assetList.getByTestId(CoreAssetSelectors.BtcAsset);
+          const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
+          const usdcxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.UsdcxAsset);
+          const connectStacks = homePage.assetList.getByTestId(
+            CoreAssetSelectors.ConnectLedgerStacks
+          );
+
+          await test.expect(btcAsset).toBeVisible();
+          await test.expect(connectStacks).toBeVisible();
+          await test.expect(stxAsset).not.toBeAttached();
+          await test.expect(usdcxAsset).not.toBeAttached();
         });
       }
 
