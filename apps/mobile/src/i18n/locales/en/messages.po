@@ -1064,7 +1064,7 @@ msgstr "ID copied to clipboard"
 msgid "If unsafe, your wallet could be drained."
 msgstr "If unsafe, your wallet could be drained."
 
-#: src/features/token/utils/image-unavailable-label.ts:5
+#: src/features/collectibles/components/image-unavailable.tsx:15
 msgid "Image currently unavailable"
 msgstr "Image currently unavailable"
 

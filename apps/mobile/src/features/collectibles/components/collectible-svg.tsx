@@ -1,9 +1,9 @@
 import { ReactNode, useState } from 'react';
 import { SvgUri } from 'react-native-svg';
 
-import { Box } from '../../box/box.native';
-import { Pressable, PressableProps } from '../../pressable/pressable.native';
-import { ImageUnavailable } from './image-unavailable.native';
+import { Box, Pressable, type PressableProps } from '@leather.io/ui/native';
+
+import { ImageUnavailable } from './image-unavailable';
 
 interface CollectibleSvgProps extends PressableProps {
   src: string;
@@ -34,6 +34,7 @@ export function CollectibleSvg({
           uri={src}
           width="100%"
           height="100%"
+          // eslint-disable-next-line lingui/no-unlocalized-strings
           preserveAspectRatio="xMidYMid meet"
           onError={() => setHasError(true)}
         />

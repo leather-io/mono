@@ -3,11 +3,9 @@ import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 
 import { Image } from 'expo-image';
 
-import { PaperPlaneIcon } from '../../../icons/paper-plane-icon.native';
-import { Box } from '../../box/box.native';
-import { TouchableOpacity } from '../../button/touchable-opacity.native';
-import { Text } from '../../text/text.native';
-import { CollectibleCard } from './collectible-card.native';
+import { Box, PaperPlaneIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
+
+import { CollectibleCard } from './collectible-card';
 
 interface CollectibleVideoProps {
   src: string;
@@ -27,6 +25,7 @@ const thumbnailCache = new Map<string, string>();
 function buildThumbnailCaptureHtml(src: string) {
   const encodedSrc = JSON.stringify(src);
 
+  /* eslint-disable lingui/no-unlocalized-strings */
   return `
     <!DOCTYPE html>
     <html>

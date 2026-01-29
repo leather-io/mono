@@ -1,8 +1,8 @@
 import { WebView } from 'react-native-webview';
 
-import { Pressable } from '../../pressable/pressable.native';
-import { Text } from '../../text/text.native';
-import { CollectibleCard } from './collectible-card.native';
+import { Pressable, Text } from '@leather.io/ui/native';
+
+import { CollectibleCard } from './collectible-card';
 
 interface CollectibleTextProps {
   src: string;

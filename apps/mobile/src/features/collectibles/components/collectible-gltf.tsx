@@ -2,8 +2,8 @@ import { ReactNode, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-import { CollectibleCard } from './collectible-card.native';
-import { CollectibleImage } from './collectible-image.native';
+import { CollectibleCard } from './collectible-card';
+import { CollectibleImage } from './collectible-image';
 
 interface CollectibleGltfProps {
   src: string;
@@ -15,6 +15,7 @@ interface CollectibleGltfProps {
 
 function buildViewerHtml(src: string) {
   const encodedSrc = JSON.stringify(src);
+  /* eslint-disable lingui/no-unlocalized-strings */
   return `
     <!DOCTYPE html>
     <html>

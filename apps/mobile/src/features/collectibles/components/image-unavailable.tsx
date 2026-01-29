@@ -1,18 +1,18 @@
 import { PropsWithChildren, ReactNode } from 'react';
 
-import { Eye1ClosedIcon } from '../../../icons/eye-1-closed-icon.native';
-import { Box } from '../../box/box.native';
-import { Text } from '../../text/text.native';
-import { CollectibleCard } from './collectible-card.native';
+import { t } from '@lingui/core/macro';
+
+import { Box, Eye1ClosedIcon, Text } from '@leather.io/ui/native';
+
+import { CollectibleCard } from './collectible-card';
 
 interface ImageUnavailableProps extends PropsWithChildren {
   height?: number;
   message?: ReactNode;
 }
 
-const defaultMessage = 'Image currently unavailable';
-
 export function ImageUnavailable({ height = 200, message, children }: ImageUnavailableProps) {
+  const defaultMessage = t`Image currently unavailable`;
   const label = message ?? children ?? defaultMessage;
 
   return (

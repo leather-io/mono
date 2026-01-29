@@ -2,10 +2,10 @@ import { ReactNode, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-import { Box } from '../../box/box.native';
-import { TouchableOpacity } from '../../button/touchable-opacity.native';
-import { CollectibleCard } from './collectible-card.native';
-import { ImageUnavailable } from './image-unavailable.native';
+import { Box, TouchableOpacity } from '@leather.io/ui/native';
+
+import { CollectibleCard } from './collectible-card';
+import { ImageUnavailable } from './image-unavailable';
 
 interface CollectibleHtmlProps {
   src: string;

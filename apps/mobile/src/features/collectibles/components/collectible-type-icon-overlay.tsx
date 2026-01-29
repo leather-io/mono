@@ -1,11 +1,7 @@
 import { PropsWithChildren, ReactElement } from 'react';
 
-import type { NonFungibleCryptoAsset } from '@leather.io/models';
-
-import { OrdinalAvatarIcon } from '../../avatar/ordinal-avatar-icon.native';
-import { StampAvatarIcon } from '../../avatar/stamp-avatar-icon.native';
-import { StxAvatarIcon } from '../../avatar/stx-avatar-icon.native';
-import { Box } from '../../box/box.native';
+import { NonFungibleCryptoAsset } from '@leather.io/models';
+import { Box, OrdinalAvatarIcon, StampAvatarIcon, StxAvatarIcon } from '@leather.io/ui/native';
 
 const overlayOffset = 12;
 

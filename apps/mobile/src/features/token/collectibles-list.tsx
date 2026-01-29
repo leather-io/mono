@@ -10,8 +10,9 @@ import { EmptyCollectiblesState } from '@/features/token/components/empty-collec
 import { useRouter } from 'expo-router';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';
-import { CollectibleTypeIconOverlay } from '@leather.io/ui/native';
 import { assertUnreachable, getAssetId, serializeAssetId } from '@leather.io/utils';
+
+import { CollectibleTypeIconOverlay } from '@/features/collectibles/components/collectible-type-icon-overlay';
 
 import { useCollectibleDetailsFlag } from '../feature-flags';
 import { Inscription } from './bitcoin/inscription';
