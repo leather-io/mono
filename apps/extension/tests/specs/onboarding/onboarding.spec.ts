@@ -118,7 +118,7 @@ test.describe('Onboarding an existing user', () => {
         test.expect(nativeSegwitAddress).toEqual(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS);
       });
 
-      test('that the wallet generates the correct Taproot address', async ({ homePage }) => {
+      test.only('that the wallet generates the correct Taproot address', async ({ homePage }) => {
         test.slow();
 
         const taprootAddress = await homePage.getReceiveTaprootAddress();

@@ -69,11 +69,8 @@ export class HomePage {
     await this.goToReceiveDialog();
     await this.page.getByTestId(HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn).click();
     const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
-    await addressDisplayer.waitFor({ state: 'visible', timeout: 10000 });
-    await this.page.waitForFunction(() => {
-      const el = document.querySelector('[data-testid="address-displayer"]');
-      return el && el.textContent && el.textContent.trim().length > 0;
-    });
+    await addressDisplayer.waitFor({ state: 'visible' });
+    await addressDisplayer.locator(':scope').filter({ hasNotText: /^$/ }).waitFor();
     const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
@@ -89,11 +86,8 @@ export class HomePage {
     // const address = await this.page.evaluate('navigator.clipboard.readText()');
     // return address;
     const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
-    await addressDisplayer.waitFor({ state: 'visible', timeout: 10000 });
-    await this.page.waitForFunction(() => {
-      const el = document.querySelector('[data-testid="address-displayer"]');
-      return el && el.textContent && el.textContent.trim().length > 0;
-    });
+    await addressDisplayer.waitFor({ state: 'visible' });
+    await addressDisplayer.locator(':scope').filter({ hasNotText: /^$/ }).waitFor();
     const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
@@ -105,11 +99,8 @@ export class HomePage {
     await delay(1000);
     if (await qrCodeBtn.isVisible()) await qrCodeBtn.click({ force: true });
     const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
-    await addressDisplayer.waitFor({ state: 'visible', timeout: 10000 });
-    await this.page.waitForFunction(() => {
-      const el = document.querySelector('[data-testid="address-displayer"]');
-      return el && el.textContent && el.textContent.trim().length > 0;
-    });
+    await addressDisplayer.waitFor({ state: 'visible' });
+    await addressDisplayer.locator(':scope').filter({ hasNotText: /^$/ }).waitFor();
     const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
