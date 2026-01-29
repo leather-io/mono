@@ -305,10 +305,10 @@ export class OnboardingPage {
         chrome.storage.session.get(['encryptionKey'])
       );
       const hasSessionKey = encryptionKey === testAccountDerivedKey;
-      const hasAssetsTab = await this.page.getByText('Assets').isVisible();
+      const hasTokensTab = await this.page.getByText('Tokens').isVisible();
       const hasActivityTab = await this.page.getByText('Activity').isVisible();
 
-      return hasSessionKey && hasAssetsTab && hasActivityTab;
+      return hasSessionKey && hasTokensTab && hasActivityTab;
     };
 
     const iterationCounter = createCounter();

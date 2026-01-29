@@ -1,7 +1,12 @@
 import type { ReactElement } from 'react';
 
 import StacksIcon from '../../assets/icons/stacks.svg';
-import { getSip10AvatarImage, isSbtcAsset, isUsdcxAsset } from './avatar.shared';
+import {
+  getAvatarFallbackText,
+  getSip10AvatarImage,
+  isSbtcAsset,
+  isUsdcxAsset,
+} from './avatar.shared';
 import { Avatar, type AvatarProps } from './avatar.web';
 import { SbtcAvatarIcon } from './sbtc-avatar-icon.web';
 import { UsdcxAvatarIcon } from './usdcx-avatar-icon.web';
@@ -35,6 +40,7 @@ export function Sip10AvatarIcon({
     <Avatar
       image={getSip10AvatarImage({ imageCanonicalUri, contractId, name })}
       imageAlt={name}
+      fallback={getAvatarFallbackText(name)}
       indicator={indicatorIcon}
       {...props}
     />

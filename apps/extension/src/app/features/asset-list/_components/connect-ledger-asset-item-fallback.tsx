@@ -26,7 +26,7 @@ export function ConnectLedgerAssetItemFallback({
   const checkBlockchainAvailable = useCheckLedgerBlockchainAvailable();
   if (variant === 'interactive' && !checkBlockchainAvailable(chain)) return null;
   return (
-    <Box my="space.02">
+    <Box my="space.02" data-testid={`connect-ledger-${chain}`}>
       <ItemLayout
         img={icon}
         captionLeft={symbol}

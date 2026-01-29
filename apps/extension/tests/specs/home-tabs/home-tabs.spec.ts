@@ -11,11 +11,11 @@ test.describe('Home tabs', () => {
 
   test.describe('tab navigation', () => {
     test('should display all three tabs', async ({ page }) => {
-      const assetsTab = page.getByTestId(HomePageSelectors.AssetsTabBtn);
+      const tokensTab = page.getByTestId(HomePageSelectors.TokensTabBtn);
       const collectiblesTab = page.getByTestId(HomePageSelectors.CollectiblesTabBtn);
       const activityTab = page.getByTestId(HomePageSelectors.ActivityTabBtn);
 
-      await expect(assetsTab).toBeVisible();
+      await expect(tokensTab).toBeVisible();
       await expect(collectiblesTab).toBeVisible();
       await expect(activityTab).toBeVisible();
     });
@@ -34,17 +34,17 @@ test.describe('Home tabs', () => {
       await expect(activityTab).toHaveAttribute('data-state', 'active');
     });
 
-    test('should navigate back to assets tab', async ({ homePage, page }) => {
+    test('should navigate back to tokens tab', async ({ homePage, page }) => {
       await homePage.clickActivityTab();
-      await homePage.clickAssetsTab();
+      await homePage.clickTokensTab();
 
-      const assetsTab = page.getByTestId(HomePageSelectors.AssetsTabBtn);
-      await expect(assetsTab).toHaveAttribute('data-state', 'active');
+      const tokensTab = page.getByTestId(HomePageSelectors.TokensTabBtn);
+      await expect(tokensTab).toHaveAttribute('data-state', 'active');
     });
   });
 
   test.describe('receive modal across tabs', () => {
-    test('should open receive modal from assets tab', async ({ homePage, page }) => {
+    test('should open receive modal from tokens tab', async ({ homePage, page }) => {
       await homePage.goToReceiveDialog();
 
       await expect(page.getByText('CHOOSE ASSET TO RECEIVE')).toBeVisible();

@@ -1,30 +1,33 @@
 import { useState } from 'react';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
-import { HStack, Stack, styled } from 'leather-styles/jsx';
+import { Stack } from 'leather-styles/jsx';
 
-import { Caption, ChevronRightIcon, Pressable, Sheet, SheetHeader } from '@leather.io/ui';
+import {
+  Caption,
+  IconButton,
+  SettingsSliderIcon,
+  Sheet,
+  SheetHeader,
+  Spinner,
+} from '@leather.io/ui';
 
 import { AssetList } from '../asset-list';
 
 export function ManageTokens() {
   const [showManageTokens, setShowManageTokens] = useState(false);
   const [hasManageableTokens, setHasManageableTokens] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <>
-      <Pressable
+      <IconButton
         data-testid={HomePageSelectors.ManageTokensBtn}
-        mt="space.04"
-        onClick={() => {
-          setShowManageTokens(!showManageTokens);
-        }}
-      >
-        <HStack alignItems="center" justifyContent="space-between" width="100%">
-          <styled.span textStyle="body.02">Manage Tokens</styled.span>
-          <ChevronRightIcon variant="small" />
-        </HStack>
-      </Pressable>
+        icon={<SettingsSliderIcon variant="small" />}
+        onClick={() => setShowManageTokens(!showManageTokens)}
+        width="40px"
+        height="40px"
+      />
 
       <Sheet
         isShowing={showManageTokens}
@@ -37,9 +40,16 @@ export function ManageTokens() {
             filter="all"
             showUnmanageableTokens={false}
             setHasManageableTokens={setHasManageableTokens}
+            setIsLoading={setIsLoading}
           />
 
-          {!hasManageableTokens && (
+          {isLoading && (
+            <Stack h="100%" justify="center" align="center">
+              <Spinner size="md" />
+            </Stack>
+          )}
+
+          {!isLoading && !hasManageableTokens && (
             <Stack h="100%" justify="center" align="center">
               <Caption>No tokens found</Caption>
             </Stack>

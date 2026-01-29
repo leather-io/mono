@@ -4,3 +4,11 @@ export enum MockedTokensSelectors {
   Src20TokenTestId = 'pxl',
   RuneTokenTestId = 'DOGGOTOTHEMOON',
 }
+
+export enum CoreAssetSelectors {
+  BtcAsset = 'BTC',
+  StxAsset = 'STX',
+  UsdcxAsset = 'SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx::usdcx-token',
+  ConnectLedgerBitcoin = 'connect-ledger-bitcoin',
+  ConnectLedgerStacks = 'connect-ledger-stacks',
+}

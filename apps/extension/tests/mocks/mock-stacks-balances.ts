@@ -1,5 +1,22 @@
 import type { Page } from '@playwright/test';
 
+const mockedEmptyStacksBalances = {
+  stx: {
+    balance: '0',
+    total_sent: '0',
+    total_received: '0',
+    total_fees_sent: '0',
+    total_miner_rewards_received: '0',
+    lock_tx_id: '',
+    locked: '0',
+    lock_height: 0,
+    burnchain_lock_height: 0,
+    burnchain_unlock_height: 0,
+  },
+  fungible_tokens: {},
+  non_fungible_tokens: {},
+};
+
 const mockedStacksBalances = {
   stx: {
     balance: '13568037',
@@ -47,6 +64,14 @@ export async function mockMainnetTestAccountStacksBalancesRequest(page: Page) {
   await page.route('**/api.hiro.so/extended/v1/address/**/balances', route =>
     route.fulfill({
       json: mockedStacksBalances,
+    })
+  );
+}
+
+export async function mockEmptyStacksBalancesRequest(page: Page) {
+  await page.route('**/api.hiro.so/extended/v1/address/**/balances', route =>
+    route.fulfill({
+      json: mockedEmptyStacksBalances,
     })
   );
 }
