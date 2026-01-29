@@ -5,7 +5,7 @@ import { Box, styled } from 'leather-styles/jsx';
 import { RouteUrls } from '@shared/route-urls';
 
 import { Card, Content, Page } from '@app/components/layout';
-import { AssetList } from '@app/features/asset-list/asset-list';
+import { TokenList } from '@app/features/asset-list/token-list';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useConfigBitcoinSendEnabled } from '@app/query/common/remote-config/remote-config.query';
 
@@ -37,7 +37,7 @@ export function ChooseCryptoAsset() {
             }
           >
             <Box pb="space.04" px="space.05">
-              <AssetList
+              <TokenList
                 onSelectAsset={navigateToSendForm}
                 variant="interactive"
                 filter="enabled"

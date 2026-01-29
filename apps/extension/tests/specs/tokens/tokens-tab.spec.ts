@@ -6,7 +6,7 @@ import { mockEmptyStacksBalancesRequest } from '../../mocks/mock-stacks-balances
 import { mockEmptyStacksBalancesV2Request } from '../../mocks/mock-stacks-balances-v2';
 import { CoreAssetSelectors } from '../../selectors/mocked-tokens.selectors';
 
-test.describe('Assets tab', () => {
+test.describe('Tokens tab', () => {
   test.describe('populated wallet', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
       await globalPage.setupAndUseApiCalls(extensionId);

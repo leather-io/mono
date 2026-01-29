@@ -14,9 +14,9 @@ import { BtcAssetItemBalanceLoader } from '@app/components/loaders/btc-balance-l
 import { Src20TokensLoader } from '@app/components/loaders/src20-tokens-loader';
 import { StxAssetItemBalanceLoader } from '@app/components/loaders/stx-balance-loader';
 import { UsdcxAssetItemBalanceLoader } from '@app/components/loaders/usdcx-balance-loader';
-import { Brc20TokenAssetList } from '@app/features/asset-list/bitcoin/brc20-token-asset-list/brc20-token-asset-list';
+import { Brc20TokenList } from '@app/features/asset-list/bitcoin/brc20-token-list/brc20-token-list';
 import { RunesAssetList } from '@app/features/asset-list/bitcoin/runes-asset-list/runes-asset-list';
-import { Src20TokenAssetList } from '@app/features/asset-list/bitcoin/src20-token-asset-list/src20-token-asset-list';
+import { Src20TokenList } from '@app/features/asset-list/bitcoin/src20-token-list/src20-token-list';
 import { StxCryptoAssetItem } from '@app/features/asset-list/stacks/stx-crypo-asset-item/stx-crypto-asset-item';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import { useCurrentAccountNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -28,29 +28,29 @@ import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 import type { AssetFilter } from '../../common/hooks/use-manage-tokens';
 import { ConnectLedgerAssetItemFallback } from './_components/connect-ledger-asset-item-fallback';
 import { BtcCryptoAssetItem } from './bitcoin/btc-crypto-asset-item/btc-crypto-asset-item';
-import { Sip10TokenAssetItem } from './stacks/sip10-token-asset-list/sip10-token-asset-item';
-import { Sip10TokenAssetList } from './stacks/sip10-token-asset-list/sip10-token-asset-list';
+import { Sip10TokenItem } from './stacks/sip10-token-list/sip10-token-item';
+import { Sip10TokenList } from './stacks/sip10-token-list/sip10-token-list';
 
-export type AssetListVariant = 'interactive' | 'read-only';
+export type TokenListVariant = 'interactive' | 'read-only';
 export type AssetRightElementVariant = 'balance' | 'toggle';
 
-interface AssetListProps {
+interface TokenListProps {
   filter?: AssetFilter;
-  variant?: AssetListVariant;
+  variant?: TokenListVariant;
   assetRightElementVariant?: AssetRightElementVariant;
   showUnmanageableTokens?: boolean;
   onSelectAsset?(symbol: string, contractId?: string): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
 
-export function AssetList({
+export function TokenList({
   onSelectAsset,
   variant = 'read-only',
   assetRightElementVariant = 'balance',
   showUnmanageableTokens = true,
   setHasManageableTokens,
   filter,
-}: AssetListProps) {
+}: TokenListProps) {
   const currentAccountIndex = useCurrentAccountIndex();
   const currentStacksAccount = useCurrentStacksAccount();
   const currentBtcNativeSegwitAccount = useCurrentAccountNativeSegwitSigner();
@@ -115,7 +115,7 @@ export function AssetList({
       {showUnmanageableTokens && currentStacksAccount && (
         <UsdcxAssetItemBalanceLoader accountIndex={currentAccountIndex}>
           {balance => (
-            <Sip10TokenAssetItem
+            <Sip10TokenItem
               balance={balance}
               isEnabled={true}
               onSelectAsset={onSelectAsset}
@@ -126,7 +126,7 @@ export function AssetList({
       )}
 
       {currentStacksAccount && (
-        <Sip10TokenAssetList
+        <Sip10TokenList
           accountIndex={currentAccountIndex}
           assetFilter={filter}
           onSelectAsset={onSelectAsset}
@@ -139,7 +139,7 @@ export function AssetList({
         <>
           <Brc20TokensLoader filter={filter}>
             {({ tokens, preEnabledTokensIds }) => (
-              <Brc20TokenAssetList
+              <Brc20TokenList
                 tokens={tokens}
                 variant={variant}
                 assetRightElementVariant={assetRightElementVariant}
@@ -153,7 +153,7 @@ export function AssetList({
             address={currentBtcNativeSegwitAccount({ changeIndex: 0, addressIndex: 0 }).address}
           >
             {({ tokens, preEnabledTokensIds }) => (
-              <Src20TokenAssetList
+              <Src20TokenList
                 tokens={tokens}
                 assetRightElementVariant={assetRightElementVariant}
                 preEnabledTokensIds={preEnabledTokensIds}

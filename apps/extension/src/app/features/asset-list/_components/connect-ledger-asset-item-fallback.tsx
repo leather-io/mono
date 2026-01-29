@@ -8,14 +8,14 @@ import { ItemLayout } from '@leather.io/ui';
 import { capitalize } from '@app/common/utils';
 import { useCheckLedgerBlockchainAvailable } from '@app/store/accounts/blockchain/utils';
 
-import type { AssetListVariant } from '../asset-list';
+import type { TokenListVariant } from '../token-list';
 import { ConnectLedgerButton } from './connect-ledger-asset-button';
 
 interface ConnectLedgerAssetItemFallbackProps {
   chain: Blockchain;
   icon: React.ReactNode;
   symbol: Currency;
-  variant: AssetListVariant;
+  variant: TokenListVariant;
 }
 export function ConnectLedgerAssetItemFallback({
   chain,

@@ -10,14 +10,14 @@ import {
   useSip10AccountBalance,
 } from '@app/query/stacks/sip10/sip10-balance.hooks';
 
-import type { AssetRightElementVariant } from '../../asset-list';
-import { Sip10TokenAssetItem } from './sip10-token-asset-item';
+import type { AssetRightElementVariant } from '../../token-list';
+import { Sip10TokenItem } from './sip10-token-item';
 
 function isUsdcxAssetId(assetId: string) {
   return assetId === USDCX_ASSET_ID_MAINNET || assetId === USDCX_ASSET_ID_TESTNET;
 }
 
-interface Sip10TokenAssetListProps {
+interface Sip10TokenListProps {
   accountIndex: number;
   assetFilter?: AssetFilter;
   assetRightElementVariant?: AssetRightElementVariant;
@@ -25,13 +25,13 @@ interface Sip10TokenAssetListProps {
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
 
-export function Sip10TokenAssetList({
+export function Sip10TokenList({
   accountIndex,
   assetFilter = 'all',
   onSelectAsset,
   assetRightElementVariant,
   setHasManageableTokens,
-}: Sip10TokenAssetListProps) {
+}: Sip10TokenListProps) {
   const sip10s = useSip10AccountBalance(accountIndex, {
     includeHiddenAssets: assetFilter === 'all',
   });
@@ -50,7 +50,7 @@ export function Sip10TokenAssetList({
       {sip10s.value.sip10s
         .filter(sip10 => !isUsdcxAssetId(sip10.asset.assetId))
         .map(sip10 => (
-          <Sip10TokenAssetItem
+          <Sip10TokenItem
             key={sip10.asset.assetId}
             assetRightElementVariant={assetRightElementVariant}
             balance={sip10}
