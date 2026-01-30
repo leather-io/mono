@@ -27,6 +27,7 @@ import { RetrieveTaprootToNativeSegwit } from '@app/features/retrieve-taproot-to
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { LegacyAccountAuth } from '@app/pages/legacy-account-auth/legacy-account-auth';
+import { ManageTokensPage } from '@app/pages/manage-tokens/manage-tokens';
 import { AddNetwork as CurrentAddNetwork } from '@app/pages/network/add-network';
 import { EditNetwork as CurrentEditNetwork } from '@app/pages/network/edit-network';
 import { SelectNetwork } from '@app/pages/network/select-network';
@@ -264,6 +265,15 @@ function useAppRoutes() {
             element={
               <AccountGate>
                 <SettingsPage />
+              </AccountGate>
+            }
+          />
+
+          <Route
+            path={RouteUrls.ManageTokens}
+            element={
+              <AccountGate>
+                <ManageTokensPage />
               </AccountGate>
             }
           />

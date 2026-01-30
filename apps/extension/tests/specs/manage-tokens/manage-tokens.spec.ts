@@ -16,13 +16,15 @@ test.describe('Manage tokens', () => {
   });
 
   test('that supported sip10 token is shown', async ({ homePage }) => {
-    await homePage.manageTokensBtn.click();
-    const sip10Token = homePage.assetList.getByTestId(MockedTokensSelectors.Sip10TokenTestId);
+    await homePage.goToManageTokensPage();
+    const sip10Token = homePage.manageTokensAssetsList.getByTestId(
+      MockedTokensSelectors.Sip10TokenTestId
+    );
     await expect(sip10Token).toBeAttached();
   });
 
   test('that core assets BTC, STX, USDCx cannot be toggled', async ({ homePage }) => {
-    await homePage.manageTokensBtn.click();
+    await homePage.goToManageTokensPage();
 
     const btcToggle = homePage.manageTokensAssetsList.getByTestId(CoreAssetSelectors.BtcAsset);
     const stxToggle = homePage.manageTokensAssetsList.getByTestId(CoreAssetSelectors.StxAsset);
@@ -34,46 +36,52 @@ test.describe('Manage tokens', () => {
   });
 
   test('that token can be removed from asset list and added back', async ({ homePage }) => {
-    await homePage.manageTokensBtn.click();
+    await homePage.goToManageTokensPage();
 
-    // sip10 token
-    const sip10InAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.Sip10TokenTestId);
     const sip10TokenInManageTokensList = homePage.manageTokensAssetsList.getByTestId(
       MockedTokensSelectors.Sip10TokenTestId
     );
-
-    // brc20 token
-    const brc20InAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.Brc20TokenTestId);
     const brc20InManageTokensList = homePage.manageTokensAssetsList.getByTestId(
       MockedTokensSelectors.Brc20TokenTestId
     );
-
-    // src20 token
-    const src20InAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.Src20TokenTestId);
     const src20InManageTokensList = homePage.manageTokensAssetsList.getByTestId(
       MockedTokensSelectors.Src20TokenTestId
     );
 
-    // rune token
-    const runeInAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.RuneTokenTestId);
-
-    // disable tokens that are enabled by default
     await sip10TokenInManageTokensList.click();
     await brc20InManageTokensList.click();
     await src20InManageTokensList.click();
 
-    // test that tokens are disabled
+    await homePage.goBackFromManageTokens();
+
+    const sip10InAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.Sip10TokenTestId);
+    const brc20InAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.Brc20TokenTestId);
+    const src20InAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.Src20TokenTestId);
+    const runeInAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.RuneTokenTestId);
+
     await expect(sip10InAssetList).not.toBeAttached();
     await expect(brc20InAssetList).not.toBeAttached();
     await expect(src20InAssetList).not.toBeAttached();
     await expect(runeInAssetList).not.toBeAttached();
 
-    // enable tokens
-    await sip10TokenInManageTokensList.click();
-    await brc20InManageTokensList.click();
-    await src20InManageTokensList.click();
+    await homePage.goToManageTokensPage();
 
-    // test that tokens are enabled
+    const sip10Toggle = homePage.manageTokensAssetsList.getByTestId(
+      MockedTokensSelectors.Sip10TokenTestId
+    );
+    const brc20Toggle = homePage.manageTokensAssetsList.getByTestId(
+      MockedTokensSelectors.Brc20TokenTestId
+    );
+    const src20Toggle = homePage.manageTokensAssetsList.getByTestId(
+      MockedTokensSelectors.Src20TokenTestId
+    );
+
+    await sip10Toggle.click();
+    await brc20Toggle.click();
+    await src20Toggle.click();
+
+    await homePage.goBackFromManageTokens();
+
     await expect(sip10InAssetList).toBeAttached();
     await expect(brc20InAssetList).toBeAttached();
     await expect(src20InAssetList).toBeAttached();
@@ -93,7 +101,7 @@ test.describe('Manage tokens empty wallet', () => {
   });
 
   test('that empty state shows no tokens found', async ({ homePage, page }) => {
-    await homePage.manageTokensBtn.click();
+    await homePage.goToManageTokensPage();
 
     const noTokensText = page.getByText('No tokens found');
     await expect(noTokensText).toBeVisible();
