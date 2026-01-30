@@ -3,7 +3,7 @@
   "author": "leather.io",
   "description": "Stacks package for Leather",
   "version": "1.19.10",
-  "license": "MIT",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "type": "module",
   "scripts": {
     "build": "tsdown",

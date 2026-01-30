@@ -5,7 +5,7 @@
   },
   "description": "Leather is a browser extension for interacting with Stacks apps",
   "version": "6.92.5",
-  "license": "MIT",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "repository": "leather-io/mono.git",
   "type": "module",
   "scripts": {

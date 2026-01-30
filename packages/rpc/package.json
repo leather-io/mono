@@ -3,7 +3,7 @@
   "author": "leather-wallet",
   "description": "RPC types package for Leather",
   "version": "2.21.8",
-  "license": "MIT",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "type": "module",
   "scripts": {
     "build": "tsdown",

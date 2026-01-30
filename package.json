@@ -3,7 +3,7 @@
   "author": "Leather Wallet",
   "description": "Leather wallet shared code",
   "version": "2.7.2",
-  "license": "MIT",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "type": "module",
   "scripts": {
     "build": "turbo run build",
