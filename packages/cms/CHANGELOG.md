@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.3.4...@leather.io/cms-v1.4.0) (2026-01-30)
+
+
+### Features
+
+* **mobile:** expo v54 ([50d0f98](https://github.com/leather-io/mono/commit/50d0f98a39a00986f35193825724e7c80dcb2d94))
+
 ## [1.3.4](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.3.3...@leather.io/cms-v1.3.4) (2025-12-15)
 
 

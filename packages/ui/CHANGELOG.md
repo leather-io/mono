@@ -489,6 +489,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.104.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.103.5...@leather.io/ui-v1.104.0) (2026-01-30)
+
+
+### Features
+
+* **mobile:** expo v54 ([50d0f98](https://github.com/leather-io/mono/commit/50d0f98a39a00986f35193825724e7c80dcb2d94))
+
 ## [1.103.5](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.103.4...@leather.io/ui-v1.103.5) (2026-01-27)
 
 

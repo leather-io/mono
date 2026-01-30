@@ -36,6 +36,27 @@
 
 ---
 
+## [6.93.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.92.5...@leather.io/extension-v6.93.0) (2026-01-30)
+
+
+### Features
+
+* **extension:** remove homeTabsRevamp feature flag and go live ([25ec770](https://github.com/leather-io/mono/commit/25ec7701b990ddb48c923f57a8e9ba2bbe7e116e))
+* **mobile:** expo v54 ([50d0f98](https://github.com/leather-io/mono/commit/50d0f98a39a00986f35193825724e7c80dcb2d94))
+
+
+### Bug Fixes
+
+* **extension:** add back build script ([fe7fc35](https://github.com/leather-io/mono/commit/fe7fc354cb37c9c5b38a1b98bcc0228b9d9a3a19))
+* **extension:** preserve background location in send inscription flow ([0bb25a2](https://github.com/leather-io/mono/commit/0bb25a200e9bd3de7718876fa2911c9c977423cf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.104.0
+
 ## [6.73.4](https://github.com/leather-io/extension/compare/v6.73.3...v6.73.4) (2025-10-06)
 
 
