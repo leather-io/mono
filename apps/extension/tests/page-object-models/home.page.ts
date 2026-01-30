@@ -137,6 +137,18 @@ export class HomePage {
     await this.fundAccountBtn.click();
   }
 
+  async goToManageTokensPage() {
+    await this.manageTokensBtn.click();
+    await this.page.waitForSelector(`[data-testid="${HomePageSelectors.ManageTokensAssetsList}"]`, {
+      state: 'attached',
+    });
+  }
+
+  async goBackFromManageTokens() {
+    await this.headerActionButton.click();
+    await this.waitForHomePageReady();
+  }
+
   async waitForHomePageReady() {
     await this.page.waitForSelector(createTestSelector(HomePageSelectors.HomePageContainer), {
       state: 'attached',
