@@ -2,25 +2,13 @@
 
 ## Unpublished
 
-### Features
-
-* **mobile:** first token ([0a9514c](https://github.com/leather-io/mono/commit/0a9514c60936f793b4a090eb7817e43561afa2bf))
-* **extension:** remove homeTabsRevamp feature flag and go live ([25ec770](https://github.com/leather-io/mono/commit/25ec7701b990ddb48c923f57a8e9ba2bbe7e116e))
-* **mobile:** expo v54 ([50d0f98](https://github.com/leather-io/mono/commit/50d0f98a39a00986f35193825724e7c80dcb2d94))
-
-### Bug Fixes
-
-* **mobile:** adjust SkeletonLoader height for total balance ([b33fc95](https://github.com/leather-io/mono/commit/b33fc9531a181b11d9d901d1788acdeaa7d081a4))
-* **mobile:** make sure secret key copy button is visible on small screens ([c2c9359](https://github.com/leather-io/mono/commit/c2c9359c477c3272347a7f2f7df930bd8cc543ad))
-* **mobile:** use correct size for receive screen asset avatar ([62f7148](https://github.com/leather-io/mono/commit/62f7148f949c527c11c6aa381e8617603ceddd8c))
+No unreleased changes.
 
 ## [2.99.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.98.0...@leather.io/mobile-v2.99.0) (2026-02-09)
 
-
 ### Features
 
 * **mobile:** first token ([0a9514c](https://github.com/leather-io/mono/commit/0a9514c60936f793b4a090eb7817e43561afa2bf))
-
 
 ### Dependencies
 
@@ -43,12 +31,10 @@
 
 ## [2.98.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.9...@leather.io/mobile-v2.98.0) (2026-01-30)
 
-
 ### Features
 
 * **extension:** remove homeTabsRevamp feature flag and go live ([25ec770](https://github.com/leather-io/mono/commit/25ec7701b990ddb48c923f57a8e9ba2bbe7e116e))
 * **mobile:** expo v54 ([50d0f98](https://github.com/leather-io/mono/commit/50d0f98a39a00986f35193825724e7c80dcb2d94))
-
 
 ### Dependencies
 
