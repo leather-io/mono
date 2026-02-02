@@ -2,6 +2,11 @@
 
 ## Unpublished
 
+### Features
+
+* **extension:** remove homeTabsRevamp feature flag and go live ([25ec770](https://github.com/leather-io/mono/commit/25ec7701b990ddb48c923f57a8e9ba2bbe7e116e))
+* **mobile:** expo v54 ([50d0f98](https://github.com/leather-io/mono/commit/50d0f98a39a00986f35193825724e7c80dcb2d94))
+
 ### Bug Fixes
 
 * **mobile:** adjust SkeletonLoader height for total balance ([b33fc95](https://github.com/leather-io/mono/commit/b33fc9531a181b11d9d901d1788acdeaa7d081a4))

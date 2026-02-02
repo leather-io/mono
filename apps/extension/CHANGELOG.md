@@ -2,7 +2,15 @@
 
 ## Unpublished
 
-No unreleased changes.
+### Features
+
+* **extension:** remove homeTabsRevamp feature flag and go live ([25ec770](https://github.com/leather-io/mono/commit/25ec7701b990ddb48c923f57a8e9ba2bbe7e116e))
+* **mobile:** expo v54 ([50d0f98](https://github.com/leather-io/mono/commit/50d0f98a39a00986f35193825724e7c80dcb2d94))
+
+### Bug Fixes
+
+* **extension:** add back build script ([fe7fc35](https://github.com/leather-io/mono/commit/fe7fc354cb37c9c5b38a1b98bcc0228b9d9a3a19))
+* **extension:** preserve background location in send inscription flow ([0bb25a2](https://github.com/leather-io/mono/commit/0bb25a200e9bd3de7718876fa2911c9c977423cf))
 
 ---
 
