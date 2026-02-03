@@ -6,7 +6,7 @@ import { Avatar, ItemLayout, Pressable } from '@leather.io/ui';
 import { isString } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { convertSwapAssetBalanceToFiat } from '@app/pages/swap/swap.utils';
+import { convertSwapAssetBalanceToFiat } from '@app/pages/swap-legacy/swap.utils';
 import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
 import { useGetFungibleTokenMetadataQuery } from '@app/query/stacks/token-metadata/fungible-tokens/fungible-token-metadata.query';
 

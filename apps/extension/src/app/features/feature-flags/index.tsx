@@ -30,6 +30,7 @@ interface FeatureFlags {
   releaseOnramperSell: boolean;
   assetsRevamp: boolean;
   activityRevamp: boolean;
+  swapRevamp: boolean;
 }
 
 export function useFlags() {

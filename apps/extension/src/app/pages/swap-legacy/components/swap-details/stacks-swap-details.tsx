@@ -9,7 +9,7 @@ import { createMoneyFromDecimal, isDefined, isUndefined } from '@leather.io/util
 import type { SwapFormValues } from '@shared/models/form.model';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useSwapContext } from '@app/pages/swap/swap.context';
+import { useSwapContext } from '@app/pages/swap-legacy/swap.context';
 import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
 
 import type { StacksSwapContext } from '../../providers/stacks-swap-provider';
