@@ -9,7 +9,7 @@ import { createMoneyFromDecimal, isUndefined, satToBtc } from '@leather.io/utils
 import type { SwapFormValues } from '@shared/models/form.model';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useSwapContext } from '@app/pages/swap/swap.context';
+import { useSwapContext } from '@app/pages/swap-legacy/swap.context';
 
 import type { BitcoinSwapContext } from '../../providers/bitcoin-swap-provider';
 import { SwapDetailLayout } from './swap-detail.layout';

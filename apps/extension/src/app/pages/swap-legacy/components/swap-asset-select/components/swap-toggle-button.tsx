@@ -9,7 +9,7 @@ import { isDefined, isUndefined } from '@leather.io/utils';
 import type { SwapFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
-import { constructSwapRoute } from '@app/pages/swap/swap.routes';
+import { constructSwapRoute } from '@app/pages/swap-legacy/swap.routes';
 
 import { type BaseSwapContext, useSwapContext } from '../../../swap.context';
 

@@ -43,7 +43,11 @@ import { BroadcastError } from '@app/pages/send/broadcast-error/broadcast-error'
 import { sendOrdinalRoutes } from '@app/pages/send/ordinal-inscription/ordinal-routes';
 import { sendCryptoAssetFormRoutes } from '@app/pages/send/send-crypto-asset-form/send-crypto-asset-form.routes';
 import { SettingsPage } from '@app/pages/settings/settings';
-import { bitcoinSwapRoutes, stacksSwapRoutes } from '@app/pages/swap/swap.routes';
+import {
+  bitcoinSwapLegacyRoutes,
+  stacksSwapLegacyRoutes,
+} from '@app/pages/swap-legacy/swap.routes';
+import { swapRoutes } from '@app/pages/swap/swap.routes';
 import { SelectTheme } from '@app/pages/theme/select-theme';
 import { UnauthorizedRequest } from '@app/pages/unauthorized-request/unauthorized-request';
 import { Unlock } from '@app/pages/unlock';
@@ -78,7 +82,7 @@ export const homePageModalRoutes = (
 );
 
 function useAppRoutes() {
-  const { releaseOnramperBuy, releaseOnramperSell } = useFlags();
+  const { releaseOnramperBuy, releaseOnramperSell, swapRevamp } = useFlags();
 
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
@@ -204,8 +208,8 @@ function useAppRoutes() {
             }
           />
 
-          {bitcoinSwapRoutes}
-          {stacksSwapRoutes}
+          {swapRevamp ? swapRoutes : bitcoinSwapLegacyRoutes}
+          {swapRevamp ? swapRoutes : stacksSwapLegacyRoutes}
 
           {/* OnBoarding Routes */}
           <Route

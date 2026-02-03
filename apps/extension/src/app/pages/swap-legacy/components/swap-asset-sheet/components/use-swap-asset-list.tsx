@@ -10,8 +10,8 @@ import type { SwapFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { type BaseSwapContext, useSwapContext } from '@app/pages/swap/swap.context';
-import { constructSwapRoute } from '@app/pages/swap/swap.routes';
+import { type BaseSwapContext, useSwapContext } from '@app/pages/swap-legacy/swap.context';
+import { constructSwapRoute } from '@app/pages/swap-legacy/swap.routes';
 import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
 
 import type { SwapAssetListProps } from './swap-asset-list';
