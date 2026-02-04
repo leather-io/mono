@@ -15,7 +15,7 @@ import {
   keyOriginToDerivationPath,
 } from '@leather.io/crypto';
 import type { BitcoinAddress, BitcoinNetworkModes, ValueOf } from '@leather.io/models';
-import { PaymentTypes, signatureHash } from '@leather.io/rpc';
+import { signatureHash } from '@leather.io/rpc';
 import { hexToNumber } from '@leather.io/utils';
 
 import { getTaprootPaymentFromAddressIndex } from '../payments/p2tr-address-gen';
@@ -52,7 +52,7 @@ export interface BitcoinSigner<Payment> {
 }
 
 export interface BitcoinPayerBase {
-  paymentType: PaymentTypes;
+  paymentType: SupportedPaymentType;
   network: BitcoinNetworkModes;
   address: BitcoinAddress;
   keyOrigin: string;

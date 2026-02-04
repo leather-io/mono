@@ -22,3 +22,7 @@ export type ReplaceTypes<T, Replacements extends { [K in keyof T]?: any }> = Omi
 export type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
+
+export type Nullable<T> = {
+  [K in keyof T]: T[K] | null;
+};

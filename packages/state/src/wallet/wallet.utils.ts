@@ -6,7 +6,7 @@ export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 const abstractWalletSchema = z.object({
   fingerprint: z.string(),
-  createdOn: z.string(),
+  createdOn: z.string().nullable(),
   name: z.string(),
 });
 
