@@ -8,7 +8,7 @@ import { analytics } from '@/utils/analytics';
 
 import { stxAsset } from '@leather.io/constants';
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { useLiveSwapEstimate, useSwapState } from '@leather.io/state/swap';
+import { SwapProvider, useLiveSwapEstimate, useSwapContext } from '@leather.io/state/swap';
 
 import { SwapFormScreen } from './screens/swap-form-screen';
 import { SwapReviewScreen } from './screens/swap-review-screen';
@@ -21,29 +21,37 @@ interface SwapProps {
 }
 
 export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
-  const [currentScreen, setCurrentScreen] = useState<SwapScreen>('form');
   const { fiatCurrencyPreference } = useSettings();
   const dependencies = useSwapDependencies();
   const disabledPairs = useSwapDisabledPairs();
 
-  const swapStateResult = useSwapState({
-    dependencies,
-    quoteCurrencyPreference: fiatCurrencyPreference,
-    baseAsset,
-    targetAsset,
-    disabledPairs,
-    trackEvent: analytics.track,
-  });
+  return (
+    <SwapProvider
+      dependencies={dependencies}
+      quoteCurrencyPreference={fiatCurrencyPreference}
+      baseAsset={baseAsset}
+      targetAsset={targetAsset}
+      disabledPairs={disabledPairs}
+      trackEvent={analytics.track}
+    >
+      <SwapContent />
+    </SwapProvider>
+  );
+}
+
+function SwapContent() {
+  const [currentScreen, setCurrentScreen] = useState<SwapScreen>('form');
+  const swapContext = useSwapContext();
 
   const liveEstimate = useLiveSwapEstimate({
-    quoteQuery: swapStateResult.quoteQuery,
-    networkFeeQuery: swapStateResult.networkFeeQuery,
-    baseMarketDataQuery: swapStateResult.baseMarketDataQuery,
-    nativeAssetMarketDataQuery: swapStateResult.networkFeeAssetMarkedDataQuery,
+    quoteQuery: swapContext.quoteQuery,
+    networkFeeQuery: swapContext.networkFeeQuery,
+    baseMarketDataQuery: swapContext.baseMarketDataQuery,
+    nativeAssetMarketDataQuery: swapContext.networkFeeAssetMarkedDataQuery,
   });
 
   function goToReview() {
-    const { state, quoteQuery } = swapStateResult;
+    const { state, quoteQuery } = swapContext;
     analytics.track('swap_review_initiated', {
       baseSymbol: state.baseSwapAsset?.asset.symbol ?? '',
       targetSymbol: state.targetSwapAsset?.asset.symbol ?? '',
@@ -65,18 +73,10 @@ export function Swap({ baseAsset = stxAsset, targetAsset }: SwapProps) {
       exiting={FadeOut.duration(150)}
     >
       {currentScreen === 'form' && (
-        <SwapFormScreen
-          swapStateResult={swapStateResult}
-          liveEstimate={liveEstimate}
-          onPressReview={goToReview}
-        />
+        <SwapFormScreen liveEstimate={liveEstimate} onPressReview={goToReview} />
       )}
       {currentScreen === 'review' && (
-        <SwapReviewScreen
-          swapStateResult={swapStateResult}
-          liveEstimate={liveEstimate}
-          onGoBack={goToForm}
-        />
+        <SwapReviewScreen liveEstimate={liveEstimate} onGoBack={goToForm} />
       )}
     </Animated.View>
   );

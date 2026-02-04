@@ -1,6 +1,9 @@
 export { useSwapState } from './use-swap-state';
 export type { UseSwapStateProps } from './use-swap-state';
 
+export { SwapProvider, type SwapProviderProps } from './swap-provider';
+export { useSwapContext } from './swap-context';
+
 export type {
   DerivedAmounts,
   DisabledPairRule,
