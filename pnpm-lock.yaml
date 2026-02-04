@@ -176,6 +176,9 @@ importers:
       '@leather.io/stacks':
         specifier: workspace:*
         version: link:../../packages/stacks
+      '@leather.io/state':
+        specifier: workspace:*
+        version: link:../../packages/state
       '@leather.io/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
@@ -458,6 +461,9 @@ importers:
       remark-gfm:
         specifier: 4.0.1
         version: 4.0.1
+      remeda:
+        specifier: 2.21.2
+        version: 2.21.2
       rxjs:
         specifier: 7.8.1
         version: 7.8.1

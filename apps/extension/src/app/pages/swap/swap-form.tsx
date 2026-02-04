@@ -5,7 +5,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 
-export function Swap() {
+export function SwapForm() {
   return (
     <Box width="100%">
       <PageHeader title="Swap" onBackLocation={RouteUrls.Home} />
