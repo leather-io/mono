@@ -10,7 +10,7 @@ import { t } from '@lingui/core/macro';
 import { currencyDecimalsMap } from '@leather.io/constants';
 import { whenInputCurrencyMode } from '@leather.io/models';
 import { AccountSwapAsset } from '@leather.io/services';
-import { LiveSwapEstimate, UseSwapStateResult } from '@leather.io/state/swap';
+import { LiveSwapEstimate, useSwapContext } from '@leather.io/state/swap';
 import { Box, Button, Numpad } from '@leather.io/ui/native';
 
 import { AmountField } from '../components/amount-field/amount-field';
@@ -23,16 +23,11 @@ import * as Panel from '../components/panel';
 import { TargetAmountPreview } from '../components/target-amount-preview';
 
 interface SwapFormScreenProps {
-  swapStateResult: UseSwapStateResult;
   liveEstimate: LiveSwapEstimate;
   onPressReview(): void;
 }
 
-export function SwapFormScreen({
-  swapStateResult,
-  liveEstimate,
-  onPressReview,
-}: SwapFormScreenProps) {
+export function SwapFormScreen({ liveEstimate, onPressReview }: SwapFormScreenProps) {
   const {
     state,
     actions,
@@ -41,7 +36,7 @@ export function SwapFormScreen({
     targetAssetsQuery,
     targetMarketDataQuery,
     canSubmit,
-  } = swapStateResult;
+  } = useSwapContext();
 
   const validateDecimalPlaces = createDecimalPlaceValidator(
     whenInputCurrencyMode(state.inputCurrencyMode)({

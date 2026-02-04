@@ -36,8 +36,8 @@ import { isNonNullish } from 'remeda';
 import {
   LiveSwapEstimate,
   PRICE_IMPACT_WARNING_THRESHOLD,
-  UseSwapStateResult,
   matchLiveEstimate,
+  useSwapContext,
 } from '@leather.io/state/swap';
 import { Box, Button, SheetInstance, Text } from '@leather.io/ui/native';
 
@@ -54,16 +54,11 @@ const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
 ];
 
 interface SwapReviewScreenProps {
-  swapStateResult: UseSwapStateResult;
   liveEstimate: LiveSwapEstimate;
   onGoBack(): void;
 }
 
-export function SwapReviewScreen({
-  swapStateResult,
-  liveEstimate,
-  onGoBack,
-}: SwapReviewScreenProps) {
+export function SwapReviewScreen({ liveEstimate, onGoBack }: SwapReviewScreenProps) {
   useAndroidBackHandler(onGoBack);
   useSwapReviewStatusGuard(liveEstimate, onGoBack);
 
@@ -82,25 +77,23 @@ export function SwapReviewScreen({
         loading: () => <SwapReviewLoadingState />,
         error: liveEstimate => <SwapReviewErrorState onRetry={liveEstimate.refetch} />,
         empty: () => <SwapReviewEmptyState onBack={onGoBack} />,
-        success: liveEstimate => (
-          <SwapReviewContent liveEstimate={liveEstimate} swapStateResult={swapStateResult} />
-        ),
+        success: liveEstimate => <SwapReviewContent liveEstimate={liveEstimate} />,
       })}
     </FullHeightSheetLayout>
   );
 }
 
 interface SwapReviewContentProps {
-  swapStateResult: UseSwapStateResult;
   liveEstimate: Extract<LiveSwapEstimate, { status: 'success' }>;
 }
 
-function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentProps) {
+function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
+  const swapState = useSwapContext();
   const slippageSheetRef = useRef<SheetInstance>(null);
   const onSubmitSwap = usePreventAccidentalInstantTap(
-    ensureAsyncFunctionMinimumDuration(swapStateResult.submit, submissionDisplayDuration)
+    ensureAsyncFunctionMinimumDuration(swapState.submit, submissionDisplayDuration)
   );
-  const { state } = swapStateResult;
+  const { state } = swapState;
   const { selectedQuote, fees, intervalState, isRefetching } = liveEstimate;
   const {
     baseAmount,
@@ -205,7 +198,7 @@ function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentP
         >{t`Make sure everything looks correct.\nConfirmed transactions cannot be undone.`}</Text>
 
         <Button
-          disabled={!swapStateResult.canSubmit || submissionStatus !== 'idle'}
+          disabled={!swapState.canSubmit || submissionStatus !== 'idle'}
           onPress={handleConfirm}
         >{t`Confirm`}</Button>
       </SwapReviewFooter>
@@ -223,8 +216,8 @@ function SwapReviewContent({ liveEstimate, swapStateResult }: SwapReviewContentP
 
       <SlippageSelectorSheet
         ref={slippageSheetRef}
-        value={swapStateResult.state.slippage}
-        onSave={swapStateResult.actions.setSlippage}
+        value={swapState.state.slippage}
+        onSave={swapState.actions.setSlippage}
       />
     </Box>
   );
