@@ -22,7 +22,7 @@ import {
   createStubSwapService,
 } from './services.stub';
 
-vi.mock('@leather.io/ui/native', () => ({
+vi.mock('@leather.io/ui', () => ({
   useDebouncedValue: <T,>(value: T) => value,
 }));
 

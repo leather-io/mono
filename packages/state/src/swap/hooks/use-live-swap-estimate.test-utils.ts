@@ -9,7 +9,7 @@ import { createMoney } from '@leather.io/utils';
 import { EnrichedSwapQuote, NetworkFee, SwapQuoteSelectionResult } from '../swap-state.types';
 import { useLiveSwapEstimate } from './use-live-swap-estimate';
 
-vi.mock('@leather.io/ui/native', () => ({
+vi.mock('@leather.io/ui', () => ({
   useInterval: vi.fn(() => ({
     interval: 30000,
     lastStartedAt: null,
