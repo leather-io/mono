@@ -5,7 +5,7 @@ import type BigNumber from 'bignumber.js';
 import { isDefined } from 'remeda';
 
 import { type ExecutionConstraint, type MarketData, type Money } from '@leather.io/models';
-import { type UseIntervalState, useInterval } from '@leather.io/ui/native';
+import { type UseIntervalState, useInterval } from '@leather.io/ui';
 import { assertUnreachable, baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import {

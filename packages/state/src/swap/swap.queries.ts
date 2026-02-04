@@ -13,7 +13,7 @@ import {
   type MarketDataService,
   type SwapService,
 } from '@leather.io/services';
-import { useDebouncedValue } from '@leather.io/ui/native';
+import { useDebouncedValue } from '@leather.io/ui';
 import { delay } from '@leather.io/utils';
 
 import { type DisabledPairRule, type SwapQuotePolicy } from './swap-state.types';

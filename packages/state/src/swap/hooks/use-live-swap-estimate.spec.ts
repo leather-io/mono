@@ -344,7 +344,7 @@ describe('useLiveSwapEstimate', () => {
   });
 
   describe('interval state', () => {
-    // Dependency on `useInterval` from "leather.io/ui/native" causes react-native related module resolution issues when trying to test this.
+    // Dependency on `useInterval` from "leather.io/ui" causes react-native related module resolution issues when trying to test this.
     // TODO: Revisit by moving useInterval
     it.todo('interval is enabled when in success state with selected quote');
     it.todo('interval is disabled when in constrained state');
