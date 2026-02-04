@@ -40,7 +40,7 @@
     "@leather.io/stacks": "workspace:*",
     "@leather.io/ui": "workspace:*",
     "@leather.io/utils": "workspace:*",
-    "@reduxjs/toolkit": "2.8.1",
+    "@reduxjs/toolkit": "2.11.2",
     "@scure/btc-signer": "1.6.0",
     "@stacks/common": "7.0.2",
     "@stacks/network": "7.0.2",

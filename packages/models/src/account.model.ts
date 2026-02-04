@@ -25,6 +25,7 @@ export const accountAddressesSchema = z.object({
 
 export type WalletId = z.infer<typeof walletIdSchema>;
 export type AccountId = z.infer<typeof accountIdSchema>;
+
 export type BitcoinAddressInfo = z.infer<typeof bitcoinAddressInfoSchema>;
 export type StacksAddressInfo = z.infer<typeof stacksAddressInfoSchema>;
 export type AccountAddresses = z.infer<typeof accountAddressesSchema>;
