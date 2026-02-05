@@ -10,7 +10,7 @@ import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useFlags } from '@app/features/feature-flags';
-import { useCurrentAccountNativeSegwitIndexZeroSignerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 import { ActionButton } from './action-button';
@@ -18,7 +18,7 @@ import { FundSheet } from './fund-sheet';
 
 export function FundButtons() {
   const stacksAccount = useCurrentStacksAccount();
-  const currentBtcSigner = useCurrentAccountNativeSegwitIndexZeroSignerNullable();
+  const currentBtcSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
   const btcAccount = currentBtcSigner?.address;
   const { releaseOnramperBuy, releaseOnramperSell } = useFlags();
   const showBuyButton = (!!stacksAccount || !!btcAccount) && releaseOnramperBuy;

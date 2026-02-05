@@ -1,5 +1,5 @@
-import { memo, useMemo } from 'react';
-import { GroupedVirtuoso } from 'react-virtuoso';
+import { useMemo } from 'react';
+import { Virtuoso } from 'react-virtuoso';
 
 import { Box, Flex } from 'leather-styles/jsx';
 
@@ -7,38 +7,34 @@ import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { useCreateAccount } from '@app/common/hooks/account/use-create-account';
 import { useWalletType } from '@app/common/use-wallet-type';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
 import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet';
 
-import { AccountListUnavailable } from './components/account-list-unavailable';
 import { SwitchAccountListItem } from './components/switch-account-list-item';
 
 interface SwitchAccountSheetProps {
   isShowing: boolean;
   onClose(): void;
 }
-export const SwitchAccountSheet = memo(function SwitchAccountSheet({
-  isShowing,
-  onClose,
-}: SwitchAccountSheetProps) {
+export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetProps) {
+  const currentAccountId = useCurrentAccountId();
+
   const createAccount = useCreateAccount();
   const { whenWallet } = useWalletType();
   const walletTree = useWalletAccountRefTree();
 
-  const { groupCounts, totalAccounts } = useMemo(() => {
-    const counts = walletTree.map(wallet => wallet.accounts.length);
-    const total = walletTree.reduce((sum, wallet) => sum + wallet.accounts.length, 0);
-    return { groupCounts: counts, totalAccounts: total };
-  }, [walletTree]);
+  // Pre-multi-wallet: there should only be one
+  const activeWallet = useMemo(
+    () => walletTree.find(wallet => wallet.fingerprint === currentAccountId.fingerprint),
+    [walletTree, currentAccountId.fingerprint]
+  );
 
   async function onCreateAccount() {
     await createAccount();
     onClose();
   }
 
-  if (isShowing && totalAccounts === 0) {
-    return <AccountListUnavailable />;
-  }
   // #4370 SMELL without this early return the wallet crashes on new install with
   // : Wallet is neither of type `ledger` nor `software`
   // FIXME remove this when adding Create Account to Ledger in #2502 #4983
@@ -53,39 +49,15 @@ export const SwitchAccountSheet = memo(function SwitchAccountSheet({
     >
       <VirtuosoWrapperSheet>
         <Box flex="1">
-          <GroupedVirtuoso
-            groupCounts={groupCounts}
-            groupContent={groupIndex => {
-              const wallet = walletTree[groupIndex];
+          <Virtuoso
+            initialTopMostItemIndex={currentAccountId.accountIndex}
+            totalCount={activeWallet?.accounts.length ?? 0}
+            itemContent={index => {
+              const accountId = activeWallet?.accounts[index];
+              if (!accountId) return null;
               return (
-                <Box
-                  py="space.03"
-                  px="space.05"
-                  bg="ink.background-primary"
-                  position="sticky"
-                  top={0}
-                  zIndex={1}
-                >
-                  <Flex fontWeight="medium" color="ink.text-primary">
-                    {wallet.name}
-                  </Flex>
-                </Box>
-              );
-            }}
-            itemContent={(index, groupIndex) => {
-              const wallet = walletTree[groupIndex];
-              const accountIndexInGroup =
-                index - groupCounts.slice(0, groupIndex).reduce((a, b) => a + b, 0);
-
-              const accountId = wallet.accounts[accountIndexInGroup];
-
-              return (
-                <Box
-                  key={`${accountId.fingerprint}-${accountId.accountIndex}`}
-                  py="space.03"
-                  px="space.05"
-                >
-                  <SwitchAccountListItem accountId={accountId} handleClose={onClose} />
+                <Box key={index} py="space.03" px="space.05">
+                  <SwitchAccountListItem handleClose={onClose} accountId={accountId} />
                 </Box>
               );
             }}
@@ -109,4 +81,4 @@ export const SwitchAccountSheet = memo(function SwitchAccountSheet({
       </VirtuosoWrapperSheet>
     </Sheet>
   );
-});
+}

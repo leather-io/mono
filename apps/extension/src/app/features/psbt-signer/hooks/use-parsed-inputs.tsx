@@ -10,8 +10,8 @@ import { isDefined, isUndefined } from '@leather.io/utils';
 import { getBitcoinInputValue } from '@shared/crypto/bitcoin/bitcoin.utils';
 
 import { useInscriptionsByOutputs } from '@app/query/bitcoin/ordinals/inscriptions-by-param.hooks';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 export interface PsbtInput {
@@ -31,8 +31,8 @@ interface UseParsedInputsArgs {
 export function useParsedInputs({ inputs, indexesToSign }: UseParsedInputsArgs) {
   const network = useCurrentNetwork();
   const bitcoinNetwork = getBtcSignerLibNetworkConfigByMode(network.chain.bitcoin.mode);
-  const bitcoinAddressNativeSegwit = useCurrentAccountNativeSegwitIndexZeroSigner().address;
-  const { address: bitcoinAddressTaproot } = useCurrentAccountTaprootIndexZeroSigner();
+  const bitcoinAddressNativeSegwit = useCurrentAccountNativeSegwitIndexZeroPayer().address;
+  const { address: bitcoinAddressTaproot } = useCurrentAccountTaprootIndexZeroPayer();
   const inscriptions = useInscriptionsByOutputs(inputs);
   const signAll = isUndefined(indexesToSign);
 

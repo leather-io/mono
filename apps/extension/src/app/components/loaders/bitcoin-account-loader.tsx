@@ -6,7 +6,7 @@ import type { AccountId } from '@leather.io/models';
 
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useHasCurrentBitcoinAccount } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
-import { useNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 interface BitcoinAccountLoaderBaseProps {
   children(account: BitcoinSigner<P2Ret>): React.ReactNode;
@@ -30,10 +30,10 @@ export function useBitcoinNativeSegwitAccountLoader(
 
   const properIndex = 'current' in props ? currentAccount : props.accountId;
 
-  const signer = useNativeSegwitSigner(properIndex);
+  const payer = useNativeSegwitPayer(properIndex);
 
-  if (!signer || !isBitcoinEnabled) return null;
-  return signer({ changeIndex: 0, addressIndex: 0 });
+  if (!payer || !isBitcoinEnabled) return null;
+  return payer({ changeIndex: 0, addressIndex: 0 });
 }
 
 export function BitcoinNativeSegwitAccountLoader({
@@ -41,7 +41,7 @@ export function BitcoinNativeSegwitAccountLoader({
   fallback,
   ...props
 }: BtcAccountLoaderProps) {
-  const signer = useBitcoinNativeSegwitAccountLoader(props);
-  if (!signer) return fallback;
-  return children(signer);
+  const account = useBitcoinNativeSegwitAccountLoader(props);
+  if (!account) return fallback;
+  return children(account);
 }

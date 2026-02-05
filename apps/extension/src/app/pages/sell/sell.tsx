@@ -13,12 +13,12 @@ import { RouteUrls } from '@shared/route-urls';
 import { useThemeSwitcher } from '@app/common/theme-provider';
 import { Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { useCurrentAccountNativeSegwitIndexZeroSignerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 export function SellPage() {
   const currentStxAccount = useCurrentStacksAccount();
-  const bitcoinSigner = useCurrentAccountNativeSegwitIndexZeroSignerNullable();
+  const bitcoinSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
   const btcAddress = bitcoinSigner?.address;
   const stxAddress = currentStxAccount?.address;
 

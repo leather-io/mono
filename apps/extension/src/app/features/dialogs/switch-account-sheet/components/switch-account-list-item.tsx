@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { getSwitchAccountSheetAccountNameSelector } from '@tests/selectors/account.selectors';
@@ -13,7 +12,7 @@ import { AccountTotalBalance } from '@app/components/account-total-balance';
 import { AccountAddresses } from '@app/components/account/account-addresses';
 import { AccountListItemLayout } from '@app/components/account/account-list-item.layout';
 import { AccountNameLayout } from '@app/components/account/account-name';
-import { useNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 import { useLoading } from '@app/store/ui/ui.hooks';
@@ -23,14 +22,10 @@ interface SwitchAccountListItemProps {
   accountId: AccountId;
   handleClose(): void;
 }
-export const SwitchAccountListItem = memo(function SwitchAccountListItem({
-  accountId,
-  handleClose,
-}: SwitchAccountListItemProps) {
+export function SwitchAccountListItem({ accountId, handleClose }: SwitchAccountListItemProps) {
   const stacksAccount = useStacksAccount(accountId);
-  // console.log({ ...accountId }, stacksAccount);
   const stxAddress = stacksAccount?.address ?? '';
-  const bitcoinSigner = useNativeSegwitSigner(accountId);
+  const bitcoinSigner = useNativeSegwitPayer(accountId);
   const btcAddress = bitcoinSigner?.({ changeIndex: 0, addressIndex: 0 }).address ?? '';
   const currentAccount = useSelector(selectCurrentAccount);
 
@@ -75,4 +70,4 @@ export const SwitchAccountListItem = memo(function SwitchAccountListItem({
       onSelectAccount={handleClick}
     />
   );
-});
+}

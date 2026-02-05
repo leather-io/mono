@@ -46,6 +46,11 @@ export function migrateMultiWalletSupport(state: RootState) {
   logger.info('Beginning multi-wallet support migration');
 
   return produce(state, (draftState: any) => {
+    // Clean up very old state that might be hanging around from very old
+    // versions (pre-migration to using no serialization)
+    if (draftState.onboarding) delete draftState.onboarding;
+    if (draftState.ordinals) delete draftState.ordinals;
+
     // Move salt from:
     // state.softwareKeys.entities.default.salt → state.softwareKeys.salt
     if (draftState.softwareKeys) {
@@ -60,6 +65,14 @@ export function migrateMultiWalletSupport(state: RootState) {
 
     const fingerprint = findDefaultAccountFingerprint(state);
     const currentAccountIndex = draftState?.chains?.stx?.default?.currentAccountIndex ?? 0;
+
+    // Check if there are any keys in the wallet
+    const bitcoinEntities = draftState?.ledger?.bitcoin?.entities ?? {};
+    const stacksEntities = draftState?.ledger?.stacks?.entities ?? {};
+    const hasSoftwareKeys = draftState.softwareKeys?.ids && draftState.softwareKeys.ids.length > 0;
+    const hasLedgerAccounts =
+      Object.keys(bitcoinEntities).length > 0 || Object.keys(stacksEntities).length > 0;
+    const hasAnyKeys = hasSoftwareKeys || hasLedgerAccounts;
 
     // Set active account
     draftState.active = { account: { fingerprint, accountIndex: currentAccountIndex } };
@@ -99,18 +112,15 @@ export function migrateMultiWalletSupport(state: RootState) {
     }
 
     //
-    // Migrate chains.stx from 'default' to fingerprint if we have one
-    if (fingerprint !== assumedZeroFingerprint && draftState.chains?.stx?.default) {
+    // Migrate chains.stx from 'default' to fingerprint
+    // Only migrate if there are keys in the wallet
+    if (hasAnyKeys && draftState.chains?.stx?.default) {
       draftState.chains.stx[fingerprint] = draftState.chains.stx.default;
       delete draftState.chains.stx.default;
     }
 
     //
     // Migrate ledger wallets to `wallets` slice
-    const bitcoinEntities = draftState?.ledger?.bitcoin?.entities ?? {};
-    const stacksEntities = draftState?.ledger?.stacks?.entities ?? {};
-    const hasLedgerAccounts =
-      Object.keys(bitcoinEntities).length > 0 || Object.keys(stacksEntities).length > 0;
 
     if (hasLedgerAccounts) {
       //
@@ -234,10 +244,7 @@ export function migrateMultiWalletSupport(state: RootState) {
 
     //
     // Clean up chains.stx.default when no keys exist
-    const hasSoftwareKeys = draftState.softwareKeys?.ids && draftState.softwareKeys.ids.length > 0;
-    const hasNoKeys = !hasSoftwareKeys && !hasLedgerAccounts;
-
-    if (hasNoKeys && draftState.chains?.stx?.default) {
+    if (!hasAnyKeys && draftState.chains?.stx?.default) {
       delete draftState.chains.stx.default;
     }
   });

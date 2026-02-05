@@ -12,18 +12,18 @@ import { OrdinalSendFormValues } from '@shared/models/form.model';
 
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
-import { useCurrentAccountNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
+import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 
 import { selectTaprootInscriptionTransferCoins } from '../coinselect/select-inscription-coins';
 
 export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivationPath) {
-  const createTaprootSigner = useCurrentAccountTaprootSigner();
-  const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
+  const createTaprootPayer = useCurrentAccountTaprootPayer();
+  const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
   const networkMode = useBitcoinScureLibNetworkConfig();
   const { utxos: nativeSegwitUtxos } = useCurrentNativeSegwitUtxos();
-  const getSignerForInput = useBitcoinSignerFromInput();
+  const getPayerForInput = useBitcoinPayerFromInput();
 
   function coverFeeFromAdditionalUtxos(values: OrdinalSendFormValues) {
     if (getAddressInfo(values.inscription.address).type === AddressType.p2wpkh) {
@@ -34,19 +34,19 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
   }
 
   function formTaprootOrdinalTx(values: OrdinalSendFormValues) {
-    const taprootSigner = createTaprootSigner?.({
+    const taprootPayer = createTaprootPayer?.({
       changeIndex: extractChangeIndexFromPath(inscriptionInput.derivationPath),
       addressIndex: extractAddressIndexFromPath(inscriptionInput.derivationPath),
     });
-    const changeSigner = createNativeSegwitSigner?.({ changeIndex: 0, addressIndex: 0 });
+    const changePayer = createNativeSegwitPayer?.({ changeIndex: 0, addressIndex: 0 });
 
-    if (!taprootSigner || !changeSigner || !nativeSegwitUtxos.available || !values.feeRate) return;
+    if (!taprootPayer || !changePayer || !nativeSegwitUtxos.available || !values.feeRate) return;
 
     const result = selectTaprootInscriptionTransferCoins({
       recipient: values.recipient,
       inscriptionInput,
       nativeSegwitUtxos: nativeSegwitUtxos.available,
-      changeAddress: changeSigner.payment.address!,
+      changeAddress: changePayer.payment.address!,
       feeRate: values.feeRate,
     });
 
@@ -65,33 +65,33 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
       tx.addInput({
         txid: inscriptionInput.txid,
         index: inscriptionInput.vout,
-        tapInternalKey: taprootSigner.payment.tapInternalKey,
+        tapInternalKey: taprootPayer.payment.tapInternalKey,
         sequence: 0,
         witnessUtxo: {
-          script: taprootSigner.payment.script,
+          script: taprootPayer.payment.script,
           amount: BigInt(inscriptionInput.value),
         },
       });
       signingConfig.push({
-        derivationPath: taprootSigner.derivationPath,
+        derivationPath: taprootPayer.derivationPath,
         index: psbtInputCounter.getValue(),
       });
       psbtInputCounter.increment();
 
       // Fee-covering Native Segwit inputs
       inputs.forEach(input => {
-        const nativeSegwitSigner = getSignerForInput(input);
+        const nativeSegwitPayer = getPayerForInput(input);
         tx.addInput({
           txid: input.txid,
           index: input.vout,
           sequence: 0,
           witnessUtxo: {
             amount: BigInt(input.value),
-            script: nativeSegwitSigner.payment.script,
+            script: nativeSegwitPayer.payment.script,
           },
         });
         signingConfig.push({
-          derivationPath: nativeSegwitSigner.derivationPath,
+          derivationPath: nativeSegwitPayer.derivationPath,
           index: psbtInputCounter.getValue(),
         });
         psbtInputCounter.increment();
@@ -113,14 +113,14 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
   }
 
   function formNativeSegwitOrdinalTx(values: OrdinalSendFormValues) {
-    const changeSigner = createNativeSegwitSigner?.({ changeIndex: 0, addressIndex: 0 });
-    const inscriptionSigner = createNativeSegwitSigner?.({
+    const changePayer = createNativeSegwitPayer?.({ changeIndex: 0, addressIndex: 0 });
+    const inscriptionPayer = createNativeSegwitPayer?.({
       changeIndex: extractChangeIndexFromPath(inscriptionInput.derivationPath),
       addressIndex: extractAddressIndexFromPath(inscriptionInput.derivationPath),
     });
 
     const { feeRate, recipient } = values;
-    if (!changeSigner || !inscriptionSigner || !nativeSegwitUtxos || !values.feeRate) return;
+    if (!changePayer || !inscriptionPayer || !nativeSegwitUtxos || !values.feeRate) return;
 
     const determineUtxosArgs = {
       feeRate,
@@ -140,29 +140,29 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
         sequence: 0,
         witnessUtxo: {
           amount: BigInt(inscriptionInput.value),
-          script: inscriptionSigner.payment.script,
+          script: inscriptionPayer.payment.script,
         },
       });
       signingConfig.push({
         index: tx.inputsLength - 1,
-        derivationPath: inscriptionSigner.derivationPath,
+        derivationPath: inscriptionPayer.derivationPath,
       });
 
       // Fee-covering Native Segwit inputs
       inputs.forEach(input => {
-        const signer = getSignerForInput(input);
+        const payer = getPayerForInput(input);
         tx.addInput({
           txid: input.txid,
           index: input.vout,
           sequence: 0,
           witnessUtxo: {
             amount: BigInt(input.value),
-            script: signer.payment.script,
+            script: payer.payment.script,
           },
         });
         signingConfig.push({
           index: tx.inputsLength - 1,
-          derivationPath: signer.derivationPath,
+          derivationPath: payer.derivationPath,
         });
       });
 
@@ -174,7 +174,7 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
         if (Number(output.value) === 0) return;
 
         if (!output.address) {
-          tx.addOutputAddress(changeSigner.address, BigInt(output.value), networkMode);
+          tx.addOutputAddress(changePayer.address, BigInt(output.value), networkMode);
           return;
         }
         tx.addOutputAddress(values.recipient, BigInt(output.value), networkMode);

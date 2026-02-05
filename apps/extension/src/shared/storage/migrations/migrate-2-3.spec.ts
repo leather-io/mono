@@ -1,12 +1,13 @@
 import { describe, expect, test } from 'vitest';
 
+import { assumedZeroFingerprint } from '@shared/utils';
+
 import type { RootState } from '@app/store';
 
 import { migrateMultiWalletSupport } from './migrate-2-3';
 
 const softwareWalletFingerprint = 'a1b2c3d4';
 const ledgerBitcoinFingerprint = 'e5f6a7b8';
-const assumedZeroFingerprint = '00000000';
 
 describe(migrateMultiWalletSupport.name, () => {
   describe('software wallet', () => {
@@ -280,7 +281,49 @@ describe(migrateMultiWalletSupport.name, () => {
         fingerprint: assumedZeroFingerprint,
       });
 
-      expect(result.chains.stx.default).toBeDefined();
+      expect(result.chains.stx[assumedZeroFingerprint]).toBeDefined();
+      expect(result.chains.stx.default).toBeUndefined();
+    });
+
+    test('migrates chains.stx.default to assumedZeroFingerprint for ledger stacks-only wallet', () => {
+      const inputState = {
+        ledger: {
+          bitcoin: {
+            ids: [],
+            entities: {},
+          },
+          stacks: {
+            ids: ["default/44'/5757'/0'/0/0"],
+            entities: {
+              "default/44'/5757'/0'/0/0": {
+                id: "default/44'/5757'/0'/0/0",
+                stxPublicKey: '02abc123',
+                dataPublicKey: '04def456',
+                targetId: '',
+                walletId: 'default',
+              },
+            },
+          },
+        },
+        chains: {
+          stx: {
+            default: {
+              currentAccountIndex: 0,
+              currentAccountStacksDescriptor: '',
+              highestAccountIndex: 0,
+            },
+          },
+        },
+      } as unknown as RootState;
+
+      const result = migrateMultiWalletSupport(inputState);
+
+      expect(result.chains.stx[assumedZeroFingerprint]).toEqual({
+        currentAccountIndex: 0,
+        currentAccountStacksDescriptor: '',
+        highestAccountIndex: 0,
+      });
+      expect(result.chains.stx.default).toBeUndefined();
     });
   });
 
@@ -486,6 +529,103 @@ describe(migrateMultiWalletSupport.name, () => {
         publicKey: '02abc123',
         fingerprint: assumedZeroFingerprint,
       });
+    });
+  });
+
+  describe('cleanup of legacy state', () => {
+    test('removes onboarding slice from state', () => {
+      const inputState = {
+        onboarding: {
+          step: 'complete',
+          hasBackedUpSecretKey: true,
+        },
+        softwareKeys: {
+          ids: ['default'],
+          entities: {
+            default: {
+              id: 'default',
+              salt: 'test-salt',
+              type: 'software',
+            },
+          },
+        },
+        chains: {
+          stx: {
+            default: {
+              currentAccountStacksDescriptor: `[${softwareWalletFingerprint}/44'/5757'/0'/0/0]02abc123`,
+            },
+          },
+        },
+      } as unknown as RootState;
+
+      const result = migrateMultiWalletSupport(inputState);
+
+      expect((result as any).onboarding).toBeUndefined();
+    });
+
+    test('removes ordinals slice from state', () => {
+      const inputState = {
+        ordinals: {
+          inscriptions: [],
+          isLoading: false,
+        },
+        softwareKeys: {
+          ids: ['default'],
+          entities: {
+            default: {
+              id: 'default',
+              salt: 'test-salt',
+              type: 'software',
+            },
+          },
+        },
+        chains: {
+          stx: {
+            default: {
+              currentAccountStacksDescriptor: `[${softwareWalletFingerprint}/44'/5757'/0'/0/0]02abc123`,
+            },
+          },
+        },
+      } as unknown as RootState;
+
+      const result = migrateMultiWalletSupport(inputState);
+
+      expect((result as any).ordinals).toBeUndefined();
+    });
+
+    test('removes both onboarding and ordinals slices from state', () => {
+      const inputState = {
+        onboarding: {
+          step: 'complete',
+          hasBackedUpSecretKey: true,
+        },
+        ordinals: {
+          inscriptions: [],
+          isLoading: false,
+        },
+        softwareKeys: {
+          ids: ['default'],
+          entities: {
+            default: {
+              id: 'default',
+              salt: 'test-salt',
+              type: 'software',
+            },
+          },
+        },
+        chains: {
+          stx: {
+            default: {
+              currentAccountStacksDescriptor: `[${softwareWalletFingerprint}/44'/5757'/0'/0/0]02abc123`,
+            },
+          },
+        },
+      } as unknown as RootState;
+
+      const result = migrateMultiWalletSupport(inputState);
+
+      expect((result as any).onboarding).toBeUndefined();
+      expect((result as any).ordinals).toBeUndefined();
     });
   });
 });

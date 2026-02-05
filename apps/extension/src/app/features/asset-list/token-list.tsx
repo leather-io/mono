@@ -20,8 +20,8 @@ import { RunesAssetList } from '@app/features/asset-list/bitcoin/runes-asset-lis
 import { Src20TokenList } from '@app/features/asset-list/bitcoin/src20-token-list/src20-token-list';
 import { StxCryptoAssetItem } from '@app/features/asset-list/stacks/stx-crypo-asset-item/stx-crypto-asset-item';
 import { useCurrentAccountId } from '@app/store/accounts/account';
-import { useCurrentAccountNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useHasLedgerKeys } from '@app/store/ledger/ledger.selectors';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
@@ -54,8 +54,8 @@ export function TokenList({
 }: TokenListProps) {
   const currentAccount = useCurrentAccountId();
   const currentStacksAccount = useCurrentStacksAccount();
-  const currentBtcNativeSegwitAccount = useCurrentAccountNativeSegwitSigner();
-  const currentBtcTaprootAccount = useCurrentAccountTaprootSigner();
+  const currentBtcNativeSegwitAccount = useCurrentAccountNativeSegwitPayer();
+  const currentBtcTaprootAccount = useCurrentAccountTaprootPayer();
   const isLedger = useHasLedgerKeys();
   const isPrivate = useIsPrivateMode();
 

@@ -10,15 +10,23 @@ import { BtcSizeFeeEstimator } from '@app/common/transactions/bitcoin/fees/btc-s
 import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
 import { useNumberOfInscriptionsOnUtxo } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
 import { useCurrentTaprootUninscribedUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
-import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountId } from '@app/store/accounts/account';
+import {
+  useBitcoinScureLibNetworkConfig,
+  useBitcoinSoftwareSignerLookup,
+} from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
+import { useCurrentAccountTaprootPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 export function useGenerateRetrieveTaprootFundsTx() {
   const networkMode = useBitcoinScureLibNetworkConfig();
+  const account = useCurrentAccountId();
+  const network = useCurrentNetwork();
 
   const { utxos: uninscribedUtxos } = useCurrentTaprootUninscribedUtxos();
 
-  const createSigner = useCurrentAccountTaprootSigner();
+  const createPayer = useCurrentAccountTaprootPayer();
+  const signingCallbacksLookup = useBitcoinSoftwareSignerLookup();
   const { data: feeRates } = useAverageBitcoinFeeRates();
   const getNumberOfInscriptionOnUtxo = useNumberOfInscriptionsOnUtxo();
 
@@ -38,18 +46,18 @@ export function useGenerateRetrieveTaprootFundsTx() {
       const totalAmount = sumNumbers(uninscribedUtxos.map(utxo => utxo.value));
 
       uninscribedUtxos.forEach(utxo => {
-        const signer = createSigner?.({
+        const payer = createPayer?.({
           addressIndex: extractAddressIndexFromPath(utxo.path),
           changeIndex: extractChangeIndexFromPath(utxo.path),
         });
-        if (!signer) return;
+        if (!payer) return;
 
         tx.addInput({
           txid: utxo.txid,
           index: utxo.vout,
-          tapInternalKey: signer.payment.tapInternalKey,
+          tapInternalKey: payer.payment.tapInternalKey,
           witnessUtxo: {
-            script: signer.payment.script,
+            script: payer.payment.script,
             amount: BigInt(utxo.value),
           },
         });
@@ -67,17 +75,33 @@ export function useGenerateRetrieveTaprootFundsTx() {
 
       tx.addOutputAddress(recipient, paymentAmount, networkMode);
 
+      const getSigner = signingCallbacksLookup(account.fingerprint);
+      if (!getSigner) throw new Error('Signing callbacks not available');
+
       uninscribedUtxos.forEach(utxo => {
-        return createSigner?.({
-          addressIndex: extractAddressIndexFromPath(utxo.path),
+        const callbacks = getSigner({
+          paymentType: 'p2tr',
+          network: network.chain.bitcoin.mode,
+          accountIndex: account.accountIndex,
           changeIndex: extractChangeIndexFromPath(utxo.path),
-        }).sign(tx);
+          addressIndex: extractAddressIndexFromPath(utxo.path),
+        });
+        callbacks.sign(tx);
       });
 
       tx.finalize();
       return tx.hex;
     },
-    [createSigner, getNumberOfInscriptionOnUtxo, networkMode, uninscribedUtxos]
+    [
+      account.accountIndex,
+      account.fingerprint,
+      createPayer,
+      getNumberOfInscriptionOnUtxo,
+      network.chain.bitcoin.mode,
+      networkMode,
+      signingCallbacksLookup,
+      uninscribedUtxos,
+    ]
   );
 
   return { generateRetrieveTaprootFundsTx, fee };

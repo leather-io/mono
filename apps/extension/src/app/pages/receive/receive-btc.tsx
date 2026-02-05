@@ -1,7 +1,3 @@
-import { useLocation } from 'react-router';
-
-import get from 'lodash.get';
-
 import { analytics } from '@shared/utils/analytics';
 
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
@@ -19,21 +15,18 @@ interface ReceiveBtcModalType {
 export function ReceiveBtcModal({ type = 'btc' }: ReceiveBtcModalType) {
   useBackgroundLocationRedirect();
 
-  const { state } = useLocation();
   const toast = useToast();
 
   const currentAccount = useCurrentAccountId();
-  const accountIndex = get(state, 'accountIndex', currentAccount.accountIndex);
 
-  const activeAccountBtcAddress = useNativeSegwitAccountIndexAddressIndexZero(accountIndex);
-  const btcAddress = get(state, 'btcAddress', activeAccountBtcAddress);
+  const activeAccountBtcAddress = useNativeSegwitAccountIndexAddressIndexZero(currentAccount);
 
   return (
     <ReceiveTokensLayout
-      address={btcAddress}
+      address={activeAccountBtcAddress}
       onCopyAddressToClipboard={async () => {
         analytics.track('copy_btc_address_to_clipboard', { type });
-        await copyToClipboard(btcAddress);
+        await copyToClipboard(activeAccountBtcAddress);
         toast.success('Copied to clipboard!');
       }}
       title={type === 'btc-stamp' ? 'BITCOIN STAMP' : 'BTC'}

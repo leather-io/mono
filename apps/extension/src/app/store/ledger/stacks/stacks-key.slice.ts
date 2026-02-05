@@ -16,3 +16,4 @@ export { stacksKeysSlice };
 const selectors = adapter.getSelectors(selectStacksKeysSlice);
 
 export const selectWalletStacksKeys = selectors.selectAll;
+export const selectWalletStacksEntities = selectors.selectEntities;

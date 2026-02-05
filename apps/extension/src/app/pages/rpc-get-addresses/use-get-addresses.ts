@@ -18,11 +18,11 @@ import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import {
-  useCurrentAccountNativeSegwitSigner,
+  useCurrentAccountNativeSegwitPayer,
   useCurrentNativeSegwitAccount,
 } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import {
-  useCurrentAccountTaprootSigner,
+  useCurrentAccountTaprootPayer,
   useCurrentTaprootAccount,
 } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
@@ -54,8 +54,8 @@ function useGetDescriptors() {
 export function useGetAddresses() {
   const permissions = useAppPermissions();
   const { tabId, origin, request } = useGetAddressesParams();
-  const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
-  const createTaprootSigner = useCurrentAccountTaprootSigner();
+  const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
+  const createTaprootPayer = useCurrentAccountTaprootPayer();
   const stacksAccount = useCurrentStacksAccount();
   const { nativeSegwitDescriptor, taprootDescriptor } = useGetDescriptors();
 
@@ -79,8 +79,8 @@ export function useGetAddresses() {
 
       const keysToIncludeInResponse = [];
 
-      if (createNativeSegwitSigner) {
-        const nativeSegwitSigner = createNativeSegwitSigner({
+      if (createNativeSegwitPayer) {
+        const nativeSegwitSigner = createNativeSegwitPayer({
           changeIndex: 0,
           addressIndex: 0,
         });
@@ -97,15 +97,15 @@ export function useGetAddresses() {
         keysToIncludeInResponse.push(nativeSegwitAddressResponse);
       }
 
-      if (createTaprootSigner) {
-        const taprootSigner = createTaprootSigner({ changeIndex: 0, addressIndex: 0 });
+      if (createTaprootPayer) {
+        const taprootPayer = createTaprootPayer({ changeIndex: 0, addressIndex: 0 });
         const taprootAddressResponse: BtcAddress = {
           symbol: 'BTC',
           type: 'p2tr',
-          address: taprootSigner.address,
-          publicKey: bytesToHex(taprootSigner.publicKey),
-          tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taprootSigner.publicKey)),
-          derivationPath: taprootSigner.derivationPath,
+          address: taprootPayer.address,
+          publicKey: bytesToHex(taprootPayer.publicKey),
+          tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taprootPayer.publicKey)),
+          derivationPath: taprootPayer.derivationPath,
           descriptor: taprootDescriptor ?? '',
         };
         keysToIncludeInResponse.push(taprootAddressResponse);
