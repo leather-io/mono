@@ -14,6 +14,7 @@ import {
   LockIcon,
   SettingsGearIcon,
   Switch,
+  UnlockIcon,
 } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -27,7 +28,10 @@ import { Divider } from '@app/components/layout/divider';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
 import { useHasDefaultInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { useTogglePrivateMode } from '@app/store/settings/settings.actions';
-import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
+import {
+  useCurrentAccountDiscardedInscriptions,
+  useIsPrivateMode,
+} from '@app/store/settings/settings.selectors';
 
 import { AdvancedMenuItems } from './components/advanced-menu-items';
 
@@ -47,6 +51,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
 
   const isPrivateMode = useIsPrivateMode();
   const togglePrivateMode = useTogglePrivateMode();
+  const { discardAllInscriptions } = useCurrentAccountDiscardedInscriptions();
 
   const location = useLocation();
 
@@ -88,6 +93,20 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
             <Switch.Thumb />
           </Switch.Root>
         </Flex>
+      </Flag>
+    </DropdownMenu.Item>
+  );
+
+  const unprotectAllInscriptionsItem = (
+    <DropdownMenu.Item
+      data-testid={SettingsSelectors.UnprotectAllInscriptions}
+      onSelect={() => {
+        analytics.track('click_unprotect_all_inscriptions');
+        discardAllInscriptions();
+      }}
+    >
+      <Flag img={<UnlockIcon />} textStyle="label.02" width="100%">
+        Unprotect all inscriptions
       </Flag>
     </DropdownMenu.Item>
   );
@@ -145,6 +164,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
             <DropdownMenu.Group>
               {isWalletUnlocked && settingsItem}
               {isWalletUnlocked && togglePrivacyItem}
+              {isWalletUnlocked && unprotectAllInscriptionsItem}
 
               {(showAdvancedMenuOptions || showLockWalletItem || showSignOutItem) &&
                 isWalletUnlocked && <Divider />}

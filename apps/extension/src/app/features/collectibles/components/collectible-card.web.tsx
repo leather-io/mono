@@ -11,7 +11,7 @@ interface CollectibleCardProps extends BoxProps {
 
 export function CollectibleCard({ children, height = 200, ...props }: CollectibleCardProps) {
   return (
-    <Box width="auto" height={height} overflow="hidden" {...props}>
+    <Box width="auto" height={height} overflow="hidden" borderRadius="sm" {...props}>
       {children}
     </Box>
   );

@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useCallback, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 
-import { Box, Stack, styled } from 'leather-styles/jsx';
+import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
+import { ORD_IO_URL } from '@leather.io/constants';
 import {
   type AccountAddresses,
   CryptoAssetProtocols,
@@ -10,15 +11,30 @@ import {
   Sip9Asset,
   StampAsset,
 } from '@leather.io/models';
-import { ArrowLeftIcon, Callout } from '@leather.io/ui';
+import {
+  ArrowLeftIcon,
+  ArrowUpIcon,
+  Callout,
+  DropdownMenu,
+  EllipsisVIcon,
+  ExternalLinkIcon,
+  Flag,
+  IconButton,
+  LockIcon,
+  UnlockIcon,
+} from '@leather.io/ui';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
+import { RouteUrls } from '@shared/route-urls';
+
 import { isPopupMode } from '@app/common/utils';
+import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderActionButton } from '@app/components/layout/headers/header-action-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
 import { CollectibleTypeIconOverlay } from '../collectibles/components/collectible-type-icon-overlay.web';
 import { InscriptionCard } from '../collectibles/components/inscription-card';
@@ -38,9 +54,38 @@ interface CollectibleDetailsProps {
 
 export function CollectibleDetails({ account, assetId, protocol }: CollectibleDetailsProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const network = useCurrentNetwork();
   const { data: collectibles = [], isLoading, isError } = useAccountCollectibles(account);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const { hasInscriptionBeenDiscarded, discardInscription, recoverInscription } =
+    useCurrentAccountDiscardedInscriptions();
+
+  const view = collectibles.find(item => item.key === assetId);
+  const inscription =
+    protocol === CryptoAssetProtocols.inscription ? (view?.asset as InscriptionAsset) : null;
+  const isInscriptionDiscarded = inscription ? hasInscriptionBeenDiscarded(inscription) : false;
+
+  const handleSendInscription = useCallback(() => {
+    if (!inscription) return;
+    void navigate(`/${RouteUrls.SendOrdinalInscription}`, {
+      state: { inscription, backgroundLocation: location },
+    });
+  }, [navigate, inscription, location]);
+
+  const handleOpenOriginal = useCallback(() => {
+    if (!inscription) return;
+    openInNewTab(`${ORD_IO_URL}/${inscription.number}`);
+  }, [inscription]);
+
+  const handleToggleProtection = useCallback(() => {
+    if (!inscription) return;
+    if (isInscriptionDiscarded) {
+      recoverInscription(inscription);
+    } else {
+      discardInscription(inscription);
+    }
+  }, [inscription, isInscriptionDiscarded, recoverInscription, discardInscription]);
 
   if (isLoading) {
     return <CollectibleDetailsLoading onBack={() => navigate(-1)} />;
@@ -55,8 +100,6 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
       </Box>
     );
   }
-
-  const view = collectibles.find(item => item.key === assetId);
 
   if (!view) {
     return (
@@ -103,7 +146,47 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
               ) : null}
             </Stack>
           }
-          rightCol={<Box />}
+          rightCol={
+            protocol === CryptoAssetProtocols.inscription && inscription ? (
+              <Flex alignItems="center" gap="space.01">
+                <HeaderActionButton
+                  icon={<ArrowUpIcon />}
+                  onAction={handleSendInscription}
+                  dataTestId="collectible-details-send"
+                />
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger>
+                    <IconButton
+                      _focus={{ outline: 'focus' }}
+                      _hover={{ bg: 'ink.component-background-hover' }}
+                      color="ink.action-primary-default"
+                      icon={<EllipsisVIcon />}
+                      data-testid="collectible-details-options"
+                    />
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Content align="end" side="bottom" sideOffset={4}>
+                    <DropdownMenu.Item onClick={handleOpenOriginal}>
+                      <Flag img={<ExternalLinkIcon />} width="100%">
+                        <styled.span textStyle="label.02">View original</styled.span>
+                      </Flag>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item onClick={handleToggleProtection}>
+                      <Flag
+                        img={isInscriptionDiscarded ? <LockIcon /> : <UnlockIcon />}
+                        width="100%"
+                      >
+                        <styled.span textStyle="label.02">
+                          {isInscriptionDiscarded ? 'Protect' : 'Unprotect'}
+                        </styled.span>
+                      </Flag>
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Root>
+              </Flex>
+            ) : (
+              <Box />
+            )
+          }
         />
       </Header>
 

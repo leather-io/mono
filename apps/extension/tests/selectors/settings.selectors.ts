@@ -28,6 +28,7 @@ export enum SettingsSelectors {
   SwitchAccountItemIndex = 'switch-account-item-[index]',
   OpenWalletInNewTab = 'open-wallet-in-new-tab',
   TogglePrivacy = 'toggle-privacy',
+  UnprotectAllInscriptions = 'unprotect-all-inscriptions',
   ToggleNotifications = 'toggle-notifications',
   ToggleNetworkBadge = 'toggle-network-badge',
   SettingsPage = 'settings-page',
