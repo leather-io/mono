@@ -47,8 +47,6 @@ export interface BitcoinSigner<Payment> {
   derivationPath: string;
   address: BitcoinAddress;
   publicKey: Uint8Array;
-  sign(tx: btc.Transaction): void;
-  signIndex(tx: btc.Transaction, index: number, allowedSighash?: AllowedSighashTypes[]): void;
 }
 
 export interface BitcoinPayerBase {

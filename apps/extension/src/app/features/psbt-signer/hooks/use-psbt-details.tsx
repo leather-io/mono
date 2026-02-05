@@ -4,8 +4,8 @@ import type { TransactionInput, TransactionOutput } from '@scure/btc-signer/psbt
 
 import { createMoney, subtractMoney } from '@leather.io/utils';
 
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useParsedInputs } from './use-parsed-inputs';
@@ -20,8 +20,8 @@ interface UsePsbtDetailsArgs {
 }
 export function usePsbtDetails({ inputs, indexesToSign, outputs }: UsePsbtDetailsArgs) {
   const network = useCurrentNetwork();
-  const bitcoinAddressNativeSegwit = useCurrentAccountNativeSegwitIndexZeroSigner().address;
-  const { address: bitcoinAddressTaproot } = useCurrentAccountTaprootIndexZeroSigner();
+  const bitcoinAddressNativeSegwit = useCurrentAccountNativeSegwitIndexZeroPayer().address;
+  const { address: bitcoinAddressTaproot } = useCurrentAccountTaprootIndexZeroPayer();
   const { isPsbtMutable, parsedInputs } = useParsedInputs({
     inputs,
     indexesToSign,

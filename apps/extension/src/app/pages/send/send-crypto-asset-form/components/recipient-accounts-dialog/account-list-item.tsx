@@ -12,7 +12,7 @@ import { AccountTotalBalance } from '@app/components/account-total-balance';
 import { AccountAddresses } from '@app/components/account/account-addresses';
 import { AccountListItemLayout } from '@app/components/account/account-list-item.layout';
 import { AccountNameLayout } from '@app/components/account/account-name';
-import { useNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
@@ -36,7 +36,7 @@ export const AccountListItem = memo(function AccountListItem({
     address: stacksAddress,
     index: accountId.accountIndex,
   });
-  const bitcoinSigner = useNativeSegwitSigner(accountId);
+  const bitcoinSigner = useNativeSegwitPayer(accountId);
   const bitcoinAddress = bitcoinSigner?.({ changeIndex: 0, addressIndex: 0 }).address || '';
 
   function onSelectAccount() {
