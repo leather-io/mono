@@ -25,11 +25,11 @@ import { useBitcoinFeesList } from '@app/components/bitcoin-fees-list/use-bitcoi
 import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
-import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
+import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
+import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   const toast = useToast();
@@ -40,11 +40,11 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     address: currentBitcoinAddress,
     publicKey,
     derivationPath: zeroIndexDerivationPath,
-  } = useCurrentAccountNativeSegwitIndexZeroSigner();
-  const { utxos, refetchUtxos } = useCurrentUtxos();
+  } = useCurrentAccountNativeSegwitIndexZeroPayer();
+  const { utxos, refetchUtxos } = useCurrentNativeSegwitUtxos();
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
-  const getSignerForOwnedUtxo = useBitcoinSignerFromInput();
+  const getPayerForOwnedUtxo = useBitcoinPayerFromInput();
   const recipient = getRecipientAddressFromOutput(btcTx.vout, currentBitcoinAddress) || '';
 
   const sizeInfo = useMemo(
@@ -80,10 +80,10 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
 
     vin.forEach(input => {
       const ownedUtxo = utxoMap.get(`${input.txid}:${input.vout}`);
-      const signer = ownedUtxo ? getSignerForOwnedUtxo(ownedUtxo) : null;
+      const payer = ownedUtxo ? getPayerForOwnedUtxo(ownedUtxo) : null;
 
-      const tapInternalKey = isP2TROut(signer)
-        ? { tapInternalKey: signer.payment.tapInternalKey }
+      const tapInternalKey = isP2TROut(payer)
+        ? { tapInternalKey: payer.payment.tapInternalKey }
         : {};
 
       newTx.addInput({
@@ -92,7 +92,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
         sequence: input.sequence + 1,
         witnessUtxo: {
           // script = 0014 + pubKeyHash
-          script: signer ? signer.payment.script : p2wpkh.script,
+          script: payer ? payer.payment.script : p2wpkh.script,
           amount: ownedUtxo ? BigInt(ownedUtxo.value) : BigInt(input.prevout.value),
         },
         ...tapInternalKey,
@@ -100,7 +100,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
 
       signingConfig.push({
         index: newTx.inputsLength - 1,
-        derivationPath: signer ? signer.derivationPath : zeroIndexDerivationPath,
+        derivationPath: payer ? payer.derivationPath : zeroIndexDerivationPath,
       });
     });
 

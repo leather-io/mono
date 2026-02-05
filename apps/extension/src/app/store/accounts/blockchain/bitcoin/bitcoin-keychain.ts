@@ -224,12 +224,11 @@ export function useBitcoinExtendedPublicKeyVersions(): Versions | undefined {
   }, [network, whenWallet]);
 }
 
-interface BitcoinSigningCallbacks {
-  signTransaction(tx: btc.Transaction): void;
-  signTransactionAtIndex(tx: btc.Transaction, index: number, allowedSighash?: number[]): void;
+interface BitcoinSoftwareSignerFns {
+  sign(tx: btc.Transaction): void;
+  signAtIndex(tx: btc.Transaction, index: number, allowedSighash?: number[]): void;
 }
-
-function createBitcoinSigningCallbacksGenerator(rootKeychain: HDKey) {
+function createBitcoinSoftwareSigner(rootKeychain: HDKey) {
   return ({
     paymentType,
     network,
@@ -239,7 +238,7 @@ function createBitcoinSigningCallbacksGenerator(rootKeychain: HDKey) {
   }: BitcoinAccountDerivationRequirements & {
     changeIndex: number;
     addressIndex: number;
-  }): BitcoinSigningCallbacks => {
+  }): BitcoinSoftwareSignerFns => {
     const derivationPathFn = whenSupportedPaymentType(paymentType)({
       p2tr: makeTaprootAccountDerivationPath,
       p2wpkh: makeNativeSegwitAccountDerivationPath,
@@ -252,12 +251,12 @@ function createBitcoinSigningCallbacksGenerator(rootKeychain: HDKey) {
     });
 
     return {
-      signTransaction(tx: btc.Transaction) {
+      sign(tx: btc.Transaction) {
         if (!addressIndexKeychain.privateKey)
           throw new Error('Unable to derive private key for signing');
         tx.sign(addressIndexKeychain.privateKey);
       },
-      signTransactionAtIndex(tx: btc.Transaction, index: number, allowedSighash?: number[]) {
+      signAtIndex(tx: btc.Transaction, index: number, allowedSighash?: number[]) {
         if (!addressIndexKeychain.privateKey)
           throw new Error('Unable to derive private key for signing');
         tx.signIdx(addressIndexKeychain.privateKey, index, allowedSighash);
@@ -266,17 +265,16 @@ function createBitcoinSigningCallbacksGenerator(rootKeychain: HDKey) {
   };
 }
 
-const selectSoftwareWalletBitcoinSigningCallbacksGenerator = createSelector(
+const selectSoftwareWalletBitcoinSignerGenerator = createSelector(
   selectRootKeychains,
-  rootKeychains =>
-    mapValues(rootKeychains, keychain => createBitcoinSigningCallbacksGenerator(keychain))
+  rootKeychains => mapValues(rootKeychains, keychain => createBitcoinSoftwareSigner(keychain))
 );
 
-const selectBitcoinSigningCallbacksLookup = createSelector(
-  selectSoftwareWalletBitcoinSigningCallbacksGenerator,
+const selectBitcoinSoftwareSignerLookup = createSelector(
+  selectSoftwareWalletBitcoinSignerGenerator,
   generators => (fingerprint: string) => generators[fingerprint]
 );
 
-export function useBitcoinSigningCallbacksLookup() {
-  return useSelector(selectBitcoinSigningCallbacksLookup);
+export function useBitcoinSoftwareSignerLookup() {
+  return useSelector(selectBitcoinSoftwareSignerLookup);
 }

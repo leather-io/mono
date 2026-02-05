@@ -11,14 +11,14 @@ import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
-import { useCurrentAccountNativeSegwitIndexZeroSignerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 function fallbackHardcodedBalanceMinusFee(balance: Money) {
   return createMoney(BigNumber.max(0, balance.amount.minus(1000)), balance.symbol);
 }
 
 export function useBtcSwapAsset() {
-  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSignerNullable();
+  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
   const currentBitcoinAddress = nativeSegwitSigner?.address ?? '';
   const { utxos } = useCurrentUtxos();
   const calcMaxSpend = useCalculateMaxBitcoinSpend();

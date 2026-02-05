@@ -17,7 +17,7 @@ import {
   useHasCurrentBitcoinAccount,
   useZeroIndexTaprootAddress,
 } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useUpdateSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.hooks';
 import { useSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.selectors';
@@ -37,7 +37,7 @@ import { TransactionList } from './components/transaction-list/transaction-list'
 // bitcoin sometimes being undefined
 function useNsBitcoinAddress() {
   try {
-    return useCurrentAccountNativeSegwitIndexZeroSigner().address;
+    return useCurrentAccountNativeSegwitIndexZeroPayer().address;
   } catch {
     return '';
   }

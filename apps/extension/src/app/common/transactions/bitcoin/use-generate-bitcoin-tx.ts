@@ -10,8 +10,8 @@ import { logger } from '@shared/logger';
 import type { TransferRecipient } from '@shared/models/form.model';
 
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 interface GenerateBitcoinTxValues {
   amount: Money;
@@ -26,8 +26,9 @@ interface UseGenerateUnsignedBitcoinTxProps {
 export function useGenerateUnsignedBitcoinTx({
   throwError = false,
 }: UseGenerateUnsignedBitcoinTxProps = {}) {
-  const zeroIndexNativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
-  const getSignerForInput = useBitcoinSignerFromInput();
+  const indexZeroPayer = useCurrentAccountNativeSegwitIndexZeroPayer();
+  const getPayerForInput = useBitcoinPayerFromInput();
+
   const networkMode = useBitcoinScureLibNetworkConfig();
 
   return useCallback(
@@ -66,9 +67,9 @@ export function useGenerateUnsignedBitcoinTx({
         const signingConfig: BitcoinInputSigningConfig[] = [];
 
         for (const input of inputs) {
-          const inputSigner = getSignerForInput(input);
-          const tapInternalKey = isP2TROut(inputSigner)
-            ? { tapInternalKey: inputSigner.payment.tapInternalKey }
+          const inputPayer = getPayerForInput(input);
+          const tapInternalKey = isP2TROut(inputPayer)
+            ? { tapInternalKey: inputPayer.payment.tapInternalKey }
             : {};
 
           tx.addInput({
@@ -76,7 +77,7 @@ export function useGenerateUnsignedBitcoinTx({
             index: input.vout,
             sequence: 0,
             witnessUtxo: {
-              script: inputSigner.payment.script,
+              script: inputPayer.payment.script,
               amount: BigInt(input.value),
             },
             ...tapInternalKey,
@@ -84,7 +85,7 @@ export function useGenerateUnsignedBitcoinTx({
 
           signingConfig.push({
             index: tx.inputsLength - 1,
-            derivationPath: inputSigner.derivationPath,
+            derivationPath: inputPayer.derivationPath,
           });
         }
 
@@ -92,11 +93,7 @@ export function useGenerateUnsignedBitcoinTx({
           // When coin selection returns output with no address we assume it is
           // a change output
           if (!output.address) {
-            tx.addOutputAddress(
-              zeroIndexNativeSegwitSigner.address,
-              BigInt(output.value),
-              networkMode
-            );
+            tx.addOutputAddress(indexZeroPayer.address, BigInt(output.value), networkMode);
             return;
           }
           tx.addOutputAddress(output.address, BigInt(output.value), networkMode);
@@ -116,6 +113,6 @@ export function useGenerateUnsignedBitcoinTx({
         return null;
       }
     },
-    [networkMode, zeroIndexNativeSegwitSigner.address, getSignerForInput, throwError]
+    [networkMode, indexZeroPayer.address, getPayerForInput, throwError]
   );
 }
