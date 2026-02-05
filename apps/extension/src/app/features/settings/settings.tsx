@@ -13,6 +13,7 @@ import {
   Flag,
   LockIcon,
   SettingsGearIcon,
+  SettingsSliderIcon,
   Switch,
   UnlockIcon,
 } from '@leather.io/ui';
@@ -33,6 +34,7 @@ import {
   useIsPrivateMode,
 } from '@app/store/settings/settings.selectors';
 
+import { ManageInscriptionsSheet } from '../manage-inscriptions/manage-inscriptions-sheet';
 import { AdvancedMenuItems } from './components/advanced-menu-items';
 
 interface SettingsProps {
@@ -40,6 +42,7 @@ interface SettingsProps {
 }
 export function Settings({ canLockWallet = true }: SettingsProps) {
   const [showSignOut, setShowSignOut] = useState(false);
+  const [showManageInscriptions, setShowManageInscriptions] = useState(false);
 
   const { hasKeys } = useHasKeys();
 
@@ -111,6 +114,20 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
     </DropdownMenu.Item>
   );
 
+  const manageInscriptionsItem = (
+    <DropdownMenu.Item
+      data-testid={SettingsSelectors.ManageInscriptions}
+      onSelect={() => {
+        analytics.track('click_manage_inscriptions');
+        setShowManageInscriptions(true);
+      }}
+    >
+      <Flag img={<SettingsSliderIcon />} textStyle="label.02" width="100%">
+        Manage inscriptions
+      </Flag>
+    </DropdownMenu.Item>
+  );
+
   const lockWalletItem = (
     <DropdownMenu.Item
       onSelect={() => {
@@ -165,6 +182,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
               {isWalletUnlocked && settingsItem}
               {isWalletUnlocked && togglePrivacyItem}
               {isWalletUnlocked && unprotectAllInscriptionsItem}
+              {isWalletUnlocked && manageInscriptionsItem}
 
               {(showAdvancedMenuOptions || showLockWalletItem || showSignOutItem) &&
                 isWalletUnlocked && <Divider />}
@@ -179,6 +197,12 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
       {showSignOut && <SignOut onClose={() => setShowSignOut(!showSignOut)} />}
+      {showManageInscriptions && (
+        <ManageInscriptionsSheet
+          isShowing={showManageInscriptions}
+          onClose={() => setShowManageInscriptions(false)}
+        />
+      )}
     </>
   );
 }
