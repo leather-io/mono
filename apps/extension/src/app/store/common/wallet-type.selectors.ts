@@ -4,10 +4,11 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { extractAccountIndexFromPath } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
-import { createNullArrayOfLength, uniqueArray } from '@leather.io/utils';
+import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { selectStacksChain } from '../chains/stx-chain.selectors';
 import { selectBitcoinKeychainEntities } from '../ledger/bitcoin/bitcoin-key.slice';
+import { selectWalletStacksKeys } from '../ledger/stacks/stacks-key.slice';
 import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 import { selectWalletEntities } from '../wallets/wallet.selectors';
 
@@ -41,31 +42,40 @@ interface WalletAccountRefTree {
 // care of account look up themselves, as a way to lazily derive account details
 // when needed.
 const selectWalletAccountRefTree = createSelector(
-  [selectWalletEntities, selectStacksChain, selectBitcoinKeychainEntities],
-  (walletEntities, stxChain, bitcoinKeychainEntities): WalletAccountRefTree[] => {
+  [selectWalletEntities, selectStacksChain, selectBitcoinKeychainEntities, selectWalletStacksKeys],
+  (walletEntities, stxChain, bitcoinKeychainEntities, ledgerStacksKeys): WalletAccountRefTree[] => {
     const tree: WalletAccountRefTree[] = [];
 
     Object.values(walletEntities || {}).forEach(wallet => {
       if (!wallet) return;
 
+      const allAccountIndices: number[] = [];
+
+      // Collect account indices from software Stacks accounts
       const stxChainState = stxChain?.[wallet.fingerprint];
-      if (!stxChainState) return;
+      if (stxChainState) {
+        for (let i = 0; i <= stxChainState.highestAccountIndex; i++) {
+          allAccountIndices.push(i);
+        }
+      }
 
-      const stxAccountCount = stxChainState.highestAccountIndex + 1;
+      // Collect account indices from Ledger Stacks keys
+      ledgerStacksKeys
+        .filter(key => key.fingerprint === wallet.fingerprint)
+        .forEach((_, index) => allAccountIndices.push(index));
 
-      const bitcoinKeysForWallet = Object.values(bitcoinKeychainEntities || {}).filter(
-        key => key?.fingerprint === wallet.fingerprint
-      );
+      // Collect account indices from Bitcoin keys
+      Object.values(bitcoinKeychainEntities || {})
+        .filter(key => key?.fingerprint === wallet.fingerprint)
+        .forEach(key => {
+          const accountIndex = extractAccountIndexFromPath(key.path);
+          if (accountIndex !== null) allAccountIndices.push(accountIndex);
+        });
 
-      const uniqueBitcoinAccountIndices = uniqueArray(
-        bitcoinKeysForWallet
-          .map(key => extractAccountIndexFromPath(key.path))
-          .filter(index => index !== null)
-      );
+      if (allAccountIndices.length === 0) return;
 
-      const bitcoinAccountCount = uniqueBitcoinAccountIndices.length;
-
-      const accountCount = Math.max(stxAccountCount, bitcoinAccountCount);
+      const highestAccountIndex = Math.max(...allAccountIndices);
+      const accountCount = highestAccountIndex + 1;
 
       const accounts = createNullArrayOfLength(accountCount).map((_, i) => ({
         fingerprint: wallet.fingerprint,

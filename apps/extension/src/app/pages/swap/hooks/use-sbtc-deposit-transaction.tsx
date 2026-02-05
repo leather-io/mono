@@ -36,7 +36,7 @@ import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
+import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -91,7 +91,7 @@ async function fetchSignersPublicKey({
   return res.value.slice(2);
 }
 
-export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: OwnedUtxo[]) {
+export function useSbtcDepositTransaction(payer: BitcoinSigner<P2Ret>, utxos: OwnedUtxo[]) {
   const toast = useToast();
   const { setIsIdle } = useLoading(LoadingKeys.SUBMIT_SWAP_TRANSACTION);
   const stacksAccount = useCurrentStacksAccount();
@@ -100,7 +100,7 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: O
   const navigate = useNavigate();
   const network = useCurrentNetwork();
   const sign = useSignBitcoinTx();
-  const getSignerForInput = useBitcoinSignerFromInput();
+  const getPayerForInput = useBitcoinPayerFromInput();
 
   const client = useMemo(
     () => (network.chain.bitcoin.mode === 'mainnet' ? clientMainnet : clientTestnet),
@@ -131,7 +131,7 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: O
             }),
             maxSignerFee: swapData.maxSignerFee,
             reclaimLockTime: DEFAULT_RECLAIM_LOCK_TIME,
-            reclaimPublicKey: bytesToHex(signer.publicKey).slice(2),
+            reclaimPublicKey: bytesToHex(payer.publicKey).slice(2),
           }),
           signingConfig: [],
         };
@@ -152,27 +152,27 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: O
           : determineUtxosForSpend(determineUtxosArgs);
 
         for (const input of inputs) {
-          const inputSigner = getSignerForInput(input);
+          const inputPayer = getPayerForInput(input);
           deposit.transaction.addInput({
             txid: input.txid,
             index: input.vout,
             sequence: 0,
             witnessUtxo: {
-              script: inputSigner.payment.script,
+              script: inputPayer.payment.script,
               amount: BigInt(input.value),
             },
           });
 
           deposit.signingConfig.push({
             index: deposit.transaction.inputsLength - 1,
-            derivationPath: inputSigner.derivationPath,
+            derivationPath: inputPayer.derivationPath,
           });
         }
 
         outputs.forEach(output => {
           // Add change output
           if (!output.address) {
-            deposit.transaction.addOutputAddress(signer.address, BigInt(output.value), networkMode);
+            deposit.transaction.addOutputAddress(payer.address, BigInt(output.value), networkMode);
             return;
           }
         });

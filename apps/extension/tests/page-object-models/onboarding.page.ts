@@ -24,8 +24,7 @@ export function getTestSoftwareAccountDefaultWalletState() {
       stx: {
         [testFingerprint]: {
           highestAccountIndex: 0,
-          currentAccountStacksDescriptor:
-            "[e87a850b/44'/5757'/0'/0/0]0329b076bc20f7b1592b2a1a5cb91dfefe8c966e50e256458e23dd2c5d63f8f1af",
+          currentAccountStacksDescriptor: '',
         },
       },
     },
@@ -44,10 +43,6 @@ export function getTestSoftwareAccountDefaultWalletState() {
         },
       },
     },
-    keychains: {
-      ids: [],
-      entities: {},
-    },
     softwareKeys: {
       salt: 'a086b877fc757a4daa7c6343d2861c05',
       ids: [testFingerprint],
@@ -59,9 +54,6 @@ export function getTestSoftwareAccountDefaultWalletState() {
             'ff735c244c72e1c7f7dc411b240ce6e30f87a43106cd1c87a77d3a6f80679176558ce2e73d1a089d6a83d8764b31d9d9043a6f79ca1104fb8238a6ae4f1e063bc1f1c3ba99c4c4e8b38d871963a7e3d8a0a4ed5e6525ec6702d9074dd9ee376c',
         },
       },
-    },
-    inMemoryKeys: {
-      keys: {},
     },
     ledger: {
       bitcoin: {
@@ -362,7 +354,10 @@ export class OnboardingPage {
       iterationCounter.increment();
     } while (!(await isSignedIn()));
 
-    await this.page.evaluate(() => window.debug.setHighestAccountIndex(2));
+    await this.page.evaluate(
+      fingerprint => window.debug.setHighestAccountIndex(fingerprint, 2),
+      testFingerprint
+    );
   }
 
   /**

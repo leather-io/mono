@@ -40,7 +40,10 @@ function setWalletEncryptionPassword(args: {
 
   return async (dispatch, getState) => {
     const secretKey = selectActiveWalletKey(getState());
+
     if (!secretKey) throw new Error('Cannot generate wallet without first having generated a key');
+
+    const fingerprint = getMnemonicRootKeyFingerprint(secretKey);
 
     const { encryptedSecretKey, encryptionKey, salt } = await encryptMnemonic({
       secretKey,
@@ -99,7 +102,12 @@ function setWalletEncryptionPassword(args: {
           return hasStxBalance || hasNames || hasBtcBalance;
         },
       }).then(recursiveActivityIndex => {
-        dispatch(stxChainSlice.actions.restoreAccountIndex(recursiveActivityIndex));
+        dispatch(
+          stxChainSlice.actions.restoreAccountIndex({
+            fingerprint,
+            accountIndex: recursiveActivityIndex,
+          })
+        );
         const end = performance.now();
         logger.info('Found account activity at higher index', {
           recursiveActivityIndex,

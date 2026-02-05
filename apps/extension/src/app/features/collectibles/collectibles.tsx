@@ -5,7 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { RouteUrls } from '@shared/route-urls';
 
 import { useWalletType } from '@app/common/use-wallet-type';
-import { CurrentBitcoinSignerLoader } from '@app/components/loaders/current-bitcoin-signer-loader';
+import { CurrentBitcoinPayerLoader } from '@app/components/loaders/current-bitcoin-signer-loader';
 import { CurrentStacksAccountLoader } from '@app/components/loaders/stacks-account-loader';
 import { useConfigNftMetadataEnabled } from '@app/query/common/remote-config/remote-config.query';
 import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
@@ -48,20 +48,20 @@ export function Collectibles() {
       onDiscardAllInscriptions={() => discardedInscriptions.discardAllInscriptions()}
       onRecoverAllInscriptions={() => discardedInscriptions.recoverAllInscriptions()}
     >
-      <CurrentBitcoinSignerLoader>{() => <AddCollectible />}</CurrentBitcoinSignerLoader>
+      <CurrentBitcoinPayerLoader>{() => <AddCollectible />}</CurrentBitcoinPayerLoader>
       {isNftMetadataEnabled && (
         <CurrentStacksAccountLoader>
           {account => <StacksCryptoAssets address={account?.address ?? ''} />}
         </CurrentStacksAccountLoader>
       )}
-      <CurrentBitcoinSignerLoader>
+      <CurrentBitcoinPayerLoader>
         {() => (
           <>
             <Stamps />
             <Ordinals />
           </>
         )}
-      </CurrentBitcoinSignerLoader>
+      </CurrentBitcoinPayerLoader>
     </CollectiblesLayout>
   );
 }

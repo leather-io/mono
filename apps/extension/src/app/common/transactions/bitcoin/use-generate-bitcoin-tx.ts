@@ -10,8 +10,8 @@ import { logger } from '@shared/logger';
 import type { TransferRecipient } from '@shared/models/form.model';
 
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 interface GenerateNativeSegwitTxValues {
   amount: Money;
@@ -26,8 +26,8 @@ interface UseGenerateUnsignedNativeSegwitTxProps {
 export function useGenerateUnsignedNativeSegwitTx({
   throwError = false,
 }: UseGenerateUnsignedNativeSegwitTxProps = {}) {
-  const indexZeroSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
-  const getSignerForInput = useBitcoinSignerFromInput();
+  const indexZeroPayer = useCurrentAccountNativeSegwitIndexZeroPayer();
+  const getPayerForInput = useBitcoinPayerFromInput();
 
   const networkMode = useBitcoinScureLibNetworkConfig();
 
@@ -67,9 +67,9 @@ export function useGenerateUnsignedNativeSegwitTx({
         const signingConfig: BitcoinInputSigningConfig[] = [];
 
         for (const input of inputs) {
-          const inputSigner = getSignerForInput(input);
+          const inputPayer = getPayerForInput(input);
 
-          const p2wpkh = btc.p2wpkh(inputSigner.publicKey, networkMode);
+          const p2wpkh = btc.p2wpkh(inputPayer.publicKey, networkMode);
 
           tx.addInput({
             txid: input.txid,
@@ -84,7 +84,7 @@ export function useGenerateUnsignedNativeSegwitTx({
 
           signingConfig.push({
             index: tx.inputsLength - 1,
-            derivationPath: inputSigner.derivationPath,
+            derivationPath: inputPayer.derivationPath,
           });
         }
 
@@ -92,7 +92,7 @@ export function useGenerateUnsignedNativeSegwitTx({
           // When coin selection returns output with no address we assume it is
           // a change output
           if (!output.address) {
-            tx.addOutputAddress(indexZeroSigner.address, BigInt(output.value), networkMode);
+            tx.addOutputAddress(indexZeroPayer.address, BigInt(output.value), networkMode);
             return;
           }
           tx.addOutputAddress(output.address, BigInt(output.value), networkMode);
@@ -112,6 +112,6 @@ export function useGenerateUnsignedNativeSegwitTx({
         return null;
       }
     },
-    [networkMode, indexZeroSigner.address, getSignerForInput, throwError]
+    [networkMode, indexZeroPayer.address, getPayerForInput, throwError]
   );
 }

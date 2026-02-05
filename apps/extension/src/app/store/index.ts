@@ -78,7 +78,6 @@ const appReducer = combineReducers({
   keychains: keychainSlice.reducer,
   inMemoryKeys: inMemoryKeySlice.reducer,
   softwareKeys: keySlice.reducer,
-  ordinals: (state = {}) => state,
   networks: networksSlice.reducer,
   submittedTransactions: submittedTransactionsSlice.reducer,
   settings: settingsSlice.reducer,

@@ -26,9 +26,9 @@ import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
+import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   const toast = useToast();
@@ -39,11 +39,11 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     address: currentBitcoinAddress,
     publicKey,
     derivationPath: zeroIndexDerivationPath,
-  } = useCurrentAccountNativeSegwitIndexZeroSigner();
+  } = useCurrentAccountNativeSegwitIndexZeroPayer();
   const { utxos, refetchUtxos } = useCurrentNativeSegwitUtxos();
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
-  const getSignerForOwnedUtxo = useBitcoinSignerFromInput();
+  const getPayerForOwnedUtxo = useBitcoinPayerFromInput();
   const recipient = getRecipientAddressFromOutput(btcTx.vout, currentBitcoinAddress) || '';
 
   const sizeInfo = useMemo(
@@ -79,21 +79,21 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
 
     vin.forEach(input => {
       const ownedUtxo = utxoMap.get(`${input.txid}:${input.vout}`);
-      const signer = ownedUtxo ? getSignerForOwnedUtxo(ownedUtxo) : null;
+      const payer = ownedUtxo ? getPayerForOwnedUtxo(ownedUtxo) : null;
       newTx.addInput({
         txid: input.txid,
         index: input.vout,
         sequence: input.sequence + 1,
         witnessUtxo: {
           // script = 0014 + pubKeyHash
-          script: signer ? signer.payment.script : p2wpkh.script,
+          script: payer ? payer.payment.script : p2wpkh.script,
           amount: ownedUtxo ? BigInt(ownedUtxo.value) : BigInt(input.prevout.value),
         },
       });
 
       signingConfig.push({
         index: newTx.inputsLength - 1,
-        derivationPath: signer ? signer.derivationPath : zeroIndexDerivationPath,
+        derivationPath: payer ? payer.derivationPath : zeroIndexDerivationPath,
       });
     });
 

@@ -33,7 +33,6 @@ test.describe('App with Ledger', () => {
       test('that homepage renders correctly', async ({ homePage }) => {
         await test.expect(homePage.page.locator('text="Send"').first()).toBeVisible();
         await test.expect(homePage.page.locator('text="Receive"').first()).toBeVisible();
-        // await test.expect(homePage.page.locator('text="Buy"').first()).toBeVisible();
       });
 
       test('receive modal opens', async ({ homePage }) => {
