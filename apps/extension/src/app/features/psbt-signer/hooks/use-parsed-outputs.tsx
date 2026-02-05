@@ -8,8 +8,8 @@ import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 
 export interface PsbtOutput {
   address: string | null;
@@ -24,8 +24,8 @@ interface UseParsedOutputsArgs {
   network: NetworkConfiguration;
 }
 export function useParsedOutputs({ isPsbtMutable, outputs, network }: UseParsedOutputsArgs) {
-  const bitcoinAddressNativeSegwit = useCurrentAccountNativeSegwitIndexZeroSigner().address;
-  const { address: bitcoinAddressTaproot } = useCurrentAccountTaprootIndexZeroSigner();
+  const bitcoinAddressNativeSegwit = useCurrentAccountNativeSegwitIndexZeroPayer().address;
+  const { address: bitcoinAddressTaproot } = useCurrentAccountTaprootIndexZeroPayer();
   const bitcoinNetwork = getBtcSignerLibNetworkConfigByMode(network.chain.bitcoin.mode);
 
   return useMemo(

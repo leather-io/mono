@@ -17,9 +17,8 @@ import { useCurrentAccountId } from '../../account';
 import {
   selectCurrentNetworkBitcoinAccountLookup,
   useBitcoinExtendedPublicKeyVersions,
-  useBitcoinSigningCallbacksLookup,
 } from './bitcoin-keychain';
-import { bitcoinSoftwareSignerFactory } from './bitcoin-signer';
+import { bitcoinSoftwarePayerFactory } from './bitcoin-payer';
 
 const selectTaprootAccountId = createSelector(
   selectCurrentNetworkBitcoinAccountLookup,
@@ -51,73 +50,55 @@ export function useTaprootAccount(accountId: AccountId) {
   return useMemo(() => lookupTaprootAccount(accountId), [lookupTaprootAccount, accountId]);
 }
 
-function useTaprootSigner(accountId: AccountId) {
+function useTaprootPayer(accountId: AccountId) {
   const account = useTaprootAccount(accountId);
   const network = useCurrentNetwork();
   const extendedPublicKeyVersions = useBitcoinExtendedPublicKeyVersions();
-  const signingCallbacksLookup = useBitcoinSigningCallbacksLookup();
 
   return useMemo(() => {
     if (!account) return;
-    const getSigningCallbacks = signingCallbacksLookup(accountId.fingerprint);
-    if (!getSigningCallbacks) return;
 
-    return bitcoinSoftwareSignerFactory({
+    return bitcoinSoftwarePayerFactory({
       accountIndex: accountId.accountIndex,
       accountKeychain: account.keychain,
       paymentFn: getTaprootPaymentFromAddressIndex,
       network: network.chain.bitcoin.mode,
       extendedPublicKeyVersions,
-      getSigningCallbacks: ({ changeIndex, addressIndex }) =>
-        getSigningCallbacks({
-          paymentType: 'p2tr',
-          network: network.chain.bitcoin.mode,
-          accountIndex: accountId.accountIndex,
-          changeIndex,
-          addressIndex,
-        }),
     });
-  }, [
-    account,
-    accountId.accountIndex,
-    accountId.fingerprint,
-    extendedPublicKeyVersions,
-    network.chain.bitcoin.mode,
-    signingCallbacksLookup,
-  ]);
+  }, [account, accountId.accountIndex, extendedPublicKeyVersions, network.chain.bitcoin.mode]);
 }
 
-export function useCurrentAccountTaprootSigner() {
+export function useCurrentAccountTaprootPayer() {
   const currentAccount = useCurrentAccountId();
-  return useTaprootSigner(currentAccount);
+  return useTaprootPayer(currentAccount);
 }
 
-export function useCurrentAccountTaprootIndexZeroSigner() {
-  const signer = useCurrentAccountTaprootSigner();
+export function useCurrentAccountTaprootIndexZeroPayer() {
+  const payer = useCurrentAccountTaprootPayer();
   return useMemo(() => {
-    if (!signer) throw new Error('No signer');
-    return signer({ changeIndex: 0, addressIndex: 0 });
-  }, [signer]);
+    if (!payer) throw new Error('No payer');
+    return payer({ changeIndex: 0, addressIndex: 0 });
+  }, [payer]);
 }
 
 export function useUpdateLedgerSpecificTaprootInputPropsForAdddressIndexZero() {
-  const createTaprootSigner = useCurrentAccountTaprootSigner();
+  const createTaprootPayer = useCurrentAccountTaprootPayer();
 
   return (tx: Psbt, fingerprint: string, inputsToUpdate: BitcoinInputSigningConfig[] = []) => {
     inputsToUpdate.forEach(({ index, derivationPath }) => {
-      const taprootAddressIndexSigner = createTaprootSigner?.({
+      const taprootAddressIndexPayer = createTaprootPayer?.({
         changeIndex: extractChangeIndexFromPath(derivationPath),
         addressIndex: extractAddressIndexFromPath(derivationPath),
       });
 
-      if (!taprootAddressIndexSigner)
+      if (!taprootAddressIndexPayer)
         throw new Error(`Unable to update taproot input for path ${derivationPath}}`);
 
       tx.updateInput(index, {
         tapBip32Derivation: [
           {
             masterFingerprint: Buffer.from(fingerprint, 'hex'),
-            pubkey: Buffer.from(ecdsaPublicKeyToSchnorr(taprootAddressIndexSigner.publicKey)),
+            pubkey: Buffer.from(ecdsaPublicKeyToSchnorr(taprootAddressIndexPayer.publicKey)),
             path: derivationPath,
             leafHashes: [],
           },

@@ -11,6 +11,7 @@ import { mapValues } from 'remeda';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
 import type { AccountId, NetworkModes } from '@leather.io/models';
+import { makeStxKeyOrigin } from '@leather.io/stacks';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { DATA_DERIVATION_PATH, deriveStacksSalt } from '@shared/crypto/stacks/stacks-address-gen';
@@ -20,7 +21,10 @@ import type { StacksAppKeysResponseItem } from '@app/features/ledger/utils/stack
 import type { RootState } from '@app/store';
 import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
 import { selectRootKeychains } from '@app/store/in-memory-key/in-memory-key.selectors';
-import { selectWalletStacksKeys } from '@app/store/ledger/stacks/stacks-key.slice';
+import {
+  selectWalletStacksEntities,
+  selectWalletStacksKeys,
+} from '@app/store/ledger/stacks/stacks-key.slice';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import type { HardwareStacksAccount, SoftwareStacksAccount } from './stacks-account.models';
@@ -160,21 +164,17 @@ const selectSoftwareStacksAccountGenerators = createSelector(selectRootKeychains
 });
 
 function generateLedgerStacksAccount(
-  ledgerKeys: (StacksAppKeysResponseItem & { id: string; fingerprint: string })[],
+  ledgerKeys: Record<string, StacksAppKeysResponseItem & { id: string; fingerprint: string }>,
   accountId: AccountId,
   network: NetworkModes
 ): HardwareStacksAccount | undefined {
-  const ledgerKeychain = ledgerKeys.find(
-    key =>
-      key.fingerprint === accountId.fingerprint && key.path.includes(`/${accountId.accountIndex}'`)
-  );
-
+  const keyOrigin = makeStxKeyOrigin(accountId.fingerprint, accountId.accountIndex);
+  const ledgerKeychain = ledgerKeys[keyOrigin];
   if (!ledgerKeychain) return undefined;
-
   return initalizeHardwareStacksAccount(ledgerKeychain, accountId, network);
 }
 
-const selectLedgerStacksAccountLookup = createSelector(selectWalletStacksKeys, ledgerKeys => {
+const selectLedgerStacksAccountLookup = createSelector(selectWalletStacksEntities, ledgerKeys => {
   function generateAccount(accountId: AccountId, network: NetworkModes) {
     return generateLedgerStacksAccount(ledgerKeys, accountId, network);
   }
