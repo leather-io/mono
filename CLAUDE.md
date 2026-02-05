@@ -1,185 +1,140 @@
+DO NOT ADD, REMOVE, OR MODIFY COMMENTS IN CODE — including punctuation and formatting in existing comments. Only touch comments if explicitly asked.
+
+After ANY code changes, you MUST run verification (see Verification section). Do not report a task as complete or move on until all checks pass.
+
 # Claude Instructions
+
+Leather is a Bitcoin & Stacks wallet — browser extension, mobile app (Expo/React Native), and web app.
 
 ## Architecture
 
-This is a Turborepo monorepo following **CLEAN architecture** with clear layer boundaries:
+Turborepo monorepo using `pnpm`, organized in **CLEAN architecture** layers. Use the `monorepo-navigation` skill for detailed package structure and decision trees.
 
+**Presentation**: `apps/` (extension, mobile, web), `@leather.io/ui`, `@leather.io/features`
+**Application**: `@leather.io/queries` (React Query), `@leather.io/services` (orchestration, API calls, DI, caching)
+**Domain**: `@leather.io/models` (types), `@leather.io/bitcoin`, `@leather.io/stacks`
+**State**: `@leather.io/state` (Redux Toolkit slices for shared state)
+**Foundation**: `@leather.io/utils`, `@leather.io/constants`, `@leather.io/tokens`, `@leather.io/crypto`
+
+- **State management**: Redux Toolkit. Extension uses `{feature}.slice.ts`; mobile uses `{feature}.write.ts` (slice + actions) and `{feature}.read.ts` (selectors + hooks).
+- **Server state**: React Query (`@tanstack/react-query`). Queries live in `packages/queries/` and app-level `src/queries/`.
+- **Feature flags**: LaunchDarkly with `camelCase` flag keys in extension; also used in mobile.
+
+Use the `monorepo-navigation` skill for the full decision tree on where new code goes.
+
+## Development commands
+
+First-time setup:
+
+```bash
+pnpm i && pnpm build
 ```
-┌────────────────────────────────────────────┐
-│  Presentation Layer                        │
-│  ├─ apps/ (extension, mobile, web)         │
-│  ├─ ui (components, icons, styles)         │
-│  └─ features (view models, UI transforms)  │
-├────────────────────────────────────────────┤
-│  Application Layer                         │
-│  ├─ queries (React Query configs)          │
-│  └─ services (orchestration + infra only)  │
-├────────────────────────────────────────────┤
-│  Domain Layer (peers)                      │
-│  ├─ domain (business logic + types)        │
-│  ├─ bitcoin (protocol utilities)           │
-│  └─ stacks (protocol utilities)            │
-├────────────────────────────────────────────┤
-│  Foundation                                │
-│  └─ utils, constants, tokens, crypto       │
-└────────────────────────────────────────────┘
+
+Run extension:
+
+```bash
+pnpm dev
 ```
 
-### Key packages
+Run web:
 
-- `@leather.io/domain` — Pure business logic and domain types (target for all domain logic)
-- `@leather.io/services` — Orchestration only: API calls, DI, caching (no pure utils)
-- `@leather.io/bitcoin` / `@leather.io/stacks` — Protocol-specific utilities
-- `@leather.io/utils` — Generic utilities (money, formatting, guards)
-- `@leather.io/ui` — Shared React components
+```bash
+pnpm dev
+```
 
-### Where does new code go?
+Run mobile:
 
-- **Pure business logic** → `@leather.io/domain` (organized by feature: `activity/`, `balances/`, `fees/`, etc.)
-- **Orchestration** (API calls, DI, caching) → `@leather.io/services`
-- **Protocol utilities** → `@leather.io/bitcoin` or `@leather.io/stacks`
-- **Generic utilities** → `@leather.io/utils`
-- **UI components** → `@leather.io/ui`
+```bash
+cd apps/mobile
+pnpm 1password:env:dev    # requires 1Password CLI — or ask developer to add EXPO_PUBLIC_LAUNCH_DARKLY to .env
+pnpm ios
+```
+
+Mobile requires an `apps/mobile/.env` file with `EXPO_PUBLIC_LAUNCH_DARKLY` set. Run `pnpm 1password:env:dev` to generate it, or ask the developer to provide the LaunchDarkly key.
+
+## React Native / Expo
+
+- Mobile app uses Expo with EAS Build. pnpm has known fingerprint-drift issues with EAS.
+- SDK upgrades: check the official upgrade guide for deprecated/renamed APIs before starting.
+- Firebase native modules: use `forceStaticLinking` in `expo-build-properties` plugin.
+- Clear bundler cache: `npx expo start --dev-client --clear`.
+- `BUILD_TARGET` env var controls platform builds: `mobile`, `extension`, or `web`. Unset builds everything.
 
 ## Code style
 
 - Don't use enums.
-- DO NOT USE COMMENTS UNLESS EXPLICITLY ASKED.
-- DO NOT REMOVE EXISTING COMMENTS.
-- Default to interfaces for object signatures.
-- Use `function` declaration for top-level functions and React components.
-- Use arrow functions for callbacks.
-- Use object method shorthand syntax in objects and interfaces.
-  constants.ts files.
-- Avoid nested ternary expressions; prefer clear branching or functional expressions.
-- Prefer `const` where possible; avoid `let` when it improves clarity.
-- Prefer constants over magic numbers or strings.
+- Default to `interface` for object shapes. Name component props `ComponentNameProps`.
+- Use `function` declarations for top-level functions and React components. Arrow functions for callbacks only.
+- Destructure props directly in the function signature.
+- Prefer Remeda (`keys`, `entries`, `pipe`, `filter`, etc.) over `Object.keys`/`Object.entries` for typed utilities and non-trivial transforms. Use native methods for trivial cases.
+- No `as` casts, `!` non-null assertions, or `any`. Use runtime checks, type guards, or `unknown` with narrowing.
+- Prefer `const` over `let`. Prefer named constants over magic numbers or strings.
+- No nested ternary expressions.
+- Use object method shorthand syntax in objects and interfaces (`{ foo() {} }` not `{ foo: () => {} }`).
+- camelCase for file-level constants; SCREAMING_SNAKE_CASE in the constants package or `constants.ts` files.
 
-## Naming
+## Error handling
 
-- use camelCase for file-level constants, screaming snake case in the "constants" package or constants.ts files.
-- Use descriptive, elaborate, intention-revealing names that explain what the function does, not how.
-- Booleans start with is/has/should/can.
-
-## Never use exceptions for control flow
-
-- Do not throw errors in helpers, utility functions, or any part of normal control paths (e.g., React lifecycle, async setup, reducers, render logic).
-- Exceptions are for truly unexpected, unrecoverable failures—not for branching or expected conditions.
-- Use explicit return values like null, undefined, or well-typed status objects to represent expected failure or alternative paths.
-
-## Decompose impure logic
-
-- Avoid mixing unrelated concerns (e.g., state access, conditional logic, async side effects, configuration).
-- Separate pure computation from impure operations (e.g., store reads/writes, I/O, global mutations).
-- Factor out non-trivial meaningful logic into named functions, even if only used once.
-- Prefer composable functions with clear input/output boundaries.
-
-## Typescript
-
-- Do not use type casting through `as` or non-null assertions (!).
-- If a cast is truly necessary, include a runtime check and/or a type guard.
-- Do not use `any`; prefer `unknown` with further narrowing if a type cannot be immediately described.
-
-## React component props
-
-- Define component props in a separate interface above the component, in the format
-  ComponentNameProps.
-- Destructure props directly in the signature: `function Component({ propA, propB }: ComponentProps)`
+- `throw` is acceptable for genuinely invalid states (wrong keychain type, missing required config).
+- For expected failure paths (user input, optional lookups), prefer returning `null`, `undefined`, or typed result objects.
+- Never throw in React render paths, reducers, or selectors.
+- In React render paths: use error boundaries for unexpected errors; return `null` or fallback UI for expected empty states.
 
 ## File naming
 
-- Use snake case file names
-- File names must explain their contents, e.g., a file containing `AlternateHeaderLayout`
-  is called `alternate-header-layout.tsx`
-- Avoid using index.ts(x) files, except for the following scenarios:
-  - Barrel exports from library packages
-  - Required by file-based router
-- use \*.spec.ts(x) for tests
+- Kebab-case file names (e.g., `alternate-header-layout.tsx`).
+- Platform suffixes for cross-platform code: `.web.tsx`, `.native.tsx`, `.shared.ts`.
+- Convention-named config files are exempt (e.g., `babel.config.cjs`, `tsconfig.json`).
+- No `index.ts(x)` except barrel exports from library packages or file-based router requirements.
+- Use `*.spec.ts(x)` for tests, co-located next to the file under test.
 
-## Use Remeda for functional utilities
+## Circular dependencies
 
-Prefer [Remeda](https://remedajs.com) when working with non-trivial data transformations that benefit from strong typing, immutability, and composability.
+- Never import from a barrel export (`index.ts`) within the same package's sub-modules.
+- Place `initialState` in write/slice modules, not shared read modules.
+- Metro require cycle warnings are bugs to fix, not warnings to ignore.
+- Concrete anti-pattern: slice → utils → store → slice. Break by keeping `initialState` in write/slice files and never importing from `store/index.ts` within slices.
 
-### Typed object utilities
+## Security
 
-Use `keys`, `entries`, and `fromEntries` instead of `Object.keys`, `Object.entries`, and `Object.fromEntries`. Remeda retains exact key types, including literal unions.
+- Sanitize HTML from external sources (NFT metadata, collectible descriptions) before rendering.
+- Validate responses from IPFS gateways and untrusted origins.
+- Never expose private keys, seeds, or mnemonics in error messages or logs.
 
-```ts
-import { keys } from 'remeda';
+## Commits
 
-const obj = { foo: 1, bar: 2 };
-const result = keys(obj); // type: ('foo' | 'bar')[]
+- Conventional commits format with scope: `feat(mobile)`, `refactor(web)`, `fix(utils)`.
+- Imperative language. No body unless explicitly asked.
+
+## Verification
+
+You MUST run these after any code changes. Do not consider a task complete until they pass:
+
+```bash
+pnpm format
+pnpm lint
+pnpm typecheck
+pnpm build
 ```
 
-### Chained transformations
+If working on mobile, run `pnpm lingui` from `apps/mobile/` before running verification.
 
-```ts
-import { filter, groupBy, mapValues, pipe } from 'remeda';
+For faster feedback in a specific package:
 
-const users = [
-  { id: 1, role: 'admin', isActive: true },
-  { id: 2, role: 'user', isActive: true },
-  { id: 3, role: 'admin', isActive: false },
-];
-
-const counts = pipe(
-  users,
-  filter(u => u.isActive),
-  groupBy(u => u.role),
-  mapValues(list => list.length)
-);
-// type: { admin: number; user: number }
+```bash
+pnpm --filter @leather.io/{package} lint
+pnpm --filter @leather.io/{package} typecheck
 ```
-
-### When not to use Remeda
-
-Use native JS methods for trivial operations where type inference is already correct and readability is higher:
-
-```ts
-const ids = items.map(x => x.id);
-```
-
-## Commit conventions
-
-- Use conventional commits format.
-- Use scope to specify affected areas, .e.g., feat(mobile), refactor(web), fix(utils).
-- Use imperative language.
-- Do not add anything to the commit message body unless explicitly asked.
 
 ## Tooling
 
-### Package Management
+- Turborepo + `pnpm`.
+- Vitest for unit/integration tests. Use the `testing-patterns` skill for conventions.
+- Playwright for E2E tests (extension). Avoid `force: true` — it hides accessibility issues. Never nest interactive elements.
 
-- Our repo is a turbo monorepo which uses `pnpm` for package management and package.json scripts.
-- Many common actions can be found in respective pacakge and apps `scripts` in the package.json.
+## Common tasks
 
-### Verify before completing
-
-Verify that no formatting, type, or lint errors are introduced:
-
-```bash
-pnpm format:check
-pnpm lint
-pnpm typecheck
-```
-
-If `format:check` fails, run `pnpm format` to auto-fix formatting issues.
-
-For faster feedback when working in a specific package, use filtered commands:
-
-```bash
-pnpm --filter @leather.io/web lint
-pnpm --filter @leather.io/extension typecheck
-```
-
-Fix any errors before considering the task complete.
-
-### Prettier formatting
-
-Follow the project's Prettier configuration. Key rules:
-- Use single quotes for strings
-- Use trailing commas where valid in ES5 (objects, arrays)
-- 2-space indentation
-- 100 character print width
-- Avoid parentheses around single arrow function parameters: `x => x` not `(x) => x`
-- Imports are auto-sorted: React first, then third-party, then `@leather.io/*`, then relative
+- **Add a UI component** → `@leather.io/ui`, use the `monorepo-navigation` skill
+- **Add a Redux slice** → Extension: `{feature}.slice.ts`; Mobile: `{feature}.write.ts` + `{feature}.read.ts`
+- **Add a React Query hook** → `packages/queries/` or app-level `src/queries/`
+- **Run a single package's tests** → `pnpm --filter @leather.io/{package} test:unit`
