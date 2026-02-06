@@ -126,7 +126,7 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
   const subtitle = view.subtitle || '';
 
   return (
-    <Stack width="100%" gap="space.04">
+    <Stack width="100%" gap="space.04" data-testid="collectible-details-container">
       <Header px={{ base: 'space.04', md: 'space.00' }}>
         <HeaderGrid
           leftCol={
@@ -165,12 +165,20 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
                     />
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Content align="end" side="bottom" sideOffset={4}>
-                    <DropdownMenu.Item onClick={handleOpenOriginal}>
+                    <DropdownMenu.Item
+                      onClick={handleOpenOriginal}
+                      data-testid="view-original-menu-item"
+                    >
                       <Flag img={<ExternalLinkIcon />} width="100%">
                         <styled.span textStyle="label.02">View original</styled.span>
                       </Flag>
                     </DropdownMenu.Item>
-                    <DropdownMenu.Item onClick={handleToggleProtection}>
+                    <DropdownMenu.Item
+                      onClick={handleToggleProtection}
+                      data-testid={
+                        isInscriptionDiscarded ? 'protect-menu-item' : 'unprotect-menu-item'
+                      }
+                    >
                       <Flag
                         img={isInscriptionDiscarded ? <LockIcon /> : <UnlockIcon />}
                         width="100%"

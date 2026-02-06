@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 import { TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS } from '@tests/mocks/constants';
 import { mockTestnetTestAccountInscriptionsRequests } from '@tests/mocks/mock-inscriptions-bis';
 import { mockTestnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxos';
+import { CollectibleDetailsSelectors } from '@tests/selectors/collectible-details.selectors';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { getDisplayerAddress } from '@tests/utils';
@@ -130,7 +131,7 @@ test.describe('Send inscription', () => {
   });
 
   test.describe('modal close behavior', () => {
-    test('should return to collectibles tab when closing form via Escape', async ({
+    test('should return to details page when closing form via Escape', async ({
       homePage,
       sendPage,
       networkPage,
@@ -144,15 +145,18 @@ test.describe('Send inscription', () => {
 
       await page.keyboard.press('Escape');
 
-      const collectiblesTab = page.getByTestId(HomePageSelectors.CollectiblesTabBtn);
-      await expect(collectiblesTab).toHaveAttribute('data-state', 'active');
+      const detailsContainer = page.getByTestId(
+        CollectibleDetailsSelectors.CollectibleDetailsContainer
+      );
+      await expect(detailsContainer).toBeVisible();
     });
 
-    test('should return to collectibles tab when closing form via X button', async ({
+    test('should return to collectibles tab when closing form and details', async ({
       homePage,
       sendPage,
       networkPage,
       page,
+      collectibleDetailsPage,
     }) => {
       await networkPage.selectTestnet();
       await homePage.clickCollectiblesTab();
@@ -160,17 +164,17 @@ test.describe('Send inscription', () => {
 
       await expect(sendPage.recipientInput).toBeVisible();
 
-      const closeButton = page
-        .locator('button:has(svg)')
-        .filter({ has: page.locator('path') })
-        .last();
-      await closeButton.click();
+      await page.keyboard.press('Escape');
+
+      await expect(collectibleDetailsPage.container).toBeVisible();
+
+      await collectibleDetailsPage.clickBack();
 
       const collectiblesTab = page.getByTestId(HomePageSelectors.CollectiblesTabBtn);
       await expect(collectiblesTab).toHaveAttribute('data-state', 'active');
     });
 
-    test('should return to collectibles tab when closing fee step via Escape', async ({
+    test('should return to details page when closing fee step via Escape', async ({
       homePage,
       sendPage,
       networkPage,
@@ -188,15 +192,18 @@ test.describe('Send inscription', () => {
 
       await page.keyboard.press('Escape');
 
-      const collectiblesTab = page.getByTestId(HomePageSelectors.CollectiblesTabBtn);
-      await expect(collectiblesTab).toHaveAttribute('data-state', 'active');
+      const detailsContainer = page.getByTestId(
+        CollectibleDetailsSelectors.CollectibleDetailsContainer
+      );
+      await expect(detailsContainer).toBeVisible();
     });
 
-    test('should return to collectibles tab when closing fee step via X button', async ({
+    test('should return to collectibles tab when closing fee step and details', async ({
       homePage,
       sendPage,
       networkPage,
       page,
+      collectibleDetailsPage,
     }) => {
       await networkPage.selectTestnet();
       await homePage.clickCollectiblesTab();
@@ -208,11 +215,11 @@ test.describe('Send inscription', () => {
 
       await expect(sendPage.feesListItem.first()).toBeVisible();
 
-      const closeButton = page
-        .locator('button:has(svg)')
-        .filter({ has: page.locator('path') })
-        .last();
-      await closeButton.click();
+      await page.keyboard.press('Escape');
+
+      await expect(collectibleDetailsPage.container).toBeVisible();
+
+      await collectibleDetailsPage.clickBack();
 
       const collectiblesTab = page.getByTestId(HomePageSelectors.CollectiblesTabBtn);
       await expect(collectiblesTab).toHaveAttribute('data-state', 'active');

@@ -41,6 +41,7 @@ export function ManageInscriptionsSheet({ isShowing, onClose }: ManageInscriptio
       header={<SheetHeader title="Manage collectibles" />}
       isShowing={isShowing}
       onClose={onClose}
+      data-testid="manage-inscriptions-sheet"
     >
       <Stack gap="space.05" px="space.05" pb="space.05">
         <Box bg="ink.background-secondary" p="space.04" borderRadius="sm">
@@ -73,6 +74,7 @@ export function ManageInscriptionsSheet({ isShowing, onClose }: ManageInscriptio
             <Switch.Root
               checked={isOrdinalsProtected}
               onCheckedChange={handleToggleOrdinalsProtection}
+              data-testid="ordinals-protection-toggle"
             >
               <Switch.Thumb />
             </Switch.Root>
@@ -90,7 +92,12 @@ export function ManageInscriptionsSheet({ isShowing, onClose }: ManageInscriptio
           Learn about UTXO protection
         </styled.button>
 
-        <Button variant="outline" fullWidth onClick={discardAllInscriptions}>
+        <Button
+          variant="outline"
+          fullWidth
+          onClick={discardAllInscriptions}
+          data-testid="unprotect-all-inscriptions-btn"
+        >
           Unprotect all inscriptions
         </Button>
       </Stack>

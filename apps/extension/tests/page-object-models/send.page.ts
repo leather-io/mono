@@ -1,4 +1,5 @@
 import { Locator, Page } from '@playwright/test';
+import { CollectibleDetailsSelectors } from '@tests/selectors/collectible-details.selectors';
 import { MockedTokensSelectors } from '@tests/selectors/mocked-tokens.selectors';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -117,18 +118,18 @@ export class SendPage {
   }
 
   async selectInscription() {
-    const inscriptions = this.page.getByTestId(SendCryptoAssetSelectors.Inscription);
-    const sendButton = this.page.getByTestId(SendCryptoAssetSelectors.InscriptionSendButton);
-    const count = await inscriptions.count();
-    if (count === 1) {
-      await inscriptions.hover();
-      await this.page
-        .getByTestId(SendCryptoAssetSelectors.InscriptionSendButton)
-        .click({ force: true });
-    } else {
-      await inscriptions.nth(0).hover();
-      await sendButton.nth(0).click({ force: true });
-    }
+    const inscriptionCard = this.page.getByTestId(
+      CollectibleDetailsSelectors.CollectibleCardInscription
+    );
+    await inscriptionCard.first().click();
+
+    const detailsContainer = this.page.getByTestId(
+      CollectibleDetailsSelectors.CollectibleDetailsContainer
+    );
+    await detailsContainer.waitFor({ state: 'visible' });
+
+    const sendButton = this.page.getByTestId(CollectibleDetailsSelectors.CollectibleDetailsSend);
+    await sendButton.click();
   }
 
   async confirmSendTransaction() {

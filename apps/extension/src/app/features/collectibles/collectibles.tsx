@@ -1,6 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
+import { Box } from 'leather-styles/jsx';
+
 import { type CollectibleView, type TokenDetailsProps } from '@leather.io/features';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
@@ -64,10 +66,16 @@ function CollectiblesCurrent() {
 
   const renderedCollectibles = useMemo(
     () =>
-      collectibles.map(view => (
-        <CollectibleTypeIconOverlay protocol={view.protocol} key={view.key}>
-          {renderCollectible(view, handleOpenToken)}
-        </CollectibleTypeIconOverlay>
+      collectibles.map((view, index) => (
+        <Box
+          key={view.key}
+          data-testid={`collectible-card-${view.asset.protocol}`}
+          data-index={index}
+        >
+          <CollectibleTypeIconOverlay protocol={view.protocol}>
+            {renderCollectible(view, handleOpenToken)}
+          </CollectibleTypeIconOverlay>
+        </Box>
       )),
     [collectibles, handleOpenToken]
   );
