@@ -21,7 +21,7 @@ export function HeaderActionButton({ icon, onAction, dataTestId }: HeaderActionB
       onClick={onAction}
       transition="transition"
       userSelect="none"
-      zIndex={999}
+      zIndex="10"
     />
   );
 }

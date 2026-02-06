@@ -95,6 +95,7 @@ export * from './plus-icon.web';
 export * from './puzzle-icon.web';
 export * from './qr-code-icon.web';
 export * from './question-circle-icon.web';
+export * from './search-icon.web';
 export * from './settings-gear-icon.web';
 export * from './sbtc-icon.web';
 export * from './settings-slider-icon.web';
