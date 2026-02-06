@@ -1,18 +1,33 @@
+import type { ReactNode } from 'react';
+
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { ChevronRightIcon } from '@leather.io/ui';
+import { GlobeTiltedIcon, GraduateCapIcon, NumberedListIcon } from '@leather.io/ui';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 
 interface LearnItem {
   title: string;
   url: string;
+  icon: ReactNode;
 }
 
 const learnItems: LearnItem[] = [
-  { title: 'Getting Started with Leather', url: 'https://leather.io/help' },
-  { title: 'What are Bitcoin Ordinals?', url: 'https://leather.io/help' },
-  { title: 'What is BNS? (Bitcoin Naming System)', url: 'https://leather.io/help' },
+  {
+    title: 'Getting Started with Leather',
+    url: 'https://leather.io/guides/getting-started',
+    icon: <GraduateCapIcon />,
+  },
+  {
+    title: 'What are Bitcoin Ordinals?',
+    url: 'https://leather.io/guides/ordinals',
+    icon: <NumberedListIcon />,
+  },
+  {
+    title: 'What is BNS? (Bitcoin Naming System)',
+    url: 'https://leather.io/guides/bns',
+    icon: <GlobeTiltedIcon />,
+  },
 ];
 
 export function CollectiblesLearn() {
@@ -51,7 +66,7 @@ export function CollectiblesLearn() {
               justifyContent="center"
               flexShrink={0}
             >
-              <ChevronRightIcon variant="small" />
+              {item.icon}
             </Flex>
             <styled.span
               textStyle="label.01"

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { ArrowRotateRightLeftIcon, Callout, InfoCircleIcon } from '@leather.io/ui';
+import { Callout, InfoCircleIcon, SettingsSliderIcon } from '@leather.io/ui';
 
 import { CollectiblesEmpty } from './collectibles-empty';
 import { CollectiblesLearn } from './collectibles-learn';
@@ -66,7 +66,7 @@ export function CollectiblesLayout({
           disabled={isRefetching}
           aria-label="Refresh collectibles"
         >
-          <ArrowRotateRightLeftIcon variant="small" />
+          <SettingsSliderIcon variant="small" />
         </styled.button>
       </Flex>
 

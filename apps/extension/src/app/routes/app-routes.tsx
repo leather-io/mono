@@ -44,6 +44,7 @@ import { sendCryptoAssetFormRoutes } from '@app/pages/send/send-crypto-asset-for
 import { SettingsPage } from '@app/pages/settings/settings';
 import { bitcoinSwapRoutes, stacksSwapRoutes } from '@app/pages/swap/swap.routes';
 import { SelectTheme } from '@app/pages/theme/select-theme';
+import { TokenDetailsPage } from '@app/pages/token-details/token-details.page';
 import { UnauthorizedRequest } from '@app/pages/unauthorized-request/unauthorized-request';
 import { Unlock } from '@app/pages/unlock';
 import { ViewSecretKey } from '@app/pages/view-secret-key/view-secret-key';
@@ -73,6 +74,7 @@ export const homePageModalRoutes = (
     {requestBitcoinKeysRoutes}
     {requestStacksKeysRoutes}
     {sendOrdinalRoutes}
+    <Route path={RouteUrls.TokenDetails} element={<TokenDetailsPage />} />
   </>
 );
 
