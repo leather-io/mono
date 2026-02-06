@@ -9,6 +9,16 @@ export const keyframes = {
       transform: 'translate(-50%, -50%) scale(1)',
     },
   },
+  contentShowTop: {
+    from: {
+      opacity: 0,
+      transform: 'translateX(-50%) scale(0.96)',
+    },
+    to: {
+      opacity: 1,
+      transform: 'translateX(-50%) scale(1)',
+    },
+  },
   fadein: {
     '0%': { opacity: '0' },
     '100%': { opacity: '1' },
