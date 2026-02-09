@@ -38,3 +38,8 @@ export interface MarketPriceHistory {
   changePercentage: number;
   prices: MarketPriceSnapshot[];
 }
+
+export interface MarketStats {
+  readonly priceChange: Partial<Record<HistoricalPeriod, number | null>>;
+  readonly marketCap?: number;
+}

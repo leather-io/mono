@@ -49,4 +49,13 @@ export const leatherApiPriorities = {
   registerAddresses: leatherPriorityLevels.LOW,
   graniteMarket: leatherPriorityLevels.MEDIUM,
   stackingDaoRates: leatherPriorityLevels.MEDIUM,
+  nativeAnalyticsMap: leatherPriorityLevels.MEDIUM,
+  nativeAnalytics: leatherPriorityLevels.MEDIUM,
+  nativeDistribution: leatherPriorityLevels.MEDIUM,
+  sip10AnalyticsMap: leatherPriorityLevels.MEDIUM,
+  sip10Analytics: leatherPriorityLevels.MEDIUM,
+  sip10Distribution: leatherPriorityLevels.MEDIUM,
+  runeAnalyticsMap: leatherPriorityLevels.MEDIUM,
+  runeAnalytics: leatherPriorityLevels.MEDIUM,
+  runeDistribution: leatherPriorityLevels.MEDIUM,
 };

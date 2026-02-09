@@ -4,6 +4,1209 @@
  */
 
 export interface paths {
+  '/v1/analytics/sip10s': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get analytics for top SIP-10 tokens */
+    get: {
+      parameters: {
+        query?: {
+          format?: 'list' | 'map';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json':
+              | {
+                  /** @enum {string} */
+                  format: 'list';
+                  meta: {
+                    count: number;
+                    /** Format: date-time */
+                    timestamp: string;
+                  };
+                  data: {
+                    circulatingSupply: number;
+                    holderCount?: number;
+                    distributionScore?: number;
+                    trustScore?: number;
+                    trendingScore?: number;
+                    /** Format: date-time */
+                    updatedAt: string;
+                    principal: string;
+                  }[];
+                }
+              | {
+                  /** @enum {string} */
+                  format: 'map';
+                  meta: {
+                    count: number;
+                    /** Format: date-time */
+                    timestamp: string;
+                  };
+                  data: {
+                    [key: string]: {
+                      circulatingSupply: number;
+                      holderCount?: number;
+                      distributionScore?: number;
+                      trustScore?: number;
+                      trendingScore?: number;
+                      /** Format: date-time */
+                      updatedAt: string;
+                    };
+                  };
+                };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/analytics/sip10s/{principal}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get analytics for a SIP-10 token */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          principal: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              circulatingSupply: number;
+              holderCount?: number;
+              distributionScore?: number;
+              trustScore?: number;
+              trendingScore?: number;
+              /** Format: date-time */
+              updatedAt: string;
+              principal: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/analytics/sip10s/{principal}/distribution': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get holder distribution breakdown for a SIP-10 token */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          principal: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              topHolders: {
+                1?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                10?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                50?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                100?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                200?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+              };
+              percentiles: {
+                10?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                25?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                50?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                75?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+              };
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/analytics/runes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get analytics for top Runes */
+    get: {
+      parameters: {
+        query?: {
+          format?: 'list' | 'map';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json':
+              | {
+                  /** @enum {string} */
+                  format: 'list';
+                  meta: {
+                    count: number;
+                    /** Format: date-time */
+                    timestamp: string;
+                  };
+                  data: {
+                    circulatingSupply: number;
+                    holderCount?: number;
+                    distributionScore?: number;
+                    trustScore?: number;
+                    trendingScore?: number;
+                    /** Format: date-time */
+                    updatedAt: string;
+                    runeName: string;
+                  }[];
+                }
+              | {
+                  /** @enum {string} */
+                  format: 'map';
+                  meta: {
+                    count: number;
+                    /** Format: date-time */
+                    timestamp: string;
+                  };
+                  data: {
+                    [key: string]: {
+                      circulatingSupply: number;
+                      holderCount?: number;
+                      distributionScore?: number;
+                      trustScore?: number;
+                      trendingScore?: number;
+                      /** Format: date-time */
+                      updatedAt: string;
+                    };
+                  };
+                };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/analytics/runes/{runeName}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get analytics for a Rune */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          runeName: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              circulatingSupply: number;
+              holderCount?: number;
+              distributionScore?: number;
+              trustScore?: number;
+              trendingScore?: number;
+              /** Format: date-time */
+              updatedAt: string;
+              runeName: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/analytics/runes/{runeName}/distribution': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get holder distribution breakdown for a Rune */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          runeName: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              topHolders: {
+                1?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                10?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                50?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                100?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                200?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+              };
+              percentiles: {
+                10?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                25?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                50?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                75?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+              };
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/analytics/native': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get analytics for native tokens (BTC, STX) */
+    get: {
+      parameters: {
+        query?: {
+          format?: 'list' | 'map';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json':
+              | {
+                  /** @enum {string} */
+                  format: 'list';
+                  meta: {
+                    count: number;
+                    /** Format: date-time */
+                    timestamp: string;
+                  };
+                  data: {
+                    circulatingSupply: number;
+                    holderCount?: number;
+                    distributionScore?: number;
+                    trustScore?: number;
+                    trendingScore?: number;
+                    /** Format: date-time */
+                    updatedAt: string;
+                    symbol: string;
+                  }[];
+                }
+              | {
+                  /** @enum {string} */
+                  format: 'map';
+                  meta: {
+                    count: number;
+                    /** Format: date-time */
+                    timestamp: string;
+                  };
+                  data: {
+                    [key: string]: {
+                      circulatingSupply: number;
+                      holderCount?: number;
+                      distributionScore?: number;
+                      trustScore?: number;
+                      trendingScore?: number;
+                      /** Format: date-time */
+                      updatedAt: string;
+                    };
+                  };
+                };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/analytics/native/{symbol}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get analytics for a native token */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          symbol: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              circulatingSupply: number;
+              holderCount?: number;
+              distributionScore?: number;
+              trustScore?: number;
+              trendingScore?: number;
+              /** Format: date-time */
+              updatedAt: string;
+              symbol: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/analytics/native/{symbol}/distribution': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get holder distribution breakdown for a native token */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          symbol: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              topHolders: {
+                1?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                10?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                50?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                100?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                200?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+              };
+              percentiles: {
+                10?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                25?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                50?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+                75?: {
+                  holderCount: number;
+                  balance: number;
+                  contracts: {
+                    count: number;
+                    balance: number;
+                  };
+                  multisigs: {
+                    count: number;
+                    balance: number;
+                  };
+                  individuals: {
+                    count: number;
+                    balance: number;
+                  };
+                };
+              };
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/app-config': {
     parameters: {
       query?: never;
@@ -663,6 +1866,15 @@ export interface paths {
                     price: number;
                     /** Format: date-time */
                     lastPriceAt: string;
+                    priceChange?: {
+                      '1d'?: number;
+                      '1w'?: number;
+                      '1m'?: number;
+                      '3m'?: number;
+                      '6m'?: number;
+                      '1y'?: number;
+                    };
+                    marketCap?: number;
                     change24h: number | null;
                     symbol: string;
                   }[];
@@ -680,6 +1892,15 @@ export interface paths {
                       price: number;
                       /** Format: date-time */
                       lastPriceAt: string;
+                      priceChange?: {
+                        '1d'?: number;
+                        '1w'?: number;
+                        '1m'?: number;
+                        '3m'?: number;
+                        '6m'?: number;
+                        '1y'?: number;
+                      };
+                      marketCap?: number;
                       change24h: number | null;
                     };
                   };
@@ -747,6 +1968,15 @@ export interface paths {
               price: number;
               /** Format: date-time */
               lastPriceAt: string;
+              priceChange?: {
+                '1d'?: number;
+                '1w'?: number;
+                '1m'?: number;
+                '3m'?: number;
+                '6m'?: number;
+                '1y'?: number;
+              };
+              marketCap?: number;
               change24h: number | null;
               symbol: string;
             };
@@ -823,7 +2053,7 @@ export interface paths {
           };
           content: {
             'application/json': {
-              changePercentage: number;
+              changePercentage: number | null;
               snapshots: {
                 price: number;
                 /** Format: date-time */
@@ -913,6 +2143,15 @@ export interface paths {
                     price: number;
                     /** Format: date-time */
                     lastPriceAt: string;
+                    priceChange?: {
+                      '1d'?: number;
+                      '1w'?: number;
+                      '1m'?: number;
+                      '3m'?: number;
+                      '6m'?: number;
+                      '1y'?: number;
+                    };
+                    marketCap?: number;
                     change24h: number | null;
                     principal: string;
                   }[];
@@ -930,6 +2169,15 @@ export interface paths {
                       price: number;
                       /** Format: date-time */
                       lastPriceAt: string;
+                      priceChange?: {
+                        '1d'?: number;
+                        '1w'?: number;
+                        '1m'?: number;
+                        '3m'?: number;
+                        '6m'?: number;
+                        '1y'?: number;
+                      };
+                      marketCap?: number;
                       change24h: number | null;
                     };
                   };
@@ -997,6 +2245,15 @@ export interface paths {
               price: number;
               /** Format: date-time */
               lastPriceAt: string;
+              priceChange?: {
+                '1d'?: number;
+                '1w'?: number;
+                '1m'?: number;
+                '3m'?: number;
+                '6m'?: number;
+                '1y'?: number;
+              };
+              marketCap?: number;
               change24h: number | null;
               principal: string;
             };
@@ -1073,7 +2330,7 @@ export interface paths {
           };
           content: {
             'application/json': {
-              changePercentage: number;
+              changePercentage: number | null;
               snapshots: {
                 price: number;
                 /** Format: date-time */
@@ -1163,6 +2420,15 @@ export interface paths {
                     price: number;
                     /** Format: date-time */
                     lastPriceAt: string;
+                    priceChange?: {
+                      '1d'?: number;
+                      '1w'?: number;
+                      '1m'?: number;
+                      '3m'?: number;
+                      '6m'?: number;
+                      '1y'?: number;
+                    };
+                    marketCap?: number;
                     change24h: number | null;
                     runeName: string;
                   }[];
@@ -1180,6 +2446,15 @@ export interface paths {
                       price: number;
                       /** Format: date-time */
                       lastPriceAt: string;
+                      priceChange?: {
+                        '1d'?: number;
+                        '1w'?: number;
+                        '1m'?: number;
+                        '3m'?: number;
+                        '6m'?: number;
+                        '1y'?: number;
+                      };
+                      marketCap?: number;
                       change24h: number | null;
                     };
                   };
@@ -1247,6 +2522,15 @@ export interface paths {
               price: number;
               /** Format: date-time */
               lastPriceAt: string;
+              priceChange?: {
+                '1d'?: number;
+                '1w'?: number;
+                '1m'?: number;
+                '3m'?: number;
+                '6m'?: number;
+                '1y'?: number;
+              };
+              marketCap?: number;
               change24h: number | null;
               runeName: string;
             };
@@ -1323,7 +2607,7 @@ export interface paths {
           };
           content: {
             'application/json': {
-              changePercentage: number;
+              changePercentage: number | null;
               snapshots: {
                 price: number;
                 /** Format: date-time */
@@ -1509,6 +2793,167 @@ export interface paths {
         };
       };
     };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/tokens/native': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get Native tokens */
+    get: {
+      parameters: {
+        query?: {
+          format?: 'list' | 'map';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json':
+              | {
+                  /** @enum {string} */
+                  format: 'list';
+                  meta: {
+                    count: number;
+                    /** Format: date-time */
+                    timestamp: string;
+                  };
+                  data: {
+                    symbol: string;
+                    decimals: number;
+                  }[];
+                }
+              | {
+                  /** @enum {string} */
+                  format: 'map';
+                  meta: {
+                    count: number;
+                    /** Format: date-time */
+                    timestamp: string;
+                  };
+                  data: {
+                    [key: string]: {
+                      decimals: number;
+                    };
+                  };
+                };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/tokens/native/{symbol}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get Native Token */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          symbol: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              symbol: string;
+              decimals: number;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;

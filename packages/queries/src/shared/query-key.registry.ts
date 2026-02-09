@@ -9,6 +9,14 @@ export const querySettingsDepsRegistry = {
   // market history
   'market-history-service--get-price-change-percentage': ['currency'],
   'market-history-service--get-price-history': ['currency'],
+  // market stats
+  'market-stats-service--get-market-stats': ['network'],
+  'market-stats-service--get-market-stats-by-asset-id': ['network'],
+  // token analytics
+  'token-analytics-service--get-analytics': ['network'],
+  'token-analytics-service--get-analytics-by-asset-id': ['network'],
+  'token-analytics-service--get-distribution': ['network'],
+  'token-analytics-service--get-distribution-by-asset-id': ['network'],
   // balances
   'btc-balances-service--get-btc-account-balance': ['currency', 'network'],
   'btc-balances-service--get-btc-aggregate-balance': ['currency', 'network'],

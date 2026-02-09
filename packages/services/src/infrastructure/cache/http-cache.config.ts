@@ -75,6 +75,15 @@ export type HttpCacheKey =
   | 'leather-api-register-notifications'
   | 'leather-api-swap-dexes'
   | 'leather-api-app-config'
+  | 'leather-api-native-analytics-map'
+  | 'leather-api-native-analytics'
+  | 'leather-api-native-distribution'
+  | 'leather-api-sip10-analytics-map'
+  | 'leather-api-sip10-analytics'
+  | 'leather-api-sip10-distribution'
+  | 'leather-api-rune-analytics-map'
+  | 'leather-api-rune-analytics'
+  | 'leather-api-rune-distribution'
 
   // BitflowSdkClient
   | 'bitflow-sdk-available-tokens'
@@ -158,6 +167,15 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-register-notifications': { ttl: secondsInMs(10) },
   'leather-api-swap-dexes': { ttl: daysInMs(1) },
   'leather-api-app-config': { ttl: daysInMs(1) },
+  'leather-api-native-analytics-map': { ttl: minutesInMs(5) },
+  'leather-api-native-analytics': { ttl: minutesInMs(5) },
+  'leather-api-native-distribution': { ttl: minutesInMs(5) },
+  'leather-api-sip10-analytics-map': { ttl: minutesInMs(5) },
+  'leather-api-sip10-analytics': { ttl: minutesInMs(5) },
+  'leather-api-sip10-distribution': { ttl: minutesInMs(5) },
+  'leather-api-rune-analytics-map': { ttl: minutesInMs(5) },
+  'leather-api-rune-analytics': { ttl: minutesInMs(5) },
+  'leather-api-rune-distribution': { ttl: minutesInMs(5) },
 
   'bitflow-sdk-available-tokens': { ttl: hoursInMs(6) },
   'bitflow-sdk-all-possible-token-y': { ttl: hoursInMs(1) },
