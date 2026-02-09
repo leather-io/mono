@@ -1,27 +1,20 @@
-import { ReactNode } from 'react';
-
 import { Balance } from '@/components/balance/balance';
 import { Loading } from '@/components/loading/loading';
-import { TestId } from '@/shared/test-id';
 
 import { Money } from '@leather.io/models';
-import { Cell, type PressableProps, Text } from '@leather.io/ui/native';
+import { Cell } from '@leather.io/ui/native';
 
-export interface TokenBalanceProps extends PressableProps {
-  ticker: string;
-  icon: ReactNode;
-  tokenName: string;
+import { TokenCell, type TokenCellProps } from './token-cell';
+
+export interface TokenBalanceProps extends Omit<TokenCellProps, 'asideComponent'> {
   availableBalance?: Money;
   quoteBalance?: Money;
   isLoading?: boolean;
   forceBalanceVisible?: boolean;
 }
 export function TokenBalance({
-  icon,
-  tokenName,
   availableBalance,
   quoteBalance,
-  onPress,
   isLoading,
   forceBalanceVisible = false,
   ...rest
@@ -29,42 +22,28 @@ export function TokenBalance({
   if (isLoading) return <Loading />;
 
   return (
-    <Cell.Root
-      pressable={true}
-      testID={`${TestId.tokenBalanceItem}-${rest.ticker}`}
-      disabled={!onPress}
-      onPress={onPress}
+    <TokenCell
+      asideComponent={
+        <Cell.Aside>
+          <Cell.Label variant="primary">
+            <Balance
+              balance={quoteBalance}
+              variant="label02"
+              lineHeight={16}
+              forceVisible={forceBalanceVisible}
+            />
+          </Cell.Label>
+          <Cell.Label variant="secondary">
+            <Balance
+              balance={availableBalance}
+              variant="caption01"
+              formattingOptions={{ preset: 'shorthand-balance', showCurrency: false }}
+              forceVisible={forceBalanceVisible}
+            />
+          </Cell.Label>
+        </Cell.Aside>
+      }
       {...rest}
-    >
-      <Cell.Icon>{icon}</Cell.Icon>
-      <Cell.Content>
-        <Cell.Label variant="primary" numberOfLines={1} ellipsizeMode="tail">
-          {tokenName}
-        </Cell.Label>
-        <Cell.Label variant="secondary">
-          <Text variant="caption01" lineHeight={16}>
-            {rest.ticker}
-          </Text>
-        </Cell.Label>
-      </Cell.Content>
-      <Cell.Aside>
-        <Cell.Label variant="primary">
-          <Balance
-            balance={quoteBalance}
-            variant="label02"
-            lineHeight={16}
-            forceVisible={forceBalanceVisible}
-          />
-        </Cell.Label>
-        <Cell.Label variant="secondary">
-          <Balance
-            balance={availableBalance}
-            variant="caption01"
-            formattingOptions={{ preset: 'shorthand-balance', showCurrency: false }}
-            forceVisible={forceBalanceVisible}
-          />
-        </Cell.Label>
-      </Cell.Aside>
-    </Cell.Root>
+    />
   );
 }
