@@ -3,7 +3,7 @@ import createClient from 'openapi-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
 import { LEATHER_API_URL_PRODUCTION, LEATHER_API_URL_STAGING } from '@leather.io/constants';
-import { HistoricalPeriod, SupportedBlockchains } from '@leather.io/models';
+import type { HistoricalPeriod, SupportedBlockchains } from '@leather.io/models';
 
 import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
@@ -42,6 +42,19 @@ export type LeatherApiZestReserve =
   paths['/v1/defi/zest/reserves/{principal}']['get']['responses'][200]['content']['application/json'];
 export type LeatherApiStackingDaoRates =
   paths['/v1/defi/stacking-dao/rates']['get']['responses'][200]['content']['application/json'];
+export type LeatherApiPriceMapEntry = Extract<
+  paths['/v1/market/prices/native']['get']['responses'][200]['content']['application/json'],
+  { format: 'map' }
+>['data'][string];
+export type LeatherApiTokenAnalyticsMapEntry = Extract<
+  paths['/v1/analytics/native']['get']['responses'][200]['content']['application/json'],
+  { format: 'map' }
+>['data'][string];
+export type LeatherApiTokenDistribution =
+  paths['/v1/analytics/native/{symbol}/distribution']['get']['responses'][200]['content']['application/json'];
+export type LeatherApiTokenHolderSegment = NonNullable<
+  LeatherApiTokenDistribution['topHolders'][1]
+>;
 
 @injectable()
 export class LeatherApiClient {
@@ -855,5 +868,272 @@ export class LeatherApiClient {
     return skipCache
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(['leather-api-stacking-dao-rates'], fetchFn);
+  }
+
+  async fetchNativeAnalyticsMap({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/analytics/native', {
+            signal,
+            params: { query: { format: 'map' } },
+          }),
+        {
+          priority: leatherApiPriorities.nativeAnalyticsMap,
+          signal,
+        }
+      );
+      if (data?.format !== 'map') {
+        throw new Error('Unrecognized collection format');
+      }
+      return data.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-native-analytics-map'], fetchFn);
+  }
+
+  async fetchNativeAnalytics(symbol: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      try {
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/analytics/native/{symbol}', {
+              signal,
+              params: { path: { symbol } },
+            }),
+          {
+            priority: leatherApiPriorities.nativeAnalytics,
+            signal,
+          }
+        );
+        return data!;
+      } catch (error) {
+        if (
+          LeatherApiError.isLeatherApiError(error) &&
+          (error.isNotFound() || error.isUnprocessableEntity())
+        ) {
+          return null;
+        }
+        throw error;
+      }
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-native-analytics', symbol], fetchFn);
+  }
+
+  async fetchNativeDistribution(symbol: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      try {
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/analytics/native/{symbol}/distribution', {
+              signal,
+              params: { path: { symbol } },
+            }),
+          {
+            priority: leatherApiPriorities.nativeDistribution,
+            signal,
+          }
+        );
+        return data!;
+      } catch (error) {
+        if (
+          LeatherApiError.isLeatherApiError(error) &&
+          (error.isNotFound() || error.isUnprocessableEntity())
+        ) {
+          return null;
+        }
+        throw error;
+      }
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-native-distribution', symbol],
+          fetchFn
+        );
+  }
+
+  async fetchSip10AnalyticsMap({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/analytics/sip10s', {
+            signal,
+            params: { query: { format: 'map' } },
+          }),
+        {
+          priority: leatherApiPriorities.sip10AnalyticsMap,
+          signal,
+        }
+      );
+      if (data?.format !== 'map') {
+        throw new Error('Unrecognized collection format');
+      }
+      return data.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-sip10-analytics-map'], fetchFn);
+  }
+
+  async fetchSip10Analytics(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      try {
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/analytics/sip10s/{principal}', {
+              signal,
+              params: { path: { principal } },
+            }),
+          {
+            priority: leatherApiPriorities.sip10Analytics,
+            signal,
+          }
+        );
+        return data!;
+      } catch (error) {
+        if (
+          LeatherApiError.isLeatherApiError(error) &&
+          (error.isNotFound() || error.isUnprocessableEntity())
+        ) {
+          return null;
+        }
+        throw error;
+      }
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-sip10-analytics', principal], fetchFn);
+  }
+
+  async fetchSip10Distribution(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      try {
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/analytics/sip10s/{principal}/distribution', {
+              signal,
+              params: { path: { principal } },
+            }),
+          {
+            priority: leatherApiPriorities.sip10Distribution,
+            signal,
+          }
+        );
+        return data!;
+      } catch (error) {
+        if (
+          LeatherApiError.isLeatherApiError(error) &&
+          (error.isNotFound() || error.isUnprocessableEntity())
+        ) {
+          return null;
+        }
+        throw error;
+      }
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-sip10-distribution', principal],
+          fetchFn
+        );
+  }
+
+  async fetchRuneAnalyticsMap({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/analytics/runes', {
+            signal,
+            params: { query: { format: 'map' } },
+          }),
+        {
+          priority: leatherApiPriorities.runeAnalyticsMap,
+          signal,
+        }
+      );
+      if (data?.format !== 'map') {
+        throw new Error('Unrecognized collection format');
+      }
+      return data.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-rune-analytics-map'], fetchFn);
+  }
+
+  async fetchRuneAnalytics(runeName: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      try {
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/analytics/runes/{runeName}', {
+              signal,
+              params: { path: { runeName } },
+            }),
+          {
+            priority: leatherApiPriorities.runeAnalytics,
+            signal,
+          }
+        );
+        return data!;
+      } catch (error) {
+        if (
+          LeatherApiError.isLeatherApiError(error) &&
+          (error.isNotFound() || error.isUnprocessableEntity())
+        ) {
+          return null;
+        }
+        throw error;
+      }
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-rune-analytics', runeName], fetchFn);
+  }
+
+  async fetchRuneDistribution(runeName: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      try {
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/analytics/runes/{runeName}/distribution', {
+              signal,
+              params: { path: { runeName } },
+            }),
+          {
+            priority: leatherApiPriorities.runeDistribution,
+            signal,
+          }
+        );
+        return data!;
+      } catch (error) {
+        if (
+          LeatherApiError.isLeatherApiError(error) &&
+          (error.isNotFound() || error.isUnprocessableEntity())
+        ) {
+          return null;
+        }
+        throw error;
+      }
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(
+          ['leather-api-rune-distribution', runeName],
+          fetchFn
+        );
   }
 }

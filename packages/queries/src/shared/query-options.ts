@@ -46,6 +46,24 @@ export const marketHistoryQueryOptions = {
   gcTime: 30000,
 } satisfies Partial<UseQueryOptions>;
 
+export const marketStatsQueryOptions = {
+  refetchOnReconnect: false,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  retryOnMount: false,
+  staleTime: oneMinInMs,
+  gcTime: oneMinInMs,
+} satisfies Partial<UseQueryOptions>;
+
+export const tokenAnalyticsQueryOptions = {
+  refetchOnReconnect: false,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  retryOnMount: false,
+  staleTime: minutesInMs(5),
+  gcTime: minutesInMs(5),
+} satisfies Partial<UseQueryOptions>;
+
 export const collectiblesQueryOptions = {
   refetchOnReconnect: false,
   refetchOnWindowFocus: false,

@@ -27,8 +27,10 @@ import { SettingsService } from './infrastructure/settings/settings.service';
 import { Types } from './inversify.types';
 import { MarketDataService } from './market/market-data.service';
 import { MarketHistoryService } from './market/market-history.service';
+import { MarketStatsService } from './market/market-stats.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { SwapService } from './swap/swap.service';
+import { TokenAnalyticsService } from './token-analytics/token-analytics.service';
 import { BitcoinTransactionsService } from './transactions/bitcoin-transactions.service';
 import { StacksTransactionsService } from './transactions/stacks-transactions.service';
 import { UtxosService } from './utxos/utxos.service';
@@ -127,6 +129,12 @@ export function getSwapService() {
 }
 export function getMarketHistoryService() {
   return getServicesContainer().get(MarketHistoryService);
+}
+export function getMarketStatsService() {
+  return getServicesContainer().get(MarketStatsService);
+}
+export function getTokenAnalyticsService() {
+  return getServicesContainer().get(TokenAnalyticsService);
 }
 export function getStacksTransactionFeesService() {
   return getServicesContainer().get(StacksTransactionFeesService);
