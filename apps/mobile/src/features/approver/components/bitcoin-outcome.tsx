@@ -1,4 +1,4 @@
-import { BitcoinTokenBalance } from '@/features/balances/bitcoin/bitcoin-balance';
+import { BitcoinTokenBalance } from '@/features/balances/bitcoin/bitcoin-token-balance';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 
 import { Money } from '@leather.io/models';

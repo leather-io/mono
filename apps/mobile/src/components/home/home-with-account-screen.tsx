@@ -6,12 +6,13 @@ import { AccountDetails } from '@/features/account/account-details';
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
 import { AvailableAccountBalance } from '@/features/account/components/available-account-balance';
 import { AssetsList } from '@/features/balances/assets/assets-list';
-import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-balance';
+import { BitcoinDepositTokenCell } from '@/features/balances/bitcoin/bitcoin-deposit-token-cell';
 import { ManageTokensSheet } from '@/features/balances/manage-tokens.sheet';
-import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
+import { StacksDepositTokenCell } from '@/features/balances/stacks/stacks-deposit-token-cell';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { CollectiblesList } from '@/features/token/collectibles-list';
+import { useActivity } from '@/queries/activity/activity.query';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
@@ -22,15 +23,13 @@ import {
   useCollectiblesAnalytics,
   useTokenPortfolioAnalytics,
 } from '@/utils/analytics-hooks';
-import { useRouter } from 'expo-router';
 
-import { btcAsset, stxAsset } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
 import { SheetInstance } from '@leather.io/ui/native';
-import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { AccountScreenHeader } from './account-screen-header';
 import { AssetTabs } from './components/asset-tabs';
+import { FirstTokenBanner } from './components/first-token-banner';
 import { ListTab } from './constants';
 
 interface HomeScreenWithAccountProps {
@@ -52,7 +51,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     sip10Balance: sip10Data.value?.sip10s ?? [],
     runeBalance: runesData.value?.runes ?? [],
   });
-  const router = useRouter();
   const allSip10Data = useSip10AccountBalance(fingerprint, accountIndex, {
     includeHiddenAssets: true,
   });
@@ -60,6 +58,9 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
     includeHiddenAssets: true,
   });
   const hasAssets = !!allSip10Data.value?.sip10s.length || !!allRunesData.value?.runes.length;
+  const activityState = useActivity(fingerprint, accountIndex);
+  const hasActivity = !!activityState.value?.length;
+  const displayFirstTokenBanner = activityState.state === 'success' && !hasActivity;
 
   function onOpenAccountSelector() {
     accountSelectorSheetRef.current?.present();
@@ -91,33 +92,18 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
               {/* TODO: research better way of switching between flashlists */}
               <AccountDetails account={currentAccount} />
               <AssetTabs listTab={listTab} setListTab={setListTab} />
-              <AvailableAccountBalance
-                account={currentAccount}
-                onOpenManageTokens={() => {
-                  manageTokensSheetRef.current?.present();
-                }}
-                hasAssets={hasAssets}
-              />
-              <BitcoinBalanceByAccount
-                fingerprint={fingerprint}
-                accountIndex={accountIndex}
-                onPress={() =>
-                  router.navigate({
-                    pathname: '/(tabs)/(index)/[assetId]',
-                    params: { assetId: serializeAssetId(getAssetId(btcAsset)) },
-                  })
-                }
-              />
-              <StacksBalanceByAccount
-                fingerprint={fingerprint}
-                accountIndex={accountIndex}
-                onPress={() =>
-                  router.navigate({
-                    pathname: '/(tabs)/(index)/[assetId]',
-                    params: { assetId: serializeAssetId(getAssetId(stxAsset)) },
-                  })
-                }
-              />
+              {displayFirstTokenBanner && <FirstTokenBanner />}
+              {!displayFirstTokenBanner && (
+                <AvailableAccountBalance
+                  account={currentAccount}
+                  onOpenManageTokens={() => {
+                    manageTokensSheetRef.current?.present();
+                  }}
+                  hasAssets={hasAssets}
+                />
+              )}
+              <BitcoinDepositTokenCell fingerprint={fingerprint} accountIndex={accountIndex} />
+              <StacksDepositTokenCell fingerprint={fingerprint} accountIndex={accountIndex} />
             </>
           }
           sip10Data={sip10Data}

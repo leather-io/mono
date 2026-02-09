@@ -1,22 +1,8 @@
-import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
-import { t } from '@lingui/core/macro';
 
 import { AccountId } from '@leather.io/models';
-import { BitcoinFilledCircleIcon, BtcAvatarIcon } from '@leather.io/ui/native';
 
-type BitcoinTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
-
-export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
-  return (
-    <TokenBalance
-      ticker="BTC"
-      icon={<BtcAvatarIcon indicator={<BitcoinFilledCircleIcon variant="small" />} />}
-      tokenName={t`Bitcoin`}
-      {...props}
-    />
-  );
-}
+import { BitcoinTokenBalance } from './bitcoin-token-balance';
 
 interface BitcoinBalanceByAccountProps extends AccountId {
   onPress?(): void;

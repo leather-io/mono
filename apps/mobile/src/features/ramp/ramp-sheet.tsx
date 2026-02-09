@@ -23,9 +23,10 @@ export function RampSheet() {
   const [asset, setAsset] = useState<null | FungibleCryptoAsset>(null);
 
   useImperativeHandle(rampSheetRef, () => ({
-    present(mode: OnramperMode) {
+    present(mode: OnramperMode, asset?: FungibleCryptoAsset) {
       ref.current?.present();
       setMode(mode);
+      setAsset(asset ?? null);
     },
     dismiss() {
       ref.current?.dismiss();

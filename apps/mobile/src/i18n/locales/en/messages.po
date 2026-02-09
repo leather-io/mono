@@ -411,7 +411,8 @@ msgstr "Balances"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:15
+#: src/features/balances/bitcoin/bitcoin-deposit-token-cell.tsx:25
+#: src/features/balances/bitcoin/bitcoin-token-balance.tsx:11
 #: src/features/receive/get-assets.ts:29
 #: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
@@ -448,6 +449,7 @@ msgid "Browser"
 msgstr "Browser"
 
 #: src/components/action-buttons.tsx:55
+#: src/features/token/components/deposit-token-cell.tsx:60
 msgid "Buy"
 msgstr "Buy"
 
@@ -912,6 +914,10 @@ msgstr "For your eyes only"
 msgid "From"
 msgstr "From"
 
+#: src/components/home/components/first-token-banner.tsx:12
+msgid "Fund your wallet by buying tokens or transferring from another account."
+msgstr "Fund your wallet by buying tokens or transferring from another account."
+
 #: src/features/account/components/available-account-balance.tsx:47
 msgid "funds already on their way to someone else."
 msgstr "funds already on their way to someone else."
@@ -945,6 +951,10 @@ msgstr "Get support or provide feedback"
 #: src/components/app-update-required/app-update-required-sheet.tsx:23
 msgid "Get the latest version of the Leather app"
 msgstr "Get the latest version of the Leather app"
+
+#: src/components/home/components/first-token-banner.tsx:10
+msgid "Get your first token"
+msgstr "Get your first token"
 
 #: src/features/swap/components/review/swap-review-empty-state.tsx:25
 msgid "Go back"
@@ -1782,7 +1792,8 @@ msgstr "SRC-20"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:14
+#: src/features/balances/stacks/stacks-deposit-token-cell.tsx:25
+#: src/features/balances/stacks/stacks-token-balance.tsx:12
 #: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
 #: src/features/swap/swap.utils.ts:9

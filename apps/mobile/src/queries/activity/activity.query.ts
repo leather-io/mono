@@ -8,6 +8,8 @@ import { AccountAddresses, Activity, CryptoAsset, QuoteCurrency } from '@leather
 import { createActivityByAssetQueryConfig, createActivityQueryConfig } from '@leather.io/queries';
 import type { UserSettings } from '@leather.io/services';
 
+import { retriableActivityQueryOptions } from './activity-query-options';
+
 function useBaseActivityQuery(
   account: AccountAddresses,
   options: Partial<UseQueryOptions<Activity[], Error, ActivityView[]>> = {}
@@ -24,6 +26,7 @@ function useBaseActivityQuery(
 
   return useQuery<Activity[], Error, ActivityView[]>({
     ...baseConfig,
+    ...retriableActivityQueryOptions,
     ...rest,
     queryKey: queryKeyWithCurrency,
     select:
@@ -54,6 +57,7 @@ export function useActivityByAssetQuery(account: AccountAddresses, asset: Crypto
   };
   return useQuery<Activity[], Error, ActivityView[]>({
     ...createActivityByAssetQueryConfig(account, asset, settings),
+    ...retriableActivityQueryOptions,
     select: activity => activity.map(item => createActivityView(item, settings.network)),
   });
 }
