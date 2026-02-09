@@ -1,12 +1,13 @@
 import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
-import { Box } from 'leather-styles/jsx';
-
-import { type CollectibleView, type TokenDetailsProps } from '@leather.io/features';
+import {
+  type CollectibleView,
+  type TokenDetailsProps,
+  createTokenDetailsPath,
+} from '@leather.io/features';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { createTokenDetailsPath } from '@app/common/asset-url';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
@@ -67,15 +68,14 @@ function CollectiblesCurrent() {
   const renderedCollectibles = useMemo(
     () =>
       collectibles.map((view, index) => (
-        <Box
+        <CollectibleTypeIconOverlay
           key={view.key}
+          protocol={view.protocol}
           data-testid={`collectible-card-${view.asset.protocol}`}
           data-index={index}
         >
-          <CollectibleTypeIconOverlay protocol={view.protocol}>
-            {renderCollectible(view, handleOpenToken)}
-          </CollectibleTypeIconOverlay>
-        </Box>
+          {renderCollectible(view, handleOpenToken)}
+        </CollectibleTypeIconOverlay>
       )),
     [collectibles, handleOpenToken]
   );

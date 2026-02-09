@@ -2,6 +2,11 @@ import type { ReactNode } from 'react';
 
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
+import {
+  LEATHER_GUIDES_BNS_URL,
+  LEATHER_GUIDES_GETTING_STARTED_URL,
+  LEATHER_GUIDES_ORDINALS_URL,
+} from '@leather.io/constants';
 import { GlobeTiltedIcon, GraduateCapIcon, NumberedListIcon } from '@leather.io/ui';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
@@ -15,17 +20,17 @@ interface LearnItem {
 const learnItems: LearnItem[] = [
   {
     title: 'Getting Started with Leather',
-    url: 'https://leather.io/guides/getting-started',
+    url: LEATHER_GUIDES_GETTING_STARTED_URL,
     icon: <GraduateCapIcon />,
   },
   {
     title: 'What are Bitcoin Ordinals?',
-    url: 'https://leather.io/guides/ordinals',
+    url: LEATHER_GUIDES_ORDINALS_URL,
     icon: <NumberedListIcon />,
   },
   {
     title: 'What is BNS? (Bitcoin Naming System)',
-    url: 'https://leather.io/guides/bns',
+    url: LEATHER_GUIDES_BNS_URL,
     icon: <GlobeTiltedIcon />,
   },
 ];

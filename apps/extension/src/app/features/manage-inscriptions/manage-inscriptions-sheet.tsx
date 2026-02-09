@@ -2,12 +2,11 @@ import { useCallback, useState } from 'react';
 
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
+import { LEATHER_GUIDES_UTXO_PROTECTION_URL } from '@leather.io/constants';
 import { Button, Sheet, SheetHeader, Switch } from '@leather.io/ui';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
-
-const UTXO_PROTECTION_LEARN_URL = 'https://leather.io/guides/utxo-protection';
 
 interface ManageInscriptionsSheetProps {
   isShowing: boolean;
@@ -33,7 +32,7 @@ export function ManageInscriptionsSheet({ isShowing, onClose }: ManageInscriptio
   }, [isOrdinalsProtected, discardAllInscriptions, recoverAllInscriptions]);
 
   const handleLearnMore = useCallback(() => {
-    openInNewTab(UTXO_PROTECTION_LEARN_URL);
+    openInNewTab(LEATHER_GUIDES_UTXO_PROTECTION_URL);
   }, []);
 
   return (

@@ -2,13 +2,12 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
+import { BTC_US_URL } from '@leather.io/constants';
 import { Button, GlobeTiltedIcon, OrdinalAvatarIcon, StxAvatarIcon } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
-
-const BTC_US_URL = 'https://btc.us/';
 
 interface NftOptionProps {
   icon: React.ReactNode;

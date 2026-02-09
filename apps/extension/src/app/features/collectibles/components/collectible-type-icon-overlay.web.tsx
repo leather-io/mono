@@ -22,18 +22,22 @@ function getCollectibleTypeIcon(protocol: NonFungibleCryptoAsset['protocol']): R
 
 interface CollectibleTypeIconOverlayProps extends PropsWithChildren {
   protocol: NonFungibleCryptoAsset['protocol'];
+  'data-testid'?: string;
+  'data-index'?: number;
 }
 
 export function CollectibleTypeIconOverlay({
   protocol,
   children,
+  'data-testid': dataTestId,
+  'data-index': dataIndex,
 }: CollectibleTypeIconOverlayProps) {
   const icon = getCollectibleTypeIcon(protocol);
 
   if (!icon) return <>{children}</>;
 
   return (
-    <Box position="relative">
+    <Box position="relative" data-testid={dataTestId} data-index={dataIndex}>
       {children}
       <Box
         pointerEvents="none"

@@ -1,8 +1,8 @@
 import { useParams } from 'react-router';
 
+import { urlPathToAssetId } from '@leather.io/features';
 import { CryptoAssetProtocols } from '@leather.io/models';
 
-import { urlPathToAssetId } from '@app/common/asset-url';
 import { CollectibleDetails } from '@app/features/token/collectible-details';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
