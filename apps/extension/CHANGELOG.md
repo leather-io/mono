@@ -4,6 +4,8 @@
 
 ### Features
 
+* **extension:** add manage tokens page ([9e16f00](https://github.com/leather-io/mono/commit/9e16f0034f9afc244362b9fd4f16a1ad4628cf3d))
+* **extension:** assets ui redesign ([a22fde9](https://github.com/leather-io/mono/commit/a22fde991f204384ade9d48253c40509ea694556))
 * **extension:** remove homeTabsRevamp feature flag and go live ([25ec770](https://github.com/leather-io/mono/commit/25ec7701b990ddb48c923f57a8e9ba2bbe7e116e))
 * **mobile:** expo v54 ([50d0f98](https://github.com/leather-io/mono/commit/50d0f98a39a00986f35193825724e7c80dcb2d94))
 

@@ -4,6 +4,7 @@
 
 ### Features
 
+* **mobile:** first token ([0a9514c](https://github.com/leather-io/mono/commit/0a9514c60936f793b4a090eb7817e43561afa2bf))
 * **extension:** remove homeTabsRevamp feature flag and go live ([25ec770](https://github.com/leather-io/mono/commit/25ec7701b990ddb48c923f57a8e9ba2bbe7e116e))
 * **mobile:** expo v54 ([50d0f98](https://github.com/leather-io/mono/commit/50d0f98a39a00986f35193825724e7c80dcb2d94))
 
