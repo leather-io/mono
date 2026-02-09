@@ -413,6 +413,26 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.47.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.6...@leather.io/services-v1.47.0) (2026-02-09)
+
+
+### Features
+
+* adds market stats and token analytics services ([b5c47ae](https://github.com/leather-io/mono/commit/b5c47ae2401e3e1431343a11cd8398e7a5c1bc6b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.5
+    * @leather.io/constants bumped to 0.30.1
+    * @leather.io/models bumped to 0.53.0
+    * @leather.io/stacks bumped to 1.19.11
+    * @leather.io/utils bumped to 0.49.9
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.9
+
 ## [1.46.6](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.5...@leather.io/services-v1.46.6) (2026-01-23)
 
 

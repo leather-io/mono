@@ -14,6 +14,34 @@
 
 ---
 
+## [6.94.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.93.0...@leather.io/extension-v6.94.0) (2026-02-09)
+
+
+### Features
+
+* **extension:** add manage tokens page ([9e16f00](https://github.com/leather-io/mono/commit/9e16f0034f9afc244362b9fd4f16a1ad4628cf3d))
+* **extension:** assets ui redesign ([a22fde9](https://github.com/leather-io/mono/commit/a22fde991f204384ade9d48253c40509ea694556))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.18.2
+    * @leather.io/bitcoin bumped to 0.36.5
+    * @leather.io/constants bumped to 0.30.1
+    * @leather.io/crypto bumped to 1.12.15
+    * @leather.io/features bumped to 1.1.12
+    * @leather.io/models bumped to 0.53.0
+    * @leather.io/provider bumped to 1.6.17
+    * @leather.io/queries bumped to 0.5.0
+    * @leather.io/query bumped to 2.45.12
+    * @leather.io/rpc bumped to 2.21.9
+    * @leather.io/services bumped to 1.47.0
+    * @leather.io/stacks bumped to 1.19.11
+    * @leather.io/ui bumped to 1.105.0
+    * @leather.io/utils bumped to 0.49.9
+
 ## [6.93.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.92.5...@leather.io/extension-v6.93.0) (2026-01-30)
 
 
