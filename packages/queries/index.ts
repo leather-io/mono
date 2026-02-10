@@ -2,6 +2,7 @@
 export * from './src/shared/query-options';
 
 // Service query configs
+export * from './src/asset-list/asset-list.query-config';
 export * from './src/market-data/market-data.query-config';
 export * from './src/market-history/market-history.query-config';
 export * from './src/market-stats/market-stats.query-config';

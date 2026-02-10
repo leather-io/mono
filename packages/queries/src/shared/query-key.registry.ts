@@ -54,4 +54,6 @@ export const querySettingsDepsRegistry = {
   'activity-service--get-activity-by-asset': ['network'],
   'activity-service--get-sip10-activity-by-asset-id': ['network'],
   'activity-service--get-sip10-total-activity-by-asset-id': ['network'],
+  // asset list
+  'asset-list-service--get-asset-list': ['currency', 'network', 'assetVisibility'],
 } as const satisfies Record<string, readonly QuerySettingsDep[]>;

@@ -1,6 +1,7 @@
 import { Container, Newable } from 'inversify';
 
 import { ActivityService } from './activity/activity.service';
+import { AssetListService } from './asset-list/asset-list.service';
 import { FungibleAssetInfoService } from './assets/fungible-asset-info.service';
 import { RuneAssetService } from './assets/rune-asset.service';
 import { Sip10AssetService } from './assets/sip10-asset.service';
@@ -76,6 +77,9 @@ export function getServicesContainer() {
 /* 
   Services API - Export service resolvers for use in client application components
 */
+export function getAssetListService() {
+  return getServicesContainer().get(AssetListService);
+}
 export function getMarketDataService() {
   return getServicesContainer().get(MarketDataService);
 }
