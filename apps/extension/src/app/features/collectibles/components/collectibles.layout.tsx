@@ -1,8 +1,10 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { Callout, InfoCircleIcon, SettingsSliderIcon } from '@leather.io/ui';
+
+import { ManageInscriptionsSheet } from '@app/features/manage-inscriptions/manage-inscriptions-sheet';
 
 import { CollectiblesEmpty } from './collectibles-empty';
 import { CollectiblesLearn } from './collectibles-learn';
@@ -15,8 +17,6 @@ interface CollectiblesLayoutProps {
   isLoading: boolean;
   hasCollectibles: boolean;
   isError: boolean;
-  onRefresh(): void;
-  isRefetching: boolean;
 }
 
 export function CollectiblesLayout({
@@ -25,50 +25,56 @@ export function CollectiblesLayout({
   isLoading,
   hasCollectibles,
   isError,
-  onRefresh,
-  isRefetching,
 }: CollectiblesLayoutProps) {
+  const [isManageSheetOpen, setIsManageSheetOpen] = useState(false);
+  const showHeader = !isLoading && hasCollectibles;
+
   return (
     <Stack gap="space.04">
-      <Flex
-        alignItems="center"
-        justifyContent="space-between"
-        px={{ base: 0, md: 'space.05' }}
-        py="space.05"
-        width="100%"
-      >
-        <Stack gap="space.01">
-          <Flex alignItems="center" gap="space.01">
-            <styled.span textStyle="label.03" margin="0">
-              Amount
-            </styled.span>
-            <InfoCircleIcon color="ink.text-subdued" variant="small" />
-          </Flex>
-          <styled.h2 textStyle="heading.05" margin="0">
-            {amount}
-          </styled.h2>
-        </Stack>
-
-        <styled.button
-          type="button"
-          height="40px"
-          width="40px"
-          display="flex"
+      {showHeader && (
+        <Flex
           alignItems="center"
-          justifyContent="center"
-          borderRadius="999px"
-          border="default"
-          bg="ink.background-primary"
-          _hover={
-            isRefetching ? undefined : { bg: 'ink.component-background-hover', cursor: 'pointer' }
-          }
-          onClick={onRefresh}
-          disabled={isRefetching}
-          aria-label="Refresh collectibles"
+          justifyContent="space-between"
+          px={{ base: 0, md: 'space.05' }}
+          py="space.05"
+          width="100%"
         >
-          <SettingsSliderIcon variant="small" />
-        </styled.button>
-      </Flex>
+          <Stack gap="space.01">
+            <Flex alignItems="center" gap="space.01">
+              <styled.span textStyle="label.03" margin="0">
+                Amount
+              </styled.span>
+              <InfoCircleIcon color="ink.text-subdued" variant="small" />
+            </Flex>
+            <styled.h2 textStyle="heading.05" margin="0">
+              {amount}
+            </styled.h2>
+          </Stack>
+
+          <styled.button
+            type="button"
+            height="40px"
+            width="40px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            borderRadius="999px"
+            border="default"
+            bg="ink.background-primary"
+            _hover={{ bg: 'ink.component-background-hover', cursor: 'pointer' }}
+            onClick={() => setIsManageSheetOpen(true)}
+            aria-label="Manage collectibles"
+            data-testid="manage-collectibles-btn"
+          >
+            <SettingsSliderIcon variant="small" />
+          </styled.button>
+        </Flex>
+      )}
+
+      <ManageInscriptionsSheet
+        isShowing={isManageSheetOpen}
+        onClose={() => setIsManageSheetOpen(false)}
+      />
 
       {isError && (
         <Box px={{ base: 0, md: 'space.05' }}>

@@ -7,7 +7,7 @@ import {
   LEATHER_GUIDES_GETTING_STARTED_URL,
   LEATHER_GUIDES_ORDINALS_URL,
 } from '@leather.io/constants';
-import { GlobeTiltedIcon, GraduateCapIcon, NumberedListIcon } from '@leather.io/ui';
+import { GlobeTiltedIcon, GridIcon, ZapIcon } from '@leather.io/ui';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 
@@ -21,12 +21,12 @@ const learnItems: LearnItem[] = [
   {
     title: 'Getting Started with Leather',
     url: LEATHER_GUIDES_GETTING_STARTED_URL,
-    icon: <GraduateCapIcon />,
+    icon: <ZapIcon />,
   },
   {
     title: 'What are Bitcoin Ordinals?',
     url: LEATHER_GUIDES_ORDINALS_URL,
-    icon: <NumberedListIcon />,
+    icon: <GridIcon />,
   },
   {
     title: 'What is BNS? (Bitcoin Naming System)',

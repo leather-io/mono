@@ -50,13 +50,7 @@ function CollectiblesCurrent() {
   const location = useLocation();
   const accountIndex = useCurrentAccountIndex();
   const account = useAccountAddresses(accountIndex);
-  const {
-    data: collectibles = [],
-    isLoading,
-    isError,
-    refetch,
-    isRefetching,
-  } = useAccountCollectibles(account);
+  const { data: collectibles = [], isLoading, isError } = useAccountCollectibles(account);
 
   const handleOpenToken = useCallback(
     ({ assetId }: TokenDetailsProps) => {
@@ -86,10 +80,6 @@ function CollectiblesCurrent() {
       isError={isError}
       amount={collectibles.length}
       hasCollectibles={collectibles.length > 0}
-      onRefresh={() => {
-        void refetch();
-      }}
-      isRefetching={isRefetching}
     >
       {renderedCollectibles}
     </CollectiblesLayout>
