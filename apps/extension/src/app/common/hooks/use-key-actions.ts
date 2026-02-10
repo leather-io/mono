@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 import { generateMnemonic } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
@@ -16,7 +15,7 @@ import { partiallyClearLocalStorage } from '@app/common/store-utils';
 import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { useBnsV2Client } from '@app/query/stacks/bns/bns-v2-client';
 import { useAppDispatch } from '@app/store';
-import { selectActiveAccount } from '@app/store/active/active.selectors';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
 import { createNewAccount } from '@app/store/chains/stx-chain.actions';
 import { useStacksClient } from '@app/store/common/api-clients.hooks';
@@ -32,7 +31,7 @@ import { useActiveSoftwareKey } from '@app/store/software-keys/software-key.sele
 export function useKeyActions() {
   const dispatch = useAppDispatch();
   const activeSoftwareKey = useActiveSoftwareKey();
-  const activeAccount = useSelector(selectActiveAccount);
+  const activeAccount = useCurrentAccountId();
   const btcClient = useBitcoinClient();
   const stxClient = useStacksClient();
   const bnsV2Client = useBnsV2Client();

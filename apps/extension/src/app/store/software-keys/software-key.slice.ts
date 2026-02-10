@@ -1,5 +1,8 @@
 import { PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
+import { fingerprintMigration } from '@shared/storage/redux-persist';
+import { assumedZeroFingerprint } from '@shared/utils';
+
 import { migrateVaultReducerStoreToNewStateStructure } from '../utils/vault-reducer-migration';
 
 interface SoftwareKeyConfig {
@@ -32,4 +35,14 @@ export const keySlice = createSlice({
       return keyAdapter.removeAll(state);
     },
   },
+  extraReducers: builder =>
+    builder.addCase(fingerprintMigration, (state, action) => {
+      const newFingerprint = action.payload;
+
+      const existingKey = state.entities[assumedZeroFingerprint];
+      if (existingKey) {
+        state.entities[newFingerprint] = { ...existingKey, id: newFingerprint };
+        delete state.entities[assumedZeroFingerprint];
+      }
+    }),
 });

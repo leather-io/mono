@@ -15,6 +15,8 @@ import { userAddsWallet } from '@leather.io/state/wallet';
 
 import { decryptMnemonic, encryptMnemonic } from '@shared/crypto/mnemonic-encryption';
 import { logger } from '@shared/logger';
+import { fingerprintMigration } from '@shared/storage/redux-persist';
+import { assumedZeroFingerprint } from '@shared/utils';
 import { identifyUser } from '@shared/utils/analytics';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
@@ -159,6 +161,15 @@ function unlockWalletAction(password: string): AppThunk {
         })
       )
     );
+
+    function requiresFingerprintMigration() {
+      return softwareKeys.length === 1 && softwareKeys[0].id === assumedZeroFingerprint;
+    }
+
+    if (requiresFingerprintMigration()) {
+      const { fingerprint } = decryptedResults[0];
+      dispatch(fingerprintMigration(fingerprint));
+    }
 
     await initalizeWalletSession(decryptedResults[0].encryptionKey);
 

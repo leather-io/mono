@@ -23,7 +23,7 @@ export function getTestSoftwareAccountDefaultWalletState() {
     chains: {
       stx: {
         [testFingerprint]: {
-          highestAccountIndex: 0,
+          highestAccountIndex: 10,
           currentAccountStacksDescriptor: '',
         },
       },
@@ -66,7 +66,6 @@ export function getTestSoftwareAccountDefaultWalletState() {
       },
     },
     networks: { ids: [], entities: {}, currentNetworkId: 'mainnet' },
-    ordinals: {},
     settings: {
       discardedInscriptions: [],
       userSelectedTheme: 'system',
