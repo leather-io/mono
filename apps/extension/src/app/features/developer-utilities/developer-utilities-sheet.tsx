@@ -20,6 +20,7 @@ import {
   resetToDevWalletLedger,
   resetToDevWalletLedgerStacksOnly,
   resetToDevWalletSoftware,
+  resetToSerializedStateVersion,
 } from './utils/dev-wallet-utils';
 
 interface DeveloperUtilitiesSheetProps {
@@ -74,6 +75,9 @@ export function DeveloperUtilitiesSheet({ isShowing, onClose }: DeveloperUtiliti
             </Button>
             <Button onClick={resetToDevWalletLedgerStacksOnly} size="sm" variant="outline">
               Reset to Ledger Dev Wallet (Stacks Only)
+            </Button>
+            <Button onClick={resetToSerializedStateVersion} size="sm" variant="outline">
+              Reset to serialized state version
             </Button>
           </HStack>
         </CategorySection>

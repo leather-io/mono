@@ -21,6 +21,7 @@ import {
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import { userSwitchesAccount } from '@app/store/active/active.slice';
 import { bitcoinKeysSlice } from '@app/store/ledger/bitcoin/bitcoin-key.slice';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
@@ -76,6 +77,8 @@ function LedgerRequestBitcoinKeys() {
             })
           );
         }
+
+        dispatch(userSwitchesAccount({ fingerprint, accountIndex: 0 }));
       },
     });
 

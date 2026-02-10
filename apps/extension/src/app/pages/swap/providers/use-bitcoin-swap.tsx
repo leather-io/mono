@@ -1,8 +1,6 @@
 import { useCallback } from 'react';
 
-import type { P2Ret } from '@scure/btc-signer/payment';
-
-import { BitcoinSigner } from '@leather.io/bitcoin';
+import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import type { OwnedUtxo } from '@leather.io/models';
 import { delay, isUndefined } from '@leather.io/utils';
 
@@ -15,7 +13,7 @@ import { useSbtcDepositTransaction } from '../hooks/use-sbtc-deposit-transaction
 import type { SubmitSwapArgs } from '../swap.context';
 import type { BitcoinSwapContext } from './bitcoin-swap-provider';
 
-export function useBitcoinSwap(signer: BitcoinSigner<P2Ret>, utxos: OwnedUtxo[]) {
+export function useBitcoinSwap(signer: BitcoinNativeSegwitPayer, utxos: OwnedUtxo[]) {
   const { setIsLoading, isLoading } = useLoading(LoadingKeys.SUBMIT_SWAP_TRANSACTION);
 
   const { onDepositSbtc, onReviewDepositSbtc } = useSbtcDepositTransaction(signer, utxos);

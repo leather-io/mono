@@ -23,6 +23,7 @@ import {
   isStacksAppOpen,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
+import { userSwitchesAccount } from '@app/store/active/active.slice';
 import { stacksKeysSlice } from '@app/store/ledger/stacks/stacks-key.slice';
 import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
@@ -80,6 +81,8 @@ function LedgerRequestStacksKeys() {
             })
           );
         }
+
+        dispatch(userSwitchesAccount({ fingerprint: assumedZeroFingerprint, accountIndex: 0 }));
       },
     });
 

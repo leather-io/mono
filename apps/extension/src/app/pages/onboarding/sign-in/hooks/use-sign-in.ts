@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { validateMnemonic } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
 
+import { resetWallet } from '@leather.io/state';
 import { delay } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -11,7 +12,6 @@ import { analytics } from '@shared/utils/analytics';
 
 import { useAppDispatch } from '@app/store';
 import { inMemoryKeyActions } from '@app/store/in-memory-key/in-memory-key.actions';
-import { keyActions } from '@app/store/software-keys/software-key.actions';
 import { useLoading } from '@app/store/ui/ui.hooks';
 
 async function simulateShortDelayToAvoidImmediateNavigation() {
@@ -58,7 +58,7 @@ export function useSignIn() {
 
       await simulateShortDelayToAvoidImmediateNavigation();
 
-      dispatch(keyActions.signOut());
+      dispatch(resetWallet());
       dispatch(inMemoryKeyActions.generateWalletKey(parsedKeyInput));
       analytics.track('submit_valid_secret_key');
       void navigate(RouteUrls.SetPassword);

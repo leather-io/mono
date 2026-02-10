@@ -2,7 +2,12 @@ import { useCallback } from 'react';
 
 import * as btc from '@scure/btc-signer';
 
-import { determineUtxosForSpend, determineUtxosForSpendAll, isP2TROut } from '@leather.io/bitcoin';
+import {
+  determineUtxosForSpend,
+  determineUtxosForSpendAll,
+  isTaprootPayer,
+} from '@leather.io/bitcoin';
+import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import type { Money, OwnedUtxo } from '@leather.io/models';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
@@ -59,16 +64,11 @@ export function useGenerateUnsignedBitcoinTx({
         if (!inputs.length) throw new Error('No inputs to sign');
         if (!outputs.length) throw new Error('No outputs to sign');
 
-        // Is this critical?
-
-        // if (outputs.length > 2)
-        //   throw new Error('Address reuse mode: wallet should have max 2 outputs');
-
         const signingConfig: BitcoinInputSigningConfig[] = [];
 
         for (const input of inputs) {
           const inputPayer = getPayerForInput(input);
-          const tapInternalKey = isP2TROut(inputPayer)
+          const tapInternalKey = isTaprootPayer(inputPayer)
             ? { tapInternalKey: inputPayer.payment.tapInternalKey }
             : {};
 
@@ -85,7 +85,7 @@ export function useGenerateUnsignedBitcoinTx({
 
           signingConfig.push({
             index: tx.inputsLength - 1,
-            derivationPath: inputPayer.derivationPath,
+            derivationPath: keyOriginToDerivationPath(inputPayer.keyOrigin),
           });
         }
 

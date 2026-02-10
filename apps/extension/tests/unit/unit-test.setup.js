@@ -21,3 +21,9 @@ globalThis.window = dom.window;
 globalThis.document = dom.window.document;
 
 globalThis.localStorage = dom.window.localStorage;
+
+globalThis.XMLHttpRequest = class XMLHttpRequest {
+  open() {}
+  send() {}
+  setRequestHeader() {}
+};

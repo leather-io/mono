@@ -1,3 +1,4 @@
+import { createAction } from '@reduxjs/toolkit';
 import { PersistConfig } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
@@ -34,3 +35,5 @@ export const persistConfig: PersistConfig<LocalRootState> & HiddenUntypeDeserial
     'manageTokens',
   ],
 };
+
+export const fingerprintMigration = createAction<string>('global/fingerprintMigration');
