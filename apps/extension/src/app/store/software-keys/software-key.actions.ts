@@ -11,10 +11,11 @@ import {
   type StacksClient,
   fetchNamesForAddress,
 } from '@leather.io/query';
-import { userAddsWallet } from '@leather.io/state/wallet';
+import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
 import { decryptMnemonic, encryptMnemonic } from '@shared/crypto/mnemonic-encryption';
 import { logger } from '@shared/logger';
+import { assumedZeroFingerprint } from '@shared/utils';
 import { identifyUser } from '@shared/utils/analytics';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
@@ -27,6 +28,7 @@ import { getStacksAddressByIndex } from '../accounts/blockchain/stacks/stacks-ke
 import { stxChainSlice } from '../chains/stx-chain.slice';
 import { selectActiveWalletKey } from '../in-memory-key/in-memory-key.selectors';
 import { inMemoryKeySlice } from '../in-memory-key/in-memory-key.slice';
+import { selectWalletEntities } from '../wallets/wallet.selectors';
 import { selectSoftwareKeys, selectWalletSalt } from './software-key.selectors';
 import { keySlice } from './software-key.slice';
 
@@ -159,6 +161,29 @@ function unlockWalletAction(password: string): AppThunk {
         })
       )
     );
+
+    function requiresFingerprintMigration() {
+      return softwareKeys.length === 1 && softwareKeys[0].id === assumedZeroFingerprint;
+    }
+
+    if (requiresFingerprintMigration()) {
+      const { fingerprint } = decryptedResults[0];
+
+      const walletEntities = selectWalletEntities(state);
+      const oldWallet = walletEntities[assumedZeroFingerprint];
+
+      if (oldWallet) {
+        dispatch(userRemovesWallet({ fingerprint: assumedZeroFingerprint }));
+        dispatch(
+          userAddsWallet({
+            wallet: { ...oldWallet, fingerprint },
+            accountKeychains: [],
+          })
+        );
+      }
+
+      dispatch(fingerprintMigration(fingerprint));
+    }
 
     await initalizeWalletSession(decryptedResults[0].encryptionKey);
 

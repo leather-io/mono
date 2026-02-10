@@ -1,8 +1,12 @@
 import * as btc from '@scure/btc-signer';
 import { AddressType, getAddressInfo } from 'bitcoin-address-validation';
 
-import { BitcoinError, determineUtxosForSpend, isP2TROut } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
+import { BitcoinError, determineUtxosForSpend, isTaprootPayer } from '@leather.io/bitcoin';
+import {
+  extractAddressIndexFromPath,
+  extractChangeIndexFromPath,
+  keyOriginToDerivationPath,
+} from '@leather.io/crypto';
 import type { UtxoWithDerivationPath } from '@leather.io/query';
 import { createCounter, createMoney } from '@leather.io/utils';
 
@@ -10,7 +14,7 @@ import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config'
 import { logger } from '@shared/logger';
 import { OrdinalSendFormValues } from '@shared/models/form.model';
 
-import { useCurrentNativeSegwitUtxos, useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
+import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
 import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
 import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -76,7 +80,7 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
         },
       });
       signingConfig.push({
-        derivationPath: taprootPayer.derivationPath,
+        derivationPath: keyOriginToDerivationPath(taprootPayer.keyOrigin),
         index: psbtInputCounter.getValue(),
       });
       psbtInputCounter.increment();
@@ -84,9 +88,10 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
       // Fee-covering Native Segwit inputs
       inputs.forEach(input => {
         const payer = getPayerForInput(input);
-        const tapInternalKey = isP2TROut(payer)
+        const tapInternalKey = isTaprootPayer(payer)
           ? { tapInternalKey: payer.payment.tapInternalKey }
           : {};
+
         tx.addInput({
           txid: input.txid,
           index: input.vout,
@@ -98,7 +103,7 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
           ...tapInternalKey,
         });
         signingConfig.push({
-          derivationPath: payer.derivationPath,
+          derivationPath: keyOriginToDerivationPath(changePayer.keyOrigin),
           index: psbtInputCounter.getValue(),
         });
         psbtInputCounter.increment();
@@ -152,13 +157,13 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
       });
       signingConfig.push({
         index: tx.inputsLength - 1,
-        derivationPath: inscriptionPayer.derivationPath,
+        derivationPath: keyOriginToDerivationPath(inscriptionPayer.keyOrigin),
       });
 
       // Fee-covering Native Segwit inputs
       inputs.forEach(input => {
         const payer = getPayerForInput(input);
-        const tapInternalKey = isP2TROut(payer)
+        const tapInternalKey = isTaprootPayer(payer)
           ? { tapInternalKey: payer.payment.tapInternalKey }
           : {};
 
@@ -172,9 +177,10 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
           },
           ...tapInternalKey,
         });
+
         signingConfig.push({
           index: tx.inputsLength - 1,
-          derivationPath: payer.derivationPath,
+          derivationPath: keyOriginToDerivationPath(payer.keyOrigin),
         });
       });
 

@@ -1,4 +1,4 @@
-import { serializeKeyOrigin } from './bitcoin-signer';
+import { serializeKeyOrigin } from './bitcoin-payer';
 
 describe(serializeKeyOrigin.name, () => {
   test('that is turns @scure/btc-signer format derivation path into key origin', () => {

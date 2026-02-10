@@ -1,9 +1,8 @@
-import { Outlet } from 'react-router';
-
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 
+import { AnimatedOutlet } from '../../components/animated-outlet';
 import { LedgerTxSigningContext, LedgerTxSigningProvider } from './ledger-sign-tx.context';
 
 interface TxSigningFlowProps {
@@ -15,7 +14,7 @@ export function TxSigningFlow({ context, closeAction }: TxSigningFlowProps) {
   return (
     <LedgerTxSigningProvider value={context}>
       <Sheet isShowing header={<SheetHeader />} onClose={closeAction}>
-        <Outlet />
+        <AnimatedOutlet />
       </Sheet>
     </LedgerTxSigningProvider>
   );

@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
@@ -13,14 +13,16 @@ import { ConnectLedger } from './connect-ledger';
 
 export function ConnectLedgerStart() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   function pageModeRoutingAction(url: string) {
     return whenPageMode({
       full() {
         void navigate(url, {
           replace: true,
-          state: { [immediatelyAttemptLedgerConnection]: true, fromLocation: location },
+          state: {
+            [immediatelyAttemptLedgerConnection]: true,
+            fromLocation: { pathname: RouteUrls.Onboarding },
+          },
         });
       },
       popup() {

@@ -65,6 +65,13 @@ export function useLedgerNavigate() {
         });
       },
 
+      toCheckingAppVersion() {
+        return navigate(RouteUrls.LedgerCheckingAppVersion, {
+          replace: true,
+          state: { backgroundLocation: { pathname: RouteUrls.Home } },
+        });
+      },
+
       toDeviceBusyStep(description?: string) {
         return navigate(RouteUrls.DeviceBusy, {
           replace: true,
@@ -147,6 +154,19 @@ export function useLedgerNavigate() {
           state: {
             backgroundLocation: { pathname: RouteUrls.Home },
             error,
+          },
+        });
+      },
+
+      toStacksAppOutdatedWarning(versionInfo?: {
+        currentVersion: string;
+        requiredVersion: string;
+      }) {
+        return navigate(RouteUrls.LedgerOutdatedAppWarning, {
+          replace: true,
+          state: {
+            backgroundLocation: { pathname: RouteUrls.Home },
+            versionInfo,
           },
         });
       },

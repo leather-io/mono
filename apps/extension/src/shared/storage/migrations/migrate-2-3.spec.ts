@@ -560,7 +560,7 @@ describe(migrateMultiWalletSupport.name, () => {
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect((result as any).onboarding).toBeUndefined();
+      expect(result.onboarding).toBeUndefined();
     });
 
     test('removes ordinals slice from state', () => {
@@ -590,7 +590,7 @@ describe(migrateMultiWalletSupport.name, () => {
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect((result as any).ordinals).toBeUndefined();
+      expect(result.ordinals).toBeUndefined();
     });
 
     test('removes both onboarding and ordinals slices from state', () => {
@@ -624,8 +624,8 @@ describe(migrateMultiWalletSupport.name, () => {
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect((result as any).onboarding).toBeUndefined();
-      expect((result as any).ordinals).toBeUndefined();
+      expect(result.onboarding).toBeUndefined();
+      expect(result.ordinals).toBeUndefined();
     });
   });
 });

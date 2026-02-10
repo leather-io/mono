@@ -1,11 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import type { AccountId } from '@leather.io/models';
-import { userAddsWallet } from '@leather.io/state/wallet';
+import { resetWallet } from '@leather.io/state';
+import { fingerprintMigration, userAddsWallet } from '@leather.io/state/wallet';
 
 import { assumedZeroFingerprint } from '@shared/utils';
-
-import { keySlice } from '../software-keys/software-key.slice';
 
 interface StxChainKeyState {
   highestAccountIndex: number;
@@ -47,12 +46,21 @@ export const stxChainSlice = createSlice({
 
   extraReducers: builder =>
     builder
-      .addCase(keySlice.actions.signOut, () => ({}))
+      .addCase(resetWallet, () => ({}))
 
       .addCase(userAddsWallet, (state, action) => {
         state[action.payload.wallet.fingerprint] = {
           highestAccountIndex: 0,
           currentAccountStacksDescriptor: '',
         };
+      })
+
+      .addCase(fingerprintMigration, (state, action) => {
+        const newFingerprint = action.payload;
+
+        if (state[assumedZeroFingerprint]) {
+          state[newFingerprint] = state[assumedZeroFingerprint];
+          delete state[assumedZeroFingerprint];
+        }
       }),
 });

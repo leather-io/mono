@@ -69,6 +69,9 @@ test.describe('Onboarding an existing user', () => {
     delete (testWalletState as any).softwareKeys.entities[testFingerprint].encryptedSecretKey;
     delete (testWalletState as any).softwareKeys.salt;
     delete (testWalletState as any).wallets.entities[testFingerprint].createdOn;
+    // Don't test highest account index
+    delete (walletState as any).chains.stx[testFingerprint].highestAccountIndex;
+    delete (testWalletState as any).chains.stx[testFingerprint].highestAccountIndex;
 
     test.expect(walletState).toEqual(testWalletState);
   });
