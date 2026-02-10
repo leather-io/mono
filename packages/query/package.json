@@ -49,7 +49,7 @@
     "@stacks/stacks-blockchain-api-types": "7.14.1",
     "@stacks/transactions": "7.0.5",
     "alex-sdk": "3.1.0",
-    "axios": "1.12.0",
+    "axios": "1.13.5",
     "bignumber.js": "9.1.2",
     "lodash.get": "4.4.2",
     "p-queue": "8.1.1",
