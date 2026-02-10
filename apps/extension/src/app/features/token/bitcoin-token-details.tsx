@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router';
 
 import { btcAsset } from '@leather.io/constants';
-import type { AccountAddresses } from '@leather.io/models';
+import type { AccountAddresses, AccountId } from '@leather.io/models';
 import { BtcAvatarIcon } from '@leather.io/ui';
 import { createMoney } from '@leather.io/utils';
 
@@ -21,17 +21,16 @@ import { TokenDetailsError } from './token-details-error';
 import { TokenDetailsLoading } from './token-details-loading';
 
 interface BitcoinTokenDetailsProps {
-  accountIndex: number;
+  accountId: AccountId;
   account: AccountAddresses;
 }
-
-export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetailsProps) {
+export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
 
-  const nativeSegwitBalance = useNativeSegwitBtcAccountBalance(accountIndex);
-  const taprootBalance = useTaprootBtcAccountBalance(accountIndex);
+  const nativeSegwitBalance = useNativeSegwitBtcAccountBalance(accountId);
+  const taprootBalance = useTaprootBtcAccountBalance(accountId);
   const marketInfo = useTokenMarketInfo(btcAsset);
   const activityQuery = useActivityByAsset(account, btcAsset);
 

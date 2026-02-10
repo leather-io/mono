@@ -1,4 +1,4 @@
-import type { AccountAddresses, Money, RuneAsset } from '@leather.io/models';
+import type { AccountAddresses, AccountId, Money, RuneAsset } from '@leather.io/models';
 import { RunesAvatarIcon } from '@leather.io/ui';
 import { type SerializedCryptoAssetId, deserializeAssetId } from '@leather.io/utils';
 
@@ -11,7 +11,7 @@ import { TokenDetailsError } from './token-details-error';
 import { TokenDetailsLoading } from './token-details-loading';
 
 interface RuneTokenDetailsProps {
-  accountIndex: number;
+  accountId: AccountId;
   account: AccountAddresses;
   assetId: SerializedCryptoAssetId;
 }
@@ -43,9 +43,9 @@ function RuneTokenDetailsContent({ asset, crypto, quote, account }: RuneTokenDet
   );
 }
 
-export function RuneTokenDetails({ accountIndex, account, assetId }: RuneTokenDetailsProps) {
+export function RuneTokenDetails({ accountId, account, assetId }: RuneTokenDetailsProps) {
   const { id: runeName } = deserializeAssetId(assetId);
-  const rune = useRuneBalanceByRuneName(accountIndex, runeName);
+  const rune = useRuneBalanceByRuneName(accountId, runeName);
 
   if (rune.state === 'error') {
     return <TokenDetailsError title="Rune" />;

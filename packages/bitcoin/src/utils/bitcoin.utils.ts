@@ -2,9 +2,8 @@ import { hexToBytes } from '@noble/hashes/utils';
 import { HDKey, Versions } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
-import type { P2Ret, P2TROut } from '@scure/btc-signer/payment';
 import { TransactionInput, TransactionOutput } from '@scure/btc-signer/psbt';
-import type { BitcoinSigner } from 'signer/bitcoin-signer';
+import type { BitcoinPayer, BitcoinTaprootPayer } from 'signer/bitcoin-payer';
 
 import { DerivationPathDepth, extractPurposeFromPath } from '@leather.io/crypto';
 import { BitcoinAddress, BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
@@ -354,12 +353,10 @@ export function isNativeSegwitDerivationPath(path: string) {
   return extractPurposeFromPath(path) === 84;
 }
 
-export function isP2TROut(
-  signer: BitcoinSigner<P2Ret | P2TROut> | null
-): signer is BitcoinSigner<P2TROut> {
-  return !!signer && isTaprootDerivationPath(signer.derivationPath);
-}
-
 export function isTaprootDerivationPath(path: string) {
   return extractPurposeFromPath(path) === 86;
+}
+
+export function isTaprootPayer(payer: BitcoinPayer | null): payer is BitcoinTaprootPayer {
+  return !!payer && isTaprootDerivationPath(payer.keyOrigin);
 }

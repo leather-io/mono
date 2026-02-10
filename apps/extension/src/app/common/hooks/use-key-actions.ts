@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 import { generateMnemonic } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
@@ -16,15 +15,11 @@ import { partiallyClearLocalStorage } from '@app/common/store-utils';
 import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { useBnsV2Client } from '@app/query/stacks/bns/bns-v2-client';
 import { useAppDispatch } from '@app/store';
-import { selectActiveAccount } from '@app/store/active/active.selectors';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
 import { createNewAccount } from '@app/store/chains/stx-chain.actions';
 import { useStacksClient } from '@app/store/common/api-clients.hooks';
 import { inMemoryKeyActions } from '@app/store/in-memory-key/in-memory-key.actions';
-import { bitcoinKeysSlice } from '@app/store/ledger/bitcoin/bitcoin-key.slice';
-import { stacksKeysSlice } from '@app/store/ledger/stacks/stacks-key.slice';
-import { manageTokensSlice } from '@app/store/manage-tokens/manage-tokens.slice';
-import { networksSlice } from '@app/store/networks/networks.slice';
 import { clearWalletSession } from '@app/store/session-restore';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
 import { useActiveSoftwareKey } from '@app/store/software-keys/software-key.selectors';
@@ -32,7 +27,7 @@ import { useActiveSoftwareKey } from '@app/store/software-keys/software-key.sele
 export function useKeyActions() {
   const dispatch = useAppDispatch();
   const activeSoftwareKey = useActiveSoftwareKey();
-  const activeAccount = useSelector(selectActiveAccount);
+  const activeAccount = useCurrentAccountId();
   const btcClient = useBitcoinClient();
   const stxClient = useStacksClient();
   const bnsV2Client = useBnsV2Client();
@@ -72,12 +67,7 @@ export function useKeyActions() {
 
       async signOut() {
         await clearWalletSession();
-        dispatch(networksSlice.actions.changeNetwork('mainnet'));
-        dispatch(keyActions.signOut());
         dispatch(resetWallet());
-        dispatch(bitcoinKeysSlice.actions.signOut());
-        dispatch(stacksKeysSlice.actions.signOut());
-        dispatch(manageTokensSlice.actions.removeAllTokens());
         await clearChromeStorage();
         partiallyClearLocalStorage();
         analytics.track('sign_out');

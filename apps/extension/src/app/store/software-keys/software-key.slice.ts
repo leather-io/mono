@@ -1,5 +1,10 @@
 import { PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
+import { resetWallet } from '@leather.io/state';
+import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/wallet';
+
+import { assumedZeroFingerprint } from '@shared/utils';
+
 import { migrateVaultReducerStoreToNewStateStructure } from '../utils/vault-reducer-migration';
 
 interface SoftwareKeyConfig {
@@ -26,10 +31,23 @@ export const keySlice = createSlice({
     addNewWallet(state, action: PayloadAction<SoftwareKeyConfig>) {
       keyAdapter.addOne(state, action.payload);
     },
-
-    signOut(state) {
-      if (state.salt) delete state.salt;
-      return keyAdapter.removeAll(state);
-    },
   },
+  extraReducers: builder =>
+    builder
+      .addCase(fingerprintMigration, (state, action) => {
+        const newFingerprint = action.payload;
+
+        const existingKey = state.entities[assumedZeroFingerprint];
+        if (existingKey) {
+          keyAdapter.removeOne(state, assumedZeroFingerprint);
+          keyAdapter.addOne(state, { ...existingKey, id: newFingerprint });
+        }
+      })
+      .addCase(userRemovesWallet, (state, action) =>
+        keyAdapter.removeOne(state, action.payload.fingerprint)
+      )
+      .addCase(resetWallet, state => {
+        if (state.salt) delete state.salt;
+        return keyAdapter.removeAll(state);
+      }),
 });

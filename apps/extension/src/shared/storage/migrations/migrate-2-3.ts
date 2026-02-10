@@ -6,8 +6,6 @@ import { isString } from '@leather.io/utils';
 import { logger } from '@shared/logger';
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import type { RootState } from '@app/store';
-
 function findDefaultAccountFingerprint(state: any): string {
   // Try to extract fingerprint from software wallet Stacks descriptor
   const stacksDescriptor = state?.chains?.stx?.default?.currentAccountStacksDescriptor;
@@ -42,7 +40,7 @@ function findDefaultAccountFingerprint(state: any): string {
   return assumedZeroFingerprint;
 }
 
-export function migrateMultiWalletSupport(state: RootState) {
+export function migrateMultiWalletSupport(state: any): any {
   logger.info('Beginning multi-wallet support migration');
 
   return produce(state, (draftState: any) => {
@@ -50,6 +48,7 @@ export function migrateMultiWalletSupport(state: RootState) {
     // versions (pre-migration to using no serialization)
     if (draftState.onboarding) delete draftState.onboarding;
     if (draftState.ordinals) delete draftState.ordinals;
+    if (draftState.analytics) delete draftState.analytics;
 
     // Move salt from:
     // state.softwareKeys.entities.default.salt → state.softwareKeys.salt

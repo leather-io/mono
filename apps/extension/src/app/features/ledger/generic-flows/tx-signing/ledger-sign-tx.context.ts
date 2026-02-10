@@ -5,13 +5,7 @@ import { StacksTransactionWire } from '@stacks/transactions';
 
 import type { SupportedBlockchains } from '@leather.io/models';
 
-import { createWaitableAction } from '@app/common/utils/create-waitable-action';
-
 import { BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
-
-export function createWaitForUserToSeeWarningScreen() {
-  return createWaitableAction<'ignored-warning' | 'cancelled-operation'>();
-}
 
 interface BaseLedgerTxSigningContext extends BaseLedgerOperationContext {
   chain: SupportedBlockchains;
@@ -26,7 +20,6 @@ interface BitcoinLedgerSigningContext extends BaseLedgerTxSigningContext {
 interface StacksLedgerSigningContext extends BaseLedgerTxSigningContext {
   chain: 'stacks';
   transaction: StacksTransactionWire | null;
-  hasUserSkippedBuggyAppWarning: ReturnType<typeof createWaitForUserToSeeWarningScreen>;
 }
 
 export type LedgerTxSigningContext = BitcoinLedgerSigningContext | StacksLedgerSigningContext;

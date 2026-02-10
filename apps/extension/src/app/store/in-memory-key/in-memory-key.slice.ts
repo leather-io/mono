@@ -1,11 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { getMnemonicRootKeyFingerprint } from '@leather.io/crypto';
+import { resetWallet } from '@leather.io/state';
 
 import { logger } from '@shared/logger';
 import { encodeText } from '@shared/utils/text-encoding';
-
-import { keySlice } from '../software-keys/software-key.slice';
 
 interface InMemoryKeyState {
   hasRestoredKeys: boolean;
@@ -46,7 +45,7 @@ export const inMemoryKeySlice = createSlice({
   },
 
   extraReducers: builder => {
-    builder.addCase(keySlice.actions.signOut, state => {
+    builder.addCase(resetWallet, state => {
       state.keys = {};
     });
   },

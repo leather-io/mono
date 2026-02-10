@@ -21,8 +21,8 @@ import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config'
 import { analytics } from '@shared/utils/analytics';
 
 import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
-import { selectActiveAccount } from '@app/store/active/active.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 
 import { useCurrentAccountId } from '../../account';
 import {
@@ -42,12 +42,11 @@ const selectNativeSegwitAccountId = createSelector(
 
 const selectCurrentNativeSegwitAccount = createSelector(
   selectCurrentNetworkBitcoinAccountLookup,
-  selectActiveAccount,
-  (accountLookup, activeAccount) => {
-    if (!activeAccount) return undefined;
-    return accountLookup(activeAccount.fingerprint)({
+  selectCurrentAccount,
+  (accountLookup, currentAccount) => {
+    return accountLookup(currentAccount.fingerprint)({
       paymentType: 'p2wpkh',
-      accountIndex: activeAccount.accountIndex,
+      accountIndex: currentAccount.accountIndex,
     });
   }
 );
@@ -73,13 +72,14 @@ export function useNativeSegwitPayer(accountId: AccountId) {
     if (!account) return;
 
     return bitcoinSoftwarePayerFactory({
-      accountIndex: accountId.accountIndex,
       accountKeychain: account.keychain,
+      accountKeyOrigin: account.keyOrigin,
+      masterKeyFingerprint: account.masterKeyFingerprint,
       paymentFn: getNativeSegwitPaymentFromAddressIndex,
       network: network.chain.bitcoin.mode,
       extendedPublicKeyVersions,
     });
-  }, [account, accountId.accountIndex, extendedPublicKeyVersions, network.chain.bitcoin.mode]);
+  }, [account, extendedPublicKeyVersions, network.chain.bitcoin.mode]);
 }
 
 export function useCurrentAccountNativeSegwitPayer() {

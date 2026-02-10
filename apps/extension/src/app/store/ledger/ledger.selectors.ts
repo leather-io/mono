@@ -28,14 +28,14 @@ const selectHasLedgerKeys = createSelector(selectNumberOfLedgerKeysPersisted, nu
 const selectHasLedgerBitcoinKeys = createSelector(
   [selectBitcoinKeychainEntities, selectCurrentAccount],
   (bitcoinKeychainEntities, currentAccount) => {
-    const bitcoinKeysForCurrentWallet = Object.values(bitcoinKeychainEntities || {}).filter(
+    const bitcoinKeysForCurrentWallet = Object.values(bitcoinKeychainEntities).filter(
       key => key?.fingerprint === currentAccount.fingerprint
     );
 
     const uniqueBitcoinAccountIndices = uniqueArray(
       bitcoinKeysForCurrentWallet
         .map(key => extractAccountIndexFromPath(key.path))
-        .filter((index): index is number => index !== null)
+        .filter(index => index !== null)
     );
 
     return uniqueBitcoinAccountIndices.includes(currentAccount.accountIndex);

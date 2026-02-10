@@ -24,6 +24,7 @@ interface UseRequestLedgerKeysArgs<App extends BitcoinApp | StacksApp> {
   getAppVersion(app: App): Promise<StacksAppVersion> | Promise<BitcoinAppVersion>;
   connectApp(): Promise<App>;
   pullKeysFromDevice(app: App): Promise<void>;
+  passesAdditionalVersionCheck?(appVersion: StacksAppVersion | BitcoinAppVersion): Promise<boolean>;
   onSuccess(): void;
 }
 export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
@@ -32,6 +33,7 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
   getAppVersion,
   pullKeysFromDevice,
   isAppOpen,
+  passesAdditionalVersionCheck,
   onSuccess,
 }: UseRequestLedgerKeysArgs<App>) {
   const [outdatedAppVersionWarning, setAppVersionOutdatedWarning] = useState(false);
@@ -41,11 +43,22 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
   const ledgerAnalytics = useLedgerAnalytics();
 
   async function checkCorrectAppIsOpenWithFailState(app: App) {
+    // Show checking version page immediately
+    void ledgerNavigate.toCheckingAppVersion();
+    await delay(1_000);
+
     const response = await getAppVersion(app);
 
     if (!isAppOpen({ name: response.name })) {
       setAwaitingDeviceConnection(false);
       throw new Error(LedgerConnectionErrors.AppNotOpen);
+    }
+
+    const passedAdditionalVersionCheck = await passesAdditionalVersionCheck?.(response);
+    if (passedAdditionalVersionCheck === false) {
+      // Version check failed, navigation handled in passesAdditionalVersionCheck
+      // Return null to signal that we should not continue
+      return null;
     }
     return response;
   }
@@ -56,13 +69,19 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
       setLatestDeviceResponse({ deviceLocked: false } as any);
       setAwaitingDeviceConnection(true);
       app = await connectApp();
-      await checkCorrectAppIsOpenWithFailState(app);
+      const versionCheckResult = await checkCorrectAppIsOpenWithFailState(app);
+
+      // If version check failed, return early (navigation already handled)
+      if (versionCheckResult === null) {
+        setAwaitingDeviceConnection(false);
+        return;
+      }
+
       setAwaitingDeviceConnection(false);
       void ledgerNavigate.toConnectionSuccessStep(chain);
       await delay(1250);
       await pullKeysFromDevice(app);
       ledgerAnalytics.publicKeysPulledFromLedgerSuccessfully();
-      await app.transport.close();
       onSuccess?.();
     } catch (e) {
       setAwaitingDeviceConnection(false);
@@ -71,8 +90,21 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
         return;
       }
 
+      if (isError(e) && e.message === LedgerConnectionErrors.MasterkeyFingerprintNotSupported) {
+        const currentVersion = (e as any).currentVersion;
+        const versionInfo = currentVersion
+          ? {
+              currentVersion: `${currentVersion.major}.${currentVersion.minor}.${currentVersion.patch}`,
+              requiredVersion: '0.26.4',
+            }
+          : undefined;
+        void ledgerNavigate.toStacksAppOutdatedWarning(versionInfo);
+        return;
+      }
+
       void ledgerNavigate.toErrorStep(chain);
-      return app?.transport.close();
+    } finally {
+      await app?.transport.close();
     }
   }
 

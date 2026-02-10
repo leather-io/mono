@@ -1,4 +1,4 @@
-import type { AccountAddresses } from '@leather.io/models';
+import type { AccountAddresses, AccountId } from '@leather.io/models';
 import type { Sip10Balance } from '@leather.io/services';
 import { Sip10AvatarIcon } from '@leather.io/ui';
 import {
@@ -16,7 +16,7 @@ import { TokenDetailsError } from './token-details-error';
 import { TokenDetailsLoading } from './token-details-loading';
 
 interface Sip10TokenDetailsProps {
-  accountIndex: number;
+  accountId: AccountId;
   account: AccountAddresses;
   assetId: SerializedCryptoAssetId;
 }
@@ -54,9 +54,9 @@ function Sip10TokenDetailsContent({ account, balance }: Sip10TokenDetailsContent
   );
 }
 
-export function Sip10TokenDetails({ accountIndex, account, assetId }: Sip10TokenDetailsProps) {
+export function Sip10TokenDetails({ accountId, account, assetId }: Sip10TokenDetailsProps) {
   const { id: assetIdentifier } = deserializeAssetId(assetId);
-  const sip10 = useSip10BalanceByAssetId(accountIndex, assetIdentifier);
+  const sip10 = useSip10BalanceByAssetId(accountId, assetIdentifier);
 
   if (sip10.state === 'error') {
     return <TokenDetailsError title="Token" />;

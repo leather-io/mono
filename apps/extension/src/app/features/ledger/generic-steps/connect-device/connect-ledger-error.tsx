@@ -1,6 +1,6 @@
 import type { SupportedBlockchains } from '@leather.io/models';
 
-import { useLocationState } from '@app/common/hooks/use-location-state';
+import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { capitalize } from '@app/common/utils';
 import { useLatestLedgerError } from '@app/features/ledger/hooks/use-ledger-latest-route-error.hook';
 
@@ -10,9 +10,13 @@ import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 export function ConnectLedgerError() {
   const latestLedgerError = useLatestLedgerError();
   const ledgerNavigate = useLedgerNavigate();
-  const chain = useLocationState<SupportedBlockchains>('chain');
+  const chain = useLocationStateWithCache<SupportedBlockchains>('chain');
   // TODO: here it would be better to use the actual app name from
   // LEDGER_APPS_MAP at src/app/features/ledger/utils/generic-ledger-utils.ts
+
+  if (!chain) {
+    throw new Error('No blockchain chain found in location state for ConnectLedgerError');
+  }
 
   const appName = capitalize(chain);
   return (

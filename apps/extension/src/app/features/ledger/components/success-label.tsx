@@ -1,6 +1,8 @@
 import { Flex, FlexProps } from 'leather-styles/jsx';
 
-import { Caption, CheckmarkIcon } from '@leather.io/ui';
+import { Caption } from '@leather.io/ui';
+
+import { AnimatedCheckmarkIcon } from '@app/components/icons/animated-checkmark-icon';
 
 interface LedgerSuccessLabelProps extends FlexProps {
   children: React.ReactNode;
@@ -8,7 +10,7 @@ interface LedgerSuccessLabelProps extends FlexProps {
 export function LedgerSuccessLabel({ children, ...props }: LedgerSuccessLabelProps) {
   return (
     <Flex alignItems="center" color="green.action-primary-default" flexDirection="row" {...props}>
-      <CheckmarkIcon />
+      <AnimatedCheckmarkIcon />
       <Caption color="inherit" ml="space.02">
         {children}
       </Caption>

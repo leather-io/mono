@@ -1,9 +1,8 @@
-import { Outlet } from 'react-router';
-
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 
+import { AnimatedOutlet } from '../../components/animated-outlet';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { LedgerRequestKeysContext, LedgerRequestKeysProvider } from './ledger-request-keys.context';
 
@@ -24,7 +23,7 @@ export function RequestKeysFlow({ context, isActionCancellableByUser }: RequestK
         header={<SheetHeader />}
         onClose={isActionCancellableByUser ? onCancelConnectLedger : undefined}
       >
-        <Outlet />
+        <AnimatedOutlet />
       </Sheet>
     </LedgerRequestKeysProvider>
   );

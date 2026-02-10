@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 
 import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
-import type { P2Ret, P2TROut } from '@scure/btc-signer/payment';
+import type { P2TROut } from '@scure/btc-signer/payment';
 import { STACKS_DEVNET } from '@stacks/network';
 import { type BufferCV, fetchCallReadOnlyFunction } from '@stacks/transactions';
 import {
@@ -18,10 +18,11 @@ import {
 } from 'sbtc';
 
 import {
-  BitcoinSigner,
+  BitcoinNativeSegwitPayer,
   determineUtxosForSpend,
   determineUtxosForSpendAll,
 } from '@leather.io/bitcoin';
+import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import type { BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
 import { btcToSat, createMoney } from '@leather.io/utils';
 
@@ -91,7 +92,7 @@ async function fetchSignersPublicKey({
   return res.value.slice(2);
 }
 
-export function useSbtcDepositTransaction(payer: BitcoinSigner<P2Ret>, utxos: OwnedUtxo[]) {
+export function useSbtcDepositTransaction(payer: BitcoinNativeSegwitPayer, utxos: OwnedUtxo[]) {
   const toast = useToast();
   const { setIsIdle } = useLoading(LoadingKeys.SUBMIT_SWAP_TRANSACTION);
   const stacksAccount = useCurrentStacksAccount();
@@ -165,7 +166,7 @@ export function useSbtcDepositTransaction(payer: BitcoinSigner<P2Ret>, utxos: Ow
 
           deposit.signingConfig.push({
             index: deposit.transaction.inputsLength - 1,
-            derivationPath: inputPayer.derivationPath,
+            derivationPath: keyOriginToDerivationPath(inputPayer.keyOrigin),
           });
         }
 

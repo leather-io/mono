@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import StacksApp from '@zondax/ledger-stacks';
 import BitcoinApp from 'ledger-bitcoin';
@@ -16,7 +16,6 @@ import {
   useLedgerResponseState,
 } from '../../utils/generic-ledger-utils';
 import { StacksAppVersion } from '../../utils/stacks-ledger-utils';
-import { createWaitForUserToSeeWarningScreen } from './ledger-sign-tx.context';
 
 interface UseLedgerSignTxArgs<App extends BitcoinApp | StacksApp> {
   chain: SupportedBlockchains;
@@ -41,18 +40,24 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
   const ledgerNavigate = useLedgerNavigate();
-  const hasUserSkippedBuggyAppWarning = useMemo(() => createWaitForUserToSeeWarningScreen(), []);
   async function checkCorrectAppIsOpenWithFailState(app: App) {
+    // Show checking version page immediately
+    void ledgerNavigate.toCheckingAppVersion();
+    await delay(500);
+
     const response = await getAppVersion(app);
     if (!isAppOpen({ name: response.name })) {
       setAwaitingDeviceConnection(false);
       throw new Error(LedgerConnectionErrors.AppNotOpen);
     }
+
     const passedAdditionalVersionCheck = await passesAdditionalVersionCheck?.(response);
-    if (passedAdditionalVersionCheck) {
-      return response;
+    if (passedAdditionalVersionCheck === false) {
+      // Version check failed, navigation handled in passesAdditionalVersionCheck
+      // Return null to signal that we should not continue
+      return null;
     }
-    return;
+    return response;
   }
 
   async function signTransactionImpl() {
@@ -61,7 +66,14 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
       setLatestDeviceResponse({ deviceLocked: false } as any);
       setAwaitingDeviceConnection(true);
       app = await connectApp();
-      await checkCorrectAppIsOpenWithFailState(app);
+      const versionCheckResult = await checkCorrectAppIsOpenWithFailState(app);
+
+      // If version check failed, return early (navigation already handled)
+      if (versionCheckResult === null) {
+        setAwaitingDeviceConnection(false);
+        return;
+      }
+
       setAwaitingDeviceConnection(false);
       void ledgerNavigate.toConnectionSuccessStep(chain);
       await delay(1250);
@@ -92,6 +104,5 @@ export function useLedgerSignTx<App extends StacksApp | BitcoinApp>({
     setLatestDeviceResponse,
     awaitingDeviceConnection,
     setAwaitingDeviceConnection,
-    hasUserSkippedBuggyAppWarning,
   };
 }

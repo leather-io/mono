@@ -1,12 +1,12 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
+import { bytesToHex } from '@noble/hashes/utils';
 import StacksApp from '@zondax/ledger-stacks';
 import { pullStacksKeysFromLedgerDevice } from 'app/features/ledger/flows/request-stacks-keys/request-stacks-keys.utils';
 
 import { userAddsWallet } from '@leather.io/state/wallet';
-
-import { assumedZeroFingerprint } from '@shared/utils';
+import { delay } from '@leather.io/utils';
 
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
@@ -18,11 +18,14 @@ import {
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
+  MINIMUM_STACKS_APP_VERSION,
+  checkStacksAppMeetsMinimumVersion,
   connectLedgerStacksApp,
   getStacksAppVersion,
   isStacksAppOpen,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
+import { userSwitchesAccount } from '@app/store/active/active.slice';
 import { stacksKeysSlice } from '@app/store/ledger/stacks/stacks-key.slice';
 import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
@@ -42,10 +45,31 @@ function LedgerRequestStacksKeys() {
       connectApp: connectLedgerStacksApp,
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
+      async passesAdditionalVersionCheck(appVersion) {
+        if (appVersion.chain !== 'stacks') {
+          return true;
+        }
+
+        // Check minimum version requirement (0.26.4+)
+        if (!checkStacksAppMeetsMinimumVersion(appVersion)) {
+          await delay(40);
+          const versionInfo = {
+            currentVersion: `${appVersion.major}.${appVersion.minor}.${appVersion.patch}`,
+            requiredVersion: MINIMUM_STACKS_APP_VERSION,
+          };
+          void ledgerNavigate.toStacksAppOutdatedWarning(versionInfo);
+          return false;
+        }
+
+        return true;
+      },
       onSuccess() {
         void navigate('/', { replace: true });
       },
       async pullKeysFromDevice(app) {
+        const fingerprintResp = await app.getMasterFingerprint();
+        const fingerprint = bytesToHex(fingerprintResp.fingerprint);
+
         const resp = await pullStacksKeysFromLedgerDevice(app)({
           onRequestKey(accountIndex) {
             void ledgerNavigate.toDeviceBusyStep(
@@ -62,24 +86,26 @@ function LedgerRequestStacksKeys() {
 
         const keysWithFingerprint = resp.publicKeys.map(keys => ({
           ...keys,
-          id: keys.path.replace('m', assumedZeroFingerprint),
-          fingerprint: assumedZeroFingerprint,
+          id: keys.path.replace('m', fingerprint),
+          fingerprint,
         }));
 
         dispatch(stacksKeysSlice.actions.addKeys(keysWithFingerprint));
 
-        if (!wallets[assumedZeroFingerprint]) {
+        if (!wallets[fingerprint]) {
           dispatch(
             userAddsWallet({
               wallet: {
                 createdOn: new Date().toISOString(),
-                fingerprint: assumedZeroFingerprint,
+                fingerprint,
                 type: 'ledger',
               },
               accountKeychains: [],
             })
           );
         }
+
+        dispatch(userSwitchesAccount({ fingerprint, accountIndex: 0 }));
       },
     });
 

@@ -16,6 +16,7 @@ export enum LedgerConnectionErrors {
   FailedToConnect = 'FailedToConnect',
   AppNotOpen = 'AppNotOpen',
   AppVersionOutdated = 'AppVersionOutdated',
+  MasterkeyFingerprintNotSupported = 'MasterkeyFingerprintNotSupported',
   DeviceNotConnected = 'DeviceNotConnected',
   DeviceLocked = 'DeviceLocked',
   IncorrectAppOpened = 'INCORRECT_APP_OPENED',

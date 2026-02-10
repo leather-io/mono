@@ -22,7 +22,7 @@ import {
 } from 'redux-persist';
 import { PersistPartial } from 'redux-persist/es/persistReducer';
 
-import { keychainSlice } from '@leather.io/state/keychains';
+import { resetWallet } from '@leather.io/state';
 import { walletSlice } from '@leather.io/state/wallet';
 
 import { persistConfig } from '@shared/storage/redux-persist';
@@ -52,7 +52,6 @@ export interface LocalRootState {
     stacks: ReturnType<typeof stacksKeysSlice.reducer>;
   };
   wallets: ReturnType<typeof walletSlice.reducer>;
-  keychains: ReturnType<typeof keychainSlice.reducer>;
   inMemoryKeys: ReturnType<typeof inMemoryKeySlice.reducer>;
   softwareKeys: ReturnType<typeof keySlice.reducer>;
   networks: ReturnType<typeof networksSlice.reducer>;
@@ -75,7 +74,6 @@ const appReducer = combineReducers({
     stacks: stacksKeysSlice.reducer,
   }),
   wallets: walletSlice.reducer,
-  keychains: keychainSlice.reducer,
   inMemoryKeys: inMemoryKeySlice.reducer,
   softwareKeys: keySlice.reducer,
   networks: networksSlice.reducer,
@@ -86,7 +84,7 @@ const appReducer = combineReducers({
 });
 
 function rootReducer(state: LocalRootState | undefined, action: Action) {
-  if (action.type === 'keys/signOut') return appReducer(undefined, action);
+  if (action.type === resetWallet.type) return appReducer(undefined, action);
   return appReducer(state, action);
 }
 

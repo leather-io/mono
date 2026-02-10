@@ -5,19 +5,33 @@ import { SigHash } from '@scure/btc-signer';
 import type { P2Ret, P2TROut } from '@scure/btc-signer/payment';
 
 import {
-  BitcoinSigner,
+  BitcoinNativeSegwitPayer,
+  BitcoinPayer,
+  BitcoinTaprootPayer,
   deriveAddressIndexKeychainFromAccount,
   isNativeSegwitDerivationPath,
   isTaprootDerivationPath,
-  makeNativeSegwitAddressIndexDerivationPath,
-  makeTaprootAddressIndexDerivationPath,
-  whenPaymentType,
 } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
+import {
+  appendAddressIndexToPath,
+  extractAddressIndexFromPath,
+  extractChangeIndexFromPath,
+} from '@leather.io/crypto';
 import type { BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
 
 import { useCurrentAccountNativeSegwitPayer } from './native-segwit-account.hooks';
 import { useCurrentAccountTaprootPayer } from './taproot-account.hooks';
+
+// Conditional type to infer payment-specific Payer type
+type PaymentToPayer<TPayment> = TPayment extends P2TROut
+  ? BitcoinTaprootPayer
+  : TPayment extends P2Ret
+    ? BitcoinNativeSegwitPayer
+    : BitcoinPayer;
+
+type ExtractPaymentReturn<T> = T extends (keychain: HDKey, network: BitcoinNetworkModes) => infer R
+  ? R
+  : never;
 
 enum SignatureHash {
   DEFAULT = 0x00,
@@ -39,19 +53,25 @@ export const allSighashTypes = [
   SignatureHash.SINGLE_ANYONECANPAY,
 ];
 
+type SupportedPaymentReturn = P2Ret | P2TROut;
+
 interface MakeBitcoinPayerArgs {
   keychain: HDKey;
   network: BitcoinNetworkModes;
-  derivationPath: string;
-  paymentFn(keychain: HDKey, network: BitcoinNetworkModes): any;
+  keyOrigin: string;
+  masterKeyFingerprint: string;
+  paymentType: 'p2wpkh' | 'p2tr';
+  paymentFn(keychain: HDKey, network: BitcoinNetworkModes): SupportedPaymentReturn;
 }
 function makeBitcoinPayer<T extends MakeBitcoinPayerArgs>(args: T) {
-  const { derivationPath, keychain, network, paymentFn } = args;
+  const { keychain, network, paymentFn, keyOrigin, masterKeyFingerprint, paymentType } = args;
   const payment = paymentFn(keychain, network) as ReturnType<T['paymentFn']>;
   return {
+    paymentType,
     network,
     payment,
-    derivationPath,
+    keyOrigin,
+    masterKeyFingerprint,
     keychain,
     get address() {
       if (!payment.address) throw new Error('Unable to get address from payment');
@@ -64,51 +84,52 @@ function makeBitcoinPayer<T extends MakeBitcoinPayerArgs>(args: T) {
   };
 }
 
-interface BitcoinSoftwarePayerFactoryArgs {
-  accountIndex: number;
+interface BitcoinSoftwarePayerFactoryArgs<
+  TPaymentFn extends (keychain: HDKey, network: BitcoinNetworkModes) => SupportedPaymentReturn,
+> {
   accountKeychain: HDKey;
-  paymentFn(keychain: HDKey, network: BitcoinNetworkModes): any;
+  accountKeyOrigin: string;
+  masterKeyFingerprint: string;
+  paymentFn: TPaymentFn;
   network: BitcoinNetworkModes;
   extendedPublicKeyVersions?: Versions;
 }
-export function bitcoinSoftwarePayerFactory<T extends BitcoinSoftwarePayerFactoryArgs>(args: T) {
-  const { accountIndex, network, paymentFn, accountKeychain, extendedPublicKeyVersions } = args;
-  return ({
-    changeIndex,
-    addressIndex,
-  }: {
-    changeIndex: number;
-    addressIndex: number;
-  }): BitcoinSigner<ReturnType<T['paymentFn']>> => {
-    const signerKeychain = deriveAddressIndexKeychainFromAccount(accountKeychain)({
+
+export function bitcoinSoftwarePayerFactory<
+  TPaymentFn extends (keychain: HDKey, network: BitcoinNetworkModes) => SupportedPaymentReturn,
+>(
+  args: BitcoinSoftwarePayerFactoryArgs<TPaymentFn>
+): (args: {
+  changeIndex: number;
+  addressIndex: number;
+}) => PaymentToPayer<ExtractPaymentReturn<TPaymentFn>> {
+  const {
+    network,
+    paymentFn,
+    accountKeychain,
+    accountKeyOrigin,
+    masterKeyFingerprint,
+    extendedPublicKeyVersions,
+  } = args;
+  return ({ changeIndex, addressIndex }) => {
+    const payerKeychain = deriveAddressIndexKeychainFromAccount(accountKeychain)({
       changeIndex,
       addressIndex,
     });
 
-    const payment = paymentFn(signerKeychain, network);
+    const payment = paymentFn(payerKeychain, network);
 
-    return makeBitcoinPayer({
-      keychain: HDKey.fromExtendedKey(signerKeychain.publicExtendedKey, extendedPublicKeyVersions),
+    const paymentType = payment.type as 'p2wpkh' | 'p2tr';
+
+    const payer = makeBitcoinPayer({
+      keychain: HDKey.fromExtendedKey(payerKeychain.publicExtendedKey, extendedPublicKeyVersions),
       network,
-      derivationPath: whenPaymentType(payment.type)({
-        p2wpkh: makeNativeSegwitAddressIndexDerivationPath({
-          network,
-          accountIndex,
-          changeIndex,
-          addressIndex,
-        }),
-        p2tr: makeTaprootAddressIndexDerivationPath({
-          network,
-          accountIndex,
-          changeIndex,
-          addressIndex,
-        }),
-        'p2wpkh-p2sh': 'Not supported',
-        p2pkh: 'Not supported',
-        p2sh: 'Not supported',
-      }),
+      keyOrigin: appendAddressIndexToPath(accountKeyOrigin, changeIndex, addressIndex),
+      masterKeyFingerprint,
+      paymentType,
       paymentFn,
     });
+    return payer as unknown as PaymentToPayer<ExtractPaymentReturn<TPaymentFn>>;
   };
 }
 
@@ -117,7 +138,7 @@ export function useBitcoinPayerFromInput() {
   const createTaprootSigner = useCurrentAccountTaprootPayer();
 
   return useCallback(
-    (input: OwnedUtxo): BitcoinSigner<P2TROut | P2Ret> => {
+    (input: OwnedUtxo): BitcoinPayer => {
       const addressIndex = extractAddressIndexFromPath(input.path);
       const changeIndex = extractChangeIndexFromPath(input.path);
 
