@@ -4,7 +4,7 @@ import { VERSION } from '~/constants/constants';
 import { configureAnalyticsClient } from '@leather.io/analytics';
 import { noop } from '@leather.io/utils';
 
-const writeKey = import.meta.env.LEATHER_MIXPANEL_TOKEN;
+const writeKey = import.meta.env.MIXPANEL_TOKEN;
 
 function getMockedMixpanel() {
   return {
