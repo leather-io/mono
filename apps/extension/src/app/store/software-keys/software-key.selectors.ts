@@ -16,12 +16,24 @@ function selectKeysSlice(state: RootState) {
   return state.softwareKeys;
 }
 
+export const selectCurrentAccount = createSelector(selectActiveAccount, activeAccount => {
+  const customAccountIndex = initialSearchParams.get('accountIndex');
+  const accountIndex =
+    customAccountIndex && initBigNumber(customAccountIndex).isInteger()
+      ? initBigNumber(customAccountIndex).toNumber()
+      : (activeAccount?.accountIndex ?? 0);
+
+  return {
+    fingerprint: activeAccount?.fingerprint ?? assumedZeroFingerprint,
+    accountIndex,
+  };
+});
+
 const selectActiveSoftwareKey = createSelector(
   selectKeysSlice,
-  selectActiveAccount,
-  (keysState, activeAccount) => {
-    if (!activeAccount) return undefined;
-    return keysState.entities[activeAccount.fingerprint];
+  selectCurrentAccount,
+  (keysState, currentAccount) => {
+    return keysState.entities[currentAccount.fingerprint];
   }
 );
 
@@ -35,19 +47,6 @@ export const selectWalletSalt = createSelector(
 export function useActiveSoftwareKey() {
   return useSelector(selectActiveSoftwareKey);
 }
-
-export const selectCurrentAccount = createSelector(selectActiveAccount, activeAccount => {
-  const customAccountIndex = initialSearchParams.get('accountIndex');
-  const accountIndex =
-    customAccountIndex && initBigNumber(customAccountIndex).isInteger()
-      ? initBigNumber(customAccountIndex).toNumber()
-      : (activeAccount?.accountIndex ?? 0);
-
-  return {
-    fingerprint: activeAccount?.fingerprint ?? assumedZeroFingerprint,
-    accountIndex,
-  };
-});
 
 const selectors = keyAdapter.getSelectors<RootState>(selectKeysSlice);
 

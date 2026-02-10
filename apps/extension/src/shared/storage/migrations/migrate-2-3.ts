@@ -50,6 +50,7 @@ export function migrateMultiWalletSupport(state: RootState) {
     // versions (pre-migration to using no serialization)
     if (draftState.onboarding) delete draftState.onboarding;
     if (draftState.ordinals) delete draftState.ordinals;
+    if (draftState.analytics) delete draftState.analytics;
 
     // Move salt from:
     // state.softwareKeys.entities.default.salt → state.softwareKeys.salt

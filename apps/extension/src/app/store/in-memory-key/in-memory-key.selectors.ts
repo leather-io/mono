@@ -4,11 +4,10 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { deriveRootKeychainFromMnemonicSync } from '@leather.io/crypto';
 
-import { assumedZeroFingerprint } from '@shared/utils';
 import { decodeText } from '@shared/utils/text-encoding';
 
 import { RootState } from '..';
-import { selectActiveAccount } from '../active/active.selectors';
+import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 
 function selectInMemoryKeys(state: RootState) {
   return state.inMemoryKeys;
@@ -16,8 +15,8 @@ function selectInMemoryKeys(state: RootState) {
 
 const selectActiveInMemoryWalletKeyBytes = createSelector(
   selectInMemoryKeys,
-  selectActiveAccount,
-  (inMemKeys, activeAccount) => inMemKeys.keys[activeAccount?.fingerprint ?? assumedZeroFingerprint]
+  selectCurrentAccount,
+  (inMemKeys, currentAccount) => inMemKeys.keys[currentAccount.fingerprint]
 );
 
 const selectHasActiveInMemoryWalletKey = createSelector(
