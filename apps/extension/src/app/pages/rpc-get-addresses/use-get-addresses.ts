@@ -2,6 +2,7 @@ import { bytesToHex } from '@stacks/common';
 import { z } from 'zod';
 
 import { ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
+import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import {
   type BtcAddress,
   type StxAddress,
@@ -90,7 +91,7 @@ export function useGetAddresses() {
           type: 'p2wpkh',
           address: nativeSegwitSigner.address,
           publicKey: bytesToHex(nativeSegwitSigner.publicKey),
-          derivationPath: nativeSegwitSigner.derivationPath,
+          derivationPath: keyOriginToDerivationPath(nativeSegwitSigner.keyOrigin),
           descriptor: nativeSegwitDescriptor ?? '',
         };
 
@@ -105,7 +106,7 @@ export function useGetAddresses() {
           address: taprootPayer.address,
           publicKey: bytesToHex(taprootPayer.publicKey),
           tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taprootPayer.publicKey)),
-          derivationPath: taprootPayer.derivationPath,
+          derivationPath: keyOriginToDerivationPath(taprootPayer.keyOrigin),
           descriptor: taprootDescriptor ?? '',
         };
         keysToIncludeInResponse.push(taprootAddressResponse);

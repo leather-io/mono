@@ -1,7 +1,6 @@
-import { P2Ret } from '@scure/btc-signer/payment';
 import type { DistributedOmit } from 'type-fest';
 
-import { BitcoinSigner } from '@leather.io/bitcoin';
+import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import type { AccountId } from '@leather.io/models';
 
 import { useCurrentAccountId } from '@app/store/accounts/account';
@@ -9,7 +8,7 @@ import { useHasCurrentBitcoinAccount } from '@app/store/accounts/blockchain/bitc
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 interface BitcoinAccountLoaderBaseProps {
-  children(account: BitcoinSigner<P2Ret>): React.ReactNode;
+  children(account: BitcoinNativeSegwitPayer): React.ReactNode;
   fallback?: React.ReactNode;
 }
 interface BtcAccountLoaderCurrentProps extends BitcoinAccountLoaderBaseProps {
@@ -24,16 +23,14 @@ type BtcAccountLoaderProps = BtcAccountLoaderCurrentProps | BtcAccountLoaderInde
 export function useBitcoinNativeSegwitAccountLoader(
   props: DistributedOmit<BtcAccountLoaderProps, 'children' | 'fallback'>
 ) {
-  const isBitcoinEnabled = useHasCurrentBitcoinAccount();
-
+  const hasBitcoinKeys = useHasCurrentBitcoinAccount();
   const currentAccount = useCurrentAccountId();
-
   const properIndex = 'current' in props ? currentAccount : props.accountId;
 
-  const payer = useNativeSegwitPayer(properIndex);
+  const payerFactory = useNativeSegwitPayer(properIndex);
 
-  if (!payer || !isBitcoinEnabled) return null;
-  return payer({ changeIndex: 0, addressIndex: 0 });
+  if (!payerFactory || !hasBitcoinKeys) return null;
+  return payerFactory({ changeIndex: 0, addressIndex: 0 });
 }
 
 export function BitcoinNativeSegwitAccountLoader({

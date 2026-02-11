@@ -2,7 +2,11 @@ import * as btc from '@scure/btc-signer';
 import { AddressType, getAddressInfo } from 'bitcoin-address-validation';
 
 import { BitcoinError, determineUtxosForSpend } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
+import {
+  extractAddressIndexFromPath,
+  extractChangeIndexFromPath,
+  keyOriginToDerivationPath,
+} from '@leather.io/crypto';
 import type { UtxoWithDerivationPath } from '@leather.io/query';
 import { createCounter, createMoney } from '@leather.io/utils';
 
@@ -73,7 +77,7 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
         },
       });
       signingConfig.push({
-        derivationPath: taprootPayer.derivationPath,
+        derivationPath: keyOriginToDerivationPath(taprootPayer.keyOrigin),
         index: psbtInputCounter.getValue(),
       });
       psbtInputCounter.increment();
@@ -91,7 +95,7 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
           },
         });
         signingConfig.push({
-          derivationPath: nativeSegwitPayer.derivationPath,
+          derivationPath: keyOriginToDerivationPath(nativeSegwitPayer.keyOrigin),
           index: psbtInputCounter.getValue(),
         });
         psbtInputCounter.increment();
@@ -145,7 +149,7 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
       });
       signingConfig.push({
         index: tx.inputsLength - 1,
-        derivationPath: inscriptionPayer.derivationPath,
+        derivationPath: keyOriginToDerivationPath(inscriptionPayer.keyOrigin),
       });
 
       // Fee-covering Native Segwit inputs
@@ -162,7 +166,7 @@ export function useGenerateUnsignedOrdinalTx(inscriptionInput: UtxoWithDerivatio
         });
         signingConfig.push({
           index: tx.inputsLength - 1,
-          derivationPath: payer.derivationPath,
+          derivationPath: keyOriginToDerivationPath(payer.keyOrigin),
         });
       });
 
