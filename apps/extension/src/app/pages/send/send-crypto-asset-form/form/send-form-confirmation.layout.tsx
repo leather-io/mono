@@ -79,8 +79,7 @@ export function SendFormConfirmationLayout({
       )}
       {principalType === 'contract' && (
         <Callout variant="warning" title="Sending to a smart contract" px="space.03" mb="space.05">
-          The recipient is a stacks contract principal. Make sure you trust the contract before
-          sending funds.
+          The recipient is a Stacks contract address. Make sure you understand how it works and that fund recovery is possible.
         </Callout>
       )}
 
