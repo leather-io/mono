@@ -34,6 +34,10 @@ msgstr " on {date} "
 msgid " since {date}"
 msgstr " since {date}"
 
+#: src/features/token/components/get-first-nft-section.tsx:31
+msgid ".btc domain"
+msgstr ".btc domain"
+
 #: src/app/settings/display/index.tsx:101
 msgid "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
 msgstr "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
@@ -183,9 +187,9 @@ msgstr "Add to new wallet"
 msgid "Add wallet"
 msgstr "Add wallet"
 
-#: src/features/token/components/empty-collectibles-state.tsx:19
-msgid "Add your collection here"
-msgstr "Add your collection here"
+#: src/features/token/components/get-first-nft-section.tsx:26
+msgid "Add your first NFT by buying or transferring from another account."
+msgstr "Add your first NFT by buying or transferring from another account."
 
 #: src/app/settings/index.tsx:63
 msgid "Add, configure and remove"
@@ -421,6 +425,14 @@ msgstr "BIP39 passphrase"
 #: src/shared/display-preference.ts:61
 msgid "Bitcoin"
 msgstr "Bitcoin"
+
+#: src/features/token/components/get-first-nft-section.tsx:56
+msgid "Bitcoin Blockchain"
+msgstr "Bitcoin Blockchain"
+
+#: src/features/token/components/discover-marketplaces-section.tsx:20
+msgid "Bitcoin NFTs and Web3 creativity built on Stacks."
+msgstr "Bitcoin NFTs and Web3 creativity built on Stacks."
 
 #: src/app/settings/display/index.tsx:72
 #: src/features/settings/bitcoin-unit-sheet.tsx:35
@@ -721,6 +733,10 @@ msgstr "Disabled"
 msgid "Disconnected"
 msgstr "Disconnected"
 
+#: src/features/token/components/discover-marketplaces-section.tsx:15
+msgid "Discover marketplaces"
+msgstr "Discover marketplaces"
+
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:64
 msgid "Dismiss"
 msgstr "Dismiss"
@@ -930,6 +946,10 @@ msgstr "funds kept safe and unavailable for spending"
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 
+#: src/features/token/components/discover-marketplaces-section.tsx:19
+msgid "Gamma"
+msgstr "Gamma"
+
 #: src/features/account/sheets/add-account-sheet.tsx:37
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:81
 msgid "Generate new Secret Key for self-custody"
@@ -951,6 +971,14 @@ msgstr "Get support or provide feedback"
 #: src/components/app-update-required/app-update-required-sheet.tsx:23
 msgid "Get the latest version of the Leather app"
 msgstr "Get the latest version of the Leather app"
+
+#: src/features/token/components/get-first-nft-section.tsx:32
+msgid "Get your .btc domain"
+msgstr "Get your .btc domain"
+
+#: src/features/token/components/get-first-nft-section.tsx:24
+msgid "Get your first NFT"
+msgstr "Get your first NFT"
 
 #: src/components/home/components/first-token-banner.tsx:10
 msgid "Get your first token"
@@ -1171,6 +1199,10 @@ msgstr "Layer 2 · Stacks"
 msgid "Layer 2 • Stacks"
 msgstr "Layer 2 • Stacks"
 
+#: src/features/token/components/discover-marketplaces-section.tsx:26
+msgid "Leading multi-chain marketplace across Bitcoin, Solana and more"
+msgstr "Leading multi-chain marketplace across Bitcoin, Solana and more"
+
 #: src/app/settings/help/index.tsx:29
 msgid "Learn"
 msgstr "Learn"
@@ -1207,6 +1239,10 @@ msgstr "Locked STX"
 #: src/features/activity/translate-activity-status.ts:30
 msgid "Locking"
 msgstr "Locking"
+
+#: src/features/token/components/discover-marketplaces-section.tsx:25
+msgid "Magic Eden"
+msgstr "Magic Eden"
 
 #: src/app/settings/index.tsx:85
 msgid "Mainnet, testnet or signet"
@@ -1394,6 +1430,10 @@ msgstr "OK"
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
 
+#: src/features/token/components/get-first-nft-section.tsx:55
+msgid "Ordinal Inscriptions"
+msgstr "Ordinal Inscriptions"
+
 #: src/features/account/components/available-account-balance.tsx:46
 msgid "Outbound balance:"
 msgstr "Outbound balance:"
@@ -1511,6 +1551,8 @@ msgstr "Read more"
 #: src/components/action-buttons.tsx:44
 #: src/features/receive/screens/asset-details.tsx:56
 #: src/features/receive/screens/select-asset.tsx:83
+#: src/features/token/components/get-first-nft-section.tsx:49
+#: src/features/token/components/get-first-nft-section.tsx:63
 msgid "Receive"
 msgstr "Receive"
 
@@ -1558,6 +1600,10 @@ msgstr "Recently viewed"
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-section-header.tsx:22
 msgid "Recents"
 msgstr "Recents"
+
+#: src/features/token/components/get-first-nft-section.tsx:35
+msgid "Register"
+msgstr "Register"
 
 #: src/features/token/stacks/bns-details.tsx:37
 msgid "Registered at block"
@@ -1805,6 +1851,14 @@ msgstr "Stacks"
 #: src/shared/display-preference.ts:40
 msgid "Stacks address"
 msgstr "Stacks address"
+
+#: src/features/token/components/get-first-nft-section.tsx:42
+msgid "Stacks Blockchain"
+msgstr "Stacks Blockchain"
+
+#: src/features/token/components/get-first-nft-section.tsx:41
+msgid "Stacks NFT"
+msgstr "Stacks NFT"
 
 #: src/shared/display-preference.ts:60
 msgid "Stamp"
