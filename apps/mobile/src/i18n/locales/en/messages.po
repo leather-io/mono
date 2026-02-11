@@ -976,6 +976,7 @@ msgstr "Guides"
 msgid "Haptics"
 msgstr "Haptics"
 
+#: src/app/settings/help/index.tsx:14
 #: src/app/settings/index.tsx:107
 msgid "Help"
 msgstr "Help"
@@ -1319,7 +1320,6 @@ msgstr "Native Segwit address"
 msgid "Network fee"
 msgstr "Network fee"
 
-#: src/app/settings/help/index.tsx:14
 #: src/app/settings/index.tsx:84
 #: src/app/settings/networks/index.tsx:47
 msgid "Networks"
