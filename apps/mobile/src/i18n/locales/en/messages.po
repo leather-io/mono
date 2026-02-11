@@ -956,6 +956,10 @@ msgstr "Get the latest version of the Leather app"
 msgid "Get your first token"
 msgstr "Get your first token"
 
+#: src/components/home/components/learn-section.tsx:58
+msgid "Getting Started with Leather"
+msgstr "Getting Started with Leather"
+
 #: src/features/swap/components/review/swap-review-empty-state.tsx:25
 msgid "Go back"
 msgstr "Go back"
@@ -1172,8 +1176,13 @@ msgid "Layer 2 • Stacks"
 msgstr "Layer 2 • Stacks"
 
 #: src/app/settings/help/index.tsx:29
+#: src/components/home/components/learn-section.tsx:55
 msgid "Learn"
 msgstr "Learn"
+
+#: src/components/home/components/learn-section.tsx:68
+msgid "Learn more about stacking"
+msgstr "Learn more about stacking"
 
 #: src/utils/dapps.ts:95
 msgid "Leather"
@@ -2152,6 +2161,10 @@ msgstr "Wallets"
 #: src/app/settings/index.tsx:62
 msgid "Wallets and accounts"
 msgstr "Wallets and accounts"
+
+#: src/components/home/components/learn-section.tsx:63
+msgid "What is sBTC?"
+msgstr "What is sBTC?"
 
 #: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:59
 msgid "Withdrawing"

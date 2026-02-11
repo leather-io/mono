@@ -14,6 +14,7 @@ import { useRouter } from 'expo-router';
 import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
 import { RuneBalance, Sip10Balance } from '@leather.io/services';
+import { useTheme } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { renderAsset } from './render-assets';
@@ -27,12 +28,14 @@ interface AssetsListProps {
   sip10Data: ReturnType<typeof useSip10AccountBalance>;
   runesData: ReturnType<typeof useRunesAccountBalance>;
   header: ReactElement;
+  footer?: ReactElement;
 }
 
-export function AssetsList({ account, sip10Data, runesData, header }: AssetsListProps) {
+export function AssetsList({ account, sip10Data, runesData, header, footer }: AssetsListProps) {
   const { fingerprint, accountIndex } = account;
   const { networkPreference } = useSettings();
   const router = useRouter();
+  const theme = useTheme();
 
   const usdcxAssetId =
     networkPreference.chain.bitcoin.mode === 'mainnet'
@@ -80,7 +83,9 @@ export function AssetsList({ account, sip10Data, runesData, header }: AssetsList
       getItemType={item => item.asset.protocol}
       // TODO: RefreshControl is working but isn't showing
       refreshControl={<RefreshControl />}
+      ListFooterComponentStyle={{ paddingTop: theme.spacing['5'] }}
       ListHeaderComponent={header}
+      ListFooterComponent={footer}
     />
   );
 }
