@@ -7,7 +7,7 @@ import { Screen } from '@/components/screen/screen';
 import { CollectibleTypeIconOverlay } from '@/features/collectibles/components/collectible-type-icon-overlay';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { CollectiblesListLoading } from '@/features/token/components/collectibles-list-loading';
-import { EmptyCollectiblesState } from '@/features/token/components/empty-collectibles-state';
+import { EmptyCollectiblesContent } from '@/features/token/components/empty-collectibles-content';
 import { useRouter } from 'expo-router';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';
@@ -91,7 +91,7 @@ export function CollectiblesList({ collectiblesState, header }: CollectiblesList
           {isError && <ErrorFallbackTab />}
         </>
       }
-      ListEmptyComponent={!isLoading && !isError ? <EmptyCollectiblesState /> : undefined}
+      ListEmptyComponent={!isLoading && !isError ? <EmptyCollectiblesContent /> : undefined}
     />
   );
 }
