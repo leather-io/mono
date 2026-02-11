@@ -41,8 +41,8 @@ export const keySlice = createSlice({
 
       const existingKey = state.entities[assumedZeroFingerprint];
       if (existingKey) {
-        state.entities[newFingerprint] = { ...existingKey, id: newFingerprint };
-        delete state.entities[assumedZeroFingerprint];
+        keyAdapter.removeOne(state, assumedZeroFingerprint);
+        keyAdapter.addOne(state, { ...existingKey, id: newFingerprint });
       }
     }),
 });

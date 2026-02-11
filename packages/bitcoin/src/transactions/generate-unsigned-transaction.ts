@@ -10,7 +10,7 @@ import {
   BitcoinTaprootPayer,
   payerToBip32Derivation,
   payerToTapBip32Derivation,
-} from '../signer/bitcoin-signer';
+} from '../signer/bitcoin-payer';
 import { BtcSignerNetwork } from '../utils/bitcoin.network';
 import { BitcoinError } from '../validation/bitcoin-error';
 

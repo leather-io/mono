@@ -2,6 +2,9 @@ import type { Account } from '@stacks/wallet-sdk';
 
 import type { AccountId } from '@leather.io/models';
 
+// TODO @kyranjamie
+// Remove dependency on wallet-sdk here
+
 // Extending the `Account` type from `@stacks/wallet-sdk`
 export type SoftwareStacksAccount = Account &
   AccountId & {

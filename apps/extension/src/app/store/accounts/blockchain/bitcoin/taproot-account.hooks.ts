@@ -58,13 +58,14 @@ function useTaprootPayer(accountId: AccountId) {
     if (!account) return;
 
     return bitcoinSoftwarePayerFactory({
-      accountIndex: accountId.accountIndex,
       accountKeychain: account.keychain,
+      accountKeyOrigin: account.keyOrigin,
+      masterKeyFingerprint: account.masterKeyFingerprint,
       paymentFn: getTaprootPaymentFromAddressIndex,
       network: network.chain.bitcoin.mode,
       extendedPublicKeyVersions,
     });
-  }, [account, accountId.accountIndex, extendedPublicKeyVersions, network.chain.bitcoin.mode]);
+  }, [account, extendedPublicKeyVersions, network.chain.bitcoin.mode]);
 }
 
 export function useCurrentAccountTaprootPayer() {

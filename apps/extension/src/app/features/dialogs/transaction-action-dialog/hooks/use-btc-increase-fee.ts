@@ -5,6 +5,7 @@ import * as btc from '@scure/btc-signer';
 import BigNumber from 'bignumber.js';
 import * as yup from 'yup';
 
+import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import type { BitcoinTx } from '@leather.io/models';
 import { emptyUtxos } from '@leather.io/services';
 import { btcToSat, createMoney, isError, sumMoney } from '@leather.io/utils';
@@ -35,11 +36,10 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   const navigate = useNavigate();
   const networkMode = useBitcoinScureLibNetworkConfig();
 
-  const {
-    address: currentBitcoinAddress,
-    publicKey,
-    derivationPath: zeroIndexDerivationPath,
-  } = useCurrentAccountNativeSegwitIndexZeroPayer();
+  const indexZeroPayer = useCurrentAccountNativeSegwitIndexZeroPayer();
+  const currentBitcoinAddress = indexZeroPayer.address;
+  const publicKey = indexZeroPayer.publicKey;
+  const zeroIndexDerivationPath = keyOriginToDerivationPath(indexZeroPayer.keyOrigin);
   const { utxos, refetchUtxos } = useCurrentNativeSegwitUtxos();
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
@@ -93,7 +93,9 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
 
       signingConfig.push({
         index: newTx.inputsLength - 1,
-        derivationPath: payer ? payer.derivationPath : zeroIndexDerivationPath,
+        derivationPath: payer
+          ? keyOriginToDerivationPath(payer.keyOrigin)
+          : zeroIndexDerivationPath,
       });
     });
 

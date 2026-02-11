@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import * as btc from '@scure/btc-signer';
 
 import { determineUtxosForSpend, determineUtxosForSpendAll } from '@leather.io/bitcoin';
+import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import type { Money, OwnedUtxo } from '@leather.io/models';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
@@ -84,7 +85,7 @@ export function useGenerateUnsignedNativeSegwitTx({
 
           signingConfig.push({
             index: tx.inputsLength - 1,
-            derivationPath: inputPayer.derivationPath,
+            derivationPath: keyOriginToDerivationPath(inputPayer.keyOrigin),
           });
         }
 
