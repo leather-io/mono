@@ -11,6 +11,8 @@
 
 ### Bug Fixes
 
+* axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
+* **extension:** show fiat balance for zero balance tokens ([1c8de74](https://github.com/leather-io/mono/commit/1c8de74bc7861385847db76c88a207d826be82d2))
 * **extension:** add back build script ([fe7fc35](https://github.com/leather-io/mono/commit/fe7fc354cb37c9c5b38a1b98bcc0228b9d9a3a19))
 * **extension:** preserve background location in send inscription flow ([0bb25a2](https://github.com/leather-io/mono/commit/0bb25a200e9bd3de7718876fa2911c9c977423cf))
 

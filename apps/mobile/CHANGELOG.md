@@ -2,7 +2,15 @@
 
 ## Unpublished
 
-No unreleased changes.
+### Features
+
+* **mobile:** get your first nft section ([f5ceaeb](https://github.com/leather-io/mono/commit/f5ceaeb4eba70b150e27ce8be969502afca16b25))
+* **mobile:** learn section ([a56cb7f](https://github.com/leather-io/mono/commit/a56cb7fedda2c395f2a3c7e2a63fa32819fab740))
+
+### Bug Fixes
+
+* axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
+* **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
 ## [2.100.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.99.0...@leather.io/mobile-v2.100.0) (2026-02-12)
 
