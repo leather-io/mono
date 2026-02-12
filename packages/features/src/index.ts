@@ -63,6 +63,7 @@ export {
   isSupportedFungibleAssetProtocol,
   isSupportedNonFungibleAssetProtocol,
 } from './token/token-types';
+export { createTokenDetailsPath, urlPathToAssetId } from './token/token-url';
 export type { TokenBalance } from './balance/balance-types';
 export {
   isAccountQuotedBtcBalance,
