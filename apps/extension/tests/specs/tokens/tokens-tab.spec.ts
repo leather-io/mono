@@ -73,13 +73,5 @@ test.describe('Tokens tab', () => {
       await expect(stxAsset).toBeVisible();
       await expect(usdcxAsset).toBeVisible();
     });
-
-    test('that zero balance assets display $0.00 fiat value', async ({ homePage }) => {
-      const btcAsset = homePage.assetList.getByTestId(CoreAssetSelectors.BtcAsset);
-      const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
-
-      await expect(btcAsset).toContainText('$0.00');
-      await expect(stxAsset).toContainText('$0.00');
-    });
   });
 });

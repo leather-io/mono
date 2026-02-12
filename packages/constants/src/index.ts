@@ -18,8 +18,6 @@ export const MEMPOOL_BASE_URL = 'https://mempool.space';
 export const ORD_IO_URL = 'https://ord.io';
 export const GAMMA_URL = 'https://gamma.io';
 export const GAMMA_API_URL: string = `${GAMMA_URL}/api`;
-export const MAGIC_EDEN_URL = 'https://magiceden.io/bitcoin';
-export const BNS_REGISTRATION_URL = 'https://www.bnsv2.com/';
 export const LEATHER_IPFS_GATEWAY_URL = 'https://leather.quicknode-ipfs.com/ipfs/';
 export const SBTC_RECLAIM_URL = 'https://app.stacks.co/reclaim?depositTxId=';
 
@@ -80,13 +78,6 @@ export const LEATHER_GUIDES_URL = 'https://leather.io/guides';
 export const LEATHER_GUIDES_CONNECT_DAPPS: string = `${LEATHER_GUIDES_URL}/connect-dapps`;
 
 export const LEATHER_LEARN_URL = 'https://leather.io/learn';
-
-export const LEATHER_GETTING_STARTED = 'https://app.leather.io/support/get-started';
-
-export const LEATHER_SBTC_TUTORIAL = 'https://app.leather.io/support/sbtc';
-
-export const LEATHER_STACKING_TUTORIAL =
-  'https://app.leather.io/support/guide/getting-started-with-stacking';
 
 export const LEATHER_HELP_CENTER = 'https://app.leather.io/support';
 

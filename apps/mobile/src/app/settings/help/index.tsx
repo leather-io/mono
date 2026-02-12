@@ -11,7 +11,7 @@ export default function SettingsHelpScreen() {
   const { openUrl } = useOpenUrl();
 
   return (
-    <SettingsLayout title={t`Help`}>
+    <SettingsLayout title={t`Networks`}>
       <SettingsList>
         <SettingsListItem
           title={t`Contact us`}

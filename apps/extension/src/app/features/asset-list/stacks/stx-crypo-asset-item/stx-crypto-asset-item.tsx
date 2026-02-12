@@ -1,7 +1,9 @@
 import { styled } from 'leather-styles/jsx';
 
+import { stxAsset } from '@leather.io/constants';
 import type { AddressQuotedStxBalance } from '@leather.io/services';
 import { Caption, StacksFilledCircleIcon, StxAvatarIcon } from '@leather.io/ui';
+import { type SerializedCryptoAssetId, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { CryptoAssetItemLayout } from '@app/components/crypto-asset-item/crypto-asset-item.layout';
@@ -10,8 +12,10 @@ interface StxCryptoAssetItemProps {
   balance: AddressQuotedStxBalance;
   isLoading: boolean;
   isPrivate?: boolean;
-  onSelectAsset?(symbol: string): void;
+  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
 }
+
+const stxAssetId = serializeAssetId(getAssetId(stxAsset));
 
 export function StxCryptoAssetItem({
   balance,
@@ -40,7 +44,7 @@ export function StxCryptoAssetItem({
       icon={<StxAvatarIcon size="xl" indicator={<StacksFilledCircleIcon variant="small" />} />}
       isLoading={isLoading}
       isPrivate={isPrivate}
-      onSelectAsset={onSelectAsset}
+      onSelectAsset={onSelectAsset ? () => onSelectAsset(stxAssetId) : undefined}
       titleLeft="Stacks"
       titleRightBulletInfo={showLockedBalance && titleRightBulletInfo}
       dataTestId="STX"

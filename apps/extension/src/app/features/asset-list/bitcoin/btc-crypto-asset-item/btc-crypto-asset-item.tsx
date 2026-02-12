@@ -1,5 +1,7 @@
+import { btcAsset } from '@leather.io/constants';
 import type { AccountQuotedBtcBalance } from '@leather.io/services';
 import { BitcoinFilledCircleIcon, BtcAvatarIcon } from '@leather.io/ui';
+import { type SerializedCryptoAssetId, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { CryptoAssetItemLayout } from '@app/components/crypto-asset-item/crypto-asset-item.layout';
@@ -9,8 +11,11 @@ interface BtcCryptoAssetItemProps {
   balance: AccountQuotedBtcBalance;
   isLoading: boolean;
   isLoadingAdditionalData?: boolean;
-  onSelectAsset?(symbol: string): void;
+  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
 }
+
+const btcAssetId = serializeAssetId(getAssetId(btcAsset));
+
 export function BtcCryptoAssetItem({
   balance,
   isLoading,
@@ -28,7 +33,7 @@ export function BtcCryptoAssetItem({
       isLoading={isLoading}
       isLoadingAdditionalData={isLoadingAdditionalData}
       isPrivate={isPrivate}
-      onSelectAsset={onSelectAsset}
+      onSelectAsset={onSelectAsset ? () => onSelectAsset(btcAssetId) : undefined}
       titleLeft="Bitcoin"
       dataTestId="BTC"
     />

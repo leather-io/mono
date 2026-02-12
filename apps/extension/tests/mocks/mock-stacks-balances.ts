@@ -56,6 +56,16 @@ const mockedStacksBalances = {
       total_sent: '0',
       total_received: '60000000000',
     },
+    'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc': {
+      balance: '50000000',
+      total_sent: '0',
+      total_received: '50000000',
+    },
+    'SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc::aeUSDC': {
+      balance: '100000000',
+      total_sent: '0',
+      total_received: '100000000',
+    },
   },
   non_fungible_tokens: {},
 };

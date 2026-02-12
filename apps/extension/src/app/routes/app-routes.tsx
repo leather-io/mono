@@ -1,4 +1,4 @@
-import { Navigate, Route, createHashRouter, createRoutesFromElements } from 'react-router';
+import { Route, createHashRouter, createRoutesFromElements } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 
 import * as Sentry from '@sentry/react';
@@ -24,6 +24,7 @@ import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-t
 import { UnsupportedBrowserLayout } from '@app/features/ledger/generic-steps';
 import { ConnectLedgerStart } from '@app/features/ledger/generic-steps/connect-device/connect-ledger-start';
 import { RetrieveTaprootToNativeSegwit } from '@app/features/retrieve-taproot-to-native-segwit/retrieve-taproot-to-native-segwit';
+import { TokenDetails } from '@app/features/token/token-details';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { LegacyAccountAuth } from '@app/pages/legacy-account-auth/legacy-account-auth';
@@ -31,6 +32,7 @@ import { ManageTokensPage } from '@app/pages/manage-tokens/manage-tokens';
 import { AddNetwork as CurrentAddNetwork } from '@app/pages/network/add-network';
 import { EditNetwork as CurrentEditNetwork } from '@app/pages/network/edit-network';
 import { SelectNetwork } from '@app/pages/network/select-network';
+import { NotFoundPage } from '@app/pages/not-found/not-found';
 import { BackUpSecretKeyPage } from '@app/pages/onboarding/back-up-secret-key/back-up-secret-key';
 import { SetPasswordPage } from '@app/pages/onboarding/set-password/set-password';
 import { ForgotPassword } from '@app/pages/onboarding/sign-in/forgot-password';
@@ -189,6 +191,17 @@ function useAppRoutes() {
 
           {sendCryptoAssetFormRoutes}
 
+          <Route
+            path={RouteUrls.TokenDetails}
+            element={
+              <AccountGate>
+                <TokenDetails />
+              </AccountGate>
+            }
+          >
+            {receiveRoutes}
+          </Route>
+
           <Route path={RouteUrls.Unlock} element={<Unlock />}>
             {leatherIntroSheetRoutes}
           </Route>
@@ -311,8 +324,14 @@ function useAppRoutes() {
           {rpcRequestRoutes}
         </Route>
 
-        {/* Catch-all route redirects to onboarding */}
-        <Route path="*" element={<Navigate replace to={RouteUrls.Onboarding} />} />
+        <Route
+          path="*"
+          element={
+            <AccountGate>
+              <NotFoundPage />
+            </AccountGate>
+          }
+        />
       </Route>
     ),
     {

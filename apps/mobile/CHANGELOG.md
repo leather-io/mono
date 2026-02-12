@@ -4,51 +4,23 @@
 
 ### Features
 
-* **mobile:** get your first nft section ([f5ceaeb](https://github.com/leather-io/mono/commit/f5ceaeb4eba70b150e27ce8be969502afca16b25))
-* **mobile:** learn section ([a56cb7f](https://github.com/leather-io/mono/commit/a56cb7fedda2c395f2a3c7e2a63fa32819fab740))
+* **mobile:** first token ([0a9514c](https://github.com/leather-io/mono/commit/0a9514c60936f793b4a090eb7817e43561afa2bf))
+* **extension:** remove homeTabsRevamp feature flag and go live ([25ec770](https://github.com/leather-io/mono/commit/25ec7701b990ddb48c923f57a8e9ba2bbe7e116e))
+* **mobile:** expo v54 ([50d0f98](https://github.com/leather-io/mono/commit/50d0f98a39a00986f35193825724e7c80dcb2d94))
 
 ### Bug Fixes
 
-* axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
-* **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
-
-## [2.100.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.99.0...@leather.io/mobile-v2.100.0) (2026-02-12)
-
-
-### Features
-
-* **mobile:** get your first nft section ([f5ceaeb](https://github.com/leather-io/mono/commit/f5ceaeb4eba70b150e27ce8be969502afca16b25))
-* **mobile:** learn section ([a56cb7f](https://github.com/leather-io/mono/commit/a56cb7fedda2c395f2a3c7e2a63fa32819fab740))
-
-
-### Bug Fixes
-
-* axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
-* **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
-
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @leather.io/bitcoin bumped to 0.36.6
-    * @leather.io/constants bumped to 0.31.0
-    * @leather.io/crypto bumped to 1.12.16
-    * @leather.io/features bumped to 1.1.13
-    * @leather.io/provider bumped to 1.6.18
-    * @leather.io/queries bumped to 0.5.1
-    * @leather.io/query bumped to 2.45.13
-    * @leather.io/rpc bumped to 2.21.10
-    * @leather.io/services bumped to 1.47.1
-    * @leather.io/stacks bumped to 1.19.12
-    * @leather.io/ui bumped to 1.106.0
-    * @leather.io/utils bumped to 0.49.10
+* **mobile:** adjust SkeletonLoader height for total balance ([b33fc95](https://github.com/leather-io/mono/commit/b33fc9531a181b11d9d901d1788acdeaa7d081a4))
+* **mobile:** make sure secret key copy button is visible on small screens ([c2c9359](https://github.com/leather-io/mono/commit/c2c9359c477c3272347a7f2f7df930bd8cc543ad))
+* **mobile:** use correct size for receive screen asset avatar ([62f7148](https://github.com/leather-io/mono/commit/62f7148f949c527c11c6aa381e8617603ceddd8c))
 
 ## [2.99.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.98.0...@leather.io/mobile-v2.99.0) (2026-02-09)
+
 
 ### Features
 
 * **mobile:** first token ([0a9514c](https://github.com/leather-io/mono/commit/0a9514c60936f793b4a090eb7817e43561afa2bf))
+
 
 ### Dependencies
 
@@ -71,10 +43,12 @@
 
 ## [2.98.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.97.9...@leather.io/mobile-v2.98.0) (2026-01-30)
 
+
 ### Features
 
 * **extension:** remove homeTabsRevamp feature flag and go live ([25ec770](https://github.com/leather-io/mono/commit/25ec7701b990ddb48c923f57a8e9ba2bbe7e116e))
 * **mobile:** expo v54 ([50d0f98](https://github.com/leather-io/mono/commit/50d0f98a39a00986f35193825724e7c80dcb2d94))
+
 
 ### Dependencies
 

@@ -1,19 +1,10 @@
+import { getPriceChangeColor } from '@leather.io/features';
 import { Money } from '@leather.io/models';
 import { ArrowTriangleTopIcon, SkeletonLoader, Text } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
 import { Balance } from './balance';
 import { emptyAmountPlaceholder } from './constants';
-
-function getPriceChangeColor(changePercent: number) {
-  if (changePercent > 0) {
-    return 'green.action-primary-default';
-  } else if (changePercent < 0) {
-    return 'red.action-primary-default';
-  } else {
-    return 'ink.text-primary';
-  }
-}
 
 interface PriceChange {
   price?: Money;

@@ -8,6 +8,7 @@ import {
   StacksFilledCircleIcon,
   StxAvatarIcon,
 } from '@leather.io/ui';
+import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { Brc20TokensLoader } from '@app/components/loaders/brc20-tokens-loader';
 import { BtcAssetItemBalanceLoader } from '@app/components/loaders/btc-balance-loader';
@@ -39,7 +40,7 @@ interface TokenListProps {
   variant?: TokenListVariant;
   assetRightElementVariant?: AssetRightElementVariant;
   showUnmanageableTokens?: boolean;
-  onSelectAsset?(symbol: string, contractId?: string): void;
+  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -165,6 +166,7 @@ export function TokenList({
             accountIndex={currentAccountIndex}
             filter={filter}
             assetRightElementVariant={assetRightElementVariant}
+            onSelectAsset={onSelectAsset}
             setHasManageableTokens={setHasManageableTokens}
           />
         </>

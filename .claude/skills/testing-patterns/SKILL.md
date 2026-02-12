@@ -37,8 +37,8 @@ describe(functionUnderTest.name, () => {
 
 ## Key Conventions
 
-1. **Prefer `test` over `it`** — Both work, `test` is preferred for new code
-2. **Prefer function reference for describe blocks**: `describe(functionName.name, () => {})` when testing a single exported function
+1. **Use `test` not `it`** - Project convention
+2. **Name describe blocks with function reference**: `describe(functionName.name, () => {})`
 3. **Descriptive test names**: Describe behavior, not implementation
 4. **Test both success and error paths**
 

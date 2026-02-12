@@ -1,39 +1,27 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { createRunesAccountBalanceQueryConfig } from '@leather.io/queries';
-import { type AccountRequest, type RuneBalance } from '@leather.io/services';
-import { isSameAsset } from '@leather.io/utils';
+import {
+  createRuneBalanceByRuneNameQueryConfig,
+  createRunesAccountBalanceQueryConfig,
+} from '@leather.io/queries';
+import type { AccountRequest } from '@leather.io/services';
 
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { balanceQueryOptionsWithRefetch } from '@app/query/common/balance-query-options';
-import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { toFetchState } from '@app/services/fetch-state';
 
-export function useManagedRunesTools(accountIndex: number) {
-  const enabledRunes = useRunesAccountBalance(accountIndex);
-  return {
-    isEnabled: (rune: RuneBalance) =>
-      !!enabledRunes.value?.runes.find(r => isSameAsset(r.asset, rune.asset)),
-  };
-}
-
-export function useRunesAccountBalance(
-  accountIndex: number,
-  options?: { includeHiddenAssets?: boolean }
-) {
-  const account = useAccountAddresses(accountIndex);
-  return toFetchState(
-    useGetRunesAccountBalanceQuery({
-      account,
-      assets: { includeHiddenAssets: options?.includeHiddenAssets },
-    })
-  );
-}
-
-function useGetRunesAccountBalanceQuery(request: AccountRequest) {
+export function useGetRunesAccountBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();
   return useQuery({
     ...createRunesAccountBalanceQueryConfig(request, settings),
+    ...balanceQueryOptionsWithRefetch,
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useGetRuneBalanceByRuneNameQuery(request: AccountRequest, runeName: string) {
+  const settings = useUserSettings();
+  return useQuery({
+    ...createRuneBalanceByRuneNameQueryConfig(request, runeName, settings),
     ...balanceQueryOptionsWithRefetch,
     placeholderData: keepPreviousData,
   });

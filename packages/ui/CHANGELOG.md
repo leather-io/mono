@@ -489,23 +489,6 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
-## [1.106.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.105.0...@leather.io/ui-v1.106.0) (2026-02-12)
-
-
-### Features
-
-* **mobile:** get your first nft section ([f5ceaeb](https://github.com/leather-io/mono/commit/f5ceaeb4eba70b150e27ce8be969502afca16b25))
-* **mobile:** learn section ([a56cb7f](https://github.com/leather-io/mono/commit/a56cb7fedda2c395f2a3c7e2a63fa32819fab740))
-
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @leather.io/utils bumped to 0.49.10
-  * devDependencies
-    * @leather.io/features bumped to 1.1.13
-
 ## [1.105.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.104.0...@leather.io/ui-v1.105.0) (2026-02-09)
 
 

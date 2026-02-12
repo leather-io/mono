@@ -62,7 +62,7 @@ export function CryptoAssetItemLayout({
             data-state={isLoadingAdditionalData ? 'loading' : undefined}
             className={shimmerStyles}
           >
-            {fiatBalance}
+            {availableBalance.amount.toNumber() > 0 ? fiatBalance : null}
           </PrivateTextLayout>
           {titleRightBulletInfo}
         </BulletSeparator>

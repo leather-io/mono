@@ -52,17 +52,23 @@ export { formatSats, formatTimestamp, formatTimestampWithTime } from './formatti
 export type { OnramperMode } from './onramper/types';
 export { getOnramperIframeParams } from './onramper/onramper-params';
 export type {
-  OnPressTokenDetails,
   SupportedAssetProtocol,
   SupportedFungibleAssetProtocol,
   SupportedNonFungibleAssetProtocol,
-  TokenDetailsProps,
 } from './token/token-types';
 export {
+  assetIdToUrlPath,
+  createTokenDetailsPath,
   isSupportedAssetProtocol,
   isSupportedFungibleAssetProtocol,
   isSupportedNonFungibleAssetProtocol,
+  urlPathToAssetId,
 } from './token/token-types';
+export {
+  formatTokenAmount,
+  formatPriceChangeText,
+  getPriceChangeColor,
+} from './token/token-details-utils';
 export type { TokenBalance } from './balance/balance-types';
 export {
   isAccountQuotedBtcBalance,

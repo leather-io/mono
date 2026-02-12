@@ -18,12 +18,36 @@ const mockedSip10TokenMap = {
       'https://images.leather.io/tokens/SM26NBC8SFHNW4P1Y4DFH27974P56WN86C92HPEHH.token-lqstx.svg',
     principal: 'SP000000000000000000002Q6VF78.leather-integration-tests',
   },
+  'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token': {
+    assetIdentifier: 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc',
+    name: 'sBTC',
+    symbol: 'sBTC',
+    decimals: 8,
+    image: 'https://images.leather.io/tokens/sbtc.svg',
+    principal: 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token',
+  },
+  'SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc': {
+    assetIdentifier: 'SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc::aeUSDC',
+    name: 'Wrapped USDC',
+    symbol: 'aeUSDC',
+    decimals: 6,
+    image: 'https://images.leather.io/tokens/usdc.svg',
+    principal: 'SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc',
+  },
 };
 
 const mockedSip10PriceMap = {
   'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin': {
     price: 4.23105713004e-7,
     change24h: 0,
+  },
+  'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token': {
+    price: 45000,
+    change24h: 2.5,
+  },
+  'SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc': {
+    price: 1.0,
+    change24h: 0.01,
   },
 };
 
@@ -84,6 +108,22 @@ export async function mockLeatherApiRequests(page: Page) {
     route =>
       route.fulfill({
         json: mockedSip10TokenMap['SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin'],
+      })
+  );
+
+  await page.route(
+    '**/v1/tokens/sip10s/SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token',
+    route =>
+      route.fulfill({
+        json: mockedSip10TokenMap['SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token'],
+      })
+  );
+
+  await page.route(
+    '**/v1/tokens/sip10s/SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc',
+    route =>
+      route.fulfill({
+        json: mockedSip10TokenMap['SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc'],
       })
   );
 
@@ -196,6 +236,8 @@ export async function mockLeatherApiRequests(page: Page) {
           defaultEnabled: [
             'sip10|SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin::longcoin',
             'sip10|SP000000000000000000002Q6VF78.leather-integration-tests::leather-test-token',
+            'sip10|SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc',
+            'sip10|SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc::aeUSDC',
           ],
         },
         fees: {

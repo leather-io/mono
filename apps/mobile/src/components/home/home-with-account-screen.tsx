@@ -30,7 +30,6 @@ import { SheetInstance } from '@leather.io/ui/native';
 import { AccountScreenHeader } from './account-screen-header';
 import { AssetTabs } from './components/asset-tabs';
 import { FirstTokenBanner } from './components/first-token-banner';
-import { LearnSection } from './components/learn-section';
 import { ListTab } from './constants';
 
 interface HomeScreenWithAccountProps {
@@ -61,7 +60,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   const hasAssets = !!allSip10Data.value?.sip10s.length || !!allRunesData.value?.runes.length;
   const activityState = useActivity(fingerprint, accountIndex);
   const hasActivity = !!activityState.value?.length;
-  const displayLearningSections = activityState.state === 'success' && !hasActivity;
+  const displayFirstTokenBanner = activityState.state === 'success' && !hasActivity;
 
   function onOpenAccountSelector() {
     accountSelectorSheetRef.current?.present();
@@ -93,8 +92,8 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
               {/* TODO: research better way of switching between flashlists */}
               <AccountDetails account={currentAccount} />
               <AssetTabs listTab={listTab} setListTab={setListTab} />
-              {displayLearningSections && <FirstTokenBanner />}
-              {!displayLearningSections && (
+              {displayFirstTokenBanner && <FirstTokenBanner />}
+              {!displayFirstTokenBanner && (
                 <AvailableAccountBalance
                   account={currentAccount}
                   onOpenManageTokens={() => {
@@ -107,7 +106,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
               <StacksDepositTokenCell fingerprint={fingerprint} accountIndex={accountIndex} />
             </>
           }
-          footer={displayLearningSections ? <LearnSection /> : undefined}
           sip10Data={sip10Data}
           runesData={runesData}
         />

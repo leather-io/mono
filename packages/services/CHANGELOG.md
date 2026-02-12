@@ -413,25 +413,6 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
-## [1.47.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.47.0...@leather.io/services-v1.47.1) (2026-02-12)
-
-
-### Bug Fixes
-
-* axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
-
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @leather.io/bitcoin bumped to 0.36.6
-    * @leather.io/constants bumped to 0.31.0
-    * @leather.io/stacks bumped to 1.19.12
-    * @leather.io/utils bumped to 0.49.10
-  * devDependencies
-    * @leather.io/rpc bumped to 2.21.10
-
 ## [1.47.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.46.6...@leather.io/services-v1.47.0) (2026-02-09)
 
 
