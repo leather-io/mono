@@ -6,7 +6,7 @@ const CARD_SIZE = 195;
 
 function CollectibleCardSkeleton({ index }: { index: number }) {
   return (
-    <Box width={`${CARD_SIZE}px`} height={`${CARD_SIZE}px`} p="space.02">
+    <Box width={`${CARD_SIZE}px`} height={`${CARD_SIZE}px`}>
       <SkeletonLoader
         isLoading
         width="100%"

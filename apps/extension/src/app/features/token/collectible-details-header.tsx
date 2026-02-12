@@ -2,7 +2,6 @@ import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import {
   ArrowLeftIcon,
-  ArrowUpIcon,
   DropdownMenu,
   EllipsisVIcon,
   ExternalLinkIcon,
@@ -20,7 +19,6 @@ interface CollectibleDetailsHeaderProps {
   title: string;
   subtitle?: string;
   onBack(): void;
-  onSend?(): void;
   onViewOriginal?(): void;
   onToggleProtection?(): void;
   isProtected?: boolean;
@@ -30,12 +28,11 @@ export function CollectibleDetailsHeader({
   title,
   subtitle,
   onBack,
-  onSend,
   onViewOriginal,
   onToggleProtection,
   isProtected,
 }: CollectibleDetailsHeaderProps) {
-  const hasActions = onSend || onViewOriginal || onToggleProtection;
+  const hasMenuActions = onViewOriginal || onToggleProtection;
 
   return (
     <Header px={{ base: 'space.04', md: 'space.00' }}>
@@ -58,52 +55,43 @@ export function CollectibleDetailsHeader({
           </Stack>
         }
         rightCol={
-          hasActions ? (
-            <Flex alignItems="center" gap="space.01">
-              {onSend && (
-                <HeaderActionButton
-                  icon={<ArrowUpIcon />}
-                  onAction={onSend}
-                  dataTestId="collectible-details-send"
-                />
-              )}
-              {(onViewOriginal || onToggleProtection) && (
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger>
-                    <IconButton
-                      _focus={{ outline: 'focus' }}
-                      _hover={{ bg: 'ink.component-background-hover' }}
-                      color="ink.action-primary-default"
-                      icon={<EllipsisVIcon />}
-                      data-testid="collectible-details-options"
-                    />
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Content align="end" side="bottom" sideOffset={4}>
-                    {onViewOriginal && (
-                      <DropdownMenu.Item
-                        onClick={onViewOriginal}
-                        data-testid="view-original-menu-item"
-                      >
-                        <Flag img={<ExternalLinkIcon />} width="100%">
-                          <styled.span textStyle="label.02">View original</styled.span>
-                        </Flag>
-                      </DropdownMenu.Item>
-                    )}
-                    {onToggleProtection && (
-                      <DropdownMenu.Item
-                        onClick={onToggleProtection}
-                        data-testid={isProtected ? 'unprotect-menu-item' : 'protect-menu-item'}
-                      >
-                        <Flag img={isProtected ? <UnlockIcon /> : <LockIcon />} width="100%">
-                          <styled.span textStyle="label.02">
-                            {isProtected ? 'Unprotect' : 'Protect'}
-                          </styled.span>
-                        </Flag>
-                      </DropdownMenu.Item>
-                    )}
-                  </DropdownMenu.Content>
-                </DropdownMenu.Root>
-              )}
+          hasMenuActions ? (
+            <Flex alignItems="center">
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger asChild>
+                  <IconButton
+                    _focus={{ outline: 'focus' }}
+                    _hover={{ bg: 'ink.component-background-hover' }}
+                    color="ink.action-primary-default"
+                    icon={<EllipsisVIcon />}
+                    data-testid="collectible-details-options"
+                  />
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content align="end" side="bottom" sideOffset={4}>
+                  {onViewOriginal && (
+                    <DropdownMenu.Item
+                      onClick={onViewOriginal}
+                      data-testid="view-original-menu-item"
+                    >
+                      <Flag img={<ExternalLinkIcon />} width="100%">
+                        <styled.span textStyle="label.02">View original</styled.span>
+                      </Flag>
+                    </DropdownMenu.Item>
+                  )}
+                  {onToggleProtection && (
+                    <DropdownMenu.Item
+                      onClick={onToggleProtection}
+                      data-testid={isProtected ? 'unprotect-menu-item' : 'protect-menu-item'}
+                    >
+                      <Flag img={isProtected ? <UnlockIcon /> : <LockIcon />} width="100%">
+                        <styled.span textStyle="label.02">
+                          {isProtected ? 'Unprotect' : 'Protect'}
+                        </styled.span>
+                      </Flag>
+                    </DropdownMenu.Item>
+                  )}
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
             </Flex>
           ) : null
         }

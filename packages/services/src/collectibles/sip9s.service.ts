@@ -34,7 +34,10 @@ export class Sip9sService {
           .sort(sortByBlockHeight)
           .map(h => this.getOptionalSip9Asset(h.holding, signal))
       );
-      return results.filter(isNonNullish).filter(sip9 => sip9.name !== 'BNS - Archive');
+      return results
+        .filter(isNonNullish)
+        .filter(sip9 => sip9.name !== 'BNS - Archive')
+        .filter(sip9 => sip9.content.contentUrl !== '');
     } catch {
       return [];
     }

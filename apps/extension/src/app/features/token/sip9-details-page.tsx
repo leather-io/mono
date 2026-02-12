@@ -6,6 +6,7 @@ import type { CollectibleView } from '@leather.io/features';
 import type { Sip9Asset } from '@leather.io/models';
 
 import { Sip9Card } from '../collectibles/components/sip9-card';
+import { CollectibleDetailsActions } from './collectible-details-actions';
 import { CollectibleDetailsHeader } from './collectible-details-header';
 import {
   CollectibleDetailsPageLayout,
@@ -23,7 +24,7 @@ export function Sip9DetailsPage({ view, onBack }: Sip9DetailsPageProps) {
 
   const asset = view.asset as Sip9Asset;
   const title = view.title || 'Stacks NFT';
-  const subtitle = view.subtitle || '';
+  const subtitle = view.subtitle;
 
   return (
     <Stack width="100%" gap="space.04" data-testid="collectible-details-container">
@@ -31,6 +32,7 @@ export function Sip9DetailsPage({ view, onBack }: Sip9DetailsPageProps) {
       <CollectibleDetailsPageLayout
         protocol="sip9"
         media={<Sip9Card item={asset} height={getCollectibleMediaHeight()} />}
+        actions={<CollectibleDetailsActions />}
       >
         <Sip9Details
           asset={asset}

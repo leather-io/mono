@@ -12,6 +12,13 @@ interface Sip9CardProps {
 }
 
 export function Sip9Card({ item, height, onSelect }: Sip9CardProps) {
+  // eslint-disable-next-line no-console
+  console.log('[DEBUG] Sip9Card:', {
+    name: item.name,
+    contentUrl: item?.content?.contentUrl,
+    contentType: item?.content?.contentType,
+  });
+
   if (!item?.content?.contentUrl || item?.content?.contentUrl?.trim() === '') {
     return <ImageUnavailable height={height} />;
   }

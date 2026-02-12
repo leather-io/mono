@@ -33,6 +33,7 @@ describe(Sip9sService.name, () => {
         protocol: CryptoAssetProtocols.sip9,
         assetId,
         name: 'Test NFT',
+        content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
       })
     ),
   } as unknown as Sip9AssetService;
@@ -113,12 +114,32 @@ describe(Sip9sService.name, () => {
         protocol: CryptoAssetProtocols.sip9,
         assetId: 'SP000.bns-archive',
         name: 'BNS - Archive',
+        content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
       } as Sip9Asset);
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 
       expect(sip9s).toHaveLength(1);
       expect(sip9s[0].assetId).not.toEqual('SP000.bns-archive');
+    });
+
+    it('filters out NFTs with empty contentUrl', async () => {
+      const account: AccountAddresses = {
+        id: { fingerprint: 'fp1', accountIndex: 0 },
+        stacks: { stxAddress: 'ST123' },
+      };
+
+      vi.spyOn(mockSip9AssetService, 'getAsset').mockResolvedValueOnce({
+        protocol: CryptoAssetProtocols.sip9,
+        assetId: 'SP000.lp-token',
+        name: 'LP Token',
+        content: { contentUrl: '', contentType: '' },
+      } as Sip9Asset);
+
+      const sip9s = await sip9sService.getAccountSip9s({ account });
+
+      expect(sip9s).toHaveLength(1);
+      expect(sip9s[0].assetId).not.toEqual('SP000.lp-token');
     });
 
     it('catches Stacks API errors and returns empty array', async () => {

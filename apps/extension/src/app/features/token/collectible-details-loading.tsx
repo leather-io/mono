@@ -8,6 +8,8 @@ import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 
 import { SectionCard } from './collectible-details.layout';
 
+const maxImageSize = 280;
+
 function LoadingRow() {
   return (
     <Flex justifyContent="space-between" gap="space.04" py="space.02">
@@ -48,30 +50,23 @@ export function CollectibleDetailsLoading({ onBack }: CollectibleDetailsLoadingP
         width="100%"
         maxWidth={{ base: '100%', md: '780px' }}
         margin="0 auto"
-        gap="space.04"
+        gap="space.05"
       >
-        {/* Media placeholder */}
-        <SectionCard>
-          <SkeletonLoader isLoading height="320px" width="100%" borderRadius="sm" />
-        </SectionCard>
-
-        {/* Stats placeholder */}
-        <Flex gap="space.03">
-          <Box flex="1" bg="ink.background-primary" p="space.04" borderRadius="sm">
-            <Stack gap="space.02">
-              <SkeletonLoader isLoading height="12px" width="60px" />
-              <SkeletonLoader isLoading height="18px" width="80px" />
-            </Stack>
+        <Stack gap="space.04" alignItems="center">
+          <Box width="100%" maxWidth={`${maxImageSize}px`}>
+            <SkeletonLoader
+              isLoading
+              height={`${maxImageSize}px`}
+              width="100%"
+              borderRadius="sm"
+            />
           </Box>
-          <Box flex="1" bg="ink.background-primary" p="space.04" borderRadius="sm">
-            <Stack gap="space.02">
-              <SkeletonLoader isLoading height="12px" width="60px" />
-              <SkeletonLoader isLoading height="18px" width="80px" />
-            </Stack>
-          </Box>
-        </Flex>
+          <Flex gap="space.03" justifyContent="center">
+            <SkeletonLoader isLoading height="40px" width="100px" borderRadius="sm" />
+            <SkeletonLoader isLoading height="40px" width="100px" borderRadius="sm" />
+          </Flex>
+        </Stack>
 
-        {/* Description placeholder */}
         <SectionCard title="Description">
           <Stack gap="space.02">
             <SkeletonLoader isLoading height="14px" width="100%" />
@@ -80,8 +75,7 @@ export function CollectibleDetailsLoading({ onBack }: CollectibleDetailsLoadingP
           </Stack>
         </SectionCard>
 
-        {/* Collectible Info placeholder */}
-        <SectionCard title="Collectible Info">
+        <SectionCard title="Details">
           <Stack gap="space.01">
             <LoadingRow />
             <LoadingRow />

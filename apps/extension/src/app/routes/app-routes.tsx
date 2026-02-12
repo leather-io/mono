@@ -74,7 +74,6 @@ export const homePageModalRoutes = (
     {requestBitcoinKeysRoutes}
     {requestStacksKeysRoutes}
     {sendOrdinalRoutes}
-    <Route path={RouteUrls.TokenDetails} element={<TokenDetailsPage />} />
   </>
 );
 
@@ -190,6 +189,15 @@ function useAppRoutes() {
           )}
 
           {sendCryptoAssetFormRoutes}
+
+          <Route
+            path={RouteUrls.TokenDetails}
+            element={
+              <AccountGate>
+                <TokenDetailsPage />
+              </AccountGate>
+            }
+          />
 
           <Route path={RouteUrls.Unlock} element={<Unlock />}>
             {leatherIntroSheetRoutes}

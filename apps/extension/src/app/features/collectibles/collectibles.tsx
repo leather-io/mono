@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import {
   type CollectibleView,
@@ -47,16 +47,16 @@ function renderCollectible(
 
 function CollectiblesCurrent() {
   const navigate = useNavigate();
-  const location = useLocation();
   const accountIndex = useCurrentAccountIndex();
   const account = useAccountAddresses(accountIndex);
-  const { data: collectibles = [], isLoading, isError } = useAccountCollectibles(account);
+  const { data: collectibles = [], isLoading, isError, refetch } = useAccountCollectibles(account);
 
   const handleOpenToken = useCallback(
     ({ assetId }: TokenDetailsProps) => {
-      void navigate(createTokenDetailsPath(assetId), { state: { backgroundLocation: location } });
+      const path = createTokenDetailsPath(assetId);
+      void navigate(path);
     },
-    [navigate, location]
+    [navigate]
   );
 
   const renderedCollectibles = useMemo(
@@ -80,6 +80,7 @@ function CollectiblesCurrent() {
       isError={isError}
       amount={collectibles.length}
       hasCollectibles={collectibles.length > 0}
+      onRefresh={() => void refetch()}
     >
       {renderedCollectibles}
     </CollectiblesLayout>

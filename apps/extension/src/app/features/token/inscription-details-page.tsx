@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { Stack } from 'leather-styles/jsx';
 
@@ -14,6 +14,7 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
 import { InscriptionCard } from '../collectibles/components/inscription-card';
+import { CollectibleDetailsActions } from './collectible-details-actions';
 import { CollectibleDetailsHeader } from './collectible-details-header';
 import {
   CollectibleDetailsPageLayout,
@@ -28,7 +29,6 @@ interface InscriptionDetailsPageProps {
 
 export function InscriptionDetailsPage({ view, onBack }: InscriptionDetailsPageProps) {
   const navigate = useNavigate();
-  const location = useLocation();
   const network = useCurrentNetwork();
   const { hasInscriptionBeenDiscarded, discardInscription, recoverInscription } =
     useCurrentAccountDiscardedInscriptions();
@@ -38,9 +38,9 @@ export function InscriptionDetailsPage({ view, onBack }: InscriptionDetailsPageP
 
   const handleSend = useCallback(() => {
     void navigate(`/${RouteUrls.SendOrdinalInscription}`, {
-      state: { inscription, backgroundLocation: location },
+      state: { inscription },
     });
-  }, [navigate, inscription, location]);
+  }, [navigate, inscription]);
 
   const handleViewOriginal = useCallback(() => {
     openInNewTab(`${ORD_IO_URL}/${inscription.number}`);
@@ -55,7 +55,7 @@ export function InscriptionDetailsPage({ view, onBack }: InscriptionDetailsPageP
   }, [inscription, isDiscarded, recoverInscription, discardInscription]);
 
   const title = view.title || 'Inscription';
-  const subtitle = view.subtitle || '';
+  const subtitle = view.subtitle;
 
   return (
     <Stack width="100%" gap="space.04" data-testid="collectible-details-container">
@@ -63,7 +63,6 @@ export function InscriptionDetailsPage({ view, onBack }: InscriptionDetailsPageP
         title={title}
         subtitle={subtitle}
         onBack={onBack}
-        onSend={handleSend}
         onViewOriginal={handleViewOriginal}
         onToggleProtection={handleToggleProtection}
         isProtected={!isDiscarded}
@@ -71,6 +70,7 @@ export function InscriptionDetailsPage({ view, onBack }: InscriptionDetailsPageP
       <CollectibleDetailsPageLayout
         protocol="inscription"
         media={<InscriptionCard item={inscription} height={getCollectibleMediaHeight()} />}
+        actions={<CollectibleDetailsActions onSend={handleSend} />}
       >
         <InscriptionDetails
           asset={inscription}

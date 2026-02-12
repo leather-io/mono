@@ -1,10 +1,19 @@
-import { type ReactNode, useState } from 'react';
+import type { ReactNode } from 'react';
 
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { Callout, InfoCircleIcon, SettingsSliderIcon } from '@leather.io/ui';
+import {
+  ArrowRotateClockwiseIcon,
+  Callout,
+  DropdownMenu,
+  InfoCircleIcon,
+  ItemLayout,
+  LockIcon,
+  SettingsSliderIcon,
+  TrashIcon,
+} from '@leather.io/ui';
 
-import { ManageInscriptionsSheet } from '@app/features/manage-inscriptions/manage-inscriptions-sheet';
+import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
 import { CollectiblesEmpty } from './collectibles-empty';
 import { CollectiblesLearn } from './collectibles-learn';
@@ -17,6 +26,7 @@ interface CollectiblesLayoutProps {
   isLoading: boolean;
   hasCollectibles: boolean;
   isError: boolean;
+  onRefresh(): void;
 }
 
 export function CollectiblesLayout({
@@ -25,8 +35,10 @@ export function CollectiblesLayout({
   isLoading,
   hasCollectibles,
   isError,
+  onRefresh,
 }: CollectiblesLayoutProps) {
-  const [isManageSheetOpen, setIsManageSheetOpen] = useState(false);
+  const { recoverAllInscriptions, discardAllInscriptions } =
+    useCurrentAccountDiscardedInscriptions();
   const showHeader = !isLoading && hasCollectibles;
 
   return (
@@ -51,30 +63,66 @@ export function CollectiblesLayout({
             </styled.h2>
           </Stack>
 
-          <styled.button
-            type="button"
-            height="40px"
-            width="40px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            borderRadius="999px"
-            border="default"
-            bg="ink.background-primary"
-            _hover={{ bg: 'ink.component-background-hover', cursor: 'pointer' }}
-            onClick={() => setIsManageSheetOpen(true)}
-            aria-label="Manage collectibles"
-            data-testid="manage-collectibles-btn"
-          >
-            <SettingsSliderIcon variant="small" />
-          </styled.button>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+              <styled.button
+                type="button"
+                height="40px"
+                width="40px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                borderRadius="999px"
+                border="default"
+                bg="ink.background-primary"
+                _hover={{ bg: 'ink.component-background-hover', cursor: 'pointer' }}
+                aria-label="Manage collectibles"
+                data-testid="manage-collectibles-btn"
+              >
+                <SettingsSliderIcon variant="small" />
+              </styled.button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content align="end" sideOffset={8}>
+                <DropdownMenu.Item onSelect={onRefresh} data-testid="refresh-collectibles">
+                  <ItemLayout
+                    titleLeft="Refresh"
+                    titleRight=""
+                    captionLeft=""
+                    img={<ArrowRotateClockwiseIcon />}
+                  />
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  onSelect={recoverAllInscriptions}
+                  data-testid="recover-all-inscriptions"
+                >
+                  <ItemLayout
+                    titleLeft="Recover all inscriptions"
+                    titleRight=""
+                    captionLeft=""
+                    img={<LockIcon />}
+                  />
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  onSelect={discardAllInscriptions}
+                  data-testid="unprotect-all-inscriptions"
+                >
+                  <ItemLayout
+                    titleLeft={
+                      <styled.span color="red.action-primary-default">
+                        Unprotect all inscriptions
+                      </styled.span>
+                    }
+                    titleRight=""
+                    captionLeft=""
+                    img={<TrashIcon color="red.action-primary-default" />}
+                  />
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
         </Flex>
       )}
-
-      <ManageInscriptionsSheet
-        isShowing={isManageSheetOpen}
-        onClose={() => setIsManageSheetOpen(false)}
-      />
 
       {isError && (
         <Box px={{ base: 0, md: 'space.05' }}>

@@ -6,6 +6,7 @@ import type { StampAsset } from '@leather.io/models';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { StampCard } from '../collectibles/components/stamp-card';
+import { CollectibleDetailsActions } from './collectible-details-actions';
 import { CollectibleDetailsHeader } from './collectible-details-header';
 import {
   CollectibleDetailsPageLayout,
@@ -23,7 +24,7 @@ export function StampDetailsPage({ view, onBack }: StampDetailsPageProps) {
 
   const asset = view.asset as StampAsset;
   const title = view.title || 'Stamp';
-  const subtitle = view.subtitle || '';
+  const subtitle = view.subtitle;
 
   return (
     <Stack width="100%" gap="space.04" data-testid="collectible-details-container">
@@ -31,6 +32,7 @@ export function StampDetailsPage({ view, onBack }: StampDetailsPageProps) {
       <CollectibleDetailsPageLayout
         protocol="stamp"
         media={<StampCard item={asset} height={getCollectibleMediaHeight()} />}
+        actions={<CollectibleDetailsActions />}
       >
         <StampDetails asset={asset} bitcoinNetwork={network.chain.bitcoin.bitcoinNetwork} />
       </CollectibleDetailsPageLayout>
