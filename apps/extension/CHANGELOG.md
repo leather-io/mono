@@ -16,6 +16,32 @@
 
 ---
 
+## [6.94.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.94.0...@leather.io/extension-v6.94.1) (2026-02-12)
+
+
+### Bug Fixes
+
+* axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
+* **extension:** show fiat balance for zero balance tokens ([1c8de74](https://github.com/leather-io/mono/commit/1c8de74bc7861385847db76c88a207d826be82d2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.36.6
+    * @leather.io/constants bumped to 0.31.0
+    * @leather.io/crypto bumped to 1.12.16
+    * @leather.io/features bumped to 1.1.13
+    * @leather.io/provider bumped to 1.6.18
+    * @leather.io/queries bumped to 0.5.1
+    * @leather.io/query bumped to 2.45.13
+    * @leather.io/rpc bumped to 2.21.10
+    * @leather.io/services bumped to 1.47.1
+    * @leather.io/stacks bumped to 1.19.12
+    * @leather.io/ui bumped to 1.106.0
+    * @leather.io/utils bumped to 0.49.10
+
 ## [6.94.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.93.0...@leather.io/extension-v6.94.0) (2026-02-09)
 
 
