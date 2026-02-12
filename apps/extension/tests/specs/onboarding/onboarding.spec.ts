@@ -114,15 +114,23 @@ test.describe('Onboarding an existing user', () => {
       test('that the wallet generates the correct Native Segwit address', async ({ homePage }) => {
         test.slow();
 
-        const nativeSegwitAddress = await homePage.getReceiveNativeSegwitAddress();
-        test.expect(nativeSegwitAddress).toEqual(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS);
+        const nativeSegwitAddress = await test.step('Get Native Segwit address from receive dialog', () =>
+          homePage.getReceiveNativeSegwitAddress()
+        );
+        await test.step('Verify address matches expected value', () => {
+          test.expect(nativeSegwitAddress).toEqual(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS);
+        });
       });
 
       test('that the wallet generates the correct Taproot address', async ({ homePage }) => {
         test.slow();
 
-        const taprootAddress = await homePage.getReceiveTaprootAddress();
-        test.expect(taprootAddress).toEqual(TEST_ACCOUNT_1_TAPROOT_ADDRESS);
+        const taprootAddress = await test.step('Get Taproot address from receive dialog', () =>
+          homePage.getReceiveTaprootAddress()
+        );
+        await test.step('Verify address matches expected value', () => {
+          test.expect(taprootAddress).toEqual(TEST_ACCOUNT_1_TAPROOT_ADDRESS);
+        });
       });
     });
 
@@ -130,8 +138,12 @@ test.describe('Onboarding an existing user', () => {
       test('that restoring a wallet generates the correct stacks address', async ({ homePage }) => {
         test.slow();
 
-        const stacksAddress = await homePage.getReceiveStxAddress();
-        test.expect(stacksAddress).toEqual(TEST_ACCOUNT_1_STX_ADDRESS);
+        const stacksAddress = await test.step('Get STX address from receive dialog', () =>
+          homePage.getReceiveStxAddress()
+        );
+        await test.step('Verify address matches expected value', () => {
+          test.expect(stacksAddress).toEqual(TEST_ACCOUNT_1_STX_ADDRESS);
+        });
       });
     });
   });
