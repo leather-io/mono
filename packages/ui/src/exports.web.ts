@@ -45,3 +45,8 @@ export { useInterval, type UseIntervalState } from './utils/use-interval.shared'
 export { useOnMount } from './utils/use-on-mount.shared';
 export { useDebouncedValue } from './utils/use-debounced-value.shared';
 export { usePressable } from './hooks/use-pressable.web';
+export {
+  useAmountField,
+  type UseAmountFieldProps,
+  type CurrencySign,
+} from './hooks/use-amount-field/use-amount-field.web';
