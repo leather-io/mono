@@ -80,6 +80,11 @@ export {
 } from './components/numeric-input/numeric-input.native';
 export { slidePair } from './animations/slide-pair.native';
 export { useDebouncedValue } from './utils/use-debounced-value.shared';
+export {
+  useAmountField,
+  type UseAmountFieldProps,
+  type CurrencySign,
+} from './hooks/use-amount-field/use-amount-field.native';
 export { default as btcDomainImage } from './assets/images/btc-domain.png';
 export { default as gammaMarketplaceImage } from './assets/images/gamma-marketplace.png';
 export { default as magicEdenMarketplaceImage } from './assets/images/magic-eden-marketplace.png';
