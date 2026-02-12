@@ -215,6 +215,14 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.31.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.30.1...@leather.io/constants-v0.31.0) (2026-02-12)
+
+
+### Features
+
+* **mobile:** get your first nft section ([f5ceaeb](https://github.com/leather-io/mono/commit/f5ceaeb4eba70b150e27ce8be969502afca16b25))
+* **mobile:** learn section ([a56cb7f](https://github.com/leather-io/mono/commit/a56cb7fedda2c395f2a3c7e2a63fa32819fab740))
+
 ## [0.30.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.30.0...@leather.io/constants-v0.30.1) (2026-02-09)
 
 
