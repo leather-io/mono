@@ -37,12 +37,12 @@ const src20TokenSchema = z.looseObject({
   address: z.string().optional(),
   cpid: z.string().optional(),
   p: z.string().optional(),
-  tick: z.string(),
+  tick: z.string().optional(),
   amt: z.string().optional(),
-  block_time: z.string(),
-  last_update: z.number(),
-  deploy_tx: z.string(),
-  deploy_img: z.string(),
+  block_time: z.string().optional(),
+  last_update: z.number().optional(),
+  deploy_tx: z.string().optional(),
+  deploy_img: z.string().optional(),
 });
 
 export type Src20Token = z.infer<typeof src20TokenSchema>;
