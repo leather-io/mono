@@ -4,8 +4,6 @@ import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { createTestSelector } from '@tests/utils';
 
-import { delay } from '@leather.io/utils';
-
 export class HomePage {
   readonly page: Page;
   readonly availableBalance: Locator;
@@ -60,6 +58,10 @@ export class HomePage {
   async goToReceiveDialog() {
     await this.page.getByTestId(HomePageSelectors.ReceiveCryptoAssetBtn).click();
     await this.page.waitForSelector('[data-state="open"]');
+    // Wait for modal content to be fully rendered (handles async routing)
+    await this.page
+      .getByTestId(HomePageSelectors.ReceiveAssetsTab)
+      .waitFor({ state: 'visible', timeout: 10000 });
   }
 
   // Open issue with Playwright's ability to copyToClipboard from legacy tests:
@@ -69,26 +71,29 @@ export class HomePage {
   // Using the `Receive` route to get the account address for now.
   async getReceiveNativeSegwitAddress() {
     await this.goToReceiveDialog();
-    await this.page.getByTestId(HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn).click();
-    const displayerAddress = await this.page
-      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-      .innerText();
+    const nativeSegwitBtn = this.page.getByTestId(
+      HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn
+    );
+    await nativeSegwitBtn.waitFor({ state: 'visible', timeout: 5000 });
+    await nativeSegwitBtn.click();
+    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
+    await addressDisplayer.waitFor({ state: 'visible', timeout: 5000 });
+    const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
   // Currently under Ordinals receive flow
   async getReceiveTaprootAddress() {
     await this.goToReceiveDialog();
-    await delay(1000);
-    await this.page.getByTestId(HomePageSelectors.ReceiveCollectiblesTab).click();
-    await this.page.getByTestId(HomePageSelectors.ReceiveBtcTaprootQrCodeBtn).click();
-    // FIXME - add better test for Copy action
-    // await this.page.getByRole('button', { name: 'Copy address' }).click();
-    // const address = await this.page.evaluate('navigator.clipboard.readText()');
-    // return address;
-    const displayerAddress = await this.page
-      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-      .innerText();
+    const collectiblesTab = this.page.getByTestId(HomePageSelectors.ReceiveCollectiblesTab);
+    await collectiblesTab.waitFor({ state: 'visible', timeout: 5000 });
+    await collectiblesTab.click();
+    const taprootBtn = this.page.getByTestId(HomePageSelectors.ReceiveBtcTaprootQrCodeBtn);
+    await taprootBtn.waitFor({ state: 'visible', timeout: 5000 });
+    await taprootBtn.click();
+    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
+    await addressDisplayer.waitFor({ state: 'visible', timeout: 5000 });
+    const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
@@ -96,11 +101,14 @@ export class HomePage {
     await this.goToReceiveDialog();
     // In Ledger mode, this element isn't visible, so clicking is conditional
     const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
-    await delay(1000);
-    if (await qrCodeBtn.isVisible()) await qrCodeBtn.click({ force: true });
-    const displayerAddress = await this.page
-      .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-      .innerText();
+    // Wait for button to be attached to DOM before checking visibility
+    await qrCodeBtn.waitFor({ state: 'attached', timeout: 5000 }).catch(() => {});
+    if (await qrCodeBtn.isVisible()) {
+      await qrCodeBtn.click({ force: true });
+    }
+    const addressDisplayer = this.page.getByTestId(SharedComponentsSelectors.AddressDisplayer);
+    await addressDisplayer.waitFor({ state: 'visible', timeout: 5000 });
+    const displayerAddress = await addressDisplayer.innerText();
     return displayerAddress.replaceAll('\n', '');
   }
 
