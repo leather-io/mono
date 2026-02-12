@@ -58,10 +58,10 @@ export class HomePage {
   async goToReceiveDialog() {
     await this.page.getByTestId(HomePageSelectors.ReceiveCryptoAssetBtn).click();
     await this.page.waitForSelector('[data-state="open"]');
-    // Wait for modal content to be fully rendered (handles async routing)
-    await this.page
-      .getByTestId(HomePageSelectors.ReceiveAssetsTab)
-      .waitFor({ state: 'visible', timeout: 10000 });
+    // Wait for modal content - either tabs (normal mode) or STX button (Ledger Stacks-only)
+    const assetsTab = this.page.getByTestId(HomePageSelectors.ReceiveAssetsTab);
+    const stxQrBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
+    await assetsTab.or(stxQrBtn).waitFor({ state: 'visible', timeout: 10000 });
   }
 
   // Open issue with Playwright's ability to copyToClipboard from legacy tests:
@@ -101,8 +101,8 @@ export class HomePage {
     await this.goToReceiveDialog();
     // In Ledger mode, this element isn't visible, so clicking is conditional
     const qrCodeBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
-    // Wait for button to be attached to DOM before checking visibility
-    await qrCodeBtn.waitFor({ state: 'attached', timeout: 5000 }).catch(() => {});
+    // Button may not exist in Ledger mode - ignore timeout errors
+    await qrCodeBtn.waitFor({ state: 'attached', timeout: 5000 }).catch(() => undefined);
     if (await qrCodeBtn.isVisible()) {
       await qrCodeBtn.click({ force: true });
     }
