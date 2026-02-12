@@ -152,12 +152,12 @@ export function CollectiblesLayout({
         </Box>
       ) : null}
 
-      {!isLoading && !isError ? (
+      {!isLoading && !isError && hasCollectibles && (
         <Stack gap="space.04" px={{ base: 0, md: 'space.05' }}>
           <CollectiblesMarketplaces />
           <CollectiblesLearn />
         </Stack>
-      ) : null}
+      )}
     </Stack>
   );
 }
