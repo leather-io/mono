@@ -54,12 +54,7 @@ export function CollectibleDetailsLoading({ onBack }: CollectibleDetailsLoadingP
       >
         <Stack gap="space.04" alignItems="center">
           <Box width="100%" maxWidth={`${maxImageSize}px`}>
-            <SkeletonLoader
-              isLoading
-              height={`${maxImageSize}px`}
-              width="100%"
-              borderRadius="sm"
-            />
+            <SkeletonLoader isLoading height={`${maxImageSize}px`} width="100%" borderRadius="sm" />
           </Box>
           <Flex gap="space.03" justifyContent="center">
             <SkeletonLoader isLoading height="40px" width="100px" borderRadius="sm" />

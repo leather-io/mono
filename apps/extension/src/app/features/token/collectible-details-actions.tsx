@@ -11,7 +11,10 @@ interface CollectibleDetailsActionsProps {
   canReceive?: boolean;
 }
 
-export function CollectibleDetailsActions({ onSend, canReceive = true }: CollectibleDetailsActionsProps) {
+export function CollectibleDetailsActions({
+  onSend,
+  canReceive = true,
+}: CollectibleDetailsActionsProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
