@@ -1,9 +1,8 @@
+import { BtcSizeFeeEstimator } from '@leather.io/bitcoin';
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
 import type { OwnedUtxo } from '@leather.io/models';
 import type { UtxoWithDerivationPath } from '@leather.io/query';
 import { createCounter, isDefined, sumNumbers } from '@leather.io/utils';
-
-import { BtcSizeFeeEstimator } from '@app/common/transactions/bitcoin/fees/btc-size-fee-estimator';
 
 interface SelectInscriptionCoinSuccess {
   success: true;
@@ -20,7 +19,7 @@ type SelectInscriptionCoinResult = SelectInscriptionCoinSuccess | SelectInscript
 
 interface SelectInscriptionTransferCoinsArgs {
   inscriptionInput: UtxoWithDerivationPath;
-  nativeSegwitUtxos: OwnedUtxo[];
+  utxos: OwnedUtxo[];
   feeRate: number;
   recipient: string;
   changeAddress: string;
@@ -29,9 +28,9 @@ interface SelectInscriptionTransferCoinsArgs {
 export function selectTaprootInscriptionTransferCoins(
   args: SelectInscriptionTransferCoinsArgs
 ): SelectInscriptionCoinResult {
-  const { inscriptionInput, recipient, changeAddress, nativeSegwitUtxos, feeRate } = args;
+  const { inscriptionInput, recipient, changeAddress, utxos, feeRate } = args;
 
-  if (nativeSegwitUtxos.length === 0) return { success: false };
+  if (utxos.length === 0) return { success: false };
 
   const txSizer = new BtcSizeFeeEstimator();
 
@@ -51,19 +50,19 @@ export function selectTaprootInscriptionTransferCoins(
 
   function shouldContinueTryingWithMoreInputs() {
     const neededSumOfInputs = sumNumbers(neededInputs.map(utxo => utxo.value));
-    if (indexCounter.getValue() > nativeSegwitUtxos.length) return false;
+    if (indexCounter.getValue() > utxos.length) return false;
     return txFee >= neededSumOfInputs.toNumber();
   }
 
-  let utxos = nativeSegwitUtxos
+  let sortedUtxos = utxos
     .filter(utxo => utxo.value >= BTC_P2WPKH_DUST_AMOUNT)
     .sort((a, b) => b.value - a.value);
   let txSize = null;
 
   while (shouldContinueTryingWithMoreInputs()) {
-    const [nextUtxo, ...remainingUtxos] = utxos;
+    const [nextUtxo, ...remainingUtxos] = sortedUtxos;
     if (nextUtxo) neededInputs.push(nextUtxo);
-    utxos = remainingUtxos;
+    sortedUtxos = remainingUtxos;
     txSize = txSizer.calcTxSize({
       input_script: 'p2wpkh',
       input_count: neededInputs.length + 1,

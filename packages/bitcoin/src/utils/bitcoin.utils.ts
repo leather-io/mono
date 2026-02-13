@@ -2,7 +2,9 @@ import { hexToBytes } from '@noble/hashes/utils';
 import { HDKey, Versions } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
+import type { P2Ret, P2TROut } from '@scure/btc-signer/payment';
 import { TransactionInput, TransactionOutput } from '@scure/btc-signer/psbt';
+import type { BitcoinSigner } from 'signer/bitcoin-signer';
 
 import {
   DerivationPathDepth,
@@ -387,4 +389,10 @@ export function isTaprootDerivationPath(path: string) {
 
 export function isNativeSegwitDerivationPath(path: string) {
   return extractPurposeFromPath(path) === 84;
+}
+
+export function isP2TROut(
+  signer: BitcoinSigner<P2Ret | P2TROut> | null
+): signer is BitcoinSigner<P2TROut> {
+  return !!signer && isTaprootDerivationPath(signer.derivationPath);
 }

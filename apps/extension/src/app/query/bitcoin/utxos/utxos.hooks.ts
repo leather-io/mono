@@ -1,16 +1,16 @@
 import { useCallback } from 'react';
 
-import { emptyUtxos, getHttpCacheService } from '@leather.io/services';
+import { type AccountRequest, emptyUtxos, getHttpCacheService } from '@leather.io/services';
 
+import { useAccountRequest } from '@app/services/accounts/use-account-request';
 import { useTaprootAccountRequest } from '@app/services/accounts/use-taproot-account-request';
 import { toFetchState } from '@app/services/fetch-state';
 
 import { useNativeSegwitAccountRequest } from '../../../services/accounts/use-native-segwit-account-request';
 import { useGetAccountUtxosQuery } from './utxos.query';
 
-export function useCurrentNativeSegwitUtxos() {
-  const accountRequest = useNativeSegwitAccountRequest();
-  const query = useGetAccountUtxosQuery(accountRequest);
+function useUtxos(request: AccountRequest) {
+  const query = useGetAccountUtxosQuery(request);
   const utxos = toFetchState(query);
 
   const refetchUtxos = useCallback(async () => {
@@ -26,6 +26,16 @@ export function useCurrentNativeSegwitUtxos() {
     utxos: utxos.value ?? emptyUtxos,
     refetchUtxos,
   };
+}
+
+export function useCurrentNativeSegwitUtxos() {
+  const accountRequest = useNativeSegwitAccountRequest();
+  return useUtxos(accountRequest);
+}
+
+export function useCurrentUtxos() {
+  const accountRequest = useAccountRequest();
+  return useUtxos(accountRequest);
 }
 
 export function useCurrentNativeSegwitInscribedUtxos() {

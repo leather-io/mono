@@ -146,7 +146,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
   );
 
   const { txVBytes } = getSizeInfo({
-    inputLength: psbtDetails.psbtInputs.length,
+    utxos: psbtDetails.psbtInputs,
     recipients,
     isSendMax: false,
   });

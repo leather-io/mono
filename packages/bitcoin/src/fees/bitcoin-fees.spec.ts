@@ -4,7 +4,7 @@ import { AverageBitcoinFeeRates } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { CoinSelectionRecipient } from '../coin-selection/coin-selection';
-import { recipientAddress, taprootAddress } from '../mocks/mocks';
+import { recipientAddress } from '../mocks/mocks';
 import { getBitcoinFees, getBitcoinTransactionFee } from './bitcoin-fees';
 
 describe('getBitcoinTransactionFee', () => {
@@ -13,7 +13,7 @@ describe('getBitcoinTransactionFee', () => {
       recipients: [{ address: recipientAddress, amount: createMoney(1000, 'BTC') }],
       utxos: [
         {
-          address: taprootAddress,
+          address: recipientAddress,
           txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
           vout: 0,
           value: 2000,
@@ -32,7 +32,7 @@ describe('getBitcoinTransactionFee', () => {
       recipients: [{ address: recipientAddress, amount: createMoney(2000, 'BTC') }],
       utxos: [
         {
-          address: taprootAddress,
+          address: recipientAddress,
           txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
           vout: 0,
           value: 2000,
@@ -68,7 +68,7 @@ describe('getBitcoinFees', () => {
     ];
     const utxos = [
       {
-        address: taprootAddress,
+        address: recipientAddress,
         txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
         vout: 0,
         value: 2000,

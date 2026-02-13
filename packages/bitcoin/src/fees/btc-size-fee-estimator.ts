@@ -26,6 +26,26 @@ export interface TxSizerParams {
   p2tr_output_count: number;
 }
 
+export interface MixedInputTxSizerParams {
+  p2wpkh_input_count: number;
+  p2tr_input_count: number;
+  p2pkh_input_count?: number;
+  p2sh_input_count?: number;
+  p2sh_p2wpkh_input_count?: number;
+  p2sh_p2wsh_input_count?: number;
+  p2wsh_input_count?: number;
+  input_m?: number;
+  input_n?: number;
+  p2pkh_output_count?: number;
+  p2sh_output_count?: number;
+  p2sh_p2wpkh_output_count?: number;
+  p2sh_p2wsh_output_count?: number;
+  p2wpkh_output_count?: number;
+  p2wsh_output_count?: number;
+  p2tr_output_count?: number;
+  _forceSegwit?: boolean;
+}
+
 export class BtcSizeFeeEstimator {
   P2PKH_IN_SIZE = 148;
   P2PKH_OUT_SIZE = 34;
@@ -305,6 +325,50 @@ export class BtcSizeFeeEstimator {
       this.getTxOverheadExtraRawBytes(this.params.input_script, this.params.input_count) +
       txVBytes +
       inputWitnessSize * this.params.input_count;
+    const txWeight = txVBytes * 4;
+
+    return { txVBytes, txBytes, txWeight };
+  }
+
+  calcMixedInputTxSize(opts: MixedInputTxSizerParams) {
+    const { p2wpkh_input_count, p2tr_input_count } = opts;
+    const totalInputCount = p2wpkh_input_count + p2tr_input_count;
+
+    const p2pkh_output_count = opts.p2pkh_output_count ?? 0;
+    const p2sh_output_count = opts.p2sh_output_count ?? 0;
+    const p2sh_p2wpkh_output_count = opts.p2sh_p2wpkh_output_count ?? 0;
+    const p2sh_p2wsh_output_count = opts.p2sh_p2wsh_output_count ?? 0;
+    const p2wpkh_output_count = opts.p2wpkh_output_count ?? 0;
+    const p2wsh_output_count = opts.p2wsh_output_count ?? 0;
+    const p2tr_output_count = opts.p2tr_output_count ?? 0;
+
+    const output_count =
+      p2pkh_output_count +
+      p2sh_output_count +
+      p2sh_p2wpkh_output_count +
+      p2sh_p2wsh_output_count +
+      p2wpkh_output_count +
+      p2wsh_output_count +
+      p2tr_output_count;
+
+    const inputVBytes =
+      p2wpkh_input_count * this.P2WPKH_IN_SIZE + p2tr_input_count * this.P2TR_IN_SIZE;
+
+    const inputWitnessBytes = p2wpkh_input_count * 107 + p2tr_input_count * 65;
+
+    const txVBytes =
+      this.getTxOverheadVBytes('p2wpkh', totalInputCount, output_count) +
+      inputVBytes +
+      this.P2PKH_OUT_SIZE * p2pkh_output_count +
+      this.P2SH_OUT_SIZE * p2sh_output_count +
+      this.P2SH_P2WPKH_OUT_SIZE * p2sh_p2wpkh_output_count +
+      this.P2SH_P2WSH_OUT_SIZE * p2sh_p2wsh_output_count +
+      this.P2WPKH_OUT_SIZE * p2wpkh_output_count +
+      this.P2WSH_OUT_SIZE * p2wsh_output_count +
+      this.P2TR_OUT_SIZE * p2tr_output_count;
+
+    const txBytes =
+      this.getTxOverheadExtraRawBytes('p2wpkh', totalInputCount) + txVBytes + inputWitnessBytes;
     const txWeight = txVBytes * 4;
 
     return { txVBytes, txBytes, txWeight };

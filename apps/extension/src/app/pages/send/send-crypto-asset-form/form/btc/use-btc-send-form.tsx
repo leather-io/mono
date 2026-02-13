@@ -24,8 +24,8 @@ import {
   currencyAmountValidator,
 } from '@app/common/validation/forms/currency-validators';
 import { useUpdatePersistedSendFormValues } from '@app/features/popup-send-form-restoration/use-update-persisted-send-form-values';
-import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
+import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
+import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useCalculateMaxBitcoinSpend } from '../../../../../common/hooks/balance/use-calculate-max-spend';
@@ -35,8 +35,8 @@ export function useBtcSendForm() {
   const [isSendingMax, setIsSendingMax] = useState(false);
   const formRef = useRef<FormikProps<BitcoinSendFormValues>>(null);
   const currentNetwork = useCurrentNetwork();
-  const { utxos, refetchUtxos } = useCurrentNativeSegwitUtxos();
-  const { btc: balance } = useCurrentNativeSegwitBtcBalanceWithFallback();
+  const { utxos, refetchUtxos } = useCurrentUtxos();
+  const { btc: balance } = useCurrentBtcBalanceWithFallback();
   const sendFormNavigate = useSendFormNavigate();
   const calcMaxSpend = useCalculateMaxBitcoinSpend();
   const { onFormStateChange } = useUpdatePersistedSendFormValues();

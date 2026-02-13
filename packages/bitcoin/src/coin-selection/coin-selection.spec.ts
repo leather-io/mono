@@ -10,22 +10,23 @@ import {
 } from '../mocks/mocks';
 import { isBitcoinAddress } from '../validation/bitcoin-address';
 import { determineUtxosForSpend, determineUtxosForSpendAll } from './coin-selection';
+import { generateMockTaprootTransactions, generateMockTransactions } from './coin-selection.mocks';
 import { filterUneconomicalUtxos, getSizeInfo } from './coin-selection.utils';
 
 const demoUtxos = [
-  { value: 8200 },
-  { value: 8490 },
-  { value: 8790 },
-  { value: 19 },
-  { value: 2000 },
-  { value: 2340 },
-  { value: 1230 },
-  { value: 120 },
-  { value: 8 },
-  { value: 1002 },
-  { value: 1382 },
-  { value: 1400 },
-  { value: 909 },
+  { txid: 'a1', value: 8200, address: recipientAddress },
+  { txid: 'a2', value: 8490, address: recipientAddress },
+  { txid: 'a3', value: 8790, address: recipientAddress },
+  { txid: 'a4', value: 19, address: recipientAddress },
+  { txid: 'a5', value: 2000, address: recipientAddress },
+  { txid: 'a6', value: 2340, address: recipientAddress },
+  { txid: 'a7', value: 1230, address: recipientAddress },
+  { txid: 'a8', value: 120, address: recipientAddress },
+  { txid: 'a9', value: 8, address: recipientAddress },
+  { txid: 'a10', value: 1002, address: recipientAddress },
+  { txid: 'a11', value: 1382, address: recipientAddress },
+  { txid: 'a12', value: 1400, address: recipientAddress },
+  { txid: 'a13', value: 909, address: recipientAddress },
 ];
 
 function generate10kSpendWithDummyUtxoSet(recipient: string) {
@@ -33,7 +34,7 @@ function generate10kSpendWithDummyUtxoSet(recipient: string) {
     throw new Error('Invalid Bitcoin address');
   }
   return determineUtxosForSpend({
-    utxos: demoUtxos as any,
+    utxos: demoUtxos,
     feeRate: 20,
     recipients: [{ address: recipient, amount: createMoney(10_000, 'BTC') }],
   });
@@ -43,7 +44,7 @@ describe(determineUtxosForSpend.name, () => {
   describe('Estimated size', () => {
     test('that Native Segwit, 1 input 2 outputs weighs 140 vBytes', () => {
       const estimation = determineUtxosForSpend({
-        utxos: [{ value: 50_000 }] as any[],
+        utxos: [{ txid: 'b1', value: 50_000, address: recipientAddress }],
         recipients: [
           {
             address: recipientAddress,
@@ -58,7 +59,10 @@ describe(determineUtxosForSpend.name, () => {
 
     test('that Native Segwit, 2 input 2 outputs weighs 200vBytes', () => {
       const estimation = determineUtxosForSpend({
-        utxos: [{ value: 50_000 }, { value: 50_000 }] as any[],
+        utxos: [
+          { txid: 'c1', value: 50_000, address: recipientAddress },
+          { txid: 'c2', value: 50_000, address: recipientAddress },
+        ],
         recipients: [
           {
             address: recipientAddress,
@@ -74,17 +78,17 @@ describe(determineUtxosForSpend.name, () => {
     test('that Native Segwit, 10 input 2 outputs weighs 200vBytes', () => {
       const estimation = determineUtxosForSpend({
         utxos: [
-          { value: 20_000 },
-          { value: 20_000 },
-          { value: 10_000 },
-          { value: 10_000 },
-          { value: 10_000 },
-          { value: 10_000 },
-          { value: 10_000 },
-          { value: 10_000 },
-          { value: 10_000 },
-          { value: 10_000 },
-        ] as any[],
+          { txid: 'd1', value: 20_000, address: recipientAddress },
+          { txid: 'd2', value: 20_000, address: recipientAddress },
+          { txid: 'd3', value: 10_000, address: recipientAddress },
+          { txid: 'd4', value: 10_000, address: recipientAddress },
+          { txid: 'd5', value: 10_000, address: recipientAddress },
+          { txid: 'd6', value: 10_000, address: recipientAddress },
+          { txid: 'd7', value: 10_000, address: recipientAddress },
+          { txid: 'd8', value: 10_000, address: recipientAddress },
+          { txid: 'd9', value: 10_000, address: recipientAddress },
+          { txid: 'd10', value: 10_000, address: recipientAddress },
+        ],
         recipients: [
           {
             address: recipientAddress,
@@ -147,12 +151,14 @@ describe(determineUtxosForSpend.name, () => {
   });
 
   test('against a random set of generated utxos', () => {
-    const testData = createNullArrayOfLength(50).map(() => ({
+    const testData = createNullArrayOfLength(50).map((_, i) => ({
+      txid: `rnd${i}`,
       value: Math.ceil(Math.random() * 10000),
+      address: recipientAddress,
     }));
     const amount = 29123n;
     const result = determineUtxosForSpend({
-      utxos: testData as any,
+      utxos: testData,
       recipients: [
         {
           address: recipientAddress,
@@ -180,7 +186,7 @@ describe(determineUtxosForSpend.name, () => {
       },
     ];
     const filteredUtxos = filterUneconomicalUtxos({
-      utxos: demoUtxos.sort((a, b) => b.value - a.value) as any,
+      utxos: demoUtxos.sort((a, b) => b.value - a.value),
       feeRate,
       recipients,
     });
@@ -188,7 +194,7 @@ describe(determineUtxosForSpend.name, () => {
     recipients[0].amount = createMoney(amount, 'BTC');
 
     const result = determineUtxosForSpend({
-      utxos: filteredUtxos as any,
+      utxos: filteredUtxos,
       recipients: [
         {
           address: recipientAddress,
@@ -203,7 +209,11 @@ describe(determineUtxosForSpend.name, () => {
   });
 
   test('that spending all utxos with sendMax does not result in dust utxos', () => {
-    const utxos = [{ value: 1000 }, { value: 2000 }, { value: 3000 }];
+    const utxos = [
+      { txid: '123', value: 1000, address: recipientAddress },
+      { txid: '1323', value: 2000, address: recipientAddress },
+      { txid: '132355', value: 3000, address: recipientAddress },
+    ];
     const recipients = [
       {
         address: recipientAddress,
@@ -211,7 +221,7 @@ describe(determineUtxosForSpend.name, () => {
       },
     ];
     const sizeInfo = getSizeInfo({
-      inputLength: utxos.length,
+      utxos,
       isSendMax: true,
       recipients,
     });
@@ -221,7 +231,7 @@ describe(determineUtxosForSpend.name, () => {
     recipients[0].amount = createMoney(amount, 'BTC');
 
     const result = determineUtxosForSpendAll({
-      utxos: utxos as any,
+      utxos: utxos,
       recipients,
       feeRate,
     });
@@ -229,5 +239,46 @@ describe(determineUtxosForSpend.name, () => {
     expect(result.outputs.length).toEqual(1);
     expect(result.fee.amount.isEqualTo(735)).toBeTruthy();
     expect(fee).toEqual(735);
+  });
+});
+
+describe('mixed input types', () => {
+  test('that spending from P2TR-only inputs produces correct fee estimation', () => {
+    const taprootUtxos = generateMockTaprootTransactions([50_000]);
+    const estimation = determineUtxosForSpend({
+      utxos: taprootUtxos,
+      recipients: [
+        {
+          address: recipientAddress,
+          amount: createMoney(40_000, 'BTC'),
+        },
+      ],
+      feeRate: 20,
+    });
+    expect(estimation.fee.amount.toNumber()).toBeGreaterThan(0);
+    expect(estimation.inputs).toHaveLength(1);
+    expect(estimation.txVBytes).toBeGreaterThanOrEqual(130);
+    expect(estimation.txVBytes).toBeLessThan(155);
+  });
+
+  test('that spending from mixed P2WPKH + P2TR inputs uses correct vBytes', () => {
+    const nativeSegwitUtxos = generateMockTransactions([30_000]);
+    const taprootUtxos = generateMockTaprootTransactions([30_000]);
+    const mixedUtxos = [...nativeSegwitUtxos, ...taprootUtxos];
+
+    const estimation = determineUtxosForSpend({
+      utxos: mixedUtxos,
+      recipients: [
+        {
+          address: recipientAddress,
+          amount: createMoney(50_000, 'BTC'),
+        },
+      ],
+      feeRate: 20,
+    });
+    expect(estimation.inputs).toHaveLength(2);
+    expect(estimation.fee.amount.toNumber()).toBeGreaterThan(0);
+    expect(estimation.txVBytes).toBeGreaterThan(170);
+    expect(estimation.txVBytes).toBeLessThan(210);
   });
 });

@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 
 import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
 
-import { TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS } from './constants';
+import { TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS, TEST_ACCOUNT_1_TAPROOT_ADDRESS } from './constants';
 
 export const mockUtxos = [
   {
@@ -116,12 +116,33 @@ export const mockMainnetNsTransactionsTestAccount = [
   },
 ];
 
+export const mockTaprootUtxosE2e = [
+  {
+    txid: 'a5ab63799f0bbd2571d1b90de9ebff815f7526787e27263d2f604e22f9118d0c',
+    vout: 1,
+    status: {
+      confirmed: true,
+      block_height: 810200,
+      block_hash: '00000000000000000002a7c4c1e48d76c5a37902165a270156b7a8d72f8804b6',
+      block_time: 1696200000,
+    },
+    value: 50000,
+  },
+];
+
 export async function mockMainnetTestAccountBitcoinRequests(page: Page) {
   await Promise.all([
     page.route('**/leather.mempool.space/api/address/**/utxo', route =>
       route.fulfill({
         json: [],
       })
+    ),
+    page.route(
+      `**/leather.mempool.space/api/address/${TEST_ACCOUNT_1_TAPROOT_ADDRESS}/utxo`,
+      route =>
+        route.fulfill({
+          json: mockTaprootUtxosE2e,
+        })
     ),
     page.route(
       `**/leather.mempool.space/api/address/${TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS}/txs`,

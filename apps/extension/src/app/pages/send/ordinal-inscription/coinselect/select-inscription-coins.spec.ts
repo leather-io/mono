@@ -12,7 +12,7 @@ describe(selectTaprootInscriptionTransferCoins.name, () => {
         value: Number(inscriptionInputAmount),
         txid: 'txid',
       } as any,
-      nativeSegwitUtxos: [
+      utxos: [
         { value: 1900, vout: 0 },
         { value: 900, vout: 0 },
         { value: 6000, vout: 0 },
@@ -47,7 +47,7 @@ describe(selectTaprootInscriptionTransferCoins.name, () => {
         value: 1000,
         txid: 'txid',
       } as any,
-      nativeSegwitUtxos: [
+      utxos: [
         { value: 0, vout: 0 },
         { value: 1, vout: 0 },
         { value: 2, vout: 0 },

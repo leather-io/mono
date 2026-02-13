@@ -5,6 +5,7 @@ import * as btc from '@scure/btc-signer';
 import BigNumber from 'bignumber.js';
 import * as yup from 'yup';
 
+import { isP2TROut } from '@leather.io/bitcoin';
 import type { BitcoinTx } from '@leather.io/models';
 import { emptyUtxos } from '@leather.io/services';
 import { btcToSat, createMoney, isError, sumMoney } from '@leather.io/utils';
@@ -22,9 +23,9 @@ import {
 import { MAX_FEE_RATE_MULTIPLIER } from '@app/components/bitcoin-custom-fee/hooks/use-bitcoin-custom-fee';
 import { useBitcoinFeesList } from '@app/components/bitcoin-fees-list/use-bitcoin-fees-list';
 import { useToast } from '@app/features/toasts/use-toast';
-import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
+import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
+import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
 import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
@@ -40,7 +41,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     publicKey,
     derivationPath: zeroIndexDerivationPath,
   } = useCurrentAccountNativeSegwitIndexZeroSigner();
-  const { utxos, refetchUtxos } = useCurrentNativeSegwitUtxos();
+  const { utxos, refetchUtxos } = useCurrentUtxos();
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
   const getSignerForOwnedUtxo = useBitcoinSignerFromInput();
@@ -56,7 +57,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     [btcTx.vin.length, btcTx.vout.length, recipient]
   );
 
-  const { btc: balance } = useCurrentNativeSegwitBtcBalanceWithFallback();
+  const { btc: balance } = useCurrentBtcBalanceWithFallback();
   const rbfAvailableBalance = sumMoney([balance.availableBalance, balance.outboundBalance]);
   const sendingAmount = getBitcoinTxValue(currentBitcoinAddress, btcTx);
   const { feesList } = useBitcoinFeesList({
@@ -80,6 +81,11 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     vin.forEach(input => {
       const ownedUtxo = utxoMap.get(`${input.txid}:${input.vout}`);
       const signer = ownedUtxo ? getSignerForOwnedUtxo(ownedUtxo) : null;
+
+      const tapInternalKey = isP2TROut(signer)
+        ? { tapInternalKey: signer.payment.tapInternalKey }
+        : {};
+
       newTx.addInput({
         txid: input.txid,
         index: input.vout,
@@ -89,6 +95,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
           script: signer ? signer.payment.script : p2wpkh.script,
           amount: ownedUtxo ? BigInt(ownedUtxo.value) : BigInt(input.prevout.value),
         },
+        ...tapInternalKey,
       });
 
       signingConfig.push({

@@ -110,4 +110,78 @@ describe('BtcSizeFeeEstimator', () => {
       expect(feeRange).toBe('900 - 1100');
     });
   });
+
+  describe('calcMixedInputTxSize', () => {
+    it('should calculate size for p2wpkh-only inputs', () => {
+      const { txVBytes, txBytes, txWeight } = estimator.calcMixedInputTxSize({
+        p2wpkh_input_count: 2,
+        p2tr_input_count: 0,
+        p2wpkh_output_count: 1,
+      });
+
+      // overhead: 10.75, inputs: 2 * 67.75 = 135.5, outputs: 1 * 31 = 31
+      expect(txVBytes).toEqual(177.25);
+      // extraRawBytes: 2.25, witnessBytes: 2 * 107 = 214
+      expect(txBytes).toEqual(393.5);
+      expect(txWeight).toEqual(709);
+    });
+
+    it('should calculate size for p2tr-only inputs', () => {
+      const { txVBytes, txBytes, txWeight } = estimator.calcMixedInputTxSize({
+        p2wpkh_input_count: 0,
+        p2tr_input_count: 2,
+        p2tr_output_count: 1,
+      });
+
+      // overhead: 10.75, inputs: 2 * 57.25 = 114.5, outputs: 1 * 43 = 43
+      expect(txVBytes).toEqual(168.25);
+      // extraRawBytes: 2.25, witnessBytes: 2 * 65 = 130
+      expect(txBytes).toEqual(300.5);
+      expect(txWeight).toEqual(673);
+    });
+
+    it('should calculate size for mixed p2wpkh and p2tr inputs', () => {
+      const { txVBytes, txBytes, txWeight } = estimator.calcMixedInputTxSize({
+        p2wpkh_input_count: 1,
+        p2tr_input_count: 1,
+        p2wpkh_output_count: 1,
+        p2tr_output_count: 1,
+      });
+
+      // overhead: 10.75, inputs: 1 * 67.75 + 1 * 57.25 = 125, outputs: 31 + 43 = 74
+      expect(txVBytes).toEqual(209.75);
+      // extraRawBytes: 2.25, witnessBytes: 107 + 65 = 172
+      expect(txBytes).toEqual(384);
+      expect(txWeight).toEqual(839);
+    });
+
+    it('should default optional output counts to zero', () => {
+      const { txVBytes } = estimator.calcMixedInputTxSize({
+        p2wpkh_input_count: 1,
+        p2tr_input_count: 0,
+      });
+
+      // overhead: 10.75, inputs: 1 * 67.75, outputs: 0
+      expect(txVBytes).toEqual(78.5);
+    });
+
+    it('should calculate size with multiple output types', () => {
+      const { txVBytes, txBytes, txWeight } = estimator.calcMixedInputTxSize({
+        p2wpkh_input_count: 2,
+        p2tr_input_count: 1,
+        p2pkh_output_count: 1,
+        p2sh_output_count: 1,
+        p2wpkh_output_count: 1,
+        p2tr_output_count: 1,
+      });
+
+      // overhead: getTxOverheadVBytes('p2wpkh', 3, 4) = 4 + 1 + 1 + 4 + 0.75 = 10.75
+      // inputs: 2 * 67.75 + 1 * 57.25 = 192.75
+      // outputs: 34 + 32 + 31 + 43 = 140
+      expect(txVBytes).toEqual(343.5);
+      // extraRawBytes: 2.25, witnessBytes: 2 * 107 + 1 * 65 = 279
+      expect(txBytes).toEqual(624.75);
+      expect(txWeight).toEqual(1374);
+    });
+  });
 });

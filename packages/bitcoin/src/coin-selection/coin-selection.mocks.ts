@@ -37,4 +37,23 @@ export const mockUtxos = generateMockTransactions([
   600, 600, 1200, 1200, 10000, 10000, 25000, 40000, 50000000,
 ]);
 
+function generateMockTaprootUtxo(value: number): OwnedUtxo {
+  return {
+    address: 'tb1parwmj7533de3k2fw2kntyqacspvhm67qnjcmpqnnpfvzu05l69nsczdywd',
+    path: `m/86'/1'/0'/0/0`,
+    keyOrigin: `deadbeef/86'/1'/0'/0/0`,
+    txid: sha256(sha256(hexToBytes(generateMockHex()))).toString(),
+    value,
+    vout: 0,
+  };
+}
+
+export function generateMockTaprootTransactions(values: number[]) {
+  return values.map(val => generateMockTaprootUtxo(val));
+}
+
+export const mockTaprootUtxos = generateMockTaprootTransactions([
+  600, 600, 1200, 1200, 10000, 10000, 25000, 40000, 50000000,
+]);
+
 export const mockAverageFee = generateMockAverageFee(10);
