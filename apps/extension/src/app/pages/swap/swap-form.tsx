@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 
-import { Box, Flex } from 'leather-styles/jsx';
+import { Box, Divider, Flex } from 'leather-styles/jsx';
 
 import { AccountSwapAsset } from '@leather.io/services';
-import { useSwapContext } from '@leather.io/state/swap';
+import { useLiveSwapEstimate, useSwapContext } from '@leather.io/state/swap';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -15,10 +15,29 @@ import { AssetBalance } from '@app/pages/swap/components/asset-balance';
 import { AssetSelectorToggle } from '@app/pages/swap/components/asset-selector-toggle';
 import { AssetSelector } from '@app/pages/swap/components/asset-selector/asset-selector';
 import { AssetSelectorSheet } from '@app/pages/swap/components/asset-selector/asset-selector-sheet';
+import { TargetAmountPreview } from '@app/pages/swap/components/target-amount-preview';
 
 export function SwapForm() {
   const amountFieldRef = useRef<HTMLInputElement>(null);
-  const { state, actions, validation, baseAssetsQuery, targetAssetsQuery } = useSwapContext();
+  const {
+    state,
+    actions,
+    validation,
+    baseAssetsQuery,
+    targetAssetsQuery,
+    targetMarketDataQuery,
+    quoteQuery,
+    networkFeeQuery,
+    baseMarketDataQuery,
+    networkFeeAssetMarkedDataQuery,
+  } = useSwapContext();
+
+  const liveEstimate = useLiveSwapEstimate({
+    quoteQuery,
+    networkFeeQuery,
+    baseMarketDataQuery,
+    nativeAssetMarketDataQuery: networkFeeAssetMarkedDataQuery,
+  });
 
   function handleAssetSelection(type: 'base' | 'target', asset: AccountSwapAsset) {
     const action = {
@@ -64,6 +83,29 @@ export function SwapForm() {
                 />
                 <AssetBalance
                   balance={state.baseSwapAsset?.balance}
+                  inputCurrencyMode={state.inputCurrencyMode}
+                />
+              </Flex>
+            </Flex>
+
+            <Divider marginY="space.05" borderColor="ink.border-transparent" />
+
+            <Flex justifyContent="space-between" alignItems="flex-start">
+              <TargetAmountPreview
+                marketData={targetMarketDataQuery.data}
+                liveEstimate={liveEstimate}
+                baseAmount={state.baseAmount}
+                isTargetAssetSet={state.targetSwapAsset !== null}
+              />
+
+              <Flex direction="column" gap="space.03" alignItems="flex-end">
+                <AssetSelectorToggle
+                  asset={state.targetSwapAsset?.asset}
+                  onPress={() => actions.openAssetSelector('target')}
+                  disabled={state.baseSwapAsset === null}
+                />
+                <AssetBalance
+                  balance={state.targetSwapAsset?.balance}
                   inputCurrencyMode={state.inputCurrencyMode}
                 />
               </Flex>
