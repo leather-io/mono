@@ -33,6 +33,7 @@ describe(Sip9sService.name, () => {
         protocol: CryptoAssetProtocols.sip9,
         assetId,
         name: 'Test NFT',
+        content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
       })
     ),
   } as unknown as Sip9AssetService;
@@ -113,12 +114,53 @@ describe(Sip9sService.name, () => {
         protocol: CryptoAssetProtocols.sip9,
         assetId: 'SP000.bns-archive',
         name: 'BNS - Archive',
+        content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
       } as Sip9Asset);
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 
       expect(sip9s).toHaveLength(1);
       expect(sip9s[0].assetId).not.toEqual('SP000.bns-archive');
+    });
+
+    it('filters out LP tokens before fetching metadata', async () => {
+      const lpHoldings: NonFungibleTokenHolding[] = [
+        {
+          asset_identifier: 'SP000.velar::pool-token-id',
+          value: { hex: '0x01', repr: '1' },
+          block_height: 100,
+          tx_id: 'tx1',
+        },
+        {
+          asset_identifier: 'SP000.dlmm-pool-stx::token',
+          value: { hex: '0x02', repr: '2' },
+          block_height: 101,
+          tx_id: 'tx2',
+        },
+        {
+          asset_identifier: 'SP000.real-nft::nft',
+          value: { hex: '0x03', repr: '3' },
+          block_height: 102,
+          tx_id: 'tx3',
+        },
+      ];
+
+      vi.spyOn(mockStacksApiClient, 'getNftHoldings').mockResolvedValueOnce(lpHoldings);
+
+      const account: AccountAddresses = {
+        id: { fingerprint: 'fp1', accountIndex: 0 },
+        stacks: { stxAddress: 'ST123' },
+      };
+
+      const sip9s = await sip9sService.getAccountSip9s({ account });
+
+      expect(sip9s).toHaveLength(1);
+      expect(mockSip9AssetService.getAsset).toHaveBeenCalledTimes(1);
+      expect(mockSip9AssetService.getAsset).toHaveBeenCalledWith(
+        'SP000.real-nft::nft',
+        '0x03',
+        undefined
+      );
     });
 
     it('catches Stacks API errors and returns empty array', async () => {
