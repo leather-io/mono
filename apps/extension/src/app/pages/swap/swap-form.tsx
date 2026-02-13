@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import { Box, Flex } from 'leather-styles/jsx';
 
 import { AccountSwapAsset } from '@leather.io/services';
@@ -7,14 +9,16 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { AmountField } from '@app/pages/swap/components/amount-field';
+import { AmountField } from '@app/pages/swap/components/amount-field/amount-field';
+import { getAmountErrorMessage } from '@app/pages/swap/components/amount-field/amount-field-error-messages';
 import { AssetBalance } from '@app/pages/swap/components/asset-balance';
 import { AssetSelectorToggle } from '@app/pages/swap/components/asset-selector-toggle';
 import { AssetSelector } from '@app/pages/swap/components/asset-selector/asset-selector';
 import { AssetSelectorSheet } from '@app/pages/swap/components/asset-selector/asset-selector-sheet';
 
 export function SwapForm() {
-  const { state, actions, baseAssetsQuery, targetAssetsQuery } = useSwapContext();
+  const amountFieldRef = useRef<HTMLInputElement>(null);
+  const { state, actions, validation, baseAssetsQuery, targetAssetsQuery } = useSwapContext();
 
   function handleAssetSelection(type: 'base' | 'target', asset: AccountSwapAsset) {
     const action = {
@@ -23,6 +27,15 @@ export function SwapForm() {
     };
 
     action[type](asset);
+  }
+
+  function handleSheetCloseAutoFocus(e: Event) {
+    if (!amountFieldRef.current) return;
+
+    e.preventDefault();
+    amountFieldRef.current.focus();
+    const length = amountFieldRef.current.value.length;
+    amountFieldRef.current.setSelectionRange(length, length);
   }
 
   return (
@@ -35,8 +48,13 @@ export function SwapForm() {
               <AmountField
                 asset={state.baseSwapAsset?.asset}
                 value={state.baseAmount}
+                onChange={actions.setBaseAmount}
                 secondaryAmount={state.secondaryAmount}
                 inputCurrencyMode={state.inputCurrencyMode}
+                onInputCurrencyModeSwitch={actions.toggleInputCurrencyMode}
+                quoteCurrencyPreference="USD"
+                inputRef={amountFieldRef}
+                errorMessage={getAmountErrorMessage(validation.issues.baseAmount)}
               />
 
               <Flex direction="column" gap="space.03" alignItems="flex-end">
@@ -56,6 +74,7 @@ export function SwapForm() {
             type={state.selectingAsset}
             isOpen={state.selectingAsset !== null}
             onClose={actions.closeAssetSelector}
+            onCloseAutoFocus={handleSheetCloseAutoFocus}
           >
             {state.selectingAsset && (
               <AssetSelector

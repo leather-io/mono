@@ -10,10 +10,17 @@ interface AssetSelectorSheetProps {
   type: 'base' | 'target' | null;
   isOpen: boolean;
   onClose(): void;
+  onCloseAutoFocus?(e: Event): void;
   children: ReactNode;
 }
 
-export function AssetSelectorSheet({ type, isOpen, onClose, children }: AssetSelectorSheetProps) {
+export function AssetSelectorSheet({
+  type,
+  isOpen,
+  onClose,
+  onCloseAutoFocus,
+  children,
+}: AssetSelectorSheetProps) {
   if (!type) return null;
 
   return (
@@ -31,6 +38,7 @@ export function AssetSelectorSheet({ type, isOpen, onClose, children }: AssetSel
         <Dialog.Content
           onPointerDownOutside={onClose}
           onEscapeKeyDown={onClose}
+          onCloseAutoFocus={onCloseAutoFocus}
           className={css({
             display: 'flex',
             flexDirection: 'column',
