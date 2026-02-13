@@ -18,6 +18,18 @@
 
 ---
 
+## [6.94.2](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.94.1...@leather.io/extension-v6.94.2) (2026-02-13)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/features bumped to 1.1.14
+    * @leather.io/queries bumped to 0.6.0
+    * @leather.io/services bumped to 1.48.0
+    * @leather.io/ui bumped to 1.106.1
+
 ## [6.94.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.94.0...@leather.io/extension-v6.94.1) (2026-02-12)
 
 
