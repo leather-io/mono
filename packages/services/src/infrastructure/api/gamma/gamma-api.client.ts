@@ -20,16 +20,20 @@ export class GammaApiClient {
     contractPrincipal: string,
     tokenId: number,
     { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<GammaNftMetadata> {
+  ): Promise<GammaNftMetadata | null> {
     async function fetchFn() {
-      const res = await axios.get(
-        `${GAMMA_API_URL}/get-stacks-nft?id=${contractPrincipal}_${tokenId}`,
-        {
-          signal,
-        }
-      );
+      try {
+        const res = await axios.get(
+          `${GAMMA_API_URL}/get-stacks-nft?id=${contractPrincipal}_${tokenId}`,
+          {
+            signal,
+          }
+        );
 
-      return gammaNftMetadataSchema.parse(res.data);
+        return gammaNftMetadataSchema.parse(res.data);
+      } catch {
+        return null;
+      }
     }
     return skipCache
       ? await fetchFn()
@@ -42,15 +46,19 @@ export class GammaApiClient {
   public async getStacksCollection(
     contractPrincipal: string,
     { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<GammaCollectionMetadata> {
+  ): Promise<GammaCollectionMetadata | null> {
     async function fetchFn() {
-      const res = await axios.get(
-        `${GAMMA_API_URL}/get-stacks-collection?contract_id_or_slug=${contractPrincipal}`,
-        {
-          signal,
-        }
-      );
-      return gammaCollectionMetadataSchema.parse(res.data);
+      try {
+        const res = await axios.get(
+          `${GAMMA_API_URL}/get-stacks-collection?contract_id_or_slug=${contractPrincipal}`,
+          {
+            signal,
+          }
+        );
+        return gammaCollectionMetadataSchema.parse(res.data);
+      } catch {
+        return null;
+      }
     }
     return skipCache
       ? await fetchFn()

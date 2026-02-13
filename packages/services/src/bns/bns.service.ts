@@ -56,10 +56,14 @@ export class BnsService {
     stacksAddress: string,
     signal?: AbortSignal
   ): Promise<BnsName | null> {
-    const primaryName = await this.getPrimaryName(stacksAddress, signal);
-    return primaryName
-      ? buildBnsName(stacksAddress, primaryName.name, primaryName.namespace)
-      : null;
+    try {
+      const primaryName = await this.getPrimaryName(stacksAddress, signal);
+      return primaryName
+        ? buildBnsName(stacksAddress, primaryName.name, primaryName.namespace)
+        : null;
+    } catch {
+      return null;
+    }
   }
 
   public async getAccountBnsNames(
@@ -70,15 +74,19 @@ export class BnsService {
       return [];
     }
 
-    const [bnsV2ApiAddressNamesRes, primaryBnsName] = await Promise.all([
-      this.bnsV2ApiClient.fetchAddressBnsNames(request.account.stacks.stxAddress, { signal }),
-      this.getAddressPrimaryBnsName(request.account.stacks.stxAddress, signal),
-    ]);
+    try {
+      const [bnsV2ApiAddressNamesRes, primaryBnsName] = await Promise.all([
+        this.bnsV2ApiClient.fetchAddressBnsNames(request.account.stacks.stxAddress, { signal }),
+        this.getAddressPrimaryBnsName(request.account.stacks.stxAddress, signal),
+      ]);
 
-    return bnsV2ApiAddressNamesRes.names.map(n => ({
-      ...mapBnsNameFromV2ApiAddressName(n),
-      isPrimary: !!primaryBnsName && n.full_name === primaryBnsName.fullName,
-    }));
+      return bnsV2ApiAddressNamesRes.names.map(n => ({
+        ...mapBnsNameFromV2ApiAddressName(n),
+        isPrimary: !!primaryBnsName && n.full_name === primaryBnsName.fullName,
+      }));
+    } catch {
+      return [];
+    }
   }
 
   public async getAccountPrimaryBnsProfile(
