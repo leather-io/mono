@@ -6,6 +6,8 @@ import { createTestSelector } from '@tests/utils';
 
 import { delay } from '@leather.io/utils';
 
+import { RouteUrls } from '@shared/route-urls';
+
 export class HomePage {
   readonly page: Page;
   readonly availableBalance: Locator;
@@ -78,14 +80,11 @@ export class HomePage {
 
   // Currently under Ordinals receive flow
   async getReceiveTaprootAddress() {
-    await this.goToReceiveDialog();
-    await delay(1000);
-    await this.page.getByTestId(HomePageSelectors.ReceiveCollectiblesTab).click();
+    await this.page.evaluate(route => {
+      window.location.hash = `/${route}`;
+    }, RouteUrls.ReceiveCollectibles);
+    await this.page.waitForSelector('[data-state="open"]');
     await this.page.getByTestId(HomePageSelectors.ReceiveBtcTaprootQrCodeBtn).click();
-    // FIXME - add better test for Copy action
-    // await this.page.getByRole('button', { name: 'Copy address' }).click();
-    // const address = await this.page.evaluate('navigator.clipboard.readText()');
-    // return address;
     const displayerAddress = await this.page
       .getByTestId(SharedComponentsSelectors.AddressDisplayer)
       .innerText();

@@ -44,6 +44,7 @@ export enum RouteUrls {
   ReceiveStx = 'receive/stx',
   ReceiveBtc = 'receive/btc',
   ReceiveBtcStamp = 'receive/btc-stamp',
+  ReceiveCollectibles = 'receive/collectibles',
   ReceiveCollectible = 'receive/collectible',
   ReceiveCollectibleOrdinal = 'receive/collectible/ordinal',
 

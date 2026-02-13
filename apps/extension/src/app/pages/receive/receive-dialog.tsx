@@ -42,6 +42,15 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
   const accountIndex = get(location.state, 'accountIndex', undefined);
   const btcAddressTaproot = useZeroIndexTaprootAddress(accountIndex);
 
+  const activeTab = location.pathname.endsWith(RouteUrls.ReceiveCollectibles)
+    ? 'collectibles'
+    : 'tokens';
+
+  const receiveTabRoutes: Record<string, string> = {
+    tokens: `${RouteUrls.Home}${RouteUrls.Receive}`,
+    collectibles: `${RouteUrls.Home}${RouteUrls.ReceiveCollectibles}`,
+  };
+
   const title =
     type === 'full' ? (
       <>
@@ -96,7 +105,12 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
     >
       {type === 'collectible' && <Collectibles />}
       {type === 'full' && (
-        <Tabs.Root defaultValue="tokens">
+        <Tabs.Root
+          value={activeTab}
+          onValueChange={(value: string) =>
+            void navigate(receiveTabRoutes[value], { replace: true, state: { backgroundLocation } })
+          }
+        >
           <Tabs.List>
             <Tabs.Trigger value="tokens" data-testid={HomePageSelectors.ReceiveAssetsTab}>
               Tokens

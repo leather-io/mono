@@ -10,6 +10,7 @@ import { ReceiveStxModal } from '@app/pages/receive/receive-stx';
 export const receiveRoutes = (
   <Route>
     <Route path={RouteUrls.Receive} element={<ReceiveSheet />} />
+    <Route path={RouteUrls.ReceiveCollectibles} element={<ReceiveSheet />} />
     <Route path={RouteUrls.ReceiveStx} element={<ReceiveStxModal />} />
     <Route path={RouteUrls.ReceiveBtc} element={<ReceiveBtcModal />} />
     <Route path={RouteUrls.ReceiveBtcStamp} element={<ReceiveBtcModal type="btc-stamp" />} />
