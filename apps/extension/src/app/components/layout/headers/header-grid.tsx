@@ -5,7 +5,7 @@ import type { HasChildren } from '@app/common/has-children';
 interface HeaderGridProps extends GridProps {
   leftCol: React.ReactNode;
   centerCol?: React.ReactNode;
-  rightCol: React.ReactNode;
+  rightCol?: React.ReactNode;
 }
 
 export function HeaderGrid({ leftCol, centerCol, rightCol, ...props }: HeaderGridProps) {
@@ -23,7 +23,7 @@ export function HeaderGrid({ leftCol, centerCol, rightCol, ...props }: HeaderGri
         </Flex>
       </GridItem>
       {centerCol && <GridItem margin="auto">{centerCol}</GridItem>}
-      <GridItem>{rightCol}</GridItem>
+      {rightCol && <GridItem>{rightCol}</GridItem>}
     </Grid>
   );
 }

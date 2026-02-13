@@ -20,7 +20,7 @@ const mockedEmptyStxBalanceV2 = {
 const mockedFtBalancesV2 = {
   limit: 100,
   offset: 0,
-  total: 6,
+  total: 9,
   results: [
     {
       token: 'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin::longcoin',
@@ -45,6 +45,18 @@ const mockedFtBalancesV2 = {
     {
       token: 'SPWECF3XYVRBRCN23CJJCX9XKSF8RFWQPAQMWXT.blockstack::BLOCKSTACK',
       balance: '60000000000',
+    },
+    {
+      token: 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc',
+      balance: '50000000',
+    },
+    {
+      token: 'SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc::aeUSDC',
+      balance: '100000000',
+    },
+    {
+      token: 'SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx::usdcx-token',
+      balance: '250000000',
     },
   ],
 };

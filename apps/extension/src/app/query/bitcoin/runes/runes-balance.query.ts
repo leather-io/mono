@@ -1,6 +1,9 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { createRunesAccountBalanceQueryConfig } from '@leather.io/queries';
+import {
+  createRuneBalanceByRuneNameQueryConfig,
+  createRunesAccountBalanceQueryConfig,
+} from '@leather.io/queries';
 import { type AccountRequest, type RuneBalance } from '@leather.io/services';
 import { isSameAsset } from '@leather.io/utils';
 
@@ -34,6 +37,20 @@ function useGetRunesAccountBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();
   return useQuery({
     ...createRunesAccountBalanceQueryConfig(request, settings),
+    ...balanceQueryOptionsWithRefetch,
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useRuneBalanceByRuneName(accountIndex: number, runeName: string) {
+  const account = useAccountAddresses(accountIndex);
+  return toFetchState(useGetRuneBalanceByRuneNameQuery({ account }, runeName));
+}
+
+function useGetRuneBalanceByRuneNameQuery(request: AccountRequest, runeName: string) {
+  const settings = useUserSettings();
+  return useQuery({
+    ...createRuneBalanceByRuneNameQueryConfig(request, runeName, settings),
     ...balanceQueryOptionsWithRefetch,
     placeholderData: keepPreviousData,
   });

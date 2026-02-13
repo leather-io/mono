@@ -44,3 +44,17 @@ export function useNativeSegwitBtcAccountBalance(accountIndex: number) {
     })
   );
 }
+
+export function useTaprootBtcAccountBalance(accountIndex: number) {
+  const account = useAccountAddresses(accountIndex);
+  const discardedInscriptions = useDiscardedInscriptions();
+  return toFetchState(
+    useGetBtcAccountBalanceQuery({
+      account,
+      protections: {
+        discardedInscriptions,
+      },
+      exclusions: { nativeSegwitAddresses: true },
+    })
+  );
+}

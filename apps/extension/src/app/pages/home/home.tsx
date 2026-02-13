@@ -1,4 +1,4 @@
-import { Route } from 'react-router';
+import { Route, useNavigate } from 'react-router';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Flex } from 'leather-styles/jsx';
@@ -12,6 +12,7 @@ import { Collectibles } from '@app/features/collectibles/collectibles';
 import { useFlags } from '@app/features/feature-flags';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
+import { NotFoundContent } from '@app/pages/not-found/not-found';
 import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
 
@@ -20,8 +21,24 @@ import { AccountCard } from './components/account-card';
 import { HomeTabs } from './components/home-tabs';
 import { Tokens } from './components/tokens';
 
-export function Home() {
+function HomeNotFound() {
+  const navigate = useNavigate();
+  return <NotFoundContent onGoHome={() => navigate(RouteUrls.Home)} />;
+}
+
+const animationState = { hasPlayed: false };
+
+interface HomeProps {
+  isBackground?: boolean;
+}
+
+export function Home({ isBackground }: HomeProps) {
   const { activityRevamp } = useFlags();
+
+  const shouldAnimate = !isBackground && !animationState.hasPlayed;
+  if (shouldAnimate) {
+    animationState.hasPlayed = true;
+  }
 
   return (
     <Flex
@@ -31,8 +48,8 @@ export function Home() {
       pt="space.04"
       width="100%"
       bg="ink.1"
-      animation="fadein"
-      animationDuration="500ms"
+      animation={shouldAnimate ? 'fadein' : undefined}
+      animationDuration={shouldAnimate ? '500ms' : undefined}
     >
       <Flex px={['space.05', 0]} pb="space.05" gap="space.05" direction="column">
         <AccountCard />
@@ -49,6 +66,7 @@ export function Home() {
           />
           <Route path={RouteUrls.Collectibles} element={<Collectibles />} />
           {homePageModalRoutes}
+          <Route path="*" element={<HomeNotFound />} />
         </ModalBackgroundWrapper>
       </HomeTabs>
     </Flex>
