@@ -63,7 +63,19 @@ export function getNonFungibleTokenId(hex: string): number {
 function encodeIpfsPath(path: string) {
   const normalized = path.replace(/^\/+/, '');
   if (!normalized) return '';
-  return '/' + normalized.split('/').map(encodeURIComponent).join('/');
+  return (
+    '/' +
+    normalized
+      .split('/')
+      .map(segment => {
+        try {
+          return encodeURIComponent(decodeURIComponent(segment));
+        } catch {
+          return encodeURIComponent(segment);
+        }
+      })
+      .join('/')
+  );
 }
 
 function toLeatherIpfsUrl(url: string): string {
