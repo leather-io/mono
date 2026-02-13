@@ -413,6 +413,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.48.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.47.1...@leather.io/services-v1.48.0) (2026-02-13)
+
+
+### Features
+
+* asset-list service ([c4dcb11](https://github.com/leather-io/mono/commit/c4dcb11d79fdaf318dade7d7f52ca81d2c33ecf0))
+
 ## [1.47.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.47.0...@leather.io/services-v1.47.1) (2026-02-12)
 
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.6.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.5.1...@leather.io/queries-v0.6.0) (2026-02-13)
+
+
+### Features
+
+* asset-list service ([c4dcb11](https://github.com/leather-io/mono/commit/c4dcb11d79fdaf318dade7d7f52ca81d2c33ecf0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.48.0
+
 ## [0.5.1](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.5.0...@leather.io/queries-v0.5.1) (2026-02-12)
 
 
