@@ -25,7 +25,6 @@ export function AssetBalance({ balance, inputCurrencyMode }: AssetBalanceProps) 
       <AnimatePresence initial={false}>
         {displayBalance && (
           <motion.div
-            key={inputCurrencyMode}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
