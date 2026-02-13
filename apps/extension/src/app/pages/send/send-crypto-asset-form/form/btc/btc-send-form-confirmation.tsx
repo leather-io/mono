@@ -33,7 +33,7 @@ import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useInscribedSpendableUtxos } from '@app/features/discarded-inscriptions/use-inscribed-spendable-utxos';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
+import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
@@ -58,7 +58,7 @@ export function BtcSendFormConfirmation() {
 
   const transaction = useMemo(() => btc.Transaction.fromRaw(hexToBytes(tx)), [tx]);
 
-  const { refetchUtxos } = useCurrentNativeSegwitUtxos();
+  const { refetchUtxos } = useCurrentUtxos();
 
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
   const { broadcastTx } = useBitcoinBroadcastTransaction();

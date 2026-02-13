@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import * as btc from '@scure/btc-signer';
 
-import { determineUtxosForSpend, determineUtxosForSpendAll } from '@leather.io/bitcoin';
+import { determineUtxosForSpend, determineUtxosForSpendAll, isP2TROut } from '@leather.io/bitcoin';
 import type { Money, OwnedUtxo } from '@leather.io/models';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
@@ -13,27 +13,26 @@ import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/
 import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
 import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
-interface GenerateNativeSegwitTxValues {
+interface GenerateBitcoinTxValues {
   amount: Money;
   recipients: TransferRecipient[];
 }
 
-interface UseGenerateUnsignedNativeSegwitTxProps {
+interface UseGenerateUnsignedBitcoinTxProps {
   throwError?: boolean;
 }
 
-// temp arg before refactoring all flows to new design
-export function useGenerateUnsignedNativeSegwitTx({
+// This should be replace by generateBitcoinUnsignedTransaction from @leather.io/bitcoin package in the future
+export function useGenerateUnsignedBitcoinTx({
   throwError = false,
-}: UseGenerateUnsignedNativeSegwitTxProps = {}) {
-  const indexZeroSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
+}: UseGenerateUnsignedBitcoinTxProps = {}) {
+  const zeroIndexNativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
   const getSignerForInput = useBitcoinSignerFromInput();
-
   const networkMode = useBitcoinScureLibNetworkConfig();
 
   return useCallback(
     (
-      values: GenerateNativeSegwitTxValues,
+      values: GenerateBitcoinTxValues,
       feeRate: number,
       utxos: OwnedUtxo[],
       isSendingMax?: boolean
@@ -68,18 +67,19 @@ export function useGenerateUnsignedNativeSegwitTx({
 
         for (const input of inputs) {
           const inputSigner = getSignerForInput(input);
-
-          const p2wpkh = btc.p2wpkh(inputSigner.publicKey, networkMode);
+          const tapInternalKey = isP2TROut(inputSigner)
+            ? { tapInternalKey: inputSigner.payment.tapInternalKey }
+            : {};
 
           tx.addInput({
             txid: input.txid,
             index: input.vout,
             sequence: 0,
             witnessUtxo: {
-              // script = 0014 + pubKeyHash
-              script: p2wpkh.script,
+              script: inputSigner.payment.script,
               amount: BigInt(input.value),
             },
+            ...tapInternalKey,
           });
 
           signingConfig.push({
@@ -92,7 +92,11 @@ export function useGenerateUnsignedNativeSegwitTx({
           // When coin selection returns output with no address we assume it is
           // a change output
           if (!output.address) {
-            tx.addOutputAddress(indexZeroSigner.address, BigInt(output.value), networkMode);
+            tx.addOutputAddress(
+              zeroIndexNativeSegwitSigner.address,
+              BigInt(output.value),
+              networkMode
+            );
             return;
           }
           tx.addOutputAddress(output.address, BigInt(output.value), networkMode);
@@ -112,6 +116,6 @@ export function useGenerateUnsignedNativeSegwitTx({
         return null;
       }
     },
-    [networkMode, indexZeroSigner.address, getSignerForInput, throwError]
+    [networkMode, zeroIndexNativeSegwitSigner.address, getSignerForInput, throwError]
   );
 }

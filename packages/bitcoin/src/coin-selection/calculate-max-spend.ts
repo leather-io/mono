@@ -3,11 +3,15 @@ import BigNumber from 'bignumber.js';
 import type { Money } from '@leather.io/models';
 import { createMoney, satToBtc } from '@leather.io/utils';
 
-import { filterUneconomicalUtxos, getSpendableAmount } from './coin-selection.utils';
+import {
+  type InputData,
+  filterUneconomicalUtxos,
+  getSpendableAmount,
+} from './coin-selection.utils';
 
 interface CalculateMaxSpendParams {
   recipient: string;
-  utxos: { value: number; txid: string }[];
+  utxos: InputData[];
   feeRate: number;
 }
 

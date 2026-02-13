@@ -9,7 +9,7 @@ import { BtcFeeType, type Money, type OwnedUtxo, btcTxTimeMap } from '@leather.i
 import { baseCurrencyAmountInQuote } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
+import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 
@@ -42,7 +42,7 @@ export function useBitcoinFeesList({
   recipient,
   utxos,
 }: UseBitcoinFeesListArgs) {
-  const { btc: balance } = useCurrentNativeSegwitBtcBalanceWithFallback();
+  const { btc: balance } = useCurrentBtcBalanceWithFallback();
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
   const { data: feeRates, isLoading } = useAverageBitcoinFeeRates();
 

@@ -6,7 +6,12 @@ import { Money } from '@leather.io/models';
 import { createMoney, sumMoney } from '@leather.io/utils';
 
 import { BitcoinError } from '../validation/bitcoin-error';
-import { filterUneconomicalUtxos, getSizeInfo, getUtxoTotal } from './coin-selection.utils';
+import {
+  type InputData,
+  filterUneconomicalUtxos,
+  getSizeInfo,
+  getUtxoTotal,
+} from './coin-selection.utils';
 
 export interface CoinSelectionOutput {
   value: bigint;
@@ -23,7 +28,7 @@ export interface DetermineUtxosForSpendArgs<T> {
   recipients: CoinSelectionRecipient[];
   utxos: T[];
 }
-export function determineUtxosForSpendAll<T extends { value: number; txid: string }>({
+export function determineUtxosForSpendAll<T extends InputData>({
   feeRate,
   recipients,
   utxos,
@@ -36,7 +41,7 @@ export function determineUtxosForSpendAll<T extends { value: number; txid: strin
   if (!filteredUtxos.length) throw new BitcoinError('InsufficientFunds');
 
   const sizeInfo = getSizeInfo({
-    inputLength: filteredUtxos.length,
+    utxos: filteredUtxos,
     isSendMax: true,
     recipients,
   });
@@ -57,7 +62,7 @@ export function determineUtxosForSpendAll<T extends { value: number; txid: strin
   };
 }
 
-export function determineUtxosForSpend<T extends { value: number; txid: string }>({
+export function determineUtxosForSpend<T extends InputData>({
   feeRate,
   recipients,
   utxos,
@@ -79,7 +84,7 @@ export function determineUtxosForSpend<T extends { value: number; txid: string }
 
   function estimateTransactionSize() {
     return getSizeInfo({
-      inputLength: neededUtxos.length,
+      utxos: neededUtxos,
       recipients,
     });
   }

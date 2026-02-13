@@ -5,18 +5,45 @@ import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
 import { sumNumbers } from '@leather.io/utils';
 
 import { BtcSizeFeeEstimator } from '../fees/btc-size-fee-estimator';
+import { inferPaymentTypeFromAddress } from '../utils/bitcoin.utils';
+import { createBitcoinAddress } from '../validation/bitcoin-address';
 import { CoinSelectionRecipient } from './coin-selection';
 
-export function getUtxoTotal<T extends { value: number }>(utxos: T[]) {
+export interface InputData {
+  value: number;
+  txid: string;
+  address: string;
+}
+
+export function getUtxoTotal<T extends InputData>(utxos: T[]) {
   return sumNumbers(utxos.map(utxo => utxo.value));
 }
 
-export function getSizeInfo(payload: {
-  inputLength: number;
+interface CountInputsByScriptTypeResponse {
+  p2wpkh: number;
+  p2tr: number;
+}
+export function countInputsByScriptType<T extends InputData>(
+  utxos: T[]
+): CountInputsByScriptTypeResponse {
+  return utxos.reduce(
+    (acc, utxo) => {
+      const paymentType = inferPaymentTypeFromAddress(createBitcoinAddress(utxo.address));
+      return {
+        ...acc,
+        [paymentType]: acc[paymentType] + 1,
+      };
+    },
+    { p2tr: 0, p2wpkh: 0 }
+  );
+}
+
+export function getSizeInfo<T extends InputData>(payload: {
+  utxos: T[];
   recipients: CoinSelectionRecipient[];
   isSendMax?: boolean;
 }) {
-  const { inputLength, recipients, isSendMax } = payload;
+  const { utxos, recipients, isSendMax } = payload;
 
   const validAddressesInfo = recipients
     .map(recipient => validate(recipient.address) && getAddressInfo(recipient.address))
@@ -48,22 +75,23 @@ export function getSizeInfo(payload: {
     {} as Record<string, number>
   );
 
+  const { p2wpkh, p2tr } = countInputsByScriptType(utxos);
   const txSizer = new BtcSizeFeeEstimator();
-  const sizeInfo = txSizer.calcTxSize({
-    input_script: 'p2wpkh',
-    input_count: inputLength,
+
+  return txSizer.calcMixedInputTxSize({
+    p2wpkh_input_count: p2wpkh,
+    p2tr_input_count: p2tr,
     ...outputsData,
   });
-
-  return sizeInfo;
 }
+
 interface GetSpendableAmountArgs<T> {
   utxos: T[];
   feeRate: number;
   recipients: CoinSelectionRecipient[];
   isSendMax?: boolean;
 }
-export function getSpendableAmount<T extends { value: number }>({
+export function getSpendableAmount<T extends InputData>({
   utxos,
   feeRate,
   recipients,
@@ -71,7 +99,7 @@ export function getSpendableAmount<T extends { value: number }>({
   const balance = utxos.map(utxo => utxo.value).reduce((prevVal, curVal) => prevVal + curVal, 0);
 
   const size = getSizeInfo({
-    inputLength: utxos.length,
+    utxos,
     recipients,
   });
   const fee = Math.ceil(size.txVBytes * feeRate);
@@ -83,7 +111,7 @@ export function getSpendableAmount<T extends { value: number }>({
 }
 
 // Check if the spendable amount drops when adding a utxo
-export function filterUneconomicalUtxos<T extends { value: number; txid: string }>({
+export function filterUneconomicalUtxos<T extends InputData>({
   utxos,
   feeRate,
   recipients,

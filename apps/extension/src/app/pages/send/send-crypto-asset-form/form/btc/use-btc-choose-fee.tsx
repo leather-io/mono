@@ -3,7 +3,7 @@ import { btcToSat, createMoney } from '@leather.io/utils';
 import { logger } from '@shared/logger';
 
 import { formFeeRowValue } from '@app/common/send/utils';
-import { useGenerateUnsignedNativeSegwitTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
+import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
 import { OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 
@@ -14,7 +14,7 @@ import { useBtcChooseFeeState } from './btc-choose-fee';
 export function useBtcChooseFee() {
   const { isSendingMax, txValues, utxos } = useBtcChooseFeeState();
   const sendFormNavigate = useSendFormNavigate();
-  const generateTx = useGenerateUnsignedNativeSegwitTx();
+  const generateTx = useGenerateUnsignedBitcoinTx();
   const calcMaxSpend = useCalculateMaxBitcoinSpend();
   const signTx = useSignBitcoinTx();
   const amountAsMoney = createMoney(btcToSat(txValues.amount).toNumber(), 'BTC');

@@ -1,4 +1,5 @@
 import * as btc from '@scure/btc-signer';
+import type { InputData } from 'coin-selection/coin-selection.utils';
 
 import {
   CoinSelectionRecipient,
@@ -24,7 +25,7 @@ export interface GenerateBitcoinUnsignedTransactionArgs<T> {
   payerLookup(keyOrigin: string): BitcoinNativeSegwitPayer | BitcoinTaprootPayer | undefined;
 }
 export function generateBitcoinUnsignedTransaction<
-  T extends { txid: string; vout: number; value: number; keyOrigin: string },
+  T extends InputData & { vout: number; keyOrigin: string },
 >({
   feeRate,
   isSendingMax,

@@ -13,7 +13,7 @@ import {
   initAnalytics,
 } from '@shared/utils/analytics';
 
-import { useNativeSegwitBtcAccountBalance } from '@app/query/bitcoin/balance/btc-balance.hooks';
+import { useBtcAccountBalance } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useAccountTotalBalance } from '@app/query/common/account-balance/account-balance.query';
 import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { store } from '@app/store';
@@ -97,7 +97,7 @@ export function useHandleQueuedBackgroundAnalytics() {
 }
 
 export function useAccountScaledBalanceAnalytics({ accountIndex }: { accountIndex: number }) {
-  const btcBalance = useNativeSegwitBtcAccountBalance(accountIndex);
+  const btcBalance = useBtcAccountBalance(accountIndex);
   const stxBalance = useStxAccountBalance(accountIndex);
 
   const totalBalance = useAccountTotalBalance(accountIndex);

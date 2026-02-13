@@ -2,13 +2,12 @@ import {
   type DetermineUtxosForSpendArgs,
   determineUtxosForSpend,
   determineUtxosForSpendAll,
+  getSizeInfo,
 } from '@leather.io/bitcoin';
 import type { OwnedUtxo } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import type { TransferRecipient } from '@shared/models/form.model';
-
-import { getSizeInfo } from '@app/common/transactions/bitcoin/utils';
 
 export function getBitcoinFee(determineUtxosForFeeArgs: DetermineUtxosForSpendArgs<OwnedUtxo>) {
   try {
@@ -40,7 +39,7 @@ export function getApproximateFee({
   utxos: OwnedUtxo[];
 }) {
   const size = getSizeInfo({
-    inputLength: utxos.length + 1,
+    utxos,
     recipients,
   });
   return createMoney(Math.ceil(size.txVBytes * feeRate), 'BTC');

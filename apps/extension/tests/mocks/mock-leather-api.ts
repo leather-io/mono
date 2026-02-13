@@ -1,5 +1,7 @@
 import type { Page } from '@playwright/test';
 
+import { TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS } from './constants';
+
 const mockedSip10TokenMap = {
   'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin': {
     assetIdentifier: 'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin::longcoin',
@@ -181,6 +183,14 @@ export async function mockLeatherApiRequests(page: Page) {
   await page.route('**/v1/utxos/**', route =>
     route.fulfill({
       json: [
+        {
+          txid: 'b7f3c61e89524a1d7f8e0b2c3d4a5f6e7d8c9b0a1f2e3d4c5b6a7f8e9d0c1b2a',
+          vout: 0,
+          value: '300000',
+          height: 98330,
+          address: TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS,
+          path: "m/86'/1'/0'/0/0",
+        },
         {
           txid: 'a8e2a50d68479d233ce3cd31cdca04160f003ca6ac49149070b6ade627553e80',
           vout: 1,

@@ -7,6 +7,7 @@ export * from './coin-selection/coin-selection';
 export * from './coin-selection/coin-selection.utils';
 
 export * from './fees/bitcoin-fees';
+export * from './fees/btc-size-fee-estimator';
 
 export * from './mocks/mocks';
 

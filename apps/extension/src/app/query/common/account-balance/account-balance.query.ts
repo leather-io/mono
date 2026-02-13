@@ -28,9 +28,6 @@ function useAccountAvailableBalance(accountIndex: number) {
       protections: {
         discardedInscriptions,
       },
-      exclusions: {
-        taprootAddresses: true,
-      },
     })
   );
 }

@@ -1,10 +1,10 @@
 import BigNumber from 'bignumber.js';
 import { sha256 } from 'bitcoinjs-lib/src/crypto';
 
+import { filterUneconomicalUtxos } from '@leather.io/bitcoin';
 import type { OwnedUtxo } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import { filterUneconomicalUtxos } from '../utils';
 import { calculateMaxBitcoinSpend } from './calculate-max-bitcoin-spend';
 
 function generateTxId(value: number): OwnedUtxo {

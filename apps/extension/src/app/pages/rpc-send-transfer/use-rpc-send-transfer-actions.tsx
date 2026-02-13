@@ -9,7 +9,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
-import { useGenerateUnsignedNativeSegwitTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
+import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
 import { getTransactionActions } from '@app/components/rpc-transaction-request/get-transaction-actions';
 import { useInscribedSpendableUtxos } from '@app/features/discarded-inscriptions/use-inscribed-spendable-utxos';
 import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context';
@@ -24,7 +24,7 @@ export function useRpcSendTransferActions() {
     useRpcSendTransferContext();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isBroadcasting, setIsBroadcasting] = useState(false);
-  const generateTx = useGenerateUnsignedNativeSegwitTx({ throwError: true });
+  const generateTx = useGenerateUnsignedBitcoinTx({ throwError: true });
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx } = useBitcoinBroadcastTransaction();
   const utxosOfSpendableInscriptions = useInscribedSpendableUtxos();

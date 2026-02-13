@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { HDKey, Versions } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { SigHash } from '@scure/btc-signer';
+import type { P2Ret, P2TROut } from '@scure/btc-signer/payment';
 
 import {
   BitcoinAccount,
@@ -214,7 +215,7 @@ export function useBitcoinSignerFromInput() {
   const createTaprootSigner = useCurrentAccountTaprootSigner();
 
   return useCallback(
-    (input: OwnedUtxo): BitcoinSigner<any> => {
+    (input: OwnedUtxo): BitcoinSigner<P2TROut | P2Ret> => {
       const addressIndex = extractAddressIndexFromPath(input.path);
       const changeIndex = extractChangeIndexFromPath(input.path);
 
