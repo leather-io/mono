@@ -76,6 +76,12 @@ export const TOKEN_NAME_LENGTH = 4;
 export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
 export const LEATHER_GUIDES_URL = 'https://leather.io/guides';
+export const LEATHER_GUIDES_UTXO_PROTECTION_URL = 'https://leather.io/guides/utxo-protection';
+export const LEATHER_GUIDES_GETTING_STARTED_URL = 'https://leather.io/guides/getting-started';
+export const LEATHER_GUIDES_ORDINALS_URL = 'https://leather.io/guides/ordinals';
+export const LEATHER_GUIDES_BNS_URL = 'https://leather.io/guides/bns';
+
+export const BTC_US_URL = 'https://btc.us/';
 
 export const LEATHER_GUIDES_CONNECT_DAPPS: string = `${LEATHER_GUIDES_URL}/connect-dapps`;
 
