@@ -2,6 +2,10 @@ import { useNavigate } from 'react-router';
 
 import { Box, styled } from 'leather-styles/jsx';
 
+import { assetIdToSendPath } from '@leather.io/features';
+import { CryptoAssetProtocols } from '@leather.io/models';
+import { type SerializedCryptoAssetId, deserializeAssetId } from '@leather.io/utils';
+
 import { RouteUrls } from '@shared/route-urls';
 
 import { Card, Content, Page } from '@app/components/layout';
@@ -13,12 +17,12 @@ export function ChooseCryptoAsset() {
   const navigate = useNavigate();
   const isBitcoinSendEnabled = useConfigBitcoinSendEnabled();
 
-  function navigateToSendForm(symbol: string, contractId?: string) {
-    if (symbol === 'BTC' && !isBitcoinSendEnabled) return navigate(RouteUrls.SendBtcDisabled);
-    if (contractId) {
-      return navigate(`${RouteUrls.SendCryptoAsset}/${symbol.toLowerCase()}/${contractId}`);
+  function navigateToSendForm(assetId: SerializedCryptoAssetId) {
+    const { protocol } = deserializeAssetId(assetId);
+    if (protocol === CryptoAssetProtocols.nativeBtc && !isBitcoinSendEnabled) {
+      return navigate(RouteUrls.SendBtcDisabled);
     }
-    return navigate(`${RouteUrls.SendCryptoAsset}/${symbol.toLowerCase()}`);
+    return navigate(`${RouteUrls.SendCryptoAsset}/${assetIdToSendPath(assetId)}`);
   }
 
   return (

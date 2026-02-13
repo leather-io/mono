@@ -3,6 +3,7 @@ import { type Dispatch, type SetStateAction, useEffect } from 'react';
 import { Stack } from 'leather-styles/jsx';
 
 import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
+import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { type AssetFilter } from '@app/common/hooks/use-manage-tokens';
 import {
@@ -21,7 +22,7 @@ interface Sip10TokenListProps {
   accountIndex: number;
   assetFilter?: AssetFilter;
   assetRightElementVariant?: AssetRightElementVariant;
-  onSelectAsset?(symbol: string, contractId?: string): void;
+  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
 

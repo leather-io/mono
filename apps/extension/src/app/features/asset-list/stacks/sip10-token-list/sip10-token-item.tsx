@@ -1,5 +1,6 @@
 import type { Sip10Balance } from '@leather.io/services';
 import { Sip10AvatarIcon } from '@leather.io/ui';
+import { type SerializedCryptoAssetId, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { getSafeImageCanonicalUri } from '@app/common/stacks-utils';
@@ -12,7 +13,7 @@ interface Sip10TokenItemProps {
   balance: Sip10Balance;
   isEnabled: boolean;
   assetRightElementVariant?: AssetRightElementVariant;
-  onSelectAsset?(symbol: string, contractId?: string): void;
+  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
 }
 export function Sip10TokenItem({
   balance,
@@ -58,7 +59,9 @@ export function Sip10TokenItem({
         titleLeft,
         fiatBalance: formatCurrency(balance.quote.availableBalance),
         dataTestId: assetId,
-        onSelectAsset,
+        onSelectAsset: onSelectAsset
+          ? () => onSelectAsset(serializeAssetId(getAssetId(balance.asset)))
+          : undefined,
       }}
     />
   );

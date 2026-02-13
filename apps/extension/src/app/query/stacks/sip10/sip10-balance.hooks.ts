@@ -12,6 +12,11 @@ import {
   useGetSip10BalanceByAssetIdQuery,
 } from './sip10-balance.query';
 
+export function useSip10BalanceByAssetId(accountIndex: number, assetIdentifier: string) {
+  const account = useAccountAddresses(accountIndex);
+  return toFetchState(useGetSip10BalanceByAssetIdQuery({ account }, assetIdentifier));
+}
+
 export function useUsdcxAccountBalance(accountIndex: number) {
   const account = useAccountAddresses(accountIndex);
   const network = useCurrentNetwork();

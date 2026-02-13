@@ -1,6 +1,7 @@
 import { type Dispatch, type SetStateAction, useEffect } from 'react';
 
 import { RunesAvatarIcon } from '@leather.io/ui';
+import { type SerializedCryptoAssetId, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { type AssetFilter } from '@app/common/hooks/use-manage-tokens';
@@ -17,6 +18,7 @@ interface RunesAssetListProps {
   accountIndex: number;
   filter?: AssetFilter;
   assetRightElementVariant?: AssetRightElementVariant;
+  onSelectAsset?(assetId: SerializedCryptoAssetId): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -24,6 +26,7 @@ export function RunesAssetList({
   accountIndex,
   filter = 'all',
   assetRightElementVariant,
+  onSelectAsset,
   setHasManageableTokens,
 }: RunesAssetListProps) {
   const isPrivate = useIsPrivateMode();
@@ -65,6 +68,9 @@ export function RunesAssetList({
           titleLeft,
           fiatBalance: formatCurrency(rune.quote.totalBalance),
           dataTestId: rune.asset.runeName,
+          onSelectAsset: onSelectAsset
+            ? () => onSelectAsset(serializeAssetId(getAssetId(rune.asset)))
+            : undefined,
         }}
       />
     );
