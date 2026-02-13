@@ -60,6 +60,10 @@ export class HomePage {
     await receiveBtn.waitFor({ state: 'visible', timeout: 10000 });
     await receiveBtn.click();
     await this.page.waitForSelector('[data-state="open"]', { state: 'visible', timeout: 10000 });
+    // Wait for modal content - either tabs (normal mode) or STX button (Ledger Stacks-only)
+    const assetsTab = this.page.getByTestId(HomePageSelectors.ReceiveAssetsTab);
+    const stxQrBtn = this.page.getByTestId(HomePageSelectors.ReceiveStxQrCodeBtn);
+    await assetsTab.or(stxQrBtn).first().waitFor({ state: 'visible', timeout: 10000 });
   }
 
   // Open issue with Playwright's ability to copyToClipboard from legacy tests:
