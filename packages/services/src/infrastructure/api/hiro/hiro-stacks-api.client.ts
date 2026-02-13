@@ -384,16 +384,14 @@ export class HiroStacksApiClient {
     principal: string,
     { signal, skipCache }: ApiRequestOptions = {}
   ): Promise<HiroNftHolding[]> {
-    const pageParams = new URLSearchParams({
-      limit: '100',
-      offset: '0',
-    });
-    const fetchFn = async () => {
+    const limit = 50;
+
+    const fetchPage = async function (this: HiroStacksApiClient, page: HiroPageRequest) {
       const res = await this.limiter.add(
         RateLimiterType.HiroStacks,
         () =>
           this._axios.get<NonFungibleTokenHoldingsList>(
-            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tokens/nft/holdings?principal=${principal}&${pageParams.toString()}`,
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tokens/nft/holdings?principal=${principal}&limit=${page.limit}&offset=${page.offset}`,
             { signal }
           ),
         {
@@ -402,8 +400,16 @@ export class HiroStacksApiClient {
           throwOnTimeout: true,
         }
       );
-      return res.data.results;
-    };
+      return res.data;
+    }.bind(this);
+
+    async function fetchFn() {
+      return fetchHiroPages(fetchPage, {
+        limit,
+        pagesRequest: { allPages: true },
+      });
+    }
+
     return skipCache
       ? await fetchFn()
       : await this.cache.fetchWithCache(
