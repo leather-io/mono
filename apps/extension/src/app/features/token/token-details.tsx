@@ -8,6 +8,7 @@ import { useAccountAddresses } from '@app/services/accounts/use-account-addresse
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
 import { BitcoinTokenDetails } from './bitcoin-token-details';
+import { CollectibleDetails } from './collectible-details';
 import { RuneTokenDetails } from './rune-token-details';
 import { Sip10TokenDetails } from './sip10-token-details';
 import { StacksTokenDetails } from './stacks-token-details';
@@ -35,11 +36,12 @@ export function TokenDetails() {
       return <Sip10TokenDetails accountIndex={accountIndex} account={account} assetId={assetId} />;
     case CryptoAssetProtocols.rune:
       return <RuneTokenDetails accountIndex={accountIndex} account={account} assetId={assetId} />;
-    case CryptoAssetProtocols.brc20:
-    case CryptoAssetProtocols.src20:
     case CryptoAssetProtocols.sip9:
     case CryptoAssetProtocols.inscription:
     case CryptoAssetProtocols.stamp:
+      return <CollectibleDetails account={account} assetId={assetId} protocol={protocol} />;
+    case CryptoAssetProtocols.brc20:
+    case CryptoAssetProtocols.src20:
       return <TokenDetailsError />;
     default:
       assertUnreachable(protocol);
