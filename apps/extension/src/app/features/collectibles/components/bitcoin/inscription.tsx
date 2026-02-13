@@ -21,13 +21,14 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { useHoverWithChildren } from '@app/common/hooks/use-hover-with-children';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
+import { CollectibleAudio } from '@app/components/collectibles/collectible-audio';
+import { CollectibleIframe } from '@app/components/collectibles/collectible-iframe';
+import { CollectibleImage } from '@app/components/collectibles/collectible-image';
+import { CollectibleOther } from '@app/components/collectibles/collectible-other';
 import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
-import { CollectibleAudio } from '../../../../components/collectibles/collectible-audio';
-import { CollectibleIframe } from '../../../../components/collectibles/collectible-iframe';
-import { CollectibleImage } from '../../../../components/collectibles/collectible-image';
-import { CollectibleOther } from '../../../../components/collectibles/collectible-other';
 import { HighSatValueUtxoWarning } from './high-sat-value-utxo';
+import { InscriptionHtml } from './inscription-html';
 import { InscriptionText } from './inscription-text';
 
 interface InscriptionProps {
@@ -53,18 +54,28 @@ export function Inscription({ inscription }: InscriptionProps) {
 
   const content = useMemo(() => {
     const sharedProps = { onClickSend: () => openSendInscriptionModal() };
+    const inscriptionTitle = `# ${inscription.number}`;
+    const inscriptionSubtitle = 'Ordinal inscription';
     switch (inscription.mimeType) {
       case 'audio':
         return (
           <CollectibleAudio
             icon={<OrdinalAvatarIcon size="md" />}
             key={inscription.title}
-            subtitle="Ordinal inscription"
-            title={`# ${inscription.number}`}
+            subtitle={inscriptionSubtitle}
+            title={inscriptionTitle}
             {...sharedProps}
           />
         );
       case 'html':
+        return (
+          <InscriptionHtml
+            contentSrc={inscription.src}
+            subtitle={inscriptionSubtitle}
+            title={inscriptionTitle}
+            {...sharedProps}
+          />
+        );
       case 'svg':
       case 'video':
       case 'gltf':
@@ -73,8 +84,8 @@ export function Inscription({ inscription }: InscriptionProps) {
             icon={<OrdinalAvatarIcon size="md" />}
             key={inscription.title}
             src={inscription.src}
-            subtitle="Ordinal inscription"
-            title={`# ${inscription.number}`}
+            subtitle={inscriptionSubtitle}
+            title={inscriptionTitle}
             {...sharedProps}
           />
         );
@@ -84,8 +95,8 @@ export function Inscription({ inscription }: InscriptionProps) {
             icon={<OrdinalAvatarIcon size="md" />}
             key={inscription.title}
             src={inscription.src}
-            subtitle="Ordinal inscription"
-            title={`# ${inscription.number}`}
+            subtitle={inscriptionSubtitle}
+            title={inscriptionTitle}
             {...sharedProps}
           />
         );
