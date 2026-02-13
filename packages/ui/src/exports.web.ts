@@ -1,3 +1,4 @@
+export * from './animations/slide-pair.web';
 export * from './components/approver/approver.web';
 export * from './components/avatar/index.web';
 export * from './components/favicon/favicon.web';
