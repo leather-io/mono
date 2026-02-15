@@ -12,9 +12,10 @@ interface AssetBalanceProps {
     crypto: CryptoAssetBalance;
   };
   inputCurrencyMode: InputCurrencyMode;
+  onSetToMax?(): void;
 }
 
-export function AssetBalance({ balance, inputCurrencyMode }: AssetBalanceProps) {
+export function AssetBalance({ balance, inputCurrencyMode, onSetToMax }: AssetBalanceProps) {
   const displayBalance = whenInputCurrencyMode(inputCurrencyMode)({
     crypto: balance?.crypto.availableBalance,
     quote: balance?.quote.availableBalance,
@@ -30,13 +31,15 @@ export function AssetBalance({ balance, inputCurrencyMode }: AssetBalanceProps) 
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
           >
-            <Balance
-              textStyle="label.03"
-              color="ink.text-subdued"
-              balance={displayBalance}
-              formatCurrency={formatCurrency}
-              formattingOptions={{ showCurrency: inputCurrencyMode === 'quote' }}
-            />
+            <Box as={onSetToMax ? 'button' : 'div'} onClick={onSetToMax}>
+              <Balance
+                textStyle="label.03"
+                color="ink.text-subdued"
+                balance={displayBalance}
+                formatCurrency={formatCurrency}
+                formattingOptions={{ showCurrency: inputCurrencyMode === 'quote' }}
+              />
+            </Box>
           </motion.div>
         )}
       </AnimatePresence>
