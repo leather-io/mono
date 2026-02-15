@@ -84,6 +84,7 @@ export function SwapForm() {
                 <AssetBalance
                   balance={state.baseSwapAsset?.balance}
                   inputCurrencyMode={state.inputCurrencyMode}
+                  onSetToMax={() => actions.setBaseAmountByPercentage(1)}
                 />
               </Flex>
             </Flex>
