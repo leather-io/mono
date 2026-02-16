@@ -26,8 +26,8 @@ const sbtcEnrollContractMap = {
   },
   mainnet: {
     contractAddress: 'SP1HFCRKEJ8BYW4D0E3FAWHFDX8A25PPAA83HWWZ9',
-    contractName: 'dual-stacking-v1',
-    contract: 'SP1HFCRKEJ8BYW4D0E3FAWHFDX8A25PPAA83HWWZ9.dual-stacking-v1',
+    contractName: 'dual-stacking-v2_0_4',
+    contract: 'SP1HFCRKEJ8BYW4D0E3FAWHFDX8A25PPAA83HWWZ9.dual-stacking-v2_0_4',
   },
   mocknet: {} as EnrollContractIdentifier,
 } as const satisfies Record<StacksNetworkName, EnrollContractIdentifier>;
