@@ -105,9 +105,11 @@ test.describe('Onboarding an existing user', () => {
   });
 
   test.describe('Address generation', () => {
+    test.describe.configure({ retries: 0 });
+
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
       await globalPage.setupAndUseApiCalls(extensionId);
-      await onboardingPage.signInExistingUser();
+      await onboardingPage.signInWithTestAccount(extensionId);
     });
 
     test.describe('Bitcoin', () => {
