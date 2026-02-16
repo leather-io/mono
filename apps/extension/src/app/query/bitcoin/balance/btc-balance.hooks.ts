@@ -46,8 +46,8 @@ export function useNativeSegwitBtcAccountBalance(accountId: AccountId) {
   );
 }
 
-export function useTaprootBtcAccountBalance(accountIndex: number) {
-  const account = useAccountAddresses(accountIndex);
+export function useTaprootBtcAccountBalance(accountId: AccountId) {
+  const account = useAccountAddresses(accountId);
   const discardedInscriptions = useDiscardedInscriptions();
   return toFetchState(
     useGetBtcAccountBalanceQuery({
