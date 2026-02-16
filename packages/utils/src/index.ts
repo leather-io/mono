@@ -235,3 +235,4 @@ export function isNumberOrNumberList(value: unknown): value is number | number[]
 }
 
 export { sanitizeContent } from './sanitize-content';
+export { toColumnMajorRows } from './to-column-major-rows';

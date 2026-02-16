@@ -31,6 +31,7 @@ import { AccountScreenHeader } from './account-screen-header';
 import { AssetTabs } from './components/asset-tabs';
 import { FirstTokenBanner } from './components/first-token-banner';
 import { LearnSection } from './components/learn-section';
+import { TrendingTokens } from './components/trending-tokens';
 import { ListTab } from './constants';
 
 interface HomeScreenWithAccountProps {
@@ -107,7 +108,12 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
               <StacksDepositTokenCell fingerprint={fingerprint} accountIndex={accountIndex} />
             </>
           }
-          footer={displayLearningSections ? <LearnSection /> : undefined}
+          footer={
+            <>
+              <TrendingTokens />
+              {displayLearningSections ? <LearnSection /> : undefined}
+            </>
+          }
           sip10Data={sip10Data}
           runesData={runesData}
         />
