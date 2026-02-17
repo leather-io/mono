@@ -133,6 +133,12 @@ export async function mockMainnetTestAccountBitcoinRequests(page: Page) {
   ]);
 }
 
+export async function mockWildcardBitcoinTxsRequests(page: Page) {
+  await page.route('**/leather.mempool.space/api/address/*/txs', route =>
+    route.fulfill({ json: [] })
+  );
+}
+
 export async function mockTestnetTestAccountEmptyUtxosRequests(page: Page) {
   await Promise.all([
     page.route(`${BITCOIN_API_BASE_URL_TESTNET4}/address/**/utxo`, route =>

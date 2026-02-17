@@ -247,6 +247,15 @@ export async function mockLeatherApiRequests(page: Page) {
     })
   );
 
+  await page.route('**/v1/defi/bitflow/pools**', route =>
+    route.fulfill({
+      json: {
+        format: 'map',
+        data: {},
+      },
+    })
+  );
+
   await page.route('**/v1/app-config', route =>
     route.fulfill({
       json: {

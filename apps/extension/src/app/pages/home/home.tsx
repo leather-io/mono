@@ -15,6 +15,7 @@ import { PromoBanner } from '@app/features/promo-banner/promo-banner';
 import { NotFoundContent } from '@app/pages/not-found/not-found';
 import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
+import { receiveRoutes } from '@app/routes/receive-routes';
 
 import { AccountActions } from './components/account-actions-current/account-actions';
 import { AccountCard } from './components/account-card';
@@ -66,6 +67,7 @@ export function Home({ isBackground }: HomeProps) {
           />
           <Route path={RouteUrls.Collectibles} element={<Collectibles />} />
           {homePageModalRoutes}
+          {receiveRoutes}
           <Route path="*" element={<HomeNotFound />} />
         </ModalBackgroundWrapper>
       </HomeTabs>

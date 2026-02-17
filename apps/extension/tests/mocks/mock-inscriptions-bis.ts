@@ -1,6 +1,9 @@
 import type { Page } from '@playwright/test';
 
-import { BESTINSLOT_API_BASE_URL_TESTNET } from '@leather.io/models';
+import {
+  BESTINSLOT_API_BASE_URL_MAINNET,
+  BESTINSLOT_API_BASE_URL_TESTNET,
+} from '@leather.io/models';
 import { type BestInSlotInscriptionResponse } from '@leather.io/query';
 
 export async function mockTestnetTestAccountInscriptionsRequests(
@@ -15,6 +18,23 @@ export async function mockTestnetTestAccountInscriptionsRequests(
       if (request.url().includes('xpub=tr')) {
         await route.fulfill({
           json: { block_height: 859832, data: inscriptions },
+        });
+        return;
+      }
+      await route.fulfill({ json: { block_height: 859832, data: [] } });
+    }
+  );
+}
+
+export async function mockMainnetTestAccountInscriptionsRequests(page: Page) {
+  await page.route(
+    new RegExp(`${BESTINSLOT_API_BASE_URL_MAINNET}/wallet/inscriptions_xpub.*`),
+    async route => {
+      const request = route.request();
+
+      if (request.url().includes('xpub=tr')) {
+        await route.fulfill({
+          json: { block_height: 859832, data: [] },
         });
         return;
       }

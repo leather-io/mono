@@ -90,6 +90,8 @@ const mockedStacksTxsRequestWithPendingTx = {
   results: [mockedStacksPendingTransaction],
 };
 
+const emptyTxsResponse = { limit: 50, offset: 0, total: 0, results: [] };
+
 const transactionWithTransfersUrl = `**/api.hiro.so/extended/v1/address/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions_with_transfers?limit=50`;
 const mempoolUrl = `**/api.hiro.so/extended/v1/tx/mempool?address=${TEST_ACCOUNT_1_STX_ADDRESS}&limit=50`;
 
@@ -97,24 +99,28 @@ export async function mockMainnetTestAccountStacksTxsRequests(page: Page) {
   await Promise.all([
     page.route(transactionWithTransfersUrl, route =>
       route.fulfill({
-        json: {
-          limit: 50,
-          offset: 0,
-          total: 0,
-          results: [],
-        },
+        json: emptyTxsResponse,
       })
     ),
 
     page.route(mempoolUrl, route =>
       route.fulfill({
-        json: {
-          limit: 50,
-          offset: 0,
-          total: 0,
-          results: [],
-        },
+        json: emptyTxsResponse,
       })
+    ),
+  ]);
+}
+
+export async function mockWildcardStacksTxsRequests(page: Page) {
+  await Promise.all([
+    page.route('**/api.hiro.so/extended/v1/address/*/transactions_with_transfers?limit=50', route =>
+      route.fulfill({ json: emptyTxsResponse })
+    ),
+    page.route('**/api.hiro.so/extended/v2/addresses/*/transactions?limit=50&offset=0', route =>
+      route.fulfill({ json: emptyTxsResponse })
+    ),
+    page.route('**/api.hiro.so/extended/v1/tx/mempool?address=*&limit=50', route =>
+      route.fulfill({ json: emptyTxsResponse })
     ),
   ]);
 }

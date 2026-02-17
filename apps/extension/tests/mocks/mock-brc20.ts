@@ -40,6 +40,12 @@ export async function mockEmptyBrc20TokensRequest(page: Page) {
 }
 
 export async function mockMainnetTestAccountBrc20TokensRequest(page: Page) {
+  await page.route('**/leatherapi.bestinslot.xyz/v3/brc20/wallet_balances**', route =>
+    route.fulfill({
+      json: { block_height: 864772, data: [] },
+    })
+  );
+
   await page.route(
     `**/leatherapi.bestinslot.xyz/v3/brc20/wallet_balances?address=${TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS}`,
     route =>

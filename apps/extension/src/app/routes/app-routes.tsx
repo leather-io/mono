@@ -50,7 +50,6 @@ import { UnauthorizedRequest } from '@app/pages/unauthorized-request/unauthorize
 import { Unlock } from '@app/pages/unlock';
 import { ViewSecretKey } from '@app/pages/view-secret-key/view-secret-key';
 import { AccountGate } from '@app/routes/account-gate';
-import { ReceiveModalWrapper } from '@app/routes/components/receive-modal-wrapper';
 import { receiveRoutes } from '@app/routes/receive-routes';
 import { legacyRequestRoutes } from '@app/routes/request-routes';
 import { rpcRequestRoutes } from '@app/routes/rpc-routes';
@@ -85,7 +84,6 @@ function useAppRoutes() {
     createRoutesFromElements(
       <Route element={<Container />}>
         <Route key="error" errorElement={<RouterErrorBoundary />}>
-          <Route element={<ReceiveModalWrapper />}>{receiveRoutes}</Route>
           <Route
             element={
               <>
@@ -105,6 +103,7 @@ function useAppRoutes() {
               }
             >
               {homePageModalRoutes}
+              {receiveRoutes}
             </Route>
 
             <Route

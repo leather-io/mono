@@ -14,6 +14,14 @@ export async function mockMainnetTestAccountStacksBnsNameRequest(page: Page) {
   );
 }
 
+const mockedBnsV2NamesResponseEmpty = bnsV2NamesByAddressResponseSchema.parse({
+  total: 0,
+  current_burn_block: 869830,
+  limit: 50,
+  offset: 0,
+  names: [],
+});
+
 const mockedBnsV2NamesResponse = bnsV2NamesByAddressResponseSchema.parse({
   total: 1,
   current_burn_block: 869830,
@@ -32,6 +40,12 @@ const mockedBnsV2NamesResponse = bnsV2NamesByAddressResponseSchema.parse({
     },
   ],
 });
+
+export async function mockBnsV2NamesRequestEmpty(page: Page) {
+  await page.route(`**/api.bnsv2.com/names/address/*/valid`, route =>
+    route.fulfill({ json: mockedBnsV2NamesResponseEmpty })
+  );
+}
 
 export async function mockBnsV2NamesRequest(page: Page) {
   await page.route(`**/api.bnsv2.com/names/address/${TEST_ACCOUNT_1_STX_ADDRESS}/valid`, route =>
