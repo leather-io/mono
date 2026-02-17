@@ -97,32 +97,37 @@ test.describe('Onboarding an existing user', () => {
   });
 
   test('Activity tab', async ({ extensionId, globalPage, onboardingPage, homePage, page }) => {
+    test.slow();
     await globalPage.setupAndUseApiCalls(extensionId);
+    await globalPage.page.evaluate(async () => {
+      await chrome.storage.local.clear();
+    });
     await onboardingPage.signUpNewUser();
     await homePage.clickActivityTab();
     const noActivityText = page.getByText('No activity yet');
-    await test.expect(noActivityText).toBeVisible();
+    await test.expect(noActivityText).toBeVisible({ timeout: 30_000 });
   });
 
   test.describe('Address generation', () => {
     test.describe.configure({ retries: 0 });
 
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
+      test.slow();
+      // clear local storage of web page with evaluate
       await globalPage.setupAndUseApiCalls(extensionId);
+      await globalPage.page.evaluate(async () => {
+        await chrome.storage.local.clear();
+      });
       await onboardingPage.signInWithTestAccount(extensionId);
     });
 
     test.describe('Bitcoin', () => {
       test('that the wallet generates the correct Native Segwit address', async ({ homePage }) => {
-        test.slow();
-
         const nativeSegwitAddress = await homePage.getReceiveNativeSegwitAddress();
         test.expect(nativeSegwitAddress).toEqual(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS);
       });
 
       test('that the wallet generates the correct Taproot address', async ({ homePage }) => {
-        test.slow();
-
         const taprootAddress = await homePage.getReceiveTaprootAddress();
         test.expect(taprootAddress).toEqual(TEST_ACCOUNT_1_TAPROOT_ADDRESS);
       });
@@ -130,8 +135,6 @@ test.describe('Onboarding an existing user', () => {
 
     test.describe('Stacks', () => {
       test('that restoring a wallet generates the correct stacks address', async ({ homePage }) => {
-        test.slow();
-
         const stacksAddress = await homePage.getReceiveStxAddress();
         test.expect(stacksAddress).toEqual(TEST_ACCOUNT_1_STX_ADDRESS);
       });

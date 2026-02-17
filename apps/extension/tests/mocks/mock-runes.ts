@@ -97,6 +97,14 @@ export async function mockEmptyRunesOutputsRequest(page: Page) {
   );
 }
 
+export async function mockRunesValidOutputsXpubRequest(page: Page) {
+  await page.route('**/leatherapi.bestinslot.xyz/v3/runes/wallet_valid_outputs_xpub**', route =>
+    route.fulfill({
+      json: { block_height: 864803, data: [] },
+    })
+  );
+}
+
 export async function mockMainnetTestAccountRunesOutputsRequest(page: Page) {
   await page.route(
     `**/leatherapi.bestinslot.xyz/v3/runes/wallet_balances?address=${TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS}`,
