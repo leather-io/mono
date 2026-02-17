@@ -1,3 +1,7 @@
+import { beforeEach, describe, expect, it } from 'vitest';
+
+import { delay } from '@leather.io/utils';
+
 import { UserSettings } from '../settings/settings.service';
 import { bestInSlotApiLimiterSettings } from './best-in-slot-limiter';
 import { RateLimiterService, RateLimiterType } from './rate-limiter.service';
@@ -16,6 +20,10 @@ describe('RateLimiterService', () => {
         },
       }) as unknown as UserSettings,
   };
+
+  beforeEach(async () => {
+    await delay(100);
+  });
 
   it('should rate limit concurrent calls', async () => {
     const service = new RateLimiterService(mockSettingsService);
@@ -36,11 +44,9 @@ describe('RateLimiterService', () => {
   it('should handle priorities correctly', async () => {
     const service = new RateLimiterService(mockSettingsService);
     const results: number[] = [];
-    // first need to hit rate limit
     const fillerCalls = Array(bestInSlotApiLimiterSettings.intervalCap)
       .fill(null)
       .map(() => service.add(RateLimiterType.BestInSlot, () => Promise.resolve('result')));
-    // subsequent calls should be queued in priority order
     const priorityPromises = [
       service.add(RateLimiterType.BestInSlot, () => Promise.resolve(results.push(3)), {
         priority: 3,
