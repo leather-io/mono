@@ -42,7 +42,7 @@ function findDefaultAccountFingerprint(state: any): string {
   return assumedZeroFingerprint;
 }
 
-export function migrateMultiWalletSupport(state: RootState) {
+export function migrateMultiWalletSupport(state: any) {
   logger.info('Beginning multi-wallet support migration');
 
   return produce(state, (draftState: any) => {
