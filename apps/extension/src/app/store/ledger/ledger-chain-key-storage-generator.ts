@@ -1,5 +1,7 @@
 import { PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
+import { resetWallet } from '@leather.io/state';
+
 interface RequiredProps {
   id: string;
   fingerprint: string;
@@ -16,10 +18,11 @@ export function generateLedgerChainKeyStorageSlice<KeyDetails extends RequiredPr
       addKeys(state, { payload }: PayloadAction<KeyDetails[]>) {
         adapter.addMany(state, payload);
       },
-      signOut(state) {
-        adapter.removeAll(state);
-      },
     },
+    extraReducers: builder =>
+      builder.addCase(resetWallet, state => {
+        adapter.removeAll(state);
+      }),
   });
 
   return { slice, initialState, adapter };

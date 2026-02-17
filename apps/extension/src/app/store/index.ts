@@ -22,6 +22,7 @@ import {
 } from 'redux-persist';
 import { PersistPartial } from 'redux-persist/es/persistReducer';
 
+import { resetWallet } from '@leather.io/state';
 import { keychainSlice } from '@leather.io/state/keychains';
 import { walletSlice } from '@leather.io/state/wallet';
 
@@ -86,7 +87,7 @@ const appReducer = combineReducers({
 });
 
 function rootReducer(state: LocalRootState | undefined, action: Action) {
-  if (action.type === 'keys/signOut') return appReducer(undefined, action);
+  if (action.type === resetWallet.type) return appReducer(undefined, action);
   return appReducer(state, action);
 }
 
