@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
-import { Outlet } from 'react-router';
 import { Virtuoso } from 'react-virtuoso';
 
 import { type ActivityView } from '@leather.io/features';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useActivity } from '@app/query/activity/activity.query';
+import { Outlet } from '@app/routes/compat';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 

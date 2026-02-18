@@ -1,5 +1,3 @@
-import { useNavigate, useParams } from 'react-router';
-
 import type { CryptoAssetBalance, MarketData, Sip10Asset } from '@leather.io/models';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -9,6 +7,7 @@ import { PageHeader } from '@app/features/container/headers/page.header';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useMarketDataByAssetId } from '@app/query/common/market-data/market-data.query';
 import { useSip10AccountBalance } from '@app/query/stacks/sip10/sip10-balance.hooks';
+import { useNavigate, useParams } from '@app/routes/compat';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
 import { Sip10TokenSendFormContainer } from './sip10-token-send-form-container';

@@ -1,5 +1,5 @@
 import QRCode from 'react-qr-code';
-import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
@@ -7,8 +7,9 @@ import { token } from 'leather-styles/tokens';
 
 import { AddressDisplayer, Button, Sheet, SheetHeader } from '@leather.io/ui';
 
-import { useLocationState } from '@app/common/hooks/use-location-state';
+import { useNavigate } from '@app/routes/compat';
 import { useBackgroundLocationRedirect } from '@app/routes/hooks/use-background-location-redirect';
+import type { RootState } from '@app/store';
 
 interface ReceiveTokensLayoutProps {
   address: string;
@@ -22,7 +23,9 @@ export function ReceiveTokensLayout(props: ReceiveTokensLayoutProps) {
 
   const { address, accountName, onCopyAddressToClipboard, title, warning } = props;
   const navigate = useNavigate();
-  const backgroundLocation = useLocationState<Location>('backgroundLocation');
+  const backgroundLocation = useSelector(
+    (state: RootState) => state.navigation.modal.backgroundLocationPathname
+  );
 
   return (
     <Sheet

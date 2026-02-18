@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useLocation } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { getAddressFromPublicKey } from '@stacks/transactions';
 import { LedgerError } from '@zondax/ledger-stacks';
-import get from 'lodash.get';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
 import { delay, isError } from '@leather.io/utils';
@@ -22,6 +21,8 @@ import {
   getStacksAppVersion,
   prepareLedgerDeviceStacksAppConnection,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
+import { Outlet } from '@app/routes/compat';
+import type { RootState } from '@app/store';
 import {
   useCurrentStacksAccount,
   useStacksAccounts,
@@ -38,7 +39,9 @@ import {
 import { LedgerJwtSigningContext, LedgerJwtSigningProvider } from './ledger-sign-jwt.context';
 
 export function LedgerSignJwtContainer() {
-  const location = useLocation();
+  const jwtAccountIndex = useSelector(
+    (state: RootState) => state.navigation.ledger.jwtAccountIndex
+  );
   const ledgerNavigate = useLedgerNavigate();
   useScrollLock(true);
 
@@ -54,9 +57,9 @@ export function LedgerSignJwtContainer() {
   const [accountIndex, setAccountIndex] = useState<null | number>(null);
 
   useEffect(() => {
-    const index = parseInt(get(location.state, 'index'), 10);
-    if (Number.isFinite(index)) setAccountIndex(index);
-  }, [location.state]);
+    if (jwtAccountIndex !== null && Number.isFinite(jwtAccountIndex))
+      setAccountIndex(jwtAccountIndex);
+  }, [jwtAccountIndex]);
 
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
 

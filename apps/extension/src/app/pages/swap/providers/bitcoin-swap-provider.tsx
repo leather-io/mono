@@ -1,5 +1,3 @@
-import { Outlet } from 'react-router';
-
 import type { P2Ret } from '@scure/btc-signer/payment';
 import BigNumber from 'bignumber.js';
 import { DEFAULT_MAX_SIGNER_FEE } from 'sbtc';
@@ -7,6 +5,8 @@ import { DEFAULT_MAX_SIGNER_FEE } from 'sbtc';
 import { BitcoinSigner } from '@leather.io/bitcoin';
 import type { OwnedUtxo } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
+
+import { Outlet } from '@app/routes/compat';
 
 import { SwapForm } from '../form/swap-form';
 import { useAllSwappableAssets } from '../hooks/use-all-swappable-assets';

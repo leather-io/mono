@@ -1,8 +1,8 @@
-import { useNavigate } from 'react-router';
-
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
 import { ArrowLeftIcon } from '@leather.io/ui';
+
+import { useNavigate } from '@app/routes/compat';
 
 import { HeaderActionButton } from './header-action-button';
 

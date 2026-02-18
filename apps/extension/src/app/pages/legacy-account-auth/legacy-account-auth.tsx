@@ -1,5 +1,3 @@
-import { Outlet, useLocation, useNavigate } from 'react-router';
-
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 
@@ -12,8 +10,11 @@ import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-acc
 import { useWalletType } from '@app/common/use-wallet-type';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
+import { Outlet, useNavigate } from '@app/routes/compat';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
+import { useAppDispatch } from '@app/store';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { ledgerNavigationSlice } from '@app/store/navigation/ledger-navigation.slice';
 
 import { ConnectAccountLayout } from '../../components/connect-account/connect-account.layout';
 
@@ -30,7 +31,7 @@ export function LegacyAccountAuth() {
   const { toggleSwitchAccount } = useSwitchAccountSheet();
   const { whenWallet } = useWalletType();
   const navigate = useNavigate();
-  const location = useLocation();
+  const dispatch = useAppDispatch();
 
   useOnOriginTabClose(() => closeWindow());
 
@@ -47,7 +48,8 @@ export function LegacyAccountAuth() {
         await finishSignIn(index);
       },
       async ledger() {
-        void navigate(RouteUrls.ConnectLedger, { state: { index, fromLocation: location } });
+        dispatch(ledgerNavigationSlice.actions.setJwtAccountIndex(index));
+        void navigate(RouteUrls.ConnectLedger);
         await listenForJwtSigningComplete();
       },
     })();

@@ -1,5 +1,3 @@
-import { Outlet, useNavigate } from 'react-router';
-
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { Box, Flex } from 'leather-styles/jsx';
@@ -18,6 +16,7 @@ import { AvailableBalance, ButtonRow, Card, Page } from '@app/components/layout'
 import { NonceSetter } from '@app/components/nonce-setter';
 import { useUpdatePersistedSendFormValues } from '@app/features/popup-send-form-restoration/use-update-persisted-send-form-values';
 import { HighFeeSheet } from '@app/features/stacks-high-fee-warning/stacks-high-fee-dialog';
+import { Outlet, useNavigate } from '@app/routes/compat';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { MemoField } from '../../components/memo-field';

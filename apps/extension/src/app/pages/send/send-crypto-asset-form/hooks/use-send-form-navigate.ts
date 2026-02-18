@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 
 import { StacksTransactionWire } from '@stacks/transactions';
 import { AxiosError } from 'axios';
@@ -9,11 +8,9 @@ import type { OwnedUtxo } from '@leather.io/models';
 import { BitcoinSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
-interface ConfirmationRouteState {
-  decimals?: number;
-  token?: string;
-  tx: string;
-}
+import { useLocation, useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { sendNavigationSlice } from '@app/store/navigation/send-navigation.slice';
 
 interface ConfirmationRouteStacksSip10Args {
   decimals?: number;
@@ -32,6 +29,7 @@ interface ConfirmationRouteBtcArgs {
 export function useSendFormNavigate() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
 
   return useMemo(
     () => ({
@@ -40,13 +38,8 @@ export function useSendFormNavigate() {
         utxos: OwnedUtxo[],
         values: BitcoinSendFormValues
       ) {
-        return navigate(RouteUrls.SendBtcChooseFee, {
-          state: {
-            isSendingMax,
-            utxos,
-            values,
-          },
-        });
+        dispatch(sendNavigationSlice.actions.setBtcChooseFeeState({ isSendingMax, utxos, values }));
+        return navigate(RouteUrls.SendBtcChooseFee);
       },
       toConfirmAndSignBtcTransaction({
         tx,
@@ -55,48 +48,50 @@ export function useSendFormNavigate() {
         feeRowValue,
         time,
       }: ConfirmationRouteBtcArgs) {
-        return navigate(RouteUrls.SendBtcConfirmation, {
-          state: {
+        dispatch(
+          sendNavigationSlice.actions.setBtcConfirmationState({
             tx,
             recipient,
             fee,
             feeRowValue,
             time,
-          } as ConfirmationRouteState,
-        });
+          })
+        );
+        return navigate(RouteUrls.SendBtcConfirmation);
       },
       toConfirmAndSignStxTransaction(tx: StacksTransactionWire, showFeeChangeWarning: boolean) {
-        return navigate(RouteUrls.SendStxConfirmation, {
-          state: {
+        dispatch(
+          sendNavigationSlice.actions.setStxConfirmationState({
             tx: tx.serialize(),
             showFeeChangeWarning,
-          } as ConfirmationRouteState,
-        });
+          })
+        );
+        return navigate(RouteUrls.SendStxConfirmation);
       },
       toConfirmAndSignStacksSip10Transaction({
         decimals,
         name,
         tx,
       }: ConfirmationRouteStacksSip10Args) {
-        return navigate(`${location.pathname}/confirm`, {
-          state: {
+        dispatch(
+          sendNavigationSlice.actions.setStxConfirmationState({
+            tx: tx.serialize(),
+            showFeeChangeWarning: false,
             decimals,
             token: name,
-            tx: tx.serialize(),
-          } as ConfirmationRouteState,
-        });
+          })
+        );
+        return navigate(`${location.pathname}/confirm`);
       },
       toErrorPage(error: unknown) {
-        // without this processing, navigate does not work
         const processedError = error instanceof AxiosError ? new Error(error.message) : error;
-
-        return navigate('../error', {
-          relative: 'path',
+        dispatch(sendNavigationSlice.actions.setSendError(processedError));
+        const parentPath = location.pathname.split('/').slice(0, -1).join('/') || '/';
+        return navigate(`${parentPath}/error`, {
           replace: true,
-          state: { error: processedError },
         });
       },
     }),
-    [navigate, location]
+    [navigate, location, dispatch]
   );
 }

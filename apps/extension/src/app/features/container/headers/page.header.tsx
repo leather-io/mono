@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { useNavigate } from 'react-router';
 
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { styled } from 'leather-styles/jsx';
@@ -13,6 +12,7 @@ import { HeaderActionButton } from '@app/components/layout/headers/header-action
 import { HeaderGrid, HeaderGridRightCol } from '@app/components/layout/headers/header-grid';
 import { LogoBox } from '@app/components/layout/headers/logo-box';
 import { Settings } from '@app/features/settings/settings';
+import { useNavigate } from '@app/routes/compat';
 
 interface PageHeaderProps {
   title?: ReactNode;

@@ -1,5 +1,4 @@
 import { memo, useState } from 'react';
-import { Navigate } from 'react-router';
 
 import { Flex, HStack, Stack } from 'leather-styles/jsx';
 
@@ -17,6 +16,7 @@ import { stacksValue } from '@app/common/stacks-utils';
 import { SwitchAccountSheet } from '@app/features/dialogs/switch-account-sheet/switch-account-sheet';
 import { ErrorMessage } from '@app/features/stacks-transaction-request/legacy-transaction-error/error-message';
 import { useStxAddressAvailableUnlockedBalance } from '@app/query/stacks/balance/stx-balance.hooks';
+import { Navigate } from '@app/routes/compat';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 import { useTransactionRequestState } from '@app/store/transactions/requests.hooks';

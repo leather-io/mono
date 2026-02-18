@@ -1,4 +1,4 @@
-import { Outlet, useParams } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { deserializeTransaction, isTokenTransferPayload } from '@stacks/transactions';
 import { Box, Stack } from 'leather-styles/jsx';
@@ -7,7 +7,6 @@ import { InfoCircleIcon } from '@leather.io/ui';
 import { baseCurrencyAmountInQuote, sumMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import {
   getNonceFromStacksTransaction,
   getRecipientFromStacksTransaction,
@@ -22,15 +21,18 @@ import { Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useStacksBroadcastTransaction } from '@app/features/stacks-transaction-request/hooks/use-legacy-stacks-broadcast-transaction';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { Outlet, useParams } from '@app/routes/compat';
+import type { RootState } from '@app/store';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import { SendFormConfirmationLayout } from '../send-form-confirmation.layout';
 
 function useStacksSendFormConfirmationState() {
+  const stxConfirmation = useSelector((state: RootState) => state.navigation.send.stxConfirmation);
   return {
-    tx: useLocationStateWithCache('tx') as string,
-    decimals: useLocationStateWithCache('decimals') as number,
-    showFeeChangeWarning: useLocationStateWithCache('showFeeChangeWarning') as boolean,
+    tx: stxConfirmation?.tx ?? '',
+    decimals: stxConfirmation?.decimals ?? 0,
+    showFeeChangeWarning: stxConfirmation?.showFeeChangeWarning ?? false,
   };
 }
 

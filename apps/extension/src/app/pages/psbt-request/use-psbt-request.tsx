@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 
@@ -11,12 +10,16 @@ import { analytics } from '@shared/utils/analytics';
 
 import { usePsbtRequestSearchParams } from '@app/common/psbt/use-psbt-request-params';
 import { usePsbtSigner } from '@app/features/psbt-signer/hooks/use-psbt-signer';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
 import { useGetAssumedZeroIndexSigningConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 
 export function usePsbtRequest() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { appName, origin, payload, requestToken, signAtIndex, tabId } =
     usePsbtRequestSearchParams();
   const { signPsbt, getRawPsbt, getPsbtAsTransaction } = usePsbtSigner();
@@ -58,9 +61,13 @@ export function usePsbtRequest() {
             tabId,
           });
         } catch (e) {
-          return navigate(RouteUrls.RequestError, {
-            state: { message: isError(e) ? e.message : '', title: 'Failed to sign' },
-          });
+          dispatch(
+            miscNavigationSlice.actions.setErrorState({
+              message: isError(e) ? e.message : '',
+              title: 'Failed to sign',
+            })
+          );
+          return navigate(RouteUrls.RequestError);
         }
       },
     };
@@ -77,5 +84,6 @@ export function usePsbtRequest() {
     signPsbt,
     getDefaultSigningConfig,
     navigate,
+    dispatch,
   ]);
 }

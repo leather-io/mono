@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { Outlet, useNavigate } from 'react-router';
 
 import { isDefined } from '@leather.io/utils';
 
@@ -14,6 +13,7 @@ import { StacksRpcTransactionRequestProvider } from '@app/features/rpc-stacks-tr
 import { useRpcTransactionRequest } from '@app/features/rpc-stacks-transaction-request/use-rpc-transaction-request';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { Outlet, useNavigate } from '@app/routes/compat';
 import type { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 

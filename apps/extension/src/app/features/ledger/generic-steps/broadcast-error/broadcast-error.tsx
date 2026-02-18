@@ -1,19 +1,17 @@
-import { useLocation } from 'react-router';
-
-import get from 'lodash.get';
+import { useSelector } from 'react-redux';
 
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
+import type { RootState } from '@app/store';
 
 import { LedgerBroadcastErrorLayout } from './broadcast-error.layout';
 
 export function LedgerBroadcastError() {
-  const location = useLocation();
   const ledgerNavigate = useLedgerNavigate();
-  const error = get(location.state, 'error', '');
+  const error = useSelector((state: RootState) => state.navigation.ledger.error);
 
   return (
     <LedgerBroadcastErrorLayout
-      error={error}
+      error={error ?? ''}
       onClose={() => ledgerNavigate.cancelLedgerActionAndReturnHome()}
     />
   );

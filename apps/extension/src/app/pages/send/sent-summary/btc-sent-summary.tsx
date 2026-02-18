@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { Stack } from 'leather-styles/jsx';
 
@@ -15,27 +15,26 @@ import {
 import { Card, Content, Page, SummaryFooter } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useToast } from '@app/features/toasts/use-toast';
+import type { RootState } from '@app/store';
 
 import { TxDone } from '../send-crypto-asset-form/components/tx-done';
 
 export function BtcSentSummary() {
-  const { state } = useLocation();
+  const summary = useSelector((state: RootState) => state.navigation.send.btcSentSummary);
 
   const toast = useToast();
 
-  const {
-    txId,
-    txValue,
-    txFiatValue,
-    txFiatValueSymbol,
-    symbol,
-    txLink,
-    arrivesIn,
-    sendingValue,
-    recipient,
-    totalSpend,
-    feeRowValue,
-  } = state;
+  const txId = summary?.txId ?? '';
+  const txValue = summary?.txValue ?? '';
+  const txFiatValue = summary?.txFiatValue ?? '';
+  const txFiatValueSymbol = summary?.txFiatValueSymbol ?? '';
+  const symbol = summary?.symbol ?? '';
+  const txLink = summary?.txLink ?? { blockchain: '', txid: '' };
+  const arrivesIn = summary?.arrivesIn ?? '';
+  const sendingValue = summary?.sendingValue ?? '';
+  const recipient = summary?.recipient ?? '';
+  const totalSpend = summary?.totalSpend ?? '';
+  const feeRowValue = summary?.feeRowValue ?? '';
 
   const { onCopy } = useClipboard(txId);
   const { handleOpenBitcoinTxLink: handleOpenTxLink } = useBitcoinExplorerLink();

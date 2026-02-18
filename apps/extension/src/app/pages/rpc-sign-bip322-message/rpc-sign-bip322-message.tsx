@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react';
-import { Outlet, useLocation } from 'react-router';
-
 import { truncateMiddle } from '@leather.io/utils';
 
 import { closeWindow } from '@shared/utils';
@@ -11,6 +8,7 @@ import { PopupHeader } from '@app/features/container/headers/popup.header';
 import { MessagePreviewBox } from '@app/features/message-signer/message-preview-box';
 import { MessageSigningRequestLayout } from '@app/features/message-signer/message-signing-request.layout';
 import { AccountGate } from '@app/routes/account-gate';
+import { Outlet } from '@app/routes/compat';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { MessageSigningHeader } from '../../features/message-signer/message-signing-header';
@@ -37,19 +35,7 @@ function RpcSignBip322Message() {
     onUserRejectBip322MessageSigningRequest,
   } = useSignBip322Message();
 
-  const location = useLocation();
   const { chain } = useCurrentNetwork();
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  // if user has wentBack need to stop button loading so they can retry
-  useEffect(() => {
-    if (location?.state?.wentBack) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(signBip322MessageIsLoading);
-    }
-  }, [location, signBip322MessageIsLoading, isLoading, setIsLoading]);
 
   if (origin === null) {
     closeWindow();
@@ -68,7 +54,7 @@ function RpcSignBip322Message() {
         <MessagePreviewBox message={message} />
         <NoFeesWarningRow chainId={chain.stacks.chainId} />
         <SignMessageActions
-          isLoading={isLoading}
+          isLoading={signBip322MessageIsLoading}
           onSignMessage={() => onUserApproveBip322MessageSigningRequest()}
           onSignMessageCancel={() => onUserRejectBip322MessageSigningRequest()}
         />

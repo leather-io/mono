@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { Formik } from 'formik';
 import { Flex, Stack } from 'leather-styles/jsx';
@@ -11,18 +11,19 @@ import { btcToSat, createMoney, sumMoney } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { getBitcoinTxValue } from '@app/common/transactions/bitcoin/utils';
 import { BitcoinCustomFeeInput } from '@app/components/bitcoin-custom-fee/bitcoin-custom-fee-input';
 import { BitcoinTransactionItem } from '@app/components/bitcoin-transaction-item/bitcoin-transaction-item';
 import { useCurrentNativeSegwitBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
+import { Outlet, useLocation, useNavigate } from '@app/routes/compat';
+import type { RootState } from '@app/store';
 import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 import { TransactionActions } from './components/transaction-actions';
 import { useBtcIncreaseFee } from './hooks/use-btc-increase-fee';
 
 export function IncreaseBtcFeeSheet() {
-  const tx = useLocationStateWithCache('btcTx') as BitcoinTx;
+  const tx = useSelector((state: RootState) => state.navigation.modal.btcTx) as BitcoinTx;
   const navigate = useNavigate();
   const location = useLocation();
 

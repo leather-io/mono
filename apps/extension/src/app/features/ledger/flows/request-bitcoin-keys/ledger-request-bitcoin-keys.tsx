@@ -1,12 +1,10 @@
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
 
 import BitcoinApp from 'ledger-bitcoin';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
 
 import { pullBitcoinKeysFromLedgerDevice } from '@app/features/ledger/flows/request-bitcoin-keys/request-bitcoin-keys.utils';
-import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
 import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import {
@@ -20,10 +18,11 @@ import {
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import { useNavigate } from '@app/routes/compat';
 import { bitcoinKeysSlice } from '@app/store/ledger/bitcoin/bitcoin-key.slice';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
-function LedgerRequestBitcoinKeys() {
+export function LedgerRequestBitcoinKeys() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -78,8 +77,3 @@ function LedgerRequestBitcoinKeys() {
     />
   );
 }
-
-export const requestBitcoinKeysRoutes = ledgerRequestKeysRoutes({
-  path: 'bitcoin',
-  component: <LedgerRequestBitcoinKeys />,
-});

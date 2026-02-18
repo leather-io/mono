@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { Flex } from 'leather-styles/jsx';
@@ -13,7 +12,10 @@ import { useHasKeys } from '@app/common/hooks/auth/use-has-keys';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
 import { useHasDefaultInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 
 export function StickyButtons() {
   const { lockWallet } = useKeyActions();
@@ -21,6 +23,7 @@ export function StickyButtons() {
   const { hasKeys } = useHasKeys();
   const { walletType } = useWalletType();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [showSignOut, setShowSignOut] = useState(false);
 
   return (
@@ -44,7 +47,10 @@ export function StickyButtons() {
             onClick={() => {
               analytics.track('lock_session');
               void lockWallet({
-                afterLock: () => navigate(RouteUrls.Unlock, { state: { from: location.pathname } }),
+                afterLock: () => {
+                  dispatch(miscNavigationSlice.actions.setUnlockReturnPath(location.pathname));
+                  navigate(RouteUrls.Unlock);
+                },
               });
             }}
           >

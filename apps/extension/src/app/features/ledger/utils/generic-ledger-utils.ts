@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router';
 
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import BitcoinApp from 'ledger-bitcoin';
@@ -9,6 +8,7 @@ import { delay } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 
 import { safeAwait } from '@app/common/utils/safe-await';
+import { useLocation } from '@app/routes/compat';
 
 import { getStacksAppVersion } from './stacks-ledger-utils';
 

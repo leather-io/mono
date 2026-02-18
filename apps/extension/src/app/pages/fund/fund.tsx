@@ -1,5 +1,3 @@
-import { Outlet } from 'react-router';
-
 import { LEATHER_EARN_URL } from '@leather.io/constants';
 import { getOnramperIframeParams } from '@leather.io/features';
 
@@ -13,6 +11,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { useThemeSwitcher } from '@app/common/theme-provider';
 import { Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
+import { Outlet } from '@app/routes/compat';
 import { useCurrentAccountNativeSegwitIndexZeroSignerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 

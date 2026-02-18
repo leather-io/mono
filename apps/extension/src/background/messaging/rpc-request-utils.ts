@@ -1,5 +1,3 @@
-import type { To } from 'react-router';
-
 import { z } from 'zod';
 
 import {
@@ -24,6 +22,8 @@ import { getHostnameFromUrl } from '@shared/utils/urls';
 import { popup } from '@background/popup';
 
 import { trackRpcRequestError } from './rpc-helpers';
+
+type To = string;
 
 export function getTabIdFromPort(port: chrome.runtime.Port) {
   return port.sender?.tab?.id ?? 0;

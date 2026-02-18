@@ -1,11 +1,10 @@
-import { Outlet } from 'react-router';
-
 import type { RouteQuote } from '@bitflowlabs/core-sdk';
 import type { StacksTransactionWire } from '@stacks/transactions';
 
 import { defaultSwapFee } from '@leather.io/query';
 
 import type { SbtcSponsorshipEligibility } from '@app/query/sbtc/sponsored-transactions.query';
+import { Outlet } from '@app/routes/compat';
 
 import { SwapForm } from '../form/swap-form';
 import { useAllSwappableAssets } from '../hooks/use-all-swappable-assets';

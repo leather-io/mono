@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { type Location, Outlet, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import type { BtcFeeType } from '@leather.io/models';
 import { Sheet, SheetHeader } from '@leather.io/ui';
@@ -7,7 +7,6 @@ import { createMoney } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import {
   BitcoinFeesList,
   OnChooseFeeArgs,
@@ -15,6 +14,8 @@ import {
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { BitcoinChooseFee } from '@app/features/bitcoin-choose-fee/bitcoin-choose-fee';
 import { useValidateBitcoinSpend } from '@app/features/bitcoin-choose-fee/hooks/use-validate-bitcoin-spend';
+import { Outlet, useNavigate } from '@app/routes/compat';
+import type { RootState } from '@app/store';
 
 import { useSendInscriptionState } from './components/send-inscription-container';
 import { useSendInscriptionFeesList } from './hooks/use-send-inscription-fees-list';
@@ -23,7 +24,9 @@ import { useSendInscriptionForm } from './hooks/use-send-inscription-form';
 export function SendInscriptionChooseFee() {
   const [isLoadingReview, setIsLoadingReview] = useState(false);
   const navigate = useNavigate();
-  const backgroundLocation = useLocationStateWithCache<Location>('backgroundLocation');
+  const backgroundPathname = useSelector(
+    (state: RootState) => state.navigation.modal.backgroundLocationPathname
+  );
   const { recipient, selectedFeeType, setSelectedFeeType, utxo, inscription } =
     useSendInscriptionState();
   const { feesList, isLoading } = useSendInscriptionFeesList({
@@ -66,7 +69,7 @@ export function SendInscriptionChooseFee() {
         header={<SheetHeader title="Choose fee" />}
         isShowing
         onGoBack={() => navigate(-1)}
-        onClose={() => navigate(backgroundLocation ?? RouteUrls.Home)}
+        onClose={() => navigate(backgroundPathname ?? RouteUrls.Home)}
       >
         <BitcoinChooseFee
           amount={createMoney(0, 'BTC')}

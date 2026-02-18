@@ -1,25 +1,20 @@
-import { Outlet, Route, Routes, useLocation } from 'react-router';
+import { useSelector } from 'react-redux';
 
-import { useLocationState } from '@app/common/hooks/use-location-state';
+import { Outlet } from '@app/routes/compat';
+import type { RootState } from '@app/store';
 
-/*
-   To overlay modal on nested routes backgroundLocation is used
-   to trick the router into thinking its on the same page
- */
 interface ModalBackgroundWrapperProps {
   children: React.ReactNode;
 }
 export function ModalBackgroundWrapper({ children }: ModalBackgroundWrapperProps) {
-  const location = useLocation();
-  const backgroundLocation = useLocationState<Location>('backgroundLocation');
+  const backgroundPathname = useSelector(
+    (state: RootState) => state.navigation.modal.backgroundLocationPathname
+  );
 
   return (
     <>
-      <Routes location={backgroundLocation || location}>
-        {children}
-        <Route path="*" element={<Outlet />} />
-      </Routes>
-      {backgroundLocation && <Outlet />}
+      {children}
+      {backgroundPathname && <Outlet />}
     </>
   );
 }

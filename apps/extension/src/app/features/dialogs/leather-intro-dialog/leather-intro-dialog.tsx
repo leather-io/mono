@@ -1,24 +1,14 @@
 import { createContext, useContext } from 'react';
-import { Outlet, Route, useNavigate } from 'react-router';
 
 import { delay } from '@leather.io/utils';
 
+import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
+import { Outlet, useNavigate } from '@app/routes/compat';
 
-import {
-  LeatherIntroSheet,
-  LeatherIntroSheetPart1,
-  LeatherIntroSheetPart2,
-} from './leather-intro-steps';
-
-export const leatherIntroSheetRoutes = (
-  <Route element={<LeatherIntroSheetContainer />}>
-    <Route path="we-have-a-new-name" element={<LeatherIntroSheetPart1 />} />
-    <Route path="introducing-leather" element={<LeatherIntroSheetPart2 />} />
-  </Route>
-);
+import { LeatherIntroSheet } from './leather-intro-steps';
 
 interface IntroContextProps {
   onRevealNewName(): void;
@@ -35,17 +25,17 @@ export function useLeatherIntroSheetContext() {
   return context;
 }
 
-function LeatherIntroSheetContainer() {
+export function LeatherIntroSheetContainer() {
   const navigate = useNavigate();
   async function onRevealNewName() {
     analytics.track('new_brand_reveal_name');
     await delay(4000);
-    void navigate('./introducing-leather', { replace: true });
+    void navigate(`${RouteUrls.Unlock}/introducing-leather`, { replace: true });
   }
 
   function onAcceptTerms() {
     analytics.track('new_brand_accept_terms');
-    void navigate('../', { replace: true });
+    void navigate(RouteUrls.Unlock, { replace: true });
   }
 
   function onRejectAndUninstall() {

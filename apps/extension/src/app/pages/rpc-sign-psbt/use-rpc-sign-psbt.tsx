@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { hexToBytes } from '@noble/hashes/utils';
 import { bytesToHex } from '@stacks/common';
 
@@ -21,7 +19,10 @@ import {
   useCalculateBitcoinFiatValue,
   useCryptoCurrencyMarketDataMeanAverage,
 } from '@app/query/common/market-data/market-data.hooks';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
 import { useGetAssumedZeroIndexSigningConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 
 interface BroadcastSignedPsbtTxArgs {
   addressNativeSegwitTotal: Money;
@@ -32,6 +33,7 @@ interface BroadcastSignedPsbtTxArgs {
 }
 export function useRpcSignPsbt() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { broadcast, origin, psbtHex, requestId, signAtIndex, tabId } = useRpcSignPsbtParams();
   const { signPsbt, getPsbtAsTransaction } = usePsbtSigner();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
@@ -81,12 +83,13 @@ export function useRpcSignPsbt() {
           txId: txid,
           txLink: {
             blockchain: 'bitcoin',
-            txId: txid || '',
+            txid: txid || '',
           },
           txValue: formatCurrency(transferTotalAsMoney),
         };
 
-        void navigate(RouteUrls.RpcSignPsbtSummary, { state: psbtTxSummaryState });
+        dispatch(miscNavigationSlice.actions.setRpcSignPsbtSummary(psbtTxSummaryState));
+        void navigate(RouteUrls.RpcSignPsbtSummary);
       },
       onError(e) {
         if (!requestId) throw new Error('Invalid request id');
@@ -98,9 +101,13 @@ export function useRpcSignPsbt() {
             error: { code: 4002, message: 'Failed to broadcast transaction' },
           })
         );
-        void navigate(RouteUrls.RequestError, {
-          state: { message: isError(e) ? e.message : '', title: 'Failed to broadcast' },
-        });
+        dispatch(
+          miscNavigationSlice.actions.setErrorState({
+            message: isError(e) ? e.message : '',
+            title: 'Failed to broadcast',
+          })
+        );
+        void navigate(RouteUrls.RequestError);
       },
     });
   }
@@ -147,20 +154,25 @@ export function useRpcSignPsbt() {
               psbt: bytesToHex(psbt),
             });
           } catch (e) {
-            return navigate(RouteUrls.RequestError, {
-              state: {
+            dispatch(
+              miscNavigationSlice.actions.setErrorState({
                 message: isError(e) ? e.message : '',
                 title: 'Failed to finalize tx',
-              },
-            });
+              })
+            );
+            return navigate(RouteUrls.RequestError);
           }
 
           return;
         }
       } catch (e) {
-        return navigate(RouteUrls.RequestError, {
-          state: { message: isError(e) ? e.message : '', title: 'Failed to sign' },
-        });
+        dispatch(
+          miscNavigationSlice.actions.setErrorState({
+            message: isError(e) ? e.message : '',
+            title: 'Failed to sign',
+          })
+        );
+        return navigate(RouteUrls.RequestError);
       }
     },
     onCancel() {

@@ -1,10 +1,9 @@
-import { useNavigate } from 'react-router';
-
 import { Box } from 'leather-styles/jsx';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { GenericError } from '@app/components/generic-error/generic-error';
+import { useNavigate } from '@app/routes/compat';
 
 const body = 'Please set a custom fee';
 const title = 'Unable to calculate fees';

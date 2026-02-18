@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
@@ -11,6 +10,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useClipboard } from '@app/common/hooks/use-copy-to-clipboard';
+import { useNavigate } from '@app/routes/compat';
 
 import { SecretKeyGrid } from './secret-key-grid';
 import { SecretKeyWord } from './secret-key-word';

@@ -1,16 +1,7 @@
-import { useMemo } from 'react';
-import { useLocation } from 'react-router';
+import { useSelector } from 'react-redux';
+
+import type { RootState } from '@app/store';
 
 export function useLatestLedgerError() {
-  const location = useLocation();
-
-  return useMemo(() => {
-    const state = location.state;
-    if (!state || state === null) return null;
-    if (typeof state === 'object') {
-      const error = state.latestLedgerError;
-      if (error) return error;
-    }
-    return null;
-  }, [location.state]);
+  return useSelector((state: RootState) => state.navigation.ledger.latestLedgerError);
 }

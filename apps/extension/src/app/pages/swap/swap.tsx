@@ -1,5 +1,3 @@
-import { Outlet } from 'react-router';
-
 import { SwapSelectors } from '@tests/selectors/swap.selectors';
 import { useFormikContext } from 'formik';
 
@@ -14,6 +12,7 @@ import {
   SbtcLedgerRecoveryWarning,
   isBtcToSbtcSwap,
 } from '@app/pages/swap/components/sbtc-ledger-recovery-warning';
+import { Outlet } from '@app/routes/compat';
 
 import { SwapAssetSelectBase } from './components/swap-asset-select/swap-asset-select-base';
 import { SwapAssetSelectQuote } from './components/swap-asset-select/swap-asset-select-quote';

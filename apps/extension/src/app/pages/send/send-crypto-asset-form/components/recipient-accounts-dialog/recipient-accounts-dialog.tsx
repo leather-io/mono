@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
 import { Virtuoso } from 'react-virtuoso';
 
 import { Box } from 'leather-styles/jsx';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
+import { useNavigate } from '@app/routes/compat';
 import { useFilteredBitcoinAccounts } from '@app/store/accounts/blockchain/bitcoin/bitcoin.ledger';
 import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet';

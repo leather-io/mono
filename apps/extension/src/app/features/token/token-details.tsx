@@ -1,9 +1,8 @@
-import { useParams } from 'react-router';
-
 import { parseTokenDetailsAssetId } from '@leather.io/features';
 import { CryptoAssetProtocols } from '@leather.io/models';
 import { assertUnreachable, deserializeAssetId } from '@leather.io/utils';
 
+import { useParams } from '@app/routes/compat';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
@@ -14,7 +13,8 @@ import { StacksTokenDetails } from './stacks-token-details';
 import { TokenDetailsError } from './token-details-error';
 
 export function TokenDetails() {
-  const { '*': encodedAssetId } = useParams();
+  const params = useParams();
+  const encodedAssetId = params['_splat'] ?? params['*'];
   const assetId = parseTokenDetailsAssetId(encodedAssetId);
 
   const accountIndex = useCurrentAccountIndex();

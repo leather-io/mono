@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { Box, styled } from 'leather-styles/jsx';
 
 import { assetIdToSendPath } from '@leather.io/features';
@@ -12,6 +10,7 @@ import { Card, Content, Page } from '@app/components/layout';
 import { TokenList } from '@app/features/asset-list/token-list';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useConfigBitcoinSendEnabled } from '@app/query/common/remote-config/remote-config.query';
+import { useNavigate } from '@app/routes/compat';
 
 export function ChooseCryptoAsset() {
   const navigate = useNavigate();

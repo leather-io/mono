@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import { Outlet, useNavigate } from 'react-router';
 
 import { Formik, FormikHelpers } from 'formik';
 import { Flex } from 'leather-styles/jsx';
@@ -42,7 +41,10 @@ import { submitSponsoredSbtcTransaction } from '@app/query/sbtc/sponsored-transa
 import { useStxAddressBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useCalculateStacksTxFees } from '@app/query/stacks/fees/fees.hooks';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
+import { Outlet, useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 import {
   useTransactionRequest,
   useTransactionRequestState,
@@ -76,6 +78,7 @@ function TransactionRequestBase() {
     stxBalance.state === 'success' && nonceQueryStatus === 'success' && !isVerifyingSbtcSponsorship;
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { stacksBroadcastTransaction } = useStacksBroadcastTransaction({ token: 'STX' });
   const signStacksTransaction = useSignStacksTransaction();
 
@@ -97,9 +100,10 @@ function TransactionRequestBase() {
           signedSponsoredTx
         );
         if (!result.txid) {
-          return navigate(RouteUrls.BroadcastError, {
-            state: { message: result.error },
-          });
+          dispatch(
+            miscNavigationSlice.actions.setErrorState({ message: result.error ?? '', title: '' })
+          );
+          return navigate(RouteUrls.BroadcastError);
         }
         if (requestToken && tabId) {
           finalizeTxSignature({
@@ -113,7 +117,8 @@ function TransactionRequestBase() {
         }
       } catch (e: any) {
         const message = isString(e) ? e : e.message;
-        return navigate(RouteUrls.BroadcastError, { state: { message } });
+        dispatch(miscNavigationSlice.actions.setErrorState({ message, title: '' }));
+        return navigate(RouteUrls.BroadcastError);
       }
     } else {
       const unsignedTx = await generateUnsignedTx(values);

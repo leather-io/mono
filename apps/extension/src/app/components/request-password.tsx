@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { Box, Stack, styled } from 'leather-styles/jsx';
@@ -13,6 +12,7 @@ import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { buildEnterKeyEvent } from '@app/common/hooks/use-modifier-key';
 import { WaitingMessages, useWaitingMessage } from '@app/common/hooks/use-waiting-message';
 import { Card, Page } from '@app/components/layout';
+import { useNavigate } from '@app/routes/compat';
 
 import { ErrorLabel } from './error-label';
 

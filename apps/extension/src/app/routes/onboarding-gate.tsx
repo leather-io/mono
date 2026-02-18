@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { Navigate } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { Navigate } from '@app/routes/compat';
 import { useHasDefaultInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { useHasLedgerKeys } from '@app/store/ledger/ledger.selectors';
 import { useCurrentKeyDetails } from '@app/store/software-keys/software-key.selectors';

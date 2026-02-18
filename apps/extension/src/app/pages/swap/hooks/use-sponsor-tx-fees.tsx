@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
 
 import type { StacksTransactionWire } from '@stacks/transactions';
 
@@ -16,6 +15,9 @@ import {
   submitSponsoredSbtcTransaction,
   verifySponsoredSbtcTransaction,
 } from '@app/query/sbtc/sponsored-transactions.query';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 import { LoadingKeys, useLoading } from '@app/store/ui/ui.hooks';
 
@@ -24,6 +26,7 @@ export function useSponsorTransactionFees() {
   const { setIsIdle } = useLoading(LoadingKeys.SUBMIT_SWAP_TRANSACTION);
   const signTx = useSignStacksTransaction();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const toast = useToast();
 
   async function checkEligibilityForSponsor(baseTx: TransactionBase) {
@@ -43,7 +46,10 @@ export function useSponsorTransactionFees() {
 
         const result = await submitSponsoredSbtcTransaction(sponsorshipApiUrl, signedSponsoredTx);
         if (!result.txid) {
-          void navigate(RouteUrls.SwapError, { state: { message: result.error } });
+          dispatch(
+            miscNavigationSlice.actions.setErrorState({ message: result.error ?? '', title: '' })
+          );
+          void navigate(RouteUrls.SwapError);
           return;
         }
 
@@ -54,7 +60,7 @@ export function useSponsorTransactionFees() {
         return logger.error('Failed to submit sponsor transaction', error);
       }
     },
-    [navigate, setIsIdle, signTx, toast, sponsorshipApiUrl]
+    [dispatch, navigate, setIsIdle, signTx, toast, sponsorshipApiUrl]
   );
 
   return {

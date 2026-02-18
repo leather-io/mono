@@ -1,5 +1,3 @@
-import { Outlet } from 'react-router';
-
 import { Box } from 'leather-styles/jsx';
 
 import { type RpcMethodNames } from '@leather.io/rpc';
@@ -9,6 +7,7 @@ import type { HasChildren } from '@app/common/has-children';
 import { BackgroundOverlay } from '@app/components/loading-overlay';
 import { TransactionHeader } from '@app/components/rpc-transaction-request/transaction-header';
 import { TransactionWrapper } from '@app/components/rpc-transaction-request/transaction-wrapper';
+import { Outlet } from '@app/routes/compat';
 
 import { RequestingTabClosedWarningMessage } from '../errors/requesting-tab-closed-error-msg';
 import { useRpcTransactionRequest } from './use-rpc-transaction-request';

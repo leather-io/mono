@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { Box, HStack, styled } from 'leather-styles/jsx';
 
 import { ExternalLinkIcon } from '@leather.io/ui';
@@ -8,6 +6,7 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { GenericError } from '@app/components/generic-error/generic-error';
+import { useNavigate } from '@app/routes/compat';
 
 const body = 'Sending bitcoin is temporarily disabled';
 const helpTextList = [

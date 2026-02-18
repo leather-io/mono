@@ -1,53 +1,39 @@
-import { Outlet, Route, Routes } from 'react-router';
+import { useSelector } from 'react-redux';
 
-import { RouteUrls } from '@shared/route-urls';
-
-import { useLocationState } from '@app/common/hooks/use-location-state';
 import { Content } from '@app/components/layout/layouts/content.layout';
-import { SwitchAccountLayout } from '@app/components/layout/layouts/switch-account.layout';
 import { HomeHeader } from '@app/features/container/headers/home.header';
 import { TokenDetails } from '@app/features/token/token-details';
 import { Home } from '@app/pages/home/home';
 import { AccountGate } from '@app/routes/account-gate';
+import { Outlet } from '@app/routes/compat';
+import type { RootState } from '@app/store';
+
+function BackgroundContent({ pathname }: { pathname: string }) {
+  if (pathname.startsWith('/token/')) {
+    return (
+      <AccountGate>
+        <TokenDetails />
+      </AccountGate>
+    );
+  }
+  return (
+    <>
+      <HomeHeader />
+      <Content>
+        <Home isBackground />
+      </Content>
+    </>
+  );
+}
 
 export function ReceiveModalWrapper() {
-  const backgroundLocation = useLocationState<Location>('backgroundLocation');
-
-  if (!backgroundLocation) {
-    return <Outlet />;
-  }
+  const backgroundPathname = useSelector(
+    (state: RootState) => state.navigation.modal.backgroundLocationPathname
+  );
 
   return (
     <>
-      <Routes location={backgroundLocation}>
-        <Route
-          path={RouteUrls.TokenDetails}
-          element={
-            <AccountGate>
-              <TokenDetails />
-            </AccountGate>
-          }
-        />
-        <Route
-          element={
-            <>
-              <HomeHeader />
-              <Content>
-                <SwitchAccountLayout />
-              </Content>
-            </>
-          }
-        >
-          <Route
-            path="/*"
-            element={
-              <AccountGate>
-                <Home isBackground />
-              </AccountGate>
-            }
-          />
-        </Route>
-      </Routes>
+      {backgroundPathname && <BackgroundContent pathname={backgroundPathname} />}
       <Outlet />
     </>
   );

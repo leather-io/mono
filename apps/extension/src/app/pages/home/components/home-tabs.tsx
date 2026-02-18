@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 
 import { Box, Stack } from 'leather-styles/jsx';
 
@@ -8,6 +7,7 @@ import { Tabs } from '@leather.io/ui';
 import { RouteUrls } from '@shared/route-urls';
 
 import { LoadingSpinner } from '@app/components/loading-spinner';
+import { useLocation, useNavigate } from '@app/routes/compat';
 import { useBackgroundLocation } from '@app/routes/hooks/use-background-location';
 
 interface HomeTabsProps {

@@ -29,6 +29,10 @@ import { inMemoryKeySlice } from './in-memory-key/in-memory-key.slice';
 import { bitcoinKeysSlice } from './ledger/bitcoin/bitcoin-key.slice';
 import { stacksKeysSlice } from './ledger/stacks/stacks-key.slice';
 import { manageTokensSlice } from './manage-tokens/manage-tokens.slice';
+import { ledgerNavigationSlice } from './navigation/ledger-navigation.slice';
+import { miscNavigationSlice } from './navigation/misc-navigation.slice';
+import { modalNavigationSlice } from './navigation/modal-navigation.slice';
+import { sendNavigationSlice } from './navigation/send-navigation.slice';
 import { networksSlice } from './networks/networks.slice';
 import { settingsSlice } from './settings/settings.slice';
 import { keySlice } from './software-keys/software-key.slice';
@@ -51,6 +55,12 @@ export interface RootState {
   submittedTransactions: ReturnType<typeof submittedTransactionsSlice.reducer>;
   settings: ReturnType<typeof settingsSlice.reducer>;
   manageTokens: ReturnType<typeof manageTokensSlice.reducer>;
+  navigation: {
+    ledger: ReturnType<typeof ledgerNavigationSlice.reducer>;
+    misc: ReturnType<typeof miscNavigationSlice.reducer>;
+    send: ReturnType<typeof sendNavigationSlice.reducer>;
+    modal: ReturnType<typeof modalNavigationSlice.reducer>;
+  };
   ui: ReturnType<typeof uiSlice.reducer>;
 }
 
@@ -70,6 +80,12 @@ const appReducer = combineReducers({
   submittedTransactions: submittedTransactionsSlice.reducer,
   settings: settingsSlice.reducer,
   manageTokens: manageTokensSlice.reducer,
+  navigation: combineReducers({
+    ledger: ledgerNavigationSlice.reducer,
+    misc: miscNavigationSlice.reducer,
+    send: sendNavigationSlice.reducer,
+    modal: modalNavigationSlice.reducer,
+  }),
   ui: uiSlice.reducer,
 });
 

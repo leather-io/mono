@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useFormikContext } from 'formik';
 
 import type { Entries } from '@leather.io/models';
 
 import { RouteUrls } from '@shared/route-urls';
+
+import { useNavigate } from '@app/routes/compat';
 
 import { useRecipientBnsName } from './use-recipient-bns-name';
 

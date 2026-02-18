@@ -1,7 +1,9 @@
-import { useLocationState } from '@app/common/hooks/use-location-state';
+import { useSelector } from 'react-redux';
+
 import { DeviceBusyLayout } from '@app/features/ledger/generic-steps';
+import type { RootState } from '@app/store';
 
 export function DeviceBusy() {
-  const description = useLocationState<string>('description');
+  const description = useSelector((state: RootState) => state.navigation.ledger.description);
   return <DeviceBusyLayout activityDescription={description ?? 'Ledger device busy'} />;
 }

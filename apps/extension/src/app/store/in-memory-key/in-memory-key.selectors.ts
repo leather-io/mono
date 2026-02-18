@@ -18,7 +18,7 @@ const selectDefaultInMemoryWalletKeyBytes = createSelector(
   state => state.keys[defaultWalletKeyId]
 );
 
-const selectHasDefaultInMemoryWalletKey = createSelector(
+export const selectHasDefaultInMemoryWalletKey = createSelector(
   selectDefaultInMemoryWalletKeyBytes,
   key => !!key
 );

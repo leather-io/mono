@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router';
 
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
+
+import { useNavigate, useParams } from '@app/routes/compat';
 
 export function useSwapNavigate() {
   const { base, quote } = useParams();

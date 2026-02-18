@@ -1,7 +1,8 @@
 import { type ReactNode } from 'react';
-import { Outlet } from 'react-router';
 
 import { Stack, styled } from 'leather-styles/jsx';
+
+import { Outlet } from '@app/routes/compat';
 
 import { ActivityEmpty } from './activity-empty';
 import { ActivityLoading } from './activity-loading';

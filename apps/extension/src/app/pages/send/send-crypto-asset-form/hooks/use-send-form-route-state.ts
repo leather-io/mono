@@ -1,12 +1,13 @@
-import { useLocation } from 'react-router';
+import { useSelector } from 'react-redux';
 
-import get from 'lodash.get';
+import type { RootState } from '@app/store';
 
 export function useSendFormRouteState() {
-  const { state } = useLocation();
+  const sendFormRouteState = useSelector(
+    (state: RootState) => state.navigation.send.sendFormRouteState
+  );
   return {
-    amount: get(state, 'amount', ''),
-    recipient: get(state, 'recipient', ''),
-    ...state,
+    amount: sendFormRouteState?.amount ?? '',
+    recipient: sendFormRouteState?.recipient ?? '',
   };
 }

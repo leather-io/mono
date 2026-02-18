@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { styled } from 'leather-styles/jsx';
 
@@ -8,6 +6,7 @@ import { NetworkModeBadge } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { useNavigate } from '@app/routes/compat';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 import { useNetworkBadgeAlwaysOn } from '@app/store/settings/settings.selectors';
 

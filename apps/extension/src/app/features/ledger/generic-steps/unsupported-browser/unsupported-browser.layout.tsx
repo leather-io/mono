@@ -1,10 +1,9 @@
-import { useNavigate } from 'react-router';
-
 import { styled } from 'leather-styles/jsx';
 
 import { Link, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { UnsupportedBrowserImg } from '@app/features/ledger/illustrations/ledger-illu-unsupported-browser';
+import { useNavigate } from '@app/routes/compat';
 
 import { LedgerTitle } from '../../components/ledger-title';
 import { LedgerWrapper } from '../../components/ledger-wrapper';

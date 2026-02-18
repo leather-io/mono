@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import type { MempoolTransaction, Transaction } from '@stacks/stacks-blockchain-api-types';
@@ -21,6 +20,7 @@ import { useToast } from '@app/features/toasts/use-toast';
 import { useStxAddressAvailableUnlockedBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useStacksRawTransaction } from '@app/query/stacks/transactions/raw-transaction-by-id.hooks';
 import { useGetTransactionByIdQuery } from '@app/query/stacks/transactions/transactions-by-id.query';
+import { Outlet, useLocation, useNavigate, useParams } from '@app/routes/compat';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 import { IncreaseFeeField } from './components/increase-fee-field';

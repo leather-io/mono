@@ -1,5 +1,3 @@
-import { Outlet } from 'react-router';
-
 import { SwapSelectors } from '@tests/selectors/swap.selectors';
 import { useFormikContext } from 'formik';
 
@@ -9,6 +7,7 @@ import type { SwapFormValues } from '@shared/models/form.model';
 
 import type { HasChildren } from '@app/common/has-children';
 import { Card } from '@app/components/layout';
+import { Outlet } from '@app/routes/compat';
 import { LoadingKeys, useLoading } from '@app/store/ui/ui.hooks';
 
 import { type BaseSwapContext, useSwapContext } from '../../swap.context';

@@ -1,5 +1,3 @@
-import { useRouteError } from 'react-router';
-
 import BroadcastError from '@assets/images/unhappy-face-ui.png';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Box, Center, Flex, HStack, styled } from 'leather-styles/jsx';
@@ -135,8 +133,11 @@ function ContentWrapper({ errorText }: ContentWrapperProps) {
   );
 }
 
-export function RouterErrorBoundary() {
-  const error = useRouteError();
+interface RouterErrorBoundaryProps {
+  error?: unknown;
+}
+
+export function RouterErrorBoundary({ error }: RouterErrorBoundaryProps) {
   const toast = useToast();
 
   const errorText = getErrorText(error);

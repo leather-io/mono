@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { Outlet } from 'react-router';
 
 import { Flex } from 'leather-styles/jsx';
 
@@ -10,6 +9,7 @@ import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 import { RequestPassword } from '@app/components/request-password';
+import { Outlet } from '@app/routes/compat';
 
 interface LockedViewSecretKeyProps {
   onUnlock(): void;

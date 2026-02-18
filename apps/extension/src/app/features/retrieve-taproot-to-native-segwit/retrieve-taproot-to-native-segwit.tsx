@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { Stack } from 'leather-styles/jsx';
 
 import { Link } from '@leather.io/ui';
@@ -15,6 +13,7 @@ import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentTaprootBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentTaprootUninscribedUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
+import { useNavigate } from '@app/routes/compat';
 import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 import { RetrieveTaprootToNativeSegwitLayout } from './components/retrieve-taproot-to-native-segwit.layout';

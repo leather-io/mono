@@ -1,12 +1,10 @@
-import { useLocation } from 'react-router';
+import { useSelector } from 'react-redux';
 
-import get from 'lodash.get';
-
-import type { InscriptionAsset } from '@leather.io/models';
+import type { RootState } from '@app/store';
 
 export function useSendInscriptionRouteState() {
-  const location = useLocation();
+  const inscriptionFlow = useSelector((state: RootState) => state.navigation.send.inscriptionFlow);
   return {
-    inscription: get(location.state, 'inscription', null) as InscriptionAsset | null,
+    inscription: inscriptionFlow?.inscription ?? null,
   };
 }

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
@@ -9,6 +8,7 @@ import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state'
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { doesBrowserSupportWebUsbApi, isPopupMode, whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
+import { Outlet, useNavigate } from '@app/routes/compat';
 
 import { WelcomeLayout } from './welcome.layout';
 

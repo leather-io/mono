@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { Flex, HStack, Stack } from 'leather-styles/jsx';
 
@@ -16,15 +16,22 @@ import {
 } from '@app/components/info-card/info-card';
 import { Card } from '@app/components/layout';
 import { useToast } from '@app/features/toasts/use-toast';
+import type { RootState } from '@app/store';
 
 export function RpcSignPsbtSummary() {
-  const { state } = useLocation();
+  const summary = useSelector((state: RootState) => state.navigation.misc.rpcSignPsbtSummary);
   const { handleOpenBitcoinTxLink: handleOpenTxLink } = useBitcoinExplorerLink();
 
   const toast = useToast();
 
-  const { fee, sendingValue, totalSpend, txId, txFiatValue, txFiatValueSymbol, txLink, txValue } =
-    state;
+  const fee = summary?.fee ?? '';
+  const sendingValue = summary?.sendingValue ?? '';
+  const totalSpend = summary?.totalSpend ?? '';
+  const txId = summary?.txId ?? '';
+  const txFiatValue = summary?.txFiatValue ?? '';
+  const txFiatValueSymbol = summary?.txFiatValueSymbol ?? '';
+  const txLink = summary?.txLink ?? { blockchain: '', txid: '' };
+  const txValue = summary?.txValue ?? '';
 
   const { onCopy } = useClipboard(txId);
 

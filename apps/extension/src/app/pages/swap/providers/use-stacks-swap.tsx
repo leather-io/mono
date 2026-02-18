@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
 
 import type { RouteQuote } from '@bitflowlabs/core-sdk';
 import { PostConditionMode, serializeCV } from '@stacks/transactions';
@@ -17,7 +16,10 @@ import {
   generateUnsignedTransaction,
 } from '@app/common/transactions/stacks/generate-unsigned-txs';
 import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 import { LoadingKeys, useLoading } from '@app/store/ui/ui.hooks';
@@ -34,6 +36,7 @@ export function useStacksSwap(nonce: number | string) {
   const broadcastStacksSwap = useStacksBroadcastSwap();
   const network = useCurrentStacksNetworkState();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const { checkEligibilityForSponsor, submitSponsoredTx } = useSponsorTransactionFees();
 
@@ -167,12 +170,13 @@ export function useStacksSwap(nonce: number | string) {
 
         return await broadcastStacksSwap(signedTx);
       } catch (e) {
-        return navigate(RouteUrls.SwapError, {
-          state: {
+        dispatch(
+          miscNavigationSlice.actions.setErrorState({
             message: isError(e) ? e.message : '',
             title: 'Swap Error',
-          },
-        });
+          })
+        );
+        return navigate(RouteUrls.SwapError);
       } finally {
         setIsIdle();
       }
@@ -180,6 +184,7 @@ export function useStacksSwap(nonce: number | string) {
     [
       broadcastStacksSwap,
       currentAccount,
+      dispatch,
       isLoading,
       navigate,
       setIsIdle,

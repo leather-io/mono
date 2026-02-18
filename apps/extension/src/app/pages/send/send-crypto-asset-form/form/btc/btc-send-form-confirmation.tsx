@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Stack } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
 import { decodeBitcoinTx } from '@leather.io/bitcoin';
 import type { CryptoCurrency } from '@leather.io/models';
@@ -35,25 +34,29 @@ import { useInscribedSpendableUtxos } from '@app/features/discarded-inscriptions
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { useNavigate } from '@app/routes/compat';
+import { type RootState, useAppDispatch } from '@app/store';
+import { sendNavigationSlice } from '@app/store/navigation/send-navigation.slice';
 
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 
 const symbol: CryptoCurrency = 'BTC';
 
 function useBtcSendFormConfirmationState() {
-  const location = useLocation();
+  const confirmation = useSelector((state: RootState) => state.navigation.send.btcConfirmation);
   return {
-    tx: get(location.state, 'tx') as string,
-    fee: get(location.state, 'fee') as number,
-    feeRowValue: get(location.state, 'feeRowValue') as string,
-    arrivesIn: get(location.state, 'time') as string,
-    recipient: get(location.state, 'recipient') as string,
+    tx: confirmation?.tx ?? '',
+    fee: confirmation?.fee ?? 0,
+    feeRowValue: confirmation?.feeRowValue ?? '',
+    arrivesIn: confirmation?.time ?? '',
+    recipient: confirmation?.recipient ?? '',
   };
 }
 
 export function BtcSendFormConfirmation() {
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { tx, recipient, fee, arrivesIn, feeRowValue } = useBtcSendFormConfirmationState();
 
   const transaction = useMemo(() => btc.Transaction.fromRaw(hexToBytes(tx)), [tx]);
@@ -99,9 +102,8 @@ export function BtcSendFormConfirmation() {
           outputs: decodedTx.inputs.length,
         });
         await refetchUtxos();
-        void navigate(RouteUrls.SentBtcTxSummary.replace(':txId', `${txid}`), {
-          state: formBtcTxSummaryState(txid),
-        });
+        dispatch(sendNavigationSlice.actions.setBtcSentSummaryState(formBtcTxSummaryState(txid)));
+        void navigate(RouteUrls.SentBtcTxSummary.replace(':txId', `${txid}`));
 
         // invalidate txs query after some time to ensure that the new tx will be shown in the list
         setTimeout(

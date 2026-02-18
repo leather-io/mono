@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router';
 
 import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
@@ -35,10 +34,13 @@ import { useToast } from '@app/features/toasts/use-toast';
 import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
 import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { LoadingKeys, useLoading } from '@app/store/ui/ui.hooks';
 
@@ -98,6 +100,7 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: O
   const { data: feeRates } = useAverageBitcoinFeeRates();
   const networkMode = useBitcoinScureLibNetworkConfig();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const network = useCurrentNetwork();
   const sign = useSignBitcoinTx();
   const getSignerForInput = useBitcoinSignerFromInput();
@@ -211,9 +214,13 @@ export function useSbtcDepositTransaction(signer: BitcoinSigner<P2Ret>, utxos: O
         setIsIdle();
         logger.error(`Deposit error: ${error}`);
         analytics.untypedTrack('bitcoin_swap_failed', { error });
-        return navigate(RouteUrls.SwapError, {
-          state: { title: 'sBTC swap error', message: serializeError(error).message },
-        });
+        dispatch(
+          miscNavigationSlice.actions.setErrorState({
+            title: 'sBTC swap error',
+            message: serializeError(error).message,
+          })
+        );
+        return navigate(RouteUrls.SwapError);
       } finally {
         setIsIdle();
       }

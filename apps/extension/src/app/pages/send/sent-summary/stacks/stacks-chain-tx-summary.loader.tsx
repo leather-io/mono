@@ -1,6 +1,5 @@
-import { Navigate } from 'react-router';
-
 import { useGetRawTransactionByIdQuery } from '@app/query/stacks/transactions/raw-transaction-by-id.query';
+import { Navigate } from '@app/routes/compat';
 
 interface StacksChainTxSummaryLoaderProps {
   txid: string;

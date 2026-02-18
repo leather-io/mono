@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
@@ -23,6 +21,7 @@ import { useWalletType } from '@app/common/use-wallet-type';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { AppVersion } from '@app/components/app-version';
 import { useToast } from '@app/features/toasts/use-toast';
+import { useNavigate } from '@app/routes/compat';
 import { useToggleNotificationsEnabled } from '@app/store/settings/settings.actions';
 import { useIsNotificationsEnabled } from '@app/store/settings/settings.selectors';
 

@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import { Outlet, useLocation, useOutletContext } from 'react-router';
-
-import get from 'lodash.get';
+import { createContext, useContext, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { createBitcoinAddress, lookupDerivationByAddress } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
@@ -11,6 +9,8 @@ import { type UtxoWithDerivationPath } from '@leather.io/query';
 import { analytics } from '@shared/utils/analytics';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { Outlet } from '@app/routes/compat';
+import type { RootState } from '@app/store';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentTaprootAccount } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
@@ -23,14 +23,21 @@ import { SendInscriptionLoader } from './send-inscription-loader';
 interface SendInscriptionContextState {
   feeRates: AverageBitcoinFeeRates;
   inscription: InscriptionAsset;
-  selectedFeeType: BtcFeeType;
+  selectedFeeType: BtcFeeType | null;
   setSelectedFeeType(value: BtcFeeType | null): void;
   utxo: UtxoWithDerivationPath;
 }
+
+const sendInscriptionContext = createContext<SendInscriptionContextState | null>(null);
+
 export function useSendInscriptionState() {
-  const location = useLocation();
-  const context = useOutletContext<SendInscriptionContextState>();
-  return { ...context, recipient: get(location.state, 'recipient', '') as string };
+  const context = useContext(sendInscriptionContext);
+  if (!context)
+    throw new Error('useSendInscriptionState must be used within SendInscriptionContainer');
+  const recipient = useSelector(
+    (state: RootState) => state.navigation.send.inscriptionFlow?.recipient ?? ''
+  );
+  return { ...context, recipient };
 }
 
 export function SendInscriptionContainer() {
@@ -93,7 +100,11 @@ export function SendInscriptionContainer() {
   return (
     <SendInscriptionLoader>
       {({ feeRates }) => (
-        <Outlet context={{ feeRates, inscription, selectedFeeType, setSelectedFeeType, utxo }} />
+        <sendInscriptionContext.Provider
+          value={{ feeRates, inscription, selectedFeeType, setSelectedFeeType, utxo }}
+        >
+          <Outlet />
+        </sendInscriptionContext.Provider>
       )}
     </SendInscriptionLoader>
   );

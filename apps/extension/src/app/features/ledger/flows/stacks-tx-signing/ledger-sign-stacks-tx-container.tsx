@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Route, useLocation, useNavigate } from 'react-router';
 
 import { deserializeTransaction } from '@stacks/transactions';
 import StacksApp, { LedgerError } from '@zondax/ledger-stacks';
@@ -22,24 +21,16 @@ import {
   signLedgerStacksTransaction,
   signStacksTransactionWithSignature,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
+import { useLocation, useNavigate } from '@app/routes/compat';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
-import { ledgerSignTxRoutes } from '../../generic-flows/tx-signing/ledger-sign-tx-route-generator';
 import { TxSigningFlow } from '../../generic-flows/tx-signing/tx-signing-flow';
 import { useLedgerSignTx } from '../../generic-flows/tx-signing/use-ledger-sign-tx';
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { useVerifyMatchingLedgerStacksPublicKey } from '../../hooks/use-verify-matching-stacks-public-key';
-import { ApproveSignLedgerStacksTx } from './steps/approve-sign-stacks-ledger-tx';
 
-export const ledgerStacksTxSigningRoutes = ledgerSignTxRoutes({
-  component: <LedgerSignStacksTxContainer />,
-  customRoutes: (
-    <Route path={RouteUrls.AwaitingDeviceUserAction} element={<ApproveSignLedgerStacksTx />} />
-  ),
-});
-
-function LedgerSignStacksTxContainer() {
+export function LedgerSignStacksTxContainer() {
   const location = useLocation();
   const ledgerNavigate = useLedgerNavigate();
   const ledgerAnalytics = useLedgerAnalytics();

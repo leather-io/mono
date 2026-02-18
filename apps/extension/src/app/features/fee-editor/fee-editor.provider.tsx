@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import type { MarketData, Money } from '@leather.io/models';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import type { HasChildren } from '@app/common/has-children';
+import { useNavigate } from '@app/routes/compat';
 
 import {
   type Fee,

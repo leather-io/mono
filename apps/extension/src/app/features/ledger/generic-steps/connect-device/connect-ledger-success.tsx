@@ -1,10 +1,11 @@
-import type { SupportedBlockchains } from '@leather.io/models';
+import { useSelector } from 'react-redux';
 
-import { useLocationState } from '@app/common/hooks/use-location-state';
+import type { RootState } from '@app/store';
 
 import { ConnectLedgerSuccessLayout } from './connect-ledger-success.layout';
 
 export function ConnectLedgerSuccess() {
-  const chain = useLocationState<SupportedBlockchains>('chain');
+  const chain = useSelector((state: RootState) => state.navigation.ledger.chain);
+  if (!chain) return null;
   return <ConnectLedgerSuccessLayout chain={chain} />;
 }

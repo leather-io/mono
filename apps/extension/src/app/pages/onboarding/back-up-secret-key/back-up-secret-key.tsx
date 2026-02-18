@@ -1,5 +1,4 @@
 import { type ReactNode, useEffect } from 'react';
-import { useNavigate } from 'react-router';
 
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
@@ -15,6 +14,7 @@ import {
   DescriptionColumn,
   TwoColumnLayout,
 } from '@app/components/layout/layouts/two-column.layout';
+import { useNavigate } from '@app/routes/compat';
 import { useDefaultWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { SecretKey } from '@app/ui/components/secret-key/secret-key';
 

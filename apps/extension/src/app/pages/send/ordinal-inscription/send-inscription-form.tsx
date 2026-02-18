@@ -1,4 +1,4 @@
-import { type Location, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Form, Formik } from 'formik';
@@ -8,11 +8,12 @@ import { Button, OrdinalAvatarIcon, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { ErrorLabel } from '@app/components/error-label';
 import { TextInputFieldError } from '@app/components/field-error';
 import { InscriptionPreview } from '@app/components/inscription-preview-card/components/inscription-preview';
 import { InscriptionPreviewCard } from '@app/components/inscription-preview-card/inscription-preview-card';
+import { useNavigate } from '@app/routes/compat';
+import type { RootState } from '@app/store';
 
 import { RecipientAddressTypeField } from '../send-crypto-asset-form/components/recipient-address-type-field';
 import { CollectibleAsset } from './components/collectible-asset';
@@ -24,7 +25,9 @@ export const recipientFieldName = 'recipient';
 
 export function SendInscriptionForm() {
   const navigate = useNavigate();
-  const backgroundLocation = useLocationStateWithCache<Location>('backgroundLocation');
+  const backgroundPathname = useSelector(
+    (state: RootState) => state.navigation.modal.backgroundLocationPathname
+  );
   const { feeRates, inscription, recipient } = useSendInscriptionState();
   const { chooseTransactionFee, currentError, validationSchema, isCheckingFees } =
     useSendInscriptionForm();
@@ -46,7 +49,7 @@ export function SendInscriptionForm() {
               header={<SheetHeader title="Send" />}
               onGoBack={() => navigate(-1)}
               isShowing
-              onClose={() => navigate(backgroundLocation ?? RouteUrls.Home)}
+              onClose={() => navigate(backgroundPathname ?? RouteUrls.Home)}
               footer={
                 <Button
                   data-testid={SendCryptoAssetSelectors.PreviewSendTxBtn}

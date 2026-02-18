@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router';
 
 import { PsbtSelectors } from '@tests/selectors/requests.selectors';
 
@@ -14,9 +13,12 @@ import { SignPsbtArgs } from '@app/common/psbt/requests';
 import { ButtonRow, Card } from '@app/components/layout';
 import { PopupHeader } from '@app/features/container/headers/popup.header';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
+import { useNavigate } from '@app/routes/compat';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
+import { useAppDispatch } from '@app/store';
 import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 
 import * as Psbt from './components';
 import { usePsbtDetails } from './hooks/use-psbt-details';
@@ -35,6 +37,7 @@ interface PsbtSignerProps {
 export function PsbtSigner(props: PsbtSignerProps) {
   const { indexesToSign, isBroadcasting, name, origin, onCancel, onSignPsbt, psbtHex } = props;
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { address: addressNativeSegwit } = useCurrentAccountNativeSegwitIndexZeroSigner();
   const { address: addressTaproot } = useCurrentAccountTaprootIndexZeroSigner();
   const { getRawPsbt, getPsbtAsTransaction } = usePsbtSigner();
@@ -45,9 +48,13 @@ export function PsbtSigner(props: PsbtSignerProps) {
     try {
       return getRawPsbt(psbtHex);
     } catch (e) {
-      void navigate(RouteUrls.RequestError, {
-        state: { message: isError(e) ? e.message : '', title: 'Failed request' },
-      });
+      dispatch(
+        miscNavigationSlice.actions.setErrorState({
+          message: isError(e) ? e.message : '',
+          title: 'Failed request',
+        })
+      );
+      void navigate(RouteUrls.RequestError);
       return;
     }
   }, [getRawPsbt, navigate, psbtHex]);

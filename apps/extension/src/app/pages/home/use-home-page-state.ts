@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { RouteUrls } from '@shared/route-urls';
 
 import { useAccountScaledBalanceAnalytics } from '@app/common/app-analytics';
@@ -12,6 +10,7 @@ import {
   useCurrentAccountTotalBalance,
 } from '@app/query/common/account-balance/account-balance.query';
 import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
+import { useNavigate } from '@app/routes/compat';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import {

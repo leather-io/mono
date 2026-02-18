@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 
 import { useFormikContext } from 'formik';
 import { Stack, styled } from 'leather-styles/jsx';
@@ -10,6 +9,7 @@ import { StacksSendFormValues, StacksTransactionFormValues } from '@shared/model
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
+import { useNavigate } from '@app/routes/compat';
 
 import { EditNonceForm } from './components/edit-nonce-form';
 
@@ -22,16 +22,11 @@ export function EditNonceSheet() {
   const [loadedNextNonce, setLoadedNextNonce] = useState<number | string>();
 
   const navigate = useNavigate();
-  const { search } = useLocation();
-
   useOnMount(() => setLoadedNextNonce(values.nonce));
 
   const onGoBack = useCallback(() => {
-    if (search) {
-      return navigate('..' + search, { replace: true });
-    }
     void navigate(-1);
-  }, [navigate, search]);
+  }, [navigate]);
 
   const onBlur = useCallback(() => validateField('nonce'), [validateField]);
 

@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { useFormikContext } from 'formik';
 import { styled } from 'leather-styles/jsx';
 
@@ -10,6 +8,7 @@ import type { SwapFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 
 import { constructSwapRoute } from '@app/pages/swap/swap.routes';
+import { useNavigate } from '@app/routes/compat';
 
 import { type BaseSwapContext, useSwapContext } from '../../../swap.context';
 

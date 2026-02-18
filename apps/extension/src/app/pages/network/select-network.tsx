@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
@@ -14,6 +12,9 @@ import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 import { useCurrentNetworkState } from '@app/query/leather-query-provider';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 import { useNetworksActions } from '@app/store/networks/networks.hooks';
 import { useNetworks } from '@app/store/networks/networks.selectors';
 import { useToggleNetworkBadgeAlwaysOn } from '@app/store/settings/settings.actions';
@@ -26,6 +27,7 @@ const defaultNetworkIds = Object.values(WalletDefaultNetworkConfigurationIds) as
 
 export function SelectNetwork() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const networks = useNetworks();
   const networksActions = useNetworksActions();
   const currentNetwork = useCurrentNetworkState();
@@ -77,11 +79,13 @@ export function SelectNetwork() {
                     removeNetwork(id);
                   }}
                   onEditNetwork={() => {
-                    void navigate(RouteUrls.EditNetwork, {
-                      state: {
+                    dispatch(
+                      miscNavigationSlice.actions.setNetworkEditState({
+                        isEditNetworkMode: true,
                         network: networks[id],
-                      },
-                    });
+                      })
+                    );
+                    void navigate(RouteUrls.EditNetwork);
                   }}
                 />
               ))}

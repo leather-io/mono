@@ -1,11 +1,11 @@
-import { useNavigate } from 'react-router';
-
 import { useFormikContext } from 'formik';
 
 import { createMoneyFromDecimal, isUndefined } from '@leather.io/utils';
 
 import type { SwapFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
+
+import { useNavigate } from '@app/routes/compat';
 
 import { constructSwapRoute } from '../../swap.routes';
 import { SwapAssetItemLayout } from './swap-asset-item.layout';

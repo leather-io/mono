@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { AuthType, StacksTransactionWire } from '@stacks/transactions';
 
@@ -17,6 +16,9 @@ import {
   stacksTransactionToHex,
 } from '@app/common/transactions/stacks/transaction.utils';
 import { useToast } from '@app/features/toasts/use-toast';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 import { useTransactionRequest } from '@app/store/transactions/requests.hooks';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 import { LoadingKeys } from '@app/store/ui/ui.hooks';
@@ -44,6 +46,7 @@ export function useStacksBroadcastTransaction({
   const requestToken = useTransactionRequest();
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const toast = useToast();
 
   const isCancelTransaction = actionType === StacksTransactionActionType.Cancel;
@@ -73,8 +76,7 @@ export function useStacksBroadcastTransaction({
           RouteUrls.SentStxTxSummary.replace(':symbol', token.toLowerCase()).replace(
             ':txid',
             `${txid}`
-          ),
-          { state: { tx: stacksTransactionToHex(signedTx) } }
+          )
         );
       }
     }
@@ -95,7 +97,8 @@ export function useStacksBroadcastTransaction({
           return await broadcastTransactionFn({
             onError(e: Error | string) {
               const message = isString(e) ? e : e.message;
-              return navigate(RouteUrls.BroadcastError, { state: { message } });
+              dispatch(miscNavigationSlice.actions.setErrorState({ message, title: '' }));
+              return navigate(RouteUrls.BroadcastError);
             },
             onSuccess(txId) {
               if (showSummaryPage) return handlePreviewSuccess(signedTx, txId);
@@ -108,9 +111,13 @@ export function useStacksBroadcastTransaction({
           })(signedTx);
         }
       } catch (e) {
-        return navigate(RouteUrls.BroadcastError, {
-          state: { message: isError(e) ? e.message : 'Unknown error' },
-        });
+        dispatch(
+          miscNavigationSlice.actions.setErrorState({
+            message: isError(e) ? e.message : 'Unknown error',
+            title: '',
+          })
+        );
+        return navigate(RouteUrls.BroadcastError);
       } finally {
         setIsBroadcasting(false);
       }
@@ -137,6 +144,7 @@ export function useStacksBroadcastTransaction({
     requestToken,
     tabId,
     redirectToSuccessPage,
+    dispatch,
     navigate,
     token,
     toast,

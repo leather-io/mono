@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 
@@ -10,6 +9,9 @@ import { useWalletType } from '@app/common/use-wallet-type';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useConfigBitcoinEnabled } from '@app/query/common/remote-config/remote-config.query';
+import { useLocation, useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { modalNavigationSlice } from '@app/store/navigation/modal-navigation.slice';
 
 import { ActionButton } from './action-button';
 import { TransferSheet } from './transfer-sheet';
@@ -17,6 +19,7 @@ import { TransferSheet } from './transfer-sheet';
 export function TransferButtons() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
   const isBitcoinEnabled = useConfigBitcoinEnabled();
 
   const receivePath = isBitcoinEnabled
@@ -39,7 +42,8 @@ export function TransferButtons() {
   }
 
   async function onReceive() {
-    await navigate(receivePath, { state: { backgroundLocation: location } });
+    dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(location.pathname));
+    await navigate(receivePath);
     setIsDrawerOpen(false);
   }
 

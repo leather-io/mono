@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Flex } from 'leather-styles/jsx';
 
@@ -7,6 +5,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
 import { useConfigSwapsEnabled } from '@app/query/common/remote-config/remote-config.query';
+import { useNavigate } from '@app/routes/compat';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';

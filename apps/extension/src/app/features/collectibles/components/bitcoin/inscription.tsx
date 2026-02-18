@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 
 import { Box, styled } from 'leather-styles/jsx';
 
@@ -21,6 +20,10 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { useHoverWithChildren } from '@app/common/hooks/use-hover-with-children';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
+import { useLocation, useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { modalNavigationSlice } from '@app/store/navigation/modal-navigation.slice';
+import { sendNavigationSlice } from '@app/store/navigation/send-navigation.slice';
 import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
 import { CollectibleAudio } from '../../../../components/collectibles/collectible-audio';
@@ -41,15 +44,16 @@ function openInscriptionUrl(num: number) {
 export function Inscription({ inscription }: InscriptionProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
   const [isHovered, bind] = useHoverWithChildren();
   const { hasInscriptionBeenDiscarded, discardInscription, recoverInscription } =
     useCurrentAccountDiscardedInscriptions();
 
   const openSendInscriptionModal = useCallback(() => {
-    void navigate(`/${RouteUrls.SendOrdinalInscription}`, {
-      state: { inscription, backgroundLocation: location },
-    });
-  }, [navigate, inscription, location]);
+    dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(location.pathname));
+    dispatch(sendNavigationSlice.actions.setInscriptionFlowState({ inscription }));
+    void navigate(`/${RouteUrls.SendOrdinalInscription}`);
+  }, [navigate, inscription, location, dispatch]);
 
   const content = useMemo(() => {
     const sharedProps = { onClickSend: () => openSendInscriptionModal() };

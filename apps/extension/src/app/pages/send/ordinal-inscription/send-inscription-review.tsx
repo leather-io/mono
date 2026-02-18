@@ -1,39 +1,43 @@
-import { type Location, useLocation, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { bytesToHex } from '@noble/hashes/utils';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Box, Flex, Stack } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import { InfoCardRow, InfoCardSeparator } from '@app/components/info-card/info-card';
 import { InscriptionPreview } from '@app/components/inscription-preview-card/components/inscription-preview';
 import { Card } from '@app/components/layout';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
+import { useNavigate } from '@app/routes/compat';
+import { type RootState, useAppDispatch } from '@app/store';
+import { sendNavigationSlice } from '@app/store/navigation/send-navigation.slice';
 
 import { InscriptionPreviewCard } from '../../../components/inscription-preview-card/inscription-preview-card';
 import { useSendInscriptionState } from './components/send-inscription-container';
 
 function useSendInscriptionReviewState() {
-  const location = useLocation();
+  const inscriptionFlow = useSelector((state: RootState) => state.navigation.send.inscriptionFlow);
   return {
-    arrivesIn: get(location.state, 'time') as string,
-    signedTx: get(location.state, 'signedTx') as Uint8Array,
-    recipient: get(location.state, 'recipient', '') as string,
-    feeRowValue: get(location.state, 'feeRowValue') as string,
+    arrivesIn: inscriptionFlow?.time ?? '',
+    signedTx: inscriptionFlow?.signedTx ? new Uint8Array(inscriptionFlow.signedTx) : null,
+    recipient: inscriptionFlow?.recipient ?? '',
+    feeRowValue: inscriptionFlow?.feeRowValue ?? '',
   };
 }
 
 export function SendInscriptionReview() {
   const navigate = useNavigate();
-  const backgroundLocation = useLocationStateWithCache<Location>('backgroundLocation');
+  const dispatch = useAppDispatch();
+  const backgroundPathname = useSelector(
+    (state: RootState) => state.navigation.modal.backgroundLocationPathname
+  );
   const { arrivesIn, signedTx, recipient, feeRowValue } = useSendInscriptionReviewState();
 
   const { inscription } = useSendInscriptionState();
@@ -41,36 +45,27 @@ export function SendInscriptionReview() {
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
 
   async function sendInscription() {
+    if (!signedTx) return;
     await broadcastTx({
       skipSpendableCheckUtxoIds: [inscription.txid],
       tx: bytesToHex(signedTx),
       async onSuccess(txid: string) {
         analytics.track('broadcast_ordinal_transaction');
         await refetchUtxos();
+        dispatch(
+          sendNavigationSlice.actions.setInscriptionFlowState({
+            txid,
+          })
+        );
         void navigate(
-          `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionSent}`,
-          {
-            state: {
-              inscription,
-              recipient,
-              arrivesIn,
-              txid,
-              feeRowValue,
-              backgroundLocation,
-            },
-          }
+          `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionSent}`
         );
       },
       onError(e) {
         analytics.track('broadcast_ordinal_error', { error: e });
+        dispatch(sendNavigationSlice.actions.setSendError(e));
         void navigate(
-          `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionError}`,
-          {
-            state: {
-              error: e,
-              backgroundLocation,
-            },
-          }
+          `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionError}`
         );
       },
     });
@@ -81,7 +76,7 @@ export function SendInscriptionReview() {
       header={<SheetHeader title="Review" />}
       isShowing
       onGoBack={() => navigate(-1)}
-      onClose={() => navigate(backgroundLocation ?? RouteUrls.Home)}
+      onClose={() => navigate(backgroundPathname ?? RouteUrls.Home)}
     >
       <Card
         dataTestId={SendCryptoAssetSelectors.ConfirmationDetails}

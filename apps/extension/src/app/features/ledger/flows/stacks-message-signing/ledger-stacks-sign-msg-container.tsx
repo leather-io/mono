@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router';
 
 import { signatureVrsToRsv } from '@stacks/common';
 import { serializeCV } from '@stacks/transactions';
@@ -20,6 +19,7 @@ import {
   signLedgerStacksStructuredMessage,
   signLedgerStacksUtf8Message,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
+import { Outlet } from '@app/routes/compat';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 

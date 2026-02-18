@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
@@ -16,6 +14,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { formatCurrency } from '@app/common/currency-formatter';
 import { emptyAmountPlaceholder } from '@app/components/balance/constants';
 import { PrivateTextLayout } from '@app/components/privacy/private-text.layout';
+import { useNavigate } from '@app/routes/compat';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import { useHomePageState } from '../use-home-page-state';

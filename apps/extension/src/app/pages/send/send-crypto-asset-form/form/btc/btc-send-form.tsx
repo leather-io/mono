@@ -1,5 +1,3 @@
-import { Outlet } from 'react-router';
-
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Form, Formik } from 'formik';
 import { Box } from 'leather-styles/jsx';
@@ -11,6 +9,7 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { AvailableBalance, ButtonRow, Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { Outlet } from '@app/routes/compat';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { AmountField } from '../../components/amount-field';
@@ -48,9 +47,13 @@ export function BtcSendForm() {
         <Page>
           <Formik
             initialValues={createDefaultInitialFormValues({
-              ...routeState,
+              fee: '',
+              feeCurrency: '',
+              feeType: '',
+              memo: '',
               recipientBnsName: '',
               symbol,
+              ...routeState,
             })}
             onSubmit={chooseTransactionFee}
             validationSchema={validationSchema}

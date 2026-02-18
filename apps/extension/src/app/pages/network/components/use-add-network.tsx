@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { createFetchFn } from '@stacks/common';
 import { ChainId } from '@stacks/network';
@@ -17,6 +17,8 @@ import { RouteUrls } from '@shared/route-urls';
 import { isValidUrl } from '@shared/utils/urls';
 
 import { removeTrailingSlash } from '@app/common/url-join';
+import { useNavigate } from '@app/routes/compat';
+import type { RootState } from '@app/store';
 import { useNetworksActions } from '@app/store/networks/networks.hooks';
 
 /**
@@ -45,11 +47,13 @@ const initialFormValues: AddNetworkFormValues = {
 };
 
 function useAddNetworkState() {
-  const { state } = useLocation();
+  const networkEditState = useSelector(
+    (state: RootState) => state.navigation.misc.networkEditState
+  );
 
   return {
-    isEditNetworkMode: state?.isEditNetworkMode,
-    network: state?.network as NetworkConfiguration | undefined,
+    isEditNetworkMode: networkEditState?.isEditNetworkMode,
+    network: networkEditState?.network as NetworkConfiguration | undefined,
   };
 }
 

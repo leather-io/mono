@@ -1,31 +1,25 @@
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { RouteUrls } from '@shared/route-urls';
 
-import { useLocationState } from '@app/common/hooks/use-location-state';
+import { type RootState, useAppDispatch } from '@app/store';
+import { modalNavigationSlice } from '@app/store/navigation/modal-navigation.slice';
 
 /**
  * If routes are accessed directly / opened in new tabs `backgroundLocation` is lost
- * this hook re-directs the users to home then overlays the modal so the BG is the home route
+ * this hook sets the background location in Redux so the modal overlay renders correctly
  */
 
 export function useBackgroundLocationRedirect(baseUrl = RouteUrls.Home) {
-  const { pathname, state, search } = useLocation();
-  const navigate = useNavigate();
-  const backgroundLocation = useLocationState('backgroundLocation');
+  const dispatch = useAppDispatch();
+  const backgroundPathname = useSelector(
+    (state: RootState) => state.navigation.modal.backgroundLocationPathname
+  );
 
   useEffect(() => {
-    void (async () => {
-      if (backgroundLocation === undefined) {
-        return navigate(
-          { pathname, search },
-          {
-            state: { backgroundLocation: { pathname: baseUrl }, ...state },
-          }
-        );
-      }
-      return false;
-    })();
-  }, [backgroundLocation, baseUrl, navigate, pathname, state, search]);
+    if (!backgroundPathname) {
+      dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(baseUrl));
+    }
+  }, [backgroundPathname, baseUrl, dispatch]);
 }

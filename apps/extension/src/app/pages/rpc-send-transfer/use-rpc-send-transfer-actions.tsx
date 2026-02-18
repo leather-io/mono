@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { createRpcSuccessResponse } from '@leather.io/rpc';
 import { delay } from '@leather.io/utils';
@@ -14,7 +13,10 @@ import { getTransactionActions } from '@app/components/rpc-transaction-request/g
 import { useInscribedSpendableUtxos } from '@app/features/discarded-inscriptions/use-inscribed-spendable-utxos';
 import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
+import { sendNavigationSlice } from '@app/store/navigation/send-navigation.slice';
 
 import { useRpcSendTransferContext } from './rpc-send-transfer.context';
 
@@ -29,6 +31,7 @@ export function useRpcSendTransferActions() {
   const { broadcastTx } = useBitcoinBroadcastTransaction();
   const utxosOfSpendableInscriptions = useInscribedSpendableUtxos();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const isInsufficientBalance = availableBalance.amount.isLessThan(amount.amount);
 
@@ -43,11 +46,8 @@ export function useRpcSendTransferActions() {
       function onError(e: unknown) {
         setIsBroadcasting(false);
         logger.error('Error broadcasting tx', e);
-        void navigate(RouteUrls.SendBtcError, {
-          state: {
-            error: e,
-          },
-        });
+        dispatch(sendNavigationSlice.actions.setSendError(e));
+        void navigate(RouteUrls.SendBtcError);
       }
 
       try {
@@ -105,6 +105,7 @@ export function useRpcSendTransferActions() {
     isInsufficientBalance,
     isBroadcasting,
     isSubmitted,
+    dispatch,
     navigate,
     selectedFee?.feeRate,
     generateTx,

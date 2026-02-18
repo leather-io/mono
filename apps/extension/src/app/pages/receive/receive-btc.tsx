@@ -1,7 +1,3 @@
-import { useLocation } from 'react-router';
-
-import get from 'lodash.get';
-
 import { analytics } from '@shared/utils/analytics';
 
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
@@ -19,14 +15,9 @@ interface ReceiveBtcModalType {
 export function ReceiveBtcModal({ type = 'btc' }: ReceiveBtcModalType) {
   useBackgroundLocationRedirect();
 
-  const { state } = useLocation();
   const toast = useToast();
-
   const currentAccountIndex = useCurrentAccountIndex();
-  const accountIndex = get(state, 'accountIndex', currentAccountIndex);
-
-  const activeAccountBtcAddress = useNativeSegwitAccountIndexAddressIndexZero(accountIndex);
-  const btcAddress = get(state, 'btcAddress', activeAccountBtcAddress);
+  const btcAddress = useNativeSegwitAccountIndexAddressIndexZero(currentAccountIndex);
 
   return (
     <ReceiveTokensLayout

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { css } from 'leather-styles/css';
@@ -25,7 +24,10 @@ import { useModifierKey } from '@app/common/hooks/use-modifier-key';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { Divider } from '@app/components/layout/divider';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
+import { useLocation, useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
 import { useHasDefaultInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 import { useTogglePrivateMode } from '@app/store/settings/settings.actions';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
@@ -36,6 +38,7 @@ interface SettingsProps {
 }
 export function Settings({ canLockWallet = true }: SettingsProps) {
   const [showSignOut, setShowSignOut] = useState(false);
+  const dispatch = useAppDispatch();
 
   const { hasKeys } = useHasKeys();
 
@@ -97,7 +100,10 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
       onSelect={() => {
         analytics.track('lock_session');
         void lockWallet({
-          afterLock: () => navigate(RouteUrls.Unlock, { state: { from: location.pathname } }),
+          afterLock: () => {
+            dispatch(miscNavigationSlice.actions.setUnlockReturnPath(location.pathname));
+            navigate(RouteUrls.Unlock);
+          },
         });
       }}
       data-testid={SettingsSelectors.LockListItem}

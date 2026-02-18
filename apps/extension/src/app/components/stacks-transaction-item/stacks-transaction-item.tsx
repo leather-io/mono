@@ -1,5 +1,3 @@
-import { useMatch, useNavigate } from 'react-router';
-
 import { StacksTx } from '@leather.io/models';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -17,6 +15,7 @@ import { useWalletType } from '@app/common/use-wallet-type';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { TransactionTitle } from '@app/components/transaction/transaction-title';
+import { useMatch, useNavigate } from '@app/routes/compat';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 

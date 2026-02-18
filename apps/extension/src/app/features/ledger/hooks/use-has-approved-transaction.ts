@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
-import { useLocation } from 'react-router';
 
 import get from 'lodash.get';
+
+import { useLocation } from '@app/routes/compat';
 
 export function useHasApprovedOperation() {
   const location = useLocation();

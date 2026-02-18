@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from 'react';
-import { Outlet } from 'react-router';
 
 import uniqby from 'lodash.uniqby';
 
@@ -14,6 +13,7 @@ import {
 } from '@app/query/sbtc/sbtc-deposits.query';
 import { useStacksPendingTransactions } from '@app/query/stacks/mempool/mempool.hooks';
 import { useGetAccountTransactionsWithTransfersQuery } from '@app/query/stacks/transactions/transactions-with-transfers.query';
+import { Outlet } from '@app/routes/compat';
 import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';

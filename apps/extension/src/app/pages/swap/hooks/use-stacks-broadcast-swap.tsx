@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
 
 import type { StacksTransactionWire } from '@stacks/transactions';
 
@@ -11,11 +10,15 @@ import { analytics } from '@shared/utils/analytics';
 
 import { useSubmitTransactionCallback } from '@app/common/hooks/use-submit-stx-transaction';
 import { useToast } from '@app/features/toasts/use-toast';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 import { LoadingKeys, useLoading } from '@app/store/ui/ui.hooks';
 
 export function useStacksBroadcastSwap() {
   const { setIsIdle } = useLoading(LoadingKeys.SUBMIT_SWAP_TRANSACTION);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const toast = useToast();
 
   const broadcastTransactionFn = useSubmitTransactionCallback({
@@ -34,7 +37,8 @@ export function useStacksBroadcastSwap() {
           onError(e: Error | string) {
             setIsIdle();
             const message = isString(e) ? e : e.message;
-            return navigate(RouteUrls.BroadcastError, { state: { message } });
+            dispatch(miscNavigationSlice.actions.setErrorState({ message, title: '' }));
+            return navigate(RouteUrls.BroadcastError);
           },
           onSuccess(txId) {
             toast.success('Transaction submitted!');
@@ -47,13 +51,17 @@ export function useStacksBroadcastSwap() {
       } catch (e) {
         setIsIdle();
         analytics.untypedTrack('stacks_swap_failed', { error: e });
-        return navigate(RouteUrls.BroadcastError, {
-          state: { message: isError(e) ? e.message : 'Unknown error' },
-        });
+        dispatch(
+          miscNavigationSlice.actions.setErrorState({
+            message: isError(e) ? e.message : 'Unknown error',
+            title: '',
+          })
+        );
+        return navigate(RouteUrls.BroadcastError);
       } finally {
         setIsIdle();
       }
     },
-    [toast, broadcastTransactionFn, setIsIdle, navigate]
+    [toast, broadcastTransactionFn, setIsIdle, navigate, dispatch]
   );
 }

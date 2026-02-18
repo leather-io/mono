@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router';
 
 import { useFormikContext } from 'formik';
 
 import type { SwapFormValues } from '@shared/models/form.model';
+
+import { useParams } from '@app/routes/compat';
 
 import { type BaseSwapContext, useSwapContext } from '../swap.context';
 

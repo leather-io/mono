@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -8,6 +8,8 @@ import { useWalletType } from '@app/common/use-wallet-type';
 import { CurrentBitcoinSignerLoader } from '@app/components/loaders/current-bitcoin-signer-loader';
 import { CurrentStacksAccountLoader } from '@app/components/loaders/stacks-account-loader';
 import { useConfigNftMetadataEnabled } from '@app/query/common/remote-config/remote-config.query';
+import { useNavigate } from '@app/routes/compat';
+import { modalNavigationSlice } from '@app/store/navigation/modal-navigation.slice';
 import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
 import { CollectiblesLayout } from '../../components/collectibles/collectible.layout';
@@ -21,6 +23,7 @@ import { useIsFetchingCollectiblesRelatedQuery } from './hooks/use-is-fetching-c
 export function Collectibles() {
   const { whenWallet } = useWalletType();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const isNftMetadataEnabled = useConfigNftMetadataEnabled();
   const queryClient = useQueryClient();
   const isFetching = useIsFetchingCollectiblesRelatedQuery();
@@ -32,13 +35,10 @@ export function Collectibles() {
       subHeader={whenWallet({
         software: (
           <TaprootBalanceDisplayer
-            onSelectRetrieveBalance={() =>
-              navigate(RouteUrls.RetrieveTaprootFunds, {
-                state: {
-                  backgroundLocation: { pathname: RouteUrls.Home },
-                },
-              })
-            }
+            onSelectRetrieveBalance={() => {
+              dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(RouteUrls.Home));
+              navigate(RouteUrls.RetrieveTaprootFunds);
+            }}
           />
         ),
         ledger: null,

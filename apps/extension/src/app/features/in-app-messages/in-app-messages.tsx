@@ -1,10 +1,9 @@
-import { useLocation } from 'react-router';
-
 import { Flex, FlexProps } from 'leather-styles/jsx';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { useRemoteLeatherMessages } from '@app/query/common/remote-config/remote-config.query';
+import { useLocation } from '@app/routes/compat';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 import { useDismissMessage } from '@app/store/settings/settings.actions';
 import { useDismissedMessageIds } from '@app/store/settings/settings.selectors';

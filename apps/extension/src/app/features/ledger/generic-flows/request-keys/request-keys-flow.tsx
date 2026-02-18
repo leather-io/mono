@@ -1,8 +1,7 @@
-import { Outlet } from 'react-router';
-
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
 import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
+import { Outlet } from '@app/routes/compat';
 
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { LedgerRequestKeysContext, LedgerRequestKeysProvider } from './ledger-request-keys.context';

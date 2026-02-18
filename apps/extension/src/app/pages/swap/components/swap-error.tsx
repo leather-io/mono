@@ -1,11 +1,12 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { styled } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { GenericError, GenericErrorListItem } from '@app/components/generic-error/generic-error';
+import { useNavigate } from '@app/routes/compat';
+import type { RootState } from '@app/store';
 
 const helpTextList = [
   <GenericErrorListItem
@@ -15,18 +16,16 @@ const helpTextList = [
 ];
 
 export function SwapError() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const message = get(location.state, 'message') as string;
-  const title = get(location.state, 'title') as string;
+  const errorState = useSelector((state: RootState) => state.navigation.misc.errorState);
 
   return (
     <GenericError
-      body={message}
+      body={errorState?.message ?? ''}
       helpTextList={helpTextList}
       mb="space.06"
       onClose={() => navigate(RouteUrls.Home)}
-      title={title}
+      title={errorState?.title ?? ''}
     />
   );
 }

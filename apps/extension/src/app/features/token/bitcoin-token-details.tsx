@@ -1,5 +1,3 @@
-import { useLocation, useNavigate } from 'react-router';
-
 import { btcAsset } from '@leather.io/constants';
 import type { AccountAddresses } from '@leather.io/models';
 import { BtcAvatarIcon } from '@leather.io/ui';
@@ -14,6 +12,9 @@ import {
   useNativeSegwitBtcAccountBalance,
   useTaprootBtcAccountBalance,
 } from '@app/query/bitcoin/balance/btc-balance.hooks';
+import { useLocation, useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { modalNavigationSlice } from '@app/store/navigation/modal-navigation.slice';
 
 import { BitcoinTokenDetailsLayout } from './bitcoin-token-details.layout';
 import { useTokenMarketInfo } from './hooks/use-token-market-info';
@@ -28,6 +29,7 @@ interface BitcoinTokenDetailsProps {
 export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetailsProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
   const toast = useToast();
 
   const nativeSegwitBalance = useNativeSegwitBtcAccountBalance(accountIndex);
@@ -41,7 +43,8 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
   }
 
   function handleOpenReceive() {
-    void navigate(`/${RouteUrls.ReceiveBtc}`, { state: { backgroundLocation: location } });
+    dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(location.pathname));
+    void navigate(`/${RouteUrls.ReceiveBtc}`);
   }
 
   const isLoading =

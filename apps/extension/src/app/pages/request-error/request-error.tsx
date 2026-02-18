@@ -1,23 +1,20 @@
-import { useLocation } from 'react-router';
-
-import get from 'lodash.get';
+import { useSelector } from 'react-redux';
 
 import { GenericError, GenericErrorListItem } from '@app/components/generic-error/generic-error';
+import type { RootState } from '@app/store';
 
 const helpTextList = [
   <GenericErrorListItem key={1} text="Please report issue to requesting app" />,
 ];
 
-function useRequestErrorState() {
-  const location = useLocation();
-  const message = get(location.state, 'message') as string;
-  const title = get(location.state, 'title') as string;
-
-  return { message, title };
-}
-
 export function RequestError() {
-  const { message, title } = useRequestErrorState();
+  const errorState = useSelector((state: RootState) => state.navigation.misc.errorState);
 
-  return <GenericError body={message} helpTextList={helpTextList} title={title} />;
+  return (
+    <GenericError
+      body={errorState?.message ?? ''}
+      helpTextList={helpTextList}
+      title={errorState?.title ?? ''}
+    />
+  );
 }

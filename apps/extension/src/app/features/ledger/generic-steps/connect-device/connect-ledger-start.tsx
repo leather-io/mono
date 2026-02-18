@@ -1,5 +1,3 @@
-import { useLocation, useNavigate } from 'react-router';
-
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -7,20 +5,29 @@ import { closeWindow } from '@shared/utils';
 
 import { doesBrowserSupportWebUsbApi, whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
+import { useLocation, useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { ledgerNavigationSlice } from '@app/store/navigation/ledger-navigation.slice';
 
-import { immediatelyAttemptLedgerConnection } from '../../hooks/use-when-reattempt-ledger-connection';
 import { ConnectLedger } from './connect-ledger';
 
 export function ConnectLedgerStart() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
 
   function pageModeRoutingAction(url: string) {
     return whenPageMode({
       full() {
+        dispatch(ledgerNavigationSlice.actions.setImmediatelyAttemptConnection(true));
+        dispatch(
+          ledgerNavigationSlice.actions.setLedgerTxSigningState({
+            tx: '',
+            fromLocationPathname: location.pathname,
+          })
+        );
         void navigate(url, {
           replace: true,
-          state: { [immediatelyAttemptLedgerConnection]: true, fromLocation: location },
         });
       },
       popup() {

@@ -1,15 +1,18 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import GenericError from '@assets/images/generic-error.png';
 import { Flex, styled } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
+import { useNavigate } from '@app/routes/compat';
+import type { RootState } from '@app/store';
+
 export function BroadcastErrorSheet() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const message = get(location.state, 'message', '');
+  const message = useSelector(
+    (state: RootState) => state.navigation.misc.errorState?.message ?? ''
+  );
 
   return (
     <Sheet

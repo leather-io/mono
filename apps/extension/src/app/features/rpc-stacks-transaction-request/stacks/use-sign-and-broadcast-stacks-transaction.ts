@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
 
 import { AuthType, type StacksTransactionWire } from '@stacks/transactions';
 
@@ -19,6 +18,9 @@ import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { stacksBroadcastTransaction } from '@app/common/transactions/stacks/stacks-broadcast-transaction';
 import { createError } from '@app/common/utils';
 import { useAnalyticsOnlyStacksNonceTracker } from '@app/components/loaders/stacks-nonce-loader';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { miscNavigationSlice } from '@app/store/navigation/misc-navigation.slice';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 
@@ -30,6 +32,7 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
   const signStacksTransaction = useSignStacksTransaction();
   const network = useCurrentStacksNetworkState();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { trackIfNonceError } = useAnalyticsOnlyStacksNonceTracker();
 
   return useCallback(
@@ -74,7 +77,8 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
         const message = isString(error) ? error : error.message;
         trackIfNonceError(unsignedTx, error);
 
-        return navigate(RouteUrls.BroadcastError, { state: { message } });
+        dispatch(miscNavigationSlice.actions.setErrorState({ message, title: '' }));
+        return navigate(RouteUrls.BroadcastError);
       }
 
       async function onSuccess(txid: string, transaction: StacksTransactionWire) {
@@ -99,6 +103,7 @@ export function useSignAndBroadcastStacksTransaction(method: RpcMethodNames) {
       onSetTransactionStatus('idle');
     },
     [
+      dispatch,
       method,
       navigate,
       network,

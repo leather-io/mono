@@ -1,6 +1,5 @@
-import { Outlet } from 'react-router';
-
 import { PsbtSigner } from '@app/features/psbt-signer/psbt-signer';
+import { Outlet } from '@app/routes/compat';
 
 import { useRpcSignPsbt } from './use-rpc-sign-psbt';
 

@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useLocation } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
 import { initalizeAnalytics, useHandleQueuedBackgroundAnalytics } from '@app/common/app-analytics';
+import { SwitchAccountSheetProvider } from '@app/common/switch-account/use-switch-account-sheet-context';
 import { ContainerLayout } from '@app/components/layout';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { SwitchAccountSheet } from '@app/features/dialogs/switch-account-sheet/switch-account-sheet';
 import { InAppMessages } from '@app/features/in-app-messages/in-app-messages';
+import { Outlet, useLocation } from '@app/routes/compat';
 import { useOnChangeAccount } from '@app/routes/hooks/use-on-change-account';
 import { useOnSignOut } from '@app/routes/hooks/use-on-sign-out';
 import { useOnWalletLock } from '@app/routes/hooks/use-on-wallet-lock';
@@ -41,7 +42,7 @@ export function Container() {
   if (!hasStateRehydrated) return <LoadingSpinner />;
 
   return (
-    <>
+    <SwitchAccountSheetProvider value={{ isShowingSwitchAccount, setIsShowingSwitchAccount }}>
       {isShowingSwitchAccount && (
         <SwitchAccountSheet
           isShowing={isShowingSwitchAccount}
@@ -50,8 +51,8 @@ export function Container() {
       )}
       <InAppMessages />
       <ContainerLayout>
-        <Outlet context={{ isShowingSwitchAccount, setIsShowingSwitchAccount }} />
+        <Outlet />
       </ContainerLayout>
-    </>
+    </SwitchAccountSheetProvider>
   );
 }

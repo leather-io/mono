@@ -1,5 +1,3 @@
-import { Route, useNavigate } from 'react-router';
-
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Flex } from 'leather-styles/jsx';
 
@@ -12,18 +10,24 @@ import { Collectibles } from '@app/features/collectibles/collectibles';
 import { useFlags } from '@app/features/feature-flags';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
-import { NotFoundContent } from '@app/pages/not-found/not-found';
-import { homePageModalRoutes } from '@app/routes/app-routes';
-import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
+import { useLocation } from '@app/routes/compat';
+import { useBackgroundLocation } from '@app/routes/hooks/use-background-location';
 
 import { AccountActions } from './components/account-actions-current/account-actions';
 import { AccountCard } from './components/account-card';
 import { HomeTabs } from './components/home-tabs';
 import { Tokens } from './components/tokens';
 
-function HomeNotFound() {
-  const navigate = useNavigate();
-  return <NotFoundContent onGoHome={() => navigate(RouteUrls.Home)} />;
+function HomeTabContent() {
+  const location = useLocation();
+  const backgroundLocation = useBackgroundLocation();
+  const { activityRevamp } = useFlags();
+  const pathname = backgroundLocation?.pathname ?? location.pathname;
+
+  if (pathname.startsWith(RouteUrls.Activity))
+    return activityRevamp ? <ActivityList /> : <ActivityListLegacy />;
+  if (pathname.startsWith(RouteUrls.Collectibles)) return <Collectibles />;
+  return <Tokens />;
 }
 
 const animationState = { hasPlayed: false };
@@ -33,8 +37,6 @@ interface HomeProps {
 }
 
 export function Home({ isBackground }: HomeProps) {
-  const { activityRevamp } = useFlags();
-
   const shouldAnimate = !isBackground && !animationState.hasPlayed;
   if (shouldAnimate) {
     animationState.hasPlayed = true;
@@ -58,16 +60,7 @@ export function Home({ isBackground }: HomeProps) {
       </Flex>
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
       <HomeTabs>
-        <ModalBackgroundWrapper>
-          <Route index element={<Tokens />} />
-          <Route
-            path={RouteUrls.Activity}
-            element={activityRevamp ? <ActivityList /> : <ActivityListLegacy />}
-          />
-          <Route path={RouteUrls.Collectibles} element={<Collectibles />} />
-          {homePageModalRoutes}
-          <Route path="*" element={<HomeNotFound />} />
-        </ModalBackgroundWrapper>
+        <HomeTabContent />
       </HomeTabs>
     </Flex>
   );

@@ -1,16 +1,15 @@
-import { useLocation } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
-
-export const immediatelyAttemptLedgerConnection = 'immediatelyAttemptLedgerConnection';
+import type { RootState } from '@app/store';
 
 export function useWhenReattemptingLedgerConnection(fn: () => void) {
-  const location = useLocation();
+  const immediatelyAttemptConnection = useSelector(
+    (state: RootState) => state.navigation.ledger.immediatelyAttemptConnection
+  );
 
   useOnMount(() => {
-    const state: any = location.state;
-    if (typeof state !== 'object' || state === null) return;
-    if (state[immediatelyAttemptLedgerConnection]) {
+    if (immediatelyAttemptConnection) {
       // hack to call function on mount
       setTimeout(fn);
     }

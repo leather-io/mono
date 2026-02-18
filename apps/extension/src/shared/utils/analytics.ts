@@ -1,16 +1,8 @@
-import { useEffect } from 'react';
-import {
-  createRoutesFromChildren,
-  matchRoutes,
-  useLocation,
-  useNavigationType,
-} from 'react-router';
-
 import { ripemd160 } from '@noble/hashes/ripemd160';
 import { sha256 } from '@noble/hashes/sha256';
 import { base58 } from '@scure/base';
 import { browserTracingIntegration, feedbackIntegration, setTag } from '@sentry/browser';
-import { init as SentryInit, reactRouterV7BrowserTracingIntegration } from '@sentry/react';
+import { init as SentryInit, tanstackRouterBrowserTracingIntegration } from '@sentry/react';
 import { token } from 'leather-styles/tokens';
 import mixpanel, { type OverridedMixpanel } from 'mixpanel-browser';
 
@@ -24,6 +16,8 @@ import {
   SENTRY_DSN,
   WALLET_ENVIRONMENT,
 } from '@shared/environment';
+
+import { tanstackRouter } from '@app/routes/tanstack/router';
 
 function configureMixpanel(mixpanelClient: OverridedMixpanel) {
   return Object.assign(mixpanelClient, {
@@ -133,13 +127,7 @@ export function initSentry() {
     profilesSampleRate: 0.25,
     integrations: [
       browserTracingIntegration({}),
-      reactRouterV7BrowserTracingIntegration({
-        useEffect,
-        useLocation,
-        useNavigationType,
-        createRoutesFromChildren,
-        matchRoutes,
-      }),
+      tanstackRouterBrowserTracingIntegration(tanstackRouter),
       sentryFeedback,
     ],
     ignoreErrors: [

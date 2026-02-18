@@ -1,8 +1,7 @@
-import { useNavigate } from 'react-router';
-
 import { RouteUrls } from '@shared/route-urls';
 
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
+import { useNavigate } from '@app/routes/compat';
 
 import { SignOutSheet } from './sign-out';
 

@@ -1,25 +1,35 @@
-import { Outlet } from 'react-router';
+import { useSelector } from 'react-redux';
 
-import type { BtcFeeType, OwnedUtxo } from '@leather.io/models';
+import type { BtcFeeType } from '@leather.io/models';
 
-import { BitcoinSendFormValues } from '@shared/models/form.model';
-
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { BitcoinFeesList } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
 import { useBitcoinFeesList } from '@app/components/bitcoin-fees-list/use-bitcoin-fees-list';
 import { Content, Page } from '@app/components/layout';
 import { BitcoinChooseFee } from '@app/features/bitcoin-choose-fee/bitcoin-choose-fee';
 import { useValidateBitcoinSpend } from '@app/features/bitcoin-choose-fee/hooks/use-validate-bitcoin-spend';
 import { PageHeader } from '@app/features/container/headers/page.header';
+import { Outlet } from '@app/routes/compat';
+import type { RootState } from '@app/store';
 
 import { useSendBitcoinAssetContextState } from '../../family/bitcoin/components/send-bitcoin-asset-container';
 import { useBtcChooseFee } from './use-btc-choose-fee';
 
 export function useBtcChooseFeeState() {
-  const isSendingMax = useLocationStateWithCache('isSendingMax') as boolean;
-  const txValues = useLocationStateWithCache('values') as BitcoinSendFormValues;
-  const utxos = useLocationStateWithCache('utxos') as OwnedUtxo[];
-  return { isSendingMax, txValues, utxos };
+  const btcChooseFee = useSelector((state: RootState) => state.navigation.send.btcChooseFee);
+  return {
+    isSendingMax: btcChooseFee?.isSendingMax ?? false,
+    txValues: btcChooseFee?.values ?? {
+      amount: '',
+      fee: '',
+      feeCurrency: '',
+      feeType: '',
+      memo: '',
+      recipient: '',
+      recipientBnsName: '',
+      symbol: '',
+    },
+    utxos: btcChooseFee?.utxos ?? [],
+  };
 }
 
 export function BtcChooseFee() {

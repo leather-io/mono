@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { resolvePath, useLocation, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { bytesToHex } from '@stacks/common';
 
@@ -12,26 +12,33 @@ import {
   toSerializableUnsignedMessage,
 } from '@shared/signature/signature-types';
 
-import { immediatelyAttemptLedgerConnection } from './use-when-reattempt-ledger-connection';
+import { useLocation, useNavigate } from '@app/routes/compat';
+import { type RootState, useAppDispatch } from '@app/store';
+import { ledgerNavigationSlice } from '@app/store/navigation/ledger-navigation.slice';
+import { modalNavigationSlice } from '@app/store/navigation/modal-navigation.slice';
 
 export function useLedgerNavigate() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
+  const fromLocationPathname = useSelector(
+    (state: RootState) => state.navigation.ledger.fromLocationPathname
+  );
 
   return useMemo(
     () => ({
       toConnectStepAndTryAgain() {
-        return navigate(`../${RouteUrls.ConnectLedger}`, {
+        dispatch(ledgerNavigationSlice.actions.setImmediatelyAttemptConnection(true));
+        const parentPath = location.pathname.split('/').slice(0, -1).join('/') || '/';
+        return navigate(`${parentPath}/${RouteUrls.ConnectLedger}`, {
           replace: true,
-          state: { [immediatelyAttemptLedgerConnection]: true },
         });
       },
 
       toConnectAndSignStacksTransactionStep(transaction: string) {
-        return navigate(RouteUrls.ConnectLedger, {
+        dispatch(ledgerNavigationSlice.actions.setLedgerTxSigningState({ tx: transaction }));
+        return navigate(`${location.pathname}/${RouteUrls.ConnectLedger}`, {
           replace: true,
-          relative: 'path',
-          state: { tx: transaction },
         });
       },
 
@@ -40,138 +47,135 @@ export function useLedgerNavigate() {
         inputsToSign?: BitcoinInputSigningConfig[],
         fromLocation?: typeof location
       ) {
+        dispatch(
+          ledgerNavigationSlice.actions.setLedgerTxSigningState({
+            tx: bytesToHex(psbt),
+            inputsToSign,
+            fromLocationPathname: fromLocation?.pathname,
+          })
+        );
+        dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(RouteUrls.Home));
         return navigate(
           location.pathname.includes('/swap/bitcoin')
             ? `${location.pathname}/${RouteUrls.ConnectLedger}`
             : RouteUrls.ConnectLedger,
           {
             replace: true,
-            relative: 'route',
-            state: {
-              tx: bytesToHex(psbt),
-              inputsToSign,
-              backgroundLocation: { pathname: RouteUrls.Home },
-              fromLocation,
-            },
           }
         );
       },
 
       toConnectAndSignMessageStep(message: UnsignedMessage) {
+        const serialized = toSerializableUnsignedMessage(message);
+        dispatch(
+          ledgerNavigationSlice.actions.setLedgerMessageSigningState({
+            messageType: serialized.messageType,
+            message:
+              serialized.messageType === 'utf8'
+                ? serialized.message
+                : bytesToHex(serialized.message as Uint8Array),
+            domain:
+              serialized.messageType === 'structured'
+                ? Array.from((serialized as { domain: Uint8Array }).domain)
+                : undefined,
+          })
+        );
         return navigate(RouteUrls.ConnectLedger, {
           replace: true,
-          // Unsigned messages may contain unserializable data, such as bigint
-          state: { ...toSerializableUnsignedMessage(message) },
         });
       },
 
       toDeviceBusyStep(description?: string) {
+        dispatch(ledgerNavigationSlice.actions.setLedgerDescription(description));
+        dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(RouteUrls.Home));
         return navigate(RouteUrls.DeviceBusy, {
           replace: true,
-          state: { description, backgroundLocation: { pathname: RouteUrls.Home } },
         });
       },
 
       toConnectionSuccessStep(chain: SupportedBlockchains) {
+        dispatch(ledgerNavigationSlice.actions.setLedgerConnectionState({ chain }));
+        dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(RouteUrls.Home));
         return navigate(RouteUrls.ConnectLedgerSuccess, {
           replace: true,
-          state: {
-            chain,
-            backgroundLocation: { pathname: RouteUrls.Home },
-          },
         });
       },
 
       toErrorStep(chain: SupportedBlockchains, errorMessage?: string) {
+        dispatch(
+          ledgerNavigationSlice.actions.setLedgerErrorState({
+            chain,
+            latestLedgerError: errorMessage,
+          })
+        );
+        dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(RouteUrls.Home));
         return navigate(RouteUrls.ConnectLedgerError, {
           replace: true,
-          state: {
-            latestLedgerError: errorMessage,
-            chain,
-            backgroundLocation: { pathname: RouteUrls.Home },
-            fromLocation: location.state.fromLocation,
-          },
         });
       },
 
       toAwaitingDeviceOperation({ hasApprovedOperation }: { hasApprovedOperation: boolean }) {
+        dispatch(ledgerNavigationSlice.actions.setLedgerApprovedOperation(hasApprovedOperation));
+        dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(RouteUrls.Home));
         return navigate(RouteUrls.AwaitingDeviceUserAction, {
           replace: true,
-          state: {
-            hasApprovedOperation,
-            backgroundLocation: { pathname: RouteUrls.Home },
-          },
         });
       },
 
       toPublicKeyMismatchStep() {
+        dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(RouteUrls.Home));
         return navigate(RouteUrls.LedgerPublicKeyMismatch, {
           replace: true,
-          state: {
-            backgroundLocation: { pathname: RouteUrls.Home },
-          },
         });
       },
 
       toDevicePayloadInvalid() {
+        dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(RouteUrls.Home));
         return navigate(RouteUrls.LedgerDevicePayloadInvalid, {
           replace: true,
-          state: {
-            backgroundLocation: { pathname: RouteUrls.Home },
-          },
         });
       },
 
       toOperationRejectedStep(description?: string) {
+        dispatch(ledgerNavigationSlice.actions.setLedgerDescription(description));
+        dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(RouteUrls.Home));
         return navigate(RouteUrls.LedgerOperationRejected, {
           replace: true,
-          state: {
-            backgroundLocation: { pathname: RouteUrls.Home },
-            description,
-          },
         });
       },
 
       toDeviceDisconnectStep() {
+        dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(RouteUrls.Home));
         return navigate(RouteUrls.LedgerDisconnected, {
           replace: true,
-          state: {
-            backgroundLocation: { pathname: RouteUrls.Home },
-          },
         });
       },
 
       toBroadcastErrorStep(error: string) {
+        dispatch(ledgerNavigationSlice.actions.setLedgerBroadcastError(error));
+        dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(RouteUrls.Home));
         return navigate(RouteUrls.LedgerBroadcastError, {
           replace: true,
-          state: {
-            backgroundLocation: { pathname: RouteUrls.Home },
-            error,
-          },
         });
       },
 
       cancelLedgerAction() {
-        const fromLocation = location.state.fromLocation ?? undefined;
+        dispatch(ledgerNavigationSlice.actions.setLedgerWentBack());
 
-        if (fromLocation) {
-          return navigate(fromLocation, { state: { ...fromLocation.state, wentBack: true } });
+        if (fromLocationPathname) {
+          return navigate(fromLocationPathname, { replace: true });
         }
 
-        const resolvedPath = resolvePath('..', location.pathname);
-
-        return navigate(resolvedPath, {
-          relative: 'path',
-          replace: true,
-          state: { ...location.state, wentBack: true },
-        });
+        const parentPath = location.pathname.split('/').slice(0, -1).join('/') || '/';
+        return navigate(parentPath, { replace: true });
       },
 
       cancelLedgerActionAndReturnHome() {
+        dispatch(ledgerNavigationSlice.actions.resetLedgerNavigation());
         return navigate(RouteUrls.Home);
       },
     }),
 
-    [location, navigate]
+    [location, navigate, dispatch, fromLocationPathname]
   );
 }

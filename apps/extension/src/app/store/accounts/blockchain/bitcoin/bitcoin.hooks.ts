@@ -1,5 +1,3 @@
-import { useLocation } from 'react-router';
-
 import { bytesToHex } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
@@ -32,6 +30,7 @@ import {
   createNativeSegwitDefaultWalletPolicy,
   createTaprootDefaultWalletPolicy,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
+import { useLocation } from '@app/routes/compat';
 import {
   useCurrentAccountTaprootSigner,
   useTaprootAccount,

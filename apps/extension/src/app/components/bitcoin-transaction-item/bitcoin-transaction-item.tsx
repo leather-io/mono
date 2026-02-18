@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 
 import { HStack } from 'leather-styles/jsx';
 
@@ -20,7 +19,10 @@ import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { IncreaseFeeButton } from '@app/components/stacks-transaction-item/increase-fee-button';
 import { TransactionTitle } from '@app/components/transaction/transaction-title';
 import { useInscriptionByOutput } from '@app/query/bitcoin/ordinals/inscriptions-by-param.hooks';
+import { useLocation, useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
 import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { modalNavigationSlice } from '@app/store/navigation/modal-navigation.slice';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { TransactionItemLayout } from '../transaction-item/transaction-item.layout';
@@ -34,6 +36,7 @@ interface BitcoinTransactionItemProps {
 export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const isPrivate = useIsPrivateMode();
 
   const { data: inscriptionData } = useInscriptionByOutput(transaction);
@@ -49,7 +52,8 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
   if (!transaction) return null;
 
   function onIncreaseFee() {
-    void navigate(RouteUrls.IncreaseBtcFee, { state: { btcTx: transaction } });
+    dispatch(modalNavigationSlice.actions.setBtcTx(transaction));
+    void navigate(RouteUrls.IncreaseBtcFee);
   }
 
   function openTxLink() {

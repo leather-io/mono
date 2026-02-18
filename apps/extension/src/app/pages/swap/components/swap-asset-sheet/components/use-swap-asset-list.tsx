@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router';
 
 import BigNumber from 'bignumber.js';
 import { useFormikContext } from 'formik';
@@ -13,6 +12,7 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { type BaseSwapContext, useSwapContext } from '@app/pages/swap/swap.context';
 import { constructSwapRoute } from '@app/pages/swap/swap.routes';
 import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
+import { useNavigate, useParams } from '@app/routes/compat';
 
 import type { SwapAssetListProps } from './swap-asset-list';
 

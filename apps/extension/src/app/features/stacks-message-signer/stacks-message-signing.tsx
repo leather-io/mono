@@ -1,5 +1,3 @@
-import { Outlet } from 'react-router';
-
 import { StacksNetwork } from '@stacks/network';
 import type { ClarityValue } from '@stacks/transactions';
 
@@ -14,6 +12,7 @@ import {
 import { closeWindow } from '@shared/utils';
 
 import { MessageSigningHeader } from '@app/features/message-signer/message-signing-header';
+import { Outlet } from '@app/routes/compat';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 
 import { MessageSigningRequestLayout } from '../message-signer/message-signing-request.layout';

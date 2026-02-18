@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import LostInStackImg from '@assets/images/lost-in-stack.png';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
@@ -10,6 +8,7 @@ import { RouteUrls } from '@shared/route-urls';
 import { isPopupMode } from '@app/common/utils';
 import { Content } from '@app/components/layout';
 import { HomeHeader } from '@app/features/container/headers/home.header';
+import { useNavigate } from '@app/routes/compat';
 
 interface NotFoundContentProps {
   onGoHome(): void;

@@ -1,5 +1,3 @@
-import { useLocation, useNavigate } from 'react-router';
-
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -7,6 +5,9 @@ import { RouteUrls } from '@shared/route-urls';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useFlags } from '@app/features/feature-flags';
+import { useLocation, useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { modalNavigationSlice } from '@app/store/navigation/modal-navigation.slice';
 
 interface TokenDetailsPillButtonProps {
   label: string;
@@ -60,6 +61,7 @@ export function TokenDetailsActionsRow({
 }: TokenDetailsActionsRowProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
   const { releaseOnramperBuy } = useFlags();
 
   function pageModeRoutingAction(url: string) {
@@ -87,14 +89,18 @@ export function TokenDetailsActionsRow({
     >
       <TokenDetailsPillButton
         label="Send"
-        onClick={() =>
-          void navigate(RouteUrls.SendCryptoAsset, { state: { backgroundLocation: location } })
-        }
+        onClick={() => {
+          dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(location.pathname));
+          void navigate(RouteUrls.SendCryptoAsset);
+        }}
         testId="token-details-send-btn"
       />
       <TokenDetailsPillButton
         label="Receive"
-        onClick={() => void navigate(receivePath, { state: { backgroundLocation: location } })}
+        onClick={() => {
+          dispatch(modalNavigationSlice.actions.setBackgroundLocationPathname(location.pathname));
+          void navigate(receivePath);
+        }}
         testId="token-details-receive-btn"
       />
       {releaseOnramperBuy && (

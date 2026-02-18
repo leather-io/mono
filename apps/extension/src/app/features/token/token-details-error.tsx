@@ -1,11 +1,10 @@
-import { useNavigate } from 'react-router';
-
 import LostInStackImg from '@assets/images/lost-in-stack.png';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { Button } from '@leather.io/ui';
 
 import { Content } from '@app/components/layout';
+import { useNavigate } from '@app/routes/compat';
 
 import { TokenDetailsHeader } from './components/token-details-header';
 

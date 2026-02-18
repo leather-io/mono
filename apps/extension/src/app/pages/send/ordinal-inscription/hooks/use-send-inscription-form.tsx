@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { type Location, useNavigate } from 'react-router';
 
 import * as yup from 'yup';
 
@@ -13,11 +12,13 @@ import { OrdinalSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { formFeeRowValue } from '@app/common/send/utils';
 import { complianceValidator } from '@app/common/validation/forms/compliance-validators';
 import { useNumberOfInscriptionsOnUtxo } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
+import { sendNavigationSlice } from '@app/store/navigation/send-navigation.slice';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useSendInscriptionState } from '../components/send-inscription-container';
@@ -29,7 +30,7 @@ export function useSendInscriptionForm() {
   const [isCheckingFees, setIsCheckingFees] = useState(false);
 
   const navigate = useNavigate();
-  const backgroundLocation = useLocationStateWithCache<Location>('backgroundLocation');
+  const dispatch = useAppDispatch();
   const sign = useSignBitcoinTx();
   const { inscription, utxo } = useSendInscriptionState();
   const currentNetwork = useCurrentNetwork();
@@ -66,16 +67,15 @@ export function useSendInscriptionForm() {
           return;
         }
 
+        dispatch(
+          sendNavigationSlice.actions.setInscriptionFlowState({
+            inscription,
+            recipient: values.recipient,
+            utxo,
+          })
+        );
         void navigate(
-          `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionChooseFee}`,
-          {
-            state: {
-              inscription,
-              recipient: values.recipient,
-              utxo,
-              backgroundLocation,
-            },
-          }
+          `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionChooseFee}`
         );
       } catch (error) {
         analytics.track('ordinals_dot_com_unavailable', { error });
@@ -121,20 +121,19 @@ export function useSendInscriptionForm() {
       logger.debug('Pre-finalized inscription PSBT', signedTx.hex);
 
       const feeRowValue = formFeeRowValue(values.feeRate, isCustomFee);
+      dispatch(
+        sendNavigationSlice.actions.setInscriptionFlowState({
+          fee: feeValue,
+          inscription,
+          utxo,
+          recipient: values.recipient,
+          time,
+          feeRowValue,
+          signedTx: Array.from(signedTx.extract()),
+        })
+      );
       void navigate(
-        `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionReview}`,
-        {
-          state: {
-            fee: feeValue,
-            inscription,
-            utxo,
-            recipient: values.recipient,
-            time,
-            feeRowValue,
-            signedTx: signedTx.extract(),
-            backgroundLocation,
-          },
-        }
+        `/${RouteUrls.SendOrdinalInscription}/${RouteUrls.SendOrdinalInscriptionReview}`
       );
     },
 

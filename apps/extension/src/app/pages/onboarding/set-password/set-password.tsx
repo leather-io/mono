@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { Form, Formik } from 'formik';
@@ -28,6 +27,7 @@ import {
   DescriptionColumn,
   TwoColumnLayout,
 } from '@app/components/layout/layouts/two-column.layout';
+import { useNavigate } from '@app/routes/compat';
 import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 import { PasswordField } from './components/password-field';
@@ -64,7 +64,7 @@ export function SetPasswordPage() {
           await finishSignIn(0);
         }
       } else {
-        void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
+        void navigate(RouteUrls.Home, { replace: true });
       }
     },
     [setPassword, decodedAuthRequest, stacksAccounts, navigate, finishSignIn]

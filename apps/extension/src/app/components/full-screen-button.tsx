@@ -1,11 +1,10 @@
-import { useLocation } from 'react-router';
-
 import { ExpandIcon, IconButton, Tooltip } from '@leather.io/ui';
 
 import { analytics } from '@shared/utils/analytics';
 
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
+import { useLocation } from '@app/routes/compat';
 
 const nonInvasiveExplainerHoverDelay = 850;
 

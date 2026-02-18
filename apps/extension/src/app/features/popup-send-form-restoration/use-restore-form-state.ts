@@ -1,9 +1,10 @@
-import { useNavigate } from 'react-router';
-
 import { getActiveTab } from '@shared/utils/get-active-tab';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { isPopupMode } from '@app/common/utils';
+import { useNavigate } from '@app/routes/compat';
+import { useAppDispatch } from '@app/store';
+import { sendNavigationSlice } from '@app/store/navigation/send-navigation.slice';
 
 // Would rather use the `useAsync` hook to call this promise, however this is
 // excuted later in the lifecycle of the app, which causes the homepage to
@@ -21,6 +22,7 @@ void run();
 
 export function useRestoreFormState() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useOnMount(async () => {
     if (!isPopupMode() || !currentTabId || !chrome.storage.session) return;
@@ -28,6 +30,12 @@ export function useRestoreFormState() {
     const state = await chrome.storage.session.get('form-state-' + currentTabId.toString());
     const persistedState = state[key];
     if (!persistedState || !persistedState.symbol) return;
-    void navigate('send/' + persistedState.symbol, { state: persistedState });
+    dispatch(
+      sendNavigationSlice.actions.setSendFormRouteState({
+        amount: persistedState.amount ?? '',
+        recipient: persistedState.recipient ?? '',
+      })
+    );
+    void navigate('send/' + persistedState.symbol);
   });
 }

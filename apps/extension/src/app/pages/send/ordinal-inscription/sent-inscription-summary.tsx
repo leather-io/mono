@@ -1,33 +1,33 @@
-import { type Location, useLocation, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 import { Box, Flex, HStack, Stack } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
-import type { Blockchain, InscriptionAsset } from '@leather.io/models';
+import type { Blockchain } from '@leather.io/models';
 import { CheckmarkIcon, CopyIcon, ExternalLinkIcon, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useBitcoinExplorerLink } from '@app/common/hooks/use-bitcoin-explorer-link';
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import { InfoCardBtn, InfoCardRow, InfoCardSeparator } from '@app/components/info-card/info-card';
 import { InscriptionPreview } from '@app/components/inscription-preview-card/components/inscription-preview';
 import { Card } from '@app/components/layout';
 import { useToast } from '@app/features/toasts/use-toast';
+import { useNavigate } from '@app/routes/compat';
+import type { RootState } from '@app/store';
 
 import { InscriptionPreviewCard } from '../../../components/inscription-preview-card/inscription-preview-card';
 
 function useSendInscriptionSummaryState() {
-  const location = useLocation();
+  const inscriptionFlow = useSelector((state: RootState) => state.navigation.send.inscriptionFlow);
   return {
-    txid: get(location.state, 'txid') as string,
-    recipient: get(location.state, 'recipient', '') as string,
-    arrivesIn: get(location.state, 'arrivesIn') as string,
-    inscription: get(location.state, 'inscription') as InscriptionAsset,
-    feeRowValue: get(location.state, 'feeRowValue') as string,
+    txid: inscriptionFlow?.txid ?? '',
+    recipient: inscriptionFlow?.recipient ?? '',
+    arrivesIn: inscriptionFlow?.time ?? '',
+    inscription: inscriptionFlow?.inscription ?? null,
+    feeRowValue: inscriptionFlow?.feeRowValue ?? '',
   };
 }
 
@@ -35,7 +35,12 @@ export function SendInscriptionSummary() {
   const { txid, recipient, arrivesIn, inscription, feeRowValue } = useSendInscriptionSummaryState();
   const toast = useToast();
   const navigate = useNavigate();
-  const backgroundLocation = useLocationStateWithCache<Location>('backgroundLocation');
+  const backgroundPathname = useSelector(
+    (state: RootState) => state.navigation.modal.backgroundLocationPathname
+  );
+
+  if (!inscription) return null;
+
   const txLink = {
     blockchain: 'bitcoin' as Blockchain,
     txid,
@@ -58,7 +63,7 @@ export function SendInscriptionSummary() {
     <Sheet
       header={<SheetHeader title="Sent" />}
       isShowing
-      onClose={() => navigate(backgroundLocation ?? RouteUrls.Home)}
+      onClose={() => navigate(backgroundPathname ?? RouteUrls.Home)}
     >
       <Card
         border="unset"
