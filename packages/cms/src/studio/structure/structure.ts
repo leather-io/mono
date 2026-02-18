@@ -74,6 +74,15 @@ export function structure(S: Parameters<StructureResolver>[0]) {
             ])
         ),
       S.divider(),
+      S.documentTypeListItem('roadmapYear')
+        .title('Roadmap')
+        .child(
+          S.documentList()
+            .title('Roadmap Years')
+            .filter('_type == "roadmapYear"')
+            .defaultOrdering([{ field: 'year', direction: 'desc' }])
+        ),
+      S.divider(),
       ...S.documentTypeListItems().filter(
         listItem =>
           ![
@@ -82,6 +91,8 @@ export function structure(S: Parameters<StructureResolver>[0]) {
             'faqSection',
             'faq',
             'post',
+            'roadmapYear',
+            'roadmapProject',
           ].includes(listItem.getId() || '')
       ),
     ]);

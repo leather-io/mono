@@ -1,6 +1,11 @@
 import { MetaDescriptor } from 'react-router';
 
+import { cmsClient } from '~/constants/cms-client';
 import { RoadmapPage } from '~/pages/roadmap/roadmap.page';
+
+import { roadmapYearsQuery } from '@leather.io/cms';
+
+import type { Route } from './+types/roadmap.route';
 
 export function meta() {
   return [
@@ -20,6 +25,10 @@ export function meta() {
   ] satisfies MetaDescriptor[];
 }
 
-export default function RoadmapRoute() {
-  return <RoadmapPage />;
+export async function loader() {
+  return await cmsClient.fetch(roadmapYearsQuery);
+}
+
+export default function RoadmapRoute({ loaderData }: Route.ComponentProps) {
+  return <RoadmapPage years={loaderData} />;
 }

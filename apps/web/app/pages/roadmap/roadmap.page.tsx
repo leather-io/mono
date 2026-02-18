@@ -1,182 +1,12 @@
 import { useState } from 'react';
 
-import { css } from 'leather-styles/css';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
 
+import type { RoadmapProject, RoadmapYearsQueryResult } from '@leather.io/cms';
 import { Badge } from '@leather.io/ui';
 
-type ProjectStatus = 'complete' | 'in-progress' | 'planning' | 'planned' | 'cancelled';
-
-interface Project {
-  title: string;
-  description: string;
-  status: ProjectStatus;
-  startDate: string;
-  endDate: string;
-}
-
-interface YearData {
-  year: number;
-  objectives: string[];
-  projects: Project[];
-}
-
-const roadmapData: YearData[] = [
-  {
-    year: 2025,
-    objectives: [
-      'Expand Bitcoin capabilities with advanced transaction features',
-      'Improve user experience with streamlined onboarding',
-      'Strengthen security infrastructure with multi-signature support',
-      'Build developer tools for third-party integrations',
-    ],
-    projects: [
-      {
-        title: 'Multi-Signature Wallet Support',
-        description:
-          'Add support for multi-signature wallets to provide enhanced security for high-value accounts and institutional users.',
-        status: 'in-progress',
-        startDate: '2025-01-15',
-        endDate: '2025-04-30',
-      },
-      {
-        title: 'Hardware Wallet Integration',
-        description:
-          'Direct integration with Ledger and Trezor devices for cold storage capabilities within the Leather interface.',
-        status: 'planning',
-        startDate: '2025-03-01',
-        endDate: '2025-06-30',
-      },
-      {
-        title: 'Advanced Transaction Builder',
-        description:
-          'Build a visual transaction builder for complex Bitcoin transactions including batch sends and custom fee controls.',
-        status: 'planned',
-        startDate: '2025-05-01',
-        endDate: '2025-08-30',
-      },
-      {
-        title: 'Developer SDK',
-        description:
-          'Release a comprehensive SDK for developers to integrate Leather wallet functionality into their applications.',
-        status: 'planned',
-        startDate: '2025-07-01',
-        endDate: '2025-10-30',
-      },
-      {
-        title: 'Mobile App Redesign',
-        description:
-          'Complete redesign of the mobile application with improved navigation and performance optimizations.',
-        status: 'planning',
-        startDate: '2025-06-01',
-        endDate: '2025-09-30',
-      },
-    ],
-  },
-  {
-    year: 2024,
-    objectives: [
-      'Launch browser extension with full Bitcoin and Stacks support',
-      'Implement sBTC integration for seamless Bitcoin DeFi',
-      'Achieve 100k active users milestone',
-      'Establish Leather as the primary wallet for Stacks ecosystem',
-    ],
-    projects: [
-      {
-        title: 'Browser Extension Launch',
-        description:
-          'Released Leather as a browser extension for Chrome, Firefox, and Brave with full Bitcoin and Stacks wallet functionality.',
-        status: 'complete',
-        startDate: '2024-01-10',
-        endDate: '2024-03-15',
-      },
-      {
-        title: 'sBTC Integration',
-        description:
-          'Integrated sBTC protocol to enable Bitcoin-backed DeFi operations on the Stacks network with one-way peg support.',
-        status: 'complete',
-        startDate: '2024-04-01',
-        endDate: '2024-07-20',
-      },
-      {
-        title: 'NFT Gallery',
-        description:
-          'Built a dedicated NFT gallery view for displaying and managing Stacks-based NFT collections.',
-        status: 'complete',
-        startDate: '2024-05-15',
-        endDate: '2024-08-10',
-      },
-      {
-        title: 'Swap Interface',
-        description:
-          'Created an integrated swap interface for exchanging tokens within the wallet without leaving the application.',
-        status: 'complete',
-        startDate: '2024-08-01',
-        endDate: '2024-11-05',
-      },
-      {
-        title: 'Desktop Application',
-        description:
-          'Native desktop application for macOS and Windows with enhanced security and performance.',
-        status: 'cancelled',
-        startDate: '2024-09-01',
-        endDate: '2024-12-31',
-      },
-    ],
-  },
-  {
-    year: 2023,
-    objectives: [
-      'Establish Leather brand and migrate from Hiro Wallet',
-      'Build core wallet infrastructure',
-      'Implement basic Bitcoin and Stacks functionality',
-      'Launch web application beta',
-    ],
-    projects: [
-      {
-        title: 'Brand Launch',
-        description:
-          'Rebranded from Hiro Wallet to Leather, establishing new visual identity and positioning in the market.',
-        status: 'complete',
-        startDate: '2023-01-05',
-        endDate: '2023-02-20',
-      },
-      {
-        title: 'Web Wallet Beta',
-        description:
-          'Launched web-based wallet application with basic send, receive, and transaction history features.',
-        status: 'complete',
-        startDate: '2023-03-01',
-        endDate: '2023-06-15',
-      },
-      {
-        title: 'Stacks DeFi Integration',
-        description:
-          'Added support for interacting with major Stacks DeFi protocols including ALEX and Arkadiko.',
-        status: 'complete',
-        startDate: '2023-06-20',
-        endDate: '2023-09-30',
-      },
-      {
-        title: 'Security Audit',
-        description:
-          'Conducted comprehensive security audit with third-party firm to ensure wallet safety and identify vulnerabilities.',
-        status: 'complete',
-        startDate: '2023-08-01',
-        endDate: '2023-10-15',
-      },
-      {
-        title: 'Mobile Prototype',
-        description:
-          'Built initial mobile wallet prototype for iOS to test mobile-first design patterns.',
-        status: 'complete',
-        startDate: '2023-10-01',
-        endDate: '2023-12-20',
-      },
-    ],
-  },
-];
+type ProjectStatus = RoadmapProject['status'];
 
 const statusBadgeVariant: Record<
   ProjectStatus,
@@ -205,92 +35,72 @@ const statusColor: Record<ProjectStatus, string> = {
   cancelled: '#dc2626',
 };
 
-function formatDate(dateString: string) {
+function formatDate(dateString?: string) {
+  if (!dateString) return '—';
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-const yearButtonStyles = css({
-  px: 'space.03',
-  py: 'space.02',
-  textStyle: 'label.02',
-  color: 'ink.text-subdued',
-  bg: 'transparent',
-  border: '1px solid {colors.ink.border-default}',
-  borderRadius: 'sm',
-  cursor: 'pointer',
-  transition: 'all 0.2s ease',
-  _hover: {
-    bg: 'ink.component-background-hover',
-    color: 'ink.text-primary',
-  },
-});
+interface YearButtonProps {
+  year: number;
+  isActive: boolean;
+  onClick(): void;
+}
 
-const yearButtonActiveStyles = css({
-  bg: 'ink.text-primary',
-  color: 'ink.background-primary',
-  borderColor: 'ink.text-primary',
-  _hover: {
-    bg: 'ink.text-primary',
-    color: 'ink.background-primary',
-  },
-});
+function YearButton({ year, isActive, onClick }: YearButtonProps) {
+  return (
+    <styled.button
+      px="space.03"
+      py="space.02"
+      textStyle="label.02"
+      color={isActive ? 'ink.background-primary' : 'ink.text-subdued'}
+      bg={isActive ? 'ink.text-primary' : 'transparent'}
+      borderWidth="1px"
+      borderStyle="solid"
+      borderColor={isActive ? 'ink.text-primary' : 'ink.border-default'}
+      borderRadius="sm"
+      cursor="pointer"
+      transition="all 0.2s ease"
+      _hover={
+        isActive
+          ? { bg: 'ink.text-primary', color: 'ink.background-primary' }
+          : { bg: 'ink.component-background-hover', color: 'ink.text-primary' }
+      }
+      onClick={onClick}
+    >
+      {year}
+    </styled.button>
+  );
+}
 
-const filterButtonStyles = css({
-  px: 'space.03',
-  py: 'space.02',
-  textStyle: 'label.02',
-  color: 'ink.text-subdued',
-  bg: 'transparent',
-  border: '1px solid {colors.ink.border-default}',
-  borderRadius: 'sm',
-  cursor: 'pointer',
-  transition: 'all 0.2s ease',
-  textTransform: 'capitalize',
-  _hover: {
-    bg: 'ink.component-background-hover',
-  },
-});
+interface FilterButtonProps {
+  label: string;
+  isActive: boolean;
+  onClick(): void;
+}
 
-const filterButtonActiveStyles = css({
-  borderColor: 'ink.text-primary',
-  bg: 'ink.component-background-hover',
-  color: 'ink.text-primary',
-});
-
-const timelineStyles = css({
-  position: 'relative',
-  pl: 'space.06',
-  _before: {
-    content: '""',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: '2px',
-    bg: 'ink.border-default',
-  },
-});
-
-const timelineItemStyles = css({
-  position: 'relative',
-  pb: 'space.07',
-  _last: {
-    pb: 0,
-  },
-});
-
-const projectCardStyles = css({
-  bg: 'ink.background-primary',
-  border: '1px solid {colors.ink.border-default}',
-  borderRadius: 'sm',
-  p: 'space.05',
-  transition: 'all 0.2s ease',
-  _hover: {
-    borderColor: 'ink.text-subdued',
-    boxShadow: '0 4px 12px rgba(18, 16, 15, 0.08)',
-  },
-});
+function FilterButton({ label, isActive, onClick }: FilterButtonProps) {
+  return (
+    <styled.button
+      px="space.03"
+      py="space.02"
+      textStyle="label.02"
+      color={isActive ? 'ink.text-primary' : 'ink.text-subdued'}
+      bg={isActive ? 'ink.component-background-hover' : 'transparent'}
+      borderWidth="1px"
+      borderStyle="solid"
+      borderColor={isActive ? 'ink.text-primary' : 'ink.border-default'}
+      borderRadius="sm"
+      cursor="pointer"
+      transition="all 0.2s ease"
+      textTransform="capitalize"
+      _hover={{ bg: 'ink.component-background-hover' }}
+      onClick={onClick}
+    >
+      {label}
+    </styled.button>
+  );
+}
 
 interface TimelineMarkerProps {
   status: ProjectStatus;
@@ -300,15 +110,14 @@ function TimelineMarker({ status }: TimelineMarkerProps) {
   return (
     <styled.div
       position="absolute"
-      left="-30px"
-      top="space.03"
-      width="12px"
-      height="12px"
-      borderRadius="50%"
+      left="-32px"
+      top="50%"
+      transform="translateY(-50%)"
+      width="8px"
+      height="100%"
+      borderRadius="2px"
       zIndex={1}
-      style={{
-        background: statusColor[status],
-      }}
+      style={{ background: statusColor[status] }}
     />
   );
 }
@@ -351,14 +160,26 @@ function ObjectivesSection({ objectives }: ObjectivesSectionProps) {
 }
 
 interface ProjectCardProps {
-  project: Project;
+  project: RoadmapProject;
 }
 
 function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <div className={timelineItemStyles}>
+    <styled.div position="relative" mb="space.07" _last={{ mb: 0 }}>
       <TimelineMarker status={project.status} />
-      <div className={projectCardStyles}>
+      <styled.div
+        bg="ink.background-primary"
+        borderWidth="1px"
+        borderStyle="solid"
+        borderColor="ink.border-default"
+        borderRadius="sm"
+        p="space.05"
+        transition="all 0.2s ease"
+        _hover={{
+          borderColor: 'ink.text-subdued',
+          boxShadow: '0 4px 12px rgba(18, 16, 15, 0.08)',
+        }}
+      >
         <Flex
           justifyContent="space-between"
           alignItems={['flex-start']}
@@ -384,8 +205,8 @@ function ProjectCard({ project }: ProjectCardProps) {
             <span>{formatDate(project.endDate)}</span>
           </Flex>
         </Flex>
-      </div>
-    </div>
+      </styled.div>
+    </styled.div>
   );
 }
 
@@ -398,37 +219,40 @@ interface StatusFilterProps {
 function StatusFilter({ activeFilter, statuses, onFilterChange }: StatusFilterProps) {
   return (
     <Flex gap="space.02" mb="space.05" flexWrap="wrap">
-      <button
-        className={`${filterButtonStyles} ${activeFilter === 'all' ? filterButtonActiveStyles : ''}`}
+      <FilterButton
+        label="All Projects"
+        isActive={activeFilter === 'all'}
         onClick={() => onFilterChange('all')}
-      >
-        All Projects
-      </button>
+      />
       {statuses.map(status => (
-        <button
+        <FilterButton
           key={status}
-          className={`${filterButtonStyles} ${activeFilter === status ? filterButtonActiveStyles : ''}`}
+          label={statusLabel[status]}
+          isActive={activeFilter === status}
           onClick={() => onFilterChange(status)}
-        >
-          {statusLabel[status]}
-        </button>
+        />
       ))}
     </Flex>
   );
 }
 
-export function RoadmapPage() {
-  const [activeYear, setActiveYear] = useState(roadmapData[0].year);
+interface RoadmapPageProps {
+  years: RoadmapYearsQueryResult;
+}
+
+export function RoadmapPage({ years }: RoadmapPageProps) {
+  const [activeYear, setActiveYear] = useState(years[0]?.year);
   const [activeFilter, setActiveFilter] = useState('all');
 
-  const currentYearData = roadmapData.find(y => y.year === activeYear);
+  const currentYearData = years.find(y => y.year === activeYear);
   if (!currentYearData) return null;
 
-  const uniqueStatuses = [...new Set(currentYearData.projects.map(p => p.status))];
+  const projects = currentYearData.projects ?? [];
+  const objectives = currentYearData.objectives ?? [];
+
+  const uniqueStatuses = [...new Set(projects.map(p => p.status))];
   const filteredProjects =
-    activeFilter === 'all'
-      ? currentYearData.projects
-      : currentYearData.projects.filter(p => p.status === activeFilter);
+    activeFilter === 'all' ? projects : projects.filter(p => p.status === activeFilter);
 
   function handleYearChange(year: number) {
     setActiveYear(year);
@@ -449,14 +273,13 @@ export function RoadmapPage() {
             Product Roadmap
           </styled.h1>
           <Flex gap="space.02" flexWrap="wrap">
-            {roadmapData.map(yearData => (
-              <button
+            {years.map(yearData => (
+              <YearButton
                 key={yearData.year}
-                className={`${yearButtonStyles} ${yearData.year === activeYear ? yearButtonActiveStyles : ''}`}
+                year={yearData.year}
+                isActive={yearData.year === activeYear}
                 onClick={() => handleYearChange(yearData.year)}
-              >
-                {yearData.year}
-              </button>
+              />
             ))}
           </Flex>
         </Flex>
@@ -471,7 +294,7 @@ export function RoadmapPage() {
           {currentYearData.year}
         </styled.h2>
 
-        <ObjectivesSection objectives={currentYearData.objectives} />
+        {objectives.length > 0 && <ObjectivesSection objectives={objectives} />}
 
         <StatusFilter
           activeFilter={activeFilter}
@@ -479,19 +302,38 @@ export function RoadmapPage() {
           onFilterChange={setActiveFilter}
         />
 
-        <div className={timelineStyles}>
+        <styled.div
+          position="relative"
+          pl="space.06"
+          _before={{
+            content: '""',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: '2px',
+            bg: 'ink.border-default',
+          }}
+        >
           {filteredProjects.map(project => (
-            <ProjectCard key={project.title} project={project} />
+            <ProjectCard key={project._key} project={project} />
           ))}
 
           {filteredProjects.length === 0 && (
-            <div className={projectCardStyles}>
+            <styled.div
+              bg="ink.background-primary"
+              borderWidth="1px"
+              borderStyle="solid"
+              borderColor="ink.border-default"
+              borderRadius="sm"
+              p="space.05"
+            >
               <styled.p textStyle="body.01" color="ink.text-subdued" textAlign="center">
                 No projects match this filter.
               </styled.p>
-            </div>
+            </styled.div>
           )}
-        </div>
+        </styled.div>
       </Box>
     </Page>
   );
