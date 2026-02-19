@@ -243,7 +243,7 @@ msgstr "Address scan range"
 msgid "Address types"
 msgstr "Address types"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:181
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:186
 #: src/features/recover-wallet/recover-wallet.layout.tsx:48
 msgid "Advanced options"
 msgstr "Advanced options"
@@ -381,7 +381,7 @@ msgstr "Arkadiko"
 msgid "Attributes"
 msgstr "Attributes"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:117
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:122
 msgid "Authentication failed"
 msgstr "Authentication failed"
 
@@ -564,7 +564,7 @@ msgstr ""
 "Configure\n"
 "account"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:144
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:149
 msgid ""
 "Configure\n"
 "wallet"
@@ -661,7 +661,7 @@ msgstr "Copy ID"
 msgid "Create new wallet"
 msgstr "Create new wallet"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:206
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:211
 msgid "Creation date"
 msgstr "Creation date"
 
@@ -1618,12 +1618,12 @@ msgstr "Register"
 msgid "Registered at block"
 msgstr "Registered at block"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:170
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:175
 #: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:17
 msgid "Remove wallet"
 msgstr "Remove wallet"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:162
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:167
 msgid "Rename wallet"
 msgstr "Rename wallet"
 
@@ -2192,7 +2192,7 @@ msgstr "View and manage your hidden accounts"
 msgid "View details"
 msgstr "View details"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:151
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:156
 msgid "View Secret Key"
 msgstr "View Secret Key"
 

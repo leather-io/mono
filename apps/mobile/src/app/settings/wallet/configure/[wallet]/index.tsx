@@ -17,7 +17,7 @@ import { useAuthentication } from '@/hooks/use-authentication';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { useAppDispatch } from '@/store/utils';
-import { WalletLoader } from '@/store/wallets/wallets.read';
+import { WalletLoader, useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';
 import dayjs from 'dayjs';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -99,10 +99,15 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
     return { success: true };
   }
 
+  const { list: walletsList } = useWallets();
+
   function removeWallet() {
     router.back();
     if (currentAccount?.fingerprint === wallet.fingerprint) {
-      changeCurrentAccount(null);
+      const remainingWallet = walletsList.find(w => w.fingerprint !== wallet.fingerprint);
+      changeCurrentAccount(
+        remainingWallet ? { fingerprint: remainingWallet.fingerprint, accountIndex: 0 } : null
+      );
     }
     dispatch(userRemovesWallet({ fingerprint: wallet.fingerprint }));
   }
