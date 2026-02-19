@@ -65,6 +65,41 @@ const mockedSip10PriceMap = {
   },
 };
 
+const mockedSip10AnalyticsMap = {
+  'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin': {
+    trendingScore: 85,
+    trustScore: 70,
+    distributionScore: 60,
+    holderCount: 5000,
+    circulatingSupply: 1000000,
+    updatedAt: '2026-01-01T00:00:00Z',
+  },
+  'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token': {
+    trendingScore: 92,
+    trustScore: 95,
+    distributionScore: 80,
+    holderCount: 25000,
+    circulatingSupply: 5000,
+    updatedAt: '2026-01-01T00:00:00Z',
+  },
+  'SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc': {
+    trendingScore: 5,
+    trustScore: 90,
+    distributionScore: 75,
+    holderCount: 15000,
+    circulatingSupply: 50000000,
+    updatedAt: '2026-01-01T00:00:00Z',
+  },
+  'SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx': {
+    trendingScore: 3,
+    trustScore: 85,
+    distributionScore: 70,
+    holderCount: 10000,
+    circulatingSupply: 30000000,
+    updatedAt: '2026-01-01T00:00:00Z',
+  },
+};
+
 const mockedRuneTokenMap = {
   DOGGOTOTHEMOON: {
     spacedRuneName: 'DOG•GO•TO•THE•MOON',
@@ -152,6 +187,15 @@ export async function mockLeatherApiRequests(page: Page) {
       json: {
         format: 'map',
         data: mockedSip10PriceMap,
+      },
+    })
+  );
+
+  await page.route('**/v1/analytics/sip10s?format=map', route =>
+    route.fulfill({
+      json: {
+        format: 'map',
+        data: mockedSip10AnalyticsMap,
       },
     })
   );

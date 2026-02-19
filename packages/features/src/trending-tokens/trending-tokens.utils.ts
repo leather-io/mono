@@ -21,6 +21,7 @@ export function isTrendingToken(item: AssetListItem): item is TrendingToken {
 export function prepTrendingItems(items: AssetListItem[]) {
   const numRows = 3;
   const filtered = pipe(items, filter(isTrendingToken), take(15));
+  if (filtered.length === 0) return [];
   const rowSize = Math.ceil(filtered.length / numRows);
   return pipe(filtered, toColumnMajorRows(rowSize), chunk(rowSize));
 }
