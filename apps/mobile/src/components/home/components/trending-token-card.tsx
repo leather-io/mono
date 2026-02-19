@@ -1,6 +1,5 @@
+import type { TrendingToken } from '@leather.io/features';
 import { ArrowTriangleTopIcon, Box, Sip10AvatarIcon, Text } from '@leather.io/ui/native';
-
-import type { TrendingToken } from './trending-tokens.utils';
 
 function getChangeColor(changePercent: number) {
   if (changePercent > 0) {

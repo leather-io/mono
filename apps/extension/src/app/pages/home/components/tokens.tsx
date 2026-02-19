@@ -7,6 +7,7 @@ import { createTokenDetailsPath } from '@leather.io/features';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { TokenList } from '@app/features/asset-list/token-list';
+import { TrendingTokens } from '@app/features/trending-tokens/trending-tokens';
 
 import { TokensTabHeader } from './tokens-tab-header';
 
@@ -22,6 +23,7 @@ export function Tokens() {
     <Stack data-testid={HomePageSelectors.AssetList} gap="space.04" pb="space.03">
       <TokensTabHeader />
       <TokenList filter="enabled" onSelectAsset={handleSelectAsset} />
+      <TrendingTokens />
       <Outlet />
     </Stack>
   );

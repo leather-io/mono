@@ -4,21 +4,11 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useTrendingTokensQuery } from '@/queries/asset-list/trending-tokens.query';
 import { t } from '@lingui/core/macro';
-import { chunk, filter, pipe, take } from 'remeda';
 
-import type { AssetListItem } from '@leather.io/services';
+import { prepTrendingItems } from '@leather.io/features';
 import { Box, InfoCircleIcon, Pressable, Text, useTheme } from '@leather.io/ui/native';
-import { toColumnMajorRows } from '@leather.io/utils';
 
 import { TrendingTokenCard } from './trending-token-card';
-import { isTrendingToken } from './trending-tokens.utils';
-
-function prepTrendingItems(items: AssetListItem[]) {
-  const numRows = 3;
-  const filtered = pipe(items, filter(isTrendingToken), take(15));
-  const rowSize = Math.ceil(filtered.length / numRows);
-  return pipe(filtered, toColumnMajorRows(rowSize), chunk(rowSize));
-}
 
 export function TrendingTokens() {
   const theme = useTheme();
