@@ -106,7 +106,6 @@ export interface Events extends HistoricalEvents {
 interface HistoricalEvents {
   add_network: undefined;
   bitcoin_rbf_fee_increase_error: { outputDiff: number };
-  broadcast_retrieve_taproot_to_native_segwit: undefined;
   broadcast_ordinal_transaction: undefined;
   broadcast_ordinal_error: { error: any };
   broadcast_transaction: {
