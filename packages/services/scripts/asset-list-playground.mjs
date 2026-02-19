@@ -29,10 +29,10 @@ const request = {
     protocols: ['nativeBtc', 'nativeStx', 'sip10'],
     // chain: 'stacks',          // 'bitcoin' | 'stacks'
     // minMarketCap: 1_000_000,
-    minTrustScore: 10,
+    // minTrustScore: 10,
     // minTrendingScore: 10,
-    minDistributionScore: 10,
-    hasBalance: true, // only tokens the user holds (needs accountContext)
+    // minDistributionScore: 10,
+    // hasBalance: true, // only tokens the user holds (needs accountContext)
     // includeHidden: true,      // include hidden tokens (visible only by default)
   },
 
@@ -46,8 +46,8 @@ const request = {
 
   // SORT — array of { field, direction } pairs, applied in order
   sort: [
-    { field: 'marketCap', direction: 'desc' },
-    // { field: 'trustScore', direction: 'desc' },
+    // { field: 'marketCap', direction: 'desc' },
+    { field: 'trustScore', direction: 'desc' },
     // { field: 'trendingScore', direction: 'desc' },
     // { field: 'change1d', direction: 'desc' },
     // { field: 'price', direction: 'desc' },
@@ -56,7 +56,7 @@ const request = {
   ],
 
   // PAGINATION
-  pagination: { limit: 20, offset: 0 },
+  pagination: { limit: 50, offset: 0 },
 };
 
 // ──────────────────────────────────────────────────────────────

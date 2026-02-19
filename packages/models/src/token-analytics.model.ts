@@ -3,7 +3,7 @@ export interface TokenHolderSegment {
   readonly balance: number;
   readonly contracts: { readonly count: number; readonly balance: number };
   readonly multisigs: { readonly count: number; readonly balance: number };
-  readonly individuals: { readonly count: number; readonly balance: number };
+  readonly standard: { readonly count: number; readonly balance: number };
 }
 
 export interface TokenAnalytics {

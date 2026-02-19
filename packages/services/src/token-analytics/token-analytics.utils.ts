@@ -21,7 +21,7 @@ function mapHolderSegment(segment: LeatherApiTokenHolderSegment): TokenHolderSeg
     balance: segment.balance,
     contracts: { count: segment.contracts.count, balance: segment.contracts.balance },
     multisigs: { count: segment.multisigs.count, balance: segment.multisigs.balance },
-    individuals: { count: segment.individuals.count, balance: segment.individuals.balance },
+    standard: { count: segment.standard.count, balance: segment.standard.balance },
   };
 }
 

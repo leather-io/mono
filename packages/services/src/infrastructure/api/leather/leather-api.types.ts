@@ -221,7 +221,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -237,7 +237,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -253,7 +253,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -269,7 +269,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -285,7 +285,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -303,7 +303,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -319,7 +319,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -335,7 +335,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -351,7 +351,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -622,7 +622,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -638,7 +638,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -654,7 +654,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -670,7 +670,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -686,7 +686,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -704,7 +704,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -720,7 +720,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -736,7 +736,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -752,7 +752,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1023,7 +1023,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1039,7 +1039,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1055,7 +1055,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1071,7 +1071,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1087,7 +1087,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1105,7 +1105,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1121,7 +1121,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1137,7 +1137,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1153,7 +1153,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };

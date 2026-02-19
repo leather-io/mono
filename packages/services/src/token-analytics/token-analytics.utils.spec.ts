@@ -44,7 +44,7 @@ describe(mapApiDistributionToTokenDistribution.name, () => {
       balance: 1000,
       contracts: { count: 2, balance: 200 },
       multisigs: { count: 1, balance: 100 },
-      individuals: { count: 7, balance: 700 },
+      standard: { count: 7, balance: 700 },
     };
     const distribution = {
       topHolders: { 1: bucket, 10: bucket },
