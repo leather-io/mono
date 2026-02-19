@@ -2056,7 +2056,7 @@ msgstr "Token Details"
 msgid "Tokens"
 msgstr "Tokens"
 
-#: src/components/home/components/trending-tokens.tsx:44
+#: src/components/home/components/trending-tokens.tsx:34
 msgid "Tokens trending across the Stacks ecosystem, ranked by recent trading activity."
 msgstr "Tokens trending across the Stacks ecosystem, ranked by recent trading activity."
 
@@ -2092,8 +2092,8 @@ msgstr "Transaction ID"
 msgid "Transaction is sent!"
 msgstr "Transaction is sent!"
 
-#: src/components/home/components/trending-tokens.tsx:40
-#: src/components/home/components/trending-tokens.tsx:55
+#: src/components/home/components/trending-tokens.tsx:30
+#: src/components/home/components/trending-tokens.tsx:45
 msgid "Trending tokens"
 msgstr "Trending tokens"
 

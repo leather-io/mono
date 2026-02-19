@@ -69,6 +69,9 @@ export {
   formatPriceChangeText,
   getPriceChangeColor,
 } from './token/token-details-utils';
+export { trendingTokensRequest } from './trending-tokens/trending-tokens.constants';
+export type { TrendingToken } from './trending-tokens/trending-tokens.utils';
+export { isTrendingToken, prepTrendingItems } from './trending-tokens/trending-tokens.utils';
 export type { TokenBalance } from './balance/balance-types';
 export {
   isAccountQuotedBtcBalance,
