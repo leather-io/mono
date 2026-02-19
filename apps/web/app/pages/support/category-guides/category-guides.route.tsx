@@ -2,6 +2,7 @@ import { MetaDescriptor } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { cmsClient } from '~/constants/cms-client';
+import { canonicalUrl } from '~/constants/meta-tags';
 import { Page } from '~/layouts/page/page';
 import { SimpleGuideList } from '~/pages/support/components/simple-guide-list';
 import { SupportFormProvider } from '~/pages/support/components/support-form-provider';
@@ -14,11 +15,18 @@ import {
 
 import { Route } from './+types/category-guides.route';
 
-export function meta() {
+export function meta({ loaderData, params }: Route.MetaArgs): MetaDescriptor[] {
+  const categoryName = loaderData?.data?.categoryName ?? 'Guides';
+  const guideCount = loaderData?.data?.guides?.length ?? 0;
+
   return [
-    { title: 'Guides – Leather' },
-    { name: 'description', content: 'Leather wallet user guides for every stage' },
-  ] satisfies MetaDescriptor[];
+    { title: `${categoryName} – Leather Guides` },
+    {
+      name: 'description',
+      content: `Browse ${guideCount} guides in ${categoryName}. Leather wallet user guides for every stage.`,
+    },
+    canonicalUrl(`/support/${params.slug}`),
+  ];
 }
 
 export async function action({ request }: Route.ActionArgs) {

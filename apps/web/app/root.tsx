@@ -10,6 +10,7 @@ import leatherUiStyles from '@leather.io/ui/styles?url';
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
 import { defaultMetaTags } from './constants/meta-tags';
+import { organizationSchema } from './constants/structured-data';
 import { InstallDialog } from './features/install-dialog/install-dialog';
 import { MockLeatherDialog } from './features/mock-dialog/mock-dialog';
 import { Footer } from './layouts/footer/footer';
@@ -45,6 +46,10 @@ export function Layout({ children }: HasChildren) {
         {defaultMetaTags.map((meta, i) => (
           <meta key={'meta' + i} {...meta} />
         ))}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
         <Links />
       </head>
       <styled.body>

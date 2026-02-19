@@ -1,5 +1,12 @@
 import { MetaDescriptor } from 'react-router';
 
+export const BASE_URL = 'https://leather.io';
+
+export function canonicalUrl(pathname: string): MetaDescriptor {
+  const cleanPath = pathname.replace(/\/$/, '');
+  return { tagName: 'link', rel: 'canonical', href: `${BASE_URL}${cleanPath}` };
+}
+
 export const defaultMetaTags = [
   {
     charSet: 'utf-8',

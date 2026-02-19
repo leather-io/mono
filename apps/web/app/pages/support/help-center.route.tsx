@@ -1,6 +1,7 @@
 import { MetaDescriptor } from 'react-router';
 
 import { cmsClient } from '~/constants/cms-client';
+import { canonicalUrl } from '~/constants/meta-tags';
 import { HelpCenter } from '~/pages/support/help-center';
 import { handleSupportFormAction } from '~/utils/support/support-form-action';
 
@@ -12,6 +13,7 @@ export function meta() {
   return [
     { title: 'Guides – Leather' },
     { name: 'description', content: 'Leather wallet user guides for every stage' },
+    canonicalUrl('/support'),
   ] satisfies MetaDescriptor[];
 }
 

@@ -2,6 +2,7 @@ import { type RouteConfig, index, prefix, route } from '@react-router/dev/routes
 
 export default [
   index('pages/index.route.tsx'),
+  route('sitemap.xml', 'pages/sitemap.route.tsx'),
   // Stacking routes
   route('stacking', 'pages/stacking/stacking.route.tsx'),
   ...prefix('stacking/pool/:slug', [

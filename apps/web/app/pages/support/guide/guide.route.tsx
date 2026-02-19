@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, MetaDescriptor } from 'react-router';
 
 import { Box } from 'leather-styles/jsx/box';
 import { styled } from 'leather-styles/jsx/factory';
@@ -6,6 +6,7 @@ import { Flex } from 'leather-styles/jsx/flex';
 import { VStack } from 'leather-styles/jsx/vstack';
 import Markdown from '~/components/content/markdown-content';
 import { cmsClient } from '~/constants/cms-client';
+import { canonicalUrl } from '~/constants/meta-tags';
 import { Page } from '~/layouts/page/page';
 
 import { LegacyGuideBySlugQueryResult, legacyGuideBySlugQuery } from '@leather.io/cms';
@@ -35,6 +36,27 @@ export async function loader({
   }
 
   return { guide };
+}
+
+export function meta({ loaderData, params }: Route.MetaArgs): MetaDescriptor[] {
+  if (!loaderData?.guide) {
+    return [
+      { title: 'Guide Not Found – Leather' },
+      { name: 'description', content: 'Guide not found' },
+    ];
+  }
+
+  const { guide } = loaderData;
+  const title = guide.title ?? 'Guide';
+  const description = guide.excerpt ?? `Learn about ${title} in our Leather wallet guide.`;
+
+  return [
+    { title: `${title} – Leather Guide` },
+    { name: 'description', content: description },
+    { property: 'og:title', content: `${title} – Leather Guide` },
+    { property: 'og:description', content: description },
+    canonicalUrl(`/support/guide/${params.slug}`),
+  ];
 }
 
 export default function GuideRoute({ loaderData }: Route.ComponentProps) {

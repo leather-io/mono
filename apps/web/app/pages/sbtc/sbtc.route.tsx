@@ -1,6 +1,7 @@
 import { MetaDescriptor } from 'react-router';
 
 import { cmsClient } from '~/constants/cms-client';
+import { canonicalUrl } from '~/constants/meta-tags';
 import { SbtcRewards } from '~/pages/sbtc/sbtc-rewards';
 
 import {
@@ -40,6 +41,7 @@ export function meta() {
       content:
         'Earn sBTC yield through integrated DeFi protocols while maintaining control of your Bitcoin.',
     },
+    canonicalUrl('/sbtc'),
   ] satisfies MetaDescriptor[];
 }
 

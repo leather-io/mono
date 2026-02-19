@@ -1,6 +1,8 @@
 import { Link, MetaDescriptor } from 'react-router';
 
 import { cmsClient, getBlockText, urlFor } from '~/constants/cms-client';
+import { canonicalUrl } from '~/constants/meta-tags';
+import { createArticleSchema } from '~/constants/structured-data';
 
 import { changelogEntryBySlugQuery } from '@leather.io/cms';
 import { ArrowLeftIcon, Button } from '@leather.io/ui';
@@ -17,7 +19,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   return { entry };
 }
 
-export function meta({ loaderData }: Route.MetaArgs) {
+export function meta({ loaderData, params }: Route.MetaArgs) {
   if (!loaderData?.entry) {
     return [
       { title: 'Leather Changelog Not Found – Leather' },
@@ -42,6 +44,7 @@ export function meta({ loaderData }: Route.MetaArgs) {
     { name: 'twitter:title', content: `${title} – Leather Changelog` },
     { name: 'twitter:description', content: `${description}` },
     { name: 'twitter:card', content: 'summary_large_image' },
+    canonicalUrl(`/changelog/${params.slug}`),
   ];
 
   if (imageUrl) {
@@ -59,28 +62,50 @@ export default function ChangelogEntryRoute({ loaderData }: Route.ComponentProps
 
   if (!entry) return null;
 
+  const imageUrl = entry.heroImage?.asset?._ref
+    ? urlFor(entry.heroImage).auto('format').format('webp').width(600).height(338).url()
+    : undefined;
+
+  const textBlocks = entry.body.filter(block => '_type' in block && block._type === 'block');
+  const fullText = getBlockText(textBlocks, ' ');
+  const description = fullText.split(/(?<!\d)\.(?!\d)|[!?]/)[0].trim() + '.';
+
+  const articleSchema = createArticleSchema({
+    headline: entry.title ?? 'Changelog',
+    datePublished: entry.publishedAt ?? entry._createdAt,
+    dateModified: entry._updatedAt,
+    image: imageUrl,
+    description,
+  });
+
   return (
-    <ChangelogPageLayout
-      backButton={
-        <Link to="/changelog">
-          <Button variant="ghost" size="sm" iconStart={ArrowLeftIcon} p="space.02" gap="0" />
-        </Link>
-      }
-    >
-      <ChangelogEntry entry={entry} key={entry._id}>
-        <ChangelogEntryLayout
-          leftColumn={
-            <>
-              <ChangelogEntry.PublishDate />
-              <ChangelogEntry.Title />
-            </>
-          }
-          isLast
-        >
-          <ChangelogEntry.Image />
-          <ChangelogEntry.Body mt="space.01" />
-        </ChangelogEntryLayout>
-      </ChangelogEntry>
-    </ChangelogPageLayout>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <ChangelogPageLayout
+        backButton={
+          <Link to="/changelog">
+            <Button variant="ghost" size="sm" iconStart={ArrowLeftIcon} p="space.02" gap="0" />
+          </Link>
+        }
+      >
+        <ChangelogEntry entry={entry} key={entry._id}>
+          <ChangelogEntryLayout
+            leftColumn={
+              <>
+                <ChangelogEntry.PublishDate />
+                <ChangelogEntry.Title />
+              </>
+            }
+            isLast
+          >
+            <ChangelogEntry.Image />
+            <ChangelogEntry.Body mt="space.01" />
+          </ChangelogEntryLayout>
+        </ChangelogEntry>
+      </ChangelogPageLayout>
+    </>
   );
 }
