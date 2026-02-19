@@ -108,4 +108,4 @@ jobs:
       - uses: ./.github/actions/provision
 
       - name: audit
-        run: pnpm audit-ci --high --skip-dev
+        run: pnpm audit-ci --config ./audit-ci.jsonc
