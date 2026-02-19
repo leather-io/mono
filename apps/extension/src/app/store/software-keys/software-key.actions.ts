@@ -11,11 +11,10 @@ import {
   type StacksClient,
   fetchNamesForAddress,
 } from '@leather.io/query';
-import { userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
+import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
 import { decryptMnemonic, encryptMnemonic } from '@shared/crypto/mnemonic-encryption';
 import { logger } from '@shared/logger';
-import { fingerprintMigration } from '@shared/storage/redux-persist';
 import { assumedZeroFingerprint } from '@shared/utils';
 import { identifyUser } from '@shared/utils/analytics';
 

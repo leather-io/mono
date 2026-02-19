@@ -114,4 +114,12 @@ export const keyframes = {
       maskPosition: 'left',
     },
   },
+  drawCheckmark: {
+    from: {
+      strokeDashoffset: '30',
+    },
+    to: {
+      strokeDashoffset: '0',
+    },
+  },
 } as const;

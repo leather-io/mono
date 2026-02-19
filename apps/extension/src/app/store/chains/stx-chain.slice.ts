@@ -2,9 +2,8 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import type { AccountId } from '@leather.io/models';
 import { resetWallet } from '@leather.io/state';
-import { userAddsWallet } from '@leather.io/state/wallet';
+import { fingerprintMigration, userAddsWallet } from '@leather.io/state/wallet';
 
-import { fingerprintMigration } from '@shared/storage/redux-persist';
 import { assumedZeroFingerprint } from '@shared/utils';
 
 interface StxChainKeyState {
@@ -57,12 +56,11 @@ export const stxChainSlice = createSlice({
       })
 
       .addCase(fingerprintMigration, (state, action) => {
-        const oldFingerprint = assumedZeroFingerprint;
         const newFingerprint = action.payload;
 
-        if (state[oldFingerprint]) {
-          state[newFingerprint] = state[oldFingerprint];
-          delete state[oldFingerprint];
+        if (state[assumedZeroFingerprint]) {
+          state[newFingerprint] = state[assumedZeroFingerprint];
+          delete state[assumedZeroFingerprint];
         }
       }),
 });

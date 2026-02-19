@@ -43,6 +43,8 @@ export const userAddsWallet = createAction<AddWalletPayload>('global/userAddsWal
 type RemoveWalletPayload = WalletId;
 export const userRemovesWallet = createAction<RemoveWalletPayload>('global/userRemovesWallet');
 
+export const fingerprintMigration = createAction<string>('global/fingerprintMigration');
+
 export const walletSlice = createSlice({
   name: 'wallets',
   initialState,

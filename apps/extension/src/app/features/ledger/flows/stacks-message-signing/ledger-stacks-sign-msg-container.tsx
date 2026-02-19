@@ -15,6 +15,8 @@ import { useScrollLock } from '@app/common/hooks/use-scroll-lock';
 import { appEvents } from '@app/common/publish-subscribe';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
+  MINIMUM_STACKS_APP_VERSION,
+  checkStacksAppMeetsMinimumVersion,
   getStacksAppVersion,
   prepareLedgerDeviceStacksAppConnection,
   signLedgerStacksStructuredMessage,
@@ -24,6 +26,7 @@ import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/s
 import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
+import { useLedgerFingerprintMigration } from '../../hooks/use-ledger-fingerprint-migration';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { useVerifyMatchingLedgerStacksPublicKey } from '../../hooks/use-verify-matching-stacks-public-key';
 import { checkLockedDeviceError, useLedgerResponseState } from '../../utils/generic-ledger-utils';
@@ -53,6 +56,7 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
   const ledgerNavigate = useLedgerNavigate();
   const ledgerAnalytics = useLedgerAnalytics();
   const verifyLedgerPublicKey = useVerifyMatchingLedgerStacksPublicKey();
+  const migrateFingerprintIfNeeded = useLedgerFingerprintMigration();
 
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
 
@@ -72,6 +76,10 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       },
     });
 
+    // Show checking version page immediately
+    void ledgerNavigate.toCheckingAppVersion();
+    await delay(1000);
+
     const versionInfo = await getStacksAppVersion(stacksApp);
     ledgerAnalytics.trackDeviceVersionInfo(versionInfo);
     setLatestDeviceResponse(versionInfo);
@@ -79,6 +87,20 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       setAwaitingDeviceConnection(false);
       return;
     }
+
+    // Check minimum version requirement (0.26.4+)
+    if (!checkStacksAppMeetsMinimumVersion(versionInfo)) {
+      const versionDetails = {
+        currentVersion: `${versionInfo.major}.${versionInfo.minor}.${versionInfo.patch}`,
+        requiredVersion: MINIMUM_STACKS_APP_VERSION,
+      };
+      void ledgerNavigate.toStacksAppOutdatedWarning(versionDetails);
+      setAwaitingDeviceConnection(false);
+      return;
+    }
+
+    // Migrate fingerprint if needed (one-time)
+    await migrateFingerprintIfNeeded(stacksApp);
 
     void ledgerNavigate.toDeviceBusyStep(`Verifying public key on Ledger…`);
     await verifyLedgerPublicKey(stacksApp);

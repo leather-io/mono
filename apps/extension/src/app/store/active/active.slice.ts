@@ -3,8 +3,9 @@ import { createAction, createSlice } from '@reduxjs/toolkit';
 import { getMnemonicRootKeyFingerprint } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
 import { resetWallet } from '@leather.io/state';
+import { fingerprintMigration } from '@leather.io/state/wallet';
 
-import { fingerprintMigration } from '@shared/storage/redux-persist';
+import { assumedZeroFingerprint } from '@shared/utils';
 
 import { inMemoryKeySlice } from '../in-memory-key/in-memory-key.slice';
 
@@ -36,9 +37,9 @@ export const activeSlice = createSlice({
       })
       .addCase(fingerprintMigration, (state, action) => {
         if (!state.account) return;
-        const oldFingerprint = state.account.fingerprint;
         const newFingerprint = action.payload;
-        if (oldFingerprint === newFingerprint) return;
-        state.account = { ...state.account, fingerprint: newFingerprint };
+        if (state.account.fingerprint === assumedZeroFingerprint) {
+          state.account = { ...state.account, fingerprint: newFingerprint };
+        }
       }),
 });

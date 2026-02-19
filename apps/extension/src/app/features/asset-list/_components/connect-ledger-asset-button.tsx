@@ -21,7 +21,7 @@ export function ConnectLedgerButton({ chain }: ConnectLedgerButtonProps) {
     void navigate(`${chain}/connect-your-ledger`, {
       replace: true,
       state: {
-        [immediatelyAttemptLedgerConnection]: true,
+        [immediatelyAttemptLedgerConnection]: false,
         backgroundLocation: { pathname: RouteUrls.Home },
         fromLocation: location,
       },

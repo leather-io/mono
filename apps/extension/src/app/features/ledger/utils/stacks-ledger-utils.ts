@@ -90,18 +90,13 @@ export function isStacksLedgerAppClosed(response: ResponseVersion) {
   );
 }
 
-// https://github.com/Zondax/ledger-stacks/issues/119
-// https://github.com/hirosystems/wallet/issues/2567
-const versionFromWhichContractPrincipalBugIsFixed = '0.23.3';
+// Minimum version required to read master key fingerprint
+// This enables proper multi-wallet support for Ledger Stacks accounts
+export const MINIMUM_STACKS_APP_VERSION = '0.26.4';
 
-export function isVersionOfLedgerStacksAppWithContractPrincipalBug(
-  currentDeviceVersion: SemVerObject
-) {
-  return compare(
-    versionObjectToVersionString(currentDeviceVersion),
-    versionFromWhichContractPrincipalBugIsFixed,
-    '<'
-  );
+export function checkStacksAppMeetsMinimumVersion(version: SemVerObject): boolean {
+  const versionString = versionObjectToVersionString(version);
+  return compare(versionString, MINIMUM_STACKS_APP_VERSION, '>=');
 }
 
 export function isStacksAppOpen({ name }: { name: string }) {
