@@ -23,7 +23,6 @@ import { requestStacksKeysRoutes } from '@app/features/ledger/flows/request-stac
 import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-tx-signing/ledger-sign-stacks-tx-container';
 import { UnsupportedBrowserLayout } from '@app/features/ledger/generic-steps';
 import { ConnectLedgerStart } from '@app/features/ledger/generic-steps/connect-device/connect-ledger-start';
-import { RetrieveTaprootToNativeSegwit } from '@app/features/retrieve-taproot-to-native-segwit/retrieve-taproot-to-native-segwit';
 import { TokenDetails } from '@app/features/token/token-details';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
@@ -107,10 +106,6 @@ function useAppRoutes() {
             </Route>
 
             <Route
-              path={RouteUrls.RetrieveTaprootFunds}
-              element={<RetrieveTaprootToNativeSegwit />}
-            />
-            <Route
               path={RouteUrls.IncreaseStacksFee}
               element={<IncreaseStacksTransactionFeeSheet />}
             >
@@ -133,11 +128,6 @@ function useAppRoutes() {
             {ledgerStacksTxSigningRoutes}
           </Route>
           {/* Page Routes */}
-
-          <Route
-            path={RouteUrls.RetrieveTaprootFunds}
-            element={<RetrieveTaprootToNativeSegwit />}
-          />
 
           <Route
             path={`${RouteUrls.IncreaseStacksFee}/${RouteUrls.BroadcastError}`}

@@ -3,7 +3,6 @@ import { createBtcBalance, createMoney } from '@leather.io/utils';
 
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useAccountRequest } from '@app/services/accounts/use-account-request';
-import { useTaprootAccountRequest } from '@app/services/accounts/use-taproot-account-request';
 import { toFetchState } from '@app/services/fetch-state';
 import { useDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
@@ -11,11 +10,6 @@ import { useGetBtcAccountBalanceQuery } from './btc-balance.query';
 
 const fallbackBtcBalance = createBtcBalance(createMoney(0, 'BTC'));
 const fallbackQuoteBalance = createBtcBalance(createMoney(0, 'USD'));
-
-export function useCurrentTaprootBtcBalanceWithFallback() {
-  const request = useTaprootAccountRequest();
-  return useBtcBalanceWithFallback(request);
-}
 
 function useBtcBalanceWithFallback(request: AccountRequest) {
   const balance = toFetchState(useGetBtcAccountBalanceQuery(request));

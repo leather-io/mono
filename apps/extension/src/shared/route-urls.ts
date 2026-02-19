@@ -54,8 +54,6 @@ export enum RouteUrls {
   // Modal routes
   EditNonce = 'edit-tx-nonce',
   SignOutConfirm = 'sign-out',
-  RetrieveTaprootFunds = 'retrieve-taproot-funds',
-
   // Send crypto asset routes
   SendCryptoAsset = '/send',
   SendCryptoAssetForm = '/send/:symbol',

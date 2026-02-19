@@ -18,14 +18,12 @@ interface CollectiblesLayoutProps {
   onRefresh(): void;
   onDiscardAllInscriptions(): void;
   onRecoverAllInscriptions(): void;
-  subHeader?: React.ReactNode;
   children: React.ReactNode;
 }
 export function CollectiblesLayout({
   title,
   isLoading,
   onRefresh,
-  subHeader,
   children,
   onDiscardAllInscriptions,
   onRecoverAllInscriptions,
@@ -71,7 +69,6 @@ export function CollectiblesLayout({
           </styled.span>
           {isLoading ? <Spinner color={token('colors.ink.text-primary')} opacity={0.5} /> : null}
         </HStack>
-        {subHeader}
       </Flex>
       <Grid
         gridTemplateColumns={{
