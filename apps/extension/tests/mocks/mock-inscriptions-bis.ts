@@ -26,7 +26,10 @@ export async function mockTestnetTestAccountInscriptionsRequests(
   );
 }
 
-export async function mockMainnetTestAccountInscriptionsRequests(page: Page) {
+export async function mockMainnetTestAccountInscriptionsRequests(
+  page: Page,
+  inscriptions?: BestInSlotInscriptionResponse[]
+) {
   await page.route(
     new RegExp(`${BESTINSLOT_API_BASE_URL_MAINNET}/wallet/inscriptions_xpub.*`),
     async route => {
@@ -34,7 +37,7 @@ export async function mockMainnetTestAccountInscriptionsRequests(page: Page) {
 
       if (request.url().includes('xpub=tr')) {
         await route.fulfill({
-          json: { block_height: 859832, data: [] },
+          json: { block_height: 859832, data: inscriptions ?? [] },
         });
         return;
       }
