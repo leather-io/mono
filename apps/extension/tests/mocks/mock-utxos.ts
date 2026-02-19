@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
+import { BITCOIN_API_BASE_URL_TESTNET4, type OwnedUtxo } from '@leather.io/models';
 
 import { TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS, TEST_ACCOUNT_1_TAPROOT_ADDRESS } from './constants';
 
@@ -167,4 +167,14 @@ export async function mockTestnetTestAccountEmptyUtxosRequests(page: Page) {
     ),
     page.route('**/v1/utxos/**', route => route.fulfill({ json: [] })),
   ]);
+}
+
+export async function mockUtxoRequestsWithInscriptions(page: Page, utxos: OwnedUtxo[]) {
+  await page.route('**/v1/utxos/**', route => {
+    const url = route.request().url();
+    if (url.includes('/v1/utxos/tr')) {
+      return route.fulfill({ json: utxos });
+    }
+    return route.fulfill({ json: [] });
+  });
 }
