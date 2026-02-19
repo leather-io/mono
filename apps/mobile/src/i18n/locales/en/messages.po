@@ -855,7 +855,7 @@ msgstr "Failed"
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:236
+#: src/features/psbt-signer/psbt-signer.tsx:238
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
 
@@ -900,7 +900,7 @@ msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
 #: src/features/approver/stx/hooks.ts:27
-#: src/features/psbt-signer/psbt-signer.tsx:200
+#: src/features/psbt-signer/psbt-signer.tsx:202
 msgid "Fee updated"
 msgstr "Fee updated"
 
@@ -1027,7 +1027,7 @@ msgid "Hide account"
 msgstr "Hide account"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
-#: src/features/psbt-signer/psbt-signer.tsx:297
+#: src/features/psbt-signer/psbt-signer.tsx:299
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -1742,7 +1742,7 @@ msgstr "Send"
 msgid "Send Failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:266
+#: src/features/psbt-signer/psbt-signer.tsx:268
 msgid "Send token"
 msgstr "Send token"
 
@@ -1777,7 +1777,7 @@ msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:170
-#: src/features/psbt-signer/psbt-signer.tsx:296
+#: src/features/psbt-signer/psbt-signer.tsx:298
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -2036,7 +2036,7 @@ msgstr "tiny amounts that cost more to send than they’re worth."
 
 #: src/features/approver/components/sip10-recipient.tsx:43
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:145
-#: src/features/psbt-signer/psbt-signer.tsx:278
+#: src/features/psbt-signer/psbt-signer.tsx:280
 msgid "To address"
 msgstr "To address"
 
@@ -2069,7 +2069,7 @@ msgstr "Too many decimals (max {maxDecimals})"
 msgid "Total balance"
 msgstr "Total balance"
 
-#: src/features/psbt-signer/psbt-signer.tsx:309
+#: src/features/psbt-signer/psbt-signer.tsx:311
 msgid "Total spend"
 msgstr "Total spend"
 
@@ -2282,7 +2282,7 @@ msgid "You will transfer more than"
 msgstr "You will transfer more than"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:136
-#: src/features/psbt-signer/psbt-signer.tsx:272
+#: src/features/psbt-signer/psbt-signer.tsx:274
 msgid "You’ll send"
 msgstr "You’ll send"
 

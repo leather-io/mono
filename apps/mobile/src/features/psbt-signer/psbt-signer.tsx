@@ -37,7 +37,12 @@ import {
 } from '@leather.io/models';
 import { RpcParams, signPsbt } from '@leather.io/rpc';
 import { Approver, Box, SentIcon, SheetInstance, Text } from '@leather.io/ui/native';
-import { baseCurrencyAmountInQuoteWithFallback, createMoney, sumMoney } from '@leather.io/utils';
+import {
+  baseCurrencyAmountInQuoteWithFallback,
+  createMoney,
+  subtractMoney,
+  sumMoney,
+} from '@leather.io/utils';
 
 import { ApproverButtons } from '../approver/components/approver-buttons';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
@@ -155,10 +160,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
     psbtDetails.addressTaprootTotal,
   ]);
   const totalSpendQuote = baseCurrencyAmountInQuoteWithFallback(totalBtc, btcMarketData);
-  const principalSpend = createMoney(
-    psbtDetails.addressNativeSegwitTotal.amount.minus(psbtDetails.fee.amount),
-    'BTC'
-  );
+  const principalSpend = subtractMoney(totalBtc, psbtDetails.fee);
 
   const generateTx = useGenerateBtcUnsignedTransactionNativeSegwit({
     changeAddress: nativeSegwitAccount.derivePayer({ change: 0, addressIndex: 0 }).address,
