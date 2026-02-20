@@ -7,7 +7,7 @@ on:
   # Run on release-please dev releases
   release:
     types: [published]
-  
+
   # Run on PRs that affect mobile
   pull_request:
     paths:
@@ -15,33 +15,54 @@ on:
       - 'packages/**'
       - 'pnpm-lock.yaml'
       - 'turbo.json'
-  
+
   # Allow manual trigger
   workflow_dispatch:
 
 jobs:
-  mobile-validate-build:
-    name: validate-mobile-build
+  code-quality-gate:
+    name: code-quality-gate
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: checkout-code
         uses: actions/checkout@v4
-      
+
+      - name: provision
+        uses: ./.github/actions/provision
+
+      - name: build-packages
+        run: pnpm build
+
+      - name: typecheck-mobile
+        run: pnpm --filter @leather.io/mobile typecheck
+
+      - name: lint-mobile
+        run: pnpm --filter @leather.io/mobile lint
+
+  mobile-validate-build:
+    name: validate-mobile-build
+    needs: code-quality-gate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout-code
+        uses: actions/checkout@v4
+
       - name: setup-node
         uses: actions/setup-node@v4
         with:
           node-version: '22.15.0'
-      
+
       - name: setup-pnpm
         uses: pnpm/action-setup@v4
-      
+
       - name: get-pnpm-store-directory
         id: pnpm-cache
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> "$GITHUB_OUTPUT"
-      
+
       - name: setup-pnpm-cache
         uses: actions/cache@v4
         with:
@@ -49,10 +70,10 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
-      
+
       - name: run-mobile-build-validation
         run: ./scripts/test-mobile-build.sh
-      
+
       - name: upload-build-logs
         if: failure()
         uses: actions/upload-artifact@v4
