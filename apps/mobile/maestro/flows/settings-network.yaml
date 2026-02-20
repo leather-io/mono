@@ -1,0 +1,33 @@
+appId: io.leather.mobilewallet
+name: Settings Network
+---
+- launchApp
+- assertVisible: 'All accounts'
+
+# Navigate to Settings > Networks
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn:
+    id: 'settingsNetworkButton'
+- assertVisible: 'Networks'
+
+# Switch to Testnet4
+- tapOn: 'Testnet4'
+- tapOn:
+    id: 'backButton'
+
+# Assert Testnet4 network badge visible
+- assertVisible:
+    id: 'networkBadge'
+
+# Go back to Networks and restore Mainnet
+- tapOn:
+    id: 'settingsNetworkButton'
+- tapOn: 'Mainnet'
+- tapOn:
+    id: 'backButton'
+
+# Back to home
+- tapOn:
+    id: 'backButton'
+- assertVisible: 'All accounts'

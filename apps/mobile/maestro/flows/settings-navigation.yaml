@@ -1,0 +1,63 @@
+appId: io.leather.mobilewallet
+name: Settings Navigation
+---
+- launchApp
+- assertVisible: 'All accounts'
+
+# Open settings
+- tapOn:
+    id: 'homeSettingsButton'
+- assertVisible: 'SETTINGS'
+
+# Assert all settings sections are visible
+- assertVisible:
+    id: 'settingsWalletAndAccountsButton'
+- assertVisible:
+    id: 'settingsDisplayButton'
+- assertVisible:
+    id: 'settingsNetworkButton'
+- assertVisible:
+    id: 'settingsSecurityButton'
+- assertVisible:
+    id: 'settingsHelpButton'
+
+# Navigate into Wallets and accounts
+- tapOn:
+    id: 'settingsWalletAndAccountsButton'
+- assertVisible: 'Wallets'
+- tapOn:
+    id: 'backButton'
+
+# Navigate into Display
+- tapOn:
+    id: 'settingsDisplayButton'
+- assertVisible: 'Display'
+- tapOn:
+    id: 'backButton'
+
+# Navigate into Networks
+- tapOn:
+    id: 'settingsNetworkButton'
+- assertVisible: 'Networks'
+- assertVisible: 'Mainnet'
+- tapOn:
+    id: 'backButton'
+
+# Navigate into Security
+- tapOn:
+    id: 'settingsSecurityButton'
+- assertVisible: 'Security'
+- tapOn:
+    id: 'backButton'
+
+# Navigate into Help
+- tapOn:
+    id: 'settingsHelpButton'
+- assertVisible: 'Help'
+- tapOn:
+    id: 'backButton'
+
+# Back to home
+- tapOn:
+    id: 'backButton'
+- assertVisible: 'All accounts'

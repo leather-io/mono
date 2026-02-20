@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: Token Details Navigation
+---
+- launchApp
+- assertVisible: 'All accounts'
+
+# Navigate to Bitcoin token details and back
+- tapOn:
+    id: 'tokenBalanceItem-BTC'
+- assertVisible: 'Bitcoin'
+- tapOn:
+    id: 'backButton'
+
+# Navigate to Stacks token details and back
+- tapOn:
+    id: 'tokenBalanceItem-STX'
+- assertVisible: 'Stacks'
+- tapOn:
+    id: 'backButton'
+
+# Assert both token items still visible on home
+- assertVisible:
+    id: 'tokenBalanceItem-BTC'
+- assertVisible:
+    id: 'tokenBalanceItem-STX'

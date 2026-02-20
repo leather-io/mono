@@ -1,0 +1,16 @@
+appId: io.leather.mobilewallet
+name: Privacy Mode
+---
+- launchApp
+- assertVisible: 'All accounts'
+
+# Toggle privacy mode on
+- tapOn:
+    id: 'homePrivacyButton'
+
+# Toggle privacy mode off
+- tapOn:
+    id: 'homePrivacyButton'
+
+# Assert app is still functional
+- assertVisible: 'All accounts'

@@ -460,8 +460,7 @@ msgstr "BRC-20"
 msgid "Browser"
 msgstr "Browser"
 
-#: src/components/action-buttons.tsx:55
-#: src/features/token/components/deposit-token-cell.tsx:60
+#: src/components/action-buttons.tsx:63
 msgid "Buy"
 msgstr "Buy"
 
@@ -543,7 +542,7 @@ msgstr "Code"
 msgid "Collectible Info"
 msgstr "Collectible Info"
 
-#: src/components/home/components/asset-tabs.tsx:30
+#: src/components/home/components/asset-tabs.tsx:32
 msgid "Collectibles"
 msgstr "Collectibles"
 
@@ -1557,11 +1556,7 @@ msgstr "Read less"
 msgid "Read more"
 msgstr "Read more"
 
-#: src/components/action-buttons.tsx:44
-#: src/features/receive/screens/asset-details.tsx:56
-#: src/features/receive/screens/select-asset.tsx:83
-#: src/features/token/components/get-first-nft-section.tsx:49
-#: src/features/token/components/get-first-nft-section.tsx:63
+#: src/components/action-buttons.tsx:52
 msgid "Receive"
 msgstr "Receive"
 
@@ -1728,13 +1723,11 @@ msgstr "Select"
 msgid "Select asset"
 msgstr "Select asset"
 
-#: src/components/action-buttons.tsx:66
+#: src/components/action-buttons.tsx:74
 msgid "Sell"
 msgstr "Sell"
 
-#: src/components/action-buttons.tsx:33
-#: src/features/send/screens/form.tsx:54
-#: src/features/send/screens/select-asset.tsx:35
+#: src/components/action-buttons.tsx:40
 msgid "Send"
 msgstr "Send"
 
@@ -1889,8 +1882,7 @@ msgstr "Submitting..."
 msgid "Success"
 msgstr "Success"
 
-#: src/components/action-buttons.tsx:77
-#: src/features/swap/screens/swap-form-screen.tsx:63
+#: src/components/action-buttons.tsx:85
 msgid "Swap"
 msgstr "Swap"
 
@@ -2052,7 +2044,7 @@ msgstr "Token can only have {decimals} decimals"
 msgid "Token Details"
 msgstr "Token Details"
 
-#: src/components/home/components/asset-tabs.tsx:23
+#: src/components/home/components/asset-tabs.tsx:24
 msgid "Tokens"
 msgstr "Tokens"
 

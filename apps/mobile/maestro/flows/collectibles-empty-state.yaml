@@ -1,0 +1,30 @@
+appId: io.leather.mobilewallet
+name: Collectibles Empty State
+---
+- launchApp
+- assertVisible: 'All accounts'
+
+# Switch to Collectibles tab
+- tapOn:
+    id: 'collectiblesTab'
+
+# Assert Get your first NFT section
+- assertVisible: 'Get your first NFT'
+- assertVisible: '.btc domain'
+- assertVisible: 'Stacks NFT'
+- assertVisible: 'Ordinal Inscriptions'
+- assertVisible: 'Register'
+- assertVisible: 'Receive'
+
+# Scroll down to discover marketplaces
+- scrollUntilVisible:
+    element: 'Discover marketplaces'
+    direction: DOWN
+- assertVisible: 'Gamma'
+- assertVisible: 'Magic Eden'
+
+# Switch back to Tokens tab
+- tapOn:
+    id: 'tokensTab'
+- assertVisible:
+    id: 'tokenBalanceItem-BTC'

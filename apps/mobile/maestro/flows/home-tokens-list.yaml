@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: Home Tokens List
+---
+- launchApp
+
+# Assert the home screen is visible
+- assertVisible: 'All accounts'
+
+# Assert BTC and STX token items are visible
+- assertVisible:
+    id: 'tokenBalanceItem-BTC'
+- assertVisible:
+    id: 'tokenBalanceItem-STX'
+
+# Assert Tokens and Collectibles tabs are visible
+- assertVisible:
+    id: 'tokensTab'
+- assertVisible:
+    id: 'collectiblesTab'
+
+# Assert Send and Receive action buttons are visible
+- assertVisible:
+    id: 'sendActionButton'
+- assertVisible:
+    id: 'receiveActionButton'

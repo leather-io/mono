@@ -110,10 +110,7 @@ describe('settings slice', () => {
         initialState,
         userChangedAssetVisibility({ assetId: 'bitcoin|native', value: false })
       );
-      state = reducer(
-        state,
-        userChangedAssetVisibility({ assetId: 'stacks|native', value: true })
-      );
+      state = reducer(state, userChangedAssetVisibility({ assetId: 'stacks|native', value: true }));
       expect(state.assetVisibility).toEqual({ 'bitcoin|native': false, 'stacks|native': true });
     });
   });

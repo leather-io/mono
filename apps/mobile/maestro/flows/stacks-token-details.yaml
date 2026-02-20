@@ -1,0 +1,29 @@
+appId: io.leather.mobilewallet
+name: Stacks Token Details
+---
+- launchApp
+- assertVisible: 'All accounts'
+
+# Navigate to Stacks token details
+- tapOn:
+    id: 'tokenBalanceItem-STX'
+
+# Assert Stacks header visible
+- assertVisible: 'Stacks'
+
+# Assert Send and Receive buttons visible
+- assertVisible:
+    id: 'sendActionButton'
+- assertVisible:
+    id: 'receiveActionButton'
+
+# Assert Token Details card visible with info labels
+- assertVisible: 'Token Details'
+- assertVisible: 'Name'
+- assertVisible: 'Price'
+- assertVisible: 'Layer'
+
+# Navigate back to home
+- tapOn:
+    id: 'backButton'
+- assertVisible: 'All accounts'

@@ -1,3 +1,4 @@
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
 
 import { Box } from '@leather.io/ui/native';
@@ -21,6 +22,7 @@ export function AssetTabs({ listTab, setListTab }: AssetTabsProps) {
         <TabButton
           isActive={listTab === 'tokens'}
           title={t`Tokens`}
+          testID={TestId.tokensTab}
           onPress={() => {
             setListTab('tokens');
           }}
@@ -28,6 +30,7 @@ export function AssetTabs({ listTab, setListTab }: AssetTabsProps) {
         <TabButton
           isActive={listTab === 'collectibles'}
           title={t`Collectibles`}
+          testID={TestId.collectiblesTab}
           onPress={() => {
             setListTab('collectibles');
           }}

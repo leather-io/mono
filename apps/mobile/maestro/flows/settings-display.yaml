@@ -1,0 +1,32 @@
+appId: io.leather.mobilewallet
+name: Settings Display
+---
+- launchApp
+- assertVisible: 'All accounts'
+
+# Navigate to Settings > Display
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn:
+    id: 'settingsDisplayButton'
+- assertVisible: 'Display'
+
+# Tap Theme cell to open theme sheet
+- tapOn: 'Theme'
+- assertVisible: 'Light'
+- assertVisible: 'Dark'
+- assertVisible: 'System'
+
+# Select Light theme
+- tapOn: 'Light'
+
+# Tap Theme cell again to verify and restore
+- tapOn: 'Theme'
+- tapOn: 'System'
+
+# Back to home
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'backButton'
+- assertVisible: 'All accounts'

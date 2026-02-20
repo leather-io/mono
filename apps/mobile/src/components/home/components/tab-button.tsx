@@ -6,9 +6,10 @@ interface TabButtonProps {
   title: string;
   onPress(): void;
   isActive: boolean;
+  testID?: string;
 }
 
-export function TabButton({ title, onPress, isActive }: TabButtonProps) {
+export function TabButton({ title, onPress, isActive, testID }: TabButtonProps) {
   return (
     <Pressable
       onPress={onPress}
@@ -16,6 +17,7 @@ export function TabButton({ title, onPress, isActive }: TabButtonProps) {
       py="4"
       justifyContent="center"
       alignItems="center"
+      testID={testID}
     >
       <Text variant="label01" color={isActive ? 'ink.text-primary' : 'ink.text-subdued'}>
         {title}
