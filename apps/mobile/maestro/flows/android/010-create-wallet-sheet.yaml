@@ -1,0 +1,17 @@
+appId: io.leather.mobilewallet
+name: "Android: Create Wallet via Sheet"
+---
+- launchApp
+- runFlow: ../../shared/clean-up.yaml
+- tapOn:
+    id: 'homeCreateWalletCard'
+- tapOn:
+    id: 'createNewWalletSheetButton'
+- tapOn:
+    id: 'walletCreationTapToReveal'
+- tapOn:
+    id: 'walletCreationBackedUpButton'
+- tapOn: 'Skip for now'
+- tapOn: 'Proceed'
+- assertVisible:
+    id: 'homeAccountCard-0'

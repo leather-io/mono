@@ -513,6 +513,10 @@ msgstr "Choose existing wallet"
 msgid "Clear search"
 msgstr "Clear search"
 
+#: src/app/developer-console.tsx:38
+msgid "Clear wallets"
+msgstr "Clear wallets"
+
 #: src/features/qr-scanner/qr-scanner-chrome.tsx:31
 msgid "Close the scanner"
 msgstr "Close the scanner"
@@ -651,6 +655,10 @@ msgstr "Copy ID"
 msgid "Create new wallet"
 msgstr "Create new wallet"
 
+#: src/app/developer-console.tsx:35
+msgid "Create wallet"
+msgstr "Create wallet"
+
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:211
 msgid "Creation date"
 msgstr "Creation date"
@@ -703,6 +711,14 @@ msgstr "Depositing"
 #: src/features/token/components/token-loading.tsx:78
 msgid "Description"
 msgstr "Description"
+
+#: src/components/screen/screen-header/components/header-actions.tsx:29
+msgid "Dev Console"
+msgstr "Dev Console"
+
+#: src/app/developer-console.tsx:30
+msgid "Developer Console"
+msgstr "Developer Console"
 
 #: src/app/settings/index.tsx:152
 msgid "Device ID"
@@ -1017,7 +1033,7 @@ msgstr "Hide account"
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
-#: src/components/screen/screen-header/components/header-actions.tsx:41
+#: src/components/screen/screen-header/components/header-actions.tsx:56
 msgid "Hide balances"
 msgstr "Hide balances"
 
@@ -1698,9 +1714,7 @@ msgstr "Sending to your own address isn’t supported. Choose a different addres
 msgid "Sent"
 msgstr "Sent"
 
-#: src/app/settings/index.tsx:59
-#: src/components/screen/screen-header/components/header-actions.tsx:30
-#: src/features/qr-scanner/use-camera-permission.ts:38
+#: src/components/screen/screen-header/components/header-actions.tsx:45
 msgid "Settings"
 msgstr "Settings"
 
@@ -1717,7 +1731,7 @@ msgstr "Share anonymous usage details"
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
-#: src/components/screen/screen-header/components/header-actions.tsx:42
+#: src/components/screen/screen-header/components/header-actions.tsx:57
 msgid "Show balances"
 msgstr "Show balances"
 
@@ -1974,6 +1988,10 @@ msgstr "tiny amounts that cost more to send than they’re worth."
 msgid "To address"
 msgstr "To address"
 
+#: src/app/developer-console.tsx:41
+msgid "Toggle network"
+msgstr "Toggle network"
+
 #: src/app/settings/display/index.tsx:117
 msgid "Toggle tactile feedback for interactions"
 msgstr "Toggle tactile feedback for interactions"
@@ -2142,6 +2160,10 @@ msgstr "Wallet added"
 #: src/hooks/use-create-wallet.ts:43
 msgid "Wallet added already"
 msgstr "Wallet added already"
+
+#: src/app/developer-console.tsx:33
+msgid "Wallet Manager"
+msgstr "Wallet Manager"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:88
 msgid "Wallet name cannot be empty"

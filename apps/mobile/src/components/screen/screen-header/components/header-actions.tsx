@@ -4,7 +4,14 @@ import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
-import { Box, Eye1ClosedIcon, Eye1Icon, IconButton, SettingsGearIcon } from '@leather.io/ui/native';
+import {
+  Box,
+  CodeIcon,
+  Eye1ClosedIcon,
+  Eye1Icon,
+  IconButton,
+  SettingsGearIcon,
+} from '@leather.io/ui/native';
 
 export function HeaderActions() {
   const router = useRouter();
@@ -17,6 +24,14 @@ export function HeaderActions() {
 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="center">
+      {__DEV__ && (
+        <IconButton
+          label={t`Dev Console`}
+          icon={<CodeIcon />}
+          onPress={() => router.navigate('/developer-console')}
+          testID={TestId.homeDeveloperToolsButton}
+        />
+      )}
       {hasWallets && (
         <IconButton
           label={getPrivacyLabel(privacyModePreference)}

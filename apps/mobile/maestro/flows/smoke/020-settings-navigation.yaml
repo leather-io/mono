@@ -1,0 +1,7 @@
+appId: io.leather.mobilewallet
+name: 'Smoke: Settings Navigation'
+---
+- launchApp
+- tapOn:
+    id: 'homeSettingsButton'
+- assertVisible: 'SETTINGS'

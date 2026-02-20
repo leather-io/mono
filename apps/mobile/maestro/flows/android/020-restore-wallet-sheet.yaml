@@ -1,0 +1,18 @@
+appId: io.leather.mobilewallet
+name: "Android: Restore Wallet via Sheet"
+---
+- launchApp
+- runFlow: ../../shared/clean-up.yaml
+- tapOn:
+    id: 'homeCreateWalletCard'
+- tapOn:
+    id: 'restoreWalletSheetButton'
+- tapOn:
+    id: 'restoreWalletTextInput'
+- inputText: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus'
+- tapOn:
+    id: 'restoreWalletContinue'
+- tapOn: 'Skip for now'
+- tapOn: 'Proceed'
+- assertVisible:
+    id: 'homeAccountCard-0'

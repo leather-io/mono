@@ -1,0 +1,10 @@
+appId: io.leather.mobilewallet
+---
+- tapOn:
+    id: 'homeDeveloperToolsButton'
+- tapOn:
+    id: 'devConsoleCreateWalletButton'
+- tapOn:
+    id: 'backButton'
+- assertVisible:
+    id: 'homeAccountCard-0'

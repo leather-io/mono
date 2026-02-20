@@ -23,7 +23,11 @@ name: Smoke Tests CI
     visible: 'Add account'
     timeout: 30000
 
-# When the user toggles the settings button it should work
+# Run smoke tests: create wallet via dev console
+- runFlow: ../shared/clean-up.yaml
+- runFlow: ../shared/create-wallet-dev-console.yaml
+
+# Verify settings navigation
 - tapOn:
     id: 'homeSettingsButton'
 - assertVisible: 'SETTINGS'

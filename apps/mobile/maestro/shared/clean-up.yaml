@@ -1,21 +1,14 @@
-# Removes all wallets to reset app state for testing
-# Can be run from any state - handles both "with wallet" and "without wallet" scenarios
-# Result: App is on home screen with no wallets (showing create wallet card)
 appId: io.leather.mobilewallet
 ---
-# Unlock if passcode screen is shown
 - runFlow:
     file: ./unlock.yaml
     when:
-      visible: 'Passcode field'
-
-# If a wallet exists (homePrivacyButton visible), remove it
-- runFlow:
-    file: ./remove-wallet.yaml
-    when:
-      visible:
-        id: 'homePrivacyButton'
-
-# Verify we're back on empty home screen
+      visible: Passcode field
+- tapOn:
+    id: 'homeDeveloperToolsButton'
+- tapOn:
+    id: 'devConsoleClearWalletsButton'
+- tapOn:
+    id: 'backButton'
 - assertVisible:
     id: 'homeCreateWalletCard'

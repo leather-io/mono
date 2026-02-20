@@ -3,18 +3,30 @@ import { HeaderActions } from '@/components/screen/screen-header/components/head
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { CreateWalletCard } from '@/features/account/components/create-wallet-card';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { TestId } from '@/shared/test-id';
+import { useRouter } from 'expo-router';
 
-import { Box, LeatherLogomarkIcon } from '@leather.io/ui/native';
+import { Box, LeatherLogomarkIcon, Pressable } from '@leather.io/ui/native';
 
 export function HomeScreenWithoutAccount() {
   const { addWalletSheetRef } = useGlobalSheets();
+  const router = useRouter();
 
   return (
     <Screen>
       <Screen.Header
         leftElement={
           <Box flexDirection="row" alignItems="center" p="2" gap="2">
-            <LeatherLogomarkIcon />
+            {__DEV__ ? (
+              <Pressable
+                onPress={() => router.navigate('/developer-console')}
+                testID={TestId.homeDeveloperToolsButton}
+              >
+                <LeatherLogomarkIcon />
+              </Pressable>
+            ) : (
+              <LeatherLogomarkIcon />
+            )}
             <NetworkBadge />
           </Box>
         }

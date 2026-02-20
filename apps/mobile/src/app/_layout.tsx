@@ -81,6 +81,7 @@ function App() {
         <StatusBar />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="developer-console" />
         </Stack>
         {currentAccount && (
           <>

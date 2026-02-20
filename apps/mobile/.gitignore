@@ -9,7 +9,7 @@ dist/
 web-build/
 expo-env.d.ts
 ios/
-android/
+/android/
 
 # Native
 *.orig.*
