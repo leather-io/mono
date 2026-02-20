@@ -6,7 +6,7 @@ function NoopProvider({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export function createLDProvider() {
+export function createLaunchDarklyProvider() {
   if (!process.env.LAUNCH_DARKLY_KEY) return NoopProvider;
 
   return asyncWithLDProvider({

@@ -25,11 +25,11 @@ import localConfig from '../../config/wallet-config.json';
 import './index.css';
 
 import { InscribedUtxoWarningDialog } from './features/dialogs/inscribed-utxo-warning-dialog/inscribed-utxo-warning-dialog';
-import { createLDProvider } from './features/feature-flags';
+import { createLaunchDarklyProvider } from './features/feature-flags';
 import { LeatherQueryProvider } from './query/leather-query-provider';
 import { useCurrentNetwork } from './store/networks/networks.selectors';
 
-const LDProvider = await createLDProvider();
+const LDProvider = await createLaunchDarklyProvider();
 
 const reactQueryDevToolsEnabled = process.env.REACT_QUERY_DEVTOOLS_ENABLED === 'true';
 

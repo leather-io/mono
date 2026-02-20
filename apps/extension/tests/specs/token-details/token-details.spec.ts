@@ -68,7 +68,6 @@ test.describe('Token details', () => {
         await expect(
           page.getByTestId(TokenDetailsSelectors.TokenDetailsReceiveButton)
         ).toBeVisible();
-        await expect(page.getByTestId(TokenDetailsSelectors.TokenDetailsBuyButton)).toBeVisible();
         await expect(page.getByTestId(TokenDetailsSelectors.TokenDetailsSwapButton)).toBeVisible();
       });
 

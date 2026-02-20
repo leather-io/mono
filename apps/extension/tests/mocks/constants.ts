@@ -30,8 +30,8 @@ export const TEST_BNS_NAME = 'test-hiro-wallet.btc';
 export const TEST_BNS_RESOLVED_ADDRESS = 'SP12YQ0M2KFT7YMJKVGP71B874YF055F77PFPH9KM';
 export const TEST_PASSWORD = 'my_s3cret_p@ssw0r4';
 
-export const SBTC_EMILY_API_URL = 'https://some-test-emily-api-url.com';
-export const SBTC_SPONSORSHIP_API_URL = 'https://some-test-sponsorship-api-url.com';
+export const SBTC_EMILY_API_URL = 'https://sbtc-emily.com';
+export const SBTC_SPONSORSHIP_API_URL = 'https://sponsor.leather.io';
 
 const mockSbtcConfig = {
   enabled: true,

@@ -99,6 +99,24 @@ test.describe('Onboarding an existing user', () => {
   test('Activity tab', async ({ extensionId, globalPage, onboardingPage, homePage, page }) => {
     test.slow();
     await globalPage.setupAndUseApiCalls(extensionId);
+    // Override balance mocks to return zero for new wallets, preventing
+    // excessive account discovery that floods the Hiro rate limiter
+    await page.route('**hiro.so/extended/v2/addresses/**/balances/stx', route =>
+      route.fulfill({
+        json: {
+          balance: '0',
+          total_miner_rewards_received: '0',
+          lock_tx_id: '',
+          locked: '0',
+          lock_height: 0,
+          burnchain_lock_height: 0,
+          burnchain_unlock_height: 0,
+        },
+      })
+    );
+    await page.route('**hiro.so/extended/v2/addresses/**/balances/ft', route =>
+      route.fulfill({ json: { limit: 100, offset: 0, total: 0, results: [] } })
+    );
     await globalPage.page.evaluate(async () => {
       await chrome.storage.local.clear();
     });

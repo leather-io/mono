@@ -34,8 +34,8 @@ async function callGetAddresses(page: Page, context: BrowserContext) {
 
 async function assertWalletHomeOpens(popup: Page) {
   await popup.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
-  const button = popup.getByTestId(HomePageSelectors.FundAccountBtn);
-  await test.expect(button).toBeVisible();
+  const sendButton = popup.getByTestId(HomePageSelectors.SendCryptoAssetBtn);
+  await test.expect(sendButton).toBeVisible();
 }
 
 async function initiateOpen(page: Page) {

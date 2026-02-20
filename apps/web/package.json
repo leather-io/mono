@@ -93,7 +93,7 @@
     "@msw/playwright": "0.4.5",
     "@originjs/vite-plugin-commonjs": "1.0.3",
     "@pandacss/dev": "1.7.1",
-    "@playwright/test": "1.57.0",
+    "@playwright/test": "1.58.2",
     "@react-router/cloudflare": "7.12.0",
     "@react-router/dev": "7.12.0",
     "@types/d3": "7.4.3",

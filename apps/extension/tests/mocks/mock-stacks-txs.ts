@@ -116,11 +116,14 @@ export async function mockWildcardStacksTxsRequests(page: Page) {
     page.route('**/api.hiro.so/extended/v1/address/*/transactions_with_transfers?limit=50', route =>
       route.fulfill({ json: emptyTxsResponse })
     ),
-    page.route('**/api.hiro.so/extended/v2/addresses/*/transactions?limit=50&offset=0', route =>
+    page.route('**/api.hiro.so/extended/v2/addresses/*/transactions**', route =>
       route.fulfill({ json: emptyTxsResponse })
     ),
-    page.route('**/api.hiro.so/extended/v1/tx/mempool?address=*&limit=50', route =>
+    page.route('**/api.hiro.so/extended/v1/tx/mempool?address=*', route =>
       route.fulfill({ json: emptyTxsResponse })
+    ),
+    page.route('**/api.hiro.so/extended/v1/address/*/assets**', route =>
+      route.fulfill({ json: { limit: 100, offset: 0, total: 0, results: [] } })
     ),
   ]);
 }
