@@ -145,8 +145,9 @@ getAddressesMethods.forEach(method => {
             const popup = await interceptRequestPopup(context);
             await popup.getByRole('textbox').fill(TEST_PASSWORD);
             await popup.getByRole('button', { name: 'Continue' }).click();
-            await popup.getByText('Connect').isVisible();
-            await test.expect(popup.getByTestId('get-addresses-approve-button')).toBeVisible();
+            await test
+              .expect(popup.getByTestId('get-addresses-approve-button'))
+              .toBeVisible({ timeout: 15_000 });
             await clickConnectLeatherButton(popup);
             await test.expect(getAddressesPromise).resolves.toMatchObject(expectedResult);
           });
@@ -174,10 +175,12 @@ getAddressesMethods.forEach(method => {
             const getAddressesPromise = initiateGetAddresses(page, method);
             const popup = await interceptRequestPopup(context);
             const switchAccountButton = popup.getByTestId('switch-account-item-0');
+            await test.expect(switchAccountButton).toBeVisible({ timeout: 10_000 });
             await switchAccountButton.click();
             const secondAccountInListButton = popup.getByTestId('switch-account-item-1');
+            await test.expect(secondAccountInListButton).toBeVisible({ timeout: 10_000 });
             await secondAccountInListButton.click();
-            await test.expect(popup.getByText('Account 2')).toBeVisible();
+            await test.expect(popup.getByText('Account 2').first()).toBeVisible();
             await clickConnectLeatherButton(popup);
             const result = await getAddressesPromise;
             test

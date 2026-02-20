@@ -6,6 +6,7 @@ import {
   mockMainnetAlexAssetsRequest,
   mockMainnetAlexTokenPricesRequest,
 } from './mock-alex-assets';
+import { mockBitflowRequests } from './mock-bitflow';
 import { mockMainnetTestAccountBrc20TokensRequest } from './mock-brc20';
 import { mockMainnetTestAccountInscriptionsRequests } from './mock-inscriptions-bis';
 import { mockLaunchDarkly } from './mock-launchdarkly';
@@ -63,5 +64,6 @@ export async function setupMockApis(page: Page) {
     mockMainnetTestAccountInscriptionsRequests(page),
     mockLaunchDarkly(page),
     mockBnsV2NamesRequestEmpty(page),
+    mockBitflowRequests(page),
   ]);
 }
