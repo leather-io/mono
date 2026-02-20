@@ -17,6 +17,7 @@ export enum TestId {
   homeActivityButton = 'homeActivityButton',
   homeAddWalletButton = 'homeAddWalletButton',
   homeCreateWalletCard = 'homeCreateWalletCard',
+  homeDeveloperToolsButton = 'homeDeveloperToolsButton',
   homePrivacyButton = 'homePrivacyButton',
   homeSettingsButton = 'homeSettingsButton',
   networkBadge = 'networkBadge',

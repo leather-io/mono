@@ -1714,7 +1714,9 @@ msgstr "Sending to your own address isn’t supported. Choose a different addres
 msgid "Sent"
 msgstr "Sent"
 
+#: src/app/settings/index.tsx:59
 #: src/components/screen/screen-header/components/header-actions.tsx:45
+#: src/features/qr-scanner/use-camera-permission.ts:38
 msgid "Settings"
 msgstr "Settings"
 

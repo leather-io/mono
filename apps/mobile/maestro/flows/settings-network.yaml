@@ -21,8 +21,7 @@ name: Settings Network
 - assertVisible: 'NETWORKS'
 
 # Switch to Testnet
-- tapOn:
-    text: 'Testnet4'
+- tapOn: 'Testnet4.*Disabled'
 - tapOn:
     id: 'backButton'
 
@@ -36,8 +35,7 @@ name: Settings Network
     id: 'homeSettingsButton'
 - tapOn:
     id: 'settingsNetworkButton'
-- tapOn:
-    text: 'Mainnet'
+- tapOn: 'Mainnet.*Enabled'
 - tapOn:
     id: 'backButton'
 - tapOn:

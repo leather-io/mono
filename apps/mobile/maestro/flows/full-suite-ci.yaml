@@ -140,8 +140,7 @@ name: Full Test Suite CI
     id: 'homeSettingsButton'
 - tapOn:
     id: 'settingsNetworkButton'
-- tapOn:
-    text: 'Testnet4'
+- tapOn: 'Testnet4.*Disabled'
 - tapOn:
     id: 'backButton'
 - tapOn:
@@ -153,8 +152,7 @@ name: Full Test Suite CI
     id: 'homeSettingsButton'
 - tapOn:
     id: 'settingsNetworkButton'
-- tapOn:
-    text: 'Mainnet'
+- tapOn: 'Mainnet.*Enabled'
 - tapOn:
     id: 'backButton'
 - tapOn:
