@@ -9,7 +9,7 @@ import { SelectedAsset } from './screens/select-asset';
 
 // Required to use a type alias: https://reactnavigation.org/docs/typescript#typechecking-the-navigator
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export type ReceiveStackParamList = {
+type ReceiveStackParamList = {
   'select-account': undefined;
   'select-asset': { account: Account; previousRoute?: ReceiveRouteKey };
   'asset-details': { asset: SelectedAsset; accountName: string; previousRoute?: ReceiveRouteKey };

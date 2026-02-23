@@ -44,11 +44,7 @@ export function useActivityByAsset(fingerprint: string, accountIndex: number, as
   return toFetchState(useActivityByAssetQuery(account, asset));
 }
 
-export function useActivityQuery(account: AccountAddresses) {
-  return useBaseActivityQuery(account);
-}
-
-export function useActivityByAssetQuery(account: AccountAddresses, asset: CryptoAsset) {
+function useActivityByAssetQuery(account: AccountAddresses, asset: CryptoAsset) {
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,

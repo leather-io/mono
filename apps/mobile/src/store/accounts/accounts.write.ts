@@ -2,17 +2,15 @@ import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
-import { entitySchema, handleAppResetWithState, handleEntityActionWith } from '@leather.io/state';
+import { handleAppResetWithState, handleEntityActionWith } from '@leather.io/state';
 import { userAddsAccount } from '@leather.io/state/keychains';
 import { userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
-import { AccountIcon, AccountStatus, AccountStore, accountStoreSchema } from './utils';
+import { AccountIcon, AccountStatus, AccountStore } from './utils';
 
 export const accountsAdapter = createEntityAdapter<AccountStore, string>({
   selectId: account => account.id,
 });
-export const accountEntitySchema = entitySchema(accountStoreSchema);
-
 const initialState = accountsAdapter.getInitialState();
 
 export const accountsSlice = createSlice({

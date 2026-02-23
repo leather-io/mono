@@ -60,7 +60,7 @@ export function useLeatherNetwork(): NetworkConfiguration {
   return leatherNetwork;
 }
 
-export interface NetworkState extends NetworkConfiguration {
+interface NetworkState extends NetworkConfiguration {
   isTestnet: boolean;
   mode: NetworkModes;
 }
@@ -68,7 +68,7 @@ export interface NetworkState extends NetworkConfiguration {
 function isStacksTestnet(network: NetworkConfiguration) {
   return network.chain.stacks.chainId === ChainId.Testnet;
 }
-export function getStacksNetworkMode(network: NetworkConfiguration) {
+function getStacksNetworkMode(network: NetworkConfiguration) {
   return isStacksTestnet(network) ? 'testnet' : 'mainnet';
 }
 

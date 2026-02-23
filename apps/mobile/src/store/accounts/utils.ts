@@ -1,5 +1,3 @@
-import z from 'zod';
-
 export const accountIcons = [
   'pizza',
   'sparkles',
@@ -24,8 +22,7 @@ export const accountIcons = [
 ] as const;
 export type AccountIcon = (typeof accountIcons)[number];
 
-const accountStatuses = ['active', 'hidden'] as const;
-export type AccountStatus = (typeof accountStatuses)[number];
+export type AccountStatus = 'active' | 'hidden';
 
 export interface AccountStore {
   id: string;
@@ -33,13 +30,6 @@ export interface AccountStore {
   name?: string;
   status?: AccountStatus;
 }
-
-export const accountStoreSchema = z.object({
-  id: z.string(),
-  icon: z.enum(accountIcons).optional(),
-  name: z.string().optional(),
-  status: z.enum(accountStatuses).optional(),
-}) satisfies z.ZodType<AccountStore>;
 
 function simpleStringHash(input: string): number {
   let hash = 0;

@@ -8,7 +8,7 @@ import { queryClient } from '@/queries/query';
 
 import { HttpCacheService } from '@leather.io/services';
 
-export function useRefreshHandler() {
+function useRefreshHandler() {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {

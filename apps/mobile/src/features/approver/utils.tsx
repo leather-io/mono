@@ -1,7 +1,4 @@
-import { useMemo } from 'react';
-
 import { calculateDefaultStacksFee } from '@/features/send/utils';
-import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import { StacksNetwork } from '@stacks/network';
@@ -137,12 +134,6 @@ export function getTxOptions(signer: StacksSigner, stacksNetwork: StacksNetwork)
     publicKey: bytesToHex(signer.publicKey),
     network: stacksNetwork,
   };
-}
-
-export function useTxOptions(signer: StacksSigner): TxOptions {
-  const stacksNetwork = useNetworkPreferenceStacksNetwork();
-
-  return useMemo(() => getTxOptions(signer, stacksNetwork), [signer, stacksNetwork]);
 }
 
 export function getDefaultFee() {

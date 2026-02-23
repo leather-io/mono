@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export type ApproverState =
+type ApproverState =
   | 'start_approver'
   | 'retry'
   | 'submitting'

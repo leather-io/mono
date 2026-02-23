@@ -16,38 +16,6 @@ export function useBtcTotalBalance() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useBtcAggregateBalanceQuery(accounts.map(account => ({ account }))));
 }
-/**
- * @deprecated useBtcTotalNativeSegwitBalance is not used now we have moved to single account view
- * @see useBtcAccountNativeSegwitBalance
- */
-export function useBtcTotalNativeSegwitBalance() {
-  const accounts = useTotalAccountAddresses();
-  return toFetchState(
-    useBtcAggregateBalanceQuery(
-      accounts.map(account => ({
-        account,
-        exclusions: { taprootAddresses: true },
-      }))
-    )
-  );
-}
-
-/**
- * @deprecated useBtcTotalTaprootBalance is not used now we have moved to single account view
- * @see useBtcAccountTaprootBalance
- */
-export function useBtcTotalTaprootBalance() {
-  const accounts = useTotalAccountAddresses();
-  return toFetchState(
-    useBtcAggregateBalanceQuery(
-      accounts.map(account => ({
-        account,
-        exclusions: { nativeSegwitAddresses: true },
-      }))
-    )
-  );
-}
-
 export function useBtcAccountBalance(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
   return toFetchState(useBtcAccountBalanceQuery({ account }));
@@ -73,7 +41,7 @@ export function useBtcAccountTaprootBalance(fingerprint: string, accountIndex: n
   );
 }
 
-export function useBtcAccountBalanceQuery(request: AccountRequest) {
+function useBtcAccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,

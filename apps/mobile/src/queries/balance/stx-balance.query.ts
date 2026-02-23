@@ -36,7 +36,7 @@ function useStxAggregateBalanceQuery(requests: AccountRequest[]) {
   });
 }
 
-export function useStxAccountBalanceQuery(request: AccountRequest) {
+function useStxAccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,

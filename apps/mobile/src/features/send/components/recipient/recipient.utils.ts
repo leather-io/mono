@@ -41,13 +41,13 @@ export function normalizeSearchTerm(input: string) {
   return input.trim();
 }
 
-export function activityContainsRecipient(activity: SendAssetActivity[], recipientAddress: string) {
+function activityContainsRecipient(activity: SendAssetActivity[], recipientAddress: string) {
   return activity.some(
     activity => isDefined(activity.receivers[0]) && activity.receivers[0] === recipientAddress
   );
 }
 
-export interface IsNewAddressParams {
+interface IsNewAddressParams {
   address: string;
   findAccountByAddress(address: string): Account | null;
   activity?: SendAssetActivity[];

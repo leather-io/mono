@@ -10,7 +10,7 @@ import { HEADER_HEIGHT } from '@/shared/constants';
 
 import { Box } from '@leather.io/ui/native';
 
-export interface HeaderProps {
+interface HeaderProps {
   leftElement?: ReactNode;
   centerElement?: ReactNode;
   rightElement?: ReactNode;

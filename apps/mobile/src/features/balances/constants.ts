@@ -1,1 +1,0 @@
-export const ASSETS_BALANCES_WIDGET_LIMIT = 3;

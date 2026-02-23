@@ -80,27 +80,27 @@ msgstr "{themePreference, select, light {Light} dark {Dark} system {System} othe
 msgid "<0>{assetName}</0> has no available receiving options right now."
 msgstr "<0>{assetName}</0> has no available receiving options right now."
 
-#: src/features/approver/utils.tsx:52
+#: src/features/approver/utils.tsx:49
 msgid "~1 hour+"
 msgstr "~1 hour+"
 
-#: src/features/approver/utils.tsx:54
+#: src/features/approver/utils.tsx:51
 msgid "~10 – 20min"
 msgstr "~10 – 20min"
 
-#: src/features/approver/utils.tsx:53
+#: src/features/approver/utils.tsx:50
 msgid "~30 min"
 msgstr "~30 min"
 
-#: src/features/approver/utils.tsx:64
+#: src/features/approver/utils.tsx:61
 msgid "1–2 minutes"
 msgstr "1–2 minutes"
 
-#: src/features/approver/utils.tsx:66
+#: src/features/approver/utils.tsx:63
 msgid "10 seconds"
 msgstr "10 seconds"
 
-#: src/features/approver/utils.tsx:65
+#: src/features/approver/utils.tsx:62
 msgid "20–30 seconds"
 msgstr "20–30 seconds"
 
@@ -108,11 +108,7 @@ msgstr "20–30 seconds"
 msgid "24 Hour Change"
 msgstr "24 Hour Change"
 
-#: src/features/wallet-manager/account-list.tsx:23
-msgid "Account {accountIndex}"
-msgstr "Account {accountIndex}"
-
-#: src/store/accounts/accounts.read.ts:27
+#: src/store/accounts/accounts.read.ts:26
 msgid "Account {displayIndex}"
 msgstr "Account {displayIndex}"
 
@@ -168,10 +164,6 @@ msgstr ""
 #: src/features/send/components/memo.tsx:66
 msgid "Add memo"
 msgstr "Add memo"
-
-#: src/features/wallet-manager/wallets.tsx:39
-msgid "Add new account for {fingerprint} 🆕"
-msgstr "Add new account for {fingerprint} 🆕"
 
 #: src/features/account/sheets/add-account-sheet.tsx:30
 msgid "Add to existing wallet"
@@ -421,7 +413,6 @@ msgstr "BIP39 passphrase"
 #: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
 #: src/features/swap/swap.utils.ts:10
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:18
 #: src/shared/display-preference.ts:61
 msgid "Bitcoin"
 msgstr "Bitcoin"
@@ -673,9 +664,9 @@ msgstr "Creator"
 msgid "Current app version format is invalid"
 msgstr "Current app version format is invalid"
 
-#: src/features/approver/utils.tsx:43
-#: src/features/approver/utils.tsx:55
-#: src/features/approver/utils.tsx:67
+#: src/features/approver/utils.tsx:40
+#: src/features/approver/utils.tsx:52
+#: src/features/approver/utils.tsx:64
 msgid "Custom"
 msgstr "Custom"
 
@@ -690,10 +681,6 @@ msgstr "Customize your app icon"
 #: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:40
 msgid "Decrease slippage"
 msgstr "Decrease slippage"
-
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:23
-msgid "Default"
-msgstr "Default"
 
 #: src/features/activity/translate-activity-status.ts:22
 msgid "Deployed"
@@ -883,7 +870,7 @@ msgstr "Failed to load latest nonce"
 msgid "Failed to start a swap"
 msgstr "Failed to start a swap"
 
-#: src/features/approver/utils.tsx:42
+#: src/features/approver/utils.tsx:39
 msgid "Fast"
 msgstr "Fast"
 
@@ -1051,50 +1038,6 @@ msgstr "I'm interested"
 msgid "I've backed it up"
 msgstr "I've backed it up"
 
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:24
-msgid "Icon 1"
-msgstr "Icon 1"
-
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:33
-msgid "Icon 10"
-msgstr "Icon 10"
-
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:34
-msgid "Icon 11"
-msgstr "Icon 11"
-
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:25
-msgid "Icon 2"
-msgstr "Icon 2"
-
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:26
-msgid "Icon 3"
-msgstr "Icon 3"
-
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:27
-msgid "Icon 4"
-msgstr "Icon 4"
-
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:28
-msgid "Icon 5"
-msgstr "Icon 5"
-
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:29
-msgid "Icon 6"
-msgstr "Icon 6"
-
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:30
-msgid "Icon 7"
-msgstr "Icon 7"
-
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:31
-msgid "Icon 8"
-msgstr "Icon 8"
-
-#: src/features/settings/choose-app-icon/app-icon.utils.ts:32
-msgid "Icon 9"
-msgstr "Icon 9"
-
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:67
 msgid "Icons"
 msgstr "Icons"
@@ -1177,7 +1120,7 @@ msgstr "Last observed block"
 msgid "Layer"
 msgstr "Layer"
 
-#: src/features/token/bitcoin/bitcoin-token-details.tsx:38
+#: src/features/token/bitcoin/bitcoin-token-details.tsx:31
 msgid "Layer 1"
 msgstr "Layer 1"
 
@@ -1191,7 +1134,7 @@ msgstr "Layer 1 · Bitcoin"
 msgid "Layer 1 • Bitcoin"
 msgstr "Layer 1 • Bitcoin"
 
-#: src/features/token/stacks/stacks-token-details.tsx:35
+#: src/features/token/stacks/stacks-token-details.tsx:29
 msgid "Layer 2"
 msgstr "Layer 2"
 
@@ -1826,7 +1769,7 @@ msgstr "Slippage"
 msgid "Slippage tolerance"
 msgstr "Slippage tolerance"
 
-#: src/features/approver/utils.tsx:40
+#: src/features/approver/utils.tsx:37
 msgid "Slow"
 msgstr "Slow"
 
@@ -1852,7 +1795,6 @@ msgstr "StackingDAO"
 #: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
 #: src/features/swap/swap.utils.ts:9
-#: src/features/token/stacks/stacks-token-details.tsx:15
 #: src/shared/display-preference.ts:62
 msgid "Stacks"
 msgstr "Stacks"
@@ -1873,7 +1815,7 @@ msgstr "Stacks NFT"
 msgid "Stamp"
 msgstr "Stamp"
 
-#: src/features/approver/utils.tsx:41
+#: src/features/approver/utils.tsx:38
 msgid "Standard"
 msgstr "Standard"
 
@@ -2137,9 +2079,9 @@ msgstr "Unable to Open Store"
 msgid "Uneconomical balance:"
 msgstr "Uneconomical balance:"
 
-#: src/features/approver/utils.tsx:44
-#: src/features/approver/utils.tsx:56
-#: src/features/approver/utils.tsx:68
+#: src/features/approver/utils.tsx:41
+#: src/features/approver/utils.tsx:53
+#: src/features/approver/utils.tsx:65
 msgid "Unknown"
 msgstr "Unknown"
 
@@ -2199,10 +2141,6 @@ msgstr "View Secret Key"
 #: src/features/approver/components/approver-permissions.tsx:13
 msgid "View your wallet balance & activity"
 msgstr "View your wallet balance & activity"
-
-#: src/features/wallet-manager/wallets.tsx:27
-msgid "Wallet {fingerprint}"
-msgstr "Wallet {fingerprint}"
 
 #: src/features/activity/translate-activity-status.ts:52
 #: src/hooks/use-create-wallet.ts:33

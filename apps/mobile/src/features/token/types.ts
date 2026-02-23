@@ -19,9 +19,9 @@ const supportedFungibleAssetProtocols = ['nativeBtc', 'nativeStx', 'sip10', 'run
 
 const supportedNonFungibleAssetProtocols = ['inscription', 'sip9', 'stamp'] as const;
 
-export type SupportedAssetProtocol = (typeof supportedAssetProtocols)[number];
-export type SupportedFungibleAssetProtocol = (typeof supportedFungibleAssetProtocols)[number];
-export type SupportedNonFungibleAssetProtocol = (typeof supportedNonFungibleAssetProtocols)[number];
+type SupportedAssetProtocol = (typeof supportedAssetProtocols)[number];
+type SupportedFungibleAssetProtocol = (typeof supportedFungibleAssetProtocols)[number];
+type SupportedNonFungibleAssetProtocol = (typeof supportedNonFungibleAssetProtocols)[number];
 
 export function isSupportedFungibleAssetProtocol(
   value: CryptoAssetProtocol

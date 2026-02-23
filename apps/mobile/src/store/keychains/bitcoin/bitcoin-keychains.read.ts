@@ -86,7 +86,7 @@ function isNativeSegwitAccount(account: BitcoinAccountKeychain) {
   return inferPaymentTypeFromPath(account.keyOrigin) === 'p2wpkh';
 }
 
-export function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
+function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
   const nativeSegwit = accounts.find(isNativeSegwitAccount);
 
   const taproot = accounts.find(isTaprootAccount);

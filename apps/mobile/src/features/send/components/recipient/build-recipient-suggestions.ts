@@ -103,7 +103,7 @@ interface GetRecentsParams {
   findAccountByAddress(address: string): Account | null;
 }
 
-export function getRecents({
+function getRecents({
   activity,
   findAccountByAddress,
 }: GetRecentsParams): RecipientSuggestionEntry[] {
@@ -134,7 +134,7 @@ interface GetAccountsParams {
   currentAccount: AccountId;
 }
 
-export function getAccounts({
+function getAccounts({
   accounts,
   getAddressByAccount,
   canSelfSend,

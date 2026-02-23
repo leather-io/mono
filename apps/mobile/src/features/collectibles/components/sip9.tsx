@@ -31,7 +31,7 @@ const supportedContentTypes = [
   '',
 ] as const;
 
-export type SupportedSip9ContentType = (typeof supportedContentTypes)[number];
+type SupportedSip9ContentType = (typeof supportedContentTypes)[number];
 
 const supportedContentTypesSet = new Set(supportedContentTypes);
 
@@ -42,7 +42,7 @@ function isSupportedContentType(
   return supportedContentTypesSet.has(contentType as SupportedSip9ContentType);
 }
 
-export interface Sip9Props {
+interface Sip9Props {
   item: Sip9Asset;
   height: number;
   onPress?(): void;

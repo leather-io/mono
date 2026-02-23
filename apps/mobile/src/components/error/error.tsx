@@ -41,7 +41,7 @@ interface ErrorProps {
   error?: Error;
   onRetry?(): void;
 }
-export function ErrorFallback({ error, onRetry }: ErrorProps) {
+function ErrorFallback({ error, onRetry }: ErrorProps) {
   return (
     <EmptyLayout
       image={

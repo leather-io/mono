@@ -47,20 +47,6 @@ export function useManagedSip10Tools(fingerprint: string, accountIndex: number) 
   };
 }
 
-/**
- * @deprecated useSip10TotalBalanceByAssetId is not used now we have moved to single account view
- * @see useSip10AccountBalanceByAssetId
- */
-export function useSip10TotalBalanceByAssetId(assetId: string) {
-  const accounts = useTotalAccountAddresses();
-  return toFetchState(
-    useSip10AggregateBalanceByAssetIdQuery(
-      accounts.map(account => ({ account })),
-      assetId
-    )
-  );
-}
-
 export function useSip10BalanceByAssetId(
   fingerprint: string,
   accountIndex: number,
@@ -68,15 +54,6 @@ export function useSip10BalanceByAssetId(
 ) {
   const account = useAccountAddresses(fingerprint, accountIndex);
   return toFetchState(useSip10BalanceByAssetIdQuery({ account }, assetId));
-}
-
-export function useSip10BalanceByContractId(
-  fingerprint: string,
-  accountIndex: number,
-  contractId: string
-) {
-  const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useSip10BalanceByContractIdQuery({ account }, contractId));
 }
 
 function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
@@ -93,7 +70,7 @@ function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
   });
 }
 
-export function useSip10AccountBalanceQuery(request: AccountRequest) {
+function useSip10AccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
@@ -103,25 +80,6 @@ export function useSip10AccountBalanceQuery(request: AccountRequest) {
 
   return useQuery({
     ...createSip10AccountBalanceQueryConfig(request, settings),
-    ...balanceQueryOptions,
-  });
-}
-
-/**
- * @deprecated useSip10AggregateBalanceByAssetIdQuery is not used now we have moved to single account view
- * @see useSip10AccountBalanceByAssetIdQuery
- */
-function useSip10AggregateBalanceByAssetIdQuery(requests: AccountRequest[], assetId: string) {
-  const { fiatCurrencyPreference } = useSettings();
-  return useQuery({
-    queryKey: [
-      'sip10-balances-service-get-sip10-aggregate-balance-by-asset-id',
-      assetId,
-      requests,
-      fiatCurrencyPreference,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AggregateBalanceByAssetId(requests, assetId, signal),
     ...balanceQueryOptions,
   });
 }
@@ -137,21 +95,6 @@ function useSip10BalanceByAssetIdQuery(request: AccountRequest, assetId: string)
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10BalanceByAssetId(request, assetId, signal),
-    ...balanceQueryOptions,
-  });
-}
-
-function useSip10BalanceByContractIdQuery(request: AccountRequest, contractId: string) {
-  const { fiatCurrencyPreference } = useSettings();
-  return useQuery({
-    queryKey: [
-      'sip10-balances-service-get-sip10-balance-by-contract-id',
-      contractId,
-      request,
-      fiatCurrencyPreference,
-    ],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10BalanceByContractId(request, contractId, signal),
     ...balanceQueryOptions,
   });
 }

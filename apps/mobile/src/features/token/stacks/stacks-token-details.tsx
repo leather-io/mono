@@ -1,4 +1,3 @@
-import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
 import { useActivityByAsset } from '@/queries/activity/activity.query';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
@@ -9,11 +8,6 @@ import { AccountId } from '@leather.io/models';
 import { StxAvatarIcon } from '@leather.io/ui/native';
 
 import { Token } from '../token';
-
-type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
-export function StacksTokenBalance(props: StacksTokenBalanceProps) {
-  return <TokenBalance ticker="STX" icon={<StxAvatarIcon />} tokenName={t`Stacks`} {...props} />;
-}
 
 interface StacksTokenDetailsProps {
   account: AccountId;

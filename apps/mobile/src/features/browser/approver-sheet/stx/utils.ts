@@ -37,7 +37,7 @@ export function getAccountIdFromRequestParams({
   return app.accountId;
 }
 
-export function getFeeFromRequestParams({ params }: { params: BaseStacksTransactionRpcParams }) {
+function getFeeFromRequestParams({ params }: { params: BaseStacksTransactionRpcParams }) {
   if (params.fee) {
     return createMoneyFromDecimal(initBigNumber(params.fee), 'STX');
   }

@@ -39,7 +39,7 @@ interface GetStxNetworkFromRequestParams {
   defaultNetwork: StacksNetwork;
 }
 
-export function getStxNetworkFromRequestParams({
+function getStxNetworkFromRequestParams({
   paramsNetwork,
   defaultNetwork,
 }: GetStxNetworkFromRequestParams) {

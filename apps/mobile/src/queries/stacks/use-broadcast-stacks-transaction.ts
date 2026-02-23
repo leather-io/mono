@@ -6,7 +6,7 @@ import { getErrorMessage } from '@leather.io/stacks';
 
 import { fetchFn } from './fetch-fn';
 
-export interface BroadcastStacksTransactionParams {
+interface BroadcastStacksTransactionParams {
   tx: StacksTransactionWire;
   stacksNetwork: StacksNetwork;
 }

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { Account } from '@/store/accounts/accounts';
-import { useAccounts, useAccountsByFingerprint } from '@/store/accounts/accounts.read';
+import { useAccounts } from '@/store/accounts/accounts.read';
 import { AccountStatus } from '@/store/accounts/utils';
 import {
   useBitcoinAccounts,
@@ -21,7 +21,6 @@ import { createAccountAddresses, isDefined, uniqueArray } from '@leather.io/util
 type Wallets = ReturnType<typeof useWallets>;
 type BitcoinAccounts = ReturnType<typeof useBitcoinAccounts>;
 type StacksSigners = ReturnType<typeof useStacksSigners>;
-type AccountsByFingerprint = ReturnType<typeof useAccountsByFingerprint>;
 type BitcoinAccountsFromAccountIndex = ReturnType<BitcoinAccounts['fromAccountIndex']>;
 
 function deriveTotalAccountAddresses(
@@ -71,52 +70,6 @@ function deriveTotalAccountAddresses(
           };
         });
       });
-}
-
-function deriveWalletAccountAddresses(
-  fingerprint: string,
-  bitcoinAccounts?: BitcoinAccounts,
-  accountsByFingerprint?: AccountsByFingerprint,
-  stacksSigners?: StacksSigners
-): AccountAddresses[] {
-  return !bitcoinAccounts || !stacksSigners || !accountsByFingerprint
-    ? []
-    : accountsByFingerprint.list
-        .map(account => account.accountIndex)
-        .map(accountIndex => {
-          const baseAddresses = createAccountAddresses(
-            { fingerprint, accountIndex },
-            bitcoinAccounts.list
-              .filter(
-                keychain =>
-                  keychain.masterKeyFingerprint === fingerprint &&
-                  extractAccountIndexFromPath(keychain.keyOrigin) === accountIndex
-              )
-              .map(getDescriptorFromKeychain)
-              .filter(isDefined),
-            stacksSigners
-              .fromAccountIndex(fingerprint, accountIndex)
-              .map(signer => signer.address)[0]
-          );
-
-          if (!baseAddresses.bitcoin) return baseAddresses;
-
-          const { nativeSegwit, taproot } = bitcoinAccounts.accountIndexByPaymentType(
-            fingerprint,
-            accountIndex
-          );
-
-          return {
-            ...baseAddresses,
-            bitcoin: {
-              ...baseAddresses.bitcoin,
-              zeroIndexTaprootPayerAddress:
-                taproot?.derivePayer({ change: 0, addressIndex: 0 }).address ?? '',
-              zeroIndexNativeSegwitPayerAddress:
-                nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 }).address ?? '',
-            },
-          };
-        });
 }
 
 function deriveAccountAddresses(
@@ -178,34 +131,6 @@ export function useTotalAccountAddresses(status: AccountStatus = 'active') {
         accounts.list
       ),
     [wallets, bitcoinAccounts, stacksSigners, accounts]
-  );
-}
-
-interface UseWalletAccountAddressesArgs {
-  fingerprint: string;
-  status: AccountStatus;
-}
-export function useWalletAccountAddresses({
-  fingerprint,
-  status = 'active',
-}: UseWalletAccountAddressesArgs) {
-  const bitcoinAccounts = useBitcoinAccounts();
-  const accountsByFingerprint = useAccountsByFingerprint(fingerprint);
-  const stacksSigners = useStacksSigners();
-  const accounts = useAccounts(status);
-
-  return useMemo(
-    () =>
-      filterAccountsByActiveAccounts(
-        deriveWalletAccountAddresses(
-          fingerprint,
-          bitcoinAccounts,
-          accountsByFingerprint,
-          stacksSigners
-        ),
-        accounts.list
-      ),
-    [accountsByFingerprint, stacksSigners, bitcoinAccounts, fingerprint, accounts]
   );
 }
 

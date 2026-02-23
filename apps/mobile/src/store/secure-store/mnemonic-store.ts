@@ -91,9 +91,3 @@ export function mnemonicStore(fingerprint: string): MnemonicStore {
     deleteMnemonic,
   };
 }
-
-export function deleteAllMnemonics(fingerprintArr: string[]) {
-  return Promise.all(
-    fingerprintArr.map(fingerprint => mnemonicStore(fingerprint).deleteMnemonic())
-  );
-}

@@ -36,7 +36,7 @@ interface CreateRecipientEvaluatorParams {
   canSelfSend: boolean;
 }
 
-export function createRecipientEvaluator({
+function createRecipientEvaluator({
   canSelfSend,
   isNewAddress,
   schema,

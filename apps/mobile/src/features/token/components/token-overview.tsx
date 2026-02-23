@@ -1,6 +1,6 @@
 import { Box, Text } from '@leather.io/ui/native';
 
-export interface TokenOverviewProps {
+interface TokenOverviewProps {
   actionButtons: React.ReactNode;
   heading: React.ReactNode;
   availableBalance: React.ReactNode;

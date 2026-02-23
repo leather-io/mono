@@ -258,5 +258,3 @@ export function CollectibleVideo({ src, alt, height = 200, onPress }: Collectibl
     </CollectibleCard>
   );
 }
-
-export default CollectibleVideo;
