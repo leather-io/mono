@@ -52,7 +52,7 @@ export const accountIconMap: Record<AccountIcon, ComponentType<IconProps>> = {
   flag: FlagIcon,
 } as const;
 
-export type AccountAvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+type AccountAvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 interface AccountAvatarProps extends SquircleBoxProps {
   icon: AccountIcon | ComponentType;
@@ -68,7 +68,7 @@ const sizeStyles: Record<AccountAvatarSize, SquircleBoxProps> = {
   xl: { width: 48, height: 48, borderRadius: 18 },
 };
 
-export const iconSizes: Record<
+const iconSizes: Record<
   AccountAvatarSize,
   { width?: number; height?: number; variant?: 'small' | 'medium' }
 > = {

@@ -6,7 +6,7 @@ import { REHYDRATE } from 'redux-persist';
 import { deserializeAccountId } from '../accounts/accounts';
 import { SettingsState } from './utils';
 
-export function isHydrateAction(action: Action): action is Action<typeof REHYDRATE> & {
+function isHydrateAction(action: Action): action is Action<typeof REHYDRATE> & {
   key: string;
   payload: RootState | undefined;
 } {

@@ -1,0 +1,28 @@
+name: mobile:code-checks
+
+on:
+  merge_group:
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'apps/mobile/**'
+      - 'packages/**'
+      - '!packages/ui/**/*.web.ts'
+      - '!packages/ui/**/*.web.tsx'
+
+permissions:
+  contents: read
+
+jobs:
+  knip:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - run: pnpm build:packages
+
+      - name: knip-unused-exports
+        working-directory: apps/mobile
+        run: pnpm knip

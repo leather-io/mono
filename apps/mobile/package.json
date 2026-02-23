@@ -16,7 +16,7 @@
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "ios": "expo run:ios",
     "ios:build": "expo run:ios --no-bundler",
-    "knip": "knip",
+    "knip": "knip --include files,exports,types,enumMembers,duplicates",
     "lingui": "pnpm run lingui:extract && pnpm run lingui:compile",
     "lingui:compile": "lingui compile --typescript --strict",
     "lingui:extract": "lingui extract --clean --overwrite",

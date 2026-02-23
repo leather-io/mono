@@ -4,12 +4,7 @@ import { useAuthentication } from '@/hooks/use-authentication';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 
-export type AuthStatus =
-  | 'cold-start'
-  | 'started'
-  | 'failed'
-  | 'passed-on-first'
-  | 'passed-afterwards';
+type AuthStatus = 'cold-start' | 'started' | 'failed' | 'passed-on-first' | 'passed-afterwards';
 
 interface AuthState {
   status: AuthStatus;

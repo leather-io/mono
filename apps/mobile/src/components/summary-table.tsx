@@ -37,10 +37,3 @@ export function SummaryTableItem({ label, value }: SummaryTableItem) {
     </Box>
   );
 }
-
-export const SummaryTable = {
-  Root: SummaryTableRoot,
-  Item: SummaryTableItem,
-  Value: SummaryTableValue,
-  Label: SummaryTableLabel,
-};

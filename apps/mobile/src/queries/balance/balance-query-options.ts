@@ -11,8 +11,3 @@ export const balanceQueryOptions = {
   retry: (failureCount: number, error: Error) =>
     error?.name === 'AbortError' || error?.name === 'CanceledError' ? failureCount < 2 : false,
 } satisfies Partial<UseQueryOptions>;
-
-export const balanceQueryOptionsWithRefetch = {
-  ...balanceQueryOptions,
-  refetchInterval: secondsInMs(30),
-} satisfies Partial<UseQueryOptions>;

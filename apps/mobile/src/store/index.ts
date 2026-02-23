@@ -12,24 +12,15 @@ import {
   persistReducer,
   persistStore,
 } from 'redux-persist';
-import z from 'zod';
 
 import { keychainSlice } from '@leather.io/state';
-import { walletEntitySchema, walletSlice } from '@leather.io/state/wallet';
+import { walletSlice } from '@leather.io/state/wallet';
 
-import { accountEntitySchema, accountsSlice } from './accounts/accounts.write';
+import { accountsSlice } from './accounts/accounts.write';
 import { appsSlice } from './apps/apps.write';
 // import { deleteAllMnemonics } from './secure-store/mnemonic-store';
 import { settingsSlice } from './settings/settings.write';
-import { settingsSchema } from './settings/utils';
 import { persistConfig } from './storage-persistors';
-
-export const stateSchema = z.object({
-  wallets: walletEntitySchema,
-  accounts: accountEntitySchema,
-  keychains: z.looseObject({}),
-  settings: settingsSchema,
-});
 
 const reducer = combineReducers({
   wallets: walletSlice.reducer,

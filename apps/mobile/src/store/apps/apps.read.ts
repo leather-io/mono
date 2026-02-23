@@ -35,7 +35,7 @@ export function useApps(status?: AppStatus) {
   };
 }
 
-export type ConnectedAppAccountIdMap = Record<string, App[]>;
+type ConnectedAppAccountIdMap = Record<string, App[]>;
 
 function connectedAppsToAccountIdMap(acc: ConnectedAppAccountIdMap, app: App) {
   if (app.status === 'connected') {

@@ -36,7 +36,7 @@ export function validateDecimalPlaces(value: string, maxDecimalPlaces: number) {
   return (value.split('.')[1] ?? '').length <= maxDecimalPlaces;
 }
 
-export interface BtcFormValuesToPsbtHexParams {
+interface BtcFormValuesToPsbtHexParams {
   values: BtcFormSchema;
   utxos: OwnedUtxo[];
   networkMode: BitcoinNetworkModes;

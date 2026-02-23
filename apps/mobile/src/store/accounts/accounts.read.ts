@@ -6,7 +6,6 @@ import { createSelector } from '@reduxjs/toolkit';
 import { isDefined } from '@leather.io/utils';
 
 import { RootState } from '..';
-import { useAppSelector } from '../utils';
 import { accountsAdapter } from './accounts.write';
 import { AccountStatus, type AccountStore, deriveIconFromAccountId } from './utils';
 
@@ -16,7 +15,7 @@ export function deserializeAccountId(accountId: string) {
   return { fingerprint, accountIndex: Number(accountIndex) };
 }
 
-export function initializeAccount(account: AccountStore) {
+function initializeAccount(account: AccountStore) {
   const accountId = deserializeAccountId(account.id);
   const displayIndex = accountId.accountIndex + 1;
 
@@ -97,12 +96,4 @@ export function useAccounts(status: AccountStatus = 'active') {
 
 export function useAccountByIndex(fingerprint: string, index: number) {
   return useSelector(selectAccountByIndex(fingerprint, index));
-}
-
-export function useAccountByAccoundId(accountId: string) {
-  return useAppSelector(state => {
-    const account = selectors.selectById(state, accountId);
-    if (!account) return;
-    return initializeAccount(account);
-  });
 }

@@ -5,7 +5,7 @@ import { t } from '@lingui/core/macro';
 const IOS_APP_ID = 'id6499127775';
 const ANDROID_PACKAGE_NAME = 'io.leather.mobilewallet';
 
-export function getStoreUrl(): string {
+function getStoreUrl(): string {
   return Platform.select({
     ios: `https://apps.apple.com/us/app/leather-self-custody-wallet/${IOS_APP_ID}`,
     android: `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE_NAME}`,
@@ -13,7 +13,7 @@ export function getStoreUrl(): string {
   });
 }
 
-export async function openAppStore(): Promise<void> {
+async function openAppStore(): Promise<void> {
   const storeUrl = getStoreUrl();
   const canOpen = await Linking.canOpenURL(storeUrl);
 
@@ -34,7 +34,7 @@ export async function handleStoreRedirect(): Promise<void> {
   }
 }
 
-export function getStoreName(): string {
+function getStoreName(): string {
   return Platform.select({
     ios: t`App Store`,
     android: t`Google Play`,

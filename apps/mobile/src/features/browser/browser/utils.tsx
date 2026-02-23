@@ -5,7 +5,6 @@ import { App } from '@/store/apps/utils';
 import { getDappMap } from '@/utils/dapps';
 import * as Application from 'expo-application';
 import { File, Paths } from 'expo-file-system';
-import { z } from 'zod';
 
 import {
   RpcRequest,
@@ -18,10 +17,6 @@ import {
 import { Favicon } from '@leather.io/ui/native';
 
 const bareUrlRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-export type BrowserSheetTab = 'suggested' | 'connected' | 'recent';
-
-export const URL_SEARCH_HEIGHT = 70;
 
 export function formatURL(url: string) {
   if (url.startsWith('http')) {
@@ -44,12 +39,6 @@ export function isValidUrl(testUrl: string) {
 
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
-
-export const messagePartialZodObject = z.object({
-  id: z.string(),
-  jsonrpc: z.string(),
-  method: z.string(),
-});
 
 function getScreenshotFile(hostname: string) {
   return new File(Paths.document, `${hostname}_screenshot.jpg`);
@@ -119,7 +108,7 @@ export function createGetInfoResponse(
   });
 }
 
-export function getParentHostname(url: string) {
+function getParentHostname(url: string) {
   const hostname = new URL(url).hostname;
   const separatedHostname = hostname.split('.');
   return [

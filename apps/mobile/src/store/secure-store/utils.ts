@@ -10,7 +10,7 @@ export function getBasicSecureStoreConfig() {
   return secureStoreConfig;
 }
 
-export function getBiometricsSecureStoreConfig() {
+function getBiometricsSecureStoreConfig() {
   const secureStoreConfigWithBiometrics = {
     ...getBasicSecureStoreConfig(),
     requireAuthentication: true,

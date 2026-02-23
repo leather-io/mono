@@ -1,5 +1,14 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "tags": ["-knipignore", "-internal"],
-  "ignore": ["*/**/*.spec.ts", "*/**/*.test.ts", "*/**/*.mocks.ts"]
+  "ignore": [
+    "*/**/*.spec.ts",
+    "*/**/*.test.ts",
+    "*/**/*.mocks.ts",
+    ".detoxrc.cjs",
+    "fingerprint.config.js",
+    "index.d.ts",
+    "lingui.config.ts",
+    "src/tests/test-utils.tsx"
+  ]
 }

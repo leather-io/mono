@@ -5,7 +5,7 @@ import { isValidVersion, isVersionLessThan } from '@/utils/version-utils';
 import { t } from '@lingui/core/macro';
 import * as Application from 'expo-application';
 
-export interface VersionCheckResult {
+interface VersionCheckResult {
   needsUpdate: boolean;
   currentVersion: string;
   minimumVersion: string | null;

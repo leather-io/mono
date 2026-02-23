@@ -32,10 +32,6 @@ export async function setupFeatureFlags() {
     console.log(e);
   });
 }
-export function useBrowserFlag() {
-  return useBoolVariation('release_browser_feature', false);
-}
-
 export function useCollectiblesFlag() {
   return useBoolVariation('release_collectibles_feature', false);
 }
@@ -51,28 +47,12 @@ export function useWaitlistFlag() {
   return useBoolVariation('release_waitlist_features', false);
 }
 
-export function useDynamicFeeFlag() {
-  return useBoolVariation('release_dynamic_fee_feature', false);
-}
-
-export function useEarnFlag() {
-  return useBoolVariation('release_earn_feature', false);
-}
-
-export function useDappSuggestions() {
-  return useBoolVariation('release_dapp_suggestions_feature', false);
-}
-
 export function useSip10SendFlag() {
   return useBoolVariation('release_sip10_send_feature', false);
 }
 
 export function useSendPasteButton() {
   return useBoolVariation('send_paste_button', false);
-}
-
-export function useTokenDetailsFlag() {
-  return useBoolVariation('token_details', false);
 }
 
 // Setting an empty string will not enforce a minimum version and will skip the check.

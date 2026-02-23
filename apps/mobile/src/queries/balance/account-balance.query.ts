@@ -30,7 +30,7 @@ export function useAccountUnlockedBalance(
   );
 }
 
-export function useGetAccountTotalBalanceQuery(
+function useGetAccountTotalBalanceQuery(
   request: AccountRequest,
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {
@@ -48,7 +48,7 @@ export function useGetAccountTotalBalanceQuery(
   });
 }
 
-export function useGetAccountUnlockedBalanceQuery(
+function useGetAccountUnlockedBalanceQuery(
   request: AccountRequest,
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {

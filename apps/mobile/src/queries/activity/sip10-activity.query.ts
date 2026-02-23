@@ -17,7 +17,7 @@ export function useSip10ActivityByAssetId(
   return toFetchState(useSip10ActivityByAssetIdQuery(account, assetId));
 }
 
-export function useSip10ActivityByAssetIdQuery(account: AccountAddresses, assetId: string) {
+function useSip10ActivityByAssetIdQuery(account: AccountAddresses, assetId: string) {
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,

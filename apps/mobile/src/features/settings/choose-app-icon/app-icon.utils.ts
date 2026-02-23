@@ -1,7 +1,5 @@
 import { Platform } from 'react-native';
 
-import { msg } from '@lingui/core/macro';
-
 export const appIcons = [
   'default',
   'icon-1',
@@ -18,21 +16,6 @@ export const appIcons = [
 ] as const;
 
 export type AppIcon = (typeof appIcons)[number];
-
-export const appIconLabels: Record<AppIcon, ReturnType<typeof msg>> = {
-  default: msg`Default`,
-  'icon-1': msg`Icon 1`,
-  'icon-2': msg`Icon 2`,
-  'icon-3': msg`Icon 3`,
-  'icon-4': msg`Icon 4`,
-  'icon-5': msg`Icon 5`,
-  'icon-6': msg`Icon 6`,
-  'icon-7': msg`Icon 7`,
-  'icon-8': msg`Icon 8`,
-  'icon-9': msg`Icon 9`,
-  'icon-10': msg`Icon 10`,
-  'icon-11': msg`Icon 11`,
-};
 
 export const appIconAssets: Record<AppIcon, number> = Platform.select({
   ios: {

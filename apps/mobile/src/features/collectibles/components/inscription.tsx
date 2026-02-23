@@ -11,7 +11,7 @@ import { CollectibleSvg } from './collectible-svg';
 import { CollectibleText } from './collectible-text';
 import { CollectibleVideo } from './collectible-video';
 
-export interface InscriptionProps {
+interface InscriptionProps {
   mimeType: InscriptionMimeType;
   name: string;
   height: number;

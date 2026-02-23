@@ -2,7 +2,7 @@
  * Utility functions for version comparison and validation
  */
 
-export interface SemanticVersion {
+interface SemanticVersion {
   major: number;
   minor: number;
   patch: number;
@@ -14,7 +14,7 @@ export interface SemanticVersion {
  * @returns Parsed version components
  * @throws Error if version format is invalid
  */
-export function parseSemanticVersion(version: string): SemanticVersion {
+function parseSemanticVersion(version: string): SemanticVersion {
   if (!version || typeof version !== 'string') {
     throw new Error('Version must be a non-empty string');
   }

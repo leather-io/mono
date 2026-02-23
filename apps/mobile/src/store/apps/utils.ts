@@ -1,34 +1,21 @@
-import z from 'zod';
+interface BaseApp {
+  origin: string;
+  screenshot: string | null;
+  name: string;
+}
 
-const baseAppSchema = z.object({
-  origin: z.string(),
-  screenshot: z.union([z.string(), z.null()]),
-  name: z.string(),
-});
+interface ConnectedApp extends BaseApp {
+  status: 'connected';
+  accountId: string;
+}
 
-const connectedAppSchema = z.intersection(
-  baseAppSchema,
-  z.object({
-    status: z.literal('connected'),
-    accountId: z.string(),
-  })
-);
+interface RecentlyVisitedApp extends BaseApp {
+  status: 'recently_visited';
+}
 
-export type ConnectedApp = z.infer<typeof connectedAppSchema>;
+export type AppStatus = App['status'];
 
-const recentlyVisitedAppSchema = z.intersection(
-  baseAppSchema,
-  z.object({
-    status: z.literal('recently_visited'),
-  })
-);
-export type RecentlyVisitedApp = z.infer<typeof recentlyVisitedAppSchema>;
-
-export const appSchema = z.union([connectedAppSchema, recentlyVisitedAppSchema]);
-
-export type AppStatus = z.infer<typeof appSchema>['status'];
-
-export type App = z.infer<typeof appSchema>;
+export type App = ConnectedApp | RecentlyVisitedApp;
 
 export function assertAppIsConnected(app: App): asserts app is ConnectedApp {
   if (app.status !== 'connected') throw new Error('App is not connected');

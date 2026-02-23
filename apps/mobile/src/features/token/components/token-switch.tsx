@@ -4,7 +4,7 @@ import { TestId } from '@/shared/test-id';
 
 import { Cell, type PressableProps, Switch, Text } from '@leather.io/ui/native';
 
-export interface TokenSwitchProps extends PressableProps {
+interface TokenSwitchProps extends PressableProps {
   ticker: string;
   icon: ReactNode;
   tokenName: string;
