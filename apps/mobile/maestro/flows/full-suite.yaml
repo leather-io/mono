@@ -134,7 +134,7 @@ name: Full Test Suite
     id: 'homeSettingsButton'
 - tapOn:
     id: 'settingsNetworkButton'
-- tapOn: 'Mainnet.*Enabled'
+- tapOn: 'Mainnet.*Disabled'
 - tapOn:
     id: 'backButton'
 - tapOn:
