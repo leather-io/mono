@@ -24,22 +24,25 @@ function formatDate(dateString: string | undefined) {
   });
   return formatter.format(date);
 }
-export async function loader({
-  params,
-}: Route.LoaderArgs): Promise<{ guide: NonNullable<HelpCenterGuideBySlugQueryResult> }> {
-  const { slug } = params;
+export async function loader({ params }: Route.LoaderArgs): Promise<{
+  guide: NonNullable<HelpCenterGuideBySlugQueryResult>;
+  categorySlug: string;
+}> {
+  const { guideSlug, categorySlug } = params;
   // Fetch the guide data using the slug
-  const guide = await cmsClient.fetch(helpCenterGuideBySlugQuery, { slug });
+  const guide = await cmsClient.fetch(helpCenterGuideBySlugQuery, { slug: guideSlug });
 
   if (!guide) {
     throw new Error('Guide not found', { cause: 404 });
   }
 
-  return { guide };
+  return { guide, categorySlug };
 }
 
 export default function GuideRoute({ loaderData }: Route.ComponentProps) {
-  const { guide } = loaderData;
+  const { guide, categorySlug } = loaderData;
+  const category =
+    guide.categories?.find(c => c.slug.current === categorySlug) ?? guide.categories?.[0];
 
   return (
     <Page>
@@ -55,7 +58,7 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
           <Breadcrumb
             segments={[
               { label: 'Help Center', href: '/support' },
-              { label: guide.category.name, href: `/support/${guide.category.slug.current}` },
+              { label: category.name, href: `/support/${category.slug.current}` },
               { label: guide.title },
             ]}
           />
@@ -69,7 +72,7 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
             px="space.02"
             py="space.01"
           >
-            {guide.category.name}
+            {category.name}
           </styled.span>
           <Page.Title my="space.04">{guide.title}</Page.Title>
           <styled.p textStyle="label.02" color="ink.text-subdued" mb="space.04">
@@ -87,7 +90,7 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
               <styled.ul listStyleType="disc" pl="space.04">
                 {guide.relatedGuides.map(post => (
                   <styled.li key={post._id} textStyle="body.01">
-                    <Link to={`/support/guide/${post.slug.current}`}>
+                    <Link to={`/support/${category.slug.current}/${post.slug.current}`}>
                       <styled.span
                         color="ink.action-primary-default"
                         _hover={{ textDecoration: 'underline' }}
