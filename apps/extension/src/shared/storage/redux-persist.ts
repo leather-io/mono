@@ -31,6 +31,7 @@ export const persistConfig: PersistConfig<LocalRootState> & HiddenUntypeDeserial
     'networks',
     'settings',
     'wallets',
+    'keychains',
     'manageTokens',
   ],
 };

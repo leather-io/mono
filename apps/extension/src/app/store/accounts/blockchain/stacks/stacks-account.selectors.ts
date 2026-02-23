@@ -10,6 +10,11 @@ import { deriveStxPrivateKey } from '@stacks/wallet-sdk';
 import { mapValues } from 'remeda';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
+import {
+  extractFingerprintFromKeyOriginPath,
+  extractKeyFromDescriptor,
+  extractKeyOriginPathFromDescriptor,
+} from '@leather.io/crypto';
 import type { AccountId, NetworkModes } from '@leather.io/models';
 import { makeStxKeyOrigin } from '@leather.io/stacks';
 import { createNullArrayOfLength } from '@leather.io/utils';
@@ -21,10 +26,7 @@ import type { StacksAppKeysResponseItem } from '@app/features/ledger/utils/stack
 import type { RootState } from '@app/store';
 import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
 import { selectRootKeychains } from '@app/store/in-memory-key/in-memory-key.selectors';
-import {
-  selectWalletStacksEntities,
-  selectWalletStacksKeys,
-} from '@app/store/ledger/stacks/stacks-key.slice';
+import { selectStacksKeychains } from '@app/store/keychains/keychain.selectors';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import type { HardwareStacksAccount, SoftwareStacksAccount } from './stacks-account.models';
@@ -110,17 +112,31 @@ const selectSoftwareAccounts = createSelector(
 
 const selectLedgerAccounts = createSelector(
   selectCurrentNetwork,
-  selectWalletStacksKeys,
-  (currentNetwork, ledgerKeys) => {
+  selectStacksKeychains,
+  (currentNetwork, stacksKeychains) => {
     const network = bitcoinNetworkModeToCoreNetworkMode(currentNetwork.chain.bitcoin.mode);
 
-    return ledgerKeys.map((publicKeys, index) =>
-      initalizeHardwareStacksAccount(
-        publicKeys,
-        { fingerprint: publicKeys.fingerprint || assumedZeroFingerprint, accountIndex: index },
+    return stacksKeychains.map((keychain, index) => {
+      const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
+      const fingerprint = extractFingerprintFromKeyOriginPath(keyOrigin) || assumedZeroFingerprint;
+      const stxPublicKey = extractKeyFromDescriptor(keychain.descriptor);
+
+      // Stacks ledger accounts also store dataPublicKey, but we don't have it in the keychain
+      // For now, we'll use the stxPublicKey as a fallback
+      const ledgerKeychain: StacksAppKeysResponseItem & { id: string; fingerprint: string } = {
+        id: keyOrigin,
+        path: keyOrigin,
+        stxPublicKey,
+        dataPublicKey: stxPublicKey,
+        fingerprint,
+      };
+
+      return initalizeHardwareStacksAccount(
+        ledgerKeychain,
+        { fingerprint, accountIndex: index },
         network
-      )
-    );
+      );
+    });
   }
 );
 
@@ -174,7 +190,27 @@ function generateLedgerStacksAccount(
   return initalizeHardwareStacksAccount(ledgerKeychain, accountId, network);
 }
 
-const selectLedgerStacksAccountLookup = createSelector(selectWalletStacksEntities, ledgerKeys => {
+const selectLedgerStacksAccountLookup = createSelector(selectStacksKeychains, stacksKeychains => {
+  // Convert keychains to a Record format for lookup
+  const ledgerKeys: Record<
+    string,
+    StacksAppKeysResponseItem & { id: string; fingerprint: string }
+  > = {};
+
+  stacksKeychains.forEach(keychain => {
+    const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
+    const fingerprint = keyOrigin.match(/\[([^/]+)/)?.[1] || assumedZeroFingerprint;
+    const stxPublicKey = extractKeyFromDescriptor(keychain.descriptor);
+
+    ledgerKeys[keyOrigin] = {
+      id: keyOrigin,
+      path: keyOrigin,
+      stxPublicKey,
+      dataPublicKey: stxPublicKey,
+      fingerprint,
+    };
+  });
+
   function generateAccount(accountId: AccountId, network: NetworkModes) {
     return generateLedgerStacksAccount(ledgerKeys, accountId, network);
   }

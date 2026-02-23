@@ -69,7 +69,6 @@ function LedgerSignStacksTxContainer() {
       async passesAdditionalVersionCheck(appVersion) {
         if (appVersion.chain !== 'stacks') return true;
 
-        // Check minimum version requirement (0.26.4+)
         if (!checkStacksAppMeetsMinimumVersion(appVersion)) {
           const versionInfo = {
             currentVersion: `${appVersion.major}.${appVersion.minor}.${appVersion.patch}`,

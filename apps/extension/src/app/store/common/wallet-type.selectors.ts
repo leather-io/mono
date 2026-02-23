@@ -2,13 +2,15 @@ import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
 
-import { extractAccountIndexFromPath } from '@leather.io/crypto';
+import {
+  extractAccountIndexFromPath,
+  extractKeyOriginPathFromDescriptor,
+} from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { selectStacksChain } from '../chains/stx-chain.selectors';
-import { selectBitcoinKeychainEntities } from '../ledger/bitcoin/bitcoin-key.slice';
-import { selectWalletStacksKeys } from '../ledger/stacks/stacks-key.slice';
+import { selectBitcoinKeychains, selectStacksKeychains } from '../keychains/keychain.selectors';
 import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 import { selectWalletEntities } from '../wallets/wallet.selectors';
 
@@ -42,8 +44,8 @@ interface WalletAccountRefTree {
 // care of account look up themselves, as a way to lazily derive account details
 // when needed.
 const selectWalletAccountRefTree = createSelector(
-  [selectWalletEntities, selectStacksChain, selectBitcoinKeychainEntities, selectWalletStacksKeys],
-  (walletEntities, stxChain, bitcoinKeychainEntities, ledgerStacksKeys): WalletAccountRefTree[] => {
+  [selectWalletEntities, selectStacksChain, selectBitcoinKeychains, selectStacksKeychains],
+  (walletEntities, stxChain, bitcoinKeychains, stacksKeychains): WalletAccountRefTree[] => {
     const tree: WalletAccountRefTree[] = [];
 
     Object.values(walletEntities || {}).forEach(wallet => {
@@ -60,15 +62,24 @@ const selectWalletAccountRefTree = createSelector(
       }
 
       // Collect account indices from Ledger Stacks keys
-      ledgerStacksKeys
-        .filter(key => key.fingerprint === wallet.fingerprint)
-        .forEach((_, index) => allAccountIndices.push(index));
+      stacksKeychains
+        .filter(keychain => {
+          const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
+          return keyOrigin?.startsWith(wallet.fingerprint);
+        })
+        .forEach(keychain => {
+          const accountIndex = extractAccountIndexFromPath(keychain.descriptor);
+          if (accountIndex !== null) allAccountIndices.push(accountIndex);
+        });
 
       // Collect account indices from Bitcoin keys
-      Object.values(bitcoinKeychainEntities || {})
-        .filter(key => key?.fingerprint === wallet.fingerprint)
-        .forEach(key => {
-          const accountIndex = extractAccountIndexFromPath(key.path);
+      bitcoinKeychains
+        .filter(keychain => {
+          const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
+          return keyOrigin?.startsWith(wallet.fingerprint);
+        })
+        .forEach(keychain => {
+          const accountIndex = extractAccountIndexFromPath(keychain.descriptor);
           if (accountIndex !== null) allAccountIndices.push(accountIndex);
         });
 

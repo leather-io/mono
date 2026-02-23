@@ -141,19 +141,15 @@ describe(migrateMultiWalletSupport.name, () => {
       });
       expect(result.wallets.ids).toEqual([ledgerBitcoinFingerprint]);
 
-      expect(result.ledger.bitcoin.ids).toEqual([`${ledgerBitcoinFingerprint}/native-segwit/0`]);
-      expect(result.ledger.bitcoin.entities[`${ledgerBitcoinFingerprint}/native-segwit/0`]).toEqual(
-        {
-          id: `${ledgerBitcoinFingerprint}/native-segwit/0`,
-          policy: `[${ledgerBitcoinFingerprint}/84'/0'/0']xpub123`,
-          fingerprint: ledgerBitcoinFingerprint,
-        }
-      );
+      // Check that ledger slice has been removed
+      expect(result.ledger).toBeUndefined();
 
-      expect(result.ledger.stacks.ids).toEqual([`${ledgerBitcoinFingerprint}/0`]);
-      expect(result.ledger.stacks.entities[`${ledgerBitcoinFingerprint}/0`]).toEqual({
-        id: `${ledgerBitcoinFingerprint}/0`,
-        fingerprint: ledgerBitcoinFingerprint,
+      // Check that keys were migrated to keychains
+      const bitcoinKeyOrigin = `${ledgerBitcoinFingerprint}/84'/0'/0'`;
+      expect(result.keychains.ids).toContain(bitcoinKeyOrigin);
+      expect(result.keychains.entities[bitcoinKeyOrigin]).toEqual({
+        chain: 'bitcoin',
+        descriptor: `[${ledgerBitcoinFingerprint}/84'/0'/0']xpub123`,
       });
     });
   });
@@ -197,23 +193,24 @@ describe(migrateMultiWalletSupport.name, () => {
         createdOn: null,
       });
 
-      expect(result.ledger.bitcoin.ids).toEqual([
-        `${ledgerBitcoinFingerprint}/native-segwit/0`,
-        `${ledgerBitcoinFingerprint}/taproot/1`,
-      ]);
+      // Check that ledger slice has been removed
+      expect(result.ledger).toBeUndefined();
 
-      expect(result.ledger.bitcoin.entities[`${ledgerBitcoinFingerprint}/native-segwit/0`]).toEqual(
-        {
-          id: `${ledgerBitcoinFingerprint}/native-segwit/0`,
-          policy: `[${ledgerBitcoinFingerprint}/84'/0'/0']xpub456`,
-          fingerprint: ledgerBitcoinFingerprint,
-        }
-      );
+      // Check that keys were migrated to keychains
+      const nativeSegwitKeyOrigin = `${ledgerBitcoinFingerprint}/84'/0'/0'`;
+      const taprootKeyOrigin = `${ledgerBitcoinFingerprint}/86'/0'/1'`;
 
-      expect(result.ledger.bitcoin.entities[`${ledgerBitcoinFingerprint}/taproot/1`]).toEqual({
-        id: `${ledgerBitcoinFingerprint}/taproot/1`,
-        policy: `[${ledgerBitcoinFingerprint}/86'/0'/1']xpub789`,
-        fingerprint: ledgerBitcoinFingerprint,
+      expect(result.keychains.ids).toContain(nativeSegwitKeyOrigin);
+      expect(result.keychains.ids).toContain(taprootKeyOrigin);
+
+      expect(result.keychains.entities[nativeSegwitKeyOrigin]).toEqual({
+        chain: 'bitcoin',
+        descriptor: `[${ledgerBitcoinFingerprint}/84'/0'/0']xpub456`,
+      });
+
+      expect(result.keychains.entities[taprootKeyOrigin]).toEqual({
+        chain: 'bitcoin',
+        descriptor: `[${ledgerBitcoinFingerprint}/86'/0'/1']xpub789`,
       });
     });
   });
@@ -232,12 +229,14 @@ describe(migrateMultiWalletSupport.name, () => {
               'default/0': {
                 id: 'default/0',
                 publicKey: '02abc123',
+                path: "m/44'/5757'/0'/0/0",
                 targetId: 'target-1',
                 walletId: 'wallet-1',
               },
               'default/1': {
                 id: 'default/1',
                 publicKey: '02def456',
+                path: "m/44'/5757'/0'/0/1",
                 targetId: 'target-2',
                 walletId: 'wallet-2',
               },
@@ -264,21 +263,24 @@ describe(migrateMultiWalletSupport.name, () => {
         createdOn: null,
       });
 
-      expect(result.ledger.stacks.ids).toEqual([
-        `${assumedZeroFingerprint}/0`,
-        `${assumedZeroFingerprint}/1`,
-      ]);
+      // Check that ledger slice has been removed
+      expect(result.ledger).toBeUndefined();
 
-      expect(result.ledger.stacks.entities[`${assumedZeroFingerprint}/0`]).toEqual({
-        id: `${assumedZeroFingerprint}/0`,
-        publicKey: '02abc123',
-        fingerprint: assumedZeroFingerprint,
+      // Check that Stacks keys were migrated to keychains
+      const stacksKeyOrigin0 = `${assumedZeroFingerprint}/44'/5757'/0'/0/0`;
+      const stacksKeyOrigin1 = `${assumedZeroFingerprint}/44'/5757'/0'/0/1`;
+
+      expect(result.keychains.ids).toContain(stacksKeyOrigin0);
+      expect(result.keychains.ids).toContain(stacksKeyOrigin1);
+
+      expect(result.keychains.entities[stacksKeyOrigin0]).toEqual({
+        chain: 'stacks',
+        descriptor: `[${assumedZeroFingerprint}/44'/5757'/0'/0/0]02abc123`,
       });
 
-      expect(result.ledger.stacks.entities[`${assumedZeroFingerprint}/1`]).toEqual({
-        id: `${assumedZeroFingerprint}/1`,
-        publicKey: '02def456',
-        fingerprint: assumedZeroFingerprint,
+      expect(result.keychains.entities[stacksKeyOrigin1]).toEqual({
+        chain: 'stacks',
+        descriptor: `[${assumedZeroFingerprint}/44'/5757'/0'/0/1]02def456`,
       });
 
       expect(result.chains.stx[assumedZeroFingerprint]).toBeDefined();
@@ -491,13 +493,15 @@ describe(migrateMultiWalletSupport.name, () => {
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.ledger.bitcoin.entities[`${ledgerBitcoinFingerprint}/native-segwit/0`]).toEqual(
-        {
-          id: `${ledgerBitcoinFingerprint}/native-segwit/0`,
-          policy: `[${ledgerBitcoinFingerprint}/84'/0'/0']xpub123`,
-          fingerprint: ledgerBitcoinFingerprint,
-        }
-      );
+      // Check that ledger slice has been removed
+      expect(result.ledger).toBeUndefined();
+
+      // Check that Bitcoin key was migrated to keychains
+      const bitcoinKeyOrigin = `${ledgerBitcoinFingerprint}/84'/0'/0'`;
+      expect(result.keychains.entities[bitcoinKeyOrigin]).toEqual({
+        chain: 'bitcoin',
+        descriptor: `[${ledgerBitcoinFingerprint}/84'/0'/0']xpub123`,
+      });
     });
 
     test('removes targetId and walletId from stacks entities', () => {
@@ -513,6 +517,7 @@ describe(migrateMultiWalletSupport.name, () => {
               [`${assumedZeroFingerprint}/0`]: {
                 id: `${assumedZeroFingerprint}/0`,
                 publicKey: '02abc123',
+                path: "m/44'/5757'/0'/0/0",
                 targetId: 'should-be-removed',
                 walletId: 'should-be-removed',
                 fingerprint: assumedZeroFingerprint,
@@ -524,10 +529,14 @@ describe(migrateMultiWalletSupport.name, () => {
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.ledger.stacks.entities[`${assumedZeroFingerprint}/0`]).toEqual({
-        id: `${assumedZeroFingerprint}/0`,
-        publicKey: '02abc123',
-        fingerprint: assumedZeroFingerprint,
+      // Check that ledger slice has been removed
+      expect(result.ledger).toBeUndefined();
+
+      // Check that Stacks key was migrated to keychains
+      const stacksKeyOrigin = `${assumedZeroFingerprint}/44'/5757'/0'/0/0`;
+      expect(result.keychains.entities[stacksKeyOrigin]).toEqual({
+        chain: 'stacks',
+        descriptor: `[${assumedZeroFingerprint}/44'/5757'/0'/0/0]02abc123`,
       });
     });
   });

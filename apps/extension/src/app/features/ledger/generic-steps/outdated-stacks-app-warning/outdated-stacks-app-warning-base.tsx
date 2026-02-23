@@ -10,6 +10,7 @@ import { useThemeSwitcher } from '@app/common/theme-provider';
 import { whenTheme } from '@app/common/utils/when-theme';
 import { LedgerTitle } from '@app/features/ledger/components/ledger-title';
 import { LedgerWrapper } from '@app/features/ledger/components/ledger-wrapper';
+import { LEDGER_LIVE_MANAGER_URL } from '@app/features/ledger/utils/generic-ledger-utils';
 
 const locationStateSchema = z.object({
   versionInfo: z
@@ -98,7 +99,7 @@ export function OutdatedStacksAppWarningBase({ onTryAgain }: OutdatedStacksAppWa
           display="inline-flex"
           gap="space.02"
           height="48px"
-          href="ledgerlive://manager"
+          href={LEDGER_LIVE_MANAGER_URL}
           justifyContent="center"
           px="space.04"
           textAlign="center"

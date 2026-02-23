@@ -25,6 +25,7 @@ import {
   extractAccountIndexFromDescriptor,
   extractDerivationPathFromDescriptor,
   extractFingerprintFromDescriptor,
+  extractKeyOriginPathFromDescriptor,
   fingerprintAsNumberToHex,
   makeAccountIdentifer,
 } from '@leather.io/crypto';
@@ -34,10 +35,7 @@ import type { BitcoinKeychain } from '@leather.io/state/keychains';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
 import { selectRootKeychains } from '@app/store/in-memory-key/in-memory-key.selectors';
-import {
-  selectAllBitcoinKeychains,
-  selectBitcoinKeychainEntities,
-} from '@app/store/ledger/bitcoin/bitcoin-key.slice';
+import { selectBitcoinKeychains } from '@app/store/keychains/keychain.selectors';
 import { selectCurrentNetwork, useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 // For any given root keychain, return a derivation function accepting the
@@ -92,8 +90,8 @@ const selectSoftwareWalletBitcoinAccountGenerator = createSelector(
 );
 
 const selectLedgerBitcoinAccountLookup = createSelector(
-  selectBitcoinKeychainEntities,
-  ledgerKeychains => (fingerprint: string) => (args: BitcoinAccountDerivationRequirements) => {
+  selectBitcoinKeychains,
+  bitcoinKeychains => (fingerprint: string) => (args: BitcoinAccountDerivationRequirements) => {
     const derivationPathFn = whenSupportedPaymentType(args.paymentType)({
       p2tr: makeTaprootAccountDerivationPath,
       p2wpkh: makeNativeSegwitAccountDerivationPath,
@@ -104,9 +102,12 @@ const selectLedgerBitcoinAccountLookup = createSelector(
       derivationPathFn(args.network, args.accountIndex)
     );
 
-    const keychain = ledgerKeychains[keyOrigin];
+    const keychain = bitcoinKeychains.find(kc => {
+      const kcKeyOrigin = extractKeyOriginPathFromDescriptor(kc.descriptor);
+      return kcKeyOrigin === keyOrigin;
+    });
     if (!keychain) return undefined;
-    return initializeBitcoinAccountKeychainFromDescriptor(keychain.policy);
+    return initializeBitcoinAccountKeychainFromDescriptor(keychain.descriptor);
   }
 );
 
@@ -147,8 +148,8 @@ const selectBitcoinAccountKeychains = createSelector(
   selectRootKeychains,
   selectStacksChain,
   selectCurrentNetwork,
-  selectAllBitcoinKeychains,
-  (softwareKeychains, stacksChain, network, ledgerAccountDetails): BitcoinKeychain[] => {
+  selectBitcoinKeychains,
+  (softwareKeychains, stacksChain, network, ledgerKeychains): BitcoinKeychain[] => {
     const accountKeychains: BitcoinKeychain[] = [];
 
     Object.entries(softwareKeychains).forEach(([fingerprint, keychain]) => {
@@ -163,9 +164,7 @@ const selectBitcoinAccountKeychains = createSelector(
       }
     });
 
-    ledgerAccountDetails.forEach(details =>
-      accountKeychains.push({ chain: 'bitcoin', descriptor: details.policy })
-    );
+    ledgerKeychains.forEach(keychain => accountKeychains.push(keychain));
 
     return accountKeychains;
   }

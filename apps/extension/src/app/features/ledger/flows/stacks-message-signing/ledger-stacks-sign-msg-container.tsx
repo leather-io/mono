@@ -88,7 +88,6 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       return;
     }
 
-    // Check minimum version requirement (0.26.4+)
     if (!checkStacksAppMeetsMinimumVersion(versionInfo)) {
       const versionDetails = {
         currentVersion: `${versionInfo.major}.${versionInfo.minor}.${versionInfo.patch}`,

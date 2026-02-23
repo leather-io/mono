@@ -1,6 +1,11 @@
 import { produce } from 'immer';
 
-import { extractFingerprintFromDescriptor } from '@leather.io/crypto';
+import {
+  createDescriptor,
+  createKeyOriginPath,
+  extractFingerprintFromDescriptor,
+  extractKeyOriginPathFromDescriptor,
+} from '@leather.io/crypto';
 import { isString } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
@@ -242,9 +247,68 @@ export function migrateMultiWalletSupport(state: any): any {
     }
 
     //
+    // Migrate ledger keys to keychain store
+    if (hasLedgerAccounts) {
+      if (!draftState.keychains) draftState.keychains = { ids: [], entities: {} };
+
+      // Migrate Bitcoin keys
+      if (draftState.ledger?.bitcoin?.entities) {
+        for (const id of Object.keys(draftState.ledger.bitcoin.entities)) {
+          const entity = draftState.ledger.bitcoin.entities[id];
+          if (entity && entity.policy) {
+            const descriptor = entity.policy;
+            // Bitcoin keys already have the descriptor (policy) which includes the key origin path
+            try {
+              const keyOriginPath = extractKeyOriginPathFromDescriptor(descriptor);
+              if (keyOriginPath && !draftState.keychains.entities[keyOriginPath]) {
+                draftState.keychains.entities[keyOriginPath] = {
+                  descriptor,
+                  chain: 'bitcoin',
+                };
+                draftState.keychains.ids.push(keyOriginPath);
+              }
+            } catch (error) {
+              logger.error(
+                'Error extracting key origin from Bitcoin descriptor:',
+                error,
+                descriptor
+              );
+            }
+          }
+        }
+      }
+
+      // Migrate Stacks keys
+      if (draftState.ledger?.stacks?.entities) {
+        for (const id of Object.keys(draftState.ledger.stacks.entities)) {
+          const entity = draftState.ledger.stacks.entities[id];
+
+          const publicKey = entity?.stxPublicKey || entity?.publicKey;
+          if (!entity || !entity.path || !publicKey) continue;
+
+          const keyOrigin = createKeyOriginPath(entity.fingerprint || fingerprint, entity.path);
+          const descriptor = createDescriptor(keyOrigin, publicKey);
+          if (!draftState.keychains.entities[keyOrigin]) {
+            draftState.keychains.entities[keyOrigin] = {
+              descriptor,
+              chain: 'stacks',
+            };
+            draftState.keychains.ids.push(keyOrigin);
+          }
+        }
+      }
+    }
+
+    //
     // Clean up chains.stx.default when no keys exist
     if (!hasAnyKeys && draftState.chains?.stx?.default) {
       delete draftState.chains.stx.default;
+    }
+
+    //
+    // Clean up old ledger slice after migration to keychains
+    if (hasLedgerAccounts && draftState.ledger) {
+      delete draftState.ledger;
     }
   });
 }

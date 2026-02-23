@@ -1,20 +1,21 @@
 import { useSelector } from 'react-redux';
 
 import { bitcoinNetworkModeToCoreNetworkMode, inferNetworkFromPath } from '@leather.io/bitcoin';
+import { extractDerivationPathFromDescriptor } from '@leather.io/crypto';
 
-import { selectAllBitcoinKeychains } from '@app/store/ledger/bitcoin/bitcoin-key.slice';
+import { selectBitcoinKeychains } from '@app/store/keychains/keychain.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 // TODO: Asset refactor: remove if determined unnecessary
 // ts-unused-exports:disable-next-line
 export function useHasBitcoinLedgerKeychain() {
   const network = useCurrentNetwork();
-  const accounts = useSelector(selectAllBitcoinKeychains);
+  const keychains = useSelector(selectBitcoinKeychains);
 
-  const hasNetworkKeys = accounts.some(v => {
+  const hasNetworkKeys = keychains.some(keychain => {
+    const path = extractDerivationPathFromDescriptor(keychain.descriptor);
     return (
-      inferNetworkFromPath(v.path) ===
-      bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode)
+      inferNetworkFromPath(path) === bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode)
     );
   });
 
@@ -22,13 +23,18 @@ export function useHasBitcoinLedgerKeychain() {
 }
 
 export function useFilteredBitcoinAccounts() {
-  const accounts = useSelector(selectAllBitcoinKeychains);
+  const keychains = useSelector(selectBitcoinKeychains);
   const network = useCurrentNetwork();
 
-  return accounts.filter(v => {
-    return (
-      inferNetworkFromPath(v.path) ===
-      bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode)
-    );
-  });
+  return keychains
+    .map(keychain => {
+      const path = extractDerivationPathFromDescriptor(keychain.descriptor);
+      return { ...keychain, path };
+    })
+    .filter(v => {
+      return (
+        inferNetworkFromPath(v.path) ===
+        bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode)
+      );
+    });
 }
