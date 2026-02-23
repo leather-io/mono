@@ -42,7 +42,7 @@ export function HelpCenter() {
           <GuideList
             items={categories.map(category => ({
               id: category._id,
-              title: category.categoryName,
+              title: category.name,
               href: `/support/${category.slug.current}`,
               icon: category.icon?.asset as unknown as SanityImageAsset | undefined,
               guideCount: category.guideCount,
