@@ -27,10 +27,10 @@ export const persistConfig: PersistConfig<LocalRootState> & HiddenUntypeDeserial
     'chains',
     'softwareKeys',
     'appPermissions',
-    'ledger',
     'networks',
     'settings',
     'wallets',
+    'keychains',
     'manageTokens',
   ],
 };

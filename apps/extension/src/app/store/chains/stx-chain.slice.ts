@@ -32,7 +32,7 @@ export const stxChainSlice = createSlice({
     },
 
     restoreAccountIndex(state, action: PayloadAction<AccountId>) {
-      const fingerprint = assumedZeroFingerprint;
+      const fingerprint = action.payload.fingerprint;
       if (!state[fingerprint]) {
         state[fingerprint] = {
           highestAccountIndex: action.payload.accountIndex,

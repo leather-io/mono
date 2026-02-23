@@ -28,7 +28,6 @@ import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { LegacyAccountAuth } from '@app/pages/legacy-account-auth/legacy-account-auth';
 import { ManageTokensPage } from '@app/pages/manage-tokens/manage-tokens';
-import { MultiWalletTest } from '@app/pages/multi-wallet-test/multi-wallet-test';
 import { AddNetwork as CurrentAddNetwork } from '@app/pages/network/add-network';
 import { EditNetwork as CurrentEditNetwork } from '@app/pages/network/edit-network';
 import { SelectNetwork } from '@app/pages/network/select-network';
@@ -145,16 +144,6 @@ function useAppRoutes() {
 
           {ledgerStacksTxSigningRoutes}
 
-          <Route
-            path={RouteUrls.MultiWalletTest}
-            element={
-              <AccountGate>
-                <MultiWalletTest />
-              </AccountGate>
-            }
-          >
-            {requestBitcoinKeysRoutes}
-          </Route>
           <Route
             path={RouteUrls.AddNetwork}
             element={

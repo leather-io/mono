@@ -1,18 +1,16 @@
-import type { Account } from '@stacks/wallet-sdk';
-
 import type { AccountId } from '@leather.io/models';
 
-// TODO @kyranjamie
-// Remove dependency on wallet-sdk here
-
-// Extending the `Account` type from `@stacks/wallet-sdk`
-export type SoftwareStacksAccount = Account &
-  AccountId & {
-    type: 'software';
-    address: string;
-    stxPublicKey: string;
-    dataPublicKey: string;
-  };
+export interface SoftwareStacksAccount extends AccountId {
+  type: 'software';
+  index: number;
+  address: string;
+  stxPublicKey: string;
+  stxPrivateKey: string;
+  dataPublicKey: string;
+  dataPrivateKey: string;
+  appsKey: string;
+  salt: string;
+}
 
 export interface HardwareStacksAccount extends AccountId {
   type: 'ledger';

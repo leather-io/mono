@@ -23,6 +23,7 @@ import {
 import { PersistPartial } from 'redux-persist/es/persistReducer';
 
 import { resetWallet } from '@leather.io/state';
+import { keychainSlice } from '@leather.io/state/keychains';
 import { walletSlice } from '@leather.io/state/wallet';
 
 import { persistConfig } from '@shared/storage/redux-persist';
@@ -31,8 +32,6 @@ import { activeSlice } from './active/active.slice';
 import { appPermissionsSlice } from './app-permissions/app-permissions.slice';
 import { stxChainSlice } from './chains/stx-chain.slice';
 import { inMemoryKeySlice } from './in-memory-key/in-memory-key.slice';
-import { bitcoinKeysSlice } from './ledger/bitcoin/bitcoin-key.slice';
-import { stacksKeysSlice } from './ledger/stacks/stacks-key.slice';
 import { manageTokensSlice } from './manage-tokens/manage-tokens.slice';
 import { networksSlice } from './networks/networks.slice';
 import { settingsSlice } from './settings/settings.slice';
@@ -47,10 +46,7 @@ export interface LocalRootState {
   chains: {
     stx: ReturnType<typeof stxChainSlice.reducer>;
   };
-  ledger: {
-    bitcoin: ReturnType<typeof bitcoinKeysSlice.reducer>;
-    stacks: ReturnType<typeof stacksKeysSlice.reducer>;
-  };
+  keychains: ReturnType<typeof keychainSlice.reducer>;
   wallets: ReturnType<typeof walletSlice.reducer>;
   inMemoryKeys: ReturnType<typeof inMemoryKeySlice.reducer>;
   softwareKeys: ReturnType<typeof keySlice.reducer>;
@@ -69,10 +65,7 @@ const appReducer = combineReducers({
   chains: combineReducers({
     stx: stxChainSlice.reducer,
   }),
-  ledger: combineReducers({
-    bitcoin: bitcoinKeysSlice.reducer,
-    stacks: stacksKeysSlice.reducer,
-  }),
+  keychains: keychainSlice.reducer,
   wallets: walletSlice.reducer,
   inMemoryKeys: inMemoryKeySlice.reducer,
   softwareKeys: keySlice.reducer,

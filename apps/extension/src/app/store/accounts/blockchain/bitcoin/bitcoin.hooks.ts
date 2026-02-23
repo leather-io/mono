@@ -59,7 +59,6 @@ export function useHasCurrentBitcoinAccount() {
   return !!nativeSegwit && !!taproot;
 }
 
-// Temporary - remove with privacy mode
 export function useZeroIndexTaprootAddress(accountId?: AccountId) {
   const network = useCurrentNetwork();
   const currentAccount = useCurrentAccountId();

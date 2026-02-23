@@ -9,7 +9,7 @@ import { assumedZeroFingerprint } from '@shared/utils';
 
 import { inMemoryKeySlice } from '../in-memory-key/in-memory-key.slice';
 
-export const userSwitchesAccount = createAction<AccountId>('active/userSwitchesAccount');
+export const userSwitchesAccount = createAction<AccountId | null>('active/userSwitchesAccount');
 
 interface ActiveState {
   account: AccountId | null;

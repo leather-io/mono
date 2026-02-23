@@ -11,6 +11,7 @@ function selectWalletsState(state: RootState) {
 const walletSelectors = walletAdapter.getSelectors<RootState>(selectWalletsState);
 
 export const selectWalletEntities = walletSelectors.selectEntities;
+export const selectAllWallets = walletSelectors.selectAll;
 
 export function useWalletEntities() {
   return useSelector(selectWalletEntities);

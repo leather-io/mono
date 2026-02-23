@@ -11,12 +11,12 @@ import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useFlags } from '@app/features/feature-flags';
 import { useActivityByAsset } from '@app/query/activity/activity.query';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 
 export function useCryptoAssetBuy(asset: CryptoAsset) {
   const navigate = useNavigate();
-  const accountIndex = useCurrentAccountIndex();
-  const account = useAccountAddresses(accountIndex);
+  const accountId = useCurrentAccountId();
+  const account = useAccountAddresses(accountId);
   const activityQuery = useActivityByAsset(account, asset);
   const { releaseOnramperBuy } = useFlags();
   const showBuyButton =

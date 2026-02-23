@@ -14,7 +14,7 @@ import {
   checkLockedDeviceError,
   useLedgerResponseState,
 } from '../../utils/generic-ledger-utils';
-import { StacksAppVersion } from '../../utils/stacks-ledger-utils';
+import { MINIMUM_STACKS_APP_VERSION, StacksAppVersion } from '../../utils/stacks-ledger-utils';
 
 export const defaultNumberOfKeysToPullFromLedgerDevice = 10;
 
@@ -95,7 +95,7 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
         const versionInfo = currentVersion
           ? {
               currentVersion: `${currentVersion.major}.${currentVersion.minor}.${currentVersion.patch}`,
-              requiredVersion: '0.26.4',
+              requiredVersion: MINIMUM_STACKS_APP_VERSION,
             }
           : undefined;
         void ledgerNavigate.toStacksAppOutdatedWarning(versionInfo);
