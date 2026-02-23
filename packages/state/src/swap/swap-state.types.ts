@@ -16,7 +16,7 @@ import {
   type Money,
   type NetworkConfiguration,
   type QuoteCurrency,
-  type SwapDex,
+  type StacksProtocol,
   type SwapExecutionData,
   type SwapProviderId,
   type SwapQuote,
@@ -118,7 +118,7 @@ export interface DisabledPairRule {
 export interface EnrichedSwapQuote {
   rawSwapQuote: SwapQuote;
   swapRate: BigNumber;
-  dexPath: SwapDex[];
+  dexPath: StacksProtocol[];
   assetPath: SwappableFungibleCryptoAsset[];
   baseAsset: SwappableFungibleCryptoAsset;
   targetAsset: SwappableFungibleCryptoAsset;

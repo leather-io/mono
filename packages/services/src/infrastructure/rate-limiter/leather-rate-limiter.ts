@@ -58,4 +58,6 @@ export const leatherApiPriorities = {
   runeAnalyticsMap: leatherPriorityLevels.MEDIUM,
   runeAnalytics: leatherPriorityLevels.MEDIUM,
   runeDistribution: leatherPriorityLevels.MEDIUM,
+  protocols: leatherPriorityLevels.MEDIUM,
+  protocolContracts: leatherPriorityLevels.LOW,
 };

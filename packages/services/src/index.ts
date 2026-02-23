@@ -19,6 +19,7 @@ export * from './infrastructure/settings/settings.service';
 export * from './inversify.config';
 export * from './market/market-data.service';
 export * from './market/market-stats.service';
+export * from './protocols/stacks-protocol.service';
 export * from './swap/swap.service';
 export * from './token-analytics/token-analytics.service';
 export * from './transactions/bitcoin-transactions.service';

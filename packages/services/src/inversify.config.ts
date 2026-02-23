@@ -30,6 +30,7 @@ import { MarketDataService } from './market/market-data.service';
 import { MarketHistoryService } from './market/market-history.service';
 import { MarketStatsService } from './market/market-stats.service';
 import { NotificationsService } from './notifications/notifications.service';
+import { StacksProtocolService } from './protocols/stacks-protocol.service';
 import { SwapService } from './swap/swap.service';
 import { TokenAnalyticsService } from './token-analytics/token-analytics.service';
 import { BitcoinTransactionsService } from './transactions/bitcoin-transactions.service';
@@ -178,6 +179,9 @@ export function getSip9sService() {
 }
 export function getStampsService() {
   return getServicesContainer().get(StampsService);
+}
+export function getStacksProtocolService() {
+  return getServicesContainer().get(StacksProtocolService);
 }
 
 /* 

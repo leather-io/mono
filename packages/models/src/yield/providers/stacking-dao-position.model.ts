@@ -3,7 +3,7 @@ import type { Money } from '../../money.model';
 import type { BasePooledStackingPosition, BaseYieldPosition } from '../yield-position.base.model';
 
 interface BaseStackingDaoLstPosition extends BaseYieldPosition {
-  provider: 'stackingdao';
+  provider: 'stacking-dao';
   withdrawalsBalance: Money;
   lstHolding?: StackingDaoLstHolding;
   withdrawals: StackingDaoLstWithdrawal[];
@@ -43,6 +43,6 @@ export interface StackingDaoLstWithdrawal {
 }
 
 export interface StackingDaoPooledStackingPosition extends BasePooledStackingPosition {
-  provider: 'stackingdao';
+  provider: 'stacking-dao';
   product: 'stackingdao-pooled-stacking';
 }

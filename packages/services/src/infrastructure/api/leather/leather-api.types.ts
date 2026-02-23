@@ -221,7 +221,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -237,7 +237,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -253,7 +253,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -269,7 +269,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -285,7 +285,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -303,7 +303,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -319,7 +319,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -335,7 +335,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -351,7 +351,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -622,7 +622,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -638,7 +638,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -654,7 +654,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -670,7 +670,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -686,7 +686,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -704,7 +704,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -720,7 +720,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -736,7 +736,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -752,7 +752,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1023,7 +1023,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1039,7 +1039,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1055,7 +1055,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1071,7 +1071,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1087,7 +1087,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1105,7 +1105,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1121,7 +1121,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1137,7 +1137,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -1153,7 +1153,7 @@ export interface paths {
                     count: number;
                     balance: number;
                   };
-                  individuals: {
+                  standard: {
                     count: number;
                     balance: number;
                   };
@@ -2731,6 +2731,263 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/protocols': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get all Stacks protocols */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              [key: string]: {
+                /** @enum {string} */
+                id:
+                  | 'alex'
+                  | 'arkadiko'
+                  | 'bitflow'
+                  | 'fast-pool'
+                  | 'granite'
+                  | 'hermetica'
+                  | 'sbtc-bridge'
+                  | 'stacking-dao'
+                  | 'velar'
+                  | 'xverse'
+                  | 'zest';
+                name: string;
+                url: string;
+                logo: string;
+                description: string;
+                addresses: string[];
+              };
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/protocols/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get a Stacks protocol by ID */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {string} */
+              id:
+                | 'alex'
+                | 'arkadiko'
+                | 'bitflow'
+                | 'fast-pool'
+                | 'granite'
+                | 'hermetica'
+                | 'sbtc-bridge'
+                | 'stacking-dao'
+                | 'velar'
+                | 'xverse'
+                | 'zest';
+              name: string;
+              url: string;
+              logo: string;
+              description: string;
+              addresses: string[];
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/protocols/{id}/contracts': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get contract-to-action mapping for a Stacks protocol */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              [key: string]: {
+                [key: string]:
+                  | 'swap'
+                  | 'add-liquidity'
+                  | 'remove-liquidity'
+                  | 'stake'
+                  | 'unstake'
+                  | 'stack'
+                  | 'unstack'
+                  | 'deposit'
+                  | 'withdraw'
+                  | 'borrow'
+                  | 'repay'
+                  | 'claim-rewards'
+                  | 'bridge';
+              };
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/quests/{task}/complete': {
     parameters: {
       query?: never;
@@ -3551,11 +3808,23 @@ export interface paths {
             'application/json': {
               [key: string]: {
                 /** @enum {string} */
-                id: 'bitflow' | 'sbtc-bridge' | 'alex' | 'velar' | 'arkadiko';
+                id:
+                  | 'alex'
+                  | 'arkadiko'
+                  | 'bitflow'
+                  | 'fast-pool'
+                  | 'granite'
+                  | 'hermetica'
+                  | 'sbtc-bridge'
+                  | 'stacking-dao'
+                  | 'velar'
+                  | 'xverse'
+                  | 'zest';
                 name: string;
                 url: string;
                 logo: string;
                 description: string;
+                addresses: string[];
               };
             };
           };

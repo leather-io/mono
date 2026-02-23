@@ -2,12 +2,12 @@ import { injectable } from 'inversify';
 
 import type {
   AccountAddresses,
+  StacksProtocol,
+  StacksProtocolId,
   YieldPosition,
   YieldProduct,
   YieldProductCategory,
   YieldProductKey,
-  YieldProvider,
-  YieldProviderKey,
 } from '@leather.io/models';
 
 import { BitflowAmmLpService } from './providers/bitflow/bitflow-amm-lp.service';
@@ -18,11 +18,11 @@ import { StackingDaoStStxBtcService } from './providers/stacking-dao/stacking-da
 import { ZestBorrowService } from './providers/zest/zest-borrow.service';
 
 export interface YieldProductService {
-  providerKey: YieldProviderKey;
+  providerKey: StacksProtocolId;
   productKey: YieldProductKey;
   productCategory: YieldProductCategory;
 
-  getProvider(signal?: AbortSignal): Promise<YieldProvider>;
+  getProvider(signal?: AbortSignal): Promise<StacksProtocol>;
   getProduct(signal?: AbortSignal): Promise<YieldProduct>;
   getAccountPositions(account: AccountAddresses, signal?: AbortSignal): Promise<YieldPosition[]>;
 }
@@ -49,7 +49,7 @@ export class YieldService {
     ];
   }
 
-  async getAllProviders(signal?: AbortSignal): Promise<YieldProvider[]> {
+  async getAllProviders(signal?: AbortSignal): Promise<StacksProtocol[]> {
     return await Promise.all(
       this.getYieldProductServices().map(service => service.getProvider(signal))
     );
@@ -62,12 +62,12 @@ export class YieldService {
   }
 
   async getProductsByProvider(
-    provider: YieldProvider,
+    provider: StacksProtocol,
     signal?: AbortSignal
   ): Promise<YieldProduct[]> {
     return await Promise.all(
       this.getYieldProductServices()
-        .filter(service => service.providerKey === provider.key)
+        .filter(service => service.providerKey === provider.id)
         .map(service => service.getProduct(signal))
     );
   }
@@ -95,12 +95,12 @@ export class YieldService {
 
   async getPositionsByProvider(
     account: AccountAddresses,
-    provider: YieldProvider,
+    provider: StacksProtocol,
     signal?: AbortSignal
   ): Promise<YieldPosition[]> {
     const positionArrays = await Promise.allSettled(
       this.getYieldProductServices()
-        .filter(service => service.providerKey === provider.key)
+        .filter(service => service.providerKey === provider.id)
         .map(service => service.getAccountPositions(account, signal))
     );
     return positionArrays

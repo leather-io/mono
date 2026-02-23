@@ -9,10 +9,7 @@ import type {
 
 import { FungibleAssetService } from '../assets/fungible-asset.service';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
-import {
-  mapApiAnalyticsToTokenAnalytics,
-  mapApiDistributionToTokenDistribution,
-} from './token-analytics.utils';
+import { mapApiAnalyticsToTokenAnalytics } from './token-analytics.utils';
 
 @injectable()
 export class TokenAnalyticsService {
@@ -65,19 +62,19 @@ export class TokenAnalyticsService {
         const result = await this.leatherApiClient.fetchNativeDistribution(asset.symbol, {
           signal,
         });
-        return result ? mapApiDistributionToTokenDistribution(result) : null;
+        return result ?? null;
       }
       case 'sip10': {
         const result = await this.leatherApiClient.fetchSip10Distribution(asset.contractId, {
           signal,
         });
-        return result ? mapApiDistributionToTokenDistribution(result) : null;
+        return result ?? null;
       }
       case 'rune': {
         const result = await this.leatherApiClient.fetchRuneDistribution(asset.runeName, {
           signal,
         });
-        return result ? mapApiDistributionToTokenDistribution(result) : null;
+        return result ?? null;
       }
       default:
         return null;

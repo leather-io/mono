@@ -1,4 +1,4 @@
-import { YieldProviderKey, YieldProviderKeys } from './yield-provider.model';
+import { StacksProtocolId, StacksProtocolIds } from '../protocols/stacks-protocol.model';
 
 export const YieldProductKeys = {
   bitflowAmmLp: 'bitflow-amm-lp',
@@ -32,29 +32,29 @@ export type YieldProductCategory =
   (typeof YieldProductCategories)[keyof typeof YieldProductCategories];
 
 export const YieldProductToProviderMap = {
-  [YieldProductKeys.bitflowAmmLp]: YieldProviderKeys.bitflow,
-  [YieldProductKeys.bitflowAmmStaking]: YieldProviderKeys.bitflow,
-  [YieldProductKeys.zestBorrowMarket]: YieldProviderKeys.zest,
-  [YieldProductKeys.graniteV1Earn]: YieldProviderKeys.granite,
-  [YieldProductKeys.graniteV1Borrow]: YieldProviderKeys.granite,
-  [YieldProductKeys.stackingDaoStstx]: YieldProviderKeys.stackingDao,
-  [YieldProductKeys.stackingDaoStstxbtc]: YieldProviderKeys.stackingDao,
-  [YieldProductKeys.stackingDaoPooledStacking]: YieldProviderKeys.stackingDao,
-  [YieldProductKeys.lisaListx]: YieldProviderKeys.lisa,
-  [YieldProductKeys.lisaLiquidStaking]: YieldProviderKeys.lisa,
-  [YieldProductKeys.hermeticaUsdhStaking]: YieldProviderKeys.hermetica,
-  [YieldProductKeys.velarAmmLp]: YieldProviderKeys.velar,
-  [YieldProductKeys.velarPerps]: YieldProviderKeys.velar,
-  [YieldProductKeys.velarAmmLpFarming]: YieldProviderKeys.velar,
-  [YieldProductKeys.fastPoolPooledStacking]: YieldProviderKeys.fastPool,
-  [YieldProductKeys.xversePooledStacking]: YieldProviderKeys.xverse,
+  [YieldProductKeys.bitflowAmmLp]: StacksProtocolIds.bitflow,
+  [YieldProductKeys.bitflowAmmStaking]: StacksProtocolIds.bitflow,
+  [YieldProductKeys.zestBorrowMarket]: StacksProtocolIds.zest,
+  [YieldProductKeys.graniteV1Earn]: StacksProtocolIds.granite,
+  [YieldProductKeys.graniteV1Borrow]: StacksProtocolIds.granite,
+  [YieldProductKeys.stackingDaoStstx]: StacksProtocolIds.stackingDao,
+  [YieldProductKeys.stackingDaoStstxbtc]: StacksProtocolIds.stackingDao,
+  [YieldProductKeys.stackingDaoPooledStacking]: StacksProtocolIds.stackingDao,
+  [YieldProductKeys.lisaListx]: StacksProtocolIds.alex,
+  [YieldProductKeys.lisaLiquidStaking]: StacksProtocolIds.alex,
+  [YieldProductKeys.hermeticaUsdhStaking]: StacksProtocolIds.hermetica,
+  [YieldProductKeys.velarAmmLp]: StacksProtocolIds.velar,
+  [YieldProductKeys.velarPerps]: StacksProtocolIds.velar,
+  [YieldProductKeys.velarAmmLpFarming]: StacksProtocolIds.velar,
+  [YieldProductKeys.fastPoolPooledStacking]: StacksProtocolIds.fastPool,
+  [YieldProductKeys.xversePooledStacking]: StacksProtocolIds.xverse,
 } as const;
 
 export type YieldProduct = BaseYieldProduct | PooledStackingYieldProduct;
 
 export interface BaseYieldProduct {
   readonly key: YieldProductKey;
-  readonly provider: YieldProviderKey;
+  readonly provider: StacksProtocolId;
   readonly category: YieldProductCategory;
   readonly name: string;
   readonly url: string;

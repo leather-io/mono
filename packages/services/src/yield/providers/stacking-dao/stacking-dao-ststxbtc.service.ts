@@ -4,11 +4,11 @@ import { isNonNullish } from 'remeda';
 import type {
   AccountAddresses,
   StackingDaoStStxBtcPosition,
+  StacksProtocol,
+  StacksProtocolId,
   YieldProduct,
   YieldProductCategory,
   YieldProductKey,
-  YieldProvider,
-  YieldProviderKey,
 } from '@leather.io/models';
 import { createMoney, sumMoney } from '@leather.io/utils';
 
@@ -20,7 +20,7 @@ import { StackingDaoLstService } from './stacking-dao-lst.service';
 
 @injectable()
 export class StackingDaoStStxBtcService implements YieldProductService {
-  providerKey: YieldProviderKey = 'stackingdao';
+  providerKey: StacksProtocolId = 'stacking-dao';
   productKey: YieldProductKey = 'stackingdao-ststxbtc';
   productCategory: YieldProductCategory = 'liquid-stacking';
 
@@ -30,9 +30,9 @@ export class StackingDaoStStxBtcService implements YieldProductService {
     @inject(Types.SettingsService) private readonly settingsService: SettingsService
   ) {}
 
-  getProvider(): Promise<YieldProvider> {
+  getProvider(): Promise<StacksProtocol> {
     return Promise.resolve({
-      key: this.providerKey,
+      id: this.providerKey,
       name: 'Stacking DAO',
       logo: '',
       url: '',
@@ -79,7 +79,7 @@ export class StackingDaoStStxBtcService implements YieldProductService {
     return [
       {
         id: this.productKey,
-        provider: 'stackingdao',
+        provider: 'stacking-dao',
         product: 'stackingdao-ststxbtc',
         totalBalance: sumMoney(
           [ststxbtcHolding?.balanceQuote, withdrawalsBalance, sbtcReward?.balanceQuote].filter(
