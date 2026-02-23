@@ -2,17 +2,33 @@ name: mobile:validate-build-pre-eas
 
 permissions:
   contents: read
+  checks: read
 
 on:
   # Run on release-please dev releases
   release:
     types: [published]
 
-  # Run on PRs that affect mobile
+  # Run on PRs that affect mobile or its runtime dependencies
   pull_request:
     paths:
       - 'apps/mobile/**'
-      - 'packages/**'
+      - 'packages/analytics/**'
+      - 'packages/bitcoin/**'
+      - 'packages/constants/**'
+      - 'packages/crypto/**'
+      - 'packages/features/**'
+      - 'packages/models/**'
+      - 'packages/provider/**'
+      - 'packages/queries/**'
+      - 'packages/query/**'
+      - 'packages/rpc/**'
+      - 'packages/services/**'
+      - 'packages/stacks/**'
+      - 'packages/state/**'
+      - 'packages/tokens/**'
+      - 'packages/ui/**'
+      - 'packages/utils/**'
       - 'pnpm-lock.yaml'
       - 'turbo.json'
 
@@ -23,26 +39,21 @@ jobs:
   code-quality-gate:
     name: code-quality-gate
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
 
     steps:
-      - name: checkout-code
-        uses: actions/checkout@v4
-
-      - name: provision
-        uses: ./.github/actions/provision
-
-      - name: build-packages
-        run: pnpm build
-
-      - name: typecheck-mobile
-        run: pnpm --filter @leather.io/mobile typecheck
-
-      - name: lint-mobile
-        run: pnpm --filter @leather.io/mobile lint
+      - name: await-repo-code-checks
+        uses: wechuli/allcheckspassed@v1
+        with:
+          checks_include: lint-eslint,typecheck,lint-prettier,test-unit
+          polling_interval: 0.5
+          retries: 50
+          delay: 0.5
 
   mobile-validate-build:
     name: validate-mobile-build
     needs: code-quality-gate
+    if: ${{ !cancelled() && (needs.code-quality-gate.result == 'success' || needs.code-quality-gate.result == 'skipped') }}
     runs-on: ubuntu-latest
 
     steps:
