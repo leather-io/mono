@@ -452,6 +452,7 @@ msgid "Browser"
 msgstr "Browser"
 
 #: src/components/action-buttons.tsx:64
+#: src/features/token/components/deposit-token-cell.tsx:60
 msgid "Buy"
 msgstr "Buy"
 
@@ -1516,6 +1517,10 @@ msgid "Read more"
 msgstr "Read more"
 
 #: src/components/action-buttons.tsx:52
+#: src/features/receive/screens/asset-details.tsx:56
+#: src/features/receive/screens/select-asset.tsx:83
+#: src/features/token/components/get-first-nft-section.tsx:49
+#: src/features/token/components/get-first-nft-section.tsx:63
 msgid "Receive"
 msgstr "Receive"
 
@@ -1687,6 +1692,8 @@ msgid "Sell"
 msgstr "Sell"
 
 #: src/components/action-buttons.tsx:40
+#: src/features/send/screens/form.tsx:54
+#: src/features/send/screens/select-asset.tsx:35
 msgid "Send"
 msgstr "Send"
 
@@ -1841,6 +1848,7 @@ msgid "Success"
 msgstr "Success"
 
 #: src/components/action-buttons.tsx:88
+#: src/features/swap/screens/swap-form-screen.tsx:63
 msgid "Swap"
 msgstr "Swap"
 
