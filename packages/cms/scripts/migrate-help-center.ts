@@ -94,8 +94,9 @@ async function fetchLegacyData() {
 
 function buildMutations(categories: LegacyCategory[]) {
   const categoryDocs: Array<Record<string, unknown>> = [];
-  const guideMap = new Map<string, Record<string, unknown>>();
+  const guideMap = new Map<string, { post: LegacyPost; categoryRefs: Array<Record<string, string>> }>();
 
+  // Pass 1: collect all guides and their categories
   for (let i = 0; i < categories.length; i++) {
     const cat = categories[i];
     const newCatId = categoryId(cat._id);
@@ -114,34 +115,42 @@ function buildMutations(categories: LegacyCategory[]) {
       const existing = guideMap.get(newGuideId);
 
       if (existing) {
-        const existingCats = existing.categories as Array<Record<string, string>>;
-        const alreadyHasCat = existingCats.some(c => c._ref === newCatId);
+        const alreadyHasCat = existing.categoryRefs.some(c => c._ref === newCatId);
         if (!alreadyHasCat) {
-          existingCats.push({ _type: 'reference', _ref: newCatId, _key: cat._id });
+          existing.categoryRefs.push({ _type: 'reference', _ref: newCatId, _key: cat._id });
         }
       } else {
-        const relatedGuides = (post.relatedPosts ?? []).map(rp => ({
-          _type: 'reference',
-          _ref: guideId(rp._id),
-          _key: rp._id,
-        }));
-
         guideMap.set(newGuideId, {
-          _id: newGuideId,
-          _type: 'helpCenterGuide',
-          title: post.title,
-          slug: post.slug,
-          categories: [{ _type: 'reference', _ref: newCatId, _key: cat._id }],
-          body: post.body,
-          disclaimer: post.disclaimer,
-          publishedAt: post.createdTime ?? post.publishedAt ?? new Date().toISOString(),
-          ...(relatedGuides.length > 0 ? { relatedGuides } : {}),
+          post,
+          categoryRefs: [{ _type: 'reference', _ref: newCatId, _key: cat._id }],
         });
       }
     }
   }
 
-  return { categoryDocs, guideDocs: Array.from(guideMap.values()) };
+  // Pass 2: build guide docs, filtering relatedGuides to only migrated posts
+  const migratedGuideIds = new Set(guideMap.keys());
+  const guideDocs: Array<Record<string, unknown>> = [];
+
+  for (const [newGuideId, { post, categoryRefs }] of guideMap) {
+    const relatedGuides = (post.relatedPosts ?? [])
+      .filter(rp => migratedGuideIds.has(guideId(rp._id)))
+      .map(rp => ({ _type: 'reference', _ref: guideId(rp._id), _key: rp._id }));
+
+    guideDocs.push({
+      _id: newGuideId,
+      _type: 'helpCenterGuide',
+      title: post.title,
+      slug: post.slug,
+      categories: categoryRefs,
+      body: post.body,
+      disclaimer: post.disclaimer,
+      publishedAt: post.createdTime ?? post.publishedAt ?? new Date().toISOString(),
+      ...(relatedGuides.length > 0 ? { relatedGuides } : {}),
+    });
+  }
+
+  return { categoryDocs, guideDocs };
 }
 
 async function run() {
