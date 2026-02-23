@@ -107,6 +107,7 @@ export default defineConfig([
       '**/react-router.config*.ts',
       '**/playwright.config*.ts',
       '**/sanity.cli.ts',
+      '**/scripts/',
       '**/.react-router/',
       '**/.wrangler/',
       '**/generated/',
