@@ -29,7 +29,7 @@ import {
   type GetTargetProviderAssetsParams,
   SwapProviderService,
 } from './swap-provider.interface';
-import { calculateMinReceiveAmount } from './swap.utils';
+import { calculateMinReceiveAmount, mapToStacksProtocol } from './swap.utils';
 
 @injectable()
 export class AlexSwapProviderService implements SwapProviderService {
@@ -111,7 +111,9 @@ export class AlexSwapProviderService implements SwapProviderService {
             targetAsset.symbol,
             targetAsset.decimals
           ),
-          dexPath: route.map(() => swapDexMap['alex']),
+          dexPath: swapDexMap['alex']
+            ? route.map(() => mapToStacksProtocol(swapDexMap['alex']))
+            : [],
           assetPath:
             route.length > 1
               ? await this.getAssetPathAssets(route, signal)

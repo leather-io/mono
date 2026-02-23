@@ -114,6 +114,7 @@ describe('quote enrichment and selection', () => {
         providerId: 'alex-sdk',
         dexPath: [
           {
+            id: 'alex',
             name: 'AlexLab',
             url: 'https://alexlab.co',
             logo: 'https://alexlab.co/logo.png',
@@ -232,6 +233,7 @@ describe('quote enrichment and selection', () => {
         providerId: 'alex-sdk',
         dexPath: [
           {
+            id: 'alex',
             name: 'AlexLab',
             url: 'https://alexlab.co',
             logo: 'https://alexlab.co/logo.png',
@@ -245,12 +247,14 @@ describe('quote enrichment and selection', () => {
         providerId: 'velar-sdk',
         dexPath: [
           {
+            id: 'velar',
             name: 'Velar',
             url: 'https://velar.co',
             logo: 'https://velar.co/logo.png',
             description: 'Velar DEX',
           },
           {
+            id: 'alex',
             name: 'AlexLab',
             url: 'https://alexlab.co',
             logo: 'https://alexlab.co/logo.png',
@@ -264,18 +268,21 @@ describe('quote enrichment and selection', () => {
         providerId: 'bitflow-sdk',
         dexPath: [
           {
+            id: 'bitflow',
             name: 'Bitflow',
             url: 'https://bitflow.finance',
             logo: 'https://bitflow.finance/logo.png',
             description: 'Bitflow DEX',
           },
           {
+            id: 'velar',
             name: 'Velar',
             url: 'https://velar.co',
             logo: 'https://velar.co/logo.png',
             description: 'Velar DEX',
           },
           {
+            id: 'alex',
             name: 'AlexLab',
             url: 'https://alexlab.co',
             logo: 'https://alexlab.co/logo.png',

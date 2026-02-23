@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { pick } from 'remeda';
 
-import { type Money, type SwapDex, type SwapQuote } from '@leather.io/models';
+import { type Money, type StacksProtocol, type SwapQuote } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { type EnrichedSwapQuote } from '../../swap-state.types';
@@ -17,7 +17,7 @@ export function calculateMinToReceiveAmount(targetAmount: Money, slippage: numbe
   );
 }
 
-export function estimateLiquidityFeePercentage(dexPath: SwapDex[]) {
+export function estimateLiquidityFeePercentage(dexPath: StacksProtocol[]) {
   return BigNumber(dexPath.length).times(PER_DEX_FEE_PERCENTAGE);
 }
 

@@ -30,7 +30,7 @@ import {
   GetTargetProviderAssetsParams,
   SwapProviderService,
 } from './swap-provider.interface';
-import { mapBitflowDexProviderToSwapDexId, mapToSwapDex } from './swap.utils';
+import { mapBitflowDexProviderToSwapDexId, mapToStacksProtocol } from './swap.utils';
 
 @injectable()
 export class BitflowSwapProviderService implements SwapProviderService {
@@ -122,7 +122,7 @@ export class BitflowSwapProviderService implements SwapProviderService {
         .map(mapBitflowDexProviderToSwapDexId)
         .map(swapDexId => swapDexMap[swapDexId])
         .filter(isNonNullish)
-        .map(mapToSwapDex),
+        .map(mapToStacksProtocol),
       assetPath: await this.getAssetPathAssets(route.tokenPath, signal),
       isExecutable: true,
       executionConstraints: [],

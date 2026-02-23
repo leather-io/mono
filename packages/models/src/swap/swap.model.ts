@@ -1,6 +1,7 @@
 import { CryptoAssetId } from '../assets/asset-id.model';
 import { NativeCryptoAsset, Sip10Asset } from '../assets/asset.model';
 import { Money } from '../money.model';
+import type { StacksProtocol } from '../protocols/stacks-protocol.model';
 
 export type SwappableFungibleCryptoAsset = NativeCryptoAsset | Sip10Asset;
 
@@ -36,7 +37,7 @@ export interface BaseSwapQuote {
   readonly targetAsset: SwappableFungibleCryptoAsset;
   readonly baseAmount: Money;
   readonly targetAmount: Money;
-  readonly dexPath: SwapDex[];
+  readonly dexPath: StacksProtocol[];
   readonly assetPath: (NativeCryptoAsset | Sip10Asset)[];
   readonly isExecutable: boolean;
   readonly executionConstraints: ExecutionConstraint[];
@@ -77,13 +78,6 @@ export interface SbtcBridgeSwapQuote extends BaseSwapQuote {
   readonly providerQuoteData: {
     signerSweepTxFeeSats: number;
   };
-}
-
-export interface SwapDex {
-  readonly name: string;
-  readonly url: string;
-  readonly logo: string;
-  readonly description: string;
 }
 
 export const swapExecutionTypes = ['stacks-contract-call', 'sbtc-bridge-deposit'] as const;

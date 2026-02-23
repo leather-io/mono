@@ -7,11 +7,11 @@ import {
   type BitflowAmmLpPosition,
   FungibleCryptoAsset,
   Money,
+  type StacksProtocol,
+  type StacksProtocolId,
   type YieldProduct,
   type YieldProductCategory,
   type YieldProductKey,
-  type YieldProvider,
-  type YieldProviderKey,
 } from '@leather.io/models';
 import { getPrincipalFromAssetString } from '@leather.io/stacks';
 import { baseCurrencyAmountInQuote, createMoney, initBigNumber } from '@leather.io/utils';
@@ -32,7 +32,7 @@ export interface BitflowPosition {
 
 @injectable()
 export class BitflowAmmLpService implements YieldProductService {
-  providerKey: YieldProviderKey = 'bitflow';
+  providerKey: StacksProtocolId = 'bitflow';
   productKey: YieldProductKey = 'bitflow-amm-lp';
   productCategory: YieldProductCategory = 'amm';
 
@@ -43,9 +43,9 @@ export class BitflowAmmLpService implements YieldProductService {
     private readonly marketDataService: MarketDataService
   ) {}
 
-  getProvider(): Promise<YieldProvider> {
+  getProvider(): Promise<StacksProtocol> {
     return Promise.resolve({
-      key: this.providerKey,
+      id: this.providerKey,
       name: 'Bitflow',
       logo: '',
       url: '',

@@ -30,6 +30,10 @@ export type LeatherApiLocale = Required<
 >['locale'];
 export type LeatherApiSwapDex =
   paths['/v1/swap/dexes']['get']['responses'][200]['content']['application/json'][string];
+export type LeatherApiProtocol =
+  paths['/v1/protocols']['get']['responses'][200]['content']['application/json'][string];
+export type LeatherApiProtocolContractMap =
+  paths['/v1/protocols/{id}/contracts']['get']['responses'][200]['content']['application/json'];
 export type LeatherApiAppConfig =
   paths['/v1/app-config']['get']['responses'][200]['content']['application/json'];
 export type LeatherApiBitcoinFeeRates =
@@ -1135,5 +1139,43 @@ export class LeatherApiClient {
           ['leather-api-rune-distribution', runeName],
           fetchFn
         );
+  }
+
+  async fetchProtocols({ signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () => this.client.GET('/v1/protocols', { signal }),
+        {
+          priority: leatherApiPriorities.protocols,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-protocols'], fetchFn);
+  }
+
+  async fetchProtocolContracts(id: string, { signal, skipCache }: ApiRequestOptions = {}) {
+    const fetchFn = async () => {
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/protocols/{id}/contracts', {
+            signal,
+            params: { path: { id } },
+          }),
+        {
+          priority: leatherApiPriorities.protocolContracts,
+          signal,
+        }
+      );
+      return data!;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cacheService.fetchWithCache(['leather-api-protocol-contracts', id], fetchFn);
   }
 }

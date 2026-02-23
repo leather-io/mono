@@ -6,11 +6,11 @@ import type {
   AccountAddresses,
   GraniteV1BorrowPosition,
   GraniteV1CollateralAsset,
+  StacksProtocol,
+  StacksProtocolId,
   YieldProduct,
   YieldProductCategory,
   YieldProductKey,
-  YieldProvider,
-  YieldProviderKey,
 } from '@leather.io/models';
 import { baseCurrencyAmountInQuote, createMoney, subtractMoney, sumMoney } from '@leather.io/utils';
 
@@ -29,7 +29,7 @@ import { aeusdcAssetPrincipal, graniteProductionAddress } from './granite.consta
 
 @injectable()
 export class GraniteV1BorrowService implements YieldProductService {
-  providerKey: YieldProviderKey = 'granite';
+  providerKey: StacksProtocolId = 'granite';
   productKey: YieldProductKey = 'granite-v1-borrow';
   productCategory: YieldProductCategory = 'lending';
 
@@ -41,9 +41,9 @@ export class GraniteV1BorrowService implements YieldProductService {
     @inject(Types.SettingsService) private readonly settingsService: SettingsService
   ) {}
 
-  getProvider(): Promise<YieldProvider> {
+  getProvider(): Promise<StacksProtocol> {
     return Promise.resolve({
-      key: this.providerKey,
+      id: this.providerKey,
       name: 'Granite',
       logo: '',
       url: '',

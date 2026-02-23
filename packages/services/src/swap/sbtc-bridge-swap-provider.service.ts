@@ -28,7 +28,7 @@ import {
   GetTargetProviderAssetsParams,
   SwapProviderService,
 } from './swap-provider.interface';
-import { mapToSwapDex } from './swap.utils';
+import { mapToStacksProtocol } from './swap.utils';
 
 @injectable()
 export class SbtcBridgeSwapProviderService implements SwapProviderService {
@@ -111,7 +111,7 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
         providerQuoteData: {
           signerSweepTxFeeSats,
         },
-        dexPath: swapDexMap['sbtc-bridge'] ? [mapToSwapDex(swapDexMap['sbtc-bridge'])] : [],
+        dexPath: swapDexMap['sbtc-bridge'] ? [mapToStacksProtocol(swapDexMap['sbtc-bridge'])] : [],
         assetPath: [baseAsset, targetAsset],
         isExecutable: executionConstraints.length === 0,
         executionConstraints,

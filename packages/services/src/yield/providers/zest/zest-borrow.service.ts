@@ -4,12 +4,12 @@ import { inject, injectable } from 'inversify';
 import { stxAsset } from '@leather.io/constants';
 import {
   type AccountAddresses,
+  type StacksProtocol,
+  type StacksProtocolId,
   type YieldProduct,
   YieldProductCategories,
   type YieldProductCategory,
   type YieldProductKey,
-  type YieldProvider,
-  type YieldProviderKey,
   type ZestBorrowAsset,
   type ZestBorrowMarketPosition,
 } from '@leather.io/models';
@@ -38,7 +38,7 @@ import { zestProductionAddress } from './zest.constants';
 
 @injectable()
 export class ZestBorrowService implements YieldProductService {
-  providerKey: YieldProviderKey = 'zest';
+  providerKey: StacksProtocolId = 'zest';
   productKey: YieldProductKey = 'zest-borrow-market';
   productCategory: YieldProductCategory = 'lending';
 
@@ -50,9 +50,9 @@ export class ZestBorrowService implements YieldProductService {
     @inject(Types.SettingsService) private readonly settingsService: SettingsService
   ) {}
 
-  getProvider(): Promise<YieldProvider> {
+  getProvider(): Promise<StacksProtocol> {
     return Promise.resolve({
-      key: this.providerKey,
+      id: this.providerKey,
       name: 'Zest',
       logo: '',
       url: '',

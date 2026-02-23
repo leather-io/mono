@@ -84,6 +84,8 @@ export type HttpCacheKey =
   | 'leather-api-rune-analytics-map'
   | 'leather-api-rune-analytics'
   | 'leather-api-rune-distribution'
+  | 'leather-api-protocols'
+  | 'leather-api-protocol-contracts'
 
   // BitflowSdkClient
   | 'bitflow-sdk-available-tokens'
@@ -176,6 +178,8 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-rune-analytics-map': { ttl: minutesInMs(5) },
   'leather-api-rune-analytics': { ttl: minutesInMs(5) },
   'leather-api-rune-distribution': { ttl: minutesInMs(5) },
+  'leather-api-protocols': { ttl: daysInMs(1) },
+  'leather-api-protocol-contracts': { ttl: daysInMs(1) },
 
   'bitflow-sdk-available-tokens': { ttl: hoursInMs(6) },
   'bitflow-sdk-all-possible-token-y': { ttl: hoursInMs(1) },

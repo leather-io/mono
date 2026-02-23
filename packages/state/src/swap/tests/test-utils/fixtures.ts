@@ -5,7 +5,7 @@ import {
   Currency,
   ExecutionConstraint,
   Sip10Asset,
-  SwapDex,
+  StacksProtocol,
   SwapExecutionType,
   SwapProviderAsset,
   SwapProviderId,
@@ -176,7 +176,7 @@ interface CreateSwapQuoteParams {
   targetAmount?: number;
   baseAsset?: SwappableFungibleCryptoAsset;
   targetAsset?: SwappableFungibleCryptoAsset;
-  dexPath?: SwapDex[];
+  dexPath?: StacksProtocol[];
   isExecutable?: boolean;
   executionConstraints?: ExecutionConstraint[];
   createdAt?: Date;
@@ -192,6 +192,7 @@ export function createSwapQuote({
   targetAsset = defaultStxAsset,
   dexPath = [
     {
+      id: 'alex',
       name: 'AlexLab',
       url: 'https://alexlab.co',
       logo: 'https://alexlab.co/logo.png',

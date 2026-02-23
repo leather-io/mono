@@ -4,11 +4,11 @@ import { injectable } from 'inversify';
 import type {
   AccountAddresses,
   GraniteV1EarnPosition,
+  StacksProtocol,
+  StacksProtocolId,
   YieldProduct,
   YieldProductCategory,
   YieldProductKey,
-  YieldProvider,
-  YieldProviderKey,
 } from '@leather.io/models';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
@@ -22,7 +22,7 @@ import { aeusdcAssetPrincipal, graniteProductionAddress } from './granite.consta
 
 @injectable()
 export class GraniteV1EarnService implements YieldProductService {
-  providerKey: YieldProviderKey = 'granite';
+  providerKey: StacksProtocolId = 'granite';
   productKey: YieldProductKey = 'granite-v1-earn';
   productCategory: YieldProductCategory = 'lending';
 
@@ -33,9 +33,9 @@ export class GraniteV1EarnService implements YieldProductService {
     private readonly leatherApiClient: LeatherApiClient
   ) {}
 
-  getProvider(): Promise<YieldProvider> {
+  getProvider(): Promise<StacksProtocol> {
     return Promise.resolve({
-      key: this.providerKey,
+      id: this.providerKey,
       name: 'Granite',
       logo: '',
       url: '',

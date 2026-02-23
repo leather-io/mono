@@ -1,13 +1,18 @@
 import type { PostCondition } from '@stacks/transactions';
 import BigNumber from 'bignumber.js';
 
-import { type Money, type StacksContractCallSwapExecutionData, SwapDex } from '@leather.io/models';
+import {
+  type Money,
+  type StacksContractCallSwapExecutionData,
+  type StacksProtocol,
+} from '@leather.io/models';
 import { createMoney, initBigNumber } from '@leather.io/utils';
 
 import { LeatherApiSwapDex } from '../infrastructure/api/leather/leather-api.client';
 
-export function mapToSwapDex(dex: LeatherApiSwapDex): SwapDex {
+export function mapToStacksProtocol(dex: LeatherApiSwapDex): StacksProtocol {
   return {
+    id: dex.id,
     name: dex.name,
     url: dex.url,
     logo: dex.logo,

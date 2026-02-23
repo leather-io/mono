@@ -1,3 +1,4 @@
+import { StacksProtocol, StacksProtocolId } from '../../protocols/stacks-protocol.model';
 import type {
   BitflowAmmLpPosition,
   BitflowAmmStakingPosition,
@@ -21,7 +22,6 @@ import {
   YieldProductKeys,
   YieldProductToProviderMap,
 } from '../yield-product.model';
-import { YieldProvider, YieldProviderKey } from '../yield-provider.model';
 
 export function isBitflowAmmLpPosition(pos: YieldPosition): pos is BitflowAmmLpPosition {
   return pos.product === YieldProductKeys.bitflowAmmLp;
@@ -61,7 +61,7 @@ export function isStackingDaoPooledPosition(
 
 export function filterPositionsByProvider(
   positions: YieldPosition[],
-  provider: YieldProviderKey
+  provider: StacksProtocolId
 ): YieldPosition[] {
   return positions.filter(p => p.provider === provider);
 }
@@ -111,7 +111,7 @@ export function sortPositionsByUpdateTime(
   });
 }
 
-export function getProviderForProduct(product: YieldProductKey): YieldProviderKey {
+export function getProviderForProduct(product: YieldProductKey): StacksProtocolId {
   return YieldProductToProviderMap[product];
 }
 
@@ -119,11 +119,11 @@ export function getCategoryForProduct(product: YieldProduct): YieldProductCatego
   return product.category;
 }
 
-export function isProductInProvider(product: YieldProductKey, provider: YieldProviderKey): boolean {
+export function isProductInProvider(product: YieldProductKey, provider: StacksProtocolId): boolean {
   return YieldProductToProviderMap[product] === provider;
 }
 
-export function getProductsForProvider(provider: YieldProviderKey): YieldProductKey[] {
+export function getProductsForProvider(provider: StacksProtocolId): YieldProductKey[] {
   return Object.entries(YieldProductToProviderMap)
     .filter(([_, p]) => p === provider)
     .map(([product]) => product as YieldProductKey);
@@ -138,8 +138,8 @@ export function getProductsInCategory(
 
 export function groupPositionsByProvider(
   positions: YieldPosition[]
-): Record<YieldProviderKey, YieldPosition[]> {
-  const grouped: Partial<Record<YieldProviderKey, YieldPosition[]>> = {};
+): Record<StacksProtocolId, YieldPosition[]> {
+  const grouped: Partial<Record<StacksProtocolId, YieldPosition[]>> = {};
 
   for (const position of positions) {
     const provider = position.provider;
@@ -149,7 +149,7 @@ export function groupPositionsByProvider(
     grouped[provider].push(position);
   }
 
-  return grouped as Record<YieldProviderKey, YieldPosition[]>;
+  return grouped as Record<StacksProtocolId, YieldPosition[]>;
 }
 
 export function groupPositionsByCategory(
@@ -188,7 +188,7 @@ export function getPositionsInCategories(
 
 export function hasPositionsInProvider(
   positions: YieldPosition[],
-  provider: YieldProviderKey
+  provider: StacksProtocolId
 ): boolean {
   return positions.some(p => p.provider === provider);
 }
@@ -204,8 +204,8 @@ export function hasPositionsInCategory(
 
 export function enrichPositionWithProvider<T extends YieldPosition>(
   position: T,
-  provider: YieldProvider
-): T & { providerData: YieldProvider } {
+  provider: StacksProtocol
+): T & { providerData: StacksProtocol } {
   return { ...position, providerData: provider };
 }
 
@@ -218,9 +218,9 @@ export function enrichPositionWithProduct<T extends YieldPosition>(
 
 export function enrichPositionWithMetadata<T extends YieldPosition>(
   position: T,
-  provider: YieldProvider,
+  provider: StacksProtocol,
   product: YieldProduct
-): T & { providerData: YieldProvider; productData: YieldProduct } {
+): T & { providerData: StacksProtocol; productData: YieldProduct } {
   return { ...position, providerData: provider, productData: product };
 }
 

@@ -3,13 +3,13 @@ import type { Money } from '../../money.model';
 import type { BaseYieldPosition } from '../yield-position.base.model';
 
 export interface LisaLiStxPosition extends BaseYieldPosition {
-  provider: 'lisa';
+  provider: 'alex';
   product: 'lisa-listx';
   holding: LisaLstHolding;
 }
 
 export interface LisaLiquidStakingPosition extends BaseYieldPosition {
-  provider: 'lisa';
+  provider: 'alex';
   product: 'lisa-liquid-staking';
   holding: LisaLstHolding;
 }

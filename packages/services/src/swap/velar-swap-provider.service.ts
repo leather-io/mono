@@ -27,7 +27,7 @@ import {
   type GetTargetProviderAssetsParams,
   SwapProviderService,
 } from './swap-provider.interface';
-import { mapToSwapDex } from './swap.utils';
+import { mapToStacksProtocol } from './swap.utils';
 
 @injectable()
 export class VelarSwapProviderService implements SwapProviderService {
@@ -110,7 +110,7 @@ export class VelarSwapProviderService implements SwapProviderService {
           },
           baseAmount,
           targetAmount,
-          dexPath: swapDexMap['velar'] ? [mapToSwapDex(swapDexMap['velar'])] : [],
+          dexPath: swapDexMap['velar'] ? [mapToStacksProtocol(swapDexMap['velar'])] : [],
           assetPath: assetPath.length > 1 ? assetPath : [baseAsset, targetAsset],
           isExecutable: true,
           executionConstraints: [],
