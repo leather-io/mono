@@ -94,13 +94,14 @@ async function fetchLegacyData() {
 
 function buildMutations(categories: LegacyCategory[]) {
   const categoryDocs: Array<Record<string, unknown>> = [];
-  const guideDocs: Array<Record<string, unknown>> = [];
+  const guideMap = new Map<string, Record<string, unknown>>();
 
   for (let i = 0; i < categories.length; i++) {
     const cat = categories[i];
+    const newCatId = categoryId(cat._id);
 
     categoryDocs.push({
-      _id: categoryId(cat._id),
+      _id: newCatId,
       _type: 'helpCenterCategory',
       name: cat.categoryName,
       slug: cat.slug,
@@ -109,30 +110,38 @@ function buildMutations(categories: LegacyCategory[]) {
     });
 
     for (const post of cat.guides ?? []) {
-      const relatedGuides = (post.relatedPosts ?? []).map(rp => ({
-        _type: 'reference',
-        _ref: guideId(rp._id),
-        _key: rp._id,
-      }));
+      const newGuideId = guideId(post._id);
+      const existing = guideMap.get(newGuideId);
 
-      guideDocs.push({
-        _id: guideId(post._id),
-        _type: 'helpCenterGuide',
-        title: post.title,
-        slug: post.slug,
-        category: {
+      if (existing) {
+        const existingCats = existing.categories as Array<Record<string, string>>;
+        const alreadyHasCat = existingCats.some(c => c._ref === newCatId);
+        if (!alreadyHasCat) {
+          existingCats.push({ _type: 'reference', _ref: newCatId, _key: cat._id });
+        }
+      } else {
+        const relatedGuides = (post.relatedPosts ?? []).map(rp => ({
           _type: 'reference',
-          _ref: categoryId(cat._id),
-        },
-        body: post.body,
-        disclaimer: post.disclaimer,
-        publishedAt: post.createdTime ?? post.publishedAt ?? new Date().toISOString(),
-        ...(relatedGuides.length > 0 ? { relatedGuides } : {}),
-      });
+          _ref: guideId(rp._id),
+          _key: rp._id,
+        }));
+
+        guideMap.set(newGuideId, {
+          _id: newGuideId,
+          _type: 'helpCenterGuide',
+          title: post.title,
+          slug: post.slug,
+          categories: [{ _type: 'reference', _ref: newCatId, _key: cat._id }],
+          body: post.body,
+          disclaimer: post.disclaimer,
+          publishedAt: post.createdTime ?? post.publishedAt ?? new Date().toISOString(),
+          ...(relatedGuides.length > 0 ? { relatedGuides } : {}),
+        });
+      }
     }
   }
 
-  return { categoryDocs, guideDocs };
+  return { categoryDocs, guideDocs: Array.from(guideMap.values()) };
 }
 
 async function run() {
@@ -154,9 +163,10 @@ async function run() {
 
   console.log(`\nGuides to create: ${guideDocs.length}`);
   for (const doc of guideDocs) {
+    const cats = (doc.categories as Array<Record<string, string>>).map(c => c._ref).join(', ');
     const related = (doc.relatedGuides as Array<Record<string, string>> | undefined)?.length ?? 0;
     console.log(
-      `  ${doc._id} → "${doc.title}" (category: ${(doc.category as Record<string, string>)._ref})${related > 0 ? ` [${related} related]` : ''}`
+      `  ${doc._id} → "${doc.title}" (categories: ${cats})${related > 0 ? ` [${related} related]` : ''}`
     );
   }
 
