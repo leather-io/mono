@@ -55,12 +55,7 @@ export default function SectionPostsRoute({ loaderData }: Route.ComponentProps) 
         backgroundSize="cover"
         backgroundPosition="center"
       />
-      <Breadcrumb
-        segments={[
-          { label: 'Help Center', href: '/support' },
-          { label: data.name },
-        ]}
-      />
+      <Breadcrumb segments={[{ label: 'Help Center', href: '/support' }, { label: data.name }]} />
       <Page.Title my="space.06">{data.name}</Page.Title>
       <Flex mt="space.07" flexDirection={{ lg: 'row', md: 'column', sm: 'column' }} flexWrap="wrap">
         <Box mb="space.05" flex="2" maxWidth="900px">
