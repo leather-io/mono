@@ -13,7 +13,6 @@ export const errorMessages = {
   nonStandardDelegateTx: 'Detected a non-standard delegate-stx transaction.',
   processedNonDelegationTx:
     'Processed a non-delegation transaction. Only delegation-related transaction should be used with this function.',
-  failedToFetchPosts: 'Failed to fetch posts.json',
 } as const;
 
 export const validationMessages = {
