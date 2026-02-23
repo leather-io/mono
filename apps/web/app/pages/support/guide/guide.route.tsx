@@ -4,11 +4,12 @@ import { Box } from 'leather-styles/jsx/box';
 import { styled } from 'leather-styles/jsx/factory';
 import { Flex } from 'leather-styles/jsx/flex';
 import { VStack } from 'leather-styles/jsx/vstack';
+import { Breadcrumb } from '~/components/breadcrumb';
 import Markdown from '~/components/content/markdown-content';
 import { cmsClient } from '~/constants/cms-client';
 import { Page } from '~/layouts/page/page';
 
-import { LegacyGuideBySlugQueryResult, legacyGuideBySlugQuery } from '@leather.io/cms';
+import { HelpCenterGuideBySlugQueryResult, helpCenterGuideBySlugQuery } from '@leather.io/cms';
 
 import { Route } from './+types/guide.route';
 
@@ -25,10 +26,10 @@ function formatDate(dateString: string | undefined) {
 }
 export async function loader({
   params,
-}: Route.LoaderArgs): Promise<{ guide: NonNullable<LegacyGuideBySlugQueryResult> }> {
+}: Route.LoaderArgs): Promise<{ guide: NonNullable<HelpCenterGuideBySlugQueryResult> }> {
   const { slug } = params;
   // Fetch the guide data using the slug
-  const guide = await cmsClient.fetch(legacyGuideBySlugQuery, { slug });
+  const guide = await cmsClient.fetch(helpCenterGuideBySlugQuery, { slug });
 
   if (!guide) {
     throw new Error('Guide not found', { cause: 404 });
@@ -51,6 +52,13 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
         justifyContent="space-between"
       >
         <Box minWidth="200px" pr={{ base: 'none', lg: 'space.04' }} flex="1">
+          <Breadcrumb
+            segments={[
+              { label: 'Help Center', href: '/support' },
+              { label: guide.category.name, href: `/support/${guide.category.slug.current}` },
+              { label: guide.title },
+            ]}
+          />
           <styled.span
             textStyle="label.03"
             border="default"
@@ -61,11 +69,11 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
             px="space.02"
             py="space.01"
           >
-            {guide.category}
+            {guide.category.name}
           </styled.span>
           <Page.Title my="space.04">{guide.title}</Page.Title>
           <styled.p textStyle="label.02" color="ink.text-subdued" mb="space.04">
-            {formatDate(guide.createdTime)}
+            {formatDate(guide.publishedAt)}
           </styled.p>
           <styled.p textStyle="label.03" color="ink.text-subdued">
             {guide.disclaimer}
@@ -73,11 +81,11 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
         </Box>
         <Box flex="2">
           <Markdown>{guide.body}</Markdown>
-          {guide.relatedPosts && guide.relatedPosts.length > 0 && (
+          {guide.relatedGuides && guide.relatedGuides.length > 0 && (
             <VStack alignItems="flex-start" gap="space.03" mt="space.06">
               <styled.h3 textStyle="heading.05">Related Guides</styled.h3>
               <styled.ul listStyleType="disc" pl="space.04">
-                {guide.relatedPosts.map(post => (
+                {guide.relatedGuides.map(post => (
                   <styled.li key={post._id} textStyle="body.01">
                     <Link to={`/support/guide/${post.slug.current}`}>
                       <styled.span
