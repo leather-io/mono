@@ -199,7 +199,7 @@ const selectLedgerStacksAccountLookup = createSelector(selectStacksKeychains, st
 
   stacksKeychains.forEach(keychain => {
     const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
-    const fingerprint = keyOrigin.match(/\[([^/]+)/)?.[1] || assumedZeroFingerprint;
+    const fingerprint = extractFingerprintFromKeyOriginPath(keyOrigin) || assumedZeroFingerprint;
     const stxPublicKey = extractKeyFromDescriptor(keychain.descriptor);
 
     ledgerKeys[keyOrigin] = {

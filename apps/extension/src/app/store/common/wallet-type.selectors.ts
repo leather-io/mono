@@ -2,10 +2,7 @@ import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
 
-import {
-  extractAccountIndexFromPath,
-  extractKeyOriginPathFromDescriptor,
-} from '@leather.io/crypto';
+import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
@@ -51,42 +48,31 @@ const selectWalletAccountRefTree = createSelector(
     Object.values(walletEntities || {}).forEach(wallet => {
       if (!wallet) return;
 
-      const allAccountIndices: number[] = [];
+      let accountCount = 0;
 
-      // Collect account indices from software Stacks accounts
-      const stxChainState = stxChain?.[wallet.fingerprint];
-      if (stxChainState) {
-        for (let i = 0; i <= stxChainState.highestAccountIndex; i++) {
-          allAccountIndices.push(i);
+      // For software wallets, use highestAccountIndex from stxChain
+      if (wallet.type === 'software') {
+        const stxChainState = stxChain?.[wallet.fingerprint];
+        if (stxChainState) {
+          accountCount = stxChainState.highestAccountIndex + 1;
         }
       }
 
-      // Collect account indices from Ledger Stacks keys
-      stacksKeychains
-        .filter(keychain => {
+      // For Ledger wallets, count the number of keychains
+      if (wallet.type === 'ledger') {
+        const matchingStacksKeychains = stacksKeychains.filter(keychain => {
           const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
           return keyOrigin?.startsWith(wallet.fingerprint);
-        })
-        .forEach(keychain => {
-          const accountIndex = extractAccountIndexFromPath(keychain.descriptor);
-          if (accountIndex !== null) allAccountIndices.push(accountIndex);
         });
 
-      // Collect account indices from Bitcoin keys
-      bitcoinKeychains
-        .filter(keychain => {
+        const matchingBitcoinKeychains = bitcoinKeychains.filter(keychain => {
           const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
           return keyOrigin?.startsWith(wallet.fingerprint);
-        })
-        .forEach(keychain => {
-          const accountIndex = extractAccountIndexFromPath(keychain.descriptor);
-          if (accountIndex !== null) allAccountIndices.push(accountIndex);
         });
 
-      if (allAccountIndices.length === 0) return;
-
-      const highestAccountIndex = Math.max(...allAccountIndices);
-      const accountCount = highestAccountIndex + 1;
+        // Use the maximum count between Stacks and Bitcoin keychains
+        accountCount = Math.max(matchingStacksKeychains.length, matchingBitcoinKeychains.length);
+      }
 
       const accounts = createNullArrayOfLength(accountCount).map((_, i) => ({
         fingerprint: wallet.fingerprint,

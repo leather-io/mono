@@ -16,12 +16,12 @@ import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-si
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   MINIMUM_STACKS_APP_VERSION,
-  checkStacksAppMeetsMinimumVersion,
   connectLedgerStacksApp,
   getStacksAppVersion,
   isStacksAppOpen,
   signLedgerStacksTransaction,
   signStacksTransactionWithSignature,
+  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
@@ -69,12 +69,12 @@ function LedgerSignStacksTxContainer() {
       async passesAdditionalVersionCheck(appVersion) {
         if (appVersion.chain !== 'stacks') return true;
 
-        if (!checkStacksAppMeetsMinimumVersion(appVersion)) {
-          const versionInfo = {
-            currentVersion: `${appVersion.major}.${appVersion.minor}.${appVersion.patch}`,
+        const { meetsMinimum, currentVersion } = validateStacksAppVersion(appVersion);
+        if (!meetsMinimum) {
+          void ledgerNavigate.toStacksAppOutdatedWarning({
+            currentVersion,
             requiredVersion: MINIMUM_STACKS_APP_VERSION,
-          };
-          void ledgerNavigate.toStacksAppOutdatedWarning(versionInfo);
+          });
           await delay(400);
           return false;
         }

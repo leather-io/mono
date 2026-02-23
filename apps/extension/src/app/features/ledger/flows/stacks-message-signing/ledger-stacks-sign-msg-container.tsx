@@ -16,11 +16,11 @@ import { appEvents } from '@app/common/publish-subscribe';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   MINIMUM_STACKS_APP_VERSION,
-  checkStacksAppMeetsMinimumVersion,
   getStacksAppVersion,
   prepareLedgerDeviceStacksAppConnection,
   signLedgerStacksStructuredMessage,
   signLedgerStacksUtf8Message,
+  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
@@ -88,12 +88,12 @@ function LedgerSignStacksMsg({ account, unsignedMessage }: LedgerSignMsgProps) {
       return;
     }
 
-    if (!checkStacksAppMeetsMinimumVersion(versionInfo)) {
-      const versionDetails = {
-        currentVersion: `${versionInfo.major}.${versionInfo.minor}.${versionInfo.patch}`,
+    const { meetsMinimum, currentVersion } = validateStacksAppVersion(versionInfo);
+    if (!meetsMinimum) {
+      void ledgerNavigate.toStacksAppOutdatedWarning({
+        currentVersion,
         requiredVersion: MINIMUM_STACKS_APP_VERSION,
-      };
-      void ledgerNavigate.toStacksAppOutdatedWarning(versionDetails);
+      });
       setAwaitingDeviceConnection(false);
       return;
     }

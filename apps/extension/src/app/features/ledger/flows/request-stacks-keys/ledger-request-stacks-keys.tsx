@@ -20,10 +20,10 @@ import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigat
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   MINIMUM_STACKS_APP_VERSION,
-  checkStacksAppMeetsMinimumVersion,
   connectLedgerStacksApp,
   getStacksAppVersion,
   isStacksAppOpen,
+  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
@@ -50,13 +50,13 @@ function LedgerRequestStacksKeys() {
           return true;
         }
 
-        if (!checkStacksAppMeetsMinimumVersion(appVersion)) {
+        const { meetsMinimum, currentVersion } = validateStacksAppVersion(appVersion);
+        if (!meetsMinimum) {
           await delay(40);
-          const versionInfo = {
-            currentVersion: `${appVersion.major}.${appVersion.minor}.${appVersion.patch}`,
+          void ledgerNavigate.toStacksAppOutdatedWarning({
+            currentVersion,
             requiredVersion: MINIMUM_STACKS_APP_VERSION,
-          };
-          void ledgerNavigate.toStacksAppOutdatedWarning(versionInfo);
+          });
           return false;
         }
 
