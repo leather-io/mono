@@ -17,11 +17,11 @@ export const helpCenterGuideType = defineType({
     }),
     slugField('title'),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'reference',
-      to: [{ type: 'helpCenterCategory' }],
-      validation: rule => rule.required(),
+      name: 'categories',
+      title: 'Categories',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'helpCenterCategory' }] }],
+      validation: rule => rule.required().min(1),
     }),
     defineField({
       name: 'body',
@@ -51,7 +51,7 @@ export const helpCenterGuideType = defineType({
   preview: {
     select: {
       title: 'title',
-      categoryName: 'category.name',
+      categoryName: 'categories.0.name',
       date: 'publishedAt',
     },
     prepare(selection) {

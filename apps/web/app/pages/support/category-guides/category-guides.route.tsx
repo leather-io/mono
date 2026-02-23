@@ -63,7 +63,7 @@ export default function SectionPostsRoute({ loaderData }: Route.ComponentProps) 
             items={data.guides.map(post => ({
               id: post._id,
               title: post.title,
-              href: `/support/guide/${post.slug.current}`,
+              href: `/support/${data.slug.current}/${post.slug.current}`,
             }))}
           />
         </Box>
