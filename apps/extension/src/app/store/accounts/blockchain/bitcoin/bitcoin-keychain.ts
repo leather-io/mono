@@ -13,8 +13,6 @@ import {
   getBtcSignerLibNetworkConfigByMode,
   getHdKeyVersionsFromNetwork,
   initializeBitcoinAccountKeychainFromDescriptor,
-  isNativeSegwitDerivationPath,
-  isTaprootDerivationPath,
   makeNativeSegwitAccountDerivationPath,
   makeTaprootAccountDerivationPath,
   whenSupportedPaymentType,
@@ -22,22 +20,15 @@ import {
 import {
   createDescriptor,
   createKeyOriginPath,
-  extractAccountIndexFromDescriptor,
-  extractDerivationPathFromDescriptor,
-  extractFingerprintFromDescriptor,
+  extractKeyOriginPathFromDescriptor,
   fingerprintAsNumberToHex,
-  makeAccountIdentifer,
 } from '@leather.io/crypto';
 import type { BitcoinNetworkModes } from '@leather.io/models';
 import type { BitcoinKeychain } from '@leather.io/state/keychains';
 
 import { useWalletType } from '@app/common/use-wallet-type';
-import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
 import { selectRootKeychains } from '@app/store/in-memory-key/in-memory-key.selectors';
-import {
-  selectAllBitcoinKeychains,
-  selectBitcoinKeychainEntities,
-} from '@app/store/ledger/bitcoin/bitcoin-key.slice';
+import { selectBitcoinKeychains } from '@app/store/keychains/keychain.selectors';
 import { selectCurrentNetwork, useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 // For any given root keychain, return a derivation function accepting the
@@ -92,8 +83,8 @@ const selectSoftwareWalletBitcoinAccountGenerator = createSelector(
 );
 
 const selectLedgerBitcoinAccountLookup = createSelector(
-  selectBitcoinKeychainEntities,
-  ledgerKeychains => (fingerprint: string) => (args: BitcoinAccountDerivationRequirements) => {
+  selectBitcoinKeychains,
+  bitcoinKeychains => (fingerprint: string) => (args: BitcoinAccountDerivationRequirements) => {
     const derivationPathFn = whenSupportedPaymentType(args.paymentType)({
       p2tr: makeTaprootAccountDerivationPath,
       p2wpkh: makeNativeSegwitAccountDerivationPath,
@@ -104,9 +95,12 @@ const selectLedgerBitcoinAccountLookup = createSelector(
       derivationPathFn(args.network, args.accountIndex)
     );
 
-    const keychain = ledgerKeychains[keyOrigin];
+    const keychain = bitcoinKeychains.find(kc => {
+      const kcKeyOrigin = extractKeyOriginPathFromDescriptor(kc.descriptor);
+      return kcKeyOrigin === keyOrigin;
+    });
     if (!keychain) return undefined;
-    return initializeBitcoinAccountKeychainFromDescriptor(keychain.policy);
+    return initializeBitcoinAccountKeychainFromDescriptor(keychain.descriptor);
   }
 );
 
@@ -138,66 +132,6 @@ export const selectCurrentNetworkBitcoinAccountLookup = createSelector(
   (accountLookup, network) => (fingerprint: string) => (args: RequirementsWithoutNetwork) =>
     accountLookup(fingerprint)({ ...args, network: network.chain.bitcoin.mode })
 );
-
-// TODO: very bad performance to use this selector to generate all keychains in
-// a single place. Code should be written such that we only derive what we need
-// when we need it. In the case of account lists, using virtual lists. Hope to
-// deprecate this.
-const selectBitcoinAccountKeychains = createSelector(
-  selectRootKeychains,
-  selectStacksChain,
-  selectCurrentNetwork,
-  selectAllBitcoinKeychains,
-  (softwareKeychains, stacksChain, network, ledgerAccountDetails): BitcoinKeychain[] => {
-    const accountKeychains: BitcoinKeychain[] = [];
-
-    Object.entries(softwareKeychains).forEach(([fingerprint, keychain]) => {
-      const childAccountGenerator = createSoftwareAccountKeychainGenerator(keychain);
-
-      const highestAccountIndex = stacksChain[fingerprint]?.highestAccountIndex ?? 0;
-
-      for (let accountIndex = 0; accountIndex <= highestAccountIndex; accountIndex++) {
-        const accountArgs = { accountIndex, network: network.chain.bitcoin.mode };
-        accountKeychains.push(childAccountGenerator({ paymentType: 'p2wpkh', ...accountArgs }));
-        accountKeychains.push(childAccountGenerator({ paymentType: 'p2tr', ...accountArgs }));
-      }
-    });
-
-    ledgerAccountDetails.forEach(details =>
-      accountKeychains.push({ chain: 'bitcoin', descriptor: details.policy })
-    );
-
-    return accountKeychains;
-  }
-);
-
-function createAccountKeychainMapSelector(pathFilterFn: (path: string) => boolean) {
-  return createSelector(selectBitcoinAccountKeychains, keychains =>
-    Object.fromEntries(
-      keychains
-        .filter(keychain => pathFilterFn(extractDerivationPathFromDescriptor(keychain.descriptor)))
-        .map(keychain => [
-          makeAccountIdentifer(
-            extractFingerprintFromDescriptor(keychain.descriptor),
-            extractAccountIndexFromDescriptor(keychain.descriptor)
-          ),
-          keychain,
-        ])
-    )
-  );
-}
-const selectNativeSegwitAccountKeychainMap = createAccountKeychainMapSelector(
-  isNativeSegwitDerivationPath
-);
-const selectTaprootAccountKeychainMap = createAccountKeychainMapSelector(isTaprootDerivationPath);
-
-export function useNativeSegwitKeychainsMap() {
-  return useSelector(selectNativeSegwitAccountKeychainMap);
-}
-
-export function useTaprootKeychainsMap() {
-  return useSelector(selectTaprootAccountKeychainMap);
-}
 
 export function useBitcoinScureLibNetworkConfig() {
   const network = useCurrentNetwork();

@@ -46,7 +46,8 @@ test.describe('Store migrations', () => {
 
     test.expect(result.softwareKeys.salt).toEqual(demoSalt);
 
-    test.expect(result.ledger.stacks).toBeDefined();
+    // ledger is deleted by migration when ledger accounts exist, or never created if they don't
+    test.expect(result.ledger).toBeUndefined();
   });
 
   test('Migration 2 --> 3', async ({ extensionId, globalPage }) => {
@@ -133,5 +134,8 @@ test.describe('Store migrations', () => {
 
     test.expect(result.onboarding).toBeUndefined();
     test.expect(result.ordinals).toBeUndefined();
+
+    test.expect(result.ledger).toBeUndefined();
+    test.expect(result.keychains).toBeDefined();
   });
 });

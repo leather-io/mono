@@ -27,22 +27,26 @@ export function useGetLegacyAuthBitcoinAddresses() {
 
       const p2wpkhMainnet = getAccountDetails('p2wpkh', 'mainnet');
       const p2wpkhTestnet = getAccountDetails('p2wpkh', 'testnet');
+      const p2wpkhRegtest = getAccountDetails('p2wpkh', 'regtest');
+      const p2wpkhSignet = getAccountDetails('p2wpkh', 'signet');
       const p2trMainnet = getAccountDetails('p2tr', 'mainnet');
       const p2trTestnet = getAccountDetails('p2tr', 'testnet');
+      const p2trRegtest = getAccountDetails('p2tr', 'regtest');
+      const p2trSignet = getAccountDetails('p2tr', 'signet');
 
       return {
         btcAddress: {
           p2tr: {
             mainnet: p2trMainnet?.address,
             testnet: p2trTestnet?.address,
-            regtest: getAccountDetails('p2tr', 'regtest')?.address,
-            signet: getAccountDetails('p2tr', 'signet')?.address,
+            regtest: p2trRegtest?.address,
+            signet: p2trSignet?.address,
           },
           p2wpkh: {
             mainnet: p2wpkhMainnet?.address,
             testnet: p2wpkhTestnet?.address,
-            regtest: getAccountDetails('p2wpkh', 'regtest')?.address,
-            signet: getAccountDetails('p2wpkh', 'signet')?.address,
+            regtest: p2wpkhRegtest?.address,
+            signet: p2wpkhSignet?.address,
           },
         },
         btcPublicKey: {

@@ -55,15 +55,9 @@ export function getTestSoftwareAccountDefaultWalletState() {
         },
       },
     },
-    ledger: {
-      bitcoin: {
-        entities: {},
-        ids: [],
-      },
-      stacks: {
-        entities: {},
-        ids: [],
-      },
+    keychains: {
+      entities: {},
+      ids: [],
     },
     networks: { ids: [], entities: {}, currentNetworkId: 'mainnet' },
     settings: {
@@ -217,10 +211,44 @@ const ledgerStacksKeysState = {
   ],
 };
 
-const emptyKeysState = { entities: {}, ids: [] };
+// Build keychains from ledger Bitcoin and Stacks keys
+function buildKeychains(keysToInclude: SupportedBlockchains[]) {
+  const entities: Record<string, { descriptor: string; chain: 'bitcoin' | 'stacks' }> = {};
+  const ids: string[] = [];
+
+  // Add Bitcoin keychains
+  if (keysToInclude.includes('bitcoin')) {
+    Object.values(ledgerBitcoinKeysState.entities).forEach(key => {
+      const keyOrigin = key.id; // Already in correct format: e87a850b/84'/0'/0'
+      entities[keyOrigin] = {
+        descriptor: key.policy, // policy is already a descriptor [keyOrigin]xpub...
+        chain: 'bitcoin',
+      };
+      ids.push(keyOrigin);
+    });
+  }
+
+  // Add Stacks keychains
+  if (keysToInclude.includes('stacks')) {
+    Object.values(ledgerStacksKeysState.entities).forEach(key => {
+      const keyOrigin = key.id; // Already in correct format: e87a850b/44'/5757'/0'/0/0
+      // Create descriptor for Stacks: [keyOrigin]publicKey
+      const descriptor = `[${keyOrigin}]${key.stxPublicKey}`;
+      entities[keyOrigin] = {
+        descriptor,
+        chain: 'stacks',
+      };
+      ids.push(keyOrigin);
+    });
+  }
+
+  return { entities, ids };
+}
 
 export function makeLedgerTestAccountWalletState(keysToInclude: SupportedBlockchains[]) {
   const fingerprint = 'e87a850b';
+  const keychains = buildKeychains(keysToInclude);
+
   return {
     _persist: { rehydrated: true, version: 3 },
     active: {
@@ -252,10 +280,7 @@ export function makeLedgerTestAccountWalletState(keysToInclude: SupportedBlockch
       entities: {},
       ids: [],
     },
-    ledger: {
-      bitcoin: keysToInclude.includes('bitcoin') ? ledgerBitcoinKeysState : emptyKeysState,
-      stacks: keysToInclude.includes('stacks') ? ledgerStacksKeysState : emptyKeysState,
-    },
+    keychains,
     networks: { currentNetworkId: 'mainnet', entities: {}, ids: [] },
     ordinals: {},
     settings: { dismissedMessages: [], userSelectedTheme: 'system' },

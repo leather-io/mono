@@ -29,6 +29,8 @@ export const LEDGER_APPS_MAP = {
   MAIN_MENU: 'BOLOS',
 } as const;
 
+export const LEDGER_LIVE_MANAGER_URL = 'ledgerlive://manager';
+
 export type LatestDeviceResponse = null | Awaited<ReturnType<typeof getStacksAppVersion>>;
 
 export interface BaseLedgerOperationContext {

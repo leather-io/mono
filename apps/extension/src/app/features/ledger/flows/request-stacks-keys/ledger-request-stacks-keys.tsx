@@ -5,6 +5,7 @@ import { bytesToHex } from '@noble/hashes/utils';
 import StacksApp from '@zondax/ledger-stacks';
 import { pullStacksKeysFromLedgerDevice } from 'app/features/ledger/flows/request-stacks-keys/request-stacks-keys.utils';
 
+import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
 import { userAddsWallet } from '@leather.io/state/wallet';
 import { delay } from '@leather.io/utils';
 
@@ -19,14 +20,13 @@ import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigat
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   MINIMUM_STACKS_APP_VERSION,
-  checkStacksAppMeetsMinimumVersion,
   connectLedgerStacksApp,
   getStacksAppVersion,
   isStacksAppOpen,
+  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
-import { stacksKeysSlice } from '@app/store/ledger/stacks/stacks-key.slice';
 import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
 function LedgerRequestStacksKeys() {
@@ -50,14 +50,13 @@ function LedgerRequestStacksKeys() {
           return true;
         }
 
-        // Check minimum version requirement (0.26.4+)
-        if (!checkStacksAppMeetsMinimumVersion(appVersion)) {
+        const { meetsMinimum, currentVersion } = validateStacksAppVersion(appVersion);
+        if (!meetsMinimum) {
           await delay(40);
-          const versionInfo = {
-            currentVersion: `${appVersion.major}.${appVersion.minor}.${appVersion.patch}`,
+          void ledgerNavigate.toStacksAppOutdatedWarning({
+            currentVersion,
             requiredVersion: MINIMUM_STACKS_APP_VERSION,
-          };
-          void ledgerNavigate.toStacksAppOutdatedWarning(versionInfo);
+          });
           return false;
         }
 
@@ -84,13 +83,14 @@ function LedgerRequestStacksKeys() {
         }
         void ledgerNavigate.toDeviceBusyStep();
 
-        const keysWithFingerprint = resp.publicKeys.map(keys => ({
-          ...keys,
-          id: keys.path.replace('m', fingerprint),
-          fingerprint,
-        }));
-
-        dispatch(stacksKeysSlice.actions.addKeys(keysWithFingerprint));
+        const keychains = resp.publicKeys.map(keys => {
+          const keyOrigin = createKeyOriginPath(fingerprint, keys.path);
+          const descriptor = createDescriptor(keyOrigin, keys.stxPublicKey);
+          return {
+            chain: 'stacks' as const,
+            descriptor,
+          };
+        });
 
         if (!wallets[fingerprint]) {
           dispatch(
@@ -100,7 +100,7 @@ function LedgerRequestStacksKeys() {
                 fingerprint,
                 type: 'ledger',
               },
-              accountKeychains: [],
+              accountKeychains: keychains,
             })
           );
         }

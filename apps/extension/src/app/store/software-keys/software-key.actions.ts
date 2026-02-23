@@ -169,6 +169,8 @@ function unlockWalletAction(password: string): AppThunk {
     if (requiresFingerprintMigration()) {
       const { fingerprint } = decryptedResults[0];
 
+      dispatch(fingerprintMigration(fingerprint));
+
       const walletEntities = selectWalletEntities(state);
       const oldWallet = walletEntities[assumedZeroFingerprint];
 
@@ -181,8 +183,6 @@ function unlockWalletAction(password: string): AppThunk {
           })
         );
       }
-
-      dispatch(fingerprintMigration(fingerprint));
     }
 
     await initalizeWalletSession(decryptedResults[0].encryptionKey);

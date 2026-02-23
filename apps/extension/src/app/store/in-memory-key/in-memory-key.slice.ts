@@ -39,6 +39,11 @@ export const inMemoryKeySlice = createSlice({
       };
     },
 
+    removeWalletKey(state, action: PayloadAction<string>) {
+      const fingerprint = action.payload;
+      delete state.keys[fingerprint];
+    },
+
     lockWallet(state) {
       state.keys = {};
     },

@@ -94,9 +94,15 @@ export function isStacksLedgerAppClosed(response: ResponseVersion) {
 // This enables proper multi-wallet support for Ledger Stacks accounts
 export const MINIMUM_STACKS_APP_VERSION = '0.26.4';
 
-export function checkStacksAppMeetsMinimumVersion(version: SemVerObject): boolean {
-  const versionString = versionObjectToVersionString(version);
-  return compare(versionString, MINIMUM_STACKS_APP_VERSION, '>=');
+interface StacksVersionCheckResult {
+  meetsMinimum: boolean;
+  currentVersion: string;
+}
+export function validateStacksAppVersion(version: SemVerObject): StacksVersionCheckResult {
+  const currentVersion = versionObjectToVersionString(version);
+  const meetsMinimum = compare(currentVersion, MINIMUM_STACKS_APP_VERSION, '>=');
+
+  return { meetsMinimum, currentVersion };
 }
 
 export function isStacksAppOpen({ name }: { name: string }) {

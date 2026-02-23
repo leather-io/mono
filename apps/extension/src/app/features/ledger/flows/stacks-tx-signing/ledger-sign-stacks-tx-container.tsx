@@ -16,12 +16,12 @@ import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-si
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   MINIMUM_STACKS_APP_VERSION,
-  checkStacksAppMeetsMinimumVersion,
   connectLedgerStacksApp,
   getStacksAppVersion,
   isStacksAppOpen,
   signLedgerStacksTransaction,
   signStacksTransactionWithSignature,
+  validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
@@ -31,7 +31,6 @@ import { useLedgerSignTx } from '../../generic-flows/tx-signing/use-ledger-sign-
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
 import { useLedgerFingerprintMigration } from '../../hooks/use-ledger-fingerprint-migration';
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
-import { useVerifyMatchingLedgerStacksPublicKey } from '../../hooks/use-verify-matching-stacks-public-key';
 import { ApproveSignLedgerStacksTx } from './steps/approve-sign-stacks-ledger-tx';
 
 export const ledgerStacksTxSigningRoutes = ledgerSignTxRoutes({
@@ -47,7 +46,6 @@ function LedgerSignStacksTxContainer() {
   const ledgerAnalytics = useLedgerAnalytics();
   useScrollLock(true);
   const account = useCurrentStacksAccount();
-  const verifyLedgerPublicKey = useVerifyMatchingLedgerStacksPublicKey();
   const migrateFingerprintIfNeeded = useLedgerFingerprintMigration();
   const [unsignedTx, setUnsignedTx] = useState<null | string>(null);
 
@@ -69,13 +67,12 @@ function LedgerSignStacksTxContainer() {
       async passesAdditionalVersionCheck(appVersion) {
         if (appVersion.chain !== 'stacks') return true;
 
-        // Check minimum version requirement (0.26.4+)
-        if (!checkStacksAppMeetsMinimumVersion(appVersion)) {
-          const versionInfo = {
-            currentVersion: `${appVersion.major}.${appVersion.minor}.${appVersion.patch}`,
+        const { meetsMinimum, currentVersion } = validateStacksAppVersion(appVersion);
+        if (!meetsMinimum) {
+          void ledgerNavigate.toStacksAppOutdatedWarning({
+            currentVersion,
             requiredVersion: MINIMUM_STACKS_APP_VERSION,
-          };
-          void ledgerNavigate.toStacksAppOutdatedWarning(versionInfo);
+          });
           await delay(400);
           return false;
         }
@@ -83,13 +80,14 @@ function LedgerSignStacksTxContainer() {
         return true;
       },
       async signTransactionWithDevice(stacksApp) {
-        // TODO: need better handling
-        if (!account) return;
+        if (!account) {
+          const errorMessage = 'No active account found for transaction signing';
+          void ledgerNavigate.toErrorStep(chain, errorMessage);
+          return;
+        }
 
         await migrateFingerprintIfNeeded(stacksApp);
 
-        void ledgerNavigate.toDeviceBusyStep('Verifying public key on Ledger…');
-        await verifyLedgerPublicKey(stacksApp);
         void ledgerNavigate.toConnectionSuccessStep('stacks');
         await delay(1000);
 

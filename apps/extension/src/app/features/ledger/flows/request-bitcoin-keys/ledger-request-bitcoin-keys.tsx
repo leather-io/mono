@@ -22,7 +22,6 @@ import {
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
-import { bitcoinKeysSlice } from '@app/store/ledger/bitcoin/bitcoin-key.slice';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
@@ -63,7 +62,7 @@ function LedgerRequestBitcoinKeys() {
           },
         });
 
-        dispatch(bitcoinKeysSlice.actions.addKeys(keys));
+        const keychains = keys.map(key => ({ chain: 'bitcoin' as const, descriptor: key.policy }));
 
         if (!wallets[fingerprint]) {
           dispatch(
@@ -73,7 +72,7 @@ function LedgerRequestBitcoinKeys() {
                 fingerprint,
                 type: 'ledger',
               },
-              accountKeychains: [],
+              accountKeychains: keychains,
             })
           );
         }
