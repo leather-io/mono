@@ -1,0 +1,79 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "tags": ["-knipignore"],
+  "ignore": [
+    "*/**/*.spec.ts",
+    "*/**/*.mocks.ts",
+    "*/**/tsdown.config*.ts",
+    "*/**/panda.config.ts",
+    "*/**/postcss.config.cjs",
+    ".husky/**",
+    ".claude/**"
+  ],
+  "workspaces": {
+    "apps/extension": {
+      "entry": [
+        "src/app/index.tsx",
+        "src/background/background.ts",
+        "src/inpage/inpage.ts",
+        "src/content-scripts/content-script.ts",
+        "src/shared/workers/decryption-worker.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}!"
+      ],
+      "webpack": {
+        "config": [
+          "webpack/webpack.config.base.js",
+          "webpack/webpack.config.dev.js",
+          "webpack/webpack.config.prod.js"
+        ]
+      },
+      "ignore": [
+        "test-app/**"
+      ]
+    },
+    "apps/mobile": {
+      "entry": [
+        "src/app/_layout.tsx"
+      ],
+      "ignore": [
+        ".detoxrc.cjs",
+        "fingerprint.config.js",
+        "index.d.ts",
+        "lingui.config.ts",
+        "src/tests/test-utils.tsx"
+      ]
+    },
+    "apps/web": {
+      "entry": [
+        "app/entry.server.tsx",
+        "app/entry.client.tsx",
+        "app/root.tsx",
+        "app/routes.ts",
+        "workers/app.ts",
+        "workers/csp.ts"
+      ],
+      "paths": {
+        "~/*": ["./app/*"]
+      },
+      "typescript": {
+        "config": ["tsconfig.cloudflare.json"]
+      },
+      "ignore": ["stubs/**", "app/layouts/nav/global-loader.styles.ts"]
+    },
+    "packages/ui": {
+      "entry": [
+        "src/index.ts!",
+        "src/native.ts!",
+        "src/exports.web.ts!"
+      ],
+      "metro": false,
+      "ignore": [
+        "src/.storybook-native/**",
+        "src/.storybook-web/**",
+        "metro.config.cjs"
+      ]
+    }
+  }
+}
