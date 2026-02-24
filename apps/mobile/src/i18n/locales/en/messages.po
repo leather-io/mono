@@ -514,7 +514,7 @@ msgstr "Choose existing wallet"
 msgid "Clear search"
 msgstr "Clear search"
 
-#: src/app/developer-console.tsx:38
+#: src/app/developer-console.tsx:37
 msgid "Clear wallets"
 msgstr "Clear wallets"
 
@@ -656,7 +656,7 @@ msgstr "Copy ID"
 msgid "Create new wallet"
 msgstr "Create new wallet"
 
-#: src/app/developer-console.tsx:35
+#: src/app/developer-console.tsx:34
 msgid "Create wallet"
 msgstr "Create wallet"
 
@@ -717,7 +717,7 @@ msgstr "Description"
 msgid "Dev Console"
 msgstr "Dev Console"
 
-#: src/app/developer-console.tsx:30
+#: src/app/developer-console.tsx:29
 msgid "Developer Console"
 msgstr "Developer Console"
 
@@ -1998,7 +1998,7 @@ msgstr "tiny amounts that cost more to send than they’re worth."
 msgid "To address"
 msgstr "To address"
 
-#: src/app/developer-console.tsx:41
+#: src/app/developer-console.tsx:40
 msgid "Toggle network"
 msgstr "Toggle network"
 
@@ -2171,7 +2171,7 @@ msgstr "Wallet added"
 msgid "Wallet added already"
 msgstr "Wallet added already"
 
-#: src/app/developer-console.tsx:33
+#: src/app/developer-console.tsx:32
 msgid "Wallet Manager"
 msgstr "Wallet Manager"
 

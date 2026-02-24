@@ -1,7 +1,6 @@
 import { ScrollView } from 'react-native';
 
 import { Screen } from '@/components/screen/screen';
-import { WalletList } from '@/features/wallet-manager';
 import { TestId } from '@/shared/test-id';
 import { useKeyStore } from '@/store/key-store';
 import { useSettings } from '@/store/settings/settings';
@@ -40,7 +39,6 @@ export default function DeveloperConsole() {
           <Button onPress={toggleNetwork} testID={TestId.devConsoleToggleNetworkButton}>
             {t`Toggle network`}
           </Button>
-          <WalletList />
         </Box>
       </ScrollView>
     </Screen>
