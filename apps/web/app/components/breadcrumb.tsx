@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
-interface BreadcrumbSegment {
+export interface BreadcrumbSegment {
   label: string;
   href?: string;
 }
@@ -13,13 +13,7 @@ interface BreadcrumbProps {
 
 export function Breadcrumb({ segments }: BreadcrumbProps) {
   return (
-    <Flex
-      alignItems="center"
-      gap="space.02"
-      textStyle="label.03"
-      color="ink.text-subdued"
-      my="space.04"
-    >
+    <Flex alignItems="center" gap="space.02" textStyle="label.03" color="ink.text-subdued">
       {segments.map((segment, i) => (
         <Flex key={segment.label} alignItems="center" gap="space.02">
           {i > 0 && <styled.span aria-hidden>/</styled.span>}

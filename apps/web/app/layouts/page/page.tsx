@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { Breadcrumb, BreadcrumbSegment } from '~/components/breadcrumb';
 import { MockModeToggle } from '~/components/mock-mode-toggle';
 import { WhenClient } from '~/components/when-client';
 import { SignInButton } from '~/features/sign-in-button/sign-in-button';
@@ -63,13 +64,18 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
 
 interface PageHeaderProps {
   title: React.ReactNode;
+  breadcrumbs?: BreadcrumbSegment[];
   children?: React.ReactElement | React.ReactElement[];
 }
-export function PageHeader({ title, children }: PageHeaderProps) {
+export function PageHeader({ title, breadcrumbs, children }: PageHeaderProps) {
   return (
     <styled.header display="flex" justifyContent="space-between" h="60px" alignItems="center">
       <Flex alignItems="center" justifyContent="space-between" flex={1}>
-        <styled.h1 textStyle="heading.05">{title}</styled.h1>
+        {breadcrumbs ? (
+          <Breadcrumb segments={breadcrumbs} />
+        ) : (
+          <styled.h1 textStyle="heading.05">{title}</styled.h1>
+        )}
         <MockModeToggle />
         {children}
       </Flex>

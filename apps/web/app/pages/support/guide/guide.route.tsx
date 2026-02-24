@@ -4,7 +4,6 @@ import { Box } from 'leather-styles/jsx/box';
 import { styled } from 'leather-styles/jsx/factory';
 import { Flex } from 'leather-styles/jsx/flex';
 import { VStack } from 'leather-styles/jsx/vstack';
-import { Breadcrumb } from '~/components/breadcrumb';
 import Markdown from '~/components/content/markdown-content';
 import { cmsClient } from '~/constants/cms-client';
 import { Page } from '~/layouts/page/page';
@@ -46,7 +45,14 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
 
   return (
     <Page>
-      <Page.Header title="Help Center" />
+      <Page.Header
+        title="Help Center"
+        breadcrumbs={[
+          { label: 'Help Center', href: '/support' },
+          { label: category.name, href: `/support/${category.slug.current}` },
+          { label: guide.title },
+        ]}
+      />
 
       <Flex
         flexDirection={{ base: 'column', lg: 'row' }}
@@ -55,13 +61,6 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
         justifyContent="space-between"
       >
         <Box minWidth="200px" pr={{ base: 'none', lg: 'space.04' }} flex="1">
-          <Breadcrumb
-            segments={[
-              { label: 'Help Center', href: '/support' },
-              { label: category.name, href: `/support/${category.slug.current}` },
-              { label: guide.title },
-            ]}
-          />
           <styled.span
             textStyle="label.03"
             border="default"
