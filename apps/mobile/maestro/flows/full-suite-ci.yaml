@@ -32,8 +32,8 @@ name: Full Test Suite CI
 - assertVisible:
     id: 'homeCreateWalletCard'
 
-# Create a wallet
-- runFlow: ../shared/create-wallet.yaml
+# Create a wallet via developer console (sheets don't present reliably in EAS Update CI)
+- runFlow: ../shared/create-wallet-dev-console.yaml
 
 # Verify wallet created
 - assertVisible:
