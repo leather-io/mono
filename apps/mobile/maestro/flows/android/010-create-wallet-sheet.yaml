@@ -5,8 +5,7 @@ name: "Android: Create Wallet via Sheet"
 - runFlow: ../../shared/clean-up.yaml
 - tapOn:
     id: 'homeCreateWalletCard'
-- tapOn:
-    id: 'createNewWalletSheetButton'
+- tapOn: 'Create new wallet'
 - tapOn:
     id: 'walletCreationTapToReveal'
 - tapOn:

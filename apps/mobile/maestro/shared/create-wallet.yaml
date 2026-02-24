@@ -9,13 +9,11 @@ appId: io.leather.mobilewallet
 
 # Wait for add wallet sheet to fully present
 - extendedWaitUntil:
-    visible:
-      id: 'createNewWalletSheetButton'
+    visible: 'Create new wallet'
     timeout: 10000
 
 # Select "Create new wallet" from the sheet
-- tapOn:
-    id: 'createNewWalletSheetButton'
+- tapOn: 'Create new wallet'
 
 # Reveal the secret key (required before proceeding)
 - tapOn:
