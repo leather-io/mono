@@ -94,7 +94,10 @@ async function fetchLegacyData() {
 
 function buildMutations(categories: LegacyCategory[]) {
   const categoryDocs: Array<Record<string, unknown>> = [];
-  const guideMap = new Map<string, { post: LegacyPost; categoryRefs: Array<Record<string, string>> }>();
+  const guideMap = new Map<
+    string,
+    { post: LegacyPost; categoryRefs: Array<Record<string, string>> }
+  >();
 
   // Pass 1: collect all guides and their categories
   for (let i = 0; i < categories.length; i++) {
