@@ -162,6 +162,7 @@ export class HiroStacksApiClient {
     const pageParams = new URLSearchParams({
       limit: page.limit.toString(),
       offset: page.offset.toString(),
+      exclude_function_args: 'true',
     });
     const fetchFn = async () => {
       const res = await this.limiter.add(

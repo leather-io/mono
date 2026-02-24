@@ -74,11 +74,25 @@ export class BitcoinTransactionsService {
       });
       return mempoolTxs.map(createBitcoinTransactionFromMempool);
     }
-    const res = await this.leatherApiClient.fetchBitcoinTransactions(
+    const firstPage = await this.leatherApiClient.fetchBitcoinTransactions(
       descriptor,
-      { page: 1, pageSize: 50 },
+      { page: 1, pageSize: 150 },
       { signal }
     );
-    return res.data.map(createBitcoinTransactionFromLeather);
+    const pagesToFetch = Math.min(firstPage.meta.totalPages, 5);
+    if (pagesToFetch <= 1) return firstPage.data.map(createBitcoinTransactionFromLeather);
+
+    const remainingPages = await Promise.all(
+      Array.from({ length: pagesToFetch - 1 }, (_, i) =>
+        this.leatherApiClient.fetchBitcoinTransactions(
+          descriptor,
+          { page: i + 2, pageSize: 150 },
+          { signal }
+        )
+      )
+    );
+    return [firstPage, ...remainingPages].flatMap(p =>
+      p.data.map(createBitcoinTransactionFromLeather)
+    );
   }
 }

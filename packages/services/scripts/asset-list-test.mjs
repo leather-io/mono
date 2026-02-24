@@ -49,16 +49,21 @@ class TestSettingsService {
   }
 }
 
-const accountContext = process.env.ASSET_LIST_TEST_ACCOUNT_CONTEXT
-  ? JSON.parse(process.env.ASSET_LIST_TEST_ACCOUNT_CONTEXT)
-  : null;
+const args = process.argv.slice(2);
+const rawMode = args.includes('--raw');
+const scenariosMode = args.includes('--scenarios');
+const filterProtocol = args.find(a => a.startsWith('--protocol='))?.split('=')[1];
+const filterChain = args.find(a => a.startsWith('--chain='))?.split('=')[1];
+const sortArg = args.find(a => a.startsWith('--sort='))?.split('=')[1];
+const limitArg = args.find(a => a.startsWith('--limit='))?.split('=')[1];
+const offsetArg = args.find(a => a.startsWith('--offset='))?.split('=')[1];
+const trustArg = args.find(a => a.startsWith('--trust='))?.split('=')[1];
+const trendingArg = args.find(a => a.startsWith('--trending='))?.split('=')[1];
+const mcapArg = args.find(a => a.startsWith('--mcap='))?.split('=')[1];
+const balanceMode = args.includes('--balance');
 
-if (!accountContext) {
-  console.warn(
-    'WARN: ASSET_LIST_TEST_ACCOUNT_CONTEXT not set — balance scenarios will be skipped.\n' +
-      'Add it to packages/services/.env as a JSON string to enable balance tests.\n'
-  );
-}
+const accountContextJson = process.env.TEST_ACCOUNT_CONTEXT;
+const accountContext = accountContextJson ? JSON.parse(accountContextJson) : null;
 
 let passed = 0;
 let failed = 0;
@@ -90,6 +95,33 @@ function assertSorted(items, getValue, direction, label) {
   assert(true, `${label}: sort order correct`);
 }
 
+function moneyToNum(money) {
+  if (!money) return null;
+  return Number(money.amount) / 10 ** money.decimals;
+}
+
+function fmtMktCap(cap) {
+  if (cap === undefined || cap === null) return '-';
+  if (cap >= 1e12) return `$${(cap / 1e12).toFixed(1)}T`;
+  if (cap >= 1e9) return `$${(cap / 1e9).toFixed(1)}B`;
+  if (cap >= 1e6) return `$${(cap / 1e6).toFixed(1)}M`;
+  if (cap >= 1e3) return `$${(cap / 1e3).toFixed(0)}K`;
+  return `$${cap.toFixed(0)}`;
+}
+
+function fmtPct(val) {
+  if (val === undefined || val === null) return '-';
+  return `${val >= 0 ? '+' : ''}${val.toFixed(2)}%`;
+}
+
+function fmtPrice(money) {
+  const num = moneyToNum(money);
+  if (num === null) return '-';
+  if (num >= 1)
+    return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return `$${num.toFixed(6)}`;
+}
+
 function logTable(items) {
   const rows = items.map(item => ({
     id: item.id,
@@ -107,15 +139,145 @@ function logTable(items) {
   console.table(rows);
 }
 
-async function main() {
-  const { AssetListService } = await import('@leather.io/services');
+function printResults(result) {
+  console.log(
+    `\nTotal: ${result.meta.total} | Returned: ${result.items.length} | Offset: ${result.meta.offset} | Limit: ${result.meta.limit}\n`
+  );
 
-  const container = new Container({ autobind: true, defaultScope: 'Singleton' });
-  container.bind(Types.Environment).toConstantValue({ environment: 'staging' });
-  container.bind(Types.SettingsService).to(TestSettingsService).inSingletonScope();
-  container.bind(Types.CacheService).to(InMemoryCacheService).inSingletonScope();
+  if (result.items.length === 0) {
+    console.log('  (no items matched)');
+    return;
+  }
 
-  const service = container.get(AssetListService);
+  const first = result.items[0];
+  const hasMarketData = first.marketData !== undefined;
+  const hasMarketStats = first.marketStats !== undefined;
+  const hasAnalytics = first.analytics !== undefined;
+  const hasBalance = first.balance !== undefined;
+
+  const rows = result.items.map(item => {
+    const row = {
+      symbol: item.asset.symbol ?? '-',
+      protocol: item.asset.protocol,
+    };
+    if (hasMarketData) row.price = fmtPrice(item.marketData?.price);
+    if (hasMarketStats) {
+      row.mktCap = fmtMktCap(item.marketStats?.marketCap);
+      row['1d%'] = fmtPct(item.marketStats?.priceChange?.['1d']);
+      row['1w%'] = fmtPct(item.marketStats?.priceChange?.['1w']);
+      row['1m%'] = fmtPct(item.marketStats?.priceChange?.['1m']);
+    }
+    if (hasAnalytics) {
+      row.trust = item.analytics?.trustScore != null ? Math.round(item.analytics.trustScore) : '-';
+      row.trend =
+        item.analytics?.trendingScore != null ? item.analytics.trendingScore.toFixed(2) : '-';
+      row.dist = item.analytics?.distributionScore ?? '-';
+      row.holders =
+        item.analytics?.holderCount != null ? item.analytics.holderCount.toLocaleString() : '-';
+    }
+    if (hasBalance) {
+      row['bal$'] = moneyToNum(item.balance?.quote?.totalBalance)?.toFixed(2) ?? '-';
+    }
+    return row;
+  });
+  console.table(rows);
+
+  if (result.meta.total > result.meta.offset + result.items.length) {
+    const nextOffset = result.meta.offset + result.items.length;
+    console.log(
+      `  ${result.meta.total - nextOffset} more -- use --offset=${nextOffset} for the next page\n`
+    );
+  }
+}
+
+function buildRequestFromArgs() {
+  const filters = {};
+  if (filterProtocol) filters.protocols = filterProtocol.split(',');
+  if (filterChain) filters.chain = filterChain;
+  if (trustArg) filters.minTrustScore = Number(trustArg);
+  if (trendingArg) filters.minTrendingScore = Number(trendingArg);
+  if (mcapArg) filters.minMarketCap = Number(mcapArg);
+  if (balanceMode) filters.hasBalance = true;
+
+  const includes = { marketData: true, marketStats: true, analytics: true };
+  if (balanceMode) includes.balance = true;
+
+  const request = { filters, includes };
+
+  if (sortArg) {
+    const [field, dir] = sortArg.split(':');
+    request.sort = [{ field, direction: dir ?? 'desc' }];
+  }
+
+  if (limitArg) {
+    request.pagination = {
+      limit: Number(limitArg),
+      offset: Number(offsetArg ?? 0),
+    };
+  }
+
+  if (balanceMode && accountContext) {
+    request.accountContext = accountContext;
+  }
+
+  return request;
+}
+
+async function runQuery(service) {
+  const request = buildRequestFromArgs();
+
+  console.log('\nAssetListService Test');
+  console.log('='.repeat(60));
+  if (filterProtocol) console.log(`Protocol filter: ${filterProtocol}`);
+  if (filterChain) console.log(`Chain filter: ${filterChain}`);
+  if (sortArg) console.log(`Sort: ${sortArg}`);
+  if (trustArg) console.log(`Min trust: ${trustArg}`);
+  if (trendingArg) console.log(`Min trending: ${trendingArg}`);
+  if (mcapArg) console.log(`Min market cap: ${mcapArg}`);
+  if (balanceMode) console.log(`Balance: enabled`);
+  if (limitArg) console.log(`Limit: ${limitArg}, Offset: ${offsetArg ?? 0}`);
+  console.log('='.repeat(60));
+
+  if (balanceMode && !accountContext) {
+    console.warn(
+      '\nWARN: --balance requires TEST_ACCOUNT_CONTEXT in .env. Running without balance data.\n'
+    );
+    request.includes.balance = false;
+    delete request.filters.hasBalance;
+  }
+
+  const start = performance.now();
+  try {
+    const result = await service.getAssetList(request);
+    const duration = Math.round(performance.now() - start);
+
+    console.log(`\n--- Asset List (${duration}ms) ---`);
+
+    if (rawMode) {
+      console.log(JSON.stringify(result, null, 2));
+    } else {
+      printResults(result);
+    }
+  } catch (err) {
+    const duration = Math.round(performance.now() - start);
+    console.error(`\n--- Asset List FAILED (${duration}ms) ---`);
+    console.error(`  ERROR: ${err.message}`);
+    if (err.stack) {
+      console.error(err.stack.split('\n').slice(0, 5).join('\n'));
+    }
+  }
+
+  console.log('\n' + '='.repeat(60));
+  console.log('Done');
+}
+
+async function runScenarios(service) {
+  if (!accountContext) {
+    console.warn(
+      'WARN: TEST_ACCOUNT_CONTEXT not set -- balance scenarios will be skipped.\n' +
+        'Add it to packages/services/.env as a JSON string to enable balance tests.\n'
+    );
+  }
 
   const scenarios = [
     // ──────────────────────────────────────────────────────────────
@@ -1853,6 +2015,23 @@ async function main() {
   console.log('='.repeat(60));
 
   process.exit(scenariosFailed > 0 ? 1 : 0);
+}
+
+async function main() {
+  const { AssetListService } = await import('@leather.io/services');
+
+  const container = new Container({ autobind: true, defaultScope: 'Singleton' });
+  container.bind(Types.Environment).toConstantValue({ environment: 'staging' });
+  container.bind(Types.SettingsService).to(TestSettingsService).inSingletonScope();
+  container.bind(Types.CacheService).to(InMemoryCacheService).inSingletonScope();
+
+  const service = container.get(AssetListService);
+
+  if (scenariosMode) {
+    await runScenarios(service);
+  } else {
+    await runQuery(service);
+  }
 }
 
 main().catch(err => {

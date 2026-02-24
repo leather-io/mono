@@ -50,6 +50,17 @@ export function mapStacksTxBlockTime(tx: HiroStacksTransaction | HiroStacksMempo
   }
 }
 
+export function mapStacksTxBlockHeight(
+  tx: HiroStacksTransaction | HiroStacksMempoolTransaction
+): number | undefined {
+  if (isMempoolTx(tx)) return undefined;
+  return tx.block_height;
+}
+
+export function mapStacksTxFee(tx: HiroStacksTransaction | HiroStacksMempoolTransaction): string {
+  return tx.fee_rate;
+}
+
 export function isMempoolTx(
   tx: HiroStacksTransaction | HiroStacksMempoolTransaction
 ): tx is HiroStacksMempoolTransaction {

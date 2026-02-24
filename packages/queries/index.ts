@@ -16,6 +16,7 @@ export * from './src/assets/fungible-asset-info.query-config';
 export * from './src/utxos/utxos.query-config';
 export * from './src/bns/bns.query-config';
 export * from './src/transactions/transactions.query-config';
+export * from './src/activity/blockchain-activity.query-config';
 export * from './src/activity/activity.query-config';
 export * from './src/activity/sip10-activity.query-config';
 export * from './src/collectibles/account-collectibles.query-config';
