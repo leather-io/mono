@@ -12,7 +12,6 @@
   },
   "type": "module",
   "scripts": {
-    "asset-list": "node ./scripts/asset-list-playground.mjs",
     "build": "tsdown",
     "build:watch": "tsdown --no-clean --watch",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
@@ -21,6 +20,7 @@
     "gen-api-types:leather": "dotenv -e .env -- openapi-typescript --redocly ./redocly.yaml https://staging.api.leather.io/docs/openapi.json -o ./src/infrastructure/api/leather/leather-api.types.ts && pnpm format",
     "lint": "eslint --cache --max-warnings 0",
     "lint:fix": "pnpm lint --fix",
+    "test:activity": "node ./scripts/activity-test.mjs",
     "test:asset-list": "node ./scripts/asset-list-test.mjs",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",

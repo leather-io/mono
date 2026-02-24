@@ -32,9 +32,9 @@ describe(BitcoinTransactionsService.name, () => {
       };
       const mockLeatherApiClient = {
         fetchBitcoinTransactions: (descriptor: string) => {
-          return Promise.resolve({
-            data: descriptor === nativeSegwitDescriptor ? [duplicateTx] : [duplicateTx, uniqueTx],
-          });
+          const data =
+            descriptor === nativeSegwitDescriptor ? [duplicateTx] : [duplicateTx, uniqueTx];
+          return Promise.resolve({ data, meta: { totalPages: 1 } });
         },
       } as unknown as LeatherApiClient;
 

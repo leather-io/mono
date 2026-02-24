@@ -50,6 +50,7 @@ export const querySettingsDepsRegistry = {
   'stacks-transactions-service--get-transaction-by-id': ['network'],
   'bitcoin-transactions-service--get-transaction-by-tx-id': ['network'],
   // activity
+  'blockchain-activity-service--get-activity': ['network'],
   'activity-service--get-activity': ['network'],
   'activity-service--get-activity-by-asset': ['network'],
   'activity-service--get-sip10-activity-by-asset-id': ['network'],

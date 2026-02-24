@@ -4,6 +4,7 @@ export * from './input-currency-mode.model';
 export * from './activity/activity-status.model';
 export * from './activity/activity-type.model';
 export * from './activity/activity.model';
+export * from './activity/blockchain-activity.model';
 export * from './assets/asset-id.model';
 export * from './assets/asset-type-guards';
 export * from './assets/asset.model';
