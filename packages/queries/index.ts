@@ -19,5 +19,8 @@ export * from './src/transactions/transactions.query-config';
 export * from './src/activity/activity.query-config';
 export * from './src/activity/sip10-activity.query-config';
 export * from './src/collectibles/account-collectibles.query-config';
+export * from './src/fees/bitcoin-fee-rates.query-config';
+export * from './src/fees/bitcoin-transaction-fees.query-config';
+export * from './src/fees/stacks-transaction-fees.query-config';
 export * from './src/assets/fungible-asset-info.query-config';
 export * from './src/market-history/market-history.query-config';

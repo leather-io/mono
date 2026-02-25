@@ -1,13 +1,13 @@
 import BigNumber from 'bignumber.js';
 
 import { filterUneconomicalUtxos, getSpendableAmount } from '@leather.io/bitcoin';
-import type { AverageBitcoinFeeRates, OwnedUtxo } from '@leather.io/models';
+import type { OwnedUtxo } from '@leather.io/models';
 import { createMoney, satToBtc } from '@leather.io/utils';
 
 interface CalculateMaxBitcoinSpend {
   address: string;
   utxos: OwnedUtxo[];
-  fetchedFeeRates?: AverageBitcoinFeeRates;
+  defaultFeeRate?: number;
   feeRate?: number;
 }
 
@@ -15,16 +15,16 @@ export function calculateMaxBitcoinSpend({
   address,
   utxos,
   feeRate,
-  fetchedFeeRates,
+  defaultFeeRate,
 }: CalculateMaxBitcoinSpend) {
-  if (!utxos.length || !fetchedFeeRates)
+  if (!utxos.length || !defaultFeeRate)
     return {
       spendAllFee: 0,
       amount: createMoney(0, 'BTC'),
       spendableBitcoin: new BigNumber(0),
     };
 
-  const currentFeeRate = feeRate ?? fetchedFeeRates.halfHourFee.toNumber();
+  const currentFeeRate = feeRate ?? defaultFeeRate;
 
   const filteredUtxos = filterUneconomicalUtxos({
     utxos,

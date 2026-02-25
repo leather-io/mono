@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { FeeTypes, type Fees } from '@leather.io/models';
+import type { TransactionFees } from '@leather.io/models';
 
 import { logger } from '@shared/logger';
 
@@ -17,7 +17,7 @@ import {
 
 interface UseCheckSbtcSponsorshipEligibleProps {
   baseTx?: TransactionBase;
-  stxFees?: Fees;
+  stxFees?: TransactionFees;
 }
 export function useCheckSbtcSponsorshipEligible({
   baseTx,
@@ -46,7 +46,7 @@ export function useCheckSbtcSponsorshipEligible({
       apiUrl: sbtcConfig.sponsorshipApiUrl,
       baseTx,
       nonce: nextNonce.nonce,
-      fee: stxFees.estimates[FeeTypes.Middle].fee.amount.toNumber(),
+      fee: stxFees.options.standard.value.amount.toNumber(),
     })
       .then(result => {
         setResult(result);

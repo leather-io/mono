@@ -27,7 +27,8 @@
   "dependencies": {
     "@leather.io/models": "workspace:*",
     "@leather.io/services": "workspace:*",
-    "@leather.io/utils": "workspace:*"
+    "@leather.io/utils": "workspace:*",
+    "@stacks/transactions": "7.0.5"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",

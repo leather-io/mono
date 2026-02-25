@@ -26,6 +26,7 @@ import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
+import { useAccountRequest } from '@app/services/accounts/use-account-request';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
 import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
@@ -57,14 +58,15 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     [btcTx.vin.length, btcTx.vout.length, recipient]
   );
 
+  const account = useAccountRequest();
   const { btc: balance } = useCurrentBtcBalanceWithFallback();
   const rbfAvailableBalance = sumMoney([balance.availableBalance, balance.outboundBalance]);
   const sendingAmount = getBitcoinTxValue(currentBitcoinAddress, btcTx);
   const { feesList } = useBitcoinFeesList({
+    account,
     amount: createMoney(btcToSat(sendingAmount), 'BTC'),
     isSendingMax: false,
     recipient,
-    utxos: utxos.available,
   });
 
   function generateUnsignedTx(payload: { feeRate: string; tx: BitcoinTx }) {

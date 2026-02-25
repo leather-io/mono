@@ -4,6 +4,7 @@ import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Form, Formik } from 'formik';
 import { Box, Flex } from 'leather-styles/jsx';
 
+import { getBitcoinFeeRate } from '@leather.io/models';
 import { Button, OrdinalAvatarIcon, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -35,7 +36,7 @@ export function SendInscriptionForm() {
       initialValues={{
         [recipientFieldName]: recipient,
         inscription,
-        feeRate: feeRates.hourFee.toNumber(),
+        feeRate: getBitcoinFeeRate(feeRates.options.low),
       }}
       onSubmit={chooseTransactionFee}
     >

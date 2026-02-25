@@ -5,7 +5,7 @@ import get from 'lodash.get';
 
 import { createBitcoinAddress, lookupDerivationByAddress } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
-import type { AverageBitcoinFeeRates, BtcFeeType, InscriptionAsset } from '@leather.io/models';
+import type { BtcFeeType, InscriptionAsset, TransactionFees } from '@leather.io/models';
 import { type UtxoWithDerivationPath } from '@leather.io/query';
 
 import { analytics } from '@shared/utils/analytics';
@@ -21,7 +21,7 @@ import { createUtxoFromInscription } from './create-utxo-from-inscription';
 import { SendInscriptionLoader } from './send-inscription-loader';
 
 interface SendInscriptionContextState {
-  feeRates: AverageBitcoinFeeRates;
+  feeRates: TransactionFees;
   inscription: InscriptionAsset;
   selectedFeeType: BtcFeeType;
   setSelectedFeeType(value: BtcFeeType | null): void;

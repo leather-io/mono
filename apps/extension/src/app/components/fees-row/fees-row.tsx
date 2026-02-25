@@ -6,7 +6,7 @@ import { useField } from 'formik';
 import { Box } from 'leather-styles/jsx';
 
 import { STX_DECIMALS } from '@leather.io/constants';
-import { FeeTypes, type Fees } from '@leather.io/models';
+import { FeeTypes, type StacksFeeEstimate, type TransactionFees } from '@leather.io/models';
 import { convertAmountToBaseUnit, createMoney, isNumber, isString } from '@leather.io/utils';
 
 import { useConvertCryptoCurrencyToFiatAmount } from '@app/common/hooks/use-convert-to-fiat-amount';
@@ -17,8 +17,20 @@ import { FeeEstimateSelect } from './components/fee-estimate-select';
 import { FeesRowLayout } from './components/fees-row.layout';
 import { TransactionFee } from './components/transaction-fee';
 
+function toEstimate(quote: TransactionFees['options']['low']): StacksFeeEstimate {
+  return {
+    fee: quote.value,
+    feeRate: quote.type === 'stacksFeeRate' ? quote.rate : 0,
+  };
+}
+
+function transactionFeesToEstimates(txFees: TransactionFees): StacksFeeEstimate[] {
+  const { low, standard, high } = txFees.options;
+  return [toEstimate(low), toEstimate(standard), toEstimate(high)];
+}
+
 interface FeeRowProps {
-  fees?: Fees;
+  fees?: TransactionFees;
   allowCustom?: boolean;
   isSponsored: boolean;
   defaultFeeValue?: number;
@@ -40,7 +52,8 @@ export function FeesRow({
   const isCustom = feeTypeField.value === FeeTypes[FeeTypes.Custom];
   const selectedItem = Number(FeeTypes[feeTypeField.value]);
 
-  const hasFeeEstimates = fees?.estimates.length;
+  const estimates = useMemo(() => (fees ? transactionFeesToEstimates(fees) : []), [fees]);
+  const hasFeeEstimates = estimates.length > 0;
   const feeCurrencySymbol = feeCurrencyField.value;
 
   const convertCryptoCurrencyToUsd = useConvertCryptoCurrencyToFiatAmount(feeCurrencySymbol);
@@ -67,9 +80,7 @@ export function FeesRow({
     }
 
     if (!defaultFeeValue && hasFeeEstimates && !feeField.value && !isCustom) {
-      void feeHelper.setValue(
-        convertAmountToBaseUnit(fees.estimates[FeeTypes.Middle].fee).toString()
-      );
+      void feeHelper.setValue(convertAmountToBaseUnit(estimates[FeeTypes.Middle].fee).toString());
       void feeTypeHelper.setValue(FeeTypes[FeeTypes.Middle]);
       return;
     }
@@ -78,7 +89,7 @@ export function FeesRow({
     feeField.value,
     feeHelper,
     feeTypeHelper,
-    fees?.estimates,
+    estimates,
     hasFeeEstimates,
     isCustom,
     isSponsored,
@@ -93,12 +104,12 @@ export function FeesRow({
             ? convertAmountToBaseUnit(new BigNumber(Number(defaultFeeValue)), STX_DECIMALS)
             : ''
         );
-      else if (fees)
-        void feeHelper.setValue(convertAmountToBaseUnit(fees.estimates[index].fee).toString());
+      else if (estimates.length > 0)
+        void feeHelper.setValue(convertAmountToBaseUnit(estimates[index].fee).toString());
       setFieldWarning('');
       setIsSelectVisible(false);
     },
-    [feeTypeHelper, feeHelper, fees, defaultFeeValue]
+    [feeTypeHelper, feeHelper, estimates, defaultFeeValue]
   );
 
   if (!hasFeeEstimates) return <LoadingRectangle height="32px" width="100%" />;
@@ -111,7 +122,7 @@ export function FeesRow({
           <CustomFeeField
             disableFeeSelection={disableFeeSelection}
             feeCurrencySymbol={feeCurrencySymbol}
-            lowFeeEstimate={fees.estimates[FeeTypes.Low]}
+            lowFeeEstimate={estimates[FeeTypes.Low]}
             setFieldWarning={(value: string) => setFieldWarning(value)}
           />
         ) : (
@@ -135,7 +146,7 @@ export function FeesRow({
           disableFeeSelection={disableFeeSelection}
           allowCustom={allowCustom}
           isVisible={isSelectVisible}
-          estimate={fees.estimates}
+          estimate={estimates}
           onSelectItem={(index: number) => handleSelectFeeEstimateOrCustomField(index)}
           onSetIsSelectVisible={(value: boolean) => setIsSelectVisible(value)}
           selectedItem={selectedItem}

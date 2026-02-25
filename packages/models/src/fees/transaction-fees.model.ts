@@ -54,3 +54,8 @@ export type TransactionFeeQuote =
   | BitcoinTransactionFeeQuote
   | StacksTransactionFeeQuote
   | EvmTransactionFeeQuote;
+
+export function getBitcoinFeeRate(quote: TransactionFeeQuote): number {
+  if (quote.type === 'bitcoinFeeRate') return quote.rate;
+  return 0;
+}

@@ -16,7 +16,7 @@ import {
 import { stxFeeValidator } from '@app/common/validation/forms/fee-validators';
 import { useUpdatePersistedSendFormValues } from '@app/features/popup-send-form-restoration/use-update-persisted-send-form-values';
 import { useStxAddressBalance } from '@app/query/stacks/balance/stx-balance.hooks';
-import { useCalculateStacksTxFees } from '@app/query/stacks/fees/fees.hooks';
+import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
 import { useStacksValidateFeeByNonce } from '@app/query/stacks/mempool/mempool.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import {
@@ -29,21 +29,20 @@ import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 
 export function useStxSendForm() {
   const unsignedTx = useStxTokenTransferUnsignedTxState();
-  const { data: stxFees } = useCalculateStacksTxFees(unsignedTx);
+  const { data: stxFees } = useStacksTransactionFees(unsignedTx);
   const generateTx = useGenerateStxTokenTransferUnsignedTx();
   const { onFormStateChange } = useUpdatePersistedSendFormValues();
   const sendFormNavigate = useSendFormNavigate();
   const address = useCurrentStacksAccountAddress();
   const { changeFeeByNonce } = useStacksValidateFeeByNonce(address);
 
-  // get stx balance
   const balance = useStxAddressBalance(address);
   const availableBalance = balance.value?.stx.availableUnlockedBalance ?? createMoney(0, 'STX');
 
   const sendMaxBalance = useMemo(() => {
-    const standardFee = stxFees?.estimates[1]?.fee.amount || 0;
+    const standardFee = stxFees?.options.standard.value.amount || 0;
     return convertAmountToBaseUnit(availableBalance.amount.minus(standardFee), STX_DECIMALS);
-  }, [availableBalance.amount, stxFees?.estimates]);
+  }, [availableBalance.amount, stxFees?.options]);
 
   const { initialValues, checkFormValidation, recipient, memo, nonce } = useStacksCommonSendForm({
     symbol: 'STX',
@@ -80,7 +79,6 @@ export function useStxSendForm() {
         fee: Number(values.fee),
       });
 
-      // if fee has changed, show info message
       const showFeeChangeWarning = initialFee !== values.fee;
 
       const tx = await generateTx(values);

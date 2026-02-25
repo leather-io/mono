@@ -1,5 +1,6 @@
 import { BrowserContext, Page } from '@playwright/test';
 import { TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS } from '@tests/mocks/constants';
+import { setupMockApis } from '@tests/mocks/mock-apis';
 import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoin-tx';
 
 import type { RpcParams, sendTransfer } from '@leather.io/rpc';
@@ -30,7 +31,8 @@ test.describe('RPC: sendTransfer', () => {
   function clickActionButton(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Approve') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForTimeout(1000);
+      await setupMockApis(popup);
+      await popup.waitForTimeout(2000);
       const btn = popup.locator(`text="${buttonToPress}"`);
       await btn.click();
     };
@@ -38,6 +40,7 @@ test.describe('RPC: sendTransfer', () => {
 
   async function mockPopupRequests(context: BrowserContext) {
     const popup = await context.waitForEvent('page');
+    await setupMockApis(popup);
     await mockTestAccountBtcBroadcastTransaction(popup);
   }
 
