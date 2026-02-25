@@ -1,12 +1,12 @@
 import { Flex, styled } from 'leather-styles/jsx';
 
-import type { UtxoItem } from '../mock-data';
-
 interface UtxoRowProps {
-  utxo: UtxoItem;
+  label: string;
+  sats: string;
+  fiatValue: string;
 }
 
-export function UtxoRow({ utxo }: UtxoRowProps) {
+export function UtxoRow({ label, sats, fiatValue }: UtxoRowProps) {
   return (
     <Flex
       justifyContent="space-between"
@@ -17,13 +17,13 @@ export function UtxoRow({ utxo }: UtxoRowProps) {
       borderRadius="xs"
     >
       <styled.span textStyle="caption.01" color="ink.text-subdued">
-        UTXO #{utxo.index}
+        {label}
       </styled.span>
       <Flex gap="space.04" alignItems="center">
         <styled.span textStyle="caption.01" color="ink.text-subdued">
-          {utxo.sats}
+          {sats}
         </styled.span>
-        <styled.span textStyle="caption.01">{utxo.fiatValue}</styled.span>
+        <styled.span textStyle="caption.01">{fiatValue}</styled.span>
       </Flex>
     </Flex>
   );
