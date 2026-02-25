@@ -104,6 +104,7 @@ export function createActivityView(
 
   return {
     key: getActivityKey(activity),
+    txid: hasTxDetails(activity) ? activity.txid : undefined,
     asset,
     fromAsset,
     toAsset,
