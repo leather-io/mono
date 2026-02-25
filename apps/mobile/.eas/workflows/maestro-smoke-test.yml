@@ -21,6 +21,7 @@ jobs:
   run_eas_update:
     name: EAS Update
     type: update
+    environment: development
     params:
       platform: all
       channel: cicd
