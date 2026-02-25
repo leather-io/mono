@@ -3,7 +3,7 @@ import { AuthType, type StacksTransactionWire } from '@stacks/transactions';
 import { createMoneyFromDecimal } from '@leather.io/utils';
 
 import { useCheckSbtcSponsorshipEligible } from '@app/query/sbtc/sponsored-transactions.hooks';
-import { useCalculateStacksTxFees } from '@app/query/stacks/fees/fees.hooks';
+import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
 
 import { type Fee, type Fees } from '../fee-editor.context';
 import { useStacksFees } from './use-stacks-fees';
@@ -20,7 +20,7 @@ interface StacksFeesLoaderProps {
   unsignedTx: StacksTransactionWire;
 }
 export function StacksFeesLoader({ children, unsignedTx }: StacksFeesLoaderProps) {
-  const { data: stxFees, isLoading: isLoadingFees } = useCalculateStacksTxFees(unsignedTx);
+  const { data: stxFees, isLoading: isLoadingFees } = useStacksTransactionFees(unsignedTx);
   const fees = useStacksFees({ fees: stxFees });
   const { isVerifying: isVerifyingSbtcSponsorship, result: sbtcSponsorshipEligibility } =
     useCheckSbtcSponsorshipEligible({ baseTx: { transaction: unsignedTx }, stxFees });

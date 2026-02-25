@@ -1,12 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 import { BITCOIN_MINIMUM_SPEND_IN_SATS } from '@leather.io/constants';
-import {
-  type BitcoinTransactionFeeQuote,
-  type CryptoAssetBalance,
-  type Money,
-  type TransactionFeeTier,
-} from '@leather.io/models';
+import { type CryptoAssetBalance, type Money, type TransactionFeeTier } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { type FeeMode, type SwapDependencies } from '../../swap-state.types';
@@ -142,6 +137,6 @@ async function resolveFeeRate(
     signal
   );
 
-  const feeQuote = transactionFees.options[feeTier] as BitcoinTransactionFeeQuote;
+  const feeQuote = transactionFees.options[feeTier];
   return feeQuote.rate;
 }

@@ -1,37 +1,5 @@
-import { getAddressInfo, validate } from 'bitcoin-address-validation';
-
-import { BtcSizeFeeEstimator } from '@leather.io/bitcoin';
-import type { BitcoinTransactionVectorOutput, BitcoinTx } from '@leather.io/models';
+import type { BitcoinTx } from '@leather.io/models';
 import { satToBtc, sumNumbers, truncateMiddle } from '@leather.io/utils';
-
-export function getBitcoinTxSizeEstimation(payload: {
-  inputCount: number;
-  outputCount: number;
-  recipient: string;
-}) {
-  const { inputCount, recipient, outputCount } = payload;
-  const addressInfo = validate(recipient) ? getAddressInfo(recipient) : null;
-  const outputAddressTypeWithFallback = addressInfo ? addressInfo.type : 'p2wpkh';
-
-  const txSizer = new BtcSizeFeeEstimator();
-  const sizeInfo = txSizer.calcTxSize({
-    // Only p2wpkh is supported by the wallet
-    input_script: 'p2wpkh',
-    input_count: inputCount,
-    // From the address of the recipient, we infer the output type
-    [outputAddressTypeWithFallback + '_output_count']: outputCount,
-  });
-
-  return sizeInfo;
-}
-
-export function getRecipientAddressFromOutput(
-  vout: BitcoinTransactionVectorOutput[],
-  currentBitcoinAddress: string
-) {
-  return vout.find(output => output.scriptpubkey_address !== currentBitcoinAddress)
-    ?.scriptpubkey_address;
-}
 
 export function getBitcoinTxCaption(transaction?: BitcoinTx) {
   return transaction ? truncateMiddle(transaction.txid, 4) : '';

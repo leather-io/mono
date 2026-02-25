@@ -33,7 +33,7 @@ import { analytics } from '@shared/utils/analytics';
 
 import { serializeError } from '@app/common/utils';
 import { useToast } from '@app/features/toasts/use-toast';
-import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
+import { useBitcoinFeeRates } from '@app/query/bitcoin/fees/bitcoin-fee-rates.hooks';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
@@ -96,7 +96,7 @@ export function useSbtcDepositTransaction(payer: BitcoinNativeSegwitPayer, utxos
   const toast = useToast();
   const { setIsIdle } = useLoading(LoadingKeys.SUBMIT_SWAP_TRANSACTION);
   const stacksAccount = useCurrentStacksAccount();
-  const { data: feeRates } = useAverageBitcoinFeeRates();
+  const { data: feeRates } = useBitcoinFeeRates();
   const networkMode = useBitcoinScureLibNetworkConfig();
   const navigate = useNavigate();
   const network = useCurrentNetwork();
@@ -138,7 +138,7 @@ export function useSbtcDepositTransaction(payer: BitcoinNativeSegwitPayer, utxos
         };
 
         const determineUtxosArgs = {
-          feeRate: feeRates?.halfHourFee.toNumber() ?? 0,
+          feeRate: feeRates?.standard.rate ?? 0,
           recipients: [
             {
               address: deposit.address,

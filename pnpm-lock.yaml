@@ -1968,6 +1968,9 @@ importers:
       '@leather.io/utils':
         specifier: workspace:*
         version: link:../utils
+      '@stacks/transactions':
+        specifier: 7.0.5
+        version: 7.0.5(encoding@0.1.13)
       '@tanstack/react-query':
         specifier: 5.85.5
         version: 5.85.5(react@19.2.3)

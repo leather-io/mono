@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 
 import { CoinSelectionRecipient } from '@leather.io/bitcoin';
-import { TransactionFees } from '@leather.io/models';
+import { type BitcoinTransactionFees } from '@leather.io/models';
 
 import { BitcoinCoinSelectionService } from '../coin-selection/bitcoin-coin-selection.service';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
@@ -20,7 +20,7 @@ export class BitcoinTransactionFeesService {
     recipients: CoinSelectionRecipient[],
     isMaxSpend = false,
     signal?: AbortSignal
-  ): Promise<TransactionFees> {
+  ): Promise<BitcoinTransactionFees> {
     const feeRates = await this.leatherApiClient.fetchBitcoinFeeRates({ signal });
 
     const [

@@ -1,5 +1,8 @@
-import { Locator, Page } from '@playwright/test';
-import { MockedTokensSelectors } from '@tests/selectors/mocked-tokens.selectors';
+import { Locator, Page, expect } from '@playwright/test';
+import {
+  CoreAssetSelectors,
+  MockedTokensSelectors,
+} from '@tests/selectors/mocked-tokens.selectors';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { createTestSelector } from '@tests/utils';
@@ -75,14 +78,21 @@ export class SendPage {
 
   async selectBtcAndGoToSendForm() {
     await this.page.waitForURL('**' + RouteUrls.SendCryptoAsset);
-    await this.page.getByTestId('BTC').click();
+    await expect(
+      this.page.getByTestId(SendCryptoAssetSelectors.ChooseAssetToSendPage)
+    ).toBeVisible();
+    await this.page.getByTestId(CoreAssetSelectors.BtcAsset).click();
     await this.page.waitForURL('**' + `${RouteUrls.SendCryptoAsset}/btc`);
+
     await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
   }
 
   async selectStxAndGoToSendForm() {
     await this.page.waitForURL('**' + RouteUrls.SendCryptoAsset);
-    await this.page.getByTestId('STX').click();
+    await expect(
+      this.page.getByTestId(SendCryptoAssetSelectors.ChooseAssetToSendPage)
+    ).toBeVisible();
+    await this.page.getByTestId(CoreAssetSelectors.StxAsset).click();
     await this.page.waitForURL('**' + `${RouteUrls.SendCryptoAsset}/stx`);
     await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
   }

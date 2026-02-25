@@ -14,7 +14,7 @@ import { validateStacksAddress } from '@app/common/stacks-utils';
 import { TransactionErrorReason } from '@app/features/stacks-transaction-request/legacy-transaction-error/transaction-error';
 import { useCheckSbtcSponsorshipEligible } from '@app/query/sbtc/sponsored-transactions.hooks';
 import { useStxAddressBalance } from '@app/query/stacks/balance/stx-balance.hooks';
-import { useCalculateStacksTxFees } from '@app/query/stacks/fees/fees.hooks';
+import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
 import { useGetContractInterfaceQuery } from '@app/query/stacks/legacy-request-contract.query';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useTransactionRequestState } from '@app/store/transactions/requests.hooks';
@@ -35,7 +35,7 @@ export function useTransactionError() {
   const availableUnlockedBalance = balance.value?.stx.unlockedBalance;
 
   const unsignedTx = useUnsignedStacksTransactionBaseState();
-  const { data: stxFees } = useCalculateStacksTxFees(unsignedTx.transaction);
+  const { data: stxFees } = useStacksTransactionFees(unsignedTx.transaction);
   const { isVerifying: isVerifyingSbtcEligibilty, result: sbtcSponsorshipEligibility } =
     useCheckSbtcSponsorshipEligible({ baseTx: unsignedTx, stxFees });
 
