@@ -23,6 +23,8 @@ import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-t
 import { UnsupportedBrowserLayout } from '@app/features/ledger/generic-steps';
 import { ConnectLedgerStart } from '@app/features/ledger/generic-steps/connect-device/connect-ledger-start';
 import { TokenDetails } from '@app/features/token/token-details';
+import { AllBalancesPage } from '@app/pages/all-balances/all-balances';
+import { AllBalancesDetail } from '@app/pages/all-balances/all-balances-detail';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { LegacyAccountAuth } from '@app/pages/legacy-account-auth/legacy-account-auth';
@@ -259,6 +261,23 @@ function useAppRoutes() {
             element={
               <AccountGate>
                 <ViewSecretKey />
+              </AccountGate>
+            }
+          />
+
+          <Route
+            path={RouteUrls.AllBalances}
+            element={
+              <AccountGate>
+                <AllBalancesPage />
+              </AccountGate>
+            }
+          />
+          <Route
+            path={`${RouteUrls.AllBalances}/:category`}
+            element={
+              <AccountGate>
+                <AllBalancesDetail />
               </AccountGate>
             }
           />

@@ -9,6 +9,7 @@ import {
   BellIcon,
   CodeIcon,
   GlobeTiltedIcon,
+  GridIcon,
   KeyIcon,
   MegaphoneIcon,
   SunInCloudIcon,
@@ -57,6 +58,15 @@ export function MenuButtons() {
           void navigate(RouteUrls.SelectTheme);
         }}
         icon={<SunInCloudIcon />}
+      />
+
+      <SettingsButton
+        variant="chevron"
+        title="All balances"
+        onClick={() => {
+          void navigate(RouteUrls.AllBalances);
+        }}
+        icon={<GridIcon />}
       />
 
       <SettingsButton

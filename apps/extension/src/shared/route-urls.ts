@@ -41,6 +41,7 @@ export enum RouteUrls {
   Send = '/send-transaction',
   ViewSecretKey = '/view-secret-key',
   Settings = '/settings',
+  AllBalances = '/all-balances',
 
   // nested routes must have relative paths
   Activity = '/activity',
