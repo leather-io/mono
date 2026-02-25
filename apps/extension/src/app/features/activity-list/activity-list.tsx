@@ -1,11 +1,14 @@
 import { useEffect } from 'react';
-import { Outlet } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 import { Virtuoso } from 'react-virtuoso';
 
 import { type ActivityView } from '@leather.io/features';
 
+import { RouteUrls } from '@shared/route-urls';
+
 import { formatCurrency } from '@app/common/currency-formatter';
 import { SbtcDepositTransactionItem } from '@app/components/sbtc-deposit-status-item/sbtc-deposit-status-item';
+import { StacksTransactionActionMenu } from '@app/components/stacks-transaction-item/stacks-transaction-action-menu';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useActivity } from '@app/query/activity/activity.query';
 import { useSbtcPendingDeposits } from '@app/query/sbtc/sbtc-deposits.query';
@@ -42,6 +45,11 @@ function isSbtcDepositRow(
  * 3. Pass the onLoadMore handler from the parent component
  */
 
+function isStacksPending(item: ActivityView): boolean {
+  if (item.statusIndicator !== 'pending' || !item.txid) return false;
+  return !item.asset || item.asset.chain === 'stacks';
+}
+
 export function ActivityList() {
   const accountIndex = useCurrentAccountIndex();
   const accountAddresses = useAccountAddresses(accountIndex);
@@ -49,6 +57,7 @@ export function ActivityList() {
   const activityQuery = useActivity(accountAddresses);
   const submittedTransactions = useSubmittedTransactions();
   const updateSubmittedTransactions = useUpdateSubmittedTransactions();
+  const navigate = useNavigate();
 
   const stacksAddress = accountAddresses.stacks?.stxAddress ?? '';
   const { transactions: stacksPendingTransactions } = useStacksPendingTransactions(stacksAddress);
@@ -80,7 +89,19 @@ export function ActivityList() {
     if (isSbtcDepositRow(item)) {
       return <SbtcDepositTransactionItem deposit={item.deposit} />;
     }
-    return <ActivityItem item={item} formatCurrency={formatCurrency} />;
+
+    const txid = item.txid;
+    const rightElement =
+      isStacksPending(item) && txid ? (
+        <StacksTransactionActionMenu
+          onIncreaseFee={() => navigate(RouteUrls.IncreaseStacksFee.replace(':txid', txid))}
+          onCancelTransaction={() =>
+            navigate(RouteUrls.CancelStacksTransaction.replace(':txid', txid))
+          }
+        />
+      ) : undefined;
+
+    return <ActivityItem item={item} rightElement={rightElement} formatCurrency={formatCurrency} />;
   }
 
   function computeItemKey(_: number, item: ActivityListRow) {
