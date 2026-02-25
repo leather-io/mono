@@ -29,6 +29,7 @@ export function createSubmittedActivityViews({
 
       const baseView: Omit<ActivityView, 'title' | 'caption'> = {
         key: `submitted-${txid}`,
+        txid,
         asset: undefined,
         fromAsset: undefined,
         toAsset: undefined,

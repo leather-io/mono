@@ -12,10 +12,11 @@ import { Balance } from '@app/components/balance/balance';
 
 interface ItemProps {
   item: ActivityView;
+  rightElement?: React.ReactNode;
   formatCurrency(money: Money, options?: FormatAmountOptions): string;
 }
 
-function Item({ item, formatCurrency }: ItemProps) {
+function Item({ item, rightElement, formatCurrency }: ItemProps) {
   const { activityLink, title, caption, balances, statusLabel, activityAvatar, statusIndicator } =
     item;
   const clickable = Boolean(activityLink);
@@ -102,6 +103,7 @@ function Item({ item, formatCurrency }: ItemProps) {
               formatCurrency={formatCurrency}
             />
           ) : null}
+          {rightElement}
         </Flex>
       </Flex>
     </styled.button>
