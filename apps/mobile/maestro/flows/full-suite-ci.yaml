@@ -25,6 +25,20 @@ name: Full Test Suite CI
     timeout: 30000
 
 # ============================================
+# SECTION 0: Capture Environment Info
+# ============================================
+
+# Navigate to dev console and screenshot env vars for debugging
+- tapOn:
+    id: 'homeDeveloperToolsButton'
+- extendedWaitUntil:
+    visible: 'Environment'
+    timeout: 5000
+- takeScreenshot: env-debug-info
+- tapOn:
+    id: 'backButton'
+
+# ============================================
 # SECTION 1: Wallet Creation
 # ============================================
 
