@@ -3,19 +3,19 @@ import { useCallback } from 'react';
 import type { OwnedUtxo } from '@leather.io/models';
 
 import { calculateMaxBitcoinSpend } from '@app/common/transactions/bitcoin/fees/calculate-max-bitcoin-spend';
-import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
+import { useBitcoinFeeRates } from '@app/query/bitcoin/fees/bitcoin-fee-rates.hooks';
 
 export function useCalculateMaxBitcoinSpend() {
-  const { data: feeRates } = useAverageBitcoinFeeRates();
+  const { data: feeRates } = useBitcoinFeeRates();
+  const defaultFeeRate = feeRates?.standard.rate;
 
   return useCallback(
     (address = '', utxos: OwnedUtxo[], feeRate?: number) =>
       calculateMaxBitcoinSpend({
         address,
         utxos,
-        feeRate,
-        fetchedFeeRates: feeRates,
+        feeRate: feeRate ?? defaultFeeRate,
       }),
-    [feeRates]
+    [defaultFeeRate]
   );
 }

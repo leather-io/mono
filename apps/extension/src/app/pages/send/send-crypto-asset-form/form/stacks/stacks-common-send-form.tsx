@@ -6,7 +6,7 @@ import { Box, Flex } from 'leather-styles/jsx';
 import { ObjectSchema } from 'yup';
 
 import { HIGH_FEE_WARNING_LEARN_MORE_URL_STX } from '@leather.io/constants';
-import type { Fees, Money } from '@leather.io/models';
+import type { Money, StacksTransactionFees } from '@leather.io/models';
 import { Button, Link } from '@leather.io/ui';
 
 import { StacksSendFormValues } from '@shared/models/form.model';
@@ -34,7 +34,7 @@ interface StacksCommonSendFormProps {
   amountField: React.JSX.Element;
   selectedAssetField: React.JSX.Element;
   availableTokenBalance: Money;
-  fees?: Fees;
+  fees?: StacksTransactionFees;
 }
 
 export function StacksCommonSendForm({

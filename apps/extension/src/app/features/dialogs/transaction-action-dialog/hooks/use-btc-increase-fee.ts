@@ -1,30 +1,24 @@
-import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
 import * as btc from '@scure/btc-signer';
 import BigNumber from 'bignumber.js';
 import * as yup from 'yup';
 
-import { isTaprootPayer } from '@leather.io/bitcoin';
+import { getSizeInfo, isTaprootPayer } from '@leather.io/bitcoin';
 import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import type { BitcoinTx } from '@leather.io/models';
 import { emptyUtxos } from '@leather.io/services';
-import { btcToSat, createMoney, isError, sumMoney } from '@leather.io/utils';
+import { createMoney, isError, sumMoney } from '@leather.io/utils';
 
 import type { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { queryClient } from '@app/common/persistence';
-import {
-  getBitcoinTxSizeEstimation,
-  getBitcoinTxValue,
-  getRecipientAddressFromOutput,
-} from '@app/common/transactions/bitcoin/utils';
 import { MAX_FEE_RATE_MULTIPLIER } from '@app/components/bitcoin-custom-fee/hooks/use-bitcoin-custom-fee';
-import { useBitcoinFeesList } from '@app/components/bitcoin-fees-list/use-bitcoin-fees-list';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
+import { useBitcoinFeeRates } from '@app/query/bitcoin/fees/bitcoin-fee-rates.hooks';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
@@ -45,27 +39,26 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
   const getPayerForOwnedUtxo = useBitcoinPayerFromInput();
-  const recipient = getRecipientAddressFromOutput(btcTx.vout, currentBitcoinAddress) || '';
 
-  const sizeInfo = useMemo(
-    () =>
-      getBitcoinTxSizeEstimation({
-        inputCount: btcTx.vin.length,
-        recipient,
-        outputCount: btcTx.vout.length,
-      }),
-    [btcTx.vin.length, btcTx.vout.length, recipient]
-  );
+  const recipients = btcTx.vout.map(output => ({
+    amount: createMoney(output.value, 'BTC'),
+    address: output.scriptpubkey_address,
+  }));
+
+  const sizeInfo = getSizeInfo({
+    utxos: btcTx.vin.map(vin => ({
+      txid: vin.txid,
+      address: vin.prevout.scriptpubkey_address,
+      value: vin.prevout.value,
+    })),
+    recipients,
+    isSendMax: false,
+  });
 
   const { btc: balance } = useCurrentBtcBalanceWithFallback();
   const rbfAvailableBalance = sumMoney([balance.availableBalance, balance.outboundBalance]);
-  const sendingAmount = getBitcoinTxValue(address => address === currentBitcoinAddress, btcTx);
-  const { feesList } = useBitcoinFeesList({
-    amount: createMoney(btcToSat(sendingAmount), 'BTC'),
-    isSendingMax: false,
-    recipient,
-    utxos: utxos.available,
-  });
+
+  const { data: feeRates } = useBitcoinFeeRates();
 
   function generateUnsignedTx(payload: { feeRate: string; tx: BitcoinTx }) {
     const newTx = new btc.Transaction();
@@ -123,7 +116,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
         newTx.addOutputAddress(currentBitcoinAddress, BigInt(outputDiff), networkMode);
         return;
       }
-      newTx.addOutputAddress(recipient, BigInt(output.value), networkMode);
+      newTx.addOutputAddress(output.scriptpubkey_address, BigInt(output.value), networkMode);
     });
 
     return { tx: newTx, signingConfig };
@@ -186,11 +179,11 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
         test(value) {
           const bnValue = new BigNumber(value);
 
+          const highestFeeRate =
+            (feeRates?.high.rate ?? 10) * sizeInfo.txVBytes * MAX_FEE_RATE_MULTIPLIER;
+
           // check if fee is higher than 50 times the highest fee
-          if (
-            feesList.length > 0 &&
-            bnValue.isGreaterThan(feesList[0].feeRate * MAX_FEE_RATE_MULTIPLIER)
-          ) {
+          if (feeRates && bnValue.isGreaterThan(highestFeeRate)) {
             return false;
           }
 
@@ -207,6 +200,6 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     sizeInfo,
     onSubmit,
     validationSchema,
-    recipient,
+    recipients,
   };
 }

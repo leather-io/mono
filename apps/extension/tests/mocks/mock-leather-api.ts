@@ -129,6 +129,16 @@ export async function mockEmptyLeatherApiUtxosRequest(page: Page) {
 }
 
 export async function mockLeatherApiRequests(page: Page) {
+  await page.route('**/v1/market/bitcoin/fees**', route =>
+    route.fulfill({
+      json: {
+        low: { rate: 1 },
+        standard: { rate: 5 },
+        high: { rate: 10 },
+      },
+    })
+  );
+
   await page.route('**/v1/tokens/rune?format=map', route =>
     route.fulfill({
       json: {

@@ -6,7 +6,7 @@ import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { FeesListItem } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
-import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
+import { useBitcoinFeeRates } from '@app/query/bitcoin/fees/bitcoin-fee-rates.hooks';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -28,7 +28,8 @@ export function useSendInscriptionFeesList({
   const { utxos } = useCurrentUtxos();
 
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
-  const { data: feeRates, isLoading } = useAverageBitcoinFeeRates();
+
+  const { data: feeRates, isLoading } = useBitcoinFeeRates();
 
   const { coverFeeFromAdditionalUtxos } = useGenerateUnsignedOrdinalTx(utxo);
 
@@ -60,9 +61,13 @@ export function useSendInscriptionFeesList({
 
     if (!feeRates || !utxos || !nativeSegwitPayer) return [];
 
-    const highFeeValue = getTransactionFee(feeRates.fastestFee.toNumber());
-    const standardFeeValue = getTransactionFee(feeRates.halfHourFee.toNumber());
-    const lowFeeValue = getTransactionFee(feeRates.hourFee.toNumber());
+    const highRate = feeRates.high.rate;
+    const standardRate = feeRates.standard.rate;
+    const lowRate = feeRates.low.rate;
+
+    const highFeeValue = getTransactionFee(highRate);
+    const standardFeeValue = getTransactionFee(standardRate);
+    const lowFeeValue = getTransactionFee(lowRate);
 
     const feesArr = [];
 
@@ -73,7 +78,7 @@ export function useSendInscriptionFeesList({
         btcValue: formatCurrency(createMoney(highFeeValue, 'BTC'), { preset: 'pad-decimals' }),
         time: btcTxTimeMap.fastestFee,
         fiatValue: getFiatFeeValue(highFeeValue),
-        feeRate: feeRates.fastestFee.toNumber(),
+        feeRate: highRate,
       });
     }
 
@@ -84,7 +89,7 @@ export function useSendInscriptionFeesList({
         btcValue: formatCurrency(createMoney(standardFeeValue, 'BTC'), { preset: 'pad-decimals' }),
         time: btcTxTimeMap.halfHourFee,
         fiatValue: getFiatFeeValue(standardFeeValue),
-        feeRate: feeRates.halfHourFee.toNumber(),
+        feeRate: standardRate,
       });
     }
 
@@ -95,7 +100,7 @@ export function useSendInscriptionFeesList({
         btcValue: formatCurrency(createMoney(lowFeeValue, 'BTC'), { preset: 'pad-decimals' }),
         time: btcTxTimeMap.hourFee,
         fiatValue: getFiatFeeValue(lowFeeValue),
-        feeRate: feeRates.hourFee.toNumber(),
+        feeRate: lowRate,
       });
     }
 

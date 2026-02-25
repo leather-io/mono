@@ -35,7 +35,7 @@ export function SendInscriptionForm() {
       initialValues={{
         [recipientFieldName]: recipient,
         inscription,
-        feeRate: feeRates.hourFee.toNumber(),
+        feeRate: feeRates.low.rate,
       }}
       onSubmit={chooseTransactionFee}
     >

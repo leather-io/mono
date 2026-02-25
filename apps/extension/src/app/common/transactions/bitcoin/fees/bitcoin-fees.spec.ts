@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js';
 import { sha256 } from 'bitcoinjs-lib/src/crypto';
 
 import { filterUneconomicalUtxos } from '@leather.io/bitcoin';
@@ -23,14 +22,6 @@ function generateTransactions(values: number[]) {
   return values.map(val => generateTxId(val));
 }
 
-function generateAverageFee(value: number) {
-  return {
-    hourFee: BigNumber(value / 2),
-    halfHourFee: BigNumber(value),
-    fastestFee: BigNumber(value * 2),
-  };
-}
-
 describe(calculateMaxBitcoinSpend.name, () => {
   const utxos = generateTransactions([600, 600, 1200, 1200, 10000, 10000, 25000, 40000, 50000000]);
 
@@ -39,7 +30,7 @@ describe(calculateMaxBitcoinSpend.name, () => {
     const maxBitcoinSpend = calculateMaxBitcoinSpend({
       address: '',
       utxos,
-      fetchedFeeRates: generateAverageFee(fee),
+      feeRate: fee,
     });
     expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50087979);
   });
@@ -49,7 +40,7 @@ describe(calculateMaxBitcoinSpend.name, () => {
     const maxBitcoinSpend = calculateMaxBitcoinSpend({
       address: '',
       utxos,
-      fetchedFeeRates: generateAverageFee(fee),
+      feeRate: fee,
     });
     expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50085497);
   });
@@ -59,7 +50,7 @@ describe(calculateMaxBitcoinSpend.name, () => {
     const maxBitcoinSpend = calculateMaxBitcoinSpend({
       address: '',
       utxos,
-      fetchedFeeRates: generateAverageFee(fee),
+      feeRate: fee,
     });
     expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50074515);
   });
@@ -69,7 +60,7 @@ describe(calculateMaxBitcoinSpend.name, () => {
     const maxBitcoinSpend = calculateMaxBitcoinSpend({
       address: '',
       utxos,
-      fetchedFeeRates: generateAverageFee(fee),
+      feeRate: fee,
     });
     expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50050050);
   });
@@ -79,7 +70,7 @@ describe(calculateMaxBitcoinSpend.name, () => {
     const maxBitcoinSpend = calculateMaxBitcoinSpend({
       address: '',
       utxos,
-      fetchedFeeRates: generateAverageFee(fee),
+      feeRate: fee,
     });
     expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(49981500);
   });

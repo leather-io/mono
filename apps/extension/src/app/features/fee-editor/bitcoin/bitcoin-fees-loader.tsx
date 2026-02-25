@@ -1,9 +1,10 @@
-import { type Money, type OwnedUtxo } from '@leather.io/models';
+import type { OwnedUtxo } from '@leather.io/models';
+import type { AccountRequest } from '@leather.io/services';
 import { createMoney } from '@leather.io/utils';
 
 import type { TransferRecipient } from '@shared/models/form.model';
 
-import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
+import { useBitcoinTransactionFees } from '@app/query/bitcoin/fees/bitcoin-transaction-fees.hooks';
 
 import type { Fee, Fees } from '../fee-editor.context';
 import { getBitcoinFee, getBitcoinSendMaxFee } from './bitcoin-fees.utils';
@@ -16,31 +17,30 @@ interface BitcoinFees {
 }
 
 interface BitcoinFeesLoaderProps {
-  amount: Money;
+  account: AccountRequest;
   children({ fees, isLoading, getCustomFee }: BitcoinFees): React.ReactNode;
   isSendingMax?: boolean;
   recipients: TransferRecipient[];
   utxos: OwnedUtxo[];
 }
 export function BitcoinFeesLoader({
-  amount,
+  account,
   children,
   isSendingMax,
   recipients,
   utxos,
 }: BitcoinFeesLoaderProps) {
-  const { data: feeRates, isLoading } = useAverageBitcoinFeeRates();
-  const { determineUtxosDefaultArgs, fees } = useBitcoinFees({
-    amount,
-    feeRates,
-    isSendingMax,
+  const { data: feeRates, isLoading } = useBitcoinTransactionFees({
+    account,
     recipients,
-    utxos,
+    isMaxSpend: isSendingMax,
   });
+  const fees = useBitcoinFees({ feeRates });
 
   function getCustomFee(feeRate: number): Fee {
     const determineUtxosForFeeArgs = {
-      ...determineUtxosDefaultArgs,
+      recipients,
+      utxos,
       feeRate,
     };
     const fee = isSendingMax

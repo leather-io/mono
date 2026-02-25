@@ -4,9 +4,17 @@ import { Blockchain } from '../types';
 export const transactionFeeTiers = ['low', 'standard', 'high'] as const;
 export type TransactionFeeTier = (typeof transactionFeeTiers)[number];
 
-export interface TransactionFees {
+export interface TransactionFees<T extends TransactionFeeQuote = TransactionFeeQuote> {
   readonly chain: Blockchain;
-  readonly options: Record<TransactionFeeTier, TransactionFeeQuote>;
+  readonly options: Record<TransactionFeeTier, T>;
+}
+
+export interface BitcoinTransactionFees extends TransactionFees<BitcoinTransactionFeeQuote> {
+  readonly chain: 'bitcoin';
+}
+
+export interface StacksTransactionFees extends TransactionFees<StacksTransactionFeeQuote> {
+  readonly chain: 'stacks';
 }
 
 export const transactionFeeQuoteType = [
