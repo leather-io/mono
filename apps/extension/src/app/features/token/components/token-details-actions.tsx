@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { RouteUrls } from '@shared/route-urls';
+import { analytics } from '@shared/utils/analytics';
 
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
@@ -87,34 +88,42 @@ export function TokenDetailsActionsRow({
     >
       <TokenDetailsPillButton
         label="Send"
-        onClick={() =>
-          void navigate(RouteUrls.SendCryptoAsset, { state: { backgroundLocation: location } })
-        }
+        onClick={() => {
+          analytics.track('click_send_button', { source: 'token_details', symbol });
+          void navigate(RouteUrls.SendCryptoAsset, { state: { backgroundLocation: location } });
+        }}
         testId="token-details-send-btn"
       />
       <TokenDetailsPillButton
         label="Receive"
-        onClick={() => void navigate(receivePath, { state: { backgroundLocation: location } })}
+        onClick={() => {
+          analytics.track('click_receive_button', { source: 'token_details', symbol });
+          void navigate(receivePath, { state: { backgroundLocation: location } });
+        }}
         testId="token-details-receive-btn"
       />
       {releaseOnramperBuy && (
         <TokenDetailsPillButton
           label="Buy"
           disabled={!isBuyEnabled}
-          onClick={() => pageModeRoutingAction(RouteUrls.Fund)}
+          onClick={() => {
+            analytics.track('click_buy_button', { source: 'token_details', symbol });
+            pageModeRoutingAction(RouteUrls.Fund);
+          }}
           testId="token-details-buy-btn"
         />
       )}
       <TokenDetailsPillButton
         label="Swap"
         disabled={!isSwapEnabled}
-        onClick={() =>
+        onClick={() => {
+          analytics.track('click_swap_button', { source: 'token_details', symbol });
           void navigate(
             RouteUrls.Swap.replace('{chain}', swapChain)
               .replace(':base', symbol)
               .replace(':quote?', '')
-          )
-        }
+          );
+        }}
         testId="token-details-swap-btn"
       />
     </Flex>

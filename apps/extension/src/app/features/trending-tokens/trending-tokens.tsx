@@ -6,6 +6,8 @@ import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 import { prepTrendingItems } from '@leather.io/features';
 import { ArrowLeftIcon, IconButton, InfoCircleIcon } from '@leather.io/ui';
 
+import { analytics } from '@shared/utils/analytics';
+
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { useTrendingTokensQuery } from '@app/query/asset-list/trending-tokens.query';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
@@ -41,10 +43,12 @@ export function TrendingTokens() {
   if (rows.length === 0) return null;
 
   function scrollLeft() {
+    analytics.track('click_trending_tokens_scroll', { direction: 'left' });
     scrollRef.current?.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
   }
 
   function scrollRight() {
+    analytics.track('click_trending_tokens_scroll', { direction: 'right' });
     scrollRef.current?.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   }
 

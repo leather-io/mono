@@ -63,6 +63,7 @@ export function WelcomePage() {
   const restoreWallet = pageModeRoutingAction(RouteUrls.SignIn);
 
   const onSelectConnectLedger = useCallback(async () => {
+    analytics.track('click_connect_ledger');
     await keyActions.signOut();
     if (doesBrowserSupportWebUsbApi()) {
       return supportsWebUsbAction();
@@ -77,7 +78,10 @@ export function WelcomePage() {
         isGeneratingWallet={isGeneratingWallet}
         onSelectConnectLedger={onSelectConnectLedger}
         onStartOnboarding={() => startOnboarding()}
-        onRestoreWallet={() => restoreWallet()}
+        onRestoreWallet={() => {
+          analytics.track('click_restore_wallet');
+          restoreWallet();
+        }}
       />
       <Outlet />
     </>

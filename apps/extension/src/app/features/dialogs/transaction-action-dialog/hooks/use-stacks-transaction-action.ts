@@ -5,6 +5,8 @@ import * as yup from 'yup';
 import { TransactionTypes, getStacksBurnAddress } from '@leather.io/stacks';
 import { stxToMicroStx } from '@leather.io/utils';
 
+import { analytics } from '@shared/utils/analytics';
+
 import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
 import {
   type GenerateUnsignedTransactionOptions,
@@ -48,6 +50,7 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
   const onSubmitCancelTx = useCallback(
     async (fee: number) => {
       if (!tx || !rawTx || !account) return;
+      analytics.track('submit_cancel_transaction', { chain: 'stacks', fee });
       const options: GenerateUnsignedTransactionOptions = {
         publicKey: account.stxPublicKey,
         nonce: tx.nonce,
@@ -70,6 +73,7 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
   const onSubmitIncreaseFeeTx = useCallback(
     async (fee: number) => {
       if (!tx || !rawTx) return;
+      analytics.track('submit_increase_fee', { chain: 'stacks', fee });
       rawTx.setFee(stxToMicroStx(fee).toString());
       await refreshAccountData();
       await stacksBroadcastTransaction(rawTx);

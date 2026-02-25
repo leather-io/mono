@@ -4,6 +4,8 @@ import { HStack, styled } from 'leather-styles/jsx';
 
 import { ChevronDownIcon, ChevronsRightIcon, CloseIcon, DropdownMenu, Flag } from '@leather.io/ui';
 
+import { analytics } from '@shared/utils/analytics';
+
 interface StacksTransactionActionMenuProps {
   onIncreaseFee(): void;
   onCancelTransaction(): void;
@@ -45,6 +47,7 @@ export function StacksTransactionActionMenu({
               data-testid={ActivitySelectors.ActivityItemMenuIncreaseFee}
               onClick={e => {
                 e.stopPropagation();
+                analytics.track('click_increase_fee', { chain: 'stacks' });
                 onIncreaseFee();
               }}
             >
@@ -57,6 +60,7 @@ export function StacksTransactionActionMenu({
               data-testid={ActivitySelectors.ActivityItemMenuCancelTransaction}
               onClick={e => {
                 e.stopPropagation();
+                analytics.track('click_cancel_transaction', { chain: 'stacks' });
                 onCancelTransaction();
               }}
             >

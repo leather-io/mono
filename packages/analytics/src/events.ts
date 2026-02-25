@@ -100,6 +100,23 @@ export interface Events extends HistoricalEvents {
   app_icon_change_failed: { icon: string; previousIcon: string; error?: string };
   network_added: undefined;
   network_edited: undefined;
+  click_send_button: { source: string; symbol?: string };
+  click_receive_button: { source: string; symbol?: string };
+  click_buy_button: { source: string; symbol?: string };
+  click_sell_button: { source: string };
+  click_swap_button: { source: string; symbol?: string };
+  click_home_tab: { tab: string };
+  click_trending_tokens_scroll: { direction: 'left' | 'right' };
+  click_view_secret_key: undefined;
+  click_toggle_notifications: { enabled: boolean };
+  click_help_menu_item: undefined;
+  click_dev_docs_menu_item: undefined;
+  click_connect_ledger: undefined;
+  click_restore_wallet: undefined;
+  click_increase_fee: { chain: string };
+  click_cancel_transaction: { chain: string };
+  submit_cancel_transaction: { chain: string; fee: number };
+  submit_increase_fee: { chain: string; fee: number };
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.

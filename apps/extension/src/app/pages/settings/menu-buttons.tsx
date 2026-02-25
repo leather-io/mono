@@ -43,7 +43,10 @@ export function MenuButtons() {
           variant="chevron"
           title="Secret Key"
           data-testid={SettingsSelectors.ViewSecretKeyListItem}
-          onClick={() => navigate(RouteUrls.ViewSecretKey)}
+          onClick={() => {
+            analytics.track('click_view_secret_key');
+            void navigate(RouteUrls.ViewSecretKey);
+          }}
           icon={<KeyIcon />}
         />
       )}
@@ -77,6 +80,9 @@ export function MenuButtons() {
         tooltipText="Available for Bitcoin sends and receives"
         isEnabled={isNotificationsEnabled}
         onClick={() => {
+          analytics.track('click_toggle_notifications', {
+            enabled: !isNotificationsEnabled,
+          });
           toggleNotificationsEnabled();
           toast.info(isNotificationsEnabled ? 'Notifications disabled' : 'Notifications enabled');
         }}
@@ -88,6 +94,7 @@ export function MenuButtons() {
         variant="external"
         title="Help"
         onClick={() => {
+          analytics.track('click_help_menu_item');
           openInNewTab(LEATHER_HELP_CENTER);
         }}
         icon={<SupportIcon />}
@@ -97,6 +104,7 @@ export function MenuButtons() {
         variant="external"
         title="Dev docs"
         onClick={() => {
+          analytics.track('click_dev_docs_menu_item');
           openInNewTab(LEATHER_GITBOOK_DEVS);
         }}
         icon={<CodeIcon />}

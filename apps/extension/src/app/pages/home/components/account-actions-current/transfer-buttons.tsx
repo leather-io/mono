@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 
 import { RouteUrls } from '@shared/route-urls';
+import { analytics } from '@shared/utils/analytics';
 
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { useWalletType } from '@app/common/use-wallet-type';
@@ -28,6 +29,7 @@ export function TransferButtons() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   function onSend() {
+    analytics.track('click_send_button', { source: 'home' });
     return whenWallet({
       ledger: () =>
         whenPageMode({
@@ -39,6 +41,7 @@ export function TransferButtons() {
   }
 
   async function onReceive() {
+    analytics.track('click_receive_button', { source: 'home' });
     await navigate(receivePath, { state: { backgroundLocation: location } });
     setIsDrawerOpen(false);
   }

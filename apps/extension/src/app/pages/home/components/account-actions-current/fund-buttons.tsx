@@ -5,6 +5,7 @@ import { HomePageSelectors } from '@tests/selectors/home.selectors';
 
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
+import { analytics } from '@shared/utils/analytics';
 
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { whenPageMode } from '@app/common/utils';
@@ -42,10 +43,12 @@ export function FundButtons() {
   const isAtLeastMd = useViewportMinWidth('md');
 
   function onBuy() {
+    analytics.track('click_buy_button', { source: 'home' });
     return pageModeRoutingAction(RouteUrls.Fund);
   }
 
   function onSell() {
+    analytics.track('click_sell_button', { source: 'home' });
     return pageModeRoutingAction(RouteUrls.Sell);
   }
 

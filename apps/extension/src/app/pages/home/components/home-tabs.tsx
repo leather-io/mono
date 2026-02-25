@@ -6,6 +6,7 @@ import { Box, Stack } from 'leather-styles/jsx';
 import { Tabs } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
+import { analytics } from '@shared/utils/analytics';
 
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useBackgroundLocation } from '@app/routes/hooks/use-background-location';
@@ -63,7 +64,10 @@ export function HomeTabs({ children, showCollectibles = true }: HomeTabsProps) {
               key={tab.value}
               data-testid={tab.testId}
               value={tab.value}
-              onClick={() => navigate(tab.value)}
+              onClick={() => {
+                analytics.track('click_home_tab', { tab: tab.label.toLowerCase() });
+                navigate(tab.value);
+              }}
             >
               {tab.label}
             </Tabs.Trigger>
