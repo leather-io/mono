@@ -41,6 +41,7 @@ function useGetSbtcDeposits(stxAddress: string, status: string) {
   return useQuery({
     queryKey: ['get-sbtc-deposits', emilyApiUrl, stxAddress, status],
     queryFn: () => getSbtcDeposits(emilyApiUrl, status),
+    enabled: Boolean(emilyApiUrl) && Boolean(stxAddress),
     select: resp =>
       resp.deposits.filter(deposit => {
         const recipient = addressToString(
