@@ -713,7 +713,7 @@ msgstr "Depositing"
 msgid "Description"
 msgstr "Description"
 
-#: src/components/screen/screen-header/components/header-actions.tsx:29
+#: src/components/screen/screen-header/components/header-actions.tsx:30
 msgid "Dev Console"
 msgstr "Dev Console"
 
@@ -1034,7 +1034,7 @@ msgstr "Hide account"
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
-#: src/components/screen/screen-header/components/header-actions.tsx:56
+#: src/components/screen/screen-header/components/header-actions.tsx:57
 msgid "Hide balances"
 msgstr "Hide balances"
 
@@ -1721,7 +1721,9 @@ msgstr "Sending to your own address isn’t supported. Choose a different addres
 msgid "Sent"
 msgstr "Sent"
 
-#: src/components/screen/screen-header/components/header-actions.tsx:45
+#: src/app/settings/index.tsx:59
+#: src/components/screen/screen-header/components/header-actions.tsx:46
+#: src/features/qr-scanner/use-camera-permission.ts:38
 msgid "Settings"
 msgstr "Settings"
 
@@ -1738,7 +1740,7 @@ msgstr "Share anonymous usage details"
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
-#: src/components/screen/screen-header/components/header-actions.tsx:57
+#: src/components/screen/screen-header/components/header-actions.tsx:58
 msgid "Show balances"
 msgstr "Show balances"
 

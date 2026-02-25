@@ -1,3 +1,4 @@
+import { isProduction } from '@/shared/environment';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { useWallets } from '@/store/wallets/wallets.read';
@@ -24,7 +25,7 @@ export function HeaderActions() {
 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="center">
-      {(__DEV__ || process.env.EXPO_PUBLIC_ENABLE_DEV_CONSOLE) && (
+      {!isProduction() && (
         <IconButton
           label={t`Dev Console`}
           icon={<CodeIcon />}

@@ -3,6 +3,7 @@ import { HeaderActions } from '@/components/screen/screen-header/components/head
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { CreateWalletCard } from '@/features/account/components/create-wallet-card';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { isProduction } from '@/shared/environment';
 import { TestId } from '@/shared/test-id';
 import { useRouter } from 'expo-router';
 
@@ -17,7 +18,7 @@ export function HomeScreenWithoutAccount() {
       <Screen.Header
         leftElement={
           <Box flexDirection="row" alignItems="center" p="2" gap="2">
-            {__DEV__ || process.env.EXPO_PUBLIC_ENABLE_DEV_CONSOLE ? (
+            {!isProduction() ? (
               <Pressable
                 onPress={() => router.navigate('/developer-console')}
                 testID={TestId.homeDeveloperToolsButton}
