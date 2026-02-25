@@ -32,7 +32,7 @@ export enum RouteUrls {
   Fund = '/fund/:chain?',
   Sell = '/sell',
   IncreaseStacksFee = '/increase-fee/stacks/:txid',
-  IncreaseBtcFee = '/increase-fee/btc',
+  IncreaseBtcFee = '/increase-fee/btc/:txid',
   CancelStacksTransaction = '/cancel-transaction/stacks/:txid',
   Send = '/send-transaction',
   ViewSecretKey = '/view-secret-key',

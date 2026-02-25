@@ -8,6 +8,7 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { SbtcDepositTransactionItem } from '@app/components/sbtc-deposit-status-item/sbtc-deposit-status-item';
+import { IncreaseFeeButton } from '@app/components/stacks-transaction-item/increase-fee-button';
 import { StacksTransactionActionMenu } from '@app/components/stacks-transaction-item/stacks-transaction-action-menu';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useActivity } from '@app/query/activity/activity.query';
@@ -48,6 +49,11 @@ function isSbtcDepositRow(
 function isStacksPending(item: ActivityView): boolean {
   if (item.statusIndicator !== 'pending' || !item.txid) return false;
   return !item.asset || item.asset.chain === 'stacks';
+}
+
+function isBitcoinPendingSend(item: ActivityView): boolean {
+  if (item.statusIndicator !== 'pending' || !item.txid) return false;
+  return item.asset?.chain === 'bitcoin' && item.statusLabel === 'Sending';
 }
 
 export function ActivityList() {
@@ -91,15 +97,25 @@ export function ActivityList() {
     }
 
     const txid = item.txid;
-    const rightElement =
-      isStacksPending(item) && txid ? (
+    let rightElement: React.ReactNode | undefined;
+    if (isStacksPending(item) && txid) {
+      rightElement = (
         <StacksTransactionActionMenu
           onIncreaseFee={() => navigate(RouteUrls.IncreaseStacksFee.replace(':txid', txid))}
           onCancelTransaction={() =>
             navigate(RouteUrls.CancelStacksTransaction.replace(':txid', txid))
           }
         />
-      ) : undefined;
+      );
+    } else if (isBitcoinPendingSend(item) && txid) {
+      rightElement = (
+        <IncreaseFeeButton
+          isEnabled
+          isSelected={false}
+          onIncreaseFee={() => navigate(RouteUrls.IncreaseBtcFee.replace(':txid', txid))}
+        />
+      );
+    }
 
     return <ActivityItem item={item} rightElement={rightElement} formatCurrency={formatCurrency} />;
   }
