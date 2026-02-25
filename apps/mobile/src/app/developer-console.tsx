@@ -39,6 +39,14 @@ export default function DeveloperConsole() {
           <Button onPress={toggleNetwork} testID={TestId.devConsoleToggleNetworkButton}>
             {t`Toggle network`}
           </Button>
+          {/* eslint-disable lingui/no-unlocalized-strings */}
+          <Text variant="heading05">{t`Environment`}</Text>
+          <Text variant="caption01">{`__DEV__: ${String(__DEV__)}`}</Text>
+          <Text variant="caption01">{`NODE_ENV: ${process.env.EXPO_PUBLIC_NODE_ENV ?? 'undefined'}`}</Text>
+          <Text variant="caption01">{`LAUNCH_DARKLY: ${process.env.EXPO_PUBLIC_LAUNCH_DARKLY ? 'set' : 'unset'}`}</Text>
+          <Text variant="caption01">{`SENTRY_DSN: ${process.env.EXPO_PUBLIC_SENTRY_DSN ? 'set' : 'unset'}`}</Text>
+          <Text variant="caption01">{`MIXPANEL: ${process.env.EXPO_PUBLIC_MIXPANEL_TOKEN ? 'set' : 'unset'}`}</Text>
+          {/* eslint-enable lingui/no-unlocalized-strings */}
         </Box>
       </ScrollView>
     </Screen>

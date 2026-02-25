@@ -1,4 +1,3 @@
-import { isProduction } from '@/shared/environment';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { useWallets } from '@/store/wallets/wallets.read';
@@ -25,14 +24,12 @@ export function HeaderActions() {
 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="center">
-      {!isProduction() && (
-        <IconButton
-          label={t`Dev Console`}
-          icon={<CodeIcon />}
-          onPress={() => router.navigate('/developer-console')}
-          testID={TestId.homeDeveloperToolsButton}
-        />
-      )}
+      <IconButton
+        label={t`Dev Console`}
+        icon={<CodeIcon />}
+        onPress={() => router.navigate('/developer-console')}
+        testID={TestId.homeDeveloperToolsButton}
+      />
       {hasWallets && (
         <IconButton
           label={getPrivacyLabel(privacyModePreference)}
