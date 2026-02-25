@@ -2,7 +2,6 @@ import { TransactionInput, TransactionOutput } from '@scure/btc-signer/psbt';
 
 import {
   extractRequiredKeyOrigins,
-  getBitcoinFees,
   getPsbtAsTransaction,
   getPsbtTxInputs,
 } from '@leather.io/bitcoin';
@@ -11,6 +10,7 @@ import {
   BitcoinNetworkModes,
   FeeTypes,
   Money,
+  type TransactionFees,
   WalletDefaultNetworkConfigurationIds,
   defaultNetworksKeyedById,
 } from '@leather.io/models';
@@ -50,16 +50,17 @@ export function getPsbtNetwork(network: BitcoinNetworkModes) {
 
 interface FeeTypeParams {
   psbtFee: Money;
-  fees: ReturnType<typeof getBitcoinFees>;
+  fees: TransactionFees;
 }
 export function getFeeType({ psbtFee, fees }: FeeTypeParams) {
-  if (fees.standard.fee?.amount && psbtFee.amount.isEqualTo(fees.standard.fee.amount)) {
+  const { low, standard, high } = fees.options;
+  if (psbtFee.amount.isEqualTo(standard.value.amount)) {
     return FeeTypes.Middle;
   }
-  if (fees.low.fee?.amount && psbtFee.amount.isEqualTo(fees.low.fee.amount)) {
+  if (psbtFee.amount.isEqualTo(low.value.amount)) {
     return FeeTypes.Low;
   }
-  if (fees.high.fee?.amount && psbtFee.amount.isEqualTo(fees.high.fee.amount)) {
+  if (psbtFee.amount.isEqualTo(high.value.amount)) {
     return FeeTypes.High;
   }
   return FeeTypes.Custom;

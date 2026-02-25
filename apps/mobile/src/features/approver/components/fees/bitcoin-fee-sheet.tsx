@@ -1,7 +1,6 @@
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
-import BigNumber from 'bignumber.js';
 
-import { AverageBitcoinFeeRates, FeeTypes } from '@leather.io/models';
+import { FeeTypes, type TransactionFees, getBitcoinFeeRate } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback, createMoney } from '@leather.io/utils';
 
@@ -13,7 +12,7 @@ const feeTypes = [FeeTypes.Low, FeeTypes.Middle, FeeTypes.High, FeeTypes.Custom]
 interface FeesSheetProps {
   sheetRef: SheetRef;
   selectedFeeType: FeeTypes;
-  fees: AverageBitcoinFeeRates | undefined;
+  fees: TransactionFees | undefined;
   txSize: number;
   currentFeeRate: number;
   onChangeFee(feeType: FeeTypes): void;
@@ -34,14 +33,15 @@ export function BitcoinFeesSheet({
   }
 
   function getFee(feeType: FeeTypes) {
-    const feeRate = {
-      [FeeTypes.Low]: fees?.hourFee ?? BigNumber(0),
-      [FeeTypes.Middle]: fees?.halfHourFee ?? BigNumber(0),
-      [FeeTypes.High]: fees?.fastestFee ?? BigNumber(0),
-      [FeeTypes.Unknown]: BigNumber(0),
-      [FeeTypes.Custom]: BigNumber(currentFeeRate),
-    }[feeType];
-    const fee = txSize * feeRate.toNumber();
+    const rateMap: Record<FeeTypes, number> = {
+      [FeeTypes.Low]: fees ? getBitcoinFeeRate(fees.options.low) : 0,
+      [FeeTypes.Middle]: fees ? getBitcoinFeeRate(fees.options.standard) : 0,
+      [FeeTypes.High]: fees ? getBitcoinFeeRate(fees.options.high) : 0,
+      [FeeTypes.Unknown]: 0,
+      [FeeTypes.Custom]: currentFeeRate,
+    };
+    const feeRate = rateMap[feeType];
+    const fee = txSize * feeRate;
     return { feeRate, fee };
   }
 
@@ -61,7 +61,7 @@ export function BitcoinFeesSheet({
             onPress={() => handleFeeChange(feeType)}
             key={feeType}
             feeType={feeType}
-            feeRate={feeRate.toNumber()}
+            feeRate={feeRate}
             fee={fee}
             quoteFee={convertFeeToQuote(fee)}
           />

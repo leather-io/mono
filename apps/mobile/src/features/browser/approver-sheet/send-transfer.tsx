@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
-import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
+import { useBitcoinFeeRates } from '@/queries/fees/bitcoin-fee-rates.hooks';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { useGetBtcNetworkFromRequestParams } from '@/shared/utils';
 import { App } from '@/store/apps/utils';
@@ -19,7 +19,7 @@ import {
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
 import { extractAccountIndexFromDescriptor } from '@leather.io/crypto';
-import { AverageBitcoinFeeRates } from '@leather.io/models';
+import { type TransactionFees, getBitcoinFeeRate } from '@leather.io/models';
 import {
   RpcRequest,
   RpcResponse,
@@ -29,7 +29,7 @@ import {
   sendTransfer,
 } from '@leather.io/rpc';
 import { UtxoTotals } from '@leather.io/services';
-import { createMoneyFromDecimal, isDefined } from '@leather.io/utils';
+import { createBitcoinRatesOnlyFees, createMoneyFromDecimal, isDefined } from '@leather.io/utils';
 
 interface SendTransferApproverProps {
   request: RpcRequest<typeof sendTransfer>;
@@ -39,7 +39,7 @@ interface SendTransferApproverProps {
   accountId: string;
 }
 export function SendTransferApprover(props: SendTransferApproverProps) {
-  const { data: feeRates } = useAverageBitcoinFeeRates();
+  const { data: feeRates } = useBitcoinFeeRates();
   const { fingerprint, accountIndex } = destructAccountIdentifier(props.accountId);
   const utxos = useAccountUtxos(fingerprint, accountIndex);
 
@@ -47,7 +47,8 @@ export function SendTransferApprover(props: SendTransferApproverProps) {
   if (!utxos.value) return null;
   if (!feeRates) return null;
 
-  return <BaseSendTransferApprover {...props} utxos={utxos.value} feeRates={feeRates} />;
+  const fees = createBitcoinRatesOnlyFees(feeRates);
+  return <BaseSendTransferApprover {...props} utxos={utxos.value} feeRates={fees} />;
 }
 
 function getSendTransferRecipients(params: RpcRequest<typeof sendTransfer>['params']) {
@@ -74,7 +75,7 @@ function getSendTransferRecipients(params: RpcRequest<typeof sendTransfer>['para
 function BaseSendTransferApprover(
   props: SendTransferApproverProps & {
     utxos: UtxoTotals;
-    feeRates: AverageBitcoinFeeRates;
+    feeRates: TransactionFees;
   }
 ) {
   const { accountIdByPaymentType } = useBitcoinAccounts();
@@ -93,7 +94,7 @@ function BaseSendTransferApprover(
       bitcoinAccount.nativeSegwit &&
       generateBitcoinUnsignedTransaction({
         recipients: getSendTransferRecipients(props.request.params),
-        feeRate: props.feeRates?.halfHourFee.toNumber() ?? 1,
+        feeRate: getBitcoinFeeRate(props.feeRates.options.standard) || 1,
         isSendingMax: false,
         utxos: props.utxos.available,
         network: getBtcSignerLibNetworkConfigByMode(networkMode),
@@ -107,7 +108,7 @@ function BaseSendTransferApprover(
       bitcoinAccount.nativeSegwit,
       networkMode,
       payerLookup,
-      props.feeRates?.halfHourFee,
+      props.feeRates.options.standard,
       props.request.params,
       props.utxos.available,
     ]

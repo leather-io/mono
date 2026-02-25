@@ -14,11 +14,11 @@ import { t } from '@lingui/core/macro';
 
 import { btcAsset } from '@leather.io/constants';
 import {
-  type AverageBitcoinFeeRates,
   type MarketData,
   type Money,
   type OwnedUtxo,
   type QuoteCurrency,
+  type TransactionFees,
 } from '@leather.io/models';
 import { BtcAvatarIcon, Button } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
@@ -28,7 +28,7 @@ const asset = btcAsset;
 interface BtcFormProps {
   availableBalance: Money;
   quoteBalance: Money;
-  feeRates: AverageBitcoinFeeRates;
+  feeRates: TransactionFees;
   utxos: OwnedUtxo[];
   marketData: MarketData;
   quoteCurrency: QuoteCurrency;

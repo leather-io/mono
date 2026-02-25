@@ -3,52 +3,47 @@ import { type ReactNode } from 'react';
 import { Error } from '@/components/error/error';
 import { FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
+import { useAccountRequest } from '@/hooks/use-account-request';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
-import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
+import { useBitcoinTransactionFees } from '@/queries/fees/bitcoin-transaction-fees.hooks';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { useQueryClient } from '@tanstack/react-query';
-import BigNumber from 'bignumber.js';
 
-import {
-  AccountId,
-  AverageBitcoinFeeRates,
-  MarketData,
-  Money,
-  OwnedUtxo,
-} from '@leather.io/models';
+import { AccountId, MarketData, Money, OwnedUtxo, TransactionFees } from '@leather.io/models';
+import { createMoney } from '@leather.io/utils';
 
 interface BtcData {
   availableBalance: Money;
   quoteBalance: Money;
-  feeRates: AverageBitcoinFeeRates;
+  feeRates: TransactionFees;
   utxos: OwnedUtxo[];
   marketData: MarketData;
 }
 
 function useBtcData(account: AccountId): FetchState<BtcData> {
-  const feeRates = useAverageBitcoinFeeRates();
   const { fingerprint, accountIndex } = account;
+  const accountRequest = useAccountRequest();
   const accountUtxos = useAccountUtxos(fingerprint, accountIndex);
   const btcBalance = useBtcAccountBalance(fingerprint, accountIndex);
   const marketData = useBtcMarketDataQuery();
 
-  const bigZero = new BigNumber(0);
-  const zeroFees = {
-    fastestFee: bigZero,
-    halfHourFee: bigZero,
-    hourFee: bigZero,
-  };
+  const availableBalance = btcBalance.value?.btc.availableBalance ?? createMoney(0, 'BTC');
+  const recipient = '';
+  const txFeesQuery = useBitcoinTransactionFees({
+    account: accountRequest,
+    recipients: [{ address: recipient, amount: availableBalance }],
+    enabled: !!btcBalance.value,
+  });
 
-  // TODO: Replace with aggregate queries once we have more flexible query API
-  const isReady = btcBalance.value && accountUtxos.value && feeRates.data && marketData.data;
+  const isReady = btcBalance.value && accountUtxos.value && txFeesQuery.data && marketData.data;
   const isLoading =
-    feeRates.status === 'pending' ||
+    txFeesQuery.status === 'pending' ||
     accountUtxos.state === 'loading' ||
     btcBalance.state === 'loading' ||
     marketData.status === 'pending';
   const isError =
-    feeRates.status === 'error' ||
+    txFeesQuery.status === 'error' ||
     accountUtxos.state === 'error' ||
     btcBalance.state === 'error' ||
     marketData.status == 'error';
@@ -58,7 +53,7 @@ function useBtcData(account: AccountId): FetchState<BtcData> {
       ? {
           availableBalance: btcBalance.value?.btc.availableBalance,
           quoteBalance: btcBalance.value?.quote.availableBalance,
-          feeRates: feeRates.data || zeroFees,
+          feeRates: txFeesQuery.data,
           utxos: accountUtxos.value?.available,
           marketData: marketData.data,
         }

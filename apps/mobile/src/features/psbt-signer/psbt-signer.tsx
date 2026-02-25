@@ -6,7 +6,7 @@ import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
 import { BitcoinFeeCard } from '@/features/approver/components/fees/bitcoin-fee-card';
 import { InputsAndOutputsCard } from '@/features/approver/components/inputs-outputs-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
-import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
+import { useBitcoinFeeRates } from '@/queries/fees/bitcoin-fee-rates.hooks';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/queries/transaction/bitcoin-transactions.hooks';
@@ -22,7 +22,6 @@ import * as Clipboard from 'expo-clipboard';
 
 import {
   PsbtOutputWithAddress,
-  getBitcoinFees,
   getPsbtAsTransaction,
   getPsbtDetails,
   getSizeInfo,
@@ -31,14 +30,16 @@ import { btcAsset } from '@leather.io/constants';
 import { makeActivityLink } from '@leather.io/features';
 import {
   AccountId,
-  AverageBitcoinFeeRates,
   BitcoinNetworkModes,
   FeeTypes,
+  type TransactionFees,
+  getBitcoinFeeRate,
 } from '@leather.io/models';
 import { RpcParams, signPsbt } from '@leather.io/rpc';
 import { Approver, Box, SentIcon, SheetInstance, Text } from '@leather.io/ui/native';
 import {
   baseCurrencyAmountInQuoteWithFallback,
+  createBitcoinRatesOnlyFees,
   createMoney,
   subtractMoney,
   sumMoney,
@@ -66,13 +67,14 @@ interface PsbtSignerProps extends AccountId {
   onClose(): void;
 }
 export function PsbtSigner(props: PsbtSignerProps) {
-  const { data: feeRates } = useAverageBitcoinFeeRates();
+  const { data: feeRates } = useBitcoinFeeRates();
   if (!feeRates) return null;
-  return <BasePsbtSigner feeRates={feeRates} {...props} />;
+  const fees = createBitcoinRatesOnlyFees(feeRates);
+  return <BasePsbtSigner feeRates={fees} {...props} />;
 }
 
 interface BasePsbtSignerProps extends PsbtSignerProps {
-  feeRates: AverageBitcoinFeeRates;
+  feeRates: TransactionFees;
 }
 function BasePsbtSigner(props: BasePsbtSignerProps) {
   const {
@@ -81,7 +83,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
     accountIndex,
     onBack,
     onResult,
-    feeRates,
+    feeRates: feeRates,
     signAtIndex,
     allowedSighash,
     broadcast,
@@ -140,14 +142,8 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
 
   const coinSelectionUtxos = utxos.value?.available ?? [];
 
-  const fees = getBitcoinFees({
-    feeRates,
-    recipients,
-    utxos: coinSelectionUtxos,
-    isSendingMax: false,
-  });
   const [selectedFeeType, setSelectedFeeType] = useState<FeeTypes>(
-    getFeeType({ psbtFee: psbtDetails.fee, fees })
+    getFeeType({ psbtFee: psbtDetails.fee, fees: feeRates })
   );
 
   const { txVBytes } = getSizeInfo({
@@ -175,13 +171,14 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
   // is, only append new inputs and outputs, leaving the existing ones
   // untouched.
   function onChangeFee(feeType: FeeTypes) {
+    const highRate = getBitcoinFeeRate(feeRates.options.high);
     const feeRateMap: Partial<Record<FeeTypes, number>> = {
-      [FeeTypes.Low]: feeRates.hourFee.toNumber(),
-      [FeeTypes.Middle]: feeRates.halfHourFee.toNumber(),
-      [FeeTypes.High]: feeRates.fastestFee.toNumber(),
+      [FeeTypes.Low]: getBitcoinFeeRate(feeRates.options.low),
+      [FeeTypes.Middle]: getBitcoinFeeRate(feeRates.options.standard),
+      [FeeTypes.High]: highRate,
     };
 
-    const feeRate = feeRateMap[feeType] ?? feeRates.fastestFee.toNumber();
+    const feeRate = feeRateMap[feeType] ?? highRate;
     const totalSendValue =
       psbtDetails.addressNativeSegwitTotal.amount.toNumber() +
       psbtDetails.addressTaprootTotal.amount.toNumber() -

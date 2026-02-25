@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2025-08-13 20:13+0400\n"
+"POT-Creation-Date: 2026-02-19 19:03+0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -407,13 +407,7 @@ msgstr "Balances"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-deposit-token-cell.tsx:25
-#: src/features/balances/bitcoin/bitcoin-token-balance.tsx:11
-#: src/features/receive/get-assets.ts:29
-#: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
-#: src/features/swap/swap.utils.ts:10
-#: src/shared/display-preference.ts:61
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -842,7 +836,7 @@ msgstr "Failed"
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:238
+#: src/features/psbt-signer/psbt-signer.tsx:235
 msgid "Failed to broadcast transaction"
 msgstr "Failed to broadcast transaction"
 
@@ -886,8 +880,7 @@ msgstr "Feature waitlist notification"
 msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
-#: src/features/approver/stx/hooks.ts:27
-#: src/features/psbt-signer/psbt-signer.tsx:202
+#: src/features/psbt-signer/psbt-signer.tsx:199
 msgid "Fee updated"
 msgstr "Fee updated"
 
@@ -1013,8 +1006,7 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
-#: src/features/psbt-signer/psbt-signer.tsx:299
+#: src/features/psbt-signer/psbt-signer.tsx:296
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
 
@@ -1602,9 +1594,6 @@ msgid "Reveal account"
 msgstr "Reveal account"
 
 #: src/features/send/forms/btc/btc-form.tsx:126
-#: src/features/send/forms/stx/sip10-form.tsx:149
-#: src/features/send/forms/stx/stx-form.tsx:140
-#: src/features/swap/screens/swap-form-screen.tsx:123
 msgid "Review"
 msgstr "Review"
 
@@ -1685,7 +1674,7 @@ msgstr "Send"
 msgid "Send Failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:268
+#: src/features/psbt-signer/psbt-signer.tsx:265
 msgid "Send token"
 msgstr "Send token"
 
@@ -1719,8 +1708,7 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:170
-#: src/features/psbt-signer/psbt-signer.tsx:298
+#: src/features/psbt-signer/psbt-signer.tsx:295
 msgid "Show advanced options"
 msgstr "Show advanced options"
 
@@ -1976,9 +1964,7 @@ msgstr "This merges your existing funds into a single output. It incurs a fee bu
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
-#: src/features/approver/components/sip10-recipient.tsx:43
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:145
-#: src/features/psbt-signer/psbt-signer.tsx:280
+#: src/features/psbt-signer/psbt-signer.tsx:277
 msgid "To address"
 msgstr "To address"
 
@@ -2011,7 +1997,7 @@ msgstr "Too many decimals (max {maxDecimals})"
 msgid "Total balance"
 msgstr "Total balance"
 
-#: src/features/psbt-signer/psbt-signer.tsx:311
+#: src/features/psbt-signer/psbt-signer.tsx:308
 msgid "Total spend"
 msgstr "Total spend"
 
@@ -2020,8 +2006,6 @@ msgid "Transaction confirmations"
 msgstr "Transaction confirmations"
 
 #: src/features/send/forms/btc/use-btc-form.ts:78
-#: src/features/send/forms/stx/use-sip10-form.ts:88
-#: src/features/send/forms/stx/use-stx-form.ts:76
 msgid "Transaction failed due to an unexpected error"
 msgstr "Transaction failed due to an unexpected error"
 
@@ -2219,8 +2203,7 @@ msgstr "You will transfer less than or equal to"
 msgid "You will transfer more than"
 msgstr "You will transfer more than"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:136
-#: src/features/psbt-signer/psbt-signer.tsx:274
+#: src/features/psbt-signer/psbt-signer.tsx:271
 msgid "You’ll send"
 msgstr "You’ll send"
 

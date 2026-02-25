@@ -18,11 +18,11 @@ import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/core/macro';
 
-import { AccountId, AverageBitcoinFeeRates, OwnedUtxo } from '@leather.io/models';
+import { AccountId, OwnedUtxo, type TransactionFees, getBitcoinFeeRate } from '@leather.io/models';
 
 interface UseBtcFormProps {
   account: AccountId;
-  feeRates: AverageBitcoinFeeRates;
+  feeRates: TransactionFees;
   utxos: OwnedUtxo[];
 }
 export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
@@ -35,7 +35,7 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
     fingerprint,
     accountIndex
   );
-  const calculateMaxBtcSpend = useCalculateBtcMaxSpend(feeRates, utxos);
+  const calculateMaxBtcSpend = useCalculateBtcMaxSpend(utxos);
   const schema = useBtcSendFormSchema({
     networkMode: networkPreference.chain.bitcoin.mode,
     calculateBtcMaxSpend: calculateMaxBtcSpend,
@@ -47,7 +47,7 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
       amount: '0',
       recipient: '',
       isSendingMax: false,
-      feeRate: feeRates.halfHourFee.toNumber(),
+      feeRate: getBitcoinFeeRate(feeRates.options.standard),
     },
   });
 
