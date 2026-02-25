@@ -17,7 +17,7 @@ export function HomeScreenWithoutAccount() {
       <Screen.Header
         leftElement={
           <Box flexDirection="row" alignItems="center" p="2" gap="2">
-            {__DEV__ ? (
+            {__DEV__ || process.env.EXPO_PUBLIC_ENABLE_DEV_CONSOLE ? (
               <Pressable
                 onPress={() => router.navigate('/developer-console')}
                 testID={TestId.homeDeveloperToolsButton}

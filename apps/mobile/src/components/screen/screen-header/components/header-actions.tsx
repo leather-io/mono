@@ -24,7 +24,7 @@ export function HeaderActions() {
 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="center">
-      {__DEV__ && (
+      {(__DEV__ || process.env.EXPO_PUBLIC_ENABLE_DEV_CONSOLE) && (
         <IconButton
           label={t`Dev Console`}
           icon={<CodeIcon />}
