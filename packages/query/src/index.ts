@@ -19,6 +19,7 @@ export * from './bitcoin/runes/runes-ticker-info.query';
 export * from './bitcoin/runes/runes-wallet-balances.query';
 export * from './bitcoin/runes/runes.utils';
 export * from './bitcoin/stamps/stamps-by-address.query';
+export * from './bitcoin/transaction/transaction-by-txid.query';
 export * from './bitcoin/transaction/use-check-utxos';
 export * from './common/compliance-checker/compliance-checker';
 export * from './common/compliance-checker/compliance-checker.query';
