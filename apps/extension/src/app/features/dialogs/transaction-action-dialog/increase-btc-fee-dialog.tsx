@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router';
 
 import { Formik } from 'formik';
 import { Flex, Stack } from 'leather-styles/jsx';
@@ -11,22 +11,27 @@ import { btcToSat, createMoney, sumMoney } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { getBitcoinTxValue } from '@app/common/transactions/bitcoin/utils';
 import { BitcoinCustomFeeInput } from '@app/components/bitcoin-custom-fee/bitcoin-custom-fee-input';
 import { BitcoinTransactionItem } from '@app/components/bitcoin-transaction-item/bitcoin-transaction-item';
+import { LoadingSpinner } from '@app/components/loading-spinner';
+import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
+import { useBitcoinTransactionByTxid } from '@app/query/bitcoin/transaction/use-bitcoin-transaction-by-txid';
 import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 import { TransactionActions } from './components/transaction-actions';
 import { useBtcIncreaseFee } from './hooks/use-btc-increase-fee';
 
-export function IncreaseBtcFeeSheet() {
-  const tx = useLocationStateWithCache('btcTx') as BitcoinTx;
+interface IncreaseBtcFeeSheetInnerProps {
+  btcTx: BitcoinTx;
+  txid: string;
+}
+
+function IncreaseBtcFeeSheetInner({ btcTx, txid }: IncreaseBtcFeeSheetInnerProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const btcTx = tx;
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
   const currentBitcoinAddress = nativeSegwitSigner.address;
   const { btc: balance } = useCurrentBtcBalanceWithFallback();
@@ -49,9 +54,7 @@ export function IncreaseBtcFeeSheet() {
     void navigate(RouteUrls.Home);
   }
 
-  if (!tx) return null;
-
-  const initialFeeRate = `${(tx.fee / sizeInfo.txVBytes).toFixed(0)}`;
+  const initialFeeRate = `${(btcTx.fee / sizeInfo.txVBytes).toFixed(0)}`;
 
   return (
     <>
@@ -66,7 +69,7 @@ export function IncreaseBtcFeeSheet() {
         {({ submitForm }) => (
           <>
             <Sheet
-              isShowing={location.pathname === RouteUrls.IncreaseBtcFee}
+              isShowing={location.pathname === RouteUrls.IncreaseBtcFee.replace(':txid', txid)}
               onClose={onClose}
               header={<SheetHeader title="Increase fee" />}
               footer={
@@ -91,7 +94,7 @@ export function IncreaseBtcFeeSheet() {
                     to be included in a block. Update the fee for a higher value and try again.
                   </Caption>
                   <Stack gap="space.06">
-                    {btcTx && <BitcoinTransactionItem transaction={btcTx} />}
+                    <BitcoinTransactionItem transaction={btcTx} />
                     <Stack gap="space.04">
                       <Stack gap="space.01">
                         <BitcoinCustomFeeInput
@@ -114,4 +117,24 @@ export function IncreaseBtcFeeSheet() {
       </Formik>
     </>
   );
+}
+
+export function IncreaseBtcFeeSheet() {
+  const { txid } = useParams();
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  if (!txid) throw new Error('Transaction id should be provided');
+
+  const { data: btcTx, isLoading } = useBitcoinTransactionByTxid(txid);
+
+  if (isLoading) return <LoadingSpinner />;
+
+  if (!btcTx) {
+    toast.error('Transaction not found');
+    void navigate(RouteUrls.Home);
+    return null;
+  }
+
+  return <IncreaseBtcFeeSheetInner btcTx={btcTx} txid={txid} />;
 }

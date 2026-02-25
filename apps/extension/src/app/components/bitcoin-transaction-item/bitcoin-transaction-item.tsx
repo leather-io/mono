@@ -58,7 +58,7 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
   if (!transaction) return null;
 
   function onIncreaseFee() {
-    void navigate(RouteUrls.IncreaseBtcFee, { state: { btcTx: transaction } });
+    void navigate(RouteUrls.IncreaseBtcFee.replace(':txid', transaction.txid));
   }
 
   function openTxLink() {
@@ -88,7 +88,7 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
   const increaseFeeButton = (
     <IncreaseFeeButton
       isEnabled={isFeeIncreaseEnabled}
-      isSelected={pathname === RouteUrls.IncreaseBtcFee}
+      isSelected={pathname === RouteUrls.IncreaseBtcFee.replace(':txid', transaction.txid)}
       onIncreaseFee={onIncreaseFee}
     />
   );
