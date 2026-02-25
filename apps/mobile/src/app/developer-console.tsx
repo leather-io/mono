@@ -46,6 +46,7 @@ export default function DeveloperConsole() {
           <Text variant="caption01">{`LAUNCH_DARKLY: ${process.env.EXPO_PUBLIC_LAUNCH_DARKLY ? 'set' : 'unset'}`}</Text>
           <Text variant="caption01">{`SENTRY_DSN: ${process.env.EXPO_PUBLIC_SENTRY_DSN ? 'set' : 'unset'}`}</Text>
           <Text variant="caption01">{`MIXPANEL: ${process.env.EXPO_PUBLIC_MIXPANEL_TOKEN ? 'set' : 'unset'}`}</Text>
+          <Text variant="caption01">{`MAESTRO_CI: ${process.env.EXPO_PUBLIC_MAESTRO_CI ?? 'undefined'}`}</Text>
           {/* eslint-enable lingui/no-unlocalized-strings */}
         </Box>
       </ScrollView>
