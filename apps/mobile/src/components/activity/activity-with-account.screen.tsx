@@ -16,7 +16,7 @@ export default function ActivityScreenWithAccount({
   return (
     <Screen>
       <Screen.Header leftElement={null} />
-      <ActivityList data={activity} header={<Screen.Title>{t`Activity`}</Screen.Title>} />
+      <ActivityList data={activity} header={<Screen.Title>{t`All activity`}</Screen.Title>} />
     </Screen>
   );
 }
