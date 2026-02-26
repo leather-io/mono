@@ -12,7 +12,7 @@ interface ContentComponentsProps {
 
 function H1({ children }: ContentComponentsProps) {
   return (
-    <styled.h1 textStyle="heading.04" mt="space.06" mb="space.05">
+    <styled.h1 textStyle="heading.03" mt="space.06" mb="space.05">
       {children}
     </styled.h1>
   );
@@ -70,10 +70,25 @@ function Ul({ children }: ContentComponentsProps) {
   return (
     <styled.ul
       textStyle="body.02"
-      mb="space.04"
-      pl="space.05"
-      css={{ listStyleType: 'disc' }}
-      lineHeight="1.6"
+      pl="space.04"
+      my="space.05"
+      css={{
+        listStyle: 'none',
+        '& > li': {
+          position: 'relative',
+          paddingLeft: 'space.05',
+        },
+        '& > li::before': {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          top: '6px',
+          width: '7px',
+          height: '7px',
+          borderRadius: '9999px',
+          backgroundColor: 'currentColor',
+        },
+      }}
     >
       {children}
     </styled.ul>
@@ -84,10 +99,32 @@ function Ol({ children }: ContentComponentsProps) {
   return (
     <styled.ol
       textStyle="body.02"
-      mb="space.04"
-      pl="space.05"
-      listStyleType="decimal"
-      lineHeight="1.6"
+      css={{
+        counterReset: 'ol-counter',
+        listStyle: 'none',
+        '& > li': {
+          counterIncrement: 'ol-counter',
+          paddingLeft: '32px', // space for the circle
+          position: 'relative',
+          marginY: 'space.06',
+          verticalAlign: 'middle',
+        },
+        '& > li::before': {
+          content: 'counter(ol-counter)',
+          display: 'inline-block',
+          position: 'absolute',
+          left: 0,
+          top: '0',
+          width: '24px',
+          height: '24px',
+          lineHeight: '24px',
+          borderRadius: '100px',
+          backgroundColor: 'ink.component-background-default',
+          fontSize: '15px',
+          textAlign: 'center',
+          color: 'ink.text-subdued',
+        },
+      }}
     >
       {children}
     </styled.ol>
@@ -95,11 +132,7 @@ function Ol({ children }: ContentComponentsProps) {
 }
 
 function Li({ children }: ContentComponentsProps) {
-  return (
-    <styled.li mb="space.02" ml="space.02">
-      {children}
-    </styled.li>
-  );
+  return <styled.li mb="space.03">{children}</styled.li>;
 }
 
 function Blockquote({ children }: ContentComponentsProps) {
@@ -261,7 +294,9 @@ function A({ children, href }: AnchorProps) {
     <Link
       href={normalizedHref || '#'}
       target={isLeatherLink ? '_self' : '_blank'}
-      style={{ fontSize: 'inherit', display: 'inline' }}
+      fontSize="inherit"
+      display="inline"
+      pt={0}
     >
       {children}
     </Link>
@@ -269,7 +304,11 @@ function A({ children, href }: AnchorProps) {
 }
 
 function Strong({ children }: ContentComponentsProps) {
-  return <styled.strong fontWeight="semibold">{children}</styled.strong>;
+  return (
+    <styled.strong fontWeight="bold" textStyle="label.02">
+      {children}
+    </styled.strong>
+  );
 }
 
 function Em({ children }: ContentComponentsProps) {

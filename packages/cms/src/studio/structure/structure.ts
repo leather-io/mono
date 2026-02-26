@@ -7,14 +7,29 @@ export function structure(S: Parameters<StructureResolver>[0]) {
     .title('Content')
     .items([
       S.listItem()
-        .title('Legacy Help Center')
+        .title('Help Center')
         .icon(HelpCircleIcon)
         .child(
           S.list()
-            .title('Legacy Help Center Documents')
+            .title('Help Center')
             .items([
-              S.documentTypeListItem('legacyHelpCenterPage').title('Help Center Page'),
-              S.documentTypeListItem('legacyHelpCenterCategory').title('Categories'),
+              S.listItem()
+                .title('Guides by Category')
+                .child(
+                  S.documentTypeList('helpCenterCategory')
+                    .title('Categories')
+                    .defaultOrdering([{ field: 'order', direction: 'asc' }])
+                    .child(categoryId =>
+                      S.documentList()
+                        .title('Guides')
+                        .filter(
+                          '_type == "helpCenterGuide" && _id in *[_type == "helpCenterCategory" && _id == $categoryId].guides[]._ref'
+                        )
+                        .params({ categoryId })
+                    )
+                ),
+              S.documentTypeListItem('helpCenterGuide').title('All Guides'),
+              S.documentTypeListItem('helpCenterCategory').title('Categories'),
             ])
         ),
       S.divider(),
@@ -30,7 +45,7 @@ export function structure(S: Parameters<StructureResolver>[0]) {
         ),
       S.divider(),
       S.listItem()
-        .title('Posts (Legacy)')
+        .title('Posts (Deprecated)')
         .child(
           S.list()
             .title('Posts')
@@ -77,11 +92,13 @@ export function structure(S: Parameters<StructureResolver>[0]) {
       ...S.documentTypeListItems().filter(
         listItem =>
           ![
-            'legacyHelpCenterCategory',
-            'legacyHelpCenterPage',
+            'helpCenterCategory',
+            'helpCenterGuide',
             'faqSection',
             'faq',
             'post',
+            'legacyHelpCenterCategory',
+            'legacyHelpCenterPage',
           ].includes(listItem.getId() || '')
       ),
     ]);

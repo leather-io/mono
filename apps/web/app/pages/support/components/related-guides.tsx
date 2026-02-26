@@ -11,11 +11,10 @@ type RelatedGuide = NonNullable<
 >[number];
 
 interface RelatedGuidesProps {
-  categorySlug: string;
   guides: RelatedGuide[];
 }
 
-export function RelatedGuides({ categorySlug, guides }: RelatedGuidesProps) {
+export function RelatedGuides({ guides }: RelatedGuidesProps) {
   if (guides.length === 0) return null;
 
   return (
@@ -29,7 +28,7 @@ export function RelatedGuides({ categorySlug, guides }: RelatedGuidesProps) {
             _hover={{ bg: 'ink.component-background-hover', borderRadius: 'sm' }}
           >
             <Link
-              to={`/support/${categorySlug}/${guide.slug.current}`}
+              to={`/support/${guide.slug.current}`}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <styled.span
