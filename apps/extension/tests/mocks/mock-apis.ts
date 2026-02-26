@@ -6,6 +6,7 @@ import {
   mockMainnetAlexAssetsRequest,
   mockMainnetAlexTokenPricesRequest,
 } from './mock-alex-assets';
+import { mockBitcoinFeeRequests } from './mock-bitcoin-fees';
 import { mockBitflowRequests } from './mock-bitflow';
 import { mockMainnetTestAccountBrc20TokensRequest } from './mock-brc20';
 import { mockMainnetTestAccountInscriptionsRequests } from './mock-inscriptions-bis';
@@ -45,6 +46,7 @@ export async function setupMockApis(page: Page) {
     mockWildcardBitcoinTxsRequests(page),
     mockWildcardStacksTxsRequests(page),
     mockMainnetTestAccountBitcoinRequests(page),
+    mockBitcoinFeeRequests(page),
     mockStacksFeeRequests(page),
     mockMainnetTestAccountStacksBnsNameRequest(page),
     mockMainnetTestAccountStacksTxsRequests(page),

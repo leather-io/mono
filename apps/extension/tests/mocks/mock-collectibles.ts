@@ -3,15 +3,20 @@ import type { Page } from '@playwright/test';
 import { BESTINSLOT_API_BASE_URL_TESTNET } from '@leather.io/models';
 import type { BestInSlotInscriptionResponse } from '@leather.io/query';
 
+import { TEST_ACCOUNT_1_TAPROOT_ADDRESS } from './constants';
 import { bisMainnetInscriptionsUrlRegex } from './mock-inscriptions-bis';
 
+// IMPORTANT: owner_wallet_addr MUST be an address derivable from the test mnemonic.
+// SendInscriptionContainer calls lookupDerivationByAddress to verify ownership.
+// If the address doesn't match, it throws inside useEffect and crashes the extension,
+// causing "Target page, context or browser has been closed" in every inscription E2E test.
 export const mockImageInscription: BestInSlotInscriptionResponse = {
   inscription_name: 'Cryptomancer #291',
   inscription_id: '01b4fd6e4df1e69da196536bb6fca37b662401213e40508f3a541c60e806e2a7i0',
   inscription_number: 73850611,
   parent_ids: [],
   metadata: { name: 'Cryptomancer #291' },
-  owner_wallet_addr: 'bc1pm0tlsgs6sy98psj5fzgkvaz0zywg4nm6g9mgpj09uc0cq53tcq0qqhneep',
+  owner_wallet_addr: TEST_ACCOUNT_1_TAPROOT_ADDRESS,
   mime_type: 'image/webp',
   last_sale_price: null,
   slug: 'bcg_cryptomancers',
@@ -37,7 +42,7 @@ export const mockTextInscription: BestInSlotInscriptionResponse = {
   inscription_number: 107315145,
   parent_ids: [],
   metadata: null,
-  owner_wallet_addr: 'bc1pm0tlsgs6sy98psj5fzgkvaz0zywg4nm6g9mgpj09uc0cq53tcq0qqhneep',
+  owner_wallet_addr: TEST_ACCOUNT_1_TAPROOT_ADDRESS,
   mime_type: 'text/plain;charset=utf-8',
   last_sale_price: null,
   slug: null,
@@ -63,7 +68,7 @@ export const mockHtmlInscription: BestInSlotInscriptionResponse = {
   inscription_number: 71788568,
   parent_ids: [],
   metadata: null,
-  owner_wallet_addr: 'bc1pm0tlsgs6sy98psj5fzgkvaz0zywg4nm6g9mgpj09uc0cq53tcq0qqhneep',
+  owner_wallet_addr: TEST_ACCOUNT_1_TAPROOT_ADDRESS,
   mime_type: 'text/html;charset=utf-8',
   last_sale_price: null,
   slug: null,
@@ -99,9 +104,18 @@ export async function mockMainnetInscriptionsWithData(
 ) {
   await page.unroute(bisMainnetInscriptionsUrlRegex);
   await page.route(bisMainnetInscriptionsUrlRegex, async route => {
-    await route.fulfill({
-      json: { block_height: 919341, data: inscriptions },
-    });
+    // Only return inscriptions for taproot xpub queries. The app queries
+    // BIS for both taproot and native segwit xpubs, then combines results
+    // without deduplication. Returning inscriptions for both causes the
+    // same inscription to be counted twice, triggering a false "multiple
+    // inscriptions on utxo" error in the send inscription flow.
+    if (route.request().url().includes('xpub=tr')) {
+      await route.fulfill({
+        json: { block_height: 919341, data: inscriptions },
+      });
+      return;
+    }
+    await route.fulfill({ json: { block_height: 919341, data: [] } });
   });
 }
 
