@@ -66,12 +66,12 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
     return <TokenDetailsLoading title="Bitcoin" />;
   }
 
-  const nativeBtc = nativeSegwitBalance.value.btc.availableBalance;
-  const taprootBtc = taprootBalance.value.btc.availableBalance;
-  const availableBalance = createMoney(nativeBtc.amount.plus(taprootBtc.amount), nativeBtc.symbol);
+  const nativeBtc = nativeSegwitBalance.value.btc.totalBalance;
+  const taprootBtc = taprootBalance.value.btc.totalBalance;
+  const totalBalance = createMoney(nativeBtc.amount.plus(taprootBtc.amount), nativeBtc.symbol);
 
-  const nativeQuote = nativeSegwitBalance.value.quote.availableBalance;
-  const taprootQuote = taprootBalance.value.quote.availableBalance;
+  const nativeQuote = nativeSegwitBalance.value.quote.totalBalance;
+  const taprootQuote = taprootBalance.value.quote.totalBalance;
   const fiatBalance = createMoney(nativeQuote.amount.plus(taprootQuote.amount), nativeQuote.symbol);
 
   const nativeSegwitAddress = account.bitcoin?.zeroIndexNativeSegwitPayerAddress;
@@ -101,7 +101,7 @@ export function BitcoinTokenDetails({ accountIndex, account }: BitcoinTokenDetai
   return (
     <BitcoinTokenDetailsLayout
       icon={<BtcAvatarIcon size="xl" />}
-      availableBalance={availableBalance}
+      totalBalance={totalBalance}
       fiatBalance={fiatBalance}
       price={marketInfo.price!}
       changePercent={marketInfo.changePercent}

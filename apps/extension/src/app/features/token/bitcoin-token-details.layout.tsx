@@ -21,7 +21,7 @@ interface BalanceEntry {
 
 interface BitcoinTokenDetailsLayoutProps {
   icon: ReactNode;
-  availableBalance: Money;
+  totalBalance: Money;
   fiatBalance: Money;
   price: Money;
   changePercent: number;
@@ -33,7 +33,7 @@ interface BitcoinTokenDetailsLayoutProps {
 
 export function BitcoinTokenDetailsLayout({
   icon,
-  availableBalance,
+  totalBalance,
   fiatBalance,
   price,
   changePercent,
@@ -49,7 +49,7 @@ export function BitcoinTokenDetailsLayout({
       symbol="BTC"
       receivePath={`/${RouteUrls.ReceiveBtc}`}
       swapChain="bitcoin"
-      availableBalance={availableBalance}
+      availableBalance={totalBalance}
       fiatBalance={fiatBalance}
       name="Bitcoin (BTC)"
       price={price}
