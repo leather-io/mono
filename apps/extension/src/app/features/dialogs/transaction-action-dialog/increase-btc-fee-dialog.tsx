@@ -54,7 +54,7 @@ function IncreaseBtcFeeSheetInner({ btcTx, txid }: IncreaseBtcFeeSheetInnerProps
     void navigate(RouteUrls.Home);
   }
 
-  const initialFeeRate = `${(btcTx.fee / sizeInfo.txVBytes).toFixed(0)}`;
+  const initialFeeRate = btcTx.fee ? `${(btcTx.fee / sizeInfo.txVBytes).toFixed(0)}` : '1';
 
   return (
     <>

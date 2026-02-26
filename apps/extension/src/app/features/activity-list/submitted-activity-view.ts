@@ -44,26 +44,26 @@ export function createSubmittedActivityViews({
         case PayloadType.TokenTransfer:
           return {
             ...baseView,
-            title: 'Stacks',
-            caption: 'Submitted',
+            title: 'STX',
+            caption: 'Submitting',
           };
         case PayloadType.ContractCall:
           return {
             ...baseView,
             title: tx.payload.functionName.content,
-            caption: 'Submitted',
+            caption: tx.payload.contractName.content,
           };
         case PayloadType.SmartContract:
           return {
             ...baseView,
-            title: tx.payload.contractName.content,
-            caption: 'Submitted',
+            title: 'Deploying',
+            caption: tx.payload.contractName.content,
           };
         default:
           return {
             ...baseView,
-            title: 'Submitted transaction',
-            caption: 'Submitted',
+            title: 'Transaction',
+            caption: 'Submitting',
           };
       }
     })

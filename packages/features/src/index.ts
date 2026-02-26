@@ -15,6 +15,7 @@ export {
 export {
   getActivityAsset,
   getActivityAvatar,
+  getActivityCaption,
   getActivityTitle,
   hasTxDetails,
 } from './activity/activity-metadata';
