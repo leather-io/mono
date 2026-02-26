@@ -59,7 +59,6 @@ export function BtcSendForm() {
           >
             {props => {
               onFormStateChange(props.values);
-              const sendMaxCalculation = calcMaxSpend(props.values.recipient, utxos.available);
 
               return (
                 <Form>
@@ -89,8 +88,6 @@ export function BtcSendForm() {
                           balance={balance.availableBalance}
                           isSendingMax={isSendingMax}
                           onSetIsSendingMax={onSetIsSendingMax}
-                          sendMaxBalance={sendMaxCalculation.spendableBitcoin.toString()}
-                          sendMaxFee={sendMaxCalculation.spendAllFee.toString()}
                         />
                       }
                       onSetIsSendingMax={onSetIsSendingMax}
