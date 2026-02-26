@@ -7,9 +7,7 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { whenPageMode } from '@app/common/utils';
 import { ActivityList } from '@app/features/activity-list/activity-list';
-import { ActivityListLegacy } from '@app/features/activity-list/activity-list-legacy';
 import { Collectibles } from '@app/features/collectibles/collectibles';
-import { useFlags } from '@app/features/feature-flags';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
 import { NotFoundContent } from '@app/pages/not-found/not-found';
@@ -33,8 +31,6 @@ interface HomeProps {
 }
 
 export function Home({ isBackground }: HomeProps) {
-  const { activityRevamp } = useFlags();
-
   const shouldAnimate = !isBackground && !animationState.hasPlayed;
   if (shouldAnimate) {
     animationState.hasPlayed = true;
@@ -62,7 +58,7 @@ export function Home({ isBackground }: HomeProps) {
           <Route index element={<Tokens />} />
           <Route
             path={RouteUrls.Activity}
-            element={activityRevamp ? <ActivityList /> : <ActivityListLegacy />}
+            element={<ActivityList />}
           />
           <Route path={RouteUrls.Collectibles} element={<Collectibles />} />
           {homePageModalRoutes}
