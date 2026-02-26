@@ -1852,7 +1852,7 @@ msgid "Success"
 msgstr "Success"
 
 #: src/components/action-buttons.tsx:88
-#: src/features/swap/screens/swap-form-screen.tsx:63
+#: src/features/swap/screens/swap-form-screen.tsx:58
 msgid "Swap"
 msgstr "Swap"
 
