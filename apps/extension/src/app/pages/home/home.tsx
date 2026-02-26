@@ -56,10 +56,7 @@ export function Home({ isBackground }: HomeProps) {
       <HomeTabs>
         <ModalBackgroundWrapper>
           <Route index element={<Tokens />} />
-          <Route
-            path={RouteUrls.Activity}
-            element={<ActivityList />}
-          />
+          <Route path={RouteUrls.Activity} element={<ActivityList />} />
           <Route path={RouteUrls.Collectibles} element={<Collectibles />} />
           {homePageModalRoutes}
           <Route path="*" element={<HomeNotFound />} />

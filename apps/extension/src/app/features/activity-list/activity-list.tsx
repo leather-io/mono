@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Outlet, useNavigate } from 'react-router';
 import { Virtuoso } from 'react-virtuoso';
 
@@ -19,32 +19,33 @@ import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import { useUpdateSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.hooks';
 import { useSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.selectors';
 
+import { ActivityDateHeader, getDateGroupKey } from './components/activity-date-header';
 import { ActivityItem } from './components/activity-item';
 import { ActivityListLayout } from './components/activity-list.layout';
 import { createSubmittedActivityViews } from './submitted-activity-view';
 
-type ActivityListRow =
-  | ActivityView
-  | {
-      key: string;
-      kind: 'sbtc-deposit';
-      deposit: import('@app/query/sbtc/sbtc-deposits.query').SbtcDeposit;
-    };
+type SbtcDepositRow = {
+  key: string;
+  kind: 'sbtc-deposit';
+  timestamp: number;
+  deposit: import('@app/query/sbtc/sbtc-deposits.query').SbtcDeposit;
+};
 
-function isSbtcDepositRow(
-  item: ActivityListRow
-): item is Extract<ActivityListRow, { kind: 'sbtc-deposit' }> {
-  return (item as any).kind === 'sbtc-deposit';
+type DateHeaderRow = {
+  key: string;
+  kind: 'date-header';
+  timestamp: number;
+};
+
+type ActivityListRow = ActivityView | SbtcDepositRow | DateHeaderRow;
+
+function isSbtcDepositRow(item: ActivityListRow): item is SbtcDepositRow {
+  return 'kind' in item && item.kind === 'sbtc-deposit';
 }
 
-/*
- * Infinite scroll support is built into this component via the onLoadMore prop,
- * but it's currently not being used because the activity service API doesn't
- * support pagination. All activity is fetched at once. To enable infinite scroll:
- * 1. Update the activity service to support pagination parameters (offset/limit or cursor)
- * 2. Update the activity query config to use useInfiniteQuery instead of useQuery
- * 3. Pass the onLoadMore handler from the parent component
- */
+function isDateHeaderRow(item: ActivityListRow): item is DateHeaderRow {
+  return 'kind' in item && item.kind === 'date-header';
+}
 
 function isStacksPending(item: ActivityView): boolean {
   if (item.statusIndicator !== 'pending' || !item.txid) return false;
@@ -54,6 +55,25 @@ function isStacksPending(item: ActivityView): boolean {
 function isBitcoinPendingSend(item: ActivityView): boolean {
   if (item.statusIndicator !== 'pending' || !item.txid) return false;
   return item.asset?.chain === 'bitcoin' && item.statusLabel === 'Sending';
+}
+
+function insertDateHeaders(items: (ActivityView | SbtcDepositRow)[]): ActivityListRow[] {
+  const result: ActivityListRow[] = [];
+  let lastDateKey = '';
+
+  for (const item of items) {
+    const ts = item.timestamp;
+    if (ts) {
+      const dateKey = getDateGroupKey(ts);
+      if (dateKey !== lastDateKey) {
+        lastDateKey = dateKey;
+        result.push({ key: `date-${dateKey}`, kind: 'date-header', timestamp: ts });
+      }
+    }
+    result.push(item);
+  }
+
+  return result;
 }
 
 export function ActivityList() {
@@ -77,21 +97,29 @@ export function ActivityList() {
 
   const historicalActivity = activityQuery.data ?? [];
   const submittedActivity = createSubmittedActivityViews({ submittedTransactions, network });
-  const sbtcPendingActivity: ActivityListRow[] = pendingSbtcDeposits.map(deposit => ({
+  const sbtcPendingActivity: SbtcDepositRow[] = pendingSbtcDeposits.map(deposit => ({
     key: `sbtc-deposit-${deposit.bitcoinTxid}-${deposit.bitcoinTxOutputIndex}`,
     kind: 'sbtc-deposit',
+    timestamp: Date.now() / 1000,
     deposit,
   }));
-  const activity: ActivityListRow[] = [
+
+  const flatActivity: (ActivityView | SbtcDepositRow)[] = [
     ...submittedActivity,
     ...sbtcPendingActivity,
     ...historicalActivity,
   ];
 
-  const hasActivity = activity.length > 0;
+  const activity = useMemo(() => insertDateHeaders(flatActivity), [flatActivity]);
+
+  const hasActivity = flatActivity.length > 0;
   const isLoading = activityQuery.isLoading;
 
   function itemContent(_: number, item: ActivityListRow) {
+    if (isDateHeaderRow(item)) {
+      return <ActivityDateHeader timestamp={item.timestamp} />;
+    }
+
     if (isSbtcDepositRow(item)) {
       return <SbtcDepositTransactionItem deposit={item.deposit} />;
     }

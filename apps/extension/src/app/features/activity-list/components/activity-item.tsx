@@ -17,37 +17,8 @@ interface ItemProps {
 }
 
 function Item({ item, rightElement, formatCurrency }: ItemProps) {
-  const { activityLink, title, caption, balances, statusLabel, activityAvatar, statusIndicator } =
-    item;
+  const { activityLink, title, caption, balances } = item;
   const clickable = Boolean(activityLink);
-
-  const normalizedStatusLabel = statusLabel?.trim() ?? '';
-
-  const titleText = normalizedStatusLabel || title;
-
-  const timestampText =
-    normalizedStatusLabel && caption.startsWith(normalizedStatusLabel)
-      ? caption.slice(normalizedStatusLabel.length).trim()
-      : caption;
-  function getSwapStatusText(statusIndicator: string): string {
-    switch (statusIndicator) {
-      case 'pending':
-        return 'Swapping';
-      case 'failed':
-        return 'Swap failed';
-      case 'swap':
-        return 'Swapped';
-      default:
-        return '';
-    }
-  }
-
-  const swapStatusText = getSwapStatusText(statusIndicator);
-
-  const captionText =
-    activityAvatar === 'swap' && !!swapStatusText
-      ? `${swapStatusText} ${timestampText}`
-      : timestampText;
 
   return (
     <styled.button
@@ -72,19 +43,19 @@ function Item({ item, rightElement, formatCurrency }: ItemProps) {
             : undefined
         }
       >
-        <Flex alignItems="center" gap="space.04">
+        <Flex alignItems="center" gap="space.04" minWidth={0} flex={1}>
           <ActivityAvatarIcon activity={item} />
-          <Flex flexDirection="column" alignItems="flex-start">
-            <styled.p textStyle="body.02" fontWeight="medium">
-              {titleText}
+          <Flex flexDirection="column" alignItems="flex-start" minWidth={0}>
+            <styled.p textStyle="body.02" fontWeight="medium" truncate>
+              {title}
             </styled.p>
-            <styled.p textStyle="caption.01" color="ink.text-subdued">
-              {captionText}
+            <styled.p textStyle="caption.01" color="ink.text-subdued" truncate>
+              {caption}
             </styled.p>
           </Flex>
         </Flex>
 
-        <Flex alignItems="flex-end" flexDir="column" gap="space.01">
+        <Flex alignItems="flex-end" flexDir="column" gap="space.01" flexShrink={0}>
           {balances.quote ? (
             <Balance
               balance={balances.quote}
