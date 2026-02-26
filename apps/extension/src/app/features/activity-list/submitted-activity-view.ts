@@ -33,7 +33,6 @@ export function createSubmittedActivityViews({
         asset: undefined,
         fromAsset: undefined,
         toAsset: undefined,
-        timestamp: Date.now() / 1000,
         activityLink,
         balances: {},
         activityAvatar: 'fallback',

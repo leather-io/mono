@@ -10,13 +10,17 @@ import { type FormatAmountOptions } from '@leather.io/utils';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { Balance } from '@app/components/balance/balance';
 
-interface ItemProps {
+interface ActivityItemProps {
   item: ActivityView;
-  rightElement?: React.ReactNode;
+  action?: React.ReactNode;
   formatCurrency(money: Money, options?: FormatAmountOptions): string;
 }
 
-function Item({ item, rightElement, formatCurrency }: ItemProps) {
+export const ActivityItem = memo(function ActivityItem({
+  item,
+  action,
+  formatCurrency,
+}: ActivityItemProps) {
   const { activityLink, title, caption, balances } = item;
   const clickable = Boolean(activityLink);
 
@@ -74,10 +78,9 @@ function Item({ item, rightElement, formatCurrency }: ItemProps) {
               formatCurrency={formatCurrency}
             />
           ) : null}
-          {rightElement}
+          {action}
         </Flex>
       </Flex>
     </styled.button>
   );
-}
-export const ActivityItem = memo(Item);
+});

@@ -12,7 +12,7 @@ import { IncreaseFeeButton } from '@app/components/stacks-transaction-item/incre
 import { StacksTransactionActionMenu } from '@app/components/stacks-transaction-item/stacks-transaction-action-menu';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useActivity } from '@app/query/activity/activity.query';
-import { useSbtcPendingDeposits } from '@app/query/sbtc/sbtc-deposits.query';
+import { type SbtcDeposit, useSbtcPendingDeposits } from '@app/query/sbtc/sbtc-deposits.query';
 import { useStacksPendingTransactions } from '@app/query/stacks/mempool/mempool.hooks';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
@@ -27,8 +27,8 @@ import { createSubmittedActivityViews } from './submitted-activity-view';
 type SbtcDepositRow = {
   key: string;
   kind: 'sbtc-deposit';
-  timestamp: number;
-  deposit: import('@app/query/sbtc/sbtc-deposits.query').SbtcDeposit;
+  timestamp?: number;
+  deposit: SbtcDeposit;
 };
 
 type DateHeaderRow = {
@@ -100,7 +100,6 @@ export function ActivityList() {
   const sbtcPendingActivity: SbtcDepositRow[] = pendingSbtcDeposits.map(deposit => ({
     key: `sbtc-deposit-${deposit.bitcoinTxid}-${deposit.bitcoinTxOutputIndex}`,
     kind: 'sbtc-deposit',
-    timestamp: Date.now() / 1000,
     deposit,
   }));
 
@@ -125,9 +124,9 @@ export function ActivityList() {
     }
 
     const txid = item.txid;
-    let rightElement: React.ReactNode | undefined;
+    let action: React.ReactNode | undefined;
     if (isStacksPending(item) && txid) {
-      rightElement = (
+      action = (
         <StacksTransactionActionMenu
           onIncreaseFee={() => navigate(RouteUrls.IncreaseStacksFee.replace(':txid', txid))}
           onCancelTransaction={() =>
@@ -136,7 +135,7 @@ export function ActivityList() {
         />
       );
     } else if (isBitcoinPendingSend(item) && txid) {
-      rightElement = (
+      action = (
         <IncreaseFeeButton
           isEnabled
           isSelected={false}
@@ -145,7 +144,7 @@ export function ActivityList() {
       );
     }
 
-    return <ActivityItem item={item} rightElement={rightElement} formatCurrency={formatCurrency} />;
+    return <ActivityItem item={item} action={action} formatCurrency={formatCurrency} />;
   }
 
   function computeItemKey(_: number, item: ActivityListRow) {
