@@ -137,7 +137,6 @@ msgstr "Account label"
 msgid "Account name cannot be empty"
 msgstr "Account name cannot be empty"
 
-#: src/components/activity/activity-with-account.screen.tsx:19
 #: src/components/activity/activity-without-account-screen.tsx:9
 #: src/features/navigation/tab-layout.tsx:60
 #: src/features/token/components/token-activity.tsx:40
@@ -191,14 +190,6 @@ msgstr "Add, configure and remove"
 msgid "Adding account..."
 msgstr "Adding account..."
 
-#: src/features/activity/translate-activity-status.ts:54
-msgid "Adding wallet"
-msgstr "Adding wallet"
-
-#: src/features/activity/translate-activity-status.ts:56
-msgid "Adding wallet failed"
-msgstr "Adding wallet failed"
-
 #: src/app/generating-wallet.tsx:23
 msgid "Adding wallet..."
 msgstr "Adding wallet..."
@@ -247,6 +238,10 @@ msgstr "Alex"
 #: src/features/swap/components/fees-info-sheet.tsx:19
 msgid "ALEX"
 msgstr "ALEX"
+
+#: src/components/activity/activity-with-account.screen.tsx:19
+msgid "All activity"
+msgstr "All activity"
 
 #: src/store/secure-store/utils.ts:7
 msgid "Allow app to access secure storage"
@@ -300,10 +295,6 @@ msgstr "Analytics and app authentication"
 #: src/features/settings/analytics-sheet.tsx:26
 msgid "Analytics updated"
 msgstr "Analytics updated"
-
-#: src/features/activity/translate-activity-status.ts:58
-msgid "Announcement received"
-msgstr "Announcement received"
 
 #: src/features/approver/components/post-conditions/post-conditions.utils.ts:46
 msgid "Another address {shortenedPcAddress} will keep"
@@ -577,18 +568,6 @@ msgstr "Confirm"
 msgid "Connect"
 msgstr "Connect"
 
-#: src/features/activity/translate-activity-status.ts:40
-msgid "Connected"
-msgstr "Connected"
-
-#: src/features/activity/translate-activity-status.ts:42
-msgid "Connecting"
-msgstr "Connecting"
-
-#: src/features/activity/translate-activity-status.ts:44
-msgid "Connection failed"
-msgstr "Connection failed"
-
 #: src/app/app-connections.tsx:12
 #: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:20
 msgid "Connections"
@@ -682,18 +661,6 @@ msgstr "Customize your app icon"
 #: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:40
 msgid "Decrease slippage"
 msgstr "Decrease slippage"
-
-#: src/features/activity/translate-activity-status.ts:22
-msgid "Deployed"
-msgstr "Deployed"
-
-#: src/features/activity/translate-activity-status.ts:24
-msgid "Deploying"
-msgstr "Deploying"
-
-#: src/features/activity/translate-activity-status.ts:26
-msgid "Deployment failed"
-msgstr "Deployment failed"
 
 #: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:58
 msgid "Depositing"
@@ -805,18 +772,6 @@ msgstr "Enter your Secret Key"
 #: src/features/swap/screens/swap-review-screen.tsx:187
 msgid "Estimated fees"
 msgstr "Estimated fees"
-
-#: src/features/activity/translate-activity-status.ts:16
-msgid "Executed"
-msgstr "Executed"
-
-#: src/features/activity/translate-activity-status.ts:18
-msgid "Executing"
-msgstr "Executing"
-
-#: src/features/activity/translate-activity-status.ts:20
-msgid "Execution failed"
-msgstr "Execution failed"
 
 #: src/app/settings/help/index.tsx:30
 msgid "Expand your Bitcoin knowledge"
@@ -1173,12 +1128,7 @@ msgstr "Lisa"
 msgid "Lock app"
 msgstr "Lock app"
 
-#: src/features/activity/translate-activity-status.ts:32
-msgid "Lock failed"
-msgstr "Lock failed"
-
 #: src/features/account/components/account-stacking.tsx:50
-#: src/features/activity/translate-activity-status.ts:28
 msgid "Locked"
 msgstr "Locked"
 
@@ -1194,7 +1144,7 @@ msgstr "Locked STX"
 msgid "Locking"
 msgstr "Locking"
 
-#: src/features/token/components/discover-marketplaces-section.tsx:38
+#: src/features/token/components/discover-marketplaces-section.tsx:25
 msgid "Magic Eden"
 msgstr "Magic Eden"
 
@@ -1509,10 +1459,6 @@ msgstr "Read more"
 msgid "Receive"
 msgstr "Receive"
 
-#: src/features/activity/translate-activity-status.ts:14
-msgid "Receive failed"
-msgstr "Receive failed"
-
 #: src/app/settings/notifications/index.tsx:14
 msgid "Receive notifications about transactions"
 msgstr "Receive notifications about transactions"
@@ -1520,26 +1466,6 @@ msgstr "Receive notifications about transactions"
 #: src/features/notifications/notifications-sheet.tsx:12
 msgid "Receive transaction notifications"
 msgstr "Receive transaction notifications"
-
-#: src/features/activity/translate-activity-status.ts:12
-msgid "Received"
-msgstr "Received"
-
-#: src/features/activity/translate-activity-status.ts:60
-msgid "Receiving announcement"
-msgstr "Receiving announcement"
-
-#: src/features/activity/translate-activity-status.ts:62
-msgid "Receiving announcement failed"
-msgstr "Receiving announcement failed"
-
-#: src/features/activity/translate-activity-status.ts:66
-msgid "Receiving feature waitlist notification"
-msgstr "Receiving feature waitlist notification"
-
-#: src/features/activity/translate-activity-status.ts:68
-msgid "Receiving feature waitlist notification failed"
-msgstr "Receiving feature waitlist notification failed"
 
 #: src/features/token/stacks/sip9-token-stats.tsx:31
 msgid "Recent sale"
@@ -1682,17 +1608,9 @@ msgstr "Sell"
 msgid "Send"
 msgstr "Send"
 
-#: src/features/activity/translate-activity-status.ts:10
-msgid "Send Failed"
-msgstr "Send Failed"
-
 #: src/features/psbt-signer/psbt-signer.tsx:268
 msgid "Send token"
 msgstr "Send token"
-
-#: src/features/activity/translate-activity-status.ts:8
-msgid "Sending"
-msgstr "Sending"
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:54
 msgid "Sending to the same address"
@@ -1701,10 +1619,6 @@ msgstr "Sending to the same address"
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:63
 msgid "Sending to your own address isn’t supported. Choose a different address."
 msgstr "Sending to your own address isn’t supported. Choose a different address."
-
-#: src/features/activity/translate-activity-status.ts:6
-msgid "Sent"
-msgstr "Sent"
 
 #: src/app/settings/index.tsx:59
 #: src/components/screen/screen-header/components/header-actions.tsx:30
@@ -1737,18 +1651,6 @@ msgstr "Sign Message"
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:120
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
-
-#: src/features/activity/translate-activity-status.ts:46
-msgid "Signed"
-msgstr "Signed"
-
-#: src/features/activity/translate-activity-status.ts:48
-msgid "Signing"
-msgstr "Signing"
-
-#: src/features/activity/translate-activity-status.ts:50
-msgid "Signing failed"
-msgstr "Signing failed"
 
 #: src/shared/display-preference.ts:58
 msgid "SIP-009"
@@ -1837,11 +1739,6 @@ msgstr "Success"
 msgid "Swap"
 msgstr "Swap"
 
-#: src/features/activity/activity-item.tsx:32
-#: src/features/activity/translate-activity-status.ts:38
-msgid "Swap failed"
-msgstr "Swap failed"
-
 #: src/features/swap/components/review/swap-submission-overlay.tsx:110
 msgid "Swap initiated"
 msgstr "Swap initiated"
@@ -1850,13 +1747,6 @@ msgstr "Swap initiated"
 msgid "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
 msgstr "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
 
-#: src/features/activity/activity-item.tsx:34
-#: src/features/activity/translate-activity-status.ts:34
-msgid "Swapped"
-msgstr "Swapped"
-
-#: src/features/activity/activity-item.tsx:30
-#: src/features/activity/translate-activity-status.ts:36
 #: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:60
 msgid "Swapping"
 msgstr "Swapping"
@@ -1982,6 +1872,10 @@ msgstr "tiny amounts that cost more to send than they’re worth."
 #: src/features/psbt-signer/psbt-signer.tsx:280
 msgid "To address"
 msgstr "To address"
+
+#: src/features/activity/activity-date-header.tsx:16
+msgid "Today"
+msgstr "Today"
 
 #: src/app/settings/display/index.tsx:117
 msgid "Toggle tactile feedback for interactions"
@@ -2143,7 +2037,6 @@ msgstr "View Secret Key"
 msgid "View your wallet balance & activity"
 msgstr "View your wallet balance & activity"
 
-#: src/features/activity/translate-activity-status.ts:52
 #: src/hooks/use-create-wallet.ts:33
 msgid "Wallet added"
 msgstr "Wallet added"
@@ -2179,6 +2072,10 @@ msgstr "Wrong URL"
 #: src/utils/dapps.ts:80
 msgid "Xverse"
 msgstr "Xverse"
+
+#: src/features/activity/activity-date-header.tsx:17
+msgid "Yesterday"
+msgstr "Yesterday"
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:94
 msgid "You haven’t sent to this address before. Double-check that it’s correct before proceeding."
