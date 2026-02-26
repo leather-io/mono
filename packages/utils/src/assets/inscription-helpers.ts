@@ -106,7 +106,6 @@ export function createInscriptionAsset(data: CreateInscriptionData): Inscription
       ...sharedInfo,
       mimeType: 'html',
       name: 'inscription',
-      thumbnailSrc: ordIoSrc,
       src: primarySrc,
     }),
     image: () => ({

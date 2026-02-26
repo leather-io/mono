@@ -6,42 +6,44 @@ import {
 } from '@leather.io/models';
 import { type BestInSlotInscriptionResponse } from '@leather.io/query';
 
+export const bisMainnetInscriptionsUrlRegex = new RegExp(
+  `${BESTINSLOT_API_BASE_URL_MAINNET}/wallet/inscriptions_xpub.*`
+);
+
+const bisTestnetInscriptionsUrlRegex = new RegExp(
+  `${BESTINSLOT_API_BASE_URL_TESTNET}/wallet/inscriptions_xpub.*`
+);
+
 export async function mockTestnetTestAccountInscriptionsRequests(
   page: Page,
   inscriptions: BestInSlotInscriptionResponse[]
 ) {
-  await page.route(
-    new RegExp(`${BESTINSLOT_API_BASE_URL_TESTNET}/wallet/inscriptions_xpub.*`),
-    async route => {
-      const request = route.request();
+  await page.route(bisTestnetInscriptionsUrlRegex, async route => {
+    const request = route.request();
 
-      if (request.url().includes('xpub=tr')) {
-        await route.fulfill({
-          json: { block_height: 859832, data: inscriptions },
-        });
-        return;
-      }
-      await route.fulfill({ json: { block_height: 859832, data: [] } });
+    if (request.url().includes('xpub=tr')) {
+      await route.fulfill({
+        json: { block_height: 859832, data: inscriptions },
+      });
+      return;
     }
-  );
+    await route.fulfill({ json: { block_height: 859832, data: [] } });
+  });
 }
 
 export async function mockMainnetTestAccountInscriptionsRequests(
   page: Page,
   inscriptions?: BestInSlotInscriptionResponse[]
 ) {
-  await page.route(
-    new RegExp(`${BESTINSLOT_API_BASE_URL_MAINNET}/wallet/inscriptions_xpub.*`),
-    async route => {
-      const request = route.request();
+  await page.route(bisMainnetInscriptionsUrlRegex, async route => {
+    const request = route.request();
 
-      if (request.url().includes('xpub=tr')) {
-        await route.fulfill({
-          json: { block_height: 859832, data: inscriptions ?? [] },
-        });
-        return;
-      }
-      await route.fulfill({ json: { block_height: 859832, data: [] } });
+    if (request.url().includes('xpub=tr')) {
+      await route.fulfill({
+        json: { block_height: 859832, data: inscriptions ?? [] },
+      });
+      return;
     }
-  );
+    await route.fulfill({ json: { block_height: 859832, data: [] } });
+  });
 }

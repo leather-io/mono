@@ -1,43 +1,40 @@
 import { expect } from '@playwright/test';
-import { TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS } from '@tests/mocks/constants';
-import { mockTestnetTestAccountInscriptionsRequests } from '@tests/mocks/mock-inscriptions-bis';
-import { mockTestnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxos';
+import { TEST_ACCOUNT_2_TAPROOT_ADDRESS } from '@tests/mocks/constants';
+import {
+  mockImageInscription,
+  mockMainnetInscriptionsWithData,
+} from '@tests/mocks/mock-collectibles';
+import { mockMainnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxos';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { getDisplayerAddress } from '@tests/utils';
 
 import { BtcFeeType } from '@leather.io/models';
-import { mockInscriptionResponse3, mockInscriptionResponseNonZeroOffset } from '@leather.io/query';
+import { mockInscriptionResponseNonZeroOffset } from '@leather.io/query';
 
 import { FormErrorMessages } from '@shared/error-messages';
 
 import { test } from '../../fixtures/fixtures';
 
-const mockInscriptionResp = {
-  ...mockInscriptionResponse3,
-  owner_wallet_addr: TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS,
-};
-
 test.describe('Send inscription', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
+    await mockMainnetInscriptionsWithData(globalPage.page, [mockImageInscription]);
     await onboardingPage.signInWithTestAccount(extensionId);
-    await mockTestnetTestAccountInscriptionsRequests(globalPage.page, [mockInscriptionResp]);
   });
 
   test.describe('valid send inscription data', () => {
-    test('should show the inscription review step', async ({ homePage, sendPage, networkPage }) => {
-      await networkPage.selectTestnet();
+    test('should show the inscription review step', async ({ homePage, sendPage }) => {
       await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
-      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
+      await sendPage.recipientInput.fill(TEST_ACCOUNT_2_TAPROOT_ADDRESS);
       const inscriptionSendButton = sendPage.page.getByTestId(
         SendCryptoAssetSelectors.PreviewSendTxBtn
       );
       await inscriptionSendButton.click();
       await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
       const displayerAddress = await getDisplayerAddress(sendPage.confirmationDetailsRecipient);
-      test.expect(displayerAddress).toEqual(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
+      test.expect(displayerAddress).toEqual(TEST_ACCOUNT_2_TAPROOT_ADDRESS);
     });
   });
 
@@ -46,14 +43,12 @@ test.describe('Send inscription', () => {
       globalPage,
       homePage,
       sendPage,
-      networkPage,
     }) => {
-      await mockTestnetTestAccountEmptyUtxosRequests(globalPage.page);
-      await networkPage.selectTestnet();
+      await mockMainnetTestAccountEmptyUtxosRequests(globalPage.page);
       await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
 
-      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
+      await sendPage.recipientInput.fill(TEST_ACCOUNT_2_TAPROOT_ADDRESS);
       const inscriptionSendButton = sendPage.page.getByTestId(
         SendCryptoAssetSelectors.PreviewSendTxBtn
       );
@@ -63,8 +58,7 @@ test.describe('Send inscription', () => {
       test.expect(errorLabel).toContain(FormErrorMessages.InsufficientFunds);
     });
 
-    test('should show invalid address error', async ({ homePage, sendPage, networkPage }) => {
-      await networkPage.selectTestnet();
+    test('should show invalid address error', async ({ homePage, sendPage }) => {
       await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
 
@@ -82,19 +76,14 @@ test.describe('Send inscription', () => {
       globalPage,
       homePage,
       sendPage,
-      networkPage,
     }) => {
-      await mockTestnetTestAccountInscriptionsRequests(globalPage.page, [
-        {
-          ...mockInscriptionResponseNonZeroOffset,
-          owner_wallet_addr: TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS,
-        },
+      await mockMainnetInscriptionsWithData(globalPage.page, [
+        mockInscriptionResponseNonZeroOffset,
       ]);
-      await networkPage.selectTestnet();
       await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
 
-      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
+      await sendPage.recipientInput.fill(TEST_ACCOUNT_2_TAPROOT_ADDRESS);
       const inscriptionSendButton = sendPage.page.getByTestId(
         SendCryptoAssetSelectors.PreviewSendTxBtn
       );
@@ -109,17 +98,19 @@ test.describe('Send inscription', () => {
     globalPage,
     homePage,
     sendPage,
-    networkPage,
   }) => {
-    await mockTestnetTestAccountInscriptionsRequests(globalPage.page, [
-      mockInscriptionResp,
-      mockInscriptionResp,
+    await mockMainnetInscriptionsWithData(globalPage.page, [
+      mockImageInscription,
+      {
+        ...mockImageInscription,
+        inscription_id: 'd2a07c26341750821da638f5da2fb00db6eacca71762e0919a14c947611c973fi0',
+        inscription_number: 107315145,
+      },
     ]);
-    await networkPage.selectTestnet();
     await homePage.clickCollectiblesTab();
     await sendPage.selectInscription();
 
-    await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
+    await sendPage.recipientInput.fill(TEST_ACCOUNT_2_TAPROOT_ADDRESS);
     const inscriptionSendButton = sendPage.page.getByTestId(
       SendCryptoAssetSelectors.PreviewSendTxBtn
     );
@@ -133,10 +124,8 @@ test.describe('Send inscription', () => {
     test('should return to collectibles tab when closing form via Escape', async ({
       homePage,
       sendPage,
-      networkPage,
       page,
     }) => {
-      await networkPage.selectTestnet();
       await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
 
@@ -151,10 +140,8 @@ test.describe('Send inscription', () => {
     test('should return to collectibles tab when closing form via X button', async ({
       homePage,
       sendPage,
-      networkPage,
       page,
     }) => {
-      await networkPage.selectTestnet();
       await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
 
@@ -173,13 +160,11 @@ test.describe('Send inscription', () => {
     test('should return to collectibles tab when closing fee step via Escape', async ({
       homePage,
       sendPage,
-      networkPage,
       page,
     }) => {
-      await networkPage.selectTestnet();
       await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
-      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
+      await sendPage.recipientInput.fill(TEST_ACCOUNT_2_TAPROOT_ADDRESS);
 
       const inscriptionSendButton = page.getByTestId(SendCryptoAssetSelectors.PreviewSendTxBtn);
       await inscriptionSendButton.click();
@@ -195,13 +180,11 @@ test.describe('Send inscription', () => {
     test('should return to collectibles tab when closing fee step via X button', async ({
       homePage,
       sendPage,
-      networkPage,
       page,
     }) => {
-      await networkPage.selectTestnet();
       await homePage.clickCollectiblesTab();
       await sendPage.selectInscription();
-      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS);
+      await sendPage.recipientInput.fill(TEST_ACCOUNT_2_TAPROOT_ADDRESS);
 
       const inscriptionSendButton = page.getByTestId(SendCryptoAssetSelectors.PreviewSendTxBtn);
       await inscriptionSendButton.click();

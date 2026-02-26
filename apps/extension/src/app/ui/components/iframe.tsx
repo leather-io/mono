@@ -15,7 +15,7 @@
 import { HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 interface IframeProps extends HTMLStyledProps<'iframe'> {
-  onError(): void;
+  onError?(): void;
   src: string;
 }
 export function Iframe({ onError, src, ...props }: IframeProps) {

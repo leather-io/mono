@@ -24,12 +24,6 @@ function createSrc20Asset(src20: Src20Token): Src20Asset {
   };
 }
 
-export function useStampsByAddress(address: string) {
-  return useQuery({
-    ...createGetStampsByAddressQueryOptions(address),
-    select: resp => resp.data?.stamps,
-  });
-}
 export function useSrc20TokensByAddress(address: string) {
   return useQuery({
     ...createGetStampsByAddressQueryOptions(address),

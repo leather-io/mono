@@ -169,6 +169,16 @@ export async function mockTestnetTestAccountEmptyUtxosRequests(page: Page) {
   ]);
 }
 
+export async function mockMainnetTestAccountEmptyUtxosRequests(page: Page) {
+  await page.unroute(`**/leather.mempool.space/api/address/${TEST_ACCOUNT_1_TAPROOT_ADDRESS}/utxo`);
+  await Promise.all([
+    page.route('**/leather.mempool.space/api/address/**/utxo', route =>
+      route.fulfill({ json: [] })
+    ),
+    page.route('**/v1/utxos/**', route => route.fulfill({ json: [] })),
+  ]);
+}
+
 export async function mockUtxoRequestsWithInscriptions(page: Page, utxos: OwnedUtxo[]) {
   await page.route('**/v1/utxos/**', route => {
     const url = route.request().url();
