@@ -19,10 +19,14 @@ export function Breadcrumb({ segments }: BreadcrumbProps) {
           {i > 0 && <styled.span aria-hidden>/</styled.span>}
           {segment.href ? (
             <Link to={segment.href}>
-              <styled.span _hover={{ textDecoration: 'underline' }}>{segment.label}</styled.span>
+              <styled.span textStyle="label.01" _hover={{ textDecoration: 'underline' }}>
+                {segment.label}
+              </styled.span>
             </Link>
           ) : (
-            <styled.span color="ink.text-primary">{segment.label}</styled.span>
+            <styled.span textStyle="label.01" color="ink.text-primary">
+              {segment.label}
+            </styled.span>
           )}
         </Flex>
       ))}

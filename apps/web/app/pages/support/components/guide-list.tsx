@@ -29,7 +29,7 @@ function GuideListItem({ href, title, icon, guideCount }: GuideListItem) {
   return (
     <styled.li
       height="auto"
-      my="space.04"
+      my="space.02"
       cursor="pointer"
       className="group"
       _hover={{ bg: 'ink.component-background-hover', borderRadius: 'sm' }}
@@ -40,7 +40,7 @@ function GuideListItem({ href, title, icon, guideCount }: GuideListItem) {
         display="flex"
         alignItems="center"
         justifyContent="space-between"
-        p="space.03"
+        p="space.02"
         textStyle="label.01"
         href={href}
         textDecoration="none"

@@ -39,6 +39,9 @@ export function HelpCenter() {
       />
       <Flex mt="space.07" flexDirection={{ lg: 'row', md: 'column', sm: 'column' }} flexWrap="wrap">
         <Box mb="space.05" flex="2" maxWidth="900px">
+          <styled.h5 textStyle="heading.05" mt="space.03" pb="space.03">
+            Popular articles
+          </styled.h5>
           <GuideList
             items={categories.map(category => ({
               id: category._id,
