@@ -20,7 +20,7 @@ import { useBitcoinClient } from '../../clients/bitcoin-client';
 interface UseInscriptionArgs {
   xpubs: string[];
 }
-export function useInscriptions({ xpubs }: UseInscriptionArgs) {
+function useInscriptions({ xpubs }: UseInscriptionArgs) {
   const client = useBitcoinClient();
   const uniqueXpubs = uniqueArray(xpubs);
   const queries = uniqueXpubs.map(xpub => createInscriptionByXpubQuery(client, xpub));

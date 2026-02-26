@@ -128,6 +128,8 @@ interface HistoricalEvents {
   click_change_theme_menu_item: undefined;
   click_settings_menu_item: undefined;
   click_toggle_privacy: undefined;
+  click_unprotect_all_inscriptions: undefined;
+  click_manage_inscriptions: undefined;
   request_psbt_cancel: undefined;
   request_sign_psbt_submit: undefined;
   request_update_profile_submit: undefined;

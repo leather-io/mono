@@ -147,11 +147,6 @@ export function useConfigFeeEstimationsMinValues() {
   return config.feeEstimationsMinMax.minValues.map(value => createMoney(value, 'STX'));
 }
 
-export function useConfigNftMetadataEnabled() {
-  const config = useRemoteConfig();
-  return config?.nftMetadataEnabled ?? true;
-}
-
 export function useConfigOrdinalsbot() {
   const config = useRemoteConfig();
 

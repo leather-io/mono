@@ -1,45 +1,62 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
-import { CurrentBitcoinSignerLoader } from '@app/components/loaders/current-bitcoin-signer-loader';
-import { CurrentStacksAccountLoader } from '@app/components/loaders/stacks-account-loader';
-import { useConfigNftMetadataEnabled } from '@app/query/common/remote-config/remote-config.query';
-import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
+import type { CollectibleView } from '@leather.io/features';
 
-import { CollectiblesLayout } from '../../components/collectibles/collectible.layout';
-import { AddCollectible } from './components/add-collectible';
-import { Ordinals } from './components/bitcoin/ordinals';
-import { Stamps } from './components/bitcoin/stamps';
-import { StacksCryptoAssets } from './components/stacks/stacks-crypto-assets';
-import { useIsFetchingCollectiblesRelatedQuery } from './hooks/use-is-fetching-collectibles';
+import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
+import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
+import { useCurrentAccountIndex } from '@app/store/accounts/account';
+
+import { CollectibleTypeIconOverlay } from './components/collectible-type-icon-overlay.web';
+import { CollectiblesLayout } from './components/collectibles.layout';
+import { InscriptionCardActions } from './components/inscription-card-actions.web';
+import { Sip9Card } from './components/sip9-card';
+import { StampCard } from './components/stamp-card';
+
+interface CollectibleItemProps {
+  view: CollectibleView;
+}
+function CollectibleItem({ view }: CollectibleItemProps) {
+  switch (view.asset.protocol) {
+    case 'stamp':
+      return <StampCard item={view.asset} />;
+    case 'sip9':
+      return <Sip9Card item={view.asset} isBns={view.isBns} />;
+    case 'inscription':
+      return <InscriptionCardActions item={view.asset} />;
+    default:
+      return null;
+  }
+}
 
 export function Collectibles() {
-  const isNftMetadataEnabled = useConfigNftMetadataEnabled();
-  const queryClient = useQueryClient();
-  const isFetching = useIsFetchingCollectiblesRelatedQuery();
-  const discardedInscriptions = useCurrentAccountDiscardedInscriptions();
+  const accountIndex = useCurrentAccountIndex();
+  const account = useAccountAddresses(accountIndex);
+  const { data: collectibles = [], isPending, isError, refetch } = useAccountCollectibles(account);
+
+  const renderedCollectibles = useMemo(
+    () =>
+      collectibles.map((view, index) => (
+        <CollectibleTypeIconOverlay
+          key={view.key}
+          protocol={view.protocol}
+          data-testid={`collectible-card-${view.asset.protocol}`}
+          data-index={index}
+        >
+          <CollectibleItem view={view} />
+        </CollectibleTypeIconOverlay>
+      )),
+    [collectibles]
+  );
 
   return (
     <CollectiblesLayout
-      title="Collectibles"
-      isLoading={isFetching}
-      onRefresh={() => void queryClient.refetchQueries({ type: 'active' })}
-      onDiscardAllInscriptions={() => discardedInscriptions.discardAllInscriptions()}
-      onRecoverAllInscriptions={() => discardedInscriptions.recoverAllInscriptions()}
+      isLoading={isPending}
+      isError={isError}
+      amount={collectibles.length}
+      hasCollectibles={collectibles.length > 0}
+      onRefresh={() => void refetch()}
     >
-      <CurrentBitcoinSignerLoader>{() => <AddCollectible />}</CurrentBitcoinSignerLoader>
-      {isNftMetadataEnabled && (
-        <CurrentStacksAccountLoader>
-          {account => <StacksCryptoAssets address={account?.address ?? ''} />}
-        </CurrentStacksAccountLoader>
-      )}
-      <CurrentBitcoinSignerLoader>
-        {() => (
-          <>
-            <Stamps />
-            <Ordinals />
-          </>
-        )}
-      </CurrentBitcoinSignerLoader>
+      {renderedCollectibles}
     </CollectiblesLayout>
   );
 }

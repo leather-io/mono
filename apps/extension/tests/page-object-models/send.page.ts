@@ -117,18 +117,16 @@ export class SendPage {
   }
 
   async selectInscription() {
-    const inscriptions = this.page.getByTestId(SendCryptoAssetSelectors.Inscription);
-    const sendButton = this.page.getByTestId(SendCryptoAssetSelectors.InscriptionSendButton);
+    const inscriptions = this.page.getByTestId('collectible-card-inscription');
     const count = await inscriptions.count();
     if (count === 1) {
       await inscriptions.hover();
-      await this.page
-        .getByTestId(SendCryptoAssetSelectors.InscriptionSendButton)
-        .click({ force: true });
+      await this.page.getByTestId('inscription-card-menu-trigger').click({ force: true });
     } else {
       await inscriptions.nth(0).hover();
-      await sendButton.nth(0).click({ force: true });
+      await this.page.getByTestId('inscription-card-menu-trigger').nth(0).click({ force: true });
     }
+    await this.page.getByTestId('inscription-menu-send').click({ force: true });
   }
 
   async confirmSendTransaction() {
