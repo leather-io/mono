@@ -1,6 +1,6 @@
 appId: io.leather.mobilewallet
 name: 'Smoke: Create Wallet'
 ---
-- launchApp
-- runFlow: ../../shared/clean-up.yaml
-- runFlow: ../../shared/create-wallet-dev-console.yaml
+- launchApp:
+    clearState: true
+- runFlow: ../../shared/create-wallet.yaml

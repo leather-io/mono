@@ -62,9 +62,59 @@ jobs:
       platform: ios
       profile: devClient
 
-  maestro_android_cached:
-    name: Android Maestro (cached)
+  # ============================================
+  # Smoke tests — fast fail gate
+  # ============================================
+
+  smoke_android_cached:
+    name: Android Smoke (cached)
     needs: [get_android_build, run_eas_update]
+    if: ${{ needs.get_android_build.outputs.build_id }}
+    type: maestro
+    env:
+      MAESTRO_DEEP_LINK_URL: 'exp+leather://expo-development-client/?url=https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc?channel-name=cicd'
+    params:
+      build_id: ${{ needs.get_android_build.outputs.build_id }}
+      flow_path: maestro/flows/smoke-tests-ci.yaml
+
+  smoke_ios_cached:
+    name: iOS Smoke (cached)
+    needs: [get_ios_build, run_eas_update]
+    if: ${{ needs.get_ios_build.outputs.build_id }}
+    type: maestro
+    env:
+      MAESTRO_DEEP_LINK_URL: 'exp+leather://expo-development-client/?url=https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc?channel-name=cicd'
+    params:
+      build_id: ${{ needs.get_ios_build.outputs.build_id }}
+      flow_path: maestro/flows/smoke-tests-ci.yaml
+
+  smoke_android_fresh:
+    name: Android Smoke (fresh)
+    needs: [build_android, run_eas_update]
+    type: maestro
+    env:
+      MAESTRO_DEEP_LINK_URL: 'exp+leather://expo-development-client/?url=https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc?channel-name=cicd'
+    params:
+      build_id: ${{ needs.build_android.outputs.build_id }}
+      flow_path: maestro/flows/smoke-tests-ci.yaml
+
+  smoke_ios_fresh:
+    name: iOS Smoke (fresh)
+    needs: [build_ios, run_eas_update]
+    type: maestro
+    env:
+      MAESTRO_DEEP_LINK_URL: 'exp+leather://expo-development-client/?url=https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc?channel-name=cicd'
+    params:
+      build_id: ${{ needs.build_ios.outputs.build_id }}
+      flow_path: maestro/flows/smoke-tests-ci.yaml
+
+  # ============================================
+  # Full suite — runs only after smoke passes
+  # ============================================
+
+  maestro_android_cached:
+    name: Android Full Suite (cached)
+    needs: [smoke_android_cached, get_android_build]
     if: ${{ needs.get_android_build.outputs.build_id }}
     type: maestro
     env:
@@ -74,8 +124,8 @@ jobs:
       flow_path: maestro/flows/full-suite-ci.yaml
 
   maestro_ios_cached:
-    name: iOS Maestro (cached)
-    needs: [get_ios_build, run_eas_update]
+    name: iOS Full Suite (cached)
+    needs: [smoke_ios_cached, get_ios_build]
     if: ${{ needs.get_ios_build.outputs.build_id }}
     type: maestro
     env:
@@ -85,8 +135,8 @@ jobs:
       flow_path: maestro/flows/full-suite-ci.yaml
 
   maestro_android_fresh:
-    name: Android Maestro (fresh)
-    needs: [build_android, run_eas_update]
+    name: Android Full Suite (fresh)
+    needs: [smoke_android_fresh, build_android]
     type: maestro
     env:
       MAESTRO_DEEP_LINK_URL: 'exp+leather://expo-development-client/?url=https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc?channel-name=cicd'
@@ -95,8 +145,8 @@ jobs:
       flow_path: maestro/flows/full-suite-ci.yaml
 
   maestro_ios_fresh:
-    name: iOS Maestro (fresh)
-    needs: [build_ios, run_eas_update]
+    name: iOS Full Suite (fresh)
+    needs: [smoke_ios_fresh, build_ios]
     type: maestro
     env:
       MAESTRO_DEEP_LINK_URL: 'exp+leather://expo-development-client/?url=https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc?channel-name=cicd'

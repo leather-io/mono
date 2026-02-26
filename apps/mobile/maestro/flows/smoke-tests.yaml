@@ -2,11 +2,11 @@
 appId: io.leather.mobilewallet
 name: Smoke Tests
 ---
-- launchApp
+- launchApp:
+    clearState: true
 
-# Create wallet via dev console
-- runFlow: ../shared/clean-up.yaml
-- runFlow: ../shared/create-wallet-dev-console.yaml
+# Create wallet via standard flow
+- runFlow: ../shared/create-wallet.yaml
 
 # Verify settings navigation
 - tapOn:

@@ -23,7 +23,7 @@ name: Smoke Tests CI
     visible: 'Add account'
     timeout: 30000
 
-# Run smoke tests: create wallet via dev console
+# Run smoke tests: create wallet via dev console (sheets unreliable in EAS Update CI)
 - runFlow: ../shared/clean-up.yaml
 - runFlow: ../shared/create-wallet-dev-console.yaml
 
