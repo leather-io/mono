@@ -7,6 +7,7 @@ import { createTokenDetailsPath } from '@leather.io/features';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { TokenList } from '@app/features/asset-list/token-list';
+import { useFlags } from '@app/features/feature-flags';
 import { TrendingTokens } from '@app/features/trending-tokens/trending-tokens';
 
 import { TokensTabHeader } from './tokens-tab-header';
@@ -14,6 +15,7 @@ import { TokensTabHeader } from './tokens-tab-header';
 export function Tokens() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { releaseTokenDetails } = useFlags();
 
   function handleSelectAsset(assetId: SerializedCryptoAssetId) {
     void navigate(createTokenDetailsPath(assetId), { state: { backgroundLocation: location } });
@@ -23,7 +25,7 @@ export function Tokens() {
     <Stack data-testid={HomePageSelectors.AssetList} gap="space.04" pb="space.03">
       <TokensTabHeader />
       <TokenList filter="enabled" onSelectAsset={handleSelectAsset} />
-      <TrendingTokens />
+      {releaseTokenDetails && <TrendingTokens />}
       <Outlet />
     </Stack>
   );
