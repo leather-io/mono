@@ -12,7 +12,7 @@ interface ContentComponentsProps {
 
 function H1({ children }: ContentComponentsProps) {
   return (
-    <styled.h1 textStyle="heading.03" mt="space.06" mb="space.04">
+    <styled.h1 textStyle="heading.04" mt="space.06" mb="space.05">
       {children}
     </styled.h1>
   );
@@ -20,7 +20,7 @@ function H1({ children }: ContentComponentsProps) {
 
 function H2({ children }: ContentComponentsProps) {
   return (
-    <styled.h2 textStyle="heading.04" mt="space.05" mb="space.03">
+    <styled.h2 textStyle="heading.05" mt="space.06" mb="space.05">
       {children}
     </styled.h2>
   );
@@ -28,7 +28,7 @@ function H2({ children }: ContentComponentsProps) {
 
 function H3({ children }: ContentComponentsProps) {
   return (
-    <styled.h3 textStyle="heading.05" mt="space.04" mb="space.02">
+    <styled.h3 textStyle="label.01" mt="space.06" mb="space.05">
       {children}
     </styled.h3>
   );
@@ -36,7 +36,7 @@ function H3({ children }: ContentComponentsProps) {
 
 function H4({ children }: ContentComponentsProps) {
   return (
-    <styled.h4 textStyle="label.01" mt="space.03" mb="space.02">
+    <styled.h4 textStyle="label.01" mt="space.06" mb="space.05">
       {children}
     </styled.h4>
   );
@@ -44,7 +44,7 @@ function H4({ children }: ContentComponentsProps) {
 
 function H5({ children }: ContentComponentsProps) {
   return (
-    <styled.h5 textStyle="label.02" mt="space.03" mb="space.02">
+    <styled.h5 textStyle="heading.05" mt="space.06" mb="space.05">
       {children}
     </styled.h5>
   );
@@ -52,7 +52,7 @@ function H5({ children }: ContentComponentsProps) {
 
 function H6({ children }: ContentComponentsProps) {
   return (
-    <styled.h6 textStyle="label.03" mt="space.02" mb="space.02">
+    <styled.h6 textStyle="heading.06" mt="space.06" mb="space.05">
       {children}
     </styled.h6>
   );
@@ -183,6 +183,10 @@ function Hr() {
       borderTop="none"
     />
   );
+}
+
+function Image({ ...props }: ContentComponentsProps & React.ImgHTMLAttributes<HTMLImageElement>) {
+  return <styled.img {...props} maxWidth="100%" borderRadius="sm" my="space.04" />;
 }
 
 function Table({ children }: ContentComponentsProps) {
@@ -368,4 +372,5 @@ export const contentComponents = {
   em: Em,
   del: Del,
   video: Video,
+  img: Image,
 };
