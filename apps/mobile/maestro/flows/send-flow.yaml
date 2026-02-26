@@ -1,0 +1,31 @@
+# Test: Send flow UI
+# Verifies the send flow opens and shows asset selection
+appId: io.leather.mobilewallet
+name: Send Flow
+---
+- launchApp:
+    clearState: true
+
+# Create a wallet first
+- runFlow: ../shared/create-wallet.yaml
+
+# Open send flow by tapping Send button
+- tapOn:
+    text: 'Send'
+
+# Verify send sheet opens with asset selection
+- assertVisible: 'Select asset'
+
+# Verify Bitcoin is available as an option
+- assertVisible: 'Bitcoin'
+
+# Verify Stacks is available as an option
+- assertVisible: 'Stacks'
+
+# Close the sheet by going back
+- tapOn:
+    id: 'backButton'
+
+# Verify we're back on home screen
+- assertVisible:
+    id: 'homePrivacyButton'

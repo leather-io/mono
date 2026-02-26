@@ -1,0 +1,41 @@
+# Creates a new wallet without biometric security
+# Assumes: App is on home screen without any existing wallets
+# Result: Wallet created and user is on home screen with account visible
+appId: io.leather.mobilewallet
+---
+# Tap the create wallet card on empty home screen
+- tapOn:
+    id: 'homeCreateWalletCard'
+
+# Wait for add wallet sheet to fully present
+- extendedWaitUntil:
+    visible:
+      id: 'createNewWalletSheetButton'
+    timeout: 10000
+
+# Select "Create new wallet" from the sheet
+- tapOn:
+    id: 'createNewWalletSheetButton'
+
+# Reveal the secret key (required before proceeding)
+- tapOn:
+    id: 'walletCreationTapToReveal'
+
+# Confirm backup
+- tapOn:
+    id: 'walletCreationBackedUpButton'
+
+# Skip biometric security
+- tapOn:
+    text: 'Skip for now'
+
+# Confirm skipping security in the warning sheet
+- tapOn:
+    text: 'Continue'
+
+# Wait for wallet generation and verify we're back on home with account
+# homePrivacyButton is only visible on home screen when a wallet exists
+- extendedWaitUntil:
+    visible:
+      id: 'homePrivacyButton'
+    timeout: 10000

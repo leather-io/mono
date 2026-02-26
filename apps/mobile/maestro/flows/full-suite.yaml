@@ -1,0 +1,171 @@
+# Full E2E Test Suite
+# Runs all tests in sequence, optimized for speed by reusing wallet state
+# This is the recommended flow for comprehensive testing
+appId: io.leather.mobilewallet
+name: Full Test Suite
+---
+# Start fresh
+- launchApp:
+    clearState: true
+
+# ============================================
+# SECTION 1: Wallet Creation
+# ============================================
+
+# Verify empty home screen
+- assertVisible:
+    id: 'homeCreateWalletCard'
+
+# Create a wallet
+- runFlow: ../shared/create-wallet.yaml
+
+# Verify wallet created
+- assertVisible:
+    id: 'homePrivacyButton'
+
+# ============================================
+# SECTION 2: Settings Navigation
+# ============================================
+
+# Navigate to Settings
+- tapOn:
+    id: 'homeSettingsButton'
+- assertVisible: 'SETTINGS'
+
+# Test Wallets and Accounts
+- tapOn:
+    id: 'settingsWalletAndAccountsButton'
+- assertVisible: 'Wallet 1'
+- tapOn:
+    id: 'backButton'
+
+# Test Display settings
+- tapOn:
+    id: 'settingsDisplayButton'
+- assertVisible: 'DISPLAY'
+- tapOn:
+    id: 'backButton'
+
+# Test Security settings
+- tapOn:
+    id: 'settingsSecurityButton'
+- assertVisible: 'SECURITY'
+- tapOn:
+    id: 'backButton'
+
+# Test Networks settings
+- tapOn:
+    id: 'settingsNetworkButton'
+- assertVisible: 'NETWORKS'
+- tapOn:
+    id: 'backButton'
+
+# Test Help settings
+- tapOn:
+    id: 'settingsHelpButton'
+- assertVisible: 'HELP'
+- tapOn:
+    id: 'backButton'
+
+# Back to home
+- tapOn:
+    id: 'backButton'
+- assertVisible:
+    id: 'homePrivacyButton'
+
+# ============================================
+# SECTION 3: Send Flow
+# ============================================
+
+# Open send flow
+- tapOn:
+    text: 'Send'
+- assertVisible: 'Select asset'
+- assertVisible: 'Bitcoin'
+- assertVisible: 'Stacks'
+
+# Close send sheet
+- tapOn:
+    id: 'backButton'
+- assertVisible:
+    id: 'homePrivacyButton'
+
+# ============================================
+# SECTION 4: Receive Flow
+# ============================================
+
+# Open receive flow
+- tapOn:
+    text: 'Receive'
+- assertVisible: 'Select asset'
+
+# Test Bitcoin address
+- tapOn:
+    id: 'receiveAssetItem'
+    index: 0
+- assertVisible: 'Native Segwit'
+- tapOn:
+    id: 'backButton'
+
+# Close receive sheet
+- tapOn:
+    id: 'backButton'
+- assertVisible:
+    id: 'homePrivacyButton'
+
+# ============================================
+# SECTION 5: Network Switching
+# ============================================
+
+# Switch to Testnet
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn:
+    id: 'settingsNetworkButton'
+- tapOn:
+    text: 'Testnet4'
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'backButton'
+- assertVisible: 'Testnet4'
+
+# Switch back to Mainnet
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn:
+    id: 'settingsNetworkButton'
+- tapOn:
+    text: 'Mainnet'
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'backButton'
+- assertNotVisible: 'Testnet4'
+
+# ============================================
+# SECTION 6: Cleanup - Remove Wallet
+# ============================================
+
+# Remove the wallet
+- runFlow: ../shared/remove-wallet.yaml
+
+# Verify back to empty state
+- assertVisible:
+    id: 'homeCreateWalletCard'
+
+# ============================================
+# SECTION 7: Wallet Restore
+# ============================================
+
+# Restore a wallet from mnemonic
+- runFlow: ../shared/restore-wallet.yaml
+
+# Verify wallet restored
+- assertVisible:
+    id: 'homePrivacyButton'
+
+# Final verification - settings accessible
+- tapOn:
+    id: 'homeSettingsButton'
+- assertVisible: 'SETTINGS'

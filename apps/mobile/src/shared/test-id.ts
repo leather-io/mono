@@ -1,6 +1,11 @@
 export enum TestId {
   accountChangeNameSheetInput = 'accountChangeNameSheetInput',
   accountChangeNameSheetSaveButton = 'accountChangeNameSheetSaveButton',
+  actionButtonBuy = 'actionButtonBuy',
+  actionButtonReceive = 'actionButtonReceive',
+  actionButtonSell = 'actionButtonSell',
+  actionButtonSend = 'actionButtonSend',
+  actionButtonSwap = 'actionButtonSwap',
   backButton = 'backButton',
   createNewWalletSheetButton = 'createNewWalletSheetButton',
   defaultAccountIcon = 'defaultAccountIcon',

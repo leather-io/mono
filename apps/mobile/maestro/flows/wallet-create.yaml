@@ -1,0 +1,28 @@
+# Test: Create a new wallet
+# Verifies the complete wallet creation flow without biometric security
+appId: io.leather.mobilewallet
+name: Create Wallet
+---
+- launchApp:
+    clearState: true
+
+# Verify we start on the empty home screen
+- assertVisible:
+    id: 'homeCreateWalletCard'
+
+# Create a new wallet using the shared flow
+- runFlow: ../shared/create-wallet.yaml
+
+# Verify wallet was created successfully
+- assertVisible:
+    id: 'homePrivacyButton'
+
+# Verify settings is accessible
+- tapOn:
+    id: 'homeSettingsButton'
+- assertVisible: 'SETTINGS'
+
+# Navigate to wallets and accounts to verify wallet exists
+- tapOn:
+    id: 'settingsWalletAndAccountsButton'
+- assertVisible: 'Wallet 1'

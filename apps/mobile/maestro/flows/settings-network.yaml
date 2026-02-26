@@ -1,0 +1,47 @@
+# Test: Network switching
+# Verifies network can be changed and persists
+appId: io.leather.mobilewallet
+name: Settings Network
+---
+- launchApp:
+    clearState: true
+
+# Create a wallet first
+- runFlow: ../shared/create-wallet.yaml
+
+# Verify wallet exists on home screen
+- assertVisible:
+    id: 'homePrivacyButton'
+
+# Navigate to Settings > Networks
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn:
+    id: 'settingsNetworkButton'
+- assertVisible: 'NETWORKS'
+
+# Switch to Testnet
+- tapOn:
+    text: 'Testnet4'
+- tapOn:
+    id: 'backButton'
+
+# Verify network badge shows Testnet
+- tapOn:
+    id: 'backButton'
+- assertVisible: 'Testnet4'
+
+# Switch back to Mainnet
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn:
+    id: 'settingsNetworkButton'
+- tapOn:
+    text: 'Mainnet'
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'backButton'
+
+# Verify network badge no longer shows Testnet
+- assertNotVisible: 'Testnet4'

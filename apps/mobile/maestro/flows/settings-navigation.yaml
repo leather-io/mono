@@ -1,0 +1,53 @@
+# Test: Settings navigation
+# Verifies all settings screens are accessible
+appId: io.leather.mobilewallet
+name: Settings Navigation
+---
+- launchApp:
+    clearState: true
+
+# Create a wallet first (settings content varies based on wallet state)
+- runFlow: ../shared/create-wallet.yaml
+
+# Navigate to Settings
+- tapOn:
+    id: 'homeSettingsButton'
+- assertVisible: 'SETTINGS'
+
+# Test Wallets and Accounts navigation
+- tapOn:
+    id: 'settingsWalletAndAccountsButton'
+- assertVisible: 'Wallet 1'
+- tapOn:
+    id: 'backButton'
+
+# Test Display settings navigation
+- tapOn:
+    id: 'settingsDisplayButton'
+- assertVisible: 'DISPLAY'
+- tapOn:
+    id: 'backButton'
+
+# Test Security settings navigation
+- tapOn:
+    id: 'settingsSecurityButton'
+- assertVisible: 'SECURITY'
+- tapOn:
+    id: 'backButton'
+
+# Test Networks settings navigation
+- tapOn:
+    id: 'settingsNetworkButton'
+- assertVisible: 'NETWORKS'
+- tapOn:
+    id: 'backButton'
+
+# Test Help settings navigation
+- tapOn:
+    id: 'settingsHelpButton'
+- assertVisible: 'HELP'
+- tapOn:
+    id: 'backButton'
+
+# Verify we're back at settings
+- assertVisible: 'SETTINGS'

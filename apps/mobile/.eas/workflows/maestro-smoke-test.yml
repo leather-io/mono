@@ -1,4 +1,4 @@
-name: Maestro Smoke Test
+name: Maestro E2E Tests
 
 on:
   pull_request:
@@ -70,7 +70,7 @@ jobs:
       MAESTRO_DEEP_LINK_URL: 'exp+leather://expo-development-client/?url=https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc?channel-name=cicd'
     params:
       build_id: ${{ needs.get_android_build.outputs.build_id }}
-      flow_path: maestro/flows/smoke-tests-ci.yaml
+      flow_path: maestro/flows/full-suite-ci.yaml
 
   maestro_ios_cached:
     name: iOS Maestro (cached)
@@ -81,7 +81,7 @@ jobs:
       MAESTRO_DEEP_LINK_URL: 'exp+leather://expo-development-client/?url=https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc?channel-name=cicd'
     params:
       build_id: ${{ needs.get_ios_build.outputs.build_id }}
-      flow_path: maestro/flows/smoke-tests-ci.yaml
+      flow_path: maestro/flows/full-suite-ci.yaml
 
   maestro_android_fresh:
     name: Android Maestro (fresh)
@@ -91,7 +91,7 @@ jobs:
       MAESTRO_DEEP_LINK_URL: 'exp+leather://expo-development-client/?url=https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc?channel-name=cicd'
     params:
       build_id: ${{ needs.build_android.outputs.build_id }}
-      flow_path: maestro/flows/smoke-tests-ci.yaml
+      flow_path: maestro/flows/full-suite-ci.yaml
 
   maestro_ios_fresh:
     name: iOS Maestro (fresh)
@@ -101,4 +101,4 @@ jobs:
       MAESTRO_DEEP_LINK_URL: 'exp+leather://expo-development-client/?url=https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc?channel-name=cicd'
     params:
       build_id: ${{ needs.build_ios.outputs.build_id }}
-      flow_path: maestro/flows/smoke-tests-ci.yaml
+      flow_path: maestro/flows/full-suite-ci.yaml

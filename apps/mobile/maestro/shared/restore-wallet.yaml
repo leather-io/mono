@@ -1,0 +1,46 @@
+# Restores a wallet from a test mnemonic without biometric security
+# Assumes: App is on home screen without any existing wallets
+# Result: Wallet restored and user is on home screen with account visible
+# Uses the standard test mnemonic from @leather.io/test-config
+appId: io.leather.mobilewallet
+---
+# Tap the create wallet card on empty home screen
+- tapOn:
+    id: 'homeCreateWalletCard'
+
+# Wait for add wallet sheet to fully present
+- extendedWaitUntil:
+    visible:
+      id: 'restoreWalletSheetButton'
+    timeout: 10000
+
+# Select "Restore wallet" from the sheet
+- tapOn:
+    id: 'restoreWalletSheetButton'
+
+# Enter the test mnemonic (from @leather.io/test-config)
+- tapOn:
+    id: 'restoreWalletTextInput'
+- inputText: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus'
+- pressKey: Enter
+
+# Continue to security screen
+- tapOn:
+    id: 'restoreWalletContinue'
+
+# Skip biometric security (only shown if securityLevelPreference is 'not-selected')
+- runFlow:
+    when:
+      visible: 'Skip for now'
+    commands:
+      - tapOn:
+          text: 'Skip for now'
+      - tapOn:
+          text: 'Continue'
+
+# Wait for wallet generation and verify we're back on home with account
+# homePrivacyButton is only visible on home screen when a wallet exists
+- extendedWaitUntil:
+    visible:
+      id: 'homePrivacyButton'
+    timeout: 10000

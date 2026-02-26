@@ -1,0 +1,31 @@
+# Removes the first wallet via Settings
+# Assumes: At least one wallet exists and app is on home screen
+# Result: First wallet removed, returns to home screen
+appId: io.leather.mobilewallet
+---
+# Navigate to Settings
+- tapOn:
+    id: 'homeSettingsButton'
+
+# Navigate to Wallets and Accounts
+- tapOn:
+    id: 'settingsWalletAndAccountsButton'
+
+# Tap the settings gear on the first wallet
+- tapOn:
+    id: 'walletListSettingsButton'
+
+# Tap Remove wallet
+- tapOn:
+    id: 'walletSettingsRemoveWalletButton'
+- waitForAnimationToEnd
+
+# Confirm removal in the warning sheet
+- tapOn:
+    text: 'Continue'
+
+# Navigate back to home
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'backButton'

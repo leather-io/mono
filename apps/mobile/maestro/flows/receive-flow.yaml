@@ -1,0 +1,42 @@
+# Test: Receive flow UI
+# Verifies the receive flow opens and shows address options
+appId: io.leather.mobilewallet
+name: Receive Flow
+---
+- launchApp:
+    clearState: true
+
+# Create a wallet first
+- runFlow: ../shared/create-wallet.yaml
+
+# Open receive flow by tapping Receive button
+- tapOn:
+    text: 'Receive'
+
+# Verify receive sheet opens with asset selection
+- assertVisible: 'Select asset'
+
+# Verify Bitcoin address types are available
+- assertVisible:
+    id: 'receiveAssetItem'
+    index: 0
+
+# Tap on first receive asset (Bitcoin Native Segwit)
+- tapOn:
+    id: 'receiveAssetItem'
+    index: 0
+
+# Verify QR code / address screen appears
+- assertVisible: 'Native Segwit'
+
+# Go back to asset selection
+- tapOn:
+    id: 'backButton'
+
+# Close the sheet
+- tapOn:
+    id: 'backButton'
+
+# Verify we're back on home screen
+- assertVisible:
+    id: 'homePrivacyButton'

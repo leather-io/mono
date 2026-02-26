@@ -63,6 +63,7 @@ export function Sheet({
 
   return (
     <BottomSheetModal
+      accessible={false}
       onChange={handleChange}
       backdropComponent={SheetNativeBackdrop}
       backgroundStyle={[styles.background, backgroundStyle]}
