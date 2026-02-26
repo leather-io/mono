@@ -58,7 +58,7 @@ export function LearnHoverCard({
   function handleIconClick(e: React.MouseEvent): void {
     e.stopPropagation();
     if (article?.slug) {
-      void navigate(`/support/guide/${article.slug}`);
+      void navigate(`/support/${article.slug}`);
     }
   }
 

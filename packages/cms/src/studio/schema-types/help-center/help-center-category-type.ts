@@ -1,5 +1,5 @@
 import { FolderIcon } from '@sanity/icons';
-import { defineField, defineType } from 'sanity';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 
 import { slugField } from '../utils/slug-type';
 
@@ -27,6 +27,17 @@ export const helpCenterCategoryType = defineType({
       title: 'Order',
       type: 'number',
       description: 'Controls display order on the help center page',
+    }),
+    defineField({
+      name: 'guides',
+      title: 'Guides',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: [{ type: 'helpCenterGuide' }],
+        }),
+      ],
     }),
   ],
   preview: {

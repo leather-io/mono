@@ -27,10 +27,10 @@ export default [
     route('signer-key-generation', 'pages/advanced/tools/signer-key-generation.route.tsx'),
   ]),
   route('support', 'pages/support/help-center.route.tsx'),
-  ...prefix('support/:slug', [index('pages/support/category-guides/category-guides.route.tsx')]),
-  ...prefix('support/:categorySlug/:guideSlug', [index('pages/support/guide/guide.route.tsx')]),
-  // Redirects from old help-center URLs
+  route('support/search', 'pages/support/search.tsx'),
   route('support/guide/:slug', 'pages/redirects/support-guide-redirect.route.tsx'),
+  route('support/:guideSlug', 'pages/support/guide/guide.route.tsx'),
+  // Redirects from old help-center URLs
   route('help-center', 'pages/redirects/help-center-redirect.route.tsx'),
   route('help-center/*', 'pages/redirects/help-center-wildcard.route.tsx'),
   // Fallback route

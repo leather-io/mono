@@ -17,11 +17,11 @@ export const helpCenterGuideType = defineType({
     }),
     slugField('title'),
     defineField({
-      name: 'categories',
-      title: 'Categories',
-      type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'helpCenterCategory' }] }],
-      validation: rule => rule.required().min(1),
+      name: 'summary',
+      title: 'Summary',
+      type: 'text',
+      rows: 3,
+      description: 'Brief introduction displayed alongside the title',
     }),
     defineField({
       name: 'body',
@@ -51,15 +51,14 @@ export const helpCenterGuideType = defineType({
   preview: {
     select: {
       title: 'title',
-      categoryName: 'categories.0.name',
       date: 'publishedAt',
     },
     prepare(selection) {
-      const { title, categoryName, date } = selection;
+      const { title, date } = selection;
       const dateFormatted = date ? new Date(date).toLocaleDateString() : 'No date';
       return {
         title: title || 'Untitled',
-        subtitle: `${categoryName || 'Uncategorized'} • ${dateFormatted}`,
+        subtitle: dateFormatted,
       };
     },
   },
