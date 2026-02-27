@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import { Box, Stack } from 'leather-styles/jsx';
 
-import { CollectibleTypeIconOverlay } from '../collectibles/components/collectible-type-icon-overlay.web';
+import { CollectibleTypeIconOverlay } from '../collectibles/components/collectible-type-icon-overlay';
 
 interface CollectibleDetailsPageLayoutProps {
   children: ReactNode;
