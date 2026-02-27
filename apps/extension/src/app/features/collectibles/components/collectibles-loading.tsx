@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import { Box, styled } from 'leather-styles/jsx';
 
 import { SkeletonLoader } from '@leather.io/ui';
@@ -26,14 +28,27 @@ function CollectibleCardSkeleton({ index }: { index: number }) {
   );
 }
 
+function getSkeletonCount(containerWidth: number) {
+  const columns = Math.max(2, Math.floor(containerWidth / 180));
+  const cardSize = containerWidth / columns;
+  const rows = Math.max(2, Math.ceil(window.innerHeight / cardSize));
+  return rows * columns;
+}
+
 export function CollectiblesLoading() {
+  const ref = useRef<HTMLDivElement>(null);
+  const width = ref.current?.clientWidth ?? window.innerWidth;
+  const count = getSkeletonCount(width);
+
   return (
-    <Box width="100%">
+    <Box ref={ref} width="100%" flex={1} overflow="hidden">
       <styled.div
         display="grid"
         gridTemplateColumns={['repeat(2, 1fr)', 'repeat(auto-fill, minmax(180px, 1fr))']}
+        flex={1}
+        minHeight="0"
       >
-        {Array.from({ length: 8 }).map((_, i) => (
+        {Array.from({ length: count }).map((_, i) => (
           <CollectibleCardSkeleton key={i} index={i} />
         ))}
       </styled.div>

@@ -1,7 +1,7 @@
 import type { StampAsset } from '@leather.io/models';
 
-import { CollectibleImage } from './collectible-image.web';
-import { ImageUnavailable } from './image-unavailable.web';
+import { CollectibleImage } from './collectible-image';
+import { ImageUnavailable } from './image-unavailable';
 
 interface StampCardProps {
   item: StampAsset;

@@ -1,13 +1,13 @@
 import type { InscriptionMimeType } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
-import { CollectibleAudio } from './collectible-audio.web';
-import { CollectibleGltf } from './collectible-gltf.web';
-import { CollectibleHtml } from './collectible-html.web';
-import { CollectibleImage } from './collectible-image.web';
-import { CollectibleSvg } from './collectible-svg.web';
-import { CollectibleText } from './collectible-text.web';
-import { CollectibleVideo } from './collectible-video.web';
+import { CollectibleAudio } from './collectible-audio';
+import { CollectibleGltf } from './collectible-gltf';
+import { CollectibleHtml } from './collectible-html';
+import { CollectibleImage } from './collectible-image';
+import { CollectibleSvg } from './collectible-svg';
+import { CollectibleText } from './collectible-text';
+import { CollectibleVideo } from './collectible-video';
 
 interface InscriptionProps {
   mimeType: InscriptionMimeType;

@@ -2,9 +2,9 @@ import { useMemo, useState } from 'react';
 
 import { Iframe } from '@app/ui/components/iframe';
 
-import { CollectibleCard } from './collectible-card.web';
-import { CollectibleImage } from './collectible-image.web';
-import { ImageUnavailable } from './image-unavailable.web';
+import { CollectibleCard } from './collectible-card';
+import { CollectibleImage } from './collectible-image';
+import { ImageUnavailable } from './image-unavailable';
 
 interface CollectibleGltfProps {
   src: string;

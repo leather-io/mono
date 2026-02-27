@@ -2,7 +2,7 @@ import { Box, styled } from 'leather-styles/jsx';
 
 import { PaperPlaneIcon } from '@leather.io/ui';
 
-import { CollectibleCard } from './collectible-card.web';
+import { CollectibleCard } from './collectible-card';
 
 interface CollectibleVideoProps {
   src: string;

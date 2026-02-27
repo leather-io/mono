@@ -6,9 +6,9 @@ import { useAccountCollectibles } from '@app/query/collectibles/account-collecti
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
-import { CollectibleTypeIconOverlay } from './components/collectible-type-icon-overlay.web';
+import { CollectibleTypeIconOverlay } from './components/collectible-type-icon-overlay';
 import { CollectiblesLayout } from './components/collectibles.layout';
-import { InscriptionCardActions } from './components/inscription-card-actions.web';
+import { InscriptionCardActions } from './components/inscription-card-actions';
 import { Sip9Card } from './components/sip9-card';
 import { StampCard } from './components/stamp-card';
 
@@ -31,7 +31,13 @@ function CollectibleItem({ view }: CollectibleItemProps) {
 export function Collectibles() {
   const accountIndex = useCurrentAccountIndex();
   const account = useAccountAddresses(accountIndex);
-  const { data: collectibles = [], isPending, isError, refetch } = useAccountCollectibles(account);
+  const {
+    data: collectibles = [],
+    isPending,
+    isFetching,
+    isError,
+    refetch,
+  } = useAccountCollectibles(account);
 
   const renderedCollectibles = useMemo(
     () =>
@@ -51,6 +57,7 @@ export function Collectibles() {
   return (
     <CollectiblesLayout
       isLoading={isPending}
+      isFetching={isFetching}
       isError={isError}
       amount={collectibles.length}
       hasCollectibles={collectibles.length > 0}

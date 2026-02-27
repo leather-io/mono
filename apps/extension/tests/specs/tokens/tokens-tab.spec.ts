@@ -41,6 +41,21 @@ test.describe('Tokens tab', () => {
     });
   });
 
+  test.describe('Learn section', () => {
+    test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
+      await globalPage.setupAndUseApiCalls(extensionId);
+      await onboardingPage.signInWithTestAccount(extensionId);
+    });
+
+    test('should show Learn section with all items', async ({ page }) => {
+      const learn = page.getByTestId('tokens-learn');
+      await expect(learn).toBeVisible();
+      await expect(page.getByText('Getting Started with Leather')).toBeVisible();
+      await expect(page.getByText('What is sBTC?')).toBeVisible();
+      await expect(page.getByText('Learn more about stacking')).toBeVisible();
+    });
+  });
+
   test.describe('empty wallet', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
       await globalPage.setupAndUseApiCalls(extensionId);

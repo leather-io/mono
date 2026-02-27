@@ -4,7 +4,7 @@ import { Box, styled } from 'leather-styles/jsx';
 
 import { Iframe } from '@app/ui/components/iframe';
 
-import { CollectibleCard } from './collectible-card.web';
+import { CollectibleCard } from './collectible-card';
 
 interface CollectibleTextProps {
   src: string;
