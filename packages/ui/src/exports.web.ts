@@ -21,6 +21,7 @@ export { Badge, type BadgeProps } from './components/badge/badge.web';
 export { BulletSeparator } from './components/bullet-separator/bullet-separator.web';
 export { Button, type ButtonProps } from './components/button/button.web';
 export { Callout, type CalloutProps } from './components/callout/callout.web';
+export { CircularProgress } from './components/circular-progress/circular-progress.web';
 export { DropdownMenu } from './components/dropdown-menu/dropdown-menu.web';
 export { Flag, type FlagProps } from './components/flag/flag.web';
 export { Highlighter, type HighlighterProps } from './components/highlighting/highlighter.web';
