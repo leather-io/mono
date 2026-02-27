@@ -15,6 +15,7 @@ import { AssetBalance } from '@app/pages/swap/components/asset-balance';
 import { AssetSelectorToggle } from '@app/pages/swap/components/asset-selector-toggle';
 import { AssetSelector } from '@app/pages/swap/components/asset-selector/asset-selector';
 import { AssetSelectorSheet } from '@app/pages/swap/components/asset-selector/asset-selector-sheet';
+import { FlipButton } from '@app/pages/swap/components/flip-button';
 import { TargetAmountPreview } from '@app/pages/swap/components/target-amount-preview';
 
 export function SwapForm() {
@@ -90,6 +91,8 @@ export function SwapForm() {
             </Flex>
 
             <Divider marginY="space.05" borderColor="ink.border-transparent" />
+
+            <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
 
             <Flex justifyContent="space-between" alignItems="flex-start">
               <TargetAmountPreview
