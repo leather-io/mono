@@ -15,7 +15,7 @@ import { TokensTabHeader } from './tokens-tab-header';
 export function Tokens() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { releaseTokenDetails } = useFlags();
+  const { releaseTrendingTokens } = useFlags();
 
   function handleSelectAsset(assetId: SerializedCryptoAssetId) {
     void navigate(createTokenDetailsPath(assetId), { state: { backgroundLocation: location } });
@@ -25,7 +25,7 @@ export function Tokens() {
     <Stack data-testid={HomePageSelectors.AssetList} gap="space.04" pb="space.03">
       <TokensTabHeader />
       <TokenList filter="enabled" onSelectAsset={handleSelectAsset} />
-      {releaseTokenDetails && <TrendingTokens />}
+      {releaseTrendingTokens && <TrendingTokens />}
       <Outlet />
     </Stack>
   );
