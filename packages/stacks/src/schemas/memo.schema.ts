@@ -1,6 +1,7 @@
 import { createMemoString } from '@stacks/transactions';
 import { z } from 'zod';
 
+// Some unrelated change
 export const stacksMemoSchema = z.string().refine(
   value => {
     try {
