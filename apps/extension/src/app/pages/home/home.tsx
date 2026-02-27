@@ -13,8 +13,11 @@ import { useFlags } from '@app/features/feature-flags';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
 import { NotFoundContent } from '@app/pages/not-found/not-found';
+import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
+import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
+import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
 import { AccountActions } from './components/account-actions-current/account-actions';
 import { AccountCard } from './components/account-card';
@@ -34,6 +37,9 @@ interface HomeProps {
 
 export function Home({ isBackground }: HomeProps) {
   const { activityRevamp } = useFlags();
+  const accountIndex = useCurrentAccountIndex();
+  const account = useAccountAddresses(accountIndex);
+  useAccountCollectibles(account);
 
   const shouldAnimate = !isBackground && !animationState.hasPlayed;
   if (shouldAnimate) {

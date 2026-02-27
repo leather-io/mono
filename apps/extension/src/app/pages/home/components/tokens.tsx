@@ -10,6 +10,7 @@ import { TokenList } from '@app/features/asset-list/token-list';
 import { useFlags } from '@app/features/feature-flags';
 import { TrendingTokens } from '@app/features/trending-tokens/trending-tokens';
 
+import { TokensLearn } from './tokens-learn';
 import { TokensTabHeader } from './tokens-tab-header';
 
 export function Tokens() {
@@ -26,6 +27,7 @@ export function Tokens() {
       <TokensTabHeader />
       <TokenList filter="enabled" onSelectAsset={handleSelectAsset} />
       {releaseTrendingTokens && <TrendingTokens />}
+      <TokensLearn />
       <Outlet />
     </Stack>
   );

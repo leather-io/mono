@@ -34,7 +34,7 @@ msgstr " on {date} "
 msgid " since {date}"
 msgstr " since {date}"
 
-#: src/features/token/components/get-first-nft-section.tsx:31
+#: src/features/token/components/get-first-nft-section.tsx:30
 msgid ".btc domain"
 msgstr ".btc domain"
 
@@ -179,7 +179,7 @@ msgstr "Add to new wallet"
 msgid "Add wallet"
 msgstr "Add wallet"
 
-#: src/features/token/components/get-first-nft-section.tsx:26
+#: src/features/token/components/get-first-nft-section.tsx:18
 msgid "Add your first NFT by buying or transferring from another account."
 msgstr "Add your first NFT by buying or transferring from another account."
 
@@ -417,11 +417,11 @@ msgstr "BIP39 passphrase"
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
-#: src/features/token/components/get-first-nft-section.tsx:56
+#: src/features/token/components/get-first-nft-section.tsx:71
 msgid "Bitcoin Blockchain"
 msgstr "Bitcoin Blockchain"
 
-#: src/features/token/components/discover-marketplaces-section.tsx:20
+#: src/features/token/components/discover-marketplaces-section.tsx:26
 msgid "Bitcoin NFTs and Web3 creativity built on Stacks."
 msgstr "Bitcoin NFTs and Web3 creativity built on Stacks."
 
@@ -720,7 +720,7 @@ msgstr "Disabled"
 msgid "Disconnected"
 msgstr "Disconnected"
 
-#: src/features/token/components/discover-marketplaces-section.tsx:15
+#: src/features/token/components/discover-marketplaces-section.tsx:14
 msgid "Discover marketplaces"
 msgstr "Discover marketplaces"
 
@@ -933,7 +933,7 @@ msgstr "funds kept safe and unavailable for spending"
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 
-#: src/features/token/components/discover-marketplaces-section.tsx:19
+#: src/features/token/components/discover-marketplaces-section.tsx:25
 msgid "Gamma"
 msgstr "Gamma"
 
@@ -959,11 +959,11 @@ msgstr "Get support or provide feedback"
 msgid "Get the latest version of the Leather app"
 msgstr "Get the latest version of the Leather app"
 
-#: src/features/token/components/get-first-nft-section.tsx:32
+#: src/features/token/components/get-first-nft-section.tsx:31
 msgid "Get your .btc domain"
 msgstr "Get your .btc domain"
 
-#: src/features/token/components/get-first-nft-section.tsx:24
+#: src/features/token/components/get-first-nft-section.tsx:16
 msgid "Get your first NFT"
 msgstr "Get your first NFT"
 
@@ -1147,7 +1147,7 @@ msgstr "Layer 2 · Stacks"
 msgid "Layer 2 • Stacks"
 msgstr "Layer 2 • Stacks"
 
-#: src/features/token/components/discover-marketplaces-section.tsx:26
+#: src/features/token/components/discover-marketplaces-section.tsx:39
 msgid "Leading multi-chain marketplace across Bitcoin, Solana and more"
 msgstr "Leading multi-chain marketplace across Bitcoin, Solana and more"
 
@@ -1193,7 +1193,7 @@ msgstr "Locked STX"
 msgid "Locking"
 msgstr "Locking"
 
-#: src/features/token/components/discover-marketplaces-section.tsx:25
+#: src/features/token/components/discover-marketplaces-section.tsx:38
 msgid "Magic Eden"
 msgstr "Magic Eden"
 
@@ -1382,7 +1382,7 @@ msgstr "OK"
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
 
-#: src/features/token/components/get-first-nft-section.tsx:55
+#: src/features/token/components/get-first-nft-section.tsx:70
 msgid "Ordinal Inscriptions"
 msgstr "Ordinal Inscriptions"
 
@@ -1503,8 +1503,8 @@ msgstr "Read more"
 #: src/components/action-buttons.tsx:44
 #: src/features/receive/screens/asset-details.tsx:56
 #: src/features/receive/screens/select-asset.tsx:83
-#: src/features/token/components/get-first-nft-section.tsx:49
-#: src/features/token/components/get-first-nft-section.tsx:63
+#: src/features/token/components/get-first-nft-section.tsx:57
+#: src/features/token/components/get-first-nft-section.tsx:79
 msgid "Receive"
 msgstr "Receive"
 
@@ -1803,11 +1803,11 @@ msgstr "Stacks"
 msgid "Stacks address"
 msgstr "Stacks address"
 
-#: src/features/token/components/get-first-nft-section.tsx:42
+#: src/features/token/components/get-first-nft-section.tsx:49
 msgid "Stacks Blockchain"
 msgstr "Stacks Blockchain"
 
-#: src/features/token/components/get-first-nft-section.tsx:41
+#: src/features/token/components/get-first-nft-section.tsx:48
 msgid "Stacks NFT"
 msgstr "Stacks NFT"
 

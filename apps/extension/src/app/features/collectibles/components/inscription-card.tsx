@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 import type { InscriptionAsset } from '@leather.io/models';
 
-import { ImageUnavailable } from './image-unavailable.web';
-import { Inscription as InscriptionComponent } from './inscription.web';
+import { ImageUnavailable } from './image-unavailable';
+import { Inscription as InscriptionComponent } from './inscription';
 
 interface InscriptionCardProps {
   item: InscriptionAsset;

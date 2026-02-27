@@ -1,4 +1,4 @@
-import { CollectibleImage, type CollectibleImageProps } from './collectible-image.web';
+import { CollectibleImage, type CollectibleImageProps } from './collectible-image';
 
 type CollectibleSvgProps = Omit<CollectibleImageProps, 'isSvg'>;
 

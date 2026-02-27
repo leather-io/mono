@@ -2,7 +2,7 @@ import { Box, styled } from 'leather-styles/jsx';
 
 import { Eye1ClosedIcon } from '@leather.io/ui';
 
-import { CollectibleCard } from './collectible-card.web';
+import { CollectibleCard } from './collectible-card';
 
 export function ImageUnavailable() {
   return (
