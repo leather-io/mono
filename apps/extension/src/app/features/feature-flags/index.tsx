@@ -31,7 +31,7 @@ interface FeatureFlags {
   assetsRevamp: boolean;
   activityRevamp: boolean;
   swapRevamp: boolean;
-  releaseTokenDetails: boolean;
+  releaseTrendingTokens: boolean;
 }
 
 export function useFlags() {
