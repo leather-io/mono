@@ -44,32 +44,17 @@ export function InscriptionCardActions({ item }: InscriptionCardActionsProps) {
   }, [navigate, item, location]);
 
   return (
-    <Box
-      position="relative"
-      _hover={{ bg: 'ink.background-secondary' }}
-      borderRadius="xs"
-      width="100%"
-      {...bind}
-    >
+    <Box position="relative" _hover={{ bg: 'ink.background-secondary' }} width="100%" {...bind}>
       <Box opacity={isDiscarded ? 0.5 : 1}>
         <InscriptionCard item={item} />
       </Box>
 
       {isHovered && (
-        <Box
-          border="1px solid"
-          borderColor="ink.text-primary"
-          borderRadius="2px"
-          bg="ink.background-primary"
-          position="absolute"
-          right="space.03"
-          top="space.03"
-          zIndex="900"
-        >
+        <Box position="absolute" right="space.03" top="space.03" zIndex="900">
           <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
               <IconButton
-                _hover={{ bg: 'ink.component-background-hover' }}
+                _hover={{ bg: 'ink.background-secondary' }}
                 bg="ink.background-primary"
                 transform="rotate(90deg)"
                 color="ink.action-primary-default"

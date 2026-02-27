@@ -6,6 +6,9 @@ import {
   ArrowRotateClockwiseIcon,
   Callout,
   DropdownMenu,
+  Flag,
+  IconButton,
+  InfoCircleIcon,
   ItemLayout,
   LockIcon,
   SettingsSliderIcon,
@@ -13,13 +16,18 @@ import {
 } from '@leather.io/ui';
 
 import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
+import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
+import { CollectiblesEmpty } from './collectibles-empty';
+import { CollectiblesLearn } from './collectibles-learn';
 import { CollectiblesLoading } from './collectibles-loading';
+import { CollectiblesMarketplaces } from './collectibles-marketplaces';
 
 interface CollectiblesLayoutProps {
   children: ReactNode;
   amount: number;
   isLoading: boolean;
+  isFetching: boolean;
   hasCollectibles: boolean;
   isError: boolean;
   onRefresh(): void;
@@ -29,51 +37,49 @@ export function CollectiblesLayout({
   amount,
   children,
   isLoading,
+  isFetching,
   hasCollectibles,
   isError,
   onRefresh,
 }: CollectiblesLayoutProps) {
   const { recoverAllInscriptions, discardAllInscriptions } =
     useCurrentAccountDiscardedInscriptions();
-  const showHeader = !isLoading && hasCollectibles;
+  const isReady = !isLoading && !isError;
+  const showLoading = isLoading || (isFetching && hasCollectibles);
+  const showEmpty = isReady && !isFetching && !hasCollectibles;
+  const showGrid = isReady && hasCollectibles;
 
   return (
-    <Stack gap="space.04">
-      {showHeader && (
-        <Flex
-          alignItems="center"
-          justifyContent="space-between"
-          px={[0, 'space.05']}
-          py="space.05"
-          width="100%"
-        >
-          <Stack gap="space.01">
-            <styled.span textStyle="label.03" margin="0">
-              Amount
-            </styled.span>
-            <styled.h2 textStyle="heading.05" margin="0">
-              {amount}
-            </styled.h2>
-          </Stack>
+    <Stack gap="space.04" flex={1}>
+      {showGrid && (
+        <Flex justifyContent="space-between" alignItems="flex-start">
+          <Box>
+            <BasicTooltip
+              side="right"
+              label="Total collectibles in this account, including: Stacks NFTs, BNS names, Stamps and Ordinal Inscriptions on Bitcoin."
+            >
+              <Flag
+                reverse
+                spacing="space.01"
+                img={<InfoCircleIcon color="ink.text-subdued" display="inline" variant="small" />}
+              >
+                <styled.span textStyle="label.02">Amount</styled.span>
+              </Flag>
+            </BasicTooltip>
+            <Box pt="space.01">
+              <styled.h2 textStyle="heading.05">{amount}</styled.h2>
+            </Box>
+          </Box>
 
           <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
-              <styled.button
-                type="button"
-                height="40px"
-                width="40px"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                borderRadius="999px"
-                border="default"
-                bg="ink.background-primary"
-                _hover={{ bg: 'ink.component-background-hover', cursor: 'pointer' }}
+              <IconButton
+                icon={<SettingsSliderIcon variant="small" />}
                 aria-label="Manage collectibles"
                 data-testid="manage-collectibles-btn"
-              >
-                <SettingsSliderIcon variant="small" />
-              </styled.button>
+                width="40px"
+                height="40px"
+              />
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
               <DropdownMenu.Content align="end" sideOffset={8}>
@@ -125,10 +131,12 @@ export function CollectiblesLayout({
         </Box>
       )}
 
-      {isLoading && <CollectiblesLoading />}
+      {showLoading && <CollectiblesLoading />}
 
-      {!isLoading && !isError && hasCollectibles ? (
-        <Box width="100%">
+      {showEmpty && <CollectiblesEmpty />}
+
+      {showGrid ? (
+        <Box width="100%" borderRadius="xs" overflow="hidden">
           <styled.div
             display="grid"
             gridTemplateColumns={['repeat(2, 1fr)', 'repeat(auto-fill, minmax(180px, 1fr))']}
@@ -137,6 +145,13 @@ export function CollectiblesLayout({
           </styled.div>
         </Box>
       ) : null}
+
+      {isReady && (
+        <Stack gap="space.04">
+          <CollectiblesMarketplaces />
+          <CollectiblesLearn />
+        </Stack>
+      )}
     </Stack>
   );
 }

@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
-import { CollectibleCard } from './collectible-card.web';
-import { ImageUnavailable } from './image-unavailable.web';
+import { CollectibleCard } from './collectible-card';
+import { ImageUnavailable } from './image-unavailable';
 
 export interface CollectibleImageProps {
   alt?: string;

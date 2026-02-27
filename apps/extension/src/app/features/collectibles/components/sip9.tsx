@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import { type Sip9MediaInfo, getSip9MediaInfo } from '@leather.io/features';
 import type { Sip9Asset } from '@leather.io/models';
 
-import { CollectibleAudio } from './collectible-audio.web';
-import { CollectibleGltf } from './collectible-gltf.web';
-import { CollectibleImage } from './collectible-image.web';
-import { CollectibleVideo } from './collectible-video.web';
+import { CollectibleAudio } from './collectible-audio';
+import { CollectibleGltf } from './collectible-gltf';
+import { CollectibleImage } from './collectible-image';
+import { CollectibleVideo } from './collectible-video';
 
 interface Sip9Props {
   item: Sip9Asset;

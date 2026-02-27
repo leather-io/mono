@@ -12,7 +12,6 @@ export function CollectibleCard({ children, ...props }: CollectibleCardProps) {
       width="100%"
       position="relative"
       overflow="hidden"
-      borderRadius="xs"
       _before={{
         content: '""',
         display: 'block',

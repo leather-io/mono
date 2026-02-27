@@ -19,7 +19,7 @@ export const ORD_IO_URL = 'https://ord.io';
 export const GAMMA_URL = 'https://gamma.io';
 export const GAMMA_API_URL: string = `${GAMMA_URL}/api`;
 export const MAGIC_EDEN_URL = 'https://magiceden.io/bitcoin';
-export const BNS_REGISTRATION_URL = 'https://www.bnsv2.com/';
+export const BNS_REGISTRATION_URL = 'https://bns.one/';
 export const LEATHER_IPFS_GATEWAY_URL = 'https://leather.quicknode-ipfs.com/ipfs/';
 export const SBTC_RECLAIM_URL = 'https://app.stacks.co/reclaim?depositTxId=';
 
@@ -75,15 +75,17 @@ export const TOKEN_NAME_LENGTH = 4;
 
 export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
+export const LEATHER_SUPPORT_GUIDES = 'https://app.leather.io/support';
 export const LEATHER_GUIDES_URL = 'https://leather.io/guides';
 export const LEATHER_GUIDES_UTXO_PROTECTION_URL = 'https://leather.io/guides/utxo-protection';
-export const LEATHER_GUIDES_GETTING_STARTED_URL = 'https://leather.io/guides/getting-started';
-export const LEATHER_GUIDES_ORDINALS_URL = 'https://leather.io/guides/ordinals';
+export const LEATHER_GUIDES_GETTING_STARTED_URL = 'https://app.leather.io/support/get-started';
+export const LEATHER_GUIDES_ORDINALS_URL =
+  'https://app.leather.io/support/guide/what-are-bitcoin-ordinals';
 export const LEATHER_GUIDES_BNS_URL = 'https://leather.io/guides/bns';
 
 export const BTC_US_URL = 'https://btc.us/';
 
-export const LEATHER_GUIDES_CONNECT_DAPPS: string = `${LEATHER_GUIDES_URL}/connect-dapps`;
+export const LEATHER_GUIDES_CONNECT_DAPPS = 'https://leather.io/guides/connect-dapps';
 
 export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 

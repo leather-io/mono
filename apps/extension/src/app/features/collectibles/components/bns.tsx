@@ -1,6 +1,6 @@
 import { Box, styled } from 'leather-styles/jsx';
 
-import { CollectibleCard } from './collectible-card.web';
+import { CollectibleCard } from './collectible-card';
 
 interface BnsImageContentProps {
   alt?: string;

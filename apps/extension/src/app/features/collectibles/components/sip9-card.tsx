@@ -1,8 +1,8 @@
 import type { Sip9Asset } from '@leather.io/models';
 
-import { BnsImage } from './bns.web';
-import { ImageUnavailable } from './image-unavailable.web';
-import { Sip9 } from './sip9.web';
+import { BnsImage } from './bns';
+import { ImageUnavailable } from './image-unavailable';
+import { Sip9 } from './sip9';
 
 interface Sip9CardProps {
   item: Sip9Asset;
