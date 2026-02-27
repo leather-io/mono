@@ -39,7 +39,12 @@ export function CurrencyModeSwitcher({ secondaryAmount, onModeSwitch }: Currency
               transition={{ duration: 0.15 }}
               style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
             >
-              <styled.span textStyle="label.03" color="ink.text-subdued">
+              <styled.span
+                textStyle="label.03"
+                color="ink.text-subdued"
+                position="relative"
+                top={0.5}
+              >
                 {formatCurrency(secondaryAmount.value)}
               </styled.span>
               <ArrowTopBottomIcon variant="small" color="ink.text-subdued" />
