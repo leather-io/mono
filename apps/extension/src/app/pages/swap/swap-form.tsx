@@ -4,6 +4,7 @@ import { Box, Divider, Flex } from 'leather-styles/jsx';
 
 import { AccountSwapAsset } from '@leather.io/services';
 import { useLiveSwapEstimate, useSwapContext } from '@leather.io/state/swap';
+import { Button } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -16,6 +17,7 @@ import { AssetSelectorToggle } from '@app/pages/swap/components/asset-selector-t
 import { AssetSelector } from '@app/pages/swap/components/asset-selector/asset-selector';
 import { AssetSelectorSheet } from '@app/pages/swap/components/asset-selector/asset-selector-sheet';
 import { FlipButton } from '@app/pages/swap/components/flip-button';
+import { QuotePreview } from '@app/pages/swap/components/quote-preview/quote-preview';
 import { TargetAmountPreview } from '@app/pages/swap/components/target-amount-preview';
 
 export function SwapForm() {
@@ -31,6 +33,7 @@ export function SwapForm() {
     networkFeeQuery,
     baseMarketDataQuery,
     networkFeeAssetMarkedDataQuery,
+    canSubmit,
   } = useSwapContext();
 
   const liveEstimate = useLiveSwapEstimate({
@@ -92,8 +95,6 @@ export function SwapForm() {
 
             <Divider marginY="space.05" borderColor="ink.border-transparent" />
 
-            <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
-
             <Flex justifyContent="space-between" alignItems="flex-start">
               <TargetAmountPreview
                 marketData={targetMarketDataQuery.data}
@@ -114,7 +115,15 @@ export function SwapForm() {
                 />
               </Flex>
             </Flex>
+
+            <FlipButton isVisible={state.assetFlippingAllowed} onPress={actions.flipAssets} />
           </Card>
+
+          <Flex direction="column" mt="space.04" gap="space.03">
+            <Button disabled={!canSubmit}>Continue</Button>
+
+            <QuotePreview state={state} liveEstimate={liveEstimate} />
+          </Flex>
 
           <AssetSelectorSheet
             type={state.selectingAsset}
