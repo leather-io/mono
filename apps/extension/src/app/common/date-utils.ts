@@ -17,9 +17,9 @@ dayjs.extend(timezone);
 // }
 
 // Convert ISO date to locale date taking into account user timezone
-function isoDateToLocalDate(isoDate: string): string {
-  return dayjs.tz(isoDate).format('YYYY-MM-DD');
-}
+// function isoDateToLocalDate(isoDate: string): string {
+//   return dayjs.tz(isoDate).format('YYYY-MM-DD');
+// }
 
 // TODO: double check if this is needed
 // // txDate is of the form YYYY-MM-DD
@@ -33,10 +33,11 @@ function isoDateToLocalDate(isoDate: string): string {
 //   return date.format('MMM Do, YYYY');
 // }
 
-export function isoDateToLocalDateSafe(isoDate: string) {
-  try {
-    return isoDateToLocalDate(isoDate);
-  } catch {
-    return;
-  }
-}
+// TODO: double check if this is needed
+// export function isoDateToLocalDateSafe(isoDate: string) {
+//   try {
+//     return isoDateToLocalDate(isoDate);
+//   } catch {
+//     return;
+//   }
+// }

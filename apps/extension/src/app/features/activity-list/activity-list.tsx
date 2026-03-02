@@ -95,7 +95,6 @@ export function ActivityList() {
     updateSubmittedTransactions(stacksPendingTransactions);
   }, [stacksAddress, stacksPendingTransactions, updateSubmittedTransactions]);
 
-  const historicalActivity = useMemo(() => activityQuery.data ?? [], [activityQuery.data]);
   const submittedActivity = createSubmittedActivityViews({ submittedTransactions, network });
   const sbtcPendingActivity: SbtcDepositRow[] = pendingSbtcDeposits.map(deposit => ({
     key: `sbtc-deposit-${deposit.bitcoinTxid}-${deposit.bitcoinTxOutputIndex}`,
@@ -104,8 +103,8 @@ export function ActivityList() {
   }));
 
   const flatActivity = useMemo(
-    () => [...submittedActivity, ...sbtcPendingActivity, ...historicalActivity],
-    [submittedActivity, sbtcPendingActivity, historicalActivity]
+    () => [...submittedActivity, ...sbtcPendingActivity, ...(activityQuery.data ?? [])],
+    [submittedActivity, sbtcPendingActivity, activityQuery.data]
   );
 
   const activity = useMemo(() => insertDateHeaders(flatActivity), [flatActivity]);
