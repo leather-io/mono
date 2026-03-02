@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.2.0](https://github.com/leather-io/mono/compare/@leather.io/features-v1.1.14...@leather.io/features-v1.2.0) (2026-03-02)
+
+
+### Features
+
+* **extension:** implement token details page ([4096727](https://github.com/leather-io/mono/commit/4096727fa624849cc74425e488c9a494b89c4c2a))
+* **extension:** overhaul collectibles tab with new UI and service integration ([9412c29](https://github.com/leather-io/mono/commit/9412c2951d423807a44ba4d96c3164f1956472cf))
+* **extension:** trending tokens ([f3ec298](https://github.com/leather-io/mono/commit/f3ec29826661db843dd2dc3e4b57e0acc9dcdbcb))
+
+
+### Bug Fixes
+
+* playwright tests ([eaf96c9](https://github.com/leather-io/mono/commit/eaf96c9400431c7fbd539b8e5cd7abc86c327f5b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.32.0
+    * @leather.io/models bumped to 0.54.0
+    * @leather.io/services bumped to 1.49.0
+    * @leather.io/stacks bumped to 1.19.13
+    * @leather.io/tokens bumped to 0.26.0
+    * @leather.io/utils bumped to 0.50.0
+
 ## [1.1.14](https://github.com/leather-io/mono/compare/@leather.io/features-v1.1.13...@leather.io/features-v1.1.14) (2026-02-13)
 
 

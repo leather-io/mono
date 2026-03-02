@@ -939,6 +939,25 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.37.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.36.6...@leather.io/bitcoin-v0.37.0) (2026-03-02)
+
+
+### Features
+
+* **extension:** implement taproot sends ([c4bfa96](https://github.com/leather-io/mono/commit/c4bfa960658d29bb0427f756725e87bdf77fd7b7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.32.0
+    * @leather.io/crypto bumped to 1.12.17
+    * @leather.io/models bumped to 0.54.0
+    * @leather.io/utils bumped to 0.50.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.11
+
 ## [0.36.6](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.36.5...@leather.io/bitcoin-v0.36.6) (2026-02-12)
 
 

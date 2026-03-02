@@ -489,6 +489,32 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.107.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.106.1...@leather.io/ui-v1.107.0) (2026-03-02)
+
+
+### Features
+
+* **extension:** add swap asset selector ([fea3884](https://github.com/leather-io/mono/commit/fea3884c5077da671c7eae11b57ce6672144f0b7))
+* **ui:** add `useAmountField` hooks for web and native ([ca8f983](https://github.com/leather-io/mono/commit/ca8f983ab20895f384a88e7c002ad6e1ce41fb7f))
+* **ui:** add a web version of the slidePair animation preset ([a08844e](https://github.com/leather-io/mono/commit/a08844e6f106a9f04e98002a902c9b17faa6a514))
+
+
+### Bug Fixes
+
+* **extension:** update storybook version ([10f91f4](https://github.com/leather-io/mono/commit/10f91f4edb59fda19e81b42654083356a33fc2bb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.26.0
+    * @leather.io/utils bumped to 0.50.0
+  * devDependencies
+    * @leather.io/features bumped to 1.2.0
+    * @leather.io/models bumped to 0.54.0
+    * @leather.io/panda-preset bumped to 0.16.2
+
 ## [1.106.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.106.0...@leather.io/ui-v1.106.1) (2026-02-13)
 
 

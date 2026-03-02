@@ -6,6 +6,64 @@ No unreleased changes.
 
 ---
 
+## [6.95.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.94.2...@leather.io/extension-v6.95.0) (2026-03-02)
+
+
+### Features
+
+* **extension:** add "set to max" to asset balance in swap ([9f90463](https://github.com/leather-io/mono/commit/9f90463d51137114cab6b285327651aaf75e4dcc))
+* **extension:** add `SearchInput` component ([383e949](https://github.com/leather-io/mono/commit/383e949cca7e90fb647c96ddf294f311abf41404))
+* **extension:** add base asset section to swap form ([4897fee](https://github.com/leather-io/mono/commit/4897feebc903d3ba68495b11fe93e72ed1dff714))
+* **extension:** add flip button to toggle swap assets ([efd69f9](https://github.com/leather-io/mono/commit/efd69f9d0008330ef8f5e4e9fbf5e66ddce1ef01))
+* **extension:** add swap amount field ([5316ce2](https://github.com/leather-io/mono/commit/5316ce281e6b75184644d8581536c7ca81dda062))
+* **extension:** add swap asset selector ([fea3884](https://github.com/leather-io/mono/commit/fea3884c5077da671c7eae11b57ce6672144f0b7))
+* **extension:** add swap target amount preview ([22d1cd1](https://github.com/leather-io/mono/commit/22d1cd190fdde4800f26d105374b131d21561856))
+* **extension:** adjust the text position in swap currency mode switcher ([9187d63](https://github.com/leather-io/mono/commit/9187d63ee7a7f0333d935bda3495c827d8fbe75d))
+* **extension:** implement taproot sends ([c4bfa96](https://github.com/leather-io/mono/commit/c4bfa960658d29bb0427f756725e87bdf77fd7b7))
+* **extension:** implement token details page ([4096727](https://github.com/leather-io/mono/commit/4096727fa624849cc74425e488c9a494b89c4c2a))
+* **extension:** overhaul collectibles tab with new UI and service integration ([9412c29](https://github.com/leather-io/mono/commit/9412c2951d423807a44ba4d96c3164f1956472cf))
+* **extension:** trending tokens ([f3ec298](https://github.com/leather-io/mono/commit/f3ec29826661db843dd2dc3e4b57e0acc9dcdbcb))
+* **extension:** wire up SwapProvider ([d52f217](https://github.com/leather-io/mono/commit/d52f21750601b39aa1197fca939019c452be5193))
+
+
+### Bug Fixes
+
+* audit cves ([4e54c65](https://github.com/leather-io/mono/commit/4e54c657a2330652a4ebd8603e1579b2f659a9cc))
+* audit deps ([a20e840](https://github.com/leather-io/mono/commit/a20e840332768b4da14d562c9a0cd4f367d609cd))
+* **extension:** broken inscrpition discard ([05a0309](https://github.com/leather-io/mono/commit/05a0309577ccd076f31d14312bf317c3d48d2edd))
+* **extension:** broken inscrpition discard ([5ba05bb](https://github.com/leather-io/mono/commit/5ba05bb4717893b211bd0e49e264023d75ff036d))
+* **extension:** flag token details ([c4cbb48](https://github.com/leather-io/mono/commit/c4cbb480f384237d051289b24bef57403dc9e684))
+* **extension:** flag trending tokens ([1f1054f](https://github.com/leather-io/mono/commit/1f1054f9f5ef0a0b92c21fe819738603990eb464))
+* **extension:** include protected balance in BTC token details total ([cb90d8f](https://github.com/leather-io/mono/commit/cb90d8f5665329e9d8da4ef3f4a0dc72bfe02b6a))
+* **extension:** remove recover taproot feature ([145cee5](https://github.com/leather-io/mono/commit/145cee55d56a20100cb11e8684b33652fd53eb66))
+* **extension:** send max ([e307e40](https://github.com/leather-io/mono/commit/e307e4063d036f6be564f421b230bcb2ee3dd4ea))
+* **extension:** update storybook version ([10f91f4](https://github.com/leather-io/mono/commit/10f91f4edb59fda19e81b42654083356a33fc2bb))
+* playwright tests ([eaf96c9](https://github.com/leather-io/mono/commit/eaf96c9400431c7fbd539b8e5cd7abc86c327f5b))
+* revert modal changes ([68e109f](https://github.com/leather-io/mono/commit/68e109f2097f9fa8b290dcb265aff65391a46faf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.19.0
+    * @leather.io/bitcoin bumped to 0.37.0
+    * @leather.io/constants bumped to 0.32.0
+    * @leather.io/crypto bumped to 1.12.17
+    * @leather.io/features bumped to 1.2.0
+    * @leather.io/models bumped to 0.54.0
+    * @leather.io/provider bumped to 1.6.19
+    * @leather.io/queries bumped to 0.6.1
+    * @leather.io/query bumped to 2.45.14
+    * @leather.io/rpc bumped to 2.21.11
+    * @leather.io/services bumped to 1.49.0
+    * @leather.io/stacks bumped to 1.19.13
+    * @leather.io/tokens bumped to 0.26.0
+    * @leather.io/ui bumped to 1.107.0
+    * @leather.io/utils bumped to 0.50.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.16.2
+
 ## [6.94.2](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.94.1...@leather.io/extension-v6.94.2) (2026-02-13)
 
 

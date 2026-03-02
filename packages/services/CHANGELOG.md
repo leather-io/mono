@@ -413,6 +413,36 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.49.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.48.0...@leather.io/services-v1.49.0) (2026-03-02)
+
+
+### Features
+
+* **models,services:** unify SwapDex and YieldProvider into StacksProtocol model ([0d7f44c](https://github.com/leather-io/mono/commit/0d7f44cb2961c57aa0730066b39697e5ab7ca632))
+
+
+### Bug Fixes
+
+* **services:** add pagination for nft holdings endpoint ([4005a7a](https://github.com/leather-io/mono/commit/4005a7afa93013e3de729c257065a89903c8a99b))
+* **services:** failing rate limiter unit test ([2fb4ced](https://github.com/leather-io/mono/commit/2fb4ced24c73db03421c0165461876a86ca4eabc))
+* **services:** filter lp tokens from collectibles ([252454c](https://github.com/leather-io/mono/commit/252454ca25e4aeebe099dd8bcf7ba94753ed855f))
+* **services:** handle api errors gracefully in gamma and bns services ([26af965](https://github.com/leather-io/mono/commit/26af965e152ecdd27ff2a0412401d7afd41b8839))
+* **services:** prevent ipfs url double-encoding ([095548b](https://github.com/leather-io/mono/commit/095548bc1dd79ee44a9054a4cc623144185f2d71))
+* **services:** use promise.allsettled for resilient nft metadata fetching ([8275367](https://github.com/leather-io/mono/commit/827536792e417e1bd0a1171ad4c677a452506707))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.37.0
+    * @leather.io/constants bumped to 0.32.0
+    * @leather.io/models bumped to 0.54.0
+    * @leather.io/stacks bumped to 1.19.13
+    * @leather.io/utils bumped to 0.50.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.11
+
 ## [1.48.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.47.1...@leather.io/services-v1.48.0) (2026-02-13)
 
 
