@@ -27,7 +27,7 @@ export function TokenDetailsBalanceItem({
       return (
         <styled.button
           type="button"
-          textStyle="caption.02"
+          textStyle="caption.01"
           color="ink.text-subdued"
           textDecoration="underline"
           textAlign="left"
@@ -42,7 +42,7 @@ export function TokenDetailsBalanceItem({
       );
     }
     return (
-      <styled.span textStyle="caption.02" color="ink.text-subdued">
+      <styled.span textStyle="caption.01" color="ink.text-subdued" textAlign="left">
         {truncateMiddle(address, 6)}
       </styled.span>
     );
@@ -50,7 +50,7 @@ export function TokenDetailsBalanceItem({
 
   const content = (
     <>
-      <Stack gap="2px" minWidth="0">
+      <Stack gap="2px" minWidth="0" alignItems="flex-start">
         <styled.span textStyle="label.02">{title}</styled.span>
         {addressElement}
       </Stack>
