@@ -92,16 +92,12 @@ export function useCurrentAccountDiscardedInscriptions() {
       },
       discardInscriptions(inscription: InscriptionIdentifier | InscriptionIdentifier[]) {
         dispatch(
-          settingsSlice.actions.discardInscriptions(
-            ensureArray(inscription).map(makeInscriptionId)
-          )
+          settingsSlice.actions.discardInscriptions(ensureArray(inscription).map(makeInscriptionId))
         );
       },
       recoverInscriptions(inscription: InscriptionIdentifier | InscriptionIdentifier[]) {
         dispatch(
-          settingsSlice.actions.recoverInscriptions(
-            ensureArray(inscription).map(makeInscriptionId)
-          )
+          settingsSlice.actions.recoverInscriptions(ensureArray(inscription).map(makeInscriptionId))
         );
       },
     }),
