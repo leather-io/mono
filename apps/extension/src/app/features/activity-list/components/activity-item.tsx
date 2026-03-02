@@ -89,7 +89,7 @@ function Item({ item, formatCurrency }: ItemProps) {
               balance={balances.quote}
               operator={balances.operator}
               color={balances.color}
-              textStyle="body.02"
+              textStyle="label.02"
               formatCurrency={formatCurrency}
             />
           ) : null}
