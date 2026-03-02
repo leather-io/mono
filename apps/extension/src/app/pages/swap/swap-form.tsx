@@ -19,6 +19,7 @@ import { AssetSelectorSheet } from '@app/pages/swap/components/asset-selector/as
 import { FlipButton } from '@app/pages/swap/components/flip-button';
 import { QuotePreview } from '@app/pages/swap/components/quote-preview/quote-preview';
 import { TargetAmountPreview } from '@app/pages/swap/components/target-amount-preview';
+import { focusAmountField } from '@app/pages/swap/swap-utils';
 
 export function SwapForm() {
   const amountFieldRef = useRef<HTMLInputElement>(null);
@@ -52,13 +53,9 @@ export function SwapForm() {
     action[type](asset);
   }
 
-  function handleSheetCloseAutoFocus(e: Event) {
-    if (!amountFieldRef.current) return;
-
+  function handleAssetSheetCloseAutoFocus(e: Event) {
     e.preventDefault();
-    amountFieldRef.current.focus();
-    const length = amountFieldRef.current.value.length;
-    amountFieldRef.current.setSelectionRange(length, length);
+    focusAmountField(amountFieldRef.current);
   }
 
   return (
@@ -129,7 +126,7 @@ export function SwapForm() {
             type={state.selectingAsset}
             isOpen={state.selectingAsset !== null}
             onClose={actions.closeAssetSelector}
-            onCloseAutoFocus={handleSheetCloseAutoFocus}
+            onCloseAutoFocus={handleAssetSheetCloseAutoFocus}
           >
             {state.selectingAsset && (
               <AssetSelector

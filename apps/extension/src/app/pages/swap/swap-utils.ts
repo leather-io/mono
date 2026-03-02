@@ -24,3 +24,10 @@ export function formatSwapRate({ swapRate, baseAsset, targetAsset }: FormatSwapR
 export function sumFeesInQuoteCurrency(networkFee: Money, providerFee?: Money): Money {
   return providerFee ? sumMoney([providerFee, networkFee]) : networkFee;
 }
+
+export function focusAmountField(input: HTMLInputElement | null) {
+  if (!input) return;
+  input.focus();
+  const length = input.value.length;
+  input.setSelectionRange(length, length);
+}

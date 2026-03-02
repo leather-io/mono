@@ -8,6 +8,8 @@ import { Currency, InputCurrencyMode, SwappableFungibleCryptoAsset } from '@leat
 import { SecondaryAmount, isUserInputEffectivelyZero } from '@leather.io/state/swap';
 import { slidePair } from '@leather.io/ui';
 
+import { focusAmountField } from '@app/pages/swap/swap-utils';
+
 import { CurrencyModeSwitcher } from '../currency-mode-switcher';
 import { AmountFieldError } from './amount-field-error';
 import { PrimaryValue } from './amount-field-primary-value';
@@ -37,6 +39,11 @@ export function AmountField({
 }: AmountFieldProps) {
   const showErrorMessage = isDefined(errorMessage) && !isUserInputEffectivelyZero(value);
   const currency = inputCurrencyMode === 'quote' ? quoteCurrencyPreference : undefined;
+
+  function handleCurrencyModeSwitch() {
+    onInputCurrencyModeSwitch();
+    focusAmountField(inputRef?.current ?? null);
+  }
 
   return (
     <Flex direction="column" gap="space.03">
@@ -72,7 +79,7 @@ export function AmountField({
             >
               <CurrencyModeSwitcher
                 secondaryAmount={secondaryAmount}
-                onModeSwitch={onInputCurrencyModeSwitch}
+                onModeSwitch={handleCurrencyModeSwitch}
               />
             </motion.div>
           )}
