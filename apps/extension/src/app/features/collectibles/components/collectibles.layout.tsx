@@ -33,7 +33,7 @@ export function CollectiblesLayout({
   isError,
   onRefresh,
 }: CollectiblesLayoutProps) {
-  const { recoverAllInscriptions, discardAllInscriptions } =
+  const { inscriptions, recoverInscriptions, discardInscriptions } =
     useCurrentAccountDiscardedInscriptions();
   const showHeader = !isLoading && hasCollectibles;
 
@@ -86,7 +86,7 @@ export function CollectiblesLayout({
                   />
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
-                  onSelect={recoverAllInscriptions}
+                  onSelect={() => recoverInscriptions(inscriptions ?? [])}
                   data-testid="recover-all-inscriptions"
                 >
                   <ItemLayout
@@ -97,7 +97,7 @@ export function CollectiblesLayout({
                   />
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
-                  onSelect={discardAllInscriptions}
+                  onSelect={() => discardInscriptions(inscriptions ?? [])}
                   data-testid="unprotect-all-inscriptions"
                 >
                   <ItemLayout

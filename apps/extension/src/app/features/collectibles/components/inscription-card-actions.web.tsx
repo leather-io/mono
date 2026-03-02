@@ -32,7 +32,7 @@ export function InscriptionCardActions({ item }: InscriptionCardActionsProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isHovered, bind] = useHoverWithChildren();
-  const { hasInscriptionBeenDiscarded, discardInscription, recoverInscription } =
+  const { hasInscriptionBeenDiscarded, discardInscriptions, recoverInscriptions } =
     useCurrentAccountDiscardedInscriptions();
 
   const isDiscarded = hasInscriptionBeenDiscarded(item);
@@ -102,7 +102,7 @@ export function InscriptionCardActions({ item }: InscriptionCardActionsProps) {
                 </DropdownMenu.Item>
                 {isDiscarded ? (
                   <DropdownMenu.Item
-                    onSelect={() => recoverInscription(item)}
+                    onSelect={() => recoverInscriptions(item)}
                     data-testid="inscription-menu-protect"
                   >
                     <Flag img={<LockIcon />} width="100%">
@@ -111,7 +111,7 @@ export function InscriptionCardActions({ item }: InscriptionCardActionsProps) {
                   </DropdownMenu.Item>
                 ) : (
                   <DropdownMenu.Item
-                    onSelect={() => discardInscription(item)}
+                    onSelect={() => discardInscriptions(item)}
                     data-testid="inscription-menu-unprotect"
                   >
                     <Flag img={<UnlockIcon />} width="100%">

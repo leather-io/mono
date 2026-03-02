@@ -54,14 +54,13 @@ export const settingsSlice = createSlice({
     dangerouslyChosenToBypassAllInscriptionChecks(state) {
       state.bypassInscriptionChecks = true;
     },
-    discardInscription(state, action: PayloadAction<string>) {
+    discardInscriptions(state, action: PayloadAction<string[]>) {
       if (!Array.isArray(state.discardedInscriptions)) state.discardedInscriptions = [];
-      state.discardedInscriptions.push(action.payload);
+      state.discardedInscriptions.push(...action.payload);
     },
-    recoverInscription(state, action: PayloadAction<string>) {
-      state.discardedInscriptions = state.discardedInscriptions.filter(
-        inscriptionId => inscriptionId !== action.payload
-      );
+    recoverInscriptions(state, action: PayloadAction<string[]>) {
+      const ids = new Set(action.payload);
+      state.discardedInscriptions = state.discardedInscriptions.filter(id => !ids.has(id));
     },
     resetInscriptionState(state) {
       state.discardedInscriptions = [];

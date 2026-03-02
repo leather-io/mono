@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 
 import type { InscriptionAsset } from '@leather.io/models';
+import { ensureArray } from '@leather.io/utils';
 
 import { useCurrentAccountInscriptions } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
 import { RootState } from '@app/store';
@@ -84,25 +85,24 @@ export function useCurrentAccountDiscardedInscriptions() {
 
   return useMemo(
     () => ({
+      inscriptions: currentAccountInscriptions.inscriptions,
       discardedInscriptions,
-      discardAllInscriptions: () => {
-        currentAccountInscriptions.inscriptions?.forEach(inscription =>
-          dispatch(settingsSlice.actions.discardInscription(makeInscriptionId(inscription)))
-        );
-      },
-      recoverAllInscriptions: () => {
-        currentAccountInscriptions.inscriptions?.forEach(inscription =>
-          dispatch(settingsSlice.actions.recoverInscription(makeInscriptionId(inscription)))
-        );
-      },
       hasInscriptionBeenDiscarded(inscription: InscriptionIdentifier) {
         return discardedInscriptions.includes(makeInscriptionId(inscription));
       },
-      discardInscription(inscription: InscriptionIdentifier) {
-        dispatch(settingsSlice.actions.discardInscription(makeInscriptionId(inscription)));
+      discardInscriptions(inscription: InscriptionIdentifier | InscriptionIdentifier[]) {
+        dispatch(
+          settingsSlice.actions.discardInscriptions(
+            ensureArray(inscription).map(makeInscriptionId)
+          )
+        );
       },
-      recoverInscription(inscription: InscriptionIdentifier) {
-        dispatch(settingsSlice.actions.recoverInscription(makeInscriptionId(inscription)));
+      recoverInscriptions(inscription: InscriptionIdentifier | InscriptionIdentifier[]) {
+        dispatch(
+          settingsSlice.actions.recoverInscriptions(
+            ensureArray(inscription).map(makeInscriptionId)
+          )
+        );
       },
     }),
     [currentAccountInscriptions.inscriptions, discardedInscriptions, dispatch]
