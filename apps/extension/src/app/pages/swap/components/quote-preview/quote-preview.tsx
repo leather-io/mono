@@ -7,7 +7,6 @@ import { QuotePreviewConstrained } from './quote-preview-constrained';
 import { QuotePreviewContent } from './quote-preview-content';
 import { QuotePreviewEmptyState } from './quote-preview-empty-state';
 import { QuotePreviewError } from './quote-preview-error';
-import { QuotePreviewLoadingIndicator } from './quote-preview-loading-indicator';
 
 interface QuotePreviewProps {
   state: SwapState;
@@ -28,8 +27,8 @@ function renderContent(state: SwapState, liveEstimate: LiveSwapEstimate) {
     case 'loading':
       if (state.baseAmount === '0' || !state.targetSwapAsset) return null;
       return (
-        <motion.div key="loading" {...loadingTransition}>
-          <QuotePreviewLoadingIndicator />
+        <motion.div key="content" {...contentTransition}>
+          <QuotePreviewContent isLoading />
         </motion.div>
       );
     case 'error':
@@ -66,7 +65,7 @@ function renderContent(state: SwapState, liveEstimate: LiveSwapEstimate) {
       assertExistence(state.baseSwapAsset, "QuotePreview expects 'baseSwapAsset' to be set.");
       assertExistence(state.targetSwapAsset, "QuotePreview expects 'targetSwapAsset' to be set.");
       return (
-        <motion.div key="success" {...contentTransition}>
+        <motion.div key="content" {...contentTransition}>
           <QuotePreviewContent
             baseAsset={state.baseSwapAsset.asset}
             targetAsset={state.targetSwapAsset.asset}
@@ -85,10 +84,4 @@ const contentTransition = {
   initial: { opacity: 0 },
   animate: { opacity: 1, transition: { duration: 0.16, ease: easeOut } },
   exit: { opacity: 0, transition: { duration: 0.16, ease: easeOut } },
-};
-
-const loadingTransition = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.6, ease: easeOut } },
-  exit: { opacity: 0, transition: { duration: 0.2, ease: easeOut } },
 };
