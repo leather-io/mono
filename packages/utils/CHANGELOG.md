@@ -368,6 +368,22 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.50.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.49.10...@leather.io/utils-v0.50.0) (2026-03-02)
+
+
+### Features
+
+* **extension:** overhaul collectibles tab with new UI and service integration ([9412c29](https://github.com/leather-io/mono/commit/9412c2951d423807a44ba4d96c3164f1956472cf))
+* **mobile:** trending tokens ([d321fc5](https://github.com/leather-io/mono/commit/d321fc529f0802f06fa6c2d68ad48606dcba88bc))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.32.0
+    * @leather.io/models bumped to 0.54.0
+
 ## [0.49.10](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.49.9...@leather.io/utils-v0.49.10) (2026-02-12)
 
 

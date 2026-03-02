@@ -36,6 +36,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.54.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.53.0...@leather.io/models-v0.54.0) (2026-03-02)
+
+
+### Features
+
+* **models,services:** unify SwapDex and YieldProvider into StacksProtocol model ([0d7f44c](https://github.com/leather-io/mono/commit/0d7f44cb2961c57aa0730066b39697e5ab7ca632))
+
 ## [0.53.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.52.0...@leather.io/models-v0.53.0) (2026-02-09)
 
 

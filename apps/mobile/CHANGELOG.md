@@ -12,6 +12,43 @@
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
+## [2.101.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.100.1...@leather.io/mobile-v2.101.0) (2026-03-02)
+
+
+### Features
+
+* **extension:** implement taproot sends ([c4bfa96](https://github.com/leather-io/mono/commit/c4bfa960658d29bb0427f756725e87bdf77fd7b7))
+* **extension:** trending tokens ([f3ec298](https://github.com/leather-io/mono/commit/f3ec29826661db843dd2dc3e4b57e0acc9dcdbcb))
+* **mobile:** trending tokens ([d321fc5](https://github.com/leather-io/mono/commit/d321fc529f0802f06fa6c2d68ad48606dcba88bc))
+
+
+### Bug Fixes
+
+* **mobile:** display of taproot sends ([741d133](https://github.com/leather-io/mono/commit/741d1330ccced495da361c93dac0c93c34b5abc9))
+* playwright tests ([eaf96c9](https://github.com/leather-io/mono/commit/eaf96c9400431c7fbd539b8e5cd7abc86c327f5b))
+* wallet deletion ([58d7e29](https://github.com/leather-io/mono/commit/58d7e2998587aa5a499e9e4410599d03856a89a8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.19.0
+    * @leather.io/bitcoin bumped to 0.37.0
+    * @leather.io/constants bumped to 0.32.0
+    * @leather.io/crypto bumped to 1.12.17
+    * @leather.io/features bumped to 1.2.0
+    * @leather.io/models bumped to 0.54.0
+    * @leather.io/provider bumped to 1.6.19
+    * @leather.io/queries bumped to 0.6.1
+    * @leather.io/query bumped to 2.45.14
+    * @leather.io/rpc bumped to 2.21.11
+    * @leather.io/services bumped to 1.49.0
+    * @leather.io/stacks bumped to 1.19.13
+    * @leather.io/tokens bumped to 0.26.0
+    * @leather.io/ui bumped to 1.107.0
+    * @leather.io/utils bumped to 0.50.0
+
 ## [2.100.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.100.0...@leather.io/mobile-v2.100.1) (2026-02-13)
 
 

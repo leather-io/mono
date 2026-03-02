@@ -144,6 +144,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.26.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.25.2...@leather.io/tokens-v0.26.0) (2026-03-02)
+
+
+### Features
+
+* **extension:** add swap asset selector ([fea3884](https://github.com/leather-io/mono/commit/fea3884c5077da671c7eae11b57ce6672144f0b7))
+
 ## [0.25.2](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.25.1...@leather.io/tokens-v0.25.2) (2026-01-21)
 
 

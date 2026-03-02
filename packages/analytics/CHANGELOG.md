@@ -114,6 +114,25 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.19.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.18.2...@leather.io/analytics-v3.19.0) (2026-03-02)
+
+
+### Features
+
+* **extension:** overhaul collectibles tab with new UI and service integration ([9412c29](https://github.com/leather-io/mono/commit/9412c2951d423807a44ba4d96c3164f1956472cf))
+
+
+### Bug Fixes
+
+* **extension:** remove recover taproot feature ([145cee5](https://github.com/leather-io/mono/commit/145cee55d56a20100cb11e8684b33652fd53eb66))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.54.0
+
 ## [3.18.2](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.18.1...@leather.io/analytics-v3.18.2) (2026-02-09)
 
 
