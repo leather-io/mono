@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
 
+import { styled } from 'leather-styles/jsx';
+
 import { Money } from '@leather.io/models';
-import { ItemLayout, Pressable } from '@leather.io/ui';
+import { ItemLayout } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 
@@ -22,13 +24,23 @@ export function AssetSelectorItem({
   onPress,
 }: AssetSelectorItemProps) {
   return (
-    <Pressable onClick={onPress} my="space.02" px="space.05">
+    <styled.button
+      onClick={onPress}
+      display="flex"
+      width="100%"
+      justifyContent="space-between"
+      py="space.03"
+      px="space.05"
+      _hover={{
+        backgroundColor: 'ink.component-background-hover',
+      }}
+    >
       <ItemLayout
         img={icon}
         titleLeft={name}
         captionLeft={balance ? formatCurrency(balance) : ''}
         titleRight={quoteBalance ? formatCurrency(quoteBalance) : undefined}
       />
-    </Pressable>
+    </styled.button>
   );
 }

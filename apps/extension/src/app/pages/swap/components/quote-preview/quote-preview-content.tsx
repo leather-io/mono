@@ -5,31 +5,50 @@ import { Divider, Flex, styled } from 'leather-styles/jsx';
 
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { LiveSwapEstimate } from '@leather.io/state/swap';
+import { SkeletonLoader } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { formatSwapRate, sumFeesInQuoteCurrency } from '@app/pages/swap/swap-utils';
 
 import { QuoteRefetchIndicator } from './quote-refetch-indicator';
 
-interface QuotePreviewContentProps {
-  baseAsset: SwappableFungibleCryptoAsset;
-  targetAsset: SwappableFungibleCryptoAsset;
-  liveEstimate: Extract<LiveSwapEstimate, { status: 'success' }>;
-}
+type QuotePreviewContentProps =
+  | { isLoading: true }
+  | {
+      isLoading?: false;
+      baseAsset: SwappableFungibleCryptoAsset;
+      targetAsset: SwappableFungibleCryptoAsset;
+      liveEstimate: Extract<LiveSwapEstimate, { status: 'success' }>;
+    };
 
-export function QuotePreviewContent({
-  baseAsset,
-  targetAsset,
-  liveEstimate,
-}: QuotePreviewContentProps) {
-  const { selectedQuote, fees, intervalState, isRefetching } = liveEstimate;
+export function QuotePreviewContent(props: QuotePreviewContentProps) {
+  const isRefetching = props.isLoading ? false : props.liveEstimate.isRefetching;
+  const refetchStyle = useRefetchDimming(isRefetching);
+
+  if (props.isLoading) {
+    return (
+      <Flex px="space.04" direction="column">
+        <QuotePreviewRow
+          label="Rate"
+          value={<SkeletonLoader isLoading width="80px" height="16px" borderRadius="xs" />}
+        />
+        <Divider borderColor="ink.border-transparent" />
+        <QuotePreviewRow
+          label="Estimated fees"
+          value={<SkeletonLoader isLoading width="80px" height="16px" borderRadius="xs" />}
+        />
+      </Flex>
+    );
+  }
+
+  const { baseAsset, targetAsset, liveEstimate } = props;
+  const { selectedQuote, fees, intervalState } = liveEstimate;
   const formattedRate = formatSwapRate({
     swapRate: selectedQuote.swapRate,
     baseAsset,
     targetAsset,
   });
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
-  const refetchStyle = useRefetchDimming(isRefetching);
 
   return (
     <motion.div style={refetchStyle}>
