@@ -1,19 +1,18 @@
-import { useQueries } from '@tanstack/react-query';
-
+// import { useQueries } from '@tanstack/react-query';
 import { createGetBitcoinTransactionsByAddressQueryOptions } from '@leather.io/query';
 
-import { useBitcoinClient } from '../clients/bitcoin-client';
+// import { useBitcoinClient } from '../clients/bitcoin-client';
 
 export function createBitcoinTransactionsByAddressListQueries(addresses: string[], client: any) {
   return addresses.map(address =>
     createGetBitcoinTransactionsByAddressQueryOptions({ address, client })
   );
 }
+// TODO: double check if this is needed
+// export function useGetBitcoinTransactionsByAddressListQuery(addresses: string[]) {
+//   const client = useBitcoinClient();
 
-export function useGetBitcoinTransactionsByAddressListQuery(addresses: string[]) {
-  const client = useBitcoinClient();
-
-  return useQueries({
-    queries: createBitcoinTransactionsByAddressListQueries(addresses, client),
-  });
-}
+//   return useQueries({
+//     queries: createBitcoinTransactionsByAddressListQueries(addresses, client),
+//   });
+// }

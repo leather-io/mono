@@ -24,18 +24,18 @@ import { ActivityItem } from './components/activity-item';
 import { ActivityListLayout } from './components/activity-list.layout';
 import { createSubmittedActivityViews } from './submitted-activity-view';
 
-type SbtcDepositRow = {
+interface SbtcDepositRow {
   key: string;
   kind: 'sbtc-deposit';
   timestamp?: number;
   deposit: SbtcDeposit;
-};
+}
 
-type DateHeaderRow = {
+interface DateHeaderRow {
   key: string;
   kind: 'date-header';
   timestamp: number;
-};
+}
 
 type ActivityListRow = ActivityView | SbtcDepositRow | DateHeaderRow;
 
@@ -95,7 +95,6 @@ export function ActivityList() {
     updateSubmittedTransactions(stacksPendingTransactions);
   }, [stacksAddress, stacksPendingTransactions, updateSubmittedTransactions]);
 
-  const historicalActivity = activityQuery.data ?? [];
   const submittedActivity = createSubmittedActivityViews({ submittedTransactions, network });
   const sbtcPendingActivity: SbtcDepositRow[] = pendingSbtcDeposits.map(deposit => ({
     key: `sbtc-deposit-${deposit.bitcoinTxid}-${deposit.bitcoinTxOutputIndex}`,
@@ -103,11 +102,10 @@ export function ActivityList() {
     deposit,
   }));
 
-  const flatActivity: (ActivityView | SbtcDepositRow)[] = [
-    ...submittedActivity,
-    ...sbtcPendingActivity,
-    ...historicalActivity,
-  ];
+  const flatActivity = useMemo(
+    () => [...submittedActivity, ...sbtcPendingActivity, ...(activityQuery.data ?? [])],
+    [submittedActivity, sbtcPendingActivity, activityQuery.data]
+  );
 
   const activity = useMemo(() => insertDateHeaders(flatActivity), [flatActivity]);
 

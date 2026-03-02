@@ -92,27 +92,28 @@ export function useSbtcPendingDeposits(stxAddress: string) {
     pendingSbtcDeposits: deposits,
   };
 }
+// TODO: double check if this is needed
+// export function useSbtcConfirmedDeposits(stxAddress: string) {
+//   const { data: confirmedSbtcDeposits = [], isLoading: isLoadingStatusConfirmed } =
+//     useGetSbtcDeposits(stxAddress, 'confirmed');
+//   const { isLoadingBlocks, deposits } = useSbtcDeposits(confirmedSbtcDeposits);
 
-export function useSbtcConfirmedDeposits(stxAddress: string) {
-  const { data: confirmedSbtcDeposits = [], isLoading: isLoadingStatusConfirmed } =
-    useGetSbtcDeposits(stxAddress, 'confirmed');
-  const { isLoadingBlocks, deposits } = useSbtcDeposits(confirmedSbtcDeposits);
+//   return {
+//     isLoading: isLoadingStatusConfirmed || isLoadingBlocks,
+//     confirmedSbtcDeposits: deposits,
+//   };
+// }
 
-  return {
-    isLoading: isLoadingStatusConfirmed || isLoadingBlocks,
-    confirmedSbtcDeposits: deposits,
-  };
-}
+// TODO: double check if this is needed
+// export function useSbtcFailedDeposits(stxAddress: string) {
+//   const { data: failedSbtcDeposits = [], isLoading: isLoadingStatusFailed } = useGetSbtcDeposits(
+//     stxAddress,
+//     'failed'
+//   );
+//   const { isLoadingBlocks, deposits } = useSbtcDeposits(failedSbtcDeposits);
 
-export function useSbtcFailedDeposits(stxAddress: string) {
-  const { data: failedSbtcDeposits = [], isLoading: isLoadingStatusFailed } = useGetSbtcDeposits(
-    stxAddress,
-    'failed'
-  );
-  const { isLoadingBlocks, deposits } = useSbtcDeposits(failedSbtcDeposits);
-
-  return {
-    isLoading: isLoadingStatusFailed || isLoadingBlocks,
-    failedSbtcDeposits: deposits,
-  };
-}
+//   return {
+//     isLoading: isLoadingStatusFailed || isLoadingBlocks,
+//     failedSbtcDeposits: deposits,
+//   };
+// }
