@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import {
+  mockHtmlInscription,
   mockImageInscription,
   mockMainnetInscriptionsWithData,
   mockTextInscription,
@@ -140,6 +141,41 @@ test.describe('Collectibles tab', () => {
 
       const unprotectItem = page.getByTestId('unprotect-all-inscriptions');
       await expect(unprotectItem).toBeVisible();
+    });
+  });
+
+  test.describe('Inscription protection', () => {
+    test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
+      await globalPage.setupAndUseApiCalls(extensionId);
+      await mockMainnetInscriptionsWithData(globalPage.page, [
+        mockImageInscription,
+        mockTextInscription,
+        mockHtmlInscription,
+      ]);
+      await onboardingPage.signInWithTestAccount(extensionId);
+    });
+
+    test('stores all inscription IDs in state after discarding all', async ({ homePage, page }) => {
+      await homePage.clickCollectiblesTab();
+
+      await page.getByTestId('manage-collectibles-btn').click();
+      await page.getByTestId('unprotect-all-inscriptions').click();
+
+      await page.waitForTimeout(500);
+
+      const discardedInscriptions = await page.evaluate(async () => {
+        const data = await chrome.storage.local.get(['persist:root']);
+        return data['persist:root']?.settings?.discardedInscriptions ?? [];
+      });
+
+      expect(discardedInscriptions).toHaveLength(3);
+      expect(discardedInscriptions).toEqual(
+        expect.arrayContaining([
+          mockImageInscription.satpoint,
+          mockTextInscription.satpoint,
+          mockHtmlInscription.satpoint,
+        ])
+      );
     });
   });
 });

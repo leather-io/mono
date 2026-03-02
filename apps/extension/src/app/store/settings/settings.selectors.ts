@@ -78,27 +78,31 @@ export function useCurrentAccountDiscardedInscriptions() {
   const dispatch = useDispatch();
   const currentAccountInscriptions = useCurrentAccountInscriptions();
 
+  function makeInscriptionId({ txid, output: vout, offset }: InscriptionIdentifier) {
+    return [txid, vout, offset].join(':');
+  }
+
   return useMemo(
     () => ({
       discardedInscriptions,
-      discardAllInscriptions() {
+      discardAllInscriptions: () => {
         currentAccountInscriptions.inscriptions?.forEach(inscription =>
-          this.discardInscription(inscription)
+          dispatch(settingsSlice.actions.discardInscription(makeInscriptionId(inscription)))
         );
       },
-      recoverAllInscriptions() {
+      recoverAllInscriptions: () => {
         currentAccountInscriptions.inscriptions?.forEach(inscription =>
-          this.recoverInscription(inscription)
+          dispatch(settingsSlice.actions.recoverInscription(makeInscriptionId(inscription)))
         );
       },
-      hasInscriptionBeenDiscarded({ txid, output: vout, offset }: InscriptionIdentifier) {
-        return discardedInscriptions.includes([txid, vout, offset].join(':'));
+      hasInscriptionBeenDiscarded(inscription: InscriptionIdentifier) {
+        return discardedInscriptions.includes(makeInscriptionId(inscription));
       },
-      discardInscription({ txid, output: vout, offset }: InscriptionIdentifier) {
-        dispatch(settingsSlice.actions.discardInscription([txid, vout, offset].join(':')));
+      discardInscription(inscription: InscriptionIdentifier) {
+        dispatch(settingsSlice.actions.discardInscription(makeInscriptionId(inscription)));
       },
-      recoverInscription({ txid, output: vout, offset }: InscriptionIdentifier) {
-        dispatch(settingsSlice.actions.recoverInscription([txid, vout, offset].join(':')));
+      recoverInscription(inscription: InscriptionIdentifier) {
+        dispatch(settingsSlice.actions.recoverInscription(makeInscriptionId(inscription)));
       },
     }),
     [currentAccountInscriptions.inscriptions, discardedInscriptions, dispatch]
