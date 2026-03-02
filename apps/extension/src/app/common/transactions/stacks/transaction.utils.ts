@@ -103,12 +103,14 @@ export function getTxTitle(tx: StacksTx) {
 
 // calculate the real amount of the token based on the decimal number
 // specified in the corresponding token smart contract
-export function calculateTokenTransferAmount(
-  decimals: number,
-  amount: number | string | BigNumber
-) {
-  return new BigNumber(amount).shiftedBy(-decimals);
-}
+
+// TODO: double check if this is needed
+// export function calculateTokenTransferAmount(
+//   decimals: number,
+//   amount: number | string | BigNumber
+// ) {
+//   return new BigNumber(amount).shiftedBy(-decimals);
+// }
 
 export function isTxSponsored(tx: StacksTransactionWire) {
   return tx.auth.authType === AuthType.Sponsored;

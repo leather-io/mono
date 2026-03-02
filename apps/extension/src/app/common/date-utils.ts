@@ -11,25 +11,27 @@ dayjs.extend(advancedFormat);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export function todaysIsoDate() {
-  return new Date().toISOString().split('T')[0];
-}
+// TODO: double check if this is needed
+// export function todaysIsoDate() {
+//   return new Date().toISOString().split('T')[0];
+// }
 
 // Convert ISO date to locale date taking into account user timezone
-export function isoDateToLocalDate(isoDate: string): string {
+function isoDateToLocalDate(isoDate: string): string {
   return dayjs.tz(isoDate).format('YYYY-MM-DD');
 }
 
-// txDate is of the form YYYY-MM-DD
-export function displayDate(txDate: string): string {
-  const date = dayjs(txDate);
-  if (date.isToday()) return 'Today';
-  if (date.isYesterday()) return 'Yesterday';
-  if (dayjs().isSame(date, 'year')) {
-    return date.format('MMM Do');
-  }
-  return date.format('MMM Do, YYYY');
-}
+// TODO: double check if this is needed
+// // txDate is of the form YYYY-MM-DD
+// export function displayDate(txDate: string): string {
+//   const date = dayjs(txDate);
+//   if (date.isToday()) return 'Today';
+//   if (date.isYesterday()) return 'Yesterday';
+//   if (dayjs().isSame(date, 'year')) {
+//     return date.format('MMM Do');
+//   }
+//   return date.format('MMM Do, YYYY');
+// }
 
 export function isoDateToLocalDateSafe(isoDate: string) {
   try {
