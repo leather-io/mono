@@ -5,7 +5,7 @@ import { ArrowDownIcon, ArrowUpIcon } from '@leather.io/ui';
 
 import { isBitcoinTxInbound } from '@app/common/transactions/bitcoin/utils';
 
-function TxStatusIcon(props: { address: string; tx: BitcoinTx }) {
+function TxStatusIcon(props: { address: string | string[]; tx: BitcoinTx }) {
   const { address, tx } = props;
   if (isBitcoinTxInbound(address, tx))
     return <ArrowDownIcon color="ink.background-primary" variant="small" />;
@@ -14,7 +14,7 @@ function TxStatusIcon(props: { address: string; tx: BitcoinTx }) {
 
 interface TransactionIconProps extends CircleProps {
   transaction: BitcoinTx;
-  btcAddress: string;
+  btcAddress: string | string[];
   icon: React.ReactNode;
 }
 export function BitcoinTransactionIcon({

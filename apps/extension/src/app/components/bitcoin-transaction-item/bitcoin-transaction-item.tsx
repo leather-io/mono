@@ -21,6 +21,7 @@ import { IncreaseFeeButton } from '@app/components/stacks-transaction-item/incre
 import { TransactionTitle } from '@app/components/transaction/transaction-title';
 import { useInscriptionByOutput } from '@app/query/bitcoin/ordinals/inscriptions-by-param.hooks';
 import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { TransactionItemLayout } from '../transaction-item/transaction-item.layout';
@@ -39,11 +40,16 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
   const { data: inscriptionData } = useInscriptionByOutput(transaction);
 
   const bitcoinAddress = useCurrentAccountNativeSegwitAddressIndexZero();
+  const taprootSigner = useCurrentAccountTaprootIndexZeroSigner();
+  const accountAddresses = useMemo(
+    () => [bitcoinAddress, taprootSigner.payment.address].filter(Boolean) as string[],
+    [bitcoinAddress, taprootSigner.payment.address]
+  );
   const { handleOpenBitcoinTxLink: handleOpenTxLink } = useBitcoinExplorerLink();
   const caption = useMemo(() => getBitcoinTxCaption(transaction), [transaction]);
   const value = useMemo(
-    () => getBitcoinTxValue(bitcoinAddress, transaction),
-    [bitcoinAddress, transaction]
+    () => getBitcoinTxValue(accountAddresses, transaction),
+    [accountAddresses, transaction]
   );
 
   if (!transaction) return null;
@@ -61,7 +67,7 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
     handleOpenTxLink({ txid: transaction?.txid || '' });
   }
 
-  const isOriginator = !isBitcoinTxInbound(bitcoinAddress, transaction);
+  const isOriginator = !isBitcoinTxInbound(accountAddresses, transaction);
   const isEnabled =
     isOriginator && !transaction.status.confirmed && !containsTaprootInput(transaction);
 
@@ -94,7 +100,7 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
             inscriptionData ? <InscriptionIcon inscription={inscriptionData} /> : <BtcAvatarIcon />
           }
           transaction={transaction}
-          btcAddress={bitcoinAddress}
+          btcAddress={accountAddresses}
         />
       }
       txStatus={<BitcoinTransactionStatus transaction={transaction} />}
