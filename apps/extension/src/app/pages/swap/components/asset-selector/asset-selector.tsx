@@ -4,7 +4,7 @@ import { Box, Flex } from 'leather-styles/jsx';
 import { AccountSwapAsset } from '@leather.io/services';
 
 import { SearchInput } from '@app/components/search-input';
-import { matchQueryResult } from '@app/queries/match-query-result';
+import { matchQueryResult } from '@app/query/match-query-result';
 
 import { AssetSelectorEmptyState } from './asset-selector-empty-state';
 import { AssetSelectorError } from './asset-selector-error';
