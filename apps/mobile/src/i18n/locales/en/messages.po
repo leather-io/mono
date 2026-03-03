@@ -239,7 +239,7 @@ msgstr "Alex"
 msgid "ALEX"
 msgstr "ALEX"
 
-#: src/components/activity/activity-with-account.screen.tsx:19
+#: src/components/activity/activity-with-account.screen.tsx:22
 msgid "All activity"
 msgstr "All activity"
 

@@ -21,7 +21,8 @@ export function useAccountCollectibleByAssetId(
 
 export function useAccountCollectibles(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useAccountCollectiblesQuery(account));
+  const query = useAccountCollectiblesQuery(account);
+  return { ...toFetchState(query), isFetching: query.isFetching };
 }
 
 function useAccountCollectiblesQuery(account: AccountAddresses) {
