@@ -15,6 +15,11 @@ export function AdvancedPage() {
           description="Signer key signature generation required for certain PoX transactions"
           to="/advanced/signer-key-generation"
         />
+        <AdvancedToolItemWithAuth
+          name="Send many"
+          description="Send STX, sBTC, or USDC to multiple recipients in a single transaction"
+          to="/advanced/send-many/stx"
+        />
       </Tool.Root>
     </Page>
   );

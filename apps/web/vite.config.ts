@@ -19,6 +19,9 @@ const sentryConfig: SentryReactRouterBuildOptions = {
 
 export default defineConfig(({ command, mode, isSsrBuild }) => ({
   envPrefix: 'LEATHER_',
+  server: {
+    host: true,
+  },
   build: {
     target: 'es2022',
   },
@@ -85,7 +88,7 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
     {
       name: 'cloudflare-vite-plugin-fix',
       configEnvironment(name, config) {
-        const isDev = process.env.npm_lifecycle_script?.endsWith('react-router dev');
+        const isDev = process.env.npm_lifecycle_script?.includes('react-router dev');
         if (name === 'ssr' && !isDev) {
           delete config.dev;
         }

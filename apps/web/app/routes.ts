@@ -25,6 +25,7 @@ export default [
   ...prefix('advanced', [
     index('pages/advanced/advanced.route.tsx'),
     route('signer-key-generation', 'pages/advanced/tools/signer-key-generation.route.tsx'),
+    route('send-many/:token', 'pages/advanced/tools/send-many.route.tsx'),
   ]),
   route('support', 'pages/support/help-center.route.tsx'),
   ...prefix('support/:slug', [index('pages/support/category-guides/category-guides.route.tsx')]),
