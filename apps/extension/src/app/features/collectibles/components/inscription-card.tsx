@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-
 import type { InscriptionAsset } from '@leather.io/models';
+
+import { useGetInscriptionTextContentQuery } from '@app/query/bitcoin/ordinals/inscription-text-content.query';
 
 import { ImageUnavailable } from './image-unavailable';
 import { Inscription as InscriptionComponent } from './inscription';
@@ -10,33 +10,44 @@ interface InscriptionCardProps {
   onSelect?(asset: InscriptionAsset): void;
 }
 
-export function InscriptionCard({ item, onSelect }: InscriptionCardProps) {
-  const [content, setContent] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const { mimeType, src, title, thumbnailSrc } = item;
+interface TextInscriptionCardProps {
+  item: InscriptionAsset;
+  onPress?(): void;
+}
 
-  useEffect(() => {
-    if (mimeType === 'text' && src) {
-      setIsLoading(true);
-      void fetch(src)
-        .then(response => response.text())
-        .then(text => setContent(text))
-        .catch(() => setContent('Content not found'))
-        .finally(() => setIsLoading(false));
-    }
-  }, [mimeType, src]);
+function TextInscriptionCard({ item, onPress }: TextInscriptionCardProps) {
+  const { data, isLoading } = useGetInscriptionTextContentQuery(item.src);
+
+  return (
+    <InscriptionComponent
+      name={item.title}
+      mimeType={item.mimeType}
+      src={isLoading ? '' : data || item.src}
+      thumbnailSrc={item.thumbnailSrc}
+      onPress={onPress}
+    />
+  );
+}
+
+export function InscriptionCard({ item, onSelect }: InscriptionCardProps) {
+  const { mimeType, src, title, thumbnailSrc } = item;
+  const onPress = onSelect ? () => onSelect(item) : undefined;
 
   if (!src || src.trim() === '') {
     return <ImageUnavailable />;
+  }
+
+  if (mimeType === 'text') {
+    return <TextInscriptionCard item={item} onPress={onPress} />;
   }
 
   return (
     <InscriptionComponent
       name={title}
       mimeType={mimeType}
-      src={isLoading ? '' : content || src}
+      src={src}
       thumbnailSrc={thumbnailSrc}
-      onPress={onSelect ? () => onSelect(item) : undefined}
+      onPress={onPress}
     />
   );
 }
