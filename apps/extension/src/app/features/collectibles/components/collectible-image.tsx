@@ -29,6 +29,7 @@ function CollectibleImageContent({ alt, src, isSvg, onError }: CollectibleImageC
     <styled.img
       src={src}
       alt={alt}
+      loading="lazy"
       onError={onError}
       onLoad={e => setNaturalWidth((e.target as HTMLImageElement).naturalWidth)}
       display="block"

@@ -16,7 +16,7 @@ function BnsImageContent({ alt, src }: BnsImageContentProps) {
       bg="ink.background-secondary"
       position="relative"
     >
-      <styled.img src={src} alt={alt} width="100%" height="100%" objectFit="cover" />
+      <styled.img src={src} alt={alt} loading="lazy" width="100%" height="100%" objectFit="cover" />
       <Box
         position="absolute"
         bottom={0}
