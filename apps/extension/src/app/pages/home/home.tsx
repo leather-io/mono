@@ -17,6 +17,7 @@ import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-
 import { AccountActions } from './components/account-actions-current/account-actions';
 import { AccountCard } from './components/account-card';
 import { HomeTabs } from './components/home-tabs';
+import { PrefetchHomeData } from './components/prefetch-home-data';
 import { Tokens } from './components/tokens';
 
 function HomeNotFound() {
@@ -47,6 +48,7 @@ export function Home({ isBackground }: HomeProps) {
       animation={shouldAnimate ? 'fadein' : undefined}
       animationDuration={shouldAnimate ? '500ms' : undefined}
     >
+      <PrefetchHomeData />
       <Flex px={['space.05', 0]} pb="space.05" gap="space.05" direction="column">
         <AccountCard />
         <AccountActions />
