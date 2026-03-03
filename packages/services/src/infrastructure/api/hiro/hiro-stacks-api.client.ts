@@ -406,7 +406,7 @@ export class HiroStacksApiClient {
     async function fetchFn() {
       return fetchHiroPages(fetchPage, {
         limit,
-        pagesRequest: { allPages: true },
+        pagesRequest: { allPages: true, stopAfter: 5 },
       });
     }
 
