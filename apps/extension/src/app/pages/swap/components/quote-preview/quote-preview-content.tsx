@@ -1,6 +1,3 @@
-import { useLayoutEffect } from 'react';
-
-import { type MotionStyle, animate, motion, useMotionValue } from 'framer-motion';
 import { Divider, Flex, styled } from 'leather-styles/jsx';
 
 import { SwappableFungibleCryptoAsset } from '@leather.io/models';
@@ -22,9 +19,6 @@ type QuotePreviewContentProps =
     };
 
 export function QuotePreviewContent(props: QuotePreviewContentProps) {
-  const isRefetching = props.isLoading ? false : props.liveEstimate.isRefetching;
-  const refetchStyle = useRefetchDimming(isRefetching);
-
   if (props.isLoading) {
     return (
       <Flex px="space.04" direction="column">
@@ -51,28 +45,26 @@ export function QuotePreviewContent(props: QuotePreviewContentProps) {
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
 
   return (
-    <motion.div style={refetchStyle}>
-      <Flex px="space.04" direction="column">
-        <QuotePreviewRow
-          label="Rate"
-          value={
-            <Flex alignItems="center" gap="space.02">
-              <QuoteRefetchIndicator
-                interval={intervalState.interval}
-                lastStartedAt={intervalState.lastStartedAt}
-                nextRunTime={intervalState.nextRunTime}
-              />
-              <styled.span textStyle="label.03">{formattedRate}</styled.span>
-            </Flex>
-          }
-        />
-        <Divider borderColor="ink.border-transparent" />
-        <QuotePreviewRow
-          label="Estimated fees"
-          value={<styled.span textStyle="label.03">{formatCurrency(totalFees)}</styled.span>}
-        />
-      </Flex>
-    </motion.div>
+    <Flex px="space.04" direction="column" opacity={props.liveEstimate.isRefetching ? 0.5 : 1}>
+      <QuotePreviewRow
+        label="Rate"
+        value={
+          <Flex alignItems="center" gap="space.02">
+            <QuoteRefetchIndicator
+              interval={intervalState.interval}
+              lastStartedAt={intervalState.lastStartedAt}
+              nextRunTime={intervalState.nextRunTime}
+            />
+            <styled.span textStyle="label.03">{formattedRate}</styled.span>
+          </Flex>
+        }
+      />
+      <Divider borderColor="ink.border-transparent" />
+      <QuotePreviewRow
+        label="Estimated fees"
+        value={<styled.span textStyle="label.03">{formatCurrency(totalFees)}</styled.span>}
+      />
+    </Flex>
   );
 }
 
@@ -92,18 +84,4 @@ function QuotePreviewRow({ label, value }: QuotePreviewRowProps) {
       </Flex>
     </Flex>
   );
-}
-
-function useRefetchDimming(isRefetching: boolean): MotionStyle {
-  const opacity = useMotionValue(1);
-
-  useLayoutEffect(() => {
-    const controls = animate(opacity, isRefetching ? 0.5 : 1, {
-      duration: 0.3,
-      ease: 'easeInOut',
-    });
-    return () => controls.stop();
-  }, [isRefetching, opacity]);
-
-  return { opacity };
 }
