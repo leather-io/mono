@@ -111,6 +111,7 @@ export function ActivityList() {
 
   const hasActivity = flatActivity.length > 0;
   const isLoading = activityQuery.isLoading;
+  const isFetching = activityQuery.isFetching;
 
   function itemContent(_: number, item: ActivityListRow) {
     if (isDateHeaderRow(item)) {
@@ -161,7 +162,7 @@ export function ActivityList() {
   }
 
   return (
-    <ActivityListLayout isLoading={isLoading} hasActivity={hasActivity}>
+    <ActivityListLayout isLoading={isLoading} isFetching={isFetching} hasActivity={hasActivity}>
       <Virtuoso
         style={{ height: '100%' }}
         data={activity}
