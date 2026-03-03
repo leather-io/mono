@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { useNavigate } from 'react-router';
 
 import { Box, Divider, Flex } from 'leather-styles/jsx';
 
@@ -36,6 +37,8 @@ export function SwapForm() {
     networkFeeAssetMarkedDataQuery,
     canSubmit,
   } = useSwapContext();
+
+  const navigate = useNavigate();
 
   const liveEstimate = useLiveSwapEstimate({
     quoteQuery,
@@ -117,7 +120,14 @@ export function SwapForm() {
           </Card>
 
           <Flex direction="column" mt="space.04" gap="space.03">
-            <Button disabled={!canSubmit}>Continue</Button>
+            <Button
+              disabled={!canSubmit}
+              onClick={() =>
+                navigate({ pathname: `${state.targetSwapAsset?.asset.symbol}/review` })
+              }
+            >
+              Continue
+            </Button>
 
             <QuotePreview state={state} liveEstimate={liveEstimate} />
           </Flex>
