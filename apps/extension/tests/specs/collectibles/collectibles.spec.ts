@@ -252,4 +252,74 @@ test.describe('Collectibles tab', () => {
       );
     });
   });
+
+  test.describe('Unprotected label', () => {
+    test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
+      await globalPage.setupAndUseApiCalls(extensionId);
+      await mockMainnetInscriptionsWithData(globalPage.page, [
+        mockImageInscription,
+        mockTextInscription,
+      ]);
+      await onboardingPage.signInWithTestAccount(extensionId);
+    });
+
+    test('should not show unprotected label on protected inscriptions', async ({
+      homePage,
+      page,
+    }) => {
+      await homePage.clickCollectiblesTab();
+
+      await expect(page.getByTestId('collectible-card-inscription').first()).toBeVisible();
+      await expect(page.getByTestId('inscription-unprotected-label')).toHaveCount(0);
+    });
+
+    test('should show unprotected label after discarding a single inscription', async ({
+      homePage,
+      page,
+    }) => {
+      await homePage.clickCollectiblesTab();
+
+      const card = page.getByTestId('collectible-card-inscription').first();
+      await card.hover();
+      await page.getByTestId('inscription-card-menu-trigger').click();
+      await page.getByTestId('inscription-menu-unprotect').click();
+
+      const label = page.getByTestId('inscription-unprotected-label');
+      await expect(label).toBeVisible();
+      await expect(label).toHaveCount(1);
+    });
+
+    test('should show unprotected label on all cards after unprotect all', async ({
+      homePage,
+      page,
+    }) => {
+      await homePage.clickCollectiblesTab();
+
+      await page.getByTestId('manage-collectibles-btn').click();
+      await page.getByTestId('unprotect-all-inscriptions').click();
+
+      const labels = page.getByTestId('inscription-unprotected-label');
+      await expect(labels).toHaveCount(2);
+    });
+
+    test('should remove unprotected label after recovering an inscription', async ({
+      homePage,
+      page,
+    }) => {
+      await homePage.clickCollectiblesTab();
+
+      const card = page.getByTestId('collectible-card-inscription').first();
+      await card.hover();
+      await page.getByTestId('inscription-card-menu-trigger').click();
+      await page.getByTestId('inscription-menu-unprotect').click();
+
+      await expect(page.getByTestId('inscription-unprotected-label')).toBeVisible();
+
+      await card.hover();
+      await page.getByTestId('inscription-card-menu-trigger').click();
+      await page.getByTestId('inscription-menu-protect').click();
+
+      await expect(page.getByTestId('inscription-unprotected-label')).toHaveCount(0);
+    });
+  });
 });
