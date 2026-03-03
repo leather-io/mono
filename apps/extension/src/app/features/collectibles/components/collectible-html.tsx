@@ -21,6 +21,7 @@ function HtmlInscriptionImage({ src, onError }: HtmlInscriptionImageProps) {
     <styled.img
       src={src}
       alt="HTML inscription"
+      loading="lazy"
       onError={onError}
       display="block"
       width="100%"
