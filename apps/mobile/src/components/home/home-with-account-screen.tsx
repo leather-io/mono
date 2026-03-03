@@ -121,6 +121,7 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
       {listTab === 'collectibles' && (
         <CollectiblesList
           collectiblesState={collectiblesState}
+          isFetching={collectiblesState.isFetching}
           header={
             <>
               <AccountDetails account={currentAccount} />

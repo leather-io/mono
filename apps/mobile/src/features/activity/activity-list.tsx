@@ -44,10 +44,11 @@ function insertDateHeaders(items: ActivityView[]): ActivityListRow[] {
 
 interface ActivityListProps {
   data: FetchState<ActivityView[]>;
+  isFetching?: boolean;
   header: ReactNode;
 }
 
-export function ActivityList({ data, header }: ActivityListProps) {
+export function ActivityList({ data, isFetching, header }: ActivityListProps) {
   const rows = useMemo(
     () => (data.state === 'success' ? insertDateHeaders(data.value) : []),
     [data]
@@ -85,7 +86,7 @@ export function ActivityList({ data, header }: ActivityListProps) {
       keyExtractor={keyExtractor}
       refreshControl={<RefreshControl />}
       ListHeaderComponent={<>{header}</>}
-      ListEmptyComponent={<ActivityEmpty />}
+      ListEmptyComponent={!isFetching ? <ActivityEmpty /> : undefined}
     />
   );
 }

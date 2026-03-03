@@ -53,10 +53,11 @@ function useCollectibleListItemHeight() {
 
 interface CollectiblesListProps {
   collectiblesState: FetchState<NonFungibleCryptoAsset[]>;
+  isFetching?: boolean;
   header: ReactElement;
 }
 
-export function CollectiblesList({ collectiblesState, header }: CollectiblesListProps) {
+export function CollectiblesList({ collectiblesState, isFetching, header }: CollectiblesListProps) {
   const collectibles = collectiblesState.state === 'success' ? collectiblesState.value : [];
   const height = useCollectibleListItemHeight();
   const router = useRouter();
@@ -91,7 +92,9 @@ export function CollectiblesList({ collectiblesState, header }: CollectiblesList
           {isError && <ErrorFallbackTab />}
         </>
       }
-      ListEmptyComponent={!isLoading && !isError ? <EmptyCollectiblesContent /> : undefined}
+      ListEmptyComponent={
+        !isLoading && !isError && !isFetching ? <EmptyCollectiblesContent /> : undefined
+      }
     />
   );
 }
