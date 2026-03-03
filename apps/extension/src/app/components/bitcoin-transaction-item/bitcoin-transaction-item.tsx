@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { HStack } from 'leather-styles/jsx';
@@ -20,7 +20,8 @@ import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { IncreaseFeeButton } from '@app/components/stacks-transaction-item/increase-fee-button';
 import { TransactionTitle } from '@app/components/transaction/transaction-title';
 import { useInscriptionByOutput } from '@app/query/bitcoin/ordinals/inscriptions-by-param.hooks';
-import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { TransactionItemLayout } from '../transaction-item/transaction-item.layout';
@@ -38,12 +39,20 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
 
   const { data: inscriptionData } = useInscriptionByOutput(transaction);
 
-  const bitcoinAddress = useCurrentAccountNativeSegwitAddressIndexZero();
+  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
+  const taprootSigner = useCurrentAccountTaprootIndexZeroSigner();
   const { handleOpenBitcoinTxLink: handleOpenTxLink } = useBitcoinExplorerLink();
   const caption = useMemo(() => getBitcoinTxCaption(transaction), [transaction]);
+
+  const isCorrespondingAddressFn = useCallback(
+    (address: string) => {
+      return address === nativeSegwitSigner.address || address === taprootSigner.address;
+    },
+    [nativeSegwitSigner.address, taprootSigner.address]
+  );
   const value = useMemo(
-    () => getBitcoinTxValue(bitcoinAddress, transaction),
-    [bitcoinAddress, transaction]
+    () => getBitcoinTxValue(isCorrespondingAddressFn, transaction),
+    [isCorrespondingAddressFn, transaction]
   );
 
   if (!transaction) return null;
@@ -61,9 +70,10 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
     handleOpenTxLink({ txid: transaction?.txid || '' });
   }
 
-  const isOriginator = !isBitcoinTxInbound(bitcoinAddress, transaction);
-  const isEnabled =
-    isOriginator && !transaction.status.confirmed && !containsTaprootInput(transaction);
+  const isTxInbound = isBitcoinTxInbound(isCorrespondingAddressFn, transaction);
+
+  const isFeeIncreaseEnabled =
+    !isTxInbound && !transaction.status.confirmed && !containsTaprootInput(transaction);
 
   const txCaption = (
     <HStack gap="space.02">
@@ -77,7 +87,7 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
   const title = inscriptionData ? `Ordinal inscription #${inscriptionData.number}` : 'Bitcoin';
   const increaseFeeButton = (
     <IncreaseFeeButton
-      isEnabled={isEnabled}
+      isEnabled={isFeeIncreaseEnabled}
       isSelected={pathname === RouteUrls.IncreaseBtcFee}
       onIncreaseFee={onIncreaseFee}
     />
@@ -86,15 +96,15 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
   return (
     <TransactionItemLayout
       openTxLink={openTxLink}
-      rightElement={isEnabled ? increaseFeeButton : undefined}
+      rightElement={isFeeIncreaseEnabled ? increaseFeeButton : undefined}
       txCaption={txCaption}
       txIcon={
         <BitcoinTransactionIcon
           icon={
             inscriptionData ? <InscriptionIcon inscription={inscriptionData} /> : <BtcAvatarIcon />
           }
-          transaction={transaction}
-          btcAddress={bitcoinAddress}
+          isTxConfirmed={transaction.status.confirmed}
+          isTxInbound={isTxInbound}
         />
       }
       txStatus={<BitcoinTransactionStatus transaction={transaction} />}

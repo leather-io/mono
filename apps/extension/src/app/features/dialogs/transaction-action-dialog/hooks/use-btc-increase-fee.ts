@@ -59,7 +59,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
 
   const { btc: balance } = useCurrentBtcBalanceWithFallback();
   const rbfAvailableBalance = sumMoney([balance.availableBalance, balance.outboundBalance]);
-  const sendingAmount = getBitcoinTxValue(currentBitcoinAddress, btcTx);
+  const sendingAmount = getBitcoinTxValue(address => address === currentBitcoinAddress, btcTx);
   const { feesList } = useBitcoinFeesList({
     amount: createMoney(btcToSat(sendingAmount), 'BTC'),
     isSendingMax: false,

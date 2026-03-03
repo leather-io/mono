@@ -38,7 +38,10 @@ export function IncreaseBtcFeeSheet() {
   const recipients = [
     {
       address: recipient,
-      amount: createMoney(btcToSat(getBitcoinTxValue(currentBitcoinAddress, btcTx)), 'BTC'),
+      amount: createMoney(
+        btcToSat(getBitcoinTxValue(address => address === currentBitcoinAddress, btcTx)),
+        'BTC'
+      ),
     },
   ];
 
