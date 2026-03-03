@@ -21,7 +21,7 @@ export function FlipButton({ isVisible, onPress }: FlipButtonProps) {
   }, [onPress]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {isVisible && (
         <motion.button
           type="button"
