@@ -9,10 +9,16 @@ import { ActivityLoading } from './activity-loading';
 interface ActivityListLayoutProps {
   children: ReactNode;
   isLoading: boolean;
+  isFetching?: boolean;
   hasActivity: boolean;
 }
 
-export function ActivityListLayout({ children, isLoading, hasActivity }: ActivityListLayoutProps) {
+export function ActivityListLayout({
+  children,
+  isLoading,
+  isFetching,
+  hasActivity,
+}: ActivityListLayoutProps) {
   if (isLoading) {
     return (
       <>
@@ -22,7 +28,7 @@ export function ActivityListLayout({ children, isLoading, hasActivity }: Activit
     );
   }
 
-  if (!hasActivity) {
+  if (!hasActivity && !isFetching) {
     return (
       <>
         <ActivityEmpty />
