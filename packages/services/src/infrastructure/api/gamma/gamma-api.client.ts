@@ -31,8 +31,9 @@ export class GammaApiClient {
         );
 
         return gammaNftMetadataSchema.parse(res.data);
-      } catch {
-        return null;
+      } catch (error) {
+        if (axios.isAxiosError(error)) return null;
+        throw error;
       }
     }
     return skipCache
@@ -56,8 +57,9 @@ export class GammaApiClient {
           }
         );
         return gammaCollectionMetadataSchema.parse(res.data);
-      } catch {
-        return null;
+      } catch (error) {
+        if (axios.isAxiosError(error)) return null;
+        throw error;
       }
     }
     return skipCache
