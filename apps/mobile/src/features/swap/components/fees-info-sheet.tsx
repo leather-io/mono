@@ -19,6 +19,7 @@ const providerDisplayNames: Record<SwapProviderId, MessageDescriptor> = {
   'alex-sdk': msg`ALEX`,
   'velar-sdk': msg`Velar`,
   'sbtc-bridge': msg`sBTC Bridge`,
+  'bitflow-bff-api': msg`Bitflow`,
 };
 
 export function FeesInfoSheet({ fees, provider }: FeesInfoSheetProps) {

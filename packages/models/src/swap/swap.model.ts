@@ -10,7 +10,13 @@ export interface SwapAsset {
   readonly providerAssets: SwapProviderAsset[];
 }
 
-export const swapProviderIds = ['bitflow-sdk', 'sbtc-bridge', 'alex-sdk', 'velar-sdk'] as const;
+export const swapProviderIds = [
+  'bitflow-sdk',
+  'bitflow-bff-api',
+  'sbtc-bridge',
+  'alex-sdk',
+  'velar-sdk',
+] as const;
 export type SwapProviderId = (typeof swapProviderIds)[number];
 
 export interface SwapProvider {
@@ -28,6 +34,7 @@ export type SwapQuote =
   | AlexSdkSwapQuote
   | VelarSdkSwapQuote
   | BitflowSdkSwapQuote
+  | BitflowBffApiSwapQuote
   | SbtcBridgeSwapQuote;
 
 export interface BaseSwapQuote {
@@ -73,6 +80,12 @@ export interface BitflowSdkSwapQuote extends BaseSwapQuote {
   };
 }
 
+export interface BitflowBffApiSwapQuote extends BaseSwapQuote {
+  readonly providerId: 'bitflow-bff-api';
+  readonly providerQuoteData: {
+    bitflowBffApiQuote: unknown;
+  };
+}
 export interface SbtcBridgeSwapQuote extends BaseSwapQuote {
   readonly providerId: 'sbtc-bridge';
   readonly providerQuoteData: {

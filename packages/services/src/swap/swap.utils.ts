@@ -53,25 +53,26 @@ export function hasValidMinReceiveAmountPostCondition(
   slippagePercentage: BigNumber
 ): boolean {
   const minAmount = calculateMinReceiveAmount(executionData.quote.targetAmount, slippagePercentage);
-
-  const minTolerance = minAmount.amount.minus(MIN_RECEIVE_AMOUNT_FRACTIONAL_UNIT_TOLERANCE);
-  const maxTolerance = minAmount.amount.plus(MIN_RECEIVE_AMOUNT_FRACTIONAL_UNIT_TOLERANCE);
-
-  function isWithinTolerance(amount: string | number | bigint): boolean {
-    const amountNumber = initBigNumber(amount);
-    return amountNumber.gte(minTolerance) && amountNumber.lte(maxTolerance);
-  }
+  const minThreshold = minAmount.amount.minus(MIN_RECEIVE_AMOUNT_FRACTIONAL_UNIT_TOLERANCE);
 
   const { targetAsset } = executionData.quote;
 
-  return (executionData.postConditions as PostCondition[]).some(pc => {
+  function isMatchingGtePostCondition(pc: PostCondition): boolean {
     return (
       ((targetAsset.protocol === 'nativeStx' && pc.type === 'stx-postcondition') ||
         (targetAsset.protocol === 'sip10' &&
           pc.type === 'ft-postcondition' &&
           pc.asset === targetAsset.assetId)) &&
-      pc.condition === 'gte' &&
-      isWithinTolerance(pc.amount)
+      pc.condition === 'gte'
     );
-  });
+  }
+
+  const totalGteAmount = (executionData.postConditions as PostCondition[])
+    .filter(isMatchingGtePostCondition)
+    .reduce(
+      (sum, pc) => ('amount' in pc ? sum.plus(initBigNumber(pc.amount)) : sum),
+      new BigNumber(0)
+    );
+
+  return totalGteAmount.gte(minThreshold);
 }

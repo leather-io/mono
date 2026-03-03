@@ -29,7 +29,8 @@ import { Sip10AddressBalance, Sip10BalancesService } from '../balances/sip10-bal
 import { AddressQuotedStxBalance, StxBalancesService } from '../balances/stx-balances.service';
 import { AccountRequest } from '../types';
 import { AlexSwapProviderService } from './alex-swap-provider.service';
-import { BitflowSwapProviderService } from './bitflow-swap-provider.service';
+import { BitflowBffApiSwapProviderService } from './bitflow-bff-api-swap-provider.service';
+import { BitflowSdkSwapProviderService } from './bitflow-sdk-swap-provider.service';
 import { SbtcBridgeSwapProviderService } from './sbtc-bridge-swap-provider.service';
 import { SwapProviderService } from './swap-provider.interface';
 import { hasValidMinReceiveAmountPostCondition } from './swap.utils';
@@ -52,12 +53,19 @@ export class SwapService {
     // provider services
     private readonly velarProvider: VelarSwapProviderService,
     private readonly alexProvider: AlexSwapProviderService,
-    private readonly bitflowProvider: BitflowSwapProviderService,
+    private readonly bitflowSdkProvider: BitflowSdkSwapProviderService,
+    private readonly bitflowBffApiProvider: BitflowBffApiSwapProviderService,
     private readonly sbtcBridgeProvider: SbtcBridgeSwapProviderService
   ) {}
 
   private getSwapProviderServices(): SwapProviderService[] {
-    return [this.velarProvider, this.alexProvider, this.bitflowProvider, this.sbtcBridgeProvider];
+    return [
+      this.velarProvider,
+      this.alexProvider,
+      this.bitflowSdkProvider,
+      this.bitflowBffApiProvider,
+      this.sbtcBridgeProvider,
+    ];
   }
 
   private getSwapProviderServiceById(providerId: SwapProviderId): SwapProviderService {

@@ -87,6 +87,11 @@ export type HttpCacheKey =
   | 'leather-api-protocols'
   | 'leather-api-protocol-contracts'
 
+  // BitflowBffApiClient
+  | 'bitflow-bff-api-tokens'
+  | 'bitflow-bff-api-pairs'
+  | 'bitflow-bff-api-quote'
+
   // BitflowSdkClient
   | 'bitflow-sdk-available-tokens'
   | 'bitflow-sdk-all-possible-token-y'
@@ -180,6 +185,10 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-rune-distribution': { ttl: minutesInMs(5) },
   'leather-api-protocols': { ttl: daysInMs(1) },
   'leather-api-protocol-contracts': { ttl: daysInMs(1) },
+
+  'bitflow-bff-api-tokens': { ttl: hoursInMs(6) },
+  'bitflow-bff-api-pairs': { ttl: hoursInMs(1) },
+  'bitflow-bff-api-quote': { ttl: secondsInMs(30) },
 
   'bitflow-sdk-available-tokens': { ttl: hoursInMs(6) },
   'bitflow-sdk-all-possible-token-y': { ttl: hoursInMs(1) },

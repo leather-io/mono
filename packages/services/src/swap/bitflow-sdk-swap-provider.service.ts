@@ -33,7 +33,7 @@ import {
 import { mapBitflowDexProviderToSwapDexId, mapToStacksProtocol } from './swap.utils';
 
 @injectable()
-export class BitflowSwapProviderService implements SwapProviderService {
+export class BitflowSdkSwapProviderService implements SwapProviderService {
   providerId: SwapProviderId = 'bitflow-sdk';
 
   constructor(
