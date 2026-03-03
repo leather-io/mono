@@ -13,6 +13,7 @@ import {
   IconButton,
   LockIcon,
   PaperPlaneIcon,
+  TrashIcon,
   UnlockIcon,
 } from '@leather.io/ui';
 
@@ -48,6 +49,24 @@ export function InscriptionCardActions({ item }: InscriptionCardActionsProps) {
       <Box opacity={isDiscarded ? 0.5 : 1}>
         <InscriptionCard item={item} />
       </Box>
+
+      {isDiscarded && (
+        <Box
+          p="space.02"
+          borderRadius="xs"
+          border="1px solid"
+          borderColor="ink.border-transparent"
+          bg="ink.background-secondary"
+          position="absolute"
+          bottom="space.05"
+          left="space.04"
+          data-testid="inscription-unprotected-label"
+        >
+          <Flag opacity={0.5} spacing="space.01" img={<TrashIcon variant="small" />} width="100%">
+            Unprotected
+          </Flag>
+        </Box>
+      )}
 
       {isHovered && (
         <Box position="absolute" right="space.03" top="space.03" zIndex="900">
