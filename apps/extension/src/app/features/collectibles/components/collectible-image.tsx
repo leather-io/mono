@@ -13,6 +13,8 @@ export interface CollectibleImageProps {
   isSvg?: boolean;
 }
 
+const pixelatedImageThreshold = 40;
+
 interface CollectibleImageContentProps {
   alt?: string;
   src: string;
@@ -21,16 +23,22 @@ interface CollectibleImageContentProps {
 }
 
 function CollectibleImageContent({ alt, src, isSvg, onError }: CollectibleImageContentProps) {
+  const [naturalWidth, setNaturalWidth] = useState(0);
+
   return (
     <styled.img
       src={src}
       alt={alt}
       onError={onError}
+      onLoad={e => setNaturalWidth((e.target as HTMLImageElement).naturalWidth)}
       display="block"
       width="100%"
       height="100%"
       objectFit="cover"
       bg={isSvg ? 'ink.background-primary' : 'ink.background-secondary'}
+      style={{
+        imageRendering: naturalWidth <= pixelatedImageThreshold ? 'pixelated' : 'auto',
+      }}
     />
   );
 }
