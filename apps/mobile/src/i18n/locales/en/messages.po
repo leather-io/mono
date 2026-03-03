@@ -58,7 +58,7 @@ msgstr "{operation} {baseAssetSymbol} to {targetAssetSymbol} is limited to {thre
 msgid "{operation} {baseAssetSymbol} to {targetAssetSymbol} requires at least {threshold}"
 msgstr "{operation} {baseAssetSymbol} to {targetAssetSymbol} requires at least {threshold}"
 
-#: src/features/swap/components/fees-info-sheet.tsx:40
+#: src/features/swap/components/fees-info-sheet.tsx:41
 msgid "{providerName} fee"
 msgstr "{providerName} fee"
 
@@ -435,6 +435,7 @@ msgid "Bitcoin unit updated"
 msgstr "Bitcoin unit updated"
 
 #: src/features/swap/components/fees-info-sheet.tsx:18
+#: src/features/swap/components/fees-info-sheet.tsx:22
 #: src/utils/dapps.ts:45
 msgid "Bitflow"
 msgstr "Bitflow"
@@ -882,7 +883,7 @@ msgstr "FastPool"
 msgid "Feature waitlist notification"
 msgstr "Feature waitlist notification"
 
-#: src/features/swap/components/fees-info-sheet.tsx:43
+#: src/features/swap/components/fees-info-sheet.tsx:44
 msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
@@ -892,7 +893,7 @@ msgid "Fee updated"
 msgstr "Fee updated"
 
 #: src/app/settings/index.tsx:131
-#: src/features/swap/components/fees-info-sheet.tsx:29
+#: src/features/swap/components/fees-info-sheet.tsx:30
 msgid "Fees"
 msgstr "Fees"
 
@@ -1304,7 +1305,7 @@ msgstr "Native Segwit"
 msgid "Native Segwit address"
 msgstr "Native Segwit address"
 
-#: src/features/swap/components/fees-info-sheet.tsx:32
+#: src/features/swap/components/fees-info-sheet.tsx:33
 msgid "Network fee"
 msgstr "Network fee"
 
@@ -1399,7 +1400,7 @@ msgstr "Output"
 msgid "Output value"
 msgstr "Output value"
 
-#: src/features/swap/components/fees-info-sheet.tsx:35
+#: src/features/swap/components/fees-info-sheet.tsx:36
 msgid "Paid to network validators to process your transaction"
 msgstr "Paid to network validators to process your transaction"
 
