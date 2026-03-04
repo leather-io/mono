@@ -12,13 +12,6 @@ export async function mockLaunchDarkly(page: Page) {
   await page.route(launchDarklyEvalx, route =>
     route.fulfill({
       json: {
-        extension_revamp: {
-          flagVersion: 3,
-          trackEvents: false,
-          value: true,
-          variation: 0,
-          version: 8,
-        },
         releaseOnramperBuy: {
           flagVersion: 7,
           trackEvents: false,
