@@ -1,13 +1,22 @@
+import { Outlet } from 'react-router';
+
 import { stxAsset } from '@leather.io/constants';
-import { SwapProvider } from '@leather.io/state/swap';
+import {
+  type LiveSwapEstimate,
+  SwapProvider,
+  useLiveSwapEstimate,
+  useSwapContext,
+} from '@leather.io/state/swap';
 
 import { analytics } from '@shared/utils/analytics';
 
-import { HasChildren } from '@app/common/has-children';
-
 import { useSwapDependencies } from './hooks/use-swap-dependencies';
 
-export function SwapContainer({ children }: HasChildren) {
+export interface SwapOutletContext {
+  liveEstimate: LiveSwapEstimate;
+}
+
+export function SwapContainer() {
   const dependencies = useSwapDependencies();
 
   return (
@@ -17,7 +26,21 @@ export function SwapContainer({ children }: HasChildren) {
       quoteCurrencyPreference="USD"
       trackEvent={analytics.track}
     >
-      {children}
+      <SwapOutlet />
     </SwapProvider>
   );
+}
+
+function SwapOutlet() {
+  const { quoteQuery, networkFeeQuery, baseMarketDataQuery, networkFeeAssetMarkedDataQuery } =
+    useSwapContext();
+
+  const liveEstimate = useLiveSwapEstimate({
+    quoteQuery,
+    networkFeeQuery,
+    baseMarketDataQuery,
+    nativeAssetMarketDataQuery: networkFeeAssetMarkedDataQuery,
+  });
+
+  return <Outlet context={{ liveEstimate } satisfies SwapOutletContext} />;
 }
