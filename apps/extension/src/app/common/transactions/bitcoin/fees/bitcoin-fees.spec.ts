@@ -41,7 +41,7 @@ describe(calculateMaxBitcoinSpend.name, () => {
       utxos,
       fetchedFeeRates: generateAverageFee(fee),
     });
-    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50087948);
+    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50087979);
   });
 
   test('with 5 sat/vb fee', () => {
@@ -51,7 +51,7 @@ describe(calculateMaxBitcoinSpend.name, () => {
       utxos,
       fetchedFeeRates: generateAverageFee(fee),
     });
-    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50085342);
+    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50085497);
   });
 
   test('with 30 sat/vb fee', () => {
@@ -61,7 +61,7 @@ describe(calculateMaxBitcoinSpend.name, () => {
       utxos,
       fetchedFeeRates: generateAverageFee(fee),
     });
-    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50073585);
+    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50074515);
   });
 
   test('with 100 sat/vb fee', () => {
@@ -71,7 +71,7 @@ describe(calculateMaxBitcoinSpend.name, () => {
       utxos,
       fetchedFeeRates: generateAverageFee(fee),
     });
-    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50046950);
+    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(50050050);
   });
 
   test('with 400 sat/vb fee', () => {
@@ -81,7 +81,7 @@ describe(calculateMaxBitcoinSpend.name, () => {
       utxos,
       fetchedFeeRates: generateAverageFee(fee),
     });
-    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(49969100);
+    expect(maxBitcoinSpend.amount.amount.toNumber()).toEqual(49981500);
   });
 });
 

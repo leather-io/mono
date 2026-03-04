@@ -240,6 +240,29 @@ describe(determineUtxosForSpend.name, () => {
     expect(result.fee.amount.isEqualTo(735)).toBeTruthy();
     expect(fee).toEqual(735);
   });
+
+  test('that spending all taproot utxos with sendMax produces lower fee than native segwit', () => {
+    const taprootUtxos = generateMockTaprootTransactions([1000, 2000, 3000]);
+    const segwitUtxos = generateMockTransactions([1000, 2000, 3000]);
+    const feeRate = 2;
+
+    const taprootResult = determineUtxosForSpendAll({
+      utxos: taprootUtxos,
+      recipients: [{ address: recipientAddress, amount: createMoney(5000, 'BTC') }],
+      feeRate,
+    });
+    const segwitResult = determineUtxosForSpendAll({
+      utxos: segwitUtxos,
+      recipients: [{ address: recipientAddress, amount: createMoney(5000, 'BTC') }],
+      feeRate,
+    });
+
+    expect(taprootResult.inputs.length).toEqual(3);
+    expect(taprootResult.outputs.length).toEqual(1);
+    expect(taprootResult.fee.amount.isLessThan(segwitResult.fee.amount)).toBeTruthy();
+    expect(taprootResult.size).toBeGreaterThan(200);
+    expect(taprootResult.size).toBeLessThan(220);
+  });
 });
 
 describe('mixed input types', () => {
@@ -280,5 +303,58 @@ describe('mixed input types', () => {
     expect(estimation.fee.amount.toNumber()).toBeGreaterThan(0);
     expect(estimation.txVBytes).toBeGreaterThan(170);
     expect(estimation.txVBytes).toBeLessThan(210);
+  });
+
+  test('that spending all mixed P2WPKH + P2TR utxos includes inputs from both address types', () => {
+    const nativeSegwitUtxos = generateMockTransactions([2000, 3000]);
+    const taprootUtxos = generateMockTaprootTransactions([2000, 3000]);
+    const allTaprootUtxos = generateMockTaprootTransactions([2000, 3000, 2000, 3000]);
+    const mixedUtxos = [...nativeSegwitUtxos, ...taprootUtxos];
+    const feeRate = 4;
+
+    const mixedResult = determineUtxosForSpendAll({
+      utxos: mixedUtxos,
+      recipients: [{ address: recipientAddress, amount: createMoney(8000, 'BTC') }],
+      feeRate,
+    });
+    const allTaprootResult = determineUtxosForSpendAll({
+      utxos: allTaprootUtxos,
+      recipients: [{ address: recipientAddress, amount: createMoney(8000, 'BTC') }],
+      feeRate,
+    });
+
+    expect(mixedResult.inputs.length).toEqual(4);
+    expect(mixedResult.outputs.length).toEqual(1);
+
+    const hasSegwit = mixedResult.inputs.some(u => u.address.startsWith('tb1q'));
+    const hasTaproot = mixedResult.inputs.some(u => u.address.startsWith('tb1p'));
+    expect(hasSegwit).toBeTruthy();
+    expect(hasTaproot).toBeTruthy();
+
+    expect(mixedResult.size).toBeGreaterThan(280);
+    expect(mixedResult.size).toBeLessThan(300);
+    expect(mixedResult.fee.amount.isGreaterThan(allTaprootResult.fee.amount)).toBeTruthy();
+  });
+
+  test('that mixed P2WPKH + P2TR inputs are sorted by value descending', () => {
+    const nativeSegwitUtxos = generateMockTransactions([15_000, 40_000]);
+    const taprootUtxos = generateMockTaprootTransactions([25_000, 30_000]);
+    const utxos = [...nativeSegwitUtxos, ...taprootUtxos];
+
+    const result = determineUtxosForSpend({
+      utxos,
+      recipients: [
+        {
+          address: recipientAddress,
+          amount: createMoney(50_000, 'BTC'),
+        },
+      ],
+      feeRate: 20,
+    });
+    result.inputs.forEach((input, i) => {
+      const nextInput = result.inputs[i + 1];
+      if (!nextInput) return;
+      expect(input.value >= nextInput.value).toEqual(true);
+    });
   });
 });

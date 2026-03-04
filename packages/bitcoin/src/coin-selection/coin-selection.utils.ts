@@ -95,12 +95,14 @@ export function getSpendableAmount<T extends InputData>({
   utxos,
   feeRate,
   recipients,
+  isSendMax,
 }: GetSpendableAmountArgs<T>) {
   const balance = utxos.map(utxo => utxo.value).reduce((prevVal, curVal) => prevVal + curVal, 0);
 
   const size = getSizeInfo({
     utxos,
     recipients,
+    isSendMax,
   });
   const fee = Math.ceil(size.txVBytes * feeRate);
   const bigNumberBalance = BigNumber(balance);
