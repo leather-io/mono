@@ -188,3 +188,24 @@ export async function mockUtxoRequestsWithInscriptions(page: Page, utxos: OwnedU
     return route.fulfill({ json: [] });
   });
 }
+
+interface LeatherUtxoMock {
+  txid: string;
+  vout: number;
+  value: string;
+  height: number;
+  address: string;
+  path: string;
+}
+
+export async function mockMixedUtxoRequests(page: Page, utxos: LeatherUtxoMock[]) {
+  await page.route('**/v1/utxos/**', route => {
+    const url = route.request().url();
+    const trUtxos = utxos.filter(u => u.path.startsWith("m/86'"));
+    const nsUtxos = utxos.filter(u => u.path.startsWith("m/84'"));
+    if (url.includes(encodeURIComponent('tr('))) {
+      return route.fulfill({ json: trUtxos });
+    }
+    return route.fulfill({ json: nsUtxos });
+  });
+}

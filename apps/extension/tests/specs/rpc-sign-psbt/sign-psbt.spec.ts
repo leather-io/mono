@@ -1,3 +1,4 @@
+import { hexToBytes } from '@noble/hashes/utils';
 import { BrowserContext, Page, type Route } from '@playwright/test';
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
@@ -7,7 +8,9 @@ import { TEST_ACCOUNT_SECRET_KEY } from '@tests/page-object-models/onboarding.pa
 
 import {
   type BtcSignerNetwork,
+  ecdsaPublicKeyToSchnorr,
   makeNativeSegwitAddressIndexDerivationPath,
+  makeTaprootAddressIndexDerivationPath,
 } from '@leather.io/bitcoin';
 import type { RpcParams, signPsbt } from '@leather.io/rpc';
 
@@ -18,6 +21,19 @@ function createKeychainFromTestMnmeonic() {
   const keychain = HDKey.fromMasterSeed(seed);
   return keychain.derive(
     makeNativeSegwitAddressIndexDerivationPath({
+      network: 'testnet',
+      accountIndex: 0,
+      changeIndex: 0,
+      addressIndex: 0,
+    })
+  );
+}
+
+function createTaprootKeychainFromTestMnemonic() {
+  const seed = mnemonicToSeedSync(TEST_ACCOUNT_SECRET_KEY);
+  const keychain = HDKey.fromMasterSeed(seed);
+  return keychain.derive(
+    makeTaprootAddressIndexDerivationPath({
       network: 'testnet',
       accountIndex: 0,
       changeIndex: 0,
@@ -276,5 +292,242 @@ test.describe('Sign PSBT', () => {
     delete result.id;
 
     test.expect(result).toEqual(createExpectedError(4002, 'Failed to broadcast transaction'));
+  });
+
+  test.describe('Taproot inputs', () => {
+    const taprootKeychain = createTaprootKeychainFromTestMnemonic();
+    if (!taprootKeychain.publicKey) throw new Error('No taproot publicKey');
+
+    const schnorrPubKey = ecdsaPublicKeyToSchnorr(taprootKeychain.publicKey);
+    const taprootPayment = btc.p2tr(schnorrPubKey, undefined, bitcoinTestnet);
+
+    function createTaprootTestPsbt() {
+      const psbt = new btc.Transaction();
+      psbt.addInput({
+        txid: '3f6c95b9895cd22943c8f8bcac899c10997b99651f0a7d9bd8c0c6f3536cbbc7',
+        index: 2,
+        witnessUtxo: {
+          amount: 5000n,
+          script: taprootPayment.script,
+        },
+        tapInternalKey: taprootPayment.tapInternalKey,
+      });
+
+      psbt.addInput({
+        txid: 'b7a3e8d14f2c6a0953e1d4b8c7f5a2e9d6b3c0f1a4e7d2c5b8f1a4d7c0e3f6a9',
+        index: 3,
+        witnessUtxo: {
+          amount: 10000n,
+          script: taprootPayment.script,
+        },
+        tapInternalKey: taprootPayment.tapInternalKey,
+      });
+
+      psbt.addOutputAddress('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d', 1000n, bitcoinTestnet);
+      return psbt;
+    }
+
+    function createTaprootTestPsbtWithoutTapInternalKey() {
+      const psbt = new btc.Transaction();
+      psbt.addInput({
+        txid: '3f6c95b9895cd22943c8f8bcac899c10997b99651f0a7d9bd8c0c6f3536cbbc7',
+        index: 2,
+        witnessUtxo: {
+          amount: 5000n,
+          script: taprootPayment.script,
+        },
+      });
+
+      psbt.addInput({
+        txid: 'b7a3e8d14f2c6a0953e1d4b8c7f5a2e9d6b3c0f1a4e7d2c5b8f1a4d7c0e3f6a9',
+        index: 3,
+        witnessUtxo: {
+          amount: 10000n,
+          script: taprootPayment.script,
+        },
+      });
+
+      psbt.addOutputAddress('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d', 1000n, bitcoinTestnet);
+      return psbt;
+    }
+
+    test('that all taproot inputs are signed and broadcast', async ({ page, context }) => {
+      const psbt = createTaprootTestPsbt();
+      const reqPromise = interceptBroadcastRequest(context, route =>
+        route.fulfill({
+          body: 'not-a-real-txid-response',
+        })
+      );
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          broadcast: true,
+        }),
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      await reqPromise;
+
+      delete result.id;
+
+      test.expect(result.jsonrpc).toEqual('2.0');
+      test.expect(result.result).toBeDefined();
+      test.expect(result.result.txid).toEqual('not-a-real-txid-response');
+
+      const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.result.hex));
+      test.expect(signedTx.getInput(0).tapKeySig).toBeDefined();
+      test.expect(signedTx.getInput(1).tapKeySig).toBeDefined();
+    });
+
+    test('that only requested taproot input is signed', async ({ page, context }) => {
+      const psbt = createTaprootTestPsbt();
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          signAtIndex: 0,
+          broadcast: false,
+        }),
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      delete result.id;
+
+      test.expect(result.jsonrpc).toEqual('2.0');
+      test.expect(result.result).toBeDefined();
+
+      const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.result.hex));
+      test.expect(signedTx.getInput(0).tapKeySig).toBeDefined();
+      test.expect(signedTx.getInput(1).tapKeySig).toBeUndefined();
+    });
+
+    test('that taproot PSBT without tapInternalKey signs successfully via auto-injection', async ({
+      page,
+      context,
+    }) => {
+      const psbt = createTaprootTestPsbtWithoutTapInternalKey();
+      const reqPromise = interceptBroadcastRequest(context, route =>
+        route.fulfill({
+          body: 'not-a-real-txid-response',
+        })
+      );
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          broadcast: true,
+        }),
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      await reqPromise;
+
+      delete result.id;
+
+      test.expect(result.result).toBeDefined();
+      test.expect(result.result.hex).toBeTruthy();
+      test.expect(result.result.txid).toEqual('not-a-real-txid-response');
+    });
+
+    test('that taproot signing request can be canceled', async ({ page, context }) => {
+      const psbt = createTaprootTestPsbt();
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          broadcast: false,
+        }),
+        clickActionButton(context)('Cancel'),
+      ]);
+
+      delete result.id;
+
+      test.expect(result).toEqual(createExpectedError(4001, 'User rejected signing PSBT request'));
+    });
+  });
+
+  test.describe('Mixed inputs (p2wpkh + p2tr)', () => {
+    const taprootKeychain = createTaprootKeychainFromTestMnemonic();
+    if (!taprootKeychain.publicKey) throw new Error('No taproot publicKey');
+
+    const schnorrPubKey = ecdsaPublicKeyToSchnorr(taprootKeychain.publicKey);
+    const taprootPayment = btc.p2tr(schnorrPubKey, undefined, bitcoinTestnet);
+
+    function createMixedTestPsbt() {
+      const psbt = new btc.Transaction();
+      psbt.addInput({
+        txid: '2965dc62a012028b529c902da59606d65d35353c966aeaf9287f534547609f5f',
+        index: 1,
+        witnessUtxo: {
+          amount: 4805n,
+          script: btc.p2wpkh(addressKeychain.publicKey!, bitcoinTestnet).script,
+        },
+      });
+
+      psbt.addInput({
+        txid: '3f6c95b9895cd22943c8f8bcac899c10997b99651f0a7d9bd8c0c6f3536cbbc7',
+        index: 2,
+        witnessUtxo: {
+          amount: 10000n,
+          script: taprootPayment.script,
+        },
+        tapInternalKey: taprootPayment.tapInternalKey,
+      });
+
+      psbt.addOutputAddress('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d', 1000n, bitcoinTestnet);
+      return psbt;
+    }
+
+    test('that all mixed inputs are signed and broadcast', async ({ page, context }) => {
+      const psbt = createMixedTestPsbt();
+      const reqPromise = interceptBroadcastRequest(context, route =>
+        route.fulfill({
+          body: 'not-a-real-txid-response',
+        })
+      );
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          broadcast: true,
+        }),
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      await reqPromise;
+
+      delete result.id;
+
+      test.expect(result.jsonrpc).toEqual('2.0');
+      test.expect(result.result).toBeDefined();
+      test.expect(result.result.txid).toEqual('not-a-real-txid-response');
+
+      const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.result.hex));
+      test.expect(signedTx.getInput(0).partialSig).toBeDefined();
+      test.expect(signedTx.getInput(1).tapKeySig).toBeDefined();
+    });
+
+    test('that only taproot input is signed in mixed PSBT', async ({ page, context }) => {
+      const psbt = createMixedTestPsbt();
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          signAtIndex: 1,
+          broadcast: false,
+        }),
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      delete result.id;
+
+      test.expect(result.jsonrpc).toEqual('2.0');
+      test.expect(result.result).toBeDefined();
+
+      const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.result.hex));
+      test.expect(signedTx.getInput(0).partialSig).toBeUndefined();
+      test.expect(signedTx.getInput(1).tapKeySig).toBeDefined();
+    });
   });
 });
