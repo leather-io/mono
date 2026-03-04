@@ -939,6 +939,24 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.37.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.37.0...@leather.io/bitcoin-v0.37.1) (2026-03-04)
+
+
+### Bug Fixes
+
+* add tr related unit tests + fix bug in max send calculation ([852e8a6](https://github.com/leather-io/mono/commit/852e8a6765fef7cb98014642fa94357e7dbfc1c0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.33.0
+    * @leather.io/crypto bumped to 1.12.18
+    * @leather.io/utils bumped to 0.50.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.12
+
 ## [0.37.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.36.6...@leather.io/bitcoin-v0.37.0) (2026-03-02)
 
 

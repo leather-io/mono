@@ -18,6 +18,31 @@
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
+## [2.102.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.101.0...@leather.io/mobile-v2.102.0) (2026-03-04)
+
+
+### Features
+
+* **extension:** overhaul collectibles tab with new UI and empty states ([73e6231](https://github.com/leather-io/mono/commit/73e623133b5786621a06b83bf099a68f5e3889ef))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.37.1
+    * @leather.io/constants bumped to 0.33.0
+    * @leather.io/crypto bumped to 1.12.18
+    * @leather.io/features bumped to 1.2.1
+    * @leather.io/provider bumped to 1.6.20
+    * @leather.io/queries bumped to 0.6.2
+    * @leather.io/query bumped to 2.45.15
+    * @leather.io/rpc bumped to 2.21.12
+    * @leather.io/services bumped to 1.49.1
+    * @leather.io/stacks bumped to 1.19.14
+    * @leather.io/ui bumped to 1.108.0
+    * @leather.io/utils bumped to 0.50.1
+
 ## [2.101.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.100.1...@leather.io/mobile-v2.101.0) (2026-03-02)
 
 
