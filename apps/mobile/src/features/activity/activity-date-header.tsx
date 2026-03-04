@@ -1,28 +1,19 @@
 import { t } from '@lingui/core/macro';
-import dayjs from 'dayjs';
 
+import { formatDateGroupLabel as formatDateGroupLabelBase } from '@leather.io/features';
 import { Box, Text } from '@leather.io/ui/native';
+
+export { getDateGroupKey } from '@leather.io/features';
 
 interface ActivityDateHeaderProps {
   timestamp: number;
 }
 
 function formatDateGroupLabel(timestampSeconds: number): string {
-  const date = dayjs(timestampSeconds * 1000);
-  const now = dayjs();
-  const today = now.startOf('day');
-  const yesterday = today.subtract(1, 'day');
-
-  if (date.isAfter(today)) return t`Today`;
-  if (date.isAfter(yesterday)) return t`Yesterday`;
-  return date.format('MMM DD, YYYY');
-}
-
-export function getDateGroupKey(timestampSeconds: number): string {
-  return dayjs(timestampSeconds * 1000)
-    .startOf('day')
-    .valueOf()
-    .toString();
+  const label = formatDateGroupLabelBase(timestampSeconds);
+  if (label === 'Today') return t`Today`;
+  if (label === 'Yesterday') return t`Yesterday`;
+  return label;
 }
 
 export function ActivityDateHeader({ timestamp }: ActivityDateHeaderProps) {

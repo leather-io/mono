@@ -4,43 +4,19 @@ import { FetchState } from '@/components/loading/fetch-state';
 import { Screen } from '@/components/screen/screen';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 
-import { type ActivityView } from '@leather.io/features';
+import {
+  type ActivityView,
+  type DateHeaderRow,
+  insertDateHeaders,
+  isDateHeaderRow,
+} from '@leather.io/features';
 
-import { ActivityDateHeader, getDateGroupKey } from './activity-date-header';
+import { ActivityDateHeader } from './activity-date-header';
 import { ActivityEmpty } from './activity-empty';
 import { ActivityItem } from './activity-item';
 import { ActivityLoading } from './activity-loading';
 
-interface DateHeaderRow {
-  key: string;
-  kind: 'date-header';
-  timestamp: number;
-}
-
 type ActivityListRow = ActivityView | DateHeaderRow;
-
-function isDateHeaderRow(item: ActivityListRow): item is DateHeaderRow {
-  return 'kind' in item && item.kind === 'date-header';
-}
-
-function insertDateHeaders(items: ActivityView[]): ActivityListRow[] {
-  const result: ActivityListRow[] = [];
-  let lastDateKey = '';
-
-  for (const item of items) {
-    const ts = item.timestamp;
-    if (ts) {
-      const dateKey = getDateGroupKey(ts);
-      if (dateKey !== lastDateKey) {
-        lastDateKey = dateKey;
-        result.push({ key: `date-${dateKey}`, kind: 'date-header', timestamp: ts });
-      }
-    }
-    result.push(item);
-  }
-
-  return result;
-}
 
 interface ActivityListProps {
   data: FetchState<ActivityView[]>;
