@@ -1,8 +1,17 @@
 import { createMoney } from '@leather.io/utils';
 
 import { recipientAddress } from '../mocks/mocks';
-import { mockUtxos } from './coin-selection.mocks';
-import { filterUneconomicalUtxos } from './coin-selection.utils';
+import {
+  generateMockTaprootTransactions,
+  generateMockTransactions,
+  mockTaprootUtxos,
+  mockUtxos,
+} from './coin-selection.mocks';
+import {
+  countInputsByScriptType,
+  filterUneconomicalUtxos,
+  getSpendableAmount,
+} from './coin-selection.utils';
 
 describe(filterUneconomicalUtxos.name, () => {
   const recipients = [
@@ -61,5 +70,107 @@ describe(filterUneconomicalUtxos.name, () => {
       feeRate: fee,
     });
     expect(filteredUtxos.length).toEqual(2);
+  });
+
+  describe('with taproot utxos', () => {
+    test('that every surviving taproot utxo increases spendable amount', () => {
+      const feeRate = 200;
+      const survivors = filterUneconomicalUtxos({
+        utxos: mockTaprootUtxos,
+        feeRate,
+        recipients,
+      });
+
+      const { spendableAmount: fullAmount } = getSpendableAmount({
+        utxos: mockTaprootUtxos,
+        feeRate,
+        recipients,
+      });
+
+      for (const utxo of survivors) {
+        const { spendableAmount: withoutUtxo } = getSpendableAmount({
+          utxos: mockTaprootUtxos.filter(u => u.txid !== utxo.txid),
+          feeRate,
+          recipients,
+        });
+        expect(fullAmount.toNumber()).toBeGreaterThan(withoutUtxo.toNumber());
+      }
+    });
+
+    test('that every filtered taproot utxo does not increase spendable amount', () => {
+      const feeRate = 200;
+      const survivors = filterUneconomicalUtxos({
+        utxos: mockTaprootUtxos,
+        feeRate,
+        recipients,
+      });
+      const filtered = mockTaprootUtxos.filter(u => !survivors.some(s => s.txid === u.txid));
+
+      expect(filtered.length).toBeGreaterThan(0);
+
+      const { spendableAmount: fullAmount } = getSpendableAmount({
+        utxos: mockTaprootUtxos,
+        feeRate,
+        recipients,
+      });
+
+      for (const utxo of filtered) {
+        const { spendableAmount: withoutUtxo } = getSpendableAmount({
+          utxos: mockTaprootUtxos.filter(u => u.txid !== utxo.txid),
+          feeRate,
+          recipients,
+        });
+        expect(withoutUtxo.toNumber()).toBeGreaterThanOrEqual(fullAmount.toNumber());
+      }
+    });
+
+    test('that taproot inputs are cheaper so more survive than native segwit', () => {
+      const feeRate = 10;
+      const segwitResult = filterUneconomicalUtxos({
+        utxos: mockUtxos,
+        feeRate,
+        recipients,
+      });
+      const taprootResult = filterUneconomicalUtxos({
+        utxos: mockTaprootUtxos,
+        feeRate,
+        recipients,
+      });
+
+      expect(taprootResult.length).toBeGreaterThan(segwitResult.length);
+    });
+
+    test('that taproot utxo below dust threshold is filtered even at low fee rate', () => {
+      const utxosWithDust = generateMockTaprootTransactions([200, 50000000]);
+      const result = filterUneconomicalUtxos({
+        utxos: utxosWithDust,
+        feeRate: 1,
+        recipients,
+      });
+
+      expect(result.length).toEqual(1);
+      expect(result[0].value).toEqual(50000000);
+    });
+  });
+});
+
+describe(countInputsByScriptType.name, () => {
+  test('all native segwit utxos', () => {
+    const result = countInputsByScriptType(mockUtxos);
+    expect(result).toEqual({ p2wpkh: 9, p2tr: 0 });
+  });
+
+  test('all taproot utxos', () => {
+    const result = countInputsByScriptType(mockTaprootUtxos);
+    expect(result).toEqual({ p2wpkh: 0, p2tr: 9 });
+  });
+
+  test('mixed utxos', () => {
+    const mixed = [
+      ...generateMockTransactions([1000, 2000]),
+      ...generateMockTaprootTransactions([3000, 4000, 5000]),
+    ];
+    const result = countInputsByScriptType(mixed);
+    expect(result).toEqual({ p2wpkh: 2, p2tr: 3 });
   });
 });
