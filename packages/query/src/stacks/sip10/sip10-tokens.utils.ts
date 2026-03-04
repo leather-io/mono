@@ -7,7 +7,7 @@ import {
   type Sip10Asset,
 } from '@leather.io/models';
 import { getStacksAssetStringParts } from '@leather.io/stacks';
-import { getTicker, isUndefined } from '@leather.io/utils';
+import { getSip10TokenNameWithOverrides, getTicker, isUndefined } from '@leather.io/utils';
 
 export function isTransferableSip10Token(token: Partial<FtMetadataResponse>) {
   return !isUndefined(token.decimals) && !isUndefined(token.name) && !isUndefined(token.symbol);
@@ -15,7 +15,8 @@ export function isTransferableSip10Token(token: Partial<FtMetadataResponse>) {
 
 export function createSip10Asset(key: string, ftAsset: FtMetadataResponse): Sip10Asset {
   const { contractAssetName } = getStacksAssetStringParts(key);
-  const name = ftAsset.name || contractAssetName;
+  const contractPrincipal = key.split('::')[0];
+  const name = getSip10TokenNameWithOverrides(contractPrincipal, ftAsset.name || contractAssetName);
 
   return {
     chain: CryptoAssetChains.stacks,
