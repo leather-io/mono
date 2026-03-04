@@ -98,6 +98,10 @@ export interface Events extends HistoricalEvents {
   app_icon_picker_sheet_dismissed: undefined;
   app_icon_selected: { icon: string; previousIcon: string };
   app_icon_change_failed: { icon: string; previousIcon: string; error?: string };
+  settings_menu_item_clicked: undefined;
+  privacy_toggled: undefined;
+  theme_menu_item_clicked: undefined;
+  network_menu_item_clicked: undefined;
   network_added: undefined;
   network_edited: undefined;
 }
@@ -124,10 +128,6 @@ interface HistoricalEvents {
   create_new_account: undefined;
   change_network: { id: string };
   click_open_in_new_tab_menu_item: undefined;
-  click_change_network_menu_item: undefined;
-  click_change_theme_menu_item: undefined;
-  click_settings_menu_item: undefined;
-  click_toggle_privacy: undefined;
   click_unprotect_all_inscriptions: undefined;
   click_manage_inscriptions: undefined;
   request_psbt_cancel: undefined;

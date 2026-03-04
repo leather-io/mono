@@ -53,7 +53,7 @@ export function MenuButtons() {
         variant="chevron"
         title="Theme"
         onClick={() => {
-          analytics.track('click_change_theme_menu_item');
+          analytics.track('theme_menu_item_clicked');
           void navigate(RouteUrls.SelectTheme);
         }}
         icon={<SunInCloudIcon />}
@@ -64,7 +64,7 @@ export function MenuButtons() {
         variant="chevron"
         title="Network"
         onClick={() => {
-          analytics.track('click_change_network_menu_item');
+          analytics.track('network_menu_item_clicked');
           void navigate(RouteUrls.SelectNetwork);
         }}
         icon={<GlobeTiltedIcon />}

@@ -60,7 +60,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
     <DropdownMenu.Item
       data-testid={SettingsSelectors.SettingsMenuItem}
       onSelect={() => {
-        analytics.track('click_settings_menu_item');
+        analytics.track('settings_menu_item_clicked');
         void navigate(RouteUrls.Settings);
       }}
     >
@@ -76,7 +76,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
     <DropdownMenu.Item
       data-testid={SettingsSelectors.TogglePrivacy}
       onSelect={e => {
-        analytics.track('click_toggle_privacy');
+        analytics.track('privacy_toggled');
         togglePrivateMode();
         e.preventDefault();
       }}
