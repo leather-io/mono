@@ -43,6 +43,35 @@
 
 ---
 
+## [6.96.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.96.0...@leather.io/extension-v6.96.1) (2026-03-04)
+
+
+### Bug Fixes
+
+* **extension:** add loading="lazy" to collectible images ([8fe4429](https://github.com/leather-io/mono/commit/8fe4429692d9280db52f16c3b6422bcf0aaa609e))
+* **extension:** restore IntersectionObserver lazy rendering for collectible cards ([83a6211](https://github.com/leather-io/mono/commit/83a6211a1b23ec2a84c730d9cc8c108ee653e18f))
+* **extension:** restore pixelated rendering for small collectible images ([bb991b8](https://github.com/leather-io/mono/commit/bb991b81cd0884a536869bad585ed396bdb63ee0))
+* **extension:** restore unprotected label on discarded inscriptions ([c6a719d](https://github.com/leather-io/mono/commit/c6a719d57e41a18877b27fa97a7af72c2e83123d))
+* **extension:** use React Query for text inscription content fetching ([d2ecd5f](https://github.com/leather-io/mono/commit/d2ecd5fa3cfae7382085a8960b55a5cdfa25b749))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.37.2
+    * @leather.io/constants bumped to 0.34.0
+    * @leather.io/crypto bumped to 1.12.19
+    * @leather.io/features bumped to 1.3.0
+    * @leather.io/provider bumped to 1.6.21
+    * @leather.io/queries bumped to 0.6.3
+    * @leather.io/query bumped to 2.46.0
+    * @leather.io/rpc bumped to 2.21.13
+    * @leather.io/services bumped to 1.50.0
+    * @leather.io/stacks bumped to 1.19.15
+    * @leather.io/ui bumped to 1.108.1
+    * @leather.io/utils bumped to 0.51.0
+
 ## [6.96.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.95.0...@leather.io/extension-v6.96.0) (2026-03-04)
 
 

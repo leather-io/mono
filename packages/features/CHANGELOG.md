@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.3.0](https://github.com/leather-io/mono/compare/@leather.io/features-v1.2.1...@leather.io/features-v1.3.0) (2026-03-04)
+
+
+### Features
+
+* **utils:** add sip10 token name override function ref LEA-3483 ([d650958](https://github.com/leather-io/mono/commit/d6509588398ac33f02ceb5272c764f6c1fb2c9b2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.34.0
+    * @leather.io/services bumped to 1.50.0
+    * @leather.io/stacks bumped to 1.19.15
+    * @leather.io/utils bumped to 0.51.0
+
 ## [1.2.1](https://github.com/leather-io/mono/compare/@leather.io/features-v1.2.0...@leather.io/features-v1.2.1) (2026-03-04)
 
 

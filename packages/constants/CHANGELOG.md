@@ -215,6 +215,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.34.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.33.0...@leather.io/constants-v0.34.0) (2026-03-04)
+
+
+### Features
+
+* **utils:** add sip10 token name override function ref LEA-3483 ([d650958](https://github.com/leather-io/mono/commit/d6509588398ac33f02ceb5272c764f6c1fb2c9b2))
+
 ## [0.33.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.32.0...@leather.io/constants-v0.33.0) (2026-03-04)
 
 
