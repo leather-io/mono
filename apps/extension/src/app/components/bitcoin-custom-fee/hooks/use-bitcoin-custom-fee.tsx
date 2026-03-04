@@ -6,7 +6,7 @@ import { baseCurrencyAmountInQuote } from '@leather.io/utils';
 import type { TransferRecipient } from '@shared/models/form.model';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
+import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
 
 export const MAX_FEE_RATE_MULTIPLIER = 50;
@@ -17,7 +17,7 @@ interface UseBitcoinCustomFeeArgs {
 }
 
 export function useBitcoinCustomFee({ isSendingMax, recipients }: UseBitcoinCustomFeeArgs) {
-  const { utxos } = useCurrentNativeSegwitUtxos();
+  const { utxos } = useCurrentUtxos();
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
 
   return useCallback(
