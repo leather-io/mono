@@ -14,7 +14,7 @@ export function GenericSearchTextInput(props: TextInputProps<Theme>) {
       width="100%"
       py="5"
       borderRadius="sm"
-      placeholderTextColor={theme.colors['ink.text-subdued']}
+      placeholderTextColor={theme.colors['ink.text-subdued-secondary']}
       color="ink.text-primary"
       placeholder={t`Type URL or search`}
     />

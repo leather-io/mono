@@ -75,7 +75,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
         enableSorting: false,
         meta: { align: 'left' },
         header: () => (
-          <styled.p textStyle="label.03" color="ink.text-subdued">
+          <styled.p textStyle="label.03" color="ink.text-subdued-secondary">
             Asset
           </styled.p>
         ),
@@ -90,7 +90,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
         enableSorting: false,
         meta: { align: 'left' },
         header: () => (
-          <styled.p textStyle="label.03" color="ink.text-subdued">
+          <styled.p textStyle="label.03" color="ink.text-subdued-secondary">
             Price
           </styled.p>
         ),
@@ -103,7 +103,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
         enableSorting: false,
         meta: { align: 'left' },
         header: () => (
-          <styled.p textStyle="label.03" color="ink.text-subdued">
+          <styled.p textStyle="label.03" color="ink.text-subdued-secondary">
             Allocation
           </styled.p>
         ),
@@ -117,7 +117,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
         enableSorting: false,
         meta: { align: 'left' },
         header: () => (
-          <styled.p textStyle="label.03" color="ink.text-subdued">
+          <styled.p textStyle="label.03" color="ink.text-subdued-secondary">
             24h
           </styled.p>
         ),
@@ -131,7 +131,7 @@ export function PortfolioTable({ assets, isLoading }: PortfolioTableProps) {
         enableSortingRemoval: false,
         meta: { align: 'right' },
         header: () => (
-          <styled.p textStyle="label.03" color="ink.text-subdued" textAlign="right">
+          <styled.p textStyle="label.03" color="ink.text-subdued-secondary" textAlign="right">
             Balance
           </styled.p>
         ),

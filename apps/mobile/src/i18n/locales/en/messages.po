@@ -236,7 +236,6 @@ msgid "Address types"
 msgstr "Address types"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:186
-#: src/features/recover-wallet/recover-wallet.layout.tsx:48
 msgid "Advanced options"
 msgstr "Advanced options"
 
@@ -344,7 +343,6 @@ msgid "App authorization updated"
 msgstr "App authorization updated"
 
 #: src/app/settings/index.tsx:91
-#: src/features/settings/choose-app-icon/app-icon-picker-sheet.tsx:70
 msgid "App Icon"
 msgstr "App Icon"
 
@@ -401,9 +399,7 @@ msgstr "Back up your Secret Key"
 msgid "Balances"
 msgstr "Balances"
 
-#: src/features/recover-wallet/recover-wallet.layout.tsx:68
 #: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:18
-#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:20
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
@@ -435,7 +431,6 @@ msgid "Bitcoin unit updated"
 msgstr "Bitcoin unit updated"
 
 #: src/features/swap/components/fees-info-sheet.tsx:18
-#: src/utils/dapps.ts:45
 msgid "Bitflow"
 msgstr "Bitflow"
 
@@ -563,12 +558,7 @@ msgstr ""
 "Configure\n"
 "wallet"
 
-#: src/features/approver/components/memo-sheet.tsx:18
-#: src/features/approver/components/nonce-sheet.tsx:18
-#: src/features/send/components/memo.tsx:88
-#: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
 #: src/features/swap/screens/swap-review-screen.tsx:203
-#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -728,7 +718,6 @@ msgstr "Discover marketplaces"
 msgid "Dismiss"
 msgstr "Dismiss"
 
-#: src/app/settings/display/index.tsx:52
 #: src/app/settings/index.tsx:70
 msgid "Display"
 msgstr "Display"
@@ -950,7 +939,6 @@ msgstr "Genesis block"
 msgid "Genesis time"
 msgstr "Genesis time"
 
-#: src/app/settings/help/index.tsx:18
 #: src/app/settings/index.tsx:108
 msgid "Get support or provide feedback"
 msgstr "Get support or provide feedback"
@@ -995,7 +983,6 @@ msgstr "Guides"
 msgid "Haptics"
 msgstr "Haptics"
 
-#: src/app/settings/help/index.tsx:14
 #: src/app/settings/index.tsx:107
 msgid "Help"
 msgstr "Help"
@@ -1279,7 +1266,6 @@ msgid "Minimum version format is invalid"
 msgstr "Minimum version format is invalid"
 
 #: src/app/settings/index.tsx:118
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:95
 msgid "More options"
 msgstr "More options"
 
@@ -1309,7 +1295,6 @@ msgid "Network fee"
 msgstr "Network fee"
 
 #: src/app/settings/index.tsx:84
-#: src/app/settings/networks/index.tsx:47
 msgid "Networks"
 msgstr "Networks"
 
@@ -1366,7 +1351,6 @@ msgid "Not enough liquidity or no route available right now. Try a smaller amoun
 msgstr "Not enough liquidity or no route available right now. Try a smaller amount or check back later."
 
 #: src/app/settings/index.tsx:99
-#: src/app/settings/notifications/_layout.tsx:13
 msgid "Notifications"
 msgstr "Notifications"
 
@@ -1433,7 +1417,6 @@ msgstr "Portfolio"
 msgid "Price"
 msgstr "Price"
 
-#: src/features/swap/components/price-impact-info-sheet.tsx:8
 #: src/features/swap/screens/swap-review-screen.tsx:178
 msgid "Price impact"
 msgstr "Price impact"
@@ -1500,9 +1483,7 @@ msgstr "Read less"
 msgid "Read more"
 msgstr "Read more"
 
-#: src/components/action-buttons.tsx:44
 #: src/features/receive/screens/asset-details.tsx:56
-#: src/features/receive/screens/select-asset.tsx:83
 #: src/features/token/components/get-first-nft-section.tsx:57
 #: src/features/token/components/get-first-nft-section.tsx:79
 msgid "Receive"
@@ -1562,7 +1543,6 @@ msgid "Registered at block"
 msgstr "Registered at block"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:175
-#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:17
 msgid "Remove wallet"
 msgstr "Remove wallet"
 
@@ -1590,9 +1570,7 @@ msgstr "Restake"
 msgid "Restore wallet"
 msgstr "Restore wallet"
 
-#: src/features/approver/components/approver-buttons/index.tsx:52
 #: src/features/swap/components/asset-selector/asset-selector-error.tsx:26
-#: src/features/swap/components/quote-preview/quote-preview-error.tsx:18
 #: src/features/swap/components/review/swap-review-error-state.tsx:25
 msgid "Retry"
 msgstr "Retry"
@@ -1636,7 +1614,6 @@ msgstr "sBTC Bridge"
 msgid "Scan a Bitcoin or Stacks address"
 msgstr "Scan a Bitcoin or Stacks address"
 
-#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:79
 #: src/features/send/components/recipient/recipient-toggle.tsx:61
 msgid "Scan a QR code"
 msgstr "Scan a QR code"
@@ -1658,7 +1635,6 @@ msgid "Secure your wallet"
 msgstr "Secure your wallet"
 
 #: src/app/settings/index.tsx:77
-#: src/app/settings/security/index.tsx:34
 msgid "Security"
 msgstr "Security"
 
@@ -1706,8 +1682,6 @@ msgid "Sent"
 msgstr "Sent"
 
 #: src/app/settings/index.tsx:59
-#: src/components/screen/screen-header/components/header-actions.tsx:30
-#: src/features/qr-scanner/use-camera-permission.ts:38
 msgid "Settings"
 msgstr "Settings"
 
@@ -1837,7 +1811,6 @@ msgid "Swap"
 msgstr "Swap"
 
 #: src/features/activity/activity-item.tsx:32
-#: src/features/activity/translate-activity-status.ts:38
 msgid "Swap failed"
 msgstr "Swap failed"
 
@@ -1850,13 +1823,10 @@ msgid "Swap wasn't submitted due to an unexpected error. Please try again, or <0
 msgstr "Swap wasn't submitted due to an unexpected error. Please try again, or <0>contact support</0> if it persists."
 
 #: src/features/activity/activity-item.tsx:34
-#: src/features/activity/translate-activity-status.ts:34
 msgid "Swapped"
 msgstr "Swapped"
 
 #: src/features/activity/activity-item.tsx:30
-#: src/features/activity/translate-activity-status.ts:36
-#: src/features/swap/components/quote-preview/quote-preview-constrained.tsx:60
 msgid "Swapping"
 msgstr "Swapping"
 
@@ -1951,7 +1921,6 @@ msgid "This is an “Allow Mode” transaction"
 msgstr "This is an “Allow Mode” transaction"
 
 #: src/features/swap/components/asset-selector/asset-selector-error.tsx:22
-#: src/features/swap/components/quote-preview/quote-preview-error.tsx:15
 #: src/features/swap/components/review/swap-review-error-state.tsx:21
 msgid "This is usually a temporary network or provider-side issue."
 msgstr "This is usually a temporary network or provider-side issue."
@@ -2110,7 +2079,6 @@ msgid "Use your device PIN, Face ID or other biometrics to secure your wallets"
 msgstr "Use your device PIN, Face ID or other biometrics to secure your wallets"
 
 #: src/features/swap/components/fees-info-sheet.tsx:20
-#: src/utils/dapps.ts:70
 msgid "Velar"
 msgstr "Velar"
 

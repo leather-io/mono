@@ -51,7 +51,7 @@ export function TargetAmountPreview({
       </Text>
       <Box height={16}>
         {secondaryAmount && (
-          <Text variant="label03" color="ink.text-subdued">
+          <Text variant="label03" color="ink.text-subdued-secondary">
             {formatCurrency(secondaryAmount)}
           </Text>
         )}
@@ -156,7 +156,7 @@ function getSecondaryAmount(primaryAmount?: Money, marketData?: MarketData) {
 
 function getTargetAmountTextColor(amount?: Money) {
   if (!amount || amount.amount.isZero()) {
-    return 'ink.text-subdued';
+    return 'ink.text-subdued-secondary';
   }
   return 'ink.text-primary';
 }

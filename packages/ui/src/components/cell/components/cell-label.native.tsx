@@ -10,7 +10,7 @@ const labelVariants: Record<CellLabelProps['variant'], TextProps> = {
   },
   secondary: {
     variant: 'caption01',
-    color: 'ink.text-subdued',
+    color: 'ink.text-subdued-secondary',
   },
 };
 

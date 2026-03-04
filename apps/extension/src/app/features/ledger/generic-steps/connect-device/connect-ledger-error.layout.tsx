@@ -54,7 +54,7 @@ export function ConnectLedgerErrorLayout(props: ConnectLedgerErrorLayoutProps) {
         Try again
       </Button>
       <HStack gap="space.01" mt="space.05">
-        <styled.span color="ink.text-subdued" textStyle="label.03">
+        <styled.span color="ink.text-subdued-secondary" textStyle="label.03">
           If the problem persists, check our
         </styled.span>
         <Link

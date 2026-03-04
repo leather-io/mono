@@ -79,5 +79,7 @@ function Title(props: TextProps) {
 }
 
 function Description(props: TextProps) {
-  return <Text variant="label02" color="ink.text-subdued" textAlign="center" {...props} />;
+  return (
+    <Text variant="label02" color="ink.text-subdued-secondary" textAlign="center" {...props} />
+  );
 }

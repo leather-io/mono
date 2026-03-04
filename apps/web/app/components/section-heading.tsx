@@ -47,7 +47,12 @@ export function SectionHeading({
           )}
         </Flex>
         {disclaimer && (
-          <styled.p textStyle="body.02" color="ink.text-subdued" mb="space.01" borderRadius="sm">
+          <styled.p
+            textStyle="body.02"
+            color="ink.text-subdued-secondary"
+            mb="space.01"
+            borderRadius="sm"
+          >
             {sanitizeContent(disclaimer)}
           </styled.p>
         )}

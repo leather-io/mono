@@ -194,7 +194,7 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         <Text
           variant="caption01"
           textAlign="center"
-          color="ink.text-subdued"
+          color="ink.text-subdued-secondary"
         >{t`Make sure everything looks correct.\nConfirmed transactions cannot be undone.`}</Text>
 
         <Button

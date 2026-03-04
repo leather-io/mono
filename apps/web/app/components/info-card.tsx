@@ -71,7 +71,7 @@ interface InfoCardLabelProps extends FlexProps {
 }
 function InfoCardLabel({ children, ...props }: InfoCardLabelProps) {
   return (
-    <Flex textStyle="label.03" color="ink.text-subdued" alignItems="center" {...props}>
+    <Flex textStyle="label.03" color="ink.text-subdued-secondary" alignItems="center" {...props}>
       <Box mr={props.explainer ? 'space.01' : undefined}>{children}</Box>
     </Flex>
   );

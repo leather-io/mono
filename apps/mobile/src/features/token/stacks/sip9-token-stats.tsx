@@ -32,7 +32,7 @@ export function Sip9TokenStats({ floorPrice, latestSale }: Sip9TokenStatsProps) 
             value={
               <Box flexDirection="column" gap="1">
                 <Text variant="label01">{formatCurrency(latestSale)}</Text>
-                <Text variant="label02" color="ink.text-subdued">
+                <Text variant="label02" color="ink.text-subdued-secondary">
                   {formatCurrency(latestSaleInQuote)}
                 </Text>
               </Box>
@@ -45,7 +45,7 @@ export function Sip9TokenStats({ floorPrice, latestSale }: Sip9TokenStatsProps) 
             value={
               <Box flexDirection="column" gap="1">
                 <Text variant="label01">{formatCurrency(floorPrice)}</Text>
-                <Text variant="label02" color="ink.text-subdued">
+                <Text variant="label02" color="ink.text-subdued-secondary">
                   {formatCurrency(floorPriceInQuote)}
                 </Text>
               </Box>

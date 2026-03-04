@@ -13,7 +13,7 @@ export function IncreaseFeeButton(props: IncreaseFeeButtonProps) {
 
   return (
     <styled.button
-      _hover={{ color: 'ink.text-subdued' }}
+      _hover={{ color: 'ink.text-subdued-secondary' }}
       bg="ink.background-primary"
       onClick={e => {
         onIncreaseFee();

@@ -44,7 +44,7 @@ function renderAvatar(asset: SwappableFungibleCryptoAsset | undefined) {
         height={24}
         borderRadius="round"
       >
-        <PlusIcon color="ink.text-subdued" variant="small" />
+        <PlusIcon color="ink.text-subdued-secondary" variant="small" />
       </Flex>
     );
   }

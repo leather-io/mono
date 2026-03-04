@@ -36,7 +36,7 @@ export function SearchInput({
   return (
     <Box flexDirection="row" alignItems="center">
       <Box position="absolute" left={12}>
-        <SearchIcon color="ink.text-subdued" />
+        <SearchIcon color="ink.text-subdued-secondary" />
       </Box>
       <Box flexGrow={1}>
         <TextInput
@@ -67,7 +67,7 @@ export function SearchInput({
             label={t`Clear search`}
             hitSlop={8}
             onPress={clearValue}
-            icon={<CloseIcon variant="small" color="ink.text-subdued" />}
+            icon={<CloseIcon variant="small" color="ink.text-subdued-secondary" />}
           />
         </Animated.View>
       )}

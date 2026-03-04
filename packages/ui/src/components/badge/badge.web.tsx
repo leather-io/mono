@@ -19,7 +19,7 @@ const badgeRecipe = cva({
       default: {
         bg: 'ink.background-secondary',
         border: '1px solid {colors.ink.border-transparent}',
-        color: 'ink.text-subdued',
+        color: 'ink.text-subdued-secondary',
       },
       error: {
         bg: 'red.background-primary',

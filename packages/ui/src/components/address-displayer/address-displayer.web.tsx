@@ -13,7 +13,7 @@ export function AddressDisplayer({ address, ...props }: AddressDisplayerProps) {
       {groupByFour(address).map((letterGroup, index) => (
         <styled.span
           key={index}
-          color={isEven(index) ? 'ink.text-primary' : 'ink.text-subdued'}
+          color={isEven(index) ? 'ink.text-primary' : 'ink.text-subdued-secondary'}
           textStyle="address"
         >
           {letterGroup}

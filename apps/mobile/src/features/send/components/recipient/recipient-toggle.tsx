@@ -53,7 +53,7 @@ export function RecipientToggle({ onPress, onQrButtonPress, value }: RecipientTo
           </AnimatedBox>
         ) : (
           <>
-            <Text variant="label02" color="ink.text-subdued">
+            <Text variant="label02" color="ink.text-subdued-secondary">
               {t`Enter recipient`}
             </Text>
             <IconButton

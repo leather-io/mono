@@ -51,7 +51,7 @@ The amount of bitcoin assigned to the inscription on-chain. A higher output valu
             <Box flexDirection="column" gap="1">
               <Text variant="label01">{`${outputValue} sats`}</Text>
               {outputValueInQuote && (
-                <Text variant="label02" color="ink.text-subdued">
+                <Text variant="label02" color="ink.text-subdued-secondary">
                   {outputValueInQuote}
                 </Text>
               )}

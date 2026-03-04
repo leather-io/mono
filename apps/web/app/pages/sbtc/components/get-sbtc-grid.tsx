@@ -20,7 +20,12 @@ function BridgeToSbtcCell() {
         <Box mt="space.04">
           <styled.h4 textStyle="heading.05">Bridge BTC to sBTC</styled.h4>
 
-          <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
+          <styled.p
+            textStyle="caption.01"
+            mt="space.01"
+            mr="space.05"
+            color="ink.text-subdued-secondary"
+          >
             Bridge BTC to Stacks using the sBTC protocol and unlock new ways to earn Bitcoin through
             DeFi apps in Leather.
             <LearnMoreLink destination="sbtc-bridge" />
@@ -67,7 +72,12 @@ function SwapStxToSbtcCell() {
 
         <Box mt="space.04">
           <styled.h4 textStyle="heading.05">Swap Stacks tokens for sBTC</styled.h4>
-          <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
+          <styled.p
+            textStyle="caption.01"
+            mt="space.01"
+            mr="space.05"
+            color="ink.text-subdued-secondary"
+          >
             Swap assets like STX, sBTC, and stablecoins directly from your Leather wallet using
             integrated DeFi protocols.
             <LearnMoreLink destination="stacks-swap" />

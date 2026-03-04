@@ -21,7 +21,7 @@ export function ContractDeployDetailsLayout({
         <Approver.Subheader>Contract</Approver.Subheader>
         <Stack gap="space.04">
           <Stack gap="space.02">
-            <styled.span color="ink.text-subdued" textStyle="caption.01">
+            <styled.span color="ink.text-subdued-secondary" textStyle="caption.01">
               Address
             </styled.span>
             <AddressDisplayer
@@ -30,7 +30,7 @@ export function ContractDeployDetailsLayout({
             />
           </Stack>
           <Stack gap="space.02">
-            <styled.span color="ink.text-subdued" textStyle="caption.01">
+            <styled.span color="ink.text-subdued-secondary" textStyle="caption.01">
               Contract name
             </styled.span>
             <styled.span textStyle="label.01">{contractName}</styled.span>

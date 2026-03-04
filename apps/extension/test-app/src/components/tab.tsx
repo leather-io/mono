@@ -9,7 +9,7 @@ interface Props {
 export function InactiveTab({ children }: Props) {
   return (
     <Box
-      color="ink.text-subdued"
+      color="ink.text-subdued-secondary"
       mr={6}
       py={3}
       borderColor="white"

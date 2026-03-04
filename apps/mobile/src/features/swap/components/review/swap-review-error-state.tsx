@@ -17,7 +17,7 @@ export function SwapReviewErrorState({ onRetry }: SwapReviewErrorStateProps) {
       />
       <Box gap="2" alignItems="center">
         <Text variant="label01">{t`Unable to load swap details`}</Text>
-        <Text variant="body02" color="ink.text-subdued" textAlign="center">
+        <Text variant="body02" color="ink.text-subdued-secondary" textAlign="center">
           {t`This is usually a temporary network or provider-side issue.`}
         </Text>
       </Box>

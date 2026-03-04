@@ -47,7 +47,7 @@ export function LinkCard({ app }: LinkCardProps) {
           <Text variant="label02" numberOfLines={1}>
             {name}
           </Text>
-          <Text color="ink.text-subdued" variant="caption01">
+          <Text color="ink.text-subdued-secondary" variant="caption01">
             {app.origin}
           </Text>
         </Box>

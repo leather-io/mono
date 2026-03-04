@@ -62,11 +62,16 @@ export function AmountFieldSecondaryValue({
       onPress={inputCurrencyModeChangeEnabled ? handleToggleInputCurrencyMode : undefined}
     >
       <Box flexDirection="row" gap="1" alignItems="center">
-        <Text variant="label02" color="ink.text-subdued" numberOfLines={1} ellipsizeMode="clip">
+        <Text
+          variant="label02"
+          color="ink.text-subdued-secondary"
+          numberOfLines={1}
+          ellipsizeMode="clip"
+        >
           {displayValue}
         </Text>
         {inputCurrencyModeChangeEnabled ? (
-          <ArrowTopBottomIcon color="ink.text-subdued" variant="small" />
+          <ArrowTopBottomIcon color="ink.text-subdued-secondary" variant="small" />
         ) : null}
       </Box>
     </Pressable>

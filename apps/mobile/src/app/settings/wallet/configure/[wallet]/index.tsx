@@ -186,19 +186,19 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
                 label={t`Advanced options`}
                 content={
                   <SettingsList mx="-5">
-                    {Object.values(getUnavailableFeatures({ iconColor: 'ink.text-subdued' })).map(
-                      feature => (
-                        <SettingsListItem
-                          key={feature.id}
-                          title={feature.title}
-                          icon={feature.icon}
-                          onPress={onOpenSheet({
-                            title: feature.title,
-                            id: feature.id,
-                          })}
-                        />
-                      )
-                    )}
+                    {Object.values(
+                      getUnavailableFeatures({ iconColor: 'ink.text-subdued-secondary' })
+                    ).map(feature => (
+                      <SettingsListItem
+                        key={feature.id}
+                        title={feature.title}
+                        icon={feature.icon}
+                        onPress={onOpenSheet({
+                          title: feature.title,
+                          id: feature.id,
+                        })}
+                      />
+                    ))}
                   </SettingsList>
                 }
               />
@@ -209,7 +209,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
 
           <Box py="3" px="5">
             <Text variant="caption01">{t`Creation date`}</Text>
-            <Text variant="caption01" color="ink.text-subdued">
+            <Text variant="caption01" color="ink.text-subdued-secondary">
               {dayjs(wallet.createdOn).format('D MMM YYYY')}
             </Text>
           </Box>

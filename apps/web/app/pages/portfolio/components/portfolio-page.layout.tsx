@@ -45,7 +45,7 @@ export function PortfolioPageLayout({
           <Flex flexDirection={['column', null, null, 'row']} py="space.05" gap="space.05">
             <Stack height="70vh" minHeight={500} flex={2}>
               <styled.h2 textStyle="heading.05" mt="space.05" mb="space.02">
-                Tokens <styled.span color="ink.text-subdued">{assetCount}</styled.span>
+                Tokens <styled.span color="ink.text-subdued-secondary">{assetCount}</styled.span>
               </styled.h2>
               <Stack overflow="auto" flexGrow={1}>
                 {assetList}

@@ -67,7 +67,7 @@ const Content = forwardRef<HTMLDivElement, RadixAccordion.AccordionContentProps>
     ref={ref}
     className={css({
       overflow: 'hidden',
-      color: 'ink.text-subdued',
+      color: 'ink.text-subdued-secondary',
       pl: 'space.08',
       pt: 'space.01',
       pb: 'space.05',

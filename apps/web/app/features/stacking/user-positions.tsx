@@ -48,9 +48,9 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
     return (
       <Flex mt="space.07" pb="space.05" justifyContent="start" alignItems="center" gap="space.02">
         <Box>
-          <LoadingSpinner fill="ink.text-subdued" />
+          <LoadingSpinner fill="ink.text-subdued-secondary" />
         </Box>
-        <styled.span textStyle="heading.05" color="ink.text-subdued">
+        <styled.span textStyle="heading.05" color="ink.text-subdued-secondary">
           Looking for positions...
         </styled.span>
       </Flex>
@@ -63,7 +63,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
     console.error(msg);
     return (
       <Box mt="space.07">
-        <styled.span textStyle="heading.05" color="ink.text-subdued">
+        <styled.span textStyle="heading.05" color="ink.text-subdued-secondary">
           {msg}
         </styled.span>
       </Box>
@@ -80,7 +80,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
   ) {
     return (
       <Box mt="space.07" pb="space.05">
-        <styled.span textStyle="heading.05" color="ink.text-subdued">
+        <styled.span textStyle="heading.05" color="ink.text-subdued-secondary">
           No position found
         </styled.span>
       </Box>
@@ -225,7 +225,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
       </InfoGrid>
 
       {!activePoolRewardProtocolInfo.id && (
-        <styled.div textStyle="caption.01" color="ink.text-subdued">
+        <styled.div textStyle="caption.01" color="ink.text-subdued-secondary">
           <Flag
             img={<QuestionCircleIcon variant="small" color={'inherit' as any} />}
             spacing="space.01"

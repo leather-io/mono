@@ -5,7 +5,8 @@ export const colors = {
 
 export interface Palette {
   'ink.text-primary': string;
-  'ink.text-subdued': string;
+  'ink.text-subdued-primary': string;
+  'ink.text-subdued-secondary': string;
   'ink.text-non-interactive': string;
   'ink.action-primary-hover': string;
   'ink.action-primary-default': string;
@@ -60,7 +61,8 @@ interface Colors {
 export const colorThemes = {
   base: {
     'ink.text-primary': '#12100F',
-    'ink.text-subdued': '#7B7572',
+    'ink.text-subdued-primary': '#5A5552',
+    'ink.text-subdued-secondary': '#7B7572',
     'ink.text-non-interactive': '#9E9996',
     'ink.action-primary-hover': '#3A3634',
     'ink.action-primary-default': '#12100F',
@@ -103,7 +105,8 @@ export const colorThemes = {
   } as const satisfies Palette,
   dark: {
     'ink.text-primary': '#F9F9F8',
-    'ink.text-subdued': '#D9D6D4',
+    'ink.text-subdued-primary': '#EDEBE9',
+    'ink.text-subdued-secondary': '#D9D6D4',
     'ink.text-non-interactive': '#9E9996',
     'ink.action-primary-hover': '#EDEBE9',
     'ink.action-primary-default': '#F9F9F8',

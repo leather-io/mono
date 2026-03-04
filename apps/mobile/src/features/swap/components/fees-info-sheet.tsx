@@ -62,7 +62,7 @@ function FeeRow({ label, crypto, quote, description }: FeeRowProps) {
         <Text variant="label02">{label}</Text>
         <Text variant="label02">{`${crypto} (~${quote})`}</Text>
       </Box>
-      <Text variant="body02" color="ink.text-subdued">
+      <Text variant="body02" color="ink.text-subdued-secondary">
         {description}
       </Text>
     </Box>

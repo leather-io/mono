@@ -40,7 +40,9 @@ export function TokensTabHeader() {
           <Flag
             reverse
             spacing="space.01"
-            img={<InfoCircleIcon color="ink.text-subdued" display="inline" variant="small" />}
+            img={
+              <InfoCircleIcon color="ink.text-subdued-secondary" display="inline" variant="small" />
+            }
           >
             <styled.span textStyle="label.02">Available</styled.span>
           </Flag>

@@ -56,7 +56,7 @@ export function PostConditionItem({
       />
       {message && (
         <Box py="space.03" borderTop="default" borderBottom={!isLast ? 'active' : 'unset'}>
-          <styled.span color="ink.text-subdued" textStyle="caption.01">
+          <styled.span color="ink.text-subdued-secondary" textStyle="caption.01">
             {message}
           </styled.span>
         </Box>

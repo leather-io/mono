@@ -15,7 +15,7 @@ function AppVersionLabel({ isLatestVersion, children }: AppVersionLabelProps) {
   return (
     <styled.p
       textStyle="caption.01"
-      color="ink.text-subdued"
+      color="ink.text-subdued-secondary"
       textDecorationLine={isLatestVersion ? 'none' : 'line-through'}
     >
       {children}

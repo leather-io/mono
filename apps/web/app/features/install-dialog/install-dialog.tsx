@@ -41,7 +41,7 @@ export function InstallDialog() {
             <Flag img={<styled.img src="/icons/leather.webp" width="36px" alt="Leather logo" />}>
               <Flex textStyle="label.02" flexDir="column">
                 <styled.span>Leather</styled.span>
-                <styled.span color="ink.text-subdued">leather.io</styled.span>
+                <styled.span color="ink.text-subdued-secondary">leather.io</styled.span>
               </Flex>
             </Flag>
             <Button

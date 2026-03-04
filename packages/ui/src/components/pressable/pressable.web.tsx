@@ -76,7 +76,7 @@ const pressableRecipe = cva({
 
 export const pressableCaptionStyles = css({
   _groupDisabled: { color: 'ink.text-non-interactive' },
-  color: 'ink.text-subdued',
+  color: 'ink.text-subdued-secondary',
 });
 
 export const pressableChevronStyles = css({

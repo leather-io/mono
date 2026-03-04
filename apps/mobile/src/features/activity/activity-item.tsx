@@ -57,7 +57,12 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
       </Cell.Content>
       <Cell.Aside>
         {balances.quote ? (
-          <Cell.Label variant="primary" color="ink.text-subdued" lineHeight={16} fontSize={13}>
+          <Cell.Label
+            variant="primary"
+            color="ink.text-subdued-secondary"
+            lineHeight={16}
+            fontSize={13}
+          >
             <Balance
               operator={balances.operator}
               balance={balances.quote}
@@ -67,12 +72,17 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
           </Cell.Label>
         ) : undefined}
         {balances.crypto ? (
-          <Cell.Label variant="secondary" color="ink.text-subdued" lineHeight={16} fontSize={13}>
+          <Cell.Label
+            variant="secondary"
+            color="ink.text-subdued-secondary"
+            lineHeight={16}
+            fontSize={13}
+          >
             <Balance
               formattingOptions={{ showCurrency: false }}
               balance={balances.crypto}
               variant="caption01"
-              color="ink.text-subdued"
+              color="ink.text-subdued-secondary"
               lineHeight={16}
               fontSize={13}
             />

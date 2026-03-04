@@ -39,7 +39,12 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
       titleLeft={accountName}
       titleRight={
         isLoading ? (
-          <Spinner color="ink.text-subdued" position="absolute" right={0} top="calc(50% - 8px)" />
+          <Spinner
+            color="ink.text-subdued-secondary"
+            position="absolute"
+            right={0}
+            top="calc(50% - 8px)"
+          />
         ) : (
           balanceLabel
         )

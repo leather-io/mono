@@ -55,7 +55,7 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
             textStyle="label.03"
             border="default"
             borderColor="ink.text-primary"
-            color="ink.text-subdued"
+            color="ink.text-subdued-secondary"
             borderRadius="round"
             borderWidth="thin"
             px="space.02"
@@ -64,10 +64,10 @@ export default function GuideRoute({ loaderData }: Route.ComponentProps) {
             {guide.category}
           </styled.span>
           <Page.Title my="space.04">{guide.title}</Page.Title>
-          <styled.p textStyle="label.02" color="ink.text-subdued" mb="space.04">
+          <styled.p textStyle="label.02" color="ink.text-subdued-secondary" mb="space.04">
             {formatDate(guide.createdTime)}
           </styled.p>
-          <styled.p textStyle="label.03" color="ink.text-subdued">
+          <styled.p textStyle="label.03" color="ink.text-subdued-secondary">
             {guide.disclaimer}
           </styled.p>
         </Box>

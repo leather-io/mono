@@ -18,13 +18,13 @@ export function StackingContractDetails({
   return (
     <Stack pt="space.03">
       <Stack direction="row" justifyContent="space-between" gap="space.02">
-        <styled.p textStyle="label.03" color="ink.text-subdued" whiteSpace="nowrap">
+        <styled.p textStyle="label.03" color="ink.text-subdued-secondary" whiteSpace="nowrap">
           {addressTitle}
         </styled.p>
         {address ? <CopyAddress address={address} /> : '—'}
       </Stack>
       <Stack direction="row" justifyContent="space-between" gap="space.02">
-        <styled.p textStyle="label.03" color="ink.text-subdued">
+        <styled.p textStyle="label.03" color="ink.text-subdued-secondary">
           Contract
         </styled.p>
         {contractAddress ? (

@@ -77,7 +77,7 @@ function Item({ item, formatCurrency }: ItemProps) {
             <styled.p textStyle="body.02" fontWeight="medium">
               {titleText}
             </styled.p>
-            <styled.p textStyle="caption.01" color="ink.text-subdued">
+            <styled.p textStyle="caption.01" color="ink.text-subdued-secondary">
               {captionText}
             </styled.p>
           </Flex>
@@ -97,7 +97,7 @@ function Item({ item, formatCurrency }: ItemProps) {
             <Balance
               balance={balances.crypto}
               formattingOptions={{ showCurrency: false }}
-              color="ink.text-subdued"
+              color="ink.text-subdued-secondary"
               textStyle="caption.01"
               formatCurrency={formatCurrency}
             />

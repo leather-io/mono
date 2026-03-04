@@ -8,7 +8,7 @@ export function SummaryTableRoot({ children }: HasChildren) {
 
 function SummaryTableLabel({ children }: HasChildren) {
   return (
-    <Text variant="label02" color="ink.text-subdued">
+    <Text variant="label02" color="ink.text-subdued-secondary">
       {children}
     </Text>
   );

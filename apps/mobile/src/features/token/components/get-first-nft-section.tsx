@@ -14,7 +14,7 @@ export function GetFirstNftSection() {
     <Box gap="2">
       <Box px="5" gap="1">
         <Text variant="label01">{t`Get your first NFT`}</Text>
-        <Text variant="caption01" color="ink.text-subdued">
+        <Text variant="caption01" color="ink.text-subdued-secondary">
           {t`Add your first NFT by buying or transferring from another account.`}
         </Text>
       </Box>

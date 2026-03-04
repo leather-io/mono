@@ -32,7 +32,12 @@ export function BroadcastErrorLayout(props: BroadcastErrorProps) {
       >
         {title}
       </styled.span>
-      <styled.span color="ink.text-subdued" mt="space.04" textAlign="center" textStyle="body.02">
+      <styled.span
+        color="ink.text-subdued-secondary"
+        mt="space.04"
+        textAlign="center"
+        textStyle="body.02"
+      >
         {body}
       </styled.span>
       {errorPayload && (

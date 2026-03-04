@@ -22,7 +22,7 @@ export function CryptoAssetItemError({
         titleLeft={title}
         captionLeft={caption}
         titleRight={
-          <styled.span color="ink.text-subdued" textStyle="label.02">
+          <styled.span color="ink.text-subdued-secondary" textStyle="label.02">
             Unable to load
           </styled.span>
         }

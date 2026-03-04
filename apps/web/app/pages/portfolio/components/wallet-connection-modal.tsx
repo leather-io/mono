@@ -40,7 +40,7 @@ function WalletActionItem({
       >
         <Box display={['none', 'block']}>
           {title}
-          <styled.p textStyle="caption.01" color="ink.text-subdued">
+          <styled.p textStyle="caption.01" color="ink.text-subdued-secondary">
             {description}
           </styled.p>
         </Box>

@@ -32,7 +32,7 @@ export function SendFiatValue({ marketData, assetSymbol = '', assetDecimals }: S
   }, [field.value, assetSymbol, assetDecimals]);
 
   return (
-    <styled.span textStyle="body.02" color="ink.text-subdued">
+    <styled.span textStyle="body.02" color="ink.text-subdued-secondary">
       {Number(field.value) > 0 && '~'}{' '}
       {formatCurrency(baseCurrencyAmountInQuote(assetValue, marketData))}
     </styled.span>

@@ -42,7 +42,13 @@ export function AccountCard() {
             <Flag
               reverse
               spacing="space.01"
-              img={<InfoCircleIcon color="ink.text-subdued" display="inline" variant="small" />}
+              img={
+                <InfoCircleIcon
+                  color="ink.text-subdued-secondary"
+                  display="inline"
+                  variant="small"
+                />
+              }
             >
               <styled.h2 textStyle="label.02">Total balance</styled.h2>
             </Flag>
@@ -100,7 +106,7 @@ export function AccountCard() {
                         spacing="space.01"
                         img={
                           <InfoCircleIcon
-                            color="ink.text-subdued"
+                            color="ink.text-subdued-secondary"
                             display="inline"
                             variant="small"
                           />

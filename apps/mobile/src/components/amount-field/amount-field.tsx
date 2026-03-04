@@ -112,7 +112,7 @@ function evaluateInternalState({
 
 function getTextColor(state: InternalState): keyof Theme['colors'] {
   const colors: Record<InternalState, keyof Theme['colors']> = {
-    initial: 'ink.text-subdued',
+    initial: 'ink.text-subdued-secondary',
     active: 'ink.text-primary',
     invalid: 'red.action-primary-default',
   };

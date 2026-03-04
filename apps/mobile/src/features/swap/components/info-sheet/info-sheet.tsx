@@ -39,7 +39,7 @@ export function InfoSheet({ title, children }: InfoSheetProps) {
       <IconButton
         onPress={() => setOpen(true)}
         label={t`Info`}
-        icon={<InfoCircleIcon variant="small" color="ink.text-subdued" />}
+        icon={<InfoCircleIcon variant="small" color="ink.text-subdued-secondary" />}
       />
       {open && (
         <Sheet ref={sheetRef} onDismiss={() => setOpen(false)}>

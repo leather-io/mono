@@ -69,7 +69,7 @@ const Viewport: typeof RadixSelect.Viewport = forwardRef((props, ref) => (
 Viewport.displayName = 'Select.Viewport';
 
 const selectLabelStyles = css({
-  color: 'ink.text-subdued',
+  color: 'ink.text-subdued-secondary',
   height: 'auto',
   px: 'space.03',
   py: 'space.02',

@@ -50,7 +50,7 @@ export function AccountHeader({ account, onPress }: AccountHeaderProps) {
       <Box>
         <Text variant="label01">{accountData?.name}</Text>
         {!hasOneWallet && wallet && (
-          <Text variant="label02" color="ink.text-subdued">
+          <Text variant="label02" color="ink.text-subdued-secondary">
             {wallet.name}
           </Text>
         )}

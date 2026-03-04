@@ -26,7 +26,7 @@ function getPrismTheme(theme: Theme): PrismTheme {
       {
         types: ['comment', 'punctuation'],
         style: {
-          color: theme.colors['ink.text-subdued'],
+          color: theme.colors['ink.text-subdued-secondary'],
         },
       },
       {

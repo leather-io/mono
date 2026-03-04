@@ -8,7 +8,7 @@ interface PendingTransactionListLayoutProps {
 export function PendingTransactionListLayout({ children }: PendingTransactionListLayoutProps) {
   return (
     <>
-      <styled.span color="ink.text-subdued" textStyle="body.02">
+      <styled.span color="ink.text-subdued-secondary" textStyle="body.02">
         Pending
       </styled.span>
       <Stack pb="space.06" mt="space.04">

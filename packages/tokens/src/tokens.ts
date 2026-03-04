@@ -14,7 +14,7 @@ export const tokens = {
     focus: { value: '2px solid {colors.ink.action-primary-default}' },
     invert: { value: '1px solid {colors.invert}' },
     none: { value: 'none' },
-    subdued: { value: '1px solid {colors.ink.text-subdued}' },
+    subdued: { value: '1px solid {colors.ink.text-subdued-secondary}' },
     warning: { value: '1px solid {colors.yellow.border}' },
   },
   colors,

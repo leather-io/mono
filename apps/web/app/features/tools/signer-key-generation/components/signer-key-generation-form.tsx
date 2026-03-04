@@ -26,7 +26,7 @@ export function SignerKeyGenerationForm({ poxInfo }: SignerKeyGenerationFormProp
           <Input.Label>Cycle</Input.Label>
           <Input.Field type="number" {...form.register('rewardCycle')} />
         </Input.Root>
-        <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.02">
+        <styled.p textStyle="caption.01" color="ink.text-subdued-secondary" mt="space.02">
           Next cycle is {poxInfo.reward_cycle_id + 1}
         </styled.p>
       </FormSection>

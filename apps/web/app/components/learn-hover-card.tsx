@@ -32,7 +32,7 @@ export function LearnHoverCard({
   align = 'center',
 }: LearnHoverCardProps) {
   const navigate = useNavigate();
-  const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued';
+  const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued-secondary';
 
   const StyledTag = styled[tagName];
 

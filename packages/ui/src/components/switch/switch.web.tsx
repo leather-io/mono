@@ -24,7 +24,7 @@ const switchThumbStyles = css({
   willChange: 'transform',
   '&[data-state="checked"]': {
     transform: 'translateX(19px)',
-    backgroundColor: 'ink.text-subdued',
+    backgroundColor: 'ink.text-subdued-secondary',
   },
 });
 

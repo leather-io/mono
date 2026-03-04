@@ -67,7 +67,7 @@ export function CollectiblesEmpty() {
         <styled.h3 textStyle="label.01" margin="0">
           Get your first NFT
         </styled.h3>
-        <styled.p textStyle="caption.01" color="ink.text-subdued" margin="0">
+        <styled.p textStyle="caption.01" color="ink.text-subdued-secondary" margin="0">
           Add your first NFT by buying or transferring from another account.
         </styled.p>
       </Stack>
@@ -102,7 +102,7 @@ export function CollectiblesEmpty() {
             </styled.span>
             <styled.span
               textStyle="caption.01"
-              color="ink.text-subdued"
+              color="ink.text-subdued-secondary"
               overflow="hidden"
               textOverflow="ellipsis"
               whiteSpace="nowrap"

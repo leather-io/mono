@@ -334,7 +334,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                     <ChooseRewardsAddress
                       disabled={!poolRewardProtocolInfo.allowCustomRewardAddress}
                     />
-                    <styled.span textStyle="caption.01" color="ink.text-subdued">
+                    <styled.span textStyle="caption.01" color="ink.text-subdued-secondary">
                       This is where the pool will deposit your rewards each cycle.
                     </styled.span>
                   </Stack>

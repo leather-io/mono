@@ -12,7 +12,7 @@ import { SwapToggleButton } from './swap-toggle-button';
 function getTextColor(showError?: boolean, onClickHandler?: boolean) {
   if (showError) return 'red.action-primary-default';
   if (onClickHandler) return 'ink.text-primary';
-  return 'ink.text-subdued';
+  return 'ink.text-subdued-secondary';
 }
 
 interface SwapAssetSelectLayoutProps {

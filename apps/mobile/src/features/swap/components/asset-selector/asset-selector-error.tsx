@@ -18,7 +18,7 @@ export function AssetSelectorError({ onRetry }: AssetSelectorErrorProps) {
       />
       <Box gap="2" alignItems="center" mb="4" px="5">
         <Text variant="label01">{t`Unable to load assets`}</Text>
-        <Text variant="body02" color="ink.text-subdued" textAlign="center">
+        <Text variant="body02" color="ink.text-subdued-secondary" textAlign="center">
           {t`This is usually a temporary network or provider-side issue.`}
         </Text>
       </Box>

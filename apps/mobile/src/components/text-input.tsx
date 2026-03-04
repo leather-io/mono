@@ -88,7 +88,7 @@ export function TextInput({
         autoCorrect
         ref={inputRef}
         textVariant={textVariant}
-        placeholderTextColor={theme.colors['ink.text-subdued']}
+        placeholderTextColor={theme.colors['ink.text-subdued-secondary']}
         borderWidth={1}
         borderColor={borderColor}
         borderRadius="sm"

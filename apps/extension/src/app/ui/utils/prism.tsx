@@ -96,7 +96,7 @@ export const theme: PrismTheme = {
     {
       types: ['comment', 'punctuation'],
       style: {
-        color: token('colors.ink.text-subdued'),
+        color: token('colors.ink.text-subdued-secondary'),
       },
     },
     {

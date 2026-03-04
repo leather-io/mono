@@ -27,7 +27,7 @@ export function ContractCallArgsSection({ txHex }: { txHex: string }) {
           const argumentNumber = index + 1;
           return (
             <Box key={strValue}>
-              <Text variant="caption01" color="ink.text-subdued">
+              <Text variant="caption01" color="ink.text-subdued-secondary">
                 {func?.args[index]?.name ?? t`Argument ${argumentNumber}`}
               </Text>
               <Text variant="label01">{strValue}</Text>

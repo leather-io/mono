@@ -19,7 +19,7 @@ export function AssetSelectorError({ onRetry }: AssetSelectorErrorProps) {
     >
       <Flex direction="column" gap="space.02" alignItems="center" px="space.05">
         <styled.span textStyle="label.01">Unable to load assets</styled.span>
-        <styled.span textStyle="body.02" color="ink.text-subdued" textAlign="center">
+        <styled.span textStyle="body.02" color="ink.text-subdued-secondary" textAlign="center">
           This is usually a temporary network or provider-side issue.
         </styled.span>
       </Flex>

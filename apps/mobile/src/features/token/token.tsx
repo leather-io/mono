@@ -78,7 +78,7 @@ export function Token({
                     />
                   </SkeletonLoader>
                   <SkeletonLoader height={23} maxWidth={60} isLoading={isLoading}>
-                    <Text variant="heading03" color="ink.text-subdued">
+                    <Text variant="heading03" color="ink.text-subdued-secondary">
                       {asset.symbol}
                     </Text>
                   </SkeletonLoader>

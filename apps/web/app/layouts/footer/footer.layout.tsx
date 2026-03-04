@@ -63,7 +63,7 @@ function FooterLegalText({ product, copyright, ...props }: FooterLegalTextProps)
         flexDir="column"
         textStyle="caption.01"
         fontSize="12px"
-        color="ink.text-subdued"
+        color="ink.text-subdued-secondary"
         mt="space.04"
       >
         <styled.span>{product}</styled.span>

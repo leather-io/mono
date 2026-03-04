@@ -15,7 +15,7 @@ export function FieldConnectorArrow() {
       position="absolute"
       bottom={-22}
     >
-      <ArrowDownIcon color="ink.text-subdued" variant="small" />
+      <ArrowDownIcon color="ink.text-subdued-secondary" variant="small" />
     </Box>
   );
 }

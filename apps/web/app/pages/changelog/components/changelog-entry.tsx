@@ -51,7 +51,7 @@ function PublishDate(props: HTMLStyledProps<'time'>) {
   return (
     <styled.time
       textStyle="label.02"
-      color="ink.text-subdued"
+      color="ink.text-subdued-secondary"
       dateTime={entry.publishedAt}
       {...props}
     >

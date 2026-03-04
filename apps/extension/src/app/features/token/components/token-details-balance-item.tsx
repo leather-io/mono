@@ -28,7 +28,7 @@ export function TokenDetailsBalanceItem({
         <styled.button
           type="button"
           textStyle="caption.01"
-          color="ink.text-subdued"
+          color="ink.text-subdued-secondary"
           textDecoration="underline"
           textAlign="left"
           _hover={{ cursor: 'pointer' }}
@@ -42,7 +42,7 @@ export function TokenDetailsBalanceItem({
       );
     }
     return (
-      <styled.span textStyle="caption.01" color="ink.text-subdued" textAlign="left">
+      <styled.span textStyle="caption.01" color="ink.text-subdued-secondary" textAlign="left">
         {truncateMiddle(address, 6)}
       </styled.span>
     );

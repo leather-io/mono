@@ -33,7 +33,7 @@ function PooledStackingActiveInfoLayout({ poolSlug }: PooledStackingActiveInfoLa
   if (isLoading) {
     return (
       <Flex justifyContent="center" alignItems="center" h="100%">
-        <LoadingSpinner fill="ink.text-subdued" />
+        <LoadingSpinner fill="ink.text-subdued-secondary" />
       </Flex>
     );
   }

@@ -24,12 +24,12 @@ export function SwapDetailLayout({
   return (
     <HStack alignItems="center" justifyContent="space-between" width="100%">
       <HStack alignItems="center" gap="space.01">
-        <styled.span color="ink.text-subdued" textStyle="body.02">
+        <styled.span color="ink.text-subdued-secondary" textStyle="body.02">
           {title}
         </styled.span>
         {tooltipLabel ? (
           <BasicTooltip label={tooltipLabel} side="bottom">
-            <Box _hover={{ cursor: 'pointer' }} color="ink.text-subdued">
+            <Box _hover={{ cursor: 'pointer' }} color="ink.text-subdued-secondary">
               <InfoCircleIcon variant="small" />
             </Box>
           </BasicTooltip>
