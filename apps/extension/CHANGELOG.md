@@ -4,6 +4,11 @@
 
 ### Features
 
+* **extension:** add quote preview to swap form ([aa72cd2](https://github.com/leather-io/mono/commit/aa72cd26bf2de87584035fc4f5def272f64f1aa7))
+* **extension:** fix inconsistent gaps in the swap asset selector list ([f2878b4](https://github.com/leather-io/mono/commit/f2878b4e846b70c6481c94d17ec4fdd13aa67b78))
+* **extension:** include Bitflow provider config into services setup ([da97df0](https://github.com/leather-io/mono/commit/da97df0fb8bc7d911534fcca7c041a7a3e31caf3))
+* **extension:** maintain amount field focus on currency mode switch ([d4dc5c8](https://github.com/leather-io/mono/commit/d4dc5c86cb20584cef764f019f385c9dd462fa8e))
+* **extension:** overhaul collectibles tab with new UI and empty states ([73e6231](https://github.com/leather-io/mono/commit/73e623133b5786621a06b83bf099a68f5e3889ef))
 * **extension:** add "set to max" to asset balance in swap ([9f90463](https://github.com/leather-io/mono/commit/9f90463d51137114cab6b285327651aaf75e4dcc))
 * **extension:** add `SearchInput` component ([383e949](https://github.com/leather-io/mono/commit/383e949cca7e90fb647c96ddf294f311abf41404))
 * **extension:** add base asset section to swap form ([4897fee](https://github.com/leather-io/mono/commit/4897feebc903d3ba68495b11fe93e72ed1dff714))
@@ -20,6 +25,9 @@
 
 ### Bug Fixes
 
+* add tr related unit tests + fix bug in max send calculation ([852e8a6](https://github.com/leather-io/mono/commit/852e8a6765fef7cb98014642fa94357e7dbfc1c0))
+* **extension:** activity txs ([4120ae2](https://github.com/leather-io/mono/commit/4120ae29c6734ad90195eb310d9fb026a26c6631))
+* **extension:** update token details design ([96026a7](https://github.com/leather-io/mono/commit/96026a76c550605f92dbab280fd5d27d94794f99))
 * audit cves ([4e54c65](https://github.com/leather-io/mono/commit/4e54c657a2330652a4ebd8603e1579b2f659a9cc))
 * audit deps ([a20e840](https://github.com/leather-io/mono/commit/a20e840332768b4da14d562c9a0cd4f367d609cd))
 * **extension:** broken inscrpition discard ([05a0309](https://github.com/leather-io/mono/commit/05a0309577ccd076f31d14312bf317c3d48d2edd))
