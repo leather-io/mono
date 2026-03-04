@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { RouteUrls } from '@shared/route-urls';
+import { analytics } from '@shared/utils/analytics';
 
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
@@ -101,7 +102,10 @@ export function TokenDetailsActionsRow({
         <TokenDetailsPillButton
           label="Buy"
           disabled={!isBuyEnabled}
-          onClick={() => pageModeRoutingAction(RouteUrls.Fund)}
+          onClick={() => {
+            analytics.track('buy_button_clicked', { token: symbol });
+            pageModeRoutingAction(RouteUrls.Fund);
+          }}
           testId="token-details-buy-btn"
         />
       )}

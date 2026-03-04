@@ -104,6 +104,8 @@ export interface Events extends HistoricalEvents {
   network_menu_item_clicked: undefined;
   network_added: undefined;
   network_edited: undefined;
+  buy_button_clicked: { token?: string };
+  trending_token_clicked: { symbol: string; contractId: string; assetId: string };
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.

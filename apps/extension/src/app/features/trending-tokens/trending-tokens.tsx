@@ -1,10 +1,12 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 
 import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { prepTrendingItems } from '@leather.io/features';
+import { createTokenDetailsPath, prepTrendingItems } from '@leather.io/features';
 import { ArrowLeftIcon, IconButton, InfoCircleIcon } from '@leather.io/ui';
+import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { useTrendingTokensQuery } from '@app/query/asset-list/trending-tokens.query';
@@ -20,6 +22,8 @@ const hideScrollbar = css({
 });
 
 export function TrendingTokens() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { data: trendingTokenData } = useTrendingTokensQuery();
   const scrollRef = useRef<HTMLDivElement>(null);
   const isLargeScreen = useViewportMinWidth('md');
@@ -37,6 +41,10 @@ export function TrendingTokens() {
     () => (trendingTokenData ? prepTrendingItems(trendingTokenData.items) : []),
     [trendingTokenData]
   );
+
+  function handleSelectToken(assetId: SerializedCryptoAssetId) {
+    void navigate(createTokenDetailsPath(assetId), { state: { backgroundLocation: location } });
+  }
 
   if (rows.length === 0) return null;
 
@@ -88,7 +96,7 @@ export function TrendingTokens() {
           {rows.map(row => (
             <Flex key={row[0].id} gap="space.02">
               {row.map(item => (
-                <TrendingTokenCard key={item.id} item={item} />
+                <TrendingTokenCard key={item.id} item={item} onSelect={handleSelectToken} />
               ))}
             </Flex>
           ))}

@@ -6,6 +6,9 @@ import { Stack } from 'leather-styles/jsx';
 import { createTokenDetailsPath } from '@leather.io/features';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
+import { analytics } from '@shared/utils/analytics';
+
+import { useTokenPortfolioAnalytics } from '@app/common/app-analytics';
 import { TokenList } from '@app/features/asset-list/token-list';
 import { useFlags } from '@app/features/feature-flags';
 import { TrendingTokens } from '@app/features/trending-tokens/trending-tokens';
@@ -26,7 +29,10 @@ export function Tokens() {
   const activityQuery = useActivity(account);
   const showFirstTokenBanner = activityQuery.isSuccess && !activityQuery.data?.length;
 
+  useTokenPortfolioAnalytics({ accountIndex });
+
   function handleSelectAsset(assetId: SerializedCryptoAssetId) {
+    analytics.track('token_details_opened', { assetId, source: 'account_balances' });
     void navigate(createTokenDetailsPath(assetId), { state: { backgroundLocation: location } });
   }
 

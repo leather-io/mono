@@ -1,9 +1,18 @@
 import { useParams } from 'react-router';
 
 import { parseTokenDetailsAssetId } from '@leather.io/features';
-import { CryptoAssetProtocols } from '@leather.io/models';
-import { assertUnreachable, deserializeAssetId } from '@leather.io/utils';
+import {
+  type AccountAddresses,
+  type CryptoAssetProtocol,
+  CryptoAssetProtocols,
+} from '@leather.io/models';
+import {
+  type SerializedCryptoAssetId,
+  assertUnreachable,
+  deserializeAssetId,
+} from '@leather.io/utils';
 
+import { useTokenDetailsTracking } from '@app/common/app-analytics';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
 
@@ -13,18 +22,20 @@ import { Sip10TokenDetails } from './sip10-token-details';
 import { StacksTokenDetails } from './stacks-token-details';
 import { TokenDetailsError } from './token-details-error';
 
-export function TokenDetails() {
-  const { '*': encodedAssetId } = useParams();
-  const assetId = parseTokenDetailsAssetId(encodedAssetId);
+interface TokenDetailsContentProps {
+  assetId: SerializedCryptoAssetId;
+  protocol: CryptoAssetProtocol;
+  accountIndex: number;
+  account: AccountAddresses;
+}
 
-  const accountIndex = useCurrentAccountIndex();
-  const account = useAccountAddresses(accountIndex);
-
-  if (!assetId) {
-    return <TokenDetailsError />;
-  }
-
-  const { protocol } = deserializeAssetId(assetId);
+function TokenDetailsContent({
+  assetId,
+  protocol,
+  accountIndex,
+  account,
+}: TokenDetailsContentProps) {
+  useTokenDetailsTracking({ accountIndex, assetId, protocol });
 
   switch (protocol) {
     case CryptoAssetProtocols.nativeBtc:
@@ -45,4 +56,27 @@ export function TokenDetails() {
       assertUnreachable(protocol);
       return <TokenDetailsError />;
   }
+}
+
+export function TokenDetails() {
+  const { '*': encodedAssetId } = useParams();
+  const assetId = parseTokenDetailsAssetId(encodedAssetId);
+
+  const accountIndex = useCurrentAccountIndex();
+  const account = useAccountAddresses(accountIndex);
+
+  if (!assetId) {
+    return <TokenDetailsError />;
+  }
+
+  const { protocol } = deserializeAssetId(assetId);
+
+  return (
+    <TokenDetailsContent
+      assetId={assetId}
+      protocol={protocol}
+      accountIndex={accountIndex}
+      account={account}
+    />
+  );
 }

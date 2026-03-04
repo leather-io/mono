@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import type { CollectibleView } from '@leather.io/features';
 
+import { useCollectiblesAnalytics } from '@app/common/app-analytics';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountIndex } from '@app/store/accounts/account';
@@ -38,6 +39,8 @@ export function Collectibles() {
     isError,
     refetch,
   } = useAccountCollectibles(account);
+
+  useCollectiblesAnalytics({ accountIndex });
 
   const renderedCollectibles = useMemo(
     () =>
