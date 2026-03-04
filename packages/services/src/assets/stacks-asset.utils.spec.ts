@@ -1,4 +1,5 @@
 import { CryptoAssetCategories, CryptoAssetChains, CryptoAssetProtocols } from '@leather.io/models';
+import { getSip10TokenNameWithOverrides } from '@leather.io/utils';
 
 import { LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
 import {
@@ -51,6 +52,23 @@ describe('getAddressFromAssetIdentifier', () => {
   });
 });
 
+describe('getSip10TokenNameWithOverrides', () => {
+  it('returns override name for known contract principal', () => {
+    expect(
+      getSip10TokenNameWithOverrides(
+        'SPQYMRAKZPQPJAADX5JBEFT0FHE3RZZK9F8TYBQ3.dawgpool-stxcity',
+        'dawgpool'
+      )
+    ).toBe('Dawgcoin');
+  });
+
+  it('returns fallback name for unknown contract principal', () => {
+    expect(getSip10TokenNameWithOverrides('SP123.unknown-token', 'Original Name')).toBe(
+      'Original Name'
+    );
+  });
+});
+
 describe('createSip10Asset', () => {
   const assetIdentifier = 'SP123.token-contract::TOKEN';
   let sip10Token: LeatherApiSip10Token;
@@ -81,5 +99,26 @@ describe('createSip10Asset', () => {
       name: 'Test Token',
       symbol: 'TEST',
     });
+  });
+
+  it('uses override name when contract principal has an override', () => {
+    sip10Token.principal = 'SPQYMRAKZPQPJAADX5JBEFT0FHE3RZZK9F8TYBQ3.dawgpool-stxcity';
+    const asset = createSip10Asset(sip10Token);
+    expect(asset.name).toBe('Dawgcoin');
+  });
+
+  it('derives symbol from override name when override is applied', () => {
+    sip10Token.principal = 'SPQYMRAKZPQPJAADX5JBEFT0FHE3RZZK9F8TYBQ3.dawgpool-stxcity';
+    sip10Token.symbol = '';
+    const asset = createSip10Asset(sip10Token);
+    expect(asset.name).toBe('Dawgcoin');
+    expect(asset.symbol).toBe('DA');
+  });
+
+  it('falls back to asset name when token name is undefined', () => {
+    // @ts-expect-error -- testing runtime fallback when API returns missing name
+    delete sip10Token.name;
+    const asset = createSip10Asset(sip10Token);
+    expect(asset.name).toBe('TOKEN');
   });
 });

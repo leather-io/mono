@@ -72,6 +72,7 @@ export {
 export { trendingTokensRequest } from './trending-tokens/trending-tokens.constants';
 export type { TrendingToken } from './trending-tokens/trending-tokens.utils';
 export { isTrendingToken, prepTrendingItems } from './trending-tokens/trending-tokens.utils';
+export { getSip10TokenNameWithOverrides } from '@leather.io/utils';
 export { urlPathToAssetId } from './token/token-url';
 export type { TokenBalance } from './balance/balance-types';
 export {

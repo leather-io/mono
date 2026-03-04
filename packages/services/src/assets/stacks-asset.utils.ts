@@ -4,7 +4,7 @@ import {
   CryptoAssetProtocols,
   Sip10Asset,
 } from '@leather.io/models';
-import { getTicker, isUndefined } from '@leather.io/utils';
+import { getSip10TokenNameWithOverrides, getTicker, isUndefined } from '@leather.io/utils';
 
 import { LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
 
@@ -42,7 +42,7 @@ export function getContractPrincipalFromAddressAndName(
 
 export function createSip10Asset(sip10Token: LeatherApiSip10Token): Sip10Asset {
   const assetName = getAssetNameFromIdentifier(sip10Token.assetIdentifier);
-  const name = sip10Token.name ?? assetName;
+  const name = getSip10TokenNameWithOverrides(sip10Token.principal, sip10Token.name ?? assetName);
 
   return {
     chain: CryptoAssetChains.stacks,

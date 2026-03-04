@@ -12,6 +12,7 @@ export * from './assets/asset-display-name';
 export * from './assets/balance-helpers';
 export * from './assets/inscription-helpers';
 export * from './assets/asset-id';
+export * from './assets/sip10-name-overrides';
 export * from './truncate-middle';
 export * from './time';
 export * from './market-data';
