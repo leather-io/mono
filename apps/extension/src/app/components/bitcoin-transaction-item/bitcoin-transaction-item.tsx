@@ -11,7 +11,6 @@ import { analytics } from '@shared/utils/analytics';
 
 import { useBitcoinExplorerLink } from '@app/common/hooks/use-bitcoin-explorer-link';
 import {
-  containsTaprootInput,
   getBitcoinTxCaption,
   getBitcoinTxValue,
   isBitcoinTxInbound,
@@ -72,8 +71,7 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
 
   const isTxInbound = isBitcoinTxInbound(isCorrespondingAddressFn, transaction);
 
-  const isFeeIncreaseEnabled =
-    !isTxInbound && !transaction.status.confirmed && !containsTaprootInput(transaction);
+  const isFeeIncreaseEnabled = !isTxInbound && !transaction.status.confirmed;
 
   const txCaption = (
     <HStack gap="space.02">

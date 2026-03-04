@@ -4,9 +4,6 @@ import { BtcSizeFeeEstimator } from '@leather.io/bitcoin';
 import type { BitcoinTransactionVectorOutput, BitcoinTx } from '@leather.io/models';
 import { satToBtc, sumNumbers, truncateMiddle } from '@leather.io/utils';
 
-export function containsTaprootInput(tx: BitcoinTx) {
-  return tx.vin.some(input => input.prevout.scriptpubkey_type === 'v1_p2tr');
-}
 export function getBitcoinTxSizeEstimation(payload: {
   inputCount: number;
   outputCount: number;
