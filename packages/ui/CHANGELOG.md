@@ -489,6 +489,23 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.108.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.107.0...@leather.io/ui-v1.108.0) (2026-03-04)
+
+
+### Features
+
+* **extension:** overhaul collectibles tab with new UI and empty states ([73e6231](https://github.com/leather-io/mono/commit/73e623133b5786621a06b83bf099a68f5e3889ef))
+* **ui:** add web version of `CircularProgress` component ([7f10152](https://github.com/leather-io/mono/commit/7f101529c75ce6170df846be3686e1a27c72515a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.50.1
+  * devDependencies
+    * @leather.io/features bumped to 1.2.1
+
 ## [1.107.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.106.1...@leather.io/ui-v1.107.0) (2026-03-02)
 
 

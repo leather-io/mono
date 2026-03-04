@@ -35,6 +35,42 @@
 
 ---
 
+## [6.96.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.95.0...@leather.io/extension-v6.96.0) (2026-03-04)
+
+
+### Features
+
+* **extension:** add quote preview to swap form ([aa72cd2](https://github.com/leather-io/mono/commit/aa72cd26bf2de87584035fc4f5def272f64f1aa7))
+* **extension:** fix inconsistent gaps in the swap asset selector list ([f2878b4](https://github.com/leather-io/mono/commit/f2878b4e846b70c6481c94d17ec4fdd13aa67b78))
+* **extension:** include Bitflow provider config into services setup ([da97df0](https://github.com/leather-io/mono/commit/da97df0fb8bc7d911534fcca7c041a7a3e31caf3))
+* **extension:** maintain amount field focus on currency mode switch ([d4dc5c8](https://github.com/leather-io/mono/commit/d4dc5c86cb20584cef764f019f385c9dd462fa8e))
+* **extension:** overhaul collectibles tab with new UI and empty states ([73e6231](https://github.com/leather-io/mono/commit/73e623133b5786621a06b83bf099a68f5e3889ef))
+
+
+### Bug Fixes
+
+* add tr related unit tests + fix bug in max send calculation ([852e8a6](https://github.com/leather-io/mono/commit/852e8a6765fef7cb98014642fa94357e7dbfc1c0))
+* **extension:** activity txs ([4120ae2](https://github.com/leather-io/mono/commit/4120ae29c6734ad90195eb310d9fb026a26c6631))
+* **extension:** update token details design ([96026a7](https://github.com/leather-io/mono/commit/96026a76c550605f92dbab280fd5d27d94794f99))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.37.1
+    * @leather.io/constants bumped to 0.33.0
+    * @leather.io/crypto bumped to 1.12.18
+    * @leather.io/features bumped to 1.2.1
+    * @leather.io/provider bumped to 1.6.20
+    * @leather.io/queries bumped to 0.6.2
+    * @leather.io/query bumped to 2.45.15
+    * @leather.io/rpc bumped to 2.21.12
+    * @leather.io/services bumped to 1.49.1
+    * @leather.io/stacks bumped to 1.19.14
+    * @leather.io/ui bumped to 1.108.0
+    * @leather.io/utils bumped to 0.50.1
+
 ## [6.95.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.94.2...@leather.io/extension-v6.95.0) (2026-03-02)
 
 
