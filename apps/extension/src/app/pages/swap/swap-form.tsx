@@ -1,10 +1,10 @@
 import { useRef } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useOutletContext } from 'react-router';
 
 import { Box, Divider, Flex } from 'leather-styles/jsx';
 
 import { AccountSwapAsset } from '@leather.io/services';
-import { useLiveSwapEstimate, useSwapContext } from '@leather.io/state/swap';
+import { useSwapContext } from '@leather.io/state/swap';
 import { Button } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -20,6 +20,7 @@ import { AssetSelectorSheet } from '@app/pages/swap/components/asset-selector/as
 import { FlipButton } from '@app/pages/swap/components/flip-button';
 import { QuotePreview } from '@app/pages/swap/components/quote-preview/quote-preview';
 import { TargetAmountPreview } from '@app/pages/swap/components/target-amount-preview';
+import { type SwapOutletContext } from '@app/pages/swap/swap-container';
 import { focusAmountField } from '@app/pages/swap/swap-utils';
 
 export function SwapForm() {
@@ -31,21 +32,10 @@ export function SwapForm() {
     baseAssetsQuery,
     targetAssetsQuery,
     targetMarketDataQuery,
-    quoteQuery,
-    networkFeeQuery,
-    baseMarketDataQuery,
-    networkFeeAssetMarkedDataQuery,
     canSubmit,
   } = useSwapContext();
-
+  const { liveEstimate } = useOutletContext<SwapOutletContext>();
   const navigate = useNavigate();
-
-  const liveEstimate = useLiveSwapEstimate({
-    quoteQuery,
-    networkFeeQuery,
-    baseMarketDataQuery,
-    nativeAssetMarketDataQuery: networkFeeAssetMarkedDataQuery,
-  });
 
   function handleAssetSelection(type: 'base' | 'target', asset: AccountSwapAsset) {
     const action = {

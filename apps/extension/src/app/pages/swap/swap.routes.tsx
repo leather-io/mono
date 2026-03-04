@@ -1,4 +1,4 @@
-import { Outlet, Route } from 'react-router';
+import { Route } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -21,9 +21,7 @@ export const swapRoutes = (
   <Route
     element={
       <AccountGate>
-        <SwapContainer>
-          <Outlet />
-        </SwapContainer>
+        <SwapContainer />
       </AccountGate>
     }
   >
