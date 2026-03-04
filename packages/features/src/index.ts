@@ -31,6 +31,13 @@ export {
   filterActivityByAsset,
   filterActivityBySerializedAssetId,
 } from './activity/activity-filter';
+export type { DateHeaderRow } from './activity/activity-date-grouping';
+export {
+  formatDateGroupLabel,
+  getDateGroupKey,
+  insertDateHeaders,
+  isDateHeaderRow,
+} from './activity/activity-date-grouping';
 export type { CollectibleView } from './collectibles/collectible-view';
 export { createCollectibleView, createCollectibleViews } from './collectibles/collectible-view';
 export type { Sip9MediaInfo, Sip9SupportedContentType } from './collectibles/sip9-media';

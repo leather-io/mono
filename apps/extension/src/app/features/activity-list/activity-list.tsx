@@ -2,7 +2,12 @@ import { useEffect, useMemo } from 'react';
 import { Outlet, useNavigate } from 'react-router';
 import { Virtuoso } from 'react-virtuoso';
 
-import { type ActivityView } from '@leather.io/features';
+import {
+  type ActivityView,
+  type DateHeaderRow,
+  insertDateHeaders,
+  isDateHeaderRow,
+} from '@leather.io/features';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -19,7 +24,7 @@ import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import { useUpdateSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.hooks';
 import { useSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.selectors';
 
-import { ActivityDateHeader, getDateGroupKey } from './components/activity-date-header';
+import { ActivityDateHeader } from './components/activity-date-header';
 import { ActivityItem } from './components/activity-item';
 import { ActivityListLayout } from './components/activity-list.layout';
 import { createSubmittedActivityViews } from './submitted-activity-view';
@@ -31,20 +36,10 @@ interface SbtcDepositRow {
   deposit: SbtcDeposit;
 }
 
-interface DateHeaderRow {
-  key: string;
-  kind: 'date-header';
-  timestamp: number;
-}
-
 type ActivityListRow = ActivityView | SbtcDepositRow | DateHeaderRow;
 
 function isSbtcDepositRow(item: ActivityListRow): item is SbtcDepositRow {
   return 'kind' in item && item.kind === 'sbtc-deposit';
-}
-
-function isDateHeaderRow(item: ActivityListRow): item is DateHeaderRow {
-  return 'kind' in item && item.kind === 'date-header';
 }
 
 function isStacksPending(item: ActivityView): boolean {
@@ -55,25 +50,6 @@ function isStacksPending(item: ActivityView): boolean {
 function isBitcoinPendingSend(item: ActivityView): boolean {
   if (item.statusIndicator !== 'pending' || !item.txid) return false;
   return item.asset?.chain === 'bitcoin' && item.statusLabel === 'Sending';
-}
-
-function insertDateHeaders(items: (ActivityView | SbtcDepositRow)[]): ActivityListRow[] {
-  const result: ActivityListRow[] = [];
-  let lastDateKey = '';
-
-  for (const item of items) {
-    const ts = item.timestamp;
-    if (ts) {
-      const dateKey = getDateGroupKey(ts);
-      if (dateKey !== lastDateKey) {
-        lastDateKey = dateKey;
-        result.push({ key: `date-${dateKey}`, kind: 'date-header', timestamp: ts });
-      }
-    }
-    result.push(item);
-  }
-
-  return result;
 }
 
 export function ActivityList() {

@@ -1868,7 +1868,7 @@ msgstr "tiny amounts that cost more to send than they’re worth."
 msgid "To address"
 msgstr "To address"
 
-#: src/features/activity/activity-date-header.tsx:16
+#: src/features/activity/activity-date-header.tsx:14
 msgid "Today"
 msgstr "Today"
 
@@ -2068,7 +2068,7 @@ msgstr "Wrong URL"
 msgid "Xverse"
 msgstr "Xverse"
 
-#: src/features/activity/activity-date-header.tsx:17
+#: src/features/activity/activity-date-header.tsx:15
 msgid "Yesterday"
 msgstr "Yesterday"
 
