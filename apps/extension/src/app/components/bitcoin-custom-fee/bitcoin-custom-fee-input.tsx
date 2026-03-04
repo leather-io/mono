@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { useField } from 'formik';
 import { Stack } from 'leather-styles/jsx';
 
@@ -86,6 +87,7 @@ export function BitcoinCustomFeeInput({
         <Input.Root hasError={hasError}>
           <Input.Label>{feeInputLabel}</Input.Label>
           <Input.Field
+            data-testid={ActivitySelectors.TransactionActionFeeInput}
             onClick={onClick}
             {...field}
             onChange={e => {
