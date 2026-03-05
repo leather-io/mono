@@ -2,14 +2,25 @@ import { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router';
 
 import { captureMessage } from '@sentry/react';
-import { Box } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
+import { isNonNullish } from 'remeda';
 
 import { LiveSwapEstimate, matchLiveEstimate } from '@leather.io/state/swap';
 
+import { formatCurrency } from '@app/common/currency-formatter';
 import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
+import { QuoteRefetchIndicator } from '@app/pages/swap/components/quote-preview/quote-refetch-indicator';
+import { SwapReviewAccountDetails } from '@app/pages/swap/components/review/swap-review-account-details';
+import {
+  SwapReviewDetailRow,
+  SwapReviewDetails,
+  SwapReviewDivider,
+} from '@app/pages/swap/components/review/swap-review-details';
 import { SwapReviewSummary } from '@app/pages/swap/components/review/swap-review-summary';
 import type { SwapOutletContext } from '@app/pages/swap/swap-container';
+
+import { formatSwapRate } from './swap-utils';
 
 const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
   'loading',
@@ -49,16 +60,43 @@ interface SwapReviewContentProps {
 }
 
 function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
-  const { selectedQuote } = liveEstimate;
-  const { baseAmount, targetAmount, baseAsset, targetAsset } = selectedQuote;
+  const { selectedQuote, isRefetching, intervalState } = liveEstimate;
+  const { baseAmount, targetAmount, baseAsset, targetAsset, swapRate, minReceive } = selectedQuote;
 
   return (
-    <SwapReviewSummary
-      baseAsset={baseAsset}
-      targetAsset={targetAsset}
-      baseAmount={baseAmount}
-      targetAmount={targetAmount}
-    />
+    <Flex direction="column" gap="space.08">
+      <SwapReviewSummary
+        baseAsset={baseAsset}
+        targetAsset={targetAsset}
+        baseAmount={baseAmount}
+        targetAmount={targetAmount}
+      />
+      <SwapReviewDetails isRefetching={isRefetching}>
+        <SwapReviewAccountDetails />
+
+        <SwapReviewDivider />
+
+        <SwapReviewDetailRow
+          label="Rate"
+          value={
+            <Flex alignItems="center" gap="space.02">
+              <QuoteRefetchIndicator
+                interval={intervalState.interval}
+                lastStartedAt={intervalState.lastStartedAt}
+                nextRunTime={intervalState.nextRunTime}
+              />
+              <styled.span textStyle="label.02">
+                {formatSwapRate({ swapRate, baseAsset, targetAsset })}
+              </styled.span>
+            </Flex>
+          }
+        />
+
+        {isNonNullish(minReceive) && (
+          <SwapReviewDetailRow label="Min. receive" value={formatCurrency(minReceive)} />
+        )}
+      </SwapReviewDetails>
+    </Flex>
   );
 }
 
