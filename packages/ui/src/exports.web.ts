@@ -34,6 +34,7 @@ export { ItemLayoutWithButtons } from './components/item-layout/item-layout-with
 export { Link } from './components/link/link.web';
 export { LoadingSpinner, Spinner } from './components/spinner/index.web';
 export { Logo } from './components/logo.web';
+export { NumericInput, type NumericInputProps } from './components/numeric-input/numeric-input.web';
 export { NetworkModeBadge } from './components/network-mode-badge/network-mode-badge.web';
 export { Prism, type PrismType } from './components/highlighting/clarity-prism.shared';
 export { SkeletonLoader } from './components/skeleton-loader/skeleton-loader.web';

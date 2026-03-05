@@ -5,7 +5,7 @@ import { Stack, styled } from 'leather-styles/jsx';
 import { Button, type ButtonProps } from '../button/button.web';
 import AccessibleIcon from './accessible-icon.web';
 
-interface IconButtonProps extends ButtonProps {
+export interface IconButtonProps extends ButtonProps {
   icon: ReactElement<any, any>;
   label?: string;
 }
