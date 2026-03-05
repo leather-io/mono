@@ -63,23 +63,30 @@ export function CollectiblesEmpty() {
 
   return (
     <Stack gap="space.02" data-testid="collectibles-empty">
-      <Stack gap="space.01">
+      <Stack gap="space.01" pb="space.04">
         <styled.h3 textStyle="label.01" margin="0">
           Get your first NFT
         </styled.h3>
-        <styled.p textStyle="caption.01" color="ink.text-subdued" margin="0">
+        <styled.p textStyle="label.03" color="ink.text-primary" margin="0">
           Add your first NFT by buying or transferring from another account.
         </styled.p>
       </Stack>
 
       {nftItems.map(item => (
-        <Flex key={item.title} alignItems="center" gap="space.03" width="100%" py="space.03">
+        <Flex
+          key={item.title}
+          alignItems="center"
+          gap="space.03"
+          width="100%"
+          py="space.03"
+        >
           <styled.img
             src={item.image}
             alt={item.title}
-            width="36px"
-            height="36px"
-            borderRadius="xs"
+            width="40px"
+            height="40px"
+            borderRadius="sm"
+            boxShadow="inset 0 0 0 1px token(colors.ink.border-transparent)"
             objectFit="cover"
             flexShrink={0}
           />

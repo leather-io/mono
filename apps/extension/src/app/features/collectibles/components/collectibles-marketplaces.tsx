@@ -41,11 +41,13 @@ export function CollectiblesMarketplaces() {
           key={item.url}
           type="button"
           display="flex"
-          alignItems="center"
+          alignItems="flex-start"
           gap="space.03"
-          width="100%"
-          my="space.03"
+          mx="-space.03"
+          px="space.03"
+          py="space.03"
           textAlign="left"
+          borderRadius="sm"
           bg="ink.background-primary"
           onClick={() => openInNewTab(item.url)}
         >
@@ -58,7 +60,7 @@ export function CollectiblesMarketplaces() {
             objectFit="cover"
           />
 
-          <Stack gap="space.01" flex="1" minWidth={0}>
+          <Stack gap="space.00" flex="1" minWidth={0}>
             <styled.span textStyle="label.01">{item.name}</styled.span>
             <styled.span textStyle="caption.01" color="ink.text-subdued">
               {item.description}
