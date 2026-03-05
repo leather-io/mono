@@ -39,8 +39,8 @@ describe('createBlockchainActivityView', () => {
     expect(result.title).toBe('BTC');
     expect(result.caption).toContain('Sent to');
     expect(result.balances.operator).toBe(minusSign);
-    expect(result.balances.crypto).toBe(activity.events[0]!.amount.crypto);
-    expect(result.balances.quote).toBe(activity.events[0]!.amount.quote);
+    expect(result.balances.crypto).toBe(activity.events[0].amount.crypto);
+    expect(result.balances.quote).toBe(activity.events[0].amount.quote);
     expect(result.statusIndicator).toBe('sent');
     expect(result.activityAvatar).toBe('asset');
   });

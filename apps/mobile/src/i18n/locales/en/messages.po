@@ -834,10 +834,6 @@ msgstr "Fast"
 msgid "FastPool"
 msgstr "FastPool"
 
-#: src/features/activity/translate-activity-status.ts:64
-msgid "Feature waitlist notification"
-msgstr "Feature waitlist notification"
-
 #: src/features/swap/components/fees-info-sheet.tsx:44
 msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
