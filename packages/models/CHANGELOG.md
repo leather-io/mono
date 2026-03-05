@@ -36,6 +36,14 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.55.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.54.0...@leather.io/models-v0.55.0) (2026-03-05)
+
+
+### Features
+
+* **services:** activity v2 ([ae29c23](https://github.com/leather-io/mono/commit/ae29c23a6001bffc5ab81c89400e2d9768930478))
+* **services:** integrate bitflow bff api ([8256079](https://github.com/leather-io/mono/commit/8256079c4b1c5760fbaa51f978cdabf8817a0e0a))
+
 ## [0.54.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.53.0...@leather.io/models-v0.54.0) (2026-03-02)
 
 

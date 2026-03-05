@@ -489,6 +489,23 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.108.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.108.1...@leather.io/ui-v1.108.2) (2026-03-05)
+
+
+### Bug Fixes
+
+* **extension:** update collectible design ([7902c68](https://github.com/leather-io/mono/commit/7902c68a97f6883c17b83f0935d125fa227ee78d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.51.1
+  * devDependencies
+    * @leather.io/features bumped to 1.3.1
+    * @leather.io/models bumped to 0.55.0
+
 ## [1.108.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.108.0...@leather.io/ui-v1.108.1) (2026-03-04)
 
 

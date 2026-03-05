@@ -247,6 +247,16 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/rpc bumped to 2.20.17
 
+## [1.5.40](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.39...@leather.io/sdk-v1.5.40) (2026-03-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.55.0
+    * @leather.io/rpc bumped to 2.21.14
+
 ## [1.5.39](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.38...@leather.io/sdk-v1.5.39) (2026-03-04)
 
 

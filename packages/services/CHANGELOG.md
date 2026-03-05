@@ -413,6 +413,33 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.51.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.50.0...@leather.io/services-v1.51.0) (2026-03-05)
+
+
+### Features
+
+* **services:** activity v2 ([ae29c23](https://github.com/leather-io/mono/commit/ae29c23a6001bffc5ab81c89400e2d9768930478))
+* **services:** integrate bitflow bff api ([8256079](https://github.com/leather-io/mono/commit/8256079c4b1c5760fbaa51f978cdabf8817a0e0a))
+
+
+### Bug Fixes
+
+* **services:** filter SIP-9 collectibles that duplicate owned BNS names ([11e2171](https://github.com/leather-io/mono/commit/11e217153c38f4e38255de083754ec8a79ea78d7))
+* **services:** limit NFT holdings pagination and narrow Gamma error handling ([e63bce2](https://github.com/leather-io/mono/commit/e63bce2a8f98f57c2372761fe77c907f46b0d302))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.37.3
+    * @leather.io/constants bumped to 0.34.1
+    * @leather.io/models bumped to 0.55.0
+    * @leather.io/stacks bumped to 1.19.16
+    * @leather.io/utils bumped to 0.51.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.14
+
 ## [1.50.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.49.1...@leather.io/services-v1.50.0) (2026-03-04)
 
 
