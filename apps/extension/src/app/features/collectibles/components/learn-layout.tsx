@@ -34,9 +34,11 @@ export function LearnLayout({ items, 'data-testid': dataTestId }: LearnLayoutPro
           alignItems="center"
           justifyContent="space-between"
           gap="space.03"
-          width="100%"
-          my="space.03"
+          mx="-space.03"
+          px="space.03"
+          py="space.03"
           textAlign="left"
+          borderRadius="sm"
           bg="ink.background-primary"
           onClick={() => openInNewTab(item.url)}
         >
@@ -44,15 +46,24 @@ export function LearnLayout({ items, 'data-testid': dataTestId }: LearnLayoutPro
             <Flex
               width="40px"
               height="40px"
-              borderRadius="xs"
+              borderRadius="sm"
               bg="ink.background-secondary"
+              border="1px solid"
+              borderColor="ink.component-background-hover"
               alignItems="center"
               justifyContent="center"
               flexShrink={0}
             >
               {item.icon}
             </Flex>
-            <styled.span textStyle="label.01">{item.title}</styled.span>
+            <styled.span
+              textStyle="label.01"
+              overflow="hidden"
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+            >
+              {item.title}
+            </styled.span>
           </Flex>
         </Pressable>
       ))}

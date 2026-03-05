@@ -50,7 +50,7 @@ export function CollectiblesLayout({
   const showGrid = isReady && hasCollectibles;
 
   return (
-    <Stack gap="space.04" flex={1} pb="space.08">
+    <Stack gap="space.05" flex={1} pb="space.08">
       {showGrid && (
         <Flex justifyContent="space-between" alignItems="flex-start">
           <Box>
@@ -152,7 +152,7 @@ export function CollectiblesLayout({
       ) : null}
 
       {isReady && (
-        <Stack gap="space.04">
+        <Stack gap="space.05" pt="space.06">
           <CollectiblesMarketplaces />
           <CollectiblesLearn />
         </Stack>
