@@ -2,6 +2,8 @@ import type { ReactNode } from 'react';
 
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
+import { Pressable } from '@leather.io/ui';
+
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 
 export interface LearnItem {
@@ -18,14 +20,14 @@ interface LearnLayoutProps {
 export function LearnLayout({ items, 'data-testid': dataTestId }: LearnLayoutProps) {
   return (
     <Stack gap="space.00" data-testid={dataTestId}>
-      <styled.div px="space.03" py="space.03">
+      <styled.div py="space.03">
         <styled.h2 textStyle="label.01" margin="0">
           Learn
         </styled.h2>
       </styled.div>
 
       {items.map(item => (
-        <styled.button
+        <Pressable
           key={item.title}
           type="button"
           display="flex"
@@ -33,11 +35,9 @@ export function LearnLayout({ items, 'data-testid': dataTestId }: LearnLayoutPro
           justifyContent="space-between"
           gap="space.03"
           width="100%"
-          px="space.03"
-          py="space.03"
+          my="space.03"
           textAlign="left"
           bg="ink.background-primary"
-          _hover={{ bg: 'ink.component-background-hover', cursor: 'pointer' }}
           onClick={() => openInNewTab(item.url)}
         >
           <Flex alignItems="center" gap="space.03" minWidth={0}>
@@ -54,7 +54,7 @@ export function LearnLayout({ items, 'data-testid': dataTestId }: LearnLayoutPro
             </Flex>
             <styled.span textStyle="label.01">{item.title}</styled.span>
           </Flex>
-        </styled.button>
+        </Pressable>
       ))}
     </Stack>
   );

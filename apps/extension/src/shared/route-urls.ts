@@ -29,7 +29,7 @@ export enum RouteUrls {
   SelectNetwork = '/select-network',
   SelectTheme = '/select-theme',
   ManageTokens = '/manage-tokens',
-  Fund = '/fund',
+  Fund = '/fund/:chain?',
   Sell = '/sell',
   IncreaseStacksFee = '/increase-fee/stacks/:txid',
   IncreaseBtcFee = '/increase-fee/btc',

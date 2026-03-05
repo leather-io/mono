@@ -176,6 +176,20 @@ export async function mockMainnetTestAccountEmptyUtxosRequests(page: Page) {
       route.fulfill({ json: [] })
     ),
     page.route('**/v1/utxos/**', route => route.fulfill({ json: [] })),
+
+    page.route('**/v1/transactions/**', route =>
+      route.fulfill({
+        json: {
+          meta: {
+            page: 1,
+            pageSize: 1,
+            totalPages: 1,
+            totalItems: 0,
+          },
+          data: [],
+        },
+      })
+    ),
   ]);
 }
 

@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
+import { mockMainnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxos';
 
 import { test } from '../../fixtures/fixtures';
-import { mockEmptyLeatherApiUtxosRequest } from '../../mocks/mock-leather-api';
 import { mockEmptyStacksBalancesRequest } from '../../mocks/mock-stacks-balances';
 import { mockEmptyStacksBalancesV2Request } from '../../mocks/mock-stacks-balances-v2';
 import { CoreAssetSelectors } from '../../selectors/mocked-tokens.selectors';
@@ -61,22 +61,19 @@ test.describe('Tokens tab', () => {
       await globalPage.setupAndUseApiCalls(extensionId);
       await mockEmptyStacksBalancesRequest(page);
       await mockEmptyStacksBalancesV2Request(page);
-      await mockEmptyLeatherApiUtxosRequest(page);
+      await mockMainnetTestAccountEmptyUtxosRequests(page);
       await onboardingPage.signInWithTestAccount(extensionId);
     });
 
-    test('that available balance shows zero state', async ({ homePage }) => {
-      await expect(homePage.availableBalance).toBeVisible();
-      const balanceText = await homePage.availableBalance.innerText();
-      expect(balanceText).toBe('$0.00');
+    test('that available balance shows zero state (buy button)', async ({ page }) => {
+      const btcBuyButton = page.getByTestId(CoreAssetSelectors.BtcAssetBuyButton);
+      const stxBuyButton = page.getByTestId(CoreAssetSelectors.StxAssetBuyButton);
+      await expect(btcBuyButton).toBeVisible();
+      await expect(stxBuyButton).toBeVisible();
     });
 
     test('that asset list is displayed', async ({ homePage }) => {
       await expect(homePage.assetList).toBeVisible();
-    });
-
-    test('that manage tokens button is visible', async ({ homePage }) => {
-      await expect(homePage.manageTokensBtn).toBeVisible();
     });
 
     test('that core assets BTC, STX, USDCx are always visible', async ({ homePage }) => {
@@ -89,12 +86,13 @@ test.describe('Tokens tab', () => {
       await expect(usdcxAsset).toBeVisible();
     });
 
-    test('that zero balance assets display $0.00 fiat value', async ({ homePage }) => {
-      const btcAsset = homePage.assetList.getByTestId(CoreAssetSelectors.BtcAsset);
-      const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
-
-      await expect(btcAsset).toContainText('$0.00');
-      await expect(stxAsset).toContainText('$0.00');
+    test('that zero balance btc/stx assets display a buy button', async ({ homePage }) => {
+      await expect(
+        homePage.assetList.getByTestId(CoreAssetSelectors.BtcAssetBuyButton)
+      ).toBeVisible();
+      await expect(
+        homePage.assetList.getByTestId(CoreAssetSelectors.StxAssetBuyButton)
+      ).toBeVisible();
     });
   });
 });

@@ -42,6 +42,7 @@ interface TokenListProps {
   showUnmanageableTokens?: boolean;
   onSelectAsset?(assetId: SerializedCryptoAssetId): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
+  showDepositButtons?: boolean;
 }
 
 export function TokenList({
@@ -49,6 +50,7 @@ export function TokenList({
   variant = 'read-only',
   assetRightElementVariant = 'balance',
   showUnmanageableTokens = true,
+  showDepositButtons = false,
   setHasManageableTokens,
   filter,
 }: TokenListProps) {
@@ -72,6 +74,7 @@ export function TokenList({
                 isLoading={isLoading}
                 onSelectAsset={onSelectAsset}
                 isLoadingAdditionalData={isLoadingAdditionalData}
+                showDepositButtons={showDepositButtons}
               />
             )}
           </BtcAssetItemBalanceLoader>
@@ -97,6 +100,7 @@ export function TokenList({
                 isLoading={isLoading}
                 isPrivate={isPrivate}
                 onSelectAsset={onSelectAsset}
+                showDepositButtons={showDepositButtons}
               />
             )}
           </StxAssetItemBalanceLoader>

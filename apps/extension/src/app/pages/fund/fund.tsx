@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router';
+import { Outlet, useParams } from 'react-router';
 
 import { LEATHER_EARN_URL } from '@leather.io/constants';
 import { getOnramperIframeParams } from '@leather.io/features';
@@ -21,13 +21,14 @@ export function FundPage() {
   const bitcoinSigner = useCurrentAccountNativeSegwitIndexZeroSignerNullable();
   const btcAddress = bitcoinSigner?.address;
   const stxAddress = currentStxAccount?.address;
+  const { chain } = useParams();
 
   const { theme } = useThemeSwitcher();
 
   const params = getOnramperIframeParams({
     theme,
-    btcAddress,
-    stxAddress,
+    btcAddress: !chain || chain === 'bitcoin' ? btcAddress : undefined,
+    stxAddress: !chain || chain === 'stacks' ? stxAddress : undefined,
     apiKey: ONRAMPER_API_KEY,
     signingSecret: ONRAMPER_SIGNING_SECRET,
     mode: 'buy',
