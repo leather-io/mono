@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { styled } from 'leather-styles/jsx';
+import { Box, styled } from 'leather-styles/jsx';
+
+import { Iframe } from '@app/ui/components/iframe';
 
 import { CollectibleCard } from './collectible-card';
 import { ImageUnavailable } from './image-unavailable';
@@ -11,36 +13,18 @@ interface CollectibleHtmlProps {
   onPress?(): void;
 }
 
-interface HtmlInscriptionImageProps {
-  src: string;
-  onError(): void;
-}
-
-function HtmlInscriptionImage({ src, onError }: HtmlInscriptionImageProps) {
+function HtmlInscriptionPreview({ src, onError }: { src: string; onError?(): void }) {
   return (
-    <styled.img
-      src={src}
-      alt="HTML inscription"
-      loading="lazy"
-      onError={onError}
-      display="block"
-      width="100%"
-      height="100%"
-      objectFit="cover"
-      bg="ink.background-secondary"
-    />
+    <Box width="100%" height="100%" overflow="hidden" bg="ink.background-secondary">
+      <Iframe src={src} width="100%" height="100%" border="none" onError={onError} />
+    </Box>
   );
 }
 
-export function CollectibleHtml({ src, thumbnailSrc, onPress }: CollectibleHtmlProps) {
+export function CollectibleHtml({ src, onPress }: CollectibleHtmlProps) {
   const [hasError, setHasError] = useState(false);
-  const imgSrc = thumbnailSrc ?? src;
 
-  useEffect(() => {
-    setHasError(!imgSrc);
-  }, [imgSrc]);
-
-  if (!imgSrc || hasError) {
+  if (!src || hasError) {
     return <ImageUnavailable />;
   }
 
@@ -57,7 +41,7 @@ export function CollectibleHtml({ src, thumbnailSrc, onPress }: CollectibleHtmlP
           width="100%"
           height="100%"
         >
-          <HtmlInscriptionImage src={imgSrc} onError={() => setHasError(true)} />
+          <HtmlInscriptionPreview src={src} onError={() => setHasError(true)} />
         </styled.button>
       </CollectibleCard>
     );
@@ -65,7 +49,7 @@ export function CollectibleHtml({ src, thumbnailSrc, onPress }: CollectibleHtmlP
 
   return (
     <CollectibleCard>
-      <HtmlInscriptionImage src={imgSrc} onError={() => setHasError(true)} />
+      <HtmlInscriptionPreview src={src} onError={() => setHasError(true)} />
     </CollectibleCard>
   );
 }

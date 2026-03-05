@@ -90,7 +90,7 @@ const dropdownContentStyles = css({
     _closed: { animationName: 'slideLeftAndOut' },
   },
 });
-const Content: typeof RadixDropdownMenu.Content = forwardRef(({ className, ...props }, ref) => (
+const ContentBase: typeof RadixDropdownMenu.Content = forwardRef(({ className, ...props }, ref) => (
   <RadixDropdownMenu.Content
     className={`${dropdownContentStyles} ${className}`}
     ref={ref}
@@ -98,7 +98,9 @@ const Content: typeof RadixDropdownMenu.Content = forwardRef(({ className, ...pr
   />
 ));
 
-Content.displayName = 'DropdownMenu.Content';
+ContentBase.displayName = 'DropdownMenu.Content';
+
+const Content = styled(ContentBase);
 
 const dropdownMenuLabelStyles = css({
   color: 'ink.text-subdued',
