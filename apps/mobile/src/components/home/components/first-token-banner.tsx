@@ -16,7 +16,7 @@ export function FirstTokenBanner() {
         <Image
           style={{ height: 48, width: 80 }}
           contentFit="cover"
-          source={require('@/assets/exchange-icons.png')}
+          source={require('@leather.io/ui/assets/images/exchange-icons.png')}
         />
       </Box>
     </Box>

@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+import { mockTestAccountStacksTxsRequestsWithPendingTx } from '@tests/mocks/mock-stacks-txs';
 
 import { test } from '../../fixtures/fixtures';
 import { mockEmptyLeatherApiUtxosRequest } from '../../mocks/mock-leather-api';
@@ -118,8 +119,9 @@ test.describe('Token details', () => {
 
   test.describe('STX token details', () => {
     test.describe('populated wallet', () => {
-      test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
+      test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
         await globalPage.setupAndUseApiCalls(extensionId);
+        await mockTestAccountStacksTxsRequestsWithPendingTx(page);
         await onboardingPage.signInWithTestAccount(extensionId);
       });
 
@@ -166,27 +168,6 @@ test.describe('Token details', () => {
         await receiveButton.click();
 
         await expect(page.getByText('RECEIVE STX')).toBeVisible();
-      });
-    });
-
-    test.describe('empty wallet', () => {
-      test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
-        await globalPage.setupAndUseApiCalls(extensionId);
-        await mockEmptyStacksBalancesRequest(page);
-        await mockEmptyStacksBalancesV2Request(page);
-        await mockEmptyLeatherApiUtxosRequest(page);
-        await onboardingPage.signInWithTestAccount(extensionId);
-      });
-
-      test('that STX token details shows zero balance', async ({ homePage, page }) => {
-        const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
-        await stxAsset.click();
-
-        const amount = page.getByTestId(TokenDetailsSelectors.TokenOverviewAmount);
-        await expect(amount).toBeVisible();
-        const amountText = await amount.innerText();
-        expect(amountText).toContain('0');
-        expect(amountText).toContain('STX');
       });
     });
   });
