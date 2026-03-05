@@ -1,7 +1,9 @@
-import { MinusIcon, PlusIcon } from '../../icons/index.native';
-import { Box } from '../box/box.native';
-import { IconButton, type IconButtonProps } from '../icon-button/icon-button.native';
-import { Text, type TextProps } from '../text/text.native';
+import { ComponentProps } from 'react';
+
+import { styled } from 'leather-styles/jsx';
+
+import { MinusIcon, PlusIcon } from '../../icons/index.web';
+import { IconButton, type IconButtonProps } from '../icon-button/icon-button.web';
 import {
   NumericInputProvider,
   type NumericInputProviderProps,
@@ -10,82 +12,83 @@ import {
 
 export type NumericInputProps = NumericInputProviderProps;
 
+type ButtonProps = Omit<IconButtonProps, 'icon'>;
+
 export function NumericInput({ children, ...props }: NumericInputProps) {
   return (
     <NumericInputProvider {...props}>
-      <Box
+      <styled.div
+        display="flex"
         flexDirection="row"
         alignItems="center"
-        borderWidth={1}
+        borderWidth="1px"
         borderColor="ink.border-transparent"
-        borderRadius="md"
+        borderRadius="sm"
       >
         {children}
-      </Box>
+      </styled.div>
     </NumericInputProvider>
   );
 }
-
-type ButtonProps = Omit<IconButtonProps, 'icon'>;
 
 function Increment(props: ButtonProps) {
   const { handlePressIn, handlePressOut, disabled, max, value } = useNumericInputContext();
 
   return (
     <IconButton
-      alignSelf="stretch"
-      justifyContent="center"
-      p="3"
-      borderLeftWidth={1}
-      borderColor="ink.border-transparent"
-      onPressIn={() => handlePressIn('increment')}
-      onPressOut={handlePressOut}
+      onPointerDown={() => handlePressIn('increment')}
+      onPointerUp={handlePressOut}
+      onPointerLeave={handlePressOut}
       disabled={disabled || value >= max}
       icon={<PlusIcon />}
+      borderLeftWidth="1px"
+      borderLeftColor="ink.border-transparent"
+      rounded="none"
       {...props}
     />
   );
 }
 
 function Decrement(props: ButtonProps) {
-  const { value, handlePressIn, handlePressOut, min, disabled } = useNumericInputContext();
+  const { handlePressIn, handlePressOut, disabled, min, value } = useNumericInputContext();
 
   return (
     <IconButton
-      alignSelf="stretch"
-      justifyContent="center"
-      p="3"
-      borderRightWidth={1}
-      borderColor="ink.border-transparent"
-      onPressIn={() => handlePressIn('decrement')}
-      onPressOut={handlePressOut}
+      onPointerDown={() => handlePressIn('decrement')}
+      onPointerUp={handlePressOut}
+      onPointerLeave={handlePressOut}
       disabled={disabled || value <= min}
       icon={<MinusIcon />}
+      borderRightWidth="1px"
+      borderRightColor="ink.border-transparent"
+      rounded="none"
       {...props}
     />
   );
 }
 
-export interface DisplayProps extends TextProps {
+export interface DisplayProps extends ComponentProps<typeof styled.span> {
   formatter?(value: number, decimals?: number): string;
 }
 
-function Display({ formatter: customFormatter, ...textProps }: DisplayProps) {
+function Display({ formatter: customFormatter, ...spanProps }: DisplayProps) {
   const { value, decimals, formatter: contextFormatter } = useNumericInputContext();
   const formatter = customFormatter ?? contextFormatter;
 
   return (
-    <Text
-      px="5"
+    <styled.span
+      flex={1}
+      px="space.04"
       fontFamily="MarchePro-Super"
-      fontSize={18}
-      lineHeight={24}
+      fontSize="18px"
+      lineHeight="24px"
       textAlign="center"
-      fontVariant={['tabular-nums']}
-      {...textProps}
+      fontVariantNumeric="tabular-nums"
+      userSelect="none"
+      {...spanProps}
     >
       {formatter(value, decimals)}
-    </Text>
+    </styled.span>
   );
 }
 
