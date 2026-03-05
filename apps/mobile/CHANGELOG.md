@@ -4,6 +4,7 @@
 
 ### Features
 
+* **services:** integrate bitflow bff api ([8256079](https://github.com/leather-io/mono/commit/8256079c4b1c5760fbaa51f978cdabf8817a0e0a))
 * **extension:** overhaul collectibles tab with new UI and empty states ([73e6231](https://github.com/leather-io/mono/commit/73e623133b5786621a06b83bf099a68f5e3889ef))
 * **extension:** implement taproot sends ([c4bfa96](https://github.com/leather-io/mono/commit/c4bfa960658d29bb0427f756725e87bdf77fd7b7))
 * **extension:** trending tokens ([f3ec298](https://github.com/leather-io/mono/commit/f3ec29826661db843dd2dc3e4b57e0acc9dcdbcb))

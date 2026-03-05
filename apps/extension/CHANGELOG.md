@@ -25,6 +25,9 @@
 
 ### Bug Fixes
 
+* **extension:** update collectible design ([7902c68](https://github.com/leather-io/mono/commit/7902c68a97f6883c17b83f0935d125fa227ee78d))
+* taproot rbf ([4628b20](https://github.com/leather-io/mono/commit/4628b20b2385233791ac58e9afab529a7e6b1358))
+* utxo selection for send transfer + generally use all utxos instead of only ns ([d21f030](https://github.com/leather-io/mono/commit/d21f030cabd7ec83eba14ac7c9b732d02aa5abef))
 * **extension:** add loading="lazy" to collectible images ([8fe4429](https://github.com/leather-io/mono/commit/8fe4429692d9280db52f16c3b6422bcf0aaa609e))
 * **extension:** restore IntersectionObserver lazy rendering for collectible cards ([83a6211](https://github.com/leather-io/mono/commit/83a6211a1b23ec2a84c730d9cc8c108ee653e18f))
 * **extension:** restore pixelated rendering for small collectible images ([bb991b8](https://github.com/leather-io/mono/commit/bb991b81cd0884a536869bad585ed396bdb63ee0))
