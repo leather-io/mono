@@ -50,7 +50,7 @@ export function CollectiblesLayout({
   const showGrid = isReady && hasCollectibles;
 
   return (
-    <Stack gap="space.04" flex={1}>
+    <Stack gap="space.04" flex={1} pb="space.08">
       {showGrid && (
         <Flex justifyContent="space-between" alignItems="flex-start">
           <Box>
@@ -82,7 +82,7 @@ export function CollectiblesLayout({
               />
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
-              <DropdownMenu.Content align="end" sideOffset={8}>
+              <DropdownMenu.Content align="end" sideOffset={8} minWidth="272px">
                 <DropdownMenu.Item onSelect={onRefresh} data-testid="refresh-collectibles">
                   <ItemLayout
                     titleLeft="Refresh"
@@ -108,7 +108,7 @@ export function CollectiblesLayout({
                 >
                   <ItemLayout
                     titleLeft={
-                      <styled.span color="red.action-primary-default">
+                      <styled.span textStyle="label.02" color="red.action-primary-default">
                         Unprotect all inscriptions
                       </styled.span>
                     }
@@ -136,7 +136,12 @@ export function CollectiblesLayout({
       {showEmpty && <CollectiblesEmpty />}
 
       {showGrid ? (
-        <Box width="100%" borderRadius="xs" overflow="hidden">
+        <Box
+          width="auto"
+          mx={['-space.05', null, 0]}
+          borderRadius={[0, null, 'xs']}
+          overflow="hidden"
+        >
           <styled.div
             display="grid"
             gridTemplateColumns={['repeat(2, 1fr)', 'repeat(auto-fill, minmax(180px, 1fr))']}
