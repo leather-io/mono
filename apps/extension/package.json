@@ -4,7 +4,7 @@
     "name": "Leather Wallet LLC"
   },
   "description": "Leather is a browser extension for interacting with Stacks apps",
-  "version": "6.96.1",
+  "version": "6.96.2",
   "license": "MIT",
   "repository": "leather-io/mono.git",
   "type": "module",

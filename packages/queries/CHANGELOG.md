@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.7.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.6.3...@leather.io/queries-v0.7.0) (2026-03-05)
+
+
+### Features
+
+* **services:** activity v2 ([ae29c23](https://github.com/leather-io/mono/commit/ae29c23a6001bffc5ab81c89400e2d9768930478))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.55.0
+    * @leather.io/services bumped to 1.51.0
+    * @leather.io/utils bumped to 0.51.1
+
 ## [0.6.3](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.6.2...@leather.io/queries-v0.6.3) (2026-03-04)
 
 

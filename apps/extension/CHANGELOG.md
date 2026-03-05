@@ -48,6 +48,35 @@
 
 ---
 
+## [6.96.2](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.96.1...@leather.io/extension-v6.96.2) (2026-03-05)
+
+
+### Bug Fixes
+
+* **extension:** update collectible design ([7902c68](https://github.com/leather-io/mono/commit/7902c68a97f6883c17b83f0935d125fa227ee78d))
+* taproot rbf ([4628b20](https://github.com/leather-io/mono/commit/4628b20b2385233791ac58e9afab529a7e6b1358))
+* utxo selection for send transfer + generally use all utxos instead of only ns ([d21f030](https://github.com/leather-io/mono/commit/d21f030cabd7ec83eba14ac7c9b732d02aa5abef))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.19.1
+    * @leather.io/bitcoin bumped to 0.37.3
+    * @leather.io/constants bumped to 0.34.1
+    * @leather.io/crypto bumped to 1.12.20
+    * @leather.io/features bumped to 1.3.1
+    * @leather.io/models bumped to 0.55.0
+    * @leather.io/provider bumped to 1.6.22
+    * @leather.io/queries bumped to 0.7.0
+    * @leather.io/query bumped to 2.46.1
+    * @leather.io/rpc bumped to 2.21.14
+    * @leather.io/services bumped to 1.51.0
+    * @leather.io/stacks bumped to 1.19.16
+    * @leather.io/ui bumped to 1.108.2
+    * @leather.io/utils bumped to 0.51.1
+
 ## [6.96.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.96.0...@leather.io/extension-v6.96.1) (2026-03-04)
 
 

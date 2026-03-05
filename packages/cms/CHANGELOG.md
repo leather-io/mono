@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.5.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.4.0...@leather.io/cms-v1.5.0) (2026-03-05)
+
+
+### Features
+
+* add breadcrumbs to top header ([46fe4b4](https://github.com/leather-io/mono/commit/46fe4b493e43471041b1fa0f8fd3f97a8b2e2e2c))
+* clean up styles and add search query ([3da2b47](https://github.com/leather-io/mono/commit/3da2b476d1efd1ad97f22b8e24a33815aa027649))
+* **cms:** add GROQ queries for new help center schema ([e497576](https://github.com/leather-io/mono/commit/e49757611ff4a7a36879eb2d7463e1f31194ef3f))
+* **cms:** add help center content migration script ([5c40dc9](https://github.com/leather-io/mono/commit/5c40dc97a225ca932b06d274f0939fadfa00f638))
+* **cms:** add helpCenterCategory Sanity schema type ([56476f6](https://github.com/leather-io/mono/commit/56476f6888d8c64193a6df6ddce25de23f3c7c8d))
+* **cms:** add helpCenterGuide Sanity schema type ([7376a50](https://github.com/leather-io/mono/commit/7376a50b044360b74c8d40e46d1e6f0b50fc1f1a))
+
+
+### Bug Fixes
+
+* **cms:** filter orphan relatedPosts in migration script ([d4567e8](https://github.com/leather-io/mono/commit/d4567e80a6480ef99382f0644ad7198ce8aa0ea7))
+
 ## [1.4.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.3.4...@leather.io/cms-v1.4.0) (2026-01-30)
 
 
