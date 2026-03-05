@@ -1140,11 +1140,7 @@ msgstr "Locked Stacks balance:"
 msgid "Locked STX"
 msgstr "Locked STX"
 
-#: src/features/activity/translate-activity-status.ts:30
-msgid "Locking"
-msgstr "Locking"
-
-#: src/features/token/components/discover-marketplaces-section.tsx:25
+#: src/features/token/components/discover-marketplaces-section.tsx:38
 msgid "Magic Eden"
 msgstr "Magic Eden"
 

@@ -16,7 +16,7 @@ import { SbtcDepositTransactionItem } from '@app/components/sbtc-deposit-status-
 import { IncreaseFeeButton } from '@app/components/stacks-transaction-item/increase-fee-button';
 import { StacksTransactionActionMenu } from '@app/components/stacks-transaction-item/stacks-transaction-action-menu';
 import { useUserSettings } from '@app/hooks/use-user-settings';
-import { useActivity } from '@app/query/activity/activity.query';
+import { useBlockchainActivity } from '@app/query/activity/blockchain-activity.query';
 import { type SbtcDeposit, useSbtcPendingDeposits } from '@app/query/sbtc/sbtc-deposits.query';
 import { useStacksPendingTransactions } from '@app/query/stacks/mempool/mempool.hooks';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
@@ -56,7 +56,7 @@ export function ActivityList() {
   const accountIndex = useCurrentAccountIndex();
   const accountAddresses = useAccountAddresses(accountIndex);
   const { network } = useUserSettings();
-  const activityQuery = useActivity(accountAddresses);
+  const activityQuery = useBlockchainActivity(accountAddresses);
   const submittedTransactions = useSubmittedTransactions();
   const updateSubmittedTransactions = useUpdateSubmittedTransactions();
   const navigate = useNavigate();

@@ -114,7 +114,7 @@ describe('activity-metadata', () => {
       expect(getActivityTitle(activity)).toBe('Token Transfer');
     });
 
-    it('extracts contract name from deploySmartContract activity', () => {
+    it('returns status-based title for deploySmartContract activity', () => {
       const activity: DeploySmartContractActivity = {
         ...baseActivity,
         txid: 'tx123',
@@ -122,10 +122,10 @@ describe('activity-metadata', () => {
         status: 'success',
         contractId: 'SP123.my-contract',
       };
-      expect(getActivityTitle(activity)).toBe('my-contract');
+      expect(getActivityTitle(activity)).toBe('Deployed');
     });
 
-    it('extracts contract name from executeSmartContract activity', () => {
+    it('returns function name for executeSmartContract activity', () => {
       const activity: ExecuteSmartContractActivity = {
         ...baseActivity,
         txid: 'tx123',
@@ -134,10 +134,10 @@ describe('activity-metadata', () => {
         contractId: 'SP456.another-contract',
         functionName: 'transfer',
       };
-      expect(getActivityTitle(activity)).toBe('another-contract');
+      expect(getActivityTitle(activity)).toBe('transfer');
     });
 
-    it('returns Unknown when contract name cannot be extracted', () => {
+    it('returns Deployed for deploy activity with empty contractId', () => {
       const activity: DeploySmartContractActivity = {
         ...baseActivity,
         txid: 'tx123',
@@ -145,7 +145,7 @@ describe('activity-metadata', () => {
         status: 'success',
         contractId: '',
       };
-      expect(getActivityTitle(activity)).toBe('Unknown');
+      expect(getActivityTitle(activity)).toBe('Deployed');
     });
 
     it('returns Swap Assets for swapAssets activity', () => {
@@ -159,7 +159,7 @@ describe('activity-metadata', () => {
         toAsset: stxAsset,
         toAmount: initBigNumber(2),
       };
-      expect(getActivityTitle(activity)).toBe('Swap Assets');
+      expect(getActivityTitle(activity)).toBe('fungible → fungible');
     });
 
     it('returns Lock Asset for lockAsset activity', () => {

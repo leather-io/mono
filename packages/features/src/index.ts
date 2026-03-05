@@ -27,6 +27,7 @@ export {
 export type { ActivityStatusIndicatorId, ActivityAvatar, ActivityView } from './activity/types';
 export { formatActivityCaption } from './activity/activity-timestamp';
 export { createActivityView } from './activity/activity-view';
+export { createBlockchainActivityView } from './activity/blockchain-activity-view';
 export {
   filterActivityByAsset,
   filterActivityBySerializedAssetId,

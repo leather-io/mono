@@ -98,7 +98,7 @@ describe('activity-view', () => {
       expect(result.asset).toBe(stxAsset);
       expect(result.fromAsset).toBe(btcAsset);
       expect(result.toAsset).toBe(stxAsset);
-      expect(result.title).toBe('Swap Assets');
+      expect(result.title).toBe('fungible → STX');
       expect(result.statusLabel).toBe('BTC → STX');
       expect(result.balances.operator).toBe('+');
       expect(result.activityAvatar).toBe('swap');
