@@ -25,7 +25,8 @@
   "exports": {
     ".": "./dist-web/exports.web.js",
     "./styles": "./dist-web/styles.css",
-    "./native": "./dist-native/native.js"
+    "./native": "./dist-native/native.js",
+    "./assets/*": "./src/assets/*"
   },
   "dependencies": {
     "@expo/vector-icons": "14.1.0",

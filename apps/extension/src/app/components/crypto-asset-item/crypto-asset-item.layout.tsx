@@ -29,6 +29,7 @@ export interface CryptoAssetItemLayoutProps {
   isLoadingAdditionalData?: boolean;
   isPrivate?: boolean;
   onSelectAsset?(symbol: string, contractId?: string): void;
+  rightElement?: React.ReactNode;
   titleLeft: string;
   titleRightBulletInfo?: React.ReactNode;
   dataTestId: string;
@@ -45,6 +46,7 @@ export function CryptoAssetItemLayout({
   isLoadingAdditionalData = false,
   isPrivate = false,
   onSelectAsset,
+  rightElement,
   titleLeft,
   titleRightBulletInfo,
   dataTestId,
@@ -101,8 +103,8 @@ export function CryptoAssetItemLayout({
       img={icon}
       titleLeft={spamFilter(titleLeft)}
       captionLeft={spamFilter(captionLeft)}
-      titleRight={titleRight}
-      captionRight={captionRight}
+      titleRight={rightElement ? rightElement : titleRight}
+      captionRight={rightElement ? undefined : captionRight}
     />
   );
 
