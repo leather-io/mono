@@ -2,7 +2,6 @@ import { analytics } from '@shared/utils/analytics';
 
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { useToast } from '@app/features/toasts/use-toast';
-import { useBackgroundLocationRedirect } from '@app/routes/hooks/use-background-location-redirect';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useNativeSegwitAccountIndexAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -11,11 +10,10 @@ import { ReceiveTokensLayout } from './components/receive-tokens.layout';
 
 interface ReceiveBtcModalProps {
   type?: 'btc' | 'btc-taproot';
+  onClose(): void;
 }
 
-export function ReceiveBtcModal({ type = 'btc' }: ReceiveBtcModalProps) {
-  useBackgroundLocationRedirect();
-
+export function ReceiveBtcModal({ type = 'btc', onClose }: ReceiveBtcModalProps) {
   const toast = useToast();
 
   const currentAccount = useCurrentAccountId();
@@ -28,6 +26,7 @@ export function ReceiveBtcModal({ type = 'btc' }: ReceiveBtcModalProps) {
   return (
     <ReceiveTokensLayout
       address={address}
+      onClose={onClose}
       onCopyAddressToClipboard={async () => {
         analytics.track('copy_btc_address_to_clipboard', { type });
         await copyToClipboard(address);

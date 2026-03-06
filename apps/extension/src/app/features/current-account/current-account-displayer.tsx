@@ -26,7 +26,6 @@ export function CurrentAccountDisplayer({ onSelectAccount }: CurrentAccountDispl
   });
   return (
     <AccountListItemLayout
-      withChevron
       fingerprint={currentAccount.fingerprint}
       accountIndex={current.accountIndex}
       accountAddresses={<AccountAddresses accountId={current} />}

@@ -1,22 +1,17 @@
-import { useNavigate } from 'react-router';
-
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Box } from 'leather-styles/jsx';
 
 import { Sheet, SheetHeader, Tabs } from '@leather.io/ui';
 
-import { RouteUrls } from '@shared/route-urls';
-
-import { useLocationState } from '@app/common/hooks/use-location-state';
-import { useBackgroundLocationRedirect } from '@app/routes/hooks/use-background-location-redirect';
+import type { ReceiveView } from '@app/common/receive/receive';
 import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 import { ReceiveCollectibles } from './components/receive-collectibles';
 import { ReceiveTokens } from './components/receive-tokens';
-
-type ReceiveSheet = 'full' | 'collectible';
+import { ReceiveBtcModal } from './receive-btc';
+import { ReceiveStxModal } from './receive-stx';
 
 export const receiveTabStyle = {
   mt: 'space.03',
@@ -25,15 +20,26 @@ export const receiveTabStyle = {
   minHeight: '260px',
 };
 
-interface ReceiveSheetProps {
-  type?: 'full' | 'collectible';
+interface ReceiveDialogProps {
+  view: ReceiveView;
+  onChangeView(view: ReceiveView): void;
+  onClose(): void;
 }
 
-export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
-  useBackgroundLocationRedirect();
+export function ReceiveDialog({ view, onChangeView, onClose }: ReceiveDialogProps) {
+  if (view === 'btc') return <ReceiveBtcModal type="btc" onClose={onClose} />;
+  if (view === 'btc-taproot') return <ReceiveBtcModal type="btc-taproot" onClose={onClose} />;
+  if (view === 'stx') return <ReceiveStxModal onClose={onClose} />;
+  return <ReceiveSheet type={view} onChangeView={onChangeView} onClose={onClose} />;
+}
 
-  const backgroundLocation = useLocationState<Location>('backgroundLocation');
-  const navigate = useNavigate();
+interface ReceiveSheetProps {
+  type?: 'full' | 'collectible';
+  onChangeView(view: ReceiveView): void;
+  onClose(): void;
+}
+
+function ReceiveSheet({ type = 'full', onChangeView, onClose }: ReceiveSheetProps) {
   const btcAddressNativeSegwit = useCurrentAccountNativeSegwitAddressIndexZero();
   const btcAddressTaproot = useZeroIndexTaprootAddress();
   const stxAddress = useCurrentStacksAccountAddress();
@@ -51,27 +57,14 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
 
   function Collectibles() {
     return (
-      <ReceiveCollectibles
-        stxAddress={stxAddress}
-        onClickQrStacksNft={() =>
-          navigate(`${RouteUrls.Home}${RouteUrls.ReceiveStx}`, {
-            state: { backgroundLocation },
-          })
-        }
-      />
+      <ReceiveCollectibles stxAddress={stxAddress} onClickQrStacksNft={() => onChangeView('stx')} />
     );
   }
 
   return (
     <Sheet
-      header={
-        <SheetHeader
-          variant="large"
-          title={title}
-          onClose={() => navigate(backgroundLocation ?? '..')}
-        />
-      }
-      onClose={() => navigate(backgroundLocation ?? '..')}
+      header={<SheetHeader variant="large" title={title} onClose={onClose} />}
+      onClose={onClose}
       isShowing
     >
       {type === 'collectible' && <Collectibles />}
@@ -95,21 +88,9 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
                 btcAddressNativeSegwit={btcAddressNativeSegwit}
                 btcAddressTaproot={btcAddressTaproot}
                 stxAddress={stxAddress}
-                onClickQrBtc={() =>
-                  navigate(`${RouteUrls.Home}${RouteUrls.ReceiveBtc}`, {
-                    state: { backgroundLocation },
-                  })
-                }
-                onClickQrBtcTaproot={() =>
-                  navigate(`${RouteUrls.Home}${RouteUrls.ReceiveBtcTaproot}`, {
-                    state: { backgroundLocation },
-                  })
-                }
-                onClickQrStx={() =>
-                  navigate(`${RouteUrls.Home}${RouteUrls.ReceiveStx}`, {
-                    state: { backgroundLocation },
-                  })
-                }
+                onClickQrBtc={() => onChangeView('btc')}
+                onClickQrBtcTaproot={() => onChangeView('btc-taproot')}
+                onClickQrStx={() => onChangeView('stx')}
               />
             </Box>
           </Tabs.Content>

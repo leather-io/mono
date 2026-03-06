@@ -36,6 +36,7 @@ export function useHomePageState() {
   const { data: name = '', isFetching: isFetchingBnsName } = useAccountDisplayName({
     address: account?.address || '',
     index: currentAccount.accountIndex || 0,
+    fingerprint: currentAccount.fingerprint,
   });
 
   const totalBalance = useCurrentAccountTotalBalance();

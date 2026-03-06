@@ -1,12 +1,10 @@
 import { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
-import { Button, Input, Link, Logo } from '@leather.io/ui';
+import { Button, Input, Logo } from '@leather.io/ui';
 
-import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
@@ -27,13 +25,11 @@ const caption =
 
 interface RequestPasswordProps {
   onSuccess(): void;
-  showForgotPassword?: boolean;
 }
-export function RequestPassword({ onSuccess, showForgotPassword = false }: RequestPasswordProps) {
+export function RequestPassword({ onSuccess }: RequestPasswordProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { unlockWallet } = useKeyActions();
-  const navigate = useNavigate();
 
   const [isRunning, waitingMessage, startWaitingMessage, stopWaitingMessage] =
     useWaitingMessage(waitingMessages);
@@ -101,11 +97,6 @@ export function RequestPassword({ onSuccess, showForgotPassword = false }: Reque
               onKeyUp={buildEnterKeyEvent(submit)}
             />
           </Input.Root>
-          {showForgotPassword && (
-            <Link width="fit-content" onClick={() => navigate(RouteUrls.ForgotPassword)}>
-              Forgot password?
-            </Link>
-          )}
           {error && <ErrorLabel width="100%">{error}</ErrorLabel>}
         </Stack>
       </Card>

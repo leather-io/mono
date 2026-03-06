@@ -4,7 +4,6 @@ export enum RouteUrls {
   BackUpSecretKey = '/back-up-secret-key',
   SetPassword = '/set-password',
   SignIn = '/sign-in',
-  ForgotPassword = '/forgot-password',
 
   // Ledger routes
   ConnectLedger = 'connect-your-ledger',
@@ -27,7 +26,6 @@ export enum RouteUrls {
   // Active wallet routes
   Home = '/',
   TokenDetails = '/token/*',
-  MultiWalletTest = '/multi-wallet-test',
   AddNetwork = '/add-network',
   EditNetwork = '/edit-network',
   SelectNetwork = '/select-network',
@@ -41,15 +39,13 @@ export enum RouteUrls {
   Send = '/send-transaction',
   ViewSecretKey = '/view-secret-key',
   Settings = '/settings',
+  AddWallet = '/add-wallet',
+  CreateWallet = '/create-wallet',
+  AddLedgerWallet = '/add-ledger-wallet',
 
   // nested routes must have relative paths
   Activity = '/activity',
   Collectibles = '/collectibles',
-  Receive = 'receive',
-  ReceiveStx = 'receive/stx',
-  ReceiveBtc = 'receive/btc',
-  ReceiveBtcTaproot = 'receive/btc-taproot',
-  ReceiveCollectible = 'receive/collectible',
 
   // Locked wallet route
   Unlock = '/unlock',

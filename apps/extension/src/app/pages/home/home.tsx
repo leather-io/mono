@@ -10,6 +10,7 @@ import { ActivityList } from '@app/features/activity-list/activity-list';
 import { ActivityListLegacy } from '@app/features/activity-list/activity-list-legacy';
 import { Collectibles } from '@app/features/collectibles/collectibles';
 import { useFlags } from '@app/features/feature-flags';
+import { MultiWalletIntroducer } from '@app/features/feature-introducer/implementations';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
 import { NotFoundContent } from '@app/pages/not-found/not-found';
@@ -61,6 +62,7 @@ export function Home({ isBackground }: HomeProps) {
         <AccountCard />
         <AccountActions />
         <PromoBanner />
+        <MultiWalletIntroducer />
       </Flex>
       {whenPageMode({ full: <FeedbackButton />, popup: null })}
       <HomeTabs>

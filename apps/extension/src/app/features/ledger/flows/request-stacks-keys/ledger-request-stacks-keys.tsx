@@ -29,7 +29,7 @@ import {
 import { useToast } from '@app/features/toasts/use-toast';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
 import { useStacksKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
-import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
+import { getAddWalletError, useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
 function LedgerRequestStacksKeys() {
   const toast = useToast();
@@ -71,6 +71,13 @@ function LedgerRequestStacksKeys() {
       async pullKeysFromDevice(app) {
         const fingerprintResp = await app.getMasterFingerprint();
         const fingerprint = bytesToHex(fingerprintResp.fingerprint);
+
+        const addWalletError = getAddWalletError(wallets, fingerprint, 'ledger');
+        if (addWalletError) {
+          toast.error(addWalletError);
+          void ledgerNavigate.toErrorStep(chain, addWalletError);
+          return;
+        }
 
         const resp = await pullStacksKeysFromLedgerDevice(app)({
           onRequestKey(accountIndex) {

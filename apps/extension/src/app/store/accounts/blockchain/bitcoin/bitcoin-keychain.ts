@@ -27,7 +27,9 @@ import type { BitcoinNetworkModes } from '@leather.io/models';
 import type { BitcoinKeychain } from '@leather.io/state/keychains';
 
 import { useWalletType } from '@app/common/use-wallet-type';
-import { selectRootKeychains } from '@app/store/in-memory-key/in-memory-key.selectors';
+import type { RootState } from '@app/store';
+import { selectRootKeychainsAtVersion } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { selectBitcoinKeychains } from '@app/store/keychains/keychain.selectors';
 import { selectCurrentNetwork, useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
@@ -61,7 +63,7 @@ function createSoftwareAccountKeychainGenerator(rootKeychain: HDKey) {
 }
 
 const selectSoftwareWalletBitcoinKeychainGenerator = createSelector(
-  selectRootKeychains,
+  selectRootKeychainsAtVersion,
   rootKeychain =>
     mapValues(rootKeychain, keychain => createSoftwareAccountKeychainGenerator(keychain))
 );
@@ -120,7 +122,8 @@ const selectBitcoinAccountLookup = createSelector(
 );
 
 export function useBitcoinAccountLookup() {
-  return useSelector(selectBitcoinAccountLookup);
+  const { version } = useInMemoryKeys();
+  return useSelector((state: RootState) => selectBitcoinAccountLookup(state, version));
 }
 
 // Selector exists as a convenience to not have to pass in the current network
@@ -200,7 +203,7 @@ function createBitcoinSoftwareSigner(rootKeychain: HDKey) {
 }
 
 const selectSoftwareWalletBitcoinSignerGenerator = createSelector(
-  selectRootKeychains,
+  selectRootKeychainsAtVersion,
   rootKeychains => mapValues(rootKeychains, keychain => createBitcoinSoftwareSigner(keychain))
 );
 
@@ -210,5 +213,6 @@ const selectBitcoinSoftwareSignerLookup = createSelector(
 );
 
 export function useBitcoinSoftwareSignerLookup() {
-  return useSelector(selectBitcoinSoftwareSignerLookup);
+  const { version } = useInMemoryKeys();
+  return useSelector((state: RootState) => selectBitcoinSoftwareSignerLookup(state, version));
 }

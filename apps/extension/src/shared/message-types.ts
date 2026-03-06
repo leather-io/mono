@@ -9,6 +9,8 @@ export const MESSAGE_SOURCE = 'stacks-wallet';
 
 export const CONTENT_SCRIPT_PORT = 'content-script';
 
+export const WALLET_LOCK_MESSAGE = 'wallet/lock';
+
 export enum ExternalMethods {
   transactionRequest = 'hiroWalletTransactionRequest',
   transactionResponse = 'hiroWalletTransactionResponse',

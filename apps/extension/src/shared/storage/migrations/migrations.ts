@@ -5,6 +5,7 @@ import { analytics } from '@shared/utils/analytics';
 import { migrateToUsingNoSerialization } from './migrate-0-1';
 import { migrateToRenameKeysStoreModule } from './migrate-1-2';
 import { migrateMultiWalletSupport } from './migrate-2-3';
+import { migrateToAccountsSlice } from './migrate-3-4';
 
 export const migrations = createMigrate({
   0: async () => {
@@ -18,6 +19,10 @@ export const migrations = createMigrate({
   3: async (state: Promise<any>) => {
     analytics.untypedTrack('migration_2_3_multi_wallet_support_started');
     return migrateMultiWalletSupport(await state);
+  },
+  4: async (state: Promise<any>) => {
+    analytics.untypedTrack('migration_3_4_accounts_slice_started');
+    return migrateToAccountsSlice(await state);
   },
   debug: true,
 } as any);

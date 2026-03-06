@@ -2,6 +2,7 @@ import { Page } from '@playwright/test';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
 import type { SupportedBlockchains } from '@leather.io/models';
 import { createCounter, delay } from '@leather.io/utils';
@@ -14,6 +15,12 @@ export const TEST_ACCOUNT_SECRET_KEY = process.env.EXTENSION_INTEGRATION_TEST_MN
 export const testFingerprint = 'e87a850b';
 export function getTestSoftwareAccountDefaultWalletState() {
   return {
+    accounts: {
+      ids: [`${testFingerprint}/0`],
+      entities: {
+        [`${testFingerprint}/0`]: { id: `${testFingerprint}/0` },
+      },
+    },
     active: {
       account: {
         fingerprint: testFingerprint,
@@ -64,11 +71,12 @@ export function getTestSoftwareAccountDefaultWalletState() {
       userSelectedTheme: 'system',
       dismissedMessages: [],
       dismissedPromoIndexes: [],
+      seenFeatureIntros: [],
       discardedInscriptions: [],
       isNotificationsEnabled: true,
     },
     manageTokens: { entities: {}, ids: [] },
-    _persist: { version: 3, rehydrated: true },
+    _persist: { version: 4, rehydrated: true },
   };
 }
 
@@ -294,18 +302,22 @@ export function makeLedgerTestAccountWalletState(keysToInclude: SupportedBlockch
 export class OnboardingPage {
   constructor(readonly page: Page) {}
 
-  async setPassword() {
-    await this.page.waitForURL('**' + RouteUrls.SetPassword);
-    await this.page.getByTestId(OnboardingSelectors.NewPasswordInput).fill(TEST_PASSWORD);
+  async setPassword(password = TEST_PASSWORD) {
+    const passwordInput = this.page.getByTestId(OnboardingSelectors.NewPasswordInput);
+    await passwordInput.waitFor();
+    await passwordInput.fill(password);
     await this.page.waitForTimeout(100);
     await this.page.getByTestId(OnboardingSelectors.SetPasswordBtn).click();
   }
 
-  async signUpNewUser() {
+  async signUpNewUser(password = TEST_PASSWORD) {
     await this.page.getByTestId(OnboardingSelectors.SignUpBtn).click();
     await this.page.waitForURL('**' + RouteUrls.BackUpSecretKey);
     await this.page.getByTestId(OnboardingSelectors.BackUpSecretKeyBtn).click();
-    await this.setPassword();
+    await this.setPassword(password);
+    await this.page.waitForURL('**' + RouteUrls.Home);
+    await this.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
+    await this.dismissFeatureIntroducer();
   }
   async initiateSignIn() {
     await this.page.getByTestId(OnboardingSelectors.SignInLink).click();
@@ -321,6 +333,19 @@ export class OnboardingPage {
     await this.setPassword();
     await this.page.waitForURL('**' + RouteUrls.Home);
     await this.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
+  }
+
+  async dismissFeatureIntroducer() {
+    const tryItOutBtn = this.page.getByTestId(
+      SharedComponentsSelectors.FeatureIntroducerTryItOutBtn
+    );
+    try {
+      await tryItOutBtn.waitFor({ state: 'visible', timeout: 5000 });
+    } catch {
+      return;
+    }
+    await tryItOutBtn.click();
+    await tryItOutBtn.waitFor({ state: 'detached' });
   }
 
   async signInMnemonicKey(secretKey = TEST_ACCOUNT_SECRET_KEY) {
@@ -386,6 +411,8 @@ export class OnboardingPage {
       fingerprint => window.debug.setHighestAccountIndex(fingerprint, 2),
       testFingerprint
     );
+
+    await this.dismissFeatureIntroducer();
   }
 
   /**
@@ -408,5 +435,6 @@ export class OnboardingPage {
     await delay(2000);
     await this.page.goto(`chrome-extension://${id}/index.html`);
     await delay(2000);
+    await this.dismissFeatureIntroducer();
   }
 }

@@ -22,14 +22,16 @@ import {
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import { useToast } from '@app/features/toasts/use-toast';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
 import { useBitcoinKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
+import { getAddWalletError, useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
 function LedgerRequestBitcoinKeys() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const toast = useToast();
   const wallets = useWalletEntities();
   const btcKeychainDescriptors = useBitcoinKeychainDescriptors();
 
@@ -64,6 +66,13 @@ function LedgerRequestBitcoinKeys() {
             );
           },
         });
+
+        const addWalletError = getAddWalletError(wallets, fingerprint, 'ledger');
+        if (addWalletError) {
+          toast.error(addWalletError);
+          void ledgerNavigate.toErrorStep(chain, addWalletError);
+          return;
+        }
 
         const keychains = keys
           .map(key => ({ chain: 'bitcoin' as const, descriptor: key.policy }))

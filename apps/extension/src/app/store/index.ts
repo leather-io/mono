@@ -28,10 +28,10 @@ import { walletSlice } from '@leather.io/state/wallet';
 
 import { persistConfig } from '@shared/storage/redux-persist';
 
+import { accountsSlice } from './accounts/accounts.slice';
 import { activeSlice } from './active/active.slice';
 import { appPermissionsSlice } from './app-permissions/app-permissions.slice';
 import { stxChainSlice } from './chains/stx-chain.slice';
-import { inMemoryKeySlice } from './in-memory-key/in-memory-key.slice';
 import { manageTokensSlice } from './manage-tokens/manage-tokens.slice';
 import { networksSlice } from './networks/networks.slice';
 import { settingsSlice } from './settings/settings.slice';
@@ -41,6 +41,7 @@ import { uiSlice } from './ui/ui.slice';
 import { broadcastActionTypeToOtherFramesMiddleware } from './utils/broadcast-action-types';
 
 export interface LocalRootState {
+  accounts: ReturnType<typeof accountsSlice.reducer>;
   active: ReturnType<typeof activeSlice.reducer>;
   appPermissions: ReturnType<typeof appPermissionsSlice.reducer>;
   chains: {
@@ -48,7 +49,6 @@ export interface LocalRootState {
   };
   keychains: ReturnType<typeof keychainSlice.reducer>;
   wallets: ReturnType<typeof walletSlice.reducer>;
-  inMemoryKeys: ReturnType<typeof inMemoryKeySlice.reducer>;
   softwareKeys: ReturnType<typeof keySlice.reducer>;
   networks: ReturnType<typeof networksSlice.reducer>;
   submittedTransactions: ReturnType<typeof submittedTransactionsSlice.reducer>;
@@ -60,6 +60,7 @@ export interface LocalRootState {
 export type RootState = LocalRootState & PersistedState;
 
 const appReducer = combineReducers({
+  accounts: accountsSlice.reducer,
   active: activeSlice.reducer,
   appPermissions: appPermissionsSlice.reducer,
   chains: combineReducers({
@@ -67,7 +68,6 @@ const appReducer = combineReducers({
   }),
   keychains: keychainSlice.reducer,
   wallets: walletSlice.reducer,
-  inMemoryKeys: inMemoryKeySlice.reducer,
   softwareKeys: keySlice.reducer,
   networks: networksSlice.reducer,
   submittedTransactions: submittedTransactionsSlice.reducer,

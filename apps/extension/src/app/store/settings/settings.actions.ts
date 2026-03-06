@@ -23,3 +23,8 @@ export function useToggleNetworkBadgeAlwaysOn() {
   const dispatch = useDispatch();
   return () => dispatch(settingsActions.toggleNetworkBadgeAlwaysOn());
 }
+
+export function useMarkFeatureAsSeen() {
+  const dispatch = useDispatch();
+  return (featureId: string) => dispatch(settingsActions.featureIntroSeen(featureId));
+}

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import type { AccountId } from '@leather.io/models';
 
 import { RootState } from '@app/store';
+import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { useSignatureRequestAccountIndex } from '@app/store/signatures/requests.hooks';
 import { useTransactionRequestState } from '@app/store/transactions/requests.hooks';
 import { useHasSwitchedAccounts } from '@app/store/ui/ui.hooks';
@@ -12,13 +13,15 @@ import { useCurrentAccountId } from '../../account';
 import { selectStacksAccountById, selectStacksAccountState } from './stacks-account.selectors';
 
 export function useStacksAccounts() {
-  return useSelector(selectStacksAccountState);
+  const { version } = useInMemoryKeys();
+  return useSelector((state: RootState) => selectStacksAccountState(state, version));
 }
 
 export function useStacksAccount(accountId: AccountId) {
+  const { version } = useInMemoryKeys();
   const selector = useCallback(
-    (state: RootState) => selectStacksAccountById(state, accountId),
-    [accountId]
+    (state: RootState) => selectStacksAccountById(state, version, accountId),
+    [accountId, version]
   );
   return useSelector(selector);
 }
@@ -50,7 +53,8 @@ export function useCurrentStacksAccountAddress() {
 }
 
 export function useTransactionAccountIndex() {
-  const accounts = useSelector(selectStacksAccountState);
+  const { version } = useInMemoryKeys();
+  const accounts = useSelector((state: RootState) => selectStacksAccountState(state, version));
   const txPayload = useTransactionRequestState();
   const txAddress = txPayload?.stxAddress;
   return useMemo(() => {

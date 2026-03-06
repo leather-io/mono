@@ -1,11 +1,11 @@
-import Wallet16 from '../assets/icons/wallet-16-16.svg';
-import Wallet24 from '../assets/icons/wallet-24-24.svg';
+import WalletPlus16 from '../assets/icons/wallet-plus-16-16.svg';
+import WalletPlus24 from '../assets/icons/wallet-plus-24-24.svg';
 import { createNativeIcon } from './icon/create-icon.native';
 
 export const WalletPlusIcon = createNativeIcon({
   icon: {
-    small: Wallet16,
-    medium: Wallet24,
+    small: WalletPlus16,
+    medium: WalletPlus24,
   },
   displayName: 'WalletPlus',
 });

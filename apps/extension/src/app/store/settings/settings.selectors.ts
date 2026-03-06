@@ -55,3 +55,17 @@ const selectNetworkBadgeAlwaysOn = createSelector(
 export function useNetworkBadgeAlwaysOn() {
   return useSelector(selectNetworkBadgeAlwaysOn);
 }
+
+const selectSeenFeatureIntros = createSelector(
+  selectSettings,
+  state => state.seenFeatureIntros ?? []
+);
+
+function useSeenFeatureIntros() {
+  return useSelector(selectSeenFeatureIntros);
+}
+
+export function useHasSeenFeature(featureId: string) {
+  const seenFeatureIntros = useSeenFeatureIntros();
+  return seenFeatureIntros.includes(featureId);
+}

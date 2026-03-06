@@ -1,12 +1,11 @@
-import { type ReactNode, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { type ReactNode, useState } from 'react';
 
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { Eye1ClosedIcon, KeyIcon, LockIcon } from '@leather.io/ui';
 
-import { RouteUrls } from '@shared/route-urls';
-
+import { useKeyActions } from '@app/common/hooks/use-key-actions';
+import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { Content } from '@app/components/layout';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
@@ -15,8 +14,9 @@ import {
   DescriptionColumn,
   TwoColumnLayout,
 } from '@app/components/layout/layouts/two-column.layout';
-import { useActiveWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { SecretKey } from '@app/ui/components/secret-key/secret-key';
+
+import { SetPasswordPage } from '../../onboarding/set-password/set-password';
 
 interface BulletPointProps {
   icon: ReactNode;
@@ -32,16 +32,22 @@ function BulletPoint({ icon, text }: BulletPointProps) {
 }
 
 export function BackUpSecretKeyPage() {
-  const secretKey = useActiveWalletSecretKey();
-  const navigate = useNavigate();
+  const keyActions = useKeyActions();
+  const [mnemonicData, setMnemonicData] = useState<null | {
+    mnemonic: string;
+    fingerprint: string;
+  }>();
+  const [showPasswordPage, setShowPasswordPage] = useState(false);
+  useOnMount(() => {
+    const { mnemonic, fingerprint } = keyActions.generateWalletKey();
+    setMnemonicData({ mnemonic, fingerprint });
+  });
 
-  useEffect(() => {
-    if (!secretKey) void navigate(RouteUrls.Onboarding);
-  }, [navigate, secretKey]);
-
-  if (!secretKey) return null;
-
-  return (
+  // TODO: need some loading here
+  if (!mnemonicData?.mnemonic) return null;
+  return showPasswordPage ? (
+    <SetPasswordPage mnemonicData={mnemonicData} onBack={() => setShowPasswordPage(false)} />
+  ) : (
     <>
       <Header px="space.04">
         <HeaderGrid leftCol={<HeaderBackButton />} rightCol={null} />
@@ -71,7 +77,14 @@ export function BackUpSecretKeyPage() {
               </Stack>
             </>
           }
-          rightColumn={<SecretKey secretKey={secretKey} />}
+          rightColumn={
+            <SecretKey
+              secretKey={mnemonicData?.mnemonic}
+              onDone={() => {
+                setShowPasswordPage(true);
+              }}
+            />
+          }
         />
       </Content>
     </>

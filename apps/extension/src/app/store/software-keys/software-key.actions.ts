@@ -1,9 +1,6 @@
 import { AddressVersion } from '@stacks/transactions';
 
-import {
-  deriveRootKeychainFromMnemonicSync,
-  getMnemonicRootKeyFingerprint,
-} from '@leather.io/crypto';
+import { deriveRootKeychainFromMnemonicSync } from '@leather.io/crypto';
 import {
   type BitcoinClient,
   type BnsV2Client,
@@ -21,37 +18,60 @@ import { identifyUser } from '@shared/utils/analytics';
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
 import { queryClient } from '@app/common/persistence';
 import { AppThunk } from '@app/store';
-import { initalizeWalletSession } from '@app/store/session-restore';
+import { getWalletSessionKey, initalizeWalletSession } from '@app/store/session-restore';
 
 import { getNativeSegwitMainnetAddressFromMnemonic } from '../accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { getStacksAddressByIndex } from '../accounts/blockchain/stacks/stacks-keychain';
+import { walletKeyGenerated } from '../active/active.slice';
 import { stxChainSlice } from '../chains/stx-chain.slice';
-import { selectActiveWalletKey } from '../in-memory-key/in-memory-key.selectors';
-import { inMemoryKeySlice } from '../in-memory-key/in-memory-key.slice';
+import * as inMemoryStore from '../in-memory-key/in-memory-storage';
 import { selectWalletEntities } from '../wallets/wallet.selectors';
 import { selectSoftwareKeys, selectWalletSalt } from './software-key.selectors';
 import { keySlice } from './software-key.slice';
+import { checkPassword } from './utils';
 
 function setWalletEncryptionPassword(args: {
   password: string;
+  mnemonic: string;
+  fingerprint: string;
   stxClient: StacksClient;
   btcClient: BitcoinClient;
   bnsV2Client: BnsV2Client;
 }): AppThunk {
-  const { password, stxClient, btcClient, bnsV2Client } = args;
+  const { password, mnemonic, fingerprint, stxClient, btcClient, bnsV2Client } = args;
 
   return async (dispatch, getState) => {
-    const secretKey = selectActiveWalletKey(getState());
+    const softwareKeys = selectSoftwareKeys(getState());
+    const hasSoftwareKeys = softwareKeys.length > 0;
 
-    if (!secretKey) throw new Error('Cannot generate wallet without first having generated a key');
+    const existingSalt = hasSoftwareKeys ? selectWalletSalt(getState()) : undefined;
 
-    const fingerprint = getMnemonicRootKeyFingerprint(secretKey);
+    const existingEncryptionKey = hasSoftwareKeys ? (await getWalletSessionKey()).data : undefined;
+
+    if (hasSoftwareKeys) {
+      if (!existingSalt || !existingEncryptionKey)
+        throw new Error("Can't find salt or encryption key");
+
+      const isCorrectPassword = await checkPassword({
+        password,
+        salt: existingSalt,
+        encryptionKey: existingEncryptionKey,
+      });
+
+      if (!isCorrectPassword) {
+        throw new Error("The password doesn't match");
+      }
+    }
 
     const { encryptedSecretKey, encryptionKey, salt } = await encryptMnemonic({
-      secretKey,
+      secretKey: mnemonic,
       password,
+      existingEncryptionKey,
+      existingSalt,
     });
 
+    inMemoryStore.setKey(fingerprint, mnemonic);
+    dispatch(walletKeyGenerated(fingerprint));
     await initalizeWalletSession(encryptionKey);
 
     //
@@ -92,14 +112,15 @@ function setWalletEncryptionPassword(args: {
       void recurseAccountsForActivity({
         async doesAddressHaveActivityFn(index) {
           const stxAddress = getStacksAddressByIndex(
-            secretKey,
+            mnemonic,
             AddressVersion.MainnetSingleSig
           )(index);
           const hasStxBalance = await doesStacksAddressHaveBalance(stxAddress);
           const hasNames = await doesStacksAddressHaveBnsName(stxAddress);
 
-          const btcAddress = getNativeSegwitMainnetAddressFromMnemonic(secretKey)(index);
+          const btcAddress = getNativeSegwitMainnetAddressFromMnemonic(mnemonic)(index);
           const hasBtcBalance = await doesBitcoinAddressHaveBalance(btcAddress.address!);
+          // TODO: add inscription check here also?
           return hasStxBalance || hasNames || hasBtcBalance;
         },
       }).then(recursiveActivityIndex => {
@@ -124,7 +145,7 @@ function setWalletEncryptionPassword(args: {
       userAddsWallet({
         wallet: {
           createdOn: new Date().toISOString(),
-          fingerprint: getMnemonicRootKeyFingerprint(secretKey),
+          fingerprint,
           type: 'software',
         },
         accountKeychains: [],
@@ -137,7 +158,7 @@ function setWalletEncryptionPassword(args: {
         salt,
         key: {
           type: 'software',
-          id: getMnemonicRootKeyFingerprint(secretKey),
+          id: fingerprint,
           encryptedSecretKey,
         },
       })
@@ -186,7 +207,9 @@ function unlockWalletAction(password: string): AppThunk {
 
     await initalizeWalletSession(decryptedResults[0].encryptionKey);
 
-    dispatch(inMemoryKeySlice.actions.setWalletKeys(decryptedResults));
+    for (const { fingerprint, secretKey } of decryptedResults) {
+      inMemoryStore.setKey(fingerprint, secretKey);
+    }
 
     const firstDecryptedResult = decryptedResults[0];
 
@@ -198,4 +221,8 @@ function unlockWalletAction(password: string): AppThunk {
   };
 }
 
-export const keyActions = { ...keySlice.actions, setWalletEncryptionPassword, unlockWalletAction };
+export const keyActions = {
+  ...keySlice.actions,
+  setWalletEncryptionPassword,
+  unlockWalletAction,
+};
