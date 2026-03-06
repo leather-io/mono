@@ -31,7 +31,7 @@ export function Tokens() {
   }
 
   return (
-    <Stack data-testid={HomePageSelectors.AssetList} gap="space.04" pb="space.03">
+    <Stack data-testid={HomePageSelectors.AssetList} gap="space.05" pb="space.03">
       {showFirstTokenBanner && <FirstTokenBanner />}
       {!showFirstTokenBanner && <TokensTabHeader />}
       <TokenList filter="enabled" onSelectAsset={handleSelectAsset} showDepositButtons />

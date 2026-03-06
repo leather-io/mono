@@ -55,7 +55,7 @@ export function HomeTabs({ children, showCollectibles = true }: HomeTabsProps) {
   const activeTab = getActiveTab(backgroundLocation?.pathname ?? pathname);
 
   return (
-    <Stack flexGrow={1} gap="space.06">
+    <Stack flexGrow={1} gap="space.05">
       <Tabs.Root value={activeTab}>
         <Tabs.List>
           {homeTabs.map(tab => (
