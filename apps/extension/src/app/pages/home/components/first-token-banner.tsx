@@ -9,7 +9,7 @@ export function FirstTokenBanner() {
         <styled.h3 textStyle="label.01" margin="0">
           Get your first token
         </styled.h3>
-        <styled.p textStyle="caption.01" color="ink.text-subdued" margin="0">
+        <styled.p textStyle="label.03" color="ink.text-primary" margin="0">
           Fund your wallet by buying tokens or transferring from another account.
         </styled.p>
       </Stack>
