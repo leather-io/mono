@@ -47,6 +47,9 @@ const debug = {
   resetPromoBanner() {
     store.dispatch(settingsSlice.actions.resetPromoBanner());
   },
+  resetFeatureIntros() {
+    store.dispatch(settingsSlice.actions.resetFeatureIntros());
+  },
   clearSubmittedTransactions() {
     store.dispatch(submittedTransactionsActions.clearSubmittedTransactions());
   },
