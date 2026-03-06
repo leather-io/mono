@@ -2,12 +2,14 @@ import type { ReactNode } from 'react';
 
 import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { t } from '@lingui/core/macro';
+import { useQuery } from '@tanstack/react-query';
 
+import { createHelpCenterCategoriesQueryConfig } from '@leather.io/queries';
 import {
-  LEATHER_GETTING_STARTED,
-  LEATHER_SBTC_TUTORIAL,
-  LEATHER_STACKING_TUTORIAL,
-} from '@leather.io/constants';
+  buildGuideUrl,
+  findGuideSlugInCategories,
+  getHelpCenterBaseUrl,
+} from '@leather.io/services';
 import {
   Box,
   Cell,
@@ -46,8 +48,17 @@ function LearnListItem({ title, icon, onPress }: LearnListItemProps) {
   );
 }
 
+function useGuideUrl(slug: string): string {
+  const { data: categories } = useQuery(createHelpCenterCategoriesQueryConfig());
+  const found = categories ? findGuideSlugInCategories(categories, slug) : undefined;
+  return found ? buildGuideUrl(found) : getHelpCenterBaseUrl();
+}
+
 export function LearnSection() {
   const { openUrl } = useOpenUrl();
+  const gettingStartedUrl = useGuideUrl('create-new-wallet');
+  const sbtcUrl = useGuideUrl('bridge-sbtc');
+  const stackingUrl = useGuideUrl('getting-started-with-stacking');
 
   return (
     <Box pb="5">
@@ -57,17 +68,17 @@ export function LearnSection() {
       <LearnListItem
         title={t`Getting Started with Leather`}
         icon={<RocketStartupLaunchIcon />}
-        onPress={() => openUrl(LEATHER_GETTING_STARTED)}
+        onPress={() => openUrl(gettingStartedUrl)}
       />
       <LearnListItem
         title={t`What is sBTC?`}
         icon={<SbtcIcon />}
-        onPress={() => openUrl(LEATHER_SBTC_TUTORIAL)}
+        onPress={() => openUrl(sbtcUrl)}
       />
       <LearnListItem
         title={t`Learn more about stacking`}
         icon={<CoinsStackIcon />}
-        onPress={() => openUrl(LEATHER_STACKING_TUTORIAL)}
+        onPress={() => openUrl(stackingUrl)}
       />
     </Box>
   );
