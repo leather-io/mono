@@ -4,6 +4,9 @@
 
 ### Features
 
+* **extension:** add swap review detail rows for account, rate, and min. receive ([edb8771](https://github.com/leather-io/mono/commit/edb8771eba7f35c1271876ff3f18642ed39d9a02))
+* **extension:** add swap review details building blocks ([6acaf25](https://github.com/leather-io/mono/commit/6acaf258b547861d3a19b835b369e96859a40261))
+* **extension:** add swap review summary section ([3c71a81](https://github.com/leather-io/mono/commit/3c71a81ba2aef808bc702a3b679d7722f46ede4c))
 * **extension:** add quote preview to swap form ([aa72cd2](https://github.com/leather-io/mono/commit/aa72cd26bf2de87584035fc4f5def272f64f1aa7))
 * **extension:** fix inconsistent gaps in the swap asset selector list ([f2878b4](https://github.com/leather-io/mono/commit/f2878b4e846b70c6481c94d17ec4fdd13aa67b78))
 * **extension:** include Bitflow provider config into services setup ([da97df0](https://github.com/leather-io/mono/commit/da97df0fb8bc7d911534fcca7c041a7a3e31caf3))
