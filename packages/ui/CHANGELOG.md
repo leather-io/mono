@@ -489,6 +489,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.109.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.108.2...@leather.io/ui-v1.109.0) (2026-03-06)
+
+
+### Features
+
+* **ui:** add web version of numeric input ([ac33307](https://github.com/leather-io/mono/commit/ac33307dd5f41f79ea7733efaba8537dcf5ab222))
+
 ## [1.108.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.108.1...@leather.io/ui-v1.108.2) (2026-03-05)
 
 

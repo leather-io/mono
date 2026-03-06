@@ -51,6 +51,22 @@
 
 ---
 
+## [6.97.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.96.2...@leather.io/extension-v6.97.0) (2026-03-06)
+
+
+### Features
+
+* **extension:** add swap review detail rows for account, rate, and min. receive ([edb8771](https://github.com/leather-io/mono/commit/edb8771eba7f35c1271876ff3f18642ed39d9a02))
+* **extension:** add swap review details building blocks ([6acaf25](https://github.com/leather-io/mono/commit/6acaf258b547861d3a19b835b369e96859a40261))
+* **extension:** add swap review summary section ([3c71a81](https://github.com/leather-io/mono/commit/3c71a81ba2aef808bc702a3b679d7722f46ede4c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.109.0
+
 ## [6.96.2](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.96.1...@leather.io/extension-v6.96.2) (2026-03-05)
 
 

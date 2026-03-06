@@ -20,6 +20,15 @@
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
+## [2.103.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.103.0...@leather.io/mobile-v2.103.1) (2026-03-06)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.109.0
+
 ## [2.103.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.102.1...@leather.io/mobile-v2.103.0) (2026-03-05)
 
 
