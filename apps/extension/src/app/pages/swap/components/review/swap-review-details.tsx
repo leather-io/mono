@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { Flex, Stack, styled } from 'leather-styles/jsx';
+import { Flex, styled } from 'leather-styles/jsx';
 import { isString } from 'remeda';
 
 import { Button, Hr, HrProps, SettingsGearIcon } from '@leather.io/ui';
@@ -17,9 +17,15 @@ interface SwapReviewDetailsProps extends HasChildren {
 
 export function SwapReviewDetails({ children, isRefetching }: SwapReviewDetailsProps) {
   return (
-    <Stack px="space.05" opacity={isRefetching ? 0.5 : 1} transition="opacity 200ms ease">
+    <Flex
+      direction="column"
+      px="space.05"
+      gap="space.01"
+      opacity={isRefetching ? 0.5 : 1}
+      transition="opacity 200ms ease"
+    >
       <AnimatePresence initial={false}>{children}</AnimatePresence>
-    </Stack>
+    </Flex>
   );
 }
 
@@ -52,11 +58,17 @@ interface SwapReviewDetailToggleProps {
   onClick(): void;
 }
 
-// ts-unused-exports:disable-next-line
 export function SwapReviewDetailToggle({ label, onClick }: SwapReviewDetailToggleProps) {
   return (
-    <Button size="sm" variant="outline" onClick={onClick}>
-      <SettingsGearIcon variant="small" />
+    <Button
+      size="sm"
+      borderRadius="md"
+      variant="outline"
+      onClick={onClick}
+      position="relative"
+      right={-2}
+      iconStart={<SettingsGearIcon variant="small" />}
+    >
       {label}
     </Button>
   );

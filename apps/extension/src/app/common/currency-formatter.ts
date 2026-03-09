@@ -28,3 +28,7 @@ export function formatCurrency(money: Money, options?: FormatAmountOptions) {
     options
   );
 }
+
+export function formatPercentage(amount: number, decimals?: number) {
+  return currencyFormatter.formatPercentage(amount, decimals);
+}
