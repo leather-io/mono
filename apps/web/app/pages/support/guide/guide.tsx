@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router';
 
 import { Box } from 'leather-styles/jsx/box';
@@ -23,40 +22,12 @@ function formatDate(dateString: string | undefined) {
   return formatter.format(date);
 }
 
-function useScrollProgress() {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    function handleScroll() {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0);
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return progress;
-}
-
 export function Guide() {
   const { guide } = useLoaderData<typeof loader>();
-  const progress = useScrollProgress();
 
   return (
     <Page>
-      <Box position="sticky" top={0} zIndex={40} bg="ink.background-primary">
-        <Page.Header title="Help Center" />
-        <Box height="3px" width="100%">
-          <Box
-            height="100%"
-            bg="ink.text-primary"
-            style={{ width: `${progress * 100}%` }}
-            transition="width 0.1s linear"
-          />
-        </Box>
-      </Box>
+      <Page.Header title="Help Center" />
 
       <Flex flexDirection={{ base: 'column', lg: 'row' }} gap="space.10" my="space.07">
         <Box minWidth="200px" flex="1" maxWidth={{ lg: '380px' }}>
