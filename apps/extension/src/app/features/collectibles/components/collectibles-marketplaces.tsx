@@ -43,12 +43,10 @@ export function CollectiblesMarketplaces() {
           display="flex"
           alignItems="flex-start"
           gap="space.03"
-          mx="-space.03"
-          px="space.03"
           py="space.03"
           textAlign="left"
-          borderRadius="sm"
           bg="ink.background-primary"
+          _before={{ top: 0, bottom: 0 }}
           onClick={() => openInNewTab(item.url)}
         >
           <styled.img
