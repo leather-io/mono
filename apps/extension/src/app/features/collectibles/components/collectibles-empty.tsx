@@ -73,13 +73,7 @@ export function CollectiblesEmpty() {
       </Stack>
 
       {nftItems.map(item => (
-        <Flex
-          key={item.title}
-          alignItems="center"
-          gap="space.03"
-          width="100%"
-          py="space.03"
-        >
+        <Flex key={item.title} alignItems="center" gap="space.03" width="100%" py="space.03">
           <styled.img
             src={item.image}
             alt={item.title}
