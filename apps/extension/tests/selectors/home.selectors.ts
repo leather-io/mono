@@ -18,4 +18,5 @@ export enum HomePageSelectors {
   ManageTokensBtn = 'manage-tokens-btn',
   ManageTokensAssetsList = 'manage-tokens-assets-list',
   NetworkSwitcher = 'network-switcher',
+  TrendingToken = 'trending-token-',
 }

@@ -50,18 +50,22 @@ const mockedSip10PriceMap = {
   'SP265WBWD4NH7TVPYQTVD23X3607NNK4484DTXQZ3.longcoin': {
     price: 4.23105713004e-7,
     change24h: 0,
+    priceChange: { '1d': 0 },
   },
   'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token': {
     price: 45000,
     change24h: 2.5,
+    priceChange: { '1d': 2.5 },
   },
   'SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc': {
     price: 1.0,
     change24h: 0.01,
+    priceChange: { '1d': 0.01 },
   },
   'SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx': {
     price: 1.0,
     change24h: 0.02,
+    priceChange: { '1d': 0.02 },
   },
 };
 
