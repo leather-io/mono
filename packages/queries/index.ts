@@ -22,4 +22,5 @@ export * from './src/activity/sip10-activity.query-config';
 export * from './src/collectibles/account-collectibles.query-config';
 export * from './src/assets/fungible-asset-info.query-config';
 export * from './src/help-center/help-center.query-config';
+export * from './src/help-center/learn-section.query-config';
 export * from './src/market-history/market-history.query-config';

@@ -4,3 +4,4 @@ export * from './basic-concepts-queries';
 export * from './legacy-guides-queries';
 export * from './help-center-queries';
 export * from './changelog-queries';
+export * from './learn-section-queries';

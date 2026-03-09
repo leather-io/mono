@@ -75,11 +75,7 @@ export const TOKEN_NAME_LENGTH = 4;
 
 export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
-export const LEATHER_SUPPORT_GUIDES = 'https://app.leather.io/support';
 export const LEATHER_GUIDES_URL = 'https://app.leather.io/support';
-export const LEATHER_GUIDES_UTXO_PROTECTION_URL =
-  'https://app.leather.io/support/how-do-i-unprotect-bitcoin-utxo-s-with-inscriptions-so-it-becomes-available';
-export const LEATHER_GUIDES_BNS_URL = 'https://app.leather.io/support';
 
 export const BTC_US_URL = 'https://btc.us/';
 
@@ -90,9 +86,6 @@ export const LEATHER_HELP_CENTER = 'https://app.leather.io/support';
 export const LEATHER_GITBOOK_DEVS = 'https://leather.gitbook.io/developers';
 
 export const LEATHER_EARN_URL = 'https://earn.leather.io';
-
-export const LEATHER_EARN_STACKING_URL = 'https://app.leather.io/stacking';
-export const LEATHER_EARN_SBTC_URL = 'https://app.leather.io/sbtc';
 
 export const LEATHER_EXTENSION_CHROME_STORE_URL =
   'https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj?hl=en';

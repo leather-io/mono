@@ -1,44 +1,35 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { LEATHER_EARN_SBTC_URL, LEATHER_EARN_STACKING_URL } from '@leather.io/constants';
-import { createHelpCenterCategoriesQueryConfig } from '@leather.io/queries';
-import {
-  buildGuideUrl,
-  findGuideSlugInCategories,
-  getHelpCenterBaseUrl,
-} from '@leather.io/services';
-import { CoinsStackIcon, RocketStartupLaunchIcon, SbtcIcon } from '@leather.io/ui';
+import { createLearnSectionQueryConfig } from '@leather.io/queries';
+import { type ResolvedLearnItem, getHelpCenterBaseUrl } from '@leather.io/services';
 
+import { getLearnIcon } from '@app/features/collectibles/components/learn-icon-map';
 import { type LearnItem, LearnLayout } from '@app/features/collectibles/components/learn-layout';
 
-function useTokensLearnItems(): LearnItem[] {
-  const { data: categories } = useQuery(createHelpCenterCategoriesQueryConfig());
+const defaultItems: ResolvedLearnItem[] = [
+  {
+    label: 'Getting Started with Leather',
+    iconKey: 'rocket-startup-launch',
+    url: getHelpCenterBaseUrl(),
+  },
+  { label: 'What is sBTC?', iconKey: 'sbtc', url: 'https://app.leather.io/sbtc' },
+  {
+    label: 'Learn more about stacking',
+    iconKey: 'coins-stack',
+    url: 'https://app.leather.io/stacking',
+  },
+];
 
-  const gettingStartedUrl = categories
-    ? (findGuideSlugInCategories(categories, 'create-new-wallet') ??
-      findGuideSlugInCategories(categories, 'get-started'))
-    : undefined;
-
-  return [
-    {
-      title: 'Getting Started with Leather',
-      url: gettingStartedUrl ? buildGuideUrl(gettingStartedUrl) : getHelpCenterBaseUrl(),
-      icon: <RocketStartupLaunchIcon />,
-    },
-    {
-      title: 'What is sBTC?',
-      url: LEATHER_EARN_SBTC_URL,
-      icon: <SbtcIcon />,
-    },
-    {
-      title: 'Learn more about stacking',
-      url: LEATHER_EARN_STACKING_URL,
-      icon: <CoinsStackIcon />,
-    },
-  ];
+function toLearnItems(items: ResolvedLearnItem[]): LearnItem[] {
+  return items.map(item => ({
+    title: item.label,
+    url: item.url,
+    icon: getLearnIcon(item.iconKey),
+  }));
 }
 
 export function TokensLearn() {
-  const learnItems = useTokensLearnItems();
-  return <LearnLayout items={learnItems} data-testid="tokens-learn" />;
+  const { data } = useQuery(createLearnSectionQueryConfig('extension-tokens'));
+  const items = toLearnItems(data ?? defaultItems);
+  return <LearnLayout items={items} data-testid="tokens-learn" />;
 }

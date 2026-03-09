@@ -972,7 +972,7 @@ msgstr "Get your first NFT"
 msgid "Get your first token"
 msgstr "Get your first token"
 
-#: src/components/home/components/learn-section.tsx:69
+#: src/components/home/components/learn-section.tsx:45
 msgid "Getting Started with Leather"
 msgstr "Getting Started with Leather"
 
@@ -1152,11 +1152,11 @@ msgstr "Layer 2 • Stacks"
 msgid "Leading multi-chain marketplace across Bitcoin, Solana and more"
 msgstr "Leading multi-chain marketplace across Bitcoin, Solana and more"
 
-#: src/components/home/components/learn-section.tsx:66
+#: src/components/home/components/learn-section.tsx:62
 msgid "Learn"
 msgstr "Learn"
 
-#: src/components/home/components/learn-section.tsx:79
+#: src/components/home/components/learn-section.tsx:50
 msgid "Learn more about stacking"
 msgstr "Learn more about stacking"
 
@@ -2163,7 +2163,7 @@ msgstr "Wallets"
 msgid "Wallets and accounts"
 msgstr "Wallets and accounts"
 
-#: src/components/home/components/learn-section.tsx:74
+#: src/components/home/components/learn-section.tsx:49
 msgid "What is sBTC?"
 msgstr "What is sBTC?"
 

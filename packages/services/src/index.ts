@@ -13,6 +13,7 @@ export * from './coin-selection/bitcoin-coin-selection.service';
 export * from './fees/bitcoin-transaction-fees.service';
 export * from './fees/stacks-transaction-fees.service';
 export * from './help-center/help-center.service';
+export * from './help-center/learn-section.service';
 export * from './infrastructure/api/gamma/gamma-api.schema';
 export * from './infrastructure/cache/http-cache.config';
 export * from './infrastructure/cache/http-cache.service';
