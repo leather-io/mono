@@ -1,25 +1,27 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router';
 
 import { captureMessage } from '@sentry/react';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { isNonNullish } from 'remeda';
 
-import { LiveSwapEstimate, matchLiveEstimate } from '@leather.io/state/swap';
+import { LiveSwapEstimate, matchLiveEstimate, useSwapContext } from '@leather.io/state/swap';
 
-import { formatCurrency } from '@app/common/currency-formatter';
+import { formatCurrency, formatPercentage } from '@app/common/currency-formatter';
 import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { QuoteRefetchIndicator } from '@app/pages/swap/components/quote-preview/quote-refetch-indicator';
 import { SwapReviewAccountDetails } from '@app/pages/swap/components/review/swap-review-account-details';
 import {
   SwapReviewDetailRow,
+  SwapReviewDetailToggle,
   SwapReviewDetails,
   SwapReviewDivider,
 } from '@app/pages/swap/components/review/swap-review-details';
 import { SwapReviewSummary } from '@app/pages/swap/components/review/swap-review-summary';
 import type { SwapOutletContext } from '@app/pages/swap/swap-container';
 
+import { SlippageSelectorSheet } from './components/review/slippage-selector-sheet';
 import { formatSwapRate } from './swap-utils';
 
 const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
@@ -60,8 +62,18 @@ interface SwapReviewContentProps {
 }
 
 function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
+  const { state, actions } = useSwapContext();
+  const [isSlippageSheetOpen, setIsSlippageSheetOpen] = useState(false);
   const { selectedQuote, isRefetching, intervalState } = liveEstimate;
-  const { baseAmount, targetAmount, baseAsset, targetAsset, swapRate, minReceive } = selectedQuote;
+  const {
+    baseAmount,
+    targetAmount,
+    baseAsset,
+    targetAsset,
+    swapRate,
+    slippageApplicable,
+    minReceive,
+  } = selectedQuote;
 
   return (
     <Flex direction="column" gap="space.08">
@@ -95,7 +107,26 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         {isNonNullish(minReceive) && (
           <SwapReviewDetailRow label="Min. receive" value={formatCurrency(minReceive)} />
         )}
+
+        {slippageApplicable && (
+          <SwapReviewDetailRow
+            label="Slippage"
+            value={
+              <SwapReviewDetailToggle
+                onClick={() => setIsSlippageSheetOpen(true)}
+                label={formatPercentage(state.slippage)}
+              />
+            }
+          />
+        )}
       </SwapReviewDetails>
+
+      <SlippageSelectorSheet
+        isShowing={isSlippageSheetOpen}
+        onClose={() => setIsSlippageSheetOpen(false)}
+        slippage={state.slippage}
+        onSave={actions.setSlippage}
+      />
     </Flex>
   );
 }
