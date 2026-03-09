@@ -1,7 +1,25 @@
 import type { Page } from '@playwright/test';
 
-const launchDarklyGoals = 'https://app.launchdarkly.com/sdk/goals*';
-const launchDarklyEvalx = 'https://app.launchdarkly.com/sdk/evalx*';
+const launchDarklyGoals = '**/sdk/goals/**';
+const launchDarklyEvalx = '**/sdk/evalx/**';
+const launchDarklyStream = '**/eval/**';
+
+const flagData = {
+  releaseOnramperBuy: {
+    flagVersion: 7,
+    trackEvents: false,
+    value: true,
+    variation: 0,
+    version: 8,
+  },
+  releaseTrendingTokens: {
+    flagVersion: 1,
+    trackEvents: false,
+    value: true,
+    variation: 0,
+    version: 1,
+  },
+};
 
 export async function mockLaunchDarkly(page: Page) {
   await page.route(launchDarklyGoals, route =>
@@ -11,15 +29,14 @@ export async function mockLaunchDarkly(page: Page) {
   );
   await page.route(launchDarklyEvalx, route =>
     route.fulfill({
-      json: {
-        releaseOnramperBuy: {
-          flagVersion: 7,
-          trackEvents: false,
-          value: true,
-          variation: 0,
-          version: 8,
-        },
-      },
+      json: flagData,
+    })
+  );
+  await page.route(launchDarklyStream, route =>
+    route.fulfill({
+      status: 200,
+      contentType: 'text/event-stream',
+      body: ['event: put', `data: ${JSON.stringify(flagData)}`, '', ''].join('\n'),
     })
   );
 }

@@ -35,7 +35,7 @@ export function Tokens() {
       {showFirstTokenBanner && <FirstTokenBanner />}
       {!showFirstTokenBanner && <TokensTabHeader />}
       <TokenList filter="enabled" onSelectAsset={handleSelectAsset} showDepositButtons />
-      {releaseTrendingTokens && <TrendingTokens />}
+      {releaseTrendingTokens && <TrendingTokens onSelectAsset={handleSelectAsset} />}
       <TokensLearn />
       <Outlet />
     </Stack>
