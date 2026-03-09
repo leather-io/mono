@@ -23,7 +23,7 @@ interface ItemLayoutProps {
   isSelected?: boolean;
   showChevron?: boolean;
   titleLeft: ReactNode;
-  titleRight: ReactNode;
+  titleRight?: ReactNode;
 }
 export function ItemLayout({
   captionLeft,
