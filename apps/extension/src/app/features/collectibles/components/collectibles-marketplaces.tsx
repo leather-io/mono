@@ -46,7 +46,7 @@ export function CollectiblesMarketplaces() {
           py="space.03"
           textAlign="left"
           bg="ink.background-primary"
-          _before={{ top: 0, bottom: 0 }}
+          _before={{ top: 0, bottom: 0, borderRadius: 'sm' }}
           onClick={() => openInNewTab(item.url)}
         >
           <styled.img

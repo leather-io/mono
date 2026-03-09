@@ -37,7 +37,7 @@ export function LearnLayout({ items, 'data-testid': dataTestId }: LearnLayoutPro
           py="space.03"
           textAlign="left"
           bg="ink.background-primary"
-          _before={{ top: 0, bottom: 0 }}
+          _before={{ top: 0, bottom: 0, borderRadius: 'sm' }}
           onClick={() => openInNewTab(item.url)}
         >
           <Flex alignItems="center" gap="space.03" minWidth={0}>
