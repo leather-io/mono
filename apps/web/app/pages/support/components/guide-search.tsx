@@ -69,6 +69,8 @@ export function GuideSearch() {
         px="space.05"
         border="default"
         borderRadius="100px"
+        transition="border-color 0.2s"
+        _hover={{ border: '1px solid', borderColor: 'ink.text-subdued' }}
       >
         <styled.input
           type="text"
