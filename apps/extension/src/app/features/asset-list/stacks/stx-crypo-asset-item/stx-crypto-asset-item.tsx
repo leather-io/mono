@@ -26,7 +26,7 @@ export function StxCryptoAssetItem({
   balance,
   isLoading,
   isPrivate,
-  onSelectAsset,
+  onSelectAsset: _onSelectAsset,
   showDepositButtons,
 }: StxCryptoAssetItemProps) {
   const { onBuy, showBuyButton } = useCryptoAssetBuy(stxAsset);
@@ -47,6 +47,7 @@ export function StxCryptoAssetItem({
   const dataTestId = CoreAssetSelectors.StxAsset;
   const titleLeft = 'Stacks';
   const captionLeft = 'STX';
+  const onSelectAsset = _onSelectAsset ? () => _onSelectAsset(stxAssetId) : undefined;
 
   if (showDepositButtons && showBuyButton) {
     return (
@@ -57,6 +58,7 @@ export function StxCryptoAssetItem({
         titleLeft={titleLeft}
         icon={icon}
         captionLeft={captionLeft}
+        onSelectAsset={onSelectAsset}
       />
     );
   }
@@ -70,7 +72,7 @@ export function StxCryptoAssetItem({
       icon={icon}
       isLoading={isLoading}
       isPrivate={isPrivate}
-      onSelectAsset={onSelectAsset ? () => onSelectAsset(stxAssetId) : undefined}
+      onSelectAsset={onSelectAsset}
       titleLeft={titleLeft}
       titleRightBulletInfo={showLockedBalance && titleRightBulletInfo}
       dataTestId={dataTestId}

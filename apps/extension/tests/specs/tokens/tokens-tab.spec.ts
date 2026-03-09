@@ -5,6 +5,7 @@ import { test } from '../../fixtures/fixtures';
 import { mockEmptyStacksBalancesRequest } from '../../mocks/mock-stacks-balances';
 import { mockEmptyStacksBalancesV2Request } from '../../mocks/mock-stacks-balances-v2';
 import { CoreAssetSelectors } from '../../selectors/mocked-tokens.selectors';
+import { TokenDetailsSelectors } from '../../selectors/token-details.selectors';
 
 test.describe('Tokens tab', () => {
   test.describe('populated wallet', () => {
@@ -93,6 +94,34 @@ test.describe('Tokens tab', () => {
       await expect(
         homePage.assetList.getByTestId(CoreAssetSelectors.StxAssetBuyButton)
       ).toBeVisible();
+    });
+
+    test('that clicking BTC deposit item navigates to token details', async ({
+      homePage,
+      page,
+    }) => {
+      const btcDepositItem = homePage.assetList.getByTestId(CoreAssetSelectors.BtcAsset);
+      await btcDepositItem.getByRole('button', { name: /bitcoin/i }).click();
+
+      const tokenDetailsContainer = page.getByTestId(TokenDetailsSelectors.TokenDetailsContainer);
+      await expect(tokenDetailsContainer).toBeVisible();
+
+      const title = page.getByTestId(TokenDetailsSelectors.TokenDetailsTitle);
+      await expect(title).toHaveText('Bitcoin');
+    });
+
+    test('that clicking STX deposit item navigates to token details', async ({
+      homePage,
+      page,
+    }) => {
+      const stxDepositItem = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
+      await stxDepositItem.getByRole('button', { name: /stacks/i }).click();
+
+      const tokenDetailsContainer = page.getByTestId(TokenDetailsSelectors.TokenDetailsContainer);
+      await expect(tokenDetailsContainer).toBeVisible();
+
+      const title = page.getByTestId(TokenDetailsSelectors.TokenDetailsTitle);
+      await expect(title).toHaveText('Stacks');
     });
   });
 });
