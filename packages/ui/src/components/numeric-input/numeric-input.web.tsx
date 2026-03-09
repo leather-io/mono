@@ -23,7 +23,7 @@ export function NumericInput({ children, ...props }: NumericInputProps) {
         alignItems="center"
         borderWidth="1px"
         borderColor="ink.border-transparent"
-        borderRadius="sm"
+        borderRadius="md"
       >
         {children}
       </styled.div>
@@ -41,6 +41,8 @@ function Increment(props: ButtonProps) {
       onPointerLeave={handlePressOut}
       disabled={disabled || value >= max}
       icon={<PlusIcon />}
+      px="space.03"
+      py="space.03"
       borderLeftWidth="1px"
       borderLeftColor="ink.border-transparent"
       rounded="none"
@@ -59,6 +61,8 @@ function Decrement(props: ButtonProps) {
       onPointerLeave={handlePressOut}
       disabled={disabled || value <= min}
       icon={<MinusIcon />}
+      px="space.03"
+      py="space.03"
       borderRightWidth="1px"
       borderRightColor="ink.border-transparent"
       rounded="none"
@@ -78,7 +82,7 @@ function Display({ formatter: customFormatter, ...spanProps }: DisplayProps) {
   return (
     <styled.span
       flex={1}
-      px="space.04"
+      px="space.05"
       fontFamily="MarchePro-Super"
       fontSize="18px"
       lineHeight="24px"
