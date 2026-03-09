@@ -25,7 +25,7 @@ export function HelpCenter() {
           <Box mb="space.07">
             <GuideSearch />
           </Box>
-          <VStack gap="space.05" alignItems="stretch">
+          <VStack gap="space.07" alignItems="stretch">
             {categories.map(category => (
               <CategorySection
                 key={category._id}
