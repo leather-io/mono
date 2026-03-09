@@ -61,7 +61,7 @@ export function TrendingTokens({ onSelectAsset }: TrendingTokensProps) {
     <Stack gap="space.03">
       <Flex justifyContent="space-between" alignItems="center">
         <Flex alignItems="center" gap="space.01">
-          <styled.span textStyle="label.02">Trending tokens</styled.span>
+          <styled.span textStyle="label.01">Trending tokens</styled.span>
           <BasicTooltip
             label="Tokens trending across the Stacks ecosystem, ranked by recent trading activity."
             side={isLargeScreen ? 'right' : 'top'}
