@@ -1,30 +1,40 @@
-import {
-  LEATHER_GUIDES_BNS_URL,
-  LEATHER_GUIDES_GETTING_STARTED_URL,
-  LEATHER_GUIDES_ORDINALS_URL,
-} from '@leather.io/constants';
-import { BnsIcon, RocketStartupLaunchIcon, StampsCollectionIcon } from '@leather.io/ui';
+import { useQuery } from '@tanstack/react-query';
 
+import type { ResolvedLearnItem } from '@leather.io/cms';
+import { LEATHER_GUIDES_URL } from '@leather.io/constants';
+import { createLearnSectionQueryConfig } from '@leather.io/queries';
+
+import { getLearnIcon } from './learn-icon-map';
 import { type LearnItem, LearnLayout } from './learn-layout';
 
-const learnItems: LearnItem[] = [
+const defaultItems: ResolvedLearnItem[] = [
   {
-    title: 'Getting Started with Leather',
-    url: LEATHER_GUIDES_GETTING_STARTED_URL,
-    icon: <RocketStartupLaunchIcon />,
+    label: 'Getting Started with Leather',
+    iconKey: 'rocket-startup-launch',
+    url: `${LEATHER_GUIDES_URL}/create-new-wallet`,
   },
   {
-    title: 'What are Bitcoin Ordinals?',
-    url: LEATHER_GUIDES_ORDINALS_URL,
-    icon: <StampsCollectionIcon />,
+    label: 'What are Bitcoin Ordinals?',
+    iconKey: 'stamps-collection',
+    url: `${LEATHER_GUIDES_URL}/what-are-bitcoin-ordinals`,
   },
   {
-    title: 'What is BNS? (Bitcoin Naming System)',
-    url: LEATHER_GUIDES_BNS_URL,
-    icon: <BnsIcon />,
+    label: 'Bitcoin NFTs: How Do They Work?',
+    iconKey: 'stamps-collection',
+    url: `${LEATHER_GUIDES_URL}/bitcoin-nfts`,
   },
 ];
 
+function toLearnItems(items: ResolvedLearnItem[]): LearnItem[] {
+  return items.map(item => ({
+    title: item.label,
+    url: item.url,
+    icon: getLearnIcon(item.iconKey),
+  }));
+}
+
 export function CollectiblesLearn() {
-  return <LearnLayout items={learnItems} data-testid="collectibles-learn" />;
+  const { data } = useQuery(createLearnSectionQueryConfig('extension-collectibles'));
+  const items = toLearnItems(data ?? defaultItems);
+  return <LearnLayout items={items} data-testid="collectibles-learn" />;
 }

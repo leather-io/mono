@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { LEATHER_GITBOOK_DEVS, LEATHER_HELP_CENTER } from '@leather.io/constants';
+import { LEATHER_GITBOOK_DEVS, LEATHER_GUIDES_URL } from '@leather.io/constants';
 import {
   BellAlarmIcon,
   BellIcon,
@@ -88,7 +88,7 @@ export function MenuButtons() {
         variant="external"
         title="Help"
         onClick={() => {
-          openInNewTab(LEATHER_HELP_CENTER);
+          openInNewTab(LEATHER_GUIDES_URL);
         }}
         icon={<SupportIcon />}
       />

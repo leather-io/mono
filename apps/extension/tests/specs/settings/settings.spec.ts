@@ -4,7 +4,7 @@ import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
-import { LEATHER_HELP_CENTER } from '@leather.io/constants';
+import { LEATHER_GUIDES_URL } from '@leather.io/constants';
 import { WalletDefaultNetworkConfigurationIds } from '@leather.io/models';
 
 import { test } from '../../fixtures/fixtures';
@@ -23,7 +23,7 @@ test.describe('Settings menu', () => {
       page.getByTestId(SettingsSelectors.GetSupportMenuItem).click(),
     ]);
 
-    await test.expect(supportPage).toHaveURL(LEATHER_HELP_CENTER);
+    await test.expect(supportPage).toHaveURL(LEATHER_GUIDES_URL);
   });
 
   test('that menu item can perform sign out', async ({ homePage, onboardingPage }) => {

@@ -53,6 +53,7 @@
     "@hookform/resolvers": "5.2.1",
     "@leather.io/analytics": "workspace:*",
     "@leather.io/bitcoin": "workspace:*",
+    "@leather.io/cms": "workspace:*",
     "@leather.io/constants": "workspace:*",
     "@leather.io/crypto": "workspace:*",
     "@leather.io/features": "workspace:*",

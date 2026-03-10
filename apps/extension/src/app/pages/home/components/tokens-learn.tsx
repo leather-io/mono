@@ -1,30 +1,32 @@
-import {
-  LEATHER_EARN_SBTC_URL,
-  LEATHER_EARN_STACKING_URL,
-  LEATHER_GUIDES_GETTING_STARTED_URL,
-} from '@leather.io/constants';
-import { CoinsStackIcon, RocketStartupLaunchIcon, SbtcIcon } from '@leather.io/ui';
+import { useQuery } from '@tanstack/react-query';
 
+import type { ResolvedLearnItem } from '@leather.io/cms';
+import { LEATHER_GUIDES_URL, LEATHER_SBTC_URL, LEATHER_STACKING_URL } from '@leather.io/constants';
+import { createLearnSectionQueryConfig } from '@leather.io/queries';
+
+import { getLearnIcon } from '@app/features/collectibles/components/learn-icon-map';
 import { type LearnItem, LearnLayout } from '@app/features/collectibles/components/learn-layout';
 
-const learnItems: LearnItem[] = [
+const defaultItems: ResolvedLearnItem[] = [
   {
-    title: 'Getting Started with Leather',
-    url: LEATHER_GUIDES_GETTING_STARTED_URL,
-    icon: <RocketStartupLaunchIcon />,
+    label: 'Getting Started with Leather',
+    iconKey: 'rocket-startup-launch',
+    url: `${LEATHER_GUIDES_URL}/create-new-wallet`,
   },
-  {
-    title: 'What is sBTC?',
-    url: LEATHER_EARN_SBTC_URL,
-    icon: <SbtcIcon />,
-  },
-  {
-    title: 'Learn more about stacking',
-    url: LEATHER_EARN_STACKING_URL,
-    icon: <CoinsStackIcon />,
-  },
+  { label: 'What is sBTC?', iconKey: 'sbtc', url: LEATHER_SBTC_URL },
+  { label: 'Learn more about stacking', iconKey: 'coins-stack', url: LEATHER_STACKING_URL },
 ];
 
+function toLearnItems(items: ResolvedLearnItem[]): LearnItem[] {
+  return items.map(item => ({
+    title: item.label,
+    url: item.url,
+    icon: getLearnIcon(item.iconKey),
+  }));
+}
+
 export function TokensLearn() {
-  return <LearnLayout items={learnItems} data-testid="tokens-learn" />;
+  const { data } = useQuery(createLearnSectionQueryConfig('extension-tokens'));
+  const items = toLearnItems(data ?? defaultItems);
+  return <LearnLayout items={items} data-testid="tokens-learn" />;
 }

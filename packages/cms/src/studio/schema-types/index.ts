@@ -3,6 +3,7 @@ import { changelogType } from './changelog-type';
 import { faqSectionBuilderType } from './faq-section-builder-type';
 import { faqType } from './faq-type';
 import { helpCenterTypes } from './help-center';
+import { learnSectionType } from './learn-section-type';
 import { legacyHelpCenterTypes } from './legacy-help-center';
 import { postType } from './post-type';
 import { sbtcPoolType } from './sbtc-pool-information-type';
@@ -15,6 +16,7 @@ export const schemaTypes = [
   sbtcPoolType,
   faqType,
   faqSectionBuilderType,
+  learnSectionType,
   basicConceptType,
   changelogType,
   tagType,

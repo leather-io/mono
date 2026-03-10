@@ -1,12 +1,10 @@
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
-import { createCmsClient } from '@leather.io/cms';
+import { cmsConfig, createCmsClient } from '@leather.io/cms';
 
 export const cmsClient = createCmsClient({
-  projectId: '70cnou7r',
-  dataset: 'production',
-  apiVersion: '2025-09-04',
+  ...cmsConfig,
   useCdn: false,
 });
 
