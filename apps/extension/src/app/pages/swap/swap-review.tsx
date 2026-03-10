@@ -2,15 +2,22 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router';
 
 import { captureMessage } from '@sentry/react';
+import BigNumber from 'bignumber.js';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { isNonNullish } from 'remeda';
 
-import { LiveSwapEstimate, matchLiveEstimate, useSwapContext } from '@leather.io/state/swap';
+import {
+  LiveSwapEstimate,
+  PRICE_IMPACT_WARNING_THRESHOLD,
+  matchLiveEstimate,
+  useSwapContext,
+} from '@leather.io/state/swap';
 
 import { formatCurrency, formatPercentage } from '@app/common/currency-formatter';
 import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { QuoteRefetchIndicator } from '@app/pages/swap/components/quote-preview/quote-refetch-indicator';
+import { PriceImpactValue } from '@app/pages/swap/components/review/price-impact-value';
 import { SwapReviewAccountDetails } from '@app/pages/swap/components/review/swap-review-account-details';
 import {
   SwapReviewDetailRow,
@@ -22,7 +29,7 @@ import { SwapReviewSummary } from '@app/pages/swap/components/review/swap-review
 import type { SwapOutletContext } from '@app/pages/swap/swap-container';
 
 import { SlippageSelectorSheet } from './components/review/slippage-selector-sheet';
-import { formatSwapRate } from './swap-utils';
+import { formatSwapRate, sumFeesInQuoteCurrency } from './swap-utils';
 
 const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
   'loading',
@@ -64,7 +71,7 @@ interface SwapReviewContentProps {
 function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
   const { state, actions } = useSwapContext();
   const [isSlippageSheetOpen, setIsSlippageSheetOpen] = useState(false);
-  const { selectedQuote, isRefetching, intervalState } = liveEstimate;
+  const { selectedQuote, isRefetching, intervalState, fees } = liveEstimate;
   const {
     baseAmount,
     targetAmount,
@@ -73,7 +80,10 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
     swapRate,
     slippageApplicable,
     minReceive,
+    priceImpactPercentage,
   } = selectedQuote;
+  const showPriceImpact = shouldShowPriceImpact(priceImpactPercentage);
+  const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
 
   return (
     <Flex direction="column" gap="space.08">
@@ -119,6 +129,17 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
             }
           />
         )}
+
+        {showPriceImpact && (
+          <SwapReviewDetailRow
+            label="Price impact"
+            value={<PriceImpactValue value={priceImpactPercentage} />}
+          />
+        )}
+
+        <SwapReviewDivider />
+
+        <SwapReviewDetailRow label="Estimated fees" value={formatCurrency(totalFees)} />
       </SwapReviewDetails>
 
       <SlippageSelectorSheet
@@ -141,4 +162,13 @@ function useSwapReviewStatusGuard(liveEstimate: LiveSwapEstimate, exitReview: ()
       exitReview();
     }
   }, [liveEstimate.status, exitReview]);
+}
+
+function shouldShowPriceImpact(
+  priceImpactPercentage: BigNumber | null
+): priceImpactPercentage is BigNumber {
+  return (
+    isNonNullish(priceImpactPercentage) &&
+    priceImpactPercentage.isGreaterThanOrEqualTo(PRICE_IMPACT_WARNING_THRESHOLD)
+  );
 }
