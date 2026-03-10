@@ -25,6 +25,7 @@
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
+    "@leather.io/cms": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/services": "workspace:*",
     "@leather.io/utils": "workspace:*"

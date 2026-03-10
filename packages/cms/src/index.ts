@@ -1,6 +1,8 @@
 export * from './client/queries/index';
 export * from './generated/types';
 export * from './client/client';
+export * from './client/cdn-client';
+export * from './client/learn-section';
 export {
   postSchema,
   sbtcPoolSchema,

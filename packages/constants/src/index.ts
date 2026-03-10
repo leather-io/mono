@@ -75,35 +75,18 @@ export const TOKEN_NAME_LENGTH = 4;
 
 export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
-export const LEATHER_SUPPORT_GUIDES = 'https://app.leather.io/support';
-export const LEATHER_GUIDES_URL = 'https://leather.io/guides';
-export const LEATHER_GUIDES_UTXO_PROTECTION_URL = 'https://leather.io/guides/utxo-protection';
-export const LEATHER_GUIDES_GETTING_STARTED_URL = 'https://app.leather.io/support/get-started';
-export const LEATHER_GUIDES_ORDINALS_URL =
-  'https://app.leather.io/support/guide/what-are-bitcoin-ordinals';
-export const LEATHER_GUIDES_BNS_URL = 'https://leather.io/guides/bns';
+export const LEATHER_APP_URL = 'https://app.leather.io';
+export const LEATHER_GUIDES_URL: string = `${LEATHER_APP_URL}/support`;
+export const LEATHER_SBTC_URL: string = `${LEATHER_APP_URL}/sbtc`;
+export const LEATHER_STACKING_URL: string = `${LEATHER_APP_URL}/stacking`;
 
 export const BTC_US_URL = 'https://btc.us/';
 
-export const LEATHER_GUIDES_CONNECT_DAPPS = 'https://leather.io/guides/connect-dapps';
-
 export const LEATHER_LEARN_URL = 'https://leather.io/learn';
-
-export const LEATHER_GETTING_STARTED = 'https://app.leather.io/support/get-started';
-
-export const LEATHER_SBTC_TUTORIAL = 'https://app.leather.io/support/sbtc';
-
-export const LEATHER_STACKING_TUTORIAL =
-  'https://app.leather.io/support/guide/getting-started-with-stacking';
-
-export const LEATHER_HELP_CENTER = 'https://app.leather.io/support';
 
 export const LEATHER_GITBOOK_DEVS = 'https://leather.gitbook.io/developers';
 
 export const LEATHER_EARN_URL = 'https://earn.leather.io';
-
-export const LEATHER_EARN_STACKING_URL = 'https://app.leather.io/stacking';
-export const LEATHER_EARN_SBTC_URL = 'https://app.leather.io/sbtc';
 
 export const LEATHER_EXTENSION_CHROME_STORE_URL =
   'https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj?hl=en';

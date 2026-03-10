@@ -46,6 +46,7 @@
     "@launchdarkly/react-native-client-sdk": "10.9.6",
     "@leather.io/analytics": "workspace:*",
     "@leather.io/bitcoin": "workspace:*",
+    "@leather.io/cms": "workspace:*",
     "@leather.io/constants": "workspace:*",
     "@leather.io/crypto": "workspace:*",
     "@leather.io/features": "workspace:*",
