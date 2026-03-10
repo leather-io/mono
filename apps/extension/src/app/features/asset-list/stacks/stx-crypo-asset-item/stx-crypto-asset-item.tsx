@@ -38,10 +38,10 @@ export function StxCryptoAssetItem({
 
   const fiatTotalBalance = formatCurrency(balance.quote.totalBalance);
 
-  const titleRightBulletInfo = (
-    <styled.span>{formatCurrency(lockedBalance, { showCurrency: false })} locked</styled.span>
+  const titleRightBulletInfo = <styled.span>{fiatLockedBalance} locked</styled.span>;
+  const captionRightBulletInfo = (
+    <Caption>{formatCurrency(lockedBalance, { showCurrency: false })} locked</Caption>
   );
-  const captionRightBulletInfo = <Caption>{fiatLockedBalance} locked</Caption>;
 
   const icon = <StxAvatarIcon size="xl" indicator={<StacksFilledCircleIcon variant="small" />} />;
   const dataTestId = CoreAssetSelectors.StxAsset;
