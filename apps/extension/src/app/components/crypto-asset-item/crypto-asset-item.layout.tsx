@@ -1,10 +1,9 @@
 import DOMPurify from 'dompurify';
-import { Box, Flex } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import type { Money } from '@leather.io/models';
 import {
   BulletSeparator,
-  Caption,
   ItemLayout,
   Pressable,
   SkeletonLoader,
@@ -55,7 +54,7 @@ export function CryptoAssetItemLayout({
 
   const titleRight = (
     <SkeletonLoader width="126px" isLoading={isLoading}>
-      <Flex alignItems="center" gap="space.02" textStyle="label.02">
+      <Flex alignItems="center" gap="space.02" textStyle="label.01">
         <BulletSeparator>
           <PrivateTextLayout
             isPrivate={isPrivate}
@@ -77,16 +76,17 @@ export function CryptoAssetItemLayout({
         label={formattedBalance.isCompact && !isPrivate ? availableBalanceString : undefined}
         side="left"
       >
-        <Flex alignItems="center" color="ink.text-subdued" gap="space.02">
+        <Flex alignItems="center" color="ink.text-primary" gap="space.02">
           <BulletSeparator>
-            <Caption
+            <styled.span
+              textStyle="label.03"
               data-state={isLoadingAdditionalData ? 'loading' : undefined}
               className={shimmerStyles}
             >
               <PrivateTextLayout isPrivate={isPrivate}>
                 {formattedBalance.value} {balanceSuffix}
               </PrivateTextLayout>
-            </Caption>
+            </styled.span>
             {captionRightBulletInfo}
           </BulletSeparator>
         </Flex>
@@ -99,8 +99,16 @@ export function CryptoAssetItemLayout({
   const content = (
     <ItemLayout
       img={icon}
-      titleLeft={spamFilter(titleLeft)}
-      captionLeft={spamFilter(captionLeft)}
+      titleLeft={
+        <styled.span textStyle="label.01" overflow="hidden" textOverflow="ellipsis">
+          {spamFilter(titleLeft)}
+        </styled.span>
+      }
+      captionLeft={
+        <styled.span textStyle="label.03" color="ink.text-primary">
+          {spamFilter(captionLeft)}
+        </styled.span>
+      }
       titleRight={titleRight}
       captionRight={captionRight}
     />
