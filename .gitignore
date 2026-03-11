@@ -19,3 +19,5 @@ tmp
 **/.claude/settings.local.json
 .cursorrules
 test-results
+scripts/.security-audit.log
+.claude/scheduled_tasks.lock
