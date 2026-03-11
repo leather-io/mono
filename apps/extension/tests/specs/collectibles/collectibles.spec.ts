@@ -66,7 +66,7 @@ test.describe('Collectibles tab', () => {
       await expect(learn).toBeVisible();
       await expect(page.getByText('Getting Started with Leather')).toBeVisible();
       await expect(page.getByText('What are Bitcoin Ordinals?')).toBeVisible();
-      await expect(page.getByText('What is BNS? (Bitcoin Naming System)')).toBeVisible();
+      await expect(page.getByText('Bitcoin NFTs: How Do They Work?')).toBeVisible();
     });
   });
 
