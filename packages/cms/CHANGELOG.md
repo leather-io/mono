@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.5.0...@leather.io/cms-v1.6.0) (2026-03-11)
+
+
+### Features
+
+* **cms:** add fully CMS-driven learn sections ([dc0ed7a](https://github.com/leather-io/mono/commit/dc0ed7a350d2f4be1f88c9e117531eea00257110))
+
 ## [1.5.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.4.0...@leather.io/cms-v1.5.0) (2026-03-05)
 
 

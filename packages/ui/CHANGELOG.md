@@ -489,6 +489,28 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.110.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.109.0...@leather.io/ui-v1.110.0) (2026-03-11)
+
+
+### Features
+
+* **extension:** first token ([a945df1](https://github.com/leather-io/mono/commit/a945df1e5bef1f884d3a1c670f7f5485376d6d2b))
+
+
+### Bug Fixes
+
+* **extension:** refine collectibles tab typography and spacing ([509e784](https://github.com/leather-io/mono/commit/509e78416099d4e90f47bb89eacd4abc474ee84a))
+* **ui:** use correct spacings for numeric input elements ([5f91542](https://github.com/leather-io/mono/commit/5f9154259e841b5e2b043c17ae92417d9cd1f69a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.51.2
+  * devDependencies
+    * @leather.io/features bumped to 1.3.2
+
 ## [1.109.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.108.2...@leather.io/ui-v1.109.0) (2026-03-06)
 
 
