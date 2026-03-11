@@ -4,6 +4,10 @@
 
 ### Features
 
+* **cms:** add fully CMS-driven learn sections ([dc0ed7a](https://github.com/leather-io/mono/commit/dc0ed7a350d2f4be1f88c9e117531eea00257110))
+* **extension:** add swap review price impact and fee rows ([01de174](https://github.com/leather-io/mono/commit/01de1744e3811c0757c716fc6662b73792b9521b))
+* **extension:** add swap review slippage selector ([9f9ae97](https://github.com/leather-io/mono/commit/9f9ae97f85f770928cdf20bbaf277ff2971b1c65))
+* **extension:** first token ([a945df1](https://github.com/leather-io/mono/commit/a945df1e5bef1f884d3a1c670f7f5485376d6d2b))
 * **extension:** add swap review detail rows for account, rate, and min. receive ([edb8771](https://github.com/leather-io/mono/commit/edb8771eba7f35c1271876ff3f18642ed39d9a02))
 * **extension:** add swap review details building blocks ([6acaf25](https://github.com/leather-io/mono/commit/6acaf258b547861d3a19b835b369e96859a40261))
 * **extension:** add swap review summary section ([3c71a81](https://github.com/leather-io/mono/commit/3c71a81ba2aef808bc702a3b679d7722f46ede4c))
@@ -28,6 +32,11 @@
 
 ### Bug Fixes
 
+* **extension:** refine collectibles tab typography and spacing ([509e784](https://github.com/leather-io/mono/commit/509e78416099d4e90f47bb89eacd4abc474ee84a))
+* **extension:** refine first token banner typography and spacing ([9cb2b01](https://github.com/leather-io/mono/commit/9cb2b01977e4f98bf9230989dd23ed6f08d833f1))
+* **extension:** swap locked balance units in STX asset row ([829a132](https://github.com/leather-io/mono/commit/829a13231c51be705c5e96528d363b7fbe6491dd))
+* **extension:** trending tokens click ([2a07dcc](https://github.com/leather-io/mono/commit/2a07dcc97c6069c3733b42376556bef361047197))
+* **extension:** update e2e test for swapped BNS learn link ([ec9be16](https://github.com/leather-io/mono/commit/ec9be1647891fcd3c0a520a32a02e51665bad80c))
 * **extension:** update collectible design ([7902c68](https://github.com/leather-io/mono/commit/7902c68a97f6883c17b83f0935d125fa227ee78d))
 * taproot rbf ([4628b20](https://github.com/leather-io/mono/commit/4628b20b2385233791ac58e9afab529a7e6b1358))
 * utxo selection for send transfer + generally use all utxos instead of only ns ([d21f030](https://github.com/leather-io/mono/commit/d21f030cabd7ec83eba14ac7c9b732d02aa5abef))

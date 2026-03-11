@@ -4,6 +4,8 @@
 
 ### Features
 
+* **cms:** add fully CMS-driven learn sections ([dc0ed7a](https://github.com/leather-io/mono/commit/dc0ed7a350d2f4be1f88c9e117531eea00257110))
+* **extension:** first token ([a945df1](https://github.com/leather-io/mono/commit/a945df1e5bef1f884d3a1c670f7f5485376d6d2b))
 * **services:** integrate bitflow bff api ([8256079](https://github.com/leather-io/mono/commit/8256079c4b1c5760fbaa51f978cdabf8817a0e0a))
 * **extension:** overhaul collectibles tab with new UI and empty states ([73e6231](https://github.com/leather-io/mono/commit/73e623133b5786621a06b83bf099a68f5e3889ef))
 * **extension:** implement taproot sends ([c4bfa96](https://github.com/leather-io/mono/commit/c4bfa960658d29bb0427f756725e87bdf77fd7b7))
