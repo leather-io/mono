@@ -2,64 +2,7 @@
 
 ## Unpublished
 
-### Features
-
-* **cms:** add fully CMS-driven learn sections ([dc0ed7a](https://github.com/leather-io/mono/commit/dc0ed7a350d2f4be1f88c9e117531eea00257110))
-* **extension:** add swap review price impact and fee rows ([01de174](https://github.com/leather-io/mono/commit/01de1744e3811c0757c716fc6662b73792b9521b))
-* **extension:** add swap review slippage selector ([9f9ae97](https://github.com/leather-io/mono/commit/9f9ae97f85f770928cdf20bbaf277ff2971b1c65))
-* **extension:** first token ([a945df1](https://github.com/leather-io/mono/commit/a945df1e5bef1f884d3a1c670f7f5485376d6d2b))
-* **extension:** add swap review detail rows for account, rate, and min. receive ([edb8771](https://github.com/leather-io/mono/commit/edb8771eba7f35c1271876ff3f18642ed39d9a02))
-* **extension:** add swap review details building blocks ([6acaf25](https://github.com/leather-io/mono/commit/6acaf258b547861d3a19b835b369e96859a40261))
-* **extension:** add swap review summary section ([3c71a81](https://github.com/leather-io/mono/commit/3c71a81ba2aef808bc702a3b679d7722f46ede4c))
-* **extension:** add quote preview to swap form ([aa72cd2](https://github.com/leather-io/mono/commit/aa72cd26bf2de87584035fc4f5def272f64f1aa7))
-* **extension:** fix inconsistent gaps in the swap asset selector list ([f2878b4](https://github.com/leather-io/mono/commit/f2878b4e846b70c6481c94d17ec4fdd13aa67b78))
-* **extension:** include Bitflow provider config into services setup ([da97df0](https://github.com/leather-io/mono/commit/da97df0fb8bc7d911534fcca7c041a7a3e31caf3))
-* **extension:** maintain amount field focus on currency mode switch ([d4dc5c8](https://github.com/leather-io/mono/commit/d4dc5c86cb20584cef764f019f385c9dd462fa8e))
-* **extension:** overhaul collectibles tab with new UI and empty states ([73e6231](https://github.com/leather-io/mono/commit/73e623133b5786621a06b83bf099a68f5e3889ef))
-* **extension:** add "set to max" to asset balance in swap ([9f90463](https://github.com/leather-io/mono/commit/9f90463d51137114cab6b285327651aaf75e4dcc))
-* **extension:** add `SearchInput` component ([383e949](https://github.com/leather-io/mono/commit/383e949cca7e90fb647c96ddf294f311abf41404))
-* **extension:** add base asset section to swap form ([4897fee](https://github.com/leather-io/mono/commit/4897feebc903d3ba68495b11fe93e72ed1dff714))
-* **extension:** add flip button to toggle swap assets ([efd69f9](https://github.com/leather-io/mono/commit/efd69f9d0008330ef8f5e4e9fbf5e66ddce1ef01))
-* **extension:** add swap amount field ([5316ce2](https://github.com/leather-io/mono/commit/5316ce281e6b75184644d8581536c7ca81dda062))
-* **extension:** add swap asset selector ([fea3884](https://github.com/leather-io/mono/commit/fea3884c5077da671c7eae11b57ce6672144f0b7))
-* **extension:** add swap target amount preview ([22d1cd1](https://github.com/leather-io/mono/commit/22d1cd190fdde4800f26d105374b131d21561856))
-* **extension:** adjust the text position in swap currency mode switcher ([9187d63](https://github.com/leather-io/mono/commit/9187d63ee7a7f0333d935bda3495c827d8fbe75d))
-* **extension:** implement taproot sends ([c4bfa96](https://github.com/leather-io/mono/commit/c4bfa960658d29bb0427f756725e87bdf77fd7b7))
-* **extension:** implement token details page ([4096727](https://github.com/leather-io/mono/commit/4096727fa624849cc74425e488c9a494b89c4c2a))
-* **extension:** overhaul collectibles tab with new UI and service integration ([9412c29](https://github.com/leather-io/mono/commit/9412c2951d423807a44ba4d96c3164f1956472cf))
-* **extension:** trending tokens ([f3ec298](https://github.com/leather-io/mono/commit/f3ec29826661db843dd2dc3e4b57e0acc9dcdbcb))
-* **extension:** wire up SwapProvider ([d52f217](https://github.com/leather-io/mono/commit/d52f21750601b39aa1197fca939019c452be5193))
-
-### Bug Fixes
-
-* **extension:** refine collectibles tab typography and spacing ([509e784](https://github.com/leather-io/mono/commit/509e78416099d4e90f47bb89eacd4abc474ee84a))
-* **extension:** refine first token banner typography and spacing ([9cb2b01](https://github.com/leather-io/mono/commit/9cb2b01977e4f98bf9230989dd23ed6f08d833f1))
-* **extension:** swap locked balance units in STX asset row ([829a132](https://github.com/leather-io/mono/commit/829a13231c51be705c5e96528d363b7fbe6491dd))
-* **extension:** trending tokens click ([2a07dcc](https://github.com/leather-io/mono/commit/2a07dcc97c6069c3733b42376556bef361047197))
-* **extension:** update e2e test for swapped BNS learn link ([ec9be16](https://github.com/leather-io/mono/commit/ec9be1647891fcd3c0a520a32a02e51665bad80c))
-* **extension:** update collectible design ([7902c68](https://github.com/leather-io/mono/commit/7902c68a97f6883c17b83f0935d125fa227ee78d))
-* taproot rbf ([4628b20](https://github.com/leather-io/mono/commit/4628b20b2385233791ac58e9afab529a7e6b1358))
-* utxo selection for send transfer + generally use all utxos instead of only ns ([d21f030](https://github.com/leather-io/mono/commit/d21f030cabd7ec83eba14ac7c9b732d02aa5abef))
-* **extension:** add loading="lazy" to collectible images ([8fe4429](https://github.com/leather-io/mono/commit/8fe4429692d9280db52f16c3b6422bcf0aaa609e))
-* **extension:** restore IntersectionObserver lazy rendering for collectible cards ([83a6211](https://github.com/leather-io/mono/commit/83a6211a1b23ec2a84c730d9cc8c108ee653e18f))
-* **extension:** restore pixelated rendering for small collectible images ([bb991b8](https://github.com/leather-io/mono/commit/bb991b81cd0884a536869bad585ed396bdb63ee0))
-* **extension:** restore unprotected label on discarded inscriptions ([c6a719d](https://github.com/leather-io/mono/commit/c6a719d57e41a18877b27fa97a7af72c2e83123d))
-* **extension:** use React Query for text inscription content fetching ([d2ecd5f](https://github.com/leather-io/mono/commit/d2ecd5fa3cfae7382085a8960b55a5cdfa25b749))
-* add tr related unit tests + fix bug in max send calculation ([852e8a6](https://github.com/leather-io/mono/commit/852e8a6765fef7cb98014642fa94357e7dbfc1c0))
-* **extension:** activity txs ([4120ae2](https://github.com/leather-io/mono/commit/4120ae29c6734ad90195eb310d9fb026a26c6631))
-* **extension:** update token details design ([96026a7](https://github.com/leather-io/mono/commit/96026a76c550605f92dbab280fd5d27d94794f99))
-* audit cves ([4e54c65](https://github.com/leather-io/mono/commit/4e54c657a2330652a4ebd8603e1579b2f659a9cc))
-* audit deps ([a20e840](https://github.com/leather-io/mono/commit/a20e840332768b4da14d562c9a0cd4f367d609cd))
-* **extension:** broken inscrpition discard ([05a0309](https://github.com/leather-io/mono/commit/05a0309577ccd076f31d14312bf317c3d48d2edd))
-* **extension:** broken inscrpition discard ([5ba05bb](https://github.com/leather-io/mono/commit/5ba05bb4717893b211bd0e49e264023d75ff036d))
-* **extension:** flag token details ([c4cbb48](https://github.com/leather-io/mono/commit/c4cbb480f384237d051289b24bef57403dc9e684))
-* **extension:** flag trending tokens ([1f1054f](https://github.com/leather-io/mono/commit/1f1054f9f5ef0a0b92c21fe819738603990eb464))
-* **extension:** include protected balance in BTC token details total ([cb90d8f](https://github.com/leather-io/mono/commit/cb90d8f5665329e9d8da4ef3f4a0dc72bfe02b6a))
-* **extension:** remove recover taproot feature ([145cee5](https://github.com/leather-io/mono/commit/145cee55d56a20100cb11e8684b33652fd53eb66))
-* **extension:** send max ([e307e40](https://github.com/leather-io/mono/commit/e307e4063d036f6be564f421b230bcb2ee3dd4ea))
-* **extension:** update storybook version ([10f91f4](https://github.com/leather-io/mono/commit/10f91f4edb59fda19e81b42654083356a33fc2bb))
-* playwright tests ([eaf96c9](https://github.com/leather-io/mono/commit/eaf96c9400431c7fbd539b8e5cd7abc86c327f5b))
-* revert modal changes ([68e109f](https://github.com/leather-io/mono/commit/68e109f2097f9fa8b290dcb265aff65391a46faf))
+No unreleased changes.
 
 ---
 
