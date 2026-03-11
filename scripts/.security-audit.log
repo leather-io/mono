@@ -1,0 +1,691 @@
+[2026-03-11 10:18:50] Starting security audit
+[2026-03-11 10:18:58] Vulnerabilities detected. Attempting fix...
+[2026-03-11 10:18:58] ┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ high                │ ws affected by a DoS when handling a request with many │
+│                     │ HTTP headers                                           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ ws                                                     │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ >=8.0.0 <8.17.1                                        │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=8.17.1                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>web-ext-submit>web-ext>ws              │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-3h5v-q93c-6h6q      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ high                │ Wrangler affected by OS Command Injection in `wrangler │
+│                     │ pages deploy`                                          │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ wrangler                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ >=4.0.0 <4.59.1                                        │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=4.59.1                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__web>wrangler                                     │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-36p8-mvp6-cv38      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ high                │ Seroval affected by Denial of Service via Array        │
+│                     │ serialization                                          │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ seroval                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <=1.4.0                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=1.4.1                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__web>react-router-devtools>@tanstack/react-       │
+│                     │ devtools>@tanstack/devtools>solid-js>seroval           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-66fc-rw6m-c2q6      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ high                │ seroval affected by Denial of Service via RegExp       │
+│                     │ serialization                                          │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ seroval                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <=1.4.0                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=1.4.1                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__web>react-router-devtools>@tanstack/react-       │
+│                     │ devtools>@tanstack/devtools>solid-js>seroval           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-hx9m-jf43-8ffr      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ high                │ seroval Affected by Remote Code Execution via JSON     │
+│                     │ Deserialization                                        │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ seroval                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <1.4.1                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=1.4.1                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__web>react-router-devtools>@tanstack/react-       │
+│                     │ devtools>@tanstack/devtools>solid-js>seroval           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-3rxj-6cgf-8cfw      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ high                │ seroval Affected by Prototype Pollution via JSON       │
+│                     │ Deserialization                                        │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ seroval                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <1.4.1                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=1.4.1                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__web>react-router-devtools>@tanstack/react-       │
+│                     │ devtools>@tanstack/devtools>solid-js>seroval           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-hj76-42vx-jwp4      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ high                │ Seroval affected by Denial of Service via Deeply       │
+│                     │ Nested Objects                                         │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ seroval                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <=1.4.0                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=1.4.1                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__web>react-router-devtools>@tanstack/react-       │
+│                     │ devtools>@tanstack/devtools>solid-js>seroval           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-3j22-8qj3-26mx      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ high                │ Immutable is vulnerable to Prototype Pollution         │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ immutable                                              │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ >=5.0.0 <5.1.5                                         │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=5.1.5                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>@redux-devtools/cli>@redux-devtools/   │
+│                     │ app>@redux-devtools/app-core>@redux-devtools/          │
+│                     │ inspector-monitor>immutable                            │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-wf6x-7x77-mvgw      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ high                │ node-tar Symlink Path Traversal via Drive-Relative     │
+│                     │ Linkpath                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ tar                                                    │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <=7.5.10                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=7.5.11                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>@redux-devtools/cli>sqlite3>tar        │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-9ppj-qmqm-q256      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ Memory Exposure in bl                                  │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ bl                                                     │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <0.9.5                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=0.9.5                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>browserify-fs>levelup>bl               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-wrw9-m778-g6mc      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ Remote Memory Exposure in bl                           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ bl                                                     │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <1.2.3                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=1.2.3                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>browserify-fs>levelup>bl               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-pp7h-53gx-mx7r      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ Server-Side Request Forgery in Request                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ request                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <=2.88.2                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ <0.0.0                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>web-ext-submit>web-ext>sign-           │
+│                     │ addon>request                                          │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-p8p7-x288-28g6      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ jose vulnerable to resource exhaustion via             │
+│                     │ specifically crafted JWE with compressed plaintext     │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ jose                                                   │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ >=3.0.0 <=4.15.4                                       │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=4.15.5                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>web-ext-submit>web-ext>jose            │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-hhhv-q57g-882q      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ tough-cookie Prototype Pollution vulnerability         │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ tough-cookie                                           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <4.1.3                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=4.1.3                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>web-ext-submit>web-ext>sign-           │
+│                     │ addon>request>tough-cookie                             │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-72xf-g2v4-qvf3      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ esbuild enables any website to send any requests to    │
+│                     │ the development server and read the response           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ esbuild                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <=0.24.2                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=0.25.0                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ .>@vitest/coverage-v8>vitest>vite>esbuild              │
+│                     │                                                        │
+│                     │ apps__web>@originjs/vite-plugin-commonjs>esbuild       │
+│                     │                                                        │
+│                     │ packages__ui>@storybook/addon-ondevice-                │
+│                     │ controls>@storybook/addon-controls>@storybook/         │
+│                     │ blocks>@storybook/docs-tools>@storybook/core-          │
+│                     │ common>esbuild                                         │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-67mh-4wv8-2f99      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ Babel has inefficient RegExp complexity in generated   │
+│                     │ code with .replace when transpiling named capturing    │
+│                     │ groups                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ @babel/runtime                                         │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <7.26.10                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=7.26.10                                              │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ .>@babel/runtime                                       │
+│                     │                                                        │
+│                     │ apps__extension>web-ext-submit>web-ext>@babel/runtime  │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-968p-4wvh-cqc8      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ PrismJS DOM Clobbering vulnerability                   │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ prismjs                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <1.30.0                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=1.30.0                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__web>react-syntax-highlighter>refractor>prismjs   │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-x7hr-w5r2-h6wg      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ Electron has ASAR Integrity Bypass via resource        │
+│                     │ modification                                           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ electron                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <35.7.5                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=35.7.5                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>@redux-devtools/cli>electron           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-vmqv-hx8q-j7mg      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ PostCSS line return parsing error                      │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ postcss                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <8.4.31                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=8.4.31                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>web-ext-submit>web-ext>addons-         │
+│                     │ linter>postcss                                         │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-7fh5-64p2-3v2j      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ Undici has an unbounded decompression chain in HTTP    │
+│                     │ responses on Node.js Fetch API via Content-Encoding    │
+│                     │ leads to resource exhaustion                           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ undici                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <6.23.0                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=6.23.0                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>@actions/core>@actions/http-           │
+│                     │ client>undici                                          │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-g9mf-h72j-4rw9      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ Undici has an unbounded decompression chain in HTTP    │
+│                     │ responses on Node.js Fetch API via Content-Encoding    │
+│                     │ leads to resource exhaustion                           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ undici                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ >=7.0.0 <7.18.2                                        │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=7.18.2                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__web>@cloudflare/vite-plugin>miniflare>undici     │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-g9mf-h72j-4rw9      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ bn.js affected by an infinite loop                     │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ bn.js                                                  │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ >=5.0.0 <5.2.3                                         │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=5.2.3                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>crypto-browserify>browserify-sign>bn.  │
+│                     │ js                                                     │
+│                     │                                                        │
+│                     │ apps__extension>bn.js                                  │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-378v-28hj-76wf      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ bn.js affected by an infinite loop                     │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ bn.js                                                  │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <4.12.3                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=4.12.3                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>crypto-browserify>browserify-          │
+│                     │ sign>elliptic>bn.js                                    │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-378v-28hj-76wf      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ ajv has ReDoS when using `$data` option                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ ajv                                                    │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <6.14.0                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=6.14.0                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ .>eslint>ajv                                           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-2g4f-4pwh-qvx6      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ ajv has ReDoS when using `$data` option                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ ajv                                                    │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ >=7.0.0-alpha.0 <8.18.0                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=8.18.0                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ apps__extension>web-ext>addons-linter>ajv              │
+│                     │                                                        │
+│                     │ apps__extension>web-ext-submit>web-ext>addons-         │
+│                     │ linter>ajv                                             │
+│                     │                                                        │
+│                     │ packages__ui>@microsoft/api-extractor>@rushstack/node- │
+│                     │ core-library>ajv                                       │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-2g4f-4pwh-qvx6      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ DOMPurify contains a Cross-site Scripting              │
+│                     │ vulnerability                                          │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ dompurify                                              │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ >=3.1.3 <3.2.7                                         │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=3.2.7                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ packages__cms>sanity>isomorphic-dompurify>dompurify    │
+│                     │                                                        │
+│                     │ apps__extension>dompurify                              │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-v8jm-5vwx-cfxm      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ DOMPurify contains a Cross-site Scripting              │
+│                     │ vulnerability                                          │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ dompurify                                              │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ >=3.1.3 <=3.3.1                                        │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=3.3.2                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ packages__cms>sanity>isomorphic-dompurify>dompurify    │
+│                     │                                                        │
+│                     │ apps__extension>dompurify                              │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-v2wj-7wpq-c8vv      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+40 vulnerabilities found
+Severity: 5 low | 26 moderate | 9 high
+26 overrides were added to package.json to fix vulnerabilities.
+Run "pnpm install" to apply the fixes.
+
+The added overrides:
+{
+  "bl@<0.9.5": ">=0.9.5",
+  "bl@<1.2.3": ">=1.2.3",
+  "jose@>=3.0.0 <=4.15.4": ">=4.15.5",
+  "tough-cookie@<4.1.3": ">=4.1.3",
+  "ws@>=8.0.0 <8.17.1": ">=8.17.1",
+  "esbuild@<=0.24.2": ">=0.25.0",
+  "@babel/runtime@<7.26.10": ">=7.26.10",
+  "prismjs@<1.30.0": ">=1.30.0",
+  "electron@<35.7.5": ">=35.7.5",
+  "tmp@<=0.2.3": ">=0.2.4",
+  "postcss@<8.4.31": ">=8.4.31",
+  "wrangler@>=4.0.0 <4.59.1": ">=4.59.1",
+  "seroval@<=1.4.0": ">=1.4.1",
+  "seroval@<1.4.1": ">=1.4.1",
+  "undici@<6.23.0": ">=6.23.0",
+  "undici@>=7.0.0 <7.18.2": ">=7.18.2",
+  "qs@>=6.7.0 <=6.14.1": ">=6.14.2",
+  "bn.js@>=5.0.0 <5.2.3": ">=5.2.3",
+  "bn.js@<4.12.3": ">=4.12.3",
+  "ajv@<6.14.0": ">=6.14.0",
+  "ajv@>=7.0.0-alpha.0 <8.18.0": ">=8.18.0",
+  "@tootallnate/once@<3.0.1": ">=3.0.1",
+  "dompurify@>=3.1.3 <3.2.7": ">=3.2.7",
+  "dompurify@>=3.1.3 <=3.3.1": ">=3.3.2",
+  "immutable@>=5.0.0 <5.1.5": ">=5.1.5",
+  "tar@<=7.5.10": ">=7.5.11"
+}
+Scope: all 28 workspace projects
+Progress: resolved 0, reused 1, downloaded 0, added 0
+
+   ╭───────────────────────────────────────────────╮
+   │                                               │
+   │     Update available! 10.27.0 → 10.32.1.      │
+   │     Changelog: https://pnpm.io/v/10.32.1      │
+   │   To update, run: corepack use pnpm@10.32.1   │
+   │                                               │
+   ╰───────────────────────────────────────────────╯
+
+apps/extension                           |  WARN  deprecated lodash.get@4.4.2
+apps/extension                           |  WARN  deprecated ledger-bitcoin@0.2.3
+apps/extension                           |  WARN  deprecated lodash.isequal@4.5.0
+Progress: resolved 400, reused 398, downloaded 0, added 0
+Progress: resolved 1474, reused 1318, downloaded 0, added 0
+Progress: resolved 2652, reused 2380, downloaded 2, added 0
+Progress: resolved 3958, reused 3674, downloaded 7, added 0
+Progress: resolved 4422, reused 4145, downloaded 15, added 0
+Progress: resolved 4429, reused 4152, downloaded 15, added 0
+Progress: resolved 4451, reused 4174, downloaded 16, added 0
+Progress: resolved 4457, reused 4180, downloaded 16, added 0
+ WARN  36 deprecated subdependencies found: @apollo/server-gateway-interface@1.1.1, @apollo/server@4.13.0, @effect/schema@0.71.1, @formatjs/intl-enumerator@1.8.10, @humanwhocodes/config-array@0.11.14, @humanwhocodes/object-schema@2.0.3, @npmcli/move-file@1.1.2, abstract-leveldown@0.12.4, are-we-there-yet@3.0.1, boolean@3.2.0, deepcopy@2.1.0, deferred-leveldown@0.2.0, eslint@8.48.0, form-data@2.5.4, gauge@4.0.4, get-random-values-esm@1.0.2, glob@11.1.0, har-validator@5.1.5, has-own@1.0.1, level-js@2.2.4, levelup@0.18.6, node-domexception@1.0.0, npmlog@6.0.2, object-keys@0.2.0, prebuild-install@7.1.3, request@2.88.2, rimraf@2.4.5, rimraf@3.0.2, rollup-plugin-inject@3.0.2, sign-addon@5.3.0, source-map@0.8.0-beta.0, sourcemap-codec@1.4.8, text-encoding@0.7.0, uuid@3.3.2, uuid@3.4.0, whatwg-encoding@3.1.1
+Progress: resolved 4458, reused 4181, downloaded 16, added 0
+Packages: +70 -95
++++++++++++++++++++++++++++++++++-----------------------------------------------
+Progress: resolved 4458, reused 4181, downloaded 16, added 1
+Progress: resolved 4458, reused 4181, downloaded 16, added 60, done
+. prepare$ husky
+. prepare: Done
+apps/mobile postinstall$ pnpm lingui:compile && if [ "$PROVISION_MOBILE" = "true" ]; then pnpm -w build:mobile; fi
+apps/mobile postinstall: > @leather.io/mobile@2.103.1 lingui:compile /Users/server/dev/mono/apps/mobile
+apps/mobile postinstall: > lingui compile --typescript --strict
+apps/mobile postinstall: Compiling message catalogs…
+apps/mobile postinstall: Done!
+apps/mobile postinstall: Done
+ WARN  Issues with peer dependencies found
+.
+├─┬ @tanstack/eslint-plugin-query 5.62.1
+│ └─┬ @typescript-eslint/utils 8.32.1
+│   ├── ✕ unmet peer typescript@">=4.8.4 <5.9.0": found 5.9.3
+│   └─┬ @typescript-eslint/typescript-estree 8.32.1
+│     └── ✕ unmet peer typescript@">=4.8.4 <5.9.0": found 5.9.3
+└─┬ @vitest/coverage-v8 2.1.5
+  └── ✕ unmet peer vitest@2.1.5: found 2.1.9
+
+apps/extension
+├─┬ @redux-devtools/remote 0.9.5
+│ └─┬ @redux-devtools/utils 3.1.1
+│   ├── ✕ unmet peer immutable@^4.3.7: found 5.1.5
+│   └─┬ @redux-devtools/serialize 0.4.2
+│     └── ✕ unmet peer immutable@^4.0.0: found 5.1.5
+├─┬ @stacks/connect-react 22.2.0
+│ ├── ✕ unmet peer react@"^16.x || 17.x || 18.x": found 19.1.0
+│ └── ✕ unmet peer react-dom@"^16.x || 17.x || 18.x": found 19.1.0
+├─┬ @radix-ui/react-dialog 1.0.5
+│ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├─┬ @radix-ui/react-compose-refs 1.0.1
+│ │ └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├─┬ @radix-ui/react-context 1.0.1
+│ │ └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├─┬ @radix-ui/react-dismissable-layer 1.0.5
+│ │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ │ ├── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ │ ├─┬ @radix-ui/react-primitive 1.0.3
+│ │ │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ │ │ ├── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ │ │ └─┬ @radix-ui/react-slot 1.0.2
+│ │ │   └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ │ ├─┬ @radix-ui/react-use-callback-ref 1.0.1
+│ │ │ └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ │ └─┬ @radix-ui/react-use-escape-keydown 1.0.3
+│ │   └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├─┬ @radix-ui/react-focus-guards 1.0.1
+│ │ └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├─┬ @radix-ui/react-focus-scope 1.0.4
+│ │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ │ └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├─┬ @radix-ui/react-id 1.0.1
+│ │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ │ └─┬ @radix-ui/react-use-layout-effect 1.0.1
+│ │   └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├─┬ @radix-ui/react-portal 1.0.4
+│ │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ │ └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├─┬ @radix-ui/react-presence 1.0.1
+│ │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ │ └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├─┬ @radix-ui/react-use-controllable-state 1.0.1
+│ │ └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ └─┬ react-remove-scroll 2.5.5
+│   ├── ✕ unmet peer react@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+│   └── ✕ unmet peer @types/react@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.17
+├─┬ @radix-ui/react-dropdown-menu 2.0.6
+│ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ └─┬ @radix-ui/react-menu 2.0.6
+│   ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   ├── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   ├─┬ @radix-ui/react-popper 1.1.3
+│   │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   │ ├── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   │ ├─┬ @radix-ui/react-arrow 1.0.3
+│   │ │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   │ │ └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   │ ├─┬ @radix-ui/react-use-rect 1.0.1
+│   │ │ └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   │ └─┬ @radix-ui/react-use-size 1.0.1
+│   │   └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   ├─┬ @radix-ui/react-collection 1.0.3
+│   │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   │ └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   ├─┬ @radix-ui/react-direction 1.0.1
+│   │ └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   └─┬ @radix-ui/react-roving-focus 1.0.4
+│     ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│     └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+├─┬ @radix-ui/react-tooltip 1.0.7
+│ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ └─┬ @radix-ui/react-visually-hidden 1.0.3
+│   ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+├─┬ @radix-ui/themes 2.0.3
+│ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ ├── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│ └─┬ @radix-ui/react-form 0.0.3
+│   ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   ├── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│   └─┬ @radix-ui/react-label 2.0.2
+│     ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│     └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+├─┬ react-intersection-observer 9.5.2
+│ └── ✕ unmet peer react@"^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+├─┬ use-latest 1.2.1
+│ └── ✕ unmet peer react@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+├─┬ web-ext 9.2.0
+│ └─┬ addons-linter 9.2.0
+│   └─┬ addons-scanner-utils 9.14.0
+│     ├── ✕ unmet peer express@4.21.2: found 5.2.1
+│     └── ✕ unmet peer node-fetch@2.6.11: found 3.3.1
+└─┬ web-ext-submit 7.8.0
+  └─┬ web-ext 7.8.0
+    └─┬ addons-linter 6.13.0
+      └─┬ addons-scanner-utils 9.3.0
+        ├── ✕ unmet peer express@4.18.2: found 5.2.1
+        └── ✕ unmet peer node-fetch@2.6.11: found 3.3.1
+
+apps/mobile
+├─┬ expo-router 6.0.22
+│ ├── ✕ unmet peer @expo/metro-runtime@^6.1.2: found 5.0.5
+│ ├─┬ @react-navigation/bottom-tabs 7.10.1
+│ │ ├── ✕ unmet peer @react-navigation/native@^7.1.28: found 7.1.9
+│ │ └─┬ @react-navigation/elements 2.9.5
+│ │   └── ✕ unmet peer @react-navigation/native@^7.1.28: found 7.1.9
+│ └─┬ @react-navigation/native-stack 7.11.0
+│   └── ✕ unmet peer @react-navigation/native@^7.1.28: found 7.1.9
+├─┬ jsdom 27.4.0
+│ └─┬ html-encoding-sniffer 6.0.0
+│   └─┬ @exodus/bytes 1.14.1
+│     └── ✕ unmet peer @noble/hashes@"^1.8.0 || ^2.0.0": found 1.5.0
+└─┬ expo-standard-web-crypto 1.8.1
+  └── ✕ unmet peer expo-crypto@^13.0.0: found 15.0.8
+
+apps/web
+└─┬ wrangler 4.72.0
+  └── ✕ unmet peer @cloudflare/workers-types@^4.20260310.1: found 4.20260111.0
+
+packages/cms
+├─┬ @typescript-eslint/parser 8.18.0
+│ ├── ✕ unmet peer typescript@">=4.8.4 <5.8.0": found 5.9.3
+│ └─┬ @typescript-eslint/typescript-estree 8.18.0
+│   └── ✕ unmet peer typescript@">=4.8.4 <5.8.0": found 5.9.3
+└─┬ @sanity/eslint-config-studio 5.0.2
+  └─┬ typescript-eslint 8.18.0
+    ├── ✕ unmet peer typescript@">=4.8.4 <5.8.0": found 5.9.3
+    ├─┬ @typescript-eslint/utils 8.18.0
+    │ └── ✕ unmet peer typescript@">=4.8.4 <5.8.0": found 5.9.3
+    └─┬ @typescript-eslint/eslint-plugin 8.18.0
+      ├── ✕ unmet peer typescript@">=4.8.4 <5.8.0": found 5.9.3
+      └─┬ @typescript-eslint/type-utils 8.18.0
+        └── ✕ unmet peer typescript@">=4.8.4 <5.8.0": found 5.9.3
+
+packages/ui
+├─┬ expo-router 6.0.22
+│ ├── ✕ unmet peer @expo/metro-runtime@^6.1.2: found 5.0.5
+│ ├─┬ @react-navigation/bottom-tabs 7.10.1
+│ │ └── ✕ unmet peer @react-navigation/native@^7.1.28: found 7.1.9 in expo-router
+│ └─┬ @react-navigation/native-stack 7.11.0
+│   └── ✕ unmet peer @react-navigation/native@^7.1.28: found 7.1.9 in expo-router
+├─┬ @storybook/addon-ondevice-actions 7.6.20
+│ └─┬ @storybook/manager-api 7.6.20
+│   └─┬ @storybook/theming 7.6.20
+│     ├── ✕ unmet peer react@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+│     └── ✕ unmet peer react-dom@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+├─┬ @storybook/addon-ondevice-controls 7.6.20
+│ └─┬ @storybook/addon-controls 7.6.20
+│   └─┬ @storybook/blocks 7.6.20
+│     ├── ✕ unmet peer react@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+│     ├── ✕ unmet peer react-dom@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+│     └─┬ @storybook/components 7.6.20
+│       ├── ✕ unmet peer react@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+│       ├── ✕ unmet peer react-dom@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+│       ├─┬ @radix-ui/react-select 1.2.2
+│       │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│       │ ├── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│       │ ├─┬ @radix-ui/react-use-previous 1.0.1
+│       │ │ └── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│       │ ├─┬ @radix-ui/react-dismissable-layer 1.0.4
+│       │ │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│       │ │ └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│       │ ├─┬ @radix-ui/react-focus-scope 1.0.3
+│       │ │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│       │ │ └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│       │ ├─┬ @radix-ui/react-popper 1.1.2
+│       │ │ ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│       │ │ └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│       │ └─┬ @radix-ui/react-portal 1.0.3
+│       │   ├── ✕ unmet peer react@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│       │   └── ✕ unmet peer react-dom@"^16.8 || ^17.0 || ^18.0": found 19.1.0
+│       └─┬ use-resize-observer 9.1.0
+│         ├── ✕ unmet peer react@"16.8.0 - 18": found 19.1.0
+│         └── ✕ unmet peer react-dom@"16.8.0 - 18": found 19.1.0
+└─┬ @storybook/react-native 7.6.20
+  └─┬ @storybook/react 7.6.20
+    ├── ✕ unmet peer react@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+    ├── ✕ unmet peer react-dom@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+    ├─┬ @storybook/react-dom-shim 7.6.20
+    │ ├── ✕ unmet peer react@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+    │ └── ✕ unmet peer react-dom@"^16.8.0 || ^17.0.0 || ^18.0.0": found 19.1.0
+    └─┬ react-element-to-jsx-string 15.0.0
+      ├── ✕ unmet peer react@"^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0": found 19.1.0
+      └── ✕ unmet peer react-dom@"^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0": found 19.1.0
+
+devDependencies:
+- @babel/runtime 7.26.0
++ @babel/runtime 7.28.4 (7.28.6 is available)
+- @vitest/coverage-v8 2.1.9
++ @vitest/coverage-v8 2.1.5
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: @sentry/cli@2.45.0, @swc/core@1.11.24,              │
+│   core-js-pure@3.46.0, electron@41.0.0, esbuild@0.27.2, msw@2.12.7,          │
+│   sharp@0.34.5, workerd@1.20260310.1.                                        │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 19.7s using pnpm v10.27.0
