@@ -215,6 +215,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.35.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.34.1...@leather.io/constants-v0.35.0) (2026-03-11)
+
+
+### Features
+
+* **cms:** add fully CMS-driven learn sections ([dc0ed7a](https://github.com/leather-io/mono/commit/dc0ed7a350d2f4be1f88c9e117531eea00257110))
+
 ## [0.34.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.34.0...@leather.io/constants-v0.34.1) (2026-03-05)
 
 

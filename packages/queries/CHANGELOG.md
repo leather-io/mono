@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.8.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.7.0...@leather.io/queries-v0.8.0) (2026-03-11)
+
+
+### Features
+
+* **cms:** add fully CMS-driven learn sections ([dc0ed7a](https://github.com/leather-io/mono/commit/dc0ed7a350d2f4be1f88c9e117531eea00257110))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/cms bumped to 1.6.0
+    * @leather.io/services bumped to 1.51.1
+    * @leather.io/utils bumped to 0.51.2
+
 ## [0.7.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.6.3...@leather.io/queries-v0.7.0) (2026-03-05)
 
 
