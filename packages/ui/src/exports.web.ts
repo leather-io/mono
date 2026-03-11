@@ -36,6 +36,7 @@ export { LoadingSpinner, Spinner } from './components/spinner/index.web';
 export { Logo } from './components/logo.web';
 export { NumericInput, type NumericInputProps } from './components/numeric-input/numeric-input.web';
 export { NetworkModeBadge } from './components/network-mode-badge/network-mode-badge.web';
+export { Popover } from './components/popover/index.web';
 export { Prism, type PrismType } from './components/highlighting/clarity-prism.shared';
 export { SkeletonLoader } from './components/skeleton-loader/skeleton-loader.web';
 export { Slider } from './components/slider/slider.web';
