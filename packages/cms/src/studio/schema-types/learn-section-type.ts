@@ -40,19 +40,10 @@ export const learnSectionType = defineType({
               validation: rule => rule.required(),
             }),
             defineField({
-              name: 'iconKey',
-              title: 'Icon Key',
-              type: 'string',
+              name: 'icon',
+              title: 'Icon',
+              type: 'image',
               validation: rule => rule.required(),
-              options: {
-                list: [
-                  { title: 'Rocket / Getting Started', value: 'rocket-startup-launch' },
-                  { title: 'Stamps / Collection', value: 'stamps-collection' },
-                  { title: 'BNS', value: 'bns' },
-                  { title: 'sBTC', value: 'sbtc' },
-                  { title: 'Coins Stack', value: 'coins-stack' },
-                ],
-              },
             }),
             defineField({
               name: 'linkType',

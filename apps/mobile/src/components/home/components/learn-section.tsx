@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
+import { Image } from 'react-native';
 
 import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { t } from '@lingui/core/macro';
 import { useQuery } from '@tanstack/react-query';
 
-import type { ResolvedLearnItem } from '@leather.io/cms';
 import { LEATHER_GUIDES_URL, LEATHER_SBTC_URL, LEATHER_STACKING_URL } from '@leather.io/constants';
 import { createLearnSectionQueryConfig } from '@leather.io/queries';
 import { Box, Cell, Text } from '@leather.io/ui/native';
@@ -40,22 +40,40 @@ function LearnListItem({ title, icon, onPress }: LearnListItemProps) {
   );
 }
 
-function getDefaultItems(): ResolvedLearnItem[] {
+interface DefaultLearnItem {
+  title: string;
+  icon: ReactNode;
+  url: string;
+}
+
+function getDefaultItems(): DefaultLearnItem[] {
   return [
     {
-      label: t`Getting Started with Leather`,
-      iconKey: 'rocket-startup-launch',
+      title: t`Getting Started with Leather`,
+      icon: getLearnIcon('rocket-startup-launch'),
       url: `${LEATHER_GUIDES_URL}/create-new-wallet`,
     },
-    { label: t`What is sBTC?`, iconKey: 'sbtc', url: LEATHER_SBTC_URL },
-    { label: t`Learn more about stacking`, iconKey: 'coins-stack', url: LEATHER_STACKING_URL },
+    { title: t`What is sBTC?`, icon: getLearnIcon('sbtc'), url: LEATHER_SBTC_URL },
+    {
+      title: t`Learn more about stacking`,
+      icon: getLearnIcon('coins-stack'),
+      url: LEATHER_STACKING_URL,
+    },
   ];
 }
 
 export function LearnSection() {
   const { openUrl } = useOpenUrl();
   const { data } = useQuery(createLearnSectionQueryConfig('mobile-home'));
-  const items = data ?? getDefaultItems();
+  const items = data
+    ? data.map(item => ({
+        title: item.label,
+        url: item.url,
+        icon: item.iconUrl ? (
+          <Image source={{ uri: item.iconUrl }} style={{ width: 24, height: 24 }} />
+        ) : null,
+      }))
+    : getDefaultItems();
 
   return (
     <Box pb="5">
@@ -64,9 +82,9 @@ export function LearnSection() {
       </Text>
       {items.map(item => (
         <LearnListItem
-          key={item.label}
-          title={item.label}
-          icon={getLearnIcon(item.iconKey)}
+          key={item.title}
+          title={item.title}
+          icon={item.icon}
           onPress={() => openUrl(item.url)}
         />
       ))}

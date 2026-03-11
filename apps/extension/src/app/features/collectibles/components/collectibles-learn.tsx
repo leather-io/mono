@@ -1,40 +1,37 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { ResolvedLearnItem } from '@leather.io/cms';
 import { LEATHER_GUIDES_URL } from '@leather.io/constants';
 import { createLearnSectionQueryConfig } from '@leather.io/queries';
 
 import { getLearnIcon } from './learn-icon-map';
 import { type LearnItem, LearnLayout } from './learn-layout';
 
-const defaultItems: ResolvedLearnItem[] = [
+const defaultItems: LearnItem[] = [
   {
-    label: 'Getting Started with Leather',
-    iconKey: 'rocket-startup-launch',
+    title: 'Getting Started with Leather',
+    icon: getLearnIcon('rocket-startup-launch'),
     url: `${LEATHER_GUIDES_URL}/create-new-wallet`,
   },
   {
-    label: 'What are Bitcoin Ordinals?',
-    iconKey: 'stamps-collection',
+    title: 'What are Bitcoin Ordinals?',
+    icon: getLearnIcon('stamps-collection'),
     url: `${LEATHER_GUIDES_URL}/what-are-bitcoin-ordinals`,
   },
   {
-    label: 'Bitcoin NFTs: How Do They Work?',
-    iconKey: 'stamps-collection',
+    title: 'Bitcoin NFTs: How Do They Work?',
+    icon: getLearnIcon('stamps-collection'),
     url: `${LEATHER_GUIDES_URL}/bitcoin-nfts`,
   },
 ];
 
-function toLearnItems(items: ResolvedLearnItem[]): LearnItem[] {
-  return items.map(item => ({
-    title: item.label,
-    url: item.url,
-    icon: getLearnIcon(item.iconKey),
-  }));
-}
-
 export function CollectiblesLearn() {
   const { data } = useQuery(createLearnSectionQueryConfig('extension-collectibles'));
-  const items = toLearnItems(data ?? defaultItems);
+  const items: LearnItem[] = data
+    ? data.map(item => ({
+        title: item.label,
+        url: item.url,
+        icon: item.iconUrl ? <img src={item.iconUrl} alt="" width={24} height={24} /> : null,
+      }))
+    : defaultItems;
   return <LearnLayout items={items} data-testid="collectibles-learn" />;
 }

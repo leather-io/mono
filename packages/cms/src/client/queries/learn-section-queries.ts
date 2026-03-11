@@ -5,7 +5,7 @@ export const extensionTokensLearnSectionQuery = defineQuery(`*[
   && key == "extension-tokens"
 ][0]{
   key,
-  items[]{ label, iconKey, linkType, guideSlug, externalUrl }
+  items[]{ label, "iconUrl": icon.asset->url, linkType, guideSlug, externalUrl }
 }`);
 
 export const extensionCollectiblesLearnSectionQuery = defineQuery(`*[
@@ -13,7 +13,7 @@ export const extensionCollectiblesLearnSectionQuery = defineQuery(`*[
   && key == "extension-collectibles"
 ][0]{
   key,
-  items[]{ label, iconKey, linkType, guideSlug, externalUrl }
+  items[]{ label, "iconUrl": icon.asset->url, linkType, guideSlug, externalUrl }
 }`);
 
 export const mobileHomeLearnSectionQuery = defineQuery(`*[
@@ -21,5 +21,5 @@ export const mobileHomeLearnSectionQuery = defineQuery(`*[
   && key == "mobile-home"
 ][0]{
   key,
-  items[]{ label, iconKey, linkType, guideSlug, externalUrl }
+  items[]{ label, "iconUrl": icon.asset->url, linkType, guideSlug, externalUrl }
 }`);

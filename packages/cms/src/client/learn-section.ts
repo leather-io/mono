@@ -4,7 +4,7 @@ type LearnSectionKey = 'extension-tokens' | 'extension-collectibles' | 'mobile-h
 
 interface SanityLearnItem {
   label: string;
-  iconKey: string;
+  iconUrl: string | null;
   linkType: 'guide' | 'url';
   guideSlug: string | null;
   externalUrl: string | null;
@@ -17,7 +17,7 @@ interface SanityLearnSection {
 
 export interface ResolvedLearnItem {
   label: string;
-  iconKey: string;
+  iconUrl: string | null;
   url: string;
 }
 
@@ -33,7 +33,7 @@ function resolveLearnItemUrl(item: SanityLearnItem): string {
   return helpCenterBaseUrl;
 }
 
-const learnSectionQuery = `*[_type == "learnSection" && key == $key][0]{ key, items[]{ label, iconKey, linkType, guideSlug, externalUrl } }`;
+const learnSectionQuery = `*[_type == "learnSection" && key == $key][0]{ key, items[]{ label, "iconUrl": icon.asset->url, linkType, guideSlug, externalUrl } }`;
 
 export async function fetchLearnSection(
   key: LearnSectionKey,
@@ -47,7 +47,7 @@ export async function fetchLearnSection(
   if (!result?.items) return null;
   return result.items.map(item => ({
     label: item.label,
-    iconKey: item.iconKey,
+    iconUrl: item.iconUrl,
     url: resolveLearnItemUrl(item),
   }));
 }
