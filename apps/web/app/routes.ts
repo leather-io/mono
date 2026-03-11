@@ -26,6 +26,8 @@ export default [
     index('pages/advanced/advanced.route.tsx'),
     route('signer-key-generation', 'pages/advanced/tools/signer-key-generation.route.tsx'),
   ]),
+  // A fallback to legacy post routes
+  route('posts/:postSlug', 'pages/posts/post.route.tsx'),
   route('support', 'pages/support/help-center.route.tsx'),
   route('support/search', 'pages/support/search.tsx'),
   route('support/guide/:slug', 'pages/redirects/support-guide-redirect.route.tsx'),
