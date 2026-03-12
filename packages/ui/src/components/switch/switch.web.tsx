@@ -17,7 +17,7 @@ const switchRootStyles = css({
   },
   '&:focus-visible': {
     outline: '2px solid',
-    outlineColor: 'lightModeBlue.500',
+    outlineColor: 'blue.border',
     outlineOffset: '2px',
   },
 });
