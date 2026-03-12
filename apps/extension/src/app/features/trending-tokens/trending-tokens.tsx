@@ -94,8 +94,6 @@ export function TrendingTokens({ onSelectAsset }: TrendingTokensProps) {
         style={{
           maskImage:
             'linear-gradient(to right, transparent, black 40px, black calc(100% - 90px), transparent)',
-          WebkitMaskImage:
-            'linear-gradient(to right, transparent, black 40px, black calc(100% - 90px), transparent)',
         }}
       >
         <Box
@@ -106,17 +104,17 @@ export function TrendingTokens({ onSelectAsset }: TrendingTokensProps) {
           px="space.05"
         >
           <Flex gap="space.02" direction="column">
-          {rows.map(row => (
-            <Flex key={row[0].id} gap="space.02">
-              {row.map(item => (
-                <TrendingTokenCard
-                  key={item.id}
-                  item={item}
-                  onSelectAsset={() => onSelectAsset(item.id)}
-                />
-              ))}
-            </Flex>
-          ))}
+            {rows.map(row => (
+              <Flex key={row[0].id} gap="space.02">
+                {row.map(item => (
+                  <TrendingTokenCard
+                    key={item.id}
+                    item={item}
+                    onSelectAsset={() => onSelectAsset(item.id)}
+                  />
+                ))}
+              </Flex>
+            ))}
           </Flex>
         </Box>
       </Box>
