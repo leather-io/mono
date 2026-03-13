@@ -42,7 +42,7 @@ export function Sip9({
 
   switch (contentType) {
     case 'video/mp4':
-      return <CollectibleVideo src={contentUrl} alt={name} onPress={onPress} />;
+      return <CollectibleVideo src={contentUrl} onPress={onPress} />;
     case 'image/png':
     case 'image/jpeg':
     case 'image/gif':
@@ -67,7 +67,7 @@ export function Sip9({
     case 'text/plain':
     case '':
       if (mediaInfo.isVideo) {
-        return <CollectibleVideo src={contentUrl} alt={name} onPress={onPress} />;
+        return <CollectibleVideo src={contentUrl} onPress={onPress} />;
       }
       return image;
     default:
