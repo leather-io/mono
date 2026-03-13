@@ -10,7 +10,6 @@ import { SwitchAccountLayout } from '@app/components/layout/layouts/switch-accou
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { Container } from '@app/features/container/container';
 import { HomeHeader } from '@app/features/container/headers/home.header';
-import { leatherIntroSheetRoutes } from '@app/features/dialogs/leather-intro-dialog/leather-intro-dialog';
 import { CancelStacksTransactionSheet } from '@app/features/dialogs/transaction-action-dialog/cancel-stacks-transaction-sheet';
 import { IncreaseBtcFeeSheet } from '@app/features/dialogs/transaction-action-dialog/increase-btc-fee-dialog';
 import { IncreaseStacksTransactionFeeSheet } from '@app/features/dialogs/transaction-action-dialog/increase-stacks-fee-sheet';
@@ -195,9 +194,7 @@ function useAppRoutes() {
             }
           />
 
-          <Route path={RouteUrls.Unlock} element={<Unlock />}>
-            {leatherIntroSheetRoutes}
-          </Route>
+          <Route path={RouteUrls.Unlock} element={<Unlock />} />
           <Route path={RouteUrls.UnauthorizedRequest} element={<UnauthorizedRequest />} />
           <Route
             path={RouteUrls.RequestError}

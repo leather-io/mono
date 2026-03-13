@@ -160,9 +160,6 @@ interface HistoricalEvents {
   start_unlock: undefined;
   complete_unlock: { durationMs: number };
   background_analytics_schema_fail: undefined;
-  new_brand_reveal_name: undefined;
-  new_brand_accept_terms: undefined;
-  new_brand_reject_terms: undefined;
   lock_session: undefined;
   remove_network: undefined;
   generate_new_secret_key: undefined;
