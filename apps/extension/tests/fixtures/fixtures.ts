@@ -1,4 +1,5 @@
 import { BrowserContext, Page, test as base, chromium } from '@playwright/test';
+import { CollectibleDetailsPage } from '@tests/page-object-models/collectible-details.page';
 import { GlobalPage } from '@tests/page-object-models/global.page';
 import { HomePage } from '@tests/page-object-models/home.page';
 import { NetworkPage } from '@tests/page-object-models/network.page';
@@ -13,6 +14,7 @@ interface TestFixtures {
   context: BrowserContext;
   page: Page;
   extensionId: string;
+  collectibleDetailsPage: CollectibleDetailsPage;
   globalPage: GlobalPage;
   homePage: HomePage;
   onboardingPage: OnboardingPage;
@@ -68,6 +70,9 @@ export const test = base.extend<TestFixtures>({
     if (!background) background = await context.waitForEvent('serviceworker');
     const extensionId = background.url().split('/')[2];
     await use(extensionId);
+  },
+  collectibleDetailsPage: async ({ page }, use) => {
+    await use(new CollectibleDetailsPage(page));
   },
   globalPage: async ({ page }, use) => {
     await use(new GlobalPage(page));
