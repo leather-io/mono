@@ -105,6 +105,7 @@ Mobile requires an `apps/mobile/.env` file with `EXPO_PUBLIC_LAUNCH_DARKLY` set.
 
 - Conventional commits format with scope: `feat(mobile)`, `refactor(web)`, `fix(utils)`.
 - Imperative language. No body unless explicitly asked.
+- Branches and PRs are always based against `dev`, not `main`.
 
 ## Verification
 
