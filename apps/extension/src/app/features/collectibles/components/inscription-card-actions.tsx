@@ -27,9 +27,10 @@ import { InscriptionCard } from './inscription-card';
 
 interface InscriptionCardActionsProps {
   item: InscriptionAsset;
+  onSelect?(asset: InscriptionAsset): void;
 }
 
-export function InscriptionCardActions({ item }: InscriptionCardActionsProps) {
+export function InscriptionCardActions({ item, onSelect }: InscriptionCardActionsProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isHovered, bind] = useHoverWithChildren();
@@ -47,7 +48,7 @@ export function InscriptionCardActions({ item }: InscriptionCardActionsProps) {
   return (
     <Box position="relative" _hover={{ bg: 'ink.background-secondary' }} width="100%" {...bind}>
       <Box opacity={isDiscarded ? 0.5 : 1}>
-        <InscriptionCard item={item} />
+        <InscriptionCard item={item} onSelect={onSelect} />
       </Box>
 
       {isDiscarded && (
