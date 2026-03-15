@@ -52,8 +52,10 @@ export function SwapForm() {
   }
 
   function handleAssetSheetCloseAutoFocus(e: Event) {
-    e.preventDefault();
-    focusAmountField(amountFieldRef.current);
+    if (state.selectingAsset === 'base') {
+      e.preventDefault();
+      focusAmountField(amountFieldRef.current);
+    }
   }
 
   return (
