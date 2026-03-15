@@ -47,6 +47,9 @@ export function PrimaryValue({
         {currencySign && <CurrencySymbol color={symbolColor}>{currencySign.symbol}</CurrencySymbol>}
         <styled.input
           ref={composedRef}
+          autoCapitalize="off"
+          autoComplete="off"
+          inputMode="decimal"
           textStyle="heading.03"
           fontSize={26}
           lineHeight="28px"
