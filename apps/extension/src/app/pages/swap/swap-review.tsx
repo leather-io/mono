@@ -28,7 +28,9 @@ import {
 import { SwapReviewSummary } from '@app/pages/swap/components/review/swap-review-summary';
 import type { SwapOutletContext } from '@app/pages/swap/swap-container';
 
+import { FeesTooltipContent } from './components/review/fees-tooltip-content';
 import { SlippageSelectorSheet } from './components/review/slippage-selector-sheet';
+import { SwapReviewInfoTooltip } from './components/review/swap-review-info-tooltip';
 import { formatSwapRate, sumFeesInQuoteCurrency } from './swap-utils';
 
 const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
@@ -115,7 +117,13 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         />
 
         {isNonNullish(minReceive) && (
-          <SwapReviewDetailRow label="Min. receive" value={formatCurrency(minReceive)} />
+          <SwapReviewDetailRow
+            label="Min. receive"
+            value={formatCurrency(minReceive)}
+            info={
+              <SwapReviewInfoTooltip label="The guaranteed minimum amount you'll receive based on your slippage tolerance. If the final amount falls below this, the transaction will automatically revert." />
+            }
+          />
         )}
 
         {slippageApplicable && (
@@ -127,6 +135,9 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
                 label={formatPercentage(state.slippage)}
               />
             }
+            info={
+              <SwapReviewInfoTooltip label="The maximum price change you're willing to accept between when you submit and when your swap executes. If the price moves beyond this threshold, the transaction will revert." />
+            }
           />
         )}
 
@@ -134,12 +145,23 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
           <SwapReviewDetailRow
             label="Price impact"
             value={<PriceImpactValue value={priceImpactPercentage} />}
+            info={
+              <SwapReviewInfoTooltip label="The difference between the market price and the price you'll receive due to your trade size relative to the available liquidity. Larger trades typically have higher price impact." />
+            }
           />
         )}
 
         <SwapReviewDivider />
 
-        <SwapReviewDetailRow label="Estimated fees" value={formatCurrency(totalFees)} />
+        <SwapReviewDetailRow
+          label="Estimated fees"
+          value={formatCurrency(totalFees)}
+          info={
+            <SwapReviewInfoTooltip
+              label={<FeesTooltipContent fees={fees} provider={selectedQuote.provider} />}
+            />
+          }
+        />
       </SwapReviewDetails>
 
       <SlippageSelectorSheet
