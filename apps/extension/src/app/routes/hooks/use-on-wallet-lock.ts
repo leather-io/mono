@@ -1,10 +1,11 @@
 import { useOnMount } from '@app/common/hooks/use-on-mount';
-import { inMemoryKeyActions } from '@app/store/in-memory-key/in-memory-key.actions';
+
+const WALLET_LOCK_MESSAGE = 'wallet/lock';
 
 export function useOnWalletLock(handler: () => void) {
   useOnMount(() => {
     chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-      if (message?.method === inMemoryKeyActions.lockWallet.type) handler();
+      if (message?.method === WALLET_LOCK_MESSAGE) handler();
       sendResponse();
     });
   });

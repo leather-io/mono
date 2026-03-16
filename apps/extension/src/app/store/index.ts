@@ -31,7 +31,6 @@ import { persistConfig } from '@shared/storage/redux-persist';
 import { activeSlice } from './active/active.slice';
 import { appPermissionsSlice } from './app-permissions/app-permissions.slice';
 import { stxChainSlice } from './chains/stx-chain.slice';
-import { inMemoryKeySlice } from './in-memory-key/in-memory-key.slice';
 import { manageTokensSlice } from './manage-tokens/manage-tokens.slice';
 import { networksSlice } from './networks/networks.slice';
 import { settingsSlice } from './settings/settings.slice';
@@ -48,7 +47,6 @@ export interface LocalRootState {
   };
   keychains: ReturnType<typeof keychainSlice.reducer>;
   wallets: ReturnType<typeof walletSlice.reducer>;
-  inMemoryKeys: ReturnType<typeof inMemoryKeySlice.reducer>;
   softwareKeys: ReturnType<typeof keySlice.reducer>;
   networks: ReturnType<typeof networksSlice.reducer>;
   submittedTransactions: ReturnType<typeof submittedTransactionsSlice.reducer>;
@@ -67,7 +65,6 @@ const appReducer = combineReducers({
   }),
   keychains: keychainSlice.reducer,
   wallets: walletSlice.reducer,
-  inMemoryKeys: inMemoryKeySlice.reducer,
   softwareKeys: keySlice.reducer,
   networks: networksSlice.reducer,
   submittedTransactions: submittedTransactionsSlice.reducer,

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { validateMnemonic } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
 
+import { getMnemonicRootKeyFingerprint } from '@leather.io/crypto';
 import { resetWallet } from '@leather.io/state';
 import { delay } from '@leather.io/utils';
 
@@ -11,7 +12,8 @@ import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useAppDispatch } from '@app/store';
-import { inMemoryKeyActions } from '@app/store/in-memory-key/in-memory-key.actions';
+import { walletKeyGenerated } from '@app/store/active/active.slice';
+import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { useLoading } from '@app/store/ui/ui.hooks';
 
 async function simulateShortDelayToAvoidImmediateNavigation() {
@@ -59,7 +61,9 @@ export function useSignIn() {
       await simulateShortDelayToAvoidImmediateNavigation();
 
       dispatch(resetWallet());
-      dispatch(inMemoryKeyActions.generateWalletKey(parsedKeyInput));
+      const fingerprint = getMnemonicRootKeyFingerprint(parsedKeyInput);
+      inMemoryStore.setKey(fingerprint, parsedKeyInput);
+      dispatch(walletKeyGenerated(fingerprint));
       analytics.track('submit_valid_secret_key');
       void navigate(RouteUrls.SetPassword);
       setIsIdle();

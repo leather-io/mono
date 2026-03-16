@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { generateMnemonic } from '@leather.io/crypto';
+import { generateMnemonic, getMnemonicRootKeyFingerprint } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
 import { resetWallet } from '@leather.io/state';
 
@@ -16,10 +16,10 @@ import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { useBnsV2Client } from '@app/query/stacks/bns/bns-v2-client';
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
-import { userSwitchesAccount } from '@app/store/active/active.slice';
+import { userSwitchesAccount, walletKeyGenerated } from '@app/store/active/active.slice';
 import { createNewAccount } from '@app/store/chains/stx-chain.actions';
 import { useStacksClient } from '@app/store/common/api-clients.hooks';
-import { inMemoryKeyActions } from '@app/store/in-memory-key/in-memory-key.actions';
+import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { clearWalletSession } from '@app/store/session-restore';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
 import { useActiveSoftwareKey } from '@app/store/software-keys/software-key.selectors';
@@ -45,7 +45,10 @@ export function useKeyActions() {
           logger.warn('Cannot generate new wallet when wallet already exists');
           return;
         }
-        return dispatch(inMemoryKeyActions.generateWalletKey(generateMnemonic()));
+        const mnemonic = generateMnemonic();
+        const fingerprint = getMnemonicRootKeyFingerprint(mnemonic);
+        inMemoryStore.setKey(fingerprint, mnemonic);
+        dispatch(walletKeyGenerated(fingerprint));
       },
 
       unlockWallet(password: string) {
@@ -76,7 +79,7 @@ export function useKeyActions() {
 
       async lockWallet({ afterLock }: { afterLock?(): void }) {
         await clearWalletSession();
-        dispatch(inMemoryKeyActions.lockWallet());
+        inMemoryStore.clearAll();
         afterLock?.();
         window.location.reload();
       },

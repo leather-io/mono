@@ -27,7 +27,7 @@ import { getNativeSegwitMainnetAddressFromMnemonic } from '../accounts/blockchai
 import { getStacksAddressByIndex } from '../accounts/blockchain/stacks/stacks-keychain';
 import { stxChainSlice } from '../chains/stx-chain.slice';
 import { selectActiveWalletKey } from '../in-memory-key/in-memory-key.selectors';
-import { inMemoryKeySlice } from '../in-memory-key/in-memory-key.slice';
+import * as inMemoryStore from '../in-memory-key/in-memory-storage';
 import { selectWalletEntities } from '../wallets/wallet.selectors';
 import { selectSoftwareKeys, selectWalletSalt } from './software-key.selectors';
 import { keySlice } from './software-key.slice';
@@ -187,7 +187,9 @@ function unlockWalletAction(password: string): AppThunk {
 
     await initalizeWalletSession(decryptedResults[0].encryptionKey);
 
-    dispatch(inMemoryKeySlice.actions.setWalletKeys(decryptedResults));
+    for (const { fingerprint, secretKey } of decryptedResults) {
+      inMemoryStore.setKey(fingerprint, secretKey);
+    }
 
     const firstDecryptedResult = decryptedResults[0];
 
