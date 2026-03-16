@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 import { Box, Flex } from 'leather-styles/jsx';
@@ -19,6 +19,7 @@ interface SwitchAccountSheetProps {
 }
 export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetProps) {
   const currentAccountId = useCurrentAccountId();
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
 
   const createAccount = useCreateAccount();
   const { whenWallet } = useWalletType();
@@ -30,9 +31,12 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
     [walletTree, currentAccountId.fingerprint]
   );
 
-  async function onCreateAccount() {
-    await createAccount();
-    onClose();
+  function onCreateAccount() {
+    setIsCreatingAccount(true);
+    requestIdleCallback(async () => {
+      await createAccount();
+      onClose();
+    });
   }
 
   // #4370 SMELL without this early return the wallet crashes on new install with
@@ -71,7 +75,12 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
               boxShadow="contentOverflowFade"
               p="space.05"
             >
-              <Button fullWidth onClick={onCreateAccount} data-testid="create-account-btn">
+              <Button
+                fullWidth
+                onClick={onCreateAccount}
+                data-testid="create-account-btn"
+                aria-busy={isCreatingAccount}
+              >
                 Create new account
               </Button>
             </Flex>

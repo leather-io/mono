@@ -4,6 +4,7 @@ import { logger } from '@shared/logger';
 
 import { AppThunk } from '@app/store';
 
+import { userSwitchesAccount } from '../active/active.slice';
 import { selectRootKeychains } from '../in-memory-key/in-memory-key.selectors';
 import { selectStacksChain } from './stx-chain.selectors';
 import { stxChainSlice } from './stx-chain.slice';
@@ -26,6 +27,8 @@ export function createNewAccount(fingerprint: string): AppThunk {
 
     const stacksDescriptor = stacksRootKeychainToAccountDescriptorV2(keychain, highestIndex + 1);
 
+    const newAccountIndex = highestIndex + 1;
+
     dispatch(
       stxChainSlice.actions.createNewAccount({
         fingerprint,
@@ -33,9 +36,16 @@ export function createNewAccount(fingerprint: string): AppThunk {
       })
     );
 
+    dispatch(
+      userSwitchesAccount({
+        fingerprint,
+        accountIndex: newAccountIndex,
+      })
+    );
+
     logger.info('Account created for wallet', {
       fingerprint,
-      accountIndex: highestIndex + 1,
+      accountIndex: newAccountIndex,
     });
   };
 }
