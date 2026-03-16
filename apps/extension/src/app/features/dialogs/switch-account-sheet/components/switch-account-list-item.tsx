@@ -14,6 +14,7 @@ import { AccountListItemLayout } from '@app/components/account/account-list-item
 import { AccountNameLayout } from '@app/components/account/account-name';
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { WalletType } from '@app/store/common/wallet-type.selectors';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 import { useLoading } from '@app/store/ui/ui.hooks';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
@@ -21,8 +22,13 @@ import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/acc
 interface SwitchAccountListItemProps {
   accountId: AccountId;
   handleClose(): void;
+  walletType: WalletType;
 }
-export function SwitchAccountListItem({ accountId, handleClose }: SwitchAccountListItemProps) {
+export function SwitchAccountListItem({
+  accountId,
+  handleClose,
+  walletType,
+}: SwitchAccountListItemProps) {
   const stacksAccount = useStacksAccount(accountId);
   const stxAddress = stacksAccount?.address ?? '';
   const bitcoinSigner = useNativeSegwitPayer(accountId);
@@ -68,6 +74,7 @@ export function SwitchAccountListItem({ accountId, handleClose }: SwitchAccountL
       isLoading={isLoading}
       isSelected={isSelected}
       onSelectAccount={handleClick}
+      walletType={walletType}
     />
   );
 }

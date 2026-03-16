@@ -3,7 +3,7 @@ import { GroupedVirtuoso } from 'react-virtuoso';
 
 import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
 
-import { Button, PlusIcon, Pressable, Sheet, SheetHeader } from '@leather.io/ui';
+import { Button, PlusIcon, Pressable, Sheet, SheetHeader, WalletPlusIcon } from '@leather.io/ui';
 
 import { useCreateAccount } from '@app/common/hooks/account/use-create-account';
 import { useCurrentAccountId } from '@app/store/accounts/account';
@@ -141,7 +141,7 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
             minWidth={0}
             p="space.05"
           >
-            <Button onClick={onAddWallet} variant="outline" flex={1}>
+            <Button onClick={onAddWallet} variant="outline" flex={1} iconStart={<WalletPlusIcon />}>
               Add wallet
             </Button>
             <Button onClick={onManage} variant="outline" flex={1}>
