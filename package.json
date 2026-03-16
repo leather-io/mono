@@ -91,7 +91,13 @@
       "minimatch@9": "9.0.7",
       "minimatch@10": "10.2.3",
       "svgo@>=3.0.0": ">=3.3.3",
-      "serialize-javascript": "7.0.3"
+      "serialize-javascript": "7.0.3",
+      "@expo/cli>undici": ">=7.24.0",
+      "ws@>=8.0.0 <8.17.1": ">=8.17.1",
+      "seroval@<=1.4.0": ">=1.4.1",
+      "seroval@<1.4.1": ">=1.4.1",
+      "undici@>=7.0.0 <7.24.0": ">=7.24.0",
+      "undici@<6.24.0": ">=6.24.0"
     },
     "patchedDependencies": {
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
