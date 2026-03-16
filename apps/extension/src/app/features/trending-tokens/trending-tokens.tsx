@@ -61,7 +61,7 @@ export function TrendingTokens() {
             label="Tokens trending across the Stacks ecosystem, ranked by recent trading activity."
             side={isLargeScreen ? 'right' : 'top'}
           >
-            <InfoCircleIcon color="ink.text-subdued-secondary" variant="small" />
+            <InfoCircleIcon color="ink.text-subdued-primary" variant="small" />
           </BasicTooltip>
         </Flex>
         {!isLargeScreen && (

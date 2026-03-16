@@ -16,7 +16,7 @@ export function HeaderTitle({ title, testID }: HeaderTitleProps) {
 
 export function HeaderSubtitle({ title }: HeaderTitleProps) {
   return (
-    <Text variant="label03" color="ink.text-subdued-secondary">
+    <Text variant="label03" color="ink.text-subdued-primary">
       {title}
     </Text>
   );

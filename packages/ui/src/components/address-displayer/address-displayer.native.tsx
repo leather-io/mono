@@ -14,7 +14,7 @@ export function AddressDisplayer({ address, ...props }: AddressDisplayerProps) {
         <Text
           key={index}
           variant="address"
-          color={isEven(index) ? 'ink.text-primary' : 'ink.text-subdued-secondary'}
+          color={isEven(index) ? 'ink.text-primary' : 'ink.text-subdued-primary'}
           {...props}
         >
           {letterGroup}

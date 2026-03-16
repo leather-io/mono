@@ -17,7 +17,7 @@ export function TabButton({ title, onPress, isActive }: TabButtonProps) {
       justifyContent="center"
       alignItems="center"
     >
-      <Text variant="label01" color={isActive ? 'ink.text-primary' : 'ink.text-subdued-secondary'}>
+      <Text variant="label01" color={isActive ? 'ink.text-primary' : 'ink.text-subdued-primary'}>
         {title}
       </Text>
     </Pressable>

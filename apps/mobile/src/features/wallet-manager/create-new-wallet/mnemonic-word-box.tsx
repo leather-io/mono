@@ -10,7 +10,7 @@ export function MnemonicWordBox({ wordIdx, word }: MnemonicWordBoxProps) {
     <Box flexGrow={1}>
       <Box flexDirection="row" alignItems="center" height={32} minWidth={100}>
         <Box width={24} justifyContent="center" alignItems="center">
-          <Text variant="label03" color="ink.text-subdued-secondary">
+          <Text variant="label03" color="ink.text-subdued-primary">
             {wordIdx}
           </Text>
         </Box>

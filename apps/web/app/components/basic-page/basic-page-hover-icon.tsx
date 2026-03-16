@@ -22,7 +22,7 @@ export function BasicPageHoverIcon({
   description,
   iconColor = 'black',
 }: BasicPageHoverIconProps) {
-  const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued-secondary';
+  const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued-primary';
 
   /**
    * Handle click on the info icon button

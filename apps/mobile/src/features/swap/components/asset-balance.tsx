@@ -29,7 +29,7 @@ export function AssetBalance({ balance, inputCurrencyMode }: AssetBalanceProps) 
         >
           <Balance
             variant="label03"
-            color="ink.text-subdued-secondary"
+            color="ink.text-subdued-primary"
             balance={displayBalance}
             formattingOptions={{ showCurrency: inputCurrencyMode === 'quote' }}
           />

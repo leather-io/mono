@@ -27,7 +27,7 @@ export function AssetSelectorItem({
       <Cell.Content>
         <Cell.Label variant="primary">{name}</Cell.Label>
         {balance && (
-          <Cell.Label variant="primary" color="ink.text-subdued-secondary">
+          <Cell.Label variant="primary" color="ink.text-subdued-primary">
             {formatCurrency(balance)}
           </Cell.Label>
         )}

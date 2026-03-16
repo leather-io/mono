@@ -31,7 +31,7 @@ export function NotFoundContent({ onGoHome }: NotFoundContentProps) {
         <styled.h2 textStyle="heading.04" data-testid="not-found-heading">
           Lost in the stack
         </styled.h2>
-        <styled.p textStyle="body.02" color="ink.text-subdued-secondary" textAlign="center">
+        <styled.p textStyle="body.02" color="ink.text-subdued-primary" textAlign="center">
           We could not find what you're looking for. The link you clicked may be broken or the page
           may have been removed.
         </styled.p>

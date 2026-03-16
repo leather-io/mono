@@ -44,7 +44,7 @@ export function BaseFeeCard({
               <Balance
                 balance={quoteAmount}
                 variant="label02"
-                color="ink.text-subdued-secondary"
+                color="ink.text-subdued-primary"
                 forceVisible
               />
             </Box>

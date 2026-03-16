@@ -6,7 +6,7 @@ function getBorderColor(isActive: boolean) {
   return isActive ? 'ink.action-primary-default' : 'ink.border-default';
 }
 function getTextColor(isActive: boolean) {
-  return isActive ? 'ink.text-primary' : 'ink.text-subdued-secondary';
+  return isActive ? 'ink.text-primary' : 'ink.text-subdued-primary';
 }
 interface Tab {
   isActive: boolean;

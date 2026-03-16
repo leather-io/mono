@@ -76,7 +76,7 @@ export function AssetCell({ asset }: AssetCellProps) {
         <styled.p textStyle="body.02" fontWeight="medium">
           {name}
         </styled.p>
-        <styled.p textStyle="caption.01" color="ink.text-subdued-secondary">
+        <styled.p textStyle="caption.01" color="ink.text-subdued-primary">
           {symbol}
         </styled.p>
       </Box>
@@ -96,7 +96,7 @@ export function BalanceCell({ balance, value }: BalanceCellProps) {
   return (
     <Flex alignItems="flex-end" flexDir="column" gap="space.01">
       <styled.p textStyle="body.02">{value}</styled.p>
-      <styled.span textStyle="caption.01" color="ink.text-subdued-secondary">
+      <styled.span textStyle="caption.01" color="ink.text-subdued-primary">
         {balance}
       </styled.span>
     </Flex>
@@ -113,9 +113,9 @@ export function HeaderCell({ children, justifyContent, sortState }: HeaderCellPr
     <Flex alignItems="center" gap="space.01" justifyContent={justifyContent}>
       {children}
       {sortState === 'desc' && (
-        <ChevronDownIcon variant="small" color="ink.text-subdued-secondary" />
+        <ChevronDownIcon variant="small" color="ink.text-subdued-primary" />
       )}
-      {sortState === 'asc' && <ChevronUpIcon variant="small" color="ink.text-subdued-secondary" />}
+      {sortState === 'asc' && <ChevronUpIcon variant="small" color="ink.text-subdued-primary" />}
     </Flex>
   );
 }

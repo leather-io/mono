@@ -35,7 +35,7 @@ export function SwapAssetItemLayout({ caption, icon, symbol, value }: SwapAssetI
       spacing="space.03"
       width="100%"
     >
-      <styled.span color="ink.text-subdued-secondary" textStyle="caption.01">
+      <styled.span color="ink.text-subdued-primary" textStyle="caption.01">
         {caption}
       </styled.span>
       <HStack alignItems="center" justifyContent="space-between">

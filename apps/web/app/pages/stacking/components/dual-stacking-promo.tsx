@@ -13,7 +13,7 @@ export function DualStackingPromo() {
         <styled.h3 textStyle="heading.05" mt="space.03">
           Up to 5% APY in sBTC
         </styled.h3>
-        <styled.p textStyle="label.02" color="ink.text-subdued-secondary" mt="space.01">
+        <styled.p textStyle="label.02" color="ink.text-subdued-primary" mt="space.01">
           Use Leather to Dual Stack and earn sBTC yield
         </styled.p>
       </Flex>

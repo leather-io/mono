@@ -20,7 +20,7 @@ export function StackingConditions({ conditions }: StackingConditionsProps) {
           <Box flexShrink={0}>{condition.icon}</Box>
           <Stack gap="0">
             <styled.span textStyle="label.03">{condition.title}</styled.span>
-            <styled.span textStyle="caption.01" color="ink.text-subdued-secondary">
+            <styled.span textStyle="caption.01" color="ink.text-subdued-primary">
               {condition.description}
             </styled.span>
           </Stack>

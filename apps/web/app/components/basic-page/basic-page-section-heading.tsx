@@ -49,7 +49,7 @@ export function BasicPageSectionHeading({
         {disclaimer && (
           <styled.p
             textStyle="body.02"
-            color="ink.text-subdued-secondary"
+            color="ink.text-subdued-primary"
             mb="space.01"
             borderRadius="sm"
           >

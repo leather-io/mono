@@ -47,7 +47,7 @@ export function ChooseStackingAmount({
         />
       </Box>
 
-      <Box textStyle="body.02" color="ink.text-subdued-secondary" aria-busy={isLoading}>
+      <Box textStyle="body.02" color="ink.text-subdued-primary" aria-busy={isLoading}>
         <styled.span textStyle="caption">Available balance:</styled.span>
         {isLoading && <Spinner />}
         {!isLoading && availableAmount && (
@@ -65,7 +65,7 @@ export function ChooseStackingAmount({
       </Box>
 
       {stackedAmount?.isGreaterThan(0) && (
-        <Box textStyle="body.02" color="ink.text-subdued-secondary" aria-busy={isLoading}>
+        <Box textStyle="body.02" color="ink.text-subdued-primary" aria-busy={isLoading}>
           <styled.span textStyle="caption">Minimum amount:</styled.span>
           <Button
             variant="ghost"

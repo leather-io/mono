@@ -27,11 +27,11 @@ export function FeesRowLayout(props: FeesRowLayoutProps) {
         <HStack alignItems="center" width="100%">
           <BasicTooltip label={feesInfo} side="bottom">
             <HStack gap="space.01">
-              <styled.span color="ink.text-subdued-secondary" textStyle="label.02">
+              <styled.span color="ink.text-subdued-primary" textStyle="label.02">
                 Fee
               </styled.span>
               <InfoCircleIcon
-                color="ink.text-subdued-secondary"
+                color="ink.text-subdued-primary"
                 onClick={() => openInNewTab(url)}
                 variant="small"
               />

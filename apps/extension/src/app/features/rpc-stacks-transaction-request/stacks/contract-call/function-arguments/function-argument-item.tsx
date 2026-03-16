@@ -97,12 +97,12 @@ export function FunctionArgumentItem({ name, type, value }: FunctionArgumentItem
     <Stack gap="space.03">
       <HStack alignItems="center" flexShrink={0} justifyContent="space-between">
         {name && (
-          <styled.span color="ink.text-subdued-secondary" textStyle="caption.01">
+          <styled.span color="ink.text-subdued-primary" textStyle="caption.01">
             {name}
           </styled.span>
         )}
         {type && (
-          <styled.span color="ink.text-subdued-secondary" textStyle="caption.01">
+          <styled.span color="ink.text-subdued-primary" textStyle="caption.01">
             {type}
           </styled.span>
         )}

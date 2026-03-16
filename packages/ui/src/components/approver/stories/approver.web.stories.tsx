@@ -119,7 +119,7 @@ export const Pending: Story = {
           info={
             <BasicTooltip label="Greetings, traveler">
               <Box p="space.02">
-                <QuestionCircleIcon color="ink.text-subdued-secondary" variant="small" />
+                <QuestionCircleIcon color="ink.text-subdued-primary" variant="small" />
               </Box>
             </BasicTooltip>
           }

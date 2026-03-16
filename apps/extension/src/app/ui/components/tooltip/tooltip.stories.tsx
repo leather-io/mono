@@ -25,7 +25,7 @@ export const Tooltip: Story = {
     <RadixTooltip.Provider delayDuration={300}>
       <Component {...args}>
         <Box>
-          <InfoCircleIcon color="ink.text-subdued-secondary" variant="small" />
+          <InfoCircleIcon color="ink.text-subdued-primary" variant="small" />
         </Box>
       </Component>
     </RadixTooltip.Provider>

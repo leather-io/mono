@@ -15,7 +15,7 @@ interface UseAmountFieldParams {
 const colorAnimationConfig = { duration: 200, easing: Easing.ease };
 
 const textColorByVariant: Record<Variant, keyof Theme['colors']> = {
-  initial: 'ink.text-subdued-secondary',
+  initial: 'ink.text-subdued-primary',
   active: 'ink.text-primary',
   invalid: 'red.action-primary-default',
 };

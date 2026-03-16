@@ -84,7 +84,7 @@ export function BitcoinCustomFee({
           <Stack gap="space.06" mt="space.02">
             <Stack gap="space.05">
               <styled.span
-                color="ink.text-subdued-secondary"
+                color="ink.text-subdued-primary"
                 textStyle="body.02"
                 maxWidth="21.5rem"
               >

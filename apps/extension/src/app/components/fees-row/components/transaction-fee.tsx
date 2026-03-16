@@ -14,7 +14,7 @@ interface TransactionFeeProps {
 export function TransactionFee({ fee, feeCurrencySymbol, usdAmount }: TransactionFeeProps) {
   const feeLabel = (
     <styled.span
-      color="ink.text-subdued-secondary"
+      color="ink.text-subdued-primary"
       data-testid={SharedComponentsSelectors.FeeToBePaidLabel}
       textStyle="label.02"
     >

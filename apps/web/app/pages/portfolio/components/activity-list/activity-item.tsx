@@ -42,7 +42,7 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
             <styled.p textStyle="body.02" fontWeight="medium">
               {title}
             </styled.p>
-            <styled.p textStyle="caption.01" color="ink.text-subdued-secondary">
+            <styled.p textStyle="caption.01" color="ink.text-subdued-primary">
               {caption}
             </styled.p>
           </Flex>
@@ -63,7 +63,7 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
               balance={balances.crypto}
               formattingOptions={{ showCurrency: false }}
               textStyle="caption.01"
-              color="ink.text-subdued-secondary"
+              color="ink.text-subdued-primary"
               formatCurrency={formatCurrency}
             />
           ) : null}

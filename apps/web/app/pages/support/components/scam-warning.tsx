@@ -7,7 +7,7 @@ export function ScamWarning() {
     <Box mb="space.07" bg="ink.background-secondary" p="space.04" borderRadius="md">
       <Box display="flex" justifyContent="space-between" mb="space.02" pr="space.03">
         <styled.h4 textStyle="label.02">Stay safe from scams</styled.h4>
-        <InfoCircleIcon color="ink.text-subdued-secondary" variant="medium" />
+        <InfoCircleIcon color="ink.text-subdued-primary" variant="medium" />
       </Box>
       <styled.p textStyle="caption.01" color="ink.action-primary-hover">
         Leather will never contact you first via direct messages on any platform. If someone reaches

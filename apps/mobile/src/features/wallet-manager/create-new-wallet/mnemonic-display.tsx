@@ -14,7 +14,7 @@ import { MnemonicWordBox } from './mnemonic-word-box';
 function PassphraseDisplay({ passphrase }: { passphrase: string }) {
   return (
     <Box>
-      <Text variant="label03" color="ink.text-subdued-secondary">
+      <Text variant="label03" color="ink.text-subdued-primary">
         {t`BIP39 passphrase`}
       </Text>
       <Text variant="label02">{passphrase}</Text>

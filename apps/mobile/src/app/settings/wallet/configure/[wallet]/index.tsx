@@ -187,7 +187,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
                 content={
                   <SettingsList mx="-5">
                     {Object.values(
-                      getUnavailableFeatures({ iconColor: 'ink.text-subdued-secondary' })
+                      getUnavailableFeatures({ iconColor: 'ink.text-subdued-primary' })
                     ).map(feature => (
                       <SettingsListItem
                         key={feature.id}
@@ -209,7 +209,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
 
           <Box py="3" px="5">
             <Text variant="caption01">{t`Creation date`}</Text>
-            <Text variant="caption01" color="ink.text-subdued-secondary">
+            <Text variant="caption01" color="ink.text-subdued-primary">
               {dayjs(wallet.createdOn).format('D MMM YYYY')}
             </Text>
           </Box>

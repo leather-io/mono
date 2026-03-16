@@ -24,7 +24,7 @@ function BridgeToSbtcCell() {
             textStyle="caption.01"
             mt="space.01"
             mr="space.05"
-            color="ink.text-subdued-secondary"
+            color="ink.text-subdued-primary"
           >
             Bridge BTC to Stacks using the sBTC protocol and unlock new ways to earn Bitcoin through
             DeFi apps in Leather.
@@ -76,7 +76,7 @@ function SwapStxToSbtcCell() {
             textStyle="caption.01"
             mt="space.01"
             mr="space.05"
-            color="ink.text-subdued-secondary"
+            color="ink.text-subdued-primary"
           >
             Swap assets like STX, sBTC, and stablecoins directly from your Leather wallet using
             integrated DeFi protocols.

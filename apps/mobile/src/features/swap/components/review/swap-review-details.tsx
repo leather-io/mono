@@ -59,7 +59,7 @@ export function SwapReviewDetailRow({ label, value, info }: SwapReviewDetailRowP
       alignItems="center"
     >
       <Box flexDirection="row" alignItems="center">
-        {renderTextOrNode(label, { variant: 'label02', color: 'ink.text-subdued-secondary' })}
+        {renderTextOrNode(label, { variant: 'label02', color: 'ink.text-subdued-primary' })}
         {info}
       </Box>
 

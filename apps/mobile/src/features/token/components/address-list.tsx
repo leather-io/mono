@@ -72,7 +72,7 @@ export function AddressListItem({
           <Balance balance={availableBalance} variant="label02" />
         </Cell.Label>
         <Cell.Label variant="secondary">
-          <Balance balance={quoteBalance} variant="caption01" color="ink.text-subdued-secondary" />
+          <Balance balance={quoteBalance} variant="caption01" color="ink.text-subdued-primary" />
         </Cell.Label>
       </Cell.Aside>
     </Cell.Root>

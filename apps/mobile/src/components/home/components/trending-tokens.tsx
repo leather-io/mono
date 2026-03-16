@@ -43,7 +43,7 @@ export function TrendingTokens() {
         pb="3"
       >
         <Text variant="label01">{t`Trending tokens`}</Text>
-        <InfoCircleIcon variant="small" color="ink.text-subdued-secondary" />
+        <InfoCircleIcon variant="small" color="ink.text-subdued-primary" />
       </Pressable>
       <ScrollView
         horizontal

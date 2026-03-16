@@ -29,7 +29,7 @@ export function CurrencyModeSwitcher({ secondaryAmount, onModeSwitch }: Currency
         return <PendingIndicator />;
       case 'error':
         return (
-          <Text variant="label02" color="ink.text-subdued-secondary">
+          <Text variant="label02" color="ink.text-subdued-primary">
             {emptyAmountPlaceholder}
           </Text>
         );
@@ -43,10 +43,10 @@ export function CurrencyModeSwitcher({ secondaryAmount, onModeSwitch }: Currency
             alignItems="center"
             gap="1"
           >
-            <Text variant="label03" color="ink.text-subdued-secondary" style={{ top: 1 }}>
+            <Text variant="label03" color="ink.text-subdued-primary" style={{ top: 1 }}>
               {formatCurrency(secondaryAmount.value)}
             </Text>
-            <ArrowTopBottomIcon variant="small" color="ink.text-subdued-secondary" />
+            <ArrowTopBottomIcon variant="small" color="ink.text-subdued-primary" />
           </AnimatedBox>
         );
       default:

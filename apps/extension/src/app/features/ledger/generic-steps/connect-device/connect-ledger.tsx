@@ -116,7 +116,7 @@ export function ConnectLedger(props: ConnectLedgerProps) {
         <Stack gap="space.05" width="100%">
           <Divider />
           <Stack alignItems="center" gap="space.01">
-            <styled.span textStyle="label.03" color="ink.text-subdued-secondary">
+            <styled.span textStyle="label.03" color="ink.text-subdued-primary">
               First time using Ledger on Leather?
             </styled.span>
             <Link

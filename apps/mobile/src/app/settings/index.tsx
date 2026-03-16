@@ -142,7 +142,7 @@ export default function SettingsScreen() {
 
         <Box>
           <Text variant="label02">{t`Version`}</Text>
-          <Text variant="caption01" color="ink.text-subdued-secondary">
+          <Text variant="caption01" color="ink.text-subdued-primary">
             {Application.nativeApplicationVersion} / {Application.nativeBuildVersion}
           </Text>
         </Box>
@@ -156,7 +156,7 @@ export default function SettingsScreen() {
               justifyContent="space-between"
               onPress={handleCopyDeviceIdToClipboard}
             >
-              <Text variant="caption01" color="ink.text-subdued-secondary">
+              <Text variant="caption01" color="ink.text-subdued-primary">
                 {deviceId}
               </Text>
               <CopyIcon variant="small" style={{ marginTop: -2 }} />

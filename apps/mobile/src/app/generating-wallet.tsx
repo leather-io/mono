@@ -19,7 +19,7 @@ export default function GeneratingWalletScreen() {
         justifyContent="center"
         alignItems="center"
       >
-        <Text variant="heading04" color="ink.text-subdued-secondary">
+        <Text variant="heading04" color="ink.text-subdued-primary">
           {t`Adding wallet...`}
         </Text>
       </Box>

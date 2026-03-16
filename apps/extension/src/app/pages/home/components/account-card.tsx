@@ -44,7 +44,7 @@ export function AccountCard() {
               spacing="space.01"
               img={
                 <InfoCircleIcon
-                  color="ink.text-subdued-secondary"
+                  color="ink.text-subdued-primary"
                   display="inline"
                   variant="small"
                 />
@@ -106,7 +106,7 @@ export function AccountCard() {
                         spacing="space.01"
                         img={
                           <InfoCircleIcon
-                            color="ink.text-subdued-secondary"
+                            color="ink.text-subdued-primary"
                             display="inline"
                             variant="small"
                           />

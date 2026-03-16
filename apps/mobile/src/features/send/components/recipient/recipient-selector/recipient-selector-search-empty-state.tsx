@@ -8,7 +8,7 @@ export function RecipientSelectorSearchEmptyState() {
       <Text textAlign="center" variant="label01">
         {t`No results found`}
       </Text>
-      <Text textAlign="center" variant="label02" color="ink.text-subdued-secondary">
+      <Text textAlign="center" variant="label02" color="ink.text-subdued-primary">
         {t`The address you entered isn’t valid. Verify and try again`}
       </Text>
     </Box>

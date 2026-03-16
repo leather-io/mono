@@ -16,7 +16,7 @@ const theme: PrismTheme = {
     {
       types: ['comment', 'punctuation'],
       style: {
-        color: token('colors.ink.text-subdued-secondary'),
+        color: token('colors.ink.text-subdued-primary'),
       },
     },
     {
@@ -87,7 +87,7 @@ function LineNumber({ number, length, ...rest }: { number: number; length: numbe
       width={lineNumberWidth}
       borderRight="1px solid"
       borderRightColor="inherit"
-      color="ink.text-subdued-secondary"
+      color="ink.text-subdued-primary"
       flexShrink={0}
       style={{ userSelect: 'none' }}
       position="absolute"
@@ -129,7 +129,7 @@ function Line({
           ? undefined
           : {
               bg: ['unset', 'unset', 'ink.background-secondary'],
-              borderColor: ['ink.text-primary', 'ink.text-primary', 'ink.text-subdued-secondary'],
+              borderColor: ['ink.text-primary', 'ink.text-primary', 'ink.text-subdued-primary'],
             }
       }
       position="relative"

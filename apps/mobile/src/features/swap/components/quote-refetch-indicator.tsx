@@ -24,7 +24,7 @@ export function QuoteRefetchIndicator({
       initialValue={progress.initialValue}
       duration={progress.duration}
       max={1}
-      activeStrokeColor={theme.colors['ink.text-subdued-secondary']}
+      activeStrokeColor={theme.colors['ink.text-subdued-primary']}
       key={nextRunTime}
     />
   );

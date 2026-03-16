@@ -61,7 +61,7 @@ export function CollectiblesMarketplaces() {
 
           <Stack gap="space.01" flex="1" minWidth={0}>
             <styled.span textStyle="label.01">{item.name}</styled.span>
-            <styled.span textStyle="caption.01" color="ink.text-subdued-secondary">
+            <styled.span textStyle="caption.01" color="ink.text-subdued-primary">
               {item.description}
             </styled.span>
           </Stack>

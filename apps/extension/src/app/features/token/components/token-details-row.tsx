@@ -19,7 +19,7 @@ export function TokenDetailsRow({ label, value, valueAction, testId }: TokenDeta
       justifyContent="space-between"
       data-testid={testId}
     >
-      <styled.span textStyle="label.03" color="ink.text-subdued-secondary">
+      <styled.span textStyle="label.03" color="ink.text-subdued-primary">
         {label}
       </styled.span>
       {valueAction ? (
