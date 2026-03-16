@@ -1,5 +1,6 @@
 import { type Dispatch, type SetStateAction, useEffect } from 'react';
 
+import type { AccountId } from '@leather.io/models';
 import { RunesAvatarIcon } from '@leather.io/ui';
 import { type SerializedCryptoAssetId, getAssetId, serializeAssetId } from '@leather.io/utils';
 
@@ -15,7 +16,7 @@ import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 import type { AssetRightElementVariant } from '../../token-list';
 
 interface RunesAssetListProps {
-  accountIndex: number;
+  accountId: AccountId;
   filter?: AssetFilter;
   assetRightElementVariant?: AssetRightElementVariant;
   onSelectAsset?(assetId: SerializedCryptoAssetId): void;
@@ -23,17 +24,17 @@ interface RunesAssetListProps {
 }
 
 export function RunesAssetList({
-  accountIndex,
+  accountId,
   filter = 'all',
   assetRightElementVariant,
   onSelectAsset,
   setHasManageableTokens,
 }: RunesAssetListProps) {
   const isPrivate = useIsPrivateMode();
-  const runes = useRunesAccountBalance(accountIndex, {
+  const runes = useRunesAccountBalance(accountId, {
     includeHiddenAssets: filter === 'all',
   });
-  const { isEnabled } = useManagedRunesTools(accountIndex);
+  const { isEnabled } = useManagedRunesTools(accountId);
 
   useEffect(() => {
     if (runes.value && runes.value.runes.length > 0 && setHasManageableTokens) {

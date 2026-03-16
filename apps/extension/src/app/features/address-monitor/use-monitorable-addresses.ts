@@ -1,38 +1,20 @@
 import { useMemo } from 'react';
 
-import type { HDKey } from '@scure/bip32';
-import type { P2Ret } from '@scure/btc-signer/payment';
-
-import {
-  type SupportedPaymentType,
-  deriveAddressIndexZeroFromAccount,
-  getNativeSegwitPaymentFromAddressIndex,
-  getTaprootPaymentFromAddressIndex,
-} from '@leather.io/bitcoin';
-import type { BitcoinNetworkModes } from '@leather.io/models';
+import { type SupportedPaymentType, deriveBitcoinPayerFromAccount } from '@leather.io/bitcoin';
 import { createNullArrayOfLength, isDefined } from '@leather.io/utils';
 
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
-import { useGenerateNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useGenerateTaprootAccount } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useBitcoinAccountLookup } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
 import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetworkId } from '@app/store/networks/networks.selectors';
 import type { MonitoredAddress } from '@background/monitors/address-monitor';
 
-const paymentFnMap: Record<
-  SupportedPaymentType,
-  (keychain: HDKey, network: BitcoinNetworkModes) => P2Ret
-> = {
-  p2tr: getTaprootPaymentFromAddressIndex,
-  p2wpkh: getNativeSegwitPaymentFromAddressIndex,
-};
+const paymentTypes: SupportedPaymentType[] = ['p2wpkh', 'p2tr'];
 
 export function useMonitorableAddresses() {
-  const currentAccountIndex = useCurrentAccountIndex();
+  const currentAccount = useCurrentAccountId();
   const currentNetworkId = useCurrentNetworkId();
-  const createNativeSegwitAccount = useGenerateNativeSegwitAccount();
-  const createTaprootAccount = useGenerateTaprootAccount();
-
+  const bitcoinAccountLookup = useBitcoinAccountLookup();
   const stacksAccounts = useStacksAccounts();
 
   return useMemo(() => {
@@ -44,36 +26,40 @@ export function useMonitorableAddresses() {
           accountIndex: account.index,
           address: account.address,
           chain: 'stacks',
-          isCurrent: account.index === currentAccountIndex,
+          isCurrent: account.index === currentAccount.accountIndex,
         }) satisfies MonitoredAddress
     );
-    const btcAddresses = createNullArrayOfLength(stacksAccounts.length).flatMap((_, index) =>
-      [createNativeSegwitAccount(index), createTaprootAccount(index)]
-        .filter(isDefined)
-        .map(account => {
-          const addressIndexKeychain = deriveAddressIndexZeroFromAccount(account.keychain);
-          if (account.type !== 'p2tr' && account.type !== 'p2wpkh') return undefined;
-          const payment = paymentFnMap[account.type](addressIndexKeychain, 'mainnet');
-          if (!payment.address) return undefined;
+
+    const btcAddresses = createNullArrayOfLength(stacksAccounts.length).flatMap((_, index) => {
+      const getAccount = bitcoinAccountLookup(currentAccount.fingerprint);
+      return paymentTypes
+        .map(paymentType => {
+          const account = getAccount({
+            paymentType,
+            network: 'mainnet',
+            accountIndex: index,
+          });
+          if (!account) return undefined;
+          const payer = deriveBitcoinPayerFromAccount(
+            account.descriptor,
+            'mainnet'
+          )({
+            change: 0,
+            addressIndex: 0,
+          });
           return {
             accountIndex: index,
-            address: payment.address,
+            address: payer.address,
             chain: 'bitcoin',
-            isCurrent: index === currentAccountIndex,
+            isCurrent: index === currentAccount.accountIndex,
           } satisfies MonitoredAddress;
         })
-        .filter(isDefined)
-    );
-    // if one address array is empty and the other not, we're in an intermediate state
+        .filter(isDefined);
+    });
+
     return (stacksAddresses.length === 0 && btcAddresses.length > 0) ||
       (btcAddresses.length === 0 && stacksAddresses.length > 0)
       ? undefined
       : [...stacksAddresses, ...btcAddresses];
-  }, [
-    createNativeSegwitAccount,
-    createTaprootAccount,
-    stacksAccounts,
-    currentNetworkId,
-    currentAccountIndex,
-  ]);
+  }, [bitcoinAccountLookup, stacksAccounts, currentNetworkId, currentAccount]);
 }

@@ -2,6 +2,7 @@ import { bytesToHex } from '@stacks/common';
 import { z } from 'zod';
 
 import { ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
+import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import {
   type BtcAddress,
   type StxAddress,
@@ -17,14 +18,13 @@ import { analytics } from '@shared/utils/analytics';
 import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
 import {
-  useCurrentAccountNativeSegwitSigner,
-  useGenerateNativeSegwitAccount,
+  useCurrentAccountNativeSegwitPayer,
+  useCurrentNativeSegwitAccount,
 } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import {
-  useCurrentAccountTaprootSigner,
-  useGenerateTaprootAccount,
+  useCurrentAccountTaprootPayer,
+  useCurrentTaprootAccount,
 } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useAppPermissions } from '@app/store/app-permissions/app-permissions.slice';
@@ -42,11 +42,10 @@ function useGetAddressesParams() {
 }
 
 function useGetDescriptors() {
-  const currentAccountIndex = useCurrentAccountIndex();
-  const nativeSegwitAccount = useGenerateNativeSegwitAccount()(currentAccountIndex);
-  const taprootAccount = useGenerateTaprootAccount()(currentAccountIndex);
-  const wpkhXpub = nativeSegwitAccount?.keychain.publicExtendedKey;
-  const trXpub = taprootAccount?.keychain.publicExtendedKey;
+  const nativeSegwitAccount = useCurrentNativeSegwitAccount();
+  const taprootAccount = useCurrentTaprootAccount();
+  const wpkhXpub = nativeSegwitAccount?.xpub;
+  const trXpub = taprootAccount?.xpub;
   return {
     nativeSegwitDescriptor: wpkhXpub ? `wpkh(${wpkhXpub})` : null,
     taprootDescriptor: trXpub ? `tr(${trXpub})` : null,
@@ -56,8 +55,8 @@ function useGetDescriptors() {
 export function useGetAddresses() {
   const permissions = useAppPermissions();
   const { tabId, origin, request } = useGetAddressesParams();
-  const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
-  const createTaprootSigner = useCurrentAccountTaprootSigner();
+  const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
+  const createTaprootPayer = useCurrentAccountTaprootPayer();
   const stacksAccount = useCurrentStacksAccount();
   const { nativeSegwitDescriptor, taprootDescriptor } = useGetDescriptors();
 
@@ -81,8 +80,8 @@ export function useGetAddresses() {
 
       const keysToIncludeInResponse = [];
 
-      if (createNativeSegwitSigner) {
-        const nativeSegwitSigner = createNativeSegwitSigner({
+      if (createNativeSegwitPayer) {
+        const nativeSegwitSigner = createNativeSegwitPayer({
           changeIndex: 0,
           addressIndex: 0,
         });
@@ -92,22 +91,22 @@ export function useGetAddresses() {
           type: 'p2wpkh',
           address: nativeSegwitSigner.address,
           publicKey: bytesToHex(nativeSegwitSigner.publicKey),
-          derivationPath: nativeSegwitSigner.derivationPath,
+          derivationPath: keyOriginToDerivationPath(nativeSegwitSigner.keyOrigin),
           descriptor: nativeSegwitDescriptor ?? '',
         };
 
         keysToIncludeInResponse.push(nativeSegwitAddressResponse);
       }
 
-      if (createTaprootSigner) {
-        const taprootSigner = createTaprootSigner({ changeIndex: 0, addressIndex: 0 });
+      if (createTaprootPayer) {
+        const taprootPayer = createTaprootPayer({ changeIndex: 0, addressIndex: 0 });
         const taprootAddressResponse: BtcAddress = {
           symbol: 'BTC',
           type: 'p2tr',
-          address: taprootSigner.address,
-          publicKey: bytesToHex(taprootSigner.publicKey),
-          tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taprootSigner.publicKey)),
-          derivationPath: taprootSigner.derivationPath,
+          address: taprootPayer.address,
+          publicKey: bytesToHex(taprootPayer.publicKey),
+          tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taprootPayer.publicKey)),
+          derivationPath: keyOriginToDerivationPath(taprootPayer.keyOrigin),
           descriptor: taprootDescriptor ?? '',
         };
         keysToIncludeInResponse.push(taprootAddressResponse);

@@ -1,13 +1,12 @@
 import { AddressVersion, privateKeyToPublic, publicKeyToAddress } from '@stacks/transactions';
 
+import { deriveRootKeychainFromMnemonicSync } from '@leather.io/crypto';
 import { deriveStxPrivateKey } from '@leather.io/stacks';
-
-import { mnemonicToRootNode } from '@app/common/keychain/keychain';
 
 export function getStacksAddressByIndex(secretKey: string, addressVersion: AddressVersion) {
   return (index: number) => {
     const accountPrivateKey = deriveStxPrivateKey({
-      keychain: mnemonicToRootNode(secretKey) as any,
+      keychain: deriveRootKeychainFromMnemonicSync(secretKey),
       index,
     });
 

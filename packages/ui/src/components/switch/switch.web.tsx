@@ -11,6 +11,15 @@ const switchRootStyles = css({
   borderColor: 'ink.border-default',
   borderWidth: 1,
   position: 'relative',
+  '&[data-state="checked"]': {
+    backgroundColor: 'ink.action-primary-default',
+    borderColor: 'ink.action-primary-default',
+  },
+  '&:focus-visible': {
+    outline: '2px solid',
+    outlineColor: 'blue.border',
+    outlineOffset: '2px',
+  },
 });
 
 const switchThumbStyles = css({
@@ -24,7 +33,7 @@ const switchThumbStyles = css({
   willChange: 'transform',
   '&[data-state="checked"]': {
     transform: 'translateX(19px)',
-    backgroundColor: 'ink.text-subdued',
+    backgroundColor: 'ink.component-background-default',
   },
 });
 

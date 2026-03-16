@@ -19,3 +19,4 @@ tmp
 **/.claude/settings.local.json
 .cursorrules
 test-results
+copilot-instructions.md

@@ -25,11 +25,10 @@ import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
-import { useCurrentAccountNativeSegwitIndexZeroSignerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { useWalletFingerprint } from '@app/store/in-memory-key/in-memory-key.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
@@ -67,15 +66,14 @@ async function broadcastStacksTx({
 }
 
 export function useSwapDependencies(): SwapDependencies {
-  const currentAccountIndex = useCurrentAccountIndex();
-  const fingerprint = useWalletFingerprint();
-  const accountAddresses = useAccountAddresses(currentAccountIndex);
+  const currentAccountId = useCurrentAccountId();
+  const accountAddresses = useAccountAddresses(currentAccountId);
   const stacksAccount = useCurrentStacksAccount();
   const stacksNetwork = useCurrentStacksNetworkState();
   const network = useCurrentNetwork();
   const signStacksTx = useSignStacksTransaction();
   const { data: nextNonce } = useNextNonce(stacksAccount?.address ?? '');
-  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSignerNullable();
+  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
   const bitcoinClient = useBitcoinClient();
   const signBitcoinTx = useSignBitcoinTx();
 
@@ -86,7 +84,10 @@ export function useSwapDependencies(): SwapDependencies {
     network.chain.bitcoin.mode === 'mainnet' ? sbtcClientMainnet : sbtcClientTestnet;
 
   assertExistence(stacksAccount, 'Stacks account missing during swap initialization');
-  assertExistence(fingerprint, 'Wallet fingerprint missing during swap initialization');
+  assertExistence(
+    currentAccountId.fingerprint,
+    'Wallet fingerprint missing during swap initialization'
+  );
   assertExistence(nativeSegwitSigner, 'Bitcoin signer missing during swap initialization');
 
   const stacksSigner: StacksSigner = useMemo(() => {
@@ -95,7 +96,7 @@ export function useSwapDependencies(): SwapDependencies {
       keyOrigin: '',
       derivationPath: '',
       address: stacksAccount.address,
-      accountIndex: currentAccountIndex,
+      accountIndex: currentAccountId.accountIndex,
       network: stacksNetworkMode,
       publicKey: Uint8Array.from(Buffer.from(stacksAccount.stxPublicKey, 'hex')),
       async sign(tx: StacksTransactionWire) {
@@ -111,19 +112,19 @@ export function useSwapDependencies(): SwapDependencies {
         throw new Error('signStructuredMessage not used in swap');
       },
     };
-  }, [stacksAccount, currentAccountIndex, stacksNetworkMode, signStacksTx]);
+  }, [stacksAccount, currentAccountId, stacksNetworkMode, signStacksTx]);
 
   const bitcoinPayer: BitcoinNativeSegwitPayer = useMemo(() => {
     return {
       paymentType: 'p2wpkh',
       network: bitcoinNetworkMode,
       address: nativeSegwitSigner.address,
-      keyOrigin: nativeSegwitSigner.derivationPath,
-      masterKeyFingerprint: String(fingerprint),
+      keyOrigin: nativeSegwitSigner.keyOrigin,
+      masterKeyFingerprint: String(currentAccountId.fingerprint),
       publicKey: nativeSegwitSigner.publicKey,
       payment: nativeSegwitSigner.payment,
     };
-  }, [nativeSegwitSigner, bitcoinNetworkMode, fingerprint]);
+  }, [nativeSegwitSigner, bitcoinNetworkMode, currentAccountId.fingerprint]);
 
   const broadcastBitcoinTransaction = useMemo(() => {
     return async (tx: string) => {

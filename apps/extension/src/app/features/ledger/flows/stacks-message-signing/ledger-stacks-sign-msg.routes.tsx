@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 import { RouteUrls } from '@shared/route-urls';
 
 import {
+  CheckingAppVersion,
   ConnectLedgerError,
   ConnectLedgerSuccess,
   DeviceBusy,
@@ -19,6 +20,7 @@ import { SignLedgerMessage } from './steps/sign-stacks-ledger-message';
 export const ledgerStacksMessageSigningRoutes = (
   <Route element={<LedgerSignMsgContainer />}>
     <Route path={RouteUrls.ConnectLedger} element={<ConnectLedgerSignMsg />} />
+    <Route path={RouteUrls.LedgerCheckingAppVersion} element={<CheckingAppVersion />} />
     <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />
     <Route path={RouteUrls.ConnectLedgerError} element={<ConnectLedgerError />} />
     <Route path={RouteUrls.ConnectLedgerSuccess} element={<ConnectLedgerSuccess />} />

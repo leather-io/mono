@@ -3,6 +3,7 @@ import { type Dispatch, type SetStateAction, useEffect } from 'react';
 import { Stack } from 'leather-styles/jsx';
 
 import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
+import type { AccountId } from '@leather.io/models';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { type AssetFilter } from '@app/common/hooks/use-manage-tokens';
@@ -18,25 +19,25 @@ function isUsdcxAssetId(assetId: string) {
   return assetId === USDCX_ASSET_ID_MAINNET || assetId === USDCX_ASSET_ID_TESTNET;
 }
 
-interface Sip10TokenListProps {
-  accountIndex: number;
+interface Sip10TokenAssetListProps {
+  accountId: AccountId;
   assetFilter?: AssetFilter;
   assetRightElementVariant?: AssetRightElementVariant;
   onSelectAsset?(assetId: SerializedCryptoAssetId): void;
   setHasManageableTokens?: Dispatch<SetStateAction<boolean>>;
 }
 
-export function Sip10TokenList({
-  accountIndex,
+export function Sip10TokenAssetList({
+  accountId,
   assetFilter = 'all',
   onSelectAsset,
   assetRightElementVariant,
   setHasManageableTokens,
-}: Sip10TokenListProps) {
-  const sip10s = useSip10AccountBalance(accountIndex, {
+}: Sip10TokenAssetListProps) {
+  const sip10s = useSip10AccountBalance(accountId, {
     includeHiddenAssets: assetFilter === 'all',
   });
-  const { isEnabled } = useManagedSip10Tools(accountIndex);
+  const { isEnabled } = useManagedSip10Tools(accountId);
 
   useEffect(() => {
     if (sip10s.value && sip10s.value.sip10s.length > 0 && setHasManageableTokens) {

@@ -33,15 +33,15 @@ export function RecipientAccountsSheet() {
     >
       <VirtuosoWrapperSheet>
         <Virtuoso
-          itemContent={index => (
-            <Box key={index} py="space.03" px="space.05">
-              <AccountListItem
-                stacksAccount={stacksAccounts[index]}
-                onClose={onGoBack}
-                index={index}
-              />
-            </Box>
-          )}
+          itemContent={index => {
+            const account = stacksAccounts[index];
+            if (!account) return null;
+            return (
+              <Box key={`${account.fingerprint}-${account.index}`} py="space.03" px="space.05">
+                <AccountListItem stacksAccount={account} onClose={onGoBack} accountId={account} />
+              </Box>
+            );
+          }}
           totalCount={accountNum}
         />
       </VirtuosoWrapperSheet>

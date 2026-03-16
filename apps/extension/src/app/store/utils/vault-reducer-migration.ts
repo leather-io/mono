@@ -1,6 +1,7 @@
 import deepMerge from 'deepmerge';
 
 import { logger } from '@shared/logger';
+import { assumedZeroFingerprint } from '@shared/utils';
 
 import type { initialKeysState } from '../software-keys/software-key.slice';
 
@@ -16,11 +17,11 @@ export function migrateVaultReducerStoreToNewStateStructure(initialState: typeof
       'VaultReducer generated Leather detected. Running migration to keys store structure'
     );
     const migratedState = {
-      ids: ['default'],
+      ids: [assumedZeroFingerprint],
       entities: {
-        default: {
+        [assumedZeroFingerprint]: {
           type: 'software',
-          id: 'default',
+          id: assumedZeroFingerprint,
           encryptedSecretKey,
           salt,
         },

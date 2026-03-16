@@ -9,7 +9,7 @@ import { FeesListItem } from '@app/components/bitcoin-fees-list/bitcoin-fees-lis
 import { useAverageBitcoinFeeRates } from '@app/query/bitcoin/fees/fee-estimates.hooks';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
-import { useCurrentAccountNativeSegwitSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 import { useGenerateUnsignedOrdinalTx } from './use-generate-ordinal-tx';
 
@@ -24,7 +24,7 @@ export function useSendInscriptionFeesList({
   utxo,
   inscription,
 }: UseSendInscriptionFeesListArgs) {
-  const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
+  const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
   const { utxos } = useCurrentUtxos();
 
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
@@ -56,9 +56,9 @@ export function useSendInscriptionFeesList({
       )}`;
     }
 
-    const nativeSegwitSigner = createNativeSegwitSigner?.({ addressIndex: 0, changeIndex: 0 });
+    const nativeSegwitPayer = createNativeSegwitPayer?.({ addressIndex: 0, changeIndex: 0 });
 
-    if (!feeRates || !utxos || !nativeSegwitSigner) return [];
+    if (!feeRates || !utxos || !nativeSegwitPayer) return [];
 
     const highFeeValue = getTransactionFee(feeRates.fastestFee.toNumber());
     const standardFeeValue = getTransactionFee(feeRates.halfHourFee.toNumber());
@@ -100,7 +100,7 @@ export function useSendInscriptionFeesList({
     }
 
     return feesArr;
-  }, [feeRates, utxos, btcMarketData, createNativeSegwitSigner, getTransactionFee]);
+  }, [feeRates, utxos, btcMarketData, createNativeSegwitPayer, getTransactionFee]);
 
   return {
     feesList,

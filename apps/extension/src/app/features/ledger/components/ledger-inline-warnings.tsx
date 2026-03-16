@@ -5,7 +5,7 @@ import { Callout } from '@leather.io/ui';
 
 import { Capitalize } from '@app/ui/utils/capitalize';
 
-import { LatestDeviceResponse } from '../utils/generic-ledger-utils';
+import { LEDGER_LIVE_MANAGER_URL, LatestDeviceResponse } from '../utils/generic-ledger-utils';
 import { isStacksLedgerAppClosed } from '../utils/stacks-ledger-utils';
 
 interface RequiresChainProp {
@@ -21,7 +21,7 @@ function OutdatedLedgerAppWarning({ chain }: RequiresChainProp) {
   return (
     <Callout variant="warning" textAlign="left">
       Latest version of <Capitalize>{chain} app</Capitalize> required
-      <styled.a href="ledgerlive://manager" textDecoration="underline">
+      <styled.a href={LEDGER_LIVE_MANAGER_URL} textDecoration="underline">
         Update on Ledger Live to continue
       </styled.a>
     </Callout>

@@ -3,9 +3,9 @@ import { Navigate } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
-import { useHasDefaultInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { useHasActiveInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { useHasLedgerKeys } from '@app/store/ledger/ledger.selectors';
-import { useCurrentKeyDetails } from '@app/store/software-keys/software-key.selectors';
+import { useActiveSoftwareKey } from '@app/store/software-keys/software-key.selectors';
 
 export function shouldNavigateToOnboardingStartPage(currentKeyDetails?: any) {
   return !currentKeyDetails;
@@ -19,8 +19,8 @@ interface AccountGateProps {
   children?: ReactNode;
 }
 export function AccountGate({ children }: AccountGateProps) {
-  const currentKeyDetails = useCurrentKeyDetails();
-  const hasDefaultInMemorySecretKey = useHasDefaultInMemoryWalletSecretKey();
+  const currentKeyDetails = useActiveSoftwareKey();
+  const hasDefaultInMemorySecretKey = useHasActiveInMemoryWalletSecretKey();
 
   const isLedger = useHasLedgerKeys();
   if (isLedger) return children;

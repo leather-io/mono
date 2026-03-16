@@ -5,7 +5,7 @@ import { isDefined } from '@leather.io/utils';
 
 const basePseudoOutlineProps = {
   content: '""',
-  rounded: 'xs',
+  rounded: 'sm',
   position: 'absolute',
   top: '-space.03',
   left: '-space.03',
@@ -30,7 +30,7 @@ export const pressableBaseStyles = css.raw({
   display: 'flex',
   height: 'auto',
   outline: 'none',
-  rounded: 'xs',
+  rounded: 'sm',
   userSelect: 'none',
   width: '100%',
 });

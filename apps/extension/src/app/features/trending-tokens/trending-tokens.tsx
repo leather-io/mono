@@ -61,7 +61,7 @@ export function TrendingTokens({ onSelectAsset }: TrendingTokensProps) {
     <Stack gap="space.03">
       <Flex justifyContent="space-between" alignItems="center">
         <Flex alignItems="center" gap="space.01">
-          <styled.span textStyle="label.02">Trending tokens</styled.span>
+          <styled.span textStyle="label.01">Trending tokens</styled.span>
           <BasicTooltip
             label="Tokens trending across the Stacks ecosystem, ranked by recent trading activity."
             side={isLargeScreen ? 'right' : 'top'}
@@ -88,20 +88,35 @@ export function TrendingTokens({ onSelectAsset }: TrendingTokensProps) {
           </Flex>
         )}
       </Flex>
-      <Box overflowX="auto" ref={scrollRef} className={hideScrollbar} onScroll={updateScrollState}>
-        <Flex gap="space.02" direction="column">
-          {rows.map(row => (
-            <Flex key={row[0].id} gap="space.02">
-              {row.map(item => (
-                <TrendingTokenCard
-                  key={item.id}
-                  item={item}
-                  onSelectAsset={() => onSelectAsset(item.id)}
-                />
-              ))}
-            </Flex>
-          ))}
-        </Flex>
+      <Box
+        position="relative"
+        mx="-space.05"
+        style={{
+          maskImage:
+            'linear-gradient(to right, transparent, black 40px, black calc(100% - 90px), transparent)',
+        }}
+      >
+        <Box
+          overflowX="auto"
+          ref={scrollRef}
+          className={hideScrollbar}
+          onScroll={updateScrollState}
+          px="space.05"
+        >
+          <Flex gap="space.02" direction="column">
+            {rows.map(row => (
+              <Flex key={row[0].id} gap="space.02">
+                {row.map(item => (
+                  <TrendingTokenCard
+                    key={item.id}
+                    item={item}
+                    onSelectAsset={() => onSelectAsset(item.id)}
+                  />
+                ))}
+              </Flex>
+            ))}
+          </Flex>
+        </Box>
       </Box>
     </Stack>
   );

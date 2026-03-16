@@ -13,12 +13,6 @@ import { stxChainSlice } from './store/chains/stx-chain.slice';
 import { settingsSlice } from './store/settings/settings.slice';
 import { submittedTransactionsActions } from './store/submitted-transactions/submitted-transactions.actions';
 
-declare global {
-  interface Window {
-    debug: typeof debug;
-  }
-}
-
 const debug = {
   printDiagnosticInfo() {
     // eslint-disable-next-line no-console
@@ -43,9 +37,9 @@ const debug = {
     // eslint-disable-next-line no-console
     void reduxPersist.getStoredState(persistConfig).then(state => console.log(state));
   },
-  setHighestAccountIndex(index: number) {
-    logger.info(`Highest account index set to ${index}`);
-    store.dispatch(stxChainSlice.actions.restoreAccountIndex(index));
+  setHighestAccountIndex(fingerprint: string, accountIndex: number) {
+    logger.info(`Highest account index set to ${accountIndex}`);
+    store.dispatch(stxChainSlice.actions.restoreAccountIndex({ fingerprint, accountIndex }));
   },
   resetMessages() {
     store.dispatch(settingsSlice.actions.resetMessages());
@@ -74,6 +68,11 @@ const debug = {
   },
 };
 
+declare global {
+  interface Window {
+    debug: typeof debug;
+  }
+}
 export function setDebugOnGlobal() {
   window.debug = debug;
 }

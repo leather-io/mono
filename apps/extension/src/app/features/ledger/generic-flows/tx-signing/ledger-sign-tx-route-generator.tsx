@@ -3,8 +3,9 @@ import { Route } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
-import { ContractPrincipalBugWarning } from '../../flows/stacks-tx-signing/steps/contract-principal-bug-warning';
+import { OutdatedStacksAppWarningTxSigning } from '../../flows/stacks-tx-signing/steps/outdated-stacks-app-warning-tx-signing';
 import {
+  CheckingAppVersion,
   ConnectLedgerError,
   ConnectLedgerSuccess,
   DeviceBusy,
@@ -26,6 +27,7 @@ export function ledgerSignTxRoutes({ component, customRoutes }: LedgerSignTxRout
     <Route element={component}>
       {customRoutes}
       <Route path={RouteUrls.ConnectLedger} element={<ConnectLedgerSignTx />} />
+      <Route path={RouteUrls.LedgerCheckingAppVersion} element={<CheckingAppVersion />} />
       <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />
       <Route path={RouteUrls.ConnectLedgerError} element={<ConnectLedgerError />} />
       <Route path={RouteUrls.LedgerUnsupportedBrowser} element={<UnsupportedBrowserLayout />} />
@@ -34,7 +36,10 @@ export function ledgerSignTxRoutes({ component, customRoutes }: LedgerSignTxRout
       <Route path={RouteUrls.LedgerOperationRejected} element={<OperationRejected />} />
       <Route path={RouteUrls.LedgerPublicKeyMismatch} element={<LedgerPublicKeyMismatch />} />
       <Route path={RouteUrls.LedgerDevicePayloadInvalid} element={<LedgerDeviceInvalidPayload />} />
-      <Route path={RouteUrls.LedgerOutdatedAppWarning} element={<ContractPrincipalBugWarning />} />
+      <Route
+        path={RouteUrls.LedgerOutdatedAppWarning}
+        element={<OutdatedStacksAppWarningTxSigning />}
+      />
       <Route path={RouteUrls.LedgerBroadcastError} element={<LedgerBroadcastError />} />
     </Route>
   );

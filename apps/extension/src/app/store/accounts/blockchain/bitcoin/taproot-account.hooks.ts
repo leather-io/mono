@@ -4,122 +4,101 @@ import { useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { Psbt } from 'bitcoinjs-lib';
 
-import {
-  deriveTaprootAccount,
-  ecdsaPublicKeyToSchnorr,
-  getTaprootPaymentFromAddressIndex,
-  lookUpLedgerKeysByPath,
-  makeTaprootAccountDerivationPath,
-} from '@leather.io/bitcoin';
+import { ecdsaPublicKeyToSchnorr, getTaprootPaymentFromAddressIndex } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
-import { type BitcoinNetworkModes } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 
-import { selectCurrentNetwork, useCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { selectCurrentAccountIndex } from '@app/store/software-keys/software-key.selectors';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 
-import { useCurrentAccountIndex } from '../../account';
+import { useCurrentAccountId } from '../../account';
 import {
-  bitcoinAccountBuilderFactory,
+  selectCurrentNetworkBitcoinAccountLookup,
   useBitcoinExtendedPublicKeyVersions,
 } from './bitcoin-keychain';
-import {
-  bitcoinAddressIndexSignerFactory,
-  useMakeBitcoinNetworkSignersForPaymentType,
-} from './bitcoin-signer';
+import { bitcoinSoftwarePayerFactory } from './bitcoin-payer';
 
-const selectTaprootAccountBuilder = bitcoinAccountBuilderFactory(
-  deriveTaprootAccount,
-  lookUpLedgerKeysByPath(makeTaprootAccountDerivationPath)
+const selectTaprootAccountId = createSelector(
+  selectCurrentNetworkBitcoinAccountLookup,
+  accountLookup => (accountId: AccountId) =>
+    accountLookup(accountId.fingerprint)({
+      paymentType: 'p2tr',
+      accountIndex: accountId.accountIndex,
+    })
 );
 
-const selectCurrentNetworkTaprootAccountBuilder = createSelector(
-  selectTaprootAccountBuilder,
-  selectCurrentNetwork,
-  (taprootKeychains, network) => taprootKeychains[network.chain.bitcoin.mode]
-);
 const selectCurrentTaprootAccount = createSelector(
-  selectCurrentNetworkTaprootAccountBuilder,
-  selectCurrentAccountIndex,
-  (taprootKeychain, accountIndex) => taprootKeychain(accountIndex)
+  selectCurrentNetworkBitcoinAccountLookup,
+  selectCurrentAccount,
+  (accountLookup, currentAccount) => {
+    return accountLookup(currentAccount.fingerprint)({
+      paymentType: 'p2tr',
+      accountIndex: currentAccount.accountIndex,
+    });
+  }
 );
-
-export function useGenerateTaprootAccount() {
-  return useSelector(selectCurrentNetworkTaprootAccountBuilder);
-}
-
-export function useTaprootAccount(accountIndex: number) {
-  const generateTaprootAccount = useSelector(selectCurrentNetworkTaprootAccountBuilder);
-  return useMemo(
-    () => generateTaprootAccount(accountIndex),
-    [generateTaprootAccount, accountIndex]
-  );
-}
 
 export function useCurrentTaprootAccount() {
   return useSelector(selectCurrentTaprootAccount);
 }
 
-export function useTaprootNetworkSigners() {
-  const { mainnet: mainnetKeychain, testnet: testnetKeychain } = useSelector(
-    selectTaprootAccountBuilder
-  );
-  return useMakeBitcoinNetworkSignersForPaymentType(
-    mainnetKeychain,
-    testnetKeychain,
-    getTaprootPaymentFromAddressIndex
-  );
+export function useTaprootAccount(accountId: AccountId) {
+  const lookupTaprootAccount = useSelector(selectTaprootAccountId);
+  return useMemo(() => lookupTaprootAccount(accountId), [lookupTaprootAccount, accountId]);
 }
 
-function useTaprootSigner(accountIndex: number, network: BitcoinNetworkModes) {
-  const account = useTaprootAccount(accountIndex);
+function useTaprootPayer(accountId: AccountId) {
+  const account = useTaprootAccount(accountId);
+  const network = useCurrentNetwork();
   const extendedPublicKeyVersions = useBitcoinExtendedPublicKeyVersions();
 
   return useMemo(() => {
-    if (!account) return; // TODO: Revisit this return early
-    return bitcoinAddressIndexSignerFactory({
-      accountIndex,
+    if (!account) return;
+
+    return bitcoinSoftwarePayerFactory({
       accountKeychain: account.keychain,
+      accountKeyOrigin: account.keyOrigin,
+      masterKeyFingerprint: account.masterKeyFingerprint,
       paymentFn: getTaprootPaymentFromAddressIndex,
-      network,
+      network: network.chain.bitcoin.mode,
       extendedPublicKeyVersions,
     });
-  }, [account, accountIndex, extendedPublicKeyVersions, network]);
+  }, [account, extendedPublicKeyVersions, network.chain.bitcoin.mode]);
 }
 
-export function useCurrentAccountTaprootIndexZeroSigner() {
-  const signer = useCurrentAccountTaprootSigner();
+export function useCurrentAccountTaprootPayer() {
+  const currentAccount = useCurrentAccountId();
+  return useTaprootPayer(currentAccount);
+}
+
+export function useCurrentAccountTaprootIndexZeroPayer() {
+  const payer = useCurrentAccountTaprootPayer();
   return useMemo(() => {
-    if (!signer) throw new Error('No signer');
-    return signer({ changeIndex: 0, addressIndex: 0 });
-  }, [signer]);
-}
-
-export function useCurrentAccountTaprootSigner() {
-  const currentAccountIndex = useCurrentAccountIndex();
-  const network = useCurrentNetwork();
-  return useTaprootSigner(currentAccountIndex, network.chain.bitcoin.mode);
+    if (!payer) throw new Error('No payer');
+    return payer({ changeIndex: 0, addressIndex: 0 });
+  }, [payer]);
 }
 
 export function useUpdateLedgerSpecificTaprootInputPropsForAdddressIndexZero() {
-  const createTaprootSigner = useCurrentAccountTaprootSigner();
+  const createTaprootPayer = useCurrentAccountTaprootPayer();
 
   return (tx: Psbt, fingerprint: string, inputsToUpdate: BitcoinInputSigningConfig[] = []) => {
     inputsToUpdate.forEach(({ index, derivationPath }) => {
-      const taprootAddressIndexSigner = createTaprootSigner?.({
+      const taprootAddressIndexPayer = createTaprootPayer?.({
         changeIndex: extractChangeIndexFromPath(derivationPath),
         addressIndex: extractAddressIndexFromPath(derivationPath),
       });
 
-      if (!taprootAddressIndexSigner)
+      if (!taprootAddressIndexPayer)
         throw new Error(`Unable to update taproot input for path ${derivationPath}}`);
 
       tx.updateInput(index, {
         tapBip32Derivation: [
           {
             masterFingerprint: Buffer.from(fingerprint, 'hex'),
-            pubkey: Buffer.from(ecdsaPublicKeyToSchnorr(taprootAddressIndexSigner.publicKey)),
+            pubkey: Buffer.from(ecdsaPublicKeyToSchnorr(taprootAddressIndexPayer.publicKey)),
             path: derivationPath,
             leafHashes: [],
           },

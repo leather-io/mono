@@ -10,5 +10,7 @@ export function CurrentAccountAvatar() {
   const stacksAccount = useCurrentStacksAccount();
   if (!stacksAccount) return <AccountAvatar index={0} publicKey="" />;
 
-  return <AccountAvatar index={stacksAccount.index} publicKey={stacksAccount.stxPublicKey} />;
+  return (
+    <AccountAvatar index={stacksAccount.accountIndex} publicKey={stacksAccount.stxPublicKey} />
+  );
 }

@@ -105,6 +105,7 @@ Mobile requires an `apps/mobile/.env` file with `EXPO_PUBLIC_LAUNCH_DARKLY` set.
 
 - Conventional commits format with scope: `feat(mobile)`, `refactor(web)`, `fix(utils)`.
 - Imperative language. No body unless explicitly asked.
+- Branches and PRs are always based against `dev`, not `main`.
 
 ## Verification
 
@@ -114,7 +115,6 @@ You MUST run these after any code changes. Do not consider a task complete until
 pnpm format
 pnpm lint
 pnpm typecheck
-pnpm build
 ```
 
 If working on mobile, run `pnpm lingui` from `apps/mobile/` before running verification.

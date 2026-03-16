@@ -2,6 +2,8 @@ import { useSelector } from 'react-redux';
 
 import { PayloadAction, createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
 
+import { resetWallet } from '@leather.io/state';
+
 import type { RootState } from '..';
 
 interface TokenUserSetting {
@@ -25,6 +27,10 @@ export const manageTokensSlice = createSlice({
       manageTokensAdapter.removeAll(state);
     },
   },
+  extraReducers: builder =>
+    builder.addCase(resetWallet, state => {
+      manageTokensAdapter.removeAll(state);
+    }),
 });
 
 const selectors = manageTokensAdapter.getSelectors();

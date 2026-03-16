@@ -25,7 +25,7 @@ import { useModifierKey } from '@app/common/hooks/use-modifier-key';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { Divider } from '@app/components/layout/divider';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
-import { useHasDefaultInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { useHasActiveInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { useTogglePrivateMode } from '@app/store/settings/settings.actions';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
@@ -53,7 +53,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
   const { isPressed: showAdvancedMenuOptions } = useModifierKey('alt', 120);
   const showLockWalletItem = canLockWallet && hasKeys && walletType === 'software';
   const showSignOutItem = hasKeys;
-  const hasDefaultInMemorySecretKey = useHasDefaultInMemoryWalletSecretKey();
+  const hasDefaultInMemorySecretKey = useHasActiveInMemoryWalletSecretKey();
   const isWalletUnlocked = hasDefaultInMemorySecretKey || walletType === 'ledger';
 
   const settingsItem = (

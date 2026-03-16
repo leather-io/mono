@@ -6,7 +6,6 @@ import uniqby from 'lodash.uniqby';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useBitcoinPendingTransactions } from '@app/query/bitcoin/address/transactions-by-address.hooks';
 import { useGetBitcoinTransactionsByAddressListQuery } from '@app/query/bitcoin/address/transactions-by-address.query';
-import { useConfigBitcoinEnabled } from '@app/query/common/remote-config/remote-config.query';
 import {
   useSbtcConfirmedDeposits,
   useSbtcFailedDeposits,
@@ -14,8 +13,11 @@ import {
 } from '@app/query/sbtc/sbtc-deposits.query';
 import { useStacksPendingTransactions } from '@app/query/stacks/mempool/mempool.hooks';
 import { useGetAccountTransactionsWithTransfersQuery } from '@app/query/stacks/transactions/transactions-with-transfers.query';
-import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import {
+  useHasCurrentBitcoinAccount,
+  useZeroIndexTaprootAddress,
+} from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useUpdateSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.hooks';
 import { useSubmittedTransactions } from '@app/store/submitted-transactions/submitted-transactions.selectors';
@@ -35,7 +37,7 @@ import { TransactionList } from './components/transaction-list/transaction-list'
 // bitcoin sometimes being undefined
 function useNsBitcoinAddress() {
   try {
-    return useCurrentAccountNativeSegwitIndexZeroSigner().address;
+    return useCurrentAccountNativeSegwitIndexZeroPayer().address;
   } catch {
     return '';
   }
@@ -83,7 +85,7 @@ export function ActivityListLegacy() {
     transactions: stacksPendingTransactions,
   } = useStacksPendingTransactions(stxAddress);
   const submittedTransactions = useSubmittedTransactions();
-  const isBitcoinEnabled = useConfigBitcoinEnabled();
+  const hasBitcoinAccounts = useHasCurrentBitcoinAccount();
 
   useEffect(() => {
     updateSubmittedTxs(stacksPendingTransactions);
@@ -145,14 +147,14 @@ export function ActivityListLegacy() {
         {hasSubmittedTransactions && <SubmittedTransactionList txs={submittedTransactions} />}
         {hasPendingTransactions && (
           <PendingTransactionList
-            bitcoinTxs={isBitcoinEnabled ? bitcoinPendingTxs : []}
+            bitcoinTxs={hasBitcoinAccounts ? bitcoinPendingTxs : []}
             sbtcDeposits={pendingSbtcDeposits}
             stacksTxs={stacksPendingTransactions}
           />
         )}
         {hasTransactions && (
           <TransactionList
-            bitcoinTxs={isBitcoinEnabled ? transactionListBitcoinTxs : []}
+            bitcoinTxs={hasBitcoinAccounts ? transactionListBitcoinTxs : []}
             stacksTxs={transactionListStacksTxs}
             sbtcDeposits={convertSbtcDepositToListType([
               ...confirmedSbtcDeposits,

@@ -21,11 +21,11 @@ import { initialSearchParams } from '@app/common/initial-search-params';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import {
-  useCurrentAccountNativeSegwitSigner,
+  useCurrentAccountNativeSegwitPayer,
   useCurrentNativeSegwitAccount,
 } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import {
-  useCurrentAccountTaprootSigner,
+  useCurrentAccountTaprootPayer,
   useCurrentTaprootAccount,
 } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -116,14 +116,16 @@ function useSignBip322MessageFactory({ address, signPsbt }: SignBip322MessageFac
 }
 
 function useSignBip322MessageTaproot() {
-  const createTaprootSigner = useCurrentAccountTaprootSigner();
-  if (!createTaprootSigner) throw new Error('No taproot signer for current account');
+  const createTaprootPayer = useCurrentAccountTaprootPayer();
+  if (!createTaprootPayer) throw new Error('No taproot signer for current account');
   const currentTaprootAccount = useCurrentTaprootAccount();
   if (!currentTaprootAccount) throw new Error('No keychain for current account');
   const sign = useSignBitcoinTx();
+  const payer = createTaprootPayer({ addressIndex: 0, changeIndex: 0 });
+
   const {
     payment: { tapInternalKey, address },
-  } = createTaprootSigner({ addressIndex: 0, changeIndex: 0 });
+  } = payer;
 
   async function signPsbt(psbt: bitcoin.Psbt) {
     psbt.data.inputs.forEach(input => (input.tapInternalKey = Buffer.from(tapInternalKey)));
@@ -134,8 +136,8 @@ function useSignBip322MessageTaproot() {
 }
 
 function useSignBip322MessageNativeSegwit() {
-  const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
-  if (!createNativeSegwitSigner) throw new Error('No native segwit signer for current account');
+  const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
+  if (!createNativeSegwitPayer) throw new Error('No native segwit signer for current account');
 
   const currentNativeSegwitAccount = useCurrentNativeSegwitAccount();
   if (!currentNativeSegwitAccount) throw new Error('No keychain for current account');
@@ -143,7 +145,7 @@ function useSignBip322MessageNativeSegwit() {
 
   const {
     payment: { address },
-  } = createNativeSegwitSigner({ addressIndex: 0, changeIndex: 0 });
+  } = createNativeSegwitPayer({ addressIndex: 0, changeIndex: 0 });
 
   async function signPsbt(psbt: bitcoin.Psbt) {
     return sign(psbt.toBuffer());
@@ -158,14 +160,14 @@ function useSignBip322MessageNativeSegwit() {
 export function useSignBip322Message() {
   const { paymentType } = useRpcSignBitcoinMessage();
 
-  const taprootMsgSigner = useSignBip322MessageTaproot();
-  const nativeSegwitMsgSigner = useSignBip322MessageNativeSegwit();
+  const taprootMsgPayer = useSignBip322MessageTaproot();
+  const nativeSegwitMsgPayer = useSignBip322MessageNativeSegwit();
 
   switch (paymentType) {
     case 'p2tr':
-      return taprootMsgSigner;
+      return taprootMsgPayer;
     case 'p2wpkh':
-      return nativeSegwitMsgSigner;
+      return nativeSegwitMsgPayer;
     default:
       throw new Error(`Unsupported payment type: ${paymentType}`);
   }

@@ -4,6 +4,7 @@ import {
   type NetworkConfiguration,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
+import { resetWallet } from '@leather.io/state';
 
 const defaultCurrentNetworkId = WalletDefaultNetworkConfigurationIds.mainnet as EntityId;
 
@@ -37,4 +38,8 @@ export const networksSlice = createSlice({
       networksAdapter.removeOne(state, action.payload as any);
     },
   },
+  extraReducers: builder =>
+    builder.addCase(resetWallet, state => {
+      state.currentNetworkId = defaultCurrentNetworkId;
+    }),
 });

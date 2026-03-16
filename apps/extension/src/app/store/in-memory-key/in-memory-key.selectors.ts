@@ -2,49 +2,50 @@ import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
 
-import { defaultWalletKeyId } from '@shared/utils';
+import { deriveRootKeychainFromMnemonicSync } from '@leather.io/crypto';
+
 import { decodeText } from '@shared/utils/text-encoding';
 
-import { mnemonicToRootNode } from '@app/common/keychain/keychain';
-
 import { RootState } from '..';
+import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 
 function selectInMemoryKeys(state: RootState) {
   return state.inMemoryKeys;
 }
 
-const selectDefaultInMemoryWalletKeyBytes = createSelector(
+const selectActiveInMemoryWalletKeyBytes = createSelector(
   selectInMemoryKeys,
-  state => state.keys[defaultWalletKeyId]
+  selectCurrentAccount,
+  (inMemKeys, currentAccount) => inMemKeys.keys[currentAccount.fingerprint]
 );
 
-const selectHasDefaultInMemoryWalletKey = createSelector(
-  selectDefaultInMemoryWalletKeyBytes,
+const selectHasActiveInMemoryWalletKey = createSelector(
+  selectActiveInMemoryWalletKeyBytes,
   key => !!key
 );
 
-export function useHasDefaultInMemoryWalletSecretKey() {
-  return useSelector(selectHasDefaultInMemoryWalletKey);
+export function useHasActiveInMemoryWalletSecretKey() {
+  return useSelector(selectHasActiveInMemoryWalletKey);
 }
 
-// Not using a memoized "createSelector" to avoid storing the decoded key as cleartext in memory
-export function selectDefaultWalletKey(state: RootState) {
-  const defaultWalletBytes = selectDefaultInMemoryWalletKeyBytes(state);
-
-  if (!defaultWalletBytes) return null;
-
-  return decodeText(defaultWalletBytes);
+// No `createSelector` to avoid storing the decoded key as cleartext in memory
+export function selectActiveWalletKey(state: RootState) {
+  const activeWalletBytes = selectActiveInMemoryWalletKeyBytes(state);
+  if (!activeWalletBytes) return null;
+  return decodeText(activeWalletBytes);
 }
 
-export const selectRootKeychain = createSelector(
-  selectDefaultInMemoryWalletKeyBytes,
-  defaultKey => {
-    if (!defaultKey) return null;
+export function useActiveWalletSecretKey() {
+  return useSelector(selectActiveWalletKey);
+}
 
-    return mnemonicToRootNode(decodeText(defaultKey));
-  }
+export const selectRootKeychains = createSelector(selectInMemoryKeys, inMemKeys =>
+  Object.fromEntries(
+    Object.entries(inMemKeys.keys)
+      .filter(([, keyBytes]) => !!keyBytes)
+      .map(([fingerprint, keyBytes]) => [
+        fingerprint,
+        deriveRootKeychainFromMnemonicSync(decodeText(keyBytes)),
+      ])
+  )
 );
-
-export function useDefaultWalletSecretKey() {
-  return useSelector(selectDefaultWalletKey);
-}

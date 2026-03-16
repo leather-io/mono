@@ -24,7 +24,7 @@ interface BtcCryptoAssetItemProps {
 export function BtcCryptoAssetItem({
   balance,
   isLoading,
-  onSelectAsset,
+  onSelectAsset: _onSelectAsset,
   isLoadingAdditionalData,
   showDepositButtons,
 }: BtcCryptoAssetItemProps) {
@@ -35,6 +35,7 @@ export function BtcCryptoAssetItem({
   const dataTestId = CoreAssetSelectors.BtcAsset;
   const titleLeft = 'Bitcoin';
   const captionLeft = 'BTC';
+  const onSelectAsset = _onSelectAsset ? () => _onSelectAsset(btcAssetId) : undefined;
 
   if (showDepositButtons && showBuyButton) {
     return (
@@ -45,6 +46,7 @@ export function BtcCryptoAssetItem({
         titleLeft={titleLeft}
         icon={icon}
         captionLeft={captionLeft}
+        onSelectAsset={onSelectAsset}
       />
     );
   }
@@ -58,7 +60,7 @@ export function BtcCryptoAssetItem({
       isLoading={isLoading}
       isLoadingAdditionalData={isLoadingAdditionalData}
       isPrivate={isPrivate}
-      onSelectAsset={onSelectAsset ? () => onSelectAsset(btcAssetId) : undefined}
+      onSelectAsset={onSelectAsset}
       titleLeft={titleLeft}
       dataTestId={dataTestId}
     />

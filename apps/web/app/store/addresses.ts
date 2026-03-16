@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
 import { StacksNetwork } from '@stacks/network';
-import { atom, useAtom, useAtomValue } from 'jotai';
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { v4 as uuidv4 } from 'uuid';
 import { analytics } from '~/utils/analytics/analytics';
@@ -18,12 +18,40 @@ type GetAddressesResult = Awaited<ReturnType<typeof leather.getAddresses>>['addr
 
 export const addressesAtom = atomWithStorage<GetAddressesResult>('addresses', []);
 
+const providerDetectedAtom = atom(isLeatherInstalled());
+
 export const extensionStateAtom = atom<ExtensionState>(get => {
   const addresses = get(addressesAtom);
   if (addresses.length !== 0) return 'connected';
-  if (isLeatherInstalled()) return 'detected';
+  if (get(providerDetectedAtom)) return 'detected';
   return 'missing';
 });
+
+const providerPollIntervalMs = 50;
+const providerPollMaxMs = 2000;
+
+export function useDetectLeatherProvider() {
+  const setProviderDetected = useSetAtom(providerDetectedAtom);
+
+  useEffect(() => {
+    if (isLeatherInstalled()) {
+      setProviderDetected(true);
+      return;
+    }
+
+    const start = Date.now();
+    const interval = setInterval(() => {
+      if (isLeatherInstalled()) {
+        setProviderDetected(true);
+        clearInterval(interval);
+      } else if (Date.now() - start > providerPollMaxMs) {
+        clearInterval(interval);
+      }
+    }, providerPollIntervalMs);
+
+    return () => clearInterval(interval);
+  }, [setProviderDetected]);
+}
 
 export const stacksAccountAtom = atom(get => {
   const addresses = get(addressesAtom);

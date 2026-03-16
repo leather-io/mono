@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import BitcoinApp from 'ledger-bitcoin';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
+import { userAddsWallet } from '@leather.io/state/wallet';
 
 import { pullBitcoinKeysFromLedgerDevice } from '@app/features/ledger/flows/request-bitcoin-keys/request-bitcoin-keys.utils';
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
@@ -20,12 +21,14 @@ import {
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
-import { bitcoinKeysSlice } from '@app/store/ledger/bitcoin/bitcoin-key.slice';
+import { userSwitchesAccount } from '@app/store/active/active.slice';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
 function LedgerRequestBitcoinKeys() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const wallets = useWalletEntities();
 
   const ledgerNavigate = useLedgerNavigate();
   const network = useCurrentNetwork();
@@ -42,7 +45,7 @@ function LedgerRequestBitcoinKeys() {
         void navigate('/', { replace: true });
       },
       async pullKeysFromDevice(app) {
-        const { keys } = await pullBitcoinKeysFromLedgerDevice(app)({
+        const { keys, fingerprint } = await pullBitcoinKeysFromLedgerDevice(app)({
           network: bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode),
           onRequestKey(index) {
             const keyGroupFinalIndex = defaultNumberOfKeysToPullFromLedgerDevice - 1;
@@ -58,7 +61,23 @@ function LedgerRequestBitcoinKeys() {
             );
           },
         });
-        dispatch(bitcoinKeysSlice.actions.addKeys(keys));
+
+        const keychains = keys.map(key => ({ chain: 'bitcoin' as const, descriptor: key.policy }));
+
+        if (!wallets[fingerprint]) {
+          dispatch(
+            userAddsWallet({
+              wallet: {
+                createdOn: new Date().toISOString(),
+                fingerprint,
+                type: 'ledger',
+              },
+              accountKeychains: keychains,
+            })
+          );
+        }
+
+        dispatch(userSwitchesAccount({ fingerprint, accountIndex: 0 }));
       },
     });
 

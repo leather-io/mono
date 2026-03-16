@@ -23,12 +23,12 @@ interface ItemLayoutProps {
   isSelected?: boolean;
   showChevron?: boolean;
   titleLeft: ReactNode;
-  titleRight: ReactNode;
+  titleRight?: ReactNode;
 }
 export function ItemLayout({
   captionLeft,
   captionRight,
-  gap = 'space.01',
+  gap = 'space.00',
   img,
   isSelected,
   showChevron,

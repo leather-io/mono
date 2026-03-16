@@ -14,25 +14,26 @@ import { useOnChangeAccount } from '@app/routes/hooks/use-on-change-account';
 import { useOnSignOut } from '@app/routes/hooks/use-on-sign-out';
 import { useOnWalletLock } from '@app/routes/hooks/use-on-wallet-lock';
 import { useAppDispatch, useHasStateRehydrated } from '@app/store';
-import { switchAccount } from '@app/store/chains/stx-chain.actions';
+import { userSwitchesAccount } from '@app/store/active/active.slice';
 
 import { useSyncAddressMonitor } from '../address-monitor/use-sync-address-monitor';
 import { useRestoreFormState } from '../popup-send-form-restoration/use-restore-form-state';
 
 initalizeAnalytics();
+
 export function Container() {
   const { pathname: locationPathname } = useLocation();
   const pathname = locationPathname as RouteUrls;
   const [isShowingSwitchAccount, setIsShowingSwitchAccount] = useState(false);
-  const dispatch = useAppDispatch();
 
+  const dispatch = useAppDispatch();
   const hasStateRehydrated = useHasStateRehydrated();
   useSyncAddressMonitor();
   useOnWalletLock(() => closeWindow());
   useOnSignOut(() => closeWindow());
   useRestoreFormState();
   useHandleQueuedBackgroundAnalytics();
-  useOnChangeAccount(index => dispatch(switchAccount(index)));
+  useOnChangeAccount(accountId => dispatch(userSwitchesAccount(accountId)));
 
   useEffect(() => {
     analytics.page('view', `${pathname}`);

@@ -2,16 +2,16 @@ import { useMemo } from 'react';
 
 import { isDefined } from '@leather.io/utils';
 
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 
 import { findOutputsReceivingInscriptions } from './find-outputs-receiving-inscriptions';
 import { PsbtInput } from './use-parsed-inputs';
 import { PsbtOutput } from './use-parsed-outputs';
 
 export function usePsbtInscriptions(psbtInputs: PsbtInput[], psbtOutputs: PsbtOutput[]) {
-  const bitcoinAddressNativeSegwit = useCurrentAccountNativeSegwitIndexZeroSigner().address;
-  const { address: bitcoinAddressTaproot } = useCurrentAccountTaprootIndexZeroSigner();
+  const bitcoinAddressNativeSegwit = useCurrentAccountNativeSegwitIndexZeroPayer().address;
+  const { address: bitcoinAddressTaproot } = useCurrentAccountTaprootIndexZeroPayer();
 
   const outputsReceivingInscriptions = useMemo(
     () =>

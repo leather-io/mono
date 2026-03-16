@@ -6,7 +6,7 @@ import { ensureArray, isEmptyString, uniqueArray } from '@leather.io/utils';
 
 import { analytics } from '@shared/utils/analytics';
 
-import { useCurrentAccountNativeSegwitIndexZeroSignerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 const checkApi = 'https://api.chainalysis.com/api/risk/v2/entities';
@@ -57,7 +57,7 @@ export function useCheckAddressComplianceQueries(addresses: string[]) {
 export const compliantErrorBody = 'Unable to handle request, errorCode: 1398';
 
 export function useBreakOnNonCompliantEntity(address: string | string[] = '') {
-  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSignerNullable();
+  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
 
   const complianceReports = useCheckAddressComplianceQueries([
     nativeSegwitSigner?.address ?? '',

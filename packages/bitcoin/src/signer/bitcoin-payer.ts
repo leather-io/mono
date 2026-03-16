@@ -38,18 +38,9 @@ export interface BitcoinAccountKeychain {
   xpub: string;
 }
 
-export type WithDerivePayer<T, P> = T & { derivePayer(args: BitcoinPayerInfo): P };
-
-export interface BitcoinSigner<Payment> {
-  network: BitcoinNetworkModes;
-  payment: Payment;
-  keychain: HDKey;
-  derivationPath: string;
-  address: BitcoinAddress;
-  publicKey: Uint8Array;
-  sign(tx: btc.Transaction): void;
-  signIndex(tx: btc.Transaction, index: number, allowedSighash?: AllowedSighashTypes[]): void;
-}
+export type WithDerivePayer<T, P extends BitcoinPayer> = T & {
+  derivePayer(args: BitcoinPayerInfo): P;
+};
 
 export interface BitcoinPayerBase {
   paymentType: SupportedPaymentType;

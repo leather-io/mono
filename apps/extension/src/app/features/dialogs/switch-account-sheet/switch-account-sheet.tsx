@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { useMemo, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 import { Box, Flex } from 'leather-styles/jsx';
@@ -7,45 +7,42 @@ import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { useCreateAccount } from '@app/common/hooks/account/use-create-account';
 import { useWalletType } from '@app/common/use-wallet-type';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
-import { useFilteredBitcoinAccounts } from '@app/store/accounts/blockchain/bitcoin/bitcoin.ledger';
-import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useCurrentAccountId } from '@app/store/accounts/account';
+import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
 import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet';
 
-import { AccountListUnavailable } from './components/account-list-unavailable';
 import { SwitchAccountListItem } from './components/switch-account-list-item';
 
 interface SwitchAccountSheetProps {
   isShowing: boolean;
   onClose(): void;
 }
+export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetProps) {
+  const currentAccountId = useCurrentAccountId();
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
 
-export const SwitchAccountSheet = memo(function SwitchAccountSheet({
-  isShowing,
-  onClose,
-}: SwitchAccountSheetProps) {
-  const currentAccountIndex = useCurrentAccountIndex();
   const createAccount = useCreateAccount();
   const { whenWallet } = useWalletType();
-  const stacksAccounts = useStacksAccounts();
-  const bitcoinAccounts = useFilteredBitcoinAccounts();
-  const btcAddressesNum = bitcoinAccounts.length / 2;
-  const stacksAddressesNum = stacksAccounts.length;
+  const walletTree = useWalletAccountRefTree();
 
-  async function onCreateAccount() {
-    await createAccount();
-    onClose();
+  // Pre-multi-wallet: there should only be one
+  const activeWallet = useMemo(
+    () => walletTree.find(wallet => wallet.fingerprint === currentAccountId.fingerprint),
+    [walletTree, currentAccountId.fingerprint]
+  );
+
+  function onCreateAccount() {
+    setIsCreatingAccount(true);
+    requestIdleCallback(async () => {
+      await createAccount();
+      onClose();
+    });
   }
 
-  if (isShowing && stacksAddressesNum === 0 && btcAddressesNum === 0) {
-    return <AccountListUnavailable />;
-  }
   // #4370 SMELL without this early return the wallet crashes on new install with
   // : Wallet is neither of type `ledger` nor `software`
   // FIXME remove this when adding Create Account to Ledger in #2502 #4983
   if (!isShowing) return null;
-
-  const accountNum = stacksAddressesNum || btcAddressesNum;
 
   return (
     <Sheet
@@ -57,17 +54,17 @@ export const SwitchAccountSheet = memo(function SwitchAccountSheet({
       <VirtuosoWrapperSheet>
         <Box flex="1">
           <Virtuoso
-            initialTopMostItemIndex={whenWallet({ ledger: 0, software: currentAccountIndex })}
-            totalCount={accountNum}
-            itemContent={index => (
-              <Box key={index} py="space.03" px="space.05">
-                <SwitchAccountListItem
-                  handleClose={onClose}
-                  currentAccountIndex={currentAccountIndex}
-                  index={index}
-                />
-              </Box>
-            )}
+            initialTopMostItemIndex={currentAccountId.accountIndex}
+            totalCount={activeWallet?.accounts.length ?? 0}
+            itemContent={index => {
+              const accountId = activeWallet?.accounts[index];
+              if (!accountId) return null;
+              return (
+                <Box key={index} py="space.03" px="space.05">
+                  <SwitchAccountListItem handleClose={onClose} accountId={accountId} />
+                </Box>
+              );
+            }}
           />
         </Box>
         {whenWallet({
@@ -78,7 +75,12 @@ export const SwitchAccountSheet = memo(function SwitchAccountSheet({
               boxShadow="contentOverflowFade"
               p="space.05"
             >
-              <Button fullWidth onClick={onCreateAccount} data-testid="create-account-btn">
+              <Button
+                fullWidth
+                onClick={onCreateAccount}
+                data-testid="create-account-btn"
+                aria-busy={isCreatingAccount}
+              >
                 Create new account
               </Button>
             </Flex>
@@ -88,4 +90,4 @@ export const SwitchAccountSheet = memo(function SwitchAccountSheet({
       </VirtuosoWrapperSheet>
     </Sheet>
   );
-});
+}
