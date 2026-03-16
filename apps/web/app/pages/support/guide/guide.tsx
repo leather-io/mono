@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router';
 
 import { Box } from 'leather-styles/jsx/box';
@@ -10,6 +9,7 @@ import Markdown from '~/components/content/markdown-content';
 import { Page } from '~/layouts/page/page';
 import { RelatedGuides } from '~/pages/support/components/related-guides';
 import { loader } from '~/pages/support/guide/guide.route';
+import { useScrollProgress } from '~/utils/hooks/use-scroll-progress';
 
 function formatDate(dateString: string | undefined) {
   if (!dateString) return '';
@@ -21,23 +21,6 @@ function formatDate(dateString: string | undefined) {
     day: 'numeric',
   });
   return formatter.format(date);
-}
-
-function useScrollProgress() {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    function handleScroll() {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0);
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return progress;
 }
 
 export function Guide() {
