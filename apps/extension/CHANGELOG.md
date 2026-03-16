@@ -6,6 +6,25 @@ No unreleased changes.
 
 ---
 
+## [6.98.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.98.0...@leather.io/extension-v6.98.1) (2026-03-16)
+
+
+### Bug Fixes
+
+* **extension:** add border radius to collectibles hover state ([480f77d](https://github.com/leather-io/mono/commit/480f77db908c0c6ffa84b2aeb7edff76fee7c12c))
+* **extension:** adds fade in mask to trending tokens ([254c693](https://github.com/leather-io/mono/commit/254c693739483d5cd974f69b67cd8945e9e98185))
+* **extension:** fix collectibles hover state overflow ([6d055bf](https://github.com/leather-io/mono/commit/6d055bf29ef818beb34d18c42701cd340f56d035))
+* **extension:** refine token list typography, spacing, and hover radius ([05871e1](https://github.com/leather-io/mono/commit/05871e1686e292760caba72286afd8ecf24781bd))
+* **extension:** remove redundant WebkitMaskImage and fix prettier formatting ([785da18](https://github.com/leather-io/mono/commit/785da187a4110aac3b66dd69593ac1df5f52d636))
+* **extension:** update trending tokens heading to label.01 ([a852bc1](https://github.com/leather-io/mono/commit/a852bc17d0a4dd122b65255772aec7ae77a4ede2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.111.0
+
 ## [6.98.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.97.0...@leather.io/extension-v6.98.0) (2026-03-11)
 
 

@@ -489,6 +489,20 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.111.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.110.0...@leather.io/ui-v1.111.0) (2026-03-16)
+
+
+### Features
+
+* **ui:** add popover web component ([a44473c](https://github.com/leather-io/mono/commit/a44473c136eb1946466527f2a4e4d8150b14847e))
+
+
+### Bug Fixes
+
+* **extension:** refine token list typography, spacing, and hover radius ([05871e1](https://github.com/leather-io/mono/commit/05871e1686e292760caba72286afd8ecf24781bd))
+* **ui:** improve switch on/off contrast and add focus ring ([e621993](https://github.com/leather-io/mono/commit/e6219935ea01f11a8928d284187a309ae4b0e098))
+* **ui:** use blue.border instead of lightModeBlue.500 for switch focus ring ([a2da5b1](https://github.com/leather-io/mono/commit/a2da5b143fd942ba7c61214f0e1bd01abf09a9a1))
+
 ## [1.110.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.109.0...@leather.io/ui-v1.110.0) (2026-03-11)
 
 
