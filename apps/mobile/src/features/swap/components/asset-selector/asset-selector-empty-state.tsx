@@ -80,6 +80,6 @@ function Title(props: TextProps) {
 
 function Description(props: TextProps) {
   return (
-    <Text variant="label02" color="ink.text-subdued-secondary" textAlign="center" {...props} />
+    <Text variant="label02" color="ink.text-subdued-primary" textAlign="center" {...props} />
   );
 }

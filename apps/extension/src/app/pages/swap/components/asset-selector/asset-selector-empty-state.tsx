@@ -68,7 +68,7 @@ function Title({ children }: HasChildren) {
 
 function Description({ children }: HasChildren) {
   return (
-    <styled.span textStyle="label.02" color="ink.text-subdued-secondary" textAlign="center">
+    <styled.span textStyle="label.02" color="ink.text-subdued-primary" textAlign="center">
       {children}
     </styled.span>
   );

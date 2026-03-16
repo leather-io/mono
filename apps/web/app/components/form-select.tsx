@@ -32,7 +32,7 @@ export function Select({ label, ...props }: SelectProps) {
         display="inline-block"
         textStyle="label.03"
         pt="space.03"
-        color="ink.text-subdued-secondary"
+        color="ink.text-subdued-primary"
       >
         {label}
       </styled.span>

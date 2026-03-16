@@ -12,7 +12,7 @@ export function AddressTypeBadge({ type }: AddressTypeBadgeProps) {
       borderWidth={1}
       px="1"
     >
-      <Text color="ink.text-subdued-secondary" fontSize={11} fontWeight={600} lineHeight={14}>
+      <Text color="ink.text-subdued-primary" fontSize={11} fontWeight={600} lineHeight={14}>
         {type}
       </Text>
     </Box>

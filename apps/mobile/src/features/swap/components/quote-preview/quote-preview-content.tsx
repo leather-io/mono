@@ -65,7 +65,7 @@ interface QuotePreviewRowProps {
 function QuotePreviewRow({ label, value }: QuotePreviewRowProps) {
   return (
     <Box height={40} flexDirection="row" alignItems="center" justifyContent="space-between">
-      <Text variant="label03" color="ink.text-subdued-secondary">
+      <Text variant="label03" color="ink.text-subdued-primary">
         {label}
       </Text>
       <Box flexDirection="row" alignItems="center" gap="2">

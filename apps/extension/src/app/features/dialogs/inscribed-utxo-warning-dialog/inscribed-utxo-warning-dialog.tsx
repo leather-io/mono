@@ -44,11 +44,11 @@ export const InscribedUtxoWarningDialog = createCallable<void, InscribedUtxoWarn
         >
           <styled.h3 textStyle="heading.05">This transaction includes inscribed UTXOs</styled.h3>
 
-          <styled.p textStyle="body.02" color="ink.text-subdued-secondary">
+          <styled.p textStyle="body.02" color="ink.text-subdued-primary">
             This transaction includes UTXOs that contain inscriptions. If you want to collect
             inscriptions, you may not want to proceed.
           </styled.p>
-          <styled.p textStyle="body.02" color="ink.text-subdued-secondary">
+          <styled.p textStyle="body.02" color="ink.text-subdued-primary">
             If inscriptions aren’t important to you, you can proceed with the transaction.
           </styled.p>
         </Stack>

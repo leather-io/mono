@@ -101,7 +101,7 @@ const Content: typeof RadixDropdownMenu.Content = forwardRef(({ className, ...pr
 Content.displayName = 'DropdownMenu.Content';
 
 const dropdownMenuLabelStyles = css({
-  color: 'ink.text-subdued-secondary',
+  color: 'ink.text-subdued-primary',
   height: 'auto',
   px: 'space.03',
   py: 'space.02',

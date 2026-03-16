@@ -110,7 +110,7 @@ function Blockquote({ children }: ContentComponentsProps) {
       pl="space.04"
       my="space.04"
       fontStyle="italic"
-      color="ink.text-subdued-secondary"
+      color="ink.text-subdued-primary"
     >
       {children}
     </styled.blockquote>
@@ -220,7 +220,7 @@ function Th({ children }: ContentComponentsProps) {
       fontWeight="semibold"
       p="space.03"
       textAlign="left"
-      color="ink.text-subdued-secondary"
+      color="ink.text-subdued-primary"
     >
       {children}
     </styled.th>

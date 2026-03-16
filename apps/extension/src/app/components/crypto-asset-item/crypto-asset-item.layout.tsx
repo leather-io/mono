@@ -77,7 +77,7 @@ export function CryptoAssetItemLayout({
         label={formattedBalance.isCompact && !isPrivate ? availableBalanceString : undefined}
         side="left"
       >
-        <Flex alignItems="center" color="ink.text-subdued-secondary" gap="space.02">
+        <Flex alignItems="center" color="ink.text-subdued-primary" gap="space.02">
           <BulletSeparator>
             <Caption
               data-state={isLoadingAdditionalData ? 'loading' : undefined}

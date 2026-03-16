@@ -25,7 +25,7 @@ interface ValueDisplayerNameProps {
 }
 function ValueDisplayerName({ name }: ValueDisplayerNameProps) {
   return (
-    <styled.h4 color="ink.text-subdued-secondary" textStyle="label.03">
+    <styled.h4 color="ink.text-subdued-primary" textStyle="label.03">
       {name}
     </styled.h4>
   );

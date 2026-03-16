@@ -8,7 +8,7 @@ type Variant = 'initial' | 'active' | 'invalid';
 const defaultCaretColor = '#2cb5c1';
 
 const textTokenByVariant: Record<Variant, ColorToken> = {
-  initial: 'ink.text-subdued-secondary',
+  initial: 'ink.text-subdued-primary',
   active: 'ink.text-primary',
   invalid: 'red.action-primary-default',
 };
@@ -40,7 +40,7 @@ export function resolveAmountFieldColors(
     textColor: token(`colors.${textTokenByVariant[variant]}`),
     caretColor: resolveCaretColor(variant, asset),
     symbolColor: token(
-      `colors.${variant === 'invalid' ? textTokenByVariant[variant] : 'ink.text-subdued-secondary'}`
+      `colors.${variant === 'invalid' ? textTokenByVariant[variant] : 'ink.text-subdued-primary'}`
     ),
   };
 }

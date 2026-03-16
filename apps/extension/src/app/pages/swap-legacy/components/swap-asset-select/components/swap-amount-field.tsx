@@ -82,7 +82,7 @@ export function SwapAmountField<T extends BaseSwapContext<T>>({
     <Stack alignItems="flex-end" gap="space.01" width={['50%', '60%']}>
       <styled.input
         _disabled={{
-          color: 'ink.text-subdued-secondary',
+          color: 'ink.text-subdued-primary',
         }}
         autoComplete="off"
         bg="ink.background-primary"
@@ -107,7 +107,7 @@ export function SwapAmountField<T extends BaseSwapContext<T>>({
       />
       {amountAsFiat ? (
         <styled.span
-          color={showError ? 'error' : 'ink.text-subdued-secondary'}
+          color={showError ? 'error' : 'ink.text-subdued-primary'}
           textStyle="caption.01"
         >
           {amountAsFiat}

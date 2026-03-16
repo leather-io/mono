@@ -32,7 +32,7 @@ export function ItemLayout({
         {isValidElement(titleLeft) ? titleLeft : <Text variant="label02">{titleLeft}</Text>}
         {captionLeft && isValidElement(captionLeft) && captionLeft}
         {captionLeft && isString(captionLeft) && (
-          <Text variant="caption01" color="ink.text-subdued-secondary">
+          <Text variant="caption01" color="ink.text-subdued-primary">
             {captionLeft}
           </Text>
         )}
@@ -42,7 +42,7 @@ export function ItemLayout({
           {isValidElement(titleRight) ? titleRight : <Text variant="label02">{titleRight}</Text>}
           {captionRight && isValidElement(captionRight) && captionRight}
           {captionRight && isString(captionRight) && (
-            <Text variant="caption01" color="ink.text-subdued-secondary">
+            <Text variant="caption01" color="ink.text-subdued-primary">
               {captionRight}
             </Text>
           )}

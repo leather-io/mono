@@ -17,7 +17,7 @@ export function SwapReviewEmptyState({ onBack }: SwapReviewEmptyStateProps) {
       />
       <Box gap="2" alignItems="center">
         <Text variant="label01">{t`No quotes available`}</Text>
-        <Text variant="body02" color="ink.text-subdued-secondary" textAlign="center">
+        <Text variant="body02" color="ink.text-subdued-primary" textAlign="center">
           {t`Not enough liquidity or no route available right now. Try a smaller amount or check back later.`}
         </Text>
       </Box>

@@ -19,7 +19,7 @@ interface SubmittedTransactionListLayoutProps {
 export function SubmittedTransactionListLayout({ children }: SubmittedTransactionListLayoutProps) {
   return (
     <>
-      <styled.span textStyle="body.02" color="ink.text-subdued-secondary">
+      <styled.span textStyle="body.02" color="ink.text-subdued-primary">
         Submitted
       </styled.span>
       <Stack pb="space.06" gap="space.05">

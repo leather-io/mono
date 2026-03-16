@@ -30,7 +30,7 @@ function TokenDetailsPillButton({ label, onClick, disabled, testId }: TokenDetai
       border="default"
       borderRadius="999px"
       textStyle="label.02"
-      color={disabled ? 'ink.text-subdued-secondary' : 'ink.text-primary'}
+      color={disabled ? 'ink.text-subdued-primary' : 'ink.text-primary'}
       opacity={disabled ? 0.6 : 1}
       _hover={disabled ? undefined : { bg: 'ink.component-background-hover', cursor: 'pointer' }}
       onClick={disabled ? undefined : onClick}

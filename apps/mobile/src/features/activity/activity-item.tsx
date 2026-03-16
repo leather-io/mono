@@ -59,7 +59,7 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
         {balances.quote ? (
           <Cell.Label
             variant="primary"
-            color="ink.text-subdued-secondary"
+            color="ink.text-subdued-primary"
             lineHeight={16}
             fontSize={13}
           >
@@ -74,7 +74,7 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
         {balances.crypto ? (
           <Cell.Label
             variant="secondary"
-            color="ink.text-subdued-secondary"
+            color="ink.text-subdued-primary"
             lineHeight={16}
             fontSize={13}
           >
@@ -82,7 +82,7 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
               formattingOptions={{ showCurrency: false }}
               balance={balances.crypto}
               variant="caption01"
-              color="ink.text-subdued-secondary"
+              color="ink.text-subdued-primary"
               lineHeight={16}
               fontSize={13}
             />

@@ -15,7 +15,7 @@ export function StackingPageHeading(): ReactElement {
           <LearnMoreLink destination="stacking" />
           <styled.p
             textStyle="caption.01"
-            color="ink.text-subdued-secondary"
+            color="ink.text-subdued-primary"
             mt="space.02"
             borderRadius="sm"
           >

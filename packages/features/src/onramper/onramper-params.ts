@@ -68,7 +68,7 @@ export function getOnramperIframeParams({
     primaryColor: formatColorHexForParams(colors['ink.action-primary-default']),
     secondaryColor: formatColorHexForParams(colors['ink.component-background-default']),
     primaryTextColor: formatColorHexForParams(colors['ink.text-primary']),
-    secondaryTextColor: formatColorHexForParams(colors['ink.text-subdued-secondary']),
+    secondaryTextColor: formatColorHexForParams(colors['ink.text-subdued-primary']),
     containerColor: formatColorHexForParams(colors['ink.background-primary']),
     cardColor: formatColorHexForParams(colors['ink.component-background-hover']),
     primaryBtnTextColor: formatColorHexForParams(colors['ink.background-primary']),

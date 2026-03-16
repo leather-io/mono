@@ -139,12 +139,12 @@ interface SubmissionFailureMessageProps {
 function SubmissionFailureMessage({ onReset }: SubmissionFailureMessageProps) {
   return (
     <Box alignItems="center" gap="5" px="5">
-      <Text variant="body02" color="ink.text-subdued-secondary" textAlign="center" lineHeight={24}>
+      <Text variant="body02" color="ink.text-subdued-primary" textAlign="center" lineHeight={24}>
         <Trans>
           Swap wasn't submitted due to an unexpected error. Please try again, or{' '}
           <Text
             variant="body02"
-            color="ink.text-subdued-secondary"
+            color="ink.text-subdued-primary"
             onPress={() => Linking.openURL(LEATHER_SUPPORT_URL)}
             textDecorationLine="underline"
             textDecorationStyle="solid"

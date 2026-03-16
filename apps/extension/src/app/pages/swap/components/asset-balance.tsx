@@ -34,7 +34,7 @@ export function AssetBalance({ balance, inputCurrencyMode, onSetToMax }: AssetBa
             <Box as={onSetToMax ? 'button' : 'div'} onClick={onSetToMax}>
               <Balance
                 textStyle="label.03"
-                color="ink.text-subdued-secondary"
+                color="ink.text-subdued-primary"
                 balance={displayBalance}
                 formatCurrency={formatCurrency}
                 formattingOptions={{ showCurrency: inputCurrencyMode === 'quote' }}

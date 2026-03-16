@@ -38,7 +38,7 @@ const input = sva({
       ring: 'none',
       textStyle: 'body.02',
       zIndex: 4,
-      color: 'ink.text-subdued-secondary',
+      color: 'ink.text-subdued-primary',
       _before: {
         content: '""',
         rounded: 'xs',
@@ -87,7 +87,7 @@ const input = sva({
         cursor: 'not-allowed',
       },
       _focus: { ring: 'none' },
-      _placeholder: { color: 'ink.text-subdued-secondary' },
+      _placeholder: { color: 'ink.text-subdued-primary' },
       '&:placeholder-shown + label': transformedLabelStyles,
       '[data-has-label="true"] &': {
         pt: '22px',

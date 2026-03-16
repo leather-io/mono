@@ -20,7 +20,7 @@ export function LedgerScreenDetail(props: LedgerScreenDetailProps) {
             <Flex cursor="question" display="inline-flex">
               {title}
               <Box ml="space.01" mt="space.01">
-                <InfoCircleIcon color="ink.text-subdued-secondary" variant="small" />
+                <InfoCircleIcon color="ink.text-subdued-primary" variant="small" />
               </Box>
             </Flex>
           </BasicTooltip>

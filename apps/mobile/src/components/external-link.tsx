@@ -11,7 +11,7 @@ function Label({ label, opacity = 1 }: LabelProps) {
     <Text
       variant="label02"
       textDecorationLine="underline"
-      textDecorationColor="ink.text-subdued-secondary"
+      textDecorationColor="ink.text-subdued-primary"
       opacity={opacity}
     >
       {label}
@@ -27,7 +27,7 @@ export function ExternalLink({ url, label }: ExternalLinkProps) {
     <Pressable onPress={() => Linking.openURL(url || '')}>
       {({ pressed }) => (
         <Box flexDirection="row" alignItems="center" gap="1">
-          <ArrowTopRightIcon color="ink.text-subdued-secondary" variant="small" />
+          <ArrowTopRightIcon color="ink.text-subdued-primary" variant="small" />
           <Label label={label} opacity={pressed ? 0.5 : 1} />
         </Box>
       )}

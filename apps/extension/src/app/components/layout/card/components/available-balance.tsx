@@ -19,16 +19,16 @@ export function AvailableBalance({
   return (
     <Flex alignItems="center" justifyContent="space-between">
       <HStack gap="space.01">
-        <styled.span color="ink.text-subdued-secondary" textStyle="caption.01">
+        <styled.span color="ink.text-subdued-primary" textStyle="caption.01">
           Available balance
         </styled.span>
         <BasicTooltip asChild label={balanceTooltipLabel} side="top">
           <Box>
-            <InfoCircleIcon color="ink.text-subdued-secondary" variant="small" />
+            <InfoCircleIcon color="ink.text-subdued-primary" variant="small" />
           </Box>
         </BasicTooltip>
       </HStack>
-      <styled.span color="ink.text-subdued-secondary" mr="space.02" textStyle="caption.01">
+      <styled.span color="ink.text-subdued-primary" mr="space.02" textStyle="caption.01">
         <PrivateTextLayout isPrivate={isPrivate}>{balance}</PrivateTextLayout>
       </styled.span>
     </Flex>

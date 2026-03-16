@@ -34,7 +34,7 @@ export function TokenOverview({
       <Stack gap="space.00" alignItems="center">
         <styled.div textStyle="heading.03" data-testid="token-overview-amount">
           {formatCurrency(availableBalance, { showCurrency: false })}
-          {symbol && <styled.span color="ink.text-subdued-secondary"> {symbol}</styled.span>}
+          {symbol && <styled.span color="ink.text-subdued-primary"> {symbol}</styled.span>}
         </styled.div>
         <styled.div
           textStyle="label.01"

@@ -56,11 +56,11 @@ export const TableHead = forwardRef<HTMLTableSectionElement, HTMLStyledProps<'th
 );
 
 export const TableHeader = forwardRef<HTMLTableCellElement, HTMLStyledProps<'th'>>((props, ref) => (
-  <styled.th textStyle="label.03" color="ink.text-subdued-secondary" ref={ref} {...props} />
+  <styled.th textStyle="label.03" color="ink.text-subdued-primary" ref={ref} {...props} />
 ));
 
 export const TableRow = forwardRef<HTMLTableRowElement, HTMLStyledProps<'tr'>>((props, ref) => (
-  <styled.tr textStyle="label.03" color="ink.text-subdued-secondary" ref={ref} {...props} />
+  <styled.tr textStyle="label.03" color="ink.text-subdued-primary" ref={ref} {...props} />
 ));
 
 export const TableBody = forwardRef<HTMLTableSectionElement, HTMLStyledProps<'tbody'>>(

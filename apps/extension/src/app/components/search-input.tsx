@@ -48,7 +48,7 @@ export function SearchInput({
   return (
     <Flex role="search" alignItems="center" position="relative">
       <Flex position="absolute" left="12px" zIndex={1} aria-hidden="true">
-        <SearchIcon color="ink.text-subdued-secondary" transform="scale(0.8)" />
+        <SearchIcon color="ink.text-subdued-primary" transform="scale(0.8)" />
       </Flex>
 
       {hasResultsRegion && <VisuallyHidden id={hintId}>Results update as you type</VisuallyHidden>}
@@ -76,7 +76,7 @@ export function SearchInput({
         onChange={e => onChange(e.target.value)}
         onKeyDown={onKeyDown}
         _focus={{ outline: 'none', borderColor: 'ink.action-primary-default' }}
-        _placeholder={{ color: 'ink.text-subdued-secondary' }}
+        _placeholder={{ color: 'ink.text-subdued-primary' }}
       />
 
       <VisuallyHidden role="status" aria-atomic="true">
@@ -95,7 +95,7 @@ export function SearchInput({
             <IconButton
               aria-label="Clear search"
               onClick={clearValue}
-              icon={<CloseIcon variant="small" color="ink.text-subdued-secondary" />}
+              icon={<CloseIcon variant="small" color="ink.text-subdued-primary" />}
             />
           </motion.div>
         )}

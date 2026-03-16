@@ -8,10 +8,10 @@ interface BitcoinCustomFeeFiatProps {
 export function BitcoinCustomFeeFiat({ feeInBtc, fiatFeeValue }: BitcoinCustomFeeFiatProps) {
   return (
     <Flex justifyContent="space-between">
-      <styled.span color="ink.text-subdued-secondary" textStyle="body.02">
+      <styled.span color="ink.text-subdued-primary" textStyle="body.02">
         {fiatFeeValue}
       </styled.span>
-      <styled.span color="ink.text-subdued-secondary" textStyle="body.02">
+      <styled.span color="ink.text-subdued-primary" textStyle="body.02">
         {feeInBtc} BTC
       </styled.span>
     </Flex>

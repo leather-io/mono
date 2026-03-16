@@ -22,7 +22,7 @@ const tabsTriggerStyles = css({
   justifyContent: 'center',
   py: 'space.04',
   userSelect: 'none',
-  color: 'ink.text-subdued-secondary',
+  color: 'ink.text-subdued-primary',
   _hover: { background: 'ink.component-background-hover' },
   '&[data-state="active"]': {
     color: 'ink.text-primary',
@@ -32,7 +32,7 @@ const tabsTriggerStyles = css({
       bottom: 0,
       height: '2px',
       width: '100%',
-      bg: 'ink.text-subdued-secondary',
+      bg: 'ink.text-subdued-primary',
       zIndex: 10,
     },
   },

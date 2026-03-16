@@ -84,7 +84,7 @@ interface QuotePreviewRowProps {
 function QuotePreviewRow({ label, value }: QuotePreviewRowProps) {
   return (
     <Flex h="40px" alignItems="center" justifyContent="space-between">
-      <styled.span textStyle="label.03" color="ink.text-subdued-secondary">
+      <styled.span textStyle="label.03" color="ink.text-subdued-primary">
         {label}
       </styled.span>
       <Flex alignItems="center" gap="space.02">

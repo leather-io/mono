@@ -16,7 +16,7 @@ const badgeVariants: Record<BadgeVariant, VariantProps> = {
   default: {
     bg: 'ink.background-secondary',
     borderColor: 'ink.border-transparent',
-    color: 'ink.text-subdued-secondary',
+    color: 'ink.text-subdued-primary',
   },
   info: {
     bg: 'blue.background-primary',

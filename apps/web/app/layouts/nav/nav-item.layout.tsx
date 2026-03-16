@@ -47,7 +47,7 @@ export function NavItem({ children, icon, href, newTab }: NavItemProps) {
             _groupHover={{ display: 'flex' }}
             display="none"
           >
-            <RotatedArrow color="ink.text-subdued-secondary" />
+            <RotatedArrow color="ink.text-subdued-primary" />
           </Box>
         )}
       </Box>

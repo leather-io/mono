@@ -74,7 +74,7 @@ export function AssetDetails() {
             {addressType && <AddressTypeBadge type={addressType} />}
           </Box>
 
-          <Text variant="label02" color="ink.text-subdued-secondary">
+          <Text variant="label02" color="ink.text-subdued-primary">
             {description}
           </Text>
         </Box>

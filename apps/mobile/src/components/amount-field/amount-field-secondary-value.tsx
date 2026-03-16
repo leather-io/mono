@@ -64,14 +64,14 @@ export function AmountFieldSecondaryValue({
       <Box flexDirection="row" gap="1" alignItems="center">
         <Text
           variant="label02"
-          color="ink.text-subdued-secondary"
+          color="ink.text-subdued-primary"
           numberOfLines={1}
           ellipsizeMode="clip"
         >
           {displayValue}
         </Text>
         {inputCurrencyModeChangeEnabled ? (
-          <ArrowTopBottomIcon color="ink.text-subdued-secondary" variant="small" />
+          <ArrowTopBottomIcon color="ink.text-subdued-primary" variant="small" />
         ) : null}
       </Box>
     </Pressable>

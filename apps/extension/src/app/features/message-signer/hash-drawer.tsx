@@ -46,7 +46,7 @@ export function HashDrawer(props: HashDrawerProps) {
         visibility={showHash ? 'visible' : 'hidden'}
       >
         <styled.span
-          color="ink.text-subdued-secondary"
+          color="ink.text-subdued-primary"
           lineHeight="1.6"
           wordBreak="break-all"
           textStyle="caption.01"

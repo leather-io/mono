@@ -33,7 +33,7 @@ export function BroadcastErrorLayout(props: BroadcastErrorProps) {
         {title}
       </styled.span>
       <styled.span
-        color="ink.text-subdued-secondary"
+        color="ink.text-subdued-primary"
         mt="space.04"
         textAlign="center"
         textStyle="body.02"

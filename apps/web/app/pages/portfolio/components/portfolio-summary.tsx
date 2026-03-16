@@ -11,7 +11,7 @@ export function PortfolioSummary({ balance, ...props }: PortfolioSummaryProps) {
     <Box {...props}>
       <Flex justifyContent="space-between" alignItems="flex-start" flexWrap="wrap" gap="space.04">
         <Box>
-          <styled.h3 textStyle="label.03" color="ink.text-subdued-secondary" mb="space.02">
+          <styled.h3 textStyle="label.03" color="ink.text-subdued-primary" mb="space.02">
             Total balance
           </styled.h3>
           <styled.p textStyle="heading.03">{balance ? formatCurrency(balance) : '$–.––'}</styled.p>

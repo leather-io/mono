@@ -39,7 +39,7 @@ export function ActivityList({ activity, isLoading, minWidth = 400 }: ActivityLi
         justifyContent="center"
         flexGrow={1}
         textStyle="body.02"
-        color="ink.text-subdued-secondary"
+        color="ink.text-subdued-primary"
       >
         No recent activity
       </Flex>

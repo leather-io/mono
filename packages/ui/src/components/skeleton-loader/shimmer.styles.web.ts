@@ -6,6 +6,6 @@ export const shimmerStyles = css({
     WebkitMask: 'linear-gradient(-60deg, #000 30%, #0005, #000 70%) right/300% 100%',
     backgroundRepeat: 'no-repeat',
     animation: 'shimmer 1.5s infinite',
-    color: 'ink.text-subdued-secondary',
+    color: 'ink.text-subdued-primary',
   },
 });

@@ -40,7 +40,7 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
       titleRight={
         isLoading ? (
           <Spinner
-            color="ink.text-subdued-secondary"
+            color="ink.text-subdued-primary"
             position="absolute"
             right={0}
             top="calc(50% - 8px)"

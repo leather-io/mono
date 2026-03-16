@@ -13,7 +13,7 @@ export function SelectTrigger({ label, children, ...props }: SelectTriggerProps)
       width="100%"
       {...props}
     >
-      <styled.strong textStyle="label.03" color="ink.text-subdued-secondary">
+      <styled.strong textStyle="label.03" color="ink.text-subdued-primary">
         {label}
       </styled.strong>
       <styled.p textStyle="label.02">{children}</styled.p>

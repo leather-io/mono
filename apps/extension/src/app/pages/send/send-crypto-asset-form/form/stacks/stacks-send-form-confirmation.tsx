@@ -54,7 +54,7 @@ export function StacksSendFormConfirmation() {
     >
       <Stack>
         <Box>
-          <InfoCircleIcon color="ink.text-subdued-secondary" variant="small" />
+          <InfoCircleIcon color="ink.text-subdued-primary" variant="small" />
         </Box>
       </Stack>
     </BasicTooltip>

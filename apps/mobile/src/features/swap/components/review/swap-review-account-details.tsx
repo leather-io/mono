@@ -19,7 +19,7 @@ export function SwapReviewAccountDetails() {
 
   return (
     <Box flexDirection="row" alignItems="flex-end" justifyContent="space-between" pb="2">
-      <Text variant="label02" color="ink.text-subdued-secondary">
+      <Text variant="label02" color="ink.text-subdued-primary">
         {t`From`}
       </Text>
 
@@ -30,8 +30,8 @@ export function SwapReviewAccountDetails() {
         </Box>
         {hasMoreThanOneWallet && (
           <Box flexDirection="row" alignItems="center" gap="1">
-            <WalletIcon variant="small" color="ink.text-subdued-secondary" />
-            <Text variant="label03" color="ink.text-subdued-secondary">
+            <WalletIcon variant="small" color="ink.text-subdued-primary" />
+            <Text variant="label03" color="ink.text-subdued-primary">
               {wallet.name}
             </Text>
           </Box>
