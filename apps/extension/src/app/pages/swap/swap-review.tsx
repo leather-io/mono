@@ -15,6 +15,7 @@ import {
 
 import { formatCurrency, formatPercentage } from '@app/common/currency-formatter';
 import { Card, Content, Page } from '@app/components/layout';
+import { LoadingSpinner } from '@app/components/loading-spinner';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { QuoteRefetchIndicator } from '@app/pages/swap/components/quote-preview/quote-refetch-indicator';
 import { PriceImpactValue } from '@app/pages/swap/components/review/price-impact-value';
@@ -30,6 +31,8 @@ import type { SwapOutletContext } from '@app/pages/swap/swap-container';
 
 import { FeesTooltipContent } from './components/review/fees-tooltip-content';
 import { SlippageSelectorSheet } from './components/review/slippage-selector-sheet';
+import { SwapReviewEmptyState } from './components/review/swap-review-empty-state';
+import { SwapReviewErrorState } from './components/review/swap-review-error-state';
 import { SwapReviewInfoTooltip } from './components/review/swap-review-info-tooltip';
 import { formatSwapRate, sumFeesInQuoteCurrency } from './swap-utils';
 
@@ -54,10 +57,10 @@ export function SwapReview() {
             {matchLiveEstimate(liveEstimate, {
               idle: () => null,
               constrained: () => null,
-              loading: () => null,
-              error: () => null,
-              empty: () => null,
-              success: liveEstimate => <SwapReviewContent liveEstimate={liveEstimate} />, // TODO:,
+              loading: () => <LoadingSpinner />,
+              error: estimate => <SwapReviewErrorState onRetry={estimate.refetch} />,
+              empty: () => <SwapReviewEmptyState onBack={() => navigate(-1)} />,
+              success: liveEstimate => <SwapReviewContent liveEstimate={liveEstimate} />,
             })}
           </Card>
         </Page>
