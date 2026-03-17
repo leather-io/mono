@@ -9,6 +9,7 @@ interface BalanceRowProps {
   cryptoValue: string;
   showChevron?: boolean;
   showInfoIcon?: boolean;
+  dataTestId?: string;
   onClick?(): void;
 }
 
@@ -18,10 +19,12 @@ export function BalanceRow({
   cryptoValue,
   showChevron,
   showInfoIcon,
+  dataTestId,
   onClick,
 }: BalanceRowProps) {
   return (
     <button
+      data-testid={dataTestId}
       className={css({
         _hover: {
           backgroundColor: 'ink.component-background-hover',

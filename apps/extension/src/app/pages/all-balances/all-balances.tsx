@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
+import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { ArrowLeftIcon, BtcAvatarIcon, StxAvatarIcon } from '@leather.io/ui';
@@ -79,14 +80,14 @@ export function AllBalancesPage() {
   ]);
 
   return (
-    <Flex height="100vh" direction="column">
+    <Flex height="100vh" direction="column" data-testid={AllBalancesSelectors.AllBalancesPage}>
       <Header px="space.04">
         <HeaderGrid
           leftCol={
             <HeaderActionButton
               icon={<ArrowLeftIcon />}
               onAction={() => navigate(RouteUrls.Settings)}
-              dataTestId="all-balances-back"
+              dataTestId={AllBalancesSelectors.BackButton}
             />
           }
           centerCol={<styled.span textStyle="heading.05">All balances</styled.span>}
@@ -108,6 +109,7 @@ export function AllBalancesPage() {
               label="Available to transfer"
               fiatValue={formatCurrency(btc.quote.availableBalance)}
               cryptoValue={formatCurrency(btc.btc.availableBalance)}
+              dataTestId={AllBalancesSelectors.BalanceRowAvailable}
               showChevron
               onClick={() => navigate(`${RouteUrls.AllBalances}/available`)}
             />
@@ -115,6 +117,7 @@ export function AllBalancesPage() {
               label="Unavailable to transfer"
               fiatValue={formatCurrency(btc.quote.unspendableBalance)}
               cryptoValue={formatCurrency(btc.btc.unspendableBalance)}
+              dataTestId={AllBalancesSelectors.BalanceRowUnavailable}
               showChevron
               onClick={() => navigate(`${RouteUrls.AllBalances}/unavailable`)}
             />
@@ -122,6 +125,7 @@ export function AllBalancesPage() {
               label="Pending"
               fiatValue={formatCurrency(btc.quote.inboundBalance)}
               cryptoValue={formatCurrency(btc.btc.inboundBalance)}
+              dataTestId={AllBalancesSelectors.BalanceRowPending}
               showChevron
               onClick={() => navigate(`${RouteUrls.AllBalances}/pending`)}
             />
@@ -133,6 +137,7 @@ export function AllBalancesPage() {
                   ? `${runes.runes.length} rune${runes.runes.length === 1 ? '' : 's'}`
                   : '0 runes'
               }
+              dataTestId={AllBalancesSelectors.BalanceRowRunes}
               showChevron
               onClick={() => navigate(`${RouteUrls.AllBalances}/runes`)}
             />

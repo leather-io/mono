@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
+import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import type { OwnedUtxo } from '@leather.io/models';
@@ -94,14 +95,18 @@ export function AllBalancesDetail() {
   const title = categoryTitles[category];
 
   return (
-    <Flex height="100vh" direction="column">
+    <Flex
+      height="100vh"
+      direction="column"
+      data-testid={AllBalancesSelectors.AllBalancesDetailPage}
+    >
       <Header px="space.04">
         <HeaderGrid
           leftCol={
             <HeaderActionButton
               icon={<ArrowLeftIcon />}
               onAction={() => navigate(-1)}
-              dataTestId="all-balances-detail-back"
+              dataTestId={AllBalancesSelectors.DetailBackButton}
             />
           }
           centerCol={<styled.span textStyle="heading.05">All balances</styled.span>}

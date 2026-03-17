@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 
+import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 
@@ -61,6 +62,7 @@ export function MenuButtons() {
       />
 
       <SettingsButton
+        data-testid={AllBalancesSelectors.AllBalancesMenuItem}
         variant="chevron"
         title="All balances"
         onClick={() => {
