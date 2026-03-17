@@ -19,7 +19,7 @@ import { useBtcAccountBalance } from '@app/query/bitcoin/balance/btc-balance.hoo
 import { useRunesAccountBalance } from '@app/query/bitcoin/runes/runes-balance.query';
 import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useSip10AccountBalance } from '@app/query/stacks/sip10/sip10-balance.hooks';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 
 import { BalanceRow } from './components/balance-row';
 import { ProtocolSection } from './components/protocol-section';
@@ -36,12 +36,12 @@ function isSbtcAsset(contractId: string) {
 
 export function AllBalancesPage() {
   const navigate = useNavigate();
-  const accountIndex = useCurrentAccountIndex();
+  const accountId = useCurrentAccountId();
 
-  const btcBalance = useBtcAccountBalance(accountIndex);
-  const stxBalance = useStxAccountBalance(accountIndex);
-  const sip10Balance = useSip10AccountBalance(accountIndex);
-  const runesBalance = useRunesAccountBalance(accountIndex);
+  const btcBalance = useBtcAccountBalance(accountId);
+  const stxBalance = useStxAccountBalance(accountId);
+  const sip10Balance = useSip10AccountBalance(accountId);
+  const runesBalance = useRunesAccountBalance(accountId);
 
   const isLoading =
     btcBalance.state === 'loading' ||
