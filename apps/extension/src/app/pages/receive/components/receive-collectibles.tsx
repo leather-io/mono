@@ -1,5 +1,4 @@
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
-import { css } from 'leather-styles/css';
 import { Stack } from 'leather-styles/jsx';
 
 import { OrdinalAvatarIcon, StxAvatarIcon } from '@leather.io/ui';
@@ -8,7 +7,6 @@ import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { useToast } from '@app/features/toasts/use-toast';
 import { StampsAvatarIcon } from '@app/ui/components/avatar/stamps-avatar-icon';
 
-import { receiveTabStyle } from '../receive-dialog';
 import { ReceiveItem } from './receive-item';
 
 interface ReceiveCollectiblesProps {
@@ -29,7 +27,7 @@ export function ReceiveCollectibles({
 }: ReceiveCollectiblesProps) {
   const toast = useToast();
   return (
-    <Stack className={css(receiveTabStyle)}>
+    <Stack mt="space.03" px="space.05" pb="space.05" minHeight="260px">
       <ReceiveItem
         address={btcAddressTaproot}
         icon={<OrdinalAvatarIcon />}

@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
-import { css } from 'leather-styles/css';
 import { Stack } from 'leather-styles/jsx';
 
 import {
@@ -20,7 +19,6 @@ import { useAlexSwappableAssets } from '@app/query/common/alex-sdk/alex-sdk.hook
 import { useConfigRunesEnabled } from '@app/query/common/remote-config/remote-config.query';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
-import { receiveTabStyle } from '../receive-dialog';
 import { ReceiveItem } from './receive-item';
 
 interface ReceiveTokensProps {
@@ -54,7 +52,7 @@ export function ReceiveTokens({
   );
 
   return (
-    <Stack className={css(receiveTabStyle)}>
+    <Stack mt="space.03" px="space.05" pb="space.05" minHeight="260px">
       <ReceiveItem
         address={btcAddressNativeSegwit}
         icon={<BtcAvatarIcon size="xl" />}

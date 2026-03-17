@@ -3,7 +3,7 @@ import { test } from '../../fixtures/fixtures';
 test.describe('Receive Dialog', () => {
   test.describe.configure({ retries: 0 });
 
-  test('That the Receive dialog renders and shows the correct assets', async ({
+  test('That the Receive dialog renders and shows the correct address cards', async ({
     extensionId,
     globalPage,
     onboardingPage,
@@ -14,12 +14,9 @@ test.describe('Receive Dialog', () => {
     await homePage.goToReceiveDialog();
 
     const dialog = homePage.page.getByRole('dialog');
-    await test.expect(dialog.getByText('Choose asset')).toBeVisible();
-    await test.expect(dialog.getByText('Tokens')).toBeVisible();
-    await test.expect(dialog.getByText('Collectibles')).toBeVisible();
-    await test.expect(dialog.getByText('Bitcoin')).toBeVisible();
+    await test.expect(dialog.getByText('Receive')).toBeVisible();
     await test.expect(dialog.getByText('Stacks')).toBeVisible();
-    await test.expect(dialog.getByText('BRC-20')).toBeVisible();
-    await test.expect(dialog.getByText('SRC-20')).toBeVisible();
+    await test.expect(dialog.getByText('Bitcoin Native Segwit')).toBeVisible();
+    await test.expect(dialog.getByText('Bitcoin Taproot')).toBeVisible();
   });
 });

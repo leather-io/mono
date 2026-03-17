@@ -47,21 +47,21 @@ test.describe('Home tabs', () => {
     test('should open receive modal from tokens tab', async ({ homePage, page }) => {
       await homePage.goToReceiveDialog();
 
-      await expect(page.getByText('CHOOSE ASSET TO RECEIVE')).toBeVisible();
+      await expect(page.getByText('RECEIVE')).toBeVisible();
     });
 
     test('should open receive modal from collectibles tab', async ({ homePage, page }) => {
       await homePage.clickCollectiblesTab();
       await homePage.goToReceiveDialog();
 
-      await expect(page.getByText('CHOOSE ASSET TO RECEIVE')).toBeVisible();
+      await expect(page.getByText('RECEIVE')).toBeVisible();
     });
 
     test('should open receive modal from activity tab', async ({ homePage, page }) => {
       await homePage.clickActivityTab();
       await homePage.goToReceiveDialog();
 
-      await expect(page.getByText('CHOOSE ASSET TO RECEIVE')).toBeVisible();
+      await expect(page.getByText('RECEIVE')).toBeVisible();
     });
 
     test('should preserve collectibles tab after closing receive modal', async ({
