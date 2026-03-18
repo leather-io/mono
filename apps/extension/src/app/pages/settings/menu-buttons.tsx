@@ -15,6 +15,7 @@ import {
   SupportIcon,
 } from '@leather.io/ui';
 
+import { WALLET_ENVIRONMENT } from '@shared/environment';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics, openFeedbackSheet } from '@shared/utils/analytics';
 
@@ -111,7 +112,11 @@ export function MenuButtons() {
       />
 
       <Flex pt="space.03" pb="space.05" direction="column" gap="space.01">
-        <styled.p textStyle="label.02">Version</styled.p>
+        <styled.p textStyle="label.02">
+          {WALLET_ENVIRONMENT === 'development' || WALLET_ENVIRONMENT === 'feature'
+            ? 'Development version'
+            : 'Version'}
+        </styled.p>
         <AppVersion />
       </Flex>
     </Flex>

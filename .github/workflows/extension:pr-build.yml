@@ -65,6 +65,7 @@ jobs:
         env:
           WALLET_ENVIRONMENT: feature
           TARGET_BROWSER: ${{ matrix.target }}
+          BRANCH_NAME: ${{ github.head_ref }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN_STAGING }}
           LAUNCH_DARKLY_KEY: ${{ secrets.EXTENSION_LAUNCH_DARKLY_KEY}}

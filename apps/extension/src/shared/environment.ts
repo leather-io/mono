@@ -1,5 +1,5 @@
 export const BRANCH = process.env.GITHUB_REF;
-export const BRANCH_NAME = 'dev'; // use only dev branch name as config is now stored in leather-io/extension repo
+export const BRANCH_NAME = process.env.BRANCH_NAME ?? '';
 export const PR_NUMBER = process.env.PR_NUMBER;
 export const COMMIT_SHA = process.env.COMMIT_SHA;
 // ts-unused-exports:disable-next-line

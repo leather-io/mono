@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { css } from 'leather-styles/css';
-import { Flex } from 'leather-styles/jsx';
+import { Flex, styled } from 'leather-styles/jsx';
 
 import {
   DropdownMenu,
@@ -154,6 +154,8 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
               {showLockWalletItem && lockWalletItem}
 
               {showSignOutItem && signOutItem}
+
+
             </DropdownMenu.Group>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
