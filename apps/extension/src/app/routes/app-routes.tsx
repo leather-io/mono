@@ -53,6 +53,7 @@ import { Unlock } from '@app/pages/unlock';
 import { ViewSecretKey } from '@app/pages/view-secret-key/view-secret-key';
 import { AccountGate } from '@app/routes/account-gate';
 import { ReceiveModalWrapper } from '@app/routes/components/receive-modal-wrapper';
+import { SendOrdinalModalWrapper } from '@app/routes/components/send-ordinal-modal-wrapper';
 import { receiveRoutes } from '@app/routes/receive-routes';
 import { legacyRequestRoutes } from '@app/routes/request-routes';
 import { rpcRequestRoutes } from '@app/routes/rpc-routes';
@@ -76,7 +77,6 @@ export const homePageModalRoutes = (
     {ledgerBitcoinTxSigningRoutes}
     {requestBitcoinKeysRoutes}
     {requestStacksKeysRoutes}
-    {sendOrdinalRoutes}
   </>
 );
 
@@ -88,6 +88,7 @@ function useAppRoutes() {
       <Route element={<Container />}>
         <Route key="error" errorElement={<RouterErrorBoundary />}>
           <Route element={<ReceiveModalWrapper />}>{receiveRoutes}</Route>
+          <Route element={<SendOrdinalModalWrapper />}>{sendOrdinalRoutes}</Route>
           <Route
             element={
               <>
