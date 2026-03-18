@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext } from 'react-router';
 
 import { captureMessage } from '@sentry/react';
 import BigNumber from 'bignumber.js';
+import { AnimatePresence } from 'framer-motion';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { isNonNullish } from 'remeda';
 
@@ -12,6 +13,8 @@ import {
   matchLiveEstimate,
   useSwapContext,
 } from '@leather.io/state/swap';
+import { Button } from '@leather.io/ui';
+import { ensureAsyncFunctionMinimumDuration } from '@leather.io/utils';
 
 import { formatCurrency, formatPercentage } from '@app/common/currency-formatter';
 import { Card, Content, Page } from '@app/components/layout';
@@ -34,7 +37,13 @@ import { SlippageSelectorSheet } from './components/review/slippage-selector-she
 import { SwapReviewEmptyState } from './components/review/swap-review-empty-state';
 import { SwapReviewErrorState } from './components/review/swap-review-error-state';
 import { SwapReviewInfoTooltip } from './components/review/swap-review-info-tooltip';
+import { SwapSubmissionOverlay } from './components/review/swap-submission-overlay';
 import { formatSwapRate, sumFeesInQuoteCurrency } from './swap-utils';
+
+type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'failure';
+
+const submissionDisplayDuration = 1800;
+const successfulExitTimeout = 1200;
 
 const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
   'loading',
@@ -74,8 +83,12 @@ interface SwapReviewContentProps {
 }
 
 function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
-  const { state, actions } = useSwapContext();
+  const { state, actions, canSubmit, submit } = useSwapContext();
+  const navigate = useNavigate();
   const [isSlippageSheetOpen, setIsSlippageSheetOpen] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>('idle');
+  const onSubmitSwap = ensureAsyncFunctionMinimumDuration(submit, submissionDisplayDuration);
+
   const { selectedQuote, isRefetching, intervalState, fees } = liveEstimate;
   const {
     baseAmount,
@@ -90,8 +103,22 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
   const showPriceImpact = shouldShowPriceImpact(priceImpactPercentage);
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
 
+  function handleConfirm() {
+    setSubmissionStatus('submitting');
+    onSubmitSwap()
+      .then(() => {
+        setSubmissionStatus('success');
+        setTimeout(() => {
+          void navigate(-2);
+        }, successfulExitTimeout);
+      })
+      .catch(() => {
+        setSubmissionStatus('failure');
+      });
+  }
+
   return (
-    <Flex direction="column" gap="space.08">
+    <Flex direction="column" gap="space.08" position="relative" flex={1}>
       <SwapReviewSummary
         baseAsset={baseAsset}
         targetAsset={targetAsset}
@@ -167,12 +194,40 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         />
       </SwapReviewDetails>
 
+      <Flex direction="column" gap="space.04" mt="auto" alignItems="center">
+        <styled.span textStyle="caption.01" textAlign="center" color="ink.text-subdued">
+          Make sure everything looks correct.
+          <br />
+          Confirmed transactions cannot be undone.
+        </styled.span>
+        <Button
+          fullWidth
+          disabled={!canSubmit || submissionStatus !== 'idle'}
+          onClick={handleConfirm}
+        >
+          Confirm
+        </Button>
+      </Flex>
+
       <SlippageSelectorSheet
         isShowing={isSlippageSheetOpen}
         onClose={() => setIsSlippageSheetOpen(false)}
         slippage={state.slippage}
         onSave={actions.setSlippage}
       />
+
+      <AnimatePresence>
+        {submissionStatus !== 'idle' && (
+          <SwapSubmissionOverlay
+            baseAsset={baseAsset}
+            targetAsset={targetAsset}
+            baseAmount={baseAmount}
+            targetAmount={targetAmount}
+            status={submissionStatus}
+            onReset={() => setSubmissionStatus('idle')}
+          />
+        )}
+      </AnimatePresence>
     </Flex>
   );
 }

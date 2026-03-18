@@ -3,6 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { KEBAB_REGEX } from '@leather.io/constants';
 import type { NetworkModes } from '@leather.io/models';
 
+export * from './async';
 export { createCounter } from './counter';
 export * from './math';
 export * from './money';
@@ -111,10 +112,6 @@ export function createNumArrayOfRange(fromIndex: number, toIndex: number) {
     result.push(i);
   }
   return result;
-}
-
-export async function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export function sumNumbers(nums: number[]) {
