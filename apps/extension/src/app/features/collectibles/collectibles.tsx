@@ -1,6 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
+import { Box } from 'leather-styles/jsx';
+
 import { type CollectibleView, createTokenDetailsPath } from '@leather.io/features';
 import type { NonFungibleCryptoAsset } from '@leather.io/models';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
@@ -56,14 +58,29 @@ export function Collectibles() {
   const renderedCollectibles = useMemo(
     () =>
       collectibles.map((view, index) => (
-        <CollectibleTypeIconOverlay
+        <Box
           key={view.key}
-          protocol={view.protocol}
-          data-testid={`collectible-card-${view.asset.protocol}`}
-          data-index={index}
+          position="relative"
+          _after={{
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            bg: 'transparent',
+            pointerEvents: 'none',
+            transition: 'background 0.15s',
+          }}
+          _hover={{
+            _after: { bg: 'ink.component-background-hover' },
+          }}
         >
-          <CollectibleItem view={view} onSelect={handleSelectCollectible} />
-        </CollectibleTypeIconOverlay>
+          <CollectibleTypeIconOverlay
+            protocol={view.protocol}
+            data-testid={`collectible-card-${view.asset.protocol}`}
+            data-index={index}
+          >
+            <CollectibleItem view={view} onSelect={handleSelectCollectible} />
+          </CollectibleTypeIconOverlay>
+        </Box>
       )),
     [collectibles, handleSelectCollectible]
   );
