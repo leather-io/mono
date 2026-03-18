@@ -1,4 +1,4 @@
-import { Box, Stack, styled } from 'leather-styles/jsx';
+import { Stack, styled } from 'leather-styles/jsx';
 
 import {
   formatAttributeValue,
@@ -38,13 +38,7 @@ export function Sip9Details({
   return (
     <>
       {description && (
-        <Stack bg="ink.background-primary" py="space.03" gap="space.00">
-          <Box mx="space.05" borderTopWidth="1px" borderColor="ink.border-default" />
-          <Box px="space.05" py="space.02">
-            <styled.h2 textStyle="label.03" margin="0">
-              Description
-            </styled.h2>
-          </Box>
+        <SectionCard title="Description">
           <Stack px="space.05" gap="space.03" pb="space.03">
             <styled.p textStyle="caption.01" margin="0">
               {renderedDescription}
@@ -71,7 +65,7 @@ export function Sip9Details({
               </styled.button>
             )}
           </Stack>
-        </Stack>
+        </SectionCard>
       )}
 
       <SectionCard title="Details">

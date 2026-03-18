@@ -23,7 +23,7 @@ export function Sip9DetailsPage({ view, onBack }: Sip9DetailsPageProps) {
   const subtitle = view.subtitle;
 
   return (
-    <Stack width="100%" gap="space.04" data-testid="collectible-details-container">
+    <Stack width="100%" gap="space.00" data-testid="collectible-details-container">
       <CollectibleDetailsHeader title={title} subtitle={subtitle} onBack={onBack} />
       <CollectibleDetailsPageLayout protocol="sip9" media={<Sip9Card item={asset} />}>
         <Sip9Details

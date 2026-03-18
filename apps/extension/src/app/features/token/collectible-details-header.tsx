@@ -3,7 +3,7 @@ import { Flex, Stack, styled } from 'leather-styles/jsx';
 import {
   ArrowLeftIcon,
   DropdownMenu,
-  EllipsisVIcon,
+  EllipsisHIcon,
   ExternalLinkIcon,
   Flag,
   IconButton,
@@ -52,10 +52,11 @@ function CollectibleOptionsMenu({
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <IconButton
+            height="headerContainerHeight"
             _focus={{ outline: 'focus' }}
             _hover={{ bg: 'ink.component-background-hover' }}
             color="ink.action-primary-default"
-            icon={<EllipsisVIcon />}
+            icon={<EllipsisHIcon />}
             data-testid="collectible-details-options"
           />
         </DropdownMenu.Trigger>

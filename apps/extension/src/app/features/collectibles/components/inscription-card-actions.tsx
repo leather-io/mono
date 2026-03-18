@@ -46,7 +46,7 @@ export function InscriptionCardActions({ item, onSelect }: InscriptionCardAction
   }, [navigate, item, location]);
 
   return (
-    <Box position="relative" _hover={{ bg: 'ink.background-secondary' }} width="100%" {...bind}>
+    <Box position="relative" width="100%" {...bind}>
       <Box opacity={isDiscarded ? 0.5 : 1}>
         <InscriptionCard item={item} onSelect={onSelect} />
       </Box>

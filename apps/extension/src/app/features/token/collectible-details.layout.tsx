@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
+import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import { ExternalLinkIcon } from '@leather.io/ui';
 
@@ -13,11 +13,10 @@ interface SectionCardProps {
 
 export function SectionCard({ title, children }: SectionCardProps) {
   return (
-    <Stack bg="ink.background-primary" py="space.03" gap="space.00">
-      <Box mx="space.05" borderTopWidth="1px" borderColor="ink.border-default" />
+    <Stack bg="ink.background-primary" py="space.03" width="100%">
       {title && (
         <Flex px="space.05" py="space.02" alignItems="center" height="40px">
-          <styled.h2 textStyle="label.03" margin="0">
+          <styled.h2 textStyle="label.02" margin="0">
             {title}
           </styled.h2>
         </Flex>

@@ -23,7 +23,7 @@ export function StampDetailsPage({ view, onBack }: StampDetailsPageProps) {
   const subtitle = view.subtitle;
 
   return (
-    <Stack width="100%" gap="space.04" data-testid="collectible-details-container">
+    <Stack width="100%" gap="space.00" data-testid="collectible-details-container">
       <CollectibleDetailsHeader title={title} subtitle={subtitle} onBack={onBack} />
       <CollectibleDetailsPageLayout protocol="stamp" media={<StampCard item={asset} />}>
         <StampDetails asset={asset} bitcoinNetwork={network.chain.bitcoin.bitcoinNetwork} />
