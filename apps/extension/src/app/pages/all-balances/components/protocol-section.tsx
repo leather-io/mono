@@ -2,7 +2,9 @@ import { type ReactNode } from 'react';
 
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { Callout, InfoCircleIcon, Spinner } from '@leather.io/ui';
+import { InfoCircleIcon, Spinner } from '@leather.io/ui';
+
+import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 interface ProtocolSectionProps {
   icon: ReactNode;
@@ -10,8 +12,8 @@ interface ProtocolSectionProps {
   totalFiatValue: string;
   summary: string;
   isLoading?: boolean;
-  warningMessage?: string;
   children: ReactNode;
+  tooltipText?: string;
 }
 
 export function ProtocolSection({
@@ -20,8 +22,8 @@ export function ProtocolSection({
   totalFiatValue,
   summary,
   isLoading,
-  warningMessage,
   children,
+  tooltipText,
 }: ProtocolSectionProps) {
   return (
     <Stack gap="space.03" py="space.04">
@@ -31,7 +33,11 @@ export function ProtocolSection({
             <styled.span textStyle="label.02" color="ink.text-subdued">
               {label}
             </styled.span>
-            <InfoCircleIcon variant="small" />
+            {tooltipText && (
+              <BasicTooltip label={tooltipText} side="top">
+                <InfoCircleIcon variant="small" />
+              </BasicTooltip>
+            )}
           </Flex>
           <styled.span textStyle="heading.04">{totalFiatValue}</styled.span>
           <Flex alignItems="center" gap="space.02">
@@ -43,7 +49,6 @@ export function ProtocolSection({
         </Stack>
         {icon}
       </Flex>
-      {warningMessage && <Callout variant="warning">{warningMessage}</Callout>}
       <Stack gap="space.01">{children}</Stack>
     </Stack>
   );

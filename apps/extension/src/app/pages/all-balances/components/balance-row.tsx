@@ -1,16 +1,18 @@
 import { css } from 'leather-styles/css';
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { InfoCircleIcon, ItemLayout } from '@leather.io/ui';
+import { InfoCircleIcon, ItemLayout, Pressable } from '@leather.io/ui';
+
+import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 interface BalanceRowProps {
   label: string;
   fiatValue: string;
   cryptoValue: string;
   showChevron?: boolean;
-  showInfoIcon?: boolean;
   dataTestId?: string;
   onClick?(): void;
+  tooltipText?: string;
 }
 
 export function BalanceRow({
@@ -18,36 +20,35 @@ export function BalanceRow({
   fiatValue,
   cryptoValue,
   showChevron,
-  showInfoIcon,
   dataTestId,
   onClick,
+  tooltipText,
 }: BalanceRowProps) {
   return (
-    <button
-      data-testid={dataTestId}
-      className={css({
-        _hover: {
-          backgroundColor: 'ink.component-background-hover',
-        },
-        py: 'space.03',
-        px: 'space.02',
-        borderRadius: 'xs',
-        cursor: onClick ? 'pointer' : 'default',
-      })}
-      onClick={onClick}
-    >
+    <Pressable my="space.03" onClick={onClick} data-testid={dataTestId}>
       <ItemLayout
         titleLeft={
           <Flex alignItems="center" gap="space.01">
             <styled.span textStyle="label.02">{label}</styled.span>
-            {showInfoIcon && <InfoCircleIcon variant="small" />}
+            {tooltipText && (
+              <BasicTooltip
+                className={css({
+                  zIndex: '10',
+                })}
+                label={tooltipText}
+                side="top"
+                asChild
+              >
+                <InfoCircleIcon variant="small" />
+              </BasicTooltip>
+            )}
           </Flex>
         }
-        titleRight={<styled.span textStyle="label.02">{fiatValue}</styled.span>}
+        titleRight={<styled.span textStyle="label.02"> {fiatValue}</styled.span>}
         captionLeft={null}
         captionRight={cryptoValue}
         showChevron={showChevron}
       />
-    </button>
+    </Pressable>
   );
 }

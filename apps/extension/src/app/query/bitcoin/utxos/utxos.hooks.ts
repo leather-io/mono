@@ -20,8 +20,13 @@ function useUtxos(request: AccountRequest) {
     await query.refetch();
   }, [query]);
 
+  console.log({
+    state: utxos.state,
+    value: utxos.value,
+  });
+
   return {
-    isLoading: utxos.state !== 'success',
+    isLoading: utxos.state === 'loading',
     utxos: utxos.value ?? emptyUtxos,
     refetchUtxos,
   };
@@ -49,7 +54,7 @@ export function useCurrentNativeSegwitInscribedUtxos() {
     })
   );
   return {
-    isLoading: utxos.state !== 'success',
+    isLoading: utxos.state === 'loading',
     utxos: utxos.value?.protected ?? [],
   };
 }

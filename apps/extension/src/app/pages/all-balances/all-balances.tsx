@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
 import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
-import { Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import { ArrowLeftIcon, BtcAvatarIcon, StxAvatarIcon } from '@leather.io/ui';
 import { createMoney, subtractMoney, sumMoney } from '@leather.io/utils';
@@ -10,10 +10,12 @@ import { createMoney, subtractMoney, sumMoney } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { Content } from '@app/components/layout';
 import { Divider } from '@app/components/layout/divider';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderActionButton } from '@app/components/layout/headers/header-action-button';
+import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useBtcAccountBalance } from '@app/query/bitcoin/balance/btc-balance.hooks';
@@ -25,6 +27,7 @@ import { useCurrentAccountId } from '@app/store/accounts/account';
 import { BalanceRow } from './components/balance-row';
 import { ProtocolSection } from './components/protocol-section';
 import { TotalBalanceHeader } from './components/total-balance-header';
+import { tooltipTextMap } from './utils';
 
 const sbtcContractPrefixes = [
   'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token',
@@ -38,6 +41,7 @@ function isSbtcAsset(contractId: string) {
 export function AllBalancesPage() {
   const navigate = useNavigate();
   const accountId = useCurrentAccountId();
+  const isMd = useViewportMinWidth('md');
 
   const btcBalance = useBtcAccountBalance(accountId);
   const stxBalance = useStxAccountBalance(accountId);
@@ -79,24 +83,28 @@ export function AllBalancesPage() {
     runes?.quote.totalBalance ?? createMoney(0, 'USD'),
   ]);
 
+  const endToEndDivider = (
+    <Box mx={isMd ? 'space.00' : '-space.05'}>
+      <Divider />
+    </Box>
+  );
+
   return (
     <Flex height="100vh" direction="column" data-testid={AllBalancesSelectors.AllBalancesPage}>
       <Header px="space.04">
         <HeaderGrid
-          leftCol={
-            <HeaderActionButton
-              icon={<ArrowLeftIcon />}
-              onAction={() => navigate(RouteUrls.Settings)}
-              dataTestId={AllBalancesSelectors.BackButton}
-            />
-          }
+          leftCol={<HeaderBackButton dataTestId={AllBalancesSelectors.BackButton} />}
           centerCol={<styled.span textStyle="heading.05">All balances</styled.span>}
         />
       </Header>
       <Content>
         <Flex direction="column" width="100%" px="space.05">
-          <TotalBalanceHeader label="Total balance" totalFiatBalance={formatCurrency(totalFiat)} />
-          <Divider />
+          <TotalBalanceHeader
+            label="Total balance"
+            totalFiatBalance={formatCurrency(totalFiat)}
+            tooltipText={tooltipTextMap.totalBalance}
+          />
+          {endToEndDivider}
           <ProtocolSection
             label="Bitcoin protocol"
             totalFiatValue={formatCurrency(
@@ -104,6 +112,7 @@ export function AllBalancesPage() {
             )}
             summary={formatCurrency(btc.btc.totalBalance)}
             icon={<BtcAvatarIcon />}
+            tooltipText={tooltipTextMap.btcProtocol}
           >
             <BalanceRow
               label="Available to transfer"
@@ -112,6 +121,7 @@ export function AllBalancesPage() {
               dataTestId={AllBalancesSelectors.BalanceRowAvailable}
               showChevron
               onClick={() => navigate(`${RouteUrls.AllBalances}/available`)}
+              tooltipText={tooltipTextMap.btcAvailable}
             />
             <BalanceRow
               label="Unavailable to transfer"
@@ -120,6 +130,7 @@ export function AllBalancesPage() {
               dataTestId={AllBalancesSelectors.BalanceRowUnavailable}
               showChevron
               onClick={() => navigate(`${RouteUrls.AllBalances}/unavailable`)}
+              tooltipText={tooltipTextMap.btcUnavailable}
             />
             <BalanceRow
               label="Pending"
@@ -128,6 +139,7 @@ export function AllBalancesPage() {
               dataTestId={AllBalancesSelectors.BalanceRowPending}
               showChevron
               onClick={() => navigate(`${RouteUrls.AllBalances}/pending`)}
+              tooltipText={tooltipTextMap.btcPending}
             />
             <BalanceRow
               label="Runes"
@@ -140,9 +152,10 @@ export function AllBalancesPage() {
               dataTestId={AllBalancesSelectors.BalanceRowRunes}
               showChevron
               onClick={() => navigate(`${RouteUrls.AllBalances}/runes`)}
+              tooltipText={tooltipTextMap.runes}
             />
           </ProtocolSection>
-          <Divider />
+          {endToEndDivider}
           <ProtocolSection
             label="Stacks protocol"
             totalFiatValue={formatCurrency(
@@ -153,24 +166,25 @@ export function AllBalancesPage() {
             )}
             summary={formatCurrency(stx.stx.totalBalance)}
             icon={<StxAvatarIcon />}
+            tooltipText={tooltipTextMap.stacksProtocol}
           >
             <BalanceRow
               label="STX available to transfer"
               fiatValue={formatCurrency(stx.quote.availableUnlockedBalance)}
               cryptoValue={formatCurrency(stx.stx.availableUnlockedBalance)}
-              showInfoIcon
+              tooltipText={tooltipTextMap.stxAvailable}
             />
             <BalanceRow
               label="STX locked"
               fiatValue={formatCurrency(stx.quote.lockedBalance)}
               cryptoValue={formatCurrency(stx.stx.lockedBalance)}
-              showInfoIcon
+              tooltipText={tooltipTextMap.stxLocked}
             />
             <BalanceRow
               label="STX Pending"
               fiatValue={formatCurrency(stx.quote.inboundBalance)}
               cryptoValue={formatCurrency(stx.stx.inboundBalance)}
-              showInfoIcon
+              tooltipText={tooltipTextMap.stxPending}
             />
             <BalanceRow
               label="SIP 10"
@@ -180,7 +194,7 @@ export function AllBalancesPage() {
                   ? `${sip10Balance.value.sip10s.filter(t => !isSbtcAsset(t.asset.contractId)).length} tokens`
                   : '0 tokens'
               }
-              showInfoIcon
+              tooltipText={tooltipTextMap.sip10}
             />
             {sbtcToken && (
               <>
@@ -188,7 +202,7 @@ export function AllBalancesPage() {
                   label="sBTC available to transfer"
                   fiatValue={formatCurrency(sbtcToken.quote.availableBalance)}
                   cryptoValue={formatCurrency(sbtcToken.crypto.availableBalance)}
-                  showInfoIcon
+                  tooltipText={tooltipTextMap.sbtcAvailable}
                 />
                 <BalanceRow
                   label="sBTC locked"
@@ -198,7 +212,7 @@ export function AllBalancesPage() {
                   cryptoValue={formatCurrency(
                     subtractMoney(sbtcToken.crypto.totalBalance, sbtcToken.crypto.availableBalance)
                   )}
-                  showInfoIcon
+                  tooltipText={tooltipTextMap.sbtcLocked}
                 />
                 <BalanceRow
                   label="sBTC Pending"
@@ -210,7 +224,7 @@ export function AllBalancesPage() {
                       sbtcToken.crypto.totalBalance.decimals
                     )
                   )}
-                  showInfoIcon
+                  tooltipText={tooltipTextMap.sbtcPending}
                 />
               </>
             )}

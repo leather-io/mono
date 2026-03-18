@@ -8,9 +8,9 @@ import { LEATHER_GITBOOK_DEVS, LEATHER_GUIDES_URL } from '@leather.io/constants'
 import {
   BellAlarmIcon,
   BellIcon,
+  CalculatorIcon,
   CodeIcon,
   GlobeTiltedIcon,
-  GridIcon,
   KeyIcon,
   MegaphoneIcon,
   SunInCloudIcon,
@@ -68,7 +68,7 @@ export function MenuButtons() {
         onClick={() => {
           void navigate(RouteUrls.AllBalances);
         }}
-        icon={<GridIcon />}
+        icon={<CalculatorIcon />}
       />
 
       <SettingsButton

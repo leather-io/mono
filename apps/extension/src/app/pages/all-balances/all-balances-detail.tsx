@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
+import { AddressType, getAddressInfo } from 'bitcoin-address-validation';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
 import type { OwnedUtxo } from '@leather.io/models';
@@ -14,12 +15,15 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { Content } from '@app/components/layout';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderActionButton } from '@app/components/layout/headers/header-action-button';
+import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCalculateBitcoinFiatValue } from '@app/query/common/market-data/market-data.hooks';
+import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import { AddressBalanceGroup } from './components/address-balance-group';
+import { tooltipTextMap } from './utils';
 
 type BitcoinBalanceCategory = 'available' | 'unavailable' | 'pending' | 'runes';
 
@@ -32,13 +36,25 @@ const categoryTitles: Record<BitcoinBalanceCategory, string> = {
   runes: 'BTC in Runes',
 };
 
+const categoryTooltips: Record<BitcoinBalanceCategory, string> = {
+  available: tooltipTextMap.btcAvailable,
+  unavailable: tooltipTextMap.btcUnavailable,
+  pending: tooltipTextMap.btcPending,
+  runes: tooltipTextMap.runes,
+};
+
 function isValidCategory(value: string): value is BitcoinBalanceCategory {
   return (validCategories as readonly string[]).includes(value);
 }
 
 function getAddressType(address: string): string {
-  if (address.startsWith('bc1q') || address.startsWith('tb1q')) return 'Native Segwit';
-  if (address.startsWith('bc1p') || address.startsWith('tb1p')) return 'Taproot';
+  const addressInfo = getAddressInfo(address);
+  if (addressInfo.type === AddressType.p2wpkh) {
+    return 'Native Segwit';
+  }
+  if (addressInfo.type === AddressType.p2tr) {
+    return 'Taproot';
+  }
   return 'Unknown';
 }
 
@@ -93,6 +109,7 @@ export function AllBalancesDetail() {
   const totalBtc = createMoney(totalSats, 'BTC');
   const totalFiat = calculateFiatValue(totalBtc);
   const title = categoryTitles[category];
+  const tooltipText = categoryTooltips[category];
 
   return (
     <Flex
@@ -102,13 +119,7 @@ export function AllBalancesDetail() {
     >
       <Header px="space.04">
         <HeaderGrid
-          leftCol={
-            <HeaderActionButton
-              icon={<ArrowLeftIcon />}
-              onAction={() => navigate(-1)}
-              dataTestId={AllBalancesSelectors.DetailBackButton}
-            />
-          }
+          leftCol={<HeaderBackButton dataTestId={AllBalancesSelectors.DetailBackButton} />}
           centerCol={<styled.span textStyle="heading.05">All balances</styled.span>}
         />
       </Header>
@@ -118,7 +129,9 @@ export function AllBalancesDetail() {
             <Stack gap="space.01">
               <Flex alignItems="center" gap="space.01">
                 <styled.span textStyle="label.02">{title}</styled.span>
-                <InfoCircleIcon variant="small" />
+                <BasicTooltip label={tooltipText} side="top">
+                  <InfoCircleIcon variant="small" />
+                </BasicTooltip>
               </Flex>
               <styled.span textStyle="heading.03">{formatCurrency(totalFiat)}</styled.span>
               <styled.span textStyle="caption.01" color="ink.text-subdued">
@@ -140,11 +153,11 @@ export function AllBalancesDetail() {
                 address={address}
                 fiatValue={formatCurrency(addressFiat)}
                 cryptoValue={formatCurrency(addressBtc)}
-                utxos={utxoList.map((utxo, idx) => {
+                utxos={utxoList.map(utxo => {
                   const utxoBtc = createMoney(utxo.value, 'BTC');
                   const utxoFiat = calculateFiatValue(utxoBtc);
                   return {
-                    label: `UTXO #${idx + 1}`,
+                    label: `UTXO #${utxo.txid.substring(0, 6)}:${utxo.vout}`,
                     sats: `${utxo.value} sats`,
                     fiatValue: formatCurrency(utxoFiat),
                   };

@@ -83,13 +83,7 @@ export function ItemLayout({
             </styled.span>
           )}
         </Stack>
-        {showChevron && (
-          <ChevronRightIcon
-            className={pressableChevronStyles}
-            transform="rotate(90deg)"
-            variant="small"
-          />
-        )}
+        {showChevron && <ChevronRightIcon className={pressableChevronStyles} variant="small" />}
       </HStack>
     </Flex>
   );

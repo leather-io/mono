@@ -15,7 +15,7 @@ const fallbackQuoteBalance = createBtcBalance(createMoney(0, 'USD'));
 function useBtcBalanceWithFallback(request: AccountRequest) {
   const balance = toFetchState(useGetBtcAccountBalanceQuery(request));
   return {
-    isLoading: balance.state !== 'success',
+    isLoading: balance.state === 'loading',
     btc: balance.value?.btc ?? fallbackBtcBalance,
     quote: balance.value?.quote ?? fallbackQuoteBalance,
   };

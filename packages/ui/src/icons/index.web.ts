@@ -27,6 +27,7 @@ export * from './bns-icon.web';
 export * from './boxed-cat-locked-icon.web';
 export * from './boxed-cat-locked-icon.web';
 export * from './boxed-cat-unlocked-icon.web';
+export * from './calculator-icon.web';
 export * from './checkmark-circle-icon.web';
 export * from './checkmark-icon.web';
 export * from './changelog-icon.web';
