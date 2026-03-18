@@ -6,7 +6,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import type { InscriptionAsset } from '@leather.io/models';
 import { ensureArray } from '@leather.io/utils';
 
-import { useCurrentAccountInscriptions } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
+import { useInscriptions } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
 import { RootState } from '@app/store';
 
 import { settingsSlice } from './settings.slice';
@@ -77,7 +77,7 @@ export function useDiscardedInscriptions() {
 export function useCurrentAccountDiscardedInscriptions() {
   const discardedInscriptions = useSelector(selectDiscardedInscriptions);
   const dispatch = useDispatch();
-  const currentAccountInscriptions = useCurrentAccountInscriptions();
+  const currentAccountInscriptions = useInscriptions();
 
   function makeInscriptionId({ txid, output: vout, offset }: InscriptionIdentifier) {
     return [txid, vout, offset].join(':');
@@ -85,7 +85,7 @@ export function useCurrentAccountDiscardedInscriptions() {
 
   return useMemo(
     () => ({
-      inscriptions: currentAccountInscriptions.inscriptions,
+      inscriptions: currentAccountInscriptions.data ?? [],
       discardedInscriptions,
       hasInscriptionBeenDiscarded(inscription: InscriptionIdentifier) {
         return discardedInscriptions.includes(makeInscriptionId(inscription));
@@ -101,6 +101,6 @@ export function useCurrentAccountDiscardedInscriptions() {
         );
       },
     }),
-    [currentAccountInscriptions.inscriptions, discardedInscriptions, dispatch]
+    [currentAccountInscriptions.data, discardedInscriptions, dispatch]
   );
 }

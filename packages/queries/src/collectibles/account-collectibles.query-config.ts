@@ -5,6 +5,7 @@ import {
   type AccountRequest,
   type UserSettings,
   getCollectiblesService,
+  getInscriptionsService,
 } from '@leather.io/services';
 
 import { createServiceQueryKey } from '../shared/query-key.factory';
@@ -29,4 +30,13 @@ export function createAccountCollectiblesQueryConfig(
       getCollectiblesService().getAccountCollectibles(request, signal),
     ...collectiblesQueryOptions,
   } satisfies UseQueryOptions<NonFungibleCryptoAsset[], Error>;
+}
+
+export function createInscriptionsQuery(request: AccountRequest) {
+  return {
+    queryKey: ['inscriptions', request],
+    queryFn: () => getInscriptionsService().getAccountInscriptions(request),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5,
+  } as const;
 }

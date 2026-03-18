@@ -26,6 +26,8 @@ export type BisBrc20MarketInfo = z.infer<typeof bisBrc20MarketInfoSchema>;
 export type BisInscription = z.infer<typeof bisInscriptionSchema>;
 export type BisRuneValidOutput = z.infer<typeof bisRuneValidOutputsSchema>;
 
+const bisPageSize = 2000;
+
 @injectable()
 export class BestInSlotApiClient {
   constructor(
@@ -33,6 +35,36 @@ export class BestInSlotApiClient {
     @inject(Types.CacheService) private readonly cache: HttpCacheService,
     private readonly limiter: RateLimiterService
   ) {}
+
+  private async fetchPaginated<T>(
+    url: string,
+    baseParams: URLSearchParams,
+    schema: z.ZodType<T>,
+    signal?: AbortSignal
+  ): Promise<T[]> {
+    const results: T[] = [];
+    let offset = 0;
+
+    while (true) {
+      const params = new URLSearchParams(baseParams);
+      params.set('offset', String(offset));
+      params.set('count', String(bisPageSize));
+
+      const res = await this.limiter.add(
+        RateLimiterType.BestInSlot,
+        () => axios.get<BestInSlotApiResponse<T[]>>(url, { params, signal }),
+        { signal }
+      );
+
+      const page = z.array(schema).parse(res.data.data);
+      results.push(...page);
+
+      if (page.length < bisPageSize) break;
+      offset += bisPageSize;
+    }
+
+    return results;
+  }
 
   public async fetchBrc20MarketInfo(
     ticker: string,
@@ -69,25 +101,13 @@ export class BestInSlotApiClient {
     params.append('order', 'desc');
     params.append('exclude_brc20', 'false');
     params.append('xpub', descriptor);
-    params.append('offset', '0');
-    params.append('count', '2000');
 
     const network = bitcoinNetworkModeToCoreNetworkMode(
       selectBitcoinNetworkMode(this.settingsService.getSettings())
     );
 
-    const fetchFn = async () => {
-      const res = await this.limiter.add(
-        RateLimiterType.BestInSlot,
-        () =>
-          axios.get<BestInSlotApiResponse<BisInscription[]>>(
-            `${getBestInSlotBasePath(network)}/wallet/inscriptions_xpub`,
-            { params, signal }
-          ),
-        { signal }
-      );
-      return z.array(bisInscriptionSchema).parse(res.data.data);
-    };
+    const url = `${getBestInSlotBasePath(network)}/wallet/inscriptions_xpub`;
+    const fetchFn = () => this.fetchPaginated(url, params, bisInscriptionSchema, signal);
 
     if (network !== 'mainnet') {
       return [];
@@ -106,25 +126,13 @@ export class BestInSlotApiClient {
     params.append('sort_by', 'output');
     params.append('order', 'desc');
     params.append('xpub', descriptor);
-    params.append('offset', '0');
-    params.append('count', '2000');
 
     const network = bitcoinNetworkModeToCoreNetworkMode(
       selectBitcoinNetworkMode(this.settingsService.getSettings())
     );
 
-    const fetchFn = async () => {
-      const res = await this.limiter.add(
-        RateLimiterType.BestInSlot,
-        () =>
-          axios.get<BestInSlotApiResponse<BisRuneValidOutput[]>>(
-            `${getBestInSlotBasePath(network)}/runes/wallet_valid_outputs_xpub`,
-            { params, signal }
-          ),
-        { signal }
-      );
-      return z.array(bisRuneValidOutputsSchema).parse(res.data.data);
-    };
+    const url = `${getBestInSlotBasePath(network)}/runes/wallet_valid_outputs_xpub`;
+    const fetchFn = () => this.fetchPaginated(url, params, bisRuneValidOutputsSchema, signal);
 
     if (network !== 'mainnet') {
       return [];
