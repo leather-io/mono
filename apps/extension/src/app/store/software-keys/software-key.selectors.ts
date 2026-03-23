@@ -18,13 +18,17 @@ function selectKeysSlice(state: RootState) {
 
 export const selectCurrentAccount = createSelector(selectActiveAccount, activeAccount => {
   const customAccountIndex = initialSearchParams.get('accountIndex');
+  const customFingerprint = initialSearchParams.get('fingerprint');
+
   const accountIndex =
     customAccountIndex && initBigNumber(customAccountIndex).isInteger()
       ? initBigNumber(customAccountIndex).toNumber()
       : (activeAccount?.accountIndex ?? 0);
 
+  const fingerprint = customFingerprint ?? activeAccount?.fingerprint ?? assumedZeroFingerprint;
+
   return {
-    fingerprint: activeAccount?.fingerprint ?? assumedZeroFingerprint,
+    fingerprint,
     accountIndex,
   };
 });

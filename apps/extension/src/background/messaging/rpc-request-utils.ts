@@ -123,6 +123,7 @@ export async function createConnectingAppSearchParamsWithLastKnownAccount(
     const appPermissions = await getPermissionsByOrigin(getHostnameFromPort(port));
     if (appPermissions) {
       urlParams.set('accountIndex', appPermissions.accountIndex.toString());
+      urlParams.set('fingerprint', appPermissions.fingerprint);
     }
   }
   return { urlParams, origin, tabId };
