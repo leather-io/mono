@@ -1,11 +1,13 @@
 import { ReactNode } from 'react';
 
-import { Box, GridProps } from 'leather-styles/jsx';
+import { Box, GridProps, VStack } from 'leather-styles/jsx';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { EM_DASH } from '~/constants/constants';
 import { CopyAddress } from '~/features/stacking/components/address';
 import { StackingInfoGridLayout } from '~/features/stacking/components/stacking-info-grid.layout';
+import { PooledStackingActionButtons } from '~/features/stacking/pooled-stacking-info/pooled-stacking-action-buttons';
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
+import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 import {
   daysToWeek,
   toHumanReadableDays,
@@ -76,21 +78,31 @@ function PoolAddressCell({ rewardProtocol }: RewardProtocolCellProps) {
     <ValueDisplayer
       gap="space.04"
       name="Pool address"
-      value={<CopyAddress address={rewardProtocol.poolAddress} />}
+      value={
+        <VStack gap="space.02" alignItems="stretch" overflow="hidden">
+          <CopyAddress address={rewardProtocol.poolAddress} />
+          {rewardProtocol.poolRewardAddress && (
+            <CopyAddress address={rewardProtocol.poolRewardAddress} />
+          )}
+        </VStack>
+      }
     />
   );
 }
 
-function RewardAddressCell({ rewardProtocol }: RewardProtocolCellProps) {
-  if (!rewardProtocol.rewardAddress) {
+interface UserRewardAddressCellProps {
+  address: string | undefined;
+}
+function UserRewardAddressCell({ address }: UserRewardAddressCellProps) {
+  if (!address) {
     return EM_DASH;
   }
 
   return (
     <ValueDisplayer
       gap="space.04"
-      name="Reward address"
-      value={<CopyAddress address={rewardProtocol.rewardAddress} />}
+      name="My reward address"
+      value={<CopyAddress address={address} />}
     />
   );
 }
@@ -164,18 +176,23 @@ function RewardsTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
 interface PooledStackingInfoGridProps extends GridProps {
   poolIcon: ReactNode;
   poolName: string;
+  poolSlug: PoolSlug;
   rewardProtocol: PoolRewardProtocolInfo;
+  userRewardAddress: string | undefined;
 }
 
 export function PooledStackingInfoGrid({
   poolIcon,
   poolName,
+  poolSlug,
   rewardProtocol,
+  userRewardAddress,
   ...props
 }: PooledStackingInfoGridProps) {
   return (
     <StackingInfoGridLayout
       cells={{
+        actionButtons: <PooledStackingActionButtons poolSlug={poolSlug} />,
         name: <PoolNameCell icon={poolIcon} name={poolName} />,
         status: <RewardProtocolEnrollCell rewardProtocol={rewardProtocol} />,
         historicalApr: (
@@ -209,9 +226,9 @@ export function PooledStackingInfoGrid({
           />
         ),
         rewardAddress: (
-          <RewardAddressCell
+          <UserRewardAddressCell
             key={`${rewardProtocol.id}-reward-address`}
-            rewardProtocol={rewardProtocol}
+            address={userRewardAddress}
           />
         ),
       }}

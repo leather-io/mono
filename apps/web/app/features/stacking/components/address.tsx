@@ -1,7 +1,6 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import { CopyIcon, ExternalLinkIcon, useClipboard } from '@leather.io/ui';
-import { truncateMiddle } from '@leather.io/utils';
 
 interface AddressProps {
   address: string;
@@ -17,7 +16,7 @@ export function Address({ address }: AddressProps) {
       overflow="hidden"
       textOverflow="ellipsis"
     >
-      {truncateMiddle(address)}
+      {address}
     </styled.p>
   );
 }
@@ -31,7 +30,8 @@ export function CopyAddress({ address }: AddressProps) {
       gap="space.01"
       onClick={onCopy}
       cursor="pointer"
-      maxWidth={['250px', 'none', '220px', 'none']}
+      minWidth={0}
+      overflow="hidden"
     >
       <Box display="inline-block">
         <CopyIcon variant="small" />
@@ -49,7 +49,7 @@ interface ExternalAddressProps {
 export function ExternalAddress({ address, href }: ExternalAddressProps) {
   return (
     <styled.a href={href} target="_blank">
-      <Flex alignItems="center" gap="space.01" maxWidth={['250px', 'none', '220px', 'none']}>
+      <Flex alignItems="center" gap="space.01" minWidth={0} overflow="hidden">
         <Box display="inline-block">
           <ExternalLinkIcon variant="small" />
         </Box>

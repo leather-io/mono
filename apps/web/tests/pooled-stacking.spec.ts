@@ -12,7 +12,7 @@ test.describe('Pooled Stacking', () => {
     await page.getByRole('button', { name: 'Confirm' }).click();
     await page.getByRole('button', { name: 'Resolve' }).click();
     await test.expect(page.getByText('Pooled Stacking')).toBeVisible();
-    await test.expect(page.getByRole('heading', { name: 'Fast Pool v2' })).toBeVisible();
+    await test.expect(page.getByText('Fast Pool v2').first()).toBeVisible();
     await test.expect(page.getByRole('button', { name: 'Stop pooling' })).toBeVisible();
     await test.expect(page.getByRole('button', { name: 'Increase pooling amount' })).toBeVisible();
   });
