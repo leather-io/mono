@@ -102,7 +102,8 @@
       "@ledgerhq/logs": "6.14.0",
       "picomatch@2": "2.3.2",
       "picomatch@3": "3.0.2",
-      "picomatch@4": "4.0.4"
+      "picomatch@4": "4.0.4",
+      "node-forge@<1.4.0": ">=1.4.0"
     },
     "patchedDependencies": {
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
