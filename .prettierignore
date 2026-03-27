@@ -10,7 +10,6 @@ leather-styles/
 package.json
 CHANGELOG.md
 **/locales/**/messages.ts
-storybook-static/
 coverage/
 apps/mobile/index.js
 *.lottie.json
