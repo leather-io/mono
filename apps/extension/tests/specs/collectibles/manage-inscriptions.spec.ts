@@ -18,52 +18,42 @@ test.describe('Manage inscriptions', () => {
     await onboardingPage.signInWithTestAccount(extensionId);
   });
 
-  test.describe('settings menu items', () => {
-    test.beforeEach(async ({ globalPage }) => {
-      await mockTestnetTestAccountInscriptionsRequests(globalPage.page, [mockInscriptionResp]);
-    });
-
-    test('should display unprotect all inscriptions menu item', async ({ settingsPage }) => {
-      await settingsPage.openSettingsMenu();
-
-      await expect(settingsPage.unprotectAllInscriptionsItem).toBeVisible();
-    });
-
-    test('should display manage inscriptions menu item', async ({ settingsPage }) => {
-      await settingsPage.openSettingsMenu();
-
-      await expect(settingsPage.manageInscriptionsItem).toBeVisible();
-    });
-  });
-
   test.describe('manage inscriptions sheet', () => {
     test.beforeEach(async ({ globalPage }) => {
       await mockTestnetTestAccountInscriptionsRequests(globalPage.page, [mockInscriptionResp]);
     });
 
-    test('should open manage inscriptions sheet', async ({ settingsPage, page }) => {
-      await settingsPage.clickManageInscriptions();
+    test('should open manage inscriptions sheet', async ({ homePage, page }) => {
+      await homePage.clickCollectiblesTab();
+      await page.getByTestId('manage-collectibles-btn').click();
+      await page.getByTestId(SettingsSelectors.ManageInscriptions).click();
 
       const sheet = page.getByTestId(SettingsSelectors.ManageInscriptionsSheet);
       await expect(sheet).toBeVisible();
     });
 
-    test('should display reset protection button', async ({ settingsPage, page }) => {
-      await settingsPage.clickManageInscriptions();
+    test('should display reset protection button', async ({ homePage, page }) => {
+      await homePage.clickCollectiblesTab();
+      await page.getByTestId('manage-collectibles-btn').click();
+      await page.getByTestId(SettingsSelectors.ManageInscriptions).click();
 
       const button = page.getByTestId(SettingsSelectors.ResetProtectionBtn);
       await expect(button).toBeVisible();
     });
 
-    test('should display allow spending button', async ({ settingsPage, page }) => {
-      await settingsPage.clickManageInscriptions();
+    test('should display allow spending button', async ({ homePage, page }) => {
+      await homePage.clickCollectiblesTab();
+      await page.getByTestId('manage-collectibles-btn').click();
+      await page.getByTestId(SettingsSelectors.ManageInscriptions).click();
 
       const button = page.getByTestId(SettingsSelectors.AllowSpendingBtn);
       await expect(button).toBeVisible();
     });
 
-    test('should close sheet when clicking close button', async ({ settingsPage, page }) => {
-      await settingsPage.clickManageInscriptions();
+    test('should close sheet when clicking close button', async ({ homePage, page }) => {
+      await homePage.clickCollectiblesTab();
+      await page.getByTestId('manage-collectibles-btn').click();
+      await page.getByTestId(SettingsSelectors.ManageInscriptions).click();
 
       const sheet = page.getByTestId(SettingsSelectors.ManageInscriptionsSheet);
       await expect(sheet).toBeVisible();

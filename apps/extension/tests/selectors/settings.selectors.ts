@@ -28,7 +28,6 @@ export enum SettingsSelectors {
   SwitchAccountItemIndex = 'switch-account-item-[index]',
   OpenWalletInNewTab = 'open-wallet-in-new-tab',
   TogglePrivacy = 'toggle-privacy',
-  UnprotectAllInscriptions = 'unprotect-all-inscriptions',
   ManageInscriptions = 'manage-inscriptions',
   ManageInscriptionsSheet = 'manage-inscriptions-sheet',
   ResetProtectionBtn = 'reset-protection-btn',

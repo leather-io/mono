@@ -1,6 +1,5 @@
 import { Locator, Page } from '@playwright/test';
 import { CollectibleDetailsSelectors } from '@tests/selectors/collectible-details.selectors';
-import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
 export class CollectibleDetailsPage {
   readonly page: Page;
@@ -71,19 +70,5 @@ export class CollectibleDetailsPage {
 
   getCollectibleCardByProtocol(protocol: 'inscription' | 'sip9' | 'stamp') {
     return this.page.getByTestId(`collectible-card-${protocol}`);
-  }
-
-  async clickManageInscriptions() {
-    const settingsButton = this.page.getByTestId(SettingsSelectors.SettingsMenuBtn);
-    await settingsButton.click();
-    const manageInscriptionsItem = this.page.getByTestId(SettingsSelectors.ManageInscriptions);
-    await manageInscriptionsItem.click();
-  }
-
-  async clickUnprotectAllInscriptions() {
-    const settingsButton = this.page.getByTestId(SettingsSelectors.SettingsMenuBtn);
-    await settingsButton.click();
-    const unprotectAllItem = this.page.getByTestId(SettingsSelectors.UnprotectAllInscriptions);
-    await unprotectAllItem.click();
   }
 }
