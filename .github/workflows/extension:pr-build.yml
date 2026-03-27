@@ -100,18 +100,11 @@ jobs:
           sanitized_branch="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
           echo "BRANCH_NAME=${sanitized_branch}" >> "$GITHUB_ENV"
 
-      - name: storybook-parsed-branch-name
-        id: storybook_branch
-        run: |
-          echo "STORYBOOK_BRANCH=${{ env.BRANCH_NAME }}" >> "$GITHUB_ENV"
-
       - uses: marocchino/sticky-pull-request-comment@v2
         env:
           EXTENSION_BUILD_LINK: '[Extension build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
           TEST_REPORT_LINK: '[Extension test report](https://leather-io.github.io/playwright-reports/extension/${{ env.BRANCH_NAME }})'
-          STORYBOOK_LINK: '[Storybook](https://${{ env.STORYBOOK_BRANCH }}--65982789c7e2278518f189e7.chromatic.com)'
-          CHROMATIC_LINK: '[Chromatic](https://www.chromatic.com/library?appId=65982789c7e2278518f189e7&branch=${{ env.STORYBOOK_BRANCH }})'
         with:
           header: extension-build
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
-          message: 'Leather Extension build ${{ needs.sha-hash.outputs.SHORT_SHA }} — ${{ env.EXTENSION_BUILD_LINK }}, ${{ env.TEST_REPORT_LINK }}, ${{ env.STORYBOOK_LINK }}, ${{ env.CHROMATIC_LINK }}'
+          message: 'Leather Extension build ${{ needs.sha-hash.outputs.SHORT_SHA }} — ${{ env.EXTENSION_BUILD_LINK }}, ${{ env.TEST_REPORT_LINK }}'

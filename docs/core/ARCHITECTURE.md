@@ -26,7 +26,6 @@ mono
 │ ├─ extension
 │ ├─ mobile
 │ ├─ desktop
-│ ├─ storybook <-- replaces test-app, place to view UI components with context + tests
 ├─ docs
 ├─ packages
 │ ├─ api <-- leather API / wrapper interface to other libs: here / under apps,
