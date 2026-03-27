@@ -3,7 +3,6 @@
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/ldinpeekobnhjjdofggfgjlcehhmanlj?label=Chrome%20Web%20Store)](https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj)
 [![coverage](https://raw.githubusercontent.com/leather-io/extension/gh-pages/badge.svg)](https://leather-io.github.io/extension/)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-[![storybook](https://raw.githubusercontent.com/storybooks/brand/master/badge/badge-storybook.svg)](https://storybook.leather.io)
 
 Leather is the most popular and trusted wallet for apps built on Bitcoin. Connect to apps and manage assets secured by Bitcoin and Bitcoin L2s with battle-tested wallet for the Stacks blockchain.
 
