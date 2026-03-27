@@ -489,6 +489,23 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.111.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.111.0...@leather.io/ui-v1.111.1) (2026-03-27)
+
+
+### Bug Fixes
+
+* **extension:** make deposits pressable ([831a1f3](https://github.com/leather-io/mono/commit/831a1f3c2603ad9422d9bbe9008d72599ce24fa6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.51.3
+  * devDependencies
+    * @leather.io/features bumped to 1.4.0
+    * @leather.io/models bumped to 0.56.0
+
 ## [1.111.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.110.0...@leather.io/ui-v1.111.0) (2026-03-16)
 
 
