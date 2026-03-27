@@ -98,7 +98,6 @@ export default defineConfig([
       '**/.turbo/',
       '**/.tsdown/',
       '**/*.d.ts',
-      '**/*.stories.{ts,tsx}',
       '**/tsdown.config*.ts',
       '**/panda.config*.ts',
       '**/app.config*.ts',
@@ -111,9 +110,7 @@ export default defineConfig([
       '**/.react-router/',
       '**/.wrangler/',
       '**/generated/',
-      'packages/ui/src/index.ts',
       'packages/ui/src/icons/docs',
-      'apps/extension/.storybook/**/*',
     ],
   },
   {
@@ -191,7 +188,7 @@ export default defineConfig([
   },
   {
     name: 'extension',
-    files: ['apps/extension/src/**/*.{ts,tsx}', 'apps/extension/.storybook/**/*.{ts,tsx}'],
+    files: ['apps/extension/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
   },
   {

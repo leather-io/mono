@@ -33,5 +33,3 @@ ignore:
   - packages/ui/dist-native
   - packages/ui/dist-web
   - packages/ui/ios
-  - packages/ui/storybook-static
-  - storybook-static

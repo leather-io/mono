@@ -274,7 +274,6 @@ module.exports = {
           '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx|ls|coffee|litcoffee|coffee[.]md)$',
           'theme-web',
           'tsdown',
-          '.stories.',
           'packages/cms/src/studio',
           'test-utils/',
           '[.]test-utils[.]',
@@ -330,7 +329,6 @@ module.exports = {
         // Do not need to check Panda files (they also have circular deps)
         'apps/web/leather-styles',
         '/dist',
-        '.storybook',
         '.*.js$',
         '.*.config.ts',
         '.wrangler',

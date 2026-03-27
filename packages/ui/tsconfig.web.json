@@ -18,7 +18,6 @@
     "src/**/*.shared.ts",
     "src/**/*.shared.spec.ts",
     "src/web.exports.ts",
-    "src/.storybook-web/**/*",
     "src/global.d.ts",
     "leather-styles/"
   ]
