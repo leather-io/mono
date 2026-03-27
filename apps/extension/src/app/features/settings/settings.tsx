@@ -13,9 +13,7 @@ import {
   Flag,
   LockIcon,
   SettingsGearIcon,
-  SettingsSliderIcon,
   Switch,
-  UnlockIcon,
 } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -29,12 +27,8 @@ import { Divider } from '@app/components/layout/divider';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
 import { useHasActiveInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { useTogglePrivateMode } from '@app/store/settings/settings.actions';
-import {
-  useCurrentAccountDiscardedInscriptions,
-  useIsPrivateMode,
-} from '@app/store/settings/settings.selectors';
+import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
-import { ManageInscriptionsSheet } from '../manage-inscriptions/manage-inscriptions-sheet';
 import { AdvancedMenuItems } from './components/advanced-menu-items';
 
 interface SettingsProps {
@@ -42,7 +36,6 @@ interface SettingsProps {
 }
 export function Settings({ canLockWallet = true }: SettingsProps) {
   const [showSignOut, setShowSignOut] = useState(false);
-  const [showManageInscriptions, setShowManageInscriptions] = useState(false);
 
   const { hasKeys } = useHasKeys();
 
@@ -54,7 +47,6 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
 
   const isPrivateMode = useIsPrivateMode();
   const togglePrivateMode = useTogglePrivateMode();
-  const { inscriptions, discardInscriptions } = useCurrentAccountDiscardedInscriptions();
 
   const location = useLocation();
 
@@ -96,34 +88,6 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
             <Switch.Thumb />
           </Switch.Root>
         </Flex>
-      </Flag>
-    </DropdownMenu.Item>
-  );
-
-  const unprotectAllInscriptionsItem = (
-    <DropdownMenu.Item
-      data-testid={SettingsSelectors.UnprotectAllInscriptions}
-      onSelect={() => {
-        analytics.track('click_unprotect_all_inscriptions');
-        discardInscriptions(inscriptions ?? []);
-      }}
-    >
-      <Flag img={<UnlockIcon />} textStyle="label.02" width="100%">
-        Unprotect all inscriptions
-      </Flag>
-    </DropdownMenu.Item>
-  );
-
-  const manageInscriptionsItem = (
-    <DropdownMenu.Item
-      data-testid={SettingsSelectors.ManageInscriptions}
-      onSelect={() => {
-        analytics.track('click_manage_inscriptions');
-        setShowManageInscriptions(true);
-      }}
-    >
-      <Flag img={<SettingsSliderIcon />} textStyle="label.02" width="100%">
-        Manage inscriptions
       </Flag>
     </DropdownMenu.Item>
   );
@@ -181,8 +145,6 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
             <DropdownMenu.Group>
               {isWalletUnlocked && settingsItem}
               {isWalletUnlocked && togglePrivacyItem}
-              {isWalletUnlocked && unprotectAllInscriptionsItem}
-              {isWalletUnlocked && manageInscriptionsItem}
 
               {(showAdvancedMenuOptions || showLockWalletItem || showSignOutItem) &&
                 isWalletUnlocked && <Divider />}
@@ -197,12 +159,6 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
       {showSignOut && <SignOut onClose={() => setShowSignOut(!showSignOut)} />}
-      {showManageInscriptions && (
-        <ManageInscriptionsSheet
-          isShowing={showManageInscriptions}
-          onClose={() => setShowManageInscriptions(false)}
-        />
-      )}
     </>
   );
 }

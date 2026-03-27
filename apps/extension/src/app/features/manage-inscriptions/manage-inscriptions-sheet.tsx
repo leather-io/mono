@@ -52,10 +52,12 @@ export function ManageInscriptionsSheet({ isShowing, onClose }: ManageInscriptio
 
   function handleResetProtection() {
     recoverInscriptions(inscriptions ?? []);
+    onClose();
   }
 
   function handleAllowSpending() {
     discardInscriptions(inscriptions ?? []);
+    onClose();
   }
 
   return (
