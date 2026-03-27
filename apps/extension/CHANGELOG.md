@@ -2,8 +2,24 @@
 
 ## Unpublished
 
+### Features
+
+* **extension:** add collectible details pages and manage inscriptions ([26fc7a9](https://github.com/leather-io/mono/commit/26fc7a925ec71720735abd9dc9e105472301c777))
+* **extension:** add empty and error states to swap review ([d2102cc](https://github.com/leather-io/mono/commit/d2102cc1fa115564ff686134a5b0d433c71b2daf))
+* **extension:** add few attributes to swap amount field ([9f4ca69](https://github.com/leather-io/mono/commit/9f4ca69559c61ee1ac58aef09b78512b29a37a59))
+* **extension:** add tooltips for swap review details and fees breakdown ([67cfcba](https://github.com/leather-io/mono/commit/67cfcbae900178042594b87ea18a5f290d7ca279))
+* **extension:** fee service usage in extension ([f295794](https://github.com/leather-io/mono/commit/f29579434d4291805dc1010faeac863dcadaaf5f))
+
 ### Bug Fixes
 
+* **extension:** fingerprint not passed to window ([fc62262](https://github.com/leather-io/mono/commit/fc6226292aea1d7d42856db0523fd2c4add435f4))
+* **extension:** maintain focus on amount field after set to max ([1ca5801](https://github.com/leather-io/mono/commit/1ca5801d51b234166740b72fa79413a6690adf52))
+* **extension:** make deposits pressable ([831a1f3](https://github.com/leather-io/mono/commit/831a1f3c2603ad9422d9bbe9008d72599ce24fa6))
+* **extension:** new account becomes active account ([5a4e830](https://github.com/leather-io/mono/commit/5a4e8305b21447c872dbb19c27df5a7695e190a9))
+* **extension:** only auto-focus on amount field when base asset is selected ([045c509](https://github.com/leather-io/mono/commit/045c509344c83a2b2908a479035947cd661d9cb4))
+* **extension:** remove inscriptions buttons ([c458604](https://github.com/leather-io/mono/commit/c458604d1e82e665b0be859e2705f5a79318c89d))
+* **extension:** update collectible design ([30076c3](https://github.com/leather-io/mono/commit/30076c3616a7feb0cf3998bfc793d24093c4c518))
+* **extension:** update collectible design ([be468f1](https://github.com/leather-io/mono/commit/be468f184f4af48458b35236954026f48e5166c7))
 * **extension:** add border radius to collectibles hover state ([480f77d](https://github.com/leather-io/mono/commit/480f77db908c0c6ffa84b2aeb7edff76fee7c12c))
 * **extension:** adds fade in mask to trending tokens ([254c693](https://github.com/leather-io/mono/commit/254c693739483d5cd974f69b67cd8945e9e98185))
 * **extension:** fix collectibles hover state overflow ([6d055bf](https://github.com/leather-io/mono/commit/6d055bf29ef818beb34d18c42701cd340f56d035))
