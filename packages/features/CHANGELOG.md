@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.4.0](https://github.com/leather-io/mono/compare/@leather.io/features-v1.3.2...@leather.io/features-v1.4.0) (2026-03-27)
+
+
+### Features
+
+* **extension:** add collectible details pages and manage inscriptions ([26fc7a9](https://github.com/leather-io/mono/commit/26fc7a925ec71720735abd9dc9e105472301c777))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.35.1
+    * @leather.io/models bumped to 0.56.0
+    * @leather.io/services bumped to 1.52.0
+    * @leather.io/stacks bumped to 1.19.18
+    * @leather.io/utils bumped to 0.51.3
+
 ## [1.3.2](https://github.com/leather-io/mono/compare/@leather.io/features-v1.3.1...@leather.io/features-v1.3.2) (2026-03-11)
 
 

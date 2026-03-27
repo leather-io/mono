@@ -36,6 +36,13 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.56.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.55.0...@leather.io/models-v0.56.0) (2026-03-27)
+
+
+### Features
+
+* **extension:** fee service usage in extension ([f295794](https://github.com/leather-io/mono/commit/f29579434d4291805dc1010faeac863dcadaaf5f))
+
 ## [0.55.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.54.0...@leather.io/models-v0.55.0) (2026-03-05)
 
 
