@@ -16,7 +16,6 @@
     "src/**/*.shared.spec.ts",
     "src/native.ts",
     "src/theme-native/**/*",
-    "src/.storybook-native/**/*",
     "src/global.d.ts"
   ]
 }
