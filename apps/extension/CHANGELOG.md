@@ -29,6 +29,20 @@
 
 ---
 
+## [6.99.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.99.0...@leather.io/extension-v6.99.1) (2026-03-31)
+
+
+### Bug Fixes
+
+* legacy requests callout / analytics ([236e016](https://github.com/leather-io/mono/commit/236e01633d5b26871f2d89eeb61ede098d646240))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.19.3
+
 ## [6.99.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.98.1...@leather.io/extension-v6.99.0) (2026-03-27)
 
 

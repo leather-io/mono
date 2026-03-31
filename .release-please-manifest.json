@@ -1,7 +1,7 @@
 {
-  "apps/mobile": "2.104.2",
-  "apps/extension": "6.99.0",
-  "packages/analytics": "3.19.2",
+  "apps/mobile": "2.104.3",
+  "apps/extension": "6.99.1",
+  "packages/analytics": "3.19.3",
   "packages/bitcoin": "0.37.5",
   "packages/constants": "0.35.1",
   "packages/crypto": "1.12.22",
