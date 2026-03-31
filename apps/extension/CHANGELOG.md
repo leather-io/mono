@@ -12,6 +12,7 @@
 
 ### Bug Fixes
 
+* legacy requests callout / analytics ([236e016](https://github.com/leather-io/mono/commit/236e01633d5b26871f2d89eeb61ede098d646240))
 * **extension:** fingerprint not passed to window ([fc62262](https://github.com/leather-io/mono/commit/fc6226292aea1d7d42856db0523fd2c4add435f4))
 * **extension:** maintain focus on amount field after set to max ([1ca5801](https://github.com/leather-io/mono/commit/1ca5801d51b234166740b72fa79413a6690adf52))
 * **extension:** make deposits pressable ([831a1f3](https://github.com/leather-io/mono/commit/831a1f3c2603ad9422d9bbe9008d72599ce24fa6))
