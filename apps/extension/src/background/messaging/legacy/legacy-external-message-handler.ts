@@ -11,6 +11,7 @@ import { getLegacyTransactionPayloadFromToken } from '@shared/utils/legacy-reque
 import { queueAnalyticsRequest } from '@background/background-analytics';
 import {
   createConnectingAppSearchParamsWithLastKnownAccount,
+  getOriginFromPort,
   listenForOriginTabClose,
   listenForPopupClose,
   triggerRequestPopupWindowOpen,
@@ -50,6 +51,7 @@ function getNetworkParamsFromPayload(payload: string): [string, string][] {
 
 interface TrackLegacyRequestInitiatedArgs {
   method: ExternalMethods;
+  origin?: string;
 }
 async function trackLegacyRequestInitiated(args: TrackLegacyRequestInitiatedArgs) {
   return queueAnalyticsRequest('legacy_request_initiated', { ...args });
@@ -60,11 +62,12 @@ export async function handleLegacyExternalMethodFormat(
   port: chrome.runtime.Port
 ) {
   const { payload } = message;
+  const origin = getOriginFromPort(port);
 
   const messageMethod = message.method;
   switch (messageMethod) {
     case ExternalMethods.authenticationRequest: {
-      void trackLegacyRequestInitiated({ method: ExternalMethods.authenticationRequest });
+      void trackLegacyRequestInitiated({ method: ExternalMethods.authenticationRequest, origin });
 
       const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
         ['authRequest', payload],
@@ -82,7 +85,7 @@ export async function handleLegacyExternalMethodFormat(
     }
 
     case ExternalMethods.transactionRequest: {
-      void trackLegacyRequestInitiated({ method: ExternalMethods.transactionRequest });
+      void trackLegacyRequestInitiated({ method: ExternalMethods.transactionRequest, origin });
 
       const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
         ['request', payload],
@@ -101,7 +104,7 @@ export async function handleLegacyExternalMethodFormat(
     }
 
     case ExternalMethods.signatureRequest: {
-      void trackLegacyRequestInitiated({ method: ExternalMethods.signatureRequest });
+      void trackLegacyRequestInitiated({ method: ExternalMethods.signatureRequest, origin });
 
       const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
         ['request', payload],
@@ -121,7 +124,10 @@ export async function handleLegacyExternalMethodFormat(
     }
 
     case ExternalMethods.structuredDataSignatureRequest: {
-      void trackLegacyRequestInitiated({ method: ExternalMethods.structuredDataSignatureRequest });
+      void trackLegacyRequestInitiated({
+        method: ExternalMethods.structuredDataSignatureRequest,
+        origin,
+      });
 
       const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
         ['request', payload],
@@ -141,10 +147,11 @@ export async function handleLegacyExternalMethodFormat(
     }
 
     case ExternalMethods.psbtRequest: {
-      void trackLegacyRequestInitiated({ method: ExternalMethods.psbtRequest });
+      void trackLegacyRequestInitiated({ method: ExternalMethods.psbtRequest, origin });
 
       const { urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(port, [
         ['request', payload],
+        ['flow', ExternalMethods.psbtRequest],
       ]);
 
       const { id } = await triggerRequestPopupWindowOpen(RouteUrls.PsbtRequest, urlParams);

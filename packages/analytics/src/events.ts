@@ -17,7 +17,7 @@ export interface Events extends HistoricalEvents {
   app_unlocked: undefined;
   app_locked: undefined;
   submit_feature_waitlist: SubmitWaitlist;
-  legacy_request_initiated: { method: string };
+  legacy_request_initiated: { method: string; origin?: string };
   application_first_opened: { timestamp: string };
   pooled_stacking_started: {
     amount: number;
