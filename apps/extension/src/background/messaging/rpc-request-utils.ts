@@ -29,7 +29,7 @@ export function getTabIdFromPort(port: chrome.runtime.Port) {
   return port.sender?.tab?.id ?? 0;
 }
 
-function getOriginFromPort(port: chrome.runtime.Port) {
+export function getOriginFromPort(port: chrome.runtime.Port) {
   if (port.sender?.url) return new URL(port.sender.url).origin;
   return port.sender?.origin;
 }

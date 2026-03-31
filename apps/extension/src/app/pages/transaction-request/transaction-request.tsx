@@ -24,6 +24,7 @@ import { nonceValidator } from '@app/common/validation/nonce-validators';
 import { NonceSetter } from '@app/components/nonce-setter';
 import { PopupHeader } from '@app/features/container/headers/popup.header';
 import { RequestingTabClosedWarningMessage } from '@app/features/errors/requesting-tab-closed-error-msg';
+import { LegacyRequestCallout } from '@app/features/legacy-request-callout/legacy-request-callout';
 import { HighFeeSheet } from '@app/features/stacks-high-fee-warning/stacks-high-fee-dialog';
 import { FeeForm } from '@app/features/stacks-transaction-request/fee-form';
 import { useStacksBroadcastTransaction } from '@app/features/stacks-transaction-request/hooks/use-legacy-stacks-broadcast-transaction';
@@ -55,7 +56,7 @@ import {
 
 function TransactionRequestBase() {
   const sbtcConfig = useConfigSbtc();
-  const { tabId } = useDefaultRequestParams();
+  const { origin, flow, tabId } = useDefaultRequestParams();
   const requestToken = useTransactionRequest();
 
   const transactionRequest = useTransactionRequestState();
@@ -169,6 +170,7 @@ function TransactionRequestBase() {
           {() => (
             <>
               <PageTop />
+              {flow && <LegacyRequestCallout origin={origin} method={flow} />}
               <RequestingTabClosedWarningMessage />
               <PostConditionModeWarning />
               <TransactionError />
