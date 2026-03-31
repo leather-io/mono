@@ -114,6 +114,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.19.3](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.19.2...@leather.io/analytics-v3.19.3) (2026-03-31)
+
+
+### Bug Fixes
+
+* legacy requests callout / analytics ([236e016](https://github.com/leather-io/mono/commit/236e01633d5b26871f2d89eeb61ede098d646240))
+
 ## [3.19.2](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.19.1...@leather.io/analytics-v3.19.2) (2026-03-27)
 
 
