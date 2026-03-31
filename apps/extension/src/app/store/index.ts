@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { devToolsEnhancer } from '@redux-devtools/remote';
 import {
   Action,
-  AnyAction,
   ThunkAction,
   Tuple,
+  type UnknownAction,
   combineReducers,
   configureStore,
 } from '@reduxjs/toolkit';
@@ -14,6 +14,7 @@ import {
   PAUSE,
   PERSIST,
   PURGE,
+  type PersistedState,
   REGISTER,
   REHYDRATE,
   persistReducer,
@@ -21,13 +22,16 @@ import {
 } from 'redux-persist';
 import { PersistPartial } from 'redux-persist/es/persistReducer';
 
+import { resetWallet } from '@leather.io/state';
+import { keychainSlice } from '@leather.io/state/keychains';
+import { walletSlice } from '@leather.io/state/wallet';
+
 import { persistConfig } from '@shared/storage/redux-persist';
 
+import { activeSlice } from './active/active.slice';
 import { appPermissionsSlice } from './app-permissions/app-permissions.slice';
 import { stxChainSlice } from './chains/stx-chain.slice';
 import { inMemoryKeySlice } from './in-memory-key/in-memory-key.slice';
-import { bitcoinKeysSlice } from './ledger/bitcoin/bitcoin-key.slice';
-import { stacksKeysSlice } from './ledger/stacks/stacks-key.slice';
 import { manageTokensSlice } from './manage-tokens/manage-tokens.slice';
 import { networksSlice } from './networks/networks.slice';
 import { settingsSlice } from './settings/settings.slice';
@@ -36,15 +40,14 @@ import { submittedTransactionsSlice } from './submitted-transactions/submitted-t
 import { uiSlice } from './ui/ui.slice';
 import { broadcastActionTypeToOtherFramesMiddleware } from './utils/broadcast-action-types';
 
-export interface RootState {
+export interface LocalRootState {
+  active: ReturnType<typeof activeSlice.reducer>;
   appPermissions: ReturnType<typeof appPermissionsSlice.reducer>;
   chains: {
     stx: ReturnType<typeof stxChainSlice.reducer>;
   };
-  ledger: {
-    bitcoin: ReturnType<typeof bitcoinKeysSlice.reducer>;
-    stacks: ReturnType<typeof stacksKeysSlice.reducer>;
-  };
+  keychains: ReturnType<typeof keychainSlice.reducer>;
+  wallets: ReturnType<typeof walletSlice.reducer>;
   inMemoryKeys: ReturnType<typeof inMemoryKeySlice.reducer>;
   softwareKeys: ReturnType<typeof keySlice.reducer>;
   networks: ReturnType<typeof networksSlice.reducer>;
@@ -54,18 +57,18 @@ export interface RootState {
   ui: ReturnType<typeof uiSlice.reducer>;
 }
 
+export type RootState = LocalRootState & PersistedState;
+
 const appReducer = combineReducers({
+  active: activeSlice.reducer,
   appPermissions: appPermissionsSlice.reducer,
   chains: combineReducers({
     stx: stxChainSlice.reducer,
   }),
-  ledger: combineReducers({
-    bitcoin: bitcoinKeysSlice.reducer,
-    stacks: stacksKeysSlice.reducer,
-  }),
+  keychains: keychainSlice.reducer,
+  wallets: walletSlice.reducer,
   inMemoryKeys: inMemoryKeySlice.reducer,
   softwareKeys: keySlice.reducer,
-  ordinals: (state = {}) => state,
   networks: networksSlice.reducer,
   submittedTransactions: submittedTransactionsSlice.reducer,
   settings: settingsSlice.reducer,
@@ -73,8 +76,8 @@ const appReducer = combineReducers({
   ui: uiSlice.reducer,
 });
 
-function rootReducer(state: RootState | undefined, action: Action) {
-  if (action.type === 'keys/signOut') return appReducer(undefined, action);
+function rootReducer(state: LocalRootState | undefined, action: Action) {
+  if (action.type === resetWallet.type) return appReducer(undefined, action);
   return appReducer(state, action);
 }
 
@@ -109,7 +112,7 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   Promise<ReturnType> | ReturnType,
   RootState,
   unknown,
-  AnyAction
+  UnknownAction
 >;
 
 type AppDispatch = typeof store.dispatch & ((action: AppThunk<Promise<void>>) => void);

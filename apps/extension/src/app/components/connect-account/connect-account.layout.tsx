@@ -19,6 +19,7 @@ import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { FaviconDisplayer } from '@app/components/favicon-displayer/favicon-displayer';
 
 interface ConnectAccountLayoutProps {
+  banner?: ReactNode;
   requester: string;
   switchAccount: ReactNode;
   onBeforeAnimation?(): void;
@@ -26,6 +27,7 @@ interface ConnectAccountLayoutProps {
   onClickRequestedByLink(): void;
 }
 export function ConnectAccountLayout({
+  banner,
   requester,
   switchAccount,
   onBeforeAnimation,
@@ -94,6 +96,7 @@ export function ConnectAccountLayout({
           />
         </motion.div>
       </Flex>
+      {banner}
       <motion.div animate={contentDisappears} style={{ display: 'flex', flex: 1 }}>
         <Approver requester={requester} width="100%" mt="space.01">
           <Approver.Header

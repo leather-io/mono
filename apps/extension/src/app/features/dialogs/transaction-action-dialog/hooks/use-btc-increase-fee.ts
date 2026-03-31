@@ -1,71 +1,64 @@
-import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
 import * as btc from '@scure/btc-signer';
 import BigNumber from 'bignumber.js';
 import * as yup from 'yup';
 
-import { isP2TROut } from '@leather.io/bitcoin';
+import { getSizeInfo, isTaprootPayer } from '@leather.io/bitcoin';
+import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import type { BitcoinTx } from '@leather.io/models';
 import { emptyUtxos } from '@leather.io/services';
-import { btcToSat, createMoney, isError, sumMoney } from '@leather.io/utils';
+import { createMoney, isError, sumMoney } from '@leather.io/utils';
 
 import type { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { queryClient } from '@app/common/persistence';
-import {
-  getBitcoinTxSizeEstimation,
-  getBitcoinTxValue,
-  getRecipientAddressFromOutput,
-} from '@app/common/transactions/bitcoin/utils';
 import { MAX_FEE_RATE_MULTIPLIER } from '@app/components/bitcoin-custom-fee/hooks/use-bitcoin-custom-fee';
-import { useBitcoinFeesList } from '@app/components/bitcoin-fees-list/use-bitcoin-fees-list';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
+import { useBitcoinFeeRates } from '@app/query/bitcoin/fees/bitcoin-fee-rates.hooks';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
-import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
+import { useCurrentNativeSegwitUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
+import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   const toast = useToast();
   const navigate = useNavigate();
   const networkMode = useBitcoinScureLibNetworkConfig();
 
-  const {
-    address: currentBitcoinAddress,
-    publicKey,
-    derivationPath: zeroIndexDerivationPath,
-  } = useCurrentAccountNativeSegwitIndexZeroSigner();
-  const { utxos, refetchUtxos } = useCurrentUtxos();
+  const indexZeroPayer = useCurrentAccountNativeSegwitIndexZeroPayer();
+  const currentBitcoinAddress = indexZeroPayer.address;
+  const publicKey = indexZeroPayer.publicKey;
+  const zeroIndexDerivationPath = keyOriginToDerivationPath(indexZeroPayer.keyOrigin);
+  const { utxos, refetchUtxos } = useCurrentNativeSegwitUtxos();
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx, isBroadcasting } = useBitcoinBroadcastTransaction();
-  const getSignerForOwnedUtxo = useBitcoinSignerFromInput();
-  const recipient = getRecipientAddressFromOutput(btcTx.vout, currentBitcoinAddress) || '';
+  const getPayerForOwnedUtxo = useBitcoinPayerFromInput();
 
-  const sizeInfo = useMemo(
-    () =>
-      getBitcoinTxSizeEstimation({
-        inputCount: btcTx.vin.length,
-        recipient,
-        outputCount: btcTx.vout.length,
-      }),
-    [btcTx.vin.length, btcTx.vout.length, recipient]
-  );
+  const recipients = btcTx.vout.map(output => ({
+    amount: createMoney(output.value, 'BTC'),
+    address: output.scriptpubkey_address,
+  }));
+
+  const sizeInfo = getSizeInfo({
+    utxos: btcTx.vin.map(vin => ({
+      txid: vin.txid,
+      address: vin.prevout.scriptpubkey_address,
+      value: vin.prevout.value,
+    })),
+    recipients,
+    isSendMax: false,
+  });
 
   const { btc: balance } = useCurrentBtcBalanceWithFallback();
   const rbfAvailableBalance = sumMoney([balance.availableBalance, balance.outboundBalance]);
-  const sendingAmount = getBitcoinTxValue(address => address === currentBitcoinAddress, btcTx);
-  const { feesList } = useBitcoinFeesList({
-    amount: createMoney(btcToSat(sendingAmount), 'BTC'),
-    isSendingMax: false,
-    recipient,
-    utxos: utxos.available,
-  });
+
+  const { data: feeRates } = useBitcoinFeeRates();
 
   function generateUnsignedTx(payload: { feeRate: string; tx: BitcoinTx }) {
     const newTx = new btc.Transaction();
@@ -80,10 +73,10 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
 
     vin.forEach(input => {
       const ownedUtxo = utxoMap.get(`${input.txid}:${input.vout}`);
-      const signer = ownedUtxo ? getSignerForOwnedUtxo(ownedUtxo) : null;
+      const payer = ownedUtxo ? getPayerForOwnedUtxo(ownedUtxo) : null;
 
-      const tapInternalKey = isP2TROut(signer)
-        ? { tapInternalKey: signer.payment.tapInternalKey }
+      const tapInternalKey = isTaprootPayer(payer)
+        ? { tapInternalKey: payer.payment.tapInternalKey }
         : {};
 
       newTx.addInput({
@@ -92,7 +85,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
         sequence: input.sequence + 1,
         witnessUtxo: {
           // script = 0014 + pubKeyHash
-          script: signer ? signer.payment.script : p2wpkh.script,
+          script: payer ? payer.payment.script : p2wpkh.script,
           amount: ownedUtxo ? BigInt(ownedUtxo.value) : BigInt(input.prevout.value),
         },
         ...tapInternalKey,
@@ -100,7 +93,9 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
 
       signingConfig.push({
         index: newTx.inputsLength - 1,
-        derivationPath: signer ? signer.derivationPath : zeroIndexDerivationPath,
+        derivationPath: payer
+          ? keyOriginToDerivationPath(payer.keyOrigin)
+          : zeroIndexDerivationPath,
       });
     });
 
@@ -121,7 +116,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
         newTx.addOutputAddress(currentBitcoinAddress, BigInt(outputDiff), networkMode);
         return;
       }
-      newTx.addOutputAddress(recipient, BigInt(output.value), networkMode);
+      newTx.addOutputAddress(output.scriptpubkey_address, BigInt(output.value), networkMode);
     });
 
     return { tx: newTx, signingConfig };
@@ -184,11 +179,11 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
         test(value) {
           const bnValue = new BigNumber(value);
 
+          const highestFeeRate =
+            (feeRates?.high.rate ?? 10) * sizeInfo.txVBytes * MAX_FEE_RATE_MULTIPLIER;
+
           // check if fee is higher than 50 times the highest fee
-          if (
-            feesList.length > 0 &&
-            bnValue.isGreaterThan(feesList[0].feeRate * MAX_FEE_RATE_MULTIPLIER)
-          ) {
+          if (feeRates && bnValue.isGreaterThan(highestFeeRate)) {
             return false;
           }
 
@@ -205,6 +200,6 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     sizeInfo,
     onSubmit,
     validationSchema,
-    recipient,
+    recipients,
   };
 }

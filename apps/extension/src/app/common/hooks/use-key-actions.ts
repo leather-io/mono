@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 
-import { generateSecretKey } from '@stacks/wallet-sdk';
+import { generateMnemonic } from '@leather.io/crypto';
+import type { AccountId } from '@leather.io/models';
+import { resetWallet } from '@leather.io/state';
 
 import { logger } from '@shared/logger';
 import { InternalMethods } from '@shared/message-types';
@@ -13,20 +15,19 @@ import { partiallyClearLocalStorage } from '@app/common/store-utils';
 import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { useBnsV2Client } from '@app/query/stacks/bns/bns-v2-client';
 import { useAppDispatch } from '@app/store';
-import { createNewAccount, switchAccount } from '@app/store/chains/stx-chain.actions';
+import { useCurrentAccountId } from '@app/store/accounts/account';
+import { userSwitchesAccount } from '@app/store/active/active.slice';
+import { createNewAccount } from '@app/store/chains/stx-chain.actions';
 import { useStacksClient } from '@app/store/common/api-clients.hooks';
 import { inMemoryKeyActions } from '@app/store/in-memory-key/in-memory-key.actions';
-import { bitcoinKeysSlice } from '@app/store/ledger/bitcoin/bitcoin-key.slice';
-import { stacksKeysSlice } from '@app/store/ledger/stacks/stacks-key.slice';
-import { manageTokensSlice } from '@app/store/manage-tokens/manage-tokens.slice';
-import { networksSlice } from '@app/store/networks/networks.slice';
 import { clearWalletSession } from '@app/store/session-restore';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
-import { useCurrentKeyDetails } from '@app/store/software-keys/software-key.selectors';
+import { useActiveSoftwareKey } from '@app/store/software-keys/software-key.selectors';
 
 export function useKeyActions() {
   const dispatch = useAppDispatch();
-  const defaultKeyDetails = useCurrentKeyDetails();
+  const activeSoftwareKey = useActiveSoftwareKey();
+  const activeAccount = useCurrentAccountId();
   const btcClient = useBitcoinClient();
   const stxClient = useStacksClient();
   const bnsV2Client = useBnsV2Client();
@@ -40,34 +41,33 @@ export function useKeyActions() {
       },
 
       generateWalletKey() {
-        if (defaultKeyDetails) {
+        if (activeSoftwareKey) {
           logger.warn('Cannot generate new wallet when wallet already exists');
           return;
         }
-        const secretKey = generateSecretKey(256);
-        return dispatch(inMemoryKeyActions.generateWalletKey(secretKey));
+        return dispatch(inMemoryKeyActions.generateWalletKey(generateMnemonic()));
       },
 
       unlockWallet(password: string) {
         return dispatch(keyActions.unlockWalletAction(password));
       },
 
-      switchAccount(accountIndex: number) {
-        void sendMessage({ method: InternalMethods.AccountChanged, payload: { accountIndex } });
-        return dispatch(switchAccount(accountIndex));
+      switchAccount(accountId: AccountId) {
+        void sendMessage({
+          method: InternalMethods.AccountChanged,
+          payload: accountId,
+        });
+        return dispatch(userSwitchesAccount(accountId));
       },
 
       createNewAccount() {
-        return dispatch(createNewAccount());
+        if (!activeAccount) throw new Error('No active account');
+        return dispatch(createNewAccount(activeAccount.fingerprint));
       },
 
       async signOut() {
         await clearWalletSession();
-        dispatch(networksSlice.actions.changeNetwork('mainnet'));
-        dispatch(keyActions.signOut());
-        dispatch(bitcoinKeysSlice.actions.signOut());
-        dispatch(stacksKeysSlice.actions.signOut());
-        dispatch(manageTokensSlice.actions.removeAllTokens());
+        dispatch(resetWallet());
         await clearChromeStorage();
         partiallyClearLocalStorage();
         analytics.track('sign_out');
@@ -81,6 +81,6 @@ export function useKeyActions() {
         window.location.reload();
       },
     }),
-    [bnsV2Client, btcClient, defaultKeyDetails, dispatch, stxClient]
+    [activeAccount, bnsV2Client, btcClient, activeSoftwareKey, dispatch, stxClient]
   );
 }

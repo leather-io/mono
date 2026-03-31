@@ -10,7 +10,6 @@ import { SwitchAccountLayout } from '@app/components/layout/layouts/switch-accou
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { Container } from '@app/features/container/container';
 import { HomeHeader } from '@app/features/container/headers/home.header';
-import { leatherIntroSheetRoutes } from '@app/features/dialogs/leather-intro-dialog/leather-intro-dialog';
 import { CancelStacksTransactionSheet } from '@app/features/dialogs/transaction-action-dialog/cancel-stacks-transaction-sheet';
 import { IncreaseBtcFeeSheet } from '@app/features/dialogs/transaction-action-dialog/increase-btc-fee-dialog';
 import { IncreaseStacksTransactionFeeSheet } from '@app/features/dialogs/transaction-action-dialog/increase-stacks-fee-sheet';
@@ -54,6 +53,7 @@ import { Unlock } from '@app/pages/unlock';
 import { ViewSecretKey } from '@app/pages/view-secret-key/view-secret-key';
 import { AccountGate } from '@app/routes/account-gate';
 import { ReceiveModalWrapper } from '@app/routes/components/receive-modal-wrapper';
+import { SendOrdinalModalWrapper } from '@app/routes/components/send-ordinal-modal-wrapper';
 import { receiveRoutes } from '@app/routes/receive-routes';
 import { legacyRequestRoutes } from '@app/routes/request-routes';
 import { rpcRequestRoutes } from '@app/routes/rpc-routes';
@@ -77,7 +77,6 @@ export const homePageModalRoutes = (
     {ledgerBitcoinTxSigningRoutes}
     {requestBitcoinKeysRoutes}
     {requestStacksKeysRoutes}
-    {sendOrdinalRoutes}
   </>
 );
 
@@ -89,6 +88,7 @@ function useAppRoutes() {
       <Route element={<Container />}>
         <Route key="error" errorElement={<RouterErrorBoundary />}>
           <Route element={<ReceiveModalWrapper />}>{receiveRoutes}</Route>
+          <Route element={<SendOrdinalModalWrapper />}>{sendOrdinalRoutes}</Route>
           <Route
             element={
               <>
@@ -195,9 +195,7 @@ function useAppRoutes() {
             }
           />
 
-          <Route path={RouteUrls.Unlock} element={<Unlock />}>
-            {leatherIntroSheetRoutes}
-          </Route>
+          <Route path={RouteUrls.Unlock} element={<Unlock />} />
           <Route path={RouteUrls.UnauthorizedRequest} element={<UnauthorizedRequest />} />
           <Route
             path={RouteUrls.RequestError}

@@ -6,6 +6,63 @@ No unreleased changes.
 
 ---
 
+## [6.99.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.99.0...@leather.io/extension-v6.99.1) (2026-03-31)
+
+
+### Bug Fixes
+
+* legacy requests callout / analytics ([236e016](https://github.com/leather-io/mono/commit/236e01633d5b26871f2d89eeb61ede098d646240))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.19.3
+
+## [6.99.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.98.1...@leather.io/extension-v6.99.0) (2026-03-27)
+
+
+### Features
+
+* **extension:** add collectible details pages and manage inscriptions ([26fc7a9](https://github.com/leather-io/mono/commit/26fc7a925ec71720735abd9dc9e105472301c777))
+* **extension:** add empty and error states to swap review ([d2102cc](https://github.com/leather-io/mono/commit/d2102cc1fa115564ff686134a5b0d433c71b2daf))
+* **extension:** add few attributes to swap amount field ([9f4ca69](https://github.com/leather-io/mono/commit/9f4ca69559c61ee1ac58aef09b78512b29a37a59))
+* **extension:** add tooltips for swap review details and fees breakdown ([67cfcba](https://github.com/leather-io/mono/commit/67cfcbae900178042594b87ea18a5f290d7ca279))
+* **extension:** fee service usage in extension ([f295794](https://github.com/leather-io/mono/commit/f29579434d4291805dc1010faeac863dcadaaf5f))
+
+
+### Bug Fixes
+
+* **extension:** fingerprint not passed to window ([fc62262](https://github.com/leather-io/mono/commit/fc6226292aea1d7d42856db0523fd2c4add435f4))
+* **extension:** maintain focus on amount field after set to max ([1ca5801](https://github.com/leather-io/mono/commit/1ca5801d51b234166740b72fa79413a6690adf52))
+* **extension:** make deposits pressable ([831a1f3](https://github.com/leather-io/mono/commit/831a1f3c2603ad9422d9bbe9008d72599ce24fa6))
+* **extension:** new account becomes active account ([5a4e830](https://github.com/leather-io/mono/commit/5a4e8305b21447c872dbb19c27df5a7695e190a9))
+* **extension:** only auto-focus on amount field when base asset is selected ([045c509](https://github.com/leather-io/mono/commit/045c509344c83a2b2908a479035947cd661d9cb4))
+* **extension:** remove inscriptions buttons ([c458604](https://github.com/leather-io/mono/commit/c458604d1e82e665b0be859e2705f5a79318c89d))
+* **extension:** update collectible design ([30076c3](https://github.com/leather-io/mono/commit/30076c3616a7feb0cf3998bfc793d24093c4c518))
+* **extension:** update collectible design ([be468f1](https://github.com/leather-io/mono/commit/be468f184f4af48458b35236954026f48e5166c7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.19.2
+    * @leather.io/bitcoin bumped to 0.37.5
+    * @leather.io/constants bumped to 0.35.1
+    * @leather.io/crypto bumped to 1.12.22
+    * @leather.io/features bumped to 1.4.0
+    * @leather.io/models bumped to 0.56.0
+    * @leather.io/provider bumped to 1.6.24
+    * @leather.io/queries bumped to 0.9.0
+    * @leather.io/query bumped to 2.46.3
+    * @leather.io/rpc bumped to 2.21.16
+    * @leather.io/services bumped to 1.52.0
+    * @leather.io/stacks bumped to 1.19.18
+    * @leather.io/ui bumped to 1.111.1
+    * @leather.io/utils bumped to 0.51.3
+
 ## [6.98.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.98.0...@leather.io/extension-v6.98.1) (2026-03-16)
 
 

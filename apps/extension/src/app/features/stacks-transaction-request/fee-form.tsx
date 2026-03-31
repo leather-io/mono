@@ -1,6 +1,6 @@
 import { useFormikContext } from 'formik';
 
-import type { Fees } from '@leather.io/models';
+import type { StacksTransactionFees } from '@leather.io/models';
 
 import { StacksTransactionFormValues } from '@shared/models/form.model';
 
@@ -11,7 +11,7 @@ import type { SbtcSponsorshipEligibility } from '@app/query/sbtc/sponsored-trans
 import { useUnsignedPrepareTransactionDetails } from '@app/store/transactions/transaction.hooks';
 
 interface FeeFormProps {
-  fees?: Fees;
+  fees?: StacksTransactionFees;
   disableFeeSelection?: boolean;
   defaultFeeValue?: number;
   sbtcSponsorshipEligibility?: SbtcSponsorshipEligibility;
@@ -29,7 +29,7 @@ export function FeeForm({
 
   return (
     <>
-      {!!sbtcSponsorshipEligibility && fees?.estimates.length ? (
+      {!!sbtcSponsorshipEligibility && fees ? (
         <FeesRow
           disableFeeSelection={disableFeeSelection}
           defaultFeeValue={defaultFeeValue}

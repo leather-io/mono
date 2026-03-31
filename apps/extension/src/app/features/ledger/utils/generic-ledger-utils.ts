@@ -16,6 +16,7 @@ export enum LedgerConnectionErrors {
   FailedToConnect = 'FailedToConnect',
   AppNotOpen = 'AppNotOpen',
   AppVersionOutdated = 'AppVersionOutdated',
+  MasterkeyFingerprintNotSupported = 'MasterkeyFingerprintNotSupported',
   DeviceNotConnected = 'DeviceNotConnected',
   DeviceLocked = 'DeviceLocked',
   IncorrectAppOpened = 'INCORRECT_APP_OPENED',
@@ -27,6 +28,8 @@ export const LEDGER_APPS_MAP = {
   BITCOIN_TESTNET: 'Bitcoin Test',
   MAIN_MENU: 'BOLOS',
 } as const;
+
+export const LEDGER_LIVE_MANAGER_URL = 'ledgerlive://manager';
 
 export type LatestDeviceResponse = null | Awaited<ReturnType<typeof getStacksAppVersion>>;
 

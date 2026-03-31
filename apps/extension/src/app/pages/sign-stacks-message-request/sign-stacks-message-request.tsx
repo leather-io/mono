@@ -1,6 +1,8 @@
 import { isSignableMessageType } from '@shared/signature/signature-types';
 
+import { initialSearchParams } from '@app/common/initial-search-params';
 import { PopupHeader } from '@app/features/container/headers/popup.header';
+import { LegacyRequestCallout } from '@app/features/legacy-request-callout/legacy-request-callout';
 import { StacksMessageSigning } from '@app/features/stacks-message-signer/stacks-message-signing';
 import {
   useSignStacksMessageRequest,
@@ -12,6 +14,7 @@ export function SignStacksMessageRequest() {
   const { requestToken, messageType, tabId, origin } = useSignatureRequestSearchParams();
   const { isLoading, signMessage, onCancelMessageSigning } = useSignStacksMessageRequest();
   const payload = useStacksMessageRequestPayload();
+  const flow = initialSearchParams.get('flow');
 
   if (!requestToken || !tabId) return null;
   if (!isSignableMessageType(messageType)) return null;
@@ -22,6 +25,7 @@ export function SignStacksMessageRequest() {
     <>
       {/* TODO check this route for '/signature' as it seems STX specific but we don't show balance */}
       <PopupHeader showSwitchAccount />
+      {flow && <LegacyRequestCallout origin={origin} method={flow} />}
       <StacksMessageSigning
         payload={payload}
         isLoading={isLoading}

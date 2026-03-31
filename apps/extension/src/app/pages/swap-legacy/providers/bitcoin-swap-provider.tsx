@@ -1,10 +1,9 @@
 import { Outlet } from 'react-router';
 
-import type { P2Ret } from '@scure/btc-signer/payment';
 import BigNumber from 'bignumber.js';
 import { DEFAULT_MAX_SIGNER_FEE } from 'sbtc';
 
-import { BitcoinSigner } from '@leather.io/bitcoin';
+import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import type { OwnedUtxo } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
@@ -18,12 +17,12 @@ import { useBitcoinSwap } from './use-bitcoin-swap';
 export interface BitcoinSwapContext extends BaseSwapContext<BitcoinSwapContext> {
   deposit?: SbtcDeposit;
   maxSignerFee: number;
-  signer: BitcoinSigner<P2Ret>;
+  signer: BitcoinNativeSegwitPayer;
   utxos: OwnedUtxo[];
 }
 
 interface BitcoinSwapProviderProps {
-  signer: BitcoinSigner<P2Ret>;
+  signer: BitcoinNativeSegwitPayer;
   utxos: OwnedUtxo[];
 }
 export function BitcoinSwapProvider({ signer, utxos }: BitcoinSwapProviderProps) {

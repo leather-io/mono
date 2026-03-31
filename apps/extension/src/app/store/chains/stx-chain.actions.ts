@@ -1,54 +1,51 @@
-import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
+import { stacksRootKeychainToAccountDescriptorV2 } from '@leather.io/stacks';
+
+import { logger } from '@shared/logger';
 
 import { AppThunk } from '@app/store';
 
-import {
-  selectDefaultWalletKey,
-  selectRootKeychain,
-} from '../in-memory-key/in-memory-key.selectors';
-import { selectHighestAccountIndex } from './stx-chain.selectors';
+import { userSwitchesAccount } from '../active/active.slice';
+import { selectRootKeychains } from '../in-memory-key/in-memory-key.selectors';
+import { selectStacksChain } from './stx-chain.selectors';
 import { stxChainSlice } from './stx-chain.slice';
 
-export function initializeIndexZeroAccount(): AppThunk {
+export function createNewAccount(fingerprint: string): AppThunk {
   return (dispatch, getState) => {
     const state = getState();
-    const keychain = selectRootKeychain(state);
+    const rootKeychains = selectRootKeychains(state);
 
-    if (keychain) {
-      const stacksDescriptor = stacksRootKeychainToAccountDescriptor(keychain, 0);
-      dispatch(
-        stxChainSlice.actions.initializeAccount({
-          highestAccountIndex: 0,
-          currentAccountIndex: 0,
-          currentAccountStacksDescriptor: stacksDescriptor,
-        })
-      );
+    const keychain = rootKeychains[fingerprint];
+
+    if (!keychain) {
+      logger.error('No keychain found for fingerprint:', { fingerprint });
+      throw new Error('Unable to create account. Wallet keychain not found');
     }
-  };
-}
 
-export function switchAccount(accountIndex: number): AppThunk {
-  return (dispatch, getState) => {
-    const state = getState();
-    const keychain = selectRootKeychain(state);
-    if (keychain) {
-      const stacksDescriptor = stacksRootKeychainToAccountDescriptor(keychain, accountIndex);
-      dispatch(stxChainSlice.actions.switchAccount({ accountIndex, stacksDescriptor }));
-      return;
-    }
-    dispatch(stxChainSlice.actions.switchAccount({ accountIndex }));
-  };
-}
+    const stxChain = selectStacksChain(state);
+    const walletChain = stxChain[fingerprint];
+    const highestIndex = walletChain?.highestAccountIndex ?? -1;
 
-export function createNewAccount(): AppThunk {
-  return (dispatch, getState) => {
-    const state = getState();
-    const secretKey = selectDefaultWalletKey(state);
-    if (!secretKey) throw new Error('Unable to create a new account. Wallet not signed in');
-    const keychain = selectRootKeychain(state);
-    const highestIndex = selectHighestAccountIndex(state);
-    if (!keychain) throw new Error('No root keychain found');
-    const stacksDescriptor = stacksRootKeychainToAccountDescriptor(keychain, highestIndex + 1);
-    dispatch(stxChainSlice.actions.createNewAccount(stacksDescriptor));
+    const stacksDescriptor = stacksRootKeychainToAccountDescriptorV2(keychain, highestIndex + 1);
+
+    const newAccountIndex = highestIndex + 1;
+
+    dispatch(
+      stxChainSlice.actions.createNewAccount({
+        fingerprint,
+        descriptor: stacksDescriptor,
+      })
+    );
+
+    dispatch(
+      userSwitchesAccount({
+        fingerprint,
+        accountIndex: newAccountIndex,
+      })
+    );
+
+    logger.info('Account created for wallet', {
+      fingerprint,
+      accountIndex: newAccountIndex,
+    });
   };
 }

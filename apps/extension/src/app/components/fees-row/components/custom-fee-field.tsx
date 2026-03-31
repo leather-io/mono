@@ -4,20 +4,20 @@ import { SharedComponentsSelectors } from '@tests/selectors/shared-component.sel
 import { useField } from 'formik';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
-import type { CryptoCurrency, StacksFeeEstimate } from '@leather.io/models';
+import type { CryptoCurrency, StacksTransactionFeeQuote } from '@leather.io/models';
 import { stxToMicroStx } from '@leather.io/utils';
 
 import { SendFormWarningMessages } from '@app/common/warning-messages';
 
 interface CustomFeeFieldProps {
   feeCurrencySymbol: CryptoCurrency;
-  lowFeeEstimate: StacksFeeEstimate;
+  lowFeeQuote: StacksTransactionFeeQuote;
   setFieldWarning(value: string): void;
   disableFeeSelection?: boolean;
 }
 export function CustomFeeField({
   feeCurrencySymbol,
-  lowFeeEstimate,
+  lowFeeQuote,
   setFieldWarning,
   disableFeeSelection,
 }: CustomFeeFieldProps) {
@@ -27,12 +27,12 @@ export function CustomFeeField({
     (value: string) => {
       if (meta.error) return setFieldWarning('');
       const fee = stxToMicroStx(value);
-      if (lowFeeEstimate.fee.amount.isGreaterThan(fee)) {
+      if (lowFeeQuote.value.amount.isGreaterThan(fee)) {
         return setFieldWarning(SendFormWarningMessages.AdjustedFeeBelowLowestEstimate);
       }
       return setFieldWarning('');
     },
-    [lowFeeEstimate, meta.error, setFieldWarning]
+    [lowFeeQuote, meta.error, setFieldWarning]
   );
 
   return (

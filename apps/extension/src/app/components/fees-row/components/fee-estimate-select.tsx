@@ -1,11 +1,10 @@
-import { FeeTypes, type StacksFeeEstimate } from '@leather.io/models';
+import { FeeTypes } from '@leather.io/models';
 
 import { FeeEstimateItem } from './fee-estimate-item';
 import { FeeEstimateSelectLayout } from './fee-estimate-select.layout';
 
 interface FeeEstimateSelectProps {
   isVisible: boolean;
-  estimate: StacksFeeEstimate[];
   onSelectItem(index: number): void;
   onSetIsSelectVisible(value: boolean): void;
   selectedItem: number;
@@ -14,7 +13,6 @@ interface FeeEstimateSelectProps {
 }
 export function FeeEstimateSelect({
   isVisible,
-  estimate,
   onSelectItem,
   onSetIsSelectVisible,
   selectedItem,
@@ -28,15 +26,25 @@ export function FeeEstimateSelect({
       onSetIsSelectVisible={onSetIsSelectVisible}
       selectedItem={selectedItem}
     >
-      {estimate.map((estimate, index) => (
-        <FeeEstimateItem
-          index={index}
-          isVisible={isVisible}
-          key={estimate.fee.amount.toNumber()}
-          onSelectItem={onSelectItem}
-          selectedItem={selectedItem}
-        />
-      ))}
+      <FeeEstimateItem
+        index={FeeTypes.Low}
+        isVisible={isVisible}
+        onSelectItem={onSelectItem}
+        selectedItem={selectedItem}
+      />
+      <FeeEstimateItem
+        index={FeeTypes.Middle}
+        isVisible={isVisible}
+        onSelectItem={onSelectItem}
+        selectedItem={selectedItem}
+      />
+      <FeeEstimateItem
+        index={FeeTypes.High}
+        isVisible={isVisible}
+        onSelectItem={onSelectItem}
+        selectedItem={selectedItem}
+      />
+
       {allowCustom && (
         <FeeEstimateItem
           index={FeeTypes.Custom}

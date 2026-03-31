@@ -65,6 +65,13 @@ export function useLedgerNavigate() {
         });
       },
 
+      toCheckingAppVersion() {
+        return navigate(RouteUrls.LedgerCheckingAppVersion, {
+          replace: true,
+          state: { backgroundLocation: { pathname: RouteUrls.Home } },
+        });
+      },
+
       toDeviceBusyStep(description?: string) {
         return navigate(RouteUrls.DeviceBusy, {
           replace: true,
@@ -151,8 +158,21 @@ export function useLedgerNavigate() {
         });
       },
 
+      toStacksAppOutdatedWarning(versionInfo?: {
+        currentVersion: string;
+        requiredVersion: string;
+      }) {
+        return navigate(RouteUrls.LedgerOutdatedAppWarning, {
+          replace: true,
+          state: {
+            backgroundLocation: { pathname: RouteUrls.Home },
+            versionInfo,
+          },
+        });
+      },
+
       cancelLedgerAction() {
-        const fromLocation = location.state.fromLocation ?? undefined;
+        const fromLocation = location.state?.fromLocation ?? undefined;
 
         if (fromLocation) {
           return navigate(fromLocation, { state: { ...fromLocation.state, wentBack: true } });

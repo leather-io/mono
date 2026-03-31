@@ -4,8 +4,8 @@ import BitcoinApp, { DefaultWalletPolicy } from 'ledger-bitcoin';
 import { PartialSignature } from 'ledger-bitcoin/build/main/lib/appClient';
 
 import {
-  getNativeSegwitAccountDerivationPath,
-  getTaprootAccountDerivationPath,
+  makeNativeSegwitAccountDerivationPath,
+  makeTaprootAccountDerivationPath,
 } from '@leather.io/bitcoin';
 import type { BitcoinNetworkModes } from '@leather.io/models';
 
@@ -15,7 +15,7 @@ export interface BitcoinLedgerAccountDetails {
   id: string;
   path: string;
   policy: string;
-  targetId: string;
+  fingerprint: string;
 }
 
 export function connectLedgerBitcoinApp(network: BitcoinNetworkModes) {
@@ -60,14 +60,14 @@ function derivationPathToWalletPolicy(
 export function createNativeSegwitDefaultWalletPolicy(policyDetails: WalletPolicyDetails) {
   return new DefaultWalletPolicy(
     'wpkh(@0/**)',
-    derivationPathToWalletPolicy(getNativeSegwitAccountDerivationPath)(policyDetails)
+    derivationPathToWalletPolicy(makeNativeSegwitAccountDerivationPath)(policyDetails)
   );
 }
 
 export function createTaprootDefaultWalletPolicy(policyDetails: WalletPolicyDetails) {
   return new DefaultWalletPolicy(
     'tr(@0/**)',
-    derivationPathToWalletPolicy(getTaprootAccountDerivationPath)(policyDetails)
+    derivationPathToWalletPolicy(makeTaprootAccountDerivationPath)(policyDetails)
   );
 }
 

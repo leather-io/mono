@@ -11,6 +11,7 @@ import { Content, Page } from '@app/components/layout';
 import { BitcoinChooseFee } from '@app/features/bitcoin-choose-fee/bitcoin-choose-fee';
 import { useValidateBitcoinSpend } from '@app/features/bitcoin-choose-fee/hooks/use-validate-bitcoin-spend';
 import { PageHeader } from '@app/features/container/headers/page.header';
+import { useAccountRequest } from '@app/services/accounts/use-account-request';
 
 import { useSendBitcoinAssetContextState } from '../../family/bitcoin/components/send-bitcoin-asset-container';
 import { useBtcChooseFee } from './use-btc-choose-fee';
@@ -23,15 +24,16 @@ export function useBtcChooseFeeState() {
 }
 
 export function BtcChooseFee() {
-  const { isSendingMax, txValues, utxos } = useBtcChooseFeeState();
+  const { isSendingMax, txValues } = useBtcChooseFeeState();
   const { selectedFeeType, setSelectedFeeType } = useSendBitcoinAssetContextState();
   const { amountAsMoney, previewTransaction } = useBtcChooseFee();
+  const account = useAccountRequest();
 
   const { feesList, isLoading } = useBitcoinFeesList({
+    account,
     amount: amountAsMoney,
     isSendingMax,
     recipient: txValues.recipient,
-    utxos,
   });
 
   const recipients = [

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
 import { PsbtSelectors } from '@tests/selectors/requests.selectors';
@@ -15,8 +15,8 @@ import { ButtonRow, Card } from '@app/components/layout';
 import { PopupHeader } from '@app/features/container/headers/popup.header';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 
 import * as Psbt from './components';
 import { usePsbtDetails } from './hooks/use-psbt-details';
@@ -24,6 +24,7 @@ import { usePsbtSigner } from './hooks/use-psbt-signer';
 import { PsbtSignerContext, PsbtSignerProvider } from './psbt-signer.context';
 
 interface PsbtSignerProps {
+  banner?: ReactNode;
   indexesToSign?: number[];
   isBroadcasting?: boolean;
   name?: string;
@@ -33,10 +34,11 @@ interface PsbtSignerProps {
   psbtHex: string;
 }
 export function PsbtSigner(props: PsbtSignerProps) {
-  const { indexesToSign, isBroadcasting, name, origin, onCancel, onSignPsbt, psbtHex } = props;
+  const { banner, indexesToSign, isBroadcasting, name, origin, onCancel, onSignPsbt, psbtHex } =
+    props;
   const navigate = useNavigate();
-  const { address: addressNativeSegwit } = useCurrentAccountNativeSegwitIndexZeroSigner();
-  const { address: addressTaproot } = useCurrentAccountTaprootIndexZeroSigner();
+  const { address: addressNativeSegwit } = useCurrentAccountNativeSegwitIndexZeroPayer();
+  const { address: addressTaproot } = useCurrentAccountTaprootIndexZeroPayer();
   const { getRawPsbt, getPsbtAsTransaction } = usePsbtSigner();
 
   useOnOriginTabClose(() => closeWindow());
@@ -93,6 +95,7 @@ export function PsbtSigner(props: PsbtSignerProps) {
   return (
     <PsbtSignerProvider value={psbtSignerContext}>
       <PopupHeader showSwitchAccount balance="all" />
+      {banner}
       <Card
         dataTestId={PsbtSelectors.PsbtSignerCard}
         contentStyle={{

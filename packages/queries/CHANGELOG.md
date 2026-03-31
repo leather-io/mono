@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.8.0...@leather.io/queries-v0.9.0) (2026-03-27)
+
+
+### Features
+
+* **extension:** fee service usage in extension ([f295794](https://github.com/leather-io/mono/commit/f29579434d4291805dc1010faeac863dcadaaf5f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.56.0
+    * @leather.io/services bumped to 1.52.0
+    * @leather.io/utils bumped to 0.51.3
+
 ## [0.8.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.7.0...@leather.io/queries-v0.8.0) (2026-03-11)
 
 

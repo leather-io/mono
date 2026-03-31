@@ -29,7 +29,7 @@ export function getTabIdFromPort(port: chrome.runtime.Port) {
   return port.sender?.tab?.id ?? 0;
 }
 
-function getOriginFromPort(port: chrome.runtime.Port) {
+export function getOriginFromPort(port: chrome.runtime.Port) {
   if (port.sender?.url) return new URL(port.sender.url).origin;
   return port.sender?.origin;
 }
@@ -123,6 +123,7 @@ export async function createConnectingAppSearchParamsWithLastKnownAccount(
     const appPermissions = await getPermissionsByOrigin(getHostnameFromPort(port));
     if (appPermissions) {
       urlParams.set('accountIndex', appPermissions.accountIndex.toString());
+      urlParams.set('fingerprint', appPermissions.fingerprint);
     }
   }
   return { urlParams, origin, tabId };

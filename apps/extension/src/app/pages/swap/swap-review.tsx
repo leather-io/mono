@@ -15,6 +15,7 @@ import {
 
 import { formatCurrency, formatPercentage } from '@app/common/currency-formatter';
 import { Card, Content, Page } from '@app/components/layout';
+import { LoadingSpinner } from '@app/components/loading-spinner';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { QuoteRefetchIndicator } from '@app/pages/swap/components/quote-preview/quote-refetch-indicator';
 import { PriceImpactValue } from '@app/pages/swap/components/review/price-impact-value';
@@ -28,7 +29,11 @@ import {
 import { SwapReviewSummary } from '@app/pages/swap/components/review/swap-review-summary';
 import type { SwapOutletContext } from '@app/pages/swap/swap-container';
 
+import { FeesTooltipContent } from './components/review/fees-tooltip-content';
 import { SlippageSelectorSheet } from './components/review/slippage-selector-sheet';
+import { SwapReviewEmptyState } from './components/review/swap-review-empty-state';
+import { SwapReviewErrorState } from './components/review/swap-review-error-state';
+import { SwapReviewInfoTooltip } from './components/review/swap-review-info-tooltip';
 import { formatSwapRate, sumFeesInQuoteCurrency } from './swap-utils';
 
 const supportedLiveEstimateStatuses: LiveSwapEstimate['status'][] = [
@@ -52,10 +57,10 @@ export function SwapReview() {
             {matchLiveEstimate(liveEstimate, {
               idle: () => null,
               constrained: () => null,
-              loading: () => null,
-              error: () => null,
-              empty: () => null,
-              success: liveEstimate => <SwapReviewContent liveEstimate={liveEstimate} />, // TODO:,
+              loading: () => <LoadingSpinner />,
+              error: estimate => <SwapReviewErrorState onRetry={estimate.refetch} />,
+              empty: () => <SwapReviewEmptyState onBack={() => navigate(-1)} />,
+              success: liveEstimate => <SwapReviewContent liveEstimate={liveEstimate} />,
             })}
           </Card>
         </Page>
@@ -115,7 +120,13 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         />
 
         {isNonNullish(minReceive) && (
-          <SwapReviewDetailRow label="Min. receive" value={formatCurrency(minReceive)} />
+          <SwapReviewDetailRow
+            label="Min. receive"
+            value={formatCurrency(minReceive)}
+            info={
+              <SwapReviewInfoTooltip label="The guaranteed minimum amount you'll receive based on your slippage tolerance. If the final amount falls below this, the transaction will automatically revert." />
+            }
+          />
         )}
 
         {slippageApplicable && (
@@ -127,6 +138,9 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
                 label={formatPercentage(state.slippage)}
               />
             }
+            info={
+              <SwapReviewInfoTooltip label="The maximum price change you're willing to accept between when you submit and when your swap executes. If the price moves beyond this threshold, the transaction will revert." />
+            }
           />
         )}
 
@@ -134,12 +148,23 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
           <SwapReviewDetailRow
             label="Price impact"
             value={<PriceImpactValue value={priceImpactPercentage} />}
+            info={
+              <SwapReviewInfoTooltip label="The difference between the market price and the price you'll receive due to your trade size relative to the available liquidity. Larger trades typically have higher price impact." />
+            }
           />
         )}
 
         <SwapReviewDivider />
 
-        <SwapReviewDetailRow label="Estimated fees" value={formatCurrency(totalFees)} />
+        <SwapReviewDetailRow
+          label="Estimated fees"
+          value={formatCurrency(totalFees)}
+          info={
+            <SwapReviewInfoTooltip
+              label={<FeesTooltipContent fees={fees} provider={selectedQuote.provider} />}
+            />
+          }
+        />
       </SwapReviewDetails>
 
       <SlippageSelectorSheet

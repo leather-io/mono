@@ -7,13 +7,15 @@ import { useCancelAuthRequest } from '@app/common/authentication/use-cancel-auth
 import { useFinishAuthRequest } from '@app/common/authentication/use-finish-auth-request';
 import { useAppDetails } from '@app/common/hooks/auth/use-app-details';
 import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { initialSearchParams } from '@app/common/initial-search-params';
 import { appEvents } from '@app/common/publish-subscribe';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
+import { LegacyRequestCallout } from '@app/features/legacy-request-callout/legacy-request-callout';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 
 import { ConnectAccountLayout } from '../../components/connect-account/connect-account.layout';
 
@@ -24,8 +26,10 @@ function listenForJwtSigningComplete() {
 }
 
 export function LegacyAccountAuth() {
+  const flow = initialSearchParams.get('flow');
   const { url } = useAppDetails();
-  const accountIndex = useCurrentAccountIndex();
+  const currentAccount = useCurrentAccountId();
+  const accountIndex = currentAccount.accountIndex;
   const finishSignIn = useFinishAuthRequest();
   const { toggleSwitchAccount } = useSwitchAccountSheet();
   const { whenWallet } = useWalletType();
@@ -58,6 +62,7 @@ export function LegacyAccountAuth() {
   return (
     <>
       <ConnectAccountLayout
+        banner={flow ? <LegacyRequestCallout origin={url.origin} method={flow} /> : undefined}
         requester={url.origin}
         onUserApprovesGetAddresses={async () => signIntoAccount(accountIndex)}
         // Here we should refocus the tab that initiated the request, however

@@ -19,8 +19,8 @@ import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { IncreaseFeeButton } from '@app/components/stacks-transaction-item/increase-fee-button';
 import { TransactionTitle } from '@app/components/transaction/transaction-title';
 import { useInscriptionByOutput } from '@app/query/bitcoin/ordinals/inscriptions-by-param.hooks';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { TransactionItemLayout } from '../transaction-item/transaction-item.layout';
@@ -38,8 +38,8 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
 
   const { data: inscriptionData } = useInscriptionByOutput(transaction);
 
-  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
-  const taprootSigner = useCurrentAccountTaprootIndexZeroSigner();
+  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayer();
+  const taprootSigner = useCurrentAccountTaprootIndexZeroPayer();
   const { handleOpenBitcoinTxLink: handleOpenTxLink } = useBitcoinExplorerLink();
   const caption = useMemo(() => getBitcoinTxCaption(transaction), [transaction]);
 

@@ -10,6 +10,7 @@ export enum RouteUrls {
   ConnectLedger = 'connect-your-ledger',
   ConnectLedgerError = 'ledger-connection-error',
   ConnectLedgerSuccess = 'successfully-connected-your-ledger',
+  LedgerCheckingAppVersion = 'checking-app-version',
   DeviceBusy = 'please-wait',
   AwaitingDeviceUserAction = 'awaiting-approval',
   LedgerDisconnected = 'your-ledger-disconnected',
@@ -18,12 +19,15 @@ export enum RouteUrls {
   LedgerDevicePayloadInvalid = 'ledger-payload-invalid',
   LedgerUnsupportedBrowser = 'unsupported-browser',
   LedgerOutdatedAppWarning = 'outdated-app-warning',
+  LedgerUnexpectedFingerprint = 'unexpected-device-fingerprint',
   LedgerBroadcastError = 'transaction-broadcast-error',
   ConnectLedgerStart = 'connect-ledger',
+  OutdatedStacksAppWarning = 'outdated-stacks-app-warning',
 
   // Active wallet routes
   Home = '/',
   TokenDetails = '/token/*',
+  MultiWalletTest = '/multi-wallet-test',
   AddNetwork = '/add-network',
   EditNetwork = '/edit-network',
   SelectNetwork = '/select-network',

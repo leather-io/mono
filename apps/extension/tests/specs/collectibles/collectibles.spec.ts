@@ -7,6 +7,7 @@ import {
   mockTextInscription,
 } from '@tests/mocks/mock-collectibles';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
+import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -199,22 +200,13 @@ test.describe('Collectibles tab', () => {
       await expect(refreshItem).toBeVisible();
     });
 
-    test('should show Recover all inscriptions option', async ({ homePage, page }) => {
+    test('should show Manage inscriptions option', async ({ homePage, page }) => {
       await homePage.clickCollectiblesTab();
 
       await page.getByTestId('manage-collectibles-btn').click();
 
-      const recoverItem = page.getByTestId('recover-all-inscriptions');
-      await expect(recoverItem).toBeVisible();
-    });
-
-    test('should show Unprotect all inscriptions option', async ({ homePage, page }) => {
-      await homePage.clickCollectiblesTab();
-
-      await page.getByTestId('manage-collectibles-btn').click();
-
-      const unprotectItem = page.getByTestId('unprotect-all-inscriptions');
-      await expect(unprotectItem).toBeVisible();
+      const manageItem = page.getByTestId(SettingsSelectors.ManageInscriptions);
+      await expect(manageItem).toBeVisible();
     });
   });
 
@@ -233,9 +225,12 @@ test.describe('Collectibles tab', () => {
       await homePage.clickCollectiblesTab();
 
       await page.getByTestId('manage-collectibles-btn').click();
-      await page.getByTestId('unprotect-all-inscriptions').click();
+      await page.getByTestId(SettingsSelectors.ManageInscriptions).click();
 
-      await page.waitForTimeout(500);
+      const sheet = page.getByTestId(SettingsSelectors.ManageInscriptionsSheet);
+      await expect(sheet).toBeVisible();
+      await page.getByTestId(SettingsSelectors.AllowSpendingBtn).click();
+      await sheet.waitFor({ state: 'hidden' });
 
       const discardedInscriptions = await page.evaluate(async () => {
         const data = await chrome.storage.local.get(['persist:root']);
@@ -296,7 +291,12 @@ test.describe('Collectibles tab', () => {
       await homePage.clickCollectiblesTab();
 
       await page.getByTestId('manage-collectibles-btn').click();
-      await page.getByTestId('unprotect-all-inscriptions').click();
+      await page.getByTestId(SettingsSelectors.ManageInscriptions).click();
+
+      const sheet = page.getByTestId(SettingsSelectors.ManageInscriptionsSheet);
+      await expect(sheet).toBeVisible();
+      await page.getByTestId(SettingsSelectors.AllowSpendingBtn).click();
+      await sheet.waitFor({ state: 'hidden' });
 
       const labels = page.getByTestId('inscription-unprotected-label');
       await expect(labels).toHaveCount(2);

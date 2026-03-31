@@ -1,7 +1,7 @@
 import { StacksTransactionWire, estimateTransactionByteLength } from '@stacks/transactions';
 import { injectable } from 'inversify';
 
-import { TransactionFeeTier, TransactionFees } from '@leather.io/models';
+import { type StacksTransactionFees, TransactionFeeTier } from '@leather.io/models';
 import { getSerializedUnsignedStacksTxPayload } from '@leather.io/stacks';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
@@ -22,7 +22,7 @@ export class StacksTransactionFeesService {
   async getStacksTransactionFees(
     unsignedTx: StacksTransactionWire,
     signal?: AbortSignal
-  ): Promise<TransactionFees> {
+  ): Promise<StacksTransactionFees> {
     const estimatedTxSize = estimateTransactionByteLength(unsignedTx);
     const fees = await this.getTieredFeeAmounts(unsignedTx, estimatedTxSize, signal);
     return {

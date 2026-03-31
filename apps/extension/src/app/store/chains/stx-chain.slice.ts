@@ -1,56 +1,66 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { defaultWalletKeyId } from '@shared/utils';
+import type { AccountId } from '@leather.io/models';
+import { resetWallet } from '@leather.io/state';
+import { fingerprintMigration, userAddsWallet } from '@leather.io/state/wallet';
 
-import { keySlice } from '../software-keys/software-key.slice';
+import { assumedZeroFingerprint } from '@shared/utils';
 
 interface StxChainKeyState {
   highestAccountIndex: number;
-  currentAccountIndex: number;
   currentAccountStacksDescriptor: string;
 }
 
-const initialState: Record<string, StxChainKeyState> = {
-  [defaultWalletKeyId]: {
-    highestAccountIndex: 0,
-    currentAccountIndex: 0,
-    currentAccountStacksDescriptor: '',
-  },
-};
+const initialState: Record<string, StxChainKeyState> = {};
 
 export const stxChainSlice = createSlice({
   name: 'stxChain',
   initialState,
 
   reducers: {
-    initializeAccount(state, action: PayloadAction<StxChainKeyState>) {
-      state.default.highestAccountIndex = action.payload.highestAccountIndex;
-      state.default.currentAccountIndex = action.payload.currentAccountIndex;
-      state.default.currentAccountStacksDescriptor = action.payload.currentAccountStacksDescriptor;
+    createNewAccount(state, action: PayloadAction<{ fingerprint: string; descriptor: string }>) {
+      const fingerprint = action.payload.fingerprint;
+      if (!state[fingerprint]) {
+        state[fingerprint] = {
+          highestAccountIndex: 1,
+          currentAccountStacksDescriptor: action.payload.descriptor,
+        };
+      } else {
+        state[fingerprint].highestAccountIndex += 1;
+        state[fingerprint].currentAccountStacksDescriptor = action.payload.descriptor;
+      }
     },
-    switchAccount(
-      state,
-      action: PayloadAction<{ accountIndex: number; stacksDescriptor?: string }>
-    ) {
-      state.default.currentAccountIndex = action.payload.accountIndex;
-      if (action.payload.stacksDescriptor)
-        state.default.currentAccountStacksDescriptor = action.payload.stacksDescriptor;
-    },
-    createNewAccount(state, action: PayloadAction<string>) {
-      state.default.highestAccountIndex += 1;
-      state.default.currentAccountIndex = state.default.highestAccountIndex;
-      state.default.currentAccountStacksDescriptor = action.payload;
-    },
-    restoreAccountIndex(state, action: PayloadAction<number>) {
-      state.default.highestAccountIndex = action.payload;
+
+    restoreAccountIndex(state, action: PayloadAction<AccountId>) {
+      const fingerprint = action.payload.fingerprint;
+      if (!state[fingerprint]) {
+        state[fingerprint] = {
+          highestAccountIndex: action.payload.accountIndex,
+          currentAccountStacksDescriptor: '',
+        };
+      } else {
+        state[fingerprint].highestAccountIndex = action.payload.accountIndex;
+      }
     },
   },
 
-  extraReducers: builder => {
-    builder.addCase(keySlice.actions.signOut.toString(), state => {
-      state.default.highestAccountIndex = 0;
-      state.default.currentAccountIndex = 0;
-      state.default.currentAccountStacksDescriptor = '';
-    });
-  },
+  extraReducers: builder =>
+    builder
+      .addCase(resetWallet, () => ({}))
+
+      .addCase(userAddsWallet, (state, action) => {
+        state[action.payload.wallet.fingerprint] = {
+          highestAccountIndex: 0,
+          currentAccountStacksDescriptor: '',
+        };
+      })
+
+      .addCase(fingerprintMigration, (state, action) => {
+        const newFingerprint = action.payload;
+
+        if (state[assumedZeroFingerprint]) {
+          state[newFingerprint] = state[assumedZeroFingerprint];
+          delete state[assumedZeroFingerprint];
+        }
+      }),
 });

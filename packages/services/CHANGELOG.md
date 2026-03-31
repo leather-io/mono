@@ -413,6 +413,26 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.52.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.51.1...@leather.io/services-v1.52.0) (2026-03-27)
+
+
+### Features
+
+* **extension:** fee service usage in extension ([f295794](https://github.com/leather-io/mono/commit/f29579434d4291805dc1010faeac863dcadaaf5f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.37.5
+    * @leather.io/constants bumped to 0.35.1
+    * @leather.io/models bumped to 0.56.0
+    * @leather.io/stacks bumped to 1.19.18
+    * @leather.io/utils bumped to 0.51.3
+  * devDependencies
+    * @leather.io/rpc bumped to 2.21.16
+
 ## [1.51.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.51.0...@leather.io/services-v1.51.1) (2026-03-11)
 
 

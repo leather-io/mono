@@ -1,10 +1,13 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 
-import type { CollectibleView } from '@leather.io/features';
+import { type CollectibleView, createTokenDetailsPath } from '@leather.io/features';
+import type { NonFungibleCryptoAsset } from '@leather.io/models';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 
 import { CollectibleTypeIconOverlay } from './components/collectible-type-icon-overlay';
 import { CollectiblesLayout } from './components/collectibles.layout';
@@ -14,30 +17,41 @@ import { StampCard } from './components/stamp-card';
 
 interface CollectibleItemProps {
   view: CollectibleView;
+  onSelect(asset: NonFungibleCryptoAsset): void;
 }
-function CollectibleItem({ view }: CollectibleItemProps) {
+function CollectibleItem({ view, onSelect }: CollectibleItemProps) {
   switch (view.asset.protocol) {
     case 'stamp':
-      return <StampCard item={view.asset} />;
+      return <StampCard item={view.asset} onSelect={onSelect} />;
     case 'sip9':
-      return <Sip9Card item={view.asset} isBns={view.isBns} />;
+      return <Sip9Card item={view.asset} isBns={view.isBns} onSelect={onSelect} />;
     case 'inscription':
-      return <InscriptionCardActions item={view.asset} />;
+      return <InscriptionCardActions item={view.asset} onSelect={onSelect} />;
     default:
       return null;
   }
 }
 
 export function Collectibles() {
-  const accountIndex = useCurrentAccountIndex();
-  const account = useAccountAddresses(accountIndex);
+  const accountId = useCurrentAccountId();
+  const account = useAccountAddresses(accountId);
+  const navigate = useNavigate();
+  const location = useLocation();
   const {
     data: collectibles = [],
     isPending,
-    isFetching,
     isError,
+    isFetching,
     refetch,
   } = useAccountCollectibles(account);
+
+  const handleSelectCollectible = useCallback(
+    (asset: NonFungibleCryptoAsset) => {
+      const assetId = serializeAssetId(getAssetId(asset));
+      void navigate(createTokenDetailsPath(assetId), { state: { backgroundLocation: location } });
+    },
+    [navigate, location]
+  );
 
   const renderedCollectibles = useMemo(
     () =>
@@ -48,10 +62,10 @@ export function Collectibles() {
           data-testid={`collectible-card-${view.asset.protocol}`}
           data-index={index}
         >
-          <CollectibleItem view={view} />
+          <CollectibleItem view={view} onSelect={handleSelectCollectible} />
         </CollectibleTypeIconOverlay>
       )),
-    [collectibles]
+    [collectibles, handleSelectCollectible]
   );
 
   return (

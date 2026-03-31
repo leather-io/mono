@@ -24,6 +24,7 @@ import { nonceValidator } from '@app/common/validation/nonce-validators';
 import { NonceSetter } from '@app/components/nonce-setter';
 import { PopupHeader } from '@app/features/container/headers/popup.header';
 import { RequestingTabClosedWarningMessage } from '@app/features/errors/requesting-tab-closed-error-msg';
+import { LegacyRequestCallout } from '@app/features/legacy-request-callout/legacy-request-callout';
 import { HighFeeSheet } from '@app/features/stacks-high-fee-warning/stacks-high-fee-dialog';
 import { FeeForm } from '@app/features/stacks-transaction-request/fee-form';
 import { useStacksBroadcastTransaction } from '@app/features/stacks-transaction-request/hooks/use-legacy-stacks-broadcast-transaction';
@@ -40,7 +41,7 @@ import { useConfigSbtc } from '@app/query/common/remote-config/remote-config.que
 import { useCheckSbtcSponsorshipEligible } from '@app/query/sbtc/sponsored-transactions.hooks';
 import { submitSponsoredSbtcTransaction } from '@app/query/sbtc/sponsored-transactions.query';
 import { useStxAddressBalance } from '@app/query/stacks/balance/stx-balance.hooks';
-import { useCalculateStacksTxFees } from '@app/query/stacks/fees/fees.hooks';
+import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import {
@@ -55,12 +56,12 @@ import {
 
 function TransactionRequestBase() {
   const sbtcConfig = useConfigSbtc();
-  const { tabId } = useDefaultRequestParams();
+  const { origin, flow, tabId } = useDefaultRequestParams();
   const requestToken = useTransactionRequest();
 
   const transactionRequest = useTransactionRequestState();
   const unsignedTx = useUnsignedStacksTransactionBaseState();
-  const { data: stxFees } = useCalculateStacksTxFees(unsignedTx.transaction);
+  const { data: stxFees } = useStacksTransactionFees(unsignedTx.transaction);
   const generateUnsignedTx = useGenerateUnsignedStacksTransaction();
   const stxAddress = useCurrentStacksAccountAddress();
 
@@ -125,7 +126,7 @@ function TransactionRequestBase() {
     }
 
     analytics.track('submit_fee_for_transaction', {
-      calculation: stxFees?.calculation || 'unknown',
+      calculation: stxFees ? 'service' : 'unknown',
       fee: values.fee,
       type: values.feeType,
     });
@@ -169,6 +170,7 @@ function TransactionRequestBase() {
           {() => (
             <>
               <PageTop />
+              {flow && <LegacyRequestCallout origin={origin} method={flow} />}
               <RequestingTabClosedWarningMessage />
               <PostConditionModeWarning />
               <TransactionError />

@@ -16,6 +16,10 @@ interface UseBitcoinCustomFeeArgs {
   recipients: TransferRecipient[];
 }
 
+/**
+ * TODO: refactor this bit
+ * This hook uses utxos that are not necessarily present in the transaction
+ */
 export function useBitcoinCustomFee({ isSendingMax, recipients }: UseBitcoinCustomFeeArgs) {
   const { utxos } = useCurrentUtxos();
   const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');

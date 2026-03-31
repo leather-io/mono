@@ -1,4 +1,5 @@
 import type { MarketData, Money, OwnedUtxo } from '@leather.io/models';
+import type { AccountRequest } from '@leather.io/services';
 
 import type { TransferRecipient } from '@shared/models/form.model';
 
@@ -8,7 +9,7 @@ import { FeeEditorProvider } from '../fee-editor.provider';
 import { BitcoinFeesLoader } from './bitcoin-fees-loader';
 
 interface BitcoinFeeEditorProviderProps extends HasChildren {
-  amount: Money;
+  account: AccountRequest;
   availableBalance: Money;
   isSendingMax?: boolean;
   marketData: MarketData;
@@ -17,7 +18,7 @@ interface BitcoinFeeEditorProviderProps extends HasChildren {
   utxos: OwnedUtxo[];
 }
 export function BitcoinFeeEditorProvider({
-  amount,
+  account,
   availableBalance,
   children,
   isSendingMax,
@@ -28,7 +29,7 @@ export function BitcoinFeeEditorProvider({
 }: BitcoinFeeEditorProviderProps) {
   return (
     <BitcoinFeesLoader
-      amount={amount}
+      account={account}
       isSendingMax={isSendingMax}
       recipients={recipients}
       utxos={utxos}

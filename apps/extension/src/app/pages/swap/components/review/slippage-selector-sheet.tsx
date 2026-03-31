@@ -42,7 +42,7 @@ export function SlippageSelectorSheet({
             longPressStep={0.01}
             value={editingValue}
             onChange={setEditingValue}
-            formatter={value => formatPercentage(value, 1)}
+            formatter={(value: number) => formatPercentage(value, 1)}
           >
             <NumericInput.Decrement />
             <NumericInput.Display fontSize="24px" lineHeight="32px" />

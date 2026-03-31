@@ -22,10 +22,7 @@ import {
   getStacksAppVersion,
   prepareLedgerDeviceStacksAppConnection,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
-import {
-  useCurrentStacksAccount,
-  useStacksAccounts,
-} from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
@@ -42,9 +39,8 @@ export function LedgerSignJwtContainer() {
   const ledgerNavigate = useLedgerNavigate();
   useScrollLock(true);
 
-  const activeAccount = useCurrentStacksAccount();
+  const account = useCurrentStacksAccount();
   const network = useCurrentStacksNetworkState();
-  const accounts = useStacksAccounts();
 
   const getBitcoinAddressesLegacyFormat = useGetLegacyAuthBitcoinAddresses();
 
@@ -68,25 +64,22 @@ export function LedgerSignJwtContainer() {
   const chain = 'stacks';
 
   async function signJwtPayload() {
-    if (!origin) throw new Error('Cannot sign payload for unknown origin');
+    if (!origin || !account) throw new Error('Cannot sign payload for unknown origin');
 
     if (accountIndex === null) {
       logger.warn('No account index found');
       return;
     }
 
-    if (!activeAccount || !decodedAuthRequest || !authRequest || !accounts || !tabId) {
+    if (!account || !decodedAuthRequest || !authRequest || !tabId) {
       logger.warn('No necessary state not found while performing JWT signing', {
-        account: activeAccount,
+        account: account,
         decodedAuthRequest,
         authRequest,
-        accounts,
         tabId,
       });
       return;
     }
-
-    const account = accounts[accountIndex];
 
     if (!account) {
       logger.warn('No account for given index found');
@@ -154,7 +147,7 @@ export function LedgerSignJwtContainer() {
       void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
       const authResponse = addSignatureToAuthResponseJwt(authResponsePayload, resp.signatureDER);
       await delay(600);
-      await keyActions.switchAccount(accountIndex);
+      keyActions.switchAccount({ fingerprint: account.fingerprint, accountIndex });
 
       finalizeAuthResponse({
         decodedAuthRequest,

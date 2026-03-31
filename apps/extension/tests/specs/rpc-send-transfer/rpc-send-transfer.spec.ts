@@ -5,6 +5,7 @@ import {
 } from '@tests/mocks/constants';
 import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoin-tx';
 import { mockMainnetTestAccountInscriptionsRequests } from '@tests/mocks/mock-inscriptions-bis';
+import { mockLeatherApiRequests } from '@tests/mocks/mock-leather-api';
 import {
   mockMainnetNsTransactionsTestAccount,
   mockMixedUtxoRequests,
@@ -48,6 +49,7 @@ function clickActionButton(context: BrowserContext) {
 
 async function mockPopupRequests(context: BrowserContext) {
   const popup = await context.waitForEvent('page');
+  await mockLeatherApiRequests(popup);
   await mockTestAccountBtcBroadcastTransaction(popup);
 }
 
@@ -86,6 +88,8 @@ test.describe('RPC: sendTransfer', () => {
   });
 
   test('that the request can be cancelled', async ({ page, context }) => {
+    void mockPopupRequests(context);
+
     const [result] = await Promise.all([
       openSendTransfer(page)(baseParams),
       clickActionButton(context)('Cancel'),

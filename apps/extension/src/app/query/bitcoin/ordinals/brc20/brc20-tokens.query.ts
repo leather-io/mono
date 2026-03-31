@@ -7,8 +7,8 @@ import { createNumArrayOfRange } from '@leather.io/utils';
 
 import { useLeatherNetwork } from '@app/query/leather-query-provider';
 import { useBestInSlotApiRateLimiter } from '@app/query/rate-limiter/best-in-slot-limiter';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootSigner } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useCurrentAccountTaprootPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 
 import { useBitcoinClient } from '../../clients/bitcoin-client';
 
@@ -16,8 +16,8 @@ const addressesSimultaneousFetchLimit = 3;
 const stopSearchAfterNumberAddressesWithoutBrc20Tokens = 3;
 
 export function useGetBrc20TokensQuery() {
-  const createTaprootSigner = useCurrentAccountTaprootSigner();
-  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
+  const createTaprootSigner = useCurrentAccountTaprootPayer();
+  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayer();
   const nativeSegwitAddress = nativeSegwitSigner.address;
 
   const network = useLeatherNetwork();

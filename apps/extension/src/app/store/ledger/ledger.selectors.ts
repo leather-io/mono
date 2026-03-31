@@ -2,33 +2,49 @@ import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
 
-import { sumNumbers } from '@leather.io/utils';
+import {
+  extractAccountIndexFromPath,
+  extractKeyOriginPathFromDescriptor,
+} from '@leather.io/crypto';
+import { sumNumbers, uniqueArray } from '@leather.io/utils';
 
-import { RootState } from '..';
+import { selectBitcoinKeychains, selectStacksKeychains } from '../keychains/keychain.selectors';
+import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 
-function selectLedger(state: RootState) {
-  return state.ledger;
-}
-
-const selectNumberOfLedgerKeysPersisted = createSelector(selectLedger, ledger =>
-  sumNumbers(Object.values(ledger).map(chain => Object.keys(chain.entities).length))
+const selectNumberOfLedgerKeysPersisted = createSelector(
+  [selectBitcoinKeychains, selectStacksKeychains],
+  (bitcoinKeychains, stacksKeychains) =>
+    sumNumbers([bitcoinKeychains.length, stacksKeychains.length])
 );
 
-const selectNumberOfLedgerBitcoinKeysPersisted = createSelector(selectLedger, ledger =>
-  sumNumbers(Object.values(ledger.bitcoin).map(entities => Object.keys(entities).length))
+const selectNumberOfLedgerStacksKeysPersisted = createSelector(
+  selectStacksKeychains,
+  stacksKeychains => sumNumbers([stacksKeychains.length])
 );
 
-const selectNumberOfLedgerStacksKeysPersisted = createSelector(selectLedger, ledger =>
-  sumNumbers(Object.values(ledger.stacks).map(entities => Object.keys(entities).length))
-);
-
-export const selectHasLedgerKeys = createSelector(selectNumberOfLedgerKeysPersisted, numOfKeys =>
+const selectHasLedgerKeys = createSelector(selectNumberOfLedgerKeysPersisted, numOfKeys =>
   numOfKeys.isGreaterThan(0)
 );
 
 const selectHasLedgerBitcoinKeys = createSelector(
-  selectNumberOfLedgerBitcoinKeysPersisted,
-  numOfKeys => numOfKeys.isGreaterThan(0)
+  [selectBitcoinKeychains, selectCurrentAccount],
+  (bitcoinKeychains, currentAccount) => {
+    const bitcoinKeysForCurrentWallet = bitcoinKeychains.filter(keychain => {
+      const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
+      return keyOrigin.startsWith(`[${currentAccount.fingerprint}/`);
+    });
+
+    const uniqueBitcoinAccountIndices = uniqueArray(
+      bitcoinKeysForCurrentWallet
+        .map(keychain => {
+          const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
+          return extractAccountIndexFromPath(keyOrigin);
+        })
+        .filter((index): index is number => index !== null)
+    );
+
+    return uniqueBitcoinAccountIndices.includes(currentAccount.accountIndex);
+  }
 );
 
 const selectHasLedgerStacksKeys = createSelector(

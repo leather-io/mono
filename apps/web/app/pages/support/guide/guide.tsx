@@ -37,11 +37,13 @@ export function Guide() {
               { label: guide.categories[0]?.name ?? '' },
             ]}
           />
-          <Page.Title my="space.04">{guide.title}</Page.Title>
-          <styled.p textStyle="label.02" color="ink.text-primary" mb="space.04">
+          <Page.Title textStyle="heading.03" mt="space.05" mb="space.05">
+            {guide.title}
+          </Page.Title>
+          <styled.p textStyle="label.02" color="ink.text-primary" mb="space.05">
             {guide.summary}
           </styled.p>
-          <styled.p textStyle="caption.01" color="ink.text-subdued">
+          <styled.p textStyle="label.03" color="ink.text-subdued">
             {formatDate(guide.publishedAt)}
           </styled.p>
         </Box>

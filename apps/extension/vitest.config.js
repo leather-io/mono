@@ -9,6 +9,17 @@ export default defineConfig({
     setupFiles: './tests/unit/unit-test.setup.js',
     deps: { interopDefault: true },
     silent: false,
+    coverage: {
+      provider: 'v8',
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/scripts/**',
+        '**/*.spec.{ts,tsx}',
+        '**/tests/**',
+        '**/*.config.{js,ts}',
+      ],
+    },
   },
   resolve: {
     alias: {

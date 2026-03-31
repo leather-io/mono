@@ -2,7 +2,12 @@ import { useCallback } from 'react';
 
 import * as btc from '@scure/btc-signer';
 
-import { determineUtxosForSpend, determineUtxosForSpendAll, isP2TROut } from '@leather.io/bitcoin';
+import {
+  determineUtxosForSpend,
+  determineUtxosForSpendAll,
+  isTaprootPayer,
+} from '@leather.io/bitcoin';
+import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import type { Money, OwnedUtxo } from '@leather.io/models';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
@@ -10,8 +15,8 @@ import { logger } from '@shared/logger';
 import type { TransferRecipient } from '@shared/models/form.model';
 
 import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/bitcoin/bitcoin-keychain';
-import { useBitcoinSignerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-signer';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/bitcoin-payer';
+import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 interface GenerateBitcoinTxValues {
   amount: Money;
@@ -26,8 +31,9 @@ interface UseGenerateUnsignedBitcoinTxProps {
 export function useGenerateUnsignedBitcoinTx({
   throwError = false,
 }: UseGenerateUnsignedBitcoinTxProps = {}) {
-  const zeroIndexNativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
-  const getSignerForInput = useBitcoinSignerFromInput();
+  const indexZeroPayer = useCurrentAccountNativeSegwitIndexZeroPayer();
+  const getPayerForInput = useBitcoinPayerFromInput();
+
   const networkMode = useBitcoinScureLibNetworkConfig();
 
   return useCallback(
@@ -58,17 +64,12 @@ export function useGenerateUnsignedBitcoinTx({
         if (!inputs.length) throw new Error('No inputs to sign');
         if (!outputs.length) throw new Error('No outputs to sign');
 
-        // Is this critical?
-
-        // if (outputs.length > 2)
-        //   throw new Error('Address reuse mode: wallet should have max 2 outputs');
-
         const signingConfig: BitcoinInputSigningConfig[] = [];
 
         for (const input of inputs) {
-          const inputSigner = getSignerForInput(input);
-          const tapInternalKey = isP2TROut(inputSigner)
-            ? { tapInternalKey: inputSigner.payment.tapInternalKey }
+          const inputPayer = getPayerForInput(input);
+          const tapInternalKey = isTaprootPayer(inputPayer)
+            ? { tapInternalKey: inputPayer.payment.tapInternalKey }
             : {};
 
           tx.addInput({
@@ -76,7 +77,7 @@ export function useGenerateUnsignedBitcoinTx({
             index: input.vout,
             sequence: 0,
             witnessUtxo: {
-              script: inputSigner.payment.script,
+              script: inputPayer.payment.script,
               amount: BigInt(input.value),
             },
             ...tapInternalKey,
@@ -84,7 +85,7 @@ export function useGenerateUnsignedBitcoinTx({
 
           signingConfig.push({
             index: tx.inputsLength - 1,
-            derivationPath: inputSigner.derivationPath,
+            derivationPath: keyOriginToDerivationPath(inputPayer.keyOrigin),
           });
         }
 
@@ -92,11 +93,7 @@ export function useGenerateUnsignedBitcoinTx({
           // When coin selection returns output with no address we assume it is
           // a change output
           if (!output.address) {
-            tx.addOutputAddress(
-              zeroIndexNativeSegwitSigner.address,
-              BigInt(output.value),
-              networkMode
-            );
+            tx.addOutputAddress(indexZeroPayer.address, BigInt(output.value), networkMode);
             return;
           }
           tx.addOutputAddress(output.address, BigInt(output.value), networkMode);
@@ -116,6 +113,6 @@ export function useGenerateUnsignedBitcoinTx({
         return null;
       }
     },
-    [networkMode, zeroIndexNativeSegwitSigner.address, getSignerForInput, throwError]
+    [networkMode, indexZeroPayer.address, getPayerForInput, throwError]
   );
 }

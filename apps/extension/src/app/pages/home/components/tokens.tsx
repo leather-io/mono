@@ -11,7 +11,7 @@ import { useFlags } from '@app/features/feature-flags';
 import { TrendingTokens } from '@app/features/trending-tokens/trending-tokens';
 import { useActivity } from '@app/query/activity/activity.query';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 
 import { FirstTokenBanner } from './first-token-banner';
 import { TokensLearn } from './tokens-learn';
@@ -21,8 +21,8 @@ export function Tokens() {
   const navigate = useNavigate();
   const location = useLocation();
   const { releaseTrendingTokens } = useFlags();
-  const accountIndex = useCurrentAccountIndex();
-  const account = useAccountAddresses(accountIndex);
+  const accountId = useCurrentAccountId();
+  const account = useAccountAddresses(accountId);
   const activityQuery = useActivity(account);
   const showFirstTokenBanner = activityQuery.isSuccess && !activityQuery.data?.length;
 

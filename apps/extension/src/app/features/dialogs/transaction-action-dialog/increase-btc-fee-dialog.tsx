@@ -6,17 +6,15 @@ import { Flex, Stack } from 'leather-styles/jsx';
 
 import type { BitcoinTx } from '@leather.io/models';
 import { Caption, Sheet, SheetHeader, Spinner } from '@leather.io/ui';
-import { btcToSat, createMoney, sumMoney } from '@leather.io/utils';
+import { sumMoney } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
-import { getBitcoinTxValue } from '@app/common/transactions/bitcoin/utils';
 import { BitcoinCustomFeeInput } from '@app/components/bitcoin-custom-fee/bitcoin-custom-fee-input';
 import { BitcoinTransactionItem } from '@app/components/bitcoin-transaction-item/bitcoin-transaction-item';
 import { useCurrentBtcBalanceWithFallback } from '@app/query/bitcoin/balance/btc-balance.hooks';
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 import { TransactionActions } from './components/transaction-actions';
 import { useBtcIncreaseFee } from './hooks/use-btc-increase-fee';
@@ -27,23 +25,11 @@ export function IncreaseBtcFeeSheet() {
   const location = useLocation();
 
   const btcTx = tx;
-  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSigner();
-  const currentBitcoinAddress = nativeSegwitSigner.address;
   const { btc: balance } = useCurrentBtcBalanceWithFallback();
-  const { isBroadcasting, sizeInfo, onSubmit, validationSchema, recipient } =
+  const { isBroadcasting, sizeInfo, onSubmit, validationSchema, recipients } =
     useBtcIncreaseFee(btcTx);
 
   const btcBalance = formatCurrency(sumMoney([balance.availableBalance, balance.outboundBalance]));
-
-  const recipients = [
-    {
-      address: recipient,
-      amount: createMoney(
-        btcToSat(getBitcoinTxValue(address => address === currentBitcoinAddress, btcTx)),
-        'BTC'
-      ),
-    },
-  ];
 
   function onClose() {
     void navigate(RouteUrls.Home);

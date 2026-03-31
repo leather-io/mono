@@ -1,10 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { logger } from '@shared/logger';
-import { defaultWalletKeyId } from '@shared/utils';
-import { encodeText } from '@shared/utils/text-encoding';
+import { getMnemonicRootKeyFingerprint } from '@leather.io/crypto';
+import { resetWallet } from '@leather.io/state';
 
-import { keySlice } from '../software-keys/software-key.slice';
+import { logger } from '@shared/logger';
+import { encodeText } from '@shared/utils/text-encoding';
 
 interface InMemoryKeyState {
   hasRestoredKeys: boolean;
@@ -22,16 +22,26 @@ export const inMemoryKeySlice = createSlice({
 
   reducers: {
     generateWalletKey(state, action: PayloadAction<string>) {
-      if (state.keys[defaultWalletKeyId]) {
+      const fingerprint = getMnemonicRootKeyFingerprint(action.payload);
+
+      if (state.keys[fingerprint]) {
         logger.warn('Not generating another wallet, already exists.');
         return;
       }
 
-      state.keys[defaultWalletKeyId] = encodeText(action.payload);
+      state.keys[fingerprint] = encodeText(action.payload);
     },
 
-    setDefaultKey(state, action: PayloadAction<string>) {
-      state.keys[defaultWalletKeyId] = encodeText(action.payload);
+    setWalletKeys(state, action: PayloadAction<{ fingerprint: string; secretKey: string }[]>) {
+      state.keys = {
+        ...state.keys,
+        ...Object.fromEntries(action.payload.map(k => [k.fingerprint, encodeText(k.secretKey)])),
+      };
+    },
+
+    removeWalletKey(state, action: PayloadAction<string>) {
+      const fingerprint = action.payload;
+      delete state.keys[fingerprint];
     },
 
     lockWallet(state) {
@@ -40,7 +50,7 @@ export const inMemoryKeySlice = createSlice({
   },
 
   extraReducers: builder => {
-    builder.addCase(keySlice.actions.signOut.toString(), state => {
+    builder.addCase(resetWallet, state => {
       state.keys = {};
     });
   },

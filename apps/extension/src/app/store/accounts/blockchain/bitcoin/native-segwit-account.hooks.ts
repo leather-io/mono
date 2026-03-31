@@ -8,139 +8,127 @@ import {
   deriveAddressIndexZeroFromAccount,
   deriveNativeSegwitAccountFromRootKeychain,
   getNativeSegwitPaymentFromAddressIndex,
-  lookUpLedgerKeysByPath,
-  makeNativeSegwitAccountDerivationPath,
 } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
-import { bitcoinNetworkToNetworkMode } from '@leather.io/models';
+import {
+  deriveRootKeychainFromMnemonicSync,
+  extractAddressIndexFromPath,
+  extractChangeIndexFromPath,
+} from '@leather.io/crypto';
+import { type AccountId } from '@leather.io/models';
 import { reverseBytes } from '@leather.io/utils';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { analytics } from '@shared/utils/analytics';
 
-import { mnemonicToRootNode } from '@app/common/keychain/keychain';
 import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
-import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { selectCurrentAccountIndex } from '@app/store/software-keys/software-key.selectors';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 
-import { useCurrentAccountIndex } from '../../account';
+import { useCurrentAccountId } from '../../account';
 import {
-  bitcoinAccountBuilderFactory,
+  selectCurrentNetworkBitcoinAccountLookup,
   useBitcoinExtendedPublicKeyVersions,
 } from './bitcoin-keychain';
-import {
-  bitcoinAddressIndexSignerFactory,
-  useMakeBitcoinNetworkSignersForPaymentType,
-} from './bitcoin-signer';
+import { bitcoinSoftwarePayerFactory } from './bitcoin-payer';
 
-const selectNativeSegwitAccountBuilder = bitcoinAccountBuilderFactory(
-  deriveNativeSegwitAccountFromRootKeychain,
-  lookUpLedgerKeysByPath(makeNativeSegwitAccountDerivationPath)
+const selectNativeSegwitAccountId = createSelector(
+  selectCurrentNetworkBitcoinAccountLookup,
+  accountLookup => (accountId: AccountId) =>
+    accountLookup(accountId.fingerprint)({
+      paymentType: 'p2wpkh',
+      accountIndex: accountId.accountIndex,
+    })
 );
-
-const selectCurrentNetworkNativeSegwitAccountBuilder = createSelector(
-  selectNativeSegwitAccountBuilder,
-  selectCurrentNetwork,
-  (nativeSegwitKeychains, network) =>
-    nativeSegwitKeychains[bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork)]
-);
-
-export function useGenerateNativeSegwitAccount() {
-  return useSelector(selectCurrentNetworkNativeSegwitAccountBuilder);
-}
 
 const selectCurrentNativeSegwitAccount = createSelector(
-  selectCurrentNetworkNativeSegwitAccountBuilder,
-  selectCurrentAccountIndex,
-  (generateAccount, accountIndex) => generateAccount(accountIndex)
+  selectCurrentNetworkBitcoinAccountLookup,
+  selectCurrentAccount,
+  (accountLookup, currentAccount) => {
+    return accountLookup(currentAccount.fingerprint)({
+      paymentType: 'p2wpkh',
+      accountIndex: currentAccount.accountIndex,
+    });
+  }
 );
 
 export function useCurrentNativeSegwitAccount() {
   return useSelector(selectCurrentNativeSegwitAccount);
 }
 
-export function useNativeSegwitAccount(accountIndex: number) {
-  const generateNativeSegwitAccount = useSelector(selectCurrentNetworkNativeSegwitAccountBuilder);
+export function useNativeSegwitAccount(accountId: AccountId) {
+  const lookupNativeSegwitAccount = useSelector(selectNativeSegwitAccountId);
   return useMemo(
-    () => generateNativeSegwitAccount(accountIndex),
-    [generateNativeSegwitAccount, accountIndex]
+    () => lookupNativeSegwitAccount(accountId),
+    [lookupNativeSegwitAccount, accountId]
   );
 }
 
-export function useNativeSegwitNetworkSigners() {
-  const { mainnet: mainnetKeychain, testnet: testnetKeychain } = useSelector(
-    selectNativeSegwitAccountBuilder
-  );
-
-  return useMakeBitcoinNetworkSignersForPaymentType(
-    mainnetKeychain,
-    testnetKeychain,
-    getNativeSegwitPaymentFromAddressIndex
-  );
-}
-
-export function useNativeSegwitSigner(accountIndex: number) {
-  const account = useGenerateNativeSegwitAccount()(accountIndex);
+export function useNativeSegwitPayer(accountId: AccountId) {
+  const account = useNativeSegwitAccount(accountId);
+  const network = useCurrentNetwork();
   const extendedPublicKeyVersions = useBitcoinExtendedPublicKeyVersions();
 
   return useMemo(() => {
     if (!account) return;
-    return bitcoinAddressIndexSignerFactory({
-      accountIndex,
+
+    return bitcoinSoftwarePayerFactory({
       accountKeychain: account.keychain,
+      accountKeyOrigin: account.keyOrigin,
+      masterKeyFingerprint: account.masterKeyFingerprint,
       paymentFn: getNativeSegwitPaymentFromAddressIndex,
-      network: account.network,
+      network: network.chain.bitcoin.mode,
       extendedPublicKeyVersions,
     });
-  }, [account, accountIndex, extendedPublicKeyVersions]);
+  }, [account, extendedPublicKeyVersions, network.chain.bitcoin.mode]);
 }
 
-export function useCurrentAccountNativeSegwitSigner() {
-  const currentAccountIndex = useCurrentAccountIndex();
-  return useNativeSegwitSigner(currentAccountIndex);
+export function useCurrentAccountNativeSegwitPayer() {
+  const currentAccount = useCurrentAccountId();
+  return useNativeSegwitPayer(currentAccount);
 }
 
-// TODO: as ledger users are able to have only stacks account on their devices, this hook throws an unnecessary error.
-// To alleviate that, use useCurrentAccountNativeSegwitIndexZeroSignerNullable
-export function useCurrentAccountNativeSegwitIndexZeroSigner() {
-  const signer = useCurrentAccountNativeSegwitSigner();
+// TODO: as ledger users are able to have only stacks account on their devices,
+// this hook throws an unnecessary error. To alleviate that, use
+// useCurrentAccountNativeSegwitIndexZeroSignerNullable
+export function useCurrentAccountNativeSegwitIndexZeroPayer() {
+  const createPayer = useCurrentAccountNativeSegwitPayer();
   return useMemo(() => {
-    if (!signer) throw new Error('No signer');
-    return signer({ changeIndex: 0, addressIndex: 0 });
-  }, [signer]);
+    if (!createPayer) throw new Error('No payer');
+    return createPayer({ changeIndex: 0, addressIndex: 0 });
+  }, [createPayer]);
 }
 
-export function useCurrentAccountNativeSegwitIndexZeroSignerNullable() {
-  const signer = useCurrentAccountNativeSegwitSigner();
+export function useCurrentAccountNativeSegwitIndexZeroPayerNullable() {
+  const createPayer = useCurrentAccountNativeSegwitPayer();
   return useMemo(() => {
-    if (!signer) return undefined;
-    return signer({ changeIndex: 0, addressIndex: 0 });
-  }, [signer]);
+    if (!createPayer) return undefined;
+    return createPayer({ changeIndex: 0, addressIndex: 0 });
+  }, [createPayer]);
 }
 
 /**
- * @deprecated Use signer.address instead
+ * @deprecated Use payer.address instead
  */
 export function useCurrentAccountNativeSegwitAddressIndexZero() {
-  const signer = useCurrentAccountNativeSegwitSigner();
+  const createPayer = useCurrentAccountNativeSegwitPayer();
   return useMemo(
-    () => signer?.({ changeIndex: 0, addressIndex: 0 }).payment.address,
-    [signer]
+    () => createPayer?.({ changeIndex: 0, addressIndex: 0 }).payment.address,
+    [createPayer]
   ) as string;
 }
 
 /**
- * @deprecated Use signer.address instead
+ * @deprecated Use payer.address instead
  */
-export function useNativeSegwitAccountIndexAddressIndexZero(accountIndex: number) {
-  const signer = useNativeSegwitSigner(accountIndex)?.({ changeIndex: 0, addressIndex: 0 });
-  // could it be this?
-  return signer?.payment.address as string;
+export function useNativeSegwitAccountIndexAddressIndexZero(accountId: AccountId) {
+  const createPayer = useNativeSegwitPayer(accountId);
+  const payer = createPayer?.({ changeIndex: 0, addressIndex: 0 });
+  return payer?.payment.address as string;
 }
 
 export function getNativeSegwitMainnetAddressFromMnemonic(secretKey: string) {
   return (accountIndex: number) => {
-    const rootNode = mnemonicToRootNode(secretKey);
+    const rootNode = deriveRootKeychainFromMnemonicSync(secretKey);
     const account = deriveNativeSegwitAccountFromRootKeychain(rootNode, 'mainnet')(accountIndex);
     return getNativeSegwitPaymentFromAddressIndex(
       deriveAddressIndexZeroFromAccount(account.keychain),
@@ -163,7 +151,6 @@ export function useUpdateLedgerSpecificNativeSegwitUtxoHexForAdddressIndexZero()
     );
 
     inputSigningConfig.forEach(({ index }) => {
-      // decorate input with nonWitnessUtxo unless it already exists
       if (!tx.data.inputs[index].nonWitnessUtxo) {
         tx.updateInput(index, {
           nonWitnessUtxo: Buffer.from(inputsTxHex[index], 'hex'),
@@ -181,23 +168,22 @@ export function useUpdateLedgerSpecificNativeSegwitUtxoHexForAdddressIndexZero()
 }
 
 export function useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero() {
-  const createNativeSegwitSigner = useCurrentAccountNativeSegwitSigner();
+  const createNativeSegwitPayer = useCurrentAccountNativeSegwitPayer();
 
   return (tx: Psbt, fingerprint: string, inputSigningConfig: BitcoinInputSigningConfig[]) => {
     inputSigningConfig.forEach(({ index, derivationPath }) => {
-      const nativeSegwitSigner = createNativeSegwitSigner?.({
+      const nativeSegwitPayer = createNativeSegwitPayer?.({
         changeIndex: extractChangeIndexFromPath(derivationPath),
         addressIndex: extractAddressIndexFromPath(derivationPath),
       });
 
-      if (!nativeSegwitSigner)
-        throw new Error(`Unable to update input for path ${derivationPath}}`);
+      if (!nativeSegwitPayer) throw new Error(`Unable to update input for path ${derivationPath}}`);
 
       tx.updateInput(index, {
         bip32Derivation: [
           {
             masterFingerprint: Buffer.from(fingerprint, 'hex'),
-            pubkey: Buffer.from(nativeSegwitSigner.publicKey),
+            pubkey: Buffer.from(nativeSegwitPayer.publicKey),
             path: derivationPath,
           },
         ],

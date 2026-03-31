@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 
+import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Box, styled } from 'leather-styles/jsx';
 
 import { assetIdToSendPath } from '@leather.io/features';
@@ -31,6 +32,7 @@ export function ChooseCryptoAsset() {
       <Content>
         <Page>
           <Card
+            dataTestId={SendCryptoAssetSelectors.ChooseAssetToSendPage}
             contentStyle={{
               p: 'space.00',
             }}

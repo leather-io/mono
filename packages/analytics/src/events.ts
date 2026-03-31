@@ -17,7 +17,7 @@ export interface Events extends HistoricalEvents {
   app_unlocked: undefined;
   app_locked: undefined;
   submit_feature_waitlist: SubmitWaitlist;
-  legacy_request_initiated: { method: string };
+  legacy_request_initiated: { method: string; origin?: string };
   application_first_opened: { timestamp: string };
   pooled_stacking_started: {
     amount: number;
@@ -160,9 +160,6 @@ interface HistoricalEvents {
   start_unlock: undefined;
   complete_unlock: { durationMs: number };
   background_analytics_schema_fail: undefined;
-  new_brand_reveal_name: undefined;
-  new_brand_accept_terms: undefined;
-  new_brand_reject_terms: undefined;
   lock_session: undefined;
   remove_network: undefined;
   generate_new_secret_key: undefined;

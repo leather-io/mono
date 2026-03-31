@@ -1,5 +1,5 @@
 import { stxAsset } from '@leather.io/constants';
-import type { AccountAddresses } from '@leather.io/models';
+import type { AccountAddresses, AccountId } from '@leather.io/models';
 import { StxAvatarIcon } from '@leather.io/ui';
 
 import { useActivityByAsset } from '@app/query/activity/activity.query';
@@ -11,12 +11,12 @@ import { TokenDetailsError } from './token-details-error';
 import { TokenDetailsLoading } from './token-details-loading';
 
 interface StacksTokenDetailsProps {
-  accountIndex: number;
+  accountId: AccountId;
   account: AccountAddresses;
 }
 
-export function StacksTokenDetails({ accountIndex, account }: StacksTokenDetailsProps) {
-  const balance = useStxAccountBalance(accountIndex);
+export function StacksTokenDetails({ accountId, account }: StacksTokenDetailsProps) {
+  const balance = useStxAccountBalance(accountId);
   const marketInfo = useTokenMarketInfo(stxAsset);
   const activityQuery = useActivityByAsset(account, stxAsset);
 

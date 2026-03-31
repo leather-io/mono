@@ -2,20 +2,20 @@ import { ReactNode } from 'react';
 
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
+import type { AccountId } from '@leather.io/models';
 import { ChevronRightIcon, Flag, ItemLayout, Pressable, Spinner } from '@leather.io/ui';
 
 import { useWindowMinWidth } from '@app/common/hooks/use-media-query';
 
-interface AccountListItemLayoutProps {
+interface AccountListItemLayoutProps extends AccountId {
   accountAddresses: ReactNode;
   accountName: ReactNode;
   avatar: ReactNode;
   balanceLabel: ReactNode;
   withChevron?: boolean;
-  index: number;
   isLoading: boolean;
   isSelected: boolean;
-  onSelectAccount(): void;
+  onSelectAccount(accountId: AccountId): void;
 }
 export function AccountListItemLayout(props: AccountListItemLayoutProps) {
   const {
@@ -23,7 +23,8 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
     accountName,
     avatar,
     balanceLabel,
-    index,
+    fingerprint,
+    accountIndex,
     isLoading,
     isSelected,
     withChevron,
@@ -50,9 +51,9 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
 
   return (
     <Pressable
-      data-testid={SettingsSelectors.SwitchAccountItemIndex.replace('[index]', `${index}`)}
-      key={`account-${index}`}
-      onClick={onSelectAccount}
+      data-testid={SettingsSelectors.SwitchAccountItemIndex.replace('[index]', `${accountIndex}`)}
+      key={`account-${accountIndex}`}
+      onClick={() => onSelectAccount({ fingerprint, accountIndex })}
     >
       {withChevron ? (
         <Flag reverse img={<ChevronRightIcon variant="small" />} width="100%">

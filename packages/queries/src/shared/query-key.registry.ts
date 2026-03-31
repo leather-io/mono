@@ -57,4 +57,8 @@ export const querySettingsDepsRegistry = {
   'activity-service--get-sip10-total-activity-by-asset-id': ['network'],
   // asset list
   'asset-list-service--get-asset-list': ['currency', 'network', 'assetVisibility'],
+  // fees
+  'leather-api--bitcoin-fee-rates': ['network'],
+  'bitcoin-transaction-fees-service--get-bitcoin-transaction-fees': ['network'],
+  'stacks-transaction-fees-service--get-stacks-transaction-fees': ['network'],
 } as const satisfies Record<string, readonly QuerySettingsDep[]>;

@@ -1,3 +1,4 @@
+import type { AccountId } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
@@ -14,7 +15,7 @@ export function useStxAddressBalance(address: string) {
   return toFetchState(useGetStxAddressBalanceQuery(address));
 }
 
-export function useStxAccountBalance(accountIndex: number) {
-  const account = useAccountAddresses(accountIndex);
+export function useStxAccountBalance(accountId: AccountId) {
+  const account = useAccountAddresses(accountId);
   return toFetchState(useGetStxAccountBalanceQuery({ account }));
 }

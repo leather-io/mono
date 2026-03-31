@@ -1,6 +1,8 @@
 import { bytesToHex } from '@stacks/common';
 import { decryptMnemonic as decrypt, encryptMnemonic as encrypt } from '@stacks/encryption';
 
+import { getMnemonicRootKeyFingerprint } from '@leather.io/crypto';
+
 import { deriveEncryptionKey } from './generate-encryption-key';
 import { generateRandomHexString } from './generate-random-hex';
 
@@ -38,6 +40,7 @@ export async function decryptMnemonic({
   salt: string;
   secretKey: string;
   encryptionKey: string;
+  fingerprint: string;
 }> {
   if (salt) {
     const encryptionKey = await deriveEncryptionKey({ password, salt });
@@ -47,9 +50,9 @@ export async function decryptMnemonic({
       encryptedSecretKey,
       salt,
       encryptionKey,
+      fingerprint: getMnemonicRootKeyFingerprint(secretKey),
     };
   } else {
-    // if there is no salt, decrypt the secret key, then re-encrypt with an argon2 hash
     const secretKey = await decrypt(encryptedSecretKey, password);
     const newEncryptedKey = await encryptMnemonic({ secretKey, password });
     return {
@@ -57,6 +60,7 @@ export async function decryptMnemonic({
       encryptedSecretKey: newEncryptedKey.encryptedSecretKey,
       salt: newEncryptedKey.salt,
       encryptionKey: newEncryptedKey.encryptionKey,
+      fingerprint: getMnemonicRootKeyFingerprint(secretKey),
     };
   }
 }

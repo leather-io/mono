@@ -46,9 +46,16 @@ export function SwapForm() {
     action[type](asset);
   }
 
-  function handleAssetSheetCloseAutoFocus(e: Event) {
-    e.preventDefault();
+  function handleSetToMax() {
+    actions.setBaseAmountByPercentage(1);
     focusAmountField(amountFieldRef.current);
+  }
+
+  function handleAssetSheetCloseAutoFocus(e: Event) {
+    if (state.selectingAsset === 'base') {
+      e.preventDefault();
+      focusAmountField(amountFieldRef.current);
+    }
   }
 
   return (
@@ -78,7 +85,7 @@ export function SwapForm() {
                 <AssetBalance
                   balance={state.baseSwapAsset?.balance}
                   inputCurrencyMode={state.inputCurrencyMode}
-                  onSetToMax={() => actions.setBaseAmountByPercentage(1)}
+                  onSetToMax={handleSetToMax}
                 />
               </Flex>
             </Flex>

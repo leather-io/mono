@@ -11,7 +11,7 @@ import { StacksSendFormValues } from '@shared/models/form.model';
 
 import { getSafeImageCanonicalUri } from '@app/common/stacks-utils';
 import { stacksFungibleTokenAmountValidator } from '@app/common/validation/forms/amount-validators';
-import { useCalculateStacksTxFees } from '@app/query/stacks/fees/fees.hooks';
+import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
 import {
   useFtTokenTransferUnsignedTx,
   useGenerateFtTokenTransferUnsignedTx,
@@ -30,7 +30,7 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
   const sendFormNavigate = useSendFormNavigate();
 
   const unsignedTx = useFtTokenTransferUnsignedTx(info);
-  const { data: stacksFtFees } = useCalculateStacksTxFees(unsignedTx);
+  const { data: stacksFtFees } = useStacksTransactionFees(unsignedTx);
 
   const availableTokenBalance = balance.availableBalance;
   const sendMaxBalance = useMemo(

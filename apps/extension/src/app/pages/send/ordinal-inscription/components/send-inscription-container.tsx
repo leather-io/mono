@@ -5,13 +5,14 @@ import get from 'lodash.get';
 
 import { createBitcoinAddress, lookupDerivationByAddress } from '@leather.io/bitcoin';
 import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
-import type { AverageBitcoinFeeRates, BtcFeeType, InscriptionAsset } from '@leather.io/models';
+import type { BtcFeeType, InscriptionAsset } from '@leather.io/models';
 import { type UtxoWithDerivationPath } from '@leather.io/query';
 
 import { analytics } from '@shared/utils/analytics';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
-import { useCurrentAccountIndex } from '@app/store/accounts/account';
+import { type BitcoinFeeRatesData } from '@app/query/bitcoin/fees/bitcoin-fee-rates.hooks';
+import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentTaprootAccount } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -21,7 +22,7 @@ import { createUtxoFromInscription } from './create-utxo-from-inscription';
 import { SendInscriptionLoader } from './send-inscription-loader';
 
 interface SendInscriptionContextState {
-  feeRates: AverageBitcoinFeeRates;
+  feeRates: BitcoinFeeRatesData;
   inscription: InscriptionAsset;
   selectedFeeType: BtcFeeType;
   setSelectedFeeType(value: BtcFeeType | null): void;
@@ -40,7 +41,8 @@ export function SendInscriptionContainer() {
 
   const routeState = useSendInscriptionRouteState();
   const network = useCurrentNetwork();
-  const currentAccountIndex = useCurrentAccountIndex();
+  const currentAccount = useCurrentAccountId();
+  const currentAccountIndex = currentAccount.accountIndex;
 
   const taprootAccount = useCurrentTaprootAccount();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
