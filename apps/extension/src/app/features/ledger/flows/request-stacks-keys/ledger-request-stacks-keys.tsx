@@ -6,6 +6,7 @@ import StacksApp from '@zondax/ledger-stacks';
 import { pullStacksKeysFromLedgerDevice } from 'app/features/ledger/flows/request-stacks-keys/request-stacks-keys.utils';
 
 import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
+import { userAddsKeychains } from '@leather.io/state';
 import { userAddsWallet } from '@leather.io/state/wallet';
 import { delay } from '@leather.io/utils';
 
@@ -27,6 +28,7 @@ import {
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
+import { useStacksKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
 import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
 function LedgerRequestStacksKeys() {
@@ -34,6 +36,7 @@ function LedgerRequestStacksKeys() {
   const navigate = useNavigate();
   const ledgerNavigate = useLedgerNavigate();
 
+  const stxKeychainsDescriptors = useStacksKeychainDescriptors();
   const wallets = useWalletEntities();
   const dispatch = useDispatch();
 
@@ -83,14 +86,18 @@ function LedgerRequestStacksKeys() {
         }
         void ledgerNavigate.toDeviceBusyStep();
 
-        const keychains = resp.publicKeys.map(keys => {
-          const keyOrigin = createKeyOriginPath(fingerprint, keys.path);
-          const descriptor = createDescriptor(keyOrigin, keys.stxPublicKey);
-          return {
-            chain: 'stacks' as const,
-            descriptor,
-          };
-        });
+        const keychains = resp.publicKeys
+          .map(keys => {
+            const keyOrigin = createKeyOriginPath(fingerprint, keys.path);
+            const descriptor = createDescriptor(keyOrigin, keys.stxPublicKey);
+            return {
+              chain: 'stacks' as const,
+              descriptor,
+            };
+          })
+          .filter(keychain => {
+            return !stxKeychainsDescriptors.includes(keychain.descriptor);
+          });
 
         if (!wallets[fingerprint]) {
           dispatch(
@@ -100,6 +107,12 @@ function LedgerRequestStacksKeys() {
                 fingerprint,
                 type: 'ledger',
               },
+              accountKeychains: keychains,
+            })
+          );
+        } else if (keychains.length) {
+          dispatch(
+            userAddsKeychains({
               accountKeychains: keychains,
             })
           );
