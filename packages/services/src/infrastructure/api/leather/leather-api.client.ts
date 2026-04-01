@@ -32,19 +32,17 @@ export type LeatherApiSwapDex =
   paths['/v1/swap/dexes']['get']['responses'][200]['content']['application/json'][string];
 export type LeatherApiProtocol =
   paths['/v1/protocols']['get']['responses'][200]['content']['application/json'][string];
-export type LeatherApiProtocolContractMap =
-  paths['/v1/protocols/{id}/contracts']['get']['responses'][200]['content']['application/json'];
 export type LeatherApiAppConfig =
   paths['/v1/app-config']['get']['responses'][200]['content']['application/json'];
-export type LeatherApiBitcoinFeeRates =
+type LeatherApiBitcoinFeeRates =
   paths['/v1/market/bitcoin/fees']['get']['responses'][200]['content']['application/json'];
 export type LeatherApiBitflowPool = Extract<
   paths['/v1/defi/bitflow/pools']['get']['responses'][200]['content']['application/json'],
   { format: 'list' }
 >['data'][number];
-export type LeatherApiZestReserve =
+type LeatherApiZestReserve =
   paths['/v1/defi/zest/reserves/{principal}']['get']['responses'][200]['content']['application/json'];
-export type LeatherApiStackingDaoRates =
+type LeatherApiStackingDaoRates =
   paths['/v1/defi/stacking-dao/rates']['get']['responses'][200]['content']['application/json'];
 export type LeatherApiPriceMapEntry = Extract<
   paths['/v1/market/prices/native']['get']['responses'][200]['content']['application/json'],
@@ -54,12 +52,6 @@ export type LeatherApiTokenAnalyticsMapEntry = Extract<
   paths['/v1/analytics/native']['get']['responses'][200]['content']['application/json'],
   { format: 'map' }
 >['data'][string];
-export type LeatherApiTokenDistribution =
-  paths['/v1/analytics/native/{symbol}/distribution']['get']['responses'][200]['content']['application/json'];
-export type LeatherApiTokenHolderSegment = NonNullable<
-  LeatherApiTokenDistribution['topHolders'][1]
->;
-
 @injectable()
 export class LeatherApiClient {
   private readonly client;

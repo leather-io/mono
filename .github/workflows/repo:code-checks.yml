@@ -70,6 +70,17 @@ jobs:
       - name: lint-dependency-rules
         run: pnpm lint:filenames
 
+  knip:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - run: pnpm build
+
+      - name: knip
+        run: pnpm knip
+
   test-unit:
     runs-on: ubuntu-latest
     steps:

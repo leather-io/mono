@@ -29,7 +29,7 @@ function useHapticsContext(): HapticsContextValue {
   return useContext(HapticsContext);
 }
 
-export type HapticFeedbackType =
+type HapticFeedbackType =
   | 'soft'
   | 'light'
   | 'medium'

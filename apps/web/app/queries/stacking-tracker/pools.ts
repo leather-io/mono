@@ -12,7 +12,7 @@ async function fetchPools() {
   return data;
 }
 
-export function useStackingTrackerPools() {
+function useStackingTrackerPools() {
   return useQuery({
     queryKey: ['stacking-tracker-pools'],
     queryFn: fetchPools,
@@ -67,7 +67,7 @@ const poolSlugToStackingTrackerSlug: Record<PoolSlug, string | null> = {
   restake: null,
 };
 
-export interface StackingTrackerPool {
+interface StackingTrackerPool {
   name: string;
   stackers_count: number;
   pox_address?: string;
@@ -79,7 +79,7 @@ export interface StackingTrackerPool {
   rewards_amount_usd?: number;
 }
 
-export interface StackingTrackerPoolCycle {
+interface StackingTrackerPoolCycle {
   cycle_number: number;
   stacked_amount: number;
   rewards_amount: number;
@@ -88,11 +88,11 @@ export interface StackingTrackerPoolCycle {
   pools: StackingTrackerPool[];
 }
 
-export interface StackingTrackerCycleWithOnePool extends Omit<StackingTrackerPoolCycle, 'pools'> {
+interface StackingTrackerCycleWithOnePool extends Omit<StackingTrackerPoolCycle, 'pools'> {
   pool: StackingTrackerPool;
 }
 
-export interface StackingTrackerPoolEntity {
+interface StackingTrackerPoolEntity {
   name: string;
   fee: number;
   feeDisclosed: boolean;
@@ -109,7 +109,7 @@ export interface StackingTrackerPoolEntity {
   apy: number | null;
 }
 
-export interface StackingTrackerPoolsResponse {
+interface StackingTrackerPoolsResponse {
   cycles: StackingTrackerPoolCycle[];
   entities: StackingTrackerPoolEntity[];
 }

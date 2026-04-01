@@ -9,8 +9,6 @@ export const MIXPANEL_TOKEN = process.env.MIXPANEL_TOKEN ?? '';
 export const SENTRY_DSN = process.env.SENTRY_DSN ?? '';
 export const WALLET_ENVIRONMENT = process.env.WALLET_ENVIRONMENT ?? 'unknown';
 
-// ts-unused-exports:disable-next-line
-export const SWAP_ENABLED = process.env.SWAP_ENABLED === 'true';
 export const BITFLOW_API_HOST = process.env.BITFLOW_API_HOST ?? '';
 export const BITFLOW_API_KEY = process.env.BITFLOW_API_KEY ?? '';
 export const BITFLOW_READONLY_CALL_API_HOST = process.env.BITFLOW_READONLY_CALL_API_HOST ?? '';

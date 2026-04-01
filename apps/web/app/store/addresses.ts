@@ -16,11 +16,11 @@ import { useStacksNetwork } from './stacks-network';
 
 type GetAddressesResult = Awaited<ReturnType<typeof leather.getAddresses>>['addresses'];
 
-export const addressesAtom = atomWithStorage<GetAddressesResult>('addresses', []);
+const addressesAtom = atomWithStorage<GetAddressesResult>('addresses', []);
 
 const providerDetectedAtom = atom(isLeatherInstalled());
 
-export const extensionStateAtom = atom<ExtensionState>(get => {
+const extensionStateAtom = atom<ExtensionState>(get => {
   const addresses = get(addressesAtom);
   if (addresses.length !== 0) return 'connected';
   if (get(providerDetectedAtom)) return 'detected';
@@ -53,13 +53,13 @@ export function useDetectLeatherProvider() {
   }, [setProviderDetected]);
 }
 
-export const stacksAccountAtom = atom(get => {
+const stacksAccountAtom = atom(get => {
   const addresses = get(addressesAtom);
   return addresses.find(address => address.symbol === 'STX');
 });
 
-export const showMissingStacksKeysDialogAtom = atom(false);
-export const showInstallLeatherDialogAtom = atom(false);
+const showMissingStacksKeysDialogAtom = atom(false);
+const showInstallLeatherDialogAtom = atom(false);
 
 export function useStacksAccount() {
   return useAtomValue(stacksAccountAtom);

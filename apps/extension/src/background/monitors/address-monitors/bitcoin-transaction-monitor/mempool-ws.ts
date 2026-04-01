@@ -10,6 +10,7 @@ export interface MempoolWsBitcoinTxMessage {
   };
 }
 
+/** @knipignore */
 export interface MempoolWsBitcoinTx {
   txid: string;
   vin: MempoolWsBitcoinVin[];

@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { Box } from '../box/box.native';
 import { Text, TextProps } from '../text/text.native';
 
-export interface SheetHeaderProps {
+interface SheetHeaderProps {
   leftElement?: ReactNode;
   centerElement?: ReactNode;
   rightElement?: ReactNode;

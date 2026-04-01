@@ -11,7 +11,7 @@ import { SheetFooter } from './sheet-footer.web';
 
 type SheetVariant = 'dialog' | 'drawer';
 
-export interface SheetProps {
+interface SheetProps {
   isShowing: boolean;
   onClose?(): void;
 }

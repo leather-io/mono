@@ -11,7 +11,7 @@ const Root = forwardRef<HTMLDivElement, RadixAccordion.AccordionSingleProps>((pr
 
 Root.displayName = 'Accordion';
 
-export const Item = forwardRef<HTMLDivElement, RadixAccordion.AccordionItemProps>((props, ref) => (
+const Item = forwardRef<HTMLDivElement, RadixAccordion.AccordionItemProps>((props, ref) => (
   <RadixAccordion.Item
     ref={ref}
     {...props}

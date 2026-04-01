@@ -23,7 +23,6 @@ export enum ExternalMethods {
 }
 
 export enum InternalMethods {
-  RequestDerivedStxAccounts = 'RequestDerivedStxAccounts',
   OriginatingTabClosed = 'OriginatingTabClosed',
   AccountChanged = 'AccountChanged',
   AddressMonitorUpdated = 'AddressMonitorUpdated',

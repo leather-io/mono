@@ -114,10 +114,3 @@ export const stackingLabels = {
   fee: 'Fee',
   startEarning: 'Start earning',
 };
-
-export const stackingSectionHeaders = {
-  duration: 'Duration',
-  start: 'Start',
-  end: 'End',
-  bitcoinAddress: 'Bitcoin address',
-};

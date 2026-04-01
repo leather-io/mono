@@ -28,7 +28,7 @@ function combineAddressMempoolTransactionsQueries(
   };
 }
 
-export function useGetAddressMempoolTransactionsQueries(addresses: string[]) {
+function useGetAddressMempoolTransactionsQueries(addresses: string[]) {
   const client = useStacksClient();
   const uniqueAddresses = uniqueArray(addresses);
   return useQueries({

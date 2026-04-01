@@ -66,7 +66,7 @@ type BorderProps<Theme extends BaseTheme> = {
   >;
 };
 
-export const border = [
+const border = [
   ...getKeys(borderProperties).map(property => {
     return createRestyleFunction({
       property,
@@ -91,7 +91,7 @@ type BoxProps = BackgroundColorProps<Theme> &
   SpacingShorthandProps<Theme> &
   BackgroundColorShorthandProps<Theme>;
 
-export const boxRestyleFunctions = [
+const boxRestyleFunctions = [
   backgroundColor,
   backgroundColorShorthand,
   opacity,

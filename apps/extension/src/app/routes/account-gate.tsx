@@ -7,10 +7,12 @@ import { useHasActiveInMemoryWalletSecretKey } from '@app/store/in-memory-key/in
 import { useHasLedgerKeys } from '@app/store/ledger/ledger.selectors';
 import { useActiveSoftwareKey } from '@app/store/software-keys/software-key.selectors';
 
+/** @knipignore */
 export function shouldNavigateToOnboardingStartPage(currentKeyDetails?: any) {
   return !currentKeyDetails;
 }
 
+/** @knipignore */
 export function shouldNavigateToUnlockWalletPage(hasDefaultInMemorySecretKey: boolean) {
   return !hasDefaultInMemorySecretKey;
 }

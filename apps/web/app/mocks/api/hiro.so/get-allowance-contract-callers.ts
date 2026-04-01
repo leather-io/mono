@@ -1,4 +1,4 @@
-export const resp = {
+const resp = {
   okay: true,
   result: '0x09',
 };

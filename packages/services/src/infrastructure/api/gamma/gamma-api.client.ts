@@ -9,8 +9,8 @@ import type { HttpCacheService } from '../../cache/http-cache.service';
 import { ApiRequestOptions } from '../types';
 import { gammaCollectionMetadataSchema, gammaNftMetadataSchema } from './gamma-api.schema';
 
-export type GammaNftMetadata = z.infer<typeof gammaNftMetadataSchema>;
-export type GammaCollectionMetadata = z.infer<typeof gammaCollectionMetadataSchema>;
+type GammaNftMetadata = z.infer<typeof gammaNftMetadataSchema>;
+type GammaCollectionMetadata = z.infer<typeof gammaCollectionMetadataSchema>;
 
 @injectable()
 export class GammaApiClient {

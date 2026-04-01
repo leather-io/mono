@@ -9,7 +9,7 @@ import { stringToAlexSdkCurrency } from './alex-sdk.utils';
 
 export type AlexSdkTokenInfo = TokenInfo;
 export type AlexSdkCurrency = Currency;
-export type AlexSdkTxToBroadCast = TxToBroadCast;
+type AlexSdkTxToBroadCast = TxToBroadCast;
 export type AlexSdkAMMRoute = AMMRoute;
 
 @injectable()

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { atom, useAtom } from 'jotai';
 
-export const bus = new EventTarget();
+const bus = new EventTarget();
 
 function emitAssetHoverOn(symbol: string) {
   bus.dispatchEvent(new CustomEvent('cursor-hover-on', { detail: { symbol } }));

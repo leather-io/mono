@@ -19,15 +19,10 @@ export const protocolSlugSchema = z.enum(
   Object.keys(ProtocolSlugToIdMap) as [ProtocolSlug, ...ProtocolSlug[]]
 );
 
-export type ProtocolId = (typeof ProtocolSlugToIdMap)[ProtocolSlug];
+type ProtocolId = (typeof ProtocolSlugToIdMap)[ProtocolSlug];
 export type ProtocolName = (typeof ProtocolIdToDisplayNameMap)[ProtocolId];
 
-export const LiquidContractNameMap = {
-  WrapperStackingDAO: 'WrapperStackingDAO',
-  lisa: 'LISA',
-} as const;
-
-export type LiquidContractName = keyof typeof LiquidContractNameMap;
+export type LiquidContractName = 'WrapperStackingDAO' | 'lisa';
 
 export const NetworkInstanceToLiquidContractMap = {
   devnet: {
@@ -50,10 +45,10 @@ export const LiquidTokenMap = {
   OTHER: 'OTHER',
 } as const;
 
-export type LiquidToken = keyof typeof LiquidTokenMap;
+type LiquidToken = keyof typeof LiquidTokenMap;
 
-export type ContractMapType = typeof NetworkInstanceToLiquidContractMap;
-export type LiquidContractType = ContractMapType[NetworkMode];
+type ContractMapType = typeof NetworkInstanceToLiquidContractMap;
+type LiquidContractType = ContractMapType[NetworkMode];
 export type LiquidContractPrincipal = LiquidContractType[keyof LiquidContractType];
 
 export interface Protocol {

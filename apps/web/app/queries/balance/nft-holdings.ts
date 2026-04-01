@@ -1,7 +1,4 @@
 import { NonFungibleTokenHolding } from '@stacks/stacks-blockchain-api-types';
-import { useQuery } from '@tanstack/react-query';
-import { useLeatherConnect } from '~/store/addresses';
-import { useStacksNetwork } from '~/store/stacks-network';
 import { fetchFn } from '~/utils/hiro-wrapped-fetch';
 
 interface NftHoldingsResponse {
@@ -20,23 +17,4 @@ export async function fetchNftHoldings(
     throw new Error(`Failed to fetch NFT holdings: ${res.statusText}`);
   }
   return res.json();
-}
-
-function createGetNftHoldingsQueryOptions(baseUrl: string, address?: string) {
-  return {
-    queryKey: ['nft-holdings', address, baseUrl],
-    queryFn: async (): Promise<NftHoldingsResponse> => {
-      return fetchNftHoldings(baseUrl, address);
-    },
-    enabled: !!address,
-  };
-}
-
-export function useNftHoldingsQuery() {
-  const { networkPreference } = useStacksNetwork();
-  const { stacksAccount: stxAddress } = useLeatherConnect();
-
-  return useQuery(
-    createGetNftHoldingsQueryOptions(networkPreference.chain.stacks.url, stxAddress?.address)
-  );
 }

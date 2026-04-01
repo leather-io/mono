@@ -42,21 +42,6 @@ const providers = {
 export type ProviderId = keyof typeof providers;
 export const providerIdSchema = z.enum(Object.keys(providers) as [ProviderId, ...ProviderId[]]);
 
-export const yieldStrategies = {
-  liquid: {
-    name: 'Liquid Stacking',
-    description:
-      'Liquid Stacking allows you to earn STX rewards while keeping your STX liquid. You can use your stSTX or LiSTX to trade, lend, or borrow.',
-  },
-  pooled: {
-    name: 'Pooled Stacking',
-    description:
-      'Pooled Stacking allows you to earn STX rewards by pooling your tokens with a trusted infrastructure operator. Your STX will be locked for a period of time.',
-  },
-} as const;
-
-export type YieldStrategy = keyof typeof yieldStrategies;
-
 export interface StackingPool {
   providerId: ProviderId;
   name: string;
@@ -234,7 +219,7 @@ export interface LiquidStackingPool {
   slug: string;
   fee: string;
 }
-export const liquidStackingPoolData = {
+const liquidStackingPoolData = {
   stackingDao: {
     ...providers.stackingDao,
     slug: 'stacking-dao',

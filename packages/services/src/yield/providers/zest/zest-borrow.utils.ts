@@ -12,7 +12,7 @@ import {
   isClarityUInt,
 } from '@leather.io/stacks';
 
-export interface ZestGetUserAssetsReadResponse {
+interface ZestGetUserAssetsReadResponse {
   borrowedAssetPrincipals: string[];
   suppliedAssetPrincipals: string[];
 }
@@ -49,7 +49,7 @@ export function parseZestGetUserAssetsReadResponseCV(
   }
 }
 
-export interface ZestUserAssetBorrowBalanceResponse {
+interface ZestUserAssetBorrowBalanceResponse {
   principal: bigint;
   compoundedBalance: bigint;
   balanceIncrease: bigint;

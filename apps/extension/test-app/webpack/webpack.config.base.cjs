@@ -93,7 +93,7 @@ const config = {
     extensions: ['.js', '.ts', '.tsx', '.json', '.d.ts'],
     plugins: [
       new TsconfigPathsPlugin({
-        configFile: path.resolve('./test-app/tsconfig.json'),
+        configFile: path.join(__dirname, '..', 'tsconfig.json'),
       }),
     ],
     alias: aliases,

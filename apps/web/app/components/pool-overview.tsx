@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
-import { LearnHoverCard, SupportedTags } from '~/components/learn-hover-card';
+import { LearnHoverCard } from '~/components/learn-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { EM_DASH } from '~/constants/constants';
 import { learnArticles } from '~/content/learn-content';
@@ -221,17 +221,4 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps): ReactElemen
       </InfoGrid.Cell>
     </InfoGrid>
   );
-}
-
-// Add a component for the stacking-amount post label
-export function StackingAmountLabel({
-  textStyle = 'label.03',
-  tagName = 'h1',
-}: {
-  textStyle?: string;
-  tagName?: SupportedTags;
-}): ReactElement {
-  const article = learnArticles.stackingAmount;
-  const label = article?.title ?? 'Amount';
-  return <LearnHoverCard article={article} label={label} textStyle={textStyle} tagName={tagName} />;
 }

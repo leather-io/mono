@@ -55,7 +55,7 @@ export function createMockNetworkFee(overrides: Partial<NetworkFee> = {}): Netwo
   } as NetworkFee;
 }
 
-export function createMockMarketData(overrides: Partial<MarketData> = {}): MarketData {
+function createMockMarketData(overrides: Partial<MarketData> = {}): MarketData {
   return {
     pair: { base: 'BTC', quote: 'USD' },
     price: createMoney(5000000, 'USD', 2),
@@ -122,7 +122,7 @@ export function createConstrainedQuoteResult(
   };
 }
 
-export interface RenderHookOptions {
+interface RenderHookOptions {
   quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
   networkFeeQuery?: UseQueryResult<NetworkFee, Error>;
   baseMarketDataQuery?: UseQueryResult<MarketData, Error>;

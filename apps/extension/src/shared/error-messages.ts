@@ -1,11 +1,9 @@
 export enum FormErrorMessages {
-  AdjustedFeeExceedsBalance = 'Fee added exceeds current balance',
   AddressRequired = 'Enter an address',
   AmountRequired = 'Enter an amount',
   BnsAddressNotFound = 'Address not found',
   CannotDetermineBalance = 'Cannot determine balance',
   CannotDeterminePrecision = 'Cannot determine decimal precision',
-  CastToNumber = 'Amount must be a `number` type, but the final value was: `NaN`',
   DoesNotSupportDecimals = 'Token does not support decimal places',
   IncorrectNetworkAddress = 'Address is for incorrect network',
   InvalidAddress = 'Address is not valid',
@@ -14,7 +12,6 @@ export enum FormErrorMessages {
   MemoExceedsLimit = 'Memo must be less than 34-bytes',
   MustBeNumber = 'Amount must be a number',
   MustBePositive = 'Amount must be greater than zero',
-  MustSelectAsset = 'Select a valid token to transfer',
   SameAddress = 'Cannot send to yourself',
   TooMuchPrecision = 'Token can only have {decimals} decimals',
 

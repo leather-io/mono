@@ -9,7 +9,7 @@ import { DUMMY_P2TR_RECIPIENT, STX_SAFETY_BUFFER } from '../../swap.constants';
 
 export type SupportedProtocol = 'nativeBtc' | 'nativeStx' | 'sip10';
 
-export interface SpendableAmountContext {
+interface SpendableAmountContext {
   balance: CryptoAssetBalance;
   dependencies: SwapDependencies;
   feeTier: TransactionFeeTier;
@@ -17,14 +17,14 @@ export interface SpendableAmountContext {
   signal: AbortSignal;
 }
 
-export interface ProtocolStrategy {
+interface ProtocolStrategy {
   resolveSpendableAmount(context: SpendableAmountContext): Promise<Money>;
   getMinimumSpendAmount(): number;
   getMaximumSpendAmount(): number;
   getFeeCapabilities(): FeeCapabilities;
 }
 
-export interface FeeCapabilities {
+interface FeeCapabilities {
   mode: FeeMode;
   customFeeEnabled: boolean;
 }
