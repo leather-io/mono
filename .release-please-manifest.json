@@ -1,6 +1,6 @@
 {
   "apps/mobile": "2.104.3",
-  "apps/extension": "6.99.1",
+  "apps/extension": "6.99.2",
   "packages/analytics": "3.19.3",
   "packages/bitcoin": "0.37.5",
   "packages/constants": "0.35.1",
