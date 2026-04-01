@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { FEE_RATE } from '~/constants/constants';
 
-export function useFeeRate() {
+function useFeeRate() {
   return useMemo(() => ({ feeRate: FEE_RATE }), []);
 }
 /**

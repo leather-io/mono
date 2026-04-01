@@ -43,7 +43,7 @@ type TChild = string | React.ReactElement<ChildProps>;
 interface Props extends BoxProps {
   children: TChild | TChild[];
 }
-export function InfoCardGroup({ children, ...props }: Props) {
+function InfoCardGroup({ children, ...props }: Props) {
   const parsedChildren = Array.isArray(children) ? children : [children];
   const infoGroup = parsedChildren.flatMap((child, index) => {
     if (!isValidElement(child)) return null;

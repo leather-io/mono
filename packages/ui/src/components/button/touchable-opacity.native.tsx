@@ -34,12 +34,12 @@ import {
 
 import { Theme } from '../../theme-native';
 
-export interface TextColorProps<Theme extends BaseTheme> {
+interface TextColorProps<Theme extends BaseTheme> {
   textColor?: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
   textDecorationColor?: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
 }
 
-export type TouchableOpacityProps<Theme extends BaseTheme> = VariantProps<
+type TouchableOpacityProps<Theme extends BaseTheme> = VariantProps<
   Theme,
   'textVariants',
   'textVariant'
@@ -58,7 +58,7 @@ export type TouchableOpacityProps<Theme extends BaseTheme> = VariantProps<
   PositionProps<Theme> &
   ComponentPropsWithoutRef<typeof RNTouchableOpacity>;
 
-export const buttonRestyleFunctions = [
+const buttonRestyleFunctions = [
   opacity,
   visible,
   typography,

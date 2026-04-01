@@ -46,7 +46,7 @@ export type TextInputProps<Theme extends BaseTheme> = ComponentPropsWithRef<type
   ColorProps<Theme> &
   TextShadowProps<Theme>;
 
-export const textInputRestyleFunctions = [
+const textInputRestyleFunctions = [
   opacity,
   visible,
   typography,

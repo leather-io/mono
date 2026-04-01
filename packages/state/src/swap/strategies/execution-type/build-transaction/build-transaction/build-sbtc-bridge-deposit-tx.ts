@@ -20,7 +20,7 @@ import {
   type NetworkConfiguration,
 } from '@leather.io/models';
 
-export interface SbtcDeposit {
+interface SbtcDeposit {
   address: string;
   depositScript: string;
   reclaimScript: string;
@@ -83,7 +83,7 @@ async function fetchSignersPublicKey({
   return res.value.slice(2);
 }
 
-export async function hiroFetchWrapper(input: RequestInfo | URL, init?: RequestInit) {
+async function hiroFetchWrapper(input: RequestInfo | URL, init?: RequestInit) {
   const url =
     typeof input === 'string' || input instanceof URL
       ? new URL(input.toString())

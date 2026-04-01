@@ -8,7 +8,7 @@ import { isString } from '@leather.io/utils';
 import { Box } from '../box/box.native';
 import { Text } from '../text/text.native';
 
-export interface ItemLayoutProps {
+interface ItemLayoutProps {
   actionIcon?: ReactNode;
   captionLeft?: ReactNode;
   captionRight?: ReactNode;

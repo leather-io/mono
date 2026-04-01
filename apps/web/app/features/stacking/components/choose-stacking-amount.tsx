@@ -8,7 +8,7 @@ import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import { Button, Input, Spinner } from '@leather.io/ui';
 import { isDefined, microStxToStx } from '@leather.io/utils';
 
-export interface ChooseStackingAmountProps {
+interface ChooseStackingAmountProps {
   controlName?: string;
   isLoading: boolean;
   availableAmount: BigNumber | undefined;

@@ -1,35 +1,10 @@
 import { toUnicode } from 'punycode';
 
-import { KEBAB_REGEX } from '@leather.io/constants';
-
-function kebabCase(str: string) {
-  return str.replace(KEBAB_REGEX, match => '-' + match.toLowerCase());
-}
-
 export function truncateString(str: string, maxLength: number) {
   if (str.length <= maxLength) {
     return str;
   }
   return str.slice(0, maxLength) + '…';
-}
-
-function getLetters(string: string, offset = 1) {
-  return string.slice(0, offset);
-}
-
-export function getTicker(value: string) {
-  let name = kebabCase(value);
-  if (name.includes('-')) {
-    const words = name.split('-');
-    if (words.length >= 3) {
-      name = `${getLetters(words[0])}${getLetters(words[1])}${getLetters(words[2])}`;
-    } else {
-      name = `${getLetters(words[0])}${getLetters(words[1], 2)}`;
-    }
-  } else if (name.length >= 3) {
-    name = `${getLetters(name, 3)}`;
-  }
-  return name.toUpperCase();
 }
 
 function isUtf8(buf?: Buffer | Uint8Array): boolean {
@@ -138,10 +113,6 @@ function getUrlPort(url: string) {
 export function addPortSuffix(url: string) {
   const port = getUrlPort(url);
   return port ? `:${port}` : '';
-}
-
-export function with0x(value: string): string {
-  return !value.startsWith('0x') ? `0x${value}` : value;
 }
 
 export function doesBrowserSupportWebUsbApi() {

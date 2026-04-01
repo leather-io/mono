@@ -18,9 +18,6 @@ export function makeNativeSegwitAccountDerivationPath(
   return `m/84'/${getBitcoinCoinTypeIndexByNetwork(network)}'/${accountIndex}'`;
 }
 
-/** @deprecated Use makeNativeSegwitAccountDerivationPath */
-export const getNativeSegwitAccountDerivationPath = makeNativeSegwitAccountDerivationPath;
-
 export function makeNativeSegwitAddressIndexDerivationPath({
   network,
   accountIndex,
@@ -36,9 +33,6 @@ export function makeNativeSegwitAddressIndexDerivationPath({
     makeNativeSegwitAccountDerivationPath(network, accountIndex) + `/${changeIndex}/${addressIndex}`
   );
 }
-
-/** @deprecated Use makeNativeSegwitAddressIndexDerivationPath */
-export const getNativeSegwitAddressIndexDerivationPath = makeNativeSegwitAddressIndexDerivationPath;
 
 export function deriveNativeSegwitAccountFromRootKeychain(
   keychain: HDKey,

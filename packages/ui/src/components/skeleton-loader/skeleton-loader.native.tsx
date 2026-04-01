@@ -16,7 +16,7 @@ import { Box, type BoxProps } from '../box/box.native';
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
-export const ANIMATION_DURATION = 1_000;
+const ANIMATION_DURATION = 1_000;
 const animationEasing = Easing.ease;
 const leftPosStart = -100;
 const leftPosEnd = 100;

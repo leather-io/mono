@@ -12,7 +12,7 @@ async function fetchTokens(): Promise<StackingTrackerTokensResponse> {
   return data;
 }
 
-export function useStackingTrackerProtocols() {
+function useStackingTrackerProtocols() {
   return useQuery({
     queryKey: ['stacking-tracker-protocols'],
     queryFn: fetchTokens,
@@ -65,7 +65,7 @@ const protocolSlugToStackingTrackerSlug: Record<ProtocolSlug, string | null> = {
   lisa: 'lisa',
 };
 
-export interface StackingTrackerToken {
+interface StackingTrackerToken {
   address: string;
   name: string;
   stacked_amount: number;
@@ -74,7 +74,7 @@ export interface StackingTrackerToken {
   apy: number;
 }
 
-export interface StackingTrackerTokenCycle {
+interface StackingTrackerTokenCycle {
   cycle_number: number;
   tokens: StackingTrackerToken[];
   stacked_amount: number;
@@ -83,11 +83,11 @@ export interface StackingTrackerTokenCycle {
   rewards_amount_usd: number;
 }
 
-export interface StackingTrackerCycleWithOnePool extends Omit<StackingTrackerTokenCycle, 'tokens'> {
+interface StackingTrackerCycleWithOnePool extends Omit<StackingTrackerTokenCycle, 'tokens'> {
   token: StackingTrackerToken;
 }
 
-export interface StackingTrackerTokenEntity {
+interface StackingTrackerTokenEntity {
   name: string;
   entity: string;
   logo: string;
@@ -104,7 +104,7 @@ export interface StackingTrackerTokenEntity {
   token_mcap: number;
 }
 
-export interface StackingTrackerTokensResponse {
+interface StackingTrackerTokensResponse {
   cycles: StackingTrackerTokenCycle[];
   entities: StackingTrackerTokenEntity[];
 }

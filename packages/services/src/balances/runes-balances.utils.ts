@@ -3,7 +3,7 @@ import { aggregateBaseCryptoAssetBalances, initBigNumber } from '@leather.io/uti
 import { BisRuneValidOutput } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { RuneBalance, RunesAccountBalance } from './runes-balances.service';
 
-export interface RunesOutputsBalances {
+interface RunesOutputsBalances {
   [runeName: string]: string;
 }
 

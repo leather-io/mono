@@ -4,7 +4,7 @@ import { Theme } from '../../theme-native';
 import { Box, BoxProps } from '../box/box.native';
 import { Text } from '../text/text.native';
 
-export type BadgeVariant = 'default' | 'info' | 'success' | 'warning' | 'error';
+type BadgeVariant = 'default' | 'info' | 'success' | 'warning' | 'error';
 
 interface VariantProps {
   bg: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;

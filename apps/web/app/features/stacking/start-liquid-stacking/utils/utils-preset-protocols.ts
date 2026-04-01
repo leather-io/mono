@@ -1,25 +1,15 @@
-import { StacksNetwork } from '@stacks/network';
 import { ProviderId } from '~/data/data';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
 import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
-import { getNetworkInstance } from '~/features/stacking/utils/stacking-network-utils';
 
 import {
   LiquidContractName,
   LiquidContractPrincipal,
-  LiquidContractType,
   NetworkInstanceToLiquidContractMap,
   ProtocolIdToDisplayNameMap,
-  ProtocolName,
   ProtocolSlug,
   ProtocolSlugToIdMap,
-  protocolSlugSchema,
 } from './types-preset-protocols';
-
-export function getPoxContracts(network: StacksNetwork): LiquidContractType {
-  const mode = getNetworkInstance(network);
-  return NetworkInstanceToLiquidContractMap[mode];
-}
 
 export function getLiquidContract(
   networkInstance: NetworkMode,
@@ -51,14 +41,4 @@ export function getProtocolBySlug(protocolSlug: ProtocolSlug) {
 
 export function getProtocolIdBySlug(protocolSlug: ProtocolSlug) {
   return ProtocolSlugToIdMap[protocolSlug];
-}
-
-export function getProtocolSlugByProtocolName(
-  protocolName: ProtocolName
-): ProtocolSlug | undefined {
-  const [poolId] =
-    Object.entries(ProtocolIdToDisplayNameMap).find(([, name]) => name === protocolName) ?? [];
-  const [poolSlug] = Object.entries(ProtocolSlugToIdMap).find(([, name]) => name === poolId) ?? [];
-  const result = protocolSlugSchema.safeParse(poolSlug);
-  return result.success ? result.data : undefined;
 }

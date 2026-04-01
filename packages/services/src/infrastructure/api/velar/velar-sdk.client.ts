@@ -6,8 +6,8 @@ import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
 
 export type VelarSdkToken = Token;
-export type VelarSdkAmountOutResponse = AmountOutResponse;
-export type VelarSdkSwapResponse = SwapResponse;
+type VelarSdkAmountOutResponse = AmountOutResponse;
+type VelarSdkSwapResponse = SwapResponse;
 
 @injectable()
 export class VelarSdkClient {

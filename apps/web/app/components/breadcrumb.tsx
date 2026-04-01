@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
-export interface BreadcrumbSegment {
+interface BreadcrumbSegment {
   label: string;
   href?: string;
 }

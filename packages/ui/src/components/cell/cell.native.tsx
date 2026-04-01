@@ -25,7 +25,7 @@ const cellRootStyles: BoxProps = {
   alignItems: 'center',
 };
 
-export function CellRoot(props: CellProps & { ref?: PressableRef }) {
+function CellRoot(props: CellProps & { ref?: PressableRef }) {
   const { onPressIn, onPressOut } = usePressedState();
 
   if (props.pressable) {

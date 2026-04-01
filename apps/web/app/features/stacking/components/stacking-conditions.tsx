@@ -2,13 +2,13 @@ import { ReactNode } from 'react';
 
 import { Box, HStack, Stack, styled } from 'leather-styles/jsx';
 
-export interface StackingConditionItem {
+interface StackingConditionItem {
   icon: ReactNode;
   title: string;
   description: string;
 }
 
-export interface StackingConditionsProps {
+interface StackingConditionsProps {
   conditions: StackingConditionItem[];
 }
 

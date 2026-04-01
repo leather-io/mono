@@ -5,7 +5,7 @@ import { BulletSeparator } from '../../../components/bullet-separator/bullet-sep
 
 type ApproverStatusName = 'completed' | 'error' | 'pending';
 
-export const loadingStripedGradient = css({
+const loadingStripedGradient = css({
   pos: 'relative',
   overflow: 'hidden',
   _before: {

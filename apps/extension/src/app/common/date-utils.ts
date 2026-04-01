@@ -16,6 +16,7 @@ export function todaysIsoDate() {
 }
 
 // Convert ISO date to locale date taking into account user timezone
+/** @knipignore */
 export function isoDateToLocalDate(isoDate: string): string {
   return dayjs.tz(isoDate).format('YYYY-MM-DD');
 }

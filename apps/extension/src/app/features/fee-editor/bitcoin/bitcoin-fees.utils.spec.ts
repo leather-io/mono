@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { OwnedUtxo } from '@leather.io/models';
 import { createMoney, noop } from '@leather.io/utils';
 
-import { getApproximateFee, getBitcoinFee, getBitcoinSendMaxFee } from './bitcoin-fees.utils';
+import { getBitcoinFee, getBitcoinSendMaxFee } from './bitcoin-fees.utils';
 
 const mockOwnedUtxos: OwnedUtxo[] = [
   {
@@ -73,17 +73,6 @@ describe('bitcoin-fees.utils', () => {
       });
       expect(result).toBeNull();
       consoleSpy.mockRestore();
-    });
-  });
-
-  describe('getApproximateFee', () => {
-    it('calculates approximate fee correctly', () => {
-      const result = getApproximateFee({
-        feeRate: 10,
-        recipients: mockRecipients,
-        utxos: mockOwnedUtxos,
-      });
-      expect(result.amount.toNumber()).toBeGreaterThan(0);
     });
   });
 });

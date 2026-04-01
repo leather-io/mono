@@ -1,5 +1,5 @@
 // https://api.mainnet.hiro.so/v2/accounts/SP32YZPY7SEF52D2R4AD103SCDP4E7ATVBF1CTEST?proof=0
-export const resp = {
+const resp = {
   balance: '0x00000000000000000000000000000000',
   locked: '0x00000000000000000000000000000000',
   unlock_height: 0,

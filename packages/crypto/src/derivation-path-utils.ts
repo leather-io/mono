@@ -3,6 +3,7 @@ import { isHexString } from '@leather.io/utils';
 export enum DerivationPathDepth {
   Root = 0,
   Purpose = 1,
+  /** @knipignore */
   CoinType = 2,
   Account = 3,
   Change = 4,

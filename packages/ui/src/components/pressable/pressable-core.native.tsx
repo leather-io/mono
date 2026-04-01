@@ -38,7 +38,7 @@ export type PressableRestyleProps = OpacityProps<Theme> &
   LayoutProps<Theme> &
   PositionProps<Theme>;
 
-export const AnimatedRestylePressable = Animated.createAnimatedComponent<
+const AnimatedRestylePressable = Animated.createAnimatedComponent<
   PressableRestyleProps & RNPressableProps
 >(
   createRestyleComponent<PressableRestyleProps & RNPressableProps, Theme>(

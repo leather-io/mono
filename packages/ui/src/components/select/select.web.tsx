@@ -1,16 +1,10 @@
-import { ReactNode, forwardRef } from 'react';
+import { forwardRef } from 'react';
 
 import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 import { Select as RadixSelect } from 'radix-ui';
 
 import { pressableBaseStyles, pressableStyles } from '../../components/pressable/pressable.web';
-
-export interface SelectItem {
-  iconLeft?: ReactNode;
-  iconRight?: ReactNode;
-  label: string;
-}
 
 const selectTriggerStyles = css({
   alignItems: 'center',

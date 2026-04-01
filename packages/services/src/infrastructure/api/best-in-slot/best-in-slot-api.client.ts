@@ -22,7 +22,7 @@ interface BestInSlotApiResponse<T> {
   data: T;
 }
 
-export type BisBrc20MarketInfo = z.infer<typeof bisBrc20MarketInfoSchema>;
+type BisBrc20MarketInfo = z.infer<typeof bisBrc20MarketInfoSchema>;
 export type BisInscription = z.infer<typeof bisInscriptionSchema>;
 export type BisRuneValidOutput = z.infer<typeof bisRuneValidOutputsSchema>;
 

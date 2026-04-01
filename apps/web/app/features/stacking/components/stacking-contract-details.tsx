@@ -3,7 +3,7 @@ import { CopyAddress, ExternalAddress } from '~/features/stacking/components/add
 import { useStacksNetwork } from '~/store/stacks-network';
 import { makeExplorerTxLink } from '~/utils/external-links';
 
-export interface PoolingDetailsProps {
+interface PoolingDetailsProps {
   addressTitle: string;
   address: string | undefined;
   contractAddress: string | undefined;
