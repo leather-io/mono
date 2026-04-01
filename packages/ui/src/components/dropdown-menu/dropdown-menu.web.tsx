@@ -1,4 +1,4 @@
-import { ReactNode, forwardRef } from 'react';
+import { forwardRef } from 'react';
 
 import { css } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
@@ -8,11 +8,6 @@ import { pressableBaseStyles, pressableStyles } from '../../components/pressable
 import { ChevronDownIcon } from '../../icons/index.web';
 import { Flag } from '../flag/flag.web';
 
-export interface DropdownMenuItem {
-  iconLeft?: ReactNode;
-  iconRight?: ReactNode;
-  label: string;
-}
 const dropdownButtonStyles = css({
   bg: 'ink.background-primary',
   borderRadius: 'xs',

@@ -37,7 +37,7 @@ export interface RateLimiterQueueOptions {
   timeout: number;
 }
 
-export interface RateLimiterCallOptions {
+interface RateLimiterCallOptions {
   priority?: number;
   throwOnTimeout?: boolean;
   signal?: AbortSignal;

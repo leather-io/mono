@@ -13,8 +13,6 @@ interface ClientParam {
   client: StacksClient;
 }
 
-export type AllowanceContractCallersResult = string[]; // массив principal'ов
-
 export function createGetAllowanceContractCallersQueryOptions(
   params: CreateGetAllowanceContractCallersQueryOptionsArgs & ClientParam
 ) {

@@ -21,7 +21,7 @@ export interface ChangeResult {
   cursorPosition: number;
 }
 
-export interface UseBaseAmountFieldResult {
+interface UseBaseAmountFieldResult {
   displayValue: string;
   touched: boolean;
   currencySign?: CurrencySign;

@@ -18,9 +18,6 @@ export function makeTaprootAccountDerivationPath(
 ) {
   return `m/86'/${getBitcoinCoinTypeIndexByNetwork(network)}'/${accountIndex}'`;
 }
-/** @deprecated Use makeTaprootAccountDerivationPath */
-export const getTaprootAccountDerivationPath = makeTaprootAccountDerivationPath;
-
 export function makeTaprootAddressIndexDerivationPath({
   network,
   accountIndex,
@@ -36,9 +33,6 @@ export function makeTaprootAddressIndexDerivationPath({
     makeTaprootAccountDerivationPath(network, accountIndex) + `/${changeIndex}/${addressIndex}`
   );
 }
-/** @deprecated Use makeTaprootAddressIndexDerivationPath */
-export const getTaprootAddressIndexDerivationPath = makeTaprootAddressIndexDerivationPath;
-
 export function deriveTaprootAccount(keychain: HDKey, network: BitcoinNetworkModes) {
   if (keychain.depth !== DerivationPathDepth.Root)
     throw new Error('Keychain passed is not an account');

@@ -4,7 +4,7 @@ import { BasicTooltip, Button, ButtonProps } from '@leather.io/ui';
 
 import { useEnrolledStatus, useSbtcEnroll } from './use-enroll-transaction';
 
-export function EnrollButtonLayout(props: ButtonProps) {
+function EnrollButtonLayout(props: ButtonProps) {
   return <Button fullWidth size="sm" {...props} />;
 }
 

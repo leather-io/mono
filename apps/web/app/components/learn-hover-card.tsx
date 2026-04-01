@@ -8,7 +8,7 @@ import { sanitizeContent } from '~/utils/sanitize-content';
 
 import { HoverCard, InfoCircleIcon } from '@leather.io/ui';
 
-export type SupportedTags = 'h1' | 'h2' | 'h3' | 'h4' | 'span';
+type SupportedTags = 'h1' | 'h2' | 'h3' | 'h4' | 'span';
 
 interface LearnHoverCardProps {
   article?: LearnArticle;

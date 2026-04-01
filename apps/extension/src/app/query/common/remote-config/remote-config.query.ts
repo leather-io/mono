@@ -104,16 +104,6 @@ export function useRemoteLeatherMessages(): HiroMessage[] {
   return get(config, 'messages.global', []);
 }
 
-export function useConfigOrdinalsbot() {
-  const config = useRemoteConfig();
-
-  return {
-    integrationEnabled: config?.ordinalsbot?.integrationEnabled ?? true,
-    mainnetApiUrl: config?.ordinalsbot?.mainnetApiUrl ?? 'https://api2.ordinalsbot.com',
-    signetApiUrl: config?.ordinalsbot?.signetApiUrl ?? 'https://signet.ordinalsbot.com',
-  };
-}
-
 export function useConfigRunesEnabled() {
   const config = useRemoteConfig();
   return get(config, 'runesEnabled', false);

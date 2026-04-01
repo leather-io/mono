@@ -4,7 +4,6 @@ import {
   StackingPool,
   StackingProviderId,
   stackingContractMap,
-  stackingPoolData,
   stackingPoolList,
   stackingProviderIdSchema,
 } from '~/data/data';
@@ -23,7 +22,7 @@ export function getPoxContractsByNetwork(network: StacksNetwork) {
   return stackingContractMap[mode as keyof typeof stackingContractMap];
 }
 
-export function isPoxWrapperContract(pool: StackingPool) {
+function isPoxWrapperContract(pool: StackingPool) {
   return pool.poxContract !== 'Pox4';
 }
 
@@ -47,27 +46,8 @@ export function getPoxWrapperContract2(
   return stackingContractMap[networkInstance as keyof typeof stackingContractMap][poxContractName];
 }
 
-export function isSelfServicePool(poolAddress: string) {
-  const allSelfServicePools: string[] = [
-    stackingPoolData.fastPool.poolAddress.mainnet,
-    stackingPoolData.fastPool.poolAddress.testnet,
-    stackingPoolData.fastPool.poolAddress.devnet,
-    stackingPoolData.restake.poolAddress.mainnet,
-    stackingPoolData.restake.poolAddress.testnet,
-    stackingPoolData.restake.poolAddress.devnet,
-  ];
-  return allSelfServicePools.includes(poolAddress);
-}
-
 export function getPoxContract(networkInstance: NetworkMode, poxContract: PoxContractName) {
   return stackingContractMap[networkInstance as keyof typeof stackingContractMap][poxContract];
-}
-
-export function getPoxContractAddressAndName(
-  networkInstance: NetworkMode,
-  poxContract: PoxContractName
-) {
-  return getPoxContract(networkInstance, poxContract).split('.');
 }
 
 export function getPoolByAddress(address: string) {

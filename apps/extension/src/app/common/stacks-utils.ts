@@ -76,6 +76,7 @@ export function validateAddressChain(address: string, currentNetwork: NetworkCon
   }
 }
 
+/** @knipignore */
 export function isFtNameLikeStx(name: string) {
   return ['stx', 'stack', 'stacks'].includes(convertUnicodeToAscii(name).toLocaleLowerCase());
 }

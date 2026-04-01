@@ -4,14 +4,13 @@ import { RpcRequests, RpcResponses } from '@leather.io/rpc';
 
 const mockRequestEventName = 'mockRequest';
 const mockResponseEventName = 'mockResponse';
-export type MockResponseEventName = typeof mockResponseEventName;
 
-export const requestEventBus = new EventTarget();
+const requestEventBus = new EventTarget();
 export function dispatchMockRequestEvent(requestPayload: RpcRequests): void {
   requestEventBus.dispatchEvent(new CustomEvent(mockRequestEventName, { detail: requestPayload }));
 }
 
-export const responseEventBus = new EventTarget();
+const responseEventBus = new EventTarget();
 export function dispatchMockResponseEvent(responsePayload: RpcResponses): void {
   responseEventBus.dispatchEvent(
     new CustomEvent(mockResponseEventName, { detail: responsePayload })

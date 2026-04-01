@@ -16,7 +16,7 @@ export function InfoGrid(props: GridProps) {
   );
 }
 
-export function InfoGridCell(props: FlexProps) {
+function InfoGridCell(props: FlexProps) {
   return <Flex flexDir="column" bg="ink.background-primary" {...props} />;
 }
 

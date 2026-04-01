@@ -41,6 +41,7 @@ function defaultNetworkIdToBitcoinNetworkMode(
   }
 }
 
+/** @knipignore */
 export const rpcSendTransferParamsSchemaLegacy = z.object({
   account: accountSchema.optional(),
   address: z.string(),
@@ -48,6 +49,7 @@ export const rpcSendTransferParamsSchemaLegacy = z.object({
   network: defaultNetworkIdSchema.optional(),
 });
 
+/** @knipignore */
 export const rpcSendTransferParamsSchema = z
   .object({
     account: accountSchema.optional(),

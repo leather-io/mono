@@ -10,7 +10,7 @@ import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { stxToMicroStx } from '@leather.io/utils';
 
-export interface LiquidStackingConfirmationStepsProps {
+interface LiquidStackingConfirmationStepsProps {
   stackingAmount: number;
   confirmationState: Partial<
     Record<

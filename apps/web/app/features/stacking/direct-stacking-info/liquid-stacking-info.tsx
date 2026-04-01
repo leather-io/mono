@@ -19,7 +19,7 @@ import { useGetPoxInfoQuery, useGetStatusQuery } from '../hooks/stacking.query';
 import { NoStackingInfo } from './components/no-stacking-info';
 import { PendingStackingInfo } from './components/pending-stacking-info';
 
-export interface DirectStackingInfoProps {
+interface DirectStackingInfoProps {
   address: string;
   protocolSlug: ProtocolSlug;
 }

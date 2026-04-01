@@ -186,7 +186,7 @@ function ContractAddressCell({ address }: ContractAddressCellProps): ReactElemen
   );
 }
 
-export interface ProtocolOverviewProps {
+interface ProtocolOverviewProps {
   info?: ProtocolInfo;
   protocol?: Protocol;
   protocolSlug?: string;

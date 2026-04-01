@@ -5,13 +5,10 @@
 export enum BitcoinQueryPrefixes {
   GetInscriptionTextContent = 'get-inscription-text-content',
   GetTransactionsByAddress = 'get-transactions-by-address',
-  GetTaprootUtxosByAddress = 'get-taproot-utxos-by-address',
   GetInscriptionsByAddress = 'get-inscriptions-by-address',
   GetInscription = 'get-inscription',
-  GetInscriptions = 'get-inscriptions',
   GetStampsByAddress = 'get-stamps-by-address',
   GetBrc20Tokens = 'get-brc20-tokens',
-  GetUtxosByAddress = 'get-utxos-by-address',
   GetBitcoinFeeEstimates = 'bitcoin-fee-estimates',
   GetInscriptionsByParam = 'get-inscriptions-by-param',
   GetRunesOutputsByAddress = 'get-runes-outputs-by-address',
@@ -32,7 +29,6 @@ export enum StacksQueryPrefixes {
   GetNetworkBlockTime = 'get-network-block-time',
   PostFeeTransaction = 'post-fee-transaction',
   GetContractInterface = 'get-contract-interface',
-  GetAccountBalance = 'get-account-balance',
   GetStxAddressBalance = 'get-stx-address-balance',
   GetSip10AddressBalances = 'get-sip10-address-balances',
 }

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-export type PoolRewardProtocolInfoRewardToken = 'STX' | 'BTC';
+type PoolRewardProtocolInfoRewardToken = 'STX' | 'BTC';
 
 export interface PoolRewardProtocolInfo {
   id: string;

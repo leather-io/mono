@@ -16,7 +16,7 @@ export const poolSlugToIdMap = {
   // custom: 'custom',
 } as const;
 
-export function poolSlugToId(slug: PoolSlug) {
+function poolSlugToId(slug: PoolSlug) {
   return poolSlugToIdMap[slug];
 }
 
@@ -34,7 +34,5 @@ export function getPoolFromSlug(slug: PoolSlug) {
 }
 
 export const poolSlugSchema = z.enum(Object.keys(poolSlugToIdMap) as [PoolSlug, ...PoolSlug[]]);
-
-export type PayoutMethod = 'BTC' | 'STX' | 'OTHER';
 
 export type PoolAddress = Record<NetworkMode, string>;

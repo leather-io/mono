@@ -30,7 +30,7 @@ function LeatherLogoHomeLink(props: HTMLStyledProps<'a'>) {
   );
 }
 
-export function NavContents() {
+function NavContents() {
   return (
     <>
       <NavItem href="/portfolio" icon={<SuitcaseIcon variant="small" />}>

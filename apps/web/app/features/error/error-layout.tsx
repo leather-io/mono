@@ -6,7 +6,7 @@ import { errorMessages } from '~/content/messages';
 
 import type { Route } from '../../+types/root';
 
-export interface ErrorLayoutProps {
+interface ErrorLayoutProps {
   error: Route.ErrorBoundaryProps['error'];
 }
 

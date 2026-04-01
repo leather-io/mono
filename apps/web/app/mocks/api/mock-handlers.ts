@@ -52,12 +52,3 @@ const endpoints = [
 export const successHandlers = endpoints.map(endpoint =>
   http[endpoint.method](endpoint.path, async () => delayedJsonResponse(endpoint.resp))
 );
-
-export const errorEverythingHandlers = endpoints.map(endpoint =>
-  http[endpoint.method](endpoint.path, () =>
-    HttpResponse.json(
-      { error: 'This endpoint is not available in the mock server.' },
-      { status: 500, statusText: 'Internal Server Error' }
-    )
-  )
-);

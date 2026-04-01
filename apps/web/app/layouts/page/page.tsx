@@ -17,7 +17,7 @@ interface PageHeadingProps {
   subtitle?: ReactNode;
   children?: ReactNode;
 }
-export function PageHeading({ title, subtitle, children }: PageHeadingProps) {
+function PageHeading({ title, subtitle, children }: PageHeadingProps) {
   return (
     <Flex my="space.07" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
       <Box flex={1}>
@@ -65,7 +65,7 @@ interface PageHeaderProps {
   title: React.ReactNode;
   children?: React.ReactElement | React.ReactElement[];
 }
-export function PageHeader({ title, children }: PageHeaderProps) {
+function PageHeader({ title, children }: PageHeaderProps) {
   return (
     <styled.header display="flex" justifyContent="space-between" h="60px" alignItems="center">
       <Flex alignItems="center" justifyContent="space-between" flex={1}>
@@ -82,15 +82,15 @@ export function PageHeader({ title, children }: PageHeaderProps) {
   );
 }
 
-export function PageDivider(props: HTMLStyledProps<'hr'>) {
+function PageDivider(props: HTMLStyledProps<'hr'>) {
   return <styled.hr color="ink.background-primary" borderBottom="default" {...props} />;
 }
 
-export function PageTitle({ ...props }: HTMLStyledProps<'h2'>) {
+function PageTitle({ ...props }: HTMLStyledProps<'h2'>) {
   return <styled.h2 textStyle="heading.02" {...props} />;
 }
 
-export function PageSubtitle({ ...props }: HTMLStyledProps<'h3'>) {
+function PageSubtitle({ ...props }: HTMLStyledProps<'h3'>) {
   return <styled.h3 textStyle="label.01" {...props} />;
 }
 

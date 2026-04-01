@@ -28,5 +28,3 @@ export function formatCurrency(money: Money, options?: FormatAmountOptions) {
     options
   );
 }
-
-export const formatPercentage = currencyFormatter.formatPercentage;

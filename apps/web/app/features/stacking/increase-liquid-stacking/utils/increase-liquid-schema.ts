@@ -28,7 +28,3 @@ export function createIncreaseLiquidValidationSchema({
       }),
   });
 }
-
-export type IncreaseLiquidFormSchema = z.infer<
-  ReturnType<typeof createIncreaseLiquidValidationSchema>
->; // TODO: Use as main type for form

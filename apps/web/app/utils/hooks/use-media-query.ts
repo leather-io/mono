@@ -28,10 +28,6 @@ function useMediaQuery(query: string) {
   return matches;
 }
 
-export function useWindowMinWidth(width: number) {
-  return useMediaQuery(`(min-width: ${width}px)`);
-}
-
 export function useViewportMinWidth(viewport: BreakpointToken) {
   return useMediaQuery(`(min-width: ${token(`breakpoints.${viewport}`)})`);
 }

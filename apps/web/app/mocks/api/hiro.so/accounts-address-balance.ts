@@ -1,5 +1,5 @@
 // https://api.mainnet.hiro.so/v2/accounts/SP32YZPY7SEF52D2R4AD103SCDP4E7ATVBF1CTEST?proof=0
-export const resp = {
+const resp = {
   stx: {
     balance: '0',
     total_miner_rewards_received: '0',

@@ -7,7 +7,7 @@ import { Sip10AvatarIcon } from './sip10-avatar-icon.native';
 import { StxAvatarIcon } from './stx-avatar-icon.native';
 import type { AssetForAvatar } from './types.shared';
 
-export interface AssetAvatarIconProps extends AvatarProps {
+interface AssetAvatarIconProps extends AvatarProps {
   asset: AssetForAvatar;
   indicator?: ReactElement;
 }

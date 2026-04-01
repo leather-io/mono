@@ -192,7 +192,7 @@ export function useSwapState({
   };
 }
 
-export interface InitializeStateParams {
+interface InitializeStateParams {
   baseAsset?: SwappableFungibleCryptoAsset;
   targetAsset?: SwappableFungibleCryptoAsset;
   quoteCurrencyPreference: QuoteCurrency;
