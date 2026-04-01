@@ -30,6 +30,13 @@
 
 ---
 
+## [6.99.2](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.99.1...@leather.io/extension-v6.99.2) (2026-04-01)
+
+
+### Bug Fixes
+
+* **extension:** ledger chains connection ([be79b57](https://github.com/leather-io/mono/commit/be79b57a4e5d540ac139c4f2de08aa75767e6513))
+
 ## [6.99.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.99.0...@leather.io/extension-v6.99.1) (2026-03-31)
 
 
