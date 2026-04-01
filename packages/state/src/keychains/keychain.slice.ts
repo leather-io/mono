@@ -21,7 +21,14 @@ interface AddAccountPayload {
   account: { id: string };
   accountKeychains: Keychain[];
 }
+
 export const userAddsAccount = createAction<AddAccountPayload>('accounts/userAddsAccount');
+
+interface AddKeychainPayload {
+  accountKeychains: Keychain[];
+}
+
+export const userAddsKeychains = createAction<AddKeychainPayload>('accounts/userAddsKeychains');
 
 export const keychainSlice = createSlice({
   name: 'keychains',
@@ -36,6 +43,11 @@ export const keychainSlice = createSlice({
 
       .addCase(
         userAddsAccount,
+        handleEntityActionWith(keychainAdapter.addMany, payload => payload.accountKeychains)
+      )
+
+      .addCase(
+        userAddsKeychains,
         handleEntityActionWith(keychainAdapter.addMany, payload => payload.accountKeychains)
       )
 
