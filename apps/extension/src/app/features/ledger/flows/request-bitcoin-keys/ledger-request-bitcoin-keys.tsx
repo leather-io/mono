@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import BitcoinApp from 'ledger-bitcoin';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
+import { userAddsKeychains } from '@leather.io/state';
 import { userAddsWallet } from '@leather.io/state/wallet';
 
 import { pullBitcoinKeysFromLedgerDevice } from '@app/features/ledger/flows/request-bitcoin-keys/request-bitcoin-keys.utils';
@@ -22,6 +23,7 @@ import {
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
+import { useBitcoinKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
@@ -29,6 +31,7 @@ function LedgerRequestBitcoinKeys() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const wallets = useWalletEntities();
+  const btcKeychainDescriptors = useBitcoinKeychainDescriptors();
 
   const ledgerNavigate = useLedgerNavigate();
   const network = useCurrentNetwork();
@@ -62,7 +65,11 @@ function LedgerRequestBitcoinKeys() {
           },
         });
 
-        const keychains = keys.map(key => ({ chain: 'bitcoin' as const, descriptor: key.policy }));
+        const keychains = keys
+          .map(key => ({ chain: 'bitcoin' as const, descriptor: key.policy }))
+          .filter(keychain => {
+            return !btcKeychainDescriptors.includes(keychain.descriptor);
+          });
 
         if (!wallets[fingerprint]) {
           dispatch(
@@ -72,6 +79,12 @@ function LedgerRequestBitcoinKeys() {
                 fingerprint,
                 type: 'ledger',
               },
+              accountKeychains: keychains,
+            })
+          );
+        } else if (keychains.length) {
+          dispatch(
+            userAddsKeychains({
               accountKeychains: keychains,
             })
           );
