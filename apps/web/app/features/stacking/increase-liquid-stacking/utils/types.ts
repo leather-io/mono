@@ -25,16 +25,3 @@ export interface SignerDetailsFormValues {
    */
   signatureJSON?: string;
 }
-
-export interface StackAggregationCommitFormValues extends SignerDetailsFormValues {
-  /**
-   * The PoX rewards address. The address where rewards are paid into,
-   * Must be of a supported address type
-   */
-  poxAddress: string;
-
-  /**
-   * The reward cycle id that should be finalized.
-   */
-  rewardCycleId: number;
-}

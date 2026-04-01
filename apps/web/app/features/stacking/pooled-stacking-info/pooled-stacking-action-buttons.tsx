@@ -6,7 +6,7 @@ import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/stacki
 
 import { Button } from '@leather.io/ui';
 
-export interface PooledStackingActionButtonsProps extends FlexProps {
+interface PooledStackingActionButtonsProps extends FlexProps {
   poolSlug: PoolSlug;
 }
 

@@ -1,6 +1,5 @@
 import { isString } from 'remeda';
 
-import { type Money } from '@leather.io/models';
 import { countDecimals } from '@leather.io/utils';
 
 export function isParsableNumber(value: string) {
@@ -21,8 +20,4 @@ export function hasValidPrecision(value: string, maxDecimals: number): boolean {
 export function isWithinRange(input: number, min: number, max: number) {
   if (min > max) [min, max] = [max, min];
   return input >= min && input <= max;
-}
-
-export function isAmountWithinBalance(amount: Money, spendableBalance: Money): boolean {
-  return amount.amount.isLessThanOrEqualTo(spendableBalance.amount);
 }

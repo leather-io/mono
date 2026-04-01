@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test';
 
 // Mock CMS posts data
-export const mockPostsData = {
+const mockPostsData = {
   historicalYield: {
     id: 'mock-historical-yield',
     title: 'Historical Yield',
@@ -201,7 +201,7 @@ export const mockPostsData = {
 };
 
 // Convert mock data into the format expected by the application
-export function generateMockPostsCollection() {
+function generateMockPostsCollection() {
   const collection: Record<string, any> = {};
 
   Object.entries(mockPostsData).forEach(([key, post]) => {
@@ -393,65 +393,6 @@ export async function setupProtocolMocks(page: Page) {
   ); // Only intercept the first navigation, let subsequent requests through
 }
 
-// Setup mock data for hover card tests
-export async function setupHoverCardMocks(page: Page) {
-  await page.addInitScript(() => {
-    // Mock elements for hover card tests
-    window.addEventListener('load', () => {
-      const mockApp = document.createElement('div');
-      mockApp.id = 'mock-app';
-      document.body.appendChild(mockApp);
-
-      // Value hover card
-      if (window.location.pathname === '/hover-card-value') {
-        const valueElement = document.createElement('div');
-        valueElement.setAttribute('data-testid', 'hover-card-value');
-        valueElement.textContent = '5–8%';
-        valueElement.className = 'post-value-display';
-        mockApp.appendChild(valueElement);
-      }
-
-      // Missing value hover card
-      if (window.location.pathname === '/hover-card-value-missing') {
-        const valueElement = document.createElement('div');
-        valueElement.setAttribute('data-testid', 'hover-card-value-missing');
-        valueElement.textContent = 'N/A';
-        valueElement.className = 'post-value-display';
-        mockApp.appendChild(valueElement);
-      }
-
-      // Label hover card
-      if (window.location.pathname === '/hover-card-label') {
-        const labelElement = document.createElement('div');
-        labelElement.textContent = 'Historical yield';
-        mockApp.appendChild(labelElement);
-      }
-
-      // Missing label hover card
-      if (window.location.pathname === '/hover-card-label-missing') {
-        const labelElement = document.createElement('div');
-        labelElement.textContent = 'Unknown';
-        mockApp.appendChild(labelElement);
-      }
-
-      // Add a mock radix popper content wrapper that shows on hover
-      document.addEventListener('mouseover', e => {
-        if (e.target instanceof HTMLElement) {
-          if (
-            e.target.textContent?.includes('Historical yield') ||
-            e.target.hasAttribute('data-testid')
-          ) {
-            const popperContent = document.createElement('div');
-            popperContent.setAttribute('data-radix-popper-content-wrapper', '');
-            popperContent.innerHTML = '<span>learn more</span>';
-            document.body.appendChild(popperContent);
-          }
-        }
-      });
-    });
-  });
-}
-
 // Setup mocks for XSS protection test
 export async function setupXssMocks(page: Page) {
   await page.route('**/stacking/faq', async route => {
@@ -466,98 +407,6 @@ export async function setupXssMocks(page: Page) {
               <p>Safe text</p>
               <p>more text</p>
             </div>
-          </body>
-        </html>
-      `,
-    });
-  });
-}
-
-// Setup mocks for post page heading tests
-export async function setupPostPageHeadingMocks(page: Page) {
-  // Mock the CMS data fetch first (shared with protocol mocks)
-  await page.route('https://leather-cms.s3.amazonaws.com/posts.json', async route => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(generateMockPostsCollection()),
-    });
-  });
-
-  // Mock page content for test-slug
-  await page.route('**/test-slug', async route => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'text/html',
-      body: `
-        <html>
-          <head><title>Test Page</title></head>
-          <body>
-            <h1>Test Title</h1>
-            <p>Test subtitle <a href="/test-slug">Learn more</a></p>
-            <p>Test disclaimer</p>
-          </body>
-        </html>
-      `,
-    });
-  });
-
-  // Mock page content for test-slug-missing-fields (empty page)
-  await page.route('**/test-slug-missing-fields', async route => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'text/html',
-      body: `
-        <html>
-          <head><title>Empty Test Page</title></head>
-          <body>
-            <div>No content here</div>
-          </body>
-        </html>
-      `,
-    });
-  });
-}
-
-// Setup mocks for post section heading tests
-export async function setupPostSectionHeadingMocks(page: Page) {
-  // Mock the CMS data fetch first (shared with protocol mocks)
-  await page.route('https://leather-cms.s3.amazonaws.com/posts.json', async route => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(generateMockPostsCollection()),
-    });
-  });
-
-  // Mock page content for section-slug
-  await page.route('**/section-slug', async route => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'text/html',
-      body: `
-        <html>
-          <head><title>Section Page</title></head>
-          <body>
-            <h2>Step 1: Section Title</h2>
-            <p>This is a test sentence <a href="/section-slug">Learn more</a></p>
-            <p>Test disclaimer</p>
-          </body>
-        </html>
-      `,
-    });
-  });
-
-  // Mock page content for section-slug-missing (empty page)
-  await page.route('**/section-slug-missing', async route => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'text/html',
-      body: `
-        <html>
-          <head><title>Empty Section Page</title></head>
-          <body>
-            <div>No section content here</div>
           </body>
         </html>
       `,

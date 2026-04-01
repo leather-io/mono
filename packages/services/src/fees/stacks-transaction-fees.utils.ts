@@ -8,9 +8,7 @@ import { HiroTransactionFeeEstimateResponse } from '../infrastructure/api/hiro/h
 import { StacksFeeConfig } from '../infrastructure/app-config/app-config.service';
 import { calculateFeeRate, enforceFeeBounds, enforceFeeMinimum } from './transaction-fees.utils';
 
-export type StacksPayloadTypeFeeConfig = StacksFeeConfig['transfers'];
-
-/* 
+/*
   Takes default fees for each tier for given Tx payload type.
 */
 export function getStacksTxFeeDefaultAmounts(

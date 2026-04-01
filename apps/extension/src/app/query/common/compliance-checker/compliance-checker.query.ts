@@ -43,7 +43,7 @@ export async function checkEntityAddressIsCompliant(address: string): Promise<Co
   return { ...entityReport, isOnSanctionsList };
 }
 
-export function useCheckAddressComplianceQueries(addresses: string[]) {
+function useCheckAddressComplianceQueries(addresses: string[]) {
   const network = useCurrentNetwork();
   const filteredAddresses = addresses.filter(address => !isEmptyString(address));
   const uniqueAddresses = uniqueArray(filteredAddresses);

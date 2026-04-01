@@ -1,22 +1,5 @@
 import { type CryptoAssetId, CryptoAssetProtocols } from '@leather.io/models';
-import {
-  type SerializedCryptoAssetId,
-  deserializeAssetId,
-  serializeAssetId,
-} from '@leather.io/utils';
-
-export function assetIdToUrlPath(assetId: SerializedCryptoAssetId): string {
-  const parsed = deserializeAssetId(assetId);
-
-  if (parsed.protocol === CryptoAssetProtocols.nativeBtc) {
-    return 'BTC';
-  }
-  if (parsed.protocol === CryptoAssetProtocols.nativeStx) {
-    return 'STX';
-  }
-
-  return `${parsed.protocol}/${encodeURIComponent(parsed.id)}`;
-}
+import { type SerializedCryptoAssetId, serializeAssetId } from '@leather.io/utils';
 
 export function urlPathToAssetId(urlPath: string): SerializedCryptoAssetId {
   if (urlPath === 'BTC') {

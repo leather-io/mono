@@ -1,7 +1,7 @@
 import { Box } from '../box/box.native';
 import { Pressable, PressableProps } from '../pressable/pressable.native';
 
-export interface RadioButtonProps extends PressableProps {
+interface RadioButtonProps extends PressableProps {
   isSelected: boolean;
 }
 export function RadioButton({ isSelected, ...props }: RadioButtonProps) {

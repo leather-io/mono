@@ -11,13 +11,13 @@ import { formatContractId } from '@leather.io/stacks';
 
 import { useStackingClientRequired } from '../providers/stacking-client-provider';
 
-export interface CreateRevokeDelegateStxMutationArgs {
+interface CreateRevokeDelegateStxMutationArgs {
   leather: LeatherSdk;
   network: StacksNetworkName;
   client: StackingClient;
 }
 
-export function createRevokeDelegateStxMutationOptions({
+function createRevokeDelegateStxMutationOptions({
   leather,
   network,
   client,

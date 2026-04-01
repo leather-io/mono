@@ -13,6 +13,7 @@ import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/s
 
 import { useTransactionRequestState } from './requests.hooks';
 
+/** @knipignore */
 export function formatPostConditionState(payload?: TransactionPayload | null, address?: string) {
   if (!payload || !address) return;
 

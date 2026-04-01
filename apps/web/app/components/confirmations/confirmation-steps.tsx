@@ -8,9 +8,7 @@ export type PooledStackingConfirmationStepId = 'terms' | 'allowContractCaller' |
 
 export type LiquidStackingConfirmationStepId = 'terms' | 'depositStx';
 
-export type ConfirmationStepId =
-  | PooledStackingConfirmationStepId
-  | LiquidStackingConfirmationStepId;
+type ConfirmationStepId = PooledStackingConfirmationStepId | LiquidStackingConfirmationStepId;
 
 export interface ConfirmationStep<T extends ConfirmationStepId> {
   id: T;
@@ -24,7 +22,7 @@ export interface ConfirmationStep<T extends ConfirmationStepId> {
   onClick(): void;
 }
 
-export interface ConfirmationStepsProps<T extends ConfirmationStepId> {
+interface ConfirmationStepsProps<T extends ConfirmationStepId> {
   preview: ReactNode;
   confirmationSteps: ConfirmationStep<T>[];
 }

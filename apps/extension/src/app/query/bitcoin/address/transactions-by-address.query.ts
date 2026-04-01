@@ -4,6 +4,7 @@ import { createGetBitcoinTransactionsByAddressQueryOptions } from '@leather.io/q
 
 import { useBitcoinClient } from '../clients/bitcoin-client';
 
+/** @knipignore */
 export function createBitcoinTransactionsByAddressListQueries(addresses: string[], client: any) {
   return addresses.map(address =>
     createGetBitcoinTransactionsByAddressQueryOptions({ address, client })

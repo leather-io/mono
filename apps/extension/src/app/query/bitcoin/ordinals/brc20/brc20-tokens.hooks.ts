@@ -5,31 +5,8 @@ import { isFetchedWithSuccess } from '@leather.io/query';
 import { createBaseCryptoAssetBalance, createMoney, unitToFractionalUnit } from '@leather.io/utils';
 
 import { useCalculateBitcoinFiatValue } from '@app/query/common/market-data/market-data.hooks';
-import { useConfigOrdinalsbot } from '@app/query/common/remote-config/remote-config.query';
-import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useGetBrc20TokensQuery } from './brc20-tokens.query';
-
-// ts-unused-exports:disable-next-line
-export function useBrc20FeatureFlag() {
-  const currentNetwork = useCurrentNetwork();
-
-  const ordinalsbotConfig = useConfigOrdinalsbot();
-
-  if (!ordinalsbotConfig.integrationEnabled) {
-    return { enabled: false, reason: 'BRC-20 transfers are temporarily disabled' } as const;
-  }
-
-  const supportedNetwork =
-    currentNetwork.chain.bitcoin.bitcoinNetwork === 'mainnet' ||
-    currentNetwork.chain.bitcoin.bitcoinNetwork === 'signet';
-
-  if (!supportedNetwork) return { enabled: false, reason: 'Unsupported network' } as const;
-
-  // TODO: Add api availability check
-
-  return { enabled: true } as const;
-}
 
 function createBrc20Asset(decimals: number, ticker: string): Brc20Asset {
   return {

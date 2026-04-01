@@ -114,19 +114,19 @@ export function useNumericInput({
   };
 }
 
-export function defaultFormatter(value: number, decimals?: number): string {
+function defaultFormatter(value: number, decimals?: number): string {
   return decimals !== undefined ? value.toFixed(decimals) : String(value);
 }
 
-export function countDecimals(value: number): number {
+function countDecimals(value: number): number {
   return (String(value).split('.')[1] || '').length;
 }
 
-export function roundToPrecision(value: number, decimals: number): number {
+function roundToPrecision(value: number, decimals: number): number {
   const factor = Math.pow(10, decimals);
   return Math.round(value * factor) / factor;
 }
 
-export function getStepDelta(direction: 'increment' | 'decrement', stepSize: number): number {
+function getStepDelta(direction: 'increment' | 'decrement', stepSize: number): number {
   return direction === 'increment' ? stepSize : -stepSize;
 }

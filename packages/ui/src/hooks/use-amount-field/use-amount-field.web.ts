@@ -17,7 +17,7 @@ type InputProps = Pick<
   'value' | 'onChange' | 'type' | 'inputMode'
 >;
 
-export interface UseAmountFieldResult {
+interface UseAmountFieldResult {
   ref: RefObject<HTMLInputElement | null>;
   inputProps: InputProps;
   touched: boolean;

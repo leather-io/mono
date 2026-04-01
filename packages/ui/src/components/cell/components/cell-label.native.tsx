@@ -1,6 +1,6 @@
 import { Text, TextProps } from '../../text/text.native';
 
-export interface CellLabelProps extends Omit<TextProps, 'variant'> {
+interface CellLabelProps extends Omit<TextProps, 'variant'> {
   variant: 'primary' | 'secondary';
 }
 

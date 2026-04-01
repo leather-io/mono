@@ -1,4 +1,4 @@
-export const resp = {
+const resp = {
   balance: '0',
   total_miner_rewards_received: '0',
   lock_tx_id: '',

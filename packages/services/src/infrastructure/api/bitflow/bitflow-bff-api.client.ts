@@ -24,13 +24,12 @@ interface BitflowBffApiSwapParams {
 }
 
 export type BitflowBffApiToken = components['schemas']['TokenInfo'];
-export type BitflowBffApiPair = components['schemas']['PairInfo'];
-export type BitflowBffApiPairsResponse = components['schemas']['PairsResponse'];
+type BitflowBffApiPairsResponse = components['schemas']['PairsResponse'];
 export type BitflowBffApiExecutionStep = components['schemas']['ExecutionStep'];
 export type BitflowBffApiQuoteResponse = components['schemas']['QuoteResponse'];
 export type BitflowBffApiSwapSimpleParameter = components['schemas']['SwapSimpleParameter'];
 export type BitflowBffApiPostCondition = components['schemas']['PostCondition'];
-export type BitflowBffApiSwapResponse = components['schemas']['SwapResponse'];
+type BitflowBffApiSwapResponse = components['schemas']['SwapResponse'];
 
 @injectable()
 export class BitflowBffApiClient {

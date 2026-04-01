@@ -37,7 +37,7 @@ const assetOrderPriority: Record<string, PriorityAssetConfig> = {
 
 const defaultPriority = 100;
 
-export interface SwapAssetsSelectorOptions {
+interface SwapAssetsSelectorOptions {
   disabledPairs?: DisabledPairRule[];
   currentBaseId?: CryptoAssetId;
 }
