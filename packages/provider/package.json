@@ -23,15 +23,9 @@
     "./mobile": "./dist/injected-provider.js"
   },
   "dependencies": {
-    "@leather.io/models": "workspace:*",
     "@leather.io/rpc": "workspace:*",
-    "@leather.io/utils": "workspace:*",
-    "@scure/btc-signer": "1.6.0",
     "@stacks/connect": "7.4.0",
-    "@stacks/connect-jwt": "npm:@stacks/connect@7.4.0",
-    "@stacks/network": "7.0.2",
-    "@stacks/transactions": "7.0.5",
-    "zod": "4.0.17"
+    "@stacks/connect-jwt": "npm:@stacks/connect@7.4.0"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",

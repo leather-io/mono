@@ -6,7 +6,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export function InactiveTab({ children }: Props) {
+function InactiveTab({ children }: Props) {
   return (
     <Box
       color="ink.text-subdued"
@@ -21,7 +21,7 @@ export function InactiveTab({ children }: Props) {
   );
 }
 
-export function ActiveTab({ children }: Props) {
+function ActiveTab({ children }: Props) {
   return (
     <Box
       color="ink.text-primary"

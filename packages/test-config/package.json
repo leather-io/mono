@@ -27,7 +27,6 @@
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
-    "concurrently": "8.2.2",
     "prettier": "3.5.1",
     "tsdown": "0.16.5",
     "typescript": "5.9.3"
