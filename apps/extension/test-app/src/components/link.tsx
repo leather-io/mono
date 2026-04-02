@@ -10,7 +10,7 @@ interface LinkProps {
   textStyle: string;
 }
 
-export function buildEnterKeyEvent(onClick: () => void) {
+function buildEnterKeyEvent(onClick: () => void) {
   return (event: React.KeyboardEvent) => {
     if (event.key === 'Enter' && onClick) {
       onClick();
@@ -36,13 +36,5 @@ export function Link({
         {children}
       </styled.span>
     </Box>
-  );
-}
-
-export function MediumLink({ children, fontSize = '14px', ...rest }: LinkProps) {
-  return (
-    <Link fontSize={fontSize} {...rest}>
-      {children}
-    </Link>
   );
 }

@@ -20,7 +20,7 @@
     "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
     "install:fresh": "pnpm install:clean && pnpm i",
     "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
-    "knip": "knip --include files,exports,types,enumMembers,duplicates",
+    "knip": "knip",
     "lint": "turbo run lint",
     "lint:deps": "pnpm dependency-cruiser .",
     "lint:filenames": "pnpm ls-lint",
