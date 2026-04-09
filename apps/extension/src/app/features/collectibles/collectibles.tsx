@@ -68,6 +68,8 @@ export function Collectibles() {
     [collectibles, handleSelectCollectible]
   );
 
+  const hasInscriptions = collectibles.some(c => c.asset.protocol === 'inscription');
+
   return (
     <CollectiblesLayout
       isLoading={isPending}
@@ -75,6 +77,7 @@ export function Collectibles() {
       isError={isError}
       amount={collectibles.length}
       hasCollectibles={collectibles.length > 0}
+      hasInscriptions={hasInscriptions}
       onRefresh={() => void refetch()}
     >
       {renderedCollectibles}

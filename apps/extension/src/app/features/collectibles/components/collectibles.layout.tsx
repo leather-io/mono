@@ -30,6 +30,7 @@ interface CollectiblesLayoutProps {
   isLoading: boolean;
   isFetching: boolean;
   hasCollectibles: boolean;
+  hasInscriptions: boolean;
   isError: boolean;
   onRefresh(): void;
 }
@@ -40,6 +41,7 @@ export function CollectiblesLayout({
   isLoading,
   isFetching,
   hasCollectibles,
+  hasInscriptions,
   isError,
   onRefresh,
 }: CollectiblesLayoutProps) {
@@ -52,6 +54,11 @@ export function CollectiblesLayout({
   return (
     <>
       <Stack gap="space.05" flex={1} pb="space.08">
+        {hasInscriptions && (
+          <Callout variant="warning" title="Ordinals support ending May 16">
+            Please transfer your Ordinals to another wallet before this date.
+          </Callout>
+        )}
         {showGrid && (
           <Flex justifyContent="space-between" alignItems="flex-start">
             <Box>
