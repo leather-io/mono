@@ -104,11 +104,6 @@ export function useRemoteLeatherMessages(): HiroMessage[] {
   return get(config, 'messages.global', []);
 }
 
-export function useConfigRunesEnabled() {
-  const config = useRemoteConfig();
-  return get(config, 'runesEnabled', false);
-}
-
 export function useConfigSwapsEnabled() {
   const config = useRemoteConfig();
   return get(config, 'swapsEnabled', false);

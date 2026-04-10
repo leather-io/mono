@@ -32,18 +32,19 @@ export function useBitcoinBroadcastTransaction() {
       delayTime = 700,
     }: BroadcastCallbackArgs) => {
       try {
-        if (skipSpendableCheckUtxoIds !== 'all') {
-          // Filter out intentional spend inscription txid from the check list
-          const utxos: TransactionInput[] = filterOutIntentionalUtxoSpend({
-            inputs: decodeBitcoinTx(tx).inputs,
-            intentionalSpendUtxoIds: skipSpendableCheckUtxoIds,
-          });
+        const allInputs = decodeBitcoinTx(tx).inputs;
 
-          const hasInscribedUtxos = await checkIfUtxosListIncludesInscribed(utxos);
+        const inputsToCheck: TransactionInput[] =
+          skipSpendableCheckUtxoIds === 'all'
+            ? allInputs
+            : filterOutIntentionalUtxoSpend({
+                inputs: allInputs,
+                intentionalSpendUtxoIds: skipSpendableCheckUtxoIds,
+              });
 
-          if (hasInscribedUtxos) {
-            return;
-          }
+        const shouldHalt = await checkIfUtxosListIncludesInscribed(inputsToCheck);
+        if (shouldHalt) {
+          return;
         }
 
         setIsBroadcasting(true);

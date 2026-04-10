@@ -19,6 +19,20 @@ const flagData = {
     variation: 0,
     version: 1,
   },
+  isOrdinalsActive: {
+    flagVersion: 1,
+    trackEvents: false,
+    value: true,
+    variation: 0,
+    version: 1,
+  },
+  isRunesActive: {
+    flagVersion: 1,
+    trackEvents: false,
+    value: true,
+    variation: 0,
+    version: 1,
+  },
 };
 
 export async function mockLaunchDarkly(page: Page) {

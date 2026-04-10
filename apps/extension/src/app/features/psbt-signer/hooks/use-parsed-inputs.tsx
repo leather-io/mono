@@ -9,6 +9,7 @@ import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { getBitcoinInputValue } from '@shared/crypto/bitcoin/bitcoin.utils';
 
+import { useFlags } from '@app/features/feature-flags';
 import { useInscriptionsByOutputs } from '@app/query/bitcoin/ordinals/inscriptions-by-param.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
@@ -31,9 +32,10 @@ interface UseParsedInputsArgs {
 export function useParsedInputs({ inputs, indexesToSign }: UseParsedInputsArgs) {
   const network = useCurrentNetwork();
   const bitcoinNetwork = getBtcSignerLibNetworkConfigByMode(network.chain.bitcoin.mode);
+  const { isOrdinalsActive } = useFlags();
   const bitcoinAddressNativeSegwit = useCurrentAccountNativeSegwitIndexZeroPayer().address;
   const { address: bitcoinAddressTaproot } = useCurrentAccountTaprootIndexZeroPayer();
-  const inscriptions = useInscriptionsByOutputs(inputs);
+  const inscriptions = useInscriptionsByOutputs(isOrdinalsActive ? inputs : []);
   const signAll = isUndefined(indexesToSign);
 
   const psbtInputs = useMemo(
