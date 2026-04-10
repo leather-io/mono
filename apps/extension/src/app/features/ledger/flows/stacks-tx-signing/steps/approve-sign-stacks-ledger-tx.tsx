@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import * as Sentry from '@sentry/react';
-import { PayloadType, cvToString } from '@stacks/transactions';
+import { PayloadType, addressToString, cvToString } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
 
 import { microStxToStx } from '@leather.io/utils';
@@ -56,8 +56,12 @@ export function ApproveSignLedgerStacksTx() {
         return details;
       }
 
+      if (transaction.payload.payloadType === PayloadType.ContractCall) {
+        details.push(['Contract address', addressToString(transaction.payload.contractAddress)]);
+        details.push(['Contract name', transaction.payload.contractName.content]);
+      }
+
       if (
-        transaction.payload.payloadType === PayloadType.ContractCall ||
         transaction.payload.payloadType === PayloadType.SmartContract ||
         transaction.payload.payloadType === PayloadType.VersionedSmartContract
       ) {
