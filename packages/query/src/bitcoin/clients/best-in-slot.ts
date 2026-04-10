@@ -155,7 +155,94 @@ export interface BestInSlotInscriptionByAddressResponse {
   data: BestInSlotInscriptionsByTxIdResponse[];
 }
 
+const emptyBestInSlotInscription: BestInSlotInscriptionResponse = {
+  inscription_id: '',
+  inscription_number: 0,
+  parent_ids: [],
+  metadata: null,
+  owner_wallet_addr: '',
+  satpoint: '',
+  genesis_height: 0,
+  content_url: '',
+  bis_url: '',
+  output_value: 0,
+  genesis_ts: '',
+  genesis_block_hash: '',
+};
+
+const emptyBrc20TickerInfo: Brc20TickerInfo = {
+  id: '',
+  number: 0,
+  block_height: 0,
+  tx_id: '',
+  address: '',
+  ticker: '',
+  max_supply: '0',
+  mint_limit: '0',
+  decimals: 0,
+  deploy_timestamp: 0,
+  minted_supply: '0',
+  tx_count: 0,
+};
+
+const emptyRuneTickerInfo: RuneTickerInfo = {
+  rune_id: '',
+  rune_number: '',
+  rune_name: '',
+  spaced_rune_name: '',
+  symbol: '',
+  decimals: 0,
+  per_mint_amount: '0',
+  mint_cnt: '0',
+  mint_cnt_limit: '0',
+  premined_supply: '0',
+  total_minted_supply: '0',
+  burned_supply: '0',
+  circulating_supply: '0',
+  mint_progress: 0,
+  mint_start_block: null,
+  mint_end_block: null,
+  genesis_block: 0,
+  deploy_ts: '',
+  deploy_txid: '',
+  auto_upgrade: false,
+  holder_count: 0,
+  event_count: 0,
+  mintable: false,
+  icon_inscr_id: null,
+  icon_delegate_id: null,
+  icon_content_url: null,
+  icon_render_url: null,
+  avg_unit_price_in_sats: null,
+  min_listed_unit_price_in_sats: null,
+  min_listed_unit_price_unisat: null,
+  listed_supply: '0',
+  listed_supply_ratio: 0,
+  marketcap: null,
+  total_sale_info: {
+    sale_count: 0,
+    sale_amount: '0',
+    vol_3h: 0,
+    vol_6h: 0,
+    vol_9h: 0,
+    vol_12h: 0,
+    vol_1d: 0,
+    vol_3d: 0,
+    vol_7d: 0,
+    vol_30d: 0,
+    vol_total: 0,
+  },
+};
+
 export function BestInSlotApi(basePath: string) {
+  async function withFallback<T>(request: () => Promise<T>, fallbackValue: T): Promise<T> {
+    try {
+      return await request();
+    } catch {
+      return fallbackValue;
+    }
+  }
+
   /**
    * @see https://docs.bestinslot.xyz/reference/api-reference/ordinals-and-brc-20-and-runes-and-bitmap-v3-api-mainnet+testnet+signet/wallets#get-wallet-inscriptions
    */
@@ -178,12 +265,17 @@ export function BestInSlotApi(basePath: string) {
       count: count.toString(),
     });
 
-    const resp = await axios.get<BestInSlotInscriptionByAddressResponse>(
-      `${basePath}/wallet/inscriptions?${queryParams}`,
-      { signal }
-    );
+    return withFallback(
+      async () => {
+        const resp = await axios.get<BestInSlotInscriptionByAddressResponse>(
+          `${basePath}/wallet/inscriptions?${queryParams}`,
+          { signal }
+        );
 
-    return inscriptionsByAddressSchema.parse(resp.data);
+        return inscriptionsByAddressSchema.parse(resp.data);
+      },
+      { block_height: 0, data: [] }
+    );
   }
 
   async function getInscriptionsByAddresses({
@@ -205,20 +297,30 @@ export function BestInSlotApi(basePath: string) {
       count,
     };
 
-    const resp = await axios.post<BestInSlotInscriptionByAddressResponse>(
-      `${basePath}/wallet/inscriptions_batch`,
-      data,
-      { signal }
+    return withFallback(
+      async () => {
+        const resp = await axios.post<BestInSlotInscriptionByAddressResponse>(
+          `${basePath}/wallet/inscriptions_batch`,
+          data,
+          { signal }
+        );
+        return inscriptionsByAddressSchema.parse(resp.data);
+      },
+      { block_height: 0, data: [] }
     );
-    return inscriptionsByAddressSchema.parse(resp.data);
   }
 
   async function getInscriptionsByTransactionId(id: string) {
-    const resp = await axios.get<BestInSlotInscriptionsByTxIdResponse>(
-      `${basePath}/inscription/in_transaction?tx_id=${id}`
-    );
+    return withFallback(
+      async () => {
+        const resp = await axios.get<BestInSlotInscriptionsByTxIdResponse>(
+          `${basePath}/inscription/in_transaction?tx_id=${id}`
+        );
 
-    return resp.data;
+        return resp.data;
+      },
+      { data: [], blockHeight: 0 }
+    );
   }
 
   /**
@@ -227,56 +329,82 @@ export function BestInSlotApi(basePath: string) {
    *
    */
   async function getBatchInscriptionInfo(queries: string[]) {
-    const resp = await axios.post<BestInSlotInscriptionsBatchInfoResponse>(
-      `${basePath}/inscription/batch_info`,
-      { queries }
+    return withFallback(
+      async () => {
+        const resp = await axios.post<BestInSlotInscriptionsBatchInfoResponse>(
+          `${basePath}/inscription/batch_info`,
+          { queries }
+        );
+        return resp.data;
+      },
+      { data: [] }
     );
-    return resp.data;
   }
 
   async function getInscriptionById(id: string) {
-    const resp = await axios.get<BestInSlotInscriptionByIdResponse>(
-      `${basePath}/inscription/single_info_id?inscription_id=${id}`
+    return withFallback(
+      async () => {
+        const resp = await axios.get<BestInSlotInscriptionByIdResponse>(
+          `${basePath}/inscription/single_info_id?inscription_id=${id}`
+        );
+        return resp.data;
+      },
+      { data: emptyBestInSlotInscription, block_height: 0 }
     );
-    return resp.data;
   }
 
   /* BRC-20 */
   async function getBrc20Balances(address: string) {
-    const resp = await axios.get<Brc20WalletBalancesResponse>(
-      `${basePath}/brc20/wallet_balances?address=${address}`
+    return withFallback(
+      async () => {
+        const resp = await axios.get<Brc20WalletBalancesResponse>(
+          `${basePath}/brc20/wallet_balances?address=${address}`
+        );
+        return resp.data;
+      },
+      { block_height: 0, data: [] }
     );
-    return resp.data;
   }
 
   async function getBrc20TickerInfo(ticker: string) {
-    const resp = await axios.get<Brc20TickerInfoResponse>(
-      `${basePath}/brc20/ticker_info?ticker=${ticker}`
+    return withFallback(
+      async () => {
+        const resp = await axios.get<Brc20TickerInfoResponse>(
+          `${basePath}/brc20/ticker_info?ticker=${ticker}`
+        );
+        return resp.data;
+      },
+      { block_height: 0, data: emptyBrc20TickerInfo }
     );
-    return resp.data;
   }
 
   /* RUNES */
   async function getRunesWalletBalances(address: string) {
-    const resp = await axios.get<RunesWalletBalancesResponse>(
-      `${basePath}/runes/wallet_balances?address=${address}`
-    );
-    return resp.data.data;
+    return withFallback(async () => {
+      const resp = await axios.get<RunesWalletBalancesResponse>(
+        `${basePath}/runes/wallet_balances?address=${address}`
+      );
+      return resp.data.data;
+    }, []);
   }
 
   async function getRunesTickerInfo(runeName: string) {
-    const resp = await axios.get<RunesTickerInfoResponse>(
-      `${basePath}/runes/ticker_info?rune_name=${runeName}`
-    );
-    return runeTickerInfoSchema.parse(resp.data.data);
+    return withFallback(async () => {
+      const resp = await axios.get<RunesTickerInfoResponse>(
+        `${basePath}/runes/ticker_info?rune_name=${runeName}`
+      );
+      return runeTickerInfoSchema.parse(resp.data.data);
+    }, emptyRuneTickerInfo);
   }
 
   async function getRunesBatchOutputsInfo(outputs: string[]) {
-    const resp = await axios.post<RunesOutputsByAddressResponse>(
-      `${basePath}/runes/batch_output_info`,
-      { queries: outputs }
-    );
-    return resp.data.data;
+    return withFallback(async () => {
+      const resp = await axios.post<RunesOutputsByAddressResponse>(
+        `${basePath}/runes/batch_output_info`,
+        { queries: outputs }
+      );
+      return resp.data.data;
+    }, []);
   }
 
   /**
@@ -298,11 +426,13 @@ export function BestInSlotApi(basePath: string) {
       count: count.toString(),
     });
 
-    const resp = await axios.get<RunesOutputsByAddressResponse>(
-      `${basePath}/runes/wallet_valid_outputs?${queryParams}`,
-      { signal }
-    );
-    return resp.data.data;
+    return withFallback(async () => {
+      const resp = await axios.get<RunesOutputsByAddressResponse>(
+        `${basePath}/runes/wallet_valid_outputs?${queryParams}`,
+        { signal }
+      );
+      return resp.data.data;
+    }, []);
   }
 
   // https://leatherapi.bestinslot.xyz/v3/wallet/inscriptions_xpub?sort_by=inscr_num&order=desc&offset=0&count=100&exclude_brc20=true&xpub=tr(xpub6CXPXMfXcvsrKobgiqZJm1XdW4HBEB7dM1FfpZmbWjmU5yMp6npza7MD6Jd3xUJZCX9wy6cTiT1xTh7aE3aXDSzVRHFQVwG8SoKnwkW7QD2)
@@ -317,11 +447,16 @@ export function BestInSlotApi(basePath: string) {
     params.append('offset', '0');
     params.append('count', '2000');
 
-    const resp = await axios.get<BestInSlotInscriptionByXpubResponse>(
-      `${basePath}/wallet/inscriptions_xpub`,
-      { params }
+    return withFallback(
+      async () => {
+        const resp = await axios.get<BestInSlotInscriptionByXpubResponse>(
+          `${basePath}/wallet/inscriptions_xpub`,
+          { params }
+        );
+        return resp.data;
+      },
+      { data: [], block_height: 0 }
     );
-    return resp.data;
   }
 
   return {
