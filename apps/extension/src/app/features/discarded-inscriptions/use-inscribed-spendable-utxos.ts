@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
 
+import { useFlags } from '@app/features/feature-flags';
 import { useCurrentNativeSegwitInscriptions } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
 import { useCurrentNativeSegwitInscribedUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCurrentAccountDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
 export function useInscribedSpendableUtxos() {
+  const { isOrdinalsActive } = useFlags();
   const { hasInscriptionBeenDiscarded } = useCurrentAccountDiscardedInscriptions();
 
   const nativeSegwitInscriptions = useCurrentNativeSegwitInscriptions();
@@ -13,6 +15,7 @@ export function useInscribedSpendableUtxos() {
   const { utxos } = useCurrentNativeSegwitInscribedUtxos();
 
   return useMemo(() => {
+    if (!isOrdinalsActive) return [];
     if (!utxos || !nativeSegwitInscriptions.value) return [];
 
     // Preformatting utxos so that inscriptions are declared as an object
@@ -35,5 +38,5 @@ export function useInscribedSpendableUtxos() {
       );
 
     return utxosThatCanBeSpentBecauseAllUtxosInsideWereDiscarded;
-  }, [utxos, nativeSegwitInscriptions, hasInscriptionBeenDiscarded]);
+  }, [isOrdinalsActive, utxos, nativeSegwitInscriptions, hasInscriptionBeenDiscarded]);
 }

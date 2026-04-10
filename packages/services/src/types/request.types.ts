@@ -15,6 +15,8 @@ export interface AccountRequestUtxoProtectionOptions {
   discardedInscriptions?: string[];
   /** Removes UTXO protection from all Runes */
   discardRunes?: boolean;
+  isOrdinalsActive?: boolean;
+  isRunesActive?: boolean;
 }
 
 export interface AccountRequestAddressExclusionOptions {

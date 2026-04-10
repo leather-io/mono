@@ -100,6 +100,7 @@ export interface Events extends HistoricalEvents {
   app_icon_change_failed: { icon: string; previousIcon: string; error?: string };
   network_added: undefined;
   network_edited: undefined;
+  taproot_utxo_warning_dialog_displayed: undefined;
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.

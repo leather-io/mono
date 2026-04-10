@@ -19,6 +19,7 @@ import { Brc20TokenList } from '@app/features/asset-list/bitcoin/brc20-token-lis
 import { RunesAssetList } from '@app/features/asset-list/bitcoin/runes-asset-list/runes-asset-list';
 import { Src20TokenList } from '@app/features/asset-list/bitcoin/src20-token-list/src20-token-list';
 import { StxCryptoAssetItem } from '@app/features/asset-list/stacks/stx-crypo-asset-item/stx-crypto-asset-item';
+import { useFlags } from '@app/features/feature-flags';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
@@ -60,6 +61,7 @@ export function TokenList({
   const currentBtcTaprootAccount = useCurrentAccountTaprootPayer();
   const isLedger = useHasLedgerKeys();
   const isPrivate = useIsPrivateMode();
+  const { isRunesActive } = useFlags();
 
   const isReadOnly = variant === 'read-only';
 
@@ -140,7 +142,7 @@ export function TokenList({
         />
       )}
 
-      {currentBtcTaprootAccount && currentBtcNativeSegwitAccount && isReadOnly && (
+      {isRunesActive && currentBtcTaprootAccount && currentBtcNativeSegwitAccount && isReadOnly && (
         <>
           <Brc20TokensLoader filter={filter}>
             {({ tokens, preEnabledTokensIds }) => (

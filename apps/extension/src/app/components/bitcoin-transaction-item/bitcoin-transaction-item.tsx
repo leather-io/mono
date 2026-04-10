@@ -18,6 +18,7 @@ import {
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { IncreaseFeeButton } from '@app/components/stacks-transaction-item/increase-fee-button';
 import { TransactionTitle } from '@app/components/transaction/transaction-title';
+import { useFlags } from '@app/features/feature-flags';
 import { useInscriptionByOutput } from '@app/query/bitcoin/ordinals/inscriptions-by-param.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
@@ -35,8 +36,10 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const isPrivate = useIsPrivateMode();
+  const { isOrdinalsActive } = useFlags();
 
-  const { data: inscriptionData } = useInscriptionByOutput(transaction);
+  const inscriptionQuery = useInscriptionByOutput(transaction);
+  const inscriptionData = isOrdinalsActive ? inscriptionQuery.data : undefined;
 
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayer();
   const taprootSigner = useCurrentAccountTaprootIndexZeroPayer();

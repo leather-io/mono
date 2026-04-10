@@ -15,10 +15,9 @@ import {
 import { isString } from '@leather.io/utils';
 
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
+import { useFlags } from '@app/features/feature-flags';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useAlexSwappableAssets } from '@app/query/common/alex-sdk/alex-sdk.hooks';
-import { useConfigRunesEnabled } from '@app/query/common/remote-config/remote-config.query';
-import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { receiveTabStyle } from '../receive-dialog';
 import { ReceiveItem } from './receive-item';
@@ -38,8 +37,7 @@ export function ReceiveTokens({
   onClickQrStx,
 }: ReceiveTokensProps) {
   const toast = useToast();
-  const network = useCurrentNetwork();
-  const runesEnabled = useConfigRunesEnabled();
+  const { isRunesActive } = useFlags();
   const { data: swapAssets = [] } = useAlexSwappableAssets(stxAddress);
 
   const receivableAssets = useMemo(
@@ -77,28 +75,30 @@ export function ReceiveTokens({
         onClickQrCode={onClickQrStx}
         title="Stacks (STX)"
       />
-      <ReceiveItem
-        address={btcAddressTaproot}
-        icon={<Brc20AvatarIcon />}
-        dataTestId={HomePageSelectors.ReceiveBtcTaprootQrCodeBtn}
-        onCopyAddress={async () => {
-          await copyToClipboard(btcAddressTaproot);
-          toast.success('Copied to clipboard!');
-        }}
-        // onClickQrCode={onClickQrOrdinal}
-        title="BRC-20"
-      />
-      <ReceiveItem
-        address={btcAddressNativeSegwit}
-        icon={<Src20AvatarIcon />}
-        // onClickQrCode={onClickQrStamp}
-        onCopyAddress={async () => {
-          await copyToClipboard(btcAddressNativeSegwit);
-          toast.success('Copied to clipboard!');
-        }}
-        title="SRC-20"
-      />
-      {(network.chain.bitcoin.mode === 'testnet' || runesEnabled) && (
+      {isRunesActive && (
+        <ReceiveItem
+          address={btcAddressTaproot}
+          icon={<Brc20AvatarIcon />}
+          dataTestId={HomePageSelectors.ReceiveBtcTaprootQrCodeBtn}
+          onCopyAddress={async () => {
+            await copyToClipboard(btcAddressTaproot);
+            toast.success('Copied to clipboard!');
+          }}
+          title="BRC-20"
+        />
+      )}
+      {isRunesActive && (
+        <ReceiveItem
+          address={btcAddressNativeSegwit}
+          icon={<Src20AvatarIcon />}
+          onCopyAddress={async () => {
+            await copyToClipboard(btcAddressNativeSegwit);
+            toast.success('Copied to clipboard!');
+          }}
+          title="SRC-20"
+        />
+      )}
+      {isRunesActive && (
         <ReceiveItem
           address={btcAddressTaproot}
           icon={<RunesAvatarIcon />}

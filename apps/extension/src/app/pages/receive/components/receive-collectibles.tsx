@@ -5,6 +5,7 @@ import { Stack } from 'leather-styles/jsx';
 import { OrdinalAvatarIcon, StxAvatarIcon } from '@leather.io/ui';
 
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
+import { useFlags } from '@app/features/feature-flags';
 import { useToast } from '@app/features/toasts/use-toast';
 import { StampsAvatarIcon } from '@app/ui/components/avatar/stamps-avatar-icon';
 
@@ -28,29 +29,34 @@ export function ReceiveCollectibles({
   onClickQrStamp,
 }: ReceiveCollectiblesProps) {
   const toast = useToast();
+  const { isOrdinalsActive, isRunesActive } = useFlags();
   return (
     <Stack className={css(receiveTabStyle)}>
-      <ReceiveItem
-        address={btcAddressTaproot}
-        icon={<OrdinalAvatarIcon />}
-        dataTestId={HomePageSelectors.ReceiveBtcTaprootQrCodeBtn}
-        onCopyAddress={async () => {
-          await copyToClipboard(btcAddressTaproot);
-          toast.success('Copied to clipboard!');
-        }}
-        onClickQrCode={onClickQrOrdinal}
-        title="Ordinal inscription"
-      />
-      <ReceiveItem
-        address={btcAddressNativeSegwit}
-        icon={<StampsAvatarIcon />}
-        onClickQrCode={onClickQrStamp}
-        onCopyAddress={async () => {
-          await copyToClipboard(btcAddressNativeSegwit);
-          toast.success('Copied to clipboard!');
-        }}
-        title="Bitcoin Stamp"
-      />
+      {isOrdinalsActive && (
+        <ReceiveItem
+          address={btcAddressTaproot}
+          icon={<OrdinalAvatarIcon />}
+          dataTestId={HomePageSelectors.ReceiveBtcTaprootQrCodeBtn}
+          onCopyAddress={async () => {
+            await copyToClipboard(btcAddressTaproot);
+            toast.success('Copied to clipboard!');
+          }}
+          onClickQrCode={onClickQrOrdinal}
+          title="Ordinal inscription"
+        />
+      )}
+      {isRunesActive && (
+        <ReceiveItem
+          address={btcAddressNativeSegwit}
+          icon={<StampsAvatarIcon />}
+          onClickQrCode={onClickQrStamp}
+          onCopyAddress={async () => {
+            await copyToClipboard(btcAddressNativeSegwit);
+            toast.success('Copied to clipboard!');
+          }}
+          title="Bitcoin Stamp"
+        />
+      )}
       <ReceiveItem
         address={stxAddress}
         icon={<StxAvatarIcon />}

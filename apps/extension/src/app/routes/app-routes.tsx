@@ -81,14 +81,16 @@ export const homePageModalRoutes = (
 );
 
 function useAppRoutes() {
-  const { releaseOnramperBuy, releaseOnramperSell, swapRevamp } = useFlags();
+  const { releaseOnramperBuy, releaseOnramperSell, swapRevamp, isOrdinalsActive } = useFlags();
 
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
       <Route element={<Container />}>
         <Route key="error" errorElement={<RouterErrorBoundary />}>
           <Route element={<ReceiveModalWrapper />}>{receiveRoutes}</Route>
-          <Route element={<SendOrdinalModalWrapper />}>{sendOrdinalRoutes}</Route>
+          {isOrdinalsActive && (
+            <Route element={<SendOrdinalModalWrapper />}>{sendOrdinalRoutes}</Route>
+          )}
           <Route
             element={
               <>

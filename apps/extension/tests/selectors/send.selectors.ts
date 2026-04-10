@@ -35,4 +35,5 @@ export enum SendCryptoAssetSelectors {
   Inscription = 'inscription',
   InscriptionSendButton = 'inscription-send-button',
   InscriptionWarningDialog = 'inscription-warning-dialog',
+  TaprootUtxoWarningDialog = 'taproot-utxo-warning-dialog',
 }
