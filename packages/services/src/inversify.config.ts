@@ -23,13 +23,16 @@ import { BestInSlotApiClient } from './infrastructure/api/best-in-slot/best-in-s
 import { BnsV2ApiClient } from './infrastructure/api/bns-v2/bns-v2-api.client';
 import { HiroStacksApiClient } from './infrastructure/api/hiro/hiro-stacks-api.client';
 import { LeatherApiClient } from './infrastructure/api/leather/leather-api.client';
+import { LeatherAuthApiClient } from './infrastructure/api/leather/leather-auth-api.client';
 import { HttpCacheService } from './infrastructure/cache/http-cache.service';
 import { Environment } from './infrastructure/environment';
 import { SettingsService } from './infrastructure/settings/settings.service';
+import type { TokenAuthService } from './infrastructure/token-auth.service';
 import { Types } from './inversify.types';
 import { MarketDataService } from './market/market-data.service';
 import { MarketHistoryService } from './market/market-history.service';
 import { MarketStatsService } from './market/market-stats.service';
+import { MultisigService } from './multisig/multisig.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { StacksProtocolService } from './protocols/stacks-protocol.service';
 import { SwapService } from './swap/swap.service';
@@ -51,6 +54,7 @@ export interface InitServicesContainerOptions {
   env: Environment;
   settingsService: Newable<SettingsService>;
   cacheService: Newable<HttpCacheService>;
+  tokenAuthService?: Newable<TokenAuthService>;
 }
 
 export function initServicesContainer(options: InitServicesContainerOptions): Container {
@@ -65,6 +69,12 @@ export function initServicesContainer(options: InitServicesContainerOptions): Co
       .bind<HttpCacheService>(Types.CacheService)
       .to(options.cacheService)
       .inSingletonScope();
+    if (options.tokenAuthService) {
+      servicesContainer
+        .bind(Types.TokenAuthService)
+        .to(options.tokenAuthService)
+        .inSingletonScope();
+    }
   }
   return servicesContainer;
 }
@@ -187,12 +197,18 @@ export function getStampsService() {
 export function getStacksProtocolService() {
   return getServicesContainer().get(StacksProtocolService);
 }
+export function getMultisigService() {
+  return getServicesContainer().get(MultisigService);
+}
 
-/* 
+/*
   API Layer Clients
 */
 export function getLeatherApiClient() {
   return getServicesContainer().get(LeatherApiClient);
+}
+export function getLeatherAuthApiClient() {
+  return getServicesContainer().get(LeatherAuthApiClient);
 }
 export function getHiroStacksApiClient() {
   return getServicesContainer().get(HiroStacksApiClient);
