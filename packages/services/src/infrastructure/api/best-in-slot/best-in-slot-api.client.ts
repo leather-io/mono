@@ -26,6 +26,16 @@ type BisBrc20MarketInfo = z.infer<typeof bisBrc20MarketInfoSchema>;
 export type BisInscription = z.infer<typeof bisInscriptionSchema>;
 export type BisRuneValidOutput = z.infer<typeof bisRuneValidOutputsSchema>;
 
+const emptyBisBrc20MarketInfo: BisBrc20MarketInfo = {
+  marketcap: 0,
+  min_listed_unit_price: 0,
+  min_listed_unit_price_ordinalswallet: 0,
+  min_listed_unit_price_unisat: 0,
+  min_listed_unit_price_okx: 0,
+  listed_supply: 0,
+  listed_supply_ratio: 0,
+};
+
 @injectable()
 export class BestInSlotApiClient {
   constructor(
@@ -33,6 +43,14 @@ export class BestInSlotApiClient {
     @inject(Types.CacheService) private readonly cache: HttpCacheService,
     private readonly limiter: RateLimiterService
   ) {}
+
+  private async withFallback<T>(request: () => Promise<T>, fallbackValue: T): Promise<T> {
+    try {
+      return await request();
+    } catch {
+      return fallbackValue;
+    }
+  }
 
   public async fetchBrc20MarketInfo(
     ticker: string,
@@ -55,9 +73,12 @@ export class BestInSlotApiClient {
       return bisBrc20MarketInfoSchema.parse(res.data.data);
     };
 
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(['bis-brc20-market-info', network, ticker], fetchFn);
+    const request = async () =>
+      skipCache
+        ? await fetchFn()
+        : await this.cache.fetchWithCache(['bis-brc20-market-info', network, ticker], fetchFn);
+
+    return this.withFallback(request, emptyBisBrc20MarketInfo);
   }
 
   public async fetchInscriptions(
@@ -93,9 +114,12 @@ export class BestInSlotApiClient {
       return [];
     }
 
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(['bis-inscriptions', network, descriptor], fetchFn);
+    const request = async () =>
+      skipCache
+        ? await fetchFn()
+        : await this.cache.fetchWithCache(['bis-inscriptions', network, descriptor], fetchFn);
+
+    return this.withFallback(request, []);
   }
 
   public async fetchRunesValidOutputs(
@@ -130,8 +154,14 @@ export class BestInSlotApiClient {
       return [];
     }
 
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(['bis-runes-valid-outputs', network, descriptor], fetchFn);
+    const request = async () =>
+      skipCache
+        ? await fetchFn()
+        : await this.cache.fetchWithCache(
+            ['bis-runes-valid-outputs', network, descriptor],
+            fetchFn
+          );
+
+    return this.withFallback(request, []);
   }
 }
