@@ -22,6 +22,7 @@
     "lint:fix": "pnpm lint --fix",
     "test:activity": "node ./scripts/activity-test.mjs",
     "test:asset-list": "node ./scripts/asset-list-test.mjs",
+    "test:auth": "node ./scripts/auth-test.mjs",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
