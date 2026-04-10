@@ -1,3 +1,4 @@
+import { BitcoinError } from '@leather.io/bitcoin';
 import type { OwnedUtxo } from '@leather.io/models';
 import type { AccountRequest } from '@leather.io/services';
 import { createMoney } from '@leather.io/utils';
@@ -30,7 +31,11 @@ export function BitcoinFeesLoader({
   recipients,
   utxos,
 }: BitcoinFeesLoaderProps) {
-  const { data: feeRates, isLoading } = useBitcoinTransactionFees({
+  const {
+    data: feeRates,
+    isLoading,
+    error,
+  } = useBitcoinTransactionFees({
     account,
     recipients,
     isMaxSpend: isSendingMax,
@@ -53,6 +58,9 @@ export function BitcoinFeesLoader({
       txFee: fee ?? createMoney(0, 'BTC'),
       time: '',
     };
+  }
+  if (error instanceof BitcoinError && error.message === 'InsufficientFunds') {
+    throw error;
   }
 
   if (!fees) return null;
