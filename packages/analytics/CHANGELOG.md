@@ -114,6 +114,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.20.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.19.3...@leather.io/analytics-v3.20.0) (2026-04-13)
+
+
+### Features
+
+* **extension:** deprecation of ordinals and runes ([d6e1fea](https://github.com/leather-io/mono/commit/d6e1feaccb47de540983c9263cb198f279ed7679))
+
 ## [3.19.3](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.19.2...@leather.io/analytics-v3.19.3) (2026-03-31)
 
 

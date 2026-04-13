@@ -779,6 +779,18 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.47.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.46.3...@leather.io/query-v2.47.0) (2026-04-13)
+
+
+### Features
+
+* add fallback responses to all bis client calls ([c81750e](https://github.com/leather-io/mono/commit/c81750ee967704794efdae276f9bd3e31af50941))
+
+
+### Bug Fixes
+
+* dep audit ([f0f69d3](https://github.com/leather-io/mono/commit/f0f69d3b726fc8637ba9b7b69b7bcbf3bb78d244))
+
 ## [2.46.3](https://github.com/leather-io/mono/compare/@leather.io/query-v2.46.2...@leather.io/query-v2.46.3) (2026-03-27)
 
 
