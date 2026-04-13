@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useLoaderData } from 'react-router';
 
 import { Box } from 'leather-styles/jsx/box';
@@ -8,6 +9,7 @@ import { Breadcrumb } from '~/components/breadcrumb';
 import Markdown from '~/components/content/markdown-content';
 import { Page } from '~/layouts/page/page';
 import { RelatedGuides } from '~/pages/support/components/related-guides';
+import { ReadingProgress } from '~/pages/support/guide/components/reading-progress';
 import { loader } from '~/pages/support/guide/guide.route';
 
 function formatDate(dateString: string | undefined) {
@@ -24,12 +26,22 @@ function formatDate(dateString: string | undefined) {
 
 export function Guide() {
   const { guide } = useLoaderData<typeof loader>();
+  const contentRef = useRef<HTMLDivElement>(null);
 
   return (
     <Page>
-      <Page.Header title="Help Center" />
+      <Box position="sticky" top={0} zIndex={1} bg="ink.background-primary">
+        <Page.Header title="Help Center" />
+        <ReadingProgress targetRef={contentRef} />
+      </Box>
 
-      <Flex flexDirection={{ base: 'column', lg: 'row' }} gap="space.10" my="space.07">
+      <Flex
+        ref={contentRef}
+        flexDirection={{ base: 'column', lg: 'row' }}
+        gap="space.10"
+        mt="space.07"
+        mb="space.09"
+      >
         <Box minWidth="200px" flex="1" maxWidth={{ lg: '380px' }}>
           <Breadcrumb
             segments={[
@@ -47,7 +59,15 @@ export function Guide() {
             {formatDate(guide.publishedAt)}
           </styled.p>
         </Box>
-        <Box flex="2">
+        <Box
+          flex="2"
+          mt={{ base: 0, lg: 'space.08' }}
+          css={{
+            '& > *:first-child': {
+              lg: { marginTop: 0 },
+            },
+          }}
+        >
           <Markdown>{guide.body}</Markdown>
           {guide.relatedGuides && guide.relatedGuides.length > 0 && (
             <RelatedGuides guides={guide.relatedGuides} />
