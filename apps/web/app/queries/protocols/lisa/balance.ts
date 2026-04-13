@@ -17,14 +17,6 @@ const STATUS_MAP: Record<string, string> = {
 
 const LISA_NFT_IDENTIFIER = 'li-stx-mint-nft::li-stx-mint';
 
-export interface LisaMintRequest {
-  id: number;
-  amount: BigNumber;
-  requestedAt: number;
-  requestedBy: string;
-  status: string;
-}
-
 export function createGetLisaBalanceQueryOptions({
   address,
   networkMode,

@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/features",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -33,7 +33,6 @@
     "@leather.io/tsconfig-config": "workspace:*",
     "prettier": "3.5.1",
     "tsdown": "0.16.5",
-    "tsup": "8.4.0",
     "typescript": "5.9.3",
     "vitest": "2.1.9"
   },

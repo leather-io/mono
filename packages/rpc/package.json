@@ -28,8 +28,6 @@
     "@leather.io/models": "workspace:*",
     "@leather.io/stacks": "workspace:*",
     "@leather.io/utils": "workspace:*",
-    "@scure/btc-signer": "1.6.0",
-    "@stacks/network": "7.0.2",
     "@stacks/transactions": "7.0.5",
     "zod": "4.0.17"
   },

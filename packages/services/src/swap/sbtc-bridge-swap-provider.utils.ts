@@ -7,14 +7,14 @@ import { createMoney } from '@leather.io/utils';
 
 import type { EmilySbtcLimitsResponse } from '../infrastructure/api/emily/emily-api.types';
 
-export type SbtcBridgeTxType = 'deposit' | 'withdrawal';
+type SbtcBridgeTxType = 'deposit' | 'withdrawal';
 
 export const sbtcStacksAddressMap = {
   mainnet: 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4',
   testnet: 'SNGWPN3XDAQE673MXYXF81016M50NHF5X5PWWM70',
 };
 
-export interface getSbtcBridgeExecutionConstraintsArgs {
+interface getSbtcBridgeExecutionConstraintsArgs {
   bridgeTxType: SbtcBridgeTxType;
   bridgeAmount: BigNumber;
   sbtcLimits: EmilySbtcLimitsResponse;
@@ -56,7 +56,7 @@ export function getSbtcBridgeExecutionConstraints({
   return [];
 }
 
-export interface getSbtcWithdrawalContractCallDataArgs {
+interface getSbtcWithdrawalContractCallDataArgs {
   stxAddress: string;
   withdrawalBtcAddress: string;
   quoteAmount: Money;

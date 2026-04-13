@@ -6,6 +6,35 @@ No unreleased changes.
 
 ---
 
+## [6.100.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.99.2...@leather.io/extension-v6.100.0) (2026-04-13)
+
+
+### Features
+
+* add banners ([245d75f](https://github.com/leather-io/mono/commit/245d75f017839f7610dbe1fdcf40b7527f690c32))
+* **extension:** deprecation of ordinals and runes ([d6e1fea](https://github.com/leather-io/mono/commit/d6e1feaccb47de540983c9263cb198f279ed7679))
+
+
+### Bug Fixes
+
+* dep audit ([f0f69d3](https://github.com/leather-io/mono/commit/f0f69d3b726fc8637ba9b7b69b7bcbf3bb78d244))
+* developer notice on legacy requests ([6414b17](https://github.com/leather-io/mono/commit/6414b1749b6a62789bb62314fb772defbcee7705))
+* **extension:** insufficient funds ([5508cf9](https://github.com/leather-io/mono/commit/5508cf99a7347b5d9e982d86001da29ff6f488c1))
+* **extension:** ledger contract call should display contract's address ([481900a](https://github.com/leather-io/mono/commit/481900a1fe3fa474bd380f2e44da6fc73c4a21d7))
+* ledger btc keychain filtration ([61b40b9](https://github.com/leather-io/mono/commit/61b40b95fd6e7e7b9a1118185f48a9b6f363c054))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.20.0
+    * @leather.io/features bumped to 1.4.1
+    * @leather.io/queries bumped to 0.9.1
+    * @leather.io/query bumped to 2.47.0
+    * @leather.io/services bumped to 1.53.0
+    * @leather.io/ui bumped to 1.111.2
+
 ## [6.99.2](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.99.1...@leather.io/extension-v6.99.2) (2026-04-01)
 
 

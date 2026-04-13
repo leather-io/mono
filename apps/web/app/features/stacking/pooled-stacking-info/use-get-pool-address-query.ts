@@ -58,7 +58,7 @@ interface GetPoolAddressQueryOptionsArgs {
   ready: boolean;
 }
 
-export function createGetPoolAddressQueryOptions({
+function createGetPoolAddressQueryOptions({
   txId,
   poolAddress,
   stacksClient,

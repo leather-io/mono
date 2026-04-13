@@ -16,11 +16,31 @@
 
 ### Bug Fixes
 
+* dep audit ([f0f69d3](https://github.com/leather-io/mono/commit/f0f69d3b726fc8637ba9b7b69b7bcbf3bb78d244))
 * **mobile:** display of taproot sends ([741d133](https://github.com/leather-io/mono/commit/741d1330ccced495da361c93dac0c93c34b5abc9))
 * playwright tests ([eaf96c9](https://github.com/leather-io/mono/commit/eaf96c9400431c7fbd539b8e5cd7abc86c327f5b))
 * wallet deletion ([58d7e29](https://github.com/leather-io/mono/commit/58d7e2998587aa5a499e9e4410599d03856a89a8))
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
+
+## [2.104.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.104.3...@leather.io/mobile-v2.104.4) (2026-04-13)
+
+
+### Bug Fixes
+
+* dep audit ([f0f69d3](https://github.com/leather-io/mono/commit/f0f69d3b726fc8637ba9b7b69b7bcbf3bb78d244))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.20.0
+    * @leather.io/features bumped to 1.4.1
+    * @leather.io/queries bumped to 0.9.1
+    * @leather.io/query bumped to 2.47.0
+    * @leather.io/services bumped to 1.53.0
+    * @leather.io/ui bumped to 1.111.2
 
 ## [2.104.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.104.2...@leather.io/mobile-v2.104.3) (2026-03-31)
 

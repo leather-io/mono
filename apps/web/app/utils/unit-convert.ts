@@ -34,14 +34,6 @@ export function toHumanReadableStx(
   return amount.toFormat(decimalPlaces) + ' STX';
 }
 
-export function toHumanReadableShortMicroStx(
-  microStx: string | number | bigint | BigNumber
-): string {
-  const stx = parseNumber(microStx).dividedBy(1e6);
-
-  return toHumanReadableShortStx(stx);
-}
-
 export function toHumanReadableShortStx(userStx: string | number | bigint | BigNumber): string {
   const stx = parseNumber(userStx);
   if (stx.lt(1e6)) {
@@ -56,11 +48,6 @@ export function toHumanReadableShortStx(userStx: string | number | bigint | BigN
 // Max U128 is too large for BigNumber
 export function stxToMicroStxBigint(stx: bigint | string | number): string {
   return parseNumber(stx).shiftedBy(6).decimalPlaces(0).toString(10);
-}
-
-// Max U128 is too large for BigNumber
-export function microStxToStxBigint(microStx: bigint | string | number): string {
-  return parseNumber(microStx).shiftedBy(-6).decimalPlaces(6).toString(10);
 }
 
 export function daysToWeek(daysNumber: bigint | string | number | BigNumber) {

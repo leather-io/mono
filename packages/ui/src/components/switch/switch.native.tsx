@@ -3,7 +3,7 @@ import { Switch as RNSwitch, SwitchProps as RNSwitchProps } from 'react-native';
 import { useTheme } from '@shopify/restyle';
 import { Theme } from 'native';
 
-export interface SwitchProps extends RNSwitchProps {
+interface SwitchProps extends RNSwitchProps {
   value: boolean;
 }
 export function Switch({ value, onValueChange, ...props }: SwitchProps) {

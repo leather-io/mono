@@ -52,6 +52,6 @@ export interface MempoolDescriptorFields {
 export type MempoolDescriptorUtxo = MempoolUtxo & MempoolDescriptorFields;
 export type MempoolDescriptorTransaction = MempoolTransaction & MempoolDescriptorFields;
 
-export function nullishToUndefined<T extends z.ZodTypeAny>(schema: T) {
+function nullishToUndefined<T extends z.ZodTypeAny>(schema: T) {
   return schema.nullish().transform(val => (val === null ? undefined : val));
 }

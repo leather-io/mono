@@ -2,7 +2,7 @@ import { ErrorLayout } from '~/features/error/error-layout';
 
 import type { Route } from '../../../.react-router/types/app/+types/root';
 
-export interface ErrorPageProps {
+interface ErrorPageProps {
   error: Route.ErrorBoundaryProps['error'];
 }
 

@@ -14,7 +14,7 @@ export const pressEffectProperties = [
   'borderColor',
 ] as const;
 
-export interface PressEffectConfig<T> {
+interface PressEffectConfig<T> {
   to: T;
   from: T;
   duration?: CSSTransitionDuration;

@@ -413,6 +413,19 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.53.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.52.0...@leather.io/services-v1.53.0) (2026-04-13)
+
+
+### Features
+
+* add fallback responses to all bis client calls ([c81750e](https://github.com/leather-io/mono/commit/c81750ee967704794efdae276f9bd3e31af50941))
+* **extension:** deprecation of ordinals and runes ([d6e1fea](https://github.com/leather-io/mono/commit/d6e1feaccb47de540983c9263cb198f279ed7679))
+
+
+### Bug Fixes
+
+* dep audit ([f0f69d3](https://github.com/leather-io/mono/commit/f0f69d3b726fc8637ba9b7b69b7bcbf3bb78d244))
+
 ## [1.52.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.51.1...@leather.io/services-v1.52.0) (2026-03-27)
 
 

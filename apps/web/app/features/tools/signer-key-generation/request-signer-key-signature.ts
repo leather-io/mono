@@ -9,7 +9,7 @@ import {
 import { cvToHex } from '@stacks/transactions';
 import { leather } from '~/utils/leather-sdk';
 
-export interface GenerateSignatureOptions {
+interface GenerateSignatureOptions {
   network: 'mainnet' | 'testnet';
   rewardCycle: number;
   poxAddress: string;

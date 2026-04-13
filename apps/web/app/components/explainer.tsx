@@ -45,7 +45,7 @@ interface EarnInstructionStepProps {
   img?: ReactElement;
 }
 
-export function ExplainerStep({ index, title, description, img }: EarnInstructionStepProps) {
+function ExplainerStep({ index, title, description, img }: EarnInstructionStepProps) {
   return (
     <Flex
       flexDir="column"

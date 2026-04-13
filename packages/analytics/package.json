@@ -2,7 +2,7 @@
   "name": "@leather.io/analytics",
   "author": "Leather.io contact@leather.io",
   "description": "Analytics package for Leather using Mixpanel",
-  "version": "3.19.3",
+  "version": "3.20.0",
   "license": "MIT",
   "homepage": "https://github.com/leather.io/mono/tree/dev/packages/analytics",
   "repository": {
@@ -34,7 +34,6 @@
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/test-config": "workspace:*",
     "@types/node": "24.0.8",
-    "concurrently": "8.2.2",
     "prettier": "3.5.1",
     "tsdown": "0.16.5",
     "typescript": "5.9.3",

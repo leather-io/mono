@@ -5,6 +5,7 @@ import { type CollectibleView, createTokenDetailsPath } from '@leather.io/featur
 import type { NonFungibleCryptoAsset } from '@leather.io/models';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
+import { useFlags } from '@app/features/feature-flags';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountId } from '@app/store/accounts/account';
@@ -37,13 +38,28 @@ export function Collectibles() {
   const account = useAccountAddresses(accountId);
   const navigate = useNavigate();
   const location = useLocation();
+  const { isOrdinalsActive, isRunesActive } = useFlags();
   const {
-    data: collectibles = [],
+    data: allCollectibles = [],
     isPending,
     isError,
     isFetching,
     refetch,
   } = useAccountCollectibles(account);
+
+  function ordinalsFilter(collectible: CollectibleView) {
+    return isOrdinalsActive || collectible.asset.protocol !== 'inscription';
+  }
+  function stampFilter(collectible: CollectibleView) {
+    return isRunesActive || collectible.asset.protocol !== 'stamp';
+  }
+
+  const collectibles = allCollectibles.filter(ordinalsFilter).filter(stampFilter);
+
+  const hasInscriptions =
+    isOrdinalsActive && allCollectibles.some(c => c.asset.protocol === 'inscription');
+
+  const hasStamps = isRunesActive && allCollectibles.some(c => c.asset.protocol === 'stamp');
 
   const handleSelectCollectible = useCallback(
     (asset: NonFungibleCryptoAsset) => {
@@ -75,6 +91,8 @@ export function Collectibles() {
       isError={isError}
       amount={collectibles.length}
       hasCollectibles={collectibles.length > 0}
+      hasInscriptions={hasInscriptions}
+      hasStamps={hasStamps}
       onRefresh={() => void refetch()}
     >
       {renderedCollectibles}

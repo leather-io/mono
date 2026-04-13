@@ -52,12 +52,6 @@ export function useStxBalance(address: string) {
   };
 }
 
-export function useStxAvailableLockedBalance(address: string) {
-  const stxBalance = useStxBalance(address);
-
-  return stxBalance.filteredBalanceQuery.data?.lockedBalance ?? createMoney(0, 'STX');
-}
-
 export function useStxAvailableUnlockedBalance(address: string) {
   const stxBalance = useStxBalance(address);
 

@@ -27,9 +27,6 @@ export function deriveBip39SeedFromMnemonicSync(mnemonic: string, passphrase?: s
   return mnemonicToSeedSync(mnemonic, passphrase);
 }
 
-/** @deprecated Inaccurately named fn, use `deriveBip39SeedFromMnemonic` */
-export const deriveBip39MnemonicFromSeed = deriveBip39SeedFromMnemonic;
-
 export function deriveRootBip32Keychain(seed: Uint8Array) {
   return HDKey.fromMasterSeed(seed);
 }

@@ -3,7 +3,6 @@ import {
   QuoteResult,
   RouteQuote,
   type SelectedSwapRoute,
-  SwapDataParamsAndPostConditions,
   SwapExecutionData,
   Token,
 } from '@bitflowlabs/core-sdk';
@@ -13,12 +12,10 @@ import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
 import type { Environment } from '../../environment';
 
-export type BitflowSdkToken = Token;
-export type BitflowSdkQuoteResult = QuoteResult;
+type BitflowSdkToken = Token;
+type BitflowSdkQuoteResult = QuoteResult;
 export type BitflowSdkRouteQuote = RouteQuote;
 export type BitflowSdkSelectedSwapRoute = SelectedSwapRoute;
-export type BitflowSwapExecutionData = SwapExecutionData;
-export type BitflowSwapParams = SwapDataParamsAndPostConditions;
 
 @injectable()
 export class BitflowSdkClient {

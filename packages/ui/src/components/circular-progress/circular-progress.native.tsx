@@ -66,7 +66,7 @@ interface CircularProgressProps {
   duration?: number;
 }
 
-export function CircularProgressImpl({
+function CircularProgressImpl({
   progress,
   initialValue,
   min = defaultMin,

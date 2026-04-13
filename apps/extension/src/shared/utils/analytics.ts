@@ -84,6 +84,7 @@ export function initAnalytics() {
 
 // Used to create a unique identifier for a user's key in base58.
 // K = ripemd160(sha256(publicKey))[:8]
+/** @knipignore */
 export function deriveAnalyticsIdentifier(publicKey: Uint8Array) {
   return base58.encode(ripemd160(sha256(publicKey)).slice(0, 8));
 }

@@ -9,7 +9,7 @@ import {
 
 type NativeInputProps = Pick<TextInputProps, 'value' | 'onChangeText' | 'keyboardType'>;
 
-export interface UseAmountFieldResult {
+interface UseAmountFieldResult {
   ref: RefObject<TextInput | null>;
   textInputProps: NativeInputProps;
   touched: boolean;

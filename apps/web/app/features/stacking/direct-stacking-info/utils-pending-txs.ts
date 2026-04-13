@@ -11,13 +11,8 @@ import { isContractCallTransaction, isMempoolContractCallTransaction } from '~/u
 
 import { StacksClient } from '@leather.io/query';
 
-export type TransactionPredicate = (
-  t: ContractCallTransactionMetadata,
-  poxContractId: string
-) => boolean;
-export type TransactionConverter<T> = (
-  t: ContractCallTransaction | MempoolContractCallTransaction
-) => T;
+type TransactionPredicate = (t: ContractCallTransactionMetadata, poxContractId: string) => boolean;
+type TransactionConverter<T> = (t: ContractCallTransaction | MempoolContractCallTransaction) => T;
 
 export interface PendingTransactionArgs {
   stackingClient: StackingClient;
@@ -104,7 +99,7 @@ export async function getHasPendingTransaction<T>({
   return null;
 }
 
-export function getBestTransaction(
+function getBestTransaction(
   accountTransaction: ContractCallTransaction | undefined,
   mempoolTransaction: MempoolContractCallTransaction
 ) {

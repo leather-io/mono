@@ -71,7 +71,7 @@ function Decrement(props: ButtonProps) {
   );
 }
 
-export interface DisplayProps extends ComponentProps<typeof styled.span> {
+interface DisplayProps extends ComponentProps<typeof styled.span> {
   formatter?(value: number, decimals?: number): string;
 }
 

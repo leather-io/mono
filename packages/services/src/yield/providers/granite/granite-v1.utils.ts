@@ -12,7 +12,7 @@ import {
   isClarityUInt,
 } from '@leather.io/stacks';
 
-export interface GraniteUserPositionResponse {
+interface GraniteUserPositionResponse {
   debtShares: bigint;
   collaterals: string[];
   borrowedAmount: bigint;

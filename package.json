@@ -60,6 +60,7 @@
     "eslint": "9.34.0",
     "eslint-plugin-lingui": "0.10.1",
     "husky": "9.1.7",
+    "knip": "5.50.5",
     "lint-staged": "15.2.10",
     "prettier": "3.5.1",
     "syncpack": "13.0.0",
@@ -104,7 +105,8 @@
       "picomatch@3": "3.0.2",
       "picomatch@4": "4.0.4",
       "node-forge@<1.4.0": ">=1.4.0",
-      "path-to-regexp@<0.1.13": "0.1.13"
+      "path-to-regexp@<0.1.13": "0.1.13",
+      "lodash@>=4.0.0 <4.18.0": ">=4.18.0"
     },
     "patchedDependencies": {
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",

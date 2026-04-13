@@ -9,7 +9,7 @@ import { Text } from '../text/text.native';
 import { Prism, type PrismType } from './clarity-prism.shared';
 import { Language, RenderProps } from './utils.shared';
 
-export interface HighlighterProps {
+interface HighlighterProps {
   code: string;
   language?: Language;
   showLineNumbers?: boolean;

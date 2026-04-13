@@ -23,7 +23,6 @@
     ".": "./dist/index.js"
   },
   "dependencies": {
-    "@leather.io/constants": "workspace:*",
     "@leather.io/crypto": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/utils": "workspace:*",
@@ -32,7 +31,6 @@
     "@stacks/common": "7.0.2",
     "@stacks/encryption": "7.0.2",
     "@stacks/network": "7.0.2",
-    "@stacks/stacks-blockchain-api-types": "7.14.1",
     "@stacks/transactions": "7.0.5",
     "bignumber.js": "9.1.2",
     "c32check": "2.0.0",

@@ -5,9 +5,7 @@ import { createGetAllowanceContractCallersQueryOptions } from '~/queries/create-
 import {
   createGetAccountExtendedBalancesQueryOptions,
   createGetCoreInfoQueryOptions,
-  createGetCycleDurationQueryOptions,
   createGetPoxInfoQueryOptions,
-  createGetPoxOperationInfoQueryOptions,
   createGetSecondsUntilNextCycleQueryOptions,
   createGetStatusQueryOptions,
 } from '@leather.io/query';
@@ -18,22 +16,10 @@ export function useGetAllowanceContractCallersQuery(
   return useQuery(createGetAllowanceContractCallersQueryOptions(...params));
 }
 
-export function useGetCycleDurationQuery() {
-  const { client } = useStackingClient();
-  if (!client) throw new Error('Expected client to be defined.');
-  return useQuery(createGetCycleDurationQueryOptions({ client }));
-}
-
 export function useGetStatusQuery() {
   const { client } = useStackingClient();
   if (!client) throw new Error('Expected client to be defined.');
   return useQuery(createGetStatusQueryOptions({ client }));
-}
-
-export function useGetPoxOperationInfoQuery() {
-  const { client } = useStackingClient();
-  if (!client) throw new Error('Expected client to be defined.');
-  return useQuery(createGetPoxOperationInfoQueryOptions({ client }));
 }
 
 export function useGetCoreInfoQuery() {

@@ -4,6 +4,7 @@ import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Stack } from 'leather-styles/jsx';
 
 import { createTokenDetailsPath } from '@leather.io/features';
+import { Callout } from '@leather.io/ui';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { TokenList } from '@app/features/asset-list/token-list';
@@ -32,6 +33,13 @@ export function Tokens() {
 
   return (
     <Stack data-testid={HomePageSelectors.AssetList} gap="space.05" pb="space.03">
+      <Callout
+        variant="warning"
+        title="Leather is sunsetting Ordinals, Runes, BRC-20, SRC-20, and Stamps"
+      >
+        Runes, BRC-20, SRC-20, and Stamps support ends April 18. Ordinals support ends May 18. If
+        you have these assets, please transfer them to another wallet before the deadline.
+      </Callout>
       {showFirstTokenBanner && <FirstTokenBanner />}
       {!showFirstTokenBanner && <TokensTabHeader />}
       <TokenList filter="enabled" onSelectAsset={handleSelectAsset} showDepositButtons />

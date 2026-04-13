@@ -19,7 +19,7 @@ import { createMoney } from '@leather.io/utils';
 
 import { defaultBaseSwapAssets, defaultSwapQuotes, getDefaultTargetSwapAssets } from './fixtures';
 
-export interface StubSwapServiceConfig {
+interface StubSwapServiceConfig {
   baseSwapAssets?: AccountSwapAsset[];
   targetSwapAssets?: AccountSwapAsset[];
   swapQuotes?: SwapQuote[];
@@ -57,7 +57,7 @@ export function createStubSwapService({
   } as unknown as SwapService;
 }
 
-export interface StubMarketDataServiceConfig {
+interface StubMarketDataServiceConfig {
   marketData?: MarketData;
 }
 
@@ -119,7 +119,7 @@ export function createStubNetwork(): NetworkConfiguration {
   };
 }
 
-export interface StubStacksTransactionFeesServiceConfig {
+interface StubStacksTransactionFeesServiceConfig {
   transactionFees?: TransactionFees;
 }
 
@@ -163,7 +163,7 @@ export function createStubStacksTransactionFeesService({
   } as unknown as StacksTransactionFeesService;
 }
 
-export interface StubBitcoinTransactionFeesServiceConfig {
+interface StubBitcoinTransactionFeesServiceConfig {
   transactionFees?: TransactionFees;
 }
 

@@ -15,14 +15,6 @@ export interface FormatAmountOptions extends FormatAmountCustomOptions {
   numberFormatOptions?: Intl.NumberFormatOptions;
 }
 
-export interface FormatAmountOptionsWithoutMeta extends FormatAmountOptions {
-  meta?: false;
-}
-
-export interface FormatAmountOptionsWithMeta extends FormatAmountOptions {
-  meta: true;
-}
-
 export type CurrencyFormatterPreset = 'price' | 'shorthand-balance' | 'pad-decimals';
 
 export type CurrencyFormatterPresetValue =

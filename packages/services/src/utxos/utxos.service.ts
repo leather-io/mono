@@ -111,7 +111,12 @@ export class UtxosService {
   private async getDescriptorProtectedUtxos(
     fingerprint: string,
     descriptor: string,
-    { discardedInscriptions = [], discardRunes = false }: AccountRequestUtxoProtectionOptions,
+    {
+      discardedInscriptions = [],
+      discardRunes = false,
+      isRunesActive = true,
+      isOrdinalsActive = true,
+    }: AccountRequestUtxoProtectionOptions,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
     const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
@@ -120,8 +125,12 @@ export class UtxosService {
     }
     const [utxos, inscriptions, runeOutputs] = await Promise.all([
       this.getDescriptorTotalUtxos(descriptor, fingerprint, signal),
-      this.bisApiClient.fetchInscriptions(descriptor, { signal }),
-      this.bisApiClient.fetchRunesValidOutputs(descriptor, { signal }),
+      isOrdinalsActive
+        ? this.bisApiClient.fetchInscriptions(descriptor, { signal })
+        : Promise.resolve([]),
+      isRunesActive
+        ? this.bisApiClient.fetchRunesValidOutputs(descriptor, { signal })
+        : Promise.resolve([]),
     ]);
     const inscriptionProtectedUtxoIds = getInscriptionProtectedUtxoIds(
       inscriptions,

@@ -19,7 +19,7 @@ function getFlagAlignment(align: FlagAlignment) {
   }
 }
 
-export interface FlagProps extends BoxProps<Theme> {
+interface FlagProps extends BoxProps<Theme> {
   align?: FlagAlignment;
   children: React.ReactNode;
   img?: React.ReactNode;

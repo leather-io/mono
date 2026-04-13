@@ -23,21 +23,11 @@ export const rowPadding = css({
   '& th:last-child': { pr: 'space.05' },
 });
 
-export function SortableHeader({ children, ...props }: HTMLStyledProps<'div'>) {
-  return (
-    <styled.div {...props}>
-      <styled.span zIndex={99} _hover={{ textDecoration: 'underline' }}>
-        {children}
-      </styled.span>
-    </styled.div>
-  );
-}
-
-export const TableRoot = forwardRef<HTMLDivElement, HTMLStyledProps<'div'>>((props, ref) => (
+const TableRoot = forwardRef<HTMLDivElement, HTMLStyledProps<'div'>>((props, ref) => (
   <styled.div ref={ref} {...props} />
 ));
 
-export const StyledTable = forwardRef<HTMLTableElement, HTMLStyledProps<'table'>>((props, ref) => (
+const StyledTable = forwardRef<HTMLTableElement, HTMLStyledProps<'table'>>((props, ref) => (
   <styled.table
     borderCollapse="separate"
     borderSpacing={0}
@@ -49,23 +39,21 @@ export const StyledTable = forwardRef<HTMLTableElement, HTMLStyledProps<'table'>
   />
 ));
 
-export const TableHead = forwardRef<HTMLTableSectionElement, HTMLStyledProps<'thead'>>(
-  (props, ref) => (
-    <styled.thead height="40px" className={theadBorderBottom} mx="space.05" ref={ref} {...props} />
-  )
-);
+const TableHead = forwardRef<HTMLTableSectionElement, HTMLStyledProps<'thead'>>((props, ref) => (
+  <styled.thead height="40px" className={theadBorderBottom} mx="space.05" ref={ref} {...props} />
+));
 
-export const TableHeader = forwardRef<HTMLTableCellElement, HTMLStyledProps<'th'>>((props, ref) => (
+const TableHeader = forwardRef<HTMLTableCellElement, HTMLStyledProps<'th'>>((props, ref) => (
   <styled.th textStyle="label.03" color="ink.text-subdued" ref={ref} {...props} />
 ));
 
-export const TableRow = forwardRef<HTMLTableRowElement, HTMLStyledProps<'tr'>>((props, ref) => (
+const TableRow = forwardRef<HTMLTableRowElement, HTMLStyledProps<'tr'>>((props, ref) => (
   <styled.tr textStyle="label.03" color="ink.text-subdued" ref={ref} {...props} />
 ));
 
-export const TableBody = forwardRef<HTMLTableSectionElement, HTMLStyledProps<'tbody'>>(
-  (props, ref) => <styled.tbody ref={ref} {...props} />
-);
+const TableBody = forwardRef<HTMLTableSectionElement, HTMLStyledProps<'tbody'>>((props, ref) => (
+  <styled.tbody ref={ref} {...props} />
+));
 
 export const Table = {
   Root: TableRoot,

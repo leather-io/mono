@@ -1,0 +1,169 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "tags": ["-knipignore"],
+  "ignoreDependencies": [
+    "tslib",
+    "@babel/runtime",
+    "@testing-library/jest-dom",
+    "@testing-library/react",
+    "chalk",
+    "dotenv",
+    "lint-staged",
+    "@sanity/eslint-config-studio",
+    "@leather.io/rpc",
+    "conventional-changelog-conventionalcommits",
+    "@actions/core"
+  ],
+  "ignoreBinaries": [
+    "lint:unused-exports",
+    "build:test",
+    "lingui:extract",
+    "lingui:compile",
+    "build:mobile",
+    "only-allow"
+  ],
+  "ignoreUnresolved": ["metro-minify-terser", "/\\+types/"],
+  "ignore": [
+    "*/**/*.spec.ts",
+    "*/**/tsdown.config*.ts",
+    "*/**/panda.config.ts",
+    "*/**/postcss.config.cjs",
+    ".husky/**",
+    ".claude/**",
+    "apps/extension/src/app/store/active/active.actions.ts",
+    "packages/services/src/infrastructure/api/leather/leather-api.types.ts",
+    "packages/services/src/infrastructure/api/bitflow/bitflow-bff-api.types.ts"
+  ],
+  "workspaces": {
+    "apps/extension": {
+      "entry": [
+        "src/app/index.tsx",
+        "src/background/background.ts",
+        "src/inpage/inpage.ts",
+        "src/content-scripts/content-script.ts",
+        "src/shared/workers/decryption-worker.ts",
+        "test-app/src/index.tsx"
+      ],
+      "project": ["src/**/*.{ts,tsx}!", "test-app/src/**/*.{ts,tsx}"],
+      "paths": {
+        "@store/*": ["./test-app/src/store/*"],
+        "@store": ["./test-app/src/store/index"],
+        "@dev/*": ["./test-app/src/dev/*"],
+        "@components/*": ["./test-app/src/components/*"],
+        "@containers/*": ["./test-app/src/containers/*"],
+        "@common/*": ["./test-app/src/common/*"],
+        "@cards/*": ["./test-app/src/components/cards/*"],
+        "@tests/*": ["./tests/*"],
+        "leather-styles/*": ["./leather-styles/*"]
+      },
+      "webpack": {
+        "config": [
+          "webpack/webpack.config.base.js",
+          "webpack/webpack.config.dev.js",
+          "webpack/webpack.config.prod.js",
+          "test-app/webpack/webpack.config.base.cjs",
+          "test-app/webpack/webpack.config.prod.cjs"
+        ]
+      },
+      "ignoreDependencies": [
+        "assert",
+        "url",
+        "process",
+        "path-browserify",
+        "esbuild",
+        "postcss-preset-env",
+        "punycode",
+        "webextension-polyfill",
+        "@leather.io/panda-preset",
+        "@pmmmwh/react-refresh-webpack-plugin",
+        "@types/dompurify",
+        "@types/html-webpack-plugin",
+        "@types/punycode",
+        "@types/react-router",
+        "@types/remote-redux-devtools",
+        "@types/webextension-polyfill",
+        "@types/webpack",
+        "@redux-devtools/cli",
+        "blns",
+        "web-ext-submit"
+      ],
+      "ignore": ["src/shared/global-types.ts", "src/shared/models/global-types.ts"]
+    },
+    "apps/mobile": {
+      "entry": ["src/app/_layout.tsx"],
+      "ignoreDependencies": [
+        "expo-modules-core",
+        "expo-status-bar",
+        "expo-sharing",
+        "expo-blur",
+        "expo-haptics",
+        "expo-squircle-view",
+        "@leather.io/prettier-config",
+        "@lingui/conf",
+        "concurrently",
+        "@react-native/assets-registry",
+        "buffer",
+        "eas-build-cache-provider",
+        "punycode",
+        "@sentry/cli",
+        "babel-preset-expo",
+        "@lingui/macro",
+        "@lingui/format-po",
+        "@babel/plugin-transform-class-static-block"
+      ],
+      "ignoreBinaries": ["op", "firebase", "maestro"],
+      "ignore": [
+        ".detoxrc.cjs",
+        "fingerprint.config.js",
+        "index.d.ts",
+        "lingui.config.ts",
+        "src/tests/test-utils.tsx"
+      ]
+    },
+    "apps/web": {
+      "entry": [
+        "app/entry.server.tsx",
+        "app/entry.client.tsx",
+        "app/root.tsx",
+        "app/routes.ts",
+        "workers/app.ts",
+        "workers/csp.ts"
+      ],
+      "paths": {
+        "~/*": ["./app/*"]
+      },
+      "typescript": {
+        "config": ["tsconfig.cloudflare.json"]
+      },
+      "ignoreDependencies": ["leather-styles", "@leather.io/panda-preset"],
+      "ignore": ["stubs/**", "app/layouts/nav/global-loader.styles.ts"]
+    },
+    "packages/provider": {
+      "entry": ["src/index.ts", "src/mobile.ts"]
+    },
+    "packages/utils": {
+      "ignoreDependencies": ["@types/dompurify"]
+    },
+    "packages/ui": {
+      "entry": ["src/index.ts!", "src/native.ts!", "src/exports.web.ts!"],
+      "metro": false,
+      "ignoreDependencies": [
+        "@expo/vector-icons",
+        "@react-native/assets-registry",
+        "@rnx-kit/metro-resolver-symlinks",
+        "react-native-webview",
+        "@leather.io/models",
+        "@leather.io/panda-preset",
+        "@svgr/rollup",
+        "react-native-svg-transformer",
+        "rollup-plugin-copy"
+      ],
+      "ignore": [
+        "src/.storybook-native/**",
+        "src/.storybook-web/**",
+        "metro.config.cjs",
+        "src/assets-web/splash-screen.js"
+      ]
+    }
+  }
+}

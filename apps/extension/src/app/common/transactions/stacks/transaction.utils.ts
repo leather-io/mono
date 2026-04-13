@@ -17,12 +17,10 @@ import {
   createAddress,
   cvToString,
   deserializeMemoString,
-  deserializeTransaction,
   isTokenTransferPayload,
   serializeCV,
 } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
-import z from 'zod';
 
 import { StacksTx, StacksTxStatus } from '@leather.io/models';
 import { getStacksContractName } from '@leather.io/stacks';
@@ -203,17 +201,6 @@ export function getSip10MemoDisplayText(payload: ContractCallPayload) {
   const isSome = payload.functionArgs[3].type === ClarityType.OptionalSome;
   return isSome ? deserializeMemoString(serializeCV(payload.functionArgs[3])).content : null;
 }
-
-function isValidEncodedTransaction(tx: string | Uint8Array) {
-  const [result, error] = safeCall(() => deserializeTransaction(tx));
-  return !!result && !error;
-}
-
-export const hexEncodedStacksTxSchema = z
-  .string()
-  .refine(value => isValidEncodedTransaction(value), {
-    message: 'Invalid hex-encoded Stacks transaction',
-  });
 
 export function getContractAddressFromContractCallPayload(payload: ContractCallPayload) {
   const contractAddress = addressToString(payload.contractAddress);

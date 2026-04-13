@@ -15,7 +15,7 @@ import {
 import { AccountRequest, AccountSwapAsset } from '@leather.io/services';
 import { createMoney, createMoneyFromDecimal } from '@leather.io/utils';
 
-export function createFungibleAsset(
+function createFungibleAsset(
   overrides: Partial<SwappableFungibleCryptoAsset> = {}
 ): SwappableFungibleCryptoAsset {
   const protocol = overrides.protocol ?? 'nativeBtc';
@@ -138,7 +138,7 @@ export function createAccountRequest(): AccountRequest {
 export const defaultBtcAsset = createFungibleAsset({ protocol: 'nativeBtc' });
 export const defaultStxAsset = createFungibleAsset({ protocol: 'nativeStx' });
 export const defaultSbtcAsset = createFungibleAsset({ protocol: 'sip10', symbol: 'sBTC' });
-export const defaultABCDAsset = createFungibleAsset({
+const defaultABCDAsset = createFungibleAsset({
   protocol: 'sip10',
   symbol: 'ABCD',
   name: 'ABCD',

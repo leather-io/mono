@@ -8,7 +8,7 @@ import {
   isClarityUInt,
 } from '@leather.io/stacks';
 
-export interface StackingDaoGetWithdrawalsByNft {
+interface StackingDaoGetWithdrawalsByNft {
   ststxAmount?: number;
   stxAmount: number;
   unlockBurnHeight: number;

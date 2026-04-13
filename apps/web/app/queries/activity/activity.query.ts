@@ -5,7 +5,7 @@ import { type ActivityView, createActivityView } from '@leather.io/features';
 import { type AccountAddresses, type Activity } from '@leather.io/models';
 import { createActivityQueryConfig } from '@leather.io/queries';
 
-export function useActivityQuery(
+function useActivityQuery(
   account: AccountAddresses,
   options: Partial<UseQueryOptions<Activity[], Error, ActivityView[]>> = {}
 ) {

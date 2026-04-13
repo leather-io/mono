@@ -2,7 +2,7 @@ import PQueue from 'p-queue';
 
 import { RateLimiterQueueOptions } from './rate-limiter.service';
 
-export const hiroStacksApiLimiterSettings: RateLimiterQueueOptions = {
+const hiroStacksApiLimiterSettings: RateLimiterQueueOptions = {
   interval: 1000,
   intervalCap: 30,
   timeout: 60000,

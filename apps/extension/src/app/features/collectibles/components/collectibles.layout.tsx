@@ -16,6 +16,7 @@ import {
 
 import { analytics } from '@shared/utils/analytics';
 
+import { useFlags } from '@app/features/feature-flags';
 import { ManageInscriptionsSheet } from '@app/features/manage-inscriptions/manage-inscriptions-sheet';
 import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
@@ -30,6 +31,8 @@ interface CollectiblesLayoutProps {
   isLoading: boolean;
   isFetching: boolean;
   hasCollectibles: boolean;
+  hasInscriptions: boolean;
+  hasStamps: boolean;
   isError: boolean;
   onRefresh(): void;
 }
@@ -40,6 +43,8 @@ export function CollectiblesLayout({
   isLoading,
   isFetching,
   hasCollectibles,
+  hasInscriptions,
+  hasStamps,
   isError,
   onRefresh,
 }: CollectiblesLayoutProps) {
@@ -48,10 +53,21 @@ export function CollectiblesLayout({
   const showEmpty = isReady && !isFetching && !hasCollectibles;
   const showGrid = isReady && hasCollectibles;
 
+  const { isOrdinalsActive } = useFlags();
   const [showManageInscriptions, setShowManageInscriptions] = useState(false);
   return (
     <>
       <Stack gap="space.05" flex={1} pb="space.08">
+        {hasStamps && (
+          <Callout variant="warning" title="Stamps support ending April 18">
+            Please transfer your Stamps to another wallet before this date.
+          </Callout>
+        )}
+        {hasInscriptions && (
+          <Callout variant="warning" title="Ordinals support ending May 18">
+            Please transfer your Ordinals to another wallet before this date.
+          </Callout>
+        )}
         {showGrid && (
           <Flex justifyContent="space-between" alignItems="flex-start">
             <Box>
@@ -92,20 +108,22 @@ export function CollectiblesLayout({
                       img={<ArrowRotateClockwiseIcon />}
                     />
                   </DropdownMenu.Item>
-                  <DropdownMenu.Item
-                    onSelect={() => {
-                      analytics.track('click_manage_inscriptions');
-                      setShowManageInscriptions(true);
-                    }}
-                    data-testid={SettingsSelectors.ManageInscriptions}
-                  >
-                    <ItemLayout
-                      titleLeft="Manage inscriptions"
-                      titleRight=""
-                      captionLeft=""
-                      img={<SettingsSliderIcon />}
-                    />
-                  </DropdownMenu.Item>
+                  {isOrdinalsActive && (
+                    <DropdownMenu.Item
+                      onSelect={() => {
+                        analytics.track('click_manage_inscriptions');
+                        setShowManageInscriptions(true);
+                      }}
+                      data-testid={SettingsSelectors.ManageInscriptions}
+                    >
+                      <ItemLayout
+                        titleLeft="Manage inscriptions"
+                        titleRight=""
+                        captionLeft=""
+                        img={<SettingsSliderIcon />}
+                      />
+                    </DropdownMenu.Item>
+                  )}
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
             </DropdownMenu.Root>
