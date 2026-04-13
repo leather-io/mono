@@ -16,6 +16,7 @@
 
 ### Bug Fixes
 
+* dep audit ([f0f69d3](https://github.com/leather-io/mono/commit/f0f69d3b726fc8637ba9b7b69b7bcbf3bb78d244))
 * **mobile:** display of taproot sends ([741d133](https://github.com/leather-io/mono/commit/741d1330ccced495da361c93dac0c93c34b5abc9))
 * playwright tests ([eaf96c9](https://github.com/leather-io/mono/commit/eaf96c9400431c7fbd539b8e5cd7abc86c327f5b))
 * wallet deletion ([58d7e29](https://github.com/leather-io/mono/commit/58d7e2998587aa5a499e9e4410599d03856a89a8))

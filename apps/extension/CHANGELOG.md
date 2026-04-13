@@ -4,6 +4,8 @@
 
 ### Features
 
+* add banners ([245d75f](https://github.com/leather-io/mono/commit/245d75f017839f7610dbe1fdcf40b7527f690c32))
+* **extension:** deprecation of ordinals and runes ([d6e1fea](https://github.com/leather-io/mono/commit/d6e1feaccb47de540983c9263cb198f279ed7679))
 * **extension:** add collectible details pages and manage inscriptions ([26fc7a9](https://github.com/leather-io/mono/commit/26fc7a925ec71720735abd9dc9e105472301c777))
 * **extension:** add empty and error states to swap review ([d2102cc](https://github.com/leather-io/mono/commit/d2102cc1fa115564ff686134a5b0d433c71b2daf))
 * **extension:** add few attributes to swap amount field ([9f4ca69](https://github.com/leather-io/mono/commit/9f4ca69559c61ee1ac58aef09b78512b29a37a59))
@@ -12,6 +14,11 @@
 
 ### Bug Fixes
 
+* dep audit ([f0f69d3](https://github.com/leather-io/mono/commit/f0f69d3b726fc8637ba9b7b69b7bcbf3bb78d244))
+* developer notice on legacy requests ([6414b17](https://github.com/leather-io/mono/commit/6414b1749b6a62789bb62314fb772defbcee7705))
+* **extension:** insufficient funds ([5508cf9](https://github.com/leather-io/mono/commit/5508cf99a7347b5d9e982d86001da29ff6f488c1))
+* **extension:** ledger contract call should display contract's address ([481900a](https://github.com/leather-io/mono/commit/481900a1fe3fa474bd380f2e44da6fc73c4a21d7))
+* ledger btc keychain filtration ([61b40b9](https://github.com/leather-io/mono/commit/61b40b95fd6e7e7b9a1118185f48a9b6f363c054))
 * **extension:** ledger chains connection ([be79b57](https://github.com/leather-io/mono/commit/be79b57a4e5d540ac139c4f2de08aa75767e6513))
 * legacy requests callout / analytics ([236e016](https://github.com/leather-io/mono/commit/236e01633d5b26871f2d89eeb61ede098d646240))
 * **extension:** fingerprint not passed to window ([fc62262](https://github.com/leather-io/mono/commit/fc6226292aea1d7d42856db0523fd2c4add435f4))
