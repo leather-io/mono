@@ -114,7 +114,7 @@ function Ol({ children }: ContentComponentsProps) {
           display: 'inline-block',
           position: 'absolute',
           left: 0,
-          top: '0',
+          top: '-2px',
           width: '24px',
           height: '24px',
           lineHeight: '24px',
