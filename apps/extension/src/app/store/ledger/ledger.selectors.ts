@@ -4,6 +4,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import {
   extractAccountIndexFromPath,
+  extractFingerprintFromDescriptor,
   extractKeyOriginPathFromDescriptor,
 } from '@leather.io/crypto';
 import { sumNumbers, uniqueArray } from '@leather.io/utils';
@@ -30,8 +31,8 @@ const selectHasLedgerBitcoinKeys = createSelector(
   [selectBitcoinKeychains, selectCurrentAccount],
   (bitcoinKeychains, currentAccount) => {
     const bitcoinKeysForCurrentWallet = bitcoinKeychains.filter(keychain => {
-      const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
-      return keyOrigin.startsWith(`[${currentAccount.fingerprint}/`);
+      const keychainFingerprint = extractFingerprintFromDescriptor(keychain.descriptor);
+      return keychainFingerprint === currentAccount.fingerprint;
     });
 
     const uniqueBitcoinAccountIndices = uniqueArray(
