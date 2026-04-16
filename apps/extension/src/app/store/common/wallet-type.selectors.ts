@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
+import { captureMessage } from '@sentry/react';
 
 import {
   extractAccountIndexFromDescriptor,
@@ -56,7 +57,16 @@ const selectWalletAccountRefTree = createSelector(
       // For software wallets, use highestAccountIndex from stxChain
       if (wallet.type === 'software') {
         const stxChainState = stxChain?.[wallet.fingerprint];
-        if (stxChainState) accountCount = stxChainState.highestAccountIndex + 1;
+        if (!stxChainState) {
+          captureMessage('stxChain entry missing for software wallet', {
+            level: 'warning',
+            extra: {
+              fingerprint: wallet.fingerprint,
+              stxChainKeys: Object.keys(stxChain ?? {}),
+            },
+          });
+        }
+        accountCount = stxChainState ? stxChainState.highestAccountIndex + 1 : 1;
       }
 
       // For Ledger wallets, count the number of keychains
