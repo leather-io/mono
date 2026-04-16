@@ -57,7 +57,6 @@ function verifyUserConfirmsSpendingInscribedUtxos() {
 }
 
 const taprootAddressPrefixes = ['bc1p', 'tb1p', 'bcrt1p'];
-const smallTaprootUtxoThreshold = 10_000;
 
 function isTaprootAddress(address: string) {
   return taprootAddressPrefixes.some(prefix => address.startsWith(prefix));
@@ -68,7 +67,7 @@ export function useCheckUnspendableUtxos() {
   const [isLoading, setIsLoading] = useState(false);
   const { isTestnet } = useCurrentNetworkState();
   const isTestEnv = useIsLeatherTestingEnv();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
+  const { isOrdinalsActive } = useFlags();
   const { utxos: walletUtxos } = useCurrentUtxos();
 
   const checkIfUtxosListIncludesInscribed = useCallback(
@@ -80,7 +79,7 @@ export function useCheckUnspendableUtxos() {
         return bytesToHex(input.txid);
       });
 
-      function hasSmallTaprootUtxos() {
+      function hasTaprootUtxos() {
         const allWalletUtxos = [
           ...walletUtxos.confirmed,
           ...walletUtxos.protected,
@@ -92,12 +91,12 @@ export function useCheckUnspendableUtxos() {
           const txid = bytesToHex(input.txid);
           const match = allWalletUtxos.find(u => u.txid === txid && u.vout === input.index);
           if (!match) return false;
-          return isTaprootAddress(match.address) && match.value <= smallTaprootUtxoThreshold;
+          return isTaprootAddress(match.address);
         });
       }
 
-      async function warnIfSmallTaprootUtxos() {
-        if (hasSmallTaprootUtxos()) {
+      async function warnIfTaprootUtxos() {
+        if (hasTaprootUtxos()) {
           const { userAcceptedRisk } = await TaprootUtxoWarningDialog.call();
           return !userAcceptedRisk;
         }
@@ -105,9 +104,10 @@ export function useCheckUnspendableUtxos() {
       }
 
       try {
-        if (!isOrdinalsActive) {
-          return await warnIfSmallTaprootUtxos();
-        }
+        const shouldHaltForTaproot = await warnIfTaprootUtxos();
+        if (shouldHaltForTaproot) return true;
+
+        if (!isOrdinalsActive) return false;
 
         // no need to check for inscriptions on testnet
         if (isTestnet && !isTestEnv) {
@@ -136,10 +136,6 @@ export function useCheckUnspendableUtxos() {
           return !userAcceptedRisk;
         }
 
-        if (!isRunesActive) {
-          return await warnIfSmallTaprootUtxos();
-        }
-
         return false;
       } catch {
         const hasInscribedUtxo = await checkInscribedUtxosByBestinslot({
@@ -153,16 +149,12 @@ export function useCheckUnspendableUtxos() {
           return !userAcceptedRisk;
         }
 
-        if (!isRunesActive) {
-          return await warnIfSmallTaprootUtxos();
-        }
-
         return false;
       } finally {
         setIsLoading(false);
       }
     },
-    [client, isOrdinalsActive, isRunesActive, isTestEnv, isTestnet, walletUtxos]
+    [client, isOrdinalsActive, isTestEnv, isTestnet, walletUtxos]
   );
 
   return {

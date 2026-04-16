@@ -44,7 +44,12 @@ export class BestInSlotApiClient {
     private readonly limiter: RateLimiterService
   ) {}
 
-  private async withFallback<T>(request: () => Promise<T>, fallbackValue: T): Promise<T> {
+  private async withFallback<T>(
+    request: () => Promise<T>,
+    fallbackValue: T,
+    isFeatureActive?: boolean
+  ): Promise<T> {
+    if (isFeatureActive !== false) return request();
     try {
       return await request();
     } catch {
@@ -83,7 +88,7 @@ export class BestInSlotApiClient {
 
   public async fetchInscriptions(
     descriptor: string,
-    { signal, skipCache }: ApiRequestOptions = {}
+    { signal, skipCache, isOrdinalsActive }: ApiRequestOptions = {}
   ): Promise<BisInscription[]> {
     const params = new URLSearchParams();
     params.append('sort_by', 'inscr_num');
@@ -119,12 +124,12 @@ export class BestInSlotApiClient {
         ? await fetchFn()
         : await this.cache.fetchWithCache(['bis-inscriptions', network, descriptor], fetchFn);
 
-    return this.withFallback(request, []);
+    return this.withFallback(request, [], isOrdinalsActive);
   }
 
   public async fetchRunesValidOutputs(
     descriptor: string,
-    { signal, skipCache }: ApiRequestOptions = {}
+    { signal, skipCache, isRunesActive }: ApiRequestOptions = {}
   ): Promise<BisRuneValidOutput[]> {
     const params = new URLSearchParams();
     params.append('sort_by', 'output');
@@ -162,6 +167,6 @@ export class BestInSlotApiClient {
             fetchFn
           );
 
-    return this.withFallback(request, []);
+    return this.withFallback(request, [], isRunesActive);
   }
 }

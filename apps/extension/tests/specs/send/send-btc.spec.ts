@@ -104,6 +104,9 @@ test.describe('send btc', () => {
 
       await sendPage.clickInfoCardButton();
 
+      const taprootContinueBtn = sendPage.page.locator('text="I understand, continue"');
+      await taprootContinueBtn.click();
+
       await test.expect(sendPage.inscriptionWarningDialog).toBeVisible();
     });
 
@@ -162,6 +165,9 @@ test.describe('send btc', () => {
       await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
 
       await sendPage.clickInfoCardButton();
+
+      const taprootContinueBtn = sendPage.page.locator('text="I understand, continue"');
+      await taprootContinueBtn.click();
 
       await test.expect(sendPage.inscriptionWarningDialog).toBeVisible();
     });

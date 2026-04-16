@@ -8,10 +8,12 @@ import {
 import { bitcoinClient } from '@leather.io/query';
 import { whenNetwork } from '@leather.io/utils';
 
+import { useFlags } from '@app/features/feature-flags';
 import { useLeatherNetwork } from '@app/query/leather-query-provider';
 
 export function useBitcoinClient() {
   const network = useLeatherNetwork();
+  const { isOrdinalsActive, isRunesActive } = useFlags();
   const bestInSlotPath = whenNetwork(
     bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode)
   )({
@@ -25,7 +27,14 @@ export function useBitcoinClient() {
         networkName: network.chain.bitcoin.bitcoinNetwork,
         basePath: network.chain.bitcoin.bitcoinUrl,
         bestInSlotPath,
+        bestInSlotOptions: { isOrdinalsActive, isRunesActive },
       }),
-    [bestInSlotPath, network.chain.bitcoin.bitcoinNetwork, network.chain.bitcoin.bitcoinUrl]
+    [
+      bestInSlotPath,
+      network.chain.bitcoin.bitcoinNetwork,
+      network.chain.bitcoin.bitcoinUrl,
+      isOrdinalsActive,
+      isRunesActive,
+    ]
   );
 }

@@ -10,7 +10,6 @@ import { analytics } from '@shared/utils/analytics';
 
 import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { ButtonRow } from '@app/components/layout';
-import { useFlags } from '@app/features/feature-flags';
 
 interface TaprootUtxoWarningResponse {
   userAcceptedRisk: boolean;
@@ -18,13 +17,6 @@ interface TaprootUtxoWarningResponse {
 
 export const TaprootUtxoWarningDialog = createCallable<void, TaprootUtxoWarningResponse>(
   ({ call }) => {
-    const { isOrdinalsActive, isRunesActive } = useFlags();
-    function getDescription() {
-      if (isOrdinalsActive && !isRunesActive) {
-        return 'This transaction spends from taproot UTXOs valued at 10,000 sats or less. These UTXOs may contain rune or BRC-20 tokens.';
-      }
-      return 'This transaction spends from taproot UTXOs valued at 10,000 sats or less. These UTXOs may contain ordinal inscriptions, rune, or BRC-20 tokens.';
-    }
     useOnMount(() => analytics.track('taproot_utxo_warning_dialog_displayed'));
     return (
       <Sheet
@@ -51,12 +43,11 @@ export const TaprootUtxoWarningDialog = createCallable<void, TaprootUtxoWarningR
           py="space.06"
           data-testid={SendCryptoAssetSelectors.TaprootUtxoWarningDialog}
         >
-          <styled.h3 textStyle="heading.05">
-            This transaction includes small taproot UTXOs
-          </styled.h3>
+          <styled.h3 textStyle="heading.05">This transaction includes taproot UTXOs</styled.h3>
 
           <styled.p textStyle="body.02" color="ink.text-subdued">
-            {getDescription()}
+            This transaction spends from taproot UTXOs. These UTXOs may contain ordinal
+            inscriptions, rune, or BRC-20 tokens.
           </styled.p>
           <styled.p textStyle="body.02" color="ink.text-subdued">
             If you want to protect these assets, cancel this transaction and transfer them to
