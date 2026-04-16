@@ -119,4 +119,4 @@ jobs:
       - uses: ./.github/actions/provision
 
       - name: audit
-        run: pnpm audit-ci --config ./audit-ci.jsonc
+        run: pnpm dlx pnpm@11.0.0-rc.1 audit --prod --audit-level high --config.manage-package-manager-versions=false
