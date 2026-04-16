@@ -8,6 +8,7 @@ import {
 import { type AccountRequest, type RuneBalance } from '@leather.io/services';
 import { isSameAsset } from '@leather.io/utils';
 
+import { useFlags } from '@app/features/feature-flags';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { balanceQueryOptionsWithRefetch } from '@app/query/common/balance-query-options';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
@@ -26,9 +27,11 @@ export function useRunesAccountBalance(
   options?: { includeHiddenAssets?: boolean }
 ) {
   const account = useAccountAddresses(accountId);
+  const { isOrdinalsActive, isRunesActive } = useFlags();
   return toFetchState(
     useGetRunesAccountBalanceQuery({
       account,
+      protections: { isOrdinalsActive, isRunesActive },
       assets: { includeHiddenAssets: options?.includeHiddenAssets },
     })
   );
@@ -45,7 +48,13 @@ function useGetRunesAccountBalanceQuery(request: AccountRequest) {
 
 export function useRuneBalanceByRuneName(accountId: AccountId, runeName: string) {
   const account = useAccountAddresses(accountId);
-  return toFetchState(useGetRuneBalanceByRuneNameQuery({ account }, runeName));
+  const { isOrdinalsActive, isRunesActive } = useFlags();
+  return toFetchState(
+    useGetRuneBalanceByRuneNameQuery(
+      { account, protections: { isOrdinalsActive, isRunesActive } },
+      runeName
+    )
+  );
 }
 
 function useGetRuneBalanceByRuneNameQuery(request: AccountRequest, runeName: string) {

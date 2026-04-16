@@ -47,6 +47,14 @@ function clickActionButton(context: BrowserContext) {
   };
 }
 
+async function approveAndAcceptTaprootWarning(context: BrowserContext) {
+  const popup = await context.waitForEvent('page');
+  await popup.waitForTimeout(1000);
+  await popup.locator('text="Approve"').click();
+  const continueBtn = popup.locator('text="I understand, continue"');
+  await continueBtn.click({ timeout: 10000 });
+}
+
 async function mockPopupRequests(context: BrowserContext) {
   const popup = await context.waitForEvent('page');
   await mockLeatherApiRequests(popup);
@@ -76,7 +84,7 @@ test.describe('RPC: sendTransfer', () => {
 
     const [result] = await Promise.all([
       openSendTransfer(page)(baseParams),
-      clickActionButton(context)('Approve'),
+      approveAndAcceptTaprootWarning(context),
     ]);
 
     delete result.id;
@@ -121,7 +129,7 @@ test.describe('RPC: sendTransfer with taproot UTXOs', () => {
 
     const [result] = await Promise.all([
       openSendTransfer(page)(baseParams),
-      clickActionButton(context)('Approve'),
+      approveAndAcceptTaprootWarning(context),
     ]);
 
     delete result.id;

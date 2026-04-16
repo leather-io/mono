@@ -26,11 +26,13 @@ export class InscriptionsService {
           ? Promise.resolve([])
           : this.bisApiClient.fetchInscriptions(request.account.bitcoin.nativeSegwitDescriptor, {
               signal,
+              isOrdinalsActive: request.protections?.isOrdinalsActive,
             }),
         request.exclusions?.taprootAddresses
           ? Promise.resolve([])
           : this.bisApiClient.fetchInscriptions(request.account.bitcoin.taprootDescriptor, {
               signal,
+              isOrdinalsActive: request.protections?.isOrdinalsActive,
             }),
       ]);
 
