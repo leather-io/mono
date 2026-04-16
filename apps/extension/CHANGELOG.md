@@ -14,6 +14,8 @@
 
 ### Bug Fixes
 
+* accounts display ([300c929](https://github.com/leather-io/mono/commit/300c929a3008efa12252caa11f402b3b2ca44f50))
+* ordinals/runes fallback ([35d1bea](https://github.com/leather-io/mono/commit/35d1bea0e3cde0e9ad1e6c77d33793ef48260e3b))
 * dep audit ([f0f69d3](https://github.com/leather-io/mono/commit/f0f69d3b726fc8637ba9b7b69b7bcbf3bb78d244))
 * developer notice on legacy requests ([6414b17](https://github.com/leather-io/mono/commit/6414b1749b6a62789bb62314fb772defbcee7705))
 * **extension:** insufficient funds ([5508cf9](https://github.com/leather-io/mono/commit/5508cf99a7347b5d9e982d86001da29ff6f488c1))
