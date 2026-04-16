@@ -49,10 +49,13 @@ export const stxChainSlice = createSlice({
       .addCase(resetWallet, () => ({}))
 
       .addCase(userAddsWallet, (state, action) => {
-        state[action.payload.wallet.fingerprint] = {
-          highestAccountIndex: 0,
-          currentAccountStacksDescriptor: '',
-        };
+        const fingerprint = action.payload.wallet.fingerprint;
+        if (!state[fingerprint]) {
+          state[fingerprint] = {
+            highestAccountIndex: 0,
+            currentAccountStacksDescriptor: '',
+          };
+        }
       })
 
       .addCase(fingerprintMigration, (state, action) => {
