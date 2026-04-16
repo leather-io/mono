@@ -413,6 +413,18 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.54.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.53.0...@leather.io/services-v1.54.0) (2026-04-16)
+
+
+### Features
+
+* implement auth service ([c414973](https://github.com/leather-io/mono/commit/c4149736c63f547718d8730ff6a029273c9a7306))
+
+
+### Bug Fixes
+
+* ordinals/runes fallback ([35d1bea](https://github.com/leather-io/mono/commit/35d1bea0e3cde0e9ad1e6c77d33793ef48260e3b))
+
 ## [1.53.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.52.0...@leather.io/services-v1.53.0) (2026-04-13)
 
 

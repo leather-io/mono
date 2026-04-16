@@ -128,22 +128,29 @@ export interface BitcoinClient {
   BestInSlotApi: ReturnType<typeof BestInSlotApi>;
 }
 
+interface BestInSlotApiOptions {
+  isOrdinalsActive?: boolean;
+  isRunesActive?: boolean;
+}
+
 interface BitcoinClientArgs {
   networkName: string;
   basePath: string;
   bestInSlotPath: string;
+  bestInSlotOptions?: BestInSlotApiOptions;
 }
 
 export function bitcoinClient({
   networkName,
   basePath,
   bestInSlotPath,
+  bestInSlotOptions,
 }: BitcoinClientArgs): BitcoinClient {
   return {
     networkName,
     addressApi: AddressApi(basePath),
     feeEstimatesApi: FeeEstimatesApi(),
     transactionsApi: TransactionsApi(basePath),
-    BestInSlotApi: BestInSlotApi(bestInSlotPath),
+    BestInSlotApi: BestInSlotApi(bestInSlotPath, bestInSlotOptions),
   };
 }

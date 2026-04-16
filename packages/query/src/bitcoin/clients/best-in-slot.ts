@@ -234,8 +234,23 @@ const emptyRuneTickerInfo: RuneTickerInfo = {
   },
 };
 
-export function BestInSlotApi(basePath: string) {
-  async function withFallback<T>(request: () => Promise<T>, fallbackValue: T): Promise<T> {
+interface BestInSlotApiOptions {
+  isOrdinalsActive?: boolean;
+  isRunesActive?: boolean;
+}
+
+export function BestInSlotApi(basePath: string, options: BestInSlotApiOptions = {}) {
+  async function withOrdinalsFallback<T>(request: () => Promise<T>, fallbackValue: T): Promise<T> {
+    if (options.isOrdinalsActive !== false) return request();
+    try {
+      return await request();
+    } catch {
+      return fallbackValue;
+    }
+  }
+
+  async function withRunesFallback<T>(request: () => Promise<T>, fallbackValue: T): Promise<T> {
+    if (options.isRunesActive !== false) return request();
     try {
       return await request();
     } catch {
@@ -265,7 +280,7 @@ export function BestInSlotApi(basePath: string) {
       count: count.toString(),
     });
 
-    return withFallback(
+    return withOrdinalsFallback(
       async () => {
         const resp = await axios.get<BestInSlotInscriptionByAddressResponse>(
           `${basePath}/wallet/inscriptions?${queryParams}`,
@@ -297,7 +312,7 @@ export function BestInSlotApi(basePath: string) {
       count,
     };
 
-    return withFallback(
+    return withOrdinalsFallback(
       async () => {
         const resp = await axios.post<BestInSlotInscriptionByAddressResponse>(
           `${basePath}/wallet/inscriptions_batch`,
@@ -311,7 +326,7 @@ export function BestInSlotApi(basePath: string) {
   }
 
   async function getInscriptionsByTransactionId(id: string) {
-    return withFallback(
+    return withOrdinalsFallback(
       async () => {
         const resp = await axios.get<BestInSlotInscriptionsByTxIdResponse>(
           `${basePath}/inscription/in_transaction?tx_id=${id}`
@@ -329,7 +344,7 @@ export function BestInSlotApi(basePath: string) {
    *
    */
   async function getBatchInscriptionInfo(queries: string[]) {
-    return withFallback(
+    return withOrdinalsFallback(
       async () => {
         const resp = await axios.post<BestInSlotInscriptionsBatchInfoResponse>(
           `${basePath}/inscription/batch_info`,
@@ -342,7 +357,7 @@ export function BestInSlotApi(basePath: string) {
   }
 
   async function getInscriptionById(id: string) {
-    return withFallback(
+    return withOrdinalsFallback(
       async () => {
         const resp = await axios.get<BestInSlotInscriptionByIdResponse>(
           `${basePath}/inscription/single_info_id?inscription_id=${id}`
@@ -355,7 +370,7 @@ export function BestInSlotApi(basePath: string) {
 
   /* BRC-20 */
   async function getBrc20Balances(address: string) {
-    return withFallback(
+    return withRunesFallback(
       async () => {
         const resp = await axios.get<Brc20WalletBalancesResponse>(
           `${basePath}/brc20/wallet_balances?address=${address}`
@@ -367,7 +382,7 @@ export function BestInSlotApi(basePath: string) {
   }
 
   async function getBrc20TickerInfo(ticker: string) {
-    return withFallback(
+    return withRunesFallback(
       async () => {
         const resp = await axios.get<Brc20TickerInfoResponse>(
           `${basePath}/brc20/ticker_info?ticker=${ticker}`
@@ -380,7 +395,7 @@ export function BestInSlotApi(basePath: string) {
 
   /* RUNES */
   async function getRunesWalletBalances(address: string) {
-    return withFallback(async () => {
+    return withRunesFallback(async () => {
       const resp = await axios.get<RunesWalletBalancesResponse>(
         `${basePath}/runes/wallet_balances?address=${address}`
       );
@@ -389,7 +404,7 @@ export function BestInSlotApi(basePath: string) {
   }
 
   async function getRunesTickerInfo(runeName: string) {
-    return withFallback(async () => {
+    return withRunesFallback(async () => {
       const resp = await axios.get<RunesTickerInfoResponse>(
         `${basePath}/runes/ticker_info?rune_name=${runeName}`
       );
@@ -398,7 +413,7 @@ export function BestInSlotApi(basePath: string) {
   }
 
   async function getRunesBatchOutputsInfo(outputs: string[]) {
-    return withFallback(async () => {
+    return withRunesFallback(async () => {
       const resp = await axios.post<RunesOutputsByAddressResponse>(
         `${basePath}/runes/batch_output_info`,
         { queries: outputs }
@@ -426,7 +441,7 @@ export function BestInSlotApi(basePath: string) {
       count: count.toString(),
     });
 
-    return withFallback(async () => {
+    return withRunesFallback(async () => {
       const resp = await axios.get<RunesOutputsByAddressResponse>(
         `${basePath}/runes/wallet_valid_outputs?${queryParams}`,
         { signal }
@@ -447,7 +462,7 @@ export function BestInSlotApi(basePath: string) {
     params.append('offset', '0');
     params.append('count', '2000');
 
-    return withFallback(
+    return withOrdinalsFallback(
       async () => {
         const resp = await axios.get<BestInSlotInscriptionByXpubResponse>(
           `${basePath}/wallet/inscriptions_xpub`,

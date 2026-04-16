@@ -6,6 +6,25 @@ No unreleased changes.
 
 ---
 
+## [6.100.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.100.0...@leather.io/extension-v6.100.1) (2026-04-16)
+
+
+### Bug Fixes
+
+* accounts display ([300c929](https://github.com/leather-io/mono/commit/300c929a3008efa12252caa11f402b3b2ca44f50))
+* ordinals/runes fallback ([35d1bea](https://github.com/leather-io/mono/commit/35d1bea0e3cde0e9ad1e6c77d33793ef48260e3b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/features bumped to 1.4.2
+    * @leather.io/queries bumped to 0.9.2
+    * @leather.io/query bumped to 2.47.1
+    * @leather.io/services bumped to 1.54.0
+    * @leather.io/ui bumped to 1.111.3
+
 ## [6.100.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.99.2...@leather.io/extension-v6.100.0) (2026-04-13)
 
 

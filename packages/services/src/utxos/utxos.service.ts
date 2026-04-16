@@ -126,10 +126,10 @@ export class UtxosService {
     const [utxos, inscriptions, runeOutputs] = await Promise.all([
       this.getDescriptorTotalUtxos(descriptor, fingerprint, signal),
       isOrdinalsActive
-        ? this.bisApiClient.fetchInscriptions(descriptor, { signal })
+        ? this.bisApiClient.fetchInscriptions(descriptor, { signal, isOrdinalsActive })
         : Promise.resolve([]),
       isRunesActive
-        ? this.bisApiClient.fetchRunesValidOutputs(descriptor, { signal })
+        ? this.bisApiClient.fetchRunesValidOutputs(descriptor, { signal, isRunesActive })
         : Promise.resolve([]),
     ]);
     const inscriptionProtectedUtxoIds = getInscriptionProtectedUtxoIds(

@@ -4,6 +4,7 @@ import { initServicesContainer } from '@leather.io/services';
 
 import { WebHttpCacheService } from './web-http-cache.service';
 import { WebSettingsService } from './web-settings.service';
+import { WebTokenAuthService } from './web-token-auth.service';
 
 export function initAppServices() {
   initServicesContainer({
@@ -13,5 +14,6 @@ export function initAppServices() {
     },
     cacheService: WebHttpCacheService,
     settingsService: WebSettingsService,
+    tokenAuthService: WebTokenAuthService,
   });
 }

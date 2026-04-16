@@ -779,6 +779,13 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.47.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.47.0...@leather.io/query-v2.47.1) (2026-04-16)
+
+
+### Bug Fixes
+
+* ordinals/runes fallback ([35d1bea](https://github.com/leather-io/mono/commit/35d1bea0e3cde0e9ad1e6c77d33793ef48260e3b))
+
 ## [2.47.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.46.3...@leather.io/query-v2.47.0) (2026-04-13)
 
 
