@@ -25,9 +25,19 @@ export function Post() {
 
   return (
     <Page>
-      <Flex flexDirection={{ base: 'column', lg: 'row' }} gap="space.10" my="space.07">
+      <Box position="sticky" top={0} zIndex={1} bg="ink.background-primary">
+        <Page.Header />
+      </Box>
+      <Flex
+        flexDirection={{ base: 'column', lg: 'row' }}
+        gap="space.10"
+        mt="space.07"
+        mb="space.07"
+      >
         <Box minWidth="200px" flex="1" maxWidth={{ lg: '380px' }}>
-          <Page.Title my="space.04">{post.title}</Page.Title>
+          <Page.Title mt={0} mb="space.04">
+            {post.title}
+          </Page.Title>
           <styled.p textStyle="label.02" color="ink.text-primary" mb="space.04">
             {post.summary}
           </styled.p>

@@ -62,14 +62,14 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
 }
 
 interface PageHeaderProps {
-  title: React.ReactNode;
+  title?: React.ReactNode;
   children?: React.ReactElement | React.ReactElement[];
 }
 function PageHeader({ title, children }: PageHeaderProps) {
   return (
     <styled.header display="flex" justifyContent="space-between" h="60px" alignItems="center">
       <Flex alignItems="center" justifyContent="space-between" flex={1}>
-        <styled.h1 textStyle="heading.05">{title}</styled.h1>
+        {title && <styled.h1 textStyle="heading.05">{title}</styled.h1>}
         <MockModeToggle />
         {children}
       </Flex>
