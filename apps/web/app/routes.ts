@@ -26,6 +26,32 @@ export default [
     index('pages/advanced/advanced.route.tsx'),
     route('signer-key-generation', 'pages/advanced/tools/signer-key-generation.route.tsx'),
   ]),
+  route('posts/ordinals-vs-runes', 'pages/redirects/leather-runes-wallet-redirect.route.tsx', {
+    id: 'redirect-ordinals-vs-runes',
+  }),
+  route('posts/bitcoin-runes', 'pages/redirects/leather-runes-wallet-redirect.route.tsx', {
+    id: 'redirect-bitcoin-runes',
+  }),
+  route(
+    'posts/see-your-runes-in-usd-with-leather',
+    'pages/redirects/leather-runes-wallet-redirect.route.tsx',
+    { id: 'redirect-see-your-runes-in-usd-with-leather' }
+  ),
+  route(
+    'posts/april-partnership-roundup-more-runes-and-more-bitcoin-defi',
+    'pages/redirects/leather-runes-wallet-redirect.route.tsx',
+    { id: 'redirect-april-partnership-roundup-more-runes-and-more-bitcoin-defi' }
+  ),
+  route(
+    'posts/bitcoin-runes-have-come-to-leather-unpacking-the-runes-protocol',
+    'pages/redirects/leather-runes-wallet-redirect.route.tsx',
+    { id: 'redirect-bitcoin-runes-have-come-to-leather-unpacking-the-runes-protocol' }
+  ),
+  route(
+    'posts/august-partnerships-roundup-do-more-with-your-bitcoin-runes-and-tokens',
+    'pages/redirects/leather-runes-wallet-redirect.route.tsx',
+    { id: 'redirect-august-partnerships-roundup-do-more-with-your-bitcoin-runes-and-tokens' }
+  ),
   // A fallback to legacy post routes
   route('posts/:postSlug', 'pages/posts/post.route.tsx'),
   route('support', 'pages/support/help-center.route.tsx'),
