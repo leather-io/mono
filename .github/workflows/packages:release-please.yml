@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 jobs:
   release-please:
@@ -40,16 +41,28 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
 
+      - name: upgrade-npm-for-oidc
+        run: npm install -g npm@11.12.1 --integrity=sha512-zcoUuF1kezGSAo0CqtvoLXX3mkRqzuqYdL6Y5tdo8g69NVV3CkjQ6ZBhBgB4d7vGkPcV6TcvLi3GRKPDFX+xTA==
+
       - name: build-packages
         run: pnpm build
 
-      - name: set-publishing-config
-        run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # pnpm does not yet support npm's tokenless OIDC trusted publishing
+      # (tracked in https://github.com/pnpm/pnpm/issues/9812). Until it does,
+      # we pack with pnpm (to resolve `workspace:*`) and publish each tarball
+      # with `npm publish`, which performs the OIDC exchange. Once the pnpm
+      # issue is resolved, these two steps can collapse back to a single
+      # `pnpm --filter="./packages/*" publish --no-git-checks`.
+      - name: pack-workspace-packages
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tarballs"
+          pnpm --filter="@leather.io/sdk" --filter="@leather.io/rpc" exec \
+            pnpm pack --pack-destination "$GITHUB_WORKSPACE/tarballs"
 
-      - name: publish-to-npm
-        run: pnpm --filter="./packages/*" publish --no-git-checks
+      - name: publish-to-npm-with-oidc
+        run: |
+          npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-sdk-*.tgz --access public
+          npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-rpc-*.tgz --access public
 
   sync-changelogs:
     needs: release-please
