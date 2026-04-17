@@ -4,13 +4,12 @@ import {
   TokenBalance,
   isAccountQuotedBtcBalance,
   isAddressQuotedStxBalance,
-  isRuneBalance,
   isSip10Balance,
 } from '@leather.io/features';
 
 export function getAvailableBalance(balance: FetchState<TokenBalance>) {
   if (balance.state === 'success') {
-    if (isSip10Balance(balance.value) || isRuneBalance(balance.value)) {
+    if (isSip10Balance(balance.value)) {
       return balance.value.crypto.availableBalance;
     }
     if (isAccountQuotedBtcBalance(balance.value)) {

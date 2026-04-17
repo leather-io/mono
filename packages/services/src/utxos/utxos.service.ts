@@ -16,7 +16,6 @@ import {
   createOwnedUtxoFromMempool,
   filterMatchesAnyUtxoId,
   getInscriptionProtectedUtxoIds,
-  getRuneProtectedUtxoIds,
   getUtxoTotals,
 } from './utxos.utils';
 
@@ -111,35 +110,24 @@ export class UtxosService {
   private async getDescriptorProtectedUtxos(
     fingerprint: string,
     descriptor: string,
-    {
-      discardedInscriptions = [],
-      discardRunes = false,
-      isRunesActive = true,
-      isOrdinalsActive = true,
-    }: AccountRequestUtxoProtectionOptions,
+    { discardedInscriptions = [], isOrdinalsActive = true }: AccountRequestUtxoProtectionOptions,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
     const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
     if (networkMode === 'regtest') {
       return []; // short-circuit on regtest mode
     }
-    const [utxos, inscriptions, runeOutputs] = await Promise.all([
+    const [utxos, inscriptions] = await Promise.all([
       this.getDescriptorTotalUtxos(descriptor, fingerprint, signal),
       isOrdinalsActive
         ? this.bisApiClient.fetchInscriptions(descriptor, { signal, isOrdinalsActive })
-        : Promise.resolve([]),
-      isRunesActive
-        ? this.bisApiClient.fetchRunesValidOutputs(descriptor, { signal, isRunesActive })
         : Promise.resolve([]),
     ]);
     const inscriptionProtectedUtxoIds = getInscriptionProtectedUtxoIds(
       inscriptions,
       discardedInscriptions
     );
-    const runesProtectedUtxoIds = getRuneProtectedUtxoIds(runeOutputs, discardRunes);
-    return utxos.filter(
-      filterMatchesAnyUtxoId([...inscriptionProtectedUtxoIds, ...runesProtectedUtxoIds])
-    );
+    return utxos.filter(filterMatchesAnyUtxoId(inscriptionProtectedUtxoIds));
   }
 
   private async getDescriptorTotalUtxos(

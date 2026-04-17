@@ -12,7 +12,7 @@ export function useAccountRequest(): AccountRequest {
   const accountId = useCurrentAccountId();
   const account = useAccountAddresses(accountId);
   const discardedInscriptions = useDiscardedInscriptions();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
+  const { isOrdinalsActive } = useFlags();
 
   return useMemo(
     () => ({
@@ -20,9 +20,8 @@ export function useAccountRequest(): AccountRequest {
       protections: {
         discardedInscriptions,
         isOrdinalsActive,
-        isRunesActive,
       },
     }),
-    [account, discardedInscriptions, isOrdinalsActive, isRunesActive]
+    [account, discardedInscriptions, isOrdinalsActive]
   );
 }

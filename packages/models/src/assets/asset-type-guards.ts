@@ -1,15 +1,11 @@
 import {
-  Brc20Asset,
   BtcAsset,
   CryptoAsset,
   FungibleCryptoAsset,
   InscriptionAsset,
   NativeCryptoAsset,
   NonFungibleCryptoAsset,
-  RuneAsset,
   Sip10Asset,
-  Src20Asset,
-  StampAsset,
   StxAsset,
 } from './asset.model';
 import { Sip9Asset } from './sip9-asset.model';
@@ -42,24 +38,8 @@ export function isSwappableAsset(asset: CryptoAsset): asset is NativeCryptoAsset
   return isNativeAsset(asset) || isSip10Asset(asset);
 }
 
-export function isBrc20Asset(asset: CryptoAsset): asset is Brc20Asset {
-  return asset.protocol === 'brc20';
-}
-
-export function isSrc20Asset(asset: CryptoAsset): asset is Src20Asset {
-  return asset.protocol === 'src20';
-}
-
-export function isRuneAsset(asset: CryptoAsset): asset is RuneAsset {
-  return asset.protocol === 'rune';
-}
-
 export function isInscriptionAsset(asset: CryptoAsset): asset is InscriptionAsset {
   return asset.protocol === 'inscription';
-}
-
-export function isStampAsset(asset: CryptoAsset): asset is StampAsset {
-  return asset.protocol === 'stamp';
 }
 
 export function isSip9Asset(asset: CryptoAsset): asset is Sip9Asset {

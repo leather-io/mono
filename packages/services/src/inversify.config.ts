@@ -4,11 +4,9 @@ import { ActivityService } from './activity/activity.service';
 import { BlockchainActivityService } from './activity/blockchain-activity.service';
 import { AssetListService } from './asset-list/asset-list.service';
 import { FungibleAssetInfoService } from './assets/fungible-asset-info.service';
-import { RuneAssetService } from './assets/rune-asset.service';
 import { Sip10AssetService } from './assets/sip10-asset.service';
 import { AccountBalancesService } from './balances/account-balances.service';
 import { BtcBalancesService } from './balances/btc-balances.service';
-import { RunesBalancesService } from './balances/runes-balances.service';
 import { Sip10BalancesService } from './balances/sip10-balances.service';
 import { StxBalancesService } from './balances/stx-balances.service';
 import { BnsService } from './bns/bns.service';
@@ -16,7 +14,6 @@ import { BitcoinCoinSelectionService } from './coin-selection/bitcoin-coin-selec
 import { CollectiblesService } from './collectibles/collectibles.service';
 import { InscriptionsService } from './collectibles/inscriptions.service';
 import { Sip9sService } from './collectibles/sip9s.service';
-import { StampsService } from './collectibles/stamps.service';
 import { BitcoinTransactionFeesService } from './fees/bitcoin-transaction-fees.service';
 import { StacksTransactionFeesService } from './fees/stacks-transaction-fees.service';
 import { BestInSlotApiClient } from './infrastructure/api/best-in-slot/best-in-slot-api.client';
@@ -104,14 +101,8 @@ export function getStxBalancesService() {
 export function getSip10BalancesService() {
   return getServicesContainer().get(Sip10BalancesService);
 }
-export function getRunesBalancesService() {
-  return getServicesContainer().get(RunesBalancesService);
-}
 export function getSip10AssetService() {
   return getServicesContainer().get(Sip10AssetService);
-}
-export function getRuneAssetService() {
-  return getServicesContainer().get(RuneAssetService);
 }
 export function getUtxosService() {
   return getServicesContainer().get(UtxosService);
@@ -190,9 +181,6 @@ export function getInscriptionsService() {
 }
 export function getSip9sService() {
   return getServicesContainer().get(Sip9sService);
-}
-export function getStampsService() {
-  return getServicesContainer().get(StampsService);
 }
 export function getStacksProtocolService() {
   return getServicesContainer().get(StacksProtocolService);

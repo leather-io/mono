@@ -8,17 +8,11 @@ import {
 } from './mock-alex-assets';
 import { mockBitcoinFeeRequests } from './mock-bitcoin-fees';
 import { mockBitflowRequests } from './mock-bitflow';
-import { mockMainnetTestAccountBrc20TokensRequest } from './mock-brc20';
 import { mockMainnetTestAccountInscriptionsRequests } from './mock-inscriptions-bis';
 import { mockLaunchDarkly } from './mock-launchdarkly';
 import { mockLeatherApiRequests } from './mock-leather-api';
 import { mockMarketDataRequests } from './mock-market-data';
-import {
-  mockMainnetTestAccountRunesOutputsRequest,
-  mockRunesValidOutputsXpubRequest,
-} from './mock-runes';
 import { mockMainnetTestAccountSbtcDepositRequests } from './mock-sbtc';
-import { mockMainnetTestAccountStampchainRequest } from './mock-src20';
 import { mockMainnetTestAccountStacksBalancesRequest } from './mock-stacks-balances';
 import { mockMainnetTestAccountStacksBalancesV2Request } from './mock-stacks-balances-v2';
 import {
@@ -57,10 +51,6 @@ export async function setupMockApis(page: Page) {
     mockMainnetAlexAssetsRequest(page),
     mockMainnetAlexTokenPricesRequest(page),
     mockLeatherApiRequests(page),
-    mockMainnetTestAccountStampchainRequest(page),
-    mockMainnetTestAccountBrc20TokensRequest(page),
-    mockMainnetTestAccountRunesOutputsRequest(page),
-    mockRunesValidOutputsXpubRequest(page),
     mockMarketDataRequests(page),
     mockMainnetTestAccountSbtcDepositRequests(page),
     mockMainnetTestAccountInscriptionsRequests(page),

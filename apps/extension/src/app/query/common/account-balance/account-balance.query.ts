@@ -24,14 +24,13 @@ export function useCurrentAccountAvailableBalance() {
 function useAccountAvailableBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
   const discardedInscriptions = useDiscardedInscriptions();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
+  const { isOrdinalsActive } = useFlags();
   return toFetchState(
     useGetAccountAvailableBalanceQuery({
       account,
       protections: {
         discardedInscriptions,
         isOrdinalsActive,
-        isRunesActive,
       },
     })
   );
@@ -45,14 +44,13 @@ export function useCurrentAccountTotalBalance() {
 export function useAccountTotalBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
   const discardedInscriptions = useDiscardedInscriptions();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
+  const { isOrdinalsActive } = useFlags();
   return toFetchState(
     useGetAccountTotalBalanceQuery({
       account,
       protections: {
         discardedInscriptions,
         isOrdinalsActive,
-        isRunesActive,
       },
     })
   );

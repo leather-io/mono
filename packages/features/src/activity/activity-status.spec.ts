@@ -7,7 +7,6 @@ import type {
   InscriptionAsset,
   ReceiveAssetActivity,
   SendAssetActivity,
-  StampAsset,
   SwapAssetsActivity,
 } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
@@ -96,28 +95,6 @@ describe('activity-status', () => {
         toAmount: initBigNumber(2),
       };
       expect(formatActivityStatusLabel(activity)).toBe('BTC → STX');
-    });
-
-    it('formats swapAssets label for stamp assets', () => {
-      const stampAsset: StampAsset = {
-        chain: 'bitcoin',
-        category: 'nft',
-        protocol: 'stamp',
-        stamp: 123,
-        stampUrl: 'https://stampchain.io/stamp/123',
-        stampExplorerUrl: 'https://stampchain.io/stamp/123',
-        blockHeight: 800000,
-      };
-      const activity: SwapAssetsActivity = {
-        ...baseActivity,
-        type: 'swapAssets',
-        status: 'success',
-        fromAsset: stampAsset,
-        fromAmount: initBigNumber(1),
-        toAsset: stampAsset,
-        toAmount: initBigNumber(1),
-      };
-      expect(formatActivityStatusLabel(activity)).toBe('Stamp → Stamp');
     });
 
     it('formats swapAssets label for inscription assets', () => {

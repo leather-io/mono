@@ -11,10 +11,8 @@ import type {
 import { type SerializedCryptoAssetId, getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { FungibleAssetVisibilityService } from '../assets/fungible-asset-visibility.service';
-import { createRuneAsset } from '../assets/rune-asset.utils';
 import { createSip10Asset } from '../assets/stacks-asset.utils';
 import { BtcBalancesService } from '../balances/btc-balances.service';
-import { RunesBalancesService } from '../balances/runes-balances.service';
 import { Sip10BalancesService } from '../balances/sip10-balances.service';
 import { StxBalancesService } from '../balances/stx-balances.service';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
@@ -50,8 +48,7 @@ export class AssetListService {
     private readonly tokenAnalyticsService: TokenAnalyticsService,
     private readonly btcBalancesService: BtcBalancesService,
     private readonly stxBalancesService: StxBalancesService,
-    private readonly sip10BalancesService: Sip10BalancesService,
-    private readonly runesBalancesService: RunesBalancesService
+    private readonly sip10BalancesService: Sip10BalancesService
   ) {}
 
   async getAssetList(request: AssetListRequest, signal?: AbortSignal): Promise<AssetListResponse> {
@@ -186,12 +183,8 @@ export class AssetListService {
     const includeAll = !protocols;
 
     const fetchSip10 = includeAll || protocols.includes('sip10');
-    const fetchRune = includeAll || protocols.includes('rune');
 
-    const [sip10Map, runeMap] = await Promise.all([
-      fetchSip10 ? this.leatherApiClient.fetchSip10TokenMap({ signal }) : null,
-      fetchRune ? this.leatherApiClient.fetchRuneMap({ signal }) : null,
-    ]);
+    const sip10Map = fetchSip10 ? await this.leatherApiClient.fetchSip10TokenMap({ signal }) : null;
 
     const assets: FungibleCryptoAsset[] = [];
 
@@ -205,12 +198,6 @@ export class AssetListService {
     if (sip10Map) {
       for (const [principal, token] of entries(sip10Map)) {
         assets.push(createSip10Asset({ ...token, principal }));
-      }
-    }
-
-    if (runeMap) {
-      for (const [runeName, rune] of entries(runeMap)) {
-        assets.push(createRuneAsset(runeName, rune.spacedRuneName, rune.decimals, rune.symbol));
       }
     }
 
@@ -289,7 +276,7 @@ export class AssetListService {
     const accountRequest = request.accountContext;
     const protocolSet = new Set(assets.map(a => a.protocol));
 
-    const [btcResult, stxResult, sip10Result, runesResult] = await Promise.all([
+    const [btcResult, stxResult, sip10Result] = await Promise.all([
       protocolSet.has('nativeBtc')
         ? this.btcBalancesService.getBtcAccountBalance(accountRequest, signal).catch(() => null)
         : null,
@@ -298,9 +285,6 @@ export class AssetListService {
         : null,
       protocolSet.has('sip10')
         ? this.sip10BalancesService.getSip10AccountBalance(accountRequest, signal).catch(() => null)
-        : null,
-      protocolSet.has('rune')
-        ? this.runesBalancesService.getRunesAccountBalance(accountRequest, signal).catch(() => null)
         : null,
     ]);
 
@@ -323,15 +307,6 @@ export class AssetListService {
         map.set(serializeAssetId({ protocol: 'sip10', id: sip10.asset.assetId }), {
           crypto: sip10.crypto,
           quote: sip10.quote,
-        });
-      }
-    }
-
-    if (runesResult) {
-      for (const rune of runesResult.runes) {
-        map.set(serializeAssetId({ protocol: 'rune', id: rune.asset.runeName }), {
-          crypto: rune.crypto,
-          quote: rune.quote,
         });
       }
     }

@@ -1,10 +1,7 @@
 import { expect } from '@playwright/test';
 
 import { test } from '../../fixtures/fixtures';
-import { mockEmptyBrc20TokensRequest } from '../../mocks/mock-brc20';
 import { mockEmptyLeatherApiUtxosRequest } from '../../mocks/mock-leather-api';
-import { mockEmptyRunesOutputsRequest } from '../../mocks/mock-runes';
-import { mockEmptyStampchainRequest } from '../../mocks/mock-src20';
 import { mockEmptyStacksBalancesRequest } from '../../mocks/mock-stacks-balances';
 import { mockEmptyStacksBalancesV2Request } from '../../mocks/mock-stacks-balances-v2';
 import { CoreAssetSelectors, MockedTokensSelectors } from '../../selectors/mocked-tokens.selectors';
@@ -41,50 +38,26 @@ test.describe('Manage tokens', () => {
     const sip10TokenInManageTokensList = homePage.manageTokensAssetsList.getByTestId(
       MockedTokensSelectors.Sip10TokenTestId
     );
-    const brc20InManageTokensList = homePage.manageTokensAssetsList.getByTestId(
-      MockedTokensSelectors.Brc20TokenTestId
-    );
-    const src20InManageTokensList = homePage.manageTokensAssetsList.getByTestId(
-      MockedTokensSelectors.Src20TokenTestId
-    );
 
     await sip10TokenInManageTokensList.click();
-    await brc20InManageTokensList.click();
-    await src20InManageTokensList.click();
 
     await homePage.goBackFromManageTokens();
 
     const sip10InAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.Sip10TokenTestId);
-    const brc20InAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.Brc20TokenTestId);
-    const src20InAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.Src20TokenTestId);
-    const runeInAssetList = homePage.assetList.getByTestId(MockedTokensSelectors.RuneTokenTestId);
 
     await expect(sip10InAssetList).not.toBeAttached();
-    await expect(brc20InAssetList).not.toBeAttached();
-    await expect(src20InAssetList).not.toBeAttached();
-    await expect(runeInAssetList).not.toBeAttached();
 
     await homePage.goToManageTokensPage();
 
     const sip10Toggle = homePage.manageTokensAssetsList.getByTestId(
       MockedTokensSelectors.Sip10TokenTestId
     );
-    const brc20Toggle = homePage.manageTokensAssetsList.getByTestId(
-      MockedTokensSelectors.Brc20TokenTestId
-    );
-    const src20Toggle = homePage.manageTokensAssetsList.getByTestId(
-      MockedTokensSelectors.Src20TokenTestId
-    );
 
     await sip10Toggle.click();
-    await brc20Toggle.click();
-    await src20Toggle.click();
 
     await homePage.goBackFromManageTokens();
 
     await expect(sip10InAssetList).toBeAttached();
-    await expect(brc20InAssetList).toBeAttached();
-    await expect(src20InAssetList).toBeAttached();
   });
 });
 
@@ -93,9 +66,6 @@ test.describe('Manage tokens empty wallet', () => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await mockEmptyStacksBalancesRequest(page);
     await mockEmptyStacksBalancesV2Request(page);
-    await mockEmptyBrc20TokensRequest(page);
-    await mockEmptyStampchainRequest(page);
-    await mockEmptyRunesOutputsRequest(page);
     await mockEmptyLeatherApiUtxosRequest(page);
     await onboardingPage.signInWithTestAccount(extensionId);
   });

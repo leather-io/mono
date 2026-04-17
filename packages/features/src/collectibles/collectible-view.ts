@@ -23,14 +23,6 @@ export function createCollectibleView(asset: NonFungibleCryptoAsset): Collectibl
         subtitle: 'Ordinal inscription',
         asset,
       };
-    case 'stamp':
-      return {
-        key,
-        protocol: asset.protocol,
-        title: `# ${asset.stamp}`,
-        subtitle: 'Bitcoin Stamp',
-        asset,
-      };
     case 'sip9': {
       const assetName = getStacksContractAssetName(asset.assetId);
       const isBns =

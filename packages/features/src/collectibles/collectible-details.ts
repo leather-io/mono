@@ -5,7 +5,6 @@ import type {
   Money,
   Sip9Asset,
   Sip9Attribute,
-  StampAsset,
 } from '@leather.io/models';
 
 import { getBitcoinExplorerLink } from '../activity/activity-links';
@@ -101,28 +100,6 @@ export function formatAttributeValue(attribute: Sip9Attribute): string {
     return `${attribute.value} (${attribute.rarityPercent}%)`;
   }
   return String(attribute.value);
-}
-
-export interface StampInfo {
-  name: string;
-  stampExplorerUrl?: string;
-  blockExplorerUrl?: string | null;
-  blockHeight?: number;
-}
-
-export function getStampInfo(asset: StampAsset, bitcoinNetwork: BitcoinNetwork): StampInfo {
-  return {
-    name: `Stamp #${asset.stamp}`,
-    stampExplorerUrl: asset.stampExplorerUrl,
-    blockExplorerUrl: asset.blockHeight
-      ? getBitcoinExplorerLink({
-          id: asset.blockHeight.toString(),
-          type: 'block',
-          networkPreference: bitcoinNetwork,
-        })
-      : undefined,
-    blockHeight: asset.blockHeight,
-  };
 }
 
 export const DESCRIPTION_TRUNCATE_LENGTH = 180;

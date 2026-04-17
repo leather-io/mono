@@ -29,15 +29,6 @@ export class MarketStatsService {
         const entry = sip10Map[asset.contractId];
         return entry ? mapPriceEntryToMarketStats(entry) : null;
       }
-      case 'rune': {
-        const runeMap = await this.leatherApiClient.fetchRunePriceMap({ signal });
-        const entry = runeMap[asset.runeName];
-        if (entry) {
-          return mapPriceEntryToMarketStats(entry);
-        }
-        const single = await this.leatherApiClient.fetchRunePrice(asset.runeName, { signal });
-        return single ? mapPriceEntryToMarketStats(single) : null;
-      }
       default:
         return null;
     }

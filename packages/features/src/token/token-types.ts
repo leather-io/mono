@@ -1,19 +1,11 @@
 import { CryptoAssetProtocol, CryptoAssetProtocols } from '@leather.io/models';
 import { type SerializedCryptoAssetId, deserializeAssetId } from '@leather.io/utils';
 
-const supportedAssetProtocols = [
-  'nativeBtc',
-  'nativeStx',
-  'sip10',
-  'rune',
-  'sip9',
-  'inscription',
-  'stamp',
-] as const;
+const supportedAssetProtocols = ['nativeBtc', 'nativeStx', 'sip10', 'sip9', 'inscription'] as const;
 
-const supportedFungibleAssetProtocols = ['nativeBtc', 'nativeStx', 'sip10', 'rune'] as const;
+const supportedFungibleAssetProtocols = ['nativeBtc', 'nativeStx', 'sip10'] as const;
 
-const supportedNonFungibleAssetProtocols = ['inscription', 'sip9', 'stamp'] as const;
+const supportedNonFungibleAssetProtocols = ['inscription', 'sip9'] as const;
 
 export type SupportedAssetProtocol = (typeof supportedAssetProtocols)[number];
 export type SupportedFungibleAssetProtocol = (typeof supportedFungibleAssetProtocols)[number];

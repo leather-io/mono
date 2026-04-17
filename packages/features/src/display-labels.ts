@@ -17,10 +17,6 @@ export function getProtocolDisplayLabel(protocol: CryptoAssetProtocol): string {
     sip9: 'SIP-009',
     sip10: 'SIP-010',
     inscription: 'Ordinals',
-    stamp: 'Stamps',
-    brc20: 'BRC-20',
-    src20: 'SRC-20',
-    rune: 'Runes',
   };
   return labels[protocol] ?? protocol;
 }

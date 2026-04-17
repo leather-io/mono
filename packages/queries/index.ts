@@ -9,7 +9,6 @@ export * from './src/market-stats/market-stats.query-config';
 export * from './src/token-analytics/token-analytics.query-config';
 export * from './src/balances/btc-balances.query-config';
 export * from './src/balances/stx-balances.query-config';
-export * from './src/balances/runes-balances.query-config';
 export * from './src/balances/sip10-balances.query-config';
 export * from './src/balances/account-balances.query-config';
 export * from './src/assets/fungible-asset-info.query-config';

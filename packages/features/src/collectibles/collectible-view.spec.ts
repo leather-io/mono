@@ -24,16 +24,6 @@ const inscription = {
   genesisBlockHeight: 0,
 } satisfies NonFungibleCryptoAsset;
 
-const stamp = {
-  protocol: 'stamp',
-  chain: 'bitcoin',
-  category: 'nft',
-  stamp: 100,
-  stampUrl: 'https://stampchain.io',
-  stampExplorerUrl: 'https://stampchain.io',
-  blockHeight: 0,
-} satisfies NonFungibleCryptoAsset;
-
 const sip9 = {
   protocol: 'sip9',
   chain: 'stacks',
@@ -56,12 +46,6 @@ describe(createCollectibleView.name, () => {
     expect(view.subtitle).toBe('Ordinal inscription');
   });
 
-  it('formats stamp metadata', () => {
-    const view = createCollectibleView(stamp);
-    expect(view.title).toBe('# 100');
-    expect(view.subtitle).toBe('Bitcoin Stamp');
-  });
-
   it('marks BNS collectibles as special SIP-009 items', () => {
     const view = createCollectibleView(sip9);
     expect(view.isBns).toBe(true);
@@ -71,8 +55,8 @@ describe(createCollectibleView.name, () => {
 
 describe(createCollectibleViews.name, () => {
   it('creates stable keys for each asset', () => {
-    const views = createCollectibleViews([inscription, stamp, sip9]);
+    const views = createCollectibleViews([inscription, sip9]);
     const keys = new Set(views.map(view => view.key));
-    expect(keys.size).toBe(3);
+    expect(keys.size).toBe(2);
   });
 });

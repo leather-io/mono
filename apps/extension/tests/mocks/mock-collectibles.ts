@@ -132,24 +132,5 @@ export async function mockEmptyCollectibles(page: Page) {
     page.route('**/api.hiro.so/extended/v1/tokens/nft/holdings*', route =>
       route.fulfill({ json: { limit: 50, offset: 0, total: 0, results: [] } })
     ),
-    page.route('**/stampchain.io/api/v2/balance/**', route =>
-      route.fulfill({
-        json: {
-          page: 1,
-          limit: 1000,
-          totalPages: 0,
-          total: 0,
-          last_block: 919341,
-          btc: {
-            address: '',
-            balance: 0,
-            txCount: 0,
-            unconfirmedBalance: 0,
-            unconfirmedTxCount: 0,
-          },
-          data: { stamps: [], src20: [] },
-        },
-      })
-    ),
   ]);
 }

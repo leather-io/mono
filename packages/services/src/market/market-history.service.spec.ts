@@ -3,7 +3,6 @@ import {
   CryptoAssetProtocols,
   FungibleCryptoAsset,
   MarketData,
-  RuneAsset,
   Sip10Asset,
 } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
@@ -17,7 +16,6 @@ import { convertApiPriceSnapshots } from './market-history.utils';
 describe(MarketHistoryService.name, () => {
   const nativeTokenPriceChange = 1;
   const sip10TokenPriceChange = 2;
-  const runePriceChange = 3;
 
   const nativeTokenApiPriceHistory = {
     changePercentage: nativeTokenPriceChange,
@@ -37,20 +35,10 @@ describe(MarketHistoryService.name, () => {
       },
     ],
   };
-  const runeApiPriceHistory = {
-    changePercentage: runePriceChange,
-    snapshots: [
-      {
-        price: 3,
-        timestamp: '2025-06-28T12:00:00.000Z',
-      },
-    ],
-  };
 
   const mockLeatherApiClient = {
     fetchNativeTokenHistory: vi.fn().mockResolvedValue(nativeTokenApiPriceHistory),
     fetchSip10TokenHistory: vi.fn().mockResolvedValue(sip10TokenApiPriceHistory),
-    fetchRuneHistory: vi.fn().mockResolvedValue(runeApiPriceHistory),
   } as unknown as LeatherApiClient;
 
   const mockSettingsService = {
@@ -72,7 +60,6 @@ describe(MarketHistoryService.name, () => {
   describe('getPriceChangePercentage', () => {
     it('should return the price change percentage from the Leather API', async () => {
       const contractId = 'contractId';
-      const runeName = 'runeName';
       const signal = new AbortController().signal;
       const period = '1d';
 
@@ -83,11 +70,6 @@ describe(MarketHistoryService.name, () => {
       );
       const sip10AssetPriceChange = await marketHistoryService.getPriceChangePercentage(
         { contractId, protocol: CryptoAssetProtocols.sip10 } as Sip10Asset,
-        period,
-        signal
-      );
-      const runeAssetPriceChange = await marketHistoryService.getPriceChangePercentage(
-        { runeName, protocol: CryptoAssetProtocols.rune } as RuneAsset,
         period,
         signal
       );
@@ -102,13 +84,9 @@ describe(MarketHistoryService.name, () => {
       expect(mockLeatherApiClient.fetchSip10TokenHistory).toHaveBeenCalledWith(contractId, period, {
         signal,
       });
-      expect(mockLeatherApiClient.fetchRuneHistory).toHaveBeenCalledWith(runeName, period, {
-        signal,
-      });
 
       expect(nativeAssetPriceChange).toEqual(nativeAssetPriceChange);
       expect(sip10AssetPriceChange).toEqual(sip10AssetPriceChange);
-      expect(runeAssetPriceChange).toEqual(runeAssetPriceChange);
     });
 
     it('should throw an error if the asset protocol is not supported', async () => {
@@ -123,7 +101,6 @@ describe(MarketHistoryService.name, () => {
   describe('getAssetPriceHistory', () => {
     it('should return the asset price history from the Leather API', async () => {
       const contractId = 'contractId';
-      const runeName = 'runeName';
       const signal = new AbortController().signal;
       const period = '1d';
 
@@ -134,11 +111,6 @@ describe(MarketHistoryService.name, () => {
       );
       const sip10AssetPriceHistory = await marketHistoryService.getPriceHistory(
         { contractId, protocol: CryptoAssetProtocols.sip10 } as Sip10Asset,
-        period,
-        signal
-      );
-      const runeAssetPriceHistory = await marketHistoryService.getPriceHistory(
-        { runeName, protocol: CryptoAssetProtocols.rune } as RuneAsset,
         period,
         signal
       );
@@ -153,9 +125,6 @@ describe(MarketHistoryService.name, () => {
       expect(mockLeatherApiClient.fetchSip10TokenHistory).toHaveBeenCalledWith(contractId, period, {
         signal,
       });
-      expect(mockLeatherApiClient.fetchRuneHistory).toHaveBeenCalledWith(runeName, period, {
-        signal,
-      });
 
       expect(nativeAssetPriceHistory).toEqual({
         period,
@@ -166,11 +135,6 @@ describe(MarketHistoryService.name, () => {
         period,
         changePercentage: sip10TokenPriceChange,
         prices: convertApiPriceSnapshots(sip10TokenApiPriceHistory.snapshots),
-      });
-      expect(runeAssetPriceHistory).toEqual({
-        period,
-        changePercentage: runePriceChange,
-        prices: convertApiPriceSnapshots(runeApiPriceHistory.snapshots),
       });
     });
 

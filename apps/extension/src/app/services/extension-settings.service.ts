@@ -13,7 +13,7 @@ export class ExtensionSettingsService implements SettingsService {
       assetVisibility: Object.fromEntries(
         Object.values(selectTokenState(store.getState()).entities).map(tokenSetting => [
           serializeAssetId({
-            protocol: tokenSetting.id.includes('::') ? 'sip10' : 'rune',
+            protocol: 'sip10',
             id: tokenSetting.id,
           }),
           tokenSetting.enabled,

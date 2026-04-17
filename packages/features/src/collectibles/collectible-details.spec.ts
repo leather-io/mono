@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { GAMMA_URL, HIRO_EXPLORER_URL, ORD_IO_URL } from '@leather.io/constants';
-import type { InscriptionAsset, Sip9Asset, Sip9Attribute, StampAsset } from '@leather.io/models';
+import type { InscriptionAsset, Sip9Asset, Sip9Attribute } from '@leather.io/models';
 
 import {
   DESCRIPTION_TRUNCATE_LENGTH,
@@ -12,7 +12,6 @@ import {
   getInscriptionInfo,
   getOrdExplorerUrl,
   getSip9Info,
-  getStampInfo,
   truncateDescription,
 } from './collectible-details';
 
@@ -169,21 +168,5 @@ describe('getSip9Info', () => {
     expect(info.collectionUrl).toContain('gamma.io');
     expect(info.contractUrl).toContain('explorer.hiro.so');
     expect(info.attributes).toHaveLength(1);
-  });
-});
-
-describe('getStampInfo', () => {
-  it('extracts stamp info correctly', () => {
-    const asset = {
-      stamp: 456,
-      stampExplorerUrl: 'https://stampchain.io/stamp/456',
-      blockHeight: 800000,
-    } as StampAsset;
-
-    const info = getStampInfo(asset, 'mainnet');
-    expect(info.name).toBe('Stamp #456');
-    expect(info.stampExplorerUrl).toBe('https://stampchain.io/stamp/456');
-    expect(info.blockExplorerUrl).toContain('800000');
-    expect(info.blockHeight).toBe(800000);
   });
 });

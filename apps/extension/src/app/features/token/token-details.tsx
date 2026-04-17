@@ -10,7 +10,6 @@ import { useCurrentAccountId } from '@app/store/accounts/account';
 
 import { BitcoinTokenDetails } from './bitcoin-token-details';
 import { CollectibleDetails } from './collectible-details';
-import { RuneTokenDetails } from './rune-token-details';
 import { Sip10TokenDetails } from './sip10-token-details';
 import { StacksTokenDetails } from './stacks-token-details';
 import { TokenDetailsError } from './token-details-error';
@@ -19,7 +18,7 @@ export function TokenDetails() {
   const { '*': encodedAssetId } = useParams();
   const assetId = parseTokenDetailsAssetId(encodedAssetId);
 
-  const { isOrdinalsActive, isRunesActive } = useFlags();
+  const { isOrdinalsActive } = useFlags();
   const accountId = useCurrentAccountId();
   const account = useAccountAddresses(accountId);
 
@@ -36,20 +35,11 @@ export function TokenDetails() {
       return <StacksTokenDetails accountId={accountId} account={account} />;
     case CryptoAssetProtocols.sip10:
       return <Sip10TokenDetails accountId={accountId} account={account} assetId={assetId} />;
-    case CryptoAssetProtocols.rune:
-      if (!isRunesActive) return <TokenDetailsError />;
-      return <RuneTokenDetails accountId={accountId} account={account} assetId={assetId} />;
     case CryptoAssetProtocols.sip9:
-      return <CollectibleDetails account={account} assetId={assetId} protocol={protocol} />;
-    case CryptoAssetProtocols.stamp:
-      if (!isRunesActive) return <TokenDetailsError />;
       return <CollectibleDetails account={account} assetId={assetId} protocol={protocol} />;
     case CryptoAssetProtocols.inscription:
       if (!isOrdinalsActive) return <TokenDetailsError />;
       return <CollectibleDetails account={account} assetId={assetId} protocol={protocol} />;
-    case CryptoAssetProtocols.brc20:
-    case CryptoAssetProtocols.src20:
-      return <TokenDetailsError />;
     default:
       assertUnreachable(protocol);
       return <TokenDetailsError />;

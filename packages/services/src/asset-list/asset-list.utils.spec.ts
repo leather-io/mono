@@ -1,5 +1,5 @@
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import type { FungibleCryptoAsset, RuneAsset, Sip10Asset } from '@leather.io/models';
+import type { FungibleCryptoAsset, Sip10Asset } from '@leather.io/models';
 import {
   type SerializedCryptoAssetId,
   createBaseCryptoAssetBalance,
@@ -33,18 +33,7 @@ const sip10Asset: Sip10Asset = {
   symbol: 'TT',
 };
 
-const runeAsset: RuneAsset = {
-  chain: 'bitcoin',
-  category: 'fungible',
-  protocol: 'rune',
-  decimals: 8,
-  hasMemo: false,
-  runeName: 'DOGGO',
-  spacedRuneName: 'D.O.G.G.O',
-  symbol: '¤',
-};
-
-const allAssets: FungibleCryptoAsset[] = [btcAsset, stxAsset, sip10Asset, runeAsset];
+const allAssets: FungibleCryptoAsset[] = [btcAsset, stxAsset, sip10Asset];
 
 function createTestItem(
   overrides: Partial<AssetListItem> & { id: SerializedCryptoAssetId }
@@ -54,28 +43,21 @@ function createTestItem(
 
 describe(filterAssetsByProtocol.name, () => {
   test('filters to requested protocols', () => {
-    const result = allAssets.filter(filterAssetsByProtocol(['nativeBtc', 'rune']));
-    expect(result).toHaveLength(2);
-    expect(result.map(a => a.protocol)).toEqual(['nativeBtc', 'rune']);
-  });
-
-  test('returns empty when no protocols match', () => {
-    const result = allAssets.filter(filterAssetsByProtocol(['brc20']));
-    expect(result).toHaveLength(0);
+    const result = allAssets.filter(filterAssetsByProtocol(['nativeBtc']));
+    expect(result).toHaveLength(1);
+    expect(result.map(a => a.protocol)).toEqual(['nativeBtc']);
   });
 
   test('returns all when all protocols requested', () => {
-    const result = allAssets.filter(
-      filterAssetsByProtocol(['nativeBtc', 'nativeStx', 'sip10', 'rune'])
-    );
-    expect(result).toHaveLength(4);
+    const result = allAssets.filter(filterAssetsByProtocol(['nativeBtc', 'nativeStx', 'sip10']));
+    expect(result).toHaveLength(3);
   });
 });
 
 describe(filterAssetsByChain.name, () => {
   test('filters to bitcoin chain', () => {
     const result = allAssets.filter(filterAssetsByChain('bitcoin'));
-    expect(result).toHaveLength(2);
+    expect(result).toHaveLength(1);
     expect(result.every(a => a.chain === 'bitcoin')).toBe(true);
   });
 

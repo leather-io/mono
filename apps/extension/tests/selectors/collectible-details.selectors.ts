@@ -9,7 +9,6 @@ export enum CollectibleDetailsSelectors {
   CollectibleCard = 'collectible-card',
   CollectibleCardInscription = 'collectible-card-inscription',
   CollectibleCardSip9 = 'collectible-card-sip9',
-  CollectibleCardStamp = 'collectible-card-stamp',
   ViewOriginalMenuItem = 'view-original-menu-item',
   ProtectMenuItem = 'protect-menu-item',
   UnprotectMenuItem = 'unprotect-menu-item',
@@ -20,5 +19,4 @@ export enum CollectibleDetailsSelectors {
   Sip9LastSale = 'sip9-last-sale',
   Sip9Description = 'sip9-description',
   Sip9Attributes = 'sip9-attributes',
-  StampDetailsSection = 'stamp-details-section',
 }

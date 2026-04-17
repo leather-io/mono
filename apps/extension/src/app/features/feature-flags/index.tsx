@@ -33,7 +33,6 @@ interface FeatureFlags {
   swapRevamp: boolean;
   releaseTrendingTokens: boolean;
   isOrdinalsActive: boolean;
-  isRunesActive: boolean;
 }
 
 export function useFlags() {

@@ -1,12 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { AccountAddresses, InscriptionAsset, Sip9Asset, StampAsset } from '@leather.io/models';
+import type { AccountAddresses, InscriptionAsset, Sip9Asset } from '@leather.io/models';
 
 import type { BnsService } from '../bns/bns.service';
 import { CollectiblesService } from './collectibles.service';
 import type { InscriptionsService } from './inscriptions.service';
 import type { Sip9sService } from './sip9s.service';
-import type { StampsService } from './stamps.service';
 
 describe(CollectiblesService.name, () => {
   const mockInscriptions: InscriptionAsset[] = [
@@ -26,27 +25,6 @@ describe(CollectiblesService.name, () => {
       number: 2,
       mimeType: 'image/jpeg',
     } as unknown as InscriptionAsset,
-  ];
-
-  const mockStamps: StampAsset[] = [
-    {
-      chain: 'bitcoin',
-      category: 'nft',
-      protocol: 'stamp',
-      stamp: 67890,
-      stampUrl: 'https://stampchain.io/stamps/67890.png',
-      stampExplorerUrl: 'https://stampchain.io/stamp/67890',
-      blockHeight: 115,
-    },
-    {
-      chain: 'bitcoin',
-      category: 'nft',
-      protocol: 'stamp',
-      stamp: 12345,
-      stampUrl: 'https://stampchain.io/stamps/12345.png',
-      stampExplorerUrl: 'https://stampchain.io/stamp/12345',
-      blockHeight: 105,
-    },
   ];
 
   const mockSip9s: Sip9Asset[] = [
@@ -70,10 +48,6 @@ describe(CollectiblesService.name, () => {
     getAccountInscriptions: vi.fn().mockResolvedValue(mockInscriptions),
   } as unknown as InscriptionsService;
 
-  const mockStampsService = {
-    getAccountStamps: vi.fn().mockResolvedValue(mockStamps),
-  } as unknown as StampsService;
-
   const mockSip9sService = {
     getAccountSip9s: vi.fn().mockResolvedValue(mockSip9s),
   } as unknown as Sip9sService;
@@ -84,7 +58,6 @@ describe(CollectiblesService.name, () => {
 
   const collectiblesService = new CollectiblesService(
     mockInscriptionsService,
-    mockStampsService,
     mockSip9sService,
     mockBnsService
   );
@@ -111,18 +84,14 @@ describe(CollectiblesService.name, () => {
         { account },
         undefined
       );
-      expect(mockStampsService.getAccountStamps).toHaveBeenCalledWith({ account }, undefined);
       expect(mockSip9sService.getAccountSip9s).toHaveBeenCalledWith({ account }, undefined);
 
-      expect(collectibles).toHaveLength(6);
+      expect(collectibles).toHaveLength(4);
 
-      // Stacks NFTs first, then inscriptions, then stamps
       expect(collectibles[0].protocol).toEqual('sip9');
       expect(collectibles[1].protocol).toEqual('sip9');
       expect(collectibles[2].protocol).toEqual('inscription');
       expect(collectibles[3].protocol).toEqual('inscription');
-      expect(collectibles[4].protocol).toEqual('stamp');
-      expect(collectibles[5].protocol).toEqual('stamp');
     });
 
     it('passes abort signal to all services', async () => {
@@ -142,10 +111,6 @@ describe(CollectiblesService.name, () => {
         { account },
         abortController.signal
       );
-      expect(mockStampsService.getAccountStamps).toHaveBeenCalledWith(
-        { account },
-        abortController.signal
-      );
       expect(mockSip9sService.getAccountSip9s).toHaveBeenCalledWith(
         { account },
         abortController.signal
@@ -154,7 +119,6 @@ describe(CollectiblesService.name, () => {
 
     it('returns empty array when all services return empty', async () => {
       vi.spyOn(mockInscriptionsService, 'getAccountInscriptions').mockResolvedValueOnce([]);
-      vi.spyOn(mockStampsService, 'getAccountStamps').mockResolvedValueOnce([]);
       vi.spyOn(mockSip9sService, 'getAccountSip9s').mockResolvedValueOnce([]);
 
       const account: AccountAddresses = {
@@ -168,7 +132,6 @@ describe(CollectiblesService.name, () => {
 
     it('returns only stacks collectibles when bitcoin services return empty', async () => {
       vi.spyOn(mockInscriptionsService, 'getAccountInscriptions').mockResolvedValueOnce([]);
-      vi.spyOn(mockStampsService, 'getAccountStamps').mockResolvedValueOnce([]);
 
       const account: AccountAddresses = {
         id: { fingerprint: 'fp1', accountIndex: 0 },
@@ -195,9 +158,8 @@ describe(CollectiblesService.name, () => {
 
       const collectibles = await collectiblesService.getAccountCollectibles({ account });
 
-      expect(collectibles).toHaveLength(4);
+      expect(collectibles).toHaveLength(2);
       expect(collectibles.filter(c => c.protocol === 'inscription')).toHaveLength(2);
-      expect(collectibles.filter(c => c.protocol === 'stamp')).toHaveLength(2);
     });
 
     it('filters out SIP-9 NFTs whose names match owned BNS names', async () => {

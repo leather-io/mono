@@ -3,7 +3,6 @@ import type { BitcoinTx, InscriptionAsset, Money } from '@leather.io/models';
 import { isEmptyArray, sumNumbers } from '@leather.io/utils';
 
 import { UtxoResponseItem } from '../../types/utxo';
-import { RunesOutputsByAddress } from '../clients/best-in-slot';
 
 export function createBitcoinCryptoCurrencyAssetTypeWrapper(balance: Money) {
   return {
@@ -50,11 +49,5 @@ export function filterUtxosWithInscriptions(inscriptions: InscriptionAsset[]) {
       inscription =>
         `${utxo.txid}:${utxo.vout.toString()}` === `${inscription.txid}:${inscription.output}`
     );
-  };
-}
-
-export function filterUtxosWithRunes(runes: RunesOutputsByAddress[]) {
-  return <T extends UtxoIdentifier>(utxo: T) => {
-    return !runes.some(rune => rune.output === `${utxo.txid}:${utxo.vout}`);
   };
 }

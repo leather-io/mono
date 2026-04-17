@@ -1,13 +1,6 @@
-import {
-  CryptoAssetCategories,
-  CryptoAssetChains,
-  CryptoAssetProtocols,
-  StampAsset,
-} from '@leather.io/models';
 import { CreateInscriptionData } from '@leather.io/utils';
 
 import { BisInscription } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
-import { STAMPCHAIN_API_BASE_URL } from '../infrastructure/api/stampchain/stampchain-api.client';
 
 export function mapBisInscriptionToCreateInscriptionData(
   bisInscription: BisInscription
@@ -50,22 +43,4 @@ const lpTokenPatterns = [
 export function isLpToken(assetIdentifier: string): boolean {
   const lowerIdentifier = assetIdentifier.toLowerCase();
   return lpTokenPatterns.some(pattern => lowerIdentifier.includes(pattern));
-}
-
-interface StampData {
-  stamp: number;
-  stampUrl: string;
-  blockHeight: number;
-}
-
-export function createStampAsset({ stamp, stampUrl, blockHeight }: StampData): StampAsset {
-  return {
-    chain: CryptoAssetChains.bitcoin,
-    category: CryptoAssetCategories.nft,
-    protocol: CryptoAssetProtocols.stamp,
-    stamp,
-    stampUrl,
-    stampExplorerUrl: `${STAMPCHAIN_API_BASE_URL}/stamp/${stamp}`,
-    blockHeight,
-  };
 }

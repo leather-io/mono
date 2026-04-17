@@ -30,14 +30,13 @@ export function useCurrentBtcBalanceWithFallback() {
 export function useBtcAccountBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
   const discardedInscriptions = useDiscardedInscriptions();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
+  const { isOrdinalsActive } = useFlags();
   return toFetchState(
     useGetBtcAccountBalanceQuery({
       account,
       protections: {
         discardedInscriptions,
         isOrdinalsActive,
-        isRunesActive,
       },
     })
   );
@@ -46,7 +45,7 @@ export function useBtcAccountBalance(accountId: AccountId) {
 export function useNativeSegwitBtcAccountBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
   const discardedInscriptions = useDiscardedInscriptions();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
+  const { isOrdinalsActive } = useFlags();
 
   return toFetchState(
     useGetBtcAccountBalanceQuery({
@@ -54,7 +53,6 @@ export function useNativeSegwitBtcAccountBalance(accountId: AccountId) {
       protections: {
         discardedInscriptions,
         isOrdinalsActive,
-        isRunesActive,
       },
       exclusions: { taprootAddresses: true },
     })
@@ -64,7 +62,7 @@ export function useNativeSegwitBtcAccountBalance(accountId: AccountId) {
 export function useTaprootBtcAccountBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
   const discardedInscriptions = useDiscardedInscriptions();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
+  const { isOrdinalsActive } = useFlags();
 
   return toFetchState(
     useGetBtcAccountBalanceQuery({
@@ -72,7 +70,6 @@ export function useTaprootBtcAccountBalance(accountId: AccountId) {
       protections: {
         discardedInscriptions,
         isOrdinalsActive,
-        isRunesActive,
       },
       exclusions: { nativeSegwitAddresses: true },
     })

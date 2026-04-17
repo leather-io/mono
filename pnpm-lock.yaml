@@ -1882,12 +1882,6 @@ importers:
       '@leather.io/utils':
         specifier: workspace:*
         version: link:../utils
-      '@noble/hashes':
-        specifier: 1.5.0
-        version: 1.5.0
-      '@scure/base':
-        specifier: 1.2.4
-        version: 1.2.4
       '@scure/btc-signer':
         specifier: 1.6.0
         version: 1.6.0
@@ -1924,9 +1918,6 @@ importers:
       uuid:
         specifier: 11.1.0
         version: 11.1.0
-      yup:
-        specifier: 1.4.0
-        version: 1.4.0
       zod:
         specifier: 4.0.17
         version: 4.0.17

@@ -12,12 +12,12 @@ function useAccountCollectiblesQuery(
   options: Partial<UseQueryOptions<NonFungibleCryptoAsset[], Error, CollectibleView[]>> = {}
 ) {
   const settings = useUserSettings();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
+  const { isOrdinalsActive } = useFlags();
   const { select, ...rest } = options;
 
   return useQuery<NonFungibleCryptoAsset[], Error, CollectibleView[]>({
     ...createAccountCollectiblesQueryConfig(
-      { account, protections: { isOrdinalsActive, isRunesActive } },
+      { account, protections: { isOrdinalsActive } },
       settings
     ),
     ...rest,

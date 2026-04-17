@@ -12,18 +12,17 @@ export function useNativeSegwitAccountRequest(): AccountRequest {
   const currentAccount = useCurrentAccountId();
   const account = useAccountAddresses(currentAccount);
   const discardedInscriptions = useDiscardedInscriptions();
-  const { isRunesActive, isOrdinalsActive } = useFlags();
+  const { isOrdinalsActive } = useFlags();
 
   return useMemo(
     () => ({
       account,
       protections: {
         discardedInscriptions,
-        isRunesActive,
         isOrdinalsActive,
       },
       exclusions: { taprootAddresses: true },
     }),
-    [account, discardedInscriptions, isOrdinalsActive, isRunesActive]
+    [account, discardedInscriptions, isOrdinalsActive]
   );
 }

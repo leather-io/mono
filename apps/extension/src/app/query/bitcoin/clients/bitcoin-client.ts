@@ -13,7 +13,7 @@ import { useLeatherNetwork } from '@app/query/leather-query-provider';
 
 export function useBitcoinClient() {
   const network = useLeatherNetwork();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
+  const { isOrdinalsActive } = useFlags();
   const bestInSlotPath = whenNetwork(
     bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode)
   )({
@@ -27,14 +27,13 @@ export function useBitcoinClient() {
         networkName: network.chain.bitcoin.bitcoinNetwork,
         basePath: network.chain.bitcoin.bitcoinUrl,
         bestInSlotPath,
-        bestInSlotOptions: { isOrdinalsActive, isRunesActive },
+        bestInSlotOptions: { isOrdinalsActive },
       }),
     [
       bestInSlotPath,
       network.chain.bitcoin.bitcoinNetwork,
       network.chain.bitcoin.bitcoinUrl,
       isOrdinalsActive,
-      isRunesActive,
     ]
   );
 }

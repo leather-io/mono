@@ -19,9 +19,5 @@ describe('getProtocolDisplayLabel', () => {
     expect(getProtocolDisplayLabel('sip9')).toBe('SIP-009');
     expect(getProtocolDisplayLabel('sip10')).toBe('SIP-010');
     expect(getProtocolDisplayLabel('inscription')).toBe('Ordinals');
-    expect(getProtocolDisplayLabel('stamp')).toBe('Stamps');
-    expect(getProtocolDisplayLabel('brc20')).toBe('BRC-20');
-    expect(getProtocolDisplayLabel('src20')).toBe('SRC-20');
-    expect(getProtocolDisplayLabel('rune')).toBe('Runes');
   });
 });
