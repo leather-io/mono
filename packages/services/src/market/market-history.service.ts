@@ -79,10 +79,8 @@ export class MarketHistoryService {
         return this.leatherApiClient.fetchNativeTokenHistory(asset.symbol, period, { signal });
       case CryptoAssetProtocols.sip10:
         return this.leatherApiClient.fetchSip10TokenHistory(asset.contractId, period, { signal });
-      case CryptoAssetProtocols.rune:
-        return this.leatherApiClient.fetchRuneHistory(asset.runeName, period, { signal });
       default:
-        throw Error('Price history not supported for asset type: ' + asset.protocol);
+        throw Error('Price history not supported for asset type');
     }
   }
 }

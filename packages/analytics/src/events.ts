@@ -152,7 +152,7 @@ interface HistoricalEvents {
   unable_to_read_available_balance_in_stx_validator: undefined;
   view_bitcoin_transaction: undefined;
   view_transaction: undefined;
-  view_collectibles: { ordinals_count?: number; stamps_count?: number; stacks_nfts_count?: number };
+  view_collectibles: { ordinals_count?: number; stacks_nfts_count?: number };
   view_rpc_send_transfer_confirmation: { symbol: string };
   view_rpc_sign_and_broadcast_psbt_confirmation: { symbol: string };
   view_transaction_confirmation: { symbol: string };
@@ -229,10 +229,8 @@ interface TokenPortfolioSummary {
   walletAccountId: string;
   platform: 'mobile' | 'extension';
   sip10TokenCount: number;
-  runeTokenCount: number;
   totalTokenCount: number;
   sip10TokenValue: number;
-  runeTokenValue: number;
   totalTokenValue: number;
   fiatCurrency?: string;
 }

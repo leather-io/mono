@@ -32,7 +32,6 @@ export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheet
   const sip10s = useSip10AccountBalance(currentAccount.fingerprint, currentAccount.accountIndex, {
     includeHiddenAssets: true,
   });
-
   const { isEnabled: isSip10Enabled } = useManagedSip10Tools(
     currentAccount.fingerprint,
     currentAccount.accountIndex

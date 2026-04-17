@@ -5,7 +5,6 @@ import {
 } from '@tests/mocks/constants';
 import { mockImageInscription } from '@tests/mocks/mock-collectibles';
 import { mockMainnetTestAccountInscriptionsRequests } from '@tests/mocks/mock-inscriptions-bis';
-import { mockEmptyStampchainRequest } from '@tests/mocks/mock-src20';
 import { mockMainnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxos';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
@@ -21,7 +20,6 @@ import { test } from '../../fixtures/fixtures';
 test.describe('Send inscription', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await mockEmptyStampchainRequest(globalPage.page);
     await mockMainnetTestAccountInscriptionsRequests(globalPage.page, [mockImageInscription]);
     await onboardingPage.signInWithTestAccount(extensionId);
   });
@@ -146,7 +144,6 @@ test.describe('Send inscription', () => {
 test.describe('Send inscription - non-zero offset', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await mockEmptyStampchainRequest(globalPage.page);
     await mockMainnetTestAccountInscriptionsRequests(globalPage.page, [
       {
         ...mockInscriptionResponseNonZeroOffset,
@@ -172,7 +169,6 @@ test.describe('Send inscription - non-zero offset', () => {
 test.describe('Send inscription - multiple inscriptions on utxo', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await mockEmptyStampchainRequest(globalPage.page);
     await mockMainnetTestAccountInscriptionsRequests(globalPage.page, [
       mockImageInscription,
       {
@@ -200,7 +196,6 @@ test.describe('Send inscription - multiple inscriptions on utxo', () => {
 test.describe('Send inscription - insufficient balance', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await mockEmptyStampchainRequest(globalPage.page);
     await mockMainnetTestAccountEmptyUtxosRequests(globalPage.page);
     await mockMainnetTestAccountInscriptionsRequests(globalPage.page, [mockImageInscription]);
     await onboardingPage.signInWithTestAccount(extensionId);

@@ -90,7 +90,6 @@
     "mainnetApiUrl": "https://api2.ordinalsbot.com",
     "signetApiUrl": "https://signet.ordinalsbot.com"
   },
-  "runesEnabled": true,
   "swapsEnabled": true,
   "sbtc": {
     "enabled": true,

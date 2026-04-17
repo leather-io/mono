@@ -12,7 +12,6 @@ export const receiveRoutes = (
     <Route path={RouteUrls.Receive} element={<ReceiveSheet />} />
     <Route path={RouteUrls.ReceiveStx} element={<ReceiveStxModal />} />
     <Route path={RouteUrls.ReceiveBtc} element={<ReceiveBtcModal />} />
-    <Route path={RouteUrls.ReceiveBtcStamp} element={<ReceiveBtcModal type="btc-stamp" />} />
     <Route path={RouteUrls.ReceiveCollectible} element={<ReceiveSheet type="collectible" />} />
     <Route path={RouteUrls.ReceiveCollectibleOrdinal} element={<ReceiveOrdinalModal />} />
   </Route>

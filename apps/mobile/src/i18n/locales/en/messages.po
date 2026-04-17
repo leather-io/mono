@@ -413,7 +413,7 @@ msgstr "BIP39 passphrase"
 #: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
 #: src/features/swap/swap.utils.ts:10
-#: src/shared/display-preference.ts:61
+#: src/shared/display-preference.ts:60
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -443,10 +443,6 @@ msgstr "Bitflow"
 #: src/shared/display-preference.ts:35
 msgid "BNS name"
 msgstr "BNS name"
-
-#: src/shared/display-preference.ts:64
-msgid "BRC-20"
-msgstr "BRC-20"
 
 #: src/features/navigation/tab-layout.tsx:68
 msgid "Browser"
@@ -1177,7 +1173,7 @@ msgstr ""
 msgid "Make your first transaction to get started"
 msgstr "Make your first transaction to get started"
 
-#: src/features/balances/manage-tokens.sheet.tsx:61
+#: src/features/balances/manage-tokens.sheet.tsx:60
 msgid "Manage tokens"
 msgstr "Manage tokens"
 
@@ -1544,10 +1540,6 @@ msgstr "Review"
 msgid "Review Swap"
 msgstr "Review Swap"
 
-#: src/shared/display-preference.ts:66
-msgid "Rune"
-msgstr "Rune"
-
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:74
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:19
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:19
@@ -1684,7 +1676,7 @@ msgstr "Signing failed"
 msgid "SIP-009"
 msgstr "SIP-009"
 
-#: src/shared/display-preference.ts:63
+#: src/shared/display-preference.ts:62
 msgid "SIP-010"
 msgstr "SIP-010"
 
@@ -1713,10 +1705,6 @@ msgstr "Some balances couldn’t load."
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
-#: src/shared/display-preference.ts:65
-msgid "SRC-20"
-msgstr "SRC-20"
-
 #: src/utils/dapps.ts:60
 msgid "StackingDAO"
 msgstr "StackingDAO"
@@ -1726,7 +1714,7 @@ msgstr "StackingDAO"
 #: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
 #: src/features/swap/swap.utils.ts:9
-#: src/shared/display-preference.ts:62
+#: src/shared/display-preference.ts:61
 msgid "Stacks"
 msgstr "Stacks"
 
@@ -1741,10 +1729,6 @@ msgstr "Stacks Blockchain"
 #: src/features/token/components/get-first-nft-section.tsx:48
 msgid "Stacks NFT"
 msgstr "Stacks NFT"
-
-#: src/shared/display-preference.ts:60
-msgid "Stamp"
-msgstr "Stamp"
 
 #: src/features/approver/utils.tsx:38
 msgid "Standard"

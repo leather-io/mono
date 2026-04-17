@@ -130,7 +130,6 @@ export interface BitcoinClient {
 
 interface BestInSlotApiOptions {
   isOrdinalsActive?: boolean;
-  isRunesActive?: boolean;
 }
 
 interface BitcoinClientArgs {

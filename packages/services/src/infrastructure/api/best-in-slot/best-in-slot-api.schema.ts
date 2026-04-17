@@ -1,19 +1,5 @@
 import { z } from 'zod';
 
-export const bisRuneValidOutputsSchema = z.object({
-  pkscript: z.string(),
-  wallet_addr: z.string(),
-  output: z.string(),
-  rune_ids: z.array(z.string()),
-  balances: z.array(z.string()),
-  min_price: z.number().nullable(),
-  unisat_price: z.number().nullable(),
-  derivation_path: z.string(),
-  rune_names: z.array(z.string()),
-  spaced_rune_names: z.array(z.string()),
-  decimals: z.array(z.number()),
-});
-
 const bisInscriptionDelegateSchema = z.object({
   delegate_id: z.string(),
   render_url: z.string().nullable().optional(),
@@ -44,14 +30,4 @@ export const bisInscriptionSchema = z.object({
   output_value: z.number(),
   genesis_ts: z.string(),
   genesis_block_hash: z.string(),
-});
-
-export const bisBrc20MarketInfoSchema = z.object({
-  marketcap: z.number(),
-  min_listed_unit_price: z.number(),
-  min_listed_unit_price_ordinalswallet: z.number(),
-  min_listed_unit_price_unisat: z.number(),
-  min_listed_unit_price_okx: z.number(),
-  listed_supply: z.number(),
-  listed_supply_ratio: z.number(),
 });

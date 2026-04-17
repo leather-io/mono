@@ -47,7 +47,7 @@ export const TaprootUtxoWarningDialog = createCallable<void, TaprootUtxoWarningR
 
           <styled.p textStyle="body.02" color="ink.text-subdued">
             This transaction spends from taproot UTXOs. These UTXOs may contain ordinal
-            inscriptions, rune, or BRC-20 tokens.
+            inscriptions.
           </styled.p>
           <styled.p textStyle="body.02" color="ink.text-subdued">
             If you want to protect these assets, cancel this transaction and transfer them to
@@ -57,7 +57,7 @@ export const TaprootUtxoWarningDialog = createCallable<void, TaprootUtxoWarningR
             Reach out to our support (
             <a
               className={css({ textDecorationLine: 'underline' })}
-              href="mailto:support@leather.io?subject=Runes%20or%20inscription%20check%20and%2For%20migration"
+              href="mailto:support@leather.io?subject=Inscription%20check%20and%2For%20migration"
             >
               support@leather.io
             </a>

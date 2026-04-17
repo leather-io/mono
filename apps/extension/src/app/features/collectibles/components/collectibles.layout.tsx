@@ -32,7 +32,6 @@ interface CollectiblesLayoutProps {
   isFetching: boolean;
   hasCollectibles: boolean;
   hasInscriptions: boolean;
-  hasStamps: boolean;
   isError: boolean;
   onRefresh(): void;
 }
@@ -44,7 +43,6 @@ export function CollectiblesLayout({
   isFetching,
   hasCollectibles,
   hasInscriptions,
-  hasStamps,
   isError,
   onRefresh,
 }: CollectiblesLayoutProps) {
@@ -58,11 +56,6 @@ export function CollectiblesLayout({
   return (
     <>
       <Stack gap="space.05" flex={1} pb="space.08">
-        {hasStamps && (
-          <Callout variant="warning" title="Stamps support ending April 18">
-            Please transfer your Stamps to another wallet before this date.
-          </Callout>
-        )}
         {hasInscriptions && (
           <Callout variant="warning" title="Ordinals support ending May 18">
             Please transfer your Ordinals to another wallet before this date.
@@ -73,7 +66,7 @@ export function CollectiblesLayout({
             <Box>
               <BasicTooltip
                 side="right"
-                label="Total collectibles in this account, including: Stacks NFTs, BNS names, Stamps and Ordinal Inscriptions on Bitcoin."
+                label="Total collectibles in this account, including: Stacks NFTs, BNS names, and Ordinal Inscriptions on Bitcoin."
               >
                 <Flag
                   reverse

@@ -6,13 +6,11 @@ import { BnsService } from '../bns/bns.service';
 import { AccountRequest } from '../types';
 import { InscriptionsService } from './inscriptions.service';
 import { Sip9sService } from './sip9s.service';
-import { StampsService } from './stamps.service';
 
 @injectable()
 export class CollectiblesService {
   constructor(
     private readonly inscriptionsService: InscriptionsService,
-    private readonly stampsService: StampsService,
     private readonly sip9sService: Sip9sService,
     private readonly bnsService: BnsService
   ) {}
@@ -21,9 +19,8 @@ export class CollectiblesService {
     request: AccountRequest,
     signal?: AbortSignal
   ): Promise<NonFungibleCryptoAsset[]> {
-    const [inscriptions, stamps, stacksCollectibles, bnsNames] = await Promise.all([
+    const [inscriptions, stacksCollectibles, bnsNames] = await Promise.all([
       this.inscriptionsService.getAccountInscriptions(request, signal),
-      this.stampsService.getAccountStamps(request, signal),
       this.sip9sService.getAccountSip9s(request, signal),
       this.bnsService.getAccountBnsNames(request, signal),
     ]);
@@ -31,6 +28,6 @@ export class CollectiblesService {
     const bnsNameSet = new Set(bnsNames.map(n => n.fullName));
     const filteredSip9s = stacksCollectibles.filter(sip9 => !bnsNameSet.has(sip9.name));
 
-    return [...filteredSip9s, ...inscriptions, ...stamps];
+    return [...filteredSip9s, ...inscriptions];
   }
 }

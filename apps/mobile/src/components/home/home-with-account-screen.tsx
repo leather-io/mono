@@ -41,7 +41,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   useAccountScaledBalanceAnalytics({ currentAccount });
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
   const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
-
   const allSip10Data = useSip10AccountBalance(fingerprint, accountIndex, {
     includeHiddenAssets: true,
   });
@@ -78,7 +77,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
           account={currentAccount}
           header={
             <>
-              {/* TODO: research better way of switching between flashlists */}
               <AccountDetails account={currentAccount} />
               <AssetTabs listTab={listTab} setListTab={setListTab} />
               {displayLearningSections && <FirstTokenBanner />}

@@ -19,7 +19,5 @@ test.describe('Receive Dialog', () => {
     await test.expect(dialog.getByText('Collectibles')).toBeVisible();
     await test.expect(dialog.getByText('Bitcoin')).toBeVisible();
     await test.expect(dialog.getByText('Stacks')).toBeVisible();
-    await test.expect(dialog.getByText('BRC-20')).toBeVisible();
-    await test.expect(dialog.getByText('SRC-20')).toBeVisible();
   });
 });

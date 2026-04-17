@@ -138,10 +138,6 @@
         "signetApiUrl": { "type": "string" }
       }
     },
-    "runesEnabled": {
-      "type": "boolean",
-      "description": "Determines whether or not Runes are live on mainnet"
-    },
     "swapsEnabled": {
       "type": "boolean",
       "description": "Determines whether or not the swaps feature is enabled"

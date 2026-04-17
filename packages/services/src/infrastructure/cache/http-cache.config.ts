@@ -10,16 +10,11 @@ export type HttpCacheKey =
   | 'bns-v2-sdk-primary-name'
 
   // BestInSlotApiClient
-  | 'bis-brc20-market-info'
   | 'bis-inscriptions'
-  | 'bis-runes-valid-outputs'
 
   // GammaApiClient
   | 'gamma-api-get-stacks-nft'
   | 'gamma-api-get-stacks-collection'
-
-  // StampchainApiClient
-  | 'stampchain-api-stamps-by-address'
 
   // HiroStacksApiClient
   | 'hiro-stacks-get-address-balances'
@@ -52,14 +47,6 @@ export type HttpCacheKey =
   | 'leather-api-native-token-price'
   | 'leather-api-native-token-description'
   | 'leather-api-native-token-history'
-  | 'leather-api-rune-price-list'
-  | 'leather-api-rune-price-map'
-  | 'leather-api-rune-price'
-  | 'leather-api-rune-list'
-  | 'leather-api-rune-map'
-  | 'leather-api-rune'
-  | 'leather-api-rune-description'
-  | 'leather-api-rune-history'
   | 'leather-api-sip10-price-list'
   | 'leather-api-sip10-price-map'
   | 'leather-api-sip10-price'
@@ -81,9 +68,6 @@ export type HttpCacheKey =
   | 'leather-api-sip10-analytics-map'
   | 'leather-api-sip10-analytics'
   | 'leather-api-sip10-distribution'
-  | 'leather-api-rune-analytics-map'
-  | 'leather-api-rune-analytics'
-  | 'leather-api-rune-distribution'
   | 'leather-api-protocols'
   | 'leather-api-protocol-contracts'
 
@@ -114,14 +98,10 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'bns-v2-api-zone-file-raw': { ttl: minutesInMs(2) },
   'bns-v2-sdk-primary-name': { ttl: minutesInMs(2) },
 
-  'bis-brc20-market-info': { ttl: minutesInMs(2) },
   'bis-inscriptions': { ttl: secondsInMs(30) },
-  'bis-runes-valid-outputs': { ttl: secondsInMs(30) },
 
   'gamma-api-get-stacks-nft': { ttl: weeksInMs(8) },
   'gamma-api-get-stacks-collection': { ttl: weeksInMs(8) },
-
-  'stampchain-api-stamps-by-address': { ttl: secondsInMs(30) },
 
   'hiro-stacks-get-address-balances': { ttl: secondsInMs(10) },
   'hiro-stacks-get-address-stx-balance': { ttl: secondsInMs(10) },
@@ -151,14 +131,6 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-native-token-price': { ttl: minutesInMs(5) },
   'leather-api-native-token-description': { ttl: daysInMs(1) },
   'leather-api-native-token-history': { ttl: minutesInMs(5) },
-  'leather-api-rune-price-list': { ttl: minutesInMs(5) },
-  'leather-api-rune-price-map': { ttl: minutesInMs(5) },
-  'leather-api-rune-price': { ttl: minutesInMs(5) },
-  'leather-api-rune-list': { ttl: daysInMs(1) },
-  'leather-api-rune-map': { ttl: daysInMs(1) },
-  'leather-api-rune': { ttl: daysInMs(30) },
-  'leather-api-rune-description': { ttl: daysInMs(1) },
-  'leather-api-rune-history': { ttl: minutesInMs(5) },
   'leather-api-sip10-price-list': { ttl: minutesInMs(5) },
   'leather-api-sip10-price-map': { ttl: minutesInMs(5) },
   'leather-api-sip10-price': { ttl: minutesInMs(5) },
@@ -180,9 +152,6 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-sip10-analytics-map': { ttl: minutesInMs(5) },
   'leather-api-sip10-analytics': { ttl: minutesInMs(5) },
   'leather-api-sip10-distribution': { ttl: minutesInMs(5) },
-  'leather-api-rune-analytics-map': { ttl: minutesInMs(5) },
-  'leather-api-rune-analytics': { ttl: minutesInMs(5) },
-  'leather-api-rune-distribution': { ttl: minutesInMs(5) },
   'leather-api-protocols': { ttl: daysInMs(1) },
   'leather-api-protocol-contracts': { ttl: daysInMs(1) },
 

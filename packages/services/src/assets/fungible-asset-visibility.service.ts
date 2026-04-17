@@ -37,9 +37,6 @@ export class FungibleAssetVisibilityService {
     const defaultAssets = await this.appConfigService.getDefaultEnabledAssets(signal);
     if (defaultAssets.includes(serializeAssetId(assetId))) {
       return true;
-    } else if (assetId.protocol === 'rune') {
-      const runePrices = await this.leatherApiClient.fetchRunePriceMap({ signal });
-      return isDefined(runePrices[assetId.id]);
     } else if (assetId.protocol === 'sip10') {
       const sip10Prices = await this.leatherApiClient.fetchSip10PriceMap({ signal });
       return isDefined(sip10Prices[getPrincipalFromAssetString(assetId.id)]);

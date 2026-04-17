@@ -8,11 +8,7 @@ import { useNativeSegwitAccountIndexAddressIndexZero } from '@app/store/accounts
 
 import { ReceiveTokensLayout } from './components/receive-tokens.layout';
 
-interface ReceiveBtcModalType {
-  type?: 'btc' | 'btc-stamp';
-}
-
-export function ReceiveBtcModal({ type = 'btc' }: ReceiveBtcModalType) {
+export function ReceiveBtcModal() {
   useBackgroundLocationRedirect();
 
   const toast = useToast();
@@ -25,11 +21,11 @@ export function ReceiveBtcModal({ type = 'btc' }: ReceiveBtcModalType) {
     <ReceiveTokensLayout
       address={activeAccountBtcAddress}
       onCopyAddressToClipboard={async () => {
-        analytics.track('copy_btc_address_to_clipboard', { type });
+        analytics.track('copy_btc_address_to_clipboard', { type: 'btc' });
         await copyToClipboard(activeAccountBtcAddress);
         toast.success('Copied to clipboard!');
       }}
-      title={type === 'btc-stamp' ? 'BITCOIN STAMP' : 'BTC'}
+      title="BTC"
     />
   );
 }

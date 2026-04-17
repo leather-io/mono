@@ -1,10 +1,7 @@
 import { Utxo, UtxoId } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
-import {
-  BisInscription,
-  BisRuneValidOutput,
-} from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
+import { BisInscription } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import {
   LeatherApiBitcoinTransaction,
   LeatherApiUtxo,
@@ -18,7 +15,6 @@ import {
   getInscriptionProtectedUtxoIds,
   getKeyOrigin,
   getOutboundUtxos,
-  getRuneProtectedUtxoIds,
   getUtxoIdFromOutpoint,
   getUtxoIdFromSatpoint,
   isDustUtxo,
@@ -475,45 +471,5 @@ describe(getInscriptionProtectedUtxoIds.name, () => {
       getUtxoIdFromOutpoint('txn:3'),
       getUtxoIdFromOutpoint('txn:4'),
     ]);
-  });
-});
-
-describe(getRuneProtectedUtxoIds.name, () => {
-  const runeOutputs = [
-    {
-      output: 'txn:0',
-    },
-    {
-      output: 'txn:1',
-    },
-    {
-      output: 'txn:2',
-    },
-    {
-      output: 'txn:3',
-    },
-    {
-      output: 'txn:3',
-    },
-    {
-      output: 'txn:4',
-    },
-    {
-      output: 'txn:4',
-    },
-  ] as BisRuneValidOutput[];
-
-  it('should return a list of unique utxo ids corresponding to rune outputs', () => {
-    expect(getRuneProtectedUtxoIds(runeOutputs, false)).toEqual([
-      getUtxoIdFromOutpoint('txn:0'),
-      getUtxoIdFromOutpoint('txn:1'),
-      getUtxoIdFromOutpoint('txn:2'),
-      getUtxoIdFromOutpoint('txn:3'),
-      getUtxoIdFromOutpoint('txn:4'),
-    ]);
-  });
-
-  it('should return an empty array when all runes are discarded', () => {
-    expect(getRuneProtectedUtxoIds(runeOutputs, true)).toEqual([]);
   });
 });

@@ -1,13 +1,10 @@
 export * from './avatar.web';
 export { AssetAvatarIcon } from './asset-avatar-icon.web';
-export { Brc20AvatarIcon } from './brc20-avatar-icon.web';
 export { BtcAvatarIcon } from './btc-avatar-icon.web';
 export { OrdinalAvatarIcon } from './ordinal-avatar-icon.web';
 export { getAvatarUrl } from './avatar.shared';
-export { RunesAvatarIcon } from './runes-avatar-icon.web';
 export { Sip10AvatarIcon } from './sip10-avatar-icon.web';
 export { SbtcAvatarIcon } from './sbtc-avatar-icon.web';
-export { Src20AvatarIcon } from './src20-avatar-icon.web';
 export { StxAvatarIcon } from './stx-avatar-icon.web';
 export { UsdcxAvatarIcon } from './usdcx-avatar-icon.web';
 export { ActivityAvatarIcon } from './activity-avatar-icon.web';

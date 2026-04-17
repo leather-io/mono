@@ -59,11 +59,9 @@ export function AssetsList({ account, sip10Data, header, footer }: AssetsListPro
     return sip10s.sort(sortSip10Balances);
   }, [sip10Data, usdcxBalance]);
 
-  const allAssetsMemo = [...sip10Memo];
-
   return (
     <Screen.FlashList<Sip10Balance>
-      data={allAssetsMemo}
+      data={sip10Memo}
       renderItem={({ item }) =>
         renderAsset({
           item,
@@ -77,7 +75,6 @@ export function AssetsList({ account, sip10Data, header, footer }: AssetsListPro
         })
       }
       getItemType={item => item.asset.protocol}
-      // TODO: RefreshControl is working but isn't showing
       refreshControl={<RefreshControl />}
       ListFooterComponentStyle={{ paddingTop: theme.spacing['5'] }}
       ListHeaderComponent={header}

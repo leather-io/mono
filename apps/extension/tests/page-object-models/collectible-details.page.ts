@@ -63,12 +63,7 @@ export class CollectibleDetailsPage {
     await card.first().click();
   }
 
-  async clickStampCard() {
-    const card = this.page.getByTestId(CollectibleDetailsSelectors.CollectibleCardStamp);
-    await card.first().click();
-  }
-
-  getCollectibleCardByProtocol(protocol: 'inscription' | 'sip9' | 'stamp') {
+  getCollectibleCardByProtocol(protocol: 'inscription' | 'sip9') {
     return this.page.getByTestId(`collectible-card-${protocol}`);
   }
 }

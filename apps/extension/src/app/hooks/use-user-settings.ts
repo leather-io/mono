@@ -15,7 +15,7 @@ export function useUserSettings(): UserSettings {
       Object.fromEntries(
         tokenSettings.map(tokenSetting => [
           serializeAssetId({
-            protocol: tokenSetting.id.includes('::') ? 'sip10' : 'rune',
+            protocol: 'sip10',
             id: tokenSetting.id,
           }),
           tokenSetting.enabled,

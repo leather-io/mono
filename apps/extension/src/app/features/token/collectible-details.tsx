@@ -11,7 +11,6 @@ import { useAccountCollectibles } from '@app/query/collectibles/account-collecti
 import { CollectibleDetailsLoading } from './collectible-details-loading';
 import { InscriptionDetailsPage } from './inscription-details-page';
 import { Sip9DetailsPage } from './sip9-details-page';
-import { StampDetailsPage } from './stamp-details-page';
 
 interface CollectibleDetailsProps {
   account: AccountAddresses;
@@ -58,8 +57,6 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
       return <InscriptionDetailsPage view={view} onBack={handleBack} />;
     case 'sip9':
       return <Sip9DetailsPage view={view} onBack={handleBack} />;
-    case 'stamp':
-      return <StampDetailsPage view={view} onBack={handleBack} />;
     default:
       return null;
   }

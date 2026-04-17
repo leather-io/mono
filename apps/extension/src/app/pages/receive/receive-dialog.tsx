@@ -57,7 +57,6 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
     return (
       <ReceiveCollectibles
         btcAddressTaproot={btcAddressTaproot}
-        btcAddressNativeSegwit={btcAddressNativeSegwit}
         stxAddress={stxAddress}
         onClickQrOrdinal={() => {
           analytics.track('select_inscription_to_add_new_collectible');
@@ -68,11 +67,6 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
             },
           });
         }}
-        onClickQrStamp={() =>
-          navigate(`${RouteUrls.Home}${RouteUrls.ReceiveBtcStamp}`, {
-            state: { backgroundLocation },
-          })
-        }
         onClickQrStacksNft={() =>
           navigate(`${RouteUrls.Home}${RouteUrls.ReceiveStx}`, {
             state: { backgroundLocation },
@@ -114,7 +108,6 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
               <ReceiveTokens
                 btcAddressNativeSegwit={btcAddressNativeSegwit}
                 stxAddress={stxAddress}
-                btcAddressTaproot={btcAddressTaproot}
                 onClickQrBtc={() =>
                   navigate(`${RouteUrls.Home}${RouteUrls.ReceiveBtc}`, {
                     state: { backgroundLocation },

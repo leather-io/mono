@@ -171,8 +171,6 @@ export * from './square-lines-bottom-icon.native';
 export * from './square-notification-icon.native';
 export * from './stacks-filled-circle-icon.native';
 export * from './stacks-icon.native';
-export * from './stamps-collection-icon.native';
-export * from './stamp-icon.native';
 export * from './star-icon.native';
 export * from './sun-icon.native';
 export * from './sun-in-cloud-icon.native';

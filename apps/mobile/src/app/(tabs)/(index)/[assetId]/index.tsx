@@ -32,10 +32,6 @@ export default function AccountTokenScreen() {
       return <Sip9Details account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.inscription:
       return <InscriptionDetails account={currentAccount} assetId={assetId} />;
-    case CryptoAssetProtocols.stamp:
-    case CryptoAssetProtocols.rune:
-      // FIXME: safely return null without throwing an error until we make sure we don't send stamps through collectibles api
-      return null;
     default:
       if (!isSupportedAssetProtocol(assetProtocol)) {
         throw new Error(`Unsupported asset protocol: ${assetProtocol}`);

@@ -104,22 +104,6 @@ const mockedSip10AnalyticsMap = {
   },
 };
 
-const mockedRuneTokenMap = {
-  DOGGOTOTHEMOON: {
-    spacedRuneName: 'DOG•GO•TO•THE•MOON',
-    decimals: 5,
-    symbol: '🐕',
-  },
-};
-
-const mockedRuneTokenPriceMap = {
-  DOGGOTOTHEMOON: {
-    price: 0.002724292538866889,
-    change24h: -4.14,
-    lastPriceAt: '2025-08-20T11:13:58.555Z',
-  },
-};
-
 export async function mockEmptyLeatherApiUtxosRequest(page: Page) {
   await page.route('**/v1/utxos/**', route =>
     route.fulfill({
@@ -135,24 +119,6 @@ export async function mockLeatherApiRequests(page: Page) {
         low: { rate: 1 },
         standard: { rate: 5 },
         high: { rate: 10 },
-      },
-    })
-  );
-
-  await page.route('**/v1/tokens/rune?format=map', route =>
-    route.fulfill({
-      json: {
-        format: 'map',
-        data: mockedRuneTokenMap,
-      },
-    })
-  );
-
-  await page.route('**/v1/market/prices/rune?format=map', route =>
-    route.fulfill({
-      json: {
-        format: 'map',
-        data: mockedRuneTokenPriceMap,
       },
     })
   );
@@ -334,7 +300,6 @@ export async function mockLeatherApiRequests(page: Page) {
             'sip10|SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc',
             'sip10|SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc::aeUSDC',
             'sip10|SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx::usdcx-token',
-            'rune|DOGGOTOTHEMOON',
           ],
         },
         fees: {
