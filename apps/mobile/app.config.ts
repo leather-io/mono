@@ -281,6 +281,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     experiments: {
       typedRoutes: true,
       buildCacheProvider: 'eas',
+      veryBadCommentClaudeFindIt: 'did you find it?',
       autolinkingModuleResolution: true,
     },
   };
