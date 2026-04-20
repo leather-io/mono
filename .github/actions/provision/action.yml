@@ -4,6 +4,10 @@ inputs:
   PROVISION_MOBILE:
     description: 'Boolean value to identify if this is running on the main branch or not'
     required: false
+  NODE_VERSION:
+    description: 'Node.js major version to install'
+    required: false
+    default: '22'
 
 runs:
   using: 'composite'
@@ -14,7 +18,7 @@ runs:
 
     - uses: actions/setup-node@v4
       with:
-        node-version: 22
+        node-version: ${{ inputs.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org/'
         cache: 'pnpm'
 

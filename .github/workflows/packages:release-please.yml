@@ -40,12 +40,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
-
-      - name: upgrade-npm-for-oidc
-        run: npm install -g npm@11.12.1 --integrity=sha512-zcoUuF1kezGSAo0CqtvoLXX3mkRqzuqYdL6Y5tdo8g69NVV3CkjQ6ZBhBgB4d7vGkPcV6TcvLi3GRKPDFX+xTA==
+        with:
+          NODE_VERSION: '24'
 
       - name: build-packages
-        run: pnpm build
+        run: pnpm build:packages
 
       # pnpm does not yet support npm's tokenless OIDC trusted publishing
       # (tracked in https://github.com/pnpm/pnpm/issues/9812). Until it does,
@@ -64,26 +63,3 @@ jobs:
           npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-sdk-*.tgz --access public
           npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-rpc-*.tgz --access public
 
-  sync-changelogs:
-    needs: release-please
-    runs-on: ubuntu-latest
-    if: needs.release-please.outputs.releases_created
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.LEATHER_BOT }}
-
-      - uses: ./.github/actions/provision
-
-      - name: sync-unpublished-changelogs
-        run: |
-          pnpm lt changelog sync --app=mobile
-          pnpm lt changelog sync --app=extension
-
-      - name: commit-changelog-updates
-        run: |
-          git config user.name "leather-bot"
-          git config user.email "leather-bot@leather.io"
-          git add apps/mobile/CHANGELOG.md apps/extension/CHANGELOG.md
-          git diff --staged --quiet || git commit -m "chore: sync unpublished changelog sections"
-          git push
