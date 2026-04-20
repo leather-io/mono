@@ -103,8 +103,7 @@ jobs:
       - uses: marocchino/sticky-pull-request-comment@v2
         env:
           EXTENSION_BUILD_LINK: '[Extension build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
-          TEST_REPORT_LINK: '[Extension test report](https://leather-io.github.io/playwright-reports/extension/${{ env.BRANCH_NAME }})'
         with:
           header: extension-build
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
-          message: 'Leather Extension build ${{ needs.sha-hash.outputs.SHORT_SHA }} — ${{ env.EXTENSION_BUILD_LINK }}, ${{ env.TEST_REPORT_LINK }}'
+          message: 'Leather Extension build ${{ needs.sha-hash.outputs.SHORT_SHA }} — ${{ env.EXTENSION_BUILD_LINK }}'

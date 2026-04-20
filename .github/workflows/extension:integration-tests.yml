@@ -153,28 +153,11 @@ jobs:
       - name: merge-into-html-report
         run: npx playwright merge-reports --reporter html ./all-blob-reports
 
-      - name: extract-branch-name
-        shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
-        id: extract_branch
-
-      - uses: Wandalen/wretry.action@master
-        if: github.event_name == 'pull_request'
+      - name: upload-html-report
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          action: peaceiris/actions-gh-pages@v4
-          with: |
-            personal_token: ${{ secrets.LEATHER_BOT }}
-            external_repository: leather-io/playwright-reports
-            publish_branch: main
-            publish_dir: ./playwright-report
-            destination_dir: extension/${{ steps.extract_branch.outputs.branch }}
+          name: playwright-html-report
+          path: playwright-report
+          if-no-files-found: error
 
-      - name: deploy-specs.leather.io
-        uses: peaceiris/actions-gh-pages@v4
-        if: steps.extract_branch.outputs.branch == 'dev'
-        with:
-          personal_token: ${{ secrets.LEATHER_BOT }}
-          external_repository: leather-io/specs.leather.io
-          publish_branch: main
-          publish_dir: ./playwright-report
-          cname: specs.leather.io
