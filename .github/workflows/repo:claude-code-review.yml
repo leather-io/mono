@@ -32,7 +32,7 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: >-
-            --model claude-opus-4-6
+            --model claude-opus-4-7
             --allowedTools "Bash(gh pr view:*) Bash(gh pr diff:*) Bash(gh pr list:*)"
           use_sticky_comment: true
           classify_inline_comments: true
