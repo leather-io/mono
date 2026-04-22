@@ -1,7 +1,8 @@
 name: mobile:deploy-production
 
+# GITHUB_TOKEN only needs to read the repository for checkout.
 permissions:
-  contents: write
+  contents: read
 defaults:
   run:
     shell: bash
@@ -9,16 +10,24 @@ defaults:
 on:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build-and-submit-mobile:
+    name: build-and-submit-mobile
     runs-on: ubuntu-latest
+    environment: mobile:production
     outputs:
       build_output: ${{ steps.build_and_submit.outputs.build_output }}
       android_build_id: ${{ steps.build_and_submit.outputs.android_build_id }}
       ios_build_id: ${{ steps.build_and_submit.outputs.ios_build_id }}
       build_version: ${{ steps.build_and_submit.outputs.build_version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: provision-the-app
         uses: ./.github/actions/provision
@@ -26,7 +35,7 @@ jobs:
           PROVISION_MOBILE: true
 
       - name: setup-expo-and-eas
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@c7b66a9c327a43a8fa7c0158e7f30d6040d2481e # 8.2.1
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}

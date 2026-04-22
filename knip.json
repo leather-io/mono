@@ -20,7 +20,8 @@
     "lingui:extract",
     "lingui:compile",
     "build:mobile",
-    "only-allow"
+    "only-allow",
+    "pinact"
   ],
   "ignoreUnresolved": ["metro-minify-terser", "/\\+types/"],
   "ignore": [

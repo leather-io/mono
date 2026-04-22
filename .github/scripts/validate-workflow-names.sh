@@ -32,7 +32,7 @@ if [ ${#invalid_files[@]} -ne 0 ]; then
   echo "  - Start with one of: repo, web, mobile, extension, packages"
   echo "  - Followed by a colon (:)"
   echo "  - Then lowercase letters, numbers, hyphens, or underscores"
-  echo "  - Examples: repo:workflow-checks, web:deploy, mobile:build-preview"
+  echo "  - Examples: repo:workflow-checks, web:deploy"
   exit 1
 fi
 

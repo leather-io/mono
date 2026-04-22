@@ -1,0 +1,11 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        "*": hash-pin
+  secrets-outside-env:
+    config:
+      allow:
+        - LEATHER_BOT
+        - CODECOV_TOKEN
+        - CLAUDE_CODE_OAUTH_TOKEN

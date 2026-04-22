@@ -10,25 +10,34 @@ on:
       - labeled
       - unlabeled
 
+# GITHUB_TOKEN default permissions disabled; jobs declare their own.
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   all-checks:
+    name: all-checks
     runs-on: ubuntu-latest
     permissions:
-      checks: read
-      contents: read
+      checks: read # allcheckspassed polls check-run statuses
+      contents: read # actions/checkout baseline
 
     steps:
       - name: check-if-is-merge-queue
+        env:
+          REF: ${{ github.ref }}
         run: |
-          if [[ "${{ github.ref }}" =~ ^refs/heads/gh-readonly-queue ]]; then
+          if [[ "$REF" =~ ^refs/heads/gh-readonly-queue ]]; then
             echo "IS_MERGE_QUEUE=true" >> "$GITHUB_ENV"
           else
             echo "IS_MERGE_QUEUE=false" >> "$GITHUB_ENV"
           fi
 
-      - uses: wechuli/allcheckspassed@v1
+      - uses: wechuli/allcheckspassed@e22f45a4f25f4cf821d1273705ac233355400db1 # v1.2.0
         if: env.IS_MERGE_QUEUE != 'true'
         with:
           polling_interval: 0.5
           retries: 50
-          checks_exclude: 'mobile:preview-builds-pr'

@@ -11,14 +11,22 @@ on:
       - '!packages/ui/**/*.web.ts'
       - '!packages/ui/**/*.web.tsx'
 
+# GITHUB_TOKEN only needs to read the repository for checkout.
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   knip:
+    name: knip
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/provision
 
       - run: pnpm build:packages

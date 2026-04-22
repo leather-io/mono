@@ -4,25 +4,29 @@ inputs:
   PROVISION_MOBILE:
     description: 'Boolean value to identify if this is running on the main branch or not'
     required: false
+  NODE_VERSION:
+    description: 'Node.js major version to install'
+    required: false
+    default: '22'
 
 runs:
   using: 'composite'
   steps:
-    - uses: pnpm/action-setup@v4
+    - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
       with:
         version: '10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319'
 
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
       with:
-        node-version: 22
+        node-version: ${{ inputs.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org/'
         cache: 'pnpm'
 
-    - run: pnpm install --ignore-scripts
-      env:
+    - env:
         PROVISION_MOBILE: ${{ inputs.PROVISION_MOBILE }}
       shell: bash
+      run: pnpm install --ignore-scripts
 
     - name: build-panda
-      run: pnpm turbo run build --filter="@leather.io/panda-preset"
       shell: bash
+      run: pnpm turbo run build --filter="@leather.io/panda-preset"

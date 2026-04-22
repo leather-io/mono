@@ -5,17 +5,23 @@ on:
     branches:
       - dev
 
+# GITHUB_TOKEN only needs to read the repository. Deploys use CLOUDFLARE_API_TOKEN.
 permissions:
   contents: read
-  deployments: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     name: deploy
-    environment: 'web:production'
+    environment: web:production
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/provision
 
       - name: build-web-app-deps
@@ -26,12 +32,12 @@ jobs:
         env:
           CLOUDFLARE_ENV: production
           LEATHER_TARGET: production
-          LEATHER_SENTRY_DSN: ${{ secrets.LEATHER_WEB_SENTRY_DSN }}
+          LEATHER_SENTRY_DSN: ${{ vars.PUBLIC_LEATHER_WEB_SENTRY_DSN }}
+          LEATHER_MIXPANEL_TOKEN: ${{ vars.PUBLIC_LEATHER_MIXPANEL_TOKEN }}
+          LEATHER_LAUNCH_DARKLY_KEY: ${{ vars.PUBLIC_WEB_LAUNCH_DARKLY_KEY}}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
+          CLOUDFLARE_PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
           LEATHER_SENTRY_AUTH_TOKEN: ${{ secrets.LEATHER_SENTRY_AUTH_TOKEN }}
-          LEATHER_MIXPANEL_TOKEN: ${{ vars.LEATHER_MIXPANEL_TOKEN }}
-          LEATHER_LAUNCH_DARKLY_KEY: ${{ secrets.WEB_LAUNCH_DARKLY_KEY}}
           LEATHER_FRONT_WEB_APP_API_TOKEN: ${{ secrets.FRONT_WEB_APP_API_TOKEN }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
-          CLOUDFLARE_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PRODUCTION_API_TOKEN }}
         run: pnpm run deploy

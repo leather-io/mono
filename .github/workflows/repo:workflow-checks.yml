@@ -11,49 +11,92 @@ on:
     paths:
       - '.github/workflows/**'
 
+# GITHUB_TOKEN only needs to read the repository for checkout.
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate-workflow-names:
+    name: validate-workflow-names
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: validate-workflow-naming-convention
         run: bash .github/scripts/validate-workflow-names.sh
 
   validate-job-names:
+    name: validate-job-names
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: validate-job-naming-convention
         run: bash .github/scripts/validate-job-names.sh
 
   validate-step-names:
+    name: validate-step-names
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: validate-step-naming-convention
         run: bash .github/scripts/validate-step-names.sh
 
   validate-filenames:
+    name: validate-filenames
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: validate-filename-matches-workflow-name
         run: bash .github/scripts/validate-filename-conventions.sh
 
   lint-workflows:
+    name: lint-workflows
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
       - name: install-actionlint
         id: get_actionlint
         run: bash .github/scripts/install-action-lint.sh
 
       - name: lint-github-workflows
-        run: ${{ steps.get_actionlint.outputs.executable }} -color
+        env:
+          ACTIONLINT: ${{ steps.get_actionlint.outputs.executable }}
+        run: |
+          "$ACTIONLINT" -color
+
+  audit-workflow-security:
+    name: audit-workflow-security
+    runs-on: ubuntu-latest
+    # `contents: read` sufficient for zizmor to audit workflow files.
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - name: zizmor-audit
+        uses: zizmorcore/zizmor-action@b1d7e1fb5de872772f31590499237e7cce841e8e # v0.5.3
+        with:
+          persona: auditor
+          min-severity: informational
+          min-confidence: low
+          advanced-security: false
+          annotations: true
+          config: .github/zizmor.yml

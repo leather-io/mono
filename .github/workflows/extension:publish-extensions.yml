@@ -2,41 +2,35 @@ name: extension:publish-extensions
 
 on: workflow_dispatch
 
+# GITHUB_TOKEN only needs to read the repository for checkout.
+# `create-github-release` job elevates to `contents: write` at job level for
+# `gh release upload`.
 permissions:
-  contents: write
-  actions: write
+  contents: read
 
-env:
-  SENTRY_DSN: ${{ secrets.EXTENSION_SENTRY_DSN }}
-  MIXPANEL_TOKEN: ${{ secrets.EXTENSION_MIXPANEL_TOKEN }}
-  LAUNCH_DARKLY_KEY: ${{ secrets.EXTENSION_LAUNCH_DARKLY_KEY}}
-  BITFLOW_API_HOST: ${{ secrets.BITFLOW_API_HOST }}
-  BITFLOW_API_KEY: ${{ secrets.BITFLOW_API_KEY }}
-  BITFLOW_READONLY_CALL_API_HOST: ${{ secrets.BITFLOW_READONLY_CALL_API_HOST }}
-  BITFLOW_READONLY_CALL_API_KEY: ${{ secrets.BITFLOW_READONLY_CALL_API_KEY }}
-  BITFLOW_KEEPER_API_KEY: ${{ secrets.BITFLOW_KEEPER_API_KEY }}
-  BITFLOW_KEEPER_API_HOST: ${{ secrets.BITFLOW_KEEPER_API_HOST }}
-  BITFLOW_PROVIDER_ADDRESS: ${{ secrets.BITFLOW_PROVIDER_ADDRESS }}
-  WALLET_ENVIRONMENT: production
-  IS_PUBLISHING: true
-  ONRAMPER_API_KEY: ${{ secrets.ONRAMPER_API_KEY }}
-  ONRAMPER_WIDGET_HOST: ${{ secrets.ONRAMPER_WIDGET_HOST }}
-  ONRAMPER_SIGNING_SECRET: ${{ secrets.ONRAMPER_SIGNING_SECRET }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   extract-version:
+    name: extract-version
     runs-on: ubuntu-24.04
     outputs:
       new_version: ${{ steps.extract_version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: extract-version
         id: extract_version
-        uses: Saionaro/extract-package-version@v1.3.0
+        uses: Saionaro/extract-package-version@35ced6bfe3b1491af23de4db27c601697e6d8d17 # v1.3.0
 
       - name: print-version
-        run: echo ${{ steps.extract_version.outputs.version }}
+        env:
+          VERSION: ${{ steps.extract_version.outputs.version }}
+        run: echo "$VERSION"
 
   publish-chrome-extension:
     name: publish-chrome-extension
@@ -47,9 +41,12 @@ jobs:
     outputs:
       publish_status: ${{ steps.publish-chrome.outputs.publish_status }}
     env:
+      NEW_VERSION: ${{ needs.extract-version.outputs.new_version }}
       TARGET_BROWSER: chromium
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/provision
 
       - name: build-packages
@@ -58,12 +55,27 @@ jobs:
       - name: build-project
         working-directory: apps/extension
         env:
+          SENTRY_DSN: ${{ vars.PUBLIC_EXTENSION_SENTRY_DSN }}
+          MIXPANEL_TOKEN: ${{ vars.PUBLIC_EXTENSION_MIXPANEL_TOKEN }}
+          LAUNCH_DARKLY_KEY: ${{ vars.PUBLIC_EXTENSION_LAUNCH_DARKLY_KEY}}
+          BITFLOW_API_HOST: ${{ vars.PUBLIC_BITFLOW_API_HOST }}
+          BITFLOW_API_KEY: ${{ vars.PUBLIC_BITFLOW_API_KEY }}
+          BITFLOW_READONLY_CALL_API_HOST: ${{ vars.PUBLIC_BITFLOW_READONLY_CALL_API_HOST }}
+          BITFLOW_READONLY_CALL_API_KEY: ${{ vars.PUBLIC_BITFLOW_READONLY_CALL_API_KEY }}
+          BITFLOW_KEEPER_API_KEY: ${{ vars.PUBLIC_BITFLOW_KEEPER_API_KEY }}
+          BITFLOW_KEEPER_API_HOST: ${{ vars.PUBLIC_BITFLOW_KEEPER_API_HOST }}
+          BITFLOW_PROVIDER_ADDRESS: ${{ vars.PUBLIC_BITFLOW_PROVIDER_ADDRESS }}
+          WALLET_ENVIRONMENT: production
+          IS_PUBLISHING: true
+          ONRAMPER_API_KEY: ${{ vars.PUBLIC_ONRAMPER_API_KEY }}
+          ONRAMPER_WIDGET_HOST: ${{ vars.PUBLIC_ONRAMPER_WIDGET_HOST }}
+          ONRAMPER_SIGNING_SECRET: ${{ vars.PUBLIC_ONRAMPER_SIGNING_SECRET }}
           # We only add the sentry auth token for chrome, as we don't want to
           # create a duplicate release during the ff build
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: pnpm build
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         name: Upload build artifact
         with:
           name: leather-chromium-v${{ needs.extract-version.outputs.new_version }}
@@ -89,31 +101,39 @@ jobs:
   create-github-release:
     name: create-github-release
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write # create GitHub release and attach build zip
     needs:
       - extract-version
       - publish-chrome-extension
     steps:
       - name: download-extension-build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: .
 
       - name: zip-chromium-build
-        run: zip -r leather-chromium.v${{ needs.extract-version.outputs.new_version }}.zip leather-chromium-v${{ needs.extract-version.outputs.new_version }}
+        env:
+          VERSION: ${{ needs.extract-version.outputs.new_version }}
+        run: zip -r "leather-chromium.v${VERSION}.zip" "leather-chromium-v${VERSION}"
 
       - name: update-release
-        uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
-        with:
-          tag_name: ${{ github.ref_name }}
-          files: |
-            leather-chromium.v${{ needs.extract-version.outputs.new_version }}.zip
+        env:
+          # permissions: create release, similar to release-please token
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+          VERSION: ${{ needs.extract-version.outputs.new_version }}
+        run: gh release upload "$TAG" "leather-chromium.v${VERSION}.zip" --clobber
 
   post-run:
+    name: post-run
     runs-on: ubuntu-24.04
     needs:
       - publish-chrome-extension
     steps:
       - name: publish-statuses
+        env:
+          PUBLISH_STATUS: ${{ needs.publish-chrome-extension.outputs.publish_status }}
         run: |
-          echo "::warning::Chrome Publish Status: $([[ "${{ needs.publish-chrome-extension.outputs.publish_status }}" = "0" ]] && echo 'SUCCESS' || echo 'FAILED')"
+          echo "::warning::Chrome Publish Status: $([[ "$PUBLISH_STATUS" = "0" ]] && echo 'SUCCESS' || echo 'FAILED')"

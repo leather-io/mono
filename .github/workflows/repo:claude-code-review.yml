@@ -8,10 +8,11 @@ on:
       - 'docs/**'
       - '.changeset/**'
 
+# GITHUB_TOKEN only needs to read the repository; the review job elevates to
+# pull-requests:write + id-token:write for claude-code-action's PR commenting
+# and OIDC exchange.
 permissions:
   contents: read
-  pull-requests: write
-  id-token: write
 
 concurrency:
   group: claude-review-${{ github.event.pull_request.number }}
@@ -19,20 +20,25 @@ concurrency:
 
 jobs:
   review:
+    name: review
     if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      pull-requests: write # post PR review comments
+      id-token: write # OIDC exchange for claude-code-action
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 1
+          persist-credentials: false
 
       - name: claude-code-review
-        uses: anthropics/claude-code-action@496f0537244eccbaa9b0eeff94084c64e1fe6a56 # v1
+        uses: anthropics/claude-code-action@5d5c10a4f389689f992ea10bb14dcb6fcc83146d # v1.0.102
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: >-
-            --model claude-opus-4-6
+            --model claude-opus-4-7
             --allowedTools "Bash(gh pr view:*) Bash(gh pr diff:*) Bash(gh pr list:*)"
           use_sticky_comment: true
           classify_inline_comments: true
