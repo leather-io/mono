@@ -5,20 +5,32 @@ on:
     - cron: '0 */2 * * *'
   workflow_dispatch:
 
+# GITHUB_TOKEN only needs to read the repository; no mutations.
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 jobs:
   check-headers:
+    name: check-headers
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ matrix.domain }}
+      cancel-in-progress: false
     strategy:
+      fail-fast: false
       matrix:
         domain: ['leather.io', 'app.leather.io']
     steps:
       - name: check-for-required-security-headers-on-${{ matrix.domain }}
+        env:
+          DOMAIN: ${{ matrix.domain }}
         run: |
-          headers=$(curl -sI https://${{ matrix.domain }})
-          echo "Headers for ${{ matrix.domain }}:"
+          headers=$(curl -sI "https://${DOMAIN}")
+          echo "Headers for ${DOMAIN}:"
           echo "$headers"
 
           if ! echo "$headers" | grep -iq "Content-Security-Policy"; then
@@ -46,14 +58,20 @@ jobs:
             exit 1
           fi
 
-          echo "All required security headers are present for ${{ matrix.domain }}."
+          echo "All required security headers are present for ${DOMAIN}."
 
-      - name: send-slack-notification-on-failure
-        if: failure()
-        uses: slackapi/slack-github-action@v2
+  notify-slack:
+    name: notify-slack
+    needs: check-headers
+    if: failure()
+    runs-on: ubuntu-latest
+    environment: slack-notification
+    steps:
+      - name: send-slack-notification
+        uses: slackapi/slack-github-action@91efab103c0de0a537f72a35f6b8cda0ee76bf0a # v2.1.1
         with:
           method: chat.postMessage
           token: ${{ secrets.LEATHER_SLACK_BOT }}
           payload: |
             channel: ${{ secrets.LEATHER_MAIN_SLACK_CHANNEL_ID }}
-            text: '<!channel> ⚠️ Security headers check failed on ${{ matrix.domain }}. Check Cloudflare configuration and ensure all required headers are present.'
+            text: '<!channel> ⚠️ Security headers check failed — see ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'

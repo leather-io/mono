@@ -5,27 +5,33 @@ on:
     branches:
       - dev
 
+# GITHUB_TOKEN only needs to read the repository. release-please uses the
+# LEATHER_BOT PAT for creating PRs; the deploy job elevates to `id-token: write`
+# for npm OIDC publishing.
 permissions:
-  contents: write
-  pull-requests: write
-  id-token: write
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release-please:
+    name: release-please
     runs-on: ubuntu-latest
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
       changelog: ${{ steps.release.outputs.changelog }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
-          token: ${{ secrets.LEATHER_BOT }}
+          persist-credentials: false
 
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4.4.1
         id: release
         with:
-          # this assumes that you have created a personal access token (PAT)
+          # permissions: create branch, push to branch, create PR with description, create release
           token: ${{ secrets.LEATHER_BOT }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
@@ -33,19 +39,24 @@ jobs:
 
     # The logic below handles the npm publication:
   deploy:
+    name: deploy
     needs: release-please
     runs-on: ubuntu-latest
+    environment: publish-npm-packages
+    permissions:
+      id-token: write # npm OIDC trusted publishing exchange
     # Ensure we only publish if a new release was created
     if: needs.release-please.outputs.releases_created
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/provision
-
-      - name: upgrade-npm-for-oidc
-        run: npm install -g npm@11.12.1 --integrity=sha512-zcoUuF1kezGSAo0CqtvoLXX3mkRqzuqYdL6Y5tdo8g69NVV3CkjQ6ZBhBgB4d7vGkPcV6TcvLi3GRKPDFX+xTA==
+        with:
+          NODE_VERSION: '24'
 
       - name: build-packages
-        run: pnpm build
+        run: pnpm build:packages
 
       # pnpm does not yet support npm's tokenless OIDC trusted publishing
       # (tracked in https://github.com/pnpm/pnpm/issues/9812). Until it does,
@@ -64,26 +75,3 @@ jobs:
           npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-sdk-*.tgz --access public
           npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-rpc-*.tgz --access public
 
-  sync-changelogs:
-    needs: release-please
-    runs-on: ubuntu-latest
-    if: needs.release-please.outputs.releases_created
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.LEATHER_BOT }}
-
-      - uses: ./.github/actions/provision
-
-      - name: sync-unpublished-changelogs
-        run: |
-          pnpm lt changelog sync --app=mobile
-          pnpm lt changelog sync --app=extension
-
-      - name: commit-changelog-updates
-        run: |
-          git config user.name "leather-bot"
-          git config user.email "leather-bot@leather.io"
-          git add apps/mobile/CHANGELOG.md apps/extension/CHANGELOG.md
-          git diff --staged --quiet || git commit -m "chore: sync unpublished changelog sections"
-          git push

@@ -1,17 +1,7 @@
 name: extension:integration-tests
 
 env:
-  CI: true
   DO_NOT_TRACK: 1
-  WALLET_ENVIRONMENT: testing
-  BITFLOW_API_HOST: ${{ secrets.BITFLOW_API_HOST }}
-  BITFLOW_API_KEY: ${{ secrets.BITFLOW_API_KEY }}
-  BITFLOW_READONLY_CALL_API_HOST: ${{ secrets.BITFLOW_READONLY_CALL_API_HOST }}
-  BITFLOW_READONLY_CALL_API_KEY: ${{ secrets.BITFLOW_READONLY_CALL_API_KEY }}
-  BITFLOW_KEEPER_API_KEY: ${{ secrets.BITFLOW_KEEPER_API_KEY }}
-  BITFLOW_KEEPER_API_HOST: ${{ secrets.BITFLOW_KEEPER_API_HOST }}
-  BITFLOW_PROVIDER_ADDRESS: ${{ secrets.BITFLOW_PROVIDER_ADDRESS }}
-  LAUNCH_DARKLY_KEY: ${{ secrets.EXTENSION_LAUNCH_DARKLY_KEY}}
 
 on:
   pull_request:
@@ -36,7 +26,9 @@ jobs:
       run:
         working-directory: apps/extension
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/provision
 
       - name: build-packages
@@ -49,9 +41,19 @@ jobs:
 
       - name: build-extension-in-test-mode
         run: pnpm build:test
+        env:
+          BITFLOW_API_HOST: ${{ vars.PUBLIC_BITFLOW_API_HOST }}
+          BITFLOW_API_KEY: ${{ vars.PUBLIC_BITFLOW_API_KEY }}
+          BITFLOW_READONLY_CALL_API_HOST: ${{ vars.PUBLIC_BITFLOW_READONLY_CALL_API_HOST }}
+          BITFLOW_READONLY_CALL_API_KEY: ${{ vars.PUBLIC_BITFLOW_READONLY_CALL_API_KEY }}
+          BITFLOW_KEEPER_API_KEY: ${{ vars.PUBLIC_BITFLOW_KEEPER_API_KEY }}
+          BITFLOW_KEEPER_API_HOST: ${{ vars.PUBLIC_BITFLOW_KEEPER_API_HOST }}
+          BITFLOW_PROVIDER_ADDRESS: ${{ vars.PUBLIC_BITFLOW_PROVIDER_ADDRESS }}
+          LAUNCH_DARKLY_KEY: ${{ vars.PUBLIC_EXTENSION_LAUNCH_DARKLY_KEY}}
+          WALLET_ENVIRONMENT: testing
 
       - name: upload-extension-build-artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: extension-dist
           path: apps/extension/dist
@@ -72,11 +74,13 @@ jobs:
       run:
         working-directory: apps/extension
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/provision
 
       - name: download-extension-build-artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: extension-dist
           path: apps/extension/dist
@@ -95,7 +99,7 @@ jobs:
         run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package.json').devDependencies['@playwright/test'])")" >> "$GITHUB_ENV"
 
       - name: cache-playwright-binaries
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
@@ -121,14 +125,16 @@ jobs:
         # processes that require a display server to run in environments where
         # one is not available.
       - name: run-playwright-tests
-        run: xvfb-run pnpm playwright test tests/specs --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --workers=1
         env:
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
-          EXTENSION_INTEGRATION_TEST_MNEMONIC: ${{ secrets.EXTENSION_INTEGRATION_TEST_MNEMONIC }}
+          EXTENSION_INTEGRATION_TEST_MNEMONIC: ${{ vars.EXTENSION_INTEGRATION_TEST_MNEMONIC }}
+          SHARD_INDEX: ${{ matrix.shardIndex }}
+          SHARD_TOTAL: ${{ matrix.shardTotal }}
+        run: xvfb-run pnpm playwright test tests/specs --shard="${SHARD_INDEX}/${SHARD_TOTAL}" --workers=1
 
       - name: upload-blob-report-to-github-actions-artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: blob-report-${{ matrix.shardIndex }}
           path: apps/extension/blob-report
@@ -141,10 +147,12 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: download-blob-reports-from-github-actions-artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: all-blob-reports
           pattern: blob-report-*
@@ -153,28 +161,11 @@ jobs:
       - name: merge-into-html-report
         run: npx playwright merge-reports --reporter html ./all-blob-reports
 
-      - name: extract-branch-name
-        shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
-        id: extract_branch
-
-      - uses: Wandalen/wretry.action@master
-        if: github.event_name == 'pull_request'
+      - name: upload-html-report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          action: peaceiris/actions-gh-pages@v4
-          with: |
-            personal_token: ${{ secrets.LEATHER_BOT }}
-            external_repository: leather-io/playwright-reports
-            publish_branch: main
-            publish_dir: ./playwright-report
-            destination_dir: extension/${{ steps.extract_branch.outputs.branch }}
+          name: playwright-html-report
+          path: playwright-report
+          if-no-files-found: error
 
-      - name: deploy-specs.leather.io
-        uses: peaceiris/actions-gh-pages@v4
-        if: steps.extract_branch.outputs.branch == 'dev'
-        with:
-          personal_token: ${{ secrets.LEATHER_BOT }}
-          external_repository: leather-io/specs.leather.io
-          publish_branch: main
-          publish_dir: ./playwright-report
-          cname: specs.leather.io

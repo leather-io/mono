@@ -26,6 +26,8 @@
     "lint:filenames": "pnpm ls-lint",
     "lint:fix": "turbo run lint:fix",
     "lt": "pnpm --filter @leather.io/tools lt",
+    "pinact": "pinact run",
+    "pinact:check": "pinact run --check",
     "prepare": "husky",
     "syncpack:fix": "syncpack fix-mismatches",
     "syncpack:format": "syncpack format",

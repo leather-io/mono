@@ -1,16 +1,26 @@
 name: mobile:lingui-checks
+
+# GITHUB_TOKEN only needs to read the repository for checkout.
 permissions:
   contents: read
+
 on:
   pull_request:
     paths:
       - 'apps/mobile/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lingui-extract:
+    name: lingui-extract
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/provision
       - name: run-lingui
         working-directory: ./apps/mobile
