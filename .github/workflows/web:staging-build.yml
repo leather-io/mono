@@ -62,7 +62,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         id: wrangler-upload
-        run: pnpm wrangler versions upload --staging-alias "pr-${PR_NUMBER}" > wrangler-staging.txt
+        run: pnpm wrangler versions upload --preview-alias "pr-${PR_NUMBER}" > wrangler-staging.txt
 
       - name: output-wrangler-staging-file
         working-directory: apps/web
