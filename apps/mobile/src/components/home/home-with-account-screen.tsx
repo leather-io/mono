@@ -14,14 +14,12 @@ import { useOnDetectNoNotificationPreference } from '@/features/notifications/us
 import { CollectiblesList } from '@/features/token/collectibles-list';
 import { useActivity } from '@/queries/activity/activity.query';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
-import { useRunesAccountBalance } from '@/queries/balance/runes-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { useSettings } from '@/store/settings/settings';
 import {
   useAccountScaledBalanceAnalytics,
   useCollectiblesAnalytics,
-  useTokenPortfolioAnalytics,
 } from '@/utils/analytics-hooks';
 
 import { AccountId } from '@leather.io/models';
@@ -47,19 +45,12 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   useAccountScaledBalanceAnalytics({ currentAccount });
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
   const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
-  const runesData = useRunesAccountBalance(fingerprint, accountIndex);
-  useTokenPortfolioAnalytics({
-    currentAccount,
-    sip10Balance: sip10Data.value?.sip10s ?? [],
-    runeBalance: runesData.value?.runes ?? [],
-  });
+
   const allSip10Data = useSip10AccountBalance(fingerprint, accountIndex, {
     includeHiddenAssets: true,
   });
-  const allRunesData = useRunesAccountBalance(fingerprint, accountIndex, {
-    includeHiddenAssets: true,
-  });
-  const hasAssets = !!allSip10Data.value?.sip10s.length || !!allRunesData.value?.runes.length;
+
+  const hasAssets = !!allSip10Data.value?.sip10s.length;
   const activityState = useActivity(fingerprint, accountIndex);
   const hasActivity = !!activityState.value?.length;
   const displayLearningSections = activityState.state === 'success' && !hasActivity;
@@ -115,7 +106,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
             </>
           }
           sip10Data={sip10Data}
-          runesData={runesData}
         />
       )}
       {listTab === 'collectibles' && (

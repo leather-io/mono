@@ -3,10 +3,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { SpinnerIcon } from '@/components/spinner-icon';
 import {
-  useManagedRunesTools,
-  useRunesAccountBalance,
-} from '@/queries/balance/runes-balance.query';
-import {
   useManagedSip10Tools,
   useSip10AccountBalance,
 } from '@/queries/balance/sip10-balance.query';
@@ -15,15 +11,7 @@ import { t } from '@lingui/core/macro';
 
 import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/constants';
 import { AccountId } from '@leather.io/models';
-import {
-  Box,
-  RunesAvatarIcon,
-  Sheet,
-  SheetRef,
-  Sip10AvatarIcon,
-  Text,
-  useTheme,
-} from '@leather.io/ui/native';
+import { Box, Sheet, SheetRef, Sip10AvatarIcon, Text, useTheme } from '@leather.io/ui/native';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { TokenSwitch } from '../token/components/token-switch';
@@ -44,19 +32,13 @@ export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheet
   const sip10s = useSip10AccountBalance(currentAccount.fingerprint, currentAccount.accountIndex, {
     includeHiddenAssets: true,
   });
-  const runes = useRunesAccountBalance(currentAccount.fingerprint, currentAccount.accountIndex, {
-    includeHiddenAssets: true,
-  });
+
   const { isEnabled: isSip10Enabled } = useManagedSip10Tools(
     currentAccount.fingerprint,
     currentAccount.accountIndex
   );
-  const { isEnabled: isRuneEnabled } = useManagedRunesTools(
-    currentAccount.fingerprint,
-    currentAccount.accountIndex
-  );
 
-  const isLoading = sip10s.state === 'loading' || runes.state === 'loading';
+  const isLoading = sip10s.state === 'loading';
 
   return (
     <FullHeightSheet sheetRef={sheetRef} handlePlacement="inside">
@@ -99,18 +81,6 @@ export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheet
                     }}
                   />
                 ))}
-              {runes.value?.runes?.map(rune => (
-                <TokenSwitch
-                  key={rune.asset.runeName}
-                  icon={<RunesAvatarIcon />}
-                  ticker={rune.asset.symbol}
-                  tokenName={rune.asset.runeName}
-                  value={isRuneEnabled(rune)}
-                  onValueChange={val => {
-                    changeAssetVisibility(serializeAssetId(getAssetId(rune.asset)), val);
-                  }}
-                />
-              ))}
             </Box>
           </>
         </Sheet.ScrollView>

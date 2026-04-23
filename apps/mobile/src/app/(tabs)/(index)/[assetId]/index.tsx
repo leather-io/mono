@@ -1,7 +1,5 @@
 import { BitcoinTokenDetails } from '@/features/token/bitcoin/bitcoin-token-details';
 import { InscriptionDetails } from '@/features/token/bitcoin/inscription-details';
-import { RuneTokenDetails } from '@/features/token/bitcoin/rune-token-details';
-import { StampDetails } from '@/features/token/bitcoin/stamp-details';
 import { Sip9Details } from '@/features/token/stacks/sip9-details';
 import { Sip10TokenDetails } from '@/features/token/stacks/sip10-token-details';
 import { StacksTokenDetails } from '@/features/token/stacks/stacks-token-details';
@@ -30,14 +28,14 @@ export default function AccountTokenScreen() {
       return <StacksTokenDetails account={currentAccount} />;
     case CryptoAssetProtocols.sip10:
       return <Sip10TokenDetails account={currentAccount} assetId={assetId} />;
-    case CryptoAssetProtocols.rune:
-      return <RuneTokenDetails account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.sip9:
       return <Sip9Details account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.inscription:
       return <InscriptionDetails account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.stamp:
-      return <StampDetails account={currentAccount} assetId={assetId} />;
+    case CryptoAssetProtocols.rune:
+      // FIXME: safely return null without throwing an error until we make sure we don't send stamps through collectibles api
+      return null;
     default:
       if (!isSupportedAssetProtocol(assetProtocol)) {
         throw new Error(`Unsupported asset protocol: ${assetProtocol}`);

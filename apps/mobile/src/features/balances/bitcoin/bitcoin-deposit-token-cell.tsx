@@ -23,8 +23,8 @@ export function BitcoinDepositTokenCell({ accountIndex, fingerprint }: AccountId
       ticker="BTC"
       icon={<BtcAvatarIcon indicator={<BitcoinFilledCircleIcon variant="small" />} />}
       tokenName={t`Bitcoin`}
-      availableBalance={balanceValue?.btc.availableBalance}
-      quoteBalance={balanceValue?.quote.availableBalance}
+      availableBalance={balanceValue?.btc.totalBalance}
+      quoteBalance={balanceValue?.quote.totalBalance}
       isBalanceLoading={balanceState === 'loading'}
       isActivityLoading={activityState === 'loading'}
       hasActivity={!!activityValue?.length}

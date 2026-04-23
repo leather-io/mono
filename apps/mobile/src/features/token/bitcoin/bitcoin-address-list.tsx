@@ -27,15 +27,15 @@ export function BitcoinAddressList({ account }: { account: AccountId }) {
         address={nativeSegwitPayerAddress}
         assetType={AssetType.NativeSegwit}
         name={t`Native Segwit`}
-        availableBalance={btcNativeSegwitBalance.value?.btc.availableBalance}
-        quoteBalance={btcNativeSegwitBalance.value?.quote.availableBalance}
+        availableBalance={btcNativeSegwitBalance.value?.btc.totalBalance}
+        quoteBalance={btcNativeSegwitBalance.value?.quote.totalBalance}
       />
       <AddressListItem
         address={taprootPayerAddress}
         assetType={AssetType.Taproot}
         name={t`Taproot`}
-        availableBalance={btcTaprootBalance.value?.btc.availableBalance}
-        quoteBalance={btcTaprootBalance.value?.quote.availableBalance}
+        availableBalance={btcTaprootBalance.value?.btc.totalBalance}
+        quoteBalance={btcTaprootBalance.value?.quote.totalBalance}
       />
     </AddressList>
   );

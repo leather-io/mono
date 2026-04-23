@@ -7,7 +7,6 @@ import { analytics } from '@/utils/analytics';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId, Money, NonFungibleCryptoAsset } from '@leather.io/models';
-import { type RuneBalance, type Sip10Balance } from '@leather.io/services';
 import { convertAmountToBaseUnit, isDefined, scaleValue } from '@leather.io/utils';
 
 function getScaledValueFromMoney(money: Money | undefined) {
@@ -62,39 +61,6 @@ export function useAccountScaledBalanceAnalytics({
     scaledStxLockedBalance,
     scaledUsdBalance,
   ]);
-}
-
-export function useTokenPortfolioAnalytics({
-  currentAccount,
-  sip10Balance,
-  runeBalance,
-}: {
-  currentAccount: AccountId;
-  sip10Balance: Sip10Balance[];
-  runeBalance: RuneBalance[];
-}) {
-  const { fingerprint, accountIndex } = currentAccount;
-  const accountId = makeAccountIdentifer(fingerprint, accountIndex);
-
-  useEffect(() => {
-    if (!sip10Balance.length || !runeBalance.length) return;
-    const sip10Value = getScaledValueFromMoney(sip10Balance[0]?.quote.availableBalance);
-    const runeValue = getScaledValueFromMoney(runeBalance[0]?.quote.availableBalance);
-    const sip10TokenCount = sip10Balance.length;
-    const runeTokenCount = runeBalance.length;
-    const fiatCurrency = sip10Balance[0]?.quote.availableBalance?.symbol;
-    analytics.track('token_portfolio_summary', {
-      platform: 'mobile',
-      walletAccountId: accountId,
-      sip10TokenCount,
-      runeTokenCount,
-      totalTokenCount: sip10TokenCount + runeTokenCount,
-      sip10TokenValue: sip10Value ?? 0,
-      runeTokenValue: runeValue ?? 0,
-      totalTokenValue: (sip10Value ?? 0) + (runeValue ?? 0),
-      fiatCurrency,
-    });
-  }, [accountId, runeBalance, sip10Balance]);
 }
 
 export function useCollectiblesAnalytics({
