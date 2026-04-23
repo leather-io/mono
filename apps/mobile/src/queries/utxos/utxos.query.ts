@@ -20,7 +20,15 @@ function useAccountUtxosQuery(account: AccountAddresses) {
     assetVisibility,
   };
 
-  const request: AccountRequest = { account };
+  const request: AccountRequest = {
+    account,
+    protections: {
+      isRunesActive: false,
+      isOrdinalsActive: true,
+      discardedInscriptions: [],
+      discardRunes: true,
+    },
+  };
 
   return useQuery({
     ...createAccountUtxosQueryConfig(request, settings),

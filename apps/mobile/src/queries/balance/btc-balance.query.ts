@@ -14,11 +14,33 @@ import { balanceQueryOptions } from './balance-query-options';
 
 export function useBtcTotalBalance() {
   const accounts = useTotalAccountAddresses();
-  return toFetchState(useBtcAggregateBalanceQuery(accounts.map(account => ({ account }))));
+  return toFetchState(
+    useBtcAggregateBalanceQuery(
+      accounts.map(account => ({
+        account,
+        protections: {
+          isRunesActive: false,
+          isOrdinalsActive: true,
+          discardedInscriptions: [],
+          discardRunes: true,
+        },
+      }))
+    )
+  );
 }
 export function useBtcAccountBalance(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useBtcAccountBalanceQuery({ account }));
+  return toFetchState(
+    useBtcAccountBalanceQuery({
+      account,
+      protections: {
+        isRunesActive: false,
+        isOrdinalsActive: true,
+        discardedInscriptions: [],
+        discardRunes: true,
+      },
+    })
+  );
 }
 
 export function useBtcAccountNativeSegwitBalance(fingerprint: string, accountIndex: number) {
@@ -27,6 +49,12 @@ export function useBtcAccountNativeSegwitBalance(fingerprint: string, accountInd
     useBtcAccountBalanceQuery({
       account,
       exclusions: { taprootAddresses: true },
+      protections: {
+        isRunesActive: false,
+        isOrdinalsActive: true,
+        discardedInscriptions: [],
+        discardRunes: true,
+      },
     })
   );
 }
@@ -37,6 +65,12 @@ export function useBtcAccountTaprootBalance(fingerprint: string, accountIndex: n
     useBtcAccountBalanceQuery({
       account,
       exclusions: { nativeSegwitAddresses: true },
+      protections: {
+        isRunesActive: false,
+        isOrdinalsActive: true,
+        discardedInscriptions: [],
+        discardRunes: true,
+      },
     })
   );
 }

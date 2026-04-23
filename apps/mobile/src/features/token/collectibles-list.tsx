@@ -15,7 +15,6 @@ import { assertUnreachable, getAssetId, serializeAssetId } from '@leather.io/uti
 
 import { useCollectibleDetailsFlag } from '../feature-flags';
 import { Inscription } from './bitcoin/inscription';
-import { Stamp } from './bitcoin/stamp';
 import { Sip9 } from './stacks/sip9';
 
 interface RenderCollectibleProps {
@@ -26,12 +25,12 @@ interface RenderCollectibleProps {
 function renderCollectible({ item, height, onPress }: RenderCollectibleProps) {
   const collectible = (() => {
     switch (item.protocol) {
-      case 'stamp':
-        return <Stamp item={item} height={height} onPress={onPress} />;
       case 'sip9':
         return <Sip9 item={item} height={height} onPress={onPress} />;
       case 'inscription':
         return <Inscription item={item} height={height} onPress={onPress} />;
+      case 'stamp':
+        return null;
       default:
         return assertUnreachable(item);
     }
@@ -57,7 +56,10 @@ interface CollectiblesListProps {
 }
 
 export function CollectiblesList({ collectiblesState, header }: CollectiblesListProps) {
-  const collectibles = collectiblesState.state === 'success' ? collectiblesState.value : [];
+  const collectibles =
+    collectiblesState.state === 'success'
+      ? collectiblesState.value.filter(c => c.protocol !== 'stamp')
+      : [];
   const height = useCollectibleListItemHeight();
   const router = useRouter();
   const collectiblesDetailsFlag = useCollectibleDetailsFlag();

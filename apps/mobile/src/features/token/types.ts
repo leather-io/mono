@@ -5,19 +5,11 @@ export interface TokenDetailsProps {
   assetId: SerializedCryptoAssetId;
 }
 
-const supportedAssetProtocols = [
-  'nativeBtc',
-  'nativeStx',
-  'sip10',
-  'rune',
-  'sip9',
-  'inscription',
-  'stamp',
-] as const;
+const supportedAssetProtocols = ['nativeBtc', 'nativeStx', 'sip10', 'sip9', 'inscription'] as const;
 
-const supportedFungibleAssetProtocols = ['nativeBtc', 'nativeStx', 'sip10', 'rune'] as const;
+const supportedFungibleAssetProtocols = ['nativeBtc', 'nativeStx', 'sip10'] as const;
 
-const supportedNonFungibleAssetProtocols = ['inscription', 'sip9', 'stamp'] as const;
+const supportedNonFungibleAssetProtocols = ['inscription', 'sip9'] as const;
 
 type SupportedAssetProtocol = (typeof supportedAssetProtocols)[number];
 type SupportedFungibleAssetProtocol = (typeof supportedFungibleAssetProtocols)[number];

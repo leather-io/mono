@@ -15,8 +15,8 @@ export function BitcoinBalanceByAccount({
 }: BitcoinBalanceByAccountProps) {
   const { state, value } = useBtcAccountBalance(fingerprint, accountIndex);
 
-  const availableBalance = value?.btc.availableBalance;
-  const quoteBalance = value?.quote.availableBalance;
+  const availableBalance = value?.btc.totalBalance;
+  const quoteBalance = value?.quote.totalBalance;
 
   if (!availableBalance || !quoteBalance) {
     return null;

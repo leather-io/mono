@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { AccountId, QuoteCurrency } from '@leather.io/models';
 import {
-  createAccountAvailableBalanceQueryConfig,
+  createAccountTotalBalanceQueryConfig,
   createAccountUnlockedBalanceQueryConfig,
 } from '@leather.io/queries';
 import { AccountRequest, UserSettings } from '@leather.io/services';
@@ -17,7 +17,20 @@ export function useAccountTotalBalance(
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
-  return toFetchState(useGetAccountTotalBalanceQuery({ account }, overrideFiatCurrencyPreference));
+  return toFetchState(
+    useGetAccountTotalBalanceQuery(
+      {
+        account,
+        protections: {
+          isRunesActive: false,
+          isOrdinalsActive: true,
+          discardedInscriptions: [],
+          discardRunes: true,
+        },
+      },
+      overrideFiatCurrencyPreference
+    )
+  );
 }
 
 export function useAccountUnlockedBalance(
@@ -26,7 +39,18 @@ export function useAccountUnlockedBalance(
 ) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
   return toFetchState(
-    useGetAccountUnlockedBalanceQuery({ account }, overrideFiatCurrencyPreference)
+    useGetAccountUnlockedBalanceQuery(
+      {
+        account,
+        protections: {
+          isRunesActive: false,
+          isOrdinalsActive: true,
+          discardedInscriptions: [],
+          discardRunes: true,
+        },
+      },
+      overrideFiatCurrencyPreference
+    )
   );
 }
 
@@ -43,7 +67,7 @@ function useGetAccountTotalBalanceQuery(
   };
 
   return useQuery({
-    ...createAccountAvailableBalanceQueryConfig(request, settings),
+    ...createAccountTotalBalanceQueryConfig(request, settings),
     ...balanceQueryOptions,
   });
 }
