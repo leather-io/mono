@@ -16,7 +16,7 @@ concurrency:
 jobs:
   check-headers:
     name: check-headers
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     concurrency:
       group: ${{ github.workflow }}-${{ matrix.domain }}
       cancel-in-progress: false
@@ -64,7 +64,7 @@ jobs:
     name: notify-slack
     needs: check-headers
     if: failure()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: slack-notification
     steps:
       - name: send-slack-notification

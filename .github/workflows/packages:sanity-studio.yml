@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   deploy-sanity-studio:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: cms:production
     name: deploy-sanity-studio
     steps:

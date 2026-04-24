@@ -17,7 +17,7 @@ concurrency:
 jobs:
   build-and-submit-mobile:
     name: build-and-submit-mobile
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: mobile:production
     outputs:
       build_output: ${{ steps.build_and_submit.outputs.build_output }}

@@ -22,7 +22,7 @@ jobs:
   review:
     name: review
     if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       pull-requests: write # post PR review comments

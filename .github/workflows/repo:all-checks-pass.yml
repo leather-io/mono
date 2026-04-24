@@ -20,7 +20,7 @@ concurrency:
 jobs:
   all-checks:
     name: all-checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       checks: read # allcheckspassed polls check-run statuses
       contents: read # actions/checkout baseline

@@ -19,7 +19,7 @@ concurrency:
 jobs:
   comment-building:
     name: comment-building
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       pull-requests: write # post sticky build-status comment on the PR
     steps:
@@ -33,7 +33,7 @@ jobs:
     name: staging
     needs: comment-building
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: web:staging
     outputs:
       staging_url: ${{ steps.set-staging-url.outputs.staging_url }}
@@ -84,7 +84,7 @@ jobs:
   comment-staging-ready:
     name: comment-staging-ready
     needs: staging
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       pull-requests: write # post sticky build-status comment on the PR
     env:
