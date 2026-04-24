@@ -5,9 +5,6 @@ on:
     branches:
       - dev
 
-# GITHUB_TOKEN only needs to read the repository. release-please uses the
-# LEATHER_BOT PAT for creating PRs; the deploy job elevates to `id-token: write`
-# for npm OIDC publishing.
 permissions:
   contents: read
 
@@ -29,11 +26,17 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
+        id: app-token
+        with:
+          app-id: ${{ secrets.LEATHER_BOT_APP_ID }}
+          private-key: ${{ secrets.LEATHER_BOT_APP_PRIVATE_KEY }}
+
       - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4.4.1
         id: release
         with:
           # permissions: create branch, push to branch, create PR with description, create release
-          token: ${{ secrets.LEATHER_BOT }}
+          token: ${{ steps.app-token.outputs.token }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}
@@ -44,10 +47,10 @@ jobs:
     needs: release-please
     runs-on: ubuntu-latest
     environment: publish-npm-packages
+    if: needs.release-please.outputs.releases_created == 'true'
     permissions:
       id-token: write # npm OIDC trusted publishing exchange
     # Ensure we only publish if a new release was created
-    if: needs.release-please.outputs.releases_created
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
@@ -75,4 +78,3 @@ jobs:
         run: |
           npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-sdk-*.tgz --access public
           npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-rpc-*.tgz --access public
-
