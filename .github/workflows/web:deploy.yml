@@ -1,9 +1,6 @@
 name: web:deploy
 
-on:
-  push:
-    branches:
-      - dev
+on: workflow_dispatch
 
 # GITHUB_TOKEN only needs to read the repository. Deploys use CLOUDFLARE_API_TOKEN.
 permissions:
@@ -18,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     name: deploy
     environment: web:production
+    if: github.ref_name == 'dev'
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:

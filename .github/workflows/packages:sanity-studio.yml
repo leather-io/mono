@@ -18,6 +18,7 @@ jobs:
   deploy-sanity-studio:
     runs-on: ubuntu-latest
     environment: cms:production
+    if: github.ref_name == 'dev'
     name: deploy-sanity-studio
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1

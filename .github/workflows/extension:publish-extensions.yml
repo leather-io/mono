@@ -36,6 +36,7 @@ jobs:
     name: publish-chrome-extension
     runs-on: ubuntu-24.04
     environment: extension:production
+    if: github.ref_name == 'dev'
     needs:
       - extract-version
     outputs:
