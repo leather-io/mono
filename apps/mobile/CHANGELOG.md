@@ -23,6 +23,13 @@
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
+## [2.104.6](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.104.5...@leather.io/mobile-v2.104.6) (2026-04-24)
+
+
+### Bug Fixes
+
+* **mobile:** remove mobile runes/stamps ([#2288](https://github.com/leather-io/mono/issues/2288)) ([66a4584](https://github.com/leather-io/mono/commit/66a4584ca0abeb5e6413a0c225447fad144bfe8c))
+
 ## [2.104.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.104.4...@leather.io/mobile-v2.104.5) (2026-04-16)
 
 
