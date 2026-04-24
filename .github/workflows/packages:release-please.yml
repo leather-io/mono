@@ -44,7 +44,7 @@ jobs:
     needs: release-please
     runs-on: ubuntu-latest
     environment: publish-npm-packages
-    if: github.ref_name == 'dev' && needs.release-please.outputs.releases_created
+    if: github.ref_name == 'dev' && needs.release-please.outputs.releases_created == 'true'
     permissions:
       id-token: write # npm OIDC trusted publishing exchange
     steps:
