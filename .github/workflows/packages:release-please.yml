@@ -5,9 +5,6 @@ on:
     branches:
       - dev
 
-# GITHUB_TOKEN only needs to read the repository. release-please uses the
-# LEATHER_BOT PAT for creating PRs; the deploy job elevates to `id-token: write`
-# for npm OIDC publishing.
 permissions:
   contents: read
 
@@ -21,6 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: release-please
     if: github.ref_name == 'dev'
+    permissions:
+      contents: write # commit version/changelog updates, create the release tag, and publish the GitHub Release
+      issues: write # apply release-please state labels (e.g. autorelease: pending/tagged) via the issues API
+      pull-requests: write # open and update the release PR against the target branch
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
       changelog: ${{ steps.release.outputs.changelog }}
@@ -30,11 +31,9 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4.4.1
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         id: release
         with:
-          # permissions: create branch, push to branch, create PR with description, create release
-          token: ${{ secrets.LEATHER_BOT }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}

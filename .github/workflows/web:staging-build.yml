@@ -20,6 +20,7 @@ jobs:
   comment-building:
     name: comment-building
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
     permissions:
       pull-requests: write # post sticky build-status comment on the PR
     steps:
@@ -32,7 +33,7 @@ jobs:
   staging:
     name: staging
     needs: comment-building
-    if: always()
+    if: always() && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     environment: web:staging
     outputs:
@@ -85,6 +86,7 @@ jobs:
     name: comment-staging-ready
     needs: staging
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
     permissions:
       pull-requests: write # post sticky build-status comment on the PR
     env:
