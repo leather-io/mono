@@ -37,6 +37,8 @@ jobs:
     name: set-in-progress-message
     if: github.repository == 'leather-io/mono' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: write # post sticky build-status comment on the PR
     needs:
       - sha-hash
     steps:
@@ -44,8 +46,6 @@ jobs:
         with:
           header: extension-build
           message: '_Building extension at commit ${{ needs.sha-hash.outputs.SHORT_SHA }}_'
-          # permissions: post comment to pr
-          GITHUB_TOKEN: ${{ secrets.ISSUE_PR_COMMENTS_BOT }}
 
   build:
     name: build-${{ matrix.target }}-extension
@@ -99,6 +99,8 @@ jobs:
     name: set-download-link
     if: github.repository == 'leather-io/mono' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: write # post sticky build-status comment on the PR
     needs:
       - sha-hash
       - build
@@ -114,6 +116,4 @@ jobs:
           EXTENSION_BUILD_LINK: '[Extension build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
         with:
           header: extension-build
-          # permissions: post comment to pr
-          GITHUB_TOKEN: ${{ secrets.ISSUE_PR_COMMENTS_BOT }}
           message: 'Leather Extension build ${{ needs.sha-hash.outputs.SHORT_SHA }} — ${{ env.EXTENSION_BUILD_LINK }}'

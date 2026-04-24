@@ -6,6 +6,5 @@ rules:
   secrets-outside-env:
     config:
       allow:
-        - ISSUE_PR_COMMENTS_BOT
         - CODECOV_TOKEN
         - CLAUDE_CODE_OAUTH_TOKEN
