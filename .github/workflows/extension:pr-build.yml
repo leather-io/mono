@@ -45,7 +45,7 @@ jobs:
           header: extension-build
           message: '_Building extension at commit ${{ needs.sha-hash.outputs.SHORT_SHA }}_'
           # permissions: post comment to pr
-          GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+          GITHUB_TOKEN: ${{ secrets.ISSUE_PR_COMMENTS_BOT }}
 
   build:
     name: build-${{ matrix.target }}-extension
@@ -115,5 +115,5 @@ jobs:
         with:
           header: extension-build
           # permissions: post comment to pr
-          GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+          GITHUB_TOKEN: ${{ secrets.ISSUE_PR_COMMENTS_BOT }}
           message: 'Leather Extension build ${{ needs.sha-hash.outputs.SHORT_SHA }} — ${{ env.EXTENSION_BUILD_LINK }}'
