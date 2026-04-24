@@ -19,6 +19,7 @@ jobs:
   release-please:
     name: release-please
     runs-on: ubuntu-latest
+    environment: release-please
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
       changelog: ${{ steps.release.outputs.changelog }}
