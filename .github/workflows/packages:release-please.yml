@@ -46,7 +46,7 @@ jobs:
     permissions:
       id-token: write # npm OIDC trusted publishing exchange
     # Ensure we only publish if a new release was created
-    if: needs.release-please.outputs.releases_created
+    if: needs.release-please.outputs.releases_created == 'true'
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
