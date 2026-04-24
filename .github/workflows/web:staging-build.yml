@@ -1,7 +1,7 @@
 name: web:staging-build
 
 # GITHUB_TOKEN only needs to read the repository; PR comments and deploy use
-# the LEATHER_BOT PAT and CLOUDFLARE_API_TOKEN respectively.
+# the ISSUE_PR_COMMENTS_BOT PAT and CLOUDFLARE_API_TOKEN respectively.
 permissions:
   contents: read
 
@@ -27,7 +27,7 @@ jobs:
         with:
           header: web-staging-build
           # permission: comment on pr
-          GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+          GITHUB_TOKEN: ${{ secrets.ISSUE_PR_COMMENTS_BOT }}
           message: |
             _Building web app staging at ${{ github.event.pull_request.head.sha }}_
 
@@ -94,5 +94,5 @@ jobs:
         with:
           header: web-staging-build
           # permissions: comment on pr
-          GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+          GITHUB_TOKEN: ${{ secrets.ISSUE_PR_COMMENTS_BOT }}
           message: 'Leather Web build ${{ github.event.pull_request.head.sha }} — ${{ env.WEB_STAGING_LINK }}'
