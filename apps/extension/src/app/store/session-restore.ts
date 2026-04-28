@@ -16,7 +16,7 @@ export async function clearWalletSession() {
   return chrome.storage.session.remove('encryptionKey');
 }
 
-async function getWalletSessionKey() {
+export async function getWalletSessionKey() {
   const key = await chrome.storage.session.get(['encryptionKey']);
   return z.string().safeParse(key.encryptionKey);
 }

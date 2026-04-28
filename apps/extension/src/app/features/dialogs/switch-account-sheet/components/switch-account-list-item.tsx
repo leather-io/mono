@@ -42,6 +42,7 @@ export function SwitchAccountListItem({
   const { data: name = '', isFetching: isFetchingBnsName } = useAccountDisplayName({
     address: stxAddress,
     index: accountId.accountIndex,
+    fingerprint: accountId.fingerprint,
   });
 
   function handleClick() {

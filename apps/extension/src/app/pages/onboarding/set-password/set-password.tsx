@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
@@ -13,8 +14,6 @@ import { isUndefined } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { useFinishAuthRequest } from '@app/common/authentication/use-finish-auth-request';
-import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import {
   blankPasswordValidation,
@@ -28,7 +27,8 @@ import {
   DescriptionColumn,
   TwoColumnLayout,
 } from '@app/components/layout/layouts/two-column.layout';
-import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useCheckPassword } from '@app/store/software-keys/software-key.hooks';
+import { selectSoftwareKeys } from '@app/store/software-keys/software-key.selectors';
 
 import { PasswordField } from './components/password-field';
 
@@ -38,32 +38,30 @@ interface SetPasswordFormValues {
 }
 const setPasswordFormValues: SetPasswordFormValues = { password: '', confirmPassword: '' };
 
-export function SetPasswordPage() {
+export function SetPasswordPage({
+  mnemonicData,
+}: {
+  mnemonicData: { mnemonic: string; fingerprint: string };
+}) {
   const [loading, setLoading] = useState(false);
   const [strengthResult, setStrengthResult] = useState(blankPasswordValidation);
-  const stacksAccounts = useStacksAccounts();
-  const { setPassword } = useKeyActions();
-  const finishSignIn = useFinishAuthRequest();
+  const { setPasswordUpdated } = useKeyActions();
+  const softwareKeys = useSelector(selectSoftwareKeys);
+  const hasSoftwareKeys = !!softwareKeys.length;
+  const checkPassword = useCheckPassword();
+
   const navigate = useNavigate();
-  const { decodedAuthRequest } = useOnboardingState();
 
   const submit = useCallback(
     async (password: string) => {
-      await setPassword(password);
-
-      if (decodedAuthRequest) {
-        if (!stacksAccounts) return;
-
-        if (stacksAccounts && stacksAccounts.length > 1) {
-          void navigate(RouteUrls.ChooseAccount);
-        } else {
-          await finishSignIn(0);
-        }
-      } else {
-        void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
-      }
+      await setPasswordUpdated({
+        password,
+        mnemonic: mnemonicData.mnemonic,
+        fingerprint: mnemonicData.fingerprint,
+      });
+      void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
     },
-    [setPassword, decodedAuthRequest, stacksAccounts, navigate, finishSignIn]
+    [setPasswordUpdated, navigate, mnemonicData.fingerprint, mnemonicData.mnemonic]
   );
 
   const onSubmit = useCallback(
@@ -85,6 +83,12 @@ export function SetPasswordPage() {
       .string()
       .required()
       .test({
+        message: "Doesn't match",
+        test: debounce((value: string) => {
+          checkPassword({ password: value });
+        }),
+      })
+      .test({
         message: 'Weak',
         test: debounce((value: unknown) => {
           if (isUndefined(value)) {
@@ -101,6 +105,11 @@ export function SetPasswordPage() {
         }, 60) as unknown as yup.TestFunction<any, any>,
       }),
   });
+  const title = hasSoftwareKeys ? 'Enter your Password' : 'Set a password';
+  const description = hasSoftwareKeys
+    ? 'Enter the password you set on this device.'
+    : "Your password protects your Secret Key on this device only. To access your wallet on another device, you'll need just your Secret Key.";
+
   return (
     <>
       <Header px="space.04">
@@ -118,12 +127,7 @@ export function SetPasswordPage() {
           {({ dirty, isSubmitting, isValid }) => (
             <Form>
               <TwoColumnLayout
-                leftColumn={
-                  <DescriptionColumn
-                    title="Set a password"
-                    description="Your password protects your Secret Key on this device only. To access your wallet on another device, you'll need just your Secret Key."
-                  />
-                }
+                leftColumn={<DescriptionColumn title={title} description={description} />}
                 rightColumn={
                   <Stack
                     p="space.05"

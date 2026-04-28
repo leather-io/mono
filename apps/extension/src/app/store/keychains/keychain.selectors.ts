@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 
 import { keychainAdapter } from '@leather.io/state/keychains';
+import { sumNumbers } from '@leather.io/utils';
 
 import { RootState } from '..';
 
@@ -36,4 +37,17 @@ export function useBitcoinKeychainDescriptors() {
 
 export function useStacksKeychainDescriptors() {
   return useSelector(selectStacksKeychainDescriptors);
+}
+
+const selectNumberOfKeysPersisted = createSelector(
+  [selectBitcoinKeychains, selectStacksKeychains],
+  (bitcoinKeychains, stacksKeychains) =>
+    sumNumbers([bitcoinKeychains.length, stacksKeychains.length])
+);
+
+const selectHasKeychains = createSelector(selectNumberOfKeysPersisted, numOfKeys =>
+  numOfKeys.isGreaterThan(0)
+);
+export function useHasKeychains() {
+  return useSelector(selectHasKeychains);
 }

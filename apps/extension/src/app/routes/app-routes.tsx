@@ -23,6 +23,8 @@ import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-t
 import { UnsupportedBrowserLayout } from '@app/features/ledger/generic-steps';
 import { ConnectLedgerStart } from '@app/features/ledger/generic-steps/connect-device/connect-ledger-start';
 import { TokenDetails } from '@app/features/token/token-details';
+import { AddWallet } from '@app/pages/add-wallet/add-wallet';
+import { CreateWalletPage } from '@app/pages/create-wallet/create-wallet';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { LegacyAccountAuth } from '@app/pages/legacy-account-auth/legacy-account-auth';
@@ -77,6 +79,8 @@ export const homePageModalRoutes = (
     {ledgerBitcoinTxSigningRoutes}
     {requestBitcoinKeysRoutes}
     {requestStacksKeysRoutes}
+    <Route path={RouteUrls.ConnectLedgerStart} element={<ConnectLedgerStart initialRoute="" />} />
+    <Route path={RouteUrls.LedgerUnsupportedBrowser} element={<UnsupportedBrowserLayout />} />
   </>
 );
 
@@ -228,6 +232,24 @@ function useAppRoutes() {
             {requestStacksKeysRoutes}
           </Route>
 
+          {/* <Route */}
+          {/*   path={RouteUrls.AddLedgerWallet} */}
+          {/*   element={ */}
+          {/*     <AccountGate> */}
+          {/*       <Home /> */}
+          {/*     </AccountGate> */}
+          {/*   } */}
+          {/* > */}
+          {/*   <Route path={RouteUrls.ConnectLedgerStart} element={<ConnectLedgerStart />} /> */}
+          {/*   <Route */}
+          {/*     path={RouteUrls.LedgerUnsupportedBrowser} */}
+          {/*     element={<UnsupportedBrowserLayout />} */}
+          {/*   /> */}
+          {/**/}
+          {/*   {requestBitcoinKeysRoutes} */}
+          {/*   {requestStacksKeysRoutes} */}
+          {/* </Route> */}
+
           <Route
             path={RouteUrls.BackUpSecretKey}
             element={
@@ -236,14 +258,14 @@ function useAppRoutes() {
               </OnboardingGate>
             }
           />
-          <Route
-            path={RouteUrls.SetPassword}
-            element={
-              <OnboardingGate>
-                <SetPasswordPage />
-              </OnboardingGate>
-            }
-          />
+          {/* <Route */}
+          {/*   path={RouteUrls.SetPassword} */}
+          {/*   element={ */}
+          {/*     <OnboardingGate> */}
+          {/*       <SetPasswordPage /> */}
+          {/*     </OnboardingGate> */}
+          {/*   } */}
+          {/* /> */}
 
           <Route
             path={RouteUrls.SignIn}
@@ -251,6 +273,22 @@ function useAppRoutes() {
               <OnboardingGate>
                 <SignIn />
               </OnboardingGate>
+            }
+          />
+          <Route
+            path={RouteUrls.AddWallet}
+            element={
+              <AccountGate>
+                <AddWallet />
+              </AccountGate>
+            }
+          />
+          <Route
+            path={RouteUrls.CreateWallet}
+            element={
+              <AccountGate>
+                <CreateWalletPage />
+              </AccountGate>
             }
           />
           <Route path={RouteUrls.ForgotPassword} element={<ForgotPassword />} />

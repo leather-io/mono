@@ -4,8 +4,8 @@ import { Flex, HStack, styled } from 'leather-styles/jsx';
 
 import { Button, Callout, Sheet, SheetHeader } from '@leather.io/ui';
 
-import { useWalletType } from '@app/common/use-wallet-type';
 import { ButtonRow } from '@app/components/layout';
+import { useHasUnlockedSoftwareWallets } from '@app/store/in-memory-key/in-memory-key.selectors';
 
 interface SignOutSheetProps {
   isShowing: boolean;
@@ -13,11 +13,12 @@ interface SignOutSheetProps {
   onClose(): void;
 }
 export function SignOutSheet({ isShowing, onUserDeleteWallet, onClose }: SignOutSheetProps) {
-  const { whenWallet, walletType } = useWalletType();
+  const hasUnlockedSoftwareWallets = useHasUnlockedSoftwareWallets();
+
   const form = useFormik({
     initialValues: {
-      confirmBackup: whenWallet({ ledger: true, software: false }),
-      confirmPasswordDisable: whenWallet({ ledger: true, software: false }),
+      confirmBackup: !hasUnlockedSoftwareWallets,
+      confirmPasswordDisable: !hasUnlockedSoftwareWallets,
     },
     onSubmit() {
       handleSignOut();
@@ -62,16 +63,13 @@ export function SignOutSheet({ isShowing, onUserDeleteWallet, onClose }: SignOut
       }
     >
       <Callout variant="warning" width="100%" title="You'll need your Secret Key to sign in again">
-        {whenWallet({
-          software:
-            "Back up your Secret Key before signing out. You'll be asked for your Secret Key on your next login.",
-          ledger:
-            "When you sign out, you'll need to reconnect your Ledger to sign back into your wallet.",
-        })}
+        {hasUnlockedSoftwareWallets
+          ? "Back up your Secret Key before signing out. You'll be asked for your Secret Key on your next login."
+          : "When you sign out, you'll need to reconnect your Ledger to sign back into your wallet."}
       </Callout>
       <Flex alignItems="center" flexDirection="column" p="space.05">
         <form onChange={form.handleChange} onSubmit={form.handleSubmit}>
-          <styled.label alignItems="center" display={walletType === 'software' ? 'flex' : 'none'}>
+          <styled.label alignItems="center" display={hasUnlockedSoftwareWallets ? 'flex' : 'none'}>
             <HStack gap="space.03">
               <input
                 type="checkbox"
@@ -88,7 +86,7 @@ export function SignOutSheet({ isShowing, onUserDeleteWallet, onClose }: SignOut
           <styled.label
             alignItems="center"
             mt="space.05"
-            display={walletType === 'software' ? 'flex' : 'none'}
+            display={hasUnlockedSoftwareWallets ? 'flex' : 'none'}
           >
             <HStack gap="space.03">
               <input

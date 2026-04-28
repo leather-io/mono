@@ -58,6 +58,8 @@ export function TokenList({
   const currentStacksAccount = useCurrentStacksAccount();
   const currentBtcNativeSegwitAccount = useCurrentAccountNativeSegwitPayer();
   const currentBtcTaprootAccount = useCurrentAccountTaprootPayer();
+  console.log({ currentBtcNativeSegwitAccount });
+  // const wallets = useWallets()
   const isLedger = useHasLedgerKeys();
   const isPrivate = useIsPrivateMode();
 
@@ -79,7 +81,7 @@ export function TokenList({
             )}
           </BtcAssetItemBalanceLoader>
         ) : (
-          isLedger && (
+          !isLedger && (
             <ConnectLedgerAssetItemFallback
               chain="bitcoin"
               icon={

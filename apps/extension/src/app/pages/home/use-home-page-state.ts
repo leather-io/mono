@@ -22,6 +22,8 @@ import { useTogglePrivateMode } from '@app/store/settings/settings.actions';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 export function useHomePageState() {
+  console.warn('rerender connected app');
+
   const { decodedAuthRequest } = useOnboardingState();
   const { toggleSwitchAccount } = useSwitchAccountSheet();
   const navigate = useNavigate();

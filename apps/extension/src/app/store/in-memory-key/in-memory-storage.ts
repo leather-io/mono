@@ -6,9 +6,37 @@ import { decodeText, encodeText } from '@shared/utils/text-encoding';
  *
  * Keys are stored as encoded text in a private Map that is not accessible from
  * outside this module.
+ *
+ * The store is observable via `subscribe`/`getSnapshot` for use with
+ * `useSyncExternalStore`, allowing React components to reactively re-render
+ * when keys are added, removed, or cleared.
  */
 
 const keys = new Map<string, string>();
+const listeners = new Set<() => void>();
+let version = 0;
+
+function emitChange() {
+  version++;
+  listeners.forEach(listener => listener());
+}
+
+/**
+ * Subscribe to store changes. Compatible with `useSyncExternalStore`.
+ * @returns Unsubscribe function
+ */
+export function subscribe(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+/**
+ * Get a snapshot version of the store. Compatible with `useSyncExternalStore`.
+ * Returns a stable value between mutations.
+ */
+export function getSnapshot(): number {
+  return version;
+}
 
 /**
  * Store a key in memory
@@ -17,6 +45,7 @@ const keys = new Map<string, string>();
  */
 export function setKey(fingerprint: string, secretKey: string): void {
   keys.set(fingerprint, encodeText(secretKey));
+  emitChange();
 }
 
 /**
@@ -45,6 +74,7 @@ export function hasKey(fingerprint: string): boolean {
  */
 export function removeKey(fingerprint: string): void {
   keys.delete(fingerprint);
+  emitChange();
 }
 
 /**
@@ -60,6 +90,7 @@ export function getFingerprints(): string[] {
  */
 export function clearAll(): void {
   keys.clear();
+  emitChange();
 }
 
 /**

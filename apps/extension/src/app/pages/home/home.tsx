@@ -37,6 +37,7 @@ interface HomeProps {
 }
 
 export function Home({ isBackground }: HomeProps) {
+  console.log('home renders');
   const { activityRevamp } = useFlags();
   const accountId = useCurrentAccountId();
   const account = useAccountAddresses(accountId);

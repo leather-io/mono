@@ -12,9 +12,10 @@ import { useAuthRequestParams } from '@app/common/hooks/auth/use-auth-request-pa
 import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useWalletType } from '@app/common/use-wallet-type';
-import { store } from '@app/store';
-import { selectStacksAccountById } from '@app/store/accounts/blockchain/stacks/stacks-account.selectors';
+import type { RootState } from '@app/store';
+import { selectStacksAccountState } from '@app/store/accounts/blockchain/stacks/stacks-account.selectors';
 import { useActiveWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 
 import { useGetLegacyAuthBitcoinAddresses } from './use-legacy-auth-bitcoin-addresses';
@@ -27,6 +28,10 @@ export function useFinishAuthRequest() {
 
   const { origin, tabId } = useAuthRequestParams();
   const hasSecretKey = !!useActiveWalletSecretKey();
+  const { version } = useInMemoryKeys();
+  const stacksAccounts = useSelector((state: RootState) =>
+    selectStacksAccountState(state, version)
+  );
 
   // TODO: It would be good to separate out finishing auth by the wallet vs an app
   // so that the additional data we provide apps can be removed from our onboarding.
@@ -35,8 +40,9 @@ export function useFinishAuthRequest() {
 
   return useCallback(
     async (accountIndex: number) => {
-      const accountId = { fingerprint: currentAccount.fingerprint, accountIndex };
-      const account = selectStacksAccountById(store.getState(), accountId);
+      const account = stacksAccounts.find(
+        a => a.fingerprint === currentAccount.fingerprint && a.index === accountIndex
+      );
 
       if (!decodedAuthRequest || !authRequest || !account || !origin || !tabId) {
         logger.error('Uh oh! Finished onboarding without auth info.');
@@ -85,6 +91,7 @@ export function useFinishAuthRequest() {
       tabId,
       walletType,
       hasSecretKey,
+      stacksAccounts,
       getLegacyAuthBitcoinData,
       keyActions,
       currentAccount.fingerprint,

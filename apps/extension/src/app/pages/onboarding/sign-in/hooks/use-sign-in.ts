@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { validateMnemonic } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
@@ -8,7 +7,6 @@ import { getMnemonicRootKeyFingerprint } from '@leather.io/crypto';
 import { resetWallet } from '@leather.io/state';
 import { delay } from '@leather.io/utils';
 
-import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useAppDispatch } from '@app/store';
@@ -23,9 +21,12 @@ async function simulateShortDelayToAvoidImmediateNavigation() {
 export function useSignIn() {
   const [error, setError] = useState<string | undefined>();
   const [isKeyMasked, setIsKeyMasked] = useState(true);
+  const [mnemonicData, setMnemonicData] = useState<null | {
+    mnemonic: string;
+    fingerprint: string;
+  }>(null);
 
   const { isLoading, setIsLoading, setIsIdle } = useLoading('useSignIn');
-  const navigate = useNavigate();
 
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -65,10 +66,36 @@ export function useSignIn() {
       inMemoryStore.setKey(fingerprint, parsedKeyInput);
       dispatch(walletKeyGenerated(fingerprint));
       analytics.track('submit_valid_secret_key');
-      void navigate(RouteUrls.SetPassword);
+      // void navigate(RouteUrls.SetPassword);
       setIsIdle();
     },
-    [setIsLoading, dispatch, navigate, setIsIdle, handleSetError]
+    [setIsLoading, dispatch, setIsIdle, handleSetError]
+  );
+  const submitMnemonicFormUpdated = useCallback(
+    async (passedValue: string) => {
+      setIsLoading();
+      const parsedKeyInput = passedValue ? passedValue.trim() : '';
+
+      // empty?
+      if (parsedKeyInput.length === 0) {
+        handleSetError('Entering your Secret Key is required.');
+      }
+
+      if (!validateMnemonic(parsedKeyInput, wordlist)) {
+        handleSetError();
+        return;
+      }
+
+      await simulateShortDelayToAvoidImmediateNavigation();
+
+      const fingerprint = getMnemonicRootKeyFingerprint(parsedKeyInput);
+      setMnemonicData({ mnemonic: passedValue, fingerprint });
+      // dispatch(walletKeyGenerated(fingerprint));
+      analytics.track('submit_valid_secret_key');
+      // void navigate(RouteUrls.SetPassword);
+      setIsIdle();
+    },
+    [setIsLoading, setIsIdle, handleSetError]
   );
 
   const toggleKeyMask = useCallback(() => {
@@ -87,10 +114,12 @@ export function useSignIn() {
 
   return {
     submitMnemonicForm,
+    submitMnemonicFormUpdated,
     ref: textAreaRef,
     error,
     isLoading,
     toggleKeyMask,
     isKeyMasked,
+    mnemonicData,
   };
 }

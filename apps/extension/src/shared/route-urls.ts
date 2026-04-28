@@ -41,6 +41,9 @@ export enum RouteUrls {
   Send = '/send-transaction',
   ViewSecretKey = '/view-secret-key',
   Settings = '/settings',
+  AddWallet = '/add-wallet',
+  CreateWallet = '/create-wallet',
+  AddLedgerWallet = '/add-ledger-wallet',
 
   // nested routes must have relative paths
   Activity = '/activity',

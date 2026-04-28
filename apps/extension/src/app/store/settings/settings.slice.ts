@@ -7,6 +7,8 @@ interface InitialState {
   dismissedMessages: string[];
   dismissedPromoIndexes: number[];
   seenFeatureIntros: string[];
+  customAccountNames: Record<string, string>;
+  hiddenAccounts: string[];
   isPrivateMode?: boolean;
   isNotificationsEnabled?: boolean;
   bypassInscriptionChecks?: boolean;
@@ -14,11 +16,17 @@ interface InitialState {
   networkBadgeAlwaysOn?: boolean;
 }
 
+function accountKey(fingerprint: string, accountIndex: number) {
+  return `${fingerprint}:${accountIndex}`;
+}
+
 const initialState: InitialState = {
   userSelectedTheme: 'system',
   dismissedMessages: [],
   dismissedPromoIndexes: [],
   seenFeatureIntros: [],
+  customAccountNames: {},
+  hiddenAccounts: [],
   discardedInscriptions: [],
   isNotificationsEnabled: true,
 };
@@ -75,6 +83,28 @@ export const settingsSlice = createSlice({
     },
     resetInscriptionState(state) {
       state.discardedInscriptions = [];
+    },
+    setAccountName(
+      state,
+      action: PayloadAction<{ fingerprint: string; accountIndex: number; name: string }>
+    ) {
+      const { fingerprint, accountIndex, name } = action.payload;
+      if (!state.customAccountNames) state.customAccountNames = {};
+      state.customAccountNames[accountKey(fingerprint, accountIndex)] = name;
+    },
+    toggleAccountHidden(
+      state,
+      action: PayloadAction<{ fingerprint: string; accountIndex: number }>
+    ) {
+      const { fingerprint, accountIndex } = action.payload;
+      if (!Array.isArray(state.hiddenAccounts)) state.hiddenAccounts = [];
+      const key = accountKey(fingerprint, accountIndex);
+      const idx = state.hiddenAccounts.indexOf(key);
+      if (idx === -1) {
+        state.hiddenAccounts.push(key);
+      } else {
+        state.hiddenAccounts.splice(idx, 1);
+      }
     },
   },
 });

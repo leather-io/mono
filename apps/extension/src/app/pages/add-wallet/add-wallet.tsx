@@ -1,10 +1,9 @@
-import { SetPasswordPage } from '../set-password/set-password';
-import { EnterMnemonic } from './enter-mnemonic';
-import { useSignIn } from './hooks/use-sign-in';
+import { SetPasswordPage } from '../onboarding/set-password/set-password';
+import { EnterMnemonic } from '../onboarding/sign-in/enter-mnemonic';
+import { useSignIn } from '../onboarding/sign-in/hooks/use-sign-in';
 
-export function SignIn() {
+export function AddWallet() {
   const { submitMnemonicFormUpdated, error, isLoading, mnemonicData } = useSignIn();
-  console.log('sign in', mnemonicData);
 
   return mnemonicData ? (
     <SetPasswordPage mnemonicData={mnemonicData} />

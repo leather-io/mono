@@ -4,7 +4,6 @@ import { generateMnemonic, getMnemonicRootKeyFingerprint } from '@leather.io/cry
 import type { AccountId } from '@leather.io/models';
 import { resetWallet } from '@leather.io/state';
 
-import { logger } from '@shared/logger';
 import { InternalMethods } from '@shared/message-types';
 import { sendMessage } from '@shared/messages';
 import { clearChromeStorage } from '@shared/storage/redux-persist';
@@ -22,11 +21,9 @@ import { useStacksClient } from '@app/store/common/api-clients.hooks';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { clearWalletSession } from '@app/store/session-restore';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
-import { useActiveSoftwareKey } from '@app/store/software-keys/software-key.selectors';
 
 export function useKeyActions() {
   const dispatch = useAppDispatch();
-  const activeSoftwareKey = useActiveSoftwareKey();
   const activeAccount = useCurrentAccountId();
   const btcClient = useBitcoinClient();
   const stxClient = useStacksClient();
@@ -39,16 +36,47 @@ export function useKeyActions() {
           keyActions.setWalletEncryptionPassword({ password, stxClient, btcClient, bnsV2Client })
         );
       },
+      setPasswordUpdated({
+        mnemonic,
+        password,
+        fingerprint,
+      }: {
+        mnemonic: string;
+        password: string;
+        fingerprint: string;
+      }) {
+        return dispatch(
+          keyActions.setWalletEncryptionPasswordUpdated({
+            mnemonic,
+            fingerprint,
+            password,
+            stxClient,
+            btcClient,
+            bnsV2Client,
+          })
+        );
+      },
 
       generateWalletKey() {
-        if (activeSoftwareKey) {
-          logger.warn('Cannot generate new wallet when wallet already exists');
-          return;
-        }
+        // if (activeSoftwareKey) {
+        //   logger.warn('Cannot generate new wallet when wallet already exists');
+        //   return;
+        // }
         const mnemonic = generateMnemonic();
         const fingerprint = getMnemonicRootKeyFingerprint(mnemonic);
         inMemoryStore.setKey(fingerprint, mnemonic);
         dispatch(walletKeyGenerated(fingerprint));
+      },
+      generateWalletKeyUpdated() {
+        // if (activeSoftwareKey) {
+        //   logger.warn('Cannot generate new wallet when wallet already exists');
+        //   return;
+        // }
+        const mnemonic = generateMnemonic();
+        const fingerprint = getMnemonicRootKeyFingerprint(mnemonic);
+        return { mnemonic, fingerprint };
+        // inMemoryStore.setKey(fingerprint, mnemonic);
+        // dispatch(walletKeyGenerated(fingerprint));
       },
 
       unlockWallet(password: string) {
@@ -63,9 +91,9 @@ export function useKeyActions() {
         return dispatch(userSwitchesAccount(accountId));
       },
 
-      createNewAccount() {
+      createNewAccount(fingerprint?: string) {
         if (!activeAccount) throw new Error('No active account');
-        return dispatch(createNewAccount(activeAccount.fingerprint));
+        return dispatch(createNewAccount(fingerprint ? fingerprint : activeAccount.fingerprint));
       },
 
       async signOut() {
@@ -84,6 +112,6 @@ export function useKeyActions() {
         window.location.reload();
       },
     }),
-    [activeAccount, bnsV2Client, btcClient, activeSoftwareKey, dispatch, stxClient]
+    [activeAccount, bnsV2Client, btcClient, dispatch, stxClient]
   );
 }

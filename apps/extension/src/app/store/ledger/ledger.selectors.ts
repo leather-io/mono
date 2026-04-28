@@ -14,6 +14,7 @@ import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 const selectNumberOfLedgerKeysPersisted = createSelector(
   [selectBitcoinKeychains, selectStacksKeychains],
   (bitcoinKeychains, stacksKeychains) =>
+    console.log({ bitcoinKeychains, stacksKeychains }) ||
     sumNumbers([bitcoinKeychains.length, stacksKeychains.length])
 );
 

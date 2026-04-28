@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router';
-
 import { Button } from '@leather.io/ui';
 
 import { FeatureIntroducer } from '../feature-introducer';
@@ -8,13 +6,11 @@ import { MultiWalletIllustration } from './multi-wallet-illustration';
 
 export function MultiWalletIntroducer() {
   const { shouldShow, markAsSeen } = useFeatureIntroducer('multi-wallet-support');
-  const navigate = useNavigate();
 
   if (!shouldShow) return null;
 
   function handleTryIt() {
     markAsSeen();
-    navigate('/add-account');
   }
 
   function handleClose() {
@@ -44,3 +40,4 @@ export function MultiWalletIntroducer() {
     </FeatureIntroducer.Root>
   );
 }
+
