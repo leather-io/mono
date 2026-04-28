@@ -19,9 +19,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read # paths-filter reads changed files via the PR API
+    outputs:
+      workflow: ${{ steps.filter.outputs.workflow }}
+    steps:
+      - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
+        id: filter
+        with:
+          filters: |
+            workflow:
+              - '.github/workflows/repo:claude-code-review.yml'
+
   review:
     name: review
-    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.draft == false
+    needs: changes
+    if: needs.changes.outputs.workflow != 'true' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
