@@ -9,8 +9,6 @@ import { AssetsList } from '@/features/balances/assets/assets-list';
 import { BitcoinDepositTokenCell } from '@/features/balances/bitcoin/bitcoin-deposit-token-cell';
 import { ManageTokensSheet } from '@/features/balances/manage-tokens.sheet';
 import { StacksDepositTokenCell } from '@/features/balances/stacks/stacks-deposit-token-cell';
-import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
-import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { CollectiblesList } from '@/features/token/collectibles-list';
 import { useActivity } from '@/queries/activity/activity.query';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
@@ -36,12 +34,10 @@ interface HomeScreenWithAccountProps {
   currentAccount: AccountId;
 }
 export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountProps) {
-  const notificationSheetRef = useRef<SheetInstance>(null);
   const manageTokensSheetRef = useRef<SheetInstance>(null);
   const { fingerprint, accountIndex } = currentAccount;
   const { changeCurrentAccount } = useSettings();
   const [listTab, setListTab] = useState<ListTab>('tokens');
-  useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
   useAccountScaledBalanceAnalytics({ currentAccount });
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
   const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
@@ -120,7 +116,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
         />
       )}
 
-      <NotificationsSheet sheetRef={notificationSheetRef} />
       <AccountSelectorSheet sheetRef={accountSelectorSheetRef} onAccountPress={onAccountPress} />
       <ManageTokensSheet sheetRef={manageTokensSheetRef} currentAccount={currentAccount} />
     </Screen>

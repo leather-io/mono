@@ -15,7 +15,6 @@ import { LeatherQueryProvider } from '@/core/leather-query-provider';
 import { ThemeProvider } from '@/core/theme-provider';
 import { AddAccountSheet } from '@/features/account/sheets/add-account-sheet';
 import { featureFlagClient, setupFeatureFlags, useSwapFlag } from '@/features/feature-flags';
-import { useWatchNotificationAddresses } from '@/features/notifications/use-notifications';
 import { RampSheet } from '@/features/ramp/ramp-sheet';
 import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
@@ -66,7 +65,6 @@ ErrorUtils.setGlobalHandler(error => {
 
 function App() {
   useUpdateAnalyticsPlugin();
-  useWatchNotificationAddresses();
   usePageViewTracking();
   useOnMount(trackFirstAppOpen);
   useDeepLinks(router);
