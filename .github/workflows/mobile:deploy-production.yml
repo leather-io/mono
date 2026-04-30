@@ -19,6 +19,7 @@ jobs:
     name: build-and-submit-mobile
     runs-on: ubuntu-latest
     environment: mobile:production
+    if: github.ref_name == 'dev'
     outputs:
       build_output: ${{ steps.build_and_submit.outputs.build_output }}
       android_build_id: ${{ steps.build_and_submit.outputs.android_build_id }}

@@ -17,6 +17,7 @@ jobs:
     name: release-please
     runs-on: ubuntu-latest
     environment: release-please
+    if: github.ref_name == 'dev'
     permissions:
       contents: write # commit version/changelog updates, create the release tag, and publish the GitHub Release
       issues: write # apply release-please state labels (e.g. autorelease: pending/tagged) via the issues API
@@ -43,10 +44,9 @@ jobs:
     needs: release-please
     runs-on: ubuntu-latest
     environment: publish-npm-packages
+    if: github.ref_name == 'dev' && needs.release-please.outputs.releases_created == 'true'
     permissions:
       id-token: write # npm OIDC trusted publishing exchange
-    # Ensure we only publish if a new release was created
-    if: needs.release-please.outputs.releases_created == 'true'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
