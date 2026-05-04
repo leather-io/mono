@@ -8,13 +8,18 @@ lane :build_android_aab do
     json_key: ENV.fetch("GOOGLE_APPLICATION_CREDENTIALS"),
   ).max || 0) + 1
 
+  gradle_file = File.expand_path("../../../android/app/build.gradle", __dir__)
+  sh("sed", "-i.bak", "-E", "s/^([[:space:]]+)versionCode [0-9]+$/\\1versionCode #{next_code}/", gradle_file)
+
+  grep_out = sh("grep", "-E", "versionCode [0-9]+", gradle_file)
+  UI.user_error!("versionCode injection failed — got: #{grep_out}") unless grep_out.include?("versionCode #{next_code}")
+
   gradle(
     project_dir: "android/",
     task: "bundle",
     build_type: "Release",
     properties: {
       "unsignedRelease" => "true",
-      "android.injected.version.code" => next_code
     },
   )
 end
