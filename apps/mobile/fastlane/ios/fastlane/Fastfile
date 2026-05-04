@@ -17,7 +17,7 @@ lane :build_ios_archive do
   )
 end
 
-desc "Patch CFBundleVersion from TestFlight, re-sign archive, upload. Requires production secrets."
+desc "Re-sign prebuilt archive and upload to TestFlight. Requires production secrets."
 lane :sign_and_submit_ios do
   required_env = %w[
     IOS_DIST_CERT_P12_BASE64
@@ -59,16 +59,6 @@ lane :sign_and_submit_ios do
     is_key_content_base64: true,
     in_house: false,
   )
-
-  next_build = latest_testflight_build_number(
-    initial_build_number: 0,
-    api_key: api_key,
-  ) + 1
-
-  archive_plist = "../#{ARCHIVE_PATH}/Info.plist"
-  app_plist = "../#{ARCHIVE_PATH}/Products/Applications/Leather.app/Info.plist"
-  sh("/usr/libexec/PlistBuddy -c 'Set :ApplicationProperties:CFBundleVersion #{next_build}' '#{archive_plist}'")
-  sh("/usr/libexec/PlistBuddy -c 'Set :CFBundleVersion #{next_build}' '#{app_plist}'")
 
   build_app(
     skip_build_archive: true,

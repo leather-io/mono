@@ -1,12 +1,14 @@
 import { ConfigContext, ExpoConfig } from 'expo/config';
 
+const version = '2.104.6'; // x-release-please-version
+
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
     name: 'Leather',
     owner: 'leather-wallet',
     slug: 'leather-wallet-mobile',
-    version: '2.104.6', // x-release-please-version
+    version,
     orientation: 'portrait',
     icon: './src/assets/icon.png',
     scheme: 'leather',
@@ -19,6 +21,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         usesNonExemptEncryption: false,
       },
       bundleIdentifier: 'io.leather.mobilewallet',
+      buildNumber: version,
       supportsTablet: false,
       associatedDomains: ['applinks:connect.leather.io'],
       entitlements: {
