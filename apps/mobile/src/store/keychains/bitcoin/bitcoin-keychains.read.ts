@@ -141,17 +141,6 @@ export function useBitcoinPayerAddressFromAccountIndex(fingerprint: string, acco
   return { taprootPayerAddress, nativeSegwitPayerAddress };
 }
 
-export function useBitcoinAddresses() {
-  const { list: accounts } = useBitcoinAccounts();
-  return useMemo(
-    () =>
-      accounts
-        .map(keychain => keychain.derivePayer({ change: 0, addressIndex: 0 }))
-        .map(a => a.address),
-    [accounts]
-  );
-}
-
 export function findAccountByAddress(
   accounts: ReturnType<typeof useBitcoinAccounts>['list'],
   address: string,

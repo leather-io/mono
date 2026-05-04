@@ -1,30 +1,32 @@
 name: mobile:deploy-production
 
-# GITHUB_TOKEN only needs to read the repository for checkout.
 permissions:
   contents: read
 defaults:
   run:
     shell: bash
-
 on:
   workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform(s) to build and submit'
+        type: choice
+        default: all
+        options:
+          - all
+          - ios
+          - android
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  build-and-submit-mobile:
-    name: build-and-submit-mobile
-    runs-on: ubuntu-latest
-    environment: mobile:production
-    if: github.ref_name == 'dev'
-    outputs:
-      build_output: ${{ steps.build_and_submit.outputs.build_output }}
-      android_build_id: ${{ steps.build_and_submit.outputs.android_build_id }}
-      ios_build_id: ${{ steps.build_and_submit.outputs.ios_build_id }}
-      build_version: ${{ steps.build_and_submit.outputs.build_version }}
+  ios-build:
+    name: ios-build
+    if: github.ref_name == 'dev' && (inputs.platform == 'all' || inputs.platform == 'ios')
+    runs-on: macos-15
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -35,25 +37,217 @@ jobs:
         with:
           PROVISION_MOBILE: true
 
-      - name: setup-expo-and-eas
-        uses: expo/expo-github-action@c7b66a9c327a43a8fa7c0158e7f30d6040d2481e # 8.2.1
+      - name: build-mobile-workspace
+        run: pnpm -w build:mobile
+
+      - name: expo-prebuild
+        working-directory: apps/mobile
+        run: pnpm prebuild
+
+      - name: setup-ruby
+        uses: ruby/setup-ruby@4a9ddd6f338a97768b8006bf671dfbad383215f4 # v1.207.0
         with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: apps/mobile/fastlane
 
-      - name: install-jq-tool
-        run: |
-          sudo apt-get update
-          sudo apt-get install jq
+      - name: enforce-cocoapods-version
+        working-directory: apps/mobile
+        run: bash scripts/enforce-cocoapods-version.sh
 
-      - name: build-and-submit-mobile
-        id: build_and_submit
-        working-directory: ./apps/mobile
-        run: |
-          build_output=$(eas build --non-interactive --json --no-wait --auto-submit --platform=all --profile=production)
-          {
-            echo "build_output=$(echo "$build_output" | base64 -w 0)"
-            echo "android_build_id=$(echo "$build_output" | jq -r '.[0].["id"]')"
-            echo "ios_build_id=$(echo "$build_output" | jq -r '.[1].["id"]')"
-            echo "build_version=$(eas config -e production -p android --json --non-interactive | jq -r '.appConfig.version')"
-          } >> "$GITHUB_OUTPUT"
+      - name: cache-pods
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: apps/mobile/ios/Pods
+          key: pods-${{ hashFiles('apps/mobile/ios/Podfile.lock') }}
+          restore-keys: pods-
+
+      - name: build-archive
+        working-directory: apps/mobile
+        env:
+          BUNDLE_GEMFILE: ${{ github.workspace }}/apps/mobile/fastlane/Gemfile
+          MOBILE_DOTENV: ${{ vars.MOBILE_DOTENV }}
+          FASTLANE_HIDE_CHANGELOG: 'true'
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: bundle exec fastlane ios build_ios_archive
+
+      - name: upload-archive
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ios-xcarchive
+          path: apps/mobile/ios/build/Leather.xcarchive
+          retention-days: 7
+          if-no-files-found: error
+
+  ios-submit:
+    name: ios-submit
+    needs: ios-build
+    if: github.ref_name == 'dev' && (inputs.platform == 'all' || inputs.platform == 'ios')
+    runs-on: macos-15
+    environment: ios:production
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: provision-the-app
+        uses: ./.github/actions/provision
+        with:
+          PROVISION_MOBILE: true
+
+      - name: build-mobile-workspace
+        run: pnpm -w build:mobile
+
+      - name: expo-prebuild
+        working-directory: apps/mobile
+        run: pnpm prebuild
+
+      - name: setup-ruby
+        uses: ruby/setup-ruby@4a9ddd6f338a97768b8006bf671dfbad383215f4 # v1.207.0
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: apps/mobile/fastlane
+
+      - name: download-archive
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: ios-xcarchive
+          path: apps/mobile/ios/build/Leather.xcarchive
+
+      - name: sign-and-submit
+        working-directory: apps/mobile
+        env:
+          BUNDLE_GEMFILE: ${{ github.workspace }}/apps/mobile/fastlane/Gemfile
+          IOS_DIST_CERT_P12_BASE64: ${{ secrets.IOS_DIST_CERT_P12_BASE64 }}
+          IOS_DIST_CERT_P12_PASSWORD: ${{ secrets.IOS_DIST_CERT_P12_PASSWORD }}
+          IOS_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_PROVISION_PROFILE_BASE64 }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_ISSUER_ID: ${{ secrets.APPLE_API_KEY_ISSUER_ID }}
+          APPLE_API_KEY_P8_BASE64: ${{ secrets.APPLE_API_KEY_P8_BASE64 }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: bundle exec fastlane ios sign_and_submit_ios
+ 
+  android-build:
+    name: android-build
+    if: github.ref_name == 'dev' && (inputs.platform == 'all' || inputs.platform == 'android')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # GCP workload identity federation for Play Store version lookup
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: provision-the-app
+        uses: ./.github/actions/provision
+        with:
+          PROVISION_MOBILE: true
+
+      - name: build-mobile-workspace
+        run: pnpm -w build:mobile
+
+      - name: expo-prebuild
+        working-directory: apps/mobile
+        run: pnpm prebuild
+
+      - name: setup-java
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: setup-ruby
+        uses: ruby/setup-ruby@4a9ddd6f338a97768b8006bf671dfbad383215f4 # v1.207.0
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: apps/mobile/fastlane
+
+      - name: cache-gradle
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('apps/mobile/android/**/*.gradle*', 'apps/mobile/android/gradle.properties') }}
+          restore-keys: gradle-
+
+      - name: gcp-auth
+        id: gcp-auth
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_PLAY_STORE_SERVICE_ACCOUNT }}
+
+      - name: build-aab
+        working-directory: apps/mobile
+        env:
+          BUNDLE_GEMFILE: ${{ github.workspace }}/apps/mobile/fastlane/Gemfile
+          MOBILE_DOTENV: ${{ vars.MOBILE_DOTENV }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: bundle exec fastlane android build_android_aab
+
+      - name: upload-aab
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: android-aab
+          path: apps/mobile/android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 7
+          if-no-files-found: error
+
+  android-submit:
+    name: android-submit
+    needs: android-build
+    if: github.ref_name == 'dev' && (inputs.platform == 'all' || inputs.platform == 'android')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # GCP workload identity federation for Play Store auth
+    environment: android:production
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: setup-java
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: setup-ruby
+        uses: ruby/setup-ruby@4a9ddd6f338a97768b8006bf671dfbad383215f4 # v1.207.0
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: apps/mobile/fastlane
+
+      - name: download-aab
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: android-aab
+          path: apps/mobile/android/app/build/outputs/bundle/release
+
+      - name: gcp-auth
+        id: gcp-auth
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_PLAY_STORE_SERVICE_ACCOUNT }}
+
+      - name: sign-and-submit
+        working-directory: apps/mobile
+        env:
+          BUNDLE_GEMFILE: ${{ github.workspace }}/apps/mobile/fastlane/Gemfile
+          ANDROID_AAB_PATH: ${{ github.workspace }}/apps/mobile/android/app/build/outputs/bundle/release/app-release.aab
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: bundle exec fastlane android sign_and_submit_android
+

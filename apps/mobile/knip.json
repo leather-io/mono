@@ -6,7 +6,6 @@
     "*/**/*.test.ts",
     "*/**/*.mocks.ts",
     ".detoxrc.cjs",
-    "fingerprint.config.js",
     "index.d.ts",
     "lingui.config.ts",
     "src/tests/test-utils.tsx"

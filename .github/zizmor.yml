@@ -8,3 +8,4 @@ rules:
       allow:
         - CODECOV_TOKEN
         - CLAUDE_CODE_OAUTH_TOKEN
+        - SENTRY_AUTH_TOKEN

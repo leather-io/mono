@@ -1,1 +1,2 @@
 package_name("io.leather.mobilewallet")
+app_identifier("io.leather.mobilewallet")

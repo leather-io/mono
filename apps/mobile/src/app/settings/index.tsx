@@ -6,7 +6,7 @@ import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.layout';
 import { useAuthContext } from '@/components/splash-screen-guard/use-auth-context';
 import { useToastContext } from '@/components/toast/toast-context';
-import { useNotificationsFlag, useWaitlistFlag } from '@/features/feature-flags';
+import { useWaitlistFlag } from '@/features/feature-flags';
 import { AppIconPickerSheet } from '@/features/settings/choose-app-icon/app-icon-picker-sheet';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { WaitlistIds } from '@/features/waitlist/ids';
@@ -20,7 +20,6 @@ import { useRouter } from 'expo-router';
 import {
   Accordion,
   AppIcon,
-  BellIcon,
   Box,
   Button,
   CopyIcon,
@@ -45,7 +44,6 @@ export default function SettingsScreen() {
   const { displayToast } = useToastContext();
   const deviceId = useDeviceId();
   const { onCopy: onDeviceIdCopy } = useCopyToClipboard(deviceId ?? '');
-  const releasePushNotifications = useNotificationsFlag();
   const releaseWaitlistFeatures = useWaitlistFlag();
   function handleCopyDeviceIdToClipboard() {
     void onDeviceIdCopy();
@@ -93,16 +91,6 @@ export default function SettingsScreen() {
           icon={<AppIcon />}
           onPress={() => appIconSheetRef.current?.present()}
         />
-        {releasePushNotifications && (
-          <SettingsListItem
-            py="3"
-            title={t`Notifications`}
-            caption={t`Push and email notifications`}
-            icon={<BellIcon />}
-            onPress={() => router.navigate('/settings/notifications')}
-            testID={TestId.settingsNotificationsButton}
-          />
-        )}
         <SettingsListItem
           title={t`Help`}
           caption={t`Get support or provide feedback`}

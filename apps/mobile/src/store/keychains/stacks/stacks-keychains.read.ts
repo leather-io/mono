@@ -1,8 +1,6 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Account } from '@/store/accounts/accounts';
-import { useAccounts } from '@/store/accounts/accounts.read';
 import { mnemonicStore } from '@/store/secure-store/mnemonic-store';
 import { selectNetworkPreference } from '@/store/settings/settings.read';
 import { createSelector } from '@reduxjs/toolkit';
@@ -64,24 +62,6 @@ export function useStacksSigners() {
       ...descriptorKeychainSelectors(list, filterKeychainsByStacksAccount),
     }),
     [list]
-  );
-}
-
-function filterActiveAddresses(stacksSigners: StacksSigner[], accounts: Account[]) {
-  return stacksSigners.filter(signer =>
-    accounts.some(account => {
-      const { fingerprint } = decomposeDescriptor(signer.descriptor);
-      return account.accountIndex === signer.accountIndex && account.fingerprint === fingerprint;
-    })
-  );
-}
-
-export function useStacksSignerAddresses() {
-  const { list: stacksSigners } = useStacksSigners();
-  const activeAccounts = useAccounts();
-  return useMemo(
-    () => filterActiveAddresses(stacksSigners, activeAccounts.list).map(signer => signer.address),
-    [stacksSigners, activeAccounts]
   );
 }
 

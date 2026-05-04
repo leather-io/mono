@@ -19,7 +19,6 @@ export enum TestId {
   settingsLockAppButton = 'settingsLockAppButton',
   settingsMoreOptionsButton = 'settingsMoreOptionsButton',
   settingsNetworkButton = 'settingsNetworkButton',
-  settingsNotificationsButton = 'settingsNotificationsButton',
   settingsSecurityButton = 'settingsSecurityButton',
   settingsWalletAndAccountsButton = 'settingsWalletAndAccountsButton',
   toastContainer = 'toastContainer',

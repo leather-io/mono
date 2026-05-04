@@ -1,3 +1,65 @@
 default_platform(:android)
 
-# stubbed out but not used for now
+desc "Look up next versionCode from Play and build an unsigned release AAB."
+lane :build_android_aab do
+  next_code = (google_play_track_version_codes(
+    package_name: "io.leather.mobilewallet",
+    track: "internal",
+    json_key: ENV.fetch("GOOGLE_APPLICATION_CREDENTIALS"),
+  ).max || 0) + 1
+
+  gradle(
+    project_dir: "android/",
+    task: "bundle",
+    build_type: "Release",
+    properties: {
+      "unsignedRelease" => "true",
+      "android.injected.version.code" => next_code
+    },
+  )
+end
+
+desc "Sign the prebuilt unsigned AAB with the production keystore and upload to Play."
+lane :sign_and_submit_android do
+  required_env = %w[
+    ANDROID_KEYSTORE_BASE64
+    ANDROID_KEYSTORE_PASSWORD
+    ANDROID_KEY_PASSWORD
+    ANDROID_KEY_ALIAS
+    ANDROID_AAB_PATH
+    GOOGLE_APPLICATION_CREDENTIALS
+  ]
+  missing_env = required_env.select { |k| ENV[k].nil? || ENV[k].empty? }
+  UI.user_error!("sign_and_submit_android missing env: #{missing_env.join(', ')}") unless missing_env.empty?
+
+  require "base64"
+  require "tempfile"
+  keystore = Tempfile.new(["release", ".keystore"])
+  keystore.binmode
+  keystore.write(Base64.decode64(ENV.fetch("ANDROID_KEYSTORE_BASE64")))
+  keystore.close
+
+  aab_path = ENV.fetch("ANDROID_AAB_PATH")
+  UI.user_error!("AAB not found at #{aab_path} — sign lane refuses to build.") unless File.exist?(aab_path)
+
+  sh "zip -d '#{aab_path}' 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*.DSA' 'META-INF/*.EC' || [ $? -eq 12 ]"
+
+  sh(
+    "jarsigner",
+    "-verbose",
+    "-keystore", keystore.path,
+    "-storepass:env", "ANDROID_KEYSTORE_PASSWORD",
+    "-keypass:env", "ANDROID_KEY_PASSWORD",
+    aab_path,
+    ENV.fetch("ANDROID_KEY_ALIAS"),
+  )
+
+  sh("jarsigner", "-verify", "-verbose", aab_path)
+
+  upload_to_play_store(
+    track: "internal",
+    release_status: "draft",
+    aab: aab_path,
+    json_key: ENV.fetch("GOOGLE_APPLICATION_CREDENTIALS"),
+  )
+end

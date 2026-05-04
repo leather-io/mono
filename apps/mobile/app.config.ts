@@ -7,15 +7,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     owner: 'leather-wallet',
     slug: 'leather-wallet-mobile',
     version: '2.104.6', // x-release-please-version
-    runtimeVersion: {
-      policy: 'fingerprint',
-    },
-    notification: {
-      icon: './src/assets/icon.png',
-    },
-    updates: {
-      url: 'https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
-    },
     orientation: 'portrait',
     icon: './src/assets/icon.png',
     scheme: 'leather',
@@ -28,18 +19,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         usesNonExemptEncryption: false,
       },
       bundleIdentifier: 'io.leather.mobilewallet',
-      googleServicesFile: process.env.GOOGLE_SERVICES_INFO_PLIST ?? './GoogleService-Info.plist',
       supportsTablet: false,
       associatedDomains: ['applinks:connect.leather.io'],
       entitlements: {
-        'aps-environment': 'production',
         'com.apple.developer.associated-domains': [
           'applinks:connect.leather.io',
           'webcredentials:connect.leather.io',
         ],
       },
       infoPlist: {
-        UIBackgroundModes: ['remote-notification', 'fetch'],
         NSCameraUsageDescription:
           'This app uses the camera to scan QR codes for sending transactions.',
         CFBundleURLTypes: [
@@ -80,7 +68,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     android: {
       ...config.android,
       package: 'io.leather.mobilewallet',
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json',
       edgeToEdgeEnabled: true,
       intentFilters: [
         {
@@ -110,30 +97,13 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     plugins: [
       [
-        // 'expo-build-properties' must be first. See https://github.com/invertase/react-native-firebase/issues/8657#issuecomment-3312082933
-
         'expo-build-properties',
         {
           ios: {
-            /**
-             * Helps RNFB to compile correctly on iOS, since firebase-ios-sdk requires use_frameworks
-             * @see https://rnfirebase.io/#configure-react-native-firebase-modules
-             */
-            useFrameworks: 'static',
             deploymentTarget: '15.1',
-            /**
-             * RNFirebase iOS build fix using static linking (maintainer-recommended).
-             * This `forceStaticLinking` configuration follows the Expo maintainer’s suggested solution:
-             * https://github.com/expo/expo/issues/39607#issuecomment-3337284928
-             * ⚠️ IMPORTANT: If installing/removing react-native-firebase npm packages, ensure you also update this list.
-             * - Look for `s.name` property in node_modules/@react-native-firebase/<module>/<module>.podspec to get the Pod name.
-             */
-            forceStaticLinking: ['RNFBApp', 'RNFBMessaging'],
           },
         },
       ],
-      '@react-native-firebase/messaging',
-      '@react-native-firebase/app',
       [
         '@sentry/react-native/expo',
         {
@@ -274,13 +244,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       router: {
         origin: false,
       },
-      eas: {
-        projectId: 'c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
-      },
     },
     experiments: {
       typedRoutes: true,
-      buildCacheProvider: 'eas',
       autolinkingModuleResolution: true,
     },
   };

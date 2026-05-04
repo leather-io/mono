@@ -39,10 +39,6 @@ export function useCollectibleDetailsFlag() {
   return useBoolVariation('collectible_details', false);
 }
 
-export function useNotificationsFlag() {
-  return useBoolVariation('release_push_notifications', false);
-}
-
 export function useWaitlistFlag() {
   return useBoolVariation('release_waitlist_features', false);
 }

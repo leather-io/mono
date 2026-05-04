@@ -152,22 +152,6 @@ BUILD_TARGET=mobile pnpm build:mobile
 2. `prebuild` explicitly calls `prepare:build`
 3. Runs codegen before main build
 
-### Mobile (EAS)
-
-```json
-{
-  "scripts": {
-    "eas-build-post-install": "cd ../.. && pnpm install --filter=@leather.io/mobile... && BUILD_TARGET=mobile pnpm build:mobile"
-  }
-}
-```
-
-**Flow:**
-1. Install mobile deps (no prepare scripts!)
-2. Build with BUILD_TARGET=mobile (optimization)
-3. Turbo handles build order
-4. No panda, no web stuff
-
 ## Turbo Dependency Management
 
 ### How It Works
@@ -302,17 +286,6 @@ esac
 
 ## CI/CD Setup
 
-### Mobile (EAS)
-
-```json
-// apps/mobile/package.json
-{
-  "eas-build-post-install": "cd ../.. && pnpm install --filter=@leather.io/mobile... && BUILD_TARGET=mobile pnpm build:mobile"
-}
-```
-
-No additional CI config needed!
-
 ### Web CI
 
 ```yaml
@@ -391,5 +364,4 @@ echo $BUILD_TARGET
 
 ## See Also
 
-- [Full Documentation](./mobile-eas-build-fix.md) - Complete technical details
 - [Test Script](../scripts/test-mobile-build.sh) - Validation script

@@ -1,26 +1,89 @@
 default_platform(:ios)
 
-desc "Build iOS app"
-lane :build_ios do
-  if is_ci  
-    setup_ci
-  end
-  ENV["SENTRY_ALLOW_FAILURE"] = "true"
-  match(type: "appstore", readonly: true)
+ARCHIVE_PATH = "ios/build/Leather.xcarchive".freeze
+
+desc "Build unsigned .xcarchive. No production signing secrets needed."
+lane :build_ios_archive do
+  cocoapods(podfile: "ios/Podfile", verbose: true)
+
   build_app(
-    scheme: "leatherwalletmobile"
+    workspace: "ios/Leather.xcworkspace",
+    scheme: "leatherwalletmobile",
+    configuration: "Release",
+    archive_path: ARCHIVE_PATH,
+    skip_package_ipa: true,
+    skip_codesigning: true,
+    xcargs: "CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY=''",
   )
 end
 
-lane :distribute_ios_beta do
-  build_ios
-  release = firebase_app_distribution(
-    app: "1:915379517791:ios:ecfa47ab5ee5f256789eea",
-    groups: "leatherhood",
-    release_notes: "New iOS build available",
+desc "Patch CFBundleVersion from TestFlight, re-sign archive, upload. Requires production secrets."
+lane :sign_and_submit_ios do
+  required_env = %w[
+    IOS_DIST_CERT_P12_BASE64
+    IOS_DIST_CERT_P12_PASSWORD
+    IOS_PROVISION_PROFILE_BASE64
+    APPLE_API_KEY_ID
+    APPLE_API_KEY_ISSUER_ID
+    APPLE_API_KEY_P8_BASE64
+  ]
+  missing_env = required_env.select { |k| ENV[k].nil? || ENV[k].empty? }
+  UI.user_error!("sign_and_submit_ios missing env: #{missing_env.join(', ')}") unless missing_env.empty?
+
+  setup_ci
+
+  require "base64"
+  require "tempfile"
+
+  cert = Tempfile.new(["dist", ".p12"])
+  cert.binmode
+  cert.write(Base64.decode64(ENV.fetch("IOS_DIST_CERT_P12_BASE64")))
+  cert.close
+  import_certificate(
+    certificate_path: cert.path,
+    certificate_password: ENV.fetch("IOS_DIST_CERT_P12_PASSWORD"),
+    keychain_name: "fastlane_tmp_keychain",
+    keychain_password: "",
   )
-  notify_slack_of_firebase_build(
-    firebase_release: release
+
+  profile = Tempfile.new(["leather", ".mobileprovision"])
+  profile.binmode
+  profile.write(Base64.decode64(ENV.fetch("IOS_PROVISION_PROFILE_BASE64")))
+  profile.close
+  install_provisioning_profile(path: profile.path)
+
+  api_key = app_store_connect_api_key(
+    key_id: ENV.fetch("APPLE_API_KEY_ID"),
+    issuer_id: ENV.fetch("APPLE_API_KEY_ISSUER_ID"),
+    key_content: ENV.fetch("APPLE_API_KEY_P8_BASE64"),
+    is_key_content_base64: true,
+    in_house: false,
+  )
+
+  next_build = latest_testflight_build_number(
+    initial_build_number: 0,
+    api_key: api_key,
+  ) + 1
+
+  archive_plist = "../#{ARCHIVE_PATH}/Info.plist"
+  app_plist = "../#{ARCHIVE_PATH}/Products/Applications/Leather.app/Info.plist"
+  sh("/usr/libexec/PlistBuddy -c 'Set :ApplicationProperties:CFBundleVersion #{next_build}' '#{archive_plist}'")
+  sh("/usr/libexec/PlistBuddy -c 'Set :CFBundleVersion #{next_build}' '#{app_plist}'")
+
+  build_app(
+    skip_build_archive: true,
+    archive_path: ARCHIVE_PATH,
+    workspace: './ios/Leather.xcworkspace',
+    export_options: "./fastlane/ios/ExportOptions.plist",
+    output_directory: "ios/build",
+    output_name: "Leather.ipa",
+    xcargs: "-allowProvisioningUpdates",
+  )
+
+  pilot(
+    api_key: api_key,
+    skip_waiting_for_build_processing: true,
+    distribute_external: false,
+    skip_submission: true,
   )
 end
-

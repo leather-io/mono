@@ -35,13 +35,11 @@ Maestro is built with async in mind, so whenever we do any of the actions, maest
 
 To run all of the flows locally, you can run `maestro test maestro/flows`.
 
-Whenever you create a new flow don't forget to add it in expo build [maestro-flows.yaml](../apps/mobile/.eas/functions/maestro-flows.yaml):
-
 You want a recording of your new changes? Simply create an E2E test for you changes and run `maestro record maestro/flows/your-amazing-flow.yaml` and it will create an mp4 for you!
 
 ### Add test to CI
 
-To add test to CI, you need to add it to the `run_maestro_tests` function in [maestro.yml](../apps/mobile/.eas/common/maestro.yml)
+Maestro CI is currently disabled (it previously ran via EAS Workflows, which have been removed). Local runs only for now.
 
 Refs:
 

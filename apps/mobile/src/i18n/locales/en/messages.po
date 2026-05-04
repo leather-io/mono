@@ -183,7 +183,7 @@ msgstr "Add wallet"
 msgid "Add your first NFT by buying or transferring from another account."
 msgstr "Add your first NFT by buying or transferring from another account."
 
-#: src/app/settings/index.tsx:63
+#: src/app/settings/index.tsx:61
 msgid "Add, configure and remove"
 msgstr "Add, configure and remove"
 
@@ -293,7 +293,7 @@ msgstr "An error occurred"
 msgid "Analytics"
 msgstr "Analytics"
 
-#: src/app/settings/index.tsx:78
+#: src/app/settings/index.tsx:76
 msgid "Analytics and app authentication"
 msgstr "Analytics and app authentication"
 
@@ -343,7 +343,7 @@ msgstr "App authentication"
 msgid "App authorization updated"
 msgstr "App authorization updated"
 
-#: src/app/settings/index.tsx:91
+#: src/app/settings/index.tsx:89
 #: src/features/settings/choose-app-icon/app-icon-picker-sheet.tsx:70
 msgid "App Icon"
 msgstr "App Icon"
@@ -497,10 +497,6 @@ msgstr "Changed network"
 msgid "Charisma"
 msgstr "Charisma"
 
-#: src/features/settings/email-address-sheet.tsx:33
-msgid "Check your email for verification"
-msgstr "Check your email for verification"
-
 #: src/features/approver/layouts/get-addresses.layout.tsx:45
 #: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:41
 msgid "Choose an account"
@@ -597,8 +593,8 @@ msgstr "Connections"
 msgid "Contact us"
 msgstr "Contact us"
 
-#: src/app/settings/index.tsx:123
-#: src/app/settings/index.tsx:176
+#: src/app/settings/index.tsx:111
+#: src/app/settings/index.tsx:164
 msgid "Contacts"
 msgstr "Contacts"
 
@@ -670,11 +666,11 @@ msgstr "Current app version format is invalid"
 msgid "Custom"
 msgstr "Custom"
 
-#: src/app/settings/index.tsx:183
+#: src/app/settings/index.tsx:171
 msgid "Custom fees"
 msgstr "Custom fees"
 
-#: src/app/settings/index.tsx:92
+#: src/app/settings/index.tsx:90
 msgid "Customize your app icon"
 msgstr "Customize your app icon"
 
@@ -705,7 +701,7 @@ msgstr "Depositing"
 msgid "Description"
 msgstr "Description"
 
-#: src/app/settings/index.tsx:152
+#: src/app/settings/index.tsx:140
 msgid "Device ID"
 msgstr "Device ID"
 
@@ -729,7 +725,7 @@ msgid "Dismiss"
 msgstr "Dismiss"
 
 #: src/app/settings/display/index.tsx:52
-#: src/app/settings/index.tsx:70
+#: src/app/settings/index.tsx:68
 msgid "Display"
 msgstr "Display"
 
@@ -740,10 +736,6 @@ msgstr "Dive into feature details"
 #: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:55
 msgid "Do not proceed"
 msgstr "Do not proceed"
-
-#: src/features/notifications/notifications-sheet.tsx:30
-msgid "Don't notify me"
-msgstr "Don't notify me"
 
 #: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:28
 msgid "Done"
@@ -761,24 +753,9 @@ msgstr "Edit memo"
 msgid "Edit Slippage"
 msgstr "Edit Slippage"
 
-#: src/app/settings/notifications/_layout.tsx:29
-#: src/app/settings/notifications/_layout.tsx:45
-msgid "Email"
-msgstr "Email"
-
-#: src/app/settings/notifications/email.tsx:18
-#: src/features/settings/email-address-sheet.tsx:42
-#: src/features/settings/email-address-sheet.tsx:44
-msgid "Email address"
-msgstr "Email address"
-
 #: src/app/secure-your-wallet.tsx:49
 msgid "Enable device security"
 msgstr "Enable device security"
-
-#: src/features/notifications/notifications-sheet.tsx:13
-msgid "Enable to receive notifications about transactions"
-msgstr "Enable to receive notifications about transactions"
 
 #: src/app/settings/networks/index.tsx:53
 #: src/app/settings/security/index.tsx:18
@@ -891,7 +868,7 @@ msgstr "Fee charged by {providerName} for facilitating the swap"
 msgid "Fee updated"
 msgstr "Fee updated"
 
-#: src/app/settings/index.tsx:131
+#: src/app/settings/index.tsx:119
 #: src/features/swap/components/fees-info-sheet.tsx:30
 msgid "Fees"
 msgstr "Fees"
@@ -951,7 +928,7 @@ msgid "Genesis time"
 msgstr "Genesis time"
 
 #: src/app/settings/help/index.tsx:18
-#: src/app/settings/index.tsx:108
+#: src/app/settings/index.tsx:96
 msgid "Get support or provide feedback"
 msgstr "Get support or provide feedback"
 
@@ -996,7 +973,7 @@ msgid "Haptics"
 msgstr "Haptics"
 
 #: src/app/settings/help/index.tsx:14
-#: src/app/settings/index.tsx:107
+#: src/app/settings/index.tsx:95
 msgid "Help"
 msgstr "Help"
 
@@ -1042,7 +1019,7 @@ msgstr "I've backed it up"
 msgid "Icons"
 msgstr "Icons"
 
-#: src/app/settings/index.tsx:53
+#: src/app/settings/index.tsx:51
 msgid "ID copied to clipboard"
 msgstr "ID copied to clipboard"
 
@@ -1094,10 +1071,6 @@ msgstr "Insufficient funds"
 #: src/features/swap/components/amount-field/amount-field-error-messages.ts:14
 msgid "Invalid amount"
 msgstr "Invalid amount"
-
-#: src/features/settings/email-address-sheet.tsx:23
-msgid "Invalid email address"
-msgstr "Invalid email address"
 
 #: src/features/recover-wallet/components/error-message.tsx:5
 msgid "Invalid words: {joinedInvalidWords}"
@@ -1159,7 +1132,7 @@ msgstr "Leather"
 msgid "Lisa"
 msgstr "Lisa"
 
-#: src/app/settings/index.tsx:170
+#: src/app/settings/index.tsx:158
 msgid "Lock app"
 msgstr "Lock app"
 
@@ -1188,7 +1161,7 @@ msgstr "Locking"
 msgid "Magic Eden"
 msgstr "Magic Eden"
 
-#: src/app/settings/index.tsx:85
+#: src/app/settings/index.tsx:83
 msgid "Mainnet, testnet or signet"
 msgstr "Mainnet, testnet or signet"
 
@@ -1269,7 +1242,7 @@ msgstr "Minimum receive"
 msgid "Minimum version format is invalid"
 msgstr "Minimum version format is invalid"
 
-#: src/app/settings/index.tsx:118
+#: src/app/settings/index.tsx:106
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:95
 msgid "More options"
 msgstr "More options"
@@ -1298,7 +1271,7 @@ msgstr "Native Segwit address"
 msgid "Network fee"
 msgstr "Network fee"
 
-#: src/app/settings/index.tsx:84
+#: src/app/settings/index.tsx:82
 #: src/app/settings/networks/index.tsx:47
 msgid "Networks"
 msgstr "Networks"
@@ -1354,15 +1327,6 @@ msgstr "Not enough liquidity or no route available right now. Try a smaller amou
 #: src/features/swap/components/review/swap-review-empty-state.tsx:21
 msgid "Not enough liquidity or no route available right now. Try a smaller amount or check back later."
 msgstr "Not enough liquidity or no route available right now. Try a smaller amount or check back later."
-
-#: src/app/settings/index.tsx:99
-#: src/app/settings/notifications/_layout.tsx:13
-msgid "Notifications"
-msgstr "Notifications"
-
-#: src/features/notifications/notifications-sheet.tsx:21
-msgid "Notify me"
-msgstr "Notify me"
 
 #: src/components/app-update-required/update-button.tsx:26
 msgid "OK"
@@ -1455,22 +1419,9 @@ msgstr "Protected Bitcoin balance:"
 msgid "Protocol"
 msgstr "Protocol"
 
-#: src/features/settings/email-address-sheet.tsx:43
-msgid "Provide an email address for receiving notifications"
-msgstr "Provide an email address for receiving notifications"
-
 #: src/components/error/fetch-error.tsx:15
 msgid "Pull to refresh"
 msgstr "Pull to refresh"
-
-#: src/app/settings/notifications/_layout.tsx:22
-#: src/app/settings/notifications/_layout.tsx:38
-msgid "Push"
-msgstr "Push"
-
-#: src/app/settings/index.tsx:100
-msgid "Push and email notifications"
-msgstr "Push and email notifications"
 
 #: src/features/token/stacks/sip9-token-details.tsx:70
 msgid "Rarity rank"
@@ -1500,14 +1451,6 @@ msgstr "Receive"
 #: src/features/activity/translate-activity-status.ts:14
 msgid "Receive failed"
 msgstr "Receive failed"
-
-#: src/app/settings/notifications/index.tsx:14
-msgid "Receive notifications about transactions"
-msgstr "Receive notifications about transactions"
-
-#: src/features/notifications/notifications-sheet.tsx:12
-msgid "Receive transaction notifications"
-msgstr "Receive transaction notifications"
 
 #: src/features/activity/translate-activity-status.ts:12
 msgid "Received"
@@ -1606,7 +1549,6 @@ msgid "Rune"
 msgstr "Rune"
 
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:74
-#: src/features/settings/email-address-sheet.tsx:45
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:19
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:19
 msgid "Save"
@@ -1646,7 +1588,7 @@ msgstr "Search for BNS name or address"
 msgid "Secure your wallet"
 msgstr "Secure your wallet"
 
-#: src/app/settings/index.tsx:77
+#: src/app/settings/index.tsx:75
 #: src/app/settings/security/index.tsx:34
 msgid "Security"
 msgstr "Security"
@@ -1694,7 +1636,7 @@ msgstr "Sending to your own address isn’t supported. Choose a different addres
 msgid "Sent"
 msgstr "Sent"
 
-#: src/app/settings/index.tsx:59
+#: src/app/settings/index.tsx:57
 #: src/components/screen/screen-header/components/header-actions.tsx:30
 #: src/features/qr-scanner/use-camera-permission.ts:38
 msgid "Settings"
@@ -1911,7 +1853,7 @@ msgstr "The maximum price change you're willing to accept between when you submi
 msgid "Theme"
 msgstr "Theme"
 
-#: src/app/settings/index.tsx:71
+#: src/app/settings/index.tsx:69
 msgid "Theme and account identifier"
 msgstr "Theme and account identifier"
 
@@ -2003,10 +1945,6 @@ msgstr "Total balance"
 #: src/features/psbt-signer/psbt-signer.tsx:311
 msgid "Total spend"
 msgstr "Total spend"
-
-#: src/app/settings/notifications/index.tsx:13
-msgid "Transaction confirmations"
-msgstr "Transaction confirmations"
 
 #: src/features/send/forms/btc/use-btc-form.ts:78
 #: src/features/send/forms/stx/use-sip10-form.ts:88
@@ -2107,7 +2045,7 @@ msgstr "Velar"
 msgid "Verify full address"
 msgstr "Verify full address"
 
-#: src/app/settings/index.tsx:144
+#: src/app/settings/index.tsx:132
 msgid "Version"
 msgstr "Version"
 
@@ -2148,7 +2086,7 @@ msgstr "Wallet name cannot be empty"
 msgid "Wallets"
 msgstr "Wallets"
 
-#: src/app/settings/index.tsx:62
+#: src/app/settings/index.tsx:60
 msgid "Wallets and accounts"
 msgstr "Wallets and accounts"
 

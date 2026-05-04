@@ -1,7 +1,13 @@
 # fastlane/Fastfile
 
-# Import shared lanes
-import './shared/Fastfile'
+skip_docs
+
+before_all do |lane|
+  mobile_dotenv = ENV["MOBILE_DOTENV"]
+  if mobile_dotenv && !mobile_dotenv.empty?
+    File.write(File.expand_path("../.env", __dir__), mobile_dotenv)
+  end
+end
 
 # Import iOS lanes
 platform :ios do
