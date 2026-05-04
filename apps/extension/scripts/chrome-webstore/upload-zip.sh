@@ -11,10 +11,16 @@ response=$(curl --silent --show-error --fail \
 
 state=$(printf '%s' "$response" | jq -r '.uploadState')
 
-if [ "$state" != "SUCCEEDED" ]; then
-  echo "Chrome Web Store upload failed:" >&2
-  printf '%s\n' "$response" >&2
-  exit 1
-fi
-
-echo "Chrome Web Store upload succeeded" >&2
+case "$state" in
+  SUCCEEDED)
+    echo "Chrome Web Store upload succeeded" >&2
+    ;;
+  IN_PROGRESS)
+    echo "Chrome Web Store upload accepted but still processing — publish may fail if not ready" >&2
+    ;;
+  *)
+    echo "Chrome Web Store upload failed:" >&2
+    printf '%s\n' "$response" >&2
+    exit 1
+    ;;
+esac
