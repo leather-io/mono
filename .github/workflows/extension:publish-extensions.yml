@@ -32,15 +32,12 @@ jobs:
           VERSION: ${{ steps.extract_version.outputs.version }}
         run: echo "$VERSION"
 
-  publish-chrome-extension:
-    name: publish-chrome-extension
+  build-chrome-extension:
+    name: build-chrome-extension
     runs-on: ubuntu-24.04
-    environment: extension:production
     if: github.ref_name == 'dev'
     needs:
       - extract-version
-    outputs:
-      publish_status: ${{ steps.publish-chrome.outputs.publish_status }}
     env:
       NEW_VERSION: ${{ needs.extract-version.outputs.new_version }}
       TARGET_BROWSER: chromium
@@ -76,28 +73,68 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: pnpm build
 
+      - name: package-extension
+        working-directory: apps/extension
+        env:
+          VERSION: ${{ needs.extract-version.outputs.new_version }}
+        run: sh build-ext.sh "../leather-chromium.v${VERSION}.zip"
+
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         name: Upload build artifact
         with:
           name: leather-chromium-v${{ needs.extract-version.outputs.new_version }}
-          path: apps/extension/dist
+          path: apps/extension/leather-chromium.v${{ needs.extract-version.outputs.new_version }}.zip
 
-      - name: build-extension
-        working-directory: apps/extension
-        run: sh build-ext.sh
+  publish-chrome-extension:
+    name: publish-chrome-extension
+    runs-on: ubuntu-24.04
+    environment: extension:production
+    if: github.ref_name == 'dev'
+    needs:
+      - extract-version
+      - build-chrome-extension
+    outputs:
+      publish_status: ${{ steps.publish-chrome.outputs.publish_status }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: download-extension-build
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: leather-chromium-v${{ needs.extract-version.outputs.new_version }}
+          path: apps/extension
 
       - name: sign-and-upload-production-chrome-extension
         continue-on-error: true
         working-directory: apps/extension
         id: publish-chrome
-        run: |
-          pnpm chrome-webstore-upload upload --auto-publish --source leather-chromium.zip
-          echo "publish_status=${?}" >> "$GITHUB_OUTPUT"
         env:
           EXTENSION_ID: ${{ vars.CHROME_APP_ID }}
-          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
-          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          PUBLISHER_ID: ${{ vars.CHROME_PUBLISHER_ID }}
+          SERVICE_ACCOUNT_KEY: ${{ secrets.CHROME_SERVICE_ACCOUNT_KEY }}
+          VERSION: ${{ needs.extract-version.outputs.new_version }}
+        run: |
+          set -u
+
+          ACCESS_TOKEN=$(sh ./scripts/chrome-webstore/get-access-token.sh) || {
+            echo "publish_status=1" >> "$GITHUB_OUTPUT"
+            exit 1
+          }
+          export ACCESS_TOKEN
+
+          if ! sh ./scripts/chrome-webstore/upload-zip.sh "leather-chromium.v${VERSION}.zip"; then
+            echo "publish_status=1" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+          if ! sh ./scripts/chrome-webstore/publish.sh; then
+            echo "publish_status=1" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+          echo "publish_status=0" >> "$GITHUB_OUTPUT"
 
   create-github-release:
     name: create-github-release
@@ -106,17 +143,13 @@ jobs:
       contents: write # create GitHub release and attach build zip
     needs:
       - extract-version
-      - publish-chrome-extension
+      - build-chrome-extension
     steps:
       - name: download-extension-build
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
+          name: leather-chromium-v${{ needs.extract-version.outputs.new_version }}
           path: .
-
-      - name: zip-chromium-build
-        env:
-          VERSION: ${{ needs.extract-version.outputs.new_version }}
-        run: zip -r "leather-chromium.v${VERSION}.zip" "leather-chromium-v${VERSION}"
 
       - name: update-release
         if: github.ref_type == 'tag'
