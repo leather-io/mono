@@ -14,7 +14,7 @@ import { copyMswWorker } from './scripts/copy-msw-worker.plugin';
 const sentryConfig: SentryReactRouterBuildOptions = {
   org: 'trust-machines',
   project: 'leather-web',
-  authToken: process.env.LEATHER_SENTRY_AUTH_TOKEN,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
 };
 
 export default defineConfig(({ command, mode, isSsrBuild }) => ({
