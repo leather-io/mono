@@ -22,10 +22,8 @@ export function useAccountTotalBalance(
       {
         account,
         protections: {
-          isRunesActive: false,
           isOrdinalsActive: true,
           discardedInscriptions: [],
-          discardRunes: true,
         },
       },
       overrideFiatCurrencyPreference
@@ -43,10 +41,8 @@ export function useAccountUnlockedBalance(
       {
         account,
         protections: {
-          isRunesActive: false,
           isOrdinalsActive: true,
           discardedInscriptions: [],
-          discardRunes: true,
         },
       },
       overrideFiatCurrencyPreference

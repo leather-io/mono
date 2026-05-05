@@ -12,10 +12,8 @@ export function useAccountRequest(): AccountRequest {
   return {
     account: accountAddresses,
     protections: {
-      isRunesActive: false,
       isOrdinalsActive: true,
       discardedInscriptions: [],
-      discardRunes: true,
     },
   };
 }

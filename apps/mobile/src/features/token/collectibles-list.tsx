@@ -29,8 +29,6 @@ function renderCollectible({ item, height, onPress }: RenderCollectibleProps) {
         return <Sip9 item={item} height={height} onPress={onPress} />;
       case 'inscription':
         return <Inscription item={item} height={height} onPress={onPress} />;
-      case 'stamp':
-        return null;
       default:
         return assertUnreachable(item);
     }
@@ -56,10 +54,7 @@ interface CollectiblesListProps {
 }
 
 export function CollectiblesList({ collectiblesState, header }: CollectiblesListProps) {
-  const collectibles =
-    collectiblesState.state === 'success'
-      ? collectiblesState.value.filter(c => c.protocol !== 'stamp')
-      : [];
+  const collectibles = collectiblesState.state === 'success' ? collectiblesState.value : [];
   const height = useCollectibleListItemHeight();
   const router = useRouter();
   const collectiblesDetailsFlag = useCollectibleDetailsFlag();

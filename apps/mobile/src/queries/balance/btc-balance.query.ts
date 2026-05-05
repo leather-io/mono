@@ -19,10 +19,8 @@ export function useBtcTotalBalance() {
       accounts.map(account => ({
         account,
         protections: {
-          isRunesActive: false,
           isOrdinalsActive: true,
           discardedInscriptions: [],
-          discardRunes: true,
         },
       }))
     )
@@ -34,10 +32,8 @@ export function useBtcAccountBalance(fingerprint: string, accountIndex: number) 
     useBtcAccountBalanceQuery({
       account,
       protections: {
-        isRunesActive: false,
         isOrdinalsActive: true,
         discardedInscriptions: [],
-        discardRunes: true,
       },
     })
   );
@@ -50,10 +46,8 @@ export function useBtcAccountNativeSegwitBalance(fingerprint: string, accountInd
       account,
       exclusions: { taprootAddresses: true },
       protections: {
-        isRunesActive: false,
         isOrdinalsActive: true,
         discardedInscriptions: [],
-        discardRunes: true,
       },
     })
   );
@@ -66,10 +60,8 @@ export function useBtcAccountTaprootBalance(fingerprint: string, accountIndex: n
       account,
       exclusions: { nativeSegwitAddresses: true },
       protections: {
-        isRunesActive: false,
         isOrdinalsActive: true,
         discardedInscriptions: [],
-        discardRunes: true,
       },
     })
   );

@@ -23,10 +23,8 @@ function useAccountUtxosQuery(account: AccountAddresses) {
   const request: AccountRequest = {
     account,
     protections: {
-      isRunesActive: false,
       isOrdinalsActive: true,
       discardedInscriptions: [],
-      discardRunes: true,
     },
   };
 

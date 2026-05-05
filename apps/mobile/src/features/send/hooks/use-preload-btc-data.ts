@@ -19,10 +19,8 @@ export function usePreloadBtcData(account: AccountId) {
         {
           account: accountAddresses,
           protections: {
-            isRunesActive: false,
             isOrdinalsActive: true,
             discardedInscriptions: [],
-            discardRunes: true,
           },
         },
         signal
