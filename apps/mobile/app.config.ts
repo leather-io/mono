@@ -1,6 +1,6 @@
 import { ConfigContext, ExpoConfig } from 'expo/config';
 
-const version = '2.104.6'; // x-release-please-version
+const version = '2.105.0'; // x-release-please-version
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
