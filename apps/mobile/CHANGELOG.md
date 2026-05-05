@@ -23,6 +23,32 @@
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
+## [2.105.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.104.6...@leather.io/mobile-v2.105.0) (2026-05-05)
+
+
+### Features
+
+* migrate off eas ([#2306](https://github.com/leather-io/mono/issues/2306)) ([66751ab](https://github.com/leather-io/mono/commit/66751ab5bea4504021927313185d67848516897a))
+
+
+### Bug Fixes
+
+* android version code ([#2309](https://github.com/leather-io/mono/issues/2309)) ([283432b](https://github.com/leather-io/mono/commit/283432bba7b74295c180e6a852909f930b4ed4e6))
+* ios team id ([#2310](https://github.com/leather-io/mono/issues/2310)) ([3d40cf8](https://github.com/leather-io/mono/commit/3d40cf8df8ec7aea38d36f348ccdcadbf3982215))
+* mobile release ([#2308](https://github.com/leather-io/mono/issues/2308)) ([c973d9a](https://github.com/leather-io/mono/commit/c973d9aef60ee2eaa84710ac204e5106a52f5843))
+* upgrade axios ([#2313](https://github.com/leather-io/mono/issues/2313)) ([9876bb2](https://github.com/leather-io/mono/commit/9876bb2a6cc764494fbcf9d57449ce5ccc821ab3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/features bumped to 1.4.3
+    * @leather.io/queries bumped to 0.9.3
+    * @leather.io/query bumped to 2.47.2
+    * @leather.io/services bumped to 1.54.1
+    * @leather.io/ui bumped to 1.111.4
+
 ## [2.104.6](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.104.5...@leather.io/mobile-v2.104.6) (2026-04-24)
 
 
