@@ -45,7 +45,7 @@
     "@stacks/transactions": "7.0.5",
     "@velarprotocol/velar-sdk": "0.7.5-beta",
     "alex-sdk": "3.1.0",
-    "axios": "1.15.0",
+    "axios": "1.15.2",
     "bignumber.js": "9.1.2",
     "inversify": "7.1.0",
     "openapi-fetch": "0.13.5",
