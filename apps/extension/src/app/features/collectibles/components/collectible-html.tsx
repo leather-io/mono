@@ -11,16 +11,16 @@ interface CollectibleHtmlProps {
   onPress?(): void;
 }
 
-interface HtmlInscriptionImageProps {
+interface HtmlImageProps {
   src: string;
   onError(): void;
 }
 
-function HtmlInscriptionImage({ src, onError }: HtmlInscriptionImageProps) {
+function HtmlImage({ src, onError }: HtmlImageProps) {
   return (
     <styled.img
       src={src}
-      alt="HTML inscription"
+      alt="HTML asset"
       loading="lazy"
       onError={onError}
       display="block"
@@ -57,7 +57,7 @@ export function CollectibleHtml({ src, thumbnailSrc, onPress }: CollectibleHtmlP
           width="100%"
           height="100%"
         >
-          <HtmlInscriptionImage src={imgSrc} onError={() => setHasError(true)} />
+          <HtmlImage src={imgSrc} onError={() => setHasError(true)} />
         </styled.button>
       </CollectibleCard>
     );
@@ -65,7 +65,7 @@ export function CollectibleHtml({ src, thumbnailSrc, onPress }: CollectibleHtmlP
 
   return (
     <CollectibleCard>
-      <HtmlInscriptionImage src={imgSrc} onError={() => setHasError(true)} />
+      <HtmlImage src={imgSrc} onError={() => setHasError(true)} />
     </CollectibleCard>
   );
 }

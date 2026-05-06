@@ -14,29 +14,11 @@ import { balanceQueryOptions } from './balance-query-options';
 
 export function useBtcTotalBalance() {
   const accounts = useTotalAccountAddresses();
-  return toFetchState(
-    useBtcAggregateBalanceQuery(
-      accounts.map(account => ({
-        account,
-        protections: {
-          isOrdinalsActive: true,
-          discardedInscriptions: [],
-        },
-      }))
-    )
-  );
+  return toFetchState(useBtcAggregateBalanceQuery(accounts.map(account => ({ account }))));
 }
 export function useBtcAccountBalance(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(
-    useBtcAccountBalanceQuery({
-      account,
-      protections: {
-        isOrdinalsActive: true,
-        discardedInscriptions: [],
-      },
-    })
-  );
+  return toFetchState(useBtcAccountBalanceQuery({ account }));
 }
 
 export function useBtcAccountNativeSegwitBalance(fingerprint: string, accountIndex: number) {
@@ -45,10 +27,6 @@ export function useBtcAccountNativeSegwitBalance(fingerprint: string, accountInd
     useBtcAccountBalanceQuery({
       account,
       exclusions: { taprootAddresses: true },
-      protections: {
-        isOrdinalsActive: true,
-        discardedInscriptions: [],
-      },
     })
   );
 }
@@ -59,10 +37,6 @@ export function useBtcAccountTaprootBalance(fingerprint: string, accountIndex: n
     useBtcAccountBalanceQuery({
       account,
       exclusions: { nativeSegwitAddresses: true },
-      protections: {
-        isOrdinalsActive: true,
-        discardedInscriptions: [],
-      },
     })
   );
 }

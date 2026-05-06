@@ -1,7 +1,6 @@
 import { Utxo, UtxoId } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
-import { BisInscription } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import {
   LeatherApiBitcoinTransaction,
   LeatherApiUtxo,
@@ -12,7 +11,6 @@ import {
   fallbackUtxoHeight,
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
-  getInscriptionProtectedUtxoIds,
   getKeyOrigin,
   getOutboundUtxos,
   getUtxoIdFromOutpoint,
@@ -425,51 +423,5 @@ describe(getKeyOrigin.name, () => {
     const path = "m/84'/0'/0'/0/0";
     const keyOrigin = getKeyOrigin(fingerprint, path);
     expect(keyOrigin).toEqual("deadbeef/84'/0'/0'/0/0");
-  });
-});
-
-describe(getInscriptionProtectedUtxoIds.name, () => {
-  const inscriptions = [
-    {
-      satpoint: 'txn:0:0',
-    },
-    {
-      satpoint: 'txn:1:0',
-    },
-    {
-      satpoint: 'txn:2:0',
-    },
-    {
-      satpoint: 'txn:3:0',
-    },
-    {
-      satpoint: 'txn:3:1',
-    },
-    {
-      satpoint: 'txn:4:0',
-    },
-    {
-      satpoint: 'txn:4:1',
-    },
-  ] as BisInscription[];
-
-  it('should return unique id list of inscribed utxos', () => {
-    expect(getInscriptionProtectedUtxoIds(inscriptions, [])).toEqual([
-      getUtxoIdFromOutpoint('txn:0'),
-      getUtxoIdFromOutpoint('txn:1'),
-      getUtxoIdFromOutpoint('txn:2'),
-      getUtxoIdFromOutpoint('txn:3'),
-      getUtxoIdFromOutpoint('txn:4'),
-    ]);
-  });
-
-  it('should filter out utxos if ALL inscriptions are discarded', () => {
-    const discardedInscriptions = ['txn:2:0', 'txn:1:0', 'txn:3:0', 'txn:4:1'];
-    const result = getInscriptionProtectedUtxoIds(inscriptions, discardedInscriptions);
-    expect(result).toEqual([
-      getUtxoIdFromOutpoint('txn:0'),
-      getUtxoIdFromOutpoint('txn:3'),
-      getUtxoIdFromOutpoint('txn:4'),
-    ]);
   });
 });

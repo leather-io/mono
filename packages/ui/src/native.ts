@@ -7,7 +7,6 @@ export {
 export { ActivityAvatarIcon } from './components/avatar/activity-avatar-icon.native';
 export { AssetAvatarIcon } from './components/avatar/asset-avatar-icon.native';
 export { BtcAvatarIcon } from './components/avatar/btc-avatar-icon.native';
-export { OrdinalAvatarIcon } from './components/avatar/ordinal-avatar-icon.native';
 export { Sip10AvatarIcon } from './components/avatar/sip10-avatar-icon.native';
 export { SbtcAvatarIcon } from './components/avatar/sbtc-avatar-icon.native';
 export { StxAvatarIcon } from './components/avatar/stx-avatar-icon.native';

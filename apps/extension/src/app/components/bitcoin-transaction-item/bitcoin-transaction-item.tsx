@@ -15,18 +15,14 @@ import {
   getBitcoinTxValue,
   isBitcoinTxInbound,
 } from '@app/common/transactions/bitcoin/utils';
-import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { IncreaseFeeButton } from '@app/components/stacks-transaction-item/increase-fee-button';
 import { TransactionTitle } from '@app/components/transaction/transaction-title';
-import { useFlags } from '@app/features/feature-flags';
-import { useInscriptionByOutput } from '@app/query/bitcoin/ordinals/inscriptions-by-param.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { TransactionItemLayout } from '../transaction-item/transaction-item.layout';
 import { BitcoinTransactionIcon } from './bitcoin-transaction-icon';
-import { InscriptionIcon } from './bitcoin-transaction-inscription-icon';
 import { BitcoinTransactionStatus } from './bitcoin-transaction-status';
 
 interface BitcoinTransactionItemProps {
@@ -36,10 +32,6 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const isPrivate = useIsPrivateMode();
-  const { isOrdinalsActive } = useFlags();
-
-  const inscriptionQuery = useInscriptionByOutput(transaction);
-  const inscriptionData = isOrdinalsActive ? inscriptionQuery.data : undefined;
 
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayer();
   const taprootSigner = useCurrentAccountTaprootIndexZeroPayer();
@@ -65,10 +57,6 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
 
   function openTxLink() {
     analytics.track('view_bitcoin_transaction');
-    if (inscriptionData) {
-      openInNewTab(inscriptionData.id);
-      return;
-    }
     handleOpenTxLink({ txid: transaction?.txid || '' });
   }
 
@@ -80,12 +68,10 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
     <HStack gap="space.02">
       <BulletSeparator>
         <Caption>{caption}</Caption>
-        {inscriptionData ? <Caption>{inscriptionData.mimeType}</Caption> : null}
       </BulletSeparator>
     </HStack>
   );
 
-  const title = inscriptionData ? `Ordinal inscription #${inscriptionData.number}` : 'Bitcoin';
   const increaseFeeButton = (
     <IncreaseFeeButton
       isEnabled={isFeeIncreaseEnabled}
@@ -101,15 +87,13 @@ export function BitcoinTransactionItem({ transaction }: BitcoinTransactionItemPr
       txCaption={txCaption}
       txIcon={
         <BitcoinTransactionIcon
-          icon={
-            inscriptionData ? <InscriptionIcon inscription={inscriptionData} /> : <BtcAvatarIcon />
-          }
+          icon={<BtcAvatarIcon />}
           isTxConfirmed={transaction.status.confirmed}
           isTxInbound={isTxInbound}
         />
       }
       txStatus={<BitcoinTransactionStatus transaction={transaction} />}
-      txTitle={<TransactionTitle title={title} />}
+      txTitle={<TransactionTitle title="Bitcoin" />}
       txValue={value}
       isPrivate={isPrivate}
     />

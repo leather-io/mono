@@ -8,8 +8,6 @@ export class CollectibleDetailsPage {
   readonly sendButton: Locator;
   readonly optionsButton: Locator;
   readonly viewOriginalMenuItem: Locator;
-  readonly protectMenuItem: Locator;
-  readonly unprotectMenuItem: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -18,8 +16,6 @@ export class CollectibleDetailsPage {
     this.sendButton = page.getByTestId(CollectibleDetailsSelectors.CollectibleDetailsSend);
     this.optionsButton = page.getByTestId(CollectibleDetailsSelectors.CollectibleDetailsOptions);
     this.viewOriginalMenuItem = page.getByTestId(CollectibleDetailsSelectors.ViewOriginalMenuItem);
-    this.protectMenuItem = page.getByTestId(CollectibleDetailsSelectors.ProtectMenuItem);
-    this.unprotectMenuItem = page.getByTestId(CollectibleDetailsSelectors.UnprotectMenuItem);
   }
 
   async waitForDetailsPage() {
@@ -43,27 +39,8 @@ export class CollectibleDetailsPage {
     await this.viewOriginalMenuItem.click();
   }
 
-  async clickUnprotect() {
-    await this.openOptionsMenu();
-    await this.unprotectMenuItem.click();
-  }
-
-  async clickProtect() {
-    await this.openOptionsMenu();
-    await this.protectMenuItem.click();
-  }
-
-  async clickInscriptionCard() {
-    const card = this.page.getByTestId(CollectibleDetailsSelectors.CollectibleCardInscription);
-    await card.first().click();
-  }
-
   async clickSip9Card() {
     const card = this.page.getByTestId(CollectibleDetailsSelectors.CollectibleCardSip9);
     await card.first().click();
-  }
-
-  getCollectibleCardByProtocol(protocol: 'inscription' | 'sip9') {
-    return this.page.getByTestId(`collectible-card-${protocol}`);
   }
 }

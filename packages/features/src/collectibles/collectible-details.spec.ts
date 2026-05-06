@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { GAMMA_URL, HIRO_EXPLORER_URL, ORD_IO_URL } from '@leather.io/constants';
-import type { InscriptionAsset, Sip9Asset, Sip9Attribute } from '@leather.io/models';
+import { GAMMA_URL, HIRO_EXPLORER_URL } from '@leather.io/constants';
+import type { Sip9Asset, Sip9Attribute } from '@leather.io/models';
 
 import {
   DESCRIPTION_TRUNCATE_LENGTH,
@@ -9,21 +9,9 @@ import {
   formatAttributeValue,
   getGammaCollectionUrl,
   getHiroExplorerContractUrl,
-  getInscriptionInfo,
-  getOrdExplorerUrl,
   getSip9Info,
   truncateDescription,
 } from './collectible-details';
-
-describe('getOrdExplorerUrl', () => {
-  it('returns undefined when no number provided', () => {
-    expect(getOrdExplorerUrl()).toBeUndefined();
-  });
-
-  it('returns ord.io URL with inscription number', () => {
-    expect(getOrdExplorerUrl(12345)).toBe(`${ORD_IO_URL}/12345`);
-  });
-});
 
 describe('getGammaCollectionUrl', () => {
   it('returns undefined when no URL provided', () => {
@@ -101,38 +89,6 @@ describe('truncateDescription', () => {
     const { text, isTruncated } = truncateDescription('Hello World', 5);
     expect(text).toBe('Hello…');
     expect(isTruncated).toBe(true);
-  });
-});
-
-describe('getInscriptionInfo', () => {
-  it('extracts inscription info correctly', () => {
-    const asset = {
-      chain: 'bitcoin',
-      protocol: 'inscription',
-      id: 'test-id',
-      address: 'bc1...',
-      number: 123,
-      title: 'Test Inscription',
-      txid: 'abc123',
-      genesisTimestamp: 1704067200,
-      genesisBlockHeight: 800000,
-      mimeType: 'image/png',
-      value: '546',
-      category: 'image',
-      offset: '0',
-      output: 'abc123:0',
-      content: 'https://example.com/content',
-      contentLength: '1234',
-    } as unknown as InscriptionAsset;
-
-    const info = getInscriptionInfo(asset, 'mainnet');
-    expect(info.title).toBe('Test Inscription');
-    expect(info.ordExplorerUrl).toContain('123');
-    expect(info.txExplorerUrl).toContain('abc123');
-    expect(info.genesisTimestamp).toBe(1704067200);
-    expect(info.genesisBlockHeight).toBe(800000);
-    expect(info.mimeType).toBe('image/png');
-    expect(info.outputValue).toBe('546');
   });
 });
 

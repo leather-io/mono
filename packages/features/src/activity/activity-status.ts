@@ -1,9 +1,4 @@
-import {
-  type Activity,
-  type BaseOnChainActivity,
-  isFungibleAsset,
-  isInscriptionAsset,
-} from '@leather.io/models';
+import { type Activity, type BaseOnChainActivity, isFungibleAsset } from '@leather.io/models';
 
 import type { ActivityStatusIndicatorId } from './types';
 
@@ -106,8 +101,6 @@ export function formatActivityStatusLabel(activity: Activity) {
       }
       if (isFungibleAsset(activity.fromAsset) && isFungibleAsset(activity.toAsset)) {
         return `${activity.fromAsset.symbol} → ${activity.toAsset.symbol}`;
-      } else if (isInscriptionAsset(activity.fromAsset) && isInscriptionAsset(activity.toAsset)) {
-        return `${activity.fromAsset.title} → ${activity.toAsset.title}`;
       }
       return `${activity.fromAsset.category} → ${activity.toAsset.category}`;
     default: {

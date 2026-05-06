@@ -7,9 +7,7 @@ import {
   ExternalLinkIcon,
   Flag,
   IconButton,
-  LockIcon,
   PaperPlaneIcon,
-  UnlockIcon,
 } from '@leather.io/ui';
 
 import { Header } from '@app/components/layout/headers/header';
@@ -37,16 +35,9 @@ function CollectibleTitle({ title, subtitle }: CollectibleTitleProps) {
 interface CollectibleOptionsMenuProps {
   onSend?(): void;
   onViewOriginal?(): void;
-  onToggleProtection?(): void;
-  isProtected?: boolean;
 }
 
-function CollectibleOptionsMenu({
-  onSend,
-  onViewOriginal,
-  onToggleProtection,
-  isProtected,
-}: CollectibleOptionsMenuProps) {
+function CollectibleOptionsMenu({ onSend, onViewOriginal }: CollectibleOptionsMenuProps) {
   return (
     <Flex alignItems="center">
       <DropdownMenu.Root>
@@ -74,18 +65,6 @@ function CollectibleOptionsMenu({
               </Flag>
             </DropdownMenu.Item>
           )}
-          {onToggleProtection && (
-            <DropdownMenu.Item
-              onClick={onToggleProtection}
-              data-testid={isProtected ? 'unprotect-menu-item' : 'protect-menu-item'}
-            >
-              <Flag img={isProtected ? <UnlockIcon /> : <LockIcon />} width="100%">
-                <styled.span textStyle="label.02">
-                  {isProtected ? 'Unprotect' : 'Protect'}
-                </styled.span>
-              </Flag>
-            </DropdownMenu.Item>
-          )}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </Flex>
@@ -98,8 +77,6 @@ interface CollectibleDetailsHeaderProps {
   onBack(): void;
   onSend?(): void;
   onViewOriginal?(): void;
-  onToggleProtection?(): void;
-  isProtected?: boolean;
 }
 
 export function CollectibleDetailsHeader({
@@ -108,10 +85,8 @@ export function CollectibleDetailsHeader({
   onBack,
   onSend,
   onViewOriginal,
-  onToggleProtection,
-  isProtected,
 }: CollectibleDetailsHeaderProps) {
-  const hasMenuActions = onSend || onViewOriginal || onToggleProtection;
+  const hasMenuActions = onSend || onViewOriginal;
 
   return (
     <Header px={{ base: 'space.04', md: 'space.00' }}>
@@ -127,12 +102,7 @@ export function CollectibleDetailsHeader({
         rightCol={
           hasMenuActions ? (
             <Flex justifyContent="flex-end">
-              <CollectibleOptionsMenu
-                onSend={onSend}
-                onViewOriginal={onViewOriginal}
-                onToggleProtection={onToggleProtection}
-                isProtected={isProtected}
-              />
+              <CollectibleOptionsMenu onSend={onSend} onViewOriginal={onViewOriginal} />
             </Flex>
           ) : null
         }

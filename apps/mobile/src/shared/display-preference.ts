@@ -56,7 +56,6 @@ export function getChainDisplayLabel(
 export function getProtocolDisplayLabel(protocol: CryptoAssetProtocol): string {
   return {
     sip9: t`SIP-009`,
-    inscription: t`Inscription`,
     nativeBtc: t`Bitcoin`,
     nativeStx: t`Stacks`,
     sip10: t`SIP-010`,

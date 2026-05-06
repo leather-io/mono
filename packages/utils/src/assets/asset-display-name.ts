@@ -10,8 +10,6 @@ export function getAssetDisplayName(asset: CryptoAsset) {
       return 'bitcoin';
     case 'nativeStx':
       return 'stacks';
-    case 'inscription':
-      return 'inscription';
     case 'sip10':
       return asset.name;
     case 'sip9':

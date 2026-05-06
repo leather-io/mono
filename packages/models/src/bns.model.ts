@@ -30,7 +30,6 @@ export interface BnsProfileData {
 
 export interface BnsProfileDataAddresses {
   bitcoinPayment?: string;
-  bitcoinOrdinal?: string;
   solana?: string;
   ethereum?: string;
 }

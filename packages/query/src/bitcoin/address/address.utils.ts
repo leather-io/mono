@@ -1,8 +1,6 @@
 import { BTC_DECIMALS } from '@leather.io/constants';
-import type { BitcoinTx, InscriptionAsset, Money } from '@leather.io/models';
-import { isEmptyArray, sumNumbers } from '@leather.io/utils';
-
-import { UtxoResponseItem } from '../../types/utxo';
+import type { BitcoinTx, Money } from '@leather.io/models';
+import { sumNumbers } from '@leather.io/utils';
 
 export function createBitcoinCryptoCurrencyAssetTypeWrapper(balance: Money) {
   return {
@@ -16,10 +14,6 @@ export function createBitcoinCryptoCurrencyAssetTypeWrapper(balance: Money) {
     },
     type: 'crypto-currency',
   };
-}
-
-export function hasInscriptions(utxos: UtxoResponseItem[]) {
-  return !isEmptyArray(utxos);
 }
 
 export function calculateOutboundPendingTxsValue(pendingTxs: BitcoinTx[], address: string) {
@@ -36,18 +30,4 @@ export function calculateOutboundPendingTxsValue(pendingTxs: BitcoinTx[], addres
   const sumOutputs = sumNumbers(returnedOutputChangeValues);
 
   return sumInputs.minus(sumOutputs).toNumber();
-}
-
-interface UtxoIdentifier {
-  txid: string;
-  vout: number;
-}
-
-export function filterUtxosWithInscriptions(inscriptions: InscriptionAsset[]) {
-  return <T extends UtxoIdentifier>(utxo: T) => {
-    return !inscriptions.some(
-      inscription =>
-        `${utxo.txid}:${utxo.vout.toString()}` === `${inscription.txid}:${inscription.output}`
-    );
-  };
 }

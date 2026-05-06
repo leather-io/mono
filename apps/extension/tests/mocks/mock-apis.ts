@@ -8,7 +8,6 @@ import {
 } from './mock-alex-assets';
 import { mockBitcoinFeeRequests } from './mock-bitcoin-fees';
 import { mockBitflowRequests } from './mock-bitflow';
-import { mockMainnetTestAccountInscriptionsRequests } from './mock-inscriptions-bis';
 import { mockLaunchDarkly } from './mock-launchdarkly';
 import { mockLeatherApiRequests } from './mock-leather-api';
 import { mockMarketDataRequests } from './mock-market-data';
@@ -53,7 +52,6 @@ export async function setupMockApis(page: Page) {
     mockLeatherApiRequests(page),
     mockMarketDataRequests(page),
     mockMainnetTestAccountSbtcDepositRequests(page),
-    mockMainnetTestAccountInscriptionsRequests(page),
     mockLaunchDarkly(page),
     mockBnsV2NamesRequestEmpty(page),
     mockBitflowRequests(page),

@@ -17,18 +17,7 @@ export function useAccountTotalBalance(
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
-  return toFetchState(
-    useGetAccountTotalBalanceQuery(
-      {
-        account,
-        protections: {
-          isOrdinalsActive: true,
-          discardedInscriptions: [],
-        },
-      },
-      overrideFiatCurrencyPreference
-    )
-  );
+  return toFetchState(useGetAccountTotalBalanceQuery({ account }, overrideFiatCurrencyPreference));
 }
 
 export function useAccountUnlockedBalance(
@@ -37,16 +26,7 @@ export function useAccountUnlockedBalance(
 ) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
   return toFetchState(
-    useGetAccountUnlockedBalanceQuery(
-      {
-        account,
-        protections: {
-          isOrdinalsActive: true,
-          discardedInscriptions: [],
-        },
-      },
-      overrideFiatCurrencyPreference
-    )
+    useGetAccountUnlockedBalanceQuery({ account }, overrideFiatCurrencyPreference)
   );
 }
 

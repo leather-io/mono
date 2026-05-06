@@ -13,18 +13,9 @@ export function usePreloadBtcData(account: AccountId) {
   const accountAddresses = useAccountAddresses(fingerprint, accountIndex);
 
   useQuery({
-    queryKey: ['utxos-service-get-account-utxos', accountAddresses, 'runes-off'],
+    queryKey: ['utxos-service-get-account-utxos', accountAddresses],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getUtxosService().getAccountUtxos(
-        {
-          account: accountAddresses,
-          protections: {
-            isOrdinalsActive: true,
-            discardedInscriptions: [],
-          },
-        },
-        signal
-      ),
+      getUtxosService().getAccountUtxos({ account: accountAddresses }, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

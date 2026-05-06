@@ -5,7 +5,6 @@ import { BitcoinTx } from '@leather.io/models';
 
 import { UtxoResponseItem } from '../../types/utxo';
 import { getBitcoinRatelimiter } from '../bitcoin-rate-limiter';
-import { BestInSlotApi } from './best-in-slot';
 
 function AddressApi(basePath: string) {
   const rateLimiter = getBitcoinRatelimiter(basePath);
@@ -125,31 +124,18 @@ export interface BitcoinClient {
   addressApi: ReturnType<typeof AddressApi>;
   feeEstimatesApi: ReturnType<typeof FeeEstimatesApi>;
   transactionsApi: ReturnType<typeof TransactionsApi>;
-  BestInSlotApi: ReturnType<typeof BestInSlotApi>;
-}
-
-interface BestInSlotApiOptions {
-  isOrdinalsActive?: boolean;
 }
 
 interface BitcoinClientArgs {
   networkName: string;
   basePath: string;
-  bestInSlotPath: string;
-  bestInSlotOptions?: BestInSlotApiOptions;
 }
 
-export function bitcoinClient({
-  networkName,
-  basePath,
-  bestInSlotPath,
-  bestInSlotOptions,
-}: BitcoinClientArgs): BitcoinClient {
+export function bitcoinClient({ networkName, basePath }: BitcoinClientArgs): BitcoinClient {
   return {
     networkName,
     addressApi: AddressApi(basePath),
     feeEstimatesApi: FeeEstimatesApi(),
     transactionsApi: TransactionsApi(basePath),
-    BestInSlotApi: BestInSlotApi(bestInSlotPath, bestInSlotOptions),
   };
 }

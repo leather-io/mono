@@ -1,5 +1,4 @@
 import { BitcoinTokenDetails } from '@/features/token/bitcoin/bitcoin-token-details';
-import { InscriptionDetails } from '@/features/token/bitcoin/inscription-details';
 import { Sip9Details } from '@/features/token/stacks/sip9-details';
 import { Sip10TokenDetails } from '@/features/token/stacks/sip10-token-details';
 import { StacksTokenDetails } from '@/features/token/stacks/stacks-token-details';
@@ -30,8 +29,6 @@ export default function AccountTokenScreen() {
       return <Sip10TokenDetails account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.sip9:
       return <Sip9Details account={currentAccount} assetId={assetId} />;
-    case CryptoAssetProtocols.inscription:
-      return <InscriptionDetails account={currentAccount} assetId={assetId} />;
     default:
       if (!isSupportedAssetProtocol(assetProtocol)) {
         throw new Error(`Unsupported asset protocol: ${assetProtocol}`);

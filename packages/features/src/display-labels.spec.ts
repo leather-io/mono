@@ -18,6 +18,5 @@ describe('getProtocolDisplayLabel', () => {
     expect(getProtocolDisplayLabel('nativeStx')).toBe('Stacks');
     expect(getProtocolDisplayLabel('sip9')).toBe('SIP-009');
     expect(getProtocolDisplayLabel('sip10')).toBe('SIP-010');
-    expect(getProtocolDisplayLabel('inscription')).toBe('Ordinals');
   });
 });

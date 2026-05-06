@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`createAccountCollectiblesQueryKey > creates deterministic keys from account identifiers 1`] = `
+[
+  "collectibles-service--get-account-collectibles",
+  {
+    "account": {
+      "bitcoin": {
+        "nativeSegwitDescriptor": "nw",
+        "taprootDescriptor": "tr",
+        "zeroIndexNativeSegwitPayerAddress": "bc1p123",
+        "zeroIndexTaprootPayerAddress": "bc1p456",
+      },
+      "id": {
+        "accountIndex": 1,
+        "fingerprint": "fp",
+      },
+      "stacks": {
+        "stxAddress": "SP123",
+      },
+    },
+  },
+]
+`;

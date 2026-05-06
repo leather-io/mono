@@ -32,7 +32,6 @@ interface FeatureFlags {
   activityRevamp: boolean;
   swapRevamp: boolean;
   releaseTrendingTokens: boolean;
-  isOrdinalsActive: boolean;
 }
 
 export function useFlags() {

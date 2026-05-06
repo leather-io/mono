@@ -9,11 +9,5 @@ export function useAccountRequest(): AccountRequest {
     currentAccount.fingerprint,
     currentAccount.accountIndex
   );
-  return {
-    account: accountAddresses,
-    protections: {
-      isOrdinalsActive: true,
-      discardedInscriptions: [],
-    },
-  };
+  return { account: accountAddresses };
 }

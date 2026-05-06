@@ -2,7 +2,6 @@ import {
   BtcAsset,
   CryptoAsset,
   FungibleCryptoAsset,
-  InscriptionAsset,
   NativeCryptoAsset,
   NonFungibleCryptoAsset,
   Sip10Asset,
@@ -36,10 +35,6 @@ export function isSip10Asset(asset: CryptoAsset): asset is Sip10Asset {
 
 export function isSwappableAsset(asset: CryptoAsset): asset is NativeCryptoAsset | Sip10Asset {
   return isNativeAsset(asset) || isSip10Asset(asset);
-}
-
-export function isInscriptionAsset(asset: CryptoAsset): asset is InscriptionAsset {
-  return asset.protocol === 'inscription';
 }
 
 export function isSip9Asset(asset: CryptoAsset): asset is Sip9Asset {

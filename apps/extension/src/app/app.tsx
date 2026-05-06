@@ -24,7 +24,6 @@ import localConfig from '../../config/wallet-config.json';
 
 import './index.css';
 
-import { InscribedUtxoWarningDialog } from './features/dialogs/inscribed-utxo-warning-dialog/inscribed-utxo-warning-dialog';
 import { TaprootUtxoWarningDialog } from './features/dialogs/taproot-utxo-warning-dialog/taproot-utxo-warning-dialog';
 import { createLaunchDarklyProvider } from './features/feature-flags';
 import { LeatherQueryProvider } from './query/leather-query-provider';
@@ -55,7 +54,6 @@ function ConnectedApp() {
         <LDProvider>
           <Suspense fallback={<FullPageLoadingSpinner />}>
             <AppRoutes />
-            <InscribedUtxoWarningDialog.Root />
             <TaprootUtxoWarningDialog.Root />
             {reactQueryDevToolsEnabled && <Devtools />}
           </Suspense>

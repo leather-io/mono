@@ -9,7 +9,6 @@ import type { SerializedCryptoAssetId } from '@leather.io/utils';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
 
 import { CollectibleDetailsLoading } from './collectible-details-loading';
-import { InscriptionDetailsPage } from './inscription-details-page';
 import { Sip9DetailsPage } from './sip9-details-page';
 
 interface CollectibleDetailsProps {
@@ -52,12 +51,9 @@ export function CollectibleDetails({ account, assetId, protocol }: CollectibleDe
     );
   }
 
-  switch (protocol) {
-    case 'inscription':
-      return <InscriptionDetailsPage view={view} onBack={handleBack} />;
-    case 'sip9':
-      return <Sip9DetailsPage view={view} onBack={handleBack} />;
-    default:
-      return null;
+  if (protocol === 'sip9') {
+    return <Sip9DetailsPage view={view} onBack={handleBack} />;
   }
+
+  return null;
 }

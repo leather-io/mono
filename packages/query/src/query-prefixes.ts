@@ -3,12 +3,8 @@
  * queries they are used in to be read from any part of the app.
  */
 export enum BitcoinQueryPrefixes {
-  GetInscriptionTextContent = 'get-inscription-text-content',
   GetTransactionsByAddress = 'get-transactions-by-address',
-  GetInscriptionsByAddress = 'get-inscriptions-by-address',
-  GetInscription = 'get-inscription',
   GetBitcoinFeeEstimates = 'bitcoin-fee-estimates',
-  GetInscriptionsByParam = 'get-inscriptions-by-param',
 }
 
 export enum StacksQueryPrefixes {

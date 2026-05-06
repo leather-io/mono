@@ -1,14 +1,12 @@
 import { PropsWithChildren, ReactElement } from 'react';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';
-import { Box, OrdinalAvatarIcon, StxAvatarIcon } from '@leather.io/ui/native';
+import { Box, StxAvatarIcon } from '@leather.io/ui/native';
 
 const overlayOffset = 12;
 
 function getCollectibleTypeIcon(protocol: NonFungibleCryptoAsset['protocol']): ReactElement | null {
   switch (protocol) {
-    case 'inscription':
-      return <OrdinalAvatarIcon size="sm" />;
     case 'sip9':
       return <StxAvatarIcon size="sm" />;
     default:

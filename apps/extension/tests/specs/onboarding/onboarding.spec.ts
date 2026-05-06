@@ -1,7 +1,6 @@
 import {
   TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS,
   TEST_ACCOUNT_1_STX_ADDRESS,
-  TEST_ACCOUNT_1_TAPROOT_ADDRESS,
   TEST_PASSWORD,
 } from '@tests/mocks/constants';
 import {
@@ -151,11 +150,6 @@ test.describe('Onboarding an existing user', () => {
       test('that the wallet generates the correct Native Segwit address', async ({ homePage }) => {
         const nativeSegwitAddress = await homePage.getReceiveNativeSegwitAddress();
         test.expect(nativeSegwitAddress).toEqual(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS);
-      });
-
-      test('that the wallet generates the correct Taproot address', async ({ homePage }) => {
-        const taprootAddress = await homePage.getReceiveTaprootAddress();
-        test.expect(taprootAddress).toEqual(TEST_ACCOUNT_1_TAPROOT_ADDRESS);
       });
     });
 

@@ -46,18 +46,17 @@ export const TaprootUtxoWarningDialog = createCallable<void, TaprootUtxoWarningR
           <styled.h3 textStyle="heading.05">This transaction includes taproot UTXOs</styled.h3>
 
           <styled.p textStyle="body.02" color="ink.text-subdued">
-            This transaction spends from taproot UTXOs. These UTXOs may contain ordinal
-            inscriptions.
+            This transaction spends from taproot UTXOs.
           </styled.p>
           <styled.p textStyle="body.02" color="ink.text-subdued">
-            If you want to protect these assets, cancel this transaction and transfer them to
-            another wallet.
+            If you want to protect any assets held in taproot UTXOs, cancel this transaction and
+            transfer them to another wallet.
           </styled.p>
           <styled.p textStyle="body.02" color="ink.text-subdued">
             Reach out to our support (
             <a
               className={css({ textDecorationLine: 'underline' })}
-              href="mailto:support@leather.io?subject=Inscription%20check%20and%2For%20migration"
+              href="mailto:support@leather.io"
             >
               support@leather.io
             </a>

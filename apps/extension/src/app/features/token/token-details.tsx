@@ -4,7 +4,6 @@ import { parseTokenDetailsAssetId } from '@leather.io/features';
 import { CryptoAssetProtocols } from '@leather.io/models';
 import { assertUnreachable, deserializeAssetId } from '@leather.io/utils';
 
-import { useFlags } from '@app/features/feature-flags';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 
@@ -18,7 +17,6 @@ export function TokenDetails() {
   const { '*': encodedAssetId } = useParams();
   const assetId = parseTokenDetailsAssetId(encodedAssetId);
 
-  const { isOrdinalsActive } = useFlags();
   const accountId = useCurrentAccountId();
   const account = useAccountAddresses(accountId);
 
@@ -36,9 +34,6 @@ export function TokenDetails() {
     case CryptoAssetProtocols.sip10:
       return <Sip10TokenDetails accountId={accountId} account={account} assetId={assetId} />;
     case CryptoAssetProtocols.sip9:
-      return <CollectibleDetails account={account} assetId={assetId} protocol={protocol} />;
-    case CryptoAssetProtocols.inscription:
-      if (!isOrdinalsActive) return <TokenDetailsError />;
       return <CollectibleDetails account={account} assetId={assetId} protocol={protocol} />;
     default:
       assertUnreachable(protocol);

@@ -75,9 +75,6 @@ export function mapBnsProfileDataAddresses(
 
   return {
     bitcoinPayment: btcPayment || undefined,
-    bitcoinOrdinal: zoneFileAddresses.find(
-      address => address.network === 'btc' && address.type === 'ordinal'
-    )?.address,
     ethereum: zoneFileAddresses.find(
       address => address.network === 'eth' && address.type === 'wallet'
     )?.address,

@@ -16,7 +16,6 @@ export function getProtocolDisplayLabel(protocol: CryptoAssetProtocol): string {
     nativeStx: 'Stacks',
     sip9: 'SIP-009',
     sip10: 'SIP-010',
-    inscription: 'Ordinals',
   };
   return labels[protocol] ?? protocol;
 }

@@ -1,18 +1,5 @@
-import { GAMMA_URL, HIRO_EXPLORER_URL, ORD_IO_URL } from '@leather.io/constants';
-import type {
-  BitcoinNetwork,
-  InscriptionAsset,
-  Money,
-  Sip9Asset,
-  Sip9Attribute,
-} from '@leather.io/models';
-
-import { getBitcoinExplorerLink } from '../activity/activity-links';
-
-export function getOrdExplorerUrl(inscriptionNumber?: number): string | undefined {
-  if (!inscriptionNumber) return undefined;
-  return `${ORD_IO_URL}/${inscriptionNumber}`;
-}
+import { GAMMA_URL, HIRO_EXPLORER_URL } from '@leather.io/constants';
+import type { Money, Sip9Asset, Sip9Attribute } from '@leather.io/models';
 
 export function getGammaCollectionUrl(collectionExplorerUrl?: string | null): string | undefined {
   if (!collectionExplorerUrl) return undefined;
@@ -22,37 +9,6 @@ export function getGammaCollectionUrl(collectionExplorerUrl?: string | null): st
 export function getHiroExplorerContractUrl(contractId?: string | null): string | undefined {
   if (!contractId) return undefined;
   return `${HIRO_EXPLORER_URL}/address/${contractId}`;
-}
-
-export interface InscriptionInfo {
-  title?: string;
-  ordExplorerUrl?: string;
-  txExplorerUrl?: string | null;
-  genesisTimestamp?: number;
-  genesisBlockHeight?: number;
-  mimeType?: string;
-  outputValue?: string;
-}
-
-export function getInscriptionInfo(
-  asset: InscriptionAsset,
-  bitcoinNetwork: BitcoinNetwork
-): InscriptionInfo {
-  return {
-    title: asset.title,
-    ordExplorerUrl: getOrdExplorerUrl(asset.number),
-    txExplorerUrl: asset.txid
-      ? getBitcoinExplorerLink({
-          id: asset.txid,
-          type: 'tx',
-          networkPreference: bitcoinNetwork,
-        })
-      : undefined,
-    genesisTimestamp: asset.genesisTimestamp,
-    genesisBlockHeight: asset.genesisBlockHeight,
-    mimeType: asset.mimeType,
-    outputValue: asset.value,
-  };
 }
 
 export interface Sip9Info {

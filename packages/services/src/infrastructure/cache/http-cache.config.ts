@@ -9,9 +9,6 @@ export type HttpCacheKey =
   | 'bns-v2-api-zone-file-raw'
   | 'bns-v2-sdk-primary-name'
 
-  // BestInSlotApiClient
-  | 'bis-inscriptions'
-
   // GammaApiClient
   | 'gamma-api-get-stacks-nft'
   | 'gamma-api-get-stacks-collection'
@@ -97,8 +94,6 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'bns-v2-api-address-names': { ttl: minutesInMs(2) },
   'bns-v2-api-zone-file-raw': { ttl: minutesInMs(2) },
   'bns-v2-sdk-primary-name': { ttl: minutesInMs(2) },
-
-  'bis-inscriptions': { ttl: secondsInMs(30) },
 
   'gamma-api-get-stacks-nft': { ttl: weeksInMs(8) },
   'gamma-api-get-stacks-collection': { ttl: weeksInMs(8) },

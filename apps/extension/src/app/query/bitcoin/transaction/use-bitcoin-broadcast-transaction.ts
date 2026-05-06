@@ -1,9 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { TransactionInput } from '@scure/btc-signer/psbt';
-
 import { decodeBitcoinTx } from '@leather.io/bitcoin';
-import { filterOutIntentionalUtxoSpend } from '@leather.io/query';
 import { delay } from '@leather.io/utils';
 
 import { useBitcoinClient } from '../clients/bitcoin-client';
@@ -11,7 +8,7 @@ import { useCheckUnspendableUtxos } from './use-check-utxos';
 
 interface BroadcastCallbackArgs {
   tx: string;
-  skipSpendableCheckUtxoIds?: string[] | 'all';
+  skipTaprootCheck?: boolean;
   delayTime?: number;
   onSuccess?(txid: string): void;
   onError?(error: Error): void;
@@ -20,7 +17,7 @@ interface BroadcastCallbackArgs {
 export function useBitcoinBroadcastTransaction() {
   const client = useBitcoinClient();
   const [isBroadcasting, setIsBroadcasting] = useState(false);
-  const { checkIfUtxosListIncludesInscribed } = useCheckUnspendableUtxos();
+  const { checkIfUtxosListIncludesTaproot } = useCheckUnspendableUtxos();
 
   const broadcastTx = useCallback(
     async ({
@@ -28,28 +25,20 @@ export function useBitcoinBroadcastTransaction() {
       onSuccess,
       onError,
       onFinally,
-      skipSpendableCheckUtxoIds = [],
+      skipTaprootCheck = false,
       delayTime = 700,
     }: BroadcastCallbackArgs) => {
       try {
-        const allInputs = decodeBitcoinTx(tx).inputs;
-
-        const inputsToCheck: TransactionInput[] =
-          skipSpendableCheckUtxoIds === 'all'
-            ? allInputs
-            : filterOutIntentionalUtxoSpend({
-                inputs: allInputs,
-                intentionalSpendUtxoIds: skipSpendableCheckUtxoIds,
-              });
-
-        const shouldHalt = await checkIfUtxosListIncludesInscribed(inputsToCheck);
-        if (shouldHalt) {
-          return;
+        if (!skipTaprootCheck) {
+          const allInputs = decodeBitcoinTx(tx).inputs;
+          const shouldHalt = await checkIfUtxosListIncludesTaproot(allInputs);
+          if (shouldHalt) {
+            return;
+          }
         }
 
         setIsBroadcasting(true);
         const resp = await client.transactionsApi.broadcastTransaction(tx);
-        // simulate slower broadcast time to allow mempool refresh
         await delay(delayTime);
         if (!resp.ok) throw new Error(await resp.text());
         const txid = await resp.text();
@@ -63,7 +52,7 @@ export function useBitcoinBroadcastTransaction() {
         onFinally?.();
       }
     },
-    [checkIfUtxosListIncludesInscribed, client]
+    [checkIfUtxosListIncludesTaproot, client]
   );
 
   return { broadcastTx, isBroadcasting };

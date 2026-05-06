@@ -1,17 +1,14 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { Box } from 'leather-styles/jsx';
-import get from 'lodash.get';
 
 import { Sheet, SheetHeader, Tabs } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
-import { analytics } from '@shared/utils/analytics';
 
 import { useLocationState } from '@app/common/hooks/use-location-state';
 import { useBackgroundLocationRedirect } from '@app/routes/hooks/use-background-location-redirect';
-import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
@@ -36,11 +33,8 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
 
   const backgroundLocation = useLocationState<Location>('backgroundLocation');
   const navigate = useNavigate();
-  const location = useLocation();
   const btcAddressNativeSegwit = useCurrentAccountNativeSegwitAddressIndexZero();
   const stxAddress = useCurrentStacksAccountAddress();
-  const accountIndex = get(location.state, 'accountIndex', undefined);
-  const btcAddressTaproot = useZeroIndexTaprootAddress(accountIndex);
 
   const title =
     type === 'full' ? (
@@ -56,17 +50,7 @@ export function ReceiveSheet({ type = 'full' }: ReceiveSheetProps) {
   function Collectibles() {
     return (
       <ReceiveCollectibles
-        btcAddressTaproot={btcAddressTaproot}
         stxAddress={stxAddress}
-        onClickQrOrdinal={() => {
-          analytics.track('select_inscription_to_add_new_collectible');
-          void navigate(`${RouteUrls.Home}${RouteUrls.ReceiveCollectibleOrdinal}`, {
-            state: {
-              btcAddressTaproot,
-              backgroundLocation,
-            },
-          });
-        }}
         onClickQrStacksNft={() =>
           navigate(`${RouteUrls.Home}${RouteUrls.ReceiveStx}`, {
             state: { backgroundLocation },

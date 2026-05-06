@@ -15,7 +15,6 @@ export const ZERO_INDEX = 0;
 
 export const HIRO_EXPLORER_URL = 'https://explorer.hiro.so';
 export const MEMPOOL_BASE_URL = 'https://mempool.space';
-export const ORD_IO_URL = 'https://ord.io';
 export const GAMMA_URL = 'https://gamma.io';
 export const GAMMA_API_URL: string = `${GAMMA_URL}/api`;
 export const MAGIC_EDEN_URL = 'https://magiceden.io/bitcoin';

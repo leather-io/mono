@@ -145,7 +145,6 @@ export * from './newspaper-icon.native';
 export * from './note-empty-icon.native';
 export * from './note-text-icon.native';
 export * from './numbered-list-icon.native';
-export * from './ordinal-icon.native';
 export * from './package-security-icon.native';
 export * from './palette-icon.native';
 export * from './paper-plane-icon.native';

@@ -15,7 +15,5 @@ export enum FormErrorMessages {
   SameAddress = 'Cannot send to yourself',
   TooMuchPrecision = 'Token can only have {decimals} decimals',
 
-  NonZeroOffsetInscription = 'Sending inscriptions at non-zero offsets is unsupported',
-  UtxoWithMultipleInscriptions = 'Sending inscription from utxo with multiple inscriptions is unsupported',
   InsufficientFundsToCoverFee = 'Insufficient funds to cover fee. Deposit some BTC to your Native Segwit address.',
 }

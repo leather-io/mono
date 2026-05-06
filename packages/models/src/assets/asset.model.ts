@@ -1,4 +1,3 @@
-import { InscriptionMimeType } from '../inscription-mime-type.model';
 import { Sip9Asset } from './sip9-asset.model';
 
 export const CryptoAssetChains = {
@@ -16,7 +15,6 @@ export const FungibleCryptoAssetProtocols = {
 } as const;
 export const NonFungibleCryptoAssetProtocols = {
   sip9: 'sip9',
-  inscription: 'inscription',
 } as const;
 export const CryptoAssetProtocols = {
   ...FungibleCryptoAssetProtocols,
@@ -73,27 +71,8 @@ export interface BaseNonFungibleCryptoAsset extends BaseCryptoAsset {
   readonly category: 'nft';
   readonly protocol: NonFungibleCryptoAssetProtocol;
 }
-export interface InscriptionAsset extends BaseNonFungibleCryptoAsset {
-  readonly chain: 'bitcoin';
-  readonly protocol: 'inscription';
-  readonly id: string;
-  readonly mimeType: InscriptionMimeType;
-  readonly number: number;
-  readonly address: string;
-  readonly title: string;
-  readonly txid: string;
-  readonly output: string;
-  readonly offset: string;
-  readonly preview: string;
-  readonly src: string;
-  readonly thumbnailSrc?: string;
-  readonly value: string;
-  readonly genesisBlockHash: string;
-  readonly genesisTimestamp: number;
-  readonly genesisBlockHeight: number;
-}
 
-export type NonFungibleCryptoAsset = InscriptionAsset | Sip9Asset;
+export type NonFungibleCryptoAsset = Sip9Asset;
 
 export type CryptoAsset = FungibleCryptoAsset | NonFungibleCryptoAsset;
 

@@ -25,10 +25,6 @@ export interface BaseCryptoAssetBalance {
 
 export interface BtcBalance extends BaseCryptoAssetBalance {
   /**
-   * Balance of UTXOs with collectibles
-   */
-  readonly protectedBalance: Money;
-  /**
    * Balance across UTXOs with value less than dust threshold
    */
   readonly dustBalance: Money;

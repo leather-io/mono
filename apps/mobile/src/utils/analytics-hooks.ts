@@ -94,16 +94,7 @@ export function useCollectiblesAnalytics({
 
       entry.total += 1;
 
-      function getContentType() {
-        if ('mimeType' in collectible && collectible.mimeType) {
-          return collectible.mimeType;
-        }
-        if ('content' in collectible && collectible.content?.contentType) {
-          return collectible.content.contentType;
-        }
-        return;
-      }
-      const contentType = getContentType();
+      const contentType: string | undefined = collectible.content?.contentType;
 
       if (contentType) {
         entry.byContentType[contentType] = (entry.byContentType[contentType] ?? 0) + 1;

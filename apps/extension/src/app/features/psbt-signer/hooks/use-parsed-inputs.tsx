@@ -4,13 +4,10 @@ import type { TransactionInput } from '@scure/btc-signer/psbt';
 import { bytesToHex } from '@stacks/common';
 
 import { getBitcoinInputAddress, getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
-import type { InscriptionAsset } from '@leather.io/models';
 import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { getBitcoinInputValue } from '@shared/crypto/bitcoin/bitcoin.utils';
 
-import { useFlags } from '@app/features/feature-flags';
-import { useInscriptionsByOutputs } from '@app/query/bitcoin/ordinals/inscriptions-by-param.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -18,7 +15,6 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 export interface PsbtInput {
   address: string | null;
   index?: number;
-  inscription?: InscriptionAsset;
   isMutable: boolean;
   toSign: boolean;
   txid: string;
@@ -32,10 +28,8 @@ interface UseParsedInputsArgs {
 export function useParsedInputs({ inputs, indexesToSign }: UseParsedInputsArgs) {
   const network = useCurrentNetwork();
   const bitcoinNetwork = getBtcSignerLibNetworkConfigByMode(network.chain.bitcoin.mode);
-  const { isOrdinalsActive } = useFlags();
   const bitcoinAddressNativeSegwit = useCurrentAccountNativeSegwitIndexZeroPayer().address;
   const { address: bitcoinAddressTaproot } = useCurrentAccountTaprootIndexZeroPayer();
-  const inscriptions = useInscriptionsByOutputs(isOrdinalsActive ? inputs : []);
   const signAll = isUndefined(indexesToSign);
 
   const psbtInputs = useMemo(
@@ -46,18 +40,15 @@ export function useParsedInputs({ inputs, indexesToSign }: UseParsedInputsArgs) 
           : null;
         const isCurrentAddress =
           inputAddress === bitcoinAddressNativeSegwit || inputAddress === bitcoinAddressTaproot;
-        // Flags when not signing ALL inputs/outputs (NONE, SINGLE, and ANYONECANPAY)
         const canChange =
           isCurrentAddress &&
           !(!input.sighashType || input.sighashType === 0 || input.sighashType === 1);
-        // Should we check the sighashType here before it gets to the signing lib?
         const toSignAll = isCurrentAddress && signAll;
         const toSignIndex = isCurrentAddress && !signAll && indexesToSign.includes(i);
 
         return {
           address: inputAddress,
           index: input.index,
-          inscription: inscriptions[i],
           isMutable: canChange,
           toSign: toSignAll || toSignIndex,
           txid: input.txid ? bytesToHex(input.txid) : '',
@@ -70,7 +61,6 @@ export function useParsedInputs({ inputs, indexesToSign }: UseParsedInputsArgs) 
       bitcoinNetwork,
       indexesToSign,
       inputs,
-      inscriptions,
       signAll,
     ]
   );

@@ -7,7 +7,6 @@ import { mapBnsProfileDataAddresses, mapBnsProfileDataFromZoneFile } from './bns
 describe(mapBnsProfileDataAddresses.name, () => {
   const oldSchemaBtcAddress = '3123123123123123123123123123123123123123';
   const nativeSegwitBtcAddress = 'bc1q1234567890123456789012345678901234567890';
-  const taprootBtcAddress = 'bc1p1234567890123456789012345678901234567890';
   const ethAddress = '0x1234567890123456789012345678901234567890';
   const solAddress = 'So11111111111111111111111111111111111111112';
 
@@ -17,11 +16,6 @@ describe(mapBnsProfileDataAddresses.name, () => {
         network: 'btc',
         type: 'payment',
         address: nativeSegwitBtcAddress,
-      },
-      {
-        network: 'btc',
-        type: 'ordinal',
-        address: taprootBtcAddress,
       },
       {
         network: 'eth',
@@ -36,7 +30,6 @@ describe(mapBnsProfileDataAddresses.name, () => {
     ];
     expect(mapBnsProfileDataAddresses(oldSchemaBtcAddress, zoneFileAddresses)).toEqual({
       bitcoinPayment: nativeSegwitBtcAddress,
-      bitcoinOrdinal: taprootBtcAddress,
       ethereum: ethAddress,
       solana: solAddress,
     });
@@ -45,7 +38,6 @@ describe(mapBnsProfileDataAddresses.name, () => {
   it('should use the old schema btc address as payment address if no new payment address in zone file', () => {
     expect(mapBnsProfileDataAddresses(oldSchemaBtcAddress, [])).toEqual({
       bitcoinPayment: oldSchemaBtcAddress,
-      bitcoinOrdinal: undefined,
     });
   });
 

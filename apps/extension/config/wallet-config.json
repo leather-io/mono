@@ -85,11 +85,6 @@
   },
   "tokenTransferFeeEstimations": [200, 400, 800],
   "nftMetadataEnabled": true,
-  "ordinalsbot": {
-    "integrationEnabled": true,
-    "mainnetApiUrl": "https://api2.ordinalsbot.com",
-    "signetApiUrl": "https://signet.ordinalsbot.com"
-  },
   "swapsEnabled": true,
   "sbtc": {
     "enabled": true,
@@ -109,12 +104,6 @@
     }
   },
   "tokensEnabledByDefault": [
-    "DOGGOTOTHEMOON",
-    "RSICGENESISRUNE",
-    "PUPSWORLDPEACE",
-    "UNCOMMONGOODS",
-    "USDHUSDHUSDHUSDH",
-    "SUSDHSUSDHSUSDHSUSDH",
     "SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx::usdcx-token",
     "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usdcx::usdcx-token",
     "SP2XD7417HGPRTREMKF748VNEQPDRR0RMANB7X1NK.token-abtc::abtc",

@@ -4,7 +4,6 @@ import {
   TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
 } from '@tests/mocks/constants';
 import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoin-tx';
-import { mockMainnetTestAccountInscriptionsRequests } from '@tests/mocks/mock-inscriptions-bis';
 import { mockLeatherApiRequests } from '@tests/mocks/mock-leather-api';
 import {
   mockMainnetNsTransactionsTestAccount,
@@ -119,7 +118,6 @@ test.describe('RPC: sendTransfer with taproot UTXOs', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await mockMixedUtxoRequests(page, [taprootOnlyUtxo]);
-    await mockMainnetTestAccountInscriptionsRequests(page, []);
     await onboardingPage.signInWithTestAccount(extensionId);
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });
