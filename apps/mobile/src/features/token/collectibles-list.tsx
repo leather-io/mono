@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { assertUnreachable, getAssetId, serializeAssetId } from '@leather.io/utils';
 
-import { useCollectibleDetailsFlag } from '../feature-flags';
+import { useCollectibleDetailsFlag, useOrdinalsFlag } from '../feature-flags';
 import { Inscription } from './bitcoin/inscription';
 import { Sip9 } from './stacks/sip9';
 
@@ -56,9 +56,12 @@ interface CollectiblesListProps {
 }
 
 export function CollectiblesList({ collectiblesState, header }: CollectiblesListProps) {
+  const ordinalsFlag = useOrdinalsFlag();
   const collectibles =
     collectiblesState.state === 'success'
-      ? collectiblesState.value.filter(c => c.protocol !== 'stamp')
+      ? collectiblesState.value.filter(
+          c => c.protocol !== 'stamp' && (ordinalsFlag || c.protocol !== 'inscription')
+        )
       : [];
   const height = useCollectibleListItemHeight();
   const router = useRouter();

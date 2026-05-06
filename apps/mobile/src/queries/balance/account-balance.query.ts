@@ -1,4 +1,5 @@
 import { toFetchState } from '@/components/loading/fetch-state';
+import { useOrdinalsFlag } from '@/features/feature-flags';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
@@ -17,13 +18,14 @@ export function useAccountTotalBalance(
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
+  const ordinalsFlag = useOrdinalsFlag();
   return toFetchState(
     useGetAccountTotalBalanceQuery(
       {
         account,
         protections: {
           isRunesActive: false,
-          isOrdinalsActive: true,
+          isOrdinalsActive: ordinalsFlag,
           discardedInscriptions: [],
           discardRunes: true,
         },
@@ -38,13 +40,14 @@ export function useAccountUnlockedBalance(
   overrideFiatCurrencyPreference?: QuoteCurrency
 ) {
   const account = useAccountAddresses(accountId.fingerprint, accountId.accountIndex);
+  const ordinalsFlag = useOrdinalsFlag();
   return toFetchState(
     useGetAccountUnlockedBalanceQuery(
       {
         account,
         protections: {
           isRunesActive: false,
-          isOrdinalsActive: true,
+          isOrdinalsActive: ordinalsFlag,
           discardedInscriptions: [],
           discardRunes: true,
         },
