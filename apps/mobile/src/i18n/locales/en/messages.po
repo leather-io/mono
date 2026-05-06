@@ -399,6 +399,12 @@ msgstr "Balances"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
+#: src/features/balances/bitcoin/bitcoin-deposit-token-cell.tsx:25
+#: src/features/balances/bitcoin/bitcoin-token-balance.tsx:11
+#: src/features/receive/get-assets.ts:29
+#: src/features/receive/get-assets.ts:37
+#: src/features/send/forms/btc/btc-form.tsx:64
+#: src/features/swap/swap.utils.ts:10
 #: src/shared/display-preference.ts:59
 msgid "Bitcoin"
 msgstr "Bitcoin"
@@ -836,6 +842,7 @@ msgstr "Feature waitlist notification"
 msgid "Fee charged by {providerName} for facilitating the swap"
 msgstr "Fee charged by {providerName} for facilitating the swap"
 
+#: src/features/approver/stx/hooks.ts:27
 #: src/features/psbt-signer/psbt-signer.tsx:202
 msgid "Fee updated"
 msgstr "Fee updated"
@@ -953,6 +960,7 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:171
 #: src/features/psbt-signer/psbt-signer.tsx:298
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
@@ -1386,6 +1394,9 @@ msgstr "Read less"
 msgid "Read more"
 msgstr "Read more"
 
+#: src/components/action-buttons.tsx:44
+#: src/features/receive/screens/asset-details.tsx:56
+#: src/features/receive/screens/select-asset.tsx:83
 #: src/features/token/components/get-first-nft-section.tsx:57
 msgid "Receive"
 msgstr "Receive"
@@ -1588,6 +1599,7 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:170
 #: src/features/psbt-signer/psbt-signer.tsx:297
 msgid "Show advanced options"
 msgstr "Show advanced options"
@@ -1654,6 +1666,11 @@ msgstr "Something went wrong"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
+#: src/features/balances/stacks/stacks-deposit-token-cell.tsx:25
+#: src/features/balances/stacks/stacks-token-balance.tsx:12
+#: src/features/receive/get-assets.ts:45
+#: src/features/send/forms/stx/stx-form.tsx:58
+#: src/features/swap/swap.utils.ts:9
 #: src/shared/display-preference.ts:60
 msgid "Stacks"
 msgstr "Stacks"
@@ -1831,6 +1848,8 @@ msgstr "This merges your existing funds into a single output. It incurs a fee bu
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
+#: src/features/approver/components/sip10-recipient.tsx:43
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:145
 #: src/features/psbt-signer/psbt-signer.tsx:279
 msgid "To address"
 msgstr "To address"
@@ -2064,6 +2083,7 @@ msgstr "You will transfer less than or equal to"
 msgid "You will transfer more than"
 msgstr "You will transfer more than"
 
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:136
 #: src/features/psbt-signer/psbt-signer.tsx:273
 msgid "You’ll send"
 msgstr "You’ll send"
