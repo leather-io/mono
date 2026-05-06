@@ -72,5 +72,12 @@ jobs:
 
       - name: publish-to-npm-with-oidc
         run: |
-          npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-sdk-*.tgz --access public
-          npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-rpc-*.tgz --access public
+          sdk_v=$(jq -r .version packages/sdk/package.json)
+          if [ -z "$(npm view "@leather.io/sdk@$sdk_v" version 2>/dev/null)" ]; then
+            npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-sdk-*.tgz --access public
+          fi
+
+          rpc_v=$(jq -r .version packages/rpc/package.json)
+          if [ -z "$(npm view "@leather.io/rpc@$rpc_v" version 2>/dev/null)" ]; then
+            npm publish "$GITHUB_WORKSPACE"/tarballs/leather.io-rpc-*.tgz --access public
+          fi
