@@ -1,3 +1,4 @@
+import { useOrdinalsFlag } from '@/features/feature-flags';
 import { BitcoinTokenDetails } from '@/features/token/bitcoin/bitcoin-token-details';
 import { InscriptionDetails } from '@/features/token/bitcoin/inscription-details';
 import { Sip9Details } from '@/features/token/stacks/sip9-details';
@@ -17,6 +18,7 @@ export default function AccountTokenScreen() {
   }>();
   const { currentAccount } = useSettings();
   const { protocol: assetProtocol } = deserializeAssetId(assetId);
+  const ordinalsFlag = useOrdinalsFlag();
   assertExistence(currentAccount, 'Current account is required for AccountTokenScreen');
 
   useTokenTracking({ currentAccount, assetId, assetProtocol });
@@ -31,6 +33,7 @@ export default function AccountTokenScreen() {
     case CryptoAssetProtocols.sip9:
       return <Sip9Details account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.inscription:
+      if (!ordinalsFlag) return null;
       return <InscriptionDetails account={currentAccount} assetId={assetId} />;
     case CryptoAssetProtocols.stamp:
     case CryptoAssetProtocols.rune:

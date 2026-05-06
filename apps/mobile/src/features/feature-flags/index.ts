@@ -39,6 +39,10 @@ export function useCollectibleDetailsFlag() {
   return useBoolVariation('collectible_details', false);
 }
 
+export function useOrdinalsFlag() {
+  return useBoolVariation('release_ordinals_feature', false);
+}
+
 export function useWaitlistFlag() {
   return useBoolVariation('release_waitlist_features', false);
 }

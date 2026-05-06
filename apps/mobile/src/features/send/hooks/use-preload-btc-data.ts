@@ -1,3 +1,4 @@
+import { useOrdinalsFlag } from '@/features/feature-flags';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
@@ -11,16 +12,21 @@ export function usePreloadBtcData(account: AccountId) {
   useBtcMarketDataQuery();
   const { fingerprint, accountIndex } = account;
   const accountAddresses = useAccountAddresses(fingerprint, accountIndex);
+  const ordinalsFlag = useOrdinalsFlag();
 
   useQuery({
-    queryKey: ['utxos-service-get-account-utxos', accountAddresses, 'runes-off'],
+    queryKey: [
+      'utxos-service-get-account-utxos',
+      accountAddresses,
+      ordinalsFlag ? 'ordinals-on' : 'ordinals-off',
+    ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getUtxosService().getAccountUtxos(
         {
           account: accountAddresses,
           protections: {
             isRunesActive: false,
-            isOrdinalsActive: true,
+            isOrdinalsActive: ordinalsFlag,
             discardedInscriptions: [],
             discardRunes: true,
           },
