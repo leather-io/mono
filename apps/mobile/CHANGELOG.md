@@ -23,6 +23,13 @@
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
+## [2.106.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.105.0...@leather.io/mobile-v2.106.0) (2026-05-06)
+
+
+### Features
+
+* **mobile:** ordinals feature flag ([#2320](https://github.com/leather-io/mono/issues/2320)) ([0dc1bc3](https://github.com/leather-io/mono/commit/0dc1bc3d970ae1db80624585f5a4c58a9b0aff5d))
+
 ## [2.105.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.104.6...@leather.io/mobile-v2.105.0) (2026-05-05)
 
 
