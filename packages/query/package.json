@@ -44,7 +44,7 @@
     "@stacks/network": "7.0.2",
     "@stacks/stacking": "7.0.5",
     "@stacks/stacks-blockchain-api-types": "7.14.1",
-    "@stacks/transactions": "7.0.5",
+    "@stacks/transactions": "7.4.0",
     "alex-sdk": "3.1.0",
     "axios": "1.15.2",
     "bignumber.js": "9.1.2",

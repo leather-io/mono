@@ -1,4 +1,3 @@
-import { useSip10FtMetadata } from '@/queries/assets/sip10-asset.query';
 import {
   NonFungiblePostConditionWire,
   PostConditionPrincipalId,
@@ -21,7 +20,6 @@ export function NFTPostCondition({ stacksAddress, postCondition }: NFTPostCondit
   const contractId = `${contractAddress}.${contractName}`;
   const assetName = postCondition.asset.assetName.content;
   const visibleAssetId = `${truncateMiddle(contractAddress, 4)}.${contractName}::${assetName}`;
-  const asset = useSip10FtMetadata(contractId);
   const isContractPrincipal = postCondition.principal.prefix === PostConditionPrincipalId.Contract;
   const title = formatPostConditionMessage({
     stacksAddress,
@@ -29,15 +27,13 @@ export function NFTPostCondition({ stacksAddress, postCondition }: NFTPostCondit
     postCondition,
   });
 
-  if (!asset.data) return null;
-
   const icon = (
     <Sip10AvatarIcon
       variant="square"
       indicator="stacksIcon"
-      name={asset.data.name}
+      name={contractName}
       contractId={contractId}
-      imageCanonicalUri={asset.data.imageCanonicalUri}
+      imageCanonicalUri=""
     />
   );
 

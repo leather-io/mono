@@ -271,8 +271,8 @@ importers:
         specifier: 1.0.3
         version: 1.0.3(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.0.5
-        version: 7.0.5(encoding@0.1.13)
+        specifier: 7.4.0
+        version: 7.4.0(encoding@0.1.13)
       '@stacks/wallet-sdk':
         specifier: 7.1.2
         version: 7.1.2(encoding@0.1.13)
@@ -296,7 +296,7 @@ importers:
         version: 1.1.1(encoding@0.1.13)
       alex-sdk:
         specifier: 3.1.0
-        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
+        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13))
       are-passive-events-supported:
         specifier: 1.1.1
         version: 1.1.1
@@ -803,8 +803,8 @@ importers:
         specifier: 7.14.1
         version: 7.14.1
       '@stacks/transactions':
-        specifier: 7.0.5
-        version: 7.0.5(encoding@0.1.13)
+        specifier: 7.4.0
+        version: 7.4.0(encoding@0.1.13)
       '@tanstack/react-query':
         specifier: 5.85.5
         version: 5.85.5(react@19.1.0)
@@ -1155,8 +1155,8 @@ importers:
         specifier: 7.14.1
         version: 7.14.1
       '@stacks/transactions':
-        specifier: 7.0.5
-        version: 7.0.5(encoding@0.1.13)
+        specifier: 7.4.0
+        version: 7.4.0(encoding@0.1.13)
       '@tanstack/react-query':
         specifier: 5.85.5
         version: 5.85.5(react@19.1.0)
@@ -1732,8 +1732,8 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@stacks/transactions':
-        specifier: 7.0.5
-        version: 7.0.5(encoding@0.1.13)
+        specifier: 7.4.0
+        version: 7.4.0(encoding@0.1.13)
       '@tanstack/react-query':
         specifier: 5.85.5
         version: 5.85.5(react@19.2.3)
@@ -1796,11 +1796,11 @@ importers:
         specifier: 7.14.1
         version: 7.14.1
       '@stacks/transactions':
-        specifier: 7.0.5
-        version: 7.0.5(encoding@0.1.13)
+        specifier: 7.4.0
+        version: 7.4.0(encoding@0.1.13)
       alex-sdk:
         specifier: 3.1.0
-        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
+        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13))
       axios:
         specifier: 1.15.2
         version: 1.15.2
@@ -1863,8 +1863,8 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@stacks/transactions':
-        specifier: 7.0.5
-        version: 7.0.5(encoding@0.1.13)
+        specifier: 7.4.0
+        version: 7.4.0(encoding@0.1.13)
       zod:
         specifier: 4.0.17
         version: 4.0.17
@@ -1946,14 +1946,14 @@ importers:
         specifier: 7.14.1
         version: 7.14.1
       '@stacks/transactions':
-        specifier: 7.0.5
-        version: 7.0.5(encoding@0.1.13)
+        specifier: 7.4.0
+        version: 7.4.0(encoding@0.1.13)
       '@velarprotocol/velar-sdk':
         specifier: 0.7.5-beta
-        version: 0.7.5-beta(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
+        version: 0.7.5-beta(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13))
       alex-sdk:
         specifier: 3.1.0
-        version: 3.1.0(@stacks/common@7.3.1)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
+        version: 3.1.0(@stacks/common@7.3.1)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13))
       axios:
         specifier: 1.15.2
         version: 1.15.2
@@ -2040,8 +2040,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.0.5
-        version: 7.0.5(encoding@0.1.13)
+        specifier: 7.4.0
+        version: 7.4.0(encoding@0.1.13)
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -2113,8 +2113,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.0.5
-        version: 7.0.5(encoding@0.1.13)
+        specifier: 7.4.0
+        version: 7.4.0(encoding@0.1.13)
       '@tanstack/react-query':
         specifier: 5.85.5
         version: 5.85.5(react@19.1.0)
@@ -9023,8 +9023,8 @@ packages:
   '@stacks/encryption@7.0.2':
     resolution: {integrity: sha512-3evRvxPqVzQAhcZ8uacQrVfAETUMIV8VyKkHGsd4QZroGWlvXQheLV3CFeDttFb304QcKq/oKv1clOvQ2shaAw==}
 
-  '@stacks/encryption@7.2.0':
-    resolution: {integrity: sha512-XDgb5GuR2kURC0YJWo70xnWPKeizBg/qpGPDApBVLFgaOqFL4FdFmvxHXU5lVbFR3W+mtdxPHedWtQpxxOBlMQ==}
+  '@stacks/encryption@7.4.0':
+    resolution: {integrity: sha512-jrxgHui3P8M2o2sXs01cAd9uJ6JrtB0g6BDBSKj6K40zvlBbEOiki4wXYQNC3g3AmO73Udv31EhCQrWZtwZspA==}
 
   '@stacks/network@6.13.0':
     resolution: {integrity: sha512-Ss/Da4BNyPBBj1OieM981fJ7SkevKqLPkzoI1+Yo7cYR2df+0FipIN++Z4RfpJpc8ne60vgcx7nJZXQsiGhKBQ==}
@@ -9034,9 +9034,6 @@ packages:
 
   '@stacks/network@7.0.2':
     resolution: {integrity: sha512-XzHnoWqku/jRrTgMXhmh3c+I0O9vDH24KlhzGDZtBu+8CGGyHNPAZzGwvoUShonMXrXjEnfO9IYQwV5aJhfv6g==}
-
-  '@stacks/network@7.2.0':
-    resolution: {integrity: sha512-AkLougCF2RLbK97TtISZxAhF3cE757XMXWOGKvEFWNauiQ5/bYyI9W5jZypG3yI/AyYIo04NKoFWWTnpJcn1iA==}
 
   '@stacks/network@7.3.1':
     resolution: {integrity: sha512-dQjhcwkz8lihSYSCUMf7OYeEh/Eh0++NebDtXbIB3pHWTvNCYEH7sxhYTB1iyunurv31/QEi0RuWdlfXK/BjeA==}
@@ -9068,14 +9065,8 @@ packages:
   '@stacks/transactions@6.17.0':
     resolution: {integrity: sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==}
 
-  '@stacks/transactions@7.0.5':
-    resolution: {integrity: sha512-mHsv7lUbZ5w4MKJ3NAirtdClIXLNKMqWIqT2rLjbIHzlYBqvZaELJSYD+km6E7Cm9G3yUYszorhruQmSTgilbg==}
-
-  '@stacks/transactions@7.2.0':
-    resolution: {integrity: sha512-U7wjlxM9Q+408ihRsv5mlKRslXGt2WCShKi1lduiqf5+dBSRGdVi8ttCIEckSsg3ulCVF3EHTQF3LZgw4kwKlQ==}
-
-  '@stacks/transactions@7.3.1':
-    resolution: {integrity: sha512-ufnC1BPrOKz5b5gxxdseP3vBrFq1+qx1L6t+J/QnjXULyWdkhtS+LBEqRw2bL5qNteMvU2GhqPgFtYQPzolGbw==}
+  '@stacks/transactions@7.4.0':
+    resolution: {integrity: sha512-scsQO3rSNNKcPHp56Wy5OeZiIpQNmmZOORz8bkQKWjzvzycAodtSWmAoHiMFAKSleR1NyeRIz642fReqlZU9tw==}
 
   '@stacks/wallet-sdk@7.1.2':
     resolution: {integrity: sha512-LQNCu3aj5SsAEn1pTDTo4CDjEXFfgpN/ssF9evWdHOTQlyFK3E8lnEDbnD+Ulyjyak0aGz7ut+G93z2Y448mrQ==}
@@ -23026,7 +23017,7 @@ snapshots:
     dependencies:
       '@stacks/connect': 7.10.2(encoding@0.1.13)
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
       dotenv: 16.6.1
     transitivePeerDependencies:
       - encoding
@@ -29532,8 +29523,8 @@ snapshots:
     dependencies:
       '@noble/secp256k1': 1.7.1
       '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.2.0
-      '@stacks/network': 7.2.0(encoding@0.1.13)
+      '@stacks/encryption': 7.4.0
+      '@stacks/network': 7.3.1(encoding@0.1.13)
       '@stacks/profile': 7.2.0(encoding@0.1.13)
       cross-fetch: 3.2.0(encoding@0.1.13)
       jsontokens: 4.0.1
@@ -29574,7 +29565,7 @@ snapshots:
       '@stacks/network': 7.0.2(encoding@0.1.13)
       '@stacks/network-v6': '@stacks/network@6.17.0(encoding@0.1.13)'
       '@stacks/profile': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
       '@stacks/transactions-v6': '@stacks/transactions@6.17.0(encoding@0.1.13)'
       jsontokens: 4.0.1
     transitivePeerDependencies:
@@ -29614,12 +29605,12 @@ snapshots:
       ripemd160-min: 0.0.6
       varuint-bitcoin: 1.1.2
 
-  '@stacks/encryption@7.2.0':
+  '@stacks/encryption@7.4.0':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
       '@scure/bip39': 1.1.0
-      '@stacks/common': 7.0.2
+      '@stacks/common': 7.3.1
       base64-js: 1.5.1
       bs58: 5.0.0
       ripemd160-min: 0.0.6
@@ -29640,13 +29631,6 @@ snapshots:
       - encoding
 
   '@stacks/network@7.0.2(encoding@0.1.13)':
-    dependencies:
-      '@stacks/common': 7.0.2
-      cross-fetch: 3.2.0(encoding@0.1.13)
-    transitivePeerDependencies:
-      - encoding
-
-  '@stacks/network@7.2.0(encoding@0.1.13)':
     dependencies:
       '@stacks/common': 7.0.2
       cross-fetch: 3.2.0(encoding@0.1.13)
@@ -29675,7 +29659,7 @@ snapshots:
     dependencies:
       '@stacks/common': 7.0.2
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
       jsontokens: 4.0.1
       schema-inspector: 2.0.2
       zone-file: 2.0.0-beta.3
@@ -29685,8 +29669,8 @@ snapshots:
   '@stacks/profile@7.2.0(encoding@0.1.13)':
     dependencies:
       '@stacks/common': 7.0.2
-      '@stacks/network': 7.2.0(encoding@0.1.13)
-      '@stacks/transactions': 7.2.0(encoding@0.1.13)
+      '@stacks/network': 7.3.1(encoding@0.1.13)
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
       jsontokens: 4.0.1
       schema-inspector: 2.0.2
       zone-file: 2.0.0-beta.3
@@ -29705,10 +29689,10 @@ snapshots:
       '@noble/hashes': 1.1.5
       '@scure/base': 1.1.1
       '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.2.0
+      '@stacks/encryption': 7.4.0
       '@stacks/network': 7.0.2(encoding@0.1.13)
       '@stacks/stacks-blockchain-api-types': 0.61.0
-      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
       bs58: 5.0.0
     transitivePeerDependencies:
       - encoding
@@ -29721,8 +29705,8 @@ snapshots:
     dependencies:
       '@stacks/auth': 7.2.0(encoding@0.1.13)
       '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.2.0
-      '@stacks/network': 7.2.0(encoding@0.1.13)
+      '@stacks/encryption': 7.4.0
+      '@stacks/network': 7.3.1(encoding@0.1.13)
       base64-js: 1.5.1
       jsontokens: 4.0.1
     transitivePeerDependencies:
@@ -29739,29 +29723,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/transactions@7.0.5(encoding@0.1.13)':
-    dependencies:
-      '@noble/hashes': 1.1.5
-      '@noble/secp256k1': 1.7.1
-      '@stacks/common': 7.0.2
-      '@stacks/network': 7.0.2(encoding@0.1.13)
-      c32check: 2.0.0
-      lodash.clonedeep: 4.5.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@stacks/transactions@7.2.0(encoding@0.1.13)':
-    dependencies:
-      '@noble/hashes': 1.1.5
-      '@noble/secp256k1': 1.7.1
-      '@stacks/common': 7.0.2
-      '@stacks/network': 7.2.0(encoding@0.1.13)
-      c32check: 2.0.0
-      lodash.clonedeep: 4.5.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@stacks/transactions@7.3.1(encoding@0.1.13)':
+  '@stacks/transactions@7.4.0(encoding@0.1.13)':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
@@ -29778,11 +29740,11 @@ snapshots:
       '@scure/bip39': 1.1.0
       '@stacks/auth': 7.2.0(encoding@0.1.13)
       '@stacks/common': 7.0.2
-      '@stacks/encryption': 7.2.0
+      '@stacks/encryption': 7.4.0
       '@stacks/network': 7.0.2(encoding@0.1.13)
       '@stacks/profile': 7.2.0(encoding@0.1.13)
       '@stacks/storage': 7.2.0(encoding@0.1.13)
-      '@stacks/transactions': 7.2.0(encoding@0.1.13)
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
       c32check: 2.0.0
       jsontokens: 4.0.1
       zone-file: 2.0.0-beta.3
@@ -30991,10 +30953,10 @@ snapshots:
       '@urql/core': 5.1.1(graphql@16.12.0)
       wonka: 6.3.5
 
-  '@velarprotocol/velar-sdk@0.7.5-beta(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))':
+  '@velarprotocol/velar-sdk@0.7.5-beta(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13))':
     dependencies:
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
 
   '@vercel/edge@1.2.2': {}
 
@@ -31224,7 +31186,7 @@ snapshots:
   '@zondax/ledger-stacks@1.1.1(encoding@0.1.13)':
     dependencies:
       '@ledgerhq/hw-transport': 6.32.0
-      '@stacks/transactions': 7.3.1(encoding@0.1.13)
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
       varuint-bitcoin: 2.0.0
     transitivePeerDependencies:
       - encoding
@@ -31483,20 +31445,20 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
-  alex-sdk@3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13)):
+  alex-sdk@3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13)):
     dependencies:
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.5(encoding@0.1.13)
-      clarity-codegen: 1.0.0-beta.1(@stacks/common@7.0.2)(@stacks/transactions@7.0.5(encoding@0.1.13))
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      clarity-codegen: 1.0.0-beta.1(@stacks/common@7.0.2)(@stacks/transactions@7.4.0(encoding@0.1.13))
     transitivePeerDependencies:
       - '@stacks/common'
       - debug
 
-  alex-sdk@3.1.0(@stacks/common@7.3.1)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13)):
+  alex-sdk@3.1.0(@stacks/common@7.3.1)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.4.0(encoding@0.1.13)):
     dependencies:
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.5(encoding@0.1.13)
-      clarity-codegen: 1.0.0-beta.1(@stacks/common@7.3.1)(@stacks/transactions@7.0.5(encoding@0.1.13))
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
+      clarity-codegen: 1.0.0-beta.1(@stacks/common@7.3.1)(@stacks/transactions@7.4.0(encoding@0.1.13))
     transitivePeerDependencies:
       - '@stacks/common'
       - debug
@@ -32680,11 +32642,11 @@ snapshots:
 
   cjs-module-lexer@1.4.3: {}
 
-  clarity-codegen@1.0.0-beta.1(@stacks/common@7.0.2)(@stacks/transactions@7.0.5(encoding@0.1.13)):
+  clarity-codegen@1.0.0-beta.1(@stacks/common@7.0.2)(@stacks/transactions@7.4.0(encoding@0.1.13)):
     dependencies:
       '@stacks/common': 7.0.2
       '@stacks/stacks-blockchain-api-types': 7.14.1
-      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
       axios: 1.15.2
       lodash: 4.18.1
       yargs: 17.7.2
@@ -32692,11 +32654,11 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  clarity-codegen@1.0.0-beta.1(@stacks/common@7.3.1)(@stacks/transactions@7.0.5(encoding@0.1.13)):
+  clarity-codegen@1.0.0-beta.1(@stacks/common@7.3.1)(@stacks/transactions@7.4.0(encoding@0.1.13)):
     dependencies:
       '@stacks/common': 7.3.1
       '@stacks/stacks-blockchain-api-types': 7.14.1
-      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
       axios: 1.15.2
       lodash: 4.18.1
       yargs: 17.7.2
@@ -41541,7 +41503,7 @@ snapshots:
       '@stacks/common': 7.0.2
       '@stacks/encryption': 7.0.2
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+      '@stacks/transactions': 7.4.0(encoding@0.1.13)
       c32check: 2.0.0
       micro-packed: 0.6.3
     transitivePeerDependencies:

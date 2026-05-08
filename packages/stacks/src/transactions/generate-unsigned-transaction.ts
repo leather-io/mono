@@ -24,7 +24,9 @@ export function initNonce(nonce: number | string) {
   return new BigNumber(nonce, 10);
 }
 
-export function getUnsignedContractCallParsedOptions(options: StacksUnsignedContractCallOptions) {
+export function getUnsignedContractCallParsedOptions(
+  options: StacksUnsignedContractCallOptions
+): Parameters<typeof makeUnsignedContractCall>[0] {
   return {
     ...options,
     fee: options.fee.amount.toString(),
@@ -36,7 +38,7 @@ export function getUnsignedContractCallParsedOptions(options: StacksUnsignedCont
 
 export function getUnsignedContractDeployParsedOptions(
   options: StacksUnsignedContractDeployOptions
-) {
+): Parameters<typeof makeUnsignedContractDeploy>[0] {
   return {
     ...options,
     fee: options.fee.amount.toString(),
@@ -49,7 +51,7 @@ export function getUnsignedContractDeployParsedOptions(
 
 export function getUnsignedStxTokenTransferParsedOptions(
   options: StacksUnsignedTokenTransferOptions
-) {
+): Parameters<typeof makeUnsignedSTXTokenTransfer>[0] {
   return {
     ...options,
     amount: options.amount.amount.toString(),

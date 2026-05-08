@@ -21,7 +21,9 @@ export const baseStacksTransactionConfigSchema = z.object({
   nonce: z.coerce.number().optional(),
   // add pc later when imported from stacks.js
   postConditions: z.array(z.string()).optional(),
-  postConditionMode: z.union([z.literal('allow'), z.literal('deny')]).optional(),
+  postConditionMode: z
+    .union([z.literal('allow'), z.literal('deny'), z.literal('originator')])
+    .optional(),
   sponsored: z.boolean().optional(),
 });
 

@@ -17,6 +17,7 @@ function getUserPcTitle(conditionCode: FungibleConditionCode | NonFungibleCondit
     [FungibleConditionCode.LessEqual]: t`You will transfer less than or equal to`,
     [NonFungibleConditionCode.Sends]: t`You will transfer`,
     [NonFungibleConditionCode.DoesNotSend]: t`You will keep`,
+    [NonFungibleConditionCode.MaybeSent]: t`You may transfer`,
   }[conditionCode];
 }
 function getContractPcTitle(conditionCode: FungibleConditionCode | NonFungibleConditionCode) {
@@ -28,6 +29,7 @@ function getContractPcTitle(conditionCode: FungibleConditionCode | NonFungibleCo
     [FungibleConditionCode.LessEqual]: t`The contract will transfer less than or equal to`,
     [NonFungibleConditionCode.Sends]: t`The contract will transfer`,
     [NonFungibleConditionCode.DoesNotSend]: t`The contract will keep`,
+    [NonFungibleConditionCode.MaybeSent]: t`The contract may transfer`,
   }[conditionCode];
 }
 
@@ -44,6 +46,7 @@ function getAddressPcTitle(
     [FungibleConditionCode.LessEqual]: t`Another address ${shortenedPcAddress} will transfer less than or equal to`,
     [NonFungibleConditionCode.Sends]: t`Another address ${shortenedPcAddress} will transfer`,
     [NonFungibleConditionCode.DoesNotSend]: t`Another address ${shortenedPcAddress} will keep`,
+    [NonFungibleConditionCode.MaybeSent]: t`Another address ${shortenedPcAddress} may transfer`,
   }[conditionCode];
 }
 

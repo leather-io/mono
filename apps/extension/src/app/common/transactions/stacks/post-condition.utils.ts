@@ -3,6 +3,8 @@ import {
   type FungiblePostConditionWire,
   NonFungibleConditionCode,
   type NonFungiblePostConditionWire,
+  PostConditionMode,
+  type PostConditionModeName,
   PostConditionType,
   type PostConditionWire,
   type STXPostConditionWire,
@@ -19,6 +21,12 @@ import { stacksValue } from '@app/common/stacks-utils';
 //
 // These were used with legacy tx requests, so we have to keep them
 // until we are able to remove that code entirely.
+
+export function rpcPostConditionModeToEnum(mode?: PostConditionModeName) {
+  if (mode === 'allow') return PostConditionMode.Allow;
+  if (mode === 'originator') return PostConditionMode.Originator;
+  return PostConditionMode.Deny;
+}
 
 export function getIconStringFromPostCondition(
   pc: STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire
@@ -78,6 +86,8 @@ export function getPostConditionCodeMessage(
       return `${sender} will transfer`;
     case NonFungibleConditionCode.DoesNotSend:
       return `${sender} will keep or receive`;
+    case NonFungibleConditionCode.MaybeSent:
+      return `${sender} may transfer`;
     default:
       assertUnreachable(code);
   }
@@ -137,6 +147,8 @@ function getTitleFromConditionCode(code: FungibleConditionCode | NonFungibleCond
       return 'will transfer';
     case NonFungibleConditionCode.DoesNotSend:
       return 'will keep';
+    case NonFungibleConditionCode.MaybeSent:
+      return 'may transfer';
     default:
       return '';
   }
