@@ -36,7 +36,7 @@ export class BitcoinTransactionsService {
     return leatherTx ? createBitcoinTransactionFromLeather(leatherTx) : null;
   }
 
-  /* 
+  /*
     Gets bitcoin transactions for an account
   */
   public async getAccountTransactions(
@@ -60,7 +60,7 @@ export class BitcoinTransactionsService {
     return Array.from(uniqueTxsMap.values());
   }
 
-  /* 
+  /*
     Gets bitcoin transactions for a descriptor
   */
   public async getDescriptorTransactions(

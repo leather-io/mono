@@ -19,11 +19,13 @@ export interface ActivityBalances {
 
 export interface ActivityView {
   key: string;
+  txid?: string;
   asset?: CryptoAsset;
   fromAsset?: CryptoAsset;
   toAsset?: CryptoAsset;
   title: string;
   caption: string;
+  timestamp?: number;
   statusLabel: string | null;
   activityLink?: string | null;
   balances: ActivityBalances;

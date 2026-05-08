@@ -14,6 +14,7 @@ export enum BitcoinQueryPrefixes {
   GetRunesOutputsByAddress = 'get-runes-outputs-by-address',
   GetRunesTickerInfo = 'get-runes-ticker-info',
   GetRunesWalletBalances = 'get-runes-wallet-balances',
+  GetTransactionByTxid = 'get-transaction-by-txid',
 }
 
 export enum StacksQueryPrefixes {

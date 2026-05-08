@@ -6,11 +6,11 @@ import { makeActivityLink } from './activity-links';
 import {
   getActivityAsset,
   getActivityAvatar,
+  getActivityCaption,
   getActivityTitle,
   hasTxDetails,
 } from './activity-metadata';
 import { formatActivityStatusLabel, getActivityStatusIndicatorId } from './activity-status';
-import { formatActivityCaption } from './activity-timestamp';
 import type { ActivityView } from './types';
 
 function getActivityUniqueIdentifier(activity: Activity): string {
@@ -92,8 +92,7 @@ export function createActivityView(
   const balances = getActivityBalances(activity);
   const title = getActivityTitle(activity);
   const statusLabel = formatActivityStatusLabel(activity);
-  const caption = formatActivityCaption(activity);
-  const combinedCaption = statusLabel ? `${statusLabel} ${caption}` : caption;
+  const caption = getActivityCaption(activity);
 
   const activityAvatar = getActivityAvatar(activity);
   const statusIndicator = getActivityStatusIndicatorId(activity);
@@ -104,11 +103,13 @@ export function createActivityView(
 
   return {
     key: getActivityKey(activity),
+    txid: hasTxDetails(activity) ? activity.txid : undefined,
     asset,
     fromAsset,
     toAsset,
     title,
-    caption: combinedCaption,
+    caption,
+    timestamp: activity.timestamp,
     statusLabel: statusLabel ?? null,
     balances,
     activityLink,

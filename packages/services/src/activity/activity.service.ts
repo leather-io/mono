@@ -1,11 +1,15 @@
+import { hexToBytes } from '@stacks/common';
+import { BytesReader, addressToString, deserializeAddress } from '@stacks/transactions';
 import { injectable } from 'inversify';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import {
   AccountAddresses,
+  ActivityLevels,
   CryptoAsset,
   CryptoAssetCategories,
   OnChainActivity,
+  OnChainActivityStatuses,
   OnChainActivityTypes,
 } from '@leather.io/models';
 import {
@@ -13,12 +17,18 @@ import {
   createMoney,
   hasBitcoinAddress,
   hasStacksAddress,
+  initBigNumber,
   isDefined,
 } from '@leather.io/utils';
 
 import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { getAssetIdentifierFromContract } from '../assets/stacks-asset.utils';
+import { EmilyApiClient } from '../infrastructure/api/emily/emily-api.client';
+import {
+  type EmilySbtcDeposit,
+  type EmilySbtcDepositStatus,
+} from '../infrastructure/api/emily/emily-api.types';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import {
   HiroStacksMempoolTransaction,
@@ -50,7 +60,8 @@ export class ActivityService {
     private readonly bitcoinTransactionsService: BitcoinTransactionsService,
     private readonly marketDataService: MarketDataService,
     private readonly sip10AssetService: Sip10AssetService,
-    private readonly sip9AssetService: Sip9AssetService
+    private readonly sip9AssetService: Sip9AssetService,
+    private readonly emilyApiClient: EmilyApiClient
   ) {}
   /*
    * Gets combined total activity for a list of accounts
@@ -95,11 +106,19 @@ export class ActivityService {
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<OnChainActivity[]> {
-    const [btcActivity, stacksActivity] = await Promise.all([
+    // Important: do not let one upstream failure (e.g. Hiro/Bitcoin API hiccup)
+    // take down the entire activity list.
+    const [btcResult, stacksResult, sbtcResult] = await Promise.allSettled([
       this.getBtcActivity(account, signal),
       this.getStacksActivity(account, signal),
+      this.getSbtcActivity(account, signal),
     ]);
-    return [...btcActivity, ...stacksActivity].sort(sortActivityByTimestampDesc);
+
+    const btcActivity = btcResult.status === 'fulfilled' ? btcResult.value : [];
+    const stacksActivity = stacksResult.status === 'fulfilled' ? stacksResult.value : [];
+    const sbtcActivity = sbtcResult.status === 'fulfilled' ? sbtcResult.value : [];
+
+    return [...btcActivity, ...stacksActivity, ...sbtcActivity].sort(sortActivityByTimestampDesc);
   }
 
   /*
@@ -336,7 +355,8 @@ export class ActivityService {
   private async applyMarketData(activity: OnChainActivity, signal?: AbortSignal) {
     if (
       activity.type === OnChainActivityTypes.sendAsset ||
-      activity.type === OnChainActivityTypes.receiveAsset
+      activity.type === OnChainActivityTypes.receiveAsset ||
+      activity.type === OnChainActivityTypes.lockAsset
     ) {
       const isTransferAssetFungible = activity.asset.category === CryptoAssetCategories.fungible;
       if (isTransferAssetFungible) {
@@ -398,5 +418,95 @@ export class ActivityService {
       };
     }
     return activity;
+  }
+
+  private mapSbtcStatusToActivityStatus(status: EmilySbtcDepositStatus) {
+    switch (status) {
+      case 'pending':
+      case 'accepted':
+        return OnChainActivityStatuses.pending;
+      case 'confirmed':
+        return OnChainActivityStatuses.success;
+      case 'failed':
+      case 'rbf':
+      default:
+        return OnChainActivityStatuses.failed;
+    }
+  }
+
+  private decodeSbtcRecipient(recipient: string) {
+    const reader = new BytesReader(hexToBytes(recipient.slice(2)));
+    return addressToString(deserializeAddress(reader));
+  }
+
+  private async getSbtcActivity(
+    account: AccountAddresses,
+    signal?: AbortSignal
+  ): Promise<OnChainActivity[]> {
+    if (!hasStacksAddress(account)) return [];
+
+    try {
+      const [pending, accepted, confirmed, failed] = await Promise.all([
+        this.emilyApiClient.getSbtcDeposits('pending', { signal }),
+        this.emilyApiClient.getSbtcDeposits('accepted', { signal }),
+        this.emilyApiClient.getSbtcDeposits('confirmed', { signal }),
+        this.emilyApiClient.getSbtcDeposits('failed', { signal }),
+      ]);
+
+      const allDeposits: EmilySbtcDeposit[] = [
+        ...pending.deposits,
+        ...accepted.deposits,
+        ...confirmed.deposits,
+        ...failed.deposits,
+      ];
+
+      if (allDeposits.length === 0) return [];
+
+      const accountAddress = account.stacks.stxAddress;
+
+      const depositsForAccount = allDeposits.filter(deposit => {
+        try {
+          return this.decodeSbtcRecipient(deposit.recipient) === accountAddress;
+        } catch {
+          return false;
+        }
+      });
+
+      if (depositsForAccount.length === 0) return [];
+
+      const activityList: OnChainActivity[] = [];
+
+      for (const deposit of depositsForAccount) {
+        let timestamp = Math.floor(Date.now() / 1000);
+        try {
+          const block = await this.hiroStacksApiClient.getBlockByHeight(deposit.lastUpdateHeight, {
+            signal,
+          });
+          if (block.block_time) {
+            timestamp = block.block_time;
+          }
+        } catch {
+          // ignore
+        }
+
+        activityList.push({
+          type: OnChainActivityTypes.swapAssets,
+          timestamp,
+          level: ActivityLevels.account,
+          account: account.id,
+          txid: deposit.bitcoinTxid,
+          status: this.mapSbtcStatusToActivityStatus(deposit.status),
+          fromAsset: btcAsset,
+          fromAmount: initBigNumber(deposit.amount),
+          toAsset: btcAsset,
+          toAmount: initBigNumber(deposit.amount),
+          sbtcBridgeStatus: deposit.status,
+        });
+      }
+
+      return activityList;
+    } catch {
+      return [];
+    }
   }
 }

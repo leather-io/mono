@@ -1,43 +1,20 @@
 import { memo } from 'react';
 
 import { Balance } from '@/components/balance/balance';
-import { t } from '@lingui/core/macro';
 import type { ResponsiveValue } from '@shopify/restyle';
 
 import { type ActivityView } from '@leather.io/features';
 import { ActivityAvatarIcon, Cell, type Theme } from '@leather.io/ui/native';
 
 import { useOpenUrl } from '../browser/browser/use-open-url';
-import { translateActivityStatus } from './translate-activity-status';
 
 interface ActivityItemProps {
   item: ActivityView;
 }
 
-function ActivityItemComponent({ item }: ActivityItemProps) {
-  const { balances, statusLabel, title, caption, activityLink, activityAvatar, statusIndicator } =
-    item;
+export const ActivityItem = memo(function ActivityItem({ item }: ActivityItemProps) {
+  const { balances, title, caption, activityLink } = item;
   const { openUrl } = useOpenUrl();
-
-  const titleText = statusLabel ? translateActivityStatus(statusLabel) : null;
-  const timestampText =
-    statusLabel && caption.startsWith(statusLabel)
-      ? caption.slice(statusLabel.length).trim()
-      : caption;
-
-  function getSwapStatusText(status: string) {
-    if (status === 'pending') {
-      return t`Swapping`;
-    } else if (status === 'failed') {
-      return t`Swap failed`;
-    } else {
-      return t`Swapped`;
-    }
-  }
-  const swapStatusText = getSwapStatusText(statusIndicator);
-
-  const secondaryText =
-    activityAvatar === 'swap' ? `${swapStatusText} ${timestampText}` : timestampText;
 
   return (
     <Cell.Root
@@ -49,10 +26,10 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
       </Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary" fontSize={15}>
-          {titleText || title}
+          {title}
         </Cell.Label>
         <Cell.Label variant="secondary" fontSize={15}>
-          {secondaryText}
+          {caption}
         </Cell.Label>
       </Cell.Content>
       <Cell.Aside>
@@ -81,6 +58,4 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
       </Cell.Aside>
     </Cell.Root>
   );
-}
-
-export const ActivityItem = memo(ActivityItemComponent);
+});

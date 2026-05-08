@@ -35,6 +35,7 @@ export type HttpCacheKey =
   | 'hiro-stacks-get-transfer-fee-rate'
   | 'hiro-stacks-get-transaction-fee-estimate'
   | 'hiro-stacks-get-api-status'
+  | 'hiro-stacks-get-block-by-height'
 
   // MempoolApiClient
   | 'mempool-api-address-utxos'
@@ -106,7 +107,8 @@ export type HttpCacheKey =
   | 'velar-sdk-get-computed-amount'
 
   // EmilyApiClient
-  | 'emily-api-get-sbtc-limits';
+  | 'emily-api-get-sbtc-limits'
+  | 'emily-api-get-sbtc-deposits';
 
 export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'bns-v2-api-name': { ttl: minutesInMs(2) },
@@ -136,6 +138,7 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'hiro-stacks-get-transfer-fee-rate': { ttl: secondsInMs(4) },
   'hiro-stacks-get-transaction-fee-estimate': { ttl: secondsInMs(4) },
   'hiro-stacks-get-api-status': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-block-by-height': { ttl: secondsInMs(10) },
 
   'mempool-api-address-utxos': { ttl: secondsInMs(5) },
   'mempool-api-address-transactions': { ttl: secondsInMs(5) },
@@ -201,4 +204,5 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'velar-sdk-get-computed-amount': { ttl: secondsInMs(30) },
 
   'emily-api-get-sbtc-limits': { ttl: hoursInMs(12) },
+  'emily-api-get-sbtc-deposits': { ttl: minutesInMs(5) },
 };

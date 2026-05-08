@@ -38,6 +38,11 @@ import {
 } from './hiro-stacks-api.types';
 import { filterVerboseUnusedTransactionWithTransfersData } from './hiro-stacks-api.utils';
 
+interface HiroStacksBlock {
+  height: number;
+  block_time: number;
+}
+
 @injectable()
 export class HiroStacksApiClient {
   private readonly _axios: AxiosInstance;
@@ -558,6 +563,38 @@ export class HiroStacksApiClient {
       ? await fetchFn()
       : await this.cache.fetchWithCache(
           ['hiro-stacks-get-api-status', selectStacksChainId(this.settings.getSettings())],
+          fetchFn
+        );
+  }
+
+  public async getBlockByHeight(
+    height: number,
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<HiroStacksBlock> {
+    const fetchFn = async () => {
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<HiroStacksBlock>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v2/blocks/${height}`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getAccountTransactions,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return skipCache
+      ? await fetchFn()
+      : await this.cache.fetchWithCache(
+          [
+            'hiro-stacks-get-block-by-height',
+            height,
+            selectStacksChainId(this.settings.getSettings()),
+          ],
           fetchFn
         );
   }

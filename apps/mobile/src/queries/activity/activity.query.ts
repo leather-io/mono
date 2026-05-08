@@ -36,7 +36,8 @@ function useBaseActivityQuery(
 
 export function useActivity(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useBaseActivityQuery(account));
+  const query = useBaseActivityQuery(account);
+  return { ...toFetchState(query), isFetching: query.isFetching };
 }
 
 export function useActivityByAsset(fingerprint: string, accountIndex: number, asset: CryptoAsset) {
