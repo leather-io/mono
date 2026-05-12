@@ -37,32 +37,24 @@ export function ContractCallPostConditionsSection({
 
   return (
     <Approver.Section>
-      {tx.postConditions.values.map(pc => {
+      {tx.postConditions.values.map((pc, index) => {
         if (pc.conditionType === PostConditionType.Fungible) {
           return (
-            <FTPostCondition
-              key={pc.amount + pc.asset.assetName.content}
-              stacksAddress={stacksAddress}
-              postCondition={pc}
-            />
+            <FTPostCondition key={`ft-${index}`} stacksAddress={stacksAddress} postCondition={pc} />
           );
         }
 
         if (pc.conditionType === PostConditionType.NonFungible) {
           return (
             <NFTPostCondition
-              key={pc.asset.assetName.content}
+              key={`nft-${index}`}
               stacksAddress={stacksAddress}
               postCondition={pc}
             />
           );
         }
         return (
-          <StxPostCondition
-            key={pc.amount + 'STX'}
-            stacksAddress={stacksAddress}
-            postCondition={pc}
-          />
+          <StxPostCondition key={`stx-${index}`} stacksAddress={stacksAddress} postCondition={pc} />
         );
       })}
     </Approver.Section>

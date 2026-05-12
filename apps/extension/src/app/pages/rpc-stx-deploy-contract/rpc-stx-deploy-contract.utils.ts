@@ -1,5 +1,5 @@
 import type { StacksNetwork } from '@stacks/network';
-import { ClarityVersion, PostConditionMode } from '@stacks/transactions';
+import { ClarityVersion } from '@stacks/transactions';
 
 import type { Money } from '@leather.io/models';
 import { createRequestEncoder, stxDeployContract } from '@leather.io/rpc';
@@ -12,6 +12,7 @@ import {
 import { createMoney } from '@leather.io/utils';
 
 import { initialSearchParams } from '@app/common/initial-search-params';
+import { rpcPostConditionModeToEnum } from '@app/common/transactions/stacks/post-condition.utils';
 import type { Nonce } from '@app/features/nonce-editor/nonce-editor.context';
 
 function getDecodedRpcStxDeployContractRequest() {
@@ -32,10 +33,7 @@ function getTransactionOptionsFromRpcRequest() {
       ? createMoney(decodedRpcRequest.params.fee, 'STX')
       : undefined,
     nonce: decodedRpcRequest.params.nonce,
-    postConditionMode:
-      decodedRpcRequest.params.postConditionMode === 'allow'
-        ? PostConditionMode.Allow
-        : PostConditionMode.Deny,
+    postConditionMode: rpcPostConditionModeToEnum(decodedRpcRequest.params.postConditionMode),
     postConditions: getPostConditions(
       decodedRpcRequest.params.postConditions?.map(pc => ensurePostConditionWireFormat(pc))
     ),

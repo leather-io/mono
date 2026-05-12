@@ -5,7 +5,11 @@ import {
   STXTransferPayload as ConnectSTXTransferPayload,
 } from '@stacks/connect-jwt';
 import type { StacksNetwork } from '@stacks/network';
-import { type PostCondition, type PostConditionWire } from '@stacks/transactions';
+import {
+  type PostCondition,
+  type PostConditionMode,
+  type PostConditionWire,
+} from '@stacks/transactions';
 import { decodeToken } from 'jsontokens';
 
 import type { ReplaceTypes } from '@leather.io/models';
@@ -19,6 +23,7 @@ export type ContractCallPayload = ReplaceTypes<
     txType: TransactionTypes.ContractCall;
     network: StacksNetwork;
     postConditions?: PostCondition[] | PostConditionWire[];
+    postConditionMode?: PostConditionMode;
   }
 >;
 export type ContractDeployPayload = ReplaceTypes<
@@ -27,6 +32,7 @@ export type ContractDeployPayload = ReplaceTypes<
     txType: TransactionTypes.ContractDeploy;
     network: StacksNetwork;
     postConditions?: PostCondition[] | PostConditionWire[];
+    postConditionMode?: PostConditionMode;
   }
 >;
 export type STXTransferPayload = ReplaceTypes<
@@ -35,6 +41,7 @@ export type STXTransferPayload = ReplaceTypes<
     txType: TransactionTypes.StxTokenTransfer;
     network: StacksNetwork;
     postConditions?: PostCondition[] | PostConditionWire[];
+    postConditionMode?: PostConditionMode;
   }
 >;
 export type CommonSignaturePayload = ReplaceTypes<

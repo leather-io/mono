@@ -53,7 +53,7 @@ export async function generateContractCallToken({
     contractName: 'hello-world',
     functionArgs: [],
     functionName: 'print',
-    postConditionMode: PostConditionMode.Allow,
+    postConditionMode: PostConditionMode.Allow as ContractCallOptions['postConditionMode'],
     network: network as any,
     postConditions: [serializePostConditionWire(postConditionToWire(pc))],
     ...txOptions,

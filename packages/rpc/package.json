@@ -28,7 +28,7 @@
     "@leather.io/models": "workspace:*",
     "@leather.io/stacks": "workspace:*",
     "@leather.io/utils": "workspace:*",
-    "@stacks/transactions": "7.0.5",
+    "@stacks/transactions": "7.4.0",
     "zod": "4.0.17"
   },
   "devDependencies": {
