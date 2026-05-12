@@ -17,14 +17,15 @@ CLAIMS=$(printf '%s' "$SERVICE_ACCOUNT_KEY" | jq -c \
 UNSIGNED="${HEADER}.${CLAIMS}"
 SIGNATURE=$(printf '%s' "$UNSIGNED" | openssl dgst -sha256 -sign "$KEY_FILE" -binary | b64url)
 
-response=$(curl --silent --show-error --fail \
+response=$(curl --silent --show-error \
   -X POST "https://oauth2.googleapis.com/token" \
   --data-urlencode "grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer" \
   --data-urlencode "assertion=${UNSIGNED}.${SIGNATURE}")
 token=$(printf '%s' "$response" | jq -r '.access_token')
 
 if [ -z "$token" ] || [ "$token" = "null" ]; then
-  echo "Failed to obtain Chrome Web Store access token" >&2
+  echo "Failed to obtain Chrome Web Store access token:" >&2
+  printf '%s\n' "$response" >&2
   exit 1
 fi
 

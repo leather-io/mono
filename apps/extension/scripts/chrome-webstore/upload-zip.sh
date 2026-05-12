@@ -3,7 +3,7 @@ set -eu
 
 ZIP="$1"
 
-response=$(curl --silent --show-error --fail \
+response=$(curl --silent --show-error \
   -X POST "https://chromewebstore.googleapis.com/upload/v2/publishers/${PUBLISHER_ID}/items/${EXTENSION_ID}:upload" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "X-Goog-Upload-Protocol: raw" \
