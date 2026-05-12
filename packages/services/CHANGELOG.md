@@ -413,6 +413,23 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.55.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.54.1...@leather.io/services-v1.55.0) (2026-05-12)
+
+
+### Features
+
+* **extension:** support originator post-condition mode ([#2324](https://github.com/leather-io/mono/issues/2324)) ([6e7d3e1](https://github.com/leather-io/mono/commit/6e7d3e11b5d18a576c72fe4886f5ead6376d9d16))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.37.6
+    * @leather.io/stacks bumped to 1.20.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.22.0
+
 ## [1.54.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.54.0...@leather.io/services-v1.54.1) (2026-05-05)
 
 

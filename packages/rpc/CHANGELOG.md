@@ -411,6 +411,20 @@
     * @leather.io/stacks bumped to 1.17.3
     * @leather.io/utils bumped to 0.46.4
 
+## [2.22.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.21.16...@leather.io/rpc-v2.22.0) (2026-05-12)
+
+
+### Features
+
+* **extension:** support originator post-condition mode ([#2324](https://github.com/leather-io/mono/issues/2324)) ([6e7d3e1](https://github.com/leather-io/mono/commit/6e7d3e11b5d18a576c72fe4886f5ead6376d9d16))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/stacks bumped to 1.20.0
+
 ## [2.21.16](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.21.15...@leather.io/rpc-v2.21.16) (2026-03-27)
 
 

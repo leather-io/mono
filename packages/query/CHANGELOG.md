@@ -779,6 +779,21 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.48.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.47.2...@leather.io/query-v2.48.0) (2026-05-12)
+
+
+### Features
+
+* **extension:** support originator post-condition mode ([#2324](https://github.com/leather-io/mono/issues/2324)) ([6e7d3e1](https://github.com/leather-io/mono/commit/6e7d3e11b5d18a576c72fe4886f5ead6376d9d16))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.37.6
+    * @leather.io/stacks bumped to 1.20.0
+
 ## [2.47.2](https://github.com/leather-io/mono/compare/@leather.io/query-v2.47.1...@leather.io/query-v2.47.2) (2026-05-05)
 
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.9.3...@leather.io/queries-v0.10.0) (2026-05-12)
+
+
+### Features
+
+* **extension:** support originator post-condition mode ([#2324](https://github.com/leather-io/mono/issues/2324)) ([6e7d3e1](https://github.com/leather-io/mono/commit/6e7d3e11b5d18a576c72fe4886f5ead6376d9d16))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.55.0
+
 ## [0.9.3](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.9.2...@leather.io/queries-v0.9.3) (2026-05-05)
 
 

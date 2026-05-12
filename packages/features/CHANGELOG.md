@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.4.4](https://github.com/leather-io/mono/compare/@leather.io/features-v1.4.3...@leather.io/features-v1.4.4) (2026-05-12)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.55.0
+    * @leather.io/stacks bumped to 1.20.0
+
 ## [1.4.3](https://github.com/leather-io/mono/compare/@leather.io/features-v1.4.2...@leather.io/features-v1.4.3) (2026-05-05)
 
 
