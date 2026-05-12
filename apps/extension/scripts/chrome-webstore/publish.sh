@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-response=$(curl --silent --show-error --fail \
+response=$(curl --silent --show-error \
   -X POST "https://chromewebstore.googleapis.com/v2/publishers/${PUBLISHER_ID}/items/${EXTENSION_ID}:publish" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
