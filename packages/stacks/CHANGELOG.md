@@ -577,6 +577,13 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/utils bumped to 0.46.4
 
+## [1.20.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.19.18...@leather.io/stacks-v1.20.0) (2026-05-12)
+
+
+### Features
+
+* **extension:** support originator post-condition mode ([#2324](https://github.com/leather-io/mono/issues/2324)) ([6e7d3e1](https://github.com/leather-io/mono/commit/6e7d3e11b5d18a576c72fe4886f5ead6376d9d16))
+
 ## [1.19.18](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.19.17...@leather.io/stacks-v1.19.18) (2026-03-27)
 
 
