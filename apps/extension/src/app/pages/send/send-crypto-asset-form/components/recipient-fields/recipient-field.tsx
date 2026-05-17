@@ -5,6 +5,7 @@ import { RecipientAddressTypeField } from '../recipient-address-type-field';
 import { RecipientIdentifierTypeDropdown } from '../recipient-type-dropdown/recipient-type-dropdown';
 import { useRecipientSelectFields } from './hooks/use-recipient-select-fields';
 import { RecipientBnsNameTypeField } from './recipient-bns-name-type-field';
+import { RecipientBnrpNameTypeField } from './recipient-bnrp-name-type-field';
 
 interface RecipientFieldProps {
   bnsLookupFn(client: any, name: string, isTestnet?: boolean): Promise<string | null>;
@@ -36,6 +37,16 @@ export function RecipientField({ bnsLookupFn }: RecipientFieldProps) {
             topInputOverlay={recipientDropdown}
           />
           <TextInputFieldError name="recipientBnsName" />
+        </>
+      );
+    case 'bnrpName':
+      return (
+        <>
+          <RecipientBnrpNameTypeField
+            rightLabel={selectAccountButton}
+            topInputOverlay={recipientDropdown}
+          />
+          <TextInputFieldError name="recipientBnrpName" />
         </>
       );
     case 'address':

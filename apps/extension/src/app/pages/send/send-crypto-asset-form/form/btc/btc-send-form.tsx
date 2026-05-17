@@ -50,6 +50,7 @@ export function BtcSendForm() {
             initialValues={createDefaultInitialFormValues({
               ...routeState,
               recipientBnsName: '',
+              recipientBnrpName: '',
               symbol,
             })}
             onSubmit={chooseTransactionFee}

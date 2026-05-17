@@ -8,8 +8,13 @@ import type { Entries } from '@leather.io/models';
 import { RouteUrls } from '@shared/route-urls';
 
 import { useRecipientBnsName } from './use-recipient-bns-name';
+import { useRecipientBnrpName } from './use-recipient-bnrp-name';
 
-const recipientIdentifierTypesMap = { address: 'Address', bnsName: 'BNS Name' } as const;
+const recipientIdentifierTypesMap = {
+  address: 'Address',
+  bnsName: 'BNS Name',
+  bnrpName: 'Bitcoin Name',
+} as const;
 
 export type RecipientIdentifierType = keyof typeof recipientIdentifierTypesMap;
 
@@ -32,6 +37,7 @@ export function useRecipientSelectFields() {
 
   const [isSelectVisible, setIsSelectVisible] = useState(false);
   const { setBnsAddress } = useRecipientBnsName();
+  const { setBnrpAddress } = useRecipientBnrpName();
   const navigate = useNavigate();
 
   const resetAllRecipientFields = useCallback(async () => {
@@ -41,6 +47,9 @@ export function useRecipientSelectFields() {
     void setFieldValue('recipientBnsName', '');
     setFieldError('recipientBnsName', undefined);
     await setFieldTouched('recipientBnsName', false);
+    void setFieldValue('recipientBnrpName', '');
+    setFieldError('recipientBnrpName', undefined);
+    await setFieldTouched('recipientBnrpName', false);
   }, [setFieldValue, setFieldError, setFieldTouched]);
 
   return useMemo(
@@ -59,6 +68,7 @@ export function useRecipientSelectFields() {
       async onSelectRecipientFieldType(recipientType: RecipientIdentifierType) {
         await resetAllRecipientFields();
         setBnsAddress('');
+        setBnrpAddress('');
         setSelectedRecipientField(recipientType);
         setIsSelectVisible(false);
       },
@@ -68,6 +78,6 @@ export function useRecipientSelectFields() {
         setIsSelectVisible(value);
       },
     }),
-    [isSelectVisible, navigate, resetAllRecipientFields, selectedRecipientField, setBnsAddress]
+    [isSelectVisible, navigate, resetAllRecipientFields, selectedRecipientField, setBnsAddress, setBnrpAddress]
   );
 }
