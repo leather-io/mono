@@ -12,6 +12,8 @@ interface SearchResult {
   title: string;
   slug: { current: string };
   categories: { _id: string; name: string; slug: { current: string } }[];
+  kind: 'guide' | 'deprecation';
+  href: string;
 }
 
 interface SearchResponse {
@@ -116,34 +118,49 @@ export function GuideSearch() {
             </styled.p>
           )}
           <styled.ul listStyleType="none">
-            {results.map(result => {
-              const href = `/support/${result.slug.current}`;
-              return (
-                <styled.li
-                  key={result._id}
-                  cursor="pointer"
-                  _hover={{ bg: 'ink.component-background-hover', borderRadius: 'sm' }}
+            {results.map(result => (
+              <styled.li
+                key={result._id}
+                cursor="pointer"
+                _hover={{ bg: 'ink.component-background-hover', borderRadius: 'sm' }}
+              >
+                <Link
+                  to={result.href}
+                  onClick={() => setIsOpen(false)}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
                 >
-                  <Link
-                    to={href}
-                    onClick={() => setIsOpen(false)}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  <styled.span
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    gap="space.03"
+                    p="space.03"
+                    textStyle="label.02"
+                    color="ink.action-primary-default"
                   >
-                    <styled.span
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      p="space.03"
-                      textStyle="label.02"
-                      color="ink.action-primary-default"
-                    >
+                    <styled.span display="flex" alignItems="center" gap="space.02">
+                      {result.kind === 'deprecation' && (
+                        <styled.span
+                          display="inline-flex"
+                          alignItems="center"
+                          px="space.02"
+                          py="space.01"
+                          borderRadius="xs"
+                          bg="ink.background-secondary"
+                          color="ink.text-subdued"
+                          textStyle="caption.01"
+                          flexShrink={0}
+                        >
+                          Notice
+                        </styled.span>
+                      )}
                       {result.title}
-                      <ChevronRightIcon variant="small" />
                     </styled.span>
-                  </Link>
-                </styled.li>
-              );
-            })}
+                    <ChevronRightIcon variant="small" />
+                  </styled.span>
+                </Link>
+              </styled.li>
+            ))}
           </styled.ul>
         </Box>
       )}
