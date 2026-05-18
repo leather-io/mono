@@ -712,6 +712,14 @@ msgstr "Disabled"
 msgid "Disconnected"
 msgstr "Disconnected"
 
+#: src/features/token/components/discover-marketplaces-section.tsx:26
+msgid "Discover and trade Stacks NFTs"
+msgstr "Discover and trade Stacks NFTs"
+
+#: src/features/token/components/discover-marketplaces-section.tsx:14
+msgid "Discover marketplaces"
+msgstr "Discover marketplaces"
+
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:64
 msgid "Dismiss"
 msgstr "Dismiss"
@@ -901,6 +909,10 @@ msgstr "funds kept safe and unavailable for spending"
 #: src/features/account/components/available-account-balance.tsx:57
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
+
+#: src/features/token/components/discover-marketplaces-section.tsx:25
+msgid "Gamma"
+msgstr "Gamma"
 
 #: src/features/account/sheets/add-account-sheet.tsx:37
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:81
