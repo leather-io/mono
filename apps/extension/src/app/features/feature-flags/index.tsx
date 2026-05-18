@@ -37,5 +37,6 @@ interface FeatureFlags {
 }
 
 export function useFlags() {
-  return useLDFlags<FeatureFlags>();
+  const flags = useLDFlags<FeatureFlags>();
+  return { ...flags, isOrdinalsActive: true }
 }
