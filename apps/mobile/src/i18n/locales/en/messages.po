@@ -1416,6 +1416,9 @@ msgstr "Read less"
 msgid "Read more"
 msgstr "Read more"
 
+#: src/components/action-buttons.tsx:44
+#: src/features/receive/screens/asset-details.tsx:56
+#: src/features/receive/screens/select-asset.tsx:83
 #: src/features/token/components/get-first-nft-section.tsx:57
 msgid "Receive"
 msgstr "Receive"
