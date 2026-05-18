@@ -58,28 +58,6 @@ export function GetFirstNftSection() {
           </Button>
         </Cell.Aside>
       </Cell.Root>
-      <Cell.Root pressable={false}>
-        <Cell.Icon borderRadius="round">
-          <Image
-            style={{ height: 40, width: 40 }}
-            contentFit="cover"
-            source={require('@/assets/ord-inscription.png')}
-          />
-        </Cell.Icon>
-        <Cell.Content>
-          <Cell.Label variant="primary">{t`Ordinal Inscriptions`}</Cell.Label>
-          <Cell.Label variant="secondary">{t`Bitcoin Blockchain`}</Cell.Label>
-        </Cell.Content>
-        <Cell.Aside>
-          <Button
-            variant="outline"
-            size="sm"
-            onPress={() => receiveSheetRef.current?.present('taproot')}
-          >
-            {t`Receive`}
-          </Button>
-        </Cell.Aside>
-      </Cell.Root>
     </Box>
   );
 }

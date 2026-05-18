@@ -23,7 +23,6 @@ import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 import { CollectiblesEmpty } from './collectibles-empty';
 import { CollectiblesLearn } from './collectibles-learn';
 import { CollectiblesLoading } from './collectibles-loading';
-import { CollectiblesMarketplaces } from './collectibles-marketplaces';
 
 interface CollectiblesLayoutProps {
   children: ReactNode;
@@ -160,7 +159,6 @@ export function CollectiblesLayout({
 
         {isReady && (
           <Stack gap="space.05" pt="space.06">
-            <CollectiblesMarketplaces />
             <CollectiblesLearn />
           </Stack>
         )}

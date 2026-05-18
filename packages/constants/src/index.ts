@@ -18,7 +18,6 @@ export const MEMPOOL_BASE_URL = 'https://mempool.space';
 export const ORD_IO_URL = 'https://ord.io';
 export const GAMMA_URL = 'https://gamma.io';
 export const GAMMA_API_URL: string = `${GAMMA_URL}/api`;
-export const MAGIC_EDEN_URL = 'https://magiceden.io/bitcoin';
 export const BNS_REGISTRATION_URL = 'https://bns.one/';
 export const LEATHER_IPFS_GATEWAY_URL = 'https://leather.quicknode-ipfs.com/ipfs/';
 export const SBTC_RECLAIM_URL = 'https://app.stacks.co/reclaim?depositTxId=';
