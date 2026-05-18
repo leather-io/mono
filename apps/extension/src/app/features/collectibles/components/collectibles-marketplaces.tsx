@@ -1,6 +1,6 @@
 import { Stack, styled } from 'leather-styles/jsx';
 
-import { GAMMA_URL, MAGIC_EDEN_URL } from '@leather.io/constants';
+import { GAMMA_URL } from '@leather.io/constants';
 import { Pressable } from '@leather.io/ui';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
@@ -18,12 +18,6 @@ const marketplaces: MarketplaceItem[] = [
     description: 'Bitcoin NFTs and Web3 creativity built on Stacks.',
     url: GAMMA_URL,
     image: '/assets/images/gamma-marketplace.png',
-  },
-  {
-    name: 'Magic Eden',
-    description: 'Leading multi-chain marketplace across Bitcoin, Solana, and more',
-    url: MAGIC_EDEN_URL,
-    image: '/assets/images/magic-eden-marketplace.png',
   },
 ];
 

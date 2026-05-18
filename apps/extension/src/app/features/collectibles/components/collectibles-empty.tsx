@@ -8,7 +8,6 @@ import { Button } from '@leather.io/ui';
 import { RouteUrls } from '@shared/route-urls';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
-import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 
 interface NftItem {
   title: string;
@@ -27,7 +26,6 @@ function createNftItemTestId(item: NftItem): string {
 export function CollectiblesEmpty() {
   const navigate = useNavigate();
   const location = useLocation();
-  const btcAddressTaproot = useZeroIndexTaprootAddress();
 
   const backgroundLocation = location;
 
@@ -47,16 +45,6 @@ export function CollectiblesEmpty() {
       onAction: () =>
         void navigate(`${RouteUrls.Home}${RouteUrls.ReceiveStx}`, {
           state: { backgroundLocation },
-        }),
-    },
-    {
-      title: 'Ordinal Inscriptions',
-      caption: 'Bitcoin Blockchain',
-      image: '/assets/images/ord-inscription.png',
-      action: 'Receive',
-      onAction: () =>
-        void navigate(`${RouteUrls.Home}${RouteUrls.ReceiveCollectibleOrdinal}`, {
-          state: { backgroundLocation, btcAddressTaproot },
         }),
     },
   ];

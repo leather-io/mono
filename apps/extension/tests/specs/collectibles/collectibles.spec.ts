@@ -41,15 +41,6 @@ test.describe('Collectibles tab', () => {
       await expect(page.getByTestId('collectibles-empty-receive-stacks-nft')).toBeVisible();
     });
 
-    test('should show Ordinal Inscriptions with Receive button', async ({ homePage, page }) => {
-      await homePage.clickCollectiblesTab();
-
-      await expect(page.getByText('Ordinal Inscriptions')).toBeVisible();
-      await expect(
-        page.getByTestId('collectibles-empty-receive-ordinal-inscriptions')
-      ).toBeVisible();
-    });
-
     test('should show Discover marketplaces section', async ({ homePage, page }) => {
       await homePage.clickCollectiblesTab();
 
@@ -57,7 +48,6 @@ test.describe('Collectibles tab', () => {
       await expect(marketplaces).toBeVisible();
       await expect(page.getByText('Discover marketplaces')).toBeVisible();
       await expect(page.getByText('Gamma')).toBeVisible();
-      await expect(page.getByText('Magic Eden')).toBeVisible();
     });
 
     test('should show Learn section', async ({ homePage, page }) => {
