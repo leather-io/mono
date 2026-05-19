@@ -3,7 +3,7 @@ import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
-import { BNS_REGISTRATION_URL, GAMMA_URL } from '@leather.io/constants';
+import { BNS_REGISTRATION_URL } from '@leather.io/constants';
 import { Box, Cell, Text } from '@leather.io/ui/native';
 
 export function GetFirstNftSection() {
@@ -44,7 +44,7 @@ export function GetFirstNftSection() {
           <Cell.Label variant="secondary">{t`Transfer from another account`}</Cell.Label>
         </Cell.Content>
       </Cell.Root>
-      <Cell.Root pressable onPress={() => openUrl(GAMMA_URL)}>
+      <Cell.Root pressable onPress={() => openUrl('https://stacks.gamma.io/')}>
         <Cell.Icon borderRadius="round">
           <Image
             style={{ height: 40, width: 40 }}

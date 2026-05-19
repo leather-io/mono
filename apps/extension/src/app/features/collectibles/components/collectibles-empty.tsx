@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { Stack, styled } from 'leather-styles/jsx';
 
-import { BNS_REGISTRATION_URL, GAMMA_URL } from '@leather.io/constants';
+import { BNS_REGISTRATION_URL } from '@leather.io/constants';
 import { Pressable } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -46,7 +46,7 @@ export function CollectiblesEmpty() {
       caption: 'Browse on Gamma',
       image: '/assets/images/gamma-marketplace.png',
       testId: 'collectibles-empty-discover-stacks-nfts',
-      onAction: () => openInNewTab(GAMMA_URL),
+      onAction: () => openInNewTab('https://stacks.gamma.io/'),
     },
   ];
 
