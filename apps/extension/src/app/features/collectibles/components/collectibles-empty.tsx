@@ -1,68 +1,57 @@
 import { useLocation, useNavigate } from 'react-router';
 
-import { Flex, Stack, styled } from 'leather-styles/jsx';
+import { Stack, styled } from 'leather-styles/jsx';
 
 import { BNS_REGISTRATION_URL } from '@leather.io/constants';
-import { Button } from '@leather.io/ui';
+import { Pressable } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
-import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 
 interface NftItem {
   title: string;
   caption: string;
   image: string;
-  action: string;
+  testId: string;
   onAction(): void;
-}
-
-function createNftItemTestId(item: NftItem): string {
-  const action = item.action.toLowerCase();
-  const title = item.title.toLowerCase().replace(/[\s.]/g, '-');
-  return `collectibles-empty-${action}-${title}`;
 }
 
 export function CollectiblesEmpty() {
   const navigate = useNavigate();
   const location = useLocation();
-  const btcAddressTaproot = useZeroIndexTaprootAddress();
 
   const backgroundLocation = location;
 
   const nftItems: NftItem[] = [
     {
-      title: '.btc domain',
-      caption: 'Get your .btc domain',
+      title: 'Register .btc domain',
+      caption: 'Decentralized Bitcoin identity',
       image: '/assets/images/btc-domain.png',
-      action: 'Register',
+      testId: 'collectibles-empty-register-btc-domain',
       onAction: () => openInNewTab(BNS_REGISTRATION_URL),
     },
     {
-      title: 'Stacks NFT',
-      caption: 'Stacks Blockchain',
+      title: 'Receive Stacks NFT',
+      caption: 'Transfer from another account',
       image: '/assets/images/stx-nft.png',
-      action: 'Receive',
+      testId: 'collectibles-empty-receive-stacks-nft',
       onAction: () =>
         void navigate(`${RouteUrls.Home}${RouteUrls.ReceiveStx}`, {
           state: { backgroundLocation },
         }),
     },
     {
-      title: 'Ordinal Inscriptions',
-      caption: 'Bitcoin Blockchain',
-      image: '/assets/images/ord-inscription.png',
-      action: 'Receive',
-      onAction: () =>
-        void navigate(`${RouteUrls.Home}${RouteUrls.ReceiveCollectibleOrdinal}`, {
-          state: { backgroundLocation, btcAddressTaproot },
-        }),
+      title: 'Discover Stacks NFTs',
+      caption: 'Browse on Gamma',
+      image: '/assets/images/gamma-marketplace.png',
+      testId: 'collectibles-empty-discover-stacks-nfts',
+      onAction: () => openInNewTab('https://stacks.gamma.io/'),
     },
   ];
 
   return (
-    <Stack gap="space.02" data-testid="collectibles-empty">
+    <Stack gap="space.00" data-testid="collectibles-empty">
       <Stack gap="space.01" pb="space.04">
         <styled.h3 textStyle="label.01" margin="0">
           Get your first NFT
@@ -73,7 +62,19 @@ export function CollectiblesEmpty() {
       </Stack>
 
       {nftItems.map(item => (
-        <Flex key={item.title} alignItems="center" gap="space.03" width="100%" py="space.03">
+        <Pressable
+          key={item.title}
+          type="button"
+          display="flex"
+          alignItems="center"
+          gap="space.03"
+          py="space.03"
+          textAlign="left"
+          bg="ink.background-primary"
+          _before={{ top: 0, bottom: 0, borderRadius: 'sm' }}
+          onClick={item.onAction}
+          data-testid={item.testId}
+        >
           <styled.img
             src={item.image}
             alt={item.title}
@@ -104,17 +105,7 @@ export function CollectiblesEmpty() {
               {item.caption}
             </styled.span>
           </Stack>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={item.onAction}
-            flexShrink={0}
-            data-testid={createNftItemTestId(item)}
-          >
-            {item.action}
-          </Button>
-        </Flex>
+        </Pressable>
       ))}
     </Stack>
   );

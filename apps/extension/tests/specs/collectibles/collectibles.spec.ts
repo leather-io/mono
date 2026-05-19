@@ -27,37 +27,25 @@ test.describe('Collectibles tab', () => {
       await expect(page.getByText('Get your first NFT')).toBeVisible();
     });
 
-    test('should show .btc domain with Register button', async ({ homePage, page }) => {
+    test('should show Register .btc domain item', async ({ homePage, page }) => {
       await homePage.clickCollectiblesTab();
 
-      await expect(page.getByText('.btc domain', { exact: true })).toBeVisible();
-      await expect(page.getByTestId('collectibles-empty-register--btc-domain')).toBeVisible();
+      await expect(page.getByText('Register .btc domain')).toBeVisible();
+      await expect(page.getByTestId('collectibles-empty-register-btc-domain')).toBeVisible();
     });
 
-    test('should show Stacks NFT with Receive button', async ({ homePage, page }) => {
+    test('should show Receive Stacks NFT item', async ({ homePage, page }) => {
       await homePage.clickCollectiblesTab();
 
-      await expect(page.getByText('Stacks NFT')).toBeVisible();
+      await expect(page.getByText('Receive Stacks NFT')).toBeVisible();
       await expect(page.getByTestId('collectibles-empty-receive-stacks-nft')).toBeVisible();
     });
 
-    test('should show Ordinal Inscriptions with Receive button', async ({ homePage, page }) => {
+    test('should show Discover Stacks NFTs item', async ({ homePage, page }) => {
       await homePage.clickCollectiblesTab();
 
-      await expect(page.getByText('Ordinal Inscriptions')).toBeVisible();
-      await expect(
-        page.getByTestId('collectibles-empty-receive-ordinal-inscriptions')
-      ).toBeVisible();
-    });
-
-    test('should show Discover marketplaces section', async ({ homePage, page }) => {
-      await homePage.clickCollectiblesTab();
-
-      const marketplaces = page.getByTestId('collectibles-marketplaces');
-      await expect(marketplaces).toBeVisible();
-      await expect(page.getByText('Discover marketplaces')).toBeVisible();
-      await expect(page.getByText('Gamma')).toBeVisible();
-      await expect(page.getByText('Magic Eden')).toBeVisible();
+      await expect(page.getByText('Discover Stacks NFTs')).toBeVisible();
+      await expect(page.getByTestId('collectibles-empty-discover-stacks-nfts')).toBeVisible();
     });
 
     test('should show Learn section', async ({ homePage, page }) => {
@@ -101,14 +89,7 @@ test.describe('Collectibles tab', () => {
       await expect(inscriptionCards.first()).toBeVisible();
     });
 
-    test('should show Discover marketplaces below grid', async ({ homePage, page }) => {
-      await homePage.clickCollectiblesTab();
-
-      const marketplaces = page.getByTestId('collectibles-marketplaces');
-      await expect(marketplaces).toBeVisible();
-    });
-
-    test('should show Learn section below marketplaces', async ({ homePage, page }) => {
+    test('should show Learn section below grid', async ({ homePage, page }) => {
       await homePage.clickCollectiblesTab();
 
       const learn = page.getByTestId('collectibles-learn');

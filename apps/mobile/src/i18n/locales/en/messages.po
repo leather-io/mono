@@ -34,10 +34,6 @@ msgstr " on {date} "
 msgid " since {date}"
 msgstr " since {date}"
 
-#: src/features/token/components/get-first-nft-section.tsx:30
-msgid ".btc domain"
-msgstr ".btc domain"
-
 #: src/app/settings/display/index.tsx:101
 msgid "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
 msgstr "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
@@ -421,14 +417,6 @@ msgstr "BIP39 passphrase"
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
-#: src/features/token/components/get-first-nft-section.tsx:71
-msgid "Bitcoin Blockchain"
-msgstr "Bitcoin Blockchain"
-
-#: src/features/token/components/discover-marketplaces-section.tsx:26
-msgid "Bitcoin NFTs and Web3 creativity built on Stacks."
-msgstr "Bitcoin NFTs and Web3 creativity built on Stacks."
-
 #: src/app/settings/display/index.tsx:72
 #: src/features/settings/bitcoin-unit-sheet.tsx:35
 msgid "Bitcoin unit"
@@ -451,6 +439,10 @@ msgstr "BNS name"
 #: src/shared/display-preference.ts:64
 msgid "BRC-20"
 msgstr "BRC-20"
+
+#: src/features/token/components/get-first-nft-section.tsx:57
+msgid "Browse on Gamma"
+msgstr "Browse on Gamma"
 
 #: src/features/navigation/tab-layout.tsx:68
 msgid "Browser"
@@ -678,6 +670,10 @@ msgstr "Custom fees"
 msgid "Customize your app icon"
 msgstr "Customize your app icon"
 
+#: src/features/token/components/get-first-nft-section.tsx:31
+msgid "Decentralized Bitcoin identity"
+msgstr "Decentralized Bitcoin identity"
+
 #: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:40
 msgid "Decrease slippage"
 msgstr "Decrease slippage"
@@ -720,9 +716,9 @@ msgstr "Disabled"
 msgid "Disconnected"
 msgstr "Disconnected"
 
-#: src/features/token/components/discover-marketplaces-section.tsx:14
-msgid "Discover marketplaces"
-msgstr "Discover marketplaces"
+#: src/features/token/components/get-first-nft-section.tsx:56
+msgid "Discover Stacks NFTs"
+msgstr "Discover Stacks NFTs"
 
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:64
 msgid "Dismiss"
@@ -914,10 +910,6 @@ msgstr "funds kept safe and unavailable for spending"
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 
-#: src/features/token/components/discover-marketplaces-section.tsx:25
-msgid "Gamma"
-msgstr "Gamma"
-
 #: src/features/account/sheets/add-account-sheet.tsx:37
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:81
 msgid "Generate new Secret Key for self-custody"
@@ -939,10 +931,6 @@ msgstr "Get support or provide feedback"
 #: src/components/app-update-required/app-update-required-sheet.tsx:23
 msgid "Get the latest version of the Leather app"
 msgstr "Get the latest version of the Leather app"
-
-#: src/features/token/components/get-first-nft-section.tsx:31
-msgid "Get your .btc domain"
-msgstr "Get your .btc domain"
 
 #: src/features/token/components/get-first-nft-section.tsx:16
 msgid "Get your first NFT"
@@ -1115,10 +1103,6 @@ msgstr "Layer 2 · Stacks"
 msgid "Layer 2 • Stacks"
 msgstr "Layer 2 • Stacks"
 
-#: src/features/token/components/discover-marketplaces-section.tsx:39
-msgid "Leading multi-chain marketplace across Bitcoin, Solana and more"
-msgstr "Leading multi-chain marketplace across Bitcoin, Solana and more"
-
 #: src/app/settings/help/index.tsx:29
 #: src/components/home/components/learn-section.tsx:63
 msgid "Learn"
@@ -1160,10 +1144,6 @@ msgstr "Locked STX"
 #: src/features/activity/translate-activity-status.ts:30
 msgid "Locking"
 msgstr "Locking"
-
-#: src/features/token/components/discover-marketplaces-section.tsx:38
-msgid "Magic Eden"
-msgstr "Magic Eden"
 
 #: src/app/settings/index.tsx:83
 msgid "Mainnet, testnet or signet"
@@ -1340,10 +1320,6 @@ msgstr "OK"
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
 
-#: src/features/token/components/get-first-nft-section.tsx:70
-msgid "Ordinal Inscriptions"
-msgstr "Ordinal Inscriptions"
-
 #: src/features/account/components/available-account-balance.tsx:46
 msgid "Outbound balance:"
 msgstr "Outbound balance:"
@@ -1447,14 +1423,16 @@ msgstr "Read more"
 #: src/components/action-buttons.tsx:44
 #: src/features/receive/screens/asset-details.tsx:56
 #: src/features/receive/screens/select-asset.tsx:83
-#: src/features/token/components/get-first-nft-section.tsx:57
-#: src/features/token/components/get-first-nft-section.tsx:79
 msgid "Receive"
 msgstr "Receive"
 
 #: src/features/activity/translate-activity-status.ts:14
 msgid "Receive failed"
 msgstr "Receive failed"
+
+#: src/features/token/components/get-first-nft-section.tsx:43
+msgid "Receive Stacks NFT"
+msgstr "Receive Stacks NFT"
 
 #: src/features/activity/translate-activity-status.ts:12
 msgid "Received"
@@ -1489,9 +1467,9 @@ msgstr "Recently viewed"
 msgid "Recents"
 msgstr "Recents"
 
-#: src/features/token/components/get-first-nft-section.tsx:35
-msgid "Register"
-msgstr "Register"
+#: src/features/token/components/get-first-nft-section.tsx:30
+msgid "Register .btc domain"
+msgstr "Register .btc domain"
 
 #: src/features/token/stacks/bns-details.tsx:37
 msgid "Registered at block"
@@ -1738,14 +1716,6 @@ msgstr "Stacks"
 msgid "Stacks address"
 msgstr "Stacks address"
 
-#: src/features/token/components/get-first-nft-section.tsx:49
-msgid "Stacks Blockchain"
-msgstr "Stacks Blockchain"
-
-#: src/features/token/components/get-first-nft-section.tsx:48
-msgid "Stacks NFT"
-msgstr "Stacks NFT"
-
 #: src/shared/display-preference.ts:60
 msgid "Stamp"
 msgstr "Stamp"
@@ -1968,6 +1938,10 @@ msgstr "Transaction ID"
 #: src/features/send/forms/stx/stx-approver.tsx:42
 msgid "Transaction is sent!"
 msgstr "Transaction is sent!"
+
+#: src/features/token/components/get-first-nft-section.tsx:44
+msgid "Transfer from another account"
+msgstr "Transfer from another account"
 
 #: src/components/home/components/trending-tokens.tsx:30
 #: src/components/home/components/trending-tokens.tsx:45
