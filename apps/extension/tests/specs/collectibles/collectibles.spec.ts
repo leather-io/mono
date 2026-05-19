@@ -27,18 +27,25 @@ test.describe('Collectibles tab', () => {
       await expect(page.getByText('Get your first NFT')).toBeVisible();
     });
 
-    test('should show .btc domain with Register button', async ({ homePage, page }) => {
+    test('should show Register .btc domain item', async ({ homePage, page }) => {
       await homePage.clickCollectiblesTab();
 
-      await expect(page.getByText('.btc domain', { exact: true })).toBeVisible();
-      await expect(page.getByTestId('collectibles-empty-register--btc-domain')).toBeVisible();
+      await expect(page.getByText('Register .btc domain')).toBeVisible();
+      await expect(page.getByTestId('collectibles-empty-register-btc-domain')).toBeVisible();
     });
 
-    test('should show Stacks NFT with Receive button', async ({ homePage, page }) => {
+    test('should show Receive Stacks NFT item', async ({ homePage, page }) => {
       await homePage.clickCollectiblesTab();
 
-      await expect(page.getByText('Stacks NFT')).toBeVisible();
+      await expect(page.getByText('Receive Stacks NFT')).toBeVisible();
       await expect(page.getByTestId('collectibles-empty-receive-stacks-nft')).toBeVisible();
+    });
+
+    test('should show Discover Stacks NFTs item', async ({ homePage, page }) => {
+      await homePage.clickCollectiblesTab();
+
+      await expect(page.getByText('Discover Stacks NFTs')).toBeVisible();
+      await expect(page.getByTestId('collectibles-empty-discover-stacks-nfts')).toBeVisible();
     });
 
     test('should show Learn section', async ({ homePage, page }) => {
