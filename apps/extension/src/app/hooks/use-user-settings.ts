@@ -13,13 +13,15 @@ export function useUserSettings(): UserSettings {
   const assetVisibility = useMemo(
     () =>
       Object.fromEntries(
-        tokenSettings.map(tokenSetting => [
-          serializeAssetId({
-            protocol: tokenSetting.id.includes('::') ? 'sip10' : 'rune',
-            id: tokenSetting.id,
-          }),
-          tokenSetting.enabled,
-        ])
+        tokenSettings
+          .filter(tokenSetting => tokenSetting.id.includes('::'))
+          .map(tokenSetting => [
+            serializeAssetId({
+              protocol: 'sip10',
+              id: tokenSetting.id,
+            }),
+            tokenSetting.enabled,
+          ])
       ),
     [tokenSettings]
   );

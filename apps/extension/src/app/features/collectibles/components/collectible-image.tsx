@@ -5,7 +5,7 @@ import { styled } from 'leather-styles/jsx';
 import { CollectibleCard } from './collectible-card';
 import { ImageUnavailable } from './image-unavailable';
 
-export interface CollectibleImageProps {
+interface CollectibleImageProps {
   alt?: string;
   src: string;
   thumbnailSrc?: string;

@@ -1,17 +1,14 @@
 import { useCallback, useState } from 'react';
 
-import { TransactionInput } from '@scure/btc-signer/psbt';
-
 import { decodeBitcoinTx } from '@leather.io/bitcoin';
-import { filterOutIntentionalUtxoSpend } from '@leather.io/query';
 import { delay } from '@leather.io/utils';
 
 import { useBitcoinClient } from '../clients/bitcoin-client';
-import { useCheckUnspendableUtxos } from './use-check-utxos';
+import { useCheckTaprootUtxos } from './use-check-taproot-utxos';
 
 interface BroadcastCallbackArgs {
   tx: string;
-  skipSpendableCheckUtxoIds?: string[] | 'all';
+  skipTaprootWarning?: boolean;
   delayTime?: number;
   onSuccess?(txid: string): void;
   onError?(error: Error): void;
@@ -20,31 +17,22 @@ interface BroadcastCallbackArgs {
 export function useBitcoinBroadcastTransaction() {
   const client = useBitcoinClient();
   const [isBroadcasting, setIsBroadcasting] = useState(false);
-  const { checkIfUtxosListIncludesInscribed } = useCheckUnspendableUtxos();
+  const { checkIfInputsIncludeTaproot } = useCheckTaprootUtxos();
 
   const broadcastTx = useCallback(
     async ({
       tx,
+      skipTaprootWarning = false,
       onSuccess,
       onError,
       onFinally,
-      skipSpendableCheckUtxoIds = [],
       delayTime = 700,
     }: BroadcastCallbackArgs) => {
       try {
-        const allInputs = decodeBitcoinTx(tx).inputs;
-
-        const inputsToCheck: TransactionInput[] =
-          skipSpendableCheckUtxoIds === 'all'
-            ? allInputs
-            : filterOutIntentionalUtxoSpend({
-                inputs: allInputs,
-                intentionalSpendUtxoIds: skipSpendableCheckUtxoIds,
-              });
-
-        const shouldHalt = await checkIfUtxosListIncludesInscribed(inputsToCheck);
-        if (shouldHalt) {
-          return;
+        if (!skipTaprootWarning) {
+          const inputs = decodeBitcoinTx(tx).inputs;
+          const shouldHalt = await checkIfInputsIncludeTaproot(inputs);
+          if (shouldHalt) return;
         }
 
         setIsBroadcasting(true);
@@ -63,7 +51,7 @@ export function useBitcoinBroadcastTransaction() {
         onFinally?.();
       }
     },
-    [checkIfUtxosListIncludesInscribed, client]
+    [checkIfInputsIncludeTaproot, client]
   );
 
   return { broadcastTx, isBroadcasting };

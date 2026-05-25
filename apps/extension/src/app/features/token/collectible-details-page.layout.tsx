@@ -7,7 +7,7 @@ import { CollectibleTypeIconOverlay } from '../collectibles/components/collectib
 interface CollectibleDetailsPageLayoutProps {
   children: ReactNode;
   media: ReactNode;
-  protocol: 'inscription' | 'sip9' | 'stamp';
+  protocol: 'sip9';
 }
 
 const maxImageSize = 342;

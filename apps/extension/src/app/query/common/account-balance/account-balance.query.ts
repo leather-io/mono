@@ -7,12 +7,10 @@ import {
 } from '@leather.io/queries';
 import type { AccountRequest } from '@leather.io/services';
 
-import { useFlags } from '@app/features/feature-flags';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { toFetchState } from '@app/services/fetch-state';
 import { useCurrentAccountId } from '@app/store/accounts/account';
-import { useDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
 import { balanceQueryOptions } from '../balance-query-options';
 
@@ -23,18 +21,7 @@ export function useCurrentAccountAvailableBalance() {
 
 function useAccountAvailableBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
-  const discardedInscriptions = useDiscardedInscriptions();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
-  return toFetchState(
-    useGetAccountAvailableBalanceQuery({
-      account,
-      protections: {
-        discardedInscriptions,
-        isOrdinalsActive,
-        isRunesActive,
-      },
-    })
-  );
+  return toFetchState(useGetAccountAvailableBalanceQuery({ account }));
 }
 
 export function useCurrentAccountTotalBalance() {
@@ -44,18 +31,7 @@ export function useCurrentAccountTotalBalance() {
 
 export function useAccountTotalBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
-  const discardedInscriptions = useDiscardedInscriptions();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
-  return toFetchState(
-    useGetAccountTotalBalanceQuery({
-      account,
-      protections: {
-        discardedInscriptions,
-        isOrdinalsActive,
-        isRunesActive,
-      },
-    })
-  );
+  return toFetchState(useGetAccountTotalBalanceQuery({ account }));
 }
 
 function useGetAccountAvailableBalanceQuery(request: AccountRequest) {

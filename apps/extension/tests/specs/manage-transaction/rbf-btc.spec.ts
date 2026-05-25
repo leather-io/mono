@@ -15,18 +15,6 @@ import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 
 import { test } from '../../fixtures/fixtures';
 
-const noInscriptionsHtml = `
-  <!doctype html><html><body>
-  <dl><dt>value</dt><dd>20000</dd></dl>
-  </body></html>
-`;
-
-async function mockNoInscriptions(page: import('@playwright/test').Page) {
-  await page.route('**/ordinals.com/**', route =>
-    route.fulfill({ status: 200, contentType: 'text/html', body: noInscriptionsHtml })
-  );
-}
-
 test.describe('Bitcoin RBF increase fee', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
@@ -36,7 +24,6 @@ test.describe('Bitcoin RBF increase fee', () => {
   test('that user can increase fee on native segwit transaction', async ({ page, homePage }) => {
     await mockPendingBitcoinTransactions(page, [mockPendingNativeSegwitBtcTx]);
     await mockBitcoinMainnetBroadcast(page);
-    await mockNoInscriptions(page);
     await mockMixedUtxoRequests(page, [
       {
         txid: mockPendingNativeSegwitBtcTx.vin[0].txid,
@@ -72,7 +59,6 @@ test.describe('Bitcoin RBF increase fee', () => {
   }) => {
     await mockPendingBitcoinTransactions(page, [mockPendingMixedInputBtcTx]);
     await mockBitcoinMainnetBroadcast(page);
-    await mockNoInscriptions(page);
     await mockMixedUtxoRequests(page, [
       {
         txid: mockPendingMixedInputBtcTx.vin[0].txid,

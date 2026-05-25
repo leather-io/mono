@@ -36,20 +36,3 @@ export function useCurrentUtxos() {
   const accountRequest = useAccountRequest();
   return useUtxos(accountRequest);
 }
-
-export function useCurrentNativeSegwitInscribedUtxos() {
-  const accountRequest = useNativeSegwitAccountRequest();
-  const utxos = toFetchState(
-    useGetAccountUtxosQuery({
-      ...accountRequest,
-      protections: {
-        ...accountRequest.protections,
-        discardRunes: true,
-      },
-    })
-  );
-  return {
-    isLoading: utxos.state !== 'success',
-    utxos: utxos.value?.protected ?? [],
-  };
-}

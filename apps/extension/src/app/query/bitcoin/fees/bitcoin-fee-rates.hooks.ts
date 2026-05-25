@@ -4,7 +4,7 @@ import { createBitcoinFeeRatesQueryConfig } from '@leather.io/queries';
 
 import { useUserSettings } from '@app/hooks/use-user-settings';
 
-export interface BitcoinFeeRatesData {
+interface BitcoinFeeRatesData {
   high: { rate: number };
   standard: { rate: number };
   low: { rate: number };

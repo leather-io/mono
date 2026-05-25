@@ -109,11 +109,6 @@ export function useConfigSwapsEnabled() {
   return get(config, 'swapsEnabled', false);
 }
 
-export function useConfigTokensEnabledByDefault(): string[] {
-  const config = useRemoteConfig();
-  return get(config, 'tokensEnabledByDefault', []);
-}
-
 export function useConfigSpamFilterWhitelist(): string[] {
   const config = useRemoteConfig();
   return get(config, 'spamFilterWhitelist', []);

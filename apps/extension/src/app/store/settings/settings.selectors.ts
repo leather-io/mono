@@ -1,15 +1,8 @@
-import { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
 
-import type { InscriptionAsset } from '@leather.io/models';
-import { ensureArray } from '@leather.io/utils';
-
-import { useCurrentAccountInscriptions } from '@app/query/bitcoin/ordinals/inscriptions/inscriptions.query';
 import { RootState } from '@app/store';
-
-import { settingsSlice } from './settings.slice';
 
 function selectSettings(state: RootState) {
   return state.settings;
@@ -61,46 +54,4 @@ const selectNetworkBadgeAlwaysOn = createSelector(
 
 export function useNetworkBadgeAlwaysOn() {
   return useSelector(selectNetworkBadgeAlwaysOn);
-}
-
-const selectDiscardedInscriptions = createSelector(
-  selectSettings,
-  state => state.discardedInscriptions
-);
-
-type InscriptionIdentifier = Pick<InscriptionAsset, 'txid' | 'output' | 'offset'>;
-
-export function useDiscardedInscriptions() {
-  return useSelector(selectDiscardedInscriptions);
-}
-
-export function useCurrentAccountDiscardedInscriptions() {
-  const discardedInscriptions = useSelector(selectDiscardedInscriptions);
-  const dispatch = useDispatch();
-  const currentAccountInscriptions = useCurrentAccountInscriptions();
-
-  function makeInscriptionId({ txid, output: vout, offset }: InscriptionIdentifier) {
-    return [txid, vout, offset].join(':');
-  }
-
-  return useMemo(
-    () => ({
-      inscriptions: currentAccountInscriptions.inscriptions,
-      discardedInscriptions,
-      hasInscriptionBeenDiscarded(inscription: InscriptionIdentifier) {
-        return discardedInscriptions.includes(makeInscriptionId(inscription));
-      },
-      discardInscriptions(inscription: InscriptionIdentifier | InscriptionIdentifier[]) {
-        dispatch(
-          settingsSlice.actions.discardInscriptions(ensureArray(inscription).map(makeInscriptionId))
-        );
-      },
-      recoverInscriptions(inscription: InscriptionIdentifier | InscriptionIdentifier[]) {
-        dispatch(
-          settingsSlice.actions.recoverInscriptions(ensureArray(inscription).map(makeInscriptionId))
-        );
-      },
-    }),
-    [currentAccountInscriptions.inscriptions, discardedInscriptions, dispatch]
-  );
 }

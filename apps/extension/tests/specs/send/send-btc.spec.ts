@@ -1,10 +1,9 @@
 import { TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS } from '@tests/mocks/constants';
-import { mockOrdinalsComApiHtmlResponse } from '@tests/mocks/mock-ordinalscom-api';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { getDisplayerAddress, withNbsp } from '@tests/utils';
 
-import { BESTINSLOT_API_BASE_URL_TESTNET, BtcFeeType } from '@leather.io/models';
+import { BtcFeeType } from '@leather.io/models';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -86,90 +85,6 @@ test.describe('send btc', () => {
         .innerText();
 
       test.expect(fee).toContain(confirmationFee);
-    });
-
-    test('that prevents transaction if it contains inscribed utxo', async ({ sendPage }) => {
-      await sendPage.page.route('**/ordinals.com/**', async route => {
-        return route.fulfill({
-          status: 200,
-          contentType: 'text/html',
-          body: mockOrdinalsComApiHtmlResponse,
-        });
-      });
-      await sendPage.amountInput.fill('0.00006');
-      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);
-
-      await sendPage.previewSendTxButton.click();
-      await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
-
-      await sendPage.clickInfoCardButton();
-
-      const taprootContinueBtn = sendPage.page.locator('text="I understand, continue"');
-      await taprootContinueBtn.click();
-
-      await test.expect(sendPage.inscriptionWarningDialog).toBeVisible();
-    });
-
-    test('that fallbacks to other api provider if main fails', async ({ sendPage }) => {
-      let output = '';
-      let id = '';
-      let index = '';
-
-      await sendPage.page.route('**/ordinals.com/**', async route => {
-        return route.fulfill({
-          status: 500,
-          contentType: 'text/html',
-          body: mockOrdinalsComApiHtmlResponse,
-        });
-      });
-
-      sendPage.page.on('request', request => {
-        const parsedUrl = new URL(request.url());
-        if (parsedUrl.host === 'ordinals.com') {
-          const url = request.url();
-          output = url.split('/').pop() || '';
-          id = output.split(':')[0];
-          index = output.split(':')[1];
-        }
-      });
-
-      await sendPage.page.route(
-        `${BESTINSLOT_API_BASE_URL_TESTNET}/inscription/in_transaction**`,
-        async route => {
-          return route.fulfill({
-            status: 200,
-            contentType: 'application/json',
-            body: JSON.stringify({
-              data: [{ txid: id, output, index, satpoint: output }],
-            }),
-          });
-        }
-      );
-
-      await sendPage.page.route(
-        `${BESTINSLOT_API_BASE_URL_TESTNET}/inscription/single_info_id**`,
-        async route => {
-          return route.fulfill({
-            status: 200,
-            contentType: 'application/json',
-            body: JSON.stringify({
-              data: { txid: id, output, index, satpoint: output },
-            }),
-          });
-        }
-      );
-      await sendPage.amountInput.fill('0.00006');
-      await sendPage.recipientInput.fill(TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS);
-
-      await sendPage.previewSendTxButton.click();
-      await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
-
-      await sendPage.clickInfoCardButton();
-
-      const taprootContinueBtn = sendPage.page.locator('text="I understand, continue"');
-      await taprootContinueBtn.click();
-
-      await test.expect(sendPage.inscriptionWarningDialog).toBeVisible();
     });
   });
 });

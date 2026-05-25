@@ -20,16 +20,6 @@ const LeatherNetworkContext = createContext<NetworkConfiguration | null>(null);
 
 const LeatherEnvironmentContext = createContext<LeatherEnvironment | null>(null);
 
-export function useIsLeatherTestingEnv() {
-  const leatherEnv = useContext(LeatherEnvironmentContext);
-
-  if (!leatherEnv || !leatherEnv.env) {
-    throw new Error('No LeatherEnvironment set, use LeatherQueryProvider to set one');
-  }
-
-  return leatherEnv.env === 'testing';
-}
-
 export function useLeatherNetwork(): NetworkConfiguration {
   const leatherNetwork = useContext(LeatherNetworkContext);
 

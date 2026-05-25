@@ -8,7 +8,6 @@ export enum BitcoinQueryPrefixes {
   GetInscriptionsByAddress = 'get-inscriptions-by-address',
   GetInscription = 'get-inscription',
   GetStampsByAddress = 'get-stamps-by-address',
-  GetBrc20Tokens = 'get-brc20-tokens',
   GetBitcoinFeeEstimates = 'bitcoin-fee-estimates',
   GetInscriptionsByParam = 'get-inscriptions-by-param',
   GetRunesOutputsByAddress = 'get-runes-outputs-by-address',

@@ -11,13 +11,15 @@ export class ExtensionSettingsService implements SettingsService {
       quoteCurrency: 'USD',
       network: selectCurrentNetwork(store.getState()),
       assetVisibility: Object.fromEntries(
-        Object.values(selectTokenState(store.getState()).entities).map(tokenSetting => [
-          serializeAssetId({
-            protocol: tokenSetting.id.includes('::') ? 'sip10' : 'rune',
-            id: tokenSetting.id,
-          }),
-          tokenSetting.enabled,
-        ])
+        Object.values(selectTokenState(store.getState()).entities)
+          .filter(tokenSetting => tokenSetting.id.includes('::'))
+          .map(tokenSetting => [
+            serializeAssetId({
+              protocol: 'sip10',
+              id: tokenSetting.id,
+            }),
+            tokenSetting.enabled,
+          ])
       ),
     };
   }

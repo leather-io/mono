@@ -111,15 +111,15 @@ export class RunesBalancesService {
     signal?: AbortSignal
   ): Promise<RunesAccountBalance> {
     const runesOutputs = [];
-    if (hasBitcoinAddress(request.account)) {
+    if (request.protections?.isRunesActive && hasBitcoinAddress(request.account)) {
       const [taprootRunesOutputs, nativeSegwitRunesOutputs] = await Promise.all([
         this.bisApiClient.fetchRunesValidOutputs(request.account.bitcoin.taprootDescriptor, {
           signal,
-          isRunesActive: request.protections?.isRunesActive,
+          isRunesActive: request.protections.isRunesActive,
         }),
         this.bisApiClient.fetchRunesValidOutputs(request.account.bitcoin.nativeSegwitDescriptor, {
           signal,
-          isRunesActive: request.protections?.isRunesActive,
+          isRunesActive: request.protections.isRunesActive,
         }),
       ]);
       runesOutputs.push(...nativeSegwitRunesOutputs, ...taprootRunesOutputs);

@@ -329,8 +329,3 @@ export function useBitcoinAccountXpubs(accountId: AccountId) {
   const taprootXpub = useBitcoinAccountTaprootXpub(accountId);
   return [nativeSegwitXpub, taprootXpub].filter(xpub => isString(xpub));
 }
-
-export function useCurrentBitcoinAccountXpubs() {
-  const currentAccount = useCurrentAccountId();
-  return useBitcoinAccountXpubs(currentAccount);
-}

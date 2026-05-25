@@ -1,4 +1,4 @@
-import type { InscriptionAsset, Money } from '@leather.io/models';
+import type { Money } from '@leather.io/models';
 
 import type { SwapAsset } from '@app/query/common/alex-sdk/alex-sdk.hooks';
 
@@ -11,12 +11,6 @@ export interface BitcoinSendFormValues {
   recipient: string;
   recipientBnsName: string;
   symbol: string;
-}
-
-export interface OrdinalSendFormValues {
-  feeRate: number;
-  recipient: string;
-  inscription: InscriptionAsset;
 }
 
 // TODO: Remove assetId and optional symbol with legacy send form

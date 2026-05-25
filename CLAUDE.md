@@ -114,6 +114,7 @@ You MUST run these after any code changes. Do not consider a task complete until
 pnpm format
 pnpm lint
 pnpm typecheck
+pnpm --filter @leather.io/extension lint:unused-exports
 ```
 
 If working on mobile, run `pnpm lingui` from `apps/mobile/` before running verification.

@@ -19,6 +19,7 @@ export class InscriptionsService {
     signal?: AbortSignal
   ): Promise<InscriptionAsset[]> {
     if (!request.account.bitcoin) return [];
+    if (!request.protections?.isOrdinalsActive) return [];
 
     try {
       const [taprootInscriptions, nativeSegwitInscriptions] = await Promise.all([
