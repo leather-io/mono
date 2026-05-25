@@ -60,8 +60,10 @@ export const prepareLedgerDeviceStacksAppConnection = prepareLedgerDeviceForAppF
 ) as (args: PrepareLedgerDeviceConnectionArgs) => Promise<StacksApp>;
 
 export function signLedgerStacksTransaction(app: StacksApp) {
-  return async (payload: Buffer, accountIndex: number) =>
-    app.sign(stxDerivationWithAccount.replace('{account}', accountIndex.toString()), payload);
+  return async (payload: Buffer, accountIndex: number) => {
+    console.log('Raw transaction sent to Ledger (Stacks, hex):', payload.toString('hex'));
+    return app.sign(stxDerivationWithAccount.replace('{account}', accountIndex.toString()), payload);
+  };
 }
 
 export function signLedgerStacksUtf8Message(app: StacksApp) {

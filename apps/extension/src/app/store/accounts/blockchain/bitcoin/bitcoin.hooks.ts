@@ -180,6 +180,7 @@ export function useSignLedgerBitcoinTx() {
         xpub: taprootExtendedPublicKey,
       });
 
+      console.log('Raw transaction sent to Ledger (taproot PSBT, base64):', psbt.toBase64());
       const taprootSignatures = await app.signPsbt(psbt.toBase64(), taprootPolicy, null);
 
       addTaprootInputSignaturesToPsbt(psbt, taprootSignatures);
@@ -215,6 +216,10 @@ export function useSignLedgerBitcoinTx() {
         xpub: nativeSegwitExtendedPublicKey,
       });
 
+      console.log(
+        'Raw transaction sent to Ledger (native segwit PSBT, base64):',
+        psbt.toBase64()
+      );
       const nativeSegwitSignatures = await app.signPsbt(psbt.toBase64(), nativeSegwitPolicy, null);
 
       addNativeSegwitSignaturesToPsbt(psbt, nativeSegwitSignatures);
