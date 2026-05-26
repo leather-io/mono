@@ -48,9 +48,8 @@ export enum RouteUrls {
   Receive = 'receive',
   ReceiveStx = 'receive/stx',
   ReceiveBtc = 'receive/btc',
-  ReceiveBtcStamp = 'receive/btc-stamp',
+  ReceiveBtcTaproot = 'receive/btc-taproot',
   ReceiveCollectible = 'receive/collectible',
-  ReceiveCollectibleOrdinal = 'receive/collectible/ordinal',
 
   // Locked wallet route
   Unlock = '/unlock',
@@ -72,13 +71,6 @@ export enum RouteUrls {
   SendStacksSip10Confirmation = '/send/:symbol/confirm',
   SentBtcTxSummary = '/sent/btc/:txId',
   SentStxTxSummary = '/sent/:symbol/:txid',
-
-  // Send ordinal inscriptions
-  SendOrdinalInscription = 'send/ordinal-inscription',
-  SendOrdinalInscriptionChooseFee = 'choose-fee',
-  SendOrdinalInscriptionReview = 'review',
-  SendOrdinalInscriptionSent = 'sent',
-  SendOrdinalInscriptionError = 'error',
 
   // Swap routes
   Swap = '/swap/{chain}/:base/:quote?',

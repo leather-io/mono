@@ -28,9 +28,9 @@ const environmentIcons = {
 };
 
 const devCsp =
-  "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; frame-src https://ordinals.com/ https://*.onramper.com https://*.onramper.dev; frame-ancestors 'none';";
+  "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; frame-src https://*.onramper.com https://*.onramper.dev; frame-ancestors 'none';";
 
-const prodCsp = `default-src 'none'; connect-src *; style-src 'unsafe-inline'; img-src 'self' data: https:; script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; frame-src https://ordinals.com/ https://*.onramper.com; frame-ancestors 'none';`;
+const prodCsp = `default-src 'none'; connect-src *; style-src 'unsafe-inline'; img-src 'self' data: https:; script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; frame-src https://*.onramper.com; frame-ancestors 'none';`;
 
 const contentSecurityPolicyEnvironment = {
   testing: prodCsp,
@@ -68,7 +68,7 @@ const browserSpecificConfig = {
 const manifest = {
   manifest_version: 3,
   author: 'Leather Wallet, LLC',
-  description: 'Leather Bitcoin Wallet - Your Bitcoin Wallet for DeFi, NFTs, Ordinals, and dApps',
+  description: 'Leather Bitcoin Wallet - Your Bitcoin Wallet for DeFi, NFTs, and dApps',
   permissions: ['contextMenus', 'storage', 'unlimitedStorage', 'notifications'],
   commands: {
     _execute_browser_action: {

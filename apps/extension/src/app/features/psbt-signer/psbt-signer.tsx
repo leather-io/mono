@@ -59,8 +59,6 @@ export function PsbtSigner(props: PsbtSignerProps) {
   const psbtTxOutputs = useMemo(() => getPsbtTxOutputs(psbtTx), [psbtTx]);
 
   const {
-    accountInscriptionsBeingTransferred,
-    accountInscriptionsBeingReceived,
     addressNativeSegwitTotal,
     addressTaprootTotal,
     fee,
@@ -77,8 +75,6 @@ export function PsbtSigner(props: PsbtSignerProps) {
   useBreakOnNonCompliantEntity(psbtOutputs.map(output => output.address ?? ''));
 
   const psbtSignerContext: PsbtSignerContext = {
-    accountInscriptionsBeingTransferred,
-    accountInscriptionsBeingReceived,
     addressNativeSegwit,
     addressTaproot,
     addressNativeSegwitTotal,

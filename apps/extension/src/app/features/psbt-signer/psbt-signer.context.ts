@@ -1,13 +1,11 @@
 import { createContext, useContext } from 'react';
 
-import type { InscriptionAsset, Money } from '@leather.io/models';
+import type { Money } from '@leather.io/models';
 
 import { PsbtInput } from './hooks/use-parsed-inputs';
 import { PsbtOutput } from './hooks/use-parsed-outputs';
 
 export interface PsbtSignerContext {
-  accountInscriptionsBeingTransferred: InscriptionAsset[];
-  accountInscriptionsBeingReceived: InscriptionAsset[];
   addressNativeSegwit: string;
   addressTaproot: string;
   addressNativeSegwitTotal: Money;

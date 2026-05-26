@@ -10,24 +10,16 @@ import {
 } from '@leather.io/ui';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { Brc20TokensLoader } from '@app/components/loaders/brc20-tokens-loader';
 import { BtcAssetItemBalanceLoader } from '@app/components/loaders/btc-balance-loader';
-import { Src20TokensLoader } from '@app/components/loaders/src20-tokens-loader';
 import { StxAssetItemBalanceLoader } from '@app/components/loaders/stx-balance-loader';
 import { UsdcxAssetItemBalanceLoader } from '@app/components/loaders/usdcx-balance-loader';
-import { Brc20TokenList } from '@app/features/asset-list/bitcoin/brc20-token-list/brc20-token-list';
-import { RunesAssetList } from '@app/features/asset-list/bitcoin/runes-asset-list/runes-asset-list';
-import { Src20TokenList } from '@app/features/asset-list/bitcoin/src20-token-list/src20-token-list';
 import { StxCryptoAssetItem } from '@app/features/asset-list/stacks/stx-crypo-asset-item/stx-crypto-asset-item';
-import { useFlags } from '@app/features/feature-flags';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useHasLedgerKeys } from '@app/store/ledger/ledger.selectors';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
-import type { AssetFilter } from '../../common/hooks/use-manage-tokens';
 import { ConnectLedgerAssetItemFallback } from './_components/connect-ledger-asset-item-fallback';
 import { BtcCryptoAssetItem } from './bitcoin/btc-crypto-asset-item/btc-crypto-asset-item';
 import { Sip10TokenItem } from './stacks/sip10-token-list/sip10-token-item';
@@ -35,6 +27,7 @@ import { Sip10TokenAssetList } from './stacks/sip10-token-list/sip10-token-list'
 
 export type TokenListVariant = 'interactive' | 'read-only';
 export type AssetRightElementVariant = 'balance' | 'toggle';
+export type AssetFilter = 'all' | 'enabled' | 'disabled';
 
 interface TokenListProps {
   filter?: AssetFilter;
@@ -58,12 +51,8 @@ export function TokenList({
   const currentAccount = useCurrentAccountId();
   const currentStacksAccount = useCurrentStacksAccount();
   const currentBtcNativeSegwitAccount = useCurrentAccountNativeSegwitPayer();
-  const currentBtcTaprootAccount = useCurrentAccountTaprootPayer();
   const isLedger = useHasLedgerKeys();
   const isPrivate = useIsPrivateMode();
-  const { isRunesActive } = useFlags();
-
-  const isReadOnly = variant === 'read-only';
 
   return (
     <Stack>
@@ -140,42 +129,6 @@ export function TokenList({
           assetRightElementVariant={assetRightElementVariant}
           setHasManageableTokens={setHasManageableTokens}
         />
-      )}
-
-      {isRunesActive && currentBtcTaprootAccount && currentBtcNativeSegwitAccount && isReadOnly && (
-        <>
-          <Brc20TokensLoader filter={filter}>
-            {({ tokens, preEnabledTokensIds }) => (
-              <Brc20TokenList
-                tokens={tokens}
-                variant={variant}
-                assetRightElementVariant={assetRightElementVariant}
-                preEnabledTokensIds={preEnabledTokensIds}
-                setHasManageableTokens={setHasManageableTokens}
-              />
-            )}
-          </Brc20TokensLoader>
-          <Src20TokensLoader
-            filter={filter}
-            address={currentBtcNativeSegwitAccount({ changeIndex: 0, addressIndex: 0 }).address}
-          >
-            {({ tokens, preEnabledTokensIds }) => (
-              <Src20TokenList
-                tokens={tokens}
-                assetRightElementVariant={assetRightElementVariant}
-                preEnabledTokensIds={preEnabledTokensIds}
-                setHasManageableTokens={setHasManageableTokens}
-              />
-            )}
-          </Src20TokensLoader>
-          <RunesAssetList
-            accountId={currentAccount}
-            filter={filter}
-            assetRightElementVariant={assetRightElementVariant}
-            onSelectAsset={onSelectAsset}
-            setHasManageableTokens={setHasManageableTokens}
-          />
-        </>
       )}
     </Stack>
   );

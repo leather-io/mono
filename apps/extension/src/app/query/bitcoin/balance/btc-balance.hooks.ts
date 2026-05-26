@@ -2,11 +2,9 @@ import type { AccountId } from '@leather.io/models';
 import type { AccountRequest } from '@leather.io/services';
 import { createBtcBalance, createMoney } from '@leather.io/utils';
 
-import { useFlags } from '@app/features/feature-flags';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useAccountRequest } from '@app/services/accounts/use-account-request';
 import { toFetchState } from '@app/services/fetch-state';
-import { useDiscardedInscriptions } from '@app/store/settings/settings.selectors';
 
 import { useGetBtcAccountBalanceQuery } from './btc-balance.query';
 
@@ -29,33 +27,15 @@ export function useCurrentBtcBalanceWithFallback() {
 
 export function useBtcAccountBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
-  const discardedInscriptions = useDiscardedInscriptions();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
-  return toFetchState(
-    useGetBtcAccountBalanceQuery({
-      account,
-      protections: {
-        discardedInscriptions,
-        isOrdinalsActive,
-        isRunesActive,
-      },
-    })
-  );
+  return toFetchState(useGetBtcAccountBalanceQuery({ account }));
 }
 
 export function useNativeSegwitBtcAccountBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
-  const discardedInscriptions = useDiscardedInscriptions();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
 
   return toFetchState(
     useGetBtcAccountBalanceQuery({
       account,
-      protections: {
-        discardedInscriptions,
-        isOrdinalsActive,
-        isRunesActive,
-      },
       exclusions: { taprootAddresses: true },
     })
   );
@@ -63,17 +43,10 @@ export function useNativeSegwitBtcAccountBalance(accountId: AccountId) {
 
 export function useTaprootBtcAccountBalance(accountId: AccountId) {
   const account = useAccountAddresses(accountId);
-  const discardedInscriptions = useDiscardedInscriptions();
-  const { isOrdinalsActive, isRunesActive } = useFlags();
 
   return toFetchState(
     useGetBtcAccountBalanceQuery({
       account,
-      protections: {
-        discardedInscriptions,
-        isOrdinalsActive,
-        isRunesActive,
-      },
       exclusions: { nativeSegwitAddresses: true },
     })
   );

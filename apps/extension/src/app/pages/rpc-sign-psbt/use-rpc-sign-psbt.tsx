@@ -57,8 +57,7 @@ export function useRpcSignPsbt() {
 
     return await broadcastTx({
       tx,
-      // skip utxos check for psbt txs
-      skipSpendableCheckUtxoIds: 'all',
+      skipTaprootWarning: true,
       async onSuccess(txid) {
         if (!requestId) throw new Error('Invalid request id');
 

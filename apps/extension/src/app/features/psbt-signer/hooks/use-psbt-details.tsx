@@ -10,7 +10,6 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useParsedInputs } from './use-parsed-inputs';
 import { useParsedOutputs } from './use-parsed-outputs';
-import { usePsbtInscriptions } from './use-psbt-inscriptions';
 import { usePsbtTotals } from './use-psbt-totals';
 
 interface UsePsbtDetailsArgs {
@@ -42,9 +41,6 @@ export function usePsbtDetails({ inputs, indexesToSign, outputs }: UsePsbtDetail
     parsedOutputs,
   });
 
-  const { accountInscriptionsBeingTransferred, accountInscriptionsBeingReceived } =
-    usePsbtInscriptions(parsedInputs, parsedOutputs);
-
   const defaultToAdvancedView = useCallback(() => {
     const noInputs = !inputs.length;
     const noOutputs = !outputs.length;
@@ -58,8 +54,6 @@ export function usePsbtDetails({ inputs, indexesToSign, outputs }: UsePsbtDetail
   }, [psbtInputsTotal, psbtOutputsTotal]);
 
   return {
-    accountInscriptionsBeingTransferred,
-    accountInscriptionsBeingReceived,
     addressNativeSegwitTotal: subtractMoney(inputsTotalNativeSegwit, outputsTotalNativeSegwit),
     addressTaprootTotal: subtractMoney(inputsTotalTaproot, outputsTotalTaproot),
     fee,

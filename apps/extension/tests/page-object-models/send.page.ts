@@ -31,7 +31,6 @@ export class SendPage {
   readonly feeToBePaid: Locator;
   readonly infoCardButton: Locator;
   readonly broadcastErrorTitle: Locator;
-  readonly inscriptionWarningDialog: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -71,9 +70,6 @@ export class SendPage {
     this.feeToBePaid = page.getByTestId(SharedComponentsSelectors.FeeToBePaidLabel);
     this.infoCardButton = page.getByTestId(SharedComponentsSelectors.InfoCardButton);
     this.broadcastErrorTitle = page.getByTestId(SharedComponentsSelectors.BroadcastErrorTitle);
-    this.inscriptionWarningDialog = page.getByTestId(
-      SendCryptoAssetSelectors.InscriptionWarningDialog
-    );
   }
 
   async selectBtcAndGoToSendForm() {
@@ -124,19 +120,6 @@ export class SendPage {
 
   async waitForFeeRow() {
     await this.page.getByTestId(SharedComponentsSelectors.FeeRow).waitFor({ state: 'attached' });
-  }
-
-  async selectInscription() {
-    const inscriptions = this.page.getByTestId('collectible-card-inscription');
-    const count = await inscriptions.count();
-    if (count === 1) {
-      await inscriptions.hover();
-      await this.page.getByTestId('inscription-card-menu-trigger').click({ force: true });
-    } else {
-      await inscriptions.nth(0).hover();
-      await this.page.getByTestId('inscription-card-menu-trigger').nth(0).click({ force: true });
-    }
-    await this.page.getByTestId('inscription-menu-send').click({ force: true });
   }
 
   async confirmSendTransaction() {

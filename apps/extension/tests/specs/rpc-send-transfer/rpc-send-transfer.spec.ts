@@ -1,15 +1,7 @@
 import { BrowserContext, Page } from '@playwright/test';
-import {
-  TEST_ACCOUNT_1_TAPROOT_ADDRESS,
-  TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
-} from '@tests/mocks/constants';
+import { TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS } from '@tests/mocks/constants';
 import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoin-tx';
-import { mockMainnetTestAccountInscriptionsRequests } from '@tests/mocks/mock-inscriptions-bis';
 import { mockLeatherApiRequests } from '@tests/mocks/mock-leather-api';
-import {
-  mockMainnetNsTransactionsTestAccount,
-  mockMixedUtxoRequests,
-} from '@tests/mocks/mock-utxos';
 
 import type { RpcParams, sendTransfer } from '@leather.io/rpc';
 
@@ -27,15 +19,6 @@ const baseParams = {
     },
   ],
   network: 'testnet4',
-};
-
-const taprootOnlyUtxo = {
-  txid: 'aa11bb22cc33dd44ee55ff6677889900aabbccddeeff00112233445566778899',
-  vout: 0,
-  value: '100000',
-  height: 810200,
-  address: TEST_ACCOUNT_1_TAPROOT_ADDRESS,
-  path: "m/86'/0'/0'/0/0",
 };
 
 function clickActionButton(context: BrowserContext) {
@@ -111,32 +94,6 @@ test.describe('RPC: sendTransfer', () => {
         code: 4001,
         message: 'User rejected request',
       },
-    });
-  });
-});
-
-test.describe('RPC: sendTransfer with taproot UTXOs', () => {
-  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
-    await globalPage.setupAndUseApiCalls(extensionId);
-    await mockMixedUtxoRequests(page, [taprootOnlyUtxo]);
-    await mockMainnetTestAccountInscriptionsRequests(page, []);
-    await onboardingPage.signInWithTestAccount(extensionId);
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
-  });
-
-  test('that sendTransfer broadcasts with taproot UTXOs', async ({ page, context }) => {
-    void mockPopupRequests(context);
-
-    const [result] = await Promise.all([
-      openSendTransfer(page)(baseParams),
-      approveAndAcceptTaprootWarning(context),
-    ]);
-
-    delete result.id;
-
-    test.expect(result).toEqual({
-      jsonrpc: '2.0',
-      result: { txid: mockMainnetNsTransactionsTestAccount[0].txid },
     });
   });
 });
