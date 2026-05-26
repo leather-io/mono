@@ -26,13 +26,6 @@ export const querySettingsDepsRegistry = {
   'sip10-balances-service--get-sip10-balance-by-asset-id': ['currency', 'network'],
   'sip10-balances-service--get-sip10-address-balance': ['currency', 'network', 'assetVisibility'],
   'sip10-balances-service--get-sip10-account-balance': ['currency', 'network', 'assetVisibility'],
-  'runes-balances-service--get-runes-account-balance': ['currency', 'network', 'assetVisibility'],
-  'runes-balances-service--get-runes-aggregate-balance': ['currency', 'network', 'assetVisibility'],
-  'runes-balances-service--get-rune-balance-by-rune-name': [
-    'currency',
-    'network',
-    'assetVisibility',
-  ],
   'account-balances-service--get-total-balance': ['currency', 'network', 'assetVisibility'],
   'account-balances-service--get-available-balance': ['currency', 'network', 'assetVisibility'],
   'account-balances-service--get-unlocked-balance': ['currency', 'network', 'assetVisibility'],
