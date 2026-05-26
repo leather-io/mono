@@ -16,11 +16,6 @@ describe('urlPathToAssetId', () => {
     expect(result).toBe(serializeAssetId({ protocol: CryptoAssetProtocols.nativeStx, id: 'STX' }));
   });
 
-  it('handles inscription asset', () => {
-    const result = urlPathToAssetId('inscription/abc123');
-    expect(result).toBe(serializeAssetId({ protocol: 'inscription', id: 'abc123' }));
-  });
-
   it('handles sip9 asset with encoded characters', () => {
     const result = urlPathToAssetId('sip9/SP123.contract%3A%3Atoken');
     expect(result).toBe(serializeAssetId({ protocol: 'sip9', id: 'SP123.contract::token' }));

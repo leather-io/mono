@@ -104,7 +104,6 @@ export * from './settings-slider-icon.web';
 export * from './square-lines-bottom-icon.web';
 export * from './stacks-icon.web';
 export * from './stacks-filled-circle-icon.web';
-export * from './stamps-collection-icon.web';
 export * from './star-icon.web';
 export * from './suitcase-icon.web';
 export * from './sun-icon.web';
