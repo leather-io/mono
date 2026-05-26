@@ -23,13 +23,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       bundleIdentifier: 'io.leather.mobilewallet',
       buildNumber: version,
       supportsTablet: false,
-      associatedDomains: ['applinks:connect.leather.io'],
-      entitlements: {
-        'com.apple.developer.associated-domains': [
-          'applinks:connect.leather.io',
-          'webcredentials:connect.leather.io',
-        ],
-      },
       infoPlist: {
         NSCameraUsageDescription:
           'This app uses the camera to scan QR codes for sending transactions.',
@@ -72,17 +65,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ...config.android,
       package: 'io.leather.mobilewallet',
       edgeToEdgeEnabled: true,
-      intentFilters: [
-        {
-          action: 'VIEW',
-          category: ['DEFAULT', 'BROWSABLE'],
-          data: {
-            scheme: 'https',
-            host: 'connect.leather.io',
-          },
-          autoVerify: true,
-        },
-      ],
       adaptiveIcon: {
         foregroundImage: './src/assets/adaptive-icon.png',
         backgroundColor: '#12100F',
