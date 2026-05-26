@@ -91,7 +91,13 @@ export function StackingInfoGridLayout({ cells, ...props }: StackingInfoGridLayo
         mt="0"
         width="100%"
         display={['none', 'none', 'grid']}
-        gridTemplateColumns="minmax(0, 1fr)"
+        gridTemplateColumns={[
+          'minmax(0, 1fr)',
+          'minmax(0, 1fr)',
+          'minmax(0, 1fr)',
+          'minmax(0, 1fr)',
+          'repeat(2, minmax(0, 1fr))',
+        ]}
         gridTemplateRows="auto"
         height="fit-content"
       >

@@ -80,9 +80,9 @@ function PoolAddressCell({ rewardProtocol }: RewardProtocolCellProps) {
       name="Pool address"
       value={
         <VStack gap="space.02" alignItems="stretch" overflow="hidden">
-          <CopyAddress address={rewardProtocol.poolAddress} />
+          <CopyAddress address={rewardProtocol.poolAddress} full />
           {rewardProtocol.poolRewardAddress && (
-            <CopyAddress address={rewardProtocol.poolRewardAddress} />
+            <CopyAddress address={rewardProtocol.poolRewardAddress} full />
           )}
         </VStack>
       }
@@ -102,7 +102,7 @@ function UserRewardAddressCell({ address }: UserRewardAddressCellProps) {
     <ValueDisplayer
       gap="space.04"
       name="My reward address"
-      value={<CopyAddress address={address} />}
+      value={<CopyAddress address={address} full />}
     />
   );
 }
