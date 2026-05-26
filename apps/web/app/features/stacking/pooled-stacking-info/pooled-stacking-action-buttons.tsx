@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 
 import { Flex, FlexProps } from 'leather-styles/jsx';
+import { StopPoolingIcon } from '~/components/icons/stop-pooling-icon';
 import { useRevokeDelegateStxMutation } from '~/features/stacking/pooled-stacking-info/use-revoke-delegate-stx';
 import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 
@@ -29,14 +30,15 @@ export function PooledStackingActionButtons({
   return (
     <Flex gap="space.04" {...flexProps}>
       <Button
-        width="220px"
-        variant="outline"
+        size="md"
+        variant="ghost"
+        iconStart={<StopPoolingIcon width="16" height="16" />}
         onClick={handleStopStackingClick}
         disabled={isPending}
       >
         Stop pooling
       </Button>
-      <Button width="220px" onClick={handleIncreaseStackingClick}>
+      <Button size="md" onClick={handleIncreaseStackingClick}>
         Increase pooling amount
       </Button>
     </Flex>
