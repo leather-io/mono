@@ -59,7 +59,11 @@ export class StackingDaoStStxService implements YieldProductService {
 
     const [ftBalances, nftHoldings] = await Promise.all([
       this.hiroStacksApiClient.getAddressFtBalances(account.stacks.stxAddress, { signal }),
-      this.hiroStacksApiClient.getNftHoldings(account.stacks.stxAddress, { signal }),
+      this.hiroStacksApiClient.getNftHoldings(
+        account.stacks.stxAddress,
+        { allPages: true, stopAfter: 5 },
+        { signal }
+      ),
     ]);
 
     const [ststxHolding, withdrawals] = await Promise.all([

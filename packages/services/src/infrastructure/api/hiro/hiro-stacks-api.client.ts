@@ -381,18 +381,22 @@ export class HiroStacksApiClient {
         );
   }
 
-  public async getNftHoldings(
+  private async getNftHoldingsPage(
     principal: string,
+    page: HiroPageRequest,
     { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<HiroNftHolding[]> {
-    const limit = 50;
-
-    const fetchPage = async function (this: HiroStacksApiClient, page: HiroPageRequest) {
+  ): Promise<NonFungibleTokenHoldingsList> {
+    const pageParams = new URLSearchParams({
+      principal,
+      limit: page.limit.toString(),
+      offset: page.offset.toString(),
+    });
+    const fetchFn = async () => {
       const res = await this.limiter.add(
         RateLimiterType.HiroStacks,
         () =>
           this._axios.get<NonFungibleTokenHoldingsList>(
-            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tokens/nft/holdings?principal=${principal}&limit=${page.limit}&offset=${page.offset}`,
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tokens/nft/holdings?${pageParams.toString()}`,
             { signal }
           ),
         {
@@ -402,25 +406,31 @@ export class HiroStacksApiClient {
         }
       );
       return res.data;
-    }.bind(this);
-
-    async function fetchFn() {
-      return fetchHiroPages(fetchPage, {
-        limit,
-        pagesRequest: { allPages: true, stopAfter: 5 },
-      });
-    }
-
+    };
     return skipCache
       ? await fetchFn()
       : await this.cache.fetchWithCache(
           [
             'hiro-stacks-get-nft-holdings',
-            principal,
             selectStacksChainId(this.settings.getSettings()),
+            pageParams.toString(),
           ],
           fetchFn
         );
+  }
+
+  public async getNftHoldings(
+    principal: string,
+    pages: HiroMultiPageRequest,
+    { signal }: ApiRequestOptions = {}
+  ): Promise<HiroNftHolding[]> {
+    return fetchHiroPages<HiroNftHolding>(
+      page => this.getNftHoldingsPage(principal, page, { signal }),
+      {
+        limit: 200,
+        pagesRequest: pages,
+      }
+    );
   }
 
   public async callReadOnlyFunction(
