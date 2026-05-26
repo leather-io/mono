@@ -53,9 +53,11 @@ describe(Sip9sService.name, () => {
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 
-      expect(mockStacksApiClient.getNftHoldings).toHaveBeenCalledWith('ST123', {
-        signal: undefined,
-      });
+      expect(mockStacksApiClient.getNftHoldings).toHaveBeenCalledWith(
+        'ST123',
+        { allPages: true, stopAfter: 10 },
+        { signal: undefined }
+      );
       expect(mockSip9AssetService.getAsset).toHaveBeenCalledTimes(2);
       expect(sip9s).toHaveLength(2);
     });
