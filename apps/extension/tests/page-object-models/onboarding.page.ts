@@ -61,10 +61,10 @@ export function getTestSoftwareAccountDefaultWalletState() {
     },
     networks: { ids: [], entities: {}, currentNetworkId: 'mainnet' },
     settings: {
-      discardedInscriptions: [],
       userSelectedTheme: 'system',
       dismissedMessages: [],
       dismissedPromoIndexes: [],
+      discardedInscriptions: [],
       isNotificationsEnabled: true,
     },
     manageTokens: { entities: {}, ids: [] },
@@ -282,7 +282,6 @@ export function makeLedgerTestAccountWalletState(keysToInclude: SupportedBlockch
     },
     keychains,
     networks: { currentNetworkId: 'mainnet', entities: {}, ids: [] },
-    ordinals: {},
     settings: { dismissedMessages: [], userSelectedTheme: 'system' },
     appPermissions: {
       entities: {},

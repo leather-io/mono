@@ -32,15 +32,8 @@ export async function setupFeatureFlags() {
     console.log(e);
   });
 }
-export function useCollectiblesFlag() {
-  return useBoolVariation('release_collectibles_feature', false);
-}
 export function useCollectibleDetailsFlag() {
   return useBoolVariation('collectible_details', false);
-}
-
-export function useOrdinalsFlag() {
-  return useBoolVariation('release_ordinals_feature', false);
 }
 
 export function useWaitlistFlag() {

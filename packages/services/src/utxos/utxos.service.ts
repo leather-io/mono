@@ -114,8 +114,8 @@ export class UtxosService {
     {
       discardedInscriptions = [],
       discardRunes = false,
-      isRunesActive = true,
-      isOrdinalsActive = true,
+      isRunesActive = false,
+      isOrdinalsActive = false,
     }: AccountRequestUtxoProtectionOptions,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {

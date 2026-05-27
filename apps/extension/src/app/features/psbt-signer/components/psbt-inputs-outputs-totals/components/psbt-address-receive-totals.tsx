@@ -6,7 +6,6 @@ import { usePsbtSignerContext } from '@app/features/psbt-signer/psbt-signer.cont
 import { useCalculateBitcoinFiatValue } from '@app/query/common/market-data/market-data.hooks';
 
 import { PsbtAddressTotalItem } from './psbt-address-total-item';
-import { PsbtInscription } from './psbt-inscription';
 
 interface PsbtAddressTotalsProps {
   showNativeSegwitTotal: boolean;
@@ -16,20 +15,13 @@ export function PsbtAddressReceiveTotals({
   showNativeSegwitTotal,
   showTaprootTotal,
 }: PsbtAddressTotalsProps) {
-  const {
-    accountInscriptionsBeingReceived,
-    addressNativeSegwit,
-    addressNativeSegwitTotal,
-    addressTaproot,
-    addressTaprootTotal,
-  } = usePsbtSignerContext();
+  const { addressNativeSegwit, addressNativeSegwitTotal, addressTaproot, addressTaprootTotal } =
+    usePsbtSignerContext();
   const calculateBitcoinFiatValue = useCalculateBitcoinFiatValue();
-
-  const isReceivingInscriptions = accountInscriptionsBeingReceived?.length > 0;
 
   return (
     <>
-      {!isReceivingInscriptions && showNativeSegwitTotal ? (
+      {showNativeSegwitTotal ? (
         <PsbtAddressTotalItem
           hoverLabel={addressNativeSegwit}
           subtitle={truncateMiddle(addressNativeSegwit)}
@@ -39,7 +31,7 @@ export function PsbtAddressReceiveTotals({
           value={removeMinusSign(formatCurrency(addressNativeSegwitTotal))}
         />
       ) : null}
-      {!isReceivingInscriptions && showTaprootTotal ? (
+      {showTaprootTotal ? (
         <PsbtAddressTotalItem
           hoverLabel={addressTaproot}
           subtitle={truncateMiddle(addressTaproot)}
@@ -47,11 +39,6 @@ export function PsbtAddressReceiveTotals({
           value={removeMinusSign(formatCurrency(addressTaprootTotal))}
         />
       ) : null}
-      {isReceivingInscriptions
-        ? accountInscriptionsBeingReceived.map(inscription => (
-            <PsbtInscription key={inscription.id} inscription={inscription} />
-          ))
-        : null}
     </>
   );
 }

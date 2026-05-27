@@ -224,7 +224,6 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
       analytics.track('broadcast_transaction', { symbol: 'BTC' });
 
       const txid = await broadcastTx({
-        skipSpendableCheckUtxoIds: 'all',
         tx: signedTx.hex,
       });
       if (txid) {

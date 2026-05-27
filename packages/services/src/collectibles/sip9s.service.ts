@@ -25,6 +25,7 @@ export class Sip9sService {
     try {
       const nftHoldings = await this.stacksApiClient.getNftHoldings(
         request.account.stacks.stxAddress,
+        { allPages: true, stopAfter: 10 },
         { signal }
       );
 

@@ -3,7 +3,6 @@ import {
   TEST_ACCOUNT_1_TAPROOT_ADDRESS,
   TEST_ACCOUNT_2_TAPROOT_ADDRESS,
 } from '@tests/mocks/constants';
-import { mockMainnetTestAccountInscriptionsRequests } from '@tests/mocks/mock-inscriptions-bis';
 import { mockMixedUtxoRequests } from '@tests/mocks/mock-utxos';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 
@@ -31,7 +30,6 @@ test.describe('send btc send max with mixed utxos', () => {
   test.beforeEach(async ({ page, extensionId, globalPage, homePage, onboardingPage, sendPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await mockMixedUtxoRequests(page, [taprootUtxo, nativeSegwitUtxo]);
-    await mockMainnetTestAccountInscriptionsRequests(page, []);
     await onboardingPage.signInWithTestAccount(extensionId);
     await homePage.sendButton.click();
     await sendPage.selectBtcAndGoToSendForm();

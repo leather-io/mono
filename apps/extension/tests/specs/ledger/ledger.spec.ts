@@ -15,7 +15,7 @@ const specs = {
 };
 
 async function interceptBitcoinRequests(homePage: HomePage) {
-  const requestPromise = homePage.page.waitForRequest(/bestinslot|mempool\.space|inscriptions/, {
+  const requestPromise = homePage.page.waitForRequest(/bestinslot|mempool\.space/, {
     timeout: 1000,
   });
   return requestPromise;

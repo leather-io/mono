@@ -4,18 +4,10 @@ import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { css } from 'leather-styles/css';
 import { Stack } from 'leather-styles/jsx';
 
-import {
-  Avatar,
-  Brc20AvatarIcon,
-  BtcAvatarIcon,
-  RunesAvatarIcon,
-  Src20AvatarIcon,
-  StxAvatarIcon,
-} from '@leather.io/ui';
+import { Avatar, BtcAvatarIcon, StxAvatarIcon } from '@leather.io/ui';
 import { isString } from '@leather.io/utils';
 
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
-import { useFlags } from '@app/features/feature-flags';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useAlexSwappableAssets } from '@app/query/common/alex-sdk/alex-sdk.hooks';
 
@@ -27,6 +19,7 @@ interface ReceiveTokensProps {
   btcAddressTaproot: string;
   stxAddress: string;
   onClickQrBtc(): void;
+  onClickQrBtcTaproot(): void;
   onClickQrStx(): void;
 }
 export function ReceiveTokens({
@@ -34,10 +27,10 @@ export function ReceiveTokens({
   btcAddressTaproot,
   stxAddress,
   onClickQrBtc,
+  onClickQrBtcTaproot,
   onClickQrStx,
 }: ReceiveTokensProps) {
   const toast = useToast();
-  const { isRunesActive } = useFlags();
   const { data: swapAssets = [] } = useAlexSwappableAssets(stxAddress);
 
   const receivableAssets = useMemo(
@@ -65,6 +58,17 @@ export function ReceiveTokens({
         title="Bitcoin (BTC)"
       />
       <ReceiveItem
+        address={btcAddressTaproot}
+        icon={<BtcAvatarIcon size="xl" />}
+        dataTestId={HomePageSelectors.ReceiveBtcTaprootQrCodeBtn}
+        onCopyAddress={async () => {
+          await copyToClipboard(btcAddressTaproot);
+          toast.success('Copied to clipboard!');
+        }}
+        onClickQrCode={onClickQrBtcTaproot}
+        title="Bitcoin Taproot"
+      />
+      <ReceiveItem
         address={stxAddress}
         icon={<StxAvatarIcon size="xl" />}
         dataTestId={HomePageSelectors.ReceiveStxQrCodeBtn}
@@ -75,41 +79,6 @@ export function ReceiveTokens({
         onClickQrCode={onClickQrStx}
         title="Stacks (STX)"
       />
-      {isRunesActive && (
-        <ReceiveItem
-          address={btcAddressTaproot}
-          icon={<Brc20AvatarIcon />}
-          dataTestId={HomePageSelectors.ReceiveBtcTaprootQrCodeBtn}
-          onCopyAddress={async () => {
-            await copyToClipboard(btcAddressTaproot);
-            toast.success('Copied to clipboard!');
-          }}
-          title="BRC-20"
-        />
-      )}
-      {isRunesActive && (
-        <ReceiveItem
-          address={btcAddressNativeSegwit}
-          icon={<Src20AvatarIcon />}
-          onCopyAddress={async () => {
-            await copyToClipboard(btcAddressNativeSegwit);
-            toast.success('Copied to clipboard!');
-          }}
-          title="SRC-20"
-        />
-      )}
-      {isRunesActive && (
-        <ReceiveItem
-          address={btcAddressTaproot}
-          icon={<RunesAvatarIcon />}
-          // onClickQrCode={onClickQrStamp}
-          onCopyAddress={async () => {
-            await copyToClipboard(btcAddressTaproot);
-            toast.success('Copied to clipboard!');
-          }}
-          title="Runes"
-        />
-      )}
 
       {receivableAssets.map(asset => (
         <ReceiveItem
@@ -122,7 +91,6 @@ export function ReceiveTokens({
               asset.icon
             )
           }
-          // onClickQrCode={() => null}
           onCopyAddress={async () => {
             await copyToClipboard(asset.address);
             toast.success('Copied to clipboard!');

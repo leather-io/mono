@@ -59,14 +59,19 @@ describe(InscriptionsService.name, () => {
         },
       };
 
-      const inscriptions = await inscriptionsService.getAccountInscriptions({ account });
+      const inscriptions = await inscriptionsService.getAccountInscriptions({
+        account,
+        protections: { isOrdinalsActive: true },
+      });
 
       expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(2);
       expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledWith('native1', {
         signal: undefined,
+        isOrdinalsActive: true,
       });
       expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledWith('desc1', {
         signal: undefined,
+        isOrdinalsActive: true,
       });
       expect(inscriptions).toHaveLength(4);
     });
@@ -80,7 +85,10 @@ describe(InscriptionsService.name, () => {
         },
       };
 
-      const inscriptions = await inscriptionsService.getAccountInscriptions({ account });
+      const inscriptions = await inscriptionsService.getAccountInscriptions({
+        account,
+        protections: { isOrdinalsActive: true },
+      });
 
       // Each descriptor returns both inscriptions, combined and sorted
       expect(inscriptions).toHaveLength(4);
@@ -97,7 +105,10 @@ describe(InscriptionsService.name, () => {
         stacks: { stxAddress: 'ST123' },
       };
 
-      const inscriptions = await inscriptionsService.getAccountInscriptions({ account });
+      const inscriptions = await inscriptionsService.getAccountInscriptions({
+        account,
+        protections: { isOrdinalsActive: true },
+      });
 
       expect(mockBisApiClient.fetchInscriptions).not.toHaveBeenCalled();
       expect(inscriptions).toHaveLength(0);
@@ -114,12 +125,14 @@ describe(InscriptionsService.name, () => {
 
       const inscriptions = await inscriptionsService.getAccountInscriptions({
         account,
+        protections: { isOrdinalsActive: true },
         exclusions: { nativeSegwitAddresses: true },
       });
 
       expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(1);
       expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledWith('desc1', {
         signal: undefined,
+        isOrdinalsActive: true,
       });
       expect(inscriptions).toHaveLength(2);
     });
@@ -135,12 +148,14 @@ describe(InscriptionsService.name, () => {
 
       const inscriptions = await inscriptionsService.getAccountInscriptions({
         account,
+        protections: { isOrdinalsActive: true },
         exclusions: { taprootAddresses: true },
       });
 
       expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(1);
       expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledWith('native1', {
         signal: undefined,
+        isOrdinalsActive: true,
       });
       expect(inscriptions).toHaveLength(2);
     });
@@ -155,7 +170,10 @@ describe(InscriptionsService.name, () => {
         new Error('BIS API error')
       );
 
-      const inscriptions = await inscriptionsService.getAccountInscriptions({ account });
+      const inscriptions = await inscriptionsService.getAccountInscriptions({
+        account,
+        protections: { isOrdinalsActive: true },
+      });
 
       expect(inscriptions).toHaveLength(0);
     });
@@ -174,7 +192,10 @@ describe(InscriptionsService.name, () => {
         },
       };
 
-      const inscriptions = await inscriptionsService.getAccountInscriptions({ account });
+      const inscriptions = await inscriptionsService.getAccountInscriptions({
+        account,
+        protections: { isOrdinalsActive: true },
+      });
 
       expect(inscriptions).toHaveLength(1);
       expect(inscriptions[0]).toMatchObject({

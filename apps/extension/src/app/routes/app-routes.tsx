@@ -39,7 +39,6 @@ import { WelcomePage } from '@app/pages/onboarding/welcome/welcome';
 import { RequestError } from '@app/pages/request-error/request-error';
 import { SellPage } from '@app/pages/sell/sell';
 import { BroadcastError } from '@app/pages/send/broadcast-error/broadcast-error';
-import { sendOrdinalRoutes } from '@app/pages/send/ordinal-inscription/ordinal-routes';
 import { sendCryptoAssetFormRoutes } from '@app/pages/send/send-crypto-asset-form/send-crypto-asset-form.routes';
 import { SettingsPage } from '@app/pages/settings/settings';
 import {
@@ -53,7 +52,6 @@ import { Unlock } from '@app/pages/unlock';
 import { ViewSecretKey } from '@app/pages/view-secret-key/view-secret-key';
 import { AccountGate } from '@app/routes/account-gate';
 import { ReceiveModalWrapper } from '@app/routes/components/receive-modal-wrapper';
-import { SendOrdinalModalWrapper } from '@app/routes/components/send-ordinal-modal-wrapper';
 import { receiveRoutes } from '@app/routes/receive-routes';
 import { legacyRequestRoutes } from '@app/routes/request-routes';
 import { rpcRequestRoutes } from '@app/routes/rpc-routes';
@@ -81,16 +79,13 @@ export const homePageModalRoutes = (
 );
 
 function useAppRoutes() {
-  const { releaseOnramperBuy, releaseOnramperSell, swapRevamp, isOrdinalsActive } = useFlags();
+  const { releaseOnramperBuy, releaseOnramperSell, swapRevamp } = useFlags();
 
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
       <Route element={<Container />}>
         <Route key="error" errorElement={<RouterErrorBoundary />}>
           <Route element={<ReceiveModalWrapper />}>{receiveRoutes}</Route>
-          {isOrdinalsActive && (
-            <Route element={<SendOrdinalModalWrapper />}>{sendOrdinalRoutes}</Route>
-          )}
           <Route
             element={
               <>

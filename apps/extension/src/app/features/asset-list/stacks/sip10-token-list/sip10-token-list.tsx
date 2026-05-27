@@ -6,13 +6,12 @@ import { USDCX_ASSET_ID_MAINNET, USDCX_ASSET_ID_TESTNET } from '@leather.io/cons
 import type { AccountId } from '@leather.io/models';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { type AssetFilter } from '@app/common/hooks/use-manage-tokens';
 import {
   useManagedSip10Tools,
   useSip10AccountBalance,
 } from '@app/query/stacks/sip10/sip10-balance.hooks';
 
-import type { AssetRightElementVariant } from '../../token-list';
+import type { AssetFilter, AssetRightElementVariant } from '../../token-list';
 import { Sip10TokenItem } from './sip10-token-item';
 
 function isUsdcxAssetId(assetId: string) {

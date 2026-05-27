@@ -31,7 +31,6 @@ import {
 } from '@app/components/info-card/info-card';
 import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { useInscribedSpendableUtxos } from '@app/features/discarded-inscriptions/use-inscribed-spendable-utxos';
 import { useBitcoinBroadcastTransaction } from '@app/query/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
@@ -83,12 +82,9 @@ export function BtcSendFormConfirmation() {
   });
   const summaryFee = formatCurrency(createMoney(Number(fee), symbol), { preset: 'pad-decimals' });
 
-  const utxosOfSpendableInscriptions = useInscribedSpendableUtxos();
-
   async function initiateTransaction() {
     setIsBroadcasting(true);
     await broadcastTx({
-      skipSpendableCheckUtxoIds: utxosOfSpendableInscriptions.map(utxo => utxo.txid),
       tx: transaction.hex,
       async onSuccess(txid) {
         analytics.track('broadcast_transaction', {

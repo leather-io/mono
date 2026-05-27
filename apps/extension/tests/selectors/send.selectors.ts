@@ -31,9 +31,5 @@ export enum SendCryptoAssetSelectors {
   HighFeeWarningSheet = 'high-fee-warning-sheet',
   HighFeeWarningSheetSubmit = 'high-fee-warning-sheet-submit',
 
-  // inscription
-  Inscription = 'inscription',
-  InscriptionSendButton = 'inscription-send-button',
-  InscriptionWarningDialog = 'inscription-warning-dialog',
   TaprootUtxoWarningDialog = 'taproot-utxo-warning-dialog',
 }

@@ -100,7 +100,6 @@ function setWalletEncryptionPassword(args: {
 
           const btcAddress = getNativeSegwitMainnetAddressFromMnemonic(secretKey)(index);
           const hasBtcBalance = await doesBitcoinAddressHaveBalance(btcAddress.address!);
-          // TODO: add inscription check here also?
           return hasStxBalance || hasNames || hasBtcBalance;
         },
       }).then(recursiveActivityIndex => {
