@@ -1,7 +1,7 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import type { TransactionInput } from '@scure/btc-signer/psbt';
 
-import type { BitcoinAddress, BitcoinNetworkModes, InscriptionAsset } from '@leather.io/models';
+import type { BitcoinAddress, BitcoinNetworkModes } from '@leather.io/models';
 import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
@@ -10,8 +10,6 @@ import { getBitcoinInputAddress, getBitcoinInputValue } from '../utils/bitcoin.u
 export interface PsbtInput {
   address: BitcoinAddress;
   index?: number;
-  // TODO: inject inscription later on. getParsedInputs should be a pure function
-  inscription?: InscriptionAsset;
   isMutable: boolean;
   toSign: boolean;
   txid: string;
@@ -61,7 +59,6 @@ export function getParsedInputs({
       index: input.index,
       bip32Derivation: input.bip32Derivation,
       tapBip32Derivation: input.tapBip32Derivation,
-      // inscription: inscriptions[i],
       isMutable: canChange,
       toSign: toSignAll || toSignIndex,
       txid: input.txid ? bytesToHex(input.txid) : '',

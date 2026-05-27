@@ -17,7 +17,6 @@ export * from './fees/bitcoin-fees.model';
 export * from './fees/fees.model';
 export * from './fees/stacks-fees.model';
 export * from './fees/transaction-fees.model';
-export * from './inscription-mime-type.model';
 export * from './market.model';
 export * from './money.model';
 export * from './network/network.model';

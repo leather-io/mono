@@ -22,7 +22,6 @@ export function useGetAccountUtxosQuery(request: AccountRequest) {
       request.account.id.fingerprint,
       request.account.id.accountIndex,
       request.exclusions,
-      request.protections,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getUtxosService().getAccountUtxos(request, signal),

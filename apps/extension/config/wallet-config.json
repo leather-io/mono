@@ -85,12 +85,6 @@
   },
   "tokenTransferFeeEstimations": [200, 400, 800],
   "nftMetadataEnabled": true,
-  "ordinalsbot": {
-    "integrationEnabled": true,
-    "mainnetApiUrl": "https://api2.ordinalsbot.com",
-    "signetApiUrl": "https://signet.ordinalsbot.com"
-  },
-  "runesEnabled": true,
   "swapsEnabled": true,
   "sbtc": {
     "enabled": true,
@@ -110,12 +104,6 @@
     }
   },
   "tokensEnabledByDefault": [
-    "DOGGOTOTHEMOON",
-    "RSICGENESISRUNE",
-    "PUPSWORLDPEACE",
-    "UNCOMMONGOODS",
-    "USDHUSDHUSDHUSDH",
-    "SUSDHSUSDHSUSDHSUSDH",
     "SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx::usdcx-token",
     "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usdcx::usdcx-token",
     "SP2XD7417HGPRTREMKF748VNEQPDRR0RMANB7X1NK.token-abtc::abtc",
@@ -134,7 +122,6 @@
     "SP1Y5YSTAHZ88XYK1VPDH24GY0HPX5J4JECTMY4A1.velar-token::velar",
     "SP14NS8MVBRHXMM96BQY0727AJ59SWPV7RMHC0NCG.pontis-bridge-pBTC::pontis-bitcoin",
     "SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR.arkadiko-token::arkadiko-token",
-    "SP3K8BC0PPEVCV7NZ6QSRWPQ2JE9E5B6N3PA0KBR9.brc20-trio::bridged-trio",
     "SP3BRXZ9Y7P5YP28PSR8YJT39RT51ZZBSECTCADGR.skullcoin-stxcity::skullcoin",
     "SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS.charisma-token::charisma",
     "SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.mega::mega",

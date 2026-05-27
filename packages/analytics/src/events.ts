@@ -107,8 +107,6 @@ export interface Events extends HistoricalEvents {
 interface HistoricalEvents {
   add_network: undefined;
   bitcoin_rbf_fee_increase_error: { outputDiff: number };
-  broadcast_ordinal_transaction: undefined;
-  broadcast_ordinal_error: { error: any };
   broadcast_transaction: {
     symbol: string;
     amount?: number;
@@ -119,7 +117,6 @@ interface HistoricalEvents {
   broadcast_btc_error: { error: any };
   copy_btc_address_to_clipboard: { type: string };
   copy_secret_key_to_clipboard: undefined;
-  copy_address_to_add_new_inscription: undefined;
   copy_stx_address_to_clipboard: undefined;
   copy_recipient_bns_address_to_clipboard: undefined;
   create_new_account: undefined;
@@ -129,8 +126,6 @@ interface HistoricalEvents {
   click_change_theme_menu_item: undefined;
   click_settings_menu_item: undefined;
   click_toggle_privacy: undefined;
-  click_unprotect_all_inscriptions: undefined;
-  click_manage_inscriptions: undefined;
   request_psbt_cancel: undefined;
   request_sign_psbt_submit: undefined;
   request_update_profile_submit: undefined;
@@ -140,7 +135,6 @@ interface HistoricalEvents {
   select_add_new_collectible: undefined;
   select_buy_option: { provider: string };
   select_theme: { theme: string };
-  select_inscription_to_add_new_collectible: undefined;
   select_maximum_amount_for_send: undefined;
   submit_valid_password: undefined;
   submit_invalid_password: undefined;
@@ -152,7 +146,7 @@ interface HistoricalEvents {
   unable_to_read_available_balance_in_stx_validator: undefined;
   view_bitcoin_transaction: undefined;
   view_transaction: undefined;
-  view_collectibles: { ordinals_count?: number; stamps_count?: number; stacks_nfts_count?: number };
+  view_collectibles: { stacks_nfts_count?: number };
   view_rpc_send_transfer_confirmation: { symbol: string };
   view_rpc_sign_and_broadcast_psbt_confirmation: { symbol: string };
   view_transaction_confirmation: { symbol: string };
@@ -165,7 +159,6 @@ interface HistoricalEvents {
   remove_network: undefined;
   generate_new_secret_key: undefined;
   bitcoin_contract_error: { msg: string };
-  ordinals_dot_com_unavailable: { error: any };
   schema_fail: {
     query: any;
     hash: string;
@@ -229,10 +222,8 @@ interface TokenPortfolioSummary {
   walletAccountId: string;
   platform: 'mobile' | 'extension';
   sip10TokenCount: number;
-  runeTokenCount: number;
   totalTokenCount: number;
   sip10TokenValue: number;
-  runeTokenValue: number;
   totalTokenValue: number;
   fiatCurrency?: string;
 }

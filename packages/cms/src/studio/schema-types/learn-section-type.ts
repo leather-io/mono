@@ -47,7 +47,6 @@ export const learnSectionType = defineType({
               options: {
                 list: [
                   { title: 'Rocket / Getting Started', value: 'rocket-startup-launch' },
-                  { title: 'Stamps / Collection', value: 'stamps-collection' },
                   { title: 'BNS', value: 'bns' },
                   { title: 'sBTC', value: 'sbtc' },
                   { title: 'Coins Stack', value: 'coins-stack' },

@@ -18,22 +18,18 @@ export interface BaseCryptoAssetBalance {
    */
   readonly pendingBalance: Money;
   /**
-   * totalBalance after filtering out outboundBalance, protectedBalance, and dustBalance
+   * totalBalance after filtering out outboundBalance and dustBalance
    */
   readonly availableBalance: Money;
 }
 
 export interface BtcBalance extends BaseCryptoAssetBalance {
   /**
-   * Balance of UTXOs with collectibles
-   */
-  readonly protectedBalance: Money;
-  /**
    * Balance across UTXOs with value less than dust threshold
    */
   readonly dustBalance: Money;
   /**
-   * Balance of the union set of protected and dust UTXOs
+   * Balance of the union set of pending-outbound and dust UTXOs
    */
   readonly unspendableBalance: Money;
 }

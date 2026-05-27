@@ -38,31 +38,6 @@ export function getAssetId(asset: CryptoAsset): CryptoAssetId {
         protocol: 'sip10',
         id: asset.assetId,
       };
-    case 'rune':
-      return {
-        protocol: 'rune',
-        id: asset.runeName,
-      };
-    case 'brc20':
-      return {
-        protocol: 'brc20',
-        id: asset.symbol,
-      };
-    case 'src20':
-      return {
-        protocol: 'src20',
-        id: asset.id,
-      };
-    case 'inscription':
-      return {
-        protocol: 'inscription',
-        id: asset.id,
-      };
-    case 'stamp':
-      return {
-        protocol: 'stamp',
-        id: asset.stamp.toString(),
-      };
     case 'sip9':
       return createSip9AssetId(asset);
     default:

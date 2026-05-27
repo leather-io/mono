@@ -369,7 +369,7 @@ msgstr "Attributes"
 msgid "Authentication failed"
 msgstr "Authentication failed"
 
-#: src/features/account/components/available-account-balance.tsx:71
+#: src/features/account/components/available-account-balance.tsx:66
 msgid "Available"
 msgstr "Available"
 
@@ -405,7 +405,7 @@ msgstr "BIP39 passphrase"
 #: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
 #: src/features/swap/swap.utils.ts:10
-#: src/shared/display-preference.ts:61
+#: src/shared/display-preference.ts:59
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -427,10 +427,6 @@ msgstr "Bitflow"
 #: src/shared/display-preference.ts:35
 msgid "BNS name"
 msgstr "BNS name"
-
-#: src/shared/display-preference.ts:64
-msgid "BRC-20"
-msgstr "BRC-20"
 
 #: src/features/token/components/get-first-nft-section.tsx:57
 msgid "Browse on Gamma"
@@ -889,10 +885,6 @@ msgid "funds already on their way to someone else."
 msgstr "funds already on their way to someone else."
 
 #: src/features/account/components/available-account-balance.tsx:52
-msgid "funds kept safe and unavailable for spending"
-msgstr "funds kept safe and unavailable for spending"
-
-#: src/features/account/components/available-account-balance.tsx:57
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 
@@ -1026,10 +1018,6 @@ msgstr "Input"
 msgid "Inputs and outputs"
 msgstr "Inputs and outputs"
 
-#: src/shared/display-preference.ts:59
-msgid "Inscription"
-msgstr "Inscription"
-
 #: src/features/swap/components/amount-field/amount-field-error-messages.ts:28
 msgid "Insufficient balance"
 msgstr "Insufficient balance"
@@ -1110,7 +1098,7 @@ msgstr "Lock failed"
 msgid "Locked"
 msgstr "Locked"
 
-#: src/features/account/components/available-account-balance.tsx:56
+#: src/features/account/components/available-account-balance.tsx:51
 msgid "Locked Stacks balance:"
 msgstr "Locked Stacks balance:"
 
@@ -1359,10 +1347,6 @@ msgstr "Proceed with caution since the wallet will be removed entirely from this
 msgid "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
 msgstr "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
 
-#: src/features/account/components/available-account-balance.tsx:51
-msgid "Protected Bitcoin balance:"
-msgstr "Protected Bitcoin balance:"
-
 #: src/features/token/components/token-loading.tsx:37
 #: src/features/token/stacks/bns-details.tsx:42
 #: src/features/token/stacks/sip9-token-details.tsx:73
@@ -1495,10 +1479,6 @@ msgstr "Review"
 #: src/features/swap/screens/swap-review-screen.tsx:69
 msgid "Review Swap"
 msgstr "Review Swap"
-
-#: src/shared/display-preference.ts:66
-msgid "Rune"
-msgstr "Rune"
 
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:74
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:19
@@ -1636,7 +1616,7 @@ msgstr "Signing failed"
 msgid "SIP-009"
 msgstr "SIP-009"
 
-#: src/shared/display-preference.ts:63
+#: src/shared/display-preference.ts:61
 msgid "SIP-010"
 msgstr "SIP-010"
 
@@ -1665,10 +1645,6 @@ msgstr "Some balances couldn’t load."
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
-#: src/shared/display-preference.ts:65
-msgid "SRC-20"
-msgstr "SRC-20"
-
 #: src/utils/dapps.ts:60
 msgid "StackingDAO"
 msgstr "StackingDAO"
@@ -1678,17 +1654,13 @@ msgstr "StackingDAO"
 #: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
 #: src/features/swap/swap.utils.ts:9
-#: src/shared/display-preference.ts:62
+#: src/shared/display-preference.ts:60
 msgid "Stacks"
 msgstr "Stacks"
 
 #: src/shared/display-preference.ts:40
 msgid "Stacks address"
 msgstr "Stacks address"
-
-#: src/shared/display-preference.ts:60
-msgid "Stamp"
-msgstr "Stamp"
 
 #: src/features/approver/utils.tsx:38
 msgid "Standard"
@@ -1851,7 +1823,7 @@ msgstr "This is your Taproot address for receiving tokens on the Bitcoin network
 msgid "This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent."
 msgstr "This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent."
 
-#: src/features/account/components/available-account-balance.tsx:62
+#: src/features/account/components/available-account-balance.tsx:57
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
@@ -1950,7 +1922,7 @@ msgstr "Unable to open app store. Please update the app manually from your devic
 msgid "Unable to Open Store"
 msgstr "Unable to Open Store"
 
-#: src/features/account/components/available-account-balance.tsx:61
+#: src/features/account/components/available-account-balance.tsx:56
 msgid "Uneconomical balance:"
 msgstr "Uneconomical balance:"
 

@@ -4,9 +4,6 @@ export type ReceiveType = 'stacks' | 'bitcoin' | 'native-segwit' | 'taproot' | '
 
 const protocolToReceiveType = {
   sip10: 'stacks',
-  rune: 'taproot',
-  brc20: 'taproot',
-  src20: 'taproot',
   nativeBtc: 'bitcoin',
   nativeStx: 'stacks',
 } as const satisfies Record<FungibleCryptoAssetProtocol, ReceiveType>;

@@ -5,18 +5,8 @@ import { AccountAddresses } from '@leather.io/models';
 */
 export interface AccountRequest {
   account: AccountAddresses;
-  protections?: AccountRequestUtxoProtectionOptions;
   exclusions?: AccountRequestAddressExclusionOptions;
   assets?: AccountRequestAssetOptions;
-}
-
-export interface AccountRequestUtxoProtectionOptions {
-  /** Removes UTXO protections from inscriptions by satpoint (txid:vout:offset) */
-  discardedInscriptions?: string[];
-  /** Removes UTXO protection from all Runes */
-  discardRunes?: boolean;
-  isOrdinalsActive?: boolean;
-  isRunesActive?: boolean;
 }
 
 export interface AccountRequestAddressExclusionOptions {
