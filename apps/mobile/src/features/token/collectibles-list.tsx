@@ -4,17 +4,15 @@ import { useWindowDimensions } from 'react-native';
 import { ErrorFallbackTab } from '@/components/error/error';
 import { FetchState } from '@/components/loading/fetch-state';
 import { Screen } from '@/components/screen/screen';
-import { CollectibleTypeIconOverlay } from '@/features/collectibles/components/collectible-type-icon-overlay';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { CollectiblesListLoading } from '@/features/token/components/collectibles-list-loading';
 import { EmptyCollectiblesContent } from '@/features/token/components/empty-collectibles-content';
 import { useRouter } from 'expo-router';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';
-import { assertUnreachable, getAssetId, serializeAssetId } from '@leather.io/utils';
+import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
-import { useCollectibleDetailsFlag, useOrdinalsFlag } from '../feature-flags';
-import { Inscription } from './bitcoin/inscription';
+import { useCollectibleDetailsFlag } from '../feature-flags';
 import { Sip9 } from './stacks/sip9';
 
 interface RenderCollectibleProps {
@@ -23,22 +21,8 @@ interface RenderCollectibleProps {
   onPress?(): void;
 }
 function renderCollectible({ item, height, onPress }: RenderCollectibleProps) {
-  const collectible = (() => {
-    switch (item.protocol) {
-      case 'sip9':
-        return <Sip9 item={item} height={height} onPress={onPress} />;
-      case 'inscription':
-        return <Inscription item={item} height={height} onPress={onPress} />;
-      case 'stamp':
-        return null;
-      default:
-        return assertUnreachable(item);
-    }
-  })();
-
-  return (
-    <CollectibleTypeIconOverlay protocol={item.protocol}>{collectible}</CollectibleTypeIconOverlay>
-  );
+  if (item.protocol !== 'sip9') return null;
+  return <Sip9 item={item} height={height} onPress={onPress} />;
 }
 
 function useCollectibleListItemHeight() {
@@ -56,13 +40,7 @@ interface CollectiblesListProps {
 }
 
 export function CollectiblesList({ collectiblesState, header }: CollectiblesListProps) {
-  const ordinalsFlag = useOrdinalsFlag();
-  const collectibles =
-    collectiblesState.state === 'success'
-      ? collectiblesState.value.filter(
-          c => c.protocol !== 'stamp' && (ordinalsFlag || c.protocol !== 'inscription')
-        )
-      : [];
+  const collectibles = collectiblesState.state === 'success' ? collectiblesState.value : [];
   const height = useCollectibleListItemHeight();
   const router = useRouter();
   const collectiblesDetailsFlag = useCollectibleDetailsFlag();
