@@ -50,7 +50,10 @@ import {
 import { ChoosePoolingConditions } from './components/choose-pooling-conditions';
 import { ChoosePoolingDuration } from './components/choose-pooling-duration';
 import { ChooseRewardsAddress } from './components/choose-rewards-address';
-import { createStackingPoolFormValidationSchema } from './utils/stacking-pool-form-schema';
+import {
+  createStackingPoolFormValidationSchema,
+  poxContractRequiresRewardAddress,
+} from './utils/stacking-pool-form-schema';
 import { PoolSlug, getPoolFromSlug } from './utils/stacking-pool-types';
 import { PoolWrapperAllowanceState } from './utils/types';
 
@@ -142,9 +145,18 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
         providerId: pool.providerId,
         availableBalance: totalAvailableBalance,
         stackedAmount,
+        poxContract: pool.poxContract,
       }),
-    [networkPreference.chain.bitcoin.mode, pool.providerId, totalAvailableBalance, stackedAmount]
+    [
+      networkPreference.chain.bitcoin.mode,
+      pool.providerId,
+      pool.poxContract,
+      totalAvailableBalance,
+      stackedAmount,
+    ]
   );
+
+  const showRewardAddressInput = poxContractRequiresRewardAddress(pool.poxContract);
 
   if (!poxWrapperContract) throw new Error('No POX wrapper contract available');
 
@@ -325,7 +337,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                   />
                 </Stack>
 
-                {poolRewardProtocolInfo?.rewardsToken === 'BTC' && (
+                {showRewardAddressInput && poolRewardProtocolInfo && (
                   <Stack gap="space.02">
                     <StackingFormItemTitle
                       title="Address to receive rewards"
