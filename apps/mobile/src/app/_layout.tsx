@@ -21,7 +21,6 @@ import { SendSheet } from '@/features/send/send-sheet';
 import { DescriptionSheet } from '@/features/settings/description-sheet';
 import { SwapSheet } from '@/features/swap/swap-sheet';
 import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
-import { useDeepLinks } from '@/hooks/use-deep-links';
 import { usePageViewTracking } from '@/hooks/use-page-view-tracking';
 import { useUpdateAnalyticsPlugin } from '@/hooks/use-update-analytics-plugin';
 import { I18nProvider } from '@/i18n/i18n';
@@ -35,7 +34,7 @@ import * as Sentry from '@sentry/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Stack, router } from 'expo-router';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
 
@@ -67,7 +66,6 @@ function App() {
   useUpdateAnalyticsPlugin();
   usePageViewTracking();
   useOnMount(trackFirstAppOpen);
-  useDeepLinks(router);
   const isSwapEnabled = useSwapFlag();
 
   const { currentAccount } = useSettings();
