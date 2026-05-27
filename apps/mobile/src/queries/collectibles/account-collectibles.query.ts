@@ -1,5 +1,4 @@
 import { toFetchState } from '@/components/loading/fetch-state';
-import { useCollectiblesFlag, useOrdinalsFlag } from '@/features/feature-flags';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
@@ -25,11 +24,6 @@ export function useAccountCollectibles(fingerprint: string, accountIndex: number
 }
 
 function useAccountCollectiblesQuery(account: AccountAddresses) {
-  const collectiblesFlag = useCollectiblesFlag();
-  const ordinalsFlag = useOrdinalsFlag();
-  if (!collectiblesFlag || !ordinalsFlag) {
-    account.bitcoin = undefined;
-  }
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
@@ -43,11 +37,6 @@ function useAccountCollectiblesQuery(account: AccountAddresses) {
   });
 }
 function useAccountCollectibleByAssetIdQuery(account: AccountAddresses, assetId: CryptoAssetId) {
-  const collectiblesFlag = useCollectiblesFlag();
-  const ordinalsFlag = useOrdinalsFlag();
-  if (!collectiblesFlag || !ordinalsFlag) {
-    account.bitcoin = undefined;
-  }
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,

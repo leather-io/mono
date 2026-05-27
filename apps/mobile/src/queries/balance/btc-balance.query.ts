@@ -1,5 +1,4 @@
 import { toFetchState } from '@/components/loading/fetch-state';
-import { useOrdinalsFlag } from '@/features/feature-flags';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
@@ -15,67 +14,29 @@ import { balanceQueryOptions } from './balance-query-options';
 
 export function useBtcTotalBalance() {
   const accounts = useTotalAccountAddresses();
-  const ordinalsFlag = useOrdinalsFlag();
-  return toFetchState(
-    useBtcAggregateBalanceQuery(
-      accounts.map(account => ({
-        account,
-        protections: {
-          isRunesActive: false,
-          isOrdinalsActive: ordinalsFlag,
-          discardedInscriptions: [],
-          discardRunes: true,
-        },
-      }))
-    )
-  );
+  return toFetchState(useBtcAggregateBalanceQuery(accounts.map(account => ({ account }))));
 }
 export function useBtcAccountBalance(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  const ordinalsFlag = useOrdinalsFlag();
-  return toFetchState(
-    useBtcAccountBalanceQuery({
-      account,
-      protections: {
-        isRunesActive: false,
-        isOrdinalsActive: ordinalsFlag,
-        discardedInscriptions: [],
-        discardRunes: true,
-      },
-    })
-  );
+  return toFetchState(useBtcAccountBalanceQuery({ account }));
 }
 
 export function useBtcAccountNativeSegwitBalance(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  const ordinalsFlag = useOrdinalsFlag();
   return toFetchState(
     useBtcAccountBalanceQuery({
       account,
       exclusions: { taprootAddresses: true },
-      protections: {
-        isRunesActive: false,
-        isOrdinalsActive: ordinalsFlag,
-        discardedInscriptions: [],
-        discardRunes: true,
-      },
     })
   );
 }
 
 export function useBtcAccountTaprootBalance(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  const ordinalsFlag = useOrdinalsFlag();
   return toFetchState(
     useBtcAccountBalanceQuery({
       account,
       exclusions: { nativeSegwitAddresses: true },
-      protections: {
-        isRunesActive: false,
-        isOrdinalsActive: ordinalsFlag,
-        discardedInscriptions: [],
-        discardRunes: true,
-      },
     })
   );
 }
