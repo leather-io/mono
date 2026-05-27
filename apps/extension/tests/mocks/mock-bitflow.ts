@@ -155,6 +155,31 @@ const mockedReadOnlyResult = {
   result: '0x0100000000000000000000000000007a12',
 };
 
+const mockedBitflowBffApiTokens = { tokens: [] };
+
+const mockedBitflowBffApiPairs = {
+  input_token: '',
+  input_token_symbol: '',
+  input_token_name: '',
+  input_token_decimals: 0,
+  input_token_image: '',
+  pairs: [],
+};
+
+const mockedBitflowBffApiQuote = {
+  success: false,
+  amount_out: '0',
+  min_amount_out: '0',
+  slippage_tolerance: 0,
+  route_path: [],
+  execution_path: [],
+  fee: '0',
+  price_impact_bps: 0,
+  price_impact_tokens: '0',
+};
+
+const mockedBitflowBffApiSwap = { success: false };
+
 export async function mockBitflowRequests(page: Page) {
   await page.route('**/getAllTokensAndPools**', route =>
     route.fulfill({ json: mockedBitflowTokens })
@@ -168,5 +193,29 @@ export async function mockBitflowRequests(page: Page) {
 
   await page.route('**/wvzrnmxqmi**/v2/contracts/call-read/**', route =>
     route.fulfill({ json: mockedReadOnlyResult })
+  );
+
+  await page.route('**/node.bitflowapis.finance/v2/contracts/interface/**', route =>
+    route.fulfill({ json: mockedContractInterface })
+  );
+
+  await page.route('**/node.bitflowapis.finance/v2/contracts/call-read/**', route =>
+    route.fulfill({ json: mockedReadOnlyResult })
+  );
+
+  await page.route('**/bff.bitflowapis.finance/api/quotes/v1/tokens**', route =>
+    route.fulfill({ json: mockedBitflowBffApiTokens })
+  );
+
+  await page.route('**/bff.bitflowapis.finance/api/quotes/v1/pairs**', route =>
+    route.fulfill({ json: mockedBitflowBffApiPairs })
+  );
+
+  await page.route('**/bff.bitflowapis.finance/api/quotes/v1/quote**', route =>
+    route.fulfill({ json: mockedBitflowBffApiQuote })
+  );
+
+  await page.route('**/bff.bitflowapis.finance/api/quotes/v1/swap**', route =>
+    route.fulfill({ json: mockedBitflowBffApiSwap })
   );
 }
