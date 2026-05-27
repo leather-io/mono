@@ -45,11 +45,6 @@ export interface RemoteConfig {
   bitcoinSendEnabled: boolean;
   feeEstimationsMinMax?: FeeEstimationsConfig;
   nftMetadataEnabled: boolean;
-  ordinalsbot?: {
-    integrationEnabled: boolean;
-    mainnetApiUrl: string;
-    signetApiUrl: string;
-  };
   sbtc: SbtcConfig;
   tokensEnabledByDefault: string[];
 }

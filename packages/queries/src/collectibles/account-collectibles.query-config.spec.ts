@@ -55,7 +55,7 @@ describe(createAccountCollectiblesQueryConfig.name, () => {
   });
 
   it('invokes collectibles service with provided account', async () => {
-    mockGetAccountCollectibles.mockResolvedValueOnce([{ protocol: 'inscription' }]);
+    mockGetAccountCollectibles.mockResolvedValueOnce([{ protocol: 'sip9' }]);
 
     const config = createAccountCollectiblesQueryConfig(request, settings);
     expect(config.queryFn).toBeDefined();
