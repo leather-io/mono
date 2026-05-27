@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
 import { validationMessages } from '~/content/messages';
-import { StackingProviderId } from '~/data/data';
+import { PoxContractName, StackingProviderId } from '~/data/data';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import {
   stxAmountSchema,
@@ -18,18 +18,36 @@ function btcAddressNetworkValidator(networkMode: BitcoinNetworkModes) {
   return (address: string) => isValidBitcoinNetworkAddress(address, networkMode);
 }
 
+const poxContractsRequiringRewardAddress: PoxContractName[] = [
+  'WrapperOneCycle',
+  'WrapperStackingDao',
+];
+
+export function poxContractRequiresRewardAddress(poxContract: PoxContractName): boolean {
+  return poxContractsRequiringRewardAddress.includes(poxContract);
+}
+
 interface SchemaCreationParams {
   networkMode: BitcoinNetworkModes;
   providerId: StackingProviderId;
   availableBalance: Money;
   stackedAmount?: BigNumber;
+  poxContract: PoxContractName;
 }
 
 export function createStackingPoolFormValidationSchema({
   providerId,
   networkMode,
   stackedAmount,
+  poxContract,
 }: SchemaCreationParams) {
+  const rewardAddress = poxContractRequiresRewardAddress(poxContract)
+    ? z
+        .string()
+        .refine(isValidBitcoinAddress, validationMessages.addressNotValid) // TODO: invalidAddress
+        .refine(btcAddressNetworkValidator(networkMode), validationMessages.addressIncorrectNetwork) // incorrectNetworkAddress
+    : z.string().optional();
+
   return z
     .object({
       amount: stxAmountSchema()
@@ -45,13 +63,7 @@ export function createStackingPoolFormValidationSchema({
             message: `${validationMessages.mustDelegateMore} (${toHumanReadableMicroStx(stackedAmount ?? 0)})`,
           }
         ),
-      rewardAddress: z
-        .string()
-        .refine(isValidBitcoinAddress, validationMessages.addressNotValid) // TODO: invalidAddress
-        .refine(
-          btcAddressNetworkValidator(networkMode),
-          validationMessages.addressIncorrectNetwork
-        ), // incorrectNetworkAddress
+      rewardAddress,
     })
     .superRefine((data, ctx) => {
       const amount = data.amount;
