@@ -82,7 +82,7 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
       ? toHumanReadablePercent(stackingTrackerPool.data.entity.apr)
       : null;
 
-    const rewardAddress =
+    const poolRewardAddress =
       stackingTrackerPool.data?.lastCycle?.pool.pox_address ||
       (poxAddress && formatPoxAddressToNetwork(stacksNetwork.network, poxAddress));
 
@@ -111,7 +111,7 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
       tvlUsd,
       status: getStatusQuery.data?.stacked ? 'Active' : 'Waiting on pool',
       poolAddress: getPoolAddressQuery.data?.poolAddress || '',
-      rewardAddress,
+      poolRewardAddress,
       minLockupPeriodDays: poxInfoQuery.data.reward_cycle_length / STACKS_BLOCKS_PER_DAY,
       nextCycleDays: poxInfoQuery.data.next_cycle.blocks_until_reward_phase / STACKS_BLOCKS_PER_DAY,
       nextCycleNumber: poxInfoQuery.data.next_cycle.id,

@@ -5,9 +5,10 @@ import { truncateMiddle } from '@leather.io/utils';
 
 interface AddressProps {
   address: string;
+  full?: boolean;
 }
 
-export function Address({ address }: AddressProps) {
+export function Address({ address, full }: AddressProps) {
   return (
     <styled.p
       mr="space.02"
@@ -17,12 +18,12 @@ export function Address({ address }: AddressProps) {
       overflow="hidden"
       textOverflow="ellipsis"
     >
-      {truncateMiddle(address)}
+      {full ? address : truncateMiddle(address)}
     </styled.p>
   );
 }
 
-export function CopyAddress({ address }: AddressProps) {
+export function CopyAddress({ address, full }: AddressProps) {
   const { onCopy } = useClipboard(address);
 
   return (
@@ -31,12 +32,14 @@ export function CopyAddress({ address }: AddressProps) {
       gap="space.01"
       onClick={onCopy}
       cursor="pointer"
-      maxWidth={['250px', 'none', '220px', 'none']}
+      minWidth={full ? 0 : undefined}
+      maxWidth={full ? undefined : ['250px', 'none', '220px', 'none']}
+      overflow={full ? 'hidden' : undefined}
     >
       <Box display="inline-block">
         <CopyIcon variant="small" />
       </Box>
-      <Address address={address} />
+      <Address address={address} full={full} />
     </Flex>
   );
 }

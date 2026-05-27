@@ -17,7 +17,7 @@ export interface PoolRewardProtocolInfo {
   rewardsToken: PoolRewardProtocolInfoRewardToken;
   status: string;
   poolAddress: string;
-  rewardAddress: string | null;
+  poolRewardAddress: string | null;
   minLockupPeriodDays: number;
   nextCycleDays: number;
   nextCycleNumber: number;
