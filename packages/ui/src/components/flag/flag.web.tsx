@@ -60,7 +60,9 @@ export function Flag({
       >
         {img}
       </div>
-      <Box flex={1}>{children}</Box>
+      <Box flex={1} minWidth={0}>
+        {children}
+      </Box>
     </Flex>
   );
 }

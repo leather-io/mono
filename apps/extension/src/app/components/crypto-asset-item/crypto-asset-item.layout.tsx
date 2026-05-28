@@ -100,7 +100,7 @@ export function CryptoAssetItemLayout({
     <ItemLayout
       img={icon}
       titleLeft={
-        <styled.span textStyle="label.01" overflow="hidden" textOverflow="ellipsis">
+        <styled.span textStyle="label.01" width="100%" overflow="hidden" textOverflow="ellipsis">
           {spamFilter(titleLeft)}
         </styled.span>
       }
