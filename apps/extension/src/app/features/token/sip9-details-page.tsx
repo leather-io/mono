@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Stack } from 'leather-styles/jsx';
 
 import type { CollectibleView } from '@leather.io/features';
-import type { Sip9Asset } from '@leather.io/models';
 
 import { Sip9Card } from '../collectibles/components/sip9-card';
 import { CollectibleDetailsHeader } from './collectible-details-header';
@@ -18,7 +17,7 @@ interface Sip9DetailsPageProps {
 export function Sip9DetailsPage({ view, onBack }: Sip9DetailsPageProps) {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
-  const asset = view.asset as Sip9Asset;
+  const asset = view.asset;
   const title = view.title || 'Stacks NFT';
   const subtitle = view.subtitle;
 

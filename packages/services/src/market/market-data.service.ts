@@ -1,20 +1,18 @@
 import { inject, injectable } from 'inversify';
 
-import { btcAsset, currencyDecimalsMap } from '@leather.io/constants';
+import { currencyDecimalsMap } from '@leather.io/constants';
 import {
-  Brc20Asset,
   type FungibleAssetId,
   FungibleCryptoAsset,
   MarketData,
   NativeCryptoAsset,
   QuoteCurrency,
-  RuneAsset,
   Sip10Asset,
   createMarketData,
   createMarketPair,
 } from '@leather.io/models';
 import {
-  baseCurrencyAmountInQuote,
+  assertUnreachable,
   convertAmountToFractionalUnit,
   createMoney,
   initBigNumber,
@@ -23,7 +21,6 @@ import {
 } from '@leather.io/utils';
 
 import { FungibleAssetService } from '../assets/fungible-asset.service';
-import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
@@ -33,7 +30,6 @@ export class MarketDataService {
   constructor(
     @inject(Types.SettingsService) private readonly settingsService: SettingsService,
     private readonly leatherApiClient: LeatherApiClient,
-    private readonly bestInSlotApiClient: BestInSlotApiClient,
     private readonly fungibleAssetService: FungibleAssetService
   ) {}
 
@@ -73,12 +69,8 @@ export class MarketDataService {
         return await this.getNativeAssetMarketDataUsd(asset, signal);
       case 'sip10':
         return await this.getSip10MarketDataUsd(asset, signal);
-      case 'rune':
-        return await this.getRuneMarketDataUsd(asset, signal);
-      case 'brc20':
-        return await this.getBrc20MarketDataUsd(asset, signal);
       default:
-        throw Error('Market data not supported for asset type: ' + asset.protocol);
+        return assertUnreachable(asset);
     }
   }
 
@@ -157,39 +149,5 @@ export class MarketDataService {
     const bitflowPools = await this.leatherApiClient.fetchBitflowPoolMap({ signal });
     const poolMatch = bitflowPools[asset.contractId];
     return poolMatch && poolMatch.poolToken.latestPrice ? poolMatch.poolToken.latestPrice : 0;
-  }
-
-  private async getRuneMarketDataUsd(asset: RuneAsset, signal?: AbortSignal): Promise<MarketData> {
-    const runePriceMap = await this.leatherApiClient.fetchRunePriceMap({ signal });
-
-    const runePriceUsd = runePriceMap[asset.runeName]
-      ? runePriceMap[asset.runeName]
-      : await this.leatherApiClient.fetchRunePrice(asset.runeName, { signal });
-
-    return createMarketData(
-      createMarketPair(asset.runeName, 'USD'),
-      createMoney(
-        convertAmountToFractionalUnit(
-          initBigNumber(runePriceUsd.price),
-          currencyDecimalsMap['USD']
-        ),
-        'USD'
-      )
-    );
-  }
-
-  private async getBrc20MarketDataUsd(
-    asset: Brc20Asset,
-    signal?: AbortSignal
-  ): Promise<MarketData> {
-    const [btcMarketData, bisMarketInfo] = await Promise.all([
-      this.getNativeAssetMarketDataUsd(btcAsset, signal),
-      this.bestInSlotApiClient.fetchBrc20MarketInfo(asset.symbol, { signal }),
-    ]);
-    const brc20PriceUsd = baseCurrencyAmountInQuote(
-      createMoney(bisMarketInfo.min_listed_unit_price ?? 0, 'BTC'),
-      btcMarketData
-    );
-    return createMarketData(createMarketPair(asset.symbol, 'USD'), brc20PriceUsd);
   }
 }

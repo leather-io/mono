@@ -1,10 +1,5 @@
 import { btcAsset } from '@leather.io/constants';
-import {
-  CryptoAssetProtocols,
-  FungibleCryptoAsset,
-  RuneAsset,
-  Sip10Asset,
-} from '@leather.io/models';
+import { CryptoAssetProtocols, FungibleCryptoAsset, Sip10Asset } from '@leather.io/models';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { FungibleAssetInfoService } from './fungible-asset-info.service';
@@ -12,7 +7,6 @@ import { FungibleAssetInfoService } from './fungible-asset-info.service';
 describe(FungibleAssetInfoService.name, () => {
   const nativeTokenDescription = 'nativeTokenDescription';
   const sip10TokenDescription = 'sip10TokenDescription';
-  const runeDescription = 'runeDescription';
 
   const mockLeatherApiClient = {
     fetchNativeTokenDescription: vi.fn().mockResolvedValue({
@@ -20,9 +14,6 @@ describe(FungibleAssetInfoService.name, () => {
     }),
     fetchSip10TokenDescription: vi.fn().mockResolvedValue({
       description: sip10TokenDescription,
-    }),
-    fetchRuneDescription: vi.fn().mockResolvedValue({
-      description: runeDescription,
     }),
   } as unknown as LeatherApiClient;
 
@@ -64,24 +55,6 @@ describe(FungibleAssetInfoService.name, () => {
       );
       expect(description).toEqual({
         description: sip10TokenDescription,
-      });
-    });
-
-    it('should return rune asset descriptions from Leather API', async () => {
-      const runeName = 'runeName';
-
-      const signal = new AbortController().signal;
-      const description = await fungibleAssetInfoService.getAssetDescription(
-        { runeName, protocol: CryptoAssetProtocols.rune } as RuneAsset,
-        'en',
-        signal
-      );
-
-      expect(mockLeatherApiClient.fetchRuneDescription).toHaveBeenCalledWith(runeName, 'en', {
-        signal,
-      });
-      expect(description).toEqual({
-        description: runeDescription,
       });
     });
 

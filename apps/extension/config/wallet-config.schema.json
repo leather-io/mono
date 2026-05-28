@@ -128,20 +128,6 @@
       "type": "boolean",
       "description": "Determines whether or not we display nft metadata in the wallet"
     },
-    "ordinalsbot": {
-      "type": "object",
-      "description": "Configuration for the ordinalsbot",
-      "additionalProperties": false,
-      "properties": {
-        "integrationEnabled": { "type": "boolean" },
-        "mainnetApiUrl": { "type": "string" },
-        "signetApiUrl": { "type": "string" }
-      }
-    },
-    "runesEnabled": {
-      "type": "boolean",
-      "description": "Determines whether or not Runes are live on mainnet"
-    },
     "swapsEnabled": {
       "type": "boolean",
       "description": "Determines whether or not the swaps feature is enabled"

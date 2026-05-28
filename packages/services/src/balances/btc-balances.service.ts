@@ -65,8 +65,6 @@ export class BtcBalancesService {
    * Gets BTC balance for given account, denominated in both BTC and quote currency.
    *
    * Balance reflects combined balance of all taproot (m/86') and segwit (m/84') addresses under provided account index.
-   *
-   * A list of selectively unprotected UTXOs provided on the request will move the UTXO values from protected to available balance.
    */
   public async getBtcAccountBalance(
     request: AccountRequest,
@@ -77,7 +75,6 @@ export class BtcBalancesService {
     const totalBalance = createMoney(sumUtxoValues(utxos.confirmed), 'BTC');
     const inboundBalance = createMoney(sumUtxoValues(utxos.inbound), 'BTC');
     const outboundBalance = createMoney(sumUtxoValues(utxos.outbound), 'BTC');
-    const protectedBalance = createMoney(sumUtxoValues(utxos.protected), 'BTC');
     const dustBalance = createMoney(sumUtxoValues(utxos.dust), 'BTC');
     const unspendableBalance = createMoney(sumUtxoValues(utxos.unspendable), 'BTC');
 
@@ -89,7 +86,6 @@ export class BtcBalancesService {
         totalBalance,
         inboundBalance,
         outboundBalance,
-        protectedBalance,
         dustBalance,
         unspendableBalance
       ),
@@ -97,7 +93,6 @@ export class BtcBalancesService {
         baseCurrencyAmountInQuote(totalBalance, btcMarketData),
         baseCurrencyAmountInQuote(inboundBalance, btcMarketData),
         baseCurrencyAmountInQuote(outboundBalance, btcMarketData),
-        baseCurrencyAmountInQuote(protectedBalance, btcMarketData),
         baseCurrencyAmountInQuote(dustBalance, btcMarketData),
         baseCurrencyAmountInQuote(unspendableBalance, btcMarketData)
       ),

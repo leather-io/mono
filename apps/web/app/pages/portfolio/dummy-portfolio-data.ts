@@ -38,7 +38,6 @@ const btcCryptoBalance: BtcBalance = {
   pendingBalance: btcBalance,
   inboundBalance: zeroBtc,
   outboundBalance: zeroBtc,
-  protectedBalance: zeroBtc,
   dustBalance: zeroBtc,
   unspendableBalance: zeroBtc,
 };

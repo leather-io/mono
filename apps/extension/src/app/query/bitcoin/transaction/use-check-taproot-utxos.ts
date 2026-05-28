@@ -23,7 +23,6 @@ export function useCheckTaprootUtxos() {
       try {
         const allWalletUtxos = [
           ...walletUtxos.confirmed,
-          ...walletUtxos.protected,
           ...walletUtxos.inbound,
           ...walletUtxos.available,
         ];

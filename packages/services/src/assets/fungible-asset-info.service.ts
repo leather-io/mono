@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 
 import { CryptoAssetProtocols, FungibleCryptoAsset } from '@leather.io/models';
+import { assertUnreachable } from '@leather.io/utils';
 
 import {
   LeatherApiClient,
@@ -27,10 +28,8 @@ export class FungibleAssetInfoService {
         return await this.leatherApiClient.fetchSip10TokenDescription(asset.contractId, locale, {
           signal,
         });
-      case CryptoAssetProtocols.rune:
-        return await this.leatherApiClient.fetchRuneDescription(asset.runeName, locale, { signal });
       default:
-        throw Error('Asset descriptions not supported for asset type: ' + asset.protocol);
+        return assertUnreachable(asset);
     }
   }
 }

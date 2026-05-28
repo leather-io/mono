@@ -48,11 +48,6 @@ export function AvailableAccountBalance({
                 },
                 {
                   key: 'bullet',
-                  title: t`Protected Bitcoin balance:`,
-                  text: t`funds kept safe and unavailable for spending`,
-                },
-                {
-                  key: 'bullet',
                   title: t`Locked Stacks balance:`,
                   text: t`funds temporarily locked in a stacking pool and not yet spendable.`,
                 },

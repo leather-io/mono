@@ -650,10 +650,6 @@
                     },
                     {
                       "type": "string",
-                      "value": "stamps-collection"
-                    },
-                    {
-                      "type": "string",
                       "value": "bns"
                     },
                     {

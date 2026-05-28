@@ -102,7 +102,7 @@ describe(filterActivityByAsset.name, () => {
   });
 
   it('returns empty array for unsupported protocol', () => {
-    const result = filterActivityByAsset(all, { protocol: 'brc20' } as any);
+    const result = filterActivityByAsset(all, { protocol: 'unknown' } as any);
     expect(result).toEqual([]);
   });
 });

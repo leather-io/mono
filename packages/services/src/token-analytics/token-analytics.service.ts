@@ -34,11 +34,6 @@ export class TokenAnalyticsService {
         const entry = map[asset.contractId];
         return entry ? mapApiAnalyticsToTokenAnalytics(entry) : null;
       }
-      case 'rune': {
-        const map = await this.leatherApiClient.fetchRuneAnalyticsMap({ signal });
-        const entry = map[asset.runeName];
-        return entry ? mapApiAnalyticsToTokenAnalytics(entry) : null;
-      }
       default:
         return null;
     }
@@ -66,12 +61,6 @@ export class TokenAnalyticsService {
       }
       case 'sip10': {
         const result = await this.leatherApiClient.fetchSip10Distribution(asset.contractId, {
-          signal,
-        });
-        return result ?? null;
-      }
-      case 'rune': {
-        const result = await this.leatherApiClient.fetchRuneDistribution(asset.runeName, {
           signal,
         });
         return result ?? null;

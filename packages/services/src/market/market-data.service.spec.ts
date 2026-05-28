@@ -1,9 +1,8 @@
 import { btcAsset, stxAsset } from '@leather.io/constants';
-import { RuneAsset, Sip10Asset } from '@leather.io/models';
+import { Sip10Asset } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
 import type { FungibleAssetService } from '../assets/fungible-asset.service';
-import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from './market-data.service';
@@ -27,11 +26,6 @@ describe(MarketDataService.name, () => {
         price: 0.04,
       },
     }),
-    fetchRunePriceMap: vi.fn().mockReturnValue({
-      SOMERUNE: {
-        price: 0.001,
-      },
-    }),
     fetchUsdExchangeRates: vi.fn().mockReturnValue({
       rates: {
         EUR: 0.8,
@@ -40,10 +34,6 @@ describe(MarketDataService.name, () => {
     }),
   } as unknown as LeatherApiClient;
 
-  const mockBestInSlotApiClient = {
-    getMarketData: vi.fn(),
-  } as unknown as BestInSlotApiClient;
-
   const mockFungibleAssetService = {
     getAsset: vi.fn().mockReturnValue(stxAsset),
   } as unknown as FungibleAssetService;
@@ -51,7 +41,6 @@ describe(MarketDataService.name, () => {
   const marketDataService = new MarketDataService(
     mockSettingsService,
     mockLeatherApiClient,
-    mockBestInSlotApiClient,
     mockFungibleAssetService
   );
 
@@ -83,19 +72,6 @@ describe(MarketDataService.name, () => {
       expect(sip10MarketData.price.amount).toEqual(initBigNumber(4));
       expect(sip10MarketData.price.symbol).toEqual('USD');
     });
-
-    it('should return rune asset market data in USD', async () => {
-      const runeMarketData = await marketDataService.getMarketDataUsd({
-        protocol: 'rune',
-        runeName: 'SOMERUNE',
-        symbol: 'SOMERUNE',
-      } as RuneAsset);
-
-      expect(runeMarketData.pair.base).toEqual('SOMERUNE');
-      expect(runeMarketData.pair.quote).toEqual('USD');
-      expect(runeMarketData.price.amount).toEqual(initBigNumber(0.1));
-      expect(runeMarketData.price.symbol).toEqual('USD');
-    });
   });
 
   describe(MarketDataService.prototype.getMarketData.name, () => {
@@ -122,19 +98,6 @@ describe(MarketDataService.name, () => {
       expect(sip10MarketData.pair.quote).toEqual('EUR');
       expect(sip10MarketData.price.amount).toEqual(initBigNumber(3.2));
       expect(sip10MarketData.price.symbol).toEqual('EUR');
-    });
-
-    it('should return rune asset market data in the users quote currency', async () => {
-      const runeMarketData = await marketDataService.getMarketData({
-        protocol: 'rune',
-        runeName: 'SOMERUNE',
-        symbol: 'SOMERUNE',
-      } as RuneAsset);
-
-      expect(runeMarketData.pair.base).toEqual('SOMERUNE');
-      expect(runeMarketData.pair.quote).toEqual('EUR');
-      expect(runeMarketData.price.amount).toEqual(initBigNumber(0.08));
-      expect(runeMarketData.price.symbol).toEqual('EUR');
     });
   });
 

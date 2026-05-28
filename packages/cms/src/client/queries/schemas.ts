@@ -62,7 +62,6 @@ export const postSchema = z.object({
       'Interviews',
       'Legal',
       'None',
-      'Ordinals',
       'Security',
       'Settings',
       'Smart Contracts',
