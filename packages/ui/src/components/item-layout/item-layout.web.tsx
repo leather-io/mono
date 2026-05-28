@@ -41,11 +41,12 @@ export function ItemLayout({
         alignItems="start"
         flexGrow={2}
         gap={gap}
+        minWidth={0}
         overflow="hidden"
         textOverflow="ellipsis"
         whiteSpace="nowrap"
       >
-        <HStack gap="space.01">
+        <HStack gap="space.01" maxWidth="100%" minWidth={0} overflow="hidden">
           {componentWithFallback(
             titleLeft,
             <styled.span
@@ -70,7 +71,7 @@ export function ItemLayout({
           </styled.span>
         )}
       </Stack>
-      <HStack gap={gap}>
+      <HStack gap={gap} flexShrink={0}>
         <Stack alignItems="end" gap={gap}>
           {componentWithFallback(
             titleRight,
