@@ -4,10 +4,8 @@ import { btcAsset, stxAsset } from '@leather.io/constants';
 import type {
   DeploySmartContractActivity,
   ExecuteSmartContractActivity,
-  InscriptionAsset,
   ReceiveAssetActivity,
   SendAssetActivity,
-  StampAsset,
   SwapAssetsActivity,
 } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
@@ -96,60 +94,6 @@ describe('activity-status', () => {
         toAmount: initBigNumber(2),
       };
       expect(formatActivityStatusLabel(activity)).toBe('BTC → STX');
-    });
-
-    it('formats swapAssets label for stamp assets', () => {
-      const stampAsset: StampAsset = {
-        chain: 'bitcoin',
-        category: 'nft',
-        protocol: 'stamp',
-        stamp: 123,
-        stampUrl: 'https://stampchain.io/stamp/123',
-        stampExplorerUrl: 'https://stampchain.io/stamp/123',
-        blockHeight: 800000,
-      };
-      const activity: SwapAssetsActivity = {
-        ...baseActivity,
-        type: 'swapAssets',
-        status: 'success',
-        fromAsset: stampAsset,
-        fromAmount: initBigNumber(1),
-        toAsset: stampAsset,
-        toAmount: initBigNumber(1),
-      };
-      expect(formatActivityStatusLabel(activity)).toBe('Stamp → Stamp');
-    });
-
-    it('formats swapAssets label for inscription assets', () => {
-      const inscriptionAsset: InscriptionAsset = {
-        chain: 'bitcoin',
-        category: 'nft',
-        protocol: 'inscription',
-        id: 'inscription-id-123',
-        mimeType: 'image',
-        number: 456,
-        address: 'bc1q...',
-        title: 'Cool Inscription',
-        txid: 'tx123',
-        output: 'output',
-        offset: '0',
-        preview: 'https://example.com/preview.png',
-        src: 'https://example.com/inscription.png',
-        value: '10000',
-        genesisBlockHash: 'blockhash123',
-        genesisTimestamp: 1640000000,
-        genesisBlockHeight: 800000,
-      };
-      const activity: SwapAssetsActivity = {
-        ...baseActivity,
-        type: 'swapAssets',
-        status: 'success',
-        fromAsset: inscriptionAsset,
-        fromAmount: initBigNumber(1),
-        toAsset: { ...inscriptionAsset, title: 'Another Inscription' },
-        toAmount: initBigNumber(1),
-      };
-      expect(formatActivityStatusLabel(activity)).toBe('Cool Inscription → Another Inscription');
     });
 
     it('formats swapAssets label using category as fallback', () => {

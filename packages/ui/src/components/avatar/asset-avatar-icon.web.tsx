@@ -43,7 +43,6 @@ export function AssetAvatarIcon({ asset, indicator, size, ...rest }: AssetAvatar
       );
     }
     default: {
-      // TODO: add support for other protocols (brc20, src20, runes, etc.)
       return (
         <Avatar
           image={getAvatarUrl(asset.protocol)}

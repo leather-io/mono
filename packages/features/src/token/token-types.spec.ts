@@ -24,15 +24,6 @@ describe('createTokenDetailsPath', () => {
     const path = createTokenDetailsPath(assetId);
     expect(path).toBe(`/token/${encodeURIComponent(assetId)}`);
   });
-
-  it('creates URL-encoded path for runes', () => {
-    const assetId = serializeAssetId({
-      protocol: CryptoAssetProtocols.rune,
-      id: 'UNCOMMON•GOODS',
-    });
-    const path = createTokenDetailsPath(assetId);
-    expect(path).toBe(`/token/${encodeURIComponent(assetId)}`);
-  });
 });
 
 describe('parseTokenDetailsAssetId', () => {
@@ -68,15 +59,6 @@ describe('parseTokenDetailsAssetId', () => {
     const assetId = serializeAssetId({
       protocol: CryptoAssetProtocols.sip10,
       id: 'SP3NE50GEXFG9SZGTT51P40X2CKYSZ5CC4ZTZ7A2G.welshcorgicoin-token::welshcorgicoin',
-    });
-    const encoded = encodeURIComponent(assetId);
-    expect(parseTokenDetailsAssetId(encoded)).toBe(assetId);
-  });
-
-  it('parses URL-encoded rune asset ID', () => {
-    const assetId = serializeAssetId({
-      protocol: CryptoAssetProtocols.rune,
-      id: 'UNCOMMON•GOODS',
     });
     const encoded = encodeURIComponent(assetId);
     expect(parseTokenDetailsAssetId(encoded)).toBe(assetId);
@@ -118,16 +100,6 @@ describe('round-trip conversion', () => {
     const assetId = serializeAssetId({
       protocol: CryptoAssetProtocols.sip10,
       id: 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token',
-    });
-    const path = createTokenDetailsPath(assetId);
-    const encodedPart = path.replace('/token/', '');
-    expect(parseTokenDetailsAssetId(encodedPart)).toBe(assetId);
-  });
-
-  it('creates path and parses back for runes with special characters', () => {
-    const assetId = serializeAssetId({
-      protocol: CryptoAssetProtocols.rune,
-      id: 'UNCOMMON•GOODS',
     });
     const path = createTokenDetailsPath(assetId);
     const encodedPart = path.replace('/token/', '');
