@@ -7,7 +7,14 @@ interface ValueDisplayerProps extends FlexProps {
 }
 export function ValueDisplayerBase({ children, ...flexProps }: ValueDisplayerProps) {
   return (
-    <Flex flex={1} flexDir="column" justifyContent="space-between" p="space.05" {...flexProps}>
+    <Flex
+      flex={1}
+      flexDir="column"
+      justifyContent="space-between"
+      gap="space.06"
+      p="space.05"
+      {...flexProps}
+    >
       {children}
     </Flex>
   );

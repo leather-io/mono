@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 
-import { css } from 'leather-styles/css';
-import { Box, Flex, VStack, styled } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import {
   ValueDisplayerWithCustomLoader,
@@ -14,6 +13,7 @@ import {
   DropdownMenu,
   Flag,
   InfoCircleIcon,
+  Link,
   PlusIcon,
   SkeletonLoader,
 } from '@leather.io/ui';
@@ -55,54 +55,66 @@ export function UserPositionGrid({
       gridTemplateColumns={['repeat(auto-fit, minmax(210px, 1fr))']}
       gridTemplateRows="auto"
       height="fit-content"
-      className={css({ '& > *:not(:first-child)': { height: 'unset' } })}
     >
       <InfoGrid.Cell>
-        <VStack gap="space.05" alignItems="left" p="space.05">
-          <SkeletonLoader width="32" height="32" isLoading={isLoading}>
-            {logo}
+        <Flex flex={1} flexDir="column" justifyContent="space-between" gap="space.06" p="space.05">
+          <SkeletonLoader height="16" width="120" isLoading={isLoading}>
+            <Flex alignItems="center" gap="space.02" height="16px" overflow="visible">
+              {logo}
+              <styled.h4 color="ink.text-subdued" textStyle="label.03">
+                {name ?? 'Unknown pool'}
+              </styled.h4>
+            </Flex>
           </SkeletonLoader>
 
-          <SkeletonLoader height="15" width="80" isLoading={isLoading}>
-            {poolSlug && hasMenu ? (
+          <SkeletonLoader width="120" height="15" isLoading={isLoading}>
+            {hasMenu && poolSlug ? (
               <DropdownMenu.Root>
-                <DropdownMenu.Trigger>
-                  <Flag reverse img={<ChevronDownIcon variant="small" />} spacing="space.01">
-                    <styled.h4 userSelect="none" textStyle="label.01" textAlign="left">
-                      {name}
-                    </styled.h4>
-                  </Flag>
+                <DropdownMenu.Trigger asChild>
+                  <Link
+                    _before={{ bg: 'transparent' }}
+                    _hover={{ color: 'ink.action-primary-hover' }}
+                    variant="text"
+                    maxWidth="fit-content"
+                  >
+                    <Flex alignItems="center" gap="space.01">
+                      <styled.span textStyle="label.01">Manage position</styled.span>
+                      <ChevronDownIcon variant="small" />
+                    </Flex>
+                  </Link>
                 </DropdownMenu.Trigger>
-                <DropdownMenu.Content align="start">
-                  <Box p="space.02" textStyle="label.02">
-                    {onViewDetails && (
-                      <DropdownMenu.Item onSelect={() => onViewDetails()}>
-                        <Flag img={<InfoCircleIcon variant="small" />}>View position details</Flag>
-                      </DropdownMenu.Item>
-                    )}
-                    {onIncrease && (
-                      <DropdownMenu.Item onSelect={() => onIncrease()}>
-                        <Flag img={<PlusIcon variant="small" />}>Increase pooling amount</Flag>
-                      </DropdownMenu.Item>
-                    )}
-                    {onStopPooling && (
-                      <DropdownMenu.Item onSelect={() => onStopPooling()}>
-                        <Flag
-                          color="red.action-primary-default"
-                          img={<CloseIcon color="red.action-primary-default" variant="small" />}
-                        >
-                          Stop pooling
-                        </Flag>
-                      </DropdownMenu.Item>
-                    )}
-                  </Box>
-                </DropdownMenu.Content>
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content align="start" side="bottom" sideOffset={4}>
+                    <Box p="space.02" textStyle="label.02">
+                      {onViewDetails && (
+                        <DropdownMenu.Item onSelect={() => onViewDetails()}>
+                          <Flag img={<InfoCircleIcon variant="small" />}>
+                            View position details
+                          </Flag>
+                        </DropdownMenu.Item>
+                      )}
+                      {onIncrease && (
+                        <DropdownMenu.Item onSelect={() => onIncrease()}>
+                          <Flag img={<PlusIcon variant="small" />}>Increase pooling amount</Flag>
+                        </DropdownMenu.Item>
+                      )}
+                      {onStopPooling && (
+                        <DropdownMenu.Item onSelect={() => onStopPooling()}>
+                          <Flag
+                            color="red.action-primary-default"
+                            img={<CloseIcon color="red.action-primary-default" variant="small" />}
+                          >
+                            Stop pooling
+                          </Flag>
+                        </DropdownMenu.Item>
+                      )}
+                    </Box>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
               </DropdownMenu.Root>
-            ) : (
-              <styled.h4 textStyle="label.01">{name ?? 'Unknown pool'}</styled.h4>
-            )}
+            ) : null}
           </SkeletonLoader>
-        </VStack>
+        </Flex>
       </InfoGrid.Cell>
 
       <InfoGrid.Cell>
