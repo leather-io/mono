@@ -55,7 +55,7 @@
     "@stacks/transactions": "7.4.0",
     "@tanstack/react-query": "5.85.5",
     "@tanstack/react-table": "8.21.3",
-    "axios": "1.15.2",
+    "axios": "1.16.1",
     "bignumber.js": "9.1.2",
     "content-security-policy-builder": "2.3.0",
     "d3": "7.9.0",

@@ -43,7 +43,7 @@
     "@stacks/stacks-blockchain-api-types": "7.14.1",
     "@stacks/transactions": "7.4.0",
     "alex-sdk": "3.1.0",
-    "axios": "1.15.2",
+    "axios": "1.16.1",
     "bignumber.js": "9.1.2",
     "p-queue": "8.1.1",
     "uuid": "11.1.0",
