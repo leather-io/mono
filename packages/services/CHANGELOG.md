@@ -413,6 +413,32 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.56.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.55.0...@leather.io/services-v1.56.0) (2026-06-01)
+
+
+### Features
+
+* **extension:** remove runes and ordinals ([#2343](https://github.com/leather-io/mono/issues/2343)) ([88d12da](https://github.com/leather-io/mono/commit/88d12da1389dc241d24753f7f7f230a243b2444b))
+
+
+### Bug Fixes
+
+* audit axios ([#2362](https://github.com/leather-io/mono/issues/2362)) ([83e1848](https://github.com/leather-io/mono/commit/83e1848b6fe5f4ac3d4478090277b3bf032d055b))
+* remove runes/ordinals pages from services/models ([#2358](https://github.com/leather-io/mono/issues/2358)) ([101bf28](https://github.com/leather-io/mono/commit/101bf2808285991f40d93e6eaad00f32c4435675))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.37.7
+    * @leather.io/constants bumped to 0.36.0
+    * @leather.io/models bumped to 0.56.1
+    * @leather.io/stacks bumped to 1.20.1
+    * @leather.io/utils bumped to 0.51.4
+  * devDependencies
+    * @leather.io/rpc bumped to 2.22.1
+
 ## [1.55.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.54.1...@leather.io/services-v1.55.0) (2026-05-12)
 
 

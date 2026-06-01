@@ -114,6 +114,20 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.20.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.20.0...@leather.io/analytics-v3.20.1) (2026-06-01)
+
+
+### Bug Fixes
+
+* remove runes/ordinals pages from services/models ([#2358](https://github.com/leather-io/mono/issues/2358)) ([101bf28](https://github.com/leather-io/mono/commit/101bf2808285991f40d93e6eaad00f32c4435675))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.56.1
+
 ## [3.20.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.19.3...@leather.io/analytics-v3.20.0) (2026-04-13)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.6.0...@leather.io/cms-v1.6.1) (2026-06-01)
+
+
+### Bug Fixes
+
+* remove runes/ordinals pages from services/models ([#2358](https://github.com/leather-io/mono/issues/2358)) ([101bf28](https://github.com/leather-io/mono/commit/101bf2808285991f40d93e6eaad00f32c4435675))
+
 ## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.5.0...@leather.io/cms-v1.6.0) (2026-03-11)
 
 

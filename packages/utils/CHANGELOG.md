@@ -368,6 +368,21 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.51.4](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.51.3...@leather.io/utils-v0.51.4) (2026-06-01)
+
+
+### Bug Fixes
+
+* remove runes/ordinals pages from services/models ([#2358](https://github.com/leather-io/mono/issues/2358)) ([101bf28](https://github.com/leather-io/mono/commit/101bf2808285991f40d93e6eaad00f32c4435675))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.36.0
+    * @leather.io/models bumped to 0.56.1
+
 ## [0.51.3](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.51.2...@leather.io/utils-v0.51.3) (2026-03-27)
 
 

@@ -40,6 +40,44 @@
 
 ---
 
+## [6.103.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.102.0...@leather.io/extension-v6.103.0) (2026-06-01)
+
+
+### Features
+
+* **extension:** add aeUSDC retirement callout ([#2336](https://github.com/leather-io/mono/issues/2336)) ([a2f8423](https://github.com/leather-io/mono/commit/a2f8423fae4074f952a016b249c291674c7878fa))
+* **extension:** remove runes and ordinals ([#2343](https://github.com/leather-io/mono/issues/2343)) ([88d12da](https://github.com/leather-io/mono/commit/88d12da1389dc241d24753f7f7f230a243b2444b))
+
+
+### Bug Fixes
+
+* audit axios ([#2362](https://github.com/leather-io/mono/issues/2362)) ([83e1848](https://github.com/leather-io/mono/commit/83e1848b6fe5f4ac3d4478090277b3bf032d055b))
+* bitflow mocks ([#2355](https://github.com/leather-io/mono/issues/2355)) ([be896b5](https://github.com/leather-io/mono/commit/be896b53cc9e27b777a1b8469b4b966beae175a2))
+* remove runes/ordinals pages from queries ([#2352](https://github.com/leather-io/mono/issues/2352)) ([22578a1](https://github.com/leather-io/mono/commit/22578a14ef855040b549e8ec2d39c5f23de3806b))
+* remove runes/ordinals pages from services/models ([#2358](https://github.com/leather-io/mono/issues/2358)) ([101bf28](https://github.com/leather-io/mono/commit/101bf2808285991f40d93e6eaad00f32c4435675))
+* **ui:** truncate long titles in item layout with ellipsis ([#2360](https://github.com/leather-io/mono/issues/2360)) ([58cf921](https://github.com/leather-io/mono/commit/58cf92115f5ccffa6c0bfd847ec85026e85d5880))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.20.1
+    * @leather.io/bitcoin bumped to 0.37.7
+    * @leather.io/cms bumped to 1.6.1
+    * @leather.io/constants bumped to 0.36.0
+    * @leather.io/crypto bumped to 1.12.23
+    * @leather.io/features bumped to 1.4.5
+    * @leather.io/models bumped to 0.56.1
+    * @leather.io/provider bumped to 1.6.26
+    * @leather.io/queries bumped to 0.10.1
+    * @leather.io/query bumped to 2.49.0
+    * @leather.io/rpc bumped to 2.22.1
+    * @leather.io/services bumped to 1.56.0
+    * @leather.io/stacks bumped to 1.20.1
+    * @leather.io/ui bumped to 1.111.6
+    * @leather.io/utils bumped to 0.51.4
+
 ## [6.102.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.101.0...@leather.io/extension-v6.102.0) (2026-05-12)
 
 

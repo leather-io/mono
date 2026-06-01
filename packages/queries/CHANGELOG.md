@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.10.1](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.10.0...@leather.io/queries-v0.10.1) (2026-06-01)
+
+
+### Bug Fixes
+
+* remove runes/ordinals pages from queries ([#2352](https://github.com/leather-io/mono/issues/2352)) ([22578a1](https://github.com/leather-io/mono/commit/22578a14ef855040b549e8ec2d39c5f23de3806b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/cms bumped to 1.6.1
+    * @leather.io/models bumped to 0.56.1
+    * @leather.io/services bumped to 1.56.0
+    * @leather.io/utils bumped to 0.51.4
+
 ## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.9.3...@leather.io/queries-v0.10.0) (2026-05-12)
 
 
