@@ -939,6 +939,25 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.37.7](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.37.6...@leather.io/bitcoin-v0.37.7) (2026-06-01)
+
+
+### Bug Fixes
+
+* remove runes/ordinals pages from services/models ([#2358](https://github.com/leather-io/mono/issues/2358)) ([101bf28](https://github.com/leather-io/mono/commit/101bf2808285991f40d93e6eaad00f32c4435675))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.36.0
+    * @leather.io/crypto bumped to 1.12.23
+    * @leather.io/models bumped to 0.56.1
+    * @leather.io/utils bumped to 0.51.4
+  * devDependencies
+    * @leather.io/rpc bumped to 2.22.1
+
 ## [0.37.6](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.37.5...@leather.io/bitcoin-v0.37.6) (2026-05-12)
 
 

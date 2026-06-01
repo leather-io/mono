@@ -489,6 +489,24 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.111.6](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.111.5...@leather.io/ui-v1.111.6) (2026-06-01)
+
+
+### Bug Fixes
+
+* remove runes/ordinals from ui packages ([#2353](https://github.com/leather-io/mono/issues/2353)) ([709dbb5](https://github.com/leather-io/mono/commit/709dbb53a38f221b2befc73191e44c952bee4c49))
+* **ui:** truncate long titles in item layout with ellipsis ([#2360](https://github.com/leather-io/mono/issues/2360)) ([58cf921](https://github.com/leather-io/mono/commit/58cf92115f5ccffa6c0bfd847ec85026e85d5880))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.51.4
+  * devDependencies
+    * @leather.io/features bumped to 1.4.5
+    * @leather.io/models bumped to 0.56.1
+
 ## [1.111.5](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.111.4...@leather.io/ui-v1.111.5) (2026-05-12)
 
 

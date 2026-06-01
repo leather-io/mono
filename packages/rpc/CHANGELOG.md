@@ -411,6 +411,17 @@
     * @leather.io/stacks bumped to 1.17.3
     * @leather.io/utils bumped to 0.46.4
 
+## [2.22.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.22.0...@leather.io/rpc-v2.22.1) (2026-06-01)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.56.1
+    * @leather.io/stacks bumped to 1.20.1
+    * @leather.io/utils bumped to 0.51.4
+
 ## [2.22.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.21.16...@leather.io/rpc-v2.22.0) (2026-05-12)
 
 

@@ -215,6 +215,20 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.36.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.35.1...@leather.io/constants-v0.36.0) (2026-06-01)
+
+
+### Features
+
+* **extension:** add aeUSDC retirement callout ([#2336](https://github.com/leather-io/mono/issues/2336)) ([a2f8423](https://github.com/leather-io/mono/commit/a2f8423fae4074f952a016b249c291674c7878fa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.56.1
+
 ## [0.35.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.35.0...@leather.io/constants-v0.35.1) (2026-03-27)
 
 

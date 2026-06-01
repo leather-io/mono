@@ -779,6 +779,30 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.49.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.48.0...@leather.io/query-v2.49.0) (2026-06-01)
+
+
+### Features
+
+* **extension:** remove runes and ordinals ([#2343](https://github.com/leather-io/mono/issues/2343)) ([88d12da](https://github.com/leather-io/mono/commit/88d12da1389dc241d24753f7f7f230a243b2444b))
+
+
+### Bug Fixes
+
+* audit axios ([#2362](https://github.com/leather-io/mono/issues/2362)) ([83e1848](https://github.com/leather-io/mono/commit/83e1848b6fe5f4ac3d4478090277b3bf032d055b))
+* remove runes/ordinals pages from queries ([#2352](https://github.com/leather-io/mono/issues/2352)) ([22578a1](https://github.com/leather-io/mono/commit/22578a14ef855040b549e8ec2d39c5f23de3806b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.37.7
+    * @leather.io/constants bumped to 0.36.0
+    * @leather.io/models bumped to 0.56.1
+    * @leather.io/stacks bumped to 1.20.1
+    * @leather.io/utils bumped to 0.51.4
+
 ## [2.48.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.47.2...@leather.io/query-v2.48.0) (2026-05-12)
 
 
