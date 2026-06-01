@@ -1,28 +1,40 @@
+import { getDefaultStore } from 'jotai';
+import { sessionsAtom } from '~/features/multisig/auth/sessions.atom';
+
+import type { AuthSession, ChainNetworkId } from '@leather.io/models';
 import type { TokenAuthService } from '@leather.io/services';
 
-let accessToken: string | null = null;
-let refreshToken: string | null = null;
-
 export class WebTokenAuthService implements TokenAuthService {
-  getAccessToken() {
-    return accessToken;
+  private readonly store = getDefaultStore();
+
+  getSession(network: ChainNetworkId) {
+    return this.store.get(sessionsAtom)[network];
   }
 
-  getRefreshToken() {
-    return refreshToken;
+  getActiveNetworks() {
+    const sessions = this.store.get(sessionsAtom);
+    return (Object.keys(sessions) as ChainNetworkId[]).filter(
+      network => sessions[network] !== null
+    );
   }
 
-  setTokens(access: string, refresh: string) {
-    accessToken = access;
-    refreshToken = refresh;
+  setSession(network: ChainNetworkId, session: AuthSession) {
+    this.store.set(sessionsAtom, prev => ({ ...prev, [network]: session }));
   }
 
-  onTokenRefreshed(newAccessToken: string) {
-    accessToken = newAccessToken;
+  clearSession(network: ChainNetworkId) {
+    this.store.set(sessionsAtom, prev => ({ ...prev, [network]: null }));
   }
 
-  onAuthFailure() {
-    accessToken = null;
-    refreshToken = null;
+  onTokenRefreshed(network: ChainNetworkId, accessToken: string) {
+    this.store.set(sessionsAtom, prev => {
+      const existing = prev[network];
+      if (!existing) return prev;
+      return { ...prev, [network]: { ...existing, accessToken } };
+    });
+  }
+
+  onAuthFailure(network: ChainNetworkId) {
+    this.clearSession(network);
   }
 }

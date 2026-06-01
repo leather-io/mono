@@ -23,6 +23,8 @@ export * from './infrastructure/token-auth.service';
 export * from './inversify.config';
 export * from './market/market-data.service';
 export * from './market/market-stats.service';
+export * from './multisig/auth.service';
+export * from './multisig/auth.types';
 export * from './multisig/multisig.service';
 export * from './protocols/stacks-protocol.service';
 export * from './swap/swap.service';

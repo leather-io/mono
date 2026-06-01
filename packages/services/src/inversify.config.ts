@@ -27,6 +27,7 @@ import { Types } from './inversify.types';
 import { MarketDataService } from './market/market-data.service';
 import { MarketHistoryService } from './market/market-history.service';
 import { MarketStatsService } from './market/market-stats.service';
+import { AuthService } from './multisig/auth.service';
 import { MultisigService } from './multisig/multisig.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { StacksProtocolService } from './protocols/stacks-protocol.service';
@@ -182,6 +183,9 @@ export function getStacksProtocolService() {
 }
 export function getMultisigService() {
   return getServicesContainer().get(MultisigService);
+}
+export function getAuthService() {
+  return getServicesContainer().get(AuthService);
 }
 
 /*

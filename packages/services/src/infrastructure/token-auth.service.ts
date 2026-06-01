@@ -1,6 +1,12 @@
+import type { AuthSession, ChainNetworkId } from '@leather.io/models';
+
 export interface TokenAuthService {
-  getAccessToken(): string | null;
-  getRefreshToken(): string | null;
-  onTokenRefreshed(accessToken: string): void;
-  onAuthFailure(): void;
+  getSession(network: ChainNetworkId): AuthSession | null;
+  getActiveNetworks(): ChainNetworkId[];
+
+  setSession(network: ChainNetworkId, session: AuthSession): void;
+  clearSession(network: ChainNetworkId): void;
+
+  onTokenRefreshed(network: ChainNetworkId, accessToken: string): void;
+  onAuthFailure(network: ChainNetworkId): void;
 }
