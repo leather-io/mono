@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react';
-import { NavLink } from 'react-router';
+import { NavLink, useMatch } from 'react-router';
 
 import { Box, styled } from 'leather-styles/jsx';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
@@ -15,6 +15,12 @@ interface NavItemProps {
   newTab?: boolean;
 }
 export function NavItem({ children, icon, href, newTab }: NavItemProps) {
+  const isExternal = href.startsWith('https');
+  // Match the current path against this item (including nested routes, e.g.
+  // /multisig also matches /multisig/vault/:id) so the active section stays
+  // highlighted while drilling down. External links never match.
+  const match = useMatch(isExternal ? '__external__' : `${href}/*`);
+  const isActive = !isExternal && Boolean(match);
   const content = (
     <Flag
       width="100%"
@@ -32,6 +38,7 @@ export function NavItem({ children, icon, href, newTab }: NavItemProps) {
       lineHeight="1.05"
       outline="none"
       borderRadius="99px"
+      bg={isActive ? 'ink.component-background-hover' : undefined}
       _hover={{ bg: 'ink.component-background-hover' }}
       _focusVisible={{ textDecoration: 'underline' }}
     >

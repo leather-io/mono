@@ -1,5 +1,7 @@
 import { type RouteConfig, index, prefix, route } from '@react-router/dev/routes';
 
+import { multisigRoutes } from './pages/multisig/multisig.routes';
+
 export default [
   index('pages/index.route.tsx'),
   // Stacking routes
@@ -35,6 +37,7 @@ export default [
   // Redirects from old help-center URLs
   route('help-center', 'pages/redirects/help-center-redirect.route.tsx'),
   route('help-center/*', 'pages/redirects/help-center-wildcard.route.tsx'),
+  ...multisigRoutes,
   // Fallback route
   route('*', 'pages/error/error-not-found.route.tsx'),
 ] satisfies RouteConfig;
