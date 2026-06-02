@@ -1,10 +1,10 @@
 import { getDefaultStore } from 'jotai';
 import { sessionsAtom } from '~/features/multisig/auth/sessions.atom';
 
-import type { AuthSession, ChainNetworkId } from '@leather.io/models';
-import type { TokenAuthService } from '@leather.io/services';
+import type { ChainNetworkId } from '@leather.io/models';
+import type { AuthSessionService } from '@leather.io/services';
 
-export class WebTokenAuthService implements TokenAuthService {
+export class WebAuthSessionService implements AuthSessionService {
   private readonly store = getDefaultStore();
 
   getSession(network: ChainNetworkId) {
@@ -18,14 +18,6 @@ export class WebTokenAuthService implements TokenAuthService {
     );
   }
 
-  setSession(network: ChainNetworkId, session: AuthSession) {
-    this.store.set(sessionsAtom, prev => ({ ...prev, [network]: session }));
-  }
-
-  clearSession(network: ChainNetworkId) {
-    this.store.set(sessionsAtom, prev => ({ ...prev, [network]: null }));
-  }
-
   onTokenRefreshed(network: ChainNetworkId, accessToken: string) {
     this.store.set(sessionsAtom, prev => {
       const existing = prev[network];
@@ -35,6 +27,6 @@ export class WebTokenAuthService implements TokenAuthService {
   }
 
   onAuthFailure(network: ChainNetworkId) {
-    this.clearSession(network);
+    this.store.set(sessionsAtom, prev => ({ ...prev, [network]: null }));
   }
 }

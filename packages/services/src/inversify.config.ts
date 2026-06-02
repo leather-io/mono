@@ -19,15 +19,15 @@ import { BnsV2ApiClient } from './infrastructure/api/bns-v2/bns-v2-api.client';
 import { HiroStacksApiClient } from './infrastructure/api/hiro/hiro-stacks-api.client';
 import { LeatherApiClient } from './infrastructure/api/leather/leather-api.client';
 import { LeatherAuthApiClient } from './infrastructure/api/leather/leather-auth-api.client';
+import type { AuthSessionService } from './infrastructure/auth/auth-session.service';
+import { SignInService } from './infrastructure/auth/sign-in.service';
 import { HttpCacheService } from './infrastructure/cache/http-cache.service';
 import { Environment } from './infrastructure/environment';
 import { SettingsService } from './infrastructure/settings/settings.service';
-import type { TokenAuthService } from './infrastructure/token-auth.service';
 import { Types } from './inversify.types';
 import { MarketDataService } from './market/market-data.service';
 import { MarketHistoryService } from './market/market-history.service';
 import { MarketStatsService } from './market/market-stats.service';
-import { AuthService } from './multisig/auth.service';
 import { MultisigService } from './multisig/multisig.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { StacksProtocolService } from './protocols/stacks-protocol.service';
@@ -50,7 +50,7 @@ export interface InitServicesContainerOptions {
   env: Environment;
   settingsService: Newable<SettingsService>;
   cacheService: Newable<HttpCacheService>;
-  tokenAuthService?: Newable<TokenAuthService>;
+  authSessionService?: Newable<AuthSessionService>;
 }
 
 export function initServicesContainer(options: InitServicesContainerOptions): Container {
@@ -65,10 +65,10 @@ export function initServicesContainer(options: InitServicesContainerOptions): Co
       .bind<HttpCacheService>(Types.CacheService)
       .to(options.cacheService)
       .inSingletonScope();
-    if (options.tokenAuthService) {
+    if (options.authSessionService) {
       servicesContainer
-        .bind(Types.TokenAuthService)
-        .to(options.tokenAuthService)
+        .bind(Types.AuthSessionService)
+        .to(options.authSessionService)
         .inSingletonScope();
     }
   }
@@ -184,8 +184,8 @@ export function getStacksProtocolService() {
 export function getMultisigService() {
   return getServicesContainer().get(MultisigService);
 }
-export function getAuthService() {
-  return getServicesContainer().get(AuthService);
+export function getSignInService() {
+  return getServicesContainer().get(SignInService);
 }
 
 /*
