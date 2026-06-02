@@ -6,9 +6,9 @@ import { LEATHER_API_URL_PRODUCTION, LEATHER_API_URL_STAGING } from '@leather.io
 import type { ChainNetworkId } from '@leather.io/models';
 
 import { Types } from '../../../inversify.types';
+import type { AuthSessionService } from '../../auth/auth-session.service';
 import type { Environment } from '../../environment';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
-import type { TokenAuthService } from '../../token-auth.service';
 import { LeatherApiError } from './leather-api.error';
 import { paths } from './leather-api.types';
 
@@ -19,7 +19,7 @@ export class LeatherAuthApiClient {
   private isRefreshing = false;
 
   constructor(
-    @inject(Types.TokenAuthService) private readonly tokenProvider: TokenAuthService,
+    @inject(Types.AuthSessionService) private readonly tokenProvider: AuthSessionService,
     @inject(Types.Environment) env: Environment,
     private readonly rateLimiter: RateLimiterService
   ) {

@@ -1,18 +1,37 @@
 import { useMutation } from '@tanstack/react-query';
+import { useSetAtom } from 'jotai';
 
-import type { AuthSession, ChainNetworkId } from '@leather.io/models';
-import { type WalletSignInPayload, getAuthService } from '@leather.io/services';
+import type { AuthApplication, AuthSession, ChainNetworkId } from '@leather.io/models';
+import {
+  type WalletSignInPayload,
+  buildSignInMessage,
+  getSignInService,
+} from '@leather.io/services';
 
-async function walletSignIn(_params: {
+import { sessionsAtom } from './sessions.atom';
+
+function walletSignIn(params: {
   message: string;
   timestamp: number;
 }): Promise<WalletSignInPayload> {
-  throw new Error('TODO: wire to extension wallet_signIn RPC once available');
+  return Promise.reject(
+    new Error(
+      `TODO: wire to extension wallet_signIn RPC once available (message=${params.message})`
+    )
+  );
 }
 
-export function useSignIn(network: ChainNetworkId) {
+export function useSignIn(network: ChainNetworkId, application: AuthApplication[] = ['multisig']) {
+  const setSessions = useSetAtom(sessionsAtom);
+
   return useMutation<AuthSession, Error, void>({
-    mutationKey: ['multisig-auth-sign-in', network],
-    mutationFn: () => getAuthService().signIn({ network, walletSignIn }),
+    mutationKey: ['multisig-auth-sign-in', network, application],
+    mutationFn: async () => {
+      const { message, timestamp } = buildSignInMessage();
+      const payload = await walletSignIn({ message, timestamp });
+      const session = await getSignInService().signIn({ network, application, payload });
+      setSessions(prev => ({ ...prev, [network]: session }));
+      return session;
+    },
   });
 }
