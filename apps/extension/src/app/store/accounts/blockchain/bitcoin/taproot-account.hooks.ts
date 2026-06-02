@@ -10,6 +10,8 @@ import { type AccountId } from '@leather.io/models';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 
+import type { RootState } from '@app/store';
+import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 
@@ -41,11 +43,15 @@ const selectCurrentTaprootAccount = createSelector(
 );
 
 export function useCurrentTaprootAccount() {
-  return useSelector(selectCurrentTaprootAccount);
+  const { version } = useInMemoryKeys();
+  return useSelector((state: RootState) => selectCurrentTaprootAccount(state, version));
 }
 
 export function useTaprootAccount(accountId: AccountId) {
-  const lookupTaprootAccount = useSelector(selectTaprootAccountId);
+  const { version } = useInMemoryKeys();
+  const lookupTaprootAccount = useSelector((state: RootState) =>
+    selectTaprootAccountId(state, version)
+  );
   return useMemo(() => lookupTaprootAccount(accountId), [lookupTaprootAccount, accountId]);
 }
 

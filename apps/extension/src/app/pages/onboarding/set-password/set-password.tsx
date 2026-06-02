@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
-import { Form, Formik } from 'formik';
+import { Form, Formik, type FormikHelpers } from 'formik';
 import { Stack } from 'leather-styles/jsx';
 import { debounce } from 'ts-debounce';
 import * as yup from 'yup';
@@ -13,8 +14,6 @@ import { isUndefined } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { useFinishAuthRequest } from '@app/common/authentication/use-finish-auth-request';
-import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import {
   blankPasswordValidation,
@@ -28,7 +27,8 @@ import {
   DescriptionColumn,
   TwoColumnLayout,
 } from '@app/components/layout/layouts/two-column.layout';
-import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useCheckPassword } from '@app/store/software-keys/software-key.hooks';
+import { selectSoftwareKeys } from '@app/store/software-keys/software-key.selectors';
 
 import { PasswordField } from './components/password-field';
 
@@ -38,73 +38,94 @@ interface SetPasswordFormValues {
 }
 const setPasswordFormValues: SetPasswordFormValues = { password: '', confirmPassword: '' };
 
-export function SetPasswordPage() {
+interface SetPasswordPageProps {
+  mnemonicData: { mnemonic: string; fingerprint: string };
+  onBack?(): void;
+}
+export function SetPasswordPage({ mnemonicData, onBack }: SetPasswordPageProps) {
   const [loading, setLoading] = useState(false);
   const [strengthResult, setStrengthResult] = useState(blankPasswordValidation);
-  const stacksAccounts = useStacksAccounts();
   const { setPassword } = useKeyActions();
-  const finishSignIn = useFinishAuthRequest();
+  const softwareKeys = useSelector(selectSoftwareKeys);
+  const hasSoftwareKeys = !!softwareKeys.length;
+  const checkPassword = useCheckPassword();
+
   const navigate = useNavigate();
-  const { decodedAuthRequest } = useOnboardingState();
 
   const submit = useCallback(
     async (password: string) => {
-      await setPassword(password);
-
-      if (decodedAuthRequest) {
-        if (!stacksAccounts) return;
-
-        if (stacksAccounts && stacksAccounts.length > 1) {
-          void navigate(RouteUrls.ChooseAccount);
-        } else {
-          await finishSignIn(0);
-        }
-      } else {
-        void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
-      }
+      await setPassword({
+        password,
+        mnemonic: mnemonicData.mnemonic,
+        fingerprint: mnemonicData.fingerprint,
+      });
+      void navigate(RouteUrls.Home, { replace: true, state: { fromOnboarding: true } });
     },
-    [setPassword, decodedAuthRequest, stacksAccounts, navigate, finishSignIn]
+    [setPassword, navigate, mnemonicData.fingerprint, mnemonicData.mnemonic]
   );
 
   const onSubmit = useCallback(
-    async ({ password }: SetPasswordFormValues) => {
+    async (
+      { password }: SetPasswordFormValues,
+      { setFieldError }: FormikHelpers<SetPasswordFormValues>
+    ) => {
       if (!password) return;
       setLoading(true);
-      if (strengthResult.meetsAllStrengthRequirements) {
-        analytics.track('submit_valid_password');
-        await submit(password);
-        return;
+      try {
+        if (hasSoftwareKeys) {
+          if (await checkPassword({ password })) {
+            await submit(password);
+            return;
+          }
+          setFieldError('password', "The password you entered doesn't match");
+          return;
+        }
+
+        if (strengthResult.meetsAllStrengthRequirements) {
+          analytics.track('submit_valid_password');
+          await submit(password);
+        }
+      } catch {
+        setFieldError('password', 'Something went wrong setting your password');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     },
-    [strengthResult, submit]
+    [hasSoftwareKeys, checkPassword, strengthResult, submit]
   );
 
   const validationSchema = yup.object({
-    password: yup
-      .string()
-      .required()
-      .test({
-        message: 'Weak',
-        test: debounce((value: unknown) => {
-          if (isUndefined(value)) {
-            setStrengthResult(blankPasswordValidation);
-            return false;
-          }
-          if (typeof value !== 'string') return false;
-          const result = validatePassword(value);
-          setStrengthResult(result);
-          if (!result.meetsAllStrengthRequirements) {
-            analytics.track('submit_invalid_password');
-          }
-          return result.meetsAllStrengthRequirements;
-        }, 60) as unknown as yup.TestFunction<any, any>,
-      }),
+    password: hasSoftwareKeys
+      ? yup.string().required('Enter your password')
+      : yup
+          .string()
+          .required()
+          .test({
+            message: 'Weak',
+            test: debounce((value: unknown) => {
+              if (isUndefined(value)) {
+                setStrengthResult(blankPasswordValidation);
+                return false;
+              }
+              if (typeof value !== 'string') return false;
+              const result = validatePassword(value);
+              setStrengthResult(result);
+              if (!result.meetsAllStrengthRequirements) {
+                analytics.track('submit_invalid_password');
+              }
+              return result.meetsAllStrengthRequirements;
+            }, 60) as unknown as yup.TestFunction<any, any>,
+          }),
   });
+  const title = hasSoftwareKeys ? 'Enter your Password' : 'Set a password';
+  const description = hasSoftwareKeys
+    ? 'Enter the password you set on this device.'
+    : "Your password protects your Secret Key on this device only. To access your wallet on another device, you'll need just your Secret Key.";
+
   return (
     <>
       <Header px="space.04">
-        <HeaderGrid leftCol={<HeaderBackButton />} rightCol={null} />
+        <HeaderGrid leftCol={<HeaderBackButton onBack={onBack} />} rightCol={null} />
       </Header>
       <Content>
         <Formik
@@ -118,12 +139,7 @@ export function SetPasswordPage() {
           {({ dirty, isSubmitting, isValid }) => (
             <Form>
               <TwoColumnLayout
-                leftColumn={
-                  <DescriptionColumn
-                    title="Set a password"
-                    description="Your password protects your Secret Key on this device only. To access your wallet on another device, you'll need just your Secret Key."
-                  />
-                }
+                leftColumn={<DescriptionColumn title={title} description={description} />}
                 rightColumn={
                   <Stack
                     p="space.05"
@@ -135,7 +151,11 @@ export function SetPasswordPage() {
                     minWidth={['100%', null, '400px', 'twoColumnPageWidth']}
                     flex="1"
                   >
-                    <PasswordField strengthResult={strengthResult} isDisabled={loading} />
+                    <PasswordField
+                      strengthResult={strengthResult}
+                      isDisabled={loading}
+                      showStrength={!hasSoftwareKeys}
+                    />
                     <Button
                       data-testid={OnboardingSelectors.SetPasswordBtn}
                       disabled={loading || !(dirty && isValid)}

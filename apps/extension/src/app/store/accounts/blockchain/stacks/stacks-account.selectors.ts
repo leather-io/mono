@@ -25,7 +25,7 @@ import { assumedZeroFingerprint } from '@shared/utils';
 import type { StacksAppKeysResponseItem } from '@app/features/ledger/utils/stacks-ledger-utils';
 import type { RootState } from '@app/store';
 import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
-import { selectRootKeychains } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { selectRootKeychainsAtVersion } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { selectStacksKeychains } from '@app/store/keychains/keychain.selectors';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
@@ -88,7 +88,7 @@ function initalizeHardwareStacksAccount(
 }
 
 const selectSoftwareAccounts = createSelector(
-  selectRootKeychains,
+  selectRootKeychainsAtVersion,
   selectStacksChain,
   selectCurrentNetwork,
   (keychains, chain, currentNetwork) => {
@@ -174,10 +174,13 @@ function createSoftwareStacksAccountGenerator(rootKeychain: HDKey) {
   return memoizeAccountGenerator(generateAccount);
 }
 
-const selectSoftwareStacksAccountGenerators = createSelector(selectRootKeychains, keychains => {
-  if (!keychains) return {};
-  return mapValues(keychains, keychain => createSoftwareStacksAccountGenerator(keychain));
-});
+const selectSoftwareStacksAccountGenerators = createSelector(
+  selectRootKeychainsAtVersion,
+  keychains => {
+    if (!keychains) return {};
+    return mapValues(keychains, keychain => createSoftwareStacksAccountGenerator(keychain));
+  }
+);
 
 function generateLedgerStacksAccount(
   ledgerKeys: Record<string, StacksAppKeysResponseItem & { id: string; fingerprint: string }>,
@@ -230,7 +233,7 @@ const selectStacksAccountLookup = createSelector(
 export const selectStacksAccountById = createSelector(
   selectStacksAccountLookup,
   selectCurrentNetwork,
-  (_state: RootState, accountId: AccountId) => accountId,
+  (_state: RootState, _version: number, accountId: AccountId) => accountId,
   (accountLookup, currentNetwork, accountId) => {
     return accountLookup(
       accountId,
