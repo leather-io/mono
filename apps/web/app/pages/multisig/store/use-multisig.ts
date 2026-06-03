@@ -44,7 +44,7 @@ export function useVaultTx(
   return { vault, tx };
 }
 
-export interface RecentTransaction extends MultisigTransaction {
+interface RecentTransaction extends MultisigTransaction {
   vault: Vault;
 }
 
@@ -61,7 +61,7 @@ export function useRecentTransactions(limit = 5): RecentTransaction[] {
     .slice(0, limit);
 }
 
-export interface MultisigActions {
+interface MultisigActions {
   addVault(payload: { chain: Chain; name: string; theme: number; members: NewMemberInput[] }): void;
   addAccount(payload: { vaultId: string; name: string; threshold: number; icon: string }): void;
   acceptInvite(vaultId: string): void;

@@ -6,11 +6,11 @@
 
 export type Chain = 'btc' | 'stx';
 
-export type MemberRole = 'Admin' | 'Member';
+type MemberRole = 'Admin' | 'Member';
 
 export type InviteStatus = 'invited' | 'joined' | 'declined';
 
-export type VaultStatus = 'pending' | 'active' | 'cancelled';
+type VaultStatus = 'pending' | 'active' | 'cancelled';
 
 // queued is STX-only (waiting on a prior nonce); a BTC tx is never queued.
 export type TxStatus =

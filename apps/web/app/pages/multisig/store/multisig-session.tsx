@@ -17,7 +17,7 @@ export interface MultisigSessionState {
   idSeq: number;
 }
 
-export type MultisigAction =
+type MultisigAction =
   | { type: 'reset'; payload: 'empty' | 'seed' }
   | {
       type: 'addVault';

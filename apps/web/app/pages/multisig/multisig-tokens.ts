@@ -4,7 +4,7 @@
 // token directly, so the multisig area tracks the current Leather design
 // system rather than the prototype's older token snapshot.
 
-export interface VaultTheme {
+interface VaultTheme {
   id: number;
   name: string;
   // Public asset path to the textured hero background (copied from the
