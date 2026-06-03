@@ -42,6 +42,7 @@ export function RenameWalletDialog({
             autoFocus
             data-testid={SwitchAccountSelectors.RenameWalletInput}
             value={name}
+            maxLength={40}
             onChange={e => setName(e.currentTarget.value)}
             onKeyDown={e => {
               if (e.key === 'Enter') handleSave();

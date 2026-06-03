@@ -37,7 +37,10 @@ export function Container() {
     inMemoryStore.clearAll();
     window.location.reload();
   });
-  useOnSignOut(() => closeWindow());
+  useOnSignOut(() => {
+    inMemoryStore.clearAll();
+    window.location.reload();
+  });
   useRestoreFormState();
   useHandleQueuedBackgroundAnalytics();
   useOnChangeAccount(accountId => dispatch(userSwitchesAccount(accountId)));

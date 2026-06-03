@@ -20,9 +20,10 @@ export function CurrentAccountDisplayer({ onSelectAccount }: CurrentAccountDispl
 
   const currentAccount = useSelector(selectCurrentAccount);
   const stacksAccount = useStacksAccount(currentAccount);
-  const { data: name = '' } = useAccountDisplayName({
-    address: stacksAccount?.address || '',
+  const { data: name } = useAccountDisplayName({
+    address: stacksAccount?.address,
     index: current.accountIndex,
+    fingerprint: current.fingerprint,
   });
   return (
     <AccountListItemLayout

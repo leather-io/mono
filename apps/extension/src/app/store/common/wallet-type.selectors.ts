@@ -44,7 +44,7 @@ interface WalletAccountRefTree {
 // should be used to render virtualised lists, where list item components take
 // care of account look up themselves, as a way to lazily derive account details
 // when needed.
-const selectWalletAccountRefTree = createSelector(
+export const selectWalletAccountRefTree = createSelector(
   [selectWalletEntities, selectStacksChain, selectBitcoinKeychains, selectStacksKeychains],
   (walletEntities, stxChain, bitcoinKeychains, stacksKeychains): WalletAccountRefTree[] => {
     const tree: WalletAccountRefTree[] = [];

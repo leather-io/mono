@@ -31,10 +31,11 @@ export const AccountListItem = memo(function AccountListItem({
     BitcoinSendFormValues | StacksSendFormValues
   >();
   const currentAccount = useSelector(selectCurrentAccount);
-  const stacksAddress = stacksAccount?.address || '';
-  const { data: name = '' } = useAccountDisplayName({
-    address: stacksAddress,
+  const stacksAddress = stacksAccount.address;
+  const { data: name } = useAccountDisplayName({
+    address: stacksAccount.address,
     index: accountId.accountIndex,
+    fingerprint: accountId.fingerprint,
   });
   const bitcoinSigner = useNativeSegwitPayer(accountId);
   const bitcoinAddress = bitcoinSigner?.({ changeIndex: 0, addressIndex: 0 }).address || '';

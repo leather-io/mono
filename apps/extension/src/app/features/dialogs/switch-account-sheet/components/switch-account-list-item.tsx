@@ -39,8 +39,8 @@ export function SwitchAccountListItem({
     'SWITCH_ACCOUNTS' + stxAddress || btcAddress
   );
   const { handleSwitchAccount } = useSwitchAccount(handleClose);
-  const { data: name = '', isFetching: isFetchingBnsName } = useAccountDisplayName({
-    address: stxAddress,
+  const { data: name, isFetching: isFetchingBnsName } = useAccountDisplayName({
+    address: stacksAccount?.address,
     index: accountId.accountIndex,
     fingerprint: accountId.fingerprint,
   });

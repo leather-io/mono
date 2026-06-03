@@ -48,6 +48,7 @@ export function RenameAccountDialog({ accountId, isShowing, onClose }: RenameAcc
             autoFocus
             data-testid={SwitchAccountSelectors.RenameAccountInput}
             value={name}
+            maxLength={35}
             onChange={e => setName(e.currentTarget.value)}
             onKeyDown={e => {
               if (e.key === 'Enter') handleSave();

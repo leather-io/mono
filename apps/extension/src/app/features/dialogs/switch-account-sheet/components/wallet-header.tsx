@@ -35,6 +35,10 @@ export function WalletHeader({
       <styled.span
         color="ink.text-primary"
         textStyle="label.01"
+        minWidth={0}
+        overflow="hidden"
+        whiteSpace="nowrap"
+        textOverflow="ellipsis"
         data-testid={SwitchAccountSelectors.WalletHeaderName}
       >
         {name}

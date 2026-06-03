@@ -3,10 +3,10 @@ import { EnterMnemonic } from '../onboarding/sign-in/enter-mnemonic';
 import { useSignIn } from '../onboarding/sign-in/hooks/use-sign-in';
 
 export function AddWallet() {
-  const { submitMnemonicForm, error, isLoading, mnemonicData } = useSignIn();
+  const { submitMnemonicForm, error, isLoading, mnemonicData, clearMnemonicData } = useSignIn();
 
   return mnemonicData ? (
-    <SetPasswordPage mnemonicData={mnemonicData} />
+    <SetPasswordPage mnemonicData={mnemonicData} onBack={clearMnemonicData} />
   ) : (
     <EnterMnemonic
       onSubmit={submitMnemonicForm}

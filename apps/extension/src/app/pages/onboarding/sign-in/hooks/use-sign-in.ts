@@ -73,6 +73,10 @@ export function useSignIn() {
     [setIsLoading, setIsIdle, handleSetError, walletEntities]
   );
 
+  const clearMnemonicData = useCallback(() => {
+    setMnemonicData(null);
+  }, []);
+
   const toggleKeyMask = useCallback(() => {
     setIsKeyMasked(prev => !prev);
   }, []);
@@ -89,6 +93,7 @@ export function useSignIn() {
 
   return {
     submitMnemonicForm,
+    clearMnemonicData,
     ref: textAreaRef,
     error,
     isLoading,

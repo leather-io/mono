@@ -11,7 +11,7 @@ import { accountsAdapter } from './accounts.slice';
 
 const selectors = accountsAdapter.getSelectors((state: RootState) => state.accounts);
 
-const selectHiddenAccountIds = createSelector(selectors.selectAll, accounts =>
+export const selectHiddenAccountIds = createSelector(selectors.selectAll, accounts =>
   accounts.filter(account => account.status === 'hidden').map(account => account.id)
 );
 

@@ -1,3 +1,4 @@
+import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
 import { userRemovesWallet } from '@leather.io/state/wallet';
 
@@ -5,6 +6,8 @@ import { InternalMethods } from '@shared/message-types';
 import { sendMessage } from '@shared/messages';
 
 import { AppThunk } from '..';
+import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
+import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
 import { selectAllWallets } from '../wallets/wallet.selectors';
 import { selectActiveAccount } from './active.selectors';
@@ -30,8 +33,22 @@ export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
     if (activeAccount?.fingerprint === fingerprint) {
       const remainingWallet = allWallets.find(w => w.fingerprint !== fingerprint);
       if (remainingWallet) {
+        const hiddenAccountIds = selectHiddenAccountIds(state);
+        const remainingAccounts =
+          selectWalletAccountRefTree(state).find(
+            wallet => wallet.fingerprint === remainingWallet.fingerprint
+          )?.accounts ?? [];
+        const firstVisibleAccount = remainingAccounts.find(
+          account =>
+            !hiddenAccountIds.includes(
+              makeAccountIdentifer(account.fingerprint, account.accountIndex)
+            )
+        );
         void dispatch(
-          changeActiveAccount({ fingerprint: remainingWallet.fingerprint, accountIndex: 0 })
+          changeActiveAccount({
+            fingerprint: remainingWallet.fingerprint,
+            accountIndex: firstVisibleAccount?.accountIndex ?? 0,
+          })
         );
       } else {
         dispatch(userSwitchesAccount(null));
