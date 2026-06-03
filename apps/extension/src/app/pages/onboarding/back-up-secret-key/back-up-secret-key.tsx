@@ -5,7 +5,6 @@ import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { Eye1ClosedIcon, KeyIcon, LockIcon } from '@leather.io/ui';
 
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { Content } from '@app/components/layout';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
@@ -33,18 +32,9 @@ function BulletPoint({ icon, text }: BulletPointProps) {
 
 export function BackUpSecretKeyPage() {
   const keyActions = useKeyActions();
-  const [mnemonicData, setMnemonicData] = useState<null | {
-    mnemonic: string;
-    fingerprint: string;
-  }>();
+  const [mnemonicData] = useState(() => keyActions.generateWalletKey());
   const [showPasswordPage, setShowPasswordPage] = useState(false);
-  useOnMount(() => {
-    const { mnemonic, fingerprint } = keyActions.generateWalletKey();
-    setMnemonicData({ mnemonic, fingerprint });
-  });
 
-  // TODO: need some loading here
-  if (!mnemonicData?.mnemonic) return null;
   return showPasswordPage ? (
     <SetPasswordPage mnemonicData={mnemonicData} onBack={() => setShowPasswordPage(false)} />
   ) : (
@@ -79,7 +69,7 @@ export function BackUpSecretKeyPage() {
           }
           rightColumn={
             <SecretKey
-              secretKey={mnemonicData?.mnemonic}
+              secretKey={mnemonicData.mnemonic}
               onDone={() => {
                 setShowPasswordPage(true);
               }}
