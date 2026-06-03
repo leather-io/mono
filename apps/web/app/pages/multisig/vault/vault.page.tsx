@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
 
-import { AvatarSq } from '../components/avatar-sq';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
 import { useMultisigToast } from '../components/multisig-toast';
@@ -63,11 +62,7 @@ export function VaultDetailPage() {
 
   return (
     <Page>
-      <Page.Header
-        title={vault.name}
-        backTo={multisigPaths.index}
-        icon={<AvatarSq chain={vault.chain} icon="vault" themeId={vault.theme} size="sm" />}
-      />
+      <Page.Header title={vault.name} backTo={multisigPaths.index} />
       <Flex direction={['column', 'column', 'row']} gap="space.06" alignItems="flex-start">
         <Box flex={['1', '1', '1.6']} width="100%">
           <MultisigHero

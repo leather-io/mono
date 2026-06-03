@@ -65,20 +65,25 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
 interface PageHeaderProps {
   title?: React.ReactNode;
   backTo?: string;
-  icon?: React.ReactNode;
   children?: React.ReactElement | React.ReactElement[];
 }
-function PageHeader({ title, backTo, icon, children }: PageHeaderProps) {
+function PageHeader({ title, backTo, children }: PageHeaderProps) {
   return (
     <styled.header display="flex" justifyContent="space-between" h="60px" alignItems="center">
       <Flex alignItems="center" justifyContent="space-between" flex={1}>
         <Flex alignItems="center" gap="space.02" minWidth={0}>
           {backTo && (
             <RouterLink to={backTo} aria-label="Back">
-              <Button variant="ghost" size="sm" iconStart={ArrowLeftIcon} p="space.02" gap="0" />
+              <Button
+                variant="ghost"
+                size="sm"
+                iconStart={ArrowLeftIcon}
+                width="32px"
+                px="0"
+                gap="0"
+              />
             </RouterLink>
           )}
-          {icon}
           {title && <styled.h1 textStyle="heading.05">{title}</styled.h1>}
         </Flex>
         <MockModeToggle />

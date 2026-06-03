@@ -6,7 +6,6 @@ import { Page } from '~/layouts/page/page';
 
 import { PlusIcon } from '@leather.io/ui';
 
-import { AvatarSq } from '../components/avatar-sq';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
 import { useMultisigToast } from '../components/multisig-toast';
@@ -57,11 +56,7 @@ export function AccountDetailPage() {
 
   return (
     <Page>
-      <Page.Header
-        title={account.name}
-        backTo={multisigPaths.vault(vault.id)}
-        icon={<AvatarSq chain={vault.chain} icon={account.icon} themeId={vault.theme} size="sm" />}
-      />
+      <Page.Header title={account.name} backTo={multisigPaths.vault(vault.id)} />
       <Flex direction={['column', 'column', 'row']} gap="space.06" alignItems="flex-start">
         <Box flex={['1', '1', '1.6']} width="100%">
           <MultisigHero
