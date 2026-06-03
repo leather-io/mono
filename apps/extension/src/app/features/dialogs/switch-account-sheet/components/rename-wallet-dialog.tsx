@@ -8,6 +8,8 @@ import { Button, Input, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { useAppDispatch } from '@app/store';
 
+const WALLET_MAX_NAME_LENGTH = 40;
+
 interface RenameWalletDialogProps {
   currentName: string;
   fingerprint: string;
@@ -25,7 +27,7 @@ export function RenameWalletDialog({
   const [name, setName] = useState(currentName);
 
   function handleSave() {
-    const trimmed = name.trim();
+    const trimmed = name.trim().substring(0, WALLET_MAX_NAME_LENGTH);
     if (!trimmed) return;
     dispatch(userRenamesWallet({ fingerprint, name: trimmed }));
     onClose();
@@ -42,7 +44,7 @@ export function RenameWalletDialog({
             autoFocus
             data-testid={SwitchAccountSelectors.RenameWalletInput}
             value={name}
-            maxLength={40}
+            maxLength={WALLET_MAX_NAME_LENGTH}
             onChange={e => setName(e.currentTarget.value)}
             onKeyDown={e => {
               if (e.key === 'Enter') handleSave();

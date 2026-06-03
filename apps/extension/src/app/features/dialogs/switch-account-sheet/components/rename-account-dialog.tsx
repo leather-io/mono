@@ -12,6 +12,8 @@ import { useAppDispatch } from '@app/store';
 import { useAccountNameOverride } from '@app/store/accounts/accounts.selectors';
 import { userRenamesAccount } from '@app/store/accounts/accounts.slice';
 
+const ACCOUNT_MAX_NAME_LENGTH = 35;
+
 interface RenameAccountDialogProps {
   accountId: AccountId;
   isShowing: boolean;
@@ -26,7 +28,7 @@ export function RenameAccountDialog({ accountId, isShowing, onClose }: RenameAcc
   );
 
   function handleSave() {
-    const trimmed = name.trim();
+    const trimmed = name.trim().substring(0, ACCOUNT_MAX_NAME_LENGTH);
     if (!trimmed) return;
     dispatch(
       userRenamesAccount({
@@ -48,7 +50,7 @@ export function RenameAccountDialog({ accountId, isShowing, onClose }: RenameAcc
             autoFocus
             data-testid={SwitchAccountSelectors.RenameAccountInput}
             value={name}
-            maxLength={35}
+            maxLength={ACCOUNT_MAX_NAME_LENGTH}
             onChange={e => setName(e.currentTarget.value)}
             onKeyDown={e => {
               if (e.key === 'Enter') handleSave();

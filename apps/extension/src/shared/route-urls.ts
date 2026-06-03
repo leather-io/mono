@@ -2,7 +2,6 @@ export enum RouteUrls {
   // Onboarding routes
   Onboarding = '/get-started',
   BackUpSecretKey = '/back-up-secret-key',
-  SetPassword = '/set-password',
   SignIn = '/sign-in',
 
   // Ledger routes

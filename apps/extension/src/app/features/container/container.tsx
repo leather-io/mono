@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
-import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
 import { initalizeAnalytics, useHandleQueuedBackgroundAnalytics } from '@app/common/app-analytics';

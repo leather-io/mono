@@ -232,4 +232,58 @@ describe(migrateToAccountsSlice.name, () => {
 
     expect(result.accounts.ids).toEqual([`${softwareFingerprint}/0`]);
   });
+
+  test('overwrites a pre-existing accounts slice with freshly derived accounts', () => {
+    const inputState = {
+      wallets: {
+        ids: [softwareFingerprint],
+        entities: {
+          [softwareFingerprint]: { fingerprint: softwareFingerprint, type: 'software' },
+        },
+      },
+      chains: { stx: { [softwareFingerprint]: { highestAccountIndex: 1 } } },
+      accounts: {
+        ids: [`${softwareFingerprint}/0`, 'stale/0'],
+        entities: {
+          [`${softwareFingerprint}/0`]: { id: `${softwareFingerprint}/0`, name: 'Stale name' },
+          'stale/0': { id: 'stale/0' },
+        },
+      },
+      settings: {},
+    };
+
+    const result = migrateToAccountsSlice(inputState);
+
+    expect(result.accounts.ids).toEqual([`${softwareFingerprint}/0`, `${softwareFingerprint}/1`]);
+    expect(result.accounts.entities['stale/0']).toBeUndefined();
+    expect(result.accounts.entities[`${softwareFingerprint}/0`]).toEqual({
+      id: `${softwareFingerprint}/0`,
+    });
+  });
+
+  test('is idempotent when re-run on an already-migrated state', () => {
+    const inputState = {
+      wallets: {
+        ids: [softwareFingerprint],
+        entities: {
+          [softwareFingerprint]: { fingerprint: softwareFingerprint, type: 'software' },
+        },
+      },
+      chains: { stx: { [softwareFingerprint]: { highestAccountIndex: 2 } } },
+      settings: {},
+    };
+
+    const once = migrateToAccountsSlice(inputState);
+    const twice = migrateToAccountsSlice(once);
+
+    expect(twice.accounts).toEqual(once.accounts);
+  });
+
+  test('produces an empty accounts slice when wallets is undefined', () => {
+    const inputState = { settings: {} };
+
+    const result = migrateToAccountsSlice(inputState);
+
+    expect(result.accounts).toEqual({ ids: [], entities: {} });
+  });
 });

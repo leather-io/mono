@@ -26,7 +26,9 @@ export function SigningAccountCard({
   const stxAddress = account?.address || '';
   const { data: name = '', isLoading: isLoadingName } = useAccountDisplayName({
     address: stxAddress,
+    // TODO: We shouldn't just set it to empty strings here, rethink
     index: account?.accountIndex ?? 0,
+    fingerprint: account?.fingerprint ?? '',
   });
 
   const titleRight = (

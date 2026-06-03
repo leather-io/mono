@@ -9,59 +9,38 @@ import { selectCurrentAccount, selectSoftwareKeys } from '../software-keys/softw
 import * as inMemoryStore from './in-memory-storage';
 import { useInMemoryKeys } from './use-in-memory-keys';
 
-// The `version` input only busts memoization; results read from `inMemoryStore`, not the arg.
-const selectHasActiveInMemoryWalletKey = createSelector(
-  [selectCurrentAccount, (_state: RootState, version: number) => version],
-  currentAccount => inMemoryStore.hasKey(currentAccount.fingerprint)
-);
-
-const selectHasLockedSoftwareWallets = createSelector(
-  [selectSoftwareKeys, (_state: RootState, version: number) => version],
-  softwareKeys => softwareKeys.some(key => !inMemoryStore.hasKey(key.id))
-);
 export function useHasLockedSoftwareWallets() {
-  const { version } = useInMemoryKeys();
-  return useSelector((state: RootState) => selectHasLockedSoftwareWallets(state, version));
+  const { hasKey } = useInMemoryKeys();
+  const softwareKeys = useSelector(selectSoftwareKeys);
+  return softwareKeys.some(key => !hasKey(key.id));
 }
 
-const selectHasUnlockedSoftwareWallets = createSelector(
-  [selectSoftwareKeys, (_state: RootState, version: number) => version],
-  softwareKeys => softwareKeys.some(key => inMemoryStore.hasKey(key.id))
-);
 export function useHasUnlockedSoftwareWallets() {
-  const { version } = useInMemoryKeys();
-  return useSelector((state: RootState) => selectHasUnlockedSoftwareWallets(state, version));
+  const { hasKey } = useInMemoryKeys();
+  const softwareKeys = useSelector(selectSoftwareKeys);
+  return softwareKeys.some(key => hasKey(key.id));
 }
 
 export function useHasActiveInMemoryWalletSecretKey() {
-  const { version } = useInMemoryKeys();
-
-  return useSelector((state: RootState) => selectHasActiveInMemoryWalletKey(state, version));
+  const { hasKey } = useInMemoryKeys();
+  const fingerprint = useSelector((state: RootState) => selectCurrentAccount(state).fingerprint);
+  return hasKey(fingerprint);
 }
 
-const selectActiveWalletKeyAtVersion = createSelector(
-  [selectCurrentAccount, (_state: RootState, version: number) => version],
-  currentAccount => {
-    return inMemoryStore.getKey(currentAccount.fingerprint);
-  }
-);
-
+// Intentionally do NOT use `createSelector` (or any memoized selector) for the
+// decoded secret key. reselect retains its last result in a module-lifetime memo
+// cache, which would keep the cleartext mnemonic resident in process memory until
+// the inputs change and across component unmounts. Read it on demand instead;
+// reactivity comes from `useInMemoryKeys()` (useSyncExternalStore).
 export function useActiveWalletSecretKey() {
-  const { version } = useInMemoryKeys();
-  return useSelector((state: RootState) => selectActiveWalletKeyAtVersion(state, version));
+  const { getKey } = useInMemoryKeys();
+  const fingerprint = useSelector((state: RootState) => selectCurrentAccount(state).fingerprint);
+  return getKey(fingerprint);
 }
-
-const selectWalletKeyAtVersion = createSelector(
-  [
-    (_state: RootState, fingerprint: string | undefined) => fingerprint,
-    (_state: RootState, _fingerprint: string | undefined, version: number) => version,
-  ],
-  fingerprint => (fingerprint ? inMemoryStore.getKey(fingerprint) : undefined)
-);
 
 export function useWalletSecretKey(fingerprint: string | undefined) {
-  const { version } = useInMemoryKeys();
-  return useSelector((state: RootState) => selectWalletKeyAtVersion(state, fingerprint, version));
+  const { getKey } = useInMemoryKeys();
+  return fingerprint ? getKey(fingerprint) : undefined;
 }
 export const selectRootKeychainsAtVersion = createSelector(
   [selectSoftwareKeys, (_state: RootState, version: number) => version],

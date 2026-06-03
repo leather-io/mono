@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { userRemovesWallet } from '@leather.io/state/wallet';
+import { userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
 import { stxChainSlice } from './stx-chain.slice';
 
@@ -30,6 +30,19 @@ describe('stxChainSlice', () => {
     );
 
     expect(removed[fingerprintA]).toBeUndefined();
+
+    const readded = stxChainSlice.reducer(
+      removed,
+      userAddsWallet({
+        wallet: { fingerprint: fingerprintA, createdOn: null, type: 'software' },
+        accountKeychains: [],
+      })
+    );
+
+    expect(readded[fingerprintA]).toEqual({
+      highestAccountIndex: 0,
+      currentAccountStacksDescriptor: '',
+    });
   });
 
   test('leaves state untouched when removing a wallet with no stx chain state', () => {
