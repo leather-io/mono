@@ -2,6 +2,7 @@ import { Outlet, data } from 'react-router';
 
 import { Box } from 'leather-styles/jsx';
 
+import { DevToolsPanel } from './components/dev-tools-panel';
 import { MultisigToastProvider } from './components/multisig-toast';
 import { multisigEnabled } from './multisig.constants';
 import { MultisigSessionProvider } from './store/multisig-session';
@@ -23,6 +24,7 @@ export default function MultisigLayout() {
         <Box pb="space.11">
           <Outlet />
         </Box>
+        <DevToolsPanel />
       </MultisigToastProvider>
     </MultisigSessionProvider>
   );

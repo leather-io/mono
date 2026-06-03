@@ -10,7 +10,7 @@ import { TxRow } from '../components/tx-row';
 import type { Vault } from '../data/multisig-types';
 import { InviteAcceptModal } from '../modals/invite-accept-modal';
 import { multisigPaths } from '../multisig.constants';
-import { useMultisigActions, useRecentTransactions, useVaults } from '../store/use-multisig';
+import { useRecentTransactions, useVaults } from '../store/use-multisig';
 import { CreateVaultTile } from './components/create-vault-tile';
 import { VaultCard } from './components/vault-card';
 
@@ -19,25 +19,6 @@ function SectionLabel({ children }: { children: string }) {
     <styled.h3 textStyle="label.02" color="ink.text-subdued" mb="space.03">
       {children}
     </styled.h3>
-  );
-}
-
-// Dev-only affordance so reviewers can walk zero → create → populated without a
-// state switcher. Resets the in-memory session; disappears at extraction.
-function PreviewDataControls() {
-  const { resetSession } = useMultisigActions();
-  return (
-    <Flex alignItems="center" gap="space.02" mb="space.05">
-      <styled.span textStyle="caption.01" color="ink.text-subdued">
-        Preview data:
-      </styled.span>
-      <Button variant="ghost" onClick={() => resetSession('seed')}>
-        Populated
-      </Button>
-      <Button variant="ghost" onClick={() => resetSession('empty')}>
-        Empty
-      </Button>
-    </Flex>
   );
 }
 
@@ -97,7 +78,6 @@ export function MultisigDashboardPage() {
   return (
     <Page>
       <Page.Header title="Multisig" />
-      <PreviewDataControls />
       <Flex direction={['column', 'column', 'row']} gap="space.06" alignItems="flex-start">
         <Box flex={['1', '1', '1.6']} width="100%">
           <SectionLabel>My vaults</SectionLabel>
