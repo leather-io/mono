@@ -11,6 +11,7 @@ interface AccountGateDestinationArgs {
   hasLockedSoftwareWallets: boolean;
 }
 
+/** @knipignore exported only for unit testing; consumed internally by `AccountGate` */
 export function selectAccountGateDestination({
   walletCount,
   hasLockedSoftwareWallets,

@@ -29,7 +29,7 @@ export function createGetBnsNamesOwnedByAddressQueryOptions({
   client,
 }: CreateGetBnsNamesOwnedByAddressQueryOptionsArgs) {
   return {
-    enabled: !isUndefined(address),
+    enabled: !isUndefined(address) && address !== '',
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [BnsV2QueryPrefixes.GetBnsNamesByAddress, address],
     queryFn: async ({ signal }: QueryFunctionContext) => {
