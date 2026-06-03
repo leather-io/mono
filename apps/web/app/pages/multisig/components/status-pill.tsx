@@ -1,8 +1,5 @@
-import { Badge } from '@leather.io/ui';
-
 import { type TxStatus, txStatusLabel } from '../data/multisig-types';
-
-type BadgeVariant = 'default' | 'error' | 'info' | 'success' | 'warning';
+import { Badge, type BadgeVariant } from './badge';
 
 // Maps each transaction status to a Badge tone. queued/cancelled read as
 // neutral, in-flight signing as warning/info, terminal success/failure as

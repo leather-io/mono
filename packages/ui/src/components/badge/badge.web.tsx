@@ -8,13 +8,15 @@ const badgeRecipe = cva({
     display: 'inline-flex',
     alignItems: 'center',
     gap: 'space.01',
-    borderRadius: 'xs',
+    borderRadius: 'round',
     maxWidth: 'fit-content',
-    maxHeight: 24,
-    p: 'space.01',
     textStyle: 'label.03',
   },
   variants: {
+    size: {
+      sm: { px: 'space.02', py: '2px' },
+      md: { px: 'space.02', py: 'space.01' },
+    },
     variant: {
       default: {
         bg: 'ink.background-secondary',
@@ -46,6 +48,7 @@ const badgeRecipe = cva({
     outlined: { true: { bg: 'transparent' } },
   },
   defaultVariants: {
+    size: 'sm',
     variant: 'default',
   },
 });
@@ -59,9 +62,9 @@ interface BadgeOwnProps {
 
 export type BadgeProps = BadgeOwnProps & BadgeVariants & HTMLStyledProps<'div'>;
 
-export function Badge({ icon, label, outlined, variant, ...props }: BadgeProps) {
+export function Badge({ icon, label, outlined, size, variant, ...props }: BadgeProps) {
   return (
-    <styled.div className={badgeRecipe({ outlined, variant })} {...props}>
+    <styled.div className={badgeRecipe({ outlined, size, variant })} {...props}>
       {icon}
       {label}
     </styled.div>

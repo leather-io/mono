@@ -1,6 +1,5 @@
-import { Badge } from '@leather.io/ui';
-
 import type { InviteStatus } from '../data/multisig-types';
+import { Badge } from './badge';
 
 interface MemberStatusPillProps {
   status: InviteStatus;

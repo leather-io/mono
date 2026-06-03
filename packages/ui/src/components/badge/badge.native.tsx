@@ -5,6 +5,7 @@ import { Box, BoxProps } from '../box/box.native';
 import { Text } from '../text/text.native';
 
 type BadgeVariant = 'default' | 'info' | 'success' | 'warning' | 'error';
+type BadgeSize = 'sm' | 'md';
 
 interface VariantProps {
   bg: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
@@ -40,23 +41,31 @@ const badgeVariants: Record<BadgeVariant, VariantProps> = {
   },
 };
 
+const badgeSizes: Record<BadgeSize, number> = {
+  sm: 22,
+  md: 24,
+};
+
 export interface BadgeProps extends BoxProps {
   label: string;
   variant?: BadgeVariant;
+  size?: BadgeSize;
   outlined?: boolean;
 }
 
-export function Badge({ variant = 'default', outlined, ...props }: BadgeProps) {
+export function Badge({ variant = 'default', size = 'sm', outlined, ...props }: BadgeProps) {
   const styles = badgeVariants[variant];
 
   return (
     <Box
+      alignItems="center"
+      justifyContent="center"
       bg={outlined ? undefined : styles.bg}
       borderColor={styles.borderColor}
-      borderRadius="xs"
+      borderRadius="round"
       borderWidth={1}
-      height={24}
-      p="1"
+      height={badgeSizes[size]}
+      px="2"
       {...props}
     >
       <Text variant="label03" color={styles.color}>

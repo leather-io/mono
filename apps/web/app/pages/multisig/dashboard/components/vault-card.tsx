@@ -1,8 +1,7 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { Badge } from '@leather.io/ui';
-
 import { AvatarSq } from '../../components/avatar-sq';
+import { Badge } from '../../components/badge';
 import type { Vault } from '../../data/multisig-types';
 
 interface VaultCardProps {
