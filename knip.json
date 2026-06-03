@@ -179,7 +179,10 @@
       ],
       "ignore": [
         "stubs/**",
-        "app/layouts/nav/global-loader.styles.ts"
+        "app/layouts/nav/global-loader.styles.ts",
+        "app/features/multisig/auth/use-session.ts",
+        "app/features/multisig/auth/use-sign-in.ts",
+        "app/features/multisig/auth/use-sign-out.ts"
       ]
     },
     "packages/provider": {
