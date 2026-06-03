@@ -2,15 +2,14 @@ import { useState } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
-import { CheckmarkIcon, CopyIcon } from '@leather.io/ui';
+import { AddressDisplayer, CheckmarkIcon, CopyIcon } from '@leather.io/ui';
+
+import { truncateAddress } from './address-text';
 
 interface CopyAddressProps {
   addr: string;
   full?: boolean;
-}
-
-function truncate(addr: string): string {
-  return addr.length > 18 ? `${addr.slice(0, 9)}…${addr.slice(-7)}` : addr;
+  grouped?: boolean;
 }
 
 const COPIED_RESET_MS = 1400;
@@ -18,8 +17,9 @@ const COPIED_RESET_MS = 1400;
 // Mono-font address with click-to-copy. Uses the Clipboard API directly (a
 // design-only convenience); production extraction routes through the app's
 // clipboard hook.
-export function CopyAddress({ addr, full }: CopyAddressProps) {
+export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
   const [copied, setCopied] = useState(false);
+  const multiline = grouped || full;
   function onCopy() {
     void navigator.clipboard?.writeText(addr);
     setCopied(true);
@@ -31,26 +31,41 @@ export function CopyAddress({ addr, full }: CopyAddressProps) {
       onClick={onCopy}
       title="Copy address"
       display="inline-flex"
-      alignItems="center"
-      gap="space.01"
+      alignItems={multiline ? 'flex-start' : 'center'}
+      gap="space.02"
       maxWidth="100%"
+      textAlign="left"
       cursor="pointer"
+      ml="-space.02"
+      px="space.02"
+      py="space.01"
+      borderRadius="sm"
       bg="transparent"
       color="ink.text-subdued"
-      fontFamily="firaCode"
-      fontSize="13px"
-      lineHeight="1.4"
-      _hover={{ color: 'ink.text-primary' }}
+      transition="background 0.1s ease"
+      _hover={{ bg: 'ink.component-background-hover', color: 'ink.text-primary' }}
     >
+      {grouped ? (
+        <AddressDisplayer address={addr} minWidth={0} />
+      ) : (
+        <styled.span
+          textStyle="code"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          whiteSpace={full ? 'normal' : 'nowrap'}
+          wordBreak={full ? 'break-all' : 'normal'}
+        >
+          {full ? addr : truncateAddress(addr)}
+        </styled.span>
+      )}
       <styled.span
-        overflow="hidden"
-        textOverflow="ellipsis"
-        whiteSpace={full ? 'normal' : 'nowrap'}
-        wordBreak={full ? 'break-all' : 'normal'}
+        flexShrink={0}
+        display="inline-flex"
+        alignItems="center"
+        mt={multiline ? 'space.01' : '0'}
       >
-        {full ? addr : truncate(addr)}
+        {copied ? <CheckmarkIcon variant="small" /> : <CopyIcon variant="small" />}
       </styled.span>
-      {copied ? <CheckmarkIcon variant="small" /> : <CopyIcon variant="small" />}
     </styled.button>
   );
 }

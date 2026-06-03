@@ -16,8 +16,7 @@ export function AddressText({ addr, full }: AddressTextProps) {
   return (
     <styled.span
       display="block"
-      fontFamily="firaCode"
-      fontSize="13px"
+      textStyle="code"
       color="ink.text-subdued"
       overflow="hidden"
       textOverflow="ellipsis"

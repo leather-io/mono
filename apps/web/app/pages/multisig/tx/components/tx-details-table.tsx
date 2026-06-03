@@ -56,7 +56,7 @@ export function TxDetailsTable({ vault, tx }: TxDetailsTableProps) {
       </Row>
       <Row label="Initiation date">{tx.proposedAt}</Row>
       <Row label="Recipient">
-        <CopyAddress addr={recipient} />
+        <CopyAddress addr={recipient} grouped />
       </Row>
       <Row label="Amount">{tx.amount}</Row>
       <Row label="Fee">{isBtc ? '0.00023 BTC ≈ $15.50' : '0.0125 STX ≈ $0.01'}</Row>

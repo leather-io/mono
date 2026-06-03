@@ -61,7 +61,7 @@ export function AccountDetailsCard({
         <styled.div textStyle="label.02" mb="space.02">
           Address
         </styled.div>
-        <CopyAddress addr={account.addr} full />
+        <CopyAddress addr={account.addr} grouped />
       </CardRow>
 
       <CardRow>
