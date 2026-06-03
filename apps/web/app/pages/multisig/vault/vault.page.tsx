@@ -7,7 +7,6 @@ import { Page } from '~/layouts/page/page';
 import { AvatarSq } from '../components/avatar-sq';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
-import { MultisigPageHeader } from '../components/multisig-page-header';
 import { useMultisigToast } from '../components/multisig-toast';
 import { TxRow } from '../components/tx-row';
 import { CreateAccountModal } from '../modals/create-account-modal';
@@ -43,7 +42,7 @@ export function VaultDetailPage() {
   if (!vault) {
     return (
       <Page>
-        <MultisigPageHeader title="Vault" backTo={multisigPaths.index} />
+        <Page.Header title="Vault" backTo={multisigPaths.index} />
         <MultisigErrorState
           body={
             <>
@@ -64,18 +63,10 @@ export function VaultDetailPage() {
 
   return (
     <Page>
-      <MultisigPageHeader
+      <Page.Header
         title={vault.name}
         backTo={multisigPaths.index}
-        icon={
-          <AvatarSq
-            chain={vault.chain}
-            icon="vault"
-            themeId={vault.theme}
-            size="sm"
-            withChainBadge={false}
-          />
-        }
+        icon={<AvatarSq chain={vault.chain} icon="vault" themeId={vault.theme} size="sm" />}
       />
       <Flex direction={['column', 'column', 'row']} gap="space.06" alignItems="flex-start">
         <Box flex={['1', '1', '1.6']} width="100%">

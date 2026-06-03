@@ -1,5 +1,7 @@
 import { Outlet, data } from 'react-router';
 
+import { Box } from 'leather-styles/jsx';
+
 import { MultisigToastProvider } from './components/multisig-toast';
 import { multisigEnabled } from './multisig.constants';
 import { MultisigSessionProvider } from './store/multisig-session';
@@ -18,7 +20,9 @@ export default function MultisigLayout() {
   return (
     <MultisigSessionProvider>
       <MultisigToastProvider>
-        <Outlet />
+        <Box pb="space.11">
+          <Outlet />
+        </Box>
       </MultisigToastProvider>
     </MultisigSessionProvider>
   );

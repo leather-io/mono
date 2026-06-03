@@ -4,7 +4,6 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
 
 import { ChainPill } from '../components/chain-pill';
-import { MultisigPageHeader } from '../components/multisig-page-header';
 import type { Chain } from '../data/multisig-types';
 import { multisigPaths } from '../multisig.constants';
 import { SettingsRow } from './components/settings-row';
@@ -93,7 +92,7 @@ function ChainSettings({ chain }: { chain: Chain }) {
 export function MultisigSettingsPage() {
   return (
     <Page>
-      <MultisigPageHeader title="Multisig settings" backTo={multisigPaths.index} />
+      <Page.Header title="Multisig settings" backTo={multisigPaths.index} />
       <Flex direction="column" gap="space.06" maxWidth="640px">
         <SettingsSection
           head={

@@ -9,7 +9,6 @@ import { PlusIcon } from '@leather.io/ui';
 import { AvatarSq } from '../components/avatar-sq';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
-import { MultisigPageHeader } from '../components/multisig-page-header';
 import { useMultisigToast } from '../components/multisig-toast';
 import { TxRow } from '../components/tx-row';
 import { SendModal } from '../modals/send-modal';
@@ -40,7 +39,7 @@ export function AccountDetailPage() {
   if (!vault || !account) {
     return (
       <Page>
-        <MultisigPageHeader
+        <Page.Header
           title="Account"
           backTo={vault ? multisigPaths.vault(vault.id) : multisigPaths.index}
         />
@@ -58,18 +57,10 @@ export function AccountDetailPage() {
 
   return (
     <Page>
-      <MultisigPageHeader
+      <Page.Header
         title={account.name}
         backTo={multisigPaths.vault(vault.id)}
-        icon={
-          <AvatarSq
-            chain={vault.chain}
-            icon={account.icon}
-            themeId={vault.theme}
-            size="sm"
-            withChainBadge={false}
-          />
-        }
+        icon={<AvatarSq chain={vault.chain} icon={account.icon} themeId={vault.theme} size="sm" />}
       />
       <Flex direction={['column', 'column', 'row']} gap="space.06" alignItems="flex-start">
         <Box flex={['1', '1', '1.6']} width="100%">

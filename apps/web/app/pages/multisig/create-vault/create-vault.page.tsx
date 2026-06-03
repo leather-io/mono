@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
 
-import { MultisigPageHeader } from '../components/multisig-page-header';
 import { useMultisigToast } from '../components/multisig-toast';
 import { TextField } from '../components/text-field';
 import { myWalletAddress } from '../data/dummy-multisig-data';
@@ -61,7 +60,7 @@ export function CreateVaultPage() {
 
   return (
     <Page>
-      <MultisigPageHeader title="Create vault" backTo={multisigPaths.index} />
+      <Page.Header title="Create vault" backTo={multisigPaths.index} />
       <Flex direction={['column', 'column', 'row']} gap="space.07" alignItems="flex-start">
         <Box flex={['1', '1', '1.4']} width="100%">
           <Section label="Vault name">

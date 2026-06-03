@@ -7,7 +7,6 @@ import { Page } from '~/layouts/page/page';
 import { AvatarCircle } from '../components/avatar-circle';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
-import { MultisigPageHeader } from '../components/multisig-page-header';
 import { useMultisigToast } from '../components/multisig-toast';
 import { multisigPaths } from '../multisig.constants';
 import { useMultisigActions, useVaultTx } from '../store/use-multisig';
@@ -72,7 +71,7 @@ export function TxDetailPage() {
   if (!vault || !tx) {
     return (
       <Page>
-        <MultisigPageHeader
+        <Page.Header
           title="Transaction"
           backTo={vault ? multisigPaths.vault(vault.id) : multisigPaths.index}
         />
@@ -103,7 +102,7 @@ export function TxDetailPage() {
 
   return (
     <Page>
-      <MultisigPageHeader title="Transaction details" backTo={multisigPaths.vault(vault.id)} />
+      <Page.Header title="Transaction details" backTo={multisigPaths.vault(vault.id)} />
       <Flex direction={['column', 'column', 'row']} gap="space.06" alignItems="flex-start">
         <Box flex={['1', '1', '1.6']} width="100%">
           <MultisigHero
