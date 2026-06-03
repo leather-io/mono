@@ -1,7 +1,8 @@
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { styled } from 'leather-styles/jsx';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { Badge } from '../../components/badge';
+import { VaultListItem } from '../../components/vault-list-item';
 import type { Vault } from '../../data/multisig-types';
 
 interface VaultCardProps {
@@ -17,13 +18,28 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
   const isInvite = vault.invited;
   const invitedCount = vault.members.filter(m => m.inviteStatus === 'invited').length;
   const hasPending = !isInvite && invitedCount > 0;
+
+  function renderTrailingTitle() {
+    if (isInvite) return <Badge variant="info" label="Invitation" />;
+    if (hasPending) {
+      return (
+        <Badge
+          variant="warning"
+          label={`${invitedCount} pending invite${invitedCount === 1 ? '' : 's'}`}
+        />
+      );
+    }
+    return formatUsd(vault.balanceUsd);
+  }
+
+  const chainLabel = vault.chain === 'btc' ? 'Bitcoin' : 'Stacks';
+  const accountLabel = vault.accounts.length === 1 ? 'account' : 'accounts';
+
   return (
     <styled.button
       type="button"
       onClick={onClick}
-      display="flex"
-      alignItems="center"
-      gap="space.04"
+      display="block"
       width="100%"
       textAlign="left"
       cursor="pointer"
@@ -35,33 +51,13 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
       bg="ink.background-primary"
       _hover={{ bg: 'ink.component-background-hover' }}
     >
-      <AvatarSq chain={vault.chain} icon="vault" themeId={vault.theme} size="md" />
-      <Box flex={1} minWidth={0}>
-        <Flex alignItems="center" justifyContent="space-between" gap="space.02">
-          <styled.span textStyle="label.01" truncate>
-            {vault.name}
-          </styled.span>
-          {!isInvite && !hasPending && (
-            <styled.span textStyle="label.02">{formatUsd(vault.balanceUsd)}</styled.span>
-          )}
-          {hasPending && (
-            <Badge
-              variant="warning"
-              label={`${invitedCount} pending invite${invitedCount === 1 ? '' : 's'}`}
-            />
-          )}
-          {isInvite && <Badge variant="info" label="Invitation" />}
-        </Flex>
-        <Flex alignItems="center" justifyContent="space-between" gap="space.02" mt="space.01">
-          <styled.span textStyle="caption.01" color="ink.text-subdued" truncate>
-            {vault.chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault · {vault.accounts.length}{' '}
-            {vault.accounts.length === 1 ? 'account' : 'accounts'}
-          </styled.span>
-          <styled.span textStyle="caption.01" color="ink.text-subdued" flexShrink={0}>
-            {hasPending ? 'Awaiting members' : vault.balanceSub}
-          </styled.span>
-        </Flex>
-      </Box>
+      <VaultListItem
+        leading={<AvatarSq chain={vault.chain} icon="vault" themeId={vault.theme} size="md" />}
+        title={vault.name}
+        caption={`${chainLabel} vault · ${vault.accounts.length} ${accountLabel}`}
+        trailingTitle={renderTrailingTitle()}
+        trailingSubtitle={hasPending ? 'Awaiting members' : vault.balanceSub}
+      />
     </styled.button>
   );
 }

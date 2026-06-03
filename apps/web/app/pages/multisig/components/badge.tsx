@@ -72,7 +72,9 @@ export function Badge({ label, variant = 'default', outlined }: BadgeProps) {
           bg="currentColor"
         />
       )}
-      <styled.span>{label}</styled.span>
+      <styled.span position="relative" top="1px">
+        {label}
+      </styled.span>
     </Flex>
   );
 }

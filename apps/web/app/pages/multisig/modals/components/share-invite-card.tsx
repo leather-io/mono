@@ -2,6 +2,7 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import { AvatarCircle } from '../../components/avatar-circle';
 import { CopyAddress } from '../../components/copy-address';
+import { VaultListItem } from '../../components/vault-list-item';
 import type { Member, Vault } from '../../data/multisig-types';
 import { FauxQR } from './faux-qr';
 
@@ -20,19 +21,13 @@ export function ShareInviteCard({ member, vault }: ShareInviteCardProps) {
       borderStyle="solid"
       borderColor="ink.border-default"
     >
-      <Flex alignItems="center" gap="space.03" mb="space.04">
-        <AvatarCircle name={member.name} size="sm" />
-        <Box minWidth={0}>
-          <styled.div textStyle="label.02" truncate>
-            {member.name}
-          </styled.div>
-          {member.handle && (
-            <styled.div textStyle="caption.01" color="ink.text-subdued">
-              {member.handle}
-            </styled.div>
-          )}
-        </Box>
-      </Flex>
+      <Box mb="space.04">
+        <VaultListItem
+          leading={<AvatarCircle name={member.name} size="lg" />}
+          title={member.name}
+          caption={member.handle}
+        />
+      </Box>
       <Flex gap="space.04" alignItems="center" flexWrap="wrap">
         <FauxQR text={inviteUrl} size={108} />
         <Box flex={1} minWidth="180px">

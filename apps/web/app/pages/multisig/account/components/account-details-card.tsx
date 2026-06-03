@@ -5,6 +5,7 @@ import { Button, CheckmarkIcon } from '@leather.io/ui';
 import { AvatarCircle } from '../../components/avatar-circle';
 import { AvatarSq } from '../../components/avatar-sq';
 import { CopyAddress } from '../../components/copy-address';
+import { VaultListItem } from '../../components/vault-list-item';
 import type { MultisigAccount, Vault } from '../../data/multisig-types';
 
 interface AccountDetailsCardProps {
@@ -41,21 +42,21 @@ export function AccountDetailsCard({
       borderColor="ink.border-default"
       overflow="hidden"
     >
-      <Flex alignItems="center" gap="space.03" p="space.04">
-        <AvatarSq
-          chain={vault.chain}
-          icon={account.icon}
-          themeId={vault.theme}
-          size="sm"
-          withChainBadge={false}
+      <Box p="space.04">
+        <VaultListItem
+          leading={
+            <AvatarSq
+              chain={vault.chain}
+              icon={account.icon}
+              themeId={vault.theme}
+              size="md"
+              withChainBadge={false}
+            />
+          }
+          title={account.name}
+          caption={`${vault.chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault account`}
         />
-        <Box>
-          <styled.div textStyle="label.01">{account.name}</styled.div>
-          <styled.div textStyle="caption.01" color="ink.text-subdued">
-            {vault.chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault account
-          </styled.div>
-        </Box>
-      </Flex>
+      </Box>
 
       <CardRow>
         <styled.div textStyle="label.02" mb="space.02">

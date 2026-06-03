@@ -4,6 +4,7 @@ import { Button } from '@leather.io/ui';
 
 import { AddressText } from '../../components/address-text';
 import { AvatarCircle } from '../../components/avatar-circle';
+import { VaultListItem } from '../../components/vault-list-item';
 import type { MultisigTransaction, Vault } from '../../data/multisig-types';
 
 interface SignerRollcallProps {
@@ -40,38 +41,33 @@ export function SignerRollcall({
         const isMe = member.isCreator || member.name === 'Me';
         const showSign = !signed && isMe && collecting;
         return (
-          <Flex
+          <Box
             key={member.addr}
-            alignItems="center"
-            gap="space.03"
             p="space.04"
             borderTopWidth={index === 0 ? '0' : '1px'}
             borderTopStyle="solid"
             borderTopColor="ink.border-default"
           >
-            <AvatarCircle name={member.name} size="sm" />
-            <Box flex={1} minWidth={0}>
-              <styled.div textStyle="label.02">
-                {member.name}
-                {isMe ? ' (me)' : ''}
-              </styled.div>
-              <Box maxWidth="100%">
-                <AddressText addr={member.addr} />
-              </Box>
-            </Box>
-            {showSign ? (
-              <Button variant="solid" disabled={verifying} onClick={onSign}>
-                {verifying ? 'Verifying…' : 'Sign'}
-              </Button>
-            ) : (
-              <styled.span
-                textStyle="caption.01"
-                color={signed ? 'green.action-primary-default' : 'ink.text-subdued'}
-              >
-                {signed ? 'Signed' : 'Not signed yet'}
-              </styled.span>
-            )}
-          </Flex>
+            <VaultListItem
+              leading={<AvatarCircle name={member.name} size="lg" />}
+              title={`${member.name}${isMe ? ' (me)' : ''}`}
+              caption={<AddressText addr={member.addr} />}
+              trailingTitle={
+                showSign ? (
+                  <Button variant="solid" disabled={verifying} onClick={onSign}>
+                    {verifying ? 'Verifying…' : 'Sign'}
+                  </Button>
+                ) : (
+                  <styled.span
+                    textStyle="caption.01"
+                    color={signed ? 'green.action-primary-default' : 'ink.text-subdued'}
+                  >
+                    {signed ? 'Signed' : 'Not signed yet'}
+                  </styled.span>
+                )
+              }
+            />
+          </Box>
         );
       })}
 

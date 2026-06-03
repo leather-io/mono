@@ -10,6 +10,7 @@ import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
 import { useMultisigToast } from '../components/multisig-toast';
 import { TxRow } from '../components/tx-row';
+import { VaultListItem } from '../components/vault-list-item';
 import { SendModal } from '../modals/send-modal';
 import { multisigPaths } from '../multisig.constants';
 import { useVaultAccount } from '../store/use-multisig';
@@ -75,9 +76,7 @@ export function AccountDetailPage() {
             <styled.button
               type="button"
               onClick={() => setSendOpen(true)}
-              display="flex"
-              alignItems="center"
-              gap="space.03"
+              display="block"
               width="100%"
               textAlign="left"
               cursor="pointer"
@@ -87,15 +86,15 @@ export function AccountDetailPage() {
               bg="transparent"
               _hover={{ bg: 'ink.component-background-hover' }}
             >
-              <Circle size="32px" bg="ink.background-secondary" flexShrink={0}>
-                <PlusIcon variant="small" />
-              </Circle>
-              <Box flex={1} minWidth={0}>
-                <styled.div textStyle="label.02">Create transaction</styled.div>
-                <styled.div textStyle="caption.01" color="ink.text-subdued">
-                  Propose a new {vault.chain === 'btc' ? 'BTC' : 'STX'} transfer for this account
-                </styled.div>
-              </Box>
+              <VaultListItem
+                leading={
+                  <Circle size="40px" bg="ink.background-secondary">
+                    <PlusIcon variant="small" />
+                  </Circle>
+                }
+                title="Create transaction"
+                caption={`Propose a new ${vault.chain === 'btc' ? 'BTC' : 'STX'} transfer for this account`}
+              />
             </styled.button>
             {txs.map(tx => (
               <TxRow

@@ -3,6 +3,7 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Button } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
+import { VaultListItem } from '../../components/vault-list-item';
 import type { Vault } from '../../data/multisig-types';
 
 interface VaultStatusCardProps {
@@ -56,21 +57,21 @@ export function VaultStatusCard({ vault, onShareInvites, onCancelVault }: VaultS
       borderColor="ink.border-default"
       overflow="hidden"
     >
-      <Flex alignItems="center" gap="space.03" p="space.04">
-        <AvatarSq
-          chain={vault.chain}
-          icon="vault"
-          themeId={vault.theme}
-          size="sm"
-          withChainBadge={false}
+      <Box p="space.04">
+        <VaultListItem
+          leading={
+            <AvatarSq
+              chain={vault.chain}
+              icon="vault"
+              themeId={vault.theme}
+              size="md"
+              withChainBadge={false}
+            />
+          }
+          title={vault.name}
+          caption={`${vault.chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault`}
         />
-        <Box>
-          <styled.div textStyle="label.01">{vault.name}</styled.div>
-          <styled.div textStyle="caption.01" color="ink.text-subdued">
-            {vault.chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault
-          </styled.div>
-        </Box>
-      </Flex>
+      </Box>
 
       <Row label="Threshold" value={`${threshold[0]} of ${threshold[1]}`}>
         <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">

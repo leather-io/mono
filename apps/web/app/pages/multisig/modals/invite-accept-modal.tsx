@@ -6,6 +6,7 @@ import { AvatarCircle } from '../components/avatar-circle';
 import { AvatarSq } from '../components/avatar-sq';
 import { CopyAddress } from '../components/copy-address';
 import { useMultisigToast } from '../components/multisig-toast';
+import { VaultListItem } from '../components/vault-list-item';
 import type { Vault } from '../data/multisig-types';
 import { vaultTheme } from '../multisig-tokens';
 import { useMultisigActions } from '../store/use-multisig';
@@ -80,27 +81,24 @@ export function InviteAcceptModal({ vault, isShowing, onClose }: InviteAcceptMod
           overflow="hidden"
         >
           {vault.members.map((member, index) => (
-            <Flex
+            <Box
               key={member.addr}
-              alignItems="center"
-              gap="space.03"
               p="space.04"
               borderTopWidth={index === 0 ? '0' : '1px'}
               borderTopStyle="solid"
               borderTopColor="ink.border-default"
             >
-              <AvatarCircle name={member.name} size="sm" />
-              <Box flex={1} minWidth={0}>
-                <styled.div textStyle="label.02">
-                  {member.name}
-                  {member.isCreator ? ' (you)' : ''}
-                </styled.div>
-                <CopyAddress addr={member.addr} />
-              </Box>
-              <styled.span textStyle="caption.01" color="ink.text-subdued">
-                {member.inviteStatus === 'joined' ? 'Joined' : 'Pending'}
-              </styled.span>
-            </Flex>
+              <VaultListItem
+                leading={<AvatarCircle name={member.name} size="lg" />}
+                title={`${member.name}${member.isCreator ? ' (you)' : ''}`}
+                caption={<CopyAddress addr={member.addr} />}
+                trailingTitle={
+                  <styled.span textStyle="caption.01" color="ink.text-subdued">
+                    {member.inviteStatus === 'joined' ? 'Joined' : 'Pending'}
+                  </styled.span>
+                }
+              />
+            </Box>
           ))}
         </Box>
 
