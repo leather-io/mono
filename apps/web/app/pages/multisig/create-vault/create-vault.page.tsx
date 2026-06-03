@@ -61,7 +61,12 @@ export function CreateVaultPage() {
   return (
     <Page>
       <Page.Header title="Create vault" backTo={multisigPaths.index} />
-      <Flex direction={['column', 'column', 'row']} gap="space.07" alignItems="flex-start">
+      <Flex
+        direction={['column', 'column', 'row']}
+        gap="space.07"
+        alignItems="flex-start"
+        mt="space.07"
+      >
         <Box flex={['1', '1', '1.4']} width="100%">
           <Section label="Vault name">
             <TextField placeholder="e.g. Team treasury" value={name} onChange={setName} />

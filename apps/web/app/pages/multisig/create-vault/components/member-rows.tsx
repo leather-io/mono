@@ -51,8 +51,7 @@ export function MemberRows({ chain, members, onChange }: MemberRowsProps) {
           <styled.input
             {...inputStyles}
             flex={1}
-            fontFamily="firaCode"
-            fontSize="13px"
+            textStyle="code"
             readOnly={member.isMe}
             placeholder={member.isMe ? 'Your wallet address' : placeholder}
             value={member.isMe ? myWalletAddress[chain] : member.addr}
@@ -84,6 +83,7 @@ export function MemberRows({ chain, members, onChange }: MemberRowsProps) {
       ))}
       <Button
         variant="ghost"
+        size="md"
         onClick={add}
         alignSelf="flex-start"
         iconStart={<PlusIcon variant="small" />}

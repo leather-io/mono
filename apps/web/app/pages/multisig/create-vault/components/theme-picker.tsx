@@ -19,13 +19,15 @@ export function ThemePicker({ themeId, onChange }: ThemePickerProps) {
             onClick={() => onChange(theme.id)}
             aria-label={theme.name}
             aria-pressed={selected}
-            width="48px"
+            flex={1}
+            minWidth={0}
             height="48px"
             borderRadius="md"
             cursor="pointer"
+            overflow="hidden"
             borderWidth="2px"
             borderStyle="solid"
-            borderColor={selected ? 'ink.action-primary-default' : 'transparent'}
+            borderColor={selected ? 'ink.action-primary-default' : 'ink.border-default'}
             style={{ background: theme.background }}
           />
         );
