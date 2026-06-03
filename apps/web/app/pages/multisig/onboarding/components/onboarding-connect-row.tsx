@@ -1,8 +1,9 @@
-import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { Badge, Button } from '@leather.io/ui';
+import { Button } from '@leather.io/ui';
 
-import { ChainGlyph } from '../../components/chain-glyph';
+import { Badge } from '../../components/badge';
+import { ChainAvatar } from '../../components/chain-avatar';
 import type { Chain } from '../../data/multisig-types';
 
 interface OnboardingConnectRowProps {
@@ -24,9 +25,9 @@ export function OnboardingConnectRow({ chain, connected, onConnect }: Onboarding
       borderStyle="solid"
       borderColor="ink.border-default"
     >
-      <Circle size="36px" bg="ink.background-secondary" flexShrink={0}>
-        <ChainGlyph chain={chain} variant="medium" />
-      </Circle>
+      <Box flexShrink={0}>
+        <ChainAvatar chain={chain} size="lg" />
+      </Box>
       <Box flex={1} minWidth={0}>
         <styled.div textStyle="label.02">Connect {label}</styled.div>
         <styled.div textStyle="caption.01" color="ink.text-subdued">

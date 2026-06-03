@@ -41,13 +41,7 @@ export function AccountsList({ vault, onCreate }: AccountsListProps) {
           bg="ink.background-primary"
           _hover={{ bg: 'ink.component-background-hover' }}
         >
-          <AvatarSq
-            chain={vault.chain}
-            icon={account.icon}
-            themeId={vault.theme}
-            size="md"
-            withChainBadge={false}
-          />
+          <AvatarSq chain={vault.chain} icon={account.icon} themeId={vault.theme} size="md" />
           <Box flex={1} minWidth={0}>
             <Flex alignItems="center" justifyContent="space-between" gap="space.02">
               <styled.span textStyle="label.01" truncate>

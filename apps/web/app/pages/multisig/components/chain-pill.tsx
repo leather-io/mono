@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Flex, styled } from 'leather-styles/jsx';
 
 import type { Chain } from '../data/multisig-types';
-import { ChainGlyph } from './chain-glyph';
+import { ChainAvatar } from './chain-avatar';
 
 interface ChainPillProps {
   chain: Chain;
@@ -29,7 +29,7 @@ export function ChainPill({ chain, logo, suffix }: ChainPillProps) {
       textStyle="label.03"
       color="ink.text-subdued"
     >
-      <ChainGlyph chain={chain} variant="small" />
+      <ChainAvatar chain={chain} boxSize="16px" />
       {!logo && <styled.span>{label}</styled.span>}
       {suffix}
     </Flex>

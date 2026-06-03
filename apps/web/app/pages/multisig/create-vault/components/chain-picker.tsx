@@ -1,6 +1,6 @@
-import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { ChainGlyph } from '../../components/chain-glyph';
+import { ChainAvatar } from '../../components/chain-avatar';
 import type { Chain } from '../../data/multisig-types';
 
 interface ChainPickerProps {
@@ -37,9 +37,9 @@ export function ChainPicker({ chain, onChange }: ChainPickerProps) {
             borderColor={selected ? 'ink.action-primary-default' : 'ink.border-default'}
             bg={selected ? 'ink.component-background-hover' : 'transparent'}
           >
-            <Circle size="32px" bg="ink.background-secondary" flexShrink={0}>
-              <ChainGlyph chain={option.id} variant="small" />
-            </Circle>
+            <Box flexShrink={0}>
+              <ChainAvatar chain={option.id} size="md" />
+            </Box>
             <Box minWidth={0}>
               <styled.div textStyle="label.02">{option.label}</styled.div>
             </Box>

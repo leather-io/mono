@@ -76,8 +76,11 @@ and is documented, not silent.)
 
 ### Genuine TOKEN-GAPs (no token equivalent → local constants in `multisig-tokens.ts`)
 
-- `bitcoin` brand orange `#F7931A` — `stacks` (`#5546FF`) is a token and is used directly;
-  bitcoin is not, so it is a raw hex literal.
+- ~~`bitcoin` brand orange raw hex~~ **(resolved)** — BTC/STX brand marks now render via
+  `@leather.io/ui`'s canonical brand-art avatar icons (`BtcAvatarIcon`/`StxAvatarIcon`, through the
+  local `ChainAvatar` seam), matching Portfolio. The former raw-hex bitcoin literal is gone and the
+  gap is sidestepped without adding a `bitcoin` color token. (Note: the brand art renders STX as its
+  coral mark, not the purple `stacks` token.)
 - The four **vault theme** textures (`themes/{blue,bronze,green,orange}.jpg`) — decorative
   hero backgrounds, not design tokens.
 - `avatarSquircleRadius` (`14px`) — no token radius matches the squircle avatar tile.
@@ -107,9 +110,8 @@ components rather than copied SVGs.
 Net-new multisig primitives built locally because no atom fit (logged as they are built):
 
 - **`AvatarSq`** — net-new. `@leather.io/ui` `Avatar` supports `variant="square"` and a round `indicator` slot, but it cannot carry a _texture-image background_ paired with a _mask-image account glyph that recolors to the theme_ — the combination this tile needs. Candidate for an upstream `Avatar` extension if multisig graduates.
-- **`ChainPill`** — net-new pill (chain mark + label); no atom equivalent.
-- **`ChainGlyph`** — wraps `BitcoinIcon`/`StacksIcon`; bitcoin has no color token so its color is a raw hex (TOKEN-GAP).
-- **`MultisigPageHeader`** — net-new (back-Link + title + actions); the web `Page.Header` carries sign-in + mock toggle, so it's not reusable for per-screen drill-down headers.
+- **`ChainPill`** — net-new pill (chain mark + label); no atom equivalent. Renders its chain mark via the `ChainAvatar` seam.
+- **`ChainAvatar`** — thin seam mapping a vault/account `chain` to the canonical `@leather.io/ui` `AssetAvatarIcon` (`nativeBtc`/`nativeStx`), so every BTC/STX brand mark + the chain/status punch-out badges use the shared brand art. Replaced the former local `ChainGlyph` + raw-hex bitcoin color.
 - **`MultisigErrorState`** — net-new shared not-found/empty surface.
 - **`MultisigToast`** — net-new; apps/web has **no** shared toast/notification mechanism (confirmed by grep in U4), so a minimal local one is provided. Strong candidate to standardize upstream.
 

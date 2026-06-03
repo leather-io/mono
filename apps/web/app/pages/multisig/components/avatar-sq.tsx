@@ -2,7 +2,7 @@ import { Box } from 'leather-styles/jsx';
 
 import type { Chain } from '../data/multisig-types';
 import { accountIconUrl, avatarSquircleRadius, vaultTheme } from '../multisig-tokens';
-import { ChainGlyph } from './chain-glyph';
+import { ChainAvatar } from './chain-avatar';
 
 type AvatarSqSize = 'sm' | 'md' | 'lg';
 
@@ -67,16 +67,16 @@ export function AvatarSq({
       {withChainBadge && (
         <Box
           position="absolute"
-          bottom="-3px"
-          right="-3px"
-          bg="ink.background-primary"
+          bottom="-2px"
+          right="-2px"
           borderRadius="round"
-          p="2px"
+          borderWidth="2px"
+          borderStyle="solid"
+          borderColor="ink.background-primary"
           display="flex"
-          alignItems="center"
-          justifyContent="center"
+          lineHeight="0"
         >
-          <ChainGlyph chain={chain} variant="small" />
+          <ChainAvatar chain={chain} boxSize="16px" />
         </Box>
       )}
     </Box>

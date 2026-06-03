@@ -4,19 +4,6 @@
 // token directly, so the multisig area tracks the current Leather design
 // system rather than the prototype's older token snapshot.
 
-// Bitcoin brand orange. `stacks` exists as a Panda color token (#5546FF) and
-// is referenced directly as the `stacks` token; bitcoin has no token, so the
-// raw hex lives here and is passed as a literal value to style props.
-export const bitcoinColor = '#F7931A';
-
-// Chain accent usable in Panda style props. `stacks` is a token name (resolves
-// to the Panda color token); `btc` is a raw hex literal. Both are valid values
-// for a `color`/`bg` style prop.
-export const chainColor = {
-  stx: 'stacks',
-  btc: bitcoinColor,
-};
-
 export interface VaultTheme {
   id: number;
   name: string;

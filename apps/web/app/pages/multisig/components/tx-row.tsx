@@ -1,10 +1,14 @@
-import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
+import type { ReactElement } from 'react';
 
-import { Badge } from '@leather.io/ui';
+import { Box, Flex, styled } from 'leather-styles/jsx';
+
+import { FailedIcon, SentIcon } from '@leather.io/ui';
 
 import type { MultisigTransaction, Vault } from '../data/multisig-types';
-import { ChainGlyph } from './chain-glyph';
+import { Badge } from './badge';
+import { ChainAvatar } from './chain-avatar';
 import { StatusPill } from './status-pill';
+import { type TxIndicatorKind, txStatusToIndicatorKind } from './tx-status-indicator';
 
 interface TxRowProps {
   tx: MultisigTransaction;
@@ -12,6 +16,11 @@ interface TxRowProps {
   showVaultName?: boolean;
   onClick(): void;
 }
+
+const txIndicatorIcon: Record<TxIndicatorKind, ReactElement> = {
+  sent: <SentIcon width={16} height={16} />,
+  failed: <FailedIcon width={16} height={16} />,
+};
 
 // Shared activity row used by the dashboard, vault detail, and account detail.
 export function TxRow({ tx, vault, showVaultName, onClick }: TxRowProps) {
@@ -34,9 +43,13 @@ export function TxRow({ tx, vault, showVaultName, onClick }: TxRowProps) {
       bg="transparent"
       _hover={{ bg: 'ink.component-background-hover' }}
     >
-      <Circle size="32px" bg="ink.background-secondary" flexShrink={0}>
-        <ChainGlyph chain={vault.chain} variant="small" />
-      </Circle>
+      <Box flexShrink={0}>
+        <ChainAvatar
+          chain={vault.chain}
+          size="lg"
+          indicator={txIndicatorIcon[txStatusToIndicatorKind(tx.status)]}
+        />
+      </Box>
       <Box flex={1} minWidth={0}>
         <Flex alignItems="center" gap="space.02">
           <styled.span textStyle="label.02" truncate>
