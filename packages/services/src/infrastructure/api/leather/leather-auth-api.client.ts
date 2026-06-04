@@ -3,26 +3,29 @@ import createClient from 'openapi-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
 import { LEATHER_API_URL_PRODUCTION, LEATHER_API_URL_STAGING } from '@leather.io/constants';
+import type { ChainNetworkId } from '@leather.io/models';
 
 import { Types } from '../../../inversify.types';
+import type { AuthSessionService } from '../../auth/auth-session.service';
 import type { Environment } from '../../environment';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
-import type { TokenAuthService } from '../../token-auth.service';
 import { LeatherApiError } from './leather-api.error';
 import { paths } from './leather-api.types';
 
 @injectable()
 export class LeatherAuthApiClient {
   private readonly client;
+  private readonly network: ChainNetworkId = 'stx:mainnet';
   private isRefreshing = false;
 
   constructor(
-    @inject(Types.TokenAuthService) private readonly tokenProvider: TokenAuthService,
+    @inject(Types.AuthSessionService) private readonly tokenProvider: AuthSessionService,
     @inject(Types.Environment) env: Environment,
     private readonly rateLimiter: RateLimiterService
   ) {
     const clientId = uuidv4();
     const provider = this.tokenProvider;
+    const network = this.network;
 
     this.client = createClient<paths>({
       baseUrl:
@@ -34,7 +37,7 @@ export class LeatherAuthApiClient {
     this.client.use({
       onRequest({ request }) {
         request.headers.set('X-Client-ID', clientId);
-        const token = provider.getAccessToken();
+        const token = provider.getSession(network)?.accessToken;
         if (token) {
           request.headers.set('Authorization', `Bearer ${token}`);
         }
@@ -83,19 +86,19 @@ export class LeatherAuthApiClient {
         throw error;
       }
 
-      const refreshToken = this.tokenProvider.getRefreshToken();
+      const refreshToken = this.tokenProvider.getSession(this.network)?.refreshToken;
       if (!refreshToken) {
-        this.tokenProvider.onAuthFailure();
+        this.tokenProvider.onAuthFailure(this.network);
         throw error;
       }
 
       try {
         this.isRefreshing = true;
         const result = await this.refreshAccessToken(refreshToken);
-        this.tokenProvider.onTokenRefreshed(result.accessToken);
+        this.tokenProvider.onTokenRefreshed(this.network, result.accessToken);
         return await fetchFn();
       } catch {
-        this.tokenProvider.onAuthFailure();
+        this.tokenProvider.onAuthFailure(this.network);
         throw error;
       } finally {
         this.isRefreshing = false;
