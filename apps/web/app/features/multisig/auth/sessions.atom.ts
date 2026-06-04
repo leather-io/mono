@@ -13,5 +13,7 @@ const defaultSessions: SessionsRecord = {
 
 export const sessionsAtom = atomWithStorage<SessionsRecord>(
   'leather:multisig:sessions',
-  defaultSessions
+  defaultSessions,
+  undefined,
+  { getOnInit: true }
 );

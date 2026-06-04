@@ -1,6 +1,8 @@
-import { Box } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 
+import type { AuthSession } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
+import { truncateMiddle } from '@leather.io/utils';
 
 import { Badge } from '../../components/badge';
 import { ChainAvatar } from '../../components/chain-avatar';
@@ -9,35 +11,55 @@ import type { Chain } from '../../data/multisig-types';
 
 interface OnboardingConnectRowProps {
   chain: Chain;
-  connected: boolean;
-  onConnect(): void;
+  session: AuthSession | null;
+  isPending: boolean;
+  error: Error | null;
+  onSignIn(): void;
+  onSignOut(): void;
 }
 
-export function OnboardingConnectRow({ chain, connected, onConnect }: OnboardingConnectRowProps) {
+export function OnboardingConnectRow({
+  chain,
+  session,
+  isPending,
+  error,
+  onSignIn,
+  onSignOut,
+}: OnboardingConnectRowProps) {
   const label = chain === 'btc' ? 'Bitcoin' : 'Stacks';
   const desc = chain === 'btc' ? 'Sign PSBT-based BTC vaults' : 'Sign on-chain STX & sBTC vaults';
   return (
     <Box
       p="space.04"
-      borderRadius="md"
+      borderRadius="lg"
       borderWidth="1px"
       borderStyle="solid"
       borderColor="ink.border-default"
     >
       <VaultListItem
         leading={<ChainAvatar chain={chain} size="lg" />}
-        title={`Connect ${label}`}
-        caption={desc}
+        title={session ? `Connected to ${label}` : `Connect ${label}`}
+        caption={session ? truncateMiddle(session.identity.address, 4) : desc}
         trailingTitle={
-          connected ? (
-            <Badge variant="success" label="Connected" />
+          session ? (
+            <Flex alignItems="center" gap="space.03">
+              <Badge variant="success" label="Signed in" />
+              <Button variant="ghost" onClick={onSignOut}>
+                Sign out
+              </Button>
+            </Flex>
           ) : (
-            <Button variant="solid" onClick={onConnect}>
-              Connect
+            <Button variant="solid" disabled={isPending} onClick={onSignIn}>
+              {isPending ? 'Connecting…' : 'Connect'}
             </Button>
           )
         }
       />
+      {error && (
+        <styled.div textStyle="caption.01" color="red.action-primary-default" mt="space.03">
+          {error.message}
+        </styled.div>
+      )}
     </Box>
   );
 }

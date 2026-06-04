@@ -9,10 +9,21 @@ import type { SignInInput } from './auth.types';
 export class SignInService {
   constructor(private readonly authApiClient: LeatherAuthApiClient) {}
 
-  signIn(input: SignInInput): Promise<AuthSession> {
-    void this.authApiClient;
-    return Promise.reject(
-      new Error(`TODO: implement SignInService.signIn for network ${input.network}`)
+  async signIn(input: SignInInput): Promise<AuthSession> {
+    const { network, payload } = input;
+    const tokens = await this.authApiClient.authenticate(
+      payload.signature,
+      payload.publicKey,
+      payload.timestamp
     );
+    return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      identity: {
+        address: payload.address,
+        publicKey: payload.publicKey,
+        network,
+      },
+    };
   }
 }
