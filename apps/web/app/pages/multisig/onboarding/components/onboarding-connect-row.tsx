@@ -13,6 +13,7 @@ interface OnboardingConnectRowProps {
   chain: Chain;
   session: AuthSession | null;
   isPending: boolean;
+  isRestoring: boolean;
   error: Error | null;
   onSignIn(): void;
   onSignOut(): void;
@@ -22,6 +23,7 @@ export function OnboardingConnectRow({
   chain,
   session,
   isPending,
+  isRestoring,
   error,
   onSignIn,
   onSignOut,
@@ -43,13 +45,17 @@ export function OnboardingConnectRow({
         trailingTitle={
           session ? (
             <Flex alignItems="center" gap="space.03">
-              <Badge variant="success" label="Signed in" />
+              {isRestoring ? (
+                <Badge variant="default" label="Restoring…" />
+              ) : (
+                <Badge variant="success" label="Signed in" />
+              )}
               <Button variant="ghost" onClick={onSignOut}>
                 Sign out
               </Button>
             </Flex>
           ) : (
-            <Button variant="solid" disabled={isPending} onClick={onSignIn}>
+            <Button variant="solid" minWidth="124px" disabled={isPending} onClick={onSignIn}>
               {isPending ? 'Connecting…' : 'Connect'}
             </Button>
           )

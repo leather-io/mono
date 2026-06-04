@@ -24,9 +24,7 @@ async function getWalletAddresses() {
 
 async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
   const addresses = await getWalletAddresses();
-  const account = addresses.find(
-    address => address.symbol === 'BTC' && address.type === 'p2wpkh'
-  );
+  const account = addresses.find(address => address.symbol === 'BTC' && address.type === 'p2wpkh');
   if (!account) {
     throw new Error('No Bitcoin account available in the connected wallet');
   }

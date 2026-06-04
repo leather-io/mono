@@ -26,4 +26,9 @@ export class SignInService {
       },
     };
   }
+
+  async refreshSession(session: AuthSession): Promise<AuthSession> {
+    const { accessToken } = await this.authApiClient.refreshAccessToken(session.refreshToken);
+    return { ...session, accessToken };
+  }
 }

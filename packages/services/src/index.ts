@@ -20,6 +20,7 @@ export * from './infrastructure/api/leather/leather-auth-api.utils';
 export * from './infrastructure/environment';
 export * from './infrastructure/auth/auth-session.service';
 export * from './infrastructure/auth/auth.types';
+export * from './infrastructure/auth/jwt.utils';
 export * from './infrastructure/auth/sign-in-message.utils';
 export * from './infrastructure/auth/sign-in.service';
 export * from './infrastructure/settings/settings.service';

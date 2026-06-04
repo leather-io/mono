@@ -1,5 +1,6 @@
 import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
+import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useSignOut } from '~/features/multisig/auth/use-sign-out';
 import { Page } from '~/layouts/page/page';
@@ -22,6 +23,8 @@ export function MultisigOnboardingPage() {
   const stxSignIn = useSignIn(chainNetwork.stx);
   const btcSignOut = useSignOut(chainNetwork.btc);
   const stxSignOut = useSignOut(chainNetwork.stx);
+  const btcRestoring = useIsRestoringSession(chainNetwork.btc);
+  const stxRestoring = useIsRestoringSession(chainNetwork.stx);
 
   return (
     <Page>
@@ -53,6 +56,7 @@ export function MultisigOnboardingPage() {
               chain="btc"
               session={btcSession}
               isPending={btcSignIn.isPending}
+              isRestoring={btcRestoring}
               error={btcSignIn.error}
               onSignIn={() => btcSignIn.mutate()}
               onSignOut={btcSignOut}
@@ -61,6 +65,7 @@ export function MultisigOnboardingPage() {
               chain="stx"
               session={stxSession}
               isPending={stxSignIn.isPending}
+              isRestoring={stxRestoring}
               error={stxSignIn.error}
               onSignIn={() => stxSignIn.mutate()}
               onSignOut={stxSignOut}
@@ -81,7 +86,7 @@ export function MultisigOnboardingPage() {
               rel="noreferrer"
               color="ink.text-primary"
               textDecorationColor="ink.text-subdued"
-              fontWeight={600}
+              fontWeight={400}
             >
               Install the extension ↗
             </UiLink>
