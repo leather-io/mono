@@ -1,4 +1,4 @@
-import type { AuthApplication, ChainNetworkId } from '@leather.io/models';
+import type { AuthApplication, AuthNetworkId } from '@leather.io/models';
 
 export interface WalletSignInPayload {
   signature: string;
@@ -12,7 +12,7 @@ export interface WalletSignInPayload {
 }
 
 export interface SignInInput {
-  network: ChainNetworkId;
+  network: AuthNetworkId;
   application: AuthApplication[];
   payload: WalletSignInPayload;
 }

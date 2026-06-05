@@ -2,11 +2,11 @@ import { useCallback } from 'react';
 
 import { useSetAtom } from 'jotai';
 
-import type { ChainNetworkId } from '@leather.io/models';
+import type { AuthNetworkId } from '@leather.io/models';
 
 import { sessionsAtom } from './sessions.atom';
 
-export function useSignOut(network: ChainNetworkId) {
+export function useSignOut(network: AuthNetworkId) {
   const setSessions = useSetAtom(sessionsAtom);
   return useCallback(() => {
     setSessions(prev => ({ ...prev, [network]: null }));

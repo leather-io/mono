@@ -1,8 +1,8 @@
 import { atomWithStorage } from 'jotai/utils';
 
-import type { AuthSession, ChainNetworkId } from '@leather.io/models';
+import type { AuthNetworkId, AuthSession } from '@leather.io/models';
 
-type SessionsRecord = Record<ChainNetworkId, AuthSession | null>;
+type SessionsRecord = Record<AuthNetworkId, AuthSession | null>;
 
 const defaultSessions: SessionsRecord = {
   'stx:mainnet': null,

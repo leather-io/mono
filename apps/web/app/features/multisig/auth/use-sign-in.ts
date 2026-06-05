@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
 
-import type { AuthApplication, AuthSession, ChainNetworkId } from '@leather.io/models';
+import type { AuthApplication, AuthNetworkId, AuthSession } from '@leather.io/models';
 import {
   type WalletSignInPayload,
   buildSignInMessage,
@@ -21,7 +21,7 @@ function walletSignIn(params: {
   );
 }
 
-export function useSignIn(network: ChainNetworkId, application: AuthApplication[] = ['multisig']) {
+export function useSignIn(network: AuthNetworkId, application: AuthApplication[] = ['multisig']) {
   const setSessions = useSetAtom(sessionsAtom);
 
   return useMutation<AuthSession, Error, void>({
