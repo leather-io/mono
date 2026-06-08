@@ -1,27 +1,30 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-
 import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
+import { useSession } from '~/features/multisig/auth/use-session';
+import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
+import { useSignIn } from '~/features/multisig/auth/use-sign-in';
+import { useSignOut } from '~/features/multisig/auth/use-sign-out';
 import { Page } from '~/layouts/page/page';
 
-import { Button, KeyIcon, Link as UiLink } from '@leather.io/ui';
+import type { AuthNetworkId } from '@leather.io/models';
+import { KeyIcon, Link as UiLink } from '@leather.io/ui';
 
 import type { Chain } from '../data/multisig-types';
-import { multisigPaths } from '../multisig.constants';
 import { OnboardingConnectRow } from './components/onboarding-connect-row';
 
-const StyledLink = styled(Link);
+const chainNetwork: Record<Chain, AuthNetworkId> = {
+  btc: 'btc:mainnet',
+  stx: 'stx:mainnet',
+};
 
-// UI-only onboarding: the connect step is simulated via local state (no real
-// wallet connection), so reviewers can walk neither → one → both connected.
 export function MultisigOnboardingPage() {
-  const navigate = useNavigate();
-  const [connected, setConnected] = useState<Record<Chain, boolean>>({ btc: false, stx: false });
-  const bothConnected = connected.btc && connected.stx;
-
-  function connect(chain: Chain) {
-    setConnected(prev => ({ ...prev, [chain]: true }));
-  }
+  const btcSession = useSession(chainNetwork.btc);
+  const stxSession = useSession(chainNetwork.stx);
+  const btcSignIn = useSignIn(chainNetwork.btc);
+  const stxSignIn = useSignIn(chainNetwork.stx);
+  const btcSignOut = useSignOut(chainNetwork.btc);
+  const stxSignOut = useSignOut(chainNetwork.stx);
+  const btcRestoring = useIsRestoringSession(chainNetwork.btc);
+  const stxRestoring = useIsRestoringSession(chainNetwork.stx);
 
   return (
     <Page>
@@ -29,7 +32,7 @@ export function MultisigOnboardingPage() {
       <Flex justifyContent="center" py="space.07">
         <Box
           width="100%"
-          maxWidth="460px"
+          maxWidth="540px"
           p="space.06"
           borderRadius="lg"
           borderWidth="1px"
@@ -37,8 +40,8 @@ export function MultisigOnboardingPage() {
           borderColor="ink.border-default"
         >
           <Flex alignItems="center" gap="space.03" mb="space.05">
-            <Circle size="40px" bg="ink.background-secondary" flexShrink={0}>
-              <KeyIcon variant="medium" />
+            <Circle size="40px" bg="ink.text-primary" flexShrink={0}>
+              <KeyIcon variant="medium" color="ink.background-primary" />
             </Circle>
             <Box>
               <styled.h2 textStyle="heading.05">Get started with Leather Multisig</styled.h2>
@@ -51,30 +54,22 @@ export function MultisigOnboardingPage() {
           <Flex direction="column" gap="space.03">
             <OnboardingConnectRow
               chain="btc"
-              connected={connected.btc}
-              onConnect={() => connect('btc')}
+              session={btcSession}
+              isPending={btcSignIn.isPending}
+              isRestoring={btcRestoring}
+              error={btcSignIn.error}
+              onSignIn={() => btcSignIn.mutate()}
+              onSignOut={btcSignOut}
             />
             <OnboardingConnectRow
               chain="stx"
-              connected={connected.stx}
-              onConnect={() => connect('stx')}
+              session={stxSession}
+              isPending={stxSignIn.isPending}
+              isRestoring={stxRestoring}
+              error={stxSignIn.error}
+              onSignIn={() => stxSignIn.mutate()}
+              onSignOut={stxSignOut}
             />
-          </Flex>
-
-          <Flex direction="column" gap="space.03" mt="space.05">
-            <Button
-              variant="solid"
-              fullWidth
-              disabled={!bothConnected}
-              onClick={() => void navigate(multisigPaths.index)}
-            >
-              Enter Multisig
-            </Button>
-            <Flex justifyContent="center">
-              <StyledLink to={multisigPaths.index} textStyle="label.03" color="ink.text-subdued">
-                Skip for now
-              </StyledLink>
-            </Flex>
           </Flex>
 
           <styled.div
@@ -84,7 +79,17 @@ export function MultisigOnboardingPage() {
             textAlign="center"
           >
             Don't have Leather yet?{' '}
-            <UiLink href="https://leather.io/install-extension">Install the extension ↗</UiLink>
+            <UiLink
+              href="https://leather.io/wallet/extension"
+              size="sm"
+              target="_blank"
+              rel="noreferrer"
+              color="ink.text-primary"
+              textDecorationColor="ink.text-subdued"
+              fontWeight={400}
+            >
+              Install the extension ↗
+            </UiLink>
           </styled.div>
         </Box>
       </Flex>
