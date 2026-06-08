@@ -16,6 +16,7 @@
     "build:watch": "tsdown --no-clean --watch",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
+    "gen:btc-auth-fixture": "vitest run auth-fixture.gen 2>&1 | sed -n '/^{$/,/^}$/p'",
     "lint": "eslint --cache --max-warnings 0",
     "lint:fix": "pnpm lint --fix",
     "test:coverage": "vitest run --coverage",

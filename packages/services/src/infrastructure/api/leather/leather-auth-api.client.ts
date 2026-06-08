@@ -3,26 +3,30 @@ import createClient from 'openapi-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
 import { LEATHER_API_URL_PRODUCTION, LEATHER_API_URL_STAGING } from '@leather.io/constants';
+import type { AuthNetworkId } from '@leather.io/models';
 
 import { Types } from '../../../inversify.types';
+import type { AuthSessionService } from '../../auth/auth-session.service';
 import type { Environment } from '../../environment';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
-import type { TokenAuthService } from '../../token-auth.service';
 import { LeatherApiError } from './leather-api.error';
 import { paths } from './leather-api.types';
+
+type AuthRequestBody = paths['/v1/auth']['post']['requestBody']['content']['application/json'];
+
+const refreshTimeoutMs = 15_000;
 
 @injectable()
 export class LeatherAuthApiClient {
   private readonly client;
-  private isRefreshing = false;
+  private readonly refreshInFlight = new Map<AuthNetworkId, Promise<string>>();
 
   constructor(
-    @inject(Types.TokenAuthService) private readonly tokenProvider: TokenAuthService,
+    @inject(Types.AuthSessionService) private readonly sessions: AuthSessionService,
     @inject(Types.Environment) env: Environment,
     private readonly rateLimiter: RateLimiterService
   ) {
     const clientId = uuidv4();
-    const provider = this.tokenProvider;
 
     this.client = createClient<paths>({
       baseUrl:
@@ -34,10 +38,6 @@ export class LeatherAuthApiClient {
     this.client.use({
       onRequest({ request }) {
         request.headers.set('X-Client-ID', clientId);
-        const token = provider.getAccessToken();
-        if (token) {
-          request.headers.set('Authorization', `Bearer ${token}`);
-        }
         return request;
       },
       onResponse({ response }) {
@@ -48,57 +48,96 @@ export class LeatherAuthApiClient {
     });
   }
 
-  async authenticate(signature: string, publicKey: string, timestamp: number) {
+  async authenticate(body: AuthRequestBody) {
     const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
-      this.client.POST('/v1/auth', {
-        body: { signature, publicKey, timestamp },
-      })
+      this.client.POST('/v1/auth', { body })
     );
     return data!;
   }
 
-  async refreshAccessToken(refreshToken: string) {
+  async refreshAccessToken(refreshToken: string, signal?: AbortSignal) {
     const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
-      this.client.POST('/v1/auth/refresh', {
-        body: { refreshToken },
-      })
+      this.client.POST('/v1/auth/refresh', { body: { refreshToken }, signal })
     );
     return data!;
   }
 
-  async fetchMe({ signal }: { signal?: AbortSignal } = {}) {
-    return this.fetchWithAuth(async () => {
-      const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
-        this.client.GET('/v1/multisig/me', { signal })
-      );
-      return data!;
-    });
+  async fetchMultisigMe(network: AuthNetworkId, { signal }: { signal?: AbortSignal } = {}) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.GET('/v1/multisig/me', { signal, headers });
+        return data!;
+      })
+    );
   }
 
-  private async fetchWithAuth<T>(fetchFn: () => Promise<T>): Promise<T> {
+  private bearerHeaders(accessToken: string | undefined): Record<string, string> {
+    return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+  }
+
+  private refreshOnce(network: AuthNetworkId): Promise<string> {
+    const existing = this.refreshInFlight.get(network);
+    if (existing) {
+      return existing;
+    }
+
+    const refreshToken = this.sessions.getSession(network)?.refreshToken;
+    if (!refreshToken) {
+      return Promise.reject(new Error('No refresh token available'));
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), refreshTimeoutMs);
+
+    const refresh = this.refreshAccessToken(refreshToken, controller.signal)
+      .then(({ accessToken }) => {
+        const current = this.sessions.getSession(network);
+        if (current?.refreshToken !== refreshToken) {
+          const currentAccessToken = current?.accessToken;
+          if (!currentAccessToken) {
+            throw new Error('Session changed during refresh');
+          }
+          return currentAccessToken;
+        }
+        this.sessions.onTokenRefreshed(network, accessToken);
+        return accessToken;
+      })
+      .finally(() => {
+        clearTimeout(timeout);
+        this.refreshInFlight.delete(network);
+      });
+
+    this.refreshInFlight.set(network, refresh);
+    return refresh;
+  }
+
+  private async authed<T>(
+    network: AuthNetworkId,
+    run: (headers: Record<string, string>) => Promise<T>
+  ): Promise<T> {
+    const accessToken = this.sessions.getSession(network)?.accessToken;
     try {
-      return await fetchFn();
+      return await run(this.bearerHeaders(accessToken));
     } catch (error) {
-      if (!LeatherApiError.isLeatherApiError(error) || error.status !== 401 || this.isRefreshing) {
+      if (!LeatherApiError.isLeatherApiError(error) || error.status !== 401) {
         throw error;
       }
 
-      const refreshToken = this.tokenProvider.getRefreshToken();
-      if (!refreshToken) {
-        this.tokenProvider.onAuthFailure();
+      let refreshedToken: string;
+      try {
+        refreshedToken = await this.refreshOnce(network);
+      } catch {
+        this.sessions.onAuthFailure(network);
         throw error;
       }
 
       try {
-        this.isRefreshing = true;
-        const result = await this.refreshAccessToken(refreshToken);
-        this.tokenProvider.onTokenRefreshed(result.accessToken);
-        return await fetchFn();
-      } catch {
-        this.tokenProvider.onAuthFailure();
-        throw error;
-      } finally {
-        this.isRefreshing = false;
+        return await run(this.bearerHeaders(refreshedToken));
+      } catch (retryError) {
+        if (LeatherApiError.isLeatherApiError(retryError) && retryError.status === 401) {
+          this.sessions.onAuthFailure(network);
+        }
+        throw retryError;
       }
     }
   }
