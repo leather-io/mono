@@ -8,7 +8,7 @@ export function AddressTypeBadge({ type }: AddressTypeBadgeProps) {
     <Box
       bg="ink.background-secondary"
       borderColor="ink.border-transparent"
-      borderRadius="xs"
+      borderRadius="round"
       borderWidth={1}
       px="1"
     >

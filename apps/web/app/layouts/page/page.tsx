@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Link as RouterLink } from 'react-router';
 
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { MockModeToggle } from '~/components/mock-mode-toggle';
@@ -6,7 +7,7 @@ import { WhenClient } from '~/components/when-client';
 import { SignInButton } from '~/features/sign-in-button/sign-in-button';
 import { getPostHref } from '~/utils/post-link';
 
-import { Link } from '@leather.io/ui';
+import { ArrowLeftIcon, Button, Link } from '@leather.io/ui';
 
 export function Page(props: HTMLStyledProps<'div'>) {
   return <styled.div {...props} />;
@@ -63,13 +64,28 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
 
 interface PageHeaderProps {
   title?: React.ReactNode;
+  backTo?: string;
   children?: React.ReactElement | React.ReactElement[];
 }
-function PageHeader({ title, children }: PageHeaderProps) {
+function PageHeader({ title, backTo, children }: PageHeaderProps) {
   return (
     <styled.header display="flex" justifyContent="space-between" h="60px" alignItems="center">
       <Flex alignItems="center" justifyContent="space-between" flex={1}>
-        {title && <styled.h1 textStyle="heading.05">{title}</styled.h1>}
+        <Flex alignItems="center" gap="space.02" minWidth={0}>
+          {backTo && (
+            <RouterLink to={backTo} aria-label="Back">
+              <Button
+                variant="ghost"
+                size="sm"
+                iconStart={ArrowLeftIcon}
+                width="32px"
+                px="0"
+                gap="0"
+              />
+            </RouterLink>
+          )}
+          {title && <styled.h1 textStyle="heading.05">{title}</styled.h1>}
+        </Flex>
         <MockModeToggle />
         {children}
       </Flex>

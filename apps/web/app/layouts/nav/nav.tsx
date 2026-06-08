@@ -8,6 +8,7 @@ import { LeatherLogo } from '~/components/icons/leather-logo';
 import { SbtcMonogramIcon } from '~/components/icons/sbtc-monogram-icon';
 import { StackingIcon } from '~/components/icons/stacking-icon';
 import { advancedModeEnabled } from '~/pages/advanced/advanced.route';
+import { multisigEnabled } from '~/pages/multisig/multisig.constants';
 import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
 import {
@@ -16,6 +17,7 @@ import {
   CodeIcon,
   GridIcon,
   IconButton,
+  KeyIcon,
   SuitcaseIcon,
   SupportIcon,
 } from '@leather.io/ui';
@@ -48,6 +50,12 @@ function NavContents() {
       <NavItem href={externalLeatherNavigator.apps} icon={<GridIcon variant="small" />}>
         Apps
       </NavItem>
+
+      {multisigEnabled && (
+        <NavItem href="/multisig" icon={<KeyIcon variant="small" />}>
+          Multisig
+        </NavItem>
+      )}
 
       {advancedModeEnabled && (
         <NavItem
