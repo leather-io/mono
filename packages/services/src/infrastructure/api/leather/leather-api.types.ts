@@ -1341,7 +1341,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** @description Authenticate with a Stacks signature and receive JWT tokens */
+    /** @description Authenticate with a wallet signature (STX SIP-018 or BTC BIP-322) and receive JWT tokens */
     post: {
       parameters: {
         query?: never;
@@ -1352,9 +1352,17 @@ export interface paths {
       requestBody: {
         content: {
           'application/json': {
+            /** @enum {string} */
+            network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
             signature: string;
             publicKey: string;
             timestamp: number;
+            /** @default [] */
+            application?: 'multisig'[];
+            address: string;
+            xpub?: string;
+            xpubOriginFingerprint?: string;
+            xpubOriginPath?: string;
           };
         };
       };
@@ -1410,7 +1418,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** @description Refresh an access token using a valid refresh token */
+    /** @description Refresh an access token using a valid refresh token (same network identity) */
     post: {
       parameters: {
         query?: never;
@@ -4313,7 +4321,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Returns the authenticated public key from the JWT */
+    /** @description Returns the authenticated multisig user identity */
     get: {
       parameters: {
         query?: never;
@@ -4330,12 +4338,27 @@ export interface paths {
           };
           content: {
             'application/json': {
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               publicKey: string;
+              address: string;
+              id: string;
             };
           };
         };
         /** @description Unauthorized */
         401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
           headers: {
             [name: string]: unknown;
           };
