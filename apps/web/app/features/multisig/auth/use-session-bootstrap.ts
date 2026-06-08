@@ -19,11 +19,14 @@ async function restoreSession(network: AuthNetworkId, session: AuthSession) {
   try {
     const restored = await getSignInService().refreshSession(session);
     store.set(sessionsAtom, prev => {
-      if (!prev[network]) return prev;
+      if (prev[network]?.accessToken !== session.accessToken) return prev;
       return { ...prev, [network]: restored };
     });
   } catch {
-    store.set(sessionsAtom, prev => ({ ...prev, [network]: null }));
+    store.set(sessionsAtom, prev => {
+      if (prev[network]?.accessToken !== session.accessToken) return prev;
+      return { ...prev, [network]: null };
+    });
   } finally {
     store.set(restoringSessionsAtom, prev => prev.filter(n => n !== network));
   }
