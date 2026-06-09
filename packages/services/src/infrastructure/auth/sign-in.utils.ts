@@ -1,4 +1,4 @@
-import type { AuthIdentity } from '@leather.io/models';
+import type { AuthIdentity, AuthNetworkId } from '@leather.io/models';
 
 export interface SignInMessage {
   message: string;
@@ -6,10 +6,12 @@ export interface SignInMessage {
 }
 
 export function buildSignInMessage(
+  network: AuthNetworkId,
   timestamp: number = Math.floor(Date.now() / 1000)
 ): SignInMessage {
+  const networkMode = network.split(':')[1];
   return {
-    message: `Sign in to Leather\n${timestamp}`,
+    message: ['Sign in to Leather', `Network: ${networkMode}`, `Issued: ${timestamp}`].join('\n'),
     timestamp,
   };
 }

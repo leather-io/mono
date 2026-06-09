@@ -13,7 +13,7 @@ export function useSignIn(network: AuthNetworkId, application: AuthApplication[]
   return useMutation<AuthSession, Error, void>({
     mutationKey: ['multisig-auth-sign-in', network, application],
     mutationFn: async () => {
-      const { message, timestamp } = buildSignInMessage();
+      const { message, timestamp } = buildSignInMessage(network);
       const payload = await walletSignIn({ network, message, timestamp });
       const session = await getSignInService().signIn({ network, application, payload });
       setSessions(prev => ({ ...prev, [network]: session }));

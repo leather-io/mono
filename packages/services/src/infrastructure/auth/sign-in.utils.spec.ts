@@ -46,11 +46,17 @@ describe('decodeAuthIdentity', () => {
 });
 
 describe('buildSignInMessage', () => {
-  it('builds the timestamped sign-in message', () => {
-    expect(buildSignInMessage(1780651887)).toEqual({
-      message: 'Sign in to Leather\n1780651887',
+  it('builds the structured sign-in message bound to the network mode', () => {
+    expect(buildSignInMessage('stx:mainnet', 1780651887)).toEqual({
+      message: 'Sign in to Leather\nNetwork: mainnet\nIssued: 1780651887',
       timestamp: 1780651887,
     });
+  });
+
+  it('reflects the testnet network mode', () => {
+    expect(buildSignInMessage('btc:testnet', 1780651887).message).toBe(
+      'Sign in to Leather\nNetwork: testnet\nIssued: 1780651887'
+    );
   });
 });
 
