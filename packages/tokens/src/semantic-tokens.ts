@@ -54,5 +54,9 @@ export const semanticTokens = {
     },
     invert: createColorObjForKey('invert'),
     stacks: createColorObjForKey('stacks'),
+    chain: {
+      stx: createColorObjForKey('chain.stx'),
+      btc: createColorObjForKey('chain.btc'),
+    },
   },
 } as const;

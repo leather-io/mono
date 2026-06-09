@@ -45,6 +45,9 @@ export interface Palette {
 
   invert: string;
   stacks: string;
+
+  'chain.stx': string;
+  'chain.btc': string;
 }
 
 type DarkPalette<T> = { [P in keyof T & string as `dark.${P}`]: T[P] };
@@ -100,6 +103,9 @@ export const colorThemes = {
 
     invert: '#34312A',
     stacks: '#5546FF',
+
+    'chain.stx': '#FC6432',
+    'chain.btc': '#FFB919',
   } as const satisfies Palette,
   dark: {
     'ink.text-primary': '#F9F9F8',
@@ -143,5 +149,8 @@ export const colorThemes = {
 
     invert: '#FFFFFF',
     stacks: '#7F80FF',
+
+    'chain.stx': '#FC6432',
+    'chain.btc': '#FFB919',
   } as const satisfies Palette,
 } as const satisfies Colors;
