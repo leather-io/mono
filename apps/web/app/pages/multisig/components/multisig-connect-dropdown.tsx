@@ -5,6 +5,7 @@ import { useSession } from '~/features/multisig/auth/use-session';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useSignOut } from '~/features/multisig/auth/use-sign-out';
 import { leather } from '~/utils/leather-sdk';
+import { useClipboardCopy } from '~/utils/use-clipboard-copy';
 
 import type { AuthNetworkId } from '@leather.io/models';
 import {
@@ -31,12 +32,11 @@ const chainSignInDescriptions: Record<Chain, string> = {
   stx: 'STX & sBTC vaults · Stacks signers',
 };
 
-const chainDotColors: Record<Chain, string> = {
-  stx: '#FC6432',
-  btc: '#FFB919',
+// V1 is mainnet-pinned (spec §2.2); the wallet inherits the web app's network.
+const multisigV1Networks: Record<Chain, AuthNetworkId> = {
+  btc: 'btc:mainnet',
+  stx: 'stx:mainnet',
 };
-
-const copiedResetMs = 1400;
 
 function formatAddress(address: string): string {
   return `${address.slice(0, 5)}…${address.slice(-4)}`;
@@ -78,17 +78,12 @@ function OpenExtensionIcon() {
 }
 
 function DropdownAddress({ address }: { address: string }) {
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useClipboardCopy();
   const [hovered, setHovered] = useState(false);
-  function onCopy() {
-    void navigator.clipboard?.writeText(address);
-    setCopied(true);
-    setTimeout(() => setCopied(false), copiedResetMs);
-  }
   return (
     <styled.button
       type="button"
-      onClick={onCopy}
+      onClick={() => copy(address)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       title="Copy address"
@@ -117,9 +112,8 @@ function DropdownAddress({ address }: { address: string }) {
 }
 
 export function MultisigConnectDropdown() {
-  // V1 is mainnet-pinned (spec §2.2); the wallet inherits the web app's network.
-  const btc = useChainConnection('btc', 'btc:mainnet');
-  const stx = useChainConnection('stx', 'stx:mainnet');
+  const btc = useChainConnection('btc', multisigV1Networks.btc);
+  const stx = useChainConnection('stx', multisigV1Networks.stx);
   const chains = [btc, stx];
 
   const anySignedIn = chains.some(c => c.session);
@@ -144,8 +138,8 @@ export function MultisigConnectDropdown() {
                         borderWidth="1.5px"
                         borderStyle="solid"
                         borderColor="ink.background-primary"
+                        bg={c.chain === 'btc' ? 'chain.btc' : 'chain.stx'}
                         ml={index > 0 ? '-space.01' : undefined}
-                        style={{ backgroundColor: chainDotColors[c.chain] }}
                       />
                     ))}
                 </Flex>
