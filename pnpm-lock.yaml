@@ -144,6 +144,9 @@ importers:
 
   apps/extension:
     dependencies:
+      '@bitcoinerlab/descriptors':
+        specifier: 1.1.1
+        version: 1.1.1(ledger-bitcoin@0.2.3)
       '@bitcoinerlab/secp256k1':
         specifier: 1.0.2
         version: 1.0.2
@@ -1344,6 +1347,9 @@ importers:
 
   packages/bitcoin:
     dependencies:
+      '@bitcoinerlab/descriptors':
+        specifier: 1.1.1
+        version: 1.1.1(ledger-bitcoin@0.2.3)
       '@bitcoinerlab/secp256k1':
         specifier: 1.0.2
         version: 1.0.2

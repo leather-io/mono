@@ -40,6 +40,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@bitcoinerlab/descriptors": "1.1.1",
     "@bitcoinerlab/secp256k1": "1.0.2",
     "@bitflowlabs/core-sdk": "2.4.0",
     "@blockstack/stacks-transactions": "0.7.0",

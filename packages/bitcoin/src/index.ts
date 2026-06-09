@@ -4,6 +4,7 @@ export * from './bip322/sign-message-bip322-bitcoinjs';
 
 export * from './coin-selection/calculate-max-spend';
 export * from './coin-selection/coin-selection';
+export * from './descriptors/wsh-descriptor';
 export * from './coin-selection/coin-selection.utils';
 
 export * from './fees/bitcoin-fees';

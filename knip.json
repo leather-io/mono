@@ -31,7 +31,7 @@
     "/\\+types/"
   ],
   "ignore": [
-    "*/**/*.spec.ts",
+    "*/**/*.spec.{ts,tsx}",
     "*/**/tsdown.config*.ts",
     "*/**/panda.config.ts",
     "*/**/postcss.config.cjs",

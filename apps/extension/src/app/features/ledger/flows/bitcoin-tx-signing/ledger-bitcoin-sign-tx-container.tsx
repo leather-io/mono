@@ -7,7 +7,7 @@ import { hexToBytes } from '@stacks/common';
 import BitcoinApp from 'ledger-bitcoin';
 import get from 'lodash.get';
 
-import { delay } from '@leather.io/utils';
+import { delay, isError } from '@leather.io/utils';
 
 import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 import { logger } from '@shared/logger';
@@ -33,6 +33,8 @@ import { useToast } from '@app/features/toasts/use-toast';
 import { useSignLedgerBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
+import { useSignLedgerDescriptorTx } from './use-sign-ledger-descriptor-tx';
+
 export const ledgerBitcoinTxSigningRoutes = ledgerSignTxRoutes({
   component: <LedgerSignBitcoinTxContainer />,
   customRoutes: (
@@ -50,9 +52,11 @@ function LedgerSignBitcoinTxContainer() {
   const [unsignedTransactionRaw, setUnsignedTransactionRaw] = useState<null | string>(null);
   const [unsignedTransaction, setUnsignedTransaction] = useState<null | btc.Transaction>(null);
   const signLedger = useSignLedgerBitcoinTx();
+  const signLedgerDescriptor = useSignLedgerDescriptorTx();
   const network = useCurrentNetwork();
 
   const inputsToSign = useLocationStateWithCache<BitcoinInputSigningConfig[]>('inputsToSign');
+  const descriptor = useLocationStateWithCache<string>('descriptor');
 
   useEffect(() => {
     const tx = get(location.state, 'tx');
@@ -88,7 +92,14 @@ function LedgerSignBitcoinTxContainer() {
         void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
 
         try {
-          const btcTx = await signLedger(bitcoinApp, unsignedTransaction.toPSBT(), inputsToSign);
+          const btcTx = descriptor
+            ? await signLedgerDescriptor(
+                bitcoinApp,
+                unsignedTransaction.toPSBT(),
+                descriptor,
+                inputsToSign
+              )
+            : await signLedger(bitcoinApp, unsignedTransaction.toPSBT(), inputsToSign);
 
           if (!btcTx || !unsignedTransactionRaw) throw new Error('No tx returned');
           void ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
@@ -100,7 +111,18 @@ function LedgerSignBitcoinTxContainer() {
         } catch (e) {
           logger.error('Unable to sign tx with ledger', e);
           ledgerAnalytics.transactionSignedOnLedgerRejected();
-          void ledgerNavigate.toOperationRejectedStep();
+          // Descriptor signing is awaited by the rpc popup, which owns the error
+          // UI and the dApp response. Settle that promise with the error rather
+          // than leaving it to hang forever. Other flows keep the standard
+          // on-device rejection screen.
+          if (descriptor) {
+            appEvents.publish('ledgerBitcoinTxSigningCancelled', {
+              unsignedPsbt: unsignedTransactionRaw ?? '',
+              error: isError(e) ? e.message : undefined,
+            });
+          } else {
+            void ledgerNavigate.toOperationRejectedStep();
+          }
         } finally {
           void bitcoinApp.transport.close();
         }

@@ -1,3 +1,4 @@
+export { PsbtDescriptorPolicy } from './psbt-descriptor-policy';
 export { PsbtInputsAndOutputs } from './psbt-inputs-and-outputs/psbt-inputs-and-outputs';
 export { PsbtInputsOutputsTotals } from './psbt-inputs-outputs-totals/psbt-inputs-outputs-totals';
 export { PsbtRequestDetailsHeader } from './psbt-request-details-header';

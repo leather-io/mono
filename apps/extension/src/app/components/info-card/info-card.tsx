@@ -59,8 +59,10 @@ export function InfoCardAssetValue({
   icon,
   ...props
 }: InfoCardAssetValueProps) {
-  const displayValue = isString(value) ? `${value}\u00A0${symbol}` : formatCurrency(value);
-  const fiatDisplayValue = `~ ${fiatValue}\u00A0${fiatSymbol}`;
+  const displayValue = isString(value)
+    ? [value, symbol].filter(Boolean).join('\u00A0')
+    : formatCurrency(value);
+  const fiatDisplayValue = [`~ ${fiatValue}`, fiatSymbol].filter(Boolean).join('\u00A0');
 
   return (
     <Box width="100%" {...props}>
