@@ -5,6 +5,7 @@ import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { MockModeToggle } from '~/components/mock-mode-toggle';
 import { WhenClient } from '~/components/when-client';
 import { SignInButton } from '~/features/sign-in-button/sign-in-button';
+import { useSignInSlot } from '~/layouts/page/sign-in-slot';
 import { getPostHref } from '~/utils/post-link';
 
 import { ArrowLeftIcon, Button, Link } from '@leather.io/ui';
@@ -68,6 +69,7 @@ interface PageHeaderProps {
   children?: React.ReactElement | React.ReactElement[];
 }
 function PageHeader({ title, backTo, children }: PageHeaderProps) {
+  const signInSlot = useSignInSlot();
   return (
     <styled.header display="flex" justifyContent="space-between" h="60px" alignItems="center">
       <Flex alignItems="center" justifyContent="space-between" flex={1}>
@@ -91,7 +93,7 @@ function PageHeader({ title, backTo, children }: PageHeaderProps) {
       </Flex>
       <WhenClient>
         <Flex maxW="fit-content" height="100%">
-          <SignInButton />
+          {signInSlot ?? <SignInButton />}
         </Flex>
       </WhenClient>
     </styled.header>
