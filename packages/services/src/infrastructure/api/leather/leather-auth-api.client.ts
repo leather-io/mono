@@ -3,7 +3,7 @@ import createClient from 'openapi-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
 import { LEATHER_API_URL_PRODUCTION, LEATHER_API_URL_STAGING } from '@leather.io/constants';
-import type { AuthNetworkId } from '@leather.io/models';
+import type { AuthNetworkId, VaultMembershipStatus, VaultStatus } from '@leather.io/models';
 
 import { Types } from '../../../inversify.types';
 import type { AuthSessionService } from '../../auth/auth-session.service';
@@ -66,6 +66,127 @@ export class LeatherAuthApiClient {
     return this.authed(network, headers =>
       this.rateLimiter.add(RateLimiterType.Leather, async () => {
         const { data } = await this.client.GET('/v1/multisig/me', { signal, headers });
+        return data!;
+      })
+    );
+  }
+
+  async fetchMultisigVaults(
+    network: AuthNetworkId,
+    filters?: { status?: VaultStatus; membershipStatus?: VaultMembershipStatus },
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.GET('/v1/multisig/vaults', {
+          params: { query: filters },
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async fetchMultisigVault(
+    network: AuthNetworkId,
+    vaultId: string,
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.GET('/v1/multisig/vaults/{id}', {
+          params: { path: { id: vaultId } },
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async createMultisigVault(
+    network: AuthNetworkId,
+    params: { name: string; members: string[] },
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.POST('/v1/multisig/vaults', {
+          body: { ...params, network },
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async updateMultisigVault(
+    network: AuthNetworkId,
+    vaultId: string,
+    update: { name: string },
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.PATCH('/v1/multisig/vaults/{id}', {
+          params: { path: { id: vaultId } },
+          body: update,
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async cancelMultisigVault(
+    network: AuthNetworkId,
+    vaultId: string,
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.POST('/v1/multisig/vaults/{id}/cancel', {
+          params: { path: { id: vaultId } },
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async joinMultisigVault(
+    network: AuthNetworkId,
+    membershipId: string,
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.POST('/v1/multisig/vault-members/{id}/join', {
+          params: { path: { id: membershipId } },
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async declineMultisigVault(
+    network: AuthNetworkId,
+    membershipId: string,
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.POST('/v1/multisig/vault-members/{id}/decline', {
+          params: { path: { id: membershipId } },
+          headers,
+          signal,
+        });
         return data!;
       })
     );

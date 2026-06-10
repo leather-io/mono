@@ -3,6 +3,8 @@ import { addressesAtom } from '~/store/addresses';
 import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
+import { extractXpubFromDescriptor } from '@leather.io/bitcoin';
+import { extractAccountPathFromFullPath } from '@leather.io/crypto';
 import type { AuthNetworkId } from '@leather.io/models';
 import type { WalletSignInPayload } from '@leather.io/services';
 
@@ -37,6 +39,9 @@ async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayloa
   return {
     signature: signed.signature,
     publicKey: account.publicKey,
+    xpub: extractXpubFromDescriptor(account.descriptor),
+    xpubOriginFingerprint: 'd34db33f', // temp mock
+    xpubOriginPath: extractAccountPathFromFullPath(account.derivationPath),
     address: signed.address,
     message: params.message,
     timestamp: params.timestamp,
