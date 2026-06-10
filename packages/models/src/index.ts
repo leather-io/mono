@@ -20,6 +20,7 @@ export * from './fees/stacks-fees.model';
 export * from './fees/transaction-fees.model';
 export * from './market.model';
 export * from './money.model';
+export * from './multisig.model';
 export * from './network/network.model';
 export * from './network/network.schema';
 export * from './settings.model';
