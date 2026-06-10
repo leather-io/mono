@@ -4343,6 +4343,8 @@ export interface paths {
               publicKey: string;
               address: string;
               id: string;
+              /** @enum {string} */
+              status: 'active' | 'banned';
             };
           };
         };
@@ -4372,6 +4374,717 @@ export interface paths {
     };
     put?: never;
     post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/multisig/vaults': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description List the caller vaults */
+    get: {
+      parameters: {
+        query?: {
+          status?: 'pending' | 'active' | 'cancelled';
+          membershipStatus?: 'invited' | 'joined' | 'declined';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              name: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              /** @enum {string} */
+              status: 'pending' | 'active' | 'cancelled';
+              /** @enum {string} */
+              membershipStatus: 'invited' | 'joined' | 'declined';
+              memberCount: number;
+              accountCount: number;
+              createdBy: string;
+              createdAt: string;
+            }[];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /** @description Create a vault */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            name: string;
+            /** @enum {string} */
+            network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+            members: string[];
+          };
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              name: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              /** @enum {string} */
+              status: 'pending' | 'active' | 'cancelled';
+              members: {
+                membershipId: string;
+                address: string;
+                /** @enum {string} */
+                membershipStatus: 'invited' | 'joined' | 'declined';
+                user: {
+                  /** @enum {string} */
+                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  publicKey: string;
+                  address: string;
+                  id: string;
+                  xpub: string | null;
+                  xpubOriginFingerprint: string | null;
+                  xpubOriginPath: string | null;
+                } | null;
+              }[];
+              createdBy: string;
+              createdAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/multisig/vaults/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get a vault */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              name: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              /** @enum {string} */
+              status: 'pending' | 'active' | 'cancelled';
+              members: {
+                membershipId: string;
+                address: string;
+                /** @enum {string} */
+                membershipStatus: 'invited' | 'joined' | 'declined';
+                user: {
+                  /** @enum {string} */
+                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  publicKey: string;
+                  address: string;
+                  id: string;
+                  xpub: string | null;
+                  xpubOriginFingerprint: string | null;
+                  xpubOriginPath: string | null;
+                } | null;
+              }[];
+              createdBy: string;
+              createdAt: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** @description Rename a vault */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              name: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              /** @enum {string} */
+              status: 'pending' | 'active' | 'cancelled';
+              members: {
+                membershipId: string;
+                address: string;
+                /** @enum {string} */
+                membershipStatus: 'invited' | 'joined' | 'declined';
+                user: {
+                  /** @enum {string} */
+                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  publicKey: string;
+                  address: string;
+                  id: string;
+                  xpub: string | null;
+                  xpubOriginFingerprint: string | null;
+                  xpubOriginPath: string | null;
+                } | null;
+              }[];
+              createdBy: string;
+              createdAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
+  '/v1/multisig/vaults/{id}/cancel': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Cancel a pending vault */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              name: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              /** @enum {string} */
+              status: 'pending' | 'active' | 'cancelled';
+              members: {
+                membershipId: string;
+                address: string;
+                /** @enum {string} */
+                membershipStatus: 'invited' | 'joined' | 'declined';
+                user: {
+                  /** @enum {string} */
+                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  publicKey: string;
+                  address: string;
+                  id: string;
+                  xpub: string | null;
+                  xpubOriginFingerprint: string | null;
+                  xpubOriginPath: string | null;
+                } | null;
+              }[];
+              createdBy: string;
+              createdAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/multisig/vault-members/{id}/join': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Accept a vault invitation */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              membership: {
+                membershipId: string;
+                address: string;
+                /** @enum {string} */
+                membershipStatus: 'invited' | 'joined' | 'declined';
+                user: {
+                  /** @enum {string} */
+                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  publicKey: string;
+                  address: string;
+                  id: string;
+                  xpub: string | null;
+                  xpubOriginFingerprint: string | null;
+                  xpubOriginPath: string | null;
+                } | null;
+              };
+              vault: {
+                id: string;
+                name: string;
+                /** @enum {string} */
+                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                /** @enum {string} */
+                status: 'pending' | 'active' | 'cancelled';
+                members: {
+                  membershipId: string;
+                  address: string;
+                  /** @enum {string} */
+                  membershipStatus: 'invited' | 'joined' | 'declined';
+                  user: {
+                    /** @enum {string} */
+                    network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                    publicKey: string;
+                    address: string;
+                    id: string;
+                    xpub: string | null;
+                    xpubOriginFingerprint: string | null;
+                    xpubOriginPath: string | null;
+                  } | null;
+                }[];
+                createdBy: string;
+                createdAt: string;
+              };
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/multisig/vault-members/{id}/decline': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Decline a vault invitation */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              membership: {
+                membershipId: string;
+                address: string;
+                /** @enum {string} */
+                membershipStatus: 'invited' | 'joined' | 'declined';
+                user: {
+                  /** @enum {string} */
+                  network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                  publicKey: string;
+                  address: string;
+                  id: string;
+                  xpub: string | null;
+                  xpubOriginFingerprint: string | null;
+                  xpubOriginPath: string | null;
+                } | null;
+              };
+              vault: {
+                id: string;
+                name: string;
+                /** @enum {string} */
+                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                /** @enum {string} */
+                status: 'pending' | 'active' | 'cancelled';
+                members: {
+                  membershipId: string;
+                  address: string;
+                  /** @enum {string} */
+                  membershipStatus: 'invited' | 'joined' | 'declined';
+                  user: {
+                    /** @enum {string} */
+                    network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                    publicKey: string;
+                    address: string;
+                    id: string;
+                    xpub: string | null;
+                    xpubOriginFingerprint: string | null;
+                    xpubOriginPath: string | null;
+                  } | null;
+                }[];
+                createdBy: string;
+                createdAt: string;
+              };
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
     delete?: never;
     options?: never;
     head?: never;
