@@ -4,8 +4,8 @@ import { Box } from 'leather-styles/jsx';
 import { useSessionBootstrap } from '~/features/multisig/auth/use-session-bootstrap';
 import { SignInSlotProvider } from '~/layouts/page/sign-in-slot';
 
+import { MultisigConnectDropdown } from './components/connection-dropdown/multisig-connect-dropdown';
 import { DevToolsPanel } from './components/dev-tools-panel';
-import { MultisigConnectDropdown } from './components/multisig-connect-dropdown';
 import { MultisigToastProvider } from './components/multisig-toast';
 import { multisigEnabled } from './multisig.constants';
 import { MultisigSessionProvider } from './store/multisig-session';
