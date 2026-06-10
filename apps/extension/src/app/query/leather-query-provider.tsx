@@ -39,7 +39,7 @@ export function useCurrentNetworkState(): NetworkState {
   const currentNetwork = useLeatherNetwork();
 
   return useMemo(() => {
-    const isTestnet = currentNetwork.chain.stacks.chainId === ChainId.Testnet;
+    const isTestnet = currentNetwork.chain.stacks.chainId !== ChainId.Mainnet;
     const mode = isTestnet ? 'testnet' : 'mainnet';
     return { ...currentNetwork, isTestnet, mode };
   }, [currentNetwork]);

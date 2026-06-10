@@ -24,7 +24,7 @@ export function NetworkSwitcherBadge() {
     >
       <NetworkModeBadge
         data-testid={HomePageSelectors.NetworkSwitcher}
-        isVisible={networkBadgeAlwaysOn || chain.stacks.chainId === ChainId.Testnet}
+        isVisible={networkBadgeAlwaysOn || chain.stacks.chainId !== ChainId.Mainnet}
         name={chainName}
       />
     </styled.button>
