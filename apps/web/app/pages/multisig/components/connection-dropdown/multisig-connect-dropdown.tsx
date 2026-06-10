@@ -1,10 +1,11 @@
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { Button, ChevronDownIcon, DropdownMenu, Flag, WalletIcon } from '@leather.io/ui';
+import { truncateMiddle } from '@leather.io/utils';
 
 import { ChooseChainMenu } from './choose-chain-menu';
 import { ConnectedMenu } from './connected-menu';
-import { formatAddress, multisigV1Networks, useChainConnection } from './use-chain-connection';
+import { multisigV1Networks, useChainConnection } from './use-chain-connection';
 
 export function MultisigConnectDropdown() {
   const btc = useChainConnection('btc', multisigV1Networks.btc);
@@ -18,10 +19,10 @@ export function MultisigConnectDropdown() {
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
         {anySignedIn ? (
-          <Button variant="outline" size="md" alignSelf="center">
+          <Button variant="outline" size="md" alignSelf="center" aria-label="Wallet connections">
             <Flag reverse spacing="space.01" img={<ChevronDownIcon variant="small" />}>
               <Flex alignItems="center" gap="space.02">
-                <Flex alignItems="center">
+                <Flex alignItems="center" aria-hidden>
                   {chains
                     .filter(c => c.session)
                     .map((c, index) => (
@@ -38,7 +39,7 @@ export function MultisigConnectDropdown() {
                       />
                     ))}
                 </Flex>
-                {primaryAddress && <styled.span>{formatAddress(primaryAddress)}</styled.span>}
+                {primaryAddress && <styled.span>{truncateMiddle(primaryAddress)}</styled.span>}
               </Flex>
             </Flag>
           </Button>
@@ -59,7 +60,7 @@ export function MultisigConnectDropdown() {
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content sideOffset={8} align="end">
-          <styled.div width="340px" py="space.02">
+          <styled.div width="340px" px="space.02" py="space.02">
             {anySignedIn ? <ConnectedMenu chains={chains} /> : <ChooseChainMenu chains={chains} />}
           </styled.div>
         </DropdownMenu.Content>

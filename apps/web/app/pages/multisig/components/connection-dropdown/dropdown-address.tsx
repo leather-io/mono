@@ -4,8 +4,7 @@ import { styled } from 'leather-styles/jsx';
 import { useClipboardCopy } from '~/utils/use-clipboard-copy';
 
 import { CheckmarkIcon, CopyIcon } from '@leather.io/ui';
-
-import { formatAddress } from './use-chain-connection';
+import { truncateMiddle } from '@leather.io/utils';
 
 export function DropdownAddress({ address }: { address: string }) {
   const { copied, copy } = useClipboardCopy();
@@ -31,7 +30,7 @@ export function DropdownAddress({ address }: { address: string }) {
       transition="background 0.1s ease"
       _hover={{ bg: 'ink.component-background-hover' }}
     >
-      <styled.span>{formatAddress(address)}</styled.span>
+      <styled.span>{truncateMiddle(address, 10)}</styled.span>
       {copied ? (
         <CheckmarkIcon variant="small" color="green.action-primary-default" />
       ) : (

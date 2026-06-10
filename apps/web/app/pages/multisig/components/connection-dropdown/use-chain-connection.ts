@@ -1,4 +1,5 @@
 import { useSession } from '~/features/multisig/auth/use-session';
+import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useSignOut } from '~/features/multisig/auth/use-sign-out';
 
@@ -22,14 +23,11 @@ export const multisigV1Networks: Record<Chain, AuthNetworkId> = {
   stx: 'stx:mainnet',
 };
 
-export function formatAddress(address: string): string {
-  return `${address.slice(0, 5)}…${address.slice(-4)}`;
-}
-
 export function useChainConnection(chain: Chain, network: AuthNetworkId) {
   const session = useSession(network);
   const signIn = useSignIn(network);
   const signOut = useSignOut(network);
+  const isRestoring = useIsRestoringSession(network);
   return {
     chain,
     label: chainLabels[chain],
@@ -37,6 +35,7 @@ export function useChainConnection(chain: Chain, network: AuthNetworkId) {
     session,
     signIn,
     signOut,
+    isRestoring,
   };
 }
 

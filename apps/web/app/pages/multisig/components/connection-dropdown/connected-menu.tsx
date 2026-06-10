@@ -18,41 +18,58 @@ function MenuDivider() {
   return <styled.div height="1px" bg="ink.border-default" mx="space.03" my="space.01" />;
 }
 
-export function ConnectedMenu({ chains }: { chains: ChainConnection[] }) {
+function AccountSection({ connection }: { connection: ChainConnection }) {
+  const { session } = connection;
+  if (!session) return null;
   return (
     <>
-      {chains.map(c => {
-        const session = c.session;
-        if (!session) return null;
-        return (
-          <Fragment key={c.chain}>
-            <Flex alignItems="center" gap="space.03" px="space.03" py="space.02">
-              <ChainAvatar chain={c.chain} size="md" />
-              <Box minWidth={0}>
-                <styled.span display="block" textStyle="label.02">
-                  {c.label}
-                </styled.span>
-                <DropdownAddress address={session.identity.address} />
-              </Box>
-            </Flex>
-            <DropdownMenu.Item onSelect={c.signOut}>
-              <Flag
-                color="red.action-primary-default"
-                textStyle="label.02"
-                img={<ExitIcon variant="small" color="red.action-primary-default" />}
-              >
-                Disconnect {c.label}
-              </Flag>
-            </DropdownMenu.Item>
-            <MenuDivider />
-          </Fragment>
-        );
-      })}
+      <Flex alignItems="center" gap="space.03" px="space.03" py="space.02">
+        <ChainAvatar chain={connection.chain} size="md" />
+        <Box minWidth={0}>
+          <styled.span display="block" textStyle="label.02">
+            {connection.label}
+          </styled.span>
+          {connection.isRestoring ? (
+            <styled.span display="block" textStyle="caption.01" color="ink.text-subdued">
+              Restoring…
+            </styled.span>
+          ) : (
+            <DropdownAddress address={session.identity.address} />
+          )}
+        </Box>
+      </Flex>
+      <DropdownMenu.Item onSelect={connection.signOut}>
+        <Flag
+          color="red.action-primary-default"
+          textStyle="label.02"
+          img={<ExitIcon variant="small" color="red.action-primary-default" />}
+        >
+          Disconnect {connection.label}
+        </Flag>
+      </DropdownMenu.Item>
+    </>
+  );
+}
 
-      {chains.map(c => {
-        if (c.session) return null;
-        return <SignInItem key={c.chain} connection={c} />;
-      })}
+export function ConnectedMenu({ chains }: { chains: ChainConnection[] }) {
+  const signedIn = chains.filter(c => c.session);
+  const notSignedIn = chains.filter(c => !c.session);
+
+  return (
+    <>
+      {signedIn.map((c, index) => (
+        <Fragment key={c.chain}>
+          {index > 0 && <MenuDivider />}
+          <AccountSection connection={c} />
+        </Fragment>
+      ))}
+
+      {notSignedIn.map(c => (
+        <Fragment key={c.chain}>
+          <MenuDivider />
+          <SignInItem connection={c} />
+        </Fragment>
+      ))}
 
       <MenuDivider />
       <DropdownMenu.Item onSelect={openExtension}>
