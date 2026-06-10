@@ -1,6 +1,7 @@
 import { Outlet, data } from 'react-router';
 
 import { Box } from 'leather-styles/jsx';
+import { useSessionBootstrap } from '~/features/multisig/auth/use-session-bootstrap';
 
 import { DevToolsPanel } from './components/dev-tools-panel';
 import { MultisigToastProvider } from './components/multisig-toast';
@@ -18,6 +19,8 @@ export function loader() {
 // so the in-memory session store and toasts are scoped to the multisig area and
 // never leak into other pages.
 export default function MultisigLayout() {
+  useSessionBootstrap();
+
   return (
     <MultisigSessionProvider>
       <MultisigToastProvider>
