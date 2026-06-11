@@ -16,7 +16,7 @@ import { useStacksNetwork } from './stacks-network';
 
 type GetAddressesResult = Awaited<ReturnType<typeof leather.getAddresses>>['addresses'];
 
-export const addressesAtom = atomWithStorage<GetAddressesResult>('addresses', []);
+const addressesAtom = atomWithStorage<GetAddressesResult>('addresses', []);
 
 const providerDetectedAtom = atom(isLeatherInstalled());
 
