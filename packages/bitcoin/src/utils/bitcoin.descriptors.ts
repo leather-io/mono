@@ -1,9 +1,10 @@
-import { HARDENED_OFFSET, HDKey } from '@scure/bip32';
-import { makeTaprootAddressIndexDerivationPath } from 'payments/p2tr-address-gen';
-import { makeNativeSegwitAddressIndexDerivationPath } from 'payments/p2wpkh-address-gen';
+import { HARDENED_OFFSET } from '@scure/bip32';
 
+import { deriveKeychainFromXpub } from '@leather.io/crypto';
 import { BitcoinNetworkModes } from '@leather.io/models';
 
+import { makeTaprootAddressIndexDerivationPath } from '../payments/p2tr-address-gen';
+import { makeNativeSegwitAddressIndexDerivationPath } from '../payments/p2wpkh-address-gen';
 import {
   SupportedPaymentType,
   getNativeSegwitAddress,
@@ -38,7 +39,7 @@ export function inferPaymentTypeFromDescriptor(descriptor: string): SupportedPay
 }
 
 export function extractXpubFromDescriptor(descriptor: string) {
-  const match = descriptor.match(/\((xpub[0-9A-Za-z]+)\)/);
+  const match = descriptor.match(/\(([xt]pub[0-9A-Za-z]+)\)/);
   if (match && match[1]) {
     return match[1];
   }
@@ -61,7 +62,7 @@ export function deriveAddressesFromDescriptor({
   network,
   limit = 1,
 }: DeriveAddressesFromDescriptorArgs): DeriveAddressesFromDescriptorResult[] {
-  const accountKeychain = HDKey.fromExtendedKey(extractXpubFromDescriptor(accountDescriptor));
+  const accountKeychain = deriveKeychainFromXpub(extractXpubFromDescriptor(accountDescriptor));
   const paymentType = inferPaymentTypeFromDescriptor(accountDescriptor);
 
   const derivationPathFn = whenSupportedPaymentType(paymentType)({

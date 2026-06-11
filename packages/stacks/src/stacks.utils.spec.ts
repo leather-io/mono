@@ -11,6 +11,7 @@ import {
   getStacksBurnAddress,
   getStacksContractAssetName,
   getStacksContractName,
+  stacksChainIdToCoreNetworkMode,
   stacksRootKeychainToAccountDescriptor,
   stacksRootKeychainToAccountDescriptorV2,
   whenStacksChainId,
@@ -39,6 +40,26 @@ describe(whenStacksChainId.name, () => {
         [ChainId.Mainnet]: expectedResult,
       })
     ).toEqual(expectedResult);
+  });
+  test('that it returns testnet when given an unknown custom chain id', () => {
+    expect(
+      whenStacksChainId(256)({
+        [ChainId.Testnet]: expectedResult,
+        [ChainId.Mainnet]: 'One plus one equals two.',
+      })
+    ).toEqual(expectedResult);
+  });
+});
+
+describe(stacksChainIdToCoreNetworkMode.name, () => {
+  test('that it returns mainnet for the mainnet chain id', () => {
+    expect(stacksChainIdToCoreNetworkMode(ChainId.Mainnet)).toEqual('mainnet');
+  });
+  test('that it returns testnet for the testnet chain id', () => {
+    expect(stacksChainIdToCoreNetworkMode(ChainId.Testnet)).toEqual('testnet');
+  });
+  test('that it returns testnet for an unknown custom chain id', () => {
+    expect(stacksChainIdToCoreNetworkMode(256)).toEqual('testnet');
   });
 });
 

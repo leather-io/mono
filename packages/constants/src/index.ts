@@ -6,6 +6,7 @@ import type {
   BtcAsset,
   CryptoCurrency,
   Currency,
+  NetworkModes,
   StxAsset,
 } from '@leather.io/models';
 
@@ -35,6 +36,12 @@ export const BTC_DECIMALS = 8;
 export const STX_DECIMALS = 6;
 export const SATS_IN_BTC = 100_000_000;
 export const BITCOIN_MINIMUM_SPEND_IN_SATS = 546;
+
+export const HD_KEY_VERSIONS_BY_NETWORK: Record<NetworkModes, { private: number; public: number }> =
+  {
+    mainnet: { private: 0x0488ade4, public: 0x0488b21e },
+    testnet: { private: 0x04358394, public: 0x043587cf },
+  };
 
 // Units of `Money` should be declared in their smallest unit. Similar to
 // Rosetta, we model currencies with their respective resolution

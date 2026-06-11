@@ -1,11 +1,14 @@
+import { HDKey } from '@scure/bip32';
 import { describe, expect, test } from 'vitest';
 
+import { HD_KEY_VERSIONS_BY_NETWORK } from '@leather.io/constants';
 import { testMnemonic } from '@leather.io/test-config';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import {
   deriveBip39SeedFromMnemonic,
   deriveKeychainExtendedPublicKeyDescriptor,
+  deriveKeychainFromXpub,
   deriveRootBip32Keychain,
   generateMnemonic,
   getMnemonicRootKeyFingerprint,
@@ -82,6 +85,28 @@ describe(deriveKeychainExtendedPublicKeyDescriptor.name, () => {
     expect(() =>
       deriveKeychainExtendedPublicKeyDescriptor(keychain.derive("m/84'/0'/0'"), "m/84'/0'/0'")
     ).toThrow();
+  });
+});
+
+describe(deriveKeychainFromXpub.name, () => {
+  const mainnetXpub =
+    'xpub6D4nuUzLPukRYKmb6ZYxo5khwLJXHarYQutgauqv8UkAVV8NHw23UZPDoXdJZDqv5hHiyh55jCER2KuYt2a7Egnoj7TF8u7scsJbJPeCneM';
+
+  test('it parses mainnet xpub encoded keys', () => {
+    const keychain = deriveKeychainFromXpub(mainnetXpub);
+    expect(keychain.publicExtendedKey).toEqual(mainnetXpub);
+  });
+
+  test('it parses testnet tpub encoded keys', async () => {
+    const rootKeychain = HDKey.fromMasterSeed(
+      await deriveBip39SeedFromMnemonic(testMnemonic),
+      HD_KEY_VERSIONS_BY_NETWORK.testnet
+    );
+    const tpub = rootKeychain.derive("m/84'/1'/0'").publicExtendedKey;
+    expect(tpub.startsWith('tpub')).toBeTruthy();
+
+    const keychain = deriveKeychainFromXpub(tpub);
+    expect(keychain.publicExtendedKey).toEqual(tpub);
   });
 });
 

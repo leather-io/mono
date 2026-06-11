@@ -38,7 +38,7 @@ export function makeStxKeyOrigin(fingerprint: string, accountIndex: number) {
   return createKeyOriginPath(fingerprint, makeStxDerivationPath(accountIndex));
 }
 
-export function stacksChainIdToCoreNetworkMode(chainId: ChainId): NetworkModes {
+export function stacksChainIdToCoreNetworkMode(chainId: number): NetworkModes {
   return whenStacksChainId(chainId)({
     [ChainId.Mainnet]: 'mainnet',
     [ChainId.Testnet]: 'testnet',
@@ -49,8 +49,9 @@ interface WhenStacksChainIdMap<T> {
   [ChainId.Mainnet]: T;
   [ChainId.Testnet]: T;
 }
-export function whenStacksChainId(chainId: ChainId) {
-  return <T>(chainIdMap: WhenStacksChainIdMap<T>): T => chainIdMap[chainId];
+export function whenStacksChainId(chainId: number) {
+  return <T>(chainIdMap: WhenStacksChainIdMap<T>): T =>
+    chainId === ChainId.Mainnet ? chainIdMap[ChainId.Mainnet] : chainIdMap[ChainId.Testnet];
 }
 
 // From `@stacks/wallet-sdk` package we are trying not to use

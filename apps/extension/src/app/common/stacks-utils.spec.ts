@@ -120,6 +120,10 @@ describe(validateAddressChain.name, () => {
     chain: { stacks: { chainId: 2147483648 as const } },
   } as any;
 
+  const customChainIdNetwork = {
+    chain: { stacks: { chainId: 256 as const } },
+  } as any;
+
   describe('standard principals', () => {
     it('validates mainnet addresses on mainnet network', () => {
       expect(
@@ -142,6 +146,18 @@ describe(validateAddressChain.name, () => {
     it('rejects mainnet addresses on testnet network', () => {
       expect(
         validateAddressChain('SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7', testnetNetwork)
+      ).toBeFalsy();
+    });
+
+    it('validates testnet addresses on a network with an unknown custom chain id', () => {
+      expect(
+        validateAddressChain('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM', customChainIdNetwork)
+      ).toBeTruthy();
+    });
+
+    it('rejects mainnet addresses on a network with an unknown custom chain id', () => {
+      expect(
+        validateAddressChain('SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7', customChainIdNetwork)
       ).toBeFalsy();
     });
   });

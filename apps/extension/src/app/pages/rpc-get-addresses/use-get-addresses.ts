@@ -1,7 +1,7 @@
 import { bytesToHex } from '@stacks/common';
 import { z } from 'zod';
 
-import { ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
+import { ecdsaPublicKeyToSchnorr, encodeExtendedPublicKeyForNetwork } from '@leather.io/bitcoin';
 import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import {
   type BtcAddress,
@@ -28,6 +28,7 @@ import {
 } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useAppPermissions } from '@app/store/app-permissions/app-permissions.slice';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 // We reuse this flow for both of these requests, so here we make a union of two
 // possible requests
@@ -44,11 +45,17 @@ function useGetAddressesParams() {
 function useGetDescriptors() {
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
   const taprootAccount = useCurrentTaprootAccount();
+  const network = useCurrentNetwork();
+  const bitcoinNetworkMode = network.chain.bitcoin.mode;
   const wpkhXpub = nativeSegwitAccount?.xpub;
   const trXpub = taprootAccount?.xpub;
   return {
-    nativeSegwitDescriptor: wpkhXpub ? `wpkh(${wpkhXpub})` : null,
-    taprootDescriptor: trXpub ? `tr(${trXpub})` : null,
+    nativeSegwitDescriptor: wpkhXpub
+      ? `wpkh(${encodeExtendedPublicKeyForNetwork(wpkhXpub, bitcoinNetworkMode)})`
+      : null,
+    taprootDescriptor: trXpub
+      ? `tr(${encodeExtendedPublicKeyForNetwork(trXpub, bitcoinNetworkMode)})`
+      : null,
   };
 }
 

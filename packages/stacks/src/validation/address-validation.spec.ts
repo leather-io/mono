@@ -68,6 +68,15 @@ describe('isValidAddressChain', () => {
   it('returns false for testnet address on mainnet', () => {
     expect(isValidAddressChain(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS, ChainId.Mainnet)).toBe(false);
   });
+
+  it('returns true for testnet address on an unknown custom chain id', () => {
+    expect(isValidAddressChain(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS, 256)).toBe(true);
+  });
+
+  it('returns false for mainnet address on an unknown custom chain id', () => {
+    expect(isValidAddressChain(TEST_ACCOUNT_1_STX_ADDRESS, 256)).toBe(false);
+    expect(isValidAddressChain(TEST_ACCOUNT_2_STX_ADDRESS, 256)).toBe(false);
+  });
 });
 
 describe('validatePayerNotRecipient', () => {

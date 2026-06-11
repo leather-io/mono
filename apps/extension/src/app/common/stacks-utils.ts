@@ -70,9 +70,8 @@ export function validateAddressChain(address: string, currentNetwork: NetworkCon
     case ChainId.Mainnet:
       return prefix === 'SM' || prefix === 'SP';
     case ChainId.Testnet:
-      return prefix === 'SN' || prefix === 'ST';
     default:
-      return false;
+      return prefix === 'SN' || prefix === 'ST';
   }
 }
 

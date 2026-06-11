@@ -107,8 +107,7 @@ export function usePrivacyMode() {
 
 function getNetworkFromChainId(chainId: number) {
   if (chainId === ChainId.Mainnet) return STACKS_MAINNET;
-  if (chainId === ChainId.Testnet) return STACKS_TESTNET;
-  throw new Error(`Unknown chain ID: ${chainId}`);
+  return STACKS_TESTNET;
 }
 
 export function getStacksNetworkFromNetworkConfig(networkConfig: NetworkConfiguration) {

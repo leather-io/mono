@@ -1,11 +1,16 @@
 import { hexToBytes } from '@noble/hashes/utils';
-import { HDKey, Versions } from '@scure/bip32';
+import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
 import { TransactionInput, TransactionOutput } from '@scure/btc-signer/psbt';
 import type { BitcoinPayer, BitcoinTaprootPayer } from 'signer/bitcoin-payer';
 
-import { DerivationPathDepth, extractPurposeFromPath } from '@leather.io/crypto';
+import { HD_KEY_VERSIONS_BY_NETWORK } from '@leather.io/constants';
+import {
+  DerivationPathDepth,
+  deriveKeychainFromXpub,
+  extractPurposeFromPath,
+} from '@leather.io/crypto';
 import { BitcoinAddress, BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
 import type { BitcoinPaymentTypes } from '@leather.io/rpc';
 import { isDefined, whenNetwork } from '@leather.io/utils';
@@ -203,15 +208,28 @@ export function createWalletIdDecoratedPath(policy: string, walletId: string) {
   return policy.split(']')[0].replace('[', '').replace('m', walletId);
 }
 
+export function encodeExtendedPublicKeyForNetwork(key: string, network: BitcoinNetworkModes) {
+  const keychain = deriveKeychainFromXpub(key);
+
+  if (!keychain.chainCode || !keychain.publicKey)
+    throw new Error('Cannot re-encode extended key without public key material');
+
+  return new HDKey({
+    versions: HD_KEY_VERSIONS_BY_NETWORK[bitcoinNetworkModeToCoreNetworkMode(network)],
+    depth: keychain.depth,
+    index: keychain.index,
+    parentFingerprint: keychain.parentFingerprint,
+    chainCode: keychain.chainCode,
+    publicKey: keychain.publicKey,
+  }).publicExtendedKey;
+}
+
 // Primarily used to get the correct `Version` when passing Ledger Bitcoin
 // extended public keys to the HDKey constructor
 export function getHdKeyVersionsFromNetwork(network: NetworkModes) {
   return whenNetwork(network)({
     mainnet: undefined,
-    testnet: {
-      private: 0x00000000,
-      public: 0x043587cf,
-    } as Versions,
+    testnet: HD_KEY_VERSIONS_BY_NETWORK.testnet,
   });
 }
 
