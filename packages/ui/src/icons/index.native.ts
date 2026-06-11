@@ -182,6 +182,7 @@ export * from './user-icon.native';
 export * from './users-two-icon.native';
 export * from './wallet-icon.native';
 export * from './wallet-plus-icon.native';
+export * from './wallet-sparkle-icon.native';
 export * from './x-logo-icon.native';
 export { type IconProps } from './icon/create-icon.native';
 export * from './pulse-icon.native';

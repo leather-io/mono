@@ -2,7 +2,9 @@ import { Outlet, data } from 'react-router';
 
 import { Box } from 'leather-styles/jsx';
 import { useSessionBootstrap } from '~/features/multisig/auth/use-session-bootstrap';
+import { SignInSlotProvider } from '~/layouts/page/sign-in-slot';
 
+import { MultisigConnectDropdown } from './components/connection-dropdown/multisig-connect-dropdown';
 import { DevToolsPanel } from './components/dev-tools-panel';
 import { MultisigToastProvider } from './components/multisig-toast';
 import { multisigEnabled } from './multisig.constants';
@@ -22,13 +24,15 @@ export default function MultisigLayout() {
   useSessionBootstrap();
 
   return (
-    <MultisigSessionProvider>
-      <MultisigToastProvider>
-        <Box pb="space.11">
-          <Outlet />
-        </Box>
-        <DevToolsPanel />
-      </MultisigToastProvider>
-    </MultisigSessionProvider>
+    <SignInSlotProvider slot={<MultisigConnectDropdown />}>
+      <MultisigSessionProvider>
+        <MultisigToastProvider>
+          <Box pb="space.11">
+            <Outlet />
+          </Box>
+          <DevToolsPanel />
+        </MultisigToastProvider>
+      </MultisigSessionProvider>
+    </SignInSlotProvider>
   );
 }
