@@ -17,7 +17,7 @@ export function isValidStacksAddress(address: string) {
   }
 }
 
-export function isValidAddressChain(address: string, chainId: ChainId) {
+export function isValidAddressChain(address: string, chainId: number) {
   if (!address) {
     return false;
   }
@@ -27,9 +27,8 @@ export function isValidAddressChain(address: string, chainId: ChainId) {
     case ChainId.Mainnet:
       return prefix === 'SM' || prefix === 'SP';
     case ChainId.Testnet:
-      return prefix === 'SN' || prefix === 'ST';
     default:
-      return false;
+      return prefix === 'SN' || prefix === 'ST';
   }
 }
 

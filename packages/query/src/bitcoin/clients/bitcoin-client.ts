@@ -112,7 +112,7 @@ function TransactionsApi(basePath: string) {
         method: 'POST',
         body: tx,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'text/plain',
         },
       });
     },
