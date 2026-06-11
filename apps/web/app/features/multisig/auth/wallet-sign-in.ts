@@ -1,5 +1,3 @@
-import { getDefaultStore } from 'jotai';
-import { addressesAtom } from '~/store/addresses';
 import { leather } from '~/utils/leather-sdk';
 import { isLeatherInstalled } from '~/utils/utils';
 
@@ -14,18 +12,13 @@ interface WalletSignInParams {
   timestamp: number;
 }
 
-async function getWalletAddresses() {
-  const store = getDefaultStore();
-  const known = store.get(addressesAtom);
-  if (known.length > 0) return known;
-
+async function fetchWalletAddresses() {
   const result = await leather.getAddresses();
-  store.set(addressesAtom, result.addresses);
   return result.addresses;
 }
 
 async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
-  const addresses = await getWalletAddresses();
+  const addresses = await fetchWalletAddresses();
   const account = addresses.find(address => address.symbol === 'BTC' && address.type === 'p2wpkh');
   if (!account) {
     throw new Error('No Bitcoin account available in the connected wallet');
@@ -36,26 +29,34 @@ async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayloa
     paymentType: 'p2wpkh',
   });
 
+  if (signed.address !== account.address) {
+    throw new Error('Active wallet account changed during sign-in. Please try again.');
+  }
+
   return {
     signature: signed.signature,
     publicKey: account.publicKey,
     xpub: extractXpubFromDescriptor(account.descriptor),
     xpubOriginFingerprint: 'd34db33f', // temp mock
     xpubOriginPath: extractAccountPathFromFullPath(account.derivationPath),
-    address: signed.address,
+    address: account.address,
     message: params.message,
     timestamp: params.timestamp,
   };
 }
 
 async function stxSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
-  const addresses = await getWalletAddresses();
+  const addresses = await fetchWalletAddresses();
   const account = addresses.find(address => address.symbol === 'STX');
   if (!account) {
     throw new Error('No Stacks account available in the connected wallet');
   }
 
   const signed = await leather.stxSignMessage({ message: params.message });
+
+  if (signed.publicKey !== account.publicKey) {
+    throw new Error('Active wallet account changed during sign-in. Please try again.');
+  }
 
   return {
     signature: signed.signature,
