@@ -1,6 +1,6 @@
 import { ripemd160 } from '@noble/hashes/ripemd160';
 import { sha256 } from '@noble/hashes/sha256';
-import { base58check } from '@scure/base';
+import { createBase58check } from '@scure/base';
 
 import { deriveBip39SeedFromMnemonic, deriveRootBip32Keychain } from '@leather.io/crypto';
 import { NetworkModes } from '@leather.io/models';
@@ -20,7 +20,7 @@ export const deriveRootBtcKeychain = deriveRootBip32Keychain;
 export function decodeCompressedWifPrivateKey(key: string) {
   // https://en.bitcoinwiki.org/wiki/Wallet_import_format
   // Decode Compressed WIF format private key
-  const compressedWifFormatPrivateKey = base58check(sha256).decode(key);
+  const compressedWifFormatPrivateKey = createBase58check(sha256).decode(key);
   // Drop leading network byte, trailing public key SEC format byte
   return compressedWifFormatPrivateKey.slice(1, compressedWifFormatPrivateKey.length - 1);
 }
@@ -54,7 +54,7 @@ export function makePayToScriptHashAddressBytes(keyHash: Uint8Array) {
 export function makePayToScriptHashAddress(addressBytes: Uint8Array, network: NetworkModes) {
   const networkByte = payToScriptHashPrefixMap[network];
   const addressWithPrefix = Uint8Array.from([networkByte, ...addressBytes]);
-  return base58check(sha256).encode(addressWithPrefix);
+  return createBase58check(sha256).encode(addressWithPrefix);
 }
 
 export function publicKeyToPayToScriptHashAddress(publicKey: Uint8Array, network: NetworkModes) {

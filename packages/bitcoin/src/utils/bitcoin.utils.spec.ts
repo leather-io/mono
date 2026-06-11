@@ -1,5 +1,7 @@
+import { HDKey } from '@scure/bip32';
 import { describe, expect, it } from 'vitest';
 
+import { HD_KEY_VERSIONS_BY_NETWORK } from '@leather.io/constants';
 import { deriveRootKeychainFromMnemonic } from '@leather.io/crypto';
 import { testMnemonic } from '@leather.io/test-config';
 
@@ -8,6 +10,7 @@ import { deriveNativeSegwitAccountFromRootKeychain } from '../payments/p2wpkh-ad
 import { createBitcoinAddress } from '../validation/bitcoin-address';
 import {
   deriveAddressIndexZeroFromAccount,
+  encodeExtendedPublicKeyForNetwork,
   getNativeSegwitAddress,
   getTaprootAddress,
   inferNetworkFromAddress,
@@ -64,6 +67,36 @@ describe(inferNetworkFromAddress.name, () => {
   });
 });
 // Assuming the function is in a file named bitcoinLib.ts
+
+describe(encodeExtendedPublicKeyForNetwork.name, () => {
+  const xpub =
+    'xpub6D4nuUzLPukRYKmb6ZYxo5khwLJXHarYQutgauqv8UkAVV8NHw23UZPDoXdJZDqv5hHiyh55jCER2KuYt2a7Egnoj7TF8u7scsJbJPeCneM';
+
+  it('should return mainnet encoded keys unchanged for mainnet', () => {
+    expect(encodeExtendedPublicKeyForNetwork(xpub, 'mainnet')).toEqual(xpub);
+  });
+
+  it('should re-encode xpub as tpub for testnet flavored networks', () => {
+    const tpub = encodeExtendedPublicKeyForNetwork(xpub, 'testnet');
+    expect(tpub.startsWith('tpub')).toBeTruthy();
+    expect(encodeExtendedPublicKeyForNetwork(xpub, 'regtest')).toEqual(tpub);
+    expect(encodeExtendedPublicKeyForNetwork(xpub, 'signet')).toEqual(tpub);
+  });
+
+  it('should round trip between xpub and tpub', () => {
+    const tpub = encodeExtendedPublicKeyForNetwork(xpub, 'testnet');
+    expect(encodeExtendedPublicKeyForNetwork(tpub, 'mainnet')).toEqual(xpub);
+    expect(encodeExtendedPublicKeyForNetwork(tpub, 'testnet')).toEqual(tpub);
+  });
+
+  it('should preserve the key material across re-encoding', () => {
+    const tpub = encodeExtendedPublicKeyForNetwork(xpub, 'testnet');
+    const mainnetKeychain = HDKey.fromExtendedKey(xpub);
+    const testnetKeychain = HDKey.fromExtendedKey(tpub, HD_KEY_VERSIONS_BY_NETWORK.testnet);
+    expect(testnetKeychain.publicKey).toEqual(mainnetKeychain.publicKey);
+    expect(testnetKeychain.chainCode).toEqual(mainnetKeychain.chainCode);
+  });
+});
 
 describe(inferPaymentTypeFromAddress.name, () => {
   it('should return p2wpkh for mainnet P2WPKH address', () => {
