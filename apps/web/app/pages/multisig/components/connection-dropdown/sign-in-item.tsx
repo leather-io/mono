@@ -26,12 +26,9 @@ export function SignInItem({ connection, detailed = false }: SignInItemProps) {
         signIn.mutate();
       }}
     >
-      <Flag
-        textStyle="label.02"
-        img={<ChainAvatar chain={connection.chain} boxSize={detailed ? '40px' : '24px'} />}
-      >
+      <Flag textStyle="label.03" img={<ChainAvatar chain={connection.chain} boxSize="32px" />}>
         <Box>
-          <styled.span display="block" textStyle="label.02">
+          <styled.span display="block" textStyle="label.03">
             {signInItemTitle(label, signIn.isPending, detailed)}
           </styled.span>
           {detailed && (
