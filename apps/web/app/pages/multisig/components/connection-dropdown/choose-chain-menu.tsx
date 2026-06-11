@@ -7,7 +7,7 @@ export function ChooseChainMenu({ chains }: { chains: ChainConnection[] }) {
   return (
     <>
       <styled.div px="space.03" py="space.02">
-        <styled.p textStyle="label.02">Choose a chain to connect</styled.p>
+        <styled.p textStyle="label.03">Choose a chain to connect</styled.p>
         <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.01">
           Multisig uses chain-native signing — connect each chain independently.
         </styled.p>

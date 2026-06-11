@@ -16,13 +16,14 @@ export function DropdownAddress({ address }: { address: string }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       title="Copy address"
-      display="inline-flex"
+      display="flex"
       alignItems="center"
       gap="space.01"
+      width="fit-content"
+      height="20px"
       cursor="pointer"
-      ml="-space.02"
-      px="space.02"
-      py="space.01"
+      ml="-space.01"
+      px="space.01"
       borderRadius="sm"
       bg="transparent"
       color="ink.text-subdued"
@@ -32,9 +33,19 @@ export function DropdownAddress({ address }: { address: string }) {
     >
       <styled.span>{truncateMiddle(address, 10)}</styled.span>
       {copied ? (
-        <CheckmarkIcon variant="small" color="green.action-primary-default" />
+        <CheckmarkIcon
+          variant="small"
+          width={12}
+          height={12}
+          color="green.action-primary-default"
+        />
       ) : (
-        <CopyIcon variant="small" color={hovered ? 'ink.text-primary' : 'ink.text-subdued'} />
+        <CopyIcon
+          variant="small"
+          width={12}
+          height={12}
+          color={hovered ? 'ink.text-primary' : 'ink.text-subdued'}
+        />
       )}
     </styled.button>
   );

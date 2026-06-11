@@ -1,9 +1,9 @@
-import WalletSparkle20 from '../assets/icons/wallet-sparkle-20-20.svg';
+import WalletSparkle24 from '../assets/icons/wallet-sparkle-24-24.svg';
 import { createNativeIcon } from './icon/create-icon.native';
 
 export const WalletSparkleIcon = createNativeIcon({
   icon: {
-    medium: WalletSparkle20,
+    medium: WalletSparkle24,
   },
   displayName: 'WalletSparkle',
 });

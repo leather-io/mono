@@ -3,6 +3,7 @@ import { Flex, styled } from 'leather-styles/jsx';
 import { Button, ChevronDownIcon, DropdownMenu, Flag, WalletIcon } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
+import { ChainAvatar } from '../chain-avatar';
 import { ChooseChainMenu } from './choose-chain-menu';
 import { ConnectedMenu } from './connected-menu';
 import { multisigV1Networks, useChainConnection } from './use-chain-connection';
@@ -23,21 +24,21 @@ export function MultisigConnectDropdown() {
             <Flag reverse spacing="space.01" img={<ChevronDownIcon variant="small" />}>
               <Flex alignItems="center" gap="space.02">
                 <Flex alignItems="center" aria-hidden>
-                  {chains
-                    .filter(c => c.session)
-                    .map((c, index) => (
-                      <styled.div
-                        key={c.chain}
-                        width="12px"
-                        height="12px"
-                        borderRadius="round"
-                        borderWidth="1.5px"
-                        borderStyle="solid"
-                        borderColor="ink.background-primary"
-                        bg={c.chain === 'btc' ? 'chain.btc' : 'chain.stx'}
-                        ml={index > 0 ? '-space.01' : undefined}
-                      />
-                    ))}
+                  {chains.map((c, index) => (
+                    <Flex
+                      key={c.chain}
+                      width="24px"
+                      height="24px"
+                      alignItems="center"
+                      justifyContent="center"
+                      position="relative"
+                      zIndex={c.chain === 'btc' ? 1 : 0}
+                      ml={index > 0 ? '-space.03' : undefined}
+                      filter={c.session ? undefined : 'grayscale(1)'}
+                    >
+                      <ChainAvatar chain={c.chain} boxSize="20px" />
+                    </Flex>
+                  ))}
                 </Flex>
                 {primaryAddress && <styled.span>{truncateMiddle(primaryAddress)}</styled.span>}
               </Flex>
@@ -60,7 +61,7 @@ export function MultisigConnectDropdown() {
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content sideOffset={8} align="end">
-          <styled.div width="340px" px="space.02" py="space.02">
+          <styled.div mx="space.02" py="space.02" width="300px">
             {anySignedIn ? <ConnectedMenu chains={chains} /> : <ChooseChainMenu chains={chains} />}
           </styled.div>
         </DropdownMenu.Content>
