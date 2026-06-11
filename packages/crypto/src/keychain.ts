@@ -1,4 +1,4 @@
-import { HDKey } from '@scure/bip32';
+import { HDKey, Versions } from '@scure/bip32';
 import {
   mnemonicToSeed,
   mnemonicToSeedSync,
@@ -7,6 +7,8 @@ import {
 } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
 import memoize from 'just-memoize';
+
+import { HD_KEY_VERSIONS_BY_NETWORK } from '@leather.io/constants';
 
 import {
   DerivationPathDepth,
@@ -48,7 +50,15 @@ export async function deriveChildKeychainFromMnemnonic(
   return rootKeychain.derive(keyOriginToDerivationPath(path));
 }
 
-export const deriveKeychainFromXpub = memoize((xpub: string) => HDKey.fromExtendedKey(xpub));
+function inferVersionsFromExtendedKeyPrefix(key: string): Versions | undefined {
+  if (key.startsWith('xpub')) return HD_KEY_VERSIONS_BY_NETWORK.mainnet;
+  if (key.startsWith('tpub')) return HD_KEY_VERSIONS_BY_NETWORK.testnet;
+  return undefined;
+}
+
+export const deriveKeychainFromXpub = memoize((xpub: string) =>
+  HDKey.fromExtendedKey(xpub, inferVersionsFromExtendedKeyPrefix(xpub))
+);
 
 export function fingerprintAsNumberToHex(fingerprint: number) {
   return fingerprint.toString(16).padStart(8, '0');

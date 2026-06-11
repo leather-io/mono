@@ -1,7 +1,7 @@
 import ecc from '@bitcoinerlab/secp256k1';
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex, concatBytes } from '@noble/hashes/utils';
-import { base58check } from '@scure/base';
+import { createBase58check } from '@scure/base';
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import { hash160 } from '@scure/btc-signer/utils';
@@ -177,7 +177,7 @@ describe('Bitcoin SegWit (P2WPKH-P2SH) address generation', () => {
     // compare lib output
     expect(addressBytesFromStacks).toEqual(addressBytesHex);
 
-    const address = base58check(sha256).encode(
+    const address = createBase58check(sha256).encode(
       Buffer.concat([
         Buffer.of(payToScriptHashTestnetPrefix),
         Buffer.from(addressBytesFromStacks, 'hex'),
