@@ -114,5 +114,6 @@ export * from './trash-icon.web';
 export * from './unlock-icon.web';
 export * from './user-icon.web';
 export * from './wallet-icon.web';
+export * from './wallet-sparkle-icon.web';
 export * from './zap-icon.web';
 export * from './pulse-icon.web';
