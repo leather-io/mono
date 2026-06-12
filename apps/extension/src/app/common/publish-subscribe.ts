@@ -61,6 +61,7 @@ export interface GlobalAppEvents {
   };
   ledgerBitcoinTxSigningCancelled: {
     unsignedPsbt: string;
+    error?: string;
   };
   ledgerStacksMessageSigned: {
     unsignedMessage: UnsignedMessage;

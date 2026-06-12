@@ -26,6 +26,7 @@ const signPsbtRequestParamsSchema = z.object({
   account: z.number().optional(),
   allowedSighash: z.array(z.any()).optional(),
   broadcast: z.boolean().optional(),
+  descriptor: z.string().optional(),
   hex: z.string(),
   network: z.string().optional(),
   signAtIndex: z

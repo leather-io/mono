@@ -179,11 +179,20 @@ export function useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressInd
 
       if (!nativeSegwitPayer) throw new Error(`Unable to update input for path ${derivationPath}}`);
 
+      // Coordinator PSBTs routinely populate bip32_derivation for every policy
+      // key. Re-adding our key would hit bip174's by-pubkey dedupe and throw
+      // "Can not add duplicate data to array", so skip when it is already present.
+      const pubkey = Buffer.from(nativeSegwitPayer.publicKey);
+      const hasDerivationForPubkey = tx.data.inputs[index].bip32Derivation?.some(entry =>
+        entry.pubkey.equals(pubkey)
+      );
+      if (hasDerivationForPubkey) return;
+
       tx.updateInput(index, {
         bip32Derivation: [
           {
             masterFingerprint: Buffer.from(fingerprint, 'hex'),
-            pubkey: Buffer.from(nativeSegwitPayer.publicKey),
+            pubkey,
             path: derivationPath,
           },
         ],

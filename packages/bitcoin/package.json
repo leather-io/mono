@@ -28,6 +28,7 @@
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
+    "@bitcoinerlab/descriptors": "1.1.1",
     "@bitcoinerlab/secp256k1": "1.0.2",
     "@leather.io/constants": "workspace:*",
     "@leather.io/crypto": "workspace:*",

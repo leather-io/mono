@@ -17,7 +17,7 @@ export async function listenForBitcoinTxLedgerSigning(psbt: string): Promise<btc
       if (msg.unsignedPsbt === psbt) {
         appEvents.unsubscribe('ledgerBitcoinTxSigningCancelled', signingAbortedHandler);
         appEvents.unsubscribe('ledgerBitcoinTxSigned', txSignedHandler);
-        reject(new Error('User cancelled the signing operation'));
+        reject(new Error(msg.error ?? 'User cancelled the signing operation'));
       }
     }
     appEvents.subscribe('ledgerBitcoinTxSigningCancelled', signingAbortedHandler);
