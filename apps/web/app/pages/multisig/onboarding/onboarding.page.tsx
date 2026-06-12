@@ -1,3 +1,5 @@
+import { Navigate } from 'react-router';
+
 import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
@@ -9,6 +11,7 @@ import type { AuthNetworkId } from '@leather.io/models';
 import { KeyIcon, Link as UiLink } from '@leather.io/ui';
 
 import type { Chain } from '../data/multisig-types';
+import { multisigPaths } from '../multisig.constants';
 import { OnboardingConnectRow } from './components/onboarding-connect-row';
 
 const chainNetwork: Record<Chain, AuthNetworkId> = {
@@ -25,6 +28,10 @@ export function MultisigOnboardingPage() {
   const stxSignOut = useSignOut(chainNetwork.stx);
   const btcRestoring = useIsRestoringSession(chainNetwork.btc);
   const stxRestoring = useIsRestoringSession(chainNetwork.stx);
+
+  if (btcSession || stxSession) {
+    return <Navigate to={multisigPaths.index} replace />;
+  }
 
   return (
     <Page>
