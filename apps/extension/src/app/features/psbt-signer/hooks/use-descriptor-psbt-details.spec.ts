@@ -29,7 +29,7 @@ vi.mock('@app/store/networks/networks.selectors', () => ({
 }));
 
 vi.mock('@shared/logger', () => ({
-  logger: { warn: vi.fn() },
+  logger: { error: vi.fn(), warn: vi.fn() },
 }));
 
 function requireBytes(bytes: Uint8Array | null) {
