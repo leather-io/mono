@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
@@ -6,9 +7,11 @@ import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useVaults } from '~/features/multisig/vaults/use-vaults';
 import { Page } from '~/layouts/page/page';
 
+import type { VaultSummary } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
 
 import { ChainAvatar } from '../components/chain-avatar';
+import { InvitationModal } from '../components/invitation-modal';
 import { TxRow } from '../components/tx-row';
 import type { Chain } from '../data/multisig-types';
 import { multisigPaths } from '../multisig.constants';
@@ -103,6 +106,7 @@ function ConnectChainPrompt({
 
 export function MultisigDashboardPage() {
   const navigate = useNavigate();
+  const [inviteVault, setInviteVault] = useState<VaultSummary | null>(null);
   const btcVaults = useVaults('btc:mainnet');
   const stxVaults = useVaults('stx:mainnet');
   const btcSession = useSession('btc:mainnet');
@@ -136,7 +140,11 @@ export function MultisigDashboardPage() {
               <VaultCard
                 key={vault.id}
                 vault={vault}
-                onClick={() => navigate(multisigPaths.vault(vault.id))}
+                onClick={() =>
+                  vault.membershipStatus === 'invited'
+                    ? setInviteVault(vault)
+                    : navigate(multisigPaths.vault(vault.id))
+                }
               />
             ))}
             {sortedVaults.length > 0 && (
@@ -180,6 +188,10 @@ export function MultisigDashboardPage() {
           </Box>
         </Box>
       </Flex>
+
+      {inviteVault && (
+        <InvitationModal vault={inviteVault} isShowing onClose={() => setInviteVault(null)} />
+      )}
     </Page>
   );
 }

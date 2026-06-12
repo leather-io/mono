@@ -6,7 +6,7 @@ import { AvatarSq } from '../../components/avatar-sq';
 import { Badge } from '../../components/badge';
 import { VaultListItem } from '../../components/vault-list-item';
 import type { Chain } from '../../data/multisig-types';
-import { vaultThemes } from '../../multisig-tokens';
+import { themeIdFromVaultId } from '../../multisig-tokens';
 
 interface VaultCardProps {
   vault: VaultSummary;
@@ -15,14 +15,6 @@ interface VaultCardProps {
 
 function chainFromNetwork(network: string): Chain {
   return network.startsWith('btc') ? 'btc' : 'stx';
-}
-
-// Stable theme tile derived from the vault id — keeps cards visually varied
-// without a backend-provided theme field.
-function themeFromId(id: string): number {
-  let hash = 0;
-  for (const char of id) hash = (hash * 31 + char.charCodeAt(0)) | 0;
-  return Math.abs(hash) % vaultThemes.length;
 }
 
 export function VaultCard({ vault, onClick }: VaultCardProps) {
@@ -56,7 +48,9 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
       _hover={{ bg: 'ink.component-background-hover' }}
     >
       <VaultListItem
-        leading={<AvatarSq chain={chain} icon="vault" themeId={themeFromId(vault.id)} size="md" />}
+        leading={
+          <AvatarSq chain={chain} icon="vault" themeId={themeIdFromVaultId(vault.id)} size="md" />
+        }
         title={vault.name}
         caption={`${chainLabel} vault · ${vault.accountCount} ${accountLabel}`}
         trailingTitle={renderTrailingTitle()}

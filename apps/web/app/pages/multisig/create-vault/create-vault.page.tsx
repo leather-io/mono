@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useSignIn } from '~/features/multisig/auth/use-sign-in';
-import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useCreateVault } from '~/features/multisig/vaults/use-vault-mutations';
 import { useToast } from '~/features/toasts/use-toast';
 import { Page } from '~/layouts/page/page';
@@ -89,7 +88,6 @@ export function CreateVaultPage() {
   const [attempted, setAttempted] = useState(false);
 
   const network = networkForChain(chain);
-  const me = useMultisigMe(network);
   const createVault = useCreateVault(network);
   const signIn = useSignIn(network);
 
@@ -99,23 +97,32 @@ export function CreateVaultPage() {
     btc: Boolean(btcSession),
     stx: Boolean(stxSession),
   };
+  const myAddress = (chain === 'btc' ? btcSession : stxSession)?.identity.address;
   const chainLabel = chain === 'btc' ? 'Bitcoin' : 'Stacks';
 
   function isValidMemberAddress(address: string) {
-    return chain === 'btc' ? isValidBitcoinAddress(address) : isValidStacksAddress(address);
+    return chain === 'btc'
+      ? isValidBitcoinAddress(address) && address.startsWith('bc1q')
+      : isValidStacksAddress(address) && address.startsWith('SP');
   }
 
   const inviteeAddresses = members
     .filter(member => !member.isMe && member.addr.trim() !== '')
     .map(member => member.addr.trim());
 
+  const memberAddresses = myAddress ? [myAddress, ...inviteeAddresses] : inviteeAddresses;
+
   function getMemberStatus(member: MemberDraft, index: number): MemberFieldStatus {
     if (member.isMe) return { state: 'empty' };
     const address = member.addr.trim();
     if (address === '') return { state: 'empty' };
     if (!isValidMemberAddress(address))
-      return { state: 'invalid', error: `Enter a valid ${chainLabel} address.` };
-    if (me.data?.address === address)
+      return {
+        state: 'invalid',
+        error:
+          chain === 'btc' ? 'Enter a native-segwit bc1q… address.' : 'Enter a Stacks SP… address.',
+      };
+    if (myAddress === address)
       return {
         state: 'invalid',
         error: "You're added automatically — enter another member's address.",
@@ -130,9 +137,6 @@ export function CreateVaultPage() {
 
   function validationError(): string | null {
     if (name.trim() === '') return 'Give your vault a name to continue.';
-    if ((members.find(member => member.isMe)?.name.trim() ?? '') === '')
-      return 'Add your name to continue.';
-    if (inviteeAddresses.length < 2) return 'Add at least 2 members to continue.';
     if (hasInvalidMember) return 'Fix the highlighted member addresses.';
     return null;
   }
@@ -147,7 +151,7 @@ export function CreateVaultPage() {
     setAttempted(true);
     if (!connected[chain] || validationError()) return;
     createVault.mutate(
-      { name: name.trim(), members: inviteeAddresses },
+      { name: name.trim(), members: memberAddresses },
       {
         onSuccess(vault) {
           showToast(`Vault “${vault.name}” created`);
@@ -190,7 +194,7 @@ export function CreateVaultPage() {
               chain={chain}
               members={members}
               onChange={setMembers}
-              myAddress={me.data?.address}
+              myAddress={myAddress}
               statuses={memberStatuses}
             />
           </Section>
@@ -206,7 +210,7 @@ export function CreateVaultPage() {
             name={name}
             themeId={themeId}
             members={members}
-            myAddress={me.data?.address}
+            myAddress={myAddress}
             error={error}
             disabled={!connected[chain]}
             onSubmit={submit}

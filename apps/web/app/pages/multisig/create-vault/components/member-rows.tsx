@@ -44,7 +44,7 @@ function borderColorForStatus(state: MemberFieldStatus['state']) {
 }
 
 export function MemberRows({ chain, members, myAddress, statuses, onChange }: MemberRowsProps) {
-  const placeholder = chain === 'btc' ? 'bc1q… address' : 'BNS or SP… address';
+  const placeholder = chain === 'btc' ? 'bc1q… address' : 'SP… address';
 
   function update(index: number, patch: Partial<MemberDraft>) {
     onChange(members.map((m, i) => (i === index ? { ...m, ...patch } : m)));

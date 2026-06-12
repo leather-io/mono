@@ -1,12 +1,13 @@
-import { Outlet, data } from 'react-router';
+import { Navigate, Outlet, data, useLocation } from 'react-router';
 
 import { Box } from 'leather-styles/jsx';
+import { useSession } from '~/features/multisig/auth/use-session';
 import { useSessionBootstrap } from '~/features/multisig/auth/use-session-bootstrap';
 import { SignInSlotProvider } from '~/layouts/page/sign-in-slot';
 
 import { MultisigConnectDropdown } from './components/connection-dropdown/multisig-connect-dropdown';
 import { DevToolsPanel } from './components/dev-tools-panel';
-import { multisigEnabled } from './multisig.constants';
+import { multisigEnabled, multisigPaths } from './multisig.constants';
 import { MultisigSessionProvider } from './store/multisig-session';
 
 // Gate the entire /multisig/* area: when the feature is disabled (production),
@@ -21,6 +22,15 @@ export function loader() {
 // other pages.
 export default function MultisigLayout() {
   useSessionBootstrap();
+  const location = useLocation();
+  const btcSession = useSession('btc:mainnet');
+  const stxSession = useSession('stx:mainnet');
+
+  const onEntryRoute =
+    location.pathname === multisigPaths.index || location.pathname === multisigPaths.onboarding;
+  if (!btcSession && !stxSession && !onEntryRoute) {
+    return <Navigate to={multisigPaths.index} replace />;
+  }
 
   return (
     <SignInSlotProvider slot={<MultisigConnectDropdown />}>

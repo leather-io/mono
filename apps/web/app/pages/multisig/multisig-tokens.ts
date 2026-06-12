@@ -46,6 +46,14 @@ export function vaultTheme(themeId: number): VaultTheme {
   return vaultThemes[themeId] ?? vaultThemes[0];
 }
 
+// Stable theme tile derived from the vault id — keeps cards visually varied
+// without a backend-provided theme field.
+export function themeIdFromVaultId(id: string): number {
+  let hash = 0;
+  for (const char of id) hash = (hash * 31 + char.charCodeAt(0)) | 0;
+  return Math.abs(hash) % vaultThemes.length;
+}
+
 // Squircle radius for AvatarSq tiles — the prototype uses a soft-rounded
 // square; no token radius matches (tokens stop at lg = 12px / round).
 export const avatarSquircleRadius = '14px';
