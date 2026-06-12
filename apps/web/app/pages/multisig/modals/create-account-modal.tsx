@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
+import { useToast } from '~/features/toasts/use-toast';
 
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { AvatarSq } from '../components/avatar-sq';
-import { useMultisigToast } from '../components/multisig-toast';
 import { TextField } from '../components/text-field';
 import type { Vault } from '../data/multisig-types';
 import { accountIconUrl, accountIcons } from '../multisig-tokens';
@@ -19,7 +19,7 @@ interface CreateAccountModalProps {
 
 export function CreateAccountModal({ vault, isShowing, onClose }: CreateAccountModalProps) {
   const { addAccount } = useMultisigActions();
-  const { showToast } = useMultisigToast();
+  const { success: showToast } = useToast();
   const [name, setName] = useState('');
   const [icon, setIcon] = useState('piggybank');
   const [threshold, setThreshold] = useState<number | null>(null);

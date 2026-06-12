@@ -2,18 +2,23 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useSession } from '~/features/multisig/auth/use-session';
+import { useSignIn } from '~/features/multisig/auth/use-sign-in';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useCreateVault } from '~/features/multisig/vaults/use-vault-mutations';
+import { useToast } from '~/features/toasts/use-toast';
 import { Page } from '~/layouts/page/page';
 
+import { isValidBitcoinAddress } from '@leather.io/bitcoin';
 import type { AuthNetworkId } from '@leather.io/models';
+import { isValidStacksAddress } from '@leather.io/stacks';
+import { Button, InfoCircleIcon } from '@leather.io/ui';
 
-import { useMultisigToast } from '../components/multisig-toast';
 import { TextField } from '../components/text-field';
 import type { Chain } from '../data/multisig-types';
 import { multisigPaths } from '../multisig.constants';
 import { ChainPicker } from './components/chain-picker';
-import { type MemberDraft, MemberRows } from './components/member-rows';
+import { type MemberDraft, type MemberFieldStatus, MemberRows } from './components/member-rows';
 import { ThemePicker } from './components/theme-picker';
 import { VaultPreviewCard } from './components/vault-preview-card';
 
@@ -24,7 +29,7 @@ function networkForChain(chain: Chain): AuthNetworkId {
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <Box mb="space.06">
-      <styled.div textStyle="label.02" color="ink.text-subdued" mb="space.03">
+      <styled.div textStyle="label.01" color="ink.text-primary" mb="space.03">
         {label}
       </styled.div>
       {children}
@@ -33,14 +38,50 @@ function Section({ label, children }: { label: string; children: React.ReactNode
 }
 
 const initialMembers: MemberDraft[] = [
-  { addr: '', name: 'Me', isMe: true },
+  { addr: '', name: '', isMe: true },
   { addr: '', name: '' },
   { addr: '', name: '' },
 ];
 
+function ConnectChainCallout({
+  chainLabel,
+  isPending,
+  onConnect,
+}: {
+  chainLabel: string;
+  isPending: boolean;
+  onConnect(): void;
+}) {
+  return (
+    <Flex
+      gap="space.04"
+      alignItems="center"
+      p="space.04"
+      borderRadius="md"
+      borderWidth="1px"
+      borderStyle="solid"
+      borderColor="yellow.border"
+      bg="yellow.background-primary"
+    >
+      <Box flexShrink={0} color="ink.text-primary">
+        <InfoCircleIcon variant="small" />
+      </Box>
+      <Box flex={1} minWidth={0}>
+        <styled.p textStyle="label.02">Connect your {chainLabel} wallet to continue</styled.p>
+        <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.01">
+          Leather needs your {chainLabel} key to add you as the first signer.
+        </styled.p>
+      </Box>
+      <Button variant="solid" size="sm" aria-busy={isPending} onClick={onConnect}>
+        Connect {chainLabel}
+      </Button>
+    </Flex>
+  );
+}
+
 export function CreateVaultPage() {
   const navigate = useNavigate();
-  const { showToast } = useMultisigToast();
+  const { success: showToast } = useToast();
   const [chain, setChain] = useState<Chain>('stx');
   const [name, setName] = useState('');
   const [themeId, setThemeId] = useState(0);
@@ -50,14 +91,49 @@ export function CreateVaultPage() {
   const network = networkForChain(chain);
   const me = useMultisigMe(network);
   const createVault = useCreateVault(network);
+  const signIn = useSignIn(network);
+
+  const btcSession = useSession('btc:mainnet');
+  const stxSession = useSession('stx:mainnet');
+  const connected: Record<Chain, boolean> = {
+    btc: Boolean(btcSession),
+    stx: Boolean(stxSession),
+  };
+  const chainLabel = chain === 'btc' ? 'Bitcoin' : 'Stacks';
+
+  function isValidMemberAddress(address: string) {
+    return chain === 'btc' ? isValidBitcoinAddress(address) : isValidStacksAddress(address);
+  }
 
   const inviteeAddresses = members
     .filter(member => !member.isMe && member.addr.trim() !== '')
     .map(member => member.addr.trim());
 
+  function getMemberStatus(member: MemberDraft, index: number): MemberFieldStatus {
+    if (member.isMe) return { state: 'empty' };
+    const address = member.addr.trim();
+    if (address === '') return { state: 'empty' };
+    if (!isValidMemberAddress(address))
+      return { state: 'invalid', error: `Enter a valid ${chainLabel} address.` };
+    if (me.data?.address === address)
+      return {
+        state: 'invalid',
+        error: "You're added automatically — enter another member's address.",
+      };
+    if (members.some((other, i) => i !== index && !other.isMe && other.addr.trim() === address))
+      return { state: 'invalid', error: 'This address is already added.' };
+    return { state: 'valid' };
+  }
+
+  const memberStatuses = members.map(getMemberStatus);
+  const hasInvalidMember = memberStatuses.some(status => status.state === 'invalid');
+
   function validationError(): string | null {
     if (name.trim() === '') return 'Give your vault a name to continue.';
+    if ((members.find(member => member.isMe)?.name.trim() ?? '') === '')
+      return 'Add your name to continue.';
     if (inviteeAddresses.length < 2) return 'Add at least 2 members to continue.';
+    if (hasInvalidMember) return 'Fix the highlighted member addresses.';
     return null;
   }
 
@@ -69,7 +145,7 @@ export function CreateVaultPage() {
 
   function submit() {
     setAttempted(true);
-    if (validationError()) return;
+    if (!connected[chain] || validationError()) return;
     createVault.mutate(
       { name: name.trim(), members: inviteeAddresses },
       {
@@ -95,7 +171,16 @@ export function CreateVaultPage() {
             <TextField placeholder="e.g. Team treasury" value={name} onChange={setName} />
           </Section>
           <Section label="Chain">
-            <ChainPicker chain={chain} onChange={setChain} />
+            <ChainPicker chain={chain} connected={connected} onChange={setChain} />
+            {!connected[chain] && (
+              <Box mt="space.04">
+                <ConnectChainCallout
+                  chainLabel={chainLabel}
+                  isPending={signIn.isPending}
+                  onConnect={() => signIn.mutate()}
+                />
+              </Box>
+            )}
           </Section>
           <Section label="Theme">
             <ThemePicker themeId={themeId} onChange={setThemeId} />
@@ -106,6 +191,7 @@ export function CreateVaultPage() {
               members={members}
               onChange={setMembers}
               myAddress={me.data?.address}
+              statuses={memberStatuses}
             />
           </Section>
         </Box>
@@ -120,7 +206,9 @@ export function CreateVaultPage() {
             name={name}
             themeId={themeId}
             members={members}
+            myAddress={me.data?.address}
             error={error}
+            disabled={!connected[chain]}
             onSubmit={submit}
           />
         </Box>

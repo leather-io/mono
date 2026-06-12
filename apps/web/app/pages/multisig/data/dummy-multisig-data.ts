@@ -12,6 +12,7 @@ import type { Member, Proposer, Vault } from './multisig-types';
 
 // The signed-in user's own personal wallet address per chain (used for the
 // "me" row in Create Vault and the Send "propose as" picker).
+/** @knipignore */
 export const myWalletAddress: Record<'btc' | 'stx', string> = {
   btc: 'bc1q9z3kfn8gz7jx5sd6f2h0u3sxnmke7vu44lq2x9',
   stx: 'SP3XKZE3J9YDEEY2KZ925AAJHSY6P0AJBNYTH53Z',

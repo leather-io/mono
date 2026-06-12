@@ -8,13 +8,13 @@ import {
   useJoinVault,
 } from '~/features/multisig/vaults/use-vault-mutations';
 import { useVault } from '~/features/multisig/vaults/use-vaults';
+import { useToast } from '~/features/toasts/use-toast';
 import { Page } from '~/layouts/page/page';
 
 import type { AuthNetworkId } from '@leather.io/models';
 import { Button, Callout } from '@leather.io/ui';
 
 import { MultisigErrorState } from '../components/multisig-error-state';
-import { useMultisigToast } from '../components/multisig-toast';
 import { multisigPaths } from '../multisig.constants';
 import { MembersSection } from './components/members-section';
 import { VaultStatusCard } from './components/vault-status-card';
@@ -47,7 +47,7 @@ function ComingSoon({ children }: { children: string }) {
 export function VaultDetailPage() {
   const { vaultId } = useParams();
   const navigate = useNavigate();
-  const { showToast } = useMultisigToast();
+  const { success: showToast } = useToast();
 
   const btcVault = useVault('btc:mainnet', vaultId);
   const stxVault = useVault('stx:mainnet', vaultId);

@@ -1,11 +1,11 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useToast } from '~/features/toasts/use-toast';
 
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { AvatarCircle } from '../components/avatar-circle';
 import { AvatarSq } from '../components/avatar-sq';
 import { CopyAddress } from '../components/copy-address';
-import { useMultisigToast } from '../components/multisig-toast';
 import { VaultListItem } from '../components/vault-list-item';
 import type { Vault } from '../data/multisig-types';
 import { vaultTheme } from '../multisig-tokens';
@@ -19,7 +19,7 @@ interface InviteAcceptModalProps {
 
 export function InviteAcceptModal({ vault, isShowing, onClose }: InviteAcceptModalProps) {
   const { acceptInvite, declineInvite } = useMultisigActions();
-  const { showToast } = useMultisigToast();
+  const { success: showToast } = useToast();
   const theme = vaultTheme(vault.theme);
 
   function accept() {
