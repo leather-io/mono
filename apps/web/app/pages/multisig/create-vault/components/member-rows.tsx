@@ -4,7 +4,6 @@ import { Flex, styled } from 'leather-styles/jsx';
 
 import { Button, PlusIcon } from '@leather.io/ui';
 
-import { myWalletAddress } from '../../data/dummy-multisig-data';
 import type { Chain } from '../../data/multisig-types';
 
 export interface MemberDraft {
@@ -16,6 +15,7 @@ export interface MemberDraft {
 interface MemberRowsProps {
   chain: Chain;
   members: MemberDraft[];
+  myAddress?: string;
   onChange(members: MemberDraft[]): void;
 }
 
@@ -31,7 +31,7 @@ const inputStyles = {
   _focusVisible: { outline: 'none', borderColor: 'ink.action-primary-default' },
 } as const;
 
-export function MemberRows({ chain, members, onChange }: MemberRowsProps) {
+export function MemberRows({ chain, members, onChange, myAddress }: MemberRowsProps) {
   const placeholder = chain === 'btc' ? 'bc1q… address' : 'BNS or SP… address';
 
   function update(index: number, patch: Partial<MemberDraft>) {
@@ -54,7 +54,7 @@ export function MemberRows({ chain, members, onChange }: MemberRowsProps) {
             textStyle="code"
             readOnly={member.isMe}
             placeholder={member.isMe ? 'Your wallet address' : placeholder}
-            value={member.isMe ? myWalletAddress[chain] : member.addr}
+            value={member.isMe ? (myAddress ?? '') : member.addr}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               !member.isMe && update(index, { addr: e.target.value })
             }

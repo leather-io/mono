@@ -1,0 +1,65 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import type { AuthNetworkId, Vault, VaultMembershipResult } from '@leather.io/models';
+import { type CreateVaultRequest, getMultisigService } from '@leather.io/services';
+
+import { multisigVaultKeys } from './vault-query-keys';
+
+export function useCreateVault(network: AuthNetworkId) {
+  const queryClient = useQueryClient();
+  return useMutation<Vault, Error, CreateVaultRequest>({
+    mutationKey: ['multisig-create-vault', network],
+    mutationFn(params) {
+      return getMultisigService().createVault(network, params);
+    },
+    onSuccess() {
+      void queryClient.invalidateQueries({ queryKey: multisigVaultKeys.lists(network) });
+    },
+  });
+}
+
+export function useCancelVault(network: AuthNetworkId) {
+  const queryClient = useQueryClient();
+  return useMutation<Vault, Error, string>({
+    mutationKey: ['multisig-cancel-vault', network],
+    mutationFn(vaultId) {
+      return getMultisigService().cancelVault(network, vaultId);
+    },
+    onSuccess(_vault, vaultId) {
+      void queryClient.invalidateQueries({ queryKey: multisigVaultKeys.lists(network) });
+      void queryClient.invalidateQueries({ queryKey: multisigVaultKeys.detail(network, vaultId) });
+    },
+  });
+}
+
+export function useJoinVault(network: AuthNetworkId) {
+  const queryClient = useQueryClient();
+  return useMutation<VaultMembershipResult, Error, string>({
+    mutationKey: ['multisig-join-vault', network],
+    mutationFn(membershipId) {
+      return getMultisigService().joinVault(network, membershipId);
+    },
+    onSuccess(result) {
+      void queryClient.invalidateQueries({ queryKey: multisigVaultKeys.lists(network) });
+      void queryClient.invalidateQueries({
+        queryKey: multisigVaultKeys.detail(network, result.vault.id),
+      });
+    },
+  });
+}
+
+export function useDeclineVault(network: AuthNetworkId) {
+  const queryClient = useQueryClient();
+  return useMutation<VaultMembershipResult, Error, string>({
+    mutationKey: ['multisig-decline-vault', network],
+    mutationFn(membershipId) {
+      return getMultisigService().declineVault(network, membershipId);
+    },
+    onSuccess(result) {
+      void queryClient.invalidateQueries({ queryKey: multisigVaultKeys.lists(network) });
+      void queryClient.invalidateQueries({
+        queryKey: multisigVaultKeys.detail(network, result.vault.id),
+      });
+    },
+  });
+}

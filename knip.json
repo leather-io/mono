@@ -39,7 +39,13 @@
     ".claude/**",
     "apps/extension/src/app/store/active/active.actions.ts",
     "packages/services/src/infrastructure/api/leather/leather-api.types.ts",
-    "packages/services/src/infrastructure/api/bitflow/bitflow-bff-api.types.ts"
+    "packages/services/src/infrastructure/api/bitflow/bitflow-bff-api.types.ts",
+    "apps/web/app/pages/multisig/modals/create-account-modal.tsx",
+    "apps/web/app/pages/multisig/modals/invite-accept-modal.tsx",
+    "apps/web/app/pages/multisig/modals/share-invites-modal.tsx",
+    "apps/web/app/pages/multisig/modals/components/faux-qr.tsx",
+    "apps/web/app/pages/multisig/modals/components/share-invite-card.tsx",
+    "apps/web/app/pages/multisig/vault/components/accounts-list.tsx"
   ],
   "workspaces": {
     "apps/extension": {

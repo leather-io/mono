@@ -2,18 +2,24 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
+import { useCreateVault } from '~/features/multisig/vaults/use-vault-mutations';
 import { Page } from '~/layouts/page/page';
+
+import type { AuthNetworkId } from '@leather.io/models';
 
 import { useMultisigToast } from '../components/multisig-toast';
 import { TextField } from '../components/text-field';
-import { myWalletAddress } from '../data/dummy-multisig-data';
 import type { Chain } from '../data/multisig-types';
 import { multisigPaths } from '../multisig.constants';
-import { useMultisigActions } from '../store/use-multisig';
 import { ChainPicker } from './components/chain-picker';
 import { type MemberDraft, MemberRows } from './components/member-rows';
 import { ThemePicker } from './components/theme-picker';
 import { VaultPreviewCard } from './components/vault-preview-card';
+
+function networkForChain(chain: Chain): AuthNetworkId {
+  return chain === 'btc' ? 'btc:mainnet' : 'stx:mainnet';
+}
 
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -32,12 +38,8 @@ const initialMembers: MemberDraft[] = [
   { addr: '', name: '' },
 ];
 
-// Create Vault is a single full-screen sectioned form (not a stepper). Submit-
-// on-click validation: the button is always enabled; clicking with an invalid
-// name surfaces the error in the preview card.
 export function CreateVaultPage() {
   const navigate = useNavigate();
-  const { addVault } = useMultisigActions();
   const { showToast } = useMultisigToast();
   const [chain, setChain] = useState<Chain>('stx');
   const [name, setName] = useState('');
@@ -45,17 +47,38 @@ export function CreateVaultPage() {
   const [members, setMembers] = useState<MemberDraft[]>(initialMembers);
   const [attempted, setAttempted] = useState(false);
 
-  const error = attempted && name.trim() === '' ? 'Give your vault a name to continue.' : null;
+  const network = networkForChain(chain);
+  const me = useMultisigMe(network);
+  const createVault = useCreateVault(network);
+
+  const inviteeAddresses = members
+    .filter(member => !member.isMe && member.addr.trim() !== '')
+    .map(member => member.addr.trim());
+
+  function validationError(): string | null {
+    if (name.trim() === '') return 'Give your vault a name to continue.';
+    if (inviteeAddresses.length < 2) return 'Add at least 2 members to continue.';
+    return null;
+  }
+
+  function backendError(): string | null {
+    return createVault.error ? createVault.error.message : null;
+  }
+
+  const error = attempted ? (validationError() ?? backendError()) : null;
 
   function submit() {
     setAttempted(true);
-    if (name.trim() === '') return;
-    const filled = members
-      .map(m => (m.isMe ? { ...m, addr: myWalletAddress[chain] } : m))
-      .filter(m => m.isMe || m.addr.trim() !== '');
-    addVault({ chain, name: name.trim(), theme: themeId, members: filled });
-    showToast(`Vault “${name.trim()}” created`);
-    void navigate(multisigPaths.index);
+    if (validationError()) return;
+    createVault.mutate(
+      { name: name.trim(), members: inviteeAddresses },
+      {
+        onSuccess(vault) {
+          showToast(`Vault “${vault.name}” created`);
+          void navigate(multisigPaths.vault(vault.id));
+        },
+      }
+    );
   }
 
   return (
@@ -78,7 +101,12 @@ export function CreateVaultPage() {
             <ThemePicker themeId={themeId} onChange={setThemeId} />
           </Section>
           <Section label="Members">
-            <MemberRows chain={chain} members={members} onChange={setMembers} />
+            <MemberRows
+              chain={chain}
+              members={members}
+              onChange={setMembers}
+              myAddress={me.data?.address}
+            />
           </Section>
         </Box>
         <Box

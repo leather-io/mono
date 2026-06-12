@@ -58,6 +58,7 @@ export function accountIconUrl(icon: string): string {
 // The account glyphs offered in the Create Account icon picker (filenames in
 // public/multisig/icons/account/). `vault` is excluded — it's reserved for the
 // vault avatar itself.
+/** @knipignore */
 export const accountIcons = [
   'piggybank',
   'sparkles',

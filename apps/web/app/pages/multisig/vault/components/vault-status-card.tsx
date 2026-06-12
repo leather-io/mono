@@ -1,15 +1,21 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
+import type { AuthNetworkId, Vault } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { VaultListItem } from '../../components/vault-list-item';
-import type { Vault } from '../../data/multisig-types';
+import type { Chain } from '../../data/multisig-types';
 
 interface VaultStatusCardProps {
   vault: Vault;
-  onShareInvites(): void;
+  canCancel: boolean;
+  isCancelling: boolean;
   onCancelVault(): void;
+}
+
+function chainFromNetwork(network: AuthNetworkId): Chain {
+  return network.startsWith('btc') ? 'btc' : 'stx';
 }
 
 function Row({
@@ -41,13 +47,17 @@ function Row({
   );
 }
 
-export function VaultStatusCard({ vault, onShareInvites, onCancelVault }: VaultStatusCardProps) {
-  const invited = vault.members.filter(m => m.inviteStatus === 'invited');
-  const declined = vault.members.filter(m => m.inviteStatus === 'declined');
-  const joined = vault.members.filter(m => m.inviteStatus === 'joined');
-  const threshold = vault.accounts[0]?.threshold ?? [vault.members.length, vault.members.length];
+export function VaultStatusCard({
+  vault,
+  canCancel,
+  isCancelling,
+  onCancelVault,
+}: VaultStatusCardProps) {
+  const chain = chainFromNetwork(vault.network);
+  const joined = vault.members.filter(member => member.membershipStatus === 'joined');
+  const declined = vault.members.filter(member => member.membershipStatus === 'declined');
   const allJoined = joined.length === vault.members.length;
-  const canCancel = vault.status === 'pending';
+  const statusLabel = vault.status.charAt(0).toUpperCase() + vault.status.slice(1);
 
   return (
     <Box
@@ -59,48 +69,17 @@ export function VaultStatusCard({ vault, onShareInvites, onCancelVault }: VaultS
     >
       <Box p="space.04">
         <VaultListItem
-          leading={
-            <AvatarSq
-              chain={vault.chain}
-              icon="vault"
-              themeId={vault.theme}
-              size="md"
-              withChainBadge={false}
-            />
-          }
+          leading={<AvatarSq chain={chain} icon="vault" size="md" withChainBadge={false} />}
           title={vault.name}
-          caption={`${vault.chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault`}
+          caption={`${chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault`}
         />
       </Box>
 
-      <Row label="Threshold" value={`${threshold[0]} of ${threshold[1]}`}>
-        <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
-          Any {threshold[0]} of {threshold[1]} members must approve transactions in this vault.
-        </styled.div>
-      </Row>
-
-      <Row label="Status" value={vault.status === 'pending' ? 'Pending' : 'Active'}>
+      <Row label="Status" value={statusLabel}>
         <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
           {allJoined ? 'All members joined' : `${joined.length} of ${vault.members.length} joined`}
         </styled.div>
       </Row>
-
-      {invited.length > 0 && (
-        <Box
-          p="space.04"
-          borderTopWidth="1px"
-          borderTopStyle="solid"
-          borderTopColor="ink.border-default"
-        >
-          <Button variant="solid" fullWidth onClick={onShareInvites}>
-            Share {invited.length} pending invite{invited.length === 1 ? '' : 's'}
-          </Button>
-          <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.02">
-            Leather doesn't email or text invitees — send each one through your own channel. The
-            vault stays read-only until everyone joins.
-          </styled.div>
-        </Box>
-      )}
 
       {declined.length > 0 && (
         <Box
@@ -126,7 +105,7 @@ export function VaultStatusCard({ vault, onShareInvites, onCancelVault }: VaultS
           borderTopStyle="solid"
           borderTopColor="ink.border-default"
         >
-          <Button variant="outline" fullWidth onClick={onCancelVault}>
+          <Button variant="outline" fullWidth aria-busy={isCancelling} onClick={onCancelVault}>
             Cancel vault
           </Button>
         </Box>

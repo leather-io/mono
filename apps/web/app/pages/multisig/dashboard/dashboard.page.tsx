@@ -1,16 +1,14 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useVaults } from '~/features/multisig/vaults/use-vaults';
 import { Page } from '~/layouts/page/page';
 
 import { Button } from '@leather.io/ui';
 
 import { TxRow } from '../components/tx-row';
-import type { Vault } from '../data/multisig-types';
-import { InviteAcceptModal } from '../modals/invite-accept-modal';
 import { multisigPaths } from '../multisig.constants';
-import { useRecentTransactions, useVaults } from '../store/use-multisig';
+import { useRecentTransactions } from '../store/use-multisig';
 import { CreateVaultTile } from './components/create-vault-tile';
 import { VaultCard } from './components/vault-card';
 
@@ -68,12 +66,20 @@ function EmptyActivity() {
 
 export function MultisigDashboardPage() {
   const navigate = useNavigate();
-  const vaults = useVaults();
+  const btcVaults = useVaults('btc:mainnet');
+  const stxVaults = useVaults('stx:mainnet');
   const recentTxs = useRecentTransactions(5);
-  const [inviteVault, setInviteVault] = useState<Vault | null>(null);
+
+  const vaults = [...(btcVaults.data ?? []), ...(stxVaults.data ?? [])];
+  const isLoadingVaults = btcVaults.isLoading || stxVaults.isLoading;
 
   // Invited vaults float to the top so pending invitations are seen first.
-  const sortedVaults = vaults.slice().sort((a, b) => (b.invited ? 1 : 0) - (a.invited ? 1 : 0));
+  const sortedVaults = vaults
+    .slice()
+    .sort(
+      (a, b) =>
+        (b.membershipStatus === 'invited' ? 1 : 0) - (a.membershipStatus === 'invited' ? 1 : 0)
+    );
 
   return (
     <Page>
@@ -82,16 +88,14 @@ export function MultisigDashboardPage() {
         <Box flex={['1', '1', '1.6']} width="100%">
           <SectionLabel>My vaults</SectionLabel>
           <Flex direction="column" gap="space.03">
-            {sortedVaults.length === 0 && (
+            {!isLoadingVaults && sortedVaults.length === 0 && (
               <EmptyVaults onCreate={() => navigate(multisigPaths.createVault)} />
             )}
             {sortedVaults.map(vault => (
               <VaultCard
                 key={vault.id}
                 vault={vault}
-                onClick={() =>
-                  vault.invited ? setInviteVault(vault) : navigate(multisigPaths.vault(vault.id))
-                }
+                onClick={() => navigate(multisigPaths.vault(vault.id))}
               />
             ))}
             {sortedVaults.length > 0 && (
@@ -121,10 +125,6 @@ export function MultisigDashboardPage() {
           </Box>
         </Box>
       </Flex>
-
-      {inviteVault && (
-        <InviteAcceptModal vault={inviteVault} isShowing onClose={() => setInviteVault(null)} />
-      )}
     </Page>
   );
 }

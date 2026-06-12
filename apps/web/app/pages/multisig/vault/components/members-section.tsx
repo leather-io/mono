@@ -1,19 +1,22 @@
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Box } from 'leather-styles/jsx';
 
-import { Button } from '@leather.io/ui';
+import type { Vault, VaultMember } from '@leather.io/models';
+import { truncateMiddle } from '@leather.io/utils';
 
-import { AddressText } from '../../components/address-text';
 import { AvatarCircle } from '../../components/avatar-circle';
 import { MemberStatusPill } from '../../components/member-status-pill';
 import { VaultListItem } from '../../components/vault-list-item';
-import type { Member, Vault } from '../../data/multisig-types';
 
 interface MembersSectionProps {
   vault: Vault;
-  onShareInvite(member: Member): void;
+  currentUserAddress?: string;
 }
 
-export function MembersSection({ vault, onShareInvite }: MembersSectionProps) {
+function isCreatorMember(member: VaultMember, createdBy: string): boolean {
+  return member.address === createdBy || member.user?.id === createdBy;
+}
+
+export function MembersSection({ vault, currentUserAddress }: MembersSectionProps) {
   return (
     <Box
       borderRadius="md"
@@ -22,48 +25,28 @@ export function MembersSection({ vault, onShareInvite }: MembersSectionProps) {
       borderColor="ink.border-default"
       overflow="hidden"
     >
-      {vault.members.map((member, index) => (
-        <Box
-          key={member.addr}
-          p="space.04"
-          borderTopWidth={index === 0 ? '0' : '1px'}
-          borderTopStyle="solid"
-          borderTopColor="ink.border-default"
-        >
-          <VaultListItem
-            leading={<AvatarCircle name={member.name} size="lg" />}
-            title={`${member.name}${member.isCreator ? ' (you)' : ''}`}
-            caption={
-              member.handle ? (
-                <Flex alignItems="center" gap="space.01" minWidth={0}>
-                  <styled.span textStyle="caption.01" color="ink.text-subdued" flexShrink={0}>
-                    {member.handle} ·
-                  </styled.span>
-                  <Box minWidth={0}>
-                    <AddressText addr={member.addr} />
-                  </Box>
-                </Flex>
-              ) : (
-                <AddressText addr={member.addr} />
-              )
-            }
-            trailingTitle={
-              <Flex alignItems="center" gap="space.02">
-                <MemberStatusPill
-                  status={member.inviteStatus}
-                  joinedAt={member.joinedAt}
-                  isCreator={member.isCreator}
-                />
-                {member.inviteStatus === 'invited' && (
-                  <Button variant="outline" onClick={() => onShareInvite(member)}>
-                    Share invite
-                  </Button>
-                )}
-              </Flex>
-            }
-          />
-        </Box>
-      ))}
+      {vault.members.map((member, index) => {
+        const isCreator = isCreatorMember(member, vault.createdBy);
+        const isMe = member.address === currentUserAddress;
+        return (
+          <Box
+            key={member.membershipId}
+            p="space.04"
+            borderTopWidth={index === 0 ? '0' : '1px'}
+            borderTopStyle="solid"
+            borderTopColor="ink.border-default"
+          >
+            <VaultListItem
+              // TODO: surface a BNS name here once the backend serves member identity — open question whether it will
+              leading={<AvatarCircle name={member.address} size="lg" />}
+              title={`${truncateMiddle(member.address)}${isMe ? ' (you)' : ''}`}
+              trailingTitle={
+                <MemberStatusPill status={member.membershipStatus} isCreator={isCreator} />
+              }
+            />
+          </Box>
+        );
+      })}
     </Box>
   );
 }

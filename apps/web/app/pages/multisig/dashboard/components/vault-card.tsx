@@ -1,39 +1,43 @@
 import { styled } from 'leather-styles/jsx';
 
+import type { VaultSummary } from '@leather.io/models';
+
 import { AvatarSq } from '../../components/avatar-sq';
 import { Badge } from '../../components/badge';
 import { VaultListItem } from '../../components/vault-list-item';
-import type { Vault } from '../../data/multisig-types';
+import type { Chain } from '../../data/multisig-types';
+import { vaultThemes } from '../../multisig-tokens';
 
 interface VaultCardProps {
-  vault: Vault;
+  vault: VaultSummary;
   onClick(): void;
 }
 
-function formatUsd(amount: number): string {
-  return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+function chainFromNetwork(network: string): Chain {
+  return network.startsWith('btc') ? 'btc' : 'stx';
+}
+
+// Stable theme tile derived from the vault id — keeps cards visually varied
+// without a backend-provided theme field.
+function themeFromId(id: string): number {
+  let hash = 0;
+  for (const char of id) hash = (hash * 31 + char.charCodeAt(0)) | 0;
+  return Math.abs(hash) % vaultThemes.length;
 }
 
 export function VaultCard({ vault, onClick }: VaultCardProps) {
-  const isInvite = vault.invited;
-  const invitedCount = vault.members.filter(m => m.inviteStatus === 'invited').length;
-  const hasPending = !isInvite && invitedCount > 0;
+  const chain = chainFromNetwork(vault.network);
+  const chainLabel = chain === 'btc' ? 'Bitcoin' : 'Stacks';
+  const accountLabel = vault.accountCount === 1 ? 'account' : 'accounts';
+  const memberLabel = vault.memberCount === 1 ? 'member' : 'members';
+  const isInvite = vault.membershipStatus === 'invited';
 
   function renderTrailingTitle() {
     if (isInvite) return <Badge variant="info" label="Invitation" />;
-    if (hasPending) {
-      return (
-        <Badge
-          variant="warning"
-          label={`${invitedCount} pending invite${invitedCount === 1 ? '' : 's'}`}
-        />
-      );
-    }
-    return formatUsd(vault.balanceUsd);
+    if (vault.status === 'pending') return <Badge variant="warning" label="Pending" />;
+    if (vault.status === 'cancelled') return <Badge variant="error" label="Cancelled" />;
+    return null;
   }
-
-  const chainLabel = vault.chain === 'btc' ? 'Bitcoin' : 'Stacks';
-  const accountLabel = vault.accounts.length === 1 ? 'account' : 'accounts';
 
   return (
     <styled.button
@@ -52,11 +56,11 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
       _hover={{ bg: 'ink.component-background-hover' }}
     >
       <VaultListItem
-        leading={<AvatarSq chain={vault.chain} icon="vault" themeId={vault.theme} size="md" />}
+        leading={<AvatarSq chain={chain} icon="vault" themeId={themeFromId(vault.id)} size="md" />}
         title={vault.name}
-        caption={`${chainLabel} vault · ${vault.accounts.length} ${accountLabel}`}
+        caption={`${chainLabel} vault · ${vault.accountCount} ${accountLabel}`}
         trailingTitle={renderTrailingTitle()}
-        trailingSubtitle={hasPending ? 'Awaiting members' : vault.balanceSub}
+        trailingSubtitle={isInvite ? undefined : `${vault.memberCount} ${memberLabel}`}
       />
     </styled.button>
   );
