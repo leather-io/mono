@@ -39,6 +39,7 @@ export interface Palette {
 
   'green.text-primary': string;
   'green.action-primary-default': string;
+  'green.text-secondary': string;
   'green.border': string;
   'green.background-secondary': string;
   'green.background-primary': string;
@@ -94,6 +95,7 @@ export const colorThemes = {
 
     'green.text-primary': '#083826',
     'green.action-primary-default': '#1CBA7D',
+    'green.text-secondary': '#00753A',
     'green.border': '#A8EDD0',
     'green.background-secondary': '#5DD9A5',
     'green.background-primary': '#E7F8F1',
@@ -137,6 +139,7 @@ export const colorThemes = {
 
     'green.text-primary': '#E7F8F1',
     'green.action-primary-default': '#1CBA7D',
+    'green.text-secondary': '#00753A',
     'green.border': '#169E6A',
     'green.background-secondary': '#0D5C3D',
     'green.background-primary': '#083826',
