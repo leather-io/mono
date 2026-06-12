@@ -19,12 +19,14 @@ import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts
 import { useCurrentAccountTaprootIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 
 import * as Psbt from './components';
+import { useDescriptorPsbtDetails } from './hooks/use-descriptor-psbt-details';
 import { usePsbtDetails } from './hooks/use-psbt-details';
 import { usePsbtSigner } from './hooks/use-psbt-signer';
 import { PsbtSignerContext, PsbtSignerProvider } from './psbt-signer.context';
 
 interface PsbtSignerProps {
   banner?: ReactNode;
+  descriptor?: string;
   indexesToSign?: number[];
   isBroadcasting?: boolean;
   name?: string;
@@ -32,10 +34,21 @@ interface PsbtSignerProps {
   onCancel(): void;
   onSignPsbt({ addressNativeSegwitTotal, addressTaprootTotal, fee, inputs }: SignPsbtArgs): void;
   psbtHex: string;
+  willBroadcast?: boolean;
 }
 export function PsbtSigner(props: PsbtSignerProps) {
-  const { banner, indexesToSign, isBroadcasting, name, origin, onCancel, onSignPsbt, psbtHex } =
-    props;
+  const {
+    banner,
+    descriptor,
+    indexesToSign,
+    isBroadcasting,
+    name,
+    origin,
+    onCancel,
+    onSignPsbt,
+    psbtHex,
+    willBroadcast,
+  } = props;
   const navigate = useNavigate();
   const { address: addressNativeSegwit } = useCurrentAccountNativeSegwitIndexZeroPayer();
   const { address: addressTaproot } = useCurrentAccountTaprootIndexZeroPayer();
@@ -71,6 +84,8 @@ export function PsbtSigner(props: PsbtSignerProps) {
     indexesToSign,
     outputs: psbtTxOutputs,
   });
+
+  const descriptorDetails = useDescriptorPsbtDetails(psbtHex, descriptor ?? '');
 
   useBreakOnNonCompliantEntity(psbtOutputs.map(output => output.address ?? ''));
 
@@ -123,9 +138,19 @@ export function PsbtSigner(props: PsbtSignerProps) {
       >
         <Psbt.PsbtRequestHeader name={name} origin={origin} />
         <Psbt.PsbtRequestDetailsLayout>
-          {isPsbtMutable ? <Psbt.PsbtRequestSighashWarningLabel origin={origin} /> : null}
+          {isPsbtMutable || descriptorDetails?.hasDisallowedSighash ? (
+            <Psbt.PsbtRequestSighashWarningLabel origin={origin} />
+          ) : null}
           <Psbt.PsbtRequestDetailsHeader />
-          <Psbt.PsbtInputsOutputsTotals />
+          {descriptor ? (
+            <Psbt.PsbtDescriptorPolicy
+              descriptor={descriptor}
+              details={descriptorDetails}
+              willBroadcast={willBroadcast}
+            />
+          ) : (
+            <Psbt.PsbtInputsOutputsTotals />
+          )}
           <Psbt.PsbtInputsAndOutputs />
           {psbtRaw ? <Psbt.PsbtRequestRaw psbt={psbtRaw} /> : null}
           <Psbt.PsbtRequestFee fee={fee} />

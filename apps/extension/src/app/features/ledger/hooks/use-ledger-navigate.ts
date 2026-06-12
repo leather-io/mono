@@ -38,7 +38,8 @@ export function useLedgerNavigate() {
       toConnectAndSignBitcoinTransactionStep(
         psbt: Uint8Array,
         inputsToSign?: BitcoinInputSigningConfig[],
-        fromLocation?: typeof location
+        fromLocation?: typeof location,
+        descriptor?: string
       ) {
         return navigate(
           location.pathname.includes('/swap/bitcoin')
@@ -50,6 +51,7 @@ export function useLedgerNavigate() {
             state: {
               tx: bytesToHex(psbt),
               inputsToSign,
+              descriptor,
               backgroundLocation: { pathname: RouteUrls.Home },
               fromLocation,
             },

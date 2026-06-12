@@ -8,11 +8,12 @@ import { TEST_ACCOUNT_SECRET_KEY } from '@tests/page-object-models/onboarding.pa
 
 import {
   type BtcSignerNetwork,
+  compileWshDescriptor,
   ecdsaPublicKeyToSchnorr,
   makeNativeSegwitAddressIndexDerivationPath,
   makeTaprootAddressIndexDerivationPath,
 } from '@leather.io/bitcoin';
-import type { RpcParams, signPsbt } from '@leather.io/rpc';
+import { RpcErrorCode, type RpcParams, type signPsbt } from '@leather.io/rpc';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -129,10 +130,10 @@ test.describe('Sign PSBT', () => {
     };
   }
 
-  function createExpectedError(code: number, message: string) {
+  function createExpectedError(code: number, message: string, data?: unknown) {
     return {
       jsonrpc: '2.0',
-      error: { code, message },
+      error: data ? { code, message, data } : { code, message },
     };
   }
 
@@ -291,7 +292,13 @@ test.describe('Sign PSBT', () => {
 
     delete result.id;
 
-    test.expect(result).toEqual(createExpectedError(4002, 'Failed to broadcast transaction'));
+    psbt.sign(addressKeychain.privateKey!);
+
+    test.expect(result).toEqual(
+      createExpectedError(4002, 'Failed to broadcast transaction', {
+        hex: bytesToHex(psbt.toPSBT()),
+      })
+    );
   });
 
   test.describe('Taproot inputs', () => {
@@ -528,6 +535,249 @@ test.describe('Sign PSBT', () => {
       const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.result.hex));
       test.expect(signedTx.getInput(0).partialSig).toBeUndefined();
       test.expect(signedTx.getInput(1).tapKeySig).toBeDefined();
+    });
+  });
+
+  test.describe('Descriptor (wsh miniscript) inputs', () => {
+    const seed = mnemonicToSeedSync(TEST_ACCOUNT_SECRET_KEY);
+    const nativeSegwitAccountXpub =
+      HDKey.fromMasterSeed(seed).derive("m/84'/1'/0'").publicExtendedKey;
+    const otherAccountXpub = HDKey.fromMasterSeed(new Uint8Array(32).fill(2)).derive(
+      "m/84'/1'/0'"
+    ).publicExtendedKey;
+    const digest = '00'.repeat(32);
+
+    // pk(A) is the current account's key (which must always sign), combined with
+    // a timelock-or-(hashlock + pk(B)) branch — mirrors the user's example policy.
+    const descriptor = `wsh(and_v(v:or_i(after(1000),and_v(v:sha256(${digest}),pk(${otherAccountXpub}/0/*))),pk(${nativeSegwitAccountXpub}/0/*)))`;
+    const { scriptPubKey } = compileWshDescriptor(descriptor);
+
+    function createDescriptorTestPsbt() {
+      const psbt = new btc.Transaction();
+      psbt.addInput({
+        txid: '2965dc62a012028b529c902da59606d65d35353c966aeaf9287f534547609f5f',
+        index: 0,
+        witnessUtxo: { amount: 20000n, script: scriptPubKey },
+      });
+      psbt.addOutputAddress('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d', 1000n, bitcoinTestnet);
+      return psbt;
+    }
+
+    test('that the descriptor input is signed with the account key', async ({ page, context }) => {
+      const psbt = createDescriptorTestPsbt();
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          descriptor,
+        }),
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      delete result.id;
+
+      test.expect(result.jsonrpc).toEqual('2.0');
+      test.expect(result.result).toBeDefined();
+
+      const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.result.hex));
+      const partialSig = signedTx.getInput(0).partialSig;
+      test.expect(partialSig).toBeDefined();
+      test.expect(bytesToHex(partialSig![0][0])).toEqual(bytesToHex(addressKeychain.publicKey!));
+    });
+
+    test('that a raw-pubkey (0/0) descriptor input is signed with the account key', async ({
+      page,
+      context,
+    }) => {
+      const rawPubkeyDescriptor = `wsh(and_v(v:after(5),pk(${bytesToHex(addressKeychain.publicKey!)})))`;
+      const { scriptPubKey: rawScriptPubKey } = compileWshDescriptor(rawPubkeyDescriptor);
+
+      const psbt = new btc.Transaction();
+      psbt.addInput({
+        txid: '2965dc62a012028b529c902da59606d65d35353c966aeaf9287f534547609f5f',
+        index: 0,
+        witnessUtxo: { amount: 20000n, script: rawScriptPubKey },
+      });
+      psbt.addOutputAddress('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d', 1000n, bitcoinTestnet);
+
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          descriptor: rawPubkeyDescriptor,
+        }),
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      delete result.id;
+
+      test.expect(result.result).toBeDefined();
+      const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.result.hex));
+      const partialSig = signedTx.getInput(0).partialSig;
+      test.expect(partialSig).toBeDefined();
+      test.expect(bytesToHex(partialSig![0][0])).toEqual(bytesToHex(addressKeychain.publicKey!));
+    });
+
+    const singleKeyDescriptor = `wsh(pk(${nativeSegwitAccountXpub}/0/*))`;
+    const { scriptPubKey: singleKeyScriptPubKey } = compileWshDescriptor(singleKeyDescriptor);
+
+    function createSingleKeyDescriptorPsbt() {
+      const psbt = new btc.Transaction();
+      psbt.addInput({
+        txid: '2965dc62a012028b529c902da59606d65d35353c966aeaf9287f534547609f5f',
+        index: 0,
+        witnessUtxo: { amount: 20000n, script: singleKeyScriptPubKey },
+      });
+      psbt.addOutputAddress('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d', 1000n, bitcoinTestnet);
+      return psbt;
+    }
+
+    test('that a fully satisfiable descriptor psbt is finalized and broadcast', async ({
+      page,
+      context,
+    }) => {
+      const psbt = createSingleKeyDescriptorPsbt();
+      const requestPromise = interceptBroadcastRequest(context, route =>
+        route.fulfill({ body: 'not-a-real-txid-response' })
+      );
+
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          descriptor: singleKeyDescriptor,
+          broadcast: true,
+        }),
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      const request = await requestPromise;
+
+      delete result.id;
+
+      test.expect(result.jsonrpc).toEqual('2.0');
+      test.expect(result.result).toBeDefined();
+      test.expect(result.result.txid).toEqual('not-a-real-txid-response');
+
+      const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.result.hex));
+      const partialSig = signedTx.getInput(0).partialSig;
+      test.expect(partialSig).toBeDefined();
+      test.expect(bytesToHex(partialSig![0][0])).toEqual(bytesToHex(addressKeychain.publicKey!));
+
+      const broadcastBody = request.postDataBuffer();
+      test.expect(broadcastBody).toBeDefined();
+      const broadcastTx = btc.Transaction.fromRaw(hexToBytes(broadcastBody!.toString()), {
+        allowUnknownInputs: true,
+      });
+      test.expect(broadcastTx.getInput(0).finalScriptWitness?.length).toBeGreaterThan(0);
+    });
+
+    test('that an unsatisfiable descriptor psbt is returned partially signed without broadcasting', async ({
+      page,
+      context,
+    }) => {
+      const psbt = createDescriptorTestPsbt();
+      let broadcastAttempted = false;
+      const interceptPromise = (async () => {
+        const popup = await context.waitForEvent('page');
+        await popup.route('**/api/tx', route => {
+          broadcastAttempted = true;
+          return route.fulfill({ body: 'not-a-real-txid-response' });
+        });
+      })();
+
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          descriptor,
+          broadcast: true,
+        }),
+        interceptPromise,
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      delete result.id;
+
+      test.expect(result.jsonrpc).toEqual('2.0');
+      test.expect(result.result).toBeDefined();
+      test.expect(result.result.txid).toBeUndefined();
+      test.expect(broadcastAttempted).toBe(false);
+
+      const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.result.hex));
+      const partialSig = signedTx.getInput(0).partialSig;
+      test.expect(partialSig).toBeDefined();
+      test.expect(bytesToHex(partialSig![0][0])).toEqual(bytesToHex(addressKeychain.publicKey!));
+    });
+
+    test('that a failed descriptor broadcast returns the signed psbt in the error', async ({
+      page,
+      context,
+    }) => {
+      const psbt = createSingleKeyDescriptorPsbt();
+      const requestPromise = interceptBroadcastRequest(context, route =>
+        route.fulfill({ status: 500 })
+      );
+
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          descriptor: singleKeyDescriptor,
+          broadcast: true,
+        }),
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      await requestPromise;
+
+      delete result.id;
+
+      test.expect(result.error).toBeDefined();
+      test.expect(result.error.code).toEqual(4002);
+      test.expect(result.error.message).toEqual('Failed to broadcast transaction');
+
+      const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.error.data.hex));
+      const partialSig = signedTx.getInput(0).partialSig;
+      test.expect(partialSig).toBeDefined();
+      test.expect(bytesToHex(partialSig![0][0])).toEqual(bytesToHex(addressKeychain.publicKey!));
+    });
+
+    test('that a descriptor without the current account is rejected', async ({ page, context }) => {
+      const foreignDescriptor = `wsh(and_v(v:or_i(after(1000),and_v(v:sha256(${digest}),pk(${otherAccountXpub}/0/*))),pk(${otherAccountXpub}/1/*)))`;
+      const psbt = createDescriptorTestPsbt();
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          descriptor: foreignDescriptor,
+        }),
+        clickActionButton(context)('Confirm'),
+        clickErrorCloseWindowButton(context),
+      ]);
+
+      delete result.id;
+
+      test
+        .expect(result)
+        .toEqual(createExpectedError(RpcErrorCode.INVALID_REQUEST, 'Error signing transaction'));
+    });
+
+    test('that a non-wsh descriptor is rejected with invalid params', async ({ page }) => {
+      const psbt = createDescriptorTestPsbt();
+      const result = await initiatePsbtSigning(page)({
+        network: 'testnet',
+        hex: bytesToHex(psbt.toPSBT()),
+        descriptor: `wpkh(${nativeSegwitAccountXpub}/0/*)`,
+      });
+
+      delete result.id;
+
+      test
+        .expect(result)
+        .toEqual(
+          createExpectedError(RpcErrorCode.INVALID_PARAMS, 'Only wsh() descriptors are supported')
+        );
     });
   });
 });
