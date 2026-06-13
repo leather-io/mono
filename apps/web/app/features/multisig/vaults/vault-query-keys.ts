@@ -3,16 +3,22 @@ import type { ListVaultsFilters } from '@leather.io/services';
 
 export const multisigVaultKeys = {
   all: ['multisig'] as const,
-  me(network: AuthNetworkId) {
-    return [...multisigVaultKeys.all, 'me', network] as const;
+  byNetwork(network: AuthNetworkId) {
+    return [...multisigVaultKeys.all, network] as const;
   },
-  lists(network: AuthNetworkId) {
-    return [...multisigVaultKeys.all, 'vaults', network] as const;
+  scope(network: AuthNetworkId, address: string | undefined) {
+    return [...multisigVaultKeys.byNetwork(network), address ?? null] as const;
   },
-  list(network: AuthNetworkId, filters?: ListVaultsFilters) {
-    return [...multisigVaultKeys.lists(network), filters ?? null] as const;
+  me(network: AuthNetworkId, address: string | undefined) {
+    return [...multisigVaultKeys.scope(network, address), 'me'] as const;
   },
-  detail(network: AuthNetworkId, vaultId: string | undefined) {
-    return [...multisigVaultKeys.all, 'vault', network, vaultId ?? null] as const;
+  lists(network: AuthNetworkId, address: string | undefined) {
+    return [...multisigVaultKeys.scope(network, address), 'vaults'] as const;
+  },
+  list(network: AuthNetworkId, address: string | undefined, filters?: ListVaultsFilters) {
+    return [...multisigVaultKeys.lists(network, address), filters ?? null] as const;
+  },
+  detail(network: AuthNetworkId, address: string | undefined, vaultId: string | undefined) {
+    return [...multisigVaultKeys.scope(network, address), 'vault', vaultId ?? null] as const;
   },
 };

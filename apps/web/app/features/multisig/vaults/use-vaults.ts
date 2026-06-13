@@ -9,7 +9,7 @@ import { multisigVaultKeys } from './vault-query-keys';
 export function useVaults(network: AuthNetworkId, filters?: ListVaultsFilters) {
   const session = useSession(network);
   return useQuery({
-    queryKey: multisigVaultKeys.list(network, filters),
+    queryKey: multisigVaultKeys.list(network, session?.identity.address, filters),
     queryFn: ({ signal }) => getMultisigService().listVaults(network, filters, signal),
     enabled: Boolean(session),
   });
@@ -18,7 +18,7 @@ export function useVaults(network: AuthNetworkId, filters?: ListVaultsFilters) {
 export function useVault(network: AuthNetworkId, vaultId: string | undefined) {
   const session = useSession(network);
   return useQuery({
-    queryKey: multisigVaultKeys.detail(network, vaultId),
+    queryKey: multisigVaultKeys.detail(network, session?.identity.address, vaultId),
     queryFn: ({ signal }) => {
       if (!vaultId) throw new Error('useVault requires a vaultId');
       return getMultisigService().getVault(network, vaultId, signal);

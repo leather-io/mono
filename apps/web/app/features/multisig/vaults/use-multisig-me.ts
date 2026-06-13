@@ -9,7 +9,7 @@ import { multisigVaultKeys } from './vault-query-keys';
 export function useMultisigMe(network: AuthNetworkId) {
   const session = useSession(network);
   return useQuery({
-    queryKey: multisigVaultKeys.me(network),
+    queryKey: multisigVaultKeys.me(network, session?.identity.address),
     queryFn: ({ signal }) => getMultisigService().getMe(network, signal),
     enabled: Boolean(session),
   });
