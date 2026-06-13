@@ -137,19 +137,32 @@ export function CreateVaultPage() {
 
   function validationError(): string | null {
     if (name.trim() === '') return 'Give your vault a name to continue.';
+    if (memberAddresses.length < 2) return 'Add at least one other member to continue.';
     if (hasInvalidMember) return 'Fix the highlighted member addresses.';
     return null;
   }
 
   function backendError(): string | null {
-    return createVault.error ? createVault.error.message : null;
+    const error = createVault.error;
+    if (!error) return null;
+    if ('status' in error && error.status === 409) {
+      return 'A vault with this exact set of members already exists on this network. Add or remove a member to create a separate vault.';
+    }
+    return error.message;
   }
 
   const error = attempted ? (validationError() ?? backendError()) : null;
 
+  function clearError() {
+    setAttempted(false);
+  }
+
   function submit() {
     setAttempted(true);
     if (!connected[chain] || validationError()) return;
+    // TODO: send the picked themeId once the multisig service persists vault
+    // theme — until then the choice is preview-only and displayed vaults use
+    // fallbackVaultThemeId.
     createVault.mutate(
       { name: name.trim(), members: memberAddresses },
       {
@@ -172,10 +185,25 @@ export function CreateVaultPage() {
       >
         <Box flex={['1', '1', '1.4']} width="100%">
           <Section label="Vault name">
-            <TextField placeholder="e.g. Team treasury" value={name} onChange={setName} />
+            <TextField
+              placeholder="e.g. Team treasury"
+              value={name}
+              invalid={attempted && name.trim() === ''}
+              onChange={value => {
+                setName(value);
+                clearError();
+              }}
+            />
           </Section>
           <Section label="Chain">
-            <ChainPicker chain={chain} connected={connected} onChange={setChain} />
+            <ChainPicker
+              chain={chain}
+              connected={connected}
+              onChange={value => {
+                setChain(value);
+                clearError();
+              }}
+            />
             {!connected[chain] && (
               <Box mt="space.04">
                 <ConnectChainCallout
@@ -187,13 +215,22 @@ export function CreateVaultPage() {
             )}
           </Section>
           <Section label="Theme">
-            <ThemePicker themeId={themeId} onChange={setThemeId} />
+            <ThemePicker
+              themeId={themeId}
+              onChange={value => {
+                setThemeId(value);
+                clearError();
+              }}
+            />
           </Section>
           <Section label="Members">
             <MemberRows
               chain={chain}
               members={members}
-              onChange={setMembers}
+              onChange={value => {
+                setMembers(value);
+                clearError();
+              }}
               myAddress={myAddress}
               statuses={memberStatuses}
             />
