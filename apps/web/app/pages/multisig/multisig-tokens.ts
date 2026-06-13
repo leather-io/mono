@@ -46,13 +46,11 @@ export function vaultTheme(themeId: number): VaultTheme {
   return vaultThemes[themeId] ?? vaultThemes[0];
 }
 
-// Stable theme tile derived from the vault id — keeps cards visually varied
-// without a backend-provided theme field.
-export function themeIdFromVaultId(id: string): number {
-  let hash = 0;
-  for (const char of id) hash = (hash * 31 + char.charCodeAt(0)) | 0;
-  return Math.abs(hash) % vaultThemes.length;
-}
+// Vaults have no persisted theme at the service level yet, so displayed vaults
+// fall back to a single default rather than a fabricated per-id color.
+// TODO: replace usages with the persisted vault.theme once the multisig service
+// stores and returns it.
+export const fallbackVaultThemeId = 0;
 
 // Squircle radius for AvatarSq tiles — the prototype uses a soft-rounded
 // square; no token radius matches (tokens stop at lg = 12px / round).

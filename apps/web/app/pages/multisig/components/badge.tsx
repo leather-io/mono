@@ -1,70 +1,74 @@
-import { Flex, styled } from 'leather-styles/jsx';
+import { cva } from 'leather-styles/css';
+import { styled } from 'leather-styles/jsx';
 
-export type BadgeVariant = 'default' | 'error' | 'info' | 'success' | 'warning';
+export type BadgeVariant = 'default' | 'error' | 'info' | 'pending' | 'success' | 'warning';
 
-interface BadgeColors {
-  bg: string;
-  borderColor: string;
-  color: string;
-}
-
-const badgeColors: Record<BadgeVariant, BadgeColors> = {
-  default: {
-    bg: 'ink.background-secondary',
-    borderColor: 'ink.border-transparent',
-    color: 'ink.text-subdued',
+const badge = cva({
+  base: {
+    display: 'flex',
+    alignItems: 'center',
+    width: 'fit-content',
+    height: '16px',
+    gap: 'space.01',
+    pl: 'space.01',
+    pr: 'space.02',
+    borderRadius: 'round',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    textStyle: 'label.03',
+    fontSize: '11px',
   },
-  error: {
-    bg: 'red.background-primary',
-    borderColor: 'red.border',
-    color: 'red.action-primary-default',
+  variants: {
+    variant: {
+      default: {
+        pl: 'space.02',
+        bg: 'ink.background-secondary',
+        borderColor: 'ink.border-transparent',
+        color: 'ink.text-subdued',
+      },
+      error: {
+        bg: 'red.background-primary',
+        borderColor: 'red.border',
+        color: 'red.action-primary-default',
+      },
+      info: {
+        bg: 'blue.background-primary',
+        borderColor: 'blue.border',
+        color: 'blue.action-primary-default',
+      },
+      pending: {
+        bg: 'orange.background-primary',
+        borderColor: 'orange.background-primary',
+        color: 'orange.text-primary',
+        '& [data-dot]': { bg: 'orange.action-primary-default' },
+      },
+      success: {
+        bg: 'green.background-primary',
+        borderColor: 'green.border',
+        color: 'green.action-primary-default',
+      },
+      warning: {
+        bg: 'yellow.background-primary',
+        borderColor: 'yellow.border',
+        color: 'yellow.action-primary-default',
+      },
+    },
   },
-  info: {
-    bg: 'blue.background-primary',
-    borderColor: 'blue.border',
-    color: 'blue.action-primary-default',
-  },
-  success: {
-    bg: 'green.background-primary',
-    borderColor: 'green.border',
-    color: 'green.action-primary-default',
-  },
-  warning: {
-    bg: 'yellow.background-primary',
-    borderColor: 'yellow.border',
-    color: 'yellow.action-primary-default',
-  },
-};
+});
 
 interface BadgeProps {
   label: string;
   variant?: BadgeVariant;
-  outlined?: boolean;
 }
 
-export function Badge({ label, variant = 'default', outlined }: BadgeProps) {
-  const colors = badgeColors[variant];
+export function Badge({ label, variant = 'default' }: BadgeProps) {
   const showDot = variant !== 'default';
   return (
-    <Flex
-      alignItems="center"
-      width="fit-content"
-      height="16px"
-      gap="space.01"
-      pl={showDot ? 'space.01' : 'space.02'}
-      pr="space.02"
-      borderRadius="round"
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor={colors.borderColor}
-      bg={outlined ? 'transparent' : colors.bg}
-      color={colors.color}
-      textStyle="label.03"
-      fontSize="11px"
-    >
+    <styled.span className={badge({ variant })}>
       {showDot && (
         <styled.span
           aria-hidden
+          data-dot
           width="6px"
           height="6px"
           flexShrink={0}
@@ -75,6 +79,6 @@ export function Badge({ label, variant = 'default', outlined }: BadgeProps) {
       <styled.span position="relative" top="1px">
         {label}
       </styled.span>
-    </Flex>
+    </styled.span>
   );
 }

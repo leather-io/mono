@@ -8,7 +8,7 @@ import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import type { Chain } from '../data/multisig-types';
-import { themeIdFromVaultId, vaultTheme } from '../multisig-tokens';
+import { fallbackVaultThemeId, vaultTheme } from '../multisig-tokens';
 import { AvatarCircle } from './avatar-circle';
 import { AvatarSq } from './avatar-sq';
 import { VaultListItem } from './vault-list-item';
@@ -44,7 +44,7 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
     member => member.user?.id === vault.createdBy || member.address === vault.createdBy
   );
   const pendingCount = members.filter(member => member.membershipStatus === 'invited').length;
-  const theme = vaultTheme(themeIdFromVaultId(vault.id));
+  const theme = vaultTheme(fallbackVaultThemeId);
   const chain = chainFromNetwork(network);
 
   function accept() {
@@ -84,7 +84,7 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
           <AvatarSq
             chain={chain}
             icon="vault"
-            themeId={themeIdFromVaultId(vault.id)}
+            themeId={fallbackVaultThemeId}
             size="lg"
             withChainBadge={false}
           />
