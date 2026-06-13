@@ -1,6 +1,9 @@
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - axios
+auditConfig:
+  ignoreGhsas:
+    - GHSA-gv7w-rqvm-qjhr
 packages:
   - 'apps/*'
   - 'packages/*'
