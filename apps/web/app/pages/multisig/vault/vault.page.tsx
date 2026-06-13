@@ -52,7 +52,7 @@ export function VaultDetailPage() {
   const btcVault = useVault('btc:mainnet', vaultId);
   const stxVault = useVault('stx:mainnet', vaultId);
   const vault = btcVault.data ?? stxVault.data;
-  const network: AuthNetworkId = stxVault.data ? 'stx:mainnet' : 'btc:mainnet';
+  const network: AuthNetworkId = vault?.network ?? 'btc:mainnet';
   const isLoading = btcVault.isLoading || stxVault.isLoading;
   const hasFetched = btcVault.isFetched || stxVault.isFetched;
 

@@ -10,6 +10,7 @@ import { Page } from '~/layouts/page/page';
 
 import { isValidBitcoinAddress } from '@leather.io/bitcoin';
 import type { AuthNetworkId } from '@leather.io/models';
+import { LeatherApiError } from '@leather.io/services';
 import { isValidStacksAddress } from '@leather.io/stacks';
 import { Button, InfoCircleIcon } from '@leather.io/ui';
 
@@ -37,9 +38,9 @@ function Section({ label, children }: { label: string; children: React.ReactNode
 }
 
 const initialMembers: MemberDraft[] = [
-  { addr: '', name: '', isMe: true },
-  { addr: '', name: '' },
-  { addr: '', name: '' },
+  { id: 'me', addr: '', name: '', isMe: true },
+  { id: 'member-1', addr: '', name: '' },
+  { id: 'member-2', addr: '', name: '' },
 ];
 
 function ConnectChainCallout({
@@ -145,7 +146,7 @@ export function CreateVaultPage() {
   function backendError(): string | null {
     const error = createVault.error;
     if (!error) return null;
-    if ('status' in error && error.status === 409) {
+    if (LeatherApiError.isLeatherApiError(error) && error.status === 409) {
       return 'A vault with this exact set of members already exists on this network. Add or remove a member to create a separate vault.';
     }
     return error.message;

@@ -7,6 +7,7 @@ import { Button, CheckmarkIcon, PlusIcon } from '@leather.io/ui';
 import type { Chain } from '../../data/multisig-types';
 
 export interface MemberDraft {
+  id: string;
   addr: string;
   name: string;
   isMe?: boolean;
@@ -50,7 +51,7 @@ export function MemberRows({ chain, members, myAddress, statuses, onChange }: Me
     onChange(members.map((m, i) => (i === index ? { ...m, ...patch } : m)));
   }
   function add() {
-    onChange([...members, { addr: '', name: '' }]);
+    onChange([...members, { id: crypto.randomUUID(), addr: '', name: '' }]);
   }
   function remove(index: number) {
     onChange(members.filter((_, i) => i !== index));
@@ -61,7 +62,7 @@ export function MemberRows({ chain, members, myAddress, statuses, onChange }: Me
       {members.map((member, index) => {
         const status = statuses[index] ?? { state: 'empty' };
         return (
-          <Flex key={index} direction="column" gap="space.01">
+          <Flex key={member.id} direction="column" gap="space.01">
             <Flex gap="space.02" alignItems="center">
               <Box position="relative" flex={1}>
                 <styled.input
