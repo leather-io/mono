@@ -54,6 +54,7 @@ export function VaultDetailPage() {
   const vault = btcVault.data ?? stxVault.data;
   const network: AuthNetworkId = stxVault.data ? 'stx:mainnet' : 'btc:mainnet';
   const isLoading = btcVault.isLoading || stxVault.isLoading;
+  const hasFetched = btcVault.isFetched || stxVault.isFetched;
 
   const me = useMultisigMe(network);
   const cancelVault = useCancelVault(network);
@@ -61,10 +62,23 @@ export function VaultDetailPage() {
   const declineVault = useDeclineVault(network);
 
   if (!vault) {
+    const isResolving = isLoading || !hasFetched;
     return (
       <Page>
         <Page.Header title="Vault" backTo={multisigPaths.index} />
-        {!isLoading && (
+        {isResolving ? (
+          <Flex direction="column" gap="space.03" mt="space.05">
+            {[0, 1, 2].map(index => (
+              <Box
+                key={index}
+                height="64px"
+                borderRadius="md"
+                bg="ink.component-background-default"
+                opacity={0.6}
+              />
+            ))}
+          </Flex>
+        ) : (
           <MultisigErrorState
             body={
               <>

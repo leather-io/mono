@@ -117,6 +117,8 @@ export function MultisigDashboardPage() {
 
   const vaults = [...(btcVaults.data ?? []), ...(stxVaults.data ?? [])];
   const isLoadingVaults = btcVaults.isLoading || stxVaults.isLoading;
+  const hasFetchedVaults = btcVaults.isFetched || stxVaults.isFetched;
+  const isResolvingVaults = isLoadingVaults || !hasFetchedVaults;
 
   // Invited vaults float to the top so pending invitations are seen first.
   const sortedVaults = vaults
@@ -133,7 +135,18 @@ export function MultisigDashboardPage() {
         <Box flex={['1', '1', '1.6']} width="100%">
           <SectionLabel>My vaults</SectionLabel>
           <Flex direction="column" gap="space.03">
-            {!isLoadingVaults && sortedVaults.length === 0 && (
+            {isResolvingVaults &&
+              sortedVaults.length === 0 &&
+              [0, 1, 2].map(index => (
+                <Box
+                  key={index}
+                  height="72px"
+                  borderRadius="md"
+                  bg="ink.component-background-default"
+                  opacity={0.6}
+                />
+              ))}
+            {!isResolvingVaults && sortedVaults.length === 0 && (
               <EmptyVaults onCreate={() => navigate(multisigPaths.createVault)} />
             )}
             {sortedVaults.map(vault => (
