@@ -60,31 +60,3 @@ export const avatarSquircleRadius = '14px';
 export function accountIconUrl(icon: string): string {
   return `/multisig/icons/account/${icon}.svg`;
 }
-
-// The account glyphs offered in the Create Account icon picker (filenames in
-// public/multisig/icons/account/). `vault` is excluded — it's reserved for the
-// vault avatar itself.
-/** @knipignore */
-export const accountIcons = [
-  'piggybank',
-  'sparkles',
-  'orange',
-  'pizza',
-  'car',
-  'alien',
-  'saturn',
-  'bank',
-  'rocket',
-  'folder',
-  'smile',
-  'code',
-  'zap',
-  'gift',
-  'palette',
-  'home',
-  'person',
-  'inbox',
-  'heart',
-  'flag',
-  'space',
-];
