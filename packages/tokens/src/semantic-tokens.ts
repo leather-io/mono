@@ -53,6 +53,11 @@ export const semanticTokens = {
       'background-secondary': createColorObjForKey('green.background-secondary'),
       'background-primary': createColorObjForKey('green.background-primary'),
     },
+    orange: {
+      'text-primary': createColorObjForKey('orange.text-primary'),
+      'action-primary-default': createColorObjForKey('orange.action-primary-default'),
+      'background-primary': createColorObjForKey('orange.background-primary'),
+    },
     invert: createColorObjForKey('invert'),
     stacks: createColorObjForKey('stacks'),
   },
