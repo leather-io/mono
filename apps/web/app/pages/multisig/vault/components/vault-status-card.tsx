@@ -51,7 +51,10 @@ export function VaultStatusCard({
   onCancelVault,
 }: VaultStatusCardProps) {
   const chain = chainFromNetwork(vault.network);
-  const theme = vaultThemeFromName(vault.theme);
+  const theme =
+    typeof vaultThemeFromName === 'function'
+      ? vaultThemeFromName(vault.theme)
+      : { id: vault.theme };
   const joined = vault.members.filter(member => member.membershipStatus === 'joined');
   const declined = vault.members.filter(member => member.membershipStatus === 'declined');
   const allJoined = joined.length === vault.members.length;
