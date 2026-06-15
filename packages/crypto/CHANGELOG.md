@@ -492,6 +492,21 @@
   * dependencies
     * @leather.io/utils bumped to 0.46.4
 
+## [1.12.24](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.12.23...@leather.io/crypto-v1.12.24) (2026-06-15)
+
+
+### Bug Fixes
+
+* add support for tpubs ([#2381](https://github.com/leather-io/mono/issues/2381)) ([09d4c94](https://github.com/leather-io/mono/commit/09d4c944af9b0f74bb15379382d47ad45f11832f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.36.1
+    * @leather.io/utils bumped to 0.51.5
+
 ## [1.12.23](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.12.22...@leather.io/crypto-v1.12.23) (2026-06-01)
 
 

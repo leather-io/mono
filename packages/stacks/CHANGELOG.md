@@ -577,6 +577,22 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/utils bumped to 0.46.4
 
+## [1.20.2](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.20.1...@leather.io/stacks-v1.20.2) (2026-06-15)
+
+
+### Bug Fixes
+
+* networks bug ([#2379](https://github.com/leather-io/mono/issues/2379)) ([01d0c87](https://github.com/leather-io/mono/commit/01d0c87860b18ff5952cac03a12f42f8f9b9165a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.12.24
+    * @leather.io/models bumped to 0.57.0
+    * @leather.io/utils bumped to 0.51.5
+
 ## [1.20.1](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.20.0...@leather.io/stacks-v1.20.1) (2026-06-01)
 
 

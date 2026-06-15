@@ -779,6 +779,24 @@
     * @leather.io/stacks bumped to 1.17.2
     * @leather.io/utils bumped to 0.46.3
 
+## [2.49.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.49.0...@leather.io/query-v2.49.1) (2026-06-15)
+
+
+### Bug Fixes
+
+* networks bug ([#2379](https://github.com/leather-io/mono/issues/2379)) ([01d0c87](https://github.com/leather-io/mono/commit/01d0c87860b18ff5952cac03a12f42f8f9b9165a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.38.0
+    * @leather.io/constants bumped to 0.36.1
+    * @leather.io/models bumped to 0.57.0
+    * @leather.io/stacks bumped to 1.20.2
+    * @leather.io/utils bumped to 0.51.5
+
 ## [2.49.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.48.0...@leather.io/query-v2.49.0) (2026-06-01)
 
 

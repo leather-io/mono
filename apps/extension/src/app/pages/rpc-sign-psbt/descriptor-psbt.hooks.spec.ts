@@ -76,6 +76,10 @@ const accountDerivationPath = "m/84'/0'/0'/0/0";
 const multiSigDescriptor = `wsh(multi(2,${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0,${accountKeychain.publicExtendedKey}/0/0))`;
 const rawPubkeyCosignerDescriptor = `wsh(multi(2,${bytesToHex(requireBytes(cosignerAddressIndexKey.publicKey))},${accountKeychain.publicExtendedKey}/0/0))`;
 const foreignDescriptor = `wsh(multi(2,${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0,${makeNativeSegwitAccountKeychain(3).publicExtendedKey}/0/0))`;
+const vaultIndexDescriptor = `wsh(sortedmulti(2,${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/7,${accountKeychain.publicExtendedKey}/0/7))`;
+const mixedKeyPathDescriptor = `wsh(multi(2,${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0,${accountKeychain.publicExtendedKey}/0/7))`;
+const accountVaultIndexKey = makeNativeSegwitAccountKeychain(1).deriveChild(0).deriveChild(7);
+const cosignerVaultIndexKey = makeNativeSegwitAccountKeychain(2).deriveChild(0).deriveChild(7);
 
 function buildDescriptorTx(descriptor: string, signWith: HDKey[]) {
   const { scriptPubKey, witnessScript } = compileWshDescriptor(descriptor);
@@ -159,6 +163,25 @@ describe(useSignDescriptorPsbt.name, () => {
         true
       );
     });
+
+    test('signs at the descriptor key path with the matching derivation path', async () => {
+      const psbtHex = buildDescriptorPsbtHex(vaultIndexDescriptor, [cosignerVaultIndexKey]);
+      mocks.signPsbt.mockImplementation(({ tx }: { tx: btc.Transaction }) => {
+        tx.signIdx(requireBytes(accountVaultIndexKey.privateKey), 0);
+        return tx;
+      });
+
+      const signedTx = await useSignDescriptorPsbt()(psbtHex, vaultIndexDescriptor);
+
+      expect(mocks.signPsbt).toHaveBeenCalledWith(
+        expect.objectContaining({
+          signingConfig: [{ index: 0, derivationPath: "m/84'/0'/0'/0/7" }],
+        })
+      );
+      expect(hasPartialSigFor(signedTx, 0, requireBytes(accountVaultIndexKey.publicKey))).toBe(
+        true
+      );
+    });
   });
 
   describe('signing plan validation', () => {
@@ -177,6 +200,13 @@ describe(useSignDescriptorPsbt.name, () => {
       await expect(useSignDescriptorPsbt()(psbtHex, foreignDescriptor)).rejects.toThrow(
         'is not part of this descriptor'
       );
+      expect(mocks.signPsbt).not.toHaveBeenCalled();
+    });
+
+    test('rejects a descriptor whose extended keys use different key paths', async () => {
+      await expect(
+        useSignDescriptorPsbt()(buildNonDescriptorPsbtHex(), mixedKeyPathDescriptor)
+      ).rejects.toThrow('must use the same key path');
       expect(mocks.signPsbt).not.toHaveBeenCalled();
     });
   });

@@ -10,6 +10,7 @@ import {
   compileWshDescriptor,
   extractWshDescriptorPreimages,
   finalizeWshDescriptorPsbt,
+  findAccountDescriptorKey,
   findAccountKeyByPubkey,
   getDescriptorInputsWithDisallowedSighash,
   getDescriptorMatchingInputIndexes,
@@ -17,6 +18,10 @@ import {
   makeWshDescriptorInstance,
   toLedgerSignableDescriptor,
 } from './wsh-descriptor';
+
+function makeNativeSegwitAccountKeychain(seedByte: number) {
+  return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'");
+}
 
 function makeNativeSegwitAccountXpub(seedByte: number) {
   return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'")
@@ -106,6 +111,138 @@ describe('wsh-descriptor', () => {
     expect(findAccountKeyByPubkey(keys, pubkeyA)).toBeDefined();
     expect(findAccountKeyByPubkey(keys, makeNativeSegwitAddressPubkey(2))).toBeDefined();
     expect(findAccountKeyByPubkey(keys, makeNativeSegwitAddressPubkey(9))).toBeUndefined();
+  });
+
+  it('exposes the key path indexes of a fixed-path descriptor', () => {
+    const { keyPathIndexes } = compileWshDescriptor(
+      `wsh(sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7))`
+    );
+    expect(keyPathIndexes).toEqual({ changeIndex: 0, addressIndex: 7 });
+  });
+
+  it('exposes the key path indexes of a ranged descriptor resolved at the given index', () => {
+    const { keyPathIndexes } = compileWshDescriptor(
+      `wsh(sortedmulti(2,${xpubA}/0/*,${xpubB}/0/*))`,
+      5
+    );
+    expect(keyPathIndexes).toEqual({ changeIndex: 0, addressIndex: 5 });
+  });
+
+  it('defaults the key path indexes to 0/0 for a raw-pubkey-only descriptor', () => {
+    const { keyPathIndexes } = compileWshDescriptor(
+      `wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyA)})))`
+    );
+    expect(keyPathIndexes).toEqual({ changeIndex: 0, addressIndex: 0 });
+  });
+
+  it('rejects a descriptor whose extended keys use different key paths', () => {
+    expect(() => compileWshDescriptor(`wsh(multi(2,${xpubA}/0/0,${xpubB}/0/3))`)).toThrow(
+      'must use the same key path'
+    );
+  });
+
+  it('rejects a descriptor whose key path is not /0/N or /1/N', () => {
+    expect(() => compileWshDescriptor(`wsh(multi(2,${xpubA}/2/0,${xpubB}/2/0))`)).toThrow(
+      '/0/N or /1/N'
+    );
+  });
+
+  it('rejects a descriptor with a pathless extended key', () => {
+    expect(() => compileWshDescriptor(`wsh(pk(${xpubA}))`)).toThrow('/0/N or /1/N');
+  });
+
+  it('matches the account by xpub at the descriptor key path', () => {
+    const accountKeychain = makeNativeSegwitAccountKeychain(1);
+    const compiled = compileWshDescriptor(`wsh(sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7))`);
+
+    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    expect(match.changeIndex).toBe(0);
+    expect(match.addressIndex).toBe(7);
+    expect(bytesToHex(match.key.pubkey)).toBe(
+      bytesToHex(accountKeychain.deriveChild(0).deriveChild(7).publicKey!)
+    );
+  });
+
+  it('matches the account on the change branch key path', () => {
+    const accountKeychain = makeNativeSegwitAccountKeychain(1);
+    const compiled = compileWshDescriptor(`wsh(multi(2,${xpubA}/1/4,${xpubB}/1/4))`);
+
+    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    expect(match.changeIndex).toBe(1);
+    expect(match.addressIndex).toBe(4);
+  });
+
+  it('matches the account xpub regardless of its serialized version bytes', () => {
+    const accountKeychain = makeNativeSegwitAccountKeychain(1);
+    const tpubSamePath = HDKey.fromMasterSeed(
+      new Uint8Array(32).fill(1),
+      testnetExtendedKeyVersions
+    ).derive("m/84'/0'/0'").publicExtendedKey;
+    const tpubCosigner = HDKey.fromMasterSeed(
+      new Uint8Array(32).fill(2),
+      testnetExtendedKeyVersions
+    ).derive("m/84'/0'/0'").publicExtendedKey;
+    const compiled = compileWshDescriptor(`wsh(multi(2,${tpubSamePath}/0/9,${tpubCosigner}/0/9))`);
+
+    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    expect(match.addressIndex).toBe(9);
+    expect(bytesToHex(match.key.pubkey)).toBe(
+      bytesToHex(accountKeychain.deriveChild(0).deriveChild(9).publicKey!)
+    );
+  });
+
+  it('matches a raw-pubkey account key at address index 0/0', () => {
+    const accountKeychain = makeNativeSegwitAccountKeychain(1);
+    const compiled = compileWshDescriptor(`wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyA)})))`);
+
+    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    expect(match.changeIndex).toBe(0);
+    expect(match.addressIndex).toBe(0);
+    expect(match.key.bip32).toBeUndefined();
+  });
+
+  it('does not match a raw pubkey derived from a non-zero address index', () => {
+    const accountKeychain = makeNativeSegwitAccountKeychain(1);
+    const pubkeyAtIndexOne = accountKeychain.deriveChild(0).deriveChild(1).publicKey!;
+    const compiled = compileWshDescriptor(
+      `wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyAtIndexOne)})))`
+    );
+
+    expect(findAccountDescriptorKey(compiled, accountKeychain)).toBeUndefined();
+  });
+
+  it('allows a raw-pubkey co-signer alongside extended keys at a non-zero key path', () => {
+    const accountKeychain = makeNativeSegwitAccountKeychain(1);
+    const cosignerRawPubkey = makeNativeSegwitAddressPubkey(2);
+    const compiled = compileWshDescriptor(
+      `wsh(multi(2,${bytesToHex(cosignerRawPubkey)},${xpubA}/0/7))`
+    );
+    expect(compiled.keyPathIndexes).toEqual({ changeIndex: 0, addressIndex: 7 });
+
+    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    expect(match.addressIndex).toBe(7);
+  });
+
+  it('returns undefined when the account does not participate in the descriptor', () => {
+    const foreignKeychain = makeNativeSegwitAccountKeychain(9);
+    const compiled = compileWshDescriptor(`wsh(sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7))`);
+
+    expect(findAccountDescriptorKey(compiled, foreignKeychain)).toBeUndefined();
+  });
+
+  it('rejects an extended key carrying the account pubkey but a different chain code', () => {
+    const accountKeychain = makeNativeSegwitAccountKeychain(1);
+    const forgedKey = new HDKey({
+      publicKey: accountKeychain.publicKey!,
+      chainCode: new Uint8Array(32).fill(7),
+    });
+    expect(forgedKey.publicExtendedKey).not.toBe(accountKeychain.publicExtendedKey);
+
+    const compiled = compileWshDescriptor(
+      `wsh(multi(2,${forgedKey.publicExtendedKey}/0/7,${xpubB}/0/7))`
+    );
+
+    expect(findAccountDescriptorKey(compiled, accountKeychain)).toBeUndefined();
   });
 
   it('signs the matched p2wsh input with the account key once the witness script is attached', () => {

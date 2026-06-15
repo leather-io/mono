@@ -489,6 +489,24 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.112.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.111.6...@leather.io/ui-v1.112.0) (2026-06-15)
+
+
+### Features
+
+* **web:** Leather Multisig UI (initial import, behind multisigEnabled flag) ([#2365](https://github.com/leather-io/mono/issues/2365)) ([872827d](https://github.com/leather-io/mono/commit/872827d28f3f848595958f197df22df6b580dd81))
+* **web:** multisig per-chain connection-status dropdown ([#2376](https://github.com/leather-io/mono/issues/2376)) ([98b810b](https://github.com/leather-io/mono/commit/98b810b51d8b9c9994978d10637cf30ecb7662d6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.51.5
+  * devDependencies
+    * @leather.io/features bumped to 1.4.6
+    * @leather.io/models bumped to 0.57.0
+
 ## [1.111.6](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.111.5...@leather.io/ui-v1.111.6) (2026-06-01)
 
 
