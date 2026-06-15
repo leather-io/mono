@@ -113,9 +113,11 @@ export function CreateVaultPage() {
 
   const inviteeAddresses = members
     .filter(member => !member.isMe && member.addr.trim() !== '')
-    .map(member => member.addr.trim());
+    .map(member => normalizeAddress(member.addr.trim()));
 
-  const memberAddresses = myAddress ? [myAddress, ...inviteeAddresses] : inviteeAddresses;
+  const memberAddresses = myAddress
+    ? [normalizeAddress(myAddress), ...inviteeAddresses]
+    : inviteeAddresses;
 
   function getMemberStatus(member: MemberDraft, index: number): MemberFieldStatus {
     if (member.isMe) return { state: 'empty' };
