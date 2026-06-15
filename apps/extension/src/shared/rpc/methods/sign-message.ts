@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import { defaultNetworkIdSchema } from '../rpc-schemas';
 import {
   accountSchema,
   formatValidationErrors,
@@ -12,7 +11,7 @@ const rpcSignMessageParamsSchema = z.object({
   type: z.enum(['bip322']).optional(),
   account: accountSchema.optional(),
   message: z.string(),
-  network: defaultNetworkIdSchema.optional(),
+  network: z.string().optional(),
   paymentType: z.enum(['p2tr', 'p2wpkh']).optional(),
 });
 
