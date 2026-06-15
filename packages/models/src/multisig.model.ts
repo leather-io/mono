@@ -53,3 +53,37 @@ export interface VaultMembershipResult {
   readonly membership: VaultMember;
   readonly vault: Vault;
 }
+
+export interface VaultAccountSigner {
+  readonly network: AuthNetworkId;
+  readonly publicKey: string;
+  readonly address: string;
+  readonly id: string;
+  readonly xpub: string | null;
+  readonly xpubOriginFingerprint: string | null;
+  readonly xpubOriginPath: string | null;
+  readonly signerIndex: number;
+  readonly signingPubkey: string;
+  readonly derivationIndex: number | null;
+}
+
+interface VaultAccountBase {
+  readonly id: string;
+  readonly vaultId: string;
+  readonly name: string;
+  readonly network: AuthNetworkId;
+  readonly threshold: number;
+  readonly multisigAddress: string;
+  readonly accountIndex: number;
+  readonly createdAt: string;
+}
+
+export interface VaultAccountSummary extends VaultAccountBase {
+  readonly signerCount: number;
+}
+
+export interface VaultAccount extends VaultAccountBase {
+  readonly signers: readonly VaultAccountSigner[];
+  readonly pendingTransactionCount: number;
+  readonly queuedTransactionCount: number;
+}
