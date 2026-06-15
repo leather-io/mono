@@ -16,6 +16,7 @@ import { Button, InfoCircleIcon } from '@leather.io/ui';
 
 import { TextField } from '../components/text-field';
 import type { Chain } from '../data/multisig-types';
+import { vaultThemeName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
 import { ChainPicker } from './components/chain-picker';
 import { type MemberDraft, type MemberFieldStatus, MemberRows } from './components/member-rows';
@@ -117,13 +118,16 @@ export function CreateVaultPage() {
     return chain === 'btc' ? value.toLowerCase() : value;
   }
 
-  const inviteeAddresses = members
-    .filter(member => !member.isMe && member.addr.trim() !== '')
-    .map(member => normalizeAddress(member.addr.trim()));
-
-  const memberAddresses = myAddress
-    ? [normalizeAddress(myAddress), ...inviteeAddresses]
-    : inviteeAddresses;
+  const meName = members.find(member => member.isMe)?.name.trim();
+  const memberPayload: { address: string; name?: string }[] = [
+    ...(myAddress ? [{ address: normalizeAddress(myAddress), name: meName || undefined }] : []),
+    ...members
+      .filter(member => !member.isMe && member.addr.trim() !== '')
+      .map(member => ({
+        address: normalizeAddress(member.addr.trim()),
+        name: member.name.trim() || undefined,
+      })),
+  ];
 
   function getMemberStatus(member: MemberDraft, index: number): MemberFieldStatus {
     if (member.isMe) return { state: 'empty' };
@@ -159,7 +163,7 @@ export function CreateVaultPage() {
   function validationError(): string | null {
     if (!connected[chain]) return `Connect your ${chainLabel} wallet to continue.`;
     if (name.trim() === '') return 'Give your vault a name to continue.';
-    if (memberAddresses.length < 2) return 'Add at least one other member to continue.';
+    if (memberPayload.length < 2) return 'Add at least one other member to continue.';
     if (hasInvalidMember) return 'Fix the highlighted member addresses.';
     return null;
   }
@@ -183,11 +187,8 @@ export function CreateVaultPage() {
   function submit() {
     setAttempted(true);
     if (!connected[chain] || createVault.isPending || validationError()) return;
-    // TODO: send the picked themeId once the multisig service persists vault
-    // theme — until then the choice is preview-only and displayed vaults use
-    // fallbackVaultThemeId.
     createVault.mutate(
-      { name: name.trim(), members: memberAddresses },
+      { name: name.trim(), theme: vaultThemeName(themeId), members: memberPayload },
       {
         onSuccess(vault) {
           showToast(`Vault “${vault.name}” created`);

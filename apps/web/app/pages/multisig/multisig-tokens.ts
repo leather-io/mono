@@ -46,11 +46,18 @@ export function vaultTheme(themeId: number): VaultTheme {
   return vaultThemes[themeId] ?? vaultThemes[0];
 }
 
-// Vaults have no persisted theme at the service level yet, so displayed vaults
-// fall back to a single default rather than a fabricated per-id color.
-// TODO: replace usages with the persisted vault.theme once the multisig service
-// stores and returns it.
-export const fallbackVaultThemeId = 0;
+// Default theme for vaults whose persisted theme is missing or unrecognized.
+const fallbackVaultThemeId = 0;
+
+// Theme name stored on the vault (vault.theme) when creating, mapped back to a
+// VaultTheme for display. Names are the canonical wire value.
+export function vaultThemeName(themeId: number): string {
+  return (vaultThemes[themeId] ?? vaultThemes[fallbackVaultThemeId]).name;
+}
+
+export function vaultThemeFromName(name: string | null | undefined): VaultTheme {
+  return vaultThemes.find(theme => theme.name === name) ?? vaultThemes[fallbackVaultThemeId];
+}
 
 // Squircle radius for AvatarSq tiles — the prototype uses a soft-rounded
 // square; no token radius matches (tokens stop at lg = 12px / round).

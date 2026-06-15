@@ -7,7 +7,7 @@ import type { VaultMember, VaultSummary } from '@leather.io/models';
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
-import { fallbackVaultThemeId, vaultTheme } from '../multisig-tokens';
+import { vaultThemeFromName } from '../multisig-tokens';
 import { chainFromNetwork } from '../multisig.utils';
 import { AvatarCircle } from './avatar-circle';
 import { AvatarSq } from './avatar-sq';
@@ -38,7 +38,7 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
   const myMembership = members.find(member => member.address === myAddress);
   const creator = members.find(member => member.user?.id === vault.createdBy);
   const pendingCount = members.filter(member => member.membershipStatus === 'invited').length;
-  const theme = vaultTheme(fallbackVaultThemeId);
+  const theme = vaultThemeFromName(vault.theme);
   const chain = chainFromNetwork(network);
 
   function accept() {
@@ -88,7 +88,7 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
           <AvatarSq
             chain={chain}
             icon="vault"
-            themeId={fallbackVaultThemeId}
+            themeId={theme.id}
             size="lg"
             withChainBadge={false}
           />
@@ -117,8 +117,8 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
               borderTopColor="ink.border-default"
             >
               <VaultListItem
-                leading={<AvatarCircle name={member.address} size="lg" />}
-                title={`${truncateMiddle(member.address)}${
+                leading={<AvatarCircle name={member.name || member.address} size="lg" />}
+                title={`${member.name || truncateMiddle(member.address)}${
                   member.address === myAddress ? ' (me)' : ''
                 }`}
                 trailingTitle={

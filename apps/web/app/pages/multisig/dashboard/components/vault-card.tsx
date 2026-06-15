@@ -5,7 +5,7 @@ import type { VaultSummary } from '@leather.io/models';
 import { AvatarSq } from '../../components/avatar-sq';
 import { Badge } from '../../components/badge';
 import { VaultListItem } from '../../components/vault-list-item';
-import { fallbackVaultThemeId } from '../../multisig-tokens';
+import { vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 
 interface VaultCardProps {
@@ -20,6 +20,7 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
   const memberLabel = vault.memberCount === 1 ? 'member' : 'members';
   const isInvite = vault.membershipStatus === 'invited';
   const needsAttention = isInvite || vault.status === 'pending';
+  const theme = vaultThemeFromName(vault.theme);
 
   function renderTrailingTitle() {
     if (isInvite) return <Badge variant="pending" label="Invitation" />;
@@ -50,7 +51,7 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
       _hover={{ bg: 'ink.component-background-hover' }}
     >
       <VaultListItem
-        leading={<AvatarSq chain={chain} icon="vault" themeId={fallbackVaultThemeId} size="md" />}
+        leading={<AvatarSq chain={chain} icon="vault" themeId={theme.id} size="md" />}
         title={vault.name}
         caption={`${chainLabel} vault · ${vault.accountCount} ${accountLabel}`}
         trailingTitle={renderTrailingTitle()}

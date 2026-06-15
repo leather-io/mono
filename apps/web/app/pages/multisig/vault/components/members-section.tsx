@@ -37,9 +37,8 @@ export function MembersSection({ vault, currentUserAddress }: MembersSectionProp
             borderTopColor="ink.border-default"
           >
             <VaultListItem
-              // TODO: surface a BNS name here once the backend serves member identity — open question whether it will
-              leading={<AvatarCircle name={member.address} size="lg" />}
-              title={`${truncateMiddle(member.address)}${isMe ? ' (you)' : ''}`}
+              leading={<AvatarCircle name={member.name || member.address} size="lg" />}
+              title={`${member.name || truncateMiddle(member.address)}${isMe ? ' (you)' : ''}`}
               trailingTitle={
                 <MemberStatusPill status={member.membershipStatus} isCreator={isCreator} />
               }
