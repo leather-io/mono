@@ -7,8 +7,8 @@ import type { VaultMember, VaultSummary } from '@leather.io/models';
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
-import type { Chain } from '../data/multisig-types';
 import { fallbackVaultThemeId, vaultTheme } from '../multisig-tokens';
+import { chainFromNetwork } from '../multisig.utils';
 import { AvatarCircle } from './avatar-circle';
 import { AvatarSq } from './avatar-sq';
 import { VaultListItem } from './vault-list-item';
@@ -17,10 +17,6 @@ interface InvitationModalProps {
   vault: VaultSummary;
   isShowing: boolean;
   onClose(): void;
-}
-
-function chainFromNetwork(network: string): Chain {
-  return network.startsWith('btc') ? 'btc' : 'stx';
 }
 
 function memberStatusLabel(member: VaultMember, currentUserAddress?: string): string {

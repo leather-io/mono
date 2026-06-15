@@ -5,16 +5,12 @@ import type { VaultSummary } from '@leather.io/models';
 import { AvatarSq } from '../../components/avatar-sq';
 import { Badge } from '../../components/badge';
 import { VaultListItem } from '../../components/vault-list-item';
-import type { Chain } from '../../data/multisig-types';
 import { fallbackVaultThemeId } from '../../multisig-tokens';
+import { chainFromNetwork } from '../../multisig.utils';
 
 interface VaultCardProps {
   vault: VaultSummary;
   onClick(): void;
-}
-
-function chainFromNetwork(network: string): Chain {
-  return network.startsWith('btc') ? 'btc' : 'stx';
 }
 
 export function VaultCard({ vault, onClick }: VaultCardProps) {

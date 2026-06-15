@@ -1,21 +1,17 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import type { AuthNetworkId, Vault } from '@leather.io/models';
+import type { Vault } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { VaultListItem } from '../../components/vault-list-item';
-import type { Chain } from '../../data/multisig-types';
+import { chainFromNetwork } from '../../multisig.utils';
 
 interface VaultStatusCardProps {
   vault: Vault;
   canCancel: boolean;
   isCancelling: boolean;
   onCancelVault(): void;
-}
-
-function chainFromNetwork(network: AuthNetworkId): Chain {
-  return network.startsWith('btc') ? 'btc' : 'stx';
 }
 
 function Row({
