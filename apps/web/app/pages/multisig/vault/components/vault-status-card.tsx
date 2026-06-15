@@ -5,6 +5,7 @@ import { Button } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { VaultListItem } from '../../components/vault-list-item';
+import { vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 
 interface VaultStatusCardProps {
@@ -50,6 +51,7 @@ export function VaultStatusCard({
   onCancelVault,
 }: VaultStatusCardProps) {
   const chain = chainFromNetwork(vault.network);
+  const theme = vaultThemeFromName(vault.theme);
   const joined = vault.members.filter(member => member.membershipStatus === 'joined');
   const declined = vault.members.filter(member => member.membershipStatus === 'declined');
   const allJoined = joined.length === vault.members.length;
@@ -65,7 +67,15 @@ export function VaultStatusCard({
     >
       <Box p="space.04">
         <VaultListItem
-          leading={<AvatarSq chain={chain} icon="vault" size="md" withChainBadge={false} />}
+          leading={
+            <AvatarSq
+              chain={chain}
+              icon="vault"
+              themeId={theme.id}
+              size="md"
+              withChainBadge={false}
+            />
+          }
           title={vault.name}
           caption={`${chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault`}
         />
