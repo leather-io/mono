@@ -121,6 +121,7 @@ export function VaultDetailPage() {
           <Flex gap="space.03" mt="space.03">
             <Button
               variant="solid"
+              disabled={declineVault.isPending}
               aria-busy={joinVault.isPending}
               onClick={() => joinVault.mutate(myMembership.membershipId)}
             >
@@ -128,6 +129,7 @@ export function VaultDetailPage() {
             </Button>
             <Button
               variant="outline"
+              disabled={joinVault.isPending}
               aria-busy={declineVault.isPending}
               onClick={() =>
                 declineVault.mutate(myMembership.membershipId, {

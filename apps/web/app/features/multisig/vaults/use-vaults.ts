@@ -7,7 +7,14 @@ import { useSession } from '../auth/use-session';
 import { multisigVaultKeys } from './vault-query-keys';
 
 function retryMultisigQuery(failureCount: number, error: Error) {
-  if (LeatherApiError.isLeatherApiError(error) && error.status < 500) return false;
+  if (
+    LeatherApiError.isLeatherApiError(error) &&
+    error.status >= 400 &&
+    error.status < 500 &&
+    ![408, 429].includes(error.status)
+  ) {
+    return false;
+  }
   return failureCount < 3;
 }
 

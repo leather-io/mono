@@ -175,7 +175,7 @@ export function CreateVaultPage() {
 
   function submit() {
     setAttempted(true);
-    if (!connected[chain] || validationError()) return;
+    if (!connected[chain] || createVault.isPending || validationError()) return;
     // TODO: send the picked themeId once the multisig service persists vault
     // theme — until then the choice is preview-only and displayed vaults use
     // fallbackVaultThemeId.
@@ -265,7 +265,7 @@ export function CreateVaultPage() {
             members={members}
             myAddress={myAddress}
             error={error}
-            disabled={!connected[chain]}
+            disabled={!connected[chain] || createVault.isPending}
             onSubmit={submit}
           />
         </Box>
