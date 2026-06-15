@@ -4,6 +4,7 @@ minimumReleaseAgeExclude:
 auditConfig:
   ignoreGhsas:
     - GHSA-gv7w-rqvm-qjhr
+    - GHSA-fx2h-pf6j-xcff
 packages:
   - 'apps/*'
   - 'packages/*'
