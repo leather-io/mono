@@ -5,8 +5,7 @@ import * as btc from '@scure/btc-signer';
 
 import {
   compileWshDescriptor,
-  deriveAddressIndexKeychainFromAccount,
-  findAccountKeyByPubkey,
+  findAccountDescriptorKey,
   getDescriptorMatchingInputIndexes,
   makeNativeSegwitAddressIndexDerivationPath,
 } from '@leather.io/bitcoin';
@@ -34,19 +33,11 @@ function useGetDescriptorSigningPlan() {
   return (psbtHex: string, descriptor: string) => {
     if (!nativeSegwitAccount) throw new Error('No native segwit account available');
 
-    const addressIndexKeychain = deriveAddressIndexKeychainFromAccount(
-      nativeSegwitAccount.keychain
-    )({
-      changeIndex: 0,
-      addressIndex: 0,
-    });
-    if (!addressIndexKeychain.publicKey) throw new Error('Unable to derive public key for signing');
+    const compiled = compileWshDescriptor(descriptor);
+    const { scriptPubKey, witnessScript, keys } = compiled;
 
-    const { scriptPubKey, witnessScript, keys } = compileWshDescriptor(descriptor);
-
-    const accountKey = findAccountKeyByPubkey(keys, addressIndexKeychain.publicKey);
-    if (!accountKey)
-      throw new Error('Current account (at address index 0) is not part of this descriptor');
+    const accountDescriptorKey = findAccountDescriptorKey(compiled, nativeSegwitAccount.keychain);
+    if (!accountDescriptorKey) throw new Error('Current account is not part of this descriptor');
 
     const tx = btc.Transaction.fromPSBT(hexToBytes(psbtHex));
     const inputIndexes = getDescriptorMatchingInputIndexes(tx, scriptPubKey);
@@ -55,14 +46,14 @@ function useGetDescriptorSigningPlan() {
     const derivationPath = makeNativeSegwitAddressIndexDerivationPath({
       network: network.chain.bitcoin.mode,
       accountIndex: accountId.accountIndex,
-      changeIndex: 0,
-      addressIndex: 0,
+      changeIndex: accountDescriptorKey.changeIndex,
+      addressIndex: accountDescriptorKey.addressIndex,
     });
 
     inputIndexes.forEach(index => tx.updateInput(index, { witnessScript }));
     const signingConfig = inputIndexes.map(index => ({ index, derivationPath }));
 
-    return { tx, signingConfig, inputIndexes, keys, accountKey };
+    return { tx, signingConfig, inputIndexes, keys, accountKey: accountDescriptorKey.key };
   };
 }
 

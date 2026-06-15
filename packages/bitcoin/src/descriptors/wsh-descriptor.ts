@@ -5,8 +5,11 @@ import {
 } from '@bitcoinerlab/descriptors';
 import secp256k1 from '@bitcoinerlab/secp256k1';
 import { bytesToHex } from '@noble/hashes/utils';
+import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { type Network, Psbt, networks } from 'bitcoinjs-lib';
+
+import { deriveAddressIndexKeychainFromAccount } from '../utils/bitcoin.utils';
 
 const { Descriptor, parseKeyExpression } = DescriptorsFactory(secp256k1);
 
@@ -24,8 +27,9 @@ const keyExpressionStarts = ['(', ',', ']'];
 // only governs extended-key version-byte validation (and bech32 address
 // encoding, which we don't use). We therefore pick the network that matches the
 // descriptor's keys so parsing succeeds regardless of the wallet's active
-// network (Leather software wallets expose mainnet-version xpubs on every
-// network).
+// network — coordinators build descriptors from keys shared as xpubs or
+// tpubs (getAddresses encodes them for whichever network was active), so
+// the descriptor's key encoding need not match our current network.
 function getNetworkForDescriptor(descriptor: string): Network {
   const compactDescriptor = descriptor.replace(/\s/g, '');
   const hasTestnetKey = keyExpressionStarts.some(start =>
@@ -65,10 +69,33 @@ function rewriteSortedmultiAsMulti(descriptor: string, index: number) {
   );
 }
 
+export interface DescriptorKeyPathIndexes {
+  changeIndex: number;
+  addressIndex: number;
+}
+
+const allowedDescriptorKeyPathPattern = /^\/[01]\/\d+$/;
+
+function getUniformKeyPathIndexes(keys: KeyInfo[]): DescriptorKeyPathIndexes {
+  const keyPaths = keys.filter(key => key.bip32).map(key => key.keyPath);
+  if (!keyPaths.length) return { changeIndex: 0, addressIndex: 0 };
+
+  const [keyPath, ...remainingKeyPaths] = keyPaths;
+  if (remainingKeyPaths.some(path => path !== keyPath))
+    throw new Error('All extended keys in the descriptor must use the same key path');
+
+  if (!keyPath || !allowedDescriptorKeyPathPattern.test(keyPath))
+    throw new Error('Extended keys in the descriptor must use a key path of the form /0/N or /1/N');
+
+  const [, changeIndex, addressIndex] = keyPath.split('/');
+  return { changeIndex: Number(changeIndex), addressIndex: Number(addressIndex) };
+}
+
 export interface CompiledWshDescriptor {
   scriptPubKey: Uint8Array;
   witnessScript: Uint8Array;
   keys: KeyInfo[];
+  keyPathIndexes: DescriptorKeyPathIndexes;
 }
 
 // Builds the @bitcoinerlab Descriptor instance for a `wsh(...)` descriptor. The
@@ -118,11 +145,13 @@ export function compileWshDescriptor(descriptor: string, index = 0): CompiledWsh
   if (!witnessScript) throw new Error('Descriptor does not produce a witness script');
 
   const { expansionMap } = instance.expand();
+  const keys = expansionMap ? Object.values(expansionMap) : [];
 
   return {
     scriptPubKey: Uint8Array.from(instance.getScriptPubKey()),
     witnessScript: Uint8Array.from(witnessScript),
-    keys: expansionMap ? Object.values(expansionMap) : [],
+    keys,
+    keyPathIndexes: getUniformKeyPathIndexes(keys),
   };
 }
 
@@ -137,6 +166,45 @@ export function findAccountKeyByPubkey(keys: KeyInfo[], pubkey: Uint8Array) {
     (key): key is KeyInfo & { pubkey: Buffer } =>
       !!key.pubkey && bytesToHex(key.pubkey) === pubkeyHex
   );
+}
+
+export interface AccountDescriptorKey extends DescriptorKeyPathIndexes {
+  key: KeyInfo & { pubkey: Buffer };
+}
+
+export function findAccountDescriptorKey(
+  compiled: CompiledWshDescriptor,
+  accountKeychain: HDKey
+): AccountDescriptorKey | undefined {
+  const { keys, keyPathIndexes } = compiled;
+
+  if (accountKeychain.publicKey) {
+    const accountPubkeyHex = bytesToHex(accountKeychain.publicKey);
+    const addressIndexKeychain =
+      deriveAddressIndexKeychainFromAccount(accountKeychain)(keyPathIndexes);
+    const addressIndexPubkeyHex = addressIndexKeychain.publicKey
+      ? bytesToHex(addressIndexKeychain.publicKey)
+      : undefined;
+    const extendedKey = keys.find(
+      (key): key is KeyInfo & { pubkey: Buffer } =>
+        !!key.pubkey &&
+        !!key.bip32 &&
+        bytesToHex(key.bip32.publicKey) === accountPubkeyHex &&
+        bytesToHex(key.pubkey) === addressIndexPubkeyHex
+    );
+    if (extendedKey) return { key: extendedKey, ...keyPathIndexes };
+  }
+
+  const addressIndexZeroKeychain = deriveAddressIndexKeychainFromAccount(accountKeychain)({
+    changeIndex: 0,
+    addressIndex: 0,
+  });
+  if (!addressIndexZeroKeychain.publicKey) return undefined;
+
+  const rawPubkeyKey = findAccountKeyByPubkey(keys, addressIndexZeroKeychain.publicKey);
+  if (rawPubkeyKey) return { key: rawPubkeyKey, changeIndex: 0, addressIndex: 0 };
+
+  return undefined;
 }
 
 function stripDescriptorChecksum(descriptor: string): string {
