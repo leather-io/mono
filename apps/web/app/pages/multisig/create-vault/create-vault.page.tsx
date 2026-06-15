@@ -107,6 +107,10 @@ export function CreateVaultPage() {
       : isValidStacksAddress(address) && (address.startsWith('SP') || address.startsWith('SM'));
   }
 
+  function normalizeAddress(value: string) {
+    return chain === 'btc' ? value.toLowerCase() : value;
+  }
+
   const inviteeAddresses = members
     .filter(member => !member.isMe && member.addr.trim() !== '')
     .map(member => member.addr.trim());
@@ -125,12 +129,18 @@ export function CreateVaultPage() {
             ? 'Enter a native SegWit address (bc1q…). Taproot is not supported.'
             : 'Enter a Stacks mainnet address (SP…).',
       };
-    if (myAddress === address)
+    const normalized = normalizeAddress(address);
+    if (myAddress && normalizeAddress(myAddress) === normalized)
       return {
         state: 'invalid',
         error: "You're added automatically — enter another member's address.",
       };
-    if (members.some((other, i) => i !== index && !other.isMe && other.addr.trim() === address))
+    if (
+      members.some(
+        (other, i) =>
+          i !== index && !other.isMe && normalizeAddress(other.addr.trim()) === normalized
+      )
+    )
       return { state: 'invalid', error: 'This address is already added.' };
     return { state: 'valid' };
   }

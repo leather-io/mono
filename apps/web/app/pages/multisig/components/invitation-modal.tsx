@@ -57,10 +57,20 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
       header={<SheetHeader title="You're invited to a vault" />}
       footer={
         <Flex gap="space.03" justifyContent="flex-end" width="100%">
-          <Button variant="outline" aria-busy={declineVault.isPending} onClick={decline}>
+          <Button
+            variant="outline"
+            disabled={!myMembership || joinVault.isPending}
+            aria-busy={declineVault.isPending}
+            onClick={decline}
+          >
             Decline
           </Button>
-          <Button variant="solid" aria-busy={joinVault.isPending} onClick={accept}>
+          <Button
+            variant="solid"
+            disabled={!myMembership || declineVault.isPending}
+            aria-busy={joinVault.isPending}
+            onClick={accept}
+          >
             Accept invitation
           </Button>
         </Flex>
