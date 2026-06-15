@@ -10,28 +10,33 @@ import { initialSearchParams } from '@app/common/initial-search-params';
 import { RootState } from '@app/store';
 
 import { selectActiveAccount } from '../active/active.selectors';
+import { selectHasSwitched } from '../ui/ui.selectors';
 import { keyAdapter } from './software-key.slice';
 
 function selectKeysSlice(state: RootState) {
   return state.softwareKeys;
 }
 
-export const selectCurrentAccount = createSelector(selectActiveAccount, activeAccount => {
-  const customAccountIndex = initialSearchParams.get('accountIndex');
-  const customFingerprint = initialSearchParams.get('fingerprint');
+export const selectCurrentAccount = createSelector(
+  selectActiveAccount,
+  selectHasSwitched,
+  (activeAccount, hasSwitched) => {
+    const customAccountIndex = hasSwitched ? null : initialSearchParams.get('accountIndex');
+    const customFingerprint = hasSwitched ? null : initialSearchParams.get('fingerprint');
 
-  const accountIndex =
-    customAccountIndex && initBigNumber(customAccountIndex).isInteger()
-      ? initBigNumber(customAccountIndex).toNumber()
-      : (activeAccount?.accountIndex ?? 0);
+    const accountIndex =
+      customAccountIndex && initBigNumber(customAccountIndex).isInteger()
+        ? initBigNumber(customAccountIndex).toNumber()
+        : (activeAccount?.accountIndex ?? 0);
 
-  const fingerprint = customFingerprint ?? activeAccount?.fingerprint ?? assumedZeroFingerprint;
+    const fingerprint = customFingerprint ?? activeAccount?.fingerprint ?? assumedZeroFingerprint;
 
-  return {
-    fingerprint,
-    accountIndex,
-  };
-});
+    return {
+      fingerprint,
+      accountIndex,
+    };
+  }
+);
 
 const selectActiveSoftwareKey = createSelector(
   selectKeysSlice,
