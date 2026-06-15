@@ -40,9 +40,7 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
   const myAddress = session?.identity.address;
   const members = detail.data?.members ?? [];
   const myMembership = members.find(member => member.address === myAddress);
-  const creator = members.find(
-    member => member.user?.id === vault.createdBy || member.address === vault.createdBy
-  );
+  const creator = members.find(member => member.user?.id === vault.createdBy);
   const pendingCount = members.filter(member => member.membershipStatus === 'invited').length;
   const theme = vaultTheme(fallbackVaultThemeId);
   const chain = chainFromNetwork(network);

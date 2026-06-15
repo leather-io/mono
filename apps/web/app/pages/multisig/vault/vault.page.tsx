@@ -100,7 +100,7 @@ export function VaultDetailPage() {
 
   const myMembership = vault.members.find(member => member.address === me.data?.address);
   const isInvited = myMembership?.membershipStatus === 'invited';
-  const isCreator = vault.createdBy === me.data?.address || vault.createdBy === me.data?.id;
+  const isCreator = vault.createdBy === me.data?.id;
   const canCancel = isCreator && vault.status === 'pending';
 
   function onCancel() {

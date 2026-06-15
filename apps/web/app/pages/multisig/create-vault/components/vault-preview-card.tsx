@@ -104,8 +104,8 @@ export function VaultPreviewCard({
           </Flex>
         ) : (
           <Flex direction="column" gap="space.03">
-            {filled.map((member, index) => (
-              <Flex key={index} alignItems="center" gap="space.02">
+            {filled.map(member => (
+              <Flex key={member.id} alignItems="center" gap="space.02">
                 <AvatarCircle name={member.name} size="sm" />
                 <Box minWidth={0}>
                   <styled.div textStyle="caption.01">
