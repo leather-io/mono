@@ -1,9 +1,13 @@
+import type { UnknownAction } from '@reduxjs/toolkit';
+
 import type { AccountId } from '@leather.io/models';
 
 import {
   ExtensionMethods,
   InternalMethods,
   Message,
+  REPLAY_ACTION_MESSAGE,
+  WALLET_LIST_CHANGED_MESSAGE,
   WALLET_LOCK_MESSAGE,
 } from '@shared/message-types';
 
@@ -42,6 +46,32 @@ export function broadcastWalletLock() {
 export function addWalletLockListener(handler: () => void) {
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.method === WALLET_LOCK_MESSAGE) handler();
+    sendResponse();
+  });
+}
+
+interface WalletListChangedPayload {
+  removedFingerprint?: string;
+}
+
+export function broadcastWalletListChanged(payload: WalletListChangedPayload) {
+  return chrome.runtime.sendMessage({ method: WALLET_LIST_CHANGED_MESSAGE, payload });
+}
+
+export function addWalletListChangedListener(handler: (payload: WalletListChangedPayload) => void) {
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message?.method === WALLET_LIST_CHANGED_MESSAGE) handler(message.payload ?? {});
+    sendResponse();
+  });
+}
+
+export function broadcastReplayAction(action: UnknownAction) {
+  return chrome.runtime.sendMessage({ method: REPLAY_ACTION_MESSAGE, action });
+}
+
+export function addReplayActionListener(handler: (action: UnknownAction) => void) {
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message?.method === REPLAY_ACTION_MESSAGE) handler(message.action);
     sendResponse();
   });
 }

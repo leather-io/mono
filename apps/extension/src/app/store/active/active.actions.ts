@@ -1,11 +1,11 @@
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
-import { userRemovesWallet } from '@leather.io/state/wallet';
+import { userRemovesWallet, userRenamesWallet } from '@leather.io/state/wallet';
 
 import { InternalMethods } from '@shared/message-types';
-import { sendMessage } from '@shared/messages';
+import { broadcastReplayAction, broadcastWalletListChanged, sendMessage } from '@shared/messages';
 
-import { AppThunk } from '..';
+import { AppThunk, persistor } from '..';
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
@@ -22,7 +22,7 @@ export function changeActiveAccount(accountId: AccountId): AppThunk {
 
 // ts-unused-exports:disable-next-line
 export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState();
     const activeAccount = selectActiveAccount(state);
     const allWallets = selectAllWallets(state);
@@ -54,5 +54,16 @@ export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
         dispatch(userSwitchesAccount(null));
       }
     }
+
+    await persistor.flush();
+    void broadcastWalletListChanged({ removedFingerprint: fingerprint });
+  };
+}
+
+export function renameWallet(fingerprint: string, name: string): AppThunk {
+  return dispatch => {
+    const action = userRenamesWallet({ fingerprint, name });
+    dispatch(action);
+    void broadcastReplayAction(action);
   };
 }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 
+import { userRemovesWallet } from '@leather.io/state/wallet';
+
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
@@ -12,9 +14,11 @@ import { SwitchAccountSheet } from '@app/features/dialogs/switch-account-sheet/s
 import { InAppMessages } from '@app/features/in-app-messages/in-app-messages';
 import { ReceiveDialog } from '@app/pages/receive/receive-dialog';
 import { useOnChangeAccount } from '@app/routes/hooks/use-on-change-account';
+import { useOnReplayAction } from '@app/routes/hooks/use-on-replay-action';
 import { useOnSignOut } from '@app/routes/hooks/use-on-sign-out';
+import { useOnWalletListChanged } from '@app/routes/hooks/use-on-wallet-list-changed';
 import { useOnWalletLock } from '@app/routes/hooks/use-on-wallet-lock';
-import { useAppDispatch, useHasStateRehydrated } from '@app/store';
+import { persistor, useAppDispatch, useHasStateRehydrated } from '@app/store';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 
@@ -40,6 +44,16 @@ export function Container() {
     inMemoryStore.clearAll();
     window.location.reload();
   });
+  useOnWalletListChanged(({ removedFingerprint }) => {
+    if (removedFingerprint) {
+      inMemoryStore.removeKey(removedFingerprint);
+      dispatch(userRemovesWallet({ fingerprint: removedFingerprint }));
+      return;
+    }
+    persistor.pause();
+    window.location.reload();
+  });
+  useOnReplayAction();
   useRestoreFormState();
   useHandleQueuedBackgroundAnalytics();
   useOnChangeAccount(accountId => dispatch(userSwitchesAccount(accountId)));

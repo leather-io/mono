@@ -1,8 +1,11 @@
+import type { UnknownAction } from '@reduxjs/toolkit';
+
 import { deriveRootKeychainFromMnemonicSync, makeAccountIdentifer } from '@leather.io/crypto';
 import { stacksRootKeychainToAccountDescriptorV2 } from '@leather.io/stacks';
 import { userAddsAccount } from '@leather.io/state/keychains';
 
 import { logger } from '@shared/logger';
+import { broadcastReplayAction } from '@shared/messages';
 
 import { AppThunk } from '@app/store';
 
@@ -31,7 +34,12 @@ export function createNewAccount(fingerprint: string): AppThunk {
 
     const newAccountIndex = highestIndex + 1;
 
-    dispatch(
+    function dispatchAndReplay(action: UnknownAction) {
+      dispatch(action);
+      void broadcastReplayAction(action);
+    }
+
+    dispatchAndReplay(
       stxChainSlice.actions.createNewAccount({
         fingerprint,
         descriptor: stacksDescriptor,
@@ -40,14 +48,14 @@ export function createNewAccount(fingerprint: string): AppThunk {
 
     // Materialize the account entity in the accounts slice. No keychains are
     // passed as software accounts derive their keys lazily from the index.
-    dispatch(
+    dispatchAndReplay(
       userAddsAccount({
         account: { id: makeAccountIdentifer(fingerprint, newAccountIndex) },
         accountKeychains: [],
       })
     );
 
-    dispatch(
+    dispatchAndReplay(
       userSwitchesAccount({
         fingerprint,
         accountIndex: newAccountIndex,

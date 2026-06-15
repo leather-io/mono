@@ -11,6 +11,10 @@ export const CONTENT_SCRIPT_PORT = 'content-script';
 
 export const WALLET_LOCK_MESSAGE = 'wallet/lock';
 
+export const WALLET_LIST_CHANGED_MESSAGE = 'wallet/list-changed';
+
+export const REPLAY_ACTION_MESSAGE = 'replay-action';
+
 export enum ExternalMethods {
   transactionRequest = 'hiroWalletTransactionRequest',
   transactionResponse = 'hiroWalletTransactionResponse',

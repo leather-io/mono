@@ -18,8 +18,8 @@ import { doesBrowserSupportWebUsbApi, whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
+import { toggleHideAccount } from '@app/store/accounts/accounts.actions';
 import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
-import { userTogglesHideAccount } from '@app/store/accounts/accounts.slice';
 import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
 import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet';
 
@@ -263,12 +263,9 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
                           onRename={() => setRenamingAccount(accountId)}
                           onHide={() =>
                             dispatch(
-                              userTogglesHideAccount({
-                                accountId: makeAccountIdentifer(
-                                  accountId.fingerprint,
-                                  accountId.accountIndex
-                                ),
-                              })
+                              toggleHideAccount(
+                                makeAccountIdentifer(accountId.fingerprint, accountId.accountIndex)
+                              )
                             )
                           }
                         />

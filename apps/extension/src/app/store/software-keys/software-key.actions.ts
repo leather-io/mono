@@ -12,12 +12,13 @@ import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leathe
 
 import { decryptMnemonic, encryptMnemonic } from '@shared/crypto/mnemonic-encryption';
 import { logger } from '@shared/logger';
+import { broadcastWalletListChanged } from '@shared/messages';
 import { assumedZeroFingerprint } from '@shared/utils';
 import { identifyUser } from '@shared/utils/analytics';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
 import { queryClient } from '@app/common/persistence';
-import { AppThunk } from '@app/store';
+import { AppThunk, persistor } from '@app/store';
 import { getWalletSessionKey, initalizeWalletSession } from '@app/store/session-restore';
 
 import { getNativeSegwitMainnetAddressFromMnemonic } from '../accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -163,6 +164,9 @@ function setWalletEncryptionPassword(args: {
         },
       })
     );
+
+    await persistor.flush();
+    void broadcastWalletListChanged({});
   };
 }
 
