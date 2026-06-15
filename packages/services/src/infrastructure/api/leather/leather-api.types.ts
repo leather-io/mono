@@ -5091,6 +5091,380 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/multisig/vaults/{id}/accounts': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description List vault accounts */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              vaultId: string;
+              name: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              threshold: number;
+              multisigAddress: string;
+              accountIndex: number;
+              signerCount: number;
+              createdAt: string;
+            }[];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /** @description Create a vault account */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            name: string;
+            threshold: number;
+            index: number;
+          };
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              vaultId: string;
+              name: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              threshold: number;
+              multisigAddress: string;
+              accountIndex: number;
+              signers: {
+                /** @enum {string} */
+                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                publicKey: string;
+                address: string;
+                id: string;
+                xpub: string | null;
+                xpubOriginFingerprint: string | null;
+                xpubOriginPath: string | null;
+                signerIndex: number;
+                signingPubkey: string;
+                derivationIndex: number | null;
+              }[];
+              pendingTransactionCount: number;
+              queuedTransactionCount: number;
+              createdAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/multisig/vault-accounts/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get a vault account */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              vaultId: string;
+              name: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              threshold: number;
+              multisigAddress: string;
+              accountIndex: number;
+              signers: {
+                /** @enum {string} */
+                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                publicKey: string;
+                address: string;
+                id: string;
+                xpub: string | null;
+                xpubOriginFingerprint: string | null;
+                xpubOriginPath: string | null;
+                signerIndex: number;
+                signingPubkey: string;
+                derivationIndex: number | null;
+              }[];
+              pendingTransactionCount: number;
+              queuedTransactionCount: number;
+              createdAt: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** @description Rename a vault account */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              vaultId: string;
+              name: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              threshold: number;
+              multisigAddress: string;
+              accountIndex: number;
+              signers: {
+                /** @enum {string} */
+                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                publicKey: string;
+                address: string;
+                id: string;
+                xpub: string | null;
+                xpubOriginFingerprint: string | null;
+                xpubOriginPath: string | null;
+                signerIndex: number;
+                signingPubkey: string;
+                derivationIndex: number | null;
+              }[];
+              pendingTransactionCount: number;
+              queuedTransactionCount: number;
+              createdAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
