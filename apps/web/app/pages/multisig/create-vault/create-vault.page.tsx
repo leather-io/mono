@@ -103,8 +103,8 @@ export function CreateVaultPage() {
 
   function isValidMemberAddress(address: string) {
     return chain === 'btc'
-      ? isValidBitcoinAddress(address) && address.startsWith('bc1q')
-      : isValidStacksAddress(address) && address.startsWith('SP');
+      ? isValidBitcoinAddress(address) && address.toLowerCase().startsWith('bc1q')
+      : isValidStacksAddress(address) && (address.startsWith('SP') || address.startsWith('SM'));
   }
 
   const inviteeAddresses = members
@@ -121,7 +121,9 @@ export function CreateVaultPage() {
       return {
         state: 'invalid',
         error:
-          chain === 'btc' ? 'Enter a native-segwit bc1q… address.' : 'Enter a Stacks SP… address.',
+          chain === 'btc'
+            ? 'Enter a native SegWit address (bc1q…). Taproot is not supported.'
+            : 'Enter a Stacks mainnet address (SP…).',
       };
     if (myAddress === address)
       return {
@@ -156,6 +158,7 @@ export function CreateVaultPage() {
 
   function clearError() {
     setAttempted(false);
+    createVault.reset();
   }
 
   function submit() {

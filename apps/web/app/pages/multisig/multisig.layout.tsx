@@ -26,10 +26,8 @@ export default function MultisigLayout() {
   const btcSession = useSession('btc:mainnet');
   const stxSession = useSession('stx:mainnet');
 
-  const onEntryRoute =
-    location.pathname === multisigPaths.index || location.pathname === multisigPaths.onboarding;
-  if (!btcSession && !stxSession && !onEntryRoute) {
-    return <Navigate to={multisigPaths.index} replace />;
+  if (!btcSession && !stxSession && location.pathname !== multisigPaths.onboarding) {
+    return <Navigate to={multisigPaths.onboarding} replace />;
   }
 
   return (

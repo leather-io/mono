@@ -38,7 +38,7 @@ const badge = cva({
       },
       pending: {
         bg: 'orange.background-primary',
-        borderColor: 'orange.background-primary',
+        borderColor: 'transparent',
         color: 'orange.text-primary',
         '& [data-dot]': { bg: 'orange.action-primary-default' },
       },

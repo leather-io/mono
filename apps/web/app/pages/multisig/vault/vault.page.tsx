@@ -7,7 +7,7 @@ import {
   useDeclineVault,
   useJoinVault,
 } from '~/features/multisig/vaults/use-vault-mutations';
-import { useVault } from '~/features/multisig/vaults/use-vaults';
+import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
 import { Page } from '~/layouts/page/page';
 
@@ -49,10 +49,16 @@ export function VaultDetailPage() {
   const navigate = useNavigate();
   const { success: showToast } = useToast();
 
-  const btcVault = useVault('btc:mainnet', vaultId);
-  const stxVault = useVault('stx:mainnet', vaultId);
+  const btcVaults = useVaults('btc:mainnet');
+  const stxVaults = useVaults('stx:mainnet');
+  const inBtc = btcVaults.data?.some(summary => summary.id === vaultId) ?? false;
+  const inStx = stxVaults.data?.some(summary => summary.id === vaultId) ?? false;
+  const vaultNetworkKnown = inBtc || inStx;
+
+  const btcVault = useVault('btc:mainnet', !vaultNetworkKnown || inBtc ? vaultId : undefined);
+  const stxVault = useVault('stx:mainnet', !vaultNetworkKnown || inStx ? vaultId : undefined);
   const vault = btcVault.data ?? stxVault.data;
-  const network: AuthNetworkId = vault?.network ?? 'btc:mainnet';
+  const network: AuthNetworkId = vault?.network ?? (inStx ? 'stx:mainnet' : 'btc:mainnet');
   const isLoading = btcVault.isLoading || stxVault.isLoading;
   const hasFetched = btcVault.isFetched || stxVault.isFetched;
 
