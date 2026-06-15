@@ -13,7 +13,7 @@ interface MembersSectionProps {
 }
 
 function isCreatorMember(member: VaultMember, createdBy: string): boolean {
-  return member.address === createdBy || member.user?.id === createdBy;
+  return member.user?.id === createdBy;
 }
 
 export function MembersSection({ vault, currentUserAddress }: MembersSectionProps) {
