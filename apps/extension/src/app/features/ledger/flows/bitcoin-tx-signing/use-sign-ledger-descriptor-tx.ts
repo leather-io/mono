@@ -5,8 +5,7 @@ import AppClient from 'ledger-bitcoin';
 
 import {
   compileWshDescriptor,
-  deriveAddressIndexKeychainFromAccount,
-  findAccountKeyByPubkey,
+  findAccountDescriptorKey,
   getBitcoinJsLibNetworkConfigByMode,
   makeWshDescriptorInstance,
   toLedgerSignableDescriptor,
@@ -45,20 +44,12 @@ export function useSignLedgerDescriptorTx() {
   ) => {
     if (!nativeSegwitAccount) throw new Error('No native segwit account available');
 
-    const addressIndexKeychain = deriveAddressIndexKeychainFromAccount(
-      nativeSegwitAccount.keychain
-    )({
-      changeIndex: 0,
-      addressIndex: 0,
-    });
-    if (!addressIndexKeychain.publicKey) throw new Error('Unable to derive public key for signing');
-
     // Ledger can only sign through a wallet policy keyed by `[fingerprint/path]xpub`,
     // so rewrite the account's key (a bare xpub or a raw 0/0 pubkey) into that form.
-    const { keys } = compileWshDescriptor(descriptor);
-    const accountKey = findAccountKeyByPubkey(keys, addressIndexKeychain.publicKey);
-    if (!accountKey)
-      throw new Error('Current account (at address index 0) is not part of this descriptor');
+    const compiled = compileWshDescriptor(descriptor);
+    const accountDescriptorKey = findAccountDescriptorKey(compiled, nativeSegwitAccount.keychain);
+    if (!accountDescriptorKey) throw new Error('Current account is not part of this descriptor');
+    const accountKey = accountDescriptorKey.key;
 
     const ledgerDescriptor = toLedgerSignableDescriptor(
       descriptor,
@@ -88,7 +79,7 @@ export function useSignLedgerDescriptorTx() {
     // A coordinator PSBT may already carry a partialSig for the account key; the
     // device adding its own would collide on bip174's by-pubkey dedupe. Strip ours
     // (co-signer signatures stay) so signLedger can merge the fresh signature.
-    const accountPubkey = Buffer.from(addressIndexKeychain.publicKey);
+    const accountPubkey = Buffer.from(accountKey.pubkey);
     signingConfig.forEach(({ index }) => {
       const input = psbt.data.inputs[index];
       if (!input?.partialSig?.length) return;

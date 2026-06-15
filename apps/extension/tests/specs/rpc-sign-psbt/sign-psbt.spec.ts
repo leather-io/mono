@@ -618,6 +618,43 @@ test.describe('Sign PSBT', () => {
       test.expect(bytesToHex(partialSig![0][0])).toEqual(bytesToHex(addressKeychain.publicKey!));
     });
 
+    test('that a fixed non-zero index descriptor input is signed at that index', async ({
+      page,
+      context,
+    }) => {
+      const vaultDescriptor = `wsh(sortedmulti(2,${otherAccountXpub}/0/7,${nativeSegwitAccountXpub}/0/7))`;
+      const { scriptPubKey: vaultScriptPubKey } = compileWshDescriptor(vaultDescriptor);
+      const vaultAddressKey = HDKey.fromMasterSeed(seed)
+        .derive("m/84'/1'/0'")
+        .deriveChild(0)
+        .deriveChild(7);
+
+      const psbt = new btc.Transaction();
+      psbt.addInput({
+        txid: '2965dc62a012028b529c902da59606d65d35353c966aeaf9287f534547609f5f',
+        index: 0,
+        witnessUtxo: { amount: 20000n, script: vaultScriptPubKey },
+      });
+      psbt.addOutputAddress('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d', 1000n, bitcoinTestnet);
+
+      const [result] = await Promise.all([
+        initiatePsbtSigning(page)({
+          network: 'testnet',
+          hex: bytesToHex(psbt.toPSBT()),
+          descriptor: vaultDescriptor,
+        }),
+        clickActionButton(context)('Confirm'),
+      ]);
+
+      delete result.id;
+
+      test.expect(result.result).toBeDefined();
+      const signedTx = btc.Transaction.fromPSBT(hexToBytes(result.result.hex));
+      const partialSig = signedTx.getInput(0).partialSig;
+      test.expect(partialSig).toBeDefined();
+      test.expect(bytesToHex(partialSig![0][0])).toEqual(bytesToHex(vaultAddressKey.publicKey!));
+    });
+
     const singleKeyDescriptor = `wsh(pk(${nativeSegwitAccountXpub}/0/*))`;
     const { scriptPubKey: singleKeyScriptPubKey } = compileWshDescriptor(singleKeyDescriptor);
 
@@ -744,7 +781,10 @@ test.describe('Sign PSBT', () => {
     });
 
     test('that a descriptor without the current account is rejected', async ({ page, context }) => {
-      const foreignDescriptor = `wsh(and_v(v:or_i(after(1000),and_v(v:sha256(${digest}),pk(${otherAccountXpub}/0/*))),pk(${otherAccountXpub}/1/*)))`;
+      const anotherForeignXpub = HDKey.fromMasterSeed(new Uint8Array(32).fill(3)).derive(
+        "m/84'/1'/0'"
+      ).publicExtendedKey;
+      const foreignDescriptor = `wsh(and_v(v:or_i(after(1000),and_v(v:sha256(${digest}),pk(${otherAccountXpub}/0/*))),pk(${anotherForeignXpub}/0/*)))`;
       const psbt = createDescriptorTestPsbt();
       const [result] = await Promise.all([
         initiatePsbtSigning(page)({

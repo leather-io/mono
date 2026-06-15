@@ -168,6 +168,23 @@ describe(useSignLedgerDescriptorTx.name, () => {
     );
   });
 
+  test('strips the stale account signature at the descriptor key path index', async () => {
+    const vaultIndexDescriptor = `wsh(multi(2,${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/7,${accountKeychain.publicExtendedKey}/0/7))`;
+    const accountVaultIndexKey = accountKeychain.deriveChild(0).deriveChild(7);
+    const cosignerVaultIndexKey = makeNativeSegwitAccountKeychain(2).deriveChild(0).deriveChild(7);
+    const vaultSigningConfig = [{ index: 0, derivationPath: "m/84'/0'/0'/0/7" }];
+    const rawPsbt = buildDescriptorTx(vaultIndexDescriptor, [
+      accountVaultIndexKey,
+      cosignerVaultIndexKey,
+    ]).toPSBT();
+
+    await signTx(makeFakeLedgerApp(), rawPsbt, vaultIndexDescriptor, vaultSigningConfig);
+
+    expect(partialSigPubkeysAtSignTime).toEqual([
+      bytesToHex(requireDefined(cosignerVaultIndexKey.publicKey)),
+    ]);
+  });
+
   test('removes the partialSig field entirely when only the account had signed', async () => {
     const signedTx = await signLedgerDescriptorTx([accountAddressIndexKey]);
 
