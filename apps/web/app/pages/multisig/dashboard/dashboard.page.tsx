@@ -97,7 +97,7 @@ function ConnectChainPrompt({
           You'll be able to create and join {label} multisig vaults alongside your existing ones.
         </styled.p>
       </Box>
-      <Button variant="outline" aria-busy={isPending} onClick={onConnect}>
+      <Button variant="outline" disabled={isPending} aria-busy={isPending} onClick={onConnect}>
         Connect {label}
       </Button>
     </Flex>

@@ -72,7 +72,13 @@ function ConnectChainCallout({
           Leather needs your {chainLabel} key to add you as the first signer.
         </styled.p>
       </Box>
-      <Button variant="solid" size="sm" aria-busy={isPending} onClick={onConnect}>
+      <Button
+        variant="solid"
+        size="sm"
+        disabled={isPending}
+        aria-busy={isPending}
+        onClick={onConnect}
+      >
         Connect {chainLabel}
       </Button>
     </Flex>

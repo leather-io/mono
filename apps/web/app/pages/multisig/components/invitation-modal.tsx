@@ -59,7 +59,7 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
         <Flex gap="space.03" justifyContent="flex-end" width="100%">
           <Button
             variant="outline"
-            disabled={!myMembership || joinVault.isPending}
+            disabled={!myMembership || joinVault.isPending || declineVault.isPending}
             aria-busy={declineVault.isPending}
             onClick={decline}
           >
@@ -67,7 +67,7 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
           </Button>
           <Button
             variant="solid"
-            disabled={!myMembership || declineVault.isPending}
+            disabled={!myMembership || joinVault.isPending || declineVault.isPending}
             aria-busy={joinVault.isPending}
             onClick={accept}
           >

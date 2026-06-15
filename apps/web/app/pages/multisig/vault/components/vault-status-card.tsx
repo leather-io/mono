@@ -101,7 +101,13 @@ export function VaultStatusCard({
           borderTopStyle="solid"
           borderTopColor="ink.border-default"
         >
-          <Button variant="outline" fullWidth aria-busy={isCancelling} onClick={onCancelVault}>
+          <Button
+            variant="outline"
+            fullWidth
+            disabled={isCancelling}
+            aria-busy={isCancelling}
+            onClick={onCancelVault}
+          >
             Cancel vault
           </Button>
         </Box>
