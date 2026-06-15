@@ -157,6 +157,7 @@ export function CreateVaultPage() {
   const hasInvalidMember = memberStatuses.some(status => status.state === 'invalid');
 
   function validationError(): string | null {
+    if (!connected[chain]) return `Connect your ${chainLabel} wallet to continue.`;
     if (name.trim() === '') return 'Give your vault a name to continue.';
     if (memberAddresses.length < 2) return 'Add at least one other member to continue.';
     if (hasInvalidMember) return 'Fix the highlighted member addresses.';

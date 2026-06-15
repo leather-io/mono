@@ -55,12 +55,14 @@ export function VaultDetailPage() {
   const inStx = stxVaults.data?.some(summary => summary.id === vaultId) ?? false;
   const vaultNetworkKnown = inBtc || inStx;
 
-  const btcVault = useVault('btc:mainnet', !vaultNetworkKnown || inBtc ? vaultId : undefined);
-  const stxVault = useVault('stx:mainnet', !vaultNetworkKnown || inStx ? vaultId : undefined);
+  const btcVault = useVault('btc:mainnet', inBtc ? vaultId : undefined);
+  const stxVault = useVault('stx:mainnet', inStx ? vaultId : undefined);
   const vault = btcVault.data ?? stxVault.data;
   const network: AuthNetworkId = vault?.network ?? (inStx ? 'stx:mainnet' : 'btc:mainnet');
-  const isLoading = btcVault.isLoading || stxVault.isLoading;
-  const hasFetched = btcVault.isFetched || stxVault.isFetched;
+
+  const listsResolving = btcVaults.isLoading || stxVaults.isLoading;
+  const detailResolving = vaultNetworkKnown && !(btcVault.isFetched || stxVault.isFetched);
+  const isResolving = listsResolving || detailResolving;
 
   const me = useMultisigMe(network);
   const cancelVault = useCancelVault(network);
@@ -68,7 +70,6 @@ export function VaultDetailPage() {
   const declineVault = useDeclineVault(network);
 
   if (!vault) {
-    const isResolving = isLoading || !hasFetched;
     return (
       <Page>
         <Page.Header title="Vault" backTo={multisigPaths.index} />
