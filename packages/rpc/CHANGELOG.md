@@ -411,6 +411,22 @@
     * @leather.io/stacks bumped to 1.17.3
     * @leather.io/utils bumped to 0.46.4
 
+## [2.22.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.22.1...@leather.io/rpc-v2.22.2) (2026-06-15)
+
+
+### Bug Fixes
+
+* implement wsh signing in signPsbt ([#2374](https://github.com/leather-io/mono/issues/2374)) ([82f6216](https://github.com/leather-io/mono/commit/82f621646a4ff619e31090be9eb24ec148866349))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.57.0
+    * @leather.io/stacks bumped to 1.20.2
+    * @leather.io/utils bumped to 0.51.5
+
 ## [2.22.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.22.0...@leather.io/rpc-v2.22.1) (2026-06-01)
 
 

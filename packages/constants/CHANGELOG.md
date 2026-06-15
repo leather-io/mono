@@ -215,6 +215,20 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.36.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.36.0...@leather.io/constants-v0.36.1) (2026-06-15)
+
+
+### Bug Fixes
+
+* add support for tpubs ([#2381](https://github.com/leather-io/mono/issues/2381)) ([09d4c94](https://github.com/leather-io/mono/commit/09d4c944af9b0f74bb15379382d47ad45f11832f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.57.0
+
 ## [0.36.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.35.1...@leather.io/constants-v0.36.0) (2026-06-01)
 
 

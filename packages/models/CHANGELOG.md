@@ -36,6 +36,14 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.57.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.56.1...@leather.io/models-v0.57.0) (2026-06-15)
+
+
+### Features
+
+* auth infrastructure ([#2368](https://github.com/leather-io/mono/issues/2368)) ([f3d4b3e](https://github.com/leather-io/mono/commit/f3d4b3e91e86f0d69606c21f67985b3eed762f1f))
+* **services:** multisig service vaults ([#2378](https://github.com/leather-io/mono/issues/2378)) ([4351c6c](https://github.com/leather-io/mono/commit/4351c6c26b256fd4007d70020bc588bf109f7b89))
+
 ## [0.56.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.56.0...@leather.io/models-v0.56.1) (2026-06-01)
 
 

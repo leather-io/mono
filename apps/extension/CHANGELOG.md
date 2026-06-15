@@ -40,6 +40,38 @@
 
 ---
 
+## [6.103.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.103.0...@leather.io/extension-v6.103.1) (2026-06-15)
+
+
+### Bug Fixes
+
+* add non zero index signing for descriptor mode in signPsbt ([#2382](https://github.com/leather-io/mono/issues/2382)) ([ad289a7](https://github.com/leather-io/mono/commit/ad289a7a03b0bc11042b3e335b58b8d39d2e0cf6))
+* add support for tpubs ([#2381](https://github.com/leather-io/mono/issues/2381)) ([09d4c94](https://github.com/leather-io/mono/commit/09d4c944af9b0f74bb15379382d47ad45f11832f))
+* audit react-router ([#2369](https://github.com/leather-io/mono/issues/2369)) ([80a7ed8](https://github.com/leather-io/mono/commit/80a7ed886eb9981d85fdfda6736c37f488b37d06))
+* btc account selection in signPsbt flow ([#2384](https://github.com/leather-io/mono/issues/2384)) ([0acc820](https://github.com/leather-io/mono/commit/0acc820215ad906b1695d56deb5eafca50dd12b7))
+* implement wsh signing in signPsbt ([#2374](https://github.com/leather-io/mono/issues/2374)) ([82f6216](https://github.com/leather-io/mono/commit/82f621646a4ff619e31090be9eb24ec148866349))
+* networks bug ([#2379](https://github.com/leather-io/mono/issues/2379)) ([01d0c87](https://github.com/leather-io/mono/commit/01d0c87860b18ff5952cac03a12f42f8f9b9165a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.20.2
+    * @leather.io/bitcoin bumped to 0.38.0
+    * @leather.io/constants bumped to 0.36.1
+    * @leather.io/crypto bumped to 1.12.24
+    * @leather.io/features bumped to 1.4.6
+    * @leather.io/models bumped to 0.57.0
+    * @leather.io/provider bumped to 1.6.27
+    * @leather.io/queries bumped to 0.10.2
+    * @leather.io/query bumped to 2.49.1
+    * @leather.io/rpc bumped to 2.22.2
+    * @leather.io/services bumped to 1.57.0
+    * @leather.io/stacks bumped to 1.20.2
+    * @leather.io/ui bumped to 1.112.0
+    * @leather.io/utils bumped to 0.51.5
+
 ## [6.103.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.102.0...@leather.io/extension-v6.103.0) (2026-06-01)
 
 

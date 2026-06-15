@@ -939,6 +939,32 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.38.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.37.7...@leather.io/bitcoin-v0.38.0) (2026-06-15)
+
+
+### Features
+
+* auth infrastructure ([#2368](https://github.com/leather-io/mono/issues/2368)) ([f3d4b3e](https://github.com/leather-io/mono/commit/f3d4b3e91e86f0d69606c21f67985b3eed762f1f))
+
+
+### Bug Fixes
+
+* add non zero index signing for descriptor mode in signPsbt ([#2382](https://github.com/leather-io/mono/issues/2382)) ([ad289a7](https://github.com/leather-io/mono/commit/ad289a7a03b0bc11042b3e335b58b8d39d2e0cf6))
+* add support for tpubs ([#2381](https://github.com/leather-io/mono/issues/2381)) ([09d4c94](https://github.com/leather-io/mono/commit/09d4c944af9b0f74bb15379382d47ad45f11832f))
+* implement wsh signing in signPsbt ([#2374](https://github.com/leather-io/mono/issues/2374)) ([82f6216](https://github.com/leather-io/mono/commit/82f621646a4ff619e31090be9eb24ec148866349))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.36.1
+    * @leather.io/crypto bumped to 1.12.24
+    * @leather.io/models bumped to 0.57.0
+    * @leather.io/utils bumped to 0.51.5
+  * devDependencies
+    * @leather.io/rpc bumped to 2.22.2
+
 ## [0.37.7](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.37.6...@leather.io/bitcoin-v0.37.7) (2026-06-01)
 
 
