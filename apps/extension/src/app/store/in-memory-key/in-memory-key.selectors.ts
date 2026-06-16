@@ -1,12 +1,11 @@
 import { useSelector } from 'react-redux';
 
-import { createSelector } from '@reduxjs/toolkit';
-
 import { deriveRootKeychainFromMnemonicSync } from '@leather.io/crypto';
 
 import { RootState } from '..';
 import { selectCurrentAccount, selectSoftwareKeys } from '../software-keys/software-key.selectors';
 import * as inMemoryStore from './in-memory-storage';
+import { createKeychainSelector, registerKeychainSelectorCache } from './keychain-selector-cache';
 import { useInMemoryKeys } from './use-in-memory-keys';
 
 export function useHasLockedSoftwareWallets() {
@@ -42,19 +41,22 @@ export function useWalletSecretKey(fingerprint: string | undefined) {
   const { getKey } = useInMemoryKeys();
   return fingerprint ? getKey(fingerprint) : undefined;
 }
-export const selectRootKeychainsAtVersion = createSelector(
-  [selectSoftwareKeys, (_state: RootState, version: number) => version],
-  softwareKeys => {
-    return Object.fromEntries(
-      softwareKeys
-        .map(wallet => {
-          const key = inMemoryStore.getKey(wallet.id);
-          if (!key) return null;
-          return [wallet.id, deriveRootKeychainFromMnemonicSync(key)];
-        })
-        .filter((entry): entry is [string, ReturnType<typeof deriveRootKeychainFromMnemonicSync>] =>
-          Boolean(entry)
-        )
-    );
-  }
+export const selectRootKeychainsAtVersion = registerKeychainSelectorCache(
+  createKeychainSelector(
+    [selectSoftwareKeys, (_state: RootState, version: number) => version],
+    softwareKeys => {
+      return Object.fromEntries(
+        softwareKeys
+          .map(wallet => {
+            const key = inMemoryStore.getKey(wallet.id);
+            if (!key) return null;
+            return [wallet.id, deriveRootKeychainFromMnemonicSync(key)];
+          })
+          .filter(
+            (entry): entry is [string, ReturnType<typeof deriveRootKeychainFromMnemonicSync>] =>
+              Boolean(entry)
+          )
+      );
+    }
+  )
 );

@@ -29,6 +29,10 @@ import type { BitcoinKeychain } from '@leather.io/state/keychains';
 import { useWalletType } from '@app/common/use-wallet-type';
 import type { RootState } from '@app/store';
 import { selectRootKeychainsAtVersion } from '@app/store/in-memory-key/in-memory-key.selectors';
+import {
+  createKeychainSelector,
+  registerKeychainSelectorCache,
+} from '@app/store/in-memory-key/keychain-selector-cache';
 import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { selectBitcoinKeychains } from '@app/store/keychains/keychain.selectors';
 import { selectCurrentNetwork, useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -62,18 +66,17 @@ function createSoftwareAccountKeychainGenerator(rootKeychain: HDKey) {
   };
 }
 
-const selectSoftwareWalletBitcoinKeychainGenerator = createSelector(
-  selectRootKeychainsAtVersion,
-  rootKeychain =>
+const selectSoftwareWalletBitcoinKeychainGenerator = registerKeychainSelectorCache(
+  createKeychainSelector(selectRootKeychainsAtVersion, rootKeychain =>
     mapValues(rootKeychain, keychain => createSoftwareAccountKeychainGenerator(keychain))
+  )
 );
 
 // This could be written as a single selector, but the intention is to be
 // explicit about the transition of store-level keychain (descriptor only) to
 // the more useful `BitcoinAccount` interface
-const selectSoftwareWalletBitcoinAccountGenerator = createSelector(
-  selectSoftwareWalletBitcoinKeychainGenerator,
-  accountKeychainGenerator =>
+const selectSoftwareWalletBitcoinAccountGenerator = registerKeychainSelectorCache(
+  createKeychainSelector(selectSoftwareWalletBitcoinKeychainGenerator, accountKeychainGenerator =>
     mapValues(
       accountKeychainGenerator,
       (generator: ReturnType<typeof createSoftwareAccountKeychainGenerator>) =>
@@ -82,6 +85,7 @@ const selectSoftwareWalletBitcoinAccountGenerator = createSelector(
           return initializeBitcoinAccountKeychainFromDescriptor(keychainWithDescriptor.descriptor);
         }
     )
+  )
 );
 
 const selectLedgerBitcoinAccountLookup = createSelector(
@@ -109,16 +113,18 @@ const selectLedgerBitcoinAccountLookup = createSelector(
 // This selector combines software wallet bitcoin account derivation, and look
 // up to see if we have matching Ledger keys in the wallet, in a single lookup
 // function
-const selectBitcoinAccountLookup = createSelector(
-  selectSoftwareWalletBitcoinAccountGenerator,
-  selectLedgerBitcoinAccountLookup,
-  (softwareGenerators, ledgerKeyLookup) =>
-    (fingerprint: string) =>
-    (args: BitcoinAccountDerivationRequirements) => {
-      const softwareGenerator = softwareGenerators[fingerprint];
-      if (softwareGenerator) return softwareGenerator(args);
-      return ledgerKeyLookup(fingerprint)(args);
-    }
+const selectBitcoinAccountLookup = registerKeychainSelectorCache(
+  createKeychainSelector(
+    selectSoftwareWalletBitcoinAccountGenerator,
+    selectLedgerBitcoinAccountLookup,
+    (softwareGenerators, ledgerKeyLookup) =>
+      (fingerprint: string) =>
+      (args: BitcoinAccountDerivationRequirements) => {
+        const softwareGenerator = softwareGenerators[fingerprint];
+        if (softwareGenerator) return softwareGenerator(args);
+        return ledgerKeyLookup(fingerprint)(args);
+      }
+  )
 );
 
 export function useBitcoinAccountLookup() {
@@ -129,11 +135,13 @@ export function useBitcoinAccountLookup() {
 // Selector exists as a convenience to not have to pass in the current network
 // each time, while not defaulting to only working with the existing network
 type RequirementsWithoutNetwork = Omit<BitcoinAccountDerivationRequirements, 'network'>;
-export const selectCurrentNetworkBitcoinAccountLookup = createSelector(
-  selectBitcoinAccountLookup,
-  selectCurrentNetwork,
-  (accountLookup, network) => (fingerprint: string) => (args: RequirementsWithoutNetwork) =>
-    accountLookup(fingerprint)({ ...args, network: network.chain.bitcoin.mode })
+export const selectCurrentNetworkBitcoinAccountLookup = registerKeychainSelectorCache(
+  createKeychainSelector(
+    selectBitcoinAccountLookup,
+    selectCurrentNetwork,
+    (accountLookup, network) => (fingerprint: string) => (args: RequirementsWithoutNetwork) =>
+      accountLookup(fingerprint)({ ...args, network: network.chain.bitcoin.mode })
+  )
 );
 
 export function useBitcoinScureLibNetworkConfig() {
@@ -202,14 +210,17 @@ function createBitcoinSoftwareSigner(rootKeychain: HDKey) {
   };
 }
 
-const selectSoftwareWalletBitcoinSignerGenerator = createSelector(
-  selectRootKeychainsAtVersion,
-  rootKeychains => mapValues(rootKeychains, keychain => createBitcoinSoftwareSigner(keychain))
+const selectSoftwareWalletBitcoinSignerGenerator = registerKeychainSelectorCache(
+  createKeychainSelector(selectRootKeychainsAtVersion, rootKeychains =>
+    mapValues(rootKeychains, keychain => createBitcoinSoftwareSigner(keychain))
+  )
 );
 
-const selectBitcoinSoftwareSignerLookup = createSelector(
-  selectSoftwareWalletBitcoinSignerGenerator,
-  generators => (fingerprint: string) => generators[fingerprint]
+const selectBitcoinSoftwareSignerLookup = registerKeychainSelectorCache(
+  createKeychainSelector(
+    selectSoftwareWalletBitcoinSignerGenerator,
+    generators => (fingerprint: string) => generators[fingerprint]
+  )
 );
 
 export function useBitcoinSoftwareSignerLookup() {

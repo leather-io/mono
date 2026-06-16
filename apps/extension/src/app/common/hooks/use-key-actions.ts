@@ -18,6 +18,7 @@ import { changeActiveAccount } from '@app/store/active/active.actions';
 import { createNewAccount } from '@app/store/chains/stx-chain.actions';
 import { useStacksClient } from '@app/store/common/api-clients.hooks';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
+import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-selector-cache';
 import { clearWalletSession } from '@app/store/session-restore';
 import { keyActions } from '@app/store/software-keys/software-key.actions';
 
@@ -73,6 +74,7 @@ export function useKeyActions() {
       async signOut() {
         await clearWalletSession();
         inMemoryStore.clearAll();
+        clearKeychainSelectorCaches();
         dispatch(resetWallet());
         await clearChromeStorage();
         partiallyClearLocalStorage();
@@ -83,6 +85,7 @@ export function useKeyActions() {
       async lockWallet({ afterLock }: { afterLock?(): void }) {
         await clearWalletSession();
         inMemoryStore.clearAll();
+        clearKeychainSelectorCaches();
         void broadcastWalletLock();
         afterLock?.();
         window.location.reload();

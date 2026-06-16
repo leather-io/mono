@@ -21,6 +21,7 @@ import { useOnWalletLock } from '@app/routes/hooks/use-on-wallet-lock';
 import { persistor, useAppDispatch, useHasStateRehydrated } from '@app/store';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
+import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-selector-cache';
 
 import { useSyncAddressMonitor } from '../address-monitor/use-sync-address-monitor';
 import { useRestoreFormState } from '../popup-send-form-restoration/use-restore-form-state';
@@ -38,15 +39,18 @@ export function Container() {
   useSyncAddressMonitor();
   useOnWalletLock(() => {
     inMemoryStore.clearAll();
+    clearKeychainSelectorCaches();
     window.location.reload();
   });
   useOnSignOut(() => {
     inMemoryStore.clearAll();
+    clearKeychainSelectorCaches();
     window.location.reload();
   });
   useOnWalletListChanged(({ removedFingerprint }) => {
     if (removedFingerprint) {
       inMemoryStore.removeKey(removedFingerprint);
+      clearKeychainSelectorCaches();
       dispatch(userRemovesWallet({ fingerprint: removedFingerprint }));
       return;
     }
