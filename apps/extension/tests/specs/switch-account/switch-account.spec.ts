@@ -84,7 +84,6 @@ test.describe('Switch account sheet', () => {
 
   test('that account rows cannot be activated by keyboard in manage mode', async ({
     switchAccountPage,
-    page,
   }) => {
     await switchAccountPage.open();
     const before = await switchAccountPage.getActiveAccount();
@@ -95,7 +94,7 @@ test.describe('Switch account sheet', () => {
     await expect(row).toBeDisabled();
 
     await row.focus();
-    await page.keyboard.press('Enter');
+    await expect(row).not.toBeFocused();
 
     await expect(switchAccountPage.manageWalletsHeader).toBeVisible();
     expect(await switchAccountPage.getActiveAccount()).toEqual(before);

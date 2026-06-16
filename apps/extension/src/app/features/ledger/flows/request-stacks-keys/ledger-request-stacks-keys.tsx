@@ -105,8 +105,8 @@ function LedgerRequestStacksKeys() {
             return !stxKeychainsDescriptors.includes(keychain.descriptor);
           });
 
-        dispatch(addOrMigrateLedgerKeychains({ fingerprint, accountKeychains: keychains }));
-        dispatch(activateFirstVisibleAccount(fingerprint));
+        void dispatch(addOrMigrateLedgerKeychains({ fingerprint, accountKeychains: keychains }));
+        void dispatch(activateFirstVisibleAccount(fingerprint));
         return { status: 'success' };
       },
     });

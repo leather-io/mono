@@ -38,7 +38,7 @@ function runThunk() {
   const dispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue({});
-  activateFirstVisibleAccount(fingerprint)(dispatch, getState, undefined);
+  void activateFirstVisibleAccount(fingerprint)(dispatch, getState, undefined);
   return dispatch;
 }
 

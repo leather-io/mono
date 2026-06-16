@@ -30,7 +30,7 @@ export function RenameAccountDialog({ accountId, isShowing, onClose }: RenameAcc
   function handleSave() {
     const trimmed = name.trim().substring(0, ACCOUNT_MAX_NAME_LENGTH);
     if (!trimmed) return;
-    dispatch(
+    void dispatch(
       renameAccount(makeAccountIdentifer(accountId.fingerprint, accountId.accountIndex), trimmed)
     );
     onClose();

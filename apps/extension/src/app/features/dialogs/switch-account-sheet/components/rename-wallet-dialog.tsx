@@ -29,7 +29,7 @@ export function RenameWalletDialog({
   function handleSave() {
     const trimmed = name.trim().substring(0, WALLET_MAX_NAME_LENGTH);
     if (!trimmed) return;
-    dispatch(renameWallet(fingerprint, trimmed));
+    void dispatch(renameWallet(fingerprint, trimmed));
     onClose();
   }
 

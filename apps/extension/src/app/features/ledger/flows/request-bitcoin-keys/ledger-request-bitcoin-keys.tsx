@@ -99,7 +99,7 @@ function LedgerRequestBitcoinKeys() {
           );
         }
 
-        dispatch(activateFirstVisibleAccount(fingerprint));
+        void dispatch(activateFirstVisibleAccount(fingerprint));
         return { status: 'success' };
       },
     });

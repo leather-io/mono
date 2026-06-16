@@ -64,7 +64,7 @@ function runThunk(
   const dispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue(state);
-  addOrMigrateLedgerKeychains(args)(dispatch, getState, undefined);
+  void addOrMigrateLedgerKeychains(args)(dispatch, getState, undefined);
   return dispatch;
 }
 
