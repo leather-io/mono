@@ -211,6 +211,26 @@ function unlockWalletAction(password: string): AppThunk {
       }
     }
 
+    // Pre-Argon2 / vault-migrated wallets have no top-level salt, so decryptMnemonic
+    // took its legacy path and re-encrypted the key with a freshly generated Argon2
+    // salt. Persist that salt and re-encrypted key here, otherwise selectWalletSalt
+    // stays undefined and the add-wallet password check (useCheckPassword) can never
+    // pass for these users.
+    if (!salt) {
+      const reEncrypted = decryptedResults[0];
+      dispatch(
+        keySlice.actions.softwareKeyReEncrypted({
+          salt: reEncrypted.salt,
+          key: {
+            type: 'software',
+            id: reEncrypted.fingerprint,
+            encryptedSecretKey: reEncrypted.encryptedSecretKey,
+          },
+        })
+      );
+      await persistor.flush();
+    }
+
     await initalizeWalletSession(decryptedResults[0].encryptionKey);
 
     for (const { fingerprint, secretKey } of decryptedResults) {
