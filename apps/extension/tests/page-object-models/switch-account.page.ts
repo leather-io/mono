@@ -10,6 +10,7 @@ export class SwitchAccountPage {
   readonly trigger: Locator;
   readonly currentAccountName: Locator;
   readonly addWalletButton: Locator;
+  readonly addAccountButton: Locator;
   readonly manageButton: Locator;
   readonly doneButton: Locator;
   readonly selectAccountHeader: Locator;
@@ -23,6 +24,7 @@ export class SwitchAccountPage {
     this.trigger = page.getByTestId(SettingsSelectors.SigningAccountCard);
     this.currentAccountName = page.getByTestId(SettingsSelectors.CurrentAccountDisplayName);
     this.addWalletButton = page.getByRole('button', { name: 'Add wallet' });
+    this.addAccountButton = page.getByTestId(SwitchAccountSelectors.CreateAccountBtn);
     this.manageButton = page.getByRole('button', { name: 'Manage' });
     this.doneButton = page.getByRole('button', { name: 'Done' });
     this.selectAccountHeader = page.getByRole('heading', { name: 'Select account' });
@@ -97,6 +99,16 @@ export class SwitchAccountPage {
         ?.stx;
       return stx ? Object.keys(stx) : [];
     });
+  }
+
+  async getHighestAccountIndex(fingerprint: string) {
+    return this.page.evaluate(async fp => {
+      const store = await window.debug.getPersistedStore();
+      const stx = (
+        store as { chains?: { stx?: Record<string, { highestAccountIndex?: number }> } } | undefined
+      )?.chains?.stx;
+      return stx?.[fp]?.highestAccountIndex ?? -1;
+    }, fingerprint);
   }
 
   async selectAccount(accountIndex: number) {

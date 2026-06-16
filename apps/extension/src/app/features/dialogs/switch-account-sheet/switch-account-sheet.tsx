@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { GroupedVirtuoso } from 'react-virtuoso';
 
@@ -49,6 +49,8 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
   const walletTree = useWalletAccountRefTree();
   const navigate = useNavigate();
   const hiddenAccountIds = useHiddenAccountIds();
+  const isCreatingAccountRef = useRef(false);
+  const [creatingFingerprint, setCreatingFingerprint] = useState<string | null>(null);
   const [isAddWalletSheetOpen, setIsAddWalletSheetOpen] = useState(false);
   const [isManageMode, setIsManageMode] = useState(false);
   const [renamingWallet, setRenamingWallet] = useState<RenamingWallet | null>(null);
@@ -96,7 +98,17 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
     return 0;
   }, [filteredWalletTree, groupCounts, currentAccountId]);
 
+  useEffect(() => {
+    if (isShowing) {
+      isCreatingAccountRef.current = false;
+      setCreatingFingerprint(null);
+    }
+  }, [isShowing]);
+
   function onCreateAccount(fingerprint: string) {
+    if (isCreatingAccountRef.current) return;
+    isCreatingAccountRef.current = true;
+    setCreatingFingerprint(fingerprint);
     requestIdleCallback(async () => {
       await createAccount(fingerprint);
       onClose();
@@ -217,10 +229,13 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
                 const isAddAccountButton = localIndex >= accountCount;
 
                 if (isAddAccountButton) {
+                  const isCreating = creatingFingerprint === wallet.fingerprint;
                   return (
                     <Box px="space.05" py="space.03">
                       <Pressable
                         onClick={() => onCreateAccount(wallet.fingerprint)}
+                        disabled={isCreating}
+                        aria-busy={isCreating}
                         data-testid={SwitchAccountSelectors.CreateAccountBtn}
                       >
                         <Flex alignItems="center" gap="space.03">

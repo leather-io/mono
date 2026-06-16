@@ -51,6 +51,27 @@ test.describe('Switch account sheet', () => {
     await expect(page.getByText('Back up your Secret Key')).toBeVisible();
   });
 
+  test('that rapidly double-clicking add account creates only one account', async ({
+    switchAccountPage,
+  }) => {
+    await switchAccountPage.open();
+
+    const activeAccount = await switchAccountPage.getActiveAccount();
+    if (!activeAccount) throw new Error('Expected an active account before adding one');
+    const { fingerprint } = activeAccount;
+    const before = await switchAccountPage.getHighestAccountIndex(fingerprint);
+
+    await switchAccountPage.addAccountButton.first().dblclick();
+    await switchAccountPage.selectAccountHeader.waitFor({ state: 'hidden' });
+
+    await expect
+      .poll(async () => switchAccountPage.getHighestAccountIndex(fingerprint), { timeout: 5000 })
+      .toBe(before + 1);
+
+    await switchAccountPage.page.waitForTimeout(1000);
+    expect(await switchAccountPage.getHighestAccountIndex(fingerprint)).toBe(before + 1);
+  });
+
   test('that manage mode can be toggled on and off', async ({ switchAccountPage, page }) => {
     await switchAccountPage.open();
     await switchAccountPage.enterManageMode();
