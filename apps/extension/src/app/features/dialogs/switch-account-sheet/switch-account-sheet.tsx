@@ -260,11 +260,12 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
                   return (
                     <Box px="space.05" py="space.03" opacity={hidden ? 0.5 : 1}>
                       <Flex alignItems="center" gap="space.02">
-                        <Box minWidth={0} flex="1" pointerEvents="none">
+                        <Box minWidth={0} flex="1">
                           <SwitchAccountListItem
                             handleClose={noop}
                             accountId={accountId}
                             walletType={wallet.type}
+                            disabled
                           />
                         </Box>
                         <AccountActionMenu

@@ -81,4 +81,23 @@ test.describe('Switch account sheet', () => {
     await page.getByRole('button', { name: 'Done' }).click();
     await expect(switchAccountPage.selectAccountHeader).toBeVisible();
   });
+
+  test('that account rows cannot be activated by keyboard in manage mode', async ({
+    switchAccountPage,
+    page,
+  }) => {
+    await switchAccountPage.open();
+    const before = await switchAccountPage.getActiveAccount();
+
+    await switchAccountPage.enterManageMode();
+
+    const row = switchAccountPage.accountRow(1);
+    await expect(row).toBeDisabled();
+
+    await row.focus();
+    await page.keyboard.press('Enter');
+
+    await expect(switchAccountPage.manageWalletsHeader).toBeVisible();
+    expect(await switchAccountPage.getActiveAccount()).toEqual(before);
+  });
 });

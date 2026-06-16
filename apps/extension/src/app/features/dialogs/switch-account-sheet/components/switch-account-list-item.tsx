@@ -21,11 +21,13 @@ import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/acc
 
 interface SwitchAccountListItemProps {
   accountId: AccountId;
+  disabled?: boolean;
   handleClose(): void;
   walletType: WalletType;
 }
 export function SwitchAccountListItem({
   accountId,
+  disabled,
   handleClose,
   walletType,
 }: SwitchAccountListItemProps) {
@@ -72,6 +74,7 @@ export function SwitchAccountListItem({
         />
       }
       balanceLabel={<AccountTotalBalance accountId={accountId} />}
+      disabled={disabled}
       isLoading={isLoading}
       isSelected={isSelected}
       onSelectAccount={handleClick}

@@ -72,6 +72,10 @@ export class SwitchAccountPage {
     return this.page.getByTestId(getSwitchAccountSheetAccountNameSelector(accountIndex));
   }
 
+  accountRow(accountIndex: number) {
+    return this.page.getByTestId(`switch-account-item-${accountIndex}`);
+  }
+
   async getPersistedAccountIds() {
     return this.page.evaluate(async () => {
       const store = await window.debug.getPersistedStore();
