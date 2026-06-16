@@ -1,18 +1,21 @@
-import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
+import {
+  useCancelVault,
+  useDeclineVault,
+  useJoinVault,
+} from '~/features/multisig/vaults/use-vault-mutations';
+import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
+import { useToast } from '~/features/toasts/use-toast';
 import { Page } from '~/layouts/page/page';
 
+import type { AuthNetworkId } from '@leather.io/models';
+import { Button, Callout } from '@leather.io/ui';
+
 import { MultisigErrorState } from '../components/multisig-error-state';
-import { MultisigHero } from '../components/multisig-hero';
-import { useMultisigToast } from '../components/multisig-toast';
-import { TxRow } from '../components/tx-row';
-import { CreateAccountModal } from '../modals/create-account-modal';
-import { ShareInvitesModal } from '../modals/share-invites-modal';
 import { multisigPaths } from '../multisig.constants';
-import { useMultisigActions, useVault, useVaults } from '../store/use-multisig';
-import { AccountsList } from './components/accounts-list';
 import { MembersSection } from './components/members-section';
 import { VaultStatusCard } from './components/vault-status-card';
 
@@ -24,100 +27,146 @@ function SectionLabel({ children }: { children: string }) {
   );
 }
 
-function formatUsd(amount: number): string {
-  return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+function ComingSoon({ children }: { children: string }) {
+  return (
+    <Box
+      borderRadius="md"
+      borderWidth="1px"
+      borderStyle="dashed"
+      borderColor="ink.border-default"
+      p="space.05"
+      textAlign="center"
+    >
+      <styled.span textStyle="caption.01" color="ink.text-subdued">
+        {children}
+      </styled.span>
+    </Box>
+  );
 }
 
 export function VaultDetailPage() {
   const { vaultId } = useParams();
-  const vault = useVault(vaultId);
-  const vaults = useVaults();
   const navigate = useNavigate();
-  const { cancelVault } = useMultisigActions();
-  const { showToast } = useMultisigToast();
-  const [createAccountOpen, setCreateAccountOpen] = useState(false);
-  const [shareOpen, setShareOpen] = useState(false);
+  const { success: showToast } = useToast();
+
+  const btcVaults = useVaults('btc:mainnet');
+  const stxVaults = useVaults('stx:mainnet');
+  const inBtc = btcVaults.data?.some(summary => summary.id === vaultId) ?? false;
+  const inStx = stxVaults.data?.some(summary => summary.id === vaultId) ?? false;
+  const vaultNetworkKnown = inBtc || inStx;
+
+  const btcVault = useVault('btc:mainnet', inBtc ? vaultId : undefined);
+  const stxVault = useVault('stx:mainnet', inStx ? vaultId : undefined);
+  const vault = btcVault.data ?? stxVault.data;
+  const network: AuthNetworkId = vault?.network ?? (inStx ? 'stx:mainnet' : 'btc:mainnet');
+
+  const listsResolving = btcVaults.isLoading || stxVaults.isLoading;
+  const detailResolving = vaultNetworkKnown && !(btcVault.isFetched || stxVault.isFetched);
+  const isResolving = listsResolving || detailResolving;
+
+  const me = useMultisigMe(network);
+  const cancelVault = useCancelVault(network);
+  const joinVault = useJoinVault(network);
+  const declineVault = useDeclineVault(network);
 
   if (!vault) {
     return (
       <Page>
         <Page.Header title="Vault" backTo={multisigPaths.index} />
-        <MultisigErrorState
-          body={
-            <>
-              No vault with id <styled.code>{vaultId}</styled.code> in this session. Available:{' '}
-              {vaults.map(v => v.id).join(', ') || 'none'}.
-            </>
-          }
-        />
+        {isResolving ? (
+          <Flex direction="column" gap="space.03" mt="space.05">
+            {[0, 1, 2].map(index => (
+              <Box
+                key={index}
+                height="64px"
+                borderRadius="md"
+                bg="ink.component-background-default"
+                opacity={0.6}
+              />
+            ))}
+          </Flex>
+        ) : (
+          <MultisigErrorState
+            body={
+              <>
+                No vault found for <styled.code>{vaultId}</styled.code> — it may not exist or you
+                may not be a member.
+              </>
+            }
+          />
+        )}
       </Page>
     );
   }
 
+  const myMembership = vault.members.find(member => member.address === me.data?.address);
+  const isInvited = myMembership?.membershipStatus === 'invited';
+  const isCreator = vault.createdBy === me.data?.id;
+  const canCancel = isCreator && vault.status === 'pending';
+
   function onCancel() {
-    cancelVault(vault.id);
-    showToast(`“${vault.name}” cancelled`);
-    void navigate(multisigPaths.index);
+    cancelVault.mutate(vault.id, {
+      onSuccess() {
+        showToast(`“${vault.name}” cancelled`);
+        void navigate(multisigPaths.index);
+      },
+    });
   }
 
   return (
     <Page>
       <Page.Header title={vault.name} backTo={multisigPaths.index} />
+
+      {isInvited && myMembership && (
+        <Callout variant="info" title="You've been invited to this vault">
+          <Flex gap="space.03" mt="space.03">
+            <Button
+              variant="solid"
+              disabled={joinVault.isPending || declineVault.isPending}
+              aria-busy={joinVault.isPending}
+              onClick={() => joinVault.mutate(myMembership.membershipId)}
+            >
+              Accept invite
+            </Button>
+            <Button
+              variant="outline"
+              disabled={joinVault.isPending || declineVault.isPending}
+              aria-busy={declineVault.isPending}
+              onClick={() =>
+                declineVault.mutate(myMembership.membershipId, {
+                  onSuccess: () => void navigate(multisigPaths.index),
+                })
+              }
+            >
+              Decline
+            </Button>
+          </Flex>
+        </Callout>
+      )}
+
       <Flex direction={['column', 'column', 'row']} gap="space.06" alignItems="flex-start">
         <Box flex={['1', '1', '1.6']} width="100%">
-          <MultisigHero
-            themeId={vault.theme}
-            primary={vault.balanceSub}
-            secondary={formatUsd(vault.balanceUsd)}
-          />
-          <SectionLabel>Vault accounts</SectionLabel>
-          <AccountsList vault={vault} onCreate={() => setCreateAccountOpen(true)} />
           <SectionLabel>Vault members</SectionLabel>
-          <MembersSection vault={vault} onShareInvite={() => setShareOpen(true)} />
+          <MembersSection vault={vault} currentUserAddress={me.data?.address} />
+          <SectionLabel>Vault accounts</SectionLabel>
+          <ComingSoon>
+            Vault accounts will appear here once account creation is available.
+          </ComingSoon>
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel>Vault details</SectionLabel>
           <VaultStatusCard
             vault={vault}
-            onShareInvites={() => setShareOpen(true)}
+            canCancel={canCancel}
+            isCancelling={cancelVault.isPending}
             onCancelVault={onCancel}
           />
           <SectionLabel>Transactions</SectionLabel>
-          <Box
-            borderRadius="md"
-            borderWidth="1px"
-            borderStyle="solid"
-            borderColor="ink.border-default"
-            p="space.02"
-          >
-            {vault.transactions.length === 0 && (
-              <styled.div
-                textStyle="caption.01"
-                color="ink.text-subdued"
-                textAlign="center"
-                py="space.06"
-              >
-                No transactions yet.
-              </styled.div>
-            )}
-            {vault.transactions.map(tx => (
-              <TxRow
-                key={tx.id}
-                tx={tx}
-                vault={vault}
-                onClick={() => navigate(multisigPaths.tx(vault.id, tx.id))}
-              />
-            ))}
-          </Box>
+          <ComingSoon>
+            Transactions will appear here once the activity feed is available.
+          </ComingSoon>
         </Box>
       </Flex>
-
-      {createAccountOpen && (
-        <CreateAccountModal vault={vault} isShowing onClose={() => setCreateAccountOpen(false)} />
-      )}
-      {shareOpen && (
-        <ShareInvitesModal vault={vault} isShowing onClose={() => setShareOpen(false)} />
-      )}
     </Page>
   );
 }

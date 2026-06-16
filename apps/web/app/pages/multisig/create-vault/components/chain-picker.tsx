@@ -5,6 +5,7 @@ import type { Chain } from '../../data/multisig-types';
 
 interface ChainPickerProps {
   chain: Chain;
+  connected: Record<Chain, boolean>;
   onChange(chain: Chain): void;
 }
 
@@ -13,11 +14,12 @@ const chains: { id: Chain; label: string }[] = [
   { id: 'stx', label: 'Stacks multisig' },
 ];
 
-export function ChainPicker({ chain, onChange }: ChainPickerProps) {
+export function ChainPicker({ chain, connected, onChange }: ChainPickerProps) {
   return (
     <Flex gap="space.03">
       {chains.map(option => {
         const selected = chain === option.id;
+        const isConnected = connected[option.id];
         return (
           <styled.button
             key={option.id}
@@ -42,6 +44,12 @@ export function ChainPicker({ chain, onChange }: ChainPickerProps) {
             </Box>
             <Box minWidth={0}>
               <styled.div textStyle="label.02">{option.label}</styled.div>
+              <styled.div
+                textStyle="caption.01"
+                color={isConnected ? 'green.text-secondary' : 'ink.text-subdued'}
+              >
+                {isConnected ? 'Connected' : 'Disconnected'}
+              </styled.div>
             </Box>
           </styled.button>
         );

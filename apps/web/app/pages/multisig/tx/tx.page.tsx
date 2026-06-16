@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useToast } from '~/features/toasts/use-toast';
 import { Page } from '~/layouts/page/page';
 
 import { AvatarCircle } from '../components/avatar-circle';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
-import { useMultisigToast } from '../components/multisig-toast';
 import { multisigPaths } from '../multisig.constants';
 import { useMultisigActions, useVaultTx } from '../store/use-multisig';
 import { SignerRollcall } from './components/signer-rollcall';
@@ -65,7 +65,7 @@ export function TxDetailPage() {
   const { vaultId, txId } = useParams();
   const { vault, tx } = useVaultTx(vaultId, txId);
   const { signTransaction, broadcastTransaction, cancelTransaction } = useMultisigActions();
-  const { showToast } = useMultisigToast();
+  const { success: showToast } = useToast();
   const [verifying, setVerifying] = useState(false);
 
   if (!vault || !tx) {

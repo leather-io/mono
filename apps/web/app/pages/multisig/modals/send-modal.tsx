@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useToast } from '~/features/toasts/use-toast';
 
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
-import { useMultisigToast } from '../components/multisig-toast';
 import { TextField } from '../components/text-field';
 import type { MultisigAccount, Proposer, Vault } from '../data/multisig-types';
 import { useMultisigActions } from '../store/use-multisig';
@@ -18,7 +18,7 @@ interface SendModalProps {
 
 export function SendModal({ vault, account, isShowing, onClose }: SendModalProps) {
   const { proposeTransaction } = useMultisigActions();
-  const { showToast } = useMultisigToast();
+  const { success: showToast } = useToast();
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
 
