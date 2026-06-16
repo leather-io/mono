@@ -42,6 +42,7 @@ export function createNewAccount(fingerprint: string): AppThunk {
     dispatchAndReplay(
       stxChainSlice.actions.createNewAccount({
         fingerprint,
+        accountIndex: newAccountIndex,
         descriptor: stacksDescriptor,
       })
     );

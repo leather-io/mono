@@ -76,6 +76,64 @@ describe('stxChainSlice', () => {
     });
   });
 
+  test('creates the first account for a fingerprint at the payload index', () => {
+    const result = stxChainSlice.reducer(
+      {},
+      stxChainSlice.actions.createNewAccount({
+        fingerprint: fingerprintA,
+        accountIndex: 0,
+        descriptor: 'descA',
+      })
+    );
+
+    expect(result[fingerprintA]).toEqual({
+      highestAccountIndex: 0,
+      currentAccountStacksDescriptor: 'descA',
+    });
+  });
+
+  test('advances highestAccountIndex to the payload index on existing state', () => {
+    const result = stxChainSlice.reducer(
+      { [fingerprintA]: { highestAccountIndex: 2, currentAccountStacksDescriptor: 'old' } },
+      stxChainSlice.actions.createNewAccount({
+        fingerprint: fingerprintA,
+        accountIndex: 3,
+        descriptor: 'descA',
+      })
+    );
+
+    expect(result[fingerprintA]).toEqual({
+      highestAccountIndex: 3,
+      currentAccountStacksDescriptor: 'descA',
+    });
+  });
+
+  test('does not decrease highestAccountIndex when a stale createNewAccount is replayed', () => {
+    const result = stxChainSlice.reducer(
+      { [fingerprintA]: { highestAccountIndex: 5, currentAccountStacksDescriptor: 'descA' } },
+      stxChainSlice.actions.createNewAccount({
+        fingerprint: fingerprintA,
+        accountIndex: 3,
+        descriptor: 'descStale',
+      })
+    );
+
+    expect(result[fingerprintA].highestAccountIndex).toBe(5);
+  });
+
+  test('uses the absolute payload index rather than incrementing the current index', () => {
+    const result = stxChainSlice.reducer(
+      { [fingerprintA]: { highestAccountIndex: 2, currentAccountStacksDescriptor: 'old' } },
+      stxChainSlice.actions.createNewAccount({
+        fingerprint: fingerprintA,
+        accountIndex: 4,
+        descriptor: 'descA',
+      })
+    );
+
+    expect(result[fingerprintA].highestAccountIndex).toBe(4);
+  });
+
   test('leaves state untouched when removing a wallet with no stx chain state', () => {
     const state = {
       [fingerprintB]: { highestAccountIndex: 1, currentAccountStacksDescriptor: 'descB' },
