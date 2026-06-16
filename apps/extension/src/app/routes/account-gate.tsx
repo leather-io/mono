@@ -21,17 +21,21 @@ export function selectAccountGateDestination({
   return null;
 }
 
+export function useAccountGateDestination() {
+  const wallets = useWallets();
+  const hasLockedSoftwareWallets = useHasLockedSoftwareWallets();
+
+  return selectAccountGateDestination({
+    walletCount: wallets.length,
+    hasLockedSoftwareWallets,
+  });
+}
+
 interface AccountGateProps {
   children?: ReactNode;
 }
 export function AccountGate({ children }: AccountGateProps) {
-  const wallets = useWallets();
-  const hasLockedSoftwareWallets = useHasLockedSoftwareWallets();
-
-  const destination = selectAccountGateDestination({
-    walletCount: wallets.length,
-    hasLockedSoftwareWallets,
-  });
+  const destination = useAccountGateDestination();
 
   if (destination) return <Navigate to={destination} />;
 

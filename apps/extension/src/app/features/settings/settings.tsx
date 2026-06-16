@@ -22,13 +22,10 @@ import { analytics } from '@shared/utils/analytics';
 import { useCanSignOut } from '@app/common/hooks/auth/use-can-sign-out';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useModifierKey } from '@app/common/hooks/use-modifier-key';
-import { useWalletType } from '@app/common/use-wallet-type';
 import { Divider } from '@app/components/layout/divider';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
-import {
-  useHasActiveInMemoryWalletSecretKey,
-  useHasUnlockedSoftwareWallets,
-} from '@app/store/in-memory-key/in-memory-key.selectors';
+import { useAccountGateDestination } from '@app/routes/account-gate';
+import { useHasUnlockedSoftwareWallets } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { useTogglePrivateMode } from '@app/store/settings/settings.actions';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
@@ -47,8 +44,6 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
 
   const navigate = useNavigate();
 
-  const { walletType } = useWalletType();
-
   const isPrivateMode = useIsPrivateMode();
   const togglePrivateMode = useTogglePrivateMode();
 
@@ -57,8 +52,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
   const { isPressed: showAdvancedMenuOptions } = useModifierKey('alt', 120);
   const showLockWalletItem = canLockWallet && hasUnlockedSoftwareWallets;
   const showSignOutItem = canSignOut;
-  const hasDefaultInMemorySecretKey = useHasActiveInMemoryWalletSecretKey();
-  const isWalletUnlocked = hasDefaultInMemorySecretKey || walletType === 'ledger';
+  const isWalletUnlocked = useAccountGateDestination() === null;
 
   const settingsItem = (
     <DropdownMenu.Item
