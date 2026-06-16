@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'vitest';
 
-import { userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
+import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
+
+import { assumedZeroFingerprint } from '@shared/utils';
 
 import { stxChainSlice } from './stx-chain.slice';
 
@@ -42,6 +44,35 @@ describe('stxChainSlice', () => {
     expect(readded[fingerprintA]).toEqual({
       highestAccountIndex: 0,
       currentAccountStacksDescriptor: '',
+    });
+  });
+
+  test('preserves highestAccountIndex across the fingerprint migration sequence (migrate first)', () => {
+    let state = stxChainSlice.reducer(
+      {
+        [assumedZeroFingerprint]: {
+          highestAccountIndex: 3,
+          currentAccountStacksDescriptor: 'descLegacy',
+        },
+      },
+      fingerprintMigration(fingerprintA)
+    );
+    state = stxChainSlice.reducer(
+      state,
+      userRemovesWallet({ fingerprint: assumedZeroFingerprint })
+    );
+    state = stxChainSlice.reducer(
+      state,
+      userAddsWallet({
+        wallet: { fingerprint: fingerprintA, createdOn: null, type: 'ledger' },
+        accountKeychains: [],
+      })
+    );
+
+    expect(state[assumedZeroFingerprint]).toBeUndefined();
+    expect(state[fingerprintA]).toEqual({
+      highestAccountIndex: 3,
+      currentAccountStacksDescriptor: 'descLegacy',
     });
   });
 

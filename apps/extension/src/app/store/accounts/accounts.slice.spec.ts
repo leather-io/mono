@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { fingerprintMigration } from '@leather.io/state/wallet';
+import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
@@ -35,6 +35,36 @@ describe('accountsSlice', () => {
       expect(result.ids.some(id => String(id).startsWith(`${assumedZeroFingerprint}/`))).toBe(
         false
       );
+    });
+
+    test('keeps re-keyed accounts when the migration remove/add cascade follows', () => {
+      let state = accountsAdapter.addMany(accountsAdapter.getInitialState(), [
+        { id: makeAccountIdentifer(assumedZeroFingerprint, 0), name: 'My main', status: 'hidden' },
+        { id: makeAccountIdentifer(assumedZeroFingerprint, 1), name: 'Savings' },
+      ]);
+
+      state = accountsSlice.reducer(state, fingerprintMigration(realFingerprint));
+      state = accountsSlice.reducer(
+        state,
+        userRemovesWallet({ fingerprint: assumedZeroFingerprint })
+      );
+      state = accountsSlice.reducer(
+        state,
+        userAddsWallet({
+          wallet: { fingerprint: realFingerprint, createdOn: null, type: 'ledger' },
+          accountKeychains: [],
+        })
+      );
+
+      expect(state.entities[makeAccountIdentifer(realFingerprint, 0)]).toEqual({
+        id: makeAccountIdentifer(realFingerprint, 0),
+        name: 'My main',
+        status: 'hidden',
+      });
+      expect(state.entities[makeAccountIdentifer(realFingerprint, 1)]).toEqual({
+        id: makeAccountIdentifer(realFingerprint, 1),
+        name: 'Savings',
+      });
     });
 
     test('is a no-op when there are no assumed-zero accounts', () => {
