@@ -12,13 +12,17 @@ import { isUndefined } from '@leather.io/utils';
 
 import { InternalMethods } from '@shared/message-types';
 import { sendMessage } from '@shared/messages';
-import { getPermissionsByOrigin } from '@shared/permissions/permission.helpers';
+import {
+  getPermissionsByOrigin,
+  isConnectedToExistingWallet,
+} from '@shared/permissions/permission.helpers';
 import { RouteUrls } from '@shared/route-urls';
 import {
   RpcErrorMessage,
   getRpcParamErrorsFormatted,
   validateRpcParams,
 } from '@shared/rpc/methods/validation.utils';
+import { getRootState, sendMissingStateErrorToTab } from '@shared/storage/get-root-state';
 import { getHostnameFromUrl } from '@shared/utils/urls';
 
 import { popup } from '@background/popup';
@@ -34,7 +38,7 @@ export function getOriginFromPort(port: chrome.runtime.Port) {
   return port.sender?.origin;
 }
 
-export function getHostnameFromPort(port: chrome.runtime.Port) {
+function getHostnameFromPort(port: chrome.runtime.Port) {
   const origin = getOriginFromPort(port);
   if (!origin) throw new Error('No URL found in port sender');
   return getHostnameFromUrl(origin);
@@ -185,5 +189,37 @@ export function validateRequestParams({
     );
     return { status: 'failure' };
   }
+  return { status: 'success' };
+}
+
+const walletNoLongerAvailableMessage =
+  'Wallet no longer available. Reconnect the app to an available wallet.';
+
+export async function validateConnectedWalletExists(
+  request: RpcRequests,
+  port: chrome.runtime.Port,
+  errorMessage = walletNoLongerAvailableMessage
+): Promise<{ status: ValidationResult }> {
+  const tabId = getTabIdFromPort(port);
+  const state = await getRootState();
+  if (!state) {
+    void sendMissingStateErrorToTab({ tabId, method: request.method, id: request.id });
+    return { status: 'failure' };
+  }
+
+  const hostname = getHostnameFromPort(port);
+  const originPermissions = state.appPermissions.entities[hostname];
+
+  if (!isConnectedToExistingWallet(originPermissions, state.wallets.entities)) {
+    void chrome.tabs.sendMessage(
+      tabId,
+      createRpcErrorResponse(request.method, {
+        id: request.id,
+        error: { code: RpcErrorCode.UNAUTHENTICATED, message: errorMessage },
+      })
+    );
+    return { status: 'failure' };
+  }
+
   return { status: 'success' };
 }
