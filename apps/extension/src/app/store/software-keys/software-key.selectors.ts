@@ -11,6 +11,7 @@ import { RootState } from '@app/store';
 
 import { selectActiveAccount } from '../active/active.selectors';
 import { selectHasSwitched } from '../ui/ui.selectors';
+import { selectWalletEntities } from '../wallets/wallet.selectors';
 import { keyAdapter } from './software-key.slice';
 
 function selectKeysSlice(state: RootState) {
@@ -20,21 +21,24 @@ function selectKeysSlice(state: RootState) {
 export const selectCurrentAccount = createSelector(
   selectActiveAccount,
   selectHasSwitched,
-  (activeAccount, hasSwitched) => {
+  selectWalletEntities,
+  (activeAccount, hasSwitched, walletEntities) => {
+    const fallback = {
+      fingerprint: activeAccount?.fingerprint ?? assumedZeroFingerprint,
+      accountIndex: activeAccount?.accountIndex ?? 0,
+    };
+
     const customAccountIndex = hasSwitched ? null : initialSearchParams.get('accountIndex');
     const customFingerprint = hasSwitched ? null : initialSearchParams.get('fingerprint');
+
+    if (!customFingerprint || !walletEntities[customFingerprint]) return fallback;
 
     const accountIndex =
       customAccountIndex && initBigNumber(customAccountIndex).isInteger()
         ? initBigNumber(customAccountIndex).toNumber()
-        : (activeAccount?.accountIndex ?? 0);
+        : fallback.accountIndex;
 
-    const fingerprint = customFingerprint ?? activeAccount?.fingerprint ?? assumedZeroFingerprint;
-
-    return {
-      fingerprint,
-      accountIndex,
-    };
+    return { fingerprint: customFingerprint, accountIndex };
   }
 );
 
