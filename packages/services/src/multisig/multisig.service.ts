@@ -4,6 +4,8 @@ import type {
   AuthNetworkId,
   MultisigUser,
   Vault,
+  VaultAccount,
+  VaultAccountSummary,
   VaultMembershipResult,
   VaultMembershipStatus,
   VaultStatus,
@@ -24,6 +26,16 @@ export interface UpdateVaultRequest {
 export interface ListVaultsFilters {
   status?: VaultStatus;
   membershipStatus?: VaultMembershipStatus;
+}
+
+export interface CreateVaultAccountRequest {
+  name: string;
+  threshold: number;
+  index: number;
+}
+
+export interface UpdateVaultAccountRequest {
+  name: string;
 }
 
 @injectable()
@@ -81,5 +93,39 @@ export class MultisigService {
     signal?: AbortSignal
   ): Promise<VaultMembershipResult> {
     return this.authApiClient.declineMultisigVault(network, membershipId, { signal });
+  }
+
+  async listVaultAccounts(
+    network: AuthNetworkId,
+    vaultId: string,
+    signal?: AbortSignal
+  ): Promise<VaultAccountSummary[]> {
+    return this.authApiClient.fetchMultisigVaultAccounts(network, vaultId, { signal });
+  }
+
+  async getVaultAccount(
+    network: AuthNetworkId,
+    accountId: string,
+    signal?: AbortSignal
+  ): Promise<VaultAccount> {
+    return this.authApiClient.fetchMultisigVaultAccount(network, accountId, { signal });
+  }
+
+  async createVaultAccount(
+    network: AuthNetworkId,
+    vaultId: string,
+    params: CreateVaultAccountRequest,
+    signal?: AbortSignal
+  ): Promise<VaultAccount> {
+    return this.authApiClient.createMultisigVaultAccount(network, vaultId, params, { signal });
+  }
+
+  async updateVaultAccount(
+    network: AuthNetworkId,
+    accountId: string,
+    update: UpdateVaultAccountRequest,
+    signal?: AbortSignal
+  ): Promise<VaultAccount> {
+    return this.authApiClient.updateMultisigVaultAccount(network, accountId, update, { signal });
   }
 }
