@@ -9,8 +9,8 @@ import { AppThunk, persistor } from '..';
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
+import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 import { selectAllWallets } from '../wallets/wallet.selectors';
-import { selectActiveAccount } from './active.selectors';
 import { userSwitchesAccount } from './active.slice';
 
 export function changeActiveAccount(accountId: AccountId): AppThunk {
@@ -47,13 +47,13 @@ export function activateFirstVisibleAccount(fingerprint: string): AppThunk {
 export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
   return async (dispatch, getState) => {
     const state = getState();
-    const activeAccount = selectActiveAccount(state);
+    const currentAccount = selectCurrentAccount(state);
     const allWallets = selectAllWallets(state);
 
     dispatch(userRemovesWallet({ fingerprint }));
     removeKey(fingerprint);
 
-    if (activeAccount?.fingerprint === fingerprint) {
+    if (currentAccount?.fingerprint === fingerprint) {
       const remainingWallet = allWallets.find(w => w.fingerprint !== fingerprint);
       if (remainingWallet) {
         const remainingAccounts =
