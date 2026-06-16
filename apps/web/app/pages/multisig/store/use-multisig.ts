@@ -17,11 +17,11 @@ function useSession() {
   return ctx;
 }
 
-export function useVaults(): Vault[] {
+function useVaults(): Vault[] {
   return useSession().state.vaults;
 }
 
-export function useVault(vaultId: string | undefined): Vault | undefined {
+function useVault(vaultId: string | undefined): Vault | undefined {
   const { state } = useSession();
   return state.vaults.find(vault => vault.id === vaultId);
 }

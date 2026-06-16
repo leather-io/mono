@@ -39,9 +39,14 @@ export interface Palette {
 
   'green.text-primary': string;
   'green.action-primary-default': string;
+  'green.text-secondary': string;
   'green.border': string;
   'green.background-secondary': string;
   'green.background-primary': string;
+
+  'orange.text-primary': string;
+  'orange.action-primary-default': string;
+  'orange.background-primary': string;
 
   invert: string;
   stacks: string;
@@ -94,9 +99,14 @@ export const colorThemes = {
 
     'green.text-primary': '#083826',
     'green.action-primary-default': '#1CBA7D',
+    'green.text-secondary': '#00753A',
     'green.border': '#A8EDD0',
     'green.background-secondary': '#5DD9A5',
     'green.background-primary': '#E7F8F1',
+
+    'orange.text-primary': '#9A4F0E',
+    'orange.action-primary-default': '#F7931A',
+    'orange.background-primary': '#FCE6D2',
 
     invert: '#34312A',
     stacks: '#5546FF',
@@ -137,9 +147,14 @@ export const colorThemes = {
 
     'green.text-primary': '#E7F8F1',
     'green.action-primary-default': '#1CBA7D',
+    'green.text-secondary': '#00753A',
     'green.border': '#169E6A',
     'green.background-secondary': '#0D5C3D',
     'green.background-primary': '#083826',
+
+    'orange.text-primary': '#FCE6D2',
+    'orange.action-primary-default': '#F7931A',
+    'orange.background-primary': '#3A2410',
 
     invert: '#FFFFFF',
     stacks: '#7F80FF',
