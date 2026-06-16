@@ -11,11 +11,8 @@ import { Button, PlusIcon, Pressable, Sheet, SheetHeader, WalletPlusIcon } from 
 import { noop } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
-import { closeWindow } from '@shared/utils';
 
 import { useCreateAccount } from '@app/common/hooks/account/use-create-account';
-import { doesBrowserSupportWebUsbApi, whenPageMode } from '@app/common/utils';
-import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { toggleHideAccount } from '@app/store/accounts/accounts.actions';
@@ -31,6 +28,7 @@ import { RenameWalletDialog } from './components/rename-wallet-dialog';
 import { SwitchAccountListItem } from './components/switch-account-list-item';
 import { WalletHeader } from './components/wallet-header';
 import { canHideAccount } from './switch-account-sheet.utils';
+import { useAddWalletNavigation } from './use-add-wallet-navigation';
 
 interface SwitchAccountSheetProps {
   isShowing: boolean;
@@ -123,40 +121,14 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
     setIsAddWalletSheetOpen(false);
   }
 
-  function onCreateNewWallet() {
+  const closeSheets = useCallback(() => {
     onClose();
     setIsAddWalletSheetOpen(false);
-    void navigate(RouteUrls.CreateWallet);
-  }
+  }, [onClose]);
 
-  function onRestoreWallet() {
-    onClose();
-    setIsAddWalletSheetOpen(false);
-    void navigate(RouteUrls.AddWallet);
-  }
-
-  function pageModeRoutingAction(url: string) {
-    return whenPageMode({
-      full() {
-        return navigate(url);
-      },
-      popup() {
-        void openIndexPageInNewTab(url);
-        closeWindow();
-      },
-    });
-  }
-
-  const supportsWebUsbAction = pageModeRoutingAction(RouteUrls.ConnectLedgerStart);
-  const doesNotSupportWebUsbAction = pageModeRoutingAction(RouteUrls.LedgerUnsupportedBrowser);
-
-  const onSelectConnectLedger = useCallback(() => {
-    if (doesBrowserSupportWebUsbApi()) {
-      return supportsWebUsbAction();
-    } else {
-      return doesNotSupportWebUsbAction();
-    }
-  }, [doesNotSupportWebUsbAction, supportsWebUsbAction]);
+  const { onCreateNewWallet, onRestoreWallet, onConnectLedger } = useAddWalletNavigation({
+    closeSheets,
+  });
 
   function onManage() {
     setIsManageMode(prev => !prev);
@@ -356,7 +328,7 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
         onClose={onCloseAddWalletSheet}
         onCreateNewWallet={onCreateNewWallet}
         onRestoreWallet={onRestoreWallet}
-        onConnectLedger={onSelectConnectLedger}
+        onConnectLedger={onConnectLedger}
       />
     </>
   );
