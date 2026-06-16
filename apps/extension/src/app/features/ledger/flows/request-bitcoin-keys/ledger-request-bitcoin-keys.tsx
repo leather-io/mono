@@ -71,7 +71,7 @@ function LedgerRequestBitcoinKeys() {
         if (addWalletError) {
           toast.error(addWalletError);
           void ledgerNavigate.toErrorStep(chain, addWalletError);
-          return;
+          return { status: 'failure' };
         }
 
         const keychains = keys
@@ -100,6 +100,7 @@ function LedgerRequestBitcoinKeys() {
         }
 
         dispatch(userSwitchesAccount({ fingerprint, accountIndex: 0 }));
+        return { status: 'success' };
       },
     });
 

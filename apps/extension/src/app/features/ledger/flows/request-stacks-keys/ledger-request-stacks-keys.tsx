@@ -76,7 +76,7 @@ function LedgerRequestStacksKeys() {
         if (addWalletError) {
           toast.error(addWalletError);
           void ledgerNavigate.toErrorStep(chain, addWalletError);
-          return;
+          return { status: 'failure' };
         }
 
         const resp = await pullStacksKeysFromLedgerDevice(app)({
@@ -89,7 +89,7 @@ function LedgerRequestStacksKeys() {
         if (resp.status === 'failure') {
           toast.error(resp.errorMessage);
           void ledgerNavigate.toErrorStep(chain, resp.errorMessage);
-          return;
+          return { status: 'failure' };
         }
         void ledgerNavigate.toDeviceBusyStep();
 
@@ -126,6 +126,7 @@ function LedgerRequestStacksKeys() {
         }
 
         dispatch(userSwitchesAccount({ fingerprint, accountIndex: 0 }));
+        return { status: 'success' };
       },
     });
 
