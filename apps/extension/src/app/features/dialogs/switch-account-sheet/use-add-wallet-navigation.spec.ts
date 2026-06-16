@@ -113,4 +113,30 @@ describe('useAddWalletNavigation', () => {
     expect(h.closeWindow).toHaveBeenCalledOnce();
     expect(h.navigate).not.toHaveBeenCalled();
   });
+
+  test('onCreateNewWallet opens a new tab and closes the window in popup mode', () => {
+    h.pageMode = 'popup';
+    const closeSheets = vi.fn();
+    const { getValue } = renderHookValue(() => useAddWalletNavigation({ closeSheets }));
+
+    act(() => getValue().onCreateNewWallet());
+
+    expect(closeSheets).toHaveBeenCalledOnce();
+    expect(h.openInNewTab).toHaveBeenCalledWith(RouteUrls.CreateWallet);
+    expect(h.closeWindow).toHaveBeenCalledOnce();
+    expect(h.navigate).not.toHaveBeenCalled();
+  });
+
+  test('onRestoreWallet opens a new tab and closes the window in popup mode', () => {
+    h.pageMode = 'popup';
+    const closeSheets = vi.fn();
+    const { getValue } = renderHookValue(() => useAddWalletNavigation({ closeSheets }));
+
+    act(() => getValue().onRestoreWallet());
+
+    expect(closeSheets).toHaveBeenCalledOnce();
+    expect(h.openInNewTab).toHaveBeenCalledWith(RouteUrls.AddWallet);
+    expect(h.closeWindow).toHaveBeenCalledOnce();
+    expect(h.navigate).not.toHaveBeenCalled();
+  });
 });

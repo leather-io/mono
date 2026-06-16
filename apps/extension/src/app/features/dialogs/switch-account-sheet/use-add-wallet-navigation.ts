@@ -27,12 +27,12 @@ export function useAddWalletNavigation({ closeSheets }: UseAddWalletNavigationAr
 
   function onCreateNewWallet() {
     closeSheets();
-    void navigate(RouteUrls.CreateWallet);
+    return pageModeRoutingAction(RouteUrls.CreateWallet)();
   }
 
   function onRestoreWallet() {
     closeSheets();
-    void navigate(RouteUrls.AddWallet);
+    return pageModeRoutingAction(RouteUrls.AddWallet)();
   }
 
   function onConnectLedger() {
