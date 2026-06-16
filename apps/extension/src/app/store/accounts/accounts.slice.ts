@@ -3,7 +3,9 @@ import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { handleAppResetWithState } from '@leather.io/state';
 import { userAddsAccount } from '@leather.io/state/keychains';
-import { userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
+import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
+
+import { assumedZeroFingerprint } from '@shared/utils';
 
 import { AccountStatus, AccountStore } from './account-store.utils';
 
@@ -50,6 +52,26 @@ export const accountsSlice = createSlice({
         const prefix = `${action.payload.fingerprint}/`;
         const accountIds = state.ids.filter(id => String(id).startsWith(prefix));
         accountsAdapter.removeMany(state, accountIds);
+      })
+
+      // Re-key accounts from the assumed-zero fingerprint to the real one,
+      // preserving name/status. Must run before the migration's
+      // `userRemovesWallet('00000000')` so the cascade above finds nothing to delete
+      .addCase(fingerprintMigration, (state, action) => {
+        const newFingerprint = action.payload;
+        const prefix = `${assumedZeroFingerprint}/`;
+        const legacyIds = state.ids.filter(id => String(id).startsWith(prefix));
+
+        for (const legacyId of legacyIds) {
+          const account = state.entities[legacyId];
+          if (!account) continue;
+          const accountIndex = Number(String(legacyId).slice(prefix.length));
+          accountsAdapter.removeOne(state, legacyId);
+          accountsAdapter.addOne(state, {
+            ...account,
+            id: makeAccountIdentifer(newFingerprint, accountIndex),
+          });
+        }
       })
 
       // `upsertOne` (rather than mobile's `updateOne`) so renaming/hiding works

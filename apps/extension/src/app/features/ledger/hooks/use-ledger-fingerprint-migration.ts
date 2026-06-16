@@ -37,6 +37,8 @@ export function useLedgerFingerprintMigration() {
 
         if (actualFingerprint === assumedZeroFingerprint) return;
 
+        dispatch(fingerprintMigration(actualFingerprint));
+
         const oldWallet = wallets[assumedZeroFingerprint];
         if (oldWallet) {
           dispatch(userRemovesWallet({ fingerprint: assumedZeroFingerprint }));
@@ -47,7 +49,6 @@ export function useLedgerFingerprintMigration() {
             })
           );
         }
-        dispatch(fingerprintMigration(actualFingerprint));
 
         logger.info(
           `Successfully migrated Ledger fingerprint: ${assumedZeroFingerprint} → ${actualFingerprint}`
