@@ -64,7 +64,11 @@ export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
         alignItems="center"
         mt={multiline ? 'space.01' : '0'}
       >
-        {copied ? <CheckmarkIcon variant="small" /> : <CopyIcon variant="small" />}
+        {copied ? (
+          <CheckmarkIcon variant="small" color="green.text-secondary" />
+        ) : (
+          <CopyIcon variant="small" />
+        )}
       </styled.span>
     </styled.button>
   );

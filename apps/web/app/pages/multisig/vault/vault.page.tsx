@@ -86,14 +86,7 @@ export function VaultDetailPage() {
             ))}
           </Flex>
         ) : (
-          <MultisigErrorState
-            body={
-              <>
-                No vault found for <styled.code>{vaultId}</styled.code> — it may not exist or you
-                may not be a member.
-              </>
-            }
-          />
+          <MultisigErrorState body="No vault found. It may not exist, or you may not be a member." />
         )}
       </Page>
     );
