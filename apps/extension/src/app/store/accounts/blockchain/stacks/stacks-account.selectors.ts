@@ -16,7 +16,7 @@ import {
   extractKeyOriginPathFromDescriptor,
 } from '@leather.io/crypto';
 import type { AccountId, NetworkModes } from '@leather.io/models';
-import { makeStxKeyOrigin } from '@leather.io/stacks';
+import { extractStacksDerivationPathAccountIndex, makeStxKeyOrigin } from '@leather.io/stacks';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { DATA_DERIVATION_PATH, deriveStacksSalt } from '@shared/crypto/stacks/stacks-address-gen';
@@ -122,7 +122,7 @@ const selectLedgerAccounts = createSelector(
   (currentNetwork, stacksKeychains) => {
     const network = bitcoinNetworkModeToCoreNetworkMode(currentNetwork.chain.bitcoin.mode);
 
-    return stacksKeychains.map((keychain, index) => {
+    return stacksKeychains.map(keychain => {
       const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
       const fingerprint = extractFingerprintFromKeyOriginPath(keyOrigin) || assumedZeroFingerprint;
       const stxPublicKey = extractKeyFromDescriptor(keychain.descriptor);
@@ -139,7 +139,7 @@ const selectLedgerAccounts = createSelector(
 
       return initalizeHardwareStacksAccount(
         ledgerKeychain,
-        { fingerprint, accountIndex: index },
+        { fingerprint, accountIndex: extractStacksDerivationPathAccountIndex(keyOrigin) },
         network
       );
     });
