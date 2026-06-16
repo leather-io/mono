@@ -5,7 +5,7 @@ import {
   open,
 } from '@leather.io/rpc';
 
-import { hasRequestedAccountPermission } from '@shared/permissions/permission.helpers';
+import { isConnectedToExistingWallet } from '@shared/permissions/permission.helpers';
 import { RouteUrls } from '@shared/route-urls';
 import { getRootState, sendMissingStateErrorToTab } from '@shared/storage/get-root-state';
 
@@ -32,7 +32,7 @@ export const openHandler = defineRpcRequestHandler(open.method, async (request, 
 
   const originPermissions = state.appPermissions.entities[hostname];
 
-  if (!originPermissions || !hasRequestedAccountPermission(originPermissions)) {
+  if (!isConnectedToExistingWallet(originPermissions, state.wallets.entities)) {
     void chrome.tabs.sendMessage(
       tabId,
       createRpcErrorResponse('open', {
