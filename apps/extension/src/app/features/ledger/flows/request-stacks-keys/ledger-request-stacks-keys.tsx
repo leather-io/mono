@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import { bytesToHex } from '@noble/hashes/utils';
@@ -27,7 +26,8 @@ import {
   validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
-import { userSwitchesAccount } from '@app/store/active/active.slice';
+import { useAppDispatch } from '@app/store';
+import { activateFirstVisibleAccount } from '@app/store/active/active.actions';
 import { useStacksKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
 import { getAddWalletError, useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
@@ -38,7 +38,7 @@ function LedgerRequestStacksKeys() {
 
   const stxKeychainsDescriptors = useStacksKeychainDescriptors();
   const wallets = useWalletEntities();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const chain = 'stacks';
 
@@ -125,7 +125,7 @@ function LedgerRequestStacksKeys() {
           );
         }
 
-        dispatch(userSwitchesAccount({ fingerprint, accountIndex: 0 }));
+        dispatch(activateFirstVisibleAccount(fingerprint));
         return { status: 'success' };
       },
     });

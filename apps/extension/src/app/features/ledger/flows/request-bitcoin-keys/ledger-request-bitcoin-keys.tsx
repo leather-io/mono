@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import BitcoinApp from 'ledger-bitcoin';
@@ -23,14 +22,15 @@ import {
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
-import { userSwitchesAccount } from '@app/store/active/active.slice';
+import { useAppDispatch } from '@app/store';
+import { activateFirstVisibleAccount } from '@app/store/active/active.actions';
 import { useBitcoinKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { getAddWalletError, useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
 function LedgerRequestBitcoinKeys() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const toast = useToast();
   const wallets = useWalletEntities();
   const btcKeychainDescriptors = useBitcoinKeychainDescriptors();
@@ -99,7 +99,7 @@ function LedgerRequestBitcoinKeys() {
           );
         }
 
-        dispatch(userSwitchesAccount({ fingerprint, accountIndex: 0 }));
+        dispatch(activateFirstVisibleAccount(fingerprint));
         return { status: 'success' };
       },
     });

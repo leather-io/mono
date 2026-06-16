@@ -20,6 +20,29 @@ export function changeActiveAccount(accountId: AccountId): AppThunk {
   };
 }
 
+function pickFirstVisibleAccountIndex(accounts: AccountId[], hiddenAccountIds: string[]): number {
+  const firstVisibleAccount = accounts.find(
+    account =>
+      !hiddenAccountIds.includes(makeAccountIdentifer(account.fingerprint, account.accountIndex))
+  );
+  return firstVisibleAccount?.accountIndex ?? 0;
+}
+
+export function activateFirstVisibleAccount(fingerprint: string): AppThunk {
+  return (dispatch, getState) => {
+    const state = getState();
+    const accounts =
+      selectWalletAccountRefTree(state).find(wallet => wallet.fingerprint === fingerprint)
+        ?.accounts ?? [];
+    dispatch(
+      userSwitchesAccount({
+        fingerprint,
+        accountIndex: pickFirstVisibleAccountIndex(accounts, selectHiddenAccountIds(state)),
+      })
+    );
+  };
+}
+
 // ts-unused-exports:disable-next-line
 export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
   return async (dispatch, getState) => {
@@ -33,21 +56,17 @@ export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
     if (activeAccount?.fingerprint === fingerprint) {
       const remainingWallet = allWallets.find(w => w.fingerprint !== fingerprint);
       if (remainingWallet) {
-        const hiddenAccountIds = selectHiddenAccountIds(state);
         const remainingAccounts =
           selectWalletAccountRefTree(state).find(
             wallet => wallet.fingerprint === remainingWallet.fingerprint
           )?.accounts ?? [];
-        const firstVisibleAccount = remainingAccounts.find(
-          account =>
-            !hiddenAccountIds.includes(
-              makeAccountIdentifer(account.fingerprint, account.accountIndex)
-            )
-        );
         void dispatch(
           changeActiveAccount({
             fingerprint: remainingWallet.fingerprint,
-            accountIndex: firstVisibleAccount?.accountIndex ?? 0,
+            accountIndex: pickFirstVisibleAccountIndex(
+              remainingAccounts,
+              selectHiddenAccountIds(state)
+            ),
           })
         );
       } else {
