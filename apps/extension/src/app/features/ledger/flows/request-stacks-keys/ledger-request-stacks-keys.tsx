@@ -5,8 +5,6 @@ import StacksApp from '@zondax/ledger-stacks';
 import { pullStacksKeysFromLedgerDevice } from 'app/features/ledger/flows/request-stacks-keys/request-stacks-keys.utils';
 
 import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
-import { userAddsKeychains } from '@leather.io/state';
-import { userAddsWallet } from '@leather.io/state/wallet';
 import { delay } from '@leather.io/utils';
 
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
@@ -29,6 +27,7 @@ import { useToast } from '@app/features/toasts/use-toast';
 import { useAppDispatch } from '@app/store';
 import { activateFirstVisibleAccount } from '@app/store/active/active.actions';
 import { useStacksKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
+import { addOrMigrateLedgerKeychains } from '@app/store/wallets/wallet.actions';
 import { getAddWalletError, useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
 function LedgerRequestStacksKeys() {
@@ -106,25 +105,7 @@ function LedgerRequestStacksKeys() {
             return !stxKeychainsDescriptors.includes(keychain.descriptor);
           });
 
-        if (!wallets[fingerprint]) {
-          dispatch(
-            userAddsWallet({
-              wallet: {
-                createdOn: new Date().toISOString(),
-                fingerprint,
-                type: 'ledger',
-              },
-              accountKeychains: keychains,
-            })
-          );
-        } else if (keychains.length) {
-          dispatch(
-            userAddsKeychains({
-              accountKeychains: keychains,
-            })
-          );
-        }
-
+        dispatch(addOrMigrateLedgerKeychains({ fingerprint, accountKeychains: keychains }));
         dispatch(activateFirstVisibleAccount(fingerprint));
         return { status: 'success' };
       },
