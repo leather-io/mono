@@ -192,6 +192,78 @@ export class LeatherAuthApiClient {
     );
   }
 
+  async fetchMultisigVaultAccounts(
+    network: AuthNetworkId,
+    vaultId: string,
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.GET('/v1/multisig/vaults/{id}/accounts', {
+          params: { path: { id: vaultId } },
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async createMultisigVaultAccount(
+    network: AuthNetworkId,
+    vaultId: string,
+    params: { name: string; threshold: number; index: number },
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.POST('/v1/multisig/vaults/{id}/accounts', {
+          params: { path: { id: vaultId } },
+          body: params,
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async fetchMultisigVaultAccount(
+    network: AuthNetworkId,
+    accountId: string,
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.GET('/v1/multisig/vault-accounts/{id}', {
+          params: { path: { id: accountId } },
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async updateMultisigVaultAccount(
+    network: AuthNetworkId,
+    accountId: string,
+    update: { name: string },
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.PATCH('/v1/multisig/vault-accounts/{id}', {
+          params: { path: { id: accountId } },
+          body: update,
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
   private bearerHeaders(accessToken: string | undefined): Record<string, string> {
     return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
   }
