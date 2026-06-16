@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 
-import { userRemovesWallet } from '@leather.io/state/wallet';
-
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
@@ -19,6 +17,7 @@ import { useOnSignOut } from '@app/routes/hooks/use-on-sign-out';
 import { useOnWalletListChanged } from '@app/routes/hooks/use-on-wallet-list-changed';
 import { useOnWalletLock } from '@app/routes/hooks/use-on-wallet-lock';
 import { persistor, useAppDispatch, useHasStateRehydrated } from '@app/store';
+import { applyRemoteWalletRemoval } from '@app/store/active/active.actions';
 import { userSwitchesAccount } from '@app/store/active/active.slice';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-selector-cache';
@@ -51,7 +50,7 @@ export function Container() {
     if (removedFingerprint) {
       inMemoryStore.removeKey(removedFingerprint);
       clearKeychainSelectorCaches();
-      dispatch(userRemovesWallet({ fingerprint: removedFingerprint }));
+      dispatch(applyRemoteWalletRemoval(removedFingerprint));
       return;
     }
     persistor.pause();

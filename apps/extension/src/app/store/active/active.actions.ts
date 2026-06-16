@@ -5,7 +5,7 @@ import { userRemovesWallet, userRenamesWallet } from '@leather.io/state/wallet';
 import { InternalMethods } from '@shared/message-types';
 import { broadcastReplayAction, broadcastWalletListChanged, sendMessage } from '@shared/messages';
 
-import { AppThunk, persistor } from '..';
+import { AppThunk, RootState, persistor } from '..';
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
@@ -43,39 +43,52 @@ export function activateFirstVisibleAccount(fingerprint: string): AppThunk {
   };
 }
 
+function selectFirstRemainingAccount(
+  state: RootState,
+  removedFingerprint: string
+): AccountId | null {
+  const remainingWallet = selectAllWallets(state).find(w => w.fingerprint !== removedFingerprint);
+  if (!remainingWallet) return null;
+  const remainingAccounts =
+    selectWalletAccountRefTree(state).find(
+      wallet => wallet.fingerprint === remainingWallet.fingerprint
+    )?.accounts ?? [];
+  return {
+    fingerprint: remainingWallet.fingerprint,
+    accountIndex: pickFirstVisibleAccountIndex(remainingAccounts, selectHiddenAccountIds(state)),
+  };
+}
+
 // ts-unused-exports:disable-next-line
 export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
   return async (dispatch, getState) => {
     const state = getState();
     const currentAccount = selectCurrentAccount(state);
-    const allWallets = selectAllWallets(state);
 
     dispatch(userRemovesWallet({ fingerprint }));
     removeKey(fingerprint);
 
     if (currentAccount?.fingerprint === fingerprint) {
-      const remainingWallet = allWallets.find(w => w.fingerprint !== fingerprint);
-      if (remainingWallet) {
-        const remainingAccounts =
-          selectWalletAccountRefTree(state).find(
-            wallet => wallet.fingerprint === remainingWallet.fingerprint
-          )?.accounts ?? [];
-        void dispatch(
-          changeActiveAccount({
-            fingerprint: remainingWallet.fingerprint,
-            accountIndex: pickFirstVisibleAccountIndex(
-              remainingAccounts,
-              selectHiddenAccountIds(state)
-            ),
-          })
-        );
-      } else {
-        dispatch(userSwitchesAccount(null));
-      }
+      const nextAccount = selectFirstRemainingAccount(state, fingerprint);
+      if (nextAccount) void dispatch(changeActiveAccount(nextAccount));
+      else dispatch(userSwitchesAccount(null));
     }
 
     await persistor.flush();
     void broadcastWalletListChanged({ removedFingerprint: fingerprint });
+  };
+}
+
+export function applyRemoteWalletRemoval(removedFingerprint: string): AppThunk {
+  return (dispatch, getState) => {
+    const state = getState();
+    const currentAccount = selectCurrentAccount(state);
+
+    dispatch(userRemovesWallet({ fingerprint: removedFingerprint }));
+
+    if (currentAccount?.fingerprint !== removedFingerprint) return;
+
+    dispatch(userSwitchesAccount(selectFirstRemainingAccount(state, removedFingerprint)));
   };
 }
 

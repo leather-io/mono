@@ -2,7 +2,7 @@ import { createAction, createSlice } from '@reduxjs/toolkit';
 
 import { AccountId } from '@leather.io/models';
 import { resetWallet } from '@leather.io/state';
-import { fingerprintMigration } from '@leather.io/state/wallet';
+import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/wallet';
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
@@ -38,6 +38,11 @@ export const activeSlice = createSlice({
         const newFingerprint = action.payload;
         if (state.account.fingerprint === assumedZeroFingerprint) {
           state.account = { ...state.account, fingerprint: newFingerprint };
+        }
+      })
+      .addCase(userRemovesWallet, (state, action) => {
+        if (state.account?.fingerprint === action.payload.fingerprint) {
+          state.account = null;
         }
       }),
 });
