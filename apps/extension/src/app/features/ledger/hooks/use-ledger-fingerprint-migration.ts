@@ -1,19 +1,18 @@
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { bytesToHex } from '@noble/hashes/utils';
 import type StacksApp from '@zondax/ledger-stacks';
 
-import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
-
 import { logger } from '@shared/logger';
 import { assumedZeroFingerprint } from '@shared/utils';
 
+import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
+import { migrateLedgerStacksFingerprint } from '@app/store/wallets/wallet.actions';
 import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
 export function useLedgerFingerprintMigration() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const wallets = useWalletEntities();
   const currentAccount = useCurrentAccountId();
 
@@ -35,20 +34,7 @@ export function useLedgerFingerprintMigration() {
         const fingerprintResp = await stacksApp.getMasterFingerprint();
         const actualFingerprint = bytesToHex(fingerprintResp.fingerprint);
 
-        if (actualFingerprint === assumedZeroFingerprint) return;
-
-        dispatch(fingerprintMigration(actualFingerprint));
-
-        const oldWallet = wallets[assumedZeroFingerprint];
-        if (oldWallet) {
-          dispatch(userRemovesWallet({ fingerprint: assumedZeroFingerprint }));
-          dispatch(
-            userAddsWallet({
-              wallet: { ...oldWallet, fingerprint: actualFingerprint },
-              accountKeychains: [],
-            })
-          );
-        }
+        dispatch(migrateLedgerStacksFingerprint({ fingerprint: actualFingerprint }));
 
         logger.info(
           `Successfully migrated Ledger fingerprint: ${assumedZeroFingerprint} → ${actualFingerprint}`

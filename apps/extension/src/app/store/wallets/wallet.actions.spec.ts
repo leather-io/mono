@@ -1,8 +1,12 @@
 import { describe, expect, test, vi } from 'vitest';
 
-import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
+import {
+  createDescriptor,
+  createKeyOriginPath,
+  extractFingerprintFromDescriptor,
+} from '@leather.io/crypto';
 import { userAddsKeychains } from '@leather.io/state';
-import { type Keychain, keychainAdapter } from '@leather.io/state/keychains';
+import { type Keychain, keychainAdapter, keychainSlice } from '@leather.io/state/keychains';
 import {
   type WalletStore,
   fingerprintMigration,
@@ -14,7 +18,7 @@ import {
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import { addOrMigrateLedgerKeychains } from './wallet.actions';
+import { addOrMigrateLedgerKeychains, migrateLedgerStacksFingerprint } from './wallet.actions';
 
 const realFingerprint = 'a1b2c3d4';
 const otherDeviceFingerprint = 'eeee9999';
@@ -195,5 +199,98 @@ describe('addOrMigrateLedgerKeychains', () => {
     expect(dispatch).not.toHaveBeenCalledWith(
       expect.objectContaining({ type: userRemovesWallet.type })
     );
+  });
+});
+
+function runMigration(state: ReturnType<typeof buildState>, fingerprint: string) {
+  const dispatch = vi.fn();
+  const getState = vi.fn();
+  getState.mockReturnValue(state);
+  void migrateLedgerStacksFingerprint({ fingerprint })(dispatch, getState, undefined);
+  return dispatch;
+}
+
+describe('migrateLedgerStacksFingerprint', () => {
+  test('re-keys the legacy Stacks keychains to the real fingerprint', () => {
+    const state = buildState({ wallets: [legacyLedgerWallet], keychains: legacyKeychains });
+
+    const dispatch = runMigration(state, realFingerprint);
+
+    expect(dispatch).toHaveBeenNthCalledWith(1, fingerprintMigration(realFingerprint));
+    expect(dispatch).toHaveBeenNthCalledWith(
+      2,
+      userRemovesWallet({ fingerprint: assumedZeroFingerprint })
+    );
+    expect(dispatch).toHaveBeenNthCalledWith(
+      3,
+      userAddsWallet({
+        wallet: {
+          fingerprint: realFingerprint,
+          name: 'My Ledger',
+          type: 'ledger',
+          createdOn: null,
+        },
+        accountKeychains: reconnectedKeychains,
+      })
+    );
+    expect(dispatch).toHaveBeenCalledTimes(3);
+  });
+
+  test('preserves the keychains under the real fingerprint through the reducer cascade', () => {
+    const state = buildState({ wallets: [legacyLedgerWallet], keychains: legacyKeychains });
+
+    const dispatch = runMigration(state, realFingerprint);
+
+    // Feed the thunk's actual dispatched actions through the real keychain reducer.
+    let keychainState = keychainAdapter.addMany(keychainSlice.getInitialState(), legacyKeychains);
+    for (const [action] of dispatch.mock.calls) {
+      keychainState = keychainSlice.reducer(keychainState, action);
+    }
+
+    const remaining = keychainAdapter.getSelectors().selectAll(keychainState);
+    expect(remaining).toHaveLength(2);
+    expect(
+      remaining.map(keychain => extractFingerprintFromDescriptor(keychain.descriptor))
+    ).toEqual([realFingerprint, realFingerprint]);
+  });
+
+  test('does nothing when the device reports the placeholder fingerprint', () => {
+    const state = buildState({ wallets: [legacyLedgerWallet], keychains: legacyKeychains });
+
+    const dispatch = runMigration(state, assumedZeroFingerprint);
+
+    expect(dispatch).not.toHaveBeenCalled();
+  });
+
+  test('does nothing when there is no legacy wallet', () => {
+    const dispatch = runMigration(buildState(), realFingerprint);
+
+    expect(dispatch).not.toHaveBeenCalled();
+  });
+
+  test('does nothing when a wallet already exists under the real fingerprint', () => {
+    const migratedWallet: WalletStore = {
+      fingerprint: realFingerprint,
+      name: 'My Ledger',
+      type: 'ledger',
+      createdOn: null,
+    };
+    const state = buildState({
+      wallets: [legacyLedgerWallet, migratedWallet],
+      keychains: legacyKeychains,
+    });
+
+    const dispatch = runMigration(state, realFingerprint);
+
+    expect(dispatch).not.toHaveBeenCalled();
+  });
+
+  test('does nothing when the legacy wallet is not a Ledger', () => {
+    const softwareWallet: WalletStore = { ...legacyLedgerWallet, type: 'software' };
+    const state = buildState({ wallets: [softwareWallet], keychains: legacyKeychains });
+
+    const dispatch = runMigration(state, realFingerprint);
+
+    expect(dispatch).not.toHaveBeenCalled();
   });
 });

@@ -1,4 +1,10 @@
-import { extractFingerprintFromDescriptor } from '@leather.io/crypto';
+import {
+  createDescriptor,
+  createKeyOriginPath,
+  extractDerivationPathFromDescriptor,
+  extractFingerprintFromDescriptor,
+  extractKeyFromDescriptor,
+} from '@leather.io/crypto';
 import { SupportedBlockchains } from '@leather.io/models';
 import { userAddsKeychains } from '@leather.io/state';
 import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
@@ -72,5 +78,42 @@ export function addOrMigrateLedgerKeychains({
     if (accountKeychains.length) {
       dispatch(userAddsKeychains({ accountKeychains }));
     }
+  };
+}
+
+function rekeyDescriptorToFingerprint(descriptor: string, fingerprint: string): string {
+  return createDescriptor(
+    createKeyOriginPath(fingerprint, extractDerivationPathFromDescriptor(descriptor)),
+    extractKeyFromDescriptor(descriptor)
+  );
+}
+
+export function migrateLedgerStacksFingerprint({ fingerprint }: { fingerprint: string }): AppThunk {
+  return (dispatch, getState) => {
+    if (fingerprint === assumedZeroFingerprint) return;
+
+    const state = getState();
+    const wallets = selectWalletEntities(state);
+    const legacyWallet = wallets[assumedZeroFingerprint];
+
+    if (!legacyWallet || legacyWallet.type !== 'ledger' || wallets[fingerprint]) return;
+
+    const rekeyedKeychains = selectStacksKeychains(state)
+      .filter(
+        keychain => extractFingerprintFromDescriptor(keychain.descriptor) === assumedZeroFingerprint
+      )
+      .map(keychain => ({
+        chain: keychain.chain,
+        descriptor: rekeyDescriptorToFingerprint(keychain.descriptor, fingerprint),
+      }));
+
+    dispatch(fingerprintMigration(fingerprint));
+    dispatch(userRemovesWallet({ fingerprint: assumedZeroFingerprint }));
+    dispatch(
+      userAddsWallet({
+        wallet: { ...legacyWallet, fingerprint },
+        accountKeychains: rekeyedKeychains,
+      })
+    );
   };
 }
