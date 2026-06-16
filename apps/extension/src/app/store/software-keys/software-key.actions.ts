@@ -71,9 +71,38 @@ function setWalletEncryptionPassword(args: {
       existingSalt,
     });
 
-    inMemoryStore.setKey(fingerprint, mnemonic);
-    dispatch(walletKeyGenerated(fingerprint));
     await initalizeWalletSession(encryptionKey);
+
+    inMemoryStore.setKey(fingerprint, mnemonic);
+
+    // Multi-wallet structure
+    dispatch(
+      userAddsWallet({
+        wallet: {
+          createdOn: new Date().toISOString(),
+          fingerprint,
+          type: 'software',
+        },
+        accountKeychains: [],
+      })
+    );
+
+    // Single wallet key slice structure
+    dispatch(
+      keySlice.actions.createSoftwareWalletComplete({
+        salt,
+        key: {
+          type: 'software',
+          id: fingerprint,
+          encryptedSecretKey,
+        },
+      })
+    );
+
+    dispatch(walletKeyGenerated(fingerprint));
+
+    await persistor.flush();
+    void broadcastWalletListChanged({});
 
     //
     // Recursive account activity lookup functions
@@ -140,33 +169,6 @@ function setWalletEncryptionPassword(args: {
     } catch {
       // Errors during account restore are non-critical and can fail silently
     }
-
-    // Multi-wallet structure
-    dispatch(
-      userAddsWallet({
-        wallet: {
-          createdOn: new Date().toISOString(),
-          fingerprint,
-          type: 'software',
-        },
-        accountKeychains: [],
-      })
-    );
-
-    // Single wallet key slice structure
-    dispatch(
-      keySlice.actions.createSoftwareWalletComplete({
-        salt,
-        key: {
-          type: 'software',
-          id: fingerprint,
-          encryptedSecretKey,
-        },
-      })
-    );
-
-    await persistor.flush();
-    void broadcastWalletListChanged({});
   };
 }
 
