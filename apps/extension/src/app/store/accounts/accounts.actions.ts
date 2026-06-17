@@ -1,11 +1,23 @@
 import { broadcastReplayAction } from '@shared/messages';
 
 import { AppThunk } from '..';
-import { userRenamesAccount, userTogglesHideAccount } from './accounts.slice';
+import {
+  userClearsAccountName,
+  userRenamesAccount,
+  userTogglesHideAccount,
+} from './accounts.slice';
 
 export function renameAccount(accountId: string, name: string): AppThunk {
   return dispatch => {
     const action = userRenamesAccount({ accountId, name });
+    dispatch(action);
+    void broadcastReplayAction(action);
+  };
+}
+
+export function clearAccountName(accountId: string): AppThunk {
+  return dispatch => {
+    const action = userClearsAccountName({ accountId });
     dispatch(action);
     void broadcastReplayAction(action);
   };

@@ -24,6 +24,13 @@ interface RenameAccountPayload {
 // in mobile today. To be reconciled when these slices move to the shared package.
 export const userRenamesAccount = createAction<RenameAccountPayload>('accounts/userRenamesAccount');
 
+interface ClearAccountNamePayload {
+  accountId: string;
+}
+export const userClearsAccountName = createAction<ClearAccountNamePayload>(
+  'accounts/userClearsAccountName'
+);
+
 interface ToggleHideAccountPayload {
   accountId: string;
 }
@@ -80,6 +87,19 @@ export const accountsSlice = createSlice({
       .addCase(userRenamesAccount, (state, action) => {
         const { accountId, name } = action.payload;
         accountsAdapter.upsertOne(state, { id: accountId, name });
+      })
+
+      // Clearing the custom name reverts display to the BNS name (or "Account N").
+      // Preserve any other metadata (status); otherwise drop the row entirely
+      .addCase(userClearsAccountName, (state, action) => {
+        const { accountId } = action.payload;
+        const account = state.entities[accountId];
+        if (!account) return;
+        if (account.status) {
+          accountsAdapter.setOne(state, { id: accountId, status: account.status });
+        } else {
+          accountsAdapter.removeOne(state, accountId);
+        }
       })
 
       .addCase(userTogglesHideAccount, (state, action) => {

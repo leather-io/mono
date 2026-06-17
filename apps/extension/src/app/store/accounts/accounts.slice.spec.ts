@@ -5,7 +5,7 @@ import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leathe
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import { accountsAdapter, accountsSlice } from './accounts.slice';
+import { accountsAdapter, accountsSlice, userClearsAccountName } from './accounts.slice';
 
 const realFingerprint = 'abcd1234';
 
@@ -73,6 +73,47 @@ describe('accountsSlice', () => {
       ]);
 
       const result = accountsSlice.reducer(seeded, fingerprintMigration('99999999'));
+
+      expect(result).toEqual(seeded);
+    });
+  });
+
+  describe('userClearsAccountName', () => {
+    test('removes a name-only entity so display reverts to the bns/default name', () => {
+      const accountId = makeAccountIdentifer(realFingerprint, 0);
+      const seeded = accountsAdapter.addOne(accountsAdapter.getInitialState(), {
+        id: accountId,
+        name: 'Custom',
+      });
+
+      const result = accountsSlice.reducer(seeded, userClearsAccountName({ accountId }));
+
+      expect(result.entities[accountId]).toBeUndefined();
+    });
+
+    test('drops the custom name but preserves a hidden status', () => {
+      const accountId = makeAccountIdentifer(realFingerprint, 0);
+      const seeded = accountsAdapter.addOne(accountsAdapter.getInitialState(), {
+        id: accountId,
+        name: 'Custom',
+        status: 'hidden',
+      });
+
+      const result = accountsSlice.reducer(seeded, userClearsAccountName({ accountId }));
+
+      expect(result.entities[accountId]).toEqual({ id: accountId, status: 'hidden' });
+    });
+
+    test('is a no-op for an account with no entity', () => {
+      const seeded = accountsAdapter.addOne(accountsAdapter.getInitialState(), {
+        id: makeAccountIdentifer(realFingerprint, 0),
+        name: 'Existing',
+      });
+
+      const result = accountsSlice.reducer(
+        seeded,
+        userClearsAccountName({ accountId: makeAccountIdentifer(realFingerprint, 9) })
+      );
 
       expect(result).toEqual(seeded);
     });

@@ -25,4 +25,17 @@ test.describe('Bns v2 names', () => {
 
     test.expect(accountOneNameText).toEqual(ACCOUNT_ONE_NAME);
   });
+
+  test('that clearing a custom account name reverts to the bns name', async ({
+    switchAccountPage,
+  }) => {
+    await switchAccountPage.open();
+    await switchAccountPage.enterManageMode();
+
+    await switchAccountPage.renameAccount('My main account', 0);
+    await test.expect(switchAccountPage.accountName(0)).toHaveText('My main account');
+
+    await switchAccountPage.clearAccountName(0);
+    await test.expect(switchAccountPage.accountName(0)).toHaveText(ACCOUNT_ONE_NAME);
+  });
 });

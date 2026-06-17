@@ -170,6 +170,13 @@ export class SwitchAccountPage {
     await this.page.getByTestId(SwitchAccountSelectors.RenameAccountSaveBtn).click();
   }
 
+  async clearAccountName(nth = 0) {
+    await this.openAccountMenu(nth);
+    await this.clickMenuItem('Rename');
+    await this.page.getByTestId(SwitchAccountSelectors.RenameAccountInput).fill('');
+    await this.page.getByTestId(SwitchAccountSelectors.RenameAccountSaveBtn).click();
+  }
+
   async removeWallet(nth: number) {
     await this.openWalletMenu(nth);
     await this.clickMenuItem('Remove wallet');
