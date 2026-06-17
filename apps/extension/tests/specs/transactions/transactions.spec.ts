@@ -1,4 +1,5 @@
 import { TokenTransferPayloadWire, deserializeTransaction } from '@stacks/transactions';
+import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { TestAppPage } from '@tests/page-object-models/test-app.page';
 import { TransactionRequestPage } from '@tests/page-object-models/transaction-request.page';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
@@ -16,7 +17,7 @@ test.describe('Transaction signing', () => {
 
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, context }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await onboardingPage.signInWithTestAccount(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
     testAppPage = await TestAppPage.openDemoPage(context);
   });
 
