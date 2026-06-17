@@ -25,6 +25,7 @@ import {
 import { getRootState, sendMissingStateErrorToTab } from '@shared/storage/get-root-state';
 import { getHostnameFromUrl } from '@shared/utils/urls';
 
+import type { RootState } from '@app/store';
 import { popup } from '@background/popup';
 
 import { trackRpcRequestError } from './rpc-helpers';
@@ -195,14 +196,24 @@ export function validateRequestParams({
 const walletNoLongerAvailableMessage =
   'Wallet no longer available. Reconnect the app to an available wallet.';
 
+type MaybePreMultiWalletRootState = Omit<RootState, 'wallets'> & {
+  wallets?: RootState['wallets'];
+};
+
 export async function validateConnectedWalletExists(
   request: RpcRequests,
   port: chrome.runtime.Port,
   errorMessage = walletNoLongerAvailableMessage
 ): Promise<{ status: ValidationResult }> {
   const tabId = getTabIdFromPort(port);
-  const state = await getRootState();
+  const state = (await getRootState()) as MaybePreMultiWalletRootState | null;
   if (!state) {
+    void sendMissingStateErrorToTab({ tabId, method: request.method, id: request.id });
+    return { status: 'failure' };
+  }
+
+  const walletEntities = state.wallets?.entities;
+  if (!walletEntities) {
     void sendMissingStateErrorToTab({ tabId, method: request.method, id: request.id });
     return { status: 'failure' };
   }
@@ -210,7 +221,7 @@ export async function validateConnectedWalletExists(
   const hostname = getHostnameFromPort(port);
   const originPermissions = state.appPermissions.entities[hostname];
 
-  if (!isConnectedToExistingWallet(originPermissions, state.wallets.entities)) {
+  if (!isConnectedToExistingWallet(originPermissions, walletEntities)) {
     void chrome.tabs.sendMessage(
       tabId,
       createRpcErrorResponse(request.method, {

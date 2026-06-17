@@ -138,6 +138,22 @@ describe('validateConnectedWalletExists', () => {
     expect(mocks.sendMessage).not.toHaveBeenCalled();
   });
 
+  test('fails and reports missing state when persisted state predates multiwallet support', async () => {
+    mocks.getRootState.mockResolvedValue({
+      appPermissions: { entities: { [hostname]: buildPermission() } },
+    });
+
+    const result = await validateConnectedWalletExists(request, buildPort());
+
+    expect(result).toEqual({ status: 'failure' });
+    expect(mocks.sendMissingStateErrorToTab).toHaveBeenCalledWith({
+      tabId,
+      method: request.method,
+      id: request.id,
+    });
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+  });
+
   test('forwards a custom error message into the rejection', async () => {
     const errorMessage = 'Permission denied, user must first connect to the wallet';
     mocks.getRootState.mockResolvedValue(
