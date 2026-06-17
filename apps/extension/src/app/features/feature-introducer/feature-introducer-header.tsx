@@ -1,3 +1,4 @@
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Flex } from 'leather-styles/jsx';
 
 import { CloseIcon, IconButton } from '@leather.io/ui';
@@ -15,7 +16,13 @@ export function FeatureIntroducerHeader({ onClose }: FeatureIntroducerHeaderProp
       justifyContent="flex-end"
       px="space.04"
     >
-      {onClose && <IconButton icon={<CloseIcon />} onClick={onClose} />}
+      {onClose && (
+        <IconButton
+          data-testid={SharedComponentsSelectors.FeatureIntroducerCloseBtn}
+          icon={<CloseIcon />}
+          onClick={onClose}
+        />
+      )}
     </Flex>
   );
 }

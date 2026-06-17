@@ -76,12 +76,7 @@ const MotionStyledH2 = motion.create(styled.h2);
 function Title({ children }: TitleProps) {
   return (
     <MotionStyledH2
-      fontFamily="Marche Pro"
-      fontWeight="800"
-      fontSize="32px"
-      lineHeight="35px"
-      letterSpacing="0.64px"
-      textTransform="uppercase"
+      textStyle="heading.03"
       color="ink.text-primary"
       width="100%"
       initial={{ opacity: 0, x: -20 }}
