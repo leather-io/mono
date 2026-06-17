@@ -3,6 +3,7 @@ import { TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS } from '@tests/mocks/constants';
 import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoin-tx';
 import { mockLeatherApiRequests } from '@tests/mocks/mock-leather-api';
 import { testFingerprint } from '@tests/page-object-models/onboarding.page';
+import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 
 import type { RpcParams, sendTransfer } from '@leather.io/rpc';
 
@@ -77,6 +78,21 @@ test.describe('RPC: sendTransfer', () => {
       jsonrpc: '2.0',
       result: { txid: '58d44000884f0ba4cdcbeb1ac082e6c802d300c16b0d3251738e8cf6a57397ce' },
     });
+  });
+
+  test('that the approval popup shows the wallet name', async ({ page, context }) => {
+    void mockPopupRequests(context);
+
+    const popupPromise = context.waitForEvent('page');
+    const resultPromise = openSendTransfer(page)(baseParams);
+    const popup = await popupPromise;
+
+    await test
+      .expect(popup.getByTestId(ConnectAccountSelectors.WalletName).first())
+      .toHaveText('Wallet 1', { timeout: 15_000 });
+
+    await popup.locator('text="Cancel"').click();
+    await resultPromise;
   });
 
   test('that the request can be cancelled', async ({ page, context }) => {
