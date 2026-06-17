@@ -8,7 +8,7 @@ export type Chain = 'btc' | 'stx';
 
 type MemberRole = 'Admin' | 'Member';
 
-export type InviteStatus = 'invited' | 'joined' | 'declined';
+type InviteStatus = 'invited' | 'joined' | 'declined';
 
 type VaultStatus = 'pending' | 'active' | 'cancelled';
 

@@ -107,7 +107,15 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
           <Box minWidth={0}>
             <styled.div textStyle="heading.05">{vault.name}</styled.div>
             <styled.div textStyle="caption.01" opacity={0.85}>
-              {creator ? `Invited by ${creator.name || truncateMiddle(creator.address)} · ` : ''}
+              {creator && (
+                <>
+                  Invited by{' '}
+                  <styled.span fontWeight="bold">
+                    {creator.name || truncateMiddle(creator.address)}
+                  </styled.span>
+                  {' · '}
+                </>
+              )}
               {vault.memberCount} members · thresholds set per account
             </styled.div>
           </Box>
@@ -120,7 +128,7 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
           borderColor="ink.border-default"
           overflow="hidden"
         >
-          {detail.isLoading
+          {!detail.data
             ? Array.from({ length: vault.memberCount || 2 }).map((_unused, index) => (
                 <Box
                   key={index}
@@ -146,11 +154,18 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
                   borderTopColor="ink.border-default"
                 >
                   <VaultListItem
+                    tightLeading
                     leading={<AvatarCircle name={member.name || member.address} size="lg" />}
-                    title={`${member.name || truncateMiddle(member.address)}${
-                      member.address === myAddress ? ' (me)' : ''
-                    }`}
-                    caption={member.name ? <CopyAddress addr={member.address} /> : undefined}
+                    title={
+                      <styled.span pl="space.02" textStyle="label.02">
+                        {`${member.name || truncateMiddle(member.address)}${
+                          member.address === myAddress ? ' (me)' : ''
+                        }`}
+                      </styled.span>
+                    }
+                    caption={
+                      member.name ? <CopyAddress addr={member.address} emphasis /> : undefined
+                    }
                     trailingTitle={
                       <styled.span textStyle="caption.01" color="ink.text-subdued">
                         {memberStatusLabel(member, myAddress)}
