@@ -1,48 +1,79 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { Virtuoso } from 'react-virtuoso';
+import { GroupedVirtuoso } from 'react-virtuoso';
 
 import { Box } from 'leather-styles/jsx';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
+import { noop } from '@leather.io/utils';
 
-import { useFilteredBitcoinAccounts } from '@app/store/accounts/blockchain/bitcoin/bitcoin.ledger';
-import { useStacksAccounts } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { WalletHeader } from '@app/features/dialogs/switch-account-sheet/components/wallet-header';
+import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
+import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
 import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet';
 
 import { AccountListItem } from './account-list-item';
+import { getAccountAt, getVisibleWalletAccountGroups } from './recipient-accounts-dialog.utils';
 
 export function RecipientAccountsSheet() {
-  const stacksAccounts = useStacksAccounts();
   const navigate = useNavigate();
+  const walletTree = useWalletAccountRefTree();
+  const hiddenAccountIds = useHiddenAccountIds();
 
   const onGoBack = useCallback(() => navigate('..', { replace: true }), [navigate]);
-  const bitcoinAccounts = useFilteredBitcoinAccounts();
-  const btcAddressesNum = bitcoinAccounts.length / 2;
-  const stacksAddressesNum = stacksAccounts.length;
 
-  if (stacksAddressesNum === 0 && btcAddressesNum === 0) return null;
-  const accountNum = stacksAddressesNum || btcAddressesNum;
+  const { groups, groupCounts } = useMemo(
+    () => getVisibleWalletAccountGroups(walletTree, hiddenAccountIds),
+    [walletTree, hiddenAccountIds]
+  );
+
+  if (groups.length === 0) return null;
 
   return (
     <Sheet
-      header={<SheetHeader title="My accounts" />}
+      header={<SheetHeader title="Select account" />}
       isShowing
       onClose={onGoBack}
       wrapChildren={false}
     >
       <VirtuosoWrapperSheet>
-        <Virtuoso
-          itemContent={index => {
-            const account = stacksAccounts[index];
-            if (!account) return null;
+        <GroupedVirtuoso
+          groupCounts={groupCounts}
+          groupContent={groupIndex => {
+            const wallet = groups[groupIndex];
+            if (!wallet) return null;
             return (
-              <Box key={`${account.fingerprint}-${account.index}`} py="space.03" px="space.05">
-                <AccountListItem stacksAccount={account} onClose={onGoBack} accountId={account} />
+              <Box
+                bg="ink.background-primary"
+                pb="space.03"
+                pt={groupIndex === 0 ? 'space.01' : 'space.05'}
+              >
+                <WalletHeader
+                  isManageMode={false}
+                  name={wallet.name}
+                  walletType={wallet.type}
+                  canRemoveWallet={false}
+                  onRename={noop}
+                  onRemove={noop}
+                  onViewSecretKey={noop}
+                />
               </Box>
             );
           }}
-          totalCount={accountNum}
+          itemContent={(index, groupIndex) => {
+            const wallet = groups[groupIndex];
+            const accountId = getAccountAt(groups, groupCounts, index);
+            if (!wallet || !accountId) return null;
+            return (
+              <Box px="space.05" py="space.03">
+                <AccountListItem
+                  accountId={accountId}
+                  walletType={wallet.type}
+                  onClose={onGoBack}
+                />
+              </Box>
+            );
+          }}
         />
       </VirtuosoWrapperSheet>
     </Sheet>

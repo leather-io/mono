@@ -32,7 +32,7 @@ export function useActiveWalletType() {
   return useSelector(selectActiveWalletType);
 }
 
-interface WalletAccountRefTree {
+export interface WalletAccountRefTree {
   fingerprint: string;
   name: string;
   type: WalletType;
