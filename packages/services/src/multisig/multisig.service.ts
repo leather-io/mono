@@ -3,6 +3,7 @@ import { injectable } from 'inversify';
 import type {
   AuthNetworkId,
   MultisigTransaction,
+  MultisigTransactionSummary,
   MultisigUser,
   Vault,
   VaultAccount,
@@ -160,7 +161,7 @@ export class MultisigService {
     vaultAccountId: string,
     pageRequest: LeatherApiPageRequest,
     signal?: AbortSignal
-  ): Promise<LeatherApiPage<MultisigTransaction>> {
+  ): Promise<LeatherApiPage<MultisigTransactionSummary>> {
     return this.authApiClient.fetchMultisigVaultAccountTransactions(
       network,
       vaultAccountId,

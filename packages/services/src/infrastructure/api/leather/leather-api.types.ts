@@ -4420,10 +4420,7 @@ export interface paths {
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               proposerUserId: string;
-              proposalRawPayload: string;
-              proposalSignature: string;
               proposalTimestamp: number;
-              proposalHash: string;
               nonce: number | null;
               txId: string | null;
               /** @enum {string} */
@@ -4436,6 +4433,12 @@ export interface paths {
                 | 'failed'
                 | 'dropped'
                 | 'cancelled';
+              broadcastAt: string | null;
+              createdAt: string;
+              updatedAt: string;
+              proposalRawPayload: string;
+              proposalSignature: string;
+              proposalHash: string;
               signatures: {
                 userId: string;
                 signerIndex: number;
@@ -4443,9 +4446,6 @@ export interface paths {
                 inputIndex: number | null;
                 createdAt: string;
               }[];
-              broadcastAt: string | null;
-              createdAt: string;
-              updatedAt: string;
             };
           };
         };
@@ -4531,10 +4531,7 @@ export interface paths {
                 /** @enum {string} */
                 network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
                 proposerUserId: string;
-                proposalRawPayload: string;
-                proposalSignature: string;
                 proposalTimestamp: number;
-                proposalHash: string;
                 nonce: number | null;
                 txId: string | null;
                 /** @enum {string} */
@@ -4547,16 +4544,10 @@ export interface paths {
                   | 'failed'
                   | 'dropped'
                   | 'cancelled';
-                signatures: {
-                  userId: string;
-                  signerIndex: number;
-                  signature: string;
-                  inputIndex: number | null;
-                  createdAt: string;
-                }[];
                 broadcastAt: string | null;
                 createdAt: string;
                 updatedAt: string;
+                approvalCount: number;
               }[];
             };
           };
@@ -4635,10 +4626,7 @@ export interface paths {
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               proposerUserId: string;
-              proposalRawPayload: string;
-              proposalSignature: string;
               proposalTimestamp: number;
-              proposalHash: string;
               nonce: number | null;
               txId: string | null;
               /** @enum {string} */
@@ -4651,6 +4639,12 @@ export interface paths {
                 | 'failed'
                 | 'dropped'
                 | 'cancelled';
+              broadcastAt: string | null;
+              createdAt: string;
+              updatedAt: string;
+              proposalRawPayload: string;
+              proposalSignature: string;
+              proposalHash: string;
               signatures: {
                 userId: string;
                 signerIndex: number;
@@ -4658,9 +4652,6 @@ export interface paths {
                 inputIndex: number | null;
                 createdAt: string;
               }[];
-              broadcastAt: string | null;
-              createdAt: string;
-              updatedAt: string;
             };
           };
         };
@@ -4749,10 +4740,7 @@ export interface paths {
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               proposerUserId: string;
-              proposalRawPayload: string;
-              proposalSignature: string;
               proposalTimestamp: number;
-              proposalHash: string;
               nonce: number | null;
               txId: string | null;
               /** @enum {string} */
@@ -4765,6 +4753,12 @@ export interface paths {
                 | 'failed'
                 | 'dropped'
                 | 'cancelled';
+              broadcastAt: string | null;
+              createdAt: string;
+              updatedAt: string;
+              proposalRawPayload: string;
+              proposalSignature: string;
+              proposalHash: string;
               signatures: {
                 userId: string;
                 signerIndex: number;
@@ -4772,9 +4766,6 @@ export interface paths {
                 inputIndex: number | null;
                 createdAt: string;
               }[];
-              broadcastAt: string | null;
-              createdAt: string;
-              updatedAt: string;
             };
           };
         };
@@ -4863,10 +4854,7 @@ export interface paths {
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               proposerUserId: string;
-              proposalRawPayload: string;
-              proposalSignature: string;
               proposalTimestamp: number;
-              proposalHash: string;
               nonce: number | null;
               txId: string | null;
               /** @enum {string} */
@@ -4879,6 +4867,12 @@ export interface paths {
                 | 'failed'
                 | 'dropped'
                 | 'cancelled';
+              broadcastAt: string | null;
+              createdAt: string;
+              updatedAt: string;
+              proposalRawPayload: string;
+              proposalSignature: string;
+              proposalHash: string;
               signatures: {
                 userId: string;
                 signerIndex: number;
@@ -4886,9 +4880,6 @@ export interface paths {
                 inputIndex: number | null;
                 createdAt: string;
               }[];
-              broadcastAt: string | null;
-              createdAt: string;
-              updatedAt: string;
             };
           };
         };
@@ -4977,10 +4968,7 @@ export interface paths {
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               proposerUserId: string;
-              proposalRawPayload: string;
-              proposalSignature: string;
               proposalTimestamp: number;
-              proposalHash: string;
               nonce: number | null;
               txId: string | null;
               /** @enum {string} */
@@ -4993,6 +4981,12 @@ export interface paths {
                 | 'failed'
                 | 'dropped'
                 | 'cancelled';
+              broadcastAt: string | null;
+              createdAt: string;
+              updatedAt: string;
+              proposalRawPayload: string;
+              proposalSignature: string;
+              proposalHash: string;
               signatures: {
                 userId: string;
                 signerIndex: number;
@@ -5000,9 +4994,6 @@ export interface paths {
                 inputIndex: number | null;
                 createdAt: string;
               }[];
-              broadcastAt: string | null;
-              createdAt: string;
-              updatedAt: string;
             };
           };
         };
