@@ -9,6 +9,7 @@ import { AppThunk, RootState, persistor } from '..';
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
+import { clearKeychainSelectorCaches } from '../in-memory-key/keychain-selector-cache';
 import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 import { selectAllWallets } from '../wallets/wallet.selectors';
 import { userSwitchesAccount } from './active.slice';
@@ -67,6 +68,7 @@ export function removeWalletAndUpdateActive(fingerprint: string): AppThunk {
 
     dispatch(userRemovesWallet({ fingerprint }));
     removeKey(fingerprint);
+    clearKeychainSelectorCaches();
 
     if (currentAccount?.fingerprint === fingerprint) {
       const nextAccount = selectFirstRemainingAccount(state, fingerprint);

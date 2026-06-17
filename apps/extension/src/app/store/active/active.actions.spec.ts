@@ -10,6 +10,7 @@ import { persistor } from '@app/store';
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
 import { removeKey } from '../in-memory-key/in-memory-storage';
+import { clearKeychainSelectorCaches } from '../in-memory-key/keychain-selector-cache';
 import { selectCurrentAccount } from '../software-keys/software-key.selectors';
 import { selectAllWallets } from '../wallets/wallet.selectors';
 import {
@@ -42,6 +43,10 @@ vi.mock('../software-keys/software-key.selectors', () => ({
 
 vi.mock('../in-memory-key/in-memory-storage', () => ({
   removeKey: vi.fn(),
+}));
+
+vi.mock('../in-memory-key/keychain-selector-cache', () => ({
+  clearKeychainSelectorCaches: vi.fn(),
 }));
 
 vi.mock('@shared/messages', () => ({
@@ -194,6 +199,13 @@ describe(removeWalletAndUpdateActive.name, () => {
     expect(removeKey).toHaveBeenCalledWith(fingerprint);
     expect(persistor.flush).toHaveBeenCalledTimes(1);
     expect(broadcastWalletListChanged).toHaveBeenCalledWith({ removedFingerprint: fingerprint });
+  });
+
+  test('purges keychain selector caches so derived key material does not linger', async () => {
+    const { promise } = runRemoveThunk();
+    await promise;
+    expect(removeKey).toHaveBeenCalledWith(fingerprint);
+    expect(clearKeychainSelectorCaches).toHaveBeenCalledTimes(1);
   });
 
   test('skips leading hidden accounts when re-pointing to the remaining wallet', () => {
