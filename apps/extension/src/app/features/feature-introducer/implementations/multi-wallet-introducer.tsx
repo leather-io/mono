@@ -28,7 +28,11 @@ export function MultiWalletIntroducer() {
       <FeatureIntroducer.Content>
         <FeatureIntroducer.Label>Introducing</FeatureIntroducer.Label>
 
-        <FeatureIntroducer.Title>Multi wallet support</FeatureIntroducer.Title>
+        <FeatureIntroducer.Title>
+          Multi wallet
+          <br />
+          support
+        </FeatureIntroducer.Title>
 
         <FeatureIntroducer.Description>
           Create or restore wallets in seconds, keeping all your Bitcoin and Stacks accounts in one

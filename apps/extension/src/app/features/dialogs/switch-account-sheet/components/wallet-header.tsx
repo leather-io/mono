@@ -28,7 +28,8 @@ export function WalletHeader({
     <Flex
       alignItems="center"
       justifyContent="space-between"
-      px="space.05"
+      pl="space.05"
+      pr={isManageMode ? 'space.04' : 'space.05'}
       py="space.00"
       width="100%"
     >

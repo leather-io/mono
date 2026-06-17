@@ -26,19 +26,21 @@ function SheetRow({
   icon: ReactNode;
 }) {
   return (
-    <Pressable my="space.03" onClick={onClick}>
-      <Flex gap="space.03" px="space.05">
-        <Circle
-          bg="ink.background-primary"
-          border="1px solid"
-          borderColor="ink.border-default"
-          size="48px"
-        >
-          {icon}
-        </Circle>
-        <ItemLayout titleLeft={title} captionLeft={caption} />
-      </Flex>
-    </Pressable>
+    <Box px="space.05">
+      <Pressable my="space.03" onClick={onClick}>
+        <Flex gap="space.03">
+          <Circle
+            bg="ink.background-primary"
+            border="1px solid"
+            borderColor="ink.border-default"
+            size="48px"
+          >
+            {icon}
+          </Circle>
+          <ItemLayout titleLeft={title} captionLeft={caption} />
+        </Flex>
+      </Pressable>
+    </Box>
   );
 }
 interface AddWalletSheetProps {
@@ -66,11 +68,11 @@ export function AddWalletSheet({
       wrapChildren={false}
     >
       <Flex flexDirection="column" width="100%">
-        <Box bg="ink.background-secondary" px="space.05" py="space.07">
+        <Box bg="ink.background-primary" px="space.05" py="space.07">
           <MultiWalletIllustration />
         </Box>
 
-        <Flex flexDirection="column" gap="space.01" pb="space.05" width="100%">
+        <Flex flexDirection="column" gap="space.01" pb="space.05" pt="space.05" width="100%">
           <SheetRow
             title="Create new wallet"
             caption="Create a new Bitcoin and Stacks wallet"

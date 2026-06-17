@@ -2,7 +2,7 @@ import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selector
 import { css } from 'leather-styles/css';
 import { HStack, styled } from 'leather-styles/jsx';
 
-import { DropdownMenu, EllipsisVIcon, Eye1Icon, PencilIcon, TrashIcon } from '@leather.io/ui';
+import { DropdownMenu, EllipsisHIcon, Eye1Icon, PencilIcon, TrashIcon } from '@leather.io/ui';
 
 import { useThemeSwitcher } from '@app/common/theme-provider';
 import { WalletType } from '@app/store/common/wallet-type.selectors';
@@ -26,7 +26,7 @@ export function WalletActionMenu({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.IconButton data-testid={SwitchAccountSelectors.WalletActionMenuTrigger}>
-        <EllipsisVIcon color="ink.text-primary" />
+        <EllipsisHIcon color="ink.text-primary" />
       </DropdownMenu.IconButton>
       <DropdownMenu.Portal>
         <DropdownMenu.Content

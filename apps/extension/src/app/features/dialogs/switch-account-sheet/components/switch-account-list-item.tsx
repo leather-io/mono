@@ -23,12 +23,14 @@ interface SwitchAccountListItemProps {
   accountId: AccountId;
   disabled?: boolean;
   handleClose(): void;
+  hideBalance?: boolean;
   walletType: WalletType;
 }
 export function SwitchAccountListItem({
   accountId,
   disabled,
   handleClose,
+  hideBalance,
   walletType,
 }: SwitchAccountListItemProps) {
   const stacksAccount = useStacksAccount(accountId);
@@ -73,7 +75,7 @@ export function SwitchAccountListItem({
           publicKey={stacksAccount?.stxPublicKey || ''}
         />
       }
-      balanceLabel={<AccountTotalBalance accountId={accountId} />}
+      balanceLabel={hideBalance ? null : <AccountTotalBalance accountId={accountId} />}
       disabled={disabled}
       isLoading={isLoading}
       isSelected={isSelected}

@@ -132,8 +132,11 @@ function Actions({ children }: ActionsProps) {
       gap="space.04"
       px="space.06"
       pb="space.06"
+      pt="space.04"
       width="100%"
       bg="ink.background-primary"
+      position="sticky"
+      bottom={0}
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut', delay: 0.65 }}

@@ -32,7 +32,14 @@ export function SheetHeader({ onClose, title, variant = 'default' }: SheetHeader
         </styled.h2>
       )}
       {onClose && (
-        <IconButton icon={<CloseIcon />} onClick={onClose} position="absolute" top="space.05" />
+        <IconButton
+          icon={<CloseIcon />}
+          onClick={onClose}
+          position="absolute"
+          top="50%"
+          right={variant === 'large' ? 'space.05' : 'space.04'}
+          transform="translateY(-50%)"
+        />
       )}
     </Flex>
   );

@@ -27,7 +27,11 @@ import { RenameAccountDialog } from './components/rename-account-dialog';
 import { RenameWalletDialog } from './components/rename-wallet-dialog';
 import { SwitchAccountListItem } from './components/switch-account-list-item';
 import { WalletHeader } from './components/wallet-header';
-import { canHideAccount } from './switch-account-sheet.utils';
+import {
+  canHideAccount,
+  getWalletGroupCounts,
+  isAddAccountRow,
+} from './switch-account-sheet.utils';
 import { useAddWalletNavigation } from './use-add-wallet-navigation';
 
 interface SwitchAccountSheetProps {
@@ -65,15 +69,7 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
     }));
   }, [walletTree, hiddenAccountIds, isManageMode]);
 
-  const groupCounts = useMemo(() => {
-    return filteredWalletTree.map(wallet => {
-      let count = wallet.accounts.length;
-      if (wallet.type === 'software' && !isManageMode) {
-        count += 1;
-      }
-      return count;
-    });
-  }, [filteredWalletTree, isManageMode]);
+  const groupCounts = useMemo(() => getWalletGroupCounts(filteredWalletTree), [filteredWalletTree]);
 
   const isAccountHidden = useCallback(
     (acc: AccountId) =>
@@ -197,8 +193,7 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
                 }
                 const localIndex = index - itemsBefore;
 
-                const accountCount = wallet.accounts.length;
-                const isAddAccountButton = localIndex >= accountCount;
+                const isAddAccountButton = isAddAccountRow(wallet, localIndex);
 
                 if (isAddAccountButton) {
                   const isCreating = creatingFingerprint === wallet.fingerprint;
@@ -230,13 +225,14 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
 
                 if (isManageMode) {
                   return (
-                    <Box px="space.05" py="space.03" opacity={hidden ? 0.5 : 1}>
+                    <Box pl="space.05" pr="space.04" py="space.03" opacity={hidden ? 0.5 : 1}>
                       <Flex alignItems="center" gap="space.02">
                         <Box minWidth={0} flex="1">
                           <SwitchAccountListItem
                             handleClose={noop}
                             accountId={accountId}
                             walletType={wallet.type}
+                            hideBalance
                             disabled
                           />
                         </Box>

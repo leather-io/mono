@@ -2,7 +2,7 @@ import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selector
 import { css } from 'leather-styles/css';
 import { HStack, styled } from 'leather-styles/jsx';
 
-import { DropdownMenu, EllipsisVIcon, Eye1ClosedIcon, PencilIcon } from '@leather.io/ui';
+import { DropdownMenu, EllipsisHIcon, Eye1ClosedIcon, PencilIcon } from '@leather.io/ui';
 
 import { useThemeSwitcher } from '@app/common/theme-provider';
 
@@ -18,7 +18,7 @@ export function AccountActionMenu({ isHidden, canHide, onHide, onRename }: Accou
   return (
     <DropdownMenu.Root>
       <DropdownMenu.IconButton data-testid={SwitchAccountSelectors.AccountActionMenuTrigger}>
-        <EllipsisVIcon color="ink.text-primary" />
+        <EllipsisHIcon color="ink.text-primary" />
       </DropdownMenu.IconButton>
       <DropdownMenu.Portal>
         <DropdownMenu.Content

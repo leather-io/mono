@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
-import { Flex, Stack } from 'leather-styles/jsx';
+import { Stack } from 'leather-styles/jsx';
 
 import { Button, Input, Sheet, SheetHeader } from '@leather.io/ui';
 
+import { ButtonRow } from '@app/components/layout/card/components/button-row';
 import { useAppDispatch } from '@app/store';
 import { renameWallet } from '@app/store/active/active.actions';
 
@@ -36,8 +37,27 @@ export function RenameWalletDialog({
   if (!isShowing) return null;
 
   return (
-    <Sheet header={<SheetHeader title="Rename wallet" />} isShowing={isShowing} onClose={onClose}>
-      <Stack gap="space.05" px="space.05" pb="space.05">
+    <Sheet
+      header={<SheetHeader title="Rename wallet" />}
+      isShowing={isShowing}
+      onClose={onClose}
+      footer={
+        <ButtonRow flexDirection="row">
+          <Button variant="outline" flexGrow={1} onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            data-testid={SwitchAccountSelectors.RenameWalletSaveBtn}
+            flexGrow={1}
+            onClick={handleSave}
+            disabled={!name.trim()}
+          >
+            Save
+          </Button>
+        </ButtonRow>
+      }
+    >
+      <Stack gap="space.05" px="space.05" pt="space.05" pb="space.05">
         <Input.Root>
           <Input.Label>Wallet name</Input.Label>
           <Input.Field
@@ -51,18 +71,6 @@ export function RenameWalletDialog({
             }}
           />
         </Input.Root>
-        <Flex gap="space.04" justifyContent="flex-end">
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            data-testid={SwitchAccountSelectors.RenameWalletSaveBtn}
-            onClick={handleSave}
-            disabled={!name.trim()}
-          >
-            Save
-          </Button>
-        </Flex>
       </Stack>
     </Sheet>
   );
