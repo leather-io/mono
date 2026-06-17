@@ -33,6 +33,14 @@ export const pressableBaseStyles = css.raw({
   rounded: 'sm',
   userSelect: 'none',
   width: '100%',
+
+  '&:is(:disabled, [data-disabled])': {
+    _active: { bg: 'unset' },
+    _focus: { border: 'unset' },
+    _hover: { bg: 'unset' },
+    color: 'ink.text-non-interactive',
+    cursor: 'not-allowed',
+  },
 });
 
 export const pressableStyles = css.raw({
@@ -48,13 +56,6 @@ export const pressableStyles = css.raw({
   '&:is(:focus-visible)': {
     ...focusVisibleStyles,
   },
-  '&:is(:disabled, [data-disabled])': {
-    _active: { bg: 'unset' },
-    _focus: { border: 'unset' },
-    _hover: { bg: 'unset' },
-    color: 'ink.text-non-interactive',
-    cursor: 'not-allowed',
-  },
 
   '&:is(:hover, [data-highlighted])': {
     _before: {
@@ -67,7 +68,6 @@ export const pressableStyles = css.raw({
 const pressableRecipe = cva({
   base: pressableBaseStyles,
   variants: {
-    disabled: { true: {} },
     pressable: {
       true: pressableStyles,
     },
