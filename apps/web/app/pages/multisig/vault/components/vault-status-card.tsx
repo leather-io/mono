@@ -1,7 +1,7 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import type { Vault } from '@leather.io/models';
-import { Button } from '@leather.io/ui';
+import { ArrowTopRightIcon } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { VaultListItem } from '../../components/vault-list-item';
@@ -12,6 +12,8 @@ interface VaultStatusCardProps {
   vault: Vault;
   canCancel: boolean;
   isCancelling: boolean;
+  pendingCount: number;
+  onShareInvite(): void;
   onCancelVault(): void;
 }
 
@@ -32,7 +34,9 @@ function Row({
       borderTopColor="ink.border-default"
     >
       <Flex justifyContent="space-between" alignItems="center" gap="space.02">
-        <styled.span textStyle="label.02">{label}</styled.span>
+        <styled.span textStyle="caption.01" color="ink.text-subdued">
+          {label}
+        </styled.span>
         {value && (
           <styled.span textStyle="caption.01" color="ink.text-subdued">
             {value}
@@ -48,6 +52,8 @@ export function VaultStatusCard({
   vault,
   canCancel,
   isCancelling,
+  pendingCount,
+  onShareInvite,
   onCancelVault,
 }: VaultStatusCardProps) {
   const chain = chainFromNetwork(vault.network);
@@ -62,27 +68,19 @@ export function VaultStatusCard({
       borderRadius="md"
       borderWidth="1px"
       borderStyle="solid"
-      borderColor="ink.border-default"
+      borderColor={vault.status === 'pending' ? 'yellow.border' : 'ink.border-default'}
       overflow="hidden"
     >
       <Box p="space.04">
         <VaultListItem
-          leading={
-            <AvatarSq
-              chain={chain}
-              icon="vault"
-              themeId={theme.id}
-              size="md"
-              withChainBadge={false}
-            />
-          }
+          leading={<AvatarSq chain={chain} icon="vault" themeId={theme.id} size="md" />}
           title={vault.name}
           caption={`${chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault`}
         />
       </Box>
 
       <Row label="Status" value={statusLabel}>
-        <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
+        <styled.div textStyle="body.02" color="ink.text-primary" mt="space.01">
           {allJoined ? 'All members joined' : `${joined.length} of ${vault.members.length} joined`}
         </styled.div>
       </Row>
@@ -98,9 +96,44 @@ export function VaultStatusCard({
             {declined.length} member{declined.length === 1 ? '' : 's'} declined
           </styled.div>
           <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
-            Once a member declines, this vault can't activate. The creator can cancel and start
-            over.
+            {vault.status === 'cancelled'
+              ? 'Because a member declined, this vault was cancelled.'
+              : "Once a member declines, this vault can't activate. The creator can cancel and start over."}
           </styled.div>
+        </Box>
+      )}
+
+      {pendingCount > 0 && (
+        <Box
+          p="space.04"
+          borderTopWidth="1px"
+          borderTopStyle="solid"
+          borderTopColor="ink.border-default"
+          bg="yellow.background-primary"
+        >
+          <styled.button
+            type="button"
+            onClick={onShareInvite}
+            width="100%"
+            height="48px"
+            borderRadius="round"
+            bg="ink.action-primary-default"
+            color="ink.background-primary"
+            textStyle="label.02"
+            cursor="pointer"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            gap="space.02"
+            _hover={{ bg: 'ink.action-primary-hover' }}
+          >
+            <ArrowTopRightIcon variant="small" color="ink.background-primary" />
+            Share {pendingCount} pending {pendingCount === 1 ? 'invite' : 'invites'}
+          </styled.button>
+          <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.03">
+            Leather doesn't email or text invitees. Send each one through your own channel. The
+            vault stays read-only until everyone joins.
+          </styled.p>
         </Box>
       )}
 
@@ -111,15 +144,26 @@ export function VaultStatusCard({
           borderTopStyle="solid"
           borderTopColor="ink.border-default"
         >
-          <Button
-            variant="outline"
-            fullWidth
+          <styled.button
+            type="button"
             disabled={isCancelling}
             aria-busy={isCancelling}
             onClick={onCancelVault}
+            width="100%"
+            height="48px"
+            borderRadius="round"
+            borderWidth="1px"
+            borderStyle="solid"
+            borderColor="red.border"
+            bg="transparent"
+            color="red.action-primary-default"
+            textStyle="label.02"
+            cursor="pointer"
+            _hover={{ bg: 'red.background-primary' }}
+            _disabled={{ cursor: 'not-allowed', opacity: 0.6 }}
           >
             Cancel vault
-          </Button>
+          </styled.button>
         </Box>
       )}
     </Box>
