@@ -163,18 +163,29 @@ export class SwitchAccountPage {
     await this.page.getByTestId(SwitchAccountSelectors.RenameWalletSaveBtn).click();
   }
 
-  async renameAccount(name: string, nth = 0) {
+  async openRenameAccount(nth = 0) {
     await this.openAccountMenu(nth);
     await this.clickMenuItem('Rename');
-    await this.page.getByTestId(SwitchAccountSelectors.RenameAccountInput).fill(name);
+  }
+
+  renameAccountInput() {
+    return this.page.getByTestId(SwitchAccountSelectors.RenameAccountInput);
+  }
+
+  async saveRenameAccount() {
     await this.page.getByTestId(SwitchAccountSelectors.RenameAccountSaveBtn).click();
   }
 
+  async renameAccount(name: string, nth = 0) {
+    await this.openRenameAccount(nth);
+    await this.renameAccountInput().fill(name);
+    await this.saveRenameAccount();
+  }
+
   async clearAccountName(nth = 0) {
-    await this.openAccountMenu(nth);
-    await this.clickMenuItem('Rename');
-    await this.page.getByTestId(SwitchAccountSelectors.RenameAccountInput).fill('');
-    await this.page.getByTestId(SwitchAccountSelectors.RenameAccountSaveBtn).click();
+    await this.openRenameAccount(nth);
+    await this.renameAccountInput().fill('');
+    await this.saveRenameAccount();
   }
 
   async removeWallet(nth: number) {
