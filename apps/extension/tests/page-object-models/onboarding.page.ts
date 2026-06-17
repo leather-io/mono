@@ -299,6 +299,75 @@ export function makeLedgerTestAccountWalletState(keysToInclude: SupportedBlockch
   };
 }
 
+// A distinct fingerprint for the Ledger wallet so it does not collide with the
+// software test wallet (`testFingerprint`) when both are present.
+export const mixedLedgerFingerprint = 'a1b2c3d4';
+
+function rekeyLedgerKeychains(
+  keychains: {
+    entities: Record<string, { descriptor: string; chain: 'bitcoin' | 'stacks' }>;
+    ids: string[];
+  },
+  fromFingerprint: string,
+  toFingerprint: string
+) {
+  const entities: Record<string, { descriptor: string; chain: 'bitcoin' | 'stacks' }> = {};
+  const ids: string[] = [];
+  keychains.ids.forEach(id => {
+    const rekeyedId = id.replace(fromFingerprint, toFingerprint);
+    const keychain = keychains.entities[id];
+    entities[rekeyedId] = {
+      ...keychain,
+      // Only the key-origin fingerprint changes; the xpub/pubkey is untouched,
+      // so the derived addresses are identical to the original Ledger fixture.
+      descriptor: keychain.descriptor.replace(fromFingerprint, toFingerprint),
+    };
+    ids.push(rekeyedId);
+  });
+  return { entities, ids };
+}
+
+// One software wallet with 2 accounts plus one Ledger wallet with 5 accounts,
+// each under its own fingerprint, for testing multiwallet account selection.
+export function makeMixedSoftwareAndLedgerWalletState() {
+  const softwareState = getTestSoftwareAccountDefaultWalletState();
+  const ledgerKeychains = rekeyLedgerKeychains(
+    buildKeychains(['bitcoin', 'stacks']),
+    'e87a850b',
+    mixedLedgerFingerprint
+  );
+
+  return {
+    ...softwareState,
+    chains: {
+      stx: {
+        [testFingerprint]: { highestAccountIndex: 1, currentAccountStacksDescriptor: '' },
+        [mixedLedgerFingerprint]: { highestAccountIndex: 0, currentAccountStacksDescriptor: '' },
+      },
+    },
+    wallets: {
+      ids: [testFingerprint, mixedLedgerFingerprint],
+      entities: {
+        [testFingerprint]: {
+          fingerprint: testFingerprint,
+          name: 'Wallet 1',
+          type: 'software',
+          // Explicit timestamps so the software wallet sorts before the Ledger
+          // wallet deterministically (the tree orders wallets by createdOn)
+          createdOn: '2024-01-01T00:00:00.000Z',
+        },
+        [mixedLedgerFingerprint]: {
+          fingerprint: mixedLedgerFingerprint,
+          name: 'My Ledger',
+          type: 'ledger',
+          createdOn: '2024-01-02T00:00:00.000Z',
+        },
+      },
+    },
+    keychains: ledgerKeychains,
+  };
+}
+
 export class OnboardingPage {
   constructor(readonly page: Page) {}
 
@@ -411,6 +480,52 @@ export class OnboardingPage {
       fingerprint => window.debug.setHighestAccountIndex(fingerprint, 2),
       testFingerprint
     );
+
+    await this.dismissFeatureIntroducer();
+  }
+
+  /**
+   * Signs in with a software wallet (2 accounts) and a Ledger wallet (5
+   * accounts) already present, skipping onboarding. The encryption key is set
+   * so the software wallet's addresses derive, while the Ledger wallet's keys
+   * come from stored keychains.
+   */
+  async signInWithMixedSoftwareAndLedgerWallets(id: string) {
+    const testAccountDerivedKey =
+      'd904f412b8d116540017c302f3f7033813c95902af5a067c7befcc34fa5e5290709f157f80548603a1e4f8edc2c0d5d7';
+
+    const isSignedIn = async () => {
+      const { encryptionKey } = await this.page.evaluate(() =>
+        chrome.storage.session.get(['encryptionKey'])
+      );
+      const hasSessionKey = encryptionKey === testAccountDerivedKey;
+      const hasTokensTab = await this.page.getByTestId(HomePageSelectors.TokensTabBtn).isVisible();
+      const hasActivityTab = await this.page
+        .getByTestId(HomePageSelectors.ActivityTabBtn)
+        .isVisible();
+      return hasSessionKey && hasTokensTab && hasActivityTab;
+    };
+
+    const iterationCounter = createCounter();
+
+    do {
+      if (iterationCounter.getValue() > 5) throw new Error('Unable to initialize wallet state');
+
+      await this.page.evaluate(
+        async walletState => chrome.storage.local.set({ 'persist:root': walletState }),
+        makeMixedSoftwareAndLedgerWalletState()
+      );
+
+      await this.page.evaluate(
+        async encryptionKey => chrome.storage.session.set({ encryptionKey }),
+        testAccountDerivedKey
+      );
+
+      await this.page.goto(`chrome-extension://${id}/index.html`);
+      await delay(1000 * iterationCounter.getValue());
+
+      iterationCounter.increment();
+    } while (!(await isSignedIn()));
 
     await this.dismissFeatureIntroducer();
   }

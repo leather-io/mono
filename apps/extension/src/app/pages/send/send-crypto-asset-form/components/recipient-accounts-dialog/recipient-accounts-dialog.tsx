@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { GroupedVirtuoso } from 'react-virtuoso';
 
+import { getRecipientSelectAccountTestId } from '@tests/selectors/send.selectors';
 import { Box } from 'leather-styles/jsx';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
@@ -65,7 +66,14 @@ export function RecipientAccountsSheet() {
             const accountId = getAccountAt(groups, groupCounts, index);
             if (!wallet || !accountId) return null;
             return (
-              <Box px="space.05" py="space.03">
+              <Box
+                data-testid={getRecipientSelectAccountTestId(
+                  accountId.fingerprint,
+                  accountId.accountIndex
+                )}
+                px="space.05"
+                py="space.03"
+              >
                 <AccountListItem
                   accountId={accountId}
                   walletType={wallet.type}

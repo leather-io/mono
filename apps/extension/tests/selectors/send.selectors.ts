@@ -33,3 +33,7 @@ export enum SendCryptoAssetSelectors {
 
   TaprootUtxoWarningDialog = 'taproot-utxo-warning-dialog',
 }
+
+export function getRecipientSelectAccountTestId(fingerprint: string, accountIndex: number) {
+  return `recipient-select-account-${fingerprint}-${accountIndex}`;
+}
