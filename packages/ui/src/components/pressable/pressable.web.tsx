@@ -92,7 +92,7 @@ export function Pressable(props: HTMLStyledProps<'button'> & PressableVariantPro
   return (
     <styled.button
       className={`group ${pressableRecipe({ pressable: isPressable })}`}
-      data-disabled={disabled}
+      data-disabled={disabled || undefined}
       disabled={disabled}
       onClick={isPressable ? onClick : undefined}
       ref={ref}
