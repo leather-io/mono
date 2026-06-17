@@ -10,6 +10,7 @@ import type { AuthSessionService } from '../../auth/auth-session.service';
 import type { Environment } from '../../environment';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
 import { LeatherApiError } from './leather-api.error';
+import { LeatherApiPageRequest } from './leather-api.pagination';
 import { paths } from './leather-api.types';
 
 type AuthRequestBody = paths['/v1/auth']['post']['requestBody']['content']['application/json'];
@@ -261,6 +262,100 @@ export class LeatherAuthApiClient {
         const { data } = await this.client.PATCH('/v1/multisig/vault-accounts/{id}', {
           params: { path: { id: accountId } },
           body: update,
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async fetchMultisigVaultAccountTransactions(
+    network: AuthNetworkId,
+    vaultAccountId: string,
+    pageRequest: LeatherApiPageRequest,
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.GET('/v1/multisig/vault-accounts/{id}/transactions', {
+          params: {
+            path: { id: vaultAccountId },
+            query: {
+              page: pageRequest.page.toString(),
+              pageSize: pageRequest.pageSize.toString(),
+            },
+          },
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async fetchMultisigTransaction(
+    network: AuthNetworkId,
+    transactionId: string,
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.GET('/v1/multisig/transactions/{id}', {
+          params: { path: { id: transactionId } },
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async addMultisigTransactionSignatures(
+    network: AuthNetworkId,
+    transactionId: string,
+    body: { signatures: { signature: string; inputIndex?: number }[] },
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.POST('/v1/multisig/transactions/{id}/signatures', {
+          params: { path: { id: transactionId } },
+          body,
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async cancelMultisigTransaction(
+    network: AuthNetworkId,
+    transactionId: string,
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.POST('/v1/multisig/transactions/{id}/cancel', {
+          params: { path: { id: transactionId } },
+          headers,
+          signal,
+        });
+        return data!;
+      })
+    );
+  }
+
+  async broadcastMultisigTransaction(
+    network: AuthNetworkId,
+    transactionId: string,
+    { signal }: { signal?: AbortSignal } = {}
+  ) {
+    return this.authed(network, headers =>
+      this.rateLimiter.add(RateLimiterType.Leather, async () => {
+        const { data } = await this.client.POST('/v1/multisig/transactions/{id}/broadcast', {
+          params: { path: { id: transactionId } },
           headers,
           signal,
         });

@@ -4380,6 +4380,684 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/multisig-ext/propose': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Propose a multisig transaction */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            multisigAddress: string;
+            rawPayload: string;
+            proposalSignature: string;
+            proposalTimestamp: number;
+          };
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              vaultAccountId: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              proposerUserId: string;
+              proposalRawPayload: string;
+              proposalSignature: string;
+              proposalTimestamp: number;
+              proposalHash: string;
+              nonce: number | null;
+              txId: string | null;
+              /** @enum {string} */
+              status:
+                | 'queued'
+                | 'pending'
+                | 'signed'
+                | 'broadcast'
+                | 'confirmed'
+                | 'failed'
+                | 'dropped'
+                | 'cancelled';
+              signatures: {
+                userId: string;
+                signerIndex: number;
+                signature: string;
+                inputIndex: number | null;
+                createdAt: string;
+              }[];
+              broadcastAt: string | null;
+              createdAt: string;
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/multisig/vault-accounts/{id}/transactions': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description List transactions for a vault account */
+    get: {
+      parameters: {
+        query: {
+          page: string;
+          pageSize: string;
+        };
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              meta: {
+                page: number;
+                pageSize: number;
+                totalPages: number;
+                totalItems: number;
+              };
+              data: {
+                id: string;
+                vaultAccountId: string;
+                /** @enum {string} */
+                network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+                proposerUserId: string;
+                proposalRawPayload: string;
+                proposalSignature: string;
+                proposalTimestamp: number;
+                proposalHash: string;
+                nonce: number | null;
+                txId: string | null;
+                /** @enum {string} */
+                status:
+                  | 'queued'
+                  | 'pending'
+                  | 'signed'
+                  | 'broadcast'
+                  | 'confirmed'
+                  | 'failed'
+                  | 'dropped'
+                  | 'cancelled';
+                signatures: {
+                  userId: string;
+                  signerIndex: number;
+                  signature: string;
+                  inputIndex: number | null;
+                  createdAt: string;
+                }[];
+                broadcastAt: string | null;
+                createdAt: string;
+                updatedAt: string;
+              }[];
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/multisig/transactions/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get a transaction */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              vaultAccountId: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              proposerUserId: string;
+              proposalRawPayload: string;
+              proposalSignature: string;
+              proposalTimestamp: number;
+              proposalHash: string;
+              nonce: number | null;
+              txId: string | null;
+              /** @enum {string} */
+              status:
+                | 'queued'
+                | 'pending'
+                | 'signed'
+                | 'broadcast'
+                | 'confirmed'
+                | 'failed'
+                | 'dropped'
+                | 'cancelled';
+              signatures: {
+                userId: string;
+                signerIndex: number;
+                signature: string;
+                inputIndex: number | null;
+                createdAt: string;
+              }[];
+              broadcastAt: string | null;
+              createdAt: string;
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/multisig/transactions/{id}/signatures': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Add approval signature(s) to a transaction */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            signatures: {
+              signature: string;
+              inputIndex?: number;
+            }[];
+          };
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              vaultAccountId: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              proposerUserId: string;
+              proposalRawPayload: string;
+              proposalSignature: string;
+              proposalTimestamp: number;
+              proposalHash: string;
+              nonce: number | null;
+              txId: string | null;
+              /** @enum {string} */
+              status:
+                | 'queued'
+                | 'pending'
+                | 'signed'
+                | 'broadcast'
+                | 'confirmed'
+                | 'failed'
+                | 'dropped'
+                | 'cancelled';
+              signatures: {
+                userId: string;
+                signerIndex: number;
+                signature: string;
+                inputIndex: number | null;
+                createdAt: string;
+              }[];
+              broadcastAt: string | null;
+              createdAt: string;
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/multisig/transactions/{id}/cancel': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Cancel a transaction */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              vaultAccountId: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              proposerUserId: string;
+              proposalRawPayload: string;
+              proposalSignature: string;
+              proposalTimestamp: number;
+              proposalHash: string;
+              nonce: number | null;
+              txId: string | null;
+              /** @enum {string} */
+              status:
+                | 'queued'
+                | 'pending'
+                | 'signed'
+                | 'broadcast'
+                | 'confirmed'
+                | 'failed'
+                | 'dropped'
+                | 'cancelled';
+              signatures: {
+                userId: string;
+                signerIndex: number;
+                signature: string;
+                inputIndex: number | null;
+                createdAt: string;
+              }[];
+              broadcastAt: string | null;
+              createdAt: string;
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/multisig/transactions/{id}/broadcast': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Broadcast a signed transaction */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              id: string;
+              vaultAccountId: string;
+              /** @enum {string} */
+              network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
+              proposerUserId: string;
+              proposalRawPayload: string;
+              proposalSignature: string;
+              proposalTimestamp: number;
+              proposalHash: string;
+              nonce: number | null;
+              txId: string | null;
+              /** @enum {string} */
+              status:
+                | 'queued'
+                | 'pending'
+                | 'signed'
+                | 'broadcast'
+                | 'confirmed'
+                | 'failed'
+                | 'dropped'
+                | 'cancelled';
+              signatures: {
+                userId: string;
+                signerIndex: number;
+                signature: string;
+                inputIndex: number | null;
+                createdAt: string;
+              }[];
+              broadcastAt: string | null;
+              createdAt: string;
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Not Implemented */
+        501: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/multisig/vaults': {
     parameters: {
       query?: never;
