@@ -1,4 +1,4 @@
-import { css } from 'leather-styles/css';
+import { css, cx } from 'leather-styles/css';
 
 import { Avatar } from '@leather.io/ui';
 
@@ -18,6 +18,11 @@ const toneClass = {
 
 const tones = ['blue', 'orange', 'green', 'stacks'] as const;
 
+const fallbackFontClass: Partial<Record<AvatarCircleSize, string>> = {
+  xs: css({ '& > span': { fontSize: '10px' } }),
+  sm: css({ '& > span': { fontSize: '12px' } }),
+};
+
 function toneForName(name: string) {
   let hash = 0;
   for (const char of name) hash = (hash * 31 + char.charCodeAt(0)) | 0;
@@ -34,7 +39,7 @@ export function AvatarCircle({ name, size = 'sm' }: AvatarCircleProps) {
       variant="circle"
       size={size}
       fallback={initial}
-      className={toneClass[toneForName(name)]}
+      className={cx(toneClass[toneForName(name)], fallbackFontClass[size])}
     />
   );
 }

@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { styled } from 'leather-styles/jsx';
 
 import { AddressDisplayer, CheckmarkIcon, CopyIcon } from '@leather.io/ui';
-
-import { truncateAddress } from './address-text';
+import { truncateMiddle } from '@leather.io/utils';
 
 interface CopyAddressProps {
   addr: string;
   full?: boolean;
   grouped?: boolean;
+  emphasis?: boolean;
 }
 
 const COPIED_RESET_MS = 1400;
@@ -17,7 +17,7 @@ const COPIED_RESET_MS = 1400;
 // Mono-font address with click-to-copy. Uses the Clipboard API directly (a
 // design-only convenience); production extraction routes through the app's
 // clipboard hook.
-export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
+export function CopyAddress({ addr, full, grouped, emphasis }: CopyAddressProps) {
   const [copied, setCopied] = useState(false);
   const multiline = grouped || full;
   function onCopy() {
@@ -36,12 +36,11 @@ export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
       maxWidth="100%"
       textAlign="left"
       cursor="pointer"
-      ml="-space.02"
       px="space.02"
       py="space.01"
       borderRadius="sm"
       bg="transparent"
-      color="ink.text-subdued"
+      color={emphasis ? 'ink.text-primary' : 'ink.text-subdued'}
       transition="background 0.1s ease"
       _hover={{ bg: 'ink.component-background-hover', color: 'ink.text-primary' }}
     >
@@ -50,12 +49,12 @@ export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
       ) : (
         <styled.span
           textStyle="code"
-          overflow="hidden"
-          textOverflow="ellipsis"
+          fontSize={emphasis ? '1rem' : undefined}
+          flexShrink={0}
           whiteSpace={full ? 'normal' : 'nowrap'}
           wordBreak={full ? 'break-all' : 'normal'}
         >
-          {full ? addr : truncateAddress(addr)}
+          {full ? addr : truncateMiddle(addr)}
         </styled.span>
       )}
       <styled.span
