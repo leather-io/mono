@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router';
+import { Navigate, useSearchParams } from 'react-router';
 
 import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
@@ -28,9 +28,16 @@ export function MultisigOnboardingPage() {
   const stxSignOut = useSignOut(chainNetwork.stx);
   const btcRestoring = useIsRestoringSession(chainNetwork.btc);
   const stxRestoring = useIsRestoringSession(chainNetwork.stx);
+  const [searchParams] = useSearchParams();
 
   if (btcSession || stxSession) {
-    return <Navigate to={multisigPaths.index} replace />;
+    const invite = searchParams.get('invite');
+    return (
+      <Navigate
+        to={invite ? `${multisigPaths.index}?invite=${invite}` : multisigPaths.index}
+        replace
+      />
+    );
   }
 
   return (

@@ -1,4 +1,4 @@
-import { type MetaDescriptor, Navigate } from 'react-router';
+import { type MetaDescriptor, Navigate, useSearchParams } from 'react-router';
 
 import { WhenClient } from '~/components/when-client';
 import { useSession } from '~/features/multisig/auth/use-session';
@@ -16,9 +16,16 @@ export function meta() {
 function MultisigIndex() {
   const btcSession = useSession('btc:mainnet');
   const stxSession = useSession('stx:mainnet');
+  const [searchParams] = useSearchParams();
 
   if (!btcSession && !stxSession) {
-    return <Navigate to={multisigPaths.onboarding} replace />;
+    const invite = searchParams.get('invite');
+    return (
+      <Navigate
+        to={invite ? `${multisigPaths.onboarding}?invite=${invite}` : multisigPaths.onboarding}
+        replace
+      />
+    );
   }
   return <MultisigDashboardPage />;
 }
