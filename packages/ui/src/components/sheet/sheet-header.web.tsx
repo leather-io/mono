@@ -16,6 +16,7 @@ export function SheetHeader({ onClose, title, variant = 'default' }: SheetHeader
     <Flex
       justifyContent="flex-end"
       alignItems="center"
+      position="relative"
       m={{ base: 0, md: 'auto' }}
       p={variant === 'large' ? 'space.05' : 'space.04'}
       bg="transparent"
