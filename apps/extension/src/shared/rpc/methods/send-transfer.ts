@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { type BitcoinNetworkModes, type DefaultNetworkConfigurations } from '@leather.io/models';
+import { type BitcoinNetworkModes } from '@leather.io/models';
 import type { RpcParams, sendTransfer } from '@leather.io/rpc';
 import { uniqueArray } from '@leather.io/utils';
 
@@ -11,7 +11,6 @@ import {
 } from '@shared/forms/address-validators';
 import { checkIfDigitsOnly } from '@shared/forms/amount-validators';
 
-import { defaultNetworkIdSchema } from '../rpc-schemas';
 import {
   accountSchema,
   formatValidationErrors,
@@ -21,9 +20,7 @@ import {
 
 export const defaultRpcSendTransferNetwork = 'mainnet';
 
-function defaultNetworkIdToBitcoinNetworkMode(
-  networkId: DefaultNetworkConfigurations
-): BitcoinNetworkModes {
+function defaultNetworkIdToBitcoinNetworkMode(networkId: string): BitcoinNetworkModes | undefined {
   switch (networkId) {
     case 'mainnet':
       return 'mainnet';
@@ -37,7 +34,7 @@ function defaultNetworkIdToBitcoinNetworkMode(
     case 'signet':
       return 'signet';
     default:
-      throw new Error(`Unknown network ID: ${networkId}`);
+      return undefined;
   }
 }
 
@@ -46,14 +43,14 @@ export const rpcSendTransferParamsSchemaLegacy = z.object({
   account: accountSchema.optional(),
   address: z.string(),
   amount: z.string(),
-  network: defaultNetworkIdSchema.optional(),
+  network: z.string().optional(),
 });
 
 /** @knipignore */
 export const rpcSendTransferParamsSchema = z
   .object({
     account: accountSchema.optional(),
-    network: defaultNetworkIdSchema.optional(),
+    network: z.string().optional(),
     recipients: z
       .array(
         z.object({
@@ -78,10 +75,11 @@ export const rpcSendTransferParamsSchema = z
     ({ network, recipients }) => {
       if (!network) return true;
 
+      const networkMode = defaultNetworkIdToBitcoinNetworkMode(network);
+      if (!networkMode) return true;
+
       const addressNetworks = recipients.map(recipient =>
-        btcAddressNetworkValidator(defaultNetworkIdToBitcoinNetworkMode(network)).isValidSync(
-          recipient.address
-        )
+        btcAddressNetworkValidator(networkMode).isValidSync(recipient.address)
       );
 
       return !addressNetworks.some(val => val === false);

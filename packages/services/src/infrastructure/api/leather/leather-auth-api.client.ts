@@ -107,7 +107,12 @@ export class LeatherAuthApiClient {
 
   async createMultisigVault(
     network: AuthNetworkId,
-    params: { name: string; members: string[] },
+    params: {
+      name: string;
+      theme?: string;
+      icon?: string;
+      members: { address: string; name?: string }[];
+    },
     { signal }: { signal?: AbortSignal } = {}
   ) {
     return this.authed(network, headers =>
@@ -125,7 +130,7 @@ export class LeatherAuthApiClient {
   async updateMultisigVault(
     network: AuthNetworkId,
     vaultId: string,
-    update: { name: string },
+    update: { name: string; theme?: string | null; icon?: string | null },
     { signal }: { signal?: AbortSignal } = {}
   ) {
     return this.authed(network, headers =>
@@ -212,7 +217,7 @@ export class LeatherAuthApiClient {
   async createMultisigVaultAccount(
     network: AuthNetworkId,
     vaultId: string,
-    params: { name: string; threshold: number; index: number },
+    params: { name: string; icon?: string; threshold: number; index: number },
     { signal }: { signal?: AbortSignal } = {}
   ) {
     return this.authed(network, headers =>
@@ -248,7 +253,7 @@ export class LeatherAuthApiClient {
   async updateMultisigVaultAccount(
     network: AuthNetworkId,
     accountId: string,
-    update: { name: string },
+    update: { name: string; icon?: string | null },
     { signal }: { signal?: AbortSignal } = {}
   ) {
     return this.authed(network, headers =>

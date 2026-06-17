@@ -118,6 +118,7 @@ overrides:
   svgo@>=3.0.0: '>=3.3.3'
   serialize-javascript: 7.0.3
   '@expo/cli>undici': '>=7.24.0'
+  webpack-bundle-analyzer>ws: 8.21.0
   ws@>=6.0.0 <6.2.4: '>=6.2.4 <7'
   ws@>=7.0.0 <7.5.11: '>=7.5.11 <8'
   ws@>=8.0.0 <8.21.0: '>=8.21.0'
@@ -42669,7 +42670,7 @@ snapshots:
       opener: 1.5.2
       picocolors: 1.1.1
       sirv: 2.0.4
-      ws: 7.5.11
+      ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate

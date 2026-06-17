@@ -2,21 +2,26 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useSession } from '~/features/multisig/auth/use-session';
+import { useSignIn } from '~/features/multisig/auth/use-sign-in';
+import { useVaults } from '~/features/multisig/vaults/use-vaults';
 import { Page } from '~/layouts/page/page';
 
+import type { VaultSummary } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
 
+import { ChainAvatar } from '../components/chain-avatar';
+import { InvitationModal } from '../components/invitation-modal';
 import { TxRow } from '../components/tx-row';
-import type { Vault } from '../data/multisig-types';
-import { InviteAcceptModal } from '../modals/invite-accept-modal';
+import type { Chain } from '../data/multisig-types';
 import { multisigPaths } from '../multisig.constants';
-import { useRecentTransactions, useVaults } from '../store/use-multisig';
+import { useRecentTransactions } from '../store/use-multisig';
 import { CreateVaultTile } from './components/create-vault-tile';
 import { VaultCard } from './components/vault-card';
 
 function SectionLabel({ children }: { children: string }) {
   return (
-    <styled.h3 textStyle="label.02" color="ink.text-subdued" mb="space.03">
+    <styled.h3 textStyle="label.01" color="ink.text-primary" mb="space.03">
       {children}
     </styled.h3>
   );
@@ -66,14 +71,62 @@ function EmptyActivity() {
   );
 }
 
+function ConnectChainPrompt({
+  chain,
+  onConnect,
+  isPending,
+}: {
+  chain: Chain;
+  onConnect(): void;
+  isPending: boolean;
+}) {
+  const label = chain === 'btc' ? 'Bitcoin' : 'Stacks';
+  return (
+    <Flex
+      mt="space.05"
+      gap="space.04"
+      alignItems="center"
+      p="space.04"
+      borderRadius="md"
+      bg="ink.background-secondary"
+    >
+      <ChainAvatar chain={chain} boxSize="40px" />
+      <Box flex={1} minWidth={0}>
+        <styled.p textStyle="label.01">Connect {label} to see more vaults</styled.p>
+        <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.01">
+          You'll be able to create and join {label} multisig vaults alongside your existing ones.
+        </styled.p>
+      </Box>
+      <Button variant="outline" disabled={isPending} aria-busy={isPending} onClick={onConnect}>
+        Connect {label}
+      </Button>
+    </Flex>
+  );
+}
+
 export function MultisigDashboardPage() {
   const navigate = useNavigate();
-  const vaults = useVaults();
+  const [inviteVault, setInviteVault] = useState<VaultSummary | null>(null);
+  const btcVaults = useVaults('btc:mainnet');
+  const stxVaults = useVaults('stx:mainnet');
+  const btcSession = useSession('btc:mainnet');
+  const stxSession = useSession('stx:mainnet');
+  const btcSignIn = useSignIn('btc:mainnet');
+  const stxSignIn = useSignIn('stx:mainnet');
   const recentTxs = useRecentTransactions(5);
-  const [inviteVault, setInviteVault] = useState<Vault | null>(null);
+
+  const vaults = [...(btcVaults.data ?? []), ...(stxVaults.data ?? [])];
+  const isLoadingVaults = btcVaults.isLoading || stxVaults.isLoading;
+  const hasFetchedVaults = btcVaults.isFetched || stxVaults.isFetched;
+  const isResolvingVaults = isLoadingVaults || !hasFetchedVaults;
 
   // Invited vaults float to the top so pending invitations are seen first.
-  const sortedVaults = vaults.slice().sort((a, b) => (b.invited ? 1 : 0) - (a.invited ? 1 : 0));
+  const sortedVaults = vaults
+    .slice()
+    .sort(
+      (a, b) =>
+        (b.membershipStatus === 'invited' ? 1 : 0) - (a.membershipStatus === 'invited' ? 1 : 0)
+    );
 
   return (
     <Page>
@@ -82,7 +135,18 @@ export function MultisigDashboardPage() {
         <Box flex={['1', '1', '1.6']} width="100%">
           <SectionLabel>My vaults</SectionLabel>
           <Flex direction="column" gap="space.03">
-            {sortedVaults.length === 0 && (
+            {isResolvingVaults &&
+              sortedVaults.length === 0 &&
+              [0, 1, 2].map(index => (
+                <Box
+                  key={index}
+                  height="72px"
+                  borderRadius="md"
+                  bg="ink.component-background-default"
+                  opacity={0.6}
+                />
+              ))}
+            {!isResolvingVaults && sortedVaults.length === 0 && (
               <EmptyVaults onCreate={() => navigate(multisigPaths.createVault)} />
             )}
             {sortedVaults.map(vault => (
@@ -90,7 +154,9 @@ export function MultisigDashboardPage() {
                 key={vault.id}
                 vault={vault}
                 onClick={() =>
-                  vault.invited ? setInviteVault(vault) : navigate(multisigPaths.vault(vault.id))
+                  vault.membershipStatus === 'invited'
+                    ? setInviteVault(vault)
+                    : navigate(multisigPaths.vault(vault.id))
                 }
               />
             ))}
@@ -98,6 +164,20 @@ export function MultisigDashboardPage() {
               <CreateVaultTile onClick={() => navigate(multisigPaths.createVault)} />
             )}
           </Flex>
+          {!btcSession && (
+            <ConnectChainPrompt
+              chain="btc"
+              onConnect={() => btcSignIn.mutate()}
+              isPending={btcSignIn.isPending}
+            />
+          )}
+          {!stxSession && (
+            <ConnectChainPrompt
+              chain="stx"
+              onConnect={() => stxSignIn.mutate()}
+              isPending={stxSignIn.isPending}
+            />
+          )}
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel>Activity</SectionLabel>
@@ -123,7 +203,7 @@ export function MultisigDashboardPage() {
       </Flex>
 
       {inviteVault && (
-        <InviteAcceptModal vault={inviteVault} isShowing onClose={() => setInviteVault(null)} />
+        <InvitationModal vault={inviteVault} isShowing onClose={() => setInviteVault(null)} />
       )}
     </Page>
   );

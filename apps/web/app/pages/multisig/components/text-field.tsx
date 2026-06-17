@@ -9,11 +9,20 @@ interface TextFieldProps {
   onChange(value: string): void;
   help?: ReactNode;
   mono?: boolean;
+  invalid?: boolean;
 }
 
 // Minimal labelled text input shared by the multisig forms. A design-only
 // field; production extraction uses the app's form atoms + react-hook-form.
-export function TextField({ label, placeholder, value, onChange, help, mono }: TextFieldProps) {
+export function TextField({
+  label,
+  placeholder,
+  value,
+  onChange,
+  help,
+  mono,
+  invalid,
+}: TextFieldProps) {
   return (
     <Flex direction="column" gap="space.02">
       {label && (
@@ -30,7 +39,7 @@ export function TextField({ label, placeholder, value, onChange, help, mono }: T
         borderRadius="sm"
         borderWidth="1px"
         borderStyle="solid"
-        borderColor="ink.border-default"
+        borderColor={invalid ? 'red.action-primary-default' : 'ink.border-default'}
         bg="ink.background-primary"
         textStyle="body.02"
         fontFamily={mono ? 'firaCode' : undefined}
