@@ -1,4 +1,6 @@
 import { TokenTransferPayloadWire, deserializeTransaction } from '@stacks/transactions';
+import { mockEmptyStacksBalancesRequest } from '@tests/mocks/mock-stacks-balances';
+import { mockEmptyStacksBalancesV2Request } from '@tests/mocks/mock-stacks-balances-v2';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { TestAppPage } from '@tests/page-object-models/test-app.page';
 import { TransactionRequestPage } from '@tests/page-object-models/transaction-request.page';
@@ -28,6 +30,9 @@ test.describe('Transaction signing', () => {
     test('that it validates against insufficient funds when performing a contract call', async ({
       context,
     }) => {
+      await mockEmptyStacksBalancesRequest(context);
+      await mockEmptyStacksBalancesV2Request(context);
+
       const newPagePromise = context.waitForEvent('page');
       await testAppPage.page.getByTestId(OnboardingSelectors.SignUpBtn).click();
       const accountsPage = await newPagePromise;
