@@ -193,37 +193,57 @@ export function validateRequestParams({
   return { status: 'success' };
 }
 
-const walletNoLongerAvailableMessage =
+export const walletNoLongerAvailableMessage =
   'Wallet no longer available. Reconnect the app to an available wallet.';
 
 type MaybePreMultiWalletRootState = Omit<RootState, 'wallets'> & {
   wallets?: RootState['wallets'];
 };
 
+type ConnectedWalletFailureReason = 'missing-state' | 'wallet-unavailable';
+
+type ConnectedWalletCheckResult =
+  | { status: 'success'; tabId: number }
+  | { status: 'failure'; reason: ConnectedWalletFailureReason; tabId: number };
+
+export async function checkConnectedWalletExists(
+  port: chrome.runtime.Port
+): Promise<ConnectedWalletCheckResult> {
+  const tabId = getTabIdFromPort(port);
+  const state = (await getRootState()) as MaybePreMultiWalletRootState | null;
+  if (!state) return { status: 'failure', reason: 'missing-state', tabId };
+
+  const walletEntities = state.wallets?.entities;
+  if (!walletEntities) return { status: 'failure', reason: 'missing-state', tabId };
+
+  const hostname = getHostnameFromPort(port);
+  const originPermissions = state.appPermissions.entities[hostname];
+
+  if (!isConnectedToExistingWallet(originPermissions, walletEntities))
+    return { status: 'failure', reason: 'wallet-unavailable', tabId };
+
+  return { status: 'success', tabId };
+}
+
 export async function validateConnectedWalletExists(
   request: RpcRequests,
   port: chrome.runtime.Port,
   errorMessage = walletNoLongerAvailableMessage
 ): Promise<{ status: ValidationResult }> {
-  const tabId = getTabIdFromPort(port);
-  const state = (await getRootState()) as MaybePreMultiWalletRootState | null;
-  if (!state) {
-    void sendMissingStateErrorToTab({ tabId, method: request.method, id: request.id });
+  const result = await checkConnectedWalletExists(port);
+
+  if (result.status === 'failure' && result.reason === 'missing-state') {
+    void sendMissingStateErrorToTab({
+      tabId: result.tabId,
+      method: request.method,
+      id: request.id,
+    });
     return { status: 'failure' };
   }
 
-  const walletEntities = state.wallets?.entities;
-  if (!walletEntities) {
-    void sendMissingStateErrorToTab({ tabId, method: request.method, id: request.id });
-    return { status: 'failure' };
-  }
-
-  const hostname = getHostnameFromPort(port);
-  const originPermissions = state.appPermissions.entities[hostname];
-
-  if (!isConnectedToExistingWallet(originPermissions, walletEntities)) {
+  if (result.status === 'failure') {
     void chrome.tabs.sendMessage(
-      tabId,
+      result.tabId,
       createRpcErrorResponse(request.method, {
         id: request.id,
         error: { code: RpcErrorCode.UNAUTHENTICATED, message: errorMessage },

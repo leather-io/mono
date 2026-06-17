@@ -7,7 +7,7 @@ import {
 
 interface FormatTxSignatureResponseArgs {
   payload: string;
-  response: TxResult | 'cancel';
+  response: TxResult | string;
 }
 export function formatTxSignatureResponse({
   payload,

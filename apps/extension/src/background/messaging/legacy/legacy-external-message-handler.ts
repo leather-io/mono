@@ -10,11 +10,13 @@ import { getLegacyTransactionPayloadFromToken } from '@shared/utils/legacy-reque
 
 import { queueAnalyticsRequest } from '@background/background-analytics';
 import {
+  checkConnectedWalletExists,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginFromPort,
   listenForOriginTabClose,
   listenForPopupClose,
   triggerRequestPopupWindowOpen,
+  walletNoLongerAvailableMessage,
 } from '@background/messaging/rpc-request-utils';
 
 export function isLegacyMessage(message: any): message is LegacyMessageFromContentScript {
@@ -57,6 +59,32 @@ async function trackLegacyRequestInitiated(args: TrackLegacyRequestInitiatedArgs
   return queueAnalyticsRequest('legacy_request_initiated', { ...args });
 }
 
+const legacyMethodsRequiringConnectedWallet = new Set<ExternalMethods>([
+  ExternalMethods.transactionRequest,
+  ExternalMethods.signatureRequest,
+  ExternalMethods.structuredDataSignatureRequest,
+  ExternalMethods.psbtRequest,
+]);
+
+function createLegacyWalletUnavailableResponse(message: LegacyMessageFromContentScript) {
+  const { payload } = message;
+
+  switch (message.method) {
+    case ExternalMethods.transactionRequest:
+      return formatTxSignatureResponse({ payload, response: walletNoLongerAvailableMessage });
+    case ExternalMethods.signatureRequest:
+    case ExternalMethods.structuredDataSignatureRequest:
+      return formatMessageSigningResponse({
+        request: payload,
+        response: walletNoLongerAvailableMessage,
+      });
+    case ExternalMethods.psbtRequest:
+      return formatPsbtResponse({ request: payload, response: walletNoLongerAvailableMessage });
+    case ExternalMethods.authenticationRequest:
+      return formatAuthResponse({ request: payload, response: 'cancel' });
+  }
+}
+
 export async function handleLegacyExternalMethodFormat(
   message: LegacyMessageFromContentScript,
   port: chrome.runtime.Port
@@ -65,6 +93,14 @@ export async function handleLegacyExternalMethodFormat(
   const origin = getOriginFromPort(port);
 
   const messageMethod = message.method;
+  if (legacyMethodsRequiringConnectedWallet.has(messageMethod)) {
+    const result = await checkConnectedWalletExists(port);
+    if (result.status === 'failure') {
+      void chrome.tabs.sendMessage(result.tabId, createLegacyWalletUnavailableResponse(message));
+      return;
+    }
+  }
+
   switch (messageMethod) {
     case ExternalMethods.authenticationRequest: {
       void trackLegacyRequestInitiated({ method: ExternalMethods.authenticationRequest, origin });
