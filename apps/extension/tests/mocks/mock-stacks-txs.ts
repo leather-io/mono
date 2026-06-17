@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 import { TEST_ACCOUNT_1_STX_ADDRESS } from './constants';
 
@@ -95,7 +95,7 @@ const emptyTxsResponse = { limit: 50, offset: 0, total: 0, results: [] };
 const transactionWithTransfersUrl = `**/api.hiro.so/extended/v1/address/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions_with_transfers?limit=50`;
 const mempoolUrl = `**/api.hiro.so/extended/v1/tx/mempool?address=${TEST_ACCOUNT_1_STX_ADDRESS}&limit=50`;
 
-export async function mockMainnetTestAccountStacksTxsRequests(page: Page) {
+export async function mockMainnetTestAccountStacksTxsRequests(page: Page | BrowserContext) {
   await Promise.all([
     page.route(transactionWithTransfersUrl, route =>
       route.fulfill({
@@ -111,7 +111,7 @@ export async function mockMainnetTestAccountStacksTxsRequests(page: Page) {
   ]);
 }
 
-export async function mockWildcardStacksTxsRequests(page: Page) {
+export async function mockWildcardStacksTxsRequests(page: Page | BrowserContext) {
   await Promise.all([
     page.route('**/api.hiro.so/extended/v1/address/*/transactions_with_transfers?limit=50', route =>
       route.fulfill({ json: emptyTxsResponse })
@@ -128,7 +128,7 @@ export async function mockWildcardStacksTxsRequests(page: Page) {
   ]);
 }
 
-export async function mockMainnetTestAccountStacksConfirmedTxsRequests(page: Page) {
+export async function mockMainnetTestAccountStacksConfirmedTxsRequests(page: Page | BrowserContext) {
   await page.route(transactionWithTransfersUrl, route =>
     route.fulfill({
       json: {
@@ -141,7 +141,7 @@ export async function mockMainnetTestAccountStacksConfirmedTxsRequests(page: Pag
   );
 }
 
-export async function mockTestAccountStacksTxsRequestsWithPendingTx(page: Page) {
+export async function mockTestAccountStacksTxsRequestsWithPendingTx(page: Page | BrowserContext) {
   await page.route(mempoolUrl, route =>
     route.fulfill({
       json: mockedStacksTxsRequestWithPendingTx,
@@ -154,7 +154,7 @@ const mockedPendingRawTx = {
     '0x80800000000400fff493c4bfd46883c20368a72abd4f381ded75e1000000000000000e0000000000000bb800016179b365db452be698ef57cd8702b2ddecf3914342d70f960a80fd1221b72df1338b3f1b089843c99f2cb36e8562712901590a06c2f2aa22c5ca3be9e1de80cf03020000000000051af999e670abd8d84aa9775e6531357bcc9ed6afed00000000000f424000000000000000000000000000000000000000000000000000000000000000000000',
 };
 
-export async function mockStacksRawTx(page: Page) {
+export async function mockStacksRawTx(page: Page | BrowserContext) {
   await page.route(
     `**/api.hiro.so/extended/v1/tx/0x2fd347fd2f775db6bec23e566a1d1d4914f10502f6a0d44692e93aa80cf047e4/raw`,
     route =>
@@ -164,7 +164,7 @@ export async function mockStacksRawTx(page: Page) {
   );
 }
 
-export async function mockStacksPendingTransaction(page: Page) {
+export async function mockStacksPendingTransaction(page: Page | BrowserContext) {
   await page.route(
     `**/api.hiro.so/extended/v1/tx/0x2fd347fd2f775db6bec23e566a1d1d4914f10502f6a0d44692e93aa80cf047e4`,
     route =>
@@ -174,7 +174,7 @@ export async function mockStacksPendingTransaction(page: Page) {
   );
 }
 
-export async function mockStacksBroadcastTransaction(page: Page) {
+export async function mockStacksBroadcastTransaction(page: Page | BrowserContext) {
   const txid = '9b709768122e6c62a37b087106cc9c23280ed6242b565484b6cc4e6a43ae1155';
 
   await page.route(`**/api.hiro.so/v2/transactions`, route =>
@@ -209,7 +209,7 @@ export async function mockStacksBroadcastTransaction(page: Page) {
   );
 }
 
-export async function mockSip10LeatherTestTokenBalance(page: Page) {
+export async function mockSip10LeatherTestTokenBalance(page: Page | BrowserContext) {
   await page.route(`**/api.hiro.so/extended/v2/addresses/*/balances`, route =>
     route.fulfill({
       json: {

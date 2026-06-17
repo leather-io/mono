@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 const mockedEmptyFtBalancesV2 = {
   limit: 100,
@@ -71,7 +71,7 @@ const mockedStxBalanceV2 = {
   burnchain_unlock_height: 0,
 };
 
-export async function mockMainnetTestAccountStacksBalancesV2Request(page: Page) {
+export async function mockMainnetTestAccountStacksBalancesV2Request(page: Page | BrowserContext) {
   await page.route('**hiro.so/extended/v2/addresses/**/balances/ft', route =>
     route.fulfill({
       json: mockedFtBalancesV2,
@@ -85,7 +85,7 @@ export async function mockMainnetTestAccountStacksBalancesV2Request(page: Page) 
   );
 }
 
-export async function mockEmptyStacksBalancesV2Request(page: Page) {
+export async function mockEmptyStacksBalancesV2Request(page: Page | BrowserContext) {
   await page.route('**hiro.so/extended/v2/addresses/**/balances/ft', route =>
     route.fulfill({
       json: mockedEmptyFtBalancesV2,

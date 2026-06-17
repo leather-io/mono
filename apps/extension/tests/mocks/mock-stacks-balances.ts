@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 const mockedEmptyStacksBalances = {
   stx: {
@@ -75,7 +75,7 @@ const mockedStacksBalances = {
   non_fungible_tokens: {},
 };
 
-export async function mockMainnetTestAccountStacksBalancesRequest(page: Page) {
+export async function mockMainnetTestAccountStacksBalancesRequest(page: Page | BrowserContext) {
   await page.route('**/api.hiro.so/extended/v1/address/**/balances', route =>
     route.fulfill({
       json: mockedStacksBalances,
@@ -83,7 +83,7 @@ export async function mockMainnetTestAccountStacksBalancesRequest(page: Page) {
   );
 }
 
-export async function mockEmptyStacksBalancesRequest(page: Page) {
+export async function mockEmptyStacksBalancesRequest(page: Page | BrowserContext) {
   await page.route('**/api.hiro.so/extended/v1/address/**/balances', route =>
     route.fulfill({
       json: mockedEmptyStacksBalances,

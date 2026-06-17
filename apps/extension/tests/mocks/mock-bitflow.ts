@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 const mockedBitflowTokens = {
   tokens: [
@@ -180,7 +180,7 @@ const mockedBitflowBffApiQuote = {
 
 const mockedBitflowBffApiSwap = { success: false };
 
-export async function mockBitflowRequests(page: Page) {
+export async function mockBitflowRequests(page: Page | BrowserContext) {
   await page.route('**/getAllTokensAndPools**', route =>
     route.fulfill({ json: mockedBitflowTokens })
   );

@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 const mockedLongFtMetadata = {
   name: 'LONGcoin',
@@ -28,7 +28,7 @@ const mockedLongFtMetadata = {
   },
 };
 
-export async function mockMainnetTestAccountStacksFTsRequest(page: Page) {
+export async function mockMainnetTestAccountStacksFTsRequest(page: Page | BrowserContext) {
   await page.route(`**/api.hiro.so/metadata/v1/ft/**`, route =>
     route.fulfill({
       json: {},

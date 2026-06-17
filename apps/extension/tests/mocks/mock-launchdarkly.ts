@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 const launchDarklyGoals = '**/sdk/goals/**';
 const launchDarklyEvalx = '**/sdk/evalx/**';
@@ -21,7 +21,7 @@ const flagData = {
   },
 };
 
-export async function mockLaunchDarkly(page: Page) {
+export async function mockLaunchDarkly(page: Page | BrowserContext) {
   await page.route(launchDarklyGoals, route =>
     route.fulfill({
       json: [],
