@@ -13,7 +13,7 @@ interface AccountListItemLayoutProps extends AccountId {
   accountName: ReactNode;
   avatar: ReactNode;
   balanceLabel: ReactNode;
-  disabled?: boolean;
+  nonInteractive?: boolean;
   isLoading: boolean;
   isSelected: boolean;
   onSelectAccount(accountId: AccountId): void;
@@ -25,7 +25,7 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
     accountName,
     avatar,
     balanceLabel,
-    disabled,
+    nonInteractive,
     fingerprint,
     accountIndex,
     isLoading,
@@ -65,8 +65,8 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
     <Pressable
       data-testid={SettingsSelectors.SwitchAccountItemIndex.replace('[index]', `${accountIndex}`)}
       key={`account-${accountIndex}`}
-      disabled={disabled}
-      onClick={() => onSelectAccount({ fingerprint, accountIndex })}
+      aria-disabled={nonInteractive || undefined}
+      onClick={nonInteractive ? undefined : () => onSelectAccount({ fingerprint, accountIndex })}
     >
       {content}
     </Pressable>

@@ -68,8 +68,9 @@ const legacyMethodsRequiringConnectedWallet = new Set<ExternalMethods>([
 
 function createLegacyWalletUnavailableResponse(message: LegacyMessageFromContentScript) {
   const { payload } = message;
+  const messageMethod = message.method;
 
-  switch (message.method) {
+  switch (messageMethod) {
     case ExternalMethods.transactionRequest:
       return formatTxSignatureResponse({ payload, response: walletNoLongerAvailableMessage });
     case ExternalMethods.signatureRequest:
@@ -83,7 +84,7 @@ function createLegacyWalletUnavailableResponse(message: LegacyMessageFromContent
     case ExternalMethods.authenticationRequest:
       return formatAuthResponse({ request: payload, response: 'cancel' });
     default:
-      return assertUnreachable(message.method);
+      return assertUnreachable(messageMethod);
   }
 }
 

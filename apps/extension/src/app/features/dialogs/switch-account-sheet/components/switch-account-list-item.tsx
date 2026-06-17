@@ -21,14 +21,14 @@ import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/acc
 
 interface SwitchAccountListItemProps {
   accountId: AccountId;
-  disabled?: boolean;
+  nonInteractive?: boolean;
   handleClose(): void;
   hideBalance?: boolean;
   walletType: WalletType;
 }
 export function SwitchAccountListItem({
   accountId,
-  disabled,
+  nonInteractive,
   handleClose,
   hideBalance,
   walletType,
@@ -76,7 +76,7 @@ export function SwitchAccountListItem({
         />
       }
       balanceLabel={hideBalance ? null : <AccountTotalBalance accountId={accountId} />}
-      disabled={disabled}
+      nonInteractive={nonInteractive}
       isLoading={isLoading}
       isSelected={isSelected}
       onSelectAccount={handleClick}

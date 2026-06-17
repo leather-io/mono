@@ -233,7 +233,7 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
                             accountId={accountId}
                             walletType={wallet.type}
                             hideBalance
-                            disabled
+                            nonInteractive
                           />
                         </Box>
                         <AccountActionMenu
