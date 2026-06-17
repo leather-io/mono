@@ -26,7 +26,11 @@ import { useAppDispatch } from '@app/store';
 import { activateFirstVisibleAccount } from '@app/store/active/active.actions';
 import { useBitcoinKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { getAddWalletError, useWalletEntities } from '@app/store/wallets/wallet.selectors';
+import {
+  getAddWalletError,
+  getUnmigratedLegacyLedgerError,
+  useWalletEntities,
+} from '@app/store/wallets/wallet.selectors';
 
 function LedgerRequestBitcoinKeys() {
   const navigate = useNavigate();
@@ -67,7 +71,9 @@ function LedgerRequestBitcoinKeys() {
           },
         });
 
-        const addWalletError = getAddWalletError(wallets, fingerprint, 'ledger');
+        const addWalletError =
+          getAddWalletError(wallets, fingerprint, 'ledger') ??
+          getUnmigratedLegacyLedgerError(wallets, fingerprint);
         if (addWalletError) {
           toast.error(addWalletError);
           void ledgerNavigate.toErrorStep(chain, addWalletError);
