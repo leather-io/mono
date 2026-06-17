@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router';
 import BitcoinApp from 'ledger-bitcoin';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
-import { userAddsKeychains } from '@leather.io/state';
-import { userAddsWallet } from '@leather.io/state/wallet';
 
 import { pullBitcoinKeysFromLedgerDevice } from '@app/features/ledger/flows/request-bitcoin-keys/request-bitcoin-keys.utils';
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
@@ -26,6 +24,7 @@ import { useAppDispatch } from '@app/store';
 import { activateFirstVisibleAccount } from '@app/store/active/active.actions';
 import { useBitcoinKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
+import { addOrMigrateLedgerKeychains } from '@app/store/wallets/wallet.actions';
 import {
   getAddWalletError,
   getUnmigratedLegacyLedgerError,
@@ -86,25 +85,7 @@ function LedgerRequestBitcoinKeys() {
             return !btcKeychainDescriptors.includes(keychain.descriptor);
           });
 
-        if (!wallets[fingerprint]) {
-          dispatch(
-            userAddsWallet({
-              wallet: {
-                createdOn: new Date().toISOString(),
-                fingerprint,
-                type: 'ledger',
-              },
-              accountKeychains: keychains,
-            })
-          );
-        } else if (keychains.length) {
-          dispatch(
-            userAddsKeychains({
-              accountKeychains: keychains,
-            })
-          );
-        }
-
+        await dispatch(addOrMigrateLedgerKeychains({ fingerprint, accountKeychains: keychains }));
         void dispatch(activateFirstVisibleAccount(fingerprint));
         return { status: 'success' };
       },

@@ -9,9 +9,10 @@ import { SupportedBlockchains } from '@leather.io/models';
 import { userAddsKeychains } from '@leather.io/state';
 import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
+import { broadcastWalletListChanged } from '@shared/messages';
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import type { AppThunk } from '..';
+import { type AppThunk, persistor } from '..';
 import { selectStacksKeychains } from '../keychains/keychain.selectors';
 import { selectWalletEntities } from './wallet.selectors';
 
@@ -30,38 +31,50 @@ interface AddOrMigrateLedgerKeychainsArgs {
   accountKeychains: AccountKeychain[];
 }
 
+async function persistLedgerWalletListChange() {
+  await persistor.flush();
+  void broadcastWalletListChanged({});
+}
+
 export function addOrMigrateLedgerKeychains({
   fingerprint,
   accountKeychains,
 }: AddOrMigrateLedgerKeychainsArgs): AppThunk {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState();
     const wallets = selectWalletEntities(state);
     const legacyWallet = wallets[assumedZeroFingerprint];
 
-    const legacyIdentities = new Set(
-      selectStacksKeychains(state)
-        .filter(
-          keychain =>
-            extractFingerprintFromDescriptor(keychain.descriptor) === assumedZeroFingerprint
-        )
-        .map(keychain => descriptorIdentity(keychain.descriptor))
-    );
-    const isSameDevice = accountKeychains.some(keychain =>
-      legacyIdentities.has(descriptorIdentity(keychain.descriptor))
-    );
-
-    const isUnmigratedLegacyLedger =
+    const isLegacyLedgerMigrationCandidate =
       !!legacyWallet &&
       legacyWallet.type === 'ledger' &&
       fingerprint !== assumedZeroFingerprint &&
-      !wallets[fingerprint] &&
-      isSameDevice;
+      !wallets[fingerprint];
+
+    const legacyIdentities = isLegacyLedgerMigrationCandidate
+      ? new Set(
+          selectStacksKeychains(state)
+            .filter(
+              keychain =>
+                extractFingerprintFromDescriptor(keychain.descriptor) === assumedZeroFingerprint
+            )
+            .map(keychain => descriptorIdentity(keychain.descriptor))
+        )
+      : null;
+    const isSameDevice =
+      !!legacyIdentities &&
+      accountKeychains.some(keychain => {
+        if (keychain.chain !== 'stacks') return false;
+        return legacyIdentities.has(descriptorIdentity(keychain.descriptor));
+      });
+
+    const isUnmigratedLegacyLedger = isLegacyLedgerMigrationCandidate && isSameDevice;
 
     if (isUnmigratedLegacyLedger) {
       dispatch(fingerprintMigration(fingerprint));
       dispatch(userRemovesWallet({ fingerprint: assumedZeroFingerprint }));
       dispatch(userAddsWallet({ wallet: { ...legacyWallet, fingerprint }, accountKeychains }));
+      await persistLedgerWalletListChange();
       return;
     }
 
@@ -72,11 +85,13 @@ export function addOrMigrateLedgerKeychains({
           accountKeychains,
         })
       );
+      await persistLedgerWalletListChange();
       return;
     }
 
     if (accountKeychains.length) {
       dispatch(userAddsKeychains({ accountKeychains }));
+      await persistLedgerWalletListChange();
     }
   };
 }
@@ -89,7 +104,7 @@ function rekeyDescriptorToFingerprint(descriptor: string, fingerprint: string): 
 }
 
 export function migrateLedgerStacksFingerprint({ fingerprint }: { fingerprint: string }): AppThunk {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     if (fingerprint === assumedZeroFingerprint) return;
 
     const state = getState();
@@ -115,5 +130,6 @@ export function migrateLedgerStacksFingerprint({ fingerprint }: { fingerprint: s
         accountKeychains: rekeyedKeychains,
       })
     );
+    await persistLedgerWalletListChange();
   };
 }

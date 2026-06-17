@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import {
   createDescriptor,
@@ -16,9 +16,21 @@ import {
   walletSlice,
 } from '@leather.io/state/wallet';
 
+import { broadcastWalletListChanged } from '@shared/messages';
 import { assumedZeroFingerprint } from '@shared/utils';
 
+import { persistor } from '@app/store';
+
 import { addOrMigrateLedgerKeychains, migrateLedgerStacksFingerprint } from './wallet.actions';
+
+vi.mock('@app/store', () => ({
+  persistor: { flush: vi.fn(() => Promise.resolve()) },
+  store: { getState: vi.fn(), dispatch: vi.fn() },
+}));
+
+vi.mock('@shared/messages', () => ({
+  broadcastWalletListChanged: vi.fn(),
+}));
 
 const realFingerprint = 'a1b2c3d4';
 const otherDeviceFingerprint = 'eeee9999';
@@ -61,22 +73,26 @@ function buildState({
   };
 }
 
-function runThunk(
+async function runThunk(
   state: ReturnType<typeof buildState>,
   args: { fingerprint: string; accountKeychains: Keychain[] }
 ) {
   const dispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue(state);
-  void addOrMigrateLedgerKeychains(args)(dispatch, getState, undefined);
+  await addOrMigrateLedgerKeychains(args)(dispatch, getState, undefined);
   return dispatch;
 }
 
 describe('addOrMigrateLedgerKeychains', () => {
-  test('migrates the legacy assumed-zero wallet when its device reconnects', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test('migrates the legacy assumed-zero wallet when its device reconnects', async () => {
     const state = buildState({ wallets: [legacyLedgerWallet], keychains: legacyKeychains });
 
-    const dispatch = runThunk(state, {
+    const dispatch = await runThunk(state, {
       fingerprint: realFingerprint,
       accountKeychains: reconnectedKeychains,
     });
@@ -99,12 +115,14 @@ describe('addOrMigrateLedgerKeychains', () => {
       })
     );
     expect(dispatch).toHaveBeenCalledTimes(3);
+    expect(persistor.flush).toHaveBeenCalledTimes(1);
+    expect(broadcastWalletListChanged).toHaveBeenCalledWith({});
   });
 
-  test('leaves a single wallet entity after the migration cascade (no duplicate)', () => {
+  test('leaves a single wallet entity after the migration cascade (no duplicate)', async () => {
     const state = buildState({ wallets: [legacyLedgerWallet], keychains: legacyKeychains });
 
-    const dispatch = runThunk(state, {
+    const dispatch = await runThunk(state, {
       fingerprint: realFingerprint,
       accountKeychains: reconnectedKeychains,
     });
@@ -119,8 +137,8 @@ describe('addOrMigrateLedgerKeychains', () => {
     expect(walletState.entities[realFingerprint]?.name).toBe('My Ledger');
   });
 
-  test('adds a fresh wallet when no legacy wallet exists', () => {
-    const dispatch = runThunk(buildState(), {
+  test('adds a fresh wallet when no legacy wallet exists', async () => {
+    const dispatch = await runThunk(buildState(), {
       fingerprint: realFingerprint,
       accountKeychains: [stacksKeychain(realFingerprint, 0, '02aa')],
     });
@@ -137,6 +155,8 @@ describe('addOrMigrateLedgerKeychains', () => {
     expect(dispatch).not.toHaveBeenCalledWith(
       expect.objectContaining({ type: fingerprintMigration.type })
     );
+    expect(persistor.flush).toHaveBeenCalledTimes(1);
+    expect(broadcastWalletListChanged).toHaveBeenCalledWith({});
   });
 
   describe('when the wallet already exists under its real fingerprint', () => {
@@ -147,36 +167,40 @@ describe('addOrMigrateLedgerKeychains', () => {
       createdOn: '2024-01-01T00:00:00.000Z',
     };
 
-    test('merges only the newly pulled keychains', () => {
+    test('merges only the newly pulled keychains', async () => {
       const newKeychains = [stacksKeychain(realFingerprint, 2, '02cc')];
       const state = buildState({
         wallets: [migratedWallet],
         keychains: [stacksKeychain(realFingerprint, 0, '02aa')],
       });
 
-      const dispatch = runThunk(state, {
+      const dispatch = await runThunk(state, {
         fingerprint: realFingerprint,
         accountKeychains: newKeychains,
       });
 
       expect(dispatch).toHaveBeenCalledTimes(1);
       expect(dispatch).toHaveBeenCalledWith(userAddsKeychains({ accountKeychains: newKeychains }));
+      expect(persistor.flush).toHaveBeenCalledTimes(1);
+      expect(broadcastWalletListChanged).toHaveBeenCalledWith({});
     });
 
-    test('does nothing when there are no new keychains', () => {
-      const dispatch = runThunk(buildState({ wallets: [migratedWallet] }), {
+    test('does nothing when there are no new keychains', async () => {
+      const dispatch = await runThunk(buildState({ wallets: [migratedWallet] }), {
         fingerprint: realFingerprint,
         accountKeychains: [],
       });
 
       expect(dispatch).not.toHaveBeenCalled();
+      expect(persistor.flush).not.toHaveBeenCalled();
+      expect(broadcastWalletListChanged).not.toHaveBeenCalled();
     });
   });
 
-  test('does not migrate the legacy wallet when a different device connects', () => {
+  test('does not migrate the legacy wallet when a different device connects', async () => {
     const state = buildState({ wallets: [legacyLedgerWallet], keychains: legacyKeychains });
 
-    const dispatch = runThunk(state, {
+    const dispatch = await runThunk(state, {
       fingerprint: otherDeviceFingerprint,
       accountKeychains: [
         stacksKeychain(otherDeviceFingerprint, 0, '02dd'),
@@ -199,22 +223,28 @@ describe('addOrMigrateLedgerKeychains', () => {
     expect(dispatch).not.toHaveBeenCalledWith(
       expect.objectContaining({ type: userRemovesWallet.type })
     );
+    expect(persistor.flush).toHaveBeenCalledTimes(1);
+    expect(broadcastWalletListChanged).toHaveBeenCalledWith({});
   });
 });
 
-function runMigration(state: ReturnType<typeof buildState>, fingerprint: string) {
+async function runMigration(state: ReturnType<typeof buildState>, fingerprint: string) {
   const dispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue(state);
-  void migrateLedgerStacksFingerprint({ fingerprint })(dispatch, getState, undefined);
+  await migrateLedgerStacksFingerprint({ fingerprint })(dispatch, getState, undefined);
   return dispatch;
 }
 
 describe('migrateLedgerStacksFingerprint', () => {
-  test('re-keys the legacy Stacks keychains to the real fingerprint', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test('re-keys the legacy Stacks keychains to the real fingerprint', async () => {
     const state = buildState({ wallets: [legacyLedgerWallet], keychains: legacyKeychains });
 
-    const dispatch = runMigration(state, realFingerprint);
+    const dispatch = await runMigration(state, realFingerprint);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, fingerprintMigration(realFingerprint));
     expect(dispatch).toHaveBeenNthCalledWith(
@@ -234,12 +264,14 @@ describe('migrateLedgerStacksFingerprint', () => {
       })
     );
     expect(dispatch).toHaveBeenCalledTimes(3);
+    expect(persistor.flush).toHaveBeenCalledTimes(1);
+    expect(broadcastWalletListChanged).toHaveBeenCalledWith({});
   });
 
-  test('preserves the keychains under the real fingerprint through the reducer cascade', () => {
+  test('preserves the keychains under the real fingerprint through the reducer cascade', async () => {
     const state = buildState({ wallets: [legacyLedgerWallet], keychains: legacyKeychains });
 
-    const dispatch = runMigration(state, realFingerprint);
+    const dispatch = await runMigration(state, realFingerprint);
 
     // Feed the thunk's actual dispatched actions through the real keychain reducer.
     let keychainState = keychainAdapter.addMany(keychainSlice.getInitialState(), legacyKeychains);
@@ -254,21 +286,25 @@ describe('migrateLedgerStacksFingerprint', () => {
     ).toEqual([realFingerprint, realFingerprint]);
   });
 
-  test('does nothing when the device reports the placeholder fingerprint', () => {
+  test('does nothing when the device reports the placeholder fingerprint', async () => {
     const state = buildState({ wallets: [legacyLedgerWallet], keychains: legacyKeychains });
 
-    const dispatch = runMigration(state, assumedZeroFingerprint);
+    const dispatch = await runMigration(state, assumedZeroFingerprint);
 
     expect(dispatch).not.toHaveBeenCalled();
+    expect(persistor.flush).not.toHaveBeenCalled();
+    expect(broadcastWalletListChanged).not.toHaveBeenCalled();
   });
 
-  test('does nothing when there is no legacy wallet', () => {
-    const dispatch = runMigration(buildState(), realFingerprint);
+  test('does nothing when there is no legacy wallet', async () => {
+    const dispatch = await runMigration(buildState(), realFingerprint);
 
     expect(dispatch).not.toHaveBeenCalled();
+    expect(persistor.flush).not.toHaveBeenCalled();
+    expect(broadcastWalletListChanged).not.toHaveBeenCalled();
   });
 
-  test('does nothing when a wallet already exists under the real fingerprint', () => {
+  test('does nothing when a wallet already exists under the real fingerprint', async () => {
     const migratedWallet: WalletStore = {
       fingerprint: realFingerprint,
       name: 'My Ledger',
@@ -280,17 +316,21 @@ describe('migrateLedgerStacksFingerprint', () => {
       keychains: legacyKeychains,
     });
 
-    const dispatch = runMigration(state, realFingerprint);
+    const dispatch = await runMigration(state, realFingerprint);
 
     expect(dispatch).not.toHaveBeenCalled();
+    expect(persistor.flush).not.toHaveBeenCalled();
+    expect(broadcastWalletListChanged).not.toHaveBeenCalled();
   });
 
-  test('does nothing when the legacy wallet is not a Ledger', () => {
+  test('does nothing when the legacy wallet is not a Ledger', async () => {
     const softwareWallet: WalletStore = { ...legacyLedgerWallet, type: 'software' };
     const state = buildState({ wallets: [softwareWallet], keychains: legacyKeychains });
 
-    const dispatch = runMigration(state, realFingerprint);
+    const dispatch = await runMigration(state, realFingerprint);
 
     expect(dispatch).not.toHaveBeenCalled();
+    expect(persistor.flush).not.toHaveBeenCalled();
+    expect(broadcastWalletListChanged).not.toHaveBeenCalled();
   });
 });
