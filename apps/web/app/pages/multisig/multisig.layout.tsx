@@ -1,13 +1,13 @@
-import { Outlet, data } from 'react-router';
+import { Navigate, Outlet, data, useLocation } from 'react-router';
 
 import { Box } from 'leather-styles/jsx';
+import { useSession } from '~/features/multisig/auth/use-session';
 import { useSessionBootstrap } from '~/features/multisig/auth/use-session-bootstrap';
 import { SignInSlotProvider } from '~/layouts/page/sign-in-slot';
 
 import { MultisigConnectDropdown } from './components/connection-dropdown/multisig-connect-dropdown';
 import { DevToolsPanel } from './components/dev-tools-panel';
-import { MultisigToastProvider } from './components/multisig-toast';
-import { multisigEnabled } from './multisig.constants';
+import { multisigEnabled, multisigPaths } from './multisig.constants';
 import { MultisigSessionProvider } from './store/multisig-session';
 
 // Gate the entire /multisig/* area: when the feature is disabled (production),
@@ -17,21 +17,26 @@ export function loader() {
   return null;
 }
 
-// Scoped layout for /multisig/*. The session + toast providers are mounted here
-// so the in-memory session store and toasts are scoped to the multisig area and
-// never leak into other pages.
+// Scoped layout for /multisig/*. The session provider is mounted here so the
+// in-memory session store is scoped to the multisig area and never leaks into
+// other pages.
 export default function MultisigLayout() {
   useSessionBootstrap();
+  const location = useLocation();
+  const btcSession = useSession('btc:mainnet');
+  const stxSession = useSession('stx:mainnet');
+
+  if (!btcSession && !stxSession && location.pathname !== multisigPaths.onboarding) {
+    return <Navigate to={multisigPaths.onboarding} replace />;
+  }
 
   return (
     <SignInSlotProvider slot={<MultisigConnectDropdown />}>
       <MultisigSessionProvider>
-        <MultisigToastProvider>
-          <Box pb="space.11">
-            <Outlet />
-          </Box>
-          <DevToolsPanel />
-        </MultisigToastProvider>
+        <Box pb="space.11">
+          <Outlet />
+        </Box>
+        <DevToolsPanel />
       </MultisigSessionProvider>
     </SignInSlotProvider>
   );

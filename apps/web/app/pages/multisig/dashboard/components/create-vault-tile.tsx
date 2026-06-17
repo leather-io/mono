@@ -23,9 +23,9 @@ export function CreateVaultTile({ onClick }: CreateVaultTileProps) {
       borderStyle="dashed"
       borderColor="ink.border-default"
       bg="transparent"
-      color="ink.text-subdued"
+      color="ink.text-primary"
       textStyle="label.02"
-      _hover={{ bg: 'ink.component-background-hover', color: 'ink.text-primary' }}
+      _hover={{ bg: 'ink.component-background-hover' }}
     >
       <PlusIcon variant="small" />
       Create new vault

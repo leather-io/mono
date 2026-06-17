@@ -15,6 +15,7 @@ export * from './infrastructure/api/gamma/gamma-api.schema';
 export * from './infrastructure/cache/http-cache.config';
 export * from './infrastructure/cache/http-cache.service';
 export * from './infrastructure/cache/http-cache.utils';
+export * from './infrastructure/api/leather/leather-api.error';
 export * from './infrastructure/api/leather/leather-auth-api.client';
 export * from './infrastructure/api/leather/leather-auth-api.utils';
 export * from './infrastructure/environment';

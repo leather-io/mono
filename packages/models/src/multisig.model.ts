@@ -26,6 +26,7 @@ export interface VaultMemberUser extends MultisigIdentity {
 export interface VaultMember {
   readonly membershipId: string;
   readonly address: string;
+  readonly name: string | null;
   readonly membershipStatus: VaultMembershipStatus;
   readonly user: VaultMemberUser | null;
 }
@@ -33,6 +34,8 @@ export interface VaultMember {
 interface VaultBase {
   readonly id: string;
   readonly name: string;
+  readonly theme: string | null;
+  readonly icon: string | null;
   readonly network: AuthNetworkId;
   readonly status: VaultStatus;
   readonly createdBy: string;
@@ -71,6 +74,7 @@ interface VaultAccountBase {
   readonly id: string;
   readonly vaultId: string;
   readonly name: string;
+  readonly icon: string | null;
   readonly network: AuthNetworkId;
   readonly threshold: number;
   readonly multisigAddress: string;

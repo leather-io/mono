@@ -4409,6 +4409,8 @@ export interface paths {
             'application/json': {
               id: string;
               name: string;
+              theme: string | null;
+              icon: string | null;
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               /** @enum {string} */
@@ -4459,9 +4461,14 @@ export interface paths {
         content: {
           'application/json': {
             name: string;
+            theme?: string;
+            icon?: string;
             /** @enum {string} */
             network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
-            members: string[];
+            members: {
+              address: string;
+              name?: string;
+            }[];
           };
         };
       };
@@ -4475,6 +4482,8 @@ export interface paths {
             'application/json': {
               id: string;
               name: string;
+              theme: string | null;
+              icon: string | null;
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               /** @enum {string} */
@@ -4482,6 +4491,7 @@ export interface paths {
               members: {
                 membershipId: string;
                 address: string;
+                name: string | null;
                 /** @enum {string} */
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
@@ -4569,6 +4579,8 @@ export interface paths {
             'application/json': {
               id: string;
               name: string;
+              theme: string | null;
+              icon: string | null;
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               /** @enum {string} */
@@ -4576,6 +4588,7 @@ export interface paths {
               members: {
                 membershipId: string;
                 address: string;
+                name: string | null;
                 /** @enum {string} */
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
@@ -4648,6 +4661,8 @@ export interface paths {
         content: {
           'application/json': {
             name: string;
+            theme?: string | null;
+            icon?: string | null;
           };
         };
       };
@@ -4661,6 +4676,8 @@ export interface paths {
             'application/json': {
               id: string;
               name: string;
+              theme: string | null;
+              icon: string | null;
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               /** @enum {string} */
@@ -4668,6 +4685,7 @@ export interface paths {
               members: {
                 membershipId: string;
                 address: string;
+                name: string | null;
                 /** @enum {string} */
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
@@ -4764,6 +4782,8 @@ export interface paths {
             'application/json': {
               id: string;
               name: string;
+              theme: string | null;
+              icon: string | null;
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               /** @enum {string} */
@@ -4771,6 +4791,7 @@ export interface paths {
               members: {
                 membershipId: string;
                 address: string;
+                name: string | null;
                 /** @enum {string} */
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
@@ -4872,6 +4893,7 @@ export interface paths {
               membership: {
                 membershipId: string;
                 address: string;
+                name: string | null;
                 /** @enum {string} */
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
@@ -4888,6 +4910,8 @@ export interface paths {
               vault: {
                 id: string;
                 name: string;
+                theme: string | null;
+                icon: string | null;
                 /** @enum {string} */
                 network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
                 /** @enum {string} */
@@ -4895,6 +4919,7 @@ export interface paths {
                 members: {
                   membershipId: string;
                   address: string;
+                  name: string | null;
                   /** @enum {string} */
                   membershipStatus: 'invited' | 'joined' | 'declined';
                   user: {
@@ -4997,6 +5022,7 @@ export interface paths {
               membership: {
                 membershipId: string;
                 address: string;
+                name: string | null;
                 /** @enum {string} */
                 membershipStatus: 'invited' | 'joined' | 'declined';
                 user: {
@@ -5013,6 +5039,8 @@ export interface paths {
               vault: {
                 id: string;
                 name: string;
+                theme: string | null;
+                icon: string | null;
                 /** @enum {string} */
                 network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
                 /** @enum {string} */
@@ -5020,6 +5048,7 @@ export interface paths {
                 members: {
                   membershipId: string;
                   address: string;
+                  name: string | null;
                   /** @enum {string} */
                   membershipStatus: 'invited' | 'joined' | 'declined';
                   user: {
@@ -5120,6 +5149,7 @@ export interface paths {
               id: string;
               vaultId: string;
               name: string;
+              icon: string | null;
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               threshold: number;
@@ -5180,6 +5210,7 @@ export interface paths {
         content: {
           'application/json': {
             name: string;
+            icon?: string;
             threshold: number;
             index: number;
           };
@@ -5196,6 +5227,7 @@ export interface paths {
               id: string;
               vaultId: string;
               name: string;
+              icon: string | null;
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               threshold: number;
@@ -5301,6 +5333,7 @@ export interface paths {
               id: string;
               vaultId: string;
               name: string;
+              icon: string | null;
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               threshold: number;
@@ -5379,6 +5412,7 @@ export interface paths {
         content: {
           'application/json': {
             name: string;
+            icon?: string | null;
           };
         };
       };
@@ -5393,6 +5427,7 @@ export interface paths {
               id: string;
               vaultId: string;
               name: string;
+              icon: string | null;
               /** @enum {string} */
               network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet';
               threshold: number;

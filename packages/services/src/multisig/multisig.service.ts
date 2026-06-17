@@ -16,11 +16,15 @@ import { LeatherAuthApiClient } from '../infrastructure/api/leather/leather-auth
 
 export interface CreateVaultRequest {
   name: string;
-  members: string[];
+  theme?: string;
+  icon?: string;
+  members: { address: string; name?: string }[];
 }
 
 export interface UpdateVaultRequest {
   name: string;
+  theme?: string | null;
+  icon?: string | null;
 }
 
 export interface ListVaultsFilters {
@@ -30,12 +34,14 @@ export interface ListVaultsFilters {
 
 export interface CreateVaultAccountRequest {
   name: string;
+  icon?: string;
   threshold: number;
   index: number;
 }
 
 export interface UpdateVaultAccountRequest {
   name: string;
+  icon?: string | null;
 }
 
 @injectable()

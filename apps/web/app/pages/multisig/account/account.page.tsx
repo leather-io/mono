@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
+import { useToast } from '~/features/toasts/use-toast';
 import { Page } from '~/layouts/page/page';
 
 import { PlusIcon } from '@leather.io/ui';
 
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
-import { useMultisigToast } from '../components/multisig-toast';
 import { TxRow } from '../components/tx-row';
 import { VaultListItem } from '../components/vault-list-item';
 import { SendModal } from '../modals/send-modal';
@@ -32,7 +32,7 @@ export function AccountDetailPage() {
   const { vaultId, accountId } = useParams();
   const { vault, account } = useVaultAccount(vaultId, accountId);
   const navigate = useNavigate();
-  const { showToast } = useMultisigToast();
+  const { success: showToast } = useToast();
   const [sendOpen, setSendOpen] = useState(false);
   const [added, setAdded] = useState(false);
 

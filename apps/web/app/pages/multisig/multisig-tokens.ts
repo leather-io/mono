@@ -46,6 +46,19 @@ export function vaultTheme(themeId: number): VaultTheme {
   return vaultThemes[themeId] ?? vaultThemes[0];
 }
 
+// Default theme for vaults whose persisted theme is missing or unrecognized.
+const fallbackVaultThemeId = 0;
+
+// Theme name stored on the vault (vault.theme) when creating, mapped back to a
+// VaultTheme for display. Names are the canonical wire value.
+export function vaultThemeName(themeId: number): string {
+  return (vaultThemes[themeId] ?? vaultThemes[fallbackVaultThemeId]).name;
+}
+
+export function vaultThemeFromName(name: string | null | undefined): VaultTheme {
+  return vaultThemes.find(theme => theme.name === name) ?? vaultThemes[fallbackVaultThemeId];
+}
+
 // Squircle radius for AvatarSq tiles — the prototype uses a soft-rounded
 // square; no token radius matches (tokens stop at lg = 12px / round).
 export const avatarSquircleRadius = '14px';
@@ -54,30 +67,3 @@ export const avatarSquircleRadius = '14px';
 export function accountIconUrl(icon: string): string {
   return `/multisig/icons/account/${icon}.svg`;
 }
-
-// The account glyphs offered in the Create Account icon picker (filenames in
-// public/multisig/icons/account/). `vault` is excluded — it's reserved for the
-// vault avatar itself.
-export const accountIcons = [
-  'piggybank',
-  'sparkles',
-  'orange',
-  'pizza',
-  'car',
-  'alien',
-  'saturn',
-  'bank',
-  'rocket',
-  'folder',
-  'smile',
-  'code',
-  'zap',
-  'gift',
-  'palette',
-  'home',
-  'person',
-  'inbox',
-  'heart',
-  'flag',
-  'space',
-];
