@@ -7,13 +7,14 @@ import {
   tupleCV,
   uintCV,
 } from '@stacks/transactions';
+import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 
 import { test } from '../../fixtures/fixtures';
 
 test.describe('stx_signMessage', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await onboardingPage.signInWithTestAccount(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });
 

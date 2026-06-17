@@ -21,6 +21,11 @@ const h = vi.hoisted(() => ({
   switchAccount: vi.fn(),
   loggerError: vi.fn(),
   getState: vi.fn(() => ({})),
+  dispatch: vi.fn(),
+  updatePermission: vi.fn((payload: unknown) => ({
+    type: 'appPermissions/updatePermission',
+    payload,
+  })),
 }));
 
 vi.mock('@stacks/wallet-sdk', () => ({ makeAuthResponse: h.makeAuthResponse }));
@@ -74,7 +79,18 @@ vi.mock('./use-legacy-auth-bitcoin-addresses', () => ({
   useGetLegacyAuthBitcoinAddresses: () => () => ({}),
 }));
 
-vi.mock('react-redux', () => ({ useSelector: () => h.currentAccount }));
+vi.mock('@app/store/app-permissions/app-permissions.slice', () => ({
+  appPermissionsSlice: { actions: { updatePermission: h.updatePermission } },
+}));
+
+vi.mock('@app/store/networks/networks.selectors', () => ({
+  useCurrentNetwork: () => ({ chain: { bitcoin: { mode: 'mainnet' } } }),
+}));
+
+vi.mock('react-redux', () => ({
+  useSelector: () => h.currentAccount,
+  useDispatch: () => h.dispatch,
+}));
 
 function renderHookValue<T>(useHook: () => T) {
   let value: T | undefined;
@@ -136,6 +152,30 @@ describe('useFinishAuthRequest', () => {
     expect(h.finalizeAuthResponse).toHaveBeenCalledOnce();
   });
 
+  test('persists an app permission for the approved account so signing stays connected', async () => {
+    h.selectStacksAccountById.mockReturnValue(makeSoftwareAccount(5));
+
+    const { getValue } = renderHookValue(() => useFinishAuthRequest());
+
+    await act(async () => {
+      await getValue()(5);
+    });
+
+    expect(h.updatePermission).toHaveBeenCalledWith(
+      expect.objectContaining({
+        origin: 'app.example.com',
+        fingerprint: h.currentAccount.fingerprint,
+        accountIndex: 5,
+        networkMode: 'mainnet',
+        requestedAccounts: expect.any(String),
+      })
+    );
+    expect(h.dispatch).toHaveBeenCalledWith({
+      type: 'appPermissions/updatePermission',
+      payload: expect.objectContaining({ origin: 'app.example.com', accountIndex: 5 }),
+    });
+  });
+
   test('dead-ends without finalizing when the account cannot be resolved', async () => {
     h.selectStacksAccountById.mockReturnValue(undefined);
 
@@ -147,6 +187,7 @@ describe('useFinishAuthRequest', () => {
 
     expect(h.makeAuthResponse).not.toHaveBeenCalled();
     expect(h.finalizeAuthResponse).not.toHaveBeenCalled();
+    expect(h.updatePermission).not.toHaveBeenCalled();
     expect(h.loggerError).toHaveBeenCalledWith('Uh oh! Finished onboarding without auth info.');
   });
 });

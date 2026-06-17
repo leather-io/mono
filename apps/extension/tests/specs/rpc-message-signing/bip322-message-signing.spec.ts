@@ -1,4 +1,5 @@
 import { BrowserContext, Page } from '@playwright/test';
+import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -6,7 +7,10 @@ test.describe('Message signing', () =>
   test.describe('BIP-322 message signing', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
       await globalPage.setupAndUseApiCalls(extensionId);
-      await onboardingPage.signInWithTestAccount(extensionId);
+      await onboardingPage.signInWithTestAccount(
+        extensionId,
+        getConnectedTestAppPermissionsState()
+      );
       await page.goto('localhost:3000', { waitUntil: 'networkidle' });
     });
 

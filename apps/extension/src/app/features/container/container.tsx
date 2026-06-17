@@ -50,7 +50,7 @@ export function Container() {
     if (removedFingerprint) {
       inMemoryStore.removeKey(removedFingerprint);
       clearKeychainSelectorCaches();
-      dispatch(applyRemoteWalletRemoval(removedFingerprint));
+      void dispatch(applyRemoteWalletRemoval(removedFingerprint));
       return;
     }
     persistor.pause();

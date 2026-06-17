@@ -4,7 +4,10 @@ import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
 import { bytesToHex } from '@stacks/common';
-import { TEST_ACCOUNT_SECRET_KEY } from '@tests/page-object-models/onboarding.page';
+import {
+  TEST_ACCOUNT_SECRET_KEY,
+  getConnectedTestAppPermissionsState,
+} from '@tests/page-object-models/onboarding.page';
 import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 
 import {
@@ -47,7 +50,7 @@ function createTaprootKeychainFromTestMnemonic() {
 test.describe('Sign PSBT', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await onboardingPage.signInWithTestAccount(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
     await page.goto('localhost:3000');
   });
 

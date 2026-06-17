@@ -227,7 +227,7 @@ function runApplyRemoteRemovalThunk(state: object = { active: { account: null } 
   dispatch.mockImplementation((action: unknown) =>
     typeof action === 'function' ? action(dispatch, getState, undefined) : action
   );
-  applyRemoteWalletRemoval(fingerprint)(dispatch, getState, undefined);
+  void applyRemoteWalletRemoval(fingerprint)(dispatch, getState, undefined);
   return { dispatch };
 }
 

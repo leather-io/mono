@@ -34,7 +34,7 @@ export function useLedgerFingerprintMigration() {
         const fingerprintResp = await stacksApp.getMasterFingerprint();
         const actualFingerprint = bytesToHex(fingerprintResp.fingerprint);
 
-        dispatch(migrateLedgerStacksFingerprint({ fingerprint: actualFingerprint }));
+        void dispatch(migrateLedgerStacksFingerprint({ fingerprint: actualFingerprint }));
 
         logger.info(
           `Successfully migrated Ledger fingerprint: ${assumedZeroFingerprint} → ${actualFingerprint}`

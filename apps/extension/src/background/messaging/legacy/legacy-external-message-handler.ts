@@ -82,6 +82,8 @@ function createLegacyWalletUnavailableResponse(message: LegacyMessageFromContent
       return formatPsbtResponse({ request: payload, response: walletNoLongerAvailableMessage });
     case ExternalMethods.authenticationRequest:
       return formatAuthResponse({ request: payload, response: 'cancel' });
+    default:
+      return assertUnreachable(message.method);
   }
 }
 

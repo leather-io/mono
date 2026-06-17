@@ -80,6 +80,26 @@ export function getTestSoftwareAccountDefaultWalletState() {
   };
 }
 
+// Seeds the demo app (localhost:3000) as connected to the test software wallet.
+// Signing methods (sendTransfer, stx_*, etc.) now require a connected wallet, so
+// tests that dispatch them without an explicit connect step must seed this.
+export function getConnectedTestAppPermissionsState() {
+  return {
+    appPermissions: {
+      ids: ['localhost:3000'],
+      entities: {
+        'localhost:3000': {
+          origin: 'localhost:3000',
+          fingerprint: testFingerprint,
+          accountIndex: 0,
+          requestedAccounts: '2024-01-01T00:00:00.000Z',
+          networkMode: 'mainnet',
+        },
+      },
+    },
+  };
+}
+
 const ledgerBitcoinKeysState = {
   entities: {
     "e87a850b/84'/0'/0'": {
@@ -435,7 +455,7 @@ export class OnboardingPage {
    * onboarding flow and initialise the wallet in a signed in state for the test
    * account
    */
-  async signInWithTestAccount(id: string) {
+  async signInWithTestAccount(id: string, stateOverrides: object = {}) {
     const testAccountDerivedKey =
       'd904f412b8d116540017c302f3f7033813c95902af5a067c7befcc34fa5e5290709f157f80548603a1e4f8edc2c0d5d7';
 
@@ -462,7 +482,7 @@ export class OnboardingPage {
 
       await this.page.evaluate(
         async walletState => chrome.storage.local.set({ 'persist:root': walletState }),
-        getTestSoftwareAccountDefaultWalletState()
+        { ...getTestSoftwareAccountDefaultWalletState(), ...stateOverrides }
       );
 
       await this.page.evaluate(

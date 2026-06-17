@@ -13,10 +13,12 @@ import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selector
 
 import { test } from '../../fixtures/fixtures';
 
-const softwareAccountRow = (index: number) =>
-  getRecipientSelectAccountTestId(testFingerprint, index);
-const ledgerAccountRow = (index: number) =>
-  getRecipientSelectAccountTestId(mixedLedgerFingerprint, index);
+function softwareAccountRow(index: number) {
+  return getRecipientSelectAccountTestId(testFingerprint, index);
+}
+function ledgerAccountRow(index: number) {
+  return getRecipientSelectAccountTestId(mixedLedgerFingerprint, index);
+}
 
 async function openRecipientAccounts(
   asset: 'btc' | 'stx',

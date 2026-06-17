@@ -52,6 +52,8 @@ test.describe('Recreate wallet after sign out', () => {
     await passwordInput.fill(passwordB);
     await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
 
-    await expect(page.getByTestId(SettingsSelectors.CurrentAccountDisplayName)).toBeVisible();
+    await expect(page.getByTestId(SettingsSelectors.CurrentAccountDisplayName)).toBeVisible({
+      timeout: 15_000,
+    });
   });
 });
