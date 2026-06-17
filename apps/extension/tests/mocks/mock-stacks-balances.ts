@@ -84,6 +84,7 @@ export async function mockMainnetTestAccountStacksBalancesRequest(page: Page | B
 }
 
 export async function mockEmptyStacksBalancesRequest(page: Page | BrowserContext) {
+  await page.unroute('**/api.hiro.so/extended/v1/address/**/balances');
   await page.route('**/api.hiro.so/extended/v1/address/**/balances', route =>
     route.fulfill({
       json: mockedEmptyStacksBalances,

@@ -28,6 +28,12 @@ const mockedLongFtMetadata = {
   },
 };
 
+const mockedLeoFtMetadata = {
+  name: 'LEO',
+  symbol: 'LEO',
+  decimals: 6,
+};
+
 export async function mockMainnetTestAccountStacksFTsRequest(page: Page | BrowserContext) {
   await page.route(`**/api.hiro.so/metadata/v1/ft/**`, route =>
     route.fulfill({
@@ -41,6 +47,14 @@ export async function mockMainnetTestAccountStacksFTsRequest(page: Page | Browse
     route =>
       route.fulfill({
         json: mockedLongFtMetadata,
+      })
+  );
+
+  await page.route(
+    'https://api.hiro.so/metadata/v1/ft/SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6.leo-token',
+    route =>
+      route.fulfill({
+        json: mockedLeoFtMetadata,
       })
   );
 }

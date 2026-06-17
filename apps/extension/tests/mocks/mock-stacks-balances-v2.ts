@@ -86,12 +86,14 @@ export async function mockMainnetTestAccountStacksBalancesV2Request(page: Page |
 }
 
 export async function mockEmptyStacksBalancesV2Request(page: Page | BrowserContext) {
+  await page.unroute('**hiro.so/extended/v2/addresses/**/balances/ft');
   await page.route('**hiro.so/extended/v2/addresses/**/balances/ft', route =>
     route.fulfill({
       json: mockedEmptyFtBalancesV2,
     })
   );
 
+  await page.unroute('**hiro.so/extended/v2/addresses/**/balances/stx');
   await page.route('**hiro.so/extended/v2/addresses/**/balances/stx', route =>
     route.fulfill({
       json: mockedEmptyStxBalanceV2,

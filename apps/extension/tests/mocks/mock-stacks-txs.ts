@@ -128,7 +128,9 @@ export async function mockWildcardStacksTxsRequests(page: Page | BrowserContext)
   ]);
 }
 
-export async function mockMainnetTestAccountStacksConfirmedTxsRequests(page: Page | BrowserContext) {
+export async function mockMainnetTestAccountStacksConfirmedTxsRequests(
+  page: Page | BrowserContext
+) {
   await page.route(transactionWithTransfersUrl, route =>
     route.fulfill({
       json: {
