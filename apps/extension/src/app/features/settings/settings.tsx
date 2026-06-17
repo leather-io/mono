@@ -14,6 +14,7 @@ import {
   LockIcon,
   SettingsGearIcon,
   Switch,
+  WalletIcon,
 } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -22,6 +23,7 @@ import { analytics } from '@shared/utils/analytics';
 import { useCanSignOut } from '@app/common/hooks/auth/use-can-sign-out';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useModifierKey } from '@app/common/hooks/use-modifier-key';
+import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import { Divider } from '@app/components/layout/divider';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
 import { useAccountGateDestination } from '@app/routes/account-gate';
@@ -41,6 +43,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
   const canSignOut = useCanSignOut();
 
   const { lockWallet } = useKeyActions();
+  const { setIsShowingSwitchAccount } = useSwitchAccountSheet();
 
   const navigate = useNavigate();
 
@@ -85,6 +88,19 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
           <Switch.Root checked={isPrivateMode}>
             <Switch.Thumb />
           </Switch.Root>
+        </Flex>
+      </Flag>
+    </DropdownMenu.Item>
+  );
+
+  const manageWalletsItem = (
+    <DropdownMenu.Item
+      data-testid={SettingsSelectors.SwitchAccountMenuItem}
+      onSelect={() => setIsShowingSwitchAccount(true)}
+    >
+      <Flag img={<WalletIcon />} width="100%">
+        <Flex justifyContent="space-between" textStyle="label.02">
+          Manage wallets
         </Flex>
       </Flag>
     </DropdownMenu.Item>
@@ -142,6 +158,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
           >
             <DropdownMenu.Group>
               {isWalletUnlocked && settingsItem}
+              {isWalletUnlocked && manageWalletsItem}
               {isWalletUnlocked && togglePrivacyItem}
 
               {(showAdvancedMenuOptions || showLockWalletItem || showSignOutItem) &&
