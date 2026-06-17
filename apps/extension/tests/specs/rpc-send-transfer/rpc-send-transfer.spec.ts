@@ -2,6 +2,7 @@ import { BrowserContext, Page } from '@playwright/test';
 import { TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS } from '@tests/mocks/constants';
 import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoin-tx';
 import { mockLeatherApiRequests } from '@tests/mocks/mock-leather-api';
+import { testFingerprint } from '@tests/page-object-models/onboarding.page';
 
 import type { RpcParams, sendTransfer } from '@leather.io/rpc';
 
@@ -95,5 +96,49 @@ test.describe('RPC: sendTransfer', () => {
         message: 'User rejected request',
       },
     });
+  });
+});
+
+test.describe('RPC: sendTransfer with a software wallet alongside a Ledger wallet', () => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    // Seed the test app as connected to the software wallet. `sendTransfer`
+    // requires a connected wallet, and this is the account it signs with.
+    await onboardingPage.signInWithMixedSoftwareAndLedgerWallets(extensionId, {
+      appPermissions: {
+        ids: ['localhost:3000'],
+        entities: {
+          'localhost:3000': {
+            origin: 'localhost:3000',
+            fingerprint: testFingerprint,
+            accountIndex: 0,
+            requestedAccounts: '2024-01-01T00:00:00.000Z',
+            networkMode: 'mainnet',
+          },
+        },
+      },
+    });
+    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+  });
+
+  test('that it opens the send flow without prompting to connect Ledger', async ({
+    page,
+    context,
+  }) => {
+    test.slow();
+
+    // The transfer should open the send flow for the connected software wallet,
+    // not the "Connect your Ledger" prompt, even though a Ledger wallet also
+    // exists in the same keychain
+    const resultPromise = openSendTransfer(page)(baseParams);
+    const sendPopup = await context.waitForEvent('page');
+    await mockLeatherApiRequests(sendPopup);
+
+    await test.expect(sendPopup.getByText('Send token')).toBeVisible({ timeout: 15_000 });
+    await test.expect(sendPopup.getByText('Connect & unlock your Ledger')).toHaveCount(0);
+
+    // Close the popup so the pending request resolves before teardown
+    await sendPopup.close();
+    await resultPromise;
   });
 });
