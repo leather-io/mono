@@ -2,7 +2,10 @@ import { BrowserContext, Page } from '@playwright/test';
 import { TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS } from '@tests/mocks/constants';
 import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoin-tx';
 import { mockLeatherApiRequests } from '@tests/mocks/mock-leather-api';
-import { testFingerprint } from '@tests/page-object-models/onboarding.page';
+import {
+  getConnectedTestAppPermissionsState,
+  testFingerprint,
+} from '@tests/page-object-models/onboarding.page';
 import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 
 import type { RpcParams, sendTransfer } from '@leather.io/rpc';
@@ -60,7 +63,7 @@ function openSendTransfer(page: Page) {
 test.describe('RPC: sendTransfer', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await onboardingPage.signInWithTestAccount(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });
 

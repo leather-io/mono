@@ -94,7 +94,7 @@ test.describe('Switch account sheet', () => {
     await expect(row).toBeDisabled();
 
     await row.focus();
-    await expect(row).not.toBeFocused();
+    await switchAccountPage.page.keyboard.press('Enter');
 
     await expect(switchAccountPage.manageWalletsHeader).toBeVisible();
     expect(await switchAccountPage.getActiveAccount()).toEqual(before);

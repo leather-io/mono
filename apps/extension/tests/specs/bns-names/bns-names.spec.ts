@@ -1,4 +1,5 @@
 import { mockBnsV2NamesRequest } from '@tests/mocks/mock-stacks-bns';
+import { testFingerprint } from '@tests/page-object-models/onboarding.page';
 import { getSwitchAccountSheetAccountNameSelector } from '@tests/selectors/account.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
@@ -60,6 +61,9 @@ test.describe('Bns v2 names', () => {
     await switchAccountPage.saveRenameAccount();
 
     await test.expect(switchAccountPage.accountName(0)).toHaveText(ACCOUNT_ONE_NAME);
-    test.expect(await switchAccountPage.getPersistedAccountIds()).toEqual([]);
+    // The account row is provisioned on wallet add, so the entity always exists;
+    // an unedited save must not write a custom name override onto it
+    const persistedAccount = await switchAccountPage.getPersistedAccount(`${testFingerprint}/0`);
+    test.expect(persistedAccount).toEqual({ id: `${testFingerprint}/0` });
   });
 });
