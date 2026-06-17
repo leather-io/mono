@@ -8,6 +8,7 @@ import { useVault } from '~/features/multisig/vaults/use-vaults';
 import { formatCurrency } from '~/utils/currency-formatter';
 
 import type { VaultSummary } from '@leather.io/models';
+import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { Badge } from '../../components/badge';
@@ -41,16 +42,25 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
     vault.network,
     isActive ? (accounts.data ?? []).map(account => account.multisigAddress) : []
   );
-  const detail = useVault(vault.network, isPendingMember ? vault.id : undefined);
+  const detail = useVault(vault.network, isPendingMember || isInvite ? vault.id : undefined);
   const pendingInviteCount =
     detail.data?.members.filter(member => member.membershipStatus === 'invited').length ?? 0;
+  const inviter = detail.data?.members.find(member => member.user?.id === vault.createdBy);
+  const inviterName = inviter ? inviter.name || truncateMiddle(inviter.address) : null;
 
   function renderTrailing(): TrailingContent {
     if (isCancelled) {
       return { title: <Badge variant="error" label="Cancelled" />, subtitle: undefined };
     }
     if (isInvite) {
-      return { title: <Badge variant="pending" label="Invitation" />, subtitle: undefined };
+      return {
+        title: <Badge variant="pending" label="Invitation" />,
+        subtitle: inviterName ? (
+          <styled.span textStyle="caption.01" color="ink.text-subdued">
+            Invited by {inviterName}
+          </styled.span>
+        ) : undefined,
+      };
     }
     if (isPendingMember) {
       const label =
@@ -108,7 +118,14 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
           ? 'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.16), rgb(from token(colors.orange.action-primary-default) r g b / 0) 70%)'
           : undefined
       }
-      _hover={isCancelled ? undefined : { bg: 'ink.component-background-hover' }}
+      _hover={
+        needsAttention
+          ? {
+              bgImage:
+                'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.28), rgb(from token(colors.orange.action-primary-default) r g b / 0) 80%)',
+            }
+          : { bg: 'ink.component-background-hover' }
+      }
       _disabled={{ cursor: 'default' }}
     >
       <VaultListItem
