@@ -104,6 +104,18 @@ describe('software account index resolution', () => {
     expect(softwareAccounts.find(account => account.index === 5)).toBeUndefined();
   });
 
+  test('does not throw for a fractional highestAccountIndex and enumerates a single account', () => {
+    store.dispatch(stxChainSlice.actions.restoreAccountIndex({ fingerprint, accountIndex: 2.5 }));
+    const version = inMemoryStore.getSnapshot();
+
+    expect(() => selectStacksAccountState(store.getState(), version)).not.toThrow();
+
+    const softwareAccounts = selectStacksAccountState(store.getState(), version).filter(
+      account => account.fingerprint === fingerprint
+    );
+    expect(softwareAccounts.map(account => account.index)).toEqual([0]);
+  });
+
   test('selectStacksAccountById derives an account beyond the enumerated range', () => {
     const version = inMemoryStore.getSnapshot();
 

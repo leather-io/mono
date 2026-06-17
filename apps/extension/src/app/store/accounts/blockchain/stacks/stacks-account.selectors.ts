@@ -14,6 +14,7 @@ import {
   extractFingerprintFromKeyOriginPath,
   extractKeyFromDescriptor,
   extractKeyOriginPathFromDescriptor,
+  softwareAccountCountFromHighestIndex,
 } from '@leather.io/crypto';
 import type { AccountId, NetworkModes } from '@leather.io/models';
 import { extractStacksDerivationPathAccountIndex, makeStxKeyOrigin } from '@leather.io/stacks';
@@ -106,7 +107,7 @@ const selectSoftwareAccounts = registerKeychainSelectorCache(
         if (!chainState) return [];
 
         const { highestAccountIndex } = chainState;
-        const numberOfAccountsToDerive = highestAccountIndex + 1;
+        const numberOfAccountsToDerive = softwareAccountCountFromHighestIndex(highestAccountIndex);
 
         return createNullArrayOfLength(numberOfAccountsToDerive).map((_, accountIndex) =>
           initalizeSoftwareStacksAccount(keychain, { fingerprint, accountIndex }, network)
