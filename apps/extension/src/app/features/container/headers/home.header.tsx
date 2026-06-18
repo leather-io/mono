@@ -8,6 +8,7 @@ export function HomeHeader() {
   return (
     <Header>
       <HeaderGrid
+        gridTemplateColumns="minmax(0, 1fr) auto"
         leftCol={<HeaderAccountSelector />}
         rightCol={
           <HeaderGridRightCol>

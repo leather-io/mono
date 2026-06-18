@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Outlet, useLocation } from 'react-router';
 
 import { getAddressFromPublicKey } from '@stacks/transactions';
@@ -10,6 +11,7 @@ import { delay, isError } from '@leather.io/utils';
 
 import { finalizeAuthResponse } from '@shared/actions/finalize-auth-response';
 import { logger } from '@shared/logger';
+import { getHostnameFromUrl } from '@shared/utils/urls';
 
 import { useGetLegacyAuthBitcoinAddresses } from '@app/common/authentication/use-legacy-auth-bitcoin-addresses';
 import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state';
@@ -23,7 +25,9 @@ import {
   prepareLedgerDeviceStacksAppConnection,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { appPermissionsSlice } from '@app/store/app-permissions/app-permissions.slice';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 import { useLedgerNavigate } from '../../hooks/use-ledger-navigate';
 import { checkLockedDeviceError, useLedgerResponseState } from '../../utils/generic-ledger-utils';
@@ -45,6 +49,8 @@ export function LedgerSignJwtContainer() {
   const getBitcoinAddressesLegacyFormat = useGetLegacyAuthBitcoinAddresses();
 
   const keyActions = useKeyActions();
+  const dispatch = useDispatch();
+  const currentNetwork = useCurrentNetwork();
   const { decodedAuthRequest, authRequest } = useOnboardingState();
 
   const [accountIndex, setAccountIndex] = useState<null | number>(null);
@@ -148,6 +154,16 @@ export function LedgerSignJwtContainer() {
       const authResponse = addSignatureToAuthResponseJwt(authResponsePayload, resp.signatureDER);
       await delay(600);
       keyActions.switchAccount({ fingerprint: account.fingerprint, accountIndex });
+
+      dispatch(
+        appPermissionsSlice.actions.updatePermission({
+          origin: getHostnameFromUrl(origin),
+          fingerprint: account.fingerprint,
+          accountIndex,
+          requestedAccounts: new Date().toISOString(),
+          networkMode: currentNetwork.chain.bitcoin.mode,
+        })
+      );
 
       finalizeAuthResponse({
         decodedAuthRequest,

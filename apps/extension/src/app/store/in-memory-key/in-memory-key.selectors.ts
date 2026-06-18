@@ -1,51 +1,62 @@
 import { useSelector } from 'react-redux';
 
-import { createSelector } from '@reduxjs/toolkit';
-
 import { deriveRootKeychainFromMnemonicSync } from '@leather.io/crypto';
 
-import { decodeText } from '@shared/utils/text-encoding';
-
 import { RootState } from '..';
-import { selectCurrentAccount } from '../software-keys/software-key.selectors';
+import { selectCurrentAccount, selectSoftwareKeys } from '../software-keys/software-key.selectors';
+import * as inMemoryStore from './in-memory-storage';
+import { createKeychainSelector, registerKeychainSelectorCache } from './keychain-selector-cache';
+import { useInMemoryKeys } from './use-in-memory-keys';
 
-function selectInMemoryKeys(state: RootState) {
-  return state.inMemoryKeys;
+export function useHasLockedSoftwareWallets() {
+  const { hasKey } = useInMemoryKeys();
+  const softwareKeys = useSelector(selectSoftwareKeys);
+  return softwareKeys.some(key => !hasKey(key.id));
 }
 
-const selectActiveInMemoryWalletKeyBytes = createSelector(
-  selectInMemoryKeys,
-  selectCurrentAccount,
-  (inMemKeys, currentAccount) => inMemKeys.keys[currentAccount.fingerprint]
-);
-
-const selectHasActiveInMemoryWalletKey = createSelector(
-  selectActiveInMemoryWalletKeyBytes,
-  key => !!key
-);
+export function useHasUnlockedSoftwareWallets() {
+  const { hasKey } = useInMemoryKeys();
+  const softwareKeys = useSelector(selectSoftwareKeys);
+  return softwareKeys.some(key => hasKey(key.id));
+}
 
 export function useHasActiveInMemoryWalletSecretKey() {
-  return useSelector(selectHasActiveInMemoryWalletKey);
+  const { hasKey } = useInMemoryKeys();
+  const fingerprint = useSelector((state: RootState) => selectCurrentAccount(state).fingerprint);
+  return hasKey(fingerprint);
 }
 
-// No `createSelector` to avoid storing the decoded key as cleartext in memory
-export function selectActiveWalletKey(state: RootState) {
-  const activeWalletBytes = selectActiveInMemoryWalletKeyBytes(state);
-  if (!activeWalletBytes) return null;
-  return decodeText(activeWalletBytes);
-}
-
+// Intentionally do NOT use `createSelector` (or any memoized selector) for the
+// decoded secret key. reselect retains its last result in a module-lifetime memo
+// cache, which would keep the cleartext mnemonic resident in process memory until
+// the inputs change and across component unmounts. Read it on demand instead;
+// reactivity comes from `useInMemoryKeys()` (useSyncExternalStore).
 export function useActiveWalletSecretKey() {
-  return useSelector(selectActiveWalletKey);
+  const { getKey } = useInMemoryKeys();
+  const fingerprint = useSelector((state: RootState) => selectCurrentAccount(state).fingerprint);
+  return getKey(fingerprint);
 }
 
-export const selectRootKeychains = createSelector(selectInMemoryKeys, inMemKeys =>
-  Object.fromEntries(
-    Object.entries(inMemKeys.keys)
-      .filter(([, keyBytes]) => !!keyBytes)
-      .map(([fingerprint, keyBytes]) => [
-        fingerprint,
-        deriveRootKeychainFromMnemonicSync(decodeText(keyBytes)),
-      ])
+export function useWalletSecretKey(fingerprint: string | undefined) {
+  const { getKey } = useInMemoryKeys();
+  return fingerprint ? getKey(fingerprint) : undefined;
+}
+export const selectRootKeychainsAtVersion = registerKeychainSelectorCache(
+  createKeychainSelector(
+    [selectSoftwareKeys, (_state: RootState, version: number) => version],
+    softwareKeys => {
+      return Object.fromEntries(
+        softwareKeys
+          .map(wallet => {
+            const key = inMemoryStore.getKey(wallet.id);
+            if (!key) return null;
+            return [wallet.id, deriveRootKeychainFromMnemonicSync(key)];
+          })
+          .filter(
+            (entry): entry is [string, ReturnType<typeof deriveRootKeychainFromMnemonicSync>] =>
+              Boolean(entry)
+          )
+      );
+    }
   )
 );

@@ -15,6 +15,7 @@ export class HomePage {
   readonly swapButton: Locator;
   readonly settingsButton: Locator;
   readonly signOutConfirmHasBackupCheckbox: Locator;
+  readonly signOutConfirmHasBackupCheckboxes: Locator;
   readonly signOutConfirmPasswordDisable: Locator;
   readonly signOutDeleteWalletBtn: Locator;
   readonly signOutSettingsListItem: Locator;
@@ -40,9 +41,10 @@ export class HomePage {
     this.sendButton = page.getByTestId(HomePageSelectors.SendCryptoAssetBtn);
     this.swapButton = page.getByTestId(HomePageSelectors.SwapBtn);
     this.settingsButton = page.getByTestId(SettingsSelectors.SettingsMenuBtn);
-    this.signOutConfirmHasBackupCheckbox = page.getByTestId(
-      SettingsSelectors.SignOutConfirmHasBackupCheckbox
+    this.signOutConfirmHasBackupCheckboxes = page.locator(
+      `[data-testid^="${SettingsSelectors.SignOutConfirmHasBackupCheckbox}"]`
     );
+    this.signOutConfirmHasBackupCheckbox = this.signOutConfirmHasBackupCheckboxes.first();
     this.signOutConfirmPasswordDisable = page.getByTestId(
       SettingsSelectors.SignOutConfirmPasswordDisable
     );
@@ -107,7 +109,10 @@ export class HomePage {
   async signOut() {
     await this.clickSettingsButton();
     await this.signOutSettingsListItem.click();
-    await this.signOutConfirmHasBackupCheckbox.click();
+    const backupCheckboxCount = await this.signOutConfirmHasBackupCheckboxes.count();
+    for (let i = 0; i < backupCheckboxCount; i++) {
+      await this.signOutConfirmHasBackupCheckboxes.nth(i).check();
+    }
     await this.signOutConfirmPasswordDisable.click();
     await this.signOutDeleteWalletBtn.click();
   }

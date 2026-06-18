@@ -1,8 +1,8 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 import { TEST_ACCOUNT_1_STX_ADDRESS } from './constants';
 
-export async function mockMainnetTestAccountStacksNFTsRequest(page: Page) {
+export async function mockMainnetTestAccountStacksNFTsRequest(page: Page | BrowserContext) {
   await page.route(
     `**/api.hiro.so/extended/v1/tokens/nft/holdings?principal=${TEST_ACCOUNT_1_STX_ADDRESS}&limit=50`,
     route =>

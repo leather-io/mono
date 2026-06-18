@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { BrowserContext, Page } from '@playwright/test';
 import { json } from '@tests/utils';
 
 import { MOCK_REMOTE_CONFIG } from './constants';
@@ -30,7 +30,7 @@ import {
   mockWildcardBitcoinTxsRequests,
 } from './mock-utxos';
 
-export async function setupMockApis(page: Page) {
+export async function setupMockApis(page: Page | BrowserContext) {
   await Promise.all([
     page.route(/chrome-extension/, route => route.continue()),
     page.route(/github/, route => route.fulfill(json(MOCK_REMOTE_CONFIG))),

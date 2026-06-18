@@ -1,4 +1,5 @@
 import type { BrowserContext, Page, Route } from '@playwright/test';
+import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 
 import { delay } from '@leather.io/utils';
 
@@ -23,7 +24,7 @@ function mockChainalysisEntityCheckRequest(context: BrowserContext) {
 test.describe('Compliance checks', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await onboardingPage.signInWithTestAccount(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });
 

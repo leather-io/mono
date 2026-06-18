@@ -1,6 +1,6 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
-export async function mockMarketDataRequests(page: Page) {
+export async function mockMarketDataRequests(page: Page | BrowserContext) {
   await page.route('**/api.coingecko.com/api/v3/simple/price**', route =>
     route.fulfill({
       json: { bitcoin: { usd: 45000 } },

@@ -84,4 +84,13 @@ test.describe('Settings menu', () => {
       .expect(homePage.page.getByTestId(SharedComponentsSelectors.AccountCardBalanceText))
       .toContainText('***');
   });
+
+  test('that menu item opens the account selection sheet', async ({ page, settingsPage }) => {
+    await settingsPage.openSettingsMenu();
+    await page.getByTestId(SettingsSelectors.SwitchAccountMenuItem).click();
+
+    await test.expect(page.getByRole('heading', { name: 'Select account' })).toBeVisible();
+    await test.expect(page.getByRole('button', { name: 'Add wallet' })).toBeVisible();
+    await test.expect(page.getByRole('button', { name: 'Manage' })).toBeVisible();
+  });
 });

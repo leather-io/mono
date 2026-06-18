@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
 
@@ -105,7 +105,7 @@ export const mockTaprootUtxosE2e = [
   },
 ];
 
-export async function mockMainnetTestAccountBitcoinRequests(page: Page) {
+export async function mockMainnetTestAccountBitcoinRequests(page: Page | BrowserContext) {
   await Promise.all([
     page.route('**/leather.mempool.space/api/address/**/utxo', route =>
       route.fulfill({
@@ -129,13 +129,13 @@ export async function mockMainnetTestAccountBitcoinRequests(page: Page) {
   ]);
 }
 
-export async function mockWildcardBitcoinTxsRequests(page: Page) {
+export async function mockWildcardBitcoinTxsRequests(page: Page | BrowserContext) {
   await page.route('**/leather.mempool.space/api/address/*/txs', route =>
     route.fulfill({ json: [] })
   );
 }
 
-export async function mockTestnetTestAccountEmptyUtxosRequests(page: Page) {
+export async function mockTestnetTestAccountEmptyUtxosRequests(page: Page | BrowserContext) {
   await Promise.all([
     page.route(`${BITCOIN_API_BASE_URL_TESTNET4}/address/**/utxo`, route =>
       route.fulfill({ json: [] })
@@ -144,7 +144,7 @@ export async function mockTestnetTestAccountEmptyUtxosRequests(page: Page) {
   ]);
 }
 
-export async function mockMainnetTestAccountEmptyUtxosRequests(page: Page) {
+export async function mockMainnetTestAccountEmptyUtxosRequests(page: Page | BrowserContext) {
   await page.unroute(`**/leather.mempool.space/api/address/${TEST_ACCOUNT_1_TAPROOT_ADDRESS}/utxo`);
   await Promise.all([
     page.route('**/leather.mempool.space/api/address/**/utxo', route =>

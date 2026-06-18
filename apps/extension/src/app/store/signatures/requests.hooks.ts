@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 
+import type { AccountId } from '@leather.io/models';
+
 import { SignedMessageType } from '@shared/signature/signature-types';
 
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
@@ -31,18 +33,12 @@ function useSignatureRequestState() {
   }, [requestToken]);
 }
 
-export function useSignatureRequestAccountIndex() {
+export function useSignatureRequestAccountId(): AccountId | undefined {
   const signaturePayload = useSignatureRequestState();
   const accounts = useStacksAccounts();
 
-  if (!signaturePayload?.stxAddress) return;
-  const { stxAddress } = signaturePayload;
-
-  if (stxAddress && accounts) {
-    const account = accounts.find(account => account.address === stxAddress);
-    if (account) {
-      return account.accountIndex;
-    }
-  }
+  if (!signaturePayload?.stxAddress) return undefined;
+  const account = accounts?.find(account => account.address === signaturePayload.stxAddress);
+  if (account) return { fingerprint: account.fingerprint, accountIndex: account.accountIndex };
   return undefined;
 }

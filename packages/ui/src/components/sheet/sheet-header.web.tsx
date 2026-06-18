@@ -16,6 +16,7 @@ export function SheetHeader({ onClose, title, variant = 'default' }: SheetHeader
     <Flex
       justifyContent="flex-end"
       alignItems="center"
+      position="relative"
       m={{ base: 0, md: 'auto' }}
       p={variant === 'large' ? 'space.05' : 'space.04'}
       bg="transparent"
@@ -32,7 +33,14 @@ export function SheetHeader({ onClose, title, variant = 'default' }: SheetHeader
         </styled.h2>
       )}
       {onClose && (
-        <IconButton icon={<CloseIcon />} onClick={onClose} position="absolute" top="space.05" />
+        <IconButton
+          icon={<CloseIcon />}
+          onClick={onClose}
+          position="absolute"
+          top="50%"
+          right={variant === 'large' ? 'space.05' : 'space.04'}
+          transform="translateY(-50%)"
+        />
       )}
     </Flex>
   );

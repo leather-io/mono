@@ -1,6 +1,7 @@
 import type { QueryFunctionContext } from '@tanstack/react-query';
 
 import { NetworkModes } from '@leather.io/models';
+import { isUndefined } from '@leather.io/utils';
 
 import { BnsV2QueryPrefixes } from '../../query-prefixes';
 import { BnsV2Client } from './bns-v2-client';
@@ -17,7 +18,7 @@ const queryOptions = {
 } as const;
 
 interface CreateGetBnsNamesOwnedByAddressQueryOptionsArgs {
-  address: string;
+  address?: string;
   network: NetworkModes;
   client: BnsV2Client;
 }
@@ -28,11 +29,13 @@ export function createGetBnsNamesOwnedByAddressQueryOptions({
   client,
 }: CreateGetBnsNamesOwnedByAddressQueryOptionsArgs) {
   return {
-    enabled: address !== '',
+    enabled: !isUndefined(address) && address !== '',
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [BnsV2QueryPrefixes.GetBnsNamesByAddress, address],
-    queryFn: async ({ signal }: QueryFunctionContext) =>
-      fetchNamesForAddress({ address, network, signal, client }),
+    queryFn: async ({ signal }: QueryFunctionContext) => {
+      if (isUndefined(address)) return { names: [] };
+      return fetchNamesForAddress({ address, network, signal, client });
+    },
     ...queryOptions,
   } as const;
 }

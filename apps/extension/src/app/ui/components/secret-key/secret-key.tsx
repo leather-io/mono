@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
@@ -7,7 +6,6 @@ import { Flex, Stack } from 'leather-styles/jsx';
 
 import { Button, CopyIcon, Eye1ClosedIcon, Eye1Icon } from '@leather.io/ui';
 
-import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useClipboard } from '@app/common/hooks/use-copy-to-clipboard';
@@ -17,12 +15,11 @@ import { SecretKeyWord } from './secret-key-word';
 
 interface SecretKeyProps {
   secretKey: string;
+  onDone(): void;
 }
-export function SecretKey({ secretKey }: SecretKeyProps) {
+export function SecretKey({ secretKey, onDone }: SecretKeyProps) {
   const { onCopy, hasCopied } = useClipboard(secretKey || '');
   const [showSecretKey, setShowSecretKey] = useState(false);
-
-  const navigate = useNavigate();
 
   function copyToClipboard() {
     analytics.track('copy_secret_key_to_clipboard');
@@ -32,9 +29,6 @@ export function SecretKey({ secretKey }: SecretKeyProps) {
   const secretKeyWords = useMemo(() => secretKey?.split(' '), [secretKey]);
 
   const onCopyToClipboard = copyToClipboard;
-  function onBackedUpSecretKey() {
-    return navigate(RouteUrls.SetPassword);
-  }
 
   return (
     <Stack gap="space.05">
@@ -79,7 +73,7 @@ export function SecretKey({ secretKey }: SecretKeyProps) {
           variant="solid"
           fullWidth
           data-testid={OnboardingSelectors.BackUpSecretKeyBtn}
-          onClick={onBackedUpSecretKey}
+          onClick={onDone}
         >
           I've backed it up
         </Button>

@@ -16,12 +16,13 @@ interface HiddenUntypeDeserializeOption {
 export const persistConfig: PersistConfig<LocalRootState> & HiddenUntypeDeserializeOption = {
   key: 'root',
   stateReconciler: autoMergeLevel2,
-  version: 3,
+  version: 4,
   storage,
   serialize: false,
   migrate: migrations,
   deserialize: false,
   whitelist: [
+    'accounts',
     'active',
     'analytics',
     'chains',

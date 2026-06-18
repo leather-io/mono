@@ -14,15 +14,25 @@ import { AccountListItemLayout } from '@app/components/account/account-list-item
 import { AccountNameLayout } from '@app/components/account/account-name';
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { WalletType } from '@app/store/common/wallet-type.selectors';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 import { useLoading } from '@app/store/ui/ui.hooks';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface SwitchAccountListItemProps {
   accountId: AccountId;
+  nonInteractive?: boolean;
   handleClose(): void;
+  hideBalance?: boolean;
+  walletType: WalletType;
 }
-export function SwitchAccountListItem({ accountId, handleClose }: SwitchAccountListItemProps) {
+export function SwitchAccountListItem({
+  accountId,
+  nonInteractive,
+  handleClose,
+  hideBalance,
+  walletType,
+}: SwitchAccountListItemProps) {
   const stacksAccount = useStacksAccount(accountId);
   const stxAddress = stacksAccount?.address ?? '';
   const bitcoinSigner = useNativeSegwitPayer(accountId);
@@ -33,9 +43,10 @@ export function SwitchAccountListItem({ accountId, handleClose }: SwitchAccountL
     'SWITCH_ACCOUNTS' + stxAddress || btcAddress
   );
   const { handleSwitchAccount } = useSwitchAccount(handleClose);
-  const { data: name = '', isFetching: isFetchingBnsName } = useAccountDisplayName({
-    address: stxAddress,
+  const { data: name, isFetching: isFetchingBnsName } = useAccountDisplayName({
+    address: stacksAccount?.address,
     index: accountId.accountIndex,
+    fingerprint: accountId.fingerprint,
   });
 
   function handleClick() {
@@ -64,10 +75,12 @@ export function SwitchAccountListItem({ accountId, handleClose }: SwitchAccountL
           publicKey={stacksAccount?.stxPublicKey || ''}
         />
       }
-      balanceLabel={<AccountTotalBalance accountId={accountId} />}
+      balanceLabel={hideBalance ? null : <AccountTotalBalance accountId={accountId} />}
+      nonInteractive={nonInteractive}
       isLoading={isLoading}
       isSelected={isSelected}
       onSelectAccount={handleClick}
+      walletType={walletType}
     />
   );
 }

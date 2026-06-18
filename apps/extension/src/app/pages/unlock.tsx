@@ -21,7 +21,7 @@ export function Unlock() {
     <>
       <UnlockHeader />
       <Content>
-        <RequestPassword onSuccess={returnToPreviousRoute} showForgotPassword />
+        <RequestPassword onSuccess={returnToPreviousRoute} />
         <Outlet />
       </Content>
     </>
