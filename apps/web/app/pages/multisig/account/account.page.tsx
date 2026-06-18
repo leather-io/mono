@@ -65,7 +65,7 @@ export function AccountDetailPage() {
   const vault = useVault(network, vaultNetworkKnown ? vaultId : undefined);
   const account = useVaultAccount(network, vaultNetworkKnown ? accountId : undefined);
   const me = useMultisigMe(network);
-  const accountBalance = useVaultAccountBalance(network, account.data?.multisigAddress);
+  const accountBalance = useVaultAccountBalance();
 
   const btcSession = useSession('btc:mainnet');
   const stxSession = useSession('stx:mainnet');

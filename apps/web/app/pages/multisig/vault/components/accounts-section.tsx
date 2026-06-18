@@ -32,7 +32,7 @@ function AccountCard({
 }) {
   const theme = vaultThemeFromName(vault.theme);
   const chain = chainFromNetwork(vault.network);
-  const { crypto, fiat } = useVaultAccountBalance(vault.network, account.multisigAddress);
+  const { crypto, fiat } = useVaultAccountBalance();
   return (
     <Box
       position="relative"

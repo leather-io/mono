@@ -112,10 +112,7 @@ export function VaultDetailPage() {
 
   const me = useMultisigMe(network);
   const accounts = useVaultAccounts(network, vaultNetworkKnown ? vaultId : undefined);
-  const accountsBalance = useVaultAccountsBalance(
-    network,
-    (accounts.data ?? []).map(account => account.multisigAddress)
-  );
+  const accountsBalance = useVaultAccountsBalance();
   const cancelVault = useCancelVault(network);
   const joinVault = useJoinVault(network);
   const declineVault = useDeclineVault(network);
@@ -204,8 +201,8 @@ export function VaultDetailPage() {
         <Box flex={['1', '1', '1.6']} width="100%">
           <VaultBalanceHero
             vault={vault}
-            crypto={accounts.isSuccess ? accountsBalance.crypto : undefined}
-            fiat={accounts.isSuccess ? accountsBalance.fiat : undefined}
+            crypto={accountsBalance.crypto}
+            fiat={accountsBalance.fiat}
           />
           <SectionLabel>Vault accounts</SectionLabel>
           <AccountsSection

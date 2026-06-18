@@ -3,7 +3,6 @@ import { type ReactNode } from 'react';
 import { styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
 import { useVaultAccountsBalance } from '~/features/multisig/vaults/use-vault-account-balance';
-import { useVaultAccounts } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault } from '~/features/multisig/vaults/use-vaults';
 import { formatCurrency } from '~/utils/currency-formatter';
 
@@ -33,15 +32,10 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
   const isInvite = vault.membershipStatus === 'invited';
   const isCancelled = vault.status === 'cancelled';
   const isPendingMember = vault.membershipStatus === 'joined' && vault.status === 'pending';
-  const isActive = vault.membershipStatus === 'joined' && vault.status === 'active';
   const needsAttention = isInvite || vault.status === 'pending';
   const theme = vaultThemeFromName(vault.theme);
 
-  const accounts = useVaultAccounts(vault.network, isActive ? vault.id : undefined);
-  const { crypto, fiat } = useVaultAccountsBalance(
-    vault.network,
-    isActive ? (accounts.data ?? []).map(account => account.multisigAddress) : []
-  );
+  const { crypto, fiat } = useVaultAccountsBalance();
   const detail = useVault(vault.network, isPendingMember || isInvite ? vault.id : undefined);
   const pendingInviteCount =
     detail.data?.members.filter(member => member.membershipStatus === 'invited').length ?? 0;
@@ -76,18 +70,11 @@ export function VaultCard({ vault, onClick }: VaultCardProps) {
         ),
       };
     }
-    const balanceReady = accounts.isSuccess;
     return {
-      title: (
-        <Balance
-          balance={balanceReady ? fiat : undefined}
-          formatCurrency={formatCurrency}
-          textStyle="heading.05"
-        />
-      ),
+      title: <Balance balance={fiat} formatCurrency={formatCurrency} textStyle="heading.05" />,
       subtitle: (
         <Balance
-          balance={balanceReady ? crypto : undefined}
+          balance={crypto}
           formatCurrency={formatCurrency}
           textStyle="caption.01"
           color="ink.text-subdued"
