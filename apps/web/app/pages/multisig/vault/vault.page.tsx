@@ -110,7 +110,7 @@ export function VaultDetailPage() {
   const detailResolving = vaultNetworkKnown && !(btcVault.isSuccess || stxVault.isSuccess);
   const isResolving = !hydrated || sessionsRestoring || !listsSettled || detailResolving;
 
-  const me = useMultisigMe(network);
+  const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accounts = useVaultAccounts(network, vaultNetworkKnown ? vaultId : undefined);
   const accountsBalance = useVaultAccountsBalance();
   const cancelVault = useCancelVault(network);

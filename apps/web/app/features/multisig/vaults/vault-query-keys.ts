@@ -9,8 +9,8 @@ export const multisigVaultKeys = {
   scope(network: AuthNetworkId, address: string | undefined) {
     return [...multisigVaultKeys.byNetwork(network), address ?? null] as const;
   },
-  me(network: AuthNetworkId, address: string | undefined) {
-    return [...multisigVaultKeys.scope(network, address), 'me'] as const;
+  me(network: AuthNetworkId | undefined, address: string | undefined) {
+    return [...multisigVaultKeys.all, network ?? null, address ?? null, 'me'] as const;
   },
   lists(network: AuthNetworkId, address: string | undefined) {
     return [...multisigVaultKeys.scope(network, address), 'vaults'] as const;
