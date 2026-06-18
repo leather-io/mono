@@ -46,7 +46,6 @@ vi.mock('../../account', () => ({
 
 vi.mock('./bitcoin-keychain', () => ({
   selectCurrentNetworkBitcoinAccountLookup: () => () => undefined,
-  useBitcoinExtendedPublicKeyVersions: () => undefined,
 }));
 
 function requireDefined<T>(value: T | null | undefined): T {

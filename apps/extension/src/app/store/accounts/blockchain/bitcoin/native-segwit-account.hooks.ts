@@ -27,10 +27,7 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 
 import { useCurrentAccountId } from '../../account';
-import {
-  selectCurrentNetworkBitcoinAccountLookup,
-  useBitcoinExtendedPublicKeyVersions,
-} from './bitcoin-keychain';
+import { selectCurrentNetworkBitcoinAccountLookup } from './bitcoin-keychain';
 import { bitcoinSoftwarePayerFactory } from './bitcoin-payer';
 
 const selectNativeSegwitAccountId = createSelector(
@@ -72,7 +69,6 @@ export function useNativeSegwitAccount(accountId: AccountId) {
 export function useNativeSegwitPayer(accountId: AccountId) {
   const account = useNativeSegwitAccount(accountId);
   const network = useCurrentNetwork();
-  const extendedPublicKeyVersions = useBitcoinExtendedPublicKeyVersions();
 
   return useMemo(() => {
     if (!account) return;
@@ -83,9 +79,8 @@ export function useNativeSegwitPayer(accountId: AccountId) {
       masterKeyFingerprint: account.masterKeyFingerprint,
       paymentFn: getNativeSegwitPaymentFromAddressIndex,
       network: network.chain.bitcoin.mode,
-      extendedPublicKeyVersions,
     });
-  }, [account, extendedPublicKeyVersions, network.chain.bitcoin.mode]);
+  }, [account, network.chain.bitcoin.mode]);
 }
 
 export function useCurrentAccountNativeSegwitPayer() {

@@ -1,17 +1,14 @@
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
-import { HDKey, Versions } from '@scure/bip32';
+import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { mapValues } from 'remeda';
 
 import {
   type SupportedPaymentType,
-  bitcoinNetworkModeToCoreNetworkMode,
   deriveAddressIndexKeychainFromAccount,
   getBtcSignerLibNetworkConfigByMode,
-  getHdKeyVersionsFromNetwork,
   initializeBitcoinAccountKeychainFromDescriptor,
   makeNativeSegwitAccountDerivationPath,
   makeTaprootAccountDerivationPath,
@@ -26,7 +23,6 @@ import {
 import type { BitcoinNetworkModes } from '@leather.io/models';
 import type { BitcoinKeychain } from '@leather.io/state/keychains';
 
-import { useWalletType } from '@app/common/use-wallet-type';
 import type { RootState } from '@app/store';
 import { selectRootKeychainsAtVersion } from '@app/store/in-memory-key/in-memory-key.selectors';
 import {
@@ -147,26 +143,6 @@ export const selectCurrentNetworkBitcoinAccountLookup = registerKeychainSelector
 export function useBitcoinScureLibNetworkConfig() {
   const network = useCurrentNetwork();
   return getBtcSignerLibNetworkConfigByMode(network.chain.bitcoin.mode);
-}
-
-export function useBitcoinExtendedPublicKeyVersions(): Versions | undefined {
-  const network = useCurrentNetwork();
-  const { whenWallet } = useWalletType();
-  // Only Ledger in testnet mode do we need to manually declare `Versions`
-  return useMemo(() => {
-    // whenWallet throws if it's neither. As whenWallet is also called on
-    // SetPassword page, we need to catch because it's neither at that point
-    try {
-      return whenWallet({
-        software: undefined,
-        ledger: getHdKeyVersionsFromNetwork(
-          bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode)
-        ),
-      });
-    } catch {
-      return undefined;
-    }
-  }, [network, whenWallet]);
 }
 
 interface BitcoinSoftwareSignerFns {
