@@ -6,5 +6,5 @@ import { sessionsAtom } from './sessions.atom';
 
 export function useSession(network: AuthNetworkId | undefined): AuthSession | null {
   const sessions = useAtomValue(sessionsAtom);
-  return network ? sessions[network] : null;
+  return network ? (sessions[network] ?? null) : null;
 }

@@ -20,7 +20,7 @@ interface ShareInvitationsModalProps {
 }
 
 function inviteLink(vault: Vault): string {
-  return `https://leather.io/multisig?invite=${vault.id}`;
+  return `https://leather.io/multisig?invite=${encodeURIComponent(vault.id)}`;
 }
 
 function inviteMessage(vault: Vault, member: VaultMember, creatorName: string | null): string {
