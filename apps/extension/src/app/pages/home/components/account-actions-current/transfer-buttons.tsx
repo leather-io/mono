@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
+import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
@@ -16,12 +17,8 @@ import { TransferSheet } from './transfer-sheet';
 
 export function TransferButtons() {
   const navigate = useNavigate();
-  const location = useLocation();
   const hasBitcoinKeys = useHasCurrentBitcoinAccount();
-
-  const receivePath = hasBitcoinKeys
-    ? `${RouteUrls.Home}${RouteUrls.Receive}`
-    : `${RouteUrls.Home}${RouteUrls.ReceiveStx}`;
+  const { showReceive } = useReceiveDialog();
 
   const { whenWallet } = useWalletType();
   const isAtLeastMd = useViewportMinWidth('md');
@@ -38,8 +35,8 @@ export function TransferButtons() {
     })();
   }
 
-  async function onReceive() {
-    await navigate(receivePath, { state: { backgroundLocation: location } });
+  function onReceive() {
+    showReceive(hasBitcoinKeys ? 'full' : 'stx');
     setIsDrawerOpen(false);
   }
 

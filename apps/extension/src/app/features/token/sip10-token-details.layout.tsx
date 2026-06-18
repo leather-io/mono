@@ -3,8 +3,6 @@ import type { ReactNode } from 'react';
 import type { ActivityView } from '@leather.io/features';
 import type { Money } from '@leather.io/models';
 
-import { RouteUrls } from '@shared/route-urls';
-
 import { TokenDetailsLayout } from './token-details.layout';
 
 interface Sip10TokenDetailsLayoutProps {
@@ -39,7 +37,7 @@ export function Sip10TokenDetailsLayout({
       icon={icon}
       title={name}
       symbol={symbol}
-      receivePath={`/${RouteUrls.ReceiveStx}`}
+      receiveView="stx"
       swapChain="stacks"
       availableBalance={availableBalance}
       fiatBalance={fiatBalance}

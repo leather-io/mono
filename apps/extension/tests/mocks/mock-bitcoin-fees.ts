@@ -1,6 +1,6 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
-export async function mockBitcoinFeeRequests(page: Page) {
+export async function mockBitcoinFeeRequests(page: Page | BrowserContext) {
   await Promise.all([
     page.route('**/mempool.space/api/v1/fees/recommended', route =>
       route.fulfill({

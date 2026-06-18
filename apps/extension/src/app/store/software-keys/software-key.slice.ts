@@ -31,6 +31,15 @@ export const keySlice = createSlice({
     addNewWallet(state, action: PayloadAction<SoftwareKeyConfig>) {
       keyAdapter.addOne(state, action.payload);
     },
+
+    // Persists the result of re-encrypting a legacy (pre-Argon2 / vault-migrated)
+    // key at unlock. upsertOne overwrites the existing entity's encryptedSecretKey
+    // in place rather than adding a new one — the key already exists, only its
+    // ciphertext (and the shared top-level salt) changed.
+    softwareKeyReEncrypted(state, action: PayloadAction<{ salt: string; key: SoftwareKeyConfig }>) {
+      keyAdapter.upsertOne(state, action.payload.key);
+      state.salt = action.payload.salt;
+    },
   },
   extraReducers: builder =>
     builder

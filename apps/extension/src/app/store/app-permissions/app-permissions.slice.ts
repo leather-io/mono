@@ -1,13 +1,9 @@
-import { useMemo } from 'react';
-import { useDispatch } from 'react-redux';
-
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
-import type { AppPermission } from '@shared/permissions/permission.helpers';
-import { getHostnameFromUrl } from '@shared/utils/urls';
+import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/wallet';
 
-import { useCurrentAccountId } from '../accounts/account';
-import { useCurrentNetwork } from '../networks/networks.selectors';
+import type { AppPermission } from '@shared/permissions/permission.helpers';
+import { assumedZeroFingerprint } from '@shared/utils';
 
 const appPermissionsAdapter = createEntityAdapter<AppPermission, string>({
   selectId: permission => permission.origin,
@@ -19,27 +15,20 @@ export const appPermissionsSlice = createSlice({
   name: 'appPermissions',
   initialState,
   reducers: { updatePermission: appPermissionsAdapter.upsertOne },
-});
-
-export function useAppPermissions() {
-  const dispatch = useDispatch();
-  const account = useCurrentAccountId();
-  const currentNetwork = useCurrentNetwork();
-
-  return useMemo(
-    () => ({
-      hasRequestedAccounts(origin: string) {
-        const url = getHostnameFromUrl(origin);
-        dispatch(
-          appPermissionsSlice.actions.updatePermission({
-            ...account,
-            origin: url,
-            requestedAccounts: new Date().toISOString(),
-            networkMode: currentNetwork.chain.bitcoin.mode,
-          })
+  extraReducers: builder =>
+    builder
+      .addCase(userRemovesWallet, (state, action) => {
+        const origins = state.ids.filter(
+          origin => state.entities[origin]?.fingerprint === action.payload.fingerprint
         );
-      },
-    }),
-    [dispatch, account, currentNetwork.chain.bitcoin.mode]
-  );
-}
+        appPermissionsAdapter.removeMany(state, origins);
+      })
+
+      .addCase(fingerprintMigration, (state, action) => {
+        const newFingerprint = action.payload;
+        const updates = state.ids
+          .filter(origin => state.entities[origin]?.fingerprint === assumedZeroFingerprint)
+          .map(origin => ({ id: origin, changes: { fingerprint: newFingerprint } }));
+        appPermissionsAdapter.updateMany(state, updates);
+      }),
+});

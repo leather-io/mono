@@ -17,7 +17,7 @@ import { StxCryptoAssetItem } from '@app/features/asset-list/stacks/stx-crypo-as
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { useHasLedgerKeys } from '@app/store/ledger/ledger.selectors';
+import { useActiveWalletType } from '@app/store/common/wallet-type.selectors';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
 import { ConnectLedgerAssetItemFallback } from './_components/connect-ledger-asset-item-fallback';
@@ -51,7 +51,7 @@ export function TokenList({
   const currentAccount = useCurrentAccountId();
   const currentStacksAccount = useCurrentStacksAccount();
   const currentBtcNativeSegwitAccount = useCurrentAccountNativeSegwitPayer();
-  const isLedger = useHasLedgerKeys();
+  const isLedger = useActiveWalletType() === 'ledger';
   const isPrivate = useIsPrivateMode();
 
   return (

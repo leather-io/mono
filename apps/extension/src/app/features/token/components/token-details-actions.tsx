@@ -4,6 +4,8 @@ import { Flex, styled } from 'leather-styles/jsx';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import type { ReceiveView } from '@app/common/receive/receive';
+import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useFlags } from '@app/features/feature-flags';
@@ -45,7 +47,7 @@ export type SwapChain = 'bitcoin' | 'stacks';
 
 interface TokenDetailsActionsRowProps {
   symbol: string;
-  receivePath: string;
+  receiveView: ReceiveView;
   swapChain: SwapChain;
   isBuyEnabled?: boolean;
   isSwapEnabled?: boolean;
@@ -53,13 +55,14 @@ interface TokenDetailsActionsRowProps {
 
 export function TokenDetailsActionsRow({
   symbol,
-  receivePath,
+  receiveView,
   swapChain,
   isBuyEnabled = true,
   isSwapEnabled = true,
 }: TokenDetailsActionsRowProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { showReceive } = useReceiveDialog();
   const { releaseOnramperBuy } = useFlags();
 
   function pageModeRoutingAction(url: string) {
@@ -94,7 +97,7 @@ export function TokenDetailsActionsRow({
       />
       <TokenDetailsPillButton
         label="Receive"
-        onClick={() => void navigate(receivePath, { state: { backgroundLocation: location } })}
+        onClick={() => showReceive(receiveView)}
         testId="token-details-receive-btn"
       />
       {releaseOnramperBuy && (

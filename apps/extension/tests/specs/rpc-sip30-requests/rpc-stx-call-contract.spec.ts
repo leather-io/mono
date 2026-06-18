@@ -7,6 +7,7 @@ import {
   standardPrincipalCV,
 } from '@stacks/transactions';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
+import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
 import type { RpcParams, stxCallContract } from '@leather.io/rpc';
@@ -18,7 +19,7 @@ import { test } from '../../fixtures/fixtures';
 test.describe('RPC: stx_callContract', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await onboardingPage.signInWithTestAccount(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });
 

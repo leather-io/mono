@@ -16,9 +16,18 @@ import { MnemonicForm } from '@app/pages/onboarding/sign-in/mnemonic-form';
 interface EnterMnemonicProps {
   title: string;
   description: string;
+  onSubmit(mnemonic: string): Promise<void>;
+  error: string | undefined;
+  isLoading: boolean;
 }
 
-export function EnterMnemonic({ title, description }: EnterMnemonicProps) {
+export function EnterMnemonic({
+  title,
+  description,
+  onSubmit,
+  error,
+  isLoading,
+}: EnterMnemonicProps) {
   const [twentyFourWordMode, setTwentyFourWordMode] = useState(true);
   const [mnemonic, setMnemonic] = useState<(string | null)[]>([]);
 
@@ -51,6 +60,9 @@ export function EnterMnemonic({ title, description }: EnterMnemonicProps) {
           }
           rightColumn={
             <MnemonicForm
+              onSubmit={onSubmit}
+              isLoading={isLoading}
+              error={error}
               mnemonic={mnemonic}
               setMnemonic={setMnemonic}
               twentyFourWordMode={twentyFourWordMode}

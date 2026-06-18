@@ -18,12 +18,14 @@ import { MINIMUM_STACKS_APP_VERSION, StacksAppVersion } from '../../utils/stacks
 
 export const defaultNumberOfKeysToPullFromLedgerDevice = 10;
 
+type RequestLedgerKeysResult = { status: 'success' } | { status: 'failure' };
+
 interface UseRequestLedgerKeysArgs<App extends BitcoinApp | StacksApp> {
   chain: SupportedBlockchains;
   isAppOpen({ name }: { name: string }): boolean;
   getAppVersion(app: App): Promise<StacksAppVersion> | Promise<BitcoinAppVersion>;
   connectApp(): Promise<App>;
-  pullKeysFromDevice(app: App): Promise<void>;
+  pullKeysFromDevice(app: App): Promise<RequestLedgerKeysResult>;
   passesAdditionalVersionCheck?(appVersion: StacksAppVersion | BitcoinAppVersion): Promise<boolean>;
   onSuccess(): void;
 }
@@ -80,7 +82,8 @@ export function useRequestLedgerKeys<App extends BitcoinApp | StacksApp>({
       setAwaitingDeviceConnection(false);
       void ledgerNavigate.toConnectionSuccessStep(chain);
       await delay(1250);
-      await pullKeysFromDevice(app);
+      const pullKeysResult = await pullKeysFromDevice(app);
+      if (pullKeysResult.status === 'failure') return;
       ledgerAnalytics.publicKeysPulledFromLedgerSuccessfully();
       onSuccess?.();
     } catch (e) {

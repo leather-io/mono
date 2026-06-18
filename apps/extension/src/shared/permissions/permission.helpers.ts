@@ -1,4 +1,5 @@
 import type { AccountId, BitcoinNetworkModes } from '@leather.io/models';
+import type { WalletStore } from '@leather.io/state/wallet';
 
 import { getRootState } from '@shared/storage/get-root-state';
 
@@ -10,8 +11,16 @@ export interface AppPermission extends AccountId {
   networkMode: BitcoinNetworkModes;
 }
 
-export function hasRequestedAccountPermission(permission?: AppPermission) {
+function hasRequestedAccountPermission(permission?: AppPermission) {
   return !!permission?.requestedAccounts;
+}
+
+export function isConnectedToExistingWallet(
+  permission: AppPermission | undefined,
+  walletEntities: Partial<Record<string, WalletStore>>
+): boolean {
+  if (!permission || !hasRequestedAccountPermission(permission)) return false;
+  return !!walletEntities[permission.fingerprint];
 }
 
 export async function getPermissionsByOrigin(hostname: string) {

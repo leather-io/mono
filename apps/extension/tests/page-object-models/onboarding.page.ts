@@ -2,6 +2,7 @@ import { Page } from '@playwright/test';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
 import type { SupportedBlockchains } from '@leather.io/models';
 import { createCounter, delay } from '@leather.io/utils';
@@ -14,6 +15,12 @@ export const TEST_ACCOUNT_SECRET_KEY = process.env.EXTENSION_INTEGRATION_TEST_MN
 export const testFingerprint = 'e87a850b';
 export function getTestSoftwareAccountDefaultWalletState() {
   return {
+    accounts: {
+      ids: [`${testFingerprint}/0`],
+      entities: {
+        [`${testFingerprint}/0`]: { id: `${testFingerprint}/0` },
+      },
+    },
     active: {
       account: {
         fingerprint: testFingerprint,
@@ -64,11 +71,32 @@ export function getTestSoftwareAccountDefaultWalletState() {
       userSelectedTheme: 'system',
       dismissedMessages: [],
       dismissedPromoIndexes: [],
+      seenFeatureIntros: [],
       discardedInscriptions: [],
       isNotificationsEnabled: true,
     },
     manageTokens: { entities: {}, ids: [] },
-    _persist: { version: 3, rehydrated: true },
+    _persist: { version: 4, rehydrated: true },
+  };
+}
+
+// Seeds the demo app (localhost:3000) as connected to the test software wallet.
+// Signing methods (sendTransfer, stx_*, etc.) now require a connected wallet, so
+// tests that dispatch them without an explicit connect step must seed this.
+export function getConnectedTestAppPermissionsState() {
+  return {
+    appPermissions: {
+      ids: ['localhost:3000'],
+      entities: {
+        'localhost:3000': {
+          origin: 'localhost:3000',
+          fingerprint: testFingerprint,
+          accountIndex: 0,
+          requestedAccounts: '2024-01-01T00:00:00.000Z',
+          networkMode: 'mainnet',
+        },
+      },
+    },
   };
 }
 
@@ -291,21 +319,94 @@ export function makeLedgerTestAccountWalletState(keysToInclude: SupportedBlockch
   };
 }
 
+// A distinct fingerprint for the Ledger wallet so it does not collide with the
+// software test wallet (`testFingerprint`) when both are present.
+export const mixedLedgerFingerprint = 'a1b2c3d4';
+
+function rekeyLedgerKeychains(
+  keychains: {
+    entities: Record<string, { descriptor: string; chain: 'bitcoin' | 'stacks' }>;
+    ids: string[];
+  },
+  fromFingerprint: string,
+  toFingerprint: string
+) {
+  const entities: Record<string, { descriptor: string; chain: 'bitcoin' | 'stacks' }> = {};
+  const ids: string[] = [];
+  keychains.ids.forEach(id => {
+    const rekeyedId = id.replace(fromFingerprint, toFingerprint);
+    const keychain = keychains.entities[id];
+    entities[rekeyedId] = {
+      ...keychain,
+      // Only the key-origin fingerprint changes; the xpub/pubkey is untouched,
+      // so the derived addresses are identical to the original Ledger fixture.
+      descriptor: keychain.descriptor.replace(fromFingerprint, toFingerprint),
+    };
+    ids.push(rekeyedId);
+  });
+  return { entities, ids };
+}
+
+// One software wallet with 2 accounts plus one Ledger wallet with 5 accounts,
+// each under its own fingerprint, for testing multiwallet account selection.
+export function makeMixedSoftwareAndLedgerWalletState() {
+  const softwareState = getTestSoftwareAccountDefaultWalletState();
+  const ledgerKeychains = rekeyLedgerKeychains(
+    buildKeychains(['bitcoin', 'stacks']),
+    'e87a850b',
+    mixedLedgerFingerprint
+  );
+
+  return {
+    ...softwareState,
+    chains: {
+      stx: {
+        [testFingerprint]: { highestAccountIndex: 1, currentAccountStacksDescriptor: '' },
+        [mixedLedgerFingerprint]: { highestAccountIndex: 0, currentAccountStacksDescriptor: '' },
+      },
+    },
+    wallets: {
+      ids: [testFingerprint, mixedLedgerFingerprint],
+      entities: {
+        [testFingerprint]: {
+          fingerprint: testFingerprint,
+          name: 'Wallet 1',
+          type: 'software',
+          // Explicit timestamps so the software wallet sorts before the Ledger
+          // wallet deterministically (the tree orders wallets by createdOn)
+          createdOn: '2024-01-01T00:00:00.000Z',
+        },
+        [mixedLedgerFingerprint]: {
+          fingerprint: mixedLedgerFingerprint,
+          name: 'My Ledger',
+          type: 'ledger',
+          createdOn: '2024-01-02T00:00:00.000Z',
+        },
+      },
+    },
+    keychains: ledgerKeychains,
+  };
+}
+
 export class OnboardingPage {
   constructor(readonly page: Page) {}
 
-  async setPassword() {
-    await this.page.waitForURL('**' + RouteUrls.SetPassword);
-    await this.page.getByTestId(OnboardingSelectors.NewPasswordInput).fill(TEST_PASSWORD);
+  async setPassword(password = TEST_PASSWORD) {
+    const passwordInput = this.page.getByTestId(OnboardingSelectors.NewPasswordInput);
+    await passwordInput.waitFor();
+    await passwordInput.fill(password);
     await this.page.waitForTimeout(100);
     await this.page.getByTestId(OnboardingSelectors.SetPasswordBtn).click();
   }
 
-  async signUpNewUser() {
+  async signUpNewUser(password = TEST_PASSWORD) {
     await this.page.getByTestId(OnboardingSelectors.SignUpBtn).click();
     await this.page.waitForURL('**' + RouteUrls.BackUpSecretKey);
     await this.page.getByTestId(OnboardingSelectors.BackUpSecretKeyBtn).click();
-    await this.setPassword();
+    await this.setPassword(password);
+    await this.page.waitForURL('**' + RouteUrls.Home);
+    await this.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
+    await this.dismissFeatureIntroducer();
   }
   async initiateSignIn() {
     await this.page.getByTestId(OnboardingSelectors.SignInLink).click();
@@ -321,6 +422,19 @@ export class OnboardingPage {
     await this.setPassword();
     await this.page.waitForURL('**' + RouteUrls.Home);
     await this.page.getByTestId(HomePageSelectors.HomePageContainer).waitFor();
+  }
+
+  async dismissFeatureIntroducer() {
+    const tryItOutBtn = this.page.getByTestId(
+      SharedComponentsSelectors.FeatureIntroducerTryItOutBtn
+    );
+    try {
+      await tryItOutBtn.waitFor({ state: 'visible', timeout: 5000 });
+    } catch {
+      return;
+    }
+    await tryItOutBtn.click();
+    await tryItOutBtn.waitFor({ state: 'detached' });
   }
 
   async signInMnemonicKey(secretKey = TEST_ACCOUNT_SECRET_KEY) {
@@ -341,7 +455,7 @@ export class OnboardingPage {
    * onboarding flow and initialise the wallet in a signed in state for the test
    * account
    */
-  async signInWithTestAccount(id: string) {
+  async signInWithTestAccount(id: string, stateOverrides: object = {}) {
     const testAccountDerivedKey =
       'd904f412b8d116540017c302f3f7033813c95902af5a067c7befcc34fa5e5290709f157f80548603a1e4f8edc2c0d5d7';
 
@@ -368,7 +482,7 @@ export class OnboardingPage {
 
       await this.page.evaluate(
         async walletState => chrome.storage.local.set({ 'persist:root': walletState }),
-        getTestSoftwareAccountDefaultWalletState()
+        { ...getTestSoftwareAccountDefaultWalletState(), ...stateOverrides }
       );
 
       await this.page.evaluate(
@@ -386,6 +500,54 @@ export class OnboardingPage {
       fingerprint => window.debug.setHighestAccountIndex(fingerprint, 2),
       testFingerprint
     );
+
+    await this.dismissFeatureIntroducer();
+  }
+
+  /**
+   * Signs in with a software wallet (2 accounts) and a Ledger wallet (5
+   * accounts) already present, skipping onboarding. The encryption key is set
+   * so the software wallet's addresses derive, while the Ledger wallet's keys
+   * come from stored keychains.
+   */
+  async signInWithMixedSoftwareAndLedgerWallets(id: string, stateOverrides: object = {}) {
+    const testAccountDerivedKey =
+      'd904f412b8d116540017c302f3f7033813c95902af5a067c7befcc34fa5e5290709f157f80548603a1e4f8edc2c0d5d7';
+
+    const isSignedIn = async () => {
+      const { encryptionKey } = await this.page.evaluate(() =>
+        chrome.storage.session.get(['encryptionKey'])
+      );
+      const hasSessionKey = encryptionKey === testAccountDerivedKey;
+      const hasTokensTab = await this.page.getByTestId(HomePageSelectors.TokensTabBtn).isVisible();
+      const hasActivityTab = await this.page
+        .getByTestId(HomePageSelectors.ActivityTabBtn)
+        .isVisible();
+      return hasSessionKey && hasTokensTab && hasActivityTab;
+    };
+
+    const iterationCounter = createCounter();
+
+    do {
+      if (iterationCounter.getValue() > 5) throw new Error('Unable to initialize wallet state');
+
+      await this.page.evaluate(
+        async walletState => chrome.storage.local.set({ 'persist:root': walletState }),
+        { ...makeMixedSoftwareAndLedgerWalletState(), ...stateOverrides }
+      );
+
+      await this.page.evaluate(
+        async encryptionKey => chrome.storage.session.set({ encryptionKey }),
+        testAccountDerivedKey
+      );
+
+      await this.page.goto(`chrome-extension://${id}/index.html`);
+      await delay(1000 * iterationCounter.getValue());
+
+      iterationCounter.increment();
+    } while (!(await isSignedIn()));
+
+    await this.dismissFeatureIntroducer();
   }
 
   /**
@@ -408,5 +570,6 @@ export class OnboardingPage {
     await delay(2000);
     await this.page.goto(`chrome-extension://${id}/index.html`);
     await delay(2000);
+    await this.dismissFeatureIntroducer();
   }
 }

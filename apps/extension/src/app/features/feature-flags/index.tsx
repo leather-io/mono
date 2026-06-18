@@ -1,5 +1,7 @@
 import { asyncWithLDProvider, useFlags as useLDFlags } from 'launchdarkly-react-client-sdk';
 
+import { IS_TEST_ENV } from '@shared/environment';
+
 import { getClientId } from '@app/common/client-id';
 
 function NoopProvider({ children }: { children: React.ReactNode }) {
@@ -16,6 +18,10 @@ export function createLaunchDarklyProvider() {
         id: 'leather-extension-wallet',
         version: VERSION,
       },
+      // In integration tests the streaming endpoint isn't served, so the SDK
+      // reconnects in a loop and starves the main thread. Disable streaming so
+      // flags resolve from the initial fetch only.
+      ...(IS_TEST_ENV ? { streaming: false } : {}),
     },
     context: {
       kind: 'clientId',

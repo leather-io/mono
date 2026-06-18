@@ -1,15 +1,13 @@
 import { createAction, createSlice } from '@reduxjs/toolkit';
 
-import { getMnemonicRootKeyFingerprint } from '@leather.io/crypto';
 import { AccountId } from '@leather.io/models';
 import { resetWallet } from '@leather.io/state';
-import { fingerprintMigration } from '@leather.io/state/wallet';
+import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/wallet';
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import { inMemoryKeySlice } from '../in-memory-key/in-memory-key.slice';
-
 export const userSwitchesAccount = createAction<AccountId | null>('active/userSwitchesAccount');
+export const walletKeyGenerated = createAction<string>('active/walletKeyGenerated');
 
 interface ActiveState {
   account: AccountId | null;
@@ -29,9 +27,9 @@ export const activeSlice = createSlice({
       .addCase(userSwitchesAccount, (state, action) => {
         state.account = action.payload;
       })
-      .addCase(inMemoryKeySlice.actions.generateWalletKey, (state, action) => {
+      .addCase(walletKeyGenerated, (state, action) => {
         state.account = {
-          fingerprint: getMnemonicRootKeyFingerprint(action.payload),
+          fingerprint: action.payload,
           accountIndex: 0,
         };
       })
@@ -40,6 +38,11 @@ export const activeSlice = createSlice({
         const newFingerprint = action.payload;
         if (state.account.fingerprint === assumedZeroFingerprint) {
           state.account = { ...state.account, fingerprint: newFingerprint };
+        }
+      })
+      .addCase(userRemovesWallet, (state, action) => {
+        if (state.account?.fingerprint === action.payload.fingerprint) {
+          state.account = null;
         }
       }),
 });

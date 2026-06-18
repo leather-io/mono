@@ -1,4 +1,5 @@
-import { Box, styled } from 'leather-styles/jsx';
+import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
+import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import type { Money } from '@leather.io/models';
 import { Approver, Caption, ItemLayout, SkeletonLoader } from '@leather.io/ui';
@@ -7,6 +8,7 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { AccountNameLayout } from '@app/components/account/account-name';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface SigningAccountCardProps {
@@ -22,11 +24,15 @@ export function SigningAccountCard({
   isLoadingBalance,
 }: SigningAccountCardProps) {
   const account = useCurrentStacksAccount();
+  const walletEntities = useWalletEntities();
+  const walletName = walletEntities[account?.fingerprint ?? '']?.name;
 
   const stxAddress = account?.address || '';
   const { data: name = '', isLoading: isLoadingName } = useAccountDisplayName({
     address: stxAddress,
+    // TODO: We shouldn't just set it to empty strings here, rethink
     index: account?.accountIndex ?? 0,
+    fingerprint: account?.fingerprint ?? '',
   });
 
   const titleRight = (
@@ -55,7 +61,14 @@ export function SigningAccountCard({
             />
           }
           titleLeft={<AccountNameLayout isLoading={isLoadingName}>{name}</AccountNameLayout>}
-          captionLeft={address}
+          captionLeft={
+            <Stack gap="space.01" alignItems="flex-start">
+              {walletName ? (
+                <Caption data-testid={ConnectAccountSelectors.WalletName}>{walletName}</Caption>
+              ) : null}
+              {address}
+            </Stack>
+          }
           titleRight={titleRight}
           captionRight={captionRight}
         />

@@ -6,12 +6,15 @@ import { ArrowLeftIcon } from '@leather.io/ui';
 
 import { HeaderActionButton } from './header-action-button';
 
-export function HeaderBackButton() {
+interface HeaderBackButtonProps {
+  onBack?(): void;
+}
+export function HeaderBackButton({ onBack }: HeaderBackButtonProps) {
   const navigate = useNavigate();
   return (
     <HeaderActionButton
       icon={<ArrowLeftIcon />}
-      onAction={() => navigate(-1)}
+      onAction={() => (onBack ? onBack() : navigate(-1))}
       dataTestId={SharedComponentsSelectors.HeaderBackBtn}
     />
   );

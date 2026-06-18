@@ -1,6 +1,9 @@
 import { useSelector } from 'react-redux';
 
-import { Box } from 'leather-styles/jsx';
+import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
+import { Box, Stack } from 'leather-styles/jsx';
+
+import { Caption } from '@leather.io/ui';
 
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { AccountTotalBalance } from '@app/components/account-total-balance';
@@ -10,6 +13,7 @@ import { AccountNameLayout } from '@app/components/account/account-name';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
+import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface CurrentAccountDisplayerProps {
@@ -20,16 +24,25 @@ export function CurrentAccountDisplayer({ onSelectAccount }: CurrentAccountDispl
 
   const currentAccount = useSelector(selectCurrentAccount);
   const stacksAccount = useStacksAccount(currentAccount);
-  const { data: name = '' } = useAccountDisplayName({
-    address: stacksAccount?.address || '',
+  const walletEntities = useWalletEntities();
+  const walletName = walletEntities[current.fingerprint]?.name;
+  const { data: name } = useAccountDisplayName({
+    address: stacksAccount?.address,
     index: current.accountIndex,
+    fingerprint: current.fingerprint,
   });
   return (
     <AccountListItemLayout
-      withChevron
       fingerprint={currentAccount.fingerprint}
       accountIndex={current.accountIndex}
-      accountAddresses={<AccountAddresses accountId={current} />}
+      accountAddresses={
+        <Stack gap="space.01" alignItems="flex-start">
+          {walletName ? (
+            <Caption data-testid={ConnectAccountSelectors.WalletName}>{walletName}</Caption>
+          ) : null}
+          <AccountAddresses accountId={current} />
+        </Stack>
+      }
       accountName={<AccountNameLayout isLoading={false}>{name}</AccountNameLayout>}
       avatar={
         <AccountAvatarItem

@@ -17,8 +17,8 @@ export function HeaderGrid({ leftCol, centerCol, rightCol, ...props }: HeaderGri
       width="100%"
       {...props}
     >
-      <GridItem justifySelf="start">
-        <Flex py={[0, null, 'space.01']} ml="space.02">
+      <GridItem justifySelf="stretch" minWidth={0} overflow="hidden">
+        <Flex py={[0, null, 'space.01']} ml="space.02" minWidth={0}>
           {leftCol}
         </Flex>
       </GridItem>

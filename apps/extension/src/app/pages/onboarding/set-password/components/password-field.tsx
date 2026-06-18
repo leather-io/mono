@@ -8,6 +8,7 @@ import { Caption, Eye1ClosedIcon, Eye1Icon, Input } from '@leather.io/ui';
 
 import { useThemeSwitcher } from '@app/common/theme-provider';
 import { ValidatedPassword } from '@app/common/validation/validate-password';
+import { ErrorLabel } from '@app/components/error-label';
 
 import { getIndicatorsOfPasswordStrength } from './password-field.utils';
 import { PasswordStrengthIndicator } from './password-strength-indicator';
@@ -15,9 +16,14 @@ import { PasswordStrengthIndicator } from './password-strength-indicator';
 interface PasswordFieldProps {
   strengthResult: ValidatedPassword;
   isDisabled: boolean;
+  showStrength?: boolean;
 }
-export function PasswordField({ strengthResult, isDisabled }: PasswordFieldProps) {
-  const [field] = useField('password');
+export function PasswordField({
+  strengthResult,
+  isDisabled,
+  showStrength = true,
+}: PasswordFieldProps) {
+  const [field, meta] = useField('password');
   const [showPassword, setShowPassword] = useState(false);
   const { theme } = useThemeSwitcher();
 
@@ -29,7 +35,7 @@ export function PasswordField({ strengthResult, isDisabled }: PasswordFieldProps
   return (
     <>
       <Box position="relative">
-        <Input.Root>
+        <Input.Root hasError={!showStrength && meta.touched && !!meta.error}>
           <Input.Label>Password</Input.Label>
           <Input.Field
             autoCapitalize="off"
@@ -60,15 +66,21 @@ export function PasswordField({ strengthResult, isDisabled }: PasswordFieldProps
           {showPassword ? <Eye1ClosedIcon /> : <Eye1Icon />}
         </styled.button>
       </Box>
-      <PasswordStrengthIndicator
-        password={field.value}
-        strengthColor={theme === 'light' ? strengthColorLightMode : strengthColorDarkMode}
-        strengthResult={strengthResult}
-      />
-      <Flex alignItems="center">
-        <Caption mr="space.02">Password strength:</Caption>
-        <Caption>{field.value ? strengthText : '—'}</Caption>
-      </Flex>
+      {showStrength ? (
+        <>
+          <PasswordStrengthIndicator
+            password={field.value}
+            strengthColor={theme === 'light' ? strengthColorLightMode : strengthColorDarkMode}
+            strengthResult={strengthResult}
+          />
+          <Flex alignItems="center">
+            <Caption mr="space.02">Password strength:</Caption>
+            <Caption>{field.value ? strengthText : '—'}</Caption>
+          </Flex>
+        </>
+      ) : (
+        meta.touched && meta.error && <ErrorLabel>{meta.error}</ErrorLabel>
+      )}
     </>
   );
 }

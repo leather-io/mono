@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 import { TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS } from './constants';
 
@@ -104,7 +104,7 @@ const mockedSip10AnalyticsMap = {
   },
 };
 
-export async function mockEmptyLeatherApiUtxosRequest(page: Page) {
+export async function mockEmptyLeatherApiUtxosRequest(page: Page | BrowserContext) {
   await page.route('**/v1/utxos/**', route =>
     route.fulfill({
       json: [],
@@ -112,7 +112,7 @@ export async function mockEmptyLeatherApiUtxosRequest(page: Page) {
   );
 }
 
-export async function mockLeatherApiRequests(page: Page) {
+export async function mockLeatherApiRequests(page: Page | BrowserContext) {
   await page.route('**/v1/market/bitcoin/fees**', route =>
     route.fulfill({
       json: {

@@ -1,11 +1,8 @@
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import BitcoinApp from 'ledger-bitcoin';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
-import { userAddsKeychains } from '@leather.io/state';
-import { userAddsWallet } from '@leather.io/state/wallet';
 
 import { pullBitcoinKeysFromLedgerDevice } from '@app/features/ledger/flows/request-bitcoin-keys/request-bitcoin-keys.utils';
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
@@ -22,14 +19,22 @@ import {
   isBitcoinAppOpen,
 } from '@app/features/ledger/utils/bitcoin-ledger-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
-import { userSwitchesAccount } from '@app/store/active/active.slice';
+import { useToast } from '@app/features/toasts/use-toast';
+import { useAppDispatch } from '@app/store';
+import { activateFirstVisibleAccount } from '@app/store/active/active.actions';
 import { useBitcoinKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
+import { addOrMigrateLedgerKeychains } from '@app/store/wallets/wallet.actions';
+import {
+  getAddWalletError,
+  getUnmigratedLegacyLedgerError,
+  useWalletEntities,
+} from '@app/store/wallets/wallet.selectors';
 
 function LedgerRequestBitcoinKeys() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const toast = useToast();
   const wallets = useWalletEntities();
   const btcKeychainDescriptors = useBitcoinKeychainDescriptors();
 
@@ -65,32 +70,24 @@ function LedgerRequestBitcoinKeys() {
           },
         });
 
+        const addWalletError =
+          getAddWalletError(wallets, fingerprint, 'ledger') ??
+          getUnmigratedLegacyLedgerError(wallets, fingerprint);
+        if (addWalletError) {
+          toast.error(addWalletError);
+          void ledgerNavigate.toErrorStep(chain, addWalletError);
+          return { status: 'failure' };
+        }
+
         const keychains = keys
           .map(key => ({ chain: 'bitcoin' as const, descriptor: key.policy }))
           .filter(keychain => {
             return !btcKeychainDescriptors.includes(keychain.descriptor);
           });
 
-        if (!wallets[fingerprint]) {
-          dispatch(
-            userAddsWallet({
-              wallet: {
-                createdOn: new Date().toISOString(),
-                fingerprint,
-                type: 'ledger',
-              },
-              accountKeychains: keychains,
-            })
-          );
-        } else if (keychains.length) {
-          dispatch(
-            userAddsKeychains({
-              accountKeychains: keychains,
-            })
-          );
-        }
-
-        dispatch(userSwitchesAccount({ fingerprint, accountIndex: 0 }));
+        await dispatch(addOrMigrateLedgerKeychains({ fingerprint, accountKeychains: keychains }));
+        void dispatch(activateFirstVisibleAccount(fingerprint));
+        return { status: 'success' };
       },
     });
 

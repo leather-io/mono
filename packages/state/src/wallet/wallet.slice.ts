@@ -16,7 +16,7 @@ const initialState = walletAdapter.getInitialState();
 interface RenameWalletPayload extends WalletId {
   name: string;
 }
-export const userRenamesWallet = createAction<RenameWalletPayload>('accounts/renameAccount');
+export const userRenamesWallet = createAction<RenameWalletPayload>('global/userRenamesWallet');
 
 function addWalletDefaults({
   wallet,

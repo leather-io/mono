@@ -117,4 +117,17 @@ describe('`sendTransfer` method', () => {
     });
     expect(result.success).toEqual(true);
   });
+
+  test('that it accepts custom non-default network ids', () => {
+    const result = rpcSendTransferParamsSchema.safeParse({
+      network: 'private',
+      recipients: [
+        {
+          address: 'bcrt1qvz04jt55sy7a4e9fg447gm2zlmnjck3dhdw5gf',
+          amount: '10000',
+        },
+      ],
+    });
+    expect(result.success).toEqual(true);
+  });
 });

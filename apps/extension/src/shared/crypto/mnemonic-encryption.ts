@@ -9,10 +9,19 @@ import { generateRandomHexString } from './generate-random-hex';
 interface EncryptMnemonicArgs {
   secretKey: string;
   password: string;
+  existingEncryptionKey?: string;
+  existingSalt?: string;
 }
-export async function encryptMnemonic({ secretKey, password }: EncryptMnemonicArgs) {
-  const salt = generateRandomHexString();
-  const encryptionKey = await deriveEncryptionKey({ password, salt });
+export async function encryptMnemonic({
+  secretKey,
+  password,
+  existingEncryptionKey,
+  existingSalt,
+}: EncryptMnemonicArgs) {
+  const salt = existingSalt ? existingSalt : generateRandomHexString();
+  const encryptionKey = existingEncryptionKey
+    ? existingEncryptionKey
+    : await deriveEncryptionKey({ password, salt });
   const encryptedBuffer = await encrypt(secretKey, encryptionKey);
   return {
     salt,

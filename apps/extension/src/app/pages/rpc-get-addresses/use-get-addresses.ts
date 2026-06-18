@@ -27,7 +27,7 @@ import {
   useCurrentTaprootAccount,
 } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { useAppPermissions } from '@app/store/app-permissions/app-permissions.slice';
+import { useAppPermissions } from '@app/store/app-permissions/app-permissions.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 // We reuse this flow for both of these requests, so here we make a union of two

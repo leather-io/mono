@@ -11,3 +11,7 @@ export enum PsbtSelectors {
 export enum DlcSelectors {
   DlcSelectorsCard = 'dlc-signer-card',
 }
+
+export enum ConnectAccountSelectors {
+  WalletName = 'connect-account-wallet-name',
+}
