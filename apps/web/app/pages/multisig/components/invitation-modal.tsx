@@ -56,6 +56,7 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
   const myMembership = members.find(member => member.address === myAddress);
   const creator = members.find(member => member.user?.id === vault.createdBy);
   const pendingCount = members.filter(member => member.membershipStatus === 'invited').length;
+  const othersPending = pendingCount - (myMembership?.membershipStatus === 'invited' ? 1 : 0);
   const theme = vaultThemeFromName(vault.theme);
   const chain = chainFromNetwork(network);
 
@@ -176,11 +177,11 @@ export function InvitationModal({ vault, isShowing, onClose }: InvitationModalPr
               ))}
         </Box>
 
-        {pendingCount > 0 && (
+        {othersPending > 0 && (
           <styled.p textStyle="caption.01" color="ink.text-subdued">
-            Once {pendingCount} more {pendingCount === 1 ? 'member accepts' : 'members accept'}, the
-            vault becomes active. Anyone in the vault can then create accounts — each account sets
-            its own signing threshold (M-of-N).
+            Once {othersPending} more {othersPending === 1 ? 'member accepts' : 'members accept'},
+            the vault becomes active. Anyone in the vault can then create accounts — each account
+            sets its own signing threshold (M-of-N).
           </styled.p>
         )}
       </Flex>

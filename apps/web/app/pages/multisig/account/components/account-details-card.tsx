@@ -63,7 +63,7 @@ export function AccountDetailsCard({
             />
           }
           title={account.name}
-          caption={`${chainLabel} Account Vault`}
+          caption={`${chainLabel} Vault Account`}
         />
       </Box>
 
