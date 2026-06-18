@@ -34,7 +34,11 @@ export function MultisigOnboardingPage() {
     const invite = searchParams.get('invite');
     return (
       <Navigate
-        to={invite ? `${multisigPaths.index}?invite=${invite}` : multisigPaths.index}
+        to={
+          invite
+            ? `${multisigPaths.index}?invite=${encodeURIComponent(invite)}`
+            : multisigPaths.index
+        }
         replace
       />
     );

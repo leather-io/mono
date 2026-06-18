@@ -22,7 +22,11 @@ function MultisigIndex() {
     const invite = searchParams.get('invite');
     return (
       <Navigate
-        to={invite ? `${multisigPaths.onboarding}?invite=${invite}` : multisigPaths.onboarding}
+        to={
+          invite
+            ? `${multisigPaths.onboarding}?invite=${encodeURIComponent(invite)}`
+            : multisigPaths.onboarding
+        }
         replace
       />
     );

@@ -41,8 +41,13 @@ function inviteMessage(vault: Vault, member: VaultMember, creatorName: string | 
   return lines.join('\n');
 }
 
-function copyToClipboard(text: string) {
-  void navigator.clipboard?.writeText(text);
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard?.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function ShareHeader({ onClose }: { onClose?(): void }) {
@@ -72,8 +77,9 @@ function CopyMessageButton({ message }: { message: string }) {
       px="space.03"
       textStyle="label.03"
       onClick={() => {
-        copyToClipboard(message);
-        showToast('Invite message copied');
+        void copyToClipboard(message).then(ok => {
+          if (ok) showToast('Invite message copied');
+        });
       }}
     >
       <Flex alignItems="center" gap="space.01">
@@ -176,8 +182,9 @@ function PendingInviteCard({
               variant="outline"
               size="sm"
               onClick={() => {
-                copyToClipboard(inviteLink(vault));
-                showToast('Invite link copied');
+                void copyToClipboard(inviteLink(vault)).then(ok => {
+                  if (ok) showToast('Invite link copied');
+                });
               }}
             >
               <Flex alignItems="center" gap="space.02">

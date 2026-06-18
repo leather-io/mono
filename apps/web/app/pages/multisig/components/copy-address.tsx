@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
@@ -19,16 +19,27 @@ const COPIED_RESET_MS = 1400;
 // clipboard hook.
 export function CopyAddress({ addr, full, grouped, emphasis }: CopyAddressProps) {
   const [copied, setCopied] = useState(false);
+  const resetTimeout = useRef<ReturnType<typeof setTimeout>>();
   const multiline = grouped || full;
-  function onCopy() {
-    void navigator.clipboard?.writeText(addr);
+  useEffect(() => {
+    return () => {
+      if (resetTimeout.current) clearTimeout(resetTimeout.current);
+    };
+  }, []);
+  async function onCopy() {
+    try {
+      await navigator.clipboard?.writeText(addr);
+    } catch {
+      return;
+    }
     setCopied(true);
-    setTimeout(() => setCopied(false), COPIED_RESET_MS);
+    if (resetTimeout.current) clearTimeout(resetTimeout.current);
+    resetTimeout.current = setTimeout(() => setCopied(false), COPIED_RESET_MS);
   }
   return (
     <styled.button
       type="button"
-      onClick={onCopy}
+      onClick={() => void onCopy()}
       title="Copy address"
       display="inline-flex"
       alignItems={multiline ? 'flex-start' : 'center'}
