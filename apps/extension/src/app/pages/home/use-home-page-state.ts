@@ -34,8 +34,9 @@ export function useHomePageState() {
   useOnFinishedOnboarding(() => refreshLeatherTabs());
 
   const { data: name = '', isFetching: isFetchingBnsName } = useAccountDisplayName({
-    address: account?.address || '',
+    address: account?.address,
     index: currentAccount.accountIndex || 0,
+    fingerprint: currentAccount.fingerprint,
   });
 
   const totalBalance = useCurrentAccountTotalBalance();

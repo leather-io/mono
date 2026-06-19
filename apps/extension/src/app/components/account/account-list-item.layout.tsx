@@ -3,19 +3,21 @@ import { ReactNode } from 'react';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
 import type { AccountId } from '@leather.io/models';
-import { ChevronRightIcon, Flag, ItemLayout, Pressable, Spinner } from '@leather.io/ui';
+import { Flag, ItemLayout, LedgerIcon, Pressable, Spinner } from '@leather.io/ui';
 
 import { useWindowMinWidth } from '@app/common/hooks/use-media-query';
+import { WalletType } from '@app/store/common/wallet-type.selectors';
 
 interface AccountListItemLayoutProps extends AccountId {
   accountAddresses: ReactNode;
   accountName: ReactNode;
   avatar: ReactNode;
   balanceLabel: ReactNode;
-  withChevron?: boolean;
+  nonInteractive?: boolean;
   isLoading: boolean;
   isSelected: boolean;
   onSelectAccount(accountId: AccountId): void;
+  walletType?: WalletType;
 }
 export function AccountListItemLayout(props: AccountListItemLayoutProps) {
   const {
@@ -23,17 +25,18 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
     accountName,
     avatar,
     balanceLabel,
+    nonInteractive,
     fingerprint,
     accountIndex,
     isLoading,
     isSelected,
-    withChevron,
     onSelectAccount,
+    walletType,
   } = props;
 
   const isGreaterThanTinyWidth = useWindowMinWidth(320);
 
-  const content = (
+  const itemContent = (
     <ItemLayout
       isSelected={isSelected}
       img={isGreaterThanTinyWidth ? avatar : null}
@@ -49,19 +52,23 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
     />
   );
 
+  const content =
+    walletType === 'ledger' ? (
+      <Flag img={<LedgerIcon variant="small" />} width="100%">
+        {itemContent}
+      </Flag>
+    ) : (
+      itemContent
+    );
+
   return (
     <Pressable
       data-testid={SettingsSelectors.SwitchAccountItemIndex.replace('[index]', `${accountIndex}`)}
       key={`account-${accountIndex}`}
-      onClick={() => onSelectAccount({ fingerprint, accountIndex })}
+      aria-disabled={nonInteractive || undefined}
+      onClick={nonInteractive ? undefined : () => onSelectAccount({ fingerprint, accountIndex })}
     >
-      {withChevron ? (
-        <Flag reverse img={<ChevronRightIcon variant="small" />} width="100%">
-          {content}
-        </Flag>
-      ) : (
-        content
-      )}
+      {content}
     </Pressable>
   );
 }

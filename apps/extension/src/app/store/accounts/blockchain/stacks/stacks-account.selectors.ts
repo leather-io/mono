@@ -14,9 +14,10 @@ import {
   extractFingerprintFromKeyOriginPath,
   extractKeyFromDescriptor,
   extractKeyOriginPathFromDescriptor,
+  softwareAccountCountFromHighestIndex,
 } from '@leather.io/crypto';
 import type { AccountId, NetworkModes } from '@leather.io/models';
-import { makeStxKeyOrigin } from '@leather.io/stacks';
+import { extractStacksDerivationPathAccountIndex, makeStxKeyOrigin } from '@leather.io/stacks';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { DATA_DERIVATION_PATH, deriveStacksSalt } from '@shared/crypto/stacks/stacks-address-gen';
@@ -25,7 +26,11 @@ import { assumedZeroFingerprint } from '@shared/utils';
 import type { StacksAppKeysResponseItem } from '@app/features/ledger/utils/stacks-ledger-utils';
 import type { RootState } from '@app/store';
 import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
-import { selectRootKeychains } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { selectRootKeychainsAtVersion } from '@app/store/in-memory-key/in-memory-key.selectors';
+import {
+  createKeychainSelector,
+  registerKeychainSelectorCache,
+} from '@app/store/in-memory-key/keychain-selector-cache';
 import { selectStacksKeychains } from '@app/store/keychains/keychain.selectors';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
@@ -87,27 +92,29 @@ function initalizeHardwareStacksAccount(
   };
 }
 
-const selectSoftwareAccounts = createSelector(
-  selectRootKeychains,
-  selectStacksChain,
-  selectCurrentNetwork,
-  (keychains, chain, currentNetwork) => {
-    if (!keychains) return [];
+const selectSoftwareAccounts = registerKeychainSelectorCache(
+  createKeychainSelector(
+    selectRootKeychainsAtVersion,
+    selectStacksChain,
+    selectCurrentNetwork,
+    (keychains, chain, currentNetwork) => {
+      if (!keychains) return [];
 
-    const network = bitcoinNetworkModeToCoreNetworkMode(currentNetwork.chain.bitcoin.mode);
+      const network = bitcoinNetworkModeToCoreNetworkMode(currentNetwork.chain.bitcoin.mode);
 
-    return Object.entries(keychains).flatMap(([fingerprint, keychain]) => {
-      const chainState = chain[fingerprint];
-      if (!chainState) return [];
+      return Object.entries(keychains).flatMap(([fingerprint, keychain]) => {
+        const chainState = chain[fingerprint];
+        if (!chainState) return [];
 
-      const { highestAccountIndex } = chainState;
-      const numberOfAccountsToDerive = highestAccountIndex + 1;
+        const { highestAccountIndex } = chainState;
+        const numberOfAccountsToDerive = softwareAccountCountFromHighestIndex(highestAccountIndex);
 
-      return createNullArrayOfLength(numberOfAccountsToDerive).map((_, accountIndex) =>
-        initalizeSoftwareStacksAccount(keychain, { fingerprint, accountIndex }, network)
-      );
-    });
-  }
+        return createNullArrayOfLength(numberOfAccountsToDerive).map((_, accountIndex) =>
+          initalizeSoftwareStacksAccount(keychain, { fingerprint, accountIndex }, network)
+        );
+      });
+    }
+  )
 );
 
 const selectLedgerAccounts = createSelector(
@@ -116,7 +123,7 @@ const selectLedgerAccounts = createSelector(
   (currentNetwork, stacksKeychains) => {
     const network = bitcoinNetworkModeToCoreNetworkMode(currentNetwork.chain.bitcoin.mode);
 
-    return stacksKeychains.map((keychain, index) => {
+    return stacksKeychains.map(keychain => {
       const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
       const fingerprint = extractFingerprintFromKeyOriginPath(keyOrigin) || assumedZeroFingerprint;
       const stxPublicKey = extractKeyFromDescriptor(keychain.descriptor);
@@ -133,20 +140,22 @@ const selectLedgerAccounts = createSelector(
 
       return initalizeHardwareStacksAccount(
         ledgerKeychain,
-        { fingerprint, accountIndex: index },
+        { fingerprint, accountIndex: extractStacksDerivationPathAccountIndex(keyOrigin) },
         network
       );
     });
   }
 );
 
-export const selectStacksAccountState = createSelector(
-  selectLedgerAccounts,
-  selectSoftwareAccounts,
-  (ledgerAccounts, softwareAccounts): (SoftwareStacksAccount | HardwareStacksAccount)[] => [
-    ...softwareAccounts,
-    ...ledgerAccounts,
-  ]
+export const selectStacksAccountState = registerKeychainSelectorCache(
+  createKeychainSelector(
+    selectLedgerAccounts,
+    selectSoftwareAccounts,
+    (ledgerAccounts, softwareAccounts): (SoftwareStacksAccount | HardwareStacksAccount)[] => [
+      ...softwareAccounts,
+      ...ledgerAccounts,
+    ]
+  )
 );
 
 function memoizeAccountGenerator<
@@ -174,10 +183,12 @@ function createSoftwareStacksAccountGenerator(rootKeychain: HDKey) {
   return memoizeAccountGenerator(generateAccount);
 }
 
-const selectSoftwareStacksAccountGenerators = createSelector(selectRootKeychains, keychains => {
-  if (!keychains) return {};
-  return mapValues(keychains, keychain => createSoftwareStacksAccountGenerator(keychain));
-});
+const selectSoftwareStacksAccountGenerators = registerKeychainSelectorCache(
+  createKeychainSelector(selectRootKeychainsAtVersion, keychains => {
+    if (!keychains) return {};
+    return mapValues(keychains, keychain => createSoftwareStacksAccountGenerator(keychain));
+  })
+);
 
 function generateLedgerStacksAccount(
   ledgerKeys: Record<string, StacksAppKeysResponseItem & { id: string; fingerprint: string }>,
@@ -217,24 +228,28 @@ const selectLedgerStacksAccountLookup = createSelector(selectStacksKeychains, st
   return memoizeAccountGenerator(generateAccount);
 });
 
-const selectStacksAccountLookup = createSelector(
-  selectSoftwareStacksAccountGenerators,
-  selectLedgerStacksAccountLookup,
-  (softwareGenerators, ledgerLookup) => (accountId: AccountId, network: NetworkModes) => {
-    const softwareGenerator = softwareGenerators[accountId.fingerprint];
-    if (softwareGenerator) return softwareGenerator(accountId, network);
-    return ledgerLookup(accountId, network);
-  }
+const selectStacksAccountLookup = registerKeychainSelectorCache(
+  createKeychainSelector(
+    selectSoftwareStacksAccountGenerators,
+    selectLedgerStacksAccountLookup,
+    (softwareGenerators, ledgerLookup) => (accountId: AccountId, network: NetworkModes) => {
+      const softwareGenerator = softwareGenerators[accountId.fingerprint];
+      if (softwareGenerator) return softwareGenerator(accountId, network);
+      return ledgerLookup(accountId, network);
+    }
+  )
 );
 
-export const selectStacksAccountById = createSelector(
-  selectStacksAccountLookup,
-  selectCurrentNetwork,
-  (_state: RootState, accountId: AccountId) => accountId,
-  (accountLookup, currentNetwork, accountId) => {
-    return accountLookup(
-      accountId,
-      bitcoinNetworkModeToCoreNetworkMode(currentNetwork.chain.bitcoin.mode)
-    );
-  }
+export const selectStacksAccountById = registerKeychainSelectorCache(
+  createKeychainSelector(
+    selectStacksAccountLookup,
+    selectCurrentNetwork,
+    (_state: RootState, _version: number, accountId: AccountId) => accountId,
+    (accountLookup, currentNetwork, accountId) => {
+      return accountLookup(
+        accountId,
+        bitcoinNetworkModeToCoreNetworkMode(currentNetwork.chain.bitcoin.mode)
+      );
+    }
+  )
 );

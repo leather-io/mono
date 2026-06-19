@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 const mockedAlexTokens = [
   {
@@ -57,7 +57,7 @@ const mockedAlexTokenPrices = [
   },
 ];
 
-export async function mockMainnetAlexAssetsRequest(page: Page) {
+export async function mockMainnetAlexAssetsRequest(page: Page | BrowserContext) {
   await page.route('https://alex-sdk-api.alexlab.co/', route =>
     route.fulfill({
       json: { pools: mockedAlexPools, tokens: mockedAlexTokens },
@@ -65,7 +65,7 @@ export async function mockMainnetAlexAssetsRequest(page: Page) {
   );
 }
 
-export async function mockMainnetAlexTokenPricesRequest(page: Page) {
+export async function mockMainnetAlexTokenPricesRequest(page: Page | BrowserContext) {
   await page.route('https://api.alexgo.io/v2/public/token-prices', route =>
     route.fulfill({ json: { data: mockedAlexTokenPrices } })
   );

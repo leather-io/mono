@@ -6,6 +6,7 @@ interface InitialState {
   userSelectedTheme: UserSelectedTheme;
   dismissedMessages: string[];
   dismissedPromoIndexes: number[];
+  seenFeatureIntros: string[];
   isPrivateMode?: boolean;
   isNotificationsEnabled?: boolean;
   bypassInscriptionChecks?: boolean;
@@ -17,6 +18,7 @@ const initialState: InitialState = {
   userSelectedTheme: 'system',
   dismissedMessages: [],
   dismissedPromoIndexes: [],
+  seenFeatureIntros: [],
   discardedInscriptions: [],
   isNotificationsEnabled: true,
 };
@@ -41,6 +43,15 @@ export const settingsSlice = createSlice({
     },
     resetPromoBanner(state) {
       state.dismissedPromoIndexes = [];
+    },
+    featureIntroSeen(state, action: PayloadAction<string>) {
+      if (!Array.isArray(state.seenFeatureIntros)) state.seenFeatureIntros = [];
+      if (!state.seenFeatureIntros.includes(action.payload)) {
+        state.seenFeatureIntros = [...state.seenFeatureIntros, action.payload];
+      }
+    },
+    resetFeatureIntros(state) {
+      state.seenFeatureIntros = [];
     },
     togglePrivateMode(state) {
       state.isPrivateMode = !state.isPrivateMode;

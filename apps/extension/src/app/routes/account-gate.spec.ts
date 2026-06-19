@@ -1,23 +1,25 @@
-import {
-  shouldNavigateToOnboardingStartPage,
-  shouldNavigateToUnlockWalletPage,
-} from './account-gate';
+import { describe, expect, test } from 'vitest';
 
-describe(shouldNavigateToOnboardingStartPage.name, () => {
-  test('that it navigates to onboarding when no key details set', () => {
-    const result = shouldNavigateToOnboardingStartPage(undefined);
-    expect(result).toBeTruthy();
-  });
-});
+import { RouteUrls } from '@shared/route-urls';
 
-describe(shouldNavigateToUnlockWalletPage.name, () => {
-  test('that it navigates to unlock page', () => {
-    const result = shouldNavigateToOnboardingStartPage('in-memory-key');
-    expect(result).toBeFalsy();
+import { selectAccountGateDestination } from './account-gate';
+
+describe(selectAccountGateDestination.name, () => {
+  test('navigates to onboarding when there are no wallets', () => {
+    expect(selectAccountGateDestination({ walletCount: 0, hasLockedSoftwareWallets: false })).toBe(
+      RouteUrls.Onboarding
+    );
   });
 
-  test('that it has key in memory so goes to home page', () => {
-    const result = shouldNavigateToOnboardingStartPage(undefined);
-    expect(result).toBeTruthy();
+  test('navigates to unlock when a software wallet is locked', () => {
+    expect(selectAccountGateDestination({ walletCount: 1, hasLockedSoftwareWallets: true })).toBe(
+      RouteUrls.Unlock
+    );
+  });
+
+  test('passes through for unlocked or Ledger-only wallets', () => {
+    expect(
+      selectAccountGateDestination({ walletCount: 1, hasLockedSoftwareWallets: false })
+    ).toBeNull();
   });
 });

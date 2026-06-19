@@ -1,6 +1,7 @@
 import { BrowserContext, Page } from '@playwright/test';
 import { ClarityVersion } from '@stacks/transactions';
 import { mockStacksTokenContract } from '@tests/mocks/mock-stacks-contract';
+import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
 import type { RpcParams, stxDeployContract } from '@leather.io/rpc';
@@ -12,7 +13,7 @@ import { test } from '../../fixtures/fixtures';
 test.describe('RPC: stx_deployContract', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await onboardingPage.signInWithTestAccount(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });
 

@@ -18,6 +18,11 @@ export const AccountNameLayout = memo(function AccountNameLayout({
     <styled.span
       className={shimmerStyles}
       textStyle="label.02"
+      minWidth={0}
+      maxWidth="100%"
+      overflow="hidden"
+      whiteSpace="nowrap"
+      textOverflow="ellipsis"
       aria-busy={isLoading}
       data-state={isLoading ? 'loading' : undefined}
       {...rest}

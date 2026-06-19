@@ -1,6 +1,6 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
-export async function mockStacksFeeRequests(page: Page) {
+export async function mockStacksFeeRequests(page: Page | BrowserContext) {
   await page.route('*/**/v2/fees/transaction', route =>
     route.fulfill({
       json: {

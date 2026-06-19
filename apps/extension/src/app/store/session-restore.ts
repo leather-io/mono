@@ -6,7 +6,7 @@ import { logger } from '@shared/logger';
 import { store } from '@app/store';
 import { selectSoftwareKeys } from '@app/store/software-keys/software-key.selectors';
 
-import { inMemoryKeyActions } from './in-memory-key/in-memory-key.actions';
+import * as inMemoryStore from './in-memory-key/in-memory-storage';
 
 export async function initalizeWalletSession(encryptionKey: string) {
   return chrome.storage.session.set({ encryptionKey });
@@ -16,7 +16,7 @@ export async function clearWalletSession() {
   return chrome.storage.session.remove('encryptionKey');
 }
 
-async function getWalletSessionKey() {
+export async function getWalletSessionKey() {
   const key = await chrome.storage.session.get(['encryptionKey']);
   return z.string().safeParse(key.encryptionKey);
 }
@@ -36,7 +36,9 @@ export async function restoreWalletSession() {
       }))
     );
 
-    store.dispatch(inMemoryKeyActions.setWalletKeys(decryptedKeys));
+    for (const { fingerprint, secretKey } of decryptedKeys) {
+      inMemoryStore.setKey(fingerprint, secretKey);
+    }
   } catch {
     logger.error('Failed to decrypt secret key');
   }

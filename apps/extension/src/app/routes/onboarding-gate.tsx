@@ -37,8 +37,9 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
     return <Navigate to={RouteUrls.Home} />;
   }
 
-  if (keyDetailsExistsWalletAlreadyCreatedSoPreventOnboarding(keyDetails))
+  if (keyDetailsExistsWalletAlreadyCreatedSoPreventOnboarding(keyDetails)) {
     return <Navigate to={RouteUrls.Unlock} />;
+  }
 
   return <>{children}</>;
 }

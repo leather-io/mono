@@ -10,6 +10,7 @@ import {
 import type { Money } from '@leather.io/models';
 
 import { formatCurrency } from '@app/common/currency-formatter';
+import type { ReceiveView } from '@app/common/receive/receive';
 
 import { ActivityItem } from '../activity-list/components/activity-item';
 import { type SwapChain, TokenDetailsActionsRow } from './components/token-details-actions';
@@ -22,7 +23,7 @@ interface TokenDetailsLayoutProps {
   icon: ReactNode;
   title: string;
   symbol: string;
-  receivePath: string;
+  receiveView: ReceiveView;
   swapChain: SwapChain;
   availableBalance: Money;
   fiatBalance: Money;
@@ -43,7 +44,7 @@ export function TokenDetailsLayout({
   icon,
   title,
   symbol,
-  receivePath,
+  receiveView,
   swapChain,
   availableBalance,
   fiatBalance,
@@ -71,7 +72,7 @@ export function TokenDetailsLayout({
           actions={
             <TokenDetailsActionsRow
               symbol={symbol}
-              receivePath={receivePath}
+              receiveView={receiveView}
               swapChain={swapChain}
               isBuyEnabled={isBuyEnabled}
               isSwapEnabled={isSwapEnabled}

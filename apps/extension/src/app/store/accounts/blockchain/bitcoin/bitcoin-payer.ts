@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { HDKey, Versions } from '@scure/bip32';
+import { HDKey } from '@scure/bip32';
 import { SigHash } from '@scure/btc-signer';
 import type { P2Ret, P2TROut } from '@scure/btc-signer/payment';
 
@@ -14,6 +14,7 @@ import {
 } from '@leather.io/bitcoin';
 import {
   appendAddressIndexToPath,
+  deriveKeychainFromXpub,
   extractAddressIndexFromPath,
   extractChangeIndexFromPath,
 } from '@leather.io/crypto';
@@ -92,7 +93,6 @@ interface BitcoinSoftwarePayerFactoryArgs<
   masterKeyFingerprint: string;
   paymentFn: TPaymentFn;
   network: BitcoinNetworkModes;
-  extendedPublicKeyVersions?: Versions;
 }
 
 export function bitcoinSoftwarePayerFactory<
@@ -103,14 +103,7 @@ export function bitcoinSoftwarePayerFactory<
   changeIndex: number;
   addressIndex: number;
 }) => PaymentToPayer<ExtractPaymentReturn<TPaymentFn>> {
-  const {
-    network,
-    paymentFn,
-    accountKeychain,
-    accountKeyOrigin,
-    masterKeyFingerprint,
-    extendedPublicKeyVersions,
-  } = args;
+  const { network, paymentFn, accountKeychain, accountKeyOrigin, masterKeyFingerprint } = args;
   return ({ changeIndex, addressIndex }) => {
     const payerKeychain = deriveAddressIndexKeychainFromAccount(accountKeychain)({
       changeIndex,
@@ -122,7 +115,7 @@ export function bitcoinSoftwarePayerFactory<
     const paymentType = payment.type as 'p2wpkh' | 'p2tr';
 
     const payer = makeBitcoinPayer({
-      keychain: HDKey.fromExtendedKey(payerKeychain.publicExtendedKey, extendedPublicKeyVersions),
+      keychain: deriveKeychainFromXpub(payerKeychain.publicExtendedKey),
       network,
       keyOrigin: appendAddressIndexToPath(accountKeyOrigin, changeIndex, addressIndex),
       masterKeyFingerprint,

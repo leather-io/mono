@@ -23,6 +23,7 @@ import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-t
 import { UnsupportedBrowserLayout } from '@app/features/ledger/generic-steps';
 import { ConnectLedgerStart } from '@app/features/ledger/generic-steps/connect-device/connect-ledger-start';
 import { TokenDetails } from '@app/features/token/token-details';
+import { AddWallet } from '@app/pages/add-wallet/add-wallet';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
 import { LegacyAccountAuth } from '@app/pages/legacy-account-auth/legacy-account-auth';
@@ -32,8 +33,6 @@ import { EditNetwork as CurrentEditNetwork } from '@app/pages/network/edit-netwo
 import { SelectNetwork } from '@app/pages/network/select-network';
 import { NotFoundPage } from '@app/pages/not-found/not-found';
 import { BackUpSecretKeyPage } from '@app/pages/onboarding/back-up-secret-key/back-up-secret-key';
-import { SetPasswordPage } from '@app/pages/onboarding/set-password/set-password';
-import { ForgotPassword } from '@app/pages/onboarding/sign-in/forgot-password';
 import { SignIn } from '@app/pages/onboarding/sign-in/sign-in';
 import { WelcomePage } from '@app/pages/onboarding/welcome/welcome';
 import { RequestError } from '@app/pages/request-error/request-error';
@@ -51,8 +50,6 @@ import { UnauthorizedRequest } from '@app/pages/unauthorized-request/unauthorize
 import { Unlock } from '@app/pages/unlock';
 import { ViewSecretKey } from '@app/pages/view-secret-key/view-secret-key';
 import { AccountGate } from '@app/routes/account-gate';
-import { ReceiveModalWrapper } from '@app/routes/components/receive-modal-wrapper';
-import { receiveRoutes } from '@app/routes/receive-routes';
 import { legacyRequestRoutes } from '@app/routes/request-routes';
 import { rpcRequestRoutes } from '@app/routes/rpc-routes';
 
@@ -75,6 +72,8 @@ export const homePageModalRoutes = (
     {ledgerBitcoinTxSigningRoutes}
     {requestBitcoinKeysRoutes}
     {requestStacksKeysRoutes}
+    <Route path={RouteUrls.ConnectLedgerStart} element={<ConnectLedgerStart initialRoute="" />} />
+    <Route path={RouteUrls.LedgerUnsupportedBrowser} element={<UnsupportedBrowserLayout />} />
   </>
 );
 
@@ -85,7 +84,6 @@ function useAppRoutes() {
     createRoutesFromElements(
       <Route element={<Container />}>
         <Route key="error" errorElement={<RouterErrorBoundary />}>
-          <Route element={<ReceiveModalWrapper />}>{receiveRoutes}</Route>
           <Route
             element={
               <>
@@ -233,14 +231,6 @@ function useAppRoutes() {
               </OnboardingGate>
             }
           />
-          <Route
-            path={RouteUrls.SetPassword}
-            element={
-              <OnboardingGate>
-                <SetPasswordPage />
-              </OnboardingGate>
-            }
-          />
 
           <Route
             path={RouteUrls.SignIn}
@@ -250,8 +240,22 @@ function useAppRoutes() {
               </OnboardingGate>
             }
           />
-          <Route path={RouteUrls.ForgotPassword} element={<ForgotPassword />} />
-
+          <Route
+            path={RouteUrls.AddWallet}
+            element={
+              <AccountGate>
+                <AddWallet />
+              </AccountGate>
+            }
+          />
+          <Route
+            path={RouteUrls.CreateWallet}
+            element={
+              <AccountGate>
+                <BackUpSecretKeyPage />
+              </AccountGate>
+            }
+          />
           <Route
             path={RouteUrls.ViewSecretKey}
             element={

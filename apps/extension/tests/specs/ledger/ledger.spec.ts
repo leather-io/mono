@@ -38,7 +38,7 @@ test.describe('App with Ledger', () => {
 
       test('receive modal opens', async ({ homePage }) => {
         await homePage.goToReceiveDialog();
-        test.expect(homePage.page.url()).toContain('/receive');
+        await test.expect(homePage.page.getByRole('dialog')).toBeVisible();
       });
 
       if (testName === 'withBitcoinAndStacksKey') {

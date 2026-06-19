@@ -14,18 +14,20 @@ import {
   LockIcon,
   SettingsGearIcon,
   Switch,
+  WalletIcon,
 } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { useHasKeys } from '@app/common/hooks/auth/use-has-keys';
+import { useCanSignOut } from '@app/common/hooks/auth/use-can-sign-out';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useModifierKey } from '@app/common/hooks/use-modifier-key';
-import { useWalletType } from '@app/common/use-wallet-type';
+import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import { Divider } from '@app/components/layout/divider';
 import { SignOut } from '@app/features/settings/sign-out/sign-out-confirm';
-import { useHasActiveInMemoryWalletSecretKey } from '@app/store/in-memory-key/in-memory-key.selectors';
+import { useAccountGateDestination } from '@app/routes/account-gate';
+import { useHasUnlockedSoftwareWallets } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { useTogglePrivateMode } from '@app/store/settings/settings.actions';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 
@@ -37,13 +39,13 @@ interface SettingsProps {
 export function Settings({ canLockWallet = true }: SettingsProps) {
   const [showSignOut, setShowSignOut] = useState(false);
 
-  const { hasKeys } = useHasKeys();
+  const hasUnlockedSoftwareWallets = useHasUnlockedSoftwareWallets();
+  const canSignOut = useCanSignOut();
 
   const { lockWallet } = useKeyActions();
+  const { setIsShowingSwitchAccount } = useSwitchAccountSheet();
 
   const navigate = useNavigate();
-
-  const { walletType } = useWalletType();
 
   const isPrivateMode = useIsPrivateMode();
   const togglePrivateMode = useTogglePrivateMode();
@@ -51,10 +53,9 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
   const location = useLocation();
 
   const { isPressed: showAdvancedMenuOptions } = useModifierKey('alt', 120);
-  const showLockWalletItem = canLockWallet && hasKeys && walletType === 'software';
-  const showSignOutItem = hasKeys;
-  const hasDefaultInMemorySecretKey = useHasActiveInMemoryWalletSecretKey();
-  const isWalletUnlocked = hasDefaultInMemorySecretKey || walletType === 'ledger';
+  const showLockWalletItem = canLockWallet && hasUnlockedSoftwareWallets;
+  const showSignOutItem = canSignOut;
+  const isWalletUnlocked = useAccountGateDestination() === null;
 
   const settingsItem = (
     <DropdownMenu.Item
@@ -87,6 +88,19 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
           <Switch.Root checked={isPrivateMode}>
             <Switch.Thumb />
           </Switch.Root>
+        </Flex>
+      </Flag>
+    </DropdownMenu.Item>
+  );
+
+  const manageWalletsItem = (
+    <DropdownMenu.Item
+      data-testid={SettingsSelectors.SwitchAccountMenuItem}
+      onSelect={() => setIsShowingSwitchAccount(true)}
+    >
+      <Flag img={<WalletIcon />} width="100%">
+        <Flex justifyContent="space-between" textStyle="label.02">
+          Manage wallets
         </Flex>
       </Flag>
     </DropdownMenu.Item>
@@ -144,6 +158,7 @@ export function Settings({ canLockWallet = true }: SettingsProps) {
           >
             <DropdownMenu.Group>
               {isWalletUnlocked && settingsItem}
+              {isWalletUnlocked && manageWalletsItem}
               {isWalletUnlocked && togglePrivacyItem}
 
               {(showAdvancedMenuOptions || showLockWalletItem || showSignOutItem) &&

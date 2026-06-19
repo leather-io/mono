@@ -50,7 +50,7 @@ test.describe('Store migrations', () => {
     test.expect(result.ledger).toBeUndefined();
   });
 
-  test('Migration 2 --> 3', async ({ extensionId, globalPage }) => {
+  test('Migration 2 --> 4', async ({ extensionId, globalPage }) => {
     const version2State = {
       _persist: { rehydrated: true, version: 2 },
       appPermissions: { entities: {}, ids: [] },
@@ -109,7 +109,7 @@ test.describe('Store migrations', () => {
       chrome.storage.local.get(['persist:root']).then(state => state['persist:root'])
     );
 
-    test.expect(result._persist.version).toEqual(3);
+    test.expect(result._persist.version).toEqual(4);
     test.expect(result.softwareKeys.salt).toEqual(demoSalt);
     test.expect(result.softwareKeys.entities.default).toBeUndefined();
     test.expect(result.softwareKeys.entities.ef7bfd66).toBeDefined();
@@ -137,5 +137,11 @@ test.describe('Store migrations', () => {
 
     test.expect(result.ledger).toBeUndefined();
     test.expect(result.keychains).toBeDefined();
+
+    // Migration 3 --> 4 materializes an account entity per derived account
+    // index (highestAccountIndex 3 → accounts 0..3)
+    test
+      .expect(result.accounts.ids)
+      .toEqual(['ef7bfd66/0', 'ef7bfd66/1', 'ef7bfd66/2', 'ef7bfd66/3']);
   });
 });

@@ -13,8 +13,9 @@ export class GlobalPage {
   }
 
   async setupAndUseApiCalls(extensionId: string) {
-    await this.page.route(/.*/, route => route.continue());
-    await setupMockApis(this.page);
+    const context = this.page.context();
+    await context.route(/.*/, route => route.continue());
+    await setupMockApis(context);
     await this.page.waitForTimeout(1500);
     await this.gotoNakedRoot(extensionId);
   }

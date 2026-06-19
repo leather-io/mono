@@ -32,6 +32,10 @@ vi.mock('@app/store/networks/networks.selectors', () => ({
   useCurrentNetwork: () => ({ chain: { bitcoin: { mode: 'mainnet' } } }),
 }));
 
+vi.mock('@app/store/in-memory-key/use-in-memory-keys', () => ({
+  useInMemoryKeys: () => ({ version: 0 }),
+}));
+
 vi.mock('@app/store/software-keys/software-key.selectors', () => ({
   selectCurrentAccount: () => undefined,
 }));
@@ -42,7 +46,6 @@ vi.mock('../../account', () => ({
 
 vi.mock('./bitcoin-keychain', () => ({
   selectCurrentNetworkBitcoinAccountLookup: () => () => undefined,
-  useBitcoinExtendedPublicKeyVersions: () => undefined,
 }));
 
 function requireDefined<T>(value: T | null | undefined): T {

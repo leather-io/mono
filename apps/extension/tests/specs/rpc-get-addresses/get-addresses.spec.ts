@@ -1,6 +1,7 @@
 import type { BrowserContext, Page } from '@playwright/test';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import { makeLedgerTestAccountWalletState } from '@tests/page-object-models/onboarding.page';
+import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 
 import type { SupportedBlockchains } from '@leather.io/models';
 
@@ -165,6 +166,17 @@ getAddressesMethods.forEach(method => {
             test
               .expect(result.result.addresses[0].address)
               .toEqual('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d');
+          });
+
+          test('it shows the wallet name on the connect screen', async ({ page, context }) => {
+            await page.goto('localhost:3000');
+            const getAddressesPromise = initiateGetAddresses(page, method);
+            const popup = await interceptRequestPopup(context);
+            await test
+              .expect(popup.getByTestId(ConnectAccountSelectors.WalletName))
+              .toHaveText('Wallet 1', { timeout: 10_000 });
+            await clickConnectLeatherButton(popup);
+            await test.expect(getAddressesPromise).resolves.toMatchObject(expectedResult);
           });
 
           test('it returns the second accounts data after changing account', async ({

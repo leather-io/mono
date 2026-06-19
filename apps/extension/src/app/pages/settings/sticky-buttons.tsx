@@ -9,6 +9,7 @@ import { Button } from '@leather.io/ui';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
+import { useCanSignOut } from '@app/common/hooks/auth/use-can-sign-out';
 import { useHasKeys } from '@app/common/hooks/auth/use-has-keys';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useWalletType } from '@app/common/use-wallet-type';
@@ -19,6 +20,7 @@ export function StickyButtons() {
   const { lockWallet } = useKeyActions();
   const hasDefaultInMemorySecretKey = useHasActiveInMemoryWalletSecretKey();
   const { hasKeys } = useHasKeys();
+  const canSignOut = useCanSignOut();
   const { walletType } = useWalletType();
   const navigate = useNavigate();
   const [showSignOut, setShowSignOut] = useState(false);
@@ -52,7 +54,7 @@ export function StickyButtons() {
           </Button>
         )}
 
-        {hasKeys && (
+        {canSignOut && (
           <Button
             variant="outline"
             color="red.action-primary-default"

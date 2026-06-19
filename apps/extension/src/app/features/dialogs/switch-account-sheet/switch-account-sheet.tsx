@@ -1,93 +1,331 @@
-import { useMemo, useState } from 'react';
-import { Virtuoso } from 'react-virtuoso';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { GroupedVirtuoso } from 'react-virtuoso';
 
-import { Box, Flex } from 'leather-styles/jsx';
+import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
+import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
 
-import { Button, Sheet, SheetHeader } from '@leather.io/ui';
+import { makeAccountIdentifer } from '@leather.io/crypto';
+import type { AccountId } from '@leather.io/models';
+import { Button, PlusIcon, Pressable, Sheet, SheetHeader, WalletPlusIcon } from '@leather.io/ui';
+import { noop } from '@leather.io/utils';
+
+import { RouteUrls } from '@shared/route-urls';
 
 import { useCreateAccount } from '@app/common/hooks/account/use-create-account';
-import { useWalletType } from '@app/common/use-wallet-type';
+import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
+import { toggleHideAccount } from '@app/store/accounts/accounts.actions';
+import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
 import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
 import { VirtuosoWrapperSheet } from '@app/ui/components/virtuoso-wrapper-sheet';
 
+import { AddWalletSheet } from '../add-wallet-sheet/add-wallet-sheet';
+import { AccountActionMenu } from './components/account-action-menu';
+import { RemoveWalletDialog } from './components/remove-wallet-dialog';
+import { RenameAccountDialog } from './components/rename-account-dialog';
+import { RenameWalletDialog } from './components/rename-wallet-dialog';
 import { SwitchAccountListItem } from './components/switch-account-list-item';
+import { WalletHeader } from './components/wallet-header';
+import {
+  canHideAccount,
+  getWalletGroupCounts,
+  isAddAccountRow,
+} from './switch-account-sheet.utils';
+import { useAddWalletNavigation } from './use-add-wallet-navigation';
 
 interface SwitchAccountSheetProps {
   isShowing: boolean;
   onClose(): void;
 }
+
+interface RenamingWallet {
+  fingerprint: string;
+  name: string;
+}
+
 export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetProps) {
   const currentAccountId = useCurrentAccountId();
-  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
-
   const createAccount = useCreateAccount();
-  const { whenWallet } = useWalletType();
+  const dispatch = useAppDispatch();
   const walletTree = useWalletAccountRefTree();
+  const navigate = useNavigate();
+  const hiddenAccountIds = useHiddenAccountIds();
+  const isCreatingAccountRef = useRef(false);
+  const [creatingFingerprint, setCreatingFingerprint] = useState<string | null>(null);
+  const [isAddWalletSheetOpen, setIsAddWalletSheetOpen] = useState(false);
+  const [isManageMode, setIsManageMode] = useState(false);
+  const [renamingWallet, setRenamingWallet] = useState<RenamingWallet | null>(null);
+  const [removingWallet, setRemovingWallet] = useState<RenamingWallet | null>(null);
+  const [renamingAccount, setRenamingAccount] = useState<AccountId | null>(null);
 
-  // Pre-multi-wallet: there should only be one
-  const activeWallet = useMemo(
-    () => walletTree.find(wallet => wallet.fingerprint === currentAccountId.fingerprint),
-    [walletTree, currentAccountId.fingerprint]
+  const filteredWalletTree = useMemo(() => {
+    if (isManageMode) return walletTree;
+    return walletTree.map(wallet => ({
+      ...wallet,
+      accounts: wallet.accounts.filter(
+        acc => !hiddenAccountIds.includes(makeAccountIdentifer(acc.fingerprint, acc.accountIndex))
+      ),
+    }));
+  }, [walletTree, hiddenAccountIds, isManageMode]);
+
+  const groupCounts = useMemo(() => getWalletGroupCounts(filteredWalletTree), [filteredWalletTree]);
+
+  const isAccountHidden = useCallback(
+    (acc: AccountId) =>
+      hiddenAccountIds.includes(makeAccountIdentifer(acc.fingerprint, acc.accountIndex)),
+    [hiddenAccountIds]
   );
 
-  function onCreateAccount() {
-    setIsCreatingAccount(true);
+  const initialScrollIndex = useMemo(() => {
+    let globalIndex = 0;
+    for (let groupIndex = 0; groupIndex < filteredWalletTree.length; groupIndex++) {
+      const wallet = filteredWalletTree[groupIndex];
+      if (wallet.fingerprint === currentAccountId.fingerprint) {
+        const accountPosition = wallet.accounts.findIndex(
+          account => account.accountIndex === currentAccountId.accountIndex
+        );
+        return globalIndex + (accountPosition === -1 ? 0 : accountPosition);
+      }
+      globalIndex += groupCounts[groupIndex];
+    }
+    return 0;
+  }, [filteredWalletTree, groupCounts, currentAccountId]);
+
+  useEffect(() => {
+    if (isShowing) {
+      isCreatingAccountRef.current = false;
+      setCreatingFingerprint(null);
+    }
+  }, [isShowing]);
+
+  function onCreateAccount(fingerprint: string) {
+    if (isCreatingAccountRef.current) return;
+    isCreatingAccountRef.current = true;
+    setCreatingFingerprint(fingerprint);
     requestIdleCallback(async () => {
-      await createAccount();
+      await createAccount(fingerprint);
       onClose();
     });
   }
 
-  // #4370 SMELL without this early return the wallet crashes on new install with
-  // : Wallet is neither of type `ledger` nor `software`
-  // FIXME remove this when adding Create Account to Ledger in #2502 #4983
+  function onAddWallet() {
+    setIsAddWalletSheetOpen(true);
+  }
+
+  function onCloseAddWalletSheet() {
+    setIsAddWalletSheetOpen(false);
+  }
+
+  const closeSheets = useCallback(() => {
+    onClose();
+    setIsAddWalletSheetOpen(false);
+  }, [onClose]);
+
+  const { onCreateNewWallet, onRestoreWallet, onConnectLedger } = useAddWalletNavigation({
+    closeSheets,
+  });
+
+  function onManage() {
+    setIsManageMode(prev => !prev);
+  }
+
+  function onViewSecretKey(fingerprint: string) {
+    onClose();
+    void navigate(RouteUrls.ViewSecretKey, { state: { fingerprint } });
+  }
+
   if (!isShowing) return null;
 
   return (
-    <Sheet
-      header={<SheetHeader title="Select account" />}
-      isShowing={isShowing}
-      onClose={onClose}
-      wrapChildren={false}
-    >
-      <VirtuosoWrapperSheet>
-        <Box flex="1">
-          <Virtuoso
-            initialTopMostItemIndex={currentAccountId.accountIndex}
-            totalCount={activeWallet?.accounts.length ?? 0}
-            itemContent={index => {
-              const accountId = activeWallet?.accounts[index];
-              if (!accountId) return null;
-              return (
-                <Box key={index} py="space.03" px="space.05">
-                  <SwitchAccountListItem handleClose={onClose} accountId={accountId} />
-                </Box>
-              );
-            }}
-          />
-        </Box>
-        {whenWallet({
-          software: (
+    <>
+      <Sheet
+        header={<SheetHeader title={isManageMode ? 'Manage wallets' : 'Select account'} />}
+        isShowing={isShowing}
+        onClose={onClose}
+        wrapChildren={false}
+      >
+        <VirtuosoWrapperSheet>
+          <Box flex="1">
+            <GroupedVirtuoso
+              groupCounts={groupCounts}
+              groupContent={groupIndex => {
+                const wallet = filteredWalletTree[groupIndex];
+                if (!wallet) return null;
+
+                return (
+                  <Box
+                    bg="ink.background-primary"
+                    pb="space.03"
+                    pt={groupIndex === 0 ? 'space.01' : 'space.05'}
+                  >
+                    <WalletHeader
+                      isManageMode={isManageMode}
+                      name={wallet.name}
+                      walletType={wallet.type}
+                      canRemoveWallet={walletTree.length > 1}
+                      onRename={() =>
+                        setRenamingWallet({
+                          fingerprint: wallet.fingerprint,
+                          name: wallet.name,
+                        })
+                      }
+                      onRemove={() =>
+                        setRemovingWallet({
+                          fingerprint: wallet.fingerprint,
+                          name: wallet.name,
+                        })
+                      }
+                      onViewSecretKey={() => onViewSecretKey(wallet.fingerprint)}
+                    />
+                  </Box>
+                );
+              }}
+              initialTopMostItemIndex={initialScrollIndex !== -1 ? initialScrollIndex : 0}
+              itemContent={(index, groupIndex) => {
+                const wallet = filteredWalletTree[groupIndex];
+                if (!wallet) return null;
+
+                // Calculate local index within this group
+                let itemsBefore = 0;
+                for (let i = 0; i < groupIndex; i++) {
+                  itemsBefore += groupCounts[i];
+                }
+                const localIndex = index - itemsBefore;
+
+                const isAddAccountButton = isAddAccountRow(wallet, localIndex);
+
+                if (isAddAccountButton) {
+                  const isCreating = creatingFingerprint === wallet.fingerprint;
+                  return (
+                    <Box px="space.05" py="space.03">
+                      <Pressable
+                        onClick={() => onCreateAccount(wallet.fingerprint)}
+                        disabled={isCreating}
+                        aria-busy={isCreating}
+                        data-testid={SwitchAccountSelectors.CreateAccountBtn}
+                      >
+                        <Flex alignItems="center" gap="space.03">
+                          <Circle bg="ink.background-secondary" size="48px">
+                            <PlusIcon />
+                          </Circle>
+                          <styled.span color="ink.text-primary" textStyle="label.01">
+                            Add account
+                          </styled.span>
+                        </Flex>
+                      </Pressable>
+                    </Box>
+                  );
+                }
+
+                const accountId = wallet.accounts[localIndex];
+                if (!accountId) return null;
+
+                const hidden = isAccountHidden(accountId);
+
+                if (isManageMode) {
+                  return (
+                    <Box pl="space.05" pr="space.04" py="space.03" opacity={hidden ? 0.5 : 1}>
+                      <Flex alignItems="center" gap="space.02">
+                        <Box minWidth={0} flex="1">
+                          <SwitchAccountListItem
+                            handleClose={noop}
+                            accountId={accountId}
+                            walletType={wallet.type}
+                            hideBalance
+                            nonInteractive
+                          />
+                        </Box>
+                        <AccountActionMenu
+                          isHidden={hidden}
+                          canHide={canHideAccount({
+                            account: accountId,
+                            activeAccount: currentAccountId,
+                            walletAccounts: wallet.accounts,
+                            hiddenAccountIds,
+                          })}
+                          onRename={() => setRenamingAccount(accountId)}
+                          onHide={() =>
+                            dispatch(
+                              toggleHideAccount(
+                                makeAccountIdentifer(accountId.fingerprint, accountId.accountIndex)
+                              )
+                            )
+                          }
+                        />
+                      </Flex>
+                    </Box>
+                  );
+                }
+
+                return (
+                  <Box px="space.05" py="space.03">
+                    <SwitchAccountListItem
+                      handleClose={onClose}
+                      accountId={accountId}
+                      walletType={wallet.type}
+                    />
+                  </Box>
+                );
+              }}
+            />
+          </Box>
+          <Box flexShrink={0} width="100%">
             <Flex
-              borderBottomRadius="md"
               bg="ink.background-primary"
+              borderBottomRadius="md"
               boxShadow="contentOverflowFade"
+              flexDirection="row"
+              gap="space.04"
+              minWidth={0}
               p="space.05"
             >
               <Button
-                fullWidth
-                onClick={onCreateAccount}
-                data-testid="create-account-btn"
-                aria-busy={isCreatingAccount}
+                onClick={onAddWallet}
+                variant="outline"
+                flex={1}
+                iconStart={<WalletPlusIcon />}
               >
-                Create new account
+                Add wallet
+              </Button>
+              <Button onClick={onManage} variant="outline" flex={1}>
+                {isManageMode ? 'Done' : 'Manage'}
               </Button>
             </Flex>
-          ),
-          ledger: null,
-        })}
-      </VirtuosoWrapperSheet>
-    </Sheet>
+          </Box>
+        </VirtuosoWrapperSheet>
+      </Sheet>
+      {renamingWallet && (
+        <RenameWalletDialog
+          isShowing
+          onClose={() => setRenamingWallet(null)}
+          fingerprint={renamingWallet.fingerprint}
+          currentName={renamingWallet.name}
+        />
+      )}
+      {removingWallet && (
+        <RemoveWalletDialog
+          isShowing
+          onClose={() => setRemovingWallet(null)}
+          fingerprint={removingWallet.fingerprint}
+          currentName={removingWallet.name}
+        />
+      )}
+      {renamingAccount && (
+        <RenameAccountDialog
+          key={makeAccountIdentifer(renamingAccount.fingerprint, renamingAccount.accountIndex)}
+          isShowing
+          onClose={() => setRenamingAccount(null)}
+          accountId={renamingAccount}
+        />
+      )}
+      <AddWalletSheet
+        isShowing={isAddWalletSheetOpen}
+        onClose={onCloseAddWalletSheet}
+        onCreateNewWallet={onCreateNewWallet}
+        onRestoreWallet={onRestoreWallet}
+        onConnectLedger={onConnectLedger}
+      />
+    </>
   );
 }

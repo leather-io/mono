@@ -1,20 +1,13 @@
-import {
-  RpcErrorCode,
-  createRpcErrorResponse,
-  createRpcSuccessResponse,
-  open,
-} from '@leather.io/rpc';
+import { createRpcSuccessResponse, open } from '@leather.io/rpc';
 
-import { hasRequestedAccountPermission } from '@shared/permissions/permission.helpers';
 import { RouteUrls } from '@shared/route-urls';
-import { getRootState, sendMissingStateErrorToTab } from '@shared/storage/get-root-state';
 
 import { openNewTabWithWallet, trackRpcRequestSuccess } from '../rpc-helpers';
 import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   createConnectingAppSearchParamsWithLastKnownAccount,
-  getHostnameFromPort,
   triggerRequestPopupWindowOpen,
+  validateConnectedWalletExists,
 } from '../rpc-request-utils';
 
 export const openHandler = defineRpcRequestHandler(open.method, async (request, port) => {
@@ -22,29 +15,12 @@ export const openHandler = defineRpcRequestHandler(open.method, async (request, 
     ['requestId', request.id],
   ]);
 
-  const state = await getRootState();
-  const hostname = getHostnameFromPort(port);
-
-  if (!state) {
-    void sendMissingStateErrorToTab({ tabId, method: request.method, id: request.id });
-    return;
-  }
-
-  const originPermissions = state.appPermissions.entities[hostname];
-
-  if (!originPermissions || !hasRequestedAccountPermission(originPermissions)) {
-    void chrome.tabs.sendMessage(
-      tabId,
-      createRpcErrorResponse('open', {
-        id: request.id,
-        error: {
-          code: RpcErrorCode.UNAUTHENTICATED,
-          message: 'Permission denied, user must first connect to the wallet',
-        },
-      })
-    );
-    return;
-  }
+  const { status } = await validateConnectedWalletExists(
+    request,
+    port,
+    'Permission denied, user must first connect to the wallet'
+  );
+  if (status === 'failure') return;
 
   switch (request.params.mode) {
     case 'fullpage':

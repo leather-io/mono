@@ -1,10 +1,10 @@
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
 import { bnsV2NamesByAddressResponseSchema, bnsV2ZoneFileResponseSchema } from '@leather.io/query';
 
 import { TEST_ACCOUNT_1_STX_ADDRESS } from './constants';
 
-export async function mockMainnetTestAccountStacksBnsNameRequest(page: Page) {
+export async function mockMainnetTestAccountStacksBnsNameRequest(page: Page | BrowserContext) {
   await page.route(`**/api.hiro.so/v1/addresses/stacks/${TEST_ACCOUNT_1_STX_ADDRESS}`, route =>
     route.fulfill({
       json: {
@@ -41,13 +41,13 @@ const mockedBnsV2NamesResponse = bnsV2NamesByAddressResponseSchema.parse({
   ],
 });
 
-export async function mockBnsV2NamesRequestEmpty(page: Page) {
+export async function mockBnsV2NamesRequestEmpty(page: Page | BrowserContext) {
   await page.route(`**/api.bnsv2.com/names/address/*/valid`, route =>
     route.fulfill({ json: mockedBnsV2NamesResponseEmpty })
   );
 }
 
-export async function mockBnsV2NamesRequest(page: Page) {
+export async function mockBnsV2NamesRequest(page: Page | BrowserContext) {
   await page.route(`**/api.bnsv2.com/names/address/${TEST_ACCOUNT_1_STX_ADDRESS}/valid`, route =>
     route.fulfill({ json: mockedBnsV2NamesResponse })
   );
@@ -68,14 +68,14 @@ function createSuccessfulBnsV2ZoneFileLookupMockResponse(owner: string, btcAddre
   });
 }
 
-export function mockBnsV2ZoneFileLookup(page: Page) {
+export function mockBnsV2ZoneFileLookup(page: Page | BrowserContext) {
   return ({ name, owner, btcAddress }: { name: string; owner: string; btcAddress: string }) =>
     page.route(`**/api.bnsv2.com/resolve-name/${name}`, route =>
       route.fulfill({ json: createSuccessfulBnsV2ZoneFileLookupMockResponse(owner, btcAddress) })
     );
 }
 
-export function mockBnsV2NameLookup(page: Page) {
+export function mockBnsV2NameLookup(page: Page | BrowserContext) {
   return function ({ name, fullName, owner }: { name: string; fullName: string; owner: string }) {
     return page.route(`**/api.bnsv2.com/names/${fullName}`, route =>
       route.fulfill({

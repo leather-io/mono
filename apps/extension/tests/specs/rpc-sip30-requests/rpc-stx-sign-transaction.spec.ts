@@ -9,6 +9,7 @@ import {
   TEST_ACCOUNT_2_STX_ADDRESS,
   TEST_ACCOUNT_3_PUBKEY,
 } from '@tests/mocks/constants';
+import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { generateMultisigUnsignedStxTransfer, generateUnsignedStxTransfer } from '@tests/utils';
 
@@ -17,7 +18,7 @@ import { test } from '../../fixtures/fixtures';
 test.describe('RPC: stx_signTransaction', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await onboardingPage.signInWithTestAccount(extensionId);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
     await page.goto('localhost:3000', { waitUntil: 'networkidle' });
   });
 

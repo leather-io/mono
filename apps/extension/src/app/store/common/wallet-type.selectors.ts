@@ -3,12 +3,9 @@ import { useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { captureMessage } from '@sentry/react';
 
-import {
-  extractAccountIndexFromDescriptor,
-  extractKeyOriginPathFromDescriptor,
-} from '@leather.io/crypto';
+import { countWalletAccounts } from '@leather.io/crypto';
 import type { AccountId } from '@leather.io/models';
-import { createNullArrayOfLength, uniqueArray } from '@leather.io/utils';
+import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { selectStacksChain } from '../chains/stx-chain.selectors';
 import { selectBitcoinKeychains, selectStacksKeychains } from '../keychains/keychain.selectors';
@@ -32,7 +29,7 @@ export function useActiveWalletType() {
   return useSelector(selectActiveWalletType);
 }
 
-interface WalletAccountRefTree {
+export interface WalletAccountRefTree {
   fingerprint: string;
   name: string;
   type: WalletType;
@@ -44,7 +41,7 @@ interface WalletAccountRefTree {
 // should be used to render virtualised lists, where list item components take
 // care of account look up themselves, as a way to lazily derive account details
 // when needed.
-const selectWalletAccountRefTree = createSelector(
+export const selectWalletAccountRefTree = createSelector(
   [selectWalletEntities, selectStacksChain, selectBitcoinKeychains, selectStacksKeychains],
   (walletEntities, stxChain, bitcoinKeychains, stacksKeychains): WalletAccountRefTree[] => {
     const tree: WalletAccountRefTree[] = [];
@@ -52,43 +49,22 @@ const selectWalletAccountRefTree = createSelector(
     Object.values(walletEntities || {}).forEach(wallet => {
       if (!wallet) return;
 
-      let accountCount = 0;
-
-      // For software wallets, use highestAccountIndex from stxChain
-      if (wallet.type === 'software') {
-        const stxChainState = stxChain?.[wallet.fingerprint];
-        if (!stxChainState) {
-          captureMessage('stxChain entry missing for software wallet', {
-            level: 'warning',
-            extra: {
-              fingerprint: wallet.fingerprint,
-              stxChainKeys: Object.keys(stxChain ?? {}),
-            },
-          });
-        }
-        accountCount = stxChainState ? stxChainState.highestAccountIndex + 1 : 1;
+      if (wallet.type === 'software' && !stxChain?.[wallet.fingerprint]) {
+        captureMessage('stxChain entry missing for software wallet', {
+          level: 'warning',
+          extra: {
+            fingerprint: wallet.fingerprint,
+            stxChainKeys: Object.keys(stxChain ?? {}),
+          },
+        });
       }
 
-      // For Ledger wallets, count the number of keychains
-      if (wallet.type === 'ledger') {
-        const matchingStacksKeychains = stacksKeychains.filter(keychain => {
-          const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
-          return keyOrigin?.startsWith(wallet.fingerprint);
-        });
-
-        const matchingBitcoinKeychains = bitcoinKeychains.filter(keychain => {
-          const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
-          return keyOrigin?.startsWith(wallet.fingerprint);
-        });
-
-        const uniqueBitcoinAccountIndices = uniqueArray(
-          matchingBitcoinKeychains.map(keychain =>
-            extractAccountIndexFromDescriptor(keychain.descriptor)
-          )
-        );
-
-        accountCount = Math.max(matchingStacksKeychains.length, uniqueBitcoinAccountIndices.length);
-      }
+      const accountCount = countWalletAccounts({
+        walletType: wallet.type,
+        fingerprint: wallet.fingerprint,
+        highestAccountIndex: stxChain?.[wallet.fingerprint]?.highestAccountIndex,
+        keychains: [...bitcoinKeychains, ...stacksKeychains],
+      });
 
       const accounts = createNullArrayOfLength(accountCount).map((_, i) => ({
         fingerprint: wallet.fingerprint,

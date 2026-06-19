@@ -3,8 +3,6 @@ import type { ReactNode } from 'react';
 import type { ActivityView } from '@leather.io/features';
 import type { Money } from '@leather.io/models';
 
-import { RouteUrls } from '@shared/route-urls';
-
 import { formatCurrency } from '@app/common/currency-formatter';
 
 import { TokenDetailsBalanceItem } from './components/token-details-balance-item';
@@ -47,7 +45,7 @@ export function BitcoinTokenDetailsLayout({
       icon={icon}
       title="Bitcoin"
       symbol="BTC"
-      receivePath={`/${RouteUrls.ReceiveBtc}`}
+      receiveView="btc"
       swapChain="bitcoin"
       availableBalance={totalBalance}
       fiatBalance={fiatBalance}

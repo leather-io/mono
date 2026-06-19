@@ -21,14 +21,13 @@ import { BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config'
 import { analytics } from '@shared/utils/analytics';
 
 import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
+import type { RootState } from '@app/store';
+import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 
 import { useCurrentAccountId } from '../../account';
-import {
-  selectCurrentNetworkBitcoinAccountLookup,
-  useBitcoinExtendedPublicKeyVersions,
-} from './bitcoin-keychain';
+import { selectCurrentNetworkBitcoinAccountLookup } from './bitcoin-keychain';
 import { bitcoinSoftwarePayerFactory } from './bitcoin-payer';
 
 const selectNativeSegwitAccountId = createSelector(
@@ -52,11 +51,15 @@ const selectCurrentNativeSegwitAccount = createSelector(
 );
 
 export function useCurrentNativeSegwitAccount() {
-  return useSelector(selectCurrentNativeSegwitAccount);
+  const { version } = useInMemoryKeys();
+  return useSelector((state: RootState) => selectCurrentNativeSegwitAccount(state, version));
 }
 
 export function useNativeSegwitAccount(accountId: AccountId) {
-  const lookupNativeSegwitAccount = useSelector(selectNativeSegwitAccountId);
+  const { version } = useInMemoryKeys();
+  const lookupNativeSegwitAccount = useSelector((state: RootState) =>
+    selectNativeSegwitAccountId(state, version)
+  );
   return useMemo(
     () => lookupNativeSegwitAccount(accountId),
     [lookupNativeSegwitAccount, accountId]
@@ -66,7 +69,6 @@ export function useNativeSegwitAccount(accountId: AccountId) {
 export function useNativeSegwitPayer(accountId: AccountId) {
   const account = useNativeSegwitAccount(accountId);
   const network = useCurrentNetwork();
-  const extendedPublicKeyVersions = useBitcoinExtendedPublicKeyVersions();
 
   return useMemo(() => {
     if (!account) return;
@@ -77,9 +79,8 @@ export function useNativeSegwitPayer(accountId: AccountId) {
       masterKeyFingerprint: account.masterKeyFingerprint,
       paymentFn: getNativeSegwitPaymentFromAddressIndex,
       network: network.chain.bitcoin.mode,
-      extendedPublicKeyVersions,
     });
-  }, [account, extendedPublicKeyVersions, network.chain.bitcoin.mode]);
+  }, [account, network.chain.bitcoin.mode]);
 }
 
 export function useCurrentAccountNativeSegwitPayer() {

@@ -1,5 +1,4 @@
 import QRCode from 'react-qr-code';
-import { useNavigate } from 'react-router';
 
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
@@ -7,22 +6,16 @@ import { token } from 'leather-styles/tokens';
 
 import { AddressDisplayer, Button, Sheet, SheetHeader } from '@leather.io/ui';
 
-import { useLocationState } from '@app/common/hooks/use-location-state';
-import { useBackgroundLocationRedirect } from '@app/routes/hooks/use-background-location-redirect';
-
 interface ReceiveTokensLayoutProps {
   address: string;
   accountName?: string;
+  onClose(): void;
   onCopyAddressToClipboard(address: string): void;
   title: string;
   warning?: React.JSX.Element;
 }
 export function ReceiveTokensLayout(props: ReceiveTokensLayoutProps) {
-  useBackgroundLocationRedirect();
-
-  const { address, accountName, onCopyAddressToClipboard, title, warning } = props;
-  const navigate = useNavigate();
-  const backgroundLocation = useLocationState<Location>('backgroundLocation');
+  const { address, accountName, onClose, onCopyAddressToClipboard, title, warning } = props;
 
   return (
     <Sheet
@@ -34,11 +27,11 @@ export function ReceiveTokensLayout(props: ReceiveTokensLayoutProps) {
               Receive <br /> {title}
             </>
           }
-          onClose={() => navigate(backgroundLocation ?? '..')}
+          onClose={onClose}
         />
       }
       isShowing
-      onClose={() => navigate(backgroundLocation ?? '..')}
+      onClose={onClose}
       footer={
         <Button fullWidth onClick={() => onCopyAddressToClipboard(address)}>
           Copy address

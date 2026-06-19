@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import type { AccountId } from '@leather.io/models';
 import { resetWallet } from '@leather.io/state';
-import { fingerprintMigration, userAddsWallet } from '@leather.io/state/wallet';
+import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
@@ -18,16 +18,22 @@ export const stxChainSlice = createSlice({
   initialState,
 
   reducers: {
-    createNewAccount(state, action: PayloadAction<{ fingerprint: string; descriptor: string }>) {
-      const fingerprint = action.payload.fingerprint;
+    createNewAccount(
+      state,
+      action: PayloadAction<{ fingerprint: string; accountIndex: number; descriptor: string }>
+    ) {
+      const { fingerprint, accountIndex, descriptor } = action.payload;
       if (!state[fingerprint]) {
         state[fingerprint] = {
-          highestAccountIndex: 1,
-          currentAccountStacksDescriptor: action.payload.descriptor,
+          highestAccountIndex: accountIndex,
+          currentAccountStacksDescriptor: descriptor,
         };
       } else {
-        state[fingerprint].highestAccountIndex += 1;
-        state[fingerprint].currentAccountStacksDescriptor = action.payload.descriptor;
+        state[fingerprint].highestAccountIndex = Math.max(
+          state[fingerprint].highestAccountIndex,
+          accountIndex
+        );
+        state[fingerprint].currentAccountStacksDescriptor = descriptor;
       }
     },
 
@@ -56,6 +62,10 @@ export const stxChainSlice = createSlice({
             currentAccountStacksDescriptor: '',
           };
         }
+      })
+
+      .addCase(userRemovesWallet, (state, action) => {
+        delete state[action.payload.fingerprint];
       })
 
       .addCase(fingerprintMigration, (state, action) => {

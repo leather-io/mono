@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import { bytesToHex } from '@noble/hashes/utils';
@@ -6,8 +5,6 @@ import StacksApp from '@zondax/ledger-stacks';
 import { pullStacksKeysFromLedgerDevice } from 'app/features/ledger/flows/request-stacks-keys/request-stacks-keys.utils';
 
 import { createDescriptor, createKeyOriginPath } from '@leather.io/crypto';
-import { userAddsKeychains } from '@leather.io/state';
-import { userAddsWallet } from '@leather.io/state/wallet';
 import { delay } from '@leather.io/utils';
 
 import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
@@ -27,9 +24,11 @@ import {
   validateStacksAppVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { useToast } from '@app/features/toasts/use-toast';
-import { userSwitchesAccount } from '@app/store/active/active.slice';
+import { useAppDispatch } from '@app/store';
+import { activateFirstVisibleAccount } from '@app/store/active/active.actions';
 import { useStacksKeychainDescriptors } from '@app/store/keychains/keychain.selectors';
-import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
+import { addOrMigrateLedgerKeychains } from '@app/store/wallets/wallet.actions';
+import { getAddWalletError, useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
 function LedgerRequestStacksKeys() {
   const toast = useToast();
@@ -38,7 +37,7 @@ function LedgerRequestStacksKeys() {
 
   const stxKeychainsDescriptors = useStacksKeychainDescriptors();
   const wallets = useWalletEntities();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const chain = 'stacks';
 
@@ -72,6 +71,13 @@ function LedgerRequestStacksKeys() {
         const fingerprintResp = await app.getMasterFingerprint();
         const fingerprint = bytesToHex(fingerprintResp.fingerprint);
 
+        const addWalletError = getAddWalletError(wallets, fingerprint, 'ledger');
+        if (addWalletError) {
+          toast.error(addWalletError);
+          void ledgerNavigate.toErrorStep(chain, addWalletError);
+          return { status: 'failure' };
+        }
+
         const resp = await pullStacksKeysFromLedgerDevice(app)({
           onRequestKey(accountIndex) {
             void ledgerNavigate.toDeviceBusyStep(
@@ -82,7 +88,7 @@ function LedgerRequestStacksKeys() {
         if (resp.status === 'failure') {
           toast.error(resp.errorMessage);
           void ledgerNavigate.toErrorStep(chain, resp.errorMessage);
-          return;
+          return { status: 'failure' };
         }
         void ledgerNavigate.toDeviceBusyStep();
 
@@ -99,26 +105,9 @@ function LedgerRequestStacksKeys() {
             return !stxKeychainsDescriptors.includes(keychain.descriptor);
           });
 
-        if (!wallets[fingerprint]) {
-          dispatch(
-            userAddsWallet({
-              wallet: {
-                createdOn: new Date().toISOString(),
-                fingerprint,
-                type: 'ledger',
-              },
-              accountKeychains: keychains,
-            })
-          );
-        } else if (keychains.length) {
-          dispatch(
-            userAddsKeychains({
-              accountKeychains: keychains,
-            })
-          );
-        }
-
-        dispatch(userSwitchesAccount({ fingerprint, accountIndex: 0 }));
+        await dispatch(addOrMigrateLedgerKeychains({ fingerprint, accountKeychains: keychains }));
+        void dispatch(activateFirstVisibleAccount(fingerprint));
+        return { status: 'success' };
       },
     });
 

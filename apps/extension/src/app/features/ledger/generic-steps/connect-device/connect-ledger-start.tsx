@@ -11,7 +11,11 @@ import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { immediatelyAttemptLedgerConnection } from '../../hooks/use-when-reattempt-ledger-connection';
 import { ConnectLedger } from './connect-ledger';
 
-export function ConnectLedgerStart() {
+export function ConnectLedgerStart({
+  initialRoute = RouteUrls.Onboarding,
+}: {
+  initialRoute?: RouteUrls | '';
+}) {
   const navigate = useNavigate();
 
   function pageModeRoutingAction(url: string) {
@@ -21,7 +25,7 @@ export function ConnectLedgerStart() {
           replace: true,
           state: {
             [immediatelyAttemptLedgerConnection]: true,
-            fromLocation: { pathname: RouteUrls.Onboarding },
+            fromLocation: { pathname: initialRoute || RouteUrls.Home },
           },
         });
       },
@@ -34,10 +38,10 @@ export function ConnectLedgerStart() {
 
   function connectChain(chain: string) {
     const supportsWebUsbAction = pageModeRoutingAction(
-      RouteUrls.Onboarding + `/${chain}/` + RouteUrls.ConnectLedger
+      initialRoute + `/${chain}/` + RouteUrls.ConnectLedger
     );
     const doesNotSupportWebUsbAction = pageModeRoutingAction(
-      RouteUrls.Onboarding + '/' + RouteUrls.LedgerUnsupportedBrowser
+      initialRoute + '/' + RouteUrls.LedgerUnsupportedBrowser
     );
 
     return doesBrowserSupportWebUsbApi() ? supportsWebUsbAction() : doesNotSupportWebUsbAction();
