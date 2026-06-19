@@ -9,7 +9,7 @@ interface LogoBoxProps extends BoxProps {
 
 export function LogoBox({ onClick, ...props }: LogoBoxProps) {
   return (
-    <Box height="headerContainerHeight" margin="auto" px="space.02" hideBelow="sm" {...props}>
+    <Box height="headerContainerHeight" my="auto" pr="space.02" hideBelow="sm" {...props}>
       <Logo data-testid={OnboardingSelectors.LogoRouteToHome} onClick={onClick} />
     </Box>
   );

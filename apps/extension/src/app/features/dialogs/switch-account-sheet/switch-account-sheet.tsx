@@ -154,11 +154,7 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
                 if (!wallet) return null;
 
                 return (
-                  <Box
-                    bg="ink.background-primary"
-                    pb="space.03"
-                    pt={groupIndex === 0 ? 'space.01' : 'space.05'}
-                  >
+                  <Box bg="ink.background-primary" pb="space.03" pt="space.03">
                     <WalletHeader
                       isManageMode={isManageMode}
                       name={wallet.name}
@@ -223,19 +219,22 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
 
                 const hidden = isAccountHidden(accountId);
 
-                if (isManageMode) {
-                  return (
-                    <Box pl="space.05" pr="space.04" py="space.03" opacity={hidden ? 0.5 : 1}>
-                      <Flex alignItems="center" gap="space.02">
-                        <Box minWidth={0} flex="1">
-                          <SwitchAccountListItem
-                            handleClose={noop}
-                            accountId={accountId}
-                            walletType={wallet.type}
-                            hideBalance
-                            nonInteractive
-                          />
-                        </Box>
+                return (
+                  <Box position="relative" px="space.05" py="space.03" opacity={hidden ? 0.5 : 1}>
+                    <SwitchAccountListItem
+                      handleClose={isManageMode ? noop : onClose}
+                      accountId={accountId}
+                      walletType={wallet.type}
+                      hideBalance={isManageMode}
+                      nonInteractive={isManageMode}
+                    />
+                    {isManageMode && (
+                      <Box
+                        position="absolute"
+                        top="50%"
+                        right="space.04"
+                        transform="translateY(-50%)"
+                      >
                         <AccountActionMenu
                           isHidden={hidden}
                           canHide={canHideAccount({
@@ -253,18 +252,8 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
                             )
                           }
                         />
-                      </Flex>
-                    </Box>
-                  );
-                }
-
-                return (
-                  <Box px="space.05" py="space.03">
-                    <SwitchAccountListItem
-                      handleClose={onClose}
-                      accountId={accountId}
-                      walletType={wallet.type}
-                    />
+                      </Box>
+                    )}
                   </Box>
                 );
               }}

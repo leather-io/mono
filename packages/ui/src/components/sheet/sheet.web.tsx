@@ -54,7 +54,7 @@ export function Sheet({
   const variantMap: Record<SheetVariant, Parameters<CssFunction>[0]> = {
     dialog: css.raw({
       top: '50%',
-      transform: 'translate(-50%, -50%)',
+      transform: { base: 'translateY(-50%)', md: 'translate(-50%, -50%)' },
       height: { base: '100%', md: 'auto' },
     }),
     drawer: css.raw({
@@ -62,7 +62,7 @@ export function Sheet({
       top: { md: '50%' },
       borderTopRadius: 'lg',
 
-      transform: { base: 'translateX(-50%)', md: 'translate(-50%, -50%)' },
+      transform: { base: 'none', md: 'translate(-50%, -50%)' },
       height: { base: 'fit-content', md: 'auto' },
     }),
   };
@@ -96,9 +96,10 @@ export function Sheet({
               boxShadow:
                 'hsl(206 22% 7% / 35%) 0 10px 38px -10px, hsl(206 22% 7% / 20%) 0 10px 20px -15px',
               position: 'fixed',
-              left: '50%',
-              width: { base: '100vw', md: '90vw' },
-              maxWidth: { base: '100vw', md: 'pageWidth' },
+              left: { base: 0, md: '50%' },
+              right: { base: 0, md: 'auto' },
+              width: { base: 'auto', md: '90vw' },
+              maxWidth: { base: 'none', md: 'pageWidth' },
               maxHeight: { base: '100vh', md: '90vh' },
               '&[data-state=open]': {
                 animation: { base: '', md: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)' },
