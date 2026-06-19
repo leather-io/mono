@@ -901,4 +901,24 @@ export class LeatherApiClient {
       ? await fetchFn()
       : await this.cacheService.fetchWithCache(['leather-api-protocol-contracts', id], fetchFn);
   }
+
+  async proposeMultisigTransaction(
+    body: {
+      multisigAddress: string;
+      rawPayload: string;
+      proposalSignature: string;
+      proposalTimestamp: number;
+    },
+    { signal }: ApiRequestOptions = {}
+  ) {
+    const { data } = await this.rateLimiter.add(
+      RateLimiterType.Leather,
+      () => this.client.POST('/v1/multisig-ext/propose', { body, signal }),
+      {
+        priority: leatherApiPriorities.proposeMultisigTransaction,
+        signal,
+      }
+    );
+    return data!;
+  }
 }
