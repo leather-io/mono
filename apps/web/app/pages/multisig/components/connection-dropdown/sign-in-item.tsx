@@ -36,7 +36,7 @@ export function SignInItem({ connection, detailed = false }: SignInItemProps) {
               {description}
             </styled.span>
           )}
-          {signIn.error && (
+          {signIn.error?.message?.trim() && (
             <styled.span display="block" textStyle="caption.01" color="red.action-primary-default">
               {signIn.error.message}
             </styled.span>

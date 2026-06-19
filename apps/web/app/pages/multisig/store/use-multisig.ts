@@ -1,12 +1,6 @@
 import { useContext, useMemo } from 'react';
 
-import type {
-  Chain,
-  MultisigAccount,
-  MultisigTransaction,
-  NewMemberInput,
-  Vault,
-} from '../data/multisig-types';
+import type { Chain, MultisigTransaction, NewMemberInput, Vault } from '../data/multisig-types';
 import { MultisigSessionContext } from './multisig-session';
 
 function useSession() {
@@ -24,15 +18,6 @@ function useVaults(): Vault[] {
 function useVault(vaultId: string | undefined): Vault | undefined {
   const { state } = useSession();
   return state.vaults.find(vault => vault.id === vaultId);
-}
-
-export function useVaultAccount(
-  vaultId: string | undefined,
-  accountId: string | undefined
-): { vault: Vault | undefined; account: MultisigAccount | undefined } {
-  const vault = useVault(vaultId);
-  const account = vault?.accounts.find(a => a.id === accountId);
-  return { vault, account };
 }
 
 export function useVaultTx(

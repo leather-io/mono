@@ -6,7 +6,7 @@ import { LeatherApiError, type ListVaultsFilters, getMultisigService } from '@le
 import { useSession } from '../auth/use-session';
 import { multisigVaultKeys } from './vault-query-keys';
 
-function retryMultisigQuery(failureCount: number, error: Error) {
+export function retryMultisigQuery(failureCount: number, error: Error) {
   if (
     LeatherApiError.isLeatherApiError(error) &&
     error.status >= 400 &&
