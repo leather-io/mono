@@ -51,6 +51,18 @@ export const stxChainSlice = createSlice({
         );
       }
     },
+
+    setHighestAccountIndex(state, action: PayloadAction<AccountId>) {
+      const { fingerprint, accountIndex } = action.payload;
+      if (!state[fingerprint]) {
+        state[fingerprint] = {
+          highestAccountIndex: accountIndex,
+          currentAccountStacksDescriptor: '',
+        };
+      } else {
+        state[fingerprint].highestAccountIndex = accountIndex;
+      }
+    },
   },
 
   extraReducers: builder =>

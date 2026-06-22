@@ -39,7 +39,7 @@ const debug = {
   },
   setHighestAccountIndex(fingerprint: string, accountIndex: number) {
     logger.info(`Highest account index set to ${accountIndex}`);
-    store.dispatch(stxChainSlice.actions.restoreAccountIndex({ fingerprint, accountIndex }));
+    store.dispatch(stxChainSlice.actions.setHighestAccountIndex({ fingerprint, accountIndex }));
   },
   resetMessages() {
     store.dispatch(settingsSlice.actions.resetMessages());
