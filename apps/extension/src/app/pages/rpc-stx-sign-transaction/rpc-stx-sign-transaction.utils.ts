@@ -5,7 +5,6 @@ import {
 } from '@stacks/transactions';
 
 import { type RpcParams, createRequestEncoder, stxSignTransaction } from '@leather.io/rpc';
-import { isDefined } from '@leather.io/utils';
 
 import { initialSearchParams } from '@app/common/initial-search-params';
 
@@ -34,14 +33,4 @@ export function checkUnsignedStacksTransactionHashMode(tx: StacksTransactionWire
     hashMode === AddressHashMode.P2SHNonSequential ||
     hashMode === AddressHashMode.P2WSHNonSequential
   );
-}
-
-export function checkUnsignedStacksTransactionFee(tx: StacksTransactionWire) {
-  const txFee = tx.auth.spendingCondition.fee;
-  return isDefined(txFee) && !Number.isNaN(txFee);
-}
-
-export function checkUnsignedStacksTransactionNonce(tx: StacksTransactionWire) {
-  const txNonce = tx.auth.spendingCondition.nonce;
-  return isDefined(txNonce) && !Number.isNaN(txNonce);
 }
