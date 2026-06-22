@@ -140,7 +140,8 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
     if (network !== 'mainnet' && network !== 'testnet') {
       throw new Error('sBTC withdrawals not supported for network');
     }
-    if (!request.account.bitcoin?.zeroIndexNativeSegwitPayerAddress) {
+    const bitcoin = request.account.bitcoin;
+    if (bitcoin?.type !== 'hd' || !bitcoin.zeroIndexNativeSegwitPayerAddress) {
       throw new Error('Unable to Determine sBTC Withdrawal Address');
     }
     if (!request.account.stacks?.stxAddress) {
@@ -153,7 +154,7 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
       quote,
       ...getSbtcWithdrawalContractCallData({
         stxAddress: request.account.stacks.stxAddress,
-        withdrawalBtcAddress: request.account.bitcoin.zeroIndexNativeSegwitPayerAddress,
+        withdrawalBtcAddress: bitcoin.zeroIndexNativeSegwitPayerAddress,
         quoteAmount: quote.targetAmount,
         withdrawalSweepTxFee: quote.providerQuoteData.signerSweepTxFeeSats,
         network,
