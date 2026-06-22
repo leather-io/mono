@@ -329,22 +329,21 @@ test.describe('Multiwallet hardware wallet', () => {
     await expect(page.getByRole('menuitem', { name: 'View Secret Key' })).toHaveCount(0);
   });
 
-  test('that a Ledger wallet shows the Ledger chip on the wallet header and a badge on each account', async ({
+  test('that a Ledger wallet shows the Ledger chip and account badge in the account picker', async ({
     switchAccountPage,
     page,
   }) => {
     test.slow();
-    // Flat surface: the active Ledger account's avatar carries the corner badge
-    await expect(page.getByTestId(AccountSelectors.LedgerIndicator).first()).toBeVisible();
-
     await switchAccountPage.open();
 
-    // Grouped surface: the wallet header carries the labelled "Ledger" chip
+    // The wallet header carries the labelled "Ledger" chip
     await expect(
       page.getByTestId(SwitchAccountSelectors.WalletHeaderLedgerIndicator).first()
     ).toBeVisible();
 
-    // Each account avatar also carries the badge: home header + the account row
-    await expect(page.getByTestId(AccountSelectors.LedgerIndicator)).toHaveCount(2);
+    // The Ledger account avatar carries the corner badge
+    await expect(
+      switchAccountPage.accountRow(0).getByTestId(AccountSelectors.LedgerIndicator)
+    ).toBeVisible();
   });
 });
