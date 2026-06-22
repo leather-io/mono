@@ -40,6 +40,7 @@ export function SheetHeader({ onClose, title, variant = 'default' }: SheetHeader
           top="50%"
           right={variant === 'large' ? 'space.05' : 'space.04'}
           transform="translateY(-50%)"
+          height="headerContainerHeight"
         />
       )}
     </Flex>

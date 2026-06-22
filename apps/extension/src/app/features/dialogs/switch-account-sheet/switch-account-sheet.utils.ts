@@ -3,6 +3,8 @@ import type { AccountId } from '@leather.io/models';
 
 import type { WalletType } from '@app/store/common/wallet-type.selectors';
 
+export const accountActionMenuTriggerSize = '40px';
+
 interface WalletGroup {
   type: WalletType;
   accounts: AccountId[];

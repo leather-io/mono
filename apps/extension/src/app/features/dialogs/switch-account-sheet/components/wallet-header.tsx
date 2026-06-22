@@ -1,8 +1,9 @@
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
-import { Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import { WalletType } from '@app/store/common/wallet-type.selectors';
 
+import { accountActionMenuTriggerSize } from '../switch-account-sheet.utils';
 import { WalletActionMenu } from './wallet-action-menu';
 
 interface WalletHeaderProps {
@@ -28,8 +29,9 @@ export function WalletHeader({
     <Flex
       alignItems="center"
       justifyContent="space-between"
+      minHeight={accountActionMenuTriggerSize}
       pl="space.05"
-      pr={isManageMode ? 'space.04' : 'space.05'}
+      pr="space.04"
       py="space.00"
       width="100%"
     >
@@ -44,7 +46,7 @@ export function WalletHeader({
       >
         {name}
       </styled.span>
-      {isManageMode && (
+      {isManageMode ? (
         <WalletActionMenu
           walletType={walletType}
           canRemoveWallet={canRemoveWallet}
@@ -52,6 +54,8 @@ export function WalletHeader({
           onRemove={onRemove}
           onViewSecretKey={onViewSecretKey}
         />
+      ) : (
+        <Box flexShrink={0} width={accountActionMenuTriggerSize} aria-hidden />
       )}
     </Flex>
   );
