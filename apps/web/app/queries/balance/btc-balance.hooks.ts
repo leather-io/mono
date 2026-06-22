@@ -9,9 +9,7 @@ function useGetBtcAccountBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();
   return useQuery({
     ...createBtcBalanceQueryConfig(request, settings),
-    enabled:
-      !!request.account.bitcoin?.taprootDescriptor &&
-      !!request.account.bitcoin?.nativeSegwitDescriptor,
+    enabled: !!request.account.bitcoin,
   });
 }
 

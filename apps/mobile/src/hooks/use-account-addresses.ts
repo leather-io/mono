@@ -93,7 +93,7 @@ function deriveAccountAddresses(
     stxAddress
   );
 
-  if (!baseAddresses.bitcoin) return baseAddresses;
+  if (baseAddresses.bitcoin?.type !== 'hd') return baseAddresses;
 
   return {
     ...baseAddresses,
