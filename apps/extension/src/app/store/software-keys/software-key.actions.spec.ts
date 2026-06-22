@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import { fetchNamesForAddress } from '@leather.io/query';
 import {
   type WalletStore,
   fingerprintMigration,
@@ -9,11 +10,17 @@ import {
 } from '@leather.io/state/wallet';
 
 import { decryptMnemonic } from '@shared/crypto/mnemonic-encryption';
+import { broadcastReplayAction } from '@shared/messages';
 import { assumedZeroFingerprint } from '@shared/utils';
 
+import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
 import { persistor } from '@app/store';
 import { initalizeWalletSession } from '@app/store/session-restore';
 
+import { getNativeSegwitMainnetAddressFromRootKeychain } from '../accounts/blockchain/bitcoin/native-segwit-account.hooks';
+import { getTaprootMainnetAddressFromRootKeychain } from '../accounts/blockchain/bitcoin/taproot-account.hooks';
+import { getStacksAddressByIndex } from '../accounts/blockchain/stacks/stacks-keychain';
+import { stxChainSlice } from '../chains/stx-chain.slice';
 import * as inMemoryStore from '../in-memory-key/in-memory-storage';
 import { keyActions } from './software-key.actions';
 import { keyAdapter, keySlice } from './software-key.slice';
@@ -46,6 +53,7 @@ vi.mock('@shared/logger', () => ({
 
 vi.mock('@shared/messages', () => ({
   broadcastWalletListChanged: vi.fn(),
+  broadcastReplayAction: vi.fn(),
 }));
 
 vi.mock('@shared/utils/analytics', () => ({
@@ -75,7 +83,11 @@ vi.mock('./utils', () => ({
 }));
 
 vi.mock('../accounts/blockchain/bitcoin/native-segwit-account.hooks', () => ({
-  getNativeSegwitMainnetAddressFromMnemonic: vi.fn(),
+  getNativeSegwitMainnetAddressFromRootKeychain: vi.fn(),
+}));
+
+vi.mock('../accounts/blockchain/bitcoin/taproot-account.hooks', () => ({
+  getTaprootMainnetAddressFromRootKeychain: vi.fn(),
 }));
 
 vi.mock('../accounts/blockchain/stacks/stacks-keychain', () => ({
@@ -102,20 +114,30 @@ function buildState({
   salt,
   keys,
   wallets = [],
+  stxChain = {},
 }: {
   salt: string | undefined;
   keys: SoftwareKey[];
   wallets?: WalletStore[];
+  stxChain?: Record<
+    string,
+    { highestAccountIndex: number; currentAccountStacksDescriptor: string }
+  >;
 }) {
   return {
     softwareKeys: { ...keyAdapter.addMany(keyAdapter.getInitialState(), keys), salt },
     wallets: walletAdapter.addMany(walletAdapter.getInitialState(), wallets),
+    chains: { stx: stxChain },
   };
 }
 
 const password = 'correct-horse-battery-staple';
 const realFingerprint = 'abcd1234';
 const reEncryptType = keySlice.actions.softwareKeyReEncrypted.type;
+
+function flushPromises() {
+  return new Promise(resolve => setTimeout(resolve, 0));
+}
 
 describe('unlockWalletAction', () => {
   beforeEach(() => {
@@ -242,5 +264,132 @@ describe('unlockWalletAction', () => {
         key: { type: 'software', id: realFingerprint, encryptedSecretKey: 'enc-reencrypted' },
       })
     );
+  });
+});
+
+describe('probeNextAccountAndDiscoverAccounts', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(inMemoryStore.getKey).mockReturnValue('decrypted-mnemonic');
+    vi.mocked(fetchNamesForAddress).mockResolvedValue({ names: [] } as never);
+    vi.mocked(recurseAccountsForActivity).mockImplementation(({ onActivityFound }) => {
+      onActivityFound?.(4);
+      return Promise.resolve(4);
+    });
+    vi.mocked(getStacksAddressByIndex).mockImplementation(
+      () => (accountIndex: number) => `stx-${accountIndex}`
+    );
+    vi.mocked(getNativeSegwitMainnetAddressFromRootKeychain).mockImplementation(
+      () => (accountIndex: number) => `segwit-${accountIndex}`
+    );
+    vi.mocked(getTaprootMainnetAddressFromRootKeychain).mockImplementation(
+      () => (accountIndex: number) => `taproot-${accountIndex}`
+    );
+  });
+
+  test('checks the next account index and starts recursive discovery when btc history is found', async () => {
+    const state = buildState({
+      salt: 'argon2-salt',
+      keys: [],
+      wallets: [
+        { fingerprint: realFingerprint, createdOn: null, name: 'Wallet', type: 'software' },
+      ],
+      stxChain: {
+        [realFingerprint]: {
+          highestAccountIndex: 2,
+          currentAccountStacksDescriptor: '',
+        },
+      },
+    });
+    const stxClient = {
+      getStxAddressBalance: vi.fn().mockResolvedValue({ balance: '0' }),
+      getAccountTransactionsWithTransfers: vi.fn().mockResolvedValue({ total: 0, results: [] }),
+    };
+    const btcClient = {
+      addressApi: {
+        getUtxosByAddress: vi.fn().mockResolvedValue([]),
+        getTransactionsByAddress: vi.fn((address: string) =>
+          Promise.resolve(address === 'taproot-3' ? [{ txid: 'txid' }] : [])
+        ),
+      },
+    };
+    const dispatch = vi.fn();
+    const getState = vi.fn().mockReturnValue(state);
+
+    await keyActions.probeNextAccountAndDiscoverAccounts({
+      bnsV2Client: {} as never,
+      btcClient: btcClient as never,
+      stxClient: stxClient as never,
+    })(dispatch, getState, undefined);
+    await flushPromises();
+
+    expect(stxClient.getStxAddressBalance).toHaveBeenCalledWith('stx-3', expect.any(AbortSignal));
+    expect(btcClient.addressApi.getUtxosByAddress).toHaveBeenCalledWith(
+      'segwit-3',
+      expect.any(AbortSignal)
+    );
+    expect(btcClient.addressApi.getUtxosByAddress).toHaveBeenCalledWith(
+      'taproot-3',
+      expect.any(AbortSignal)
+    );
+    expect(btcClient.addressApi.getTransactionsByAddress).toHaveBeenCalledWith(
+      'segwit-3',
+      expect.any(AbortSignal)
+    );
+    expect(btcClient.addressApi.getTransactionsByAddress).toHaveBeenCalledWith(
+      'taproot-3',
+      expect.any(AbortSignal)
+    );
+    expect(recurseAccountsForActivity).toHaveBeenCalledTimes(1);
+    expect(recurseAccountsForActivity).toHaveBeenCalledWith(
+      expect.objectContaining({ fromAccountIndex: 2 })
+    );
+
+    const restoreAction = stxChainSlice.actions.restoreAccountIndex({
+      fingerprint: realFingerprint,
+      accountIndex: 4,
+    });
+    expect(dispatch).toHaveBeenCalledWith(restoreAction);
+    expect(persistor.flush).toHaveBeenCalled();
+    expect(broadcastReplayAction).toHaveBeenCalledWith(restoreAction);
+  });
+
+  test('does not start recursive discovery when the next account has no activity', async () => {
+    const state = buildState({
+      salt: 'argon2-salt',
+      keys: [],
+      wallets: [
+        { fingerprint: realFingerprint, createdOn: null, name: 'Wallet', type: 'software' },
+      ],
+      stxChain: {
+        [realFingerprint]: {
+          highestAccountIndex: 1,
+          currentAccountStacksDescriptor: '',
+        },
+      },
+    });
+    const stxClient = {
+      getStxAddressBalance: vi.fn().mockResolvedValue({ balance: '0' }),
+      getAccountTransactionsWithTransfers: vi.fn().mockResolvedValue({ total: 0, results: [] }),
+    };
+    const btcClient = {
+      addressApi: {
+        getUtxosByAddress: vi.fn().mockResolvedValue([]),
+        getTransactionsByAddress: vi.fn().mockResolvedValue([]),
+      },
+    };
+    const dispatch = vi.fn();
+    const getState = vi.fn().mockReturnValue(state);
+
+    await keyActions.probeNextAccountAndDiscoverAccounts({
+      bnsV2Client: {} as never,
+      btcClient: btcClient as never,
+      stxClient: stxClient as never,
+    })(dispatch, getState, undefined);
+
+    expect(stxClient.getStxAddressBalance).toHaveBeenCalledWith('stx-2', expect.any(AbortSignal));
+    expect(recurseAccountsForActivity).not.toHaveBeenCalled();
+    expect(dispatch).not.toHaveBeenCalled();
+    expect(broadcastReplayAction).not.toHaveBeenCalled();
   });
 });

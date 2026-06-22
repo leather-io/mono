@@ -1,5 +1,7 @@
 import type { BrowserContext, Page } from '@playwright/test';
 
+import { TEST_ACCOUNT_1_STX_ADDRESS } from './constants';
+
 const mockedEmptyFtBalancesV2 = {
   limit: 100,
   offset: 0,
@@ -80,7 +82,9 @@ export async function mockMainnetTestAccountStacksBalancesV2Request(page: Page |
 
   await page.route('**hiro.so/extended/v2/addresses/**/balances/stx', route =>
     route.fulfill({
-      json: mockedStxBalanceV2,
+      json: route.request().url().includes(`/addresses/${TEST_ACCOUNT_1_STX_ADDRESS}/`)
+        ? mockedStxBalanceV2
+        : mockedEmptyStxBalanceV2,
     })
   );
 }

@@ -134,6 +134,18 @@ describe('stxChainSlice', () => {
     expect(result[fingerprintA].highestAccountIndex).toBe(4);
   });
 
+  test('does not decrease highestAccountIndex when a stale restore lookup completes', () => {
+    const result = stxChainSlice.reducer(
+      { [fingerprintA]: { highestAccountIndex: 5, currentAccountStacksDescriptor: 'descA' } },
+      stxChainSlice.actions.restoreAccountIndex({
+        fingerprint: fingerprintA,
+        accountIndex: 2,
+      })
+    );
+
+    expect(result[fingerprintA].highestAccountIndex).toBe(5);
+  });
+
   test('leaves state untouched when removing a wallet with no stx chain state', () => {
     const state = {
       [fingerprintB]: { highestAccountIndex: 1, currentAccountStacksDescriptor: 'descB' },

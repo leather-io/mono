@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
+import { HDKey } from '@scure/bip32';
 import { Psbt } from 'bitcoinjs-lib';
 
 import {
@@ -9,11 +10,7 @@ import {
   deriveNativeSegwitAccountFromRootKeychain,
   getNativeSegwitPaymentFromAddressIndex,
 } from '@leather.io/bitcoin';
-import {
-  deriveRootKeychainFromMnemonicSync,
-  extractAddressIndexFromPath,
-  extractChangeIndexFromPath,
-} from '@leather.io/crypto';
+import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import { type AccountId } from '@leather.io/models';
 import { reverseBytes } from '@leather.io/utils';
 
@@ -127,14 +124,16 @@ export function useNativeSegwitAccountIndexAddressIndexZero(accountId: AccountId
   return payer?.payment.address as string;
 }
 
-export function getNativeSegwitMainnetAddressFromMnemonic(secretKey: string) {
+export function getNativeSegwitMainnetAddressFromRootKeychain(rootKeychain: HDKey) {
   return (accountIndex: number) => {
-    const rootNode = deriveRootKeychainFromMnemonicSync(secretKey);
-    const account = deriveNativeSegwitAccountFromRootKeychain(rootNode, 'mainnet')(accountIndex);
+    const account = deriveNativeSegwitAccountFromRootKeychain(
+      rootKeychain,
+      'mainnet'
+    )(accountIndex);
     return getNativeSegwitPaymentFromAddressIndex(
       deriveAddressIndexZeroFromAccount(account.keychain),
       'mainnet'
-    );
+    ).address;
   };
 }
 
