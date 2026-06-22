@@ -51,6 +51,10 @@ export class UtxosService {
   ): Promise<UtxoTotals> {
     if (!hasBitcoinAddress(account)) return emptyUtxos;
 
+    if (account.bitcoin.type === 'fixedAddress') {
+      return this.getAddressUtxos(account.bitcoin.address, account.id.fingerprint, signal);
+    }
+
     const [nativeSegwitUtxos, taprootUtxos] = await Promise.all([
       !exclusions?.nativeSegwitAddresses
         ? this.getDescriptorUtxos(
@@ -101,6 +105,27 @@ export class UtxosService {
       return mempoolApiUtxos.map(utxo => createOwnedUtxoFromMempool(utxo, fingerprint));
     }
     const leatherApiUtxos = await this.leatherApiClient.fetchUtxos(descriptor, { signal });
+    return leatherApiUtxos.map(utxo => createOwnedUtxoFromLeather(utxo, fingerprint));
+  }
+
+  public async getAddressUtxos(
+    address: string,
+    fingerprint: string,
+    signal?: AbortSignal
+  ): Promise<UtxoTotals> {
+    const [totalUtxos, btcTxs] = await Promise.all([
+      this.getAddressTotalUtxos(address, fingerprint, signal),
+      this.bitcoinTransactionsService.getAddressTransactions(address, signal),
+    ]);
+    return getUtxoTotals(fingerprint, totalUtxos, btcTxs);
+  }
+
+  private async getAddressTotalUtxos(
+    address: string,
+    fingerprint: string,
+    signal?: AbortSignal
+  ): Promise<OwnedUtxo[]> {
+    const leatherApiUtxos = await this.leatherApiClient.fetchUtxosByAddress(address, { signal });
     return leatherApiUtxos.map(utxo => createOwnedUtxoFromLeather(utxo, fingerprint));
   }
 }

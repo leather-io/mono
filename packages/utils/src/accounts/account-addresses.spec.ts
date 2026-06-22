@@ -17,6 +17,7 @@ describe(createAccountAddresses.name, () => {
     expect(result).toEqual({
       id: mockAccountId,
       bitcoin: {
+        type: 'hd',
         taprootDescriptor: 'tr(xpub123)',
         nativeSegwitDescriptor: 'wpkh(xpub456)',
       },
@@ -47,6 +48,7 @@ describe(hasBitcoinAddress.name, () => {
     const accountWithBitcoinInfo = {
       id: mockId,
       bitcoin: {
+        type: 'hd' as const,
         taprootDescriptor: 'tr(xpub123)',
         nativeSegwitDescriptor: 'wpkh(xpub456)',
       },

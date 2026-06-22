@@ -79,6 +79,7 @@ describe(Sip9sService.name, () => {
       const account: AccountAddresses = {
         id: { fingerprint: 'fp1', accountIndex: 0 },
         bitcoin: {
+          type: 'hd',
           taprootDescriptor: 'desc1',
           nativeSegwitDescriptor: 'native1',
         },
