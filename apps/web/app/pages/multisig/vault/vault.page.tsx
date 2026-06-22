@@ -1,7 +1,12 @@
+import { type ReactNode, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { useSession } from '~/features/multisig/auth/use-session';
+import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
+import { useVaultAccountsBalance } from '~/features/multisig/vaults/use-vault-account-balance';
+import { useVaultAccounts } from '~/features/multisig/vaults/use-vault-accounts';
 import {
   useCancelVault,
   useDeclineVault,
@@ -11,20 +16,51 @@ import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
 import { Page } from '~/layouts/page/page';
 
-import type { AuthNetworkId } from '@leather.io/models';
+import type { AuthNetworkId, Vault } from '@leather.io/models';
 import { Button, Callout } from '@leather.io/ui';
 
+import { Badge } from '../components/badge';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { multisigPaths } from '../multisig.constants';
+import { AccountsSection } from './components/accounts-section';
+import { CancelVaultModal } from './components/cancel-vault-modal';
+import { CreateAccountModal } from './components/create-account-modal';
 import { MembersSection } from './components/members-section';
+import { ShareInvitationsModal } from './components/share-invitations-modal';
+import { VaultBalanceHero } from './components/vault-balance-hero';
 import { VaultStatusCard } from './components/vault-status-card';
 
-function SectionLabel({ children }: { children: string }) {
+function SectionLabel({
+  children,
+  accessory,
+  noGutter,
+}: {
+  children: string;
+  accessory?: ReactNode;
+  noGutter?: boolean;
+}) {
   return (
-    <styled.h3 textStyle="label.02" color="ink.text-subdued" mb="space.03" mt="space.05">
-      {children}
-    </styled.h3>
+    <Flex
+      alignItems="center"
+      justifyContent="space-between"
+      gap="space.03"
+      mb="space.03"
+      mt={noGutter ? undefined : 'space.05'}
+    >
+      <styled.h3 textStyle="label.01" color="ink.text-primary">
+        {children}
+      </styled.h3>
+      {accessory}
+    </Flex>
   );
+}
+
+function accountCreationBlockedReason(vault: Vault): string {
+  if (vault.status === 'cancelled') return 'This vault has been cancelled.';
+  if (vault.members.some(member => member.membershipStatus === 'declined')) {
+    return "A member declined, so this vault can't add accounts. The creator can cancel and start over.";
+  }
+  return 'All members must accept their invitation before accounts can be created.';
 }
 
 function ComingSoon({ children }: { children: string }) {
@@ -48,6 +84,11 @@ export function VaultDetailPage() {
   const { vaultId } = useParams();
   const navigate = useNavigate();
   const { success: showToast } = useToast();
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [isSharingInvites, setIsSharingInvites] = useState(false);
+  const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
 
   const btcVaults = useVaults('btc:mainnet');
   const stxVaults = useVaults('stx:mainnet');
@@ -60,11 +101,18 @@ export function VaultDetailPage() {
   const vault = btcVault.data ?? stxVault.data;
   const network: AuthNetworkId = vault?.network ?? (inStx ? 'stx:mainnet' : 'btc:mainnet');
 
-  const listsResolving = btcVaults.isLoading || stxVaults.isLoading;
-  const detailResolving = vaultNetworkKnown && !(btcVault.isFetched || stxVault.isFetched);
-  const isResolving = listsResolving || detailResolving;
+  const btcSession = useSession('btc:mainnet');
+  const stxSession = useSession('stx:mainnet');
+  const restoringBtc = useIsRestoringSession('btc:mainnet');
+  const restoringStx = useIsRestoringSession('stx:mainnet');
+  const sessionsRestoring = restoringBtc || restoringStx;
+  const listsSettled = (!btcSession || btcVaults.isSuccess) && (!stxSession || stxVaults.isSuccess);
+  const detailResolving = vaultNetworkKnown && !(btcVault.isSuccess || stxVault.isSuccess);
+  const isResolving = !hydrated || sessionsRestoring || !listsSettled || detailResolving;
 
-  const me = useMultisigMe(network);
+  const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
+  const accounts = useVaultAccounts(network, vaultNetworkKnown ? vaultId : undefined);
+  const accountsBalance = useVaultAccountsBalance();
   const cancelVault = useCancelVault(network);
   const joinVault = useJoinVault(network);
   const declineVault = useDeclineVault(network);
@@ -86,14 +134,7 @@ export function VaultDetailPage() {
             ))}
           </Flex>
         ) : (
-          <MultisigErrorState
-            body={
-              <>
-                No vault found for <styled.code>{vaultId}</styled.code> — it may not exist or you
-                may not be a member.
-              </>
-            }
-          />
+          <MultisigErrorState body="No vault found. It may not exist, or you may not be a member." />
         )}
       </Page>
     );
@@ -103,6 +144,13 @@ export function VaultDetailPage() {
   const isInvited = myMembership?.membershipStatus === 'invited';
   const isCreator = vault.createdBy === me.data?.id;
   const canCancel = isCreator && vault.status === 'pending';
+  const allMembersJoined = vault.members.every(member => member.membershipStatus === 'joined');
+  const pendingCount = vault.members.filter(member => member.membershipStatus === 'invited').length;
+  const canCreateAccount = vault.status !== 'cancelled' && allMembersJoined;
+  const vaultDetailsHeading = `${vault.name.charAt(0).toUpperCase()}${vault.name.slice(1)} details`;
+  const nextAccountIndex = accounts.data?.length
+    ? Math.max(...accounts.data.map(account => account.accountIndex)) + 1
+    : 0;
 
   function onCancel() {
     cancelVault.mutate(vault.id, {
@@ -144,29 +192,79 @@ export function VaultDetailPage() {
         </Callout>
       )}
 
-      <Flex direction={['column', 'column', 'row']} gap="space.06" alignItems="flex-start">
+      <Flex
+        direction={['column', 'column', 'row']}
+        gap="space.06"
+        alignItems="flex-start"
+        mt="space.07"
+      >
         <Box flex={['1', '1', '1.6']} width="100%">
-          <SectionLabel>Vault members</SectionLabel>
-          <MembersSection vault={vault} currentUserAddress={me.data?.address} />
+          <VaultBalanceHero
+            vault={vault}
+            crypto={accountsBalance.crypto}
+            fiat={accountsBalance.fiat}
+          />
           <SectionLabel>Vault accounts</SectionLabel>
-          <ComingSoon>
-            Vault accounts will appear here once account creation is available.
-          </ComingSoon>
+          <AccountsSection
+            vault={vault}
+            accounts={accounts.data}
+            isLoading={accounts.isLoading}
+            canCreate={canCreateAccount}
+            disabledReason={accountCreationBlockedReason(vault)}
+            onCreateAccount={() => setIsCreatingAccount(true)}
+            onOpenAccount={accountId => navigate(multisigPaths.account(vault.id, accountId))}
+          />
+          <SectionLabel
+            accessory={
+              pendingCount > 0 ? (
+                <Badge variant="pending" label={`${pendingCount} pending`} />
+              ) : undefined
+            }
+          >
+            Vault members
+          </SectionLabel>
+          <MembersSection
+            vault={vault}
+            currentUserAddress={me.data?.address}
+            onShareInvite={() => setIsSharingInvites(true)}
+          />
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
-          <SectionLabel>Vault details</SectionLabel>
+          <SectionLabel noGutter>{vaultDetailsHeading}</SectionLabel>
           <VaultStatusCard
             vault={vault}
             canCancel={canCancel}
             isCancelling={cancelVault.isPending}
-            onCancelVault={onCancel}
+            pendingCount={pendingCount}
+            onShareInvite={() => setIsSharingInvites(true)}
+            onCancelVault={() => setIsConfirmingCancel(true)}
           />
           <SectionLabel>Transactions</SectionLabel>
-          <ComingSoon>
-            Transactions will appear here once the activity feed is available.
-          </ComingSoon>
+          <ComingSoon>No transactions yet.</ComingSoon>
         </Box>
       </Flex>
+
+      <CreateAccountModal
+        vault={vault}
+        nextIndex={nextAccountIndex}
+        isShowing={isCreatingAccount}
+        onClose={() => setIsCreatingAccount(false)}
+      />
+
+      <ShareInvitationsModal
+        vault={vault}
+        currentUserAddress={me.data?.address}
+        isShowing={isSharingInvites}
+        onClose={() => setIsSharingInvites(false)}
+      />
+
+      <CancelVaultModal
+        vaultName={vault.name}
+        isShowing={isConfirmingCancel}
+        isCancelling={cancelVault.isPending}
+        onConfirm={onCancel}
+        onClose={() => setIsConfirmingCancel(false)}
+      />
     </Page>
   );
 }

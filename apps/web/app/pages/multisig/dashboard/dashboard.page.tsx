@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { useSession } from '~/features/multisig/auth/use-session';
@@ -116,6 +116,25 @@ export function MultisigDashboardPage() {
   const recentTxs = useRecentTransactions(5);
 
   const vaults = [...(btcVaults.data ?? []), ...(stxVaults.data ?? [])];
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const inviteParam = searchParams.get('invite');
+  useEffect(() => {
+    if (!inviteParam) return;
+    const match = [...(btcVaults.data ?? []), ...(stxVaults.data ?? [])].find(
+      summary => summary.id === inviteParam
+    );
+    if (!match) return;
+    setInviteVault(match);
+    setSearchParams(
+      params => {
+        params.delete('invite');
+        return params;
+      },
+      { replace: true }
+    );
+  }, [inviteParam, btcVaults.data, stxVaults.data, setSearchParams]);
+
   const isLoadingVaults = btcVaults.isLoading || stxVaults.isLoading;
   const hasFetchedVaults = btcVaults.isFetched || stxVaults.isFetched;
   const isResolvingVaults = isLoadingVaults || !hasFetchedVaults;
@@ -131,7 +150,12 @@ export function MultisigDashboardPage() {
   return (
     <Page>
       <Page.Header title="Multisig" />
-      <Flex direction={['column', 'column', 'row']} gap="space.06" alignItems="flex-start">
+      <Flex
+        direction={['column', 'column', 'row']}
+        gap="space.06"
+        alignItems="flex-start"
+        mt="space.07"
+      >
         <Box flex={['1', '1', '1.6']} width="100%">
           <SectionLabel>My vaults</SectionLabel>
           <Flex direction="column" gap="space.03">

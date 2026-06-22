@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
 import { AddressDisplayer, CheckmarkIcon, CopyIcon } from '@leather.io/ui';
-
-import { truncateAddress } from './address-text';
+import { truncateMiddle } from '@leather.io/utils';
 
 interface CopyAddressProps {
   addr: string;
   full?: boolean;
   grouped?: boolean;
+  emphasis?: boolean;
 }
 
 const COPIED_RESET_MS = 1400;
@@ -17,18 +17,29 @@ const COPIED_RESET_MS = 1400;
 // Mono-font address with click-to-copy. Uses the Clipboard API directly (a
 // design-only convenience); production extraction routes through the app's
 // clipboard hook.
-export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
+export function CopyAddress({ addr, full, grouped, emphasis }: CopyAddressProps) {
   const [copied, setCopied] = useState(false);
+  const resetTimeout = useRef<ReturnType<typeof setTimeout>>();
   const multiline = grouped || full;
-  function onCopy() {
-    void navigator.clipboard?.writeText(addr);
+  useEffect(() => {
+    return () => {
+      if (resetTimeout.current) clearTimeout(resetTimeout.current);
+    };
+  }, []);
+  async function onCopy() {
+    try {
+      await navigator.clipboard?.writeText(addr);
+    } catch {
+      return;
+    }
     setCopied(true);
-    setTimeout(() => setCopied(false), COPIED_RESET_MS);
+    if (resetTimeout.current) clearTimeout(resetTimeout.current);
+    resetTimeout.current = setTimeout(() => setCopied(false), COPIED_RESET_MS);
   }
   return (
     <styled.button
       type="button"
-      onClick={onCopy}
+      onClick={() => void onCopy()}
       title="Copy address"
       display="inline-flex"
       alignItems={multiline ? 'flex-start' : 'center'}
@@ -36,12 +47,11 @@ export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
       maxWidth="100%"
       textAlign="left"
       cursor="pointer"
-      ml="-space.02"
       px="space.02"
       py="space.01"
       borderRadius="sm"
       bg="transparent"
-      color="ink.text-subdued"
+      color={emphasis ? 'ink.text-primary' : 'ink.text-subdued'}
       transition="background 0.1s ease"
       _hover={{ bg: 'ink.component-background-hover', color: 'ink.text-primary' }}
     >
@@ -50,12 +60,12 @@ export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
       ) : (
         <styled.span
           textStyle="code"
-          overflow="hidden"
-          textOverflow="ellipsis"
+          fontSize={emphasis ? '1rem' : undefined}
+          flexShrink={0}
           whiteSpace={full ? 'normal' : 'nowrap'}
           wordBreak={full ? 'break-all' : 'normal'}
         >
-          {full ? addr : truncateAddress(addr)}
+          {full ? addr : truncateMiddle(addr)}
         </styled.span>
       )}
       <styled.span
@@ -64,7 +74,11 @@ export function CopyAddress({ addr, full, grouped }: CopyAddressProps) {
         alignItems="center"
         mt={multiline ? 'space.01' : '0'}
       >
-        {copied ? <CheckmarkIcon variant="small" /> : <CopyIcon variant="small" />}
+        {copied ? (
+          <CheckmarkIcon variant="small" color="green.text-secondary" />
+        ) : (
+          <CopyIcon variant="small" />
+        )}
       </styled.span>
     </styled.button>
   );

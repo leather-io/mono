@@ -24,6 +24,8 @@ interface RadixDialogProps extends SheetProps {
   onGoBack?(): void;
   wrapChildren?: boolean;
   variant?: SheetVariant;
+  contentMaxVh?: number;
+  maxWidth?: string;
 }
 
 function getHeightOffset(header: ReactNode, footer: ReactNode) {
@@ -32,8 +34,9 @@ function getHeightOffset(header: ReactNode, footer: ReactNode) {
   return headerHeight + footerHeight;
 }
 
-function getContentMaxHeight(maxHeightOffset: number) {
-  const virtualHeight = window.innerWidth <= pxStringToNumber(token('sizes.popupWidth')) ? 100 : 70;
+function getContentMaxHeight(maxHeightOffset: number, overrideVh?: number) {
+  const defaultVh = window.innerWidth <= pxStringToNumber(token('sizes.popupWidth')) ? 100 : 70;
+  const virtualHeight = overrideVh ? Math.max(defaultVh, overrideVh) : defaultVh;
 
   return `calc(${virtualHeight}vh - ${maxHeightOffset}px)`;
 }
@@ -48,9 +51,11 @@ export function Sheet({
   title,
   description,
   variant = 'dialog',
+  contentMaxVh,
+  maxWidth,
 }: RadixDialogProps) {
   const maxHeightOffset = getHeightOffset(header, footer);
-  const contentMaxHeight = getContentMaxHeight(maxHeightOffset);
+  const contentMaxHeight = getContentMaxHeight(maxHeightOffset, contentMaxVh);
   const variantMap: Record<SheetVariant, Parameters<CssFunction>[0]> = {
     dialog: css.raw({
       top: '50%',
@@ -86,6 +91,7 @@ export function Sheet({
           <RadixDialog.Content
             onPointerDownOutside={onClose}
             onEscapeKeyDown={onClose}
+            style={maxWidth ? { width: `min(${maxWidth}, 100vw)`, maxWidth } : undefined}
             className={css({
               display: 'flex',
               flexDirection: 'column',

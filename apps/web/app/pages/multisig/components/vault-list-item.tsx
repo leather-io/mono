@@ -6,11 +6,12 @@ import { ItemLayout } from '@leather.io/ui';
 
 interface VaultListItemProps {
   leading: ReactNode;
-  title: string;
+  title: ReactNode;
   titleAccessory?: ReactNode;
   caption?: ReactNode;
   trailingTitle?: ReactNode;
   trailingSubtitle?: ReactNode;
+  tightLeading?: boolean;
 }
 
 export function VaultListItem({
@@ -20,6 +21,7 @@ export function VaultListItem({
   caption,
   trailingTitle,
   trailingSubtitle,
+  tightLeading,
 }: VaultListItemProps) {
   const titleLeft = titleAccessory ? (
     <HStack gap="space.01" minWidth={0} alignItems="center">
@@ -39,7 +41,7 @@ export function VaultListItem({
   );
 
   return (
-    <Flex alignItems="center" gap="space.04" width="100%">
+    <Flex alignItems="center" gap={tightLeading ? 'space.02' : 'space.04'} width="100%">
       <Box flexShrink={0}>{leading}</Box>
       <Box flex={1} minWidth={0}>
         <ItemLayout
