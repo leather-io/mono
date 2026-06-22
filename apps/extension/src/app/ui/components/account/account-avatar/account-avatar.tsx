@@ -25,7 +25,7 @@ export const AccountAvatar = memo(function AccountAvatar({
 
   return (
     <Box position="relative" width="48px" height="48px" {...props}>
-      <Avatar image={getAvatarUrl(gradient)} size="xl" indicator={indicator} />
+      <Avatar image={getAvatarUrl(gradient)} size="xl" />
       <Box
         position="absolute"
         top={0}
@@ -40,6 +40,7 @@ export const AccountAvatar = memo(function AccountAvatar({
       >
         {text}
       </Box>
+      {indicator}
     </Box>
   );
 });

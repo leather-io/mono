@@ -65,7 +65,11 @@ export function RecipientAccountsSheet() {
                 px="space.05"
                 py="space.03"
               >
-                <AccountListItem accountId={accountId} onClose={onGoBack} />
+                <AccountListItem
+                  accountId={accountId}
+                  walletType={wallet.type}
+                  onClose={onGoBack}
+                />
               </Box>
             );
           }}

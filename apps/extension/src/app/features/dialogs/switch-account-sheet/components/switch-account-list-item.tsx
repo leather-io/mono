@@ -1,6 +1,9 @@
 import { useSelector } from 'react-redux';
 
-import { getSwitchAccountSheetAccountNameSelector } from '@tests/selectors/account.selectors';
+import {
+  AccountSelectors,
+  getSwitchAccountSheetAccountNameSelector,
+} from '@tests/selectors/account.selectors';
 
 import type { AccountId } from '@leather.io/models';
 
@@ -12,8 +15,10 @@ import { AccountTotalBalance } from '@app/components/account-total-balance';
 import { AccountAddresses } from '@app/components/account/account-addresses';
 import { AccountListItemLayout } from '@app/components/account/account-list-item.layout';
 import { AccountNameLayout } from '@app/components/account/account-name';
+import { getLedgerAccountIndicator } from '@app/components/account/ledger-account-indicator';
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { WalletType } from '@app/store/common/wallet-type.selectors';
 import { selectCurrentAccount } from '@app/store/software-keys/software-key.selectors';
 import { useLoading } from '@app/store/ui/ui.hooks';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
@@ -23,12 +28,14 @@ interface SwitchAccountListItemProps {
   nonInteractive?: boolean;
   handleClose(): void;
   hideBalance?: boolean;
+  walletType: WalletType;
 }
 export function SwitchAccountListItem({
   accountId,
   nonInteractive,
   handleClose,
   hideBalance,
+  walletType,
 }: SwitchAccountListItemProps) {
   const stacksAccount = useStacksAccount(accountId);
   const stxAddress = stacksAccount?.address ?? '';
@@ -70,6 +77,7 @@ export function SwitchAccountListItem({
         <AccountAvatarItem
           index={accountId.accountIndex}
           publicKey={stacksAccount?.stxPublicKey || ''}
+          indicator={getLedgerAccountIndicator(walletType, AccountSelectors.LedgerIndicator)}
         />
       }
       balanceLabel={hideBalance ? null : <AccountTotalBalance accountId={accountId} />}

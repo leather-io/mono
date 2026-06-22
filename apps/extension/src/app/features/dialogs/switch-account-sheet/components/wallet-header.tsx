@@ -1,9 +1,9 @@
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
+import { LedgerIcon } from '@leather.io/ui';
 import { noop } from '@leather.io/utils';
 
-import { getLedgerAccountIndicator } from '@app/components/account/ledger-account-indicator';
 import { WalletType } from '@app/store/common/wallet-type.selectors';
 
 import { accountActionMenuTriggerSize } from '../switch-account-sheet.utils';
@@ -50,7 +50,25 @@ export function WalletHeader({
         >
           {name}
         </styled.span>
-        {getLedgerAccountIndicator(walletType, SwitchAccountSelectors.WalletHeaderLedgerIndicator)}
+        {walletType === 'ledger' ? (
+          <styled.span
+            display="inline-flex"
+            alignItems="center"
+            gap="space.01"
+            flexShrink={0}
+            px="space.02"
+            py="2px"
+            borderRadius="round"
+            bg="ink.text-primary"
+            color="ink.background-primary"
+            textStyle="label.03"
+            transform="translateY(-1px)"
+            data-testid={SwitchAccountSelectors.WalletHeaderLedgerIndicator}
+          >
+            <LedgerIcon variant="small" color="ink.background-primary" />
+            Ledger
+          </styled.span>
+        ) : null}
       </Flex>
       {isManageMode ? (
         <WalletActionMenu

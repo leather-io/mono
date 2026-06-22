@@ -1,5 +1,6 @@
 import { memo } from 'react';
 
+import { AccountSelectors } from '@tests/selectors/account.selectors';
 import { useFormikContext } from 'formik';
 
 import type { AccountId } from '@leather.io/models';
@@ -11,16 +12,20 @@ import { AccountTotalBalance } from '@app/components/account-total-balance';
 import { AccountAddresses } from '@app/components/account/account-addresses';
 import { AccountListItemLayout } from '@app/components/account/account-list-item.layout';
 import { AccountNameLayout } from '@app/components/account/account-name';
+import { getLedgerAccountIndicator } from '@app/components/account/ledger-account-indicator';
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { WalletType } from '@app/store/common/wallet-type.selectors';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface AccountListItemProps {
   accountId: AccountId;
+  walletType: WalletType;
   onClose(): void;
 }
 export const AccountListItem = memo(function AccountListItem({
   accountId,
+  walletType,
   onClose,
 }: AccountListItemProps) {
   const { setFieldValue, values } = useFormikContext<
@@ -52,6 +57,7 @@ export const AccountListItem = memo(function AccountListItem({
         <AccountAvatarItem
           index={accountId.accountIndex}
           publicKey={stacksAccount?.stxPublicKey || ''}
+          indicator={getLedgerAccountIndicator(walletType, AccountSelectors.LedgerIndicator)}
         />
       }
       balanceLabel={<AccountTotalBalance accountId={accountId} />}

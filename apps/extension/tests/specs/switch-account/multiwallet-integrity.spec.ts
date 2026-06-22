@@ -329,22 +329,22 @@ test.describe('Multiwallet hardware wallet', () => {
     await expect(page.getByRole('menuitem', { name: 'View Secret Key' })).toHaveCount(0);
   });
 
-  test('that a Ledger wallet is indicated on the home header and wallet header, not per account row', async ({
+  test('that a Ledger wallet shows the Ledger chip on the wallet header and a badge on each account', async ({
     switchAccountPage,
     page,
   }) => {
     test.slow();
     // Flat surface: the active Ledger account's avatar carries the corner badge
-    await expect(page.getByTestId(AccountSelectors.LedgerIndicator)).toBeVisible();
+    await expect(page.getByTestId(AccountSelectors.LedgerIndicator).first()).toBeVisible();
 
     await switchAccountPage.open();
 
-    // Grouped surface: the wallet header carries the marker once
+    // Grouped surface: the wallet header carries the labelled "Ledger" chip
     await expect(
       page.getByTestId(SwitchAccountSelectors.WalletHeaderLedgerIndicator).first()
     ).toBeVisible();
 
-    // Rows stay bare: the only avatar badge in the DOM is the home header's
-    await expect(page.getByTestId(AccountSelectors.LedgerIndicator)).toHaveCount(1);
+    // Each account avatar also carries the badge: home header + the account row
+    await expect(page.getByTestId(AccountSelectors.LedgerIndicator)).toHaveCount(2);
   });
 });
