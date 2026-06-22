@@ -81,6 +81,7 @@ export enum RouteUrls {
 
   // Request routes bitcoin
   RpcGetAddresses = '/get-addresses',
+  RpcBtcAddAccount = '/btc-add-account',
   RpcSignPsbt = '/sign-psbt',
   RpcSignPsbtSummary = '/sign-psbt/summary',
   RpcSendTransfer = '/send-transfer',
@@ -97,6 +98,7 @@ export enum RouteUrls {
   UnauthorizedRequest = '/unauthorized-request',
 
   // Request routes stacks
+  RpcStxAddAccount = '/stx-add-account',
   RpcStxSignTransaction = '/stx-sign-transaction',
   RpcStxCallContract = '/stx-call-contract',
   RpcStxDeployContract = '/stx-deploy-contract',
