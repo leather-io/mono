@@ -9,7 +9,7 @@ const emptyAccountAddresses: AccountAddresses = {
   id: { fingerprint: 'multisig:none', accountIndex: 0 },
 };
 
-export function useMultisigAccountAddresses(
+export function getMultisigAccountAddresses(
   account?: VaultAccount | VaultAccountSummary
 ): AccountAddresses {
   if (!account) return emptyAccountAddresses;
