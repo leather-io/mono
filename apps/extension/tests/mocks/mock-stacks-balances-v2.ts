@@ -1,6 +1,8 @@
 import type { BrowserContext, Page } from '@playwright/test';
 
-import { TEST_ACCOUNT_1_STX_ADDRESS } from './constants';
+import { TEST_ACCOUNT_1_STX_ADDRESS, TEST_TESTNET_ACCOUNT_1_STX_ADDRESS } from './constants';
+
+const fundedStxAddresses = [TEST_ACCOUNT_1_STX_ADDRESS, TEST_TESTNET_ACCOUNT_1_STX_ADDRESS];
 
 const mockedEmptyFtBalancesV2 = {
   limit: 100,
@@ -80,13 +82,14 @@ export async function mockMainnetTestAccountStacksBalancesV2Request(page: Page |
     })
   );
 
-  await page.route('**hiro.so/extended/v2/addresses/**/balances/stx', route =>
-    route.fulfill({
-      json: route.request().url().includes(`/addresses/${TEST_ACCOUNT_1_STX_ADDRESS}/`)
-        ? mockedStxBalanceV2
-        : mockedEmptyStxBalanceV2,
-    })
-  );
+  await page.route('**hiro.so/extended/v2/addresses/**/balances/stx', route => {
+    const isFundedAccount = fundedStxAddresses.some(address =>
+      route.request().url().includes(`/addresses/${address}/`)
+    );
+    return route.fulfill({
+      json: isFundedAccount ? mockedStxBalanceV2 : mockedEmptyStxBalanceV2,
+    });
+  });
 }
 
 export async function mockEmptyStacksBalancesV2Request(page: Page | BrowserContext) {
