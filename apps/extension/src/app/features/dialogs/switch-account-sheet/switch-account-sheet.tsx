@@ -224,7 +224,6 @@ export function SwitchAccountSheet({ isShowing, onClose }: SwitchAccountSheetPro
                     <SwitchAccountListItem
                       handleClose={isManageMode ? noop : onClose}
                       accountId={accountId}
-                      walletType={wallet.type}
                       hideBalance={isManageMode}
                       nonInteractive={isManageMode}
                     />

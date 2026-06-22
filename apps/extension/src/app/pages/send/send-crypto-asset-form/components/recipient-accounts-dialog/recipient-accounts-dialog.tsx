@@ -6,7 +6,6 @@ import { getRecipientSelectAccountTestId } from '@tests/selectors/send.selectors
 import { Box } from 'leather-styles/jsx';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
-import { noop } from '@leather.io/utils';
 
 import { WalletHeader } from '@app/features/dialogs/switch-account-sheet/components/wallet-header';
 import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
@@ -49,15 +48,7 @@ export function RecipientAccountsSheet() {
                 pb="space.03"
                 pt={groupIndex === 0 ? 'space.01' : 'space.05'}
               >
-                <WalletHeader
-                  isManageMode={false}
-                  name={wallet.name}
-                  walletType={wallet.type}
-                  canRemoveWallet={false}
-                  onRename={noop}
-                  onRemove={noop}
-                  onViewSecretKey={noop}
-                />
+                <WalletHeader isManageMode={false} name={wallet.name} walletType={wallet.type} />
               </Box>
             );
           }}
@@ -74,11 +65,7 @@ export function RecipientAccountsSheet() {
                 px="space.05"
                 py="space.03"
               >
-                <AccountListItem
-                  accountId={accountId}
-                  walletType={wallet.type}
-                  onClose={onGoBack}
-                />
+                <AccountListItem accountId={accountId} onClose={onGoBack} />
               </Box>
             );
           }}

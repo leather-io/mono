@@ -6,6 +6,7 @@ import {
   makeLedgerTestAccountWalletState,
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
+import { AccountSelectors } from '@tests/selectors/account.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
@@ -271,6 +272,15 @@ test.describe('Multiwallet integrity', () => {
       .toBe(0);
   });
 
+  test('that a software wallet shows no Ledger indication', async ({ switchAccountPage, page }) => {
+    await expect(page.getByTestId(AccountSelectors.LedgerIndicator)).toHaveCount(0);
+
+    await switchAccountPage.open();
+    await expect(page.getByTestId(SwitchAccountSelectors.WalletHeaderLedgerIndicator)).toHaveCount(
+      0
+    );
+  });
+
   test('that removing a wallet also removes its stx chain state', async ({ switchAccountPage }) => {
     test.slow();
     await switchAccountPage.open();
@@ -317,5 +327,24 @@ test.describe('Multiwallet hardware wallet', () => {
 
     await expect(page.getByRole('menuitem', { name: 'Rename' })).toBeVisible();
     await expect(page.getByRole('menuitem', { name: 'View Secret Key' })).toHaveCount(0);
+  });
+
+  test('that a Ledger wallet is indicated on the home header and wallet header, not per account row', async ({
+    switchAccountPage,
+    page,
+  }) => {
+    test.slow();
+    // Flat surface: the active Ledger account's avatar carries the corner badge
+    await expect(page.getByTestId(AccountSelectors.LedgerIndicator)).toBeVisible();
+
+    await switchAccountPage.open();
+
+    // Grouped surface: the wallet header carries the marker once
+    await expect(
+      page.getByTestId(SwitchAccountSelectors.WalletHeaderLedgerIndicator).first()
+    ).toBeVisible();
+
+    // Rows stay bare: the only avatar badge in the DOM is the home header's
+    await expect(page.getByTestId(AccountSelectors.LedgerIndicator)).toHaveCount(1);
   });
 });

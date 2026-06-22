@@ -13,17 +13,14 @@ import { AccountListItemLayout } from '@app/components/account/account-list-item
 import { AccountNameLayout } from '@app/components/account/account-name';
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { WalletType } from '@app/store/common/wallet-type.selectors';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface AccountListItemProps {
   accountId: AccountId;
-  walletType: WalletType;
   onClose(): void;
 }
 export const AccountListItem = memo(function AccountListItem({
   accountId,
-  walletType,
   onClose,
 }: AccountListItemProps) {
   const { setFieldValue, values } = useFormikContext<
@@ -61,7 +58,6 @@ export const AccountListItem = memo(function AccountListItem({
       isSelected={false}
       isLoading={false}
       onSelectAccount={onSelectAccount}
-      walletType={walletType}
     />
   );
 });
