@@ -49,4 +49,5 @@ export const leatherApiPriorities = {
   sip10Distribution: leatherPriorityLevels.MEDIUM,
   protocols: leatherPriorityLevels.MEDIUM,
   protocolContracts: leatherPriorityLevels.LOW,
+  proposeMultisigTransaction: leatherPriorityLevels.HIGH,
 };

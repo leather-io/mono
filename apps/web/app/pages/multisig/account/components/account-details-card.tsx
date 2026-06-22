@@ -1,21 +1,26 @@
+import type { ReactNode } from 'react';
+
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { Button, CheckmarkIcon } from '@leather.io/ui';
+import type { Vault, VaultAccount } from '@leather.io/models';
+import { Button, PlusIcon } from '@leather.io/ui';
+import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
 import { AvatarSq } from '../../components/avatar-sq';
 import { CopyAddress } from '../../components/copy-address';
 import { VaultListItem } from '../../components/vault-list-item';
-import type { MultisigAccount, Vault } from '../../data/multisig-types';
+import { vaultThemeFromName } from '../../multisig-tokens';
+import { chainFromNetwork } from '../../multisig.utils';
 
 interface AccountDetailsCardProps {
   vault: Vault;
-  account: MultisigAccount;
-  added: boolean;
+  account: VaultAccount;
+  currentUserAddress?: string;
   onAddToWallet(): void;
 }
 
-function CardRow({ children }: { children: React.ReactNode }) {
+function CardRow({ children }: { children: ReactNode }) {
   return (
     <Box
       p="space.04"
@@ -31,9 +36,14 @@ function CardRow({ children }: { children: React.ReactNode }) {
 export function AccountDetailsCard({
   vault,
   account,
-  added,
+  currentUserAddress,
   onAddToWallet,
 }: AccountDetailsCardProps) {
+  const theme = vaultThemeFromName(vault.theme);
+  const chain = chainFromNetwork(vault.network);
+  const chainLabel = chain === 'btc' ? 'Bitcoin' : 'Stacks';
+  const signerCount = account.signers.length;
+
   return (
     <Box
       borderRadius="md"
@@ -46,15 +56,14 @@ export function AccountDetailsCard({
         <VaultListItem
           leading={
             <AvatarSq
-              chain={vault.chain}
-              icon={account.icon}
-              themeId={vault.theme}
+              chain={chain}
+              icon={account.icon ?? 'piggybank'}
+              themeId={theme.id}
               size="md"
-              withChainBadge={false}
             />
           }
           title={account.name}
-          caption={`${vault.chain === 'btc' ? 'Bitcoin' : 'Stacks'} vault account`}
+          caption={`${chainLabel} Vault Account`}
         />
       </Box>
 
@@ -62,51 +71,47 @@ export function AccountDetailsCard({
         <styled.div textStyle="label.02" mb="space.02">
           Address
         </styled.div>
-        <CopyAddress addr={account.addr} grouped />
+        <CopyAddress addr={account.multisigAddress} grouped />
       </CardRow>
 
       <CardRow>
-        <Flex justifyContent="space-between" alignItems="center">
+        <Flex justifyContent="space-between" alignItems="center" gap="space.02">
           <styled.span textStyle="label.02">Threshold</styled.span>
           <styled.span textStyle="caption.01" color="ink.text-subdued">
-            {account.threshold[0]} of {account.threshold[1]}
+            {account.threshold} of {signerCount}
           </styled.span>
         </Flex>
         <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
-          Any {account.threshold[0]} of {account.threshold[1]} members can approve transactions on
-          this account.
+          Any {account.threshold} of {signerCount} members can approve transactions on this account.
         </styled.div>
       </CardRow>
 
       <CardRow>
-        <styled.div textStyle="label.02" mb="space.02">
+        <styled.div textStyle="label.02" mb="space.03">
           Signers
         </styled.div>
         <Flex gap="space.04" flexWrap="wrap">
-          {vault.members.map(member => (
-            <Flex key={member.addr} alignItems="center" gap="space.01" textStyle="caption.01">
-              <AvatarCircle name={member.name} size="xs" />
-              {member.name}
-            </Flex>
-          ))}
+          {account.signers.map(signer => {
+            const isMe = signer.address === currentUserAddress;
+            const member = vault.members.find(item => item.address === signer.address);
+            const name = isMe ? 'Me' : member?.name || truncateMiddle(signer.address);
+            return (
+              <Flex key={signer.id} alignItems="center" gap="space.02">
+                <AvatarCircle name={name} size="sm" />
+                <styled.span textStyle="label.03">{name}</styled.span>
+              </Flex>
+            );
+          })}
         </Flex>
       </CardRow>
 
       <CardRow>
-        {added ? (
-          <Button
-            variant="outline"
-            fullWidth
-            disabled
-            iconStart={<CheckmarkIcon variant="small" />}
-          >
-            Added to your wallet
-          </Button>
-        ) : (
-          <Button variant="solid" fullWidth onClick={onAddToWallet}>
+        <Button variant="solid" fullWidth onClick={onAddToWallet}>
+          <Flex alignItems="center" gap="space.02">
+            <PlusIcon variant="small" color="ink.background-primary" />
             Add to wallet
-          </Button>
-        )}
+          </Flex>
+        </Button>
       </CardRow>
     </Box>
   );

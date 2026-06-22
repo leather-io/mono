@@ -1,135 +1,143 @@
-import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 
-import { Box, Circle, Flex, styled } from 'leather-styles/jsx';
-import { useToast } from '~/features/toasts/use-toast';
+import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Balance } from '~/components/balance/balance';
+import { useSession } from '~/features/multisig/auth/use-session';
+import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
+import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
+import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
+import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
+import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { Page } from '~/layouts/page/page';
+import { formatCurrency } from '~/utils/currency-formatter';
 
-import { PlusIcon } from '@leather.io/ui';
+import type { AuthNetworkId } from '@leather.io/models';
 
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
-import { TxRow } from '../components/tx-row';
-import { VaultListItem } from '../components/vault-list-item';
-import { SendModal } from '../modals/send-modal';
+import { vaultThemeFromName } from '../multisig-tokens';
 import { multisigPaths } from '../multisig.constants';
-import { useVaultAccount } from '../store/use-multisig';
 import { AccountDetailsCard } from './components/account-details-card';
 
-function SectionLabel({ children }: { children: string }) {
+function SectionLabel({ children, noGutter }: { children: string; noGutter?: boolean }) {
   return (
-    <styled.h3 textStyle="label.02" color="ink.text-subdued" mb="space.03" mt="space.05">
+    <styled.h3
+      textStyle="label.01"
+      color="ink.text-primary"
+      mb="space.03"
+      mt={noGutter ? undefined : 'space.05'}
+    >
       {children}
     </styled.h3>
   );
 }
 
-function formatUsd(amount: number): string {
-  return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+function ComingSoon({ children }: { children: string }) {
+  return (
+    <Box
+      borderRadius="md"
+      borderWidth="1px"
+      borderStyle="dashed"
+      borderColor="ink.border-default"
+      p="space.05"
+      textAlign="center"
+    >
+      <styled.span textStyle="caption.01" color="ink.text-subdued">
+        {children}
+      </styled.span>
+    </Box>
+  );
 }
 
 export function AccountDetailPage() {
   const { vaultId, accountId } = useParams();
-  const { vault, account } = useVaultAccount(vaultId, accountId);
-  const navigate = useNavigate();
-  const { success: showToast } = useToast();
-  const [sendOpen, setSendOpen] = useState(false);
-  const [added, setAdded] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
 
-  if (!vault || !account) {
+  const btcVaults = useVaults('btc:mainnet');
+  const stxVaults = useVaults('stx:mainnet');
+  const inBtc = btcVaults.data?.some(summary => summary.id === vaultId) ?? false;
+  const inStx = stxVaults.data?.some(summary => summary.id === vaultId) ?? false;
+  const vaultNetworkKnown = inBtc || inStx;
+  const network: AuthNetworkId = inStx ? 'stx:mainnet' : 'btc:mainnet';
+
+  const vault = useVault(network, vaultNetworkKnown ? vaultId : undefined);
+  const account = useVaultAccount(network, vaultNetworkKnown ? accountId : undefined);
+  const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
+  const accountBalance = useVaultAccountBalance();
+
+  const btcSession = useSession('btc:mainnet');
+  const stxSession = useSession('stx:mainnet');
+  const restoringBtc = useIsRestoringSession('btc:mainnet');
+  const restoringStx = useIsRestoringSession('stx:mainnet');
+  const sessionsRestoring = restoringBtc || restoringStx;
+  const listsSettled = (!btcSession || btcVaults.isSuccess) && (!stxSession || stxVaults.isSuccess);
+  const detailResolving = vaultNetworkKnown && !(vault.isSuccess && account.isSuccess);
+  const isResolving = !hydrated || sessionsRestoring || !listsSettled || detailResolving;
+
+  if (!vault.data || !account.data) {
     return (
       <Page>
         <Page.Header
-          title="Account"
-          backTo={vault ? multisigPaths.vault(vault.id) : multisigPaths.index}
+          title="Vault account"
+          backTo={vaultId ? multisigPaths.vault(vaultId) : multisigPaths.index}
         />
-        <MultisigErrorState body="This account isn't part of the current session." />
+        {isResolving ? (
+          <Flex direction="column" gap="space.03" mt="space.05">
+            {[0, 1, 2].map(index => (
+              <Box
+                key={index}
+                height="64px"
+                borderRadius="md"
+                bg="ink.component-background-default"
+                opacity={0.6}
+              />
+            ))}
+          </Flex>
+        ) : (
+          <MultisigErrorState body="No account found. It may not exist, or you may not be a member." />
+        )}
       </Page>
     );
   }
 
-  const txs = vault.transactions.filter(tx => tx.accountId === account.id);
+  const theme = vaultThemeFromName(vault.data.theme);
 
   function onAddToWallet() {
-    setAdded(true);
-    showToast('Account added to your wallet');
+    // TODO: add this multisig account to the extension wallet
   }
 
   return (
     <Page>
-      <Page.Header title={account.name} backTo={multisigPaths.vault(vault.id)} />
-      <Flex direction={['column', 'column', 'row']} gap="space.06" alignItems="flex-start">
+      <Page.Header title="Vault account" backTo={multisigPaths.vault(vault.data.id)} />
+      <Flex
+        direction={['column', 'column', 'row']}
+        gap="space.06"
+        alignItems="flex-start"
+        mt="space.07"
+      >
         <Box flex={['1', '1', '1.6']} width="100%">
           <MultisigHero
-            themeId={vault.theme}
-            primary={account.balanceSub}
-            secondary={formatUsd(account.balanceUsd)}
+            themeId={theme.id}
+            primary={<Balance balance={accountBalance.crypto} formatCurrency={formatCurrency} />}
+            secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
           />
           <SectionLabel>Transactions</SectionLabel>
-          <Box
-            borderRadius="md"
-            borderWidth="1px"
-            borderStyle="solid"
-            borderColor="ink.border-default"
-            p="space.02"
-          >
-            <styled.button
-              type="button"
-              onClick={() => setSendOpen(true)}
-              display="block"
-              width="100%"
-              textAlign="left"
-              cursor="pointer"
-              px="space.03"
-              py="space.03"
-              borderRadius="sm"
-              bg="transparent"
-              _hover={{ bg: 'ink.component-background-hover' }}
-            >
-              <VaultListItem
-                leading={
-                  <Circle size="40px" bg="ink.background-secondary">
-                    <PlusIcon variant="small" />
-                  </Circle>
-                }
-                title="Create transaction"
-                caption={`Propose a new ${vault.chain === 'btc' ? 'BTC' : 'STX'} transfer for this account`}
-              />
-            </styled.button>
-            {txs.map(tx => (
-              <TxRow
-                key={tx.id}
-                tx={tx}
-                vault={vault}
-                onClick={() => navigate(multisigPaths.tx(vault.id, tx.id))}
-              />
-            ))}
-            {txs.length === 0 && (
-              <styled.div
-                textStyle="caption.01"
-                color="ink.text-subdued"
-                textAlign="center"
-                py="space.05"
-              >
-                No transactions in this account yet.
-              </styled.div>
-            )}
-          </Box>
+          <ComingSoon>
+            Transactions will appear here once the activity feed is available.
+          </ComingSoon>
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
-          <SectionLabel>Account details</SectionLabel>
+          <SectionLabel noGutter>Account details</SectionLabel>
           <AccountDetailsCard
-            vault={vault}
-            account={account}
-            added={added}
+            vault={vault.data}
+            account={account.data}
+            currentUserAddress={me.data?.address}
             onAddToWallet={onAddToWallet}
           />
         </Box>
       </Flex>
-
-      {sendOpen && (
-        <SendModal vault={vault} account={account} isShowing onClose={() => setSendOpen(false)} />
-      )}
     </Page>
   );
 }

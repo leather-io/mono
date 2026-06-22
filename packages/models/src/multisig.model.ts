@@ -91,3 +91,56 @@ export interface VaultAccount extends VaultAccountBase {
   readonly pendingTransactionCount: number;
   readonly queuedTransactionCount: number;
 }
+
+export const multisigTransactionStatuses = [
+  'queued',
+  'pending',
+  'signed',
+  'broadcast',
+  'confirmed',
+  'failed',
+  'dropped',
+  'cancelled',
+] as const;
+export type MultisigTransactionStatus = (typeof multisigTransactionStatuses)[number];
+
+export interface MultisigTransactionSignature {
+  readonly userId: string;
+  readonly signerIndex: number;
+  readonly signature: string;
+  readonly inputIndex: number | null;
+  readonly createdAt: string;
+}
+
+export interface MultisigTransactionSummary {
+  readonly id: string;
+  readonly vaultAccountId: string;
+  readonly network: AuthNetworkId;
+  readonly proposerUserId: string;
+  readonly proposalTimestamp: number;
+  readonly nonce: number | null;
+  readonly txId: string | null;
+  readonly status: MultisigTransactionStatus;
+  readonly broadcastAt: string | null;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+  readonly approvalCount: number;
+}
+
+export interface MultisigTransaction {
+  readonly id: string;
+  readonly vaultAccountId: string;
+  readonly network: AuthNetworkId;
+  readonly proposerUserId: string;
+  readonly proposalRawPayload: string;
+  readonly proposalSignature: string;
+  readonly proposalTimestamp: number;
+  readonly proposalHash: string;
+  readonly nonce: number | null;
+  readonly txId: string | null;
+  readonly status: MultisigTransactionStatus;
+  readonly signatures: readonly MultisigTransactionSignature[];
+  readonly broadcastAt: string | null;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+}

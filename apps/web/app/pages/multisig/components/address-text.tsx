@@ -1,6 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 
-export function truncateAddress(addr: string): string {
+function truncateAddress(addr: string): string {
   return addr.length > 18 ? `${addr.slice(0, 9)}…${addr.slice(-7)}` : addr;
 }
 

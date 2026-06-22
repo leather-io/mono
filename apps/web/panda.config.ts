@@ -9,7 +9,10 @@ export default defineConfig({
 
   include: ['./app/**/*.{ts,tsx}', './node_modules/@leather.io/ui/dist-web/**/*.{js,jsx,ts,tsx}'],
 
-  globalCss: globalLoaderCss,
+  globalCss: {
+    ...globalLoaderCss,
+    'button:not(:disabled)': { cursor: 'pointer' },
+  },
 
   presets: ['@leather.io/panda-preset/config'],
 

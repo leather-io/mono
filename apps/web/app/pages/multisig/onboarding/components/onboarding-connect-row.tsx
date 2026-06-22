@@ -61,7 +61,7 @@ export function OnboardingConnectRow({
           )
         }
       />
-      {error && (
+      {error?.message?.trim() && (
         <styled.div textStyle="caption.01" color="red.action-primary-default" mt="space.03">
           {error.message}
         </styled.div>

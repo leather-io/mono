@@ -9,7 +9,7 @@ export function Header({ children, ...props }: HasChildren & BoxProps) {
       margin={{ base: 0, md: 'auto' }}
       p="space.04"
       bg="transparent"
-      maxWidth={{ base: '100vw', md: 'fullPageMaxWidth' }}
+      maxWidth={{ base: '100%', md: 'fullPageMaxWidth' }}
       width="100%"
       {...props}
     >
