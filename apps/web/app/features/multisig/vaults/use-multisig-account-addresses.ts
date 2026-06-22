@@ -18,10 +18,16 @@ export function useMultisigAccountAddresses(
     fingerprint: account.id,
     accountIndex: account.accountIndex,
   };
+  const signerCount = 'signers' in account ? account.signers.length : account.signerCount;
   return account.network.startsWith('btc')
     ? {
         id,
-        bitcoin: { type: 'fixedAddress', address: account.multisigAddress, paymentType: 'p2wsh' },
+        bitcoin: {
+          type: 'fixedAddress',
+          address: account.multisigAddress,
+          paymentType: 'p2wsh',
+          multisig: { threshold: account.threshold, signerCount },
+        },
       }
     : {
         id,
