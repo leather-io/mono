@@ -1,0 +1,635 @@
+diff --git a/dist/constants.d.ts b/dist/constants.d.ts
+index de23b4ea4d241f34658333706a7dd2442acfa9ca..ff4a4bac5133055bd24b8ad83354489bf87dbf07 100644
+--- a/dist/constants.d.ts
++++ b/dist/constants.d.ts
+@@ -25,7 +25,8 @@ export declare enum ClarityVersion {
+     Clarity2 = 2,
+     Clarity3 = 3,
+     Clarity4 = 4,
+-    Clarity5 = 5
++    Clarity5 = 5,
++    Clarity6 = 6
+ }
+ export declare enum AnchorMode {
+     OnChainOnly = 1,
+@@ -43,7 +44,9 @@ export declare enum PostConditionMode {
+ export declare enum PostConditionType {
+     STX = 0,
+     Fungible = 1,
+-    NonFungible = 2
++    NonFungible = 2,
++    Staking = 3,
++    PoX = 4
+ }
+ export declare enum AuthType {
+     Standard = 4,
+@@ -76,6 +79,11 @@ export declare enum NonFungibleConditionCode {
+     DoesNotSend = 17,
+     MaybeSent = 18
+ }
++export declare enum PoxConditionCode {
++    WillNotPerform = 48,
++    MayPerform = 49,
++    WillPerform = 50
++}
+ export declare enum PostConditionPrincipalId {
+     Origin = 1,
+     Standard = 2,
+diff --git a/dist/constants.js b/dist/constants.js
+index ed99daefe4668b1cc19e743822bf399615f69883..05b22c640fc8329e93a91c5b2fbbe2716fcddd81 100644
+--- a/dist/constants.js
++++ b/dist/constants.js
+@@ -38,6 +38,7 @@ var ClarityVersion;
+     ClarityVersion[ClarityVersion["Clarity3"] = 3] = "Clarity3";
+     ClarityVersion[ClarityVersion["Clarity4"] = 4] = "Clarity4";
+     ClarityVersion[ClarityVersion["Clarity5"] = 5] = "Clarity5";
++    ClarityVersion[ClarityVersion["Clarity6"] = 6] = "Clarity6";
+ })(ClarityVersion || (exports.ClarityVersion = ClarityVersion = {}));
+ var AnchorMode;
+ (function (AnchorMode) {
+@@ -71,6 +72,8 @@ var PostConditionType;
+     PostConditionType[PostConditionType["STX"] = 0] = "STX";
+     PostConditionType[PostConditionType["Fungible"] = 1] = "Fungible";
+     PostConditionType[PostConditionType["NonFungible"] = 2] = "NonFungible";
++    PostConditionType[PostConditionType["Staking"] = 3] = "Staking";
++    PostConditionType[PostConditionType["PoX"] = 4] = "PoX";
+ })(PostConditionType || (exports.PostConditionType = PostConditionType = {}));
+ var AuthType;
+ (function (AuthType) {
+@@ -107,6 +110,12 @@ var NonFungibleConditionCode;
+     NonFungibleConditionCode[NonFungibleConditionCode["DoesNotSend"] = 17] = "DoesNotSend";
+     NonFungibleConditionCode[NonFungibleConditionCode["MaybeSent"] = 18] = "MaybeSent";
+ })(NonFungibleConditionCode || (exports.NonFungibleConditionCode = NonFungibleConditionCode = {}));
++var PoxConditionCode;
++(function (PoxConditionCode) {
++    PoxConditionCode[PoxConditionCode["WillNotPerform"] = 48] = "WillNotPerform";
++    PoxConditionCode[PoxConditionCode["MayPerform"] = 49] = "MayPerform";
++    PoxConditionCode[PoxConditionCode["WillPerform"] = 50] = "WillPerform";
++})(PoxConditionCode || (exports.PoxConditionCode = PoxConditionCode = {}));
+ var PostConditionPrincipalId;
+ (function (PostConditionPrincipalId) {
+     PostConditionPrincipalId[PostConditionPrincipalId["Origin"] = 1] = "Origin";
+diff --git a/dist/esm/constants.d.ts b/dist/esm/constants.d.ts
+index de23b4ea4d241f34658333706a7dd2442acfa9ca..ff4a4bac5133055bd24b8ad83354489bf87dbf07 100644
+--- a/dist/esm/constants.d.ts
++++ b/dist/esm/constants.d.ts
+@@ -25,7 +25,8 @@ export declare enum ClarityVersion {
+     Clarity2 = 2,
+     Clarity3 = 3,
+     Clarity4 = 4,
+-    Clarity5 = 5
++    Clarity5 = 5,
++    Clarity6 = 6
+ }
+ export declare enum AnchorMode {
+     OnChainOnly = 1,
+@@ -43,7 +44,9 @@ export declare enum PostConditionMode {
+ export declare enum PostConditionType {
+     STX = 0,
+     Fungible = 1,
+-    NonFungible = 2
++    NonFungible = 2,
++    Staking = 3,
++    PoX = 4
+ }
+ export declare enum AuthType {
+     Standard = 4,
+@@ -76,6 +79,11 @@ export declare enum NonFungibleConditionCode {
+     DoesNotSend = 17,
+     MaybeSent = 18
+ }
++export declare enum PoxConditionCode {
++    WillNotPerform = 48,
++    MayPerform = 49,
++    WillPerform = 50
++}
+ export declare enum PostConditionPrincipalId {
+     Origin = 1,
+     Standard = 2,
+diff --git a/dist/esm/constants.js b/dist/esm/constants.js
+index 2c7a7875ecc4ac6485d29b179a29a9beb676f7b2..f6632edb64a2379eee46c1ee0f8917b910a83667 100644
+--- a/dist/esm/constants.js
++++ b/dist/esm/constants.js
+@@ -35,6 +35,7 @@ export var ClarityVersion;
+     ClarityVersion[ClarityVersion["Clarity3"] = 3] = "Clarity3";
+     ClarityVersion[ClarityVersion["Clarity4"] = 4] = "Clarity4";
+     ClarityVersion[ClarityVersion["Clarity5"] = 5] = "Clarity5";
++    ClarityVersion[ClarityVersion["Clarity6"] = 6] = "Clarity6";
+ })(ClarityVersion || (ClarityVersion = {}));
+ export var AnchorMode;
+ (function (AnchorMode) {
+@@ -67,6 +68,8 @@ export var PostConditionType;
+     PostConditionType[PostConditionType["STX"] = 0] = "STX";
+     PostConditionType[PostConditionType["Fungible"] = 1] = "Fungible";
+     PostConditionType[PostConditionType["NonFungible"] = 2] = "NonFungible";
++    PostConditionType[PostConditionType["Staking"] = 3] = "Staking";
++    PostConditionType[PostConditionType["PoX"] = 4] = "PoX";
+ })(PostConditionType || (PostConditionType = {}));
+ export var AuthType;
+ (function (AuthType) {
+@@ -102,6 +105,12 @@ export var NonFungibleConditionCode;
+     NonFungibleConditionCode[NonFungibleConditionCode["DoesNotSend"] = 17] = "DoesNotSend";
+     NonFungibleConditionCode[NonFungibleConditionCode["MaybeSent"] = 18] = "MaybeSent";
+ })(NonFungibleConditionCode || (NonFungibleConditionCode = {}));
++export var PoxConditionCode;
++(function (PoxConditionCode) {
++    PoxConditionCode[PoxConditionCode["WillNotPerform"] = 48] = "WillNotPerform";
++    PoxConditionCode[PoxConditionCode["MayPerform"] = 49] = "MayPerform";
++    PoxConditionCode[PoxConditionCode["WillPerform"] = 50] = "WillPerform";
++})(PoxConditionCode || (PoxConditionCode = {}));
+ export var PostConditionPrincipalId;
+ (function (PostConditionPrincipalId) {
+     PostConditionPrincipalId[PostConditionPrincipalId["Origin"] = 1] = "Origin";
+diff --git a/dist/esm/pc.d.ts b/dist/esm/pc.d.ts
+index b0c68b3621d8c9e28c43ece1ffbab0ebc2b2e861..a60cd0bd7b42bddd7e8ceb8139e781b477fb4a37 100644
+--- a/dist/esm/pc.d.ts
++++ b/dist/esm/pc.d.ts
+@@ -1,6 +1,6 @@
+ import { IntegerType } from '@stacks/common';
+ import { ClarityValue } from './clarity';
+-import { FungibleComparator, FungiblePostCondition, NonFungibleComparator, NonFungiblePostCondition, PostCondition, StxPostCondition } from './postcondition-types';
++import { FungibleComparator, FungiblePostCondition, NonFungibleComparator, NonFungiblePostCondition, PostCondition, PoxPostCondition, StakingPostCondition, StxPostCondition } from './postcondition-types';
+ import { AddressString, AssetString, ContractIdString } from './types';
+ export declare function principal(principal: AddressString | ContractIdString): PartialPcWithPrincipal;
+ export declare function origin(): PartialPcWithPrincipal;
+@@ -15,6 +15,9 @@ declare class PartialPcWithPrincipal {
+     willSendAsset(): PartialPcNftWithCode;
+     willNotSendAsset(): PartialPcNftWithCode;
+     willMaybeSendAsset(): PartialPcNftWithCode;
++    willPerformPox(): PoxPostCondition;
++    willNotPerformPox(): PoxPostCondition;
++    mayPerformPox(): PoxPostCondition;
+ }
+ declare class PartialPcFtWithCode {
+     private address;
+@@ -23,6 +26,7 @@ declare class PartialPcFtWithCode {
+     constructor(address: string, amount: IntegerType, code: FungibleComparator);
+     ustx(): StxPostCondition;
+     ft(contractId: ContractIdString, tokenName: string): FungiblePostCondition;
++    ustxToLock(): StakingPostCondition;
+ }
+ declare class PartialPcNftWithCode {
+     private address;
+diff --git a/dist/esm/pc.js b/dist/esm/pc.js
+index b3257e81008891cbee984d6fda8f382062687e84..87e67f75016c725e6ddb383c7607d8838c6b721b 100644
+--- a/dist/esm/pc.js
++++ b/dist/esm/pc.js
+@@ -39,6 +39,15 @@ class PartialPcWithPrincipal {
+     willMaybeSendAsset() {
+         return new PartialPcNftWithCode(this.address, 'maybe-sent');
+     }
++    willPerformPox() {
++        return { type: 'pox-postcondition', address: this.address, condition: 'will-perform' };
++    }
++    willNotPerformPox() {
++        return { type: 'pox-postcondition', address: this.address, condition: 'will-not-perform' };
++    }
++    mayPerformPox() {
++        return { type: 'pox-postcondition', address: this.address, condition: 'may-perform' };
++    }
+ }
+ class PartialPcFtWithCode {
+     constructor(address, amount, code) {
+@@ -67,6 +76,14 @@ class PartialPcFtWithCode {
+             asset: `${contractId}::${tokenName}`,
+         };
+     }
++    ustxToLock() {
++        return {
++            type: 'staking-postcondition',
++            address: this.address,
++            condition: this.code,
++            amount: parsePostConditionAmount(this.amount).toString(),
++        };
++    }
+ }
+ class PartialPcNftWithCode {
+     constructor(address, code) {
+diff --git a/dist/esm/postcondition-types.d.ts b/dist/esm/postcondition-types.d.ts
+index 352292770ccebdc69e7377435e12cbbde77b0c85..2998d48a333f6ff833b52ecaf35e3e46e8836c94 100644
+--- a/dist/esm/postcondition-types.d.ts
++++ b/dist/esm/postcondition-types.d.ts
+@@ -22,5 +22,17 @@ export type NonFungiblePostCondition = {
+     asset: AssetString;
+     assetId: ClarityValue;
+ };
+-export type PostCondition = StxPostCondition | FungiblePostCondition | NonFungiblePostCondition;
++export interface StakingPostCondition {
++    type: 'staking-postcondition';
++    address: string;
++    condition: `${FungibleComparator}`;
++    amount: string | bigint | number;
++}
++export type PoxComparator = 'will-not-perform' | 'may-perform' | 'will-perform';
++export interface PoxPostCondition {
++    type: 'pox-postcondition';
++    address: string;
++    condition: `${PoxComparator}`;
++}
++export type PostCondition = StxPostCondition | FungiblePostCondition | NonFungiblePostCondition | StakingPostCondition | PoxPostCondition;
+ export type PostConditionModeName = 'allow' | 'deny' | 'originator';
+diff --git a/dist/esm/postcondition.js b/dist/esm/postcondition.js
+index 7b326c60a9763a9ad563931c0c884ff1657238c9..8e6439e7f9a29521c22fe8c3ba7e46c7927b3b48 100644
+--- a/dist/esm/postcondition.js
++++ b/dist/esm/postcondition.js
+@@ -20,6 +20,12 @@ var PostConditionCodeWireType;
+     PostConditionCodeWireType[PostConditionCodeWireType["not-sent"] = 17] = "not-sent";
+     PostConditionCodeWireType[PostConditionCodeWireType["maybe-sent"] = 18] = "maybe-sent";
+ })(PostConditionCodeWireType || (PostConditionCodeWireType = {}));
++var PoxConditionCodeWireType;
++(function (PoxConditionCodeWireType) {
++    PoxConditionCodeWireType[PoxConditionCodeWireType["will-not-perform"] = 48] = "will-not-perform";
++    PoxConditionCodeWireType[PoxConditionCodeWireType["may-perform"] = 49] = "may-perform";
++    PoxConditionCodeWireType[PoxConditionCodeWireType["will-perform"] = 50] = "will-perform";
++})(PoxConditionCodeWireType || (PoxConditionCodeWireType = {}));
+ export function postConditionToWire(postcondition) {
+     switch (postcondition.type) {
+         case 'stx-postcondition':
+@@ -54,6 +60,25 @@ export function postConditionToWire(postcondition) {
+                 asset: parseAssetString(postcondition.asset),
+                 assetName: postcondition.assetId,
+             };
++        case 'staking-postcondition':
++            return {
++                type: StacksWireType.PostCondition,
++                conditionType: PostConditionType.Staking,
++                principal: postcondition.address === 'origin'
++                    ? { type: StacksWireType.Principal, prefix: PostConditionPrincipalId.Origin }
++                    : parsePrincipalString(postcondition.address),
++                conditionCode: conditionTypeToByte(postcondition.condition),
++                amount: parsePostConditionAmount(postcondition.amount),
++            };
++        case 'pox-postcondition':
++            return {
++                type: StacksWireType.PostCondition,
++                conditionType: PostConditionType.PoX,
++                principal: postcondition.address === 'origin'
++                    ? { type: StacksWireType.Principal, prefix: PostConditionPrincipalId.Origin }
++                    : parsePrincipalString(postcondition.address),
++                conditionCode: poxConditionTypeToByte(postcondition.condition),
++            };
+         default:
+             throw new Error('Invalid post condition type');
+     }
+@@ -83,6 +108,19 @@ export function wireToPostCondition(wire) {
+                 asset: assetWireToString(wire.asset),
+                 assetId: wire.assetName,
+             };
++        case PostConditionType.Staking:
++            return {
++                type: 'staking-postcondition',
++                address: principalWireToString(wire.principal),
++                condition: conditionByteToType(wire.conditionCode),
++                amount: wire.amount.toString(),
++            };
++        case PostConditionType.PoX:
++            return {
++                type: 'pox-postcondition',
++                address: principalWireToString(wire.principal),
++                condition: poxConditionByteToType(wire.conditionCode),
++            };
+         default: {
+             const _exhaustiveCheck = wire;
+             throw new Error(`Invalid post condition type: ${_exhaustiveCheck}`);
+@@ -95,6 +133,12 @@ export function conditionTypeToByte(condition) {
+ export function conditionByteToType(wireType) {
+     return PostConditionCodeWireType[wireType];
+ }
++function poxConditionTypeToByte(condition) {
++    return PoxConditionCodeWireType[condition];
++}
++function poxConditionByteToType(wireType) {
++    return PoxConditionCodeWireType[wireType];
++}
+ export function postConditionToHex(postcondition) {
+     const wire = postConditionToWire(postcondition);
+     return serializePostConditionWire(wire);
+diff --git a/dist/esm/wire/serialization.js b/dist/esm/wire/serialization.js
+index b1dae621b5b81150307aa1b943e342a96cef248a..6fe0439eeb3594e371eddc3bf93860624c241b65 100644
+--- a/dist/esm/wire/serialization.js
++++ b/dist/esm/wire/serialization.js
+@@ -1,7 +1,7 @@
+ import { bytesToHex, bytesToUtf8, concatArray, hexToBytes, hexToInt, intToBigInt, intToBytes, intToHex, isInstance, utf8ToBytes, writeUInt32BE, writeUInt8, } from '@stacks/common';
+ import { BytesReader } from '../BytesReader';
+ import { deserializeCV, noneCV, serializeCVBytes, someCV, } from '../clarity';
+-import { AuthFieldType, COINBASE_BYTES_LENGTH, COMPRESSED_PUBKEY_LENGTH_BYTES, ClarityVersion, FungibleConditionCode, STRING_MAX_LENGTH, MEMO_MAX_LENGTH_BYTES, NonFungibleConditionCode, PayloadType, PostConditionPrincipalId, PostConditionType, PubKeyEncoding, RECOVERABLE_ECDSA_SIG_LENGTH_BYTES, TenureChangeCause, UNCOMPRESSED_PUBKEY_LENGTH_BYTES, VRF_PROOF_BYTES_LENGTH, } from '../constants';
++import { AuthFieldType, COINBASE_BYTES_LENGTH, COMPRESSED_PUBKEY_LENGTH_BYTES, ClarityVersion, FungibleConditionCode, STRING_MAX_LENGTH, MEMO_MAX_LENGTH_BYTES, NonFungibleConditionCode, PayloadType, PostConditionPrincipalId, PostConditionType, PoxConditionCode, PubKeyEncoding, RECOVERABLE_ECDSA_SIG_LENGTH_BYTES, TenureChangeCause, UNCOMPRESSED_PUBKEY_LENGTH_BYTES, VRF_PROOF_BYTES_LENGTH, } from '../constants';
+ import { DeserializationError, SerializationError } from '../errors';
+ import { compressPublicKey, createStacksPublicKey, uncompressPublicKey } from '../keys';
+ import { rightPadHexToLength } from '../utils';
+@@ -239,7 +239,8 @@ export function serializePostConditionWireBytes(postCondition) {
+     }
+     bytesArray.push(postCondition.conditionCode);
+     if (postCondition.conditionType === PostConditionType.STX ||
+-        postCondition.conditionType === PostConditionType.Fungible) {
++        postCondition.conditionType === PostConditionType.Fungible ||
++        postCondition.conditionType === PostConditionType.Staking) {
+         if (postCondition.amount > BigInt('0xffffffffffffffff'))
+             throw new SerializationError('The post-condition amount may not be larger than 8 bytes');
+         bytesArray.push(intToBytes(postCondition.amount, 8));
+@@ -298,6 +299,29 @@ export function deserializePostConditionWire(serialized) {
+                 asset,
+                 assetName,
+             };
++        case PostConditionType.Staking:
++            conditionCode = bytesReader.readUInt8Enum(FungibleConditionCode, n => {
++                throw new DeserializationError(`Could not read ${n} as FungibleConditionCode`);
++            });
++            amount = BigInt(`0x${bytesToHex(bytesReader.readBytes(8))}`);
++            return {
++                type: StacksWireType.PostCondition,
++                conditionType: PostConditionType.Staking,
++                principal,
++                conditionCode,
++                amount,
++            };
++        case PostConditionType.PoX: {
++            const poxConditionCode = bytesReader.readUInt8Enum(PoxConditionCode, n => {
++                throw new DeserializationError(`Could not read ${n} as PoxConditionCode`);
++            });
++            return {
++                type: StacksWireType.PostCondition,
++                conditionType: PostConditionType.PoX,
++                principal,
++                conditionCode: poxConditionCode,
++            };
++        }
+     }
+ }
+ export function serializePayload(payload) {
+diff --git a/dist/esm/wire/types.d.ts b/dist/esm/wire/types.d.ts
+index d20ed19d6f71aed853b3b940c6d07fd186ea3794..a849509a733ab5446ad5d0f8fe7c5d6ff75fc513 100644
+--- a/dist/esm/wire/types.d.ts
++++ b/dist/esm/wire/types.d.ts
+@@ -1,6 +1,6 @@
+ import { IntegerType } from '@stacks/common';
+ import { ClarityValue, PrincipalCV } from '../clarity';
+-import { AddressVersion, ClarityVersion, FungibleConditionCode, NonFungibleConditionCode, PayloadType, PostConditionPrincipalId, PostConditionType, PubKeyEncoding, TenureChangeCause } from '../constants';
++import { AddressVersion, ClarityVersion, FungibleConditionCode, NonFungibleConditionCode, PayloadType, PostConditionPrincipalId, PostConditionType, PoxConditionCode, PubKeyEncoding, TenureChangeCause } from '../constants';
+ export declare enum StacksWireType {
+     Address = 0,
+     Principal = 1,
+@@ -155,7 +155,20 @@ export interface NonFungiblePostConditionWire {
+     readonly asset: AssetWire;
+     readonly assetName: ClarityValue;
+ }
+-export type PostConditionWire = STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire;
++export interface StakingPostConditionWire {
++    readonly type: StacksWireType.PostCondition;
++    readonly conditionType: PostConditionType.Staking;
++    readonly principal: PostConditionPrincipalWire;
++    readonly conditionCode: FungibleConditionCode;
++    readonly amount: bigint;
++}
++export interface PoxPostConditionWire {
++    readonly type: StacksWireType.PostCondition;
++    readonly conditionType: PostConditionType.PoX;
++    readonly principal: PostConditionPrincipalWire;
++    readonly conditionCode: PoxConditionCode;
++}
++export type PostConditionWire = STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire | StakingPostConditionWire | PoxPostConditionWire;
+ export type PostConditionPrincipalWire = OriginPrincipalWire | StandardPrincipalWire | ContractPrincipalWire;
+ export interface TransactionAuthFieldWire {
+     type: StacksWireType.TransactionAuthField;
+diff --git a/dist/pc.d.ts b/dist/pc.d.ts
+index b0c68b3621d8c9e28c43ece1ffbab0ebc2b2e861..a60cd0bd7b42bddd7e8ceb8139e781b477fb4a37 100644
+--- a/dist/pc.d.ts
++++ b/dist/pc.d.ts
+@@ -1,6 +1,6 @@
+ import { IntegerType } from '@stacks/common';
+ import { ClarityValue } from './clarity';
+-import { FungibleComparator, FungiblePostCondition, NonFungibleComparator, NonFungiblePostCondition, PostCondition, StxPostCondition } from './postcondition-types';
++import { FungibleComparator, FungiblePostCondition, NonFungibleComparator, NonFungiblePostCondition, PostCondition, PoxPostCondition, StakingPostCondition, StxPostCondition } from './postcondition-types';
+ import { AddressString, AssetString, ContractIdString } from './types';
+ export declare function principal(principal: AddressString | ContractIdString): PartialPcWithPrincipal;
+ export declare function origin(): PartialPcWithPrincipal;
+@@ -15,6 +15,9 @@ declare class PartialPcWithPrincipal {
+     willSendAsset(): PartialPcNftWithCode;
+     willNotSendAsset(): PartialPcNftWithCode;
+     willMaybeSendAsset(): PartialPcNftWithCode;
++    willPerformPox(): PoxPostCondition;
++    willNotPerformPox(): PoxPostCondition;
++    mayPerformPox(): PoxPostCondition;
+ }
+ declare class PartialPcFtWithCode {
+     private address;
+@@ -23,6 +26,7 @@ declare class PartialPcFtWithCode {
+     constructor(address: string, amount: IntegerType, code: FungibleComparator);
+     ustx(): StxPostCondition;
+     ft(contractId: ContractIdString, tokenName: string): FungiblePostCondition;
++    ustxToLock(): StakingPostCondition;
+ }
+ declare class PartialPcNftWithCode {
+     private address;
+diff --git a/dist/pc.js b/dist/pc.js
+index a6d38743d2e967a68f6679aa685d73b81e19c73a..0ae97bac627745e0983b59e260ba2c718725b865 100644
+--- a/dist/pc.js
++++ b/dist/pc.js
+@@ -44,6 +44,15 @@ class PartialPcWithPrincipal {
+     willMaybeSendAsset() {
+         return new PartialPcNftWithCode(this.address, 'maybe-sent');
+     }
++    willPerformPox() {
++        return { type: 'pox-postcondition', address: this.address, condition: 'will-perform' };
++    }
++    willNotPerformPox() {
++        return { type: 'pox-postcondition', address: this.address, condition: 'will-not-perform' };
++    }
++    mayPerformPox() {
++        return { type: 'pox-postcondition', address: this.address, condition: 'may-perform' };
++    }
+ }
+ class PartialPcFtWithCode {
+     constructor(address, amount, code) {
+@@ -72,6 +81,14 @@ class PartialPcFtWithCode {
+             asset: `${contractId}::${tokenName}`,
+         };
+     }
++    ustxToLock() {
++        return {
++            type: 'staking-postcondition',
++            address: this.address,
++            condition: this.code,
++            amount: (0, postcondition_1.parsePostConditionAmount)(this.amount).toString(),
++        };
++    }
+ }
+ class PartialPcNftWithCode {
+     constructor(address, code) {
+diff --git a/dist/postcondition-types.d.ts b/dist/postcondition-types.d.ts
+index 352292770ccebdc69e7377435e12cbbde77b0c85..2998d48a333f6ff833b52ecaf35e3e46e8836c94 100644
+--- a/dist/postcondition-types.d.ts
++++ b/dist/postcondition-types.d.ts
+@@ -22,5 +22,17 @@ export type NonFungiblePostCondition = {
+     asset: AssetString;
+     assetId: ClarityValue;
+ };
+-export type PostCondition = StxPostCondition | FungiblePostCondition | NonFungiblePostCondition;
++export interface StakingPostCondition {
++    type: 'staking-postcondition';
++    address: string;
++    condition: `${FungibleComparator}`;
++    amount: string | bigint | number;
++}
++export type PoxComparator = 'will-not-perform' | 'may-perform' | 'will-perform';
++export interface PoxPostCondition {
++    type: 'pox-postcondition';
++    address: string;
++    condition: `${PoxComparator}`;
++}
++export type PostCondition = StxPostCondition | FungiblePostCondition | NonFungiblePostCondition | StakingPostCondition | PoxPostCondition;
+ export type PostConditionModeName = 'allow' | 'deny' | 'originator';
+diff --git a/dist/postcondition.js b/dist/postcondition.js
+index 32680f2f10e73ef1a3e3a1edd0ae1cda332fbb1c..68268156cc6b9301772cb6efd9788686c8b7f0ff 100644
+--- a/dist/postcondition.js
++++ b/dist/postcondition.js
+@@ -24,6 +24,12 @@ var PostConditionCodeWireType;
+     PostConditionCodeWireType[PostConditionCodeWireType["not-sent"] = 17] = "not-sent";
+     PostConditionCodeWireType[PostConditionCodeWireType["maybe-sent"] = 18] = "maybe-sent";
+ })(PostConditionCodeWireType || (PostConditionCodeWireType = {}));
++var PoxConditionCodeWireType;
++(function (PoxConditionCodeWireType) {
++    PoxConditionCodeWireType[PoxConditionCodeWireType["will-not-perform"] = 48] = "will-not-perform";
++    PoxConditionCodeWireType[PoxConditionCodeWireType["may-perform"] = 49] = "may-perform";
++    PoxConditionCodeWireType[PoxConditionCodeWireType["will-perform"] = 50] = "will-perform";
++})(PoxConditionCodeWireType || (PoxConditionCodeWireType = {}));
+ function postConditionToWire(postcondition) {
+     switch (postcondition.type) {
+         case 'stx-postcondition':
+@@ -58,6 +64,25 @@ function postConditionToWire(postcondition) {
+                 asset: (0, wire_1.parseAssetString)(postcondition.asset),
+                 assetName: postcondition.assetId,
+             };
++        case 'staking-postcondition':
++            return {
++                type: wire_1.StacksWireType.PostCondition,
++                conditionType: constants_1.PostConditionType.Staking,
++                principal: postcondition.address === 'origin'
++                    ? { type: wire_1.StacksWireType.Principal, prefix: constants_1.PostConditionPrincipalId.Origin }
++                    : (0, wire_1.parsePrincipalString)(postcondition.address),
++                conditionCode: conditionTypeToByte(postcondition.condition),
++                amount: parsePostConditionAmount(postcondition.amount),
++            };
++        case 'pox-postcondition':
++            return {
++                type: wire_1.StacksWireType.PostCondition,
++                conditionType: constants_1.PostConditionType.PoX,
++                principal: postcondition.address === 'origin'
++                    ? { type: wire_1.StacksWireType.Principal, prefix: constants_1.PostConditionPrincipalId.Origin }
++                    : (0, wire_1.parsePrincipalString)(postcondition.address),
++                conditionCode: poxConditionTypeToByte(postcondition.condition),
++            };
+         default:
+             throw new Error('Invalid post condition type');
+     }
+@@ -88,6 +113,19 @@ function wireToPostCondition(wire) {
+                 asset: assetWireToString(wire.asset),
+                 assetId: wire.assetName,
+             };
++        case constants_1.PostConditionType.Staking:
++            return {
++                type: 'staking-postcondition',
++                address: principalWireToString(wire.principal),
++                condition: conditionByteToType(wire.conditionCode),
++                amount: wire.amount.toString(),
++            };
++        case constants_1.PostConditionType.PoX:
++            return {
++                type: 'pox-postcondition',
++                address: principalWireToString(wire.principal),
++                condition: poxConditionByteToType(wire.conditionCode),
++            };
+         default: {
+             const _exhaustiveCheck = wire;
+             throw new Error(`Invalid post condition type: ${_exhaustiveCheck}`);
+@@ -103,6 +141,12 @@ function conditionByteToType(wireType) {
+     return PostConditionCodeWireType[wireType];
+ }
+ exports.conditionByteToType = conditionByteToType;
++function poxConditionTypeToByte(condition) {
++    return PoxConditionCodeWireType[condition];
++}
++function poxConditionByteToType(wireType) {
++    return PoxConditionCodeWireType[wireType];
++}
+ function postConditionToHex(postcondition) {
+     const wire = postConditionToWire(postcondition);
+     return (0, wire_1.serializePostConditionWire)(wire);
+diff --git a/dist/wire/serialization.js b/dist/wire/serialization.js
+index 6b990c3d988cdd5aa57f4e72ec6a9b923272520b..968ea891a04a2e600fa5ff659b20e9df059633b6 100644
+--- a/dist/wire/serialization.js
++++ b/dist/wire/serialization.js
+@@ -264,7 +264,8 @@ function serializePostConditionWireBytes(postCondition) {
+     }
+     bytesArray.push(postCondition.conditionCode);
+     if (postCondition.conditionType === constants_1.PostConditionType.STX ||
+-        postCondition.conditionType === constants_1.PostConditionType.Fungible) {
++        postCondition.conditionType === constants_1.PostConditionType.Fungible ||
++        postCondition.conditionType === constants_1.PostConditionType.Staking) {
+         if (postCondition.amount > BigInt('0xffffffffffffffff'))
+             throw new errors_1.SerializationError('The post-condition amount may not be larger than 8 bytes');
+         bytesArray.push((0, common_1.intToBytes)(postCondition.amount, 8));
+@@ -324,6 +325,29 @@ function deserializePostConditionWire(serialized) {
+                 asset,
+                 assetName,
+             };
++        case constants_1.PostConditionType.Staking:
++            conditionCode = bytesReader.readUInt8Enum(constants_1.FungibleConditionCode, n => {
++                throw new errors_1.DeserializationError(`Could not read ${n} as FungibleConditionCode`);
++            });
++            amount = BigInt(`0x${(0, common_1.bytesToHex)(bytesReader.readBytes(8))}`);
++            return {
++                type: types_1.StacksWireType.PostCondition,
++                conditionType: constants_1.PostConditionType.Staking,
++                principal,
++                conditionCode,
++                amount,
++            };
++        case constants_1.PostConditionType.PoX: {
++            const poxConditionCode = bytesReader.readUInt8Enum(constants_1.PoxConditionCode, n => {
++                throw new errors_1.DeserializationError(`Could not read ${n} as PoxConditionCode`);
++            });
++            return {
++                type: types_1.StacksWireType.PostCondition,
++                conditionType: constants_1.PostConditionType.PoX,
++                principal,
++                conditionCode: poxConditionCode,
++            };
++        }
+     }
+ }
+ exports.deserializePostConditionWire = deserializePostConditionWire;
+diff --git a/dist/wire/types.d.ts b/dist/wire/types.d.ts
+index d20ed19d6f71aed853b3b940c6d07fd186ea3794..a849509a733ab5446ad5d0f8fe7c5d6ff75fc513 100644
+--- a/dist/wire/types.d.ts
++++ b/dist/wire/types.d.ts
+@@ -1,6 +1,6 @@
+ import { IntegerType } from '@stacks/common';
+ import { ClarityValue, PrincipalCV } from '../clarity';
+-import { AddressVersion, ClarityVersion, FungibleConditionCode, NonFungibleConditionCode, PayloadType, PostConditionPrincipalId, PostConditionType, PubKeyEncoding, TenureChangeCause } from '../constants';
++import { AddressVersion, ClarityVersion, FungibleConditionCode, NonFungibleConditionCode, PayloadType, PostConditionPrincipalId, PostConditionType, PoxConditionCode, PubKeyEncoding, TenureChangeCause } from '../constants';
+ export declare enum StacksWireType {
+     Address = 0,
+     Principal = 1,
+@@ -155,7 +155,20 @@ export interface NonFungiblePostConditionWire {
+     readonly asset: AssetWire;
+     readonly assetName: ClarityValue;
+ }
+-export type PostConditionWire = STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire;
++export interface StakingPostConditionWire {
++    readonly type: StacksWireType.PostCondition;
++    readonly conditionType: PostConditionType.Staking;
++    readonly principal: PostConditionPrincipalWire;
++    readonly conditionCode: FungibleConditionCode;
++    readonly amount: bigint;
++}
++export interface PoxPostConditionWire {
++    readonly type: StacksWireType.PostCondition;
++    readonly conditionType: PostConditionType.PoX;
++    readonly principal: PostConditionPrincipalWire;
++    readonly conditionCode: PoxConditionCode;
++}
++export type PostConditionWire = STXPostConditionWire | FungiblePostConditionWire | NonFungiblePostConditionWire | StakingPostConditionWire | PoxPostConditionWire;
+ export type PostConditionPrincipalWire = OriginPrincipalWire | StandardPrincipalWire | ContractPrincipalWire;
+ export interface TransactionAuthFieldWire {
+     type: StacksWireType.TransactionAuthField;

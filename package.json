@@ -124,7 +124,8 @@
     "patchedDependencies": {
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
       "expo-secure-store@15.0.8": "patches/expo-secure-store@15.0.8.patch",
-      "react-native-webview@13.15.0": "patches/react-native-webview@13.15.0.patch"
+      "react-native-webview@13.15.0": "patches/react-native-webview@13.15.0.patch",
+      "@stacks/transactions@7.4.0": "patches/@stacks__transactions@7.4.0.patch"
     },
     "onlyBuiltDependencies": [
       "better-sqlite3",
