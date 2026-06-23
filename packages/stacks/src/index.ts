@@ -4,6 +4,8 @@ export * from './signer/signer';
 export * from './stacks.utils';
 export * from './transactions/create-tx-hex';
 export * from './transactions/generate-unsigned-transaction';
+export * from './transactions/multisig-nonce';
+export * from './transactions/multisig-signature';
 export * from './transactions/get-contract-fn-args';
 export * from './transactions/get-error-message';
 export * from './transactions/post-condition.utils';

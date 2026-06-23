@@ -1,0 +1,99 @@
+import { useState } from 'react';
+
+import { Flex, styled } from 'leather-styles/jsx';
+import { signBtcTransaction } from '~/features/multisig/transactions/signing/sign-btc-transaction';
+import { signStxTransaction } from '~/features/multisig/transactions/signing/sign-stx-transaction';
+
+import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
+import { getMultisigService } from '@leather.io/services';
+import { Button } from '@leather.io/ui';
+
+import { TextField } from '../text-field';
+
+const networks: AuthNetworkId[] = ['btc:mainnet', 'btc:testnet', 'stx:mainnet', 'stx:testnet'];
+
+function networkLabel(network: AuthNetworkId): string {
+  const chain = network.startsWith('btc') ? 'BTC' : 'STX';
+  const mode = network.endsWith('mainnet') ? 'main' : 'test';
+  return `${chain} ${mode}`;
+}
+
+function assertSignable(transaction: MultisigTransaction): void {
+  if (transaction.status !== 'pending')
+    throw new Error(
+      `Transaction is ${transaction.status}; only pending transactions can be signed`
+    );
+}
+
+// Fetches a proposed multisig transaction by ID, signs it with the extension, and
+// submits the signature(s) to the backend. The signing ceremony lives in the
+// reusable `signing/` functions; this dev tool is just orchestration + UI.
+export function SignTool() {
+  const [network, setNetwork] = useState<AuthNetworkId>('btc:mainnet');
+  const [transactionId, setTransactionId] = useState('');
+  const [isRunning, setIsRunning] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<MultisigTransaction | null>(null);
+
+  async function run() {
+    setIsRunning(true);
+    setError(null);
+    setResult(null);
+    try {
+      const id = transactionId.trim();
+      const service = getMultisigService();
+      const transaction = await service.getTransaction(network, id);
+      assertSignable(transaction);
+      const account = await service.getVaultAccount(network, transaction.vaultAccountId);
+      const signatures = network.startsWith('btc')
+        ? await signBtcTransaction(transaction, account)
+        : await signStxTransaction(transaction, account);
+      setResult(await service.addTransactionSignatures(network, id, { signatures }));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setIsRunning(false);
+    }
+  }
+
+  return (
+    <Flex direction="column" gap="space.02">
+      <Flex gap="space.01" flexWrap="wrap">
+        {networks.map(option => (
+          <Button
+            key={option}
+            variant={network === option ? 'solid' : 'ghost'}
+            size="sm"
+            onClick={() => setNetwork(option)}
+          >
+            {networkLabel(option)}
+          </Button>
+        ))}
+      </Flex>
+      <TextField
+        placeholder="Transaction ID"
+        value={transactionId}
+        onChange={setTransactionId}
+        mono
+      />
+      <Button
+        variant="solid"
+        size="sm"
+        disabled={!transactionId.trim() || isRunning}
+        onClick={() => void run()}
+      >
+        {isRunning ? 'Signing…' : 'Sign & submit'}
+      </Button>
+      {result ? (
+        <styled.span textStyle="caption.02" color="green.action-primary-default">
+          {result.status} · {result.id}
+        </styled.span>
+      ) : null}
+      {error ? (
+        <styled.span textStyle="caption.02" color="red.action-primary-default">
+          {error}
+        </styled.span>
+      ) : null}
+    </Flex>
+  );
+}

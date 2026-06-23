@@ -8,6 +8,7 @@ import type { AuthNetworkId, BitcoinNetworkModes, Money, VaultAccount } from '@l
 import { getBitcoinCoinSelectionService } from '@leather.io/services';
 
 import { createMultisigAccountAddresses } from '../vaults/multisig-account-addresses';
+import { getMultisigDescriptor } from './btc-multisig-descriptor';
 
 interface BuildMultisigBtcTransferArgs {
   account: VaultAccount;
@@ -18,11 +19,6 @@ interface BuildMultisigBtcTransferArgs {
 
 function getBitcoinNetworkMode(network: AuthNetworkId): BitcoinNetworkModes {
   return network === 'btc:mainnet' ? 'mainnet' : 'testnet';
-}
-
-export function getMultisigDescriptor(account: VaultAccount): string {
-  const publicKeys = account.signers.map(signer => signer.signingPubkey);
-  return `wsh(sortedmulti(${account.threshold},${publicKeys.join(',')}))`;
 }
 
 export async function buildUnsignedMultisigBtcTransfer({

@@ -6076,6 +6076,7 @@ export interface paths {
                 xpub: string | null;
                 xpubOriginFingerprint: string | null;
                 xpubOriginPath: string | null;
+                userId: string;
                 signerIndex: number;
                 signingPubkey: string;
                 derivationIndex: number | null;
@@ -6182,6 +6183,7 @@ export interface paths {
                 xpub: string | null;
                 xpubOriginFingerprint: string | null;
                 xpubOriginPath: string | null;
+                userId: string;
                 signerIndex: number;
                 signingPubkey: string;
                 derivationIndex: number | null;
@@ -6276,6 +6278,7 @@ export interface paths {
                 xpub: string | null;
                 xpubOriginFingerprint: string | null;
                 xpubOriginPath: string | null;
+                userId: string;
                 signerIndex: number;
                 signingPubkey: string;
                 derivationIndex: number | null;

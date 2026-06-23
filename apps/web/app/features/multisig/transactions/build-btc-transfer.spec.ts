@@ -1,8 +1,7 @@
-import { compileWshDescriptor } from '@leather.io/bitcoin';
 import type { VaultAccount, VaultAccountSigner } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import { buildUnsignedMultisigBtcTransfer, getMultisigDescriptor } from './build-btc-transfer';
+import { buildUnsignedMultisigBtcTransfer } from './build-btc-transfer';
 
 const publicKeys = [
   '0250863ad64a87ae8a2fe83c1af1a8403cb53f53e486d8511dad8a04887e5b2352',
@@ -16,6 +15,7 @@ function makeSigner(signerIndex: number, signingPubkey: string): VaultAccountSig
     publicKey: signingPubkey,
     address: 'bc1qmultisig',
     id: `signer-${signerIndex}`,
+    userId: `user-${signerIndex}`,
     xpub: null,
     xpubOriginFingerprint: null,
     xpubOriginPath: null,
@@ -42,16 +42,6 @@ function makeAccount(overrides: Partial<VaultAccount> = {}): VaultAccount {
     ...overrides,
   };
 }
-
-describe(getMultisigDescriptor.name, () => {
-  test('compiles to the same scriptPubKey regardless of signer order', () => {
-    const forward = compileWshDescriptor(getMultisigDescriptor(makeAccount())).scriptPubKey;
-    const reversed = compileWshDescriptor(
-      getMultisigDescriptor(makeAccount({ signers: [...makeAccount().signers].reverse() }))
-    ).scriptPubKey;
-    expect(reversed).toEqual(forward);
-  });
-});
 
 describe(buildUnsignedMultisigBtcTransfer.name, () => {
   test('throws when the descriptor does not derive the vault address', async () => {

@@ -883,7 +883,7 @@ importers:
         version: 15.0.8(expo@54.0.32)
       expo-image:
         specifier: 3.0.11
-        version: 3.0.11(expo@54.0.32)(react-native-web@0.20.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        version: 3.0.11(expo@54.0.32)(react-native-web@0.20.0(encoding@0.1.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       expo-linear-gradient:
         specifier: 15.0.8
         version: 15.0.8(expo@54.0.32)(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -901,7 +901,7 @@ importers:
         version: 3.0.29(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       expo-router:
         specifier: 6.0.22
-        version: 6.0.22(76bfa27a304d2e3644767073ff05cf1c)
+        version: 6.0.22(640ef35887e6198fba4d436f2eeec260)
       expo-secure-store:
         specifier: 15.0.8
         version: 15.0.8(patch_hash=5d4287798bcf382726d8b63c10b89753d6a3340427888f3048637406fe253ab8)(expo@54.0.32)
@@ -1399,6 +1399,9 @@ importers:
       bip32:
         specifier: 4.0.0
         version: 4.0.0
+      bip322-js:
+        specifier: 3.0.0
+        version: 3.0.0
       bitcoin-address-validation:
         specifier: 2.2.3
         version: 2.2.3
@@ -1441,7 +1444,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/cms:
     dependencies:
@@ -1567,7 +1570,7 @@ importers:
         version: 0.16.5(@typescript/native-preview@7.0.0-dev.20251121.1)(ms@2.1.3)(synckit@0.11.11)(typescript@5.9.3)
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/eslint-config:
     dependencies:
@@ -1653,7 +1656,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/models:
     dependencies:
@@ -1740,7 +1743,7 @@ importers:
         version: 0.16.5(@typescript/native-preview@7.0.0-dev.20251121.1)(ms@2.1.3)(synckit@0.11.11)(typescript@5.9.3)
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/queries:
     dependencies:
@@ -1777,7 +1780,7 @@ importers:
         version: 0.16.5(@typescript/native-preview@7.0.0-dev.20251121.1)(ms@2.1.3)(synckit@0.11.11)(typescript@5.9.3)
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/query:
     dependencies:
@@ -1893,7 +1896,7 @@ importers:
         version: 0.16.5(@typescript/native-preview@7.0.0-dev.20251121.1)(ms@2.1.3)(synckit@0.11.11)(typescript@5.9.3)
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/sdk:
     dependencies:
@@ -1921,7 +1924,7 @@ importers:
         version: 0.16.5(@typescript/native-preview@7.0.0-dev.20251121.1)(ms@2.1.3)(synckit@0.11.11)(typescript@5.9.3)
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/services:
     dependencies:
@@ -2021,7 +2024,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/stacks:
     dependencies:
@@ -2076,7 +2079,7 @@ importers:
         version: 0.16.5(@typescript/native-preview@7.0.0-dev.20251121.1)(ms@2.1.3)(synckit@0.11.11)(typescript@5.9.3)
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/state:
     dependencies:
@@ -2179,7 +2182,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/test-config:
     devDependencies:
@@ -2267,7 +2270,7 @@ importers:
         version: 15.0.8(expo@54.0.32)
       expo-image:
         specifier: 3.0.11
-        version: 3.0.11(expo@54.0.32)(react-native-web@0.20.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        version: 3.0.11(expo@54.0.32)(react-native-web@0.20.0(encoding@0.1.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       expo-linear-gradient:
         specifier: 15.0.8
         version: 15.0.8(expo@54.0.32)(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -2391,7 +2394,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   packages/utils:
     dependencies:
@@ -2431,7 +2434,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
+        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
   tools:
     dependencies:
@@ -10044,6 +10047,9 @@ packages:
   bcrypt-pbkdf@1.0.2:
     resolution: {integrity: sha512-qeFIXtP4MSoi6NLqO12WfqARWWuCKi2Rn/9hJLEmtB5yTNr9DqFWkJRCf2qShWzPeAMRnOgCrq0sg/KLv5ES9w==}
 
+  bech32@1.1.4:
+    resolution: {integrity: sha512-s0IrSOzLlbvX7yp4WBfPITzpAU8sqQcpsmwXDiKwrG4r491vwCO/XpejasRNl0piBMe/DvP4Tz0mIS/X1DPJBQ==}
+
   bech32@2.0.0:
     resolution: {integrity: sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg==}
 
@@ -10084,9 +10090,15 @@ packages:
   bip32-path@0.4.2:
     resolution: {integrity: sha512-ZBMCELjJfcNMkz5bDuJ1WrYvjlhEF5k6mQ8vUr4N7MbVRsXei7ZOg8VhhwMfNiW68NWmLkgkc6WvTickrLGprQ==}
 
+  bip322-js@3.0.0:
+    resolution: {integrity: sha512-v57yQsdlK3ch2r7tyy0+Sas8Ut7GXwsE+GnYJu+IO5HlAu77lQhWu0fKdjaao9clGBzo5HgAsABs4f7UkXtXIA==}
+
   bip32@4.0.0:
     resolution: {integrity: sha512-aOGy88DDlVUhspIXJN+dVEtclhIsfAUppD43V0j40cPTld3pv/0X/MlrZSZ6jowIaQQzFwP8M6rFU2z2mVYjDQ==}
     engines: {node: '>=6.0.0'}
+
+  bip66@1.1.5:
+    resolution: {integrity: sha512-nemMHz95EmS38a26XbbdxIYj5csHd3RMP3H5bwQknX0WYHF01qhpufP42mLOwVICuH2JmhIhXiWs89MfUGL7Xw==}
 
   bip68@1.0.4:
     resolution: {integrity: sha512-O1htyufFTYy3EO0JkHg2CLykdXEtV2ssqw47Gq9A0WByp662xpJnMEB9m43LZjsSDjIAOozWRExlFQk2hlV1XQ==}
@@ -10101,6 +10113,14 @@ packages:
   bitcoinjs-lib@6.1.5:
     resolution: {integrity: sha512-yuf6xs9QX/E8LWE2aMJPNd0IxGofwfuVOiYdNUESkc+2bHHVKjhJd8qewqapeoolh9fihzHGoDCB5Vkr57RZCQ==}
     engines: {node: '>=8.0.0'}
+
+  bitcoinjs-lib@6.1.7:
+    resolution: {integrity: sha512-tlf/r2DGMbF7ky1MgUqXHzypYHakkEnm0SZP23CJKIqNY/5uNAnMbFhMJdhjrL/7anfb/U8+AlpdjPWjPnAalg==}
+    engines: {node: '>=8.0.0'}
+
+  bitcoinjs-message@2.2.0:
+    resolution: {integrity: sha512-103Wy3xg8Y9o+pdhGP4M3/mtQQuUWs6sPuOp1mYphSUoSMHjHTlkj32K4zxU8qMH0Ckv23emfkGlFWtoWZ7YFA==}
+    engines: {node: '>=0.10'}
 
   bl@0.8.2:
     resolution: {integrity: sha512-pfqikmByp+lifZCS0p6j6KreV6kNU6Apzpm2nKOk+94cZb/jvle55+JxWiByUQ0Wo/+XnDXEy5MxxKMb6r0VIw==}
@@ -10256,6 +10276,10 @@ packages:
 
   buffer-equal-constant-time@1.0.1:
     resolution: {integrity: sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==}
+
+  buffer-equals@1.0.4:
+    resolution: {integrity: sha512-99MsCq0j5+RhubVEtKQgKaD6EM+UP3xJgIvQqwJ3SOLDUekzxMX1ylXBng+Wa2sh7mGT0W6RUly8ojjr1Tt6nA==}
+    engines: {node: '>=0.10.0'}
 
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
@@ -11670,6 +11694,10 @@ packages:
     resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
     engines: {node: '>=10'}
 
+  drbg.js@1.0.1:
+    resolution: {integrity: sha512-F4wZ06PvqxYLFEZKkFxTDcns9oFNk34hvmJSEwdzsxVQ8YI5YaxtACgQatkYgv2VI2CFkUd2Y+xosPQnHv809g==}
+    engines: {node: '>=0.10'}
+
   dtrace-provider@0.8.8:
     resolution: {integrity: sha512-b7Z7cNtHPhH9EJhNNbbeqTcXB8LGFFZhq1PGgEvpeHlzd36bhbdTWoE/Ba/YguqpBSlAPKnARWhVlhunCMwfxg==}
     engines: {node: '>=0.10'}
@@ -12614,6 +12642,9 @@ packages:
   fast-redact@3.5.0:
     resolution: {integrity: sha512-dwsoQlS7h9hMeYUq1W++23NDcBLV4KqONnITDV9DjfS3q1SgDGVrBdvvTLUotWtPSD7asWDV9/CmsZPy8Hf70A==}
     engines: {node: '>=6'}
+
+  fast-sha256@1.3.0:
+    resolution: {integrity: sha512-n11RGP/lrWEFI/bWdygLxhI+pVeo1ZYIVwvvPkW7azl/rOy+F3HYRZ2K5zeE9mmkhQppyv9sQFx0JM9UabnpPQ==}
 
   fast-text-encoding@1.0.6:
     resolution: {integrity: sha512-VhXlQgj9ioXCqGstD37E/HBeqEGV/qOD/kmbVG8h5xKBYvM1L3lR1Zn4555cQ8GkYbJa8aJSipLPndE1k6zK2w==}
@@ -15502,6 +15533,9 @@ packages:
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
 
+  node-addon-api@5.1.0:
+    resolution: {integrity: sha512-eh0GgfEkpnoWDq+VY8OyvYhFEzBk6jIYbRKdIlyTiAXIVJ8PyBaKb0rp7oDtoddbdoHWhq8wwr+XZ81F1rpNdA==}
+
   node-addon-api@7.1.1:
     resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
 
@@ -15530,6 +15564,10 @@ packages:
   node-forge@1.4.0:
     resolution: {integrity: sha512-LarFH0+6VfriEhqMMcLX2F7SwSXeWwnEAJEsYm5QKWchiVYVvJyV9v7UDvUv+w5HO23ZpQTXDv/GxdDdMyOuoQ==}
     engines: {node: '>= 6.13.0'}
+
+  node-gyp-build@4.8.4:
+    resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
+    hasBin: true
 
   node-gyp@8.4.1:
     resolution: {integrity: sha512-olTJRgUtAb/hOXG0E93wZDs5YiJlgbXxTwQAFHyNlRsXQnYzUaF2aGgujZbw+hR8aF4ZG/rST57bWMWD16jr9w==}
@@ -17645,6 +17683,14 @@ packages:
 
   scrollmirror@1.2.4:
     resolution: {integrity: sha512-UkEHHOV6j5cE3IsObQRK6vO4twSuhE4vtLD4UmX+doHgrtg2jRwXkz4O6cz0jcoxK5NGU7rFjyvLcWHzw7eQ5A==}
+
+  secp256k1@3.8.1:
+    resolution: {integrity: sha512-tArjQw2P0RTdY7QmkNehgp6TVvQXq6ulIhxv8gaH6YubKG/wxxAoNKcbuXjDhybbc+b2Ihc7e0xxiGN744UIiQ==}
+    engines: {node: '>=4.0.0'}
+
+  secp256k1@5.0.1:
+    resolution: {integrity: sha512-lDFs9AAIaWP9UCdtWrotXWWF9t8PWgQDcxqgAnpM9rMqxb3Oaq2J0thzPVSxBwdJgyQtkU/sYtFtbM1RSt/iYA==}
+    engines: {node: '>=18.0.0'}
 
   select-hose@2.0.0:
     resolution: {integrity: sha512-mEugaLK+YfkijB4fx0e6kImuJdCIt2LxCRcbEYPqRGCs4F2ogyfZU5IAZRdjCP8JPq2AtdNoC/Dux63d9Kiryg==}
@@ -22904,6 +22950,11 @@ snapshots:
 
   '@dmsnell/diff-match-patch@1.1.0': {}
 
+  '@dnd-kit/accessibility@3.1.1(react@19.1.0)':
+    dependencies:
+      react: 19.1.0
+      tslib: 2.6.2
+
   '@dnd-kit/accessibility@3.1.1(react@19.2.3)':
     dependencies:
       react: 19.2.3
@@ -22911,8 +22962,8 @@ snapshots:
 
   '@dnd-kit/core@6.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@dnd-kit/accessibility': 3.1.1(react@19.2.3)
-      '@dnd-kit/utilities': 3.2.2(react@19.2.3)
+      '@dnd-kit/accessibility': 3.1.1(react@19.1.0)
+      '@dnd-kit/utilities': 3.2.2(react@19.1.0)
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       tslib: 2.6.2
@@ -23359,7 +23410,7 @@ snapshots:
       wrap-ansi: 7.0.0
       ws: 8.21.0
     optionalDependencies:
-      expo-router: 6.0.22(76bfa27a304d2e3644767073ff05cf1c)
+      expo-router: 6.0.22(640ef35887e6198fba4d436f2eeec260)
       react-native: 0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)
     transitivePeerDependencies:
       - bufferutil
@@ -30851,6 +30902,8 @@ snapshots:
     dependencies:
       tweetnacl: 0.14.5
 
+  bech32@1.1.4: {}
+
   bech32@2.0.0: {}
 
   before-after-hook@2.2.3: {}
@@ -30883,12 +30936,26 @@ snapshots:
 
   bip32-path@0.4.2: {}
 
+  bip322-js@3.0.0:
+    dependencies:
+      '@bitcoinerlab/secp256k1': 1.2.0
+      bitcoinjs-lib: 6.1.7
+      bitcoinjs-message: 2.2.0
+      ecpair: 2.1.0
+      elliptic: 6.6.1
+      fast-sha256: 1.3.0
+      secp256k1: 5.0.1
+
   bip32@4.0.0:
     dependencies:
       '@noble/hashes': 1.5.0
       '@scure/base': 1.2.4
       typeforce: 1.18.0
       wif: 2.0.6
+
+  bip66@1.1.5:
+    dependencies:
+      safe-buffer: 5.2.1
 
   bip68@1.0.4: {}
 
@@ -30907,6 +30974,24 @@ snapshots:
       bip174: 2.1.1
       bs58check: 3.0.1
       typeforce: 1.18.0
+      varuint-bitcoin: 1.1.2
+
+  bitcoinjs-lib@6.1.7:
+    dependencies:
+      '@noble/hashes': 1.5.0
+      bech32: 2.0.0
+      bip174: 2.1.1
+      bs58check: 3.0.1
+      typeforce: 1.18.0
+      varuint-bitcoin: 1.1.2
+
+  bitcoinjs-message@2.2.0:
+    dependencies:
+      bech32: 1.1.4
+      bs58check: 2.1.2
+      buffer-equals: 1.0.4
+      create-hash: 1.2.0
+      secp256k1: 3.8.1
       varuint-bitcoin: 1.1.2
 
   bl@0.8.2:
@@ -31156,6 +31241,8 @@ snapshots:
   buffer-crc32@1.0.0: {}
 
   buffer-equal-constant-time@1.0.1: {}
+
+  buffer-equals@1.0.4: {}
 
   buffer-from@1.1.2: {}
 
@@ -32705,6 +32792,12 @@ snapshots:
 
   dotenv@8.6.0: {}
 
+  drbg.js@1.0.1:
+    dependencies:
+      browserify-aes: 1.2.0
+      create-hash: 1.2.0
+      create-hmac: 1.1.7
+
   dtrace-provider@0.8.8:
     dependencies:
       nan: 2.22.2
@@ -33638,7 +33731,7 @@ snapshots:
     dependencies:
       expo: 54.0.32(@babel/core@7.27.1)(@expo/metro-runtime@5.0.5(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)))(expo-router@6.0.22)(graphql@16.12.0)(react-native-webview@13.15.0(patch_hash=76cfeea66548fcf22fc5cb07253527086f0f00d783ef2b50399a871a98e5f25c)(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
 
-  expo-image@3.0.11(expo@54.0.32)(react-native-web@0.20.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
+  expo-image@3.0.11(expo@54.0.32)(react-native-web@0.20.0(encoding@0.1.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
     dependencies:
       expo: 54.0.32(@babel/core@7.27.1)(@expo/metro-runtime@5.0.5(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)))(expo-router@6.0.22)(graphql@16.12.0)(react-native-webview@13.15.0(patch_hash=76cfeea66548fcf22fc5cb07253527086f0f00d783ef2b50399a871a98e5f25c)(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react: 19.1.0
@@ -33696,7 +33789,7 @@ snapshots:
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)
 
-  expo-router@6.0.22(76bfa27a304d2e3644767073ff05cf1c):
+  expo-router@6.0.22(640ef35887e6198fba4d436f2eeec260):
     dependencies:
       '@expo/metro-runtime': 5.0.5(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))
       '@expo/schema-utils': 0.1.8
@@ -33977,6 +34070,8 @@ snapshots:
   fast-levenshtein@2.0.6: {}
 
   fast-redact@3.5.0: {}
+
+  fast-sha256@1.3.0: {}
 
   fast-text-encoding@1.0.6: {}
 
@@ -37465,8 +37560,7 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  nan@2.22.2:
-    optional: true
+  nan@2.22.2: {}
 
   nano-pubsub@3.0.0: {}
 
@@ -37502,6 +37596,8 @@ snapshots:
 
   node-abort-controller@3.1.1: {}
 
+  node-addon-api@5.1.0: {}
+
   node-addon-api@7.1.1: {}
 
   node-domexception@1.0.0: {}
@@ -37523,6 +37619,8 @@ snapshots:
       formdata-polyfill: 4.0.10
 
   node-forge@1.4.0: {}
+
+  node-gyp-build@4.8.4: {}
 
   node-gyp@8.4.1:
     dependencies:
@@ -40267,6 +40365,23 @@ snapshots:
 
   scrollmirror@1.2.4: {}
 
+  secp256k1@3.8.1:
+    dependencies:
+      bindings: 1.5.0
+      bip66: 1.1.5
+      bn.js: 4.12.3
+      create-hash: 1.2.0
+      drbg.js: 1.0.1
+      elliptic: 6.6.1
+      nan: 2.22.2
+      safe-buffer: 5.2.1
+
+  secp256k1@5.0.1:
+    dependencies:
+      elliptic: 6.6.1
+      node-addon-api: 5.1.0
+      node-gyp-build: 4.8.4
+
   select-hose@2.0.0: {}
 
   selfsigned@2.4.1:
@@ -42390,7 +42505,7 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0):
+  vitest@2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0):
     dependencies:
       '@vitest/expect': 2.1.9
       '@vitest/mocker': 2.1.9(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(vite@5.4.21(@types/node@25.0.3)(lightningcss@1.30.2)(terser@5.46.0))
