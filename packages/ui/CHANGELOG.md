@@ -489,6 +489,31 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.113.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.112.0...@leather.io/ui-v1.113.0) (2026-06-23)
+
+
+### Features
+
+* multiwallet UI ([#2356](https://github.com/leather-io/mono/issues/2356)) ([34e7419](https://github.com/leather-io/mono/commit/34e7419c4a870546500e3896d2ec2890fe309f33))
+* **web:** multisig vault details, accounts + balances ([#2403](https://github.com/leather-io/mono/issues/2403)) ([4a3fc3f](https://github.com/leather-io/mono/commit/4a3fc3f39bc10615952b4748cc26621a76febc5e))
+
+
+### Bug Fixes
+
+* **extension:** account picker, header & logo visual polish (LEA-3591, LEA-3589, LEA-3594) ([#2411](https://github.com/leather-io/mono/issues/2411)) ([9a54be2](https://github.com/leather-io/mono/commit/9a54be237891d601dc7110e106589c2c51f5d502))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.27.0
+    * @leather.io/utils bumped to 0.52.0
+  * devDependencies
+    * @leather.io/features bumped to 1.4.7
+    * @leather.io/models bumped to 0.58.0
+    * @leather.io/panda-preset bumped to 0.16.3
+
 ## [1.112.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.111.6...@leather.io/ui-v1.112.0) (2026-06-15)
 
 

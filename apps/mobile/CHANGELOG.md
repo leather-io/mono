@@ -23,6 +23,33 @@
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
+## [2.110.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.109.0...@leather.io/mobile-v2.110.0) (2026-06-23)
+
+
+### Features
+
+* multisig fixed address account ([#2415](https://github.com/leather-io/mono/issues/2415)) ([964ff42](https://github.com/leather-io/mono/commit/964ff421f0b83ca688859f9bae7d2863adc9c183))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.20.3
+    * @leather.io/bitcoin bumped to 0.38.1
+    * @leather.io/constants bumped to 0.36.2
+    * @leather.io/crypto bumped to 1.13.0
+    * @leather.io/features bumped to 1.4.7
+    * @leather.io/models bumped to 0.58.0
+    * @leather.io/provider bumped to 1.6.28
+    * @leather.io/queries bumped to 0.11.0
+    * @leather.io/query bumped to 2.50.0
+    * @leather.io/rpc bumped to 2.22.3
+    * @leather.io/services bumped to 1.58.0
+    * @leather.io/stacks bumped to 1.20.3
+    * @leather.io/ui bumped to 1.113.0
+    * @leather.io/utils bumped to 0.52.0
+
 ## [2.109.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.108.0...@leather.io/mobile-v2.109.0) (2026-06-15)
 
 

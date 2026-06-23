@@ -15,11 +15,9 @@ interface FeatureIntroducerProps {
 function FeatureIntroducerRoot({ children, onClose }: FeatureIntroducerProps) {
   return (
     <Sheet isShowing={true} onClose={onClose} variant="dialog" wrapChildren={false}>
-      <Flex direction="column">
-        <FeatureIntroducerHeader onClose={onClose} />
-        <Flex direction="column" gap="space.08" flexGrow="1" overflowY="auto" width="100%">
-          {children}
-        </Flex>
+      <FeatureIntroducerHeader onClose={onClose} />
+      <Flex direction="column" gap="space.08" flexGrow="1" overflowY="auto" width="100%">
+        {children}
       </Flex>
     </Sheet>
   );
@@ -31,16 +29,7 @@ interface IllustrationProps {
 
 function Illustration({ children }: IllustrationProps) {
   return (
-    <Box
-      bg="ink.background-secondary"
-      px="space.06"
-      py="space.05"
-      width="100%"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      flexShrink="0"
-    >
+    <Box width="100%" flexShrink="0">
       {children}
     </Box>
   );
