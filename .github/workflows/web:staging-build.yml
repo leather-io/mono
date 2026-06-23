@@ -52,6 +52,7 @@ jobs:
         working-directory: apps/web
         env:
           LEATHER_FRONT_WEB_APP_API_TOKEN: ${{ secrets.FRONT_WEB_APP_API_TOKEN }}
+          LEATHER_TARGET: staging
         run: pnpm run build
 
       - name: upload-staging-version
