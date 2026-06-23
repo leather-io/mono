@@ -134,14 +134,14 @@ export class SwitchAccountPage {
     await this.selectAccountHeader.waitFor();
   }
 
-  async openAddWalletSheet() {
+  async openAddWalletMenu() {
     await this.addWalletButton.click();
-    await this.page.getByRole('heading', { name: 'Add wallet' }).waitFor();
+    await this.page.getByRole('menuitem', { name: 'Create new wallet' }).waitFor();
   }
 
   async createNewWallet() {
-    await this.openAddWalletSheet();
-    await this.page.getByText('Create new wallet').click();
+    await this.openAddWalletMenu();
+    await this.clickMenuItem('Create new wallet');
   }
 
   clickMenuItem(name: string) {
@@ -218,8 +218,8 @@ export class SwitchAccountPage {
   }
 
   async restoreWallet(mnemonic: string, password: string) {
-    await this.openAddWalletSheet();
-    await this.page.getByText('Restore wallet').click();
+    await this.openAddWalletMenu();
+    await this.clickMenuItem('Restore wallet');
     const words = mnemonic.split(' ');
     if (words.length === 12) {
       await this.page.getByText('Have a 12-word Secret Key?').click();
