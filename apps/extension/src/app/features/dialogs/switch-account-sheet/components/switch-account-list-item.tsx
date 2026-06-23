@@ -1,6 +1,9 @@
 import { useSelector } from 'react-redux';
 
-import { getSwitchAccountSheetAccountNameSelector } from '@tests/selectors/account.selectors';
+import {
+  AccountSelectors,
+  getSwitchAccountSheetAccountNameSelector,
+} from '@tests/selectors/account.selectors';
 
 import type { AccountId } from '@leather.io/models';
 
@@ -12,6 +15,7 @@ import { AccountTotalBalance } from '@app/components/account-total-balance';
 import { AccountAddresses } from '@app/components/account/account-addresses';
 import { AccountListItemLayout } from '@app/components/account/account-list-item.layout';
 import { AccountNameLayout } from '@app/components/account/account-name';
+import { getLedgerAccountIndicator } from '@app/components/account/ledger-account-indicator';
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { WalletType } from '@app/store/common/wallet-type.selectors';
@@ -73,6 +77,7 @@ export function SwitchAccountListItem({
         <AccountAvatarItem
           index={accountId.accountIndex}
           publicKey={stacksAccount?.stxPublicKey || ''}
+          indicator={getLedgerAccountIndicator(walletType, AccountSelectors.LedgerIndicator)}
         />
       }
       balanceLabel={hideBalance ? null : <AccountTotalBalance accountId={accountId} />}
@@ -80,7 +85,6 @@ export function SwitchAccountListItem({
       isLoading={isLoading}
       isSelected={isSelected}
       onSelectAccount={handleClick}
-      walletType={walletType}
     />
   );
 }
