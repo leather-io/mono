@@ -10,6 +10,7 @@ import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
+import { usePolicyAccountFeatureGate } from '../policy-account-feature-gate';
 import { type PolicyAccountMatchStatus } from '../policy-account-match';
 import { registerBtcPolicyAccount } from './register-btc-policy-account';
 
@@ -25,6 +26,11 @@ function useBtcAddAccountParams() {
 export function useBtcAddAccount() {
   const { tabId, origin, request } = useBtcAddAccountParams();
   const nativeSegwitAccount = useCurrentNativeSegwitAccount();
+  const { isFeatureEnabled, rejectAsUnsupported } = usePolicyAccountFeatureGate({
+    method: request.method,
+    id: request.id,
+    tabId,
+  });
 
   // The active account must be one of the descriptor's cosigners before the user
   // can confirm. We only consider the native segwit account's xpub or its 0/0
@@ -52,6 +58,8 @@ export function useBtcAddAccount() {
     descriptor: request.params.descriptor,
     matchStatus,
     canApprove: matchStatus === 'match',
+    isFeatureEnabled,
+    rejectAsUnsupported,
     focusInitiatingTab,
     onUserApprovesAddAccount() {
       if (!tabId || !origin) {

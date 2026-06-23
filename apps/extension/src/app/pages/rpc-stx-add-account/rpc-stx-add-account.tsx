@@ -4,6 +4,7 @@ import { Approver, Button, Callout } from '@leather.io/ui';
 
 import { closeWindow } from '@shared/utils';
 
+import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
@@ -19,6 +20,8 @@ export function RpcStxAddAccount() {
     threshold,
     matchStatus,
     canApprove,
+    isFeatureEnabled,
+    rejectAsUnsupported,
     focusInitiatingTab,
     onUserApprovesAddAccount,
   } = useStxAddAccount();
@@ -26,6 +29,12 @@ export function RpcStxAddAccount() {
   useOnOriginTabClose(() => closeWindow());
 
   const { toggleSwitchAccount } = useSwitchAccountSheet();
+
+  useOnMount(() => {
+    if (!isFeatureEnabled) rejectAsUnsupported();
+  });
+
+  if (!isFeatureEnabled) return null;
 
   if (origin === null) {
     closeWindow();

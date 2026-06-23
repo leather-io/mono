@@ -9,6 +9,7 @@ import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
+import { usePolicyAccountFeatureGate } from '../policy-account-feature-gate';
 import { type PolicyAccountMatchStatus } from '../policy-account-match';
 import { registerStxPolicyAccount } from './register-stx-policy-account';
 
@@ -24,6 +25,11 @@ function useStxAddAccountParams() {
 export function useStxAddAccount() {
   const { tabId, origin, request } = useStxAddAccountParams();
   const stacksAccount = useCurrentStacksAccount();
+  const { isFeatureEnabled, rejectAsUnsupported } = usePolicyAccountFeatureGate({
+    method: request.method,
+    id: request.id,
+    tabId,
+  });
 
   // The active account's public key must be one of the policy's public keys
   // before the user can confirm.
@@ -47,6 +53,8 @@ export function useStxAddAccount() {
     threshold: request.params.threshold,
     matchStatus,
     canApprove: matchStatus === 'match',
+    isFeatureEnabled,
+    rejectAsUnsupported,
     focusInitiatingTab,
     onUserApprovesAddAccount() {
       if (!tabId || !origin) {
