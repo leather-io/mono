@@ -33,7 +33,7 @@ test.describe('Switch account sheet', () => {
     page,
   }) => {
     await switchAccountPage.open();
-    await switchAccountPage.openAddWalletSheet();
+    await switchAccountPage.openAddWalletMenu();
 
     await expect(page.getByText('Create new wallet')).toBeVisible();
     await expect(page.getByText('Restore wallet')).toBeVisible();
