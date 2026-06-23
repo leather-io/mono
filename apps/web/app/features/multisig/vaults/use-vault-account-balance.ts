@@ -58,6 +58,7 @@ export function useVaultAccountsBalance(accounts?: VaultAccountSummary[]): Vault
   const cryptos = balances.map(data =>
     'btc' in data ? data.btc.totalBalance : data.stx.totalBalance
   );
+  if (new Set(cryptos.map(money => money.symbol)).size > 1) return {};
   const fiats = balances.map(data => data.quote.totalBalance);
   return { crypto: sumMoney(cryptos), fiat: sumMoney(fiats) };
 }
