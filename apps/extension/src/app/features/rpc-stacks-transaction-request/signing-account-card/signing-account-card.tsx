@@ -1,3 +1,4 @@
+import { AccountSelectors } from '@tests/selectors/account.selectors';
 import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
@@ -7,6 +8,7 @@ import { Approver, Caption, ItemLayout, SkeletonLoader } from '@leather.io/ui';
 import { formatCurrency } from '@app/common/currency-formatter';
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { AccountNameLayout } from '@app/components/account/account-name';
+import { getLedgerAccountIndicator } from '@app/components/account/ledger-account-indicator';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
@@ -26,6 +28,7 @@ export function SigningAccountCard({
   const account = useCurrentStacksAccount();
   const walletEntities = useWalletEntities();
   const walletName = walletEntities[account?.fingerprint ?? '']?.name;
+  const walletType = walletEntities[account?.fingerprint ?? '']?.type;
 
   const stxAddress = account?.address || '';
   const { data: name = '', isLoading: isLoadingName } = useAccountDisplayName({
@@ -58,6 +61,7 @@ export function SigningAccountCard({
             <AccountAvatarItem
               index={account?.accountIndex ?? 0}
               publicKey={account?.stxPublicKey ?? ''}
+              indicator={getLedgerAccountIndicator(walletType, AccountSelectors.LedgerIndicator)}
             />
           }
           titleLeft={<AccountNameLayout isLoading={isLoadingName}>{name}</AccountNameLayout>}

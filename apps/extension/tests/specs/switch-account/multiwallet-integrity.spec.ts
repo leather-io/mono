@@ -6,6 +6,7 @@ import {
   makeLedgerTestAccountWalletState,
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
+import { AccountSelectors } from '@tests/selectors/account.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SwitchAccountSelectors } from '@tests/selectors/switch-account.selectors';
@@ -79,8 +80,8 @@ test.describe('Multiwallet integrity', () => {
     page,
   }) => {
     await switchAccountPage.open();
-    await switchAccountPage.openAddWalletSheet();
-    await page.getByText('Restore wallet').click();
+    await switchAccountPage.openAddWalletMenu();
+    await page.getByRole('menuitem', { name: 'Restore wallet' }).click();
 
     const words = TEST_ACCOUNT_SECRET_KEY.split(' ');
     for (let i = 0; i < words.length; i++) {
@@ -183,8 +184,8 @@ test.describe('Multiwallet integrity', () => {
     page,
   }) => {
     await switchAccountPage.open();
-    await switchAccountPage.openAddWalletSheet();
-    await page.getByText('Restore wallet').click();
+    await switchAccountPage.openAddWalletMenu();
+    await page.getByRole('menuitem', { name: 'Restore wallet' }).click();
     await page.getByText('Have a 12-word Secret Key?').click();
 
     for (let i = 0; i < 12; i++) {
@@ -271,6 +272,15 @@ test.describe('Multiwallet integrity', () => {
       .toBe(0);
   });
 
+  test('that a software wallet shows no Ledger indication', async ({ switchAccountPage, page }) => {
+    await expect(page.getByTestId(AccountSelectors.LedgerIndicator)).toHaveCount(0);
+
+    await switchAccountPage.open();
+    await expect(page.getByTestId(SwitchAccountSelectors.WalletHeaderLedgerIndicator)).toHaveCount(
+      0
+    );
+  });
+
   test('that removing a wallet also removes its stx chain state', async ({ switchAccountPage }) => {
     test.slow();
     await switchAccountPage.open();
@@ -317,5 +327,23 @@ test.describe('Multiwallet hardware wallet', () => {
 
     await expect(page.getByRole('menuitem', { name: 'Rename' })).toBeVisible();
     await expect(page.getByRole('menuitem', { name: 'View Secret Key' })).toHaveCount(0);
+  });
+
+  test('that a Ledger wallet shows the Ledger chip and account badge in the account picker', async ({
+    switchAccountPage,
+    page,
+  }) => {
+    test.slow();
+    await switchAccountPage.open();
+
+    // The wallet header carries the labelled "Ledger" chip
+    await expect(
+      page.getByTestId(SwitchAccountSelectors.WalletHeaderLedgerIndicator).first()
+    ).toBeVisible();
+
+    // The Ledger account avatar carries the corner badge
+    await expect(
+      switchAccountPage.accountRow(0).getByTestId(AccountSelectors.LedgerIndicator)
+    ).toBeVisible();
   });
 });

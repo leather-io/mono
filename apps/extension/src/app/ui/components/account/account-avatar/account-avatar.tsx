@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { ReactElement, memo } from 'react';
 
 import { Box, CircleProps } from 'leather-styles/jsx';
 
@@ -12,10 +12,12 @@ function getAccountNumber(index: number) {
 interface AccountAvatarProps extends CircleProps {
   publicKey: string;
   index: number;
+  indicator?: ReactElement;
 }
 export const AccountAvatar = memo(function AccountAvatar({
   publicKey,
   index,
+  indicator,
   ...props
 }: AccountAvatarProps) {
   const gradient = `${publicKey}-${index}`;
@@ -34,9 +36,11 @@ export const AccountAvatar = memo(function AccountAvatar({
         alignItems="center"
         justifyContent="center"
         textStyle="label.01"
+        pointerEvents="none"
       >
         {text}
       </Box>
+      {indicator}
     </Box>
   );
 });

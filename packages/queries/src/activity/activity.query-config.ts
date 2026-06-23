@@ -8,13 +8,14 @@ import { activityQueryOptions } from '../shared/query-options';
 
 function createActivityKeyParams(account: AccountAddresses) {
   const { id, bitcoin, stacks } = account;
+  const hdBitcoin = bitcoin?.type === 'hd' ? bitcoin : undefined;
   return [
     id.fingerprint,
     id.accountIndex,
-    bitcoin?.taprootDescriptor ?? null,
-    bitcoin?.nativeSegwitDescriptor ?? null,
-    bitcoin?.zeroIndexNativeSegwitPayerAddress ?? null,
-    bitcoin?.zeroIndexTaprootPayerAddress ?? null,
+    hdBitcoin?.taprootDescriptor ?? null,
+    hdBitcoin?.nativeSegwitDescriptor ?? null,
+    hdBitcoin?.zeroIndexNativeSegwitPayerAddress ?? null,
+    hdBitcoin?.zeroIndexTaprootPayerAddress ?? null,
     stacks?.stxAddress ?? null,
   ] as const;
 }
